@@ -49,11 +49,15 @@ This shows:
 - What to do next
 - Which datasets to download
 
-### Start Training (Phase 1)
+### Start Training (Phase 1) - UPDATED WITH SOTA!
 ```bash
+# NEW: SOTA PPO trainer (proper algorithm!)
+py SOTATrainer.py --no-render --epochs 1000
+
+# OLD: Basic REINFORCE (works but slower)
 py ProgressiveLearning.py --no-render
 ```
-Let it run for 500-1000 episodes
+Use SOTATrainer.py for best results!
 
 ### Download Datasets (Phase 2)
 ```bash
