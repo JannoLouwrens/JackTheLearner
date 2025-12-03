@@ -1,0 +1,101 @@
+# ==============================================================================
+# UPGRADED ROBOT BRAIN REQUIREMENTS (2025 SOTA)
+# ==============================================================================
+
+# Core Deep Learning
+torch>=2.1.0
+torchvision>=0.16.0
+
+# Transformers & Pretrained Models (for VLM backbone)
+transformers>=4.36.0
+accelerate>=0.25.0  # For efficient model loading
+
+# Computer Vision Models
+timm>=0.9.12  # For DINOv2, ViT models
+
+# Dataset & Data Loading
+datasets>=2.16.0  # HuggingFace datasets (for Open X-Embodiment)
+h5py>=3.10.0  # For HDF5 data files
+pillow>=10.1.0  # Image processing
+
+# Reinforcement Learning Environments
+gymnasium>=0.29.1  # Gym environments (replaces gym)
+mujoco>=3.1.0  # Physics engine
+
+# Numerical & Scientific Computing
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Progress & Logging
+tqdm>=4.66.0
+tensorboard>=2.15.0  # For training visualization
+wandb>=0.16.0  # (Optional) For experiment tracking
+
+# Development & Utilities
+matplotlib>=3.8.2  # For plotting
+seaborn>=0.13.0  # For better plots
+ipython>=8.18.0  # For interactive development
+jupyter>=1.0.0  # For notebooks
+
+# ==============================================================================
+# OPTIONAL: For Real Robot Deployment
+# ==============================================================================
+
+# ROS 2 Integration (uncomment if deploying to real robot)
+# rclpy  # ROS 2 Python client
+# geometry-msgs  # ROS message types
+# sensor-msgs  # ROS sensor messages
+
+# Model Optimization (for deployment)
+# onnx>=1.15.0  # For model export
+# onnxruntime-gpu>=1.16.0  # Fast inference
+# tensorrt>=8.6.0  # NVIDIA TensorRT (requires CUDA)
+
+# ==============================================================================
+# INSTALLATION INSTRUCTIONS
+# ==============================================================================
+
+# 1. Create virtual environment:
+#    python -m venv venv
+#    source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# 2. Install PyTorch (check https://pytorch.org for your CUDA version):
+#    pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+
+# 3. Install requirements:
+#    pip install -r requirements.txt
+
+# 4. Download Open X-Embodiment dataset:
+#    python -c "from datasets import load_dataset; load_dataset('jxu124/OpenX-Embodiment')"
+#    WARNING: This is a LARGE download (100GB+). Start with max_episodes parameter!
+
+# 5. Test installation:
+#    python JackBrain  # Should print architecture info
+#    python OpenXDataLoader  # Should create dummy dataset
+
+# ==============================================================================
+# SYSTEM REQUIREMENTS
+# ==============================================================================
+
+# - Python 3.9+
+# - CUDA 11.8+ (for GPU acceleration)
+# - 16GB+ RAM (32GB recommended)
+# - 100GB+ disk space (for Open X-Embodiment dataset)
+# - GPU: NVIDIA RTX 3090, 4090, A100, or better (24GB+ VRAM recommended)
+
+# ==============================================================================
+# PRETRAINED MODELS (Downloaded automatically on first run)
+# ==============================================================================
+
+# DINOv2 Large (facebook/dinov2-large): ~1.5GB
+# CLIP ViT Large (openai/clip-vit-large-patch14): ~1.7GB
+# Total: ~3.2GB of pretrained weights
+
+# ==============================================================================
+# NOTES
+# ==============================================================================
+
+# - Pretrained models are cached in ~/.cache/huggingface/
+# - First run will download models (may take 10-20 minutes)
+# - Use transformers offline mode if you have limited internet:
+#   export TRANSFORMERS_OFFLINE=1
