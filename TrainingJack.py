@@ -1,20 +1,30 @@
 """
-UPGRADED TRAINING SCRIPT FOR SCALABLE ROBOT BRAIN (2025 SOTA)
-Now with: Diffusion Policy + Pretrained VLM + Open X-Embodiment Dataset
+DIFFUSION POLICY TRAINING - Behavior Cloning from Demonstrations
 
-MAJOR UPGRADES:
-✅ Diffusion Policy: Flow matching for 1-step inference
-✅ Pretrained VLM: DINOv2 + SigLIP fusion (no training from scratch!)
-✅ Multi-task Data: Open X-Embodiment (1M+ trajectories, 22 robot types)
-✅ Continuous Actions: No more discretization artifacts
-✅ 48-action chunks: Boston Dynamics style
+NOTE: This script is currently DISABLED because it needs high-quality demonstration data.
 
-Training progression:
-Phase 1 (Week 1):  Train on Open X-Embodiment (diverse tasks)
-Phase 2 (Week 2):  Fine-tune on simulation (Humanoid-v4)
-Phase 3 (Week 3):  Add real robot data (100+ episo
-des)
-Phase 4 (Month 1): Deploy to real robot 🚀
+What is this?
+- Behavior cloning: Learn by copying expert demonstrations (like watching videos)
+- Diffusion policy: State-of-the-art action prediction using flow matching
+- Different from RL: RL learns by trial/error, this learns from experts
+
+To use this script, you need to download expert demonstration datasets:
+
+Option 1: MoCapAct (Human motion capture for humanoids)
+   - Size: 5-10GB
+   - Download: https://microsoft.github.io/MoCapAct/
+   - Best for: Natural humanoid locomotion
+
+Option 2: RoboNet (Robot manipulation demonstrations)
+   - Size: 100GB+
+   - Download: https://www.robonet.wiki/
+   - Best for: Manipulation tasks
+
+Option 3: Use your own demonstrations
+   - Record expert demonstrations
+   - Save in the format this script expects
+
+For now: Just use ProgressiveLearning.py which does RL training!
 """
 
 import os
@@ -23,13 +33,129 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import gymnasium as gym
-from typing import Dict, Optional, Tuple
-from scalable_robot_brain import (
+from typing import Dict, Optional, Tuple, List
+from torch.utils.data import Dataset, DataLoader
+import sys
+sys.path.append(os.path.dirname(__file__))
+from JackBrain import (
     ScalableRobotBrain,
     BrainConfig,
     flow_matching_loss,
 )
-from open_x_dataloader import create_openx_dataloader
+from SharedTrainingData import SharedTrainingDataManager
+from AutoCheckpoint import AutoCheckpointManager
+
+
+# ==============================================================================
+# HUMANOID LOCOMOTION DATASET - Real simulation data from ProgressiveLearning
+# ==============================================================================
+
+class HumanoidLocomotionDataset(Dataset):
+    """
+    PyTorch Dataset for humanoid locomotion using shared training data.
+    Loads real episodes from ProgressiveLearning's Humanoid-v4 simulation.
+    """
+
+    def __init__(
+        self,
+        data_manager: SharedTrainingDataManager,
+        context_length: int = 10,
+        action_chunk_size: int = 48,
+        split: str = "train",
+        train_split: float = 0.9,
+    ):
+        self.data_manager = data_manager
+        self.context_length = context_length
+        self.action_chunk_size = action_chunk_size
+
+        # Load all episodes
+        all_episodes = data_manager.load_all_episodes()
+
+        if not all_episodes:
+            raise ValueError("No training data found! Run ProgressiveLearning.py first to collect data.")
+
+        # Split into train/val
+        n_train = int(len(all_episodes) * train_split)
+        if split == "train":
+            self.episodes = all_episodes[:n_train]
+        else:
+            self.episodes = all_episodes[n_train:]
+
+        # Build list of valid trajectory segments
+        self.segments = []
+        for ep_idx, episode in enumerate(self.episodes):
+            ep_length = episode['episode_length']
+            # Need context_length + action_chunk_size frames
+            min_length = context_length + action_chunk_size
+            if ep_length >= min_length:
+                # Can sample from any starting point that gives us enough frames
+                for start_idx in range(ep_length - min_length + 1):
+                    self.segments.append((ep_idx, start_idx))
+
+        print(f"[*] Humanoid Dataset ({split}):")
+        print(f"   Episodes: {len(self.episodes)}")
+        print(f"   Valid segments: {len(self.segments)}")
+        print(f"   Context length: {context_length}")
+        print(f"   Action chunk size: {action_chunk_size}")
+
+    def __len__(self):
+        return len(self.segments)
+
+    def __getitem__(self, idx):
+        ep_idx, start_idx = self.segments[idx]
+        episode = self.episodes[ep_idx]
+
+        # Extract observations for context
+        obs = episode['observations'][start_idx:start_idx + self.context_length]
+
+        # Extract actions for action chunk
+        actions = episode['actions'][start_idx + self.context_length:start_idx + self.context_length + self.action_chunk_size]
+
+        # Convert to tensors
+        obs_tensor = torch.FloatTensor(np.array(obs))  # (context_length, obs_dim)
+        actions_tensor = torch.FloatTensor(np.array(actions))  # (action_chunk_size, action_dim)
+
+        # Create dummy images (84x84 RGB) - will be replaced with actual vision later
+        dummy_images = torch.zeros(self.context_length, 3, 84, 84)
+
+        # Return in format expected by DiffusionPolicyTrainer
+        return {
+            'observation': {
+                'image': dummy_images,
+                'state': obs_tensor,
+            },
+            'action_chunk': actions_tensor,
+        }
+
+
+def create_humanoid_dataloader(
+    data_dir: str = "training_data",
+    batch_size: int = 32,
+    num_workers: int = 4,
+    context_length: int = 10,
+    action_chunk_size: int = 48,
+    split: str = "train",
+) -> DataLoader:
+    """Create DataLoader for humanoid locomotion data"""
+
+    data_manager = SharedTrainingDataManager(data_dir=data_dir)
+
+    dataset = HumanoidLocomotionDataset(
+        data_manager=data_manager,
+        context_length=context_length,
+        action_chunk_size=action_chunk_size,
+        split=split,
+    )
+
+    dataloader = DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=(split == "train"),
+        num_workers=num_workers,
+        pin_memory=True,
+    )
+
+    return dataloader
 
 
 # ==============================================================================
@@ -56,12 +182,12 @@ class MultiModalWrapper(gym.ObservationWrapper):
         
         # Store original observation space
         self.proprio_space = env.observation_space
-        
-        print(f"\n🔧 Multimodal Configuration:")
-        print(f"   Proprioception: ✓ (always enabled)")
-        print(f"   Vision:         {'✓' if enable_vision else '✗'}")
-        print(f"   Touch:          {'✓' if enable_touch else '✗'}")
-        print(f"   Language:       {'✗' if enable_language else '✗'}\n")
+
+        print(f"\n[*] Multimodal Configuration:")
+        print(f"   Proprioception: [OK] (always enabled)")
+        print(f"   Vision:         {'[OK]' if enable_vision else '[--]'}")
+        print(f"   Touch:          {'[OK]' if enable_touch else '[--]'}")
+        print(f"   Language:       {'[--]' if enable_language else '[--]'}\n")
     
     def observation(self, obs):
         """Convert gym obs to multimodal dict"""
@@ -141,7 +267,7 @@ class DiffusionPolicyTrainer:
         self.epoch = 0
         self.best_val_loss = float('inf')
 
-        print(f"🎯 Diffusion Policy Trainer Initialized")
+        print(f"[*] Diffusion Policy Trainer Initialized")
         print(f"   Device: {device}")
         print(f"   Learning rate: {learning_rate}")
         print(f"   Weight decay: {weight_decay}\n")
@@ -154,7 +280,7 @@ class DiffusionPolicyTrainer:
         epoch_loss = 0
         num_batches = 0
 
-        print(f"📈 Epoch {self.epoch} - Training...")
+        print(f"[*] Epoch {self.epoch} - Training...")
 
         for batch_idx, batch in enumerate(dataloader):
             loss = self.train_step(batch)
@@ -173,15 +299,15 @@ class DiffusionPolicyTrainer:
         # Validation
         if val_dataloader is not None:
             val_loss = self.validate(val_dataloader)
-            print(f"✓ Epoch {self.epoch} | Train Loss: {avg_train_loss:.4f} | Val Loss: {val_loss:.4f}")
+            print(f"[OK] Epoch {self.epoch} | Train Loss: {avg_train_loss:.4f} | Val Loss: {val_loss:.4f}")
 
             # Save best model
             if val_loss < self.best_val_loss:
                 self.best_val_loss = val_loss
                 self.save("models/best_model.pt")
-                print(f"  💾 Best model saved (val_loss={val_loss:.4f})")
+                print(f"  [SAVE] Best model saved (val_loss={val_loss:.4f})")
         else:
-            print(f"✓ Epoch {self.epoch} | Train Loss: {avg_train_loss:.4f}")
+            print(f"[OK] Epoch {self.epoch} | Train Loss: {avg_train_loss:.4f}")
 
         return avg_train_loss
 
@@ -305,18 +431,18 @@ class DiffusionPolicyTrainer:
             'best_val_loss': self.best_val_loss,
             'config': self.config,
         }, path)
-        print(f"💾 Saved checkpoint to {path}")
+        print(f"[SAVE] Checkpoint saved to {path}")
 
     def load(self, path: str):
         """Load model checkpoint"""
-        checkpoint = torch.load(path, map_location=self.device)
+        checkpoint = torch.load(path, map_location=self.device, weights_only=False)
         self.brain.load_state_dict(checkpoint['brain_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
         self.epoch = checkpoint['epoch']
         self.global_step = checkpoint['global_step']
         self.best_val_loss = checkpoint['best_val_loss']
-        print(f"📂 Loaded checkpoint from {path} (epoch {self.epoch})")
+        print(f"[LOAD] Checkpoint loaded from {path} (epoch {self.epoch})")
 
 
 # ==============================================================================
@@ -324,20 +450,115 @@ class DiffusionPolicyTrainer:
 # ==============================================================================
 
 def main():
-    print("="*70)
-    print("🚀 UPGRADED ROBOT BRAIN TRAINING (2025 SOTA)")
-    print("="*70)
-    print("\n📋 Configuration:")
+    import argparse
 
-    # Configuration
+    parser = argparse.ArgumentParser(description="TrainingJack - Behavior Cloning")
+    parser.add_argument("--dataset", type=str, help="Dataset to train on (cmu_mocap, mocapact, deepmind_control, rt1_subset, language_table)")
+    parser.add_argument("--checkpoint-in", type=str, help="Input checkpoint to load (e.g., checkpoints/locomotion.pt)")
+    parser.add_argument("--checkpoint-out", type=str, help="Output checkpoint to save (e.g., checkpoints/natural_movement.pt)")
+    parser.add_argument("--list", action="store_true", help="List available datasets")
+    args = parser.parse_args()
+
+    print("="*70)
+    print("[*] TRAININGJACK - BEHAVIOR CLONING")
+    print("="*70)
+    print("\n[INFO] This script trains Jack from expert demonstrations")
+    print("[INFO] Much faster than RL for complex tasks!")
+    print("="*70)
+
+    # List datasets if requested
+    if args.list:
+        from DatasetDownloader import DatasetDownloader
+        downloader = DatasetDownloader()
+        downloader.list_datasets()
+        return
+
+    # Check for datasets
+    print("\n[*] Checking for datasets...")
+    dataset_dir = "datasets"
+
+    dataset_mapping = {
+        "cmu_mocap": ("CMU Motion Capture", "cmu_mocap"),
+        "mocapact": ("MoCapAct", "mocapact"),
+        "deepmind_control": ("DeepMind Control", "deepmind_mocap"),
+        "rt1_subset": ("RT-1 Subset", "rt1"),
+        "language_table": ("Language-Table", "language_table"),
+    }
+
+    available_datasets = {}
+    for key, (name, dir_name) in dataset_mapping.items():
+        dataset_path = os.path.join(dataset_dir, dir_name)
+        if os.path.exists(dataset_path) and os.listdir(dataset_path):
+            available_datasets[key] = name
+
+    if not available_datasets:
+        print("\n[WARNING] No datasets found!")
+        print("[INFO] You need to download datasets first.")
+        print("\n[*] To see available datasets:")
+        print("   py TrainingJack.py --list")
+        print("\n[*] To download datasets:")
+        print("   py DatasetDownloader.py")
+        print("\n[*] Or use sequential training:")
+        print("   py TrainSequentially.py --next")
+        print("\n[INFO] For now, use RL training:")
+        print("   py ProgressiveLearning.py")
+        print("="*70)
+        return
+
+    print(f"[OK] Found {len(available_datasets)} dataset(s):")
+    for key, name in available_datasets.items():
+        print(f"   - {name} ({key})")
+
+    # If no dataset specified, show options
+    if not args.dataset:
+        print("\n[INFO] Specify which dataset to train on:")
+        print("   py TrainingJack.py --dataset cmu_mocap")
+        print("\n[INFO] Or use sequential training (recommended):")
+        print("   py TrainSequentially.py --next")
+        print("="*70)
+        return
+
+    # Validate dataset
+    if args.dataset not in available_datasets:
+        print(f"\n[ERROR] Dataset '{args.dataset}' not found or not downloaded")
+        print(f"[INFO] Available: {list(available_datasets.keys())}")
+        print("\n[INFO] To download:")
+        print(f"   py DatasetDownloader.py --download {args.dataset}")
+        print("="*70)
+        return
+
+    print(f"\n[OK] Selected dataset: {available_datasets[args.dataset]}")
+
+    # Check checkpoint
+    if args.checkpoint_in:
+        if os.path.exists(args.checkpoint_in):
+            print(f"[OK] Will load checkpoint: {args.checkpoint_in}")
+        else:
+            print(f"[ERROR] Checkpoint not found: {args.checkpoint_in}")
+            return
+    else:
+        print("[INFO] No input checkpoint specified - training from scratch")
+
+    print("\n[INFO] TrainingJack is ready to train!")
+    print("[WARNING] Full training implementation coming soon")
+    print(f"[INFO] Will train on: {available_datasets[args.dataset]}")
+    if args.checkpoint_out:
+        print(f"[INFO] Will save to: {args.checkpoint_out}")
+    print("="*70)
+    return
+
+    # Below code is disabled until demonstration data is available
+    print("\n[*] Configuration:")
+
+    # Configuration - adjusted for Humanoid-v4 (17 DoF)
     config = BrainConfig(
         d_model=512,
         n_heads=8,
         n_layers=6,
-        context_length=50,
-        action_chunk_size=48,  # Boston Dynamics style
-        action_dim=7,  # 7-DoF for manipulation (adjust for your robot)
-        use_pretrained_vision=True,  # ENABLED!
+        context_length=10,  # Reduced for faster training
+        action_chunk_size=17,  # Match Humanoid-v4 action dim
+        action_dim=17,  # 17-DoF humanoid
+        use_pretrained_vision=False,  # Disabled for now (no vision data yet)
         vlm_backbone="prismatic",
         use_diffusion=True,
         use_flow_matching=True,  # 1-step inference
@@ -346,34 +567,39 @@ def main():
 
     print(f"   Model: {config.d_model}D, {config.n_heads} heads, {config.n_layers} layers")
     print(f"   Action chunks: {config.action_chunk_size}")
-    print(f"   Vision: Pretrained VLM ({config.vlm_backbone})")
+    print(f"   Action dim: {config.action_dim} (Humanoid-v4)")
+    print(f"   Vision: Disabled (using proprioception only)")
     print(f"   Diffusion: Flow matching ({config.flow_matching_steps}-step)")
 
-    # Create dataloaders
-    print("\n📦 Loading Open X-Embodiment Dataset...")
+    # Create dataloaders from real humanoid simulation data
+    print("\n[*] Loading Humanoid Locomotion Dataset...")
+    print("   Source: ProgressiveLearning shared training data")
 
-    train_dataloader = create_openx_dataloader(
-        data_path="./open_x_data",  # Change to actual path or HuggingFace name
-        batch_size=32,
-        num_workers=4,
-        split="train",
-        action_chunk_size=config.action_chunk_size,
-        context_length=10,
-        max_episodes=1000,  # Start with subset for testing
-    )
+    try:
+        train_dataloader = create_humanoid_dataloader(
+            data_dir="training_data",
+            batch_size=32,
+            num_workers=0,  # Set to 0 for Windows compatibility
+            context_length=config.context_length,
+            action_chunk_size=config.action_chunk_size,
+            split="train",
+        )
 
-    val_dataloader = create_openx_dataloader(
-        data_path="./open_x_data",
-        batch_size=32,
-        num_workers=4,
-        split="val",
-        action_chunk_size=config.action_chunk_size,
-        context_length=10,
-        max_episodes=100,
-    )
+        val_dataloader = create_humanoid_dataloader(
+            data_dir="training_data",
+            batch_size=32,
+            num_workers=0,  # Set to 0 for Windows compatibility
+            context_length=config.context_length,
+            action_chunk_size=config.action_chunk_size,
+            split="val",
+        )
+    except ValueError as e:
+        print(f"\n[ERROR] {e}")
+        print("[*] Please run ProgressiveLearning.py first to collect training data.")
+        return
 
     # Create brain
-    print("\n🧠 Initializing Robot Brain...")
+    print("\n[*] Initializing Robot Brain...")
 
     # Get observation dimension from first batch
     dummy_batch = next(iter(train_dataloader))
@@ -384,13 +610,13 @@ def main():
     # Count parameters
     total_params = sum(p.numel() for p in brain.parameters())
     trainable_params = sum(p.numel() for p in brain.parameters() if p.requires_grad)
-    print(f"\n📊 Model Statistics:")
+    print(f"\n[*] Model Statistics:")
     print(f"   Total parameters: {total_params:,}")
     print(f"   Trainable parameters: {trainable_params:,}")
     print(f"   Model size: ~{total_params * 4 / 1e6:.1f}MB")
 
     # Create trainer
-    print("\n🎯 Initializing Trainer...")
+    print("\n[*] Initializing Trainer...")
     trainer = DiffusionPolicyTrainer(
         brain=brain,
         config=config,
@@ -398,17 +624,30 @@ def main():
         weight_decay=1e-4,
     )
 
-    # Check for existing checkpoint
-    checkpoint_path = "models/latest_checkpoint.pt"
-    if os.path.exists(checkpoint_path):
-        print(f"\n📂 Found checkpoint: {checkpoint_path}")
-        response = input("Load it? (y/n): ")
-        if response.lower() == 'y':
-            trainer.load(checkpoint_path)
+    # AUTO-LOAD: Check for existing checkpoints and load the best one
+    print("\n[*] Searching for existing checkpoints...")
+    checkpoint_manager = AutoCheckpointManager()
+    success, checkpoint = checkpoint_manager.load_latest_checkpoint(
+        brain=trainer.brain,
+        optimizer=trainer.optimizer,
+        device=trainer.device,
+        prefer_best=True
+    )
+
+    if success:
+        # Restore training state
+        if 'epoch' in checkpoint:
+            trainer.epoch = checkpoint['epoch']
+        if 'global_step' in checkpoint:
+            trainer.global_step = checkpoint['global_step']
+        if 'best_val_loss' in checkpoint:
+            trainer.best_val_loss = checkpoint['best_val_loss']
+        if 'scheduler_state_dict' in checkpoint:
+            trainer.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
 
     # Train
     print("\n" + "="*70)
-    print("🏋️  STARTING TRAINING")
+    print("[*] STARTING TRAINING")
     print("="*70)
 
     try:
@@ -418,26 +657,28 @@ def main():
             # Train epoch
             train_loss = trainer.train_epoch(train_dataloader, val_dataloader)
 
-            # Save checkpoint every 5 epochs
-            if (epoch + 1) % 5 == 0:
-                trainer.save(f"models/checkpoint_epoch_{epoch+1}.pt")
-                trainer.save(checkpoint_path)
+            # Save checkpoint every 10 epochs to models/latest.pt
+            if (epoch + 1) % 10 == 0:
+                trainer.save("models/latest.pt")
 
-        print("\n✅ Training completed!")
+        print("\n[OK] Training completed!")
 
     except KeyboardInterrupt:
-        print("\n🛑 Training interrupted!")
-        trainer.save(checkpoint_path)
-        print("💾 Progress saved.")
+        print("\n[STOP] Training interrupted!")
+        trainer.save("models/latest.pt")
+        print("[SAVE] Progress saved.")
 
     print("\n" + "="*70)
-    print("🎓 NEXT STEPS:")
+    print("[*] NEXT STEPS:")
     print("="*70)
-    print("1. Fine-tune on your specific robot (sim or real)")
-    print("2. Test in simulation environment")
-    print("3. Deploy to real robot 🤖")
-    print("4. Scale to language commands and complex tasks")
+    print("1. Continue training with: py TrainingJack.py")
+    print("2. Run ProgressiveLearning to collect more data")
+    print("3. Test trained model in simulation")
+    print("4. Deploy to real robot")
     print("="*70)
 
 
 if __name__ == "__main__":
+
+
+    main()

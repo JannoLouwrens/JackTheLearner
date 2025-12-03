@@ -123,6 +123,7 @@ class OpenXEmbodimentDataset(Dataset):
             self.data_path,
             split=self.split,
             streaming=False,  # Set True for very large datasets
+            trust_remote_code=True,
         )
 
         if max_episodes:

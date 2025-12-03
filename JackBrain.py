@@ -86,7 +86,7 @@ class PrismaticVisionEncoder(nn.Module):
         self.image_size = image_size
 
         if config.use_pretrained_vision and config.vlm_backbone == "prismatic":
-            print("🔥 LOADING PRETRAINED VLM BACKBONE (Prismatic: DINOv2 + SigLIP)")
+            print("[*] LOADING PRETRAINED VLM BACKBONE (Prismatic: DINOv2 + SigLIP)")
 
             try:
                 # Load pretrained vision encoders
@@ -114,20 +114,20 @@ class PrismaticVisionEncoder(nn.Module):
                 )
 
                 self.use_pretrained = True
-                print(f"✓ DINOv2: 1024-dim features")
-                print(f"✓ SigLIP/CLIP: 768-dim features")
-                print(f"✓ Fused: {fusion_dim}-dim → {config.vision_embed_dim}-dim")
+                print(f"[OK] DINOv2: 1024-dim features")
+                print(f"[OK] SigLIP/CLIP: 768-dim features")
+                print(f"[OK] Fused: {fusion_dim}-dim -> {config.vision_embed_dim}-dim")
 
             except Exception as e:
-                print(f"⚠️  Failed to load pretrained models: {e}")
-                print("⚠️  Falling back to simple CNN")
+                print(f"[WARNING] Failed to load pretrained models: {e}")
+                print("[WARNING] Falling back to simple CNN")
                 self.use_pretrained = False
         else:
             self.use_pretrained = False
 
         if not self.use_pretrained:
             # Fallback: Simple CNN (for testing without pretrained models)
-            print("🔧 Using simple CNN vision encoder (no pretraining)")
+            print("[*] Using simple CNN vision encoder (no pretraining)")
             self.cnn = nn.Sequential(
                 nn.Conv2d(3, 32, kernel_size=8, stride=4),
                 nn.ReLU(),
@@ -464,7 +464,7 @@ class FlowMatchingActionDecoder(nn.Module):
             torch.randn(1, 1, config.d_model) * 0.02
         )
 
-        print(f"🌊 Flow Matching Diffusion Policy Initialized")
+        print(f"[*] Flow Matching Diffusion Policy Initialized")
         print(f"   Inference steps: {config.flow_matching_steps if config.use_flow_matching else config.diffusion_steps}")
         print(f"   Action chunk size: {config.action_chunk_size}")
         print(f"   Action dim: {config.action_dim}")
@@ -637,7 +637,7 @@ class ScalableRobotBrain(nn.Module):
         self.config = config
         
         print("\n" + "="*70)
-        print("🧠 INITIALIZING SCALABLE ROBOT BRAIN")
+        print("[*] INITIALIZING SCALABLE ROBOT BRAIN")
         print("="*70)
         
         # Sensor encoders
@@ -660,14 +660,14 @@ class ScalableRobotBrain(nn.Module):
         # Special tokens
         self.cls_token = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)
         
-        print(f"✓ Vision Encoder:      {config.vision_embed_dim}D → {config.d_model}D")
-        print(f"✓ Proprio Encoder:     {obs_dim}D → {config.d_model}D")
-        print(f"✓ Touch Encoder:       10D → {config.d_model}D")
-        print(f"✓ Language Encoder:    {config.language_embed_dim}D → {config.d_model}D")
-        print(f"✓ Cross-Modal Fusion:  {config.n_layers} layers, {config.n_heads} heads")
-        print(f"✓ Temporal Memory:     {config.context_length} timestep context")
-        print(f"✓ Action Chunking:     Predicts {config.action_chunk_size} steps ahead")
-        print(f"✓ Action Space:        {config.action_dim} DOF × {config.action_bins} bins")
+        print(f"[OK] Vision Encoder:      {config.vision_embed_dim}D -> {config.d_model}D")
+        print(f"[OK] Proprio Encoder:     {obs_dim}D -> {config.d_model}D")
+        print(f"[OK] Touch Encoder:       10D -> {config.d_model}D")
+        print(f"[OK] Language Encoder:    {config.language_embed_dim}D -> {config.d_model}D")
+        print(f"[OK] Cross-Modal Fusion:  {config.n_layers} layers, {config.n_heads} heads")
+        print(f"[OK] Temporal Memory:     {config.context_length} timestep context")
+        print(f"[OK] Action Chunking:     Predicts {config.action_chunk_size} steps ahead")
+        print(f"[OK] Action Space:        {config.action_dim} DOF")
         print("="*70 + "\n")
     
     def forward(
@@ -777,7 +777,7 @@ def flow_matching_loss(
 # ==============================================================================
 
 if __name__ == "__main__":
-    print("🤖 Scalable Robot Brain - Architecture Demo\n")
+    print("[*] Scalable Robot Brain - Architecture Demo\n")
     
     # Configuration
     config = BrainConfig(
@@ -795,9 +795,9 @@ if __name__ == "__main__":
     # Count parameters
     total_params = sum(p.numel() for p in brain.parameters())
     trainable_params = sum(p.numel() for p in brain.parameters() if p.requires_grad)
-    print(f"📊 Total parameters: {total_params:,}")
-    print(f"📊 Trainable parameters: {trainable_params:,}")
-    print(f"📊 Model size: ~{total_params * 4 / 1e6:.1f}MB\n")
+    print(f"[*] Total parameters: {total_params:,}")
+    print(f"[*] Trainable parameters: {trainable_params:,}")
+    print(f"[*] Model size: ~{total_params * 4 / 1e6:.1f}MB\n")
     
     # Example forward pass
     batch_size = 4
@@ -808,7 +808,7 @@ if __name__ == "__main__":
     touch = torch.randn(batch_size, 10)  # Contact forces
     # language = torch.randint(0, 1000, (batch_size, 10))  # "walk forward"
     
-    print("🔄 Running forward pass...")
+    print("[*] Running forward pass...")
     with torch.no_grad():
         actions, values, memory = brain(
             proprio=proprio,
@@ -818,26 +818,26 @@ if __name__ == "__main__":
             history=None,   # No history yet
         )
     
-    print(f"✓ Actions shape: {actions.shape}")  # (batch, chunk_size, action_dim) - CONTINUOUS!
-    print(f"✓ Values shape:  {values.shape}")   # (batch, 1)
-    print(f"✓ Memory shape:  {memory.shape}")   # (batch, seq_len, d_model)
+    print(f"[OK] Actions shape: {actions.shape}")  # (batch, chunk_size, action_dim) - CONTINUOUS!
+    print(f"[OK] Values shape:  {values.shape}")   # (batch, 1)
+    print(f"[OK] Memory shape:  {memory.shape}")   # (batch, seq_len, d_model)
 
     # Actions are already continuous (no discretization!)
     first_action = actions[:, 0, :]  # (batch, action_dim)
-    print(f"✓ First action (continuous): {first_action.shape}")
-    print(f"✓ Action range: [{first_action.min():.2f}, {first_action.max():.2f}]")
+    print(f"[OK] First action (continuous): {first_action.shape}")
+    print(f"[OK] Action range: [{first_action.min():.2f}, {first_action.max():.2f}]")
 
     print("\n" + "="*70)
-    print("✅ UPGRADED ARCHITECTURE VALIDATED! Ready for training.")
+    print("[SUCCESS] UPGRADED ARCHITECTURE VALIDATED! Ready for training.")
     print("="*70)
-    print("\n🚀 MAJOR UPGRADES COMPLETED:")
-    print("   ✅ Diffusion Policy with Flow Matching (1-step inference)")
-    print("   ✅ Pretrained VLM Backbone (DINOv2 + SigLIP fusion)")
-    print("   ✅ Continuous actions (no more discretization)")
-    print("   ✅ 48-action chunks (Boston Dynamics style)")
+    print("\n[*] MAJOR UPGRADES COMPLETED:")
+    print("   [OK] Diffusion Policy with Flow Matching (1-step inference)")
+    print("   [OK] Pretrained VLM Backbone (DINOv2 + SigLIP fusion)")
+    print("   [OK] Continuous actions (no more discretization)")
+    print("   [OK] 48-action chunks (Boston Dynamics style)")
     print("\nNext steps:")
     print("1. Train on Open X-Embodiment dataset (1M+ trajectories)")
     print("2. Fine-tune on your specific robot")
-    print("3. Deploy to real robot 🤖")
+    print("3. Deploy to real robot")
     print("4. Scale to manipulation + language commands")
     print("="*70)

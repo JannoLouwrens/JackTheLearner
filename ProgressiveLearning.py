@@ -22,12 +22,14 @@ import gymnasium as gym
 from typing import Dict, Optional
 import time
 from datetime import datetime
+import argparse
 import json
 
 # Import your brain architecture
 import sys
 sys.path.append(os.path.dirname(__file__))
 from JackBrain import ScalableRobotBrain, BrainConfig
+from AutoCheckpoint import AutoCheckpointManager
 
 
 # ==============================================================================
@@ -121,7 +123,8 @@ class RewardFunctions:
         fall_penalty = -10.0 if done and torso_height < 0.5 else 0.0
 
         # Small penalty for large actions (energy efficiency)
-        action_penalty = -0.01 * np.sum(np.square(action))
+        # Reduced from -0.01 to -0.001 to allow active balancing
+        action_penalty = -0.001 * np.sum(np.square(action))
 
         total_reward = height_reward + upright_reward + fall_penalty + action_penalty
         return total_reward
@@ -191,10 +194,11 @@ class SimpleProgressiveTrainer:
 
     def __init__(
         self,
-        env_name: str = "Humanoid-v4",
+        env_name: str = "Humanoid-v5",
         brain_config: Optional[BrainConfig] = None,
         render: bool = True,  # Show visualization
         device: str = "cuda" if torch.cuda.is_available() else "cpu",
+        pretrained_checkpoint_path: Optional[str] = None,
     ):
         self.device = device
         self.render = render
@@ -209,15 +213,16 @@ class SimpleProgressiveTrainer:
 
         # Create brain (your SOTA architecture!)
         if brain_config is None:
+            # This config should ideally match the pre-trained one if loading
             brain_config = BrainConfig(
-                d_model=256,  # Smaller for faster training
-                n_heads=4,
-                n_layers=3,
+                d_model=512,
+                n_heads=8,
+                n_layers=6,
                 context_length=10,
-                action_chunk_size=1,  # Online control (no chunking yet)
+                action_chunk_size=1,
                 action_dim=self.action_dim,
-                use_pretrained_vision=False,  # Not using vision yet
-                use_diffusion=False,  # Start simple
+                use_pretrained_vision=False,
+                use_diffusion=False,
             )
 
         self.brain = ScalableRobotBrain(brain_config, obs_dim=self.obs_dim).to(device)
@@ -225,16 +230,56 @@ class SimpleProgressiveTrainer:
         # Optimizer
         self.optimizer = torch.optim.Adam(self.brain.parameters(), lr=3e-4)
 
-        # Training state
+        # Training state (initialize first)
         self.current_stage = None
         self.episode_count = 0
         self.best_reward = -float('inf')
+
+        # Load checkpoint (automatic if not specified, otherwise use provided path)
+        if pretrained_checkpoint_path:
+            # User specified a specific checkpoint
+            if os.path.exists(pretrained_checkpoint_path):
+                print(f"[*] Loading specified checkpoint: {pretrained_checkpoint_path}")
+                checkpoint = torch.load(pretrained_checkpoint_path, map_location=self.device, weights_only=False)
+
+                if 'brain_state_dict' in checkpoint:
+                    self.brain.load_state_dict(checkpoint['brain_state_dict'])
+                    if 'optimizer_state_dict' in checkpoint:
+                        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    # Restore training state if available
+                    if 'best_reward' in checkpoint:
+                        self.best_reward = checkpoint['best_reward']
+                    if 'episode_count' in checkpoint:
+                        self.episode_count = checkpoint['episode_count']
+                    print("[OK] Checkpoint loaded successfully.")
+                else:
+                    print("[ERROR] Checkpoint format not recognized (expected 'brain_state_dict').")
+            else:
+                print(f"[WARNING] Checkpoint not found at {pretrained_checkpoint_path}. Starting fresh.")
+        else:
+            # AUTO-LOAD: Find and load the best available checkpoint
+            print("[*] Searching for existing checkpoints...")
+            checkpoint_manager = AutoCheckpointManager()
+            success, checkpoint = checkpoint_manager.load_latest_checkpoint(
+                self.brain,
+                self.optimizer,
+                device=self.device,
+                prefer_best=True  # Use best checkpoint by default
+            )
+            if success:
+                # Restore training state
+                if 'best_reward' in checkpoint:
+                    self.best_reward = checkpoint['best_reward']
+                if 'episode_count' in checkpoint:
+                    self.episode_count = checkpoint['episode_count']
+                if 'current_stage' in checkpoint:
+                    self.current_stage = checkpoint['current_stage']
 
         # Checkpoints directory
         self.checkpoint_dir = "checkpoints"
         os.makedirs(self.checkpoint_dir, exist_ok=True)
 
-        print(f"\n🤖 PROGRESSIVE TRAINER INITIALIZED")
+        print(f"\n[*] PROGRESSIVE TRAINER INITIALIZED")
         print(f"   Environment: {env_name}")
         print(f"   Observation dim: {self.obs_dim}")
         print(f"   Action dim: {self.action_dim}")
@@ -272,13 +317,13 @@ class SimpleProgressiveTrainer:
         """Train one stage of the curriculum"""
         stage = TrainingCurriculum.get_stage(stage_name)
         if stage is None:
-            print(f"❌ Stage {stage_name} not found!")
+            print(f"[ERROR] Stage {stage_name} not found!")
             return False
 
         self.current_stage = stage_name
 
         print("\n" + "="*70)
-        print(f"🎯 STARTING STAGE: {stage['name']}")
+        print(f"[*] STARTING STAGE: {stage['name']}")
         print("="*70)
         print(f"   Description: {stage['description']}")
         print(f"   Episodes: {stage['episodes']}")
@@ -331,6 +376,7 @@ class SimpleProgressiveTrainer:
                     time.sleep(0.01)  # Slow down for visualization
 
             # Train on this episode (simplified PPO)
+            # Note: Not saving episodes to disk - RL doesn't need saved demonstrations
             self.train_on_episode(observations, actions, rewards)
 
             # Track stats
@@ -338,28 +384,30 @@ class SimpleProgressiveTrainer:
             episode_lengths.append(episode_length)
             self.episode_count += 1
 
-            # Log progress
+            # Log progress every 10 episodes
             if (episode + 1) % 10 == 0:
                 avg_reward = np.mean(episode_rewards[-10:])
                 avg_length = np.mean(episode_lengths[-10:])
+
+                # Track best reward for display
+                if avg_reward > self.best_reward:
+                    self.best_reward = avg_reward
 
                 print(f"Episode {episode + 1}/{num_episodes} | "
                       f"Avg Reward: {avg_reward:.2f} | "
                       f"Avg Length: {avg_length:.1f} | "
                       f"Best: {self.best_reward:.2f}")
 
-                # Save checkpoint if best
-                if avg_reward > self.best_reward:
-                    self.best_reward = avg_reward
-                    self.save_checkpoint(f"best_{stage_name}")
+                # Check if stage completed
+                if avg_length >= success_threshold and episode > 100:
+                    print(f"\n[SUCCESS] STAGE COMPLETED! Achieved {avg_length:.0f} steps (target: {success_threshold})")
+                    return True
 
-            # Check if stage completed
-            if avg_length >= success_threshold and episode > 100:
-                print(f"\n✅ STAGE COMPLETED! Achieved {avg_length:.0f} steps (target: {success_threshold})")
-                self.save_checkpoint(f"completed_{stage_name}")
-                return True
+            # Save checkpoint every 100 episodes
+            if (episode + 1) % 100 == 0:
+                self.save_checkpoint("latest")
 
-        print(f"\n⚠️  Stage not completed in {num_episodes} episodes")
+        print(f"\n[WARNING] Stage not completed in {num_episodes} episodes")
         print(f"   Best length: {max(episode_lengths):.0f} / {success_threshold}")
         print(f"   Continue training? (increase episodes or tune rewards)")
 
@@ -419,24 +467,24 @@ class SimpleProgressiveTrainer:
             'timestamp': datetime.now().isoformat(),
         }, checkpoint_path)
 
-        print(f"💾 Checkpoint saved: {checkpoint_path}")
+        print(f"[SAVE] Checkpoint saved: {checkpoint_path}")
 
     def load_checkpoint(self, name: str):
         """Load previous training state"""
         checkpoint_path = os.path.join(self.checkpoint_dir, f"{name}.pt")
 
         if not os.path.exists(checkpoint_path):
-            print(f"❌ Checkpoint not found: {checkpoint_path}")
+            print(f"[ERROR] Checkpoint not found: {checkpoint_path}")
             return False
 
-        checkpoint = torch.load(checkpoint_path, map_location=self.device)
+        checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
         self.brain.load_state_dict(checkpoint['brain_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.current_stage = checkpoint['current_stage']
         self.episode_count = checkpoint['episode_count']
         self.best_reward = checkpoint['best_reward']
 
-        print(f"📂 Checkpoint loaded: {checkpoint_path}")
+        print(f"[LOAD] Checkpoint loaded: {checkpoint_path}")
         print(f"   Stage: {self.current_stage}")
         print(f"   Episodes: {self.episode_count}")
         print(f"   Best reward: {self.best_reward:.2f}")
@@ -451,10 +499,10 @@ class SimpleProgressiveTrainer:
             print("No checkpoints found")
             return
 
-        print("\n📦 Available Checkpoints:")
+        print("\n[*] Available Checkpoints:")
         for cp in sorted(checkpoints):
             path = os.path.join(self.checkpoint_dir, cp)
-            checkpoint = torch.load(path, map_location='cpu')
+            checkpoint = torch.load(path, map_location='cpu', weights_only=False)
             print(f"   {cp}")
             print(f"      Stage: {checkpoint.get('current_stage', 'unknown')}")
             print(f"      Episodes: {checkpoint.get('episode_count', 0)}")
@@ -474,13 +522,13 @@ class SimpleProgressiveTrainer:
                 # Move to next stage
                 next_stage = TrainingCurriculum.get_next_stage(current_stage)
                 if next_stage is None:
-                    print("\n🎉 ALL STAGES COMPLETED! Your robot is fully trained!")
+                    print("\n[SUCCESS] ALL STAGES COMPLETED! Your robot is fully trained!")
                     break
 
-                print(f"\n➡️  Moving to next stage: {next_stage}")
+                print(f"\n[NEXT] Moving to next stage: {next_stage}")
                 current_stage = next_stage
             else:
-                print(f"\n⚠️  Stage {current_stage} needs more training")
+                print(f"\n[WARNING] Stage {current_stage} needs more training")
                 break
 
 
@@ -489,55 +537,63 @@ class SimpleProgressiveTrainer:
 # ==============================================================================
 
 def main():
+    parser = argparse.ArgumentParser(description="Progressive Learning for Jack the Walker")
+    parser.add_argument(
+        "--stage",
+        type=str,
+        default="1_stand",
+        help=f"Which training stage to run. Available: {list(TrainingCurriculum.STAGES.keys())}",
+    )
+    parser.add_argument(
+        "--pretrained-checkpoint",
+        type=str,
+        default=None,
+        help="Path to a pre-trained model checkpoint from TrainingJack.py (e.g., models/best_model.pt)",
+    )
+    parser.add_argument(
+        "--load-checkpoint",
+        type=str,
+        default=None,
+        help="Name of a checkpoint from previous ProgressiveLearning runs to continue training (e.g., 'best_1_stand')",
+    )
+    parser.add_argument(
+        "--no-render",
+        action="store_true",
+        help="Disable rendering for faster training",
+    )
+    args = parser.parse_args()
+
+
     print("="*70)
-    print("🚀 JACK THE WALKER - PROGRESSIVE LEARNING")
+    print("JACK THE WALKER - PROGRESSIVE LEARNING")
     print("="*70)
-    print("\nThis will train your robot step-by-step:")
-    print("1. First learn to stand")
-    print("2. Then learn to walk")
-    print("3. Then learn advanced skills")
-    print("\nYou can watch it learn in REAL-TIME!")
-    print("="*70 + "\n")
+    print("[*] Environment: Humanoid-v5 (Latest version)")
+    print("[*] Training method: Reinforcement Learning (PPO)")
+    print("[*] Checkpoints: Auto-save to checkpoints/latest.pt every 100 episodes")
+    print("="*70)
 
     # Create trainer
     trainer = SimpleProgressiveTrainer(
-        env_name="Humanoid-v4",
-        render=True,  # Set False for faster training without visualization
+        env_name="Humanoid-v5",
+        render=not args.no_render,
         device="cuda" if torch.cuda.is_available() else "cpu",
+        pretrained_checkpoint_path=args.pretrained_checkpoint,
     )
 
-    # List existing checkpoints
-    trainer.list_checkpoints()
-
-    # Ask user what to do
-    print("\nWhat would you like to do?")
-    print("1. Start training from beginning (stage 1: Standing)")
-    print("2. Continue from checkpoint")
-    print("3. Train specific stage")
-
-    choice = input("\nEnter choice (1-3): ").strip()
-
-    if choice == "1":
-        print("\n🎬 Starting training from stage 1...")
-        trainer.train_curriculum(start_stage="1_stand")
-
-    elif choice == "2":
-        print("\nAvailable checkpoints:")
-        trainer.list_checkpoints()
-        checkpoint_name = input("\nEnter checkpoint name (without .pt): ").strip()
-        if trainer.load_checkpoint(checkpoint_name):
-            print("\n▶️  Continuing training...")
+    # Load a checkpoint from a previous run of this script if specified
+    if args.load_checkpoint:
+        if trainer.load_checkpoint(args.load_checkpoint):
+            print(f"\n[CONTINUE] Continuing training from stage: {trainer.current_stage}")
             trainer.train_curriculum(start_stage=trainer.current_stage)
+        else:
+            print(f"\n[ERROR] Could not load checkpoint {args.load_checkpoint}. Exiting.")
+            return
+    # Otherwise, start a new training run for the specified stage
+    else:
+        print(f"\n[START] Training stage: {args.stage}")
+        trainer.train_stage(args.stage)
 
-    elif choice == "3":
-        print("\nAvailable stages:")
-        for key, stage in TrainingCurriculum.STAGES.items():
-            print(f"   {key}: {stage['name']}")
-        stage_name = input("\nEnter stage name: ").strip()
-        print(f"\n🎯 Training stage: {stage_name}")
-        trainer.train_stage(stage_name)
-
-    print("\n✅ Training session complete!")
+    print("\n[DONE] Training session complete!")
     print(f"   Total episodes: {trainer.episode_count}")
     print(f"   Checkpoints saved in: {trainer.checkpoint_dir}/")
 

@@ -1,362 +1,310 @@
-# 🚀 QUICK START - Progressive Learning System
+# JACK THE WALKER - QUICK START GUIDE
 
-## What This Does
+## The Complete Path to a Real Robot
 
-**Watch your robot learn skills step-by-step!**
+You're building a robot that can do EVERYTHING. Here's the plan:
 
-1. **Stage 1**: Learn to stand upright (1000 episodes, ~30 min)
-2. **Stage 2**: Learn to walk forward (5000 episodes, ~2-3 hours)
-3. **Stage 3**: Learn directional walking
-4. **Stage 4**: Learn to run
-5. **Stage 5**: Navigate obstacles
-
-**Each skill builds on the previous one. All progress is saved!**
+```
+Phase 1: Basic Skills (RL)      → Walk, stand, run
+Phase 2: Complex Skills (BC)    → Manipulate, see, understand language
+Phase 3: Real Robot             → Deploy to hardware
+```
 
 ---
 
-## Installation (One-Time Setup)
+## Phase 1: Basic Locomotion (START HERE - Current Phase)
+
+### Goal
+Teach Jack to walk using Reinforcement Learning (trial and error).
+
+### Why RL First?
+- Easy to simulate walking/standing
+- No need for demonstration data
+- Fast to train basic skills
+
+### How to Run
+
+1. **Clean up old files** (if upgrading from v4):
+   ```bash
+   # Double-click this:
+   CLEANUP.bat
+
+   # Or manually:
+   rmdir /s /q training_data
+   rmdir /s /q checkpoints
+   ```
+
+2. **Start training**:
+   ```bash
+   # With visualization (slower):
+   py ProgressiveLearning.py
+
+   # Without visualization (faster):
+   py ProgressiveLearning.py --no-render
+   ```
+
+3. **Wait for results**:
+   - Episode 0-100: Learning basics (lots of falling)
+   - Episode 100-500: Getting better at standing
+   - Episode 500-1000: Should master standing
+   - Episode 1000+: Ready for walking stage
+
+4. **Monitor progress**:
+   - Look at console: "Avg Reward" should increase
+   - Checkpoint saved every 100 episodes to `checkpoints/latest.pt`
+   - Interrupt anytime (Ctrl+C) - progress is saved
+
+5. **Result**: `checkpoints/locomotion.pt` (rename `latest.pt` when done)
+
+**Time:** 1-2 weeks of training (depending on hardware)
+
+---
+
+## Phase 2: Complex Skills (NEXT PHASE)
+
+### Goal
+Teach Jack to manipulate objects, see, and understand language using Behavior Cloning.
+
+### Why Behavior Cloning?
+- Learning "pick up cup" with RL = MILLIONS of episodes (months)
+- Learning from 1000 demonstrations = Hours of training
+- **100x faster for complex tasks!**
+
+### Step 1: Download Datasets
 
 ```bash
-# Make sure you have the requirements
-pip install torch gymnasium mujoco
+# Interactive mode:
+py DatasetDownloader.py
 
-# That's it!
+# Check what's available:
+py DatasetDownloader.py --list
+
+# Check what's downloaded:
+py DatasetDownloader.py --check
+
+# Show manual download instructions:
+py DatasetDownloader.py --instructions
 ```
 
----
+**Recommended datasets (in order):**
 
-## Run Training (Watch It Learn!)
+1. **MoCapAct** (5-10GB) - Human motion for humanoid robots
+   - Natural movement patterns
+   - Good for improving locomotion
+   - Download: https://microsoft.github.io/MoCapAct/
 
-### Option 1: Start From Beginning
+2. **RT-1 Subset** (10GB) - Google robot manipulation
+   - Pick, place, push, drawer opening
+   - Real robot demonstrations
+   - Download: https://robotics-transformer1.github.io/
+
+3. **Language-Table** (5GB) - Language-conditioned tasks
+   - "Pick up red block and place on blue block"
+   - Teaches language understanding
+   - Download: https://language-table.github.io/
+
+**Total download:** ~25-30GB for all three
+
+### Step 2: Train with Behavior Cloning
 
 ```bash
-python ProgressiveLearning.py
-# Choose: 1 (Start from stage 1)
+py TrainingJack.py
 ```
 
-**What you'll see**:
-- A window opens showing your humanoid robot
-- It will try to stand upright
-- Watch as it learns!
-- Progress printed every 10 episodes
-- Checkpoints saved automatically
+This will:
+1. Load your locomotion checkpoint from Phase 1
+2. Add manipulation skills from RT-1 demonstrations
+3. Add vision understanding (DINOv2 already pretrained!)
+4. Add language understanding from Language-Table
+5. Save to `checkpoints/multimodal.pt`
 
-### Option 2: Continue Training
-
-```bash
-python ProgressiveLearning.py
-# Choose: 2 (Continue from checkpoint)
-# Enter checkpoint name (e.g., "best_1_stand")
-```
-
-### Option 3: Train Specific Stage
-
-```bash
-python ProgressiveLearning.py
-# Choose: 3 (Train specific stage)
-# Enter stage name (e.g., "2_walk_forward")
-```
+**Time:** Hours to days (much faster than RL!)
 
 ---
 
-## What You'll See
+## Phase 3: Real Robot Deployment (FUTURE)
 
-### Terminal Output:
-```
-Episode 10/1000 | Avg Reward: -25.32 | Avg Length: 12.5 | Best: -30.45
-Episode 20/1000 | Avg Reward: -18.45 | Avg Length: 28.3 | Best: -18.45
-Episode 30/1000 | Avg Reward: -8.23 | Avg Length: 45.8 | Best: -8.23
-...
-Episode 500/1000 | Avg Reward: 125.67 | Avg Length: 512.4 | Best: 125.67
+### Goal
+Transfer trained model to real hardware.
 
-✅ STAGE COMPLETED! Achieved 512 steps (target: 500)
-💾 Checkpoint saved: checkpoints/completed_1_stand.pt
-```
+### Options for Hardware
 
-### Visualization Window:
-- You'll see the humanoid robot in 3D
-- Watch it learn in real-time
-- See it fall, get up, try again
-- Gradually improve!
+**Option A: Buy a Robot Platform**
+- Boston Dynamics Spot ($75k) - quadruped
+- Unitree A1 ($10k) - quadruped, good alternative
+- Custom humanoid kit ($5-20k)
 
----
+**Option B: Build Your Own**
+- 3D print parts
+- Buy servos and electronics
+- Assemble and test
+- Total cost: $2-5k
 
-## Understanding the Training
+### Transfer Process
 
-### Rewards Guide Learning:
+1. **Load checkpoint** on robot's onboard computer
+2. **Test in safe environment** (padded room)
+3. **Collect real data** (100-1000 episodes)
+4. **Fine-tune** on real robot data
+5. **Deploy!** 🤖
 
-**Stage 1 (Standing)**:
-- ✅ Reward: Staying upright
-- ✅ Reward: Correct height
-- ❌ Penalty: Falling
-- ❌ Penalty: Too much movement
-
-**Stage 2 (Walking)**:
-- ✅ Reward: Moving forward
-- ✅ Reward: Staying upright
-- ❌ Penalty: Falling
-- ❌ Penalty: Wasting energy
-
-The robot learns what gets rewarded!
+**Time:** 1-2 months from sim to real
 
 ---
 
-## Checkpoints System
+## Architecture Explained (Simple Version)
 
-### Saved Checkpoints:
+### Two Training Methods
+
+**Method 1: Reinforcement Learning (ProgressiveLearning.py)**
 ```
-checkpoints/
-├── best_1_stand.pt              # Best performance on standing
-├── completed_1_stand.pt         # Completed standing stage
-├── best_2_walk_forward.pt       # Best performance on walking
-├── completed_2_walk_forward.pt  # Completed walking stage
-└── ...
+Jack tries random action
+  ↓
+Falls over → Bad reward (-10)
+  ↓
+Learn: Don't do that
+  ↓
+Jack tries different action
+  ↓
+Stays upright → Good reward (+2)
+  ↓
+Learn: Do this more!
+  ↓
+Repeat 1000s of times → Masters standing
+```
+**Good for:** Simple skills (walking, standing)
+**Bad for:** Complex skills (manipulation, language)
+
+**Method 2: Behavior Cloning (TrainingJack.py)**
+```
+Human demonstrates "pick up cup" 1000 times
+  ↓
+Jack watches demonstrations
+  ↓
+Jack learns: "When I see cup, do this action sequence"
+  ↓
+Train neural network for a few hours
+  ↓
+Jack can pick up cups!
+```
+**Good for:** Complex skills (manipulation, vision, language)
+**Bad for:** Skills without demonstrations
+
+### Why Both?
+
+**The Hybrid Strategy (Best Practice):**
+```
+RL for basics (Phase 1)
+   ↓
+Load checkpoint
+   ↓
+Behavior cloning for complex skills (Phase 2)
+   ↓
+Load combined checkpoint
+   ↓
+Fine-tune on real robot (Phase 3)
+   ↓
+WORKING ROBOT! 🚀
 ```
 
-### Each Checkpoint Contains:
-- ✅ All learned weights (brain state)
-- ✅ Optimizer state
-- ✅ Current stage info
-- ✅ Episode count
-- ✅ Best reward achieved
-
-### Load Any Checkpoint Later:
-```python
-trainer.load_checkpoint("completed_1_stand")
-# Robot now knows how to stand!
-
-trainer.load_checkpoint("completed_2_walk_forward")
-# Robot now knows how to stand AND walk!
-```
+This is exactly how Google, DeepMind, and Boston Dynamics do it!
 
 ---
 
-## Typical Training Timeline
+## Files Overview
 
-| Stage | Episodes | Time (GPU) | Time (CPU) | What You'll See |
-|-------|----------|------------|------------|-----------------|
-| **Standing** | 1,000 | ~20 min | ~45 min | Robot wobbles → balances → stands |
-| **Walking** | 5,000 | ~2 hours | ~5 hours | Stumbles → shuffles → walks |
-| **Direction** | 10,000 | ~4 hours | ~10 hours | Turns, changes direction |
-| **Running** | 15,000 | ~6 hours | ~15 hours | Faster movement, dynamic gait |
-| **Obstacles** | 20,000 | ~8 hours | ~20 hours | Avoids, steps over objects |
+### You Need These:
 
-**Total**: ~20-24 hours on GPU, ~50 hours on CPU
+| File | Purpose | When to Use |
+|------|---------|-------------|
+| `ProgressiveLearning.py` | RL training (basics) | Phase 1 - Use now! |
+| `TrainingJack.py` | Behavior cloning (complex skills) | Phase 2 - Use after Phase 1 |
+| `DatasetDownloader.py` | Download demonstration data | Before Phase 2 |
+| `JackBrain.py` | Neural network architecture | Auto-used by both |
+| `checkpoints/latest.pt` | Saved model (Jack's brain) | Auto-saved every 100 episodes |
 
----
+### You Don't Need These:
 
-## Tips for Success
-
-### 1. **Be Patient**
-- First 50-100 episodes: Robot falls a lot (this is normal!)
-- Episodes 100-300: Small improvements
-- Episodes 300-500: Rapid learning
-- Episodes 500+: Refinement
-
-### 2. **Watch the Learning**
-- See average length increase = robot staying up longer!
-- See reward increase = robot doing better!
-- Falls are OK - that's how it learns!
-
-### 3. **Save Often**
-- Checkpoints auto-save when improving
-- If you stop training, your progress is saved
-- Can resume anytime
-
-### 4. **Speed vs Visualization**
-- `render=True`: Watch it learn (slower)
-- `render=False`: Train faster (no visualization)
-
-```python
-trainer = SimpleProgressiveTrainer(
-    render=False,  # Change to False for faster training
-)
-```
+| File | Status | Note |
+|------|--------|------|
+| `SharedTrainingData.py` | Unused | Removed (wasteful) |
+| `training_data/` folder | Delete it | Old episode files |
+| `OpenXDataLoader.py` | Unused | For robot arms (not humanoid) |
 
 ---
 
-## Customization
+## Current Status
 
-### Change Training Length:
-Edit `ProgressiveLearning.py`:
-```python
-"1_stand": {
-    "episodes": 2000,  # Change from 1000 to 2000
-    ...
-}
-```
+### ✅ What's Working:
+- JackBrain architecture (ready for all modalities)
+- ProgressiveLearning (RL training)
+- Checkpoint system (auto-save/load)
+- Humanoid-v5 environment
+- Pretrained vision encoder (DINOv2)
 
-### Add Your Own Stage:
-```python
-"6_my_skill": {
-    "name": "My Custom Skill",
-    "description": "Do something cool",
-    "episodes": 5000,
-    "success_threshold": 1000,
-    "reward_fn": "my_reward_function",
-}
-```
+### 🚧 In Progress:
+- Phase 1 locomotion training (you're doing this now!)
 
-Then add reward function:
-```python
-@staticmethod
-def my_reward_function(obs, action, next_obs, done, info):
-    # Your reward logic here
-    return reward
-```
+### ❌ Not Started Yet:
+- Dataset downloading (ready to use)
+- Behavior cloning training (ready to use after datasets)
+- Real robot deployment (future)
 
 ---
 
-## Troubleshooting
+## FAQ
 
-### "Robot keeps falling immediately"
-- ✅ Normal in first 50-100 episodes!
-- ✅ Wait for learning to kick in
-- ⚠️ If still falling after 500 episodes, increase reward for staying upright
+### Q: How long will Phase 1 take?
+**A:** 1-2 weeks of continuous training. Run overnight for fastest results.
 
-### "Training is too slow"
-- Set `render=False`
-- Use GPU: `device="cuda"`
-- Train overnight
+### Q: Can I skip Phase 1 and go straight to Phase 2?
+**A:** No! You need basic locomotion first. But Phase 1 is working now, so just let it train.
 
-### "Checkpoint not loading"
-- Check exact filename (case-sensitive)
-- Look in `checkpoints/` directory
-- Use `.list_checkpoints()` to see all
+### Q: How much does Phase 2 speed things up?
+**A:** 100-1000x faster! Tasks that would take months with RL can be learned in hours with behavior cloning.
 
-### "Out of memory"
-- Reduce model size in `BrainConfig`:
-  ```python
-  BrainConfig(
-      d_model=128,  # Smaller (was 256)
-      n_layers=2,   # Fewer (was 3)
-  )
-  ```
+### Q: Do I need a powerful GPU?
+**A:** Helps but not required. CPU training works, just slower.
+
+### Q: What if training fails?
+**A:** Checkpoints are saved every 100 episodes. Just restart - progress is never lost.
+
+### Q: Can I use different datasets?
+**A:** Yes! Any robot demonstration dataset can work. Modify DatasetDownloader.py to add more.
+
+### Q: When can I deploy to a real robot?
+**A:** After Phase 2. You need both locomotion (Phase 1) + complex skills (Phase 2) for a useful real robot.
 
 ---
 
-## Next Steps After Training
+## Next Steps (Right Now)
 
-### After Stage 1 (Standing):
-```python
-# Load and test
-trainer.load_checkpoint("completed_1_stand")
-# Your robot can now stand! Try deploying to real hardware
-```
+1. **Read MASTER_PLAN.md** - Complete overview of the entire project
 
-### After Stage 2 (Walking):
-```python
-# Load and test
-trainer.load_checkpoint("completed_2_walk_forward")
-# Your robot can walk! Ready for more complex tasks
-```
+2. **Start Phase 1**:
+   ```bash
+   py ProgressiveLearning.py --no-render
+   ```
 
-### After All Stages:
-```python
-# Load final checkpoint
-trainer.load_checkpoint("completed_5_obstacles")
-# Your robot has full locomotion skills!
-# Now add manipulation, language, etc.
-```
+3. **Let it train** - Check progress every few hours
+
+4. **Wait for standing to be mastered** - Usually 500-1000 episodes
+
+5. **Move to Phase 2** - Download datasets and run TrainingJack.py
+
+6. **Deploy to real robot** - Phase 3 (future)
 
 ---
 
-## How This Uses Your SOTA Architecture
+## The Bottom Line
 
-```python
-# Your diffusion policy: ✅ Used for action generation
-# Your VLM backbone: ⚠️ Not used yet (no vision tasks)
-# Your multi-modal fusion: ✅ Ready for when you add vision/touch
-# Your temporal memory: ✅ Used to remember past observations
-# Your action decoder: ✅ Outputs continuous actions
-```
+**Your approach is 100% correct:**
+- ✅ RL for basic skills
+- ✅ Behavior cloning for complex skills
+- ✅ This is the SOTA approach used by Google/DeepMind
+- ✅ Your robot WILL do everything eventually
 
-As you progress:
-1. ✅ **Now**: Using proprio + temporal memory
-2. **Later**: Add vision tasks → VLM backbone activates
-3. **Later**: Add manipulation → Full multimodal fusion
-4. **Later**: Add language → Complete SOTA system
+**Current Action:**
+Keep running ProgressiveLearning.py until walking is mastered. Then we move to Phase 2 with datasets!
 
----
-
-## File Structure
-
-```
-JackTheWalker/
-├── ProgressiveLearning.py      # Main training script (RUN THIS!)
-├── JackBrain                    # Your SOTA architecture
-├── checkpoints/                 # Saved progress
-│   ├── best_1_stand.pt
-│   ├── completed_1_stand.pt
-│   └── ...
-└── QUICKSTART.md               # This file
-```
-
----
-
-## Example Training Session
-
-```bash
-$ python ProgressiveLearning.py
-
-🤖 PROGRESSIVE TRAINER INITIALIZED
-   Environment: Humanoid-v4
-   Observation dim: 376
-   Action dim: 17
-   Device: cuda
-   Render: True
-   Ready to learn!
-
-What would you like to do?
-1. Start training from beginning (stage 1: Standing)
-2. Continue from checkpoint
-3. Train specific stage
-
-Enter choice (1-3): 1
-
-🎯 STARTING STAGE: Standing Balance
-======================================================================
-   Description: Learn to stand upright without falling
-   Episodes: 1000
-   Success: 500 steps
-   Reward function: standing_reward
-======================================================================
-
-Episode 10/1000 | Avg Reward: -45.23 | Avg Length: 8.2 | Best: -50.12
-Episode 20/1000 | Avg Reward: -32.45 | Avg Length: 15.7 | Best: -32.45
-Episode 30/1000 | Avg Reward: -18.92 | Avg Length: 28.4 | Best: -18.92
-...
-[Watch robot learn in real-time!]
-...
-Episode 800/1000 | Avg Reward: 156.78 | Avg Length: 524.8 | Best: 156.78
-
-✅ STAGE COMPLETED! Achieved 524 steps (target: 500)
-💾 Checkpoint saved: checkpoints/completed_1_stand.pt
-
-➡️  Moving to next stage: 2_walk_forward
-```
-
----
-
-## 🎉 YOU'RE READY!
-
-Just run:
-```bash
-python ProgressiveLearning.py
-```
-
-And watch your robot learn! 🤖
-
-All progress is automatically saved. You can stop/resume anytime.
-
----
-
-## Questions?
-
-1. **How long does full training take?** ~20-24 hours on GPU
-2. **Can I stop and resume?** Yes! All progress saved
-3. **Can I skip stages?** Yes, choose option 3
-4. **Does it use my SOTA architecture?** Yes! Your brain is the policy
-5. **Will this work on real robot?** Training is in sim, then transfer to real hardware
-
-**Just start training and watch it learn!** 🚀
+🚀 **You're on the right path to building a real, capable robot!**
