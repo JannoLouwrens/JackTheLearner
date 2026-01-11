@@ -39,10 +39,12 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Google Colab (Recommended for Training)
-Use the provided notebooks for GPU training:
-- `RUN_ON_COLAB.ipynb` - Basic training
-- `COLAB_WITH_DRIVE.ipynb` - Training with Google Drive checkpoint sync
+### Google Colab (Recommended for GPU Training)
+Use the provided notebooks for free GPU access (T4):
+- `RUN_ON_COLAB.ipynb` - **Complete training pipeline** (Phase 1 RL + Phase 2 datasets, 5-8 days total)
+- `COLAB_WITH_DRIVE.ipynb` - Same with Google Drive checkpoint persistence
+
+The notebooks include automatic dataset downloading, checkpoint saving, and progress resumption after Colab disconnects.
 
 ---
 
