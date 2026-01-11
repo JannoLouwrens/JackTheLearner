@@ -4,9 +4,49 @@
 
 Based on 2024-2025 SOTA: AlphaGeometry, TD-MPC2, Dual-Process Theory.
 
+**Author:** Janno Louwrens
+
 ---
 
-## 🚀 QUICK START
+## Installation
+
+### Prerequisites
+- Python 3.9+
+- PyTorch 2.0+ with CUDA (recommended) or CPU
+- 8GB+ RAM (16GB recommended for training)
+
+### Setup
+
+**Windows:**
+```powershell
+git clone https://github.com/JannoLouwrens/JackTheLearner.git
+cd JackTheLearner
+
+python -m venv venv
+venv\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+**macOS / Linux:**
+```bash
+git clone https://github.com/JannoLouwrens/JackTheLearner.git
+cd JackTheLearner
+
+python3 -m venv venv
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+### Google Colab (Recommended for Training)
+Use the provided notebooks for GPU training:
+- `RUN_ON_COLAB.ipynb` - Basic training
+- `COLAB_WITH_DRIVE.ipynb` - Training with Google Drive checkpoint sync
+
+---
+
+## Quick Start
 
 ### Phase 0: Physics Foundation (2-3 days)
 ```bash
