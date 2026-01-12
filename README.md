@@ -184,22 +184,22 @@ action = brain.forward(observation)  # System 1 + System 2
 | Phase | Script | Status |
 |-------|--------|--------|
 | Phase 0 | `TRAIN_PHYSICS.py` | ✅ Complete - MathReasoner learns physics |
-| Phase 1 | `SOTATrainer_Integrated.py` | ✅ Complete - MuJoCo Humanoid-v5 walking |
+| Phase 1 | `SOTATrainer_Integrated.py` | ✅ Complete - MuJoCo Humanoid-v5 walking + WorldModel + Vision |
 | Phase 2 | `TrainingJack.py` | ⚠️ Framework ready, uses synthetic data |
 
-**Architecture (Needs Training Integration):**
+**Architecture:**
 | Component | File | Status |
 |-----------|------|--------|
-| WorldModel | `WorldModel.py` | ⚠️ Architecture exists, no training script |
+| WorldModel | `WorldModel.py` | ✅ TD-MPC2 training integrated in Phase 1 |
+| Vision (DINOv2/SigLIP) | `JackBrain.py` | ✅ Optional via `--enable-vision` flag |
 | HierarchicalPlanner | `HierarchicalPlanner.py` | ⚠️ Architecture exists, no training script |
-| Vision (DINOv2/SigLIP) | `JackBrain.py` | ⚠️ Uses pretrained, disabled in Phase 1 |
 | Real demonstrations | - | ⚠️ MoCapAct/RT-1 loaders not implemented |
 
-**This is a research prototype** demonstrating the architecture. Full training integration is ongoing.
+**This is a research prototype** demonstrating the architecture.
 
 **Roadmap:**
-- [ ] Enable vision in Phase 1 (MuJoCo rendering → visual RL)
-- [ ] Add WorldModel training to Phase 1 (TD-MPC2 imagination)
+- [x] ~~Enable vision in Phase 1 (MuJoCo rendering → visual RL)~~ ✅ Done!
+- [x] ~~Add WorldModel training to Phase 1 (TD-MPC2 imagination)~~ ✅ Done!
 - [ ] Integrate real MoCapAct/RT-1 datasets in Phase 2
 - [ ] Add HierarchicalPlanner skill learning
 - [ ] Sim-to-real transfer with domain randomization
@@ -256,6 +256,9 @@ python TRAIN_PHYSICS.py --samples 100000 --epochs 50
 
 # Phase 1: RL Locomotion (3-4 days on T4 GPU)
 python SOTATrainer_Integrated.py --phase0-checkpoint checkpoints/phase0_best.pt --epochs 1000
+
+# Phase 1 with Vision (requires more GPU memory):
+python SOTATrainer_Integrated.py --phase0-checkpoint checkpoints/phase0_best.pt --enable-vision --epochs 1000
 
 # Done! EnhancedJackBrain is ready for deployment
 ```

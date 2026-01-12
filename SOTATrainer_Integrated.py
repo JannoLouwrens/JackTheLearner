@@ -45,6 +45,7 @@ import time
 
 from JackBrain import ScalableRobotBrain, BrainConfig
 from MathReasoner import NeuroSymbolicMathReasoner, MathReasonerConfig
+from WorldModel import TD_MPC2_WorldModel, WorldModelConfig  # NEW: TD-MPC2 imagination
 
 
 class RLPolicyHead(nn.Module):
@@ -92,7 +93,7 @@ class RLPolicyHead(nn.Module):
 
 
 class PPOBuffer:
-    """PPO experience replay buffer with GAE"""
+    """PPO experience replay buffer with GAE + WorldModel training data"""
 
     def __init__(self, obs_dim: int, action_dim: int, buffer_size: int, gamma: float = 0.99, gae_lambda: float = 0.95):
         self.buffer_size = buffer_size
@@ -100,23 +101,27 @@ class PPOBuffer:
         self.gae_lambda = gae_lambda
 
         self.observations = np.zeros((buffer_size, obs_dim), dtype=np.float32)
+        self.next_observations = np.zeros((buffer_size, obs_dim), dtype=np.float32)  # For WorldModel
         self.actions = np.zeros((buffer_size, action_dim), dtype=np.float32)
         self.rewards = np.zeros(buffer_size, dtype=np.float32)
         self.values = np.zeros(buffer_size, dtype=np.float32)
         self.log_probs = np.zeros(buffer_size, dtype=np.float32)
         self.advantages = np.zeros(buffer_size, dtype=np.float32)
         self.returns = np.zeros(buffer_size, dtype=np.float32)
+        self.dones = np.zeros(buffer_size, dtype=np.float32)  # For WorldModel
 
         self.ptr = 0
         self.path_start_idx = 0
 
-    def store(self, obs, action, reward, value, log_prob):
+    def store(self, obs, action, reward, value, log_prob, next_obs, done):
         assert self.ptr < self.buffer_size
         self.observations[self.ptr] = obs
+        self.next_observations[self.ptr] = next_obs
         self.actions[self.ptr] = action
         self.rewards[self.ptr] = reward
         self.values[self.ptr] = value
         self.log_probs[self.ptr] = log_prob
+        self.dones[self.ptr] = float(done)
         self.ptr += 1
 
     def finish_path(self, last_value: float = 0.0):
@@ -140,7 +145,10 @@ class PPOBuffer:
 
         return {
             'observations': torch.FloatTensor(self.observations),
+            'next_observations': torch.FloatTensor(self.next_observations),  # For WorldModel
             'actions': torch.FloatTensor(self.actions),
+            'rewards': torch.FloatTensor(self.rewards),  # For WorldModel
+            'dones': torch.FloatTensor(self.dones),  # For WorldModel
             'returns': torch.FloatTensor(self.returns),
             'advantages': torch.FloatTensor(self.advantages),
             'log_probs': torch.FloatTensor(self.log_probs),
@@ -204,6 +212,7 @@ class IntegratedSOTATrainer:
         env_name: str = "Humanoid-v5",
         phase0_checkpoint: Optional[str] = None,
         render: bool = False,
+        enable_vision: bool = False,  # NEW: Enable visual RL (DINOv2+SigLIP)
         device: str = "cuda" if torch.cuda.is_available() else "cpu",
         steps_per_epoch: int = 4096,
         epochs_per_update: int = 10,
@@ -222,6 +231,7 @@ class IntegratedSOTATrainer:
     ):
         self.device = device
         self.render = render
+        self.enable_vision = enable_vision
         self.steps_per_epoch = steps_per_epoch
         self.epochs_per_update = epochs_per_update
         self.clip_ratio = clip_ratio
@@ -234,7 +244,13 @@ class IntegratedSOTATrainer:
         self.system2_every = system2_every
 
         # Create environment
-        render_mode = "human" if render else None
+        # If vision enabled, use rgb_array to capture frames; else human for viewing or None
+        if enable_vision:
+            render_mode = "rgb_array"  # Capture images for visual RL
+        elif render:
+            render_mode = "human"
+        else:
+            render_mode = None
         self.env = gym.make(env_name, render_mode=render_mode)
         self.obs_dim = self.env.observation_space.shape[0]
         self.action_dim = self.env.action_space.shape[0]
@@ -246,6 +262,7 @@ class IntegratedSOTATrainer:
         print(f"Observation dim: {self.obs_dim}")
         print(f"Action dim: {self.action_dim}")
         print(f"Device: {device}")
+        print(f"Vision enabled: {enable_vision} (DINOv2+SigLIP)")
         print("="*80 + "\n")
 
         # ═══════════════════════════════════════════════════════════════
@@ -259,10 +276,12 @@ class IntegratedSOTATrainer:
             context_length=1,
             action_chunk_size=1,
             action_dim=self.action_dim,
-            use_pretrained_vision=False,
+            use_pretrained_vision=enable_vision,  # Enable DINOv2+SigLIP if vision is on
             use_diffusion=False,
         )
         self.brain = ScalableRobotBrain(brain_config, obs_dim=self.obs_dim).to(device)
+        if enable_vision:
+            print("  ✓ Vision enabled: DINOv2 + SigLIP fusion")
         print("  ✓ Reactive feature extraction\n")
 
         # ═══════════════════════════════════════════════════════════════
@@ -299,6 +318,18 @@ class IntegratedSOTATrainer:
         print()
 
         # ═══════════════════════════════════════════════════════════════
+        # WORLD MODEL (TD-MPC2 style) - NEW!
+        # ═══════════════════════════════════════════════════════════════
+        print("[WORLD MODEL] TD-MPC2 Imagination (NEW!)")
+        world_config = WorldModelConfig(
+            latent_dim=256,
+            action_dim=self.action_dim,
+            obs_dim=self.obs_dim,
+        )
+        self.world_model = TD_MPC2_WorldModel(world_config).to(device)
+        print("  ✓ Latent dynamics for imagination-based planning\n")
+
+        # ═══════════════════════════════════════════════════════════════
         # RL POLICY HEAD
         # ═══════════════════════════════════════════════════════════════
         print("[RL POLICY] Gaussian policy + value function")
@@ -313,10 +344,12 @@ class IntegratedSOTATrainer:
             {'params': self.brain.parameters(), 'lr': learning_rate, 'name': 'brain'},
             {'params': self.math_reasoner.parameters(), 'lr': learning_rate * phase0_lr_scale, 'name': 'math'},
             {'params': self.rl_policy.parameters(), 'lr': learning_rate, 'name': 'policy'},
+            {'params': self.world_model.parameters(), 'lr': learning_rate, 'name': 'world_model'},
         ])
         print(f"  Brain (System 1):       {learning_rate:.1e}")
         print(f"  Math (System 2):        {learning_rate * phase0_lr_scale:.1e} (10x slower - fine-tuning!)")
         print(f"  RL Policy:              {learning_rate:.1e}")
+        print(f"  World Model (TD-MPC2):  {learning_rate:.1e}")
         print()
 
         # PPO buffer
@@ -345,19 +378,29 @@ class IntegratedSOTATrainer:
         progress = min(1.0, self.total_steps / self.std_decay_steps)
         return self.initial_std + (self.final_std - self.initial_std) * progress
 
-    def get_action(self, obs: np.ndarray, deterministic: bool = False) -> Tuple[np.ndarray, float, float]:
+    def get_action(self, obs: np.ndarray, image: Optional[np.ndarray] = None, deterministic: bool = False) -> Tuple[np.ndarray, float, float]:
         """
         Integrated System 1 + System 2 action selection:
-        1. System 1 (Fast): Extract features @ 50Hz
+        1. System 1 (Fast): Extract features @ 50Hz (optionally with vision)
         2. System 2 (Slow): Add physics reasoning @ 5Hz (every 10 steps)
         3. Combine → RL policy
         """
         obs_norm = self.obs_rms.normalize(obs)
         obs_tensor = torch.FloatTensor(obs_norm).unsqueeze(0).to(self.device)
 
+        # Process vision if enabled
+        vision_tensor = None
+        if self.enable_vision and image is not None:
+            # Preprocess image: resize to 84x84, normalize to [0, 1], HWC -> CHW
+            import cv2
+            img_resized = cv2.resize(image, (84, 84))
+            img_normalized = img_resized.astype(np.float32) / 255.0
+            img_chw = np.transpose(img_normalized, (2, 0, 1))  # HWC -> CHW
+            vision_tensor = torch.FloatTensor(img_chw).unsqueeze(0).to(self.device)
+
         with torch.no_grad():
-            # SYSTEM 1: Fast feature extraction (50Hz)
-            _, _, memory = self.brain(proprio=obs_tensor)
+            # SYSTEM 1: Fast feature extraction (50Hz) - with optional vision
+            _, _, memory = self.brain(proprio=obs_tensor, vision=vision_tensor)
             system1_features = memory[:, -1, :]  # (1, d_model)
 
             # SYSTEM 2: Physics reasoning (1-5Hz - periodically)
@@ -410,11 +453,16 @@ class IntegratedSOTATrainer:
         last_10_lengths = []
 
         for step in range(self.steps_per_epoch):
-            action, value, log_prob = self.get_action(obs)
+            # Capture image if vision is enabled
+            image = None
+            if self.enable_vision:
+                image = self.env.render()  # Returns RGB array when render_mode="rgb_array"
+
+            action, value, log_prob = self.get_action(obs, image=image)
             next_obs, reward, terminated, truncated, info = self.env.step(action)
             done = terminated or truncated
 
-            self.buffer.store(obs, action, reward, value, log_prob)
+            self.buffer.store(obs, action, reward, value, log_prob, next_obs, done)
             self.obs_rms.update(obs[np.newaxis, :])
 
             episode_reward += reward
@@ -475,9 +523,12 @@ class IntegratedSOTATrainer:
         }
 
     def update(self, data: Dict):
-        """Update policy using PPO (fine-tunes Phase 0!)"""
+        """Update policy using PPO + WorldModel (fine-tunes Phase 0!)"""
         observations = data['observations'].to(self.device)
+        next_observations = data['next_observations'].to(self.device)  # For WorldModel
         actions = data['actions'].to(self.device)
+        rewards = data['rewards'].to(self.device)  # For WorldModel
+        dones = data['dones'].to(self.device)  # For WorldModel
         returns = data['returns'].to(self.device)
         advantages = data['advantages'].to(self.device)
         old_log_probs = data['log_probs'].to(self.device)
@@ -486,6 +537,7 @@ class IntegratedSOTATrainer:
         total_policy_loss = 0
         total_value_loss = 0
         total_entropy_loss = 0
+        total_world_model_loss = 0
 
         for ppo_epoch in range(self.epochs_per_update):
             print('.', end='', flush=True)
@@ -515,7 +567,35 @@ class IntegratedSOTATrainer:
             value_loss = ((values.squeeze() - returns) ** 2).mean()
             entropy = torch.distributions.Normal(mean, std).entropy().mean()
             entropy_loss = -entropy
-            loss = policy_loss + self.value_loss_coef * value_loss + self.entropy_coef * entropy_loss
+            ppo_loss = policy_loss + self.value_loss_coef * value_loss + self.entropy_coef * entropy_loss
+
+            # ═══════════════════════════════════════════════════════════════
+            # WORLD MODEL TRAINING (TD-MPC2 style) - NEW!
+            # ═══════════════════════════════════════════════════════════════
+            # Forward through world model: predict next state and reward
+            reconstructed_obs, predicted_reward, next_latent = self.world_model(observations, actions)
+
+            # Target latent for consistency (use target encoder)
+            with torch.no_grad():
+                target_next_latent = self.world_model.encode(next_observations, use_target=True)
+
+            # World model losses:
+            # 1. Reconstruction loss (decoder learns to reconstruct observations)
+            reconstruction_loss = F.mse_loss(reconstructed_obs, observations)
+
+            # 2. Reward prediction loss
+            reward_prediction_loss = F.mse_loss(predicted_reward.squeeze(), rewards)
+
+            # 3. Latent consistency loss (predicted next latent ≈ encoded next obs)
+            # Only for non-terminal transitions
+            non_terminal_mask = (1 - dones).unsqueeze(-1)
+            latent_consistency_loss = (F.mse_loss(next_latent, target_next_latent, reduction='none') * non_terminal_mask).mean()
+
+            # Combined world model loss
+            world_model_loss = reconstruction_loss + reward_prediction_loss + 0.5 * latent_consistency_loss
+
+            # Total loss: PPO + WorldModel
+            loss = ppo_loss + 0.1 * world_model_loss  # Scale world model loss
 
             # Optimize (Phase 0 fine-tunes with 10x lower LR!)
             self.optimizer.zero_grad()
@@ -523,7 +603,8 @@ class IntegratedSOTATrainer:
             torch.nn.utils.clip_grad_norm_(
                 list(self.brain.parameters()) +
                 list(self.math_reasoner.parameters()) +
-                list(self.rl_policy.parameters()),
+                list(self.rl_policy.parameters()) +
+                list(self.world_model.parameters()),
                 self.max_grad_norm
             )
             self.optimizer.step()
@@ -532,12 +613,17 @@ class IntegratedSOTATrainer:
             total_policy_loss += policy_loss.item()
             total_value_loss += value_loss.item()
             total_entropy_loss += entropy_loss.item()
+            total_world_model_loss += world_model_loss.item()
+
+        # Update world model target network (EMA)
+        self.world_model.update_target_network()
 
         return {
             'loss': total_loss / self.epochs_per_update,
             'policy_loss': total_policy_loss / self.epochs_per_update,
             'value_loss': total_value_loss / self.epochs_per_update,
             'entropy': -total_entropy_loss / self.epochs_per_update,
+            'world_model_loss': total_world_model_loss / self.epochs_per_update,
         }
 
     def train(self, total_epochs: int = 1000):
@@ -573,7 +659,8 @@ class IntegratedSOTATrainer:
                 print(f"   Avg Reward:    {exp_stats['avg_reward']:+8.2f}  |  Best: {exp_stats['best_reward']:+8.2f}")
                 print(f"   Avg Length:    {exp_stats['avg_length']:8.1f}  |  Steps: {self.total_steps:8d}")
                 print(f"   Policy Loss:   {update_stats['policy_loss']:8.4f}  |  Value Loss: {update_stats['value_loss']:8.4f}")
-                print(f"   System 2 Use:  {system2_rate:8.1f}%  |  Entropy: {update_stats['entropy']:8.4f}")
+                print(f"   WorldModel:    {update_stats['world_model_loss']:8.4f}  |  Entropy: {update_stats['entropy']:8.4f}")
+                print(f"   System 2 Use:  {system2_rate:8.1f}%")
                 print(f"   ═══════════════════════════════════════════════════════════════════")
                 sys.stdout.flush()
 
@@ -599,6 +686,7 @@ class IntegratedSOTATrainer:
             'total_steps': self.total_steps,
             'brain_state_dict': self.brain.state_dict(),
             'math_reasoner_state_dict': self.math_reasoner.state_dict(),
+            'world_model_state_dict': self.world_model.state_dict(),  # WorldModel
             'rl_policy_state_dict': self.rl_policy.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
             'best_reward': self.best_reward,
@@ -614,6 +702,8 @@ class IntegratedSOTATrainer:
         checkpoint = torch.load(path, map_location=self.device, weights_only=False)
         self.brain.load_state_dict(checkpoint['brain_state_dict'])
         self.math_reasoner.load_state_dict(checkpoint['math_reasoner_state_dict'])
+        if 'world_model_state_dict' in checkpoint:  # Backwards compatible
+            self.world_model.load_state_dict(checkpoint['world_model_state_dict'])
         self.rl_policy.load_state_dict(checkpoint['rl_policy_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.epoch = checkpoint['epoch']
@@ -632,6 +722,8 @@ def main():
     parser.add_argument("--phase0-checkpoint", type=str, required=True,
                         help="Path to Phase 0 checkpoint (REQUIRED!)")
     parser.add_argument("--no-render", action="store_true")
+    parser.add_argument("--enable-vision", action="store_true",
+                        help="Enable visual RL with DINOv2+SigLIP (requires more GPU memory)")
     parser.add_argument("--epochs", type=int, default=1000)
     parser.add_argument("--system2-freq", type=int, default=10,
                         help="System 2 frequency (every N steps)")
@@ -642,10 +734,17 @@ def main():
         print("[HINT] Run Phase 0 first: python TRAIN_PHYSICS.py --samples 100000 --epochs 50")
         sys.exit(1)
 
+    if args.enable_vision:
+        print("\n⚠️  VISION MODE ENABLED")
+        print("    - Using DINOv2 + SigLIP vision encoders")
+        print("    - Requires ~8GB+ GPU memory")
+        print("    - Slower training (image processing overhead)\n")
+
     trainer = IntegratedSOTATrainer(
         env_name="Humanoid-v5",
         phase0_checkpoint=args.phase0_checkpoint,
         render=not args.no_render,
+        enable_vision=args.enable_vision,
         device="cuda" if torch.cuda.is_available() else "cpu",
         system2_every=args.system2_freq,
     )
