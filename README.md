@@ -150,13 +150,23 @@ System 1 + System 2 Integration (NOT frozen!)
 python SOTATrainer_Integrated.py --phase0-checkpoint checkpoints/phase0_best.pt --epochs 1000
 ```
 
-### Phase 2: Behavior Cloning (2-3 days)
-Refine with demonstration datasets (MoCapAct, RT-1).
+### Deployment: EnhancedJackBrain
+After training, `EnhancedJackBrain` combines all components for inference:
+```python
+from EnhancedJackBrain import EnhancedJackBrain, EnhancedBrainConfig
 
-**Run:**
-```bash
-python TrainingJack.py --dataset mocapact --checkpoint-in checkpoints/locomotion_best.pt
+# Load trained brain
+brain = EnhancedJackBrain(EnhancedBrainConfig())
+brain.load_checkpoint("checkpoints/phase1_best.pt")
+
+# Inference (runs System 1 + System 2)
+action = brain.forward(observation)
 ```
+
+**Future Extensions:**
+- Phase 2: Behavior cloning from real demonstrations (MoCapAct, RT-1)
+- Phase 3: Sim-to-real transfer with domain randomization
+- Phase 4: Continual learning in deployment
 
 ---
 
@@ -205,16 +215,13 @@ python TRAIN_PHYSICS.py --samples 1000 --epochs 5
 
 ### Full Training Pipeline
 ```bash
-# Phase 0: Physics (2-3 days)
+# Phase 0: Physics Foundation (2-3 days on T4 GPU)
 python TRAIN_PHYSICS.py --samples 100000 --epochs 50
 
-# Phase 1: RL (3-4 days)
+# Phase 1: RL Locomotion (3-4 days on T4 GPU)
 python SOTATrainer_Integrated.py --phase0-checkpoint checkpoints/phase0_best.pt --epochs 1000
-```
 
-### One Command (All Phases)
-```bash
-python TRAIN_AGI.py --all
+# Done! EnhancedJackBrain is ready for deployment
 ```
 
 ---
@@ -223,28 +230,34 @@ python TRAIN_AGI.py --all
 
 ```
 JackTheWalker/
-├── JackBrain.py              # VLA Transformer (DINOv2+SigLIP, Diffusion, Flow Matching)
-├── MathReasoner.py           # Neuro-Symbolic Physics (100 learnable rules)
-├── WorldModel.py             # TD-MPC2 Latent Dynamics
-├── AlphaGeometryLoop.py      # Runtime Creative Problem-Solving
+│
+│ CORE ARCHITECTURE (7 modules)
+├── EnhancedJackBrain.py      # Unified AGI Brain (imports all below)
+├── JackBrain.py              # System 1: VLA Transformer (DINOv2+SigLIP, Diffusion)
+├── MathReasoner.py           # System 2: Neuro-Symbolic Physics (100 rules)
+├── WorldModel.py             # TD-MPC2 Latent Dynamics (imagination)
 ├── HierarchicalPlanner.py    # HAC + Options Framework (20 skills)
-├── SymbolicCalculator.py     # Exact SymPy Physics Engine
-├── EnhancedJackBrain.py      # Unified AGI Brain (System 1 + System 2)
+├── AlphaGeometryLoop.py      # Runtime Creative Problem-Solving
+├── SymbolicCalculator.py     # Exact SymPy Physics Engine (ground truth)
 │
-├── TRAIN_PHYSICS.py          # Phase 0: Physics Foundation
+│ TRAINING (2 phases)
+├── TRAIN_PHYSICS.py          # Phase 0: Neural learns from Symbolic
 ├── SOTATrainer_Integrated.py # Phase 1: RL with Fine-Tuning
-├── TrainingJack.py           # Phase 2: Behavior Cloning
-├── TRAIN_AGI.py              # Complete Pipeline Orchestrator
-├── PhysicsTrainer.py         # Phase 0B: Simulated Physics
-├── ChemistryTrainer.py       # Phase 0C: Material Properties
 │
-├── RUN_ON_COLAB.ipynb        # Complete Colab Training
-├── COLAB_WITH_DRIVE.ipynb    # Colab with Persistence
+│ UTILITIES
+├── test_symbolic_calculator.py # Unit tests for physics engine
 │
-├── ARCHITECTURE_ANALYSIS.md  # Deep Technical Analysis
-├── Janno_Research_Papers_Implemented.md  # Research Citations
+│ COLAB NOTEBOOKS
+├── RUN_ON_COLAB.ipynb        # Complete training (T4 GPU)
+├── COLAB_WITH_DRIVE.ipynb    # With checkpoint persistence
+│
+│ DOCUMENTATION
+├── ARCHITECTURE_ANALYSIS.md  # Deep technical analysis
+├── Janno_Research_Papers_Implemented.md  # Research citations
 └── requirements.txt
 ```
+
+**Minimal design:** 10 Python files, each with a clear purpose. No redundancy.
 
 ---
 
