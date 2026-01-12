@@ -150,23 +150,59 @@ System 1 + System 2 Integration (NOT frozen!)
 python SOTATrainer_Integrated.py --phase0-checkpoint checkpoints/phase0_best.pt --epochs 1000
 ```
 
+### Phase 2: Behavior Cloning (TrainingJack.py)
+```
+Diffusion Policy with Flow Matching
+┌─────────────────────────────────────────────────────────────┐
+│ Loads Phase 1 checkpoint                                    │
+│ Learns from demonstrations (MoCapAct, RT-1)                 │
+│ Flow matching: 1-step inference (vs 15-100 for DDPM)        │
+│ Action chunks: 48 steps (like Boston Dynamics)              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Run:**
+```bash
+python TrainingJack.py --dataset mocapact --checkpoint-in checkpoints/phase1_best.pt
+```
+
 ### Deployment: EnhancedJackBrain
 After training, `EnhancedJackBrain` combines all components for inference:
 ```python
 from EnhancedJackBrain import EnhancedJackBrain, EnhancedBrainConfig
 
-# Load trained brain
 brain = EnhancedJackBrain(EnhancedBrainConfig())
-brain.load_checkpoint("checkpoints/phase1_best.pt")
-
-# Inference (runs System 1 + System 2)
-action = brain.forward(observation)
+brain.load_checkpoint("checkpoints/phase2_best.pt")
+action = brain.forward(observation)  # System 1 + System 2
 ```
 
-**Future Extensions:**
-- Phase 2: Behavior cloning from real demonstrations (MoCapAct, RT-1)
-- Phase 3: Sim-to-real transfer with domain randomization
-- Phase 4: Continual learning in deployment
+---
+
+## Development Status
+
+**Training Scripts (Working):**
+| Phase | Script | Status |
+|-------|--------|--------|
+| Phase 0 | `TRAIN_PHYSICS.py` | ✅ Complete - MathReasoner learns physics |
+| Phase 1 | `SOTATrainer_Integrated.py` | ✅ Complete - MuJoCo Humanoid-v5 walking |
+| Phase 2 | `TrainingJack.py` | ⚠️ Framework ready, uses synthetic data |
+
+**Architecture (Needs Training Integration):**
+| Component | File | Status |
+|-----------|------|--------|
+| WorldModel | `WorldModel.py` | ⚠️ Architecture exists, no training script |
+| HierarchicalPlanner | `HierarchicalPlanner.py` | ⚠️ Architecture exists, no training script |
+| Vision (DINOv2/SigLIP) | `JackBrain.py` | ⚠️ Uses pretrained, disabled in Phase 1 |
+| Real demonstrations | - | ⚠️ MoCapAct/RT-1 loaders not implemented |
+
+**This is a research prototype** demonstrating the architecture. Full training integration is ongoing.
+
+**Roadmap:**
+- [ ] Enable vision in Phase 1 (MuJoCo rendering → visual RL)
+- [ ] Add WorldModel training to Phase 1 (TD-MPC2 imagination)
+- [ ] Integrate real MoCapAct/RT-1 datasets in Phase 2
+- [ ] Add HierarchicalPlanner skill learning
+- [ ] Sim-to-real transfer with domain randomization
 
 ---
 
@@ -240,9 +276,10 @@ JackTheWalker/
 ├── AlphaGeometryLoop.py      # Runtime Creative Problem-Solving
 ├── SymbolicCalculator.py     # Exact SymPy Physics Engine (ground truth)
 │
-│ TRAINING (2 phases)
+│ TRAINING (3 phases)
 ├── TRAIN_PHYSICS.py          # Phase 0: Neural learns from Symbolic
-├── SOTATrainer_Integrated.py # Phase 1: RL with Fine-Tuning
+├── SOTATrainer_Integrated.py # Phase 1: RL walking (MuJoCo Humanoid-v5)
+├── TrainingJack.py           # Phase 2: Behavior cloning (Diffusion Policy)
 │
 │ UTILITIES
 ├── test_symbolic_calculator.py # Unit tests for physics engine
@@ -257,7 +294,7 @@ JackTheWalker/
 └── requirements.txt
 ```
 
-**Minimal design:** 10 Python files, each with a clear purpose. No redundancy.
+**11 Python files:** 7 architecture + 3 training + 1 test. Each with clear purpose.
 
 ---
 
