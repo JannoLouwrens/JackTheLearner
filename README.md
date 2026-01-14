@@ -19,6 +19,12 @@ A humanoid robot brain that **understands physics** instead of just imitating be
 
 ---
 
+## Design Rationale
+
+JackTheWalker began as a research exercise in combining modern robotics papers into a single, coherent brain rather than isolated demos. I started with neuro-symbolic physics (Phase 0) to ensure the model could reason about dynamics, then moved to locomotion and skill acquisition so the brain could act, not just predict.
+
+The architecture is deliberately dual-process: a fast reactive system handles immediate control, while a slower planner reasons about physics, goals, and long-horizon decisions. This mirrors cognitive science literature and provides a clear path to scale from simulated locomotion to richer embodied tasks.
+
 ## Files
 
 ```
