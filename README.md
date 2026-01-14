@@ -149,6 +149,33 @@ See [RESEARCH_PAPERS.md](RESEARCH_PAPERS.md) for code examples showing exactly h
 
 ---
 
+## Data & Pretrained Models
+
+### Auto-Downloaded (First Run)
+
+These download automatically via HuggingFace when you enable vision:
+
+| Model | Size | What it does |
+|-------|------|--------------|
+| `facebook/dinov2-large` | ~1.5GB | Spatial features (where things are) |
+| `openai/clip-vit-large-patch14` | ~1.7GB | Semantic features (what things are) |
+
+Cached in `~/.cache/huggingface/`. First run takes 10-20 min to download.
+
+### Optional: Demo Datasets (Phase 2)
+
+Phase 2 uses synthetic data by default. For real demonstrations:
+
+| Dataset | Size | Link |
+|---------|------|------|
+| **MoCapAct** | ~50GB | [microsoft/MoCapAct](https://github.com/microsoft/MoCapAct) |
+| **Open X-Embodiment** | ~1TB | [robotics-transformer-x](https://robotics-transformer-x.github.io/) |
+| **ALOHA** | ~10GB | [tonyzhaozh/aloha](https://github.com/tonyzhaozh/aloha) |
+
+To use real data, modify `Phase2_Imitation.py` to load from these instead of synthetic.
+
+---
+
 ## Quick Start
 
 ```bash

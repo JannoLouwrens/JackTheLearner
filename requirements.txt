@@ -85,12 +85,18 @@ jupyter>=1.0.0  # For notebooks
 # - GPU: NVIDIA RTX 3090, 4090, A100, or better (24GB+ VRAM recommended)
 
 # ==============================================================================
-# PRETRAINED MODELS (Downloaded automatically on first run)
+# PRETRAINED MODELS (Downloaded automatically via HuggingFace)
 # ==============================================================================
 
-# DINOv2 Large (facebook/dinov2-large): ~1.5GB
-# CLIP ViT Large (openai/clip-vit-large-patch14): ~1.7GB
-# Total: ~3.2GB of pretrained weights
+# Vision (downloaded when --enable-vision is used):
+#   facebook/dinov2-large: ~1.5GB (spatial features)
+#   openai/clip-vit-large-patch14: ~1.7GB (semantic features)
+#   Total: ~3.2GB, cached in ~/.cache/huggingface/
+
+# Demo datasets (optional, for Phase 2):
+#   MoCapAct: https://github.com/microsoft/MoCapAct (~50GB)
+#   Open X-Embodiment: https://robotics-transformer-x.github.io/ (~1TB)
+#   ALOHA: https://github.com/tonyzhaozh/aloha (~10GB)
 
 # ==============================================================================
 # NOTES
