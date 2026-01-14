@@ -130,8 +130,9 @@ git clone https://github.com/JannoLouwrens/JackTheWalker.git
 cd JackTheWalker
 pip install -r requirements.txt
 
-# Test physics (5 min)
+# If you want to test
 python Phase0_Physics.py --samples 1000 --epochs 5
+python Phase1_Locomotion.py --phase0-checkpoint checkpoints/phase0_best.pt
 
 # Full training
 python Phase0_Physics.py --samples 100000 --epochs 50
