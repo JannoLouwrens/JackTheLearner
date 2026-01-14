@@ -108,15 +108,15 @@ JackTheWalker has both:
 |------|---------------|
 | `Phase0_Physics.py` | Teach MathReasoner physics. SymPy generates 100,000 physics problems, neural learns to predict them. Takes ~2-3 days. |
 | `Phase1_Locomotion.py` | Learn to walk in MuJoCo simulator. Uses the physics knowledge from Phase 0. Also trains WorldModel and skills. Takes ~3-4 days. |
-| `Phase2_Imitation.py` | Learn from human demonstrations (MoCapAct dataset). Fine-tunes the walking to look natural. Takes ~2-3 days. |
+| `Phase2_Imitation.py` | Learn from demos using SOTA 2025 methods. Trains ALL components: Brain (diffusion), WorldModel (auxiliary), MathReasoner (physics check), HAC (skills). Takes ~2-3 days. |
 
 ---
 
 ## The Training Flow Visualized
 
 ```
-PHASE 0: PHYSICS                    PHASE 1: WALKING                 PHASE 2: STYLE
-(Neural learns from SymPy)          (RL in simulator)                (Learn from humans)
+PHASE 0: PHYSICS                    PHASE 1: WALKING                 PHASE 2: IMITATION
+(Neural learns from SymPy)          (RL in simulator)                (SOTA 2025 methods)
 
     ┌─────────┐                     ┌─────────────┐                  ┌───────────┐
     │  SymPy  │                     │   MuJoCo    │                  │  MoCapAct │
@@ -125,9 +125,10 @@ PHASE 0: PHYSICS                    PHASE 1: WALKING                 PHASE 2: ST
     └─────────┘                     └─────────────┘                  └───────────┘
          │                               │                                │
          ▼                               ▼                                ▼
-    MathReasoner                   + WorldModel                    + Diffusion
-    learns 100                     + HAC skills                      Policy
-    physics rules                  + Vision                          fine-tune
+    MathReasoner                   + WorldModel                    ALL components
+    learns 100                     + HAC skills                    continue training:
+    physics rules                  + Vision                        Brain, WorldModel,
+                                                                   HAC, MathReasoner
 ```
 
 ---
@@ -195,7 +196,7 @@ The goal isn't just a robot that walks. It's a robot that **understands** walkin
 | AlphaGeometryLoop | ✅ Working |
 | Phase 0 (Physics) | ✅ Working |
 | Phase 1 (RL Walking) | ✅ Working |
-| Phase 2 (Imitation) | ⚠️ Framework ready, needs real demo data |
+| Phase 2 (Imitation) | ✅ Working (SOTA 2025, needs real demo data) |
 
 ---
 
