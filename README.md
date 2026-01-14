@@ -6,151 +6,151 @@ A research implementation combining 17+ AI papers into one unified brain.
 
 ---
 
-## What Is This?
+## The Idea
 
-A humanoid robot brain that **understands physics** instead of just imitating behaviors.
+Most robot brains either:
+- **Learn from data** (neural networks) - flexible but don't understand physics
+- **Use physics equations** (symbolic) - accurate but can't generalize
 
-| Feature | How |
-|---------|-----|
-| Understands physics | Neural learns from symbolic (AlphaGeometry approach) |
-| Fast + slow thinking | System 1 (50Hz reflexes) + System 2 (physics reasoning) |
-| 1-step action inference | Flow matching diffusion (not 15-100 steps) |
-| Learnable skills | 20 reusable behaviors via HAC |
+JackTheWalker does **both**: Neural networks learn patterns, SymPy verifies physics.
 
----
-
-## Design Rationale
-
-JackTheWalker began as a research exercise in combining modern robotics papers into a single, coherent brain rather than isolated demos. I started with neuro-symbolic physics (Phase 0) to ensure the model could reason about dynamics, then moved to locomotion and skill acquisition so the brain could act, not just predict.
-
-The architecture is deliberately dual-process: a fast reactive system handles immediate control, while a slower planner reasons about physics, goals, and long-horizon decisions. This mirrors cognitive science literature and provides a clear path to scale from simulated locomotion to richer embodied tasks.
-
-## Files
-
-```
-JackTheWalker/
-│
-├── EnhancedJackBrain.py      # THE BRAIN (all architecture in one file)
-│
-├── Phase0_Physics.py         # Train: Neural learns physics from symbolic
-├── Phase1_Locomotion.py      # Train: RL walking in MuJoCo
-├── Phase2_Imitation.py       # Train: Behavior cloning from demos
-│
-├── WorldModel.py             # TD-MPC2 imagination
-├── HierarchicalPlanner.py    # HAC skill decomposition
-├── MathReasoner.py           # 100 physics rules (neural)
-├── AlphaGeometryLoop.py      # Creative problem solving
-├── SymbolicCalculator.py     # Exact physics (SymPy)
-│
-└── requirements.txt
-```
-
-**One brain file. Three training phases. Five support modules.**
-
----
-
-## Training Pipeline
-
-```
-Phase 0                    Phase 1                    Phase 2
-(Physics)                  (Walking)                  (Skills)
-   │                          │                          │
-   ▼                          ▼                          ▼
-┌─────────┐              ┌─────────┐              ┌─────────┐
-│SymPy    │──teaches──▶  │ MuJoCo  │──refines──▶  │ Demos   │
-│Physics  │              │ Humanoid│              │MoCapAct │
-└─────────┘              └─────────┘              └─────────┘
-   │                          │                          │
-   ▼                          ▼                          ▼
-MathReasoner             + WorldModel              + Diffusion
-learns 100               + HAC Skills               Policy
-physics rules            + Vision                   fine-tune
-
-2-3 days                 3-4 days                  2-3 days
-```
-
-### Run Training
-
-```bash
-# Phase 0: Physics (neural learns from symbolic calculator)
-python Phase0_Physics.py --samples 100000 --epochs 50
-
-# Phase 1: Walking (RL in MuJoCo Humanoid-v5)
-python Phase1_Locomotion.py --phase0-checkpoint checkpoints/phase0_best.pt --epochs 1000
-
-# Phase 1 with vision (optional, needs more GPU):
-python Phase1_Locomotion.py --phase0-checkpoint checkpoints/phase0_best.pt --enable-vision
-
-# Phase 2: Behavior cloning (currently uses synthetic data)
-python Phase2_Imitation.py --checkpoint-in checkpoints/phase1_best.pt
-```
+This is inspired by DeepMind's AlphaGeometry, which combined neural networks with a symbolic geometry solver to achieve IMO gold medal performance.
 
 ---
 
 ## Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    ENHANCED JACK BRAIN                        │
-├──────────────────────────────────────────────────────────────┤
-│                                                               │
-│  SYSTEM 1: FAST (50Hz)                                       │
-│  ├─ DINOv2 + SigLIP vision                                   │
-│  ├─ Cross-modal fusion transformer                           │
-│  └─ Diffusion policy (flow matching, 1-step)                 │
-│                                                               │
-│  SYSTEM 2: SLOW (1-5Hz)                                      │
-│  ├─ WorldModel (TD-MPC2) - imagination                       │
-│  ├─ MathReasoner - 100 physics rules                         │
-│  ├─ HierarchicalPlanner - 20 learnable skills                │
-│  └─ AlphaGeometryLoop - creative solving                     │
-│                                                               │
-│  Three Modes: REACTIVE (90%) | VERIFIED (9%) | CREATIVE (1%) │
-└──────────────────────────────────────────────────────────────┘
+         ┌─────────────────────────────────────────────────────┐
+         │              ENHANCED JACK BRAIN                    │
+         ├─────────────────────────────────────────────────────┤
+         │                                                     │
+SYSTEM 1 │  ScalableRobotBrain (50Hz - Fast)                   │
+  Fast   │  ├─ DINOv2 + SigLIP vision (OpenVLA)               │
+         │  ├─ Cross-modal fusion transformer                  │
+         │  └─ Flow matching diffusion → 1-step actions        │
+         │                                                     │
+─────────│─────────────────────────────────────────────────────│
+         │                                                     │
+SYSTEM 2 │  Reasoning Modules (1-5Hz - Slow)                   │
+  Slow   │  ├─ WorldModel: "What if I do this?"                │
+         │  ├─ MathReasoner: "Does this violate physics?"      │
+         │  ├─ HierarchicalPlanner: "Break goal into skills"   │
+         │  └─ AlphaGeometryLoop: "Novel solution needed"      │
+         │                                                     │
+         └─────────────────────────────────────────────────────┘
+
+THREE MODES:
+  REACTIVE (90%):  Just System 1 - fast reflexes
+  VERIFIED (9%):   System 1 + physics check - safe
+  CREATIVE (1%):   Full reasoning loop - novel problems
 ```
 
 ---
 
-## Research Papers
+## Files Explained
 
-| Paper | Year | What We Use |
-|-------|------|-------------|
-| AlphaGeometry (DeepMind) | 2024 | Neural-symbolic loop |
-| Physical Intelligence π0 | 2024 | Flow matching diffusion |
-| OpenVLA (Stanford) | 2024 | DINOv2 + SigLIP fusion |
-| TD-MPC2 (ICLR) | 2024 | World model imagination |
-| Thinking Fast & Slow | 2011 | Dual-process architecture |
-| HAC | 2019 | Hierarchical skills |
-| Frozen Reps Ineffective | Nov 2024 | Fine-tune, don't freeze |
+### Brain (core architecture)
 
-Full list: [Janno_Research_Papers_Implemented.md](Janno_Research_Papers_Implemented.md)
+| File | What it does |
+|------|--------------|
+| `ScalableRobotBrain.py` | **System 1**: Fast reactive brain. VLA transformer with DINOv2+SigLIP vision, flow matching diffusion for 1-step action inference. Runs at 50Hz. |
+| `EnhancedJackBrain.py` | **System 1+2 unified**: Combines fast brain with slow reasoning. Automatically selects mode based on confidence/novelty. |
+
+### System 2 Modules (reasoning)
+
+| File | What it does |
+|------|--------------|
+| `WorldModel.py` | **TD-MPC2 imagination**: Learns latent dynamics to imagine "what happens if I do X?". Used for planning without trial-and-error. |
+| `MathReasoner.py` | **Neural physics**: Learns 100 physics rules (F=ma, torque, energy). Gets training data from SymPy. |
+| `SymbolicCalculator.py` | **Exact physics**: SymPy equations for rigid body dynamics. Verifies neural predictions. Teacher for MathReasoner. |
+| `HierarchicalPlanner.py` | **HAC skills**: 20 learnable skill embeddings. Breaks "walk to kitchen" into subgoals. Like a task manager. |
+| `AlphaGeometryLoop.py` | **Creative solving**: Neural proposes action → Symbolic verifies → Refine → Repeat. For novel situations. |
+
+### Training Pipeline
+
+| File | What it does |
+|------|--------------|
+| `Phase0_Physics.py` | Train MathReasoner on physics. SymPy generates ground truth, neural learns to predict. ~2-3 days. |
+| `Phase1_Locomotion.py` | RL walking in MuJoCo Humanoid-v5. PPO + WorldModel imagination + HAC skills. ~3-4 days. |
+| `Phase2_Imitation.py` | Behavior cloning from demos. Flow matching diffusion on MoCapAct/RT-1 data. ~2-3 days. |
 
 ---
 
-## Quick Test
+## How Key Components Work
 
-```bash
-# 5-minute physics test
-python Phase0_Physics.py --samples 1000 --epochs 5
-
-# Should see MathReasoner learning F=ma, torque, energy conservation
+### WorldModel (TD-MPC2)
 ```
+Observation → [Encoder] → Latent state (z)
+                              ↓
+            [Dynamics] → Next latent (z')  ← predicts future
+                              ↓
+            [Reward] → Expected reward     ← evaluates plans
+```
+Instead of simulating real physics (slow), the WorldModel imagines outcomes in latent space. Used during training to improve value estimates and during runtime to evaluate action plans.
+
+### HierarchicalPlanner (HAC)
+```
+Goal: "Walk to kitchen"
+         ↓
+    [Planner]
+         ↓
+    Skill #3: "Navigate"
+         ↓
+    Subgoal: "Turn right 45°"
+         ↓
+    Low-level: Joint torques
+```
+20 learnable skill embeddings act like "verbs" the robot knows. The planner selects which skill to use and generates subgoals. Skills are trained end-to-end with RL.
+
+### AlphaGeometryLoop (Creative Mode)
+```
+State: "Stuck on obstacle"
+Goal: "Reach other side"
+         ↓
+Neural: "Try jumping" (proposal)
+         ↓
+Symbolic: "Landing force = 2000N, max = 1500N" (verification)
+         ↓
+Neural: "Try lower jump" (refinement)
+         ↓
+Symbolic: "Force = 1200N, OK" (verified)
+         ↓
+Execute refined action
+```
+This loop is expensive (1Hz) so only used when System 1 has low confidence or high novelty. It's what makes the system AGI-like - it can solve problems it wasn't trained on.
 
 ---
 
-## Installation
+## Quick Start
 
 ```bash
+# Install
 git clone https://github.com/JannoLouwrens/JackTheWalker.git
 cd JackTheWalker
-
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
 pip install -r requirements.txt
+
+# Test physics (5 min)
+python Phase0_Physics.py --samples 1000 --epochs 5
+
+# Full training
+python Phase0_Physics.py --samples 100000 --epochs 50
+python Phase1_Locomotion.py --phase0-checkpoint checkpoints/phase0_best.pt
+python Phase2_Imitation.py --checkpoint-in checkpoints/phase1_best.pt
 ```
 
-**Requirements:** Python 3.9+, PyTorch 2.0+, 8GB RAM
+---
+
+## Research Foundation
+
+This project implements ideas from 17+ papers. See [RESEARCH_PAPERS.md](RESEARCH_PAPERS.md) for details on HOW each paper was used.
+
+Key influences:
+- **AlphaGeometry** (Nature 2024): Neural-symbolic loop architecture
+- **Physical Intelligence pi0** (2024): Flow matching for 1-step diffusion
+- **OpenVLA** (Stanford 2024): DINOv2 + SigLIP vision fusion
+- **TD-MPC2** (ICLR 2024): World model imagination
+- **Thinking Fast and Slow** (Kahneman 2011): Dual-process architecture
 
 ---
 
@@ -158,11 +158,11 @@ pip install -r requirements.txt
 
 | Component | Status |
 |-----------|--------|
-| EnhancedJackBrain | ✅ Complete (all in one file) |
-| Phase 0 (Physics) | ✅ Working |
-| Phase 1 (RL + WorldModel + HAC + Vision) | ✅ Working |
-| Phase 2 (Imitation) | ⚠️ Framework ready, needs real data |
-| Real demo datasets (MoCapAct/RT-1) | ❌ Not yet |
+| ScalableRobotBrain (System 1) | Working |
+| EnhancedJackBrain (System 1+2) | Working |
+| Phase 0 (Physics) | Working |
+| Phase 1 (RL + WorldModel + HAC) | Working |
+| Phase 2 (Imitation) | Framework ready, needs real data |
 
 ---
 
@@ -176,4 +176,4 @@ pip install -r requirements.txt
 
 ## License
 
-MIT - Use freely.
+MIT

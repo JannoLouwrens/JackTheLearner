@@ -43,7 +43,7 @@ import gymnasium as gym
 from typing import Dict, Optional, Tuple
 import time
 
-from EnhancedJackBrain import ScalableRobotBrain, BrainConfig  # MERGED: All brain code in one file
+from ScalableRobotBrain import ScalableRobotBrain, BrainConfig  # System 1: Fast VLA brain
 from MathReasoner import NeuroSymbolicMathReasoner, MathReasonerConfig
 from WorldModel import TD_MPC2_WorldModel, WorldModelConfig
 from HierarchicalPlanner import HierarchicalPlanner, HierarchicalPlannerConfig  # NEW: Skill learning

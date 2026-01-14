@@ -28,7 +28,7 @@ from typing import Dict, Optional, Tuple
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 
-from EnhancedJackBrain import ScalableRobotBrain, BrainConfig, flow_matching_loss  # MERGED: All brain code in one file
+from ScalableRobotBrain import ScalableRobotBrain, BrainConfig, flow_matching_loss  # System 1: Fast VLA brain
 
 
 class SimpleDemonstrationsDataset(Dataset):
