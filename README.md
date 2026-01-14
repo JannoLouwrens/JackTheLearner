@@ -6,7 +6,7 @@
 
 ## Why This Project?
 
-This is my way of staying current with AI research while working towards my Masters thesis. Instead of just reading papers, I implement them. JackTheWalker combines 17+ cutting-edge papers into one coherent system - a robot brain that doesn't just imitate movements, but actually understands the physics behind them.
+This is my way of staying current with AI research while working towards my Masters thesis. Instead of just reading papers, I implement them to try and understand everything better. JackTheWalker combines 17+ cutting-edge papers into one coherent system - a robot brain that doesn't just imitate movements, but actually understands the physics behind them.
 
 **Author:** Janno Louwrens
 **Education:** BSc Computing (UNISA 2024), Honours AI (in progress)
