@@ -178,21 +178,24 @@ To use real data, modify `Phase2_Imitation.py` to load from these instead of syn
 
 ## Quick Start
 
+**Requirements:** Python 3.9+, PyTorch 2.0+, 8GB RAM (16GB for vision)
+
 ```bash
 # Clone and install
 git clone https://github.com/JannoLouwrens/JackTheWalker.git
 cd JackTheWalker
 pip install -r requirements.txt
 
-# Test the physics training (5 minutes)
+# Quick test (5 minutes)
 python Phase0_Physics.py --samples 1000 --epochs 5
 
-# You'll see:
-#   [TRAINING EXAMPLE]
-#   Input: joint angles, torques
-#   SymPy says: KE=45.2J, momentum=23.1 kg⋅m/s
-#   Neural says: KE=44.8J, momentum=22.9 kg⋅m/s
-#   Error: 0.012 (getting smaller each epoch!)
+# Full training pipeline (~1 week total)
+python Phase0_Physics.py --samples 100000 --epochs 50           # 2-3 days
+python Phase1_Locomotion.py --phase0-checkpoint checkpoints/phase0_best.pt  # 3-4 days
+python Phase2_Imitation.py --checkpoint-in checkpoints/phase1_best.pt       # 2-3 days
+
+# Optional: Enable vision (needs GPU with 8GB+ VRAM)
+python Phase1_Locomotion.py --phase0-checkpoint checkpoints/phase0_best.pt --enable-vision
 ```
 
 ---
