@@ -43,9 +43,10 @@ import gymnasium as gym
 from typing import Dict, Optional, Tuple
 import time
 
-from JackBrain import ScalableRobotBrain, BrainConfig
+from EnhancedJackBrain import ScalableRobotBrain, BrainConfig  # MERGED: All brain code in one file
 from MathReasoner import NeuroSymbolicMathReasoner, MathReasonerConfig
-from WorldModel import TD_MPC2_WorldModel, WorldModelConfig  # NEW: TD-MPC2 imagination
+from WorldModel import TD_MPC2_WorldModel, WorldModelConfig
+from HierarchicalPlanner import HierarchicalPlanner, HierarchicalPlannerConfig  # NEW: Skill learning
 
 
 class RLPolicyHead(nn.Module):
@@ -318,9 +319,9 @@ class IntegratedSOTATrainer:
         print()
 
         # ═══════════════════════════════════════════════════════════════
-        # WORLD MODEL (TD-MPC2 style) - NEW!
+        # WORLD MODEL (TD-MPC2 style)
         # ═══════════════════════════════════════════════════════════════
-        print("[WORLD MODEL] TD-MPC2 Imagination (NEW!)")
+        print("[WORLD MODEL] TD-MPC2 Imagination")
         world_config = WorldModelConfig(
             latent_dim=256,
             action_dim=self.action_dim,
@@ -328,6 +329,22 @@ class IntegratedSOTATrainer:
         )
         self.world_model = TD_MPC2_WorldModel(world_config).to(device)
         print("  ✓ Latent dynamics for imagination-based planning\n")
+
+        # ═══════════════════════════════════════════════════════════════
+        # HIERARCHICAL PLANNER (HAC - Skill Learning)
+        # ═══════════════════════════════════════════════════════════════
+        print("[HIERARCHICAL] HAC Skill Learning")
+        hier_config = HierarchicalPlannerConfig(
+            d_model=brain_config.d_model,
+            n_heads=brain_config.n_heads,
+            n_layers=4,
+            num_skills=20,
+            state_dim=256,
+            goal_dim=64,
+            action_dim=self.action_dim,
+        )
+        self.hierarchical = HierarchicalPlanner(hier_config).to(device)
+        print("  ✓ 20 learnable skills for task decomposition\n")
 
         # ═══════════════════════════════════════════════════════════════
         # RL POLICY HEAD
@@ -345,11 +362,13 @@ class IntegratedSOTATrainer:
             {'params': self.math_reasoner.parameters(), 'lr': learning_rate * phase0_lr_scale, 'name': 'math'},
             {'params': self.rl_policy.parameters(), 'lr': learning_rate, 'name': 'policy'},
             {'params': self.world_model.parameters(), 'lr': learning_rate, 'name': 'world_model'},
+            {'params': self.hierarchical.parameters(), 'lr': learning_rate, 'name': 'hierarchical'},
         ])
         print(f"  Brain (System 1):       {learning_rate:.1e}")
         print(f"  Math (System 2):        {learning_rate * phase0_lr_scale:.1e} (10x slower - fine-tuning!)")
         print(f"  RL Policy:              {learning_rate:.1e}")
         print(f"  World Model (TD-MPC2):  {learning_rate:.1e}")
+        print(f"  Hierarchical (HAC):     {learning_rate:.1e}")
         print()
 
         # PPO buffer
@@ -604,7 +623,8 @@ class IntegratedSOTATrainer:
                 list(self.brain.parameters()) +
                 list(self.math_reasoner.parameters()) +
                 list(self.rl_policy.parameters()) +
-                list(self.world_model.parameters()),
+                list(self.world_model.parameters()) +
+                list(self.hierarchical.parameters()),
                 self.max_grad_norm
             )
             self.optimizer.step()
@@ -686,7 +706,8 @@ class IntegratedSOTATrainer:
             'total_steps': self.total_steps,
             'brain_state_dict': self.brain.state_dict(),
             'math_reasoner_state_dict': self.math_reasoner.state_dict(),
-            'world_model_state_dict': self.world_model.state_dict(),  # WorldModel
+            'world_model_state_dict': self.world_model.state_dict(),
+            'hierarchical_state_dict': self.hierarchical.state_dict(),  # HAC skills
             'rl_policy_state_dict': self.rl_policy.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
             'best_reward': self.best_reward,
@@ -704,6 +725,8 @@ class IntegratedSOTATrainer:
         self.math_reasoner.load_state_dict(checkpoint['math_reasoner_state_dict'])
         if 'world_model_state_dict' in checkpoint:  # Backwards compatible
             self.world_model.load_state_dict(checkpoint['world_model_state_dict'])
+        if 'hierarchical_state_dict' in checkpoint:  # Backwards compatible
+            self.hierarchical.load_state_dict(checkpoint['hierarchical_state_dict'])
         self.rl_policy.load_state_dict(checkpoint['rl_policy_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.epoch = checkpoint['epoch']

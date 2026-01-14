@@ -184,24 +184,26 @@ action = brain.forward(observation)  # System 1 + System 2
 | Phase | Script | Status |
 |-------|--------|--------|
 | Phase 0 | `TRAIN_PHYSICS.py` | ✅ Complete - MathReasoner learns physics |
-| Phase 1 | `SOTATrainer_Integrated.py` | ✅ Complete - MuJoCo Humanoid-v5 walking + WorldModel + Vision |
+| Phase 1 | `SOTATrainer_Integrated.py` | ✅ Complete - MuJoCo + WorldModel + Vision + HAC Skills |
 | Phase 2 | `TrainingJack.py` | ⚠️ Framework ready, uses synthetic data |
 
-**Architecture:**
-| Component | File | Status |
-|-----------|------|--------|
-| WorldModel | `WorldModel.py` | ✅ TD-MPC2 training integrated in Phase 1 |
-| Vision (DINOv2/SigLIP) | `JackBrain.py` | ✅ Optional via `--enable-vision` flag |
-| HierarchicalPlanner | `HierarchicalPlanner.py` | ⚠️ Architecture exists, no training script |
-| Real demonstrations | - | ⚠️ MoCapAct/RT-1 loaders not implemented |
+**Architecture (All in EnhancedJackBrain.py - THE ONE FILE):**
+| Component | Status |
+|-----------|--------|
+| ScalableRobotBrain (System 1) | ✅ Merged into `EnhancedJackBrain.py` |
+| WorldModel (TD-MPC2) | ✅ Training integrated in Phase 1 |
+| Vision (DINOv2/SigLIP) | ✅ Optional via `--enable-vision` flag |
+| HierarchicalPlanner (HAC) | ✅ 20 skills training integrated in Phase 1 |
+| Real demonstrations | ⚠️ MoCapAct/RT-1 loaders not implemented |
 
 **This is a research prototype** demonstrating the architecture.
 
 **Roadmap:**
 - [x] ~~Enable vision in Phase 1 (MuJoCo rendering → visual RL)~~ ✅ Done!
 - [x] ~~Add WorldModel training to Phase 1 (TD-MPC2 imagination)~~ ✅ Done!
+- [x] ~~Add HierarchicalPlanner skill learning~~ ✅ Done!
+- [x] ~~Merge JackBrain + EnhancedJackBrain into one file~~ ✅ Done!
 - [ ] Integrate real MoCapAct/RT-1 datasets in Phase 2
-- [ ] Add HierarchicalPlanner skill learning
 - [ ] Sim-to-real transfer with domain randomization
 
 ---
