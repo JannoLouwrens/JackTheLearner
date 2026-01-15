@@ -52,6 +52,53 @@ This is inspired by **AlphaGeometry** (DeepMind) - the AI that won a gold medal 
 
 ---
 
+## Vision: Seeing Like a Robot
+
+Most robots use a single vision model. JackTheWalker uses **two** and fuses them together (from [OpenVLA](https://openvla.github.io/)):
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         VISION PIPELINE                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   Camera Image (224×224)                                            │
+│          │                                                          │
+│          ├──────────────────┬──────────────────┐                    │
+│          ▼                  ▼                  │                    │
+│   ┌────────────┐     ┌────────────┐           │                    │
+│   │   DINOv2   │     │   SigLIP   │           │                    │
+│   │  (frozen)  │     │  (frozen)  │           │                    │
+│   └────────────┘     └────────────┘           │                    │
+│          │                  │                  │                    │
+│     1024-dim            768-dim               │                    │
+│     SPATIAL            SEMANTIC               │                    │
+│   "where things       "what things            │                    │
+│       are"               are"                 │                    │
+│          │                  │                  │                    │
+│          └────────┬─────────┘                  │                    │
+│                   ▼                            │                    │
+│            ┌────────────┐                      │                    │
+│            │   Fuse &   │◀── Only this learns │                    │
+│            │  Project   │    (1792 → 1024)    │                    │
+│            └────────────┘                      │                    │
+│                   │                            │                    │
+│                   ▼                            │                    │
+│         1024-dim fused vision token           │                    │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Why two models?**
+- **DINOv2** learned by looking at millions of images without labels. It's great at understanding spatial structure — edges, shapes, depth, "there's something 2 meters away on the left."
+- **SigLIP** learned by matching images to text descriptions. It understands meaning — "that's a chair," "that's a person," "that's an obstacle."
+
+**Why freeze them?**
+- These models have billions of parameters trained on internet-scale data. Fine-tuning them would be slow and could hurt their general knowledge. Instead, we freeze them and only train a small fusion layer (2M parameters) that combines their outputs.
+
+**The result:** Jack sees both WHERE things are AND WHAT they are, using knowledge from two different training paradigms.
+
+---
+
 ## The Architecture: Fast Brain + Slow Brain
 
 Humans have two thinking modes (from Kahneman's "Thinking Fast and Slow"):
