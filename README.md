@@ -291,13 +291,56 @@ The goal isn't just a robot that walks. It's a robot that **understands** walkin
 | Phase 0 (Physics) | ✅ Working |
 | Phase 1 (RL Walking) | ✅ Working |
 | Phase 2 (Imitation) | ✅ Working (needs real demo data) |
-| Phase 3 (Sim-to-Real) | 🔜 Planned |
+| Phase 2.5 (Language) | 🔜 Next up |
+| Phase 3 (Sim-to-Real) | 📋 Planned |
 
 ---
 
-## Roadmap: Phase 3 and Beyond
+## Roadmap: What's Next
 
-Phase 0-2 happen entirely in simulation. **Phase 3** is about getting Jack into the real world.
+### Phase 2.5: Language Understanding (Next Up)
+
+**Current state:** The `LanguageEncoder` is a placeholder — just a simple embedding layer.
+
+**Goal:** Let Jack understand natural language commands like "walk to the door" or "pick up the red cup."
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    PHASE 2.5: LANGUAGE INTEGRATION                  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   "Pick up the red cup"                                            │
+│          │                                                          │
+│          ▼                                                          │
+│   ┌────────────────┐                                               │
+│   │  LLM Backbone  │  ← Frozen (SmolVLA: 450M or Llama 3.2: 1B)   │
+│   │  (understands  │                                               │
+│   │   language)    │                                               │
+│   └────────────────┘                                               │
+│          │                                                          │
+│          ▼                                                          │
+│   Language embedding → System 2 (slow brain)                       │
+│          │                                                          │
+│          ▼                                                          │
+│   HierarchicalPlanner breaks it down:                              │
+│   1. Turn toward cup  2. Walk  3. Reach  4. Grasp                 │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Approach options:**
+1. **SmolVLA backbone** (450M) - Lightweight, open source, runs on consumer GPU
+2. **Llama 3.2 1B** - Small but capable, good instruction following
+3. **SigLIP text encoder** - Already downloaded! Could work for simple commands
+
+**Key insight:** JackTheWalker already has a dual-system architecture like [NVIDIA's GR00T N1](https://en.wikipedia.org/wiki/Vision-language-action_model) and [Figure AI's Helix](https://en.wikipedia.org/wiki/Vision-language-action_model). Language naturally fits into System 2 (slow brain) for task planning.
+
+**Papers to implement:**
+- [OpenVLA](https://openvla.github.io/) - 7B VLA that outperforms RT-2-X with 7x fewer parameters
+- [SmolVLA](https://huggingface.co/lerobot/smolvla) - Democratized 450M VLA from Hugging Face
+- [RT-2](https://robotics-transformer2.github.io/) - The original VLA paradigm from Google DeepMind
+
+---
 
 ### Phase 3: Sim-to-Real Transfer (Planned)
 
