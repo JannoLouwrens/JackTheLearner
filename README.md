@@ -217,6 +217,8 @@ The goal isn't just a robot that walks. It's a robot that **understands** walkin
 
 ## Status
 
+**🚧 Work in Progress** - This is an active research project, not production-ready software.
+
 | Component | Status |
 |-----------|--------|
 | ScalableRobotBrain | ✅ Working |
@@ -226,7 +228,74 @@ The goal isn't just a robot that walks. It's a robot that **understands** walkin
 | AlphaGeometryLoop | ✅ Working |
 | Phase 0 (Physics) | ✅ Working |
 | Phase 1 (RL Walking) | ✅ Working |
-| Phase 2 (Imitation) | ✅ Working (SOTA 2025, needs real demo data) |
+| Phase 2 (Imitation) | ✅ Working (needs real demo data) |
+| Phase 3 (Sim-to-Real) | 🔜 Planned |
+
+---
+
+## Roadmap: Phase 3 and Beyond
+
+Phase 0-2 happen entirely in simulation. **Phase 3** is about getting Jack into the real world.
+
+### Phase 3: Sim-to-Real Transfer (Planned)
+
+The biggest challenge in robotics: policies trained in simulation often fail on real hardware. This is the "sim-to-real gap."
+
+**Planned approach:**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         PHASE 3: SIM-TO-REAL                        │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  1. DOMAIN RANDOMIZATION (during Phase 1-2)                        │
+│     - Randomize: friction, mass, motor delays, sensor noise        │
+│     - Goal: Policy sees so much variation it generalizes           │
+│                                                                     │
+│  2. ZERO-SHOT TRANSFER                                             │
+│     - Deploy trained policy directly to real robot                 │
+│     - No fine-tuning needed (if DR was good enough)                │
+│                                                                     │
+│  3. ONLINE ADAPTATION (if zero-shot fails)                         │
+│     - Continual learning on real robot                             │
+│     - Safe exploration with physics constraints (MathReasoner!)    │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Key papers to implement:**
+- [FastSAC/FastTD3](https://arxiv.org/abs/2512.01996) - Train humanoid locomotion in 15 minutes
+- [Figure AI's approach](https://www.figure.ai/news/reinforcement-learning-walking) - Domain randomization + high-frequency torque feedback
+- [SCDA](https://arxiv.org/abs/2503.10949) - Safe Continual Domain Adaptation after sim2real transfer
+- [OT-Sim2Real](https://arxiv.org/abs/2509.18631) - Optimal transport for sim-and-real co-training
+
+### Phase 4: Foundation Model Integration (Future)
+
+Scale up with the latest embodied AI foundation models:
+
+- **Vision-Language-Action (VLA)** models that understand natural language commands
+- **GEN-0 style scaling** - Train on massive real-world manipulation datasets
+- **Embodied World Models** - Move from passive prediction to active goal-driven interaction
+
+**Research to follow:**
+- [GEN-0](https://generalistai.com/blog/nov-04-2025-GEN-0) - Embodied foundation models that scale with physical interaction
+- [Embodied AI Survey](https://arxiv.org/pdf/2505.20503) - Foundation models meet embodied agents
+- [Human2Humanoid](https://arxiv.org/abs/2403.04436) - Real-time whole-body teleoperation for data collection
+
+### Why MathReasoner Matters for Sim-to-Real
+
+Most sim-to-real approaches are "blind" - they don't know physics, just patterns.
+
+JackTheWalker's advantage: **MathReasoner can detect when physics is violated.**
+
+```
+Real robot does something unexpected:
+├─ Normal approach: "This doesn't match my training data" → crash
+└─ JackTheWalker: "Wait, this violates F=ma. Motor must be weaker than expected."
+                   → Adapt parameters → Continue safely
+```
+
+This is why Phase 0 (physics training) exists. It's not just for walking better in simulation - it's preparation for the real world.
 
 ---
 
