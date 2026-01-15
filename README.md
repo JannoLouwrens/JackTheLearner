@@ -1,6 +1,6 @@
-# Jack The Walker
+# Jack The Learner
 
-**A humanoid robot brain that actually understands physics.**
+**A humanoid robot brain that actually understands physics — built on transformers.**
 
 > **🚧 Work in Progress** — This is an active research project for my Masters thesis. The architecture is implemented and showing promising results in simulation, but real-world deployment (Phase 3) is still planned. Contributions and feedback welcome!
 
@@ -8,10 +8,70 @@
 
 ## Why This Project?
 
-This is my way of staying current with AI research while working towards my Masters thesis. Instead of just reading papers, I implement them to try and understand everything better. JackTheWalker combines 17+ cutting-edge papers into one coherent system - a robot brain that doesn't just imitate movements, but actually understands the physics behind them.
+This is my way of staying current with AI research while working towards my Masters thesis. Instead of just reading papers, I implement them to try and understand everything better. JackTheLearner combines 17+ cutting-edge papers into one coherent system - a robot brain that doesn't just imitate movements, but actually understands the physics behind them.
 
 **Author:** Janno Louwrens
 **Education:** BSc Computing (UNISA 2024), Honours AI (in progress)
+
+---
+
+## Built on Transformers: The Architecture Behind Modern AI
+
+The entire brain is built on **transformers** — the same architecture that powers ChatGPT, Claude, GPT-4, and every major LLM.
+
+### Why Transformers?
+
+In 2017, Google published ["Attention Is All You Need"](https://arxiv.org/abs/1706.03762) and changed everything. Before transformers:
+- Models processed sequences one step at a time (slow)
+- Long-range dependencies were hard to learn
+- Scaling was inefficient
+
+Transformers solved all of this with **self-attention**: every element can attend to every other element in parallel. This is why LLMs can understand context across thousands of tokens, and why they scale so well with more compute.
+
+### How JackTheLearner Uses Transformers
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    TRANSFORMER ARCHITECTURE                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  1. CROSS-MODAL FUSION (nn.MultiheadAttention)                     │
+│     Vision tokens ←──attend to──→ Proprioception tokens            │
+│     "I see slippery floor" + "I feel low friction" = "widen stance"│
+│                                                                     │
+│  2. TEMPORAL MEMORY (nn.TransformerEncoder)                        │
+│     Remembers last 50 timesteps                                    │
+│     "I tried this 3 times, it's not working, try something else"   │
+│                                                                     │
+│  3. ACTION GENERATION (nn.TransformerEncoder)                      │
+│     Denoises action predictions via diffusion                      │
+│     Outputs 48 smooth actions at once                              │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**The key insight:** The same attention mechanism that lets GPT-4 understand "The cat sat on the mat because **it** was tired" (knowing "it" = cat) lets JackTheLearner understand "My right foot slipped, so **I** should shift weight left" (knowing what "I" refers to across time).
+
+### From PyTorch
+
+```python
+# Cross-modal fusion: sensors attend to each other
+self.attention = nn.MultiheadAttention(d_model=512, num_heads=8)
+
+# Temporal memory: remember past 50 timesteps
+self.memory = nn.TransformerEncoder(
+    nn.TransformerEncoderLayer(d_model=512, nhead=8),
+    num_layers=4
+)
+
+# Action denoiser: generate 48 smooth actions
+self.denoiser = nn.TransformerEncoder(
+    nn.TransformerEncoderLayer(d_model=512, nhead=8),
+    num_layers=6
+)
+```
+
+This is the same `nn.TransformerEncoder` used in BERT, GPT, and every modern language model — just applied to robot control instead of text.
 
 ---
 
@@ -21,7 +81,7 @@ Here's what makes this project interesting.
 
 Most robot brains learn by watching examples: "When the robot looks like THIS, do THAT." They're pattern matchers. They don't know WHY an action works - they just memorize patterns.
 
-JackTheWalker is different. Before learning to walk, it first learns physics.
+JackTheLearner is different. Before learning to walk, it first learns physics.
 
 ### How the Physics Training Works
 
@@ -54,7 +114,7 @@ This is inspired by **AlphaGeometry** (DeepMind) - the AI that won a gold medal 
 
 ## Vision: Seeing Like a Robot
 
-Most robots use a single vision model. JackTheWalker uses **two** and fuses them together (from [OpenVLA](https://openvla.github.io/)):
+Most robots use a single vision model. JackTheLearner uses **two** and fuses them together (from [OpenVLA](https://openvla.github.io/)):
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -105,7 +165,7 @@ Humans have two thinking modes (from Kahneman's "Thinking Fast and Slow"):
 - **System 1**: Fast, automatic, reflexive ("catch the ball!")
 - **System 2**: Slow, deliberate, logical ("if I throw at 45°, accounting for wind...")
 
-JackTheWalker has both:
+JackTheLearner has both:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -201,6 +261,7 @@ PHASE 0: PHYSICS                    PHASE 1: WALKING                 PHASE 2: IM
 
 | Paper | What I Took From It |
 |-------|---------------------|
+| **Attention Is All You Need** (Google 2017) | The transformer architecture. Self-attention for cross-modal fusion, temporal memory, and action generation. The foundation of modern AI. |
 | **AlphaGeometry** (DeepMind 2024) | The neural-symbolic loop. Neural proposes, symbolic verifies. This is the core insight. |
 | **Physical Intelligence π0** (2024) | Flow matching - makes diffusion 15x faster. One step instead of fifteen. |
 | **OpenVLA** (Stanford 2024) | Fuse DINOv2 (where things are) + SigLIP (what things are) for better vision. |
@@ -246,8 +307,8 @@ To use real data, modify `Phase2_Imitation.py` to load from these instead of syn
 
 ```bash
 # Clone and install
-git clone https://github.com/JannoLouwrens/JackTheWalker.git
-cd JackTheWalker
+git clone https://github.com/JannoLouwrens/JackTheLearner.git
+cd JackTheLearner
 pip install -r requirements.txt
 
 # Quick test
@@ -269,7 +330,7 @@ python Phase1_Locomotion.py --phase0-checkpoint checkpoints/phase0_best.pt --ena
 Most robot learning projects do ONE thing:
 - Just RL, or just imitation, or just a world model
 
-JackTheWalker combines them ALL:
+JackTheLearner combines them ALL:
 - **Neuro-symbolic**: Neural speed + symbolic correctness
 - **Dual-process**: Fast reflexes + slow reasoning
 - **Hierarchical**: High-level planning + low-level control
@@ -333,7 +394,7 @@ The goal isn't just a robot that walks. It's a robot that **understands** walkin
 2. **Llama 3.2 1B** - Small but capable, good instruction following
 3. **SigLIP text encoder** - Already downloaded! Could work for simple commands
 
-**Key insight:** JackTheWalker already has a dual-system architecture like [NVIDIA's GR00T N1](https://en.wikipedia.org/wiki/Vision-language-action_model) and [Figure AI's Helix](https://en.wikipedia.org/wiki/Vision-language-action_model). Language naturally fits into System 2 (slow brain) for task planning.
+**Key insight:** JackTheLearner already has a dual-system architecture like [NVIDIA's GR00T N1](https://en.wikipedia.org/wiki/Vision-language-action_model) and [Figure AI's Helix](https://en.wikipedia.org/wiki/Vision-language-action_model). Language naturally fits into System 2 (slow brain) for task planning.
 
 **Papers to implement:**
 - [OpenVLA](https://openvla.github.io/) - 7B VLA that outperforms RT-2-X with 7x fewer parameters
@@ -391,12 +452,12 @@ Scale up with the latest embodied AI foundation models:
 
 Most sim-to-real approaches are "blind" - they don't know physics, just patterns.
 
-JackTheWalker's advantage: **MathReasoner can detect when physics is violated.**
+JackTheLearner's advantage: **MathReasoner can detect when physics is violated.**
 
 ```
 Real robot does something unexpected:
 ├─ Normal approach: "This doesn't match my training data" → crash
-└─ JackTheWalker: "Wait, this violates F=ma. Motor must be weaker than expected."
+└─ JackTheLearner: "Wait, this violates F=ma. Motor must be weaker than expected."
                    → Adapt parameters → Continue safely
 ```
 
