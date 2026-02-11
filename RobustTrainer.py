@@ -398,7 +398,7 @@ class RobustTrainer:
             print(f"  Backbone: {self.config.learning_rate * self.config.pretrained_lr_scale:.2e}")
             print(f"  Heads: {self.config.learning_rate:.2e}")
 
-    def train_phase0(self, num_epochs: int = 50, samples_per_epoch: int = 10000):
+    def train_phase0(self, num_epochs: int = 50, samples_per_epoch: int = 10000, load_file: str = None):
         """
         Phase 0: Learn physics from synthetic data.
 
@@ -410,17 +410,42 @@ class RobustTrainer:
         print("=" * 70)
 
         self.current_phase = 0
-
-        # Check for existing checkpoint to resume
-        start_epoch = 0
-        phase0_latest = os.path.join(self.config.checkpoint_dir, "phase0_latest.pt")
-        if os.path.exists(phase0_latest):
-            checkpoint = torch.load(phase0_latest, map_location=self.device, weights_only=False)
-            self.model.load_state_dict(checkpoint['model_state_dict'])
-            start_epoch = checkpoint.get('epoch', 0) + 1
-            print(f"[RESUME] Loaded checkpoint from epoch {start_epoch}")
-
         self._create_optimizer(0)
+        start_epoch = 0
+
+        # --- Checkpoint Loading Logic ---
+        if load_file:
+            # Manual load: User specified a file
+            manual_path = os.path.join(self.config.checkpoint_dir, load_file)
+            if os.path.exists(manual_path):
+                print(f"[MANUAL LOAD] Attempting to load '{load_file}'...")
+                checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
+                self.model.load_state_dict(checkpoint['model_state_dict'])
+                if 'optimizer_state_dict' in checkpoint:
+                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                start_epoch = checkpoint.get('epoch', 0) + 1
+                print(f"[OK] Loaded checkpoint. Continuing from epoch {start_epoch}.")
+            else:
+                print(f"[WARN] Specified checkpoint '{load_file}' not found. Starting from scratch.")
+        else:
+            # Automatic load: Default behavior
+            phase0_latest = os.path.join(self.config.checkpoint_dir, "phase0_latest.pt")
+            if os.path.exists(phase0_latest):
+                checkpoint = torch.load(phase0_latest, map_location=self.device, weights_only=False)
+                self.model.load_state_dict(checkpoint['model_state_dict'])
+                if 'optimizer_state_dict' in checkpoint:
+                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                start_epoch = checkpoint.get('epoch', 0) + 1
+                print(f"[RESUME] Loaded Phase 0 LATEST checkpoint from epoch {start_epoch}")
+            else:
+                phase0_best = os.path.join(self.config.checkpoint_dir, "phase0_best.pt")
+                if os.path.exists(phase0_best):
+                    checkpoint = torch.load(phase0_best, map_location=self.device, weights_only=False)
+                    self.model.load_state_dict(checkpoint['model_state_dict'])
+                    if 'optimizer_state_dict' in checkpoint:
+                        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    start_epoch = checkpoint.get('epoch', 0) + 1 # Continue from the epoch AFTER the best one was saved
+                    print(f"[OK] Loaded Phase 0 BEST checkpoint. Continuing training from epoch {start_epoch}.")
 
         # Import SymPy calculator
         try:
@@ -535,7 +560,7 @@ class RobustTrainer:
         print(f"\n[DONE] Phase 0 complete. Best loss: {best_loss:.4f}")
         return best_loss
 
-    def train_phase1(self, num_epochs: int = 500):
+    def train_phase1(self, num_epochs: int = 500, load_file: str = None):
         """
         Phase 1: RL training with safeguards.
 
@@ -549,21 +574,44 @@ class RobustTrainer:
         print("=" * 70)
 
         self.current_phase = 1
+        self._create_optimizer(1)
+        start_epoch = 0
 
-        # Load Phase 0 checkpoint
-        phase0_path = os.path.join(self.config.checkpoint_dir, "phase0_best.pt")
-        if os.path.exists(phase0_path):
-            self.load_checkpoint(phase0_path)
-            print("[OK] Loaded Phase 0 checkpoint")
+        # --- Checkpoint Loading Logic ---
+        if load_file:
+            # Manual load: User specified a file
+            manual_path = os.path.join(self.config.checkpoint_dir, load_file)
+            if os.path.exists(manual_path):
+                print(f"[MANUAL LOAD] Attempting to load '{load_file}'...")
+                checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
+                self.model.load_state_dict(checkpoint['model_state_dict'])
+                if 'optimizer_state_dict' in checkpoint:
+                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                start_epoch = checkpoint.get('epoch', 0) + 1
+                print(f"[OK] Loaded checkpoint. Continuing from epoch {start_epoch}.")
+            else:
+                print(f"[WARN] Specified checkpoint '{load_file}' not found. Starting from scratch.")
         else:
-            print("[WARN] No Phase 0 checkpoint found!")
+            # Automatic load: Default behavior
+            phase1_latest = os.path.join(self.config.checkpoint_dir, "phase1_latest.pt")
+            if os.path.exists(phase1_latest):
+                checkpoint = torch.load(phase1_latest, map_location=self.device, weights_only=False)
+                self.model.load_state_dict(checkpoint['model_state_dict'])
+                if 'optimizer_state_dict' in checkpoint:
+                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                start_epoch = checkpoint.get('epoch', 0) + 1
+                print(f"[RESUME] Loaded Phase 1 LATEST checkpoint from epoch {start_epoch}")
+            else:
+                phase0_path = os.path.join(self.config.checkpoint_dir, "phase0_best.pt")
+                if os.path.exists(phase0_path):
+                    self.load_checkpoint(phase0_path)
+                    print("[OK] Loaded Phase 0 BEST checkpoint to start Phase 1.")
+                else:
+                    print("[WARN] No Phase 0 checkpoint found! Starting from scratch.")
 
         # Load replay buffer and EWC
         self.replay_buffer.load(self.config.replay_buffer_path)
         self.ewc.load(self.config.ewc_path)
-
-        # Create multi-rate optimizer
-        self._create_optimizer(1)
 
         # Create environment
         try:
@@ -583,7 +631,7 @@ class RobustTrainer:
 
         best_reward = -float('inf')
 
-        for epoch in range(num_epochs):
+        for epoch in range(start_epoch, num_epochs):
             self.epoch = epoch
 
             # Collect experience (simplified for demo)
@@ -598,14 +646,13 @@ class RobustTrainer:
 
             print(f"[Epoch {epoch+1}] Reward: {avg_reward:.1f} | Loss: {train_loss:.4f}")
 
+            # Save latest (for resume on disconnect)
+            self.save_checkpoint("phase1_latest")
+
             # Save best
             if avg_reward > best_reward:
                 best_reward = avg_reward
                 self.save_checkpoint("phase1_best")
-
-            # Periodic save
-            if (epoch + 1) % 50 == 0:
-                self.save_checkpoint("phase1_latest")
 
         # Update EWC for Phase 2
         print("\n[*] Updating EWC for Phase 2...")
@@ -614,7 +661,7 @@ class RobustTrainer:
         print(f"\n[DONE] Phase 1 complete. Best reward: {best_reward:.1f}")
         return best_reward
 
-    def train_phase2(self, num_epochs: int = 100):
+    def train_phase2(self, num_epochs: int = 100, load_file: str = None):
         """
         Phase 2: Imitation learning with safeguards.
 
@@ -625,31 +672,57 @@ class RobustTrainer:
         print("=" * 70)
 
         self.current_phase = 2
+        self._create_optimizer(2)
+        start_epoch = 0
 
-        # Load Phase 1 checkpoint
-        phase1_path = os.path.join(self.config.checkpoint_dir, "phase1_best.pt")
-        if os.path.exists(phase1_path):
-            self.load_checkpoint(phase1_path)
-            print("[OK] Loaded Phase 1 checkpoint")
+        # --- Checkpoint Loading Logic ---
+        if load_file:
+            # Manual load: User specified a file
+            manual_path = os.path.join(self.config.checkpoint_dir, load_file)
+            if os.path.exists(manual_path):
+                print(f"[MANUAL LOAD] Attempting to load '{load_file}'...")
+                checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
+                self.model.load_state_dict(checkpoint['model_state_dict'])
+                if 'optimizer_state_dict' in checkpoint:
+                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                start_epoch = checkpoint.get('epoch', 0) + 1
+                print(f"[OK] Loaded checkpoint. Continuing from epoch {start_epoch}.")
+            else:
+                print(f"[WARN] Specified checkpoint '{load_file}' not found. Starting from scratch.")
+        else:
+            # Automatic load: Default behavior
+            phase2_latest = os.path.join(self.config.checkpoint_dir, "phase2_latest.pt")
+            if os.path.exists(phase2_latest):
+                checkpoint = torch.load(phase2_latest, map_location=self.device, weights_only=False)
+                self.model.load_state_dict(checkpoint['model_state_dict'])
+                if 'optimizer_state_dict' in checkpoint:
+                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                start_epoch = checkpoint.get('epoch', 0) + 1
+                print(f"[RESUME] Loaded Phase 2 LATEST checkpoint from epoch {start_epoch}")
+            else:
+                phase1_path = os.path.join(self.config.checkpoint_dir, "phase1_best.pt")
+                if os.path.exists(phase1_path):
+                    self.load_checkpoint(phase1_path)
+                    print("[OK] Loaded Phase 1 BEST checkpoint to start Phase 2.")
 
         # Load replay buffer and EWC
         self.replay_buffer.load(self.config.replay_buffer_path)
         self.ewc.load(self.config.ewc_path)
 
-        # Create optimizer
-        self._create_optimizer(2)
-
         print("\n[*] Safeguards active (same as Phase 1)")
 
         best_loss = float('inf')
 
-        for epoch in range(num_epochs):
+        for epoch in range(start_epoch, num_epochs):
             self.epoch = epoch
 
             # Training step with safeguards
             train_loss = self._train_step_with_safeguards(use_flow_matching=True)
 
             print(f"[Epoch {epoch+1}] Loss: {train_loss:.4f}")
+
+            # Save latest (for resume on disconnect)
+            self.save_checkpoint("phase2_latest")
 
             # Save best
             if train_loss < best_loss:
@@ -862,6 +935,8 @@ def main():
     parser.add_argument("--phase", type=int, required=True, choices=[0, 1, 2],
                         help="Training phase (0=physics, 1=RL, 2=imitation)")
     parser.add_argument("--epochs", type=int, default=50, help="Number of epochs")
+    parser.add_argument("--load", type=str, default=None,
+                        help="Force load a specific checkpoint file, bypassing automatic selection.")
     parser.add_argument("--verify", action="store_true", help="Verify physics preservation")
     args = parser.parse_args()
 
@@ -869,11 +944,11 @@ def main():
     trainer = RobustTrainer(config)
 
     if args.phase == 0:
-        trainer.train_phase0(num_epochs=args.epochs)
+        trainer.train_phase0(num_epochs=args.epochs, load_file=args.load)
     elif args.phase == 1:
-        trainer.train_phase1(num_epochs=args.epochs)
+        trainer.train_phase1(num_epochs=args.epochs, load_file=args.load)
     elif args.phase == 2:
-        trainer.train_phase2(num_epochs=args.epochs)
+        trainer.train_phase2(num_epochs=args.epochs, load_file=args.load)
 
     if args.verify:
         verify_physics_preservation(trainer)
