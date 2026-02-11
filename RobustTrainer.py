@@ -414,11 +414,11 @@ class RobustTrainer:
 
         # Import SymPy calculator
         try:
-            from SymbolicCalculator import SymbolicCalculator
-            calculator = SymbolicCalculator()
+            from SymbolicCalculator import SymbolicPhysicsCalculator
+            calculator = SymbolicPhysicsCalculator()
             print("[OK] SymPy calculator loaded")
         except ImportError:
-            print("[WARN] SymbolicCalculator not found, using random targets")
+            print("[WARN] SymbolicPhysicsCalculator not found, using random targets")
             calculator = None
 
         best_loss = float('inf')
@@ -443,10 +443,32 @@ class RobustTrainer:
                     physics_targets = []
                     next_states = []
                     for i in range(batch_size):
-                        phys = calculator.compute_physics(state[i].cpu().numpy(), action[i].cpu().numpy())
-                        physics_targets.append(phys)
-                        ns = calculator.predict_next_state(state[i].cpu().numpy(), action[i].cpu().numpy())
+                        # predict_robot_state returns (next_state, physics_dict)
+                        ns, phys_dict = calculator.predict_robot_state(
+                            state[i].cpu().numpy(),
+                            action[i].cpu().numpy()
+                        )
                         next_states.append(ns)
+
+                        # Expand 4 physics values to 10 for model compatibility
+                        # [KE, PE, total_E, momentum, force, torque, ang_mom, stability, work, power]
+                        ke = phys_dict['kinetic_energy']
+                        pe = phys_dict['potential_energy']
+                        total_e = ke + pe
+                        momentum = phys_dict['momentum']
+                        force_mag = phys_dict['force_magnitude']
+
+                        # Compute additional physics quantities
+                        torque_mag = force_mag * 0.3  # Approximate torque (r ≈ 0.3m arm)
+                        ang_momentum = momentum * 0.5  # Approximate (r ≈ 0.5m CoM height)
+                        stability = 1.0 / (1.0 + abs(pe) / 1000.0)  # Stability score (0-1)
+                        work = force_mag * 0.02  # Work = F * d (dt ≈ 0.02m displacement)
+                        power = work / 0.02  # Power = Work / time (50Hz control)
+
+                        phys_array = [ke, pe, total_e, momentum, force_mag,
+                                      torque_mag, ang_momentum, stability, work, power]
+                        physics_targets.append(phys_array)
+
                     physics_targets = torch.tensor(np.array(physics_targets), dtype=torch.float32).to(self.device)
                     next_state = torch.tensor(np.array(next_states), dtype=torch.float32).to(self.device)
                 else:

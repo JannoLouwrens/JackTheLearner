@@ -56,7 +56,7 @@ class SymbolicPhysicsCalculator:
         self._define_chemistry_properties()
 
         print("[*] Symbolic Physics & Chemistry Calculator Initialized")
-        print("   Physics: F=ma, τ=r×F, E=½mv²+mgh, p=mv, pendulum, projectile")
+        print("   Physics: F=ma, torque=r*F, E=0.5mv^2+mgh, p=mv, pendulum, projectile")
         print("   Chemistry: Bond energies, molecular forces, reactions")
         print("   Engine: SymPy (exact symbolic computation)\n")
 
