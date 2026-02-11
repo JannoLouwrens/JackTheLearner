@@ -293,11 +293,16 @@ class IntegratedSOTATrainer:
             d_model=512,
             n_heads=8,
             n_layers=6,
+            num_joints=17,           # NEW: Joint tokenization
+            features_per_joint=8,    # NEW: 8 features per joint
             num_rules=100,
-            proprio_dim=512,  # Takes brain features
+            proprio_dim=256,         # FIXED: Must match Phase 0!
             action_dim=self.action_dim,
         )
         self.math_reasoner = NeuroSymbolicMathReasoner(math_config).to(device)
+
+        # Project brain features to match MathReasoner input dim
+        self.brain_to_math_proj = nn.Linear(brain_config.d_model, 256).to(device)
 
         # Load Phase 0 checkpoint (if provided)
         if phase0_checkpoint and os.path.exists(phase0_checkpoint):
@@ -423,9 +428,15 @@ class IntegratedSOTATrainer:
             system1_features = memory[:, -1, :]  # (1, d_model)
 
             # SYSTEM 2: Physics reasoning (1-5Hz - periodically)
+            # FIXED: Pass raw state to MathReasoner (not brain features!)
+            # MathReasoner was trained on raw state in Phase 0
             if self.total_steps % self.system2_every == 0:
+                # Prepare state for MathReasoner (256 dims from raw obs)
+                # Pad/truncate to 256 if needed
+                math_input = obs_tensor[:, :256] if obs_tensor.shape[1] >= 256 else F.pad(obs_tensor, (0, 256 - obs_tensor.shape[1]))
+
                 # Call System 2 (fine-tunes during training!)
-                math_output = self.math_reasoner(system1_features, action=None)
+                math_output = self.math_reasoner(math_input, action=None)
                 system2_reasoning = math_output['reasoning']  # (1, d_model)
                 self.system2_calls += 1
                 # Cache for next few steps
@@ -566,7 +577,9 @@ class IntegratedSOTATrainer:
             system1_features = memory[:, -1, :]
 
             # System 2: Batch physics reasoning (fine-tuning happens here!)
-            math_output = self.math_reasoner(system1_features, action=None)
+            # FIXED: Pass raw observations to MathReasoner (not brain features!)
+            math_input = observations[:, :256] if observations.shape[1] >= 256 else F.pad(observations, (0, 256 - observations.shape[1]))
+            math_output = self.math_reasoner(math_input, action=None)
             system2_reasoning = math_output['reasoning']
 
             # Combine
