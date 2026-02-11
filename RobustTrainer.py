@@ -410,6 +410,16 @@ class RobustTrainer:
         print("=" * 70)
 
         self.current_phase = 0
+
+        # Check for existing checkpoint to resume
+        start_epoch = 0
+        phase0_latest = os.path.join(self.config.checkpoint_dir, "phase0_latest.pt")
+        if os.path.exists(phase0_latest):
+            checkpoint = torch.load(phase0_latest, map_location=self.device, weights_only=False)
+            self.model.load_state_dict(checkpoint['model_state_dict'])
+            start_epoch = checkpoint.get('epoch', 0) + 1
+            print(f"[RESUME] Loaded checkpoint from epoch {start_epoch}")
+
         self._create_optimizer(0)
 
         # Import SymPy calculator
@@ -423,7 +433,7 @@ class RobustTrainer:
 
         best_loss = float('inf')
 
-        for epoch in range(num_epochs):
+        for epoch in range(start_epoch, num_epochs):
             self.epoch = epoch
             epoch_loss = 0
             num_batches = 0
@@ -502,6 +512,9 @@ class RobustTrainer:
 
             avg_loss = epoch_loss / num_batches
             print(f"[Epoch {epoch+1}] Loss: {avg_loss:.4f}")
+
+            # Save latest (for resume on disconnect)
+            self.save_checkpoint("phase0_latest")
 
             # Save best
             if avg_loss < best_loss:
