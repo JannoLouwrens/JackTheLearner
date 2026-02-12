@@ -108,6 +108,13 @@ class UnifiedBrainConfig:
     llm_use_lora: bool = False  # Optional LoRA fine-tuning
     llm_max_length: int = 128  # Max tokens for commands
 
+    # Companion Robot Features (NEW)
+    enable_response_generation: bool = True  # LLM generates spoken responses
+    enable_task_completion: bool = True  # Knows when task is done
+    enable_tts: bool = True  # Text-to-speech output
+    enable_memory: bool = True  # Long-term memory
+    memory_size: int = 1000  # Number of memories to store
+
     # Input
     obs_dim: int = 256
 
@@ -1429,6 +1436,304 @@ class ValueHead(nn.Module):
 
 
 # ==============================================================================
+# COMPANION ROBOT FEATURES (NEW)
+# ==============================================================================
+
+class TaskCompletionHead(nn.Module):
+    """
+    Predicts when a task is DONE.
+
+    Output: P(done) in [0, 1]
+    - 0.0 = still working on task
+    - 1.0 = task completed, ready for next command
+
+    Example: "Walk to the door" -> actions... -> done=0.95 -> "I'm at the door!"
+    """
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.predictor = nn.Sequential(
+            RMSNorm(config.d_model),
+            nn.Linear(config.d_model, config.d_model // 4),
+            nn.SiLU(),
+            nn.Linear(config.d_model // 4, 1),
+            nn.Sigmoid(),  # Output probability
+        )
+
+    def forward(self, x):
+        return self.predictor(x).squeeze(-1)
+
+
+class ResponseGenerator:
+    """
+    Generates spoken responses using the LLM.
+
+    The LLM is used for BOTH:
+    1. Understanding commands (encoder mode) - for motor control
+    2. Generating responses (decoder mode) - for dialogue
+
+    Example flow:
+    User: "Pick up the red cup"
+    -> LLM encodes for motor control
+    -> Robot executes actions
+    -> TaskCompletionHead: done=0.95
+    -> ResponseGenerator: "I've picked up the red cup!"
+    """
+
+    # Response templates for different situations
+    TEMPLATES = {
+        "task_started": [
+            "Okay, I'll {task}.",
+            "Sure, {task}.",
+            "On it! {task}.",
+        ],
+        "task_progress": [
+            "Still working on it...",
+            "Almost there...",
+            "Making progress...",
+        ],
+        "task_done": [
+            "Done! I finished {task}.",
+            "All done with {task}!",
+            "Completed {task}.",
+        ],
+        "task_failed": [
+            "Sorry, I couldn't {task}. {reason}",
+            "I had trouble with {task}. {reason}",
+        ],
+        "greeting": [
+            "Hey! What would you like me to do?",
+            "Hi there! Ready to help.",
+            "Hello! What's the plan?",
+        ],
+        "confusion": [
+            "I'm not sure what you mean. Can you say that differently?",
+            "Could you rephrase that?",
+        ],
+    }
+
+    def __init__(self, llm_encoder: 'LLMEncoder' = None):
+        self.llm = llm_encoder
+        self.use_llm_generation = False
+
+        # Check if LLM can generate
+        if llm_encoder is not None and hasattr(llm_encoder, 'llm') and llm_encoder.llm is not None:
+            self.use_llm_generation = True
+            print("[RESPONSE] Using LLM for response generation")
+        else:
+            print("[RESPONSE] Using template-based responses (no LLM)")
+
+    def generate(self, situation: str, task: str = "", reason: str = "", context: str = "") -> str:
+        """Generate a response for the given situation."""
+        import random
+
+        if self.use_llm_generation and context:
+            # Use LLM for more natural responses
+            return self._generate_with_llm(situation, task, context)
+        else:
+            # Use templates
+            templates = self.TEMPLATES.get(situation, self.TEMPLATES["confusion"])
+            template = random.choice(templates)
+            return template.format(task=task, reason=reason)
+
+    def _generate_with_llm(self, situation: str, task: str, context: str) -> str:
+        """Generate response using the LLM."""
+        try:
+            prompt = f"""You are a helpful companion robot. Respond briefly (1 sentence) to this situation:
+Situation: {situation}
+Task: {task}
+Context: {context}
+
+Response:"""
+
+            inputs = self.llm.tokenizer(prompt, return_tensors="pt", truncation=True, max_length=256)
+            device = next(self.llm.llm.parameters()).device
+            inputs = {k: v.to(device) for k, v in inputs.items()}
+
+            with torch.no_grad():
+                outputs = self.llm.llm.generate(
+                    **inputs,
+                    max_new_tokens=30,
+                    temperature=0.7,
+                    do_sample=True,
+                    pad_token_id=self.llm.tokenizer.pad_token_id,
+                )
+
+            response = self.llm.tokenizer.decode(outputs[0], skip_special_tokens=True)
+            # Extract just the response part
+            if "Response:" in response:
+                response = response.split("Response:")[-1].strip()
+            return response[:100]  # Limit length
+
+        except Exception as e:
+            # Fallback to template
+            import random
+            templates = self.TEMPLATES.get(situation, self.TEMPLATES["confusion"])
+            return random.choice(templates).format(task=task, reason=str(e))
+
+
+class CompanionMemory:
+    """
+    Long-term memory for companion robot.
+
+    Stores facts about the user and past interactions.
+    Uses simple embedding-based retrieval (like mini RAG).
+
+    Example memories:
+    - "User's name is Janno"
+    - "User likes chess and cycling"
+    - "Yesterday we played a game together"
+    """
+
+    def __init__(self, config: UnifiedBrainConfig, llm_encoder: 'LLMEncoder' = None):
+        self.max_memories = config.memory_size
+        self.memories = []  # List of (text, embedding, timestamp)
+        self.llm = llm_encoder
+        self.use_embeddings = llm_encoder is not None and hasattr(llm_encoder, 'use_llm') and llm_encoder.use_llm
+
+        print(f"[MEMORY] Initialized with capacity for {self.max_memories} memories")
+        if self.use_embeddings:
+            print("[MEMORY] Using LLM embeddings for retrieval")
+        else:
+            print("[MEMORY] Using keyword matching (no LLM)")
+
+    def add(self, text: str, importance: float = 1.0):
+        """Add a memory."""
+        import time
+        timestamp = time.time()
+
+        # Get embedding if possible
+        embedding = None
+        if self.use_embeddings:
+            try:
+                with torch.no_grad():
+                    embedding = self.llm.encode_batch([text])[0].cpu().numpy()
+            except:
+                pass
+
+        self.memories.append({
+            "text": text,
+            "embedding": embedding,
+            "timestamp": timestamp,
+            "importance": importance,
+        })
+
+        # Prune old memories if over capacity
+        if len(self.memories) > self.max_memories:
+            # Remove least important old memories
+            self.memories.sort(key=lambda m: m["importance"] * (1 - (timestamp - m["timestamp"]) / 86400))
+            self.memories = self.memories[-self.max_memories:]
+
+        print(f"[MEMORY] Stored: {text[:50]}...")
+
+    def recall(self, query: str, top_k: int = 3) -> List[str]:
+        """Retrieve relevant memories."""
+        if not self.memories:
+            return []
+
+        if self.use_embeddings:
+            try:
+                with torch.no_grad():
+                    query_emb = self.llm.encode_batch([query])[0].cpu().numpy()
+
+                # Cosine similarity
+                scores = []
+                for mem in self.memories:
+                    if mem["embedding"] is not None:
+                        sim = np.dot(query_emb, mem["embedding"]) / (
+                            np.linalg.norm(query_emb) * np.linalg.norm(mem["embedding"]) + 1e-8
+                        )
+                        scores.append((sim, mem["text"]))
+
+                scores.sort(reverse=True)
+                return [text for _, text in scores[:top_k]]
+            except:
+                pass
+
+        # Fallback: keyword matching
+        query_words = set(query.lower().split())
+        scores = []
+        for mem in self.memories:
+            mem_words = set(mem["text"].lower().split())
+            overlap = len(query_words & mem_words)
+            scores.append((overlap, mem["text"]))
+
+        scores.sort(reverse=True)
+        return [text for _, text in scores[:top_k] if _ > 0]
+
+    def get_context(self, query: str) -> str:
+        """Get memory context for response generation."""
+        memories = self.recall(query, top_k=3)
+        if memories:
+            return "Relevant memories: " + "; ".join(memories)
+        return ""
+
+
+class TextToSpeech:
+    """
+    Text-to-speech wrapper for companion robot.
+
+    Options:
+    1. pyttsx3 (offline, cross-platform)
+    2. gTTS (Google, needs internet)
+    3. Bark (neural TTS, needs GPU)
+    """
+
+    def __init__(self):
+        self.engine = None
+        self.method = None
+
+        # Try pyttsx3 first (offline)
+        try:
+            import pyttsx3
+            self.engine = pyttsx3.init()
+            self.method = "pyttsx3"
+            print("[TTS] Using pyttsx3 (offline)")
+        except:
+            pass
+
+        # Try gTTS (online)
+        if self.engine is None:
+            try:
+                from gtts import gTTS
+                self.method = "gtts"
+                print("[TTS] Using gTTS (online)")
+            except:
+                pass
+
+        if self.method is None:
+            print("[TTS] No TTS available - will print responses only")
+
+    def speak(self, text: str):
+        """Speak the text."""
+        print(f"[ROBOT SAYS]: {text}")
+
+        if self.method == "pyttsx3":
+            try:
+                self.engine.say(text)
+                self.engine.runAndWait()
+            except:
+                pass
+        elif self.method == "gtts":
+            try:
+                from gtts import gTTS
+                import io
+                import pygame
+
+                tts = gTTS(text=text, lang='en')
+                fp = io.BytesIO()
+                tts.write_to_fp(fp)
+                fp.seek(0)
+
+                pygame.mixer.init()
+                pygame.mixer.music.load(fp)
+                pygame.mixer.music.play()
+                while pygame.mixer.music.get_busy():
+                    pass
+            except:
+                pass
+
+
+# ==============================================================================
 # UNIFIED BRAIN - COMPLETE
 # ==============================================================================
 
@@ -1559,6 +1864,41 @@ class UnifiedBrain(nn.Module):
         self.physics_head = PhysicsHead(config)
         self.value_head = ValueHead(config)
         print("  ActionHead, PhysicsHead, ValueHead")
+
+        # Task completion head (knows when done)
+        if config.enable_task_completion:
+            self.task_completion_head = TaskCompletionHead(config)
+            print("  TaskCompletionHead (knows when done)")
+        else:
+            self.task_completion_head = None
+
+        # ==========================================
+        # COMPANION ROBOT FEATURES
+        # ==========================================
+        print("\n[COMPANION FEATURES]")
+
+        # Response generator (talks back)
+        if config.enable_response_generation:
+            llm_enc = self.language_encoder if hasattr(self.language_encoder, 'llm') else None
+            self.response_generator = ResponseGenerator(llm_enc)
+        else:
+            self.response_generator = None
+            print("  Response generation: Disabled")
+
+        # Long-term memory
+        if config.enable_memory:
+            llm_enc = self.language_encoder if hasattr(self.language_encoder, 'llm') else None
+            self.memory = CompanionMemory(config, llm_enc)
+        else:
+            self.memory = None
+            print("  Memory: Disabled")
+
+        # Text-to-speech
+        if config.enable_tts:
+            self.tts = TextToSpeech()
+        else:
+            self.tts = None
+            print("  TTS: Disabled")
 
         # CLS token
         self.cls_token = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)
@@ -1709,6 +2049,10 @@ class UnifiedBrain(nn.Module):
             'value': self.value_head(cls_combined),
         }
 
+        # Task completion prediction (knows when done)
+        if self.task_completion_head is not None:
+            output['task_done'] = self.task_completion_head(cls_combined)
+
         # ==========================================
         # WORLD MODEL (TD-MPC2)
         # ==========================================
@@ -1806,6 +2150,130 @@ class UnifiedBrain(nn.Module):
     def has_llm(self) -> bool:
         """Check if LLM is loaded"""
         return hasattr(self.language_encoder, 'use_llm') and self.language_encoder.use_llm
+
+    # ==========================================
+    # COMPANION ROBOT INTERACTION (NEW)
+    # ==========================================
+
+    def interact(self, state: torch.Tensor, command: str, speak: bool = True) -> Dict:
+        """
+        FULL COMPANION ROBOT INTERACTION.
+
+        This is the main entry point for talking to your robot friend!
+
+        Flow:
+        1. User says command → Audio/Text input
+        2. LLM understands command
+        3. Brain generates action
+        4. TaskCompletion checks if done
+        5. ResponseGenerator creates reply
+        6. TTS speaks the reply
+
+        Args:
+            state: Robot state tensor
+            command: Natural language command (text)
+            speak: Whether to use TTS
+
+        Returns:
+            Dict with:
+            - action: Motor commands
+            - task_done: Probability task is complete
+            - response: What the robot says back
+            - memories: Relevant memories retrieved
+
+        Example:
+            result = brain.interact(state, "Walk to the door")
+            # Robot: "Okay, I'll walk to the door."
+            # ... robot walks ...
+            # result['task_done'] > 0.9
+            # Robot: "Done! I'm at the door."
+        """
+        if state.dim() == 1:
+            state = state.unsqueeze(0)
+
+        # Get relevant memories
+        memories = []
+        if self.memory is not None:
+            memories = self.memory.recall(command, top_k=3)
+
+        # Prepare language input
+        # If LLM is available, pass string directly
+        # Otherwise, convert to simple token IDs for fallback encoder
+        if self.has_llm():
+            lang_input = command
+        else:
+            # Simple character-level tokenization for fallback
+            lang_input = torch.tensor([[ord(c) % self.config.vocab_size for c in command[:20]]],
+                                      device=state.device)
+
+        # Forward pass with language
+        output = self.forward(state, language=lang_input)
+
+        # Extract results
+        action = output['actions'][:, 0, :]
+        task_done = output.get('task_done', torch.tensor([0.0]))[0].item()
+
+        # Generate response
+        response = ""
+        if self.response_generator is not None:
+            context = self.memory.get_context(command) if self.memory else ""
+
+            if task_done > 0.9:
+                response = self.response_generator.generate("task_done", task=command, context=context)
+            elif task_done < 0.1:
+                response = self.response_generator.generate("task_started", task=command, context=context)
+            else:
+                response = self.response_generator.generate("task_progress", task=command, context=context)
+
+        # Speak if requested
+        if speak and self.tts is not None and response:
+            self.tts.speak(response)
+
+        return {
+            'action': action,
+            'task_done': task_done,
+            'response': response,
+            'memories': memories,
+            'full_output': output,
+        }
+
+    def remember(self, fact: str, importance: float = 1.0):
+        """
+        Store a fact in long-term memory.
+
+        Example:
+            brain.remember("Janno likes chess")
+            brain.remember("Today we went for a walk", importance=2.0)
+        """
+        if self.memory is not None:
+            self.memory.add(fact, importance)
+
+    def recall(self, query: str, top_k: int = 3) -> List[str]:
+        """
+        Retrieve relevant memories.
+
+        Example:
+            memories = brain.recall("What does Janno like?")
+            # ["Janno likes chess", "Janno likes cycling"]
+        """
+        if self.memory is not None:
+            return self.memory.recall(query, top_k)
+        return []
+
+    def say(self, text: str):
+        """Make the robot speak."""
+        if self.tts is not None:
+            self.tts.speak(text)
+        else:
+            print(f"[ROBOT]: {text}")
+
+    def greet(self):
+        """Robot greeting."""
+        if self.response_generator is not None:
+            response = self.response_generator.generate("greeting")
+            self.say(response)
+        else:
+            self.say("Hello! Ready to help.")
 
 
 # ==============================================================================
