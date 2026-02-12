@@ -205,13 +205,18 @@ class EWC:
 
         Loss = lambda * sum(Fisher[i] * (theta[i] - theta_old[i])^2)
         """
-        if not self.fisher:
-            return torch.tensor(0.0)
+        device = next(self.model.parameters()).device
 
-        loss = 0
+        if not self.fisher:
+            return torch.tensor(0.0, device=device)
+
+        loss = torch.tensor(0.0, device=device)
         for n, p in self.model.named_parameters():
             if n in self.fisher:
-                loss += (self.fisher[n] * (p - self.old_params[n]).pow(2)).sum()
+                # Ensure tensors are on same device
+                fisher_n = self.fisher[n].to(device)
+                old_param_n = self.old_params[n].to(device)
+                loss += (fisher_n * (p - old_param_n).pow(2)).sum()
 
         return self.lambda_ewc * loss
 
