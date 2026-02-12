@@ -42,6 +42,7 @@ import argparse
 from tqdm import tqdm
 
 from UnifiedBrain import UnifiedBrain, UnifiedBrainConfig, compute_physics_loss, compute_flow_matching_loss
+from MoCapLoader import MoCapDataset, MoCapConfig
 
 
 # ==============================================================================
@@ -530,6 +531,17 @@ class RobustTrainerConfig:
     dr_sensor_noise_std: float = 0.01          # Observation noise std
     dr_action_delay_steps: int = 2             # Max motor delay (steps)
 
+    # MoCap (for Phase 2 imitation learning)
+    mocap_enabled: bool = True                      # Use real MoCap data if available
+    mocap_dir: str = "datasets/cmu_mocap"           # Path to BVH files
+    mocap_context_length: int = 10                  # History frames for context
+    mocap_action_chunk_size: int = 16               # Action prediction horizon
+
+    # Colab Drive backup (periodic backup during training)
+    colab_backup_enabled: bool = False              # Enable periodic backup to Drive
+    colab_backup_interval: int = 100                # Backup every N epochs
+    colab_drive_path: str = "/content/drive/MyDrive/JackTheLearner/checkpoints"
+
     # Paths
     checkpoint_dir: str = "checkpoints"
     replay_buffer_path: str = "checkpoints/replay_buffer.pt"
@@ -572,13 +584,17 @@ class RobustTrainer:
             nn.Linear(512, self.config.obs_dim),
             nn.LayerNorm(self.config.obs_dim),
         ).to(self.device)
-        print(f"  Obs projection: {self.config.mujoco_obs_dim} → {self.config.obs_dim}")
+        print(f"  Obs projection: {self.config.mujoco_obs_dim} -> {self.config.obs_dim}")
 
         # Safeguards
         self.replay_buffer = ReplayBuffer()
         self.ewc = EWC(self.model, self.config.ewc_lambda)
         self.physics_checker = PhysicsConsistency(self.model)
         self.domain_randomizer = DomainRandomization(self.config)
+
+        # MoCap dataset for Phase 2 (lazy initialization)
+        self.mocap_dataset = None
+        self.mocap_dataloader = None
 
         # Training state
         self.current_phase = 0
@@ -645,7 +661,7 @@ class RobustTrainer:
             if os.path.exists(manual_path):
                 print(f"[MANUAL LOAD] Attempting to load '{load_file}'...")
                 checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
-                self.model.load_state_dict(checkpoint['model_state_dict'])
+                self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
                     self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint.get('epoch', 0) + 1
@@ -657,7 +673,7 @@ class RobustTrainer:
             phase0_latest = os.path.join(self.config.checkpoint_dir, "phase0_latest.pt")
             if os.path.exists(phase0_latest):
                 checkpoint = torch.load(phase0_latest, map_location=self.device, weights_only=False)
-                self.model.load_state_dict(checkpoint['model_state_dict'])
+                self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
                     self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint.get('epoch', 0) + 1
@@ -666,7 +682,7 @@ class RobustTrainer:
                 phase0_best = os.path.join(self.config.checkpoint_dir, "phase0_best.pt")
                 if os.path.exists(phase0_best):
                     checkpoint = torch.load(phase0_best, map_location=self.device, weights_only=False)
-                    self.model.load_state_dict(checkpoint['model_state_dict'])
+                    self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                     if 'optimizer_state_dict' in checkpoint:
                         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                     start_epoch = checkpoint.get('epoch', 0) + 1 # Continue from the epoch AFTER the best one was saved
@@ -771,9 +787,9 @@ class RobustTrainer:
                 best_loss = avg_loss
                 self.save_checkpoint("phase0_best")
 
-            # Periodic save
-            if (epoch + 1) % 10 == 0:
-                self.save_checkpoint(f"phase0_epoch{epoch+1}")
+            # Periodic backup to Drive (Colab)
+            if (epoch + 1) % self.config.colab_backup_interval == 0:
+                self.backup_to_drive()
 
         # Compute Fisher information for EWC (before Phase 1)
         print("\n[*] Computing EWC Fisher information...")
@@ -809,7 +825,7 @@ class RobustTrainer:
             if os.path.exists(manual_path):
                 print(f"[MANUAL LOAD] Attempting to load '{load_file}'...")
                 checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
-                self.model.load_state_dict(checkpoint['model_state_dict'])
+                self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
                     self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint.get('epoch', 0) + 1
@@ -821,7 +837,7 @@ class RobustTrainer:
             phase1_latest = os.path.join(self.config.checkpoint_dir, "phase1_latest.pt")
             if os.path.exists(phase1_latest):
                 checkpoint = torch.load(phase1_latest, map_location=self.device, weights_only=False)
-                self.model.load_state_dict(checkpoint['model_state_dict'])
+                self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
                     self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint.get('epoch', 0) + 1
@@ -879,6 +895,10 @@ class RobustTrainer:
                 best_reward = avg_reward
                 self.save_checkpoint("phase1_best")
 
+            # Periodic backup to Drive (Colab)
+            if (epoch + 1) % self.config.colab_backup_interval == 0:
+                self.backup_to_drive()
+
         # Update EWC for Phase 2
         print("\n[*] Updating EWC for Phase 2...")
         self._compute_ewc_fisher()
@@ -907,7 +927,7 @@ class RobustTrainer:
             if os.path.exists(manual_path):
                 print(f"[MANUAL LOAD] Attempting to load '{load_file}'...")
                 checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
-                self.model.load_state_dict(checkpoint['model_state_dict'])
+                self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
                     self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint.get('epoch', 0) + 1
@@ -919,7 +939,7 @@ class RobustTrainer:
             phase2_latest = os.path.join(self.config.checkpoint_dir, "phase2_latest.pt")
             if os.path.exists(phase2_latest):
                 checkpoint = torch.load(phase2_latest, map_location=self.device, weights_only=False)
-                self.model.load_state_dict(checkpoint['model_state_dict'])
+                self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
                     self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                 start_epoch = checkpoint.get('epoch', 0) + 1
@@ -933,6 +953,22 @@ class RobustTrainer:
         # Load replay buffer and EWC
         self.replay_buffer.load(self.config.replay_buffer_path)
         self.ewc.load(self.config.ewc_path)
+
+        # Initialize MoCap dataset for imitation learning
+        if self.config.mocap_enabled:
+            mocap_config = MoCapConfig(
+                mocap_dir=self.config.mocap_dir,
+                fps_target=50,  # Match MuJoCo simulation rate
+            )
+            self.mocap_dataset = MoCapDataset(
+                config=mocap_config,
+                obs_dim=self.config.obs_dim,
+                action_dim=17,
+                context_length=self.config.mocap_context_length,
+                action_chunk_size=self.config.mocap_action_chunk_size,
+                split='train'
+            )
+            print(f"[OK] MoCap dataset loaded: {len(self.mocap_dataset)} samples")
 
         print("\n[*] Safeguards active (same as Phase 1)")
 
@@ -954,7 +990,10 @@ class RobustTrainer:
                 best_loss = train_loss
                 self.save_checkpoint("phase2_best")
 
-        self.save_checkpoint("phase2_final")
+            # Periodic backup to Drive (Colab)
+            if (epoch + 1) % self.config.colab_backup_interval == 0:
+                self.backup_to_drive()
+
         print(f"\n[DONE] Phase 2 complete. Best loss: {best_loss:.4f}")
         return best_loss
 
@@ -1123,11 +1162,37 @@ class RobustTrainer:
         else:
             replay_loss = torch.tensor(0.0).to(self.device)
 
-        # Current task loss (simplified - would be RL or imitation in real impl)
-        state = torch.randn(self.config.batch_size, 256).to(self.device)
-        action = torch.randn(self.config.batch_size, 17).to(self.device)
+        # Current task loss
+        # Use MoCap data if available (Phase 2), otherwise synthetic
+        if use_flow_matching and self.mocap_dataset is not None:
+            # Get batch from MoCap dataloader
+            if self.mocap_dataloader is None:
+                from torch.utils.data import DataLoader
+                self.mocap_dataloader = DataLoader(
+                    self.mocap_dataset,
+                    batch_size=self.config.batch_size,
+                    shuffle=True,
+                    num_workers=0,
+                    drop_last=True
+                )
+                self.mocap_iter = iter(self.mocap_dataloader)
 
-        if use_flow_matching:
+            try:
+                obs_batch, action_batch = next(self.mocap_iter)
+            except StopIteration:
+                self.mocap_iter = iter(self.mocap_dataloader)
+                obs_batch, action_batch = next(self.mocap_iter)
+
+            # Use last frame of context as state (B, context, obs_dim) -> (B, obs_dim)
+            state = obs_batch[:, -1, :self.config.obs_dim].to(self.device)
+            target_actions = action_batch.to(self.device)  # (B, chunk_size, 17)
+            action = target_actions[:, 0, :]  # First action for physics check
+
+            task_loss = compute_flow_matching_loss(self.model, state, target_actions)
+        elif use_flow_matching:
+            # Fallback: synthetic data
+            state = torch.randn(self.config.batch_size, 256).to(self.device)
+            action = torch.randn(self.config.batch_size, 17).to(self.device)
             target_actions = torch.randn(self.config.batch_size, 16, 17).to(self.device)
             task_loss = compute_flow_matching_loss(self.model, state, target_actions)
         else:
@@ -1257,10 +1322,32 @@ class RobustTrainer:
     def load_checkpoint(self, path: str):
         """Load checkpoint"""
         checkpoint = torch.load(path, map_location=self.device, weights_only=False)
-        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
         self.epoch = checkpoint.get('epoch', 0)
         self.global_step = checkpoint.get('global_step', 0)
         print(f"[LOAD] {path}")
+
+    def backup_to_drive(self):
+        """Backup checkpoints to Google Drive (for Colab)"""
+        if not self.config.colab_backup_enabled:
+            return
+
+        import shutil
+        import glob
+
+        src_dir = self.config.checkpoint_dir
+        dst_dir = self.config.colab_drive_path
+
+        # Create dest dir if needed
+        os.makedirs(dst_dir, exist_ok=True)
+
+        # Copy all .pt files
+        files = glob.glob(os.path.join(src_dir, "*.pt"))
+        for f in files:
+            fname = os.path.basename(f)
+            shutil.copy2(f, os.path.join(dst_dir, fname))
+
+        print(f"[BACKUP] {len(files)} files copied to Drive")
 
 
 # ==============================================================================

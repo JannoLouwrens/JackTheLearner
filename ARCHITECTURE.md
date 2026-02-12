@@ -289,6 +289,57 @@ future_states = world_model.imagine(fused, action)
 | wav2vec2 (2020) | Audio Embeddings | UnifiedBrain.py:AudioEncoder |
 | DORAEMON (ICLR 2024) | Domain Randomization | RobustTrainer.py:DomainRandomization |
 | Humanoid-Gym (ICRA 2024) | Zero-shot Sim2Real | RobustTrainer.py:DomainRandomization |
+| GMR (ICRA 2026) | Motion Retargeting | MoCapLoader.py:SkeletonRetargeter |
+| MoCapAct (NeurIPS 2022) | MoCap Dataset | MoCapLoader.py:MoCapDataset |
+| LocoMuJoCo (2024) | Locomotion Benchmark | MoCapLoader.py:retarget_sequence |
+
+## MoCap Loader & Skeleton Retargeting (NEW)
+
+```
++---------------------------------------------------------------------+
+|                    MOCAP PIPELINE (Phase 2)                          |
++---------------------------------------------------------------------+
+|                                                                      |
+|  CMU MoCap BVH Files                                                |
+|  (2500+ motions)                                                    |
+|       |                                                              |
+|       v                                                              |
+|  +-------------------+     +------------------------+               |
+|  |   BVH Parser      |---->|  Skeleton Retargeting  |               |
+|  |  - Hierarchy      |     |  CMU 31 joints         |               |
+|  |  - Rotations      |     |  --> MuJoCo 17 acts    |               |
+|  |  - Frame timing   |     |                        |               |
+|  +-------------------+     |  Joint Mapping:        |               |
+|                            |  - Spine -> abdomen    |               |
+|                            |  - UpLeg -> hip_xyz    |               |
+|                            |  - Leg -> knee         |               |
+|                            |  - Arm -> shoulder     |               |
+|                            |  - ForeArm -> elbow    |               |
+|                            +------------------------+               |
+|                                      |                               |
+|                                      v                               |
+|  +-------------------+     +------------------------+               |
+|  | Velocity Estimator|<----|  Actuator Values       |               |
+|  | (finite diff)     |     |  (17 dims, [-0.4,0.4]) |               |
+|  +-------------------+     +------------------------+               |
+|            |                         |                               |
+|            v                         v                               |
+|  +--------------------------------------------------+               |
+|  |              MoCapDataset                         |               |
+|  |  - (obs, actions) pairs for imitation learning   |               |
+|  |  - Context window: 10 frames                     |               |
+|  |  - Action chunk: 16 steps (diffusion policy)     |               |
+|  |  - Caching for fast reload                       |               |
+|  +--------------------------------------------------+               |
+|                             |                                        |
+|                             v                                        |
+|  +--------------------------------------------------+               |
+|  |         Flow Matching Training (Phase 2)          |               |
+|  |  Diffusion policy learns smooth, natural motion  |               |
+|  +--------------------------------------------------+               |
+|                                                                      |
++---------------------------------------------------------------------+
+```
 
 ## Conclusion
 
