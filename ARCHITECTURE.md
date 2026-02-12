@@ -153,9 +153,80 @@ PHASE 2.5: Language (1-2 hours)
 
 ### CURRENT GAPS:
 1. **Vision not trained** - Encoder exists but unused
-2. **Language encoder simple** - Just embeddings (need LLM integration)
+2. ~~**Language encoder simple**~~ - **FIXED: LLM integration added!**
 3. **Skills not learned** - Planner exists but untrained
 4. **Model could be bigger** - 256M-500M for more capacity
+
+## LLM Encoder (NEW - Phase 2.5 Ready)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    LLM LANGUAGE ENCODER                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  Architecture (following OpenVLA, pi0, RT-2):                       │
+│                                                                      │
+│  "Walk to the red cup"                                              │
+│          │                                                           │
+│          ▼                                                           │
+│  ┌──────────────────┐                                               │
+│  │  FROZEN LLM      │  ← NOT part of 105M brain weights             │
+│  │                  │  ← Weights NEVER change                        │
+│  │  Options:        │                                                │
+│  │  • SmolLM2 1.7B  │  (default, best quality/size)                 │
+│  │  • TinyLlama 1.1B│  (smaller, faster)                            │
+│  │  • Gemma 2B      │  (Google's efficient model)                   │
+│  │  • Phi-2 2.7B    │  (Microsoft's capable model)                  │
+│  └────────┬─────────┘                                               │
+│           │ hidden states (2048 dim)                                │
+│           ▼                                                          │
+│  ┌──────────────────┐                                               │
+│  │  PROJECTOR       │  ← TRAINABLE (part of 105M brain)             │
+│  │  2048 -> 1024    │  ← Learns to translate for robot              │
+│  │  GELU + Dropout  │                                                │
+│  │  1024 -> 512     │                                                │
+│  │  + LayerNorm     │                                                │
+│  └────────┬─────────┘                                               │
+│           │                                                          │
+│           ▼                                                          │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │              UNIFIED BRAIN (105M params)                      │   │
+│  │  Cross-modal fusion → Transformer → Action heads              │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│                                                                      │
+│  Fallback (no HuggingFace):                                         │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐             │
+│  │  Token IDs  │ -> │  Embedding  │ -> │    LSTM     │ -> d_model  │
+│  │             │    │  (vocab=1K) │    │  (2 layers) │             │
+│  └─────────────┘    └─────────────┘    └─────────────┘             │
+│                                                                      │
+│  Research:                                                           │
+│  - OpenVLA (2024): Frozen Llama-2 + trainable action heads          │
+│  - pi0 (Physical Intelligence 2024): Frozen PaliGemma + flow match  │
+│  - RT-2 (Google 2023): Frozen PaLM-E + action tokens                │
+│  - SmolVLA (HuggingFace 2024): Democratized VLA at 450M             │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Why Frozen LLM?**
+1. LLM already understands language perfectly - don't retrain
+2. Brain focuses on physics + motor control
+3. Prevents catastrophic forgetting of language understanding
+4. Can swap LLMs anytime (upgrade SmolLM → Llama 3.2 → GPT-4)
+5. Enables local (on-device) vs cloud (API) flexibility
+
+**Usage:**
+```python
+# With LLM (Colab/GPU with HuggingFace)
+config = UnifiedBrainConfig()
+config.llm_enabled = True
+config.llm_backend = "smollm"  # or "tinyllama", "gemma"
+brain = UnifiedBrain(config)
+
+# Natural language commands
+action = brain.act_with_language(state, "walk forward slowly")
+action = brain.act_with_language(state, "pick up the red cup")
+```
 
 ## Audio Encoder (NEW)
 
@@ -282,9 +353,11 @@ future_states = world_model.imagine(fused, action)
 | LLaMA (2023) | RMSNorm, SwiGLU, RoPE | UnifiedBrain.py:99-200 |
 | TD-MPC2 (ICLR 2024) | WorldModel | UnifiedBrain.py:700-900 |
 | HAC (2019) | HierarchicalPlanner | UnifiedBrain.py:900-1000 |
-| OpenVLA (2024) | PrismaticVisionEncoder | UnifiedBrain.py:253-306 |
+| OpenVLA (2024) | PrismaticVisionEncoder, LLM architecture | UnifiedBrain.py:253-306, LLMEncoder |
 | EWC (2017) | Elastic Weight Consolidation | RobustTrainer.py:119-235 |
-| pi0 (2024) | Flow Matching | UnifiedBrain.py (compute_flow_matching_loss) |
+| pi0 (Physical Intelligence 2024) | Flow Matching, Frozen LLM pattern | UnifiedBrain.py, LLMEncoder |
+| RT-2 (Google 2023) | VLA paradigm, Frozen backbone | LLMEncoder architecture |
+| SmolVLA (HuggingFace 2024) | Democratized VLA | LLMEncoder default backend |
 | Whisper (2022) | Speech-to-Text | UnifiedBrain.py:AudioEncoder |
 | wav2vec2 (2020) | Audio Embeddings | UnifiedBrain.py:AudioEncoder |
 | DORAEMON (ICLR 2024) | Domain Randomization | RobustTrainer.py:DomainRandomization |

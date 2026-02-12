@@ -9,16 +9,24 @@ This is the COMPLETE brain that integrates EVERYTHING:
 - Temporal Memory (remembers 50 timesteps)
 - Cross-modal Fusion (vision, proprio, touch, language)
 - Physics Rule Bank (neuro-symbolic reasoning)
+- LLM Integration (frozen backbone + trainable projector)
 - AlphaGeometry-style creative loop (optional)
 
 Research papers implemented:
 - LLaMA (2023): RMSNorm, SwiGLU, RoPE
 - TD-MPC2 (ICLR 2024): World model + MPC planning
 - HAC (2019): Hierarchical Actor-Critic with skills
-- OpenVLA (2024): DINOv2 + SigLIP vision fusion
+- OpenVLA (2024): DINOv2 + SigLIP vision fusion, frozen LLM backbone
+- pi0 (Physical Intelligence 2024): Flow matching + frozen PaliGemma
+- RT-2 (Google 2023): VLA with frozen PaLM-E backbone
 - AlphaGeometry (Nature 2024): Neuro-symbolic reasoning
-- pi0 (2024): Flow matching for robotics
 - Decision Transformer (2021): RL as sequence modeling
+
+LLM Architecture (following OpenVLA/pi0/RT-2):
+- Frozen LLM backbone (SmolLM2/TinyLlama/Gemma) - NOT part of 105M
+- Trainable projector (LLM dim -> 512) - IS part of 105M
+- LLM understands language, brain learns motor control
+- Can swap LLMs without retraining (local vs cloud)
 
 Author: Janno Louwrens
 """
@@ -90,6 +98,15 @@ class UnifiedBrainConfig:
     touch_dim: int = 64
     language_embed_dim: int = 512
     vocab_size: int = 1000
+
+    # LLM Integration (NEW)
+    llm_enabled: bool = True
+    llm_backend: str = "smollm"  # Options: "smollm", "tinyllama", "gemma", "fallback"
+    llm_model_id: str = "HuggingFaceTB/SmolLM2-1.7B-Instruct"  # HuggingFace model ID
+    llm_hidden_dim: int = 2048  # LLM hidden dimension (SmolLM2-1.7B = 2048)
+    llm_freeze: bool = True  # Keep LLM frozen (recommended)
+    llm_use_lora: bool = False  # Optional LoRA fine-tuning
+    llm_max_length: int = 128  # Max tokens for commands
 
     # Input
     obs_dim: int = 256
@@ -576,7 +593,7 @@ class AudioEncoder(nn.Module):
 
 
 class LanguageEncoder(nn.Module):
-    """Encodes text instructions"""
+    """Simple fallback encoder (LSTM-based)"""
     def __init__(self, vocab_size: int, embed_dim: int):
         super().__init__()
         self.embedding = nn.Embedding(vocab_size, embed_dim)
@@ -585,6 +602,194 @@ class LanguageEncoder(nn.Module):
     def forward(self, tokens):
         _, (hidden, _) = self.encoder(self.embedding(tokens))
         return hidden[-1]
+
+
+class LLMEncoder(nn.Module):
+    """
+    Frozen LLM backbone + trainable projector for language understanding.
+
+    Architecture (following OpenVLA, pi0, RT-2):
+    - Frozen LLM extracts rich language features
+    - Trainable projector maps to robot brain's d_model
+    - LLM weights NEVER change (prevents forgetting)
+
+    Supported backends:
+    - SmolLM2 1.7B (default): Best quality/size tradeoff
+    - TinyLlama 1.1B: Smaller, faster
+    - Gemma 2B: Google's efficient model
+    - Fallback: Simple LSTM (no HuggingFace needed)
+
+    Research:
+    - OpenVLA (2024): Frozen Llama-2 + action heads
+    - pi0 (Physical Intelligence 2024): Frozen PaliGemma + flow matching
+    - RT-2 (Google 2023): Frozen PaLM-E + action tokens
+    """
+
+    # Model configurations
+    MODEL_CONFIGS = {
+        "smollm": {
+            "model_id": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+            "hidden_dim": 2048,
+            "description": "SmolLM2 1.7B - Best quality/size tradeoff"
+        },
+        "tinyllama": {
+            "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+            "hidden_dim": 2048,
+            "description": "TinyLlama 1.1B - Smaller, faster"
+        },
+        "gemma": {
+            "model_id": "google/gemma-2b-it",
+            "hidden_dim": 2048,
+            "description": "Gemma 2B - Google's efficient model"
+        },
+        "phi": {
+            "model_id": "microsoft/phi-2",
+            "hidden_dim": 2560,
+            "description": "Phi-2 2.7B - Microsoft's small but capable"
+        },
+    }
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.config = config
+        self.use_llm = False
+        self.tokenizer = None
+        self.llm = None
+
+        # Try to load HuggingFace LLM
+        if config.llm_enabled and config.llm_backend != "fallback":
+            try:
+                from transformers import AutoModelForCausalLM, AutoTokenizer
+
+                # Get model config
+                model_config = self.MODEL_CONFIGS.get(config.llm_backend, self.MODEL_CONFIGS["smollm"])
+                model_id = config.llm_model_id or model_config["model_id"]
+                hidden_dim = model_config["hidden_dim"]
+
+                print(f"[LLM] Loading {model_config['description']}...")
+                print(f"[LLM] Model ID: {model_id}")
+
+                # Load tokenizer
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    model_id,
+                    trust_remote_code=True,
+                    padding_side="left"  # For batch generation
+                )
+                if self.tokenizer.pad_token is None:
+                    self.tokenizer.pad_token = self.tokenizer.eos_token
+
+                # Load model (frozen)
+                self.llm = AutoModelForCausalLM.from_pretrained(
+                    model_id,
+                    torch_dtype=torch.float16,  # Half precision to save memory
+                    trust_remote_code=True,
+                    device_map="auto" if torch.cuda.is_available() else None,
+                    low_cpu_mem_usage=True,
+                )
+
+                # Freeze LLM weights
+                if config.llm_freeze:
+                    for param in self.llm.parameters():
+                        param.requires_grad = False
+                    print("[LLM] Weights FROZEN (recommended)")
+                else:
+                    print("[LLM] WARNING: Weights trainable (may cause forgetting)")
+
+                # Trainable projector: LLM hidden dim -> d_model
+                self.projector = nn.Sequential(
+                    nn.Linear(hidden_dim, config.d_model * 2),
+                    nn.GELU(),
+                    nn.Dropout(config.dropout),
+                    nn.Linear(config.d_model * 2, config.d_model),
+                    nn.LayerNorm(config.d_model),
+                )
+
+                self.use_llm = True
+                self.hidden_dim = hidden_dim
+
+                # Count params
+                llm_params = sum(p.numel() for p in self.llm.parameters())
+                proj_params = sum(p.numel() for p in self.projector.parameters())
+                print(f"[LLM] Loaded! LLM params: {llm_params/1e6:.1f}M (frozen)")
+                print(f"[LLM] Projector params: {proj_params/1e3:.1f}K (trainable)")
+
+            except ImportError:
+                print("[LLM] HuggingFace transformers not available, using fallback")
+            except Exception as e:
+                print(f"[LLM] Failed to load: {e}, using fallback")
+
+        # Fallback: simple LSTM encoder
+        if not self.use_llm:
+            print("[LLM] Using fallback LSTM encoder")
+            self.fallback_encoder = LanguageEncoder(config.vocab_size, config.language_embed_dim)
+            self.fallback_proj = nn.Linear(config.language_embed_dim, config.d_model)
+
+    def encode_text(self, text: str) -> torch.Tensor:
+        """Encode a single text string to embedding"""
+        return self.encode_batch([text])
+
+    def encode_batch(self, texts: list) -> torch.Tensor:
+        """Encode a batch of text strings"""
+        if self.use_llm:
+            # Tokenize
+            inputs = self.tokenizer(
+                texts,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=self.config.llm_max_length,
+            )
+
+            # Move to device
+            device = next(self.projector.parameters()).device
+            inputs = {k: v.to(device) for k, v in inputs.items()}
+
+            # Get LLM hidden states
+            with torch.no_grad():
+                outputs = self.llm(**inputs, output_hidden_states=True)
+                # Use last hidden state of last token (most information)
+                hidden_states = outputs.hidden_states[-1]  # (batch, seq, hidden)
+                # Mean pooling over sequence
+                attention_mask = inputs["attention_mask"].unsqueeze(-1)
+                pooled = (hidden_states * attention_mask).sum(1) / attention_mask.sum(1)
+
+            # Project to d_model
+            return self.projector(pooled.float())  # (batch, d_model)
+        else:
+            raise ValueError("Use forward() with token IDs for fallback encoder")
+
+    def forward(self, tokens_or_text):
+        """
+        Forward pass - handles both token IDs and text strings.
+
+        Args:
+            tokens_or_text: Either:
+                - torch.Tensor of token IDs (for fallback)
+                - List of strings (for LLM)
+                - Single string (for LLM)
+        """
+        if self.use_llm:
+            if isinstance(tokens_or_text, str):
+                return self.encode_batch([tokens_or_text])
+            elif isinstance(tokens_or_text, list) and isinstance(tokens_or_text[0], str):
+                return self.encode_batch(tokens_or_text)
+            elif isinstance(tokens_or_text, torch.Tensor):
+                # Decode tokens to text, then re-encode with LLM
+                # This is inefficient but maintains compatibility
+                texts = [self.tokenizer.decode(t, skip_special_tokens=True) for t in tokens_or_text]
+                return self.encode_batch(texts)
+            else:
+                raise ValueError(f"Unexpected input type: {type(tokens_or_text)}")
+        else:
+            # Fallback LSTM
+            if isinstance(tokens_or_text, torch.Tensor):
+                return self.fallback_proj(self.fallback_encoder(tokens_or_text))
+            else:
+                raise ValueError("Fallback encoder requires token IDs (torch.Tensor)")
+
+    def get_tokenizer(self):
+        """Return tokenizer for external use"""
+        return self.tokenizer
 
 
 # ==============================================================================
@@ -1283,10 +1488,15 @@ class UnifiedBrain(nn.Module):
             self.audio_proj = None
             print("  Audio: Disabled")
 
-        # Language
-        self.language_encoder = LanguageEncoder(config.vocab_size, config.language_embed_dim)
-        self.language_proj = nn.Linear(config.language_embed_dim, config.d_model)
-        print(f"  Language: vocab={config.vocab_size}")
+        # Language (LLM Integration)
+        print("\n[LANGUAGE/LLM]")
+        if config.llm_enabled:
+            self.language_encoder = LLMEncoder(config)
+            self.language_proj = None  # LLMEncoder has its own projector
+        else:
+            self.language_encoder = LanguageEncoder(config.vocab_size, config.language_embed_dim)
+            self.language_proj = nn.Linear(config.language_embed_dim, config.d_model)
+            print(f"  Fallback: vocab={config.vocab_size}")
 
         # ==========================================
         # TOKENIZER & FUSION
@@ -1432,9 +1642,14 @@ class UnifiedBrain(nn.Module):
             audio_emb = self.audio_proj(self.audio_encoder(audio)).unsqueeze(1)
             modality_tokens.append(audio_emb)
 
-        # Language (optional)
+        # Language (optional) - supports LLM or fallback
         if language is not None:
-            lang_emb = self.language_proj(self.language_encoder(language)).unsqueeze(1)
+            if self.language_proj is not None:
+                # Fallback mode: token IDs -> LSTM -> projection
+                lang_emb = self.language_proj(self.language_encoder(language)).unsqueeze(1)
+            else:
+                # LLM mode: LLMEncoder handles projection internally
+                lang_emb = self.language_encoder(language).unsqueeze(1)
             modality_tokens.append(lang_emb)
 
         # CLS token
@@ -1551,6 +1766,46 @@ class UnifiedBrain(nn.Module):
     def reset_planner(self):
         """Reset hierarchical planner state"""
         self.hierarchical_planner.reset()
+
+    # ==========================================
+    # LANGUAGE-CONDITIONED ACTIONS (NEW)
+    # ==========================================
+
+    def act_with_language(self, state: torch.Tensor, command: str) -> torch.Tensor:
+        """
+        Get action from natural language command.
+
+        Example:
+            action = brain.act_with_language(state, "walk forward slowly")
+
+        Args:
+            state: Robot state tensor (batch, obs_dim) or (obs_dim,)
+            command: Natural language instruction
+
+        Returns:
+            action: Action tensor (batch, action_dim)
+        """
+        if state.dim() == 1:
+            state = state.unsqueeze(0)
+
+        # LLM encodes command, brain produces action
+        output = self.forward(state, language=command)
+        return output['actions'][:, 0, :]  # First action in chunk
+
+    def act_with_language_batch(self, states: torch.Tensor, commands: list) -> torch.Tensor:
+        """Batch version of act_with_language"""
+        output = self.forward(states, language=commands)
+        return output['actions'][:, 0, :]
+
+    def get_tokenizer(self):
+        """Get the LLM tokenizer (if available)"""
+        if hasattr(self.language_encoder, 'get_tokenizer'):
+            return self.language_encoder.get_tokenizer()
+        return None
+
+    def has_llm(self) -> bool:
+        """Check if LLM is loaded"""
+        return hasattr(self.language_encoder, 'use_llm') and self.language_encoder.use_llm
 
 
 # ==============================================================================
