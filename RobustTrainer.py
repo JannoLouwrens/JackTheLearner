@@ -315,6 +315,192 @@ class PhysicsConsistency:
 
 
 # ==============================================================================
+# DOMAIN RANDOMIZATION (SOTA 2025: DORAEMON + Humanoid-Gym style)
+# ==============================================================================
+
+class DomainRandomization:
+    """
+    Randomizes simulation parameters for sim-to-real transfer.
+
+    Research backing:
+    - DORAEMON (ICLR 2024): 17 dynamics parameters for robotic manipulation
+    - Humanoid-Gym (ICRA 2024): Zero-shot sim2real for humanoid robots
+    - MuJoCo benchmarks: 84-93% sim-to-real success with optimized DR
+
+    Key insight: ±20% variation is standard for robust policies without
+    destabilizing training. Per-episode randomization (not per-step).
+
+    References:
+    - https://proceedings.iclr.cc/paper_files/paper/2024/file/56adf9cb91aedfa41ce24398782a012f-Paper-Conference.pdf
+    - https://github.com/gabrieletiboni/dropo
+    - https://lilianweng.github.io/posts/2019-05-05-domain-randomization/
+    """
+
+    def __init__(self, config: 'RobustTrainerConfig'):
+        self.config = config
+        self.enabled = config.domain_randomization_enabled
+        self.original_params = {}
+
+        # Randomization ranges (relative to default values)
+        self.ranges = {
+            # Physics parameters (DORAEMON style)
+            'body_mass': (config.dr_mass_range[0], config.dr_mass_range[1]),  # ±20%
+            'body_inertia': (0.8, 1.2),
+            'geom_friction': (config.dr_friction_range[0], config.dr_friction_range[1]),  # ±30%
+            'dof_damping': (0.8, 1.2),
+            'dof_frictionloss': (0.5, 1.5),
+            'dof_armature': (0.8, 1.2),
+
+            # Actuator parameters
+            'actuator_gainprm': (0.9, 1.1),
+            'actuator_biasprm': (0.9, 1.1),
+
+            # Contact parameters
+            'geom_solref': (0.9, 1.1),  # Contact solver reference
+            'geom_solimp': (0.9, 1.1),  # Contact solver impedance
+
+            # Sensor noise (added to observations)
+            'sensor_noise_std': config.dr_sensor_noise_std,
+
+            # Action delay (simulate motor latency)
+            'action_delay_steps': config.dr_action_delay_steps,
+        }
+
+        print(f"[DOMAIN RAND] Initialized with:")
+        print(f"  Mass: {self.ranges['body_mass']}")
+        print(f"  Friction: {self.ranges['geom_friction']}")
+        print(f"  Sensor noise std: {self.ranges['sensor_noise_std']}")
+        print(f"  Action delay: {self.ranges['action_delay_steps']} steps")
+
+    def randomize_env(self, env) -> Dict[str, float]:
+        """
+        Randomize environment parameters at the start of each episode.
+
+        Args:
+            env: MuJoCo environment (gymnasium)
+
+        Returns:
+            Dict of randomization factors applied
+        """
+        if not self.enabled:
+            return {}
+
+        factors = {}
+
+        try:
+            model = env.unwrapped.model
+
+            # Store original parameters on first call
+            if not self.original_params:
+                self._store_original_params(model)
+
+            # Randomize body masses
+            if hasattr(model, 'body_mass'):
+                low, high = self.ranges['body_mass']
+                factor = np.random.uniform(low, high, model.body_mass.shape)
+                model.body_mass[:] = self.original_params['body_mass'] * factor
+                factors['mass_factor'] = factor.mean()
+
+            # Randomize body inertias
+            if hasattr(model, 'body_inertia'):
+                low, high = self.ranges['body_inertia']
+                factor = np.random.uniform(low, high, model.body_inertia.shape)
+                model.body_inertia[:] = self.original_params['body_inertia'] * factor
+                factors['inertia_factor'] = factor.mean()
+
+            # Randomize friction
+            if hasattr(model, 'geom_friction'):
+                low, high = self.ranges['geom_friction']
+                factor = np.random.uniform(low, high, model.geom_friction.shape)
+                model.geom_friction[:] = self.original_params['geom_friction'] * factor
+                factors['friction_factor'] = factor.mean()
+
+            # Randomize joint damping
+            if hasattr(model, 'dof_damping'):
+                low, high = self.ranges['dof_damping']
+                factor = np.random.uniform(low, high, model.dof_damping.shape)
+                model.dof_damping[:] = self.original_params['dof_damping'] * factor
+                factors['damping_factor'] = factor.mean()
+
+            # Randomize joint friction loss
+            if hasattr(model, 'dof_frictionloss'):
+                low, high = self.ranges['dof_frictionloss']
+                factor = np.random.uniform(low, high, model.dof_frictionloss.shape)
+                model.dof_frictionloss[:] = self.original_params['dof_frictionloss'] * factor
+                factors['joint_friction_factor'] = factor.mean()
+
+            # Randomize actuator gains (for motor strength variation)
+            if hasattr(model, 'actuator_gainprm'):
+                low, high = self.ranges['actuator_gainprm']
+                factor = np.random.uniform(low, high, model.actuator_gainprm.shape)
+                model.actuator_gainprm[:] = self.original_params['actuator_gainprm'] * factor
+                factors['motor_gain_factor'] = factor.mean()
+
+        except Exception as e:
+            # Silently fail if env doesn't support parameter modification
+            pass
+
+        return factors
+
+    def _store_original_params(self, model):
+        """Store original model parameters for restoration"""
+        if hasattr(model, 'body_mass'):
+            self.original_params['body_mass'] = model.body_mass.copy()
+        if hasattr(model, 'body_inertia'):
+            self.original_params['body_inertia'] = model.body_inertia.copy()
+        if hasattr(model, 'geom_friction'):
+            self.original_params['geom_friction'] = model.geom_friction.copy()
+        if hasattr(model, 'dof_damping'):
+            self.original_params['dof_damping'] = model.dof_damping.copy()
+        if hasattr(model, 'dof_frictionloss'):
+            self.original_params['dof_frictionloss'] = model.dof_frictionloss.copy()
+        if hasattr(model, 'actuator_gainprm'):
+            self.original_params['actuator_gainprm'] = model.actuator_gainprm.copy()
+
+    def add_observation_noise(self, obs: np.ndarray) -> np.ndarray:
+        """
+        Add Gaussian noise to observations (simulates sensor noise).
+
+        Args:
+            obs: Observation array
+
+        Returns:
+            Noisy observation
+        """
+        if not self.enabled or self.ranges['sensor_noise_std'] == 0:
+            return obs
+
+        noise = np.random.normal(0, self.ranges['sensor_noise_std'], obs.shape)
+        return obs + noise
+
+    def get_action_delay(self) -> int:
+        """
+        Get number of steps to delay action (simulates motor latency).
+
+        Returns:
+            Number of steps to delay (0 to max)
+        """
+        if not self.enabled or self.ranges['action_delay_steps'] == 0:
+            return 0
+
+        return np.random.randint(0, self.ranges['action_delay_steps'] + 1)
+
+    def reset_env_params(self, env):
+        """Reset environment to original parameters"""
+        if not self.original_params:
+            return
+
+        try:
+            model = env.unwrapped.model
+
+            for param_name, original_value in self.original_params.items():
+                if hasattr(model, param_name):
+                    setattr(model, param_name, original_value.copy())
+        except:
+            pass
+
+
+# ==============================================================================
 # ROBUST TRAINER
 # ==============================================================================
 
@@ -336,6 +522,13 @@ class RobustTrainerConfig:
     replay_ratio: float = 0.2      # 20% of batch from replay buffer
     ewc_lambda: float = 1000       # EWC penalty strength
     physics_weight: float = 0.1    # Physics consistency weight
+
+    # Domain Randomization (for sim-to-real transfer)
+    domain_randomization_enabled: bool = True  # Enable DR in Phase 1
+    dr_mass_range: tuple = (0.8, 1.2)          # Mass variation ±20%
+    dr_friction_range: tuple = (0.7, 1.3)      # Friction variation ±30%
+    dr_sensor_noise_std: float = 0.01          # Observation noise std
+    dr_action_delay_steps: int = 2             # Max motor delay (steps)
 
     # Paths
     checkpoint_dir: str = "checkpoints"
@@ -385,6 +578,7 @@ class RobustTrainer:
         self.replay_buffer = ReplayBuffer()
         self.ewc = EWC(self.model, self.config.ewc_lambda)
         self.physics_checker = PhysicsConsistency(self.model)
+        self.domain_randomizer = DomainRandomization(self.config)
 
         # Training state
         self.current_phase = 0
@@ -967,33 +1161,64 @@ class RobustTrainer:
         return total_loss.item()
 
     def _collect_experience(self, env, steps: int = 2048) -> List[float]:
-        """Collect experience from environment with proper observation projection"""
+        """
+        Collect experience from environment with domain randomization.
+
+        Domain randomization is applied per-episode (DORAEMON/Humanoid-Gym style):
+        - Physics parameters randomized at episode start
+        - Observation noise added each step
+        - Action delay simulated for motor latency
+        """
         episode_rewards = []
+        action_buffer = []  # For action delay simulation
+
+        # Randomize environment at start of collection
+        dr_factors = self.domain_randomizer.randomize_env(env)
+        if dr_factors:
+            print(f"[DR] Episode params: mass={dr_factors.get('mass_factor', 1):.2f}, "
+                  f"friction={dr_factors.get('friction_factor', 1):.2f}")
+
         obs, _ = env.reset()
         episode_reward = 0
 
-        for _ in range(steps):
+        for step in range(steps):
+            # Add observation noise (simulates sensor noise)
+            noisy_obs = self.domain_randomizer.add_observation_noise(obs)
+
             # Project MuJoCo observation (376 dims) to model input (256 dims)
-            obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
+            obs_tensor = torch.tensor(noisy_obs, dtype=torch.float32).unsqueeze(0).to(self.device)
             with torch.no_grad():
                 state = self.obs_projection(obs_tensor)  # 376 → 256
                 action = self.model.predict_action(state).cpu().numpy()[0]
 
+            # Action delay (simulates motor latency)
+            action_buffer.append(action)
+            delay = self.domain_randomizer.get_action_delay()
+            if delay > 0 and len(action_buffer) > delay:
+                delayed_action = action_buffer[-delay-1]
+            else:
+                delayed_action = action
+
             # Store experience in replay buffer (projected state)
             self.replay_buffer.add({
                 'state': state.squeeze(0).cpu(),
-                'action': torch.tensor(action, dtype=torch.float32),
+                'action': torch.tensor(delayed_action, dtype=torch.float32),
                 'raw_obs': torch.tensor(obs, dtype=torch.float32),  # Keep raw for debugging
             }, phase=1)
 
             # Step environment
-            obs, reward, terminated, truncated, _ = env.step(action)
+            obs, reward, terminated, truncated, _ = env.step(delayed_action)
             episode_reward += reward
 
             if terminated or truncated:
                 episode_rewards.append(episode_reward)
+
+                # Randomize env for next episode (per-episode DR)
+                dr_factors = self.domain_randomizer.randomize_env(env)
+
                 obs, _ = env.reset()
                 episode_reward = 0
+                action_buffer = []  # Reset action buffer
 
         return episode_rewards if episode_rewards else [0]
 

@@ -148,12 +148,65 @@ PHASE 2.5: Language (1-2 hours)
 4. **Anti-forgetting** - EWC + Replay prevents catastrophic forgetting
 5. **Flow matching** - Better than diffusion for robotics (pi0)
 6. **Hierarchical planning** - Can compose skills
+7. **Audio encoder** - Whisper + wav2vec2 for speech understanding
+8. **Domain randomization** - DORAEMON/Humanoid-Gym style sim-to-real
 
 ### CURRENT GAPS:
 1. **Vision not trained** - Encoder exists but unused
-2. **Language encoder simple** - Just embeddings
+2. **Language encoder simple** - Just embeddings (need LLM integration)
 3. **Skills not learned** - Planner exists but untrained
 4. **Model could be bigger** - 256M-500M for more capacity
+
+## Audio Encoder (NEW)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        AUDIO ENCODER                                │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Option 1: Pretrained (HuggingFace)                                │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐             │
+│  │   Whisper   │    │  wav2vec2   │    │  Projector  │             │
+│  │   (tiny)    │ +  │   (base)    │ -> │  768->512   │ -> d_model  │
+│  │  Speech2Txt │    │  Embeddings │    │             │             │
+│  └─────────────┘    └─────────────┘    └─────────────┘             │
+│                                                                     │
+│  Option 2: CNN Fallback (no HuggingFace)                           │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐             │
+│  │  Waveform   │ -> │ Mel Spect.  │ -> │  CNN + MLP  │ -> d_model  │
+│  │  (16kHz)    │    │  (80 mels)  │    │  (128->512) │             │
+│  └─────────────┘    └─────────────┘    └─────────────┘             │
+│                                                                     │
+│  Research: Whisper (OpenAI 2022), wav2vec2 (Meta 2020),            │
+│            ES3 (CVPR 2024), WavTokenizer (ICLR 2025)               │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+## Domain Randomization (NEW)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│               DOMAIN RANDOMIZATION (Sim-to-Real)                    │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Applied per-episode during Phase 1 RL training:                   │
+│                                                                     │
+│  PHYSICS PARAMETERS (DORAEMON style):                              │
+│  ├── body_mass:      ±20% (default)                                │
+│  ├── body_inertia:   ±20%                                          │
+│  ├── geom_friction:  ±30%                                          │
+│  ├── dof_damping:    ±20%                                          │
+│  ├── actuator_gain:  ±10%                                          │
+│  └── joint_friction: ±50%                                          │
+│                                                                     │
+│  SENSOR & ACTUATOR NOISE:                                          │
+│  ├── sensor_noise:   Gaussian, std=0.01                            │
+│  └── action_delay:   0-2 steps (motor latency)                     │
+│                                                                     │
+│  Research: DORAEMON (ICLR 2024), Humanoid-Gym (ICRA 2024)          │
+│  Expected: 84-93% sim-to-real success rate                         │
+└─────────────────────────────────────────────────────────────────────┘
+```
 
 ### SCALING ROADMAP:
 ```
@@ -232,6 +285,10 @@ future_states = world_model.imagine(fused, action)
 | OpenVLA (2024) | PrismaticVisionEncoder | UnifiedBrain.py:253-306 |
 | EWC (2017) | Elastic Weight Consolidation | RobustTrainer.py:119-235 |
 | pi0 (2024) | Flow Matching | UnifiedBrain.py (compute_flow_matching_loss) |
+| Whisper (2022) | Speech-to-Text | UnifiedBrain.py:AudioEncoder |
+| wav2vec2 (2020) | Audio Embeddings | UnifiedBrain.py:AudioEncoder |
+| DORAEMON (ICLR 2024) | Domain Randomization | RobustTrainer.py:DomainRandomization |
+| Humanoid-Gym (ICRA 2024) | Zero-shot Sim2Real | RobustTrainer.py:DomainRandomization |
 
 ## Conclusion
 

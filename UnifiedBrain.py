@@ -77,6 +77,12 @@ class UnifiedBrainConfig:
     vision_embed_dim: int = 1024
     use_pretrained_vision: bool = False  # Set True if you have HuggingFace models
 
+    # Audio (Whisper + wav2vec2)
+    audio_enabled: bool = True
+    audio_embed_dim: int = 512
+    audio_sample_rate: int = 16000
+    use_pretrained_audio: bool = False  # Set True if you have HuggingFace models
+
     # Temporal memory
     context_length: int = 50  # Remember last 50 timesteps
 
@@ -334,6 +340,239 @@ class TouchEncoder(nn.Module):
 
     def forward(self, x):
         return self.encoder(x)
+
+
+# ==============================================================================
+# AUDIO ENCODER (SOTA 2025: Whisper + wav2vec2)
+# ==============================================================================
+
+class AudioEncoder(nn.Module):
+    """
+    Encodes audio input for multimodal robot learning.
+
+    Two modes:
+    1. Speech-to-Text (Whisper): For understanding voice commands
+    2. Audio Embeddings (wav2vec2): For ambient sound understanding
+
+    Research backing:
+    - Whisper (OpenAI, 2022): Robust speech recognition
+    - wav2vec2 (Meta, 2020): Self-supervised audio representations
+    - ES3 (CVPR 2024): Audio-visual speech representations
+    - WavTokenizer (ICLR 2025): Discrete audio tokens
+
+    References:
+    - https://github.com/jishengpeng/WavTokenizer
+    - https://openaccess.thecvf.com/content/CVPR2024/papers/Zhang_ES3_Evolving_Self-Supervised_Learning_of_Robust_Audio-Visual_Speech_Representations_CVPR_2024_paper.pdf
+    """
+
+    def __init__(self, config, output_dim: int = 512, sample_rate: int = 16000):
+        super().__init__()
+        self.config = config
+        self.output_dim = output_dim
+        self.sample_rate = sample_rate
+        self.use_pretrained = False
+
+        # Try to load pretrained models
+        if getattr(config, 'use_pretrained_audio', False):
+            try:
+                from transformers import (
+                    WhisperProcessor, WhisperForConditionalGeneration,
+                    Wav2Vec2Processor, Wav2Vec2Model
+                )
+
+                # Whisper for speech-to-text (frozen)
+                self.whisper_processor = WhisperProcessor.from_pretrained("openai/whisper-tiny")
+                self.whisper_model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny")
+                self.whisper_model.requires_grad_(False)  # Frozen
+
+                # wav2vec2 for audio embeddings (frozen)
+                self.wav2vec_processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
+                self.wav2vec_model = Wav2Vec2Model.from_pretrained("facebook/wav2vec2-base-960h")
+                self.wav2vec_model.requires_grad_(False)  # Frozen
+
+                # Projection from wav2vec2 hidden size (768) to output_dim
+                self.projector = nn.Sequential(
+                    nn.Linear(768, output_dim * 2),
+                    nn.GELU(),
+                    nn.Dropout(0.1),
+                    nn.Linear(output_dim * 2, output_dim),
+                    nn.LayerNorm(output_dim),
+                )
+
+                self.use_pretrained = True
+                print(f"[AUDIO] Loaded Whisper-tiny + wav2vec2-base (pretrained)")
+
+            except Exception as e:
+                print(f"[AUDIO] Pretrained models failed: {e}")
+                print("[AUDIO] Using spectrogram CNN fallback")
+
+        if not self.use_pretrained:
+            # Fallback: Spectrogram-based CNN encoder
+            # Input: raw audio waveform → mel spectrogram → CNN
+            self.n_mels = 80
+            self.n_fft = 400
+            self.hop_length = 160
+
+            # Mel spectrogram parameters (stored for forward pass)
+            self.register_buffer('mel_basis', self._create_mel_basis())
+
+            # CNN encoder for spectrograms
+            self.cnn = nn.Sequential(
+                # Input: (B, 1, n_mels, time)
+                nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1),
+                nn.BatchNorm2d(32),
+                nn.ReLU(),
+                nn.MaxPool2d(2),
+
+                nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+                nn.BatchNorm2d(64),
+                nn.ReLU(),
+                nn.MaxPool2d(2),
+
+                nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
+                nn.BatchNorm2d(128),
+                nn.ReLU(),
+                nn.AdaptiveAvgPool2d((1, 1)),
+
+                nn.Flatten(),
+            )
+
+            self.projector = nn.Sequential(
+                nn.Linear(128, output_dim),
+                nn.LayerNorm(output_dim),
+            )
+
+            print(f"[AUDIO] Using spectrogram CNN fallback")
+
+    def _create_mel_basis(self):
+        """Create mel filterbank matrix"""
+        import math
+        n_mels = self.n_mels
+        n_fft = self.n_fft
+        sr = self.sample_rate
+
+        # Simple mel filterbank (triangular filters)
+        fmin, fmax = 0.0, sr / 2.0
+        mel_min = 2595 * math.log10(1 + fmin / 700)
+        mel_max = 2595 * math.log10(1 + fmax / 700)
+        mels = torch.linspace(mel_min, mel_max, n_mels + 2)
+        freqs = 700 * (10 ** (mels / 2595) - 1)
+
+        # Convert to FFT bin indices
+        bins = torch.floor((n_fft + 1) * freqs / sr).long()
+
+        # Create filterbank
+        filterbank = torch.zeros(n_mels, n_fft // 2 + 1)
+        for i in range(n_mels):
+            left, center, right = bins[i], bins[i + 1], bins[i + 2]
+            for j in range(left, center):
+                if center > left:
+                    filterbank[i, j] = (j - left) / (center - left)
+            for j in range(center, right):
+                if right > center:
+                    filterbank[i, j] = (right - j) / (right - center)
+
+        return filterbank
+
+    def _compute_spectrogram(self, waveform: torch.Tensor) -> torch.Tensor:
+        """Compute mel spectrogram from waveform"""
+        # waveform: (B, time) or (B, 1, time)
+        if waveform.dim() == 3:
+            waveform = waveform.squeeze(1)
+
+        B, T = waveform.shape
+
+        # Pad to ensure we have enough samples
+        if T < self.n_fft:
+            waveform = F.pad(waveform, (0, self.n_fft - T))
+            T = self.n_fft
+
+        # STFT using unfold (simpler than torch.stft for compatibility)
+        # Frame the signal
+        frames = waveform.unfold(1, self.n_fft, self.hop_length)  # (B, n_frames, n_fft)
+
+        # Apply Hann window
+        window = torch.hann_window(self.n_fft, device=waveform.device)
+        frames = frames * window
+
+        # FFT
+        spectrum = torch.fft.rfft(frames, dim=-1)  # (B, n_frames, n_fft//2+1)
+        magnitude = torch.abs(spectrum)
+
+        # Apply mel filterbank
+        mel_spec = torch.matmul(magnitude, self.mel_basis.T)  # (B, n_frames, n_mels)
+
+        # Log scale
+        mel_spec = torch.log(mel_spec + 1e-9)
+
+        # Reshape for CNN: (B, 1, n_mels, n_frames)
+        mel_spec = mel_spec.transpose(1, 2).unsqueeze(1)
+
+        return mel_spec
+
+    def transcribe(self, audio: torch.Tensor) -> str:
+        """
+        Transcribe audio to text using Whisper.
+
+        Args:
+            audio: Waveform tensor (B, time) at 16kHz
+
+        Returns:
+            Transcribed text string
+        """
+        if not self.use_pretrained:
+            return "[Audio transcription requires Whisper model]"
+
+        with torch.no_grad():
+            # Process audio
+            inputs = self.whisper_processor(
+                audio.cpu().numpy(),
+                sampling_rate=self.sample_rate,
+                return_tensors="pt"
+            )
+            input_features = inputs.input_features.to(audio.device)
+
+            # Generate transcription
+            generated_ids = self.whisper_model.generate(input_features)
+            transcription = self.whisper_processor.batch_decode(
+                generated_ids,
+                skip_special_tokens=True
+            )[0]
+
+        return transcription
+
+    def forward(self, audio: torch.Tensor) -> torch.Tensor:
+        """
+        Encode audio to embeddings.
+
+        Args:
+            audio: Waveform tensor (B, time) at 16kHz
+
+        Returns:
+            Audio embeddings (B, output_dim)
+        """
+        if self.use_pretrained:
+            with torch.no_grad():
+                # Use wav2vec2 for embeddings
+                inputs = self.wav2vec_processor(
+                    audio.cpu().numpy(),
+                    sampling_rate=self.sample_rate,
+                    return_tensors="pt",
+                    padding=True
+                )
+                input_values = inputs.input_values.to(audio.device)
+
+                # Get hidden states
+                outputs = self.wav2vec_model(input_values)
+                # Mean pool over time dimension
+                embeddings = outputs.last_hidden_state.mean(dim=1)  # (B, 768)
+
+            return self.projector(embeddings)
+        else:
+            # Use spectrogram CNN
+            mel_spec = self._compute_spectrogram(audio)
+            features = self.cnn(mel_spec)
+            return self.projector(features)
 
 
 class LanguageEncoder(nn.Module):
@@ -1034,6 +1273,16 @@ class UnifiedBrain(nn.Module):
         self.touch_proj = nn.Linear(config.touch_dim, config.d_model)
         print(f"  Touch: 10 -> {config.d_model}")
 
+        # Audio (Whisper + wav2vec2)
+        if config.audio_enabled:
+            self.audio_encoder = AudioEncoder(config, config.audio_embed_dim, config.audio_sample_rate)
+            self.audio_proj = nn.Linear(config.audio_embed_dim, config.d_model)
+            print(f"  Audio: {config.audio_sample_rate}Hz -> {config.d_model}")
+        else:
+            self.audio_encoder = None
+            self.audio_proj = None
+            print("  Audio: Disabled")
+
         # Language
         self.language_encoder = LanguageEncoder(config.vocab_size, config.language_embed_dim)
         self.language_proj = nn.Linear(config.language_embed_dim, config.d_model)
@@ -1129,6 +1378,7 @@ class UnifiedBrain(nn.Module):
         task: torch.Tensor = None,
         vision: torch.Tensor = None,
         touch: torch.Tensor = None,
+        audio: torch.Tensor = None,
         language: torch.Tensor = None,
         noisy_actions: torch.Tensor = None,
         memory: torch.Tensor = None,
@@ -1145,6 +1395,7 @@ class UnifiedBrain(nn.Module):
             task: (B, goal_dim) - high-level task for hierarchical planner
             vision: (B, 3, H, W) - RGB image (optional)
             touch: (B, 10) - touch sensors (optional)
+            audio: (B, time) - audio waveform at 16kHz (optional)
             language: (B, seq_len) - text tokens (optional)
             noisy_actions: (B, chunk, action_dim) - for flow matching
             memory: (B, T, d_model) - temporal memory (optional)
@@ -1175,6 +1426,11 @@ class UnifiedBrain(nn.Module):
         if touch is not None:
             touch_emb = self.touch_proj(self.touch_encoder(touch)).unsqueeze(1)
             modality_tokens.append(touch_emb)
+
+        # Audio (optional)
+        if audio is not None and self.audio_encoder is not None:
+            audio_emb = self.audio_proj(self.audio_encoder(audio)).unsqueeze(1)
+            modality_tokens.append(audio_emb)
 
         # Language (optional)
         if language is not None:
