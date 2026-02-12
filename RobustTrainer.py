@@ -663,7 +663,10 @@ class RobustTrainer:
                 checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
                 self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
-                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    try:
+                        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    except (ValueError, KeyError) as e:
+                        print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
                 start_epoch = checkpoint.get('epoch', 0) + 1
                 print(f"[OK] Loaded checkpoint. Continuing from epoch {start_epoch}.")
             else:
@@ -675,7 +678,10 @@ class RobustTrainer:
                 checkpoint = torch.load(phase0_latest, map_location=self.device, weights_only=False)
                 self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
-                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    try:
+                        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    except (ValueError, KeyError) as e:
+                        print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
                 start_epoch = checkpoint.get('epoch', 0) + 1
                 print(f"[RESUME] Loaded Phase 0 LATEST checkpoint from epoch {start_epoch}")
             else:
@@ -684,7 +690,10 @@ class RobustTrainer:
                     checkpoint = torch.load(phase0_best, map_location=self.device, weights_only=False)
                     self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                     if 'optimizer_state_dict' in checkpoint:
-                        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                        try:
+                            self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                        except (ValueError, KeyError) as e:
+                            print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
                     start_epoch = checkpoint.get('epoch', 0) + 1 # Continue from the epoch AFTER the best one was saved
                     print(f"[OK] Loaded Phase 0 BEST checkpoint. Continuing training from epoch {start_epoch}.")
 
@@ -827,7 +836,10 @@ class RobustTrainer:
                 checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
                 self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
-                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    try:
+                        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    except (ValueError, KeyError) as e:
+                        print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
                 start_epoch = checkpoint.get('epoch', 0) + 1
                 print(f"[OK] Loaded checkpoint. Continuing from epoch {start_epoch}.")
             else:
@@ -929,7 +941,10 @@ class RobustTrainer:
                 checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
                 self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 if 'optimizer_state_dict' in checkpoint:
-                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    try:
+                        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                    except (ValueError, KeyError) as e:
+                        print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
                 start_epoch = checkpoint.get('epoch', 0) + 1
                 print(f"[OK] Loaded checkpoint. Continuing from epoch {start_epoch}.")
             else:
