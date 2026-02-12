@@ -22,6 +22,9 @@ Usage:
     # Phase 2 (auto-loads Phase 1, continues safeguards)
     python RobustTrainer.py --phase 2 --epochs 100
 
+    # Phase 2.5 (Language grounding - connects words to actions)
+    python RobustTrainer.py --phase 2.5 --epochs 50
+
 Author: Janno Louwrens
 """
 
@@ -321,6 +324,8 @@ class RobustTrainerConfig:
     # Model
     d_model: int = 512
     n_layers: int = 8
+    obs_dim: int = 256  # Internal observation dimension
+    mujoco_obs_dim: int = 376  # MuJoCo Humanoid-v5 observation dimension
 
     # Training
     batch_size: int = 64
@@ -361,8 +366,20 @@ class RobustTrainer:
         model_config = UnifiedBrainConfig(
             d_model=self.config.d_model,
             n_layers=self.config.n_layers,
+            obs_dim=self.config.obs_dim,
         )
         self.model = UnifiedBrain(model_config).to(self.device)
+
+        # Observation projection: MuJoCo 376 dims → internal 256 dims
+        # This allows us to use the same model for Phase 0 (synthetic) and Phase 1 (MuJoCo)
+        self.obs_projection = nn.Sequential(
+            nn.Linear(self.config.mujoco_obs_dim, 512),
+            nn.LayerNorm(512),
+            nn.ReLU(),
+            nn.Linear(512, self.config.obs_dim),
+            nn.LayerNorm(self.config.obs_dim),
+        ).to(self.device)
+        print(f"  Obs projection: {self.config.mujoco_obs_dim} → {self.config.obs_dim}")
 
         # Safeguards
         self.replay_buffer = ReplayBuffer()
@@ -747,6 +764,139 @@ class RobustTrainer:
         print(f"\n[DONE] Phase 2 complete. Best loss: {best_loss:.4f}")
         return best_loss
 
+    def train_phase2_5(self, num_epochs: int = 50, load_file: str = None):
+        """
+        Phase 2.5: Language Grounding.
+
+        Teaches the model to connect language commands to actions:
+        - "walk forward" → locomotion skill
+        - "stop" → zero velocity
+        - "turn left" → turning motion
+        - "pick up" → reaching + grasping
+
+        Uses the existing LanguageEncoder + CrossModalFusion.
+        """
+        print("\n" + "=" * 70)
+        print("PHASE 2.5: Language Grounding")
+        print("=" * 70)
+
+        self.current_phase = 2  # Use same optimizer as Phase 2
+        self._create_optimizer(2)
+        start_epoch = 0
+
+        # Load Phase 2 checkpoint
+        phase2_path = os.path.join(self.config.checkpoint_dir, "phase2_best.pt")
+        if os.path.exists(phase2_path):
+            self.load_checkpoint(phase2_path)
+            print("[OK] Loaded Phase 2 checkpoint")
+
+        # Load EWC (protects physics + locomotion knowledge)
+        self.ewc.load(self.config.ewc_path)
+
+        # Simple language command vocabulary
+        # Maps command text to target behavior
+        self.commands = {
+            "walk forward": {"velocity": [1.0, 0.0, 0.0], "action_scale": 1.0},
+            "walk backward": {"velocity": [-0.5, 0.0, 0.0], "action_scale": 0.5},
+            "turn left": {"velocity": [0.0, 0.0, 0.5], "action_scale": 0.3},
+            "turn right": {"velocity": [0.0, 0.0, -0.5], "action_scale": 0.3},
+            "stop": {"velocity": [0.0, 0.0, 0.0], "action_scale": 0.0},
+            "jump": {"velocity": [0.0, 2.0, 0.0], "action_scale": 1.5},
+            "crouch": {"velocity": [0.0, -0.5, 0.0], "action_scale": 0.3},
+            "stand up": {"velocity": [0.0, 0.5, 0.0], "action_scale": 0.5},
+        }
+
+        # Simple tokenizer (word to index)
+        vocab = list(set(" ".join(self.commands.keys()).split()))
+        self.word_to_idx = {w: i + 1 for i, w in enumerate(vocab)}  # 0 = padding
+        self.word_to_idx["<pad>"] = 0
+
+        print(f"[OK] Language vocabulary: {len(vocab)} words")
+        print(f"    Commands: {list(self.commands.keys())}")
+
+        best_loss = float('inf')
+
+        for epoch in range(start_epoch, num_epochs):
+            self.epoch = epoch
+            epoch_loss = 0
+            num_batches = 0
+
+            pbar = tqdm(range(0, 1000, self.config.batch_size), desc=f"Epoch {epoch+1}/{num_epochs}")
+
+            for _ in pbar:
+                # Sample random commands
+                batch_commands = random.choices(list(self.commands.keys()), k=self.config.batch_size)
+
+                # Tokenize commands (simple: just first 10 chars → indices)
+                max_len = 10
+                language_tokens = []
+                target_velocities = []
+                target_scales = []
+
+                for cmd in batch_commands:
+                    # Tokenize
+                    words = cmd.split()
+                    tokens = [self.word_to_idx.get(w, 0) for w in words]
+                    tokens = tokens[:max_len] + [0] * (max_len - len(tokens))  # Pad
+                    language_tokens.append(tokens)
+
+                    # Get target behavior
+                    behavior = self.commands[cmd]
+                    target_velocities.append(behavior["velocity"])
+                    target_scales.append(behavior["action_scale"])
+
+                language = torch.tensor(language_tokens, dtype=torch.long).to(self.device)
+                target_vel = torch.tensor(target_velocities, dtype=torch.float32).to(self.device)
+                target_scale = torch.tensor(target_scales, dtype=torch.float32).to(self.device)
+
+                # Random initial state
+                state = torch.randn(self.config.batch_size, self.config.obs_dim).to(self.device)
+
+                # Forward with language
+                self.optimizer.zero_grad()
+                output = self.model(state, language=language)
+
+                # Language grounding loss:
+                # 1. Predicted action magnitude should match target scale
+                action_mag = output['actions'].abs().mean(dim=-1)
+                scale_loss = F.mse_loss(action_mag, target_scale.unsqueeze(-1).expand_as(action_mag))
+
+                # 2. Physics output should indicate target velocity direction
+                # (This grounds language to physical meaning)
+                pred_momentum = output['physics'][:, 3]  # momentum
+                target_momentum = target_vel[:, 0] * 10  # x-velocity → momentum
+                momentum_loss = F.mse_loss(pred_momentum, target_momentum)
+
+                # 3. EWC penalty (protect earlier knowledge)
+                ewc_loss = self.ewc.penalty()
+
+                # Total loss
+                loss = scale_loss + 0.1 * momentum_loss + ewc_loss
+
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                self.optimizer.step()
+
+                epoch_loss += loss.item()
+                num_batches += 1
+                pbar.set_postfix({'loss': f"{loss.item():.4f}"})
+
+            avg_loss = epoch_loss / num_batches
+            print(f"[Epoch {epoch+1}] Loss: {avg_loss:.4f}")
+
+            # Save checkpoints
+            self.save_checkpoint("phase2_5_latest")
+            if avg_loss < best_loss:
+                best_loss = avg_loss
+                self.save_checkpoint("phase2_5_best")
+
+        # Update EWC for Phase 3
+        print("\n[*] Updating EWC for Phase 3...")
+        self._compute_ewc_fisher()
+
+        print(f"\n[DONE] Phase 2.5 complete. Best loss: {best_loss:.4f}")
+        return best_loss
+
     def _train_step_with_safeguards(self, use_flow_matching: bool = False) -> float:
         """
         Training step with ALL safeguards:
@@ -817,16 +967,24 @@ class RobustTrainer:
         return total_loss.item()
 
     def _collect_experience(self, env, steps: int = 2048) -> List[float]:
-        """Collect experience from environment (simplified)"""
+        """Collect experience from environment with proper observation projection"""
         episode_rewards = []
         obs, _ = env.reset()
         episode_reward = 0
 
         for _ in range(steps):
-            # Get action from model
-            state = torch.tensor(obs[:256], dtype=torch.float32).unsqueeze(0).to(self.device)
+            # Project MuJoCo observation (376 dims) to model input (256 dims)
+            obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
             with torch.no_grad():
+                state = self.obs_projection(obs_tensor)  # 376 → 256
                 action = self.model.predict_action(state).cpu().numpy()[0]
+
+            # Store experience in replay buffer (projected state)
+            self.replay_buffer.add({
+                'state': state.squeeze(0).cpu(),
+                'action': torch.tensor(action, dtype=torch.float32),
+                'raw_obs': torch.tensor(obs, dtype=torch.float32),  # Keep raw for debugging
+            }, phase=1)
 
             # Step environment
             obs, reward, terminated, truncated, _ = env.step(action)
@@ -946,8 +1104,8 @@ def verify_physics_preservation(trainer: RobustTrainer) -> Dict[str, float]:
 
 def main():
     parser = argparse.ArgumentParser(description="Robust Trainer with Forgetting Prevention")
-    parser.add_argument("--phase", type=int, required=True, choices=[0, 1, 2],
-                        help="Training phase (0=physics, 1=RL, 2=imitation)")
+    parser.add_argument("--phase", type=str, required=True, choices=["0", "1", "2", "2.5"],
+                        help="Training phase (0=physics, 1=RL, 2=imitation, 2.5=language)")
     parser.add_argument("--epochs", type=int, default=50, help="Number of epochs")
     parser.add_argument("--load", type=str, default=None,
                         help="Force load a specific checkpoint file, bypassing automatic selection.")
@@ -957,12 +1115,14 @@ def main():
     config = RobustTrainerConfig()
     trainer = RobustTrainer(config)
 
-    if args.phase == 0:
+    if args.phase == "0":
         trainer.train_phase0(num_epochs=args.epochs, load_file=args.load)
-    elif args.phase == 1:
+    elif args.phase == "1":
         trainer.train_phase1(num_epochs=args.epochs, load_file=args.load)
-    elif args.phase == 2:
+    elif args.phase == "2":
         trainer.train_phase2(num_epochs=args.epochs, load_file=args.load)
+    elif args.phase == "2.5":
+        trainer.train_phase2_5(num_epochs=args.epochs, load_file=args.load)
 
     if args.verify:
         verify_physics_preservation(trainer)
