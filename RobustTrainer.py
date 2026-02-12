@@ -151,10 +151,19 @@ class EWC:
             if samples_processed >= num_samples:
                 break
 
-            state = batch['state']
+            # Get device from model
+            device = next(self.model.parameters()).device
+
+            state = batch['state'].to(device)
             action = batch.get('action')
+            if action is not None:
+                action = action.to(device)
             next_state = batch.get('next_state')
+            if next_state is not None:
+                next_state = next_state.to(device)
             physics = batch.get('physics')
+            if physics is not None:
+                physics = physics.to(device)
 
             self.model.zero_grad()
 
