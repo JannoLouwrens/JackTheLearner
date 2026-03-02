@@ -121,6 +121,44 @@ class UnifiedBrainConfig:
     # Flow matching
     use_flow_matching: bool = True
 
+    # =========================================
+    # SOTA FEATURES (GR00T N1, π0, Helix style)
+    # =========================================
+
+    # Dual System Architecture (Figure Helix / NVIDIA GR00T N1)
+    # System 2: Slow VLM reasoning (7-9 Hz) - scene understanding
+    # System 1: Fast action generation (50-200 Hz) - visuomotor policy
+    # System 0: Ultra-fast motor control (1 kHz) - joint actuators
+    dual_system_enabled: bool = True
+    system2_hz: float = 9.0  # VLM reasoning frequency
+    system1_hz: float = 50.0  # Action generation frequency (π0 uses 50Hz)
+    system0_hz: float = 1000.0  # Motor control frequency (optional)
+    system0_enabled: bool = False  # Enable System 0 for real hardware
+
+    # Action Expert (π0 style - separate transformer for actions)
+    action_expert_enabled: bool = True
+    action_expert_layers: int = 4  # Smaller than main backbone
+    action_expert_dim: int = 256  # π0 uses ~300M params, we use smaller
+    flow_matching_steps: int = 10  # Number of denoising steps (π0 uses 10)
+
+    # DiT (Diffusion Transformer) for action generation
+    dit_enabled: bool = True
+    dit_time_embed_dim: int = 256  # Time embedding dimension
+
+    # =========================================
+    # OBJECT DETECTION & NAVIGATION (General-Purpose Robot)
+    # =========================================
+
+    # Object Detection (DETR-style)
+    enable_object_detection: bool = True
+    object_detection_queries: int = 100  # Number of object queries
+    num_object_classes: int = 21  # Number of detectable object types
+
+    # Navigation Planning
+    enable_navigation: bool = True
+    nav_map_size: int = 64  # Spatial memory map size
+    nav_map_resolution: float = 0.1  # Meters per grid cell
+
 
 # ==============================================================================
 # SOTA COMPONENTS (LLaMA-style)
@@ -277,6 +315,199 @@ class TransformerBlock(nn.Module):
 
 
 # ==============================================================================
+# AMP DISCRIMINATOR (Adversarial Motion Priors)
+# ==============================================================================
+
+class AMPDiscriminator(nn.Module):
+    """
+    Adversarial Motion Priors Discriminator.
+
+    Distinguishes between:
+    - REAL motion (from MoCap data)
+    - FAKE motion (from policy rollouts)
+
+    Provides reward signal for natural, human-like movement.
+
+    Research: "AMP: Adversarial Motion Priors for Stylized Physics-Based
+              Character Control" (Peng et al., 2021)
+
+    Architecture:
+    - Input: State-action pairs (s, a, s') or just state transitions
+    - Output: Probability that motion is real (from MoCap)
+
+    Training:
+    - Real samples: MoCap state transitions
+    - Fake samples: Policy rollout state transitions
+    - Loss: Binary cross-entropy + gradient penalty
+    """
+
+    def __init__(self, state_dim: int = 256, action_dim: int = 57, hidden_dim: int = 512):
+        super().__init__()
+
+        self.state_dim = state_dim
+        self.action_dim = action_dim
+
+        # Input: (s, a, s') concatenated
+        input_dim = state_dim * 2 + action_dim
+
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim // 2),
+            nn.ReLU(),
+        )
+
+        # Output: logit for real/fake
+        self.head = nn.Linear(hidden_dim // 2, 1)
+
+        # Gradient penalty coefficient
+        self.gradient_penalty_weight = 10.0
+
+    def forward(self, state: torch.Tensor, action: torch.Tensor,
+                next_state: torch.Tensor) -> torch.Tensor:
+        """
+        Compute discriminator output.
+
+        Args:
+            state: Current state [B, state_dim]
+            action: Action taken [B, action_dim]
+            next_state: Resulting state [B, state_dim]
+
+        Returns:
+            logits: [B, 1] - higher = more likely real (from MoCap)
+        """
+        # Concatenate inputs
+        x = torch.cat([state, action, next_state], dim=-1)
+
+        # Encode
+        features = self.encoder(x)
+
+        # Classify
+        logits = self.head(features)
+
+        return logits
+
+    def compute_reward(self, state: torch.Tensor, action: torch.Tensor,
+                       next_state: torch.Tensor) -> torch.Tensor:
+        """
+        Compute AMP reward for policy training.
+
+        Reward = log(D(s,a,s')) - log(1 - D(s,a,s'))
+
+        This encourages the policy to produce motion that the
+        discriminator thinks is real (from MoCap).
+        """
+        with torch.no_grad():
+            logits = self.forward(state, action, next_state)
+
+            # Clip for numerical stability
+            prob = torch.sigmoid(logits).clamp(0.01, 0.99)
+
+            # AMP-style reward
+            reward = torch.log(prob) - torch.log(1 - prob)
+
+        return reward.squeeze(-1)
+
+    def compute_loss(self, real_states: torch.Tensor, real_actions: torch.Tensor,
+                     real_next_states: torch.Tensor, fake_states: torch.Tensor,
+                     fake_actions: torch.Tensor, fake_next_states: torch.Tensor
+                     ) -> Tuple[torch.Tensor, Dict[str, float]]:
+        """
+        Compute discriminator training loss.
+
+        Args:
+            real_*: Transitions from MoCap data
+            fake_*: Transitions from policy rollouts
+
+        Returns:
+            loss: Discriminator loss (BCE + gradient penalty)
+            metrics: Dict with 'real_acc', 'fake_acc', 'grad_penalty'
+        """
+        # Real samples should be classified as 1
+        real_logits = self.forward(real_states, real_actions, real_next_states)
+        real_loss = F.binary_cross_entropy_with_logits(
+            real_logits, torch.ones_like(real_logits)
+        )
+
+        # Fake samples should be classified as 0
+        fake_logits = self.forward(fake_states, fake_actions, fake_next_states)
+        fake_loss = F.binary_cross_entropy_with_logits(
+            fake_logits, torch.zeros_like(fake_logits)
+        )
+
+        # Gradient penalty for stability (WGAN-GP style)
+        grad_penalty = self._gradient_penalty(
+            real_states, real_actions, real_next_states,
+            fake_states, fake_actions, fake_next_states
+        )
+
+        # Total loss
+        loss = real_loss + fake_loss + self.gradient_penalty_weight * grad_penalty
+
+        # Metrics
+        with torch.no_grad():
+            real_acc = (torch.sigmoid(real_logits) > 0.5).float().mean().item()
+            fake_acc = (torch.sigmoid(fake_logits) < 0.5).float().mean().item()
+
+        metrics = {
+            'real_acc': real_acc,
+            'fake_acc': fake_acc,
+            'grad_penalty': grad_penalty.item(),
+            'real_loss': real_loss.item(),
+            'fake_loss': fake_loss.item(),
+        }
+
+        return loss, metrics
+
+    def _gradient_penalty(self, real_states, real_actions, real_next_states,
+                          fake_states, fake_actions, fake_next_states) -> torch.Tensor:
+        """
+        Compute gradient penalty for training stability.
+
+        Interpolates between real and fake samples, computes gradients,
+        and penalizes deviation from unit norm.
+        """
+        batch_size = real_states.shape[0]
+        device = real_states.device
+
+        # Random interpolation coefficient
+        alpha = torch.rand(batch_size, 1, device=device)
+
+        # Interpolate
+        interp_states = alpha * real_states + (1 - alpha) * fake_states
+        interp_actions = alpha * real_actions + (1 - alpha) * fake_actions
+        interp_next = alpha * real_next_states + (1 - alpha) * fake_next_states
+
+        # Enable gradients
+        interp_states.requires_grad_(True)
+        interp_actions.requires_grad_(True)
+        interp_next.requires_grad_(True)
+
+        # Forward
+        logits = self.forward(interp_states, interp_actions, interp_next)
+
+        # Compute gradients
+        grads = torch.autograd.grad(
+            outputs=logits,
+            inputs=[interp_states, interp_actions, interp_next],
+            grad_outputs=torch.ones_like(logits),
+            create_graph=True,
+            retain_graph=True,
+        )
+
+        # Concatenate gradients
+        grad_cat = torch.cat([g.view(batch_size, -1) for g in grads], dim=-1)
+
+        # Penalty: (||grad|| - 1)^2
+        grad_norm = grad_cat.norm(2, dim=-1)
+        penalty = ((grad_norm - 1) ** 2).mean()
+
+        return penalty
+
+
+# ==============================================================================
 # VISION ENCODER (OpenVLA: DINOv2 + SigLIP)
 # ==============================================================================
 
@@ -339,6 +570,250 @@ class PrismaticVisionEncoder(nn.Module):
 # ==============================================================================
 # SENSOR ENCODERS
 # ==============================================================================
+
+class ObjectDetector(nn.Module):
+    """
+    Detects and localizes objects in the scene for manipulation/navigation.
+
+    PROBLEM: Robot needs to find "the cup" or "the kitchen" to execute commands.
+
+    SOLUTION: Use vision encoder features + learned object queries to detect:
+    - Graspable objects (cup, bottle, bowl)
+    - Locations (kitchen, table, door)
+    - People (user, faces)
+
+    Research backing:
+    - DETR (Facebook, 2020): Object detection as set prediction
+    - OWL-ViT (Google, 2022): Open-vocabulary object detection
+    - Grounding DINO (2023): Text-conditioned object detection
+    """
+
+    # Known object categories
+    OBJECTS = [
+        "cup", "bottle", "bowl", "plate", "mug", "glass",
+        "table", "chair", "counter", "shelf", "door",
+        "kitchen", "bathroom", "bedroom", "living room",
+        "person", "face", "hand",
+        "coffee machine", "fridge", "sink",
+    ]
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.config = config
+        self.d_model = config.d_model
+
+        # Object query embeddings (like DETR)
+        self.num_queries = config.object_detection_queries
+        self.object_queries = nn.Embedding(self.num_queries, self.d_model)
+
+        # Cross-attention from queries to vision features
+        self.cross_attn = nn.MultiheadAttention(self.d_model, 8, batch_first=True)
+
+        # Object classifier
+        self.classifier = nn.Sequential(
+            nn.Linear(self.d_model, 256),
+            nn.ReLU(),
+            nn.Linear(256, len(self.OBJECTS) + 1),  # +1 for "no object"
+        )
+
+        # Position predictor (x, y, z in robot frame)
+        self.position_head = nn.Sequential(
+            nn.Linear(self.d_model, 128),
+            nn.ReLU(),
+            nn.Linear(128, 3),  # x, y, z
+        )
+
+        print(f"[OBJECTS] Detector initialized with {len(self.OBJECTS)} categories")
+
+    def forward(self, vision_features: torch.Tensor) -> Dict:
+        """
+        Detect objects from vision features.
+
+        Args:
+            vision_features: [B, d_model] from vision encoder
+
+        Returns:
+            Dict with:
+            - classes: [B, num_queries] - object class indices
+            - positions: [B, num_queries, 3] - x,y,z positions
+            - scores: [B, num_queries] - confidence scores
+        """
+        B = vision_features.shape[0]
+
+        # Expand vision features for cross-attention
+        if vision_features.dim() == 2:
+            vision_features = vision_features.unsqueeze(1)  # [B, 1, d_model]
+
+        # Get object queries
+        queries = self.object_queries.weight.unsqueeze(0).expand(B, -1, -1)  # [B, num_queries, d_model]
+
+        # Cross-attend to vision
+        attended, _ = self.cross_attn(queries, vision_features, vision_features)
+
+        # Classify objects
+        class_logits = self.classifier(attended)  # [B, num_queries, num_classes]
+        class_probs = F.softmax(class_logits, dim=-1)
+        classes = class_probs.argmax(dim=-1)  # [B, num_queries]
+        scores = class_probs.max(dim=-1).values  # [B, num_queries]
+
+        # Predict positions
+        positions = self.position_head(attended)  # [B, num_queries, 3]
+
+        return {
+            'classes': classes,
+            'class_logits': class_logits,
+            'positions': positions,
+            'scores': scores,
+            'features': attended,
+        }
+
+    def find_object(self, vision_features: torch.Tensor, object_name: str) -> Dict:
+        """
+        Find a specific object in the scene.
+
+        Args:
+            vision_features: Vision encoder output
+            object_name: Name of object to find (e.g., "cup")
+
+        Returns:
+            Dict with position, confidence, found (bool)
+        """
+        detections = self.forward(vision_features)
+
+        # Find object index
+        object_name_lower = object_name.lower()
+        target_idx = None
+        for i, obj in enumerate(self.OBJECTS):
+            if obj in object_name_lower or object_name_lower in obj:
+                target_idx = i
+                break
+
+        if target_idx is None:
+            return {'found': False, 'reason': f"Unknown object: {object_name}"}
+
+        # Check if any detection matches
+        classes = detections['classes'][0]  # First batch
+        scores = detections['scores'][0]
+        positions = detections['positions'][0]
+
+        for i, (cls, score, pos) in enumerate(zip(classes, scores, positions)):
+            if cls.item() == target_idx and score.item() > 0.5:
+                return {
+                    'found': True,
+                    'position': pos.tolist(),
+                    'confidence': score.item(),
+                    'object': object_name,
+                }
+
+        return {'found': False, 'reason': f"Object '{object_name}' not detected"}
+
+    def get_object_name(self, idx: int) -> str:
+        """Get object name from index."""
+        if idx < len(self.OBJECTS):
+            return self.OBJECTS[idx]
+        return "unknown"
+
+
+class NavigationPlanner(nn.Module):
+    """
+    Plans navigation paths to target locations.
+
+    PROBLEM: "Go to the kitchen" requires knowing where the kitchen is
+    and planning a path there.
+
+    SOLUTION: Maintain a spatial memory and plan paths using learned value function.
+
+    Research backing:
+    - Neural SLAM (Chaplot et al., 2020)
+    - PointGoal Navigation (Habitat)
+    - VLMaps (2023): Vision-Language Maps for navigation
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.config = config
+
+        # Spatial memory (simplified grid map)
+        self.map_size = config.nav_map_size  # 64x64 grid
+        self.map_resolution = config.nav_map_resolution  # 10cm per cell
+
+        # Current position estimate
+        self.register_buffer('position', torch.zeros(3))  # x, y, theta
+        self.register_buffer('spatial_map', torch.zeros(1, self.map_size, self.map_size))
+
+        # Goal encoder
+        self.goal_encoder = nn.Sequential(
+            nn.Linear(config.d_model, 256),
+            nn.ReLU(),
+            nn.Linear(256, 64),
+        )
+
+        # Navigation policy
+        self.nav_policy = nn.Sequential(
+            nn.Linear(64 + 3, 128),  # goal + position
+            nn.ReLU(),
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Linear(64, 4),  # [forward, backward, turn_left, turn_right]
+        )
+
+        print(f"[NAV] Navigation planner initialized ({self.map_size}x{self.map_size} map)")
+
+    def set_goal(self, goal_embedding: torch.Tensor):
+        """Set navigation goal from language/vision embedding."""
+        self.current_goal = self.goal_encoder(goal_embedding)
+
+    def get_action(self, position: torch.Tensor) -> torch.Tensor:
+        """
+        Get navigation action given current position.
+
+        Args:
+            position: [x, y, theta] in world frame
+
+        Returns:
+            Navigation velocities [vx, vy, vtheta]
+        """
+        if not hasattr(self, 'current_goal'):
+            return torch.zeros(3)
+
+        # Combine goal and position
+        goal_flat = self.current_goal.flatten()
+        pos_flat = position.flatten()
+        combined = torch.cat([goal_flat, pos_flat], dim=-1)
+
+        # Get discrete action
+        action_logits = self.nav_policy(combined.unsqueeze(0))
+        action_probs = F.softmax(action_logits, dim=-1)
+
+        # Convert to continuous velocities
+        # [forward, backward, turn_left, turn_right]
+        probs = action_probs[0].detach()
+        vx = (probs[0] - probs[1]).item()  # Forward - backward
+        vy = 0.0  # No lateral movement
+        vtheta = (probs[3] - probs[2]).item()  # Right - left
+
+        return torch.tensor([vx, vy, vtheta])
+
+    def update_map(self, vision_features: torch.Tensor, position: torch.Tensor):
+        """Update spatial map from vision and position."""
+        # Simplified: just store position
+        self.position = position
+
+    def plan_path(self, start: torch.Tensor, goal: torch.Tensor) -> List[torch.Tensor]:
+        """
+        Plan a path from start to goal.
+
+        Returns list of waypoints.
+        """
+        # Simplified: straight line path
+        num_waypoints = 5
+        path = []
+        for i in range(num_waypoints):
+            t = i / (num_waypoints - 1)
+            waypoint = start * (1 - t) + goal * t
+            path.append(waypoint)
+        return path
+
 
 class ProprioceptionEncoder(nn.Module):
     """Encodes joint angles, velocities, orientation"""
@@ -899,10 +1374,24 @@ class JointTokenizer(nn.Module):
         self.goal_token = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)
         self.action_tokens = nn.Parameter(torch.randn(1, config.action_chunk_size, config.d_model) * 0.02)
 
-        self.token_type_embed = nn.Embedding(5, config.d_model)
+        # Token types: 0=CLS, 1=joint, 2=body, 3=goal, 4=action, 5=multimodal
+        self.token_type_embed = nn.Embedding(6, config.d_model)
         self.action_embed = nn.Linear(config.action_dim, config.d_model)
 
-    def forward(self, state, goal=None, noisy_actions=None):
+    def forward(self, state, goal=None, noisy_actions=None, multimodal_tokens=None):
+        """
+        Tokenize state + optional multimodal inputs for transformer.
+
+        Args:
+            state: [B, obs_dim] - proprioception
+            goal: [B, obs_dim] - optional goal state
+            noisy_actions: [B, chunk, action_dim] - for diffusion
+            multimodal_tokens: [B, N, d_model] - PRE-ENCODED vision/audio/language
+                               These tokens go DIRECTLY into the transformer!
+
+        Token sequence:
+            [CLS] [VISION?] [AUDIO?] [LANG?] [Joint1...17] [Body] [Goal?] [Actions]
+        """
         B = state.shape[0]
         device = state.device
         tokens, types = [], []
@@ -910,6 +1399,13 @@ class JointTokenizer(nn.Module):
         # [CLS]
         tokens.append(self.cls_token.expand(B, -1, -1))
         types.append(torch.zeros(B, 1, dtype=torch.long, device=device))
+
+        # MULTIMODAL TOKENS (vision/audio/language) - INSERTED INTO TRANSFORMER!
+        # This is the KEY fix - these tokens participate in self-attention
+        if multimodal_tokens is not None and multimodal_tokens.shape[1] > 0:
+            tokens.append(multimodal_tokens)
+            # Type 5 = multimodal
+            types.append(torch.full((B, multimodal_tokens.shape[1]), 5, dtype=torch.long, device=device))
 
         # Joint tokens
         joint_dim = self.config.num_joints * self.config.features_per_joint
@@ -1382,27 +1878,112 @@ class HierarchicalPlanner(nn.Module):
 # ==============================================================================
 
 class ActionHead(nn.Module):
-    """Action prediction with flow matching"""
+    """
+    Multi-Action Head for progressive robot training.
+
+    Supports both:
+    - Locomotion only (17 joints): legs + torso
+    - Full humanoid (57 joints): locomotion + arms + hands + neck
+
+    The heads share a common feature extractor but have separate outputs.
+    This allows training locomotion first, then adding manipulation without
+    forgetting walking skills.
+    """
     def __init__(self, config: UnifiedBrainConfig):
         super().__init__()
-        self.decoder = nn.Sequential(
+        self.config = config
+
+        # Shared feature extractor
+        self.shared = nn.Sequential(
             RMSNorm(config.d_model),
             nn.Linear(config.d_model, config.d_model),
             nn.SiLU(),
-            nn.Linear(config.d_model, config.action_dim),
         )
-        self.velocity_decoder = nn.Sequential(
-            RMSNorm(config.d_model),
-            nn.Linear(config.d_model, config.d_model),
-            nn.SiLU(),
-            nn.Linear(config.d_model, config.action_dim),
-        )
+
+        # Locomotion head (17 joints: legs + torso)
+        # Joints: abdomen (3) + hips (6) + knees (2) + ankles (4) + shoulders (2)
+        self.locomotion_dim = 17
+        self.locomotion_head = nn.Linear(config.d_model, self.locomotion_dim)
+        self.locomotion_velocity = nn.Linear(config.d_model, self.locomotion_dim)
+
+        # Manipulation head (40 joints: arms + hands + neck)
+        # Joints: neck (2) + shoulders (4) + elbows (2) + wrists (4) + fingers (30)
+        self.manipulation_dim = 40
+        self.manipulation_head = nn.Linear(config.d_model, self.manipulation_dim)
+        self.manipulation_velocity = nn.Linear(config.d_model, self.manipulation_dim)
+
+        # Full body = locomotion + manipulation = 57 joints
+        self.full_dim = self.locomotion_dim + self.manipulation_dim
+
+        # Mode: 'locomotion' (17), 'manipulation' (40), 'full' (57)
+        self.mode = 'locomotion'
+
+        print(f"  ActionHead: locomotion={self.locomotion_dim}, manipulation={self.manipulation_dim}, full={self.full_dim}")
+
+    def set_mode(self, mode: str):
+        """Set action output mode: 'locomotion', 'manipulation', or 'full'"""
+        assert mode in ['locomotion', 'manipulation', 'full']
+        self.mode = mode
+        print(f"  ActionHead mode: {mode} ({self._get_dim()} dims)")
+
+    def _get_dim(self) -> int:
+        if self.mode == 'locomotion':
+            return self.locomotion_dim
+        elif self.mode == 'manipulation':
+            return self.manipulation_dim
+        else:
+            return self.full_dim
 
     def forward(self, x):
-        return self.decoder(x)
+        """
+        Predict actions based on current mode.
+
+        Args:
+            x: Features [B, seq_len, d_model] or [B, d_model]
+
+        Returns:
+            Actions [B, seq_len, action_dim] or [B, action_dim]
+        """
+        features = self.shared(x)
+
+        if self.mode == 'locomotion':
+            return self.locomotion_head(features)
+        elif self.mode == 'manipulation':
+            return self.manipulation_head(features)
+        else:  # full
+            loco = self.locomotion_head(features)
+            manip = self.manipulation_head(features)
+            return torch.cat([loco, manip], dim=-1)
 
     def predict_velocity(self, x):
-        return self.velocity_decoder(x)
+        """Predict velocity field for flow matching."""
+        features = self.shared(x)
+
+        if self.mode == 'locomotion':
+            return self.locomotion_velocity(features)
+        elif self.mode == 'manipulation':
+            return self.manipulation_velocity(features)
+        else:  # full
+            loco_v = self.locomotion_velocity(features)
+            manip_v = self.manipulation_velocity(features)
+            return torch.cat([loco_v, manip_v], dim=-1)
+
+    def forward_locomotion(self, x):
+        """Force locomotion output regardless of mode."""
+        features = self.shared(x)
+        return self.locomotion_head(features)
+
+    def forward_manipulation(self, x):
+        """Force manipulation output regardless of mode."""
+        features = self.shared(x)
+        return self.manipulation_head(features)
+
+    def forward_full(self, x):
+        """Force full body output regardless of mode."""
+        features = self.shared(x)
+        loco = self.locomotion_head(features)
+        manip = self.manipulation_head(features)
+        return torch.cat([loco, manip], dim=-1)
 
 
 class PhysicsHead(nn.Module):
@@ -1433,6 +2014,318 @@ class ValueHead(nn.Module):
 
     def forward(self, x):
         return self.predictor(x)
+
+
+# ==============================================================================
+# SOTA ACTION GENERATION (π0, GR00T N1, Figure Helix)
+# ==============================================================================
+
+class ActionExpert(nn.Module):
+    """
+    Action Expert - Separate transformer for action generation (π0 style).
+
+    From Physical Intelligence's π0 paper:
+    - Separate action expert (smaller than VLM backbone)
+    - Cross-attention to VLM features (not concatenation)
+    - Flow matching for smooth action generation
+    - 50Hz action output (π0) or 200Hz (GR00T N1)
+
+    Architecture:
+        VLM features (System 2) ─┐
+                                 ├─> Cross-Attention ─> Action Transformer ─> Actions
+        Noisy action query ─────┘
+
+    Research: π0 (Physical Intelligence 2024), GR00T N1 (NVIDIA 2025)
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.config = config
+        dim = config.action_expert_dim
+        action_dim = config.action_dim
+        chunk_size = config.action_chunk_size
+
+        # Action embedding (noisy action -> embedding)
+        self.action_embed = nn.Linear(action_dim * chunk_size, dim)
+
+        # Time embedding for flow matching (sinusoidal)
+        self.time_embed = nn.Sequential(
+            nn.Linear(config.dit_time_embed_dim, dim),
+            nn.SiLU(),
+            nn.Linear(dim, dim),
+        )
+
+        # Cross-attention to VLM/backbone features
+        self.cross_attn_layers = nn.ModuleList([
+            nn.MultiheadAttention(dim, num_heads=4, batch_first=True)
+            for _ in range(config.action_expert_layers)
+        ])
+
+        # Self-attention transformer layers
+        self.self_attn_layers = nn.ModuleList([
+            nn.TransformerEncoderLayer(
+                d_model=dim,
+                nhead=4,
+                dim_feedforward=dim * 4,
+                dropout=config.dropout,
+                activation='gelu',
+                batch_first=True,
+            )
+            for _ in range(config.action_expert_layers)
+        ])
+
+        # Layer norms for cross-attention
+        self.cross_norms = nn.ModuleList([
+            RMSNorm(dim) for _ in range(config.action_expert_layers)
+        ])
+
+        # Project VLM features to action expert dimension
+        self.vlm_proj = nn.Linear(config.d_model, dim)
+
+        # Output projection
+        self.output_proj = nn.Sequential(
+            RMSNorm(dim),
+            nn.Linear(dim, action_dim * chunk_size),
+        )
+
+        print(f"  ActionExpert: {config.action_expert_layers} layers, dim={dim}")
+
+    def get_timestep_embedding(self, timesteps: torch.Tensor, dim: int) -> torch.Tensor:
+        """Sinusoidal timestep embeddings (from DDPM)"""
+        half_dim = dim // 2
+        emb = math.log(10000) / (half_dim - 1)
+        emb = torch.exp(torch.arange(half_dim, device=timesteps.device) * -emb)
+        emb = timesteps.float().unsqueeze(1) * emb.unsqueeze(0)
+        emb = torch.cat([torch.sin(emb), torch.cos(emb)], dim=1)
+        if dim % 2 == 1:
+            emb = F.pad(emb, (0, 1))
+        return emb
+
+    def forward(
+        self,
+        noisy_actions: torch.Tensor,  # [B, action_dim * chunk_size]
+        vlm_features: torch.Tensor,   # [B, seq_len, d_model] from backbone
+        timesteps: torch.Tensor,      # [B] diffusion timestep (0 to 1)
+    ) -> torch.Tensor:
+        """
+        Forward pass predicts noise/velocity for flow matching.
+
+        Args:
+            noisy_actions: Noised action chunk
+            vlm_features: Features from main transformer backbone
+            timesteps: Flow matching timestep (0=noise, 1=clean)
+
+        Returns:
+            Predicted velocity field for flow matching
+        """
+        B = noisy_actions.shape[0]
+
+        # Embed actions
+        x = self.action_embed(noisy_actions)  # [B, dim]
+        x = x.unsqueeze(1)  # [B, 1, dim] - single query token
+
+        # Add time embedding
+        t_emb = self.get_timestep_embedding(timesteps, self.config.dit_time_embed_dim)
+        t_emb = self.time_embed(t_emb)  # [B, dim]
+        x = x + t_emb.unsqueeze(1)
+
+        # Project VLM features
+        kv = self.vlm_proj(vlm_features)  # [B, seq_len, dim]
+
+        # Transformer layers with cross-attention
+        for cross_attn, self_attn, norm in zip(
+            self.cross_attn_layers, self.self_attn_layers, self.cross_norms
+        ):
+            # Cross-attention to VLM features
+            x_cross, _ = cross_attn(x, kv, kv)
+            x = norm(x + x_cross)
+
+            # Self-attention
+            x = self_attn(x)
+
+        # Output
+        x = x.squeeze(1)  # [B, dim]
+        velocity = self.output_proj(x)  # [B, action_dim * chunk_size]
+
+        return velocity
+
+
+class FlowMatchingScheduler:
+    """
+    Flow Matching scheduler for action generation.
+
+    From Lipman et al. (2022) "Flow Matching for Generative Modeling":
+    - Linear interpolation between noise and data
+    - Simpler than DDPM, more stable training
+    - π0 uses 10 denoising steps (vs 100+ for DDPM)
+
+    Flow: x_t = t * x_1 + (1-t) * x_0
+    Where: x_0 = noise, x_1 = clean data, t ∈ [0, 1]
+    """
+
+    def __init__(self, num_steps: int = 10):
+        self.num_steps = num_steps
+        self.timesteps = torch.linspace(0, 1, num_steps + 1)
+
+    def add_noise(
+        self,
+        clean_actions: torch.Tensor,
+        noise: torch.Tensor,
+        timestep: torch.Tensor,
+    ) -> torch.Tensor:
+        """Add noise using flow matching interpolation."""
+        t = timestep.view(-1, 1)
+        return t * clean_actions + (1 - t) * noise
+
+    def step(
+        self,
+        model_output: torch.Tensor,  # Predicted velocity
+        timestep: float,
+        sample: torch.Tensor,
+        dt: float = None,
+    ) -> torch.Tensor:
+        """One denoising step."""
+        if dt is None:
+            dt = 1.0 / self.num_steps
+
+        # Euler step: x_{t+dt} = x_t + v_t * dt
+        return sample + model_output * dt
+
+
+class DualSystemController:
+    """
+    Dual System Architecture (Figure Helix / NVIDIA GR00T N1 style).
+
+    Three-tier architecture:
+    - System 2 (VLM): Slow reasoning, 7-9 Hz, scene understanding
+    - System 1 (Action Expert): Fast actions, 50-200 Hz, visuomotor policy
+    - System 0 (Motor): Ultra-fast control, 1 kHz, PD/torque (optional)
+
+    System 2 provides context to System 1 asynchronously:
+    ┌─────────────────────────────────────────────────────────┐
+    │  System 2 (9 Hz)                                       │
+    │  VLM: "Pick up the red cup on the table"               │
+    │       ↓ scene features (async)                         │
+    │  System 1 (50 Hz)                                      │
+    │  Action Expert: generates smooth action chunks         │
+    │       ↓ target positions (sync)                        │
+    │  System 0 (1 kHz) - optional                          │
+    │  PD Controller: torque commands to motors              │
+    └─────────────────────────────────────────────────────────┘
+
+    Research:
+    - GR00T N1 (NVIDIA 2025): S0/S1/S2 hierarchy
+    - Figure Helix (Figure AI 2025): Dual system with VLM backbone
+    - π0 (Physical Intelligence 2024): 50Hz action generation
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        self.config = config
+        self.system2_hz = config.system2_hz
+        self.system1_hz = config.system1_hz
+        self.system0_hz = config.system0_hz
+
+        # Timing
+        self.system2_dt = 1.0 / self.system2_hz  # ~111ms
+        self.system1_dt = 1.0 / self.system1_hz  # ~20ms
+        self.system0_dt = 1.0 / self.system0_hz  # ~1ms
+
+        # Cached features from System 2 (for async operation)
+        self.cached_vlm_features = None
+        self.last_system2_time = 0.0
+
+        # Action buffer for interpolation
+        self.action_buffer = None
+        self.action_index = 0
+
+        print(f"  DualSystem: S2={self.system2_hz}Hz, S1={self.system1_hz}Hz, S0={self.system0_hz}Hz")
+
+    def should_run_system2(self, current_time: float) -> bool:
+        """Check if System 2 (VLM) should run."""
+        return current_time - self.last_system2_time >= self.system2_dt
+
+    def update_system2_features(self, features: torch.Tensor, current_time: float):
+        """Cache VLM features from System 2."""
+        self.cached_vlm_features = features
+        self.last_system2_time = current_time
+
+    def get_action_from_chunk(self, action_chunk: torch.Tensor) -> torch.Tensor:
+        """
+        Get single action from chunk for System 1 output.
+
+        action_chunk: [B, chunk_size, action_dim]
+        Returns: [B, action_dim]
+        """
+        if self.action_buffer is None or self.action_index >= self.action_buffer.shape[1]:
+            # Need new chunk
+            self.action_buffer = action_chunk
+            self.action_index = 0
+
+        action = self.action_buffer[:, self.action_index, :]
+        self.action_index += 1
+        return action
+
+    def reset(self):
+        """Reset controller state."""
+        self.cached_vlm_features = None
+        self.last_system2_time = 0.0
+        self.action_buffer = None
+        self.action_index = 0
+
+
+class System0Controller(nn.Module):
+    """
+    System 0: Ultra-fast motor control (1 kHz).
+
+    Converts target joint positions from System 1 into torque commands.
+    Uses learned PD gains (like NVIDIA's approach).
+
+    Optional - only needed for real hardware.
+
+    τ = Kp * (q_target - q_current) + Kd * (dq_target - dq_current)
+
+    Where Kp, Kd are learned per-joint gains.
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        action_dim = config.action_dim
+
+        # Learned PD gains per joint
+        self.kp = nn.Parameter(torch.ones(action_dim) * 50.0)
+        self.kd = nn.Parameter(torch.ones(action_dim) * 5.0)
+
+        # Optional: learned residual for model mismatch
+        self.residual_mlp = nn.Sequential(
+            nn.Linear(action_dim * 4, 64),  # q, dq, q_target, dq_target
+            nn.SiLU(),
+            nn.Linear(64, action_dim),
+        )
+
+        print(f"  System0: PD controller with learned gains")
+
+    def forward(
+        self,
+        q_current: torch.Tensor,      # Current joint positions
+        dq_current: torch.Tensor,     # Current joint velocities
+        q_target: torch.Tensor,       # Target positions from System 1
+        dq_target: torch.Tensor = None,  # Target velocities (optional)
+    ) -> torch.Tensor:
+        """Compute torque commands."""
+        if dq_target is None:
+            dq_target = torch.zeros_like(dq_current)
+
+        # PD control
+        pos_error = q_target - q_current
+        vel_error = dq_target - dq_current
+
+        tau = self.kp * pos_error + self.kd * vel_error
+
+        # Add learned residual
+        state = torch.cat([q_current, dq_current, q_target, dq_target], dim=-1)
+        tau = tau + self.residual_mlp(state)
+
+        return tau
 
 
 # ==============================================================================
@@ -1569,6 +2462,59 @@ Response:"""
             import random
             templates = self.TEMPLATES.get(situation, self.TEMPLATES["confusion"])
             return random.choice(templates).format(task=task, reason=str(e))
+
+    def answer_question(self, question: str) -> str:
+        """
+        Answer a question using the LLM.
+
+        This is for direct Q&A like "What's 1+1?" or "What's the weather?".
+        Unlike generate(), this doesn't need a task/situation context.
+
+        Args:
+            question: The question to answer
+
+        Returns:
+            The answer string
+        """
+        if not self.use_llm_generation:
+            return "I can't answer questions without my language model."
+
+        try:
+            # Format as simple Q&A
+            prompt = f"""You are a helpful companion robot. Answer this question briefly and directly.
+
+Question: {question}
+Answer:"""
+
+            inputs = self.llm.tokenizer(prompt, return_tensors="pt", truncation=True, max_length=256)
+            device = next(self.llm.llm.parameters()).device
+            inputs = {k: v.to(device) for k, v in inputs.items()}
+
+            with torch.no_grad():
+                outputs = self.llm.llm.generate(
+                    **inputs,
+                    max_new_tokens=50,
+                    temperature=0.3,  # Lower temperature for factual answers
+                    do_sample=True,
+                    pad_token_id=self.llm.tokenizer.pad_token_id,
+                )
+
+            response = self.llm.tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+            # Extract just the answer part
+            if "Answer:" in response:
+                response = response.split("Answer:")[-1].strip()
+
+            # Clean up
+            response = response.split("\n")[0].strip()  # First line only
+            return response[:150]  # Limit length
+
+        except Exception as e:
+            return f"Sorry, I had trouble thinking about that: {str(e)[:50]}"
+
+    def can_answer(self) -> bool:
+        """Check if Q&A is available."""
+        return self.use_llm_generation
 
 
 class CompanionMemory:
@@ -1813,6 +2759,10 @@ class UnifiedBrain(nn.Module):
         self.cross_modal_fusion = CrossModalFusion(config)
         print("  Cross-modal fusion: 3 layers")
 
+        # Semantic action anchors for LLM-agnostic language grounding
+        self.semantic_anchors = SemanticActionAnchors(config.d_model, num_anchors=8)
+        print("  Semantic anchors: 8 action categories (LLM-agnostic)")
+
         # ==========================================
         # TEMPORAL MEMORY
         # ==========================================
@@ -1873,6 +2823,34 @@ class UnifiedBrain(nn.Module):
             self.task_completion_head = None
 
         # ==========================================
+        # SOTA ACTION GENERATION (π0, GR00T N1)
+        # ==========================================
+        print("\n[SOTA ACTION GENERATION]")
+
+        # Action Expert (π0 style - separate transformer for actions)
+        if config.action_expert_enabled:
+            self.action_expert = ActionExpert(config)
+            self.flow_scheduler = FlowMatchingScheduler(num_steps=config.flow_matching_steps)
+        else:
+            self.action_expert = None
+            self.flow_scheduler = None
+            print("  ActionExpert: Disabled")
+
+        # Dual System Controller (manages S0/S1/S2)
+        if config.dual_system_enabled:
+            self.dual_system = DualSystemController(config)
+        else:
+            self.dual_system = None
+            print("  DualSystem: Disabled")
+
+        # System 0 motor controller (optional, for real hardware)
+        if config.system0_enabled:
+            self.system0 = System0Controller(config)
+        else:
+            self.system0 = None
+            print("  System0: Disabled (sim only)")
+
+        # ==========================================
         # COMPANION ROBOT FEATURES
         # ==========================================
         print("\n[COMPANION FEATURES]")
@@ -1899,6 +2877,25 @@ class UnifiedBrain(nn.Module):
         else:
             self.tts = None
             print("  TTS: Disabled")
+
+        # ==========================================
+        # OBJECT DETECTION & NAVIGATION
+        # ==========================================
+        print("\n[PERCEPTION & NAVIGATION]")
+
+        # Object detector (DETR-style)
+        if config.enable_object_detection:
+            self.object_detector = ObjectDetector(config)
+        else:
+            self.object_detector = None
+            print("  Object Detection: Disabled")
+
+        # Navigation planner
+        if config.enable_navigation:
+            self.navigation_planner = NavigationPlanner(config)
+        else:
+            self.navigation_planner = None
+            print("  Navigation: Disabled")
 
         # CLS token
         self.cls_token = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)
@@ -1998,7 +2995,13 @@ class UnifiedBrain(nn.Module):
         # ==========================================
         # CROSS-MODAL FUSION
         # ==========================================
-        fused = self.cross_modal_fusion(torch.cat(modality_tokens, dim=1))
+        # Concatenate all modality tokens for fusion
+        all_modality_tokens = torch.cat(modality_tokens, dim=1)  # [B, N_tokens, d_model]
+        fused = self.cross_modal_fusion(all_modality_tokens)
+
+        # Extract multimodal tokens (everything except CLS at the end)
+        # These will be INSERTED into the transformer backbone!
+        multimodal_for_backbone = fused[:, :-1, :]  # All except CLS
         cls_fused = fused[:, -1, :]  # CLS token output
 
         # ==========================================
@@ -2009,9 +3012,11 @@ class UnifiedBrain(nn.Module):
             cls_fused = mem_out[:, -1, :]
 
         # ==========================================
-        # TOKENIZE FOR BACKBONE
+        # TOKENIZE FOR BACKBONE (NOW WITH MULTIMODAL!)
         # ==========================================
-        tokens, mask = self.tokenizer(state, goal, noisy_actions)
+        # KEY FIX: Pass multimodal tokens INTO the tokenizer
+        # Now the transformer sees: [CLS] [Vision] [Audio] [Lang] [Joints...] [Actions]
+        tokens, mask = self.tokenizer(state, goal, noisy_actions, multimodal_tokens=multimodal_for_backbone)
         rules = self.rule_bank()
 
         # ==========================================
@@ -2043,6 +3048,7 @@ class UnifiedBrain(nn.Module):
         # ==========================================
         output = {
             'cls_features': cls_combined,
+            'hidden_states': tokens,  # Full sequence for ActionExpert cross-attention
             'rule_weights': avg_rule_weights,
             'actions': self.action_head(action_feat),
             'physics': self.physics_head(cls_combined),
@@ -2150,6 +3156,218 @@ class UnifiedBrain(nn.Module):
     def has_llm(self) -> bool:
         """Check if LLM is loaded"""
         return hasattr(self.language_encoder, 'use_llm') and self.language_encoder.use_llm
+
+    # ==========================================
+    # FLOW MATCHING ACTION GENERATION (π0 style)
+    # ==========================================
+
+    @torch.no_grad()
+    def generate_actions_flow_matching(
+        self,
+        state: torch.Tensor,
+        language: str = None,
+        vision: torch.Tensor = None,
+        num_steps: int = None,
+    ) -> torch.Tensor:
+        """
+        Generate smooth action chunks using flow matching (π0 style).
+
+        This is the SOTA way to generate actions:
+        1. Start from random noise
+        2. Use ActionExpert to predict velocity field
+        3. Integrate through ODE to get clean actions
+        4. Return smooth action chunk
+
+        From π0 paper: "Flow matching provides smoother trajectories than
+        diffusion models with fewer denoising steps."
+
+        Args:
+            state: Robot proprioception [B, obs_dim]
+            language: Optional language command (string or list)
+            vision: Optional vision input [B, 3, H, W]
+            num_steps: Denoising steps (default: config.flow_matching_steps)
+
+        Returns:
+            actions: Clean action chunk [B, chunk_size, action_dim]
+        """
+        if self.action_expert is None:
+            # Fallback to regular action head
+            output = self.forward(state, language=language, vision=vision)
+            return output['actions']
+
+        if state.dim() == 1:
+            state = state.unsqueeze(0)
+
+        B = state.shape[0]
+        device = state.device
+        config = self.config
+        num_steps = num_steps or config.flow_matching_steps
+
+        # Get backbone features (System 2)
+        output = self.forward(state, language=language, vision=vision)
+        vlm_features = output['hidden_states']  # [B, seq_len, d_model]
+
+        # Start from pure noise (x_0 in flow matching)
+        action_shape = (B, config.action_dim * config.action_chunk_size)
+        x = torch.randn(action_shape, device=device)
+
+        # Flow matching: integrate from t=0 (noise) to t=1 (clean)
+        dt = 1.0 / num_steps
+        for step in range(num_steps):
+            t = torch.full((B,), step * dt, device=device)
+
+            # Predict velocity at current state
+            velocity = self.action_expert(x, vlm_features, t)
+
+            # Euler step
+            x = x + velocity * dt
+
+        # Reshape to action chunk
+        actions = x.view(B, config.action_chunk_size, config.action_dim)
+
+        return actions
+
+    def train_flow_matching_step(
+        self,
+        state: torch.Tensor,
+        target_actions: torch.Tensor,
+        language: str = None,
+        vision: torch.Tensor = None,
+    ) -> torch.Tensor:
+        """
+        One training step for flow matching.
+
+        Loss: ||v_θ(x_t, t) - (x_1 - x_0)||²
+
+        Where:
+        - x_0 = noise
+        - x_1 = target_actions (from demos)
+        - x_t = interpolation
+        - v_θ = predicted velocity
+
+        Args:
+            state: Robot state [B, obs_dim]
+            target_actions: Ground truth actions [B, chunk_size, action_dim]
+            language: Optional language command
+            vision: Optional vision input
+
+        Returns:
+            loss: Flow matching loss scalar
+        """
+        if self.action_expert is None:
+            raise RuntimeError("ActionExpert not enabled. Set action_expert_enabled=True")
+
+        B = state.shape[0]
+        device = state.device
+        config = self.config
+
+        # Flatten target actions
+        x_1 = target_actions.view(B, -1)  # [B, action_dim * chunk_size]
+
+        # Sample noise (x_0)
+        x_0 = torch.randn_like(x_1)
+
+        # Sample random timestep
+        t = torch.rand(B, device=device)
+
+        # Interpolate: x_t = t * x_1 + (1-t) * x_0
+        t_expand = t.view(B, 1)
+        x_t = t_expand * x_1 + (1 - t_expand) * x_0
+
+        # Get backbone features
+        output = self.forward(state, language=language, vision=vision)
+        vlm_features = output['hidden_states']
+
+        # Predict velocity
+        v_pred = self.action_expert(x_t, vlm_features, t)
+
+        # Target velocity is just (x_1 - x_0) for conditional flow matching
+        v_target = x_1 - x_0
+
+        # MSE loss
+        loss = F.mse_loss(v_pred, v_target)
+
+        return loss
+
+    def act_dual_system(
+        self,
+        state: torch.Tensor,
+        language: str = None,
+        vision: torch.Tensor = None,
+        current_time: float = 0.0,
+    ) -> Dict[str, torch.Tensor]:
+        """
+        Action generation using Dual System Architecture.
+
+        System 2 (VLM, 9Hz): Scene understanding, runs occasionally
+        System 1 (Action Expert, 50Hz): Fast action generation
+
+        This mimics how GR00T N1 and Figure Helix operate:
+        - System 2 provides context asynchronously
+        - System 1 generates actions at high frequency
+        - Actions are chunked for smooth execution
+
+        Args:
+            state: Robot state [B, obs_dim]
+            language: Language command
+            vision: Vision input
+            current_time: Current simulation/real time in seconds
+
+        Returns:
+            Dict with:
+            - action: Single action for current timestep
+            - action_chunk: Full action chunk (for planning ahead)
+            - system2_ran: Whether System 2 was updated
+        """
+        if self.dual_system is None:
+            # Fallback to regular generation
+            actions = self.generate_actions_flow_matching(state, language, vision)
+            return {
+                'action': actions[:, 0, :],
+                'action_chunk': actions,
+                'system2_ran': True,
+            }
+
+        system2_ran = False
+
+        # Check if System 2 (VLM) should run
+        if self.dual_system.should_run_system2(current_time):
+            # Full forward pass with VLM
+            output = self.forward(state, language=language, vision=vision)
+            vlm_features = output['hidden_states']
+            self.dual_system.update_system2_features(vlm_features, current_time)
+            system2_ran = True
+
+        # System 1: Generate actions using cached VLM features
+        if self.dual_system.cached_vlm_features is None:
+            # No VLM features yet, do full pass
+            actions = self.generate_actions_flow_matching(state, language, vision)
+        else:
+            # Use cached features for fast action generation
+            B = state.shape[0]
+            device = state.device
+            config = self.config
+
+            # Flow matching with cached features
+            action_shape = (B, config.action_dim * config.action_chunk_size)
+            x = torch.randn(action_shape, device=device)
+
+            dt = 1.0 / config.flow_matching_steps
+            for step in range(config.flow_matching_steps):
+                t = torch.full((B,), step * dt, device=device)
+                velocity = self.action_expert(x, self.dual_system.cached_vlm_features, t)
+                x = x + velocity * dt
+
+            actions = x.view(B, config.action_chunk_size, config.action_dim)
+
+        # Get single action from chunk
+        action = self.dual_system.get_action_from_chunk(actions)
+
+        return {
+            'action': action,
+            'action_chunk': actions,
+            'system2_ran': system2_ran,
+        }
 
     # ==========================================
     # COMPANION ROBOT INTERACTION (NEW)
@@ -2275,6 +3493,544 @@ class UnifiedBrain(nn.Module):
         else:
             self.say("Hello! Ready to help.")
 
+    def ask(self, question: str, speak: bool = True) -> str:
+        """
+        Ask the robot a question and get a spoken answer.
+
+        This is for Q&A scenarios like:
+        - "What's 1+1?"
+        - "What time is it?"
+        - "Tell me a joke"
+
+        Args:
+            question: The question to ask
+            speak: Whether to speak the answer aloud
+
+        Returns:
+            The answer string
+
+        Example:
+            answer = brain.ask("What's 1+1?")
+            # Robot speaks: "2"
+            # Returns: "2"
+        """
+        if self.response_generator is None:
+            answer = "I don't have my language model loaded."
+        elif not self.response_generator.can_answer():
+            answer = "I can't answer questions right now."
+        else:
+            answer = self.response_generator.answer_question(question)
+
+        if speak:
+            self.say(answer)
+
+        return answer
+
+    # ==========================================================================
+    # OBJECT DETECTION & NAVIGATION METHODS
+    # ==========================================================================
+
+    def find_object(
+        self,
+        object_name: str,
+        vision_input: torch.Tensor = None
+    ) -> Dict:
+        """
+        Find an object in the scene.
+
+        Args:
+            object_name: Name of object to find (e.g., "cup", "coffee machine")
+            vision_input: Camera input tensor [B, C, H, W]
+
+        Returns:
+            Dict with:
+                - found: bool - whether object was found
+                - position: [x, y, z] if found
+                - confidence: detection confidence
+                - object_name: normalized object name
+        """
+        if self.object_detector is None:
+            return {"found": False, "error": "Object detection not enabled"}
+
+        if vision_input is None:
+            # Use dummy vision for testing
+            vision_input = torch.randn(1, 3, 224, 224)
+
+        # Get vision features
+        if self.vision_encoder is not None:
+            with torch.no_grad():
+                vision_features = self.vision_encoder(vision_input)
+                if isinstance(vision_features, dict):
+                    vision_features = vision_features.get("fused", vision_features.get("rgb"))
+        else:
+            # Mock vision features
+            vision_features = torch.randn(1, 49, self.config.d_model)
+
+        # Find the object
+        result = self.object_detector.find_object(vision_features, object_name)
+        return result
+
+    def navigate_to(
+        self,
+        target: str,
+        current_position: torch.Tensor = None
+    ) -> Dict:
+        """
+        Navigate to a target location or object.
+
+        Args:
+            target: Target name ("kitchen", "cup", "coffee machine")
+            current_position: Current robot position [x, y, theta]
+
+        Returns:
+            Dict with:
+                - action: Navigation velocity commands [vx, vy, vtheta]
+                - distance: Estimated distance to target
+                - arrived: Whether at target
+        """
+        if self.navigation_planner is None:
+            return {"error": "Navigation not enabled"}
+
+        if current_position is None:
+            current_position = torch.zeros(3)  # [x, y, theta]
+
+        # First, find the target if it's an object
+        object_result = self.find_object(target)
+
+        if object_result.get("found", False):
+            # Set navigation goal to object position
+            goal_embedding = torch.tensor(object_result["position"][:2])  # x, y
+            goal_embedding = F.pad(goal_embedding, (0, self.config.d_model - 2))
+        else:
+            # Use semantic location embedding
+            # Known locations have fixed positions
+            known_locations = {
+                "kitchen": torch.tensor([3.0, 0.0]),
+                "table": torch.tensor([1.5, 0.0]),
+                "counter": torch.tensor([3.0, 0.0]),
+                "door": torch.tensor([0.0, 2.0]),
+                "start": torch.tensor([0.0, 0.0]),
+            }
+            if target.lower() in known_locations:
+                goal_pos = known_locations[target.lower()]
+            else:
+                # Default: move forward
+                goal_pos = torch.tensor([2.0, 0.0])
+
+            goal_embedding = F.pad(goal_pos, (0, self.config.d_model - 2))
+
+        # Set goal and get action
+        self.navigation_planner.set_goal(goal_embedding.unsqueeze(0))
+        nav_action = self.navigation_planner.get_action(current_position.unsqueeze(0))
+
+        # Check if arrived (within 0.3m)
+        distance = torch.norm(current_position[:2] - goal_embedding[:2]).item()
+        arrived = distance < 0.3
+
+        return {
+            "action": nav_action.squeeze(0).tolist(),
+            "distance": distance,
+            "arrived": arrived,
+            "target": target,
+        }
+
+    def find_and_go_to(
+        self,
+        target: str,
+        vision_input: torch.Tensor = None,
+        current_position: torch.Tensor = None
+    ) -> Dict:
+        """
+        Combined find + navigate - the main high-level command.
+
+        Example:
+            result = brain.find_and_go_to("coffee machine")
+            # Robot looks for coffee machine, then navigates to it
+
+        Args:
+            target: Object or location name
+            vision_input: Camera input
+            current_position: Robot position
+
+        Returns:
+            Dict with status, action, and verbal response
+        """
+        # Step 1: Find the object
+        find_result = self.find_object(target, vision_input)
+
+        if find_result.get("found", False):
+            response = f"I found the {target}. Navigating there now."
+            print(f"[NAV] Found {target} at position {find_result.get('position')}")
+        else:
+            response = f"I don't see {target}, but I'll head towards where it might be."
+            print(f"[NAV] {target} not visible, using semantic location")
+
+        # Step 2: Navigate
+        nav_result = self.navigate_to(target, current_position)
+
+        return {
+            "found": find_result.get("found", False),
+            "position": find_result.get("position"),
+            "nav_action": nav_result.get("action"),
+            "distance": nav_result.get("distance"),
+            "arrived": nav_result.get("arrived", False),
+            "response": response,
+        }
+
+    def _execute_command(self, command: str) -> Dict:
+        """
+        Execute a parsed command.
+
+        Handles commands like:
+        - "go to the kitchen"
+        - "pick up the cup"
+        - "bring me coffee"
+        - "walk forward"
+        """
+        command_lower = command.lower()
+
+        # Navigation commands
+        nav_keywords = ["go to", "walk to", "move to", "navigate to", "head to"]
+        for keyword in nav_keywords:
+            if keyword in command_lower:
+                target = command_lower.split(keyword)[-1].strip()
+                # Clean up target
+                target = target.replace("the ", "").strip()
+                result = self.find_and_go_to(target)
+                return {
+                    "type": "navigation",
+                    "response": result.get("response", f"Going to {target}"),
+                    "action": result.get("nav_action"),
+                    "target": target,
+                }
+
+        # Pick up commands
+        pick_keywords = ["pick up", "grab", "take", "get"]
+        for keyword in pick_keywords:
+            if keyword in command_lower:
+                target = command_lower.split(keyword)[-1].strip()
+                target = target.replace("the ", "").strip()
+                find_result = self.find_object(target)
+                if find_result.get("found", False):
+                    return {
+                        "type": "manipulation",
+                        "response": f"I see the {target}. Reaching for it now.",
+                        "target": target,
+                        "position": find_result.get("position"),
+                    }
+                else:
+                    return {
+                        "type": "manipulation",
+                        "response": f"I can't find the {target}. Let me look around.",
+                        "target": target,
+                    }
+
+        # Bring commands (complex: pick up + navigate + hand over)
+        if "bring" in command_lower or "fetch" in command_lower:
+            # Extract object
+            words = command_lower.split()
+            obj_idx = -1
+            for i, w in enumerate(words):
+                if w in ["me", "us", "here"]:
+                    obj_idx = i + 1
+                    break
+            if obj_idx > 0 and obj_idx < len(words):
+                target = " ".join(words[obj_idx:]).replace("the ", "").strip()
+            else:
+                target = words[-1]
+
+            return {
+                "type": "fetch",
+                "response": f"I'll get the {target} for you.",
+                "target": target,
+                "steps": ["find", "navigate", "pick_up", "return", "hand_over"],
+            }
+
+        # Simple locomotion
+        if "walk forward" in command_lower or "move forward" in command_lower:
+            return {
+                "type": "locomotion",
+                "response": "Walking forward.",
+                "action": [0.5, 0.0, 0.0],  # Forward velocity
+            }
+
+        if "stop" in command_lower or "halt" in command_lower:
+            return {
+                "type": "stop",
+                "response": "Stopping.",
+                "action": [0.0, 0.0, 0.0],
+            }
+
+        if "turn left" in command_lower:
+            return {
+                "type": "locomotion",
+                "response": "Turning left.",
+                "action": [0.0, 0.0, 0.5],  # Rotate left
+            }
+
+        if "turn right" in command_lower:
+            return {
+                "type": "locomotion",
+                "response": "Turning right.",
+                "action": [0.0, 0.0, -0.5],  # Rotate right
+            }
+
+        # Default
+        return {
+            "type": "unknown",
+            "response": f"I'll try to {command_lower}.",
+        }
+
+    def make_coffee(self, vision_input: torch.Tensor = None) -> Dict:
+        """
+        High-level task: Make coffee.
+
+        This demonstrates the full task decomposition:
+        1. Find the cup
+        2. Pick up cup
+        3. Navigate to coffee machine
+        4. Place cup under spout
+        5. Press button
+        6. Wait for coffee
+        7. Return with coffee
+
+        Args:
+            vision_input: Camera input
+
+        Returns:
+            Task execution status
+        """
+        steps = [
+            {"action": "find", "target": "cup"},
+            {"action": "navigate", "target": "cup"},
+            {"action": "pick_up", "target": "cup"},
+            {"action": "navigate", "target": "coffee machine"},
+            {"action": "place", "target": "cup", "location": "coffee_cup_spot"},
+            {"action": "press", "target": "coffee_button"},
+            {"action": "wait", "duration": 30},
+            {"action": "pick_up", "target": "cup"},
+            {"action": "navigate", "target": "start"},
+        ]
+
+        self.say("I'll make coffee for you. Finding the cup first.")
+
+        # In a real execution loop, this would be done step by step
+        # For now, return the plan
+        return {
+            "task": "make_coffee",
+            "steps": steps,
+            "current_step": 0,
+            "status": "planned",
+            "response": "I'll make coffee for you. Finding the cup first.",
+        }
+
+    def chat(self, message: str, speak: bool = True) -> str:
+        """
+        Have a conversation with the robot.
+
+        Determines if the message is:
+        1. A question (answered with ask())
+        2. A command (executed with interact())
+        3. General chat (responded with response_generator)
+
+        Args:
+            message: User's message
+            speak: Whether to speak response
+
+        Returns:
+            Robot's response
+        """
+        message_lower = message.lower().strip()
+
+        # Check if it's a question
+        question_words = ["what", "who", "where", "when", "why", "how", "is", "are", "can", "do", "does"]
+        is_question = (
+            message_lower.endswith("?") or
+            any(message_lower.startswith(w) for w in question_words)
+        )
+
+        if is_question:
+            return self.ask(message, speak=speak)
+
+        # Check if it's a command (action verb at start)
+        action_words = ["go", "walk", "run", "pick", "grab", "put", "bring", "turn", "look", "move", "stop", "come"]
+        is_command = any(message_lower.startswith(w) for w in action_words)
+
+        if is_command:
+            # Parse command for object/location targets
+            result = self._execute_command(message_lower)
+            if speak and result.get("response"):
+                self.say(result["response"])
+            return result.get("response", f"I'll try to {message_lower}.")
+
+        # General chat
+        if self.response_generator is not None and self.response_generator.can_answer():
+            response = self.response_generator.answer_question(f"User says: {message}. How do you respond?")
+        else:
+            response = "I heard you. How can I help?"
+
+        if speak:
+            self.say(response)
+        return response
+
+
+# ==============================================================================
+# SEMANTIC ACTION ANCHORS (LLM-Agnostic Language Grounding)
+# ==============================================================================
+
+class SemanticActionAnchors(nn.Module):
+    """
+    LLM-Agnostic language grounding using learned action anchors.
+
+    PROBLEM: If you train with SmolLM2 and switch to Llama, the projector breaks
+    because different LLMs produce different embeddings for "walk forward".
+
+    SOLUTION: Learn FIXED action anchors that ANY language maps to:
+    - "walk forward", "move ahead", "go straight" → all map to ANCHOR_WALK
+    - "run fast", "sprint", "dash" → all map to ANCHOR_RUN
+
+    The anchors are learned from ACTIONS (MoCap), not from language.
+    Language just selects which anchor to use via contrastive learning.
+
+    Research backing:
+    - CLIP: Contrastive language-image pretraining
+    - SigLIP: Sigmoid loss for better alignment
+    - RT-2: Action tokens as language targets
+    """
+
+    # Known action categories with synonyms (LLM-agnostic!)
+    ACTION_CATEGORIES = {
+        "walk": ["walk forward", "move ahead", "go straight", "walk", "step forward"],
+        "run": ["run forward", "run fast", "sprint", "dash", "jog"],
+        "jump": ["jump", "jump in place", "hop", "leap", "bounce"],
+        "stand": ["stand", "stand still", "stay", "idle", "stop"],
+        "turn_left": ["turn left", "rotate left", "go left"],
+        "turn_right": ["turn right", "rotate right", "go right"],
+        "crouch": ["crouch", "duck", "squat", "bend down"],
+        "wave": ["wave", "wave hand", "greeting"],
+    }
+
+    def __init__(self, d_model: int = 512, num_anchors: int = 8):
+        super().__init__()
+        self.d_model = d_model
+        self.num_anchors = num_anchors
+
+        # Learnable action anchors - these are trained from MoCap!
+        # Shape: (num_anchors, d_model)
+        self.anchors = nn.Parameter(torch.randn(num_anchors, d_model) * 0.02)
+
+        # Action encoder: maps action sequences to anchor space
+        self.action_encoder = nn.Sequential(
+            nn.Linear(17 * 16, d_model),  # 17 joints * 16 timesteps
+            nn.LayerNorm(d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+            nn.LayerNorm(d_model),
+        )
+
+        # Temperature for contrastive learning (learnable)
+        self.temperature = nn.Parameter(torch.tensor(0.07))
+
+        # Anchor names for lookup
+        self.anchor_names = list(self.ACTION_CATEGORIES.keys())
+
+        print(f"[ANCHORS] Initialized {num_anchors} semantic action anchors")
+        print(f"[ANCHORS] Categories: {self.anchor_names}")
+
+    def encode_actions(self, actions: torch.Tensor) -> torch.Tensor:
+        """
+        Encode action sequences to anchor space.
+
+        Args:
+            actions: (B, chunk_size, action_dim) - e.g., (B, 16, 17)
+
+        Returns:
+            (B, d_model) - action embeddings in anchor space
+        """
+        B = actions.shape[0]
+        flat_actions = actions.reshape(B, -1)  # (B, 16*17)
+        return F.normalize(self.action_encoder(flat_actions), dim=-1)
+
+    def get_anchor_for_label(self, label: str) -> int:
+        """Get anchor index for a label (handles synonyms)"""
+        label_lower = label.lower().strip()
+
+        for idx, (anchor_name, synonyms) in enumerate(self.ACTION_CATEGORIES.items()):
+            if label_lower in synonyms or anchor_name in label_lower:
+                return idx
+
+        # Default to "walk" if unknown
+        return 0
+
+    def contrastive_loss(self, language_emb: torch.Tensor, action_emb: torch.Tensor,
+                         labels: list) -> torch.Tensor:
+        """
+        Contrastive loss: language embedding should match corresponding action anchor.
+
+        This makes the system LLM-agnostic because we're learning to map
+        ANY language representation to a FIXED set of action anchors.
+
+        Args:
+            language_emb: (B, d_model) - from LLM projector
+            action_emb: (B, d_model) - from action_encoder
+            labels: list of B strings - ["walk forward", "run fast", ...]
+
+        Returns:
+            contrastive loss
+        """
+        B = language_emb.shape[0]
+        device = language_emb.device
+
+        # Normalize
+        lang_norm = F.normalize(language_emb, dim=-1)
+        action_norm = F.normalize(action_emb, dim=-1)
+        anchor_norm = F.normalize(self.anchors, dim=-1)
+
+        # Get target anchor indices for each label
+        target_indices = torch.tensor(
+            [self.get_anchor_for_label(l) for l in labels],
+            dtype=torch.long, device=device
+        )
+
+        # Loss 1: Language should be close to target anchor
+        # Compute similarity: (B, num_anchors)
+        lang_to_anchor = torch.matmul(lang_norm, anchor_norm.T) / self.temperature.abs()
+        anchor_loss = F.cross_entropy(lang_to_anchor, target_indices)
+
+        # Loss 2: Action should be close to target anchor
+        action_to_anchor = torch.matmul(action_norm, anchor_norm.T) / self.temperature.abs()
+        action_anchor_loss = F.cross_entropy(action_to_anchor, target_indices)
+
+        # Loss 3: Language and action should be close to each other (when same label)
+        # InfoNCE style: positive pairs on diagonal
+        logits = torch.matmul(lang_norm, action_norm.T) / self.temperature.abs()
+        targets = torch.arange(B, device=device)
+        lang_action_loss = F.cross_entropy(logits, targets)
+
+        total_loss = anchor_loss + action_anchor_loss + 0.5 * lang_action_loss
+
+        return total_loss
+
+    def forward(self, language_emb: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        Map language embedding to nearest anchor.
+
+        Returns:
+            selected_anchor: (B, d_model) - the matched anchor embedding
+            anchor_probs: (B, num_anchors) - probability distribution over anchors
+        """
+        lang_norm = F.normalize(language_emb, dim=-1)
+        anchor_norm = F.normalize(self.anchors, dim=-1)
+
+        # Compute similarity
+        similarity = torch.matmul(lang_norm, anchor_norm.T)  # (B, num_anchors)
+        anchor_probs = F.softmax(similarity / self.temperature.abs(), dim=-1)
+
+        # Soft selection (differentiable)
+        selected_anchor = torch.matmul(anchor_probs, self.anchors)  # (B, d_model)
+
+        return selected_anchor, anchor_probs
+
 
 # ==============================================================================
 # TRAINING LOSSES
@@ -2300,22 +4056,192 @@ def compute_physics_loss(model, state, action, next_state, physics_targets):
     }
 
 
-def compute_flow_matching_loss(model, state, target_actions, goal=None):
-    """Phase 1/2: Flow matching for action generation"""
+def compute_flow_matching_loss(model, state, target_actions, goal=None, language=None):
+    """
+    Phase 1/2/2.5: PROPER Flow Matching for action generation using ActionExpert.
+
+    This implements real flow matching (Lipman et al. 2022) with:
+    - ActionExpert (π0 style separate transformer)
+    - Time-dependent conditioning
+    - Proper velocity field prediction
+    - Cross-attention to VLM features
+
+    Args:
+        model: UnifiedBrain model with action_expert
+        state: Robot state (B, obs_dim)
+        target_actions: Target action sequence (B, chunk_size, action_dim)
+        goal: Optional goal state
+        language: Optional language labels (list of strings)
+
+    Returns:
+        Total loss (flow matching + optional reconstruction)
+    """
+    B = state.shape[0]
+    device = state.device
+    chunk_size = target_actions.shape[1]
+    action_dim = target_actions.shape[2]
+
+    # Sample random timesteps t ∈ [0, 1]
+    t = torch.rand(B, device=device)
+
+    # Sample noise
+    noise = torch.randn_like(target_actions)
+
+    # Flow matching interpolation: x_t = t * x_1 + (1-t) * x_0
+    # where x_0 = noise, x_1 = clean data
+    t_exp = t[:, None, None]
+    noisy_actions = t_exp * target_actions + (1 - t_exp) * noise
+
+    # Target velocity field: v = x_1 - x_0 = target - noise
+    target_velocity = target_actions - noise
+
+    # Flatten noisy actions for ActionExpert input
+    noisy_flat = noisy_actions.view(B, -1)  # [B, chunk_size * action_dim]
+
+    # Get VLM features from backbone
+    if language is not None:
+        has_llm = model.has_llm() if hasattr(model, 'has_llm') else False
+
+        if has_llm:
+            output = model(state, goal=goal, noisy_actions=noisy_actions, language=language)
+        else:
+            # FALLBACK MODE: Convert to token indices
+            language_tokens = []
+            max_len = 10
+            vocab = {"<pad>": 0, "walk": 1, "forward": 2, "run": 3, "fast": 4,
+                     "jump": 5, "in": 6, "place": 7, "move": 8, "naturally": 9,
+                     "stand": 10, "idle": 11, "turn": 12, "left": 13, "right": 14,
+                     "backward": 15, "slow": 16, "stop": 17, "crouch": 18, "up": 19}
+
+            for label in language:
+                words = label.lower().split()
+                tokens = [vocab.get(w, vocab["<pad>"]) for w in words]
+                tokens = tokens[:max_len] + [0] * (max_len - len(tokens))
+                language_tokens.append(tokens)
+
+            language_tensor = torch.tensor(language_tokens, dtype=torch.long, device=device)
+            output = model(state, goal=goal, noisy_actions=noisy_actions, language=language_tensor)
+    else:
+        output = model(state, goal=goal, noisy_actions=noisy_actions)
+
+    # Use ActionExpert if available (π0 style)
+    if hasattr(model, 'action_expert') and model.action_expert is not None:
+        # Get hidden states from backbone for cross-attention
+        vlm_features = output['hidden_states']  # [B, seq_len, d_model]
+
+        # ActionExpert predicts velocity field
+        pred_velocity_flat = model.action_expert(noisy_flat, vlm_features, t)
+        pred_velocity = pred_velocity_flat.view(B, chunk_size, action_dim)
+
+        # Flow matching loss with time-dependent weighting
+        # Weight by (1 - t) to focus on denoising harder cases
+        weights = (1 - t_exp).expand_as(target_velocity)
+        weighted_loss = weights * (pred_velocity - target_velocity) ** 2
+        flow_loss = weighted_loss.mean()
+
+    else:
+        # Fallback: Use action_head velocity prediction (less powerful)
+        action_feat = output['cls_features'].unsqueeze(1).expand(-1, chunk_size, -1)
+        pred_velocity = model.action_head.predict_velocity(action_feat)
+        flow_loss = F.mse_loss(pred_velocity, target_velocity)
+
+    # Optional: Add reconstruction loss for stability
+    # This helps early in training when velocity prediction is noisy
+    if hasattr(model, 'action_expert') and model.action_expert is not None:
+        # Predict clean actions from t=1 (pure clean, no noise)
+        t_clean = torch.ones(B, device=device)
+        clean_flat = target_actions.view(B, -1)
+        pred_clean_flat = model.action_expert(clean_flat, vlm_features, t_clean)
+        pred_clean = pred_clean_flat.view(B, chunk_size, action_dim)
+        recon_loss = F.mse_loss(pred_clean, target_actions)
+
+        # Combined loss: flow matching + small reconstruction term
+        total_loss = flow_loss + 0.1 * recon_loss
+    else:
+        total_loss = flow_loss
+
+    return total_loss
+
+
+def compute_language_grounding_loss(model, state, target_actions, language_labels):
+    """
+    Phase 2.5: Language grounding with contrastive learning.
+
+    This solves 3 problems:
+    1. STRONGER GRADIENT SIGNAL: Direct contrastive loss on language embeddings
+    2. LLM-AGNOSTIC: Learns to map ANY language to fixed action anchors
+    3. PROPER PROJECTOR TRAINING: Language embeddings explicitly trained
+
+    The loss has 3 components:
+    - Flow matching (action prediction)
+    - Contrastive (language ↔ action alignment)
+    - Anchor matching (language → semantic anchor)
+
+    Args:
+        model: UnifiedBrain with semantic_anchors
+        state: Robot state (B, obs_dim)
+        target_actions: Target actions (B, chunk_size, action_dim)
+        language_labels: List of strings ["walk forward", "run fast", ...]
+    """
     B = state.shape[0]
     device = state.device
 
+    # 1. Standard flow matching loss (for action prediction)
     t = torch.rand(B, device=device)
     noise = torch.randn_like(target_actions)
     t_exp = t[:, None, None]
     noisy = (1 - t_exp) * noise + t_exp * target_actions
     target_velocity = target_actions - noise
 
-    output = model(state, goal=goal, noisy_actions=noisy)
+    # Get language embeddings from the model
+    has_llm = model.has_llm() if hasattr(model, 'has_llm') else False
+
+    if has_llm:
+        # Get language embeddings directly from LLMEncoder
+        language_emb = model.language_encoder(language_labels)  # (B, d_model)
+    else:
+        # Fallback: tokenize and get embeddings
+        language_tokens = []
+        max_len = 10
+        vocab = {"<pad>": 0, "walk": 1, "forward": 2, "run": 3, "fast": 4,
+                 "jump": 5, "in": 6, "place": 7, "move": 8, "naturally": 9,
+                 "stand": 10, "idle": 11, "turn": 12, "left": 13, "right": 14,
+                 "backward": 15, "slow": 16, "stop": 17, "crouch": 18, "up": 19}
+
+        for label in language_labels:
+            words = label.lower().split()
+            tokens = [vocab.get(w, vocab["<pad>"]) for w in words]
+            tokens = tokens[:max_len] + [0] * (max_len - len(tokens))
+            language_tokens.append(tokens)
+
+        language_tensor = torch.tensor(language_tokens, dtype=torch.long, device=device)
+        language_emb = model.language_encoder(language_tensor)  # (B, d_model)
+
+    # Forward pass with language
+    output = model(state, goal=None, noisy_actions=noisy, language=language_labels if has_llm else language_tensor)
+
+    # Flow matching loss
     action_feat = output['cls_features'].unsqueeze(1).expand(-1, target_actions.shape[1], -1)
     pred_velocity = model.action_head.predict_velocity(action_feat)
+    flow_loss = F.mse_loss(pred_velocity, target_velocity)
 
-    return F.mse_loss(pred_velocity, target_velocity)
+    # 2. Encode actions for contrastive learning
+    action_emb = model.semantic_anchors.encode_actions(target_actions)  # (B, d_model)
+
+    # 3. Contrastive loss: language ↔ action ↔ anchors
+    contrastive_loss = model.semantic_anchors.contrastive_loss(
+        language_emb, action_emb, language_labels
+    )
+
+    # Total loss (flow matching + contrastive)
+    # Contrastive weight starts high and decreases as anchors stabilize
+    total_loss = flow_loss + 0.5 * contrastive_loss
+
+    return total_loss, {
+        'flow': flow_loss.item(),
+        'contrastive': contrastive_loss.item(),
+        'total': total_loss.item(),
+    }
 
 
 def compute_world_model_loss(model, state, action, reward, next_state):

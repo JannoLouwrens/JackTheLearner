@@ -135,9 +135,12 @@ PHASE 2.5: Language (1-2 hours)
 | Octo (Berkeley) | 93M | ≈ JackTheLearner | Similar size, diffusion |
 | OpenVLA | 7B | Need scaling | Pretrained VLM |
 | RT-2 (Google) | 55B | Future goal | Massive VLM |
-| π0 (Physical Int.) | ~3B | Need scaling | Flow matching |
+| π0 (Physical Int.) | ~3B | **ActionExpert + FlowMatching** | ✅ Architecture implemented |
+| GR00T N1 (NVIDIA) | ~2B | **DualSystemController** | ✅ S0/S1/S2 implemented |
+| Figure Helix | ~1B | **Dual System** | ✅ VLM+Visuomotor separation |
 
-**JackTheLearner at 105M is comparable to Octo, which is SOTA for its size class.**
+**JackTheLearner at 110M implements the SAME architecture patterns as π0, GR00T N1, and Figure Helix!**
+The difference is scale (we use 110M vs their billions) and training data.
 
 ## Is This Architecture Good Enough?
 
@@ -146,16 +149,20 @@ PHASE 2.5: Language (1-2 hours)
 2. **TD-MPC2 WorldModel** - SOTA for model-based RL
 3. **Neuro-symbolic physics** - SymPy grounds learning
 4. **Anti-forgetting** - EWC + Replay prevents catastrophic forgetting
-5. **Flow matching** - Better than diffusion for robotics (pi0)
+5. **Flow matching** - Better than diffusion for robotics (π0 style)
 6. **Hierarchical planning** - Can compose skills
 7. **Audio encoder** - Whisper + wav2vec2 for speech understanding
 8. **Domain randomization** - DORAEMON/Humanoid-Gym style sim-to-real
+9. **Dual System Architecture** - GR00T N1/Figure Helix style (NEW!)
+10. **Action Expert** - Separate transformer for fast action generation (NEW!)
+11. **LLM Integration** - Frozen backbone + trainable projector (NEW!)
 
 ### CURRENT GAPS:
 1. **Vision not trained** - Encoder exists but unused
 2. ~~**Language encoder simple**~~ - **FIXED: LLM integration added!**
-3. **Skills not learned** - Planner exists but untrained
-4. **Model could be bigger** - 256M-500M for more capacity
+3. ~~**No dual system**~~ - **FIXED: S0/S1/S2 implemented!**
+4. **Skills not learned** - Planner exists but untrained
+5. **Model could be bigger** - 256M-500M for more capacity
 
 ## LLM Encoder (NEW - Phase 2.5 Ready)
 
@@ -355,9 +362,13 @@ future_states = world_model.imagine(fused, action)
 | HAC (2019) | HierarchicalPlanner | UnifiedBrain.py:900-1000 |
 | OpenVLA (2024) | PrismaticVisionEncoder, LLM architecture | UnifiedBrain.py:253-306, LLMEncoder |
 | EWC (2017) | Elastic Weight Consolidation | RobustTrainer.py:119-235 |
-| pi0 (Physical Intelligence 2024) | Flow Matching, Frozen LLM pattern | UnifiedBrain.py, LLMEncoder |
+| pi0 (Physical Intelligence 2024) | Flow Matching, ActionExpert, Frozen LLM | UnifiedBrain.py:ActionExpert, FlowMatchingScheduler |
 | RT-2 (Google 2023) | VLA paradigm, Frozen backbone | LLMEncoder architecture |
 | SmolVLA (HuggingFace 2024) | Democratized VLA | LLMEncoder default backend |
+| **GR00T N1 (NVIDIA 2025)** | **Dual System (S0/S1/S2), Action Expert** | **UnifiedBrain.py:DualSystemController** |
+| **Figure Helix (2025)** | **Dual System, VLM+Visuomotor** | **UnifiedBrain.py:DualSystemController** |
+| Flow Matching (Lipman 2022) | Conditional flow for diffusion | UnifiedBrain.py:FlowMatchingScheduler |
+| DiT (Peebles 2023) | Diffusion Transformer | UnifiedBrain.py:ActionExpert time embedding |
 | Whisper (2022) | Speech-to-Text | UnifiedBrain.py:AudioEncoder |
 | wav2vec2 (2020) | Audio Embeddings | UnifiedBrain.py:AudioEncoder |
 | DORAEMON (ICLR 2024) | Domain Randomization | RobustTrainer.py:DomainRandomization |
@@ -365,6 +376,88 @@ future_states = world_model.imagine(fused, action)
 | GMR (ICRA 2026) | Motion Retargeting | MoCapLoader.py:SkeletonRetargeter |
 | MoCapAct (NeurIPS 2022) | MoCap Dataset | MoCapLoader.py:MoCapDataset |
 | LocoMuJoCo (2024) | Locomotion Benchmark | MoCapLoader.py:retarget_sequence |
+
+## SOTA Action Generation (NEW - π0/GR00T Style)
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     DUAL SYSTEM ARCHITECTURE                             │
+│              (NVIDIA GR00T N1 / Figure Helix / π0 Style)                │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌────────────────────────────────────────────────────────────────┐     │
+│  │  SYSTEM 2 - VLM REASONING (9 Hz)                               │     │
+│  │  "Slow thinking" - Scene understanding, language comprehension │     │
+│  │                                                                 │     │
+│  │  Input: Vision + Language + State                              │     │
+│  │  Output: Scene features (cached for System 1)                  │     │
+│  │  Frequency: ~9 Hz (every 111ms)                                │     │
+│  └────────────────────────────────────────────────────────────────┘     │
+│                                │                                         │
+│                                │ Cached features (async)                 │
+│                                ▼                                         │
+│  ┌────────────────────────────────────────────────────────────────┐     │
+│  │  SYSTEM 1 - ACTION EXPERT (50 Hz)                              │     │
+│  │  "Fast actions" - Visuomotor policy with flow matching         │     │
+│  │                                                                 │     │
+│  │  ┌──────────────────────────────────────────────────────────┐  │     │
+│  │  │  ActionExpert (4 layers, 256 dim)                        │  │     │
+│  │  │  - Cross-attention to VLM features                       │  │     │
+│  │  │  - Sinusoidal time embeddings                            │  │     │
+│  │  │  - Flow matching denoising (10 steps)                    │  │     │
+│  │  └──────────────────────────────────────────────────────────┘  │     │
+│  │                                                                 │     │
+│  │  Input: Noisy action + VLM features + timestep                 │     │
+│  │  Output: Smooth action chunk [16 steps, 17 joints]             │     │
+│  │  Frequency: 50 Hz (every 20ms)                                 │     │
+│  └────────────────────────────────────────────────────────────────┘     │
+│                                │                                         │
+│                                │ Target joint positions                  │
+│                                ▼                                         │
+│  ┌────────────────────────────────────────────────────────────────┐     │
+│  │  SYSTEM 0 - MOTOR CONTROL (1 kHz) [OPTIONAL]                   │     │
+│  │  "Reflexes" - PD control for real hardware                     │     │
+│  │                                                                 │     │
+│  │  τ = Kp*(q_target - q) + Kd*(dq_target - dq)                   │     │
+│  │  + Learned residual MLP for model mismatch                     │     │
+│  │                                                                 │     │
+│  │  Frequency: 1000 Hz (every 1ms) - disabled for sim             │     │
+│  └────────────────────────────────────────────────────────────────┘     │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Key Research Papers:**
+
+1. **π0 (Physical Intelligence, 2024)**: Flow matching for action generation
+   - Paper: "π0: A Vision-Language-Action Flow Model for General Robot Control"
+   - Contribution: Flow matching scheduler, action expert, 50Hz control
+
+2. **GR00T N1 (NVIDIA, 2025)**: Dual system architecture
+   - Paper: "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots"
+   - Contribution: System 0/1/2 hierarchy, cross-embodiment transfer
+
+3. **Figure Helix (Figure AI, 2025)**: VLM + Visuomotor policy
+   - Paper: "Helix: A Vision-Language-Action Model for Generalist Robots"
+   - Contribution: Dual system separation, scene reasoning
+
+4. **Flow Matching (Lipman et al., 2022)**: Conditional flow matching
+   - Paper: "Flow Matching for Generative Modeling"
+   - Contribution: Smoother than DDPM, fewer denoising steps
+
+**Usage:**
+```python
+# Flow matching action generation (π0 style)
+actions = brain.generate_actions_flow_matching(state, language="walk forward")
+
+# Dual system (GR00T N1 style) - manages S2/S1 frequencies
+result = brain.act_dual_system(state, language="pick up cup", current_time=t)
+# result['action'] - single action for current timestep
+# result['system2_ran'] - True if VLM was updated this tick
+
+# Flow matching training loss
+loss = brain.train_flow_matching_step(state, target_actions, language=cmd)
+```
 
 ## MoCap Loader & Skeleton Retargeting (NEW)
 

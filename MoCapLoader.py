@@ -629,7 +629,8 @@ class MoCapDataset(Dataset):
                     'positions': data['positions'],
                     'velocities': data['velocities'],
                     'actions': data['actions'],
-                    'filename': str(bvh_file)
+                    'filename': str(bvh_file),
+                    'label': MoCapDownloader.get_label_for_file(str(bvh_file)),  # LANGUAGE!
                 })
             else:
                 # Parse and process
@@ -656,7 +657,8 @@ class MoCapDataset(Dataset):
                         'positions': positions,
                         'velocities': velocities,
                         'actions': actions,
-                        'filename': str(bvh_file)
+                        'filename': str(bvh_file),
+                        'label': MoCapDownloader.get_label_for_file(str(bvh_file)),  # LANGUAGE!
                     })
 
                 except Exception as e:
@@ -678,17 +680,19 @@ class MoCapDataset(Dataset):
     def __len__(self) -> int:
         return max(1, len(self.index))  # At least 1 for empty dataset
 
-    def __getitem__(self, idx: int) -> Tuple[torch.Tensor, torch.Tensor]:
+    def __getitem__(self, idx: int) -> Tuple[torch.Tensor, torch.Tensor, str]:
         """
-        Get a training sample.
+        Get a training sample WITH LANGUAGE LABEL.
 
         Returns:
             obs: (context_length, obs_dim) observation context
             actions: (action_chunk_size, action_dim) action targets
+            label: str - language description like "walk forward"
         """
         if len(self.index) == 0:
             # Return synthetic data if no real data
-            return self._get_synthetic_sample()
+            obs, actions = self._get_synthetic_sample()
+            return obs, actions, "move naturally"
 
         seq_idx, start_frame = self.index[idx % len(self.index)]
         seq = self.sequences[seq_idx]
@@ -711,7 +715,10 @@ class MoCapDataset(Dataset):
             pad_size = self.action_chunk_size - len(actions)
             actions = np.pad(actions, ((0, pad_size), (0, 0)), mode='edge')
 
-        return torch.FloatTensor(obs), torch.FloatTensor(actions)
+        # Get language label!
+        label = seq.get('label', 'move naturally')
+
+        return torch.FloatTensor(obs), torch.FloatTensor(actions), label
 
     def _build_observation(self, positions: np.ndarray, velocities: np.ndarray) -> np.ndarray:
         """Build observation vector from positions and velocities"""
@@ -761,19 +768,52 @@ class MoCapDownloader:
 
     CMU_MOCAP_URL = "https://github.com/una-dinosauria/cmu-mocap/raw/master/"
 
-    # Popular walking/locomotion clips
+    # Popular walking/locomotion clips with LANGUAGE LABELS
+    # These labels are used to train the LLM projector!
     LOCOMOTION_CLIPS = [
-        "subjects/07/07_01.bvh",  # Walk
-        "subjects/07/07_02.bvh",  # Walk
-        "subjects/07/07_03.bvh",  # Walk
-        "subjects/07/07_04.bvh",  # Walk
-        "subjects/08/08_01.bvh",  # Walk
-        "subjects/08/08_02.bvh",  # Run
-        "subjects/09/09_01.bvh",  # Walk
-        "subjects/09/09_02.bvh",  # Run
-        "subjects/35/35_01.bvh",  # Walk
-        "subjects/35/35_02.bvh",  # Walk
+        ("subjects/07/07_01.bvh", "walk forward"),
+        ("subjects/07/07_02.bvh", "walk forward"),
+        ("subjects/07/07_03.bvh", "walk forward slowly"),
+        ("subjects/07/07_04.bvh", "walk forward"),
+        ("subjects/08/08_01.bvh", "walk forward"),
+        ("subjects/08/08_02.bvh", "run forward"),
+        ("subjects/09/09_01.bvh", "walk forward"),
+        ("subjects/09/09_02.bvh", "run forward fast"),
+        ("subjects/35/35_01.bvh", "walk forward"),
+        ("subjects/35/35_02.bvh", "walk forward"),
     ]
+
+    # Extended CMU MoCap labels (subject_clip -> description)
+    # Source: CMU MoCap database descriptions
+    MOTION_LABELS = {
+        # Walking
+        "07_01": "walk forward",
+        "07_02": "walk forward",
+        "07_03": "walk forward slowly",
+        "07_04": "walk forward",
+        "08_01": "walk forward",
+        "09_01": "walk forward",
+        "35_01": "walk forward",
+        "35_02": "walk forward",
+        # Running
+        "08_02": "run forward",
+        "09_02": "run forward fast",
+        # Jumping (if added later)
+        "16_01": "jump in place",
+        "16_02": "jump forward",
+        # Turning
+        "07_05": "turn left",
+        "07_06": "turn right",
+        # Standing
+        "02_01": "stand still",
+        # Sitting
+        "13_01": "sit down",
+        # Punching/Kicking
+        "14_01": "punch",
+        "14_02": "kick",
+        # Default
+        "default": "move naturally",
+    }
 
     @classmethod
     def download_locomotion(cls, output_dir: str = "datasets/cmu_mocap") -> List[str]:
@@ -785,7 +825,8 @@ class MoCapDownloader:
 
         downloaded = []
 
-        for clip in cls.LOCOMOTION_CLIPS:
+        for clip_tuple in cls.LOCOMOTION_CLIPS:
+            clip = clip_tuple[0]  # Get path from (path, label) tuple
             url = cls.CMU_MOCAP_URL + clip
             filename = clip.replace('/', '_')
             filepath = output_path / filename
@@ -801,6 +842,25 @@ class MoCapDownloader:
                 downloaded.append(str(filepath))
 
         return downloaded
+
+    @classmethod
+    def get_label_for_file(cls, filename: str) -> str:
+        """Get language label for a motion file.
+
+        Args:
+            filename: BVH filename like "subjects_07_07_01.bvh" or "07_01"
+
+        Returns:
+            Language description like "walk forward"
+        """
+        # Extract subject_clip from filename
+        # e.g., "subjects_07_07_01.bvh" -> "07_01"
+        import re
+        match = re.search(r'(\d+)_(\d+)', filename)
+        if match:
+            key = f"{match.group(1)}_{match.group(2)}"
+            return cls.MOTION_LABELS.get(key, cls.MOTION_LABELS["default"])
+        return cls.MOTION_LABELS["default"]
 
 
 # ==============================================================================
@@ -827,10 +887,11 @@ if __name__ == "__main__":
 
     print(f"\nDataset size: {len(dataset)}")
 
-    # Get a sample
-    obs, actions = dataset[0]
+    # Get a sample (now includes language label!)
+    obs, actions, label = dataset[0]
     print(f"Observation shape: {obs.shape}")
     print(f"Actions shape: {actions.shape}")
+    print(f"Language label: '{label}'")  # NEW!
 
     # Test retargeting
     retargeter = SkeletonRetargeter(config)
