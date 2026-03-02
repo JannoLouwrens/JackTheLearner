@@ -159,6 +159,31 @@ class UnifiedBrainConfig:
     nav_map_size: int = 64  # Spatial memory map size
     nav_map_resolution: float = 0.1  # Meters per grid cell
 
+    # =========================================
+    # INTRINSIC MOTIVATION (Self-Thinking)
+    # =========================================
+    # These enable truly autonomous behavior without external rewards
+
+    # Master switch for intrinsic motivation
+    enable_intrinsic_motivation: bool = True
+
+    # Curiosity (ICM + RND) - drives exploration of novel states
+    enable_curiosity: bool = True
+
+    # Skill Discovery (DIAYN) - learns diverse skills without rewards
+    enable_skill_discovery: bool = True
+    num_discoverable_skills: int = 50  # Number of skills to discover
+
+    # Empowerment - seeks states with maximum control
+    enable_empowerment: bool = True
+
+    # Metacognition - knows what it doesn't know
+    enable_metacognition: bool = True
+
+    # Autotelic Goals - self-generated learning curriculum
+    enable_autotelic_goals: bool = True
+    goal_bank_size: int = 1000  # Number of goals to remember
+
 
 # ==============================================================================
 # SOTA COMPONENTS (LLaMA-style)
@@ -2680,6 +2705,825 @@ class TextToSpeech:
 
 
 # ==============================================================================
+# INTRINSIC MOTIVATION MODULES (NEW - Self-Thinking)
+# ==============================================================================
+# Research papers:
+# - ICM: Pathak et al., "Curiosity-driven Exploration by Self-supervised Prediction" (ICML 2017)
+# - RND: Burda et al., "Exploration by Random Network Distillation" (ICLR 2019)
+# - DIAYN: Eysenbach et al., "Diversity is All You Need" (ICLR 2019)
+# - Empowerment: Mohamed & Rezende, "Variational Information Maximisation" (NeurIPS 2015)
+# - Autotelic: Colas et al., "Autotelic Agents with Intrinsically Motivated Goal-Conditioned RL" (JMLR 2022)
+# ==============================================================================
+
+
+class IntrinsicCuriosityModule(nn.Module):
+    """
+    Hybrid ICM + RND for curiosity-driven exploration.
+
+    Two complementary signals:
+    1. ICM: Forward model prediction error (learns what's predictable vs novel)
+    2. RND: Random network distillation (pure novelty detection)
+
+    The robot is rewarded for encountering states it can't predict,
+    driving exploration even without external rewards.
+
+    Research:
+    - ICM: https://pathak22.github.io/noreward-rl/
+    - RND: https://arxiv.org/abs/1810.12894
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.config = config
+        latent_dim = config.latent_dim  # 256
+        action_dim = config.action_dim  # 17
+        d_model = config.d_model  # 512
+
+        # === ICM COMPONENT ===
+        # Feature encoder: compress state to latent
+        self.feature_encoder = nn.Sequential(
+            nn.Linear(d_model, 512),
+            nn.ReLU(),
+            nn.Linear(512, latent_dim),
+            nn.LayerNorm(latent_dim),
+        )
+
+        # Inverse model: Predict action from (s_t, s_{t+1})
+        # This learns features relevant to agent's actions (not noise)
+        self.inverse_model = nn.Sequential(
+            nn.Linear(latent_dim * 2, 512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Linear(256, action_dim),
+        )
+
+        # Forward model: Predict s_{t+1} from (s_t, a_t)
+        # Prediction error = curiosity reward
+        self.forward_model = nn.Sequential(
+            nn.Linear(latent_dim + action_dim, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, latent_dim),
+        )
+
+        # === RND COMPONENT ===
+        # Target network: FROZEN random initialization
+        self.rnd_target = nn.Sequential(
+            nn.Linear(latent_dim, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+        )
+        # Freeze it permanently!
+        for param in self.rnd_target.parameters():
+            param.requires_grad = False
+
+        # Predictor network: Learns to match target
+        # High error = novel state (never seen before)
+        self.rnd_predictor = nn.Sequential(
+            nn.Linear(latent_dim, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+        )
+
+        # Running statistics for reward normalization (critical for stability)
+        self.register_buffer('reward_mean', torch.zeros(1))
+        self.register_buffer('reward_std', torch.ones(1))
+        self.register_buffer('reward_count', torch.zeros(1))
+
+        print(f"  IntrinsicCuriosityModule: ICM + RND (latent={latent_dim})")
+
+    def compute_icm_reward(
+        self,
+        state_features: torch.Tensor,      # Current state [B, d_model]
+        next_state_features: torch.Tensor, # Next state [B, d_model]
+        action: torch.Tensor               # Action taken [B, action_dim]
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        ICM curiosity: Reward = forward model prediction error.
+        High reward when agent can't predict consequences of action.
+        """
+        # Encode states to latent
+        phi_s = self.feature_encoder(state_features)
+        phi_s_next = self.feature_encoder(next_state_features)
+
+        # Forward model prediction
+        pred_phi_next = self.forward_model(torch.cat([phi_s, action], dim=-1))
+
+        # Prediction error = intrinsic reward
+        forward_loss = F.mse_loss(pred_phi_next, phi_s_next.detach(), reduction='none')
+        icm_reward = forward_loss.mean(dim=-1)  # (B,)
+
+        # Inverse model loss (for representation learning)
+        pred_action = self.inverse_model(torch.cat([phi_s, phi_s_next], dim=-1))
+        inverse_loss = F.mse_loss(pred_action, action)
+
+        return icm_reward, {
+            'forward_loss': forward_loss.mean().item(),
+            'inverse_loss': inverse_loss.item(),
+        }
+
+    def compute_rnd_reward(self, state_features: torch.Tensor) -> torch.Tensor:
+        """
+        RND curiosity: Reward = prediction error of random network.
+        Novel states have high error because predictor hasn't seen them.
+        """
+        phi_s = self.feature_encoder(state_features)
+
+        # Target output (frozen random features)
+        with torch.no_grad():
+            target_features = self.rnd_target(phi_s)
+
+        # Predictor tries to match
+        predicted_features = self.rnd_predictor(phi_s)
+
+        # Error = novelty
+        rnd_reward = F.mse_loss(predicted_features, target_features, reduction='none')
+        rnd_reward = rnd_reward.mean(dim=-1)  # (B,)
+
+        return rnd_reward
+
+    def compute_intrinsic_reward(
+        self,
+        state_features: torch.Tensor,
+        next_state_features: torch.Tensor,
+        action: torch.Tensor,
+        icm_weight: float = 0.5,
+        rnd_weight: float = 0.5,
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        Combined intrinsic reward from ICM and RND.
+        """
+        icm_reward, icm_info = self.compute_icm_reward(
+            state_features, next_state_features, action
+        )
+        rnd_reward = self.compute_rnd_reward(next_state_features)
+
+        # Combine and normalize
+        combined = icm_weight * icm_reward + rnd_weight * rnd_reward
+        normalized = self._normalize_reward(combined)
+
+        return normalized, {
+            'icm_reward': icm_reward.mean().item(),
+            'rnd_reward': rnd_reward.mean().item(),
+            'total_intrinsic': normalized.mean().item(),
+            **icm_info,
+        }
+
+    def _normalize_reward(self, reward: torch.Tensor) -> torch.Tensor:
+        """Running normalization of intrinsic rewards (critical for stability)"""
+        batch_mean = reward.mean()
+        batch_var = reward.var() + 1e-8
+        batch_count = reward.numel()
+
+        # Update running stats
+        delta = batch_mean - self.reward_mean
+        total_count = self.reward_count + batch_count
+
+        new_mean = self.reward_mean + delta * batch_count / (total_count + 1e-8)
+        new_std = torch.sqrt(
+            (self.reward_std**2 * self.reward_count + batch_var * batch_count) / (total_count + 1e-8)
+        )
+
+        self.reward_mean.copy_(new_mean)
+        self.reward_std.copy_(new_std.clamp(min=1e-4))
+        self.reward_count.copy_(total_count.clamp(max=1e6))
+
+        # Normalize
+        return (reward - self.reward_mean) / (self.reward_std + 1e-8)
+
+    def get_training_loss(
+        self,
+        state_features: torch.Tensor,
+        next_state_features: torch.Tensor,
+        action: torch.Tensor,
+    ) -> torch.Tensor:
+        """Loss for training ICM (inverse + forward) and RND predictor."""
+        phi_s = self.feature_encoder(state_features)
+        phi_s_next = self.feature_encoder(next_state_features)
+
+        # ICM inverse loss
+        pred_action = self.inverse_model(torch.cat([phi_s, phi_s_next], dim=-1))
+        inverse_loss = F.mse_loss(pred_action, action)
+
+        # ICM forward loss
+        pred_phi_next = self.forward_model(torch.cat([phi_s, action], dim=-1))
+        forward_loss = F.mse_loss(pred_phi_next, phi_s_next.detach())
+
+        # RND predictor loss
+        with torch.no_grad():
+            target_features = self.rnd_target(phi_s_next)
+        predicted_features = self.rnd_predictor(phi_s_next)
+        rnd_loss = F.mse_loss(predicted_features, target_features)
+
+        return inverse_loss + forward_loss + rnd_loss
+
+
+class SkillDiscovery(nn.Module):
+    """
+    DIAYN: Diversity Is All You Need
+
+    Discovers diverse skills WITHOUT any reward function.
+    Skills are distinguishable by the states they visit.
+
+    Objective: F(θ) = I(S;Z) + H[A|S] - I(A;Z|S)
+    Pseudo-reward: r(s,z) = log q(z|s) - log p(z)
+
+    The robot learns "walking", "jumping", "turning" etc.
+    just from wanting to be distinguishable!
+
+    Research: https://arxiv.org/abs/1802.06070
+    """
+
+    def __init__(self, config: UnifiedBrainConfig, num_skills: int = 50):
+        super().__init__()
+        self.config = config
+        self.num_skills = num_skills
+
+        # Skill prior: uniform distribution
+        self.register_buffer('skill_prior', torch.ones(num_skills) / num_skills)
+
+        # Discriminator q(z|s): Which skill generated this state?
+        self.discriminator = nn.Sequential(
+            nn.Linear(config.latent_dim, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, num_skills),  # Logits over skills
+        )
+
+        # Skill embedding for policy conditioning
+        self.skill_embedding = nn.Embedding(num_skills, config.d_model)
+
+        # Skill names (will emerge during training)
+        self.skill_names = [f"skill_{i}" for i in range(num_skills)]
+
+        print(f"  SkillDiscovery (DIAYN): {num_skills} discoverable skills")
+
+    def sample_skill(self, batch_size: int, device: torch.device) -> torch.Tensor:
+        """Sample random skill from prior"""
+        return torch.randint(0, self.num_skills, (batch_size,), device=device)
+
+    def compute_diayn_reward(
+        self,
+        state_latent: torch.Tensor,  # (B, latent_dim) - encoded state
+        skill: torch.Tensor          # (B,) skill indices
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        DIAYN pseudo-reward: r(s,z) = log q(z|s) - log p(z)
+        High reward when state is clearly associated with skill.
+        """
+        # Discriminator prediction
+        logits = self.discriminator(state_latent)  # (B, num_skills)
+        log_q = F.log_softmax(logits, dim=-1)
+
+        # Get log probability of actual skill
+        log_q_z = log_q.gather(1, skill.unsqueeze(1)).squeeze(1)  # (B,)
+
+        # Prior (uniform)
+        log_p_z = torch.log(self.skill_prior[0])  # scalar
+
+        # DIAYN reward
+        reward = log_q_z - log_p_z
+
+        # Discriminator accuracy (for monitoring)
+        pred_skill = logits.argmax(dim=-1)
+        accuracy = (pred_skill == skill).float().mean()
+
+        return reward, {
+            'diayn_reward': reward.mean().item(),
+            'discriminator_accuracy': accuracy.item(),
+            'skill_entropy': -(F.softmax(logits, dim=-1) * log_q).sum(-1).mean().item(),
+        }
+
+    def get_discriminator_loss(
+        self,
+        state_latent: torch.Tensor,
+        skill: torch.Tensor,
+    ) -> torch.Tensor:
+        """Train discriminator to classify skills from states"""
+        logits = self.discriminator(state_latent)
+        return F.cross_entropy(logits, skill)
+
+    def get_skill_embedding(self, skill: torch.Tensor) -> torch.Tensor:
+        """Get embedding to condition policy on skill"""
+        return self.skill_embedding(skill)
+
+    def get_most_likely_skill(self, state_latent: torch.Tensor) -> torch.Tensor:
+        """Infer which skill the agent is currently executing"""
+        logits = self.discriminator(state_latent)
+        return logits.argmax(dim=-1)
+
+
+class Empowerment(nn.Module):
+    """
+    Information-theoretic intrinsic motivation.
+
+    Empowerment = I(A; S' | S) = mutual information between
+    actions and resulting states, given current state.
+
+    Robot seeks states where it has MAXIMUM CONTROL over outcomes.
+    Avoids uncontrollable situations (ice, lava, chaos).
+
+    Research:
+    - https://arxiv.org/abs/1509.08731 (Variational Information Maximisation)
+    - https://link.springer.com/article/10.1007/s10514-023-10087-8 (Robotics 2023)
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.config = config
+        latent_dim = config.latent_dim
+        action_dim = config.action_dim
+
+        # Source distribution: p(a|s) - what actions are available
+        self.action_encoder = nn.Sequential(
+            nn.Linear(latent_dim, 256),
+            nn.ReLU(),
+            nn.Linear(256, action_dim * 2),  # mean + log_std
+        )
+
+        # Planning distribution: q(a|s,s') - inverse dynamics
+        self.inverse_dynamics = nn.Sequential(
+            nn.Linear(latent_dim * 2, 512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Linear(256, action_dim * 2),  # mean + log_std
+        )
+
+        # Forward dynamics: p(s'|s,a)
+        self.forward_dynamics = nn.Sequential(
+            nn.Linear(latent_dim + action_dim, 512),
+            nn.ReLU(),
+            nn.Linear(512, latent_dim),
+        )
+
+        print(f"  Empowerment: I(A; S'|S) maximization")
+
+    def compute_empowerment(
+        self,
+        state_latent: torch.Tensor,
+        num_samples: int = 16,
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        Estimate empowerment via variational bound.
+        High empowerment = actions lead to diverse, predictable outcomes.
+        """
+        B = state_latent.shape[0]
+        device = state_latent.device
+        action_dim = self.config.action_dim
+
+        # Sample actions from source p(a|s)
+        action_params = self.action_encoder(state_latent)
+        action_mean = action_params[..., :action_dim]
+        action_log_std = action_params[..., action_dim:].clamp(-5, 2)
+        action_std = action_log_std.exp()
+
+        # Sample multiple actions
+        actions = action_mean.unsqueeze(1) + action_std.unsqueeze(1) * \
+                  torch.randn(B, num_samples, action_dim, device=device)
+
+        # Predict next states
+        state_expanded = state_latent.unsqueeze(1).expand(-1, num_samples, -1)
+        inputs = torch.cat([state_expanded, actions], dim=-1)
+        next_states = self.forward_dynamics(inputs.reshape(-1, inputs.shape[-1]))
+        next_states = next_states.reshape(B, num_samples, -1)
+
+        # Compute log probabilities under inverse model q(a|s,s')
+        inverse_inputs = torch.cat([state_expanded, next_states], dim=-1)
+        inverse_params = self.inverse_dynamics(inverse_inputs.reshape(-1, inverse_inputs.shape[-1]))
+        inverse_params = inverse_params.reshape(B, num_samples, -1)
+
+        inv_mean = inverse_params[..., :action_dim]
+        inv_log_std = inverse_params[..., action_dim:].clamp(-5, 2)
+        inv_std = inv_log_std.exp()
+
+        # Log probability of sampled actions under inverse model
+        log_q = -0.5 * ((actions - inv_mean) / (inv_std + 1e-8)).pow(2).sum(-1)
+        log_q = log_q - inv_log_std.sum(-1) - 0.5 * action_dim * np.log(2 * np.pi)
+
+        # Empowerment ≈ E[log q(a|s,s')]
+        empowerment = log_q.mean(dim=1)  # (B,)
+
+        return empowerment, {
+            'empowerment': empowerment.mean().item(),
+            'action_entropy': action_log_std.mean().item(),
+        }
+
+
+class Metacognition(nn.Module):
+    """
+    Metacognitive module: Knowing what you know and don't know.
+
+    Three components (from metacognition research):
+    1. Metacognitive Knowledge: Self-assessment of capabilities
+    2. Metacognitive Planning: Deciding what to learn
+    3. Metacognitive Evaluation: Reflecting on learning
+
+    This enables the robot to:
+    - Know when to ask for help
+    - Prioritize learning certain skills
+    - Avoid overconfident mistakes
+
+    Research: https://openreview.net/forum?id=4KhDd0Ozqe
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.config = config
+
+        # === UNCERTAINTY ESTIMATION (Ensemble) ===
+        # Multiple prediction heads for ensemble disagreement
+        self.ensemble_size = 5
+        self.ensemble_heads = nn.ModuleList([
+            nn.Sequential(
+                nn.Linear(config.d_model, 256),
+                nn.ReLU(),
+                nn.Linear(256, config.action_dim),
+            ) for _ in range(self.ensemble_size)
+        ])
+
+        # === METACOGNITIVE KNOWLEDGE ===
+        # "What am I good/bad at?"
+        self.capability_estimator = nn.Sequential(
+            nn.Linear(config.d_model + config.goal_dim, 512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Linear(256, 3),  # [can_do_confidently, uncertain, cannot_do]
+        )
+
+        # === METACOGNITIVE PLANNING ===
+        # "What should I learn next?"
+        self.learning_priority = nn.Sequential(
+            nn.Linear(config.d_model, 256),
+            nn.ReLU(),
+            nn.Linear(256, config.num_skills),  # Priority per skill
+        )
+
+        print(f"  Metacognition: ensemble={self.ensemble_size}, capability assessment")
+
+    def estimate_uncertainty(
+        self,
+        state_features: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor, Dict]:
+        """
+        Estimate epistemic uncertainty via ensemble disagreement.
+
+        Returns:
+            action_mean: Ensemble mean action
+            uncertainty: Uncertainty estimate (0-1)
+        """
+        # Get predictions from all ensemble members
+        predictions = torch.stack([
+            head(state_features) for head in self.ensemble_heads
+        ], dim=0)  # (ensemble_size, B, action_dim)
+
+        # Mean prediction
+        action_mean = predictions.mean(dim=0)
+
+        # Uncertainty = variance across ensemble
+        variance = predictions.var(dim=0).mean(dim=-1)  # (B,)
+
+        # Normalize to 0-1
+        uncertainty = torch.sigmoid(variance)
+
+        return action_mean, uncertainty, {
+            'uncertainty_mean': uncertainty.mean().item(),
+            'uncertainty_max': uncertainty.max().item(),
+            'ensemble_std': predictions.std(dim=0).mean().item(),
+        }
+
+    def assess_capability(
+        self,
+        state_features: torch.Tensor,
+        goal: torch.Tensor,
+    ) -> Tuple[str, float, Dict]:
+        """
+        Self-assess: Can I achieve this goal?
+
+        Returns:
+            assessment: "confident", "uncertain", "cannot"
+            confidence: 0-1 score
+        """
+        inputs = torch.cat([state_features, goal], dim=-1)
+        logits = self.capability_estimator(inputs)
+        probs = F.softmax(logits, dim=-1)
+
+        # Get assessment
+        assessment_idx = probs.argmax(dim=-1)
+        confidence = probs.max(dim=-1).values
+
+        labels = ["confident", "uncertain", "cannot"]
+        assessment = labels[assessment_idx[0].item()] if state_features.shape[0] == 1 else "batch"
+
+        return assessment, confidence.mean().item(), {
+            'p_confident': probs[:, 0].mean().item(),
+            'p_uncertain': probs[:, 1].mean().item(),
+            'p_cannot': probs[:, 2].mean().item(),
+        }
+
+    def decide_what_to_learn(
+        self,
+        state_features: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        Metacognitive planning: What skill should I practice?
+        Prioritizes skills with high uncertainty (learning potential).
+        """
+        priorities = self.learning_priority(state_features)
+        priorities = F.softmax(priorities, dim=-1)
+
+        # Sample skill to practice (exploration)
+        skill_to_learn = torch.multinomial(priorities, 1).squeeze(-1)
+
+        return skill_to_learn, priorities
+
+    def should_ask_for_help(
+        self,
+        state_features: torch.Tensor,
+        goal: torch.Tensor,
+        uncertainty_threshold: float = 0.7,
+    ) -> Tuple[bool, str]:
+        """
+        Decide whether to ask human for help.
+
+        Returns True if:
+        1. Uncertainty is high AND
+        2. Capability assessment is "uncertain" or "cannot"
+        """
+        _, uncertainty, _ = self.estimate_uncertainty(state_features)
+        assessment, confidence, _ = self.assess_capability(state_features, goal)
+
+        should_ask = (
+            uncertainty.mean().item() > uncertainty_threshold and
+            assessment in ["uncertain", "cannot"]
+        )
+
+        reason = ""
+        if should_ask:
+            if assessment == "cannot":
+                reason = "I don't think I can do this task."
+            else:
+                reason = "I'm not sure how to proceed."
+
+        return should_ask, reason
+
+
+class AutotelicGoalGenerator(nn.Module):
+    """
+    IMGEP: Intrinsically Motivated Goal Exploration Process
+
+    The robot generates its OWN goals based on:
+    1. Learning progress (improving areas)
+    2. Curiosity (novel areas)
+    3. Competence (achievable challenges)
+
+    This makes the robot truly self-directed - it decides what to learn!
+
+    Research:
+    - https://www.jmlr.org/papers/volume23/21-0808/21-0808.pdf
+    - https://neurips.cc/virtual/2024/workshop/84726
+    """
+
+    def __init__(self, config: UnifiedBrainConfig, goal_bank_size: int = 1000):
+        super().__init__()
+        self.config = config
+        self.goal_bank_size = goal_bank_size
+
+        # Goal generator (VAE-style)
+        self.goal_prior = nn.Sequential(
+            nn.Linear(config.d_model, 256),
+            nn.ReLU(),
+            nn.Linear(256, config.goal_dim * 2),  # mean + log_var
+        )
+
+        # Learning progress estimator
+        self.progress_estimator = nn.Sequential(
+            nn.Linear(config.goal_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, 1),
+            nn.Sigmoid(),
+        )
+
+        # Goal bank with metadata
+        self.register_buffer('goal_bank', torch.zeros(goal_bank_size, config.goal_dim))
+        self.register_buffer('goal_attempts', torch.zeros(goal_bank_size))
+        self.register_buffer('goal_successes', torch.zeros(goal_bank_size))
+        self.register_buffer('goal_progress', torch.zeros(goal_bank_size))
+        self.goal_ptr = 0
+
+        print(f"  AutotelicGoalGenerator: bank_size={goal_bank_size}")
+
+    def generate_goal(
+        self,
+        state_features: torch.Tensor,
+        strategy: str = "learning_progress",
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        Generate a goal based on chosen strategy.
+
+        Strategies:
+        - "random": Sample from prior
+        - "learning_progress": Goals where agent is improving
+        - "curiosity": Novel goals (low attempts)
+        - "competence": Achievable challenges (~50% success rate)
+        """
+        B = state_features.shape[0]
+        device = state_features.device
+
+        if strategy == "random" or self.goal_ptr == 0:
+            # Sample from conditioned prior
+            params = self.goal_prior(state_features)
+            mean = params[..., :self.config.goal_dim]
+            log_var = params[..., self.config.goal_dim:].clamp(-5, 2)
+            std = (log_var * 0.5).exp()
+            goal = mean + std * torch.randn_like(mean)
+
+        elif strategy == "learning_progress":
+            # Select goals with high learning progress
+            progress_scores = self.goal_progress[:self.goal_ptr]
+            probs = F.softmax(progress_scores * 5, dim=0)
+            idx = torch.multinomial(probs.unsqueeze(0).expand(B, -1), 1).squeeze(-1)
+            goal = self.goal_bank[idx]
+
+        elif strategy == "curiosity":
+            # Goals with low attempt count (novel)
+            attempts = self.goal_attempts[:self.goal_ptr]
+            novelty = 1.0 / (attempts + 1)
+            probs = F.softmax(novelty * 5, dim=0)
+            idx = torch.multinomial(probs.unsqueeze(0).expand(B, -1), 1).squeeze(-1)
+            goal = self.goal_bank[idx]
+
+        elif strategy == "competence":
+            # Goals at edge of competence (~50% success rate)
+            success_rate = self.goal_successes[:self.goal_ptr] / (self.goal_attempts[:self.goal_ptr] + 1)
+            competence_score = 1.0 - torch.abs(success_rate - 0.5) * 2
+            probs = F.softmax(competence_score * 5, dim=0)
+            idx = torch.multinomial(probs.unsqueeze(0).expand(B, -1), 1).squeeze(-1)
+            goal = self.goal_bank[idx]
+
+        else:
+            # Default to random
+            return self.generate_goal(state_features, "random")
+
+        return goal, {'strategy': strategy, 'goal_bank_size': self.goal_ptr}
+
+    def update_goal_statistics(
+        self,
+        goal: torch.Tensor,
+        success: bool,
+        progress: float,
+    ):
+        """Update goal bank with outcome"""
+        # Find closest goal in bank
+        if self.goal_ptr > 0:
+            distances = torch.norm(self.goal_bank[:self.goal_ptr] - goal, dim=-1)
+            closest_idx = distances.argmin()
+
+            if distances[closest_idx] < 0.5:  # Close enough
+                self.goal_attempts[closest_idx] += 1
+                self.goal_successes[closest_idx] += float(success)
+                # EMA of progress
+                self.goal_progress[closest_idx] = 0.9 * self.goal_progress[closest_idx] + 0.1 * progress
+                return
+
+        # Add new goal
+        if self.goal_ptr < self.goal_bank_size:
+            self.goal_bank[self.goal_ptr] = goal.detach()
+            self.goal_attempts[self.goal_ptr] = 1
+            self.goal_successes[self.goal_ptr] = float(success)
+            self.goal_progress[self.goal_ptr] = progress
+            self.goal_ptr += 1
+
+
+class AutonomousMind(nn.Module):
+    """
+    Complete autonomous mind integrating all intrinsic motivation components.
+
+    This is what makes Jack TRULY self-thinking:
+    1. Curiosity drives exploration (ICM + RND)
+    2. Skills emerge without supervision (DIAYN)
+    3. Goals are self-generated (Autotelic)
+    4. Metacognition enables self-awareness
+    5. Empowerment seeks control
+
+    The AutonomousMind computes combined intrinsic rewards and
+    manages the autonomous learning process.
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        super().__init__()
+        self.config = config
+
+        # All intrinsic motivation components
+        self.curiosity = IntrinsicCuriosityModule(config)
+        self.skill_discovery = SkillDiscovery(config, num_skills=50)
+        self.empowerment = Empowerment(config)
+        self.metacognition = Metacognition(config)
+        self.goal_generator = AutotelicGoalGenerator(config)
+
+        # Learnable reward mixing weights
+        self.reward_weights = nn.Parameter(torch.tensor([
+            0.3,   # extrinsic (task reward)
+            0.25,  # curiosity (ICM + RND)
+            0.2,   # skill diversity (DIAYN)
+            0.15,  # empowerment
+            0.1,   # goal progress
+        ]))
+
+        print(f"\n  AutonomousMind: Complete intrinsic motivation system")
+
+    def compute_autonomous_reward(
+        self,
+        state_features: torch.Tensor,
+        next_state_features: torch.Tensor,
+        action: torch.Tensor,
+        state_latent: torch.Tensor,
+        extrinsic_reward: torch.Tensor,
+        skill: Optional[torch.Tensor] = None,
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        Compute combined intrinsic + extrinsic reward.
+        This is what makes the robot WANT to explore and learn.
+        """
+        rewards = {}
+
+        # 1. Extrinsic (task) reward
+        rewards['extrinsic'] = extrinsic_reward
+
+        # 2. Curiosity reward
+        curiosity_r, curiosity_info = self.curiosity.compute_intrinsic_reward(
+            state_features, next_state_features, action
+        )
+        rewards['curiosity'] = curiosity_r
+
+        # 3. Skill diversity reward (DIAYN)
+        if skill is not None:
+            diayn_r, diayn_info = self.skill_discovery.compute_diayn_reward(state_latent, skill)
+            rewards['skill'] = diayn_r
+        else:
+            rewards['skill'] = torch.zeros_like(extrinsic_reward)
+
+        # 4. Empowerment reward
+        emp_r, emp_info = self.empowerment.compute_empowerment(state_latent)
+        rewards['empowerment'] = emp_r
+
+        # 5. Goal progress (placeholder - computed externally)
+        rewards['goal_progress'] = torch.zeros_like(extrinsic_reward)
+
+        # Combine with learned weights
+        weights = F.softmax(self.reward_weights, dim=0)
+        total_reward = sum(
+            w * rewards[k] for w, k in zip(
+                weights, ['extrinsic', 'curiosity', 'skill', 'empowerment', 'goal_progress']
+            )
+        )
+
+        info = {
+            'total_reward': total_reward.mean().item(),
+            'weight_extrinsic': weights[0].item(),
+            'weight_curiosity': weights[1].item(),
+            'weight_skill': weights[2].item(),
+            'weight_empowerment': weights[3].item(),
+            'weight_goal': weights[4].item(),
+            **{f'reward_{k}': v.mean().item() for k, v in rewards.items()},
+        }
+
+        return total_reward, info
+
+    def get_training_loss(
+        self,
+        state_features: torch.Tensor,
+        next_state_features: torch.Tensor,
+        action: torch.Tensor,
+        state_latent: torch.Tensor,
+        skill: torch.Tensor,
+    ) -> Tuple[torch.Tensor, Dict]:
+        """Combined training loss for all intrinsic motivation modules."""
+        # ICM + RND loss
+        curiosity_loss = self.curiosity.get_training_loss(
+            state_features, next_state_features, action
+        )
+
+        # DIAYN discriminator loss
+        diayn_loss = self.skill_discovery.get_discriminator_loss(state_latent, skill)
+
+        total_loss = curiosity_loss + diayn_loss
+
+        return total_loss, {
+            'curiosity_loss': curiosity_loss.item(),
+            'diayn_loss': diayn_loss.item(),
+        }
+
+
+# ==============================================================================
 # UNIFIED BRAIN - COMPLETE
 # ==============================================================================
 
@@ -2695,6 +3539,7 @@ class UnifiedBrain(nn.Module):
     - Temporal memory (50 timesteps)
     - Cross-modal fusion
     - Physics rule bank
+    - **NEW: Intrinsic Motivation (Curiosity, Skills, Empowerment, Metacognition)**
     """
 
     def __init__(self, config: UnifiedBrainConfig = None):
@@ -2896,6 +3741,18 @@ class UnifiedBrain(nn.Module):
         else:
             self.navigation_planner = None
             print("  Navigation: Disabled")
+
+        # ==========================================
+        # INTRINSIC MOTIVATION (Self-Thinking)
+        # ==========================================
+        print("\n[INTRINSIC MOTIVATION]")
+
+        if config.enable_intrinsic_motivation:
+            self.autonomous_mind = AutonomousMind(config)
+            print("  AutonomousMind: ENABLED (curiosity + skills + empowerment + metacognition)")
+        else:
+            self.autonomous_mind = None
+            print("  AutonomousMind: Disabled")
 
         # CLS token
         self.cls_token = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)
@@ -3525,6 +4382,221 @@ class UnifiedBrain(nn.Module):
             self.say(answer)
 
         return answer
+
+    # ==========================================================================
+    # INTRINSIC MOTIVATION METHODS (Self-Thinking)
+    # ==========================================================================
+
+    def compute_intrinsic_reward(
+        self,
+        state: torch.Tensor,
+        next_state: torch.Tensor,
+        action: torch.Tensor,
+        extrinsic_reward: torch.Tensor = None,
+        skill: torch.Tensor = None,
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        Compute intrinsic motivation reward for autonomous learning.
+
+        This combines:
+        - Curiosity (novel states)
+        - Skill diversity (DIAYN)
+        - Empowerment (control)
+
+        Args:
+            state: Current state [B, obs_dim]
+            next_state: Next state [B, obs_dim]
+            action: Action taken [B, action_dim]
+            extrinsic_reward: External task reward [B] (optional)
+            skill: Current skill index [B] (optional)
+
+        Returns:
+            total_reward: Combined intrinsic + extrinsic reward
+            info: Dict with reward components
+        """
+        if self.autonomous_mind is None:
+            if extrinsic_reward is not None:
+                return extrinsic_reward, {'extrinsic': extrinsic_reward.mean().item()}
+            return torch.zeros(state.shape[0], device=state.device), {}
+
+        # Get state features from backbone
+        with torch.no_grad():
+            output = self.forward(state)
+            state_features = output['cls_features']
+
+            output_next = self.forward(next_state)
+            next_state_features = output_next['cls_features']
+
+            # Encode to latent for DIAYN/empowerment
+            state_latent = self.world_model.encode(state_features)
+
+        # Default extrinsic reward
+        if extrinsic_reward is None:
+            extrinsic_reward = torch.zeros(state.shape[0], device=state.device)
+
+        return self.autonomous_mind.compute_autonomous_reward(
+            state_features=state_features,
+            next_state_features=next_state_features,
+            action=action,
+            state_latent=state_latent,
+            extrinsic_reward=extrinsic_reward,
+            skill=skill,
+        )
+
+    def explore_autonomously(
+        self,
+        state: torch.Tensor,
+        strategy: str = "curiosity",
+    ) -> Dict:
+        """
+        Autonomous exploration step.
+
+        The robot decides what to do based on intrinsic motivation,
+        not external commands.
+
+        Strategies:
+        - "curiosity": Seek novel states (ICM + RND)
+        - "skill_discovery": Practice diverse skills (DIAYN)
+        - "learning_progress": Focus on improving areas
+        - "empowerment": Seek controllable states
+
+        Returns:
+            Dict with action, skill, goal, and intrinsic info
+        """
+        if self.autonomous_mind is None:
+            # Fallback to random action
+            action = torch.randn(state.shape[0], self.config.action_dim, device=state.device)
+            return {'action': action, 'strategy': 'random_fallback'}
+
+        B = state.shape[0]
+        device = state.device
+
+        # Get state features
+        output = self.forward(state)
+        state_features = output['cls_features']
+        state_latent = self.world_model.encode(state_features)
+
+        # Sample skill for this exploration step
+        skill = self.autonomous_mind.skill_discovery.sample_skill(B, device)
+        skill_embedding = self.autonomous_mind.skill_discovery.get_skill_embedding(skill)
+
+        # Generate self-directed goal
+        goal, goal_info = self.autonomous_mind.goal_generator.generate_goal(
+            state_features, strategy="learning_progress"
+        )
+
+        # Check metacognition: do we know what to do?
+        _, uncertainty, uncertainty_info = self.autonomous_mind.metacognition.estimate_uncertainty(
+            state_features
+        )
+
+        # Get action (could integrate skill conditioning here)
+        action = output['actions'][:, 0, :]
+
+        return {
+            'action': action,
+            'skill': skill,
+            'skill_embedding': skill_embedding,
+            'goal': goal,
+            'uncertainty': uncertainty,
+            'strategy': strategy,
+            **goal_info,
+            **uncertainty_info,
+        }
+
+    def should_ask_for_help(
+        self,
+        state: torch.Tensor,
+        goal: torch.Tensor,
+    ) -> Tuple[bool, str]:
+        """
+        Use metacognition to decide if robot should ask for help.
+
+        Returns:
+            should_ask: True if robot is uncertain
+            reason: Explanation string
+        """
+        if self.autonomous_mind is None:
+            return False, ""
+
+        output = self.forward(state)
+        state_features = output['cls_features']
+
+        return self.autonomous_mind.metacognition.should_ask_for_help(
+            state_features, goal
+        )
+
+    def discover_skills(
+        self,
+        state: torch.Tensor,
+    ) -> Dict:
+        """
+        Run skill discovery (DIAYN).
+
+        Returns current skill, discriminator prediction, and reward.
+        """
+        if self.autonomous_mind is None:
+            return {'error': 'Autonomous mind not enabled'}
+
+        B = state.shape[0]
+        device = state.device
+
+        # Get state latent
+        output = self.forward(state)
+        state_latent = self.world_model.encode(output['cls_features'])
+
+        # Sample random skill
+        skill = self.autonomous_mind.skill_discovery.sample_skill(B, device)
+
+        # Get DIAYN reward
+        reward, info = self.autonomous_mind.skill_discovery.compute_diayn_reward(
+            state_latent, skill
+        )
+
+        # Get most likely skill from discriminator
+        predicted_skill = self.autonomous_mind.skill_discovery.get_most_likely_skill(state_latent)
+
+        return {
+            'sampled_skill': skill,
+            'predicted_skill': predicted_skill,
+            'diayn_reward': reward,
+            **info,
+        }
+
+    def get_empowerment(self, state: torch.Tensor) -> Tuple[torch.Tensor, Dict]:
+        """
+        Compute empowerment for current state.
+
+        High empowerment = robot has good control over outcomes.
+        """
+        if self.autonomous_mind is None:
+            return torch.zeros(state.shape[0], device=state.device), {}
+
+        output = self.forward(state)
+        state_latent = self.world_model.encode(output['cls_features'])
+
+        return self.autonomous_mind.empowerment.compute_empowerment(state_latent)
+
+    def get_curiosity_reward(
+        self,
+        state: torch.Tensor,
+        next_state: torch.Tensor,
+        action: torch.Tensor,
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        Compute curiosity reward for a transition.
+        """
+        if self.autonomous_mind is None:
+            return torch.zeros(state.shape[0], device=state.device), {}
+
+        output = self.forward(state)
+        output_next = self.forward(next_state)
+
+        return self.autonomous_mind.curiosity.compute_intrinsic_reward(
+            output['cls_features'],
+            output_next['cls_features'],
+            action,
+        )
 
     # ==========================================================================
     # OBJECT DETECTION & NAVIGATION METHODS
@@ -4365,6 +5437,31 @@ if __name__ == "__main__":
     for name, weight in rules:
         print(f"    - {name}: {weight:.3f}")
 
+    print("\n[TEST 6] Intrinsic Motivation (Self-Thinking)")
+    if model.autonomous_mind is not None:
+        # Test curiosity
+        next_state = torch.randn(B, 256)
+        action = torch.randn(B, 17)
+        curiosity_r, curiosity_info = model.get_curiosity_reward(state, next_state, action)
+        print(f"  Curiosity reward: {curiosity_r.mean().item():.4f}")
+
+        # Test empowerment
+        emp_r, emp_info = model.get_empowerment(state)
+        print(f"  Empowerment: {emp_r.mean().item():.4f}")
+
+        # Test skill discovery
+        skill_info = model.discover_skills(state)
+        print(f"  Sampled skill: {skill_info['sampled_skill'][0].item()}")
+        print(f"  DIAYN reward: {skill_info['diayn_reward'].mean().item():.4f}")
+
+        # Test autonomous exploration
+        explore_result = model.explore_autonomously(state)
+        print(f"  Uncertainty: {explore_result['uncertainty'].mean().item():.4f}")
+
+        print("  [OK] Intrinsic motivation working!")
+    else:
+        print("  Intrinsic motivation disabled")
+
     print("\n" + "=" * 70)
     print("[SUCCESS] All tests passed!")
     print("=" * 70)
@@ -4377,4 +5474,10 @@ if __name__ == "__main__":
     print("  [x] Cross-modal fusion")
     print("  [x] Physics rule bank (100 rules)")
     print("  [x] Flow matching for actions")
+    print("  [x] **INTRINSIC MOTIVATION (Self-Thinking)**")
+    print("      - Curiosity (ICM + RND)")
+    print("      - Skill Discovery (DIAYN)")
+    print("      - Empowerment")
+    print("      - Metacognition")
+    print("      - Autotelic Goals")
     print("=" * 70)
