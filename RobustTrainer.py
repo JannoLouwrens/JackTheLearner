@@ -1417,10 +1417,12 @@ class RobustTrainer:
             # Automatic load: Check local first, then Google Drive fallback
             checkpoint_loaded = False
 
-            # Priority: local latest > local best > Drive latest > Drive best
+            # Priority: local > /content/checkpoints (Colab default) > Drive
             search_paths = [
                 (os.path.join(self.config.checkpoint_dir, "phase0_latest.pt"), "local latest"),
                 (os.path.join(self.config.checkpoint_dir, "phase0_best.pt"), "local best"),
+                ("/content/checkpoints/phase0_latest.pt", "Colab latest"),
+                ("/content/checkpoints/phase0_best.pt", "Colab best"),
                 (os.path.join(self.config.colab_drive_path, "phase0_latest.pt"), "Drive latest"),
                 (os.path.join(self.config.colab_drive_path, "phase0_best.pt"), "Drive best"),
             ]
@@ -1442,10 +1444,11 @@ class RobustTrainer:
                     checkpoint_loaded = True
                     break
 
-            # Load replay buffer from local or Drive
+            # Load replay buffer from local, Colab default, or Drive
             if checkpoint_loaded:
                 replay_paths = [
                     self.config.replay_buffer_path,
+                    "/content/checkpoints/replay_buffer.pt",
                     os.path.join(self.config.colab_drive_path, "replay_buffer.pt"),
                 ]
                 for replay_path in replay_paths:
