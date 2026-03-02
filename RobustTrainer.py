@@ -1008,6 +1008,23 @@ class RobustTrainerConfig:
     replay_buffer_path: str = "checkpoints/replay_buffer.pt"
     ewc_path: str = "checkpoints/ewc_state.pt"
 
+    # =========================================
+    # INTRINSIC MOTIVATION (Self-Thinking)
+    # =========================================
+    # Enable autonomous exploration and skill discovery
+    enable_intrinsic_motivation: bool = True
+
+    # Reward weights for intrinsic motivation
+    intrinsic_curiosity_weight: float = 0.25    # ICM + RND novelty reward
+    intrinsic_skill_weight: float = 0.20        # DIAYN skill diversity
+    intrinsic_empowerment_weight: float = 0.15  # Control-seeking
+    intrinsic_goal_weight: float = 0.10         # Self-generated goal progress
+
+    # Autonomous exploration phase settings
+    autonomous_exploration_epochs: int = 100    # Phase -1 epochs
+    skill_discovery_skills: int = 50            # Number of skills to discover
+    goal_bank_size: int = 1000                  # Autotelic goal memory
+
 
 class RobustTrainer:
     """
@@ -1038,6 +1055,10 @@ class RobustTrainer:
             llm_enabled=False,  # Enabled in Phase 2.5
             vision_enabled=False,  # Enabled in Phase 3
             audio_enabled=False,   # Enabled in Phase 3
+            # Intrinsic motivation (self-thinking)
+            enable_intrinsic_motivation=self.config.enable_intrinsic_motivation,
+            num_discoverable_skills=self.config.skill_discovery_skills,
+            goal_bank_size=self.config.goal_bank_size,
         )
         self.model = UnifiedBrain(model_config).to(self.device)
 
@@ -1097,10 +1118,54 @@ class RobustTrainer:
         perception_components = ['vision', 'object_detector', 'llm_projector', 'language']
         planning_components = ['planner', 'world_model', 'navigation', 'memory']
 
+        intrinsic_components = ['autonomous_mind', 'curiosity', 'skill_discovery',
+                               'empowerment', 'metacognition', 'goal_generator']
+
         def is_component(name, components):
             return any(c in name.lower() for c in components)
 
-        if phase == 0:
+        if phase == -1:
+            # Phase -1: Only train intrinsic motivation modules (autonomous exploration)
+            param_groups = []
+
+            # Intrinsic motivation at full LR
+            intrinsic_params = [p for n, p in self.model.named_parameters()
+                               if is_component(n, intrinsic_components)]
+            if intrinsic_params:
+                param_groups.append({'params': intrinsic_params, 'lr': self.config.learning_rate})
+
+            # World model at lower LR (used for imagination)
+            world_model_params = [p for n, p in self.model.named_parameters()
+                                  if 'world_model' in n.lower() and not is_component(n, intrinsic_components)]
+            if world_model_params:
+                param_groups.append({'params': world_model_params,
+                                   'lr': self.config.learning_rate * 0.5})
+
+            # Action head at lower LR (to produce actions for exploration)
+            action_params = [p for n, p in self.model.named_parameters()
+                            if 'action_head' in n.lower()]
+            if action_params:
+                param_groups.append({'params': action_params,
+                                   'lr': self.config.learning_rate * 0.1})
+
+            # Freeze everything else
+            for name, param in self.model.named_parameters():
+                if not (is_component(name, intrinsic_components) or
+                       'world_model' in name.lower() or 'action_head' in name.lower()):
+                    param.requires_grad = False
+
+            if param_groups:
+                self.optimizer = torch.optim.AdamW(param_groups, weight_decay=1e-4)
+            else:
+                # Fallback: train all
+                self.optimizer = torch.optim.AdamW(
+                    self.model.parameters(),
+                    lr=self.config.learning_rate,
+                    weight_decay=1e-4
+                )
+            print(f"[OPTIMIZER] Phase -1: Intrinsic motivation at {self.config.learning_rate:.2e}")
+
+        elif phase == 0:
             # Phase 0: All parameters same LR (physics foundation)
             self.optimizer = torch.optim.AdamW(
                 self.model.parameters(),
@@ -7724,7 +7789,249 @@ class RobustTrainer:
         self.global_step = checkpoint.get('global_step', 0)
         print(f"[LOAD] {path}")
 
-    def backup_to_drive(self):
+    # ==========================================================================
+    # INTRINSIC MOTIVATION TRAINING (Self-Thinking)
+    # ==========================================================================
+
+    def train_intrinsic_motivation_step(
+        self,
+        state: torch.Tensor,
+        next_state: torch.Tensor,
+        action: torch.Tensor,
+        skill: torch.Tensor = None,
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        Compute intrinsic motivation loss for training.
+
+        This trains:
+        - ICM: Forward/inverse models for curiosity
+        - RND: Predictor network for novelty detection
+        - DIAYN: Discriminator for skill diversity
+
+        Args:
+            state: Current state features [B, d_model]
+            next_state: Next state features [B, d_model]
+            action: Action taken [B, action_dim]
+            skill: Current skill index [B] (optional)
+
+        Returns:
+            loss: Combined intrinsic motivation loss
+            info: Dict with loss components
+        """
+        if not hasattr(self.model, 'autonomous_mind') or self.model.autonomous_mind is None:
+            return torch.tensor(0.0, device=self.device), {}
+
+        # Get state features from backbone
+        with torch.no_grad():
+            output = self.model(state)
+            state_features = output['cls_features']
+
+            output_next = self.model(next_state)
+            next_state_features = output_next['cls_features']
+
+            # Encode to latent for DIAYN
+            state_latent = self.model.world_model.encode(state_features)
+
+        # Sample skill if not provided
+        if skill is None:
+            skill = self.model.autonomous_mind.skill_discovery.sample_skill(
+                state.shape[0], self.device
+            )
+
+        # Get training loss from AutonomousMind
+        loss, info = self.model.autonomous_mind.get_training_loss(
+            state_features=state_features,
+            next_state_features=next_state_features,
+            action=action,
+            state_latent=state_latent,
+            skill=skill,
+        )
+
+        return loss, info
+
+    def compute_intrinsic_reward(
+        self,
+        state: torch.Tensor,
+        next_state: torch.Tensor,
+        action: torch.Tensor,
+        extrinsic_reward: torch.Tensor = None,
+        skill: torch.Tensor = None,
+    ) -> Tuple[torch.Tensor, Dict]:
+        """
+        Compute combined intrinsic + extrinsic reward for RL training.
+
+        This is used during RL phases to augment environment rewards
+        with intrinsic motivation signals.
+        """
+        if not hasattr(self.model, 'autonomous_mind') or self.model.autonomous_mind is None:
+            if extrinsic_reward is not None:
+                return extrinsic_reward, {'extrinsic': extrinsic_reward.mean().item()}
+            return torch.zeros(state.shape[0], device=self.device), {}
+
+        return self.model.compute_intrinsic_reward(
+            state, next_state, action, extrinsic_reward, skill
+        )
+
+    def train_phase_autonomous(self, num_epochs: int = None, samples_per_epoch: int = 5000):
+        """
+        Phase -1: AUTONOMOUS EXPLORATION (Intrinsic Motivation Only)
+
+        The robot explores purely from intrinsic motivation:
+        - Curiosity (ICM + RND): Seek novel states
+        - Skill diversity (DIAYN): Discover diverse behaviors
+        - Empowerment: Seek controllable states
+
+        NO external rewards! The robot decides what to learn.
+
+        This phase runs BEFORE Phase 0 to discover motor primitives,
+        or can run AFTER Phase 0/1 to continue autonomous exploration.
+
+        Research:
+        - ICM: Pathak et al., "Curiosity-driven Exploration" (ICML 2017)
+        - DIAYN: Eysenbach et al., "Diversity is All You Need" (ICLR 2019)
+        - Empowerment: Mohamed & Rezende (NeurIPS 2015)
+        """
+        if num_epochs is None:
+            num_epochs = self.config.autonomous_exploration_epochs
+
+        print("\n" + "=" * 70)
+        print("PHASE -1: AUTONOMOUS EXPLORATION (Intrinsic Motivation)")
+        print("=" * 70)
+        print("NO external rewards - robot explores from curiosity!")
+        print(f"Components: ICM + RND + DIAYN + Empowerment + Metacognition")
+        print("=" * 70)
+
+        if not hasattr(self.model, 'autonomous_mind') or self.model.autonomous_mind is None:
+            print("[ERROR] Intrinsic motivation not enabled!")
+            print("Set enable_intrinsic_motivation=True in config")
+            return
+
+        self.current_phase = -1
+        self._create_optimizer(-1)
+
+        # Check for existing checkpoint
+        autonomous_latest = os.path.join(self.config.checkpoint_dir, "autonomous_latest.pt")
+        start_epoch = 0
+        if os.path.exists(autonomous_latest):
+            checkpoint = torch.load(autonomous_latest, map_location=self.device, weights_only=False)
+            self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+            start_epoch = checkpoint.get('epoch', 0) + 1
+            print(f"[RESUME] Continuing from epoch {start_epoch}")
+
+        best_curiosity = float('inf')
+
+        for epoch in range(start_epoch, num_epochs):
+            self.epoch = epoch
+            epoch_losses = {'curiosity': 0, 'diayn': 0, 'total': 0}
+            num_batches = 0
+
+            pbar = tqdm(range(0, samples_per_epoch, self.config.batch_size),
+                       desc=f"Epoch {epoch+1}/{num_epochs}")
+
+            for _ in pbar:
+                batch_size = self.config.batch_size
+
+                # Generate random states (or use environment if available)
+                state = torch.randn(batch_size, self.config.obs_dim).to(self.device)
+
+                # Sample skill for this batch
+                skill = self.model.autonomous_mind.skill_discovery.sample_skill(
+                    batch_size, self.device
+                )
+                skill_embedding = self.model.autonomous_mind.skill_discovery.get_skill_embedding(skill)
+
+                # Get action from policy (conditioned on skill)
+                with torch.no_grad():
+                    output = self.model(state)
+                    # Actions would ideally be conditioned on skill here
+                    action = output['actions'][:, 0, :]
+
+                # Simulate next state (in real training, this comes from environment)
+                # For now, use world model prediction
+                with torch.no_grad():
+                    state_features = output['cls_features']
+                    latent = self.model.world_model.encode(state_features)
+                    _, _, next_latent = self.model.world_model.predict_next(latent, action)
+                    next_state = self.model.world_model.decoder(next_latent)
+
+                # Pad next_state if needed
+                if next_state.shape[-1] != self.config.obs_dim:
+                    if next_state.shape[-1] < self.config.obs_dim:
+                        pad = torch.zeros(batch_size, self.config.obs_dim - next_state.shape[-1],
+                                         device=self.device)
+                        next_state = torch.cat([next_state, pad], dim=-1)
+                    else:
+                        next_state = next_state[:, :self.config.obs_dim]
+
+                # Compute intrinsic motivation loss
+                loss, loss_info = self.train_intrinsic_motivation_step(
+                    state, next_state, action, skill
+                )
+
+                # Also compute intrinsic reward (for logging)
+                with torch.no_grad():
+                    intrinsic_reward, reward_info = self.compute_intrinsic_reward(
+                        state, next_state, action,
+                        extrinsic_reward=torch.zeros(batch_size, device=self.device),
+                        skill=skill,
+                    )
+
+                # Backward pass
+                if loss.requires_grad:
+                    self.optimizer.zero_grad()
+                    loss.backward()
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                    self.optimizer.step()
+
+                # Track losses
+                epoch_losses['total'] += loss.item()
+                epoch_losses['curiosity'] += loss_info.get('curiosity_loss', 0)
+                epoch_losses['diayn'] += loss_info.get('diayn_loss', 0)
+                num_batches += 1
+
+                pbar.set_postfix({
+                    'loss': f"{loss.item():.4f}",
+                    'curiosity': f"{loss_info.get('curiosity_loss', 0):.4f}",
+                    'diayn': f"{loss_info.get('diayn_loss', 0):.4f}",
+                })
+
+            # Epoch summary
+            avg_loss = epoch_losses['total'] / max(num_batches, 1)
+            avg_curiosity = epoch_losses['curiosity'] / max(num_batches, 1)
+            avg_diayn = epoch_losses['diayn'] / max(num_batches, 1)
+
+            print(f"[Epoch {epoch+1}] Loss: {avg_loss:.4f} | "
+                  f"Curiosity: {avg_curiosity:.4f} | DIAYN: {avg_diayn:.4f}")
+
+            # Save checkpoints
+            self.save_checkpoint("autonomous_latest")
+            if avg_curiosity < best_curiosity:
+                best_curiosity = avg_curiosity
+                self.save_checkpoint("autonomous_best")
+                print(f"  [NEW BEST] Curiosity loss: {best_curiosity:.4f}")
+
+            # Store in replay buffer for later phases
+            # (So discovered behaviors aren't forgotten)
+            self.replay_buffer.add({
+                'state': state.cpu(),
+                'action': action.cpu(),
+                'next_state': next_state.cpu(),
+                'skill': skill.cpu(),
+            }, phase=-1)
+
+            # Periodic backup
+            if (epoch + 1) % self.config.colab_backup_interval == 0:
+                self.backup_to_drive()
+                # Save replay buffer
+                self.replay_buffer.save(self.config.replay_buffer_path)
+
+        print("\n" + "=" * 70)
+        print("[DONE] Autonomous exploration complete!")
+        print(f"  Best curiosity loss: {best_curiosity:.4f}")
+        print(f"  Skills discovered: {self.config.skill_discovery_skills}")
+        print("=" * 70)
+
+    def _backup_to_drive(self):
         """Backup checkpoints to Google Drive (for Colab)"""
         if not self.config.colab_backup_enabled:
             return
