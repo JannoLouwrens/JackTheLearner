@@ -3920,8 +3920,11 @@ class UnifiedBrain(nn.Module):
         # WORLD MODEL (TD-MPC2)
         # ==========================================
         if action is not None:
+            # World model uses locomotion actions only (first 17 dims)
+            # Full action may be 57 dims (17 loco + 40 manip), truncate for dynamics
+            action_for_world_model = action[..., :self.config.action_dim]
             next_state, reward, next_latent = self.world_model.predict_next(
-                self.world_model.encode(cls_combined), action
+                self.world_model.encode(cls_combined), action_for_world_model
             )
             output['next_state'] = next_state
             output['reward'] = reward
