@@ -1098,6 +1098,43 @@ class RobustTrainer:
         print(f"  Physics weight: {self.config.physics_weight}")
         print("=" * 70 + "\n")
 
+    def _load_checkpoint_flexible(self, checkpoint_path: str) -> dict:
+        """
+        Load checkpoint with flexible shape handling.
+
+        Handles cases where model architecture changed (e.g., new token types added).
+        Skips parameters with shape mismatches and loads everything else.
+        """
+        checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
+        saved_state = checkpoint['model_state_dict']
+        current_state = self.model.state_dict()
+
+        # Filter out shape-mismatched parameters
+        compatible_state = {}
+        skipped = []
+
+        for key, saved_param in saved_state.items():
+            if key in current_state:
+                if saved_param.shape == current_state[key].shape:
+                    compatible_state[key] = saved_param
+                else:
+                    skipped.append(f"{key}: checkpoint {saved_param.shape} vs model {current_state[key].shape}")
+            else:
+                skipped.append(f"{key}: not in current model")
+
+        if skipped:
+            print(f"[WARN] Skipped {len(skipped)} incompatible parameters:")
+            for s in skipped[:5]:  # Show first 5
+                print(f"  - {s}")
+            if len(skipped) > 5:
+                print(f"  ... and {len(skipped) - 5} more")
+
+        # Load compatible parameters
+        self.model.load_state_dict(compatible_state, strict=False)
+        print(f"[OK] Loaded {len(compatible_state)}/{len(saved_state)} parameters from checkpoint")
+
+        return checkpoint
+
     def _create_optimizer(self, phase: int):
         """
         Create optimizer with multi-rate learning AND component freezing.
@@ -1325,45 +1362,42 @@ class RobustTrainer:
             manual_path = os.path.join(self.config.checkpoint_dir, load_file)
             if os.path.exists(manual_path):
                 print(f"[MANUAL LOAD] Attempting to load '{load_file}'...")
-                checkpoint = torch.load(manual_path, map_location=self.device, weights_only=False)
-                self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+                checkpoint = self._load_checkpoint_flexible(manual_path)
                 if 'optimizer_state_dict' in checkpoint:
                     try:
                         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                     except (ValueError, KeyError) as e:
                         print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
                 start_epoch = checkpoint.get('epoch', 0) + 1
-                print(f"[OK] Loaded checkpoint. Continuing from epoch {start_epoch}.")
+                print(f"[OK] Continuing from epoch {start_epoch}.")
             else:
                 print(f"[WARN] Specified checkpoint '{load_file}' not found. Starting from scratch.")
         else:
             # Automatic load: Default behavior
             phase0_latest = os.path.join(self.config.checkpoint_dir, "phase0_latest.pt")
             if os.path.exists(phase0_latest):
-                checkpoint = torch.load(phase0_latest, map_location=self.device, weights_only=False)
-                self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+                checkpoint = self._load_checkpoint_flexible(phase0_latest)
                 if 'optimizer_state_dict' in checkpoint:
                     try:
                         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                     except (ValueError, KeyError) as e:
                         print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
                 start_epoch = checkpoint.get('epoch', 0) + 1
-                print(f"[RESUME] Loaded Phase 0 LATEST checkpoint from epoch {start_epoch}")
+                print(f"[RESUME] Continuing Phase 0 from epoch {start_epoch}")
                 # Also load replay buffer if resuming
                 if os.path.exists(self.config.replay_buffer_path):
                     self.replay_buffer.load(self.config.replay_buffer_path)
             else:
                 phase0_best = os.path.join(self.config.checkpoint_dir, "phase0_best.pt")
                 if os.path.exists(phase0_best):
-                    checkpoint = torch.load(phase0_best, map_location=self.device, weights_only=False)
-                    self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+                    checkpoint = self._load_checkpoint_flexible(phase0_best)
                     if 'optimizer_state_dict' in checkpoint:
                         try:
                             self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                         except (ValueError, KeyError) as e:
                             print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
-                    start_epoch = checkpoint.get('epoch', 0) + 1 # Continue from the epoch AFTER the best one was saved
-                    print(f"[OK] Loaded Phase 0 BEST checkpoint. Continuing training from epoch {start_epoch}.")
+                    start_epoch = checkpoint.get('epoch', 0) + 1
+                    print(f"[RESUME] Continuing Phase 0 BEST from epoch {start_epoch}")
                     # Also load replay buffer if resuming
                     if os.path.exists(self.config.replay_buffer_path):
                         self.replay_buffer.load(self.config.replay_buffer_path)
