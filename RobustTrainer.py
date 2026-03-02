@@ -1103,28 +1103,69 @@ class RobustTrainer:
         Load checkpoint with flexible shape handling.
 
         Handles cases where model architecture changed (e.g., new token types added).
-        Skips parameters with shape mismatches and loads everything else.
+        For embedding layers that grew, copies old weights and initializes new ones.
+        This PRESERVES learned knowledge while allowing architecture expansion.
         """
         checkpoint = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
         saved_state = checkpoint['model_state_dict']
         current_state = self.model.state_dict()
 
-        # Filter out shape-mismatched parameters
+        # Build compatible state, handling shape mismatches intelligently
         compatible_state = {}
+        expanded = []
         skipped = []
 
         for key, saved_param in saved_state.items():
-            if key in current_state:
-                if saved_param.shape == current_state[key].shape:
-                    compatible_state[key] = saved_param
-                else:
-                    skipped.append(f"{key}: checkpoint {saved_param.shape} vs model {current_state[key].shape}")
-            else:
+            if key not in current_state:
                 skipped.append(f"{key}: not in current model")
+                continue
+
+            current_param = current_state[key]
+
+            if saved_param.shape == current_param.shape:
+                # Exact match - use directly
+                compatible_state[key] = saved_param
+
+            elif len(saved_param.shape) == 2 and len(current_param.shape) == 2:
+                # 2D tensor (embeddings, linear layers) - try to expand
+                old_rows, old_cols = saved_param.shape
+                new_rows, new_cols = current_param.shape
+
+                if old_cols == new_cols and new_rows > old_rows:
+                    # Embedding expanded (more token types) - PRESERVE old, init new
+                    new_param = current_param.clone()  # Start with current (random init)
+                    new_param[:old_rows, :] = saved_param  # Copy old embeddings
+                    compatible_state[key] = new_param
+                    expanded.append(f"{key}: {old_rows}->{new_rows} rows (preserved {old_rows} learned)")
+                elif old_rows == new_rows and new_cols > old_cols:
+                    # Hidden dim expanded - preserve old, init new
+                    new_param = current_param.clone()
+                    new_param[:, :old_cols] = saved_param
+                    compatible_state[key] = new_param
+                    expanded.append(f"{key}: {old_cols}->{new_cols} cols (preserved {old_cols} learned)")
+                else:
+                    skipped.append(f"{key}: {saved_param.shape} -> {current_param.shape} (incompatible)")
+
+            elif len(saved_param.shape) == 1 and len(current_param.shape) == 1:
+                # 1D tensor (biases) - try to expand
+                if current_param.shape[0] > saved_param.shape[0]:
+                    new_param = current_param.clone()
+                    new_param[:saved_param.shape[0]] = saved_param
+                    compatible_state[key] = new_param
+                    expanded.append(f"{key}: {saved_param.shape[0]}->{current_param.shape[0]} (preserved)")
+                else:
+                    skipped.append(f"{key}: {saved_param.shape} -> {current_param.shape}")
+            else:
+                skipped.append(f"{key}: {saved_param.shape} -> {current_param.shape}")
+
+        if expanded:
+            print(f"[EXPAND] Expanded {len(expanded)} params (preserving learned weights):")
+            for e in expanded:
+                print(f"  + {e}")
 
         if skipped:
             print(f"[WARN] Skipped {len(skipped)} incompatible parameters:")
-            for s in skipped[:5]:  # Show first 5
+            for s in skipped[:5]:
                 print(f"  - {s}")
             if len(skipped) > 5:
                 print(f"  ... and {len(skipped) - 5} more")
