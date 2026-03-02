@@ -1414,34 +1414,41 @@ class RobustTrainer:
             else:
                 print(f"[WARN] Specified checkpoint '{load_file}' not found. Starting from scratch.")
         else:
-            # Automatic load: Default behavior
-            phase0_latest = os.path.join(self.config.checkpoint_dir, "phase0_latest.pt")
-            if os.path.exists(phase0_latest):
-                checkpoint = self._load_checkpoint_flexible(phase0_latest)
-                if 'optimizer_state_dict' in checkpoint:
-                    try:
-                        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-                    except (ValueError, KeyError) as e:
-                        print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
-                start_epoch = checkpoint.get('epoch', 0) + 1
-                print(f"[RESUME] Continuing Phase 0 from epoch {start_epoch}")
-                # Also load replay buffer if resuming
-                if os.path.exists(self.config.replay_buffer_path):
-                    self.replay_buffer.load(self.config.replay_buffer_path)
-            else:
-                phase0_best = os.path.join(self.config.checkpoint_dir, "phase0_best.pt")
-                if os.path.exists(phase0_best):
-                    checkpoint = self._load_checkpoint_flexible(phase0_best)
+            # Automatic load: Check local first, then Google Drive fallback
+            checkpoint_loaded = False
+
+            # Priority: local latest > local best > Drive latest > Drive best
+            search_paths = [
+                (os.path.join(self.config.checkpoint_dir, "phase0_latest.pt"), "local latest"),
+                (os.path.join(self.config.checkpoint_dir, "phase0_best.pt"), "local best"),
+                (os.path.join(self.config.colab_drive_path, "phase0_latest.pt"), "Drive latest"),
+                (os.path.join(self.config.colab_drive_path, "phase0_best.pt"), "Drive best"),
+            ]
+
+            for ckpt_path, ckpt_source in search_paths:
+                if os.path.exists(ckpt_path):
+                    print(f"[FOUND] Checkpoint at {ckpt_source}: {ckpt_path}")
+                    checkpoint = self._load_checkpoint_flexible(ckpt_path)
                     if 'optimizer_state_dict' in checkpoint:
                         try:
                             self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
                         except (ValueError, KeyError) as e:
                             print(f"[WARN] Optimizer state mismatch, using fresh optimizer: {e}")
                     start_epoch = checkpoint.get('epoch', 0) + 1
-                    print(f"[RESUME] Continuing Phase 0 BEST from epoch {start_epoch}")
-                    # Also load replay buffer if resuming
-                    if os.path.exists(self.config.replay_buffer_path):
-                        self.replay_buffer.load(self.config.replay_buffer_path)
+                    print(f"[RESUME] Continuing Phase 0 from epoch {start_epoch}")
+                    checkpoint_loaded = True
+                    break
+
+            # Load replay buffer from local or Drive
+            if checkpoint_loaded:
+                replay_paths = [
+                    self.config.replay_buffer_path,
+                    os.path.join(self.config.colab_drive_path, "replay_buffer.pt"),
+                ]
+                for replay_path in replay_paths:
+                    if os.path.exists(replay_path):
+                        self.replay_buffer.load(replay_path)
+                        break
 
         # Import SymPy calculator
         try:
