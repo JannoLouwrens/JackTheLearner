@@ -1425,7 +1425,10 @@ class RobustTrainer:
                 (os.path.join(self.config.colab_drive_path, "phase0_best.pt"), "Drive best"),
             ]
 
+            print("[SEARCH] Looking for Phase 0 checkpoints...")
             for ckpt_path, ckpt_source in search_paths:
+                exists = os.path.exists(ckpt_path)
+                print(f"  {ckpt_source}: {ckpt_path} -> {'FOUND' if exists else 'not found'}")
                 if os.path.exists(ckpt_path):
                     print(f"[FOUND] Checkpoint at {ckpt_source}: {ckpt_path}")
                     checkpoint = self._load_checkpoint_flexible(ckpt_path)
