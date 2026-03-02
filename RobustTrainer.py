@@ -1417,22 +1417,17 @@ class RobustTrainer:
             # Automatic load: Check local first, then Google Drive fallback
             checkpoint_loaded = False
 
-            # Priority: local > /content/checkpoints (Colab default) > Drive
+            # Load ONLY from Google Drive
             search_paths = [
-                (os.path.join(self.config.checkpoint_dir, "phase0_latest.pt"), "local latest"),
-                (os.path.join(self.config.checkpoint_dir, "phase0_best.pt"), "local best"),
-                ("/content/checkpoints/phase0_latest.pt", "Colab latest"),
-                ("/content/checkpoints/phase0_best.pt", "Colab best"),
                 (os.path.join(self.config.colab_drive_path, "phase0_latest.pt"), "Drive latest"),
                 (os.path.join(self.config.colab_drive_path, "phase0_best.pt"), "Drive best"),
             ]
 
-            print("[SEARCH] Looking for Phase 0 checkpoints...")
+            print("[SEARCH] Looking for Phase 0 checkpoints on Google Drive...")
             for ckpt_path, ckpt_source in search_paths:
                 exists = os.path.exists(ckpt_path)
                 print(f"  {ckpt_source}: {ckpt_path} -> {'FOUND' if exists else 'not found'}")
-                if os.path.exists(ckpt_path):
-                    print(f"[FOUND] Checkpoint at {ckpt_source}: {ckpt_path}")
+                if exists:
                     checkpoint = self._load_checkpoint_flexible(ckpt_path)
                     if 'optimizer_state_dict' in checkpoint:
                         try:
@@ -1444,17 +1439,11 @@ class RobustTrainer:
                     checkpoint_loaded = True
                     break
 
-            # Load replay buffer from local, Colab default, or Drive
+            # Load replay buffer from Drive
             if checkpoint_loaded:
-                replay_paths = [
-                    self.config.replay_buffer_path,
-                    "/content/checkpoints/replay_buffer.pt",
-                    os.path.join(self.config.colab_drive_path, "replay_buffer.pt"),
-                ]
-                for replay_path in replay_paths:
-                    if os.path.exists(replay_path):
-                        self.replay_buffer.load(replay_path)
-                        break
+                replay_path = os.path.join(self.config.colab_drive_path, "replay_buffer.pt")
+                if os.path.exists(replay_path):
+                    self.replay_buffer.load(replay_path)
 
         # Import SymPy calculator
         try:
