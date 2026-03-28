@@ -23,7 +23,7 @@ but symbolic calculator provides EXACT answers (training supervision).
 
 import sympy as sp
 import numpy as np
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional, Union
 import torch
 
 
@@ -329,6 +329,54 @@ class SymbolicPhysicsCalculator:
         if len(next_state) >= 6:
             next_state[3:6] = next_velocity
 
+        # Update joint dimensions (6+) using simplified articulated dynamics
+        # Joint angles at indices 6-22, joint velocities at indices 23-39
+        num_joints = min(17, (len(current_state) - 6) // 2)
+        if num_joints > 0 and len(action) > 3:
+            joint_start = 6
+            vel_start = joint_start + num_joints
+
+            # Joint torques from action (dims 3 onwards = joint torques)
+            available_torques = action[3:] if len(action) > 3 else np.array([])
+            joint_torques = np.zeros(num_joints)
+            joint_torques[:len(available_torques)] = available_torques[:num_joints]
+
+            # Simplified per-joint dynamics: alpha = torque / I_joint
+            # Using approximate moment of inertia for humanoid limbs
+            joint_inertias = np.ones(num_joints) * 0.1  # ~0.1 kg*m^2 per joint
+            joint_angular_accel = joint_torques / joint_inertias
+
+            # Current joint state
+            if len(current_state) > vel_start:
+                joint_angles = current_state[joint_start:joint_start+num_joints].copy()
+                joint_vels = current_state[vel_start:vel_start+num_joints].copy()
+            else:
+                joint_angles = np.zeros(num_joints)
+                joint_vels = np.zeros(num_joints)
+
+            # Symplectic Euler integration for joints
+            new_joint_vels = joint_vels + joint_angular_accel * dt
+            new_joint_angles = joint_angles + new_joint_vels * dt
+
+            # Apply joint limits (approximate humanoid ranges)
+            joint_limits = np.array([
+                [-1.31, 0.52], [-1.31, 0.52], [-0.61, 0.61],  # abdomen
+                [-0.44, 0.44], [-1.05, 0.26], [-2.09, 0.35], [-2.62, -0.03],  # right leg
+                [-0.44, 0.44], [-1.05, 0.26], [-2.09, 0.35], [-2.62, -0.03],  # left leg
+                [-1.57, 1.57], [-1.57, 1.57], [-2.62, 0.0],  # right arm
+                [-1.57, 1.57], [-1.57, 1.57], [-2.62, 0.0],  # left arm
+            ])
+            for j in range(min(num_joints, len(joint_limits))):
+                new_joint_angles[j] = np.clip(new_joint_angles[j], joint_limits[j, 0], joint_limits[j, 1])
+                # Zero velocity if at limit
+                if new_joint_angles[j] == joint_limits[j, 0] or new_joint_angles[j] == joint_limits[j, 1]:
+                    new_joint_vels[j] = 0.0
+
+            # Write back
+            if len(next_state) >= vel_start + num_joints:
+                next_state[joint_start:joint_start+num_joints] = new_joint_angles
+                next_state[vel_start:vel_start+num_joints] = new_joint_vels
+
         # Calculate physics quantities
         physics_quantities = {
             'kinetic_energy': self.calculate_kinetic_energy(robot_mass, np.linalg.norm(next_velocity)),
@@ -359,6 +407,12 @@ class SymbolicPhysicsCalculator:
             is_safe: bool
             reason: str (why unsafe if False)
         """
+        # Guard against NaN/Inf inputs
+        if np.any(np.isnan(current_state)) or np.any(np.isinf(current_state)):
+            return False, "Invalid state: contains NaN or Inf"
+        if np.any(np.isnan(proposed_action)) or np.any(np.isinf(proposed_action)):
+            return False, "Invalid action: contains NaN or Inf"
+
         if safety_limits is None:
             safety_limits = {
                 'max_force': 500.0,  # N
@@ -370,6 +424,14 @@ class SymbolicPhysicsCalculator:
         force_mag = float(np.linalg.norm(proposed_action[:3])) if len(proposed_action) >= 3 else 0
         if force_mag > safety_limits['max_force']:
             return False, f"Force too high: {force_mag:.1f}N > {safety_limits['max_force']}N"
+
+        # Check joint torques (action dims 3-16)
+        if len(proposed_action) > 3:
+            joint_torques = proposed_action[3:]
+            max_torque = 100.0  # Nm, reasonable for humanoid joints
+            for i, torque in enumerate(joint_torques):
+                if abs(torque) > max_torque:
+                    return False, f"Joint {i} torque {torque:.1f} exceeds limit {max_torque}"
 
         # Predict next state
         next_state, physics = self.predict_robot_state(current_state, proposed_action)
@@ -588,8 +650,8 @@ class SymbolicPhysicsCalculator:
 
 def symbolic_supervision_loss(
     neural_prediction: torch.Tensor,
-    state: np.ndarray,
-    action: np.ndarray,
+    state: Union[torch.Tensor, np.ndarray],
+    action: Union[torch.Tensor, np.ndarray],
     calculator: SymbolicPhysicsCalculator
 ) -> Tuple[torch.Tensor, Dict]:
     """
@@ -599,14 +661,20 @@ def symbolic_supervision_loss(
 
     Args:
         neural_prediction: (batch, state_dim) - what neural net predicted
-        state: (batch, state_dim) - current state
-        action: (batch, action_dim) - action taken
+        state: (batch, state_dim) - current state (tensor or ndarray)
+        action: (batch, action_dim) - action taken (tensor or ndarray)
         calculator: symbolic calculator
 
     Returns:
         loss: scalar
         metrics: dict
     """
+    # Convert inputs to tensors if they are numpy arrays
+    if isinstance(state, np.ndarray):
+        state = torch.from_numpy(state).float().to(neural_prediction.device)
+    if isinstance(action, np.ndarray):
+        action = torch.from_numpy(action).float().to(neural_prediction.device)
+
     batch_size = neural_prediction.shape[0]
     device = neural_prediction.device
 

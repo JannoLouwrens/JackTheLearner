@@ -1,0 +1,392 @@
+<!--
+FULL HUMANOID WITH DEXTEROUS HANDS
+==================================
+
+A complete humanoid robot model for general-purpose tasks:
+- Full body locomotion (walk, run, climb)
+- Dexterous hands with 5 fingers each (grasp, manipulate)
+- Articulated neck (look around)
+- Heightfield terrain support
+
+Based on:
+- MuJoCo Humanoid for body
+- Shadow Hand / Allegro Hand for fingers
+- Unitree H1/G1 proportions
+
+Total DOF: 17 (body) + 2 (neck) + 20 (hands) = 39 actuators
+
+Author: Janno Louwrens
+Research: Figure Helix, NVIDIA GR00T, Physical Intelligence pi0
+-->
+<mujoco model="humanoid_full">
+  <compiler angle="degree" inertiafromgeom="true"/>
+
+  <option integrator="RK4" iterations="50" solver="PGS" timestep="0.002"/>
+
+  <default>
+    <joint armature="1" damping="1" limited="true"/>
+    <geom conaffinity="1" condim="3" friction="1 0.5 0.5" margin="0.001" material="geom" rgba="0.8 0.6 0.4 1"/>
+    <motor ctrllimited="true" ctrlrange="-1 1"/>
+
+    <!-- Finger defaults (smaller, more precise) -->
+    <default class="finger">
+      <joint armature="0.01" damping="0.1" limited="true"/>
+      <geom conaffinity="1" condim="3" friction="1.5 0.5 0.5" margin="0.001" rgba="0.9 0.7 0.5 1" size="0.008"/>
+      <motor ctrllimited="true" ctrlrange="-0.5 0.5" gear="5"/>
+    </default>
+  </default>
+
+  <size nkey="5" nuser_geom="1"/>
+
+  <visual>
+    <map fogend="5" fogstart="3"/>
+    <quality shadowsize="2048"/>
+  </visual>
+
+  <asset>
+    <!-- Heightfield for terrain -->
+    <hfield name="terrain" nrow="200" ncol="200" size="10 10 1 0.1"/>
+    <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>
+    <texture builtin="flat" height="1024" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>
+    <texture builtin="checker" height="100" name="texplane" rgb1="0.2 0.3 0.4" rgb2="0.1 0.15 0.2" type="2d" width="100"/>
+    <material name="MatPlane" reflectance="0.5" shininess="1" specular="1" texrepeat="60 60" texture="texplane"/>
+    <material name="geom" texture="texgeom" texuniform="true"/>
+    <material name="terrain_mat" rgba="0.3 0.5 0.3 1"/>
+    <material name="hand_mat" rgba="0.9 0.75 0.6 1"/>
+  </asset>
+
+  <worldbody>
+    <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 1.3" specular="0.1 0.1 0.1"/>
+
+    <!-- Terrain floor -->
+    <geom conaffinity="1" condim="3" name="floor" pos="0 0 0"
+          material="terrain_mat" type="hfield" hfield="terrain"
+          friction="1 0.5 0.5" rgba="0.3 0.5 0.3 1"/>
+
+    <!-- ============== TORSO ============== -->
+    <body name="torso" pos="0 0 1.4">
+      <camera name="track" mode="trackcom" pos="0 -3 0.3" xyaxes="1 0 0 0 0 1"/>
+      <joint armature="0" damping="0" limited="false" name="root" pos="0 0 0" stiffness="0" type="free"/>
+      <geom fromto="0 -0.07 0 0 0.07 0" name="torso1" size="0.07" type="capsule"/>
+      <geom fromto="-0.01 -0.06 -0.12 -0.01 0.06 -0.12" name="uwaist" size="0.06" type="capsule"/>
+
+      <!-- ============== NECK & HEAD ============== -->
+      <body name="neck" pos="0 0 0.12">
+        <joint name="neck_pan" type="hinge" axis="0 0 1" range="-90 90" armature="0.01" damping="0.5"/>
+        <geom fromto="0 0 0 0 0 0.05" name="neck_geom" size="0.03" type="capsule"/>
+
+        <body name="head" pos="0 0 0.08">
+          <joint name="neck_tilt" type="hinge" axis="0 1 0" range="-45 45" armature="0.01" damping="0.5"/>
+          <geom name="head" pos="0 0 0.03" size="0.09" type="sphere"/>
+
+          <!-- Eyes (cameras) -->
+          <camera name="left_eye" pos="-0.03 0.08 0.03" xyaxes="0 -1 0 0.5 0 1" fovy="60"/>
+          <camera name="right_eye" pos="0.03 0.08 0.03" xyaxes="0 -1 0 0.5 0 1" fovy="60"/>
+          <camera name="head_cam" pos="0 0.09 0.03" xyaxes="0 -1 0 0.5 0 1" fovy="90"/>
+        </body>
+      </body>
+
+      <!-- ============== LOWER BODY ============== -->
+      <body name="lwaist" pos="-0.01 0 -0.16">
+        <geom fromto="0 -0.06 0 0 0.06 0" name="lwaist" size="0.06" type="capsule"/>
+        <joint armature="0.02" axis="0 0 1" damping="5" name="abdomen_z" pos="0 0 0.065" range="-45 45" stiffness="20" type="hinge"/>
+        <joint armature="0.02" axis="0 1 0" damping="5" name="abdomen_y" pos="0 0 0.065" range="-75 30" stiffness="10" type="hinge"/>
+
+        <body name="pelvis" pos="0 0 -0.165">
+          <joint armature="0.02" axis="1 0 0" damping="5" name="abdomen_x" pos="0 0 0.1" range="-35 35" stiffness="10" type="hinge"/>
+          <geom fromto="-0.02 -0.07 0 -0.02 0.07 0" name="butt" size="0.09" type="capsule"/>
+
+          <!-- RIGHT LEG -->
+          <body name="right_thigh" pos="0 -0.1 -0.04">
+            <joint armature="0.01" axis="1 0 0" damping="5" name="right_hip_x" pos="0 0 0" range="-25 5" stiffness="10" type="hinge"/>
+            <joint armature="0.01" axis="0 0 1" damping="5" name="right_hip_z" pos="0 0 0" range="-60 35" stiffness="10" type="hinge"/>
+            <joint armature="0.01" axis="0 1 0" damping="5" name="right_hip_y" pos="0 0 0" range="-120 20" stiffness="20" type="hinge"/>
+            <geom fromto="0 0 0 0 0.01 -0.34" name="right_thigh1" size="0.06" type="capsule"/>
+
+            <body name="right_shin" pos="0 0.01 -0.403">
+              <joint armature="0.006" axis="0 -1 0" damping="6" name="right_knee" pos="0 0 0.02" range="-160 -2" stiffness="15" type="hinge"/>
+              <geom fromto="0 0 0 0 0 -0.3" name="right_shin1" size="0.049" type="capsule"/>
+
+              <body name="right_foot" pos="0 0 -0.39">
+                <joint armature="0.004" axis="0 1 0" damping="3" name="right_ankle_y" pos="0 0 0.08" range="-50 50" stiffness="4" type="hinge"/>
+                <joint armature="0.004" axis="1 0 0.5" damping="1" name="right_ankle_x" pos="0 0 0.04" range="-50 50" stiffness="1" type="hinge"/>
+                <geom name="right_foot" pos="0 0 0" size="0.075 0.04 0.03" type="box"/>
+              </body>
+            </body>
+          </body>
+
+          <!-- LEFT LEG -->
+          <body name="left_thigh" pos="0 0.1 -0.04">
+            <joint armature="0.01" axis="-1 0 0" damping="5" name="left_hip_x" pos="0 0 0" range="-25 5" stiffness="10" type="hinge"/>
+            <joint armature="0.01" axis="0 0 -1" damping="5" name="left_hip_z" pos="0 0 0" range="-60 35" stiffness="10" type="hinge"/>
+            <joint armature="0.01" axis="0 1 0" damping="5" name="left_hip_y" pos="0 0 0" range="-120 20" stiffness="20" type="hinge"/>
+            <geom fromto="0 0 0 0 -0.01 -0.34" name="left_thigh1" size="0.06" type="capsule"/>
+
+            <body name="left_shin" pos="0 -0.01 -0.403">
+              <joint armature="0.006" axis="0 -1 0" damping="6" name="left_knee" pos="0 0 0.02" range="-160 -2" stiffness="15" type="hinge"/>
+              <geom fromto="0 0 0 0 0 -0.3" name="left_shin1" size="0.049" type="capsule"/>
+
+              <body name="left_foot" pos="0 0 -0.39">
+                <joint armature="0.004" axis="0 1 0" damping="3" name="left_ankle_y" pos="0 0 0.08" range="-50 50" stiffness="4" type="hinge"/>
+                <joint armature="0.004" axis="1 0 0.5" damping="1" name="left_ankle_x" pos="0 0 0.04" range="-50 50" stiffness="1" type="hinge"/>
+                <geom name="left_foot" pos="0 0 0" size="0.075 0.04 0.03" type="box"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- ============== RIGHT ARM ============== -->
+      <body name="right_upper_arm" pos="0 -0.17 0.06">
+        <joint armature="0.004" axis="2 1 1" damping="1" name="right_shoulder1" pos="0 0 0" range="-85 60" stiffness="1" type="hinge"/>
+        <joint armature="0.004" axis="0 -1 1" damping="1" name="right_shoulder2" pos="0 0 0" range="-85 60" stiffness="1" type="hinge"/>
+        <geom fromto="0 0 0 0.16 -0.16 -0.16" name="right_uarm1" size="0.04" type="capsule"/>
+
+        <body name="right_lower_arm" pos="0.18 -0.18 -0.18">
+          <joint armature="0.004" axis="0 -1 1" damping="0.5" name="right_elbow" pos="0 0 0" range="-90 50" stiffness="0.5" type="hinge"/>
+          <geom fromto="0.01 0.01 0.01 0.17 0.17 0.17" name="right_larm" size="0.031" type="capsule"/>
+
+          <!-- RIGHT WRIST -->
+          <body name="right_wrist" pos="0.18 0.18 0.18">
+            <joint name="right_wrist_roll" type="hinge" axis="1 1 1" range="-90 90" armature="0.002" damping="0.3"/>
+            <joint name="right_wrist_pitch" type="hinge" axis="0 1 -1" range="-45 45" armature="0.002" damping="0.3"/>
+            <geom name="right_palm" type="box" size="0.04 0.025 0.01" pos="0.02 0.02 0.02" material="hand_mat"/>
+
+            <!-- RIGHT HAND FINGERS -->
+            <!-- Thumb -->
+            <body name="r_thumb_base" pos="0 0.03 0.02" childclass="finger">
+              <joint name="r_thumb_base" type="hinge" axis="0 0 1" range="-30 90"/>
+              <geom fromto="0 0 0 0.02 0.01 0" type="capsule"/>
+              <body name="r_thumb_mid" pos="0.02 0.01 0">
+                <joint name="r_thumb_mid" type="hinge" axis="0 1 0" range="0 90"/>
+                <geom fromto="0 0 0 0.02 0 0" type="capsule"/>
+                <body name="r_thumb_tip" pos="0.02 0 0">
+                  <joint name="r_thumb_tip" type="hinge" axis="0 1 0" range="0 90"/>
+                  <geom fromto="0 0 0 0.015 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+
+            <!-- Index finger -->
+            <body name="r_index_base" pos="0.05 0.02 0.02" childclass="finger">
+              <joint name="r_index_base" type="hinge" axis="0 1 0" range="-15 90"/>
+              <geom fromto="0 0 0 0.03 0 0" type="capsule"/>
+              <body name="r_index_mid" pos="0.03 0 0">
+                <joint name="r_index_mid" type="hinge" axis="0 1 0" range="0 100"/>
+                <geom fromto="0 0 0 0.025 0 0" type="capsule"/>
+                <body name="r_index_tip" pos="0.025 0 0">
+                  <joint name="r_index_tip" type="hinge" axis="0 1 0" range="0 80"/>
+                  <geom fromto="0 0 0 0.02 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+
+            <!-- Middle finger -->
+            <body name="r_middle_base" pos="0.05 0 0.02" childclass="finger">
+              <joint name="r_middle_base" type="hinge" axis="0 1 0" range="-15 90"/>
+              <geom fromto="0 0 0 0.035 0 0" type="capsule"/>
+              <body name="r_middle_mid" pos="0.035 0 0">
+                <joint name="r_middle_mid" type="hinge" axis="0 1 0" range="0 100"/>
+                <geom fromto="0 0 0 0.025 0 0" type="capsule"/>
+                <body name="r_middle_tip" pos="0.025 0 0">
+                  <joint name="r_middle_tip" type="hinge" axis="0 1 0" range="0 80"/>
+                  <geom fromto="0 0 0 0.02 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+
+            <!-- Ring finger -->
+            <body name="r_ring_base" pos="0.05 -0.02 0.02" childclass="finger">
+              <joint name="r_ring_base" type="hinge" axis="0 1 0" range="-15 90"/>
+              <geom fromto="0 0 0 0.03 0 0" type="capsule"/>
+              <body name="r_ring_mid" pos="0.03 0 0">
+                <joint name="r_ring_mid" type="hinge" axis="0 1 0" range="0 100"/>
+                <geom fromto="0 0 0 0.022 0 0" type="capsule"/>
+                <body name="r_ring_tip" pos="0.022 0 0">
+                  <joint name="r_ring_tip" type="hinge" axis="0 1 0" range="0 80"/>
+                  <geom fromto="0 0 0 0.018 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+
+            <!-- Pinky finger -->
+            <body name="r_pinky_base" pos="0.04 -0.04 0.02" childclass="finger">
+              <joint name="r_pinky_base" type="hinge" axis="0 1 0" range="-15 90"/>
+              <geom fromto="0 0 0 0.025 0 0" type="capsule"/>
+              <body name="r_pinky_mid" pos="0.025 0 0">
+                <joint name="r_pinky_mid" type="hinge" axis="0 1 0" range="0 100"/>
+                <geom fromto="0 0 0 0.018 0 0" type="capsule"/>
+                <body name="r_pinky_tip" pos="0.018 0 0">
+                  <joint name="r_pinky_tip" type="hinge" axis="0 1 0" range="0 80"/>
+                  <geom fromto="0 0 0 0.015 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <!-- ============== LEFT ARM ============== -->
+      <body name="left_upper_arm" pos="0 0.17 0.06">
+        <joint armature="0.004" axis="2 -1 1" damping="1" name="left_shoulder1" pos="0 0 0" range="-60 85" stiffness="1" type="hinge"/>
+        <joint armature="0.004" axis="0 1 1" damping="1" name="left_shoulder2" pos="0 0 0" range="-60 85" stiffness="1" type="hinge"/>
+        <geom fromto="0 0 0 0.16 0.16 -0.16" name="left_uarm1" size="0.04" type="capsule"/>
+
+        <body name="left_lower_arm" pos="0.18 0.18 -0.18">
+          <joint armature="0.004" axis="0 -1 -1" damping="0.5" name="left_elbow" pos="0 0 0" range="-90 50" stiffness="0.5" type="hinge"/>
+          <geom fromto="0.01 -0.01 0.01 0.17 -0.17 0.17" name="left_larm" size="0.031" type="capsule"/>
+
+          <!-- LEFT WRIST -->
+          <body name="left_wrist" pos="0.18 -0.18 0.18">
+            <joint name="left_wrist_roll" type="hinge" axis="1 -1 1" range="-90 90" armature="0.002" damping="0.3"/>
+            <joint name="left_wrist_pitch" type="hinge" axis="0 -1 -1" range="-45 45" armature="0.002" damping="0.3"/>
+            <geom name="left_palm" type="box" size="0.04 0.025 0.01" pos="0.02 -0.02 0.02" material="hand_mat"/>
+
+            <!-- LEFT HAND FINGERS -->
+            <!-- Thumb -->
+            <body name="l_thumb_base" pos="0 -0.03 0.02" childclass="finger">
+              <joint name="l_thumb_base" type="hinge" axis="0 0 1" range="-90 30"/>
+              <geom fromto="0 0 0 0.02 -0.01 0" type="capsule"/>
+              <body name="l_thumb_mid" pos="0.02 -0.01 0">
+                <joint name="l_thumb_mid" type="hinge" axis="0 1 0" range="0 90"/>
+                <geom fromto="0 0 0 0.02 0 0" type="capsule"/>
+                <body name="l_thumb_tip" pos="0.02 0 0">
+                  <joint name="l_thumb_tip" type="hinge" axis="0 1 0" range="0 90"/>
+                  <geom fromto="0 0 0 0.015 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+
+            <!-- Index finger -->
+            <body name="l_index_base" pos="0.05 -0.02 0.02" childclass="finger">
+              <joint name="l_index_base" type="hinge" axis="0 1 0" range="-15 90"/>
+              <geom fromto="0 0 0 0.03 0 0" type="capsule"/>
+              <body name="l_index_mid" pos="0.03 0 0">
+                <joint name="l_index_mid" type="hinge" axis="0 1 0" range="0 100"/>
+                <geom fromto="0 0 0 0.025 0 0" type="capsule"/>
+                <body name="l_index_tip" pos="0.025 0 0">
+                  <joint name="l_index_tip" type="hinge" axis="0 1 0" range="0 80"/>
+                  <geom fromto="0 0 0 0.02 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+
+            <!-- Middle finger -->
+            <body name="l_middle_base" pos="0.05 0 0.02" childclass="finger">
+              <joint name="l_middle_base" type="hinge" axis="0 1 0" range="-15 90"/>
+              <geom fromto="0 0 0 0.035 0 0" type="capsule"/>
+              <body name="l_middle_mid" pos="0.035 0 0">
+                <joint name="l_middle_mid" type="hinge" axis="0 1 0" range="0 100"/>
+                <geom fromto="0 0 0 0.025 0 0" type="capsule"/>
+                <body name="l_middle_tip" pos="0.025 0 0">
+                  <joint name="l_middle_tip" type="hinge" axis="0 1 0" range="0 80"/>
+                  <geom fromto="0 0 0 0.02 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+
+            <!-- Ring finger -->
+            <body name="l_ring_base" pos="0.05 0.02 0.02" childclass="finger">
+              <joint name="l_ring_base" type="hinge" axis="0 1 0" range="-15 90"/>
+              <geom fromto="0 0 0 0.03 0 0" type="capsule"/>
+              <body name="l_ring_mid" pos="0.03 0 0">
+                <joint name="l_ring_mid" type="hinge" axis="0 1 0" range="0 100"/>
+                <geom fromto="0 0 0 0.022 0 0" type="capsule"/>
+                <body name="l_ring_tip" pos="0.022 0 0">
+                  <joint name="l_ring_tip" type="hinge" axis="0 1 0" range="0 80"/>
+                  <geom fromto="0 0 0 0.018 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+
+            <!-- Pinky finger -->
+            <body name="l_pinky_base" pos="0.04 0.04 0.02" childclass="finger">
+              <joint name="l_pinky_base" type="hinge" axis="0 1 0" range="-15 90"/>
+              <geom fromto="0 0 0 0.025 0 0" type="capsule"/>
+              <body name="l_pinky_mid" pos="0.025 0 0">
+                <joint name="l_pinky_mid" type="hinge" axis="0 1 0" range="0 100"/>
+                <geom fromto="0 0 0 0.018 0 0" type="capsule"/>
+                <body name="l_pinky_tip" pos="0.018 0 0">
+                  <joint name="l_pinky_tip" type="hinge" axis="0 1 0" range="0 80"/>
+                  <geom fromto="0 0 0 0.015 0 0" type="capsule"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <!-- ===== BODY (17 actuators - same as Humanoid-v5) ===== -->
+    <motor gear="100" joint="abdomen_y" name="abdomen_y"/>
+    <motor gear="100" joint="abdomen_z" name="abdomen_z"/>
+    <motor gear="100" joint="abdomen_x" name="abdomen_x"/>
+    <motor gear="100" joint="right_hip_x" name="right_hip_x"/>
+    <motor gear="100" joint="right_hip_z" name="right_hip_z"/>
+    <motor gear="300" joint="right_hip_y" name="right_hip_y"/>
+    <motor gear="200" joint="right_knee" name="right_knee"/>
+    <motor gear="100" joint="right_ankle_x" name="right_ankle_x"/>
+    <motor gear="100" joint="right_ankle_y" name="right_ankle_y"/>
+    <motor gear="100" joint="left_hip_x" name="left_hip_x"/>
+    <motor gear="100" joint="left_hip_z" name="left_hip_z"/>
+    <motor gear="300" joint="left_hip_y" name="left_hip_y"/>
+    <motor gear="200" joint="left_knee" name="left_knee"/>
+    <motor gear="100" joint="left_ankle_x" name="left_ankle_x"/>
+    <motor gear="100" joint="left_ankle_y" name="left_ankle_y"/>
+    <motor gear="25" joint="right_shoulder1" name="right_shoulder1"/>
+    <motor gear="25" joint="right_shoulder2" name="right_shoulder2"/>
+    <motor gear="25" joint="right_elbow" name="right_elbow"/>
+    <motor gear="25" joint="left_shoulder1" name="left_shoulder1"/>
+    <motor gear="25" joint="left_shoulder2" name="left_shoulder2"/>
+    <motor gear="25" joint="left_elbow" name="left_elbow"/>
+
+    <!-- ===== NECK (2 actuators) ===== -->
+    <motor gear="20" joint="neck_pan" name="neck_pan"/>
+    <motor gear="20" joint="neck_tilt" name="neck_tilt"/>
+
+    <!-- ===== RIGHT WRIST (2 actuators) ===== -->
+    <motor gear="10" joint="right_wrist_roll" name="right_wrist_roll"/>
+    <motor gear="10" joint="right_wrist_pitch" name="right_wrist_pitch"/>
+
+    <!-- ===== RIGHT HAND FINGERS (15 actuators) ===== -->
+    <motor gear="5" joint="r_thumb_base" name="r_thumb_base"/>
+    <motor gear="5" joint="r_thumb_mid" name="r_thumb_mid"/>
+    <motor gear="5" joint="r_thumb_tip" name="r_thumb_tip"/>
+    <motor gear="5" joint="r_index_base" name="r_index_base"/>
+    <motor gear="5" joint="r_index_mid" name="r_index_mid"/>
+    <motor gear="5" joint="r_index_tip" name="r_index_tip"/>
+    <motor gear="5" joint="r_middle_base" name="r_middle_base"/>
+    <motor gear="5" joint="r_middle_mid" name="r_middle_mid"/>
+    <motor gear="5" joint="r_middle_tip" name="r_middle_tip"/>
+    <motor gear="5" joint="r_ring_base" name="r_ring_base"/>
+    <motor gear="5" joint="r_ring_mid" name="r_ring_mid"/>
+    <motor gear="5" joint="r_ring_tip" name="r_ring_tip"/>
+    <motor gear="5" joint="r_pinky_base" name="r_pinky_base"/>
+    <motor gear="5" joint="r_pinky_mid" name="r_pinky_mid"/>
+    <motor gear="5" joint="r_pinky_tip" name="r_pinky_tip"/>
+
+    <!-- ===== LEFT WRIST (2 actuators) ===== -->
+    <motor gear="10" joint="left_wrist_roll" name="left_wrist_roll"/>
+    <motor gear="10" joint="left_wrist_pitch" name="left_wrist_pitch"/>
+
+    <!-- ===== LEFT HAND FINGERS (15 actuators) ===== -->
+    <motor gear="5" joint="l_thumb_base" name="l_thumb_base"/>
+    <motor gear="5" joint="l_thumb_mid" name="l_thumb_mid"/>
+    <motor gear="5" joint="l_thumb_tip" name="l_thumb_tip"/>
+    <motor gear="5" joint="l_index_base" name="l_index_base"/>
+    <motor gear="5" joint="l_index_mid" name="l_index_mid"/>
+    <motor gear="5" joint="l_index_tip" name="l_index_tip"/>
+    <motor gear="5" joint="l_middle_base" name="l_middle_base"/>
+    <motor gear="5" joint="l_middle_mid" name="l_middle_mid"/>
+    <motor gear="5" joint="l_middle_tip" name="l_middle_tip"/>
+    <motor gear="5" joint="l_ring_base" name="l_ring_base"/>
+    <motor gear="5" joint="l_ring_mid" name="l_ring_mid"/>
+    <motor gear="5" joint="l_ring_tip" name="l_ring_tip"/>
+    <motor gear="5" joint="l_pinky_base" name="l_pinky_base"/>
+    <motor gear="5" joint="l_pinky_mid" name="l_pinky_mid"/>
+    <motor gear="5" joint="l_pinky_tip" name="l_pinky_tip"/>
+  </actuator>
+
+</mujoco>

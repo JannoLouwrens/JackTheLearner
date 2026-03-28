@@ -27,6 +27,7 @@ Example:
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
@@ -93,7 +94,8 @@ class IdeaProposer(nn.Module):
         self,
         state: torch.Tensor,
         goal: torch.Tensor,
-        tried_ideas: List[torch.Tensor]
+        tried_ideas: List[torch.Tensor],
+        temperature: float = 1.0,
     ) -> Tuple[torch.Tensor, float]:
         """
         Propose a new creative idea.
@@ -125,6 +127,13 @@ class IdeaProposer(nn.Module):
         # Generate idea
         new_idea = self.idea_generator(combined).squeeze(0)  # (idea_dim,)
 
+        # Clamp to valid range first, then add scaled noise
+        # (applying tanh before noise prevents saturation at high temperatures)
+        new_idea = torch.tanh(new_idea)
+        if temperature > 0:
+            noise = torch.randn_like(new_idea) * temperature * 0.3
+            new_idea = torch.clamp(new_idea + noise, -1.0, 1.0)
+
         # Confidence score
         confidence = self.confidence_head(combined).item()
 
@@ -141,8 +150,9 @@ class SymbolicVerifier:
     At RUNTIME: Checks if neural's creative idea is safe/possible!
     """
 
-    def __init__(self):
+    def __init__(self, action_dim: int = 17):
         self.calculator = SymbolicPhysicsCalculator()
+        self.action_dim = action_dim
         print("[*] Symbolic Verifier: Physics verification engine")
 
     def verify_idea(
@@ -166,7 +176,7 @@ class SymbolicVerifier:
         """
         # Convert idea to action sequence (simplified)
         # In real implementation, idea would be higher-level strategy
-        action = idea[:17].cpu().numpy()  # First 17 dims = action
+        action = idea[:self.action_dim].cpu().numpy()  # First action_dim dims = action
 
         # Physics verification
         is_safe, safety_reason = self.calculator.verify_action_safe(state, action)
@@ -243,6 +253,8 @@ class AlphaGeometryLoop:
         # Components
         self.neural = IdeaProposer()
         self.symbolic = SymbolicVerifier()
+        self.proposer = self.neural
+        self.verifier = self.symbolic
 
         # Statistics (for monitoring)
         self.stats = {
@@ -282,9 +294,23 @@ class AlphaGeometryLoop:
         """
         self.stats['total_calls'] += 1
 
-        # Convert to numpy for symbolic calculator
-        state_np = state.cpu().numpy()
-        goal_np = goal.cpu().numpy()
+        import time
+        deadline = time.time() + self.config.timeout_seconds
+
+        # Convert to numpy for symbolic calculator (handle both tensor and ndarray)
+        if isinstance(state, torch.Tensor):
+            state_np = state.detach().cpu().numpy()
+            state_tensor = state
+        else:
+            state_np = np.asarray(state, dtype=np.float32)
+            state_tensor = torch.from_numpy(state_np)
+
+        if isinstance(goal, torch.Tensor):
+            goal_np = goal.detach().cpu().numpy()
+            goal_tensor = goal
+        else:
+            goal_np = np.asarray(goal, dtype=np.float32)
+            goal_tensor = torch.from_numpy(goal_np)
 
         # Track what we've tried
         tried_ideas = []
@@ -315,12 +341,20 @@ class AlphaGeometryLoop:
 
         # ===== STEP 2: Creative loop =====
         for iteration in range(self.config.max_iterations):
+            if time.time() > deadline:
+                return None, {
+                    'solved': False,
+                    'reason': f'Timeout after {self.config.timeout_seconds}s',
+                    'iterations': iteration + 1,
+                    'tried_ideas': len(tried_ideas),
+                }
+
             if verbose:
                 print(f"\n  [ITERATION {iteration+1}]")
 
             # Neural proposes creative idea
             with torch.no_grad():
-                new_idea, confidence = self.neural(state, goal, tried_ideas)
+                new_idea, confidence = self.neural(state_tensor, goal_tensor, tried_ideas, temperature=self.config.neural_temperature)
 
             if verbose:
                 print(f"    Neural proposes: idea with confidence {confidence:.2f}")
@@ -379,6 +413,84 @@ class AlphaGeometryLoop:
             'mode': 'failed',
             'iterations': self.config.max_iterations,
             'reasoning_trace': reasoning_trace,
+        }
+
+    def train_proposer(
+        self,
+        states: torch.Tensor,
+        goals: torch.Tensor,
+        optimizer: torch.optim.Optimizer,
+        num_episodes: int = 100,
+        temperature: float = 1.0,
+    ) -> Dict:
+        """
+        Train the IdeaProposer using REINFORCE.
+
+        For each episode:
+        1. Propose an idea (with gradients)
+        2. Verify it symbolically (no grad needed)
+        3. Use accept/reject as reward signal for policy gradient
+        """
+        total_reward = 0.0
+        total_accepted = 0
+
+        for ep in range(num_episodes):
+            idx = ep % states.shape[0]
+            state = states[idx].detach()
+            goal = goals[idx].detach()
+
+            # Propose idea WITH gradients through the confidence head
+            optimizer.zero_grad()
+            idea, confidence = self.proposer(state, goal, [], temperature=temperature)
+
+            # Verify symbolically (no grad needed for numpy operations)
+            state_np = state.detach().cpu().numpy()
+            goal_np = goal.detach().cpu().numpy()
+            is_valid, reason, action_seq = self.verifier.verify_idea(
+                idea.detach(), state_np, goal_np
+            )
+
+            # REINFORCE reward
+            reward = 1.0 if is_valid else -0.1
+            total_reward += reward
+            total_accepted += int(is_valid)
+
+            # Recompute with FULL gradient flow through ALL proposer components
+            # (situation_encoder, history_encoder, idea_generator, confidence_head)
+            situation = torch.cat([state, goal], dim=-1).unsqueeze(0)
+            situation_emb = self.proposer.situation_encoder(situation)
+            history_emb = torch.zeros_like(situation_emb)
+            combined = torch.cat([situation_emb, history_emb], dim=-1)
+
+            # Idea generator (gets gradients now!)
+            idea_recomputed = self.proposer.idea_generator(combined).squeeze(0)
+            if temperature > 0:
+                idea_recomputed = idea_recomputed + torch.randn_like(idea_recomputed) * temperature * 0.3
+            idea_recomputed = torch.clamp(torch.tanh(idea_recomputed), -1.0, 1.0)
+
+            # Confidence head (also gets gradients)
+            conf_tensor = self.proposer.confidence_head(combined).squeeze()
+
+            # Combined loss trains ALL components
+            if is_valid:
+                # Push confidence up + push idea toward the verified idea
+                conf_loss = -reward * torch.log(conf_tensor.clamp(min=1e-8))
+                idea_loss = F.mse_loss(idea_recomputed, idea.detach()) * 0.5
+            else:
+                # Push confidence down, don't train idea on bad examples
+                conf_loss = -reward * torch.log((1.0 - conf_tensor).clamp(min=1e-8))
+                idea_loss = torch.tensor(0.0, device=state.device)
+
+            total_loss = conf_loss + idea_loss
+            total_loss.backward()
+            torch.nn.utils.clip_grad_norm_(self.proposer.parameters(), 1.0)
+            optimizer.step()
+
+        return {
+            'episodes': num_episodes,
+            'total_reward': total_reward,
+            'acceptance_rate': total_accepted / max(num_episodes, 1),
+            'avg_reward': total_reward / max(num_episodes, 1),
         }
 
     def get_statistics(self) -> Dict:

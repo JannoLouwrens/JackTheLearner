@@ -40,6 +40,19 @@ from dataclasses import dataclass
 from collections import deque
 import numpy as np
 
+# Companion modules
+try:
+    from EmotionalState import EmotionalState, EmotionalConfig, EventType
+    from Personality import Personality, JACK_PERSONALITY
+    from MovementMoodCoupling import MovementMoodCoupling, MovementMoodConfig
+    from InnerMonologue import InnerMonologue, MonologueConfig
+except ImportError as e:
+    print(f"[WARN] Companion modules not fully available: {e}")
+    EmotionalState = None
+    Personality = None
+    MovementMoodCoupling = None
+    InnerMonologue = None
+
 
 # ==============================================================================
 # CONFIGURATION
@@ -107,6 +120,15 @@ class UnifiedBrainConfig:
     llm_freeze: bool = True  # Keep LLM frozen (recommended)
     llm_use_lora: bool = False  # Optional LoRA fine-tuning
     llm_max_length: int = 128  # Max tokens for commands
+
+    # API LLM (Claude, GPT-4, etc.) - for high-quality reasoning
+    llm_api_enabled: bool = False
+    llm_api_provider: str = "anthropic"  # "anthropic", "openai", "ollama"
+    llm_api_model: str = "claude-sonnet-4-20250514"  # API model name
+    llm_api_key_env: str = "ANTHROPIC_API_KEY"  # Environment variable for API key
+    llm_api_base_url: str = ""  # Custom base URL (for Ollama: "http://localhost:11434")
+    llm_api_max_tokens: int = 200  # Max tokens per response
+    llm_api_temperature: float = 0.7  # Response creativity
 
     # Companion Robot Features (NEW)
     enable_response_generation: bool = True  # LLM generates spoken responses
@@ -183,6 +205,20 @@ class UnifiedBrainConfig:
     # Autotelic Goals - self-generated learning curriculum
     enable_autotelic_goals: bool = True
     goal_bank_size: int = 1000  # Number of goals to remember
+
+    # =========================================
+    # VIRTUAL COMPANION (Emotional, Personality, Movement Style)
+    # =========================================
+    enable_emotional_state: bool = True
+    mood_dim: int = 3  # PAD: Pleasure, Arousal, Dominance (Mehrabian 1996)
+    mood_decay_factor: float = 0.995  # Per-step decay toward baseline
+
+    enable_movement_mood_coupling: bool = True
+    max_speed_modulation: float = 0.3  # ±30% speed change from mood
+    max_style_bias: float = 0.1  # ±10% action bias from mood
+
+    enable_inner_monologue: bool = True
+    monologue_cooldown: float = 10.0  # Seconds between autonomous thoughts
 
 
 # ==============================================================================
@@ -366,7 +402,7 @@ class AMPDiscriminator(nn.Module):
     - Loss: Binary cross-entropy + gradient penalty
     """
 
-    def __init__(self, state_dim: int = 256, action_dim: int = 57, hidden_dim: int = 512):
+    def __init__(self, state_dim: int = 256, action_dim: int = 17, hidden_dim: int = 512):
         super().__init__()
 
         self.state_dim = state_dim
@@ -1300,6 +1336,156 @@ class LLMEncoder(nn.Module):
 
 
 # ==============================================================================
+# API LLM PROVIDER (Claude, GPT-4, Ollama)
+# ==============================================================================
+
+class APILLMProvider:
+    """
+    API-based LLM for high-quality language understanding and generation.
+
+    Separates concerns:
+    - Local LLMEncoder: Produces embeddings for the transformer backbone (fast, every frame)
+    - APILLMProvider: Generates responses, plans, thoughts (slow, on-demand)
+
+    This gives Jack access to Claude/GPT-4 level intelligence for reasoning
+    while keeping motor control fast and local.
+
+    Supported providers:
+    - Anthropic (Claude): Best reasoning, recommended
+    - OpenAI (GPT-4): Strong alternative
+    - Ollama: Free, local, any open model
+    """
+
+    def __init__(self, config: UnifiedBrainConfig):
+        self.config = config
+        self.provider = config.llm_api_provider
+        self.model = config.llm_api_model
+        self.max_tokens = config.llm_api_max_tokens
+        self.temperature = config.llm_api_temperature
+        self.client = None
+        self._available = False
+
+        if not config.llm_api_enabled:
+            return
+
+        import os
+        api_key = os.environ.get(config.llm_api_key_env, "")
+
+        if self.provider == "anthropic":
+            try:
+                import anthropic
+                self.client = anthropic.Anthropic(api_key=api_key) if api_key else anthropic.Anthropic()
+                self._available = True
+                print(f"[API LLM] Anthropic Claude: {self.model}")
+            except ImportError:
+                print("[API LLM] pip install anthropic to use Claude")
+            except Exception as e:
+                print(f"[API LLM] Anthropic init failed: {e}")
+
+        elif self.provider == "openai":
+            try:
+                import openai
+                self.client = openai.OpenAI(api_key=api_key) if api_key else openai.OpenAI()
+                self._available = True
+                print(f"[API LLM] OpenAI: {self.model}")
+            except ImportError:
+                print("[API LLM] pip install openai to use GPT-4")
+            except Exception as e:
+                print(f"[API LLM] OpenAI init failed: {e}")
+
+        elif self.provider == "ollama":
+            try:
+                import requests
+                base = config.llm_api_base_url or "http://localhost:11434"
+                # Test connection
+                resp = requests.get(f"{base}/api/tags", timeout=2)
+                if resp.status_code == 200:
+                    self._available = True
+                    self._ollama_base = base
+                    print(f"[API LLM] Ollama: {self.model} at {base}")
+                else:
+                    print(f"[API LLM] Ollama not responding at {base}")
+            except Exception as e:
+                print(f"[API LLM] Ollama connection failed: {e}")
+
+    @property
+    def available(self) -> bool:
+        return self._available
+
+    def generate(self, system_prompt: str, user_message: str, max_tokens: int = None) -> str:
+        """Generate a response from the API LLM."""
+        if not self._available:
+            return ""
+
+        max_tokens = max_tokens or self.max_tokens
+
+        try:
+            if self.provider == "anthropic":
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=max_tokens,
+                    system=system_prompt,
+                    messages=[{"role": "user", "content": user_message}],
+                    temperature=self.temperature,
+                )
+                return response.content[0].text.strip()
+
+            elif self.provider == "openai":
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    max_tokens=max_tokens,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_message},
+                    ],
+                    temperature=self.temperature,
+                )
+                return response.choices[0].message.content.strip()
+
+            elif self.provider == "ollama":
+                import requests
+                response = requests.post(
+                    f"{self._ollama_base}/api/generate",
+                    json={
+                        "model": self.model,
+                        "prompt": f"{system_prompt}\n\nUser: {user_message}\nAssistant:",
+                        "stream": False,
+                        "options": {"temperature": self.temperature, "num_predict": max_tokens},
+                    },
+                    timeout=30,
+                )
+                if response.status_code == 200:
+                    return response.json().get("response", "").strip()
+                return ""
+
+        except Exception as e:
+            print(f"[API LLM] Generation failed: {e}")
+            return ""
+
+    def get_embedding(self, text: str) -> Optional[torch.Tensor]:
+        """
+        Get text embedding from API (for language-action grounding).
+        Falls back to None if not available (use local LLM projector instead).
+        """
+        if not self._available:
+            return None
+
+        try:
+            if self.provider == "openai":
+                response = self.client.embeddings.create(
+                    model="text-embedding-3-small",
+                    input=text,
+                )
+                emb = response.data[0].embedding
+                return torch.tensor(emb, dtype=torch.float32)
+            # Anthropic and Ollama don't have standard embedding APIs
+            # Fall back to None (use local projector)
+            return None
+        except Exception:
+            return None
+
+
+# ==============================================================================
 # CROSS-MODAL FUSION
 # ==============================================================================
 
@@ -1325,7 +1511,8 @@ class CrossModalFusion(nn.Module):
     def forward(self, tokens, mask=None):
         x = tokens
         for i, (attn, ffn) in enumerate(zip(self.layers, self.ffns)):
-            x = x + attn(self.norms[i*2](x), self.norms[i*2](x), self.norms[i*2](x), key_padding_mask=mask)[0]
+            normed_x = self.norms[i*2](x)
+            x = x + attn(normed_x, normed_x, normed_x, key_padding_mask=mask)[0]
             x = x + ffn(self.norms[i*2+1](x))
         return x
 
@@ -2429,8 +2616,11 @@ class ResponseGenerator:
         ],
     }
 
-    def __init__(self, llm_encoder: 'LLMEncoder' = None):
+    def __init__(self, llm_encoder: 'LLMEncoder' = None, personality=None, emotional_state=None, api_llm: 'APILLMProvider' = None):
         self.llm = llm_encoder
+        self.personality = personality
+        self.emotional_state = emotional_state
+        self.api_llm = api_llm
         self.use_llm_generation = False
 
         # Check if LLM can generate
@@ -2444,8 +2634,12 @@ class ResponseGenerator:
         """Generate a response for the given situation."""
         import random
 
+        # API LLM can generate good responses even without context
+        if self.api_llm is not None and self.api_llm.available:
+            return self._generate_with_llm(situation, task, context or "")
+
         if self.use_llm_generation and context:
-            # Use LLM for more natural responses
+            # Use local LLM for more natural responses
             return self._generate_with_llm(situation, task, context)
         else:
             # Use templates
@@ -2454,9 +2648,23 @@ class ResponseGenerator:
             return template.format(task=task, reason=reason)
 
     def _generate_with_llm(self, situation: str, task: str, context: str) -> str:
-        """Generate response using the LLM."""
+        """Generate response using the LLM with personality and mood awareness."""
+        # Build personality-aware prompt
+        persona = "You are a helpful companion robot."
+        if self.personality is not None:
+            mood_dict = {}
+            if self.emotional_state is not None:
+                mood_dict = self.emotional_state.get_mood_dict()
+            persona = self.personality.get_system_prompt(mood_dict)
+
+        # Prefer API LLM (Claude/GPT-4) for much better responses
+        if self.api_llm is not None and self.api_llm.available:
+            return self._generate_with_api(persona, situation, task, context)
+
         try:
-            prompt = f"""You are a helpful companion robot. Respond briefly (1 sentence) to this situation:
+            prompt = f"""{persona}
+
+Respond briefly (1-2 sentences) to this situation:
 Situation: {situation}
 Task: {task}
 Context: {context}
@@ -2484,9 +2692,23 @@ Response:"""
 
         except Exception as e:
             # Fallback to template
-            import random
-            templates = self.TEMPLATES.get(situation, self.TEMPLATES["confusion"])
-            return random.choice(templates).format(task=task, reason=str(e))
+            return self._template_response(situation, task)
+
+    def _generate_with_api(self, system_prompt: str, situation: str, task: str, context: str) -> str:
+        """Generate response using API LLM (Claude/GPT-4)."""
+        user_msg = f"Situation: {situation}\nTask: {task}"
+        if context:
+            user_msg += f"\nContext: {context}"
+        user_msg += "\n\nRespond in character, 1-2 sentences."
+
+        response = self.api_llm.generate(system_prompt, user_msg, max_tokens=100)
+        return response if response else self._template_response(situation, task)
+
+    def _template_response(self, situation, task):
+        """Fallback to template."""
+        import random
+        templates = self.TEMPLATES.get(situation, self.TEMPLATES.get("confusion", ["I'm not sure."]))
+        return random.choice(templates).format(task=task, reason="")
 
     def answer_question(self, question: str) -> str:
         """
@@ -2501,12 +2723,28 @@ Response:"""
         Returns:
             The answer string
         """
+        # Build personality-aware prompt
+        persona = "You are a helpful companion robot."
+        if self.personality is not None:
+            mood_dict = {}
+            if self.emotional_state is not None:
+                mood_dict = self.emotional_state.get_mood_dict()
+            persona = self.personality.get_system_prompt(mood_dict)
+
+        # Prefer API LLM (Claude/GPT-4) for much better answers
+        if self.api_llm is not None and self.api_llm.available:
+            user_msg = f"Answer this question briefly and directly.\n\nQuestion: {question}"
+            response = self.api_llm.generate(persona, user_msg, max_tokens=100)
+            if response:
+                return response
+
         if not self.use_llm_generation:
             return "I can't answer questions without my language model."
 
         try:
-            # Format as simple Q&A
-            prompt = f"""You are a helpful companion robot. Answer this question briefly and directly.
+            prompt = f"""{persona}
+
+Answer this question briefly and directly.
 
 Question: {question}
 Answer:"""
@@ -2539,6 +2777,8 @@ Answer:"""
 
     def can_answer(self) -> bool:
         """Check if Q&A is available."""
+        if self.api_llm is not None and self.api_llm.available:
+            return True
         return self.use_llm_generation
 
 
@@ -3594,6 +3834,17 @@ class UnifiedBrain(nn.Module):
             self.language_proj = nn.Linear(config.language_embed_dim, config.d_model)
             print(f"  Fallback: vocab={config.vocab_size}")
 
+        # API LLM (Claude/GPT-4 for high-quality responses)
+        if config.llm_api_enabled:
+            self.api_llm = APILLMProvider(config)
+            if self.api_llm.available:
+                print(f"  API LLM: {config.llm_api_provider} ({config.llm_api_model})")
+            else:
+                self.api_llm = None
+                print("  API LLM: Not available (check API key)")
+        else:
+            self.api_llm = None
+
         # ==========================================
         # TOKENIZER & FUSION
         # ==========================================
@@ -3703,7 +3954,7 @@ class UnifiedBrain(nn.Module):
         # Response generator (talks back)
         if config.enable_response_generation:
             llm_enc = self.language_encoder if hasattr(self.language_encoder, 'llm') else None
-            self.response_generator = ResponseGenerator(llm_enc)
+            self.response_generator = ResponseGenerator(llm_enc, api_llm=getattr(self, 'api_llm', None))
         else:
             self.response_generator = None
             print("  Response generation: Disabled")
@@ -3753,6 +4004,63 @@ class UnifiedBrain(nn.Module):
         else:
             self.autonomous_mind = None
             print("  AutonomousMind: Disabled")
+
+        # ==========================================
+        # VIRTUAL COMPANION - Emotional State & Movement
+        # ==========================================
+        print("\n[VIRTUAL COMPANION]")
+
+        if config.enable_emotional_state and EmotionalState is not None:
+            emo_config = EmotionalConfig(d_model=config.d_model, pad_dim=config.mood_dim,
+                                          decay_factor=config.mood_decay_factor)
+            self.emotional_state = EmotionalState(emo_config)
+            # Set Jack's personality baseline
+            if Personality is not None:
+                self.personality = JACK_PERSONALITY
+                pad_baseline = self.personality.get_pad_baseline()
+                self.emotional_state.set_personality(
+                    openness=self.personality.config.openness,
+                    conscientiousness=self.personality.config.conscientiousness,
+                    extraversion=self.personality.config.extraversion,
+                    agreeableness=self.personality.config.agreeableness,
+                    neuroticism=self.personality.config.neuroticism
+                )
+                print(f"  EmotionalState: PAD model, baseline=P:{pad_baseline['pleasure']:.2f} A:{pad_baseline['arousal']:.2f} D:{pad_baseline['dominance']:.2f}")
+                print(f"  Personality: {self.personality.config.name} loaded")
+            else:
+                self.personality = None
+                print("  EmotionalState: PAD model (no personality)")
+        else:
+            self.emotional_state = None
+            self.personality = None
+            print("  EmotionalState: Disabled")
+
+        # Update response_generator with personality/emotional references
+        # (ResponseGenerator is created before companion block, so patch refs now)
+        if self.response_generator is not None:
+            self.response_generator.personality = getattr(self, 'personality', None)
+            self.response_generator.emotional_state = getattr(self, 'emotional_state', None)
+            self.response_generator.api_llm = getattr(self, 'api_llm', None)
+
+        if config.enable_movement_mood_coupling and MovementMoodCoupling is not None:
+            mood_config = MovementMoodConfig(action_dim=config.action_dim,
+                                              max_speed_mod=config.max_speed_modulation,
+                                              max_style_bias=config.max_style_bias)
+            self.movement_mood = MovementMoodCoupling(mood_config)
+            print(f"  MovementMoodCoupling: speed±{config.max_speed_modulation*100:.0f}%, style±{config.max_style_bias*100:.0f}%")
+        else:
+            self.movement_mood = None
+            print("  MovementMoodCoupling: Disabled")
+
+        if config.enable_inner_monologue and InnerMonologue is not None:
+            mono_config = MonologueConfig(cooldown_seconds=config.monologue_cooldown)
+            llm_enc = self.language_encoder if hasattr(self, 'language_encoder') and hasattr(self.language_encoder, 'llm') else None
+            self.inner_monologue = InnerMonologue(llm_encoder=llm_enc, config=mono_config)
+            self.inner_monologue._api_llm = getattr(self, 'api_llm', None)
+            print(f"  InnerMonologue: cooldown={config.monologue_cooldown}s")
+        else:
+            self.inner_monologue = None
+            print("  InnerMonologue: Disabled")
 
         # CLS token
         self.cls_token = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)
@@ -3840,11 +4148,35 @@ class UnifiedBrain(nn.Module):
         if language is not None:
             if self.language_proj is not None:
                 # Fallback mode: token IDs -> LSTM -> projection
+                # Convert strings to token IDs if needed
+                if isinstance(language, str):
+                    tokens = [ord(c) % self.config.vocab_size for c in language[:20]]
+                    language = torch.tensor([tokens], dtype=torch.long, device=device)
+                elif isinstance(language, list) and len(language) > 0 and isinstance(language[0], str):
+                    batch_tokens = []
+                    for text in language:
+                        tokens = [ord(c) % self.config.vocab_size for c in text[:20]]
+                        batch_tokens.append(tokens)
+                    max_len = max(len(t) for t in batch_tokens)
+                    batch_tokens = [t + [0] * (max_len - len(t)) for t in batch_tokens]
+                    language = torch.tensor(batch_tokens, dtype=torch.long, device=device)
                 lang_emb = self.language_proj(self.language_encoder(language)).unsqueeze(1)
             else:
                 # LLM mode: LLMEncoder handles projection internally
                 lang_emb = self.language_encoder(language).unsqueeze(1)
+            # Expand to batch size if needed
+            if lang_emb.shape[0] == 1 and B > 1:
+                lang_emb = lang_emb.expand(B, -1, -1)
             modality_tokens.append(lang_emb)
+
+        # Mood embedding (if emotional state enabled)
+        if hasattr(self, 'emotional_state') and self.emotional_state is not None:
+            mood_emb = self.emotional_state.get_mood_embedding()
+            if mood_emb.dim() == 1:
+                mood_emb = mood_emb.unsqueeze(0).unsqueeze(0).expand(B, 1, -1)
+            elif mood_emb.dim() == 2:
+                mood_emb = mood_emb.unsqueeze(1).expand(B, 1, -1)
+            modality_tokens.append(mood_emb)
 
         # CLS token
         modality_tokens.append(self.cls_token.expand(B, -1, -1))
@@ -4155,70 +4487,79 @@ class UnifiedBrain(nn.Module):
         language: str = None,
         vision: torch.Tensor = None,
         current_time: float = 0.0,
+        touch: torch.Tensor = None,
+        audio: torch.Tensor = None,
     ) -> Dict[str, torch.Tensor]:
         """
-        Action generation using Dual System Architecture.
+        Action generation using Dual System Architecture with ALL senses.
 
-        System 2 (VLM, 9Hz): Scene understanding, runs occasionally
-        System 1 (Action Expert, 50Hz): Fast action generation
-
-        This mimics how GR00T N1 and Figure Helix operate:
-        - System 2 provides context asynchronously
-        - System 1 generates actions at high frequency
-        - Actions are chunked for smooth execution
+        System 2 (9Hz): Full forward pass with vision + audio + touch + language
+        System 1 (50Hz): Fast action from cached S2 features
 
         Args:
-            state: Robot state [B, obs_dim]
-            language: Language command
-            vision: Vision input
-            current_time: Current simulation/real time in seconds
+            state: Proprioception [B, obs_dim]
+            language: Text command (string or token IDs)
+            vision: Eye camera [B, 3, H, W]
+            touch: Contact forces [B, 10]
+            audio: Microphone waveform [B, samples] at 16kHz
+            current_time: Simulation time in seconds
 
         Returns:
-            Dict with:
-            - action: Single action for current timestep
-            - action_chunk: Full action chunk (for planning ahead)
-            - system2_ran: Whether System 2 was updated
+            Dict with action, action_chunk, system2_ran, task_done
         """
         if self.dual_system is None:
-            # Fallback to regular generation
             actions = self.generate_actions_flow_matching(state, language, vision)
+            # Also get task_done from a full forward pass with ALL senses
+            output = self.forward(state, language=language, vision=vision, touch=touch, audio=audio)
             return {
                 'action': actions[:, 0, :],
                 'action_chunk': actions,
                 'system2_ran': True,
+                'task_done': output.get('task_done', torch.tensor([0.0])),
+                'full_output': output,
             }
 
         system2_ran = False
 
-        # Check if System 2 (VLM) should run
+        # System 2 runs at ~9Hz: full forward pass with ALL senses
         if self.dual_system.should_run_system2(current_time):
-            # Full forward pass with VLM
-            output = self.forward(state, language=language, vision=vision)
+            output = self.forward(state, language=language, vision=vision, touch=touch, audio=audio)
             vlm_features = output['hidden_states']
             self.dual_system.update_system2_features(vlm_features, current_time)
+            # Cache task_done from System 2
+            self._cached_task_done = output.get('task_done', torch.tensor([0.0]))
             system2_ran = True
 
-        # System 1: Generate actions using cached VLM features
+        # System 1: fast actions from cached features
         if self.dual_system.cached_vlm_features is None:
-            # No VLM features yet, do full pass
             actions = self.generate_actions_flow_matching(state, language, vision)
         else:
             # Use cached features for fast action generation
-            B = state.shape[0]
-            device = state.device
-            config = self.config
+            if self.action_expert is not None:
+                B = state.shape[0]
+                device = state.device
+                config = self.config
 
-            # Flow matching with cached features
-            action_shape = (B, config.action_dim * config.action_chunk_size)
-            x = torch.randn(action_shape, device=device)
+                # Flow matching with cached features
+                action_shape = (B, config.action_dim * config.action_chunk_size)
+                x = torch.randn(action_shape, device=device)
 
-            dt = 1.0 / config.flow_matching_steps
-            for step in range(config.flow_matching_steps):
-                t = torch.full((B,), step * dt, device=device)
-                velocity = self.action_expert(x, self.dual_system.cached_vlm_features, t)
-                x = x + velocity * dt
+                # Ensure cached features match batch size
+                cached = self.dual_system.cached_vlm_features
+                if cached.shape[0] != B:
+                    cached = cached[:1].expand(B, -1, -1)
 
-            actions = x.view(B, config.action_chunk_size, config.action_dim)
+                dt = 1.0 / config.flow_matching_steps
+                for step in range(config.flow_matching_steps):
+                    t = torch.full((B,), step * dt, device=device)
+                    velocity = self.action_expert(x, cached, t)
+                    x = x + velocity * dt
+
+                actions = x.view(B, config.action_chunk_size, config.action_dim)
+            else:
+                # Fallback: regular action head
+                output = self.forward(state, language=language, vision=vision)
+                actions = output['actions']
 
         # Get single action from chunk
         action = self.dual_system.get_action_from_chunk(actions)
@@ -4227,7 +4568,43 @@ class UnifiedBrain(nn.Module):
             'action': action,
             'action_chunk': actions,
             'system2_ran': system2_ran,
+            'task_done': getattr(self, '_cached_task_done', torch.tensor([0.0])),
         }
+
+    def act_with_mood(
+        self,
+        state: torch.Tensor,
+        language: str = None,
+        vision: torch.Tensor = None,
+        touch: torch.Tensor = None,
+        audio: torch.Tensor = None,
+        current_time: float = 0.0,
+        is_idle: bool = False,
+    ) -> Dict[str, torch.Tensor]:
+        """
+        Action generation with emotional modulation and FULL sensory input.
+
+        All of Jack's senses:
+        - state: proprioception (joint angles, velocities, orientation)
+        - vision: egocentric eye camera [1, 3, 224, 224]
+        - touch: contact forces on body [1, 10]
+        - audio: raw microphone waveform [1, samples] at 16kHz
+        - language: text command or subtask goal (string)
+        - mood: emotional state (injected automatically from self.emotional_state)
+        """
+        result = self.act_dual_system(state, language, vision, current_time,
+                                       touch=touch, audio=audio)
+
+        # Apply mood modulation
+        if self.movement_mood is not None and self.emotional_state is not None:
+            pad = self.emotional_state.pad_vector.detach()
+            result['action'] = self.movement_mood.modulate_action(
+                result['action'], pad, is_idle=is_idle
+            )
+            result['mood'] = self.emotional_state.get_mood_dict()
+            result['mood_speed'] = self.movement_mood.get_speed_multiplier(pad)
+
+        return result
 
     # ==========================================
     # COMPANION ROBOT INTERACTION (NEW)
@@ -4302,6 +4679,11 @@ class UnifiedBrain(nn.Module):
                 response = self.response_generator.generate("task_started", task=command, context=context)
             else:
                 response = self.response_generator.generate("task_progress", task=command, context=context)
+
+        # Update emotional state based on interaction
+        if self.emotional_state is not None:
+            self.emotional_state.update(event_type=EventType.USER_CHAT, reward=0.0,
+                                         user_interaction=True, dt=0.1)
 
         # Speak if requested
         if speak and self.tts is not None and response:
@@ -4627,19 +5009,21 @@ class UnifiedBrain(nn.Module):
         if self.object_detector is None:
             return {"found": False, "error": "Object detection not enabled"}
 
+        device = next(self.parameters()).device
+
         if vision_input is None:
             # Use dummy vision for testing
-            vision_input = torch.randn(1, 3, 224, 224)
+            vision_input = torch.randn(1, 3, 224, 224, device=device)
 
         # Get vision features
         if self.vision_encoder is not None:
             with torch.no_grad():
-                vision_features = self.vision_encoder(vision_input)
+                vision_features = self.vision_encoder(vision_input.to(device))
                 if isinstance(vision_features, dict):
                     vision_features = vision_features.get("fused", vision_features.get("rgb"))
         else:
             # Mock vision features
-            vision_features = torch.randn(1, 49, self.config.d_model)
+            vision_features = torch.randn(1, 49, self.config.d_model, device=device)
 
         # Find the object
         result = self.object_detector.find_object(vision_features, object_name)
@@ -4666,31 +5050,33 @@ class UnifiedBrain(nn.Module):
         if self.navigation_planner is None:
             return {"error": "Navigation not enabled"}
 
+        device = next(self.parameters()).device
+
         if current_position is None:
-            current_position = torch.zeros(3)  # [x, y, theta]
+            current_position = torch.zeros(3, device=device)
+        elif not isinstance(current_position, torch.Tensor):
+            current_position = torch.tensor(current_position, dtype=torch.float32, device=device)
+        else:
+            current_position = current_position.to(device)
 
         # First, find the target if it's an object
         object_result = self.find_object(target)
 
         if object_result.get("found", False):
-            # Set navigation goal to object position
-            goal_embedding = torch.tensor(object_result["position"][:2])  # x, y
+            goal_embedding = torch.tensor(object_result["position"][:2], device=device)
             goal_embedding = F.pad(goal_embedding, (0, self.config.d_model - 2))
         else:
-            # Use semantic location embedding
-            # Known locations have fixed positions
             known_locations = {
-                "kitchen": torch.tensor([3.0, 0.0]),
-                "table": torch.tensor([1.5, 0.0]),
-                "counter": torch.tensor([3.0, 0.0]),
-                "door": torch.tensor([0.0, 2.0]),
-                "start": torch.tensor([0.0, 0.0]),
+                "kitchen": [3.0, 0.0],
+                "table": [1.5, 0.0],
+                "counter": [3.0, 0.0],
+                "door": [0.0, 2.0],
+                "start": [0.0, 0.0],
             }
             if target.lower() in known_locations:
-                goal_pos = known_locations[target.lower()]
+                goal_pos = torch.tensor(known_locations[target.lower()], device=device)
             else:
-                # Default: move forward
-                goal_pos = torch.tensor([2.0, 0.0])
+                goal_pos = torch.tensor([2.0, 0.0], device=device)
 
             goal_embedding = F.pad(goal_pos, (0, self.config.d_model - 2))
 
@@ -4899,17 +5285,18 @@ class UnifiedBrain(nn.Module):
             "response": "I'll make coffee for you. Finding the cup first.",
         }
 
-    def chat(self, message: str, speak: bool = True) -> str:
+    def chat(self, message: str, state: torch.Tensor = None, speak: bool = True) -> str:
         """
         Have a conversation with the robot.
 
         Determines if the message is:
         1. A question (answered with ask())
-        2. A command (executed with interact())
+        2. A command (executed via neural pipeline interact(), with keyword fallback)
         3. General chat (responded with response_generator)
 
         Args:
             message: User's message
+            state: Current robot state tensor (enables neural pipeline for commands)
             speak: Whether to speak response
 
         Returns:
@@ -4932,11 +5319,16 @@ class UnifiedBrain(nn.Module):
         is_command = any(message_lower.startswith(w) for w in action_words)
 
         if is_command:
-            # Parse command for object/location targets
-            result = self._execute_command(message_lower)
-            if speak and result.get("response"):
-                self.say(result["response"])
-            return result.get("response", f"I'll try to {message_lower}.")
+            if state is not None:
+                # Neural pipeline: language -> transformer -> actions
+                result = self.interact(state, message, speak=speak)
+                return result.get('response', f"I'll try to {message_lower}.")
+            else:
+                # Fallback: keyword matching (when no state available)
+                result = self._execute_command(message_lower)
+                if speak and result.get("response"):
+                    self.say(result["response"])
+                return result.get("response", f"I'll try to {message_lower}.")
 
         # General chat
         if self.response_generator is not None and self.response_generator.can_answer():

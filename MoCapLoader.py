@@ -55,31 +55,31 @@ class MoCapConfig:
 
     # Joint limits (MuJoCo Humanoid-v5)
     joint_limits: Dict[str, Tuple[float, float]] = field(default_factory=lambda: {
-        'abdomen_y': (-0.4, 0.4),
-        'abdomen_z': (-0.4, 0.4),
-        'abdomen_x': (-0.4, 0.4),
-        'right_hip_x': (-0.4, 0.4),
-        'right_hip_z': (-0.4, 0.4),
-        'right_hip_y': (-0.4, 0.4),
-        'right_knee': (-0.4, 0.4),
-        'left_hip_x': (-0.4, 0.4),
-        'left_hip_z': (-0.4, 0.4),
-        'left_hip_y': (-0.4, 0.4),
-        'left_knee': (-0.4, 0.4),
-        'right_shoulder1': (-0.4, 0.4),
-        'right_shoulder2': (-0.4, 0.4),
-        'right_elbow': (-0.4, 0.4),
-        'left_shoulder1': (-0.4, 0.4),
-        'left_shoulder2': (-0.4, 0.4),
-        'left_elbow': (-0.4, 0.4),
+        'abdomen_y': (-1.31, 0.52),    # -75 to 30 degrees
+        'abdomen_z': (-1.31, 0.52),    # -75 to 30 degrees
+        'abdomen_x': (-0.61, 0.61),    # -35 to 35 degrees
+        'right_hip_x': (-0.44, 0.44),  # -25 to 25 degrees
+        'right_hip_z': (-1.05, 0.26),  # -60 to 15 degrees
+        'right_hip_y': (-2.09, 0.35),  # -120 to 20 degrees
+        'right_knee': (-2.62, -0.03),  # -150 to -2 degrees
+        'left_hip_x': (-0.44, 0.44),   # -25 to 25 degrees
+        'left_hip_z': (-1.05, 0.26),   # -60 to 15 degrees
+        'left_hip_y': (-2.09, 0.35),   # -120 to 20 degrees
+        'left_knee': (-2.62, -0.03),   # -150 to -2 degrees
+        'right_shoulder1': (-1.57, 1.57),  # -90 to 90 degrees
+        'right_shoulder2': (-1.57, 1.57),  # -90 to 90 degrees
+        'right_elbow': (-2.62, 0.0),   # -150 to 0 degrees
+        'left_shoulder1': (-1.57, 1.57),   # -90 to 90 degrees
+        'left_shoulder2': (-1.57, 1.57),   # -90 to 90 degrees
+        'left_elbow': (-2.62, 0.0),    # -150 to 0 degrees
     })
 
     # Velocity estimation
     velocity_smoothing: int = 3  # Window for velocity smoothing
 
     # Action computation (PD control)
-    kp: float = 100.0  # Position gain
-    kd: float = 10.0   # Velocity gain
+    kp: float = 10.0  # Position gain
+    kd: float = 1.0   # Velocity gain
 
 
 # ==============================================================================
@@ -315,9 +315,9 @@ class SkeletonRetargeter:
     # Format: {cmu_joint: [(mujoco_actuator, rotation_axis, scale), ...]}
     JOINT_MAPPING = {
         # Torso (spine chain)
-        'Spine': [('abdomen_y', 'y', 0.5), ('abdomen_z', 'z', 0.5)],
-        'Spine1': [('abdomen_y', 'y', 0.5), ('abdomen_x', 'x', 0.5)],
-        'Spine2': [('abdomen_x', 'x', 0.5)],
+        'Spine':  [('abdomen_y', 'y', 0.33), ('abdomen_z', 'z', 0.5)],
+        'Spine1': [('abdomen_y', 'y', 0.33), ('abdomen_x', 'x', 0.5)],
+        'Spine2': [('abdomen_y', 'y', 0.34), ('abdomen_x', 'x', 0.5)],
 
         # Right leg
         'RightUpLeg': [('right_hip_x', 'x', 1.0), ('right_hip_z', 'z', 1.0), ('right_hip_y', 'y', 1.0)],
@@ -410,10 +410,7 @@ class SkeletonRetargeter:
                 actuator_values[mujoco_actuator] += rot_rad
                 actuator_counts[mujoco_actuator] += 1
 
-        # Average accumulated values
-        for name in self.MUJOCO_ACTUATORS:
-            if actuator_counts[name] > 1:
-                actuator_values[name] /= actuator_counts[name]
+        # Scale factors already distribute contributions - no averaging needed
 
         # Build output array in correct order
         output = np.zeros(17)
@@ -640,12 +637,24 @@ class MoCapDataset(Dataset):
                     # Retarget to MuJoCo
                     positions = self.retargeter.retarget_sequence(bvh)
 
-                    # Compute velocities
-                    dt = 1.0 / self.config.fps_target
-                    velocities = self.velocity_estimator.compute_velocities(positions, dt)
+                    # Compute velocities using actual dt from BVH and frame skip
+                    source_fps = 1.0 / bvh.frame_time if bvh.frame_time > 0 else 120
+                    frame_skip = max(1, int(source_fps / self.config.fps_target))
+                    actual_dt = bvh.frame_time * frame_skip
+                    velocities = self.velocity_estimator.compute_velocities(positions, actual_dt)
 
-                    # Compute actions (target positions)
-                    actions = self.action_computer.compute_actions(positions)
+                    # Compute actions using PD control with previous frame as current state
+                    actions = np.zeros_like(positions)
+                    for t in range(len(positions)):
+                        if t == 0:
+                            # First frame: no previous state, use position targets directly
+                            actions[t] = positions[t]
+                        else:
+                            actions[t] = self.action_computer.compute_actions(
+                                target_positions=positions[t],
+                                current_positions=positions[t-1],
+                                current_velocities=velocities[t-1] if velocities is not None else None
+                            )
 
                     # Cache
                     np.savez(cache_file,
@@ -692,7 +701,9 @@ class MoCapDataset(Dataset):
         if len(self.index) == 0:
             # Return synthetic data if no real data
             obs, actions = self._get_synthetic_sample()
-            return obs, actions, "move naturally"
+            synthetic_labels = ["walk forward", "run forward", "stand still", "move naturally", "turn left", "turn right"]
+            label = synthetic_labels[np.random.randint(len(synthetic_labels))]
+            return obs, actions, label
 
         seq_idx, start_frame = self.index[idx % len(self.index)]
         seq = self.sequences[seq_idx]
@@ -736,14 +747,20 @@ class MoCapDataset(Dataset):
 
     def _get_synthetic_sample(self) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate synthetic sample when no real data available"""
-        # Smooth sinusoidal motion
-        t = np.linspace(0, 2*np.pi, self.context_length + self.action_chunk_size)
+        # Random amplitude between 0.1 and 0.4
+        amplitude = np.random.uniform(0.1, 0.4)
+        # Random frequency multiplier between 0.5 and 2.0
+        freq_mult = np.random.uniform(0.5, 2.0)
+        # Random phase offsets per joint
+        phase_offsets = np.random.uniform(0, 2*np.pi, size=self.action_dim)
+
+        # Smooth sinusoidal motion with randomized parameters
+        t = np.linspace(0, 2*np.pi * freq_mult, self.context_length + self.action_chunk_size)
 
         # Generate joint movements
         base = np.zeros((len(t), self.action_dim))
         for j in range(self.action_dim):
-            phase = j * 0.3
-            base[:, j] = 0.2 * np.sin(t + phase)
+            base[:, j] = amplitude * np.sin(t + phase_offsets[j])
 
         # Split into obs and actions
         positions = base[:self.context_length]
@@ -856,9 +873,9 @@ class MoCapDownloader:
         # Extract subject_clip from filename
         # e.g., "subjects_07_07_01.bvh" -> "07_01"
         import re
-        match = re.search(r'(\d+)_(\d+)', filename)
-        if match:
-            key = f"{match.group(1)}_{match.group(2)}"
+        digits = re.findall(r'(\d+)', filename)
+        if len(digits) >= 2:
+            key = f"{digits[-2]}_{digits[-1]}"
             return cls.MOTION_LABELS.get(key, cls.MOTION_LABELS["default"])
         return cls.MOTION_LABELS["default"]
 

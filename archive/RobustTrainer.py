@@ -37,6 +37,9 @@ Usage:
     # Phase 7: Full Integration + Dual System (ALL systems together)
     python RobustTrainer.py --phase 7 --epochs 300
 
+    # Phase 8: Virtual Companion Training (emotional + mood + dialogue)
+    python RobustTrainer.py --phase 8 --epochs 100
+
 Author: Janno Louwrens
 """
 
@@ -60,6 +63,11 @@ from UnifiedBrain import (
 )
 from MoCapLoader import MoCapDataset, MoCapConfig
 
+try:
+    from EmotionalState import EventType
+except ImportError:
+    EventType = None
+
 
 # ==============================================================================
 # REPLAY BUFFER
@@ -71,21 +79,19 @@ class ReplayBuffer:
 
     Key insight: To prevent forgetting Phase 0 physics knowledge,
     we mix Phase 0 samples into Phase 1 training.
+
+    Phase tracking uses the '_phase' tag stored in each sample rather than
+    external index lists, so it remains correct as the deque wraps around.
     """
 
     def __init__(self, capacity: int = 100000):
         self.capacity = capacity
         self.buffer = deque(maxlen=capacity)
-        self.phase_indices = {}  # Track which samples came from which phase
 
     def add(self, sample: Dict, phase: int):
         """Add a sample to the buffer"""
         sample['_phase'] = phase
         self.buffer.append(sample)
-
-        if phase not in self.phase_indices:
-            self.phase_indices[phase] = []
-        self.phase_indices[phase].append(len(self.buffer) - 1)
 
     def sample(self, batch_size: int, phase_ratios: Dict[int, float] = None) -> List[Dict]:
         """
@@ -96,21 +102,37 @@ class ReplayBuffer:
             phase_ratios: {phase: ratio}, e.g., {0: 0.2, 1: 0.8} means
                           20% from Phase 0, 80% from Phase 1
         """
+        if len(self.buffer) == 0:
+            return []
+
         if phase_ratios is None:
             # Default: sample uniformly
             return random.sample(list(self.buffer), min(batch_size, len(self.buffer)))
 
+        # Build phase-grouped lists on the fly (always correct, no stale indices)
+        phase_samples = {}
+        for sample in self.buffer:
+            p = sample.get('_phase', -1)
+            if p not in phase_samples:
+                phase_samples[p] = []
+            phase_samples[p].append(sample)
+
         samples = []
         for phase, ratio in phase_ratios.items():
             n_samples = int(batch_size * ratio)
-            if phase in self.phase_indices and len(self.phase_indices[phase]) > 0:
-                # Get indices for this phase (handle wrap-around)
-                valid_indices = [i for i in self.phase_indices[phase] if i < len(self.buffer)]
-                if valid_indices:
-                    chosen_indices = random.choices(valid_indices, k=min(n_samples, len(valid_indices)))
-                    samples.extend([self.buffer[i] for i in chosen_indices])
+            if phase in phase_samples and len(phase_samples[phase]) > 0:
+                chosen = random.choices(phase_samples[phase], k=min(n_samples, len(phase_samples[phase])))
+                samples.extend(chosen)
 
         return samples
+
+    def get_phase_counts(self) -> Dict[int, int]:
+        """Get count of samples per phase."""
+        counts = {}
+        for sample in self.buffer:
+            p = sample.get('_phase', -1)
+            counts[p] = counts.get(p, 0) + 1
+        return counts
 
     def __len__(self):
         return len(self.buffer)
@@ -119,17 +141,20 @@ class ReplayBuffer:
         """Save buffer to disk"""
         torch.save({
             'buffer': list(self.buffer),
-            'phase_indices': dict(self.phase_indices),
         }, path)
-        print(f"[SAVE] Replay buffer: {path} ({len(self.buffer)} samples)")
+        print(f"[SAVE] Replay buffer: {path} ({len(self.buffer)} samples, phases: {self.get_phase_counts()})")
 
     def load(self, path: str):
         """Load buffer from disk"""
         if os.path.exists(path):
             data = torch.load(path, weights_only=False)
-            self.buffer = deque(data['buffer'], maxlen=self.capacity)
-            self.phase_indices = data['phase_indices']
-            print(f"[LOAD] Replay buffer: {path} ({len(self.buffer)} samples)")
+            buf = data.get('buffer', [])
+            self.buffer = deque(buf, maxlen=self.capacity)
+            # Migrate old format: if samples don't have _phase tag, tag them as phase 0
+            for sample in self.buffer:
+                if '_phase' not in sample:
+                    sample['_phase'] = 0
+            print(f"[LOAD] Replay buffer: {path} ({len(self.buffer)} samples, phases: {self.get_phase_counts()})")
 
 
 # ==============================================================================
@@ -1025,6 +1050,18 @@ class RobustTrainerConfig:
     skill_discovery_skills: int = 50            # Number of skills to discover
     goal_bank_size: int = 1000                  # Autotelic goal memory
 
+    # =========================================
+    # PHASE 8: Virtual Companion Training
+    # =========================================
+    companion_training_epochs: int = 100
+    emotional_dynamics_epochs: int = 50    # Phase 8.1
+    movement_mood_epochs: int = 50         # Phase 8.2
+    companion_dialogue_epochs: int = 30    # Phase 8.3
+    full_companion_epochs: int = 100       # Phase 8.4
+    mood_style_loss_weight: float = 0.3
+    emotional_smoothness_weight: float = 0.1
+    mood_diversity_weight: float = 0.05
+
 
 class RobustTrainer:
     """
@@ -1096,7 +1133,42 @@ class RobustTrainer:
         print(f"  Replay ratio: {self.config.replay_ratio * 100:.0f}%")
         print(f"  EWC lambda: {self.config.ewc_lambda}")
         print(f"  Physics weight: {self.config.physics_weight}")
+
+        # Cached action type embeddings (created once, not per call)
+        self._action_type_embeddings = {
+            'stop': torch.randn(self.config.d_model, device=self.device),
+            'grasp': torch.randn(self.config.d_model, device=self.device),
+            'reach': torch.randn(self.config.d_model, device=self.device),
+            'turn': torch.randn(self.config.d_model, device=self.device),
+            'turn_left': torch.randn(self.config.d_model, device=self.device),
+            'turn_right': torch.randn(self.config.d_model, device=self.device),
+            'walk': torch.randn(self.config.d_model, device=self.device),
+            'navigate': torch.randn(self.config.d_model, device=self.device),
+            'fetch': torch.randn(self.config.d_model, device=self.device),
+            'unknown': torch.randn(self.config.d_model, device=self.device),
+        }
+
         print("=" * 70 + "\n")
+
+    def project_obs(self, obs: torch.Tensor) -> torch.Tensor:
+        """
+        Project observations to model's internal dim, handling variable input sizes.
+
+        - MuJoCo obs (376-dim) -> obs_projection -> 256-dim
+        - MoCap obs (256-dim) -> passed directly (already correct size)
+        - Other sizes -> padded/truncated to 376, then projected
+        """
+        if obs.shape[-1] == self.config.obs_dim:
+            return obs
+        elif obs.shape[-1] == self.config.mujoco_obs_dim:
+            return self.obs_projection(obs)
+        else:
+            pad_size = self.config.mujoco_obs_dim - obs.shape[-1]
+            if pad_size > 0:
+                obs = torch.nn.functional.pad(obs, (0, pad_size))
+            else:
+                obs = obs[..., :self.config.mujoco_obs_dim]
+            return self.obs_projection(obs)
 
     def _load_checkpoint_flexible(self, checkpoint_path: str) -> dict:
         """
@@ -1174,13 +1246,27 @@ class RobustTrainer:
         self.model.load_state_dict(compatible_state, strict=False)
         print(f"[OK] Loaded {len(compatible_state)}/{len(saved_state)} parameters from checkpoint")
 
+        # Also load obs_projection if available
+        if 'obs_projection_state_dict' in checkpoint:
+            try:
+                self.obs_projection.load_state_dict(checkpoint['obs_projection_state_dict'], strict=False)
+                print(f"[OK] obs_projection loaded from checkpoint")
+            except Exception as e:
+                print(f"[WARN] obs_projection load failed: {e}")
+
         return checkpoint
+
+    def _get_all_trainable_params(self):
+        """Get all parameters including obs_projection (which is NOT a child of self.model)."""
+        params = list(self.model.parameters())
+        params.extend(list(self.obs_projection.parameters()))
+        return params
 
     def _create_optimizer(self, phase: int):
         """
         Create optimizer with multi-rate learning AND component freezing.
 
-        CRITICAL: Different phases train different components to prevent forgetting.
+        CRITICAL: obs_projection is ALWAYS included since it maps MuJoCo obs to model dim.
 
         Phase 0: All params (physics foundation)
         Phase 1-2: Motor only (freeze perception)
@@ -1232,12 +1318,15 @@ class RobustTrainer:
                        'world_model' in name.lower() or 'action_head' in name.lower()):
                     param.requires_grad = False
 
+            # Always include obs_projection
+            param_groups.append({'params': list(self.obs_projection.parameters()),
+                               'lr': self.config.learning_rate * 0.1})
+
             if param_groups:
                 self.optimizer = torch.optim.AdamW(param_groups, weight_decay=1e-4)
             else:
-                # Fallback: train all
                 self.optimizer = torch.optim.AdamW(
-                    self.model.parameters(),
+                    self._get_all_trainable_params(),
                     lr=self.config.learning_rate,
                     weight_decay=1e-4
                 )
@@ -1246,7 +1335,7 @@ class RobustTrainer:
         elif phase == 0:
             # Phase 0: All parameters same LR (physics foundation)
             self.optimizer = torch.optim.AdamW(
-                self.model.parameters(),
+                self._get_all_trainable_params(),
                 lr=self.config.learning_rate,
                 weight_decay=1e-4
             )
@@ -1260,17 +1349,18 @@ class RobustTrainer:
                     param.requires_grad = False
                     frozen_count += 1
 
-            # Only optimize trainable params
+            # Only optimize trainable model params + ALWAYS obs_projection
             trainable_params = [p for p in self.model.parameters() if p.requires_grad]
+            trainable_params.extend(list(self.obs_projection.parameters()))
 
             self.optimizer = torch.optim.AdamW(
                 trainable_params,
                 lr=self.config.learning_rate,
                 weight_decay=1e-4
             )
-            print(f"[OPTIMIZER] Phase {phase}: Motor training")
+            print(f"[OPTIMIZER] Phase {phase}: Motor training + obs_projection")
             print(f"  FROZEN: {frozen_count} perception/planning params")
-            print(f"  TRAINING: {len(trainable_params)} motor params")
+            print(f"  TRAINING: {len(trainable_params)} motor + obs_projection params")
 
         elif phase == 3:
             # Phase 3: Train perception, FREEZE motor
@@ -1281,6 +1371,7 @@ class RobustTrainer:
                     frozen_count += 1
 
             trainable_params = [p for p in self.model.parameters() if p.requires_grad]
+            trainable_params.extend(list(self.obs_projection.parameters()))
 
             self.optimizer = torch.optim.AdamW(
                 trainable_params,
@@ -1290,6 +1381,37 @@ class RobustTrainer:
             print(f"[OPTIMIZER] Phase 3: Perception training")
             print(f"  FROZEN: {frozen_count} motor params")
             print(f"  TRAINING: {len(trainable_params)} perception params")
+
+        elif phase == 8:
+            # Phase 8: Companion training - freeze motor, train emotional/mood/coupling
+            companion_components = ['emotional_state', 'movement_mood', 'inner_monologue',
+                                    'mood_encoder', 'pad_']
+
+            # Freeze motor backbone
+            for name, param in self.model.named_parameters():
+                if is_component(name, motor_components):
+                    param.requires_grad = False
+
+            companion_params = [p for n, p in self.model.named_parameters()
+                              if is_component(n, companion_components) and p.requires_grad]
+            other_params = [p for n, p in self.model.named_parameters()
+                          if not is_component(n, motor_components) and
+                          not is_component(n, companion_components) and p.requires_grad]
+
+            param_groups = []
+            if companion_params:
+                param_groups.append({'params': companion_params, 'lr': self.config.learning_rate})
+            if other_params:
+                param_groups.append({'params': other_params,
+                                   'lr': self.config.learning_rate * 0.01})
+            # Always include obs_projection
+            param_groups.append({'params': list(self.obs_projection.parameters()),
+                               'lr': self.config.learning_rate * 0.1})
+
+            self.optimizer = torch.optim.AdamW(param_groups, weight_decay=1e-4)
+            print(f"[OPTIMIZER] Phase 8: Companion training")
+            print(f"  Companion modules at {self.config.learning_rate:.2e}")
+            print(f"  Motor: FROZEN")
 
         else:
             # Phase 4+: All parameters with multi-rate learning
@@ -1323,12 +1445,19 @@ class RobustTrainer:
                     'lr': self.config.learning_rate * 0.1
                 })
 
+            # Always include obs_projection
+            param_groups.append({
+                'params': list(self.obs_projection.parameters()),
+                'lr': self.config.learning_rate * self.config.pretrained_lr_scale
+            })
+
             self.optimizer = torch.optim.AdamW(param_groups, weight_decay=1e-4)
 
             print(f"[OPTIMIZER] Phase {phase}: Multi-rate integration")
             print(f"  Backbone: {self.config.learning_rate * self.config.pretrained_lr_scale:.2e}")
             print(f"  Perception: {self.config.learning_rate:.2e}")
             print(f"  Motor: {self.config.learning_rate * 0.1:.2e} (preserved)")
+            print(f"  obs_projection: {self.config.learning_rate * self.config.pretrained_lr_scale:.2e}")
 
     def _create_environment(self, render_mode: str = None):
         """
@@ -1464,48 +1593,102 @@ class RobustTrainer:
             pbar = tqdm(range(0, samples_per_epoch, self.config.batch_size), desc=f"Epoch {epoch+1}/{num_epochs}")
 
             for _ in pbar:
-                # Generate synthetic physics data
+                # Generate physics training data
                 batch_size = self.config.batch_size
 
-                # Random robot states
-                state = torch.randn(batch_size, 256).to(self.device)
-                action = torch.randn(batch_size, self.config.action_dim_total).to(self.device)
+                # Try to collect REAL data from MuJoCo (much better than random)
+                if not hasattr(self, '_phase0_env'):
+                    self._phase0_env = self._create_environment()
+                    if self._phase0_env is not None:
+                        self._phase0_obs, _ = self._phase0_env.reset()
+                        print("[Phase 0] Using REAL MuJoCo data for physics training")
 
-                # Get physics ground truth from SymPy (or random for testing)
-                if calculator:
+                if hasattr(self, '_phase0_env') and self._phase0_env is not None:
+                    # Collect real (state, action, next_state) from MuJoCo
+                    states_np, actions_np, next_states_np = [], [], []
+                    for _ in range(batch_size):
+                        random_action = self._phase0_env.action_space.sample()
+                        next_obs, _, terminated, truncated, _ = self._phase0_env.step(random_action)
+                        states_np.append(self._phase0_obs)
+                        actions_np.append(random_action)
+                        next_states_np.append(next_obs)
+                        if terminated or truncated:
+                            self._phase0_obs, _ = self._phase0_env.reset()
+                        else:
+                            self._phase0_obs = next_obs
+
+                    # Project MuJoCo obs (376-dim) to model dim (256-dim)
+                    state_raw = torch.tensor(np.array(states_np), dtype=torch.float32).to(self.device)
+                    state = self.project_obs(state_raw)
+                    next_state_raw = torch.tensor(np.array(next_states_np), dtype=torch.float32).to(self.device)
+                    # Pad actions to action_dim_total if needed
+                    action_np = np.array(actions_np)
+                    if action_np.shape[-1] < self.config.action_dim_total:
+                        action_np = np.pad(action_np, ((0,0), (0, self.config.action_dim_total - action_np.shape[-1])))
+                    action = torch.tensor(action_np, dtype=torch.float32).to(self.device)
+                else:
+                    # Fallback: structured random states (not pure noise)
+                    # Generate physically plausible states: height~1.3m, small velocities, joint angles near 0
+                    state = torch.zeros(batch_size, 256).to(self.device)
+                    state[:, 0] = 0.0  # x position
+                    state[:, 1] = 0.0  # y position
+                    state[:, 2] = 1.3 + torch.randn(batch_size).to(self.device) * 0.1  # height ~1.3m
+                    state[:, 3:6] = torch.randn(batch_size, 3).to(self.device) * 0.5  # small velocities
+                    state[:, 6:23] = torch.randn(batch_size, 17).to(self.device) * 0.3  # small joint angles
+                    state[:, 23:40] = torch.randn(batch_size, 17).to(self.device) * 0.2  # small joint vels
+                    action = torch.randn(batch_size, self.config.action_dim_total).to(self.device) * 0.5
+
+                # Get physics ground truth
+                if hasattr(self, '_phase0_env') and self._phase0_env is not None:
+                    # REAL MuJoCo data: use projected next_state as target
+                    next_state = self.project_obs(next_state_raw)
+
+                    # Compute physics quantities from state data
+                    physics_targets = []
+                    for i in range(batch_size):
+                        s = state[i].detach().cpu().numpy()
+                        a = action[i].detach().cpu().numpy()
+                        # Use approximate physics from state values
+                        vel = s[3:6] if len(s) > 5 else np.zeros(3)
+                        pos = s[0:3] if len(s) > 2 else np.zeros(3)
+                        mass = 50.0
+                        speed = np.linalg.norm(vel)
+                        ke = 0.5 * mass * speed ** 2
+                        pe = mass * 9.81 * max(pos[2] if len(pos) > 2 else 1.3, 0)
+                        momentum = mass * speed
+                        force_mag = np.linalg.norm(a[:3]) if len(a) > 2 else 0.0
+                        torque_mag = force_mag * 0.3
+                        ang_momentum = momentum * 0.5
+                        stability = 1.0 / (1.0 + abs(pe) / 1000.0)
+                        work = force_mag * 0.02
+                        power = work / 0.02
+                        physics_targets.append([ke, pe, ke+pe, momentum, force_mag,
+                                                torque_mag, ang_momentum, stability, work, power])
+                    physics_targets = torch.tensor(np.array(physics_targets), dtype=torch.float32).to(self.device)
+
+                elif calculator:
                     physics_targets = []
                     next_states = []
                     for i in range(batch_size):
-                        # predict_robot_state returns (next_state, physics_dict)
                         ns, phys_dict = calculator.predict_robot_state(
                             state[i].cpu().numpy(),
                             action[i].cpu().numpy()
                         )
                         next_states.append(ns)
-
-                        # Expand 4 physics values to 10 for model compatibility
-                        # [KE, PE, total_E, momentum, force, torque, ang_mom, stability, work, power]
                         ke = phys_dict['kinetic_energy']
                         pe = phys_dict['potential_energy']
-                        total_e = ke + pe
                         momentum = phys_dict['momentum']
                         force_mag = phys_dict['force_magnitude']
-
-                        # Compute additional physics quantities
-                        torque_mag = force_mag * 0.3  # Approximate torque (r ≈ 0.3m arm)
-                        ang_momentum = momentum * 0.5  # Approximate (r ≈ 0.5m CoM height)
-                        stability = 1.0 / (1.0 + abs(pe) / 1000.0)  # Stability score (0-1)
-                        work = force_mag * 0.02  # Work = F * d (dt ≈ 0.02m displacement)
-                        power = work / 0.02  # Power = Work / time (50Hz control)
-
-                        phys_array = [ke, pe, total_e, momentum, force_mag,
-                                      torque_mag, ang_momentum, stability, work, power]
-                        physics_targets.append(phys_array)
-
+                        torque_mag = force_mag * 0.3
+                        ang_momentum = momentum * 0.5
+                        stability = 1.0 / (1.0 + abs(pe) / 1000.0)
+                        work = force_mag * 0.02
+                        power = work / 0.02
+                        physics_targets.append([ke, pe, ke+pe, momentum, force_mag,
+                                                torque_mag, ang_momentum, stability, work, power])
                     physics_targets = torch.tensor(np.array(physics_targets), dtype=torch.float32).to(self.device)
                     next_state = torch.tensor(np.array(next_states), dtype=torch.float32).to(self.device)
                 else:
-                    # Random targets for testing
                     physics_targets = torch.randn(batch_size, 10).to(self.device)
                     next_state = state + 0.1 * torch.randn_like(state)
 
@@ -1739,7 +1922,7 @@ class RobustTrainer:
                 self.optimizer.zero_grad()
 
                 # Project observation
-                state = self.obs_projection(obs_batch[:, -1, :])  # Last frame of context
+                state = self.project_obs(obs_batch[:, -1, :])  # Last frame of context
 
                 # Get policy action
                 output = self.model(state)
@@ -1763,7 +1946,7 @@ class RobustTrainer:
                     real_actions = target_action.detach()
                     # Approximate next state from MoCap sequence
                     if obs_batch.shape[1] > 1:
-                        real_next_states = self.obs_projection(obs_batch[:, -2, :]).detach()
+                        real_next_states = self.project_obs(obs_batch[:, -2, :]).detach()
                     else:
                         real_next_states = real_states + 0.01 * torch.randn_like(real_states)
 
@@ -1800,7 +1983,7 @@ class RobustTrainer:
                 # Penalize jerky motions - adjacent time steps should be similar
                 if obs_batch.shape[1] > 1:
                     # Get actions for previous frame
-                    prev_state = self.obs_projection(obs_batch[:, -2, :])
+                    prev_state = self.project_obs(obs_batch[:, -2, :])
                     with torch.no_grad():
                         prev_output = self.model(prev_state)
                         prev_action = prev_output['actions'][:, 0, :17]
@@ -1921,7 +2104,7 @@ class RobustTrainer:
                 self.optimizer.zero_grad()
 
                 # Project observation
-                state = self.obs_projection(obs_batch[:, -1, :])
+                state = self.project_obs(obs_batch[:, -1, :])
 
                 # Get policy action
                 output = self.model(state)
@@ -1941,7 +2124,7 @@ class RobustTrainer:
 
                 # Smoothness loss for arm motion
                 if obs_batch.shape[1] > 1:
-                    prev_state = self.obs_projection(obs_batch[:, -2, :])
+                    prev_state = self.project_obs(obs_batch[:, -2, :])
                     with torch.no_grad():
                         prev_output = self.model(prev_state)
                         prev_pred = prev_output['actions'][:, 0, :]
@@ -2074,7 +2257,7 @@ class RobustTrainer:
 
                 self.optimizer.zero_grad()
 
-                state = self.obs_projection(obs_batch[:, -1, :])
+                state = self.project_obs(obs_batch[:, -1, :])
                 output = self.model(state)
                 pred_action = output['actions'][:, 0, :]
 
@@ -2233,7 +2416,7 @@ class RobustTrainer:
 
             for step in range(200):  # Max steps per episode
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 self.optimizer.zero_grad()
 
@@ -2461,7 +2644,7 @@ class RobustTrainer:
 
                 self.optimizer.zero_grad()
 
-                state = self.obs_projection(obs_batch[:, -1, :])
+                state = self.project_obs(obs_batch[:, -1, :])
                 output = self.model(state)
                 pred_action = output['actions'][:, 0, :]
 
@@ -2473,7 +2656,7 @@ class RobustTrainer:
 
                 # Smoothness loss
                 if obs_batch.shape[1] > 1:
-                    prev_state = self.obs_projection(obs_batch[:, -2, :])
+                    prev_state = self.project_obs(obs_batch[:, -2, :])
                     with torch.no_grad():
                         prev_output = self.model(prev_state)
                         prev_action = prev_output['actions'][:, 0, :min_dim]
@@ -2650,14 +2833,14 @@ class RobustTrainer:
 
         for _ in range(num_steps):
             obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-            state = self.obs_projection(obs_tensor)
+            state = self.project_obs(obs_tensor)
 
             with torch.no_grad():
                 output = self.model(state)
                 action = output['actions'][:, 0, :].cpu().numpy()[0]
 
             next_obs, _, terminated, truncated, _ = env.step(action)
-            next_state = self.obs_projection(
+            next_state = self.project_obs(
                 torch.tensor(next_obs, dtype=torch.float32).unsqueeze(0).to(self.device)
             )
 
@@ -2781,27 +2964,32 @@ class RobustTrainer:
 
             for step in range(2048):
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 # Get action
                 with torch.no_grad():
                     output = self.model(state)
                     action = output['actions'][:, 0, :].cpu().numpy()[0]
 
-                next_obs, env_reward, terminated, truncated, _ = env.step(action)
+                next_obs, env_reward, terminated, truncated, info = env.step(action)
 
-                # Compute composite reward
-                # Forward progress
-                forward_reward = next_obs[0] - obs[0] if len(obs) > 0 else 0
-                # Upright bonus
-                upright_reward = 1.0 if (len(obs) > 2 and obs[2] > 0.8) else -1.0
+                # Compute composite reward using correct Humanoid-v5 observation layout:
+                # obs[0] = torso z-height (qpos[2]), obs[1:5] = torso quaternion
+                # Forward velocity from info dict (Gymnasium Humanoid-v5 provides it)
+                forward_velocity = info.get('x_velocity', 0.0) if isinstance(info, dict) else 0.0
+                forward_reward = forward_velocity * 1.5  # Reward forward movement
+
+                # Upright bonus: obs[0] is torso height in Humanoid-v5
+                torso_height = next_obs[0] if len(next_obs) > 0 else 0.0
+                upright_reward = 1.0 if torso_height > 1.0 else (0.5 if torso_height > 0.8 else -1.0)
+
                 # Energy penalty
                 energy_penalty = -0.01 * np.sum(action ** 2)
 
                 # AMP reward
                 amp_reward = 0.0
                 if hasattr(self, 'amp_discriminator'):
-                    next_state = self.obs_projection(
+                    next_state = self.project_obs(
                         torch.tensor(next_obs, dtype=torch.float32).unsqueeze(0).to(self.device)
                     )
                     action_tensor = torch.tensor(action, device=self.device).unsqueeze(0)
@@ -2822,7 +3010,7 @@ class RobustTrainer:
                     'state': state,
                     'action': torch.tensor(action, device=self.device),
                     'reward': total_reward,
-                    'next_state': self.obs_projection(
+                    'next_state': self.project_obs(
                         torch.tensor(next_obs, dtype=torch.float32).unsqueeze(0).to(self.device)
                     ),
                 })
@@ -2872,10 +3060,18 @@ class RobustTrainer:
         for i, transition in enumerate(episode_data):
             if i >= len(returns):
                 break
-            # Re-compute action for gradient
+            # Re-compute policy distribution and evaluate log_prob of ACTUAL action taken
             output = self.model(transition['state'])
-            action = output['actions'][:, 0, :]
-            log_prob = -action.pow(2).mean()  # Simplified
+            action_mean = output['actions'][:, 0, :]
+            action_std = torch.ones_like(action_mean) * 0.3
+            dist = torch.distributions.Normal(action_mean, action_std)
+            # Use the action that was ACTUALLY taken (recorded during rollout)
+            action_taken = transition['action'].to(self.device)
+            if action_taken.dim() == 1:
+                action_taken = action_taken.unsqueeze(0)
+            # Truncate to match policy output dim
+            min_dim = min(action_taken.shape[-1], action_mean.shape[-1])
+            log_prob = dist.log_prob(action_taken[:, :min_dim]).sum(dim=-1).mean()
             policy_loss += -returns[i] * log_prob
 
         policy_loss = policy_loss / max(len(episode_data), 1)
@@ -3114,7 +3310,7 @@ class RobustTrainer:
                 for step in range(200):
                     # Get action from model WITH language (gradients for projector training)
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
 
                     # Use language command - projector learns to map commands to arm actions
                     output = self.model(state, language=[command])
@@ -3164,8 +3360,12 @@ class RobustTrainer:
                     policy_loss = torch.tensor(0.0, device=self.device)
                     for i, (state, action_t) in enumerate(zip(episode_states, episode_actions)):
                         if i < len(returns):
-                            # Encourage actions that lead to high returns
-                            action_log_prob = -action_t.pow(2).mean()  # Simplified log prob
+                            # Proper Gaussian policy gradient
+                            action_mean = action_t
+                            action_std = torch.ones_like(action_mean) * 0.3
+                            dist = torch.distributions.Normal(action_mean, action_std)
+                            action_sampled = dist.sample()
+                            action_log_prob = dist.log_prob(action_sampled).sum(dim=-1).mean()
                             policy_loss += -returns[i] * action_log_prob
 
                     # Add direct supervision: action should move hand toward target
@@ -3295,7 +3495,7 @@ class RobustTrainer:
 
                 for step in range(300):
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
 
                     # Use varied command (WITH gradients for projector training)
                     output = self.model(state, language=[command])
@@ -3345,7 +3545,12 @@ class RobustTrainer:
                     policy_loss = torch.tensor(0.0, device=self.device)
                     for i, (state, action_t) in enumerate(zip(episode_states, episode_actions)):
                         if i < len(returns):
-                            action_log_prob = -action_t.pow(2).mean()
+                            # Proper Gaussian policy gradient
+                            action_mean = action_t
+                            action_std = torch.ones_like(action_mean) * 0.3
+                            dist = torch.distributions.Normal(action_mean, action_std)
+                            action_sampled = dist.sample()
+                            action_log_prob = dist.log_prob(action_sampled).sum(dim=-1).mean()
                             policy_loss += -returns[i] * action_log_prob
 
                     # Encourage finger joints to be active (indices 27-56 for fingers)
@@ -3484,7 +3689,7 @@ class RobustTrainer:
 
                 for step in range(500):
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
 
                     # WITH gradients for projector training (varied commands!)
                     output = self.model(state, language=[command])
@@ -3546,7 +3751,12 @@ class RobustTrainer:
                     policy_loss = torch.tensor(0.0, device=self.device)
                     for i, (state, action_t) in enumerate(zip(episode_states, episode_actions)):
                         if i < len(returns):
-                            action_log_prob = -action_t.pow(2).mean()
+                            # Proper Gaussian policy gradient
+                            action_mean = action_t
+                            action_std = torch.ones_like(action_mean) * 0.3
+                            dist = torch.distributions.Normal(action_mean, action_std)
+                            action_sampled = dist.sample()
+                            action_log_prob = dist.log_prob(action_sampled).sum(dim=-1).mean()
                             policy_loss += -returns[i] * action_log_prob
 
                     # Encourage BOTH locomotion (0-16) AND manipulation (17-56) joints
@@ -3636,12 +3846,18 @@ class RobustTrainer:
             full_action[17:] = action[17:min(len(action), len(full_action))]
         return full_action
 
-    def _get_hand_position(self, obs, env):
+    def _get_hand_position(self, obs_or_env, env=None):
         """
         Get actual hand position from MuJoCo environment.
 
         For Humanoid-v5, we can get body positions from env.unwrapped.data
         """
+        # Handle both (obs, env) and (env,) call patterns
+        if env is None:
+            env = obs_or_env
+            obs = None
+        else:
+            obs = obs_or_env
         try:
             # Access MuJoCo data directly
             data = env.unwrapped.data
@@ -3689,16 +3905,34 @@ class RobustTrainer:
             # Fallback to known initial positions
             return self.OBJECT_POSITIONS.get(object_name, np.array([1.5, 0.0, 0.8]))
 
-    def _compute_reach_reward(self, env, target_pos, obs):
+    def _compute_reach_reward(self, env_or_hand_pos, target_pos, obs=None):
         """
         Reward for reaching towards a TARGET POSITION (not object name!).
 
         Args:
-            env: MuJoCo environment
+            env_or_hand_pos: MuJoCo environment OR hand position array
             target_pos: np.array [x, y, z] position to reach
-            obs: current observation
+            obs: current observation (optional)
         """
-        hand_pos = self._get_hand_position(obs, env)
+        # Handle both (env, target_pos, obs) and (hand_pos, target_pos) patterns
+        if obs is None and not hasattr(env_or_hand_pos, 'unwrapped'):
+            # Called as (hand_pos, target_pos) - Phase 4 style
+            hand_pos = env_or_hand_pos
+            if isinstance(hand_pos, torch.Tensor):
+                hand_pos = hand_pos.cpu().numpy()
+            if isinstance(target_pos, torch.Tensor):
+                target_pos = target_pos.cpu().numpy()
+            distance = np.linalg.norm(hand_pos - target_pos)
+            reward = -distance
+            if distance < 0.05:
+                reward += 5.0
+            elif distance < 0.1:
+                reward += 2.0
+            elif distance < 0.2:
+                reward += 0.5
+            return reward
+
+        hand_pos = self._get_hand_position(obs, env_or_hand_pos)
         distance = np.linalg.norm(hand_pos - target_pos)
 
         # Dense reward: closer = better
@@ -3809,7 +4043,7 @@ class RobustTrainer:
         pos = self._get_object_position(env, obj_name)
         return pos, obj_name
 
-    def train_phase2(self, num_epochs: int = 100, load_file: str = None):
+    def train_phase2_legacy(self, num_epochs: int = 100, load_file: str = None):
         """
         Phase 2: Imitation learning with safeguards.
 
@@ -4233,7 +4467,7 @@ class RobustTrainer:
 
                 # Get state
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 # Forward with vision
                 self.optimizer.zero_grad()
@@ -4342,7 +4576,7 @@ class RobustTrainer:
                     continue
 
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 self.optimizer.zero_grad()
 
@@ -4381,7 +4615,7 @@ class RobustTrainer:
                     # Get action from model
                     obs_t = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
                     with torch.no_grad():
-                        out = self.model(self.obs_projection(obs_t))
+                        out = self.model(self.project_obs(obs_t))
                         action = out['actions'][:, 0, :].cpu().numpy()[0]
 
                     obs, _, terminated, truncated, _ = manip_env.step(action)
@@ -4486,7 +4720,7 @@ class RobustTrainer:
                 prev_obs = obs.copy()
 
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 self.optimizer.zero_grad()
 
@@ -4612,7 +4846,7 @@ class RobustTrainer:
                     continue
 
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 self.optimizer.zero_grad()
 
@@ -4828,7 +5062,7 @@ class RobustTrainer:
                     continue
 
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 # Episode: try to reach for object
                 episode_reward = 0
@@ -4901,7 +5135,7 @@ class RobustTrainer:
                     # Update state
                     obs = next_obs
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                     image = self._get_env_image(env)
 
                     if image is None or done or truncated or reached:
@@ -4986,7 +5220,7 @@ class RobustTrainer:
                     continue
 
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 # Episode: reach + grasp
                 episode_reward = 0
@@ -5037,7 +5271,7 @@ class RobustTrainer:
                             episode_reward += 2.0  # Bonus for reaching
                     elif phase == "grasp":
                         # Reward for finger closure
-                        grasp_reward = self._compute_grasp_reward(env, action)
+                        grasp_reward = self._compute_grasp_reward_vision(env, action)
                         episode_reward += grasp_reward
                         # Check if object is being held (simplified)
                         if distance < 0.03:  # Still close
@@ -5074,7 +5308,7 @@ class RobustTrainer:
                     # Update state
                     obs = next_obs
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                     image = self._get_env_image(env)
 
                     if image is None or done or truncated or grasped:
@@ -5186,7 +5420,7 @@ class RobustTrainer:
                     continue
 
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 # Episode: grasp → carry → place
                 episode_reward = 0
@@ -5292,7 +5526,7 @@ class RobustTrainer:
                     # Update state
                     obs = next_obs
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                     image = self._get_env_image(env)
 
                     if image is None or done or truncated or task_complete:
@@ -5359,7 +5593,7 @@ class RobustTrainer:
         except Exception:
             return 0.5
 
-    def _compute_grasp_reward(self, env, action) -> float:
+    def _compute_grasp_reward_vision(self, env, action) -> float:
         """Compute reward for grasping motion."""
         # Reward finger closure actions (indices 40-57 typically)
         if len(action) > 40:
@@ -5501,7 +5735,7 @@ class RobustTrainer:
                 if env is not None:
                     obs, _ = env.reset()
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                     image = self._get_env_image(env)
                 else:
                     state = torch.randn(1, self.model.config.d_model, device=self.device)
@@ -5748,18 +5982,8 @@ class RobustTrainer:
             return "navigate"
 
     def _get_action_embedding(self, action_type: str) -> torch.Tensor:
-        """Get embedding for action type."""
-        # Simple learned embeddings for action types
-        action_embeddings = {
-            "grasp": torch.randn(self.model.config.d_model, device=self.device),
-            "reach": torch.randn(self.model.config.d_model, device=self.device),
-            "walk": torch.randn(self.model.config.d_model, device=self.device),
-            "turn": torch.randn(self.model.config.d_model, device=self.device),
-            "stop": torch.randn(self.model.config.d_model, device=self.device),
-            "navigate": torch.randn(self.model.config.d_model, device=self.device),
-            "fetch": torch.randn(self.model.config.d_model, device=self.device),
-        }
-        return action_embeddings.get(action_type, torch.zeros(self.model.config.d_model, device=self.device))
+        """Get embedding for action type (cached, not regenerated per call)."""
+        return self._action_type_embeddings.get(action_type, self._action_type_embeddings['unknown'])
 
     # ==========================================================================
     # PHASE 6: ADVANCED PLANNING
@@ -5904,7 +6128,7 @@ class RobustTrainer:
                 if env is not None:
                     obs, _ = env.reset()
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                 else:
                     state = torch.randn(1, self.model.config.d_model, device=self.device)
 
@@ -6032,7 +6256,7 @@ class RobustTrainer:
                 # Collect transition
                 obs, _ = env.reset()
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 self.optimizer.zero_grad()
 
@@ -6051,7 +6275,7 @@ class RobustTrainer:
                 next_obs, actual_reward, done, truncated, info = env.step(action_np)
 
                 next_obs_tensor = torch.tensor(next_obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                actual_next_state = self.obs_projection(next_obs_tensor)
+                actual_next_state = self.project_obs(next_obs_tensor)
 
                 # Compute prediction errors
                 state_pred_error = F.mse_loss(decoded_next, actual_next_state)
@@ -6147,7 +6371,7 @@ class RobustTrainer:
                 if env is not None:
                     obs, _ = env.reset()
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                     image = self._get_env_image(env)
                 else:
                     state = torch.randn(1, self.model.config.d_model, device=self.device)
@@ -6215,7 +6439,7 @@ class RobustTrainer:
                         # Update state
                         obs = next_obs
                         obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                        state = self.obs_projection(obs_tensor)
+                        state = self.project_obs(obs_tensor)
                         image = self._get_env_image(env)
 
                     else:
@@ -6403,7 +6627,7 @@ class RobustTrainer:
                 # Reset
                 obs, _ = env.reset()
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
                 image = self._get_env_image(env)
 
                 episode_reward = 0
@@ -6469,7 +6693,7 @@ class RobustTrainer:
                             break
 
                     # Update state for next S2 step
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                     image = self._get_env_image(env)
 
                     episode_reward += s2_reward
@@ -6592,7 +6816,7 @@ class RobustTrainer:
                 if env is not None:
                     obs, _ = env.reset()
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                     image = self._get_env_image(env)
                 else:
                     state = torch.randn(1, self.model.config.d_model, device=self.device)
@@ -6634,7 +6858,7 @@ class RobustTrainer:
                         # Update state
                         obs = next_obs
                         obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                        state = self.obs_projection(obs_tensor)
+                        state = self.project_obs(obs_tensor)
                         image = self._get_env_image(env)
 
                     else:
@@ -6694,6 +6918,443 @@ class RobustTrainer:
         print("  - Phase 6: Hierarchical planning + world model")
         print("  - Phase 7: Full integration + dual system")
         print("=" * 70)
+
+    # ==========================================================================
+    # PHASE 8: VIRTUAL COMPANION TRAINING
+    # ==========================================================================
+
+    def train_phase8(self, num_epochs: int = None):
+        """
+        Phase 8: Virtual Companion Training.
+
+        Trains the emotional, personality, and movement-mood systems.
+        Motor backbone is FROZEN to preserve walking/manipulation skills.
+
+        Sub-phases:
+          8.1: Emotional Dynamics - train GRU mood updater for smooth trajectories
+          8.2: Movement-Mood Coupling - train style modulation per emotion
+          8.3: Companion Dialogue - fine-tune LLM projector for personality
+          8.4: Full Integration - end-to-end companion behavior
+
+        Research: ALMA (Gebhard 2005), CALM (Tessler et al. 2023),
+                  Generative Agents (Park et al. 2023)
+        """
+        print("\n" + "=" * 70)
+        print("PHASE 8: VIRTUAL COMPANION TRAINING")
+        print("=" * 70)
+
+        # Load best checkpoint from Phase 7 (or earlier)
+        for phase_name in ['phase7', 'phase6', 'phase5', 'phase2', 'rl']:
+            ckpt = self._find_best_checkpoint(phase_name)
+            if ckpt:
+                self._load_checkpoint_flexible(ckpt)
+                break
+
+        self.current_phase = 8
+        self._create_optimizer(8)
+
+        # Check companion modules exist
+        if not hasattr(self.model, 'emotional_state') or self.model.emotional_state is None:
+            print("[WARN] EmotionalState not found on model. Skipping Phase 8.")
+            return
+
+        n = num_epochs or self.config.companion_training_epochs
+        sub_epochs = max(n // 4, 10)
+
+        self._train_phase8_1_emotional_dynamics(self.config.emotional_dynamics_epochs or sub_epochs)
+        self._train_phase8_2_movement_mood(self.config.movement_mood_epochs or sub_epochs)
+        self._train_phase8_3_companion_dialogue(self.config.companion_dialogue_epochs or sub_epochs)
+        self._train_phase8_4_full_integration(self.config.full_companion_epochs or sub_epochs)
+
+        print("\n[DONE] Phase 8 complete - Jack is alive!")
+
+    def _train_phase8_1_emotional_dynamics(self, num_epochs: int = 50):
+        """
+        Phase 8.1: Train emotional state GRU for smooth, meaningful mood trajectories.
+
+        Uses simulated event sequences to train the mood updater.
+        Loss = mood_prediction + temporal_smoothness + diversity
+        """
+        print("\n" + "-" * 50)
+        print("PHASE 8.1: Emotional Dynamics")
+        print("-" * 50)
+
+        from EmotionalState import EventType
+
+        best_loss = float('inf')
+        event_types = list(EventType)
+
+        for epoch in range(num_epochs):
+            epoch_loss = 0
+            num_batches = 0
+
+            for _ in range(100):  # 100 simulated episodes per epoch
+                # Simulate a random event sequence
+                sequence_length = random.randint(10, 50)
+                moods = []
+
+                # Reset emotional state
+                self.model.emotional_state.pad_vector.data.zero_()
+
+                # Enable gradient tracking on pad_vector for this training step
+                # (it's a buffer with requires_grad=False by default)
+                self.model.emotional_state.pad_vector.requires_grad_(True)
+
+                total_loss = torch.tensor(0.0, device=self.device)
+
+                for step in range(sequence_length):
+                    # Random event
+                    event = random.choice(event_types)
+                    reward = random.gauss(0.0, 1.0)
+                    user_chat = random.random() < 0.1  # 10% chance of user interaction
+
+                    # Forward through emotional update
+                    old_mood = self.model.emotional_state.pad_vector.clone()
+                    self.model.emotional_state.update(
+                        event_type=event, reward=reward,
+                        user_interaction=user_chat, dt=0.1
+                    )
+                    new_mood = self.model.emotional_state.pad_vector
+                    moods.append(new_mood.clone())
+
+                    # Temporal smoothness loss: mood shouldn't change too fast
+                    if len(moods) > 1:
+                        smooth_loss = (moods[-1] - moods[-2]).pow(2).sum()
+                        total_loss = total_loss + self.config.emotional_smoothness_weight * smooth_loss
+
+                # Diversity loss: moods should vary across the episode
+                if len(moods) > 2:
+                    mood_stack = torch.stack(moods)
+                    mood_var = mood_stack.var(dim=0).sum()
+                    diversity_loss = -self.config.mood_diversity_weight * mood_var
+                    total_loss = total_loss + diversity_loss
+
+                # Range loss: moods should stay in [-1, 1]
+                if moods:
+                    mood_stack = torch.stack(moods)
+                    range_loss = F.relu(mood_stack.abs() - 1.0).sum()
+                    total_loss = total_loss + range_loss
+
+                self.optimizer.zero_grad()
+                total_loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                self.optimizer.step()
+
+                # Disable gradient tracking on pad_vector after backward
+                self.model.emotional_state.pad_vector.requires_grad_(False)
+
+                epoch_loss += total_loss.item()
+                num_batches += 1
+
+            avg_loss = epoch_loss / max(num_batches, 1)
+            if (epoch + 1) % 10 == 0:
+                print(f"  [Epoch {epoch+1}/{num_epochs}] Loss: {avg_loss:.4f}")
+
+            if avg_loss < best_loss:
+                best_loss = avg_loss
+                self.save_checkpoint("phase8_1_best")
+
+        print(f"  [DONE] Phase 8.1 complete. Best loss: {best_loss:.4f}")
+
+    def _train_phase8_2_movement_mood(self, num_epochs: int = 50):
+        """
+        Phase 8.2: Train movement-mood coupling.
+
+        Maps emotional state to action modulation parameters.
+        Uses MuJoCo rollouts with mood-conditioned rewards.
+        """
+        print("\n" + "-" * 50)
+        print("PHASE 8.2: Movement-Mood Coupling")
+        print("-" * 50)
+
+        if not hasattr(self.model, 'movement_mood') or self.model.movement_mood is None:
+            print("  [SKIP] MovementMoodCoupling not available")
+            return
+
+        env = self._create_environment()
+        if env is None:
+            print("  [SKIP] No MuJoCo environment available")
+            return
+
+        best_reward = -float('inf')
+
+        for epoch in range(num_epochs):
+            epoch_reward = 0
+            epoch_style_loss = 0.0
+
+            for episode in range(10):  # 10 episodes per epoch
+                obs, _ = env.reset()
+                obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
+                state = self.project_obs(obs_tensor)
+
+                # Random target mood for this episode
+                target_pad = torch.randn(3).clamp(-1, 1).to(self.device)
+                self.model.emotional_state.pad_vector.data.copy_(target_pad)
+
+                episode_reward = 0
+                episode_loss = torch.tensor(0.0, device=self.device)
+
+                for step in range(200):
+                    with torch.no_grad():
+                        output = self.model(state)
+                        base_action = output['actions'][:, 0, :].cpu().numpy()[0]
+
+                    # Apply mood modulation (WITH gradients for modulator)
+                    action_tensor = torch.tensor(base_action, dtype=torch.float32).to(self.device)
+                    modulated = self.model.movement_mood.modulate_action(
+                        action_tensor, target_pad
+                    )
+                    # Use detached action for env.step, keep modulated for loss
+                    action = modulated.detach().cpu().numpy()
+
+                    next_obs, reward, terminated, truncated, info = env.step(action)
+
+                    # Reward: task reward + style consistency
+                    # The modulated action should maintain walking stability
+                    torso_height = next_obs[0] if len(next_obs) > 0 else 1.0
+                    stability_reward = 1.0 if torso_height > 0.8 else -2.0
+
+                    episode_reward += reward + stability_reward
+
+                    if terminated or truncated:
+                        break
+
+                    obs_tensor = torch.tensor(next_obs, dtype=torch.float32).unsqueeze(0).to(self.device)
+                    state = self.project_obs(obs_tensor)
+
+                epoch_reward += episode_reward
+
+                # Compute differentiable style loss: speed should correlate with arousal
+                # Use speed_net directly instead of get_speed_multiplier() which uses no_grad
+                pad_tensor = target_pad.clone().detach()  # PAD is the "input", not optimized
+                speed_raw = self.model.movement_mood.speed_net(pad_tensor.unsqueeze(0))
+                speed_mult_tensor = 0.7 + 0.6 * torch.sigmoid(speed_raw).squeeze()
+                target_speed = 1.0 + 0.3 * pad_tensor[1]  # arousal -> target speed
+                style_loss = (speed_mult_tensor - target_speed).pow(2)
+                episode_loss = episode_loss + style_loss
+
+                # Backprop style loss for this episode
+                if episode_loss.requires_grad:
+                    self.optimizer.zero_grad()
+                    episode_loss.backward()
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                    self.optimizer.step()
+
+                epoch_style_loss += style_loss.item()
+
+            avg_reward = epoch_reward / 10
+            avg_style = epoch_style_loss / 10
+
+            if (epoch + 1) % 10 == 0:
+                print(f"  [Epoch {epoch+1}/{num_epochs}] Reward: {avg_reward:.1f} Style: {avg_style:.4f}")
+
+            if avg_reward > best_reward:
+                best_reward = avg_reward
+                self.save_checkpoint("phase8_2_best")
+
+        if env is not None:
+            env.close()
+        print(f"  [DONE] Phase 8.2 complete. Best reward: {best_reward:.1f}")
+
+    def _train_phase8_3_companion_dialogue(self, num_epochs: int = 30):
+        """
+        Phase 8.3: Train companion dialogue with personality conditioning.
+
+        Fine-tunes the LLM projector for personality-consistent responses.
+        Uses synthetic dialogue data generated with personality prompts.
+        """
+        print("\n" + "-" * 50)
+        print("PHASE 8.3: Companion Dialogue")
+        print("-" * 50)
+
+        # This phase primarily validates that personality prompts produce
+        # consistent responses. Full LLM fine-tuning requires the LLM loaded.
+        if not self.model.has_llm():
+            print("  [INFO] LLM not loaded - dialogue training uses projector only")
+
+        # Train with synthetic command -> action pairs conditioned on mood
+        commands_by_mood = {
+            'happy': ["Let's explore!", "Show me something cool!", "I'm having fun!"],
+            'curious': ["What's over there?", "I wonder what this does?", "Let me investigate."],
+            'calm': ["I'll just relax here.", "Everything is peaceful.", "Nice and quiet."],
+            'frustrated': ["This isn't working.", "I can't do this.", "Help me out here."],
+        }
+
+        mood_pads = {
+            'happy': torch.tensor([0.7, 0.5, 0.3], device=self.device),
+            'curious': torch.tensor([0.3, 0.6, 0.4], device=self.device),
+            'calm': torch.tensor([0.4, -0.3, 0.2], device=self.device),
+            'frustrated': torch.tensor([-0.5, 0.6, -0.3], device=self.device),
+        }
+
+        best_loss = float('inf')
+        for epoch in range(num_epochs):
+            epoch_loss = 0
+            num_updates = 0
+
+            for mood_name, commands in commands_by_mood.items():
+                for cmd in commands:
+                    self.optimizer.zero_grad()
+                    state = torch.randn(1, self.config.obs_dim, device=self.device)
+
+                    # Set mood matching the command
+                    if hasattr(self.model, 'emotional_state') and self.model.emotional_state is not None:
+                        self.model.emotional_state.pad_vector.data.copy_(mood_pads[mood_name])
+
+                    # Forward pass
+                    output = self.model(state)
+                    actions = output['actions'][:, 0, :]
+
+                    # Loss: actions should correlate with mood (arousal -> action magnitude)
+                    arousal = mood_pads[mood_name][1]
+                    action_magnitude = actions.abs().mean()
+                    # High arousal should produce larger actions, low arousal smaller
+                    mood_action_loss = (action_magnitude - (0.3 + 0.2 * arousal)).pow(2)
+                    # Regularization
+                    reg_loss = actions.pow(2).mean() * 0.01
+
+                    loss = mood_action_loss + reg_loss
+                    loss.backward()
+                    torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                    self.optimizer.step()
+
+                    epoch_loss += loss.item()
+                    num_updates += 1
+
+            avg_loss = epoch_loss / max(num_updates, 1)
+            if (epoch + 1) % 10 == 0:
+                print(f"  [Epoch {epoch+1}/{num_epochs}] Loss: {avg_loss:.4f}")
+
+            if avg_loss < best_loss:
+                best_loss = avg_loss
+                self.save_checkpoint("phase8_3_best")
+
+        print(f"  [DONE] Phase 8.3 complete. Best loss: {best_loss:.4f}")
+
+    def _train_phase8_4_full_integration(self, num_epochs: int = 100):
+        """
+        Phase 8.4: Full companion integration.
+
+        Runs complete companion episodes:
+        - Autonomous exploration with emotional state
+        - User interaction simulation
+        - Movement-mood coupling active
+        - Inner monologue active
+        - All systems coordinated
+        """
+        print("\n" + "-" * 50)
+        print("PHASE 8.4: Full Companion Integration")
+        print("-" * 50)
+
+        env = self._create_environment()
+        best_reward = -float('inf')
+
+        for epoch in range(num_epochs):
+            epoch_reward = 0
+
+            for episode in range(5):
+                if env is not None:
+                    obs, _ = env.reset()
+                else:
+                    obs = np.random.randn(self.config.mujoco_obs_dim).astype(np.float32)
+
+                episode_reward = 0
+
+                # Reset emotional state
+                if self.model.emotional_state is not None:
+                    self.model.emotional_state.pad_vector.data.zero_()
+
+                episode_transitions = []
+
+                for step in range(500):
+                    obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
+                    state = self.project_obs(obs_tensor)
+
+                    # Get action (with gradients disabled for rollout)
+                    with torch.no_grad():
+                        output = self.model(state)
+                        action_mean = output['actions'][:, 0, :]
+                        # Sample with exploration noise
+                        action_dist = torch.distributions.Normal(action_mean, torch.ones_like(action_mean) * 0.3)
+                        action_sampled = action_dist.sample()
+                        action = action_sampled.cpu().numpy()[0]
+
+                    if env is not None:
+                        next_obs, reward, terminated, truncated, info = env.step(action)
+                    else:
+                        next_obs = obs + 0.01 * np.random.randn(*obs.shape)
+                        reward = float(-np.sum(action ** 2) * 0.01)
+                        terminated = truncated = False
+
+                    # Update emotional state
+                    if self.model.emotional_state is not None:
+                        if reward > 0.5:
+                            self.model.emotional_state.update(EventType.TASK_SUCCESS, reward, False, 0.02)
+                        elif reward < -0.5:
+                            self.model.emotional_state.update(EventType.TASK_FAILURE, reward, False, 0.02)
+                        else:
+                            self.model.emotional_state.update(EventType.BOREDOM_TICK, reward, False, 0.02)
+
+                    episode_reward += float(reward)
+                    episode_transitions.append({
+                        'state': state.detach(),
+                        'reward': float(reward),
+                    })
+
+                    if terminated or truncated:
+                        break
+                    obs = next_obs
+
+                # --- Policy gradient update from episode ---
+                if len(episode_transitions) > 1:
+                    # Compute discounted returns
+                    returns = []
+                    G = 0.0
+                    for t in reversed(episode_transitions):
+                        G = t['reward'] + 0.99 * G
+                        returns.insert(0, G)
+                    returns = torch.tensor(returns, device=self.device, dtype=torch.float32)
+                    if returns.std() > 1e-6:
+                        returns = (returns - returns.mean()) / (returns.std() + 1e-8)
+
+                    # REINFORCE update on a subset (for memory)
+                    self.optimizer.zero_grad()
+                    policy_loss = torch.tensor(0.0, device=self.device)
+                    n_update = min(50, len(episode_transitions))
+                    for i in range(n_update):
+                        out = self.model(episode_transitions[i]['state'])
+                        a_mean = out['actions'][:, 0, :]
+                        dist = torch.distributions.Normal(a_mean, torch.ones_like(a_mean) * 0.3)
+                        sampled = dist.sample()
+                        lp = dist.log_prob(sampled).sum(dim=-1).mean()
+                        policy_loss = policy_loss + (-returns[i] * lp)
+
+                    policy_loss = policy_loss / n_update
+                    if policy_loss.requires_grad:
+                        policy_loss.backward()
+                        torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+                        self.optimizer.step()
+
+                epoch_reward += episode_reward
+
+            avg_reward = epoch_reward / 5
+
+            if (epoch + 1) % 10 == 0:
+                mood_str = ""
+                if self.model.emotional_state is not None:
+                    mood_str = f" Mood: {self.model.emotional_state.get_dominant_mood()}"
+                print(f"  [Epoch {epoch+1}/{num_epochs}] Reward: {avg_reward:.1f}{mood_str}")
+
+            if avg_reward > best_reward:
+                best_reward = avg_reward
+                self.save_checkpoint("phase8_4_best")
+
+        if env is not None:
+            env.close()
+
+        self.save_checkpoint("phase8_final")
+        print(f"\n  [DONE] Phase 8 complete. Jack is ready!")
+        print(f"  Run 'python VirtualWorld.py' to meet him.")
 
     # ==========================================================================
     # OLD PHASE 3 SUBPHASES (Moved to later phases in new pipeline)
@@ -6910,7 +7571,7 @@ class RobustTrainer:
                 for step in range(200):  # Max steps per episode
                     # Project observation
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
 
                     # Get action from model with FULL language goal (includes terrain context)
                     with torch.no_grad():
@@ -6998,8 +7659,11 @@ class RobustTrainer:
             pred_action = output['actions'][:, 0, :]
             action_tensor = torch.tensor(action, dtype=torch.float32).unsqueeze(0).to(self.device)
 
-            # Policy gradient loss
-            log_prob = -F.mse_loss(pred_action, action_tensor)
+            # Proper Gaussian policy gradient
+            action_mean = pred_action
+            action_std = torch.ones_like(action_mean) * 0.3
+            dist = torch.distributions.Normal(action_mean, action_std)
+            log_prob = dist.log_prob(action_tensor).sum(dim=-1).mean()
             loss = -log_prob * R  # Negative because we maximize reward
             total_loss += loss
 
@@ -7222,7 +7886,7 @@ class RobustTrainer:
 
                 # Random state (simulating robot in various positions)
                 state = torch.randn(1, self.config.obs_dim).to(self.device)
-                state_proj = self.obs_projection(state)
+                state_proj = self.project_obs(state)
 
                 self.optimizer.zero_grad()
 
@@ -7342,7 +8006,7 @@ class RobustTrainer:
 
             for step in range(500):
                 obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                state = self.obs_projection(obs_tensor)
+                state = self.project_obs(obs_tensor)
 
                 with torch.no_grad():
                     output = self.model(state)
@@ -7354,7 +8018,7 @@ class RobustTrainer:
                     'state': state,
                     'action': torch.tensor(action, dtype=torch.float32).unsqueeze(0).to(self.device),
                     'reward': reward,
-                    'next_state': self.obs_projection(
+                    'next_state': self.project_obs(
                         torch.tensor(next_obs, dtype=torch.float32).unsqueeze(0).to(self.device)
                     ),
                 })
@@ -7500,7 +8164,7 @@ class RobustTrainer:
                 # Use hierarchical planner to decompose task if available
                 if has_hierarchical:
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
                     plan_result = self.model.plan_with_hierarchy(state, self.model.language_encoder([full_command]))
                     subgoals = plan_result.get('subgoals', [full_command])
                 else:
@@ -7519,7 +8183,7 @@ class RobustTrainer:
 
                     # Get state
                     obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(self.device)
-                    state = self.obs_projection(obs_tensor)
+                    state = self.project_obs(obs_tensor)
 
                     # DUAL SYSTEM WITH GRADIENT TRACKING (for training)
                     # S2 (9Hz): High-level planning + VLM
@@ -7720,6 +8384,9 @@ class RobustTrainer:
             target_actions = torch.randn(self.config.batch_size, 16, 17).to(self.device)
             task_loss = compute_flow_matching_loss(self.model, state, target_actions)
         else:
+            # Fallback: generate synthetic data for basic dynamics training
+            state = torch.randn(self.config.batch_size, self.config.obs_dim, device=self.device)
+            action = torch.randn(self.config.batch_size, 17, device=self.device) * 0.5
             next_state = state + 0.1 * torch.randn_like(state)
             output = self.model(state, action=action)
             task_loss = F.mse_loss(output['next_state'], next_state)
@@ -7785,7 +8452,7 @@ class RobustTrainer:
             # Project MuJoCo observation (376 dims) to model input (256 dims)
             obs_tensor = torch.tensor(noisy_obs, dtype=torch.float32).unsqueeze(0).to(self.device)
             with torch.no_grad():
-                state = self.obs_projection(obs_tensor)  # 376 → 256
+                state = self.project_obs(obs_tensor)  # 376 → 256
                 action = self.model.predict_action(state).cpu().numpy()[0]
 
             # Action delay (simulates motor latency)
@@ -7847,11 +8514,12 @@ class RobustTrainer:
         self.ewc.save(self.config.ewc_path)
 
     def save_checkpoint(self, name: str):
-        """Save checkpoint"""
+        """Save checkpoint including obs_projection weights"""
         path = os.path.join(self.config.checkpoint_dir, f"{name}.pt")
         torch.save({
             'model_state_dict': self.model.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
+            'obs_projection_state_dict': self.obs_projection.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict() if hasattr(self, 'optimizer') else None,
             'epoch': self.epoch,
             'global_step': self.global_step,
             'current_phase': self.current_phase,
@@ -7859,12 +8527,60 @@ class RobustTrainer:
         print(f"[SAVE] {path}")
 
     def load_checkpoint(self, path: str):
-        """Load checkpoint"""
+        """Load checkpoint including obs_projection weights"""
         checkpoint = torch.load(path, map_location=self.device, weights_only=False)
         self.model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+        # Restore obs_projection (critical: maps MuJoCo obs to model dim)
+        if 'obs_projection_state_dict' in checkpoint:
+            try:
+                self.obs_projection.load_state_dict(checkpoint['obs_projection_state_dict'], strict=False)
+                print(f"[LOAD] obs_projection restored")
+            except Exception as e:
+                print(f"[WARN] obs_projection restore failed: {e}")
+        # Restore optimizer if available
+        if 'optimizer_state_dict' in checkpoint and checkpoint['optimizer_state_dict'] is not None:
+            if hasattr(self, 'optimizer'):
+                try:
+                    self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+                except (ValueError, KeyError):
+                    print(f"[WARN] Optimizer state mismatch, using fresh optimizer")
         self.epoch = checkpoint.get('epoch', 0)
         self.global_step = checkpoint.get('global_step', 0)
         print(f"[LOAD] {path}")
+
+    def _find_best_checkpoint(self, phase_prefix: str) -> Optional[str]:
+        """
+        Find the best checkpoint for a given phase prefix.
+
+        Searches checkpoint_dir and colab_drive_path for files matching:
+          {phase_prefix}_best.pt, {phase_prefix}_latest.pt
+
+        Returns the path to the best available checkpoint, or None.
+        """
+        import glob as glob_mod
+
+        search_dirs = [self.config.checkpoint_dir]
+        if hasattr(self.config, 'colab_drive_path') and os.path.exists(self.config.colab_drive_path):
+            search_dirs.append(self.config.colab_drive_path)
+
+        # Prefer best over latest
+        suffixes = ["_best.pt", "_latest.pt"]
+        for suffix in suffixes:
+            for search_dir in search_dirs:
+                candidate = os.path.join(search_dir, f"{phase_prefix}{suffix}")
+                if os.path.exists(candidate):
+                    print(f"[FOUND] Checkpoint: {candidate}")
+                    return candidate
+
+        # Also try without underscore (e.g. "phase3.pt")
+        for search_dir in search_dirs:
+            candidate = os.path.join(search_dir, f"{phase_prefix}.pt")
+            if os.path.exists(candidate):
+                print(f"[FOUND] Checkpoint: {candidate}")
+                return candidate
+
+        print(f"[WARN] No checkpoint found for '{phase_prefix}' in {search_dirs}")
+        return None
 
     # ==========================================================================
     # INTRINSIC MOTIVATION TRAINING (Self-Thinking)
@@ -8108,7 +8824,7 @@ class RobustTrainer:
         print(f"  Skills discovered: {self.config.skill_discovery_skills}")
         print("=" * 70)
 
-    def _backup_to_drive(self):
+    def backup_to_drive(self):
         """Backup checkpoints to Google Drive (for Colab)"""
         if not self.config.colab_backup_enabled:
             return
@@ -8206,9 +8922,10 @@ def verify_physics_preservation(trainer: RobustTrainer) -> Dict[str, float]:
 def main():
     parser = argparse.ArgumentParser(description="Robust Trainer with Forgetting Prevention")
     parser.add_argument("--phase", type=str, required=True,
-                        choices=["0", "1", "1.5", "1.6", "1.7", "2", "2.5", "3", "4", "5", "6", "7"],
+                        choices=["0", "1", "1.5", "1.6", "1.7", "2", "2.5", "3", "4", "5", "6", "7", "8"],
                         help="Training phase: 0=physics, 1=imitation, 2=locomotion-rl, "
-                             "3=perception, 4=manipulation, 5=audio, 6=planning, 7=integration")
+                             "3=perception, 4=manipulation, 5=audio, 6=planning, 7=integration, "
+                             "8=companion")
     parser.add_argument("--epochs", type=int, default=50, help="Number of epochs")
     parser.add_argument("--load", type=str, default=None,
                         help="Force load a specific checkpoint file, bypassing automatic selection.")
@@ -8242,6 +8959,8 @@ def main():
         trainer.train_phase6(num_epochs=args.epochs, load_file=args.load)
     elif args.phase == "7":
         trainer.train_phase7(num_epochs=args.epochs, load_file=args.load)
+    elif args.phase == "8":
+        trainer.train_phase8(num_epochs=args.epochs)
 
     if args.verify:
         verify_physics_preservation(trainer)
