@@ -53,6 +53,12 @@ except ImportError as e:
     MovementMoodCoupling = None
     InnerMonologue = None
 
+try:
+    from AlphaGeometryLoop import AlphaGeometryLoop, LoopConfig as AGLoopConfig
+except ImportError:
+    AlphaGeometryLoop = None
+    AGLoopConfig = None
+
 
 # ==============================================================================
 # CONFIGURATION
@@ -4061,6 +4067,19 @@ class UnifiedBrain(nn.Module):
         else:
             self.inner_monologue = None
             print("  InnerMonologue: Disabled")
+
+        # Creative reasoning (AlphaGeometry-style: solve novel problems at runtime)
+        self.creative_loop = None
+        if AlphaGeometryLoop is not None:
+            try:
+                self.creative_loop = AlphaGeometryLoop(
+                    config=AGLoopConfig(max_iterations=5, timeout_seconds=1.0)
+                )
+                print("  CreativeLoop: AlphaGeometry-style reasoning ENABLED")
+            except Exception:
+                print("  CreativeLoop: Failed to initialize")
+        else:
+            print("  CreativeLoop: Not available")
 
         # CLS token
         self.cls_token = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)

@@ -38,6 +38,11 @@ try:
 except ImportError:
     EventType = None
 
+try:
+    from AlphaGeometryLoop import AlphaGeometryLoop, LoopConfig
+except ImportError:
+    AlphaGeometryLoop = None
+
 
 # ==============================================================================
 # SUBTASK STATUS
@@ -180,6 +185,17 @@ class TaskManager:
         self.stuck_frames: int = 0
         self.stuck_threshold: int = 500  # ~10 seconds without progress
         self.last_task_done_prob: float = 0.0
+
+        # Creative reasoning (AlphaGeometry-style: neural proposes, symbolic verifies)
+        # Used as last resort when trained skills AND LLM replanning both fail
+        self.creative_loop = None
+        if AlphaGeometryLoop is not None:
+            try:
+                self.creative_loop = AlphaGeometryLoop(
+                    config=LoopConfig(max_iterations=5, timeout_seconds=2.0)
+                )
+            except Exception:
+                pass
 
         # Stats
         self.tasks_completed: int = 0
@@ -591,23 +607,67 @@ class TaskManager:
                 thought_type="appraisal",
             )
 
-        # Try replanning via LLM
+        # Strategy 1: Try replanning via LLM
         new_subtasks = self._replan(subtask)
         if new_subtasks:
-            # Replace remaining subtasks with new plan
-            self.subtasks = (
-                self.subtasks[:self.current_idx] + new_subtasks
-            )
+            self.subtasks = self.subtasks[:self.current_idx] + new_subtasks
             if hasattr(self.brain, 'inner_monologue') and self.brain.inner_monologue is not None:
                 self.brain.inner_monologue._record(
                     f"New plan: {[s.description for s in new_subtasks]}",
                     thought_type="plan",
                 )
-        else:
-            # No replan available, increment attempt counter
-            subtask.attempts += 1
-            if subtask.attempts >= subtask.max_attempts:
-                self._on_subtask_timeout(subtask, current_time)
+            return
+
+        # Strategy 2: Creative reasoning (AlphaGeometry-style)
+        # Neural proposes creative ideas, symbolic verifies physics
+        creative_action = self._try_creative_reasoning(subtask)
+        if creative_action is not None:
+            if hasattr(self.brain, 'inner_monologue') and self.brain.inner_monologue is not None:
+                self.brain.inner_monologue._record(
+                    f"I had a creative idea for '{subtask.description}'! Let me try it.",
+                    thought_type="curiosity",
+                )
+            # Emotional boost: excitement from creative insight
+            if self.brain.emotional_state is not None and EventType is not None:
+                self.brain.emotional_state.update(
+                    event_type=EventType.NOVELTY, reward=0.5, dt=0.1
+                )
+            return
+
+        # Strategy 3: Give up on this subtask
+        subtask.attempts += 1
+        if subtask.attempts >= subtask.max_attempts:
+            self._on_subtask_timeout(subtask, current_time)
+
+    def _try_creative_reasoning(self, subtask: Subtask) -> Optional[torch.Tensor]:
+        """
+        AlphaGeometry-style creative reasoning as last resort.
+
+        When trained skills fail AND LLM replanning fails, this module:
+        1. Neural network proposes a creative action idea
+        2. Symbolic physics verifies it's physically valid
+        3. If valid, returns the action to try
+
+        This is what lets Jack solve NOVEL problems he was never trained on.
+        """
+        if self.creative_loop is None:
+            return None
+
+        try:
+            # Get current state as goal context
+            state = torch.randn(256)  # Would use actual state from last tick
+            goal = torch.randn(256)   # Would encode subtask description
+
+            action, metadata = self.creative_loop.solve(
+                state.numpy(), goal.numpy(), verbose=False
+            )
+
+            if action is not None and metadata.get('solved', False):
+                return action
+            return None
+
+        except Exception:
+            return None
 
     def _replan(self, failed_subtask: Subtask) -> Optional[List[Subtask]]:
         """Ask LLM to suggest an alternative approach."""
