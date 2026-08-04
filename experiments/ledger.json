@@ -137,35 +137,35 @@
       "status": "PASS"
     },
     "T0.07": {
-      "commit": "57120d0",
+      "commit": "50ff9e2",
       "control_metrics": {
-        "empty_loop_hz": 14408528.2
+        "empty_loop_hz": 14385271.3
       },
-      "duration_s": 18.56,
+      "duration_s": 19.1,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
-        "batch16_per_sample_speedup": 2.88,
-        "calibration_1x_hz": 960.42,
-        "calibration_2x_hz": 486.45,
-        "calibration_error": 0.0128,
-        "env_rel_std": 0.0042,
-        "env_steps_per_s": 2379.5,
-        "hours_per_1M_rollout_steps": 22.6,
-        "peak_rss_mb": 6911.5,
-        "policy_fwd_hz_b1": 12.36,
-        "policy_fwd_hz_b1_vision": 12.294,
-        "policy_fwd_rel_std": 0.0633,
-        "policy_samples_per_s_b16": 35.539,
-        "policy_share_of_step_time": 0.9948,
-        "sleep_5ms_actual_ms": 5.065,
-        "steps_per_s": 12.296,
-        "torch_threads": 4,
-        "total_params": 1769146406,
-        "train_steps_per_s_b2": 2.747,
-        "trainable_params": 57770022
+        "bare_repeat_spread": 0.0084,
+        "bare_steps_per_s": 1831.3,
+        "calibration_error": 0.0031,
+        "calibration_hz": 989.8,
+        "hours_for_2M_steps_no_llm": 47.0,
+        "hours_for_2M_steps_policy": 47.1,
+        "llm_removal_speedup": 1.0,
+        "policy_no_llm_rel_std": 0.0015,
+        "policy_no_llm_steps_per_s": 11.81,
+        "policy_no_llm_total_params": 60123174,
+        "policy_peak_rss_mb": 6989.0,
+        "policy_rel_std": 0.0106,
+        "policy_slowdown_vs_bare": 155.3,
+        "policy_steps_per_s": 11.79,
+        "policy_total_params": 1769146406,
+        "policy_trainable_params": 57770022,
+        "vectorised_rel_std": 0.0086,
+        "vectorised_speedup": 1.03,
+        "vectorised_steps_per_s": 1877.8
       },
-      "ran_at": "2026-08-04T14:19:10",
+      "ran_at": "2026-08-04T14:21:20",
       "seeds": [
         0
       ],

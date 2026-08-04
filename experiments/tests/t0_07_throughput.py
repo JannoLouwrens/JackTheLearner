@@ -111,27 +111,35 @@ def _calibrate() -> tuple[float, float]:
 # The three subjects.
 # --------------------------------------------------------------------------
 
-def _bare(steps: int = STEPS) -> float:
+def _bare():
     import gymnasium as gym
     e = gym.make("Humanoid-v5"); e.reset(seed=0)
     a = e.action_space.sample()
-    t0 = time.perf_counter()
-    for _ in range(steps):
+
+    def step():
         _, _, term, trunc, _ = e.step(a)
         if term or trunc:
             e.reset()
-    return steps / (time.perf_counter() - t0)
+
+    return _trials(step, n=STEPS, warmup=50)
 
 
-def _vectorised(steps: int = STEPS // 4, n: int = N_VEC) -> float:
+def _vectorised(n: int = N_VEC):
+    """Measured with the same repeat discipline as everything else.
+
+    The first version timed this once and the commit message concluded
+    "vectorisation is SLOWER than one env, 0.87x". Re-measured, it read 1.17x.
+    A ratio that changes sign between runs is not a finding — it is an
+    un-repeated measurement, which is the failure mode this whole ladder exists
+    to prevent. So the spread is now reported and gated, and no directional
+    claim is made that the spread does not support.
+    """
     import gymnasium as gym
     v = gym.make_vec("Humanoid-v5", num_envs=n, vectorization_mode="sync")
     v.reset(seed=0)
     a = v.action_space.sample()
-    t0 = time.perf_counter()
-    for _ in range(steps):
-        v.step(a)
-    return (steps * n) / (time.perf_counter() - t0)
+    hz, rel_std = _trials(lambda: v.step(a), n=STEPS // 4, warmup=20)
+    return hz * n, rel_std
 
 
 def _with_policy(llm: bool) -> dict:
@@ -176,11 +184,8 @@ def _experiment(seed: int) -> dict:
     _setup()
     calib_hz, calib_err = _calibrate()
 
-    bare_a = _bare()
-    bare_b = _bare()          # repeat: a measurement that will not repeat is not one
-    bare = (bare_a + bare_b) / 2
-    spread = abs(bare_a - bare_b) / max(bare_a, bare_b)
-    vec = _vectorised()
+    bare, spread = _bare()    # repeat: a measurement that will not repeat is not one
+    vec, vec_spread = _vectorised()
 
     # LLM-off first: it is the smaller resident set, so the 6.9 GB build does not
     # colour the peak-RSS figure attributed to it.
@@ -193,6 +198,7 @@ def _experiment(seed: int) -> dict:
         "bare_steps_per_s": round(bare, 1),
         "bare_repeat_spread": round(spread, 4),
         "vectorised_steps_per_s": round(vec, 1),
+        "vectorised_rel_std": round(vec_spread, 4),
         "vectorised_speedup": round(vec / bare, 2),
 
         # Today's default brain — what every other test on this ladder pays.
@@ -229,6 +235,7 @@ def _check(m: dict, c: dict) -> bool:
     # the work rather than the loop.
     return (m["calibration_error"] < MAX_CALIBRATION_ERROR
             and m["bare_repeat_spread"] < MAX_REPEAT_SPREAD
+            and m["vectorised_rel_std"] < MAX_REPEAT_SPREAD
             and m["policy_rel_std"] < MAX_POLICY_REL_STD
             and m["policy_no_llm_rel_std"] < MAX_POLICY_REL_STD
             and m["bare_steps_per_s"] > 1

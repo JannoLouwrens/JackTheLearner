@@ -68,3 +68,34 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   by setting hasTrustDialogAccepted for this project. Check /data/jack-logs/ladder.log after next fire.
   NOTE: peak RSS 6.9 GB exceeds the 1.5 GB the loop brief asks for; tests constructing the full brain
   need llm_enabled=False or they will strain a box with paying tenants.
+- **2026-08-04 manual (same collision, continued)** — Re-ran the merged T0.07 on a quiet box and two
+  of the numbers above do not survive repetition.
+  **(1) `llm_enabled=False` changes rollout speed by 0.0%** — 11.79 steps/s with the 1.71B SmolLM2
+  loaded, 11.81 without (params 1,769,146,406 vs 60,123,174, so the flag genuinely takes effect).
+  The LLM is 6.9 GB resident and **never executes in `forward()`**. So the RSS hazard is real but the
+  llm_enabled=False remedy is free — it costs no measured speed and no measured behaviour, which is
+  itself the finding: 1.71B parameters sit in memory contributing nothing to a rollout step. Consistent
+  with T1.03's orphan sweep. Worth its own spec before anyone counts them as capability.
+  **(2) "Sync vectorisation is SLOWER than one env (0.87x)" was an un-repeated measurement.** It read
+  1.17x on the next run and **1.03x ± 0.9%** once warmed and repeated 3x. The honest claim is that 8-env
+  sync vectorisation buys *nothing* (1.03x), not that it is harmful. `_vectorised` now goes through the
+  same repeat-and-report path as everything else and its spread is gated at 25%; a ratio that changed
+  sign between runs had already reached a commit message.
+  **(3) Warmup, not the box, drove the earlier variance.** Warming once and timing measured the policy
+  at 3.67 Hz with 28.9% spread while the *same forward plus a 224x224 vision encode* measured 4.38 Hz —
+  a heavier computation cannot be faster, so the timer was catching the 6.9 GB model paging in.
+  Per-trial warmup: all spreads now <1.1% (bare 0.84%, vectorised 0.86%, policy 1.06%).
+  My own earlier 3.67 Hz figure was CPU contention from a concurrently running `--gate`; the loop's
+  ~12 steps/s was right and mine was the contaminated one.
+  Settled numbers, warmed and repeated: physics alone **1,831 steps/s**, with policy **11.8 steps/s**
+  (**155x** slowdown), **47 CPU-hours per 2M steps**.
+  Also: calibrating the harness against `time.sleep(1/200)` fails at 16.3% error, because sleep()
+  promises only a lower bound (5.8 ms delivered for a 5 ms request under load) — the ground truth was
+  wrong, not the timer. Replaced with a scaling invariant: doubling the work must halve the rate
+  (error now 0.31%).
+  PROCESS: two agents in one tree cost more than both units of work were worth. The loop's `run.py`
+  flock is the right fix; it was still uncommitted when I stopped, so I left it alone rather than
+  commit someone else's work in progress. I also killed the loop's `--gate` while clearing my own —
+  a gate is re-runnable, but it needs re-running.
+  Next: **run `--gate` once the tree has one owner** (it has not completed since T0.07 landed), then
+  T0.09 Colab round-trip. And a spec for finding (1): 1.71B params that never run.

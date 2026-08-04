@@ -83,10 +83,12 @@ LADDER: list[Spec] = [
          falsified_by="n/a — measurement, not a claim.",
          null_baseline="n/a", metric="steps_per_s", budget=Budget.CPU,
          depends_on=["T0.06"],
-         notes="The remembered figure was '~27 steps/s, CPU-dispatch-bound'. Measured "
-               "2026-08-04: 3.67 sequential rollout steps/s — 7x slower, and not "
-               "dispatch-bound (B=16 buys only 3.15x per sample). Physics is free at "
-               "1591 steps/s; the policy is 99.8% of a step. 1M rollout steps = 76 CPU-hours."),
+         notes="Measured 2026-08-04 (warmed, 3 trials, all spreads <1.1%): physics alone "
+               "1831 steps/s; with the policy 11.8 steps/s — the forward costs 155x the "
+               "physics it drives, so 2M steps = 47 CPU-hours. Sync vectorisation over 8 "
+               "envs buys 1.03x, i.e. nothing, until the POLICY is batched with it. "
+               "llm_enabled=False changes rollout speed by 0.0%: the 1.71B-param SmolLM2 "
+               "is 6.9 GB resident and never runs in forward()."),
 
     Spec("T0.08", 0, "Metrics land in the ledger",
          hypothesis="A run writes metrics retrievable by spec id.",
