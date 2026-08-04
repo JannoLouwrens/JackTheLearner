@@ -40,6 +40,32 @@
       "spec_id": "T0.02",
       "status": "PASS"
     },
+    "T1.01": {
+      "commit": "6d87687",
+      "control_metrics": {
+        "curve": "0.94305;0.94268;0.94414;0.9419;0.94451;0.94415;0.94341;0.9418;0.94329;0.94581;0.94366",
+        "final_loss": 0.94366,
+        "improvement_ratio": 1.0,
+        "initial_loss": 0.94305,
+        "trainable_tensors": 0
+      },
+      "duration_s": 688.37,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "curve": "0.94305;0.03822;0.00685;0.00419;0.00382;0.00293;0.00258;0.00245;0.00201;0.00194;0.00177",
+        "final_loss": 0.00177,
+        "improvement_ratio": 532.8,
+        "initial_loss": 0.94305,
+        "trainable_tensors": 878
+      },
+      "ran_at": "2026-08-04T12:30:16",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.01",
+      "status": "PASS"
+    },
     "T1.03": {
       "commit": "7947fe2",
       "control_metrics": {},
