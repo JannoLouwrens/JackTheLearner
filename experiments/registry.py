@@ -138,12 +138,26 @@ LADDER: list[Spec] = [
          notes="The single highest-yield test in ML. Catches wrong loss, detached "
                "graph, shape bugs, dead ReLUs, and bad LR in one shot."),
 
-    Spec("T1.02", 1, "Shuffled-target control",
-         hypothesis="With targets shuffled, the module fits SLOWER and worse.",
-         falsified_by="Shuffled targets fit as fast as real ones.",
-         null_baseline="Equal fit means the metric measures capacity, not signal.",
-         metric="real_vs_shuffled_loss_ratio", budget=Budget.CPU, depends_on=["T1.01"],
-         kills="The task definition — there is no learnable structure in it."),
+    Spec("T1.02", 1, "Shuffled-target control (generalisation)",
+         hypothesis="On HELD-OUT states, a structured task generalises and a shuffled "
+                    "one does not.",
+         falsified_by="Held-out error is the same whether or not a state->action "
+                      "mapping exists.",
+         null_baseline="Predicting the mean action, and the shuffled-task model.",
+         metric="heldout_structure_advantage", budget=Budget.CPU_LONG, depends_on=["T1.01"],
+         control="The shuffled task must NOT generalise — its held-out error should "
+                 "be no better than predicting the mean.",
+         kills="The premise that this architecture can learn a state->action mapping "
+               "at all. If structure gives no held-out advantage, GPU hours cannot help.",
+         notes="REDESIGNED 2026-08-04, with evidence, and made HARDER. The original "
+               "measured training FIT on one batch: structured vs shuffled came out at "
+               "0.999 — indistinguishable. That is not a bug in the model, it is a bug "
+               "in the experiment, and the original spec predicted it: a 58M network "
+               "memorises 8 arbitrary pairs whether or not a mapping exists, so fit "
+               "measures capacity. Only generalisation to unseen states can detect "
+               "whether structure was exploited, so the test now trains on 64 samples "
+               "and scores 16 held-out. Changed because the design could not "
+               "discriminate, not because the model failed it."),
 
     Spec("T1.03", 1, "Gradient reaches every trainable parameter",
          hypothesis="After one backward, no trainable tensor has grad None or all-zero.",
@@ -325,6 +339,30 @@ LADDER: list[Spec] = [
          metric="skill_classification_acc", budget=Budget.GPU, seeds=3, depends_on=["T1.01"],
          kills="SkillDiscovery."),
 
+    Spec("T2.13", 2, "Train to convergence, not to a step count",
+         hypothesis="Training can be extended in increments until improvement "
+                    "falls below seed noise, and the stopping point is decided by "
+                    "measurement rather than by whoever got bored.",
+         falsified_by="Held-out performance is still climbing when the criterion "
+                      "fires, or the criterion never fires because per-increment "
+                      "gains never drop below noise.",
+         null_baseline="The seed-variance band from T1.08. An increment that "
+                       "improves by less than that has not improved.",
+         metric="increments_to_convergence", budget=Budget.GPU_LONG,
+         depends_on=["T1.08", "T2.02"],
+         control="Shuffle the increment order. A real convergence point must not "
+                 "depend on which data arrived when.",
+         kills="Any claim that a run is 'done'. Without this, 'trained' means "
+               "'stopped', and the two are not the same thing.",
+         notes="Added 2026-08-04 at the owner's request: 'at end i would want to "
+               "run all steps until they stop showing growth'. This is the spec "
+               "that makes that a measurement. It resumes from checkpoints rather "
+               "than retraining, which is what T0.04 and T0.05 established is safe "
+               "(33x optimiser-state fidelity, and a SIGKILL mid-write cannot "
+               "corrupt the file). Every earlier training spec therefore has a "
+               "budget that can be raised and rerun; this one decides when to stop "
+               "raising it. Pair with --gate: extended training must not regress "
+               "anything already demonstrated."),
     Spec("T2.12", 2, "Emotion model produces distinguishable states",
          hypothesis="PAD trajectories under different event streams are separable.",
          falsified_by="Indistinguishable from a random walk.",

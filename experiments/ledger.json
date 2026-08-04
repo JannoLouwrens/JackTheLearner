@@ -318,6 +318,29 @@
       "spec_id": "T1.01",
       "status": "PASS"
     },
+    "T1.02": {
+      "commit": "863b982",
+      "control_metrics": {
+        "shuffled_heldout": 1.56415,
+        "shuffled_train_loss": 1.31829
+      },
+      "duration_s": 1676.11,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "beats_mean_baseline": 0.415,
+        "heldout_structure_advantage": 1.008,
+        "mean_baseline": 0.64411,
+        "structured_heldout": 1.55148,
+        "structured_train_loss": 1.37082
+      },
+      "ran_at": "2026-08-04T17:09:07",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.02",
+      "status": "FAIL"
+    },
     "T1.03": {
       "commit": "bb1659d",
       "control_metrics": {},

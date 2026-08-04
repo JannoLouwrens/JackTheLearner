@@ -52,6 +52,39 @@ for _m in [m for m in list(_sys.modules) if m.startswith("torch")]:
 """
 
 
+REPO_URL = "https://github.com/JannoLouwrens/JackTheLearner"
+
+
+def repo_preamble(ref: str = "main") -> str:
+    """Put the repo on an ephemeral machine that has never seen it.
+
+    Every training spec from Tier 1 onward needs UnifiedBrain, and shipping it
+    inline is not viable — it is 4700 lines and it drifts. The repo is public, so
+    the cheapest correct answer is to clone it and pin a ref, which also makes a
+    GPU result attributable to an exact commit rather than to "whatever was on the
+    box that day".
+
+    Only numpy is needed beyond torch, and both backends ship it, so there is no
+    dependency install to go wrong.
+    """
+    return f"""
+import subprocess as _sp, sys as _sys, os as _os
+_sp.run(["git", "clone", "--depth", "50", "-q", "{REPO_URL}", "/tmp/jack"], check=True)
+_sp.run(["git", "-C", "/tmp/jack", "checkout", "-q", "{ref}"], check=True)
+_sys.path.insert(0, "/tmp/jack")
+_os.environ["MUJOCO_GL"] = "disabled"
+print("REPO", _sp.run(["git", "-C", "/tmp/jack", "rev-parse", "--short", "HEAD"],
+                      capture_output=True, text=True).stdout.strip(), flush=True)
+"""
+
+
+def build_job(body: str, ref: str = "main") -> Path:
+    """Wrap a script body into a runnable job file: clone the repo, then run it."""
+    f = Path(tempfile.mkdtemp(dir="/data")) / "job.py"
+    f.write_text(repo_preamble(ref) + "\n" + body)
+    return f
+
+
 @dataclass
 class JobResult:
     backend: str
