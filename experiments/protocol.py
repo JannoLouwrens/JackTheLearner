@@ -21,9 +21,12 @@ rendered FROM it, never written by hand.
 """
 from __future__ import annotations
 
+import fcntl
 import json
+import os
 import platform
 import subprocess
+import tempfile
 import time
 from dataclasses import dataclass, field, asdict
 from enum import Enum
@@ -135,17 +138,63 @@ class Ledger:
             r["status"] = Status(r["status"])
             self.results[rid] = Result(**r)
 
-    def save(self) -> None:
-        payload = {
-            "_comment": "Written by experiments/run.py. Do not hand-edit — a claim "
-                        "here must come from a test that could have failed.",
-            "results": {k: {**asdict(v), "status": v.status.value} for k, v in self.results.items()},
-        }
-        self.path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
-
     def record(self, result: Result) -> None:
+        """Merge one result into the ledger under an exclusive lock.
+
+        Naive save() lost data: each Ledger held an in-memory copy and wrote the
+        whole file, so a writer with a stale view silently erased results it had
+        never seen. Measured, two interleaved writers kept 11 of 15 records
+        (ladder spec T0.08). That is not hypothetical — the hourly loop and a
+        manual session overlap by design.
+
+        So: lock, RE-READ from disk, merge, write atomically. The tmp+os.replace
+        is the same pattern T0.05 established, because a ledger truncated by a
+        SIGKILL would erase the evidence for every capability claimed so far.
+        """
         self.results[result.spec_id] = result
-        self.save()
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        lock_path = self.path.with_suffix(self.path.suffix + ".lock")
+
+        with open(lock_path, "w") as lock:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+            try:
+                on_disk: Dict[str, Any] = {}
+                if self.path.exists():
+                    try:
+                        on_disk = json.loads(self.path.read_text()).get("results", {})
+                    except json.JSONDecodeError:
+                        on_disk = {}          # corrupt: rebuild from memory rather than lose everything
+
+                merged = dict(on_disk)
+                for rid, r in self.results.items():
+                    merged[rid] = {**asdict(r), "status": r.status.value}
+
+                payload = {
+                    "_comment": "Written by experiments/run.py under an exclusive lock. "
+                                "Do not hand-edit — a claim here must come from a test "
+                                "that could have failed.",
+                    "results": merged,
+                }
+                fd, tmp = tempfile.mkstemp(dir=str(self.path.parent), suffix=".tmp")
+                with os.fdopen(fd, "w") as f:
+                    f.write(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(tmp, self.path)
+
+                # Adopt the merged view so this instance stops being stale.
+                for rid, raw in merged.items():
+                    if rid not in self.results:
+                        d = dict(raw)
+                        d["status"] = Status(d["status"])
+                        self.results[rid] = Result(**d)
+            finally:
+                fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+
+    def save(self) -> None:
+        """Retained for compatibility; record() is the safe path."""
+        if self.results:
+            self.record(next(iter(self.results.values())))
 
     def status(self, spec_id: str) -> Status:
         r = self.results.get(spec_id)

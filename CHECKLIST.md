@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 8 / 57 demonstrated
+## 9 / 57 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -38,7 +38,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T0.07** CPU throughput baseline
       - _asserts:_ Measured env-steps/s on this ARM box, recorded for planning.
       - _dies if:_ n/a — measurement, not a claim.
-- [ ] **T0.08** Metrics land in the ledger
+- [x] **T0.08** Metrics land in the ledger
       - _asserts:_ A run writes metrics retrievable by spec id.
       - _dies if:_ Missing or unparseable ledger entry.
 - [ ] **T0.09** Colab T4 job round-trip

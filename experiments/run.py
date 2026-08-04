@@ -34,11 +34,26 @@ MARK = {
 
 
 def _module_for(spec_id: str):
-    """tests/t0_02_*.py implements T0.02. Missing module = not yet written."""
+    """tests/t0_02_*.py implements T0.02. Missing module = not yet written.
+
+    Duplicates RAISE. Taking the first alphabetical match silently shadowed a
+    second implementation: the hourly loop and a manual session each wrote a
+    T0.07, `t0_07_cpu_throughput.py` sorted first, and the other was never run
+    again — while the ledger reported a PASS that belonged to whichever file won
+    the sort. Two implementations of one spec is an unresolved disagreement about
+    what the spec means; it must be settled by a person, not by alphabetical order.
+    """
     prefix = spec_id.lower().replace(".", "_")
-    for p in sorted(TESTS_DIR.glob(f"{prefix}*.py")):
-        return importlib.import_module(f"experiments.tests.{p.stem}")
-    return None
+    matches = sorted(TESTS_DIR.glob(f"{prefix}*.py"))
+    if len(matches) > 1:
+        raise RuntimeError(
+            f"{spec_id} has {len(matches)} implementations: "
+            f"{', '.join(m.name for m in matches)}. Delete or merge — the runner "
+            "will not choose between them."
+        )
+    if not matches:
+        return None
+    return importlib.import_module(f"experiments.tests.{matches[0].stem}")
 
 
 def cmd_status(ledger: Ledger) -> int:

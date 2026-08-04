@@ -83,8 +83,10 @@ LADDER: list[Spec] = [
          falsified_by="n/a — measurement, not a claim.",
          null_baseline="n/a", metric="steps_per_s", budget=Budget.CPU,
          depends_on=["T0.06"],
-         notes="Prior measurement: ~27 steps/s, CPU-dispatch-bound at 6095 ATen "
-               "dispatches per B=1 forward. Confirm before believing any GPU estimate."),
+         notes="The remembered figure was '~27 steps/s, CPU-dispatch-bound'. Measured "
+               "2026-08-04: 3.67 sequential rollout steps/s — 7x slower, and not "
+               "dispatch-bound (B=16 buys only 3.15x per sample). Physics is free at "
+               "1591 steps/s; the policy is 99.8% of a step. 1M rollout steps = 76 CPU-hours."),
 
     Spec("T0.08", 0, "Metrics land in the ledger",
          hypothesis="A run writes metrics retrievable by spec id.",

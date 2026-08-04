@@ -1,10 +1,10 @@
 {
-  "_comment": "Written by experiments/run.py. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
+  "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
   "results": {
     "T0.01": {
-      "commit": "7947fe2",
+      "commit": "57120d0",
       "control_metrics": {},
-      "duration_s": 1.47,
+      "duration_s": 1.62,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -13,7 +13,7 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-04T12:13:17",
+      "ran_at": "2026-08-04T14:14:27",
       "seeds": [
         0
       ],
@@ -21,11 +21,11 @@
       "status": "PASS"
     },
     "T0.02": {
-      "commit": "7947fe2",
+      "commit": "57120d0",
       "control_metrics": {
         "max_abs_trace_delta": 0.12971967458724976
       },
-      "duration_s": 1.04,
+      "duration_s": 0.82,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -33,7 +33,7 @@
         "max_abs_trace_delta": 0.0,
         "steps": 30
       },
-      "ran_at": "2026-08-04T12:13:18",
+      "ran_at": "2026-08-04T14:14:28",
       "seeds": [
         0
       ],
@@ -41,11 +41,11 @@
       "status": "PASS"
     },
     "T0.03": {
-      "commit": "313148b",
+      "commit": "57120d0",
       "control_metrics": {
         "output_delta": 6.441016197205
       },
-      "duration_s": 47.49,
+      "duration_s": 8.25,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -55,7 +55,7 @@
         "tensors_compared": 7,
         "unexpected_keys": 0
       },
-      "ran_at": "2026-08-04T13:48:16",
+      "ran_at": "2026-08-04T14:14:37",
       "seeds": [
         0
       ],
@@ -63,14 +63,14 @@
       "status": "PASS"
     },
     "T0.04": {
-      "commit": "cb1f70c",
+      "commit": "57120d0",
       "control_metrics": {
         "first_step_gap_pct": 1.326,
         "max_trace_delta": 0.3489927351,
         "reference_final": 0.023943,
         "resumed_final": 0.034312
       },
-      "duration_s": 181.47,
+      "duration_s": 143.02,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -80,7 +80,7 @@
         "resume_fidelity_ratio": 33.39,
         "resumed_final": 0.030052
       },
-      "ran_at": "2026-08-04T13:58:37",
+      "ran_at": "2026-08-04T14:13:12",
       "seeds": [
         0
       ],
@@ -88,23 +88,23 @@
       "status": "PASS"
     },
     "T0.05": {
-      "commit": "7255426",
+      "commit": "57120d0",
       "control_metrics": {
         "checkpoints_checked": 12,
         "corrupt": 12,
         "kills": 12,
         "max_step_recovered": 0
       },
-      "duration_s": 5.05,
+      "duration_s": 5.9,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
         "checkpoints_checked": 12,
         "corrupt": 0,
         "kills": 12,
-        "max_step_recovered": 5
+        "max_step_recovered": 2
       },
-      "ran_at": "2026-08-04T14:00:40",
+      "ran_at": "2026-08-04T14:13:18",
       "seeds": [
         0
       ],
@@ -112,24 +112,24 @@
       "status": "PASS"
     },
     "T0.06": {
-      "commit": "f96b717",
+      "commit": "57120d0",
       "control_metrics": {
         "raised": 5,
         "wrong_widths_tried": 5
       },
-      "duration_s": 1.61,
+      "duration_s": 0.06,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
         "action_space_dim": 17,
         "ctrl_write_error": 0.0,
         "expected_nu": 17,
-        "last_reward": 4.9097,
+        "last_reward": 4.9158,
         "nu": 17,
         "obs_dim": 348,
         "steps_ok": 5
       },
-      "ran_at": "2026-08-04T14:05:25",
+      "ran_at": "2026-08-04T14:13:18",
       "seeds": [
         0
       ],
@@ -137,26 +137,60 @@
       "status": "PASS"
     },
     "T0.07": {
-      "commit": "2d5b011",
-      "control_metrics": {},
-      "duration_s": 8.66,
+      "commit": "57120d0",
+      "control_metrics": {
+        "empty_loop_hz": 14408528.2
+      },
+      "duration_s": 18.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
-        "bare_repeat_spread": 0.0491,
-        "bare_steps_per_s": 2260.0,
-        "hours_for_2M_steps_policy": 46.2,
-        "obs_dim": 256,
-        "policy_slowdown_vs_bare": 187.8,
-        "policy_steps_per_s": 12.03,
-        "vectorised_speedup": 0.87,
-        "vectorised_steps_per_s": 1976.4
+        "batch16_per_sample_speedup": 2.88,
+        "calibration_1x_hz": 960.42,
+        "calibration_2x_hz": 486.45,
+        "calibration_error": 0.0128,
+        "env_rel_std": 0.0042,
+        "env_steps_per_s": 2379.5,
+        "hours_per_1M_rollout_steps": 22.6,
+        "peak_rss_mb": 6911.5,
+        "policy_fwd_hz_b1": 12.36,
+        "policy_fwd_hz_b1_vision": 12.294,
+        "policy_fwd_rel_std": 0.0633,
+        "policy_samples_per_s_b16": 35.539,
+        "policy_share_of_step_time": 0.9948,
+        "sleep_5ms_actual_ms": 5.065,
+        "steps_per_s": 12.296,
+        "torch_threads": 4,
+        "total_params": 1769146406,
+        "train_steps_per_s_b2": 2.747,
+        "trainable_params": 57770022
       },
-      "ran_at": "2026-08-04T14:08:23",
+      "ran_at": "2026-08-04T14:19:10",
       "seeds": [
         0
       ],
       "spec_id": "T0.07",
+      "status": "PASS"
+    },
+    "T0.08": {
+      "commit": "57120d0",
+      "control_metrics": {},
+      "duration_s": 0.13,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "blocked_records_no_metrics": true,
+        "default_is_not_run": true,
+        "dependency_blocks": true,
+        "entries_after_concurrency": 18,
+        "roundtrip_ok": true,
+        "survives_concurrent_writers": true
+      },
+      "ran_at": "2026-08-04T14:13:19",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.08",
       "status": "PASS"
     },
     "T1.01": {
