@@ -67,19 +67,20 @@
       "status": "PASS"
     },
     "T1.03": {
-      "commit": "7947fe2",
+      "commit": "77eefb5",
       "control_metrics": {},
-      "duration_s": 44.96,
+      "duration_s": 9.05,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "pre-registered threshold not met",
       "metrics": {
-        "orphan_fraction": 0.5884,
-        "params_without_grad": 67668479,
-        "total_params": 1826911260,
-        "trainable_params": 115009308,
-        "worst_offenders": "hierarchical_planner=37,166,972; temporal_memory=12,635,136; action_expert=4,615,696; autonomous_mind=4,462,201; world_model=2,974,977; language_encoder=2,624,000"
+        "modalities_fed": "vision,goal,task",
+        "orphan_fraction": 0.1672,
+        "params_without_grad": 9658921,
+        "total_params": 1769146406,
+        "trainable_params": 57770022,
+        "worst_offenders": "action_expert=4,615,696; language_encoder=2,624,000; object_detector=1,304,857; semantic_anchors=408,577; audio_proj=262,656; navigation_planner=164,996"
       },
-      "ran_at": "2026-08-04T12:14:43",
+      "ran_at": "2026-08-04T12:36:30",
       "seeds": [
         0
       ],

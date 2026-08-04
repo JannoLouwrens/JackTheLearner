@@ -193,7 +193,19 @@ class UnifiedBrainConfig:
     # These enable truly autonomous behavior without external rewards
 
     # Master switch for intrinsic motivation
-    enable_intrinsic_motivation: bool = True
+    enable_intrinsic_motivation: bool = False
+
+    # Modules that are constructed but have NO live call site. Measured
+    # 2026-08-04: together they were 67,668,479 of 115,009,308 trainable
+    # parameters (58.8%) receiving zero gradient, while still being optimised
+    # over, checkpointed, and counted in every "105M brain" claim.
+    #
+    # They stay OFF until something actually invokes them and an ablation test
+    # (ladder tier 3) shows they contribute. Turning one on without wiring it
+    # only re-creates dead weight. See docs/PIPELINE_REVIEW.md section 9.
+    enable_temporal_memory: bool = False      # never passed memory=; context is 1 frame
+    enable_world_model: bool = False          # forward() gates on action is not None
+    enable_hierarchical_planner: bool = False # 37.2M — larger than the backbone
 
     # Curiosity (ICM + RND) - drives exploration of novel states
     enable_curiosity: bool = True
@@ -3869,7 +3881,8 @@ class UnifiedBrain(nn.Module):
         # TEMPORAL MEMORY
         # ==========================================
         print("\n[TEMPORAL MEMORY]")
-        self.temporal_memory = TemporalMemory(config)
+        self.temporal_memory = (TemporalMemory(config)
+                     if config.enable_temporal_memory else None)
         print(f"  Context: {config.context_length} timesteps")
 
         # ==========================================
@@ -3895,7 +3908,8 @@ class UnifiedBrain(nn.Module):
         # WORLD MODEL (TD-MPC2)
         # ==========================================
         print("\n[WORLD MODEL - TD-MPC2]")
-        self.world_model = WorldModel(config)
+        self.world_model = (WorldModel(config)
+                     if config.enable_world_model else None)
         print(f"  Latent dim: {config.latent_dim}")
         print(f"  Imagination horizon: {config.imagination_horizon}")
         print(f"  MPC samples: {config.mpc_samples}")
@@ -3904,7 +3918,8 @@ class UnifiedBrain(nn.Module):
         # HIERARCHICAL PLANNER (HAC)
         # ==========================================
         print("\n[HIERARCHICAL PLANNER - HAC]")
-        self.hierarchical_planner = HierarchicalPlanner(config)
+        self.hierarchical_planner = (HierarchicalPlanner(config)
+                     if config.enable_hierarchical_planner else None)
         print(f"  Skills: {config.num_skills}")
         print(f"  Max subgoals: {config.max_subgoals}")
 
@@ -4084,14 +4099,45 @@ class UnifiedBrain(nn.Module):
         # CLS token
         self.cls_token = nn.Parameter(torch.randn(1, 1, config.d_model) * 0.02)
 
-        # Initialize
-        self.apply(self._init_weights)
+        # Initialize — but NEVER touch pretrained weights.
+        #
+        # self.apply() recurses into EVERY submodule, including any frozen
+        # pretrained encoder (the LLM, SigLIP, DINOv2). requires_grad_(False)
+        # stops gradients; it does not stop an in-place normal_() from
+        # overwriting the data. Measured before this fix: the loaded LLM's
+        # q_proj std went 0.1010 -> 0.0196 and its embeddings 1.0013 -> 0.0197,
+        # i.e. the "frozen pretrained backbone" was random noise in every run
+        # this project has ever done.
+        self._init_trainable_weights()
 
         # Stats
         total_params = sum(p.numel() for p in self.parameters())
         print(f"\n{'=' * 70}")
         print(f"[TOTAL] {total_params:,} parameters (~{total_params * 4 / 1e6:.1f} MB)")
         print("=" * 70 + "\n")
+
+    # Submodules holding pretrained weights. Anything whose name starts with one
+    # of these is initialised by its own pretrained checkpoint, never by us.
+    _PRETRAINED_PREFIXES = (
+        "language_encoder.llm", "language_encoder.model", "text_tower",
+        "vision_encoder.pretrained", "vision_encoder.clip", "vision_encoder.siglip",
+        "vision_encoder.dinov2", "audio_encoder.pretrained",
+    )
+
+    def _init_trainable_weights(self) -> None:
+        """Apply default init to trainable modules ONLY, skipping pretrained trees.
+
+        Named traversal rather than self.apply(), because apply() offers no way to
+        know which subtree it is in. Guarded by ladder spec T1.05.
+        """
+        skipped = 0
+        for name, module in self.named_modules():
+            if any(name.startswith(p) for p in self._PRETRAINED_PREFIXES):
+                skipped += 1
+                continue
+            self._init_weights(module)
+        if skipped:
+            print(f"  [init] preserved {skipped} pretrained submodules")
 
     def _init_weights(self, module):
         if isinstance(module, nn.Linear):

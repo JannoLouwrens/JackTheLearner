@@ -37,10 +37,26 @@ def _experiment(seed: int) -> dict:
     total = sum(p.numel() for p in brain.parameters())
     trainable = sum(p.numel() for p in brain.parameters() if p.requires_grad)
 
-    # A representative forward: proprioception only, which is what the live
-    # runtime path actually supplies.
+    # Feed EVERY modality the architecture claims to support. A module that
+    # receives no gradient when its own input is supplied is genuinely orphaned;
+    # one starved only because the test withheld its input is a test artefact,
+    # and conflating the two would let real dead weight hide.
     obs = torch.randn(2, cfg.obs_dim)
-    out = brain(obs)
+    kwargs = {}
+    for name, shape in (
+        ("vision", (2, 3, 224, 224)),
+        ("audio", (2, getattr(cfg, "audio_dim", 128))),
+        ("touch", (2, getattr(cfg, "touch_dim", 10))),
+        ("goal", (2, cfg.d_model)),
+        ("task", (2, cfg.d_model)),
+    ):
+        try:
+            brain(obs, **{name: torch.randn(*shape)})
+            kwargs[name] = torch.randn(*shape)
+        except Exception:
+            pass  # modality not accepted by this build; not an orphan
+
+    out = brain(obs, **kwargs)
     loss = sum(v.float().pow(2).mean() for v in out.values()
                if torch.is_tensor(v) and v.dtype.is_floating_point)
     loss.backward()
@@ -56,6 +72,7 @@ def _experiment(seed: int) -> dict:
 
     worst = sorted(orphan_by_module.items(), key=lambda kv: -kv[1])[:6]
     return {
+        "modalities_fed": ",".join(kwargs) or "proprio-only",
         "total_params": total,
         "trainable_params": trainable,
         "params_without_grad": orphan_params,
