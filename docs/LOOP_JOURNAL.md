@@ -112,3 +112,19 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   cannot both write. status/next/render stay lock-free.
   Next: T0.10 (Kaggle round-trip — untested end to end; the kernels API is push-and-poll, not
   ephemeral-run, so expect the metadata/slug handling to need iteration), then T0.11 failover.
+- **2026-08-04 manual** — TIER 0 COMPLETE, 12/12.
+  T0.10 Kaggle round-trip PASS (214s): Tesla P100 sm_6.0, cuda true, real matmul, artifact returned.
+  The fix that unlocked it: Kaggle assigns a P100 regardless of the accelerator requested
+  (nvidiaTeslaT4 and gpuT4x2 both gave P100) while its own preinstalled torch 2.10+cu128 ships
+  sm_70+ only. Jobs now prepend `pip install torch==2.5.1 --index-url .../cu121` — the last line
+  carrying Pascal. Verified arch_list sm_50..sm_90.
+  T0.11 failover PASS (203s): forced Colab to refuse, the IDENTICAL unmodified script landed on
+  Kaggle and returned the same artifact key. It absorbed three asymmetries silently — sync vs
+  push/poll, absolute-path download vs output dir, and torch 2.11+cu128/sm_75 vs 2.5.1+cu121/sm_60.
+  Control with both backends impossible correctly failed.
+  T0.12 quota accounting PASS: charges per ISO week, survives reload, refuses a job whose estimate
+  exceeds the remainder, isolates weeks, leaves Colab unmetered.
+  **Tier 1 is now the frontier.** T1.03 still FAILS at 16.7% orphan — action_expert (4.6M), the
+  module whose output reaches mj_data.ctrl, gets no gradient from forward(). Fix that next.
+  Also carried from the loop's last iteration: llm_enabled=False changes rollout speed by 0.0% —
+  the 1.71B SmolLM2 is 6.9 GB resident and NEVER runs in forward(). Pure dead weight at runtime.

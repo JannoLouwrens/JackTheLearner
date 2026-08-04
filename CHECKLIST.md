@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 10 / 57 demonstrated
+## 13 / 57 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -44,13 +44,13 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T0.09** Colab T4 job round-trip
       - _asserts:_ A script submits to Colab, runs on a T4, returns artifacts, VM torn down.
       - _dies if:_ No artifact returned, or the VM persists.
-- [ ] **T0.10** Kaggle job round-trip
+- [x] **T0.10** Kaggle job round-trip
       - _asserts:_ Same contract via the Kaggle kernels API.
       - _dies if:_ Kernel fails to run headless or artifacts are unreachable.
-- [ ] **T0.11** Backend failover
+- [x] **T0.11** Backend failover
       - _asserts:_ If Colab refuses a GPU, the job runs on Kaggle unmodified.
       - _dies if:_ A job that needs editing to switch backend.
-- [ ] **T0.12** GPU-hour accounting
+- [x] **T0.12** GPU-hour accounting
       - _asserts:_ Every GPU run debits a weekly budget file; the ladder refuses to launch past quota.
       - _dies if:_ A run proceeds with the budget exhausted.
 

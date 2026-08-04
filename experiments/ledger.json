@@ -219,6 +219,79 @@
       "spec_id": "T0.09",
       "status": "PASS"
     },
+    "T0.10": {
+      "commit": "b5a5738",
+      "control_metrics": {},
+      "duration_s": 214.07,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "artifact_bytes": 127,
+        "capability": "6.0",
+        "cuda_available": true,
+        "device": "Tesla P100-PCIE-16GB",
+        "duration_s": 214.1,
+        "matmul_finite": true,
+        "message": "",
+        "ok": true,
+        "torch": "2.5.1+cu121"
+      },
+      "ran_at": "2026-08-04T15:01:46",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.10",
+      "status": "PASS"
+    },
+    "T0.11": {
+      "commit": "b5a5738",
+      "control_metrics": {
+        "message": "all backends failed: colab: exit 1; kaggle: forced failure",
+        "ok": false
+      },
+      "duration_s": 202.59,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "artifact_returned": true,
+        "device": "Tesla P100-PCIE-16GB",
+        "fell_back": true,
+        "landed_on": "kaggle",
+        "matmul_finite": true,
+        "message": " | attempts: ['colab: exit 1']",
+        "ok": true,
+        "torch": "2.5.1+cu121"
+      },
+      "ran_at": "2026-08-04T15:07:41",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.11",
+      "status": "PASS"
+    },
+    "T0.12": {
+      "commit": "b5a5738",
+      "control_metrics": {},
+      "duration_s": 0.0,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "affords_within_quota": true,
+        "charge_recorded": true,
+        "colab_unmetered": true,
+        "refuses_oversized": true,
+        "refuses_when_exhausted": true,
+        "starts_full": true,
+        "survives_reload": true,
+        "weeks_isolated": true
+      },
+      "ran_at": "2026-08-04T15:08:07",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.12",
+      "status": "PASS"
+    },
     "T1.01": {
       "commit": "6d87687",
       "control_metrics": {
