@@ -178,12 +178,12 @@ class UnifiedBrainConfig:
     # =========================================
 
     # Object Detection (DETR-style)
-    enable_object_detection: bool = True
+    enable_object_detection: bool = False  # chat-regex path only; no training loss reaches it
     object_detection_queries: int = 100  # Number of object queries
     num_object_classes: int = 21  # Number of detectable object types
 
     # Navigation Planning
-    enable_navigation: bool = True
+    enable_navigation: bool = False       # chat-regex path only; no training loss reaches it
     nav_map_size: int = 64  # Spatial memory map size
     nav_map_resolution: float = 0.1  # Meters per grid cell
 
@@ -206,6 +206,16 @@ class UnifiedBrainConfig:
     enable_temporal_memory: bool = False      # never passed memory=; context is 1 frame
     enable_world_model: bool = False          # forward() gates on action is not None
     enable_hierarchical_planner: bool = False # 37.2M — larger than the backbone
+
+    # Reachable only from chat()'s regex verb matcher or from nothing at all, so
+    # they receive no gradient from any training objective. Measured 2026-08-04:
+    # semantic_anchors 408,577 — zero forward() reads; compute_language_grounding_loss
+    # has no callers. Gated rather than deleted so a real objective can turn it
+    # back on; Tier 3 ablations decide whether it earns its parameters.
+    # (object_detector and navigation_planner already have enable_object_detection
+    # and enable_navigation — both now default False for the same reason: they are
+    # reachable only from chat()'s regex verb matcher, never from a training loss.)
+    enable_semantic_anchors: bool = False
 
     # Curiosity (ICM + RND) - drives exploration of novel states
     enable_curiosity: bool = True
@@ -3874,7 +3884,8 @@ class UnifiedBrain(nn.Module):
         print("  Cross-modal fusion: 3 layers")
 
         # Semantic action anchors for LLM-agnostic language grounding
-        self.semantic_anchors = SemanticActionAnchors(config.d_model, num_anchors=8)
+        self.semantic_anchors = (SemanticActionAnchors(config.d_model, num_anchors=8)
+                                 if config.enable_semantic_anchors else None)
         print("  Semantic anchors: 8 action categories (LLM-agnostic)")
 
         # ==========================================

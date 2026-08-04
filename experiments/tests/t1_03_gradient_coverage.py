@@ -37,29 +37,41 @@ def _experiment(seed: int) -> dict:
     total = sum(p.numel() for p in brain.parameters())
     trainable = sum(p.numel() for p in brain.parameters() if p.requires_grad)
 
-    # Feed EVERY modality the architecture claims to support. A module that
-    # receives no gradient when its own input is supplied is genuinely orphaned;
-    # one starved only because the test withheld its input is a test artefact,
-    # and conflating the two would let real dead weight hide.
+    # Feed EVERY modality at the shape the code ACTUALLY expects. Earlier this
+    # test guessed from config names and mis-fed two of them: touch takes width
+    # 10 (hardcoded in TouchEncoder(10, config.touch_dim) — touch_dim is the
+    # OUTPUT), and audio takes a raw waveform of audio_sample_rate samples, not
+    # a feature vector. Both were reported as orphaned when they were merely
+    # never exercised. A test that withholds a module's input and then calls it
+    # dead is worse than no test.
     obs = torch.randn(2, cfg.obs_dim)
+    candidates = {
+        "vision": (2, 3, 224, 224),
+        "touch": (2, 10),
+        "audio": (2, getattr(cfg, "audio_sample_rate", 16000)),
+        "goal": (2, cfg.d_model),
+        "task": (2, cfg.d_model),
+    }
     kwargs = {}
-    for name, shape in (
-        ("vision", (2, 3, 224, 224)),
-        ("audio", (2, getattr(cfg, "audio_dim", 128))),
-        ("touch", (2, getattr(cfg, "touch_dim", 10))),
-        ("goal", (2, cfg.d_model)),
-        ("task", (2, cfg.d_model)),
-    ):
+    for name, shape in candidates.items():
         try:
             brain(obs, **{name: torch.randn(*shape)})
             kwargs[name] = torch.randn(*shape)
         except Exception:
-            pass  # modality not accepted by this build; not an orphan
+            pass  # genuinely not accepted by this build
 
-    out = brain(obs, **kwargs)
-    loss = sum(v.float().pow(2).mean() for v in out.values()
-               if torch.is_tensor(v) and v.dtype.is_floating_point)
-    loss.backward()
+    # Measure under the REAL training objective, not a bare forward. The runtime
+    # drives the robot from ActionExpert via flow matching, which forward() does
+    # not touch at all — measuring a forward would score the wrong path.
+    target = torch.randn(2, cfg.action_chunk_size, cfg.action_dim)
+    losses = brain.action_training_loss(obs, target)["loss"]
+
+    aux = brain(obs, **kwargs)
+    losses = losses + 0.01 * sum(
+        v.float().pow(2).mean() for k, v in aux.items()
+        if torch.is_tensor(v) and v.dtype.is_floating_point and k != "actions")
+    losses.backward()
+
 
     orphan_params, orphan_by_module = 0, {}
     for name, p in brain.named_parameters():

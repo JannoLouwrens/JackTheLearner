@@ -2,9 +2,9 @@
   "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
   "results": {
     "T0.01": {
-      "commit": "57120d0",
+      "commit": "0e88d2f",
       "control_metrics": {},
-      "duration_s": 1.62,
+      "duration_s": 1.53,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -13,7 +13,7 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-04T14:14:27",
+      "ran_at": "2026-08-04T15:33:25",
       "seeds": [
         0
       ],
@@ -21,11 +21,11 @@
       "status": "PASS"
     },
     "T0.02": {
-      "commit": "57120d0",
+      "commit": "0e88d2f",
       "control_metrics": {
         "max_abs_trace_delta": 0.12971967458724976
       },
-      "duration_s": 0.82,
+      "duration_s": 0.71,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -33,7 +33,7 @@
         "max_abs_trace_delta": 0.0,
         "steps": 30
       },
-      "ran_at": "2026-08-04T14:14:28",
+      "ran_at": "2026-08-04T15:33:26",
       "seeds": [
         0
       ],
@@ -41,21 +41,21 @@
       "status": "PASS"
     },
     "T0.03": {
-      "commit": "57120d0",
+      "commit": "0e88d2f",
       "control_metrics": {
-        "output_delta": 6.441016197205
+        "output_delta": 6.027286052704
       },
-      "duration_s": 8.25,
+      "duration_s": 6.16,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
-        "checkpoint_mb": 240.7,
+        "checkpoint_mb": 233.1,
         "missing_keys": 0,
         "output_delta": 0.0,
         "tensors_compared": 7,
         "unexpected_keys": 0
       },
-      "ran_at": "2026-08-04T14:14:37",
+      "ran_at": "2026-08-04T15:33:32",
       "seeds": [
         0
       ],
@@ -63,24 +63,24 @@
       "status": "PASS"
     },
     "T0.04": {
-      "commit": "57120d0",
+      "commit": "0e88d2f",
       "control_metrics": {
-        "first_step_gap_pct": 1.326,
-        "max_trace_delta": 0.3489927351,
-        "reference_final": 0.023943,
-        "resumed_final": 0.034312
+        "first_step_gap_pct": 0.3496,
+        "max_trace_delta": 0.6645032167,
+        "reference_final": 0.023413,
+        "resumed_final": 0.047897
       },
-      "duration_s": 143.02,
+      "duration_s": 112.27,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
-        "first_step_gap_pct": 1.326,
-        "max_trace_delta": 0.0104531348,
-        "reference_final": 0.023943,
-        "resume_fidelity_ratio": 33.39,
-        "resumed_final": 0.030052
+        "first_step_gap_pct": 0.3496,
+        "max_trace_delta": 0.0100411922,
+        "reference_final": 0.023413,
+        "resume_fidelity_ratio": 66.18,
+        "resumed_final": 0.028726
       },
-      "ran_at": "2026-08-04T14:13:12",
+      "ran_at": "2026-08-04T15:35:25",
       "seeds": [
         0
       ],
@@ -319,25 +319,49 @@
       "status": "PASS"
     },
     "T1.03": {
-      "commit": "aa885fd",
+      "commit": "0e88d2f",
       "control_metrics": {},
-      "duration_s": 8.97,
+      "duration_s": 10.34,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "pre-registered threshold not met",
+      "message": "",
       "metrics": {
-        "modalities_fed": "vision,goal,task",
-        "orphan_fraction": 0.1672,
-        "params_without_grad": 9658921,
-        "total_params": 1769146406,
-        "trainable_params": 57770022,
-        "worst_offenders": "action_expert=4,615,696; language_encoder=2,624,000; object_detector=1,304,857; semantic_anchors=408,577; audio_proj=262,656; navigation_planner=164,996"
+        "modalities_fed": "vision,touch,audio,goal,task",
+        "orphan_fraction": 0.0483,
+        "params_without_grad": 2698619,
+        "total_params": 1767267976,
+        "trainable_params": 55891592,
+        "worst_offenders": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539"
       },
-      "ran_at": "2026-08-04T15:13:06",
+      "ran_at": "2026-08-04T15:33:00",
       "seeds": [
         0
       ],
       "spec_id": "T1.03",
-      "status": "FAIL"
+      "status": "PASS"
+    },
+    "T1.11": {
+      "commit": "0e88d2f",
+      "control_metrics": {
+        "inference_params_total": 41525008,
+        "inference_params_trained": 36909312,
+        "inference_params_trained_frac": 0.8888,
+        "per_module": "action_expert=0; layers=36,710,400; proprio_encoder=198,912"
+      },
+      "duration_s": 6.49,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "inference_params_total": 41525008,
+        "inference_params_trained": 41525008,
+        "inference_params_trained_frac": 1.0,
+        "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912"
+      },
+      "ran_at": "2026-08-04T15:33:16",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.11",
+      "status": "PASS"
     }
   }
 }
