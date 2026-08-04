@@ -252,6 +252,31 @@ LADDER: list[Spec] = [
     # Every test here names the baseline it must beat. "Loss went down"
     # is not a result.
     # ===================================================================
+    Spec("T1.13", 1, "The grounding pairs are real",
+         hypothesis="Every language-action pair fed to training is a genuine "
+                    "observation, and the language is correlated with the motion "
+                    "it is attached to.",
+         falsified_by="Shuffling the language labels across the dataset leaves the "
+                      "training loss statistically unchanged. If the words can be "
+                      "permuted for free, they were never carrying signal.",
+         null_baseline="A deliberately shuffled copy of the same dataset. Real "
+                       "pairs must separate from it by more than seed noise (T1.08).",
+         metric="label_permutation_loss_gap", budget=Budget.CPU,
+         control="Also assert the data was not synthesised: no sample may be a "
+                 "pure sinusoid, and the loader must fail loudly rather than "
+                 "fabricate when a source is unreachable.",
+         kills="Every downstream grounding claim. T2.06 and T2.07 measure whether "
+               "the MODEL learned the mapping; this measures whether a mapping was "
+               "present to learn. Passing those on fabricated data would be the "
+               "original disease in a new place.",
+         notes="Added 2026-08-04 at the owner's prompting - 'don't we need mocap to "
+               "connect words to objects and actions'. This spec exists because the "
+               "repo already made exactly this mistake: the MoCap URLs 404, the "
+               "error is swallowed, and MoCapLoader.__getitem__ fabricates sinusoids "
+               "paired with RANDOMLY DRAWN language labels. That is anti-training - "
+               "it teaches that words do not predict motion. No spec currently "
+               "checks the data, only the model, so this is the cheapest test on "
+               "the ladder that could have caught the worst bug in it."),
     Spec("T2.01", 2, "Locomotion beats a random policy",
          hypothesis="Trained policy return exceeds random-action return by >5 sigma.",
          falsified_by="Return within seed noise of random.",
@@ -520,6 +545,28 @@ LADDER: list[Spec] = [
          falsified_by="State lost or corrupted across restart.",
          null_baseline="Fresh instance with no memory.",
          metric="recall_after_restart", budget=Budget.CPU, depends_on=["T2.10", "T0.05"]),
+    Spec("T6.04", 6, "Everything at once, end to end",
+         hypothesis="With every modality live simultaneously - vision, "
+                    "proprioception, touch, audio, language - Jack takes a spoken "
+                    "instruction, acts on the right object, and keeps learning, in "
+                    "one continuous episode.",
+         falsified_by="Any capability demonstrated in isolation degrades below its "
+                      "own single-modality result once the others are running.",
+         null_baseline="Each capability's own Tier 2 score, measured alone. "
+                       "Integration must not cost more than seed noise (T1.08).",
+         metric="integrated_vs_isolated_ratio", budget=Budget.GPU_LONG,
+         depends_on=["T4.05", "T5.07", "T6.01"],
+         control="Silence one modality at a time mid-episode. Behaviour must "
+                 "degrade gracefully and specifically, not collapse or freeze - a "
+                 "system that does not notice a missing input was not using it.",
+         kills="The claim that the parts compose. Tiers 2-5 prove each capability "
+               "separately, and separate is not together.",
+         notes="Added 2026-08-04 at the owner's request for a phase that tests all "
+               "aspects together at the end. T6.01-T6.03 only establish that a full "
+               "episode completes, stays up, and persists across sessions - "
+               "liveness, not capability. This is the one that asks whether the "
+               "whole thing actually works as one system, and it is deliberately "
+               "the last spec on the ladder."),
 ]
 
 
