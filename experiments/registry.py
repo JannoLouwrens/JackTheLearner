@@ -166,6 +166,40 @@ LADDER: list[Spec] = [
          notes="UnifiedBrain calls self.apply(_init_weights) — verify it does not "
                "re-randomise a loaded pretrained backbone."),
 
+    Spec("T1.11", 1, "Train/inference path parity",
+         hypothesis="Every module on the INFERENCE path that produces joint commands "
+                    "receives gradient from the TRAINING loss.",
+         falsified_by="A module the runtime uses to drive actuators gets zero gradient "
+                      "from the loss the pipeline optimises.",
+         null_baseline="Before the fix: forward() gave action_head 271,889 gradient-"
+                       "carrying params and ActionExpert exactly 0, while the runtime "
+                       "drove the robot entirely from ActionExpert.",
+         metric="inference_params_trained_frac", budget=Budget.CPU, depends_on=["T1.03"],
+         control="A loss that touches only the unused head must FAIL this.",
+         kills="Any training result. If the module producing joint commands never "
+               "learns, the loss curve is measuring something the robot does not use.",
+         notes="The defect this exists for, found 2026-08-04: the runtime path "
+               "(VirtualWorld -> act_dual_system -> generate_actions_flow_matching -> "
+               "ActionExpert) is decorated @torch.no_grad(), training went through a "
+               "different module (action_head), and train_flow_matching_step — the only "
+               "bridge — had zero callers in the entire repo. The system could have "
+               "trained to convergence with the actuator module still at its random "
+               "initialisation, and every metric would have looked correct."),
+
+    Spec("T1.12", 1, "Flow matching actually denoises",
+         hypothesis="After training on a fixed target, the flow-matching sampler "
+                    "reconstructs that target far better than the untrained sampler.",
+         falsified_by="Post-training reconstruction error is no better than pre-training.",
+         null_baseline="The untrained sampler, and a random action of matched scale.",
+         metric="reconstruction_improvement", budget=Budget.CPU, depends_on=["T1.11"],
+         control="Shuffled targets must NOT be reconstructable — that would mean the "
+                 "sampler ignores its conditioning.",
+         kills="ActionExpert and the flow-matching path; fall back to a direct head.",
+         notes="Gradient reaching a module proves plumbing, not learning. Flow matching "
+               "trains a velocity field at random t but SAMPLES by integrating 10 Euler "
+               "steps, so a correct loss can still integrate to nothing. This checks the "
+               "sampler, which is what the robot actually runs."),
+
     Spec("T1.06", 1, "Numerical stability",
          hypothesis="No NaN/Inf in loss or grads over 1000 steps.",
          falsified_by="Any non-finite value.",

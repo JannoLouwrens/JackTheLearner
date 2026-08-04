@@ -319,9 +319,9 @@
       "status": "PASS"
     },
     "T1.03": {
-      "commit": "313148b",
+      "commit": "aa885fd",
       "control_metrics": {},
-      "duration_s": 8.72,
+      "duration_s": 8.97,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "pre-registered threshold not met",
       "metrics": {
@@ -332,7 +332,7 @@
         "trainable_params": 57770022,
         "worst_offenders": "action_expert=4,615,696; language_encoder=2,624,000; object_detector=1,304,857; semantic_anchors=408,577; audio_proj=262,656; navigation_planner=164,996"
       },
-      "ran_at": "2026-08-04T13:50:07",
+      "ran_at": "2026-08-04T15:13:06",
       "seeds": [
         0
       ],

@@ -128,3 +128,29 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   module whose output reaches mj_data.ctrl, gets no gradient from forward(). Fix that next.
   Also carried from the loop's last iteration: llm_enabled=False changes rollout speed by 0.0% —
   the 1.71B SmolLM2 is 6.9 GB resident and NEVER runs in forward(). Pure dead weight at runtime.
+- **2026-08-04 manual — THE ACTION PATH DEFECT, fixed.** The most consequential finding so far.
+  Runtime: VirtualWorld -> act_dual_system -> generate_actions_flow_matching -> ActionExpert,
+  and that method is decorated **@torch.no_grad()** (UnifiedBrain.py:4421).
+  Training: TrainingPipeline -> forward() -> **action_head**, a different module.
+  Bridge: `train_flow_matching_step` — **zero callers anywhere in the repo**. The duplicate
+  `compute_flow_matching_loss` is called only from archive/RobustTrainer.py, which is dead.
+  Measured: forward()['actions'] gave action_head 271,889 grad params and ActionExpert **0**.
+  So the system could train to convergence with the 4.6M module producing joint commands still at
+  its random init, and every metric would have looked right. Commit ba012b6 ("replaces RobustTrainer")
+  deleted the caller and kept both losses.
+  FIX: added `UnifiedBrain.action_training_loss` — conditional flow matching on ActionExpert
+  (primary, reaches 51,351,824 params incl. backbone via cross-attention) plus a small-weight
+  action_head BC term so the documented fallback in generate_actions_flow_matching is not left
+  emitting noise. Verified: action_expert 4,615,696 AND action_head 271,889 now receive gradient.
+  Both flow-matching losses were mathematically correct; they were simply unreachable.
+  New specs T1.11 (train/inference path parity) and T1.12 (flow matching actually denoises — gradient
+  proves plumbing, not learning; the sampler integrates 10 Euler steps and a correct loss can still
+  integrate to nothing). T1.11 is BLOCKED until T1.03 passes.
+  T1.03 STILL FAILS, honestly: 12.3% orphaned even with the real loss + all accepted modalities.
+  Two new defects found while measuring: **cfg.touch_dim = 64 but the encoder expects 10**
+  (mat1/mat2 2x64 vs 10x128) and **cfg.audio_dim is None** so the spectrogram CNN collapses to width 0.
+  Neither modality can be fed; ~466K params across audio/touch encoders+projections are unreachable
+  by construction. Remaining orphans also include heads that need their OWN objectives
+  (value_head needs RL, task_completion_head needs task labels, physics_head needs physics targets).
+  NEXT: decide per-module — wire a real objective, or gate/delete per Tier 3. Do NOT relax T1.03's
+  threshold; the 5% bar is right and the model should meet it.

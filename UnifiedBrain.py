@@ -4484,6 +4484,52 @@ class UnifiedBrain(nn.Module):
 
         return actions
 
+    def action_training_loss(
+        self,
+        state: torch.Tensor,
+        target_actions: torch.Tensor,
+        language: str = None,
+        vision: torch.Tensor = None,
+        aux_weight: float = 0.1,
+    ) -> dict:
+        """The ONE loss that trains the action path the robot actually uses.
+
+        Why this exists. Until 2026-08-04 the system had two competing action
+        paths and trained the wrong one:
+
+          runtime   VirtualWorld -> act_dual_system -> generate_actions_flow_matching
+                    -> ActionExpert, under @torch.no_grad()
+          training  TrainingPipeline -> forward() -> action_head, a different module
+
+        Measured: forward()['actions'] gave action_head 271,889 gradient-carrying
+        parameters and ActionExpert exactly 0. train_flow_matching_step — the only
+        thing that reaches ActionExpert — had zero callers anywhere in the repo.
+        So the 4.6M-parameter module producing joint commands could never receive a
+        gradient, while the loss curve fell convincingly. The robot would have been
+        driven by its initialisation.
+
+        Primary term is conditional flow matching on ActionExpert (Lipman et al.
+        2022): measured to reach 51,351,824 of 57,770,022 trainable parameters,
+        including the backbone via cross-attention.
+
+        Auxiliary term keeps action_head honest. It is the documented fallback in
+        generate_actions_flow_matching when action_expert is None, so leaving it
+        untrained would mean the fallback silently emits noise. Small weight: it
+        is a safety net, not the objective.
+
+        Guarded by ladder spec T1.11 (train/inference path parity).
+        """
+        flow = self.train_flow_matching_step(state, target_actions, language, vision)
+
+        out = self.forward(state, language=language, vision=vision)
+        aux = F.mse_loss(out["actions"].float(), target_actions.float())
+
+        return {
+            "loss": flow + aux_weight * aux,
+            "flow_matching": flow.detach(),
+            "action_head_aux": aux.detach(),
+        }
+
     def train_flow_matching_step(
         self,
         state: torch.Tensor,
