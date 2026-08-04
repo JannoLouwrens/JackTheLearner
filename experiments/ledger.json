@@ -40,6 +40,28 @@
       "spec_id": "T0.02",
       "status": "PASS"
     },
+    "T0.03": {
+      "commit": "313148b",
+      "control_metrics": {
+        "output_delta": 6.441016197205
+      },
+      "duration_s": 47.49,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "checkpoint_mb": 240.7,
+        "missing_keys": 0,
+        "output_delta": 0.0,
+        "tensors_compared": 7,
+        "unexpected_keys": 0
+      },
+      "ran_at": "2026-08-04T13:48:16",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.03",
+      "status": "PASS"
+    },
     "T1.01": {
       "commit": "6d87687",
       "control_metrics": {
@@ -67,9 +89,9 @@
       "status": "PASS"
     },
     "T1.03": {
-      "commit": "77eefb5",
+      "commit": "313148b",
       "control_metrics": {},
-      "duration_s": 9.05,
+      "duration_s": 8.72,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "pre-registered threshold not met",
       "metrics": {
@@ -80,7 +102,7 @@
         "trainable_params": 57770022,
         "worst_offenders": "action_expert=4,615,696; language_encoder=2,624,000; object_detector=1,304,857; semantic_anchors=408,577; audio_proj=262,656; navigation_planner=164,996"
       },
-      "ran_at": "2026-08-04T12:36:30",
+      "ran_at": "2026-08-04T13:50:07",
       "seeds": [
         0
       ],

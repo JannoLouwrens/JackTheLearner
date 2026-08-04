@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 3 / 57 demonstrated
+## 4 / 57 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -19,7 +19,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Same seed produces an identical loss trace on CPU.
       - _dies if:_ Two runs at seed 0 differ beyond float tolerance.
       - _then delete:_ Every A/B comparison in the ladder. Non-negotiable.
-- [ ] **T0.03** Checkpoint round-trip fidelity
+- [x] **T0.03** Checkpoint round-trip fidelity
       - _asserts:_ save -> load reproduces identical forward outputs.
       - _dies if:_ Output delta > 1e-6 after a reload.
       - _then delete:_ All GPU training — a checkpoint that does not restore is wasted compute.

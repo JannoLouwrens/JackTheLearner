@@ -36,7 +36,7 @@ def _train(seed: int, frozen: bool) -> dict:
     cfg = UnifiedBrainConfig()
     # Keep the frozen 1.7B LLM out of this test — it is not what we are probing,
     # and loading it makes a CPU sanity check cost 7 GB.
-    for flag in ("use_llm", "enable_llm", "use_language_model"):
+    for flag in ("llm_enabled", "enable_intrinsic_motivation"):
         if hasattr(cfg, flag):
             setattr(cfg, flag, False)
     brain = UnifiedBrain(cfg)

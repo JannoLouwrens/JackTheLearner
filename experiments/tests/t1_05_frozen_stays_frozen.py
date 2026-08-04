@@ -34,7 +34,7 @@ def _experiment(seed: int) -> dict:
 
     torch.manual_seed(seed)
     cfg = UnifiedBrainConfig()
-    for flag in ("use_llm", "enable_llm", "use_language_model"):
+    for flag in ("llm_enabled", "enable_intrinsic_motivation"):
         if hasattr(cfg, flag):
             setattr(cfg, flag, False)
 
