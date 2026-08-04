@@ -14,14 +14,41 @@ than no number — it looks like evidence.
 from __future__ import annotations
 
 import argparse
+import fcntl
 import importlib
+import os
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 from .protocol import Ledger, Status
 from .registry import BY_ID, LADDER, ready, tier
 
 TESTS_DIR = Path(__file__).parent / "tests"
+RUN_LOCK = "/tmp/jack-ladder.lock"          # shared with scripts/ladder_loop.sh
+
+
+@contextmanager
+def _exclusive():
+    """Serialise ALL ladder work, manual or looped.
+
+    The hourly loop and a manual session raced and each wrote a different T0.07;
+    one silently shadowed the other. The loop script already took this lock, but
+    a human at a terminal did not, so the guard only protected one side. Holding
+    it here means whoever starts second waits or skips, regardless of who they are.
+    """
+    with open(RUN_LOCK, "w") as fh:
+        try:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            print("Another ladder run holds the lock (probably the hourly loop). "
+                  "Wait for it, or `touch .loop-paused` to stop the loop.")
+            raise SystemExit(0)
+        fh.write(f"{os.getpid()}\n"); fh.flush()
+        try:
+            yield
+        finally:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
 
 MARK = {
     Status.PASS: "PASS   ",
@@ -184,19 +211,26 @@ def main() -> int:
     args = ap.parse_args()
     ledger = Ledger()
 
+    # status/next/render are read-only and must not block on a running experiment.
+    if args.spec and args.spec[0] in ("status", "next", "render"):
+        return {"status": cmd_status, "next": cmd_next, "render": cmd_render}[args.spec[0]](ledger)
+    if not args.spec and not args.gate and args.tier is None:
+        return cmd_status(ledger)
+
     if args.gate:
         ids = [s.id for s in LADDER if ledger.status(s.id) is Status.PASS]
         print(f"Regression gate: {len(ids)} previously-passing tests\n")
-        return cmd_run(ledger, ids)
+        with _exclusive():
+            return cmd_run(ledger, ids)
     if args.tier is not None:
-        return cmd_run(ledger, [s.id for s in tier(args.tier)])
+        with _exclusive():
+            return cmd_run(ledger, [s.id for s in tier(args.tier)])
     if not args.spec or args.spec[0] == "status":
         return cmd_status(ledger)
     if args.spec[0] == "render":
         return cmd_render(ledger)
-    if args.spec[0] == "next":
-        return cmd_next(ledger)
-    return cmd_run(ledger, args.spec)
+    with _exclusive():
+        return cmd_run(ledger, args.spec)
 
 
 if __name__ == "__main__":
