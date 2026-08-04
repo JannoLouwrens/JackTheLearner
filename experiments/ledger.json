@@ -2,9 +2,9 @@
   "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
   "results": {
     "T0.01": {
-      "commit": "0e88d2f",
+      "commit": "bb1659d",
       "control_metrics": {},
-      "duration_s": 1.53,
+      "duration_s": 1.51,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -13,7 +13,7 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-04T15:33:25",
+      "ran_at": "2026-08-04T15:43:57",
       "seeds": [
         0
       ],
@@ -21,11 +21,11 @@
       "status": "PASS"
     },
     "T0.02": {
-      "commit": "0e88d2f",
+      "commit": "bb1659d",
       "control_metrics": {
         "max_abs_trace_delta": 0.12971967458724976
       },
-      "duration_s": 0.71,
+      "duration_s": 2.06,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -33,7 +33,7 @@
         "max_abs_trace_delta": 0.0,
         "steps": 30
       },
-      "ran_at": "2026-08-04T15:33:26",
+      "ran_at": "2026-08-04T15:44:00",
       "seeds": [
         0
       ],
@@ -41,11 +41,11 @@
       "status": "PASS"
     },
     "T0.03": {
-      "commit": "0e88d2f",
+      "commit": "bb1659d",
       "control_metrics": {
         "output_delta": 6.027286052704
       },
-      "duration_s": 6.16,
+      "duration_s": 7.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -55,7 +55,7 @@
         "tensors_compared": 7,
         "unexpected_keys": 0
       },
-      "ran_at": "2026-08-04T15:33:32",
+      "ran_at": "2026-08-04T15:44:08",
       "seeds": [
         0
       ],
@@ -63,14 +63,14 @@
       "status": "PASS"
     },
     "T0.04": {
-      "commit": "0e88d2f",
+      "commit": "bb1659d",
       "control_metrics": {
         "first_step_gap_pct": 0.3496,
         "max_trace_delta": 0.6645032167,
         "reference_final": 0.023413,
         "resumed_final": 0.047897
       },
-      "duration_s": 112.27,
+      "duration_s": 100.62,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -80,7 +80,7 @@
         "resume_fidelity_ratio": 66.18,
         "resumed_final": 0.028726
       },
-      "ran_at": "2026-08-04T15:35:25",
+      "ran_at": "2026-08-04T15:45:49",
       "seeds": [
         0
       ],
@@ -88,14 +88,14 @@
       "status": "PASS"
     },
     "T0.05": {
-      "commit": "57120d0",
+      "commit": "bb1659d",
       "control_metrics": {
         "checkpoints_checked": 12,
         "corrupt": 12,
         "kills": 12,
         "max_step_recovered": 0
       },
-      "duration_s": 5.9,
+      "duration_s": 4.94,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -104,7 +104,7 @@
         "kills": 12,
         "max_step_recovered": 2
       },
-      "ran_at": "2026-08-04T14:13:18",
+      "ran_at": "2026-08-04T15:45:55",
       "seeds": [
         0
       ],
@@ -112,24 +112,24 @@
       "status": "PASS"
     },
     "T0.06": {
-      "commit": "57120d0",
+      "commit": "bb1659d",
       "control_metrics": {
         "raised": 5,
         "wrong_widths_tried": 5
       },
-      "duration_s": 0.06,
+      "duration_s": 1.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
         "action_space_dim": 17,
         "ctrl_write_error": 0.0,
         "expected_nu": 17,
-        "last_reward": 4.9158,
+        "last_reward": 4.9295,
         "nu": 17,
         "obs_dim": 348,
         "steps_ok": 5
       },
-      "ran_at": "2026-08-04T14:13:18",
+      "ran_at": "2026-08-04T15:45:57",
       "seeds": [
         0
       ],
@@ -137,35 +137,35 @@
       "status": "PASS"
     },
     "T0.07": {
-      "commit": "50ff9e2",
+      "commit": "bb1659d",
       "control_metrics": {
-        "empty_loop_hz": 14385271.3
+        "empty_loop_hz": 14113659.7
       },
-      "duration_s": 19.1,
+      "duration_s": 18.0,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
-        "bare_repeat_spread": 0.0084,
-        "bare_steps_per_s": 1831.3,
-        "calibration_error": 0.0031,
-        "calibration_hz": 989.8,
-        "hours_for_2M_steps_no_llm": 47.0,
-        "hours_for_2M_steps_policy": 47.1,
-        "llm_removal_speedup": 1.0,
-        "policy_no_llm_rel_std": 0.0015,
-        "policy_no_llm_steps_per_s": 11.81,
-        "policy_no_llm_total_params": 60123174,
-        "policy_peak_rss_mb": 6989.0,
-        "policy_rel_std": 0.0106,
-        "policy_slowdown_vs_bare": 155.3,
-        "policy_steps_per_s": 11.79,
-        "policy_total_params": 1769146406,
-        "policy_trainable_params": 57770022,
-        "vectorised_rel_std": 0.0086,
-        "vectorised_speedup": 1.03,
-        "vectorised_steps_per_s": 1877.8
+        "bare_repeat_spread": 0.015,
+        "bare_steps_per_s": 2455.8,
+        "calibration_error": 0.0001,
+        "calibration_hz": 984.0,
+        "hours_for_2M_steps_no_llm": 47.1,
+        "hours_for_2M_steps_policy": 48.2,
+        "llm_removal_speedup": 1.02,
+        "policy_no_llm_rel_std": 0.0371,
+        "policy_no_llm_steps_per_s": 11.8,
+        "policy_no_llm_total_params": 58244744,
+        "policy_peak_rss_mb": 6999.0,
+        "policy_rel_std": 0.0401,
+        "policy_slowdown_vs_bare": 213.2,
+        "policy_steps_per_s": 11.52,
+        "policy_total_params": 1767267976,
+        "policy_trainable_params": 55891592,
+        "vectorised_rel_std": 0.0103,
+        "vectorised_speedup": 0.93,
+        "vectorised_steps_per_s": 2284.0
       },
-      "ran_at": "2026-08-04T14:21:20",
+      "ran_at": "2026-08-04T15:46:16",
       "seeds": [
         0
       ],
@@ -173,9 +173,9 @@
       "status": "PASS"
     },
     "T0.08": {
-      "commit": "57120d0",
+      "commit": "bb1659d",
       "control_metrics": {},
-      "duration_s": 0.13,
+      "duration_s": 1.24,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -186,7 +186,7 @@
         "roundtrip_ok": true,
         "survives_concurrent_writers": true
       },
-      "ran_at": "2026-08-04T14:13:19",
+      "ran_at": "2026-08-04T15:46:18",
       "seeds": [
         0
       ],
@@ -194,12 +194,12 @@
       "status": "PASS"
     },
     "T0.09": {
-      "commit": "fc097b2",
+      "commit": "bb1659d",
       "control_metrics": {
         "message": "exit 1",
         "ok": false
       },
-      "duration_s": 34.42,
+      "duration_s": 34.73,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -212,7 +212,7 @@
         "message": "",
         "ok": true
       },
-      "ran_at": "2026-08-04T14:39:40",
+      "ran_at": "2026-08-04T15:46:53",
       "seeds": [
         0
       ],
@@ -220,9 +220,9 @@
       "status": "PASS"
     },
     "T0.10": {
-      "commit": "b5a5738",
+      "commit": "bb1659d",
       "control_metrics": {},
-      "duration_s": 214.07,
+      "duration_s": 193.29,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -230,13 +230,13 @@
         "capability": "6.0",
         "cuda_available": true,
         "device": "Tesla P100-PCIE-16GB",
-        "duration_s": 214.1,
+        "duration_s": 193.3,
         "matmul_finite": true,
         "message": "",
         "ok": true,
         "torch": "2.5.1+cu121"
       },
-      "ran_at": "2026-08-04T15:01:46",
+      "ran_at": "2026-08-04T15:50:08",
       "seeds": [
         0
       ],
@@ -244,12 +244,12 @@
       "status": "PASS"
     },
     "T0.11": {
-      "commit": "b5a5738",
+      "commit": "bb1659d",
       "control_metrics": {
         "message": "all backends failed: colab: exit 1; kaggle: forced failure",
         "ok": false
       },
-      "duration_s": 202.59,
+      "duration_s": 224.28,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -262,7 +262,7 @@
         "ok": true,
         "torch": "2.5.1+cu121"
       },
-      "ran_at": "2026-08-04T15:07:41",
+      "ran_at": "2026-08-04T15:53:54",
       "seeds": [
         0
       ],
@@ -270,7 +270,7 @@
       "status": "PASS"
     },
     "T0.12": {
-      "commit": "b5a5738",
+      "commit": "bb1659d",
       "control_metrics": {},
       "duration_s": 0.0,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
@@ -285,7 +285,7 @@
         "survives_reload": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-04T15:08:07",
+      "ran_at": "2026-08-04T15:54:06",
       "seeds": [
         0
       ],
@@ -293,25 +293,25 @@
       "status": "PASS"
     },
     "T1.01": {
-      "commit": "6d87687",
+      "commit": "bb1659d",
       "control_metrics": {
-        "curve": "0.94305;0.94268;0.94414;0.9419;0.94451;0.94415;0.94341;0.9418;0.94329;0.94581;0.94366",
-        "final_loss": 0.94366,
+        "curve": "0.95071;0.9518;0.95146;0.95448;0.95116;0.95433;0.95249;0.9496;0.95068;0.95015;0.95464",
+        "final_loss": 0.95464,
         "improvement_ratio": 1.0,
-        "initial_loss": 0.94305,
+        "initial_loss": 0.95071,
         "trainable_tensors": 0
       },
-      "duration_s": 688.37,
+      "duration_s": 584.17,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
-        "curve": "0.94305;0.03822;0.00685;0.00419;0.00382;0.00293;0.00258;0.00245;0.00201;0.00194;0.00177",
-        "final_loss": 0.00177,
-        "improvement_ratio": 532.8,
-        "initial_loss": 0.94305,
-        "trainable_tensors": 878
+        "curve": "0.95071;0.11232;0.00895;0.00494;0.00331;0.00304;0.00272;0.00239;0.00212;0.00201;0.00184",
+        "final_loss": 0.00184,
+        "improvement_ratio": 516.69,
+        "initial_loss": 0.95071,
+        "trainable_tensors": 316
       },
-      "ran_at": "2026-08-04T12:30:16",
+      "ran_at": "2026-08-04T16:03:52",
       "seeds": [
         0
       ],
@@ -319,9 +319,9 @@
       "status": "PASS"
     },
     "T1.03": {
-      "commit": "0e88d2f",
+      "commit": "bb1659d",
       "control_metrics": {},
-      "duration_s": 10.34,
+      "duration_s": 10.17,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -332,7 +332,7 @@
         "trainable_params": 55891592,
         "worst_offenders": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539"
       },
-      "ran_at": "2026-08-04T15:33:00",
+      "ran_at": "2026-08-04T16:04:03",
       "seeds": [
         0
       ],
@@ -340,14 +340,14 @@
       "status": "PASS"
     },
     "T1.11": {
-      "commit": "0e88d2f",
+      "commit": "bb1659d",
       "control_metrics": {
         "inference_params_total": 41525008,
         "inference_params_trained": 36909312,
         "inference_params_trained_frac": 0.8888,
         "per_module": "action_expert=0; layers=36,710,400; proprio_encoder=198,912"
       },
-      "duration_s": 6.49,
+      "duration_s": 6.32,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -356,11 +356,34 @@
         "inference_params_trained_frac": 1.0,
         "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912"
       },
-      "ran_at": "2026-08-04T15:33:16",
+      "ran_at": "2026-08-04T16:04:10",
       "seeds": [
         0
       ],
       "spec_id": "T1.11",
+      "status": "PASS"
+    },
+    "T1.12": {
+      "commit": "bb1659d",
+      "control_metrics": {
+        "sampler_error_untrained": 2.00317
+      },
+      "duration_s": 338.89,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "conditioning_ratio": 2.804,
+        "final_train_loss": 0.96282,
+        "reconstruction_improvement": 2.007,
+        "sampler_error_after": 1.04998,
+        "sampler_error_before": 2.10737,
+        "shuffled_conditioning_error": 2.94416
+      },
+      "ran_at": "2026-08-04T16:15:38",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.12",
       "status": "PASS"
     }
   }

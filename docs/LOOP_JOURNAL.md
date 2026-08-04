@@ -154,3 +154,20 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   (value_head needs RL, task_completion_head needs task labels, physics_head needs physics targets).
   NEXT: decide per-module — wire a real objective, or gate/delete per Tier 3. Do NOT relax T1.03's
   threshold; the 5% bar is right and the model should meet it.
+- **2026-08-04 manual** — T1.03, T1.11, T1.12 PASS; full 15-spec regression gate PASS.
+  T1.03 4.83% orphan (from 58.8%), bar untouched. Two of the "orphans" were my test mis-feeding
+  modalities: TouchEncoder takes width 10 (hardcoded; touch_dim=64 is the OUTPUT) and AudioEncoder
+  takes a raw 16000-sample waveform. Gated semantic_anchors + flipped enable_object_detection /
+  enable_navigation to False (chat-regex path only, no loss reaches them).
+  T1.11 path parity 1.0 — all 41,525,008 inference-path params trained; old forward()-only loss
+  fails as control.
+  **T1.12 is the first evidence Jack's action system LEARNS**: the runtime sampler
+  (generate_actions_flow_matching, 10 Euler steps) improved 2.007x, beat an untrained sampler, and
+  degraded 2.804x under SHUFFLED conditioning — so it uses the state rather than emitting a mean
+  action. Gradient proves plumbing; this proves learning.
+  HARNESS FIX: the regression gate was OOM-killed (exit 137) running 15 model constructions in one
+  process. Each spec now runs in its own subprocess — memory reclaimed on exit, and a crashing test
+  can no longer take the ledger with it. On a box with paying tenants that is a hazard fix, not a
+  convenience.
+  NEXT: T1.02 (shuffled-target control), T1.04-T1.10, then Tier 2 — the first GPU training with a
+  null baseline. Per T0.07, batch the policy before spending quota: 12 steps/s at B=1 leaves a T4 idle.

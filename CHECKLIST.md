@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 13 / 57 demonstrated
+## 16 / 59 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -64,7 +64,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ With targets shuffled, the module fits SLOWER and worse.
       - _dies if:_ Shuffled targets fit as fast as real ones.
       - _then delete:_ The task definition — there is no learnable structure in it.
-- [!] **T1.03** Gradient reaches every trainable parameter  — modalities_fed=vision,goal,task; orphan_fraction=0.1672
+- [x] **T1.03** Gradient reaches every trainable parameter
       - _asserts:_ After one backward, no trainable tensor has grad None or all-zero.
       - _dies if:_ Any orphaned parameter.
       - _then delete:_ Silent dead weight. This test is the direct fix for the repo's disease.
@@ -74,6 +74,14 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T1.05** Frozen stays frozen
       - _asserts:_ The pretrained trunk/LLM does not change during policy training.
       - _dies if:_ Any delta in frozen parameters.
+- [x] **T1.11** Train/inference path parity
+      - _asserts:_ Every module on the INFERENCE path that produces joint commands receives gradient from the TRAINING loss.
+      - _dies if:_ A module the runtime uses to drive actuators gets zero gradient from the loss the pipeline optimises.
+      - _then delete:_ Any training result. If the module producing joint commands never learns, the loss curve is measuring something the robot does not use.
+- [x] **T1.12** Flow matching actually denoises
+      - _asserts:_ After training on a fixed target, the flow-matching sampler reconstructs that target far better than the untrained sampler.
+      - _dies if:_ Post-training reconstruction error is no better than pre-training.
+      - _then delete:_ ActionExpert and the flow-matching path; fall back to a direct head.
 - [ ] **T1.06** Numerical stability
       - _asserts:_ No NaN/Inf in loss or grads over 1000 steps.
       - _dies if:_ Any non-finite value.

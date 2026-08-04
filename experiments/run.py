@@ -121,6 +121,32 @@ def cmd_next(ledger: Ledger) -> int:
     return 0
 
 
+def _run_isolated(spec_id: str, ledger: Ledger):
+    """Execute one spec in a child process so its memory is reclaimed on exit."""
+    import subprocess as sp
+    from .protocol import Result, Status
+
+    code = (
+        "import sys; sys.path.insert(0, %r);"
+        "from experiments.run import _module_for;"
+        "from experiments.protocol import Ledger;"
+        "m = _module_for(%r);"
+        "m.run(Ledger())" % (str(Path(__file__).parent.parent), spec_id)
+    )
+    proc = sp.run([sys.executable, "-c", code], capture_output=True, text=True,
+                  cwd=str(Path(__file__).parent.parent), timeout=3600)
+    # The child wrote the ledger itself; re-read to see what it recorded.
+    fresh = Ledger()
+    ledger.results.update(fresh.results)
+    res = fresh.results.get(spec_id)
+    if res is None:
+        tail = (proc.stderr or proc.stdout or "")[-300:].strip()
+        res = Result(spec_id=spec_id, status=Status.ERROR,
+                     message=f"child produced no result: {tail}")
+        ledger.record(res)
+    return res
+
+
 def cmd_run(ledger: Ledger, spec_ids: list[str]) -> int:
     failures = 0
     for sid in spec_ids:
@@ -139,7 +165,12 @@ def cmd_run(ledger: Ledger, spec_ids: list[str]) -> int:
             failures += 1
             continue
         print(f"[{sid}] {spec.title} ... ", end="", flush=True)
-        res = mod.run(ledger)
+        # Each spec runs in its OWN process. In-process the regression gate was
+        # OOM-killed (exit 137): fifteen tests each constructing a model, with
+        # Python holding every allocation until the run ended. On a box shared
+        # with paying tenants that is not an inconvenience, it is a hazard.
+        # A subprocess also isolates a crashing test from the ledger.
+        res = _run_isolated(sid, ledger)
         print(f"{res.status.value} ({res.duration_s}s) {res.message}")
         if res.metrics:
             for k, v in list(res.metrics.items())[:6]:
