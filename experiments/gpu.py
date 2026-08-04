@@ -37,6 +37,20 @@ KAGGLE_WEEKLY_HOURS = 30.0
 # remote path. Verified 2026-08-04.
 COLAB_CWD = "/content"
 
+# Kaggle assigns a Tesla P100 (sm_60) regardless of the accelerator requested —
+# nvidiaTeslaT4 and gpuT4x2 both return P100 — while its preinstalled
+# torch 2.10+cu128 ships kernels for sm_70 and above only. Every CUDA op then
+# raises "no kernel image is available for execution on the device".
+# cu121 wheels are the last line carrying Pascal, so jobs prepend this.
+# Verified 2026-08-04: torch 2.5.1+cu121, arch_list sm_50..sm_90, matmul OK.
+KAGGLE_TORCH_FIX = """
+import subprocess as _sp, sys as _sys
+_sp.run([_sys.executable, "-m", "pip", "install", "-q", "torch==2.5.1",
+         "--index-url", "https://download.pytorch.org/whl/cu121"], check=False)
+for _m in [m for m in list(_sys.modules) if m.startswith("torch")]:
+    del _sys.modules[_m]
+"""
+
 
 @dataclass
 class JobResult:
@@ -144,7 +158,8 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     t0 = time.time()
     slug = f"jack-ladder-{int(t0)}"
     work = Path(tempfile.mkdtemp(dir="/data"))
-    (work / "kernel.py").write_text(script.read_text())
+    # Pascal-compatible torch first, then the job itself.
+    (work / "kernel.py").write_text(KAGGLE_TORCH_FIX + "\n" + script.read_text())
 
     # `kaggle config view` prints text, not JSON; read the username from it.
     cfg = subprocess.run([KAGGLE, "config", "view"], capture_output=True, text=True).stdout
@@ -164,7 +179,8 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         "enable_internet": True,
     }, indent=2))
 
-    rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work)], 300)
+    rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work),
+                         "--accelerator", "nvidiaTeslaT4"], 300)
     if rc != 0:
         return JobResult("kaggle", False, out, err, time.time() - t0,
                          message=f"push failed: {err.strip()[:200]}")
