@@ -42,3 +42,13 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   Replaced with `apply_action(mj_data, mj_model, action)` requiring exact width and finite values.
   Control now exercises the real write path: nu-1, nu+1, 1, 2*nu and a NaN of correct width — 5/5 refused.
   Next: T0.07 (throughput baseline — tells us honestly what a GPU buys), T0.08, then T0.09-T0.11 GPU round-trip.
+- **2026-08-04 manual** — T0.07 (throughput) PASS. The numbers that should govern the compute plan:
+  bare MuJoCo **2,260 steps/s**; with the policy forward **12.0 steps/s** — a **188x** slowdown.
+  2M steps = 0.25 h of physics but **46 h** with the policy (3.8 Kaggle sessions).
+  Sync-vectorised 8 envs = 1,976 steps/s, **speedup 0.87x — slower than one env** (gym's sync vector
+  is a Python loop; overhead, no parallelism).
+  Conclusion: the rollout is DISPATCH-bound on the policy (6,095 ATen dispatches per B=1 forward per
+  the review), not FLOP-bound or physics-bound. **A GPU alone does not fix this** — batch-1 forwards
+  leave a T4 idle. The fix is to batch the policy across N envs (one forward at batch N) and shrink to
+  the 22M adapter per D1, then re-measure before spending quota.
+  ACTION for a later spec: add a "batched rollout" benchmark and re-run this before any Tier 2 GPU work.

@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 7 / 57 demonstrated
+## 8 / 57 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -35,7 +35,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ MuJoCo model nu equals the policy action dim, asserted at startup.
       - _dies if:_ Mismatch that does not raise.
       - _then delete:_ Every locomotion result.
-- [ ] **T0.07** CPU throughput baseline
+- [x] **T0.07** CPU throughput baseline
       - _asserts:_ Measured env-steps/s on this ARM box, recorded for planning.
       - _dies if:_ n/a — measurement, not a claim.
 - [ ] **T0.08** Metrics land in the ledger
