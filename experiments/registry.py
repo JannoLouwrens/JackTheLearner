@@ -144,7 +144,7 @@ LADDER: list[Spec] = [
          falsified_by="Held-out error is the same whether or not a state->action "
                       "mapping exists.",
          null_baseline="Predicting the mean action, and the shuffled-task model.",
-         metric="heldout_structure_advantage", budget=Budget.CPU_LONG, depends_on=["T1.01"],
+         metric="heldout_structure_advantage", budget=Budget.GPU_SHORT, depends_on=["T1.01"],
          control="The shuffled task must NOT generalise — its held-out error should "
                  "be no better than predicting the mean.",
          kills="The premise that this architecture can learn a state->action mapping "
@@ -157,7 +157,11 @@ LADDER: list[Spec] = [
                "measures capacity. Only generalisation to unseen states can detect "
                "whether structure was exploited, so the test now trains on 64 samples "
                "and scores 16 held-out. Changed because the design could not "
-               "discriminate, not because the model failed it."),
+               "discriminate, not because the model failed it. REDESIGNED AGAIN the same "
+               "day: 64 training samples for an obs_dim=348 map is underdetermined, so "
+               "no architecture could pass it. Proved by a plain-MSE reference arm "
+               "carrying no flow matching at all, which failed identically. Now 2048 "
+               "train / 256 held-out, on a GPU. Thresholds have never moved."),
 
     Spec("T1.03", 1, "Gradient reaches every trainable parameter",
          hypothesis="After one backward, no trainable tensor has grad None or all-zero.",

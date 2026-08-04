@@ -171,3 +171,42 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   convenience.
   NEXT: T1.02 (shuffled-target control), T1.04-T1.10, then Tier 2 — the first GPU training with a
   null baseline. Per T0.07, batch the policy before spending quota: 12 steps/s at B=1 leaves a T4 idle.
+
+## 2026-08-04 — T1.02, and the flow parameterisation it uncovered
+
+Attempted: diagnose T1.02 (structure_advantage 0.999), fix, retest.
+
+Two experiment bugs and one real defect, in that order.
+
+The 0.999 was v1 measuring training FIT on one batch — a 58M net memorises 8
+pairs whether or not a mapping exists. Rebuilt around generalisation. It then
+failed WORSE: held-out 1.551 against a 0.644 mean-predictor baseline. Adding a
+plain-MSE reference arm with no flow matching anywhere showed that arm failing
+too (0.925), which is what identified the second bug: 64 training samples for an
+obs_dim=348 map is underdetermined and unpassable by any architecture.
+
+With 2048 samples the same sweep separated cleanly (T4, held-out MSE, baseline
+0.635):
+
+    regress (no flow)         0.238    2.665x baseline
+    x1 parameterisation       0.266    2.391x
+    velocity + Beta(1,1.5) t  0.407    1.559x
+    velocity + uniform t      0.620    1.024x   <- what the repo did
+
+So the flow path can match supervised regression, and the shipped
+parameterisation was throwing away nearly all of it. Cause: the optimal velocity
+(x1-x_t)/(1-t) diverges as t->1, so a velocity-predicting network under-estimates
+an unbounded gain and never removes the last of the initial noise. Predicting x1
+leaves that divergence in closed form. Integration steps 5..100 changed the
+result under 2%, so this is a learning effect, not discretisation.
+
+Measured: UnifiedBrainConfig.flow_parameterisation now defaults to "x1", with
+flow_timestep_dist configurable. Both train and sample paths read the same flag,
+so they cannot drift apart — the action-path defect one level down.
+
+Next iteration: run T1.02 (now GPU_SHORT, ~25 min on Colab). It is still FAIL and
+must stay FAIL until a run says otherwise. Then T1.04, T1.05, T1.06.
+
+Infrastructure: experiments/gpu.py gained repo_preamble/build_job — a GPU job now
+clones the public repo and pins a ref. This is the unlock; CPU here is ~2 s/step
+against ~0.05 s on a T4. Do not iterate training on this box.

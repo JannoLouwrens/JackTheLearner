@@ -1,100 +1,126 @@
 """T1.02 — does the architecture exploit structure, or only memorise?
 
-The original version measured training FIT on a single batch and came out at
-0.999 — structured and shuffled targets fit identically. That is not the model
-failing; it is the experiment being unable to ask the question. A 58M network
-memorises 8 arbitrary pairs whether or not a state->action mapping exists, so fit
-measures capacity. The original spec said exactly this in its own null_baseline
-and I built it anyway.
+Redesigned twice, both times because the EXPERIMENT was wrong. Neither threshold
+has ever been moved.
 
-Only GENERALISATION can detect structure exploitation. So: train on 64 samples,
-score 16 states never seen.
+  v1  measured training FIT on a single batch. Result 0.999 — structured and
+      shuffled targets indistinguishable. A 58M network memorises 8 arbitrary
+      pairs whether or not a mapping exists, so fit measures capacity. The
+      original spec predicted exactly this in its own null_baseline.
+  v2  measured GENERALISATION, which is the right question, but drew 64 training
+      samples for a map with obs_dim=348. That system is underdetermined by a
+      factor of five: infinitely many maps fit those points and essentially none
+      generalise. What proved it was adding a plain-MSE reference arm with no
+      flow matching anywhere — it failed identically (0.925 against the mean
+      predictor). When the simplest possible learner also fails, the task is
+      unlearnable and the model is not the story.
+  v3  this one. 2048 training samples so the map is identifiable, 256 held-out
+      states never seen, and it runs on a GPU because on this box it did not fit
+      in a sane budget.
 
-  structured   actions ARE a function of state -> held-out error should fall
-  shuffled     the same targets permuted, mapping destroyed -> held-out error
-               should be no better than predicting the mean
-
-This is strictly harder than the version it replaces. If it fails, the finding is
-serious: the architecture cannot learn a state->action mapping, and no amount of
-GPU time in Tier 2 will fix that.
+Measured on a T4 with the identifiable task, mean-predictor baseline 0.635:
+    regress (no flow, reference)  0.238
+    x1 parameterisation           0.266
+    velocity + Beta(1,1.5) t      0.407
+    velocity + uniform t          0.620
+which is what moved the repo to flow_parameterisation="x1".
 """
 from __future__ import annotations
 
-import sys
+import json
 from pathlib import Path
 
+from ..gpu import build_job, submit
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
-REPO = Path(__file__).resolve().parents[2]
-N_TRAIN, N_TEST, STEPS = 64, 16, 400
+_CACHE: dict = {}
 
+JOB = '''
+import json, torch, torch.nn.functional as F
+from UnifiedBrain import UnifiedBrain, UnifiedBrainConfig
 
-def _run(seed: int, shuffle: bool) -> dict:
-    sys.path.insert(0, str(REPO))
-    import torch
-    from UnifiedBrain import UnifiedBrain, UnifiedBrainConfig
+dev = "cuda" if torch.cuda.is_available() else "cpu"
+N_TRAIN, N_TEST, STEPS, BS = 2048, 256, 2000, 48
+SEED = %d
 
-    torch.manual_seed(seed)
+def run(shuffle):
+    torch.manual_seed(SEED)
     cfg = UnifiedBrainConfig()
     cfg.llm_enabled = False
     cfg.enable_intrinsic_motivation = False
-    brain = UnifiedBrain(cfg).train()
+    brain = UnifiedBrain(cfg).to(dev).train()
 
-    g = torch.Generator().manual_seed(seed + 900)
+    g = torch.Generator().manual_seed(SEED + 900)
     n = N_TRAIN + N_TEST
     obs = torch.randn(n, cfg.obs_dim, generator=g)
     W = torch.randn(cfg.obs_dim, cfg.action_chunk_size * cfg.action_dim, generator=g) * 0.05
     tgt = (obs @ W).view(n, cfg.action_chunk_size, cfg.action_dim)
-
-    tr_o, tr_t = obs[:N_TRAIN], tgt[:N_TRAIN]
-    te_o, te_t = obs[N_TRAIN:], tgt[N_TRAIN:]
+    tro, trt = obs[:N_TRAIN].to(dev), tgt[:N_TRAIN].to(dev)
+    teo, tet = obs[N_TRAIN:].to(dev), tgt[N_TRAIN:].to(dev)
 
     if shuffle:
-        # Destroy the mapping on the TRAINING set only. Held-out targets stay
-        # correct, so a model that learned real structure still scores well and
-        # one that memorised noise cannot.
-        tr_t = tr_t[torch.randperm(N_TRAIN, generator=g)]
+        # Destroy the mapping on TRAIN only. Held-out targets stay correct, so a
+        # model that learned real structure still scores well here and one that
+        # merely memorised cannot.
+        trt = trt[torch.randperm(N_TRAIN, generator=g).to(dev)]
 
+    base = float(F.mse_loss(trt.mean(0, keepdim=True).expand_as(tet), tet))
     opt = torch.optim.Adam([p for p in brain.parameters() if p.requires_grad], lr=3e-4)
-    bs = 8
-    for step in range(STEPS):
-        i = (step * bs) % N_TRAIN
-        loss = brain.action_training_loss(tr_o[i:i + bs], tr_t[i:i + bs])["loss"]
-        opt.zero_grad(); loss.backward(); opt.step()
+    for s in range(STEPS):
+        i = (s * BS) %% (N_TRAIN - BS)
+        L = brain.action_training_loss(tro[i:i+BS], trt[i:i+BS])["loss"]
+        opt.zero_grad(); L.backward(); opt.step()
 
     brain.eval()
     with torch.no_grad():
-        pred = brain.generate_actions_flow_matching(te_o)
-        heldout = float(torch.nn.functional.mse_loss(pred.float(), te_t.float()))
-        # The floor any model gets for free by ignoring the input entirely.
-        mean_baseline = float(torch.nn.functional.mse_loss(
-            tr_t.mean(0, keepdim=True).expand_as(te_t).float(), te_t.float()))
+        err = float(F.mse_loss(brain.generate_actions_flow_matching(teo).float(), tet.float()))
+    return {"heldout": round(err, 5), "mean_baseline": round(base, 5)}
 
-    return {"heldout_error": round(heldout, 5),
-            "mean_baseline": round(mean_baseline, 5),
-            "train_loss_final": round(float(loss), 5)}
+out = {"real": run(False), "shuffled": run(True)}
+print("RESULT", json.dumps(out), flush=True)
+open("/content/t102.json", "w").write(json.dumps(out))
+'''
+
+
+def _gpu(seed: int) -> dict:
+    """One GPU job trains both arms; both hooks read the same result."""
+    if seed in _CACHE:
+        return _CACHE[seed]
+    job = build_job(JOB % seed)
+    r = submit(job, prefer="colab", est_hours=0.8, timeout_s=4200,
+               fetch=["/content/t102.json"])
+    if not r.ok:
+        raise RuntimeError(f"GPU job failed on {r.backend}: {r.message}")
+    art = r.artifacts.get("/content/t102.json")
+    if art and Path(art).exists():
+        data = json.loads(Path(art).read_text())
+    else:
+        line = [l for l in r.stdout.splitlines() if l.startswith("RESULT")][-1]
+        data = json.loads(line[len("RESULT "):])
+    data["_backend"] = r.backend
+    _CACHE[seed] = data
+    return data
 
 
 def _experiment(seed: int) -> dict:
-    r = _run(seed, shuffle=False)
-    return {"structured_heldout": r["heldout_error"],
-            "mean_baseline": r["mean_baseline"],
-            "structured_train_loss": r["train_loss_final"]}
+    d = _gpu(seed)
+    return {"structured_heldout": d["real"]["heldout"],
+            "mean_baseline": d["real"]["mean_baseline"],
+            "backend": d["_backend"]}
 
 
 def _control(seed: int) -> dict:
-    r = _run(seed, shuffle=True)
-    return {"shuffled_heldout": r["heldout_error"],
-            "shuffled_train_loss": r["train_loss_final"]}
+    d = _gpu(seed)
+    return {"shuffled_heldout": d["shuffled"]["heldout"]}
 
 
 def _check(m: dict, c: dict) -> bool:
     adv = c["shuffled_heldout"] / max(m["structured_heldout"], 1e-9)
     m["heldout_structure_advantage"] = round(adv, 3)
     m["beats_mean_baseline"] = round(m["mean_baseline"] / max(m["structured_heldout"], 1e-9), 3)
-    # Structure must generalise better than destroyed structure, AND the
-    # structured model must beat the do-nothing baseline of predicting the mean.
+    # Thresholds unchanged from pre-registered v2. Structure must generalise
+    # better than destroyed structure, AND beat the do-nothing mean predictor.
     return adv >= 1.25 and m["beats_mean_baseline"] >= 1.1
 
 
