@@ -112,7 +112,41 @@ logger = logging.getLogger(__name__)
 # CONFIGURATION
 # =============================================================================
 
+def apply_action(mj_data, mj_model, action) -> None:
+    """Write an action to the actuators, or raise. Never silently adapt.
+
+    The previous implementation was:
+
+        n_act = min(len(self.current_action), self.mj_model.nu)
+        self.mj_data.ctrl[:n_act] = self.current_action[:n_act]
+
+    which TRUNCATES. A policy emitting 16 values for a 17-actuator humanoid drove
+    16 joints and left the last holding a stale command; one emitting 40 used the
+    first 17 and discarded the rest. Neither raised. Every locomotion number
+    produced that way would have been meaningless and nothing in the logs would
+    have said so.
+
+    Plain assignment is not enough either: `ctrl[:] = np.zeros(1)` is accepted by
+    NumPy broadcasting and drives EVERY joint with one value (measured, ladder
+    spec T0.06). So the width is checked explicitly before the write.
+    """
+    import numpy as np
+
+    a = np.asarray(action, dtype=np.float64).reshape(-1)
+    nu = int(mj_model.nu)
+    if a.size != nu:
+        raise ValueError(
+            f"action width {a.size} != model.nu {nu}. Refusing to write: "
+            "truncating or broadcasting here drives the wrong joints silently. "
+            "Fix the policy's action_dim or the model, do not pad."
+        )
+    if not np.all(np.isfinite(a)):
+        raise ValueError("action contains NaN or Inf; refusing to write to ctrl")
+    mj_data.ctrl[:] = a
+
+
 @dataclass
+
 class WorldConfig:
     """Configuration for the virtual world and game loop.
 
@@ -884,10 +918,9 @@ class VirtualWorld:
             return
 
         try:
-            # Apply action to actuators (if we have an action and actuators)
+            # Apply action to actuators. Exact width or refuse — see apply_action.
             if self.current_action is not None and self.mj_model.nu > 0:
-                n_act = min(len(self.current_action), self.mj_model.nu)
-                self.mj_data.ctrl[:n_act] = self.current_action[:n_act]
+                apply_action(self.mj_data, self.mj_model, self.current_action)
 
             # Step physics
             for _ in range(self.config.physics_substeps):

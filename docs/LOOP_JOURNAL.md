@@ -31,3 +31,14 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   checkpoints_checked=0 — it reported a clean failure while measuring nothing. Now polls for a real
   checkpoint before killing. Lesson worth keeping: assert the test actually exercised its subject.
   Next: T0.06 (env/policy dim contract — needs mujoco installed) or T0.07/T0.08 which are CPU-only.
+- **2026-08-04 manual** — T0.06 (dimension contract) PASS, after fixing the RUNTIME not the test.
+  Installed mujoco 3.2.3 (3.5 has no py39 aarch64 wheel and tried to compile; 3.2.3 has one) +
+  gymnasium; MUJOCO_GL=disabled for headless physics, no OSMesa on this box.
+  Humanoid-v5 confirmed: obs 348, **nu = 17**, physics steps fine.
+  The finding: `VirtualWorld.py:889` wrote `ctrl[:n] = action[:n]` with
+  `n = min(len(action), nu)` — a deliberate silent TRUNCATION. 16 actions drove 16 joints and left
+  the 17th stale; 40 actions used the first 17. Neither raised. And plain assignment is no guard
+  either: `ctrl[:] = zeros(1)` is broadcast across all 17 actuators by NumPy (measured).
+  Replaced with `apply_action(mj_data, mj_model, action)` requiring exact width and finite values.
+  Control now exercises the real write path: nu-1, nu+1, 1, 2*nu and a NaN of correct width — 5/5 refused.
+  Next: T0.07 (throughput baseline — tells us honestly what a GPU buys), T0.08, then T0.09-T0.11 GPU round-trip.

@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 6 / 57 demonstrated
+## 7 / 57 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -31,7 +31,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ SIGKILL at a random step loses at most one checkpoint interval.
       - _dies if:_ Corrupt checkpoint, or >1 interval of progress lost.
       - _then delete:_ Long GPU runs. Ephemeral VMs die without warning.
-- [ ] **T0.06** Env/policy dimension contract
+- [x] **T0.06** Env/policy dimension contract
       - _asserts:_ MuJoCo model nu equals the policy action dim, asserted at startup.
       - _dies if:_ Mismatch that does not raise.
       - _then delete:_ Every locomotion result.

@@ -111,6 +111,31 @@
       "spec_id": "T0.05",
       "status": "PASS"
     },
+    "T0.06": {
+      "commit": "f96b717",
+      "control_metrics": {
+        "raised": 5,
+        "wrong_widths_tried": 5
+      },
+      "duration_s": 1.61,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "action_space_dim": 17,
+        "ctrl_write_error": 0.0,
+        "expected_nu": 17,
+        "last_reward": 4.9097,
+        "nu": 17,
+        "obs_dim": 348,
+        "steps_ok": 5
+      },
+      "ran_at": "2026-08-04T14:05:25",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.06",
+      "status": "PASS"
+    },
     "T1.01": {
       "commit": "6d87687",
       "control_metrics": {
