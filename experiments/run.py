@@ -1,0 +1,132 @@
+#!/usr/bin/env python
+"""Ladder runner.
+
+    python -m experiments.run status          # the checklist, current state
+    python -m experiments.run next            # what is legitimately runnable now
+    python -m experiments.run T0.02           # run one experiment
+    python -m experiments.run --tier 0        # run a whole tier, in order
+    python -m experiments.run --gate          # re-run every PASSing test (regression)
+
+Dependencies are enforced: a spec whose prerequisites are not PASSing is recorded
+BLOCKED rather than run, because a number computed on a broken foundation is worse
+than no number — it looks like evidence.
+"""
+from __future__ import annotations
+
+import argparse
+import importlib
+import sys
+from pathlib import Path
+
+from .protocol import Ledger, Status
+from .registry import BY_ID, LADDER, ready, tier
+
+TESTS_DIR = Path(__file__).parent / "tests"
+
+MARK = {
+    Status.PASS: "PASS   ",
+    Status.FAIL: "FAIL   ",
+    Status.BLOCKED: "blocked",
+    Status.ERROR: "ERROR  ",
+    Status.SKIP: "skip   ",
+    Status.NOT_RUN: "-      ",
+}
+
+
+def _module_for(spec_id: str):
+    """tests/t0_02_*.py implements T0.02. Missing module = not yet written."""
+    prefix = spec_id.lower().replace(".", "_")
+    for p in sorted(TESTS_DIR.glob(f"{prefix}*.py")):
+        return importlib.import_module(f"experiments.tests.{p.stem}")
+    return None
+
+
+def cmd_status(ledger: Ledger) -> int:
+    counts = ledger.summary()
+    total = len(LADDER)
+    done = counts[Status.PASS.value]
+    print(f"\nJack validation ladder — {done}/{total} demonstrated\n")
+    current = None
+    for s in LADDER:
+        if s.tier != current:
+            current = s.tier
+            names = {0: "HARNESS", 1: "LEARNING PRIMITIVES", 2: "COMPONENT vs NULL",
+                     3: "ABLATION — does it earn its parameters?", 4: "COMPOSITION",
+                     5: "THE CLAIMS", 6: "INTEGRATION"}
+            print(f"\n  TIER {current} — {names.get(current, '')}")
+        st = ledger.status(s.id)
+        impl = "" if _module_for(s.id) else "  (not implemented)"
+        print(f"    [{MARK[st]}] {s.id}  {s.title}{impl}")
+    print(f"\n  {counts}\n")
+    print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
+    return 0
+
+
+def cmd_next(ledger: Ledger) -> int:
+    avail = ready(ledger)
+    if not avail:
+        print("Nothing runnable — every unblocked spec already passes.")
+        return 0
+    print("\nRunnable now (dependencies satisfied):\n")
+    for s in avail[:12]:
+        impl = "" if _module_for(s.id) else "  [needs implementing]"
+        print(f"  {s.id}  {s.title}  ({s.budget.value}){impl}")
+        print(f"        hypothesis:  {s.hypothesis}")
+        print(f"        falsified by: {s.falsified_by}")
+        if s.kills:
+            print(f"        kills:       {s.kills}")
+        print()
+    return 0
+
+
+def cmd_run(ledger: Ledger, spec_ids: list[str]) -> int:
+    failures = 0
+    for sid in spec_ids:
+        spec = BY_ID.get(sid)
+        if not spec:
+            print(f"unknown spec {sid}")
+            failures += 1
+            continue
+        mod = _module_for(sid)
+        if not mod:
+            print(f"[{sid}] no implementation in experiments/tests/ — skipping")
+            continue
+        blocked = ledger.blocked_by(spec)
+        if blocked:
+            print(f"[{sid}] BLOCKED by {', '.join(blocked)}")
+            failures += 1
+            continue
+        print(f"[{sid}] {spec.title} ... ", end="", flush=True)
+        res = mod.run(ledger)
+        print(f"{res.status.value} ({res.duration_s}s) {res.message}")
+        if res.metrics:
+            for k, v in list(res.metrics.items())[:6]:
+                print(f"        {k} = {v}")
+        if res.status is not Status.PASS:
+            failures += 1
+    return 1 if failures else 0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("spec", nargs="*", help="spec ids, or 'status' / 'next'")
+    ap.add_argument("--tier", type=int)
+    ap.add_argument("--gate", action="store_true", help="re-run all passing tests")
+    args = ap.parse_args()
+    ledger = Ledger()
+
+    if args.gate:
+        ids = [s.id for s in LADDER if ledger.status(s.id) is Status.PASS]
+        print(f"Regression gate: {len(ids)} previously-passing tests\n")
+        return cmd_run(ledger, ids)
+    if args.tier is not None:
+        return cmd_run(ledger, [s.id for s in tier(args.tier)])
+    if not args.spec or args.spec[0] == "status":
+        return cmd_status(ledger)
+    if args.spec[0] == "next":
+        return cmd_next(ledger)
+    return cmd_run(ledger, args.spec)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

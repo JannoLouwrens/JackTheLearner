@@ -1,0 +1,450 @@
+"""The validation ladder.
+
+Ordering principle: CHEAPEST FALSIFICATION FIRST. A hypothesis that can die on
+CPU in 60 seconds must never be allowed to consume GPU quota. Tiers 0-1 cost
+nothing and kill most bad ideas.
+
+Composition principle: nothing is combined until it passes alone, and nothing
+stays combined without its earlier gates re-running. The system only ratchets
+forward, and when a metric moves you know which addition moved it.
+
+Deletion principle: Tier 3 is an ablation tier. A component that cannot show a
+measurable contribution gets deleted. This is the direct antidote to the repo's
+current state — 45.5M parameters that look like capability and do nothing.
+"""
+from __future__ import annotations
+
+from .protocol import Budget, Spec
+
+LADDER: list[Spec] = [
+
+    # ===================================================================
+    # TIER 0 — HARNESS. Can we measure anything at all?
+    # Without these every later number is uninterpretable.
+    # ===================================================================
+    Spec("T0.01", 0, "Repo imports clean",
+         hypothesis="Every live module imports without side effects on CPU.",
+         falsified_by="Any ImportError, or an import that starts a training run.",
+         null_baseline="n/a — structural precondition.",
+         metric="modules_imported", budget=Budget.CPU_FAST,
+         kills="Nothing runs until fixed."),
+
+    Spec("T0.02", 0, "Deterministic seeding",
+         hypothesis="Same seed produces an identical loss trace on CPU.",
+         falsified_by="Two runs at seed 0 differ beyond float tolerance.",
+         null_baseline="Different seeds should DIFFER — if they match, the seed is ignored.",
+         metric="max_abs_trace_delta", budget=Budget.CPU_FAST, depends_on=["T0.01"],
+         control="Different seeds must produce different traces.",
+         kills="Every A/B comparison in the ladder. Non-negotiable."),
+
+    Spec("T0.03", 0, "Checkpoint round-trip fidelity",
+         hypothesis="save -> load reproduces identical forward outputs.",
+         falsified_by="Output delta > 1e-6 after a reload.",
+         null_baseline="A randomly re-initialised model gives a large delta.",
+         metric="output_delta", budget=Budget.CPU_FAST, depends_on=["T0.02"],
+         kills="All GPU training — a checkpoint that does not restore is wasted compute."),
+
+    Spec("T0.04", 0, "Resume continues, does not restart",
+         hypothesis="Training resumed from a checkpoint continues the loss curve "
+                    "with no discontinuity (optimiser and obs-normaliser state restored).",
+         falsified_by="Loss jumps >20% at the resume boundary.",
+         null_baseline="Resuming weights WITHOUT optimiser state shows the jump.",
+         metric="resume_loss_jump_pct", budget=Budget.CPU, depends_on=["T0.03"],
+         control="Weights-only resume must show the discontinuity.",
+         kills="Any multi-session run. Kaggle caps at 12h; jobs must survive it."),
+
+    Spec("T0.05", 0, "Preemption survival",
+         hypothesis="SIGKILL at a random step loses at most one checkpoint interval.",
+         falsified_by="Corrupt checkpoint, or >1 interval of progress lost.",
+         null_baseline="Non-atomic writes corrupt under kill.",
+         metric="steps_lost", budget=Budget.CPU, depends_on=["T0.04"],
+         kills="Long GPU runs. Ephemeral VMs die without warning."),
+
+    Spec("T0.06", 0, "Env/policy dimension contract",
+         hypothesis="MuJoCo model nu equals the policy action dim, asserted at startup.",
+         falsified_by="Mismatch that does not raise.",
+         null_baseline="Current code silently writes a wrong-width tensor to mj_data.ctrl.",
+         metric="nu_vs_action_dim", budget=Budget.CPU_FAST, depends_on=["T0.01"],
+         kills="Every locomotion result."),
+
+    Spec("T0.07", 0, "CPU throughput baseline",
+         hypothesis="Measured env-steps/s on this ARM box, recorded for planning.",
+         falsified_by="n/a — measurement, not a claim.",
+         null_baseline="n/a", metric="steps_per_s", budget=Budget.CPU,
+         depends_on=["T0.06"],
+         notes="Prior measurement: ~27 steps/s, CPU-dispatch-bound at 6095 ATen "
+               "dispatches per B=1 forward. Confirm before believing any GPU estimate."),
+
+    Spec("T0.08", 0, "Metrics land in the ledger",
+         hypothesis="A run writes metrics retrievable by spec id.",
+         falsified_by="Missing or unparseable ledger entry.",
+         null_baseline="n/a", metric="roundtrip_ok", budget=Budget.CPU_FAST),
+
+    Spec("T0.09", 0, "Colab T4 job round-trip",
+         hypothesis="A script submits to Colab, runs on a T4, returns artifacts, VM torn down.",
+         falsified_by="No artifact returned, or the VM persists.",
+         null_baseline="n/a", metric="artifact_bytes", budget=Budget.GPU_SHORT,
+         depends_on=["T0.03"],
+         notes="Verified working 2026-08-04: Tesla T4 15360MiB, torch 2.11.0+cu128."),
+
+    Spec("T0.10", 0, "Kaggle job round-trip",
+         hypothesis="Same contract via the Kaggle kernels API.",
+         falsified_by="Kernel fails to run headless or artifacts are unreachable.",
+         null_baseline="n/a", metric="artifact_bytes", budget=Budget.GPU_SHORT,
+         depends_on=["T0.03"]),
+
+    Spec("T0.11", 0, "Backend failover",
+         hypothesis="If Colab refuses a GPU, the job runs on Kaggle unmodified.",
+         falsified_by="A job that needs editing to switch backend.",
+         null_baseline="n/a", metric="failover_ok", budget=Budget.GPU_SHORT,
+         depends_on=["T0.09", "T0.10"],
+         notes="One job spec, two executors. The 30 free Kaggle hrs/week are the "
+               "scarce resource; Colab absorbs the short jobs."),
+
+    Spec("T0.12", 0, "GPU-hour accounting",
+         hypothesis="Every GPU run debits a weekly budget file; the ladder refuses "
+                    "to launch past quota.",
+         falsified_by="A run proceeds with the budget exhausted.",
+         null_baseline="n/a", metric="quota_enforced", budget=Budget.CPU_FAST,
+         depends_on=["T0.09"]),
+
+    # ===================================================================
+    # TIER 1 — LEARNING PRIMITIVES. Can each trainable piece learn ANYTHING?
+    # Applied per module. These are the tests that catch broken plumbing
+    # before it is disguised as a research result.
+    # ===================================================================
+    Spec("T1.01", 1, "Overfit a single batch",
+         hypothesis="Each trainable module drives loss below 1e-2 on ONE fixed batch.",
+         falsified_by="Loss plateaus above 1e-2 after 500 steps.",
+         null_baseline="A frozen module stays flat.",
+         metric="final_loss", budget=Budget.CPU, depends_on=["T0.02"],
+         control="Same module with requires_grad=False must NOT fit.",
+         kills="The module. If it cannot memorise one batch it will never learn a task.",
+         notes="The single highest-yield test in ML. Catches wrong loss, detached "
+               "graph, shape bugs, dead ReLUs, and bad LR in one shot."),
+
+    Spec("T1.02", 1, "Shuffled-target control",
+         hypothesis="With targets shuffled, the module fits SLOWER and worse.",
+         falsified_by="Shuffled targets fit as fast as real ones.",
+         null_baseline="Equal fit means the metric measures capacity, not signal.",
+         metric="real_vs_shuffled_loss_ratio", budget=Budget.CPU, depends_on=["T1.01"],
+         kills="The task definition — there is no learnable structure in it."),
+
+    Spec("T1.03", 1, "Gradient reaches every trainable parameter",
+         hypothesis="After one backward, no trainable tensor has grad None or all-zero.",
+         falsified_by="Any orphaned parameter.",
+         null_baseline="Current model: 45,538,295 params (38.6%) receive no gradient.",
+         metric="params_without_grad", budget=Budget.CPU_FAST, depends_on=["T0.01"],
+         kills="Silent dead weight. This test is the direct fix for the repo's disease."),
+
+    Spec("T1.04", 1, "Weights actually move",
+         hypothesis="||theta_after - theta_before|| > 0 for every trainable module.",
+         falsified_by="A module whose weights are unchanged after N steps.",
+         null_baseline="Frozen modules must show exactly zero.",
+         metric="min_weight_delta", budget=Budget.CPU_FAST, depends_on=["T1.03"]),
+
+    Spec("T1.05", 1, "Frozen stays frozen",
+         hypothesis="The pretrained trunk/LLM does not change during policy training.",
+         falsified_by="Any delta in frozen parameters.",
+         null_baseline="n/a", metric="frozen_delta", budget=Budget.CPU_FAST,
+         depends_on=["T1.04"],
+         notes="UnifiedBrain calls self.apply(_init_weights) — verify it does not "
+               "re-randomise a loaded pretrained backbone."),
+
+    Spec("T1.06", 1, "Numerical stability",
+         hypothesis="No NaN/Inf in loss or grads over 1000 steps.",
+         falsified_by="Any non-finite value.",
+         null_baseline="n/a", metric="nonfinite_steps", budget=Budget.CPU,
+         depends_on=["T1.01"]),
+
+    Spec("T1.07", 1, "Not knife-edge on learning rate",
+         hypothesis="Training succeeds across a 10x LR range.",
+         falsified_by="Only one LR works.",
+         null_baseline="n/a", metric="lrs_that_converged", budget=Budget.CPU,
+         depends_on=["T1.01"],
+         notes="A result that survives only at one LR will not survive a new task."),
+
+    Spec("T1.08", 1, "Seed variance measured",
+         hypothesis="Across 3 seeds the metric's std is small relative to the effect.",
+         falsified_by="std >= the effect size being claimed.",
+         null_baseline="n/a", metric="metric_std", budget=Budget.CPU, seeds=3,
+         depends_on=["T1.01"],
+         kills="Any single-seed claim in this repo."),
+
+    Spec("T1.09", 1, "Fits in T4 memory",
+         hypothesis="Peak VRAM < 14 GB at the intended batch size.",
+         falsified_by="OOM on a 16 GB T4.",
+         null_baseline="n/a", metric="peak_vram_gb", budget=Budget.GPU_SHORT,
+         depends_on=["T0.09"]),
+
+    Spec("T1.10", 1, "CPU and GPU agree",
+         hypothesis="Same seed, same data: CPU and T4 losses agree within tolerance.",
+         falsified_by="Divergence beyond float32 accumulation error.",
+         null_baseline="n/a", metric="cpu_gpu_delta", budget=Budget.GPU_SHORT,
+         depends_on=["T1.09", "T0.02"],
+         notes="Lets cheap CPU debugging predict GPU behaviour."),
+
+    # ===================================================================
+    # TIER 2 — COMPONENT COMPETENCE. Does each block beat its NULL?
+    # Every test here names the baseline it must beat. "Loss went down"
+    # is not a result.
+    # ===================================================================
+    Spec("T2.01", 2, "Locomotion beats a random policy",
+         hypothesis="Trained policy return exceeds random-action return by >5 sigma.",
+         falsified_by="Return within seed noise of random.",
+         null_baseline="Random policy on Humanoid: ~60-80 return.",
+         metric="episode_return", budget=Budget.GPU, seeds=3, depends_on=["T1.08", "T0.09"],
+         control="Untrained network with the same architecture."),
+
+    Spec("T2.02", 2, "Locomotion beats the honest MLP baseline",
+         hypothesis="The chosen architecture beats a ~140K-param MLP actor-critic "
+                    "at equal environment steps.",
+         falsified_by="The MLP matches or wins.",
+         null_baseline="RL-Zoo3 MuJoCo MLP: sac 6232+-280, td3 5567, tqc 7239 at 2M steps.",
+         metric="return_at_2M_steps", budget=Budget.GPU_LONG, seeds=3, depends_on=["T2.01"],
+         kills="The transformer policy. If a 140K MLP wins, use the MLP.",
+         notes="RL-Zoo3 publishes NO PPO row for Humanoid. Treat PPO-Humanoid as "
+               "a weak baseline and prefer SAC/TD3/TQC."),
+
+    Spec("T2.03", 2, "Pretrained vision features beat random features",
+         hypothesis="A linear probe on frozen DINOv2/SigLIP features beats the same "
+                    "probe on the current 0.24M from-scratch encoder.",
+         falsified_by="From-scratch matches pretrained.",
+         null_baseline="Random-projection features of equal dimension.",
+         metric="probe_accuracy", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.08"],
+         kills="use_pretrained_vision=False. Currently DINOv2/SigLIP are never loaded."),
+
+    Spec("T2.04", 2, "Behaviour cloning on scripted trajectories",
+         hypothesis="The action head reproduces scripted MuJoCo trajectories above "
+                    "a nearest-neighbour baseline.",
+         falsified_by="Fails to beat nearest-neighbour retrieval.",
+         null_baseline="Nearest-neighbour lookup in the demo set.",
+         metric="action_mse", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.01"],
+         notes="Procedurally generated in-sim. Needs no external dataset — the "
+               "CMU MoCap URLs 404 and the loader fabricates sinusoids."),
+
+    Spec("T2.05", 2, "World model beats constant prediction",
+         hypothesis="k-step latent prediction error < a persistence baseline.",
+         falsified_by="Predicting 'next state = current state' does as well.",
+         null_baseline="Persistence (copy current state) and mean-state.",
+         metric="k_step_mse", budget=Budget.GPU, seeds=3, depends_on=["T1.01"]),
+
+    Spec("T2.06", 2, "Language-action alignment beats chance",
+         hypothesis="Contrastive retrieval of the right action anchor from a command "
+                    "beats chance and a bag-of-words baseline.",
+         falsified_by="At or near chance (1/n_anchors).",
+         null_baseline="Chance = 1/len(ACTION_CATEGORIES); plus TF-IDF nearest match.",
+         metric="retrieval_acc", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.01"],
+         control="Shuffled (command, action) pairing must collapse to chance."),
+
+    Spec("T2.07", 2, "Grounding generalises to held-out phrasings",
+         hypothesis="Commands never seen in training map to the right anchor.",
+         falsified_by="Accuracy collapses on held-out synonyms.",
+         null_baseline="Memorising the ACTION_CATEGORIES synonym table.",
+         metric="heldout_retrieval_acc", budget=Budget.GPU_SHORT, seeds=3,
+         depends_on=["T2.06"],
+         kills="SemanticActionAnchors as a grounding mechanism.",
+         notes="THE test that separates understanding from a lookup table."),
+
+    Spec("T2.08", 2, "Curiosity drives coverage",
+         hypothesis="Intrinsic reward increases state-space coverage over random exploration.",
+         falsified_by="Coverage at or below random.",
+         null_baseline="Uniform random actions; and epsilon-greedy.",
+         metric="state_coverage", budget=Budget.GPU, seeds=3, depends_on=["T1.01"]),
+
+    Spec("T2.09", 2, "Noisy-TV control",
+         hypothesis="Injecting an unpredictable observation channel does NOT capture "
+                    "the intrinsic reward.",
+         falsified_by="The agent fixates on the noise channel.",
+         null_baseline="A pure ICM agent is known to fixate (Burda et al.).",
+         metric="noise_channel_dwell_frac", budget=Budget.GPU, seeds=3, depends_on=["T2.08"],
+         kills="ICM alone. Forces RND or a learning-progress signal.",
+         notes="Also covers the degenerate failure the owner should fear: an agent "
+               "that 'explores' by twitching in place to maximise proprioceptive novelty."),
+
+    Spec("T2.10", 2, "Memory retrieval beats recency",
+         hypothesis="Retrieval scoring beats a pure-recency baseline on recall questions.",
+         falsified_by="Recency-only does as well.",
+         null_baseline="Return the k most recent events.",
+         metric="recall_at_k", budget=Budget.CPU, seeds=3, depends_on=["T0.08"],
+         notes="Generative Agents scoring: recency*0.5 + relevance*3 + importance*2."),
+
+    Spec("T2.11", 2, "Skills are distinguishable",
+         hypothesis="A classifier recovers the skill label from trajectories above chance.",
+         falsified_by="Skills are indistinguishable — the MI objective collapsed.",
+         null_baseline="Chance = 1/n_skills.",
+         metric="skill_classification_acc", budget=Budget.GPU, seeds=3, depends_on=["T1.01"],
+         kills="SkillDiscovery."),
+
+    Spec("T2.12", 2, "Emotion model produces distinguishable states",
+         hypothesis="PAD trajectories under different event streams are separable.",
+         falsified_by="Indistinguishable from a random walk.",
+         null_baseline="Random walk with matched variance.",
+         metric="state_separability", budget=Budget.CPU, seeds=3, depends_on=["T0.02"],
+         kills="EmotionalState as an input modality."),
+
+    # ===================================================================
+    # TIER 3 — ABLATION. Does each component EARN its parameters?
+    # Anything that cannot show a contribution is deleted.
+    # ===================================================================
+    Spec("T3.01", 3, "Ablate vision", hypothesis="Removing vision measurably hurts a vision-dependent task.",
+         falsified_by="No measurable drop.", null_baseline="Full system.",
+         metric="delta_vs_full", budget=Budget.GPU, seeds=3, depends_on=["T2.03"],
+         kills="The vision encoder."),
+    Spec("T3.02", 3, "Ablate proprioception", hypothesis="Removing proprioception hurts control.",
+         falsified_by="No measurable drop.", null_baseline="Full system.",
+         metric="delta_vs_full", budget=Budget.GPU, seeds=3, depends_on=["T2.01"],
+         kills="The proprioception encoder."),
+    Spec("T3.03", 3, "Ablate the world model", hypothesis="Removing it hurts sample efficiency.",
+         falsified_by="Same sample efficiency without it.", null_baseline="Model-free control.",
+         metric="steps_to_threshold", budget=Budget.GPU_LONG, seeds=3, depends_on=["T2.05"],
+         kills="world_model (2.97M params, currently never invoked)."),
+    Spec("T3.04", 3, "Ablate the hierarchical planner", hypothesis="Removing it hurts long-horizon tasks.",
+         falsified_by="No drop on multi-step tasks.", null_baseline="Flat policy.",
+         metric="task_success_rate", budget=Budget.GPU_LONG, seeds=3, depends_on=["T2.01"],
+         kills="hierarchical_planner (37.17M params — larger than the backbone, zero call sites)."),
+    Spec("T3.05", 3, "Ablate temporal memory", hypothesis="Removing 50-step memory hurts partially-observed tasks.",
+         falsified_by="No drop.", null_baseline="Single-frame policy.",
+         metric="delta_vs_full", budget=Budget.GPU, seeds=3, depends_on=["T2.01"],
+         kills="temporal_memory (12.64M params, never passed memory=)."),
+    Spec("T3.06", 3, "Ablate curiosity", hypothesis="Removing intrinsic reward reduces unprompted coverage.",
+         falsified_by="Coverage unchanged.", null_baseline="Extrinsic-only.",
+         metric="delta_coverage", budget=Budget.GPU, seeds=3, depends_on=["T2.08"],
+         kills="IntrinsicCuriosityModule."),
+    Spec("T3.07", 3, "Ablate mood conditioning", hypothesis="Mood measurably changes behaviour, not just text.",
+         falsified_by="Identical action distributions across moods.",
+         null_baseline="Mood token zeroed.", metric="action_dist_divergence",
+         budget=Budget.GPU_SHORT, seeds=3, depends_on=["T2.12"],
+         kills="MovementMoodCoupling as anything but cosmetics."),
+    Spec("T3.08", 3, "Ablate the LLM", hypothesis="The frozen LLM improves command following over a bag-of-words encoder.",
+         falsified_by="Bag-of-words matches it.", null_baseline="TF-IDF command encoder.",
+         metric="command_success_rate", budget=Budget.GPU, seeds=3, depends_on=["T2.07"],
+         kills="Carrying a 1.7B model. Decides SmolLM2 vs something larger or nothing."),
+
+    # ===================================================================
+    # TIER 4 — COMPOSITION. Does adding B break A?
+    # ===================================================================
+    Spec("T4.01", 4, "Modality dropout robustness",
+         hypothesis="Performance degrades gracefully when a modality is missing at test time.",
+         falsified_by="Catastrophic failure when one sense drops.",
+         null_baseline="Full-modality performance.",
+         metric="degradation_curve", budget=Budget.GPU, seeds=3, depends_on=["T3.01", "T3.02"]),
+    Spec("T4.02", 4, "No modality collapse",
+         hypothesis="Per-modality gradient norms stay within an order of magnitude.",
+         falsified_by="One modality's gradient dominates by >10x — the others are ignored.",
+         null_baseline="Balanced contribution.",
+         metric="max_modality_grad_ratio", budget=Budget.GPU_SHORT, seeds=3,
+         depends_on=["T1.03"],
+         notes="The documented failure where vision drowns proprioception. Detected "
+               "only by instrumenting gradients per encoder."),
+    Spec("T4.03", 4, "Fusion actually fuses",
+         hypothesis="Shuffling ONE modality across the batch degrades performance.",
+         falsified_by="No degradation — the modality is being ignored.",
+         null_baseline="Unshuffled.", metric="shuffle_sensitivity",
+         budget=Budget.GPU_SHORT, seeds=3, depends_on=["T4.02"],
+         kills="CrossModalFusion. Distinguishes real integration from concat-and-project."),
+    Spec("T4.04", 4, "Task interference",
+         hypothesis="Training task B does not degrade task A beyond a set tolerance.",
+         falsified_by="A drops >10% while learning B.",
+         null_baseline="A trained alone.", metric="task_a_retention",
+         budget=Budget.GPU_LONG, seeds=3, depends_on=["T2.01"]),
+    Spec("T4.05", 4, "Full regression gate",
+         hypothesis="Every passing Tier 0-3 test still passes after composition.",
+         falsified_by="Any regression.", null_baseline="n/a",
+         metric="regressions", budget=Budget.GPU_LONG, depends_on=["T4.04"]),
+
+    # ===================================================================
+    # TIER 5 — THE CLAIMS. The thesis stands or falls here.
+    # ===================================================================
+    Spec("T5.01", 5, "Physics pre-training transfers (THE thesis test)",
+         hypothesis="Phase-0 SymPy physics pre-training improves downstream control "
+                    "sample-efficiency vs identical architecture without it.",
+         falsified_by="No difference beyond seed noise.",
+         null_baseline="Same net, random init, same budget. Also: pre-trained on "
+                       "SHUFFLED physics targets (structure-free control).",
+         metric="steps_to_reward_threshold", budget=Budget.GPU_LONG, seeds=5,
+         depends_on=["T2.01"],
+         control="Shuffled-physics pre-training must NOT help.",
+         kills="The project's entire differentiator. Run this EARLY and cheaply.",
+         notes="5 seeds because this is the headline claim and the effect may be small."),
+
+    Spec("T5.02", 5, "Physics violation detection",
+         hypothesis="The model flags dynamics perturbed outside training distribution.",
+         falsified_by="Cannot distinguish perturbed from nominal.",
+         null_baseline="A simple prediction-error threshold detector.",
+         metric="detection_auc", budget=Budget.GPU, seeds=3, depends_on=["T5.01"],
+         kills="The 'motor must be weaker than expected' adaptation story.",
+         notes="Must beat the trivial detector, or the neuro-symbolic framing adds nothing."),
+
+    Spec("T5.03", 5, "Continual learning: forgetting measured",
+         hypothesis="Sequential tasks retain prior performance above a replay-free baseline.",
+         falsified_by="Catastrophic forgetting equal to naive sequential fine-tuning.",
+         null_baseline="Naive sequential fine-tuning (expected: severe forgetting).",
+         metric="backward_transfer", budget=Budget.GPU_LONG, seeds=3, depends_on=["T4.04"]),
+
+    Spec("T5.04", 5, "Plasticity does not die",
+         hypothesis="After N consolidation cycles the model still learns a NEW task as "
+                    "fast as a fresh model.",
+         falsified_by="Steps-to-threshold on a novel task grows with cycle count.",
+         null_baseline="Fresh model on the same novel task.",
+         metric="plasticity_ratio", budget=Budget.GPU_LONG, seeds=3, depends_on=["T5.03"],
+         kills="The word 'indefinitely'.",
+         notes="Dohare et al., Nature 632:768-774 (2024). Instrument dormant-unit "
+               "fraction, parameter-norm growth and per-layer effective rank every cycle. "
+               "Without this you cannot tell 'converged' from 'can no longer learn'."),
+
+    Spec("T5.05", 5, "Sleep consolidation beats online-only",
+         hypothesis="The T2 offline GPU pass improves on the T1 online head alone.",
+         falsified_by="No improvement from consolidation.",
+         null_baseline="Online head with no consolidation.",
+         metric="post_sleep_delta", budget=Budget.GPU, seeds=3, depends_on=["T5.03"]),
+
+    Spec("T5.06", 5, "Unprompted exploration is real",
+         hypothesis="Left alone, the agent visits more distinct states than a scripted "
+                    "idle behaviour, and its choices depend on what it has already seen.",
+         falsified_by="Coverage matches a scripted wander.",
+         null_baseline="Current code: a hardcoded string on a frame counter "
+                       "(VirtualWorld.py:807).",
+         metric="unprompted_coverage", budget=Budget.GPU, seeds=3, depends_on=["T3.06"]),
+
+    Spec("T5.07", 5, "Behaviour visibly changes after training",
+         hypothesis="A blind human rater distinguishes trained from untrained episodes.",
+         falsified_by="Rater at chance.",
+         null_baseline="Untrained checkpoint, same seed and scene.",
+         metric="rater_accuracy", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T2.01"],
+         notes="The only test whose result the owner can verify with his own eyes. "
+               "Keep it in the ladder for exactly that reason."),
+
+    # ===================================================================
+    # TIER 6 — INTEGRATION.
+    # ===================================================================
+    Spec("T6.01", 6, "Full episode completes",
+         hypothesis="A full companion session runs N minutes with no crash or NaN.",
+         falsified_by="Any crash, hang, or non-finite action.",
+         null_baseline="n/a", metric="minutes_survived", budget=Budget.CPU_LONG,
+         depends_on=["T4.05"]),
+    Spec("T6.02", 6, "Long-run stability",
+         hypothesis="Hours of continuous operation without drift into degenerate behaviour.",
+         falsified_by="Action saturation, mood lock, or memory unbounded growth.",
+         null_baseline="n/a", metric="hours_stable", budget=Budget.CPU_LONG,
+         depends_on=["T6.01"]),
+    Spec("T6.03", 6, "Cross-session persistence",
+         hypothesis="Save, restart, and the companion recalls prior interaction.",
+         falsified_by="State lost or corrupted across restart.",
+         null_baseline="Fresh instance with no memory.",
+         metric="recall_after_restart", budget=Budget.CPU, depends_on=["T2.10", "T0.05"]),
+]
+
+
+BY_ID = {s.id: s for s in LADDER}
+
+
+def tier(n: int) -> list[Spec]:
+    return [s for s in LADDER if s.tier == n]
+
+
+def ready(ledger) -> list[Spec]:
+    """Specs whose dependencies all pass — the legitimate next moves."""
+    from .protocol import Status
+    return [s for s in LADDER
+            if ledger.status(s.id) is not Status.PASS and not ledger.blocked_by(s)]

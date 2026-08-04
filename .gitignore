@@ -36,3 +36,7 @@ logs/
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
+
+# Experiment artifacts (the ledger itself IS tracked — it is the capability record)
+experiments/artifacts/
+experiments/**/__pycache__/

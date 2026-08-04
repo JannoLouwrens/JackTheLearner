@@ -1,0 +1,64 @@
+{
+  "_comment": "Written by experiments/run.py. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
+  "results": {
+    "T0.01": {
+      "commit": "7947fe2",
+      "control_metrics": {},
+      "duration_s": 1.47,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "failed": "none",
+        "modules_imported": 13,
+        "modules_total": 13,
+        "slow_imports": "none"
+      },
+      "ran_at": "2026-08-04T12:13:17",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.01",
+      "status": "PASS"
+    },
+    "T0.02": {
+      "commit": "7947fe2",
+      "control_metrics": {
+        "max_abs_trace_delta": 0.12971967458724976
+      },
+      "duration_s": 1.04,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "final_loss": 0.7114750146865845,
+        "max_abs_trace_delta": 0.0,
+        "steps": 30
+      },
+      "ran_at": "2026-08-04T12:13:18",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.02",
+      "status": "PASS"
+    },
+    "T1.03": {
+      "commit": "7947fe2",
+      "control_metrics": {},
+      "duration_s": 44.96,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "orphan_fraction": 0.5884,
+        "params_without_grad": 67668479,
+        "total_params": 1826911260,
+        "trainable_params": 115009308,
+        "worst_offenders": "hierarchical_planner=37,166,972; temporal_memory=12,635,136; action_expert=4,615,696; autonomous_mind=4,462,201; world_model=2,974,977; language_encoder=2,624,000"
+      },
+      "ran_at": "2026-08-04T12:14:43",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.03",
+      "status": "FAIL"
+    }
+  }
+}
