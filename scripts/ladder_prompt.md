@@ -70,6 +70,14 @@ contrastive loss", "what does 2026 say about X" deserve real research with arXiv
 citations. Questions like "why did this tensor shape mismatch" deserve you reading
 the code.
 
+## Settled decisions
+
+Read `docs/DECISIONS.md` first. Those are the owner's calls — freeze the trunk,
+drop physics-first as a training method (SymbolicCalculator becomes a regression
+gate), continual learning on top, dialogue via a frozen swappable LLM with
+grounding on a separate local text tower. Do not relitigate them without new
+evidence; do implement against them.
+
 ## Context worth carrying
 
 Settled decisions from the two committed reviews — do not relitigate without new

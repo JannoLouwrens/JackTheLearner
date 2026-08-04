@@ -221,18 +221,23 @@ JackTheLearner has both:
 
 ### Results So Far (Simulation)
 
-Training is performed on a single RTX 3090. Results from MuJoCo Humanoid environment:
-
-| Metric | Value | Notes |
-|--------|-------|-------|
-| **Phase 0: Physics Accuracy** | 94.2% | MathReasoner predicts SymPy's physics calculations |
-| **Phase 0: Energy Conservation Error** | < 2.1% | Neural network respects E = KE + PE |
-| **Phase 1: Walking Speed** | 1.4 m/s | Stable forward locomotion |
-| **Phase 1: Episodes Before Falling** | 850+ avg | On flat terrain |
-| **Phase 1: Push Recovery** | 73% | Recovers from 50N lateral push |
-| **System 2 Activation Rate** | 8.7% | Slow reasoning only when needed |
-
-**Key insight:** Agents trained WITH Phase 0 (physics pre-training) recover from perturbations 31% more often than agents trained without it. The MathReasoner provides a "physics prior" that helps in novel situations.
+> **Nothing here has been trained yet.**
+>
+> This section previously listed measured results — walking speed, push-recovery
+> rate, physics accuracy, and a claim that physics pre-training improved
+> perturbation recovery by 31%. None of those numbers came from a training run.
+> There is no checkpoint in this repository and there never has been. They have
+> been removed rather than restated as targets, because a target written in the
+> shape of a result is how the confusion started.
+>
+> What HAS been demonstrated is tracked in [CHECKLIST.md](CHECKLIST.md), generated
+> from `experiments/ledger.json`. A capability appears there only when an
+> experiment that could have failed did not. As of the last run: **3 of 57**.
+>
+> The first real measurement: the action path drives loss from 0.943 to 0.00177
+> over 400 steps on one batch, while an identical frozen-weights control stays at
+> 0.944 — so the plumbing carries gradient and the model can learn. That is a long
+> way from walking, and the checklist says exactly how far.
 
 ---
 
@@ -344,14 +349,14 @@ The goal isn't just a robot that walks. It's a robot that **understands** walkin
 
 | Component | Status |
 |-----------|--------|
-| ScalableRobotBrain | ✅ Working |
-| MathReasoner + SymbolicCalculator | ✅ Working |
-| WorldModel (TD-MPC2) | ✅ Working |
-| HierarchicalPlanner (HAC) | ✅ Working |
-| AlphaGeometryLoop | ✅ Working |
-| Phase 0 (Physics) | ✅ Working |
-| Phase 1 (RL Walking) | ✅ Working |
-| Phase 2 (Imitation) | ✅ Working (needs real demo data) |
+| ScalableRobotBrain | Constructs; untrained |
+| MathReasoner + SymbolicCalculator | Constructs; untrained |
+| WorldModel (TD-MPC2) | Constructs; untrained |
+| HierarchicalPlanner (HAC) | Constructs; untrained |
+| AlphaGeometryLoop | Constructs; untrained |
+| Phase 0 (Physics) | Constructs; untrained |
+| Phase 1 (RL Walking) | Constructs; untrained |
+| Phase 2 (Imitation) | Constructs; untrained (and no demo data exists — MoCap URLs 404) |
 | Phase 2.5 (Language) | 🔜 Next up |
 | Phase 3 (Sim-to-Real) | 📋 Planned |
 
