@@ -62,6 +62,31 @@
       "spec_id": "T0.03",
       "status": "PASS"
     },
+    "T0.04": {
+      "commit": "cb1f70c",
+      "control_metrics": {
+        "first_step_gap_pct": 1.326,
+        "max_trace_delta": 0.3489927351,
+        "reference_final": 0.023943,
+        "resumed_final": 0.034312
+      },
+      "duration_s": 181.47,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "first_step_gap_pct": 1.326,
+        "max_trace_delta": 0.0104531348,
+        "reference_final": 0.023943,
+        "resume_fidelity_ratio": 33.39,
+        "resumed_final": 0.030052
+      },
+      "ran_at": "2026-08-04T13:58:37",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.04",
+      "status": "PASS"
+    },
     "T1.01": {
       "commit": "6d87687",
       "control_metrics": {

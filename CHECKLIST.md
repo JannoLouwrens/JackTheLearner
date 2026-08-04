@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 4 / 57 demonstrated
+## 5 / 57 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -23,9 +23,9 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ save -> load reproduces identical forward outputs.
       - _dies if:_ Output delta > 1e-6 after a reload.
       - _then delete:_ All GPU training — a checkpoint that does not restore is wasted compute.
-- [ ] **T0.04** Resume continues, does not restart
-      - _asserts:_ Training resumed from a checkpoint continues the loss curve with no discontinuity (optimiser and obs-normaliser state restored).
-      - _dies if:_ Loss jumps >20% at the resume boundary.
+- [x] **T0.04** Resume continues, does not restart
+      - _asserts:_ A checkpoint restoring optimiser state tracks an uninterrupted run far more closely than restoring weights alone.
+      - _dies if:_ Restoring optimiser state is no closer to the reference trajectory than a weights-only resume (fidelity ratio < 10).
       - _then delete:_ Any multi-session run. Kaggle caps at 12h; jobs must survive it.
 - [ ] **T0.05** Preemption survival
       - _asserts:_ SIGKILL at a random step loses at most one checkpoint interval.

@@ -45,13 +45,24 @@ LADDER: list[Spec] = [
          kills="All GPU training — a checkpoint that does not restore is wasted compute."),
 
     Spec("T0.04", 0, "Resume continues, does not restart",
-         hypothesis="Training resumed from a checkpoint continues the loss curve "
-                    "with no discontinuity (optimiser and obs-normaliser state restored).",
-         falsified_by="Loss jumps >20% at the resume boundary.",
-         null_baseline="Resuming weights WITHOUT optimiser state shows the jump.",
-         metric="resume_loss_jump_pct", budget=Budget.CPU, depends_on=["T0.03"],
-         control="Weights-only resume must show the discontinuity.",
-         kills="Any multi-session run. Kaggle caps at 12h; jobs must survive it."),
+         hypothesis="A checkpoint restoring optimiser state tracks an uninterrupted "
+                    "run far more closely than restoring weights alone.",
+         falsified_by="Restoring optimiser state is no closer to the reference "
+                      "trajectory than a weights-only resume (fidelity ratio < 10).",
+         null_baseline="Weights-only resume — the naive implementation.",
+         metric="resume_fidelity_ratio", budget=Budget.CPU, depends_on=["T0.03"],
+         control="Weights-only resume must diverge markedly further.",
+         kills="Any multi-session run. Kaggle caps at 12h; jobs must survive it.",
+         notes="THRESHOLD REVISED 2026-08-04, with evidence. The original metric was "
+               "'loss jumps >20% at the resume boundary'. Measured, that metric reads "
+               "1.326% in BOTH arms — identical — so it cannot discriminate a correct "
+               "resume from a broken one: one step after resume the loss is dominated "
+               "by the weights, and momentum only compounds over later steps. Trace "
+               "divergence separates them 33x (0.0105 restored vs 0.349 weights-only). "
+               "Changed because the old threshold was unfit, not because the code "
+               "failed it. Note also that exact bitwise resume would additionally "
+               "require saving RNG state — the residual 0.0105 is stochastic layers "
+               "drawing different values in a freshly-constructed model."),
 
     Spec("T0.05", 0, "Preemption survival",
          hypothesis="SIGKILL at a random step loses at most one checkpoint interval.",
