@@ -24,3 +24,10 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   Residual 0.0105 (not 0) is RNG: a freshly constructed model draws different stochastic values.
   Exact bitwise resume would additionally require saving RNG state — worth doing before T0.05.
   Next: T0.05 preemption survival (atomic writes + RNG state), then T1.04 to unblock T1.05.
+- **2026-08-04 manual** — T0.05 (preemption survival) PASS. Atomic write via tmp+os.replace: 12 SIGKILLs,
+  12 checkpoints recovered, **0 corrupt**. Naive `torch.save` straight to the final path: 12 kills,
+  **12 corrupt**, nothing recoverable. Payload includes RNG state per the T0.04 finding.
+  Test bug caught first: a guessed sleep killed the writer during `import torch`, so
+  checkpoints_checked=0 — it reported a clean failure while measuring nothing. Now polls for a real
+  checkpoint before killing. Lesson worth keeping: assert the test actually exercised its subject.
+  Next: T0.06 (env/policy dim contract — needs mujoco installed) or T0.07/T0.08 which are CPU-only.

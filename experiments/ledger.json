@@ -87,6 +87,30 @@
       "spec_id": "T0.04",
       "status": "PASS"
     },
+    "T0.05": {
+      "commit": "7255426",
+      "control_metrics": {
+        "checkpoints_checked": 12,
+        "corrupt": 12,
+        "kills": 12,
+        "max_step_recovered": 0
+      },
+      "duration_s": 5.05,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "checkpoints_checked": 12,
+        "corrupt": 0,
+        "kills": 12,
+        "max_step_recovered": 5
+      },
+      "ran_at": "2026-08-04T14:00:40",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.05",
+      "status": "PASS"
+    },
     "T1.01": {
       "commit": "6d87687",
       "control_metrics": {

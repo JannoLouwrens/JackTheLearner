@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 5 / 57 demonstrated
+## 6 / 57 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -27,7 +27,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A checkpoint restoring optimiser state tracks an uninterrupted run far more closely than restoring weights alone.
       - _dies if:_ Restoring optimiser state is no closer to the reference trajectory than a weights-only resume (fidelity ratio < 10).
       - _then delete:_ Any multi-session run. Kaggle caps at 12h; jobs must survive it.
-- [ ] **T0.05** Preemption survival
+- [x] **T0.05** Preemption survival
       - _asserts:_ SIGKILL at a random step loses at most one checkpoint interval.
       - _dies if:_ Corrupt checkpoint, or >1 interval of progress lost.
       - _then delete:_ Long GPU runs. Ephemeral VMs die without warning.
