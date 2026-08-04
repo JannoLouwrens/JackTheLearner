@@ -56,7 +56,7 @@ cd "$REPO" || exit 0
 BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
 
-say "iteration start — ${BEFORE}/57 demonstrated, load ${LOAD}, ${FREE_GB}GB free"
+say "iteration start — ${BEFORE}/62 demonstrated, load ${LOAD}, ${FREE_GB}GB free"
 
 PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
 
@@ -74,8 +74,8 @@ AFTER=$(/data/venvs/jackthelearner/bin/python -c \
 
 say "iteration end rc=${RC} — ${BEFORE} -> ${AFTER} demonstrated"
 
-if [ "$AFTER" -ge 57 ]; then
-  say "LADDER COMPLETE — all 57 specs demonstrated. Pausing the loop."
+if [ "$AFTER" -ge 62 ]; then
+  say "LADDER COMPLETE — all 62 specs demonstrated. Pausing the loop."
   touch "$PAUSE"
 fi
 exit 0

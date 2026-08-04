@@ -24,13 +24,48 @@ below and finish it. One spec per iteration is a good iteration.
 1. Tier 0 remaining: T0.03, T0.04, T0.05 (checkpoint fidelity, resume without
    discontinuity, preemption survival), then T0.06-T0.08, then T0.09-T0.11 (Colab
    round-trip, Kaggle round-trip, failover), then T0.12.
-2. Tier 1 remaining. Note T1.03 currently FAILS at 16.7% orphan fraction because
-   `action_expert` (4.6M) — the module whose output reaches `mj_data.ctrl` — gets
-   no gradient from `forward()`; it is only reachable via `act_dual_system`. That
-   is an architectural defect to fix in the code, not a threshold to relax.
-3. Tier 2 onward: real training, needs GPU. Use Colab
-   (`/data/venvs/colab/bin/colab --auth adc run --gpu T4 script.py`) or Kaggle
-   (`/data/venvs/kaggle/bin/kaggle`, 30 free hrs/week — spend it deliberately).
+2. Tier 1 remaining. T1.03 and T1.11 now PASS — the action-path defect is fixed
+   and `action_training_loss()` is the one loss that trains what drives the robot.
+
+   T1.02 is the open one, and its history is the cautionary tale. It has been
+   redesigned twice, both times because the EXPERIMENT was wrong, never to make
+   the model look better:
+     v1 measured training FIT on one batch -> 0.999, structured and shuffled
+        indistinguishable, because a 58M net memorises 8 pairs either way.
+     v2 measured GENERALISATION but drew 64 training samples for a map with
+        obs_dim=348. That system is underdetermined; no architecture can pass it.
+   What proved v2 unlearnable was adding a `regress` reference arm — plain MSE,
+   no flow matching anywhere. When the simplest possible learner also fails, the
+   task is the problem, not the model. ALWAYS carry a reference arm like that.
+
+   Genuine findings from the GPU sweep, still to be acted on: integration steps
+   5..100 change held-out error by <2% (discretisation is NOT the bottleneck), and
+   Beta(1,1.5) timestep sampling beat uniform (1.062 vs 1.174), consistent with the
+   conditional target (x1-x_t)/(1-t) diverging as t->1. Re-check both on a task
+   that is actually identifiable before changing repo code.
+3. Tier 2 onward: real training, needs GPU.
+
+## USE THE GPU. This is the most expensive lesson learned so far.
+
+This box is 4 shared ARM cores and runs a training step in ~2 s. A T4 runs the
+same step in ~0.05 s. On 2026-08-04 a diagnostic that took 25 minutes here
+returned MORE information in 10 minutes on Colab, and the CPU version could only
+afford one arm of a comparison that needed four. If a spec trains anything at
+all, ship it to a GPU. Do not iterate on CPU because it is convenient.
+
+    from experiments.gpu import build_job, submit
+    job = build_job(open("myjob.py").read())      # clones the repo on the VM
+    r = submit(job, prefer="colab", est_hours=0.5, timeout_s=3600,
+               fetch=["/content/out.json"])
+
+`build_job` prepends a clone of the public repo and pins a ref, so a GPU result
+is attributable to an exact commit. Only torch and numpy are needed; both
+backends ship them. Colab buffers stdout until the run ends — that is normal, not
+a hang. Kaggle gets the torch==2.5.1+cu121 fix automatically (its P100 is sm_60).
+Colab first for short work; Kaggle's 30 h/week is the scarce resource.
+
+Two things that will bite: `submit(timeout_s=N)` caps the remote run at N-60 s, so
+size it generously. And artifacts must be fetched by ABSOLUTE path (/content/x.json).
 
 ## The loop
 
