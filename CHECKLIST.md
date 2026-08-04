@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 9 / 57 demonstrated
+## 10 / 57 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -41,7 +41,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T0.08** Metrics land in the ledger
       - _asserts:_ A run writes metrics retrievable by spec id.
       - _dies if:_ Missing or unparseable ledger entry.
-- [ ] **T0.09** Colab T4 job round-trip
+- [x] **T0.09** Colab T4 job round-trip
       - _asserts:_ A script submits to Colab, runs on a T4, returns artifacts, VM torn down.
       - _dies if:_ No artifact returned, or the VM persists.
 - [ ] **T0.10** Kaggle job round-trip

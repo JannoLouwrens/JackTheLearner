@@ -193,6 +193,32 @@
       "spec_id": "T0.08",
       "status": "PASS"
     },
+    "T0.09": {
+      "commit": "fc097b2",
+      "control_metrics": {
+        "message": "exit 1",
+        "ok": false
+      },
+      "duration_s": 34.42,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "artifact_bytes": 124,
+        "cuda_available": true,
+        "device": "Tesla T4",
+        "duration_s": 31.6,
+        "gpu": "Tesla T4, 15360 MiB",
+        "matmul_finite": true,
+        "message": "",
+        "ok": true
+      },
+      "ran_at": "2026-08-04T14:39:40",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.09",
+      "status": "PASS"
+    },
     "T1.01": {
       "commit": "6d87687",
       "control_metrics": {

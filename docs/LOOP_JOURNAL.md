@@ -99,3 +99,16 @@ Written by the hourly ladder loop; the ledger holds the evidence, this holds the
   a gate is re-runnable, but it needs re-running.
   Next: **run `--gate` once the tree has one owner** (it has not completed since T0.07 landed), then
   T0.09 Colab round-trip. And a spec for finding (1): 1.71B params that never run.
+- **2026-08-04 manual** — T0.09 (Colab round-trip) PASS in 34s. Tesla T4 15360 MiB, CUDA available,
+  a real matmul executed (a CUDA context that never runs a kernel proves nothing), artifact returned
+  124 bytes. Control with an impossible accelerator correctly failed (exit 1).
+  The bug: `colab download` requires an ABSOLUTE remote path. "marker.json" -> "File or directory not
+  found"; "/content/marker.json" works. VM CWD is /content, verified by probe. Every artifact would
+  have silently vanished behind a successful-looking run. Also moved session teardown out of the
+  success branch — a kept session never stopped holds a GPU and burns quota.
+  Infrastructure now in place: experiments/gpu.py is one job contract with two executors, so T0.11
+  failover is routing rather than a rewrite. Kaggle's 30 h/week budgeted in gpu_budget.json.
+  Also fixed: the runner now takes the same flock as ladder_loop.sh, so a manual session and the loop
+  cannot both write. status/next/render stay lock-free.
+  Next: T0.10 (Kaggle round-trip — untested end to end; the kernels API is push-and-poll, not
+  ephemeral-run, so expect the metadata/slug handling to need iteration), then T0.11 failover.

@@ -33,6 +33,10 @@ BUDGET_FILE = Path(__file__).parent / "gpu_budget.json"
 # budgeted — it is simply tried first for short work.
 KAGGLE_WEEKLY_HOURS = 30.0
 
+# Colab VMs start in /content, and `colab download` will not resolve a relative
+# remote path. Verified 2026-08-04.
+COLAB_CWD = "/content"
+
 
 @dataclass
 class JobResult:
@@ -103,14 +107,20 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
                          message=f"timed out after {timeout_s}s")
 
     artifacts = {}
-    if keep and rc == 0:
+    if keep:
         tmp = Path(tempfile.mkdtemp(dir="/data"))
         for remote in fetch or []:
+            # Absolute paths only. `colab download` resolves nothing relative:
+            # "marker.json" returns "File or directory not found" while
+            # "/content/marker.json" succeeds. The VM's CWD is /content, verified.
+            remote_abs = remote if remote.startswith("/") else f"{COLAB_CWD}/{remote}"
             local = tmp / Path(remote).name
             drc, _, derr = _run([COLAB, "--auth", "adc", "download",
-                                 "-s", session, remote, str(local)], 300)
+                                 "-s", session, remote_abs, str(local)], 300)
             if drc == 0 and local.exists():
                 artifacts[remote] = str(local)
+        # Always release the VM, even if the run failed — a kept session that is
+        # never stopped holds a GPU and burns quota silently.
         _run([COLAB, "--auth", "adc", "stop", "-s", session], 120)
 
     gpu_name = ""
