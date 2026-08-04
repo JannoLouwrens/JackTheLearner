@@ -21,9 +21,26 @@ shape of failure: a run that reports success and quietly did the wrong thing.
 **Most likely cause:** Kaggle requires **phone verification** before granting GPU/TPU
 accelerators. Unverified accounts silently receive CPU rather than an error.
 
-**What to do:** kaggle.com → Settings → Phone Verification. Then tell me and I will re-run
-T0.10; the test already asserts `cuda_available` and a real matmul, so it cannot be fooled
-by a CPU fallback.
+**UPDATE 2026-08-04, after phone verification.** Verification worked — a GPU is now
+attached. But Kaggle assigns a **Tesla P100 (compute capability 6.0)** regardless of the
+accelerator requested; `--accelerator nvidiaTeslaT4` and `gpuT4x2` both returned P100. And
+Kaggle's own preinstalled torch 2.10.0+cu128 ships kernels only for sm_70 ... sm_120:
+
+    torch_arch_list: sm_70, sm_75, sm_80, sm_86, sm_90, sm_100, sm_120
+    device capability: 6.0  (sm_60 — Pascal, dropped)
+    -> CUDA error: no kernel image is available for execution on the device
+
+So the GPU is real and unusable by the torch that Kaggle itself installs. This is a Kaggle
+environment incompatibility, not something wrong with our code.
+
+**Options, none urgent — Colab works and training is not blocked:**
+ 1. Install a torch build with sm_60 kernels inside each kernel run (older cu121 wheels
+    included Pascal). Costs 2-3 min per run and adds a version to maintain.
+ 2. Use Kaggle only for CPU-side work where its 30 h/week still helps.
+ 3. Skip Kaggle. Colab's T4 is sm_75 and works today; its shorter sessions are already
+    covered by checkpoint/resume, which T0.04 and T0.05 prove.
+
+**Recommendation: option 3 for now, revisit if a job genuinely needs a 12-hour session.**
 
 **If you would rather not verify:** say so and I will mark T0.10/T0.11 as SKIP with this
 reason recorded, and the plan proceeds on Colab alone. The cost is the 30 free hours/week
