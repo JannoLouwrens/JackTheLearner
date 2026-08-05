@@ -450,6 +450,22 @@
       "spec_id": "T1.07",
       "status": "PASS"
     },
+    "T1.08": {
+      "commit": "416b259",
+      "control_metrics": {},
+      "duration_s": 2146.11,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\nM experiments/gpu_budget.json\nCommit and push first.",
+      "metrics": {},
+      "ran_at": "2026-08-05T10:07:18",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T1.08",
+      "status": "ERROR"
+    },
     "T1.11": {
       "commit": "bb1659d",
       "control_metrics": {

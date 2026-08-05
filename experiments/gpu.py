@@ -100,10 +100,22 @@ def assert_ref_is_current(ref: str = "main") -> None:
 
     rc, dirty = git("status", "--porcelain", "--untracked-files=no")
     if rc == 0 and dirty:
-        raise RuntimeError(
-            "Uncommitted changes to tracked files -- the GPU would run DIFFERENT "
-            f"code than you are testing:\n{dirty}\nCommit and push first."
-        )
+        # OUTPUTS, not inputs. These are written BY a run and never read by the
+        # remote job, so a modification to one says nothing about whether the
+        # GPU's code matches ours. Including them deadlocked the guard against
+        # itself: Budget.charge() writes gpu_budget.json at the end of every job,
+        # so the first GPU run dirtied the tree and blocked the second. A guard
+        # that fails on its own side effects trains people to bypass it.
+        outputs = {"experiments/gpu_budget.json", "experiments/ledger.json",
+                   "CHECKLIST.md", "docs/LOOP_JOURNAL.md"}
+        offending = [ln for ln in dirty.splitlines()
+                     if ln[3:].strip() not in outputs]
+        if offending:
+            raise RuntimeError(
+                "Uncommitted changes to tracked files -- the GPU would run "
+                "DIFFERENT code than you are testing:\n"
+                + "\n".join(offending) + "\nCommit and push first."
+            )
 
     git("fetch", "-q", "origin")
     rc, _ = git("merge-base", "--is-ancestor", "HEAD", f"origin/{ref}")
