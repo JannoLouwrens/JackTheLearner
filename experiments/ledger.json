@@ -412,29 +412,28 @@
       "status": "PASS"
     },
     "T1.13": {
-      "commit": "e69dc7a",
+      "commit": "8f663d1",
       "control_metrics": {
-        "shuffled_f_ratio": 0.0
+        "shuffled_f_ratio": 1.0443
       },
-      "duration_s": 1.19,
+      "duration_s": 68.24,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "pre-registered threshold not met",
+      "message": "",
       "metrics": {
-        "dataset_len": 1,
-        "distinct_labels": 1,
-        "label_signal_advantage": 0.0,
-        "mean_spectral_purity": 0.9999,
-        "real_f_ratio": 0.0,
-        "samples_checked": 1,
-        "synthetic_share": 1.0,
-        "verdict": "Grounding data is not real. 100% of trajectories are single-tone (spectral purity > 0.6) \u2014 generated, not captured; labels carry no motion signal: F=0.000 real vs 0.000 shuffled (0.00x, need 1.5x). Tier 2 grounding specs must NOT run on this data \u2014 a loss curve computed here would fall while learning nothing."
+        "dataset_len": 5590,
+        "distinct_labels": 18,
+        "label_signal_advantage": 7.956,
+        "mean_spectral_purity": 0.3808,
+        "real_f_ratio": 8.3086,
+        "samples_checked": 240,
+        "synthetic_share": 0.0042
       },
-      "ran_at": "2026-08-05T05:22:21",
+      "ran_at": "2026-08-05T06:39:11",
       "seeds": [
         0
       ],
       "spec_id": "T1.13",
-      "status": "FAIL"
+      "status": "PASS"
     }
   }
 }

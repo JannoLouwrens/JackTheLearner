@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 16 / 59 demonstrated
+## 18 / 62 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -60,10 +60,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Each trainable module drives loss below 1e-2 on ONE fixed batch.
       - _dies if:_ Loss plateaus above 1e-2 after 500 steps.
       - _then delete:_ The module. If it cannot memorise one batch it will never learn a task.
-- [ ] **T1.02** Shuffled-target control
-      - _asserts:_ With targets shuffled, the module fits SLOWER and worse.
-      - _dies if:_ Shuffled targets fit as fast as real ones.
-      - _then delete:_ The task definition — there is no learnable structure in it.
+- [x] **T1.02** Shuffled-target control (generalisation)
+      - _asserts:_ On HELD-OUT states, a structured task generalises and a shuffled one does not.
+      - _dies if:_ Held-out error is the same whether or not a state->action mapping exists.
+      - _then delete:_ The premise that this architecture can learn a state->action mapping at all. If structure gives no held-out advantage, GPU hours cannot help.
 - [x] **T1.03** Gradient reaches every trainable parameter
       - _asserts:_ After one backward, no trainable tensor has grad None or all-zero.
       - _dies if:_ Any orphaned parameter.
@@ -98,6 +98,10 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T1.10** CPU and GPU agree
       - _asserts:_ Same seed, same data: CPU and T4 losses agree within tolerance.
       - _dies if:_ Divergence beyond float32 accumulation error.
+- [x] **T1.13** The grounding pairs are real
+      - _asserts:_ Every language-action pair fed to training is a genuine observation, and the language is correlated with the motion it is attached to.
+      - _dies if:_ Shuffling the language labels across the dataset leaves the training loss statistically unchanged. If the words can be permuted for free, they were never carrying signal.
+      - _then delete:_ Every downstream grounding claim. T2.06 and T2.07 measure whether the MODEL learned the mapping; this measures whether a mapping was present to learn. Passing those on fabricated data would be the original disease in a new place.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
@@ -139,6 +143,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A classifier recovers the skill label from trajectories above chance.
       - _dies if:_ Skills are indistinguishable — the MI objective collapsed.
       - _then delete:_ SkillDiscovery.
+- [ ] **T2.13** Train to convergence, not to a step count
+      - _asserts:_ Training can be extended in increments until improvement falls below seed noise, and the stopping point is decided by measurement rather than by whoever got bored.
+      - _dies if:_ Held-out performance is still climbing when the criterion fires, or the criterion never fires because per-increment gains never drop below noise.
+      - _then delete:_ Any claim that a run is 'done'. Without this, 'trained' means 'stopped', and the two are not the same thing.
 - [ ] **T2.12** Emotion model produces distinguishable states
       - _asserts:_ PAD trajectories under different event streams are separable.
       - _dies if:_ Indistinguishable from a random walk.
@@ -236,3 +244,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T6.03** Cross-session persistence
       - _asserts:_ Save, restart, and the companion recalls prior interaction.
       - _dies if:_ State lost or corrupted across restart.
+- [ ] **T6.04** Everything at once, end to end
+      - _asserts:_ With every modality live simultaneously - vision, proprioception, touch, audio, language - Jack takes a spoken instruction, acts on the right object, and keeps learning, in one continuous episode.
+      - _dies if:_ Any capability demonstrated in isolation degrades below its own single-modality result once the others are running.
+      - _then delete:_ The claim that the parts compose. Tiers 2-5 prove each capability separately, and separate is not together.

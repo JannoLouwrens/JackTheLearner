@@ -44,7 +44,13 @@ class MoCapConfig:
     """Configuration for MoCap loading and retargeting"""
     # Data paths
     mocap_dir: str = "datasets/cmu_mocap"
-    cache_dir: str = "datasets/cache"
+    cache_dir: str = "/data/jack-data/retarget-cache"
+
+    # Real CMU ASF/AMC motion paired with HumanML3D descriptions. Built by
+    # joining HumanML3D's index.csv against the CMU corpus; see mocap_cmu.py.
+    # This is what replaced the ten hardcoded labels the loader used to invent.
+    cmu_pairs_json: str = "/data/jack-data/cmu_humanml3d_pairs.json"
+    max_sequences: int = 400   # retargeting is ~200 frames/clip; cap the load
 
     # BVH parsing
     fps_target: int = 50  # MuJoCo simulation rate (dt=0.02)
@@ -611,6 +617,75 @@ class MoCapDataset(Dataset):
         return sorted(bvh_files)
 
     def _load_sequences(self):
+        """Load motion sequences: real CMU ASF/AMC first, BVH if present.
+
+        CMU takes priority because it is the corpus that actually carries
+        language. The BVH path is retained for anyone who has a converted corpus
+        locally, but it is no longer the only option -- and critically, neither
+        path may now fall through to fabricated data (ladder spec T1.13).
+        """
+        if not self.bvh_files and Path(self.config.cmu_pairs_json).exists():
+            self._load_cmu_sequences()
+            return
+        self._load_bvh_sequences()
+
+    def _load_cmu_sequences(self):
+        """Retarget real CMU motion and attach its real human-written description.
+
+        Each clip is cached as npz after retargeting: parsing AMC and mapping 29
+        joints to 17 actuators costs ~200 frames of Python per clip, and this box
+        is four shared ARM cores that paying tenants also use.
+        """
+        from mocap_cmu import CMUTextMotionCorpus
+
+        corpus = CMUTextMotionCorpus(Path(self.config.cmu_pairs_json))
+        cache_path = Path(self.config.cache_dir)
+        cache_path.mkdir(parents=True, exist_ok=True)
+
+        entries = corpus.pairs[: self.config.max_sequences]
+        # Train/val split by CLIP, so the same motion never appears on both sides.
+        for entry in entries:
+            key = f"{entry['clip']}_{entry['text_id']}"
+            cache_file = cache_path / f"cmu_{key}.npz"
+            label = entry["descriptions"][0] if entry["descriptions"] else ""
+
+            try:
+                if cache_file.exists():
+                    d = np.load(cache_file)
+                    positions, velocities, actions = d["positions"], d["velocities"], d["actions"]
+                else:
+                    frames = corpus.frames_for(entry)
+                    if len(frames) < self.context_length + self.action_chunk_size + 2:
+                        continue
+                    positions = np.stack([
+                        self.retargeter.retarget_frame(f) for f in frames
+                    ]).astype(np.float32)
+
+                    dt = 1.0 / max(self.config.fps_target, 1)
+                    velocities = self.velocity_estimator.compute_velocities(positions, dt)
+                    actions = np.zeros_like(positions)
+                    for t in range(len(positions)):
+                        actions[t] = positions[t] if t == 0 else \
+                            self.action_computer.compute_actions(
+                                target_positions=positions[t],
+                                current_positions=positions[t - 1],
+                                current_velocities=velocities[t - 1] if velocities is not None else None,
+                            )
+                    np.savez(cache_file, positions=positions,
+                             velocities=velocities, actions=actions)
+
+                self.sequences.append({
+                    "positions": positions,
+                    "velocities": velocities,
+                    "actions": actions,
+                    "filename": entry["amc"],
+                    "label": label,                      # REAL language, not a draw
+                    "descriptions": entry["descriptions"],
+                })
+            except Exception as e:
+                warnings.warn(f"CMU clip {key} failed: {e}")
+
+    def _load_bvh_sequences(self):
         """Load and process all BVH sequences"""
         cache_path = Path(self.config.cache_dir)
         cache_path.mkdir(parents=True, exist_ok=True)
@@ -699,11 +774,24 @@ class MoCapDataset(Dataset):
             label: str - language description like "walk forward"
         """
         if len(self.index) == 0:
-            # Return synthetic data if no real data
-            obs, actions = self._get_synthetic_sample()
-            synthetic_labels = ["walk forward", "run forward", "stand still", "move naturally", "turn left", "turn right"]
-            label = synthetic_labels[np.random.randint(len(synthetic_labels))]
-            return obs, actions, label
+            # Previously this fabricated a sinusoid and paired it with a label drawn
+            # by np.random.randint — so the language was uncorrelated with the motion
+            # BY CONSTRUCTION, and a grounding model trained on it could not learn
+            # anything while showing a beautiful loss curve (sinusoids are trivially
+            # fittable). Ladder spec T1.13 measured the damage: real_f_ratio 0.0,
+            # spectral_purity 0.9999, label_signal_advantage 0.0, on a dataset of
+            # exactly ONE sample.
+            #
+            # Same disease as the silently-truncating mj_data.ctrl write (T0.06): code
+            # that quietly adapts to a broken precondition instead of reporting it.
+            # A missing dataset is a setup error, so it is raised as one.
+            raise RuntimeError(
+                f"No motion data loaded from {getattr(self, 'data_dir', '<unset>')!r}. "
+                "Refusing to fabricate training data — synthetic motion paired with "
+                "random labels teaches nothing and hides its own failure. "
+                "Fetch a real corpus (CMU allasfamc.zip, or KIT Motion-Language for "
+                "text-paired motion) and point data_dir at it."
+            )
 
         seq_idx, start_frame = self.index[idx % len(self.index)]
         seq = self.sequences[seq_idx]
