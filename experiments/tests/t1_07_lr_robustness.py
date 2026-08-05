@@ -127,7 +127,8 @@ out = {"gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "c
        "arms": [arm(lr) for lr in __LRS__],
        "absurd": arm(__ABSURD__),
        "reference": reference()}
-json.dump(out, open("/content/t107.json", "w"), indent=1)
+import os as _o
+json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "t107.json"), "w"), indent=1)
 print("DONE", json.dumps(out)[:600], flush=True)
 '''
 
@@ -139,10 +140,10 @@ def _submit() -> dict:
                .replace("__WARMUP__", repr(WARMUP_STEPS)))
     job = build_job(body)
     res = submit(job, prefer="colab", est_hours=0.4, timeout_s=3000,
-                 fetch=["/content/t107.json"])
+                 fetch=["t107.json"])
     if not res.ok:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")
-    path = res.artifacts.get("/content/t107.json")
+    path = res.artifacts.get("t107.json")
     if not path:
         raise RuntimeError(f"no artifact returned; stdout tail: {res.stdout[-300:]}")
     data = json.loads(Path(path).read_text())

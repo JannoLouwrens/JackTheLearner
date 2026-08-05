@@ -73,6 +73,13 @@ _sp.run(["git", "clone", "--depth", "50", "-q", "{REPO_URL}", "/tmp/jack"], chec
 _sp.run(["git", "-C", "/tmp/jack", "checkout", "-q", "{ref}"], check=True)
 _sys.path.insert(0, "/tmp/jack")
 _os.environ["MUJOCO_GL"] = "disabled"
+# Backend-neutral output directory. Colab VMs start in /content; Kaggle kernels
+# must write to /kaggle/working or the file is never collected. A job that
+# hardcodes either one breaks the moment failover moves it (T0.11), so jobs write
+# to JACK_OUT and never name a backend.
+JACK_OUT = "/kaggle/working" if _os.path.isdir("/kaggle/working") else "/content"
+_os.environ["JACK_OUT"] = JACK_OUT
+print("JACK_OUT", JACK_OUT, flush=True)
 print("REPO", _sp.run(["git", "-C", "/tmp/jack", "rev-parse", "--short", "HEAD"],
                       capture_output=True, text=True).stdout.strip(), flush=True)
 """
@@ -219,10 +226,15 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
             # "/content/marker.json" succeeds. The VM's CWD is /content, verified.
             remote_abs = remote if remote.startswith("/") else f"{COLAB_CWD}/{remote}"
             local = tmp / Path(remote).name
+            key = Path(remote).name
             drc, dout, derr = _run([COLAB, "--auth", "adc", "download",
                                     "-s", session, remote_abs, str(local)], 300)
             if drc == 0 and local.exists():
-                artifacts[remote] = str(local)
+                # Keyed by BASENAME on both backends. Colab used to key by full
+                # remote path and Kaggle by filename, so res.artifacts[...] found
+                # nothing after a failover -- the job contract held right up until
+                # the moment it mattered.
+                artifacts[key] = str(local)
             else:
                 # A silent download failure is indistinguishable from a job that
                 # never wrote its artifact, and the two need opposite fixes. On

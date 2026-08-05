@@ -451,13 +451,13 @@
       "status": "PASS"
     },
     "T1.08": {
-      "commit": "02ab7a7",
+      "commit": "003c9e8",
       "control_metrics": {},
-      "duration_s": 1289.47,
+      "duration_s": 1308.47,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: no artifact; stdout tail: ",
+      "message": "RuntimeError: no artifact from kaggle. message=' | attempts: [\"colab: exit 1 | fetch failed: /content/t108.json: rc=1 exists=False [colab] Session \\'ladder-1785939738\\' not found.\"]' stdout_tail='' stderr_tail=''",
       "metrics": {},
-      "ran_at": "2026-08-05T14:21:18",
+      "ran_at": "2026-08-05T14:44:04",
       "seeds": [
         0,
         1,

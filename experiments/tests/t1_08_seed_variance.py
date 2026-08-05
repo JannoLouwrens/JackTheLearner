@@ -86,7 +86,8 @@ def arm(seed):
 
 out = {"gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu",
        "arms": [arm(s) for s in __SEEDS__]}
-json.dump(out, open("/content/t108.json", "w"), indent=1)
+import os as _o
+json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "t108.json"), "w"), indent=1)
 print("DONE", json.dumps(out)[:600], flush=True)
 '''
 
@@ -94,10 +95,10 @@ print("DONE", json.dumps(out)[:600], flush=True)
 def _submit() -> dict:
     job = build_job(JOB.replace("__SEEDS__", repr(SEEDS)))
     res = submit(job, prefer="colab", est_hours=0.3, timeout_s=3000,
-                 fetch=["/content/t108.json"])
+                 fetch=["t108.json"])
     if not res.ok:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")
-    path = res.artifacts.get("/content/t108.json")
+    path = res.artifacts.get("t108.json")
     if not path:
         raise RuntimeError(
             f"no artifact from {res.backend}. message={res.message!r} "
