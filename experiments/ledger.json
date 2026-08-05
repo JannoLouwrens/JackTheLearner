@@ -319,27 +319,29 @@
       "status": "PASS"
     },
     "T1.02": {
-      "commit": "863b982",
+      "commit": "e69dc7a",
       "control_metrics": {
-        "shuffled_heldout": 1.56415,
-        "shuffled_train_loss": 1.31829
+        "shuffled_heldout": 0.53441,
+        "shuffled_train_loss": 0.10552
       },
-      "duration_s": 1676.11,
+      "duration_s": 1462.67,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "pre-registered threshold not met",
+      "message": "",
       "metrics": {
-        "beats_mean_baseline": 0.415,
-        "heldout_structure_advantage": 1.008,
-        "mean_baseline": 0.64411,
-        "structured_heldout": 1.55148,
-        "structured_train_loss": 1.37082
+        "beats_mean_baseline": 13.196,
+        "device": "cuda",
+        "heldout_structure_advantage": 23.911,
+        "mean_baseline": 0.29493,
+        "reference_gain": 7.999,
+        "reference_heldout": 0.03687,
+        "structured_heldout": 0.02235
       },
-      "ran_at": "2026-08-04T17:09:07",
+      "ran_at": "2026-08-05T05:33:33",
       "seeds": [
         0
       ],
       "spec_id": "T1.02",
-      "status": "FAIL"
+      "status": "PASS"
     },
     "T1.03": {
       "commit": "bb1659d",
@@ -408,6 +410,31 @@
       ],
       "spec_id": "T1.12",
       "status": "PASS"
+    },
+    "T1.13": {
+      "commit": "e69dc7a",
+      "control_metrics": {
+        "shuffled_f_ratio": 0.0
+      },
+      "duration_s": 1.19,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "dataset_len": 1,
+        "distinct_labels": 1,
+        "label_signal_advantage": 0.0,
+        "mean_spectral_purity": 0.9999,
+        "real_f_ratio": 0.0,
+        "samples_checked": 1,
+        "synthetic_share": 1.0,
+        "verdict": "Grounding data is not real. 100% of trajectories are single-tone (spectral purity > 0.6) \u2014 generated, not captured; labels carry no motion signal: F=0.000 real vs 0.000 shuffled (0.00x, need 1.5x). Tier 2 grounding specs must NOT run on this data \u2014 a loss curve computed here would fall while learning nothing."
+      },
+      "ran_at": "2026-08-05T05:22:21",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.13",
+      "status": "FAIL"
     }
   }
 }
