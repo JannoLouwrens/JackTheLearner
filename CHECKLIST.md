@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 18 / 62 demonstrated
+## 20 / 62 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -68,7 +68,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ After one backward, no trainable tensor has grad None or all-zero.
       - _dies if:_ Any orphaned parameter.
       - _then delete:_ Silent dead weight. This test is the direct fix for the repo's disease.
-- [ ] **T1.04** Weights actually move
+- [x] **T1.04** Weights actually move
       - _asserts:_ ||theta_after - theta_before|| > 0 for every trainable module.
       - _dies if:_ A module whose weights are unchanged after N steps.
 - [ ] **T1.05** Frozen stays frozen
@@ -82,7 +82,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ After training on a fixed target, the flow-matching sampler reconstructs that target far better than the untrained sampler.
       - _dies if:_ Post-training reconstruction error is no better than pre-training.
       - _then delete:_ ActionExpert and the flow-matching path; fall back to a direct head.
-- [ ] **T1.06** Numerical stability
+- [x] **T1.06** Numerical stability
       - _asserts:_ No NaN/Inf in loss or grads over 1000 steps.
       - _dies if:_ Any non-finite value.
 - [ ] **T1.07** Not knife-edge on learning rate

@@ -392,6 +392,36 @@
       "spec_id": "T1.04",
       "status": "PASS"
     },
+    "T1.06": {
+      "commit": "bb55c15",
+      "control_metrics": {
+        "final_loss": NaN,
+        "first_bad_step": 1,
+        "max_grad_abs": 0.08,
+        "nonfinite_grad": 399,
+        "nonfinite_loss": 398,
+        "nonfinite_weight": 7,
+        "steps": 400
+      },
+      "duration_s": 1114.28,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "final_loss": 0.0023,
+        "first_bad_step": -1,
+        "max_grad_abs": 0.113,
+        "nonfinite_grad": 0,
+        "nonfinite_loss": 0,
+        "nonfinite_weight": 0,
+        "steps": 400
+      },
+      "ran_at": "2026-08-05T07:08:22",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.06",
+      "status": "PASS"
+    },
     "T1.11": {
       "commit": "bb1659d",
       "control_metrics": {
