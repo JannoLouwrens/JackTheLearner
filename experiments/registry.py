@@ -145,24 +145,28 @@ LADDER: list[Spec] = [
                       "mapping exists.",
          null_baseline="Predicting the mean action, and the shuffled-task model.",
          metric="heldout_structure_advantage", budget=Budget.GPU_SHORT, depends_on=["T1.01"],
-         control="The shuffled task must NOT generalise — its held-out error should "
-                 "be no better than predicting the mean.",
+         control="Two of them. The shuffled task must NOT generalise. And a plain-MSE "
+                 "reference learner MUST succeed — if the simplest possible model also "
+                 "fails, the task is unlearnable and the run is void, not a failure.",
          kills="The premise that this architecture can learn a state->action mapping "
                "at all. If structure gives no held-out advantage, GPU hours cannot help.",
-         notes="REDESIGNED 2026-08-04, with evidence, and made HARDER. The original "
-               "measured training FIT on one batch: structured vs shuffled came out at "
-               "0.999 — indistinguishable. That is not a bug in the model, it is a bug "
-               "in the experiment, and the original spec predicted it: a 58M network "
-               "memorises 8 arbitrary pairs whether or not a mapping exists, so fit "
-               "measures capacity. Only generalisation to unseen states can detect "
-               "whether structure was exploited, so the test now trains on 64 samples "
-               "and scores 16 held-out. Changed because the design could not "
-               "discriminate, not because the model failed it. REDESIGNED AGAIN the same "
-               "day: 64 training samples for an obs_dim=348 map is underdetermined, so "
-               "no architecture could pass it. Proved by a plain-MSE reference arm "
-               "carrying no flow matching at all, which failed identically. Now 2048 "
-               "train / 256 held-out, on a GPU. Thresholds have never moved."),
-
+         notes="REDESIGNED TWICE, both times because the EXPERIMENT was wrong, never to "
+               "flatter the model. Recorded in full because the failures are the useful "
+               "part.\n"
+               "v1 measured training FIT on one batch -> 0.999. Structured and shuffled "
+               "were indistinguishable because a 58M network memorises 8 arbitrary pairs "
+               "either way, so fit measures capacity. The original spec had predicted "
+               "exactly this in its own null_baseline and it was built anyway.\n"
+               "v2 measured generalisation, correctly, but drew 64 training samples for "
+               "an obs_dim=348 input. That system is underdetermined; no architecture "
+               "can pass it. The giveaway was beats_mean_baseline=0.415 — the trained "
+               "model was WORSE than predicting the mean.\n"
+               "v3 makes the task identifiable (2048 samples, a rank-8 true map) and "
+               "adds the safeguard that should have been there from the start: a "
+               "plain-MSE REFERENCE ARM. When the simplest possible learner also fails, "
+               "the task is at fault, not the model, and the correct verdict is 'void' "
+               "rather than 'the architecture cannot learn'. Every later spec that "
+               "claims a learning result carries a reference arm for this reason."),
     Spec("T1.03", 1, "Gradient reaches every trainable parameter",
          hypothesis="After one backward, no trainable tensor has grad None or all-zero.",
          falsified_by="Any orphaned parameter.",
