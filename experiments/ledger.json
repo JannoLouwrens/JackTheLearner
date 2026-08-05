@@ -422,6 +422,20 @@
       "spec_id": "T1.06",
       "status": "PASS"
     },
+    "T1.07": {
+      "commit": "21d3f3f",
+      "control_metrics": {},
+      "duration_s": 302.49,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1; kaggle: status=error",
+      "metrics": {},
+      "ran_at": "2026-08-05T08:42:36",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.07",
+      "status": "ERROR"
+    },
     "T1.11": {
       "commit": "bb1659d",
       "control_metrics": {

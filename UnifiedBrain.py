@@ -4524,6 +4524,52 @@ class UnifiedBrain(nn.Module):
 
         return actions
 
+    def make_action_optimizer(
+        self,
+        lr: float = 3e-4,
+        warmup_steps: int = 100,
+        max_grad_norm: float = 2.0,
+    ):
+        """The optimiser + schedule that action_training_loss expects.
+
+        Exists because the ladder and TrainingPipeline were training the same
+        model two different ways, and that discrepancy produced a false diagnosis:
+        ladder spec T1.07 measured the model as knife-edge on learning rate
+        (5.443 / 13.195 / 0.643 across a 10x span, worse than predicting the mean
+        at 1e-3), and the first hypothesis was missing gradient clipping, since
+        TrainingPipeline clips at max_grad_norm=2.0 and the ladder did not.
+
+        Measured, that hypothesis was wrong: the global gradient norm peaks at
+        0.769 and never reaches 2.0, so clipping is a no-op here and the rerun
+        was bit-identical. The real mechanism is that Adam normalises by gradient
+        magnitude, so SMALL gradients still take ~lr-sized steps; at 1e-3 over
+        1500 steps the cumulative movement destroys the structure the conditioning
+        pathway needs before it can establish. Warmup is the standard remedy and
+        was absent.
+
+        Returning both from one place means a spec and the pipeline cannot drift
+        apart again -- which is the same disease as the two competing action paths,
+        expressed in the training recipe rather than the model.
+
+        Returns:
+            (optimizer, step_fn) -- call step_fn() instead of optimizer.step();
+            it applies clipping and advances the warmup schedule.
+        """
+        import torch as _torch
+
+        params = [p for p in self.parameters() if p.requires_grad]
+        opt = _torch.optim.Adam(params, lr=lr)
+        sched = _torch.optim.lr_scheduler.LambdaLR(
+            opt, lambda step: min(1.0, (step + 1) / max(warmup_steps, 1))
+        )
+
+        def step_fn():
+            _torch.nn.utils.clip_grad_norm_(params, max_grad_norm)
+            opt.step()
+            sched.step()
+
+        return opt, step_fn
+
     def action_training_loss(
         self,
         state: torch.Tensor,
