@@ -78,8 +78,52 @@ print("REPO", _sp.run(["git", "-C", "/tmp/jack", "rev-parse", "--short", "HEAD"]
 """
 
 
-def build_job(body: str, ref: str = "main") -> Path:
-    """Wrap a script body into a runnable job file: clone the repo, then run it."""
+def assert_ref_is_current(ref: str = "main") -> None:
+    """Refuse to ship a job whose code is not the code being tested.
+
+    The VM clones from GitHub, so anything uncommitted or unpushed simply is not
+    there. On 2026-08-05 that cost two GPU runs and produced a WRONG DIAGNOSIS:
+    a fix to UnifiedBrain existed only in the working tree, the clone ran the
+    published file, and the job died on both backends with a terse "exit 1" that
+    looked like an infrastructure fault rather than stale code. Worse was the
+    near-miss before it -- had the missing method been an OPTIONAL path instead of
+    an AttributeError, the run would have SUCCEEDED and silently measured the old
+    model, and the ladder would have recorded that number as evidence.
+
+    A GPU result is only attributable to a commit if the commit is what ran. So
+    this is checked, not documented.
+    """
+    def git(*a) -> tuple[int, str]:
+        p = subprocess.run(["git", "-C", str(Path(__file__).parent.parent), *a],
+                           capture_output=True, text=True)
+        return p.returncode, p.stdout.strip()
+
+    rc, dirty = git("status", "--porcelain", "--untracked-files=no")
+    if rc == 0 and dirty:
+        raise RuntimeError(
+            "Uncommitted changes to tracked files -- the GPU would run DIFFERENT "
+            f"code than you are testing:\n{dirty}\nCommit and push first."
+        )
+
+    git("fetch", "-q", "origin")
+    rc, _ = git("merge-base", "--is-ancestor", "HEAD", f"origin/{ref}")
+    if rc != 0:
+        _, head = git("log", "--oneline", "-1")
+        raise RuntimeError(
+            f"HEAD ({head}) is not on origin/{ref}. The VM clones from GitHub, so "
+            "unpushed work is invisible to it. Push before submitting."
+        )
+
+
+def build_job(body: str, ref: str = "main", verify: bool = True) -> Path:
+    """Wrap a script body into a runnable job file: clone the repo, then run it.
+
+    verify=True refuses to build unless HEAD is committed and pushed, because a
+    result computed from stale code is worse than no result -- it looks like
+    evidence. Pass verify=False only for jobs whose body is fully self-contained.
+    """
+    if verify:
+        assert_ref_is_current(ref)
     f = Path(tempfile.mkdtemp(dir="/data")) / "job.py"
     f.write_text(repo_preamble(ref) + "\n" + body)
     return f
