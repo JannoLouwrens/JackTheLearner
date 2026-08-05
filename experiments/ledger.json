@@ -423,18 +423,32 @@
       "status": "PASS"
     },
     "T1.07": {
-      "commit": "21d3f3f",
-      "control_metrics": {},
-      "duration_s": 302.49,
+      "commit": "1a69db6",
+      "control_metrics": {
+        "absurd_advantage": 0.0092,
+        "absurd_diverged": false,
+        "absurd_lr": 1.0
+      },
+      "duration_s": 2738.42,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1; kaggle: status=error",
-      "metrics": {},
-      "ran_at": "2026-08-05T08:42:36",
+      "message": "",
+      "metrics": {
+        "backend": "colab",
+        "gpu": "Tesla T4",
+        "lr_0.0001": 4.088,
+        "lr_0.0003": 5.585,
+        "lr_0.001": 1.298,
+        "lrs_beating_baseline": 3,
+        "reference_advantage": 7.605,
+        "spread_ratio": 4.304,
+        "worst_lr_advantage": 1.298
+      },
+      "ran_at": "2026-08-05T09:30:48",
       "seeds": [
         0
       ],
       "spec_id": "T1.07",
-      "status": "ERROR"
+      "status": "PASS"
     },
     "T1.11": {
       "commit": "bb1659d",

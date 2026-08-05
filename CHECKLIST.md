@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 20 / 62 demonstrated
+## 21 / 62 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -85,7 +85,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T1.06** Numerical stability
       - _asserts:_ No NaN/Inf in loss or grads over 1000 steps.
       - _dies if:_ Any non-finite value.
-- [ ] **T1.07** Not knife-edge on learning rate
+- [x] **T1.07** Not knife-edge on learning rate
       - _asserts:_ Training succeeds across a 10x LR range.
       - _dies if:_ Only one LR works.
 - [ ] **T1.08** Seed variance measured
