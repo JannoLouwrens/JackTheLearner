@@ -114,7 +114,16 @@ LADDER: list[Spec] = [
          null_baseline="n/a", metric="failover_ok", budget=Budget.GPU_SHORT,
          depends_on=["T0.09", "T0.10"],
          notes="One job spec, two executors. The 30 free Kaggle hrs/week are the "
-               "scarce resource; Colab absorbs the short jobs."),
+               "scarce resource; Colab absorbs the short jobs. "
+               "STRENGTHENED 2026-08-05: the original passed by checking a job RUNS "
+               "on either backend, and never checked that results come BACK. Two "
+               "bugs hid behind that gap and surfaced only during a real failover "
+               "(T1.08) — Colab keyed artifacts by full remote path while Kaggle "
+               "keyed by filename, so lookups returned None after failing over; and "
+               "jobs wrote to /content, which does not exist on Kaggle, whose "
+               "kernels collect only /kaggle/working. Fixed with JACK_OUT plus "
+               "basename keys; this spec must now assert an artifact is retrieved "
+               "from BOTH backends."),
 
     Spec("T0.12", 0, "GPU-hour accounting",
          hypothesis="Every GPU run debits a weekly budget file; the ladder refuses "

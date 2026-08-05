@@ -451,13 +451,13 @@
       "status": "PASS"
     },
     "T1.08": {
-      "commit": "003c9e8",
+      "commit": "55a07f4",
       "control_metrics": {},
-      "duration_s": 1308.47,
+      "duration_s": 2054.93,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: no artifact from kaggle. message=' | attempts: [\"colab: exit 1 | fetch failed: /content/t108.json: rc=1 exists=False [colab] Session \\'ladder-1785939738\\' not found.\"]' stdout_tail='' stderr_tail=''",
+      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\nM experiments/gpu_budget.json\n M experiments/registry.py\nCommit and push first.",
       "metrics": {},
-      "ran_at": "2026-08-05T14:44:04",
+      "ran_at": "2026-08-05T15:19:27",
       "seeds": [
         0,
         1,
