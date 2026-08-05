@@ -364,6 +364,34 @@
       "spec_id": "T1.03",
       "status": "PASS"
     },
+    "T1.04": {
+      "commit": "06e5d33",
+      "control_metrics": {
+        "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_encoder=264,704; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.action_tokens=8,192; tokenizer.body_embed=61,952; tokenizer.cls_token=512; tokenizer.goal_token=512; tokenizer.joint_embed=4,608; tokenizer.token_type_embed=3,072; value_head.predictor=132,097",
+        "moved_frac": 0.0,
+        "params_moved": 0,
+        "params_stuck": 58244744,
+        "undeclared_stuck": "action_expert=4,615,696; action_head=271,889; audio_encoder=160,192; audio_proj=262,656; cls_token=512; cross_modal_fusion=9,457,152; final_norm=512; language_encoder=4,714,496; language_proj=262,656; layers=36,710,400; proprio_encoder=198,912; rule_bank=25,600; touch_encoder=10,048; touch_proj=33,280; vision_encoder=244,960; vision_proj=524,800",
+        "undeclared_stuck_params": 57493761
+      },
+      "duration_s": 69.49,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.goal_token=512; value_head.predictor=132,097",
+        "moved_frac": 0.993,
+        "params_moved": 57836801,
+        "params_stuck": 407943,
+        "undeclared_stuck": "none",
+        "undeclared_stuck_params": 0
+      },
+      "ran_at": "2026-08-05T06:49:28",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.04",
+      "status": "PASS"
+    },
     "T1.11": {
       "commit": "bb1659d",
       "control_metrics": {

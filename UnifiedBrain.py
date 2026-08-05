@@ -4531,6 +4531,7 @@ class UnifiedBrain(nn.Module):
         language: str = None,
         vision: torch.Tensor = None,
         aux_weight: float = 0.1,
+        **modalities,
     ) -> dict:
         """The ONE loss that trains the action path the robot actually uses.
 
@@ -4557,11 +4558,21 @@ class UnifiedBrain(nn.Module):
         untrained would mean the fallback silently emits noise. Small weight: it
         is a safety net, not the objective.
 
+        **modalities (touch, audio, ...) are passed through to forward(). Added
+        2026-08-05 after ladder spec T1.04: act_dual_system -- the RUNTIME path --
+        accepts touch and audio, but this loss did not, so the robot was
+        conditioned at inference on two modalities training never supplied. Same
+        class of defect as the action-path bug above, one level out: the model is
+        optimised for one input distribution and queried on another. The touch and
+        audio encoders (170,240 params) could not receive a gradient from any
+        caller in the repo.
+
         Guarded by ladder spec T1.11 (train/inference path parity).
         """
-        flow = self.train_flow_matching_step(state, target_actions, language, vision)
+        flow = self.train_flow_matching_step(state, target_actions, language, vision,
+                                             **modalities)
 
-        out = self.forward(state, language=language, vision=vision)
+        out = self.forward(state, language=language, vision=vision, **modalities)
         aux = F.mse_loss(out["actions"].float(), target_actions.float())
 
         return {
@@ -4576,6 +4587,7 @@ class UnifiedBrain(nn.Module):
         target_actions: torch.Tensor,
         language: str = None,
         vision: torch.Tensor = None,
+        **modalities,
     ) -> torch.Tensor:
         """
         One training step for flow matching.
@@ -4620,8 +4632,9 @@ class UnifiedBrain(nn.Module):
         t_expand = t.view(B, 1)
         x_t = t_expand * x_1 + (1 - t_expand) * x_0
 
-        # Get backbone features
-        output = self.forward(state, language=language, vision=vision)
+        # Get backbone features. Extra modalities (touch, audio) flow through so
+        # the conditioning here matches what act_dual_system supplies at runtime.
+        output = self.forward(state, language=language, vision=vision, **modalities)
         vlm_features = output['hidden_states']
 
         pred = self.action_expert(x_t, vlm_features, t)
