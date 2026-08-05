@@ -67,11 +67,14 @@ def arm(seed):
     brain = UnifiedBrain(cfg).to(DEV).train()
     obs, tgt = make_task(cfg, seed)
     tr_o, tr_t, te_o, te_t = obs[:N_TRAIN], tgt[:N_TRAIN], obs[N_TRAIN:], tgt[N_TRAIN:]
-    opt = torch.optim.Adam([p for p in brain.parameters() if p.requires_grad], lr=3e-4)
+    # Same recipe as T1.07 and TrainingPipeline. A noise floor measured under a
+    # different configuration would not bound the claims it is supposed to bound.
+    opt, step_fn = brain.make_action_optimizer(lr=3e-4, warmup_steps=100,
+                                               max_grad_norm=2.0)
     for step in range(STEPS):
         i = (step * BS) % (N_TRAIN - BS)
         loss = brain.action_training_loss(tr_o[i:i+BS], tr_t[i:i+BS])["loss"]
-        opt.zero_grad(); loss.backward(); opt.step()
+        opt.zero_grad(); loss.backward(); step_fn()
     brain.eval()
     with torch.no_grad():
         pred = brain.generate_actions_flow_matching(te_o)
