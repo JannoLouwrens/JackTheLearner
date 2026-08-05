@@ -99,7 +99,9 @@ def _submit() -> dict:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")
     path = res.artifacts.get("/content/t108.json")
     if not path:
-        raise RuntimeError(f"no artifact; stdout tail: {res.stdout[-300:]}")
+        raise RuntimeError(
+            f"no artifact from {res.backend}. message={res.message!r} "
+            f"stdout_tail={res.stdout[-400:]!r} stderr_tail={res.stderr[-400:]!r}")
     d = json.loads(Path(path).read_text())
     d["backend"] = res.backend
     return d

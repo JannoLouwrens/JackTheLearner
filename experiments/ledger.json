@@ -451,13 +451,13 @@
       "status": "PASS"
     },
     "T1.08": {
-      "commit": "416b259",
+      "commit": "02ab7a7",
       "control_metrics": {},
-      "duration_s": 2146.11,
+      "duration_s": 1289.47,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\nM experiments/gpu_budget.json\nCommit and push first.",
+      "message": "RuntimeError: no artifact; stdout tail: ",
       "metrics": {},
-      "ran_at": "2026-08-05T10:07:18",
+      "ran_at": "2026-08-05T14:21:18",
       "seeds": [
         0,
         1,

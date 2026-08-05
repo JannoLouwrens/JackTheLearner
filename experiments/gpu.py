@@ -210,6 +210,7 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
                          message=f"timed out after {timeout_s}s")
 
     artifacts = {}
+    fetch_errors: list[str] = []
     if keep:
         tmp = Path(tempfile.mkdtemp(dir="/data"))
         for remote in fetch or []:
@@ -218,10 +219,19 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
             # "/content/marker.json" succeeds. The VM's CWD is /content, verified.
             remote_abs = remote if remote.startswith("/") else f"{COLAB_CWD}/{remote}"
             local = tmp / Path(remote).name
-            drc, _, derr = _run([COLAB, "--auth", "adc", "download",
-                                 "-s", session, remote_abs, str(local)], 300)
+            drc, dout, derr = _run([COLAB, "--auth", "adc", "download",
+                                    "-s", session, remote_abs, str(local)], 300)
             if drc == 0 and local.exists():
                 artifacts[remote] = str(local)
+            else:
+                # A silent download failure is indistinguishable from a job that
+                # never wrote its artifact, and the two need opposite fixes. On
+                # 2026-08-05 T1.08 returned "no artifact; stdout tail: " with an
+                # EMPTY tail and no other information, which was unactionable.
+                fetch_errors.append(
+                    f"{remote_abs}: rc={drc} exists={local.exists()} "
+                    f"{(derr or dout or '').strip()[:200]}"
+                )
         # Always release the VM, even if the run failed — a kept session that is
         # never stopped holds a GPU and burns quota silently.
         _run([COLAB, "--auth", "adc", "stop", "-s", session], 120)
@@ -232,9 +242,18 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
             gpu_name = line.strip()[:80]
             break
 
+    msg = "" if rc == 0 else f"exit {rc}"
+    if fetch_errors:
+        msg = (msg + " | " if msg else "") + "fetch failed: " + "; ".join(fetch_errors)
+    # A run that produced no stdout at all did not execute the job body: the
+    # preamble prints REPO <sha> before anything else. Say so rather than
+    # reporting an empty tail.
+    if rc == 0 and not out.strip():
+        msg = (msg + " | " if msg else "") + \
+              "remote produced NO stdout — the preamble prints 'REPO <sha>', so " \
+              "the script body almost certainly never ran (clone or import failed)"
     return JobResult("colab", rc == 0, out, err, time.time() - t0,
-                     artifacts, gpu_name,
-                     "" if rc == 0 else f"exit {rc}")
+                     artifacts, gpu_name, msg)
 
 
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
