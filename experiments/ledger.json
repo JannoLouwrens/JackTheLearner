@@ -641,20 +641,144 @@
       "status": "PASS"
     },
     "T2.01": {
-      "commit": "ffcc9a4",
-      "control_metrics": {},
-      "duration_s": 4210.14,
+      "commit": "ed42dc8",
+      "control_metrics": {
+        "untrained_mean": 170.7,
+        "untrained_mean_std": 0.0,
+        "untrained_sigma_advantage": 0.97,
+        "untrained_sigma_advantage_std": 0.0
+      },
+      "duration_s": 0.0,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\n M playground.py\nCommit and push first.",
-      "metrics": {},
-      "ran_at": "2026-08-06T11:25:39",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "all_seeds_beat_random": 0.0,
+        "all_seeds_beat_random_std": 0.0,
+        "backend": "kaggle",
+        "curve_seed0": [
+          {
+            "action_absmax": 1.2566167116165161,
+            "action_std": 0.303682804107666,
+            "entropy": 3.7398,
+            "iter": 1,
+            "mean_reward": 4.676362991333008,
+            "pg_loss": 0.2737,
+            "steps": 1024,
+            "value_mean": 0.02849879302084446,
+            "vf_loss": 0.5737
+          },
+          {
+            "action_absmax": 2.914043426513672,
+            "action_std": 0.3079470098018646,
+            "entropy": 3.9728,
+            "iter": 2,
+            "mean_reward": 4.054458141326904,
+            "pg_loss": 0.2898,
+            "steps": 2048,
+            "value_mean": 2.815157651901245,
+            "vf_loss": 0.117
+          },
+          {
+            "action_absmax": 4.585997581481934,
+            "action_std": 0.3124891221523285,
+            "entropy": 4.2195,
+            "iter": 3,
+            "mean_reward": 3.996035099029541,
+            "pg_loss": 0.2953,
+            "steps": 3072,
+            "value_mean": 1.8693751096725464,
+            "vf_loss": 0.1298
+          },
+          {
+            "action_absmax": 6.096459865570068,
+            "action_std": 0.3171751797199249,
+            "entropy": 4.4659,
+            "iter": 4,
+            "mean_reward": 4.253524303436279,
+            "pg_loss": 0.2986,
+            "steps": 4096,
+            "value_mean": 1.6805076599121094,
+            "vf_loss": 0.0727
+          },
+          {
+            "action_absmax": 8.531021118164062,
+            "action_std": 0.3267248570919037,
+            "entropy": 4.9823,
+            "iter": 6,
+            "mean_reward": 4.673983573913574,
+            "pg_loss": 0.2636,
+            "steps": 6144,
+            "value_mean": 1.8354346752166748,
+            "vf_loss": 0.2636
+          },
+          {
+            "action_absmax": 17.87947654724121,
+            "action_std": 0.35156869888305664,
+            "entropy": 6.1961,
+            "iter": 11,
+            "mean_reward": 3.8547921180725098,
+            "pg_loss": 0.2715,
+            "steps": 11264,
+            "value_mean": 2.3957035541534424,
+            "vf_loss": 0.1982
+          },
+          {
+            "action_absmax": 10.130792617797852,
+            "action_std": 0.38417401909828186,
+            "entropy": 7.693,
+            "iter": 16,
+            "mean_reward": 4.001139163970947,
+            "pg_loss": 0.3021,
+            "steps": 16384,
+            "value_mean": 2.183445930480957,
+            "vf_loss": 0.1182
+          },
+          {
+            "action_absmax": 12.505281448364258,
+            "action_std": 0.4186318814754486,
+            "entropy": 9.1603,
+            "iter": 21,
+            "mean_reward": 4.177123546600342,
+            "pg_loss": 0.2616,
+            "steps": 21504,
+            "value_mean": 2.1661601066589355,
+            "vf_loss": 0.3211
+          }
+        ],
+        "env_steps_per_seed": [
+          105472,
+          105472,
+          105472
+        ],
+        "gpu": "Tesla P100-PCIE-16GB",
+        "random_mean": 97.8,
+        "random_mean_std": 0.0,
+        "random_std": 17.96,
+        "random_std_std": 0.0,
+        "sigma_advantage": -0.79,
+        "sigma_advantage_std": 0.0,
+        "sigma_used": 10168.67,
+        "sigma_used_std": 0.0,
+        "trained_mean": -7911.9,
+        "trained_mean_std": 0.0,
+        "trained_means": [
+          -19435.5,
+          -4101.2,
+          -199.0
+        ],
+        "trained_std": 10168.67,
+        "trained_std_std": 0.0,
+        "wall_minutes": 66.6,
+        "wall_minutes_std": 0.0
+      },
+      "ran_at": "2026-08-06T14:00:19",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T2.01",
-      "status": "ERROR"
+      "status": "FAIL"
     }
   }
 }

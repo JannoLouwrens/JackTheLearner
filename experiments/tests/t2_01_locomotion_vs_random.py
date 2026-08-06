@@ -67,7 +67,13 @@ def eval_policy(tp, episodes, random_actions=False):
                     ot = torch.tensor(on, dtype=torch.float32,
                                       device=tp.device).unsqueeze(0)
                     out = tp.model(tp.project_obs(ot))
-                    act = out["actions"][0, 0, :].cpu().numpy()
+                    # Same bounded mean the training rollout uses, then clipped
+                    # like every other action reaching an environment. The v2 run
+                    # evaluated the RAW head output, so it fed actions of
+                    # magnitude 40+ into env.step and measured a bang-bang
+                    # policy nobody had trained.
+                    act = tp.policy_mean(out)[0].cpu().numpy()
+            act = np.clip(act, env.action_space.low, env.action_space.high)
             obs, r, term, trunc, _ = env.step(act)
             total += float(r)
             done = term or trunc

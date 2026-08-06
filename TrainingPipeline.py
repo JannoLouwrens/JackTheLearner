@@ -79,6 +79,8 @@ class PipelineConfig:
     n_steps: int = 512            # PPO rollout length
     n_epochs_ppo: int = 5         # PPO update epochs per rollout
     normalize_returns: bool = True  # keep value targets O(1); see rl_update
+    action_limit: float = 0.4     # Humanoid-v5 actuator range
+    squash_actions: bool = True   # bound the policy MEAN; see policy_mean()
     action_std_init: float = 0.3  # Initial exploration noise
     log_std_min: float = -4.6     # std >= 0.01 — floor, so the policy can commit
     log_std_max: float = 0.0      # std <= 1.0  — ceiling; the entropy bonus is
@@ -278,6 +280,38 @@ class TrainingPipeline:
     # ─────────────────────────────────────────────────────────────────────
     # OBSERVATION PROJECTION
     # ─────────────────────────────────────────────────────────────────────
+
+    def policy_mean(self, output) -> torch.Tensor:
+        """Turn the raw action head output into a BOUNDED policy mean.
+
+        locomotion_head is a bare nn.Linear, so its output is unbounded, and
+        clipping alone does not constrain it: once the mean passes the actuator
+        limit every action saturates to the same clipped command, the gradient
+        can no longer distinguish 0.5 from 43.8, and the drift is unopposed.
+
+        Ladder spec T2.01 measured exactly that runaway. The learning curve, per
+        iteration:
+
+            iter    reward   |act|max     std
+               1     4.676       1.26   0.304
+               4     4.254       6.10   0.317
+              11     3.855      17.88   0.352
+              31     4.008      43.81   0.506
+
+        Reward flat at ~4.0 while the mean grew 35x past a +-0.4 range — and at
+        evaluation the policy was pure bang-bang, returning -19,435 against +171
+        for the untrained network. The watch-item written into the journal after
+        the previous run said: if reward stalls while |a| grows, squash it. It
+        stalled, so it is squashed.
+
+        tanh scaling bounds the mean STRUCTURALLY, so no amount of drift can
+        leave the range. Exploration noise is still added on top and clipped for
+        the environment, which is the standard Box-space arrangement.
+        """
+        raw = output["actions"][:, 0, :]
+        if not getattr(self.config, "squash_actions", True):
+            return raw
+        return torch.tanh(raw) * self.config.action_limit
 
     def normalize_obs(self, obs_raw: np.ndarray) -> np.ndarray:
         """Running observation normalization (RL-Zoo3 pattern).
@@ -502,7 +536,7 @@ class TrainingPipeline:
                 # a no-op for buffers that already stored projected states, so
                 # the single-env collect_rollout path is unaffected.
                 output = self.model(self.project_obs(mb_states))
-                action_mean = output['actions'][:, 0, :]
+                action_mean = self.policy_mean(output)
                 values_pred = output['value'].squeeze(-1)
 
                 # Action distribution
@@ -588,7 +622,7 @@ class TrainingPipeline:
 
             with torch.no_grad():
                 output = self.model(state)
-                action_mean = output['actions'][:, 0, :]
+                action_mean = self.policy_mean(output)
                 value = output['value'].squeeze()
 
                 std = self.log_std.clamp(self.config.log_std_min,
@@ -691,7 +725,7 @@ class TrainingPipeline:
             with torch.no_grad():
                 state = self.project_obs(obs_tensor)
                 output = self.model(state)
-                action_mean = output['actions'][:, 0, :]            # (N, act)
+                action_mean = self.policy_mean(output)              # (N, act)
                 value = output['value'].squeeze(-1)                 # (N,)
 
                 std = self.log_std.clamp(self.config.log_std_min,
