@@ -141,7 +141,7 @@ LADDER: list[Spec] = [
          hypothesis="Each trainable module drives loss below 1e-2 on ONE fixed batch.",
          falsified_by="Loss plateaus above 1e-2 after 500 steps.",
          null_baseline="A frozen module stays flat.",
-         metric="final_loss", budget=Budget.CPU, depends_on=["T0.02"],
+         metric="final_loss", budget=Budget.CPU, seeds=3, depends_on=["T0.02"],
          control="Same module with requires_grad=False must NOT fit.",
          kills="The module. If it cannot memorise one batch it will never learn a task.",
          notes="The single highest-yield test in ML. Catches wrong loss, detached "
@@ -153,7 +153,7 @@ LADDER: list[Spec] = [
          falsified_by="Held-out error is the same whether or not a state->action "
                       "mapping exists.",
          null_baseline="Predicting the mean action, and the shuffled-task model.",
-         metric="heldout_structure_advantage", budget=Budget.GPU_SHORT, depends_on=["T1.01"],
+         metric="heldout_structure_advantage", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.01"],
          control="Two of them. The shuffled task must NOT generalise. And a plain-MSE "
                  "reference learner MUST succeed — if the simplest possible model also "
                  "fails, the task is unlearnable and the run is void, not a failure.",
@@ -180,14 +180,14 @@ LADDER: list[Spec] = [
          hypothesis="After one backward, no trainable tensor has grad None or all-zero.",
          falsified_by="Any orphaned parameter.",
          null_baseline="Current model: 45,538,295 params (38.6%) receive no gradient.",
-         metric="params_without_grad", budget=Budget.CPU_FAST, depends_on=["T0.01"],
+         metric="params_without_grad", budget=Budget.CPU_FAST, seeds=3, depends_on=["T0.01"],
          kills="Silent dead weight. This test is the direct fix for the repo's disease."),
 
     Spec("T1.04", 1, "Weights actually move",
          hypothesis="||theta_after - theta_before|| > 0 for every trainable module.",
          falsified_by="A module whose weights are unchanged after N steps.",
          null_baseline="Frozen modules must show exactly zero.",
-         metric="min_weight_delta", budget=Budget.CPU_FAST, depends_on=["T1.03"]),
+         metric="min_weight_delta", budget=Budget.CPU_FAST, seeds=3, depends_on=["T1.03"]),
 
     Spec("T1.05", 1, "Frozen stays frozen",
          hypothesis="The pretrained trunk/LLM does not change during policy training.",
@@ -222,7 +222,7 @@ LADDER: list[Spec] = [
                     "reconstructs that target far better than the untrained sampler.",
          falsified_by="Post-training reconstruction error is no better than pre-training.",
          null_baseline="The untrained sampler, and a random action of matched scale.",
-         metric="reconstruction_improvement", budget=Budget.CPU, depends_on=["T1.11"],
+         metric="reconstruction_improvement", budget=Budget.CPU, seeds=3, depends_on=["T1.11"],
          control="Shuffled targets must NOT be reconstructable — that would mean the "
                  "sampler ignores its conditioning.",
          kills="ActionExpert and the flow-matching path; fall back to a direct head.",
@@ -234,7 +234,7 @@ LADDER: list[Spec] = [
     Spec("T1.06", 1, "Numerical stability",
          hypothesis="No NaN/Inf in loss or grads over 1000 steps.",
          falsified_by="Any non-finite value.",
-         null_baseline="n/a", metric="nonfinite_steps", budget=Budget.CPU,
+         null_baseline="n/a", metric="nonfinite_steps", budget=Budget.CPU, seeds=3,
          depends_on=["T1.01"]),
 
     Spec("T1.07", 1, "Not knife-edge on learning rate",
