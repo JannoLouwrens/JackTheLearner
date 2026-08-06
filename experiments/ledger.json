@@ -617,6 +617,29 @@
       "spec_id": "T1.13",
       "status": "PASS"
     },
+    "T2.00": {
+      "commit": "e1bb4e7",
+      "control_metrics": {
+        "unnormalized_vf_pg_ratio": 22203.02
+      },
+      "duration_s": 1300.34,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "action_limit": 0.4,
+        "env_action_absmax": 0.4,
+        "final_vf_pg_ratio": 6.43,
+        "max_log_std": -1.197,
+        "max_vf_pg_ratio": 9.95,
+        "min_log_std": -1.2016
+      },
+      "ran_at": "2026-08-06T10:14:45",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T2.00",
+      "status": "PASS"
+    },
     "T2.01": {
       "commit": "c02e590",
       "control_metrics": {
