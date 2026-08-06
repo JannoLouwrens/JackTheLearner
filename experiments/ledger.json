@@ -497,6 +497,55 @@
       "spec_id": "T1.08",
       "status": "PASS"
     },
+    "T1.09": {
+      "commit": "a0b9569",
+      "control_metrics": {
+        "absurd_batch": 1024,
+        "absurd_oom": true,
+        "absurd_peak_gb": -1
+      },
+      "duration_s": 221.29,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "backend": "kaggle",
+        "gpu": "Tesla P100-PCIE-16GB",
+        "headroom_gb": 8.437,
+        "oom_at_batch_64": false,
+        "peak_gb_at_batch_128": 6.322,
+        "peak_gb_at_batch_64": 3.563,
+        "vram_total_gb": 15.89
+      },
+      "ran_at": "2026-08-06T07:52:19",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.09",
+      "status": "PASS"
+    },
+    "T1.10": {
+      "commit": "a0b9569",
+      "control_metrics": {
+        "wrong_seed_max_diff": 0.503418
+      },
+      "duration_s": 203.56,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "backend": "kaggle",
+        "gpu": "Tesla P100-PCIE-16GB",
+        "max_abs_diff": 6e-07,
+        "mean_abs_diff": 1.45e-07,
+        "tolerance": 0.002,
+        "values_compared": 1088
+      },
+      "ran_at": "2026-08-06T07:55:44",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.10",
+      "status": "PASS"
+    },
     "T1.11": {
       "commit": "bb1659d",
       "control_metrics": {

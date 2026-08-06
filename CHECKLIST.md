@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 21 / 62 demonstrated
+## 25 / 62 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -71,7 +71,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T1.04** Weights actually move
       - _asserts:_ ||theta_after - theta_before|| > 0 for every trainable module.
       - _dies if:_ A module whose weights are unchanged after N steps.
-- [ ] **T1.05** Frozen stays frozen
+- [x] **T1.05** Frozen stays frozen
       - _asserts:_ The pretrained trunk/LLM does not change during policy training.
       - _dies if:_ Any delta in frozen parameters.
 - [x] **T1.11** Train/inference path parity
@@ -88,14 +88,14 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T1.07** Not knife-edge on learning rate
       - _asserts:_ Training succeeds across a 10x LR range.
       - _dies if:_ Only one LR works.
-- [ ] **T1.08** Seed variance measured
+- [x] **T1.08** Seed variance measured
       - _asserts:_ Across 3 seeds the metric's std is small relative to the effect.
       - _dies if:_ std >= the effect size being claimed.
       - _then delete:_ Any single-seed claim in this repo.
-- [ ] **T1.09** Fits in T4 memory
+- [x] **T1.09** Fits in T4 memory
       - _asserts:_ Peak VRAM < 14 GB at the intended batch size.
       - _dies if:_ OOM on a 16 GB T4.
-- [ ] **T1.10** CPU and GPU agree
+- [x] **T1.10** CPU and GPU agree
       - _asserts:_ Same seed, same data: CPU and T4 losses agree within tolerance.
       - _dies if:_ Divergence beyond float32 accumulation error.
 - [x] **T1.13** The grounding pairs are real
