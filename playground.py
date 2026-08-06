@@ -241,16 +241,57 @@ class Water:
     """
 
     def __init__(self, model, x: float, y: float, half: float, depth: float,
-                 drag_coef: float = 1.2):
+                 drag_coef: float = 1.2, linear_drag: float = 6.0):
         self.x, self.y, self.half, self.depth = x, y, half, depth
         self.surface_z = 0.0        # pool is dug into the floor plane
         self.cd = drag_coef
+        # Linear (viscous/wave-making) damping, 1/s. NOT cosmetic: with
+        # quadratic drag alone the damping force vanishes as v->0, so a float
+        # never settles — measured, a rho=0.3 sphere was still oscillating at
+        # |vz| ~ 0.4-0.9 after 40,000 steps (200 s). Real water damps a bobbing
+        # body through wave-making and added mass, which are linear in v at
+        # small amplitude. Without this term PG.2's equilibrium-depth claim is
+        # not merely inaccurate, it is unmeasurable.
+        self.c_lin = linear_drag
         self.enabled = True
         self.model = model
+        # Per-body effective radius from GEOM GEOMETRY, precomputed once.
+        #
+        # The first implementation derived it from body_inertia, which is wrong
+        # in a way that inverts the physics: for a sphere I = 2/5 m r^2, so
+        # sqrt(I) scales with sqrt(MASS). Denser bodies got a larger inferred
+        # radius and therefore MORE buoyancy — measured, a rho=0.8 ball floated
+        # at z=+0.21 while a rho=0.3 ball sat at z=-0.03. Geometry must come
+        # from geometry.
+        self._radius = np.zeros(model.nbody)
+        for gid in range(model.ngeom):
+            bid = model.geom_bodyid[gid]
+            gtype = model.geom_type[gid]
+            gs = model.geom_size[gid]
+            if gtype == 2:                       # sphere
+                r = gs[0]
+            elif gtype in (3, 5):                # capsule, cylinder
+                r = (gs[0] ** 2 * max(gs[1], gs[0])) ** (1.0 / 3.0)
+            elif gtype == 6:                     # box: equivalent-volume sphere
+                r = ((3.0 / (4.0 * math.pi)) * 8.0 * gs[0] * gs[1] * gs[2]) ** (1.0 / 3.0)
+            else:
+                continue
+            self._radius[bid] = max(self._radius[bid], float(r))
 
-    def in_pool(self, pos) -> bool:
-        return (abs(pos[0] - self.x) < self.half and abs(pos[1] - self.y) < self.half
-                and pos[2] < self.surface_z)
+    def in_pool(self, pos, radius: float = 0.0) -> bool:
+        """Is ANY part of the body in the water?
+
+        The first version tested the body's CENTRE against the surface, which
+        silently zeroed buoyancy for every partially-submerged body whose centre
+        floated above the waterline — i.e. everything with density ratio < 0.5,
+        exactly the things that are supposed to float. Measured: a rho=0.3
+        sphere at its correct equilibrium depth received 0.0000 N of buoyancy
+        against 41.6 N of weight, so it sank until its centre went under. The
+        submerged-fraction maths was right; this gate in front of it was wrong.
+        """
+        return (abs(pos[0] - self.x) < self.half + radius
+                and abs(pos[1] - self.y) < self.half + radius
+                and pos[2] - radius < self.surface_z)
 
     def apply(self, model, data) -> None:
         """Add buoyancy + drag to xfrc_applied. Call every step, before mj_step."""
@@ -258,14 +299,11 @@ class Water:
             return
         for bid in range(1, model.nbody):
             pos = data.xipos[bid]
-            if not self.in_pool(pos):
+            r = float(self._radius[bid])
+            if r <= 0 or model.body_mass[bid] <= 0:
                 continue
-            mass = model.body_mass[bid]
-            if mass <= 0:
+            if not self.in_pool(pos, r):
                 continue
-            # Bounding-sphere radius from the body's inertia box.
-            r = float(np.max(model.body_inertia[bid]) ** 0.5) if model.body_inertia[bid].any() else 0.1
-            r = max(min(r, 0.4), 0.03)
             # Spherical-cap submerged fraction.
             d = self.surface_z - pos[2]          # depth of centre below surface
             if d >= r:
@@ -282,6 +320,7 @@ class Water:
             speed = float(np.linalg.norm(vel))
             area = math.pi * r * r * frac
             drag = -0.5 * WATER_DENSITY * self.cd * area * speed * vel
+            drag = drag - self.c_lin * WATER_DENSITY * vol * vel
 
             data.xfrc_applied[bid][:3] = drag
             data.xfrc_applied[bid][2] += buoy

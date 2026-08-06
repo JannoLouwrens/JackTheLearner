@@ -641,54 +641,20 @@
       "status": "PASS"
     },
     "T2.01": {
-      "commit": "c02e590",
-      "control_metrics": {
-        "untrained_mean": 169.9,
-        "untrained_mean_std": 0.0,
-        "untrained_sigma_advantage": 0.63,
-        "untrained_sigma_advantage_std": 0.0
-      },
-      "duration_s": 0.0,
+      "commit": "ffcc9a4",
+      "control_metrics": {},
+      "duration_s": 4210.14,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "pre-registered threshold not met",
-      "metrics": {
-        "all_seeds_beat_random": 0.0,
-        "all_seeds_beat_random_std": 0.0,
-        "backend": "kaggle",
-        "env_steps_per_seed": [
-          98304,
-          101376,
-          99328
-        ],
-        "gpu": "Tesla P100-PCIE-16GB",
-        "random_mean": 121.8,
-        "random_mean_std": 0.0,
-        "random_std": 31.9,
-        "random_std_std": 0.0,
-        "sigma_advantage": -0.8,
-        "sigma_advantage_std": 0.0,
-        "sigma_used": 5583.32,
-        "sigma_used_std": 0.0,
-        "trained_mean": -4334.4,
-        "trained_mean_std": 0.0,
-        "trained_means": [
-          -268.9,
-          -10700.4,
-          -2033.9
-        ],
-        "trained_std": 5583.32,
-        "trained_std_std": 0.0,
-        "wall_minutes": 66.7,
-        "wall_minutes_std": 0.0
-      },
-      "ran_at": "2026-08-06T09:26:07",
+      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\n M playground.py\nCommit and push first.",
+      "metrics": {},
+      "ran_at": "2026-08-06T11:25:39",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T2.01",
-      "status": "FAIL"
+      "status": "ERROR"
     }
   }
 }
