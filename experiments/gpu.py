@@ -115,8 +115,18 @@ def assert_ref_is_current(ref: str = "main") -> None:
         # that fails on its own side effects trains people to bypass it.
         outputs = {"experiments/gpu_budget.json", "experiments/ledger.json",
                    "CHECKLIST.md", "docs/LOOP_JOURNAL.md"}
+        # Parse by splitting, not by column: git() strips stdout, which eats the
+        # leading space of the FIRST porcelain line only (' M path' -> 'M path'),
+        # so a column-3 slice yielded 'periments/gpu_budget.json' for whichever
+        # file happened to be listed first — and the exclusion silently missed
+        # it. That is why this guard kept firing on its own budget file after
+        # being "fixed": the fix was validated against subprocess output that
+        # had not been stripped, i.e. against code that was not the code running.
+        def _path(ln: str) -> str:
+            parts = ln.strip().split(None, 1)
+            return parts[1] if len(parts) == 2 else ln.strip()
         offending = [ln for ln in dirty.splitlines()
-                     if ln[3:].strip() not in outputs]
+                     if _path(ln) not in outputs]
         if offending:
             raise RuntimeError(
                 "Uncommitted changes to tracked files -- the GPU would run "

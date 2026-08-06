@@ -451,13 +451,13 @@
       "status": "PASS"
     },
     "T1.08": {
-      "commit": "55a07f4",
+      "commit": "11c183a",
       "control_metrics": {},
-      "duration_s": 2054.93,
+      "duration_s": 2309.2,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\nM experiments/gpu_budget.json\n M experiments/registry.py\nCommit and push first.",
+      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\nM experiments/gpu_budget.json\nCommit and push first.",
       "metrics": {},
-      "ran_at": "2026-08-05T15:19:27",
+      "ran_at": "2026-08-06T07:14:58",
       "seeds": [
         0,
         1,
