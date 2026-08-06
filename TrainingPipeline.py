@@ -268,8 +268,17 @@ class TrainingPipeline:
 
     def normalize_obs(self, obs_raw: np.ndarray) -> np.ndarray:
         """Running observation normalization (RL-Zoo3 pattern).
-        Keeps running mean/var and normalizes to ~N(0,1), clipped to [-10, 10]."""
+        Keeps running mean/var and normalizes to ~N(0,1), clipped to [-10, 10].
+
+        Accepts a single observation (D,) or a batch (N, D). The batch path is
+        NOT a convenience: feeding a batch through the single-obs update would
+        silently corrupt the running statistics — obs_count would advance by 1
+        per BATCH instead of per observation, and the (N, D) delta would
+        broadcast obs_mean into a matrix. Found while batching the rollout
+        (T0.07: the batch-1 policy forward is 155x the physics it drives)."""
         obs = np.asarray(obs_raw, dtype=np.float64)
+        if obs.ndim == 2:
+            return self._normalize_obs_batch(obs)
         self.obs_count += 1
         if self.obs_count == 1:
             self.obs_mean = torch.tensor(obs, dtype=torch.float32, device=self.device)
@@ -564,6 +573,105 @@ class TrainingPipeline:
             'values': torch.stack(values),
             'rewards': torch.tensor(rewards, device=self.device),
             'dones': torch.tensor(dones, device=self.device),
+        }
+
+    def _normalize_obs_batch(self, obs: np.ndarray) -> np.ndarray:
+        """Chan et al. parallel merge of batch statistics into the running ones.
+
+        The single-obs path stores a biased running variance (M2/count), so the
+        batch is merged in the same currency: convert to M2, merge, divide back.
+        """
+        n = obs.shape[0]
+        batch = torch.tensor(obs, dtype=torch.float32, device=self.device)
+        b_mean = batch.mean(dim=0)
+        b_var = batch.var(dim=0, unbiased=False)
+
+        if self.obs_count == 0:
+            self.obs_mean = b_mean
+            self.obs_var = torch.clamp(b_var, min=1e-8)
+            self.obs_count = n
+        else:
+            new_count = self.obs_count + n
+            delta = b_mean - self.obs_mean
+            m2 = (self.obs_var * self.obs_count + b_var * n
+                  + delta.pow(2) * self.obs_count * n / new_count)
+            self.obs_mean = self.obs_mean + delta * n / new_count
+            self.obs_var = m2 / new_count
+            self.obs_count = new_count
+
+        std = (self.obs_var + 1e-8).sqrt()
+        out = (batch - self.obs_mean) / std
+        return out.clamp(-10, 10).cpu().numpy().astype(np.float32)
+
+    def make_vec_envs(self, n_envs: int):
+        """N synchronous Humanoid-v5 envs sharing one batched policy forward.
+
+        Sync, not Async: the physics is cheap (1831 steps/s, T0.07) and the win
+        is batching the POLICY, so process-per-env overhead buys nothing here.
+        SAME_STEP autoreset keeps the classic contract — a terminated env returns
+        its reset observation immediately — so the rollout loop needs no
+        next-step masking (gymnasium 1.x defaults to NEXT_STEP, which trains on
+        a phantom reset transition unless every consumer remembers to mask it).
+        """
+        from gymnasium.vector import SyncVectorEnv, AutoresetMode
+        return SyncVectorEnv([lambda: self.make_env() for _ in range(n_envs)],
+                             autoreset_mode=AutoresetMode.SAME_STEP)
+
+    def collect_rollout_vec(self, envs, n_steps: int = None) -> Dict[str, torch.Tensor]:
+        """collect_rollout over N envs with ONE policy forward per step.
+
+        Why this exists: collect_rollout is batch-1 — unsqueeze(0), one 58M-param
+        forward per physics step — which T0.07 measured at 11.8 steps/s, making
+        2M steps a 47-hour job. The physics can already run 155x faster than the
+        policy that drives it; batching the forward is the only lever that moves
+        rollout throughput.
+
+        SHAPE CONTRACT: returns (T, N, ...) tensors, NOT the flattened (T,)
+        layout collect_rollout produces. Flattening (T, N) into (T*N) would
+        interleave envs and silently break GAE, which walks dim 0 assuming time
+        order. The PPO update that consumes this must compute advantages per env
+        (over dim 0) before any flatten.
+        """
+        n_steps = n_steps or self.config.n_steps
+        states, actions, rewards, dones, log_probs, values = [], [], [], [], [], []
+
+        obs, _ = envs.reset()
+        for _ in range(n_steps):
+            obs_norm = self.normalize_obs(obs)                      # (N, D) path
+            obs_tensor = torch.tensor(obs_norm, dtype=torch.float32,
+                                      device=self.device)
+            state = self.project_obs(obs_tensor)
+
+            with torch.no_grad():
+                output = self.model(state)
+                action_mean = output['actions'][:, 0, :]            # (N, act)
+                value = output['value'].squeeze(-1)                 # (N,)
+
+                std = self.log_std.exp().expand_as(action_mean)
+                dist = torch.distributions.Normal(action_mean, std)
+                action_sampled = dist.sample()
+                log_prob = dist.log_prob(action_sampled).sum(dim=-1)
+
+            next_obs, reward, term, trunc, _ = envs.step(
+                action_sampled.cpu().numpy())
+
+            states.append(state)
+            actions.append(action_sampled)
+            log_probs.append(log_prob)
+            values.append(value)
+            rewards.append(torch.tensor(reward, dtype=torch.float32,
+                                        device=self.device))
+            dones.append(torch.tensor(np.logical_or(term, trunc),
+                                      dtype=torch.float32, device=self.device))
+            obs = next_obs
+
+        return {
+            'states': torch.stack(states),        # (T, N, obs_dim)
+            'actions': torch.stack(actions),      # (T, N, act_dim)
+            'log_probs': torch.stack(log_probs),  # (T, N)
+            'values': torch.stack(values),        # (T, N)
+            'rewards': torch.stack(rewards),      # (T, N)
+            'dones': torch.stack(dones),          # (T, N)
         }
 
     # ─────────────────────────────────────────────────────────────────────
