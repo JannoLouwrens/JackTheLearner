@@ -103,6 +103,7 @@ class UnifiedBrainConfig:
     vision_enabled: bool = True
     vision_embed_dim: int = 1024
     use_pretrained_vision: bool = False  # Set True if you have HuggingFace models
+    allow_vision_fallback: bool = False  # pretrained requested but missing: raise, unless this is set
 
     # Audio (Whisper + wav2vec2)
     audio_enabled: bool = True
@@ -642,15 +643,34 @@ class PrismaticVisionEncoder(nn.Module):
                 self.dinov2.requires_grad_(False)
                 self.siglip = AutoModel.from_pretrained("openai/clip-vit-large-patch14")
                 self.siglip.requires_grad_(False)
+                # Dims MEASURED from the loaded models, not assumed. The original
+                # hardcoded 1024+768=1792, but dinov2-large emits 1024 and
+                # clip-vit-large's vision pooler emits 1024 -> 2048, so the
+                # pretrained path crashed on its first forward and had therefore
+                # never once been executed. (Also: the attribute says siglip but
+                # the checkpoint is CLIP - kept for state-dict compatibility,
+                # named honestly here.)
+                _dino_dim = self.dinov2.config.hidden_size
+                _clip_dim = self.siglip.config.vision_config.hidden_size
                 self.projector = nn.Sequential(
-                    nn.Linear(1024 + 768, config.vision_embed_dim * 2),
+                    nn.Linear(_dino_dim + _clip_dim, config.vision_embed_dim * 2),
                     nn.GELU(),
                     nn.Linear(config.vision_embed_dim * 2, config.vision_embed_dim),
                 )
                 self.use_pretrained = True
                 print("[VISION] Loaded DINOv2 + SigLIP (pretrained)")
             except Exception as e:
-                print(f"[VISION] Pretrained failed: {e}, using CNN fallback")
+                # Silent downgrade is the fabricated-mocap disease in vision form:
+                # you asked for 730M params of frozen DINOv2+CLIP and got a 245K
+                # CNN, and the only trace was a print nobody reads. Every result
+                # downstream would say "with pretrained vision" and be wrong.
+                if not getattr(config, "allow_vision_fallback", False):
+                    raise RuntimeError(
+                        "use_pretrained_vision=True but the trunks failed to "
+                        f"load ({e}). Refusing to silently downgrade to the CNN "
+                        "fallback — set allow_vision_fallback=True to opt in."
+                    ) from e
+                print(f"[VISION] Pretrained failed: {e}, using CNN fallback (explicitly allowed)")
 
         if not self.use_pretrained:
             # Fallback CNN

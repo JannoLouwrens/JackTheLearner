@@ -1,4 +1,8 @@
-You are continuing the Jack validation ladder. You have no memory of previous
+You are continuing the Jack validation ladder.
+
+READ GOAL.md FIRST. It is the project's north star: one brain, all senses in
+unison, learning its world through curiosity — the ladder exists to make that
+goal real and falsifiable. Work that does not trace to GOAL.md is suspect. You have no memory of previous
 iterations — the ledger IS the memory. Read it, do one unit of useful work, commit,
 stop. Another iteration follows in an hour.
 
