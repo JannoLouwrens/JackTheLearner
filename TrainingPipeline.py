@@ -418,21 +418,34 @@ class TrainingPipeline:
         rewards = rollout['rewards']
         dones = rollout['dones']
 
-        N = states.shape[0]
         gamma = self.config.gamma
         gae_lambda = self.config.gae_lambda
 
         # ── GAE advantage estimation ──
-        advantages = torch.zeros(N, device=self.device)
-        last_gae = 0
-        for t in reversed(range(N)):
-            if t == N - 1:
-                next_value = 0.0
-            else:
-                next_value = old_values[t + 1]
+        # Accepts both layouts: (T,) from collect_rollout, or (T, N) from
+        # collect_rollout_vec. The recursion is identical — with (T, N) rows,
+        # delta and last_gae are (N,) vectors and every env's advantage chain is
+        # computed in parallel. What would NOT work is flattening (T, N) to
+        # (T*N,) first: that interleaves envs into one fake trajectory, so env
+        # k's first step would bootstrap from env k-1's last value. Time must
+        # stay dim 0 until the advantages exist; flattening is safe only after.
+        T = rewards.shape[0]
+        advantages = torch.zeros_like(rewards)
+        last_gae = torch.zeros_like(rewards[0])
+        for t in reversed(range(T)):
+            next_value = old_values[t + 1] if t < T - 1 else torch.zeros_like(rewards[0])
             delta = rewards[t] + gamma * next_value * (1 - dones[t]) - old_values[t]
             advantages[t] = last_gae = delta + gamma * gae_lambda * (1 - dones[t]) * last_gae
         returns = advantages + old_values
+
+        if states.dim() == 3:                      # (T, N, D) -> flat for PPO
+            states = states.reshape(-1, states.shape[-1])
+            actions = actions.reshape(-1, actions.shape[-1])
+            old_log_probs = old_log_probs.reshape(-1)
+            old_values = old_values.reshape(-1)
+            advantages = advantages.reshape(-1)
+            returns = returns.reshape(-1)
+        N = states.shape[0]
 
         # Normalize advantages (per-batch, critical for stability)
         if advantages.std() > 1e-6:
@@ -457,8 +470,11 @@ class TrainingPipeline:
                 mb_advantages = advantages[idx]
                 mb_returns = returns[idx]
 
-                # Forward pass
-                output = self.model(mb_states)
+                # Forward pass. project_obs runs HERE, inside the minibatch,
+                # so obs_proj receives a fresh gradient every backward -- it is
+                # a no-op for buffers that already stored projected states, so
+                # the single-env collect_rollout path is unaffected.
+                output = self.model(self.project_obs(mb_states))
                 action_mean = output['actions'][:, 0, :]
                 values_pred = output['value'].squeeze(-1)
 
@@ -640,9 +656,9 @@ class TrainingPipeline:
             obs_norm = self.normalize_obs(obs)                      # (N, D) path
             obs_tensor = torch.tensor(obs_norm, dtype=torch.float32,
                                       device=self.device)
-            state = self.project_obs(obs_tensor)
 
             with torch.no_grad():
+                state = self.project_obs(obs_tensor)
                 output = self.model(state)
                 action_mean = output['actions'][:, 0, :]            # (N, act)
                 value = output['value'].squeeze(-1)                 # (N,)
@@ -655,7 +671,12 @@ class TrainingPipeline:
             next_obs, reward, term, trunc, _ = envs.step(
                 action_sampled.cpu().numpy())
 
-            states.append(state)
+            # RAW normalized obs, not the projected state. Storing the projection
+            # kept its autograd graph alive into rl_update, where the second PPO
+            # minibatch backward hit a freed graph and crashed -- and the only
+            # gradient obs_proj ever received flowed through that broken path, so
+            # it could not actually train. rl_update projects per minibatch now.
+            states.append(obs_tensor)
             actions.append(action_sampled)
             log_probs.append(log_prob)
             values.append(value)
