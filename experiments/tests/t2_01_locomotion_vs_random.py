@@ -85,15 +85,30 @@ def train_one(seed, minutes):
     envs = tp.make_vec_envs(__N_ENVS__)
     deadline = time.time() + minutes * 60
     iters = steps = 0
+    curve = []
     while time.time() < deadline:
         buf = tp.collect_rollout_vec(envs, n_steps=__ROLLOUT__)
-        tp.rl_update(buf)
+        stats = tp.rl_update(buf)
         iters += 1
         steps += __ROLLOUT__ * __N_ENVS__
+        # WITHOUT THIS the run reports only endpoints, and a catastrophic
+        # failure (T2.01 v1: trained -4334 vs untrained +170) cannot be located
+        # in time. Track what actually diagnoses PPO collapse: rollout reward,
+        # the learned action std (entropy bonus can inflate it without bound),
+        # and action magnitude versus the env's own action range.
+        if iters % 5 == 1 or iters < 5:
+            curve.append({
+                "iter": iters, "steps": steps,
+                "mean_reward": float(buf["rewards"].mean()),
+                "action_std": float(tp.log_std.exp().mean()),
+                "action_absmax": float(buf["actions"].abs().max()),
+                "value_mean": float(buf["values"].mean()),
+                **{k: round(float(v), 4) for k, v in list(stats.items())[:3]},
+            })
     envs.close()
 
     trained = eval_policy(tp, __EVAL_EPS__)
-    return {"seed": seed, "iters": iters, "env_steps": steps,
+    return {"seed": seed, "iters": iters, "env_steps": steps, "curve": curve,
             "untrained_returns": untrained, "trained_returns": trained,
             "trained_mean": float(np.mean(trained)),
             "untrained_mean": float(np.mean(untrained))}
@@ -153,6 +168,7 @@ def _experiment(seed: int) -> dict:
         "gpu": _CACHE["gpu"], "backend": _CACHE["backend"],
         "wall_minutes": _CACHE["wall_minutes"],
         "env_steps_per_seed": [s["env_steps"] for s in _CACHE["seeds"]],
+        "curve_seed0": _CACHE["seeds"][0].get("curve", [])[:8],
         "random_mean": round(rnd_mean, 1), "random_std": round(rnd_std, 2),
         "trained_means": [round(m, 1) for m in trained_means],
         "trained_mean": round(tr_mean, 1), "trained_std": round(tr_std, 2),

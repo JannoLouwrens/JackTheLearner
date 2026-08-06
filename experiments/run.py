@@ -133,8 +133,20 @@ def _run_isolated(spec_id: str, ledger: Ledger):
         "m = _module_for(%r);"
         "m.run(Ledger())" % (str(Path(__file__).parent.parent), spec_id)
     )
+    # Timeout derived from the spec's declared budget. A flat 3600s cap silently
+    # killed T2.01 (budget gpu<2h) at 60 minutes while its Kaggle kernel ran to
+    # COMPLETION at 66.7 — the runner recorded an ERROR for a job that had
+    # produced a real result, and the artifact was only recovered by hand. A
+    # harness that discards finished science is worse than a slow one.
+    from .registry import BY_ID as _BY_ID
+    _budget_seconds = {
+        "cpu<1min": 300, "cpu<10min": 1800, "cpu<2h": 9000,
+        "gpu<20min": 3600, "gpu<2h": 10800, "gpu<8h": 36000,
+    }
+    _spec = _BY_ID.get(spec_id)
+    _timeout = _budget_seconds.get(_spec.budget.value if _spec else "", 3600)
     proc = sp.run([sys.executable, "-c", code], capture_output=True, text=True,
-                  cwd=str(Path(__file__).parent.parent), timeout=3600)
+                  cwd=str(Path(__file__).parent.parent), timeout=_timeout)
     # The child wrote the ledger itself; re-read to see what it recorded.
     fresh = Ledger()
     ledger.results.update(fresh.results)
