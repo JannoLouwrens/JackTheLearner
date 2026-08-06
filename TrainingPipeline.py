@@ -78,7 +78,11 @@ class PipelineConfig:
     vf_coef: float = 0.43        # PPO: RL-Zoo3 humanoid tuned
     n_steps: int = 512            # PPO rollout length
     n_epochs_ppo: int = 5         # PPO update epochs per rollout
+    normalize_returns: bool = True  # keep value targets O(1); see rl_update
     action_std_init: float = 0.3  # Initial exploration noise
+    log_std_min: float = -4.6     # std >= 0.01 — floor, so the policy can commit
+    log_std_max: float = 0.0      # std <= 1.0  — ceiling; the entropy bonus is
+                                  # otherwise unbounded and inflates std forever
 
     # Anti-forgetting
     replay_ratio: float = 0.2
@@ -241,6 +245,15 @@ class TrainingPipeline:
         ).to(self.device)
 
         # Observation normalization (RL-Zoo3: normalize=True, critical for Humanoid)
+        # Running scale of the DISCOUNTED RETURN (SB3 VecNormalize pattern).
+        # Ladder spec T2.01 measured why this is not optional: with raw Humanoid
+        # returns the value loss ran 540 against a policy loss of 0.27, and with
+        # vf_coef=0.43 the value term was ~870x the policy term. value_head sits
+        # on the SHARED trunk, so all 57M params were optimised to regress
+        # returns while the policy rode along on whatever representation that
+        # produced -- training came out at -4334 versus +170 untrained.
+        self.ret_var = torch.ones((), device=self.device)
+        self.ret_count = 1e-4
         self.obs_mean = torch.zeros(self.config.mujoco_obs_dim, device=self.device)
         self.obs_var = torch.ones(self.config.mujoco_obs_dim, device=self.device)
         self.obs_count = 0
@@ -438,6 +451,20 @@ class TrainingPipeline:
             advantages[t] = last_gae = delta + gamma * gae_lambda * (1 - dones[t]) * last_gae
         returns = advantages + old_values
 
+        if getattr(self.config, "normalize_returns", True):
+            # Scale (not centre) by a running std of returns: centring would bias
+            # the value target, scaling only fixes the loss magnitude. Advantages
+            # are normalised separately below, per batch, as PPO expects.
+            batch_var = returns.detach().var()
+            n = returns.numel()
+            self.ret_count += n
+            w = n / self.ret_count
+            self.ret_var = (1 - w) * self.ret_var + w * batch_var
+            scale = torch.sqrt(self.ret_var + 1e-8).clamp(min=1e-3)
+            returns = returns / scale
+            old_values = old_values / scale
+            advantages = advantages / scale
+
         if states.dim() == 3:                      # (T, N, D) -> flat for PPO
             states = states.reshape(-1, states.shape[-1])
             actions = actions.reshape(-1, actions.shape[-1])
@@ -479,7 +506,9 @@ class TrainingPipeline:
                 values_pred = output['value'].squeeze(-1)
 
                 # Action distribution
-                std = self.log_std.exp().expand_as(action_mean)
+                std = self.log_std.clamp(self.config.log_std_min,
+                                         self.config.log_std_max
+                                         ).exp().expand_as(action_mean)
                 dist = torch.distributions.Normal(action_mean, std)
                 new_log_probs = dist.log_prob(mb_actions).sum(dim=-1)
                 entropy = dist.entropy().sum(dim=-1).mean()
@@ -562,7 +591,9 @@ class TrainingPipeline:
                 action_mean = output['actions'][:, 0, :]
                 value = output['value'].squeeze()
 
-                std = self.log_std.exp().expand_as(action_mean)
+                std = self.log_std.clamp(self.config.log_std_min,
+                                         self.config.log_std_max
+                                         ).exp().expand_as(action_mean)
                 dist = torch.distributions.Normal(action_mean, std)
                 action_sampled = dist.sample()
                 log_prob = dist.log_prob(action_sampled).sum(dim=-1)
@@ -663,13 +694,23 @@ class TrainingPipeline:
                 action_mean = output['actions'][:, 0, :]            # (N, act)
                 value = output['value'].squeeze(-1)                 # (N,)
 
-                std = self.log_std.exp().expand_as(action_mean)
+                std = self.log_std.clamp(self.config.log_std_min,
+                                         self.config.log_std_max
+                                         ).exp().expand_as(action_mean)
                 dist = torch.distributions.Normal(action_mean, std)
                 action_sampled = dist.sample()
                 log_prob = dist.log_prob(action_sampled).sum(dim=-1)
 
+            # CLIP for the environment, keep the UNCLIPPED sample in the buffer
+            # (the Gaussian density is over unclipped actions) -- the SB3 Box
+            # convention. Measured need: |action| reached 1.20 then 2.37 against
+            # an env range of +-0.4 within two iterations, so MuJoCo was silently
+            # clipping and the policy was being scored for action components that
+            # never touched the physics.
+            _lo = envs.single_action_space.low
+            _hi = envs.single_action_space.high
             next_obs, reward, term, trunc, _ = envs.step(
-                action_sampled.cpu().numpy())
+                np.clip(action_sampled.cpu().numpy(), _lo, _hi))
 
             # RAW normalized obs, not the projected state. Storing the projection
             # kept its autograd graph alive into rl_update, where the second PPO
