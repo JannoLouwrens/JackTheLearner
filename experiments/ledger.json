@@ -392,6 +392,25 @@
       "spec_id": "T1.04",
       "status": "PASS"
     },
+    "T1.05": {
+      "commit": "29a6de2",
+      "control_metrics": {},
+      "duration_s": 5.53,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "construct_delta": 0.0,
+        "expected_std": 0.5,
+        "sentinel_std": 0.5233,
+        "train_delta": 0.0
+      },
+      "ran_at": "2026-08-06T07:48:01",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T1.05",
+      "status": "PASS"
+    },
     "T1.06": {
       "commit": "bb55c15",
       "control_metrics": {
@@ -451,20 +470,32 @@
       "status": "PASS"
     },
     "T1.08": {
-      "commit": "11c183a",
-      "control_metrics": {},
-      "duration_s": 2309.2,
+      "commit": "29a6de2",
+      "control_metrics": {
+        "distinct_results": 3,
+        "spread": 0.04209012
+      },
+      "duration_s": 1291.45,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: Uncommitted changes to tracked files -- the GPU would run DIFFERENT code than you are testing:\nM experiments/gpu_budget.json\nCommit and push first.",
-      "metrics": {},
-      "ran_at": "2026-08-06T07:14:58",
+      "message": "",
+      "metrics": {
+        "backend": "kaggle",
+        "effect": 0.23644,
+        "gpu": "Tesla P100-PCIE-16GB",
+        "heldout_cv_pct": 40.006,
+        "heldout_mean": 0.05849,
+        "heldout_std": 0.023399,
+        "min_detectable_effect": 0.046797,
+        "seed_noise": 0.023399,
+        "seeds": 3,
+        "snr": 10.1
+      },
+      "ran_at": "2026-08-06T07:40:15",
       "seeds": [
-        0,
-        1,
-        2
+        0
       ],
       "spec_id": "T1.08",
-      "status": "ERROR"
+      "status": "PASS"
     },
     "T1.11": {
       "commit": "bb1659d",
