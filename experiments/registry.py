@@ -247,9 +247,17 @@ LADDER: list[Spec] = [
     Spec("T1.08", 1, "Seed variance measured",
          hypothesis="Across 3 seeds the metric's std is small relative to the effect.",
          falsified_by="std >= the effect size being claimed.",
-         null_baseline="n/a", metric="metric_std", budget=Budget.CPU, seeds=3,
+         null_baseline="n/a", metric="metric_std", budget=Budget.CPU, seeds=1,
          depends_on=["T1.01"],
-         kills="Any single-seed claim in this repo."),
+         kills="Any single-seed claim in this repo.",
+         notes="seeds=1 AT THE SPEC LEVEL, deliberately, for a spec ABOUT seed "
+               "variance: the GPU job varies seeds [0,1,2] internally in one "
+               "session, because three seeds in one job cost one clone and one "
+               "queue wait, while spec-level seeds=3 launched three IDENTICAL "
+               "jobs (_experiment ignores its seed argument) — 3x quota for zero "
+               "information. That is also how a completed 37-min Kaggle result "
+               "was thrown away on 2026-08-06: run #2 re-ran the staleness guard "
+               "against the budget file run #1 had just dirtied."),
 
     Spec("T1.09", 1, "Fits in T4 memory",
          hypothesis="Peak VRAM < 14 GB at the intended batch size.",
