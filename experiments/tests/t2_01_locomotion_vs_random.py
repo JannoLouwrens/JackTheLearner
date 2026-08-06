@@ -1,0 +1,182 @@
+"""T2.01 — the trained policy must beat random actions by more than luck.
+
+This is the first spec in the ladder whose passing run produces a Jack worth
+keeping: a policy that moves the humanoid better than noise does. Everything
+before it proved machinery; this is the first capability.
+
+The bar is deliberately modest — beat RANDOM, not walk well — because its job is
+to prove the training loop trains, end to end, on the real environment: batched
+rollout (collect_rollout_vec) -> vectorised GAE -> PPO update -> a return that
+climbs. T2.02 raises the bar to the honest 140K-param MLP baseline afterwards.
+
+Statistics, pre-registered:
+  - 3 seeds trained independently; evaluation is deterministic (mean action).
+  - sigma = max(std of trained means across seeds, std of random episode
+    returns) — whichever noise source is larger bounds the claim.
+  - PASS needs (trained_mean - random_mean) >= 5 * sigma, per the spec, AND
+    every individual seed beating the random mean (no seed carried by another).
+  - CONTROL: the untrained network, same architecture, must NOT clear the same
+    bar. If it does, the bar measures architecture bias, not learning.
+
+Wall-clock is bounded per seed rather than step-bounded: the budget is gpu<2h
+and a fixed step count at unknown VM throughput would either waste quota or
+overrun it. The actual env-steps completed are recorded in the metrics, so the
+result is attributable regardless.
+
+T1.08's noise-floor discipline applies: the seed spread is IN the check, not a
+footnote.
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from ..gpu import build_job, submit
+from ..protocol import Ledger, run_spec
+from ..registry import BY_ID
+
+SEEDS = [0, 1, 2]
+N_ENVS = 8
+ROLLOUT_STEPS = 128          # per env per iteration -> 1024-sample PPO batches
+TRAIN_MINUTES_PER_SEED = 22  # 3 seeds + evals + install fits gpu<2h
+EVAL_EPISODES = 5
+RANDOM_EPISODES = 10
+MIN_SIGMA_ADVANTAGE = 5.0
+
+JOB = r'''
+import subprocess as _sp, sys as _sys
+_sp.run([_sys.executable, "-m", "pip", "install", "-q", "gymnasium[mujoco]"],
+        check=True)
+
+import json, time, numpy as np, torch
+from TrainingPipeline import TrainingPipeline, PipelineConfig
+
+def eval_policy(tp, episodes, random_actions=False):
+    """Deterministic evaluation: mean action, no exploration noise."""
+    env = tp.make_env()
+    returns = []
+    for _ in range(episodes):
+        obs, _ = env.reset()
+        done, total = False, 0.0
+        while not done:
+            if random_actions:
+                act = env.action_space.sample()
+            else:
+                with torch.no_grad():
+                    on = tp.normalize_obs(obs)
+                    ot = torch.tensor(on, dtype=torch.float32,
+                                      device=tp.device).unsqueeze(0)
+                    out = tp.model(tp.project_obs(ot))
+                    act = out["actions"][0, 0, :].cpu().numpy()
+            obs, r, term, trunc, _ = env.step(act)
+            total += float(r)
+            done = term or trunc
+        returns.append(total)
+    env.close()
+    return returns
+
+def train_one(seed, minutes):
+    torch.manual_seed(seed); np.random.seed(seed)
+    tp = TrainingPipeline(PipelineConfig())
+    tp.make_optimizer(phase=3)
+
+    untrained = eval_policy(tp, __EVAL_EPS__)          # control: same arch, no training
+
+    envs = tp.make_vec_envs(__N_ENVS__)
+    deadline = time.time() + minutes * 60
+    iters = steps = 0
+    while time.time() < deadline:
+        buf = tp.collect_rollout_vec(envs, n_steps=__ROLLOUT__)
+        tp.rl_update(buf)
+        iters += 1
+        steps += __ROLLOUT__ * __N_ENVS__
+    envs.close()
+
+    trained = eval_policy(tp, __EVAL_EPS__)
+    return {"seed": seed, "iters": iters, "env_steps": steps,
+            "untrained_returns": untrained, "trained_returns": trained,
+            "trained_mean": float(np.mean(trained)),
+            "untrained_mean": float(np.mean(untrained))}
+
+t0 = time.time()
+tp0 = TrainingPipeline(PipelineConfig())
+random_returns = eval_policy(tp0, __RANDOM_EPS__, random_actions=True)
+del tp0
+
+out = {"gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu",
+       "random_returns": random_returns,
+       "seeds": [train_one(s, __MINUTES__) for s in __SEEDS__],
+       "wall_minutes": round((time.time() - t0) / 60, 1)}
+import os as _o
+json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "t201.json"), "w"), indent=1)
+print("DONE", json.dumps({k: out[k] for k in ("gpu", "wall_minutes")}), flush=True)
+'''
+
+
+def _submit() -> dict:
+    body = (JOB.replace("__SEEDS__", repr(SEEDS))
+               .replace("__N_ENVS__", repr(N_ENVS))
+               .replace("__ROLLOUT__", repr(ROLLOUT_STEPS))
+               .replace("__MINUTES__", repr(TRAIN_MINUTES_PER_SEED))
+               .replace("__EVAL_EPS__", repr(EVAL_EPISODES))
+               .replace("__RANDOM_EPS__", repr(RANDOM_EPISODES)))
+    job = build_job(body)
+    res = submit(job, prefer="kaggle", est_hours=1.8, timeout_s=9000,
+                 fetch=["t201.json"])
+    if not res.ok:
+        raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")
+    path = res.artifacts.get("t201.json")
+    if not path:
+        raise RuntimeError(f"no artifact from {res.backend}. message={res.message!r} "
+                           f"stdout_tail={res.stdout[-400:]!r}")
+    d = json.loads(Path(path).read_text())
+    d["backend"] = res.backend
+    return d
+
+
+_CACHE: dict = {}
+
+
+def _stats(vals):
+    n = len(vals)
+    m = sum(vals) / n
+    return m, (sum((v - m) ** 2 for v in vals) / max(n - 1, 1)) ** 0.5
+
+
+def _experiment(seed: int) -> dict:
+    _CACHE.update(_submit())
+    rnd_mean, rnd_std = _stats(_CACHE["random_returns"])
+    trained_means = [s["trained_mean"] for s in _CACHE["seeds"]]
+    tr_mean, tr_std = _stats(trained_means)
+    sigma = max(tr_std, rnd_std, 1e-6)
+    return {
+        "gpu": _CACHE["gpu"], "backend": _CACHE["backend"],
+        "wall_minutes": _CACHE["wall_minutes"],
+        "env_steps_per_seed": [s["env_steps"] for s in _CACHE["seeds"]],
+        "random_mean": round(rnd_mean, 1), "random_std": round(rnd_std, 2),
+        "trained_means": [round(m, 1) for m in trained_means],
+        "trained_mean": round(tr_mean, 1), "trained_std": round(tr_std, 2),
+        "sigma_used": round(sigma, 2),
+        "sigma_advantage": round((tr_mean - rnd_mean) / sigma, 2),
+        "all_seeds_beat_random": all(m > rnd_mean for m in trained_means),
+    }
+
+
+def _control(seed: int) -> dict:
+    """Untrained same-architecture network must NOT clear the bar."""
+    rnd_mean, rnd_std = _stats(_CACHE["random_returns"])
+    unt_means = [s["untrained_mean"] for s in _CACHE["seeds"]]
+    u_mean, u_std = _stats(unt_means)
+    sigma = max(u_std, rnd_std, 1e-6)
+    return {"untrained_mean": round(u_mean, 1),
+            "untrained_sigma_advantage": round((u_mean - rnd_mean) / sigma, 2)}
+
+
+def _check(m: dict, c: dict) -> bool:
+    return (m["sigma_advantage"] >= MIN_SIGMA_ADVANTAGE
+            and m["all_seeds_beat_random"]
+            and c["untrained_sigma_advantage"] < MIN_SIGMA_ADVANTAGE)
+
+
+def run(ledger: Ledger | None = None):
+    return run_spec(BY_ID["T2.01"], _experiment, _check, control_fn=_control, ledger=ledger)
