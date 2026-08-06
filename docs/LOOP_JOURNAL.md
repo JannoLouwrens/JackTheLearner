@@ -210,3 +210,32 @@ must stay FAIL until a run says otherwise. Then T1.04, T1.05, T1.06.
 Infrastructure: experiments/gpu.py gained repo_preamble/build_job — a GPU job now
 clones the public repo and pins a ref. This is the unlock; CPU here is ~2 s/step
 against ~0.05 s on a T4. Do not iterate training on this box.
+
+## 2026-08-06 — T2.01 failed; three PPO bugs found and fixed
+
+T2.01 measured trained -4334 vs untrained +170 vs random +122. The untrained
+CONTROL passing while the experiment collapsed is what localised the fault to
+the RL update rather than the architecture. Three bugs, none visible in a loss
+curve, all found by instrumenting rather than reading:
+
+1. No return normalization. vf_loss 540.5 vs pg_loss 0.267; value_head sits on
+   the SHARED trunk, so with vf_coef=0.43 the value term was ~870x the policy
+   term and after clipping the policy gradient was a rounding error in the
+   update DIRECTION. Fixed with a running return scale (scale only, not
+   centred). MEASURED: vf/pg 870 -> 3.3.
+2. log_std unbounded (entropy bonus inflates it forever) -> clamped to
+   [-4.6, 0].
+3. Actions never clipped to the env's +-0.4 -> |a| hit 2.37 in two iterations;
+   MuJoCo clipped silently so PPO scored components that never touched physics.
+
+Guarded permanently by NEW SPEC T2.00 (CPU-cheap, gates every GPU locomotion
+run, with an unnormalized control that MUST explode).
+
+WATCH-ITEM for the next iteration, not yet acted on: locomotion_head is a bare
+nn.Linear with no output bound, and the action mean drifted 1.19 -> 2.27 within
+two iterations. Clipping keeps this CORRECT but saturates the policy: every
+value past 0.4 becomes the same command, so gradients stop distinguishing them.
+SB3 ships clip-only for Box spaces and it works, so this is deliberately NOT
+changed without evidence -- T2.01 logs action_absmax per iteration now, and the
+learning curve should settle it. If reward stalls while |a| grows, squash or
+penalise; if reward climbs, leave it alone.

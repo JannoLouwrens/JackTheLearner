@@ -15,6 +15,27 @@ from .protocol import Budget, Spec
 
 EXPANSION: list[Spec] = [
 
+    Spec("T2.00", 2, "The RL update is sane",
+         hypothesis="Value and policy losses stay within an order of magnitude "
+                    "of each other, log_std stays bounded, and actions reaching "
+                    "the environment stay inside its range.",
+         falsified_by="vf/pg ratio above 50, log_std outside [-4.6, 0], or an "
+                      "action exceeding the env limit.",
+         null_baseline="Unnormalized returns — the configuration that produced "
+                       "vf/pg ~870 and a policy 100x worse than doing nothing.",
+         metric="max_vf_pg_ratio", budget=Budget.CPU, depends_on=["T0.06"],
+         control="With normalize_returns disabled the ratio MUST explode — a "
+                 "guard that passes in both configurations measures nothing.",
+         kills="Every GPU locomotion run. This gates T2.01/T2.02 and costs CPU "
+               "minutes, so a broken update can never again burn GPU hours.",
+         notes="Written after T2.01 measured -4334 trained vs +170 untrained. "
+               "Three bugs, none visible in a loss curve: no return "
+               "normalization (vf_loss 540.5 vs pg_loss 0.267 on a SHARED "
+               "trunk), unbounded log_std, and actions never clipped to the env "
+               "range (|a| hit 2.37 vs a +-0.4 limit, so MuJoCo clipped "
+               "silently and PPO scored components that never touched physics)."),
+
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "
