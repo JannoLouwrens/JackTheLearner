@@ -260,6 +260,22 @@ def main() -> int:
     if not args.spec and not args.gate and args.tier is None:
         return cmd_status(ledger)
 
+    # Fail fast on stale code. The guard used to live inside build_job, i.e.
+    # AFTER the runner lock and any setup: T2.01 spent 70 minutes queued before
+    # discovering that an unrelated edit (playground.py) had dirtied the tree.
+    # A precondition that can be checked in milliseconds must not be checked
+    # after an hour.
+    if args.spec or args.tier is not None or args.gate:
+        needs_gpu = any((BY_ID.get(x) or BY_ID.get("T0.01")).budget.value.startswith("gpu")
+                        for x in (args.spec or []) if x in BY_ID)
+        if needs_gpu:
+            from .gpu import assert_ref_is_current
+            try:
+                assert_ref_is_current("main")
+            except RuntimeError as e:
+                print(f"Refusing to start: {e}")
+                return 1
+
     if args.gate:
         ids = [s.id for s in LADDER if ledger.status(s.id) is Status.PASS]
         print(f"Regression gate: {len(ids)} previously-passing tests\n")
