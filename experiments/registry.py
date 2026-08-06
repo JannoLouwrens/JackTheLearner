@@ -595,6 +595,11 @@ LADDER: list[Spec] = [
 ]
 
 
+# The expanded ladder: GOAL.md made falsifiable (playground, unified brain,
+# curiosity, memory). Details in docs/MASTER_PLAN.md and docs/research/.
+from .registry_expansion import EXPANSION
+LADDER.extend(EXPANSION)
+
 BY_ID = {s.id: s for s in LADDER}
 
 
