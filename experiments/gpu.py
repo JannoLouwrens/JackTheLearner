@@ -18,6 +18,7 @@ runs here rather than in a cloud runner.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import tempfile
 import time
@@ -286,10 +287,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     output collected afterwards, so this polls rather than blocking on a process.
     """
     t0 = time.time()
-    slug = f"jack-ladder-{int(t0)}"
     work = Path(tempfile.mkdtemp(dir="/data"))
-    # Pascal-compatible torch first, then the job itself.
-    (work / "kernel.py").write_text(KAGGLE_TORCH_FIX + "\n" + script.read_text())
 
     # `kaggle config view` prints text, not JSON; read the username from it.
     cfg = subprocess.run([KAGGLE, "config", "view"], capture_output=True, text=True).stdout
@@ -297,6 +295,21 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
                      if l.strip().startswith("- username")), None)
     if not username:
         return JobResult("kaggle", False, message="could not determine Kaggle username")
+
+    # REATTACH, not resubmit. If the local runner dies while a kernel runs
+    # (session restart SIGPIPEd T2.01 v3's waiter at ~80 min in), the kernel
+    # keeps computing and its artifact survives on Kaggle — the only thing lost
+    # is the process that was waiting. JACK_REUSE_KERNEL=<slug or user/slug>
+    # skips the push and polls/fetches that kernel instead, so recovering a
+    # finished run costs zero GPU quota. One-shot by design: the env var names
+    # ONE kernel, so only the next kaggle submission reuses it.
+    reuse = os.environ.get("JACK_REUSE_KERNEL", "").strip()
+    if reuse:
+        slug = reuse.split("/", 1)[1] if "/" in reuse else reuse
+    else:
+        slug = f"jack-ladder-{int(t0)}"
+    # Pascal-compatible torch first, then the job itself.
+    (work / "kernel.py").write_text(KAGGLE_TORCH_FIX + "\n" + script.read_text())
 
     (work / "kernel-metadata.json").write_text(json.dumps({
         "id": f"{username}/{slug}",
@@ -309,11 +322,12 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         "enable_internet": True,
     }, indent=2))
 
-    rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work),
-                         "--accelerator", "nvidiaTeslaT4"], 300)
-    if rc != 0:
-        return JobResult("kaggle", False, out, err, time.time() - t0,
-                         message=f"push failed: {err.strip()[:200]}")
+    if not reuse:
+        rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work),
+                             "--accelerator", "nvidiaTeslaT4"], 300)
+        if rc != 0:
+            return JobResult("kaggle", False, out, err, time.time() - t0,
+                             message=f"push failed: {err.strip()[:200]}")
 
     deadline = time.time() + timeout_s
     status = "queued"

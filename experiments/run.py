@@ -145,16 +145,23 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     }
     _spec = _BY_ID.get(spec_id)
     _timeout = _budget_seconds.get(_spec.budget.value if _spec else "", 3600)
+    # The ran_at of any PRE-EXISTING entry, so a crashed child cannot pass the
+    # old result off as its own. T2.01 v3's child died (SIGPIPE from a killed
+    # session pipe) after v2 had recorded a FAIL: the old check — "is there an
+    # entry at all?" — found v2's entry and reported it as the rerun's outcome.
+    # A rerun that changes nothing must be an ERROR, not an echo.
+    _prev = ledger.results.get(spec_id)
+    _prev_ran_at = getattr(_prev, "ran_at", None)
     proc = sp.run([sys.executable, "-c", code], capture_output=True, text=True,
                   cwd=str(Path(__file__).parent.parent), timeout=_timeout)
     # The child wrote the ledger itself; re-read to see what it recorded.
     fresh = Ledger()
     ledger.results.update(fresh.results)
     res = fresh.results.get(spec_id)
-    if res is None:
+    if res is None or getattr(res, "ran_at", None) == _prev_ran_at:
         tail = (proc.stderr or proc.stdout or "")[-300:].strip()
         res = Result(spec_id=spec_id, status=Status.ERROR,
-                     message=f"child produced no result: {tail}")
+                     message=f"child recorded nothing (rc={proc.returncode}): {tail}")
         ledger.record(res)
     return res
 
