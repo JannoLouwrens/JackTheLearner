@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 28 / 105 demonstrated
+## 29 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -60,7 +60,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Each trainable module drives loss below 1e-2 on ONE fixed batch.
       - _dies if:_ Loss plateaus above 1e-2 after 500 steps.
       - _then delete:_ The module. If it cannot memorise one batch it will never learn a task.
-- [x] **T1.02** Shuffled-target control (generalisation)
+- [!] **T1.02** Shuffled-target control (generalisation)
       - _asserts:_ On HELD-OUT states, a structured task generalises and a shuffled one does not.
       - _dies if:_ Held-out error is the same whether or not a state->action mapping exists.
       - _then delete:_ The premise that this architecture can learn a state->action mapping at all. If structure gives no held-out advantage, GPU hours cannot help.
@@ -293,7 +293,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T2.20** Episodic memory helps the next episode
       - _asserts:_ With the episodic store, a hidden object is found faster in episode N+1 than by a memoryless agent.
       - _dies if:_ Search time does not drop across episodes.
-- [ ] **ME.1** Event log: what happened is retrievable
+- [x] **ME.1** Event log: what happened is retrievable
       - _asserts:_ Cued QA over Jack's own event stream answers >=80% at 1k events via recency x importance x similarity scoring.
       - _dies if:_ Accuracy at 1k events <= recency-only retrieval.
 - [ ] **ME.2** Owner memory lives on disk
@@ -323,7 +323,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **ME.8** Working memory survives restarts
       - _asserts:_ A recurrent state checkpointed to disk resumes mid-episode after a kill; zeroing it mid-episode hurts.
       - _dies if:_ Post-restart behavior equals a zeroed-state agent.
-- [ ] **ME.9** He remembers what he hears, says, and does — attributed
+- [x] **ME.9** He remembers what he hears, says, and does — attributed
       - _asserts:_ Cued recall works across all three channels (heard utterance, own utterance, own action) at >=80% each, AND source attribution survives: 'what did I tell you' is answered from heard-events, 'what did you say/do' from own-events, per speaker across >=3 interleaved speakers.
       - _dies if:_ Any channel at chance, or attribution confuses who-said-what once conversations interleave.
 - [ ] **ME.10** Keeps the memory AND learns the general skill

@@ -1,6 +1,59 @@
 {
   "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
   "results": {
+    "ME.1": {
+      "commit": "10e3aef",
+      "control_metrics": {
+        "recency_only_recall": 0.0
+      },
+      "duration_s": 0.19,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "cued_recall": 0.8667,
+        "events": 1000,
+        "fabricated_abstention": 1.0,
+        "recall_after_reload": 0.8667
+      },
+      "ran_at": "2026-08-07T21:11:01",
+      "seeds": [
+        0
+      ],
+      "spec_id": "ME.1",
+      "status": "PASS"
+    },
+    "ME.9": {
+      "commit": "10e3aef",
+      "control_metrics": {
+        "swapped_mean_acc": 0.0,
+        "swapped_mean_acc_std": 0.0
+      },
+      "duration_s": 0.18,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "acc_did": 1.0,
+        "acc_did_std": 0.0,
+        "acc_heard": 1.0,
+        "acc_heard_std": 0.0,
+        "acc_said": 1.0,
+        "acc_said_std": 0.0,
+        "events": 360.0,
+        "events_std": 0.0,
+        "pooled_null_mean": 0.3,
+        "pooled_null_mean_std": 0.055686,
+        "pooled_null_worst": 0.141667,
+        "pooled_null_worst_std": 0.058926
+      },
+      "ran_at": "2026-08-07T21:11:03",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "ME.9",
+      "status": "PASS"
+    },
     "PG.1": {
       "commit": "79af208",
       "control_metrics": {
@@ -394,29 +447,20 @@
       "status": "PASS"
     },
     "T1.02": {
-      "commit": "e69dc7a",
-      "control_metrics": {
-        "shuffled_heldout": 0.53441,
-        "shuffled_train_loss": 0.10552
-      },
-      "duration_s": 1462.67,
+      "commit": "10e3aef",
+      "control_metrics": {},
+      "duration_s": 8.16,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "",
-      "metrics": {
-        "beats_mean_baseline": 13.196,
-        "device": "cuda",
-        "heldout_structure_advantage": 23.911,
-        "mean_baseline": 0.29493,
-        "reference_gain": 7.999,
-        "reference_heldout": 0.03687,
-        "structured_heldout": 0.02235
-      },
-      "ran_at": "2026-08-05T05:33:33",
+      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1 | fetch failed: /content/out.json: rc=1 exists=False [colab] Session 'ladder-1786137043' not found.; kaggle: 0.0h left, need 0.4h",
+      "metrics": {},
+      "ran_at": "2026-08-07T21:10:48",
       "seeds": [
-        0
+        0,
+        1,
+        2
       ],
       "spec_id": "T1.02",
-      "status": "PASS"
+      "status": "ERROR"
     },
     "T1.03": {
       "commit": "3e38ed9",
@@ -503,31 +547,47 @@
       "status": "PASS"
     },
     "T1.06": {
-      "commit": "bb55c15",
+      "commit": "10e3aef",
       "control_metrics": {
         "final_loss": NaN,
-        "first_bad_step": 1,
-        "max_grad_abs": 0.08,
-        "nonfinite_grad": 399,
-        "nonfinite_loss": 398,
-        "nonfinite_weight": 7,
-        "steps": 400
+        "final_loss_std": NaN,
+        "first_bad_step": 1.0,
+        "first_bad_step_std": 0.0,
+        "max_grad_abs": 0.063,
+        "max_grad_abs_std": 0.01314,
+        "nonfinite_grad": 399.0,
+        "nonfinite_grad_std": 0.0,
+        "nonfinite_loss": 398.0,
+        "nonfinite_loss_std": 0.0,
+        "nonfinite_weight": 7.0,
+        "nonfinite_weight_std": 0.0,
+        "steps": 400.0,
+        "steps_std": 0.0
       },
-      "duration_s": 1114.28,
+      "duration_s": 3898.69,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
-        "final_loss": 0.0023,
-        "first_bad_step": -1,
-        "max_grad_abs": 0.113,
-        "nonfinite_grad": 0,
-        "nonfinite_loss": 0,
-        "nonfinite_weight": 0,
-        "steps": 400
+        "final_loss": 0.00209,
+        "final_loss_std": 0.0002,
+        "first_bad_step": -1.0,
+        "first_bad_step_std": 0.0,
+        "max_grad_abs": 0.081333,
+        "max_grad_abs_std": 0.022691,
+        "nonfinite_grad": 0.0,
+        "nonfinite_grad_std": 0.0,
+        "nonfinite_loss": 0.0,
+        "nonfinite_loss_std": 0.0,
+        "nonfinite_weight": 0.0,
+        "nonfinite_weight_std": 0.0,
+        "steps": 400.0,
+        "steps_std": 0.0
       },
-      "ran_at": "2026-08-05T07:08:22",
+      "ran_at": "2026-08-07T21:10:37",
       "seeds": [
-        0
+        0,
+        1,
+        2
       ],
       "spec_id": "T1.06",
       "status": "PASS"
