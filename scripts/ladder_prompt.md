@@ -23,31 +23,29 @@ never received a gradient. Do not recreate it.
 `next` lists specs whose dependencies pass. Take the FIRST one in priority order
 below and finish it. One spec per iteration is a good iteration.
 
-## Priority order
+## Priority order (updated 2026-08-07; the ledger is still the authority)
 
-1. Tier 0 remaining: T0.03, T0.04, T0.05 (checkpoint fidelity, resume without
-   discontinuity, preemption survival), then T0.06-T0.08, then T0.09-T0.11 (Colab
-   round-trip, Kaggle round-trip, failover), then T0.12.
-2. Tier 1 remaining. T1.03 and T1.11 now PASS — the action-path defect is fixed
-   and `action_training_loss()` is the one loss that trains what drives the robot.
+State: Tiers 0-1 fully PASS (most re-verified at 3 seeds), PG.1/PG.2 and T2.00
+PASS, T2.01 FAIL at 4.06-sigma with a PLATEAUED curve at 704K steps/seed — that
+is the architecture verdict, not a bug. Read docs/LOOP_JOURNAL.md's tail first.
 
-   T1.02 is the open one, and its history is the cautionary tale. It has been
-   redesigned twice, both times because the EXPERIMENT was wrong, never to make
-   the model look better:
-     v1 measured training FIT on one batch -> 0.999, structured and shuffled
-        indistinguishable, because a 58M net memorises 8 pairs either way.
-     v2 measured GENERALISATION but drew 64 training samples for a map with
-        obs_dim=348. That system is underdetermined; no architecture can pass it.
-   What proved v2 unlearnable was adding a `regress` reference arm — plain MSE,
-   no flow matching anywhere. When the simplest possible learner also fails, the
-   task is the problem, not the model. ALWAYS carry a reference arm like that.
-
-   Genuine findings from the GPU sweep, still to be acted on: integration steps
-   5..100 change held-out error by <2% (discretisation is NOT the bottleneck), and
-   Beta(1,1.5) timestep sampling beat uniform (1.062 vs 1.174), consistent with the
-   conditional target (x1-x_t)/(1-t) diverging as t->1. Re-check both on a task
-   that is actually identifiable before changing repo code.
-3. Tier 2 onward: real training, needs GPU.
+1. CPU-implementable specs, cheapest first: the ME family (ME.1/ME.9 are
+   implemented — run them if not yet recorded; then ME.2-ME.5, ME.8, ME.10 —
+   EpisodicMemory.py is the substrate and its docstring explains the contract),
+   then UB.1-8 / CU.1-7 / T2.14-20 where implementable without GPU.
+2. GPU budget calendar — the owner chose FREE COMPUTE ONLY (no rented GPUs):
+   - Kaggle 30h/week resets SUNDAY. Before Sunday assume ~0h left. After reset,
+     the FIRST Kaggle job is T2.02 (the 140K-MLP-vs-transformer showdown at 2M
+     steps — its kill-criterion settles the D1 trunk decision). GPU_LONG goes to
+     Kaggle only.
+   - Colab takes GPU_SHORT jobs; if it returns "Service Unavailable" the GPUs
+     are rationed — record the ERROR and retry next iteration, don't fight it.
+3. T2.01 stays FAILED until D1 is decided. Do NOT relaunch it with more compute;
+   the curve plateaued. Evidence for D1 lives in /tmp/mlp_probe.json (local MLP
+   baseline at 704K steps) — if present, journal its numbers next to v4's 261.
+4. One GPU submission per spec: run_spec calls _experiment once PER SEED, so
+   guard any _submit() with a module cache (T2.01 shows the pattern) or you will
+   pay for the same kernel three times.
 
 ## USE THE GPU. This is the most expensive lesson learned so far.
 
