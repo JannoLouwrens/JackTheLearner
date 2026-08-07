@@ -22,6 +22,29 @@
       "spec_id": "ME.1",
       "status": "PASS"
     },
+    "ME.2": {
+      "commit": "5e6d698",
+      "control_metrics": {
+        "adherence_wiped": 0.175
+      },
+      "duration_s": 0.07,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "adherence_after_restart": 1.0,
+        "adherence_after_supersede": 1.0,
+        "base_rate": 0.25,
+        "extracted_topics": 40,
+        "recency_null_adherence": 0.075,
+        "stale_choice_rate": 0.0
+      },
+      "ran_at": "2026-08-07T22:10:50",
+      "seeds": [
+        0
+      ],
+      "spec_id": "ME.2",
+      "status": "PASS"
+    },
     "ME.9": {
       "commit": "10e3aef",
       "control_metrics": {

@@ -364,3 +364,18 @@ script records ME.1 and ME.9 officially. NEXT ITERATION: do not touch the
 runner while the lock is held — check /tmp/recover_chain.log and
 /tmp/me_runs.log, commit whatever the chain wrote, and if ME.1/ME.9 recorded,
 move to implementing ME.2.
+
+## 2026-08-07 (late) — ME.2 PASS: owner memory lives in profile.json
+
+Committed the recover chain's ledger writes first (T1.01/T1.06 re-PASS, ME.1
++ ME.9 recorded, T1.02 ERROR on zero GPU quota — expected pre-Sunday), and
+removed the stale /tmp/jack-ladder.lock (PID 541225 dead). Then implemented
+OwnerProfile.py (profile.json, latest-statement-wins, regex extraction, no
+LLM) and me_2_owner_memory.py. ME.2 PASS: adherence_after_restart 1.0,
+after_supersede 1.0, stale_choice_rate 0.0, extracted_topics 40/40,
+recency-null 0.075, wipe control 0.175 (~0.25 base rate). Falsification
+sanity check done off-ledger: breaking supersession drops adherence to 0.5
+and stale rate to 1.0 → check fails, so the test has teeth. 30/105 specs
+demonstrated. NEXT ITERATION: ME.3 (reflections beat raw events) — same
+substrate family, CPU-only; still no Kaggle quota until Sunday, and T2.02
+remains the first Kaggle job after the reset.

@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 29 / 105 demonstrated
+## 30 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -296,7 +296,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **ME.1** Event log: what happened is retrievable
       - _asserts:_ Cued QA over Jack's own event stream answers >=80% at 1k events via recency x importance x similarity scoring.
       - _dies if:_ Accuracy at 1k events <= recency-only retrieval.
-- [ ] **ME.2** Owner memory lives on disk
+- [x] **ME.2** Owner memory lives on disk
       - _asserts:_ A preference stated once is honoured next session; a later contradiction supersedes it.
       - _dies if:_ Adherence <= a fresh no-memory agent's base rate.
 - [ ] **ME.3** Reflections beat raw events
