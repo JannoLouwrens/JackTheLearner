@@ -183,7 +183,14 @@ def _stats(vals):
 
 
 def _experiment(seed: int) -> dict:
-    _CACHE.update(_submit())
+    # ONE submission for the whole spec. run_spec calls _experiment once per
+    # declared seed (3), but the JOB trains all three seeds internally — an
+    # unguarded _submit() here launched a second identical 5.5h kernel the
+    # moment the first one's artifact landed (2026-08-07, ~11 GPU-hours of
+    # redundant compute; v3 only escaped because JACK_REUSE_KERNEL happened to
+    # pin all three calls to one kernel).
+    if not _CACHE:
+        _CACHE.update(_submit())
     rnd_mean, rnd_std = _stats(_CACHE["random_returns"])
     trained_means = [s["trained_mean"] for s in _CACHE["seeds"]]
     tr_mean, tr_std = _stats(trained_means)
