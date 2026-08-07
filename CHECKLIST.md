@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 25 / 62 demonstrated
+## 28 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -105,7 +105,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **T2.01** Locomotion beats a random policy
+- [!] **T2.01** Locomotion beats a random policy  — all_seeds_beat_random=1.0; all_seeds_beat_random_std=0.0
       - _asserts:_ Trained policy return exceeds random-action return by >5 sigma.
       - _dies if:_ Return within seed noise of random.
 - [ ] **T2.02** Locomotion beats the honest MLP baseline
@@ -248,3 +248,158 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ With every modality live simultaneously - vision, proprioception, touch, audio, language - Jack takes a spoken instruction, acts on the right object, and keeps learning, in one continuous episode.
       - _dies if:_ Any capability demonstrated in isolation degrades below its own single-modality result once the others are running.
       - _then delete:_ The claim that the parts compose. Tiers 2-5 prove each capability separately, and separate is not together.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [x] **T2.00** The RL update is sane
+      - _asserts:_ Value and policy losses stay within an order of magnitude of each other, log_std stays bounded, and actions reaching the environment stay inside its range.
+      - _dies if:_ vf/pg ratio above 50, log_std outside [-4.6, 0], or an action exceeding the env limit.
+      - _then delete:_ Every GPU locomotion run. This gates T2.01/T2.02 and costs CPU minutes, so a broken update can never again burn GPU hours.
+- [x] **PG.1** Playground generates and is physically sound
+      - _asserts:_ A procedural room (ramp, stairs, ladder, objects, seesaw, pool, noise panel) builds from a parameter vector and obeys physics: boxes slide iff tan(theta) > mu; energy bounded at rest.
+      - _dies if:_ Objects jitter at rest, energy diverges, or a parameter draw produces an invalid MJCF.
+      - _then delete:_ Every curiosity claim — a broken world teaches broken lessons.
+- [x] **PG.2** Water works: buoyancy + drag
+      - _asserts:_ A passive ragdoll floats at the equilibrium depth its density ratio predicts (±10%); submerged motion feels drag.
+      - _dies if:_ Ragdoll sinks/launches, or equilibrium depth off >10%.
+- [ ] **PG.3** Ladder is climbable in principle (adhesion hands)
+      - _asserts:_ Adhesion actuators on the hand geoms let a scripted kinematic sequence ascend one rung; falling produces clean, resumable episodes.
+      - _dies if:_ Adhesion cannot support body weight at any gain, or falls corrupt the episode stream.
+- [ ] **PG.4** Noisy-TV panel traps naive curiosity
+      - _asserts:_ The re-randomizing texture panel is a working trap: a prediction-error agent fixates on it; dwell-time metric works.
+      - _dies if:_ The naive-curiosity control arm does NOT fixate — then the fixture cannot certify any curiosity claim.
+- [ ] **PG.5** Procedural contact audio with localization labels
+      - _asserts:_ Modal-resonator synthesis on MuJoCo contact events yields stereo audio whose panning matches source bearing.
+      - _dies if:_ Bearing decoded from stereo does not match ground truth.
+- [ ] **T2.14** Imitation from real motion capture
+      - _asserts:_ BC on the CMU corpus reaches held-out action error below mean-action AND below nearest-neighbour retrieval.
+      - _dies if:_ A lookup table (NN retrieval) matches the model.
+- [ ] **T2.15** Free-form language routes to the right task
+      - _asserts:_ Novel paraphrases of known commands map to the correct command cluster above chance (the LLM->task handoff).
+      - _dies if:_ Held-out phrasings route at chance.
+- [ ] **T2.16** Hindsight goal-reaching (the flow-matching weld)
+      - _asserts:_ Hindsight-relabeled flow regression reaches commanded outcomes above chance with zero RL machinery.
+      - _dies if:_ Reach-rate <= a policy trained on shuffled goal labels.
+- [ ] **T2.17** Progress and success estimation
+      - _asserts:_ Predicted progress correlates with ground-truth stage on held-out rollouts including failures.
+      - _dies if:_ A linear-in-timestep predictor matches it (the null everyone skips).
+      - _then delete:_ Gates LE4/LE5/PL4 — no RL-beyond-demos without a success signal.
+- [ ] **T2.18** Chunking earns its keep under latency
+      - _asserts:_ Some chunk length k>1 beats k=1 at matched FLOPs, and chunk-overlap beats naive swap under 100-300ms latency.
+      - _dies if:_ k=1 dominates all k, or overlap gives nothing at latency.
+- [ ] **T2.19** Flow head handles multimodal actions
+      - _asserts:_ On a bimodal task (pass obstacle left OR right) the flow head succeeds where MSE regression collapses to the mean.
+      - _dies if:_ L1/MSE regression matches the flow head — OFT found this on some benchmarks; genuine falsification risk, and if it happens the flow head loses its justification.
+- [ ] **T2.20** Episodic memory helps the next episode
+      - _asserts:_ With the episodic store, a hidden object is found faster in episode N+1 than by a memoryless agent.
+      - _dies if:_ Search time does not drop across episodes.
+- [ ] **ME.1** Event log: what happened is retrievable
+      - _asserts:_ Cued QA over Jack's own event stream answers >=80% at 1k events via recency x importance x similarity scoring.
+      - _dies if:_ Accuracy at 1k events <= recency-only retrieval.
+- [ ] **ME.2** Owner memory lives on disk
+      - _asserts:_ A preference stated once is honoured next session; a later contradiction supersedes it.
+      - _dies if:_ Adherence <= a fresh no-memory agent's base rate.
+- [ ] **ME.3** Reflections beat raw events
+      - _asserts:_ Aggregation questions answer better from consolidated reflections than from top-k raw events at equal tokens.
+      - _dies if:_ No gain over raw top-k.
+- [ ] **ME.4** Forgetting keeps what matters
+      - _asserts:_ Ebbinghaus decay + reinforce-on-recall + supersede beats FIFO eviction at a fixed store budget.
+      - _dies if:_ FIFO matches it on frequently-referenced old facts.
+- [ ] **ME.5** Retrieval survives growth
+      - _asserts:_ Cued-recall precision@1 stays above the recency null as the store grows 100 -> 100k events.
+      - _dies if:_ Precision falls below recency-only at any decade.
+- [ ] **ME.6** Skill library accelerates composites
+      - _asserts:_ A composite task needing two ledger-verified skills is reached far faster than learning from scratch.
+      - _dies if:_ Retrieve-and-compose ~= from-scratch at equal budget.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **ME.7** Sleep consolidation (SIESTA) holds old knowledge
+      - _asserts:_ After a sleep phase, old-concept accuracy drops <=2 points while new concepts are absorbed beyond wake-only prototypes.
+      - _dies if:_ Catastrophic forgetting after sleep, or sleep never beats wake-only.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **ME.8** Working memory survives restarts
+      - _asserts:_ A recurrent state checkpointed to disk resumes mid-episode after a kill; zeroing it mid-episode hurts.
+      - _dies if:_ Post-restart behavior equals a zeroed-state agent.
+- [ ] **ME.9** He remembers what he hears, says, and does — attributed
+      - _asserts:_ Cued recall works across all three channels (heard utterance, own utterance, own action) at >=80% each, AND source attribution survives: 'what did I tell you' is answered from heard-events, 'what did you say/do' from own-events, per speaker across >=3 interleaved speakers.
+      - _dies if:_ Any channel at chance, or attribution confuses who-said-what once conversations interleave.
+- [ ] **ME.10** Keeps the memory AND learns the general skill
+      - _asserts:_ After episodes are distilled into weights (practice/replay), the verbatim episodic record still answers cued recall at its pre-distillation rate, AND the distilled skill outperforms no-distillation; then the double dissociation: wiping the episodic store leaves the skill intact, wiping the weight update leaves recall intact.
+      - _dies if:_ Distillation degrades recall (learning ate the memory) or recall requires the store at skill-time (nothing was ever in the weights).
+      - _then delete:_ Any design where conversation memory lives only in weights or skills live only in retrieved episodes.
+
+### Tier 3 — ABLATION — does it earn its parameters?
+
+- [ ] **T3.09** The creative loop earns its existence
+      - _asserts:_ Wiring AlphaGeometryLoop into a decision path measurably improves something against the same path without it.
+      - _dies if:_ No measurable difference — currently GUARANTEED, since the loop has ZERO call sites: it constructs, prints 'ENABLED', and is never invoked.
+      - _then delete:_ AlphaGeometryLoop.py (559 lines) — wire it or delete it.
+- [ ] **T3.10** Trunk knowledge survives action training
+      - _asserts:_ Linear probes on frozen-trunk features (object class, color, spatial relation) hold constant through action training AND semantic-task success tracks probe quality.
+      - _dies if:_ Probes drift (gradient leak — a bug), or probes hold while semantic tasks sit at chance (knowledge not reaching the action head — architecture flaw).
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **UB.1** No modality collapse (the ablation matrix)
+      - _asserts:_ With modality dropout, every sense is load-bearing somewhere: zero/noise/shuffle/swap each hurt some task — no all-zero column in the tasks x senses matrix.
+      - _dies if:_ Any sense whose entire column is zero — it is decorative.
+- [ ] **UB.2** The shared trunk beats late fusion
+      - _asserts:_ One self-attention trunk over all modality tokens beats equal-parameter separate-encoders-then-concat.
+      - _dies if:_ Late fusion ties everywhere incl. occlusion tasks — then 'one brain' adds nothing at this scale; report honestly.
+- [ ] **UB.3** Cross-modal masking helps the policy
+      - _asserts:_ Co-training with masked cross-modal prediction (touch from vision+proprio, audio-event from dynamics) improves task success and few-shot adaptation at equal steps.
+      - _dies if:_ No downstream improvement — drop the objective.
+- [ ] **UB.4** Hearing is load-bearing
+      - _asserts:_ Jack turns toward an out-of-view falling object and times occluded contacts using audio.
+      - _dies if:_ Muting audio at eval leaves audio-task success unchanged.
+- [ ] **UB.5** Touch is load-bearing (or honestly redundant)
+      - _asserts:_ Touch improves blind push-recovery beyond proprioception.
+      - _dies if:_ Zeroed touch changes nothing — an HONEST possible outcome: foot force is partly inferable from torques. That is a finding, not a failure of the test.
+- [ ] **UB.6** Contrastive binding: keep only if it moves action
+      - _asserts:_ Audio<->vision alignment improves hearing-task success beyond the same compute spent on BC.
+      - _dies if:_ No task-success delta — binding is retrieval-only here.
+- [ ] **UB.7** UNISON — the headline claim
+      - _asserts:_ The shared co-trained trunk beats BOTH per-sense specialists AND frozen-separate-encoders at matched params/steps, on a battery where each sense matters somewhere.
+      - _dies if:_ The bolt-on baseline ties everywhere.
+- [ ] **UB.8** Flow-head attention ablation
+      - _asserts:_ Interleaved cross+self attention beats cross-only and self-only at equal params (SmolVLA's ablation, reproduced).
+      - _dies if:_ No difference — simplify to cross-only, bank the params.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **CU.1** Goal babbling beats action babbling
+      - _asserts:_ Sampling goals in OUTCOME space covers more distinct outcomes than random action sequences at equal budget.
+      - _dies if:_ Coverage <= the random-action-repeat null (flailing covers ground too).
+- [ ] **CU.2** Learning progress produces an emergent curriculum
+      - _asserts:_ LP-driven goal sampling yields time-ordered mastery (stand -> walk -> push -> ramp) with distinct onsets, and higher final multi-goal success than uniform sampling.
+      - _dies if:_ Mastery onsets simultaneous or seed-random.
+- [ ] **CU.3** Curious without being trapped
+      - _asserts:_ The LP stack explores (coverage grows) with near-zero dwell at the noisy-TV panel.
+      - _dies if:_ Panel dwell share exceeds the random-walk baseline.
+- [ ] **CU.4** Unsupervised skills are real and distilled
+      - _asserts:_ METRA skills on trunk embeddings are decodable from trajectories (>90%) and beat the random-repeat null on displacement; distillation carries them into the flow head.
+      - _dies if:_ Skill classifier at chance (collapse), or displacement <= flailing.
+- [ ] **CU.5** The VLM proposes, learning progress disposes
+      - _asserts:_ VLM-proposed + LP-filtered goals engage the ladder and pool earlier and rate more interesting (blind A/B) than LP-only.
+      - _dies if:_ No rating difference, or VLM goals flood the buffer while their success stays ~0 (hallucinated curriculum).
+- [ ] **CU.6** Affordances emerge from interaction
+      - _asserts:_ The interaction archive predicts pushability/liftability of held-out objects above chance.
+      - _dies if:_ Prediction at chance on novel mass/shape.
+- [ ] **CU.7** Lessons from failure improve retries
+      - _asserts:_ Retrieved one-line lessons written after failures raise retry success beyond pure resampling.
+      - _dies if:_ Retry rate with lessons equals resampling alone (the known confound).
+- [ ] **T5.08** Open-endedness: learning does not saturate
+      - _asserts:_ With ACCEL-style scene mutation + interestingness filter, distinct mastered outcome clusters grow for 8 weeks without plateau.
+      - _dies if:_ Cluster count plateaus while the fixed-scene null keeps pace at equal budget.
+- [ ] **T5.09** Skills transfer across bodies
+      - _asserts:_ Pretraining on morphology variants (limb lengths, masses) speeds learning on a new body versus random init.
+      - _dies if:_ Transfer <= random init, or negative transfer.
+
+### Tier 6 — INTEGRATION
+
+- [ ] **T6.05** Companion battery
+      - _asserts:_ Responses are contingent on user-avatar events; intent is inferred above majority-class; the user zone is violated <1/1000 episodes across reward scales; identity is distinguishable from a re-seeded twin.
+      - _dies if:_ Any leg fails: time-shuffled events show identical response stats, intent at chance, safety trades off against reward, or the twin is indistinguishable.

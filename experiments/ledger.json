@@ -358,27 +358,37 @@
       "status": "PASS"
     },
     "T1.01": {
-      "commit": "bb1659d",
+      "commit": "a533ade",
       "control_metrics": {
         "curve": "0.95071;0.9518;0.95146;0.95448;0.95116;0.95433;0.95249;0.9496;0.95068;0.95015;0.95464",
-        "final_loss": 0.95464,
+        "final_loss": 0.981293,
+        "final_loss_std": 0.020356,
         "improvement_ratio": 1.0,
-        "initial_loss": 0.95071,
-        "trainable_tensors": 0
+        "improvement_ratio_std": 0.0,
+        "initial_loss": 0.981147,
+        "initial_loss_std": 0.022526,
+        "trainable_tensors": 0.0,
+        "trainable_tensors_std": 0.0
       },
-      "duration_s": 584.17,
+      "duration_s": 2145.83,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
         "curve": "0.95071;0.11232;0.00895;0.00494;0.00331;0.00304;0.00272;0.00239;0.00212;0.00201;0.00184",
-        "final_loss": 0.00184,
-        "improvement_ratio": 516.69,
-        "initial_loss": 0.95071,
-        "trainable_tensors": 316
+        "final_loss": 0.001963,
+        "final_loss_std": 0.000141,
+        "improvement_ratio": 501.536667,
+        "improvement_ratio_std": 25.923037,
+        "initial_loss": 0.981147,
+        "initial_loss_std": 0.022526,
+        "trainable_tensors": 316.0,
+        "trainable_tensors_std": 0.0
       },
-      "ran_at": "2026-08-04T16:03:52",
+      "ran_at": "2026-08-07T20:05:37",
       "seeds": [
-        0
+        0,
+        1,
+        2
       ],
       "spec_id": "T1.01",
       "status": "PASS"
@@ -409,58 +419,74 @@
       "status": "PASS"
     },
     "T1.03": {
-      "commit": "bb1659d",
+      "commit": "3e38ed9",
       "control_metrics": {},
-      "duration_s": 10.17,
+      "duration_s": 185.9,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
         "modalities_fed": "vision,touch,audio,goal,task",
         "orphan_fraction": 0.0483,
-        "params_without_grad": 2698619,
-        "total_params": 1767267976,
-        "trainable_params": 55891592,
+        "orphan_fraction_std": 0.0,
+        "params_without_grad": 2698619.0,
+        "params_without_grad_std": 0.0,
+        "total_params": 1767267976.0,
+        "total_params_std": 0.0,
+        "trainable_params": 55891592.0,
+        "trainable_params_std": 0.0,
         "worst_offenders": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539"
       },
-      "ran_at": "2026-08-04T16:04:03",
+      "ran_at": "2026-08-07T14:43:07",
       "seeds": [
-        0
+        0,
+        1,
+        2
       ],
       "spec_id": "T1.03",
       "status": "PASS"
     },
     "T1.04": {
-      "commit": "06e5d33",
+      "commit": "3e38ed9",
       "control_metrics": {
         "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_encoder=264,704; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.action_tokens=8,192; tokenizer.body_embed=61,952; tokenizer.cls_token=512; tokenizer.goal_token=512; tokenizer.joint_embed=4,608; tokenizer.token_type_embed=3,072; value_head.predictor=132,097",
         "moved_frac": 0.0,
-        "params_moved": 0,
-        "params_stuck": 58244744,
+        "moved_frac_std": 0.0,
+        "params_moved": 0.0,
+        "params_moved_std": 0.0,
+        "params_stuck": 58244744.0,
+        "params_stuck_std": 0.0,
         "undeclared_stuck": "action_expert=4,615,696; action_head=271,889; audio_encoder=160,192; audio_proj=262,656; cls_token=512; cross_modal_fusion=9,457,152; final_norm=512; language_encoder=4,714,496; language_proj=262,656; layers=36,710,400; proprio_encoder=198,912; rule_bank=25,600; touch_encoder=10,048; touch_proj=33,280; vision_encoder=244,960; vision_proj=524,800",
-        "undeclared_stuck_params": 57493761
+        "undeclared_stuck_params": 57493761.0,
+        "undeclared_stuck_params_std": 0.0
       },
-      "duration_s": 69.49,
+      "duration_s": 262.81,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
         "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.goal_token=512; value_head.predictor=132,097",
         "moved_frac": 0.993,
-        "params_moved": 57836801,
-        "params_stuck": 407943,
+        "moved_frac_std": 0.0,
+        "params_moved": 57836801.0,
+        "params_moved_std": 0.0,
+        "params_stuck": 407943.0,
+        "params_stuck_std": 0.0,
         "undeclared_stuck": "none",
-        "undeclared_stuck_params": 0
+        "undeclared_stuck_params": 0.0,
+        "undeclared_stuck_params_std": 0.0
       },
-      "ran_at": "2026-08-05T06:49:28",
+      "ran_at": "2026-08-07T14:40:00",
       "seeds": [
-        0
+        0,
+        1,
+        2
       ],
       "spec_id": "T1.04",
       "status": "PASS"
     },
     "T1.05": {
-      "commit": "29a6de2",
+      "commit": "90d8b3c",
       "control_metrics": {},
-      "duration_s": 5.53,
+      "duration_s": 7.45,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -469,7 +495,7 @@
         "sentinel_std": 0.5233,
         "train_delta": 0.0
       },
-      "ran_at": "2026-08-06T07:48:01",
+      "ran_at": "2026-08-07T14:35:37",
       "seeds": [
         0
       ],
@@ -636,24 +662,33 @@
       "status": "PASS"
     },
     "T1.12": {
-      "commit": "bb1659d",
+      "commit": "3e38ed9",
       "control_metrics": {
-        "sampler_error_untrained": 2.00317
+        "sampler_error_untrained": 1.0441,
+        "sampler_error_untrained_std": 0.019706
       },
-      "duration_s": 338.89,
+      "duration_s": 1137.99,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
-        "conditioning_ratio": 2.804,
-        "final_train_loss": 0.96282,
-        "reconstruction_improvement": 2.007,
-        "sampler_error_after": 1.04998,
-        "sampler_error_before": 2.10737,
-        "shuffled_conditioning_error": 2.94416
+        "conditioning_ratio": 1578.026333,
+        "conditioning_ratio_std": 420.256889,
+        "final_train_loss": 0.002967,
+        "final_train_loss_std": 0.00025,
+        "reconstruction_improvement": 867.923333,
+        "reconstruction_improvement_std": 264.764664,
+        "sampler_error_after": 0.00134,
+        "sampler_error_after_std": 0.000378,
+        "sampler_error_before": 1.065447,
+        "sampler_error_before_std": 0.025663,
+        "shuffled_conditioning_error": 1.958157,
+        "shuffled_conditioning_error_std": 0.029684
       },
-      "ran_at": "2026-08-04T16:15:38",
+      "ran_at": "2026-08-07T15:02:06",
       "seeds": [
-        0
+        0,
+        1,
+        2
       ],
       "spec_id": "T1.12",
       "status": "PASS"
@@ -707,14 +742,14 @@
       "status": "PASS"
     },
     "T2.01": {
-      "commit": "4bd2227",
+      "commit": "a533ade",
       "control_metrics": {
-        "untrained_mean": 150.2,
+        "untrained_mean": 150.5,
         "untrained_mean_std": 0.0,
-        "untrained_sigma_advantage": 0.47,
+        "untrained_sigma_advantage": 0.92,
         "untrained_sigma_advantage_std": 0.0
       },
-      "duration_s": 76.86,
+      "duration_s": 27.05,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "pre-registered threshold not met",
       "metrics": {
@@ -723,121 +758,121 @@
         "backend": "kaggle",
         "curve_seed0": [
           {
-            "action_absmax": 1.5726141929626465,
-            "action_std": 0.3003370463848114,
-            "entropy": 3.6645,
+            "action_absmax": 1.2911584377288818,
+            "action_std": 0.30013662576675415,
+            "entropy": 3.6618,
             "iter": 1,
-            "mean_reward": 4.6820478439331055,
-            "pg_loss": 0.1033,
+            "mean_reward": 4.697486400604248,
+            "pg_loss": 0.1234,
             "steps": 4096,
-            "value_mean": 0.03604234755039215,
-            "vf_loss": 0.7854
+            "value_mean": 0.03571271896362305,
+            "vf_loss": 0.8577
           },
           {
-            "action_absmax": 1.4978606700897217,
-            "action_std": 0.30070385336875916,
-            "entropy": 3.6842,
+            "action_absmax": 1.218978762626648,
+            "action_std": 0.3001043200492859,
+            "entropy": 3.6597,
             "iter": 2,
-            "mean_reward": 4.734173774719238,
-            "pg_loss": 0.0179,
+            "mean_reward": 4.6817216873168945,
+            "pg_loss": 0.0111,
             "steps": 8192,
-            "value_mean": 2.815786361694336,
-            "vf_loss": 0.2029
+            "value_mean": 2.848093032836914,
+            "vf_loss": 0.2108
           },
           {
-            "action_absmax": 1.3618378639221191,
-            "action_std": 0.30065104365348816,
-            "entropy": 3.6935,
+            "action_absmax": 1.4943243265151978,
+            "action_std": 0.2998836040496826,
+            "entropy": 3.6555,
             "iter": 3,
-            "mean_reward": 4.750561714172363,
-            "pg_loss": 0.0086,
+            "mean_reward": 4.698009967803955,
+            "pg_loss": 0.0061,
             "steps": 12288,
-            "value_mean": 2.8217499256134033,
-            "vf_loss": 0.2092
+            "value_mean": 2.711918592453003,
+            "vf_loss": 0.1969
           },
           {
-            "action_absmax": 1.3950245380401611,
-            "action_std": 0.30058035254478455,
-            "entropy": 3.6892,
+            "action_absmax": 1.4339406490325928,
+            "action_std": 0.29971984028816223,
+            "entropy": 3.6423,
             "iter": 4,
-            "mean_reward": 4.807563781738281,
-            "pg_loss": -0.0068,
+            "mean_reward": 4.702190399169922,
+            "pg_loss": 0.0042,
             "steps": 16384,
-            "value_mean": 3.037564754486084,
-            "vf_loss": 0.2656
+            "value_mean": 2.7637057304382324,
+            "vf_loss": 0.1851
           },
           {
-            "action_absmax": 1.5039587020874023,
-            "action_std": 0.30058494210243225,
-            "entropy": 3.6903,
+            "action_absmax": 1.3179960250854492,
+            "action_std": 0.29886236786842346,
+            "entropy": 3.5907,
             "iter": 6,
-            "mean_reward": 4.8351359367370605,
-            "pg_loss": 0.0193,
+            "mean_reward": 4.742998123168945,
+            "pg_loss": -0.0,
             "steps": 24576,
-            "value_mean": 2.9459965229034424,
-            "vf_loss": 0.3141
+            "value_mean": 2.937385320663452,
+            "vf_loss": 0.2356
           },
           {
-            "action_absmax": 1.3939824104309082,
-            "action_std": 0.30064794421195984,
-            "entropy": 3.688,
+            "action_absmax": 1.3709096908569336,
+            "action_std": 0.29916414618492126,
+            "entropy": 3.6043,
             "iter": 11,
-            "mean_reward": 4.9842424392700195,
-            "pg_loss": -0.0043,
+            "mean_reward": 4.883058547973633,
+            "pg_loss": -0.0053,
             "steps": 45056,
-            "value_mean": 3.486051559448242,
-            "vf_loss": 0.3238
+            "value_mean": 3.075958251953125,
+            "vf_loss": 0.2864
           },
           {
-            "action_absmax": 1.5331401824951172,
-            "action_std": 0.3006005585193634,
-            "entropy": 3.6966,
+            "action_absmax": 1.3503386974334717,
+            "action_std": 0.2981862723827362,
+            "entropy": 3.5477,
             "iter": 16,
-            "mean_reward": 5.052877426147461,
-            "pg_loss": -0.007,
+            "mean_reward": 4.874356269836426,
+            "pg_loss": -0.0119,
             "steps": 65536,
-            "value_mean": 3.6579647064208984,
-            "vf_loss": 0.3016
+            "value_mean": 3.3751163482666016,
+            "vf_loss": 0.3042
           },
           {
-            "action_absmax": 1.327002763748169,
-            "action_std": 0.3002718687057495,
-            "entropy": 3.6635,
+            "action_absmax": 1.4808658361434937,
+            "action_std": 0.2973274290561676,
+            "entropy": 3.5071,
             "iter": 21,
-            "mean_reward": 5.081344127655029,
-            "pg_loss": 0.0312,
+            "mean_reward": 4.883285045623779,
+            "pg_loss": 0.0373,
             "steps": 86016,
-            "value_mean": 3.703793525695801,
-            "vf_loss": 0.3618
+            "value_mean": 3.6049087047576904,
+            "vf_loss": 0.3611
           }
         ],
         "env_steps_per_seed": [
-          192512,
-          192512,
-          192512
+          704512,
+          704512,
+          704512
         ],
         "gpu": "Tesla P100-PCIE-16GB",
-        "random_mean": 124.8,
+        "random_mean": 118.2,
         "random_mean_std": 0.0,
-        "random_std": 54.16,
+        "random_std": 35.18,
         "random_std_std": 0.0,
-        "sigma_advantage": 2.21,
+        "sigma_advantage": 4.06,
         "sigma_advantage_std": 0.0,
-        "sigma_used": 91.06,
+        "sigma_used": 35.18,
         "sigma_used_std": 0.0,
-        "trained_mean": 326.0,
+        "trained_mean": 261.0,
         "trained_mean_std": 0.0,
         "trained_means": [
-          270.5,
-          276.4,
-          431.1
+          249.6,
+          292.7,
+          240.8
         ],
-        "trained_std": 91.06,
+        "trained_std": 27.74,
         "trained_std_std": 0.0,
-        "wall_minutes": 90.8,
+        "wall_minutes": 331.9,
         "wall_minutes_std": 0.0
       },
-      "ran_at": "2026-08-07T08:19:47",
+      "ran_at": "2026-08-07T19:29:50",
       "seeds": [
         0,
         1,

@@ -338,3 +338,29 @@ Two things worth writing down before v4 reports:
 - The reverify queue from the concurrent session had deadlocked on ITSELF for
   24h: its pgrep poll pattern matched its own command line. Killed. T1
   re-verification is chained to run after v4 in one detached script.
+
+## 2026-08-07 — T2.01 v4 verdict recorded; the local MLP probe doubles it
+
+v4 (Kaggle P100, reused kernel, zero fresh quota; 704,512 env-steps/seed,
+331.9 GPU-min): FAIL. trained [249.6, 292.7, 240.8], mean 261.0; random
+118.2±35.2; sigma_advantage 4.06 (bar 5); all seeds beat random. The v3 WATCH
+resolved cleanly: seed CV fell 28% -> 10.6%, so the metric was NOT the
+asymptote — the curve itself plateaued. This is the architecture verdict.
+
+The D1-relevant evidence, same env and same 704,512 steps/seed: a 54,179-param
+MLP trained locally on CPU (81 wall-min) reached trained means
+[583.9, 546.8, 461.4] (overall 530.7) vs random 120.7±33.3 — 12.3 sigma by
+T2.01's own sigma_used metric, 8.0 sigma even against raw seed std. The tiny
+MLP clears the 5-sigma bar the 140K transformer missed while more than
+DOUBLING its return at identical steps. Strong prior, not a claim: the probe
+is not a ledger run (no pre-registration, no control). T2.02 on Kaggle after
+the Sunday reset stays the official kill-criterion run; its priors just got
+very lopsided.
+
+Also inherited from the detached recover chain (still running, owns the
+ladder lock): T1.01 re-verified PASS at 3 seeds (improvement_ratio
+501.5±25.9). T1.06 is mid-run (~1h elapsed), T1.02 follows, then a queued
+script records ME.1 and ME.9 officially. NEXT ITERATION: do not touch the
+runner while the lock is held — check /tmp/recover_chain.log and
+/tmp/me_runs.log, commit whatever the chain wrote, and if ME.1/ME.9 recorded,
+move to implementing ME.2.
