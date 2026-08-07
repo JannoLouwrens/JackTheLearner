@@ -18,6 +18,11 @@
 #     concurrent torch processes on 4 cores would thrash.
 #  4. BOUNDED. --max-turns caps a runaway iteration; the hourly cron restarts it
 #     cleanly rather than letting one session grind.
+#  5. EXPLICIT MODEL. --model is passed rather than inherited: the interactive
+#     /model command rewrites the shared settings file, so an unattended loop
+#     that trusts ambient config can silently change model mid-week and nobody
+#     would know from the log. Override with JACK_LOOP_MODEL=fable (or any
+#     alias) in the crontab line.
 #
 # Install:  crontab -e  ->  7 * * * * /home/opc/jackthelearner/scripts/ladder_loop.sh
 # Watch:    tail -f /data/jack-logs/ladder.log
@@ -65,7 +70,7 @@ BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
 TOTAL=$(/data/venvs/jackthelearner/bin/python -c \
   "from experiments.registry import LADDER; print(len(LADDER))" 2>/dev/null || echo 105)
 
-say "iteration start — ${BEFORE}/${TOTAL} demonstrated, load ${LOAD}, ${FREE_GB}GB free"
+say "iteration start — ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-opus}, load ${LOAD}, ${FREE_GB}GB free"
 
 PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
 
@@ -73,6 +78,7 @@ nice -n 19 ionice -c3 env OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
   PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
   HF_HOME=/data/caches/huggingface \
   timeout 50m claude -p "$PROMPT" \
+    --model "${JACK_LOOP_MODEL:-opus}" \
     --dangerously-skip-permissions \
     --max-turns 120 \
     >> "$LOG" 2>&1
