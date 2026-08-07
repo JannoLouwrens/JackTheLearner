@@ -35,6 +35,14 @@ falling on attempts 1–39, without anyone telling him to — that is learning.
 his owner — persists on disk, inspectable, across restarts. He remembers the
 ladder. He remembers you.
 
+And it is two memories, not one. When people interact with him he remembers
+what he **heard**, what he **said**, and what he **did** — attributed, per
+person ("what did I tell you" is not "what did you tell me") — while the same
+lived experience ALSO distils into general skill. Keeping the record and
+learning from it are separate stores with separate failure modes, and both are
+ledger-tested: ME.9 (attributed recall of heard/said/did) and ME.10 (wipe the
+diary, the skill survives; revert the weights, the diary survives).
+
 **Flexible above all.** Frozen pretrained trunks that swap as better models
 ship; a small trained core; capabilities added without retraining the world;
 components that must EARN their parameters via ablation or be deleted.

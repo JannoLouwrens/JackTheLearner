@@ -78,6 +78,12 @@ class PipelineConfig:
     vf_coef: float = 0.43        # PPO: RL-Zoo3 humanoid tuned
     n_steps: int = 512            # PPO rollout length
     n_epochs_ppo: int = 5         # PPO update epochs per rollout
+    ppo_minibatch: int = 512      # PPO minibatch. NOT config.batch_size: at 64,
+                                  # minibatch COUNT scales with rollout size, so
+                                  # adding envs bought no throughput -- T2.01 v2
+                                  # spent ~12s of its 13s/iter in the update on
+                                  # a P100. Same total sample-passes either way;
+                                  # bigger minibatches just fill the GPU.
     normalize_returns: bool = True  # keep value targets O(1); see rl_update
     action_limit: float = 0.4     # Humanoid-v5 actuator range
     squash_actions: bool = True   # bound the policy MEAN; see policy_mean()
@@ -513,7 +519,7 @@ class TrainingPipeline:
             advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
 
         # ── PPO update epochs ──
-        batch_size = min(self.config.batch_size, N)
+        batch_size = min(getattr(self.config, "ppo_minibatch", 512), N)
         total_pg_loss = 0
         total_vf_loss = 0
         total_entropy = 0

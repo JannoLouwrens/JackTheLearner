@@ -221,6 +221,53 @@ EXPANSION: list[Spec] = [
          null_baseline="Zeroed hidden state.",
          metric="resume_vs_zeroed", budget=Budget.CPU, depends_on=["T0.05"]),
 
+    # OWNER DIRECTIVE (2026-08-07): "he must also remember what he hears, says
+    # and does so when people interact with him... he must keep memory and ALSO
+    # learn generally." Two properties ME.1-8 do not pin down: (a) recall that
+    # is ATTRIBUTED — heard vs said vs did, and which person — not just cued;
+    # (b) the episodic record and the general skill are SEPARATE stores that
+    # both survive the other's ablation (complementary learning systems,
+    # McClelland et al. 1995; the double dissociation is the test).
+    Spec("ME.9", 2, "He remembers what he hears, says, and does — attributed",
+         hypothesis="Cued recall works across all three channels (heard "
+                    "utterance, own utterance, own action) at >=80% each, AND "
+                    "source attribution survives: 'what did I tell you' is "
+                    "answered from heard-events, 'what did you say/do' from "
+                    "own-events, per speaker across >=3 interleaved speakers.",
+         falsified_by="Any channel at chance, or attribution confuses "
+                      "who-said-what once conversations interleave.",
+         null_baseline="Channel-blind retrieval over the pooled log (same "
+                       "events, provenance stripped) — it must fail the "
+                       "attribution questions specifically.",
+         metric="attributed_recall_accuracy", budget=Budget.CPU,
+         depends_on=["ME.1"], seeds=3,
+         control="Swapped-provenance store (his lines relabelled as the "
+                 "speaker's and vice versa) must invert attribution answers; "
+                 "if accuracy survives the swap, the test never used "
+                 "provenance and is measuring text similarity."),
+
+    Spec("ME.10", 2, "Keeps the memory AND learns the general skill",
+         hypothesis="After episodes are distilled into weights (practice/"
+                    "replay), the verbatim episodic record still answers cued "
+                    "recall at its pre-distillation rate, AND the distilled "
+                    "skill outperforms no-distillation; then the double "
+                    "dissociation: wiping the episodic store leaves the skill "
+                    "intact, wiping the weight update leaves recall intact.",
+         falsified_by="Distillation degrades recall (learning ate the memory) "
+                      "or recall requires the store at skill-time (nothing "
+                      "was ever in the weights).",
+         null_baseline="No-distillation agent: same store, no weight update — "
+                       "its skill gap is what distillation must beat.",
+         metric="recall_kept_x_skill_gained", budget=Budget.CPU,
+         depends_on=["ME.1", "T1.04"], seeds=3,
+         control="The two ablations must each destroy exactly their own "
+                 "capability: store-wipe kills recall (not skill), "
+                 "weight-revert kills the skill gain (not recall). Either "
+                 "ablation killing BOTH means one store is masquerading as "
+                 "two.",
+         kills="Any design where conversation memory lives only in weights "
+               "or skills live only in retrieved episodes."),
+
     # ── TIER-3 GAPS ─────────────────────────────────────────────────────
     Spec("T3.09", 3, "The creative loop earns its existence",
          hypothesis="Wiring AlphaGeometryLoop into a decision path measurably "

@@ -39,10 +39,11 @@ from ..registry import BY_ID
 SEEDS = [0, 1, 2]
 # v2 completed only 105,472 env-steps per seed (~80 steps/s). MuJoCo is not the
 # bottleneck -- 1024 env-steps of Humanoid costs it ~0.5s against ~13s measured
-# per iteration -- so the 57M-param forward dominates, and it is batched over
-# envs. Quadrupling N_ENVS therefore buys env-steps at close to constant
-# wall-clock. This is a COMPUTE BUDGET change, not a threshold change: the
-# 5-sigma bar, the control, and the all-seeds rule below are untouched.
+# per iteration -- the PPO update was: 16 minibatches x 5 epochs of batch 64,
+# ~12s of the 13. Two changes follow: ppo_minibatch=512 in the pipeline (same
+# total sample-passes, GPU actually utilised) and N_ENVS 8->32 (the rollout
+# forward is batched over envs). COMPUTE BUDGET changes, not threshold changes:
+# the 5-sigma bar, the control, and the all-seeds rule below are untouched.
 N_ENVS = 32
 ROLLOUT_STEPS = 128          # per env per iteration -> 4096-sample PPO batches
 TRAIN_MINUTES_PER_SEED = 30  # 3 seeds + evals + install stays inside gpu<2h

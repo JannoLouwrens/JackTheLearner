@@ -265,3 +265,29 @@ PREDICTION: trained_mean > random_mean on every seed, sigma_advantage >= 5,
 untrained control stays under the bar (v2 measured it at 0.97). If reward is
 STILL flat with actions bounded and ~400K steps/seed, the next suspect is the
 shared-trunk gradient mixture (D1, owner decision) — not more compute.
+
+AMENDED before launch: N_ENVS alone would have bought nothing. v2's own P100
+telemetry shows ~12s of each 13s iteration inside rl_update -- 16 minibatches
+x 5 epochs of batch 64 -- and minibatch COUNT scales with rollout size, so 4x
+the envs meant 4x the update time. Added ppo_minibatch=512 (identical total
+sample-passes per iteration; the GPU is simply utilised instead of fed 64-row
+crumbs). T2.00 gate re-run against the changed rl_update before any quota is
+spent. Expected throughput ~4x: ~300+ env-steps/s, ~500K steps/seed in 30 min.
+
+## 2026-08-07 — Owner directive: interaction memory + general learning, both
+
+"He must also remember what he hears says and does so when people interact
+with him... he must keep memory and ALSO learn generally — ensure it's in the
+tests." Two new specs, because ME.1-8 pinned neither property:
+
+- ME.9: recall across heard/said/did with SOURCE ATTRIBUTION, >=3 interleaved
+  speakers. Control: a swapped-provenance store must invert the answers — if
+  accuracy survives the swap, the test measured text similarity, not memory.
+- ME.10: the CLS double dissociation. Distill episodes into weights; recall
+  must hold at its pre-distillation rate AND the skill must beat the
+  no-distillation null. Then each ablation kills exactly its own capability:
+  store-wipe kills recall only, weight-revert kills skill only. KILLS any
+  design where conversation lives only in weights or skills only in episodes.
+
+Ladder is now 105 specs. GOAL.md carries the directive verbatim in the Memory
+section.
