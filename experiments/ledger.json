@@ -45,6 +45,31 @@
       "spec_id": "ME.2",
       "status": "PASS"
     },
+    "ME.3": {
+      "commit": "49de4f6",
+      "control_metrics": {
+        "wrong_agent_acc": 0.1771
+      },
+      "duration_s": 0.38,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "aggregation_qa_gain": 0.4062,
+        "base_rate": 0.25,
+        "n_beliefs": 64,
+        "n_questions": 96,
+        "raw_acc": 0.5938,
+        "raw_tokens_mean": 40.0,
+        "reflect_acc": 1.0,
+        "reflect_tokens_mean": 15.8
+      },
+      "ran_at": "2026-08-07T23:13:03",
+      "seeds": [
+        0
+      ],
+      "spec_id": "ME.3",
+      "status": "PASS"
+    },
     "ME.9": {
       "commit": "10e3aef",
       "control_metrics": {

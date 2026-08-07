@@ -379,3 +379,17 @@ and stale rate to 1.0 → check fails, so the test has teeth. 30/105 specs
 demonstrated. NEXT ITERATION: ME.3 (reflections beat raw events) — same
 substrate family, CPU-only; still no Kaggle quota until Sunday, and T2.02
 remains the first Kaggle job after the reset.
+
+## 2026-08-07 (night) — ME.3 PASS: reflections beat raw events at equal tokens
+
+Implemented Reflections.py (statistical per-speaker consolidation of the
+episodic log — "ada often involved with pond (52 of 244 events)", source-
+linked eids, JSONL, re-derived not patched) and me_3_reflections.py. On a
+1,200-event life with mild habits (P_FAV=0.18), 96 aggregation questions at a
+40-token budget: reflect_acc 1.0 (using only 15.8 tokens/question off disk
+after reload), raw-events null 0.594 (chance 0.25 — a real competitor), gain
+0.406. Control: another life's reflections collapse to 0.177 — BELOW chance,
+they actively hurt, exactly what MEMORY.md 2.3 pre-registered. 31/105
+demonstrated. NEXT ITERATION: ME.4 (Ebbinghaus decay + reinforce-on-recall +
+supersede beats FIFO at fixed store budget) — same substrate, CPU-only. Still
+no Kaggle quota until Sunday; T2.02 remains the first Kaggle job after reset.

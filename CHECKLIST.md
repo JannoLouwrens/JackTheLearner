@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 30 / 105 demonstrated
+## 31 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -299,7 +299,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **ME.2** Owner memory lives on disk
       - _asserts:_ A preference stated once is honoured next session; a later contradiction supersedes it.
       - _dies if:_ Adherence <= a fresh no-memory agent's base rate.
-- [ ] **ME.3** Reflections beat raw events
+- [x] **ME.3** Reflections beat raw events
       - _asserts:_ Aggregation questions answer better from consolidated reflections than from top-k raw events at equal tokens.
       - _dies if:_ No gain over raw top-k.
 - [ ] **ME.4** Forgetting keeps what matters
