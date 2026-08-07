@@ -239,3 +239,29 @@ SB3 ships clip-only for Box spaces and it works, so this is deliberately NOT
 changed without evidence -- T2.01 logs action_absmax per iteration now, and the
 learning curve should settle it. If reward stalls while |a| grows, squash or
 penalise; if reward climbs, leave it alone.
+
+## 2026-08-07 — T2.01 v2 squash verified on CPU; PG.1/PG.2 PASS
+
+The v2 watch-item resolved exactly as pre-registered: reward flat at ~4.0 while
+|act|max ran 1.26 -> 43.81, so the mean got squashed (policy_mean(): tanh *
+action_limit). CPU verification, 11 iterations: |act|max stays 1.17-1.56 raw
+(0.4 at the env), std pinned at 0.301, vf/pg ratio 2.5-82 transient then
+settling single-digit. The exponential runaway is gone.
+
+PG.1 first FAILED and the bug was in the TEST: MJCF defaults to DEGREES, so
+math.radians() in euler= built a 0.87-deg "50-deg" ramp. Caught because the
+frictionless CONTROL failed too — nothing slid anywhere, which no visual
+inspection would flag. Also: a cube topples past 45 deg, so the slider is now a
+slab (stable to 71.6 deg). Friction discriminates 1751x. PG.2 water sits at the
+Archimedes equilibrium, err/radius 0.000 at rho 0.2/0.3/0.5/0.8. Ladder 27/103.
+
+## Pre-registration: T2.01 v3
+
+Changes since v2, all compute/infra, no threshold touched:
+- policy_mean() bounds the mean (the v2 fix); eval uses the same bounded mean.
+- N_ENVS 8 -> 32, minutes/seed 22 -> 30: v2 completed only 105K env-steps/seed
+  (~80/s). The forward is batched over envs, so this buys steps ~free.
+PREDICTION: trained_mean > random_mean on every seed, sigma_advantage >= 5,
+untrained control stays under the bar (v2 measured it at 0.97). If reward is
+STILL flat with actions bounded and ~400K steps/seed, the next suspect is the
+shared-trunk gradient mixture (D1, owner decision) — not more compute.
