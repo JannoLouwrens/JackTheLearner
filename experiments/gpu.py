@@ -306,6 +306,14 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     reuse = os.environ.get("JACK_REUSE_KERNEL", "").strip()
     if reuse:
         slug = reuse.split("/", 1)[1] if "/" in reuse else reuse
+        # The slug embeds the original submission epoch. Charge the budget from
+        # THERE: Kaggle bills the kernel's full wall time whether or not anyone
+        # local was watching, and a budget file that only counts the reattach
+        # window would drift optimistic exactly when runs are long.
+        try:
+            t0 = float(slug.rsplit("-", 1)[-1])
+        except ValueError:
+            pass
     else:
         slug = f"jack-ladder-{int(t0)}"
     # Pascal-compatible torch first, then the job itself.
