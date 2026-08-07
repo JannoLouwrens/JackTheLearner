@@ -37,16 +37,30 @@ N_MUTATIONS = 12
 
 
 def _slides(angle_deg: float, mu: float, steps: int = 600) -> float:
-    """Distance a box travels down a ramp of this angle. Analytic check."""
+    """Distance a box travels down a ramp of this angle. Analytic check.
+
+    Two things here are easy to get wrong and both were:
+
+    MJCF's default angle unit is DEGREES (compiler angle="degree"). Passing
+    math.radians() into euler= therefore built a 0.87-degree "50-degree" ramp,
+    and nothing slid on anything -- the frictionless control crept 0.0455m when
+    it should have run metres. A control that fails alongside the experiment is
+    what exposed this; had it been absent, "nothing slides" would have read as a
+    plausible high-friction world.
+
+    The slider is a flat SLAB, not a cube. A cube topples once tan(theta)
+    exceeds width/height = 1, i.e. above 45 degrees, so a 50-degree cube test
+    would measure tumbling and call it sliding. At 0.12 x 0.04 the slab needs
+    tan(theta) > 3 (71.6 degrees) to tip, leaving 50 degrees an honest slide.
+    """
     import mujoco
     import numpy as np
 
-    th = math.radians(angle_deg)
     xml = f"""<mujoco><option timestep="0.005" gravity="0 0 -9.81"/><worldbody>
-      <geom name="ramp" type="box" pos="0 0 0" size="3 1 0.02" euler="0 {-th} 0"
-            friction="{mu} 0.005 0.0001"/>
-      <body pos="0 0 0.12"><freejoint/>
-      <geom type="box" size="0.08 0.08 0.08" mass="1"
+      <geom name="ramp" type="box" pos="0 0 0" size="3 1 0.02"
+            euler="0 {-angle_deg} 0" friction="{mu} 0.005 0.0001"/>
+      <body pos="0 0 0.12" euler="0 {-angle_deg} 0"><freejoint/>
+      <geom type="box" size="0.12 0.12 0.04" mass="1"
             friction="{mu} 0.005 0.0001"/></body></worldbody></mujoco>"""
     m = mujoco.MjModel.from_xml_string(xml)
     d = mujoco.MjData(m)

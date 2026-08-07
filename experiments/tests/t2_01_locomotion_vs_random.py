@@ -21,7 +21,8 @@ Statistics, pre-registered:
 Wall-clock is bounded per seed rather than step-bounded: the budget is gpu<2h
 and a fixed step count at unknown VM throughput would either waste quota or
 overrun it. The actual env-steps completed are recorded in the metrics, so the
-result is attributable regardless.
+result is attributable regardless — which is how v2's 105K steps/seed became
+visible as a second, independent problem alongside the runaway policy.
 
 T1.08's noise-floor discipline applies: the seed spread is IN the check, not a
 footnote.
@@ -36,9 +37,15 @@ from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
 SEEDS = [0, 1, 2]
-N_ENVS = 8
-ROLLOUT_STEPS = 128          # per env per iteration -> 1024-sample PPO batches
-TRAIN_MINUTES_PER_SEED = 22  # 3 seeds + evals + install fits gpu<2h
+# v2 completed only 105,472 env-steps per seed (~80 steps/s). MuJoCo is not the
+# bottleneck -- 1024 env-steps of Humanoid costs it ~0.5s against ~13s measured
+# per iteration -- so the 57M-param forward dominates, and it is batched over
+# envs. Quadrupling N_ENVS therefore buys env-steps at close to constant
+# wall-clock. This is a COMPUTE BUDGET change, not a threshold change: the
+# 5-sigma bar, the control, and the all-seeds rule below are untouched.
+N_ENVS = 32
+ROLLOUT_STEPS = 128          # per env per iteration -> 4096-sample PPO batches
+TRAIN_MINUTES_PER_SEED = 30  # 3 seeds + evals + install stays inside gpu<2h
 EVAL_EPISODES = 5
 RANDOM_EPISODES = 10
 MIN_SIGMA_ADVANTAGE = 5.0
@@ -142,7 +149,9 @@ def _submit() -> dict:
                .replace("__EVAL_EPS__", repr(EVAL_EPISODES))
                .replace("__RANDOM_EPS__", repr(RANDOM_EPISODES)))
     job = build_job(body)
-    res = submit(job, prefer="kaggle", est_hours=1.8, timeout_s=9000,
+    # timeout_s stays below the runner's own gpu<2h child timeout (10800s), or
+    # the parent kills a job that was about to hand back finished science.
+    res = submit(job, prefer="kaggle", est_hours=1.9, timeout_s=9000,
                  fetch=["t201.json"])
     if not res.ok:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")

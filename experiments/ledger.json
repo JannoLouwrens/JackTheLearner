@@ -1,6 +1,71 @@
 {
   "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
   "results": {
+    "PG.1": {
+      "commit": "79af208",
+      "control_metrics": {
+        "frictionless_slide_15deg": 11.1032
+      },
+      "duration_s": 0.32,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "bodies": 8,
+        "finite_after_settle": true,
+        "friction_discriminates": 1751.7,
+        "geoms": 31,
+        "max_rest_velocity": 0.0,
+        "missing_landmarks": "none",
+        "mutations_tried": 12,
+        "mutations_valid": 12,
+        "slide_15deg": 0.0035,
+        "slide_50deg": 6.1153
+      },
+      "ran_at": "2026-08-07T06:12:29",
+      "seeds": [
+        0
+      ],
+      "spec_id": "PG.1",
+      "status": "PASS"
+    },
+    "PG.2": {
+      "commit": "79af208",
+      "control_metrics": {
+        "no_buoyancy_max_z": -1.85,
+        "no_buoyancy_z": [
+          -1.85,
+          -1.85
+        ]
+      },
+      "duration_s": 0.74,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "bob_rho0.2": 0.0,
+        "bob_rho0.3": 0.0,
+        "bob_rho0.5": 0.0,
+        "bob_rho0.8": 0.0,
+        "err_rho0.2": 0.0,
+        "err_rho0.3": 0.0,
+        "err_rho0.5": 0.0,
+        "err_rho0.8": 0.0,
+        "expected_rho0.2": 0.0639,
+        "expected_rho0.3": 0.041,
+        "expected_rho0.5": -0.0,
+        "expected_rho0.8": -0.0639,
+        "worst_depth_error_frac": 0.0,
+        "z_rho0.2": 0.0639,
+        "z_rho0.3": 0.041,
+        "z_rho0.5": -0.0,
+        "z_rho0.8": -0.0639
+      },
+      "ran_at": "2026-08-07T06:12:31",
+      "seeds": [
+        0
+      ],
+      "spec_id": "PG.2",
+      "status": "PASS"
+    },
     "T0.01": {
       "commit": "bb1659d",
       "control_metrics": {},
