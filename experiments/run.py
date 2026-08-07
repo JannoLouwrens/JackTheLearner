@@ -145,6 +145,10 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     }
     _spec = _BY_ID.get(spec_id)
     _timeout = _budget_seconds.get(_spec.budget.value if _spec else "", 3600)
+    # The budget names one EXPERIMENT; a spec runs seeds x (experiment +
+    # control). The 3-seed re-verification killed T1.01/02/06 mid-science at
+    # the single-seed timeout — six times the work, one budget of time.
+    _timeout *= max(1, getattr(_spec, "seeds", 1)) * 2
     # The ran_at of any PRE-EXISTING entry, so a crashed child cannot pass the
     # old result off as its own. T2.01 v3's child died (SIGPIPE from a killed
     # session pipe) after v2 had recorded a FAIL: the old check — "is there an
@@ -152,8 +156,18 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     # A rerun that changes nothing must be an ERROR, not an echo.
     _prev = ledger.results.get(spec_id)
     _prev_ran_at = getattr(_prev, "ran_at", None)
-    proc = sp.run([sys.executable, "-c", code], capture_output=True, text=True,
-                  cwd=str(Path(__file__).parent.parent), timeout=_timeout)
+    try:
+        proc = sp.run([sys.executable, "-c", code], capture_output=True, text=True,
+                      cwd=str(Path(__file__).parent.parent), timeout=_timeout)
+    except sp.TimeoutExpired:
+        # An uncaught timeout used to crash the whole runner invocation and
+        # leave the spec's STALE entry standing. A timeout is a result.
+        res = Result(spec_id=spec_id, status=Status.ERROR,
+                     message=f"timed out after {_timeout}s "
+                             f"(budget {_spec.budget.value if _spec else '?'} "
+                             f"x {getattr(_spec, 'seeds', 1)} seeds x2)")
+        ledger.record(res)
+        return res
     # The child wrote the ledger itself; re-read to see what it recorded.
     fresh = Ledger()
     ledger.results.update(fresh.results)

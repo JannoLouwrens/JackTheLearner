@@ -373,9 +373,13 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
     budget = Budget()
     order = ["colab", "kaggle"] if prefer == "colab" else ["kaggle", "colab"]
     attempts = []
+    # Reattaching to an already-finished kernel consumes no quota, so it must
+    # not be blocked by the affordability gate — that exact gate turned a
+    # zero-cost recovery of T2.01 v4 into a Colab failover and an ERROR.
+    reuse = bool(os.environ.get("JACK_REUSE_KERNEL", "").strip())
 
     for backend in order:
-        if backend == "kaggle" and not budget.afford("kaggle", est_hours):
+        if backend == "kaggle" and not reuse and not budget.afford("kaggle", est_hours):
             attempts.append(f"kaggle: {budget.remaining('kaggle'):.1f}h left, need {est_hours}h")
             continue
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
