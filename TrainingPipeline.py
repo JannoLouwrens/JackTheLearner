@@ -448,9 +448,20 @@ class TrainingPipeline:
     # THE ONE RL UPDATE (PPO-style, RL-Zoo3 Humanoid tuned)
     # ─────────────────────────────────────────────────────────────────────
 
-    def rl_update(self, rollout: Dict[str, torch.Tensor]) -> Dict[str, float]:
+    def rl_update(self, rollout: Dict[str, torch.Tensor],
+                  term_grad_diag: bool = False) -> Dict[str, float]:
         """
         PPO update on a rollout buffer. THE SINGLE RL update method.
+
+        term_grad_diag: measure, on the first minibatch only, the gradient norm
+        each loss term contributes to the shared trunk (grad_pg_norm /
+        grad_vf_norm in the stats). This is the DIRECT reading of value-term
+        domination. The vf/pg LOSS ratio is not: pg_loss at an unmoved policy
+        is ~0 by construction (normalized advantages, ratio=1), so its
+        magnitude tracks intra-update drift and shrinks as minibatches grow --
+        T2.00 v1 tripped exactly that artifact at ppo_minibatch=512 while the
+        true grad-norm balance measured a healthy 1.9-2.8x. Costs two extra
+        backwards per call; leave False in production.
 
         Args:
             rollout: dict with keys:
@@ -523,6 +534,7 @@ class TrainingPipeline:
         total_pg_loss = 0
         total_vf_loss = 0
         total_entropy = 0
+        grad_diag = None
 
         for _ in range(self.config.n_epochs_ppo):
             indices = torch.randperm(N, device=self.device)
@@ -562,6 +574,24 @@ class TrainingPipeline:
                 # Value loss (clipped)
                 vf_loss = F.mse_loss(values_pred, mb_returns)
 
+                if term_grad_diag and grad_diag is None:
+                    # Per-term trunk gradient norms, measured on the real
+                    # minibatch before the real step. retain_graph: the same
+                    # forward feeds the combined backward below.
+                    trunk = [p for p in self.model.parameters()
+                             if p.requires_grad]
+                    diag = {}
+                    for name, term in (("pg", pg_loss),
+                                       ("vf", self.config.vf_coef * vf_loss)):
+                        self.optimizer.zero_grad()
+                        term.backward(retain_graph=True)
+                        diag[name] = torch.sqrt(
+                            sum((p.grad ** 2).sum() for p in trunk
+                                if p.grad is not None)).item()
+                    self.optimizer.zero_grad()
+                    grad_diag = {"grad_pg_norm": diag["pg"],
+                                 "grad_vf_norm": diag["vf"]}
+
                 # EWC penalty (protects Phase 0 physics knowledge)
                 ewc_loss = self.ewc.penalty()
 
@@ -598,11 +628,14 @@ class TrainingPipeline:
                 self.global_step += 1
 
         n_updates = max(1, (N // batch_size) * self.config.n_epochs_ppo)
-        return {
+        stats = {
             'pg_loss': total_pg_loss / n_updates,
             'vf_loss': total_vf_loss / n_updates,
             'entropy': total_entropy / n_updates,
         }
+        if grad_diag:
+            stats.update(grad_diag)
+        return stats
 
     # ─────────────────────────────────────────────────────────────────────
     # ROLLOUT COLLECTOR

@@ -683,22 +683,23 @@
       "status": "PASS"
     },
     "T2.00": {
-      "commit": "e1bb4e7",
+      "commit": "17007e9",
       "control_metrics": {
-        "unnormalized_vf_pg_ratio": 22203.02
+        "unnormalized_grad_ratio": 126.28
       },
-      "duration_s": 1300.34,
+      "duration_s": 618.84,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
         "action_limit": 0.4,
         "env_action_absmax": 0.4,
-        "final_vf_pg_ratio": 6.43,
-        "max_log_std": -1.197,
-        "max_vf_pg_ratio": 9.95,
-        "min_log_std": -1.2016
+        "final_vf_pg_grad_ratio": 0.2,
+        "max_log_std": -1.2007,
+        "max_vf_pg_grad_ratio": 2.71,
+        "max_vf_pg_loss_ratio": 44.48,
+        "min_log_std": -1.2027
       },
-      "ran_at": "2026-08-06T10:14:45",
+      "ran_at": "2026-08-07T06:41:38",
       "seeds": [
         0
       ],

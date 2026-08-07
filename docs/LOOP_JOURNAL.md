@@ -291,3 +291,22 @@ tests." Two new specs, because ME.1-8 pinned neither property:
 
 Ladder is now 105 specs. GOAL.md carries the directive verbatim in the Memory
 section.
+
+## 2026-08-07 — T2.00 v1 FAIL at ppo_minibatch=512; metric was the bug
+
+The gate tripped (max vf/pg loss ratio 178.57 vs 50) on the minibatch change.
+Investigated before touching anything: the pg_loss DENOMINATOR is ~0 by
+construction at an unmoved policy (normalized advantages, ratio=1), so its
+magnitude measures intra-update drift — and 512-size minibatches take 5
+gradient steps where 64 took 10, so less drift, smaller denominator, inflated
+ratio. The per-minibatch term BALANCE is mathematically independent of batch
+partitioning. Probe of the true quantity (per-term gradient norm on the shared
+trunk, same rollout): 1.86x / 2.59x / 2.78x at mb 64/128/512. Healthy.
+
+v2 gates on the grad-norm ratio, measured INSIDE rl_update (term_grad_diag
+flag) so the guard reads the production path. Pre-registered threshold 25
+(order of magnitude above healthy, order below the unnormalized pathology).
+Control unchanged in spirit: normalize_returns=False must blow the grad ratio.
+v1's FAIL stays in history; the loss ratio is demoted to a diagnostic metric.
+Same pattern as T1.02: the test failed, the investigation said "metric
+artifact", the redesign measures the thing itself.
