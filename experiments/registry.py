@@ -306,9 +306,12 @@ LADDER: list[Spec] = [
          hypothesis="Trained policy return exceeds random-action return by >5 sigma.",
          falsified_by="Return within seed noise of random.",
          null_baseline="Random policy on Humanoid: ~60-80 return.",
-         metric="episode_return", budget=Budget.GPU, seeds=3,
+         metric="episode_return", budget=Budget.GPU_LONG, seeds=3,
          depends_on=["T2.00", "T1.08", "T0.09"],
-         control="Untrained network with the same architecture."),
+         control="Untrained network with the same architecture.",
+         notes="Budget GPU->GPU_LONG after v3: first healthy run (all seeds "
+               "beat random, curve climbing at cutoff) failed only effect "
+               "size, 2.21 sigma at 192K steps/seed. Threshold unchanged."),
 
     Spec("T2.02", 2, "Locomotion beats the honest MLP baseline",
          hypothesis="The chosen architecture beats a ~140K-param MLP actor-critic "

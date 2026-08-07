@@ -46,7 +46,15 @@ SEEDS = [0, 1, 2]
 # the 5-sigma bar, the control, and the all-seeds rule below are untouched.
 N_ENVS = 32
 ROLLOUT_STEPS = 128          # per env per iteration -> 4096-sample PPO batches
-TRAIN_MINUTES_PER_SEED = 30  # 3 seeds + evals + install stays inside gpu<2h
+# v4: 30 -> 110. v3 was the first HEALTHY run (every seed beat random, curve
+# still climbing at cutoff) and failed only the effect size: 2.21 sigma at
+# 192K steps/seed against the 5-sigma bar. The pre-registered branch for a
+# CLIMBING curve is more compute, so the spec moves to the gpu<8h budget
+# class. ~850K steps/seed at the measured ~128 env-steps/s. The 5-sigma bar,
+# the control, and the all-seeds rule are untouched -- if the curve rises and
+# the bar still fails at 850K steps, that is a real sample-efficiency verdict
+# on the architecture, and the D1 trunk question comes next.
+TRAIN_MINUTES_PER_SEED = 110
 EVAL_EPISODES = 5
 RANDOM_EPISODES = 10
 MIN_SIGMA_ADVANTAGE = 5.0
@@ -150,9 +158,9 @@ def _submit() -> dict:
                .replace("__EVAL_EPS__", repr(EVAL_EPISODES))
                .replace("__RANDOM_EPS__", repr(RANDOM_EPISODES)))
     job = build_job(body)
-    # timeout_s stays below the runner's own gpu<2h child timeout (10800s), or
+    # timeout_s stays below the runner's own gpu<8h child timeout (36000s), or
     # the parent kills a job that was about to hand back finished science.
-    res = submit(job, prefer="kaggle", est_hours=1.9, timeout_s=9000,
+    res = submit(job, prefer="kaggle", est_hours=6.5, timeout_s=32000,
                  fetch=["t201.json"])
     if not res.ok:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")

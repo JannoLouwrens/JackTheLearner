@@ -310,3 +310,31 @@ Control unchanged in spirit: normalize_returns=False must blow the grad ratio.
 v1's FAIL stays in history; the loss ratio is demoted to a diagnostic metric.
 Same pattern as T1.02: the test failed, the investigation said "metric
 artifact", the redesign measures the thing itself.
+
+## 2026-08-07 — T2.01 v3: FAIL on effect size, but Jack LEARNS for the first time
+
+Recovered via kernel reattach (the local waiter died in a session restart; the
+kernel finished alone; JACK_REUSE_KERNEL fetched it for quota-free recording —
+adopted from the concurrent session's tree, one amendment: budget charges from
+the slug's embedded submission epoch).
+
+The numbers, 192,512 env-steps/seed on a P100:
+  trained [270.5, 276.4, 431.1]  random 124.8  untrained control 150.2 (0.47s)
+  sigma_advantage 2.21 (bar: 5)  all_seeds_beat_random TRUE
+  curve: reward 4.68 -> 5.08 and still climbing; |act| bounded ~1.4 raw / 0.4
+  env; std pinned 0.30; pg_loss ~0; vf_loss stable ~0.3.
+
+Every pathology of v1/v2 is gone. This is a healthy learner short on steps,
+not a broken one — exactly the branch the pre-registration marked "more
+compute": v4 moves the spec to gpu<8h (110 min/seed, ~850K steps/seed at the
+measured ~128 steps/s). Thresholds, control, all-seeds rule untouched.
+
+Two things worth writing down before v4 reports:
+- WATCH: seed CV was 28% (91/326). If CV stays ~constant as the mean grows,
+  sigma_advantage asymptotes near 1/CV ~ 3.6 and the 5-sigma bar is
+  structurally unreachable regardless of learning. If v4 shows a rising gap
+  AND a CV plateau, the metric (raw seed std, not standard error) needs a
+  versioned redesign a la T2.00 v1->v2 — decided by data, not convenience.
+- The reverify queue from the concurrent session had deadlocked on ITSELF for
+  24h: its pgrep poll pattern matched its own command line. Killed. T1
+  re-verification is chained to run after v4 in one detached script.
