@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 40 / 105 demonstrated
+## 41 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -268,7 +268,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **PG.4** Noisy-TV panel traps naive curiosity
       - _asserts:_ The re-randomizing texture panel is a working trap: a prediction-error agent fixates on it; dwell-time metric works.
       - _dies if:_ The naive-curiosity control arm does NOT fixate — then the fixture cannot certify any curiosity claim.
-- [ ] **PG.5** Procedural contact audio with localization labels
+- [x] **PG.5** Procedural contact audio with localization labels
       - _asserts:_ Modal-resonator synthesis on MuJoCo contact events yields stereo audio whose panning matches source bearing.
       - _dies if:_ Bearing decoded from stereo does not match ground truth.
 - [ ] **T2.14** Imitation from real motion capture

@@ -438,6 +438,46 @@
       "spec_id": "PG.4",
       "status": "PASS"
     },
+    "PG.5": {
+      "commit": "bb11663",
+      "control_metrics": {
+        "control_events_decoded": 9.0,
+        "control_events_decoded_std": 0.0,
+        "mono_accuracy": 0.148133,
+        "mono_accuracy_std": 0.052373,
+        "shuffled_accuracy": 0.148133,
+        "shuffled_accuracy_std": 0.052373
+      },
+      "duration_s": 10.33,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "audio_finite": 1.0,
+        "audio_finite_std": 0.0,
+        "bearing_decode_accuracy": 1.0,
+        "bearing_decode_accuracy_std": 0.0,
+        "drops": 9.0,
+        "drops_std": 0.0,
+        "events_decoded": 9.0,
+        "events_decoded_std": 0.0,
+        "label_accuracy": 1.0,
+        "label_accuracy_std": 0.0,
+        "peak_amp": 0.361833,
+        "peak_amp_std": 0.013696,
+        "rms_vs_inv_distance_corr": 0.508,
+        "rms_vs_inv_distance_corr_std": 0.184168,
+        "spectral_match": 1.0,
+        "spectral_match_std": 0.0
+      },
+      "ran_at": "2026-08-08T12:17:25",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "PG.5",
+      "status": "PASS"
+    },
     "T0.01": {
       "commit": "fff924e",
       "control_metrics": {},

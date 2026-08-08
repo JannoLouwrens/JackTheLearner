@@ -85,7 +85,10 @@ EXPANSION: list[Spec] = [
                     "stereo audio whose panning matches source bearing.",
          falsified_by="Bearing decoded from stereo does not match ground truth.",
          null_baseline="Mono/shuffled-pan audio — bearing must be undecodable.",
-         metric="bearing_decode_accuracy", budget=Budget.CPU, depends_on=["PG.1"]),
+         metric="bearing_decode_accuracy", budget=Budget.CPU, depends_on=["PG.1"],
+         seeds=3,
+         control="Mono and shuffled-pan renders of the SAME events must decode "
+                 "at chance — else the decoder reads something other than pan."),
 
     # ── TIER-2 GAPS (docs/research/CAPABILITIES.md) ─────────────────────
     Spec("T2.14", 2, "Imitation from real motion capture",

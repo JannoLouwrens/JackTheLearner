@@ -582,3 +582,22 @@ T2.02 (settles D1). Today, cheapest CPU units: ME.7 (SIESTA consolidation) or
 CU.-family design; note ps output showing 'claude -p ...ladder...' is YOUR OWN
 process (ladder_loop.sh) — uncommitted work at start means the PREVIOUS
 iteration died mid-unit: inherit and finish it, don't discard.
+
+2026-08-08T13:1xZ — PG.5 PASS: procedural contact audio with localization
+labels — bearing decode 1.0 +/- 0.0 across 3 seeds (10-deg tolerance, truth
+computed INDEPENDENTLY from the sampled drop point, not the synth's own label),
+label accuracy 1.0, spectral match 1.0 (window's dominant freq == voiced geom's
+size-derived fundamental within 12%), controls at chance: mono 0.148, shuffled-
+pan 0.148 (both <= 0.30 gate), 9 drops/seed, 10.3s CPU. New component
+ContactAudio.py: van den Doel-Pai modal resonance on MuJoCo contact onsets,
+constant-power pan by lateral angle + 1/d attenuation; events carry full
+azimuth/elevation/distance labels for UB.4 training. Fixed en route: box
+landing flat emits up to 4 corner contacts and taking the first corner as
+source was 0.26m/9-deg off — events now use the pair's contact CENTROID.
+Shuffle control decodes 3 random pans/episode (27/seed) so the null isn't
+luck-dependent. Scope notes: pan encodes LATERALITY only (front-back needs
+ITD/HRTF — future); surface (floor) modes absent in v1; underwater muffling
+absent. 41/105. NEXT ITERATION: Kaggle resets SUNDAY (tomorrow) — FIRST Kaggle
+job is T2.02 (settles D1). If pre-reset, remaining cheap CPU: none obvious in
+'next' (ME.7 blocked on T5.03); consider T2.08-adjacent design or run --gate
+to catch regressions after the ContactAudio addition.
