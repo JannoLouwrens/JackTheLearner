@@ -601,3 +601,24 @@ absent. 41/105. NEXT ITERATION: Kaggle resets SUNDAY (tomorrow) — FIRST Kaggle
 job is T2.02 (settles D1). If pre-reset, remaining cheap CPU: none obvious in
 'next' (ME.7 blocked on T5.03); consider T2.08-adjacent design or run --gate
 to catch regressions after the ContactAudio addition.
+
+2026-08-08T13:4xZ — T2.20 PASS: episodic memory helps the next episode —
+embodied search in the playground (PG.4's collision-free rover), episode 1
+explores by random waypoints and writes "saw" events (text + position in
+meta) into EpisodicMemory amid 300 vocabulary-disjoint chatter events; later
+episodes recall-and-drive vs explore-from-scratch. search_time_ratio
+0.046+/-0.007 (memory 6.0 steps vs null 130.8+/-12.9), retrieval 1.0,
+controls at null: shuffled-position store 1.234, recency-only 0.992 (targets
+never the last-sighted object by construction). 3 seeds x 3 targets x 8
+reps/arm, 32.5s CPU. Method lesson: the seed-0 pilot with 3 episodes/arm had
+the shuffled control at 0.39 — search times are heavy-tailed and one lucky
+find swings a 3-episode mean 2x; reps were raised to 8/target/arm BEFORE the
+recorded run, gates untouched. Honest scope: chatter vocab is disjoint from
+object vocab, so retrieval-under-collision is ME.5's claim, not this one;
+objects are static across episodes. 42/105. NEXT ITERATION: Kaggle 30h
+resets SUNDAY (tomorrow) — the FIRST Kaggle job is T2.02 (140K-MLP vs
+transformer at 2M steps; settles D1). If still Saturday, Colab GPU_SHORT
+candidates in 'next': T2.03 (pretrained vision probe), T2.19 (flow-head
+bimodal), T4.02 (gradient-norm balance); T1.02 is ERROR only because both
+backends were unavailable on 08-07 — retry it cheaply first. Also consider
+--gate: last full re-run predates ContactAudio and T2.20.
