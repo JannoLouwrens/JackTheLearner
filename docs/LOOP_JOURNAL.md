@@ -413,3 +413,23 @@ ITERATION: ME.8 (working memory survives restarts — depends only on T0.05,
 CPU) or ME.10 (diary/skill separation); ME.5 is CPU_LONG (100k events), run
 it when a quiet slot allows. Still no Kaggle before Sunday; T2.02 stays the
 first Kaggle job after reset.
+
+## 2026-08-08 — ME.8 PASS: working memory survives a real SIGKILL
+
+Implemented WorkingMemory.py (GRU per research/MEMORY.md 3.2 — step/
+checkpoint/restore, wm.state written atomically every step per T0.05
+discipline, weights separate from state) and me_8_working_memory.py:
+delayed-cue task (1-of-8 cue at step 0 only, 30 steps, 4 noise channels),
+each eval episode run in a child process SIGKILLed mid-episode (killed_frac
+1.0, rc -9 verified, mean ckpt step 14.1), finished by a FRESH process.
+Ledger: resume_acc 1.0, zeroed-restart null 0.1875 (chance 0.125),
+resume_vs_zeroed 0.8125. Control has teeth: cross-restoring episode j's
+state into episode i answers j's cue 1.0 and i's cue 0.0 — the answer lives
+in the state file, nothing leaks. Found and fixed a real substrate bug:
+plain GRUCell init failed to train at seed 2 (holdout 0.109, resume==zeroed
+— the exact falsifier); update-gate bias +1 (Jozefowicz-style retain-by-
+default) fixed it — off-ledger seeds 1,2,3 all now: resume 1.0, zeroed
+0.06-0.25, control 1.0/0.0. 33/105 demonstrated. NEXT ITERATION: ME.10
+(diary/skill double dissociation, CPU, deps ME.1+T1.04 both PASS) or ME.5
+(CPU_LONG, quiet slot). Kaggle resets Sunday; T2.02 remains the first
+Kaggle job after reset.

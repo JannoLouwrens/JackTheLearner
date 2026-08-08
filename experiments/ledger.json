@@ -99,6 +99,30 @@
       "spec_id": "ME.4",
       "status": "PASS"
     },
+    "ME.8": {
+      "commit": "aefc77f",
+      "control_metrics": {
+        "acc_true_cue": 0.0,
+        "match_restored": 1.0
+      },
+      "duration_s": 37.25,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "holdout_acc": 1.0,
+        "killed_frac": 1.0,
+        "mean_ckpt_step": 14.12,
+        "resume_acc": 1.0,
+        "resume_vs_zeroed": 0.8125,
+        "zeroed_acc": 0.1875
+      },
+      "ran_at": "2026-08-08T01:19:49",
+      "seeds": [
+        0
+      ],
+      "spec_id": "ME.8",
+      "status": "PASS"
+    },
     "ME.9": {
       "commit": "10e3aef",
       "control_metrics": {

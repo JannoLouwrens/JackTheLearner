@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 32 / 105 demonstrated
+## 33 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -320,7 +320,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **ME.8** Working memory survives restarts
+- [x] **ME.8** Working memory survives restarts
       - _asserts:_ A recurrent state checkpointed to disk resumes mid-episode after a kill; zeroing it mid-episode hurts.
       - _dies if:_ Post-restart behavior equals a zeroed-state agent.
 - [x] **ME.9** He remembers what he hears, says, and does — attributed
