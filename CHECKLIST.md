@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 41 / 105 demonstrated
+## 42 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -290,7 +290,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T2.19** Flow head handles multimodal actions
       - _asserts:_ On a bimodal task (pass obstacle left OR right) the flow head succeeds where MSE regression collapses to the mean.
       - _dies if:_ L1/MSE regression matches the flow head — OFT found this on some benchmarks; genuine falsification risk, and if it happens the flow head loses its justification.
-- [ ] **T2.20** Episodic memory helps the next episode
+- [x] **T2.20** Episodic memory helps the next episode
       - _asserts:_ With the episodic store, a hidden object is found faster in episode N+1 than by a memoryless agent.
       - _dies if:_ Search time does not drop across episodes.
 - [x] **ME.1** Event log: what happened is retrievable
