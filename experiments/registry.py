@@ -318,10 +318,23 @@ LADDER: list[Spec] = [
                     "at equal environment steps.",
          falsified_by="The MLP matches or wins.",
          null_baseline="RL-Zoo3 MuJoCo MLP: sac 6232+-280, td3 5567, tqc 7239 at 2M steps.",
-         metric="return_at_2M_steps", budget=Budget.GPU_LONG, seeds=3, depends_on=["T2.01"],
+         metric="return_at_matched_steps", budget=Budget.GPU_LONG, seeds=3,
+         depends_on=["T2.00", "T1.08", "T0.10"],
          kills="The transformer policy. If a 140K MLP wins, use the MLP.",
          notes="RL-Zoo3 publishes NO PPO row for Humanoid. Treat PPO-Humanoid as "
-               "a weak baseline and prefer SAC/TD3/TQC."),
+               "a weak baseline and prefer SAC/TD3/TQC. Two edits 2026-08-08, "
+               "both explained in t2_02's docstring: (1) depends_on was "
+               "[T2.01], but T2.01's v4 FAIL (4.06 sigma, plateaued curve) is "
+               "the EVIDENCE motivating this arbitration — gating the "
+               "arbitration on its subject passing made the planned run "
+               "structurally impossible. v4 established the loop trains (all "
+               "seeds beat random); the deps now name the actual foundations. "
+               "(2) metric was return_at_2M_steps; at the measured 106 "
+               "steps/s, 2M x 3 seeds is ~16h for the transformer arm alone — "
+               "over the 9h session cap to re-measure a plateau v4 already "
+               "established. Comparison is at matched achieved steps "
+               "(~640K/seed, inside the plateau); the hypothesis and kill "
+               "criterion are unchanged."),
 
     Spec("T2.03", 2, "Pretrained vision features beat random features",
          hypothesis="A linear probe on frozen DINOv2/SigLIP features beats the same "

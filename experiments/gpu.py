@@ -185,7 +185,15 @@ class Budget:
 
     @staticmethod
     def _week() -> str:
-        return time.strftime("%G-W%V")
+        # %U weeks start SUNDAY, matching Kaggle's actual quota reset. The
+        # original %G-W%V (ISO, Monday-start) kept charging Sunday's runs to
+        # the exhausted week, so the tracker refused jobs for the entire first
+        # day of every fresh Kaggle quota. Usage recorded under the old keys
+        # was migrated on 2026-08-08 — migrated, not copied: the two formats
+        # share a namespace ("2026-W32" means Aug 3-9 in ISO but Aug 9-15 in
+        # %U), so a leftover ISO entry silently blocks the %U week it collides
+        # with. Old-format keys must be REMOVED once their hours are re-filed.
+        return time.strftime("%Y-W%U")
 
     def used_hours(self, backend: str) -> float:
         return float(self.data["weeks"].get(self._week(), {}).get(backend, 0.0))

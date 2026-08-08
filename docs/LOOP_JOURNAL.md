@@ -622,3 +622,30 @@ candidates in 'next': T2.03 (pretrained vision probe), T2.19 (flow-head
 bimodal), T4.02 (gradient-norm balance); T1.02 is ERROR only because both
 backends were unavailable on 08-07 — retry it cheaply first. Also consider
 --gate: last full re-run predates ContactAudio and T2.20.
+
+2026-08-08T23:3xZ — T2.02 launch-readiness: inherited the previous iteration's
+uncommitted prep (t2_02_mlp_showdown.py, spec dep/metric edits, Sunday-start
+budget week keys) and verified it instead of writing new code. Found and fixed
+one real bug in the inherited budget migration: the old ISO key "2026-W32"
+(Aug 3-9) was left in gpu_budget.json holding kaggle 37.4554h, and the NEW
+%U-format key for Aug 9-15 is ALSO "2026-W32" — the formats collide, so the
+tracker would have refused Kaggle jobs for ALL of next week despite the fresh
+30h. Removed the stale entry (its hours are already re-filed under W31,
+Aug 2-8); verified with a monkeypatched _week(): Sunday now shows 30.0h
+remaining, afford(7.0)=True. Dry-tested t2_02's pre-registered _check on 5
+synthetic outcomes: MLP-wins(expected)->FAIL, TR-wins->PASS,
+step-mismatch->VOID, non-learners->VOID, untrained-clears-gate->False — all
+correct. Kernel's TrainingPipeline calls match T2.01 v4's working kernel
+verbatim; fetch=["t202.json"] resolves via JACK_OUT on both backends. T1.02
+retried at 22:07 by the previous iteration: still ERROR, both backends down.
+HEAD is pushed (build_job's verify gate needs that). 42/105. NEXT ITERATION:
+it is SUNDAY — quota is fresh, everything is verified and committed. Launch
+    /data/venvs/jackthelearner/bin/python -m experiments.run T2.02
+FIRST, before anything else; expect ~7h wall (3x100min transformer + 3x<=45min
+MLP, one kernel, partial JSON dump per seed). If your process dies mid-poll
+the kernel survives on Kaggle: reattach for free with
+JACK_REUSE_KERNEL=jack-ladder-<epoch> (slug is in the kaggle kernels list)
+and rerun T2.02 — reattach skips the affordability gate by design. Do NOT
+resubmit a second kernel while one runs. After T2.02 settles D1, journal the
+verdict next to /tmp/mlp_probe.json's numbers and pick up T2.03/T2.19/T4.02
+on Colab if it is back.

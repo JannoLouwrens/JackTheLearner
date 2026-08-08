@@ -806,13 +806,13 @@
       "status": "PASS"
     },
     "T1.02": {
-      "commit": "55e5bda",
+      "commit": "0a5ff6e",
       "control_metrics": {},
-      "duration_s": 7.44,
+      "duration_s": 6.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1 | fetch failed: /content/out.json: rc=1 exists=False [colab] Session 'ladder-1786198079' not found.; kaggle: 0.0h left, need 0.4h",
+      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1 | fetch failed: /content/out.json: rc=1 exists=False [colab] Session 'ladder-1786226866' not found.; kaggle: 0.0h left, need 0.7h",
       "metrics": {},
-      "ran_at": "2026-08-08T14:08:04",
+      "ran_at": "2026-08-08T22:07:50",
       "seeds": [
         0,
         1,
