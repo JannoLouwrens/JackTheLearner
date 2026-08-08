@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 34 / 105 demonstrated
+## 35 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -305,7 +305,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **ME.4** Forgetting keeps what matters
       - _asserts:_ Ebbinghaus decay + reinforce-on-recall + supersede beats FIFO eviction at a fixed store budget.
       - _dies if:_ FIFO matches it on frequently-referenced old facts.
-- [ ] **ME.5** Retrieval survives growth
+- [x] **ME.5** Retrieval survives growth
       - _asserts:_ Cued-recall precision@1 stays above the recency null as the store grows 100 -> 100k events.
       - _dies if:_ Precision falls below recency-only at any decade.
 - [ ] **ME.6** Skill library accelerates composites

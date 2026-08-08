@@ -193,6 +193,7 @@ EXPANSION: list[Spec] = [
          null_baseline="Recency-only; hand-picked oracle as ceiling (the gap is "
                        "the degradation curve).",
          metric="precision_at_scale", budget=Budget.CPU_LONG, depends_on=["ME.1"],
+         seeds=3,
          notes="Standing spec: re-run at every decade of real store growth."),
 
     Spec("ME.6", 2, "Skill library accelerates composites",

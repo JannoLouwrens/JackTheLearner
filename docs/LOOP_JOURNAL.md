@@ -453,3 +453,27 @@ demonstrated. NEXT ITERATION: ME.5 (retrieval survives growth, CPU_LONG
 100k events — run in a quiet slot) or ME.6 (skill library), or start a
 CPU-implementable UB/CU spec. Kaggle resets Sunday; T2.02 (140K-MLP vs
 transformer showdown) remains the FIRST Kaggle job after reset.
+
+## 2026-08-08 — ME.5 PASS: retrieval survives 100 -> 100k events
+
+Implemented me_5_retrieval_at_scale.py: one life grown to 100k events (each
+holding a UNIQUE obj/place/colour/action 4-tuple from disjoint pools, so a
+4-word cue identifies exactly one event and the oracle ceiling is 1.0 by
+construction), measured at every decade with two cue classes. Ledger (3
+seeds): unique-cue precision@1 = 1.0 at ALL four decades (100/1k/10k/100k)
+and 1.0 after reloading the ~14MB JSONL at full scale; ambiguous 3-of-4-word
+cues give the honest degradation curve 0.997 -> 0.967 -> 0.773 -> 0.207
+(~1/n_competitors as ~5 events share a 3-word subset at 100k) BUT the top-1
+answer matches all three cue words 1.0 at every decade — content similarity
+stays the primary key, recency+importance never promote a non-match even
+against ~100k distractors, confirming the 10x sim-weight analysis in
+EpisodicMemory empirically. Fabricated-cue abstention 1.0 at every decade;
+recency null <= 0.01 everywhere; latency 36ms/query at 100k (linear scan,
+fine live; ~0.36ms/1k events, revisit past ~1M). Strengthened the spec to
+seeds=3 (was default 1) to match ME.9/ME.10 — data generation is stochastic.
+Standing spec per its notes: re-run at each decade of REAL store growth.
+35/105 demonstrated. NEXT ITERATION: remaining CPU-implementable specs —
+T2.10 (memory retrieval beats recency, cpu<10min, likely quick given ME.1/
+ME.5 machinery), T2.12 (emotion PAD separability), or PG.3 (ladder climbable
+with adhesion hands). ME.6 needs T2.11 (GPU). Kaggle resets Sunday; T2.02
+(140K-MLP vs transformer showdown) remains the FIRST Kaggle job after reset.
