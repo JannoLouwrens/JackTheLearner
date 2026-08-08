@@ -393,3 +393,23 @@ they actively hurt, exactly what MEMORY.md 2.3 pre-registered. 31/105
 demonstrated. NEXT ITERATION: ME.4 (Ebbinghaus decay + reinforce-on-recall +
 supersede beats FIFO at fixed store budget) — same substrate, CPU-only. Still
 no Kaggle quota until Sunday; T2.02 remains the first Kaggle job after reset.
+
+## 2026-08-08 (early) — ME.4 PASS: forgetting keeps what matters
+
+Implemented Forgetting.py (ForgettingMemory: bounded working store per
+MEMORY.md 4.2 — Ebbinghaus strength exp(-age/(tau*S)) with S=1+n_recalls,
+reinforce-on-recall, key-based supersession that invalidates rather than
+rewrites, eviction = superseded first then weakest; policy="fifo" is the
+null) and me_4_forgetting.py: 1,200-event life vs a 150-trace budget, 24
+durable facts stated in the first 200 events and referenced ~every 50, 8
+updated mid-life AFTER heavy reinforcement of the old value. Result:
+retention_acc 1.0 vs FIFO 0.0 (retention_vs_fifo 1.0, unbounded ceiling
+1.0), update_acc 1.0, stale 0.0, answered off a disk-reloaded snapshot.
+Control has teeth: no-supersede stale rate 1.0 (reinforcement deepens the
+rut — post-update recalls keep strengthening the WRONG trace). Off-ledger
+falsification: no-reinforce → retention 0.0, random eviction → 0.56, both
+fail the check; seeds 1,2 identical to seed 0. 32/105 demonstrated. NEXT
+ITERATION: ME.8 (working memory survives restarts — depends only on T0.05,
+CPU) or ME.10 (diary/skill separation); ME.5 is CPU_LONG (100k events), run
+it when a quiet slot allows. Still no Kaggle before Sunday; T2.02 stays the
+first Kaggle job after reset.

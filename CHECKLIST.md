@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 31 / 105 demonstrated
+## 32 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -302,7 +302,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **ME.3** Reflections beat raw events
       - _asserts:_ Aggregation questions answer better from consolidated reflections than from top-k raw events at equal tokens.
       - _dies if:_ No gain over raw top-k.
-- [ ] **ME.4** Forgetting keeps what matters
+- [x] **ME.4** Forgetting keeps what matters
       - _asserts:_ Ebbinghaus decay + reinforce-on-recall + supersede beats FIFO eviction at a fixed store budget.
       - _dies if:_ FIFO matches it on frequently-referenced old facts.
 - [ ] **ME.5** Retrieval survives growth

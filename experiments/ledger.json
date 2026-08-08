@@ -70,6 +70,35 @@
       "spec_id": "ME.3",
       "status": "PASS"
     },
+    "ME.4": {
+      "commit": "2075557",
+      "control_metrics": {
+        "nosup_stale_rate": 1.0,
+        "nosup_update_acc": 0.0
+      },
+      "duration_s": 0.51,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "fifo_retention_acc": 0.0,
+        "fifo_size": 150,
+        "n_retention_q": 16,
+        "n_update_q": 8,
+        "retention_acc": 1.0,
+        "retention_vs_fifo": 1.0,
+        "smart_size": 150,
+        "stale_rate": 0.0,
+        "unbounded_retention_acc": 1.0,
+        "unbounded_size": 1200,
+        "update_acc": 1.0
+      },
+      "ran_at": "2026-08-08T00:13:16",
+      "seeds": [
+        0
+      ],
+      "spec_id": "ME.4",
+      "status": "PASS"
+    },
     "ME.9": {
       "commit": "10e3aef",
       "control_metrics": {
