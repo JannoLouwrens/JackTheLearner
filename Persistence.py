@@ -30,9 +30,11 @@ Save format (dict saved as .pt):
 Author: Janno Louwrens
 """
 
+import io
 import os
 import time
 import shutil
+import hashlib
 import logging
 import tempfile
 from pathlib import Path
@@ -56,6 +58,13 @@ logger = logging.getLogger(__name__)
 CURRENT_VERSION = "1.2"
 
 COMPATIBLE_VERSIONS = {"1.0", "1.1", "1.2"}
+
+# On-disk container: the state dict is serialized to bytes and wrapped in
+# {'format': INTEGRITY_FORMAT, 'sha256': <hex of payload>, 'payload': <bytes>}.
+# torch.load has no checksum of its own — T6.03 measured it accepting a 64-byte
+# mid-file zero-overwrite without raising — so integrity must live in the
+# format. Unwrapped legacy saves (a bare state dict) still load.
+INTEGRITY_FORMAT = "jack-save-v1"
 
 
 # ==============================================================================
@@ -201,9 +210,9 @@ class CompanionPersistence:
         path = os.path.abspath(path)
         logger.info("[LOAD] Loading companion state from %s", path)
 
-        # Load raw data
+        # Load raw data (checksum-verified when the wrapper is present)
         try:
-            data = torch.load(path, map_location="cpu", weights_only=False)
+            data = self._read_verified(path)
         except Exception as exc:
             raise RuntimeError(
                 f"Failed to load save file {path}: {exc}"
@@ -783,6 +792,37 @@ class CompanionPersistence:
     # ATOMIC SAVE
     # ------------------------------------------------------------------
 
+    def _read_verified(self, path: str) -> Dict[str, Any]:
+        """
+        Load a save file, verifying the sha256 checksum when present.
+
+        Raises RuntimeError on a checksum mismatch — a corrupted save must be
+        rejected loudly, never half-loaded. Legacy saves written before the
+        integrity wrapper (a bare state dict) load without verification.
+        """
+        data = torch.load(path, map_location="cpu", weights_only=False)
+        if (
+            isinstance(data, dict)
+            and data.get("format") == INTEGRITY_FORMAT
+        ):
+            payload = data.get("payload")
+            expected = data.get("sha256")
+            if not isinstance(payload, bytes) or not expected:
+                raise RuntimeError(
+                    f"Malformed {INTEGRITY_FORMAT} container: {path}"
+                )
+            actual = hashlib.sha256(payload).hexdigest()
+            if actual != expected:
+                raise RuntimeError(
+                    f"Integrity check failed for {path}: "
+                    f"sha256 {actual} != recorded {expected} — "
+                    "the save file is corrupted"
+                )
+            data = torch.load(
+                io.BytesIO(payload), map_location="cpu", weights_only=False
+            )
+        return data
+
     def _atomic_save(self, data: Dict[str, Any], path: str) -> None:
         """
         Write save data atomically: write to a temporary file in the same
@@ -804,8 +844,18 @@ class CompanionPersistence:
             os.close(tmp_fd)
             tmp_fd = None
 
-            # Write data
-            torch.save(data, tmp_path)
+            # Serialize the payload, checksum it, and write the wrapper.
+            buf = io.BytesIO()
+            torch.save(data, buf)
+            payload = buf.getvalue()
+            torch.save(
+                {
+                    "format": INTEGRITY_FORMAT,
+                    "sha256": hashlib.sha256(payload).hexdigest(),
+                    "payload": payload,
+                },
+                tmp_path,
+            )
 
             # Atomic rename
             os.replace(tmp_path, path)
@@ -882,12 +932,8 @@ class CompanionPersistence:
         Returns a summary dict or None if the file is unreadable.
         """
         try:
-            # Use map_location='meta' trick: load to meta device to avoid
-            # allocating GPU memory. Fall back to cpu if that fails.
             try:
-                data = torch.load(
-                    filepath, map_location="cpu", weights_only=False
-                )
+                data = self._read_verified(filepath)
             except Exception:
                 return None
 

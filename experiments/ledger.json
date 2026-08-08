@@ -1323,14 +1323,14 @@
       "status": "PASS"
     },
     "T6.03": {
-      "commit": "fff924e",
+      "commit": "4a4afb3",
       "control_metrics": {
-        "byteflip_load_raised_info": 0.0,
-        "byteflip_load_raised_info_std": 0.0,
+        "byteflip_load_raised": 1.0,
+        "byteflip_load_raised_std": 0.0,
         "truncated_load_raised": 1.0,
         "truncated_load_raised_std": 0.0
       },
-      "duration_s": 45.04,
+      "duration_s": 66.06,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -1359,7 +1359,7 @@
         "weights_match": 1.0,
         "weights_match_std": 0.0
       },
-      "ran_at": "2026-08-08T07:17:34",
+      "ran_at": "2026-08-08T11:11:58",
       "seeds": [
         0,
         1,

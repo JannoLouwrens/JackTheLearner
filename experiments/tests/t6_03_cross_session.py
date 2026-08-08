@@ -28,11 +28,13 @@ The teeth:
 NULL (fresh instance with no memory, per spec): session 2 BEFORE load_all —
 same process, same queries, empty memory. Recall must be <= 0.05.
 
-CONTROL (must fail): a truncated copy of the save file. load_all() must
-RAISE, not shrug and produce a plausible half-Jack — "corrupted" is the
-spec's falsifier, so silent acceptance of corruption fails the spec. A
-mid-file byte-flip is also attempted and recorded as information only
-(torch's zip CRC behaviour is not ours to pre-register).
+CONTROL (must fail): a truncated copy of the save file AND a mid-file
+64-byte zero-overwrite. load_all() must RAISE on both, not shrug and
+produce a plausible half-Jack — "corrupted" is the spec's falsifier, so
+silent acceptance of corruption fails the spec. The byteflip arm was
+information-only in the first run (torch's raw zip behaviour accepted it);
+Persistence now wraps the payload with a sha256 (jack-save-v1) verified in
+load_all, so the byteflip gate is pre-registered as of that hardening.
 
 Found and fixed on the way in (Persistence.py): list(MoodHistory) raised
 TypeError inside _collect_emotional_state's try/except, which silently
@@ -276,7 +278,7 @@ def _control(seed: int) -> dict:
         trunc = json.load(open(f"{tmpdir}/corrupt_truncate.json"))
         flip = json.load(open(f"{tmpdir}/corrupt_byteflip.json"))
         return {"truncated_load_raised": trunc["raised"],
-                "byteflip_load_raised_info": flip["raised"]}
+                "byteflip_load_raised": flip["raised"]}
     finally:
         shutil.rmtree(tmpdir, ignore_errors=True)
         _CACHE.pop(seed, None)
@@ -295,7 +297,8 @@ def _check(m: dict, c: dict) -> bool:
             and m["gstep_restored"] == 1.0
             and m["monologue_restored"] == 1.0
             and m["n_memories_restored"] == 1.0
-            and c["truncated_load_raised"] == 1.0)
+            and c["truncated_load_raised"] == 1.0
+            and c["byteflip_load_raised"] == 1.0)
 
 
 def run(ledger: Ledger | None = None):
