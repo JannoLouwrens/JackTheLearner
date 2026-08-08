@@ -75,7 +75,10 @@ EXPANSION: list[Spec] = [
                       "the fixture cannot certify any curiosity claim.",
          null_baseline="Random walk's dwell time near the panel.",
          metric="icm_dwell_share", budget=Budget.CPU_LONG, depends_on=["PG.1"],
-         notes="Every later curiosity claim must report dwell share on this fixture."),
+         seeds=3,
+         notes="Every later curiosity claim must report dwell share on this fixture. "
+               "Control: identical ICM agent with a STATIC panel texture must not "
+               "fixate — else dwell measures geometry, not noise."),
 
     Spec("PG.5", 2, "Procedural contact audio with localization labels",
          hypothesis="Modal-resonator synthesis on MuJoCo contact events yields "

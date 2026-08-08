@@ -270,18 +270,18 @@
       "status": "PASS"
     },
     "PG.1": {
-      "commit": "79af208",
+      "commit": "0d438f0",
       "control_metrics": {
         "frictionless_slide_15deg": 11.1032
       },
-      "duration_s": 0.32,
+      "duration_s": 0.29,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
         "bodies": 8,
         "finite_after_settle": true,
         "friction_discriminates": 1751.7,
-        "geoms": 31,
+        "geoms": 35,
         "max_rest_velocity": 0.0,
         "missing_landmarks": "none",
         "mutations_tried": 12,
@@ -289,7 +289,7 @@
         "slide_15deg": 0.0035,
         "slide_50deg": 6.1153
       },
-      "ran_at": "2026-08-07T06:12:29",
+      "ran_at": "2026-08-08T08:27:12",
       "seeds": [
         0
       ],
@@ -297,7 +297,7 @@
       "status": "PASS"
     },
     "PG.2": {
-      "commit": "79af208",
+      "commit": "0d438f0",
       "control_metrics": {
         "no_buoyancy_max_z": -1.85,
         "no_buoyancy_z": [
@@ -305,7 +305,7 @@
           -1.85
         ]
       },
-      "duration_s": 0.74,
+      "duration_s": 0.72,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -327,7 +327,7 @@
         "z_rho0.5": -0.0,
         "z_rho0.8": -0.0639
       },
-      "ran_at": "2026-08-07T06:12:31",
+      "ran_at": "2026-08-08T08:27:14",
       "seeds": [
         0
       ],
@@ -335,7 +335,7 @@
       "status": "PASS"
     },
     "PG.3": {
-      "commit": "28d9bb4",
+      "commit": "0d438f0",
       "control_metrics": {
         "ascent_frac": -1.3119,
         "ascent_frac_std": 0.593984,
@@ -354,7 +354,7 @@
         "start_rung_z": 1.173333,
         "start_rung_z_std": 0.115854
       },
-      "duration_s": 8.27,
+      "duration_s": 8.64,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -385,13 +385,57 @@
         "start_rung_z": 1.173333,
         "start_rung_z_std": 0.115854
       },
-      "ran_at": "2026-08-08T06:20:19",
+      "ran_at": "2026-08-08T08:27:24",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "PG.3",
+      "status": "PASS"
+    },
+    "PG.4": {
+      "commit": "0d438f0",
+      "control_metrics": {
+        "icm_dwell_share": 0.0,
+        "icm_dwell_share_std": 0.0,
+        "icm_final_dist_to_panel": 9.815333,
+        "icm_final_dist_to_panel_std": 1.226581,
+        "icm_visited_cell_frac": 0.752067,
+        "icm_visited_cell_frac_std": 0.079559,
+        "panel_reward_ratio": 0.0,
+        "panel_reward_ratio_std": 0.0
+      },
+      "duration_s": 496.31,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "dwell_margin": 0.605267,
+        "dwell_margin_std": 0.445437,
+        "icm_dwell_share": 0.666667,
+        "icm_dwell_share_std": 0.471405,
+        "icm_final_dist_to_panel": 3.075667,
+        "icm_final_dist_to_panel_std": 3.533235,
+        "icm_visited_cell_frac": 0.515133,
+        "icm_visited_cell_frac_std": 0.061206,
+        "late_reward_in_zone": 0.641133,
+        "late_reward_in_zone_std": 0.4534,
+        "late_reward_out_zone": 0.241433,
+        "late_reward_out_zone_std": 0.341438,
+        "null_dwell_share": 0.0614,
+        "null_dwell_share_std": 0.026931,
+        "panel_reward_ratio": 641131327.173333,
+        "panel_reward_ratio_std": 453399030.102153,
+        "rays_on_panel_while_dwelling": 7.476667,
+        "rays_on_panel_while_dwelling_std": 5.286803
+      },
+      "ran_at": "2026-08-08T09:16:27",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "PG.4",
       "status": "PASS"
     },
     "T0.01": {

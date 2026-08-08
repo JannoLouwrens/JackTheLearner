@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 39 / 105 demonstrated
+## 40 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -265,7 +265,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **PG.3** Ladder is climbable in principle (adhesion hands)
       - _asserts:_ Adhesion actuators on the hand geoms let a scripted kinematic sequence ascend one rung; falling produces clean, resumable episodes.
       - _dies if:_ Adhesion cannot support body weight at any gain, or falls corrupt the episode stream.
-- [ ] **PG.4** Noisy-TV panel traps naive curiosity
+- [x] **PG.4** Noisy-TV panel traps naive curiosity
       - _asserts:_ The re-randomizing texture panel is a working trap: a prediction-error agent fixates on it; dwell-time metric works.
       - _dies if:_ The naive-curiosity control arm does NOT fixate — then the fixture cannot certify any curiosity claim.
 - [ ] **PG.5** Procedural contact audio with localization labels

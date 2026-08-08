@@ -21,11 +21,14 @@ What is in it and why each piece earns its place:
   objects         balls, boxes and a cylinder with randomised mass/friction —
                   the affordance substrate (push? lift? roll?) for CU.6.
   seesaw          a hinged plank: a dynamic affordance, unlike the static ramp.
-  noise panel     MANDATORY FIXTURE, not scenery. A wall whose texture
+  noise panel     MANDATORY FIXTURE, not scenery. A wall patch whose texture
                   re-randomises every step. A prediction-error agent must get
                   trapped here (PG.4), and every curiosity claim must report its
                   dwell time near it. Without a working trap, "his curiosity is
                   real" is unfalsifiable.
+  walls           the nursery is a room. Load-bearing for the noisy-TV fixture:
+                  the panel must differ from its surroundings ONLY in texture
+                  (see the wall comment in build_mjcf).
 
 Deliberately NOT here: anything requiring a resident GPU, and any reward
 function. The playground has no goals. Goals come from Jack.
@@ -190,6 +193,21 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False) -> str:
                   '<geom name="seesaw_plank" type="box" size="1.0 0.25 0.03" mass="2.0" '
                   'rgba="0.6 0.5 0.3 1"/></body>')
 
+    # ── perimeter walls: the nursery is a ROOM ──────────────────────────
+    # These earn their place through the noisy-TV fixture: the panel must be a
+    # patch of WALL that differs only in texture. Free-floating at the arena
+    # edge, its silhouette against empty space is itself irreducibly hard to
+    # predict — PG.4 measured a static-texture control fixating at 0.725 dwell
+    # on the silhouette alone, which would make the trap measure geometry, not
+    # noise. Embedded flush in a wall, the only surprise left is the texture.
+    walls = []
+    for i, (wx, wy, sx, sy) in enumerate([
+            (0, a, a, 0.05), (0, -a, a, 0.05),
+            (a, 0, 0.05, a), (-a, 0, 0.05, a)]):
+        walls.append(
+            f'<geom name="wall{i}" type="box" pos="{wx} {wy} 1.25" '
+            f'size="{sx} {sy} 1.25" rgba="0.75 0.73 0.68 1"/>')
+
     # ── the noisy-TV panel: a fixture, not scenery ──────────────────────
     noise = ""
     if p.noise_panel:
@@ -218,6 +236,7 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False) -> str:
     {pool_floor}
     {''.join(objects)}
     {seesaw}
+    {''.join(walls)}
     {noise}
   </worldbody>
 </mujoco>
