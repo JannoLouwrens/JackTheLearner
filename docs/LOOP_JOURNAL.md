@@ -542,3 +542,29 @@ pass. 38/105. NEXT ITERATION: T6.03 (cross-session persistence, cpu<10min,
 unblocked) is the cheapest remaining; PG.4 (noisy-TV trap, CPU_LONG) now has
 its dependency and matters for every curiosity claim. Kaggle resets SUNDAY —
 the FIRST Kaggle job after reset is T2.02 (140K-MLP vs transformer showdown).
+
+## 2026-08-08 — T6.03 PASS: Jack survives a restart whole — after fixing a save bug that dropped his mood
+
+Implemented t6_03_cross_session.py: session 1 (child process) builds the real
+UnifiedBrain (58M, LLM off), stores 20 owner facts in CompanionMemory, runs 12
+emotional updates, renames the personality, appends monologue entries, sets
+global_step, saves via CompanionPersistence.save_all, exits. Session 2 is a
+fresh process seeded differently: answers as the null FIRST (fresh instance,
+recall 0.0), then load_all and answers again — recall_after_restart 1.0 +/- 0
+(3 seeds), gap 1.0. Fidelity gates all 1.0: state_dict sha256 bit-match after
+load while virgin weights provably differ; PAD restored to 0.0 dev while the
+virgin PAD sat 0.068 +/- 0.014 away; mood history refilled into the live
+MoodHistory (record() still works); personality/global_step/monologue/memories
+exact. Control: truncated save REJECTED (load raises) every seed. Found and
+FIXED en route in Persistence.py: list(MoodHistory) raised TypeError inside
+_collect_emotional_state's try/except, so EVERY save ever written silently
+dropped the entire emotional state (pad included); and _apply_emotional_state
+replaced MoodHistory with a bare list, killing .record() after any restore.
+Spec strengthened to seeds=3 + explicit corruption control before the official
+run. CAVEAT worth an iteration: the info-only byteflip arm shows torch.load
+ACCEPTS a 64-byte mid-file zero-overwrite without raising — the save format
+has no integrity checksum. Small hardening: put a sha256 of the payload in the
+save dict, verify in load_all, then promote byteflip to a gated control.
+39/105. NEXT ITERATION: Kaggle resets SUNDAY (tomorrow) — the FIRST Kaggle job
+is T2.02 (140K-MLP vs transformer showdown, settles D1). If pre-reset, PG.4
+(noisy-TV trap, CPU_LONG) unblocks every curiosity claim and needs no GPU.

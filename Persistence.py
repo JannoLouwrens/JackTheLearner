@@ -402,9 +402,14 @@ class CompanionPersistence:
                 state["pad_vector"] = (
                     pad.cpu().tolist() if torch.is_tensor(pad) else list(pad)
                 )
-            # History of emotional states
+            # History of emotional states. EmotionalState.history is a
+            # MoodHistory (not iterable itself — its entries deque is);
+            # list(MoodHistory) raises TypeError, which the except below
+            # turned into silently dropping the WHOLE emotional state
+            # from every save (caught by T6.03).
             if hasattr(emo, "history"):
-                state["history"] = list(emo.history)
+                hist = emo.history
+                state["history"] = list(getattr(hist, "entries", hist))
             # Baseline / resting state
             if hasattr(emo, "baseline"):
                 bl = emo.baseline
@@ -642,7 +647,19 @@ class CompanionPersistence:
                     emo.pad_vector = pad
 
             if "history" in emo_data and hasattr(emo, "history"):
-                emo.history = list(emo_data["history"])
+                hist = emo.history
+                if hasattr(hist, "entries"):
+                    # MoodHistory: refill in place so .record()/.get_recent()
+                    # keep working after a restore (replacing it with a plain
+                    # list would break the API).
+                    hist.entries.clear()
+                    hist.entries.extend(emo_data["history"])
+                    if emo_data["history"]:
+                        last = emo_data["history"][-1]
+                        if isinstance(last, dict) and "timestamp" in last:
+                            hist._last_record_time = last["timestamp"]
+                else:
+                    emo.history = list(emo_data["history"])
 
             if "baseline" in emo_data and hasattr(emo, "baseline"):
                 bl = emo_data["baseline"]

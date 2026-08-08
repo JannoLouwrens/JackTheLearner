@@ -573,7 +573,10 @@ LADDER: list[Spec] = [
          hypothesis="Save, restart, and the companion recalls prior interaction.",
          falsified_by="State lost or corrupted across restart.",
          null_baseline="Fresh instance with no memory.",
-         metric="recall_after_restart", budget=Budget.CPU, depends_on=["T2.10", "T0.05"]),
+         metric="recall_after_restart", budget=Budget.CPU, seeds=3,
+         depends_on=["T2.10", "T0.05"],
+         control="A corrupted (truncated) save file must be rejected loudly by "
+                 "load_all — silent acceptance of corruption is the falsifier."),
     Spec("T6.04", 6, "Everything at once, end to end",
          hypothesis="With every modality live simultaneously - vision, "
                     "proprioception, touch, audio, language - Jack takes a spoken "

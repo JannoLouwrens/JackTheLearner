@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 38 / 105 demonstrated
+## 39 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -241,7 +241,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T6.02** Long-run stability
       - _asserts:_ Hours of continuous operation without drift into degenerate behaviour.
       - _dies if:_ Action saturation, mood lock, or memory unbounded growth.
-- [ ] **T6.03** Cross-session persistence
+- [x] **T6.03** Cross-session persistence
       - _asserts:_ Save, restart, and the companion recalls prior interaction.
       - _dies if:_ State lost or corrupted across restart.
 - [ ] **T6.04** Everything at once, end to end

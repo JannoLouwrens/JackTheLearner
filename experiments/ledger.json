@@ -395,9 +395,9 @@
       "status": "PASS"
     },
     "T0.01": {
-      "commit": "bb1659d",
+      "commit": "fff924e",
       "control_metrics": {},
-      "duration_s": 1.51,
+      "duration_s": 1.58,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "message": "",
       "metrics": {
@@ -406,7 +406,7 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-04T15:43:57",
+      "ran_at": "2026-08-08T07:18:08",
       "seeds": [
         0
       ],
@@ -1276,6 +1276,52 @@
         2
       ],
       "spec_id": "T2.12",
+      "status": "PASS"
+    },
+    "T6.03": {
+      "commit": "fff924e",
+      "control_metrics": {
+        "byteflip_load_raised_info": 0.0,
+        "byteflip_load_raised_info_std": 0.0,
+        "truncated_load_raised": 1.0,
+        "truncated_load_raised_std": 0.0
+      },
+      "duration_s": 45.04,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "gap": 1.0,
+        "gap_std": 0.0,
+        "gstep_restored": 1.0,
+        "gstep_restored_std": 0.0,
+        "hist_restored": 1.0,
+        "hist_restored_std": 0.0,
+        "monologue_restored": 1.0,
+        "monologue_restored_std": 0.0,
+        "n_memories_restored": 1.0,
+        "n_memories_restored_std": 0.0,
+        "null_recall": 0.0,
+        "null_recall_std": 0.0,
+        "pad_dev_postload": 0.0,
+        "pad_dev_postload_std": 0.0,
+        "pad_dev_preload": 0.067899,
+        "pad_dev_preload_std": 0.013592,
+        "personality_restored": 1.0,
+        "personality_restored_std": 0.0,
+        "recall_after_restart": 1.0,
+        "recall_after_restart_std": 0.0,
+        "weights_differ_preload": 1.0,
+        "weights_differ_preload_std": 0.0,
+        "weights_match": 1.0,
+        "weights_match_std": 0.0
+      },
+      "ran_at": "2026-08-08T07:17:34",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T6.03",
       "status": "PASS"
     }
   }
