@@ -433,3 +433,23 @@ default) fixed it — off-ledger seeds 1,2,3 all now: resume 1.0, zeroed
 (diary/skill double dissociation, CPU, deps ME.1+T1.04 both PASS) or ME.5
 (CPU_LONG, quiet slot). Kaggle resets Sunday; T2.02 remains the first
 Kaggle job after reset.
+
+## 2026-08-08 — ME.10 PASS: the diary and the skill are genuinely two stores
+
+Implemented me_10_diary_vs_skill.py: 84 of 120 {colour}x{object} drop
+episodes recorded in EpisodicMemory (240 filler events interleaved), world
+rule outcome = colour_bit XOR object_bit so single-attribute retrieval
+predicts held-out pairs at exactly chance; distillation parses training
+pairs FROM the diary's did-events and trains a 22-32-2 MLP. Ledger (3
+seeds): recall 1.0 pre AND post distillation (learning did not eat the
+memory), held-out skill 0.944±0.045 vs untrained null 0.574 (gain 0.370),
+diary-on-held-out 0.556 (~chance — the skill is not retrievable). Double
+dissociation clean: wipe diary -> recall 0.0, skill 0.944 unchanged;
+revert weights -> skill 0.574, recall 1.0 unchanged. Also fixed a real
+runner bug: _module_for globbed "me_1*.py" which would match BOTH
+me_1_event_log.py and me_10_*.py and raise for ME.1 and ME.10; now
+"{prefix}_*.py", all 36 implemented specs verified to resolve. 34/105
+demonstrated. NEXT ITERATION: ME.5 (retrieval survives growth, CPU_LONG
+100k events — run in a quiet slot) or ME.6 (skill library), or start a
+CPU-implementable UB/CU spec. Kaggle resets Sunday; T2.02 (140K-MLP vs
+transformer showdown) remains the FIRST Kaggle job after reset.

@@ -22,6 +22,50 @@
       "spec_id": "ME.1",
       "status": "PASS"
     },
+    "ME.10": {
+      "commit": "663270b",
+      "control_metrics": {
+        "revert_recall": 1.0,
+        "revert_recall_std": 0.0,
+        "revert_skill": 0.574067,
+        "revert_skill_std": 0.052373,
+        "wipe_recall": 0.0,
+        "wipe_recall_std": 0.0,
+        "wipe_skill": 0.944433,
+        "wipe_skill_std": 0.045356
+      },
+      "duration_s": 37.27,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "n_heldout": 36.0,
+        "n_heldout_std": 0.0,
+        "n_train_episodes": 84.0,
+        "n_train_episodes_std": 0.0,
+        "null_skill_heldout": 0.574067,
+        "null_skill_heldout_std": 0.052373,
+        "recall_kept_x_skill_gained": 0.370367,
+        "recall_kept_x_skill_gained_std": 0.094423,
+        "recall_post": 1.0,
+        "recall_post_std": 0.0,
+        "recall_pre": 1.0,
+        "recall_pre_std": 0.0,
+        "skill_gain": 0.370367,
+        "skill_gain_std": 0.094423,
+        "skill_heldout": 0.944433,
+        "skill_heldout_std": 0.045356,
+        "store_on_heldout": 0.555567,
+        "store_on_heldout_std": 0.090754
+      },
+      "ran_at": "2026-08-08T02:14:17",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "ME.10",
+      "status": "PASS"
+    },
     "ME.2": {
       "commit": "5e6d698",
       "control_metrics": {

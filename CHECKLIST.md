@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 33 / 105 demonstrated
+## 34 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -326,7 +326,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **ME.9** He remembers what he hears, says, and does — attributed
       - _asserts:_ Cued recall works across all three channels (heard utterance, own utterance, own action) at >=80% each, AND source attribution survives: 'what did I tell you' is answered from heard-events, 'what did you say/do' from own-events, per speaker across >=3 interleaved speakers.
       - _dies if:_ Any channel at chance, or attribution confuses who-said-what once conversations interleave.
-- [ ] **ME.10** Keeps the memory AND learns the general skill
+- [x] **ME.10** Keeps the memory AND learns the general skill
       - _asserts:_ After episodes are distilled into weights (practice/replay), the verbatim episodic record still answers cued recall at its pre-distillation rate, AND the distilled skill outperforms no-distillation; then the double dissociation: wiping the episodic store leaves the skill intact, wiping the weight update leaves recall intact.
       - _dies if:_ Distillation degrades recall (learning ate the memory) or recall requires the store at skill-time (nothing was ever in the weights).
       - _then delete:_ Any design where conversation memory lives only in weights or skills live only in retrieved episodes.

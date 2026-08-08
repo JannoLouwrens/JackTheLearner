@@ -71,7 +71,9 @@ def _module_for(spec_id: str):
     what the spec means; it must be settled by a person, not by alphabetical order.
     """
     prefix = spec_id.lower().replace(".", "_")
-    matches = sorted(TESTS_DIR.glob(f"{prefix}*.py"))
+    # The underscore before the slug is load-bearing: "me_1*" would also match
+    # me_10_*, so ME.1 and ME.10 would each see two implementations and raise.
+    matches = sorted(TESTS_DIR.glob(f"{prefix}_*.py"))
     if len(matches) > 1:
         raise RuntimeError(
             f"{spec_id} has {len(matches)} implementations: "
