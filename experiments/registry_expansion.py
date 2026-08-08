@@ -63,7 +63,10 @@ EXPANSION: list[Spec] = [
          falsified_by="Adhesion cannot support body weight at any gain, or "
                       "falls corrupt the episode stream.",
          null_baseline="Zero adhesion — must slip.",
-         metric="scripted_rung_ascent", budget=Budget.CPU, depends_on=["PG.1"]),
+         metric="scripted_rung_ascent", budget=Budget.CPU, depends_on=["PG.1"],
+         seeds=3,
+         notes="Seeds map to rung spacings 0.30/0.26/0.34 m — 'climbable' must "
+               "hold across the middle of the mutation range, not one geometry."),
 
     Spec("PG.4", 2, "Noisy-TV panel traps naive curiosity",
          hypothesis="The re-randomizing texture panel is a working trap: a "

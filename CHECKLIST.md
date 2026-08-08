@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 37 / 105 demonstrated
+## 38 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -262,7 +262,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **PG.2** Water works: buoyancy + drag
       - _asserts:_ A passive ragdoll floats at the equilibrium depth its density ratio predicts (±10%); submerged motion feels drag.
       - _dies if:_ Ragdoll sinks/launches, or equilibrium depth off >10%.
-- [ ] **PG.3** Ladder is climbable in principle (adhesion hands)
+- [x] **PG.3** Ladder is climbable in principle (adhesion hands)
       - _asserts:_ Adhesion actuators on the hand geoms let a scripted kinematic sequence ascend one rung; falling produces clean, resumable episodes.
       - _dies if:_ Adhesion cannot support body weight at any gain, or falls corrupt the episode stream.
 - [ ] **PG.4** Noisy-TV panel traps naive curiosity

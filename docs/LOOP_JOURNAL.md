@@ -519,3 +519,26 @@ conditioned behaviour) needs either GRU training or a residual OCC path.
 climbability, cpu<10min) or T6.03 (cross-session persistence, cpu<10min,
 now unblocked) — both CPU-cheap. Kaggle resets Sunday; T2.02 (140K-MLP vs
 transformer showdown) remains the FIRST Kaggle job after reset.
+
+## 2026-08-08 — PG.3 PASS: the ladder is climbable in principle, and falls are clean
+
+Implemented pg_3_ladder_climbable.py: a minimal certification rig (30 kg
+torso hanging from two reach+lift slide arms with adhesion hands, gain 900 N
+vs 302 N body weight) gripping the real playground ladder's rungs from BELOW,
+so zero adhesion has no support path. Scripted hand-over-hand ascent of one
+rung across three rung spacings 0.30/0.26/0.34 m (seeds; spec strengthened to
+seeds=3): ascent_frac 0.973 +/- 0.020 of a rung spacing, hold drift 0.0001 m,
+both hands verified in contact with the next rung every seed. Falls: release
+mid-air -> finite states, rest on floor (torso z 0.0698, speed 0.03), mid-fall
+snapshot restores bit-exact into a fresh MjData (resume_max_dev <= 4e-14), and
+mj_resetData + regrip holds again (drift 0.0001). Zero-adhesion null slips
+0.208 m during the hang and ends the script on the floor (final z 0.0698,
+ascent -1.31 rungs). One threshold adjusted BEFORE the official run and
+documented: control drop 0.30 -> 0.15 m, because ungripped hands legitimately
+come to REST on the rung below (normal contact) instead of free-falling —
+resting-vs-gripping is exactly the distinction the spec tests. Also fixed:
+geom_xpos is zeros until mj_forward, so the initial torso z needed a forward
+pass. 38/105. NEXT ITERATION: T6.03 (cross-session persistence, cpu<10min,
+unblocked) is the cheapest remaining; PG.4 (noisy-TV trap, CPU_LONG) now has
+its dependency and matters for every curiosity claim. Kaggle resets SUNDAY —
+the FIRST Kaggle job after reset is T2.02 (140K-MLP vs transformer showdown).
