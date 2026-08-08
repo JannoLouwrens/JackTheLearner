@@ -568,3 +568,17 @@ save dict, verify in load_all, then promote byteflip to a gated control.
 39/105. NEXT ITERATION: Kaggle resets SUNDAY (tomorrow) — the FIRST Kaggle job
 is T2.02 (140K-MLP vs transformer showdown, settles D1). If pre-reset, PG.4
 (noisy-TV trap, CPU_LONG) unblocks every curiosity claim and needs no GPU.
+
+2026-08-08T11:07Z — Landed the previous iteration's finished-but-uncommitted
+PG.4 PASS (it timed out pre-commit; ledger/CHECKLIST/walls all consistent, check
+re-verified against recorded aggregates): ICM dwell 0.667 vs null 0.061, static
+control 0.0. CAVEAT for CU.3: per-seed dwell was (1.0, 1.0, 0.0) — one seed
+never found the panel in 20k steps; PASS is by the ladder-wide aggregate-mean
+protocol. CU.3 should compare dwell DISTRIBUTIONS, not means. Then closed the
+T6.03 follow-up: jack-save-v1 sha256 wrapper in Persistence, byteflip promoted
+to a gated control, T6.03 re-PASS 3 seeds (byteflip raised 1.0, recall 1.0).
+40/105. NEXT ITERATION: Kaggle resets SUNDAY (tomorrow) — FIRST Kaggle job is
+T2.02 (settles D1). Today, cheapest CPU units: ME.7 (SIESTA consolidation) or
+CU.-family design; note ps output showing 'claude -p ...ladder...' is YOUR OWN
+process (ladder_loop.sh) — uncommitted work at start means the PREVIOUS
+iteration died mid-unit: inherit and finish it, don't discard.
