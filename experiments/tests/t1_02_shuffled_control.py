@@ -120,19 +120,20 @@ def reference_arm(seed):
     return {"heldout": round(err, 5), "mean_baseline": round(mean_err, 5)}
 
 
-SEED = 0
-out = {"device": DEV,
-       "reference": reference_arm(SEED),
-       "structured": brain_arm(SEED, shuffle=False),
-       "shuffled": brain_arm(SEED, shuffle=True)}
+out = {"device": DEV, "seeds": {}}
+for SEED in (0, 1, 2):
+    out["seeds"][str(SEED)] = {
+        "reference": reference_arm(SEED),
+        "structured": brain_arm(SEED, shuffle=False),
+        "shuffled": brain_arm(SEED, shuffle=True)}
 json.dump(out, open("/content/out.json", "w"), indent=2)
 print("RESULT", json.dumps(out), flush=True)
 '''
 
 
-def _submit(seed: int) -> dict:
+def _submit() -> dict:
     job = build_job(JOB)
-    r = submit(job, prefer="colab", est_hours=0.4, timeout_s=2400,
+    r = submit(job, prefer="colab", est_hours=0.7, timeout_s=3600,
                fetch=["/content/out.json"])
     if not r.ok:
         raise RuntimeError(f"GPU job failed on {r.backend}: {r.message}")
@@ -146,12 +147,16 @@ def _submit(seed: int) -> dict:
     raise RuntimeError("job produced no result")
 
 
+# One kernel runs all three seeds; an unguarded _submit here would pay for the
+# same session three times (run_spec calls _experiment once per seed).
 _CACHE: dict = {}
 
 
 def _experiment(seed: int) -> dict:
-    _CACHE.update(_submit(seed))
-    s, ref = _CACHE["structured"], _CACHE["reference"]
+    if not _CACHE:
+        _CACHE.update(_submit())
+    per = _CACHE["seeds"][str(seed)]
+    s, ref = per["structured"], per["reference"]
     return {"structured_heldout": s["heldout"],
             "mean_baseline": s["mean_baseline"],
             "reference_heldout": ref["heldout"],
@@ -159,7 +164,7 @@ def _experiment(seed: int) -> dict:
 
 
 def _control(seed: int) -> dict:
-    sh = _CACHE["shuffled"]
+    sh = _CACHE["seeds"][str(seed)]["shuffled"]
     return {"shuffled_heldout": sh["heldout"], "shuffled_train_loss": sh["train_loss"]}
 
 
