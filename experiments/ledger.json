@@ -1187,6 +1187,36 @@
       ],
       "spec_id": "T2.10",
       "status": "PASS"
+    },
+    "T2.12": {
+      "commit": "2d3c29f",
+      "control_metrics": {
+        "randomwalk_acc": 0.2375,
+        "randomwalk_acc_std": 0.027003,
+        "shuffled_label_acc": 0.145833,
+        "shuffled_label_acc_std": 0.164042
+      },
+      "duration_s": 39.48,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "",
+      "metrics": {
+        "chance": 0.25,
+        "chance_std": 0.0,
+        "mean_pleasure_struggling": 0.333533,
+        "mean_pleasure_struggling_std": 0.775904,
+        "mean_pleasure_thriving": 0.106767,
+        "mean_pleasure_thriving_std": 0.516128,
+        "separability_acc": 0.904167,
+        "separability_acc_std": 0.072409
+      },
+      "ran_at": "2026-08-08T05:10:19",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T2.12",
+      "status": "PASS"
     }
   }
 }

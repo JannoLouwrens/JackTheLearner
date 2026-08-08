@@ -498,3 +498,24 @@ cpu<10min) or PG.3 (adhesion-hands ladder climbability, cpu<10min) — both
 CPU-cheap. Kaggle resets Sunday; T2.02 (140K-MLP vs transformer showdown)
 remains the FIRST Kaggle job after reset. T6.03 depends on T2.10+T0.05 —
 check whether it is now unblocked next time.
+
+## 2026-08-08 — T2.12 PASS: emotion states are distinguishable (but the mapping is arbitrary)
+
+Implemented t2_12_emotion_separability.py. Four event regimes (thriving/
+struggling/exploring/neglected), 40 trajectories x 120 steps each through the
+shipped EmotionalState, nearest-centroid on z-scored (mean,std) PAD features:
+held-out separability 0.904 +/- 0.072 vs chance 0.25; matched-variance
+random-walk null 0.238 +/- 0.027 (chance, as it must be); shuffled-label
+control 0.146; margin 0.667 vs pre-registered 0.30. 3 seeds, 39s CPU.
+HONEST CAVEAT worth carrying: separable does NOT mean correct. The diagnostic
+means show pleasure sign is seed-arbitrary (struggling 0.33+/-0.78 vs
+thriving 0.11+/-0.52 across seeds) because EmotionalState.py:611 routes
+events ONLY through the untrained GRU — the OCC symbolic deltas never touch
+pad_vector directly, so an untrained module gives a random-but-injective
+event->PAD map. Fine for T2.12's claim (input modality carries information),
+but any future spec about VALENCE (e.g. "praise makes him feel good", mood-
+conditioned behaviour) needs either GRU training or a residual OCC path.
+37/105 demonstrated. NEXT ITERATION: PG.3 (adhesion-hands ladder
+climbability, cpu<10min) or T6.03 (cross-session persistence, cpu<10min,
+now unblocked) — both CPU-cheap. Kaggle resets Sunday; T2.02 (140K-MLP vs
+transformer showdown) remains the FIRST Kaggle job after reset.

@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 36 / 105 demonstrated
+## 37 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -147,7 +147,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Training can be extended in increments until improvement falls below seed noise, and the stopping point is decided by measurement rather than by whoever got bored.
       - _dies if:_ Held-out performance is still climbing when the criterion fires, or the criterion never fires because per-increment gains never drop below noise.
       - _then delete:_ Any claim that a run is 'done'. Without this, 'trained' means 'stopped', and the two are not the same thing.
-- [ ] **T2.12** Emotion model produces distinguishable states
+- [x] **T2.12** Emotion model produces distinguishable states
       - _asserts:_ PAD trajectories under different event streams are separable.
       - _dies if:_ Indistinguishable from a random walk.
       - _then delete:_ EmotionalState as an input modality.
