@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 35 / 105 demonstrated
+## 36 / 105 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -136,7 +136,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Injecting an unpredictable observation channel does NOT capture the intrinsic reward.
       - _dies if:_ The agent fixates on the noise channel.
       - _then delete:_ ICM alone. Forces RND or a learning-progress signal.
-- [ ] **T2.10** Memory retrieval beats recency
+- [x] **T2.10** Memory retrieval beats recency
       - _asserts:_ Retrieval scoring beats a pure-recency baseline on recall questions.
       - _dies if:_ Recency-only does as well.
 - [ ] **T2.11** Skills are distinguishable

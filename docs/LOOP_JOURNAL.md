@@ -477,3 +477,24 @@ T2.10 (memory retrieval beats recency, cpu<10min, likely quick given ME.1/
 ME.5 machinery), T2.12 (emotion PAD separability), or PG.3 (ladder climbable
 with adhesion hands). ME.6 needs T2.11 (GPU). Kaggle resets Sunday; T2.02
 (140K-MLP vs transformer showdown) remains the FIRST Kaggle job after reset.
+
+## 2026-08-08 — T2.10 PASS: retrieval scoring beats recency where recency is competitive
+
+Implemented t2_10_retrieval_vs_recency.py. ME.1's recency null was degenerate
+(newest event answers everything, ~0.001); this spec stages the fair fight the
+Generative Agents scoring exists for. Arm A: 120 recall questions with a
+conversational recency bias (35% about the last 10 events of a 650-event
+life), so "return the 5 most recent events" earns 0.178 +/- 0.021 recall@5 —
+a real baseline — while scored retrieval gets 1.0 recall@5 (and @1), margin
+0.82 vs pre-registered 0.30. Arm B: 30 recurring 4-tuples lived 5x each; the
+cue matches all occurrences at sim 1.0 and the right answer is the LATEST —
+scored retrieval 1.0 latest@1, similarity-only scorer (w_recency=w_importance=0,
+control that must fail) 0.0, recency-baseline-on-arm-B also 0.0. So the
+combined score beats pure recency AND is not secretly pure similarity; the
+recency term is load-bearing exactly where it should be (tie-breaking equal
+content matches). 3 seeds, all stds 0.0 on experiment arms, 0.32s runtime.
+36/105 demonstrated. NEXT ITERATION: T2.12 (emotion PAD separability,
+cpu<10min) or PG.3 (adhesion-hands ladder climbability, cpu<10min) — both
+CPU-cheap. Kaggle resets Sunday; T2.02 (140K-MLP vs transformer showdown)
+remains the FIRST Kaggle job after reset. T6.03 depends on T2.10+T0.05 —
+check whether it is now unblocked next time.
