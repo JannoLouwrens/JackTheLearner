@@ -29,6 +29,11 @@ What is in it and why each piece earns its place:
   walls           the nursery is a room. Load-bearing for the noisy-TV fixture:
                   the panel must differ from its surroundings ONLY in texture
                   (see the wall comment in build_mjcf).
+  JACK            `with_humanoid=True` puts the Humanoid-v5 body IN the room,
+                  spawned within reach of the ladder. Until 2026-08-09 that
+                  argument existed and did nothing, and nothing in the repo
+                  ever passed True: PG.1-PG.7 all passed on an EMPTY world.
+                  See PG.8 and the LESSONS.md entry it produced.
 
 Deliberately NOT here: anything requiring a resident GPU, and any reward
 function. The playground has no goals. Goals come from Jack.
@@ -36,13 +41,34 @@ function. The playground has no goals. Goals come from Jack.
 from __future__ import annotations
 
 import math
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Optional
 
 import numpy as np
 
 WATER_DENSITY = 1000.0      # kg/m^3
 GRAVITY = 9.81
+
+# The ladder's footprint, in one place so a spec can aim at it rather than
+# re-deriving a literal that build_mjcf might later move.
+LADDER_X, LADDER_Y = 0.0, -2.6
+LADDER_HALF_WIDTH = 0.25            # rail offset from LADDER_X
+
+# Where Jack starts: this far from the ladder base on the +y side (open floor —
+# the ladder sits near the arena's -y edge), at Humanoid-v5's own torso height.
+SPAWN_OFFSET_Y = 1.0
+SPAWN_Z = 1.4
+
+# Humanoid-v5 as gymnasium ships it: 13 bodies at or below the torso, 24 qpos,
+# 23 dof, 17 motors, and the 348-dim observation PipelineConfig expects. These
+# are asserted against the live model, not trusted.
+HUMANOID_NBODY = 13
+HUMANOID_NQ = 24
+HUMANOID_NV = 23
+HUMANOID_NU = 17
+HUMANOID_OBS_DIM = 348
 
 
 @dataclass
@@ -68,6 +94,16 @@ class PlaygroundParams:
     noise_panel: bool = True
     arena_size: float = 6.0
     seed: int = 0
+    # Jack's spawn point. None means "derive it from the ladder base" — the
+    # world may mutate the ladder, and he must still start within reach of it.
+    # An explicit tuple is how PG.8's control puts him outside the arena.
+    humanoid_spawn: Optional[tuple] = None
+
+    def spawn(self) -> tuple:
+        """(x, y, z) of the torso at t=0. Tracks the ladder unless overridden."""
+        if self.humanoid_spawn is not None:
+            return tuple(float(v) for v in self.humanoid_spawn)
+        return (LADDER_X, LADDER_Y + SPAWN_OFFSET_Y, SPAWN_Z)
 
     def mutate(self, rng: np.random.RandomState, strength: float = 0.15) -> "PlaygroundParams":
         """One ACCEL-style edit: perturb toward a neighbouring world.
@@ -94,7 +130,75 @@ class PlaygroundParams:
             object_size_range=self.object_size_range,
             seesaw=self.seesaw, noise_panel=self.noise_panel,
             arena_size=self.arena_size, seed=int(rng.randint(0, 10_000)),
+            humanoid_spawn=self.humanoid_spawn,
         )
+
+
+def humanoid_source_xml() -> Path:
+    """Path to gymnasium's Humanoid asset — the SOURCE OF TRUTH for the body.
+
+    Deliberately not a copy in this repo. The pipeline trains on `Humanoid-v5`;
+    if the playground's Jack were a hand-transcribed twin, the two could drift
+    apart silently and every playground result would be about a body nobody
+    trains. Reading the shipped asset makes them the same body by construction,
+    and PG.8 asserts the compiled constants match `gym.make("Humanoid-v5")`.
+    """
+    import gymnasium.envs.mujoco as gm
+    return Path(gm.__file__).resolve().parent / "assets" / "humanoid.xml"
+
+
+def _humanoid_fragments(spawn: tuple) -> tuple:
+    """Humanoid-v5's torso subtree, tendons and motors, in RADIANS.
+
+    Two hazards, both of the kind this repo has already been bitten by:
+
+    ANGLE UNITS. gymnasium's humanoid.xml declares `<compiler angle="degree">`;
+    this playground declares radian, and one document has one compiler. Splicing
+    the text verbatim would reinterpret every hinge `range` as radians — a
+    -160..-2 knee becomes -9169..-115 degrees, i.e. unlimited — and nothing
+    would error. That is the MJCF-degrees bug that broke PG.1's ramp, one level
+    up. So the 17 hinge ranges are converted here; every other attribute in the
+    file (pos, axis, fromto, quat, size, gear, ctrlrange) is unitless.
+
+    DEFAULTS. The humanoid's `<default>` sets condim=1, margin, armature and a
+    motor ctrlrange. Merged into the playground's root default those would
+    silently re-specify the ramp, the pool walls and the noise panel — PG.1-PG.7
+    measure that geometry. They go into a named class instead, reaching the
+    humanoid through childclass= and the motors through class=, and touching
+    nothing else. `material="geom"` is dropped from the class (it names an asset
+    we do not import); the class's own rgba already colours the body.
+    """
+    root = ET.parse(humanoid_source_xml()).getroot()
+    if root.find("compiler").get("angle") != "degree":
+        raise RuntimeError(
+            "gymnasium's humanoid.xml is no longer in degrees; the radian "
+            "conversion in _humanoid_fragments is now wrong. Re-run PG.8.")
+
+    torso = root.find("worldbody/body[@name='torso']")
+    n_converted = 0
+    for j in torso.iter("joint"):
+        if j.get("type") == "hinge" and j.get("range"):
+            lo, hi = (math.radians(float(v)) for v in j.get("range").split())
+            j.set("range", f"{lo:.12f} {hi:.12f}")
+            n_converted += 1
+    if n_converted != HUMANOID_NU:
+        raise RuntimeError(f"expected {HUMANOID_NU} limited hinges, "
+                           f"converted {n_converted}")
+
+    torso.set("pos", "{:.6f} {:.6f} {:.6f}".format(*spawn))
+    torso.set("childclass", "humanoid")
+    actuator = root.find("actuator")
+    for motor in actuator:
+        motor.set("class", "humanoid")
+
+    default = ('<default class="humanoid">'
+               '<joint armature="1" damping="1" limited="true"/>'
+               '<geom conaffinity="1" condim="1" contype="1" margin="0.001" '
+               'rgba="0.8 0.6 0.4 1"/>'
+               '<motor ctrllimited="true" ctrlrange="-.4 .4"/>'
+               '</default>')
+    dump = lambda e: ET.tostring(e, encoding="unicode")
+    return default, dump(torso), dump(root.find("tendon")), dump(actuator)
 
 
 def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False) -> str:
@@ -123,17 +227,17 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False) -> str:
             f'size="{p.stair_run/2:.3f} 0.7 {h/2:.3f}" rgba="0.5 0.5 0.55 1"/>')
 
     # ── ladder + the apple ──────────────────────────────────────────────
-    lx, ly = 0.0, -2.6
+    lx, ly, w = LADDER_X, LADDER_Y, LADDER_HALF_WIDTH
     ladder = [
-        f'<geom name="ladder_railL" type="capsule" fromto="{lx-0.25} {ly} 0 {lx-0.25} {ly} {p.ladder_height}" size="0.035" rgba="0.6 0.4 0.2 1"/>',
-        f'<geom name="ladder_railR" type="capsule" fromto="{lx+0.25} {ly} 0 {lx+0.25} {ly} {p.ladder_height}" size="0.035" rgba="0.6 0.4 0.2 1"/>',
+        f'<geom name="ladder_railL" type="capsule" fromto="{lx-w} {ly} 0 {lx-w} {ly} {p.ladder_height}" size="0.035" rgba="0.6 0.4 0.2 1"/>',
+        f'<geom name="ladder_railR" type="capsule" fromto="{lx+w} {ly} 0 {lx+w} {ly} {p.ladder_height}" size="0.035" rgba="0.6 0.4 0.2 1"/>',
     ]
     for i in range(p.ladder_rungs):
         z = (i + 1) * p.ladder_rung_spacing
         if z >= p.ladder_height:
             break
         ladder.append(
-            f'<geom name="rung{i}" type="capsule" fromto="{lx-0.25} {ly} {z:.3f} {lx+0.25} {ly} {z:.3f}" '
+            f'<geom name="rung{i}" type="capsule" fromto="{lx-w} {ly} {z:.3f} {lx+w} {ly} {z:.3f}" '
             f'size="0.028" rgba="0.65 0.45 0.25 1"/>')
     # The platform, and the apple on top of it. The apple carries NO reward —
     # it is an object like any other. If Jack climbs for it, that must come from
@@ -214,8 +318,17 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False) -> str:
         noise = (f'<geom name="noise_panel" type="box" pos="0 {a-0.1:.2f} 1.2" '
                  f'size="0.9 0.05 0.9" rgba="0.5 0.5 0.5 1" material="noise_mat"/>')
 
+    # ── Jack ────────────────────────────────────────────────────────────
+    # Off by default so that PG.1-PG.7's fixtures still compile the world they
+    # certified. Every spec about an AGENT must pass True; PG.8 is the gate.
+    hum_default = hum_body = hum_tendon = hum_actuator = ""
+    if with_humanoid:
+        hum_default, hum_body, hum_tendon, hum_actuator = _humanoid_fragments(p.spawn())
+        hum_default = f"<default>{hum_default}</default>"
+
     return f"""<mujoco model="jack_playground">
   <compiler angle="radian" coordinate="local"/>
+  {hum_default}
   <option timestep="0.005" gravity="0 0 -{GRAVITY}" integrator="RK4"/>
   <asset>
     <texture name="sky" type="skybox" builtin="gradient" rgb1="0.5 0.7 0.9" rgb2="0.1 0.15 0.3" width="256" height="256"/>
@@ -238,7 +351,10 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False) -> str:
     {seesaw}
     {''.join(walls)}
     {noise}
+    {hum_body}
   </worldbody>
+  {hum_tendon}
+  {hum_actuator}
 </mujoco>
 """
 
@@ -345,12 +461,85 @@ class Water:
             data.xfrc_applied[bid][2] += buoy
 
 
-def make_playground(params: Optional[PlaygroundParams] = None, with_water: bool = True):
+def humanoid_body_ids(model) -> list:
+    """Body ids of the torso subtree, in id order == Humanoid-v5's body order.
+
+    MuJoCo numbers bodies depth-first in XML order, so a spliced subtree is
+    contiguous and internally ordered exactly as it is in the standalone model.
+    That is what lets `humanoid_obs` slice cinert/cvel/cfrc_ext by this list and
+    reproduce `HumanoidEnv._get_obs` — asserted, not assumed, by PG.8.
+    """
+    torso = model.body("torso").id
+    out = []
+    for b in range(model.nbody):
+        anc = b
+        while anc > 0 and anc != torso:
+            anc = int(model.body_parentid[anc])
+        if anc == torso:
+            out.append(b)
+    return out
+
+
+def humanoid_index(model) -> dict:
+    """Where Jack lives inside the playground's shared qpos/qvel/body arrays.
+
+    The playground's other free bodies (apple, obj0-4) and the seesaw hinge
+    occupy addresses too, so nothing here may be assumed to start at 0 or 1 the
+    way it does in the single-body Humanoid-v5 model.
+    """
+    root = model.joint("root")
+    qadr, dadr = int(root.qposadr[0]), int(root.dofadr[0])
+    bodies = humanoid_body_ids(model)
+    if len(bodies) != HUMANOID_NBODY:
+        raise RuntimeError(f"expected {HUMANOID_NBODY} humanoid bodies, "
+                           f"found {len(bodies)}")
+    # The subtree's joints must be contiguous from the free root, or the slices
+    # below would silently read a seesaw or an apple into Jack's proprioception.
+    jids = sorted(int(j) for b in bodies
+                  for j in range(int(model.body_jntadr[b]),
+                                 int(model.body_jntadr[b]) + int(model.body_jntnum[b]))
+                  if model.body_jntnum[b] > 0)
+    if jids != list(range(jids[0], jids[0] + HUMANOID_NU + 1)):
+        raise RuntimeError("humanoid joints are not contiguous in the model")
+    return {"qposadr": qadr, "dofadr": dadr, "bodies": bodies}
+
+
+def humanoid_obs(model, data) -> np.ndarray:
+    """The Humanoid-v5 observation, emitted from inside the playground.
+
+    Byte-for-byte the concatenation `HumanoidEnv._get_obs` builds (gymnasium
+    1.1.1), restricted to Jack's own addresses:
+
+        qpos[2:24] 22 | qvel 23 | cinert 130 | cvel 78 | qfrc_actuator[6:] 17
+        | cfrc_ext 78   = 348
+
+    Written as a function of the model rather than a copied constant because
+    the 376-vs-348 bug (T0.14) came from exactly one constant being copied from
+    a version that no longer applied.
+    """
+    ix = humanoid_index(model)
+    q, d, b = ix["qposadr"], ix["dofadr"], ix["bodies"]
+    obs = np.concatenate([
+        data.qpos[q + 2:q + HUMANOID_NQ],
+        data.qvel[d:d + HUMANOID_NV],
+        data.cinert[b].flatten(),
+        data.cvel[b].flatten(),
+        data.qfrc_actuator[d + 6:d + HUMANOID_NV],
+        data.cfrc_ext[b].flatten(),
+    ])
+    if obs.shape[0] != HUMANOID_OBS_DIM:
+        raise RuntimeError(f"observation is {obs.shape[0]}, "
+                           f"not {HUMANOID_OBS_DIM}")
+    return obs
+
+
+def make_playground(params: Optional[PlaygroundParams] = None,
+                    with_water: bool = True, with_humanoid: bool = False):
     """Build the world and return (model, data, water). CPU-only, no rendering."""
     import mujoco
 
     p = params or PlaygroundParams()
-    xml = build_mjcf(p)
+    xml = build_mjcf(p, with_humanoid=with_humanoid)
     model = mujoco.MjModel.from_xml_string(xml)
     data = mujoco.MjData(model)
     water = None

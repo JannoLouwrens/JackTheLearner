@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 44 / 124 demonstrated
+## 47 / 127 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -108,7 +108,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [!] **T2.01** Locomotion beats a random policy  — all_seeds_beat_random=1.0; all_seeds_beat_random_std=0.0
+- [~] **T2.01** Locomotion beats a random policy  — all_seeds_beat_random=1.0; all_seeds_beat_random_std=0.0
       - _asserts:_ Trained policy return exceeds random-action return by >5 sigma.
       - _dies if:_ Return within seed noise of random.
 - [~] **T2.02** Locomotion beats the honest MLP baseline  — backend=kaggle; gpu=Tesla P100-PCIE-16GB
@@ -258,6 +258,20 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Value and policy losses stay within an order of magnitude of each other, log_std stays bounded, and actions reaching the environment stay inside its range.
       - _dies if:_ vf/pg ratio above 50, log_std outside [-4.6, 0], or an action exceeding the env limit.
       - _then delete:_ Every GPU locomotion run. This gates T2.01/T2.02 and costs CPU minutes, so a broken update can never again burn GPU hours.
+
+### Tier 0 — HARNESS — can we measure anything?
+
+- [x] **T0.14** Evaluation is deterministic and the obs contract holds
+      - _asserts:_ Two forwards of one state in eval mode are BIT-IDENTICAL; rollout leaves the model in eval mode and the PPO update in train mode; config.mujoco_obs_dim equals what the env actually emits.
+      - _dies if:_ Any drift between two eval forwards, a mode left wrong after rollout or update, or an obs-dim mismatch.
+      - _then delete:_ Every locomotion result computed before it passes. T2.01 and T2.02 must be re-run once this holds.
+- [x] **T0.15** The recorder cannot disarm a threshold
+      - _asserts:_ For every magnitude a spec might measure, the value run_spec hands to check() distinguishes a real nonzero from zero, so a pre-registered bound below the recorder's resolution still fires.
+      - _dies if:_ Any nonzero seed metric aggregating to exactly 0.0, or a 3e-7 drift satisfying a `<= 0.0` gate.
+      - _then delete:_ Nothing directly — it re-arms gates that were silently dead.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
 - [x] **PG.1** Playground generates and is physically sound
       - _asserts:_ A procedural room (ramp, stairs, ladder, objects, seesaw, pool, noise panel) builds from a parameter vector and obeys physics: boxes slide iff tan(theta) > mu; energy bounded at rest.
       - _dies if:_ Objects jitter at rest, energy diverges, or a parameter draw produces an invalid MJCF.
@@ -274,6 +288,10 @@ Every line here is backed by an experiment that could have failed;
 - [x] **PG.5** Procedural contact audio with localization labels
       - _asserts:_ Modal-resonator synthesis on MuJoCo contact events yields stereo audio whose panning matches source bearing.
       - _dies if:_ Bearing decoded from stereo does not match ground truth.
+- [x] **PG.8** Jack is IN the playground and can act in it
+      - _asserts:_ make_playground(with_humanoid=True) yields a model that contains the Humanoid body with 17 actuators, settles finite at rest, emits the 348-dim observation TrainingPipeline expects, and spawns within reach of the ladder base.
+      - _dies if:_ No humanoid body, nu != 17, non-finite state after settling, an observation dimension that disagrees with the pipeline, or a spawn point from which the ladder cannot be reached.
+      - _then delete:_ Every curiosity claim, and the ladder-and-apple standard itself. CU.*, LT.* and PG.4's dwell metrics are all defined over an agent acting in this world; none of them can be run in an empty one.
 - [ ] **T2.14** Imitation from real motion capture
       - _asserts:_ BC on the CMU corpus reaches held-out action error below mean-action AND below nearest-neighbour retrieval.
       - _dies if:_ A lookup table (NN retrieval) matches the model.

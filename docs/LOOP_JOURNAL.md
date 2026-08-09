@@ -799,3 +799,81 @@ re-run ME.8 at 3 seeds — it is a `seeds=1` PASS whose own commit records a
 seed-2 collapse that was never re-verified). Science-wise ME.11.A remains the
 cheapest unblocked unit. GPU: Kaggle ~23.6 h left this week; D1 still with the
 owner.
+
+## 2026-08-09 — PG.8 PASS: somebody is in the playground now, and the recorder was capping every gate
+
+**PG.8 PASS at 3 seeds** (47/124 demonstrated). `build_mjcf(with_humanoid=True)`
+was a parameter that had never been referenced and that nothing in the repo ever
+passed True. It now splices Humanoid-v5 into the nursery, spawned 1.0 m from the
+ladder base. Measured, all three seeds:
+
+| check | measured | threshold |
+|---|---|---|
+| present | 13 bodies, nu=17, 17/17 motors on Jack | exact |
+| fidelity vs `Humanoid-v5` | **4.48e-13** | <= 1e-9 |
+| obs vs `HumanoidEnv._get_obs` | **2.68e-15**, dim 348 == `mujoco_obs_dim` | <= 1e-9 |
+| settles (10 s, zero ctrl) | qvel 0.0194, 0 warnings, finite | <= 0.5 |
+| actuated | **2.627 rad** divergence, driven vs idle | >= 0.10 |
+| reachable | **1.118 m**, ray hits `rung0` | <= 1.5 m, must hit ladder |
+
+CONTROL (spawned outside the arena): 12.99 m, ray hits `wall2` — fails both
+halves of `reachable`, so the metric reads his position and not the ladder's
+coordinates. NULL (`with_humanoid=False`, the world as it stood this morning):
+`nu = 0`, bodies `[world, apple, obj0-4, seesaw]`, no observation — it fails
+every check, which is the point.
+
+Two things worth carrying:
+
+- **The body is referenced, not transcribed.** `playground.humanoid_source_xml()`
+  reads gymnasium's shipped `humanoid.xml`, so Jack and the Humanoid-v5 the
+  pipeline trains are literally one file and cannot drift. That leaves only the
+  *transformation* to check, and the transformation is where the danger was:
+  gymnasium's asset is `angle="degree"` and this world is `angle="radian"`, so a
+  verbatim splice turns a -160..-2 deg knee into an effectively unlimited joint
+  with nothing erroring — the PG.1 MJCF-degrees bug one level up. Its
+  `<default>` (condim=1, margins, armature) is scoped to a named class so it
+  cannot re-specify the ramp, pool walls or noise panel that PG.1-PG.7 measure.
+  Verified: the `with_humanoid=False` XML is byte-identical to HEAD's for four
+  seeds, and PG.1/2/3/5, T2.20, T0.06 and T0.08 all still PASS.
+- **The guard is a dependency, not a note.** `CU.1` — root of the whole
+  curiosity tree, CU.2-CU.7 and T5.08 descend from it — now `depends_on`
+  `PG.8`. PG.8's `kills` field said "every curiosity claim" in prose; the runner
+  now enforces it, so nobody can attempt "goal babbling beats action babbling"
+  in a world where no action exists.
+
+**T0.15 PASS — found from PG.8's own ledger entry.** Two 1e-9 deviation gates
+recorded `0.0`. Cause: `run_spec` calls `check()` on `_aggregate(runs)`, and
+`_aggregate` did `round(mean, 6)`. **Every pre-registered threshold below ~5e-7
+was unenforceable by construction** — a real 3e-7 drift records as `0.0` and
+satisfies `drift <= 0.0`. The band contains the strictest gates in the repo, not
+by coincidence: T0.14's `MAX_EVAL_DRIFT = 0.0` (the gate that closed the dropout
+bug), T0.02, T1.10, T1.11, T0.03, T0.04. No PASS was ever falsely green, purely
+by luck — `_aggregate` short-circuits at one run and all six are `seeds=1`. The
+exposure was latent and pointed exactly where this project keeps going: re-verify
+any of them at 3 seeds, as GOAL.md and the overseer both ask, and its tightest
+check goes quietly dead. T0.13 cannot see it — it perturbs the *recorded* value,
+and a perturbed `0.0` moves the verdict, so the gate reads live. The saturation
+is manufactured downstream of every test.
+
+`protocol._round6` now keeps six significant figures below 1.0 (a nonzero can
+never be stored as zero) and six decimals above. T0.15 gates it with the pre-fix
+`round(x, 6)` as its control: the control zeroes 12 of 18 magnitudes and passes
+the `<= 0.0` gate on a genuine 3e-7 drift, so the spec fails without a working
+fix. Re-ran PG.8 under the fix per LESSONS' own rule that the motivating
+artifact must exercise the guard: `0.0` -> `2.68e-15` and `4.48e-13`. T0.13
+re-run clean (46 gates scanned, 0 disarmed).
+
+NEXT ITERATION: **PG.8 unblocks the composition question, not just CU.\***. Worth
+asking the same question of the OTHER fixture families before building on them —
+PG.4's noisy-TV trap uses a probe agent, not Jack; T2.20's episodic search runs
+in the world without a body. Neither is dishonest, but neither certifies the
+wiring either. Cheapest next science: **ME.11.A** (still the cheapest unblocked
+unit), then the standing overseer items in order — **#4** (`bakeoff.py` writes
+`TEST` fixtures into the real `DECISIONS_RESOLVED.md`; give `record_decision` an
+output-path parameter, then delete the six entries, which are the file's only
+contents), **#7** (`Spec.control` is decorative — 25 specs run a control without
+declaring one), **#5** (`attempt: 1` is false for T2.01/T0.05/T1.02/T2.02 —
+prefer `null`), **#8/#9**. T0.09 still needs a Colab re-run and that still needs
+a `git push` the owner has not authorised; six commits are unpushed. GPU:
+Kaggle ~23.6 h this week, D1 still with the owner, T2.01/T2.02 still VOID and
+still the top GPU priority.

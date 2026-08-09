@@ -342,14 +342,21 @@
       "status": "PASS"
     },
     "PG.1": {
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "76ccc6c",
       "control_metrics": {
         "frictionless_slide_15deg": 11.1032
       },
-      "duration_s": 0.27,
+      "duration_s": 0.28,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:09:08",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "bodies": 8,
@@ -363,7 +370,7 @@
         "slide_15deg": 0.0035,
         "slide_50deg": 6.1153
       },
-      "ran_at": "2026-08-08T15:09:08",
+      "ran_at": "2026-08-09T14:22:09",
       "seeds": [
         0
       ],
@@ -371,8 +378,8 @@
       "status": "PASS"
     },
     "PG.2": {
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "76ccc6c",
       "control_metrics": {
         "no_buoyancy_max_z": -1.85,
         "no_buoyancy_z": [
@@ -380,9 +387,16 @@
           -1.85
         ]
       },
-      "duration_s": 0.69,
+      "duration_s": 0.7,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:09:15",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "bob_rho0.2": 0.0,
@@ -403,7 +417,7 @@
         "z_rho0.5": -0.0,
         "z_rho0.8": -0.0639
       },
-      "ran_at": "2026-08-08T15:09:15",
+      "ran_at": "2026-08-09T14:22:11",
       "seeds": [
         0
       ],
@@ -411,8 +425,8 @@
       "status": "PASS"
     },
     "PG.3": {
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "76ccc6c",
       "control_metrics": {
         "ascent_frac": -1.3119,
         "ascent_frac_std": 0.593984,
@@ -423,23 +437,30 @@
         "hands_on_next_rung": 0.0,
         "hands_on_next_rung_std": 0.0,
         "hold_drift_m": 0.0068,
-        "hold_drift_m_std": 0.005078,
+        "hold_drift_m_std": 0.00507806,
         "hold_drop_m": 0.208367,
-        "hold_drop_m_std": 0.021962,
+        "hold_drop_m_std": 0.0219624,
         "spacing": 0.3,
-        "spacing_std": 0.03266,
+        "spacing_std": 0.0326599,
         "start_rung_z": 1.173333,
         "start_rung_z_std": 0.115854
       },
-      "duration_s": 8.44,
+      "duration_s": 8.42,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:09:48",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "ascent_frac": 0.973267,
-        "ascent_frac_std": 0.019818,
+        "ascent_frac_std": 0.0198182,
         "ascent_m": 0.2915,
-        "ascent_m_std": 0.027497,
+        "ascent_m_std": 0.0274965,
         "fall_finite": 1.0,
         "fall_finite_std": 0.0,
         "fall_rest_speed": 0.0297,
@@ -447,7 +468,7 @@
         "fall_rest_torso_z": 0.0698,
         "fall_rest_torso_z_std": 0.0,
         "final_torso_z": 0.943967,
-        "final_torso_z_std": 0.088487,
+        "final_torso_z_std": 0.0884871,
         "hands_on_next_rung": 2.0,
         "hands_on_next_rung_std": 0.0,
         "hold_drift_m": 0.0001,
@@ -456,14 +477,14 @@
         "hold_drop_m_std": 0.0,
         "regrip_after_reset_drift_m": 0.0001,
         "regrip_after_reset_drift_m_std": 0.0,
-        "resume_max_dev": 0.0,
-        "resume_max_dev_std": 0.0,
+        "resume_max_dev": 1.9086e-14,
+        "resume_max_dev_std": 1.40264e-14,
         "spacing": 0.3,
-        "spacing_std": 0.03266,
+        "spacing_std": 0.0326599,
         "start_rung_z": 1.173333,
         "start_rung_z_std": 0.115854
       },
-      "ran_at": "2026-08-08T15:09:48",
+      "ran_at": "2026-08-09T14:22:21",
       "seeds": [
         0,
         1,
@@ -519,8 +540,8 @@
       "status": "PASS"
     },
     "PG.5": {
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "76ccc6c",
       "control_metrics": {
         "control_events_decoded": 9.0,
         "control_events_decoded_std": 0.0,
@@ -529,9 +550,16 @@
         "shuffled_accuracy": 0.148133,
         "shuffled_accuracy_std": 0.052373
       },
-      "duration_s": 10.32,
+      "duration_s": 10.27,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:10:00",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "audio_finite": 1.0,
@@ -545,19 +573,148 @@
         "label_accuracy": 1.0,
         "label_accuracy_std": 0.0,
         "peak_amp": 0.361833,
-        "peak_amp_std": 0.013696,
+        "peak_amp_std": 0.0136958,
         "rms_vs_inv_distance_corr": 0.508,
         "rms_vs_inv_distance_corr_std": 0.184168,
         "spectral_match": 1.0,
         "spectral_match_std": 0.0
       },
-      "ran_at": "2026-08-08T15:10:00",
+      "ran_at": "2026-08-09T14:22:33",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "PG.5",
+      "status": "PASS"
+    },
+    "PG.8": {
+      "attempt": 2,
+      "commit": "76ccc6c",
+      "control_metrics": {
+        "dist_to_ladder_m": 12.990833,
+        "dist_to_ladder_m_std": 0.052645,
+        "drive_divergence_rad": 2.626887,
+        "drive_divergence_rad_std": 0.106819,
+        "drive_qfrc_max": 120.0,
+        "drive_qfrc_max_std": 0.0,
+        "has_humanoid": 1.0,
+        "has_humanoid_std": 0.0,
+        "idle_qfrc_max": 0.0,
+        "idle_qfrc_max_std": 0.0,
+        "model_max_dev_vs_v5": 4.48308e-13,
+        "model_max_dev_vs_v5_std": 0.0,
+        "motors_on_humanoid": 17.0,
+        "motors_on_humanoid_std": 0.0,
+        "mujoco_warnings": 0.0,
+        "mujoco_warnings_std": 0.0,
+        "n_humanoid_bodies": 13.0,
+        "n_humanoid_bodies_std": 0.0,
+        "nu": 17.0,
+        "nu_std": 0.0,
+        "obs_dim": 348.0,
+        "obs_dim_std": 0.0,
+        "obs_max_dev_vs_v5": 2.67841e-15,
+        "obs_max_dev_vs_v5_std": 1.02113e-15,
+        "pipeline_obs_dim": 348.0,
+        "pipeline_obs_dim_std": 0.0,
+        "ray_first_hit": "wall2",
+        "ray_hits_ladder": 0.0,
+        "ray_hits_ladder_std": 0.0,
+        "settle_finite": 1.0,
+        "settle_finite_std": 0.0,
+        "settle_obs_finite": 1.0,
+        "settle_obs_finite_std": 0.0,
+        "settle_qvel_max": 0.0193567,
+        "settle_qvel_max_std": 0.00694283,
+        "spawn_contacts": 0.0,
+        "spawn_contacts_std": 0.0,
+        "spawn_xyz": [
+          8.0,
+          8.0,
+          1.4
+        ],
+        "world_mutated": 0.666667,
+        "world_mutated_std": 0.471405
+      },
+      "duration_s": 6.44,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "76ccc6c",
+          "message": "",
+          "ran_at": "2026-08-09T14:17:55",
+          "status": "PASS"
+        }
+      ],
+      "message": "",
+      "metrics": {
+        "dist_to_ladder_m": 1.118133,
+        "dist_to_ladder_m_std": 0.0609914,
+        "drive_divergence_rad": 2.626887,
+        "drive_divergence_rad_std": 0.106819,
+        "drive_qfrc_max": 120.0,
+        "drive_qfrc_max_std": 0.0,
+        "has_humanoid": 1.0,
+        "has_humanoid_std": 0.0,
+        "idle_qfrc_max": 0.0,
+        "idle_qfrc_max_std": 0.0,
+        "model_max_dev_vs_v5": 4.48308e-13,
+        "model_max_dev_vs_v5_std": 0.0,
+        "motors_on_humanoid": 17.0,
+        "motors_on_humanoid_std": 0.0,
+        "mujoco_warnings": 0.0,
+        "mujoco_warnings_std": 0.0,
+        "n_humanoid_bodies": 13.0,
+        "n_humanoid_bodies_std": 0.0,
+        "nu": 17.0,
+        "nu_std": 0.0,
+        "null_bodies": [
+          "apple",
+          "obj0",
+          "obj1",
+          "obj2",
+          "obj3",
+          "obj4",
+          "seesaw",
+          "world"
+        ],
+        "null_has_humanoid": 0.0,
+        "null_has_humanoid_std": 0.0,
+        "null_nu": 0.0,
+        "null_nu_std": 0.0,
+        "obs_dim": 348.0,
+        "obs_dim_std": 0.0,
+        "obs_max_dev_vs_v5": 2.67841e-15,
+        "obs_max_dev_vs_v5_std": 1.02113e-15,
+        "pipeline_obs_dim": 348.0,
+        "pipeline_obs_dim_std": 0.0,
+        "ray_first_hit": "rung0",
+        "ray_hits_ladder": 1.0,
+        "ray_hits_ladder_std": 0.0,
+        "settle_finite": 1.0,
+        "settle_finite_std": 0.0,
+        "settle_obs_finite": 1.0,
+        "settle_obs_finite_std": 0.0,
+        "settle_qvel_max": 0.0193567,
+        "settle_qvel_max_std": 0.00694283,
+        "spawn_contacts": 0.0,
+        "spawn_contacts_std": 0.0,
+        "spawn_xyz": [
+          0.0,
+          -1.6,
+          1.4
+        ],
+        "world_mutated": 0.666667,
+        "world_mutated_std": 0.471405
+      },
+      "ran_at": "2026-08-09T14:21:51",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "PG.8",
       "status": "PASS"
     },
     "T0.01": {
@@ -681,26 +838,33 @@
       "status": "PASS"
     },
     "T0.06": {
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "76ccc6c",
       "control_metrics": {
         "raised": 5,
         "wrong_widths_tried": 5
       },
-      "duration_s": 1.6,
+      "duration_s": 1.58,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:09:19",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "action_space_dim": 17,
         "ctrl_write_error": 0.0,
         "expected_nu": 17,
-        "last_reward": 4.9226,
+        "last_reward": 4.9416,
         "nu": 17,
         "obs_dim": 348,
         "steps_ok": 5
       },
-      "ran_at": "2026-08-08T15:09:19",
+      "ran_at": "2026-08-09T14:22:08",
       "seeds": [
         0
       ],
@@ -746,12 +910,19 @@
       "status": "PASS"
     },
     "T0.08": {
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "76ccc6c",
       "control_metrics": {},
-      "duration_s": 1.2,
+      "duration_s": 1.22,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:09:17",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "blocked_records_no_metrics": true,
@@ -761,7 +932,7 @@
         "roundtrip_ok": true,
         "survives_concurrent_writers": true
       },
-      "ran_at": "2026-08-08T15:09:17",
+      "ran_at": "2026-08-09T14:22:06",
       "seeds": [
         0
       ],
@@ -900,8 +1071,8 @@
       "status": "PASS"
     },
     "T0.13": {
-      "attempt": 7,
-      "commit": "d8ae799",
+      "attempt": 8,
+      "commit": "76ccc6c",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -961,13 +1132,19 @@
           "message": "",
           "ran_at": "2026-08-09T13:19:38",
           "status": "PASS"
+        },
+        {
+          "commit": "d8ae799",
+          "message": "",
+          "ran_at": "2026-08-09T13:21:00",
+          "status": "PASS"
         }
       ],
       "message": "",
       "metrics": {
         "disarmed_conjunct_keys": 0,
         "disarmed_detail": "",
-        "gates_scanned": 43,
+        "gates_scanned": 46,
         "hazard_detail": "",
         "inert_gate_keys": 1,
         "precedence_hazards": 0,
@@ -985,7 +1162,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-09T13:21:00",
+      "ran_at": "2026-08-09T14:21:51",
       "seeds": [
         0
       ],
@@ -1030,6 +1207,38 @@
         0
       ],
       "spec_id": "T0.14",
+      "status": "PASS"
+    },
+    "T0.15": {
+      "attempt": 1,
+      "commit": "76ccc6c",
+      "control_metrics": {
+        "gate_verdict_on_3e7_drift": "PASS",
+        "max_relative_error": 1.7091000155524961e-06,
+        "min_resolvable_magnitude": 1e-06,
+        "n_magnitudes_zeroed": 12,
+        "recorded_drift": 0.0,
+        "true_drift": 3e-07
+      },
+      "duration_s": 1.18,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "message": "",
+      "metrics": {
+        "end_to_end_drift": 3e-07,
+        "end_to_end_status": "FAIL",
+        "gate_verdict_on_3e7_drift": "FAIL",
+        "max_relative_error": 1.7091000155524961e-06,
+        "min_resolvable_magnitude": 1e-18,
+        "n_magnitudes_zeroed": 0,
+        "recorded_drift": 3e-07,
+        "true_drift": 3e-07
+      },
+      "ran_at": "2026-08-09T14:21:36",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.15",
       "status": "PASS"
     },
     "T1.01": {
@@ -1744,17 +1953,24 @@
       "status": "PASS"
     },
     "T2.20": {
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "76ccc6c",
       "control_metrics": {
         "search_time_ratio_recency": 0.992033,
         "search_time_ratio_recency_std": 0.29826,
         "search_time_ratio_shuffled": 1.234233,
         "search_time_ratio_shuffled_std": 0.292316
       },
-      "duration_s": 32.42,
+      "duration_s": 32.51,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:10:54",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "ep1_sighted_frac": 1.0,
@@ -1769,10 +1985,10 @@
         "null_success_rate_std": 0.0,
         "retrieval_hit_rate": 1.0,
         "retrieval_hit_rate_std": 0.0,
-        "search_time_ratio": 0.046067,
-        "search_time_ratio_std": 0.006743
+        "search_time_ratio": 0.0460667,
+        "search_time_ratio_std": 0.00674306
       },
-      "ran_at": "2026-08-08T15:10:54",
+      "ran_at": "2026-08-09T14:23:07",
       "seeds": [
         0,
         1,

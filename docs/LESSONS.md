@@ -419,6 +419,15 @@ constant. Any dimension that appears in both your config and an external
 library's output is a contract, and it should be checked at least once in the
 ladder rather than assumed to have been copied correctly.
 
+*Stronger form, from PG.8:* better than asserting a copied contract is not
+copying it. `playground.build_mjcf(with_humanoid=True)` reads gymnasium's
+shipped `humanoid.xml` at build time rather than keeping a transcription, so
+the playground's Jack and the Humanoid-v5 the pipeline trains cannot drift
+apart — they are one file. What remains to check is then only the
+*transformation* (a degree-to-radian conversion and a `<default>` scoping),
+which is a much smaller surface than an entire body. When you must transcribe,
+assert; when you can reference, reference, and assert the transform.
+
 ## A world that passes physics tests may still have nobody living in it
 
 PG.1–PG.7 all PASS and all are honest: friction discriminates hold-from-slide
@@ -437,3 +446,40 @@ the thing is connected to the system that needs it. After a family of fixtures
 passes, ask the composition question explicitly — who uses this, and is that
 wiring itself tested? The gap hides precisely where each individual spec is
 honest, which is why no amount of scrutinising them would have surfaced it.
+
+## The recorder sits downstream of every gate, and its resolution caps them all
+
+`run_spec` does not hand `check()` what a spec measured. It hands it
+`_aggregate(runs)` — the per-seed mean, rounded. That rounding was
+`round(mean, 6)`, so **every pre-registered threshold below ~5e-7 was
+unenforceable by construction**: a genuine drift of 3e-7 is recorded as `0.0`
+and satisfies `drift <= 0.0`. The gates in that band are the strictest in the
+repo, which is not a coincidence — bit-identity and parity claims are exactly
+the ones that live below 1e-6. T0.14's `MAX_EVAL_DRIFT = 0.0` is the gate that
+closed the most expensive bug in the project.
+
+No PASS was ever falsely green, by luck: `_aggregate` short-circuits at
+`len(runs) == 1` and all six affected specs are `seeds=1`. The exposure was
+latent and aimed precisely where this project keeps going — GOAL.md asks for
+>= 3 seeds, the overseer has asked for more 3-seed re-verification, and the
+first spec to run three seeds against a sub-microscale gate (PG.8) recorded
+`0.0` for both of its 1e-9 deviation checks. That is how it was found: not by
+a test, but by reading a fresh ledger entry and asking why a number that should
+have been 3e-15 was zero.
+
+Nothing in the ladder could have caught it. T0.13 exists to find gates that
+cannot fire, and it perturbs a key of the *recorded* metrics — perturb a
+recorded `0.0` and the verdict moves, so the gate reads live. The saturation is
+manufactured after the measurement and before the check, in the one place no
+`_check` can look at.
+
+**Rule:** the machinery *between* a measurement and its threshold — rounding,
+averaging, serialisation, unit conversion, a JSON round-trip — is part of the
+gate, and it needs its own falsifiable test with a known-broken control. Ask of
+any recorder: what is the smallest value it can represent, and is any threshold
+in the project tighter than that? Generalises "an assertion made against a
+saturated quantity cannot fail" to the case where the saturation is imposed by
+the recorder rather than by the quantity. Guarded by `T0.15`, whose control is
+the pre-fix `round(x, 6)` and which fails without it; `protocol._round6` now
+keeps six significant figures below 1.0, so a nonzero can never be stored as
+zero.

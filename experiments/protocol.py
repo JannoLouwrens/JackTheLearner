@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import fcntl
 import json
+import math
 import os
 import platform
 import subprocess
@@ -331,6 +332,30 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     return res
 
 
+def _round6(x: float) -> float:
+    """Six decimals for values of ordinary size, six SIGNIFICANT figures below
+    1.0. A nonzero metric may never be recorded as exactly 0.0.
+
+    `round(x, 6)` did the rounding here until 2026-08-09, and `check()` reads
+    the AGGREGATED metrics — so every pre-registered threshold below ~5e-7 was
+    unenforceable by construction: a genuine drift of 3e-7 recorded as 0.0 and
+    satisfied `drift <= 0.0`. That is T0.14's bit-identity gate, the one that
+    closed the most expensive bug in the project, plus T0.02, T1.10, T1.11 and
+    both checkpoint round-trips. They survived only because `_aggregate`
+    short-circuits at a single run and all of them are seeds=1 — the moment any
+    is re-verified at 3 seeds, as GOAL.md asks for, its tightest check goes
+    quietly dead. PG.8 is where it first showed: two 1e-9 gates recorded 0.0.
+
+    LESSONS.md: an assertion made against a saturated quantity cannot fail.
+    Here the saturation was manufactured by the recorder, downstream of every
+    test, which is why no spec could see it — including T0.13, which perturbs
+    the recorded value and finds a live gate either way.
+    """
+    if x == 0.0 or not math.isfinite(x):
+        return float(x)
+    return round(x, 6) if abs(x) >= 1.0 else float(f"{x:.6g}")
+
+
 def _aggregate(runs: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Mean and std across seeds. Std is reported always, not only when it is
     flattering — an effect smaller than its seed noise is not an effect."""
@@ -344,8 +369,8 @@ def _aggregate(runs: List[Dict[str, Any]]) -> Dict[str, Any]:
         if len(vals) == len(runs):
             mean = sum(vals) / len(vals)
             var = sum((v - mean) ** 2 for v in vals) / len(vals)
-            out[k] = round(mean, 6)
-            out[f"{k}_std"] = round(var ** 0.5, 6)
+            out[k] = _round6(mean)
+            out[f"{k}_std"] = _round6(var ** 0.5)
         else:
             out[k] = runs[0][k]
     return out

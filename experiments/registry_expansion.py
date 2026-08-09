@@ -60,6 +60,33 @@ EXPANSION: list[Spec] = [
                "one with none. Also caught: mujoco_obs_dim=376 is the "
                "Humanoid-v4 value; v5 emits 348, so 28 zeros were padded in."),
 
+    Spec("T0.15", 0, "The recorder cannot disarm a threshold",
+         hypothesis="For every magnitude a spec might measure, the value "
+                    "run_spec hands to check() distinguishes a real nonzero "
+                    "from zero, so a pre-registered bound below the recorder's "
+                    "resolution still fires.",
+         falsified_by="Any nonzero seed metric aggregating to exactly 0.0, or "
+                      "a 3e-7 drift satisfying a `<= 0.0` gate.",
+         null_baseline="n/a — an invariant of the machine, not an effect.",
+         metric="min_resolvable_magnitude", budget=Budget.CPU, seeds=1,
+         depends_on=["T0.08"],
+         control="The PRE-FIX aggregator (round(x, 6)) run through the same "
+                 "checks MUST fail them. Without it this spec would pass on "
+                 "any implementation, including the broken one.",
+         kills="Nothing directly — it re-arms gates that were silently dead.",
+         notes="FOUND 2026-08-09 from PG.8's own ledger entry: two 1e-9 "
+               "deviation gates recorded 0.0 because _aggregate did "
+               "round(mean, 6) and run_spec calls check() on the AGGREGATE. "
+               "Every threshold below ~5e-7 was therefore unenforceable — "
+               "T0.14's bit-identity gate (MAX_EVAL_DRIFT = 0.0), T0.02, "
+               "T1.10, T1.11, T0.03, T0.04. No PASS was falsely green: "
+               "_aggregate short-circuits at one run and all six are seeds=1. "
+               "The exposure was latent and pointed exactly where the project "
+               "keeps going — re-verify at 3 seeds and the tightest check in "
+               "the repo goes quietly dead. Invisible to T0.13, which perturbs "
+               "the RECORDED value and finds the gate live either way: the "
+               "saturation is manufactured downstream of every test."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "
@@ -985,7 +1012,14 @@ EXPANSION: list[Spec] = [
                       "covers ground too).",
          null_baseline="Random repeated action sequences.",
          metric="outcome_coverage_ratio", budget=Budget.CPU_LONG, seeds=3,
-         depends_on=["PG.1", "T2.16"]),
+         # PG.8 is a dependency, not a courtesy: CU.1 is the ROOT of the
+         # curiosity tree (CU.2-CU.7 and T5.08 all descend from it), and until
+         # PG.8 passes the playground is an empty room with nu=0. Every one of
+         # these specs is defined over an agent ACTING in this world, so
+         # without it the runner would happily attempt "goal babbling beats
+         # action babbling" in a world where no action exists. PG.8's `kills`
+         # field said so in prose; this line is what makes it enforced.
+         depends_on=["PG.1", "T2.16", "PG.8"]),
 
     Spec("CU.2", 5, "Learning progress produces an emergent curriculum",
          hypothesis="LP-driven goal sampling yields time-ordered mastery "
