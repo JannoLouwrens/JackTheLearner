@@ -839,3 +839,34 @@ just the conclusion. A conclusion cannot tell you when it has expired; a
 quantity can. And re-check a settled decision's premises whenever the facts
 underneath it change — "no data" stopped being true and the decision built on
 it stood for five more days.
+
+## The step that removes a confound is itself a confound until measured
+
+PG.7's fixture had to make two objects acoustically identical except by pitch.
+`ContactAudio._voice` already normalises every ring by the total gain of its
+modes (`sig *= e.amp / total_gain`), and UNIFIED_BRAIN_BAKEOFF.md 3.1 reasoned
+from that line that a difference in audible mode count "is not an amplitude
+cue". The normaliser was the cue. It divides by the gain of the modes that
+survived the 7200 Hz cutoff — 1.50 for two modes, 1.75 for three — so at
+byte-identical impact force the two-mode voice came out 15% louder (window RMS
+0.1061 vs 0.0914) and a logistic probe on LEVEL ALONE named the object on 70%
+of episodes against a 53% gate. Object identity was riding on loudness as well
+as on spectrum. UB.9 would have measured that, called it fusion, and its
+spectrum-flattening control would not have removed it.
+
+The fix was in the FIXTURE, not the threshold: radii 0.140625 and 0.214286, so
+both voices ring with exactly three modes, `total_gain` is identical, and the
+level cue measures 0.0.
+
+**Rule:** a normalisation, a whitening, a re-scaling or a matched-pair
+construction is a piece of the experiment, not a piece of the setup. Probe it
+with the same adversarial probe you point at the raw signal. The reasoning
+"this cannot leak, because we normalised" is the argument form law 3 exists to
+forbid — and here it was written into a research doc as a settled fact, three
+sections above the spec meant to check it.
+
+**Corollary, cheaper than the rule:** every fixture-certification spec should
+carry a probe that must SUCCEED alongside the probes that must fail. PG.7's
+P3 (level-normalised bands -> identity, gate >= 0.95) is what distinguishes
+"nothing leaks" from "nothing is there". A fixture that leaks nothing and
+carries nothing passes every leak test ever written.

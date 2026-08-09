@@ -1209,3 +1209,63 @@ raises).
    work drain was **1.82** — energy will flatline near zero long before the
    horizon ends, which is one of PS.01's own pre-registered falsifiers. Measure
    before deciding; do NOT re-tune kappa to make the gate pass.
+
+---
+
+**2026-08-09, ~21:20 — PG.7 PASS. The unison ladder's audio fixture is certified,
+and it needed a real fix to get there.**
+
+Took priority 0aa (PG.6 + PG.7). PG.6 is BLOCKED BY THE BOX, not by the science
+— see below. PG.7 is done: `experiments/hns_scene.py` (the heard-not-seen scene)
++ `experiments/tests/pg_7_hns_leakage.py`, pre-registered and committed in
+5283cd3 BEFORE the run, then PASS at 3 seeds x 3200 episodes in 102.6 s.
+
+    slot_leak_acc             0.5000  +- 0.0     (gate <= 0.53)  <- the falsifier
+    nonspectral_identity_acc  0.5000  +- 0.0     (gate <= 0.53)
+    spectral_identity_acc     1.0000  +- 0.0     (gate >= 0.95)  <- bit is THERE
+    max_pan_gap               4.4e-10 (gate < 1e-6)
+    max_distance_gap          9.3e-10 m (gate < 1e-3)
+    max_amp_rel_gap           0.0
+    voiced_correct / single_event / both_spheres   1.0 / 1.0 / 1.0
+    CONTROLS (must be caught): geometry leak -> P1 1.000; mass leak -> P2 1.000
+
+THE NUMBER THAT MATTERED WAS THE ONE THAT FAILED FIRST. At the radii the design
+doc specified (0.07 / 0.16) the fixture leaked: a probe on window LEVEL ALONE
+named the object on 70% of episodes. UNIFIED_BRAIN_BAKEOFF.md 3.1 had argued
+this was impossible "because `_voice` renormalises by the total gain of the
+included modes" — and that renormalisation is the cause. It divides by the gain
+of the modes surviving the 7200 Hz cutoff (1.50 for two, 1.75 for three), so
+the 2-mode voice is 15% louder at identical impact force (RMS 0.1061 vs
+0.0914). Identity was riding on loudness. Fixed in the FIXTURE, never the
+threshold: radii 0.140625 / 0.214286, both ringing with three modes, level cue
+now 0.0. Generalised into LESSONS.md ("the step that removes a confound is
+itself a confound until measured").
+
+NEXT ITERATION, in order:
+
+1. **PG.6 is now the largest unblocked lever in the ladder** — `run blocked`
+   says `PG.6 = NOT_RUN frees 5 (blocks 7)`: UB.9/10/11/12/13, plus UB.15/16
+   behind T2.02. It is blocked by the BOX, not the science: this machine has no
+   libEGL and no libOSMesa, so MuJoCo cannot render a frame at all (it fails at
+   import). PG.6's own notes prescribe `MUJOCO_GL=osmesa`; **that package does
+   not exist for OL9/aarch64**. Escalated to DECISIONS_NEEDED.md with the ask
+   (`dnf install mesa-libEGL`, one package, no restart, no tenant touched) AND
+   the no-owner-needed fallback (render on Colab, cache ~500 layouts) with its
+   price. CHECK THAT FILE FIRST — if the owner has installed it, PG.6 is a
+   couple of hours of ordinary work and seven specs come free.
+2. The HNS scene module is written and certified, so UB.9 needs only the vision
+   half. `hns_scene.hns_mjcf` already emits `<visual><global offwidth/offheight>`
+   and the two candidates are visually distinct by radius AND colour; adding
+   PG.6's `<camera>` to it is a few lines.
+3. Still open from the previous iteration and NOT done here: re-run PG.8 (stale
+   `impl_sha`), then `--gate`. PS.01 is still half-built.
+
+LOCK NOTE (and a guard for it): `experiments.run PG.7` refused to start — the
+CPU lock was held by a T2.01 process at **0.0% CPU** polling a remote GPU,
+started 26 minutes before commit 8970638 split the locks, so `_lock_for` could
+not re-route it. I ran PG.7 through `m.run(Ledger())` directly, which is safe
+(`Ledger.record` takes its own lock and re-reads-merges-writes). `_exclusive`
+now PRINTS THE HOLDER — pid, command, %CPU, age, found by scanning /proc rather
+than trusting the lockfile's PID line, which a pre-fix holder never wrote. The
+message "probably the hourly loop" was a guess dressed as a diagnosis and it
+was wrong both times it was needed.

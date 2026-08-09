@@ -54,6 +54,55 @@ def _lock_for(spec_ids) -> str:
     return RUN_LOCK
 
 
+def _lock_holder(lock_path: str):
+    """Say WHO holds the lock, what they are running, and whether they are
+    actually using the CPU this lock protects.
+
+    "Another run holds the lock (probably the hourly loop)" is a guess dressed
+    as a diagnosis, and twice now it has been wrong in the same way. On
+    2026-08-09 PG.8's strengthened check could not be re-recorded because a
+    T2.01 run held this lock; hours later PG.7 hit the identical wall, and the
+    holder turned out to be a T2.01 process started 26 minutes BEFORE the
+    lock-split commit (8970638) that would have sent it to the GPU lock — so it
+    sat at **0.0% CPU polling a remote GPU** while holding the LOCAL CPU-work
+    lock. `_lock_for` cannot fix that case: a process that is already running
+    cannot be re-routed, and every fix to it leaves a window of pre-fix
+    processes behind.
+
+    What made the call decidable was reading %CPU off the holder by hand. That
+    is the whole content of this function: the lockfile's own PID line is
+    unreliable (a pre-fix holder wrote nothing — the file was 0 bytes), so the
+    holder is found by scanning /proc for the open descriptor, which cannot go
+    stale. Diagnosis only; nothing here takes or breaks a lock.
+    """
+    import glob
+    out = []
+    try:
+        target = os.path.realpath(lock_path)
+        for fd in glob.glob("/proc/[0-9]*/fd/*"):
+            try:
+                if os.path.realpath(fd) != target:
+                    continue
+                pid = fd.split("/")[2]
+                if int(pid) == os.getpid():
+                    continue          # we hold the fd too; flock is what we lost
+                cmd = open(f"/proc/{pid}/cmdline", "rb").read().decode(
+                    "utf-8", "replace").replace("\0", " ").strip()
+                ps = os.popen(f"ps -o pcpu=,etime= -p {pid} 2>/dev/null").read().split()
+                cpu, age = (ps + ["?", "?"])[:2]
+                out.append(f"holder pid {pid}  {cpu}% cpu  up {age}  {cmd[:90]}")
+                if cpu not in ("?",) and float(cpu) < 1.0:
+                    out.append("^ holder is NOT using local CPU. If it is a remote-GPU "
+                               "poll it predates the lock split (8970638); local CPU "
+                               "work is safe to run alongside it — Ledger.record takes "
+                               "its own lock, so results cannot be lost.")
+            except (OSError, ValueError, IndexError):
+                continue
+    except OSError:
+        pass
+    return out or ["holder could not be identified from /proc."]
+
+
 @contextmanager
 def _exclusive(spec_ids=()):
     """Serialise ALL ladder work, manual or looped.
@@ -68,8 +117,10 @@ def _exclusive(spec_ids=()):
         try:
             fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            print(f"Another run holds {lock_path} (probably the hourly loop). "
-                  "Wait for it, or `touch .loop-paused` to stop the loop.")
+            print(f"Another run holds {lock_path}.")
+            for line in _lock_holder(lock_path):
+                print(f"  {line}")
+            print("  Wait for it, or `touch .loop-paused` to stop the loop.")
             raise SystemExit(0)
         fh.write(f"{os.getpid()}\n"); fh.flush()
         try:

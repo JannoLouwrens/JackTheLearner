@@ -496,3 +496,56 @@ Note this REVERSES DIRECTION_AUDIT's "do not start" recommendation — the audit
 reasoning was sound but it was an argument, and law 3 outranks it. Queued; the
 correction to the audit is recorded here so the two documents no longer
 contradict each other.
+
+## This box cannot render a frame — one `dnf install` unblocks 7 specs
+
+**Raised 2026-08-09, after PG.7 passed and left PG.6 as the largest unblocked
+lever in the ladder.** `run blocked` now says it plainly:
+
+    PG.6 = NOT_RUN  frees 5  (blocks 7)   -> UB.9, UB.10, UB.11, UB.12, UB.13
+                                          (+ UB.15, UB.16 behind T2.02 as well)
+
+**Measured, not assumed.** MuJoCo offscreen rendering fails here at import,
+before any scene exists:
+
+    MUJOCO_GL=osmesa -> mujoco/osmesa/__init__.py: from OpenGL import GL
+                        -> AttributeError: 'NoneType' object has no attribute 'glGetError'
+                        (PyOpenGL 3.1.10 is installed; libOSMesa is not)
+    installed GL libs : libGL.so.1 only. No libEGL, no libOSMesa, no display.
+    rpm -qa           : mesa-libGL, mesa-libgbm, mesa-dri-drivers, libglvnd — but
+                        NOT mesa-libEGL.
+
+PG.6's own `notes` field prescribes `MUJOCO_GL=osmesa`. **That method is not
+available on this platform**: `mesa-libOSMesa` is not packaged for OL9/aarch64.
+`mesa-libEGL.aarch64 25.2.7-4.el9` IS available in `ol9_appstream`, and with
+`mesa-dri-drivers` already installed it should give surfaceless software EGL
+(llvmpipe) — which is what `MUJOCO_GL=egl` needs. Stated as expectation, not
+fact: it is one command to install and one command to verify, and the
+verification should be run immediately rather than trusted.
+
+**THE ASK (owner's call — it is a system package, outside the repo):**
+
+    sudo dnf install -y mesa-libEGL
+    # then, to verify, from the repo:
+    MUJOCO_GL=egl /data/venvs/jackthelearner/bin/python -c "..."   # render a 64x64 frame
+
+Cost: one package, no daemon restart, no container touched, no paying tenant
+affected. Software rendering only — no GPU on this box, and none is asked for.
+
+**THE COUNTERARGUMENT AND THE FALLBACK, so this is not a one-sided ask.** The
+loop can proceed WITHOUT owner action, at a cost worth knowing:
+
+  - Render PG.6's and UB.9's frames on Colab and cache them in the repo. The
+    HNS scene reuses ~500 layouts, so this is one remote job, not a per-run
+    dependency, and `build_job` pins the commit so the frames stay attributable.
+  - The price: UB.9 stops being a CPU spec that any iteration can re-run, and
+    becomes a spec that depends on a cached artifact. Every re-run of a cached
+    fixture is a re-run against a snapshot, which is the "generated artifacts go
+    stale silently" lesson with the artifact moved off-box. `impl_sha` does not
+    cover cached frames.
+  - It also means Jack's own eyes cannot be exercised locally at all, which
+    makes every future vision spec a remote job.
+
+**Recommendation:** install the package; take the fallback only if the install
+is unwanted. Either way PG.6 should not sit NOT_RUN — it is 7 specs and the
+entire unison ladder, and 0 of 37 unison specs currently pass.
