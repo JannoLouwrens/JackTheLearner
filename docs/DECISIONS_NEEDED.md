@@ -434,3 +434,27 @@ Rationale beyond fairness: Jack's operating regime is CHEAP LIVES IN LARGE
 NUMBERS (2,826 steps/s measured on CPU) — the regime where sample efficiency
 matters LESS and throughput/simplicity matter MORE. Testing only in the
 low-data regime measures the wrong end of Jack's actual life.
+
+### ADDENDUM 2 — the truncation trap: no winner while the gap is still closing
+
+Owner, 2026-08-09: "PPO might be best for more deep learning after 20 hours
+when we stop at 19?" Exactly right, and NOT covered by Addendum 1. That rule
+protects an arm from ELIMINATION while its curve still rises (LC.03). It does
+NOT protect the WINNER decision (LC.04/LC.05): both arms can clear the gate,
+the leader wins at cutoff, and the trailing arm crosses one hour later. This
+is the standard way cheap benchmarks crown the wrong method, and it is
+DIRECTIONAL against PPO for the same reason as before.
+
+REQUIRED, before any LC winner is adopted — the CONVERGENCE CHECK:
+  Fit the last third of each finalist's learning curve. Declare WINNER only
+  if EITHER (a) the runner-up's slope is <= 0 (it has stopped improving), OR
+  (b) the projected crossover lies beyond 3x the tested budget. Otherwise the
+  verdict is SPLIT-PENDING: extend BOTH finalists to the projected crossover
+  (or 3x, whichever is smaller) and re-decide. Cost is affordable and that is
+  the point — ~130 GPU-h/month exist and ~20 are used; an extension is hours,
+  not money.
+
+The constraint here was never the budget. It was the CUTOFF CHOICE. A cutoff
+picked for convenience and then treated as a verdict is a resource limit
+masquerading as a result — and it would have been invisible in the ledger,
+because every number in it would have been true.
