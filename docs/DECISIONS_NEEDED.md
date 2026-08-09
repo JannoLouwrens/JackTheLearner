@@ -409,3 +409,28 @@ top two arms at ~10x experience on Kaggle (~6-10 GPU-h of the ~130/month
 available) and require the RANKING to hold. If it inverts, the CPU verdict is
 void and the GPU run decides. This is cheap, and it is the difference between
 "decided" and "decided at a scale that transfers".
+
+### ADDENDUM — the scale bias is DIRECTIONAL, and it points at PPO
+
+Owner, 2026-08-09: "some stuff needs much more GPU hours to prove, like PPO —
+will we properly test it?" Correct, and sharper than the general scale worry:
+
+PPO is DATA-HUNGRY; world models are SAMPLE-EFFICIENT. A cpu<2h arbitration
+therefore tests in exactly the regime where PPO looks worst and Dreamer looks
+best. LC.03's screening gate (beat random by 3 sigma, beat your untrained twin
+by 3 sigma) could ELIMINATE PPO before LC.04 runs — not because it is worse,
+but because it had not got going yet. LC.03's "fewer than two arms => VOID"
+protects the one-survivor case but NOT the case where two world-model variants
+clear and PPO alone is dropped.
+
+REQUIRED FIX, using this project's own precedent (T2.01 v3: "curve still
+climbing at cutoff" -> more compute, not a verdict): an arm that fails LC.03
+while its learning curve still has a POSITIVE SLOPE at cutoff is NOT
+eliminated. It is recorded DATA-STARVED and re-screened at ~10x experience on
+Kaggle before any elimination stands. Only a FLAT curve at cutoff justifies
+"this core cannot learn". Same rule, symmetric, applied to every arm.
+
+Rationale beyond fairness: Jack's operating regime is CHEAP LIVES IN LARGE
+NUMBERS (2,826 steps/s measured on CPU) — the regime where sample efficiency
+matters LESS and throughput/simplicity matter MORE. Testing only in the
+low-data regime measures the wrong end of Jack's actual life.
