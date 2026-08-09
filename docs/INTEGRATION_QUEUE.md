@@ -178,6 +178,21 @@ The Sunday Review's anatomy audit should check GENERALITY.md alongside
 CHAMPIONS.md: a barrier with no seat and no spec is fine, but it must stay
 NAMED.
 
+## GEN.00 — THE FINAL EXAM (owner, 2026-08-09): buildable EARLY, not far-future
+
+Owner asked whether "we build a learner capable of learning himself" can be
+tested concretely. It can, and nothing tested it: all 136 specs ask "did he
+learn X" for an X we designed. GEN.00 (docs/GENERALITY.md) is the direct test
+— a SEALED challenge, hash-committed before training, designed by someone
+blind to the curriculum, consequential to his needs and novel in mechanism.
+Null: learning frozen must NOT improve. Control: a sham-novelty challenge must
+NOT count. Unlike the rest of GENERALITY.md this is NOT far-future — it runs
+in the playground as soon as needs + a learning core exist, and it should be
+re-run forever with a fresh sealed challenge each time.
+PREREQUISITE, and it is a process one rather than a code one: the sealing.
+Whoever designs a challenge must not have seen the training specs. The owner
+is the natural sealer; a blind agent is the fallback.
+
 ## Queue (top = next)
 
 | research doc | specs | status |

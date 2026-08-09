@@ -14,6 +14,44 @@
 > Ranked by how much each one blocks the others. The first three are the ones
 > I would bet the distance to generality actually lives in.
 
+## GEN.00 — THE FINAL EXAM: he learns something nobody taught
+**The direct test of the first principle**, and the one thing 136 specs did not
+check. Every other spec asks "did he learn X?" — where X is something we
+designed, specced and rewarded. That can all pass while Jack is a COLLECTION
+OF TRAINED BEHAVIOURS rather than a learner. The claim is bigger than the
+scorecard: not "he learned these things" but "he acquires things".
+**Barrier.** Seven existing specs use held-out DATA (unseen phrasings, unseen
+states). None uses a held-out CAPABILITY — a challenge the trainer never
+anticipated.
+**Test.** A SEALED CHALLENGE, designed by someone blind to the training:
+  - The challenge is a world feature that is CONSEQUENTIAL to his existing
+    needs (so he has a reason to engage) and NOVEL in mechanism (so no trained
+    behaviour transfers directly). Example shape, not the actual test: a plant
+    that is nourishing only after being heated, where nothing in training ever
+    coupled fire to food.
+  - It is committed as a HASH before training and revealed only at test time.
+    Nobody who wrote a spec, a curriculum, a reward or a research doc may see
+    it first. That sealing is what makes it a real exam rather than a
+    rehearsal.
+  - PASS: competence improves measurably within a life or across lives, with
+    NO change to training, reward, or architecture.
+**Falsified by.** No improvement. He only ever gets better at things someone
+designed for — a trained system, not a learner.
+**Null.** The same Jack with learning FROZEN at test time (weights fixed, diary
+read-only). It must NOT improve — that separates learning from competence he
+already had.
+**Control that must fail.** A SHAM-NOVELTY challenge: superficially new,
+functionally identical to something trained. Improvement there proves nothing;
+he must improve on the genuinely novel one SPECIFICALLY. Without this, "he
+adapted" could just be "he recognised".
+**Status.** Runnable EARLY and cheaply — in the playground, long before the
+jungle, as soon as needs and a learning core exist. It should be run
+repeatedly, with a fresh sealed challenge each time, forever: the exam only
+means anything while the questions are ones nobody studied for.
+**Kills.** The first principle's central claim, if it fails. "Give him a brain,
+a body and a world and let him become" is exactly the assertion that he can
+acquire what we did not install.
+
 ## GEN.01 — The world is the ceiling
 **Barrier.** You cannot become more general than your environment demands. A
 jungle with fire, water and fruit can produce an excellent forager and can
