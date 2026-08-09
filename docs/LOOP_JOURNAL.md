@@ -1411,3 +1411,69 @@ the same "measured, not derived" correction LC.02 made to `§5.1`'s throughput
 floor. Do not re-run my exact probes verbatim — they're gone (scratch, not
 committed) — but the finding (accumulated-impulse conflates rest with impact
 when nothing walks) is the thing to design around.
+
+## 2026-08-09 late — PG.6 PASS after two honest FAILs; the eye is certified
+
+**PG.6 is PASS at attempt 3, with attempts 1 and 2 preserved in the ledger's
+history.** Radius R^2 **0.9747** (gate 0.80), bearing median error **1.27 deg**
+(gate 5.0), `visible_frac` 1.0, both nulls dead (radius R^2 -0.259 shuffled,
+-0.004 grey), control refutes (out-of-FOV R^2 -0.002, bearing 58.0 deg), canary
+stable. 606 s on CPU. **This unblocks UB.9** — "the smallest experiment that
+could establish unison", CPU-only, deps PG.6/PG.7/T1.06 all now PASS. That is
+the next iteration's work and it is the most valuable unblocked spec in the
+project: 0 of 37 unison specs pass today.
+
+**Attempt 1 FAILED for a reason that was not the sensor.** Both registered gates
+cleared (R^2 0.828, bearing 2.18) and the fixture check `visible_frac == 1.0`
+read 0.95 on all three seeds. The tempting diagnosis was acuity at 96 px. Wrong:
+every miss had a pixel difference of **exactly 0.0**, and all sat at |bearing|
+16.6-17.9 deg. The eye is at y=-3.4, the LADDER is at y=-2.6 — its rails at
+x=+-0.25 stand 0.8 m in front of the camera and subtend +-17.4 deg. The uniform
+sampler was putting ~6% of objects behind ladder rails. Fixed by rejecting
+occluded episodes at sampling time with a GEOMETRIC test (`mj_ray` must reach
+the object) while the fixture's assertion stays PHOTOMETRIC — filtering on the
+pixel difference would have made `visible_frac == 1.0` true by construction.
+**30.8% of the eye's nominal 0-22 deg band is behind the ladder**, now reported
+as `occluded_frac`; UB.9 samples the same band and inherits this.
+
+**Attempt 2 FAILED on an arithmetically impossible constant.** Everything else
+cleared (R^2 0.9747, bearing 1.27) and the only failing condition was
+`NULL_BEARING_FLOOR = 20 deg`, requiring the shuffled and grey nulls to score
+WORSE than 20 deg of median bearing error. In a +-22 deg band a null that always
+answers 0 scores the band's median |bearing| — measured **8.87/8.91/8.78 deg**
+over 3000 draws on seeds 0/1/2 — so exceeding 20 needs a null systematically
+anti-correlated with truth. The nulls (8.96, 8.20) were sitting exactly on the
+constant predictor, i.e. behaving correctly. The 20 deg figure is right for the
+40-75 deg CONTROL band (58.0 measured there) and is **still enforced there,
+unchanged**; it had been carried across to a band it cannot fit.
+
+Replaced with a MEASURED baseline (`_const_bearing_err`, the LC.02 "measured,
+not derived" precedent), and the replacement is tighter, not looser: the probe
+must beat the constant predictor 2x (4.10 deg here, inside the registered 5),
+and the grey null must EQUAL it to 0.05 deg. That last one is a live check on
+the solver — a grey frame leaves the ridge design matrix rank-0, so the two are
+provably the same estimator. It landed at `bearing_med_grey == bearing_med_const
+== 8.200667`, identical to seven digits. Note for the record: the registry
+pre-registers the two capability gates and NAMES the nulls but sets no number
+for them, so the constant changed here was an implementation choice from
+attempt 1, not a pre-registered threshold. Neither registered gate moved.
+
+**Also fixed, and it is why any of this ran: the runner could not start.** An
+idle T2.01 remote-GPU poll (0.00 cores, up 3h45m) held the LOCAL CPU lock, as it
+had already blocked PG.8 and PG.7 earlier the same day. `_lock_for` routes NEW
+gpu-only runs elsewhere but cannot re-route a process already running, so that
+fix permanently leaves a window of pre-fix holders. `_exclusive` now measures
+each holder's INSTANTANEOUS cpu (differenced `/proc/pid/stat`, not `ps -o pcpu`,
+which is a lifetime average and reads idle for a poller that just started local
+work) and, when every holder is both idle and running only gpu-budget specs,
+proceeds on one overflow slot instead of exiting. Two conditions, both
+conservative; an unreadable /proc or any local work blocks exactly as before,
+and the overflow slot is itself exclusive so real CPU contention stays at one.
+
+**NEXT ITERATION: implement and run UB.9.** It is CPU-only, all three deps are
+green, and it is the smallest experiment that could establish "his senses work
+in unison". Two things to carry into it: `occluded_frac` 0.319 means a third of
+the in-FOV band is blind, so sample bearings through `_sample_unoccluded` or
+UB.9 will measure the ladder; and PG.6's `get_eye` cache must be reused rather
+than re-created, because a garbage-collected `mujoco.Renderer` poisons the
+shared X display and returns corrupted-but-plausible frames with no error.

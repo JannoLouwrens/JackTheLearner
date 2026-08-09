@@ -1075,3 +1075,67 @@ And when scanning `/proc` or `ps` for "is this thing in use", scope the scan to
 the kind of process that can legitimately hold the resource (`ps -eo comm=,args=
 | awk '$1 ~ /claude/'`) rather than to all of them. The narrower scan is not an
 optimisation — it is what makes the answer mean anything.
+
+---
+
+## "In FOV" is not "visible", and a fixture that conflates them blames the sensor
+
+PG.6's first run FAILED with both registered gates cleared — radius R^2 0.828
+against a 0.80 gate, bearing 2.18 deg against 5 — because its must-succeed
+fixture check `visible_frac == 1.0` read 0.95 on all three seeds. The natural
+reading was acuity: 96 px is too coarse for a 6 cm ball at 3.6 m. It was not.
+Every missed episode had a pixel difference of **exactly 0.0** — not a faint
+object, an absent one — and all of them sat at |bearing| 16.6-17.9 deg. The eye
+is at y=-3.4; the playground LADDER is at y=-2.6, so its rails at x=+-0.25 stand
+0.8 m in front of the camera and subtend atan(0.25/0.8) = +-17.4 deg. The uniform
+sampler was placing objects behind two vertical stripes of ladder and the probe
+was being asked to regress the radius of a ball that was not in the image.
+
+Three separate things went wrong, and only the first is about ladders.
+
+**A uniform sampler over a world samples the occluded parts of it.** "In the
+camera frustum" is a statement about angles; "visible" is a statement about what
+is between the camera and the object. Any fixture in a furnished world needs the
+second one, and the arithmetic that says the first is satisfied will happily
+report that the second is too.
+
+**Exactly zero is a different failure from nearly zero.** `maxdiff == 0.0` says
+byte-identical frames, which no amount of insufficient resolution produces — a
+too-small object produces a small difference, not no difference. Reading the
+distribution of the failing measurements, rather than their rate, localised this
+in one probe. A 5% miss rate is compatible with a dozen stories; 5% of misses at
+*exactly* 0.0 and all within 1.3 deg of each other is compatible with one.
+
+**Filter with a different instrument than the one you assert with.** The repair
+rejects occluded episodes at sampling time, and the rejection test is GEOMETRIC
+(`mj_ray` from the eye must reach the object) while the fixture's assertion stays
+PHOTOMETRIC (the rendered frame must differ from the same scene without the
+object). Had the sampler filtered on the pixel difference instead — the obvious
+one-line fix — `visible_frac == 1.0` would have become true by construction, and
+a fixture that cannot fail is exactly the thing this ladder exists to prevent.
+Independence is what keeps a must-succeed check alive: the geometry can still be
+contradicted by the renderer, and if the GL context degrades or the camera pose
+moves, it will be.
+
+**Rule:** when a fixture check fails, ask whether the world has a physical reason
+your sampler ignored before concluding the instrument is weak. Then, when you fix
+the sampler, make its criterion independent of the quantity the fixture asserts,
+and report the rejection rate as a metric — it is a fact about the world (here:
+30.8% of the eye's nominal 0-22 deg band is behind the ladder) that downstream
+specs sampling the same band inherit.
+
+### Corollary: prefer the filter that rejects less, when both are defensible
+
+The strict form of "unoccluded" is three rays — centre and both limbs — so that
+a ball half behind a rail is dropped; it rejects 49.6% of PG.6's band against
+30.8% for the centre ray alone. The two rules differ exactly on the PARTIALLY
+occluded episodes, which are the hard ones, so the strict rule raises every
+number in the file while narrowing what the certificate covers. Choosing it
+because it scores better against a fixed threshold is the same sin as moving the
+threshold, and it is harder to see, because nothing in the diff touches a gate.
+
+**Rule:** when a data-selection rule is a free parameter and both settings are
+defensible, take the one that keeps the harder samples. If the gates then fail,
+that is a result about the capability. A selection rule tuned until the metric
+clears is a threshold move wearing a sampler's clothes — and unlike a threshold
+move, no reviewer grepping for changed constants will find it.

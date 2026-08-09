@@ -21,6 +21,7 @@ import hashlib
 import importlib
 import os
 import sys
+import time
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -54,9 +55,83 @@ def _lock_for(spec_ids) -> str:
     return RUN_LOCK
 
 
+CPU_LOCK_B = "/tmp/jack-ladder-cpu-b.lock"   # the one overflow slot; see _exclusive
+
+
+def _cpu_fraction(pid: int, window_s: float = 1.0):
+    """Cores consumed by `pid` over `window_s` seconds, or None if unreadable.
+
+    NOT `ps -o pcpu`, which is CPU averaged over the process's whole LIFETIME.
+    That average is exactly wrong for the case this file cares about: a job
+    that trained locally for an hour and then blocked on a remote poll still
+    reads busy, and — the dangerous direction — a job that polled for three
+    hours and has just begun local work still reads idle. Only a differenced
+    sample says what a process is doing NOW.
+    """
+    hz = os.sysconf("SC_CLK_TCK")
+
+    def _ticks():
+        # /proc/pid/stat field 2 (comm) may contain spaces and parentheses, so
+        # split after the last ')' — utime/stime are fields 14/15 overall.
+        raw = open(f"/proc/{pid}/stat").read()
+        fields = raw[raw.rindex(")") + 2:].split()
+        return int(fields[11]) + int(fields[12])
+
+    try:
+        a = _ticks()
+        time.sleep(window_s)
+        b = _ticks()
+    except (OSError, ValueError, IndexError):
+        return None
+    return (b - a) / hz / window_s
+
+
+def _holders(lock_path: str):
+    """Every live process holding `lock_path` open, with what it is doing.
+
+    The lockfile's own PID line is unreliable (a pre-fix holder wrote nothing —
+    the file was 0 bytes), so holders are found by scanning /proc for the open
+    descriptor, which cannot go stale.
+    """
+    import glob
+    found = []
+    try:
+        target = os.path.realpath(lock_path)
+    except OSError:
+        return found
+    for fd in glob.glob("/proc/[0-9]*/fd/*"):
+        try:
+            if os.path.realpath(fd) != target:
+                continue
+            pid = int(fd.split("/")[2])
+            if pid == os.getpid():
+                continue              # we hold the fd too; flock is what we lost
+            argv = open(f"/proc/{pid}/cmdline", "rb").read().decode(
+                "utf-8", "replace").split("\0")
+            argv = [a for a in argv if a]
+            age = os.popen(f"ps -o etime= -p {pid} 2>/dev/null").read().strip() or "?"
+            specs = [a for a in argv if a in BY_ID]
+            found.append({
+                "pid": pid,
+                "cmd": " ".join(argv),
+                "age": age,
+                "specs": specs,
+                # A holder is "remote-only" when every ladder spec it names has
+                # a gpu budget AND it names at least one. Anything else — a
+                # --gate, a tier sweep, an unrecognised argv — is treated as
+                # local CPU work, which is the safe direction.
+                "remote_only": bool(specs) and all(
+                    BY_ID[s].budget.value.startswith("gpu") for s in specs),
+                "cores": _cpu_fraction(pid),
+            })
+        except (OSError, ValueError, IndexError):
+            continue
+    return found
+
+
 def _lock_holder(lock_path: str):
-    """Say WHO holds the lock, what they are running, and whether they are
-    actually using the CPU this lock protects.
+    """Human-readable lines for `_holders` — say WHO holds the lock, what they
+    are running, and whether they are actually using the CPU it protects.
 
     "Another run holds the lock (probably the hourly loop)" is a guess dressed
     as a diagnosis, and twice now it has been wrong in the same way. On
@@ -67,40 +142,17 @@ def _lock_holder(lock_path: str):
     sat at **0.0% CPU polling a remote GPU** while holding the LOCAL CPU-work
     lock. `_lock_for` cannot fix that case: a process that is already running
     cannot be re-routed, and every fix to it leaves a window of pre-fix
-    processes behind.
-
-    What made the call decidable was reading %CPU off the holder by hand. That
-    is the whole content of this function: the lockfile's own PID line is
-    unreliable (a pre-fix holder wrote nothing — the file was 0 bytes), so the
-    holder is found by scanning /proc for the open descriptor, which cannot go
-    stale. Diagnosis only; nothing here takes or breaks a lock.
+    processes behind. `_exclusive` acts on this; here it is only described.
     """
-    import glob
     out = []
-    try:
-        target = os.path.realpath(lock_path)
-        for fd in glob.glob("/proc/[0-9]*/fd/*"):
-            try:
-                if os.path.realpath(fd) != target:
-                    continue
-                pid = fd.split("/")[2]
-                if int(pid) == os.getpid():
-                    continue          # we hold the fd too; flock is what we lost
-                cmd = open(f"/proc/{pid}/cmdline", "rb").read().decode(
-                    "utf-8", "replace").replace("\0", " ").strip()
-                ps = os.popen(f"ps -o pcpu=,etime= -p {pid} 2>/dev/null").read().split()
-                cpu, age = (ps + ["?", "?"])[:2]
-                out.append(f"holder pid {pid}  {cpu}% cpu  up {age}  {cmd[:90]}")
-                if cpu not in ("?",) and float(cpu) < 1.0:
-                    out.append("^ holder is NOT using local CPU. If it is a remote-GPU "
-                               "poll it predates the lock split (8970638); local CPU "
-                               "work is safe to run alongside it — Ledger.record takes "
-                               "its own lock, so results cannot be lost.")
-            except (OSError, ValueError, IndexError):
-                continue
-    except OSError:
-        pass
+    for h in _holders(lock_path):
+        cores = "?" if h["cores"] is None else f"{h['cores']:.2f}"
+        out.append(f"holder pid {h['pid']}  {cores} cores now  up {h['age']}  "
+                   f"{h['cmd'][:90]}")
     return out or ["holder could not be identified from /proc."]
+
+
+IDLE_CORES = 0.05      # a holder below this is not using the CPU this lock protects
 
 
 @contextmanager
@@ -111,22 +163,55 @@ def _exclusive(spec_ids=()):
     one silently shadowed the other. The loop script already took this lock, but
     a human at a terminal did not, so the guard only protected one side. Holding
     it here means whoever starts second waits or skips, regardless of who they are.
+
+    THE OVERFLOW SLOT. What this lock actually protects is 4 shared ARM cores
+    from two torch processes; it was never about ledger integrity (`Ledger.record`
+    takes its own fcntl lock and re-read-merge-writes — the T0.08 lesson). So a
+    holder that is provably consuming no local CPU is not protecting anything,
+    and blocking behind it costs real science: on 2026-08-09 an idle T2.01
+    remote poll blocked PG.8, then PG.7, then PG.6, each time while the box sat
+    at 4% CPU. `_lock_for` routes NEW gpu-only runs to a separate lock, but a
+    process already running cannot be re-routed, so that fix always leaves a
+    window of pre-fix holders behind — this is the part that closes the window.
+
+    When every holder is (a) measured at <IDLE_CORES cores over a live sample,
+    not a lifetime average, and (b) running only gpu-budget specs, we take ONE
+    overflow slot instead of giving up. Two conditions, not one, and both are
+    conservative: an unreadable /proc, an unrecognised argv, or any local work
+    blocks exactly as before, and the overflow slot itself is exclusive, so the
+    number of processes actually competing for the cores never exceeds one.
     """
     lock_path = _lock_for(spec_ids)
-    with open(lock_path, "w") as fh:
+    for path, overflow in ((lock_path, False), (CPU_LOCK_B, True)):
+        fh = open(path, "w")
         try:
             fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            print(f"Another run holds {lock_path}.")
-            for line in _lock_holder(lock_path):
+            fh.close()
+            if overflow:
+                print(f"  overflow slot {CPU_LOCK_B} is also held — waiting is correct.")
+                break
+            print(f"Another run holds {path}.")
+            holders = _holders(path)
+            for line in _lock_holder(path):
                 print(f"  {line}")
-            print("  Wait for it, or `touch .loop-paused` to stop the loop.")
-            raise SystemExit(0)
+            idle_remote = bool(holders) and all(
+                h["remote_only"] and h["cores"] is not None and h["cores"] < IDLE_CORES
+                for h in holders)
+            if not idle_remote or path != RUN_LOCK:
+                print("  Wait for it, or `touch .loop-paused` to stop the loop.")
+                raise SystemExit(0)
+            print("  ^ every holder is a remote-GPU poll using no local CPU. "
+                  f"Proceeding on the overflow slot {CPU_LOCK_B}.")
+            continue
         fh.write(f"{os.getpid()}\n"); fh.flush()
         try:
             yield
         finally:
             fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+            fh.close()
+        return
+    raise SystemExit(0)
 
 MARK = {
     Status.PASS: "PASS   ",

@@ -1157,6 +1157,74 @@
       "spec_id": "PG.5",
       "status": "PASS"
     },
+    "PG.6": {
+      "attempt": 3,
+      "commit": "185cb1c",
+      "control_metrics": {
+        "control_canary_stable": 1.0,
+        "control_canary_stable_std": 0.0,
+        "control_seed_gates_ok": 1.0,
+        "control_seed_gates_ok_std": 0.0,
+        "oof_bearing_med_deg": 58.025,
+        "oof_bearing_med_deg_std": 0.53551,
+        "oof_radius_r2": -0.00203333,
+        "oof_radius_r2_std": 0.0017632
+      },
+      "duration_s": 605.62,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "185cb1c",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-09T23:20:17",
+          "status": "FAIL"
+        },
+        {
+          "commit": "185cb1c",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-09T23:36:22",
+          "status": "FAIL"
+        }
+      ],
+      "impl_sha": "f8b7cf05e21acbf5",
+      "message": "",
+      "metrics": {
+        "bearing_med_const": 8.200667,
+        "bearing_med_const_std": 0.459971,
+        "bearing_med_deg": 1.27,
+        "bearing_med_deg_std": 0.0817598,
+        "bearing_med_grey": 8.200667,
+        "bearing_med_grey_std": 0.459971,
+        "bearing_med_shuffled": 8.957,
+        "bearing_med_shuffled_std": 0.460904,
+        "canary_stable": 1.0,
+        "canary_stable_std": 0.0,
+        "geometric_col_err_deg": 0.674667,
+        "geometric_col_err_deg_std": 0.101562,
+        "occluded_frac": 0.3188,
+        "occluded_frac_std": 0.00600222,
+        "radius_r2": 0.974667,
+        "radius_r2_fixed_dist": 0.9831,
+        "radius_r2_fixed_dist_std": 0.0049558,
+        "radius_r2_grey": -0.0039,
+        "radius_r2_grey_std": 0.00314431,
+        "radius_r2_shuffled": -0.2591,
+        "radius_r2_shuffled_std": 0.0363677,
+        "radius_r2_std": 0.00266124,
+        "seed_gates_ok": 1.0,
+        "seed_gates_ok_std": 0.0,
+        "visible_frac": 1.0,
+        "visible_frac_std": 0.0
+      },
+      "ran_at": "2026-08-09T23:49:26",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "PG.6",
+      "status": "PASS"
+    },
     "PG.7": {
       "attempt": 1,
       "commit": "5283cd3",
