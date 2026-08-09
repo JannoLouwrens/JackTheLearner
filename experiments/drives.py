@@ -164,8 +164,18 @@ class DriveLayer:
         for _ in range(frame_skip):
             data.ctrl[:] = ctrl * layer.gear_scale()
             mujoco.mj_step(model, data)
-            layer.substep(model, data, model.opt.timestep)
+            mujoco.mj_rnePostConstraint(model, data)   # cfrc_ext is stale
+            layer.substep(model, data, model.opt.timestep)  # without this
         h = layer.decide()
+
+    The `mj_rnePostConstraint` call is NOT optional and NOT free to omit: it is
+    what populates `cfrc_ext`, which `substep` reads for the impact-impulse
+    term (`§2.2`'s `J_t`). `mj_step` does not call it (the PG.8 lesson,
+    `LESSONS.md`). Omitting it, or calling it only once after the whole
+    substep loop instead of after every `mj_step`, silently feeds `substep`
+    the PREVIOUS decision's contact state — found in `w0.py`'s own caller,
+    where it did not invalidate LC.02 (never gates on `j`) but would have
+    silently wrecked PS.01's calibration, which is the whole point of `j0`.
 
     `j0` is the impulse below which contact is NORMAL and costs nothing, and
     `alpha` converts the excess into integrity. Both are measured by PS.01 and

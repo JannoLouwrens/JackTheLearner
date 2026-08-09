@@ -302,10 +302,20 @@ class W0:
             if self.water is not None:
                 self.water.apply(self.model, self.data)
             self.mujoco.mj_step(self.model, self.data)
+            # cfrc_ext is filled by mj_rnePostConstraint, not by mj_step (the
+            # PG.8 lesson, LESSONS.md) — called every substep, not once at the
+            # end of the decision, because drives.substep() reads cfrc_ext HERE
+            # to accumulate impact impulse. A single end-of-decision call left
+            # 39 of every 40 substep reads holding the PREVIOUS decision's
+            # final contact state, understating (or misattributing) impact to
+            # the wrong decision. Never gated by any passing spec (LC.02 only
+            # reads `drive_gate_frac`, from `_grounded()`'s own contact scan,
+            # not from cfrc_ext) so no existing claim is affected — caught
+            # while calibrating PS.01, which DOES need the real number.
+            self.mujoco.mj_rnePostConstraint(self.model, self.data)
             self.synth.step(self.data)
             self.drives.substep(self.model, self.data, dt)
         self.data.xfrc_applied[self.rover_bid, :2] = 0.0
-        self.mujoco.mj_rnePostConstraint(self.model, self.data)
 
         self._prev_drive = drives.DriveState(**vars(self.drives.state))
         self.drives.decide()

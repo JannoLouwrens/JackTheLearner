@@ -497,7 +497,36 @@ reasoning was sound but it was an argument, and law 3 outranks it. Queued; the
 correction to the audit is recorded here so the two documents no longer
 contradict each other.
 
-## This box cannot render a frame — one `dnf install` unblocks 7 specs
+## ~~This box cannot render a frame — one `dnf install` unblocks 7 specs~~
+
+> **WITHDRAWN 2026-08-09, same day, by measurement. NO OWNER ACTION NEEDED, NO
+> PACKAGE INSTALLED.** The premise was false. MuJoCo has three GL backends and
+> this escalation tested two: `osmesa` (not packaged for OL9/aarch64) and `egl`
+> (`mesa-libEGL` absent). It never tried **GLX under a virtual display**, and
+> every piece of that path was already installed — `libGL.so.1`,
+> `libGLX_mesa.so.0` (llvmpipe), `mesa-dri-drivers`, and `Xvfb` — because
+> WorldTwin renders headless WebGL globes on this same box. The memory
+> `worldtwin-webgl-screenshots` records that path; nobody connected it to MuJoCo.
+>
+> Measured: RGB **and** depth render correctly, ~12 ms/frame at 64x64, ~14 ms at
+> 128x128. A thousand frames costs twelve seconds — cheaper than the physics that
+> generates them. `experiments/render.py` (`ensure_gl()`) makes it one import for
+> any future spec, and `python -m experiments.render` self-tests it.
+>
+> **The cost of the near-miss was not the package.** It was that the fallback —
+> render PG.6's and UB.9's frames on Colab and cache them — would have been
+> adopted, making every future vision spec depend on a cached remote artifact
+> that `impl_sha` does not cover, and taking Jack's eyes off this box
+> permanently. An escalation that is wrong in the safe direction still costs
+> real architecture.
+>
+> Generalised in `docs/LESSONS.md`: **"the box cannot do X" is a claim about
+> every path to X, and it is usually made after testing one.** Before escalating
+> a capability as missing, enumerate the ways it is normally obtained, say which
+> ones you tried, and check whether something else on the machine already does it.
+>
+> Original text retained below, unedited, because a withdrawn escalation that
+> deletes its own reasoning teaches nothing.
 
 **Raised 2026-08-09, after PG.7 passed and left PG.6 as the largest unblocked
 lever in the ladder.** `run blocked` now says it plainly:

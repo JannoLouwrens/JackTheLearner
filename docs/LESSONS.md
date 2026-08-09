@@ -981,3 +981,59 @@ must NOT trigger) alongside the positive one.
 **Rule:** when a check reads shared mutable state — a log, a lock file, a
 scratch tree — establish the boundary of what belongs to this run *before* the
 run, not by pattern-matching afterwards.
+
+## The same instrumentation bug can recur inside a single day
+
+PG.8 (this morning) found `cfrc_ext` filled by `mj_rnePostConstraint`, which
+`mj_step` never calls, leaving 78 observation columns silently zero. `w0.py`
+(this afternoon, same day, same author lineage) called
+`mj_rnePostConstraint` exactly once, after the whole 40-substep decision loop,
+then read `cfrc_ext` *inside* that loop via `drives.substep()` — so 39 of every
+40 reads saw the PREVIOUS decision's contact state, not the current one.
+Fixing the first instance did not immunise the second: the lesson had been
+recorded as a fact about `humanoid_obs`, not as a fact about `cfrc_ext` itself,
+so a second caller reintroduced the identical defect against a different
+consumer (impact-impulse integration instead of observation columns) a few
+hours later. It was found while calibrating PS.01's `J0`, not by any gated
+spec — `LC.02` never reads `j` and was not invalidated, but PS.01's calibration
+would have been silently wrong had it been built on the stale values.
+
+**Rule:** when a lesson is really about an API's contract ("X is unpopulated
+until Y is called"), write the rule at the API, not only at the one call site
+that broke first — a docstring on `DriveLayer`'s own usage example is a second
+caller's only defence, and `mj_rnePostConstraint`'s absence from `mj_step`'s
+own contract is exactly the kind of thing every future caller of `cfrc_ext`
+will get wrong once before someone points it out.
+
+## "The box cannot do X" is a claim about every path to X
+
+PG.6 needed MuJoCo to render a frame. The builder tried `MUJOCO_GL=osmesa`
+(libOSMesa is not packaged for OL9/aarch64) and found `mesa-libEGL` absent,
+concluded "MuJoCo offscreen rendering fails here at import", and escalated to
+the owner asking for a `dnf install` — with a fallback plan to render PG.6's and
+UB.9's frames on Colab and cache them in the repo.
+
+MuJoCo has three backends. The third, GLX under a virtual display, worked
+immediately: `libGL.so.1`, `libGLX_mesa.so.0` (llvmpipe), `mesa-dri-drivers` and
+`Xvfb` were all already installed — because WorldTwin renders headless WebGL
+globes on this same machine, a fact recorded in this project's own memory. RGB
+and depth both render at ~12 ms/frame. Nothing was installed.
+
+The escalation was careful: it labelled its numbers "measured, not assumed",
+listed the installed libraries, and offered a counterargument and a fallback. It
+was still wrong, because every one of those measurements was inside one branch
+of the search. Rigour about the evidence you gathered says nothing about the
+evidence you did not think to gather.
+
+**The cost was not the package.** The fallback would have been adopted, and it
+was architecturally expensive: every future vision spec would depend on a cached
+remote artifact that `impl_sha` does not cover, and Jack's eyes would have left
+this box permanently. An escalation that errs toward asking permission still
+buys a worse design if its premise is false.
+
+**Rule:** before escalating a capability as unavailable, enumerate the ways that
+capability is normally obtained, state which ones you tested, and check whether
+anything else already running on the machine does the same thing. Write the
+enumeration into the escalation, so a reader can see the shape of the search and
+not just its result. Then, when the escalation is withdrawn, leave the original
+text in place — a withdrawn ask that deletes its reasoning teaches nothing.

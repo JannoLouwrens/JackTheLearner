@@ -288,13 +288,33 @@ def rover_spawn(p: "PlaygroundParams") -> tuple:
     return (x, y, ROVER_REST_Z + 0.01)
 
 
+# The egocentric eye. PG.6 certifies that frames from THIS camera let a linear
+# probe recover object radius and bearing; every later visual spec (UB.9, UB.10,
+# the unison ladder's visual half) reads through it, so its pose is part of the
+# world's contract and changing it invalidates those certificates.
+#
+# Head height, standing at the south edge, looking north across the object
+# field with a slight downward tilt. xyaxes gives right and up; the camera
+# looks along -z = right x up, here (0, +0.94, -0.35).
+EYE_POS = (0.0, -3.4, 1.10)
+EYE_XYAXES = (1.0, 0.0, 0.0, 0.0, 0.35, 0.94)
+EYE_FOVY = 60.0
+
+
 def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False,
-               with_rover: bool = False) -> str:
+               with_rover: bool = False,
+               probe_objects: tuple = ()) -> str:
     """Emit the playground as MJCF XML.
 
     Kept as plain string templating rather than dm_control.mjcf: the artifact is
     then a file a person can read, diff and hand to a bug report — the same
     reason the ledger is a JSON file in git.
+
+    `probe_objects` places spheres at exact `(name, x, y, radius)` for sensor
+    certification, where the ground truth must be KNOWN rather than sampled.
+    Default empty, so every existing world is byte-identical apart from the
+    camera. It adds no actuator, no joint and no dof — only geoms — so obs
+    dimensions are untouched.
     """
     rng = np.random.RandomState(p.seed)
     a = p.arena_size
@@ -369,6 +389,12 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False,
             f'friction="{rng.uniform(0.4, 1.2):.3f} 0.05 0.001" '
             f'rgba="{rng.uniform(0.3,0.9):.2f} {rng.uniform(0.3,0.9):.2f} {rng.uniform(0.3,0.9):.2f} 1"/></body>')
 
+    for _name, _px, _py, _pr in probe_objects:
+        objects.append(
+            f'<body name="{_name}" pos="{_px:.4f} {_py:.4f} {_pr + 0.02:.4f}"><freejoint/>'
+            f'<geom name="{_name}" type="sphere" size="{_pr:.4f}" mass="0.5" '
+            f'rgba="0.90 0.20 0.15 1"/></body>')
+
     # An immovable welded block: the CONTROL for affordance learning (CU.6).
     # If Jack's affordance model calls this pushable, it learned actions, not
     # interactions.
@@ -429,6 +455,10 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False,
                                  '<geom contype="4" conaffinity="4" name="', 1)
                   for g in ladder]
 
+    ex, ey, ez = EYE_POS
+    ax, ay, az, bx, by, bz = EYE_XYAXES
+    fov = EYE_FOVY
+
     return f"""<mujoco model="jack_playground">
   <compiler angle="radian" coordinate="local"/>
   {hum_default}
@@ -442,6 +472,7 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False,
   </asset>
   <worldbody>
     <light name="sun" pos="0 0 8" dir="0 0 -1" diffuse="0.9 0.9 0.9"/>
+    <camera name="eye" pos="{ex} {ey} {ez}" xyaxes="{ax} {ay} {az} {bx} {by} {bz}" fovy="{fov}"/>
     <geom name="floor" type="plane" size="{a} {a} 0.1" material="grid_mat" friction="1.0 0.05 0.001"/>
     {ramp}
     {''.join(stairs)}
@@ -708,12 +739,13 @@ def _has_geom(model, name: str) -> bool:
 
 def make_playground(params: Optional[PlaygroundParams] = None,
                     with_water: bool = True, with_humanoid: bool = False,
-                    with_rover: bool = False):
+                    with_rover: bool = False, probe_objects: tuple = ()):
     """Build the world and return (model, data, water). CPU-only, no rendering."""
     import mujoco
 
     p = params or PlaygroundParams()
-    xml = build_mjcf(p, with_humanoid=with_humanoid, with_rover=with_rover)
+    xml = build_mjcf(p, with_humanoid=with_humanoid, with_rover=with_rover,
+                     probe_objects=probe_objects)
     model = mujoco.MjModel.from_xml_string(xml)
     data = mujoco.MjData(model)
     water = None
