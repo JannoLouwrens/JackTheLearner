@@ -164,3 +164,35 @@ dependents are runnable, and is confused by a BLOCKED result.
 
 **One line from you settles it.** Saying *"take the recommendation"* will be
 read as block-and-fix-the-docstring, implemented and journalled.
+
+## /data is 95% full and Jack is not the cause (OPEN, owner action)
+
+Found 2026-08-09 by the memory-retrieval agent, then confirmed. /data hit
+**100% (661 MB free of 100 GB)**. Jack's share was 17 GB, of which 4.9 GB was
+redundant source archives — deleted, verified extracted first, recovery
+instructions in /data/jack-data/ARCHIVES_REMOVED.md. That bought 5.6 GB.
+
+THE ACTUAL CONSUMER IS NOT THIS PROJECT:
+
+    /data/history/history.sqlite       75.6 GB
+    /data/history/history.sqlite-wal    1.7 GB
+    /data/jack-data                    17   GB   <- Jack, now 12 GB
+    /data/caches                        7.2 GB
+
+That is WorldTwin's aggregator database, and CLAUDE.md records that a runaway
+WAL on this exact database filled /data once before. The WAL is 1.7 GB now,
+not catastrophic, but the 75.6 GB main file leaves no headroom for anything.
+
+This is OUTSIDE /home/opc/jackthelearner, so it is not mine to act on, and the
+box serves paying tenants (company-lakeside, sportsstock, bergen, kayakco,
+jj-app, admin, searxng) behind one Caddy. Owner's call. Options, in the order
+a WorldTwin session should consider them:
+  - VACUUM the database if it has free pages (needs ~equal free space — it does
+    not have that right now, so this may require pruning first);
+  - prune old history rows to a retention window;
+  - grow the block volume.
+
+RISK IF IGNORED: at 0 bytes free, WorldTwin's writes fail, and Jack's ladder
+also stops — the loop already refuses to start below 3 GB free, which is the
+only reason it has not been silently corrupting runs. Note the loop's guard
+checks / (73% used), NOT /data, so it would not have caught this.

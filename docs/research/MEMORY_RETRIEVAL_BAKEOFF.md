@@ -533,7 +533,7 @@ CONCEPTS = {
                                             "damaged"]},
   "pond":    {"stored": "pond",    "cues": ["water", "pool"]},
   "repaired":{"stored": "repaired","cues": ["fixed", "mended", "sorted out"]},
-  ...
+  # ... one entry per concept the generator may place in an event
 }
 ```
 
@@ -605,6 +605,20 @@ Therefore:
 4. **Frozen before any arm runs.** The cue set, gold sets and negative probes
    are generated from `seed`, hashed, and the hash is written into the ledger
    entry. An arm that runs against a different hash is not comparable.
+5. **Gate on the minimum register count, never the total.** Added after
+   implementation, and this is the one thing the design as first written got
+   wrong. The first build produced 113 headline cues — a healthy-looking total —
+   which decomposed as R1 26, R3 26, **R4 1**. Rule 3 was working *correctly*:
+   in a corpus where one target's distractors legitimately answer another
+   target's vaguer question, the superordinate register is almost entirely
+   ambiguous and had been deleted by the labelling logic. A four-register
+   headline recall would silently have been a three-register average, and **no
+   arm would ever have been scored on the hardest cue type** — the exact
+   register the incumbent fails worst. `ME.11.0` now asserts
+   `min_register_cues >= 30` and reports the count per register, so this is a
+   red ledger entry rather than a silent narrowing. Realised after the fix:
+   **160 headline cues, 40 per register, 12 ambiguous** (LESSONS, *"An aggregate
+   count hides a stratum the labelling logic has deleted"*).
 
 ### 2.5 Pilot evidence that the design discriminates
 
@@ -676,12 +690,37 @@ but 0.60 on N1 has not solved anything, and a pooled number would hide it.
 
 ---
 
-## 3. The bakeoff spec — six arms, in registry format
+## 3. The bakeoff spec — seven specs, in registry format
+
+> **STATUS, 2026-08-09.** All seven `Spec(...)` blocks below are **LIVE** in
+> `experiments/registry_expansion.py` (commit `0c1ff06`, ids `ME.11.0` and
+> `ME.11.A`–`ME.11.F`), and **`ME.11.0` has since PASSED** (commit `ea5b236`).
+> They were adopted with light editorial trimming and one substantive change:
+> `ME.11.0`'s budget is `Budget.CPU`, not `Budget.CPU_FAST` as first drafted
+> here — building three 5 000-event lives plus a leak-control fixture does not
+> fit in a minute. **The registry is authoritative**; this document is the
+> design record and the place the reasoning lives. The blocks below have been
+> re-verified to parse against the real `experiments/protocol.py`, to contain no
+> duplicate ids, and to have every `depends_on` resolve in `registry.BY_ID`.
+>
+> What `ME.11.0` actually produced, per seed: **5 000 events, 160 headline cues
+> (40 per register, minimum), 12 ambiguous cues held out, 300 tuning + 300
+> certifying negatives, 52 positives in the smallest provenance stratum,
+> `overlap_violations = 0`, `oracle_ceiling = 1.000`, and
+> `lexical_null_recall = 0.000`.** The incumbent scores **zero** on an eval set
+> whose oracle scores **one**. Finding 1 of §0 is now a ledger entry, not a
+> pilot.
+>
+> **One flag for whoever next touches the registry:** the implementation of
+> `ME.11.0` asserts `min_register_cues >= 30` (and the ledger records 40), but
+> the `Spec.notes` in `registry_expansion.py` do not mention it. The doc block
+> below has been corrected; the registry's prose should be brought into line, or
+> the strongest guard in that fixture is undocumented where the specs live.
 
 Drop-in for `experiments/registry_expansion.py` (same `Spec(...)` dataclass:
 `id, tier, title, hypothesis, falsified_by, null_baseline, metric, budget,
 depends_on, seeds, control, kills, notes`). ME.11 as already written becomes the
-**adoption** spec; these are the arms that make it decidable.
+**adoption** spec; these make it decidable.
 
 `ME.11.0` must PASS before any arm runs — it is the "is the test honest" gate,
 and every arm `depends_on` it, so `protocol.blocked_by()` structurally prevents
@@ -690,11 +729,12 @@ running an arm against an unvalidated eval set.
 ```python
     # ── ME.11 BAKEOFF: the arms that make ME.11 decidable ────────────────
     # One shared fixture (experiments/fixtures/paraphrase_eval.py) generates,
-    # for each seed: a 5,000-event life, 240 paraphrase cues in 4 registers
-    # with MECHANICALLY-derived gold SETS, 600 adversarial negatives in 4
-    # families, and a 100k-event scale life for latency only. The fixture
-    # hash is written into every arm's metrics so two arms cannot silently
-    # be scored on different data.
+    # for each seed: a 5,000-event life, paraphrase cues in 4 registers with
+    # MECHANICALLY-derived gold SETS, 600 adversarial negatives in 4 families,
+    # and a 100k-event scale life for latency only. The fixture hash is written
+    # into every arm's metrics so two arms cannot silently be scored on
+    # different data. Realised at seed 0: 160 headline cues, 40 per register,
+    # 12 ambiguous held out, min stratum 52 positives, hash 9c915329f4755c3e.
 
     Spec("ME.11.0", 2, "The paraphrase eval set is honest before anyone is scored",
          hypothesis="Every cue shares NO content word with its target beyond an "
@@ -713,7 +753,7 @@ running an arm against an unvalidated eval set.
          null_baseline="Lexical containment on the cue set — must be ~0 BY "
                        "CONSTRUCTION. This spec exists to verify the "
                        "construction, so its null is its own primary assertion.",
-         metric="eval_set_validity", budget=Budget.CPU_FAST, depends_on=["ME.1"],
+         metric="eval_set_validity", budget=Budget.CPU, depends_on=["ME.1"],
          seeds=3,
          control="A DELIBERATELY LEAKY cue set (cues built by deleting words "
                  "from the target rather than by synonym substitution) must "
@@ -725,7 +765,11 @@ running an arm against an unvalidated eval set.
                "(the Mondrian conformal minimum at alpha=0.05) and >=300 "
                "tune + >=300 certify negatives per family-balanced split (the "
                "Clopper-Pearson minimum to certify abstention >=0.95 at 95% "
-               "confidence). Freezes cue set, gold sets and negatives by hash."),
+               "confidence). AND min_register_cues >= 30: gate on the THINNEST "
+               "register, never the total — the first build had 113 headline "
+               "cues of which register R4 held ONE, so the hardest cue type had "
+               "been silently deleted by correct ambiguity labelling. "
+               "Freezes cue set, gold sets and negatives by hash."),
 
     Spec("ME.11.A", 2, "Arm A — lexical containment, the incumbent, as the null",
          hypothesis="The shipped EpisodicMemory retriever (content-word "
@@ -906,6 +950,117 @@ BM25S does not provide. ColBERT late interaction is excluded on index size
 principle (§1.7). A Jack-specific distilled static model is a stretch goal
 (§6.4).
 
+### 3.1 Wiring the arms into `experiments/bakeoff.py`
+
+`experiments/bakeoff.py` is now the decision primitive (SYSTEM.md law 3), and it
+imposes two things this design must satisfy exactly. Both are satisfied below;
+neither is optional, and getting either wrong returns `VOID` rather than a
+wrong answer — which is the module working, not failing.
+
+**Which spec is the null, and which specs are arms.** `run_bakeoff(spec, arms,
+null_run, …)` takes *one* null and *≥2* arms, and it gates **every arm** against
+that null. Mapping the six arm specs onto that shape:
+
+| spec | role in `run_bakeoff` | why |
+|---|---|---|
+| `ME.11.A` lexical containment | **`null_run`** | It *is* ME.11's declared null. An incumbent scoring 0.000 (ME.11.0, measured) is the floor every arm must clear, not a competitor. |
+| `ME.11.B` BM25S | **not a bakeoff arm** — plain `run_spec` | Run first, standalone. Its job is to decide whether the null gets *upgraded*: if BM25S beats containment, `null_run` becomes BM25S for the bakeoff proper. Its pilot score (0.125) is far below the learning gate, so entering it as an arm would `VOID` the whole bakeoff for a method nobody expected to win. |
+| `ME.11.C` static embeddings | **arm** | |
+| `ME.11.D` MiniLM ONNX | **arm** | |
+| `ME.11.E` weighted hybrid | **arm** | |
+| `ME.11.F` cascade + reranker | **arm** | |
+
+Four arms, one null, `seeds = [0, 1, 2]`. This is the ordering the ladder loop
+should run: `ME.11.0` → `ME.11.A` → `ME.11.B` → *then* the bakeoff over C/D/E/F.
+
+**The metric each `Arm.run(seed)` returns.** A single float, higher-is-better:
+
+```
+R_matched(seed) = paraphrase recall@1 on the held-out cue split, measured at
+                  the tau for which THAT ARM's abstention on the held-out
+                  negatives equals exactly 0.95 (linear interpolation between
+                  adjacent grid points).
+```
+
+This is the whole two-dimensional rule of §4.3 collapsed into one scalar, which
+is what `run_bakeoff` needs. **The collapse is the point:** every arm is scored
+at the *same* abstention, so an arm cannot buy recall by abstaining less — the
+thing the coordinator's brief demands, enforced by the metric's definition
+rather than by a reviewer noticing. The remaining requirements (verbatim
+identity, latency, RSS, threshold feasibility) are **admissibility predicates**
+evaluated in each arm's own spec *before* the bakeoff, not extra metrics — see
+"withdrawal" below.
+
+**(a) COST — declared, with its unit.** `Arm.cost` defaults to `None` and a TIE
+with any undeclared cost now returns `VOID` (`bakeoff.py` L161-173; LESSONS,
+*"A default of zero is not 'unknown'"*). The unit this spec declares is:
+
+> **`cost` = mean end-to-end query latency in MILLISECONDS at 100 000 events,
+> measured on this box (4 × Neoverse-N1, `nice 19`, `OMP_NUM_THREADS=4`), seed 0
+> of the scale leg, encode + score + threshold, excluding index build.**
+
+Latency, not resident MB, because latency is what the live agent pays on every
+single recall and it spans 20× across these arms, while RSS spans 4× and is
+already bounded by an admissibility gate. Resident MB and cold-reindex seconds
+are **reported for every arm** and are the second and third tie-breaks in §4.3's
+prose rule, but `Arm.cost` carries exactly one number and this is it.
+
+From §1.9, the costs to declare (to be **re-measured** at run time and written
+into the ledger, never copied from here):
+
+```python
+Arm("C_static",  run=..., cost=16.0,  description="potion-base-8M 256d, flat fp32 scan")
+Arm("D_minilm",  run=..., cost=37.0,  description="all-MiniLM-L6-v2 ONNX fp32 384d")
+Arm("E_hybrid",  run=..., cost=17.0,  description="BM25S + potion-8M, TMM convex fusion")
+Arm("F_cascade", run=..., cost=181.0, description="potion-8M top-10 -> ms-marco-MiniLM-L-6 int8 rerank")
+```
+
+`F_cascade` is declared at **k = 10**, not k = 20 or 50, because k = 10 (~181 ms)
+is the only configuration inside the 250 ms admissibility gate of §4.3. The
+k ∈ {20, 50} points are reported in `ME.11.F`'s own metrics as a
+recall/latency curve; they are not eligible to enter the bakeoff.
+
+**(b) THE LEARNING GATE — stated explicitly.** `run_bakeoff` is called with the
+defaults, and this spec adopts them as pre-registered:
+
+```
+learning_gate_sigma = 3.0        margin_sigma = 1.5        higher_is_better = True
+```
+
+Every arm must clear the null by **≥ 3.0 σ** on `R_matched`, where σ is
+`max(arm_std, null_std)` across the three seeds. **If any single arm fails, the
+entire bakeoff returns `VOID`** — no winner is chosen, `Status.VOID` is recorded,
+and the correct response is to fix or withdraw that arm and re-run, never to
+decide among the survivors. This is T2.02's lesson (*"two non-learners cannot
+arbitrate an architecture"*), and it applies with full force here: an arm that
+cannot beat lexical containment on paraphrase cues has not demonstrated
+paraphrase retrieval, so its opinion about static-vs-transformer is worthless.
+
+Two consequences worth stating before any number exists, so that neither can be
+rationalised afterwards:
+
+- **The gate is easy to clear here, and that is not a loophole.** The null
+  measured `0.000 ± 0.000` on this eval set. With `null_std = 0`, σ collapses to
+  the arm's own seed spread, so an arm scoring 0.55 ± 0.05 clears at 11 σ.
+  The gate is doing real work only for an arm that is both weak *and* unstable —
+  which is exactly the arm that should not be allowed to arbitrate.
+- **`margin_sigma = 1.5` will probably produce a TIE, and a TIE is a result.**
+  The pilot separation between Arm C and Arm D was 0.000–0.125 with seed noise
+  unmeasured. If C and D land within 1.5 σ, `run_bakeoff` returns
+  `TIE → cheapest`, which selects **C at 16 ms over D at 37 ms** and deletes the
+  transformer, the 90 MB of weights, the `onnxruntime` dependency and the
+  18-minute reindex with it. That outcome is *stated in advance* as acceptable
+  and is `ME.11.D`'s declared `kills`.
+
+**Withdrawal, not silent exclusion.** An arm that fails admissibility (verbatim
+< 1.000, latency > 250 ms, RSS > 500 MB, or thresholds infeasible) is
+**withdrawn before `run_bakeoff` is called**, and its own spec records `FAIL`
+with the failing predicate named in its metrics. It does not enter the bakeoff
+with a zeroed score, because a zero would trip the learning gate and `VOID` the
+decision for everyone else — punishing three working arms for a fourth's
+latency. If fewer than two arms remain admissible, the bakeoff is not run and
+`ME.11` records `Status.VOID` with the reason (§4.6).
+
 ---
 
 ## 4. The decision rule — two-dimensional, fixed before the run
@@ -962,8 +1117,9 @@ WINNER = argmax over ADMISSIBLE arms of  R_matched
   abstention on the held-out negatives equals exactly 0.95 (linear interpolation
   between adjacent grid points).
 
-TIES (|ΔR_matched| ≤ 1 pooled seed-std, 3 seeds) are broken, in order, by:
-     1. lower mean query latency at 100k events
+TIES are decided by run_bakeoff(margin_sigma=1.5) -> cheapest declared cost,
+  where cost = mean query latency (ms) at 100k events   [§3.1(a)].
+  Reported but NOT in Arm.cost, and used in prose only if latency also ties:
      2. lower cold-reindex time at 100k events   (6.6 s vs 18 min is a real cost)
      3. lower index RSS
      4. fewer new dependencies
@@ -974,12 +1130,20 @@ this section.** Reporting recall at each arm's own certified τ* would still
 reward an arm whose certificate happens to sit at a permissive threshold.
 Matching every arm at exactly 0.95 measured abstention removes the last degree
 of freedom: **an arm that wins recall by abstaining less cannot win, because it
-is re-measured at the same abstention as everyone else.**
+is re-measured at the same abstention as everyone else.** It is also the reason
+the rule survives being handed to `run_bakeoff`, which accepts one scalar per
+arm per seed: the two dimensions are already fused inside `R_matched`, so
+nothing about the abstention constraint depends on a human remembering it.
+
+The admissibility predicate is evaluated **per arm, in that arm's own spec,
+before the bakeoff runs** (§3.1, "withdrawal"). `run_bakeoff` never sees an
+inadmissible arm and never sees a zero standing in for one.
 
 Also reported for every arm, and required for the ledger entry, but not part of
 the argmax: recall at 0.99 abstention, **E-AURC** over the full risk–coverage
-curve, per-register recall (R1–R4), per-family abstention (N1–N4), and which
-abstention statistic was selected in step 2.
+curve, per-register recall (R1–R4, each with its cue count — see §2.4), per-family
+abstention (N1–N4), the selected abstention statistic from step 2, and both
+threshold limits `τ_fpr` and `τ_cov` even when feasible.
 
 ### 4.4 What the winner triggers
 
@@ -997,11 +1161,13 @@ and is applied to the winner. Three outcomes:
   measured ceiling. This is a good failure: it tells us the next move is a
   Jack-specific encoder (§6.4) or document-side SPLADE (§1.4), not more
   threshold tuning.
-- **No arm is admissible.** Report the infeasibility interval `[τ_fpr, τ_cov]`
-  per arm. This says the score functions available to us cannot separate a
-  paraphrased memory from a plausible fabrication at the required rates, which
-  is a genuine and publishable negative result about CPU-only episodic memory,
-  and is far more useful than a tuned number.
+- **No arm is admissible.** ME.11 records **`Status.VOID`**, not FAIL. Report the
+  infeasibility interval `[τ_fpr, τ_cov]` per arm. This says the score functions
+  available to us cannot separate a paraphrased memory from a plausible
+  fabrication at the required rates — a genuine negative result about CPU-only
+  episodic memory, far more useful than a tuned number, and **not** a refutation
+  of ME.11's hypothesis (which was never tested). See §4.6 for why the
+  distinction has to be in code.
 
 ### 4.5 What we refuse to do
 
@@ -1010,7 +1176,73 @@ and is applied to the winner. Three outcomes:
 - No cue removed for being "unfair" after an arm misses it — ambiguity is
   handled *ex ante* by §2.4's mechanical gold sets, or not at all.
 - No pooled abstention number used to hide a failing negative family.
+- No arm re-entered into the bakeoff after being withdrawn for inadmissibility,
+  unless the change that fixed it is committed first and all three seeds re-run.
 - The winner does not enter `EpisodicMemory` until ME.1/ME.5/ME.9 re-pass.
+
+### 4.6 The three outcomes, encoded — `_check` returns a `Status`, never a bool
+
+`protocol.run_spec` now accepts a `Status` from `check` (`protocol.py` L295-303),
+and it *raises* `VoidStatusMismatch` if metrics say VOID while `check` returns a
+bare `False` — because T2.02 did exactly that, and a VOID recorded as FAIL reads
+machine-side as the spec's `kills` field firing on a run that refused to
+arbitrate (LESSONS, *"VOID is not FAIL, and the difference is load-bearing"*).
+ME.11's `kills` is real, so this is not a stylistic point: a fallthrough here
+would tell the ladder that semantic episodic retrieval had been *refuted*.
+
+The check is therefore written with **no implicit fallthrough** — every return
+path names its outcome and its reason:
+
+```python
+def _check(m: dict, c: dict) -> Status:
+    # (0) the eval set must have been the honest one, this seed, this hash
+    if m.get("fixture_hash") != m.get("fixture_hash_expected"):
+        m["verdict"] = ("VOID: fixture hash mismatch — arms were not scored "
+                        "on the eval set ME.11.0 certified")
+        return Status.VOID
+
+    # (1) fewer than two admissible arms: nothing was compared
+    if m["n_admissible"] < 2:
+        m["verdict"] = (f"VOID: {m['n_admissible']} admissible arm(s) "
+                        f"({m['withdrawn']}); a bakeoff needs two. "
+                        f"Infeasible thresholds: {m['infeasible_intervals']}")
+        return Status.VOID
+
+    # (2) the bakeoff itself refused to arbitrate (learning gate / undeclared
+    #     cost on a tie). run_bakeoff already returned VOID; do not re-judge it.
+    if m["bakeoff_verdict"] == "VOID":
+        m["verdict"] = "VOID: " + m["bakeoff_reason"]
+        return Status.VOID
+
+    # (3) a decision exists. NOW the hypothesis may be tested, and may lose.
+    if m["verbatim_ok"] < 1.0:
+        m["verdict"] = ("FAIL: winner returned a string not byte-identical to "
+                        "a stored record — extractive constraint violated")
+        return Status.FAIL                       # this one SHOULD fire `kills`
+    if m["winner_recall_matched"] < 0.80:
+        m["verdict"] = (f"FAIL: best certified paraphrase recall "
+                        f"{m['winner_recall_matched']:.3f} < 0.80 at 0.95 "
+                        f"abstention (ceiling measured, not a broken run)")
+        return Status.FAIL
+    if m["winner_abstention_lower_bound"] < 0.95:
+        m["verdict"] = "FAIL: abstention certificate not met by the winner"
+        return Status.FAIL
+    if min(m[f"abstain_N{i}"] for i in (1, 2, 3, 4)) < 0.95:
+        m["verdict"] = ("FAIL: a negative family fell below 0.95 "
+                        "(a pooled pass would have hidden it)")
+        return Status.FAIL
+
+    m["verdict"] = f"PASS: {m['winner']} at {m['winner_recall_matched']:.3f}"
+    return Status.PASS
+```
+
+Three properties of this that are deliberate. **`Status.VOID` is checked before
+any FAIL branch**, so an undecidable run can never be recorded as a refutation.
+**Every VOID branch writes its reason into `m["verdict"]`**, so the ledger's
+metrics and its status agree — the exact disagreement that needed hand-repair on
+T2.02. And **`kills` fires only on a real FAIL**: the only outcome that deletes
+work is "we compared the arms and semantic retrieval lost", never "we could not
+compare the arms".
 
 ---
 
@@ -1032,7 +1264,9 @@ class Citation:
     score: float
     stratum: str      # the channel/speaker filter that produced it
 
-def recall(...) -> list[Citation]: ...
+def recall(query: str, top_k: int = 3, channel=None, speaker=None,
+           now=None) -> "list[Citation]":
+    ...
 
 # the ONLY function that produces a string, and it is pure I/O
 def quote(eid: int) -> str:
@@ -1047,7 +1281,7 @@ reorder pointers; it has no channel through which to author bytes. Everything in
 
 ### 5.2 The four assertions the test makes, per returned answer
 
-For every one of the ~240 cues × 3 seeds that produces an answer:
+For every one of the 172 cues × 3 seeds that produces an answer:
 
 1. **Byte identity.** `quote(eid).encode("utf-8") == stored_bytes[eid]`, where
    `stored_bytes` is parsed **in a fresh process** from the JSONL by an
@@ -1131,27 +1365,32 @@ Structure the run as a **quality leg** (5 000 events, 3 seeds, all arms) plus a
 choice that keeps the bakeoff inside `Budget.CPU_LONG`; running all arms at
 100k × 3 seeds would put Arm D alone at 54 minutes of pure indexing.
 
-Per seed, quality leg (5 000 events, 240 cues, 600 negatives = 840 queries):
+Per seed, quality leg — realised fixture size from `ME.11.0`: 5 000 events,
+160 headline + 12 ambiguous cues, 600 negatives = **772 queries**:
 
-| arm | index | 840 queries | per seed |
+| arm | index | 772 queries | per seed |
 |---|---|---|---|
-| A lexical | 0 s | 840 × ~2 ms | 2 s |
-| B BM25S | 0.2 s | 840 × 0.4 ms | 1 s |
-| C potion-8M | 0.4 s | 840 × ~1 ms | 2 s |
-| D MiniLM | 54 s | 840 × 14 ms | 66 s |
-| E hybrid | (reuses B + C) | 840 × ~2 ms | 3 s |
-| F cascade k=20 | (reuses C) | 840 × 330 ms | 277 s |
+| A lexical (the null) | 0 s | 772 × ~2 ms | 2 s |
+| B BM25S (standalone spec) | 0.2 s | 772 × 0.4 ms | 1 s |
+| C potion-8M | 0.4 s | 772 × ~1 ms | 1 s |
+| D MiniLM | 54 s | 772 × 14 ms | 65 s |
+| E hybrid | (reuses B + C) | 772 × ~2 ms | 2 s |
+| F cascade k=10 | (reuses C) | 772 × 181 ms | 140 s |
 
-Quality leg total ≈ **(2+1+2+66+3+277) × 3 seeds ≈ 18 minutes**.
+Quality leg total ≈ **(2+1+1+65+2+140) × 3 seeds ≈ 11 minutes**. F is quoted at
+k = 10 because that is the only configuration admissible under §4.3's 250 ms
+gate and therefore the only one that enters the bakeoff; the k ∈ {20, 50} curve
+points add ~14 minutes and are run once, at seed 0, inside `ME.11.F` alone.
 
 Scale leg, seed 0 only: index 100k for B (4 s), C (7 s), D (1073 s) = **~18
 minutes**, plus 200 timing queries per arm (≈ 2 minutes with F at k=10).
 
-**Whole bakeoff ≈ 40 minutes of wall clock at `nice 19`**, comfortably inside
-`Budget.CPU_LONG` (2 h) and well inside one hourly ladder-loop slot if split as
-`ME.11.0` + arms A/B/C/E in one iteration and D/F in the next. **Zero GPU
-hours.** No new background services, no daemon restarts, nothing that touches
-the tenant containers.
+**Whole bakeoff ≈ 45 minutes of wall clock at `nice 19`** (11 quality + 18 scale
++ 14 for `ME.11.F`'s k-curve + 2 timing), comfortably inside `Budget.CPU_LONG`
+(2 h) and splittable across two hourly ladder-loop slots: `ME.11.A`/`ME.11.B`
+(the null and its possible upgrade) in one, then the C/D/E/F bakeoff in the
+next. **Zero GPU hours.** No new background services, no daemon restarts,
+nothing that touches the tenant containers.
 
 ### 6.3 Reproducing the measurements in this document
 
@@ -1182,6 +1421,10 @@ memory that must run forever on four shared ARM cores.
 
 ## 7. What this document does not claim
 
+- **`ME.11.0` has PASSED; no arm has been run.** The only thing now established
+  on the ledger is that the *evaluation set is honest* — 0 overlap violations,
+  oracle ceiling 1.000, incumbent 0.000, 40 cues in the thinnest register, hash
+  stable across builds. Every arm number in this document is still a pilot.
 - The pilot numbers in §2.5 and §0 are **n = 8 cues and n = 10 negatives**. They
   establish that the arms are separable and that the eval design discriminates.
   They are **not** results, they do not decide anything, and no ledger entry may
@@ -1192,5 +1435,15 @@ memory that must run forever on four shared ARM cores.
   is all it is asked to support.
 - No claim is made that any arm will pass. Arm A is written to be beaten and
   Arm D is written so that a tie kills the transformer. §4.4's third outcome —
-  nothing is admissible — is a live possibility and is specified as a reportable
-  result rather than a reason to loosen a threshold.
+  nothing is admissible — is a live possibility, is encoded as `Status.VOID` in
+  §4.6's `_check` rather than left as a fallthrough, and is a reportable result
+  rather than a reason to loosen a threshold.
+- The `Arm.cost` figures in §3.1 are **this document's measurements, and are not
+  the ones that will be recorded**. Each must be re-measured on the scale leg at
+  run time and written into the ledger. Copying them forward would be a
+  generated artifact going stale silently, which is its own lesson in
+  `docs/LESSONS.md`.
+- Nothing here has been demonstrated about **ME.5 under a semantic index**.
+  §1.11 predicts `u_p1` is the metric at risk, but that is a prediction. The
+  winner is not adopted until ME.1, ME.5 and ME.9 re-pass (§4.4), and if they do
+  not, the winner is discarded regardless of how well it did on ME.11.
