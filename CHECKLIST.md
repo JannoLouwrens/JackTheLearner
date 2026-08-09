@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 51 / 136 demonstrated
+## 52 / 136 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -387,7 +387,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ An egocentric camera in the playground MJCF renders frames from which a linear probe recovers object RADIUS (R^2>=0.8) and BEARING (median error <=5 deg) for objects in FOV.
       - _dies if:_ Radius or bearing unrecoverable at the chosen resolution — then vision cannot carry HNS's identity->position channel and UB.9 would measure nothing.
       - _then delete:_ Any visual claim in UB.9/UB.10 at this resolution. Escalate resolution or move vision to a frozen tower with cached embeddings before proceeding.
-- [ ] **PG.7** The heard-not-seen fixture leaks nothing but the intended bit
+- [x] **PG.7** The heard-not-seen fixture leaks nothing but the intended bit
       - _asserts:_ In the HNS scene the two candidates are acoustically indistinguishable except by modal fundamental: identical pan (<1e-6), identical listener distance (<1e-3 m), matched impact amplitude, and the candidate (not the striker or floor) is the voiced geom on 100% of events.
       - _dies if:_ Any leak: an audio-only probe over band energies, amplitude and pan classifies which object fell above chance+3%.
       - _then delete:_ UB.9. A binding test built on a leaky fixture measures the leak.

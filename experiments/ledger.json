@@ -13,6 +13,7 @@
       "duration_s": 26.39,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "cores_completed": 4.0,
@@ -55,6 +56,7 @@
       "duration_s": 5.71,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "arms_admitted": 5.0,
@@ -226,6 +228,7 @@
       "duration_s": 0.19,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "cued_recall": 0.8667,
@@ -256,6 +259,7 @@
       "duration_s": 37.76,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "n_heldout": 36.0,
@@ -303,6 +307,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "ambiguous_cues": 12.0,
@@ -352,6 +357,7 @@
       "duration_s": 3.33,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "abstain_N1": 1.0,
@@ -404,6 +410,7 @@
       "duration_s": 0.07,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "adherence_after_restart": 1.0,
@@ -429,6 +436,7 @@
       "duration_s": 0.35,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "aggregation_qa_gain": 0.4062,
@@ -457,6 +465,7 @@
       "duration_s": 0.48,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "fifo_retention_acc": 0.0,
@@ -494,6 +503,7 @@
       "duration_s": 58.27,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "a_match_100": 1.0,
@@ -560,6 +570,7 @@
       "duration_s": 37.25,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "holdout_acc": 1.0,
@@ -586,6 +597,7 @@
       "duration_s": 0.18,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "acc_did": 1.0,
@@ -626,6 +638,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "bodies": 8,
@@ -666,6 +679,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "bob_rho0.2": 0.0,
@@ -724,6 +738,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "ascent_frac": 0.973267,
@@ -778,6 +793,7 @@
       "duration_s": 496.31,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "dwell_margin": 0.605267,
@@ -829,6 +845,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "audio_finite": 1.0,
@@ -855,6 +872,63 @@
         2
       ],
       "spec_id": "PG.5",
+      "status": "PASS"
+    },
+    "PG.7": {
+      "attempt": 1,
+      "commit": "5283cd3",
+      "control_metrics": {
+        "control_seed_gates_ok": 1.0,
+        "control_seed_gates_ok_std": 0.0,
+        "geometry_leak_pan_gap": 1.529867,
+        "geometry_leak_pan_gap_std": 0.000598711,
+        "geometry_leak_slot_acc": 1.0,
+        "geometry_leak_slot_acc_std": 0.0,
+        "mass_leak_amp_rel_gap": 0.61161,
+        "mass_leak_amp_rel_gap_std": 0.0,
+        "mass_leak_nonspectral_acc": 1.0,
+        "mass_leak_nonspectral_acc_std": 0.0
+      },
+      "duration_s": 102.6,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "81ebbed76eb2d9de",
+      "message": "",
+      "metrics": {
+        "audio_only_leak_margin": 0.0,
+        "audio_only_leak_margin_std": 0.0,
+        "both_spheres": 1.0,
+        "both_spheres_std": 0.0,
+        "episodes": 3200.0,
+        "episodes_std": 0.0,
+        "max_amp_rel_gap": 0.0,
+        "max_amp_rel_gap_std": 0.0,
+        "max_distance_gap": 9.34759e-10,
+        "max_distance_gap_std": 3.64762e-11,
+        "max_pan_gap": 4.43687e-10,
+        "max_pan_gap_std": 1.9463e-11,
+        "nonspectral_identity_acc": 0.5,
+        "nonspectral_identity_acc_std": 0.0,
+        "seed_gates_ok": 1.0,
+        "seed_gates_ok_std": 0.0,
+        "single_event": 1.0,
+        "single_event_std": 0.0,
+        "slot_leak_acc": 0.5,
+        "slot_leak_acc_std": 0.0,
+        "spectral_identity_acc": 1.0,
+        "spectral_identity_acc_std": 0.0,
+        "usable": 3200.0,
+        "usable_std": 0.0,
+        "voiced_correct": 1.0,
+        "voiced_correct_std": 0.0
+      },
+      "ran_at": "2026-08-09T21:20:51",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "PG.7",
       "status": "PASS"
     },
     "PG.8": {
@@ -916,6 +990,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "dist_to_ladder_m": 1.118133,
@@ -1000,6 +1075,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "failed": "none",
@@ -1023,6 +1099,7 @@
       "duration_s": 2.1,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "final_loss": 0.7114750146865845,
@@ -1045,6 +1122,7 @@
       "duration_s": 7.59,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "checkpoint_mb": 233.1,
@@ -1072,6 +1150,7 @@
       "duration_s": 112.43,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "first_step_gap_pct": 0.3496,
@@ -1099,6 +1178,7 @@
       "duration_s": 34.89,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "checkpoints_checked": 12,
@@ -1130,6 +1210,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "action_space_dim": 17,
@@ -1156,6 +1237,7 @@
       "duration_s": 18.83,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "bare_repeat_spread": 0.0054,
@@ -1205,6 +1287,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "blocked_records_no_metrics": true,
@@ -1231,6 +1314,7 @@
       "duration_s": 34.73,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "artifact_bytes": 124,
@@ -1256,6 +1340,7 @@
       "duration_s": 193.29,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "artifact_bytes": 127,
@@ -1285,6 +1370,7 @@
       "duration_s": 224.28,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "artifact_returned": true,
@@ -1348,6 +1434,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "affords_within_quota": true,
@@ -1470,6 +1557,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "disarmed_conjunct_keys": 0,
@@ -1527,6 +1615,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "config_obs_dim": 348,
@@ -1559,6 +1648,7 @@
       "duration_s": 1.18,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "end_to_end_drift": 3e-07,
@@ -1595,6 +1685,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "kernels_scanned": 2,
@@ -1637,6 +1728,7 @@
       "duration_s": 2145.83,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "curve": "0.95071;0.11232;0.00895;0.00494;0.00331;0.00304;0.00272;0.00239;0.00212;0.00201;0.00184",
@@ -1665,6 +1757,7 @@
       "duration_s": 6.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1 | fetch failed: /content/out.json: rc=1 exists=False [colab] Session 'ladder-1786226866' not found.; kaggle: 0.0h left, need 0.7h",
       "metrics": {},
       "ran_at": "2026-08-08T22:07:50",
@@ -1683,6 +1776,7 @@
       "duration_s": 24.73,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "modalities_fed": "vision,touch,audio,goal,task",
@@ -1723,6 +1817,7 @@
       "duration_s": 268.04,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.goal_token=512; value_head.predictor=132,097",
@@ -1752,6 +1847,7 @@
       "duration_s": 5.92,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "construct_delta": 0.0,
@@ -1788,6 +1884,7 @@
       "duration_s": 3898.69,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "final_loss": 0.00209,
@@ -1825,6 +1922,7 @@
       "duration_s": 2738.42,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "backend": "colab",
@@ -1854,6 +1952,7 @@
       "duration_s": 1291.45,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "backend": "kaggle",
@@ -1885,6 +1984,7 @@
       "duration_s": 221.29,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "backend": "kaggle",
@@ -1911,6 +2011,7 @@
       "duration_s": 203.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "backend": "kaggle",
@@ -1939,6 +2040,7 @@
       "duration_s": 6.46,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "inference_params_total": 41525008,
@@ -1963,6 +2065,7 @@
       "duration_s": 1137.99,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "conditioning_ratio": 1578.026333,
@@ -1996,6 +2099,7 @@
       "duration_s": 3.98,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "dataset_len": 5590,
@@ -2029,6 +2133,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "action_limit": 0.4,
@@ -2058,6 +2163,7 @@
       "duration_s": 27.05,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "VOID (invalidated by T0.14, 2026-08-09): run predates the dropout fix. 36 nn.Dropout modules were live during rollout, update and eval \u2014 42% policy-mean drift on an identical state \u2014 and obs was padded 376 vs the env-emitted 348. The 4.06-sigma result is not a refutation of the architecture; it is an invalid run.",
       "metrics": {
         "all_seeds_beat_random": 1.0,
@@ -2204,6 +2310,7 @@
       "duration_s": 22604.42,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "VOID (restated 2026-08-09): the run refused to arbitrate \u2014 transformer 2.46 sigma is below the 3-sigma learning gate. Originally recorded FAIL, which read machine-side as the kills criterion (the transformer policy) having fired.",
       "metrics": {
         "backend": "kaggle",
@@ -2279,6 +2386,7 @@
       "duration_s": 0.33,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "events": 650.0,
@@ -2311,6 +2419,7 @@
       "duration_s": 38.61,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "chance": 0.25,
@@ -2350,6 +2459,7 @@
           "status": "PASS"
         }
       ],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "ep1_sighted_frac": 1.0,
@@ -2388,6 +2498,7 @@
       "duration_s": 66.06,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
+      "impl_sha": null,
       "message": "",
       "metrics": {
         "gap": 1.0,
