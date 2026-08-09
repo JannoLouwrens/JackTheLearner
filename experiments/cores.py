@@ -334,8 +334,14 @@ class WorldModelCore(Core):
         self.ensemble = nn.ModuleList(
             [_mlp(self.state_dim + ACTION_DIM, 128, LATENT)
              for _ in range(ensemble)])
-        # The actor reads the MODEL STATE (deter + stoch), as DreamerV3's does.
+        # The actor reads the MODEL STATE (deter + stoch), as DreamerV3's does —
+        # and so must the critic. Both were LATENT-wide from `Core.__init__`;
+        # LC.01 never called the critic, so a world-model arm carried a critic
+        # that could not accept its own shared state and nothing said so. Found
+        # by LC.02, which is the first spec to run a gradient step through these
+        # arms. F9's separate policy/value networks are preserved.
         self.actor = _mlp(self.state_dim, 128, ACTION_DIM)
+        self.critic = _mlp(self.state_dim, 128, 1)
         with torch.no_grad():
             self.actor[-1].weight.mul_(0.01)
             self.actor[-1].bias.zero_()
@@ -411,6 +417,54 @@ class WorldModelCore(Core):
 
 
 # ---------------------------------------------------------------------------
+# LC.02's control — the 57M UnifiedBrain trunk, on the control path.
+# ---------------------------------------------------------------------------
+class TrunkCore(PPOCore):
+    """`trunk-57m`: PPOCore with `UnifiedBrain`'s transformer backbone as its
+    encoder. LC.02's declared control, which MUST FAIL the throughput floor.
+
+    It imports the REAL modules — `TransformerBlock` x `n_layers` plus the
+    `PhysicsRuleBank` the cross-attention layers read, 36.74M parameters — so
+    the control cannot pass by being a cheap imitation of an expensive thing.
+    Every modality embedding becomes a token, a CLS token is prepended, and the
+    shared latent is read off CLS: the trunk is genuinely between the senses and
+    the action, which is what "in the control path" means.
+
+    `dropout` is forced to 0.0 (F2). The control is allowed to be slow; it is
+    not allowed to reintroduce the bug class that voided T2.01 and T2.02.
+    """
+
+    binding_term = "L_masked_cross_modal (through the 57M trunk)"
+
+    def __init__(self, with_placebo: bool = True):
+        super().__init__(with_placebo)
+        from UnifiedBrain import (PhysicsRuleBank, RMSNorm, TransformerBlock,
+                                  UnifiedBrainConfig)
+        cfg = UnifiedBrainConfig()
+        cfg.dropout = 0.0
+        self.tok = nn.Linear(EMB, cfg.d_model)
+        self.cls = nn.Parameter(torch.zeros(1, 1, cfg.d_model))
+        self.layers = nn.ModuleList(
+            [TransformerBlock(cfg, use_cross_attn=(i % 2 == 1))
+             for i in range(cfg.n_layers)])
+        self.rule_bank = PhysicsRuleBank(cfg)
+        self.final_norm = RMSNorm(cfg.d_model)
+        self.readout = nn.Linear(cfg.d_model, LATENT)
+
+    def encode(self, obs, dropped: Iterable[str] = ()):
+        e = self.embed(obs, dropped)
+        tok = self.tok(torch.stack([e[k] for k in self.keys], dim=1))
+        x = torch.cat([self.cls.expand(tok.shape[0], -1, -1), tok], dim=1)
+        rules = self.rule_bank()
+        for layer in self.layers:
+            x, _ = layer(x, rules, None)
+        return self.readout(self.final_norm(x)[:, 0])
+
+
+TRUNK_CONTROL_ARM = "trunk-57m"
+
+
+# ---------------------------------------------------------------------------
 # The arm table. `admissible` names the five §5.4 candidates; the rest are the
 # controls LC.01 needs in order to be able to fail.
 # ---------------------------------------------------------------------------
@@ -431,12 +485,78 @@ def build_arm(name: str, with_placebo: bool = True) -> Core:
         return LeakyPPOCore(with_placebo)
     if name == "dreamer-naive":
         return WorldModelCore(with_placebo, decoder=True, sum_reduce=True)
+    if name == TRUNK_CONTROL_ARM:
+        return TrunkCore(with_placebo)
     raise KeyError(f"unknown arm: {name}")
 
 
 CANDIDATE_ARMS: Tuple[str, ...] = (
     "ppo-needs", "ppo-lp", "dreamer-xs", "wm-efe", "wm-latent")
 CONTROL_ARMS: Tuple[str, ...] = ("unbound", "leaky", "dreamer-naive")
+
+
+# ---------------------------------------------------------------------------
+# THE LC UPDATE — one definition, because LC.02 must time the thing LC.03 runs.
+#
+# LC.02 is a wall-clock floor. A throughput number measured against a stand-in
+# update would licence a train_ratio the real update cannot afford, and nothing
+# downstream could see the substitution — the `Arm.cost` failure shape, in a
+# second file. So the update lives here, both specs import it, and any change
+# to it changes both.
+#
+# The loss is the arm's OWN declared binding objective plus a matched
+# actor-critic pair, identical in structure across arms (F3). The TARGETS are
+# supplied by the caller and LC.02 passes noise: a throughput measurement must
+# not depend on the agent being any good, and pretending otherwise would make
+# the timing a function of how well it happened to be learning.
+# ---------------------------------------------------------------------------
+LC_BATCH = 16                # observations per gradient step
+LC_LR = 3e-4                 # Adam, F9's separate policy/value heads
+VALUE_COEF = 0.5
+
+
+def make_optimizer(core: Core, lr: float = LC_LR) -> "torch.optim.Optimizer":
+    return torch.optim.Adam(core.parameters(), lr=lr, eps=1e-5)
+
+
+def lc_update(core: Core, batch: Dict[str, torch.Tensor],
+              targets: Dict[str, torch.Tensor], opt, *,
+              dropped: Iterable[str] = ()) -> float:
+    """One gradient step. Returns the scalar loss.
+
+    F1 is enforced here rather than trusted: `.train()` only inside this
+    function, `.eval()` restored on the way out, so no caller can leave a core
+    in training mode during a rollout. That is the 42%-action-drift bug and
+    T0.16's 103.6% shipped-kernel drift, made structurally impossible at this
+    call site.
+    """
+    was_training = core.training
+    core.train()
+    try:
+        l_bind, _ = core.binding_loss(batch, dropped)
+        z = core.shared_state(batch, dropped)
+        l_v = F.mse_loss(core.critic(z), targets["value"])
+        if getattr(core, "lp", False):
+            l_v = l_v + F.mse_loss(core.critic_lp(z), targets["value_lp"])
+        a = core.act(batch, z)
+        l_pi = (((a - targets["action"]) ** 2).mean(-1)
+                * targets["advantage"]).mean()
+        loss = l_bind + VALUE_COEF * l_v + l_pi
+        opt.zero_grad(set_to_none=True)
+        loss.backward()
+        opt.step()
+        return float(loss.detach())
+    finally:
+        core.train(was_training)
+
+
+def lc_targets(gen: "torch.Generator", n: int = LC_BATCH) -> Dict[str, torch.Tensor]:
+    """Noise targets of the right shapes. See the note above: LC.02 times the
+    update, it does not evaluate it."""
+    return {"value": torch.randn(n, 1, generator=gen),
+            "value_lp": torch.randn(n, 1, generator=gen),
+            "action": torch.randn(n, ACTION_DIM, generator=gen),
+            "advantage": torch.randn(n, generator=gen)}
 
 
 def n_params(core: nn.Module) -> int:

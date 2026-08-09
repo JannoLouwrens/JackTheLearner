@@ -85,6 +85,53 @@ IMPACT_BODIES = ("torso",)
 HEAD_GEOM = "head"                    # for the drowning test, §2.2
 
 
+@dataclass(frozen=True)
+class BodyRef:
+    """WHICH body this layer is integrating, resolved against the live model.
+
+    The layer was written for Humanoid-v5 and every id it needed was looked up
+    by a humanoid name. `LEARNING_CORE.md` §5.0 then put the LC bakeoff on the
+    climber-rover, and the choice was: a second integrator for the second body,
+    or one integrator that is told which body it is holding. `LESSONS.md` —
+    *"two kernels re-implementing one operation is the defect"* — settles it.
+    The humanoid path is byte-identical to what it was; the rover supplies its
+    own ids through `playground.rover_index`.
+
+    `head_geoms` is the drowning probe, not an anatomical claim: on the rover
+    the torso capsule's own geom is the highest point of the body, and on the
+    humanoid `head` is a geom on the torso body for the same reason.
+    """
+    bodies: frozenset       # every body id that is Jack — the eating/water test
+    impact: tuple           # body ids whose `cfrc_ext` rows are the impact channel
+    head_geoms: tuple       # geom ids submerged == drowning
+    dofadr: int             # first dof of the free root
+    ndof: int               # free root (6) + actuated dofs
+
+
+def humanoid_body_ref(model) -> BodyRef:
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from playground import HUMANOID_NV, humanoid_body_ids, humanoid_index
+    return BodyRef(bodies=frozenset(humanoid_body_ids(model)),
+                   impact=tuple(int(model.body(n).id) for n in IMPACT_BODIES),
+                   head_geoms=(int(model.geom(HEAD_GEOM).id),),
+                   dofadr=humanoid_index(model)["dofadr"], ndof=HUMANOID_NV)
+
+
+def rover_body_ref(model) -> BodyRef:
+    """The climber-rover: 3 bodies, 10 dofs (free root + 4 arm slides)."""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from playground import rover_index
+    ix = rover_index(model)
+    return BodyRef(bodies=frozenset(ix["body"].values()),
+                   impact=(ix["body"]["rover"],),
+                   head_geoms=(ix["geom"]["rover_torso"],),
+                   dofadr=ix["root_dofadr"], ndof=10)
+
+
 def drive(e: float, i: float, w: float) -> float:
     """d(h) — distance from the (1, 1, 0) setpoint, §2.5."""
     terms = (LAMBDA[0] * abs(1.0 - e) ** N_EXP
@@ -127,7 +174,8 @@ class DriveLayer:
     """
 
     def __init__(self, model, *, j0: float, alpha: float,
-                 pool: Optional[tuple] = None, state: Optional[DriveState] = None):
+                 pool: Optional[tuple] = None, state: Optional[DriveState] = None,
+                 body: Optional[BodyRef] = None):
         if j0 is None or alpha is None:
             raise ValueError("j0 and alpha must be measured (PS.01), not defaulted")
         self.model = model
@@ -137,20 +185,23 @@ class DriveLayer:
         self.pool = pool
         self.state = state or DriveState()
 
-        self._body_ids = _humanoid_bodies(model)
-        self._impact_ids = [model.body(n).id for n in IMPACT_BODIES]
+        self.body = body or humanoid_body_ref(model)
+        self._body_ids = set(self.body.bodies)
+        self._impact_ids = list(self.body.impact)
         self._geom_of_body = {g: int(model.geom_bodyid[g]) for g in range(model.ngeom)}
         self._jack_geoms = {g for g, b in self._geom_of_body.items()
                             if b in self._body_ids}
-        self._head_geoms = [int(model.geom(HEAD_GEOM).id)]
+        self._head_geoms = list(self.body.head_geoms)
+        self._jack_mask = np.zeros(model.ngeom, dtype=bool)
+        self._jack_mask[list(self._jack_geoms)] = True
+        self._jack_gids = np.array(sorted(self._jack_geoms), dtype=int)
         self._food = {}
         for name, nu in FOOD_GEOMS.items():
             try:
                 self._food[name] = (int(model.geom(name).id), nu)
             except (KeyError, ValueError):
                 pass                       # a mutated world may not carry it
-        ix = _humanoid_index(model)
-        self._dofadr, self._ndof = ix
+        self._dofadr, self._ndof = self.body.dofadr, self.body.ndof
 
         self.t = 0.0
         self._respawn_at = {name: 0.0 for name in self._food}
@@ -201,14 +252,21 @@ class DriveLayer:
         if float(np.linalg.norm(qvel)) < Q_REST:
             self._rest_dt += dt
 
-        # eating: a physical contact between one of Jack's geoms and a food geom
-        for name, (gid, nu) in self._food.items():
-            if self.t + self._dt_acc < self._respawn_at[name]:
-                continue
-            if _in_contact(data, self._jack_geoms, gid):
-                self._ate += nu
-                self._respawn_at[name] = self.t + self._dt_acc + RESPAWN_S[name]
-                self.ate_total[name] += 1
+        # eating: a physical contact between one of Jack's geoms and a food geom.
+        # ONE vectorised pass over `data.contact.geom` per substep rather than
+        # one Python scan per food item. Identical semantics — LC.02 measured
+        # the old form at 5.35 ms of a 20.4 ms decision, and a throughput floor
+        # that a lazy inner loop can fail is a floor on the loop, not the core.
+        if self._food:
+            partners = _contact_partners(data, self._jack_mask)
+            for name, (gid, nu) in self._food.items():
+                if self.t + self._dt_acc < self._respawn_at[name]:
+                    continue
+                if gid in partners:
+                    self._ate += nu
+                    self._respawn_at[name] = (self.t + self._dt_acc
+                                              + RESPAWN_S[name])
+                    self.ate_total[name] += 1
 
         # drowning: the head geom below the pool surface for > DROWN_DELAY_S
         if self.pool is not None and self._head_under(data):
@@ -279,11 +337,26 @@ class DriveLayer:
         if self.pool is None:
             return False
         x, y, half, surf = self.pool
-        for g in self._jack_geoms:
-            p = data.geom_xpos[g]
-            if abs(p[0] - x) <= half and abs(p[1] - y) <= half and p[2] < surf:
-                return True
-        return False
+        p = np.asarray(data.geom_xpos)[self._jack_gids]
+        return bool(np.any((np.abs(p[:, 0] - x) <= half)
+                           & (np.abs(p[:, 1] - y) <= half)
+                           & (p[:, 2] < surf)))
+
+
+def _contact_partners(data, mask: np.ndarray) -> set:
+    """Geom ids currently touching any geom selected by `mask`.
+
+    One numpy pass over `data.contact.geom` (an (ncon, 2) array since MuJoCo
+    3.x) instead of one Python loop per query. `_in_contact` below is kept
+    because it is the readable single-query form and is still the right tool
+    outside a substep loop.
+    """
+    n = int(data.ncon)
+    if n == 0:
+        return set()
+    g = np.asarray(data.contact.geom[:n])
+    a, b = g[:, 0], g[:, 1]
+    return set(b[mask[a]].tolist()) | set(a[mask[b]].tolist())
 
 
 def _in_contact(data, geoms: set, gid: int) -> bool:
@@ -295,17 +368,3 @@ def _in_contact(data, geoms: set, gid: int) -> bool:
     return False
 
 
-def _humanoid_bodies(model) -> set:
-    import sys
-    from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from playground import humanoid_body_ids
-    return set(humanoid_body_ids(model))
-
-
-def _humanoid_index(model) -> tuple:
-    import sys
-    from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from playground import HUMANOID_NV, humanoid_index
-    return humanoid_index(model)["dofadr"], HUMANOID_NV

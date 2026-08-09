@@ -1607,7 +1607,25 @@ Derivation, so the number is not arbitrary [C]:
 - at train_ratio 64 (481) ⇒ **0.42** — fails by 12×.
 
 So **T ≥ 5.0 admits train_ratio up to ≈ 4 and excludes ≥ 8**, and it admits
-Director's 0.06 comfortably. It also means the LC.04 envelope (§5.7) fits
+Director's 0.06 comfortably.
+
+> **CORRECTED BY MEASUREMENT, 2026-08-09 — LC.02 PASS.** The derivation above is
+> wrong by 16x and the error is in its denominator, not its arithmetic. The
+> "~81 decisions/s" physics figure was measured with NO SENSES ATTACHED, and the
+> core costs were measured with no physics attached, so the composition was
+> never measured at all. Built as `experiments/w0.py` and timed on 3 ARM cores
+> at nice 19, one decision costs ~20 ms of which `mj_step` is 9.4 ms and the six
+> W0-4 senses (16-ray retina, 8-band binaural contact audio, 4-site touch, and
+> the drive integrator's per-substep accumulation) are ~11 ms. Measured:
+> **null (world + senses, no learner) 10.09 ± 0.96 sim-s/real-s**; every
+> admissible arm clears 5.0, and the committed train_ratios are **0.25** for
+> `ppo-needs`, `ppo-lp`, `dreamer-xs` and `wm-efe`, and **0.125** for
+> `wm-latent` — not 4. The control behaved as pre-registered: the 36.92M
+> `UnifiedBrain` trunk on the control path ran at 0.325 sim-s/real-s, 15.4x
+> below the floor. Everything downstream that assumed a ratio near 4 —
+> including the LC.04 envelope in §5.7 — must be re-costed against 0.25.
+> Generalised in `LESSONS.md`, "A budget derived from a component measured
+> alone is wrong by everything else". It also means the LC.04 envelope (§5.7) fits
 inside `Budget.CPU_LONG`. The floor is set by what the ladder's own budget
 ceiling permits, not by taste — and stating it as sim-seconds per real second
 rather than as FLOPs is deliberate: it is the unit in which "Jack lives for an

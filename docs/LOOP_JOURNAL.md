@@ -1269,3 +1269,85 @@ now PRINTS THE HOLDER — pid, command, %CPU, age, found by scanning /proc rathe
 than trusting the lockfile's PID line, which a pre-fix holder never wrote. The
 message "probably the hourly loop" was a guess dressed as a diagnosis and it
 was wrong both times it was needed.
+
+## 2026-08-09 — LC.02 PASS: the world exists, and it runs at 10.09 sim-s/real-s empty
+
+ATTEMPTED: LC.02, the throughput floor — the first item of priority 0. It could
+not be implemented, because the thing it measures did not exist. `LEARNING_CORE.md`
+§5.0 puts the whole LC bakeoff on a **climber-rover in the playground with the
+six W0-4 senses**, and the repo had neither: `playground.py` knew only the
+Humanoid-v5 body, `cores.py` declared `ACTION_DIM = 8` for a body nobody had
+built, and the only "rover" in the tree was PG.4's 2-DoF slider. So this
+iteration built W0 and then measured it.
+
+BUILT (all reusable by LC.03/LC.04/LC.05, which is the point):
+
+* `playground._rover_fragments` — the climber-rover, `with_rover=True`. Arms,
+  adhesion gain and contact classes copied unchanged from PG.3 so the rig
+  inherits PG.3's certification by construction; foot and gated drive declared
+  here. `model.nu == 6` MJCF actuators + the 2-dim gated drive = 8 action dims.
+* `experiments/w0.py` — one decision of Jack's life. 40 substeps = 0.2 sim-s,
+  and the full `cores.MODALITIES` dict every decision: 16-ray retina (with
+  PG.4's noise-panel acuity falloff), 8-band **binaural** contact audio built
+  from `ContactAudio`'s own events and pan convention, 4-site touch,
+  proprioception, the drive vector, and `language` handled as a MISSING input
+  condition (LC.01's U3) rather than zero-filled.
+* `drives.BodyRef` — `DriveLayer` was humanoid-only by name lookup. Rather than
+  a second integrator for a second body it now takes a body descriptor; the
+  humanoid path is unchanged.
+* `cores.lc_update` — the ONE update definition, so LC.02 times exactly what
+  LC.03 will run. F1 (`.eval()` outside, `.train()` only inside) is enforced at
+  that call site instead of trusted.
+
+MEASURED (3 seeds, 3 ARM cores, nice 19 — both asserted in the metrics):
+
+| | sim-s/real-s |
+|---|---|
+| null: world + all senses, zero action, NO learner | **10.09 ± 0.96** |
+| every admissible arm at train_ratio 0.25 | 6.13 – 6.59 |
+| `wm-latent` at 0.25 | 4.72 — fails, so it commits to 0.125 |
+| CONTROL: the 36.92M `UnifiedBrain` trunk on the control path | **0.325** |
+
+**COMMITTED train_ratios, which LC.03 must use: 0.25 for `ppo-needs`, `ppo-lp`,
+`dreamer-xs`, `wm-efe`; 0.125 for `wm-latent`.** The selection rule is the
+largest power-of-two clearing 5.0 on EVERY seed (`committed_ratio` in the test);
+the spec was silent on seed disagreement and erring low is the only safe
+direction for a selection step. LC.02's `_check` never reads a task metric —
+the update is fed noise targets on purpose.
+
+THE NUMBER THAT MATTERS MOST IS THE ONE THAT WAS WRONG BEFORE. §5.1 derived
+"admits train_ratio up to ~4"; the measurement says 0.25, **16x lower**. The
+arithmetic was fine; the denominator was. Physics-only had been measured at
+~81 dec/s with no senses attached and the cores measured with no physics, so
+the composition was never measured. Actual split per decision: `mj_step` 9.4 ms,
+senses + drive integrator ~11 ms. §5.1 is corrected in place and the lesson is
+in `LESSONS.md`. Two of the three per-substep scans were vectorised first
+(20.4 -> ~19 ms, null 8.9 -> 10.1) so the floor is not a floor on a lazy loop.
+
+TWO BUGS THE RUN FOUND, both real:
+1. **`WorldModelCore` carried a critic it could not use.** It overrides `actor`
+   to the 512-wide RSSM state and inherited `critic` at 64. Three arms had
+   shipped that since they were written; LC.01 ADMITTED all five and never
+   called `critic`. Lesson filed: instantiating a module is not exercising it.
+2. The body-sanity check first read a NEGATIVE actuation margin — it compared
+   whole-`qpos` drift, which the free root's fall swamps. Now measured on the
+   four arm slides between ctrl extremes: 0.302 rad.
+
+NEXT ITERATION, in order:
+
+1. **W0.BAL is now the top of `INTEGRATION_QUEUE.md` and it blocks LC.03's
+   meaning, not its execution.** The rover topples within ~20 decisions and
+   slides on its side (`upright_cos` −0.041, all 3 seeds) — the body §2.3
+   specifies has no balance mechanism, and its arms lift along the BODY z, so a
+   prone rover cannot raise a hand to a rung. Three candidate fixes, a metric
+   (`upright_frac`, `hand_reach_z_max`) and a kill criterion are written up
+   there. Decide it by bakeoff; do not pick one by argument.
+2. **LC.03** is otherwise unblocked (deps LC.00/LC.01/LC.02 PASS, plus PS.01 —
+   which is still half-built and also needs `j0`/`alpha`, currently passed to
+   `DriveLayer` as declared THROUGHPUT-ONLY placeholders by LC.02 and read by
+   nothing). PS.01 before LC.03.
+3. Still open from earlier iterations: PG.6 needs `mesa-libEGL` (owner, one
+   `dnf install`, still not done — check `DECISIONS_NEEDED.md` first); PG.8's
+   stale `impl_sha`; and the CPU lock is still held by a 0%-CPU T2.01 remote
+   poll started before the lock split, so LC.02 was run via `m.run(Ledger())`
+   directly, as the previous iteration did.

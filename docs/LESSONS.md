@@ -870,3 +870,88 @@ carry a probe that must SUCCEED alongside the probes that must fail. PG.7's
 P3 (level-normalised bands -> identity, gate >= 0.95) is what distinguishes
 "nothing leaks" from "nothing is there". A fixture that leaks nothing and
 carries nothing passes every leak test ever written.
+
+## Instantiating a module is not exercising it
+
+LC.01 built all five candidate learning cores, probed four structural
+requirements on each, checked parameter counts, checked determinism, and
+PASSED. LC.02 then ran the first gradient step through those same objects and
+`dreamer-xs` raised immediately: `WorldModelCore` overrides `actor` to accept
+the RSSM model state (512-wide) and inherits `critic` from `Core`, which is
+built for the 64-wide fused latent. Three world-model arms had carried a critic
+that could not accept their own shared state since the day they were written,
+and the admission gate that certified them never called it.
+
+Nothing about LC.01 was dishonest — it measured exactly what it claimed, on the
+paths it exercised (encoders, trunk, actor, binding loss). The gap is that a
+reader of "5 of 5 arms ADMITTED" naturally reads it as "these five arms work".
+
+**Rule:** a structural probe certifies the code paths it runs and no others.
+When a spec's verdict is about an OBJECT rather than about a path — "this arm
+is admissible", "this component is wired" — enumerate the object's public
+surface and say in the spec which parts the probe touched and which it did not.
+The cheapest version of this is to make the probe call every entry point once,
+even where it asserts nothing about the result: a shape error is free to
+detect and expensive to inherit.
+
+## A budget derived from a component measured alone is wrong by everything else
+
+`LEARNING_CORE.md` §5.1 derived the 5.0 sim-s/real-s floor from two measured
+numbers — climber-rover physics at ~81 decisions/s and the cores at 13.1-19.6
+core-seconds per 1,000 decisions — and concluded the floor "admits train_ratio
+up to ~4 and excludes >= 8". Both inputs were real measurements. LC.02 built
+the world those numbers describe and measured the arms at train_ratio **0.25**,
+sixteen times lower.
+
+The arithmetic was never wrong; the denominator was incomplete. Physics at 81
+dec/s was measured with no senses attached. The six W0-4 modalities — the ray
+retina, the binaural contact audio, touch, and the drive integrator's
+per-substep accumulation — cost 11 ms of a 20 ms decision, roughly as much as
+`mj_step` itself. Neither the physics measurement nor the core measurement was
+taken with the other in the loop, so the composition was never measured at all.
+
+**Rule:** a budget is a claim about a composition and must be measured as one.
+When a derivation multiplies or adds numbers from separate measurements, the
+first implementation of the composed thing outranks the derivation, and the
+derivation gets corrected in the document that made it. (Composition failures
+have now bitten this repo twice in two weeks: PG.8 found seven honest fixtures
+certifying an empty room, and this found a throughput budget with no senses in
+it. Both times every individual number was correct.)
+
+## "Idle" and "old" are different questions, and a directory cannot answer either
+
+`scripts/tmp_reaper.sh` v1 reclaimed root by deleting Claude scratch directories
+older than two days:
+
+    find /tmp/claude-1000 -maxdepth 2 -type d -mtime +2 -exec rm -rf {} +
+
+It freed 4 GB and logged success. It also deleted the scratchpad of the session
+that was running it, mid-session — the first symptom was a tool reporting
+`output file could not be read (ENOENT)`.
+
+A directory's mtime records when its own entries last changed: a session dir
+created on Aug 1 keeps an Aug 1 mtime forever while the session writes busily
+one level down. The reaper asked "is this directory old?" and acted on the
+answer to "is this work finished?" — two questions that happen to agree on dead
+scratch and disagree on exactly the case that matters.
+
+The fix uses two independent liveness signals, neither of them the directory's
+own mtime: the newest file found by RECURSING the tree, and whether a running
+claude process names that session id. Two, because one had already been shown
+insufficient — and this class of bug is silent on the way in and loud only
+later, so the cost of a redundant check is far below the cost of missing.
+
+**The sharper half of the lesson is in the control.** The first version of the
+liveness scan read every process's argv, so the test command — which contained
+the fixture ids as literals — kept its own fixture "alive" and the reaper became
+a no-op that reported success. A guard that spares everything looks identical in
+the log to a guard that works. That is why the test asserts BOTH directions:
+dead scratch must actually be reaped, and a live-shaped directory must survive.
+A cleanup test that only checks "nothing important was deleted" passes trivially
+on a cleanup that does nothing at all.
+
+**Rule:** any destructive automation must decide by a signal that would change if
+the target were in use, never by a proxy that merely correlates with age. Test it
+against a fixture of each kind — one that must die, one that must live — and make
+the must-die case a real assertion, because the failure mode of an over-cautious
+guard is invisible.

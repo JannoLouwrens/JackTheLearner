@@ -61,6 +61,21 @@ LADDER_HALF_WIDTH = 0.25            # rail offset from LADDER_X
 SPAWN_OFFSET_Y = 1.0
 SPAWN_Z = 1.4
 
+# ── the climber-rover (CURIOSITY_BAKEOFF.md §2.3, LEARNING_CORE.md §5.0) ────
+# The body the LC bakeoff runs on. Its arm geometry, adhesion gain and contact
+# classes are PG.3's, unchanged, so the rover inherits PG.3's certification by
+# construction rather than by claim. Everything else is declared here.
+ROVER_NU = 6                        # MJCF actuators: 2 reach, 2 lift, 2 adhesion
+ROVER_DRIVE_DOF = 2                 # + the gated horizontal drive (see below)
+ROVER_ACTION_DIM = ROVER_NU + ROVER_DRIVE_DOF          # 8, = cores.ACTION_DIM
+ROVER_ADHESION_GAIN = 900.0         # N per hand; PG.3's number, body weight ~314 N
+ROVER_DRIVE_FORCE = 600.0           # N, the bound on the horizontal drive
+ROVER_HAND_R = 0.045                # PG.3's hand radius
+ROVER_FOOT_R = 0.09
+ROVER_TORSO_TOP, ROVER_TORSO_BOT = -0.05, -0.45     # capsule, in the body frame
+ROVER_FOOT_Z = -0.55                                 # foot centre, body frame
+ROVER_REST_Z = -(ROVER_FOOT_Z - ROVER_FOOT_R)        # 0.64 m: origin at rest
+
 # Humanoid-v5 as gymnasium ships it: 13 bodies at or below the torso, 24 qpos,
 # 23 dof, 17 motors, and the 348-dim observation PipelineConfig expects. These
 # are asserted against the live model, not trusted.
@@ -201,7 +216,80 @@ def _humanoid_fragments(spawn: tuple) -> tuple:
     return default, dump(torso), dump(root.find("tendon")), dump(actuator)
 
 
-def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False) -> str:
+def _rover_fragments(spawn: tuple) -> tuple:
+    """The climber-rover: 8 actuated DoF, `CURIOSITY_BAKEOFF.md` §2.3.
+
+    Returns `(body_xml, actuator_xml)`. The body is deliberately NOT the
+    humanoid — `LEARNING_CORE.md` §5.0 gives three independently sufficient
+    reasons (Qflex's O(1/|A|) exploration variance, RGSD's 69-DoF collapse, and
+    the plain fact that T2.01/T2.02 are VOID so a negative learning result on a
+    body that cannot walk would measure the body).
+
+    Declared rig conveniences, each stated so a reader can attack it — the
+    first three are PG.3's, inherited unchanged:
+
+    * **Arms are slides, not joints.** `reach` (y) + `lift` (z), damping 40,
+      PG.3's exact ranges, kp and forcerange. PG.3 certified that this rig
+      hangs, ascends and falls correctly.
+    * **Adhesion stands in for fingers**, gain 900 N per hand against a ~314 N
+      body. Holding adhesion permanently on is a LEGAL strategy; report
+      `adhesion_duty_cycle`, never penalise it.
+    * **Torso and foot are masked out of the ladder contact class** (1 vs the
+      ladder's 4), so the body cannot wedge itself on a rung — it must grip.
+      Hands are class 5 and collide with everything.
+    * **The drive is a cheat, deliberately**, and it is the one piece that is
+      NOT an MJCF actuator: it is a world-frame horizontal force on the torso,
+      bounded at 600 N and GATED on floor/stair contact, applied through
+      `xfrc_applied` by `w0.W0.decide`. It grants locomotion — T2.01's problem,
+      not the learning core's — and because it is gated it cannot fly, cannot
+      climb, and cannot contribute one newton once the foot leaves the ground.
+      Every metre of ladder-supported height is earned by the arms. A MuJoCo
+      actuator cannot express "only while touching", which is exactly why the
+      drive lives outside the actuator list; `model.nu == 6` and the action
+      vector is 8 wide, and both numbers are asserted rather than assumed.
+    """
+    x, y, z = spawn
+
+    def arm(side: str, dx: float) -> str:
+        return (f'<body name="arm{side}" pos="{dx} 0 0">'
+                f'<joint name="reach{side}" type="slide" axis="0 1 0" range="-0.25 0.05" damping="40"/>'
+                f'<joint name="lift{side}" type="slide" axis="0 0 1" range="-0.2 0.55" damping="40"/>'
+                f'<geom name="hand{side}" type="sphere" size="{ROVER_HAND_R}" mass="0.4" '
+                f'margin="0.015" gap="0.015" contype="5" conaffinity="5" group="3" '
+                f'friction="1.2 0.05 0.001" rgba="0.9 0.7 0.5 1"/></body>')
+
+    body = (
+        f'<body name="rover" pos="{x:.6f} {y:.6f} {z:.6f}">'
+        f'<joint name="rover_root" type="free" damping="10"/>'
+        f'<site name="rover_drive" pos="0 0 {ROVER_TORSO_BOT:.3f}"/>'
+        f'<geom name="rover_torso" type="capsule" '
+        f'fromto="0 0 {ROVER_TORSO_BOT:.3f} 0 0 {ROVER_TORSO_TOP:.3f}" '
+        f'size="0.07" mass="30" contype="1" conaffinity="1" group="3" rgba="0.3 0.5 0.8 1"/>'
+        f'<geom name="rover_foot" type="sphere" pos="0 0 {ROVER_FOOT_Z:.3f}" '
+        f'size="{ROVER_FOOT_R}" mass="2" contype="1" conaffinity="1" '
+        f'friction="1.0 0.05 0.001" group="3" rgba="0.2 0.35 0.6 1"/>'
+        f'{arm("L", -0.10)}{arm("R", 0.10)}</body>')
+
+    actuator = (
+        '<actuator>'
+        '<position name="a_reachL" joint="reachL" kp="1500" ctrlrange="-0.25 0.05" forcerange="-400 400"/>'
+        '<position name="a_liftL" joint="liftL" kp="3000" ctrlrange="-0.2 0.55" forcerange="-600 600"/>'
+        '<position name="a_reachR" joint="reachR" kp="1500" ctrlrange="-0.25 0.05" forcerange="-400 400"/>'
+        '<position name="a_liftR" joint="liftR" kp="3000" ctrlrange="-0.2 0.55" forcerange="-600 600"/>'
+        f'<adhesion name="a_adhL" body="armL" ctrlrange="0 1" gain="{ROVER_ADHESION_GAIN}"/>'
+        f'<adhesion name="a_adhR" body="armR" ctrlrange="0 1" gain="{ROVER_ADHESION_GAIN}"/>'
+        '</actuator>')
+    return body, actuator
+
+
+def rover_spawn(p: "PlaygroundParams") -> tuple:
+    """(x, y, z) of the rover's body origin at t=0 — foot just above the floor."""
+    x, y, _ = p.spawn()
+    return (x, y, ROVER_REST_Z + 0.01)
+
+
+def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False,
+               with_rover: bool = False) -> str:
     """Emit the playground as MJCF XML.
 
     Kept as plain string templating rather than dm_control.mjcf: the artifact is
@@ -322,9 +410,24 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False) -> str:
     # Off by default so that PG.1-PG.7's fixtures still compile the world they
     # certified. Every spec about an AGENT must pass True; PG.8 is the gate.
     hum_default = hum_body = hum_tendon = hum_actuator = ""
+    if with_humanoid and with_rover:
+        raise ValueError("one body at a time: with_humanoid and with_rover "
+                         "both set. The LC bakeoff runs on the rover, the "
+                         "locomotion branch on the humanoid; a world with both "
+                         "would give either one an observation of the other.")
     if with_humanoid:
         hum_default, hum_body, hum_tendon, hum_actuator = _humanoid_fragments(p.spawn())
         hum_default = f"<default>{hum_default}</default>"
+    if with_rover:
+        hum_body, hum_actuator = _rover_fragments(rover_spawn(p))
+        # PG.3's contact classes: the ladder becomes class 4, so the hands (5)
+        # grip it while the torso and foot (1) pass through and cannot wedge.
+        # The PLATFORM stays in class 1 — it is a floor to stand on, not a
+        # rung to grip, and PG.3's regex likewise never touched it.
+        ladder = [g if 'name="platform"' in g
+                  else g.replace('<geom name="',
+                                 '<geom contype="4" conaffinity="4" name="', 1)
+                  for g in ladder]
 
     return f"""<mujoco model="jack_playground">
   <compiler angle="radian" coordinate="local"/>
@@ -567,13 +670,50 @@ def step(model, data, ctrl=None, frame_skip: int = 5, water: Optional["Water"] =
     mujoco.mj_rnePostConstraint(model, data)
 
 
+def rover_index(model) -> dict:
+    """Every id `w0.py` needs, resolved against the LIVE model (F5).
+
+    Nothing here is a constant a config file could get wrong: each id is looked
+    up by name and the counts are asserted by the caller. T0.14's 28 dead
+    padded columns came from trusting a declared dimension.
+    """
+    act = ("reachL", "liftL", "reachR", "liftR", "adhL", "adhR")
+    ix = {
+        "act": {n: int(model.actuator(f"a_{n}").id) for n in act},
+        "body": {n: int(model.body(n).id) for n in ("rover", "armL", "armR")},
+        "geom": {n: int(model.geom(n).id)
+                 for n in ("rover_torso", "rover_foot", "handL", "handR")},
+        "jnt": {n: int(model.joint(n).id)
+                for n in ("reachL", "liftL", "reachR", "liftR")},
+        "root_qposadr": int(model.joint("rover_root").qposadr[0]),
+        "root_dofadr": int(model.joint("rover_root").dofadr[0]),
+    }
+    ix["jnt_qposadr"] = {n: int(model.joint(n).qposadr[0]) for n in ix["jnt"]}
+    ix["jnt_dofadr"] = {n: int(model.joint(n).dofadr[0]) for n in ix["jnt"]}
+    # Ground: what the drive is allowed to push off. Floor, ramp and stairs.
+    ground = ["floor", "ramp"] + [g for g in
+              (f"stair{i}" for i in range(16))
+              if _has_geom(model, g)]
+    ix["ground_geoms"] = {int(model.geom(g).id) for g in ground}
+    return ix
+
+
+def _has_geom(model, name: str) -> bool:
+    try:
+        model.geom(name)
+        return True
+    except (KeyError, ValueError):
+        return False
+
+
 def make_playground(params: Optional[PlaygroundParams] = None,
-                    with_water: bool = True, with_humanoid: bool = False):
+                    with_water: bool = True, with_humanoid: bool = False,
+                    with_rover: bool = False):
     """Build the world and return (model, data, water). CPU-only, no rendering."""
     import mujoco
 
     p = params or PlaygroundParams()
-    xml = build_mjcf(p, with_humanoid=with_humanoid)
+    xml = build_mjcf(p, with_humanoid=with_humanoid, with_rover=with_rover)
     model = mujoco.MjModel.from_xml_string(xml)
     data = mujoco.MjData(model)
     water = None

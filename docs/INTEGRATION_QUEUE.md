@@ -135,7 +135,62 @@ the motor system for movement. Muscles do not choose the destination.
                "rule extended from memory to speech. The LLM-swap arm doubles "
                "as a live test of the swappable-LLM decree.")
 
+## TOP OF QUEUE — W0.BAL: the rover topples, and LC.03 cannot mean anything until it is decided by bakeoff
+
+**Raised by a MEASUREMENT, 2026-08-09, not by an argument.** LC.02 built the
+climber-rover exactly as `CURIOSITY_BAKEOFF.md` §2.3 specifies and ran it. A
+30 kg capsule torso standing on a 0.09 m spherical foot is an inverted pendulum
+with no balance mechanism, so under random action it **topples within ~20
+decisions and then slides on its side**: `upright_cos` goes to −0.041 and stays
+there, on all three seeds. LC.02's own claim is unaffected (it is a wall-clock
+floor and a body on its side steps at the same speed), and the number is
+recorded in its ledger entry rather than hidden. But the arms' `lift` slides
+travel along the BODY's z axis, so a toppled rover cannot raise a hand, and
+`CURIOSITY_BAKEOFF.md`'s pilot table — zero engaged ladder attempts in 9,000
+random decisions — is consistent with a rover that was on its side for most of
+them. **LC.03 asks whether an arm learns to survive; on a body that spends its
+life prone, a null result would measure the rig.** This is PG.8's finding one
+level down: the room now has somebody in it, and he is lying on the floor.
+
+DO NOT pick a fix by argument — that is law 3, and there are at least three
+plausible answers, each with a real cost:
+
+    A  accept it        the rover is a slider; ladder specs move to a body that
+                        can stand. Cheapest; concedes the ladder test.
+    B  gated righting   a bounded restoring torque on the torso, gated on floor
+                        contact EXACTLY as the drive is, so it contributes
+                        nothing once the feet leave the ground and every metre
+                        of ladder height is still earned by the arms. Mirrors
+                        the cheat that is already declared; adds a mechanism.
+    C  wide base        replace the spherical foot with a plinth and lower the
+                        COM until the rig is statically stable under the 600 N
+                        drive. No new mechanism; changes PG.3's inherited
+                        geometry, so the inheritance-by-construction claim needs
+                        re-checking.
+
+METRIC, pre-registerable today and readable without any learning:
+`upright_frac` (fraction of decisions with `upright_cos >= 0.7`) and
+`hand_reach_z_max` (highest world z any hand geom attains) under an identical
+uniform-random policy, 3 seeds x 500 decisions, all three arms in the same
+mutated worlds. NULL: the rover as built (arm A) — measured today at
+`upright_cos` −0.041. KILL: if no arm reaches a hand above the first rung,
+none of them fixes the thing the fix is for, and the ladder branch moves to a
+different body rather than to a better rig.
+
+Cross-check status (protocol step 1): grepped `CURIOSITY_BAKEOFF.md`,
+`LEARNING_CORE.md`, `PURPOSE_AND_SCAFFOLDING.md` and `NEEDS_AND_DEATH.md` —
+none of them states a balance requirement or a stability measurement for this
+body, so nothing here is refuted and nothing is duplicated. That silence is
+itself the gap.
+
 ## FIRST: FINISH THE LC BAKEOFF (LC.02-LC.06) — unblocked, zero GPU
+
+**LC.02 PASS 2026-08-09** — all five admissible arms clear the 5.0 sim-s/real-s
+floor, at train_ratio **0.25** (0.125 for `wm-latent`). Those ratios are now
+committed and LC.03 must use them. Note the size of the correction they carry:
+`LEARNING_CORE.md` §5.1 derived "admits train_ratio up to ~4" from physics and
+core costs measured SEPARATELY, and the composed world runs 16x lower. §5.1's
+derivation should be corrected in place rather than left standing.
 
 LC.00 PASS (framing survived its cheapest falsifier), LC.01 PASS (unison
 admission gate). LC.03/04/05 are the actual PPO-vs-world-model arbitration and
