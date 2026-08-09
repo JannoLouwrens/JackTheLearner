@@ -98,6 +98,43 @@ project's existential claim and it had no falsifier.
                "in his world while losing only the ability to say so. "
                "Knowledge in the parts that lived; language as the mouth.")
 
+## GAP-FILL — WHO CHOOSES THE WORDS (owner, 2026-08-09). Register with LG.00.
+
+Owner: "but the LLM will always be the one talking — how will Jack choose what
+to say?" Speaking is an ACTION: his core selects it the way it selects any
+other, and the LLM is the motor system for language, exactly as actuators are
+the motor system for movement. Muscles do not choose the destination.
+
+    Spec("LG.10", 4, "Jack chooses what to say; the LLM only chooses how",
+         hypothesis="Utterance MEANING tracks Jack's internal state and diary, "
+                    "not the language model. Three independent measurements: "
+                    "(a) same state, different LLM sampling seeds -> same "
+                    "meaning, different wording; (b) different state, same LLM "
+                    "-> different meaning; (c) SWAP THE LLM for a different "
+                    "frozen model -> meaning preserved, style changes.",
+         falsified_by="Meaning varies with the sampler, or survives a state "
+                      "change, or changes when the LLM is swapped. Any of the "
+                      "three means the language model is choosing the content "
+                      "and Jack is being ventriloquised.",
+         null_baseline="LLM free-generation from the same prompt with no "
+                       "core-selected intent — its meaning must NOT track his "
+                       "state.",
+         metric="meaning_tracks_state_not_model", budget=Budget.CPU,
+         depends_on=["LG.00"], seeds=3,
+         control="SILENCE. Drive his core to a state with nothing to report "
+                 "and he must say NOTHING. A mouth that always speaks is a "
+                 "generator running free; choosing not to speak is the "
+                 "cheapest proof that something is choosing at all.",
+         kills="Any speech path where the LLM receives free rein over content. "
+               "If the model swap changes what he means, the mind was in the "
+               "mouth.",
+         notes="Practical form: core emits a structured intent (report/ask/"
+               "describe + referent + source) OR selects among LLM-proposed "
+               "phrasings; a verification gate rejects any utterance asserting "
+               "something not present in his state or diary — the extractive "
+               "rule extended from memory to speech. The LLM-swap arm doubles "
+               "as a live test of the swappable-LLM decree.")
+
 ## Queue (top = next)
 
 | research doc | specs | status |
