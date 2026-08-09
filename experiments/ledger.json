@@ -1426,25 +1426,32 @@
       "status": "PASS"
     },
     "T2.00": {
-      "attempt": 1,
-      "commit": "17007e9",
+      "attempt": 2,
+      "commit": "35e1134",
       "control_metrics": {
-        "unnormalized_grad_ratio": 126.28
+        "unnormalized_grad_ratio": 144.98
       },
-      "duration_s": 618.84,
+      "duration_s": 658.75,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "17007e9",
+          "message": "",
+          "ran_at": "2026-08-07T06:41:38",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "action_limit": 0.4,
         "env_action_absmax": 0.4,
-        "final_vf_pg_grad_ratio": 0.2,
-        "max_log_std": -1.2007,
-        "max_vf_pg_grad_ratio": 2.71,
-        "max_vf_pg_loss_ratio": 44.48,
-        "min_log_std": -1.2027
+        "final_vf_pg_grad_ratio": 0.36,
+        "max_log_std": -1.1988,
+        "max_vf_pg_grad_ratio": 2.56,
+        "max_vf_pg_loss_ratio": 65.07,
+        "min_log_std": -1.2026
       },
-      "ran_at": "2026-08-07T06:41:38",
+      "ran_at": "2026-08-09T14:01:33",
       "seeds": [
         0
       ],
@@ -1463,7 +1470,7 @@
       "duration_s": 27.05,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "message": "pre-registered threshold not met",
+      "message": "VOID (invalidated by T0.14, 2026-08-09): run predates the dropout fix. 36 nn.Dropout modules were live during rollout, update and eval \u2014 42% policy-mean drift on an identical state \u2014 and obs was padded 376 vs the env-emitted 348. The 4.06-sigma result is not a refutation of the architecture; it is an invalid run.",
       "metrics": {
         "all_seeds_beat_random": 1.0,
         "all_seeds_beat_random_std": 0.0,
@@ -1591,7 +1598,7 @@
         2
       ],
       "spec_id": "T2.01",
-      "status": "FAIL"
+      "status": "VOID"
     },
     "T2.02": {
       "attempt": 1,

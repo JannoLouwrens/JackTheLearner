@@ -59,9 +59,17 @@ is the architecture verdict, not a bug. Read docs/LOOP_JOURNAL.md's tail first.
      Kaggle only.
    - Colab takes GPU_SHORT jobs; if it returns "Service Unavailable" the GPUs
      are rationed — record the ERROR and retry next iteration, don't fight it.
-3. T2.01 stays FAILED until D1 is decided. Do NOT relaunch it with more compute;
-   the curve plateaued. Evidence for D1 lives in /tmp/mlp_probe.json (local MLP
-   baseline at 704K steps) — if present, journal its numbers next to v4's 261.
+3. TOP GPU PRIORITY: re-run T2.01 then T2.02. Both are now VOID, invalidated by
+   T0.14 — every locomotion result predates the dropout fix. 36 nn.Dropout
+   modules were live during rollout, the PPO update AND "deterministic" eval
+   (42% policy-mean drift on an identical state), and obs was padded 376 vs the
+   env's actual 348. SB3 disables training mode for you, so T2.02 compared one
+   arm with 42% injected action noise against one with none. The old 4.06-sigma
+   and 261-vs-531 numbers are NOT architecture evidence — do not cite them.
+   Re-run both before anything else touches D1. ~6.3 GPU-h of the ~23 left.
+   Read docs/research/D1_CONTROL_ARCHITECTURE.md first: it also found
+   "matched env-steps" hid 6,240 vs 99,840 optimiser steps, so match optimiser
+   steps too, and report both.
 4. One GPU submission per spec: run_spec calls _experiment once PER SEED, so
    guard any _submit() with a module cache (T2.01 shows the pattern) or you will
    pay for the same kernel three times.
