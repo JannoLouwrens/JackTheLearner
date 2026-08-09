@@ -51,6 +51,19 @@ architecture verdict, not a bug". That was WRONG and is exactly the claim
 T0.14 invalidated; if you see that sentence anywhere, it is stale.
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
+0. STAGE 0.1 FIRST — REGISTER THE DESIGNED SPECS. docs/research/DIRECTION_AUDIT.md
+   found ~28 fully-designed specs sitting OUTSIDE the registry, invisible to
+   `run next` and to every count: the LC.00-LC.06 learning-core bakeoff
+   (docs/research/LEARNING_CORE.md — AST-verified, ~33 CPU-core-h, zero GPU),
+   LT.*, PS.*, HR.*, D1.0, T2.21, LG.*, and the audit's own WP./LF./SO. stubs.
+   Register them into registry_expansion.py exactly as written (no threshold
+   edits), checking id collisions against the live registry first. NOTE: LC.03
+   depends on PS.01 — register both together or LC.03 is permanently BLOCKED.
+   Then run the cheapest newly-registered CPU specs, LC.00 first: the
+   learning-core bakeoff is the highest-leverage work in the project and needs
+   no GPU. Also read DIRECTION_AUDIT's Stage 0: 40 specs are transitively
+   blocked behind {T1.02, T2.01, T2.02} — unblocking those three is the other
+   half of Stage 0.
 1. CPU-implementable specs, cheapest first: the ME family (ME.1/ME.9 are
    implemented — run them if not yet recorded; then ME.2-ME.5, ME.8, ME.10 —
    EpisodicMemory.py is the substrate and its docstring explains the contract),
