@@ -330,3 +330,8 @@ from, unscripted.
 Needs: owner's call on whether care verbs exist at all and which; then a
 small research pass + SO-family specs (interaction channel, anti-puppeteering
 limits — care must never become remote control, or the first principle dies).
+
+**DECIDED 2026-08-09, same day: YES.** Owner: "Can you also drop stuff in for
+him... Yes." Care verbs approved on the provisioning-as-environment model.
+The anti-puppeteering constraint stands: what is left must still be found,
+learned, and chosen. Design work unblocked -> INTEGRATION_QUEUE.

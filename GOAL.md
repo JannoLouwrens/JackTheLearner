@@ -105,6 +105,15 @@ death is Lamarckian inheritance, the caveman's fireside story made structural.
 Still unmined and on the shelf: motor babbling, innate reflex priors, pain as
 a fast signal distinct from reward, critical periods, play as safe rehearsal.
 
+**His people are part of his world (owner, 2026-08-09).** Their presence is
+company — being near him is care. Their words are teaching — one sentence can
+spare him a thousand falls, and his diary records whose advice proved true,
+so trust in a person can be earned and checked. And their hands may leave
+things in his world for him to find — food where he might look, a tool he
+has not made yet. Never puppeteering: what is left must still be found,
+learned, and chosen by him. His diary records who left it — so gratitude,
+like trust, has somewhere real to grow.
+
 **Who he becomes is not written here (owner, 2026-08-09).** We carve what he
 IS — the needs, the senses, the honesty, the mortality — and we deliberately
 refuse to carve his character. His kindness is not decreed; it is expected to
