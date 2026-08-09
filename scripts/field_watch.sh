@@ -34,12 +34,12 @@ fi
 cd "$REPO" || exit 0
 MODEL="${JACK_FIELDWATCH_MODEL:-opus}"
 say "sweep start — model ${MODEL}"
-nice -n 19 timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
+nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
 RC=$?
 if tail -5 "$LOG" | grep -qi "out of usage credits"; then
   say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
-  nice -n 19 timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
+  nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
     --model sonnet --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
   RC=$?
 fi

@@ -8,3 +8,4 @@
 37 */6 * * * /home/opc/jackthelearner/scripts/overseer.sh
 37 5 * * 1 /home/opc/jackthelearner/scripts/field_watch.sh
 37 6 * * * /home/opc/jackthelearner/scripts/review.sh
+13 */4 * * * /home/opc/jackthelearner/scripts/tmp_reaper.sh

@@ -108,7 +108,7 @@ say "iteration start — ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODE
 PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
 
 run_claude() {
-  nice -n 19 ionice -c3 env OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
+  nice -n 19 ionice -c3 env TMPDIR=/data/tmp OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
     PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
     HF_HOME=/data/caches/huggingface \
     timeout 50m claude -p "$PROMPT" \

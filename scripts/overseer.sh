@@ -49,7 +49,7 @@ cd "$REPO" || exit 0
 MODEL="${JACK_OVERSEER_MODEL:-opus}"
 say "audit start — model ${MODEL}, $(git rev-parse --short HEAD)"
 
-nice -n 19 ionice -c3 \
+nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
   timeout 25m claude -p "$(cat "$REPO/scripts/overseer_prompt.md")" \
     --model "$MODEL" \
     --dangerously-skip-permissions \

@@ -38,12 +38,12 @@ MODEL="${JACK_REVIEW_MODEL:-opus}"
 # FULL on Sundays = everything, including test re-examination.
 if [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=40m; else MODE=DAILY; TMOUT=20m; fi
 say "review start — mode ${MODE}, model ${MODEL}"
-nice -n 19 timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
+nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
 RC=$?
 if tail -5 "$LOG" | grep -qi "out of usage credits"; then
   say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
-  nice -n 19 timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
+  nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
     --model sonnet --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
   RC=$?
 fi
