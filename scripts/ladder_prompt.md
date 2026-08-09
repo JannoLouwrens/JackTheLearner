@@ -54,35 +54,15 @@ and T2.02 are VOID (the T0.14 dropout + obs-dim invalidation), and any text
 calling T2.01's plateau "the architecture verdict" is stale and wrong.
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
-0. STAGE 0.1 FIRST — REGISTER THE DESIGNED SPECS. docs/research/DIRECTION_AUDIT.md
-   found ~28 fully-designed specs sitting OUTSIDE the registry, invisible to
-   `run next` and to every count: the LC.00-LC.06 learning-core bakeoff
-   (docs/research/LEARNING_CORE.md — AST-verified, ~33 CPU-core-h, zero GPU),
-   LT.*, PS.*, HR.*, D1.0, T2.21, LG.*, and the audit's own WP./LF./SO. stubs.
-   Register them into registry_expansion.py exactly as written (no threshold
-   edits), checking id collisions against the live registry first. NOTE: LC.03
-   depends on PS.01 — register both together or LC.03 is permanently BLOCKED.
-   *** PS.* CORRECTION REQUIRED FIRST (2026-08-09, do not skip): ***
-   NEEDS_AND_DEATH.md disproved PURPOSE_AND_SCAFFOLDING §2.6(iii)'s
-   "drive-farming" exploit by exact value iteration on a certified-
-   discriminating MDP: under drive-reduction reward, closed depletion cycles
-   telescope to exactly 0 undiscounted and strictly NEGATIVE discounted —
-   farming cannot exist; K&G eLife 2014's own theorem says so. PS.00(c) and
-   PS.02 as written pre-register a FALSE prediction. Correct both against
-   NEEDS_AND_DEATH.md's analysis before registering any PS.* spec (the real
-   pathology is the mirror image: constant-cost reward + reachable death makes
-   suicide optimal — already covered by the NE.* designs). Also: thermal
-   design constants in NEEDS_AND_DEATH §1.2 flagged unverified have verified
-   sources in the needs agent's transcript — hypothermia staging <28C (Durrer
-   2003/Paal 2016), heatstroke >40C (Bouchama 2022); never cite a 42C ceiling.
-   Then run the cheapest newly-registered CPU specs, LC.00 first: the
-   learning-core bakeoff is the highest-leverage work in the project and needs
-   no GPU. Also read DIRECTION_AUDIT's Stage 0: 40 specs are transitively
-   blocked behind {T1.02, T2.01, T2.02} — unblocking those three is the other
-   half of Stage 0. Also implement experiments/audit.py: the deterministic,
-   ZERO-CREDIT integrity checks specced in docs/research/SYSTEM_DESIGN.md
-   (P1-6) — they keep auditing even when every model is out of credits, which
-   happened 4 times on 2026-08-09.
+0. STAGE 0.1 FIRST — PROCESS docs/INTEGRATION_QUEUE.md, top entry down,
+   following its 5-step protocol EXACTLY (cross-check for refutations across
+   the other research docs BEFORE registering — a disproven spec nearly
+   entered the ladder on 2026-08-09; the protocol is that near-miss made
+   mandatory). One queue entry per iteration is a good iteration. Also from
+   DIRECTION_AUDIT Stage 0: 40 specs are transitively blocked behind {T1.02,
+   T2.01, T2.02}; unblocking those is the other half. Also implement
+   experiments/audit.py (SYSTEM_DESIGN P1-6, deterministic zero-credit
+   checks).
 1. CPU-implementable specs, cheapest first: the ME family (ME.1/ME.9 are
    implemented — run them if not yet recorded; then ME.2-ME.5, ME.8, ME.10 —
    EpisodicMemory.py is the substrate and its docstring explains the contract),
