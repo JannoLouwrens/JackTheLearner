@@ -104,6 +104,18 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 
 ## Hard constraints, non-negotiable
 
+- **No new organ without a scar.** Every mechanism in this system exists
+  because a specific, named failure happened — the ledger from the "Working"
+  README, VOID from T2.02, the overseer from a self-certified broken gate,
+  the queue from a disproven spec 12 minutes from registration. That is the
+  standard forever: a proposed organ, protocol, or meta-layer must cite the
+  REAL failure it prevents, or it is not built. Speculative machinery burns
+  the binding resource (credits) to buy imaginary trust. The system is grown,
+  not designed — and it is grown by selection, which means the next
+  improvement is earned by the next failure, not brainstormed in advance.
+  Corollary: when the machine is sufficient, PROVE it by throughput — the
+  Review's weekly question ("closer to a creature, or just busier?") is the
+  guard against polishing the machine instead of running it.
 - **No learning core without unison.** Any candidate learning core — however it
   scores on task metrics — is INADMISSIBLE unless it accepts every modality
   into one shared representation, and its adoption is VOID until the standing
