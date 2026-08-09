@@ -135,6 +135,15 @@ the motor system for movement. Muscles do not choose the destination.
                "rule extended from memory to speech. The LLM-swap arm doubles "
                "as a live test of the swappable-LLM decree.")
 
+## FIRST: FINISH THE LC BAKEOFF (LC.02-LC.06) — unblocked, zero GPU
+
+LC.00 PASS (framing survived its cheapest falsifier), LC.01 PASS (unison
+admission gate). LC.03/04/05 are the actual PPO-vs-world-model arbitration and
+are NOT IMPLEMENTED. This is the highest-leverage unblocked work in the
+project and needs no GPU, so it proceeds beside T2.01. Everything below waits
+on it, INCLUDING the T5.01 entry — which is blocked on T2.01 anyway and must
+not stall the queue behind it.
+
 ## SCHEDULED BY THE OWNER — T5.01, the founding thesis test (2026-08-09)
 
 "Schedule the run after T2.01." The physics-pretraining premise was retired by

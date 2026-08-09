@@ -54,7 +54,22 @@ and T2.02 are VOID (the T0.14 dropout + obs-dim invalidation), and any text
 calling T2.01's plateau "the architecture verdict" is stale and wrong.
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
-0a. OWNER-SCHEDULED: implement T5.01 (the founding physics-thesis test) and
+0. FINISH THE LEARNING-CORE BAKEOFF FIRST — it decides HOW JACK LEARNS and it
+   is the highest-leverage unblocked work in the project. LC.00 and LC.01 PASS
+   (the framing survived its cheapest falsifier; the unison admission gate
+   exists). Implement and run, in order: LC.02 (throughput floor, cpu<10min),
+   LC.03 (screening: which cores learn to survive at all, cpu<2h), LC.04 (THE
+   ARBITRATION — PPO vs the world-model arms at matched experience, cpu<2h),
+   LC.05 (matched compute), LC.06 (simplicity budget). ZERO GPU, so it runs
+   beside any GPU job. Carry the three guards the owner added on 2026-08-09,
+   all recorded in DECISIONS_NEEDED.md — data-starved != non-learner (positive
+   curve slope at cutoff means re-screen, not eliminate); the convergence check
+   (no winner while the runner-up is still closing); and the scale-transfer
+   gate (top two arms re-tested at ~10x on Kaggle, ranking must hold) before
+   any winner is ADOPTED.
+
+0a. OWNER-SCHEDULED, but currently BLOCKED behind T2.01 — do not let it stall
+   the queue: implement T5.01 (the founding physics-thesis test) and
    run it as soon as T2.01 PASSES. See INTEGRATION_QUEUE's top entry. This
    REVERSES DIRECTION_AUDIT's "do not start T5.01" — the owner invoked law 3
    (decisions by bakeoff, never argument) and the audit's reasoning, though
