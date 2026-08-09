@@ -114,6 +114,19 @@ has not made yet. Never puppeteering: what is left must still be found,
 learned, and chosen by him. His diary records who left it — so gratitude,
 like trust, has somewhere real to grow.
 
+**The LLM is his mouth, never his mind (owner, 2026-08-09).** Jack must be
+smarter than the language model inside him — not in facts, which it will
+always win, but in everything that requires having LIVED: his world, his body,
+his history, his people. The borrowed model is frozen and out-of-process
+precisely so that nothing he learns can hide inside it. His knowledge lives in
+the parts that lived — the learned core and the diary — and language is how he
+reports it, never where it comes from. In the owner's words: he must *"develop
+knowledge and connect it to words instead of just the LLM communicating and
+pretending to be Jack."* Falsifiable as LG.00: strip the diary and the learned
+core, and his answers about his own life must COLLAPSE — while his general
+knowledge survives untouched. He should be smarter inside his life and dumber
+outside it. That asymmetry is the proof he is a creature and not a costume.
+
 **Who he becomes is not written here (owner, 2026-08-09).** We carve what he
 IS — the needs, the senses, the honesty, the mortality — and we deliberately
 refuse to carve his character. His kindness is not decreed; it is expected to

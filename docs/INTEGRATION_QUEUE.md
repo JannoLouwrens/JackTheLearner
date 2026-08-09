@@ -64,6 +64,40 @@ experience grows. Draft:
                "that motivate it: 54K beat 57M here; a 4M PPO beat a 201M "
                "DreamerV3 on Crafter.")
 
+## GAP-FILL — THE ANTI-PUPPET TEST (owner, 2026-08-09). Register with the LG family.
+
+The owner's question: "will Jack be smarter than the local LLM on him? He MUST
+develop knowledge and connect it to words instead of just the LLM communicating
+and PRETENDING to be Jack." Nothing in 136 specs tested this. It is the
+project's existential claim and it had no falsifier.
+
+    Spec("LG.00", 4, "Jack knows what his LLM cannot — he is not a puppet",
+         hypothesis="On questions about HIS world, HIS body and HIS history, "
+                    "full Jack (learned core + diary + LLM) beats LLM-ALONE "
+                    "given the identical prompt context, by >=3 sigma. The "
+                    "knowledge is in the parts that LIVED, not in the frozen "
+                    "weights that never did.",
+         falsified_by="LLM-alone matches full Jack on world questions. Then "
+                      "Jack is a costume on a language model, the learned core "
+                      "and diary are decorative, and the project has not built "
+                      "a creature.",
+         null_baseline="LLM-alone, same prompt, no diary, no learned core.",
+         metric="grounded_knowledge_advantage", budget=Budget.CPU,
+         depends_on=["ME.9", "LG.01"], seeds=3,
+         control="GENERAL-KNOWLEDGE questions (history, arithmetic, "
+                 "vocabulary) — here LLM-alone must MATCH OR BEAT full Jack. "
+                 "If Jack wins everywhere, the test is measuring scaffolding "
+                 "or prompt advantage, not grounding. The two results together "
+                 "are the claim: he is smarter INSIDE his life and dumber "
+                 "outside it, which is exactly what a creature should be.",
+         kills="The frozen-LLM architecture as implemented. If the mouth is "
+               "doing the knowing, the mind was never built.",
+         notes="Double dissociation, the ME.10 pattern applied to selfhood: "
+               "ablate the diary -> his history answers collapse, general "
+               "knowledge survives; ablate the LLM -> he still ACTS correctly "
+               "in his world while losing only the ability to say so. "
+               "Knowledge in the parts that lived; language as the mouth.")
+
 ## Queue (top = next)
 
 | research doc | specs | status |
