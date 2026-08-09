@@ -308,3 +308,25 @@ slots; (b) set a cadence budget (e.g. drop the builder to every 2h overnight);
 credit balance, so any budget must be time/cadence-based, not token-based.
 Note: experiments/audit.py (queued for the builder) gives zero-credit
 integrity checking either way.
+
+## The owner's hands — how does a human TOUCH Jack's world? (OPEN, design fork)
+
+Found 2026-08-09 by the owner auditing the design against the nurture itch:
+Jack knows you (attributed memory), you can watch him (specced), you can talk
+to him (specced) — but there are NO CARE VERBS. You cannot leave food, warm
+his shelter, or hand him anything. The human has eyes and a voice in his
+world, but no hands. Tamagotchi's entire loop is "you feed it"; our design
+has him feed himself (correctly — first principle), which serves the WATCH
+itch and starves the NURTURE itch.
+
+Proposed reconciliation, consistent with the first principle and the
+emergence stone: the human enters as ENVIRONMENT, not puppeteer — parental
+provisioning, biology's own pattern. You may place things in his world; he
+still must find, learn, and choose. Teaching-by-telling is already designed
+(culture transfer). Attribution gives gratitude a substrate: his diary would
+record WHO left it — attachment to his people gets somewhere real to grow
+from, unscripted.
+
+Needs: owner's call on whether care verbs exist at all and which; then a
+small research pass + SO-family specs (interaction channel, anti-puppeteering
+limits — care must never become remote control, or the first principle dies).
