@@ -38,6 +38,7 @@ LOGDIR=/data/jack-logs          # /data, not /var/log — root is the tight volu
 # Claude reasoning against a ladder it was locked out of.
 LOCK=/tmp/jack-loop.lock
 PAUSE="$REPO/.loop-paused"
+FALLBACK_MODEL="${JACK_LOOP_FALLBACK:-sonnet}"   # used when the primary is out of credits
 MIN_FREE_GB=3
 MAX_LOAD=6.0
 
@@ -74,15 +75,41 @@ say "iteration start — ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODE
 
 PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
 
-nice -n 19 ionice -c3 env OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
-  PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
-  HF_HOME=/data/caches/huggingface \
-  timeout 50m claude -p "$PROMPT" \
-    --model "${JACK_LOOP_MODEL:-opus}" \
-    --dangerously-skip-permissions \
-    --max-turns 120 \
-    >> "$LOG" 2>&1
+run_claude() {
+  nice -n 19 ionice -c3 env OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
+    PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
+    HF_HOME=/data/caches/huggingface \
+    timeout 50m claude -p "$PROMPT" \
+      --model "$1" \
+      --dangerously-skip-permissions \
+      --max-turns 120 \
+      >> "$LOG" 2>&1
+}
+
+MODEL="${JACK_LOOP_MODEL:-opus}"
+run_claude "$MODEL"
 RC=$?
+
+# CREDIT EXHAUSTION IS NOT A CRASH, and it does not look like one: the CLI
+# prints "out of usage credits" and exits in ~3 seconds, so an hourly loop
+# happily burns every remaining slot doing nothing. It cost 8 dead iterations
+# on 2026-08-09 before anyone looked. Detect it and fall back one tier rather
+# than idling until a human notices.
+if tail -5 "$LOG" | grep -qi "out of usage credits"; then
+  if [ "$MODEL" != "$FALLBACK_MODEL" ]; then
+    say "OUT OF CREDITS on ${MODEL} — falling back to ${FALLBACK_MODEL}"
+    run_claude "$FALLBACK_MODEL"
+    RC=$?
+    if tail -5 "$LOG" | grep -qi "out of usage credits"; then
+      say "OUT OF CREDITS on ${FALLBACK_MODEL} too — pausing the loop. "\
+"Resume with: rm ${PAUSE}"
+      touch "$PAUSE"
+    fi
+  else
+    say "OUT OF CREDITS on ${MODEL} — pausing the loop. Resume with: rm ${PAUSE}"
+    touch "$PAUSE"
+  fi
+fi
 
 AFTER=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
