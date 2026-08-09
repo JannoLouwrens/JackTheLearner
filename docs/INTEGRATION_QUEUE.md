@@ -153,6 +153,22 @@ at gpu<8h. If the implementation's honest estimate exceeds the remaining
 budget, SPLIT ACROSS WEEKS (Kaggle resets Sunday) rather than shrinking the
 experiment.
 
+## THE GENERALITY MAP — docs/GENERALITY.md (owner, 2026-08-09)
+
+Twelve named barriers between Jack and general intelligence, each with a
+falsifiable test. NOT SCHEDULED and NOT competing with the frontier — it is
+the map, so the ladder stops being silent about the distance. Two entries are
+cheap enough to enter the real queue when their prerequisites land:
+  - GEN.02 (two Jacks, learning by watching) — costs a second PROCESS, and it
+    is the largest known driver of intelligence that we currently have zero
+    specs for.
+  - GEN.01 (does capability track world richness?) — measurable the moment the
+    W-tier fidelity ladder exists; tells us whether the ceiling is the brain
+    or the world, which is the most informative single number available.
+The Sunday Review's anatomy audit should check GENERALITY.md alongside
+CHAMPIONS.md: a barrier with no seat and no spec is fine, but it must stay
+NAMED.
+
 ## Queue (top = next)
 
 | research doc | specs | status |
