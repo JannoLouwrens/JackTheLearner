@@ -66,19 +66,45 @@ SYSTEM.md, which outrank this file.
 | Curiosity signal | learning-progress | **BY ANALYSIS** (favourite on pilot data) | LT.03/LT.04 (queued) | ICM/RND enter as controls-that-must-fail |
 | Episodic retrieval | lexical containment | BY VERDICT (ME.1/ME.9) — **known weakness: 0.000 on paraphrase** | ME.11.A–F (registered) | potion-8M favourite, cascade the risk |
 | Sensory fusion | undecided — token-trunk favourite | — | UB.10 (registered) | six arms, matched params |
-| Vision encoder | from-scratch 0.24M | **DEFAULT, never defended** | T2.03 (registered) | DINOv2/SigLIP probes |
+| Vision encoder | from-scratch 0.24M | **DEFAULT, never defended — and the FROZEN alternative is now CONTESTED, see below** | T2.03 (registered) + PL.02 (pending registration) | frozen DINOv2/SigLIP vs adapters vs plastic vs pure |
 | ASR (speech→text) | whisper.cpp | BY ANALYSIS (3.8–8.3× measured on this box) | HR bakeoff (queued) | — |
 | Speaker ID | CAM++ / TitaNet-small | BY ANALYSIS (research only) | HR speaker spec (queued) | needs ARM benchmark — no published numbers exist |
-| Language model | SmolLM2-360M, frozen, out-of-process | **BY DECREE** (owner; swappable by design) | — | any better frozen swap-in |
+| Language model | SmolLM2-360M as a TALKATIVE PARENT — in his world, speaking to him; NOT inside him | **BY DECREE** (owner 2026-08-09; supersedes the earlier 'frozen mouth' framing) | LG.00 anti-puppet applies to any role | any better frozen swap-in |
 | Consolidation | SIESTA wake/sleep, sleep-gated | BY ANALYSIS | NE.05 (queued) | — |
 | World | MuJoCo playground + needs overlays | **BY VERDICT** (measured 4–6× faster than Craftax AND goal-aligned) | W.1–W.7 fidelity gates (queued) | rematch at each fidelity stage |
-| Audio encoder (world-sound → brain) | undecided — mel favourite (raw costs 12–25×, measured) | — | HR audio-entry bakeoff (queued) | raw vs mel vs tokens vs no-audio null |
+| Audio encoder (world-sound → brain) | undecided — mel favourite (raw costs 12–25×, measured) | — | HR audio-entry bakeoff (queued); PL.* applies here too | raw vs mel vs tokens vs no-audio null |
 | Language grounding (word → lived skill) | undecided — skills-then-language ordering unproven | — | LG bakeoff (queued; doc needs completeness check) | grounding approaches + the ordering experiment |
 
 | Smell (olfaction) | **VACANT — sense not yet built** | — | under research (FROZEN_VS_PLASTIC.md) | finds food/fire/decay through occlusion |
 | Taste (gustation) | **VACANT — sense not yet built** | — | under research | one-trial aversion learning; poison |
 | Voice (vocalisation) | **VACANT — he cannot make a sound** | — | needs a spec | prerequisite for emergent language + GEN.02 |
 | Language acquisition | LLM-as-parent (speaks to him; he learns by hearing) | **BY DECREE** (owner 2026-08-09) | LG family + LG.00 anti-puppet | pure from-scratch; critical-period |
+
+### OPEN AND CONTESTED: are the PERCEPTION encoders frozen? (2026-08-09)
+
+**NOT DECIDED.** docs/research/FROZEN_VS_PLASTIC.md recommends against frozen
+and the reasoning is arithmetic rather than preference: the RESHAPING GAIN —
+does training with sense B improve sense A's own representation? — is
+identically zero for a frozen tower, so a frozen encoder makes one class of
+learning permanently impossible, which GOAL.md's capability target marks as
+suspect by definition. Supporting measurements: OpenVLA 47.0% frozen vs 69.7%
+fine-tuned vs 68.2% LoRA at 1.4% of parameters; Kleinman/Achille/Soatto
+(CVPR 2023) — separately pretrained backbones may fail to encode synergistic
+information, AND IT FAILS SILENTLY (93–94% either way, −20 points only when
+the task needs synergy). Recommended ranking: adapters+plastic fusion >
+fully pure > critical period > current fully-frozen.
+
+**But law 3 governs: this is a RECOMMENDATION, not a verdict.** PL.02 decides
+it and is runnable today. Until PL.02 records a result, no spec, agent or
+document may treat "no frozen encoders" as settled. What IS settled is only
+the LANGUAGE half, by owner decree: the LLM is a parent in his world, not a
+component inside him.
+
+**Three consequences already found, pending action:** the learning-core
+bakeoff's admission criterion U2 excludes every frozen tower BY ARITHMETIC and
+was never run against one; the "Heard, Not Seen" binding test cannot
+discriminate frozen from adapted (it measures readout, not reshaping); and EWC
+in TrainingPipeline.py measures indistinguishable from vanilla at our scale.
 
 **Future seats, named so they are not forgotten:** the body itself (Humanoid-v5
 has ball hands; fingers will compete one day) and the cross-life world
