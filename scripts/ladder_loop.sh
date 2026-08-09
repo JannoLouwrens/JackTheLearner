@@ -38,7 +38,7 @@ LOGDIR=/data/jack-logs          # /data, not /var/log — root is the tight volu
 # Claude reasoning against a ladder it was locked out of.
 LOCK=/tmp/jack-loop.lock
 PAUSE="$REPO/.loop-paused"
-FALLBACK_MODEL="${JACK_LOOP_FALLBACK:-sonnet}"   # used when the primary is out of credits
+FALLBACK_MODELS="${JACK_LOOP_FALLBACK:-opus sonnet}"  # tried in order when the primary is out of credits
 MIN_FREE_GB=3
 MAX_LOAD=6.0
 
@@ -92,23 +92,19 @@ RC=$?
 
 # CREDIT EXHAUSTION IS NOT A CRASH, and it does not look like one: the CLI
 # prints "out of usage credits" and exits in ~3 seconds, so an hourly loop
-# happily burns every remaining slot doing nothing. It cost 8 dead iterations
-# on 2026-08-09 before anyone looked. Detect it and fall back one tier rather
-# than idling until a human notices.
+# burns every remaining slot doing nothing. It cost 8 dead iterations on
+# 2026-08-09 before anyone looked. Walk a fallback chain instead of idling.
+for FB in $FALLBACK_MODELS; do
+  tail -5 "$LOG" | grep -qi "out of usage credits" || break
+  [ "$FB" = "$MODEL" ] && continue
+  say "OUT OF CREDITS on ${MODEL} — falling back to ${FB}"
+  MODEL="$FB"
+  run_claude "$FB"
+  RC=$?
+done
 if tail -5 "$LOG" | grep -qi "out of usage credits"; then
-  if [ "$MODEL" != "$FALLBACK_MODEL" ]; then
-    say "OUT OF CREDITS on ${MODEL} — falling back to ${FALLBACK_MODEL}"
-    run_claude "$FALLBACK_MODEL"
-    RC=$?
-    if tail -5 "$LOG" | grep -qi "out of usage credits"; then
-      say "OUT OF CREDITS on ${FALLBACK_MODEL} too — pausing the loop. "\
-"Resume with: rm ${PAUSE}"
-      touch "$PAUSE"
-    fi
-  else
-    say "OUT OF CREDITS on ${MODEL} — pausing the loop. Resume with: rm ${PAUSE}"
-    touch "$PAUSE"
-  fi
+  say "OUT OF CREDITS on every model — pausing. Resume with: rm ${PAUSE}"
+  touch "$PAUSE"
 fi
 
 AFTER=$(/data/venvs/jackthelearner/bin/python -c \

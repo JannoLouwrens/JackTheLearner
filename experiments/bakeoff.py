@@ -1,0 +1,203 @@
+"""The bakeoff: how this project decides things.
+
+The owner's requirement, 2026-08-09: "I want a system where different stuff are
+tested and best ones chosen." This module is that, as infrastructure rather
+than as a habit.
+
+A bakeoff runs N candidate implementations (ARMS) head-to-head on one
+pre-registered metric, multi-seed, against a shared null. The winner is chosen
+by arithmetic, not by argument, and the rule is fixed before any number exists.
+
+THREE PROPERTIES THAT MAKE IT HONEST, each learned the hard way here:
+
+  1. THE LEARNING GATE (invented by spec T2.02, generalised here).
+     T2.02 compared a 57M transformer against a 125K MLP on locomotion. The
+     MLP cleared random by 7.11 sigma; the transformer managed 2.46. The spec
+     could have declared the MLP the winner. It declared itself VOID instead,
+     with the verdict "two non-learners cannot arbitrate the architecture" —
+     because an arm that has not demonstrably learned tells you nothing about
+     its architecture, only about that run. A bakeoff where any arm fails the
+     gate returns VOID and blocks the decision until the arms actually work.
+     Without this, a bakeoff is a machine for converting broken runs into
+     confident architectural conclusions.
+
+  2. A MARGIN, NOT A MAXIMUM. Picking argmax over noisy seeds picks noise.
+     The winner must beat the runner-up by `margin_sigma` of the pooled seed
+     spread, or the result is a TIE — which is real information: it means the
+     choice does not matter yet and the cheaper arm should be preferred.
+
+  3. THE DECISION IS WRITTEN DOWN, INCLUDING THE LOSERS. A bakeoff that
+     records only its winner cannot be re-opened when evidence changes, and
+     the deleted alternatives get silently reinvented six weeks later.
+
+WHAT A BAKEOFF MAY NOT DO: it may not choose its own metric after seeing the
+data, drop an arm that embarrasses it, or re-run until an arm wins. The metric,
+the arms, the gate and the margin live in the Spec, which is committed before
+the run.
+"""
+from __future__ import annotations
+
+import json
+import statistics as st
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Callable, Dict, List, Optional
+
+from .protocol import Ledger, Result, Spec, Status
+
+DECISIONS = Path(__file__).parent.parent / "docs" / "DECISIONS_RESOLVED.md"
+
+
+@dataclass
+class Arm:
+    """One candidate implementation.
+
+    `run(seed) -> float` returns the metric for that seed. Higher is better;
+    pass `higher_is_better=False` on the bakeoff to flip it. `cost` is a
+    tie-breaker (params, latency, GPU-hours — whatever the spec declared), so
+    a TIE resolves toward the cheaper option rather than the flashier one.
+    """
+    name: str
+    run: Callable[[int], float]
+    description: str = ""
+    cost: float = 0.0
+
+
+@dataclass
+class ArmResult:
+    name: str
+    scores: List[float]
+    mean: float
+    std: float
+    sigma_over_null: float
+    passed_gate: bool
+    cost: float = 0.0
+    description: str = ""
+
+
+@dataclass
+class BakeoffResult:
+    spec_id: str
+    verdict: str                      # WINNER | TIE | VOID
+    winner: Optional[str]
+    arms: List[ArmResult]
+    null_mean: float
+    null_std: float
+    reason: str
+    metric: str = ""
+
+    def to_metrics(self) -> Dict[str, float | str]:
+        m: Dict[str, float | str] = {
+            "verdict": self.verdict,
+            "winner": self.winner or "none",
+            "reason": self.reason,
+            "null_mean": round(self.null_mean, 4),
+            "null_std": round(self.null_std, 4),
+        }
+        for a in self.arms:
+            m[f"{a.name}_mean"] = round(a.mean, 4)
+            m[f"{a.name}_sigma"] = round(a.sigma_over_null, 3)
+            m[f"{a.name}_gate"] = float(a.passed_gate)
+        return m
+
+
+def run_bakeoff(spec: Spec,
+                arms: List[Arm],
+                null_run: Callable[[int], float],
+                seeds: Optional[List[int]] = None,
+                learning_gate_sigma: float = 3.0,
+                margin_sigma: float = 1.5,
+                higher_is_better: bool = True,
+                ledger: Optional[Ledger] = None) -> BakeoffResult:
+    """Run every arm on every seed, gate them, and pick a winner or refuse to.
+
+    Records to the ledger as PASS only when a decision was actually reached:
+    a VOID bakeoff is not a passing spec, because the question is still open.
+    """
+    seeds = seeds or list(range(max(spec.seeds, 3)))
+    if len(arms) < 2:
+        raise ValueError("a bakeoff needs at least two arms; one arm is just a test")
+
+    null_scores = [float(null_run(s)) for s in seeds]
+    null_mean = st.mean(null_scores)
+    null_std = st.stdev(null_scores) if len(null_scores) > 1 else 0.0
+
+    results: List[ArmResult] = []
+    for arm in arms:
+        scores = [float(arm.run(s)) for s in seeds]
+        mean = st.mean(scores)
+        std = st.stdev(scores) if len(scores) > 1 else 0.0
+        # Sigma against the LARGER of the two noise sources. Using only the
+        # null's spread flatters an arm whose own seeds disagree wildly.
+        sigma_unit = max(std, null_std, 1e-9)
+        delta = (mean - null_mean) if higher_is_better else (null_mean - mean)
+        sigma = delta / sigma_unit
+        results.append(ArmResult(arm.name, scores, mean, std, sigma,
+                                 sigma >= learning_gate_sigma, arm.cost,
+                                 arm.description))
+
+    failed = [a.name for a in results if not a.passed_gate]
+    if failed:
+        # See property 1 above. This is the whole point of the module.
+        return _finish(spec, BakeoffResult(
+            spec.id, "VOID", None, results, null_mean, null_std,
+            f"arms below the {learning_gate_sigma}-sigma learning gate: "
+            f"{', '.join(failed)}. An arm that has not demonstrably learned "
+            f"cannot arbitrate the decision.", spec.metric), ledger)
+
+    ranked = sorted(results, key=lambda a: a.mean, reverse=higher_is_better)
+    best, second = ranked[0], ranked[1]
+    unit = max(best.std, second.std, null_std, 1e-9)
+    gap = abs(best.mean - second.mean) / unit
+
+    if gap < margin_sigma:
+        tied = [a for a in ranked if abs(a.mean - best.mean) / unit < margin_sigma]
+        cheapest = min(tied, key=lambda a: a.cost)
+        return _finish(spec, BakeoffResult(
+            spec.id, "TIE", cheapest.name, results, null_mean, null_std,
+            f"{best.name} leads {second.name} by only {gap:.2f} sigma "
+            f"(margin {margin_sigma}). The choice does not matter yet; "
+            f"defaulting to the cheapest tied arm ({cheapest.name}).",
+            spec.metric), ledger)
+
+    return _finish(spec, BakeoffResult(
+        spec.id, "WINNER", best.name, results, null_mean, null_std,
+        f"{best.name} beats {second.name} by {gap:.2f} sigma and clears the "
+        f"null by {best.sigma_over_null:.2f} sigma.", spec.metric), ledger)
+
+
+def _finish(spec: Spec, res: BakeoffResult, ledger: Optional[Ledger]) -> BakeoffResult:
+    if ledger is not None:
+        ledger.record(Result(
+            spec_id=spec.id,
+            status=Status.PASS if res.verdict in ("WINNER", "TIE") else Status.FAIL,
+            metrics=res.to_metrics(),
+            message=f"{res.verdict}: {res.reason}",
+        ))
+    _append_decision(res)
+    return res
+
+
+def _append_decision(res: BakeoffResult) -> None:
+    """Write the decision — losers included — so it can be re-opened later."""
+    DECISIONS.parent.mkdir(parents=True, exist_ok=True)
+    if not DECISIONS.exists():
+        DECISIONS.write_text(
+            "# Decisions resolved by bakeoff\n\n"
+            "Written by experiments/bakeoff.py. Losing arms are recorded on "
+            "purpose: a decision whose alternatives were discarded cannot be "
+            "re-opened when the evidence changes, and the alternatives get "
+            "silently reinvented later.\n")
+    lines = [f"\n## {res.spec_id} — {res.verdict}"
+             + (f" — {res.winner}" if res.winner else ""),
+             f"\n{res.reason}\n",
+             f"\nmetric: `{res.metric}`  ·  null {res.null_mean:.3f} "
+             f"± {res.null_std:.3f}\n",
+             "\n| arm | mean | sigma over null | gate | cost |",
+             "\n|---|---|---|---|---|"]
+    for a in sorted(res.arms, key=lambda x: x.mean, reverse=True):
+        lines.append(f"\n| {a.name} | {a.mean:.3f} | {a.sigma_over_null:.2f} | "
+                     f"{'pass' if a.passed_gate else 'FAIL'} | {a.cost:g} |")
+    lines.append("\n")
+    with open(DECISIONS, "a", encoding="utf-8") as fh:
+        fh.write("".join(lines))

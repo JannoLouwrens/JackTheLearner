@@ -1301,20 +1301,79 @@
       "status": "FAIL"
     },
     "T2.02": {
-      "commit": "1d827c8",
-      "control_metrics": {},
-      "duration_s": 391.78,
+      "commit": "114e8f7",
+      "control_metrics": {
+        "untrained_mlp_mean": 175.1,
+        "untrained_mlp_mean_std": 0.0,
+        "untrained_mlp_sigma": 2.74,
+        "untrained_mlp_sigma_std": 0.0,
+        "untrained_tr_mean": 150.3,
+        "untrained_tr_mean_std": 0.0,
+        "untrained_tr_sigma": 1.19,
+        "untrained_tr_sigma_std": 0.0
+      },
+      "duration_s": 22604.42,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "message": "RuntimeError: GPU job failed on colab: all backends failed: kaggle: status=error; colab: exit 1 | fetch failed: /content/t202.json: rc=1 exists=False [colab] Session 'ladder-1786234484' not found.",
-      "metrics": {},
-      "ran_at": "2026-08-09T00:14:49",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "backend": "kaggle",
+        "gpu": "Tesla P100-PCIE-16GB",
+        "mlp_mean": 530.2,
+        "mlp_mean_std": 0.0,
+        "mlp_means": [
+          468.9,
+          586.6,
+          535.0
+        ],
+        "mlp_params": 124707.0,
+        "mlp_params_std": 0.0,
+        "mlp_sigma_vs_random": 7.11,
+        "mlp_sigma_vs_random_std": 0.0,
+        "mlp_std": 59.0,
+        "mlp_std_std": 0.0,
+        "mlp_steps": [
+          638976,
+          638976,
+          634880
+        ],
+        "pair_sigma_advantage": -2.52,
+        "pair_sigma_advantage_std": 0.0,
+        "random_mean": 110.9,
+        "random_mean_std": 0.0,
+        "random_std": 23.46,
+        "random_std_std": 0.0,
+        "step_match_ratio": 1.0,
+        "step_match_ratio_std": 0.0,
+        "tr_sigma_vs_random": 2.46,
+        "tr_sigma_vs_random_std": 0.0,
+        "transformer_mean": 317.7,
+        "transformer_mean_std": 0.0,
+        "transformer_means": [
+          280.5,
+          258.5,
+          414.0
+        ],
+        "transformer_std": 84.17,
+        "transformer_std_std": 0.0,
+        "transformer_steps": [
+          638976,
+          638976,
+          634880
+        ],
+        "transformer_wins_all_seeds": 0.0,
+        "transformer_wins_all_seeds_std": 0.0,
+        "verdict": "VOID \u2014 an arm failed the 3-sigma learning gate vs random (tr 2.46, mlp 7.11). Two non-learners cannot arbitrate the architecture.",
+        "wall_minutes": 372.9,
+        "wall_minutes_std": 0.0
+      },
+      "ran_at": "2026-08-09T07:30:25",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T2.02",
-      "status": "ERROR"
+      "status": "FAIL"
     },
     "T2.10": {
       "commit": "55e5bda",
