@@ -899,6 +899,71 @@
       "spec_id": "T0.12",
       "status": "PASS"
     },
+    "T0.13": {
+      "attempt": 4,
+      "commit": "b30166a",
+      "control_metrics": {
+        "disarmed_conjunct_keys": 3,
+        "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
+        "gates_scanned": 1,
+        "hazard_detail": "T0.09_prefix",
+        "inert_gate_keys": 3,
+        "precedence_hazards": 1,
+        "redundant_detail": "",
+        "redundant_disjunct_keys": 0,
+        "specs_with_disarmed_keys": 1,
+        "specs_with_precedence_hazards": 1,
+        "unevaluable_detail": "",
+        "unevaluable_gates": 0,
+        "unreadable_detail": "",
+        "unreadable_gates": 0
+      },
+      "duration_s": 0.11,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "b30166a",
+          "message": "AttributeError: 'Ledger' object has no attribute 'data'",
+          "ran_at": "2026-08-09T13:13:30",
+          "status": "ERROR"
+        },
+        {
+          "commit": "b30166a",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-09T13:13:43",
+          "status": "FAIL"
+        },
+        {
+          "commit": "b30166a",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-09T13:15:57",
+          "status": "FAIL"
+        }
+      ],
+      "message": "",
+      "metrics": {
+        "disarmed_conjunct_keys": 0,
+        "disarmed_detail": "",
+        "gates_scanned": 43,
+        "hazard_detail": "",
+        "inert_gate_keys": 1,
+        "precedence_hazards": 0,
+        "redundant_detail": "T1.09: c['absurd_peak_gb']",
+        "redundant_disjunct_keys": 1,
+        "specs_with_disarmed_keys": 0,
+        "specs_with_precedence_hazards": 0,
+        "unevaluable_detail": "",
+        "unevaluable_gates": 0,
+        "unreadable_detail": "",
+        "unreadable_gates": 0
+      },
+      "ran_at": "2026-08-09T13:16:21",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.13",
+      "status": "PASS"
+    },
     "T1.01": {
       "attempt": 1,
       "commit": "a533ade",

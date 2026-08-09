@@ -84,30 +84,77 @@ def _perturbations(v: Any) -> list:
     return []
 
 
-def _referenced_keys(fn: Callable) -> tuple[set, set]:
-    """Keys read as m["..."] / c["..."], by parameter POSITION not by name —
-    checks in this repo variously call them m/c, m/_c, metrics/control."""
+def _source(fn: Callable, src: str | None) -> str | None:
+    """Explicit source wins. The control fixture is built with exec(), and
+    `inspect.getsource` raises OSError on a function with no file on disk — so
+    relying on inspect alone made the control scan ZERO gates and report a
+    clean bill of health for the known-bad one. Caught by the control itself on
+    T0.13's first run."""
+    if src is not None:
+        return _dedent(src)
     try:
-        src = inspect.getsource(fn)
+        return _dedent(inspect.getsource(fn))
     except (OSError, TypeError):
-        return set(), set()
-    tree = ast.parse(ast.unparse(ast.parse(_dedent(src))))
-    fdef = next((n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)), None)
+        return None
+
+
+def _fdef(src: str | None):
+    if src is None:
+        return None
+    return next((n for n in ast.walk(ast.parse(src))
+                 if isinstance(n, ast.FunctionDef)), None)
+
+
+def _referenced_keys(fn: Callable, src: str | None) -> tuple[set, set, set]:
+    """Keys READ as m["..."] / c["..."], by parameter POSITION not by name —
+    checks in this repo variously call them m/c, m/_c, metrics/control.
+
+    Load context only. Several checks compute a derived figure and store it
+    back (`m["resume_fidelity_ratio"] = ...` in T0.04, `m["verdict"]` in
+    T2.02); those are OUTPUTS of the gate, not inputs to it, and counting them
+    reported three inert keys that were never assertions at all.
+
+    Third return value: the subset that appears ONLY inside an `or`. An inert
+    key there is redundancy by design — T1.09's control asserts `absurd_oom or
+    absurd_peak_gb > MAX_GB` because a run that OOMs has no peak to read, so
+    one branch is necessarily dead and no correct rewrite avoids it. An inert
+    key under pure `and` is a disarmed assertion, which is the real defect.
+    """
+    fdef = _fdef(src)
     if fdef is None:
-        return set(), set()
+        return set(), set(), set()
     names = [a.arg for a in fdef.args.args]
     m_name = names[0] if names else None
     c_name = names[1] if len(names) > 1 else None
-    m_keys, c_keys = set(), set()
+
+    # Every subscript that sits somewhere beneath an `or`.
+    under_or = set()
     for node in ast.walk(fdef):
-        if (isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name)
+        if isinstance(node, ast.BoolOp) and isinstance(node.op, ast.Or):
+            for sub in ast.walk(node):
+                under_or.add(id(sub))
+
+    m_keys, c_keys = set(), set()
+    inside, outside = set(), set()
+    for node in ast.walk(fdef):
+        if not (isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name)
                 and isinstance(node.slice, ast.Constant)
-                and isinstance(node.slice.value, str)):
-            if node.value.id == m_name:
-                m_keys.add(node.slice.value)
-            elif node.value.id == c_name:
-                c_keys.add(node.slice.value)
-    return m_keys, c_keys
+                and isinstance(node.slice.value, str)
+                and isinstance(node.ctx, ast.Load)):
+            continue
+        key = node.slice.value
+        if node.value.id == m_name:
+            tag, bucket = "m", m_keys
+        elif node.value.id == c_name:
+            tag, bucket = "c", c_keys
+        else:
+            continue
+        bucket.add(key)
+        (inside if id(node) in under_or else outside).add(f"{tag}[{key!r}]")
+    # A key read anywhere OUTSIDE an `or` is load-bearing as a conjunct, even
+    # if it is also read inside one. Only reads that are exclusively disjunctive
+    # get the redundancy exemption.
+    return m_keys, c_keys, inside - outside
 
 
 def _dedent(src: str) -> str:
@@ -129,13 +176,17 @@ def _verdict(fn: Callable, m: dict, c: dict):
     return ("BOOL", bool(out))
 
 
-def _inert_keys(fn: Callable, m: dict, c: dict) -> list:
-    """Referenced keys that cannot move the verdict at this operating point."""
+def _inert_keys(fn: Callable, src: str | None, m: dict, c: dict) -> tuple[list, list]:
+    """Referenced keys that cannot move the verdict at this operating point.
+
+    Returns (disarmed, redundant): keys read under pure conjunction, and keys
+    read only inside an `or`. Only the first class is gated.
+    """
     base = _verdict(fn, m, c)
     if base[0] == "RAISED":
-        return []            # cannot score a gate we cannot evaluate; reported separately
-    m_keys, c_keys = _referenced_keys(fn)
-    inert = []
+        return [], []        # cannot score a gate we cannot evaluate; reported separately
+    m_keys, c_keys, disjunct_only = _referenced_keys(fn, src)
+    disarmed, redundant = [], []
     for which, keys, store in (("m", m_keys, m), ("c", c_keys, c)):
         for k in sorted(keys):
             if k not in store:
@@ -149,19 +200,23 @@ def _inert_keys(fn: Callable, m: dict, c: dict) -> list:
                     moved = True
                     break
             if not moved:
-                inert.append(f"{which}[{k!r}]")
-    return inert
+                label = f"{which}[{k!r}]"
+                (redundant if label in disjunct_only else disarmed).append(label)
+    return disarmed, redundant
 
 
-def _precedence_hazards(fn: Callable) -> int:
+def _precedence_hazards(fn: Callable, src: str | None) -> int:
     """An `or` with an `and` among its operands. Python's grammar drops
     redundant parens, so `(a and b) or c` and `a and b or c` share an AST —
     both are reported. That is intended: the first is only safe by luck of
     where the author happened to stop typing, and the audit's finding is that
-    nothing in the ladder distinguishes them."""
-    try:
-        src = _dedent(inspect.getsource(fn))
-    except (OSError, TypeError):
+    nothing in the ladder distinguishes them.
+
+    This is the detector that separates a DISARMED gate from honest
+    redundancy. T1.09's `absurd_oom or absurd_peak_gb > MAX_GB` has no `and`
+    among its operands and is not flagged; the pre-fix T0.09 gate is.
+    """
+    if src is None:
         return 0
     n = 0
     for node in ast.walk(ast.parse(src)):
@@ -173,28 +228,52 @@ def _precedence_hazards(fn: Callable) -> int:
 
 
 def _scan(entries: list) -> dict:
-    """entries: (spec_id, check_fn, metrics, control_metrics)."""
-    inert, hazards, unevaluable, scanned = {}, {}, [], 0
-    for spec_id, fn, m, c in entries:
+    """entries: (spec_id, check_fn, source_or_None, metrics, control_metrics)."""
+    disarmed, redundant, hazards, unevaluable, unreadable, scanned = {}, {}, {}, [], [], 0
+    for spec_id, fn, raw_src, m, c in entries:
         scanned += 1
+        src = _source(fn, raw_src)
+        if src is None or _fdef(src) is None:
+            # A gate whose source cannot be read is a gate that was not
+            # scanned. Reported, never silently skipped.
+            unreadable.append(spec_id)
+            continue
         if _verdict(fn, m, c)[0] == "RAISED":
             unevaluable.append(spec_id)
-        bad = _inert_keys(fn, m, c)
-        if bad:
-            inert[spec_id] = bad
-        h = _precedence_hazards(fn)
+        h = _precedence_hazards(fn, src)
         if h:
             hazards[spec_id] = h
+        dis, red = _inert_keys(fn, src, m, c)
+        # The redundancy exemption is forfeited by a gate that ALSO carries a
+        # precedence hazard. Structure alone cannot separate honest redundancy
+        # from a disarmed assertion — the pre-fix T0.09 keys and T1.09's
+        # `absurd_peak_gb` are both inert operands of an `or`, and both look
+        # identical to the sensitivity detector. What distinguishes them is
+        # that T0.09's `or` was never written: `and` binding tighter turned an
+        # intended conjunction into one. So an `or` that swallows an `and` is
+        # evidence of intent, and its dead operands are defects, not slack.
+        if h:
+            dis, red = sorted(dis + red), []
+        if dis:
+            disarmed[spec_id] = dis
+        if red:
+            redundant[spec_id] = red
     return {
         "gates_scanned": scanned,
-        "inert_gate_keys": sum(len(v) for v in inert.values()),
-        "specs_with_inert_keys": len(inert),
+        "disarmed_conjunct_keys": sum(len(v) for v in disarmed.values()),
+        "specs_with_disarmed_keys": len(disarmed),
+        "redundant_disjunct_keys": sum(len(v) for v in redundant.values()),
+        "inert_gate_keys": (sum(len(v) for v in disarmed.values())
+                            + sum(len(v) for v in redundant.values())),
         "precedence_hazards": sum(hazards.values()),
         "specs_with_precedence_hazards": len(hazards),
         "unevaluable_gates": len(unevaluable),
-        "inert_detail": "; ".join(f"{k}: {', '.join(v)}" for k, v in sorted(inert.items())),
+        "unreadable_gates": len(unreadable),
+        "disarmed_detail": "; ".join(f"{k}: {', '.join(v)}" for k, v in sorted(disarmed.items())),
+        "redundant_detail": "; ".join(f"{k}: {', '.join(v)}" for k, v in sorted(redundant.items())),
         "hazard_detail": ", ".join(sorted(hazards)),
         "unevaluable_detail": ", ".join(sorted(unevaluable)),
+        "unreadable_detail": ", ".join(sorted(unreadable)),
     }
 
 
@@ -210,7 +289,7 @@ def _experiment(seed: int) -> dict:
         fn = getattr(mod, "_check", None)
         if fn is None:
             continue
-        entries.append((spec_id, fn, dict(r.get("metrics") or {}),
+        entries.append((spec_id, fn, None, dict(r.get("metrics") or {}),
                         dict(r.get("control_metrics") or {})))
     return _scan(entries)
 
@@ -224,29 +303,34 @@ def _module_stem(prefix: str) -> str:
 
 
 def _passing(ledger: Ledger):
-    raw = ledger.data.get("results", {})
-    items = raw.items() if isinstance(raw, dict) else ((r["spec_id"], r) for r in raw)
-    for spec_id, r in items:
-        status = r.get("status")
-        status = status.value if hasattr(status, "value") else status
-        if status == "PASS" and (r.get("metrics") or r.get("control_metrics")):
-            yield spec_id, r
+    for spec_id, r in sorted(ledger.results.items()):
+        if r.status is Status.PASS and (r.metrics or r.control_metrics):
+            yield spec_id, {"metrics": r.metrics, "control_metrics": r.control_metrics}
 
 
 def _control(seed: int) -> dict:
     ns: dict = {}
     exec(compile(CONTROL_SRC, "<pre-fix T0.09 gate>", "exec"), ns)
-    return _scan([("T0.09_prefix", ns["_check"], dict(CONTROL_M), dict(CONTROL_C))])
+    # Source passed explicitly — inspect cannot recover it for exec'd code, and
+    # a detector that reads nothing reports a clean bill of health.
+    return _scan([("T0.09_prefix", ns["_check"], CONTROL_SRC,
+                   dict(CONTROL_M), dict(CONTROL_C))])
 
 
 def _check(m: dict, c: dict) -> bool:
-    # The detectors must both come up clean on the real ladder...
-    ladder_clean = (m["inert_gate_keys"] == 0
+    # The detectors must come up clean on the real ladder...
+    ladder_clean = (m["disarmed_conjunct_keys"] == 0
                     and m["precedence_hazards"] == 0
-                    and m["unevaluable_gates"] == 0)
-    # ...and both must fire on the known-bad gate, or a clean scan means
-    # nothing. The pre-fix check has exactly three unreachable assertions.
-    control_caught = (c["inert_gate_keys"] >= 3 and c["precedence_hazards"] >= 1)
+                    and m["unevaluable_gates"] == 0
+                    and m["unreadable_gates"] == 0)
+    # ...and BOTH must fire on the known-bad gate, or a clean scan is
+    # indistinguishable from a scan that does not run. The pre-fix T0.09 check
+    # has exactly three unreachable assertions (ok, cuda_available,
+    # matmul_finite) and one precedence hazard.
+    control_caught = (c["disarmed_conjunct_keys"] >= 3
+                      and c["precedence_hazards"] >= 1
+                      and c["gates_scanned"] == 1
+                      and c["unreadable_gates"] == 0)
     # A scan of nothing is not a clean scan.
     scanned_enough = m["gates_scanned"] >= 30
     return ladder_clean and control_caught and scanned_enough
