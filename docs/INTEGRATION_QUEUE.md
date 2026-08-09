@@ -33,6 +33,37 @@ citations, arms, costs, and Spec(...) drafts in the house format. The output
 is a new research doc AND a new entry in this queue. The loop generates its
 own work; it never idles because nobody fed it.
 
+## GAP-FILL designed by the owner's question (2026-08-09) — register with the LC family
+
+**LC.07 — the capacity sweep, and it is a STANDING spec.** LC.06 enforces a
+ceiling; nothing finds the optimum, and nothing re-opens the question as
+experience grows. Draft:
+
+    Spec("LC.07", 2, "Capacity is swept, not assumed — and re-swept as he lives",
+         hypothesis="At a FIXED experience budget, life_gain over trainable "
+                    "parameters is an INVERTED U: too small underfits, too "
+                    "large starves on limited experience. The adopted size is "
+                    "the SMALLEST within 1 sigma of the peak.",
+         falsified_by="Monotonic in size (bigger always better) — then the "
+                      "experience budget, not capacity, is the binding "
+                      "constraint and the simplicity budget is arbitrary. Or "
+                      "flat — capacity does not matter here and the smallest "
+                      "ships by default.",
+         null_baseline="The current champion's size.",
+         metric="smallest_within_1sigma_of_peak", budget=Budget.CPU_LONG,
+         depends_on=["LC.04"], seeds=3,
+         control="Shuffled-experience arm at every size: the inverted U must "
+                 "FLATTEN — if big still beats small on scrambled data, the "
+                 "sweep is measuring capacity to memorise, not to live.",
+         kills="Any size claim made without a sweep, including our own "
+               "5M ceiling.",
+         notes="STANDING: re-run at each decade of accumulated lifetime "
+               "experience. The optimum MOVES — scaling laws say capacity "
+               "should track data, and Jack's data grows every life. A size "
+               "decided at 10 lives is wrong at 1,000. Measured precedents "
+               "that motivate it: 54K beat 57M here; a 4M PPO beat a 201M "
+               "DreamerV3 on Crafter.")
+
 ## Queue (top = next)
 
 | research doc | specs | status |
