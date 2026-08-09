@@ -669,3 +669,41 @@ affordability gate by design). After the verdict lands, journal it next to
 /tmp/mlp_probe.json (local MLP 54K params @704K steps: seed means ~584 etc.)
 and v4 transformer's 261, then update docs/DECISIONS.md D1 per the
 kill-criterion.
+
+2026-08-09T12:0xZ — ME.11 BAKEOFF FOUNDATION. Inherited two uncommitted
+research docs from the 11:07 iteration (MEMORY_RETRIEVAL_BAKEOFF.md, 1196
+lines; CURIOSITY_BAKEOFF.md pilot-2) and committed them, then built what the
+first makes possible. Pre-registered ME.11.0 + arms ME.11.A-F in
+registry_expansion.py (committed BEFORE running, per SYSTEM.md), wrote the
+shared fixture experiments/fixtures/paraphrase_eval.py, and ran ME.11.0:
+**PASS at 3 seeds, 6.3 s.** The number that matters: the shipped
+lexical-containment retriever scores **0.000 on 160 paraphrase cues** while
+the SAME code scores **1.000** on the planted-leak control — so the eval set
+discriminates and the leak detector is a detector. Oracle ceiling 1.000
+(re-parsed from stored text, independent of the generator's bookkeeping), 0
+content-word overlaps, hash stable across rebuilds, 52 positives/provenance
+stratum, 300 tune + 300 certify negatives at exactly 75 per family cell.
+ME.1's 0.8667 cued_recall stands; it was never about paraphrases.
+
+Two defects the build surfaced, both now guarded rather than fixed:
+(1) the eval quietly hollowed out — 240 cues, 113 headline, but per register
+R1 26 / R3 26 / **R4 1**, because a distractor of one target legitimately
+answers another target's superordinate question. Two generator designs were
+measured and rejected before "one target per object, distractors from other
+predicate classes" gave 40/40/40/40. `min_register_cues >= 30` is now a
+pre-registered assertion, so this cannot recur silently. (2) `_module_for`
+globs `me_11_*.py`, which matches `me_11_0_*.py` — the duplicate-implementation
+guard would have permanently disabled the parent spec ME.11 the moment its
+first arm existed. Fixed in run.py: a longer spec id claims its own files.
+Both written up in docs/LESSONS.md.
+
+NEXT ITERATION: ME.11.A is the cheapest next unit and needs no new packages —
+run the incumbent against the frozen fixture and quantify "honest and useless"
+(expect recall <=0.10, and report N1 held-out-target abstention SEPARATELY;
+the research doc predicts the 0.34 floor fails exactly there). Arms C/D/F need
+model2vec / onnxruntime / bm25s, which are NOT installed in
+/data/venvs/jackthelearner — check before planning them, and note the venv is
+outside the repo so installing is a box change, not a repo change. GPU: Kaggle
+spent ~6.3h of the fresh 30h on T2.02 (VOID, 07:30Z, transformer 2.46 sigma vs
+MLP 7.11 — the learning gate refused to arbitrate); D1 is with the owner in
+DECISIONS_NEEDED.md. No poller is running; nothing to reattach.

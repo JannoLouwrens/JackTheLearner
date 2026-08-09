@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 42 / 116 demonstrated
+## 43 / 123 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -334,6 +334,30 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Cued recall stays >=80% when cues are PARAPHRASES sharing no content words with the stored event (synonyms, circumlocutions, indirect questions), while fabricated-event abstention stays >=95% and every returned answer is byte-identical to a stored record.
       - _dies if:_ Paraphrase recall at the lexical baseline (i.e. the index did not help), OR abstention degrading as recall improves (the retriever bought recall with credulity), OR any returned string not present verbatim in the log.
       - _then delete:_ Any retriever that generates its answer instead of quoting one, however good its numbers.
+- [x] **ME.11.0** The paraphrase eval set is honest before anyone is scored
+      - _asserts:_ Every cue shares NO content word with its target beyond an explicitly allowed speaker name; the lexical-containment null therefore scores <=0.10 on the cue set; gold sets are derived from the generator's concept bindings, not hand labels; and the ORACLE ceiling (score events by their concept-tuple overlap with the cue's concept constraints, re-parsed from the STORED TEXT) is >=0.95, proving the questions are answerable at all.
+      - _dies if:_ Any cue-target content-word intersection outside the allowed set, OR lexical null >0.10 (the cues leaked surface form), OR oracle ceiling <0.95 (the cues are not answerable and every arm's score is a floor effect), OR the fixture hash differing across two builds at the same seed (the eval set is not frozen).
+      - _then delete:_ The entire bakeoff. An arm scored against an unvalidated eval set produces a number nobody may cite.
+- [ ] **ME.11.A** Arm A — lexical containment, the incumbent, as the null
+      - _asserts:_ The shipped EpisodicMemory retriever (content-word containment x recency x importance, abstain_below=0.34) scores <=0.10 paraphrase recall@1 while abstaining >=0.95 on adversarial negatives: honest and useless, quantified.
+      - _dies if:_ Paraphrase recall@1 >0.30 — in which case the premise of ME.11 is wrong, lexical matching does generalise, and no encoder is needed. This arm is written to be beatable; if it is not beaten the bakeoff is cancelled and the compute is saved.
+- [ ] **ME.11.B** Arm B — BM25S with stemming, real lexical SOTA
+      - _asserts:_ A properly implemented BM25 (bm25s, Snowball stemming, stopwords, k1=1.2 b=0.75) beats Arm A on paraphrase recall@1 while keeping lexical retrieval's free abstention (a query whose terms appear nowhere returns an EMPTY list, no threshold needed), at <=2 ms/query at 100k events.
+      - _dies if:_ No gain over Arm A — i.e. the incumbent's weakness is semantic, not an implementation defect, and stemming buys nothing. (Pilot says 0.125 vs 0.000: a real but tiny gain.)
+- [ ] **ME.11.C** Arm C — static embeddings (potion-base-8M), near-free semantics
+      - _asserts:_ A distilled STATIC embedding table (model2vec potion-base-8M, 256d, 7.56M params, 30 MB, no attention) with corpus mean-centering and a split-conformal threshold beats Arm B on paraphrase recall@1 by >=0.30 absolute while holding certified abstention >=0.95, at <=20 ms/query at 100k events.
+      - _dies if:_ Recall gain over Arm B <0.30, OR certified abstention <0.95 at the conformal threshold, OR the coverage and false-answer thresholds proving INFEASIBLE (tau_fpr > tau_cov) — semantics bought recall with credulity, which ME.11 explicitly forbids.
+- [ ] **ME.11.D** Arm D — a real sentence encoder (all-MiniLM-L6-v2, ONNX)
+      - _asserts:_ A 6-layer transformer bi-encoder (22.7M params, ONNX CPUExecutionProvider, mean pooling, corpus mean-centering, split-conformal threshold) beats Arm C on paraphrase recall@1, and the recall it buys is worth its ~13 ms query encode and 18-minute cold reindex at 100k.
+      - _dies if:_ Recall within one seed-std of Arm C — in which case the static table wins on cost and the transformer is deleted. This is the genuine falsification risk of the whole bakeoff and the pilot says it is close (0.625 vs 0.625 at 2,030 events).
+      - _then delete:_ If Arm D ties Arm C, every transformer encoder is removed from the memory path and the 90 MB of weights, the onnxruntime dependency and the 18-minute reindex go with it.
+- [ ] **ME.11.E** Arm E — weighted hybrid, calibrated not assumed
+      - _asserts:_ Fusing Arm B's lexical scores with the best dense arm's, using theoretical-min-max normalisation and a convex weight w fit on the CALIBRATION split, beats both parents on paraphrase recall@1 AND improves certified abstention, because lexical overlap is most informative exactly where the dense score is least trustworthy.
+      - _dies if:_ No gain over the better parent, OR — the specific risk — fusion DEGRADING recall, which unweighted RRF already did in the pilot (0.375 vs 0.625/0.750).
+- [ ] **ME.11.F** Arm F — cascade: cheap recall, cross-encoder rerank, cheap abstention
+      - _asserts:_ Arm C retrieves top-50 (pilot recall@10 was 1.000, so the answer is present), a 22.7M cross-encoder (ms-marco-MiniLM-L-6-v2, ONNX int8) reranks them, and the ABSTENTION decision stays with Arm C's calibrated first-stage score. This yields the highest paraphrase recall of any arm at a latency the live agent can still pay.
+      - _dies if:_ Recall gain over Arm C <0.10, OR mean latency at 100k events >250 ms, OR the reranker changing the abstention decision at all (it must not — see control).
+      - _then delete:_ If Arm F wins on recall but breaks the 250 ms budget, it is recorded as the OFFLINE-only retriever (reflection generation, ME.3) and Arm C or E ships in the live loop. Two answers is an acceptable outcome; a slow live loop is not.
 - [ ] **PG.6** The playground has eyes, and they resolve what the test needs
       - _asserts:_ An egocentric camera in the playground MJCF renders frames from which a linear probe recovers object RADIUS (R^2>=0.8) and BEARING (median error <=5 deg) for objects in FOV.
       - _dies if:_ Radius or bearing unrecoverable at the chosen resolution — then vision cannot carry HNS's identity->position channel and UB.9 would measure nothing.

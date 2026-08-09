@@ -300,7 +300,7 @@ EXPANSION: list[Spec] = [
          null_baseline="The current lexical-containment retriever, which "
                        "measured 0/4 on paraphrased cues.",
          metric="paraphrase_recall_at_fixed_abstention", budget=Budget.CPU,
-         depends_on=["ME.1"], seeds=3,
+         depends_on=["ME.1", "ME.11.0"], seeds=3,
          control="A DISTRACTOR store where the paraphrase's true target is "
                  "removed but topically-similar events remain: the retriever "
                  "must abstain rather than return the nearest neighbour. "
@@ -308,6 +308,217 @@ EXPANSION: list[Spec] = [
                  "abstention floor is the thing under test, not the recall.",
          kills="Any retriever that generates its answer instead of quoting "
                "one, however good its numbers."),
+
+    # ── ME.11 BAKEOFF: the arms that make ME.11 decidable ────────────────
+    # From docs/research/MEMORY_RETRIEVAL_BAKEOFF.md (agent, 2026-08-09), which
+    # measured three things on this box that reframe the problem:
+    #  (1) the incumbent retriever scores 0/8 on paraphrase cues -- ME.1's
+    #      0.8667 is real but is about cues that are WORD SUBSETS of their
+    #      target, exactly the case lexical containment aces;
+    #  (2) the 0.34 abstention floor has a ONE-BASIS-POINT margin (worst real
+    #      cue 0.000 vs best fabricated 0.333), so the threshold, not the
+    #      encoder, is the hard part;
+    #  (3) raw top-1 cosine separates real from fabricated better (AUC
+    #      0.975-1.000) than every per-query-normalised statistic the
+    #      2024-2026 literature recommends (0.54-0.80) -- on a diary corpus
+    #      the standard advice is inverted, so each arm MEASURES its
+    #      abstention statistic rather than inheriting one.
+    # One shared fixture (experiments/fixtures/paraphrase_eval.py) generates,
+    # per seed, a 5,000-event life, 240 cues in 4 registers with MECHANICALLY
+    # derived gold SETS, and 600 adversarial negatives in 4 families. Its hash
+    # goes into every arm's metrics so two arms cannot silently be scored on
+    # different data.
+    Spec("ME.11.0", 2, "The paraphrase eval set is honest before anyone is scored",
+         hypothesis="Every cue shares NO content word with its target beyond an "
+                    "explicitly allowed speaker name; the lexical-containment "
+                    "null therefore scores <=0.10 on the cue set; gold sets are "
+                    "derived from the generator's concept bindings, not hand "
+                    "labels; and the ORACLE ceiling (score events by their "
+                    "concept-tuple overlap with the cue's concept constraints, "
+                    "re-parsed from the STORED TEXT) is >=0.95, proving the "
+                    "questions are answerable at all.",
+         falsified_by="Any cue-target content-word intersection outside the "
+                      "allowed set, OR lexical null >0.10 (the cues leaked "
+                      "surface form), OR oracle ceiling <0.95 (the cues are "
+                      "not answerable and every arm's score is a floor effect), "
+                      "OR the fixture hash differing across two builds at the "
+                      "same seed (the eval set is not frozen).",
+         null_baseline="Lexical containment on the cue set — must be ~0 BY "
+                       "CONSTRUCTION. This spec exists to verify the "
+                       "construction, so its null is its own primary assertion.",
+         metric="eval_set_validity", budget=Budget.CPU, depends_on=["ME.1"],
+         seeds=3,
+         control="A DELIBERATELY LEAKY cue set (cues built by deleting words "
+                 "from the target rather than by synonym substitution) must "
+                 "make the lexical null score >=0.80. If the leak detector "
+                 "cannot detect a planted leak it is not a detector.",
+         kills="The entire bakeoff. An arm scored against an unvalidated eval "
+               "set produces a number nobody may cite.",
+         notes="Also asserts >=19 positives per provenance stratum (the "
+               "Mondrian conformal minimum at alpha=0.05) and >=300 tune + "
+               ">=300 certify negatives, family-balanced (the Clopper-Pearson "
+               "minimum to certify abstention >=0.95 at 95% confidence). "
+               "Freezes cue set, gold sets and negatives by hash."),
+
+    Spec("ME.11.A", 2, "Arm A — lexical containment, the incumbent, as the null",
+         hypothesis="The shipped EpisodicMemory retriever (content-word "
+                    "containment x recency x importance, abstain_below=0.34) "
+                    "scores <=0.10 paraphrase recall@1 while abstaining >=0.95 "
+                    "on adversarial negatives: honest and useless, quantified.",
+         falsified_by="Paraphrase recall@1 >0.30 — in which case the premise of "
+                      "ME.11 is wrong, lexical matching does generalise, and no "
+                      "encoder is needed. This arm is written to be beatable; if "
+                      "it is not beaten the bakeoff is cancelled and the compute "
+                      "is saved.",
+         null_baseline="Recency-only retrieval (ME.1's null), carried forward "
+                       "unchanged so all three specs share one floor.",
+         metric="paraphrase_recall_at_fixed_abstention", budget=Budget.CPU,
+         depends_on=["ME.11.0"], seeds=3,
+         control="On the ME.1-style TEMPLATED cue set this same code must still "
+                 "score >=0.80. An arm that fails its own home benchmark is "
+                 "mis-wired, and its 0.10 on paraphrases would mean nothing.",
+         notes="Measured pilot: 0/8 paraphrase cues, and only 1 of 8 cleared "
+               "the 0.34 floor. Report N1 (held-out-target) abstention "
+               "separately; that is where the floor is expected to fail."),
+
+    Spec("ME.11.B", 2, "Arm B — BM25S with stemming, real lexical SOTA",
+         hypothesis="A properly implemented BM25 (bm25s, Snowball stemming, "
+                    "stopwords, k1=1.2 b=0.75) beats Arm A on paraphrase "
+                    "recall@1 while keeping lexical retrieval's free abstention "
+                    "(a query whose terms appear nowhere returns an EMPTY list, "
+                    "no threshold needed), at <=2 ms/query at 100k events.",
+         falsified_by="No gain over Arm A — i.e. the incumbent's weakness is "
+                      "semantic, not an implementation defect, and stemming "
+                      "buys nothing. (Pilot says 0.125 vs 0.000: a real but "
+                      "tiny gain.)",
+         null_baseline="Arm A.",
+         metric="paraphrase_recall_at_fixed_abstention", budget=Budget.CPU,
+         depends_on=["ME.11.0"], seeds=3,
+         control="Shuffle the term-document matrix rows: recall must collapse "
+                 "to ~1/N. A BM25 that scores the same on a shuffled index is "
+                 "reading document length, not content.",
+         notes="Measured: build 100k = 4.24 s, query = 0.876 ms — 40x FASTER "
+               "than the incumbent's 35.4 ms linear scan, so whatever wins on "
+               "recall, this replaces the scan on efficiency grounds alone. "
+               "BM25S: Lu, arXiv:2407.03618."),
+
+    Spec("ME.11.C", 2, "Arm C — static embeddings (potion-base-8M), near-free semantics",
+         hypothesis="A distilled STATIC embedding table (model2vec potion-base-8M, "
+                    "256d, 7.56M params, 30 MB, no attention) with corpus "
+                    "mean-centering and a split-conformal threshold beats Arm B "
+                    "on paraphrase recall@1 by >=0.30 absolute while holding "
+                    "certified abstention >=0.95, at <=20 ms/query at 100k events.",
+         falsified_by="Recall gain over Arm B <0.30, OR certified abstention "
+                      "<0.95 at the conformal threshold, OR the coverage and "
+                      "false-answer thresholds proving INFEASIBLE (tau_fpr > "
+                      "tau_cov) — semantics bought recall with credulity, which "
+                      "ME.11 explicitly forbids.",
+         null_baseline="Arm B (BM25S). Also reported: potion-base-2M (64d) and "
+                       "static-retrieval-mrl-en-v1 truncated to 256d, as "
+                       "within-arm variants — the arm is 'static embeddings', "
+                       "not one checkpoint.",
+         metric="paraphrase_recall_at_fixed_abstention", budget=Budget.CPU,
+         depends_on=["ME.11.0"], seeds=3,
+         control="RANDOM-PROJECTION control: replace the learned embedding "
+                 "table with a random Gaussian matrix of identical shape, "
+                 "re-center, re-calibrate. Recall must collapse to ~chance. If "
+                 "a random table scores anywhere near the learned one, the arm "
+                 "is measuring sentence length or token count, not meaning.",
+         notes="Measured on this box: 0.123 ms/query encode, 15,258 docs/s, "
+               "100k index built in 6.6 s and held in 102 MB. Pilot p@1 0.625, "
+               "recall@10 1.000. Cheapest arm that could plausibly win, and its "
+               "6.6 s reindex (vs MiniLM's 18 min) is an operational argument "
+               "in its favour on a tenant-serving box. Model2Vec: Zenodo "
+               "10.5281/zenodo.17270888."),
+
+    Spec("ME.11.D", 2, "Arm D — a real sentence encoder (all-MiniLM-L6-v2, ONNX)",
+         hypothesis="A 6-layer transformer bi-encoder (22.7M params, ONNX "
+                    "CPUExecutionProvider, mean pooling, corpus mean-centering, "
+                    "split-conformal threshold) beats Arm C on paraphrase "
+                    "recall@1, and the recall it buys is worth its ~13 ms query "
+                    "encode and 18-minute cold reindex at 100k.",
+         falsified_by="Recall within one seed-std of Arm C — in which case the "
+                      "static table wins on cost and the transformer is deleted. "
+                      "This is the genuine falsification risk of the whole "
+                      "bakeoff and the pilot says it is close (0.625 vs 0.625 "
+                      "at 2,030 events).",
+         null_baseline="Arm C (static embeddings) — the question is not whether "
+                       "MiniLM beats lexical, it is whether it beats FREE "
+                       "semantics.",
+         metric="paraphrase_recall_at_fixed_abstention", budget=Budget.CPU_LONG,
+         depends_on=["ME.11.0"], seeds=3,
+         control="Same random-projection control as Arm C, plus a "
+                 "SHUFFLED-TOKEN control: encode each event with its word order "
+                 "randomised. If recall survives shuffling, the encoder is a "
+                 "bag of words with extra steps and Arm C dominates it by "
+                 "construction.",
+         kills="If Arm D ties Arm C, every transformer encoder is removed from "
+               "the memory path and the 90 MB of weights, the onnxruntime "
+               "dependency and the 18-minute reindex go with it.",
+         notes="Measured: 13.4 ms/query (fp32), 93 docs/s, 1073 s to index 100k. "
+               "int8-arm64 dynamic quantization made it SLOWER (17.8 ms) — this "
+               "Neoverse-N1 has asimddp but NOT i8mm; int8 is a disk win, not a "
+               "speed win. Report both. bge-small-en-v1.5 is a within-arm "
+               "variant WITH its query prefix, but note its compressed cosine "
+               "band (real 0.617 vs fabricated 0.595) makes it the worst arm "
+               "for abstention despite the best BEIR score."),
+
+    Spec("ME.11.E", 2, "Arm E — weighted hybrid, calibrated not assumed",
+         hypothesis="Fusing Arm B's lexical scores with the best dense arm's, "
+                    "using theoretical-min-max normalisation and a convex "
+                    "weight w fit on the CALIBRATION split, beats both parents "
+                    "on paraphrase recall@1 AND improves certified abstention, "
+                    "because lexical overlap is most informative exactly where "
+                    "the dense score is least trustworthy.",
+         falsified_by="No gain over the better parent, OR — the specific risk — "
+                      "fusion DEGRADING recall, which unweighted RRF already "
+                      "did in the pilot (0.375 vs 0.625/0.750).",
+         null_baseline="Unweighted RRF at k=60, the default everyone ships. It "
+                       "is the null precisely because it is the popular choice "
+                       "and it LOST here; beating it is the arm's minimum duty.",
+         metric="paraphrase_recall_at_fixed_abstention", budget=Budget.CPU,
+         depends_on=["ME.11.0"], seeds=3,
+         control="Fit w on the calibration split, then evaluate with w=0 and "
+                 "w=1 (each parent alone). If the fitted w lands within noise of "
+                 "0 or 1, the hybrid is one parent wearing a costume and must be "
+                 "reported as such rather than as a third method.",
+         notes="Min-max normalisation is FORBIDDEN here: it forces max=1 for "
+               "every query, destroying the absolute-similarity magnitude that "
+               "is our only working abstention signal. Use TMM (Bruch et al., "
+               "arXiv:2210.11934). The abstention decision is taken on the "
+               "DENSE score unless the fused score measurably separates better."),
+
+    Spec("ME.11.F", 2, "Arm F — cascade: cheap recall, cross-encoder rerank, cheap abstention",
+         hypothesis="Arm C retrieves top-50 (pilot recall@10 was 1.000, so the "
+                    "answer is present), a 22.7M cross-encoder (ms-marco-"
+                    "MiniLM-L-6-v2, ONNX int8) reranks them, and the ABSTENTION "
+                    "decision stays with Arm C's calibrated first-stage score. "
+                    "This yields the highest paraphrase recall of any arm at a "
+                    "latency the live agent can still pay.",
+         falsified_by="Recall gain over Arm C <0.10, OR mean latency at 100k "
+                      "events >250 ms, OR the reranker changing the abstention "
+                      "decision at all (it must not — see control).",
+         null_baseline="Arm C alone (the cascade's own first stage). The "
+                       "reranker must earn its 330 ms.",
+         metric="paraphrase_recall_at_fixed_abstention", budget=Budget.CPU_LONG,
+         depends_on=["ME.11.0"], seeds=3,
+         control="ABSTENTION MUST BE UNCHANGED by reranking. Measured pilot: "
+                 "the cross-encoder's own scores do NOT separate real from "
+                 "fabricated cues (real-min -9.06 BELOW fabricated-max -7.78), "
+                 "so any pipeline that lets the reranker decide whether to "
+                 "answer is buying recall with confabulation. The test asserts "
+                 "the abstention decision is byte-identical to Arm C's on every "
+                 "query, and FAILS the arm if it is not.",
+         kills="If Arm F wins on recall but breaks the 250 ms budget, it is "
+               "recorded as the OFFLINE-only retriever (reflection generation, "
+               "ME.3) and Arm C or E ships in the live loop. Two answers is an "
+               "acceptable outcome; a slow live loop is not.",
+         notes="Measured rerank of 20 candidates: 516 ms fp32, 329 ms int8. At "
+               "top-50 expect ~800 ms, so the arm as specified will likely "
+               "BREACH its own 250 ms gate and must be run at top-10 (~165 ms) "
+               "too. Report the recall/latency curve over k in {10,20,50}, not "
+               "one point. Pilot cascade p@1 was 0.875 — the only configuration "
+               "that cleared ME.11's 0.80 hypothesis."),
 
     # ── UNIFIED BRAIN: the binding evidence ladder ──────────────────────
     # From docs/research/UNIFIED_BRAIN_BAKEOFF.md (agent, 2026-08-09). Two

@@ -70,6 +70,62 @@
       "spec_id": "ME.10",
       "status": "PASS"
     },
+    "ME.11.0": {
+      "attempt": 2,
+      "commit": "0c1ff06",
+      "control_metrics": {
+        "leaky_null_recall": 1.0,
+        "leaky_null_recall_std": 0.0
+      },
+      "duration_s": 6.34,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "0c1ff06",
+          "message": "",
+          "ran_at": "2026-08-09T12:20:05",
+          "status": "PASS"
+        }
+      ],
+      "message": "",
+      "metrics": {
+        "ambiguous_cues": 12.0,
+        "ambiguous_cues_std": 0.0,
+        "events": 5000.0,
+        "events_std": 0.0,
+        "fixture_hash_seed_only": "9c915329f4755c3e",
+        "hash_stable": 1.0,
+        "hash_stable_std": 0.0,
+        "headline_cues": 160.0,
+        "headline_cues_std": 0.0,
+        "lexical_null_recall": 0.0,
+        "lexical_null_recall_std": 0.0,
+        "max_gold_size": 2.0,
+        "max_gold_size_std": 0.0,
+        "min_family_cell": 75.0,
+        "min_family_cell_std": 0.0,
+        "min_register_cues": 40.0,
+        "min_register_cues_std": 0.0,
+        "min_stratum_positives": 52.0,
+        "min_stratum_positives_std": 0.0,
+        "n_certify": 300.0,
+        "n_certify_std": 0.0,
+        "n_tune": 300.0,
+        "n_tune_std": 0.0,
+        "oracle_ceiling": 1.0,
+        "oracle_ceiling_std": 0.0,
+        "overlap_violations": 0.0,
+        "overlap_violations_std": 0.0
+      },
+      "ran_at": "2026-08-09T12:20:39",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "ME.11.0",
+      "status": "PASS"
+    },
     "ME.2": {
       "attempt": 1,
       "commit": "55e5bda",

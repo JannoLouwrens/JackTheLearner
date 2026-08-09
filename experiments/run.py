@@ -75,6 +75,15 @@ def _module_for(spec_id: str):
     # The underscore before the slug is load-bearing: "me_1*" would also match
     # me_10_*, so ME.1 and ME.10 would each see two implementations and raise.
     matches = sorted(TESTS_DIR.glob(f"{prefix}_*.py"))
+    # Hierarchical ids (ME.11 and its bakeoff arms ME.11.0/ME.11.A) defeat that
+    # underscore: `me_11_*` matches `me_11_0_eval_set_honest.py` too, so ME.11
+    # would report a duplicate implementation and refuse to run — a naming
+    # choice silently disabling a spec. A longer spec id owns its own files.
+    longer = [s.id.lower().replace(".", "_") for s in LADDER
+              if s.id != spec_id and s.id.lower().replace(".", "_").startswith(prefix + "_")]
+    if longer:
+        matches = [m for m in matches
+                   if not any(m.stem.startswith(p + "_") for p in longer)]
     if len(matches) > 1:
         raise RuntimeError(
             f"{spec_id} has {len(matches)} implementations: "

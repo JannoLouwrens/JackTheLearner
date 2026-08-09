@@ -190,3 +190,35 @@ declared arm plus one undeclared still hands victory to the undeclared one.
 
 **Rule:** use `None` for undeclared and refuse to proceed, never a neutral-
 looking default. A sentinel that is also a valid value cannot be detected.
+
+## An aggregate count hides a stratum the labelling logic has deleted
+
+ME.11's paraphrase eval has four cue registers, and cues whose gold set grows
+past `k_amb` are moved to an AMBIGUOUS partition and excluded from the headline
+recall. The generator built 240 cues and the totals looked fine — 113 headline
+cues, a healthy-looking eval. Per register it was R1 26, R3 26, **R4 1**: the
+superordinate register had been almost entirely deleted, not by a bug in the
+labelling but by the labelling working correctly on a corpus where distractors
+of one target legitimately answer another target's vaguer question. A
+four-register headline recall would have been a three-register average, and no
+arm would ever have been scored on the hardest cue type.
+
+**Rule:** whenever a test partitions, filters, or excludes rows, report the
+count per partition and *gate on the minimum*, never on the total. The check
+now asserts `min_register_cues >= 30`, so this is a red ledger entry rather
+than a silent narrowing. Generalises the PG.4 lesson (report per seed) to every
+axis a metric is averaged over.
+
+## A spec id that is a prefix of another spec id disables one of them
+
+`ME.11.0` and `ME.11.A` are arms of `ME.11`. The runner maps a spec to its
+implementation by globbing `me_11_*.py`, which matches `me_11_0_*.py` — so the
+moment the first arm existed, `run ME.11` would have raised "ME.11 has 2
+implementations" and refused to run the parent spec forever. The duplicate
+guard, added to catch two people implementing one spec, would have fired on a
+naming convention instead.
+
+**Rule:** a guard that refuses to proceed needs to be checked against the
+*naming scheme*, not only the case it was written for. `_module_for` now lets a
+longer spec id claim its own files. And when introducing a hierarchical id,
+resolve the parent AND the child before writing any test.
