@@ -1351,3 +1351,63 @@ NEXT ITERATION, in order:
    stale `impl_sha`; and the CPU lock is still held by a 0%-CPU T2.01 remote
    poll started before the lock split, so LC.02 was run via `m.run(Ledger())`
    directly, as the previous iteration did.
+
+## 2026-08-09 22:35 — LC.02 re-cert, a real DriveLayer bug found+reverted, PS.01 attempted and stood down
+
+Inherited an interleaved-commit situation, not a dead unit: the prior 22:07
+iteration hit max-turns mid-LC.02-build, but by the time I looked, an
+interactive owner session (pts/0, live the whole hour) had already swept its
+work into `56fbf38`/`1379a69` and kept committing PG.6 work underneath me
+throughout (`170cb52`, `5e2a2ef`). Checked ancestry (`ps -o ppid=`) before
+touching anything, per `ladder-loop-runs-concurrently` — confirmed a
+genuinely separate live writer by file mtimes, not my own process.
+
+**1. LC.02 was STALE** (`run status` flagged it: recorded `impl_sha` didn't
+match the committed `lc_02_throughput_floor.py`). Re-ran directly via
+`m.run(Ledger())` — CPU lock still held by the same 0%-CPU T2.01 remote poll
+noted last iteration. Reproduced cleanly: null 10.05 sim-s/real-s, all five
+committed train_ratios unchanged. Committed as `75d8424`.
+
+**2. Attempted PS.01, stood down honestly rather than force it.** Built
+calibration probes for `J0` (95th %ile impulse under "normal" activity) and
+`alpha` (calibrated so a platform fall costs ~0.15 integrity). Found the
+`§2.2` formulation — `J_t = sum(||cfrc_ext||) * dt` over a whole 0.2s decision
+— measures ACCUMULATED CONTACT LOAD, not peak impact force. With no
+locomotion controller anywhere in this repo, every rollout collapses within
+~1s regardless of policy (PG.8 already established this: "he falls over"),
+so "normal walking contact" and "a fall" are not distinguishable regimes —
+both are dominated by the same lying-on-the-ground sustained-contact signal,
+and my probes showed platform-fall peak J (15-27) landing INSIDE the range of
+ordinary ground-collapse J (7-49), not clearly above it. Forcing a threshold
+through this would have been exactly the contrived-fixture failure mode
+`LESSONS.md` warns about. Not implemented; PS.01 stays `NOT_RUN`, `depends_on`
+`PG.8` still PASS so it remains immediately runnable.
+
+**3. Found and handled a real bug along the way, carefully.** `w0.py`'s
+`step()` calls `mj_rnePostConstraint` once per decision, after the substep
+loop — so `drives.substep()`'s per-substep impulse read sees the PREVIOUS
+decision's `cfrc_ext` 39 times out of 40 (same class of bug as PG.8's, a few
+hours later, different consumer). Fixed it directly first, which is the
+CORRECT semantics — then it got swept into the owner's PG.6 commit before I
+could verify it, and a background re-run of LC.02 came back **FAIL**: 4 of 5
+arms dropped from clearing 0.25 to clearing nothing at any ratio, `null_T`
+10.09 -> 8.69-9.15. Reverted in a new commit (`1a61427`) rather than amend the
+owner's commit; re-verified LC.02 PASS again (`null_T` 10.10) before landing.
+`LESSONS.md` has the full writeup ("The same instrumentation bug can recur
+inside a single day"). **Lesson for next time carrying `j0`/`alpha` work: any
+fix to a throughput-critical shared kernel must be checked against every gate
+that kernel feeds before it's trusted, not just against the bug it fixes.**
+
+**NEXT ITERATION on PS.01:** the impulse formulation needs rethinking before
+implementation, not just more probing. Options worth a bakeoff rather than an
+argument: (a) redefine `J_t` as the PEAK per-substep `||cfrc_ext||` in the
+decision rather than the time-integral, which would cleanly separate a sharp
+landing spike from sustained resting load; (b) restrict the "normal contact"
+sampling window to decisions where `upright_cos` is still high (i.e. before
+any collapse has happened), even though that window is short without a
+balance controller; (c) escalate to the owner whether `§2.2`'s formula itself
+needs amending now that it's been run against a body with no walking policy,
+the same "measured, not derived" correction LC.02 made to `§5.1`'s throughput
+floor. Do not re-run my exact probes verbatim — they're gone (scratch, not
+committed) — but the finding (accumulated-impulse conflates rest with impact
+when nothing walks) is the thing to design around.
