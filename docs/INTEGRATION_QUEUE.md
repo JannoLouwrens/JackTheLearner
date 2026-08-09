@@ -20,6 +20,16 @@
 5. MARK the entry: status, commit hash, date. Never delete entries — this
    file is the provenance chain from research to ledger.
 
+## WHEN THE QUEUE IS EMPTY — the loop's research step is YOURS
+
+An empty queue is not "done"; it means the frontier has no design yet. The
+correct iteration is then: find the next stage on GOAL.md's path (via
+DIRECTION_AUDIT's sequencing) whose question has no docs/research/ document,
+and RESEARCH it — dispatch research agents or write the survey yourself, with
+citations, arms, costs, and Spec(...) drafts in the house format. The output
+is a new research doc AND a new entry in this queue. The loop generates its
+own work; it never idles because nobody fed it.
+
 ## Queue (top = next)
 
 | research doc | specs | status |
