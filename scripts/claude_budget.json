@@ -1,0 +1,5 @@
+{
+  "weekly_output_token_ceiling": 40000000,
+  "pause_at_pct": 90,
+  "_comment": "Set the ceiling from OBSERVED usage. pause_at_pct is where the autonomous organs stop; the owner is never blocked."
+}

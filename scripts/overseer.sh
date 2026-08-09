@@ -34,6 +34,17 @@ flock -n 9 || { say "previous audit still running — skipping"; exit 0; }
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt "$MIN_FREE_GB" ] && { say "ABORT: ${FREE_GB}GB free"; exit 0; }
 
+# CLAUDE BUDGET GATE. Credits were the one binding resource with no meter
+# (META_AUDIT 2026-08-09, four exhaustion events in a day). scripts/
+# claude_usage.py sums this machine's own token consumption; the organs stop
+# at the owner-set threshold so the OWNER always has headroom left. The owner
+# is never blocked by this — only the autonomous organs are.
+PCT=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --pct 2>/dev/null || echo 0)
+LIMIT=$(/data/venvs/jackthelearner/bin/python -c "import json,sys;print(json.load(open('$REPO/scripts/claude_budget.json'))['pause_at_pct'])" 2>/dev/null || echo 90)
+if awk -v p="$PCT" -v l="$LIMIT" 'BEGIN{exit !(p>=l)}'; then
+  say "ABORT: Claude usage ${PCT}% of ceiling (>= ${LIMIT}%) — leaving headroom for the owner"
+  exit 0
+fi
 cd "$REPO" || exit 0
 MODEL="${JACK_OVERSEER_MODEL:-opus}"
 say "audit start — model ${MODEL}, $(git rev-parse --short HEAD)"
