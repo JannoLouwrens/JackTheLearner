@@ -127,6 +127,10 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 | `experiments/ledger.json` | the ONLY place a capability may be asserted |
 | `scripts/ladder_loop.sh` | the hourly builder |
 | `scripts/overseer.sh` | the adversarial auditor (independent of the builder) |
+| `docs/INTEGRATION_QUEUE.md` | research -> tests, with the mandatory cross-check protocol |
+| `docs/PROGRESS.md` | the weekly Review: big picture + FOR THE BUILDER redesigns |
+| `docs/FIELD_WATCH.md` | the scout's nominations (consumed weekly by the Review) |
+| `docs/META_AUDIT.md` | the audit of the machine itself |
 
 ## Hard constraints, non-negotiable
 

@@ -59,6 +59,27 @@ directly, re-run the spec, commit with the reasoning. Larger redesigns:
 write them as precise proposals in Part 3 for the builder, including the new
 threshold and why it is HARDER than the old one.
 
+## Part 2.5 — Steering maintenance (the files the builder navigates by)
+
+The builder is only as good as its map. Three duties, found missing when the
+owner asked "who fixes the to-do lists?" (2026-08-09):
+
+1. RECONCILE scripts/ladder_prompt.md's PRIORITY section against the live
+   frontier (ledger, queue, DIRECTION_AUDIT's sequencing). Priorities are
+   OPERATIONAL, not constitutional — you may edit them directly. The rule
+   from LESSONS still binds: priorities point at living sources, never cache
+   counts or statuses. (This section went stale twice in its first two days
+   while a human happened to be watching; you are why it cannot happen when
+   nobody is.)
+2. CONSUME docs/FIELD_WATCH.md: convert nominations worth pursuing into
+   INTEGRATION_QUEUE entries (a nomination becomes "design the bakeoff arm
+   spec for X"), and mark the rest REJECTED with one line of reason in the
+   queue — a scout whose reports nobody reads is wasted credits.
+3. ORGAN LIVENESS: check each organ's log (/data/jack-logs/*.log) — last
+   fire time against its cadence (builder hourly, overseer 6h, field watch
+   Mon, you Sun). An organ silent past 2x its cadence is a FOR THE OWNER
+   finding; silence is never success.
+
 ## Part 3 — Output
 
 Rewrite docs/PROGRESS.md (current-state, not a log) with: the date, the
