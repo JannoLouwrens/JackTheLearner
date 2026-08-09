@@ -96,6 +96,14 @@ Fixing one bug is maintenance. Making that bug unrepeatable is building.
 
 ## Hard constraints, non-negotiable
 
+- **No learning core without unison.** Any candidate learning core — however it
+  scores on task metrics — is INADMISSIBLE unless it accepts every modality
+  into one shared representation, and its adoption is VOID until the standing
+  unison gates (the UB ablation matrix, placebo modality, binding test) pass
+  under it. A core that wins the task but fails binding has not won; it has
+  changed the subject. "All senses in one brain, trained together" is
+  constitutional (GOAL.md), and constitutional means: no bakeoff can trade it
+  away for a better score.
 - **Free compute only.** 4 shared ARM CPU cores here; Kaggle 30 h/week (resets
   Sunday); Colab T4, elastic. Never propose or buy paid compute.
 - **This box serves paying tenants.** Never `systemctl restart docker` or any
