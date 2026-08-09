@@ -25,7 +25,7 @@
 | research doc | specs | status |
 |---|---|---|
 | LEARNING_CORE.md | LC.00–LC.06 (+PS.01 pairing — register together) | PENDING |
-| NEEDS_AND_DEATH.md | NE.00–NE.09 | PENDING |
+| NEEDS_AND_DEATH.md | NE.00–NE.09 | PENDING — note: doc §9 gates NE.01's constants on §1.2 citation verification (Borbély ratio is load-bearing and open); register all, but do not let NE.01 fix constants until a citation pass closes §1.2 |
 | PURPOSE_AND_SCAFFOLDING.md | PS.* | BLOCKED-ON-CORRECTION: PS.00(c)+PS.02 disproven by NEEDS_AND_DEATH (drive-farming cannot exist; exact VI + K&G eLife 2014 theorem). Correct, then register. |
 | CURIOSITY_BAKEOFF.md | LT.01–LT.09 | PENDING |
 | D1_CONTROL_ARCHITECTURE.md | D1.0, T2.21 | PENDING |
