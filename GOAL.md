@@ -47,6 +47,35 @@ diary, the skill survives; revert the weights, the diary survives).
 ship; a small trained core; capabilities added without retraining the world;
 components that must EARN their parameters via ablation or be deleted.
 
+## The world is the teacher (owner directive, 2026-08-09)
+
+**Jack has the needs of a human.** He must eat, drink, sleep, stay warm — too
+cold kills him, too hot kills him — and he needs company. Not as decoration:
+the needs ARE the curriculum. Cold nights teach shelter-building the way no
+scripted lesson can. In the owner's words: *"having the needs of a human will
+have him learn the most efficient ways... and will allow users to talk to him
+while he is there doing stuff and he will be relatable — I want to watch him
+figure out the world himself."*
+
+**He lives, he dies, he remembers.** The destination world is as realistic a
+survival simulation as buildable — the jungle. He gets thrown in, figures life
+out or doesn't, dies, and tries again — and what survives death is the point:
+the diary and the skills persist across lives (the ME family already proves
+the substrate). Life N+1 must be measurably better than life N *because of*
+what life N recorded. Death is not a reset; it is a page turn.
+
+**The system is the product, not the model.** In the owner's words: *"at the
+end of the day it won't be the most complex model that Jack is. It will be
+just a system that can learn and get input from every single sense."* We build
+tests, throw him in, get results, build bigger tests, throw him in again — and
+the final test in that sequence is the real world. The 57M-vs-54K lesson is
+already on the ledger: complexity must earn its place or lose it.
+
+**The staging is unchanged and deliberate.** First prove he can see, talk,
+walk, and learn in every way (the ladder as it stands). Only then does he go
+into the survival world with everything at once — and the testing never stops
+there; it moves in with him.
+
 ## The path (each stage gated by the ladder — see CHECKLIST.md)
 
 1. **Harness + primitives** (Tiers 0–1, DONE): measurement works, every part can learn.
