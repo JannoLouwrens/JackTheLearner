@@ -489,3 +489,10 @@ decision rest on our evidence rather than someone else's papers; (b) formally
 retire it, recording in DECISIONS_RESOLVED that this one decision was made by
 argument, so the exception is visible rather than silent. Either is defensible;
 leaving it NOT_RUN and unexplained is not.
+
+**DECIDED 2026-08-09: (a) RUN IT.** Owner: "schedule the run after T2.01."
+The founding premise gets tested on our own numbers, as DECISIONS.md promised.
+Note this REVERSES DIRECTION_AUDIT's "do not start" recommendation — the audit's
+reasoning was sound but it was an argument, and law 3 outranks it. Queued; the
+correction to the audit is recorded here so the two documents no longer
+contradict each other.

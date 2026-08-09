@@ -135,6 +135,24 @@ the motor system for movement. Muscles do not choose the destination.
                "rule extended from memory to speech. The LLM-swap arm doubles "
                "as a live test of the swappable-LLM decree.")
 
+## SCHEDULED BY THE OWNER — T5.01, the founding thesis test (2026-08-09)
+
+"Schedule the run after T2.01." The physics-pretraining premise was retired by
+argument; law 3 says bakeoff. It now runs.
+
+STATE: T5.01 is **NOT IMPLEMENTED** — scheduling it is therefore two jobs:
+  1. IMPLEMENT experiments/tests/t5_01_*.py (Phase-0 SymPy physics pretraining
+     vs identical architecture without it, downstream control sample-efficiency,
+     5 seeds as declared — do NOT reduce seeds to fit budget; law 4).
+  2. RUN once T2.01 (its dependency) is PASSING.
+PRECONDITION RISK, state it in the ledger if it bites: if T2.01 does not PASS,
+T5.01 stays BLOCKED and this schedule cannot execute — say so plainly rather
+than silently skipping.
+BUDGET: ~17 Kaggle hours remain this week after T2.01's ~6.5. T5.01 is 5 seeds
+at gpu<8h. If the implementation's honest estimate exceeds the remaining
+budget, SPLIT ACROSS WEEKS (Kaggle resets Sunday) rather than shrinking the
+experiment.
+
 ## Queue (top = next)
 
 | research doc | specs | status |

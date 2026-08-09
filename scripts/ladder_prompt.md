@@ -54,7 +54,13 @@ and T2.02 are VOID (the T0.14 dropout + obs-dim invalidation), and any text
 calling T2.01's plateau "the architecture verdict" is stale and wrong.
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
-0. STAGE 0.1 FIRST — PROCESS docs/INTEGRATION_QUEUE.md, top entry down,
+0a. OWNER-SCHEDULED: implement T5.01 (the founding physics-thesis test) and
+   run it as soon as T2.01 PASSES. See INTEGRATION_QUEUE's top entry. This
+   REVERSES DIRECTION_AUDIT's "do not start T5.01" — the owner invoked law 3
+   (decisions by bakeoff, never argument) and the audit's reasoning, though
+   sound, was an argument. Do not reduce its 5 seeds to fit the GPU budget;
+   split across weeks instead.
+0. STAGE 0.1 — PROCESS docs/INTEGRATION_QUEUE.md, top entry down,
    following its 5-step protocol EXACTLY (cross-check for refutations across
    the other research docs BEFORE registering — a disproven spec nearly
    entered the ladder on 2026-08-09; the protocol is that near-miss made
