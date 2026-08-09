@@ -80,7 +80,50 @@ SYSTEM.md, which outrank this file.
 | Voice (vocalisation) | **VACANT — he cannot make a sound** | — | needs a spec | prerequisite for emergent language + GEN.02 |
 | Language acquisition | LLM-as-parent (speaks to him; he learns by hearing) | **BY DECREE** (owner 2026-08-09) | LG family + LG.00 anti-puppet | pure from-scratch; critical-period |
 
-### OPEN AND CONTESTED: are the PERCEPTION encoders frozen? (2026-08-09)
+### DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK.
+
+Owner: *"if there's already published I decide on using plastic only and never
+frozen in our Jack."* Everything INSIDE Jack learns. Nothing inside him is
+welded shut.
+
+SCOPE, precisely: this governs components INSIDE Jack — his encoders, his
+core, his fusion. It does NOT touch the parent LLM, which by the earlier
+decree is not inside him at all; it lives in his world and speaks to him.
+A frozen thing in his environment is not a frozen part of him.
+
+THE EVIDENCE BEHIND IT (not in dispute): reshaping gain — does training with
+sense B improve sense A's own representation? — is identically ZERO for a
+frozen tower, by arithmetic. GOAL.md's capability target marks any choice that
+forecloses a class of learning as suspect by definition. Published support:
+OpenVLA 47.0% frozen vs 69.7% fine-tuned; M3L's vision+touch training improved
+VISION-ONLY policies at test time; Kleinman/Achille/Soatto (CVPR 2023) —
+separately pretrained backbones may fail to encode synergistic information,
+and fail SILENTLY.
+
+THE STRONGEST COUNTERARGUMENT, recorded because directives enter with eyes
+open (SYSTEM.md):
+  1. The research's OWN top pick was frozen-base + adapters + plastic fusion.
+     Fully pure ranked SECOND. This decree overrules the #1 recommendation.
+  2. Pure forfeits inherited visual knowledge — a real head start. Expect a
+     longer, more data-hungry childhood for his eyes.
+  3. It eliminates the PL.* bakeoff rather than winning it: of four arms
+     (frozen / frozen+adapters / critical-period / pure), three involve
+     freezing at some stage. Only pure survives, so there is nothing left to
+     arbitrate. Two cheap CPU tests could have decided this in days; the owner
+     chose to decide it on published evidence instead. That is his call and it
+     is legitimate — but it is a DECREE, not a measurement, and this file says
+     so.
+  4. RE-OPEN TRIGGER, pre-registered so the decree is falsifiable rather than
+     permanent: if a from-scratch encoder cannot hit the PL.00 throughput
+     floor on this hardware, or if visual competence has not cleared its null
+     after the budget PL.00 declares, the decision returns to the owner with
+     that number attached.
+
+WHAT STILL RUNS: PL.00 (throughput — now a feasibility check on the pure
+encoder rather than a comparison) and PL.02 (reshaping gain — now measuring
+what the plastic path BUYS, not whether to take it). Both cheap, both CPU.
+
+### Superseded context: the contested phase (kept for the record)
 
 **NOT DECIDED.** docs/research/FROZEN_VS_PLASTIC.md recommends against frozen
 and the reasoning is arithmetic rather than preference: the RESHAPING GAIN —

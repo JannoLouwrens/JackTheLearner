@@ -73,7 +73,16 @@ learning from it are separate stores with separate failure modes, and both are
 ledger-tested: ME.9 (attributed recall of heard/said/did) and ME.10 (wipe the
 diary, the skill survives; revert the weights, the diary survives).
 
-**Flexible above all.** Frozen pretrained trunks that swap as better models
+**PLASTIC ONLY — nothing inside him is frozen (owner decree, 2026-08-09).**
+Every component inside Jack learns: his encoders, his core, his fusion. The
+reason is arithmetic, not taste — a frozen tower's reshaping gain is
+identically zero, so it forecloses a class of learning, which the capability
+target above marks suspect by definition. This does NOT touch the parent LLM:
+that is not inside him, it lives in his world and speaks to him. A frozen
+thing in his environment is not a frozen part of him. Counterargument, cost
+and re-open trigger recorded in docs/CHAMPIONS.md.
+
+**Flexible above all.** Components that swap as better ones
 ship; a small trained core; capabilities added without retraining the world;
 components that must EARN their parameters via ablation or be deleted.
 
