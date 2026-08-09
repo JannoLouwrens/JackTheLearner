@@ -196,3 +196,49 @@ RISK IF IGNORED: at 0 bytes free, WorldTwin's writes fail, and Jack's ladder
 also stops — the loop already refuses to start below 3 GB free, which is the
 only reason it has not been silently corrupting runs. Note the loop's guard
 checks / (73% used), NOT /data, so it would not have caught this.
+
+### D1 — CORRECTION 2026-08-09, evidence is confounded. DO NOT DECIDE ON IT.
+
+The section above says "three independent runs at matched env-steps" show the
+57M trunk plateauing. That claim is not safe, and the reason was found by
+measurement, not argument (docs/research/D1_CONTROL_ARCHITECTURE.md, verified
+independently before writing this):
+
+1. DROPOUT WAS LIVE THROUGHOUT. TrainingPipeline never calls .eval()/.train().
+   36 nn.Dropout modules at p=0.1 stayed active during rollout, during the PPO
+   update, and during "deterministic" evaluation. Measured on the real
+   pipeline: two forwards of the SAME state differ in the policy mean by 42%
+   of the mean's own magnitude (66% for the value). In eval mode the same
+   double-forward is bit-identical. The PPO importance ratio at ZERO policy
+   change puts ~20% of samples outside clip_range=0.3 — the update was
+   clipping against its own noise.
+   SB3's MLP has no dropout and disables training mode for rollouts. So the
+   two arms of T2.02 were not the same experiment: one was evaluated with 42%
+   action noise injected, the other with none. That is not a fair architecture
+   comparison, and the trunk's 261 vs the MLP's 531 cannot be attributed to
+   architecture until it is re-run.
+
+2. "MATCHED ENV-STEPS" WAS NOT MATCHED OPTIMISATION. 6,240 vs 99,840 optimiser
+   steps — 16x fewer, on a model 457x larger. The ppo_minibatch 64->512
+   throughput fix preserved sample-passes and silently divided gradient steps
+   by eight. My own change, and I did not notice the consequence.
+
+3. THE PLATEAU IS NOT IN THE LEDGER. curve_seed0 stores [:8] — iterations 1-21
+   of 172. I described the curve as plateaued; the stored evidence does not
+   cover the region where that would be visible.
+
+4. obs projection pads 28 zeros (mujoco_obs_dim=376 is the Humanoid-v4 value;
+   v5 emits 348, confirmed), and JointTokenizer slices a dense LayerNormed
+   projection into "17 joint tokens" that contain no joints.
+
+Also demoted, having been checked: value/policy gradient interference
+(cos(grad_pg, grad_vf) = 0.102, vf/pg = 0.052 on the trunk) and gradient-norm
+clipping (binds, but Adam is scale-invariant). The two intuitive culprits are
+NOT the cause.
+
+WHAT THIS CHANGES: option C ("keep training end-to-end") was listed as "not
+supported by evidence". It is UNTESTED, not refuted. Option A (freeze + small
+head) is still the recommendation, but it must be EARNED by the bakeoff
+(T2.21, ~6.3 GPU-h for the Week-32 half), not adopted by argument. Nothing
+about D1 should be decided until the dropout fix lands and the comparison is
+re-run.

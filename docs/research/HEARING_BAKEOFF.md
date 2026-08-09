@@ -98,20 +98,51 @@ GFLOP/s peak**, and real transformer inference lands well under that.
 Two constraints that bound everything else, and which no survey paper will tell
 you:
 
-- **`/data` is 100 % full — 725 MB free.** `HF_HOME=/data/caches/huggingface`
-  (`scripts/ladder_loop.sh:81`) already holds 6.0 GB. Every model weight in this
-  document has to fit in **725 MB total**, or displace something. This kills
-  several otherwise-reasonable arms outright and it is the single hardest
-  constraint on hearing. → **escalate to `docs/DECISIONS_NEEDED.md`**: either
-  free `/data`, or move `HF_HOME` to `/` (9.6 GB free, but `ladder_loop.sh`
-  refuses to start below 3 GB there, so the working headroom is ~6 GB).
+- **`/data` is nearly full, and how full is not a constant.** Two readings
+  forty minutes apart on 2026-08-09: **725 MB free (100 %)** and then **4.8 GB
+  free (96 %)**. `HF_HOME=/data/caches/huggingface` (`scripts/ladder_loop.sh:81`)
+  holds 8 GB; `/data/history` holds 73 GB and belongs to other tenants. So the
+  budget is not a number to plan against, it is a **shared, volatile resource
+  that can drop to ~700 MB without warning.** Any spec that downloads weights
+  must (i) size for the worst observed case, (ii) verify free space before
+  fetching, and (iii) not assume the cache survives to the next run. This is a
+  *stronger* constraint than a fixed small quota, because a mid-download ENOSPC
+  is how you get a corrupted cache rather than a clean failure. → **escalate to
+  `docs/DECISIONS_NEEDED.md`**: pin a hearing model cache with a hard size cap,
+  or move `HF_HOME` to `/` (6.2 GB free, and `ladder_loop.sh` refuses to start
+  below 3 GB there).
 - **Nothing audio-related is installed.** `/data/venvs/jackthelearner` has
   torch 2.8.0+cpu, transformers 4.57.6, numpy, scipy, mujoco. It has **no**
   `faster_whisper`, `ctranslate2`, `onnxruntime`, `torchaudio`, `soundfile`,
   `librosa`, `sklearn`, `speechbrain`. Every arm below carries an install cost
-  as well as a runtime cost, and `onnxruntime` + `ctranslate2` aarch64 wheel
-  availability is a **go/no-go** that must be checked before a spec is written,
-  not after it fails.
+  as well as a runtime cost, and aarch64 wheel availability is a **go/no-go**
+  that must be checked before a spec is written, not after it fails. It is
+  checked below.
+
+#### Installability go/no-go, queried against PyPI 2026-08-09
+
+The venv is **Python 3.9.25 / aarch64 / glibc 2.34**. Python 3.9 is old enough
+that upstream projects are actively dropping it, and this silently deletes arms:
+
+| package | cp39-aarch64 wheel? | size | verdict |
+|---|---|---|---|
+| `ctranslate2` 4.8.1 | **yes** (`manylinux_2_27_aarch64`) | 16.5 MB | **GO** — faster-whisper's backend runs here |
+| `faster-whisper` 1.2.1 | pure Python | 1.1 MB | **GO** |
+| `onnxruntime` **1.28.0** (latest) | **NO** — cp311+ only | — | **must pin** |
+| `onnxruntime` **1.19.2** | yes | 11.5 MB | **GO, pinned** |
+| `vosk` 0.3.45 | yes (`py3-none-manylinux2014_aarch64`) | — | **GO** |
+| `silero-vad`, `speechbrain`, `resemblyzer` | pure-Python sdists | small | **GO** (deps permitting) |
+| `librosa` 0.11 | sdist; needs `numba`/`llvmlite` | — | **NO-GO on 3.9** — current `numba`/`llvmlite` publish no cp39 wheel at all |
+
+Two consequences that change how the specs must be written:
+
+- **Pin `onnxruntime<=1.19.2`.** Any spec that reaches for the WeSpeaker-ONNX
+  embedder, or silero-vad's ONNX path, on the unpinned latest will fail to
+  install — and it will fail *at implementation time*, wasting a ladder slot.
+- **Do not depend on `librosa`.** Every measurement in this document used
+  `torch.stft` + a mel matrix (§1.0) and `scipy`. That is deliberate and it must
+  stay that way: `librosa` would drag in a `numba` that does not exist for this
+  interpreter. Feature extraction stays in torch.
 
 #### Measured: what audio already costs us
 
@@ -252,9 +283,108 @@ Four design commitments, each of which becomes a gate in §3.2:
 
 ### 1.3 Sound events — job (c), and the null hypothesis that it is not needed
 
-*(pending: the audio-tower survey agent's mAP / params / license table.)*
+#### 1.3.1 The candidates, ranked honestly
 
-**The null hypothesis, stated before any number arrives: no pretrained AudioSet
+Citation hygiene follows `UNIFIED_BRAIN_BAKEOFF.md`: **[V]** = the number was
+fetched from the paper, repo or HF API during this research pass; **[e]** =
+estimated or extrapolated, with the basis named.
+
+| model | AudioSet mAP | params | disk | tokens / 10 s | license (code / weights) |
+|---|---|---|---|---|---|
+| YAMNet | 0.306 [V] | 3.7 M | **4.1 MB** [V] | 10 patches | Apache-2.0 / Apache-2.0 |
+| **EfficientAT `mn04_as`** | 0.432 [V] | **0.98 M** | **4.1 MB** [V] | 1000 fr | MIT / MIT |
+| EfficientAT `mn10_as` | 0.471 [V] | 4.88 M | 19.7 MB [V] | 1000 fr | MIT / MIT |
+| **CED-tiny** | **0.481** [V] | **5.5 M** | **22.0 MB** [V] | **248** | Apache-2.0 / Apache-2.0 |
+| PANNs CNN14 | 0.431 [V] | 80.8 M | 327 MB [V] | 1000 fr | MIT / **CC-BY-4.0** |
+| AST | 0.459 [V] | 87 M | 346 MB [V] | 1188–1212 | **BSD-3** / BSD-3 |
+| PaSST-S | 0.476 [V] | ~86 M | ~330 MB | ~1200 | Apache-2.0 |
+| BEATs iter3+ | 0.486 [V] | 90 M | ~350 MB | 496 | MIT repo / **weights unlicensed** |
+| LAION-CLAP | — (zero-shot) | 153.6 M | **615 MB** [V] | — | CC0 / Apache-2.0 |
+| MS-CLAP 2023 | — (zero-shot) | ~172 M | 690 MB [V] | — | MIT / MS-PL |
+
+Two corrections to the brief's premise, both worth having: **CED-tiny and
+`mn04_as` dominate YAMNet on every axis** (CED-tiny: +0.175 mAP for 1.6× the
+size, and 5× fewer tokens than AST), and **BEATs' checkpoints are not covered by
+the repo's MIT licence** — they live outside the source tree.
+
+CPU cost, MEASURED where it exists. The closest published analogue to our
+hardware is a Raspberry Pi 4B (4× Cortex-A72); our Neoverse-N1 is meaningfully
+faster per core, so these are conservative:
+
+```
+mn05_as / mn10_as, ONNX      < 0.25 s per 10 s clip   Pi 4B      [V] arXiv 2509.14049
+PANNs CNN6 / CNN9 / CNN13     ~1 s   per 10 s clip    Pi 4B      [V] same
+ConvNeXt / Wavegram / ResNet54 2-3 s per 10 s clip    Pi 4B      [V] same
+PANNs CNN14, LiteRT           220 ms (99 ms of which is the log-mel front end!)
+                                                      Pixel 8a   [V]
+AST / PaSST / BEATs on CPU    no published wall-clock anywhere              [e]
+CLAP encoders on CPU          no published wall-clock anywhere              [e]
+```
+
+Note the 45 % figure: **the log-mel front end was 99 ms of PANNs' 220 ms.** In
+the SELD literature it reaches 43.4 % of the real-time budget on a Pi 3. Feature
+extraction is a first-class cost, not a rounding error — which is consistent
+with our own measurement in §1.0 (mel 4.7 ms vs conv stem 6.2 ms for a 1 s
+window: the front end is *comparable to the whole encoder*).
+
+#### 1.3.2 The decisive finding: AudioSet is worst at exactly Jack's sounds
+
+This is the part that settles the question, and it is not the argument I
+expected to be able to make. Per-class average precision on AudioSet, for the
+classes GOAL.md names, together with Google's own human audit of label
+correctness (`qa_true_counts.csv`, ~10 clips audited per class):
+
+| class Jack needs | CNN14 AP | AST AP | eval clips | **label quality** |
+|---|---|---|---|---|
+| **Scrape** | **0.057** (rank **519/527**) | 0.062 | 357 | **0.20** |
+| **Crack** | **0.053** (rank **521/527**) | 0.169 | 202 | 0.44 |
+| **Creak** | **0.074** | 0.086 | **89** | **0.11** |
+| **Roll** | 0.190 | 0.214 | 1,988 | **0.00** |
+| Clatter | 0.132 | 0.144 | 1,293 | 0.20 |
+| Slam | 0.141 | 0.226 | 785 | 0.20 |
+| Thump, thud | 0.297 | 0.293 | 1,740 | 0.80 |
+| Walk, footsteps | 0.304 | 0.369 | 1,623 | 0.90 |
+| Wood | 0.387 | 0.416 | 3,294 | 0.70 |
+| **Splash, splatter** | **0.432** | 0.460 | 879 | **0.90** |
+| *(ref)* Music / Speech | 0.844 / 0.815 | — | ~1 M each | — |
+
+Aggregate over 51 physics-relevant classes: **CNN14 mAP 0.332 vs 0.431 over all
+527.** [V]
+
+And the mechanism is **label noise, not data scarcity** — which is the
+interesting part, because scarcity would be fixable by fine-tuning and noise is
+not. Spearman(AP, log clip count) = **−0.05** across all 527, but
+Spearman(AP, label quality) = **0.48** on the physics subset (vs 0.04 overall).
+`Roll` audited **0 of 10** clips genuinely containing the sound; `Creak` **1 of
+9**. Those are not model failures. **The models are being scored against labels
+that are mostly wrong**, and any transfer we attempted would inherit that.
+
+Two further nails:
+
+- **Impact events are 0.14–0.35 s inside 10 s weakly-labelled clips** — a ~3 %
+  duty cycle [V, temporally-strong AudioSet, arXiv 2105.07031]. The pretext task
+  never required temporal localisation. `ContactAudio`'s entire signal is a
+  0.30 s ring (`VOICE_SECONDS = 0.30`), i.e. exactly the regime AudioSet
+  supervision is blindest to.
+- **CLAP zero-shot on impacts is flat.** The only impact-sound zero-shot
+  datapoint that exists is SESA (gunshot/explosion/siren): MS-CLAP 2023 scores
+  **65.71 %**, MS-CLAP 2022 **66.28 %** — the 4.6 M-pair model is *no better on
+  impacts* despite being +11 points on ESC-50, and prompt ensembling moves it by
+  **exactly zero** [V]. Template choice alone swings results by 5.5–8.0 points
+  with no universal best prompt [V, arXiv 2409.13676].
+
+**And one finding that condemns the code we already have.** On the HEAR
+benchmark, self-supervised *speech* models are 20–40 points worse than
+AudioSet-supervised models on environmental sound: **wav2vec2 (315 M params)
+scores 0.561 on ESC-50 against PANNs' 0.909 and CED-base's 0.967** [V].
+`UnifiedBrain.AudioEncoder` (line 1020) loads `facebook/wav2vec2-base-960h` as
+its ambient-sound encoder. That is the single worst family of frozen features
+for this job, by a wide measured margin, and it should go regardless of how HR.6
+resolves.
+
+#### 1.3.3 The null hypothesis, now with evidence behind it
+
+**No pretrained AudioSet
 tower earns its parameters in Jack's world.** The argument, which §3.3 turns
 into a falsifiable bakeoff rather than an assertion:
 
@@ -267,23 +397,40 @@ into a falsifiable bakeoff rather than an assertion:
   the voiced geom, the force, the azimuth, the elevation and the distance
   (`ContactAudio.py:57-71`). There is nothing for a classifier to *discover*.
 - YAMNet / PANNs / AST / BEATs / PaSST were trained on YouTube. They have never
-  heard a synthetic 2571 Hz four-partial exponential ring. Their features are
-  tuned to a distribution Jack does not inhabit.
-- **And the disk says no anyway.** 725 MB free on `/data`; PANNs CNN14 and BEATs
-  are each ~0.3 GB. Two towers is the entire remaining budget of the box.
+  heard a synthetic 2571 Hz four-partial exponential ring.
+- **§1.3.2 makes it quantitative.** The classes GOAL.md names are the *worst*
+  classes in AudioSet: `Scrape` 519th of 527, `Crack` 521st, `Creak` with 89
+  clips and 11 % label accuracy, `Roll` with 0 % label accuracy. Transfer from
+  a tower is transfer from labels that are mostly wrong.
+- **And the disk says no.** PANNs CNN14 and BEATs are ~330–350 MB each, against
+  a `/data` free space that was observed at 725 MB.
 
 The honest counter-case, which the spec must leave room for: the moment Jack
 hears a **real microphone** (`AudioListener`) rather than the synth, the
 distribution is real-world audio and a pretrained tower becomes the obvious
-choice. That is not on the ladder today. The correct decision is therefore
-**"no tower now, revisit when a real-world non-speech audio task exists"**, and
-the spec records it that way so it can be re-opened rather than silently
-reinvented (`bakeoff.py`'s third property).
+choice — and the *frozen-embeddings-plus-small-head* route is well supported
+there (PANNs CNN14 frozen + one linear layer reaches **0.918 on ESC-50 vs 0.833
+trained from scratch** [V]). That is not on the ladder today, and the same
+source shows the direction reverses under domain mismatch (on DCASE19-T1 and
+RAVDESS, frozen PANNs is *much worse* than scratch: 0.589 vs 0.691, 0.397 vs
+0.692 [V]) — which is precisely Jack's situation. The decision is therefore
+**"no tower now; revisit when a real-microphone, no-ground-truth task exists,
+and prefer CED-tiny or `mn04_as` over YAMNet when that day comes"**, recorded so
+it can be re-opened rather than silently reinvented (`bakeoff.py`'s third
+property).
 
-CLAP zero-shot deserves one specific note: it is the only candidate that could
-label sounds Jack has **no** ground truth for, which is precisely the real-mic
-case and precisely not the sim case. Its cost (~600 MB for LAION-CLAP) is more
-than the free disk.
+Two specific notes worth carrying forward:
+
+- **CLAP zero-shot: do not ship it.** Its one impact-sound datapoint is flat
+  (§1.3.2), template choice swings it 5.5–8.0 points, and it costs 615–690 MB.
+  What *is* interesting is that acoustic properties (RT60, LUFS, relative pitch)
+  are **linearly recoverable from frozen CLAP embeddings** [V, arXiv 2607.03806]
+  — the physics is in there, it is just unreachable by text prompting. That
+  argues for frozen-features-plus-head, never for zero-shot.
+- **The honest ceiling.** Across all 33 models on HEAR's *Vocal Imitations*
+  task, the best score is **0.227** [V]. When the sound→label mapping is
+  non-lexical, every frozen embedding fails. Do not expect a tower to name
+  Jack's materials.
 
 ### 1.4 How audio enters the brain — representation, and the bearing problem
 
@@ -602,9 +749,13 @@ gradient (an arm whose weights do not fit is not slow, it is impossible).
                "EXCEEDS the 725 MB free-disk budget alongside anything else; "
                "admit only if /data is freed first). "
                "A3 distil-whisper distil-small.en via CTranslate2. "
-               "A4 whisper.cpp base.en Q5_0 (no Python deps, NEON; the arm "
-               "that survives if the ctranslate2 aarch64 wheel does not "
-               "exist). "
+               "A4 whisper.cpp base.en Q5_0 (no Python deps, NEON). "
+               "INSTALLABILITY CHECKED 2026-08-09: ctranslate2 4.8.1 DOES ship "
+               "a cp39-aarch64 wheel (16.5 MB) and faster-whisper 1.2.1 is "
+               "pure Python, so A0-A3 are runnable on this interpreter. "
+               "onnxruntime's latest (1.28.0) has DROPPED cp39 — pin <=1.19.2. "
+               "librosa is a NO-GO on Python 3.9 (numba/llvmlite publish no "
+               "cp39 wheel); do feature extraction in torch. "
                "A5 vosk-model-small-en-us (~40 MB, streaming, the cheap "
                "reference arm whose FAILURE would indict the task per "
                "docs/LESSONS.md). "
@@ -670,6 +821,9 @@ the tie-breaker because `/data`'s 725 MB is the binding constraint.
                "A1 SpeechBrain ECAPA-TDNN spkrec-ecapa-voxceleb (192-d). "
                "A2 WeSpeaker ResNet34 via ONNX Runtime (the embedder inside "
                "pyannote 3.1; ONNX avoids the speechbrain dependency tree). "
+               "PIN onnxruntime<=1.19.2 — checked 2026-08-09, the latest "
+               "(1.28.0) publishes no cp39-aarch64 wheel and this venv is "
+               "Python 3.9.25. "
                "A3 x-vector spkrec-xvect-voxceleb - the cheap deep arm. "
                "A4 Resemblyzer / GE2E d-vector (256-d, ~17 MB) - cheapest deep "
                "arm; expected worse EER, may still clear 0.85 on N<=8 speakers, "

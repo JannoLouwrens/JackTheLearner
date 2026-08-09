@@ -367,3 +367,37 @@ not run.
 it. This applies hardest to reports from sources that have just been right
 about several harder things — the credibility is real but it does not transfer
 between claims.
+
+## Call .eval(). The most expensive bug in this project was three characters
+
+`TrainingPipeline` never called `.eval()` or `.train()`, so 36 `nn.Dropout`
+modules at p=0.1 were active during rollout, during the PPO update, and during
+"deterministic" evaluation. Measured on the real pipeline: two forwards of the
+same state differ by **42%** of the policy mean's own magnitude; the PPO
+importance ratio at *zero policy change* puts ~20% of samples outside
+`clip_range`. The signature was sitting in the ledger — `pg_loss` collapsing to
+~0 within 6 iterations while `action_std` moved 0.94% over 840 optimiser steps.
+
+It went unnoticed through four T2.01 runs, a T2.02 architecture comparison, and
+an owner-facing recommendation, because the baseline it was compared against
+(SB3) disables training mode automatically. **One arm had 42% action noise
+injected and the other had none**, and the difference was attributed to
+architecture.
+
+**Rule:** before comparing your implementation to a library baseline, enumerate
+what the library does *for* you that yours does not — mode switching, gradient
+clipping, observation normalisation, action squashing. Silent defaults are the
+hardest confound to see because there is no line of code to read. And any
+"deterministic evaluation" must be asserted deterministic: forward the same
+input twice and require bit-identity.
+
+## "Matched steps" has more than one meaning
+
+T2.02 matched env-steps between arms and reported it as a fair comparison. The
+arms took 6,240 vs 99,840 optimiser steps — 16x apart, on models 457x apart in
+size. The `ppo_minibatch 64->512` throughput fix preserved sample-passes and
+divided gradient steps by eight; the spec's fairness check never looked.
+
+**Rule:** state which budget is matched — env-steps, optimiser steps, wall
+clock, or FLOPs — and report the other three. They diverge, and the one you did
+not match is where the confound lives.
