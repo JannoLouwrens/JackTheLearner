@@ -19,7 +19,7 @@ the certification spec for the backend that ran T1.07, T1.12 and every T1.02
 attempt — would have passed a job that reported failure, had no CUDA, and
 returned non-finite results.
 
-Two detectors, because they fail differently:
+Three detectors, because they fail differently:
 
   1. SENSITIVITY (the general one). For every PASSing spec, replay its stored
      `_check` against its stored metrics, then perturb one referenced key at a
@@ -32,12 +32,34 @@ Two detectors, because they fail differently:
   2. PRECEDENCE (the narrow one). Parse every `_check` and flag an `or` whose
      operands include an unparenthesised `and`, which is the exact shape above.
      Kept separate because it fires on source that is *currently* harmless but
-     one metric value away from silently disarming a gate.
+     one metric value away from silently disarming a gate. It is also what
+     licenses the redundancy exemption in detector 1: structure alone cannot
+     tell T1.09's deliberate `absurd_oom or absurd_peak_gb > MAX_GB` from an
+     `or` that `and`-precedence manufactured, so a gate carrying a hazard
+     forfeits the exemption and its dead operands count as disarmed.
+
+  3. STALENESS. A PASS asserts that THIS gate accepted THOSE metrics, but the
+     gate can be edited afterwards and nothing re-checks the pairing. Every
+     PASSing spec's current `_check` is replayed against its recorded metrics
+     and must still return True. This is not a substitute for re-running the
+     experiment — it certifies only that the stored numbers still clear the
+     current bar. It is how T0.09's precedence fix was verified without
+     spending a Colab round-trip: the 2026-08-04 metrics satisfy the repaired
+     gate, so the recorded PASS was substantively sound and only the guard was
+     off.
+
+Nothing is skipped silently. Gates that will not import, expose no `_check`,
+have unreadable source, or raise when replayed are COUNTED and gated, because
+an unaudited gate that leaves the numerator alone is the same lie one level up.
+T0.13 excludes only itself, and says so in `self_excluded_gates`: its own entry
+is written after the scan, so it always reflects the previous version of this
+file. Its own gate is exercised by the control instead.
 
 Control: the pre-fix T0.09 check, verbatim, against T0.09's recorded metrics.
-Both detectors must flag it. Without that, a scan finding nothing would be
-indistinguishable from a scan that does not work — which is precisely the
-"silence is not success" failure this repo has paid for repeatedly.
+The sensitivity and precedence detectors must BOTH flag it. Without that, a
+scan finding nothing would be indistinguishable from a scan that does not work
+— which is precisely the "silence is not success" failure this repo has paid
+for repeatedly, and precisely what happened on this spec's own second attempt.
 """
 from __future__ import annotations
 
@@ -229,7 +251,8 @@ def _precedence_hazards(fn: Callable, src: str | None) -> int:
 
 def _scan(entries: list) -> dict:
     """entries: (spec_id, check_fn, source_or_None, metrics, control_metrics)."""
-    disarmed, redundant, hazards, unevaluable, unreadable, scanned = {}, {}, {}, [], [], 0
+    disarmed, redundant, hazards = {}, {}, {}
+    unevaluable, unreadable, stale, scanned = [], [], [], 0
     for spec_id, fn, raw_src, m, c in entries:
         scanned += 1
         src = _source(fn, raw_src)
@@ -240,6 +263,15 @@ def _scan(entries: list) -> dict:
             continue
         if _verdict(fn, m, c)[0] == "RAISED":
             unevaluable.append(spec_id)
+        # A PASS is a claim that THIS gate accepted THOSE metrics. The gate can
+        # be edited afterwards — T0.09's was, to fix the precedence bug — and
+        # nothing re-checks that the stored entry still satisfies it. Replay is
+        # free and turns "the ledger agrees with the code" from an assumption
+        # into a measurement. It is not a substitute for re-running the
+        # experiment; it only certifies that the recorded numbers still clear
+        # the current bar.
+        if _verdict(fn, m, c) not in (("BOOL", True), ("STATUS", Status.PASS.value)):
+            stale.append(spec_id)
         h = _precedence_hazards(fn, src)
         if h:
             hazards[spec_id] = h
@@ -269,29 +301,51 @@ def _scan(entries: list) -> dict:
         "specs_with_precedence_hazards": len(hazards),
         "unevaluable_gates": len(unevaluable),
         "unreadable_gates": len(unreadable),
+        "stale_gates": len(stale),
         "disarmed_detail": "; ".join(f"{k}: {', '.join(v)}" for k, v in sorted(disarmed.items())),
         "redundant_detail": "; ".join(f"{k}: {', '.join(v)}" for k, v in sorted(redundant.items())),
         "hazard_detail": ", ".join(sorted(hazards)),
         "unevaluable_detail": ", ".join(sorted(unevaluable)),
         "unreadable_detail": ", ".join(sorted(unreadable)),
+        "stale_detail": ", ".join(sorted(stale)),
     }
 
 
 def _experiment(seed: int) -> dict:
     ledger = Ledger()
-    entries = []
+    entries, unloadable = [], []
+    self_excluded = 0
     for spec_id, r in _passing(ledger):
+        # A gate cannot audit its own ledger entry. That entry is written AFTER
+        # this scan, so it always reflects the PREVIOUS version of this file —
+        # on the run where T0.13's own `_check` changes, replaying it against
+        # last run's metrics raises KeyError and reports T0.13 as stale, every
+        # time, forever. The exclusion is stated in the metrics rather than
+        # silent: T0.13's own gate is instead exercised by the control fixture,
+        # which must fire on a known-bad check on every run.
+        if spec_id == "T0.13":
+            self_excluded += 1
+            continue
         mod_name = spec_id.lower().replace(".", "_")
+        # Counted, not swallowed. A PASSing spec whose module will not import,
+        # or which exposes no `_check`, is a gate this scan did NOT audit — and
+        # an unaudited gate must not quietly leave the numerator alone.
         try:
             mod = importlib.import_module(f"..tests.{_module_stem(mod_name)}", __package__)
         except Exception:
+            unloadable.append(spec_id)
             continue
         fn = getattr(mod, "_check", None)
         if fn is None:
+            unloadable.append(spec_id)
             continue
         entries.append((spec_id, fn, None, dict(r.get("metrics") or {}),
                         dict(r.get("control_metrics") or {})))
-    return _scan(entries)
+    out = _scan(entries)
+    out["self_excluded_gates"] = self_excluded
+    out["unloadable_gates"] = len(unloadable)
+    out["unloadable_detail"] = ", ".join(sorted(unloadable))
+    return out
 
 
 def _module_stem(prefix: str) -> str:
@@ -313,8 +367,12 @@ def _control(seed: int) -> dict:
     exec(compile(CONTROL_SRC, "<pre-fix T0.09 gate>", "exec"), ns)
     # Source passed explicitly — inspect cannot recover it for exec'd code, and
     # a detector that reads nothing reports a clean bill of health.
-    return _scan([("T0.09_prefix", ns["_check"], CONTROL_SRC,
-                   dict(CONTROL_M), dict(CONTROL_C))])
+    out = _scan([("T0.09_prefix", ns["_check"], CONTROL_SRC,
+                  dict(CONTROL_M), dict(CONTROL_C))])
+    out["self_excluded_gates"] = 0
+    out["unloadable_gates"] = 0
+    out["unloadable_detail"] = ""
+    return out
 
 
 def _check(m: dict, c: dict) -> bool:
@@ -322,7 +380,9 @@ def _check(m: dict, c: dict) -> bool:
     ladder_clean = (m["disarmed_conjunct_keys"] == 0
                     and m["precedence_hazards"] == 0
                     and m["unevaluable_gates"] == 0
-                    and m["unreadable_gates"] == 0)
+                    and m["unreadable_gates"] == 0
+                    and m["stale_gates"] == 0
+                    and m["unloadable_gates"] == 0)
     # ...and BOTH must fire on the known-bad gate, or a clean scan is
     # indistinguishable from a scan that does not run. The pre-fix T0.09 check
     # has exactly three unreachable assertions (ok, cuda_available,

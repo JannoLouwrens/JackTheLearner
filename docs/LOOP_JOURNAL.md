@@ -707,3 +707,95 @@ outside the repo so installing is a box change, not a repo change. GPU: Kaggle
 spent ~6.3h of the fresh 30h on T2.02 (VOID, 07:30Z, transformer 2.46 sigma vs
 MLP 7.11 — the learning gate refused to arbitrate); D1 is with the owner in
 DECISIONS_NEEDED.md. No poller is running; nothing to reattach.
+
+## 2026-08-09 — the overseer's three gates that do not gate, closed
+
+Took `docs/OVERSIGHT.md` FOR THE BUILDER items 1, 2, 3 and 6. The audit's
+verdict was INTEGRITY RISK — not a false PASS anywhere, but three Tier-0/2
+*gates* that could not fire. All three are now closed, and the class is guarded.
+
+**T0.09** (item 1): `and` binds tighter than `or`, so the gate evaluated as
+`(ok and cuda and matmul and NVIDIA-in-gpu) or (TESLA in gpu)`. Colab reports
+`"Tesla T4"`, so three assertions were unreachable on every real run.
+Parenthesised. NOT re-run on Colab — see the note on pushing below — but
+verified offline: T0.13's staleness detector replays the repaired gate against
+the 2026-08-04 metrics and it still returns True, so the recorded PASS was
+substantively sound and only the guard was off.
+
+**T0.12** (item 2): `weeks_isolated` asserted `remaining() == 0.0` after
+draining the quota to its 30 h ceiling, where `max(0, 30-30)` is 0.0 under
+every implementation including total isolation failure. Now asserted at
+**28.0 of 30 h** — a mid-range value that moves — with foreign keys built from
+the LIVE `%Y-W%U` format (the old test used the retired `%G-W%V`, writing into
+a key space the code no longer produces), a retired-format key as a second
+probe, and a `_LeakyBudget` control. PASS: experiment `weeks_isolated=True`,
+control `weeks_isolated=False` **and** `stale_format_key_isolated=False`, so it
+fails on isolation specifically rather than incidentally.
+
+**T2.02** (item 3): all three VOID paths returned bare `False` → FAIL, firing
+`kills` ("the transformer policy") off a run that refused to arbitrate. Now
+returns `Status.VOID`. Guard added rather than just the fix:
+`protocol.VoidStatusMismatch` **raises** when a `_check` writes "VOID" into its
+own metrics and returns a bare False, so the metrics/status disagreement is
+unrecordable. Verified directly at all three paths (VOID-in-metrics+False →
+ERROR; plain False → FAIL; `Status.VOID` → VOID). T2.02 itself was NOT re-run —
+that is a 6.28 h Kaggle kernel and D1 is with the owner.
+
+**T0.13 — the new spec, and the actual deliverable.** The audit noted this bug
+class "is not detectable by any current gate". It is now. T0.13 replays every
+PASSing spec's `_check` against its recorded metrics and runs three detectors:
+operating-point **sensitivity** (a referenced key that cannot move the verdict
+is inert), an AST **precedence** scan, and **staleness** (the stored metrics
+must still clear the current gate). **PASS: 43 gates scanned, 0 disarmed, 0
+hazards, 0 stale, 0 unreadable/unloadable/unevaluable.**
+
+Its history is the interesting part — `attempt 6`, `ERROR → FAIL → FAIL → PASS
+→ FAIL → PASS`, all on the record:
+
+- The second attempt FAILed because the **control scanned zero gates** and
+  reported the known-bad pre-fix T0.09 check as clean. `inspect.getsource`
+  raises `OSError` on `exec`'d code, so every detector read 0. A clean scan and
+  a scan that never ran are the same number — "silence is not success" *inside
+  the machinery built to catch it*, caught only by having a positive control.
+- The third FAILed on a genuine measurement bug (keys extracted regardless of
+  `ctx`, so `m["resume_fidelity_ratio"]` and `m["label_signal_advantage"]` —
+  both *written* by their checks — were reported as dead assertions) and on one
+  real, benign finding: T1.09's `c["absurd_peak_gb"]`, inert because a run that
+  OOMs has no peak to read, so no correct rewrite avoids one dead branch.
+- **Threshold split in the open, not quietly moved.** Gating the raw inert
+  count would make a correct test unpassable. `inert_gate_keys` is still
+  reported in full (**1**) and the gate is `disarmed_conjunct_keys == 0`. The
+  split is only sound because the precedence detector separates the two cases:
+  structure cannot — the pre-fix T0.09 keys and T1.09's are *both* inert
+  operands of an `or` — but an `or` whose operands include an `and` is one
+  nobody typed on purpose, so a hazard forfeits the redundancy exemption.
+- The fifth FAILed on `stale_gates=1` pointing at **T0.13 itself**: a gate
+  cannot audit its own entry, which is written after the scan. Self-excluded,
+  and the exclusion is *counted* in `self_excluded_gates` rather than silent.
+
+Three lessons appended to `docs/LESSONS.md`: the gate itself is a claim; a
+detector that cannot see its own positive control has measured nothing;
+structure cannot separate honest redundancy from a disarmed assertion.
+
+**D2 escalated** (item 6): `Status.VOID`'s docstring says VOID does not block
+dependents; `blocked_by` blocks anything `is not PASS`. Code and docs
+contradict, no metric can settle it. Recommendation recorded: block, fix the
+docstring, and make the message name VOID distinctly.
+
+NEXT ITERATION: **T0.09 needs a Colab re-run and that needs a `git push`** —
+`run.py` refuses to submit unpushed work (correctly: the VM clones from
+GitHub). Five commits are unpushed including three from earlier iterations, and
+publishing to a public repo is the owner's call, so I did not push. Either get
+that authorisation or leave T0.09 as-is; its gate is verified offline and the
+recorded metrics satisfy it. Remaining audit items, cheapest first: **#4**
+(`bakeoff.py` writes to the real `DECISIONS_RESOLVED.md` from its own unit
+tests — add an output-path parameter, then delete the six `TEST` fixture
+entries, which are currently the file's *only* contents), **#7** (make
+`Spec.control` load-bearing: `run_spec` should raise when `control_fn` is
+supplied and `spec.control is None` — 25 specs run a control without declaring
+one), **#5** (`attempt: 1` is a false statement for T2.01/T0.05/T1.02/T2.02;
+prefer `null` over a wrong integer), **#8/#9** (controls for T1.03/T1.05;
+re-run ME.8 at 3 seeds — it is a `seeds=1` PASS whose own commit records a
+seed-2 collapse that was never re-verified). Science-wise ME.11.A remains the
+cheapest unblocked unit. GPU: Kaggle ~23.6 h left this week; D1 still with the
+owner.

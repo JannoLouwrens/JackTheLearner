@@ -900,8 +900,8 @@
       "status": "PASS"
     },
     "T0.13": {
-      "attempt": 4,
-      "commit": "b30166a",
+      "attempt": 7,
+      "commit": "d8ae799",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -911,14 +911,19 @@
         "precedence_hazards": 1,
         "redundant_detail": "",
         "redundant_disjunct_keys": 0,
+        "self_excluded_gates": 0,
         "specs_with_disarmed_keys": 1,
         "specs_with_precedence_hazards": 1,
+        "stale_detail": "",
+        "stale_gates": 0,
         "unevaluable_detail": "",
         "unevaluable_gates": 0,
+        "unloadable_detail": "",
+        "unloadable_gates": 0,
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 0.11,
+      "duration_s": 0.12,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -938,6 +943,24 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-09T13:15:57",
           "status": "FAIL"
+        },
+        {
+          "commit": "b30166a",
+          "message": "",
+          "ran_at": "2026-08-09T13:16:21",
+          "status": "PASS"
+        },
+        {
+          "commit": "d8ae799",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-09T13:18:42",
+          "status": "FAIL"
+        },
+        {
+          "commit": "d8ae799",
+          "message": "",
+          "ran_at": "2026-08-09T13:19:38",
+          "status": "PASS"
         }
       ],
       "message": "",
@@ -950,14 +973,19 @@
         "precedence_hazards": 0,
         "redundant_detail": "T1.09: c['absurd_peak_gb']",
         "redundant_disjunct_keys": 1,
+        "self_excluded_gates": 1,
         "specs_with_disarmed_keys": 0,
         "specs_with_precedence_hazards": 0,
+        "stale_detail": "",
+        "stale_gates": 0,
         "unevaluable_detail": "",
         "unevaluable_gates": 0,
+        "unloadable_detail": "",
+        "unloadable_gates": 0,
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-09T13:16:21",
+      "ran_at": "2026-08-09T13:21:00",
       "seeds": [
         0
       ],

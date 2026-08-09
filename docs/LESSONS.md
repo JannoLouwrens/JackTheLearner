@@ -271,3 +271,68 @@ impossible (here: refuse to record a bare `False` from a `_check` that wrote
 "VOID" into its own metrics). And when adding a status, grep every site that
 branches on status; a new enum member is silently absorbed by every `is not
 Status.PASS` in the codebase.
+
+*Closed 2026-08-09:* `protocol.VoidStatusMismatch` now raises on that exact
+disagreement, and `t2_02_mlp_showdown.py` returns `Status.VOID` on all three
+paths. The `blocked_by` half is still open — see `DECISIONS_NEEDED.md`.
+
+## The gate itself is a claim, and it needs a test that could have failed
+
+Law 1 says a capability is claimed only by a test that could have failed. The
+same disease appears one level up, in the machine rather than the science: an
+assertion inside a `_check` that cannot change that check's verdict. T0.09's
+gate read `(ok and cuda and matmul and "NVIDIA" in gpu) or ("TESLA" in gpu)`
+because `and` binds tighter than `or`, and Colab's device string is literally
+`"Tesla T4"` — so three assertions were unreachable on every real run, in the
+spec that certifies the backend which ran T1.07, T1.12 and every T1.02 attempt.
+Nothing in the ladder could see it; it took a human audit. Its sibling, T0.12's
+`weeks_isolated`, asserted `remaining() == 0.0` *after* draining the quota to
+its ceiling, where the answer is 0.0 under every possible implementation.
+
+**Rule:** a threshold you never watch fire is not a threshold. Gates are now
+themselves gated by `T0.13`, which replays every PASSing spec's `_check`
+against its recorded metrics, perturbs one referenced key at a time, and
+reports any key that cannot move the verdict *at the operating point the run
+actually produced*. Sensitivity is measured at the real operating point on
+purpose: "could this have fired on a run like the ones we get" is Law 1's
+question; "is it reachable for some fictional input" is not.
+
+## A detector that cannot see its own positive control has measured nothing
+
+T0.13's first scan came back clean on the *known-bad* pre-fix T0.09 gate: zero
+inert keys, zero hazards. The fixture was built with `exec`, and
+`inspect.getsource` raises `OSError` on a function with no file on disk, so key
+extraction returned an empty set and every detector read 0. A clean scan and a
+scan that never ran are the same number. Only the control's own failure
+distinguished them — had T0.13 shipped without one, it would have certified the
+ladder green forever while reading nothing.
+
+**Rule:** this is "silence is not success" *inside the machinery built to catch
+it*, so the same discipline applies to meta-tests: count what you could not
+inspect (`unreadable_gates`) and gate on that count, rather than letting a
+skipped item leave the numerator alone. Every audit tool needs a known-positive
+fixture it must flag, and the fixture must exercise the same code path as the
+real scan — not a tidied re-statement of it.
+
+## Structure cannot separate honest redundancy from a disarmed assertion
+
+T0.13's sensitivity detector flagged two inert operands of an `or`, and they
+were indistinguishable: T1.09's control asserts `absurd_oom or absurd_peak_gb >
+MAX_GB`, where a run that OOMs has no peak to read, so one branch is *necessarily*
+dead and no correct rewrite avoids it — while the pre-fix T0.09 keys were dead
+because `and` binding tighter had manufactured an `or` the author never wrote.
+Same AST shape, opposite meanings. Gating on the raw inert count would have made
+a *correct* test unpassable; exempting all disjuncts would have swallowed the
+motivating bug.
+
+What separates them is not structure but evidence of intent: an `or` whose
+operands include an `and` is one nobody typed on purpose. So the exemption is
+conditional — a gate carrying a precedence hazard forfeits it.
+
+**Rule:** when one measurement cannot distinguish two cases, do not pick the
+threshold that makes the ladder look better; find the *second, independent*
+signal that separates them, and make the first conditional on it. And when a
+pre-registered threshold turns out to be genuinely wrong, split it in the open —
+keep reporting the original quantity in full (`inert_gate_keys` is still 1) and
+name the narrower one you actually gate on, so the change is legible as a
+change rather than a quietly moved number.

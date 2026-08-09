@@ -126,3 +126,41 @@ so, over your name, rather than continue to ask a settled question.
 (in-kernel torch pin with sm_60 kernels, PIP_CONSTRAINT torch==2.5.1). Losers:
 option 2 (CPU-only Kaggle), option 3 (skip Kaggle). Evidence: T0.10/T0.11 PASS,
 T2.02 6.28 h P100 kernel 2026-08-09."*
+
+---
+
+## D2 — Does a VOID dependency BLOCK its dependents?
+
+**Raised 2026-08-09** by the overseer audit (§1.3 context, builder item 6).
+Code and documentation currently contradict each other, and both are shipped.
+
+`Status.VOID`'s docstring (`experiments/protocol.py:58`) says a VOID spec
+*"does not BLOCK its dependents on the grounds that the claim was refuted."*
+`Ledger.blocked_by` (`protocol.py:242`) returns any dependency whose status
+`is not Status.PASS`, so VOID blocks **exactly like FAIL**. The docstring is
+the aspiration; the code is the behaviour. Right now T2.13 and T5.09 are
+BLOCKED behind T2.02's VOID.
+
+This is not a bug I can settle by bakeoff — there is no metric to measure, only
+a choice about what the ladder means. Both readings are defensible:
+
+- **Block (current behaviour).** An undemonstrated foundation is undemonstrated.
+  Building on a run that could not test its own claim is how unearned green
+  ticks propagate, which is this repo's original disease.
+- **Do not block (current docstring).** VOID means "we learned nothing", not
+  "the claim is false". Blocking treats a *failure to measure* as a *negative
+  result*, and it is the reason 34 specs are parked: T2.02 refusing to
+  arbitrate now has the same downstream force as T2.01 losing outright.
+
+**The loop's recommendation: BLOCK, and fix the docstring** — but make the
+blocking *message* distinguish the two, so `run status` says "dependency T2.02
+is VOID (not demonstrated)" rather than "dependencies not passing". The
+asymmetry that matters is `kills`, which VOID already correctly suppresses; the
+dependency graph should stay conservative.
+
+**Cost of the status quo:** none beyond the contradiction itself, since the
+code already blocks. The risk is that someone reads the docstring, assumes
+dependents are runnable, and is confused by a BLOCKED result.
+
+**One line from you settles it.** Saying *"take the recommendation"* will be
+read as block-and-fix-the-docstring, implemented and journalled.

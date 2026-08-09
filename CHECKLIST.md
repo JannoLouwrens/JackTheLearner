@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 43 / 123 demonstrated
+## 44 / 124 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -53,6 +53,9 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T0.12** GPU-hour accounting
       - _asserts:_ Every GPU run debits a weekly budget file; the ladder refuses to launch past quota.
       - _dies if:_ A run proceeds with the budget exhausted.
+- [x] **T0.13** No gate in the ladder is decorative
+      - _asserts:_ Every metric a `_check` reads can change that check's verdict at the operating point the run actually produced, and no `_check` mixes `and` with an unparenthesised `or`.
+      - _dies if:_ A PASSing spec's gate references a metric that cannot move its verdict, or contains an operator-precedence hazard.
 
 ### Tier 1 — LEARNING PRIMITIVES — can each piece learn at all?
 
