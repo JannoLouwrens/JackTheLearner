@@ -22,6 +22,32 @@ This project's original disease was a README status table reading "Working" for
 eleven components that had never received a gradient. Everything here exists to
 make that impossible to repeat.
 
+## THE LOOP — the kernel everything else specializes
+
+    RESEARCH -> TEST -> IMPLEMENT -> TEST -> FIX -> (repeat)
+
+That is the whole system. It runs at two levels with the same steps:
+
+- **On Jack**: research a question, write the falsifiable test, implement,
+  run it, fix what breaks. This is how every capability is built.
+- **On itself**: when the LOOP malfunctions — a test lied, integration nearly
+  registered garbage, an agent died silently — the SAME steps run on the
+  system: the failure is researched, a guard is specced, implemented,
+  verified. The loop mutates the system that hosts it. (Every organ below is
+  a scar from exactly this — see the hard constraints.)
+
+The organs are not separate machinery; they are the loop at different
+cadences: research agents and the field watch are its RESEARCH step; the
+ladder is its TEST step; the builder is IMPLEMENT; the gate re-runs and the
+overseer are TEST-again pointed at Jack and at the system respectively; the
+Review and LESSONS.md are FIX, generalised. The integration queue is the
+conveyor between the steps.
+
+**This loop is the starting point for every agent.** Whatever you were
+spawned to do, you are standing somewhere on this loop — know which step,
+do it, and if you find the loop itself broken, that repair outranks your
+task.
+
 ## The four laws
 
 1. **A capability is claimed ONLY by a test that could have failed.**
