@@ -62,6 +62,19 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    Register them into registry_expansion.py exactly as written (no threshold
    edits), checking id collisions against the live registry first. NOTE: LC.03
    depends on PS.01 — register both together or LC.03 is permanently BLOCKED.
+   *** PS.* CORRECTION REQUIRED FIRST (2026-08-09, do not skip): ***
+   NEEDS_AND_DEATH.md disproved PURPOSE_AND_SCAFFOLDING §2.6(iii)'s
+   "drive-farming" exploit by exact value iteration on a certified-
+   discriminating MDP: under drive-reduction reward, closed depletion cycles
+   telescope to exactly 0 undiscounted and strictly NEGATIVE discounted —
+   farming cannot exist; K&G eLife 2014's own theorem says so. PS.00(c) and
+   PS.02 as written pre-register a FALSE prediction. Correct both against
+   NEEDS_AND_DEATH.md's analysis before registering any PS.* spec (the real
+   pathology is the mirror image: constant-cost reward + reachable death makes
+   suicide optimal — already covered by the NE.* designs). Also: thermal
+   design constants in NEEDS_AND_DEATH §1.2 flagged unverified have verified
+   sources in the needs agent's transcript — hypothermia staging <28C (Durrer
+   2003/Paal 2016), heatstroke >40C (Bouchama 2022); never cite a 42C ceiling.
    Then run the cheapest newly-registered CPU specs, LC.00 first: the
    learning-core bakeoff is the highest-leverage work in the project and needs
    no GPU. Also read DIRECTION_AUDIT's Stage 0: 40 specs are transitively
