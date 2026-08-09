@@ -43,6 +43,22 @@ class Status(str, Enum):
     BLOCKED = "BLOCKED"      # a dependency failed, so this cannot be trusted
     ERROR = "ERROR"          # the test itself crashed — distinct from FAIL
     SKIP = "SKIP"            # deliberately out of scope, with a reason
+    VOID = "VOID"            # the run was INVALID — it did not test the claim
+    """VOID is not FAIL, and conflating them corrupts the record.
+
+    FAIL means the hypothesis was tested and lost. VOID means the run could not
+    test it at all: an arm that never learned, a fixture that leaked, a
+    measurement that turned out to be an artifact. The distinction has teeth
+    because specs carry a `kills` field — T2.02 kills "the transformer policy",
+    and it was recorded FAIL with the message "pre-registered threshold not
+    met" while its own metrics read "VOID — two non-learners cannot arbitrate
+    the architecture". Read machine-side, that ledger said the kill criterion
+    had fired on a comparison that explicitly refused to arbitrate.
+
+    A VOID spec is not demonstrated and must not be counted as PASS, but it
+    also does not trigger `kills` and does not BLOCK its dependents on the
+    grounds that the claim was refuted. It means: fix the run and try again.
+    """
 
 
 class Budget(str, Enum):
@@ -95,6 +111,9 @@ class Result:
     hardware: str = ""
     ran_at: str = ""
     message: str = ""
+    history: List[Dict[str, Any]] = field(default_factory=list)
+    """Previous attempts, trimmed. Written by Ledger.record — see the note there."""
+    attempt: int = 1
 
     @staticmethod
     def env_stamp() -> Dict[str, str]:
@@ -167,7 +186,24 @@ class Ledger:
 
                 merged = dict(on_disk)
                 for rid, r in self.results.items():
-                    merged[rid] = {**asdict(r), "status": r.status.value}
+                    # KEEP THE PREVIOUS ATTEMPT. Overwriting by spec_id made
+                    # SYSTEM.md's "the failing version stays in the ledger's
+                    # history" unenforceable: a spec redesigned three times
+                    # (T1.02) or fixed after a real bug (T2.01) showed only its
+                    # final green tick, so the system could not measure its own
+                    # first-attempt pass rate — the one number that says whether
+                    # the specs are honestly risky or written to pass. History
+                    # is a trimmed record: status, when, commit and message, not
+                    # full metrics, so the file stays readable.
+                    prev = on_disk.get(rid)
+                    hist = list(prev.get("history", [])) if prev else []
+                    if prev and prev.get("ran_at") != r.ran_at:
+                        hist.append({k: prev.get(k) for k in
+                                     ("status", "ran_at", "commit", "message")})
+                    row = {**asdict(r), "status": r.status.value}
+                    row["history"] = hist[-20:]
+                    row["attempt"] = len(hist) + 1
+                    merged[rid] = row
 
                 payload = {
                     "_comment": "Written by experiments/run.py under an exclusive lock. "
@@ -239,8 +275,19 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
         metrics = _aggregate(runs)
         control_metrics = _aggregate([control_fn(s) for s in seeds]) if control_fn else {}
         ok = check(metrics, control_metrics)
-        status = Status.PASS if ok else Status.FAIL
-        message = "" if ok else "pre-registered threshold not met"
+        # `check` may return a Status directly to signal VOID — a run that
+        # could not test the claim at all (an arm that never learned, a leaky
+        # fixture). Bare bools keep their old meaning, so no existing test
+        # changes behaviour.
+        if isinstance(ok, Status):
+            status = ok
+            message = {Status.PASS: "",
+                       Status.FAIL: "pre-registered threshold not met",
+                       Status.VOID: "run did not test the claim; not a refutation"
+                       }.get(status, "")
+        else:
+            status = Status.PASS if ok else Status.FAIL
+            message = "" if ok else "pre-registered threshold not met"
     except Exception as e:
         metrics, control_metrics = {}, {}
         status = Status.ERROR

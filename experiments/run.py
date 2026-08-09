@@ -53,6 +53,7 @@ def _exclusive():
 MARK = {
     Status.PASS: "PASS   ",
     Status.FAIL: "FAIL   ",
+    Status.VOID: "VOID   ",   # invalid run, NOT a refutation — see protocol.Status
     Status.BLOCKED: "blocked",
     Status.ERROR: "ERROR  ",
     Status.SKIP: "skip   ",
@@ -232,7 +233,7 @@ def cmd_render(ledger: Ledger) -> int:
              4: "COMPOSITION — does adding B break A?",
              5: "THE CLAIMS — the thesis stands or falls",
              6: "INTEGRATION"}
-    box = {Status.PASS: "[x]", Status.FAIL: "[!]", Status.ERROR: "[!]",
+    box = {Status.PASS: "[x]", Status.FAIL: "[!]", Status.VOID: "[~]", Status.ERROR: "[!]",
            Status.BLOCKED: "[-]", Status.SKIP: "[~]", Status.NOT_RUN: "[ ]"}
     out = [
         "# Jack — the checklist",
@@ -254,7 +255,7 @@ def cmd_render(ledger: Ledger) -> int:
         st = ledger.status(s_.id)
         r = ledger.results.get(s_.id)
         note = ""
-        if st is Status.FAIL and r and r.metrics:
+        if st in (Status.FAIL, Status.VOID) and r and r.metrics:
             k = next(iter(r.metrics)), 
             note = "  — " + "; ".join(f"{k}={v}" for k, v in list(r.metrics.items())[:2])
         elif st is Status.BLOCKED and r:

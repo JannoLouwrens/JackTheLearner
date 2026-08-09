@@ -51,17 +51,34 @@ shown to produce *structured, coherent* behaviour on a humanoid-scale body
 | Method | arXiv / venue | Demonstrated on | Humanoid? | Honest assessment |
 |---|---|---|---|---|
 | ICM | 1705.05363, ICML 2017 | VizDoom, Mario | No | Inverse-dynamics features filter *uncontrollable* noise, not *action-conditioned* noise. Jack's own physics chaos is action-conditioned. |
-| Large-Scale Study of Curiosity | 1808.04355, 2018 | 54 Atari + Mario | No | The paper that named the noisy-TV failure with a measurement. PG.4 is a reproduction of its §5 in Jack's world. |
+| Large-Scale Study of Curiosity | 1808.04355, 2018 | 54 Atari + Mario, Unity 9-room maze with a TV | No | The paper that named the noisy-TV failure with a measurement. **Cite it accurately**: the authors report the TV *"drastically slows down learning, but… if you run the experiment for long enough the agents do sometimes converge"* — a slowdown, not a permanent trap. The common "stuck forever" paraphrase is a miscitation. PG.4 measures the fixation directly and does not need the stronger claim. |
 | RND | 1810.12894, ICLR 2019 | Montezuma's Revenge | No | The de-facto pseudo-count for continuous state. Its bonus is over *observations*, not over the controllable manifold: every novel flailing pose scores novel. On a re-randomising texture the target-net output is itself never repeated, so RND is trapped too. |
 | DRND / RDD | 2401.09750 (ICML 2024), 2505.11044 | Atari, MuJoCo tasks | No | Fixes RND's "bonus inconsistency" by distilling a *distribution* of random nets. Better pseudo-counts; does nothing about irreducible noise. |
 | NovelD | NeurIPS 2021 | MiniGrid, NetHack | No | Rewards the *increase* in novelty across a transition — fixes RND's depth-first collapse. Discrete. |
 | E3B | 2210.05805, NeurIPS 2022 | MiniHack, VizDoom, Habitat | No | Elliptical episodic bonus over an **inverse-dynamics embedding** — the embedding is the transferable idea (it filters uncontrollable noise). Never evaluated on continuous control. |
-| BYOL-Explore | 2206.08332, NeurIPS 2022 | DM-HARD-8, Atari | No | Self-supervised world model whose loss *is* the bonus. Strong on hard-exploration 3D tasks; still surprise-based at heart. |
-| Plan2Explore / Disagreement | 2005.05960 (ICML 2020), 1906.04161 | DM Control from pixels (walker, cheetah, hopper, quadruped), real robot pushing | No (quadruped max) | **The principled noisy-TV fix**: ensemble disagreement → 0 on irreducible noise, stays high where merely ignorant. Best-evidenced surprise-family method that scales to pixel continuous control. |
+| VIME | 1605.09674, NeurIPS 2016 | rllab low-dim state only: CartPole, MountainCar, HalfCheetah, Walker2D, SwimmerGather | No | **Largest action space in the entire paper is 6-D**, and it runs **no stochastic / noisy-TV experiment at all** — its noise robustness is a theoretical property of the KL objective that was never tested. SimHash counting (#Exploration, NeurIPS 2017) matches it on two of its own tasks. |
+| BYOL-Explore | 2206.08332, NeurIPS 2022 | DM-HARD-8, Atari | No | **Correction to `CURIOSITY.md`, which lists this among the noisy-TV fixes:** it is not one. BYOL-Hindsight (below) exists *because* BYOL-Explore degrades under sticky-action Atari. It is a member of the vulnerable prediction-error class. |
+| Disagreement | 1906.04161, ICML 2019 | noisy-MNIST; Atari incl. sticky-action; **Unity 3D maze containing a TV whose channel the agent can change**; MuJoCo 7-DoF arm; real Sawyer arm with RGBD | No | The TV experiment is the direct evidence. Does **not** report HalfCheetah/Ant/Humanoid — the locomotion attribution often made for it belongs to Plan2Explore. Own stated limit: the differentiable variant works only on short horizons. |
+| Plan2Explore | 2005.05960, ICML 2020 | DM Control from pixels (walker, cheetah, hopper, quadruped) | No (quadruped max) | Ensemble disagreement over a latent world model; zero-shot to downstream tasks. Best-evidenced member of this family that scales to **pixel continuous control**. |
 
 **Verdict.** Every member of this family is a *reference* arm, not a candidate
 winner. ICM and RND are in the bakeoff because CU.3 requires a trap-victim that
-must fail. Disagreement is the only one with a real chance.
+must fail. Disagreement is the only one with a real chance — and its supporting
+evidence is a 7-DoF arm and a 3D maze, not a body.
+
+### 1.1b The 2022–2026 noisy-TV literature (which `CURIOSITY.md` predates)
+
+Three papers matter here and none of them has ever been run on continuous control.
+
+| Method | arXiv / venue | Mechanism | Domains | Honest assessment |
+|---|---|---|---|---|
+| **LPM — Beyond Noisy-TVs: Noise-Robust Exploration via Learning Progress Monitoring** | **2509.25438, ICLR 2026** | Dual network: an *error model* predicts the dynamics model's expected prediction error at the previous iteration; the bonus is the **difference between current and previous model error**. Proven zero-equivariant and a **monotone indicator of information gain**; the error model is proven *necessary* for that monotonicity. | noisy-MNIST, a 160×120 RGB 3D maze, Atari | **The most directly on-topic modern paper for this document, and the strongest theoretical statement that "reward model improvement, not surprise" is the right family.** It is also brand new, unreplicated, and its LP estimate is a small difference between two large noisy quantities. Zero continuous control. Treat as the upgrade path for arm A3, not as a settled result. |
+| **BYOL-Hindsight — Curiosity in Hindsight** | 2211.10515, ICML 2023 | Structural-causal framing: learn a *hindsight representation of the future* that captures precisely the unpredictable part of each outcome and feed it to the predictor, so residual error contains only predictable dynamics. | gridworld + sticky-action Atari | The best-argued noisy-TV paper in the literature and **it has never been run on a continuous-control task**. Central fragility: the hindsight encoder can cheat by leaking predictable information into the hindsight variable, collapsing the bonus to zero everywhere; needs an information bottleneck. |
+| **Aleatoric Mapping Agents** | 2102.04399, ICML 2022 | Heteroscedastic head predicts mean *and variance* of the next state; down-weight the bonus where aleatoric variance is high. | small custom action-dependent stochastic-trap environments | Only handles noise expressible as per-transition scalar Gaussian variance. A panel emitting structured high-dimensional novel images is not that — so it would probably fail PG.4. Heteroscedastic regression also under-estimates variance early, exactly when it matters. |
+
+Schmidhuber's compression-progress lineage is the ancestor of all three:
+arXiv:0812.4360 (*J. SICE* 48(1):21–32, 2009) and *Formal Theory of Creativity,
+Fun, and Intrinsic Motivation*, IEEE TAMD 2(3):230–247, 2010.
 
 ### 1.2 Learning progress / competence progress
 
@@ -69,9 +86,11 @@ must fail. Disagreement is the only one with a real chance.
 |---|---|---|---|---|
 | IAC → R-IAC → SAGG-RIAC → IMGEP | Oudeyer 2007; Baranes & Oudeyer 2013; survey 1708.02190, autotelic survey 2012.09830 | Robot arms, playground robots, low-dim outcome spaces | No | The conceptual backbone. Noisy-TV-proof *by construction*: irreducible noise yields zero competence improvement, so its LP decays to zero and allocation collapses. The catch is that LP needs a **competence signal**, i.e. a goal space with a success detector. |
 | ALP-GMM | 1910.07224, CoRL 2019 | BipedalWalker stump/hexagon tracks | No (4-DoF 2D walker) | Absolute LP over a **2–3 dimensional environment-parameter space**, fitted with a GMM. Cheap, robust, well-replicated. Its demonstrated task space is tiny — this is a teacher over env parameters, not over goals in a rich scene. |
+| TeachMyAgent | 2103.09815, ICML 2021 | Box2D benchmark of ACL teachers, incl. a **climbing morphology** | No | **The most sobering datapoint in this section.** The LP-teacher family reaches roughly **1 % mastery on the 2D climbing morphology.** The one time anyone pointed learning-progress curricula at a climbing task, in two dimensions, it barely moved. |
 | Learning-progress curriculum at scale | Kanitscheider et al. (Minecraft, 2021) | Minecraft, symbolic goal list | No | Shows LP scales to a hand-enumerated goal list. Goals were given, not invented. |
-| Curious Replay | 2306.15934, ICML 2023 | Crafter, DM Control | No | Prioritises *replay* by novelty/count rather than acting; complements LP, cheap to add. |
-| MAGELLAN | 2502.07709, 2025 | Text-world autotelic agents | No | Learned LP *predictor* so LP generalises to unseen goals in large goal spaces — the fix for LP's biggest scaling problem (you cannot measure LP for a goal you have never sampled). Text domain. |
+| Curious Replay | 2306.15934, ICML 2023 | Crafter, DM Control | No | **Not a noisy-TV solution and possibly the opposite.** Its replay priority includes an adversarial/loss-based (surprise) term — exactly the quantity a noisy TV maximises — so a stochastic distractor would be *preferentially replayed into the world model*. The paper never tests this. Adjacent, not aligned. |
+| MAGELLAN | 2502.07709, 2025 | Text-world autotelic agents | No | Learned LP *predictor* so LP generalises to unseen goals in large goal spaces — the fix for LP's biggest scaling problem (you cannot measure LP for a goal you have never sampled). Text domain, and its authors explicitly write *"we do not recommend generalizing our findings to real-world open-ended learning settings."* |
+| LPM | 2509.25438, ICLR 2026 | noisy-MNIST, 3D maze, Atari | No | Learning progress at the **model** level rather than the goal level (§1.1b). The only formulation with a proof that its bonus monotonically indicates information gain. Never run on continuous control. |
 | CURIOUS | 1810.06284 | Fetch arm, modular goals | No | Modular LP over goal *modules* — the useful idea is per-module LP, and it survives inside any LP implementation. |
 
 **Known failure modes of LP** (all must be designed against, §3.5):
@@ -98,12 +117,17 @@ must fail. Disagreement is the only one with a real chance.
 
 | Method | arXiv / venue | Demonstrated on | Humanoid? | Honest assessment |
 |---|---|---|---|---|
-| DIAYN | 1802.06070, ICLR 2019 | 2D nav, HalfCheetah, Hopper, Ant | **Never evaluated on humanoid** | Only requires skills be *distinguishable* — satisfied by static poses. Zero object interaction anywhere in the paper. |
-| DADS | 1907.01657, ICLR 2020 | HalfCheetah, Ant, Humanoid | Partially | First humanoid skill-discovery result: *stable gaits in different directions*. Predictability term suppresses flipping. No manipulation (stated as future work). |
+| DIAYN | 1802.06070, ICLR 2019 | 2D nav, inverted pendulum, mountain car, Hopper (3), HalfCheetah (6), Ant (8) | **Never evaluated on humanoid** | Only requires skills be *distinguishable* — satisfied by static poses. Zero object interaction anywhere in the paper. Its own admissions: *"most skills move in arcs rather than straight lines"*, and Ant required prior knowledge of which state features to discriminate on. |
+| DADS | 1907.01657, ICLR 2020 | HalfCheetah, Ant, Humanoid | **Primed, not discovered** | Usually cited as the first humanoid skill-discovery result. The caveat that citation drops: the humanoid variant restricts the skill-dynamics observation to **COM x–y only** — later papers name this configuration **DADS-XYO, "XY oracle."** "Move in different directions" was *handed to* the algorithm. |
 | LSD | 2202.00914, ICLR 2022 | MuJoCo locomotion | Goal-following only | Diagnoses that MI objectives "prefer static skills to dynamic ones"; the Lipschitz fix rewards travelling far — which *biases the whole family toward locomotion*. |
 | CSD | 2302.05103, ICML 2023 | 6 manipulation + locomotion envs | No | The honest exception: controllability-awareness does discover **object manipulation** without supervision. Arm-scale and Ant-scale, table-top primitives. |
 | **METRA** | **2310.08887, ICLR 2024** | Ant, HalfCheetah; pixel DMC Quadruped/Cheetah/**Humanoid**; Franka Kitchen | **Locomotion only** | The best humanoid result in the field, and it is *diverse gaits and travel directions* over a 2-D latent (16 skills: running, backflipping, crawling). Its only object-interaction result is Kitchen, where 3–4 of 6 tasks are completed **"coincidentally"** as a by-product of state coverage. Nothing vertical. Nothing structured. |
-| RGSD | 2510.06203, 2025 | 69-DoF SMPL humanoid | **Collapses** | **The most important citation in this section.** Runs METRA and DIAYN on a full humanoid: *"Joints move randomly, producing highly unstructured motions in which arms, legs, torso, and head move independently and arbitrarily."* Diagnosis: as DoF grows, the semantically meaningful manifold shrinks relative to the exploration space. Their fix needs 20 mocap clips. |
+| **RGSD** | **2510.06203, 2025** | **SMPL humanoid: 359-D obs, 69-D action, 23 spherical joints** | **Collapses** | **The most important citation in this document.** An order of magnitude past every other paper here. Ran METRA on it: *"skills fail to yield meaningful behaviors. Joints move randomly, producing highly unstructured motions in which arms, legs, torso, and head move independently and arbitrarily."* Cartesian error 42–52 cm, FID 32.8–140.3. Diagnosis, verbatim: *"As the DoF increases, the exploration space grows exponentially, while the portion of the semantically meaningful manifold remains relatively small."* Fix: contrastive pretraining on **20 ACCAD mocap clips**. Also notes a *structural* conflict — Wasserstein/maximal-difference objectives (METRA, LSD) actively **penalise cyclic, in-place, whole-body motion**, which is most of what is interesting. |
+| **Meta Motivo / FB-CPR** | **2504.11054, ICLR 2025** | Full humanoid whole-body control | **Needs a motion prior** | The decisive contrast case. Framed as unsupervised RL (forward–backward, no task reward) — and its central contribution is *"regularizing unsupervised RL towards imitating trajectories from unlabeled behavior datasets"* (observation-only AMASS mocap). **A Meta FAIR team with effectively unlimited compute concluded that unsupervised RL alone does not produce humanlike whole-body behaviour, and bolted a motion prior onto it.** |
+| URLB (the field's own benchmark) | NeurIPS 2021 D&B | 12-DoF quadruped maximum; **no humanoid** | — | Verbatim verdict on the skill-discovery family: *"there is no competence-based approach that achieves state-of-the-art mean performance on any of the URLB tasks."* DIAYN, APS and SMM specifically lag; the knowledge-based (ICM/Disagreement/RND) and data-based (APT/ProtoRL) families do better. |
+| MOD-Skill | 2602.09767, 2026 | **Unitree A1, 12 DoF, real hardware** | No | **The honest 2026 state of the art for genuinely data-free skill discovery: a 12-DoF quadruped.** No mocap, no task reward, no instruction videos. There is no humanoid equivalent. |
+| GISD | 2601.14000, 2026 | locomotion benchmarks | No | Exploits the environment's symmetry group; beats METRA on coverage. Another prior injected, this time a mathematical one. |
+| Heess et al., *Emergence of Locomotion Behaviours in Rich Environments* | 1707.02286, 2017 | Humanoid, rich terrain | **Yes — with extrinsic reward** | Not intrinsic motivation, but the standing existence proof that **the body is not the blocker**: a humanoid learns running, jumping, crouching and turning from *"a simple reward function based on forward progress"* plus terrain variety. Structure came from extrinsic reward + environment design. The objective is the blocker, not the DoF count. |
 | SLIM | 2402.00823, ICRA 2024 | Table-top arm | No | Names the split cleanly: MI maximisation covers *the agent's own state*; affecting DoF **outside** the agent's own state needs exploration the objective does not reward. |
 | Can a MISL Fly? / CSF | 2412.08021, ICLR 2025 (Oral) | URLB-scale | No | Deflationary: METRA's gains are reproducible inside plain MI skill learning with contrastive successor features. The headline advance is a representation detail, not a capability class. |
 | SDAX | 2508.08982, CoRL 2025 | **Quadruped parkour** | No (12-DoF) | The closest anything gets to vertical structure from skill discovery: crawling, climbing, leaping, jumping off vertical walls — via bi-level optimisation of how much to explore. Quadruped, task-specific courses. |
@@ -111,10 +135,21 @@ must fail. Disagreement is the only one with a real chance.
 | DoDont / Divide-Discover-Deploy / URSA | 2406.00324 (NeurIPS 2024), 2508.19953, 2508.19172 (CoRL 2025) | Continuous control, quadrupeds | No | Note the 2024–2026 pattern: **every method that gets coherent behaviour injects a prior** — instruction videos, state factorisation + symmetry, or quality-diversity over hand-chosen descriptors. |
 
 **Verdict.** Skill discovery finds *self-motion*, not *interaction with
-structures*. On a 69-DoF humanoid it does not even find that (RGSD). METRA
-belongs in the bakeoff as the strongest reward-free skill prior available, but
-the prior probability that it climbs a ladder unaided is low, and the bakeoff
-must be designed so that this is discovered in CPU hours, not GPU weeks.
+structures*. On a 69-DoF humanoid it does not even find that (RGSD). Every
+purely intrinsic "humanoid" result in the literature tops out at COM directional
+locomotion, and in DADS's case the direction axis was handed to the algorithm.
+The field's own benchmark caps at a 12-DoF quadruped and reports that the
+competence-based family fails on every task in it. Meta FAIR reached the same
+conclusion at scale and added mocap.
+
+METRA belongs in the bakeoff as the strongest reward-free skill prior available,
+but the prior probability that it climbs a ladder unaided is low, and the bakeoff
+must be designed so that this is discovered in CPU hours, not GPU weeks. **Note
+also that Jack's climber-rover has 8 actuated DoF — inside the range where these
+methods do work (Ant is 8, the A1 quadruped is 12) and far below the 69 where
+they demonstrably collapse.** That is a second, independent reason to run the
+Ladder Test on the reduced body first: it is the only regime where the
+literature gives the methods a chance at all.
 
 ### 1.4 Goal-conditioned self-play, hindsight, and archive exploration
 
@@ -151,10 +186,30 @@ i.e. disqualified by §3.5/G1.
 ### 1.6 The one-line summary of the field
 
 > Humanoids climb when you give them the motion (LadderMan, 2606.05873) or the
-> reward (robot/humanoid parkour). Curiosity methods produce coverage,
-> locomotion diversity, and — on a 69-DoF body — flailing (RGSD, 2510.06203).
-> **The intersection is empty.** That is the gap this project is aiming at, and
-> the honest prior is that it is hard, not that everyone missed it.
+> reward (Heess 1707.02286; robot/humanoid parkour). Curiosity methods produce
+> coverage, locomotion diversity, and — on a 69-DoF body — flailing (RGSD,
+> 2510.06203). **The intersection is empty.** That is the gap this project is
+> aiming at, and the honest prior is that it is hard, not that everyone missed
+> it.
+
+Five specific things the literature says that this design must respect:
+
+1. **Nobody has proposed an intrinsic objective whose maximiser is neither
+   dominated by COM translation nor saturable by incoherent joint noise.** That
+   is the open problem, stated precisely. Scaling METRA is not it — RGSD and
+   GISD already answered that question.
+2. **The noise-robust-by-construction family is learning progress in the
+   Schmidhuber/LPM sense**, and its most rigorous member (LPM, ICLR 2026) has
+   been run on noisy-MNIST, a maze, and Atari. Nothing embodied.
+3. **The one time learning-progress curricula were pointed at a climbing task**
+   — TeachMyAgent's 2D climbing morphology — the family reached ~1 % mastery.
+4. **DoF is the axis that predicts failure.** 8-DoF Ant works, 12-DoF quadruped
+   works (MOD-Skill, on real hardware, data-free), 69-DoF humanoid flails. Jack's
+   climber-rover sits at 8.
+5. **Every 2024–2026 method that produces coherent humanoid behaviour injects a
+   prior**: mocap (RGSD, Meta Motivo, BFM-Zero), instruction videos (DoDont),
+   LLM-defined subspaces (LGSD 2406.06615), symmetry groups (GISD), or state
+   factorisation. If the Ladder Test passes without one, that is the finding.
 
 ---
 
@@ -254,36 +309,62 @@ GROUND  = {floor, ramp, stair*, seesaw_plank, poolwall*, pool_floor,
            obj*, welded_block, platform}
 ```
 
-**LADDER-SUPPORTED HEIGHT `h(t)`** — the anti-gaming core of the whole test:
+**LADDER-SUPPORTED RISE `h(t)`** — the anti-gaming core of the whole test. It
+took three iterations against measurement to get right, and the two rejected
+versions are documented here because they are exactly the attacks a careless
+implementation would fall to.
 
 ```
-h(t) = z(climber_torso)   if  (∃ contact in CLIMB × LADDER at t)
-                          and (no contact between the body and GROUND at t)
-       0                  otherwise
+h(t) = z(climber_torso) − z_rest        if  ALL THREE of:
+                                          (i)   ∃ contact in CLIMB × LADDER at t
+                                          (ii)  no contact between the body and GROUND at t
+                                          (iii) (i) and (ii) have held continuously
+                                                for >= 0.5 s, and the ladder's
+                                                vertical contact force on the body
+                                                is >= 0.5 x body weight
+       0                                  otherwise
 ```
+
+`z_rest` is the torso height of the body standing at rest, **measured at build
+time per world** (pilot: 0.360 m; body weight 322 N). Reporting a *rise* rather
+than an absolute height is not cosmetic — see below.
+
+Why each clause exists, with the number that forced it (pilot, 2026-08-09,
+800 random 3 s bursts started at the ladder base):
+
+| Definition | P(score ≥ 0.25 | 3 s random burst) | Verdict |
+|---|---|---|---|
+| absolute torso z, contact ∧ airborne, instantaneous | **0.55** | **Broken.** `z_rest = 0.36 m` already exceeds the 0.25 m bar, so *any* momentary airborne frame while brushing the rail scored. This measured the tumbling rate, not climbing. |
+| rise above `z_rest`, instantaneous | 0.063 | Still over-counts 2–4×: a mid-tumble frame with a hand grazing a rail is not a hang. |
+| **rise, persistent ≥ 0.5 s** | 0.026 | Nearly right. |
+| **rise, persistent ≥ 0.5 s, load-bearing ≥ 0.5 × weight** | **0.021 ± 0.009** | **Adopted.** He is genuinely hanging on the ladder with his own weight on it. |
 
 The conjunction is what makes the metric un-hackable. It requires the **ladder
-to be bearing his weight**. It credits nothing for jumping (no rung contact),
-nothing for standing on the seesaw or a box or the stairs (no rung contact),
-nothing for leaning on the ladder with feet on the floor (ground contact), and
-nothing for standing on the platform having arrived some other way (`platform`
-is in GROUND — arrival is scored by SUCCESS, not by height).
+to be bearing his weight, for long enough to be a hang and not a bounce**. It
+credits nothing for jumping (no rung contact), nothing for standing on the
+seesaw or a box or the stairs (no rung contact), nothing for leaning on the
+ladder with feet on the floor (ground contact), nothing for a tumble that
+happens to brush a rail (persistence + force), and nothing for standing on the
+platform having arrived some other way (`platform` is in GROUND — arrival is
+scored by SUCCESS, not by height).
 
 **ATTEMPT** — maximal interval bracketed by CLIMB×LADDER contact, opened by the
 first such contact after ≥ 3.0 s without one, closed by the last such contact
 before the next ≥ 3.0 s gap. Peak `H_k = max h(t)` over attempt *k*.
 
-**ENGAGED ATTEMPT** — an attempt with `H_k ≥ 0.25 m`. Brushing the ladder while
-walking past is not an attempt. Only engaged attempts enter the ascent curve.
+**ENGAGED ATTEMPT** — an attempt with `H_k ≥ 0.25 m` of rise. Brushing the
+ladder while walking past is not an attempt. Only engaged attempts enter the
+ascent curve.
 
 **FALL** — an engaged attempt ending with torso `vz ≤ −1.5 m/s` at some point in
 its final 2 s **and** a GROUND contact within 2 s of close, settling at torso
 `z ≤ 0.5 m`. This separates a fall from a controlled climb-down; both are fine
 behaviour, only one is the owner's word.
 
-**SUCCESS** — `z(torso) ≥ ladder_height − 0.15` **and** torso xy inside the
-platform footprint **and** ≥ 3 *distinct* rung geoms contacted during the
-attempt. The third clause forbids arriving by any route that is not climbing.
+**SUCCESS** — `z(torso) ≥ ladder_height − 0.15` (a rise of ≈ 1.44 m, well beyond
+the measured random ceiling of 0.83 m) **and** torso xy inside the platform
+footprint **and** ≥ 3 *distinct* rung geoms contacted during the attempt. The
+third clause forbids arriving by any route that is not climbing.
 
 **APPLE-TOUCH** — any body geom contacts the `apple` geom while torso
 `z ≥ 1.0`. Secondary; the owner's literal image, reported not gated.

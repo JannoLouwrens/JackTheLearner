@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 42 / 105 demonstrated
+## 42 / 116 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -108,7 +108,7 @@ Every line here is backed by an experiment that could have failed;
 - [!] **T2.01** Locomotion beats a random policy  — all_seeds_beat_random=1.0; all_seeds_beat_random_std=0.0
       - _asserts:_ Trained policy return exceeds random-action return by >5 sigma.
       - _dies if:_ Return within seed noise of random.
-- [ ] **T2.02** Locomotion beats the honest MLP baseline
+- [~] **T2.02** Locomotion beats the honest MLP baseline  — backend=kaggle; gpu=Tesla P100-PCIE-16GB
       - _asserts:_ The chosen architecture beats a ~140K-param MLP actor-critic at equal environment steps.
       - _dies if:_ The MLP matches or wins.
       - _then delete:_ The transformer policy. If a 140K MLP wins, use the MLP.
@@ -330,6 +330,50 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ After episodes are distilled into weights (practice/replay), the verbatim episodic record still answers cued recall at its pre-distillation rate, AND the distilled skill outperforms no-distillation; then the double dissociation: wiping the episodic store leaves the skill intact, wiping the weight update leaves recall intact.
       - _dies if:_ Distillation degrades recall (learning ate the memory) or recall requires the store at skill-time (nothing was ever in the weights).
       - _then delete:_ Any design where conversation memory lives only in weights or skills live only in retrieved episodes.
+- [ ] **ME.11** Finds the memory from a paraphrase, still never invents one
+      - _asserts:_ Cued recall stays >=80% when cues are PARAPHRASES sharing no content words with the stored event (synonyms, circumlocutions, indirect questions), while fabricated-event abstention stays >=95% and every returned answer is byte-identical to a stored record.
+      - _dies if:_ Paraphrase recall at the lexical baseline (i.e. the index did not help), OR abstention degrading as recall improves (the retriever bought recall with credulity), OR any returned string not present verbatim in the log.
+      - _then delete:_ Any retriever that generates its answer instead of quoting one, however good its numbers.
+- [ ] **PG.6** The playground has eyes, and they resolve what the test needs
+      - _asserts:_ An egocentric camera in the playground MJCF renders frames from which a linear probe recovers object RADIUS (R^2>=0.8) and BEARING (median error <=5 deg) for objects in FOV.
+      - _dies if:_ Radius or bearing unrecoverable at the chosen resolution — then vision cannot carry HNS's identity->position channel and UB.9 would measure nothing.
+      - _then delete:_ Any visual claim in UB.9/UB.10 at this resolution. Escalate resolution or move vision to a frozen tower with cached embeddings before proceeding.
+- [ ] **PG.7** The heard-not-seen fixture leaks nothing but the intended bit
+      - _asserts:_ In the HNS scene the two candidates are acoustically indistinguishable except by modal fundamental: identical pan (<1e-6), identical listener distance (<1e-3 m), matched impact amplitude, and the candidate (not the striker or floor) is the voiced geom on 100% of events.
+      - _dies if:_ Any leak: an audio-only probe over band energies, amplitude and pan classifies which object fell above chance+3%.
+      - _then delete:_ UB.9. A binding test built on a leaky fixture measures the leak.
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **UB.9** Heard, not seen: the task that is impossible without fusion
+      - _asserts:_ On a scene where audio gives object IDENTITY (modal fundamental) but not position, and a pre-event frame gives position but not which object fell, the fused model identifies the fallen object well above chance (>=0.75 mean over 3 seeds, lower bootstrap CI > 0.5).
+      - _dies if:_ Fused accuracy indistinguishable from 0.5, OR indistinguishable from the unimodal late ensemble — either way nothing was bound.
+      - _then delete:_ The sentence 'his senses work in unison'. This is the smallest experiment that could establish it and it costs no GPU; if it fails, no larger experiment rescues the claim.
+- [ ] **UB.15** Heard, not seen — embodied
+      - _asserts:_ Jack turns toward and reaches the object he heard fall but did not see, above the 0.5 bearing-sign chance rate.
+      - _dies if:_ Reach target at chance, or unchanged when audio is muted.
+- [ ] **UB.10** Fusion bakeoff: six arms, matched params, matched steps
+      - _asserts:_ At matched trainable parameters (+-5%), matched tokens per modality, matched optimisation steps and matched data order, at least one shared-computation arm beats the late-concat null on the binding battery, and the ranking is stable across 3 paired seeds.
+      - _dies if:_ A0 (late concat) ties the best arm everywhere — then at this scale 'one brain' buys nothing over bolt-on encoders and GOAL.md's architecture claim must be restated. Report it; do not re-run until it looks better.
+      - _then delete:_ Five of six architectures. The survivor is the trunk Jack ships; the rest are deleted, not kept 'for later'.
+- [ ] **UB.11** The modality ablation matrix (standing)
+      - _asserts:_ On the tasks x senses matrix, every sense shows a degradation significantly above the PLACEBO column under at least the cross-episode SWAP perturbation; no sense has an all-null row of cells.
+      - _dies if:_ Any sense whose four perturbations are all indistinguishable from the placebo modality — it is decorative and loses its parameters (Tier-3 rule).
+      - _then delete:_ Any encoder whose column is placebo-indistinguishable. Deletion is the default action, not a discussion.
+- [ ] **UB.12** Synergy, not redundancy: beating the unimodal ensemble
+      - _asserts:_ On every task in the battery the fused model beats the UNIMODAL LATE ENSEMBLE (independently trained per-sense models, predictions averaged), paired across seeds, with a bootstrap CI on the paired difference excluding zero.
+      - _dies if:_ Fusion >= best single modality but <= the ensemble on every task: the model is exploiting redundancy and uniqueness, and computes nothing jointly. This is the most likely honest outcome and it must be reportable.
+- [ ] **UB.13** Cross-modal retrieval: the gate, never the claim
+      - _asserts:_ Given a contact-audio window, the matching visual clip is retrieved above chance (R@1 and R@10 vs a candidate set of known size), including against HARD negatives: the same episode at +-0.5 s, and a different object at the same instant.
+      - _dies if:_ At-chance retrieval against hard negatives while easy retrieval succeeds — then the model matched onset synchrony, not content.
+      - _then delete:_ Nothing on its own. This spec exists so that a NULL result on the contrastive arm (A4) is interpretable: without it, 'A4 did not help control' cannot be distinguished from 'A4's loss never trained'. Retrieval is necessary, never sufficient (arXiv:2603.19233: encoded is not used).
+- [ ] **UB.14** Cross-modal prediction, against the null that usually wins
+      - _asserts:_ Masked touch is predicted from vision+proprioception better than from proprioception ALONE, and better than the unconditional mean, at matched capacity.
+      - _dies if:_ Proprio-only matches vision+proprio: foot contact is inferable from joint torques, so vision adds nothing here. An HONEST and likely outcome that must be reported, not retried.
+      - _then delete:_ The vision->touch masked objective in arm A3, if vision adds nothing over proprio. Run this BEFORE the bakeoff: it costs CPU minutes and can delete an arm's justification.
+- [ ] **UB.16** Sensory information reaches the controller (D1-agnostic)
+      - _asserts:_ Zeroing the trunk's percept vector z degrades tasks that require non-proprioceptive information, and does NOT degrade flat-ground locomotion.
+      - _dies if:_ z-ablation changes nothing anywhere (the trunk is decorative in the control path) OR it degrades flat walking too (z is smuggling proprioception the controller already has, so the comparison in D1 was never about perception).
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 

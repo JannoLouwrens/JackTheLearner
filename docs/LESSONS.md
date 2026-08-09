@@ -152,3 +152,41 @@ shows what you CAN do and is silent about what you can never do. When a claim
 is blocked, check whether the dependency is real or an artifact of how the
 claim was categorised. And be suspicious when the project's headline claim is
 one of the unreachable ones.
+
+## VOID is not FAIL, and the difference is load-bearing
+
+T2.02's own metrics read "VOID — an arm failed the 3-sigma learning gate; two
+non-learners cannot arbitrate the architecture." Its ledger status read FAIL,
+message "pre-registered threshold not met". T2.02's `kills` field is *"the
+transformer policy"*. So read machine-side, the ledger said the kill criterion
+had fired — on a run that had explicitly refused to arbitrate. A human caught
+it in prose; the machine did not. Cause: `_check` signalled VOID with
+`return False`, and `run_spec` maps False -> FAIL.
+
+FAIL means the hypothesis was tested and lost. VOID means the run could not
+test it: an arm that never learned, a leaky fixture, a metric that turned out
+to be an artifact. Only FAIL may trigger `kills`.
+
+**Rule:** when a test can be invalid as well as wrong, it needs a third status,
+not an overloaded second one. And check that the *stored* status agrees with
+what the metrics say — the two disagreeing is a class of corruption no
+threshold catches. `Status.VOID` now exists and `check` may return one.
+
+## Generated artifacts go stale silently
+
+`CHECKLIST.md` displayed T2.02 as "[ ] not run" while a completed 22,604-second
+run sat in the ledger. Nothing had re-rendered it, and nothing checks that it
+matches its source.
+
+**Rule:** any generated file needs a currency check, or it becomes a confident
+lie that outranks the truth in whoever reads it first.
+
+## A default of zero is not "unknown"
+
+`Arm.cost` defaulted to `0.0` and TIEs resolve by cost. An arm that never
+declared a cost therefore looked free and won — an arbitrary pick presented as
+a measurement. Widening the guard to "all costs are zero" was still wrong: one
+declared arm plus one undeclared still hands victory to the undeclared one.
+
+**Rule:** use `None` for undeclared and refuse to proceed, never a neutral-
+looking default. A sentinel that is also a valid value cannot be detected.

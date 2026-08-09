@@ -37,8 +37,8 @@ the run.
 """
 from __future__ import annotations
 
-import json
 import statistics as st
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Dict, List, Optional
@@ -60,7 +60,11 @@ class Arm:
     name: str
     run: Callable[[int], float]
     description: str = ""
-    cost: float = 0.0
+    cost: Optional[float] = None
+    """UNDECLARED by default, not zero. A TIE is resolved by cost, so a default
+    of 0.0 let an arm that never declared one win by appearing free — an
+    arbitrary pick reported as a measurement. None forces the spec to say what
+    the arms cost, in the units it named."""
 
 
 @dataclass
@@ -71,7 +75,7 @@ class ArmResult:
     std: float
     sigma_over_null: float
     passed_gate: bool
-    cost: float = 0.0
+    cost: Optional[float] = None
     description: str = ""
 
 
@@ -98,6 +102,8 @@ class BakeoffResult:
             m[f"{a.name}_mean"] = round(a.mean, 4)
             m[f"{a.name}_sigma"] = round(a.sigma_over_null, 3)
             m[f"{a.name}_gate"] = float(a.passed_gate)
+            if a.cost is not None:
+                m[f"{a.name}_cost"] = a.cost
         return m
 
 
@@ -152,13 +158,26 @@ def run_bakeoff(spec: Spec,
 
     if gap < margin_sigma:
         tied = [a for a in ranked if abs(a.mean - best.mean) / unit < margin_sigma]
+        # A TIE is resolved by COST, so cost must be real. It defaults to 0.0,
+        # and with every arm at 0.0 `min` returns whichever happened to sort
+        # first — an arbitrary pick, reported as "the cheapest". Refuse rather
+        # than dress up a coin flip as a measurement.
+        if any(a.cost is None for a in tied):
+            return _finish(spec, BakeoffResult(
+                spec.id, "VOID", None, results, null_mean, null_std,
+                f"{best.name} and {second.name} are within {gap:.2f} sigma so "
+                f"the decision falls to cost, but "
+                f"{', '.join(a.name for a in tied if a.cost is None)} declared "
+                f"none. Declare "
+                f"Arm(cost=...) in the units the spec named (params, latency, "
+                f"GPU-hours) and re-run.", spec.metric), ledger)
         cheapest = min(tied, key=lambda a: a.cost)
         return _finish(spec, BakeoffResult(
             spec.id, "TIE", cheapest.name, results, null_mean, null_std,
             f"{best.name} leads {second.name} by only {gap:.2f} sigma "
             f"(margin {margin_sigma}). The choice does not matter yet; "
-            f"defaulting to the cheapest tied arm ({cheapest.name}).",
-            spec.metric), ledger)
+            f"taking the cheapest tied arm ({cheapest.name}, cost "
+            f"{cheapest.cost:g}).", spec.metric), ledger)
 
     return _finish(spec, BakeoffResult(
         spec.id, "WINNER", best.name, results, null_mean, null_std,
@@ -168,12 +187,19 @@ def run_bakeoff(spec: Spec,
 
 def _finish(spec: Spec, res: BakeoffResult, ledger: Optional[Ledger]) -> BakeoffResult:
     if ledger is not None:
+        # VOID maps to Status.VOID, never FAIL. A bakeoff that could not
+        # arbitrate has NOT refuted anything, and specs carry a `kills` field:
+        # recording VOID as FAIL reads machine-side as the kill criterion
+        # firing. That exact corruption is live in T2.02's entry today.
+        status = {"WINNER": Status.PASS, "TIE": Status.PASS,
+                  "VOID": Status.VOID}[res.verdict]
         ledger.record(Result(
-            spec_id=spec.id,
-            status=Status.PASS if res.verdict in ("WINNER", "TIE") else Status.FAIL,
+            spec_id=spec.id, status=status,
             metrics=res.to_metrics(),
             message=f"{res.verdict}: {res.reason}",
-        ))
+            ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
+            **Result.env_stamp(),   # commit + hardware: an unattributable
+        ))                          # result defeats the overseer's own audit
     _append_decision(res)
     return res
 
@@ -197,7 +223,8 @@ def _append_decision(res: BakeoffResult) -> None:
              "\n|---|---|---|---|---|"]
     for a in sorted(res.arms, key=lambda x: x.mean, reverse=True):
         lines.append(f"\n| {a.name} | {a.mean:.3f} | {a.sigma_over_null:.2f} | "
-                     f"{'pass' if a.passed_gate else 'FAIL'} | {a.cost:g} |")
+                     f"{'pass' if a.passed_gate else 'FAIL'} | "
+                     f"{a.cost if a.cost is not None else '—'} |")
     lines.append("\n")
     with open(DECISIONS, "a", encoding="utf-8") as fh:
         fh.write("".join(lines))
