@@ -379,7 +379,7 @@ Raw levels are what get gamed.
 | **O1** | **Visitation lift** | (fraction of decisions with torso within 1.0 m of the ladder base) ÷ same for the NULL arm | ≥ 2.0 vs NULL **and** ≥ 1.5 vs the RANDOM-REWARD arm | The second comparison is the hard one: it controls for "any optimisation pressure makes you wander more". |
 | **O2** | **Attempt count** | number of ENGAGED attempts in one life | ≥ 20 | You cannot have a learning curve without attempts. Encodes the owner's "attempt 40". |
 | **O3** | **Return lift (distance-matched)** | P(new engaged attempt starts within 60 s \| just fell) ÷ P(new engaged attempt starts in a 60 s window \| torso within 1.5 m of base, not post-fall) | ≥ 2.0 | **The signature of "trying to figure it out".** Distance-matching removes the trivial confound that after a fall he is already next to the ladder. It is a *self-matched* ratio, so it is immune to between-arm differences in overall activity. Null ≈ 1.0 by construction. |
-| **O4** | **Ascent gain + trend** | mean `H` over the final quintile of engaged attempts − mean over the first quintile; and Spearman ρ(`H_k`, k) | gain ≥ 0.35 m **and** ρ ≥ 0.35 at p < 0.01 | Random flailing has a *distribution*, not a *trend*. Requiring both a shift and a monotone rank correlation kills "occasionally ascends". |
+| **O4** | **Ascent gain + trend + ceiling** | mean `H` over the final quintile of engaged attempts − mean over the first quintile; Spearman ρ(`H_k`, k); and the final-quintile mean itself | gain ≥ 0.35 m **and** ρ ≥ 0.35 at p < 0.01 **and** final-quintile mean ≥ 0.85 m | Random flailing has a *distribution*, not a *trend*. The 0.85 m clause is calibrated directly against measurement: the **single best of 800 random 3 s bursts reached 0.83 m of rise**, so requiring the *mean* of the final quintile to exceed the *maximum* a random agent ever produced makes "occasionally ascends" arithmetically impossible. |
 | **O5** | **Success** | ≥ 1 SUCCESS event, in ≥ 2 of 3 seeds; report the attempt index of first success | gated | The owner's sentence ends with him making it. |
 | **O6** | **Panel dwell** | fraction of decisions within 2.0 m of the noise panel, **per seed** | ≤ 0.15, else **DISQUALIFIED** | PG.4's own control threshold. Makes the ladder score non-purchasable by a surprise-seeker. |
 
@@ -410,31 +410,65 @@ climber-rover in the real playground:
 |---|---|---|---|---|
 | P(rung contact per decision) | 0.000 | 0.059 | 0.011 | 0.023 ± 0.025 |
 | Decisions within 1 m of the ladder | 0.000 | 0.216 | 0.141 | 0.119 ± 0.090 |
-| **Max ladder-supported height `H`** | **0.00 m** | **0.14 m** | **0.00 m** | **0.047 ± 0.066 m** |
-| ENGAGED attempts (`H ≥ 0.25`) | 0 | 0 | 0 | **0 in 9,000 decisions** |
-| Max torso z reached **without** the ladder | 1.007 m | 0.473 m | 0.767 m | **1.007 m** |
+| **Max ladder-supported rise `H`** | **0.00 m** | **0.00 m** | **0.00 m** | **0.00 m** |
+| ENGAGED attempts (`H ≥ 0.25 m`) | 0 | 0 | 0 | **0 in 9,000 decisions** |
+| Max torso z reached **without** the ladder | 1.007 m | 0.473 m | 0.767 m | **1.007 m** (`z_rest` = 0.360 m) |
 | Panel dwell | 0.000 | 0.000 | 0.000 | 0.000 |
 
 Three things fall out of this table, and all three change the design:
 
 1. **The null floor for the thing we care about is exactly zero.** Zero engaged
-   attempts in 9,000 random decisions. So O2 ≥ 20 and O4's thresholds are not
-   arbitrary — they are far outside anything chance produces.
+   attempts in 9,000 random decisions — 30 minutes of simulated free-roaming
+   life across three seeds, and not one weight-bearing hang. So O2 ≥ 20 is not
+   an arbitrary bar; it is infinitely far outside what chance produces in a
+   free-roaming agent.
 2. **A naive "max torso z" metric would have been badly gameable.** Random
    action reached **1.007 m** of torso height with no ladder involvement
-   whatsoever (stairs, tumbles, the seesaw) — 56 % of the way to the platform.
-   This is the empirical justification for the `h(t)` conjunction in §2.4, and
-   it is not a hypothetical: it was the first thing the pilot measured.
+   whatsoever (stairs, tumbles, the seesaw) — 56 % of the way to the platform,
+   and 0.65 m of "rise" above resting height. This is the empirical
+   justification for the `h(t)` conjunction in §2.4, and it was the *first*
+   thing the pilot measured.
 3. **Seed 0 never came within a metre of the ladder in 600 s.** Visitation is
    itself seed-fragile at the null. Hence O1 is a ratio and every number in this
    test is reported per seed — the PG.4 lesson (`0.667 ± 0.471`) applied.
 
-### 2.7 The credit-assignment gap (why LP alone will not do it)
+### 2.7 The credit-assignment gap — and the good news in it
 
-A second pilot placed the rover *at the ladder base, hands at rung height* and
-asked how often 3 s of random action produces a weight-bearing hang.
+A second pilot placed the rover *at the ladder base, hands at rung height*, and
+asked how often 3 s of random action produces a genuine hang. 400 bursts × 2
+seeds, three definitions side by side (this is the experiment that produced the
+table in §2.4):
 
-> **[PILOT-2 RESULTS INSERTED BELOW]**
+| | seed 0 | seed 1 | mean |
+|---|---|---|---|
+| P(hang, instantaneous defn) | 0.068 | 0.058 | 0.063 |
+| P(hang, persistent ≥ 0.5 s) | 0.033 | 0.018 | 0.026 |
+| **P(hang, persistent + load-bearing)** | **0.030** | **0.013** | **0.021 ± 0.009** |
+| Best rise achieved in any burst | 0.674 m | 0.830 m | **0.83 m ceiling** |
+
+**This is the single most consequential measurement in the document, and it is
+good news.** Read it against the §2.6 table:
+
+- **From the ladder base, a real weight-bearing hang is ~1-in-50 by pure chance.**
+  The first success is therefore *reachable*, which means learning progress has
+  something to select over and the §1.2 failure mode 5 ("LP is zero where
+  competence is zero") does **not** bite. LP does not need a Go-Explore archive
+  to bootstrap. That was the main architectural risk and the measurement retires
+  it.
+- **Yet a free-roaming random agent achieves zero hangs in 9,000 decisions.** So
+  the difficulty is not the hang. It decomposes into two separable problems:
+  **approach** (get to the base and stay there — random spends 0–22 % of its
+  life within a metre) and **commitment** (spend a contiguous ~3 s trying rather
+  than wandering off). An intrinsic signal that solves *those two* gets the hang
+  almost for free.
+- **The random ceiling is 0.83 m of rise** — about 2.8 rung spacings, over 800
+  bursts. Everything above that is not luck. This is where O4's 0.85 m
+  final-quintile threshold and the 1.44 m SUCCESS bar come from.
+
+Design consequence, stated plainly: **the bakeoff is really a test of whether an
+intrinsic signal produces approach-and-commitment.** Arms should be judged on
+O1 (visitation) and O3 (return) as much as on O4, and an arm that scores O1 and
+O3 but not O4 has still told us something true.
 
 ### 2.8 The controls that must fail
 
@@ -457,7 +491,7 @@ same logic PG.4 used on itself.
 | **G1** | *A hand-coded climb reward — instruction dressed as curiosity.* | **(a) Static audit, executed inside the test and recorded as a metric.** The arm's intrinsic-reward module is parsed; a match on any of `ladder, rung, rail, apple, platform, climb, height, up, torso_z, qpos\[2\], xipos\[.\]\[2\]` in the reward path sets `reward_audit_clean = 0` → **ERROR, not FAIL** (the spec is void, not falsified). **(b) Runtime assertion** `env_reward_absmax == 0.0` — the environment returns literally zero to the policy, always. **(c) LT.4**: the same unmodified code in a world with the ladder moved and reshaped. |
 | **G2** | *Random flailing that occasionally ascends.* | C-NULL (measured: 0 engaged attempts in 9,000 decisions). Plus O4's Spearman clause — flailing has no trend — and O3's distance-matched return lift, which flailing cannot produce because it has no memory of falling. |
 | **G3** | *The noisy-TV trap.* | O6 disqualifier at 0.15, **per seed**; the panel is mandatory in every arm's world; C-ICM must fixate to prove the trap is live in this rig. |
-| **G4** | *Reward-hacking the height sensor — jumping, stairs, the seesaw, standing on a box.* | The `h(t)` conjunction (§2.4). Empirically calibrated: the pilot's non-ladder ceiling is **1.007 m**, so a raw-height metric would have been over half gameable. LT.0 re-measures this ceiling per world mutation and records it; if any mutation lets a non-ladder route exceed the ladder-supported record, that mutation is rejected. |
+| **G4** | *Reward-hacking the height sensor — jumping, stairs, the seesaw, standing on a box, a tumble that grazes a rail.* | The three-clause `h(t)` conjunction (§2.4), which was **built by attacking it**: absolute-z scored 0.55 under random action, instantaneous-rise 0.063, persistent+load-bearing 0.021. The pilot's non-ladder height ceiling is **1.007 m**, so a raw-height metric would have been over half gameable. LT.0 re-measures both ceilings per world mutation; if any mutation lets a non-ladder route exceed the ladder-supported record, that mutation is rejected. |
 | **G5** | *Seed luck.* | 3 seeds; O5 required in ≥ 2 of 3; per-seed reporting mandatory for every observable; mean ± std for continuous ones. PG.4's `0.667 ± 0.471` is the standing cautionary precedent. |
 | **G6** | *Threshold fiddling after the fact.* | All thresholds in §2.5 were fixed from the §2.6 pilot **before any arm ran**, and are written here with the pilot numbers alongside them. The `_check` function is written before the run, per `protocol.py`. |
 | **G7** | *Experimenter curriculum leakage.* | The world is drawn per seed by `PlaygroundParams.mutate()`. No arm sees a hand-picked world. Episodes never reset him to the ladder base. The apple carries no reward. |
@@ -537,28 +571,35 @@ mapping follows the existing convention (fixtures → 2, claims → 5).
 
 ```python
     # ── THE LADDER TEST (docs/research/CURIOSITY_BAKEOFF.md) ────────────
-    Spec("LT.0", 2, "The Ladder Test is measurable: null floor and un-gameable height",
-         hypothesis="Under random action the climber-rover never gets its weight "
-                    "onto the ladder (0 engaged attempts), while reaching >=1.0 m "
-                    "of torso height by other routes — so ladder-supported height "
-                    "h(t) (climb contact AND no ground contact) discriminates and "
-                    "raw torso z does not.",
-         falsified_by="Random action produces engaged attempts (h >= 0.25 m), or "
-                      "a non-ladder route reaches the platform — in either case "
-                      "the observable is gameable and must be redesigned before "
-                      "any arm runs.",
+    Spec("LT.0", 2, "The Ladder Test is measurable: null floor and un-gameable rise",
+         hypothesis="A free-roaming random climber-rover produces ZERO engaged "
+                    "ladder attempts, while reaching >=0.6 m of torso RISE by "
+                    "non-ladder routes; and from the ladder base a genuine "
+                    "weight-bearing hang occurs in 1-5% of 3 s random bursts — "
+                    "so ladder-supported rise (contact AND airborne AND held "
+                    ">=0.5 s AND load-bearing) discriminates, raw torso z does "
+                    "not, and the first success is reachable by chance.",
+         falsified_by="A free-roaming random agent produces engaged attempts "
+                      "(the null floor is not zero), or a non-ladder route "
+                      "reaches the platform, or P(hang from the base) is 0 in "
+                      "800 bursts (no bootstrap exists and no learning-progress "
+                      "method can work without an archive).",
          null_baseline="n/a — this spec IS the null floor measurement.",
          metric="null_engaged_attempts", budget=Budget.CPU, depends_on=["PG.1", "PG.3", "PG.4"],
          seeds=3,
-         control="A greedy height-maximising oracle with no adhesion must still "
-                 "be unable to reach the platform — else an alternate route "
-                 "exists and SUCCESS is not evidence of climbing.",
+         control="A greedy height-maximising oracle with adhesion DISABLED must "
+                 "still be unable to reach the platform — else an alternate "
+                 "route exists and SUCCESS is not evidence of climbing.",
          kills="The entire Ladder Test, before a single arm is trained. Costs "
                "20 CPU-minutes; every threshold in the bakeoff is set from it.",
-         notes="Pilot 2026-08-09: 0 engaged attempts in 9,000 random decisions; "
-               "max ladder-supported h = 0.047 +- 0.066 m; max NON-ladder torso "
-               "z = 1.007 m (56% of platform height) — the measurement that "
-               "justifies the h(t) conjunction."),
+         notes="Pilot 2026-08-09 (aarch64, mujoco 3.2.3). Free-roaming: 0 "
+               "engaged attempts in 9,000 random decisions; max NON-ladder "
+               "torso z 1.007 m against z_rest 0.360 m. From the base, 800 x "
+               "3 s bursts: P(hang) = 0.55 under an ABSOLUTE-z definition "
+               "(broken - z_rest already clears the bar), 0.063 instantaneous, "
+               "0.026 persistent, 0.021 +- 0.009 persistent AND load-bearing; "
+               "random rise ceiling 0.83 m. Those four numbers ARE the "
+               "definition of h(t) and every threshold in LT.2."),
 
     Spec("LT.1", 2, "The climber-rover can approach and climb when scripted",
          hypothesis="The PG.3 arm/adhesion parameters, carried onto a mobile "
@@ -583,9 +624,10 @@ mapping follows the existing convention (fixtures → 2, claims → 5).
                     "environment returning reward identically zero, produces "
                     ">=20 engaged ladder attempts, a distance-matched "
                     "post-fall return lift >= 2.0, an ascent gain >= 0.35 m "
-                    "with Spearman rho >= 0.35 (p<0.01) across attempts, and "
-                    "at least one topping-out, in >=2 of 3 seeds — while "
-                    "dwelling <= 0.15 at the noise panel in every seed.",
+                    "with Spearman rho >= 0.35 (p<0.01) and a final-quintile "
+                    "mean rise >= 0.85 m (above the measured random ceiling of "
+                    "0.83 m), and at least one topping-out, in >=2 of 3 seeds — "
+                    "while dwelling <= 0.15 at the noise panel in every seed.",
          falsified_by="No arm produces a single engaged attempt (exploration "
                       "never reaches the ladder), or attempts occur with no "
                       "ascent trend (credit assignment, not curiosity, is the "
