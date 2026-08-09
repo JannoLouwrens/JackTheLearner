@@ -24,14 +24,14 @@
 
 | research doc | specs | status |
 |---|---|---|
-| LEARNING_CORE.md | LC.00–LC.06 (+PS.01 pairing — register together) | PENDING |
-| NEEDS_AND_DEATH.md | NE.00–NE.09 | PENDING — note: doc §9 gates NE.01's constants on §1.2 citation verification (Borbély ratio is load-bearing and open); register all, but do not let NE.01 fix constants until a citation pass closes §1.2 |
+| LEARNING_CORE.md | LC.00–LC.06 + PS.01 | REGISTERED by the builder autonomously, 2026-08-09 (registry 128→136) — implementation/runs proceed via Stage 0.1 |
+| NEEDS_AND_DEATH.md | NE.00–NE.09 | PENDING — note: doc §9 gates NE.01's constants on §1.2 citation verification (Borbély ratio is load-bearing and open); register all, but do not let NE.01 fix constants until a citation pass closes §1.2. NE.08 overlaps W.6 — see SURVIVAL_WORLD §5.0 reconciliation before registering |
 | PURPOSE_AND_SCAFFOLDING.md | PS.* | BLOCKED-ON-CORRECTION: PS.00(c)+PS.02 disproven by NEEDS_AND_DEATH (drive-farming cannot exist; exact VI + K&G eLife 2014 theorem). Correct, then register. |
 | CURIOSITY_BAKEOFF.md | LT.01–LT.09 | PENDING |
 | D1_CONTROL_ARCHITECTURE.md | D1.0, T2.21 | PENDING |
 | HEARING_BAKEOFF.md | HR.1–HR.8 | PENDING |
 | LANGUAGE_GROUNDING.md | LG.* | PENDING — doc was truncated (agent killed); verify completeness before extracting |
 | DIRECTION_AUDIT.md | WP.01–04, LF.01–05, SO.01–05, PS.07, T0.17–18 (stubs) | PENDING — stubs need full Spec fields before registration |
-| SURVIVAL_WORLD.md | (agent still writing) | AWAITING DOC |
+| SURVIVAL_WORLD.md | W.1–W.7 | PENDING — CROSS-CHECK REQUIRED: W.6 overlaps NE.08 (reconciliation written in SURVIVAL_WORLD §5.0); register the reconciled pair or the ledger gets two specs testing one claim. Also carries recommendation 6b: contype/conaffinity audit of the playground, worth ~3x throughput, do before any W.* runs |
 | UNIFIED_BRAIN_BAKEOFF.md | PG.6–7, UB.9–16 | REGISTERED a3129b2 2026-08-09 |
 | MEMORY_RETRIEVAL_BAKEOFF.md | ME.11.0, ME.11.A–F | REGISTERED 0c1ff06 (ME.11.0 PASSING) |
