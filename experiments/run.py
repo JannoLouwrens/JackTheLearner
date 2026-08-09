@@ -198,13 +198,25 @@ def cmd_status(ledger: Ledger) -> int:
         print(f"    [{MARK[st]}] {s.id}  {s.title}{impl}")
     print(f"\n  {counts}\n")
     _check_stale_detector(ledger)
-    changed = [x for x in stale_claims(ledger) if x[2] == "CHANGED"]
+    rows = stale_claims(ledger)
+    changed = [x for x in rows if x[2] == "CHANGED"]
+    unknown = [x for x in rows if x[2] == "UNVERIFIABLE"]
     if changed:
         print("  ! STALE CLAIMS — the test changed after the run that recorded it:")
         for sid, st, _, detail in changed:
             print(f"      {sid}  recorded {st}; {detail}. Re-run it — the entry "
                   f"is about older code.")
         print()
+    if unknown:
+        # Printed, not filed under "clean". The entry that MOTIVATED this guard
+        # (PG.8, strengthened but un-re-runnable behind a held lock) is itself
+        # in this bucket, because it was recorded before `impl_sha` existed. A
+        # guard whose own motivating case reads green is the "guard built by
+        # fixing one file leaves the file that motivated it unfixed" lesson
+        # repeating; saying the number out loud is the cheapest way not to.
+        print(f"  ? {len(unknown)} entr(y/ies) predate `impl_sha` and CANNOT be "
+              f"checked for staleness — `run stale` lists them; a re-run fixes "
+              f"each one.\n")
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
 
