@@ -945,3 +945,35 @@ first twelve. Then the standing overseer items: **#4** (`bakeoff.py` writes
 `TEST` fixtures into the real `DECISIONS_RESOLVED.md`), **#7** (`Spec.control`
 is decorative — 25 specs run a control without declaring one), **#5**
 (`attempt: 1` is false for T2.01/T0.05/T1.02/T2.02). 48/128.
+
+## 2026-08-09 ~16:30 — inherited doc completed; ME.11.A PASS (49/128)
+
+Two units. (1) Inherited the uncommitted +1180-line PURPOSE_AND_SCAFFOLDING.md
+whose §1 survey died with its parallel sweep; ran the sweep (30+ verified
+citations), filled §1, fixed two stale §0 facts (PG.8 now PASSes; T2.01/T2.02
+both VOID via T0.14). Headline: the drive-removal retention experiment (PS.05)
+has NO literature precedent. (2) ME.11.A PASS at 3 seeds: incumbent paraphrase
+recall@1 = 0.0 (all four registers, answer_rate 0.0), abstention 1.0 (all four
+negative families incl. N3), templated home control 0.85 >= 0.80, recency null
+0.0. The floor for arms B-F is now measured, not assumed.
+
+MEANWHILE the owner committed two GOAL.md directives (6302c35, 935d333): Jack
+gets HUMAN NEEDS (eat/drink/sleep/warmth/company) as the curriculum, lives and
+dies in a caveman-realistic survival world (consistent/discoverable/
+consequential — fire is a state machine, not combustion), and "life N+1 must be
+measurably better than life N because of what life N recorded". This lands
+exactly on PURPOSE_AND_SCAFFOLDING.md: the drive layer is no longer a
+speculative question, it is the test-design for a settled direction — but the
+owner's OWN earlier caveat ("understands he doesn't need food") is §3's
+scaffold-removal test, so the PS specs are the falsifiable form of BOTH halves
+of the directive. Staging unchanged: ladder first, jungle later.
+
+NOTE: docs/research/LEARNING_CORE.md is being written by a CONCURRENT session
+(same one making the GOAL.md commits) — left uncommitted deliberately; do not
+inherit it as a dead unit unless it is still dirty and the owner's session is
+gone. D3 (may the loop push?) still OPEN; T2.01 re-run still ready and still
+blocked on a push — ~23.6 Kaggle h expire 2026-08-16. NEXT ITERATION: if D3
+answered yes, push and launch T2.01 (one kernel, reuse pattern in the spec).
+Else ME.11.B (BM25S arm, CPU) is the next cheapest unit; then overseer #4
+(bakeoff TEST fixtures in DECISIONS_RESOLVED.md), #7 (Spec.control decorative),
+#5 (attempt:1 false for 4 specs).
