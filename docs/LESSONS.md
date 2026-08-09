@@ -564,3 +564,46 @@ the test whenever an implementation disagrees with it. Same family as "fixture
 specs certify PROPERTIES of a thing, not that the thing is connected to the
 system that needs it", one level up: here the fixture *was* connected, and it
 was the auditor that had the wrong end.
+
+## A counter that stands in for an external resource must be reconciled against it at least once
+
+`Budget` is the project's Kaggle quota meter: `remaining() = max(0, 30.0 -
+used_hours())`, and `afford()` refuses a submission against it. Week 31 closed at
+**37.4554 of the 30.0 h ceiling**, and 27.73 h of that was charged inside a
+window of at most 12.75 h of wall clock — on a backend the loop drives serially
+under a flock, so the number cannot be an account of elapsed time. It is not
+measuring Kaggle at all. `submit()` calls `budget.charge(backend,
+res.duration_s)` *before* `if res.ok`, so a crashed job, a timed-out job and a
+job whose artifact download failed all bill their full local wall clock as GPU
+hours; `res.duration_s` is `time.time() - t0` on this box, so queue time and
+download time are billed too; and a free `JACK_REUSE_KERNEL` reattach correctly
+skips `afford()` and then bills `charge()` for compute already paid for.
+
+It has already cost a run: `T1.02` is ERROR in the ledger with the message
+`kaggle: 0.0h left, need 0.7h`, recorded 2026-08-08. A Tier-1 spec was denied 42
+minutes of GPU by a counter that had billed 7.46 h more than the ceiling it was
+clamped against.
+
+T0.12 was green throughout, and was *strengthened* during this period. It asserts
+`starts_full`, `refuses_when_exhausted`, `drained_to_exact_ceiling`,
+`weeks_isolated`, `stale_format_key_isolated` — every one of them against
+synthetic `charge()` calls the test makes itself. The assertions can all fire;
+they are just not pointed at anything outside the test. T0.12 verifies the
+accountant's arithmetic and has never looked at the account.
+
+This is distinct from "an assertion made against a saturated quantity cannot
+fail": there the assertion was unfalsifiable, here it is perfectly falsifiable
+and measures the wrong universe. It is closer to "fixture specs certify
+PROPERTIES of a thing; they do not certify that the thing is connected to the
+system that needs it" — but the missing connection is to an *external* system
+that no amount of local testing can reach.
+
+**Rule:** when a local number stands in for a resource owned by someone else — a
+provider's quota, a disk the OS reports, a rate limit, a remaining balance — the
+test suite must reconcile it against the external source of truth at least once,
+or the number is a fiction with a threshold attached. Ask of any such counter:
+*what does this bill when the work did not happen?* Charging on failure, on
+retry, on reattach, and on queue time are four different ways to make a meter
+read high, and none of them errors. And a ceiling that can be exceeded is not a
+ceiling: if `used` may legally pass `max`, log it, because `max(0, ...)` will
+otherwise present exhaustion and overrun as the same state.

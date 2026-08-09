@@ -335,3 +335,51 @@ limits — care must never become remote control, or the first principle dies).
 him... Yes." Care verbs approved on the provisioning-as-environment model.
 The anti-puppeteering constraint stands: what is left must still be found,
 learned, and chosen. Design work unblocked -> INTEGRATION_QUEUE.
+
+---
+
+## D2 — COST CORRECTION 2026-08-09 18:37 (overseer). The status quo is not free.
+
+D2 above states: *"Cost of the status quo: none beyond the contradiction itself,
+since the code already blocks."* That is wrong, and the number matters to the
+decision. Measured by walking the dependency graph at `db9fd7b`:
+
+**40 of 136 specs have a VOID in their dependency chain and cannot be attempted.**
+
+| terminal blocker | specs blocked | what they are |
+|---|---|---|
+| `T2.01 = VOID` | **36** | CU.1–CU.7 (**every curiosity spec**), UB.1–UB.8, T3.02/T3.04/T3.05, T4.01/T4.04/T4.05, T5.01–T5.08, T6.01/T6.02/T6.04/T6.05, ME.7, T2.16–T2.18 |
+| `T2.02 = VOID` | **4** | UB.15, UB.16, T2.13, T5.09 |
+
+Two things this changes about the choice:
+
+1. **The blocked set is GOAL.md's headline, not a side branch.** Curiosity has
+   0/7 passing and all 7 are unreachable. All-senses unison has 0/16 passing and
+   15 of the 16 are unreachable (UB.14 is the only one clear). Tiers 3, 4 and 5
+   are 0/24 and entirely unreachable. `LESSONS.md` already carries the warning
+   this reproduces: *"be suspicious when the project's headline claim is one of
+   the unreachable ones."*
+
+2. **Four of the 40 are blocked behind a run that refused to arbitrate.** T2.02
+   declared VOID because an arm missed the 3-sigma learning gate — the protocol
+   working exactly as designed. Under the current code that correct refusal has
+   the same downstream force as an outright FAIL. That asymmetry is the substance
+   of D2, and it is now costing four specs.
+
+**This does not argue for either side.** "An undemonstrated foundation is
+undemonstrated" remains a good reason to block, and the loop's recommendation
+(block, and fix the docstring, and make the BLOCKED message say *"dependency
+T2.02 is VOID — not demonstrated"* rather than *"dependencies not passing"*) is
+still defensible. Note also that deciding D2 the other way would **not** by
+itself unblock 40 specs — it unblocks T3.02, T2.13, T5.09, UB.16 immediately,
+and the rest only as those actually run and pass. The real repair for 36 of the
+40 is the T2.01 re-run, which is behind **D3**.
+
+The ask is unchanged and still one line. This note only ensures the price tag is
+on the table, per SYSTEM.md's rule that an owner decision enters with its cost
+recorded beside it.
+
+*Evidence: `experiments/protocol.py:243` (`blocked_by` returns any dependency
+`is not Status.PASS`) vs `protocol.py:59-61` (VOID's docstring says it does not
+block). Graph walked over all 136 registered specs against
+`experiments/ledger.json` at `db9fd7b`. Full working in `docs/OVERSIGHT.md` §1.3.*
