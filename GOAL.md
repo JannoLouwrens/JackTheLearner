@@ -1,5 +1,13 @@
 # THE GOAL
 
+> ## THE FIRST PRINCIPLE — the only real goal
+> ## **Give him a brain, a body, and a world. Let him naturally become.**
+>
+> Everything below is that one sentence, unpacked. Every mechanism in this
+> repository either builds the brain, builds the body, builds the world — or
+> protects the honesty of watching what happens when the three meet. Anything
+> that serves none of those is not this project.
+
 > **One brain, all senses in unison, that learns its world by living in it.**
 
 Jack is a virtual humanoid who **learns his environment the way a child does**:
