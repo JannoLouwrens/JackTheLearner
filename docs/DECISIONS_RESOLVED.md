@@ -61,3 +61,36 @@ metric: `m`  ·  null 107.613 ± 3.636
 |---|---|---|---|---|
 | good | 389.605 | 77.56 | pass | 50 |
 | weak | 103.261 | -1.20 | FAIL | 1 |
+
+## TEST — WINNER — lp
+lp beats metra by 20.63 sigma and clears the null by 42.30 sigma.
+
+metric: `m`  ·  null 107.613 ± 3.636
+
+| arm | mean | sigma over null | gate | cost |
+|---|---|---|---|---|
+| lp | 415.227 | 42.30 | pass | 2.0 |
+| metra | 265.227 | 21.68 | pass | 14.0 |
+| control:icm | 102.930 | -0.61 | FAIL | 3.5 |
+
+## TEST — VOID
+arms below the 3.0-sigma learning gate: icm. An arm that has not demonstrably learned cannot arbitrate the decision.
+
+metric: `m`  ·  null 107.613 ± 3.636
+
+| arm | mean | sigma over null | gate | cost |
+|---|---|---|---|---|
+| lp | 415.227 | 42.30 | pass | 2.0 |
+| metra | 265.227 | 21.68 | pass | 14.0 |
+| icm | 102.930 | -0.61 | FAIL | 3.5 |
+
+## TEST — VOID
+control(s) control:bad_ctrl CLEARED the 3.0-sigma gate. A control that succeeds means the metric does not measure what the spec claims; no comparison on it is valid.
+
+metric: `m`  ·  null 107.613 ± 3.636
+
+| arm | mean | sigma over null | gate | cost |
+|---|---|---|---|---|
+| lp | 415.227 | 42.30 | pass | 2.0 |
+| control:bad_ctrl | 381.143 | 28.24 | pass | 1.0 |
+| metra | 265.227 | 21.68 | pass | 14.0 |

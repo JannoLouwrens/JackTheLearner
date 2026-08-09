@@ -114,15 +114,36 @@ def run_bakeoff(spec: Spec,
                 learning_gate_sigma: float = 3.0,
                 margin_sigma: float = 1.5,
                 higher_is_better: bool = True,
+                controls: Optional[List[Arm]] = None,
                 ledger: Optional[Ledger] = None) -> BakeoffResult:
     """Run every arm on every seed, gate them, and pick a winner or refuse to.
+
+    `arms` COMPETE and must clear the learning gate. `controls` are expected to
+    FAIL it, and are scored without being allowed to VOID the run.
+
+    The distinction was forced by the curiosity bakeoff, and it is not a
+    convenience. That design needs ICM and RND present as arms that MUST be
+    beaten — noisy-TV fixation is the whole point of including them. But every
+    arm must clear the gate or the run is VOID, so entering a designed-to-fail
+    control as an arm would VOID that bakeoff permanently, by construction. The
+    generalisation: any bakeoff with a control has this problem, and the fix is
+    that a control is a different KIND of thing, not a weak arm.
+
+    A control that CLEARS the gate inverts the verdict to VOID — same logic as
+    run_spec's controls. If the thing that was supposed to fail succeeds, the
+    metric is not measuring what the spec claims, and no comparison built on it
+    can be trusted.
 
     Records to the ledger as PASS only when a decision was actually reached:
     a VOID bakeoff is not a passing spec, because the question is still open.
     """
     seeds = seeds or list(range(max(spec.seeds, 3)))
+    controls = controls or []
     if len(arms) < 2:
         raise ValueError("a bakeoff needs at least two arms; one arm is just a test")
+    clash = {a.name for a in arms} & {c.name for c in controls}
+    if clash:
+        raise ValueError(f"{clash} declared as both arm and control")
 
     null_scores = [float(null_run(s)) for s in seeds]
     null_mean = st.mean(null_scores)
@@ -142,11 +163,33 @@ def run_bakeoff(spec: Spec,
                                  sigma >= learning_gate_sigma, arm.cost,
                                  arm.description))
 
+    # Controls are scored on the same ruler but never compete. One that
+    # CLEARS the gate inverts the verdict: the metric is not measuring what
+    # the spec claims, so nothing built on it can be trusted.
+    control_results: List[ArmResult] = []
+    for c in controls:
+        scores = [float(c.run(s)) for s in seeds]
+        mean = st.mean(scores)
+        std = st.stdev(scores) if len(scores) > 1 else 0.0
+        sigma = ((mean - null_mean) if higher_is_better else (null_mean - mean)) \
+            / max(std, null_std, 1e-9)
+        control_results.append(ArmResult(f"control:{c.name}", scores, mean, std,
+                                         sigma, sigma >= learning_gate_sigma,
+                                         c.cost, c.description))
+    escaped = [c.name for c in control_results if c.passed_gate]
+    if escaped:
+        return _finish(spec, BakeoffResult(
+            spec.id, "VOID", None, results + control_results, null_mean, null_std,
+            f"control(s) {', '.join(escaped)} CLEARED the {learning_gate_sigma}-"
+            f"sigma gate. A control that succeeds means the metric does not "
+            f"measure what the spec claims; no comparison on it is valid.",
+            spec.metric), ledger)
+
     failed = [a.name for a in results if not a.passed_gate]
     if failed:
         # See property 1 above. This is the whole point of the module.
         return _finish(spec, BakeoffResult(
-            spec.id, "VOID", None, results, null_mean, null_std,
+            spec.id, "VOID", None, results + control_results, null_mean, null_std,
             f"arms below the {learning_gate_sigma}-sigma learning gate: "
             f"{', '.join(failed)}. An arm that has not demonstrably learned "
             f"cannot arbitrate the decision.", spec.metric), ledger)
@@ -164,7 +207,7 @@ def run_bakeoff(spec: Spec,
         # than dress up a coin flip as a measurement.
         if any(a.cost is None for a in tied):
             return _finish(spec, BakeoffResult(
-                spec.id, "VOID", None, results, null_mean, null_std,
+                spec.id, "VOID", None, results + control_results, null_mean, null_std,
                 f"{best.name} and {second.name} are within {gap:.2f} sigma so "
                 f"the decision falls to cost, but "
                 f"{', '.join(a.name for a in tied if a.cost is None)} declared "
@@ -173,14 +216,14 @@ def run_bakeoff(spec: Spec,
                 f"GPU-hours) and re-run.", spec.metric), ledger)
         cheapest = min(tied, key=lambda a: a.cost)
         return _finish(spec, BakeoffResult(
-            spec.id, "TIE", cheapest.name, results, null_mean, null_std,
+            spec.id, "TIE", cheapest.name, results + control_results, null_mean, null_std,
             f"{best.name} leads {second.name} by only {gap:.2f} sigma "
             f"(margin {margin_sigma}). The choice does not matter yet; "
             f"taking the cheapest tied arm ({cheapest.name}, cost "
             f"{cheapest.cost:g}).", spec.metric), ledger)
 
     return _finish(spec, BakeoffResult(
-        spec.id, "WINNER", best.name, results, null_mean, null_std,
+        spec.id, "WINNER", best.name, results + control_results, null_mean, null_std,
         f"{best.name} beats {second.name} by {gap:.2f} sigma and clears the "
         f"null by {best.sigma_over_null:.2f} sigma.", spec.metric), ledger)
 

@@ -336,3 +336,34 @@ pre-registered threshold turns out to be genuinely wrong, split it in the open �
 keep reporting the original quantity in full (`inert_gate_keys` is still 1) and
 name the narrower one you actually gate on, so the change is legible as a
 change rather than a quietly moved number.
+
+## A designed-to-fail control is not a weak arm
+
+The curiosity bakeoff needs ICM and RND present — noisy-TV fixation is exactly
+what they are there to demonstrate. But `run_bakeoff` VOIDs when any arm misses
+the learning gate, so entering a control as an arm would VOID that bakeoff
+**permanently, by construction**. The agent designing it caught this by reading
+the primitive before writing against it.
+
+`run_bakeoff` now takes `controls=` separately: scored on the same ruler, never
+competing, and a control that CLEARS the gate inverts the verdict to VOID —
+if the thing that was supposed to fail succeeds, the metric is not measuring
+what the spec claims.
+
+**Rule:** when a framework's validity check and a design's intent point
+opposite ways, the framework is missing a category, not the design. Generalise:
+any bakeoff containing a control has this shape.
+
+## Verify a mechanism claim before fixing it, even from a careful source
+
+The same agent reported that `_module_for`'s glob would silently collide
+`UB.1` with `UB.16` (`ub_1_*.py` matching `ub_16_*.py`), and renumbered its own
+specs to avoid it. Tested: `fnmatch("ub_16_binding.py", "ub_1_*.py")` is
+**False**. The trailing underscore already prevents it — which is precisely
+what the guard's own comment says it was added for. The report was reasoned,
+not run.
+
+**Rule:** a claim about how a mechanism behaves is a two-line experiment. Run
+it. This applies hardest to reports from sources that have just been right
+about several harder things — the credibility is real but it does not transfer
+between claims.

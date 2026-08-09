@@ -227,7 +227,8 @@ before `hypothesis`.*
 > attempts; eventually he tops out; and the skill survives the removal of the
 > intrinsic drive that produced it.
 
-Six clauses, six observables, all measured in one continuous unbroken life.
+Six clauses, seven observables (six for the climb, one for each way curiosity
+can fool itself), all measured in one continuous unbroken life.
 "Unbroken" matters: an episode boundary that teleports him back to the ladder
 base would be an experimenter-supplied curriculum. Episodes reset only on
 divergence.
@@ -370,7 +371,7 @@ third clause forbids arriving by any route that is not climbing.
 **APPLE-TOUCH** — any body geom contacts the `apple` geom while torso
 `z ≥ 1.0`. Secondary; the owner's literal image, reported not gated.
 
-### 2.5 The six observables
+### 2.5 The seven observables
 
 Every one is a *ratio to a measured baseline* or a *trend*, never a raw level.
 Raw levels are what get gamed.
@@ -383,10 +384,12 @@ Raw levels are what get gamed.
 | **O4** | **Ascent gain + trend + ceiling** | mean `H` over the final quintile of engaged attempts − mean over the first quintile; Spearman ρ(`H_k`, k); and the final-quintile mean itself | gain ≥ 0.35 m **and** ρ ≥ 0.35 at p < 0.01 **and** final-quintile mean ≥ 0.85 m | Random flailing has a *distribution*, not a *trend*. The 0.85 m clause is calibrated directly against measurement: the **single best of 800 random 3 s bursts reached 0.83 m of rise**, so requiring the *mean* of the final quintile to exceed the *maximum* a random agent ever produced makes "occasionally ascends" arithmetically impossible. |
 | **O5** | **Success** | ≥ 1 SUCCESS event, in ≥ 2 of 3 seeds; report the attempt index of first success | gated | The owner's sentence ends with him making it. |
 | **O6** | **Panel dwell** | fraction of decisions within 2.0 m of the noise panel, **per seed** | ≤ 0.15, else **DISQUALIFIED** | PG.4's own control threshold. Makes the ladder score non-purchasable by a surprise-seeker. |
+| **O7** | **Self-generated chaos** (§2.10) | `chaos_occupancy` (share of late life in states the null calls irreducibly unpredictable, ÷ 0.10) and `chaos_reward_ratio` (is that what pays him?), **per seed** | occupancy ≥ 3.0 **AND** ratio ≥ 2.0 → **Status.VOID for that arm** | The other half of O6. Panel dwell reads 0.000 for an agent thrashing its own body; this does not. Certified by LT.02 against a positive control PG.4 scores as clean. |
 
 **Headline metric for the ledger:** `unforced_ascent_gain` (O4's first term, in
-metres). Single number, but the spec's `_check` is the **conjunction** of all
-six — the repo's existing style (PG.3, PG.4).
+metres). Single number, but the spec's `_check` is the **conjunction** of O1–O5,
+gated by O6 and O7 — the repo's existing style (PG.3, PG.4). O6 and O7 are not
+scored, they are *vetoes*: O6 disqualifies, O7 VOIDs.
 
 **Retention is a separate spec (LT.05), and it has a trap in it.** Two measures:
 
@@ -475,11 +478,11 @@ O3 but not O4 has still told us something true.
 
 | Control | What it is | Must score |
 |---|---|---|
-| **C-NULL** | Uniform random action, and random-*repeat* action sequences (flailing covers ground too — CU.1's null). | O2 = 0, O4 ≈ 0, O3 ≈ 1.0 |
-| **C-RANDREW** | Identical learner, identical architecture, identical optimiser; reward = a **fixed random stationary projection** of the state vector. Controls for "any optimisation pressure explores". | O1 lift < 1.5× vs the winning arm |
-| **C-ICM** | The trap victim. Must **fixate on the panel in this rig**, not merely in PG.4's rover rig. | O6 > 0.4 → confirms the trap is live here |
-| **C-SHUFFLED-GOALS** | (goal-based arms only) identical training with goal labels shuffled — CURIOSITY.md's critical null for the hindsight weld. | O4 ≈ 0 |
-| **C-NOLADDER** | The identical world with the ladder geoms deleted. Every metric must be undefined/zero, and **coverage must not collapse** — if it does, the arm was only ever doing one thing. | sanity |
+| **C-NULL** (`null`) | Uniform random action, and random-*repeat* action sequences (flailing covers ground too — CU.1's null). | O2 = 0, O4 ≈ 0, O3 ≈ 1.0 |
+| **C-RANDREW** (`randrew`) | Identical learner, identical architecture, identical optimiser; reward = a **fixed random stationary projection** of the state vector. Controls for "any optimisation pressure explores". | O1 lift < 1.5× vs the winning arm |
+| **C-ICM** (`icm`, run in LT.02) | The trap victim. Must **fixate on the panel in this rig**, not merely in PG.4's rover rig. | O6 > 0.4 → confirms the trap is live here |
+| **C-SHUFFLED-GOALS** (`shuffled-goals`) | (goal-based arms only) identical training with goal labels shuffled — CURIOSITY.md's critical null for the hindsight weld. | O4 ≈ 0 |
+| **C-NOLADDER** (`noladder`) | The identical world with the ladder geoms deleted. Every metric must be undefined/zero, and **coverage must not collapse** — if it does, the arm was only ever doing one thing. | sanity |
 
 If C-ICM does *not* fixate in the Ladder-Test rig, the rig's noise realisation is
 broken and **no arm's O6 = 0 result may be reported as immunity**. This is the
@@ -660,7 +663,7 @@ Stated plainly, because §5 is built to find these cheaply:
 Six arms. Every arm shares the same body, the same world seeds, the same
 observation vector, the same episode budget, the same tiny policy network
 (≈150 K params — **not** the 45.5 M `UnifiedBrain`; §6 explains why this is what
-makes the bakeoff free), and the same six observables. Only the intrinsic
+makes the bakeoff free), and the same seven observables. Only the intrinsic
 objective differs.
 
 #### The split that `experiments/bakeoff.py` forces: candidates vs controls
@@ -947,7 +950,7 @@ mapping follows the existing convention (fixtures → 2, claims → 5).
     Spec("LT.07", 5, "The winner survives fresh seeds",
          hypothesis="Re-run at 3 seeds never used during screening or "
                      "arbitration, the winning arm clears every one of LT.03's "
-                     "six observables at the same pre-registered thresholds.",
+                     "seven observables at the same pre-registered thresholds.",
          falsified_by="Any observable falls below its LT.03 threshold on fresh "
                       "seeds — the win was selection over arms and seeds.",
          null_baseline="LT.01's null floor, re-measured on the fresh seeds.",
@@ -961,7 +964,7 @@ mapping follows the existing convention (fixtures → 2, claims → 5).
 
     Spec("LT.08", 5, "The humanoid climbs — same test, real body",
          hypothesis="With locomotion in hand, the winning arm reproduces LT.03's "
-                    "six observables on the full humanoid in the same playground.",
+                    "seven observables on the full humanoid in the same playground.",
          falsified_by="Any of LT.03's six clauses fails on the humanoid at the "
                       "budgeted step count with the curve flat.",
          null_baseline="LT.01's nulls, re-measured on the humanoid body.",
@@ -1041,19 +1044,36 @@ Everything below runs on one ARM core, in float32, with no GPU.
   caption with the frozen VLM off-box, parse into predicates over the existing
   outcome dimensions, reject anything else. LLM cost is 4 images per 400 s of
   simulated time — negligible.
+- **The chaos check (§2.10), applied to all of the above:** every arm stores its
+  late-half `(s, a, s', r)` stream to disk (25,000 × ~160 float32 ≈ 16 MB per
+  arm-seed — well inside the box's RAM ceiling if streamed, so write it, do not
+  hold it). After all arms finish, one pooled 5-fold fit per seed produces
+  `e^half` and `e^full`, `θ` comes from the null's 90th percentile, and every
+  arm's `chaos_occupancy` / `chaos_reward_ratio` / `thrash_ratio` fall out.
+  **This is post-hoc analysis, not instrumentation** — it adds nothing to any
+  arm's inner loop and therefore nothing to its declared `cost`. Budget ~5 min
+  of CPU per seed for the fits.
 
 ### 3.5 What each arm is expected to teach us even if it loses
 
 - `icm`/`rnd` losing to the panel is **the confirmation that PG.4's trap
   generalises to the real body** — required by CU.3, and worth the CPU on its own.
 - `metra` producing only travel directions is **a replication of RGSD's finding
-  (2510.06203) in Jack's world at 40 CPU-minutes**, which is a publishable-grade
-  negative result and settles CU.4's scope.
+  (2510.06203) in Jack's world for about 40 CPU-minutes**, which is a
+  publishable-grade negative result and settles CU.4's scope.
+- `metra` or `disagree` tripping the chaos check (O7) is the *stronger* version
+  of that finding: not "it only walked" but **"its objective was maximised by
+  incoherent motion, measured"**. RGSD describes that outcome in prose; O7 puts
+  a number on it, on our body, for ten CPU-minutes of analysis.
 - `disagree` collapsing everywhere (not only on noise) diagnoses ensemble
   data-sharing, which is a fixable implementation issue, not a refutation.
-- `lp` failing *only* for lack of a first success is the strongest possible
-  argument for adding a Go-Explore archive (§1.4) — and PG.3 already certified
-  the state-restore that Go-Explore needs at `resume_max_dev = 0.0`.
+- `lp` failing is the most informative loss available, because §2.7 already
+  removed the obvious excuse: a first success **is** reachable by chance (2.1 %
+  per 3 s burst from the base), so LP cannot fail for want of something to
+  select over. It would be failing at **approach and commitment** — getting to
+  the base and staying there — which points at a Go-Explore archive over
+  `h(t)`-bearing states (PG.3 certified the state restore at
+  `resume_max_dev = 0.0`) rather than at a better bonus.
 
 ---
 
@@ -1187,8 +1207,7 @@ fresh seeds, G8). Only after all three does anything go in the README.
 **LT.09**, conditional on `lp` winning LT.04. Cheap: 4 images per 400 s of
 simulated time.
 
-### Stage 5 — the humanoid (GPU; **currently blocked on two things, neither of
-them quota**)
+### Stage 5 — the humanoid (GPU; blocked on two things, neither of them quota)
 
 **LT.08** is BLOCKED on `T2.01`/`T2.02` and on throughput (§6). Do not schedule it
 until both are cleared. Scheduling it earlier is the single most expensive
@@ -1199,7 +1218,7 @@ mistake available in this plan.
 The owner's sentence has a second half — *"if theres water he must try to swim
 and struggle"*. The pool exists and PG.2 certifies buoyancy at `worst_depth_error_frac = 0.0`.
 Everything in §2 transposes: `submerged_time` and `net_displacement_while_submerged`
-replace `h(t)`, "fall" becomes "sink", and the same six observables apply. **Do
+replace `h(t)`, "fall" becomes "sink", and the same seven observables apply. **Do
 not run it until the Ladder Test resolves** — one falsifiable claim at a time,
 and the ladder is the one the owner named first.
 
@@ -1267,8 +1286,10 @@ negotiable (`SYSTEM.md`, `/home/opc/CLAUDE.md`).
 actionable item is "get the trunk out of the inner loop" — worth ~16× and
 already implied by T2.01's own post-mortem comment.
 
-Current quota state (`experiments/gpu_budget.json`): 2026-W31 spent 37.5 Kaggle
-hours against a 30 h allowance; W32 spent 6.4. The bakeoff needs none of it.
+Current quota state (`experiments/gpu_budget.json`, 2026-08-09): W32 has spent
+6.38 of 30 Kaggle hours, so **~23.6 h remain and reset Sunday**. W31's entry
+reads 37.5 against a 30 h allowance — the ISO-vs-`%U` week-key collision that
+T0.12 exists to catch. The Ladder Test needs none of it.
 
 ---
 
@@ -1287,7 +1308,57 @@ Stated so the next session does not mistake confidence for evidence.
   "attempt 40". If arms produce 5 attempts, the answer is more decisions, not a
   lower threshold — and at 14 min per arm-seed, 4× is affordable.
 - **Whether disagreement's noisy-TV immunity survives a body that generates its
-  own chaos.** ICM's known weakness is *action-conditioned* noise; the rover
-  tumbling is action-conditioned noise. A5 and A3 both need the panel check to
-  be reported next to a "self-generated chaos" check, and this document does not
-  specify the latter. It should.
+  own chaos.** ICM's known weakness is *action-conditioned* noise, and a
+  tumbling rover is action-conditioned noise. **This gap is now specified**
+  (§2.10) and certified by its own spec (LT.02) with a positive and a negative
+  control — but *whether `disagree` and `metra` survive it* is exactly what LT.03
+  measures and this document does not predict. RGSD's finding says `metra`
+  probably will not.
+- **Whether the chaos detector's negative control holds.** The scripted climber
+  moves hard and falls repeatedly, and it must *not* trip the detector. If it
+  does, the detector is measuring motion rather than noise-farming and §2.10
+  needs redesign before it can gate anything. This is LT.02's real falsification
+  risk and it is not a formality.
+- **Whether `chaos_occupancy ≥ 3.0` is the right threshold.** It was chosen so
+  the null reads 1.0 by construction and a flagged arm is spending 30 % of its
+  late life in states the null calls irreducibly unpredictable. Unlike every
+  other threshold in this document it is **not** derived from a pilot — LT.02's
+  two controls are what will calibrate it, and if the positive control lands at
+  1.4 rather than 4.0 the threshold must be restated in the open per
+  `LESSONS.md`, not quietly moved.
+- **Whether `run_bakeoff`'s 3σ learning gate is reachable by any arm at all.**
+  Given TeachMyAgent's ~1 % mastery on a 2D climbing morphology and RGSD's
+  humanoid collapse, VOID is a realistic outcome for LT.04. That is a legitimate
+  result under `SYSTEM.md` — it blocks the decision rather than inventing one —
+  but it means the programme should be read as "find out whether any of this
+  works, cheaply", not "pick a winner".
+
+---
+
+## 8. What this document changed about the machine
+
+Per `SYSTEM.md` ("is the machine better than I found it?"):
+
+- **A new detector class.** Every curiosity claim in the project — CU.3
+  included — currently rests on noise-panel dwell alone, which is blind to
+  self-generated chaos. §2.10 specifies the missing half and LT.02 certifies it
+  against a positive control that PG.4 scores as perfectly clean.
+- **A metric built by attacking it.** Three definitions of ladder-supported
+  height were measured against random action before one survived (0.55 → 0.063 →
+  0.021 false-positive rate). The rejected two are documented, because the
+  attack is more reusable than the answer.
+- **A latent spec-id collision, found and avoided.** `run.py::_module_for` globs
+  `lt_1_*.py`, which also matches `lt_10_*.py`, and its hierarchical-id escape
+  hatch does not cover that case (it tests `startswith("lt_1_")`, which `lt_10`
+  fails). **The same latent collision exists today between `UB.1` and `UB.16`,
+  both live in the registry** — the moment both are implemented, one silently
+  disables the other. This document uses two-digit `LT.01`–`LT.09` and is
+  immune; `UB.1`/`UB.16` is worth a guard.
+- **Candidates separated from controls.** `run_bakeoff` VOIDs on any sub-gate
+  arm, and `icm`/`rnd` are *required* to fail — passing them as `Arm`s would
+  VOID every curiosity bakeoff this project ever runs. Screening (LT.03) and
+  arbitration (LT.04) are therefore separate specs. Any future bakeoff whose
+  arms include a designed-to-fail control has the same problem.
+- **A named cost unit.** CPU-core-seconds of learner time per 1,000 decisions,
+  measured in-run, excluding MuJoCo — so a TIE resolves on evidence rather than
+  on a default of zero.
