@@ -383,3 +383,29 @@ recorded beside it.
 `is not Status.PASS`) vs `protocol.py:59-61` (VOID's docstring says it does not
 block). Graph walked over all 136 registered specs against
 `experiments/ledger.json` at `db9fd7b`. Full working in `docs/OVERSIGHT.md` §1.3.*
+
+## Does the LC bakeoff's verdict survive scale? (OPEN — owner flagged the risk)
+
+Owner, 2026-08-09: "are you sure it isn't holding us back that agents are
+making CPU tasks and not GPU?" Audited. Verdict: the CPU scoping is mostly
+LEGITIMATE, with one real gap.
+
+Legitimate: LC.00 is a 2-CPU-minute gridworld falsifier whose stated kill is
+"the whole LC programme... before any body, any physics, any torch or any GPU
+is involved" — cheapest-falsifier-first, exactly right. LC.01/02/06 are
+property checks (unison admission, throughput floor, simplicity) that a GPU
+cannot make more true. And the survival world measured 2,826 steps/s on CPU,
+faster than Craftax — the world genuinely is a CPU workload.
+
+THE GAP: LC.03/04/05 ARBITRATE the learning core at cpu<2h. RL algorithm
+RANKINGS ARE KNOWN TO CHANGE WITH SCALE — the field's own literature is full
+of small-scale verdicts that inverted (our own record: DreamerV3 beat PPO
+until a tuned PPO at 4M params beat DreamerV3 at 201M). A core crowned in 2
+CPU-hours may not be the core that wins at the scale Jack actually lives at,
+and LC.04's PROVISIONAL clause only re-checks UNISON gates, not scale.
+
+Needed: a scale-transfer check before the LC winner is adopted — re-run the
+top two arms at ~10x experience on Kaggle (~6-10 GPU-h of the ~130/month
+available) and require the RANKING to hold. If it inverts, the CPU verdict is
+void and the GPU run decides. This is cheap, and it is the difference between
+"decided" and "decided at a scale that transfers".
