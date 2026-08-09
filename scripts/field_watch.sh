@@ -15,6 +15,7 @@ REPO=/home/opc/jackthelearner
 LOG=/data/jack-logs/field_watch.log
 PAUSE="$REPO/.fieldwatch-paused"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
+. "$REPO/scripts/lib_credits.sh"
 [ -f "$PAUSE" ] && { say "paused"; exit 0; }
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt 3 ] && { say "ABORT: ${FREE_GB}GB free on /"; exit 0; }
@@ -34,11 +35,13 @@ fi
 cd "$REPO" || exit 0
 MODEL="${JACK_FIELDWATCH_MODEL:-opus}"
 say "sweep start — model ${MODEL}"
+mark_log
 nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
 RC=$?
-if tail -5 "$LOG" | grep -qi "out of usage credits"; then
+if credits_out; then
   say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
+  mark_log
   nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
     --model sonnet --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
   RC=$?

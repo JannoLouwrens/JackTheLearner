@@ -25,6 +25,7 @@ MIN_FREE_GB=2
 mkdir -p "$LOGDIR"
 LOG="$LOGDIR/overseer.log"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
+. "$REPO/scripts/lib_credits.sh"
 
 [ -f "$PAUSE" ] && { say "paused"; exit 0; }
 
@@ -49,6 +50,8 @@ cd "$REPO" || exit 0
 MODEL="${JACK_OVERSEER_MODEL:-opus}"
 say "audit start — model ${MODEL}, $(git rev-parse --short HEAD)"
 
+mark_log
+
 nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
   timeout 25m claude -p "$(cat "$REPO/scripts/overseer_prompt.md")" \
     --model "$MODEL" \
@@ -59,7 +62,7 @@ RC=$?
 
 # Same credit-exhaustion trap the builder fell into: the CLI prints a message
 # and exits in ~3s, which looks identical to a clean fast run.
-if tail -5 "$LOG" | grep -qi "out of usage credits"; then
+if credits_out; then
   say "OUT OF CREDITS on ${MODEL} — audit skipped, not performed"
   exit 0
 fi

@@ -955,3 +955,29 @@ the target were in use, never by a proxy that merely correlates with age. Test i
 against a fixture of each kind — one that must die, one that must live — and make
 the must-die case a real assertion, because the failure mode of an over-cautious
 guard is invisible.
+
+## A detector on a shared log must bound itself to its own writes
+
+The four cron organs append to one long-lived log and each decided "was I
+stopped by credit exhaustion?" with `tail -5 "$LOG" | grep -qi "out of usage
+credits"`. On 2026-08-09 the builder's fable run died on credits at 22:07; opus
+then ran for 28 minutes and exited with `Error: Reached max turns (120)`,
+appending a single line. The fable message from 28 minutes earlier was still
+inside `tail -5`, so the loop announced "OUT OF CREDITS on opus", burned its
+last fallback, and came one step from credit-pausing every agent for four hours
+over a run that had plenty of credit.
+
+`tail -N` is a guess about how chatty the last run was. It is not a boundary.
+The fix records the log's byte length immediately before each invocation and
+reads only past it (`scripts/lib_credits.sh`).
+
+This is the same shape as the reaper above: **the signal was real, it just
+belonged to something else.** A directory's mtime was real — it belonged to the
+session's creation. The credit message was real — it belonged to the previous
+model. Both guards then reported success in the log while doing the wrong thing,
+which is why both needed a control asserting the NEGATIVE case (a stale signal
+must NOT trigger) alongside the positive one.
+
+**Rule:** when a check reads shared mutable state — a log, a lock file, a
+scratch tree — establish the boundary of what belongs to this run *before* the
+run, not by pattern-matching afterwards.

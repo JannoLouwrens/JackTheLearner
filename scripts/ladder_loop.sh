@@ -49,6 +49,7 @@ MAX_LOAD=6.0
 mkdir -p "$LOGDIR"
 LOG="$LOGDIR/ladder.log"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
+. "$REPO/scripts/lib_credits.sh"
 
 if [ -f "$PAUSE" ]; then
   # Credit-caused pauses SELF-EXPIRE: credits refresh on their own schedule,
@@ -108,6 +109,7 @@ say "iteration start — ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODE
 PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
 
 run_claude() {
+  mark_log            # bound the credit check to THIS run's output
   nice -n 19 ionice -c3 env TMPDIR=/data/tmp OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
     PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
     HF_HOME=/data/caches/huggingface \
@@ -127,14 +129,14 @@ RC=$?
 # burns every remaining slot doing nothing. It cost 8 dead iterations on
 # 2026-08-09 before anyone looked. Walk a fallback chain instead of idling.
 for FB in $FALLBACK_MODELS; do
-  tail -5 "$LOG" | grep -qi "out of usage credits" || break
+  credits_out || break
   [ "$FB" = "$MODEL" ] && continue
   say "OUT OF CREDITS on ${MODEL} — falling back to ${FB}"
   MODEL="$FB"
   run_claude "$FB"
   RC=$?
 done
-if tail -5 "$LOG" | grep -qi "out of usage credits"; then
+if credits_out; then
   say "OUT OF CREDITS on every model — credit-pausing (self-resumes in 4h)"
   echo "credits $(date -Iseconds)" > "$PAUSE"
 fi

@@ -13,6 +13,7 @@ REPO=/home/opc/jackthelearner
 LOG=/data/jack-logs/review.log
 PAUSE="$REPO/.review-paused"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
+. "$REPO/scripts/lib_credits.sh"
 [ -f "$PAUSE" ] && { say "paused"; exit 0; }
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt 3 ] && { say "ABORT: ${FREE_GB}GB free on /"; exit 0; }
@@ -38,11 +39,13 @@ MODEL="${JACK_REVIEW_MODEL:-opus}"
 # FULL on Sundays = everything, including test re-examination.
 if [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=40m; else MODE=DAILY; TMOUT=20m; fi
 say "review start — mode ${MODE}, model ${MODEL}"
+mark_log
 nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
 RC=$?
-if tail -5 "$LOG" | grep -qi "out of usage credits"; then
+if credits_out; then
   say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
+  mark_log
   nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
     --model sonnet --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
   RC=$?
