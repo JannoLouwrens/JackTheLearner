@@ -44,9 +44,12 @@ below and finish it. One spec per iteration is a good iteration.
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
-State: Tiers 0-1 fully PASS (most re-verified at 3 seeds), PG.1/PG.2 and T2.00
-PASS, T2.01 FAIL at 4.06-sigma with a PLATEAUED curve at 704K steps/seed — that
-is the architecture verdict, not a bug. Read docs/LOOP_JOURNAL.md's tail first.
+State (2026-08-09): 45 PASS, 2 VOID, 1 ERROR of 124. Tiers 0-1 PASS (most
+re-verified at 3 seeds). T2.01 and T2.02 are VOID, killed by T0.14 — see
+priority 3. An earlier version of this file called T2.01's plateau "the
+architecture verdict, not a bug". That was WRONG and is exactly the claim
+T0.14 invalidated; if you see that sentence anywhere, it is stale.
+Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
 1. CPU-implementable specs, cheapest first: the ME family (ME.1/ME.9 are
    implemented — run them if not yet recorded; then ME.2-ME.5, ME.8, ME.10 —
