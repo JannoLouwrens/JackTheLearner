@@ -79,6 +79,20 @@ tests, throw him in, get results, build bigger tests, throw him in again — and
 the final test in that sequence is the real world. The 57M-vs-54K lesson is
 already on the ledger: complexity must earn its place or lose it.
 
+**Biology is the reference implementation (owner, 2026-08-09).** Human and
+nature biology is the best model we have — the only working example of general
+intelligence built by living. When stuck, ask how nature solved it: needs are
+interoception, the diary-vs-weights split is hippocampus-vs-cortex, sleep
+consolidation is replay, curiosity-as-learning-progress came from infant
+studies, dreaming is training in imagination. But biology is the ORACLE, not
+the blueprint — planes do not flap. Nature's solution enters as a bakeoff arm
+and must win on our substrate like any other; where it loses, we take the win
+and record the divergence. And in one place Jack deliberately surpasses
+biology: genes cannot inherit experience, but culture can — the diary crossing
+death is Lamarckian inheritance, the caveman's fireside story made structural.
+Still unmined and on the shelf: motor babbling, innate reflex priors, pain as
+a fast signal distinct from reward, critical periods, play as safe rehearsal.
+
 **The staging is unchanged and deliberate.** First prove he can see, talk,
 walk, and learn in every way (the ladder as it stands). Only then does he go
 into the survival world with everything at once — and the testing never stops
