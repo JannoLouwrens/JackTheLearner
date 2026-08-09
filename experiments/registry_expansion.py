@@ -309,6 +309,294 @@ EXPANSION: list[Spec] = [
          kills="Any retriever that generates its answer instead of quoting "
                "one, however good its numbers."),
 
+    # ── UNIFIED BRAIN: the binding evidence ladder ──────────────────────
+    # From docs/research/UNIFIED_BRAIN_BAKEOFF.md (agent, 2026-08-09). Two
+    # findings reframed this family:
+    #  (1) UB.1 was parented UB.1 -> T4.01 -> T3.02 -> T2.01(FAIL), so the
+    #      project's NAMESAKE claim was unreachable behind a locomotion
+    #      failure. Binding is a PERCEPTION claim -- supervised probes, no
+    #      policy, no control loop -- so these parent onto PG/T1 instead.
+    #  (2) D1's evidence says nothing about binding: flat locomotion is the one
+    #      task where proprioception is SUFFICIENT, so a task where fusion
+    #      cannot help is not evidence about fusion either way. UB.16 states
+    #      the trunk->readout->controller contract so both D1 outcomes work.
+    # Three measurement sharpenings worth knowing before reading these: a
+    # PLACEBO modality (matched noise) supplies the empirical null for
+    # "decorative"; cross-episode SWAP replaces zeroing as the ablation
+    # primitive (destroys correspondence, preserves marginals); and the synergy
+    # null is the unimodal LATE ENSEMBLE, which cannot synergise by
+    # construction -- beating the best single modality is not synergy.
+
+    # ── FIXTURES for the binding test ───────────────────────────────────
+
+    Spec("PG.6", 2, "The playground has eyes, and they resolve what the test needs",
+         hypothesis="An egocentric camera in the playground MJCF renders frames "
+                    "from which a linear probe recovers object RADIUS (R^2>=0.8) "
+                    "and BEARING (median error <=5 deg) for objects in FOV.",
+         falsified_by="Radius or bearing unrecoverable at the chosen resolution "
+                      "— then vision cannot carry HNS's identity->position "
+                      "channel and UB.9 would measure nothing.",
+         null_baseline="Probe on a shuffled-frame/label pairing; probe on a "
+                       "constant grey frame.",
+         metric="radius_r2_x_bearing_error", budget=Budget.CPU_LONG,
+         depends_on=["PG.1"], seeds=3,
+         control="Objects OUTSIDE the FOV must be unrecoverable — else the probe "
+                 "is reading episode identity, not the image.",
+         kills="Any visual claim in UB.9/UB.10 at this resolution. Escalate "
+               "resolution or move vision to a frozen tower with cached "
+               "embeddings before proceeding.",
+         notes="playground.py:217-243 emits no <camera>. This spec adds one and "
+               "certifies it. Render on CPU via MUJOCO_GL=osmesa; only ~500 "
+               "distinct layouts are needed because HNS reuses layouts across "
+               "episodes."),
+
+    Spec("PG.7", 2, "The heard-not-seen fixture leaks nothing but the intended bit",
+         hypothesis="In the HNS scene the two candidates are acoustically "
+                    "indistinguishable except by modal fundamental: identical "
+                    "pan (<1e-6), identical listener distance (<1e-3 m), "
+                    "matched impact amplitude, and the candidate (not the "
+                    "striker or floor) is the voiced geom on 100% of events.",
+         falsified_by="Any leak: an audio-only probe over band energies, "
+                      "amplitude and pan classifies which object fell above "
+                      "chance+3%.",
+         null_baseline="Chance (0.5) for the audio-only probe.",
+         metric="audio_only_leak_margin", budget=Budget.CPU,
+         depends_on=["PG.5"], seeds=3,
+         control="A DELIBERATELY UNBALANCED variant (unequal mass, so amplitude "
+                 "tracks size) must be classified WELL above chance by the same "
+                 "probe — else the leak detector is blind and its null result "
+                 "is worthless.",
+         kills="UB.9. A binding test built on a leaky fixture measures the leak.",
+         notes="Closes, in order, the seven leaks tabulated in "
+               "docs/research/UNIFIED_BRAIN_BAKEOFF.md section 3.2. PG.5's "
+               "circularity guard is the precedent: ground truth is computed in "
+               "this file's own trig, never from the synth's labels."),
+
+    # ── THE BINDING TEST ────────────────────────────────────────────────
+
+    Spec("UB.9", 4, "Heard, not seen: the task that is impossible without fusion",
+         hypothesis="On a scene where audio gives object IDENTITY (modal "
+                    "fundamental) but not position, and a pre-event frame gives "
+                    "position but not which object fell, the fused model "
+                    "identifies the fallen object well above chance (>=0.75 "
+                    "mean over 3 seeds, lower bootstrap CI > 0.5).",
+         falsified_by="Fused accuracy indistinguishable from 0.5, OR "
+                      "indistinguishable from the unimodal late ensemble — "
+                      "either way nothing was bound.",
+         null_baseline="Three nulls, all at chance BY CONSTRUCTION and all "
+                       "measured anyway: (i) audio-only (pan is identical for "
+                       "mirrored azimuths, ContactAudio.py:26), (ii) "
+                       "vision-only (the frame predates the event), (iii) the "
+                       "UNIMODAL LATE ENSEMBLE of (i) and (ii) — the arm that "
+                       "is structurally incapable of synergy.",
+         metric="hns_accuracy_over_ensemble", budget=Budget.CPU_LONG,
+         depends_on=["PG.6", "PG.7", "T1.06"], seeds=3,
+         control="SWAP-FLIP: re-render the frame with the two candidates' radii "
+                 "exchanged between positions, audio untouched. The correct "
+                 "answer flips, so the prediction MUST flip on >=80% of "
+                 "previously-correct trials. Also: spectrum-flattened audio "
+                 "must fall to chance, and PAN-SHUFFLED audio must NOT change "
+                 "anything (pan is uninformative here; sensitivity to it means "
+                 "a leak).",
+         kills="The sentence 'his senses work in unison'. This is the smallest "
+               "experiment that could establish it and it costs no GPU; if it "
+               "fails, no larger experiment rescues the claim.",
+         notes="I(audio;Y)=0, I(vision;Y)=0, I(audio,vision;Y)=1 bit — physical "
+               "XOR, one bit of PURE synergy (PID framework, arXiv:2302.12247). "
+               "Proprioception, Jack's dominant modality, is uninformative here "
+               "by design, which is precisely why collapse cannot hide."),
+
+    Spec("UB.15", 4, "Heard, not seen — embodied",
+         hypothesis="Jack turns toward and reaches the object he heard fall but "
+                    "did not see, above the 0.5 bearing-sign chance rate.",
+         falsified_by="Reach target at chance, or unchanged when audio is muted.",
+         null_baseline="Audio-muted policy; vision-frozen policy; the UB.9 "
+                       "discriminative ceiling (the gap is the control cost).",
+         metric="embodied_hns_success", budget=Budget.GPU, seeds=3,
+         depends_on=["UB.9", "T2.02"],
+         control="Left/right channel swap must invert the turn direction. A "
+                 "500 ms audio lag must degrade timing but not identity — the "
+                 "two channels fail differently, which is itself evidence they "
+                 "are separately read.",
+         notes="Deliberately the ONLY binding spec that depends on locomotion. "
+               "Everything else in this block is falsifiable without a "
+               "controller, so decision D1 cannot block the unison claim."),
+
+    # ── THE BAKEOFF ─────────────────────────────────────────────────────
+
+    Spec("UB.10", 4, "Fusion bakeoff: six arms, matched params, matched steps",
+         hypothesis="At matched trainable parameters (+-5%), matched tokens per "
+                    "modality, matched optimisation steps and matched data "
+                    "order, at least one shared-computation arm beats the "
+                    "late-concat null on the binding battery, and the ranking "
+                    "is stable across 3 paired seeds.",
+         falsified_by="A0 (late concat) ties the best arm everywhere — then at "
+                      "this scale 'one brain' buys nothing over bolt-on "
+                      "encoders and GOAL.md's architecture claim must be "
+                      "restated. Report it; do not re-run until it looks "
+                      "better.",
+         null_baseline="A0 = per-modality encoders -> pool to one vector each "
+                       "-> concat -> head ('concatenate and pray'). Plus the "
+                       "UNIMODAL LATE ENSEMBLE computed for every arm.",
+         metric="arm_ranking_x_synergy_gap", budget=Budget.GPU, seeds=3,
+         depends_on=["UB.9", "T2.00"],
+         control="Every arm must FAIL the cross-episode SWAP ablation on at "
+                 "least one sense (i.e. swapping a sense's stream between "
+                 "episodes must hurt). An arm that is invariant to swapping "
+                 "every sense has learned a marginal, not a correspondence, and "
+                 "its score on the battery is uninterpretable.",
+         kills="Five of six architectures. The survivor is the trunk Jack "
+               "ships; the rest are deleted, not kept 'for later'.",
+         notes="ARMS. A0 late-concat null. A1 shared token trunk (multi-token "
+               "per modality, modality-ID embeddings, readout tokens; "
+               "arXiv:2205.06175, 2405.12213, 2409.20537). A2 = A1 + modality "
+               "dropout with learned [MISSING-m] tokens (arXiv:2410.03010, "
+               "2201.01763). A3 = A2 + cross-modal masked prediction, "
+               "cross-signal not joint (arXiv:2311.00924, 2410.16424, "
+               "2607.13522). A4 = A2 + contrastive alignment with "
+               "state-proximity positives (arXiv:2510.01711, 2303.15343) - "
+               "NOT episode-identity positives, which are false negatives on "
+               "synchronous streams. A5 = per-modality experts + learned router "
+               "(arXiv:2509.23468), the credible non-trunk alternative; if A5 "
+               "wins, 'one brain' is the wrong shape and we say so. "
+               "A3 and A4 are parallel, not cumulative, so architecture and "
+               "objective are separated. TOKEN BUDGET IS EQUALISED ACROSS ARMS "
+               "or this measures token counts (arXiv:2601.16667). "
+               "PAIRED bootstrap CIs and IQM per arXiv:2108.13264 - unpaired "
+               "3-seed architecture comparisons resolve nothing at this budget."),
+
+    # ── THE STANDING AUDIT ──────────────────────────────────────────────
+
+    Spec("UB.11", 4, "The modality ablation matrix (standing)",
+         hypothesis="On the tasks x senses matrix, every sense shows a "
+                    "degradation significantly above the PLACEBO column under "
+                    "at least the cross-episode SWAP perturbation; no sense has "
+                    "an all-null row of cells.",
+         falsified_by="Any sense whose four perturbations are all "
+                      "indistinguishable from the placebo modality — it is "
+                      "decorative and loses its parameters (Tier-3 rule).",
+         null_baseline="A PLACEBO MODALITY: pure noise, identical token count, "
+                       "encoder capacity and dropout rate, wired in like a real "
+                       "sense. Its column IS the empirical null distribution "
+                       "for 'decorative', re-estimated every run.",
+         metric="min_sense_margin_over_placebo", budget=Budget.GPU, seeds=3,
+         depends_on=["UB.10"],
+         control="TWO controls in opposite directions. (a) The placebo column "
+                 "must be SMALL: a large placebo Delta means the procedure "
+                 "measures off-manifold shock, not information, and every other "
+                 "column is uninterpretable. (b) With proprioception replaced "
+                 "by its [MISSING] token, a dropout-trained model must still "
+                 "briefly stand using vision - vestibular substitution.",
+         kills="Any encoder whose column is placebo-indistinguishable. Deletion "
+               "is the default action, not a discussion.",
+         notes="STANDING SPEC - re-runs on every architecture change, forever, "
+               "like ME.5 at every decade of store growth. FOUR perturbations "
+               "per cell: zero (off-manifold), matched noise (marginals kept), "
+               "within-episode time-shuffle (temporal binding destroyed), "
+               "CROSS-EPISODE SWAP (correspondence destroyed, everything else "
+               "kept). Swap is the primitive: it is the only one that isolates "
+               "correspondence, which is what binding means. Ablation uses the "
+               "learned [MISSING-m] token, never zeros, or the matrix measures "
+               "brittleness (arXiv:2410.03010). Logged alongside: per-layer "
+               "cross-modal attention mass (arXiv:2410.16424) and the learned "
+               "binary modality mask (arXiv:2209.07682) - both free, both "
+               "necessary-not-sufficient, both red flags rather than claims."),
+
+    Spec("UB.12", 4, "Synergy, not redundancy: beating the unimodal ensemble",
+         hypothesis="On every task in the battery the fused model beats the "
+                    "UNIMODAL LATE ENSEMBLE (independently trained per-sense "
+                    "models, predictions averaged), paired across seeds, with "
+                    "a bootstrap CI on the paired difference excluding zero.",
+         falsified_by="Fusion >= best single modality but <= the ensemble on "
+                      "every task: the model is exploiting redundancy and "
+                      "uniqueness, and computes nothing jointly. This is the "
+                      "most likely honest outcome and it must be reportable.",
+         null_baseline="max_m U_m (the trivial bar) AND the ensemble E (the "
+                       "real bar). Beating max_m U_m is not evidence of fusion.",
+         metric="synergy_gap", budget=Budget.GPU_SHORT, seeds=3,
+         depends_on=["UB.10"],
+         control="On UB.9 (pure synergy, all unimodal channels at chance) the "
+                 "ensemble MUST sit at chance. An ensemble above chance there "
+                 "proves the fixture leaks and PG.7 passed wrongly.",
+         notes="The operational definition of 'one brain': the late ensemble is "
+               "structurally incapable of synergy because no parameter ever "
+               "sees two modalities jointly, so F > E is joint computation by "
+               "construction. Costs 5 tiny models per task; compute it for "
+               "every arm, every task, forever. Frame results as PID "
+               "redundancy/uniqueness/synergy (arXiv:2302.12247)."),
+
+    Spec("UB.13", 4, "Cross-modal retrieval: the gate, never the claim",
+         hypothesis="Given a contact-audio window, the matching visual clip is "
+                    "retrieved above chance (R@1 and R@10 vs a candidate set of "
+                    "known size), including against HARD negatives: the same "
+                    "episode at +-0.5 s, and a different object at the same "
+                    "instant.",
+         falsified_by="At-chance retrieval against hard negatives while easy "
+                      "retrieval succeeds — then the model matched onset "
+                      "synchrony, not content.",
+         null_baseline="Chance = 1/N for the actual candidate-set size, stated "
+                       "before the run; plus a retriever over event ONSET TIMES "
+                       "only, which is the synchrony-shortcut baseline.",
+         metric="hard_negative_recall_at_1", budget=Budget.GPU_SHORT, seeds=3,
+         depends_on=["UB.10"],
+         control="Time-offset negatives must be harder than random negatives. "
+                 "If they are equally easy, the candidate set is trivial.",
+         kills="Nothing on its own. This spec exists so that a NULL result on "
+               "the contrastive arm (A4) is interpretable: without it, 'A4 did "
+               "not help control' cannot be distinguished from 'A4's loss never "
+               "trained'. Retrieval is necessary, never sufficient "
+               "(arXiv:2603.19233: encoded is not used)."),
+
+    Spec("UB.14", 4, "Cross-modal prediction, against the null that usually wins",
+         hypothesis="Masked touch is predicted from vision+proprioception "
+                    "better than from proprioception ALONE, and better than the "
+                    "unconditional mean, at matched capacity.",
+         falsified_by="Proprio-only matches vision+proprio: foot contact is "
+                      "inferable from joint torques, so vision adds nothing "
+                      "here. An HONEST and likely outcome that must be "
+                      "reported, not retried.",
+         null_baseline="Unconditional mean (the floor) AND a proprio-only "
+                       "predictor of equal capacity (the real bar).",
+         metric="touch_r2_over_proprio_only", budget=Budget.CPU_LONG, seeds=3,
+         depends_on=["PG.1"],
+         control="Touch-from-SHUFFLED-vision must collapse to the "
+                 "unconditional mean — else the head ignores its vision input "
+                 "and the conditioning is decorative.",
+         kills="The vision->touch masked objective in arm A3, if vision adds "
+               "nothing over proprio. Run this BEFORE the bakeoff: it costs CPU "
+               "minutes and can delete an arm's justification.",
+         notes="Calibrate expectations from Kepler-Encoder (arXiv:2607.13522): "
+               "fused-vs-vision-only force R^2 of 0.049/-0.001/0.187 across "
+               "three robots, one of them NEGATIVE, p<=0.012. Real, clean, "
+               "small. A bakeoff expecting a large effect has mis-specified "
+               "its success criterion."),
+
+    Spec("UB.16", 4, "Sensory information reaches the controller (D1-agnostic)",
+         hypothesis="Zeroing the trunk's percept vector z degrades tasks that "
+                    "require non-proprioceptive information, and does NOT "
+                    "degrade flat-ground locomotion.",
+         falsified_by="z-ablation changes nothing anywhere (the trunk is "
+                      "decorative in the control path) OR it degrades flat "
+                      "walking too (z is smuggling proprioception the "
+                      "controller already has, so the comparison in D1 was "
+                      "never about perception).",
+         null_baseline="Controller on raw proprioception alone; controller with "
+                       "z replaced by its batch mean.",
+         metric="z_channel_asymmetry", budget=Budget.GPU, seeds=3,
+         depends_on=["UB.11", "T2.02"],
+         control="A SHUFFLED-z controller (z drawn from another episode) must "
+                 "match the zeroed-z controller. If shuffled-z is WORSE than "
+                 "zeroed-z, the controller is reading correspondence, which is "
+                 "a stronger result than the hypothesis claims.",
+         notes="The asymmetry IS the test, and it holds under either D1 "
+               "outcome. If D1 removes the trunk from the control path, z is "
+               "the entire sensory channel and this spec certifies it. If the "
+               "trunk stays end-to-end, z is the readout-token bundle and the "
+               "same measurement applies. Locomotion is the task where "
+               "proprioception is SUFFICIENT, so it is the wrong task to judge "
+               "a binder by - which is why 'no degradation on flat walking' is "
+               "a PASS condition here, not a failure."),
+
     # ── TIER-3 GAPS ─────────────────────────────────────────────────────
     Spec("T3.09", 3, "The creative loop earns its existence",
          hypothesis="Wiring AlphaGeometryLoop into a decision path measurably "

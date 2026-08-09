@@ -132,3 +132,23 @@ aces.
 **Rule:** ask what your synthetic data makes *easy*, and build the evaluation
 around the hard case. A test that only samples the regime your method is good
 at reports the method's best day as its average.
+
+## A dependency graph can quietly make your most important claim unreachable
+
+`UB.1` — "one brain, all senses in unison", the claim the project is named for
+— was parented `UB.1 -> T4.01 -> T3.02 -> T2.01`. T2.01 is locomotion, and it
+FAILED for architecture reasons. So the least-tested claim in the project was
+also the one the runner would refuse to attempt, and 11 specs in total were
+dead-ended behind that single failure. Nobody noticed because `run next` simply
+never listed them.
+
+The cause was a category error: binding was modelled as a CONTROL claim when it
+is a PERCEPTION claim. Nearly all of it is measurable by supervised probes with
+no policy, no RL and no control loop. Re-parenting onto the playground and
+Tier-1 fixtures made eight specs immediately runnable.
+
+**Rule:** periodically ask which specs are unreachable and why — `run next`
+shows what you CAN do and is silent about what you can never do. When a claim
+is blocked, check whether the dependency is real or an artifact of how the
+claim was categorised. And be suspicious when the project's headline claim is
+one of the unreachable ones.
