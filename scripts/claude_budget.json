@@ -1,5 +1,5 @@
 {
-  "weekly_output_token_ceiling": 40000000,
-  "pause_at_pct": 90,
-  "_comment": "Set the ceiling from OBSERVED usage. pause_at_pct is where the autonomous organs stop; the owner is never blocked."
+  "weekly_output_token_ceiling": 37700000,
+  "pause_at_pct": 88,
+  "_comment": "CALIBRATED 2026-08-09 against the owner's reported 82% weekly usage: 30,943,713 observed tokens / 0.82 = 37,700,000 ceiling. Not a guess any more. pause_at_pct 88 leaves the owner the last 12%."
 }
