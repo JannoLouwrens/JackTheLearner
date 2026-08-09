@@ -779,3 +779,26 @@ work in progress" with "CPU busy", which are different resources.
 after the activity. Two activities that never contend for the same resource
 must never share a lock — and the cost of getting this wrong is invisible,
 because nothing errors: the machine just quietly does less.
+
+## An audit inherits every hole in its own standard
+
+In one evening the owner found: smell, taste, voice and body-schema with ZERO
+specs among 136; the project's existential claim (is Jack smarter than his own
+LLM, or a puppet?) with no test; the founding premise retired by argument
+rather than bakeoff; a CPU-scoped arbitration systematically biased against the
+incumbent; and the whole box idling at 4% behind a mis-scoped lock.
+
+Not one was findable by our own organs. The overseer checks that specs are
+honest. The Review checks that tests are strong. The field watch checks for
+better methods. All three measure reality against a STATED standard — and
+`GOAL.md` never mentioned smell, so no audit could report it missing.
+
+Two different blindnesses, and we had only cured one:
+  EXECUTION blindness — "are we doing this correctly?" Well covered.
+  AMBITION blindness  — "are we doing the right things at all?" Structurally
+                        invisible, because the map is the thing with the hole.
+
+**Rule:** at least one recurring audit must measure against a reference from
+OUTSIDE the project's own documents — human capability, an external taxonomy,
+the goal as a person would state it fresh. Everything else can only tell you
+how well you are executing a plan that may itself be incomplete.

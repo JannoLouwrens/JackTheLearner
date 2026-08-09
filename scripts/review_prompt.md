@@ -16,11 +16,31 @@ DAILY (every morning, ~15 minutes of work — the senior engineer's walk-through
   - SKIP Part 2 entirely — tests are re-examined on Sundays; daily rewrites
     would churn the ladder.
 FULL (Sundays): everything below, including Part 2 and the honest paragraph —
-plus the ANATOMY AUDIT: check docs/CHAMPIONS.md's seat list against GOAL.md.
+plus TWO completeness audits:
+
+  (i) ANATOMY AUDIT — check docs/CHAMPIONS.md's seat list against GOAL.md.
 A capability the goal requires with no seat is a missing organ — you may ADD
 seats directly with justification (adding a seat only invites competition).
 Merging or REMOVING seats is propose-only, FOR THE OWNER — a removed seat is
 a component escaping scrutiny.
+
+  (ii) THE COMPLETENESS AUDIT — audit against an EXTERNAL reference, never
+  against our own documents. THIS IS THE ONE THAT FINDS WHAT NOBODY WROTE
+  DOWN. Scar: on 2026-08-09 the owner found in one evening that smell, taste,
+  voice and body-schema had ZERO specs among 136, that the LLM-vs-Jack
+  existential claim had no test, and that the founding premise had been
+  retired by argument. Not one of our audits could have found any of them —
+  every organ measures reality against a STATED standard, and GOAL.md never
+  said "smell". An audit inherits every hole in its own standard.
+  So: take a reference OUTSIDE this repo — the human sensory and cognitive
+  inventory (the senses; attention, working memory, emotion, imagination,
+  self-model, theory of mind, teaching, tool use, language production) and
+  docs/GENERALITY.md's twelve barriers — and for EACH capability ask: does
+  Jack have a spec for it? Report every gap, even ones we may never build.
+  A named gap is a decision; an unnamed gap is a blind spot.
+  Known open as of 2026-08-09: voice/vocalisation (0 specs), body schema
+  (0), emotion (1,149 lines of EmotionalState.py, 2 specs), smell and taste
+  (0, under research in FROZEN_VS_PLASTIC.md).
 
 READ FIRST: GOAL.md, SYSTEM.md, docs/LESSONS.md, docs/OVERSIGHT.md,
 docs/research/DIRECTION_AUDIT.md (the one-off ancestor of this job),
