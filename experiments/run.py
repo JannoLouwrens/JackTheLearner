@@ -3,6 +3,8 @@
 
     python -m experiments.run status          # the checklist, current state
     python -m experiments.run next            # what is legitimately runnable now
+    python -m experiments.run blocked         # what is unreachable, and what frees it
+    python -m experiments.run stale           # claims whose test changed since the run
     python -m experiments.run T0.02           # run one experiment
     python -m experiments.run --tier 0        # run a whole tier, in order
     python -m experiments.run --gate          # re-run every PASSing test (regression)
@@ -15,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import hashlib
 import importlib
 import os
 import sys
@@ -25,6 +28,7 @@ from .protocol import Ledger, Status
 from .registry import BY_ID, LADDER, ready, tier
 
 TESTS_DIR = Path(__file__).parent / "tests"
+_REPO = Path(__file__).resolve().parent.parent
 RUN_LOCK = "/tmp/jack-ladder.lock"          # shared with scripts/ladder_loop.sh
 
 
@@ -118,6 +122,64 @@ def _module_for(spec_id: str):
     return importlib.import_module(f"experiments.tests.{matches[0].stem}")
 
 
+def _module_path_for(spec_id: str):
+    """The implementation FILE for a spec, without importing it."""
+    prefix = spec_id.lower().replace(".", "_")
+    matches = sorted(TESTS_DIR.glob(f"{prefix}_*.py"))
+    longer = [s.id.lower().replace(".", "_") for s in LADDER
+              if s.id != spec_id and s.id.lower().replace(".", "_").startswith(prefix + "_")]
+    if longer:
+        matches = [m for m in matches
+                   if not any(m.stem.startswith(p + "_") for p in longer)]
+    return matches[0] if len(matches) == 1 else None
+
+
+def stale_claims(ledger: Ledger) -> list:
+    """Specs whose test FILE differs from the one that produced their entry.
+
+    A ledger entry is a claim about a specific piece of code. Edit the test
+    afterwards and the entry keeps asserting the old result under the new test's
+    name — `LESSONS.md`'s "generated artifacts go stale silently", except the
+    stale artifact is the scoreboard itself.
+
+    Written 2026-08-09 the moment it bit. PG.8's observation check was
+    strengthened (it had been comparing 78 identically-zero columns against 78
+    identically-zero columns), verified at 3 seeds, and could NOT be re-recorded:
+    a concurrent iteration held the runner lock on a long GPU job. For as long as
+    that lock is held the ledger says PG.8 PASS about a file that no longer
+    exists in that form, and nothing says so.
+
+    Compares `Result.impl_sha`, not commits. The first attempt used "any commit
+    touching the test since the recorded commit" and reported 15 of 54 entries
+    stale — because a test is written, RUN, and only then committed, so the
+    recorded commit predates the test's own first commit and every honest entry
+    fires. A diagnostic with a 100% false-positive rate on healthy entries is
+    worse than none: it trains its reader to ignore it.
+
+    Returns (spec_id, status, kind, detail) where kind is "CHANGED" (the file
+    hash moved) or "UNVERIFIABLE" (the entry predates `impl_sha`).
+    """
+    out = []
+    for s in LADDER:
+        st = ledger.status(s.id)
+        if st is Status.NOT_RUN:
+            continue
+        entry = ledger.results.get(s.id)
+        path = _module_path_for(s.id)
+        if entry is None or path is None:
+            continue
+        recorded = getattr(entry, "impl_sha", None)
+        if not recorded:
+            out.append((s.id, st.value, "UNVERIFIABLE",
+                        f"recorded at {(entry.commit or '?')[:8]} before impl_sha existed"))
+            continue
+        cur = hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+        if cur != recorded:
+            out.append((s.id, st.value, "CHANGED",
+                        f"{path.name}: ran on {recorded}, now {cur}"))
+    return out
+
+
 def cmd_status(ledger: Ledger) -> int:
     counts = ledger.summary()
     total = len(LADDER)
@@ -135,7 +197,66 @@ def cmd_status(ledger: Ledger) -> int:
         impl = "" if _module_for(s.id) else "  (not implemented)"
         print(f"    [{MARK[st]}] {s.id}  {s.title}{impl}")
     print(f"\n  {counts}\n")
+    _check_stale_detector(ledger)
+    changed = [x for x in stale_claims(ledger) if x[2] == "CHANGED"]
+    if changed:
+        print("  ! STALE CLAIMS — the test changed after the run that recorded it:")
+        for sid, st, _, detail in changed:
+            print(f"      {sid}  recorded {st}; {detail}. Re-run it — the entry "
+                  f"is about older code.")
+        print()
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
+    return 0
+
+
+def _check_stale_detector(ledger: Ledger) -> None:
+    """Plant a known-stale entry and require the detector to find it.
+
+    `stale_claims` returning "nothing is stale" and `stale_claims` never having
+    looked are the same output, and this repo has already shipped an audit tool
+    that came back clean on a known-bad input because its source extraction
+    silently returned an empty set (T0.13). So the real function is run, on a
+    real spec, against a real file, with one `impl_sha` deliberately wrong — and
+    a detector that cannot see that refuses to report at all.
+    """
+    import copy
+
+    victim = next((s.id for s in LADDER
+                   if ledger.results.get(s.id) is not None
+                   and _module_path_for(s.id) is not None), None)
+    if victim is None:
+        return
+    probe = copy.copy(ledger)
+    probe.results = dict(ledger.results)
+    planted = copy.copy(probe.results[victim])
+    planted.impl_sha = "0" * 16          # a hash this file cannot have
+    probe.results[victim] = planted
+    hit = [r for r in stale_claims(probe) if r[0] == victim and r[2] == "CHANGED"]
+    if not hit:
+        raise RuntimeError(
+            f"the stale detector did not flag a planted mismatch on {victim}; "
+            "refusing to report a clean scan it may not have performed")
+
+
+def cmd_stale(ledger: Ledger) -> int:
+    _check_stale_detector(ledger)
+    rows = stale_claims(ledger)
+    changed = [r for r in rows if r[2] == "CHANGED"]
+    unknown = [r for r in rows if r[2] == "UNVERIFIABLE"]
+    if not changed:
+        print("\nNo stale claims — every verifiable entry names the test as it "
+              "stands today.")
+    else:
+        print(f"\n{len(changed)} claim(s) recorded against code that has since "
+              f"changed:\n")
+        for sid, st, _, detail in changed:
+            print(f"  {sid:8} {st:7} {detail}")
+        print("\nRe-run these (or `--gate`). A ledger entry is a claim about a "
+              "specific piece of code.")
+    # Reported, never hidden: a skipped item that leaves the numerator alone is
+    # how a clean scan and a scan that never ran become the same number.
+    print(f"\n{len(unknown)} entr(y/ies) predate `impl_sha` and cannot be "
+          f"checked at all; they become verifiable on their next run.\n")
     return 0
 
 
@@ -485,9 +606,9 @@ def main() -> int:
     ledger = Ledger()
 
     # status/next/render are read-only and must not block on a running experiment.
-    if args.spec and args.spec[0] in ("status", "next", "blocked", "render"):
+    if args.spec and args.spec[0] in ("status", "next", "blocked", "render", "stale"):
         return {"status": cmd_status, "next": cmd_next, "blocked": cmd_blocked,
-                "render": cmd_render}[args.spec[0]](ledger)
+                "render": cmd_render, "stale": cmd_stale}[args.spec[0]](ledger)
     if not args.spec and not args.gate and args.tier is None:
         return cmd_status(ledger)
 

@@ -634,6 +634,76 @@ so the honest reading of a green T0.12 today is *"the meter is internally
 coherent and charges only what a job plausibly spent"*, not *"the meter agrees
 with Kaggle."*
 
+## A shared observation can be dead in three quarters of one column block and every fixture still passes
+
+`playground.humanoid_obs` reproduces `HumanoidEnv._get_obs`, and 78 of its 348
+columns are `cfrc_ext`. MuJoCo does not fill `cfrc_ext` in `mj_step`; it fills it
+in `mj_rnePostConstraint`, which gymnasium's `MujocoEnv._step_mujoco_simulation`
+calls after every frame-skip block and which **no playground caller ever
+called**. So for the whole life of the playground those 78 columns were
+identically zero in this world. Measured on a matched floor-contact state:
+max |playground obs − Humanoid-v5 obs| is **135.9 without the call and 0.0040
+with it**.
+
+PG.8 could not see it, and the reason is in its own docstring: the comparison is
+made at z = 4 m, "above the walls, so cfrc_ext is zero on both sides". That was a
+deliberate, sensible choice to compare the state-derived columns without two
+different contact sets confounding it — and it is exactly the one state in which
+those 78 columns cannot tell a live channel from a dead one. Every other
+playground spec (PG.1–PG.7) certifies physics and never reads the observation at
+all. The next thing to touch this — a drive layer needing contact impulse —
+found it in ten minutes, because it was the first code to *ask* the observation
+about contact.
+
+**Rule:** when a test picks a regime to remove a confound, list what that regime
+also removes; the confound and the signal are often the same variable, and
+choosing a state where a subsystem contributes nothing makes the test blind to
+that subsystem rather than robust to it. Same family as "an assertion made
+against a saturated quantity cannot fail", but the saturation is chosen for a
+good reason here, which is why it survived review. The fix is not a second
+threshold, it is a second operating point: PG.8 now also compares IN CONTACT (dev
+0.0016–0.0066 across 3 seeds, gate 0.05), with the no-`rne` path as its control at
+135.9. And `playground.step()` is now the world's only stepping kernel, so there
+is one place the call can be missing from — the "when you can reference,
+reference" form applied to behaviour.
+
+*Second-order, from building that check:* its first version put Jack at a fixed
+xy offset, and on a MUTATED world (seed 1) an object was there — deviation 2.24
+instead of 0.004, from a real world difference the check does not test. Its
+second version searched for a clear spot but counted `apple`-on-`platform` and
+his own foot-against-hip self-collisions as contamination, so all 625 candidates
+looked dirty and it fell back to the arena centre, i.e. into the ladder. **When a
+fixture needs a "clean" configuration, define clean as the property under test
+(no FOREIGN contact), derive it from the live model rather than writing
+coordinates down, and gate on the derivation having worked** — `contact_non_floor_pg
+== 0` is checked, so a world with nowhere clear left is a red ledger entry rather
+than a quietly contaminated comparison.
+
+## A ledger entry is a claim about code, and nothing was checking the code still matched
+
+`Ledger.record` stamps the git commit at run time, and that is not enough to
+answer "is this entry still about the test that produced it". A test is written,
+RUN, and only then committed — so the recorded commit always predates the test's
+own first commit, and the obvious check ("any commit touching this file since")
+reported **15 of 54 entries stale**, every one of them healthy. A diagnostic with
+a 100% false-positive rate on healthy entries is worse than no diagnostic: it
+trains its reader to ignore it.
+
+What forced the question was a real gap, not a hypothetical: PG.8's check was
+strengthened and verified at 3 seeds, and could not be re-recorded because a
+concurrent iteration held the runner lock on a long GPU job. The ledger went on
+saying PG.8 PASS about a file that no longer existed in that form, and the only
+thing that would ever have noticed was somebody remembering to run `--gate`.
+
+**Rule:** a record that points at code needs to pin the code's CONTENT, not its
+revision — `Result.impl_sha` is the sha256 of the test file at run time, `None`
+(never `""`) for entries that predate it, and `run status` prints the stale set
+without being asked. Entries that cannot be checked are counted and reported
+separately rather than folded into "clean", because a skipped item that leaves
+the numerator alone is how a clean scan and a scan that never ran become the same
+number. The detector plants a known mismatch on a real entry and refuses to
+report a clean scan it may not have performed.
+
 ## A count that double-counts is a ranking, and a ranking is an instruction
 
 `run blocked` was built to answer "what one fix would free the most", and it

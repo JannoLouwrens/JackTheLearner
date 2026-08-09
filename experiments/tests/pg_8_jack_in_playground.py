@@ -36,10 +36,18 @@ brackets, from the calibration probe on 2026-08-09):
               fragments; this check is what makes it a claim.       [dev 0.0]
   observation `humanoid_obs` is 348-long, equals PipelineConfig.mujoco_obs_dim,
               and is bit-equivalent (<= 1e-9) to `HumanoidEnv._get_obs` on a
-              matched, contact-free state. A dimension count alone would pass
-              on a permuted or wrongly-sliced vector, and the playground shares
-              qpos with the apple, five objects and the seesaw, so slicing is
-              exactly where this would go wrong.               [dev 4.7e-16]
+              matched, contact-free state — AND agrees to <= 0.05 on a matched
+              state IN CONTACT, where the 78 cfrc_ext columns are nonzero.
+              The contact half was added 2026-08-09 and it found a real defect:
+              cfrc_ext is filled by `mj_rnePostConstraint`, `mj_step` does not
+              call it, and no playground caller did — so 78 of the 348 columns
+              were identically zero in this world (dev 114.97 without the call,
+              0.0061 with). The contact-free state was the one place those
+              columns could not tell live from dead. A dimension count alone
+              would pass on a permuted or wrongly-sliced vector, and the
+              playground shares qpos with the apple, five objects and the
+              seesaw, so slicing is exactly where this would go wrong.
+                                       [dev 4.7e-16 free; 0.0061 vs 115 contact]
   settles     2000 steps (10 s) at zero control: states stay finite, MuJoCo
               raises no warning, and |qvel| on Jack's dofs falls below 0.5.
               He falls over — that is correct, Humanoid-v5 spawns standing and
@@ -78,7 +86,20 @@ from ..registry import BY_ID
 REPO = Path(__file__).resolve().parents[2]
 
 MODEL_DEV_MAX = 1e-9        # playground Jack vs gym.make("Humanoid-v5")
-OBS_DEV_MAX = 1e-9          # humanoid_obs vs HumanoidEnv._get_obs
+OBS_DEV_MAX = 1e-9          # humanoid_obs vs HumanoidEnv._get_obs, no contact
+# ── STRENGTHENED 2026-08-09 (T1.02 precedent: strengthen only) ──────────
+# The contact-free comparison above is the only state in which cfrc_ext is zero
+# on BOTH sides, so the 78 columns it contributes were compared 0 == 0 and could
+# not distinguish a live channel from a dead one. They WERE dead: MuJoCo fills
+# cfrc_ext in `mj_rnePostConstraint`, which `mj_step` does not call and every
+# playground caller therefore never called. Measured on a floor-contact state:
+# 114.97 deviation without the call, 0.00611 with it. The residual 0.00611 is
+# real physics — the playground floor declares friction 1/0.05/0.001 (PG.1
+# measures that) against Humanoid-v5's 1/0.1/0.1, and the contact sets differ 10
+# vs 9 — so the threshold is set an order of magnitude above the measured
+# residual and four below the broken path.
+CONTACT_OBS_DEV_MAX = 0.05
+CONTACT_OBS_DEV_MIN_BROKEN = 1.0   # the no-rne control must blow past this
 SETTLE_STEPS = 2000         # 10 s at the playground's 0.005 timestep
 SETTLE_QVEL_MAX = 0.5       # rad/s or m/s on Jack's dofs
 DRIVE_DIVERGENCE_MIN = 0.10  # rad of qpos, driven vs zero-control
@@ -200,6 +221,127 @@ def _obs_equivalence(model, data, seed: int) -> float:
         env.close()
 
 
+def _contact_obs_equivalence(model, data, seed: int) -> dict:
+    """The same comparison, IN CONTACT — where the 78 cfrc_ext columns are live.
+
+    Settles gymnasium's own Humanoid on its own floor, copies that state into the
+    playground (offset in xy, because the observation must not care where in the
+    room he is), and compares `humanoid_obs` against `_get_obs` twice: once
+    exactly as every playground caller used to produce it (`mj_forward` only) and
+    once through the shared kernel. The first IS the control — it is not a
+    tidied restatement of the bug, it is the bug, and it must fail.
+    """
+    import gymnasium as gym
+    import mujoco
+    import numpy as np
+    from playground import humanoid_index, humanoid_obs
+
+    env = gym.make("Humanoid-v5")
+    try:
+        rm, rd = env.unwrapped.model, env.unwrapped.data
+        mujoco.mj_resetData(rm, rd)
+        rng = np.random.RandomState(500 + seed)
+        rd.qpos[:] = rm.qpos0
+        rd.qpos[7:] += rng.uniform(-RESET_NOISE, RESET_NOISE, rm.nq - 7)
+        for _ in range(600):                    # 3 s: he falls and lies in contact
+            rd.ctrl[:] = 0.0
+            mujoco.mj_step(rm, rd)
+        mujoco.mj_rnePostConstraint(rm, rd)
+        ref = env.unwrapped._get_obs()
+
+        ix = humanoid_index(model)
+        q, d = ix["qposadr"], ix["dofadr"]
+        mujoco.mj_resetData(model, data)
+        data.qpos[q:q + 24] = rd.qpos
+        data.qvel[d:d + 23] = rd.qvel
+        # a different place in the room, and one with nothing else in it
+        cx, cy = _clear_floor_spot(model, data, q)
+        broken = float(np.abs(humanoid_obs(model, data) - ref).max())
+        mujoco.mj_rnePostConstraint(model, data)
+        fixed = humanoid_obs(model, data)
+        from playground import humanoid_body_ids
+        non_floor = _foreign_contacts(model, data, set(humanoid_body_ids(model)),
+                                      int(model.geom("floor").id))
+        return {
+            "contact_ncon_ref": int(rd.ncon),
+            "contact_ncon_pg": int(data.ncon),
+            "contact_non_floor_pg": non_floor,
+            "contact_spot_xy": [round(cx, 2), round(cy, 2)],
+            "contact_cfrc_norm_ref": round(float(np.linalg.norm(rd.cfrc_ext)), 4),
+            "contact_obs_dev": round(float(np.abs(fixed - ref).max()), 6),
+            "contact_obs_dev_no_rne": round(broken, 4),
+        }
+    finally:
+        env.close()
+
+
+def _foreign_contacts(model, data, jack: set, floor: int) -> int:
+    """Contacts between Jack and something that is neither Jack nor the floor.
+
+    The obvious "any contact not involving the floor" counts two things that are
+    not defects: `apple` resting on `platform` (two OTHER bodies, nothing to do
+    with him) and `left_foot`/`right_foot` against `butt`, which are Jack's own
+    self-collisions and are present in Humanoid-v5 too. Counting those made
+    every one of 625 candidate spots look contaminated and the search fell back
+    to the arena centre, i.e. into the ladder. The quantity that matters is
+    FOREIGN contact.
+    """
+    n = 0
+    for k in range(int(data.ncon)):
+        g1, g2 = int(data.contact[k].geom1), int(data.contact[k].geom2)
+        b1, b2 = int(model.geom_bodyid[g1]), int(model.geom_bodyid[g2])
+        j1, j2 = b1 in jack, b2 in jack
+        if j1 == j2:                       # both his, or neither his
+            continue
+        other = g2 if j1 else g1
+        if other != floor:
+            n += 1
+    return n
+
+
+def _clear_floor_spot(model, data, q: int) -> tuple:
+    """Place Jack's already-set pose where the ONLY thing he touches is the floor.
+
+    Not decoration. The first version of this check offset him by a fixed
+    (+1.7, -2.3) and seed 1 — a MUTATED world — dropped an object there, so his
+    contact set was 10 against Humanoid-v5's 8 and the deviation read 2.24
+    instead of 0.004. That is a real world difference, not a defect in
+    `humanoid_obs`, and gating on it would have failed the check for a reason it
+    does not test. Every seed mutates the furniture, so the spot cannot be
+    written down.
+
+    It is searched rather than computed from geom sizes because the property
+    that matters — "no contact except the floor" — is one MuJoCo can answer
+    exactly, while any bounding-box estimate of it is an approximation that
+    would silently drift as new geometry is added. `contact_non_floor_pg` is
+    gated, so a world with nowhere clear left is a red ledger entry rather than
+    a quietly contaminated comparison.
+    """
+    import mujoco
+    import numpy as np
+
+    from playground import humanoid_body_ids
+
+    floor = int(model.geom("floor").id)
+    jack = set(humanoid_body_ids(model))
+    half = float(model.geom_size[floor][0]) - 1.0
+    grid = np.linspace(-half, half, 25)
+    # Search outward from the arena centre: the furniture clusters there, but a
+    # spot flush against a wall is worse, so nearest-first with a hard reject is
+    # the right order.
+    cands = sorted(((float(x), float(y)) for x in grid for y in grid),
+                   key=lambda xy: xy[0] ** 2 + xy[1] ** 2)
+    best = cands[0]
+    for x, y in cands:
+        data.qpos[q], data.qpos[q + 1] = x, y
+        mujoco.mj_forward(model, data)
+        if _foreign_contacts(model, data, jack, floor) == 0 and int(data.ncon) > 0:
+            return x, y
+    data.qpos[q], data.qpos[q + 1] = best
+    mujoco.mj_forward(model, data)
+    return best
+
+
 def _model_fidelity(model) -> float:
     """Max deviation of Jack's compiled constants from Humanoid-v5's own.
 
@@ -244,6 +386,7 @@ def _run(seed: int, spawn=None) -> dict:
 
     from playground import (HUMANOID_NBODY, HUMANOID_NU, HUMANOID_OBS_DIM,
                             humanoid_body_ids, humanoid_obs, make_playground)
+    from playground import step as pg_step
     from TrainingPipeline import PipelineConfig
 
     p = _params(seed)
@@ -274,15 +417,19 @@ def _run(seed: int, spawn=None) -> dict:
         "obs_dim": int(obs.shape[0]),
         "pipeline_obs_dim": int(PipelineConfig().mujoco_obs_dim),
         "obs_max_dev_vs_v5": _obs_equivalence(model, data, seed),
+        **_contact_obs_equivalence(model, data, seed),
         "model_max_dev_vs_v5": _model_fidelity(model),
         "spawn_contacts": spawn_contacts,
         "world_mutated": int(seed > 0),
     }
 
     # ── settle: 10 s of nothing, and the physics must stay sane ─────────
+    # Through the shared kernel (playground.step), not a bare mj_step loop, so
+    # `settle_obs_finite` below reads an observation whose contact columns are
+    # actually populated. Same 2000 physics steps; 400 decisions of frame_skip 5.
     ix = _reset(model, data, seed)
-    for _ in range(SETTLE_STEPS):
-        mujoco.mj_step(model, data)
+    for _ in range(SETTLE_STEPS // 5):
+        pg_step(model, data, frame_skip=5)
     out.update({
         "settle_finite": int(bool(np.isfinite(data.qpos).all()
                                   and np.isfinite(data.qvel).all())),
@@ -358,6 +505,12 @@ def _check(m: dict, c: dict) -> bool:
         and m["obs_dim"] == 348
         and m["obs_dim"] == m["pipeline_obs_dim"]
         and m["obs_max_dev_vs_v5"] <= OBS_DEV_MAX
+        # observation, IN CONTACT — the 78 cfrc_ext columns must be live, and
+        # the path that left them dead must be visibly worse
+        and m["contact_cfrc_norm_ref"] > 0.0
+        and m["contact_non_floor_pg"] == 0
+        and m["contact_obs_dev"] <= CONTACT_OBS_DEV_MAX
+        and m["contact_obs_dev_no_rne"] >= CONTACT_OBS_DEV_MIN_BROKEN
         # settles
         and m["spawn_contacts"] == 0
         and m["settle_finite"] == 1

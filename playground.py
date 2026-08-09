@@ -533,6 +533,40 @@ def humanoid_obs(model, data) -> np.ndarray:
     return obs
 
 
+def step(model, data, ctrl=None, frame_skip: int = 5, water: Optional["Water"] = None):
+    """Advance the world one DECISION — the playground's only stepping kernel.
+
+    Bare `mujoco.mj_step` is not enough, and the gap is silent. MuJoCo populates
+    `data.cfrc_ext` in `mj_rnePostConstraint`, which `mj_step` does not call;
+    gymnasium's `MujocoEnv._step_mujoco_simulation` calls it after every
+    `frame_skip` block, which is the only reason `HumanoidEnv._get_obs` has
+    contact forces in it at all. Every playground caller stepped with bare
+    `mj_step`, so **78 of `humanoid_obs`'s 348 columns were identically zero in
+    this world** — measured: max |playground obs - Humanoid-v5 obs| on a
+    floor-contact state is 114.97 without the call and 0.0061 with it.
+
+    PG.8 could not see it. Its obs-equivalence check compares at z = 4 m, above
+    the walls, deliberately contact-free "so cfrc_ext is zero on both sides" —
+    the one state in which the 78 columns cannot tell a live channel from a dead
+    one. (`LESSONS.md`: an assertion made against a saturated quantity cannot
+    fail.) PG.8 now also compares in contact, and the no-`rne` path is its
+    control.
+
+    So there is one stepping function, it matches gymnasium's, and anything that
+    wants Jack's observation goes through it — "two kernels re-implementing one
+    operation is the defect".
+    """
+    import mujoco
+
+    if ctrl is not None:
+        data.ctrl[:] = ctrl
+    for _ in range(frame_skip):
+        if water is not None:
+            water.apply(model, data)
+        mujoco.mj_step(model, data)
+    mujoco.mj_rnePostConstraint(model, data)
+
+
 def make_playground(params: Optional[PlaygroundParams] = None,
                     with_water: bool = True, with_humanoid: bool = False):
     """Build the world and return (model, data, water). CPU-only, no rendering."""

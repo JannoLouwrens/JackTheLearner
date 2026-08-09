@@ -1133,3 +1133,79 @@ unit on the board is now **T2.03** (11 specs freed, no GPU, no owner decision),
 then **PG.6/PG.7** (7 each, both feed the UB.9–16 unison family). PS.01 remains
 the cheapest LC unit. Do not spend an iteration registering more specs — the
 unrun gap is 85 and the audit named that as the drift.
+
+## 2026-08-09 ~20:10-21:0x — the playground's observation was 78 columns short, and three guards that could not have found it
+
+**Started at `blocked`, per the last hand-off, and the hand-off was wrong.**
+`run blocked` ranked terminal blockers by how many stuck specs MENTION each root,
+and mentions double-count. `T2.03 blocks 11` is really **frees 2** (T3.01, T3.10;
+the other nine are UB.1-8 + T4.01, which also rest on `T2.01 = VOID`). Worse in
+the other direction: `PG.6 blocks 7`, `PG.7 blocks 7`, `LC.02 blocks 4`,
+`PS.01 blocks 4` — each frees **nothing** alone. Four of twelve entries had a
+marginal value of zero and were printed as the 3rd-6th best moves on the board,
+and the iteration that built the command wrote "T2.03 ... the largest unblocking
+available without a GPU" into its own hand-off. Fixed: rank by `frees`, keep
+`blocks` (blocks-many/frees-none is the signal a PAIR is needed), and print the
+CO-REQUISITE SETS. The real board:
+
+    T2.01=VOID frees 26 | T2.08 3 | T2.06 3 | T2.03 2 | T2.02=VOID 2 | T2.05/T4.02/T2.11 1
+    pairs: T2.01+T2.03 -> 9 | PG.6+PG.7 -> 5 | LC.02+PS.01 -> 4
+
+Guarded by `_check_ranker`, a 4-spec graph whose answer is known, run on every
+`blocked`; the pre-fix ranker fails it (verified).
+
+**Then took PS.01** (INTEGRATION_QUEUE top entry LEARNING_CORE's own "next
+cheapest"; with LC.02 it frees LC.03-06). Wrote `experiments/drives.py` — the
+§2.2-2.5 drive layer, energy/integrity/wetness, caller owns `mj_step`, `j0` and
+`alpha` have NO defaults because PS.01 measures them. First pilot returned
+**J = 0.0000 at every percentile**, which is how the real finding surfaced:
+
+**MuJoCo fills `cfrc_ext` in `mj_rnePostConstraint`, not in `mj_step`, and no
+playground caller ever called it.** 78 of `humanoid_obs`'s 348 columns have been
+identically zero in this world for its whole history. Measured on a matched
+floor-contact state: max |playground obs - Humanoid-v5 obs| = **135.9 without the
+call, 0.0040 with**. PG.8's obs check compares at z = 4 m, deliberately
+contact-free "so cfrc_ext is zero on both sides" — the one state where those 78
+columns cannot tell live from dead. PG.1-PG.7 never read the observation at all.
+
+Fixed and made unrepeatable:
+- `playground.step()` is now the world's ONE stepping kernel (frame_skip loop +
+  `mj_rnePostConstraint`, matching gymnasium), so there is a single place the
+  call can go missing from.
+- PG.8 STRENGTHENED (T1.02 precedent, strengthen only): a second obs comparison
+  IN CONTACT, gate `<= 0.05`, plus `contact_non_floor_pg == 0`. Verified 3 seeds:
+  dev **0.003955 / 0.006600 / 0.001643**, foreign contacts 0/0/0, ncon 9-10 vs
+  gym's 8-9, and the pre-fix path (135.9) FAILS the gate. Two false starts worth
+  knowing: a fixed xy offset landed on an object in the mutated seed-1 world
+  (dev 2.24), and counting `apple`-vs-`platform` and his own foot-vs-hip
+  self-collisions as contamination made all 625 candidate spots look dirty.
+  The spot is now SEARCHED for foreign-contact-free and the search is gated.
+
+**NOT RECORDED — the ledger still holds PG.8's PRE-strengthening entry.** A
+concurrent iteration has held `/tmp/jack-ladder.lock` since ~19:42 on a T2.01 GPU
+run (it predates the 20:08 lock split, so it holds the CPU lock too). Every
+`experiments.run PG.8` attempt skipped. The numbers above are from calling
+`_experiment`/`_control`/`_check` directly; nothing was written to the ledger by
+hand.
+
+That gap produced the third guard: **`Result.impl_sha`** (sha256 of the test file
+at run time) + `run stale`, surfaced automatically in `run status`. Commit-based
+staleness was tried first and reported 15 of 54 entries stale — all healthy, because
+a test is written, run, THEN committed. Content-hash is exact. 54 entries predate
+the field and are reported as UNVERIFIABLE, counted separately, never folded into
+"clean". `_check_stale_detector` plants a known mismatch on a real entry and
+refuses to report a scan it may not have performed (verified: a no-op detector
+raises).
+
+**FOR THE NEXT ITERATION, in order:**
+1. `python -m experiments.run PG.8` — the strengthened check is verified but the
+   ledger entry is stale. `run status` now says so. Do this first.
+2. Then `--gate`. Anything that reads `humanoid_obs` after a bare `mj_step` loop
+   was reading 78 zeros; PG.1-PG.7 do not, but check `t2_20_episodic_search.py`
+   and `ContactAudio.py`, which both step by hand.
+3. PS.01 is half-built: `experiments/drives.py` is written but has NO test and is
+   NOT registered as passing anything. Pilot numbers from the broken-J run, so
+   re-pilot: at frame_skip 5 over 3,000 decisions (75 s), basal drain is 0.125 and
+   work drain was **1.82** — energy will flatline near zero long before the
+   horizon ends, which is one of PS.01's own pre-registered falsifiers. Measure
+   before deciding; do NOT re-tune kappa to make the gate pass.

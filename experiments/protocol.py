@@ -115,6 +115,17 @@ class Result:
     history: List[Dict[str, Any]] = field(default_factory=list)
     """Previous attempts, trimmed. Written by Ledger.record — see the note there."""
     attempt: int = 1
+    impl_sha: Optional[str] = None
+    """sha256 of the test file this result was produced by, at run time.
+
+    `commit` alone cannot answer "is this entry still about the code that
+    produced it": a test is normally written, RUN, and only then committed, so
+    the recorded commit predates the test's own first commit and "any commit
+    touching the file since" fires on every honest entry. The file's content
+    hash answers it exactly. `None` means the entry predates this field and is
+    UNVERIFIABLE — deliberately not `""`, because a sentinel that is also a
+    valid value cannot be detected (the `Arm.cost` lesson).
+    """
 
     @staticmethod
     def env_stamp() -> Dict[str, str]:
@@ -266,6 +277,19 @@ def _declares_void(metrics: Dict[str, Any]) -> Optional[str]:
     return None
 
 
+def _impl_sha(fn: Callable) -> Optional[str]:
+    """sha256 of the file `fn` is defined in — the test as it was when it ran."""
+    import hashlib
+    import inspect
+    try:
+        src = inspect.getsourcefile(fn)
+        if not src:
+            return None
+        return hashlib.sha256(Path(src).read_bytes()).hexdigest()[:16]
+    except (OSError, TypeError):
+        return None
+
+
 def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
              check: Callable[[Dict[str, Any], Dict[str, Any]], bool],
              control_fn: Optional[Callable[[int], Dict[str, Any]]] = None,
@@ -278,6 +302,7 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     never adjusted afterwards to make a result look better.
     """
     ledger = ledger or Ledger()
+    impl_sha = _impl_sha(fn)
     blocked = ledger.blocked_by(spec)
     if blocked:
         res = Result(spec_id=spec.id, status=Status.BLOCKED,
@@ -327,6 +352,7 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     res = Result(spec_id=spec.id, status=status, metrics=metrics,
                  control_metrics=control_metrics, seeds=seeds,
                  duration_s=round(time.time() - t0, 2), message=message,
+                 impl_sha=impl_sha,
                  ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"), **Result.env_stamp())
     ledger.record(res)
     return res
