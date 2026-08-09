@@ -7,6 +7,9 @@ READ IN THIS ORDER, EVERY TIME, BEFORE ANYTHING ELSE:
   3. docs/LESSONS.md — mistakes already made here, generalised. Do not repeat one.
   4. docs/OVERSIGHT.md, section FOR THE BUILDER — the auditor's findings are
      your highest-priority work when present.
+  5. docs/PROGRESS.md, section FOR THE BUILDER — the weekly review's proposed
+     spec redesigns. Implement them under the T1.02 precedent: strengthen only,
+     old versions stay in the ledger's history.
 
 BEFORE YOU FINISH, ask: is the machine better than I found it? Add a guard, a
 spec, a lesson in docs/LESSONS.md, or a resolved/escalated decision. Fixing one
