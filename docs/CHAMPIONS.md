@@ -22,6 +22,11 @@ however good its number — can touch them. **Bakeoffs decide HOW, never WHAT.**
 - **Both drives exist** — curiosity AND needs; only their balance is empirical.
 - **The method**: claims only by falsifiable tests; biology as oracle;
   caveman-realism; simplicity earned; the system is the product.
+- **Who he becomes is not written here.** Character EMERGES — kindness is
+  expected from his need for company, not decreed; his grasp that memories of
+  people are OF people comes from attribution itself, not a rule. What
+  emerges is observed and reported honestly; troubling emergence escalates to
+  the owner — it is never silently patched, and never silently decreed either.
 - **The owner's boundaries**: free compute only; the tenants are untouchable.
 
 If a spec, arm, or verdict appears to conflict with this layer, the verdict

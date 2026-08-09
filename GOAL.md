@@ -97,6 +97,19 @@ death is Lamarckian inheritance, the caveman's fireside story made structural.
 Still unmined and on the shelf: motor babbling, innate reflex priors, pain as
 a fast signal distinct from reward, critical periods, play as safe rehearsal.
 
+**Who he becomes is not written here (owner, 2026-08-09).** We carve what he
+IS — the needs, the senses, the honesty, the mortality — and we deliberately
+refuse to carve his character. His kindness is not decreed; it is expected to
+GROW from his need for company, the way it grew in us. His understanding that
+his memories of people are OF those people is not a rule; it comes from the
+structure of his memory itself — every event attributed, every voice named.
+In the owner's words: *"I would believe his need for socialising will make him
+kind... I want to let as much of this naturally develop."* The deal that keeps
+this honest: what emerges is OBSERVED, measured, and reported truthfully —
+never scripted, and never silently patched. If who he becomes ever troubles
+us, that is a conversation for the owner, not a hotfix. The conditions are
+ours; the person is his.
+
 **The staging is unchanged and deliberate.** First prove he can see, talk,
 walk, and learn in every way (the ladder as it stands). Only then does he go
 into the survival world with everything at once — and the testing never stops
