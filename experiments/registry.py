@@ -131,8 +131,21 @@ LADDER: list[Spec] = [
          falsified_by="A run proceeds with the budget exhausted.",
          null_baseline="n/a", metric="quota_enforced", budget=Budget.CPU_FAST,
          depends_on=["T0.09"],
-         control="A Budget whose weeks deliberately leak must FAIL isolation.",
-         notes="REWRITTEN 2026-08-09: `weeks_isolated` was asserted after the "
+         control="Two named broken meters: a Budget whose weeks deliberately "
+                 "leak must FAIL isolation, and the pre-2026-08-09 `charge()` "
+                 "plus `submit()` loop must FAIL every billing property.",
+         notes="EXTENDED 2026-08-09 (2nd overseer audit): every property this "
+               "spec asserted was checked against synthetic charges the test "
+               "made itself, so it could not see that `charge()` billed failed "
+               "jobs as work, re-billed a reattached kernel, and billed this "
+               "box's wall clock rather than the metered window — week 31 "
+               "closed at 37.4554 of 30.0 h and denied T1.02 its 0.7 h with "
+               "this spec green. Added: failure bucket, per-job idempotency "
+               "(across a reload), overrun marker, and submit()-level wiring. "
+               "Strengthened only; no prior assertion was removed. Reconciling "
+               "the meter against Kaggle's own reported kernel runtime needs "
+               "network and a live kernel, and remains OPEN. "
+               "REWRITTEN 2026-08-09: `weeks_isolated` was asserted after the "
                "quota was drained to its ceiling, where remaining() is "
                "max(0, 30-30) = 0 under EVERY implementation including total "
                "isolation failure. True by construction, and the week-key "

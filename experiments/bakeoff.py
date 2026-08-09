@@ -115,7 +115,8 @@ def run_bakeoff(spec: Spec,
                 margin_sigma: float = 1.5,
                 higher_is_better: bool = True,
                 controls: Optional[List[Arm]] = None,
-                ledger: Optional[Ledger] = None) -> BakeoffResult:
+                ledger: Optional[Ledger] = None,
+                decisions_path: Optional[Path] = None) -> BakeoffResult:
     """Run every arm on every seed, gate them, and pick a winner or refuse to.
 
     `arms` COMPETE and must clear the learning gate. `controls` are expected to
@@ -183,7 +184,7 @@ def run_bakeoff(spec: Spec,
             f"control(s) {', '.join(escaped)} CLEARED the {learning_gate_sigma}-"
             f"sigma gate. A control that succeeds means the metric does not "
             f"measure what the spec claims; no comparison on it is valid.",
-            spec.metric), ledger)
+            spec.metric), ledger, decisions_path)
 
     failed = [a.name for a in results if not a.passed_gate]
     if failed:
@@ -192,7 +193,7 @@ def run_bakeoff(spec: Spec,
             spec.id, "VOID", None, results + control_results, null_mean, null_std,
             f"arms below the {learning_gate_sigma}-sigma learning gate: "
             f"{', '.join(failed)}. An arm that has not demonstrably learned "
-            f"cannot arbitrate the decision.", spec.metric), ledger)
+            f"cannot arbitrate the decision.", spec.metric), ledger, decisions_path)
 
     ranked = sorted(results, key=lambda a: a.mean, reverse=higher_is_better)
     best, second = ranked[0], ranked[1]
@@ -213,22 +214,23 @@ def run_bakeoff(spec: Spec,
                 f"{', '.join(a.name for a in tied if a.cost is None)} declared "
                 f"none. Declare "
                 f"Arm(cost=...) in the units the spec named (params, latency, "
-                f"GPU-hours) and re-run.", spec.metric), ledger)
+                f"GPU-hours) and re-run.", spec.metric), ledger, decisions_path)
         cheapest = min(tied, key=lambda a: a.cost)
         return _finish(spec, BakeoffResult(
             spec.id, "TIE", cheapest.name, results + control_results, null_mean, null_std,
             f"{best.name} leads {second.name} by only {gap:.2f} sigma "
             f"(margin {margin_sigma}). The choice does not matter yet; "
             f"taking the cheapest tied arm ({cheapest.name}, cost "
-            f"{cheapest.cost:g}).", spec.metric), ledger)
+            f"{cheapest.cost:g}).", spec.metric), ledger, decisions_path)
 
     return _finish(spec, BakeoffResult(
         spec.id, "WINNER", best.name, results + control_results, null_mean, null_std,
         f"{best.name} beats {second.name} by {gap:.2f} sigma and clears the "
-        f"null by {best.sigma_over_null:.2f} sigma.", spec.metric), ledger)
+        f"null by {best.sigma_over_null:.2f} sigma.", spec.metric), ledger, decisions_path)
 
 
-def _finish(spec: Spec, res: BakeoffResult, ledger: Optional[Ledger]) -> BakeoffResult:
+def _finish(spec: Spec, res: BakeoffResult, ledger: Optional[Ledger],
+            decisions_path: Optional[Path] = None) -> BakeoffResult:
     if ledger is not None:
         # VOID maps to Status.VOID, never FAIL. A bakeoff that could not
         # arbitrate has NOT refuted anything, and specs carry a `kills` field:
@@ -243,15 +245,24 @@ def _finish(spec: Spec, res: BakeoffResult, ledger: Optional[Ledger]) -> Bakeoff
             ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
             **Result.env_stamp(),   # commit + hardware: an unattributable
         ))                          # result defeats the overseer's own audit
-    _append_decision(res)
+    _append_decision(res, decisions_path)
     return res
 
 
-def _append_decision(res: BakeoffResult) -> None:
-    """Write the decision — losers included — so it can be re-opened later."""
-    DECISIONS.parent.mkdir(parents=True, exist_ok=True)
-    if not DECISIONS.exists():
-        DECISIONS.write_text(
+def _append_decision(res: BakeoffResult, path: Optional[Path] = None) -> None:
+    """Write the decision — losers included — so it can be re-opened later.
+
+    `path` exists because this function used to hard-code the real record, so
+    `bakeoff.py`'s own self-tests appended to it: on 2026-08-09 the entirety of
+    `docs/DECISIONS_RESOLVED.md` was nine fixtures on a spec called `TEST`,
+    which made the file useless as evidence that any decision had been made.
+    Same shape as `submit()` hard-coding `gpu_budget.json`. A test must be able
+    to reach the code without reaching the record.
+    """
+    DECISIONS_FILE = path or DECISIONS
+    DECISIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    if not DECISIONS_FILE.exists():
+        DECISIONS_FILE.write_text(
             "# Decisions resolved by bakeoff\n\n"
             "Written by experiments/bakeoff.py. Losing arms are recorded on "
             "purpose: a decision whose alternatives were discarded cannot be "
@@ -269,5 +280,5 @@ def _append_decision(res: BakeoffResult) -> None:
                      f"{'pass' if a.passed_gate else 'FAIL'} | "
                      f"{a.cost if a.cost is not None else '—'} |")
     lines.append("\n")
-    with open(DECISIONS, "a", encoding="utf-8") as fh:
+    with open(DECISIONS_FILE, "a", encoding="utf-8") as fh:
         fh.write("".join(lines))

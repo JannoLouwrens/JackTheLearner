@@ -153,6 +153,16 @@ is blocked, check whether the dependency is real or an artifact of how the
 claim was categorised. And be suspicious when the project's headline claim is
 one of the unreachable ones.
 
+**GUARD, 2026-08-09.** "Periodically ask" was advice to humans, and it failed
+twice: the re-parenting above never covered UB.1–UB.8, which are behind `T2.01`
+again by the same four-hop path, and it took the overseer walking the graph by
+hand to find that 40 specs were dead. It is now a command —
+`python -m experiments.run blocked` — which reports each unreachable spec under
+its **terminal** blocker rather than its immediate parent, ranked by how many it
+frees. The immediate parent is almost never actionable; the root is. Run it
+alongside `next`: `next` says what to do, `blocked` says what one fix would be
+worth the most.
+
 ## VOID is not FAIL, and the difference is load-bearing
 
 T2.02's own metrics read "VOID — an arm failed the 3-sigma learning gate; two
@@ -607,3 +617,45 @@ retry, on reattach, and on queue time are four different ways to make a meter
 read high, and none of them errors. And a ceiling that can be exceeded is not a
 ceiling: if `used` may legally pass `max`, log it, because `max(0, ...)` will
 otherwise present exhaustion and overrun as the same state.
+
+**GUARD, 2026-08-09.** Three of the four failure modes are now closed in code and
+gated by T0.12. `Budget.charge()` takes `ok=` (waste goes to a `{backend}_failed`
+bucket that counts against the quota but is visibly not work) and `job_id=`
+(idempotent per unit of remote compute, surviving a reload, so a reattach cannot
+re-bill a kernel); crossing `KAGGLE_WEEKLY_HOURS` appends to an `overruns` list
+and prints to stderr; `JobResult.billable_s` carries the provider's metered
+window — for Kaggle, push-accepted to terminal status — and `submit()` charges
+that, not the wall clock wrapped around it. T0.12 asserts all of it against two
+named broken meters, one of which is the pre-fix `submit()` loop reproduced
+verbatim. **The fourth is still open**, and it is the one this lesson is named
+for: nothing reconciles the meter against Kaggle's own report of what a kernel
+ran for. That needs a live kernel and network — it cannot be a CPU_FAST spec —
+so the honest reading of a green T0.12 today is *"the meter is internally
+coherent and charges only what a job plausibly spent"*, not *"the meter agrees
+with Kaggle."*
+
+## A function that hard-codes the path to the record it mutates cannot be tested without corrupting it
+
+Two files, same shape, found on the same day. `gpu.submit()` opened `Budget()` on
+the module-level `BUDGET_FILE`, so no test could exercise its routing and billing
+without writing to the live quota meter — which is precisely why the billing
+defects above lived in the one function T0.12 never touched. And
+`bakeoff._append_decision()` wrote to the module constant `DECISIONS`, so
+`bakeoff.py`'s own self-tests appended to the real decision record: on 2026-08-09
+the entire contents of `docs/DECISIONS_RESOLVED.md` were **nine fixtures on a
+spec called `TEST`** and nothing else. The register of every architectural choice
+this project has made was, in its entirety, unit-test output.
+
+The two failure modes are opposite and both bad. Hard-coding either makes the
+code untestable (so it goes untested, and the bugs live exactly there), or makes
+the tests destructive (so the record fills with fiction). There is no third
+outcome; which one you get depends only on whether someone was brave enough to
+call the function.
+
+**Rule:** any function that writes to a durable record — a ledger, a budget, a
+decision log, a journal — takes its destination as a parameter defaulting to the
+real one. Injection is not a testing convenience; it is what makes the real
+record's contents attributable. Corollary for auditing: a record whose entries
+are all self-declared fixtures is not an empty record, it is a *misleading* one —
+delete them and say in the file that it is empty, because "nine decisions" and
+"zero decisions" read very differently to anyone counting.

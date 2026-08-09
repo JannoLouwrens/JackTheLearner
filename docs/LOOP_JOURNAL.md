@@ -1055,3 +1055,81 @@ FOR THE NEXT ITERATION, two things that will bite:
    drive layer — CPU, no body) is likely the cheaper next LC unit. The queue's
    second entry (NEEDS_AND_DEATH, NE.00–NE.09) is still PENDING and its NE.01
    is gated on the §1.2 Borbély citation pass.
+
+---
+
+## 2026-08-09 ~19:15 — the meter now measures Kaggle; the ladder can say what it can never do
+
+Took the overseer's `FOR THE BUILDER` items 1, 4 and 8 rather than a new
+capability spec. All three are record-integrity, which is the category the 18:37
+audit found sliding while the science went well — five of nine items carried
+over untouched.
+
+**1. The GPU meter (audit RANK 3, builder item 1).** Three defects in `gpu.py`,
+all fixed and all now gated:
+- `charge()` ran above `if res.ok`, so a crashed kernel, a timeout and a failed
+  artifact download each billed full wall clock as GPU hours. Waste now goes to
+  a `{backend}_failed` bucket — counted against the quota, because the GPU was
+  really occupied, but visibly not work.
+- A `JACK_REUSE_KERNEL` reattach skipped `afford()` (correct — reattaching is
+  free) and then still called `charge()`, re-billing compute already paid for.
+  `charge(job_id=...)` is now idempotent per unit of remote compute and survives
+  a reload, which is where the reattach actually happens.
+- `res.duration_s` is `time.time() - t0` **on this box**: push, queue, polling
+  and download, none of it GPU time. `JobResult.billable_s` now carries the
+  metered window (Kaggle: push-accepted → terminal status) and `submit()`
+  charges that. A push that never landed bills 0.0, not the 300 s the CLI spent
+  failing.
+- `afford()` gates on the estimate and `charge()` bills actuals, so nothing caps
+  an overrun. Crossing `KAGGLE_WEEKLY_HOURS` now appends to an `overruns` list
+  and shouts on stderr — week 31 closed at **37.4554 of 30.0** and no artifact
+  anywhere said so.
+
+T0.12 extended from 12 properties to 24, strengthen-only, none removed. It gained
+`failed_hours_visible`, `waste_not_counted_as_work`, `charged_once`,
+`distinct_jobs_both_charged`, `idempotent_across_processes`, `overrun_recorded`,
+`overrun_names_the_job`, `no_false_overrun`, and three `submit()`-level wiring
+properties under stub backends. **PASS, 24/24, attempt 3, 0.01 s.** Two named
+controls, each failing only what it exists to break: `_LeakyBudget` fails
+isolation (2 properties), `_PreFixBudget` + the pre-fix `submit()` loop
+reproduced verbatim fails 8 billing properties. `submit()` took a `budget=`
+parameter to make this testable at all — see below.
+
+**STILL OPEN and deliberately not claimed:** nothing reconciles the meter against
+Kaggle's OWN reported runtime for a kernel. That needs a live kernel and network
+and cannot be a `CPU_FAST` spec. A green T0.12 today means *"the meter is
+internally coherent and charges only what a job plausibly spent"*, NOT *"the
+meter agrees with Kaggle."* The existing week-31 figure was left alone: it is a
+past week, gates nothing, and hand-editing the accounting record is the disease,
+not the cure. Migration to the new schema is lazy, in `Budget.__init__`.
+
+**4. `bakeoff.py` no longer writes the real decision record from tests (item 4).**
+`_append_decision` took no path; `run_bakeoff(decisions_path=...)` now threads
+one through. `docs/DECISIONS_RESOLVED.md` contained **nine fixtures on a spec
+called `TEST` and nothing else** — the register of every architectural decision
+this project has made was, in its entirety, unit-test output. Removed, with a
+note in the file recording why it is now empty. That emptiness is the honest
+reading: SYSTEM.md's third law has still never been exercised on a real question.
+
+**8. `python -m experiments.run blocked` (item 8).** The converse of `next`, which
+answers "what can I do" and is silent about what is unreachable. Reports each
+blocked spec under its **terminal** blocker, not its immediate parent — UB.1
+reads as blocked by T4.01 and only T2.01 is actionable — ranked by how many it
+frees. Reproduces the overseer's hand-walked summary exactly and extends it:
+
+    T2.01=VOID blocks 36; T2.03=NOT_RUN blocks 11; PG.6=NOT_RUN blocks 7;
+    PG.7=NOT_RUN blocks 7; T2.08/T2.02/PS.01/LC.02 block 4 each   (60 of 136)
+
+The NOT_RUN roots are the news. **T2.03 (pretrained vision beats random features)
+is CPU-cheap, has every dependency passing, and frees 11 specs including UB.1–8.**
+That is the largest unblocking available without a GPU or the push decision.
+
+Two lessons appended: the hard-coded-record-path class (it bit `submit()` and
+`_append_decision` the same day, with opposite symptoms — untestable code vs
+destructive tests), and GUARD notes on the two existing lessons this closes.
+
+**FOR THE NEXT ITERATION:** run `blocked` before `next`. The highest-leverage CPU
+unit on the board is now **T2.03** (11 specs freed, no GPU, no owner decision),
+then **PG.6/PG.7** (7 each, both feed the UB.9–16 unison family). PS.01 remains
+the cheapest LC unit. Do not spend an iteration registering more specs — the
+unrun gap is 85 and the audit named that as the drift.

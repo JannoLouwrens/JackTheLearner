@@ -139,6 +139,78 @@ def cmd_next(ledger: Ledger) -> int:
     return 0
 
 
+def _terminal_blockers(ledger: Ledger) -> dict:
+    """For every spec, the ROOTS its unreachability actually rests on.
+
+    A spec's immediate parent is almost never the answer. UB.1 reads as blocked
+    by T4.01, which is blocked by T3.02, which is blocked by T2.01 = VOID — and
+    only T2.01 can be acted on. Walking to the terminal blocker is what turns a
+    list of 40 stuck specs into two things to fix.
+    """
+    terminal: dict = {}
+
+    def walk(sid: str, seen: frozenset) -> set:
+        if sid in terminal:
+            return terminal[sid]
+        spec = BY_ID.get(sid)
+        if spec is None or sid in seen:      # unknown dep, or a dependency cycle
+            return {sid}
+        roots: set = set()
+        for d in spec.depends_on:
+            if ledger.status(d) is Status.PASS:
+                continue
+            upstream = walk(d, seen | {sid})
+            # A dependency that is itself stuck resolves to ITS roots; one that
+            # is merely not-yet-run is a root of its own.
+            roots |= upstream if upstream else {d}
+        terminal[sid] = roots
+        return roots
+
+    for s in LADDER:
+        walk(s.id, frozenset())
+    return terminal
+
+
+def cmd_blocked(ledger: Ledger) -> int:
+    """What can this ladder NEVER do, and why — the converse of `next`.
+
+    Written 2026-08-09 because the overseer had to walk the dependency graph by
+    hand to discover that 29% of the ladder was dead behind two VOIDs, and that
+    the dead set was precisely GOAL.md's headline: all 7 curiosity specs, all 16
+    unison specs, all of Tiers 3, 4 and 5. `next` answers "what can I do"; until
+    now nothing answered "what is unreachable, and what one fix would free it".
+    LESSONS.md carried that as advice to humans. This makes it a command.
+    """
+    terminal = _terminal_blockers(ledger)
+    by_root: dict = {}
+    for s in LADDER:
+        if ledger.status(s.id) is Status.PASS:
+            continue
+        for root in terminal.get(s.id, set()):
+            if root == s.id:                       # runnable now, not blocked
+                continue
+            by_root.setdefault(root, []).append(s.id)
+
+    if not by_root:
+        print("Nothing is blocked — every unrun spec has its dependencies passing.")
+        return 0
+
+    ranked = sorted(by_root.items(), key=lambda kv: -len(kv[1]))
+    total = len({sid for ids in by_root.values() for sid in ids})
+    print(f"\n{total} of {len(LADDER)} specs are unreachable. Terminal blockers, "
+          f"worst first:\n")
+    for root, ids in ranked:
+        st = ledger.status(root).value if root in BY_ID else "UNKNOWN-SPEC"
+        title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
+        print(f"  {root} = {st}  blocks {len(ids)}  — {title}")
+        print(f"        {', '.join(sorted(ids))}\n")
+    summary = "; ".join(
+        f"{root}={ledger.status(root).value if root in BY_ID else 'UNKNOWN'} "
+        f"blocks {len(ids)}" for root, ids in ranked)
+    print(f"  SUMMARY: {summary}\n")
+    return 0
+
+
 def _run_isolated(spec_id: str, ledger: Ledger):
     """Execute one spec in a child process so its memory is reclaimed on exit."""
     import subprocess as sp
@@ -294,8 +366,9 @@ def main() -> int:
     ledger = Ledger()
 
     # status/next/render are read-only and must not block on a running experiment.
-    if args.spec and args.spec[0] in ("status", "next", "render"):
-        return {"status": cmd_status, "next": cmd_next, "render": cmd_render}[args.spec[0]](ledger)
+    if args.spec and args.spec[0] in ("status", "next", "blocked", "render"):
+        return {"status": cmd_status, "next": cmd_next, "blocked": cmd_blocked,
+                "render": cmd_render}[args.spec[0]](ledger)
     if not args.spec and not args.gate and args.tier is None:
         return cmd_status(ledger)
 

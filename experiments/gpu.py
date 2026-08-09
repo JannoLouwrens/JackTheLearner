@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 import tempfile
 import time
 from dataclasses import dataclass, field
@@ -33,6 +34,15 @@ BUDGET_FILE = Path(__file__).parent / "gpu_budget.json"
 # Kaggle's free allowance. Colab's is unpublished and elastic, so it is not
 # budgeted — it is simply tried first for short work.
 KAGGLE_WEEKLY_HOURS = 30.0
+
+# Hours a provider billed for a run that returned nothing get their own bucket
+# per week: `{backend}` is work, `{backend}_failed` is waste. Both count against
+# the quota; only one of them bought anything.
+FAILED_SUFFIX = "_failed"
+
+# How many job ids the budget remembers for idempotency. Only a reattach needs
+# to find its own id, and that happens within hours of the original push.
+MAX_TRACKED_JOBS = 500
 
 # Colab VMs start in /content, and `colab download` will not resolve a relative
 # remote path. Verified 2026-08-04.
@@ -178,6 +188,20 @@ class JobResult:
     artifacts: dict = field(default_factory=dict)   # name -> local path
     gpu_name: str = ""
     message: str = ""
+    # Identity of the remote unit of work: the Kaggle kernel `user/slug`, the
+    # Colab session. Two JobResults with the same id are the SAME compute, so
+    # the budget may bill it once — that is what makes a reattach free.
+    job_id: str = ""
+    # The window the provider actually meters, when it is narrower than this
+    # box's wall clock. `duration_s` includes pushing the kernel, waiting in
+    # Kaggle's queue and downloading artifacts; none of that is GPU time, and
+    # billing it is how a 30 h ceiling closed a week at 37.4554 h. None means
+    # "no narrower window is known" and the full duration is charged.
+    billable_s: Optional[float] = None
+
+    @property
+    def charge_seconds(self) -> float:
+        return self.duration_s if self.billable_s is None else self.billable_s
 
 
 class Budget:
@@ -190,7 +214,12 @@ class Budget:
 
     def __init__(self, path: Path = BUDGET_FILE):
         self.path = path
-        self.data = json.loads(path.read_text()) if path.exists() else {"weeks": {}}
+        self.data = json.loads(path.read_text()) if path.exists() else {}
+        # Lazily migrate older files rather than hand-editing the accounting
+        # record: a budget written before 2026-08-09 has weeks and nothing else.
+        self.data.setdefault("weeks", {})
+        self.data.setdefault("charged_jobs", {})
+        self.data.setdefault("overruns", [])
 
     @staticmethod
     def _week() -> str:
@@ -204,18 +233,75 @@ class Budget:
         # with. Old-format keys must be REMOVED once their hours are re-filed.
         return time.strftime("%Y-W%U")
 
-    def used_hours(self, backend: str) -> float:
+    def productive_hours(self, backend: str) -> float:
+        """Hours that bought a result."""
         return float(self.data["weeks"].get(self._week(), {}).get(backend, 0.0))
+
+    def failed_hours(self, backend: str) -> float:
+        """Hours the provider still billed for a run that returned nothing.
+
+        Kept in a separate bucket because it is WASTE, and waste that cannot be
+        seen cannot be reduced. It counts against the quota all the same — a
+        crashed kernel occupied a real GPU.
+        """
+        key = backend + FAILED_SUFFIX
+        return float(self.data["weeks"].get(self._week(), {}).get(key, 0.0))
+
+    def used_hours(self, backend: str) -> float:
+        return self.productive_hours(backend) + self.failed_hours(backend)
 
     def remaining(self, backend: str) -> float:
         if backend != "kaggle":
             return float("inf")
         return max(0.0, KAGGLE_WEEKLY_HOURS - self.used_hours("kaggle"))
 
-    def charge(self, backend: str, seconds: float) -> None:
+    def overruns(self) -> list:
+        return list(self.data.get("overruns", []))
+
+    def charge(self, backend: str, seconds: float, *,
+               ok: bool = True, job_id: str = "") -> bool:
+        """Bill `seconds` of `backend`. Returns True if this call actually billed.
+
+        `job_id` makes billing idempotent per unit of remote compute. Without it,
+        `JACK_REUSE_KERNEL` — which reattaches to a kernel that is already
+        running and deliberately skips `afford()` because reattaching is free —
+        billed the whole kernel a second time on every recovery.
+
+        `ok=False` files the hours as waste. Before 2026-08-09 this call sat
+        above `if res.ok`, so a kernel that crashed, timed out or lost its
+        artifact download was indistinguishable in the record from work.
+        """
+        if job_id and job_id in self.data["charged_jobs"]:
+            return False
+        key = backend if ok else backend + FAILED_SUFFIX
         wk = self.data["weeks"].setdefault(self._week(), {})
-        wk[backend] = round(wk.get(backend, 0.0) + seconds / 3600.0, 4)
+        wk[key] = round(wk.get(key, 0.0) + seconds / 3600.0, 4)
+        if job_id:
+            self.data["charged_jobs"][job_id] = {
+                "week": self._week(), "backend": backend,
+                "hours": round(seconds / 3600.0, 4), "ok": ok,
+            }
+            # Unbounded growth would eventually make the file the largest thing
+            # in the repo. Insertion order is the age order.
+            while len(self.data["charged_jobs"]) > MAX_TRACKED_JOBS:
+                self.data["charged_jobs"].pop(next(iter(self.data["charged_jobs"])))
+        # `afford()` gates on the DECLARED estimate and this bills the ACTUAL
+        # elapsed time, so nothing prevents an overrun — but an overrun that
+        # leaves no mark is how week 31 closed at 37.4554 of a 30.0 h ceiling
+        # with T0.12 green throughout, and denied T1.02 its 0.7 h.
+        used = self.used_hours(backend)
+        if backend == "kaggle" and used > KAGGLE_WEEKLY_HOURS:
+            self.data["overruns"].append({
+                "week": self._week(), "backend": backend,
+                "used_hours": round(used, 4), "ceiling": KAGGLE_WEEKLY_HOURS,
+                "job_id": job_id, "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            })
+            print(f"!! GPU BUDGET OVERRUN: {backend} {used:.4f}h of "
+                  f"{KAGGLE_WEEKLY_HOURS}h this week ({self._week()}) — "
+                  f"the ceiling is not being enforced, only observed",
+                  file=sys.stderr, flush=True)
         self.path.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
+        return True
 
     def afford(self, backend: str, est_hours: float) -> bool:
         return self.remaining(backend) >= est_hours
@@ -242,7 +328,10 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
         rc, out, err = _run(cmd, timeout_s)
     except subprocess.TimeoutExpired:
         return JobResult("colab", False, duration_s=time.time() - t0,
-                         message=f"timed out after {timeout_s}s")
+                         message=f"timed out after {timeout_s}s", job_id=session)
+    # Colab keeps the VM alive across the artifact download (`--keep`, released
+    # only by `stop` below), so wall clock here IS the held window: `billable_s`
+    # stays None and `charge_seconds` falls back to `duration_s`.
 
     artifacts = {}
     fetch_errors: list[str] = []
@@ -293,7 +382,7 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
               "remote produced NO stdout — the preamble prints 'REPO <sha>', so " \
               "the script body almost certainly never ran (clone or import failed)"
     return JobResult("colab", rc == 0, out, err, time.time() - t0,
-                     artifacts, gpu_name, msg)
+                     artifacts, gpu_name, msg, job_id=session)
 
 
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
@@ -347,12 +436,25 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         "enable_internet": True,
     }, indent=2))
 
+    job_id = f"{username}/{slug}"
+
     if not reuse:
         rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work),
                              "--accelerator", "nvidiaTeslaT4"], 300)
         if rc != 0:
+            # A push that never landed ran nothing. Bill zero, not the 300 s the
+            # CLI may have spent failing.
             return JobResult("kaggle", False, out, err, time.time() - t0,
-                             message=f"push failed: {err.strip()[:200]}")
+                             message=f"push failed: {err.strip()[:200]}",
+                             job_id=job_id, billable_s=0.0)
+
+    # The metered window opens when the kernel exists on Kaggle and closes when
+    # it reaches a terminal status. Pushing and downloading the output happen on
+    # THIS box and are not GPU time; charging them is part of why `used_hours`
+    # stopped being an account of hours consumed. On a reattach the local `t0`
+    # was already rewound to the slug's submission epoch above, because the
+    # kernel ran whether or not anyone here was watching.
+    t_meter_open = t0 if reuse else time.time()
 
     deadline = time.time() + timeout_s
     status = "queued"
@@ -364,6 +466,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
             status = "complete"; break
         if "error" in low or "cancel" in low:
             status = "error"; break
+    billable_s = time.time() - t_meter_open
 
     artifacts = {}
     if status == "complete":
@@ -375,19 +478,25 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
                 artifacts[f.name] = str(f)
 
     return JobResult("kaggle", status == "complete", "", "", time.time() - t0,
-                     artifacts, "", "" if status == "complete" else f"status={status}")
+                     artifacts, "", "" if status == "complete" else f"status={status}",
+                     job_id=job_id, billable_s=billable_s)
 
 
 def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
            gpu: str = "T4", timeout_s: int = 900,
-           fetch: Optional[list[str]] = None) -> JobResult:
+           fetch: Optional[list[str]] = None,
+           budget: Optional["Budget"] = None) -> JobResult:
     """Run a job on whichever backend can take it. The job does not know which.
 
     Order: try `prefer`, fall back to the other. Kaggle is checked against its
     weekly budget first — the 30 free hours are the scarce resource, so short
     jobs belong on Colab and Kaggle is spent on work that needs the session length.
+
+    `budget` exists so a test can exercise this routing without writing to the
+    real accounting file. A function that hard-codes the path to the record it
+    mutates cannot be tested except by corrupting it.
     """
-    budget = Budget()
+    budget = budget or Budget()
     order = ["colab", "kaggle"] if prefer == "colab" else ["kaggle", "colab"]
     attempts = []
     # Reattaching to an already-finished kernel consumes no quota, so it must
@@ -401,7 +510,9 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
             continue
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
                else run_on_kaggle(script, timeout_s, fetch))
-        budget.charge(backend, res.duration_s)
+        # Charge the metered window, labelled by outcome, once per remote job.
+        # All three of those qualifiers were missing until 2026-08-09.
+        budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id)
         if res.ok:
             res.message = (res.message + f" | attempts: {attempts}") if attempts else res.message
             return res

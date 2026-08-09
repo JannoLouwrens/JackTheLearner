@@ -987,12 +987,19 @@
       "status": "PASS"
     },
     "T0.01": {
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "44c719c",
       "control_metrics": {},
-      "duration_s": 1.54,
+      "duration_s": 1.86,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T14:09:30",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "failed": "none",
@@ -1000,7 +1007,7 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-08T14:09:30",
+      "ran_at": "2026-08-09T19:15:58",
       "seeds": [
         0
       ],
@@ -1179,16 +1186,22 @@
       "status": "PASS"
     },
     "T0.08": {
-      "attempt": 2,
-      "commit": "76ccc6c",
+      "attempt": 3,
+      "commit": "44c719c",
       "control_metrics": {},
-      "duration_s": 1.22,
+      "duration_s": 1.23,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
           "commit": "55e5bda",
           "message": "",
           "ran_at": "2026-08-08T15:09:17",
+          "status": "PASS"
+        },
+        {
+          "commit": "76ccc6c",
+          "message": "",
+          "ran_at": "2026-08-09T14:22:06",
           "status": "PASS"
         }
       ],
@@ -1201,7 +1214,7 @@
         "roundtrip_ok": true,
         "survives_concurrent_writers": true
       },
-      "ran_at": "2026-08-09T14:22:06",
+      "ran_at": "2026-08-09T19:16:00",
       "seeds": [
         0
       ],
@@ -1291,23 +1304,35 @@
       "status": "PASS"
     },
     "T0.12": {
-      "attempt": 2,
-      "commit": "4f58dfd",
+      "attempt": 3,
+      "commit": "44c719c",
       "control_metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
+        "charged_once": false,
         "colab_unmetered": true,
+        "distinct_jobs_both_charged": false,
         "drained_to_exact_ceiling": false,
+        "failed_counts_against_quota": true,
+        "failed_hours_visible": false,
+        "idempotent_across_processes": false,
+        "no_false_overrun": true,
+        "overrun_names_the_job": false,
+        "overrun_recorded": false,
         "refuses_oversized": true,
         "refuses_when_exhausted": true,
         "stale_format_key_isolated": false,
         "stale_key_collided_with_live": false,
         "starts_full": true,
+        "submit_buckets_failure_as_waste": false,
+        "submit_charges_metered_window": false,
+        "submit_reattach_is_free": false,
         "survives_reload": true,
         "test_key_format_matches_live_code": true,
+        "waste_not_counted_as_work": false,
         "weeks_isolated": false
       },
-      "duration_s": 0.0,
+      "duration_s": 0.01,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1315,24 +1340,42 @@
           "message": "",
           "ran_at": "2026-08-08T15:08:59",
           "status": "PASS"
+        },
+        {
+          "commit": "4f58dfd",
+          "message": "",
+          "ran_at": "2026-08-09T13:11:08",
+          "status": "PASS"
         }
       ],
       "message": "",
       "metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
+        "charged_once": true,
         "colab_unmetered": true,
+        "distinct_jobs_both_charged": true,
         "drained_to_exact_ceiling": true,
+        "failed_counts_against_quota": true,
+        "failed_hours_visible": true,
+        "idempotent_across_processes": true,
+        "no_false_overrun": true,
+        "overrun_names_the_job": true,
+        "overrun_recorded": true,
         "refuses_oversized": true,
         "refuses_when_exhausted": true,
         "stale_format_key_isolated": true,
         "stale_key_collided_with_live": false,
         "starts_full": true,
+        "submit_buckets_failure_as_waste": true,
+        "submit_charges_metered_window": true,
+        "submit_reattach_is_free": true,
         "survives_reload": true,
         "test_key_format_matches_live_code": true,
+        "waste_not_counted_as_work": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-09T13:11:08",
+      "ran_at": "2026-08-09T19:14:05",
       "seeds": [
         0
       ],
@@ -1340,8 +1383,8 @@
       "status": "PASS"
     },
     "T0.13": {
-      "attempt": 10,
-      "commit": "824339a",
+      "attempt": 11,
+      "commit": "44c719c",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -1419,6 +1462,12 @@
           "message": "",
           "ran_at": "2026-08-09T15:15:32",
           "status": "PASS"
+        },
+        {
+          "commit": "824339a",
+          "message": "",
+          "ran_at": "2026-08-09T18:16:15",
+          "status": "PASS"
         }
       ],
       "message": "",
@@ -1443,7 +1492,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-09T18:16:15",
+      "ran_at": "2026-08-09T19:14:22",
       "seeds": [
         0
       ],
@@ -1529,16 +1578,23 @@
       "status": "PASS"
     },
     "T0.16": {
-      "attempt": 1,
-      "commit": "49529e6",
+      "attempt": 2,
+      "commit": "44c719c",
       "control_metrics": {
         "prefix_max_drift": 1.6337,
         "prefix_trained_train_mode": true,
         "prefix_untrained_train_mode": true
       },
-      "duration_s": 35.13,
+      "duration_s": 33.91,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "49529e6",
+          "message": "",
+          "ran_at": "2026-08-09T15:14:32",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "kernels_scanned": 2,
@@ -1557,7 +1613,7 @@
         "untrained_forwards": 4,
         "untrained_mode_restored": true
       },
-      "ran_at": "2026-08-09T15:14:32",
+      "ran_at": "2026-08-09T19:16:34",
       "seeds": [
         0
       ],
