@@ -84,6 +84,17 @@ if awk -v l="$LOAD" -v m="$MAX_LOAD" 'BEGIN{exit !(l>m)}'; then
   exit 0
 fi
 
+# STOP AT 90%. Owner's rule, 2026-08-09: pause ALL agents at 90% weekly usage
+# until the owner resumes them. Real number from `claude -p /usage`, not a
+# proxy. Nothing else is throttled — this is the only limit.
+# UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
+# open is not a limit.
+PCT=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --pct 2>/dev/null)
+case "$PCT" in ''|*[!0-9]*) say "ABORT: usage unreadable — refusing to run"; exit 0;; esac
+if [ "$PCT" -ge 90 ]; then
+  say "STOPPED at ${PCT}% weekly usage — all agents paused until the owner resumes"
+  exit 0
+fi
 cd "$REPO" || exit 0
 BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
