@@ -1300,6 +1300,22 @@
       "spec_id": "T2.01",
       "status": "FAIL"
     },
+    "T2.02": {
+      "commit": "1d827c8",
+      "control_metrics": {},
+      "duration_s": 391.78,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "message": "RuntimeError: GPU job failed on colab: all backends failed: kaggle: status=error; colab: exit 1 | fetch failed: /content/t202.json: rc=1 exists=False [colab] Session 'ladder-1786234484' not found.",
+      "metrics": {},
+      "ran_at": "2026-08-09T00:14:49",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T2.02",
+      "status": "ERROR"
+    },
     "T2.10": {
       "commit": "55e5bda",
       "control_metrics": {

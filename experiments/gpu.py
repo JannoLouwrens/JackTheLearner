@@ -45,9 +45,18 @@ COLAB_CWD = "/content"
 # cu121 wheels are the last line carrying Pascal, so jobs prepend this.
 # Verified 2026-08-04: torch 2.5.1+cu121, arch_list sm_50..sm_90, matmul OK.
 KAGGLE_TORCH_FIX = """
-import subprocess as _sp, sys as _sys
+import subprocess as _sp, sys as _sys, os as _os
 _sp.run([_sys.executable, "-m", "pip", "install", "-q", "torch==2.5.1",
          "--index-url", "https://download.pytorch.org/whl/cu121"], check=False)
+# Pin torch for every later pip install in this job. On 2026-08-09 T2.02's own
+# dependency install (stable-baselines3, whose torch range 2.5.1 satisfies)
+# nevertheless dragged torch up to 2.13.0+cu130 — no sm_60 kernels — and the
+# P100 died in .to(device) six minutes in. PEP 440 says ==2.5.1 is satisfied
+# by the installed 2.5.1+cu121, so constrained installs leave it alone, and a
+# dependency that genuinely cannot live with 2.5.1 now fails resolution loudly
+# instead of silently un-fixing Pascal.
+open("/tmp/jack_torch_pin.txt", "w").write("torch==2.5.1\\n")
+_os.environ["PIP_CONSTRAINT"] = "/tmp/jack_torch_pin.txt"
 for _m in [m for m in list(_sys.modules) if m.startswith("torch")]:
     del _sys.modules[_m]
 """
