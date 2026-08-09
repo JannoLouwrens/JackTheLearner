@@ -525,3 +525,16 @@ comment names the old broken call — so the guard flagged its own fix as the bu
 A substring cannot tell code from prose. It parses the AST now. Any detector
 that reads source must read it as source, or it will confidently report the
 thing it was written to certify as absent.
+
+## A prompt that caches state is a generated artifact that nobody regenerates
+
+`ladder_prompt.md` twice carried a hardcoded ledger summary ("45 PASS of 124")
+that was wrong within hours, and once carried a priority ("re-run T2.01 before
+anything touches D1") that a newer document had already superseded — twelve
+lines above the correction. Every hourly agent read the contradiction and got
+to pick the convenient half. Same failure class as the stale CHECKLIST.md, but
+worse: a prompt is an instruction, so its staleness is obeyed, not just read.
+
+**Rule:** prompts state priorities and point at living sources for facts; they
+never cache counts, statuses, or summaries of other documents. If a prompt
+must reference state, reference the command that prints it.

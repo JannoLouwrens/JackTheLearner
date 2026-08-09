@@ -47,11 +47,11 @@ below and finish it. One spec per iteration is a good iteration.
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
-State (2026-08-09): 45 PASS, 2 VOID, 1 ERROR of 124. Tiers 0-1 PASS (most
-re-verified at 3 seeds). T2.01 and T2.02 are VOID, killed by T0.14 — see
-priority 3. An earlier version of this file called T2.01's plateau "the
-architecture verdict, not a bug". That was WRONG and is exactly the claim
-T0.14 invalidated; if you see that sentence anywhere, it is stale.
+STATE LIVES IN THE LEDGER, NOT HERE. Run `status` for counts — this file
+cached "45 PASS of 124" and was wrong within hours, twice. This file states
+PRIORITIES; the ledger states facts. Standing history you must know: T2.01
+and T2.02 are VOID (the T0.14 dropout + obs-dim invalidation), and any text
+calling T2.01's plateau "the architecture verdict" is stale and wrong.
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
 0. STAGE 0.1 FIRST — REGISTER THE DESIGNED SPECS. docs/research/DIRECTION_AUDIT.md
@@ -66,7 +66,10 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    learning-core bakeoff is the highest-leverage work in the project and needs
    no GPU. Also read DIRECTION_AUDIT's Stage 0: 40 specs are transitively
    blocked behind {T1.02, T2.01, T2.02} — unblocking those three is the other
-   half of Stage 0.
+   half of Stage 0. Also implement experiments/audit.py: the deterministic,
+   ZERO-CREDIT integrity checks specced in docs/research/SYSTEM_DESIGN.md
+   (P1-6) — they keep auditing even when every model is out of credits, which
+   happened 4 times on 2026-08-09.
 1. CPU-implementable specs, cheapest first: the ME family (ME.1/ME.9 are
    implemented — run them if not yet recorded; then ME.2-ME.5, ME.8, ME.10 —
    EpisodicMemory.py is the substrate and its docstring explains the contract),
@@ -78,17 +81,13 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
      Kaggle only.
    - Colab takes GPU_SHORT jobs; if it returns "Service Unavailable" the GPUs
      are rationed — record the ERROR and retry next iteration, don't fight it.
-3. TOP GPU PRIORITY: re-run T2.01 then T2.02. Both are now VOID, invalidated by
-   T0.14 — every locomotion result predates the dropout fix. 36 nn.Dropout
-   modules were live during rollout, the PPO update AND "deterministic" eval
-   (42% policy-mean drift on an identical state), and obs was padded 376 vs the
-   env's actual 348. SB3 disables training mode for you, so T2.02 compared one
-   arm with 42% injected action noise against one with none. The old 4.06-sigma
-   and 261-vs-531 numbers are NOT architecture evidence — do not cite them.
-   Re-run both before anything else touches D1. ~6.3 GPU-h of the ~23 left.
-   Read docs/research/D1_CONTROL_ARCHITECTURE.md first: it also found
-   "matched env-steps" hid 6,240 vs 99,840 optimiser steps, so match optimiser
-   steps too, and report both.
+3. GPU work follows DIRECTION_AUDIT's sequencing: the T2.01/T2.02 re-runs are
+   worth doing but RE-SCOPED behind registering and running D1.0 + T2.21 — they
+   should answer WHERE the trunk belongs, not merely whether it learned. Keep
+   D1_CONTROL_ARCHITECTURE's lesson: match optimiser steps as well as
+   env-steps, report both. The dropout/obs-dim history is in LESSONS.md — read
+   it before touching any eval code; never cite the old 4.06-sigma or
+   261-vs-531 numbers as architecture evidence.
 4. One GPU submission per spec: run_spec calls _experiment once PER SEED, so
    guard any _submit() with a module cache (T2.01 shows the pattern) or you will
    pay for the same kernel three times.

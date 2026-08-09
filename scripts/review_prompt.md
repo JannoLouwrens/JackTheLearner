@@ -22,6 +22,13 @@ docs/FIELD_WATCH.md if present, and experiments/ledger.json (entries carry
   DIRECTION_AUDIT found 40 specs behind 3 stale results — recompute, don't
   quote). Effort-vs-goal: what fraction of the week's commits served the
   current stage of GOAL.md's path?
+- Goodhart check: pass RATE against registry growth — the ladder can grow
+  faster than it passes (40.0% -> 38.3% across 2026-08-07..09 while every day
+  felt productive). Rate falling while count rises is information, not shame;
+  say which it is this week.
+- Constitution coherence: GOAL.md and SYSTEM.md accrete by directive — scan
+  them for internal contradictions a fresh agent could trip on. Propose
+  reconciliations to the owner; NEVER silently edit the constitution.
 - Then the honest paragraph, no numbers allowed: are we closer to a creature
   that lives, learns, and is known — or just busier? Name the week's single
   most important step toward Jack and the most concerning drift away.

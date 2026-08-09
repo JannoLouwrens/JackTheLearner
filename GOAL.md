@@ -52,7 +52,11 @@ components that must EARN their parameters via ablation or be deleted.
 **Jack has the needs of a human.** He must eat, drink, sleep, stay warm — too
 cold kills him, too hot kills him — and he needs company. Not as decoration:
 the needs ARE the curriculum. Cold nights teach shelter-building the way no
-scripted lesson can. In the owner's words: *"having the needs of a human will
+scripted lesson can. Needs do not replace curiosity — they complete it:
+curiosity is the explorer, needs are the reason. The "purely out of curiosity"
+sentence above predates this section; read the two drives as partners, and
+their exact balance as an empirical question the curiosity/needs bakeoffs
+decide, not a doctrine either sentence settles. In the owner's words: *"having the needs of a human will
 have him learn the most efficient ways... and will allow users to talk to him
 while he is there doing stuff and he will be relatable — I want to watch him
 figure out the world himself."*

@@ -1,0 +1,10 @@
+0 2 * * * /home/opc/jackandjill/backup.sh >> /var/log/jj-backup.log 2>&1
+*/30 * * * * /home/opc/openclaw-platform/scripts/platform_monitor.sh >> /var/log/platform-monitor.log 2>&1
+17 6 * * * /usr/bin/python3 /home/opc/worldtwin/scripts/nightly_audit.py >> /var/log/wt-audit.log 2>&1
+43 3 * * 0 /home/opc/worldtwin/scripts/wal_truncate.sh >> /var/log/wt-wal-truncate.log 2>&1
+*/2 * * * * /home/opc/worldtwin/scripts/mem_watchdog.sh >> /var/log/wt-mem-watchdog.log 2>&1
+17 5 * * * /home/opc/worldtwin/scripts/editor_probe.sh >> /var/log/wt-editor.log 2>&1
+7 * * * * JACK_LOOP_MODEL=fable /home/opc/jackthelearner/scripts/ladder_loop.sh
+37 */6 * * * /home/opc/jackthelearner/scripts/overseer.sh
+37 5 * * 1 /home/opc/jackthelearner/scripts/field_watch.sh
+37 6 * * 0 /home/opc/jackthelearner/scripts/review.sh

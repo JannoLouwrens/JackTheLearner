@@ -292,3 +292,19 @@ whether the loop may perform the routine step its own toolchain requires.
 
 **Recommendation: option 1 or 2.** Either unblocks the re-run today; option 3
 should be chosen deliberately, not by default, because its cost is the quota.
+
+## Claude credits are the binding resource and are unmetered (OPEN, owner)
+
+Found by the 2026-08-09 meta-audit. GPU hours are metered to the second
+(gpu_budget.json, weekly ledger, affordability gate). Claude usage — which
+powers the hourly builder, 6-hourly overseer, weekly field watch, weekly
+review, and every research agent — has NO meter at all, and the builder ran
+dry 4 times today (fable -> opus fallback engaged). The machine now has four
+organs spending the same unmetered budget on schedule.
+
+Owner call, options: (a) accept as-is — fallback chains already prevent dead
+slots; (b) set a cadence budget (e.g. drop the builder to every 2h overnight);
+(c) plan-level decision about credit allowances. The system cannot see its own
+credit balance, so any budget must be time/cadence-based, not token-based.
+Note: experiments/audit.py (queued for the builder) gives zero-credit
+integrity checking either way.

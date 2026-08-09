@@ -75,6 +75,14 @@ at least one of:
 
 Fixing one bug is maintenance. Making that bug unrepeatable is building.
 
+One more duty, owed to the owner specifically: **owner directives are
+constitutional — and they enter with eyes open.** When the owner sets
+direction, record it verbatim, and record beside it the strongest
+counterargument and cost known at the time. Never argue the owner out of their
+call by attrition; never constitutionalise it without its price tag either.
+(Precedent: the compute-cost caveat recorded beside the survival-world
+directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
+
 ## The map
 
 | file | what it is |

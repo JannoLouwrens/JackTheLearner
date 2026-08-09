@@ -14,6 +14,10 @@ LOG=/data/jack-logs/review.log
 PAUSE="$REPO/.review-paused"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 [ -f "$PAUSE" ] && { say "paused"; exit 0; }
+FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
+[ "${FREE_GB:-0}" -lt 3 ] && { say "ABORT: ${FREE_GB}GB free on /"; exit 0; }
+LOAD=$(awk '{print $1}' /proc/loadavg)
+awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenants first"; exit 0; }
 cd "$REPO" || exit 0
 MODEL="${JACK_REVIEW_MODEL:-opus}"
 say "sweep start — model ${MODEL}"
