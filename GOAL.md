@@ -9,6 +9,14 @@
 > that serves none of those is not this project.
 
 > **One brain, all senses in unison, that learns its world by living in it.**
+>
+> **The capability target, stated plainly (owner, 2026-08-09):** give him a
+> body with EVERY sense a human has, and build him so that he is CAPABLE OF
+> LEARNING EVERYTHING — with one interconnected brain. Not a system that
+> performs a fixed list of capabilities well. A system whose limit is what its
+> world asks of it, not what its architecture allows. Wherever a design choice
+> would make some class of learning permanently impossible, that choice is
+> suspect no matter how well it scores.
 
 Jack is a virtual humanoid who **learns his environment the way a child does**:
 not from a curriculum we write, but from curiosity we give him. This is the
@@ -25,12 +33,26 @@ out of curiosity. If there is water, he must try to swim, struggle, and learn to
 swim by struggling. Nobody scripts "ladder lesson" or "swim lesson". The
 environment plus intrinsic motivation IS the curriculum.
 
-**All senses, one brain, trained together.** Seeing, hearing, touch,
-proprioception, language — processed together in one model, involved together
-in training, so that what he hears can teach what he sees, and what he touches
-can correct what he predicts. Not bolt-on encoders that coexist: a genuinely
-unified brain where every sense is load-bearing (and we PROVE each one is —
-ablate a sense, something measurable must degrade).
+**EVERY SENSE A HUMAN HAS, one brain, trained together (owner, 2026-08-09).**
+Not a chosen subset — the full human sensory inventory, because a mind is
+shaped by what it can perceive and every missing channel is a permanent hole
+in what he can ever understand:
+
+    sight · hearing · touch · proprioception & balance · SMELL · TASTE
+    pain · temperature · interoception (hunger, thirst, fatigue)
+    and VOICE — he must be able to make sound, not only receive it
+
+Smell and taste are not ornaments: olfaction finds food, fire and decay at a
+distance and through occlusion — the sense that works when sight fails — and
+gustation drives conditioned taste aversion, one-trial learning with long
+delay tolerance, the fastest learning in biology and a capability nothing else
+in his design has. Voice is how a creature acts on other creatures.
+
+All of it processed together in ONE model, involved together in training, so
+that what he hears can teach what he sees and what he touches can correct what
+he predicts. Not bolt-on encoders that coexist: a genuinely unified brain where
+every sense is load-bearing (and we PROVE each one is — ablate a sense,
+something measurable must degrade).
 
 **Really learning, not appearing to learn.** Learning that survives our
 falsification ladder: every capability claimed only by an experiment that could
@@ -113,6 +135,17 @@ things in his world for him to find — food where he might look, a tool he
 has not made yet. Never puppeteering: what is left must still be found,
 learned, and chosen by him. His diary records who left it — so gratitude,
 like trust, has somewhere real to grow.
+
+**The LLM is his TALKATIVE PARENT (owner, 2026-08-09) — decided.** It is not
+inside him. It lives in his WORLD as a voice that speaks to him, and he learns
+words the way every child does: by hearing them used while things happen, and
+attaching his own meanings from his own life. Borrowing WORDS is not borrowing
+MEANINGS — a child does not invent English and is not a puppet for it. This
+role has zero puppet risk by construction, because the words arrive through
+his ears like every other sound and nothing borrowed is ever inside him. It
+also means he can be spoken to from day one, so his childhood is not silent
+while grounding accumulates. The earlier "mouth" framing below is now the
+FALLBACK, kept because LG.00's test applies to any role the model plays.
 
 **The LLM is his mouth, never his mind (owner, 2026-08-09).** Jack must be
 smarter than the language model inside him — not in facts, which it will

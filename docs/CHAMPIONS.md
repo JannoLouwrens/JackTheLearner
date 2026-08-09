@@ -75,6 +75,11 @@ SYSTEM.md, which outrank this file.
 | Audio encoder (world-sound → brain) | undecided — mel favourite (raw costs 12–25×, measured) | — | HR audio-entry bakeoff (queued) | raw vs mel vs tokens vs no-audio null |
 | Language grounding (word → lived skill) | undecided — skills-then-language ordering unproven | — | LG bakeoff (queued; doc needs completeness check) | grounding approaches + the ordering experiment |
 
+| Smell (olfaction) | **VACANT — sense not yet built** | — | under research (FROZEN_VS_PLASTIC.md) | finds food/fire/decay through occlusion |
+| Taste (gustation) | **VACANT — sense not yet built** | — | under research | one-trial aversion learning; poison |
+| Voice (vocalisation) | **VACANT — he cannot make a sound** | — | needs a spec | prerequisite for emergent language + GEN.02 |
+| Language acquisition | LLM-as-parent (speaks to him; he learns by hearing) | **BY DECREE** (owner 2026-08-09) | LG family + LG.00 anti-puppet | pure from-scratch; critical-period |
+
 **Future seats, named so they are not forgotten:** the body itself (Humanoid-v5
 has ball hands; fingers will compete one day) and the cross-life world
 curriculum (how worlds mutate between deaths). They get chairs when their
