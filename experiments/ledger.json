@@ -992,6 +992,46 @@
       "spec_id": "T0.13",
       "status": "PASS"
     },
+    "T0.14": {
+      "attempt": 3,
+      "commit": "97e34d0",
+      "control_metrics": {
+        "train_mode_action_drift": 0.634767
+      },
+      "duration_s": 19.27,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "97e34d0",
+          "message": "RuntimeError: The size of tensor a (376) must match the size of tensor b (348) at non-singleton dimension 0",
+          "ran_at": "2026-08-09T13:49:00",
+          "status": "ERROR"
+        },
+        {
+          "commit": "97e34d0",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-09T13:49:45",
+          "status": "FAIL"
+        }
+      ],
+      "message": "",
+      "metrics": {
+        "config_obs_dim": 348,
+        "env_obs_dim": 348,
+        "eval_action_drift": 0.0,
+        "eval_mode_after_rollout": true,
+        "eval_value_drift": 0.0,
+        "n_dropout_modules": 36,
+        "obs_dim_matches": true,
+        "train_mode_after_update": true
+      },
+      "ran_at": "2026-08-09T13:50:28",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.14",
+      "status": "PASS"
+    },
     "T1.01": {
       "attempt": 1,
       "commit": "a533ade",

@@ -401,3 +401,20 @@ divided gradient steps by eight; the spec's fairness check never looked.
 **Rule:** state which budget is matched — env-steps, optimiser steps, wall
 clock, or FLOPs — and report the other three. They diverge, and the one you did
 not match is where the confound lives.
+
+## A padded input dimension is silent, permanent capacity loss
+
+`mujoco_obs_dim` was 376 — the Humanoid-**v4** value — while every run used v5,
+which emits 348. Twenty-eight zero columns were padded into every observation
+for the project's whole history. Nothing errors: the shapes are consistent, the
+model trains, the loss falls. The projection just spends weights and gradient
+on inputs that are always zero.
+
+Found only because T0.14 asserted `config.mujoco_obs_dim == env.observation_
+space.shape[0]` — an invariant nobody had thought to state, because both
+numbers "looked like the obs dim".
+
+**Rule:** assert contracts against the source of truth, not against another
+constant. Any dimension that appears in both your config and an external
+library's output is a contract, and it should be checked at least once in the
+ladder rather than assumed to have been copied correctly.

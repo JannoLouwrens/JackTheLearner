@@ -64,7 +64,14 @@ class PipelineConfig:
     d_model: int = 512
     n_layers: int = 8
     obs_dim: int = 256
-    mujoco_obs_dim: int = 376
+    mujoco_obs_dim: int = 348   # Humanoid-v5. 376 was the v4 value and this
+                                # ran on v5, so 28 zeros were padded into every
+                                # observation — dead input columns whose weights
+                                # still consumed capacity and gradient. Caught
+                                # by T0.14; no checkpoint is lost, because every
+                                # locomotion result predating T0.14 is void
+                                # anyway (see the dropout note in
+                                # collect_rollout_vec).
     action_dim: int = 17
 
     # Training
@@ -475,6 +482,10 @@ class TrainingPipeline:
         Returns:
             dict of training metrics
         """
+        # TRAIN MODE for the update, EVAL for rollout/evaluation (set above in
+        # collect_rollout_vec). Dropout belongs in the gradient path and nowhere
+        # else; see the note in collect_rollout_vec for what its absence cost.
+        self.model.train()
         states = rollout['states']
         actions = rollout['actions']
         old_log_probs = rollout['log_probs']
@@ -755,6 +766,17 @@ class TrainingPipeline:
         n_steps = n_steps or self.config.n_steps
         states, actions, rewards, dones, log_probs, values = [], [], [], [], [], []
 
+        # EVAL MODE FOR ROLLOUT. The model carries 36 nn.Dropout modules at
+        # p=0.1 and nothing ever called .eval(), so they were live here, in
+        # rl_update, and in "deterministic" evaluation. Measured on the real
+        # pipeline: two forwards of the SAME state differ by 42% of the policy
+        # mean's own magnitude (66% for value), and the PPO importance ratio at
+        # ZERO policy change puts ~20% of samples outside clip_range=0.3 — the
+        # update was clipping against its own sampling noise. SB3 disables
+        # training mode for rollouts and has no dropout at all, so T2.02's
+        # architecture comparison ran one arm with 42% injected action noise
+        # and the other with none. Guarded permanently by spec T0.14.
+        self.model.eval()
         obs, _ = envs.reset()
         for _ in range(n_steps):
             obs_norm = self.normalize_obs(obs)                      # (N, D) path

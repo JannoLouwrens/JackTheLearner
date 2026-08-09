@@ -78,6 +78,28 @@ is the arm expected to lose.
 
 ## 1. Survey, with measured cost on the hardware we actually have
 
+> **Citation hygiene — read this before quoting any number below.** Following
+> `UNIFIED_BRAIN_BAKEOFF.md` §1, but with a fourth tier this document had to
+> invent:
+>
+> - **[M]** — measured **on this box** during this pass. Reproducible; the
+>   command is in the text. These are the only numbers I stand behind fully.
+> - **[V]** — fetched from a primary source (paper, repo, HF/PyPI API) during
+>   this pass **and corroborated by at least two independent reports**.
+> - **[f]** — extracted from a *figure* rather than a table, with the extraction
+>   validated. Sound method, wide error bars.
+> - **[u]** — **reported once and NOT corroborated.** The research pass that
+>   produced these later reported it had been *unable* to obtain them, so the
+>   two accounts disagree about whether the retrieval happened at all. **Treat
+>   every [u] as a lead to verify, never as a number to cite.** They are kept
+>   because they are useful hypotheses and deleting them would lose the pointer;
+>   they are marked because `SYSTEM.md` law 1 does not have an exception for
+>   research documents.
+>
+> Nothing in this document's *conclusions* rests on a [u] alone. Where an
+> argument would have leaned on one, §1.3.2 and §1.4.2 say so explicitly and
+> fall back to a [V] or [M].
+
 ### 1.0 The hardware, measured today, not quoted from a spec sheet
 
 All numbers below were measured on this box on 2026-08-09 at `nice 19` with
@@ -176,7 +198,7 @@ The measured PyTorch-shape numbers below are ours and stand regardless.)*
 
 #### Measured here: Whisper-shaped encoder cost on this box
 
-I could not download Whisper weights (725 MB of `/data`, and a `pip install` of
+I could not download Whisper weights (`/data` was at 725 MB free, and a `pip install` of
 `faster-whisper` pulls CTranslate2 + onnxruntime). So instead I **built the
 architecture and timed it** — same shapes, same dtype, same threads. This is an
 architecture-level measurement, not a proxy: Whisper's encoder is exactly two
@@ -293,6 +315,7 @@ estimated or extrapolated, with the basis named.
 |---|---|---|---|---|---|
 | YAMNet | 0.306 [V] | 3.7 M | **4.1 MB** [V] | 10 patches | Apache-2.0 / Apache-2.0 |
 | **EfficientAT `mn04_as`** | 0.432 [V] | **0.98 M** | **4.1 MB** [V] | 1000 fr | MIT / MIT |
+| **EfficientAT `mn05_as`** | 0.443 [V] | 1.43 M | **5.9 MB** [V] | 1000 fr | MIT / MIT |
 | EfficientAT `mn10_as` | 0.471 [V] | 4.88 M | 19.7 MB [V] | 1000 fr | MIT / MIT |
 | **CED-tiny** | **0.481** [V] | **5.5 M** | **22.0 MB** [V] | **248** | Apache-2.0 / Apache-2.0 |
 | PANNs CNN14 | 0.431 [V] | 80.8 M | 327 MB [V] | 1000 fr | MIT / **CC-BY-4.0** |
@@ -327,66 +350,99 @@ extraction is a first-class cost, not a rounding error — which is consistent
 with our own measurement in §1.0 (mel 4.7 ms vs conv stem 6.2 ms for a 1 s
 window: the front end is *comparable to the whole encoder*).
 
-#### 1.3.2 The decisive finding: AudioSet is worst at exactly Jack's sounds
+#### 1.3.2 The decisive finding: AudioSet is starved and noisy at exactly Jack's sounds
 
-This is the part that settles the question, and it is not the argument I
-expected to be able to make. Per-class average precision on AudioSet, for the
-classes GOAL.md names, together with Google's own human audit of label
-correctness (`qa_true_counts.csv`, ~10 clips audited per class):
+**The corroborated core, [V].** Clip counts were computed directly from the
+official 2,041,789-row `unbalanced_train_segments.csv`, and reproduced
+independently across three research passes. Jack's sounds are the *rarest*
+classes in AudioSet:
 
-| class Jack needs | CNN14 AP | AST AP | eval clips | **label quality** |
-|---|---|---|---|---|
-| **Scrape** | **0.057** (rank **519/527**) | 0.062 | 357 | **0.20** |
-| **Crack** | **0.053** (rank **521/527**) | 0.169 | 202 | 0.44 |
-| **Creak** | **0.074** | 0.086 | **89** | **0.11** |
-| **Roll** | 0.190 | 0.214 | 1,988 | **0.00** |
-| Clatter | 0.132 | 0.144 | 1,293 | 0.20 |
-| Slam | 0.141 | 0.226 | 785 | 0.20 |
-| Thump, thud | 0.297 | 0.293 | 1,740 | 0.80 |
-| Walk, footsteps | 0.304 | 0.369 | 1,623 | 0.90 |
-| Wood | 0.387 | 0.416 | 3,294 | 0.70 |
-| **Splash, splatter** | **0.432** | 0.460 | 879 | **0.90** |
-| *(ref)* Music / Speech | 0.844 / 0.815 | — | ~1 M each | — |
+| class Jack needs | unbalanced train clips | rank / 527 |
+|---|---|---|
+| **Creak** | **29** | **525** |
+| Crushing | 56 | 519 |
+| Squeak | 72 | 513 |
+| Bouncing | 94 | 506 |
+| Crack | 142 | 499 |
+| Knock | 202 | 486 |
+| Bang | 240 | 474 |
+| Shatter | 247 | 470 |
+| Scrape | 297 | 454 |
+| Thunk | 314 | 448 |
+| Breaking | 346 | 439 |
+| Slam | 724 | 364 |
+| Splash, splatter | 818 | 344 |
+| Walk, footsteps | 1,563 | 263 |
+| Thump, thud | 1,680 | 243 |
+| Roll | 1,928 | 216 |
+| Wood | 3,128 | 141 |
+| *(reference)* Music / Speech | 999,366 / 999,421 | 2 / 1 |
 
-Aggregate over 51 physics-relevant classes: **CNN14 mAP 0.332 vs 0.431 over all
-527.** [V]
+Median class: 1,558 clips. **`Creak` — the sound GOAL.md names first — has 29
+training clips in a two-million-clip corpus, rank 525 of 527.** Six of Jack's
+target classes sit in the bottom 25. And every one of them has exactly the
+**60-clip floor in the eval split**, so any per-class AP for them is estimated
+from ~60 weakly-labelled YouTube clips and is statistically noisy before it is
+anything else.
 
-And the mechanism is **label noise, not data scarcity** — which is the
-interesting part, because scarcity would be fixable by fine-tuning and noise is
-not. Spearman(AP, log clip count) = **−0.05** across all 527, but
-Spearman(AP, label quality) = **0.48** on the physics subset (vs 0.04 overall).
-`Roll` audited **0 of 10** clips genuinely containing the sound; `Creak` **1 of
-9**. Those are not model failures. **The models are being scored against labels
-that are mostly wrong**, and any transfer we attempted would inherit that.
+Two structural problems compound the scarcity, both [V]:
 
-Two further nails:
+- **Weak labels.** An AudioSet label means "this class occurs somewhere in this
+  10 s clip." `ContactAudio`'s entire signal is a **0.30 s ring**
+  (`VOICE_SECONDS = 0.30`), so the label-to-event ratio is ~30:1 and the pretext
+  task never required temporal localisation. This is the motivation for
+  **AudioSet-Strong** (Hershey et al., ICASSP 2021): re-annotating 67 k clips at
+  ~0.1 s resolution moved ResNet-50 d′ from **1.13 → 1.41** on strong eval.
+- **Ontology granularity mismatch.** AudioSet has `Wood`, but no
+  *wood-on-wood impact* vs *wood-on-stone scrape*. A physics sim's natural label
+  space is material-pair × interaction-type × energy. That space does not exist
+  in the ontology, at any AP.
 
-- **Impact events are 0.14–0.35 s inside 10 s weakly-labelled clips** — a ~3 %
-  duty cycle [V, temporally-strong AudioSet, arXiv 2105.07031]. The pretext task
-  never required temporal localisation. `ContactAudio`'s entire signal is a
-  0.30 s ring (`VOICE_SECONDS = 0.30`), i.e. exactly the regime AudioSet
-  supervision is blindest to.
-- **CLAP zero-shot on impacts is flat.** The only impact-sound zero-shot
-  datapoint that exists is SESA (gunshot/explosion/siren): MS-CLAP 2023 scores
-  **65.71 %**, MS-CLAP 2022 **66.28 %** — the 4.6 M-pair model is *no better on
-  impacts* despite being +11 points on ESC-50, and prompt ensembling moves it by
-  **exactly zero** [V]. Template choice alone swings results by 5.5–8.0 points
-  with no universal best prompt [V, arXiv 2409.13676].
+**The uncorroborated extension, [u] — do not cite.** One research pass reported
+per-class AP values and a label-quality audit that, if real, would be a much
+sharper version of the same argument: `Scrape` AP 0.057 (rank 519/527), `Crack`
+0.053 (521st), `Creak` 0.074 with **11 %** label accuracy, `Roll` 0.190 with
+**0 %** label accuracy, against `Splash` 0.432 / 90 % and `Thump, thud` 0.297 /
+80 %; aggregate physics-subset mAP 0.332 vs 0.431 overall; and
+Spearman(AP, label quality) = 0.48 on the physics subset vs 0.04 across all 527,
+while Spearman(AP, log clip count) = −0.05. **Two later passes from the same
+research reported being unable to obtain any per-class AP table at all**, noting
+that PANNs publishes it only as a figure and AST/PaSST/BEATs publish none. The
+two accounts cannot both be right. **The argument above does not need them** —
+29 clips at rank 525 is sufficient on its own — so they are recorded as a lead
+and excluded from every conclusion. Anyone who wants these numbers should
+generate them: run a pretrained CNN14 or CED over the AudioSet eval segments and
+compute AP per class. That is a few GPU-hours on Kaggle and it would settle it.
 
-**And one finding that condemns the code we already have.** On the HEAR
-benchmark, self-supervised *speech* models are 20–40 points worse than
-AudioSet-supervised models on environmental sound: **wav2vec2 (315 M params)
-scores 0.561 on ESC-50 against PANNs' 0.909 and CED-base's 0.967** [V].
-`UnifiedBrain.AudioEncoder` (line 1020) loads `facebook/wav2vec2-base-960h` as
-its ambient-sound encoder. That is the single worst family of frozen features
-for this job, by a wide measured margin, and it should go regardless of how HR.6
-resolves.
+**And one finding that condemns code we already have, [V].** Self-supervised
+*speech* models transfer badly to environmental sound: on ESC-50, wav2vec2
+scores far below AudioSet-supervised models, and PANNs' own transfer table shows
+frozen CNN14 + one linear layer at **0.918 vs 0.833 for a from-scratch CNN**,
+while the same frozen embeddings *collapse* on acoustic-scene (0.589 vs 0.691)
+and emotion (0.397 vs 0.692) tasks. `UnifiedBrain.AudioEncoder` (line 1020)
+loads `facebook/wav2vec2-base-960h` as its ambient-sound encoder — the wrong
+family for this job, and the transfer table also warns that frozen AudioSet
+features only help when the target task is *"which object made this sound"*,
+which is at least the right shape for Jack.
+
+One operational note that only shows up in the ARM measurements and matters for
+an always-on shared box, [V]: on a Pi 4B, PANNs models **stabilise at ~79 °C
+after 8 minutes and their latency drifts 0.5 s → 0.6 s purely from clock
+throttling**, while MobileNetV2/CNN6-class models stay under 65 °C. A tower
+resident in Jack's loop is a sustained thermal load on hardware shared with
+paying tenants, not a burst cost.
 
 #### 1.3.3 The null hypothesis, now with evidence behind it
 
 **No pretrained AudioSet
-tower earns its parameters in Jack's world.** The argument, which §3.3 turns
-into a falsifiable bakeoff rather than an assertion:
+tower earns its parameters in Jack's world.**
+
+`SYSTEM.md` law 3 says decisions are made by bakeoff, never by argument — so
+this is **not** settled below. It is settled by **arm A6 of HR.6** (§4.2), a
+frozen CED-tiny tower wired in at the same token count as every other arm. That
+costs one extra arm in a bakeoff that is running anyway, instead of a separate
+bakeoff, and it means the null hypothesis can lose. What follows is the *prior*,
+and why A6 is expected to be the arm that dies:
 
 - `ContactAudio` emits sound from a **four-mode free-bar resonator bank**
   (`MODE_RATIOS = (1.0, 2.76, 5.40, 8.93)`, `ContactAudio.py:49`) with
@@ -403,7 +459,7 @@ into a falsifiable bakeoff rather than an assertion:
   clips and 11 % label accuracy, `Roll` with 0 % label accuracy. Transfer from
   a tower is transfer from labels that are mostly wrong.
 - **And the disk says no.** PANNs CNN14 and BEATs are ~330–350 MB each, against
-  a `/data` free space that was observed at 725 MB.
+  a `/data` free space that was observed as low as 725 MB.
 
 The honest counter-case, which the spec must leave room for: the moment Jack
 hears a **real microphone** (`AudioListener`) rather than the synth, the
@@ -434,55 +490,139 @@ Two specific notes worth carrying forward:
 
 ### 1.4 How audio enters the brain — representation, and the bearing problem
 
-Four candidate front-ends, and one property that outranks all of them.
-
-| representation | tokens / s | measured cost (0.5 s win, 2 thr) | preserves bearing? |
+| representation | tokens / s | measured cost, 0.5 s window, 2 threads | preserves bearing? |
 |---|---|---|---|
-| raw waveform, strided conv stem (wav2vec2-style, 7 layers, 4.21 M) | ~50 | **65.5 ms** | yes, in principle (ITD *and* ILD survive) |
-| **2-channel log-mel (64 bins, 10 ms hop) + conv stem (167 K)** | 100 frames → pooled to **4 tokens** | **5.6 ms** | **yes, via ILD** — see below |
-| discrete neural codec tokens (EnCodec / WavTokenizer / Mimi) | 12.5–75 per codebook × n | encoder must be resident; not installable in 725 MB | **probably not** — see below |
-| hand-crafted event vector `(t_onset, f0, level, pan)` | 1 per event | ~0 | yes, exactly |
+| raw waveform, wav2vec2-style strided conv stem (7 layers, 4.21 M) | ~50 | **65.5 ms** | yes in principle (ITD *and* ILD survive) |
+| **2-channel log-mel (64 bins, 10 ms hop) + conv stem (167 K)** | 100 frames → pooled to **4 tokens** | **5.6 ms** | **yes, via ILD — measured below** |
+| discrete codec tokens (EnCodec 24k / WavTokenizer-40 / Mimi) | 300 / 40 / 100 | encoder resident; no published ARM RTF | **predicted no — see below** |
+| hand-crafted event vector `(t_onset, f0, level, pan)` | 1 per event | ~0 | exactly, by construction |
 
-**The bearing property, and why it is the deciding criterion.** PG.5 is PASSING
-because `decode_lateral` recovers the source angle from **L/R energy ratio
-alone** (`ContactAudio.py:199-207`): `p̂ = (E_R − E_L)/(E_L + E_R)`,
-`lateral = −asin(p̂)`. The pan law is pure **interaural level difference** —
-`ContactAudio` synthesises no interaural *time* difference at all (both channels
-get the identical `sig`, scaled; `ContactAudio.py:194-195`). So:
+#### 1.4.1 What the literature settles
 
-- **A 2-channel log-mel front-end preserves everything the fixture encodes**,
-  because log-mel is a per-channel energy representation and the pan law is a
-  per-channel gain. `log(g_L · x) − log(g_R · x) = log(g_L/g_R)`, independent of
-  the mel bin. Bearing is a *constant offset between the two channels' log-mel
-  planes* — about as easy a feature as exists.
-- **Summing to mono destroys it irrecoverably**, which is exactly why PG.5's
-  `mode="mono"` control fails at ≤0.30. Any stem that averages the channel
-  dimension before the trunk is functionally the mono control. This is a
-  one-line architectural error that would silently delete Jack's only
-  directional sense, and §4's HR.7 exists to catch it.
-- **Discrete codecs are the arm at real risk.** EnCodec/DAC/WavTokenizer/Mimi
-  are speech-and-music codecs; the standard checkpoints are mono, and stereo is
-  handled by encoding channels independently. RVQ then quantises each channel
-  separately, and a *few-dB* level offset — which is all a 25° bearing is — is
-  well inside a codebook cell. The prediction is that discrete tokens pass a
-  content test and **fail the bearing test**. That is a falsifiable prediction
-  and HR.7 is where it gets tested, not asserted.
-- **The hand-crafted event vector is the arm nobody wants to run and everybody
-  should.** It is `docs/LESSONS.md`'s reference-arm rule inverted: if a
-  four-number symbolic summary matches every learned encoder, the learned
-  encoder has not earned its parameters *in this fixture* — and the honest
-  reading is not "audio is useless" but **"the fixture is too narrow to
-  distinguish representations"**, which indicts §5's sound inventory, not the
-  brain.
+- **Fixed log-mel wins; learnable front-ends failed replication.** EfficientLEAF
+  (arXiv 2207.05508 [V]) evaluated LEAF and EfficientLEAF on six audio
+  classification tasks and found *"both fail to consistently outperform a fixed
+  mel filterbank"* — a direct replication failure of LEAF's original claim.
+  SincNet and Wavegram are in the same family. **Do not learn the front end.**
+- **64 mel at a 10 ms hop is the efficient corner, and the number is measured.**
+  EfficientAT's `mn10_as` release encodes its own ablation: 128→64 mel costs
+  **1.0 mAP**, 10→20 ms hop costs **1.5 mAP**, and going the other way buys
+  almost nothing (256 mel = +0.3) [V]. `UNIFIED_BRAIN.md` §4 already specified
+  64-mel × 2 ch; this is the number that justifies it rather than the taste.
+- **At Jack's data scale, use a CNN stem, not a transformer.** On ESC-50 with
+  ~40 samples per class, the best tiny transformer reached **67.71 %** against a
+  CNN's **88.50 %** [V, arXiv 2103.12157]. Separately, AST from scratch on
+  balanced AudioSet (~20 k clips) scores **0.148 mAP** vs 0.347 pretrained [V].
+  Transformers need either data or a pretrained init; Jack's audio stem has
+  neither. The trunk can be attention; the *stem* should be convolutional.
+- **Discrete-vs-continuous is genuinely contested, and mostly settled against
+  discrete.** DASB (arXiv 2406.14294 [V]): *"Across all domains and tasks,
+  continuous representations outperform discrete tokens"* — but it is
+  **speech-only** by its own admission. The counter-evidence (arXiv 2309.10922
+  [V]) finds EnCodec tokens *"within 1 % of mel-spectrogram features"* on
+  average. Nobody has trained a small from-scratch transformer on
+  *environmental* codec tokens with < 1000 h; that gap is real and it is not
+  Jack's job to close it.
+- **If tokens are used at all, use a single-quantiser codec.** MusicGen's
+  Table 4 [V] measures the RVQ interleaving problem directly: **parallel is
+  catastrophic** (FAD 2.58 vs flattening's 0.86), delay recovers ~90 % of
+  flattening at 1/K the sequence length, flattening multiplies context by K.
+  **WavTokenizer-40** (arXiv 2408.16532 [V]) makes the question disappear: one
+  quantiser, V=4096, 40 tokens/s, MIT. Its caveat is measured and serious —
+  PESQ collapses **2.17 → 1.14** out of domain (speech→music) [V], and Jack's
+  impacts are further out of domain than music.
+- **EnCodec is the only codec with a published CPU RTF**: 9.8× real time
+  encoding, single thread, on a 2019 i7 — **but 1.6× with entropy coding on**
+  [V]. We want raw RVQ indices, not a bitstream; that path must be off. A
+  third-party Mimi measurement swings **~40× on runtime choice alone** (0.6× RT
+  in PyTorch eager on an Android CPU vs ~26× with ONNX).
 
-The literature position is consistent with the cost measurement:
-`UNIFIED_BRAIN.md` §4 cites SoundSpaces (1912.11474) for *"two-channel mel-STFT +
-small CNN suffices for localization"*, and the DCASE SELD line uses either FOA
-intensity vectors or MIC arrays with GCC-PHAT — both of which are *engineered
-spatial features on top of a spectrogram*, not raw waveform. Since Jack's
-fixture encodes bearing purely as ILD, the minimum sufficient representation is
-**two separate log-mel channels**, and GCC-PHAT/ITD machinery buys nothing until
-`ContactAudio` grows a time-difference model (§5).
+#### 1.4.2 The bearing problem, and why 2-channel stereo is the right scope
+
+The strongest single citation for `ContactAudio`'s design is one that reads at
+first like a criticism of it. Wilkins et al. (arXiv 2309.13343 [V]) run the
+identical 604.5 K-param SELD baseline on FOA, binaural and plain stereo:
+
+| input | localisation error | front→front | **front→back** | right→right |
+|---|---|---|---|---|
+| FOA (4 ch) | **16.9°** | 0.67 | **0.00** | 0.91 |
+| binaural (2 ch) | 30.1° | 0.53 | 0.22 | 0.90 |
+| **stereo (2 ch)** | 42.9° | 0.31 | **0.48** | **0.93** |
+
+Read the last column against the fourth. **Stereo's lateral accuracy matches
+FOA (0.93 vs 0.91) while 48 % of front sources land in the back.** DCASE has
+formally conceded the point: **DCASE 2025 Task 3 moved to stereo and
+azimuth-only**, citing front-back and top-bottom ambiguity.
+
+That is exactly the scope `ContactAudio` documented for itself in 2026-08:
+*"Panning encodes left/right ONLY: front-back disambiguation needs ITD/spectral
+cues (future work)."* PG.5 correspondingly tests **folded** azimuth in
+[−90°, 90°]. The fixture is not under-ambitious; it is at the same operating
+point the field has ratified for two-channel audio, and the peer-reviewed
+numbers say lateral accuracy is the part that survives.
+
+The consequences for the stem:
+
+- **ILD is fully retained by log-magnitude; ITD/IPD is destroyed by it.** The
+  DCASE 2025 stereo baseline uses **log-mel and nothing else** — no IPD, no
+  GCC — and reaches DOAE 24.5° [V]. For Jack this is not even a trade-off:
+  `ContactAudio` synthesises **no interaural time difference at all** (both
+  channels receive the identical `sig`, scaled by `gL`/`gR`;
+  `ContactAudio.py:188-195`), so a phase-preserving front end has *nothing extra
+  to preserve*. **GCC-PHAT, SALSA-Lite's IPD channels and every ITD feature are
+  identically zero on this fixture** — they would be four channels of noise.
+  (SALSA-Lite is otherwise excellent — 9× faster than log-mel+GCC-PHAT *and*
+  more accurate, 0.30 s per 60 s clip [V, arXiv 2111.08192] — and becomes
+  relevant only if `ContactAudio` ever grows a propagation-delay model.)
+- **Summing to mono destroys bearing irrecoverably**, which is why PG.5's
+  `mode="mono"` control fails at ≤ 0.30. A stem whose first operation averages
+  the channel dimension *is* the mono control. One line, silently deleting
+  Jack's only directional sense — HR.7 (§4.1) is the guard.
+
+#### 1.4.3 Measured here: mel keeps the bearing, but the naive probe throws it away
+
+I ran a miniature HR.7 on this box rather than assert the above. 108 PG.5-style
+drops across 12 seeds, 80 ms decode window, 64-mel 2-channel log spectrogram,
+bearing recovered from the interaural level difference and scored against PG.5's
+own ≤ 10° gate:
+
+```
+                                              stereo            mono (control)
+PG.5's raw energy decode (the incumbent)      1.00               0.10
+naive MEAN over per-bin log-mel ILD           0.69  (med  6.4°)  0.10  (med 40.2°)
+pooled mel ENERGY ILD                         0.99  (med  0.0°)  0.10  (med 40.2°)
+energy-WEIGHTED per-bin log-mel ILD           1.00  (med  0.0°)  0.10  (med 40.2°)
+```
+
+So the headline is confirmed — **a 2-channel log-mel front end preserves bearing
+to the full PG.5 gate, and mono destroys it** — but the *way* it nearly went
+wrong is the more useful result, and it is a trap HR.7 must be written around.
+
+**The link function is `atanh`, not linear.** Constant-power panning gives
+`gL = √((1−p)/2)`, `gR = √((1+p)/2)`, so the log-domain ILD is
+
+```
+   log(gR) − log(gL) = ½·log((1+p)/(1−p)) = atanh(p)          exact
+```
+
+verified to machine precision at p = ±0.9, ±0.99. Two consequences:
+
+1. **A *linear* probe on log-mel scores 0.40 where the analytic `tanh` link
+   scores 1.00.** `atanh` saturates hard near the lateral extremes, so a linear
+   readout is systematically wrong exactly where bearing matters most. A
+   linear-probe HR.7 would have reported a **false negative on the correct
+   representation** and killed the winning arm. The probe must be non-linear, or
+   must predict `atanh(p)` and invert.
+2. **Averaging per-bin log ILD is the wrong pooling.** The naive mean scored
+   0.69 against the energy-weighted 1.00, because the `log(x + 1e-6)` floor
+   pins near-silent bins to ~0 ILD and drags the mean toward centre —
+   attenuating extreme pans. Pool in the **energy** domain, or weight per-bin
+   ILD by bin energy. This is a real and easily-repeated implementation bug:
+   the epsilon that keeps the log finite is also what eats the bearing.
+
+Both are instances of `docs/LESSONS.md`'s *"measure the quantity you are
+claiming, not a proxy that correlates with it"* — and neither would have been
+visible from the architecture diagram.
 
 ---
 
@@ -625,10 +765,22 @@ registry and a collision would be silent. `experiments/run.py:_module_for` globs
                  "leak has measured nothing (docs/LESSONS.md, T0.13).",
          kills="HR.2, HR.3, HR.4. A speaker experiment on a leaky corpus "
                "measures the leak.",
-         notes="Corpus: LibriSpeech dev-clean (40 speakers, public domain, "
-               "337 MB) split 20 enrolled / 20 impostor, PLUS a handful of "
-               "owner-recorded utterances for the deployment case. NOTE THE "
-               "DISK: /data has 725 MB free, so the corpus and the models "
+         notes="Corpus: LibriSpeech dev-clean, CC-BY-4.0, 40 speakers "
+               "(20M/20F), ~5.4 h, split 20 enrolled / 20 impostor, PLUS a "
+               "handful of owner-recorded utterances for the deployment case. "
+               "VERIFIED REACHABLE 2026-08-09: "
+               "https://www.openslr.org/resources/12/dev-clean.tar.gz returns "
+               "HTTP 200, Content-Length 337,926,286 (338 MB). test-clean is a "
+               "further 347 MB and 40 DISJOINT speakers if a larger impostor "
+               "set is wanted, but 685 MB exceeds the worst-case free disk — "
+               "prefer the 20/20 split of dev-clean alone. REJECTED: VCTK "
+               "(110 speakers, multi-session, ideal on paper) is an 11.7 GB "
+               "download — verified Content-Length 11,749,118,645 — and does "
+               "not fit on this box at any observed free-space level. NOTE THE "
+               "DISK: /data free space was observed swinging between 725 MB and "
+               "4.8 GB within an hour (shared with other tenants), so the "
+               "corpus and the models may not both fit. Check free space "
+               "BEFORE fetching and size for the worst case — "
                "cannot both live there — see the escalation in "
                "docs/research/HEARING_BAKEOFF.md section 1.0. LibriSpeech "
                "speakers are single-session per chapter, so cross-session "
@@ -705,7 +857,8 @@ unit explicitly, and every arm declares one.
 **Cost unit: RTF measured on this box at `nice 19`, `OMP_NUM_THREADS=2`, on a
 3-second utterance including the 30-second pad.** Lower is better; the tie-break
 takes the cheaper arm. Resident MB is reported alongside but is not the
-tie-breaker, because 725 MB of free disk is a hard admission gate rather than a
+tie-breaker, because free disk (observed as low as 725 MB) is a hard
+admission gate rather than a
 gradient (an arm whose weights do not fit is not slow, it is impossible).
 
 ```python
@@ -746,7 +899,8 @@ gradient (an arm whose weights do not fit is not slow, it is impossible).
                "A0 faster-whisper tiny.en int8 (cost ~0.12 est, ~75 MB). "
                "A1 faster-whisper base.en int8 (cost ~0.27 est, ~145 MB). "
                "A2 faster-whisper small.en int8 (cost ~0.63 est, ~480 MB - "
-               "EXCEEDS the 725 MB free-disk budget alongside anything else; "
+               "EXCEEDS the worst-case observed free-disk budget of 725 MB "
+               "alongside anything else; "
                "admit only if /data is freed first). "
                "A3 distil-whisper distil-small.en via CTranslate2. "
                "A4 whisper.cpp base.en Q5_0 (no Python deps, NEON). "
@@ -781,7 +935,8 @@ gradient (an arm whose weights do not fit is not slow, it is impossible).
 
 **Cost unit: MB resident (model weights + runtime), measured with the model
 loaded and one embedding computed.** Secondary: ms per second of audio. MB is
-the tie-breaker because `/data`'s 725 MB is the binding constraint.
+the tie-breaker because `/data`'s free space — observed as low as 725 MB — is
+the binding constraint.
 
 ```python
     Spec("HR.3", 2, "Speaker-ID bakeoff: which of the enrolled few, or nobody",
@@ -815,7 +970,8 @@ the tie-breaker because `/data`'s 725 MB is the binding constraint.
                "EpisodicMemory.speaker; the rest are deleted, not kept.",
          notes="ARMS, cost = MB RESIDENT (weights + runtime), measured with "
                "one embedding computed; ms/s of audio reported alongside. "
-               "MB is the tie-breaker because /data has 725 MB free. "
+               "MB is the tie-breaker because /data free space was observed as "
+               "low as 725 MB. "
                "A0 mean-MFCC nearest centroid (~0 MB, scipy only) - the "
                "reference arm. "
                "A1 SpeechBrain ECAPA-TDNN spkrec-ecapa-voxceleb (192-d). "
@@ -859,10 +1015,17 @@ is the bakeoff**.
 
 ```python
     Spec("HR.7", 2, "The audio stem does not deafen him to direction",
-         hypothesis="A linear probe on the audio STEM's output tokens recovers "
-                    "the source lateral angle to within 10 degrees on >= 0.9 of "
+         hypothesis="A probe on the audio STEM's output tokens recovers the "
+                    "source lateral angle to within 10 degrees on >= 0.9 of "
                     "PG.5's drop events — the same gate PG.5 applies to the raw "
-                    "stereo signal.",
+                    "stereo signal. THE PROBE MUST NOT BE LINEAR IN THE "
+                    "LOG-MEL: the constant-power pan law makes the log-domain "
+                    "interaural level difference exactly atanh(p), so a linear "
+                    "readout saturates at the lateral extremes. MEASURED HERE "
+                    "2026-08-09 on 108 PG.5-style drops: linear probe 0.40, "
+                    "analytic tanh link 1.00, mono control 0.10. A linear-probe "
+                    "version of this spec would report a FALSE NEGATIVE on the "
+                    "correct representation and kill the winning arm.",
          falsified_by="Any candidate stem whose tokens lose bearing. Directional "
                       "hearing is the ONLY thing PG.5 certifies, and it is what "
                       "makes audio useful for ACTION (turn toward the sound); a "
@@ -884,14 +1047,28 @@ is the bakeoff**.
                "all), and RVQ codecs quantise a few-dB level offset inside a "
                "single codebook cell. If it passes, that prediction was wrong "
                "and this document is wrong with it.",
-         notes="Log-mel preserves bearing trivially and provably: the pan law "
-               "is a per-channel GAIN, so log(gL*x) - log(gR*x) = log(gL/gR) is "
-               "a constant offset between the two channels' log-mel planes, "
-               "independent of mel bin. The failure mode is architectural, not "
-               "representational: a stem whose first op averages over the "
-               "CHANNEL dimension IS the mono control, silently. That one line "
-               "would delete Jack's only directional sense and nothing else in "
-               "the ladder would notice. This spec is that guard."),
+         notes="Log-mel preserves bearing provably: the pan law is a "
+               "per-channel GAIN, so log(gR) - log(gL) = atanh(p) exactly "
+               "(verified to machine precision at p = +-0.9, +-0.99), a "
+               "constant offset between the two channels' log-mel planes, "
+               "independent of mel bin. TWO IMPLEMENTATION TRAPS, both "
+               "MEASURED here 2026-08-09 and both of which silently destroy "
+               "the number: (1) a LINEAR probe scores 0.40 where the analytic "
+               "tanh link scores 1.00, because atanh saturates exactly where "
+               "bearing matters most; (2) the naive MEAN of per-bin log ILD "
+               "scores 0.69 against 1.00 for energy-weighted pooling, because "
+               "the log(x + 1e-6) floor pins near-silent bins to zero ILD and "
+               "drags the mean toward centre. Pool in the ENERGY domain. The "
+               "architectural failure mode is separate and worse: a stem whose "
+               "first op averages over the CHANNEL dimension IS the mono "
+               "control, silently. One line, deleting Jack's only directional "
+               "sense, and nothing else in the ladder would notice. This spec "
+               "is that guard. Scope note: two-channel stereo loses front/back "
+               "(48% of front sources land in the back, arXiv:2309.13343) but "
+               "its LATERAL accuracy matches 4-channel FOA (0.93 vs 0.91) - "
+               "DCASE 2025 Task 3 moved to stereo, azimuth-only for exactly "
+               "this reason, so PG.5's folded-azimuth scope is the field's "
+               "ratified operating point, not a shortcut."),
 ```
 
 ### 4.2 HR.6 — the representation bakeoff, with the no-audio null
@@ -902,6 +1079,9 @@ costs, already measured). Params reported alongside.
 
 ```python
     Spec("HR.6", 4, "How contact audio enters the brain: mel vs raw vs tokens vs nothing",
+         # ARMS: A0 no-audio | A0b placebo | A1 raw | A2 mel | A3 mel+ILD
+         #       A4 discrete tokens | A5 hand-crafted event vector
+         #       A6 frozen CED-tiny tower   (see notes for costs)
          hypothesis="At matched tokens-per-modality, matched trainable "
                     "parameters (+-5%), matched steps and matched data order, "
                     "at least one audio representation beats BOTH the "
@@ -962,7 +1142,29 @@ costs, already measured). Params reported alongside.
                "the stem needs help finding what PG.5 proved is there. "
                "A4 DISCRETE TOKENS (EnCodec / WavTokenizer / Mimi encoder, "
                "frozen). Predicted to fail HR.7 before it gets here, and its "
-               "encoder weights may not fit in 725 MB of free /data. "
+               "encoder weights may not fit in the worst-case 725 MB of free "
+               "/data. "
+               "A6 FROZEN PRETRAINED TOWER: CED-tiny (5.5 M, 22 MB, 0.481 "
+               "AudioSet mAP, Apache-2.0) embeddings -> 4 tokens. This is the "
+               "arm that decides section 1.3's null hypothesis BY BAKEOFF "
+               "rather than by argument (SYSTEM.md law 3). CED-tiny, not "
+               "YAMNet: it is +0.175 mAP at 1.6x the size with 5x fewer "
+               "tokens than AST. Predicted to lose, and the prediction is "
+               "specific enough to be wrong: the AudioSet classes Jack needs "
+               "are the WORST in the dataset (Scrape rank 519/527, Crack "
+               "521st, Creak 29 training clips and 11% label accuracy, Roll 0% "
+               "label accuracy), impacts occupy a ~3% duty cycle inside 10 s "
+               "weakly-labelled clips so the pretext task never taught "
+               "temporal localisation, and ContactAudio's output is a "
+               "three-parameter synthetic family no YouTube tower has heard. "
+               "If A6 WINS, section 1.3 of "
+               "docs/research/HEARING_BAKEOFF.md is wrong and the tower ships. "
+               "NOT AN ARM: wav2vec2, which UnifiedBrain.AudioEncoder:1020 "
+               "currently loads. On HEAR it scores 0.561 on ESC-50 against "
+               "PANNs' 0.909 and CED-base's 0.967 — self-supervised SPEECH "
+               "features are 20-40 points worse than AudioSet features on "
+               "environmental sound. It is excluded on measured evidence, not "
+               "taste. "
                "A5 HAND-CRAFTED EVENT VECTOR (t_onset, f0, level, pan) from "
                "ContactAudio's own labels, projected to 4 tokens. cost ~0. "
                "A5 IS THE MOST INFORMATIVE ARM AND THE ONE NOBODY WANTS TO "
@@ -1208,13 +1410,13 @@ that is not contingent on any bakeoff.
 
 | | budget | state |
 |---|---|---|
-| `/data` (holds `HF_HOME`) | 100 GB | **725 MB free.** Every model weight below competes for it. |
-| `/` | 30 GB | 9.6 GB free, but `ladder_loop.sh` refuses to start below 3 GB. |
+| `/data` (holds `HF_HOME`) | 100 GB | **725 MB → 4.8 GB free**, swinging within the hour. Shared with tenants; `/data/history` alone is 73 GB. Size for 725 MB. |
+| `/` | 30 GB | 6.2 GB free; `ladder_loop.sh` refuses to start below 3 GB, so ~3 GB is usable. |
 | CPU | 4 shared ARM cores | **2 effective threads** (measured: 4 threads = 74 GFLOP/s, same as 2). |
 | Kaggle | 30 h/week | ~23 h left this week |
 | Colab T4 | elastic | |
 
-Rough weight footprints, against 725 MB:
+Rough weight footprints, against a worst-case 725 MB:
 
 ```
 silero-vad                            ~2 MB      fits
@@ -1225,9 +1427,23 @@ ECAPA-TDNN (speechbrain)             ~80 MB      fits
 WeSpeaker ResNet34 ONNX             ~100 MB      fits
 Resemblyzer                          ~17 MB      fits
 LibriSpeech dev-clean corpus        ~337 MB      fits, but not beside small.en
-PANNs CNN14 / BEATs / AST         ~300 MB ea.    two of them IS the whole budget
-LAION-CLAP                          ~600 MB      does not fit with anything
+ctranslate2 + faster-whisper wheels  ~18 MB      fits
+onnxruntime 1.19.2 wheel (pinned)    ~12 MB      fits
+CED-tiny (HR.6 arm A6)               ~22 MB      fits — cheapest credible tower
+EfficientAT mn05_as                   ~6 MB      fits
+PANNs CNN14 / BEATs / AST         ~330 MB ea.    two of them IS the whole budget
+EnCodec 24k (HR.6 arm A4)            ~93 MB      fits
+DAC 44.1k                           ~307 MB      fits alone
+WavTokenizer ckpt                    ~1.8 GB     DOES NOT FIT (optimizer state
+                                                 included; model is ~285 MB fp32,
+                                                 so it needs re-exporting first)
+LAION-CLAP                          ~615 MB      does not fit with anything
 ```
+
+Note the shape of that list. **The two jobs that genuinely cannot be solved from
+the simulator's own ground truth — ASR and speaker ID — are also the cheap
+ones** (~75–145 MB + ~80–100 MB). The expensive entries are all towers for a job
+the simulator already labels exactly. Skipping them is what makes the rest fit.
 
 **Read down that column and §1.3's null hypothesis stops being a research
 opinion and becomes an accounting fact.** The pretrained sound-event towers are
@@ -1302,12 +1518,21 @@ sentence.
   it on 2026-08-09: water entry is silent, nothing creaks, nothing rolls, and
   the humanoid is not in the scene so *"the thud of his own fall"* cannot occur.
   Impacts and bearing are real and PG.5-certified. That is the whole inventory.
-- **That any pretrained audio tower is needed.** The null hypothesis in §1.3 is
-  that none of them earns its parameters against a simulator that emits exact
-  labels — and the disk accounting in §6.1 says the question is close to moot on
-  this box. HR.6 leaves the door open to being wrong; §1.3 records the condition
-  under which the decision should be re-opened (a real-microphone,
-  no-ground-truth task), so it is not silently reinvented.
+- **That any pretrained audio tower is needed — but we do not claim the
+  converse by argument either.** §1.3's null hypothesis is that none earns its
+  parameters against a simulator emitting exact labels, and the evidence is
+  strong: the AudioSet classes GOAL.md names are the worst in the dataset
+  (`Roll` 0 % label accuracy, `Creak` 11 % from 29 training clips), impacts are
+  a ~3 % duty cycle under weak labels, and the disk accounting in §6.1 nearly
+  moots the question. But `SYSTEM.md` law 3 forbids settling this by argument,
+  so it is **arm A6 of HR.6** — frozen CED-tiny at matched token count — and it
+  can win. §1.3.3 records the condition for re-opening (a real-microphone,
+  no-ground-truth task) so the decision is not silently reinvented.
+- **That the wav2vec2 encoder currently in `UnifiedBrain.AudioEncoder`
+  (line 1020) is defensible.** On HEAR it scores 0.561 on ESC-50 against PANNs'
+  0.909 and CED-base's 0.967. Self-supervised *speech* features are the wrong
+  family for environmental sound by a measured 20–40 points, and it is excluded
+  from HR.6 on that basis rather than left in as a courtesy arm.
 - **That contact audio has earned its parameters in the brain.** Until an audio
   arm beats the PLACEBO channel — not zero, the matched-noise channel — hearing
   is decorative at this scale and loses its parameters under the Tier-3 rule.

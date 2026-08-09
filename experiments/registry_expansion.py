@@ -36,6 +36,30 @@ EXPANSION: list[Spec] = [
                "silently and PPO scored components that never touched physics)."),
 
 
+    Spec("T0.14", 0, "Evaluation is deterministic and the obs contract holds",
+         hypothesis="Two forwards of one state in eval mode are BIT-IDENTICAL; "
+                    "rollout leaves the model in eval mode and the PPO update "
+                    "in train mode; config.mujoco_obs_dim equals what the env "
+                    "actually emits.",
+         falsified_by="Any drift between two eval forwards, a mode left wrong "
+                      "after rollout or update, or an obs-dim mismatch.",
+         null_baseline="n/a — an invariant, not an effect.",
+         metric="eval_action_drift", budget=Budget.CPU, depends_on=["T0.06"],
+         control="Forced into TRAIN mode the determinism check MUST fail. A "
+                 "property that cannot be violated is not being tested — which "
+                 "is exactly how this went unnoticed for four GPU runs.",
+         kills="Every locomotion result computed before it passes. T2.01 and "
+               "T2.02 must be re-run once this holds.",
+         notes="TrainingPipeline never called .eval()/.train(), so 36 nn.Dropout "
+               "modules at p=0.1 were live during rollout, the PPO update, and "
+               "'deterministic' evaluation. Measured: 42% policy-mean drift on "
+               "the same state, 66% on value, ~20% of samples outside "
+               "clip_range at ZERO policy change. Invisible by inspection "
+               "because the SB3 baseline disables training mode for you — so "
+               "T2.02 compared one arm with 42% injected action noise against "
+               "one with none. Also caught: mujoco_obs_dim=376 is the "
+               "Humanoid-v4 value; v5 emits 348, so 28 zeros were padded in."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "
