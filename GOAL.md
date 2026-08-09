@@ -58,7 +58,15 @@ while he is there doing stuff and he will be relatable — I want to watch him
 figure out the world himself."*
 
 **He lives, he dies, he remembers.** The destination world is as realistic a
-survival simulation as buildable — the jungle. He gets thrown in, figures life
+survival simulation as buildable — the jungle. And "realistic" means what it
+meant to a caveman, not to a chemist (owner, 2026-08-09: *"we don't actually
+need to understand chemistry for this — just like cavemen didn't"*). The world
+must be **consistent** (same act, same conditions, same result — so rules are
+learnable), **discoverable** (rules surface through poking at things — so
+curiosity grips), and **consequential** (outcomes couple to his needs — so
+learning matters). Fire is a state machine, not combustion. The world-fidelity
+gates verify that the world obeys its own pre-registered rules; consistency is
+the falsifiable property, realism never was. He gets thrown in, figures life
 out or doesn't, dies, and tries again — and what survives death is the point:
 the diary and the skills persist across lives (the ME family already proves
 the substrate). Life N+1 must be measurably better than life N *because of*
