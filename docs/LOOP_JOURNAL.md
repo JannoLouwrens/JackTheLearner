@@ -649,3 +649,23 @@ and rerun T2.02 — reattach skips the affordability gate by design. Do NOT
 resubmit a second kernel while one runs. After T2.02 settles D1, journal the
 verdict next to /tmp/mlp_probe.json's numbers and pick up T2.03/T2.19/T4.02
 on Colab if it is back.
+
+2026-08-09T00:2xZ — T2.02 LAUNCHED on fresh Sunday Kaggle quota, per plan.
+Kernel jannolouwrens/jack-ladder-1786234100 pushed 00:08:20Z, status RUNNING
+(verified via kaggle kernels status). Local poller survives this iteration:
+setsid-detached PID 830502 running `experiments.run T2.02`, log at
+/tmp/t202_run.log (stdout is block-buffered — a near-empty log is NORMAL, the
+kernel status command is the truth). Expected ~6.7h wall: finish ~07:00Z, then
+the poller fetches t202.json, writes the ledger, and exits on its own. Budget
+is charged by Budget.charge() at job end, so gpu_budget.json still showing
+only W31 is expected until then. NEXT ITERATIONS (01:00-07:00Z): do NOT
+resubmit T2.02 and do NOT launch other Kaggle work while this runs. Check
+`pgrep -f 'experiments.run T2.02'` — if the poller is alive, leave it alone
+and do CPU work (T2.19 audio-conditioned nav, T4.02 gradient-norm balance) or
+Colab-short (T1.02 retry, T2.03) if Colab is back. If the poller is DEAD and
+the ledger has no T2.02 outcome, reattach for free:
+JACK_REUSE_KERNEL=jack-ladder-1786234100 then rerun T2.02 (reattach skips the
+affordability gate by design). After the verdict lands, journal it next to
+/tmp/mlp_probe.json (local MLP 54K params @704K steps: seed means ~584 etc.)
+and v4 transformer's 261, then update docs/DECISIONS.md D1 per the
+kill-criterion.
