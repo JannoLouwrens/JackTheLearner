@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 47 / 127 demonstrated
+## 48 / 128 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -269,6 +269,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ For every magnitude a spec might measure, the value run_spec hands to check() distinguishes a real nonzero from zero, so a pre-registered bound below the recorder's resolution still fires.
       - _dies if:_ Any nonzero seed metric aggregating to exactly 0.0, or a 3e-7 drift satisfying a `<= 0.0` gate.
       - _then delete:_ Nothing directly — it re-arms gates that were silently dead.
+- [x] **T0.16** The evaluation a spec SHIPS is deterministic, not the one the pipeline owns
+      - _asserts:_ Replaying the exact call order a locomotion spec's kernel performs — untrained eval, rollout, PPO update, trained eval — the action-producing path is in eval mode and returns bit-identical actions for one identical state at BOTH evaluation points.
+      - _dies if:_ Either evaluation point runs with dropout live, or two calls of the shipped eval path on one state differ.
+      - _then delete:_ Any locomotion number produced by an eval path that bypasses act_deterministic.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

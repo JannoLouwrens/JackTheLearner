@@ -1071,8 +1071,8 @@
       "status": "PASS"
     },
     "T0.13": {
-      "attempt": 8,
-      "commit": "76ccc6c",
+      "attempt": 9,
+      "commit": "49529e6",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -1094,7 +1094,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 0.12,
+      "duration_s": 0.13,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1138,13 +1138,19 @@
           "message": "",
           "ran_at": "2026-08-09T13:21:00",
           "status": "PASS"
+        },
+        {
+          "commit": "76ccc6c",
+          "message": "",
+          "ran_at": "2026-08-09T14:21:51",
+          "status": "PASS"
         }
       ],
       "message": "",
       "metrics": {
         "disarmed_conjunct_keys": 0,
         "disarmed_detail": "",
-        "gates_scanned": 46,
+        "gates_scanned": 47,
         "hazard_detail": "",
         "inert_gate_keys": 1,
         "precedence_hazards": 0,
@@ -1162,7 +1168,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-09T14:21:51",
+      "ran_at": "2026-08-09T15:15:32",
       "seeds": [
         0
       ],
@@ -1170,12 +1176,12 @@
       "status": "PASS"
     },
     "T0.14": {
-      "attempt": 3,
-      "commit": "97e34d0",
+      "attempt": 4,
+      "commit": "49529e6",
       "control_metrics": {
-        "train_mode_action_drift": 0.634767
+        "train_mode_action_drift": 0.634769
       },
-      "duration_s": 19.27,
+      "duration_s": 19.46,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1189,6 +1195,12 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-09T13:49:45",
           "status": "FAIL"
+        },
+        {
+          "commit": "97e34d0",
+          "message": "",
+          "ran_at": "2026-08-09T13:50:28",
+          "status": "PASS"
         }
       ],
       "message": "",
@@ -1202,7 +1214,7 @@
         "obs_dim_matches": true,
         "train_mode_after_update": true
       },
-      "ran_at": "2026-08-09T13:50:28",
+      "ran_at": "2026-08-09T15:15:28",
       "seeds": [
         0
       ],
@@ -1239,6 +1251,42 @@
         0
       ],
       "spec_id": "T0.15",
+      "status": "PASS"
+    },
+    "T0.16": {
+      "attempt": 1,
+      "commit": "49529e6",
+      "control_metrics": {
+        "prefix_max_drift": 1.6337,
+        "prefix_trained_train_mode": true,
+        "prefix_untrained_train_mode": true
+      },
+      "duration_s": 35.13,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "message": "",
+      "metrics": {
+        "kernels_scanned": 2,
+        "kernels_using_act_deterministic": 2,
+        "kernels_with_raw_forward": 0,
+        "max_shipped_eval_drift": 0.0,
+        "normaliser_mutated_by_eval": true,
+        "train_mode_after_update": true,
+        "trained_any_train_mode": false,
+        "trained_drift": 0.0,
+        "trained_forwards": 4,
+        "trained_mode_restored": true,
+        "unreadable_kernels": 0,
+        "untrained_any_train_mode": false,
+        "untrained_drift": 0.0,
+        "untrained_forwards": 4,
+        "untrained_mode_restored": true
+      },
+      "ran_at": "2026-08-09T15:14:32",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.16",
       "status": "PASS"
     },
     "T1.01": {

@@ -483,3 +483,45 @@ the recorder rather than by the quantity. Guarded by `T0.15`, whose control is
 the pre-fix `round(x, 6)` and which fails without it; `protocol._round6` now
 keeps six significant figures below 1.0, so a nonzero can never be stored as
 zero.
+
+## Code that lives in a string and runs on another machine is invisible to every guard you have
+
+T0.14 fixed the dropout bug in `TrainingPipeline` — `collect_rollout_vec` calls
+`.eval()`, `rl_update` calls `.train()` — and PASSed. The next iteration's job
+was to re-run T2.01 and T2.02, whose numbers T0.14 had invalidated, on a fresh
+Sunday quota. Both kernels carry their **own** `eval_policy()` inside a `JOB`
+string that is shipped to a GPU VM and never imported here, and both forwarded
+through `tp.model(...)` with no mode call at all. The untrained control
+evaluated in train mode because a fresh `nn.Module` defaults to
+`training=True`; the trained arm evaluated in train mode because `rl_update`
+correctly leaves it there and nothing turned it off afterwards. Measured at that
+call site on the real net: **103.6%** relative drift between two forwards of one
+identical state (0.0 in eval mode).
+
+So ~13 GPU-hours of re-runs whose entire purpose was to remove the dropout
+confound would have reintroduced it, and the numbers would have gone into the
+D1 architecture decision looking like clean evidence. Nothing could have caught
+it: T0.14 tests the library and the defect was in its two callers; T0.13 scans
+`_check` functions and this is not a gate; the `JOB` text is a string literal,
+so it has no imports to trace, no coverage, and no linting.
+
+Two rules, and the second is the one that would have prevented it:
+
+**Rule:** a spec's GPU kernel is production code that no in-process guard can
+see. When you write a guard, enumerate the *copies* of the thing you fixed —
+`grep` the `JOB` strings, not just the modules — and test the shipped text
+itself. T0.16 extracts `eval_policy` from the live `JOB` string and runs *that*,
+because a tidied restatement would pass while the shipped kernel stayed broken.
+
+**Rule:** two kernels re-implementing one operation is the defect; the mode bug
+was only its symptom. The moment an operation is worth copying it belongs in the
+library, so there is one place to fix and one place to guard —
+`TrainingPipeline.act_deterministic()` now owns it. This is the PG.8 form of
+"when you can reference, reference" applied to behaviour rather than data.
+
+*Corollary, cheap and worth repeating:* T0.16's static half first read
+`"tp.model(" in src`, which matched the explanatory comment above the fix — the
+comment names the old broken call — so the guard flagged its own fix as the bug.
+A substring cannot tell code from prose. It parses the AST now. Any detector
+that reads source must read it as source, or it will confidently report the
+thing it was written to certify as absent.

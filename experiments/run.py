@@ -121,7 +121,13 @@ def cmd_next(ledger: Ledger) -> int:
     if not avail:
         print("Nothing runnable — every unblocked spec already passes.")
         return 0
-    print("\nRunnable now (dependencies satisfied):\n")
+    # Say what is being hidden. `avail[:12]` silently dropped the rest, and the
+    # cheapest unblocked work sorts LAST (ME.11.A sat behind twelve GPU specs),
+    # so the one command an iteration runs to choose its work was quietly
+    # answering a different question than the one it appears to answer.
+    shown = min(12, len(avail))
+    more = f" — showing {shown} of {len(avail)}" if len(avail) > shown else ""
+    print(f"\nRunnable now (dependencies satisfied){more}:\n")
     for s in avail[:12]:
         impl = "" if _module_for(s.id) else "  [needs implementing]"
         print(f"  {s.id}  {s.title}  ({s.budget.value}){impl}")

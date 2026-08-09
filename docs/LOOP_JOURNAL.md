@@ -877,3 +877,71 @@ prefer `null`), **#8/#9**. T0.09 still needs a Colab re-run and that still needs
 a `git push` the owner has not authorised; six commits are unpushed. GPU:
 Kaggle ~23.6 h this week, D1 still with the owner, T2.01/T2.02 still VOID and
 still the top GPU priority.
+
+## 2026-08-09 ~15:20Z — T0.16 PASS: the shipped eval path bypassed T0.14, and would have re-contaminated the re-run it was written to enable
+
+Picked up the TOP GPU PRIORITY (re-run T2.01, then T2.02 — both VOID since
+T0.14). Before spending ~13 h of a fresh Sunday quota, read what the kernels
+would actually execute. **Both locomotion kernels evaluate with dropout live.**
+
+T0.14 fixed `TrainingPipeline` (`collect_rollout_vec` -> `.eval()`, `rl_update`
+-> `.train()`) and PASSes. It cannot reach its callers: T2.01 and T2.02 each
+carry their own `eval_policy()` inside a `JOB` **string**, shipped to a VM and
+never imported here, and both forwarded through `tp.model(...)` with no mode
+call. The untrained control evaluated in train mode (fresh `nn.Module` defaults
+to `training=True`); the trained arm evaluated in train mode (`rl_update`
+correctly leaves it there). Measured on the real 57M net at that call site:
+
+    train-mode relative drift, two forwards of ONE identical state:  1.0357
+    eval-mode  relative drift:                                       0.0
+
+So the re-runs whose entire purpose is to remove the dropout confound would have
+reintroduced it, at ~13 GPU-h, and fed D1 numbers that looked clean.
+
+**FIX:** `TrainingPipeline.act_deterministic()` — one deterministic action path,
+eval mode guaranteed, prior mode restored so T0.14's two invariants survive.
+Both kernels reference it now instead of re-implementing the forward; the
+duplication was the defect and the mode bug only its symptom.
+
+**GUARD — T0.16 PASS (35 s, CPU), 47 gates now scanned by T0.13, 0 disarmed.**
+Static half extracts `eval_policy` from the **live `JOB` string** and parses it
+(a tidied restatement would pass while the shipped kernel stayed broken);
+runtime half replays the real call order (untrained eval, rollout, PPO update,
+trained eval) against a stub env and reads `model.training` **at the forward**
+via a hook, then demands bit-identity. Control is the pre-fix body verbatim from
+T2.01 v4: `prefix_untrained_train_mode=True`, `prefix_trained_train_mode=True`,
+`prefix_max_drift=1.6337` against a shipped `max_shipped_eval_drift=0.0`. The
+spec fails without the fix. T0.14 re-run clean (drift still 0.0, obs dim 348).
+
+Two smaller things, both worth the next iteration's attention:
+
+- **`run next` was hiding half the ladder.** `avail[:12]`, silently. There are
+  **24** runnable specs; the twelve shown are all GPU, and the cheapest
+  unblocked CPU work (ME.11.A) sorts *last*. The one command an iteration runs
+  to choose its work was answering a different question than it appeared to.
+  Now prints "showing 12 of 24". Consider sorting by budget, not tier.
+- **`normalize_obs` mutates the running statistics on every call, including
+  evaluation** (`normaliser_mutated_by_eval = True`, recorded but deliberately
+  NOT gated). T2.01's untrained control eval injects up to 5 x 1000 observations
+  into `obs_mean`/`obs_var` *before the first rollout*. Pre-existing, shared by
+  every recorded locomotion run, and out of scope for a dropout fix — changing
+  it would move T2.01's numbers for an unrelated reason. Decide it deliberately
+  before the re-run, not during it.
+
+**BLOCKED, escalated as D3 in `DECISIONS_NEEDED.md`:** the T2.01 re-run is now
+correct and ready and *cannot be launched* — `gpu.py:assert_ref_is_current`
+requires HEAD on `origin/main`, and pushing publishes to a public repo, which
+the loop prompt reserves to the owner. Iterations have read this both ways
+(2026-08-08 declined, T0.09's Colab re-run never happened; 2026-08-09 14:04 six
+commits were pushed). It is a coin flip deciding whether the project's scarcest
+resource is usable. ~23.6 of 30 Kaggle hours expire 2026-08-16 and unspent free
+quota is not saved.
+
+NEXT ITERATION: if D3 is answered yes, **push and launch T2.01 first**
+(`run T2.01`, ~6.5 h, one kernel, reattach with `JACK_REUSE_KERNEL=jack-ladder-
+<epoch>` if your process dies — do NOT resubmit). If D3 is still open, take
+**ME.11.A** — cheapest unblocked CPU unit, and note it is *not* in `run next`'s
+first twelve. Then the standing overseer items: **#4** (`bakeoff.py` writes
+`TEST` fixtures into the real `DECISIONS_RESOLVED.md`), **#7** (`Spec.control`
+is decorative — 25 specs run a control without declaring one), **#5**
+(`attempt: 1` is false for T2.01/T0.05/T1.02/T2.02). 48/128.

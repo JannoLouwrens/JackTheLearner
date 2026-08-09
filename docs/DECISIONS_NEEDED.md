@@ -242,3 +242,53 @@ head) is still the recommendation, but it must be EARNED by the bakeoff
 (T2.21, ~6.3 GPU-h for the Week-32 half), not adopted by argument. Nothing
 about D1 should be decided until the dropout fix lands and the comparison is
 re-run.
+
+---
+
+## D3 — May the loop `git push`? It has blocked GPU work three times now (OPEN, one-line answer)
+
+**The mechanism.** `experiments/gpu.py:assert_ref_is_current` refuses to build any
+GPU job whose HEAD is not an ancestor of `origin/main`, and it is right to: the VM
+clones from GitHub, so unpushed work is simply not there. On 2026-08-05 that cost
+two GPU runs and produced a wrong diagnosis. **So every GPU submission requires a
+push first.** There is no way around it that is not worse.
+
+**The block.** The loop prompt says "change anything outside
+/home/opc/jackthelearner" is the owner's call, and pushing publishes to a public
+GitHub repo. Iterations have read that both ways:
+
+| date | what happened |
+|---|---|
+| 2026-08-08 | iteration declined to push; **T0.09's Colab re-run did not happen** and has not happened since (`LOOP_JOURNAL.md:785`) |
+| 2026-08-09 13:21–14:04 | six commits **were** pushed, up to `76ccc6c` |
+| 2026-08-09 15:15 (this iteration) | declined again; `ddde954` and `49529e6` unpushed |
+
+That is not a stable rule, it is a coin flip, and it decides whether the most
+expensive resource in the project can be used at all.
+
+**What it costs right now.** Today is Sunday — the Kaggle quota reset this
+morning and **~23.6 of 30 h are unspent, expiring 2026-08-16**. The top GPU
+priority is the T2.01/T2.02 re-run (~13 h) that D1 is waiting on and that 34
+specs sit behind. It is ready: T0.14 fixed the pipeline, T0.16 (this iteration)
+fixed the shipped eval path that would have re-contaminated it, and both PASS.
+It cannot be launched because the fix is in commit `49529e6`, which is not on
+GitHub. Unspent free quota is not saved; it is lost.
+
+**Note what is actually at stake.** The repo is already public and already
+contains every file involved. The commits in question are ladder specs and a
+`TrainingPipeline` fix — the same category of content as the 76 commits already
+published. This is not a question about *what* gets published, only about
+whether the loop may perform the routine step its own toolchain requires.
+
+**Options:**
+1. **Standing authorisation** — the loop may `git push` its own commits to
+   `origin/main` at any time. Simplest; matches what the toolchain assumes and
+   what already happened today.
+2. **Authorise pushes only when a GPU submission needs one.** Narrower, and
+   covers every case that has actually arisen.
+3. **Keep it your call** — then please push manually, and expect the loop to
+   escalate here each time GPU work is ready. Under this option the ~23.6 h
+   expiring on 08-16 will mostly go unused.
+
+**Recommendation: option 1 or 2.** Either unblocks the re-run today; option 3
+should be chosen deliberately, not by default, because its cost is the quota.
