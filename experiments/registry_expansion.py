@@ -114,6 +114,40 @@ EXPANSION: list[Spec] = [
          control="Mono and shuffled-pan renders of the SAME events must decode "
                  "at chance — else the decoder reads something other than pan."),
 
+    Spec("PG.8", 2, "Jack is IN the playground and can act in it",
+         hypothesis="make_playground(with_humanoid=True) yields a model that "
+                    "contains the Humanoid body with 17 actuators, settles "
+                    "finite at rest, emits the 348-dim observation "
+                    "TrainingPipeline expects, and spawns within reach of the "
+                    "ladder base.",
+         falsified_by="No humanoid body, nu != 17, non-finite state after "
+                      "settling, an observation dimension that disagrees with "
+                      "the pipeline, or a spawn point from which the ladder "
+                      "cannot be reached.",
+         null_baseline="The playground as it stands today: bodies are "
+                       "[world, apple, obj0-4, seesaw] and nu = 0. It must "
+                       "fail every check above — there is nobody in it.",
+         metric="humanoid_present_and_actuated", budget=Budget.CPU,
+         depends_on=["PG.1", "T0.14"], seeds=3,
+         control="A humanoid spawned OUTSIDE the arena must fail the "
+                 "ladder-reachability check — otherwise 'reachable' is not "
+                 "measuring position and the spec would pass anywhere.",
+         kills="Every curiosity claim, and the ladder-and-apple standard "
+               "itself. CU.*, LT.* and PG.4's dwell metrics are all defined "
+               "over an agent acting in this world; none of them can be run "
+               "in an empty one.",
+         notes="FOUND 2026-08-09 by the hearing research, verified directly: "
+               "the playground has NO humanoid and ZERO actuators. "
+               "build_mjcf() takes with_humanoid=False and nothing in the "
+               "repo ever passes True. PG.1-PG.7 all PASS and all are honest "
+               "— they certify the WORLD's physics: friction discriminates "
+               "1751x, water floats at the Archimedes depth, contact audio "
+               "pans correctly. PG.3 climbs the ladder with what its own "
+               "docstring calls 'a certification jig, not a humanoid'. So the "
+               "ladder is climbable, the apple is on top, the pool holds "
+               "water — and there is nobody there to climb, swim or fall. "
+               "This is the gap between a green ladder and GOAL.md."),
+
     # ── TIER-2 GAPS (docs/research/CAPABILITIES.md) ─────────────────────
     Spec("T2.14", 2, "Imitation from real motion capture",
          hypothesis="BC on the CMU corpus reaches held-out action error below "

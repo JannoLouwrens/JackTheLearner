@@ -193,115 +193,323 @@ Two things fall straight out and they pre-empt a lot of argument:
 
 ### 1.1 ASR — job (a)
 
-*(pending: the ASR survey agent's citations and published ARM RTF / WER numbers.
-The measured PyTorch-shape numbers below are ours and stand regardless.)*
+#### 1.1.1 Measured on this box — and the estimate it falsified
 
-#### Measured here: Whisper-shaped encoder cost on this box
+The headline is a correction to this document's own earlier draft, which is why
+it leads. **On this hardware `whisper.cpp` beats `faster-whisper` by 3.8–8.3×,
+and CTranslate2's `int8` is *slower* than its own `float32`.** On x86 the
+ordering is the opposite. Measured [M] on this box: Neoverse-N1, 4 threads,
+`nice -19`, 66.0 s of 16 kHz English speech, `beam_size=5`/`best_of=5` on both
+engines (whisper.cpp's CLI defaults are `-bs 5 -bo 5`, so it is like-for-like).
 
-I could not download Whisper weights (`/data` was at 725 MB free, and a `pip install` of
-`faster-whisper` pulls CTranslate2 + onnxruntime). So instead I **built the
-architecture and timed it** — same shapes, same dtype, same threads. This is an
-architecture-level measurement, not a proxy: Whisper's encoder is exactly two
-Conv1d stems plus N pre-LN transformer blocks over a fixed 1500-frame sequence.
+**whisper.cpp b1.9.2 / ggml 0.19.0**, built from source, `+dotprod`, no `i8mm`:
 
-```
-                                              30 s window     encoder-only RTF
-whisper-tiny  shape (d=384, L=4,  7.6 M enc)     1.18 s            0.039
-whisper-base  shape (d=512, L=6, 19.8 M enc)     2.43 s            0.081
-whisper-small shape (d=768, L=12, 87.0 M enc)    5.92 s            0.197
-              (fp32, torch 2.8 CPU, 2 threads, nice 19)
-
-decoder step, NO KV cache (torch reference path):
-  tiny  67.6 ms/step @ prefix 1 ... 87.8 ms @ prefix 32
-  base 140.3 ms/step @ prefix 1 ... 188.6 ms @ prefix 32
-```
-
-**The load-bearing fact Whisper users keep missing: Whisper always pads to 30
-seconds.** A 3-second "come here, Jack" costs a *full* 30-second encoder pass.
-So for a typical short command:
-
-| | encoder | ~15 decoded tokens | total | RTF on a 3 s utterance |
+| model | wall | **RTF** | × real time | peak RSS |
 |---|---|---|---|---|
-| tiny, torch fp32, no KV cache | 1.18 s | ~1.05 s | **~2.2 s** | **~0.75** (unusable live) |
-| tiny, torch fp32, KV-cached (est.) | 1.18 s | ~0.1 s | ~1.3 s | ~0.43 |
-| tiny, CTranslate2 int8 (est., 3–4× fp32) | ~0.3 s | ~0.05 s | **~0.35 s** | **~0.12** |
-| base, CTranslate2 int8 (est.) | ~0.7 s | ~0.1 s | ~0.8 s | ~0.27 |
-| small, CTranslate2 int8 (est.) | ~1.7 s | ~0.2 s | ~1.9 s | ~0.63 |
+| tiny.en f16 | 6.98 s | **0.106** | 9.5× | 233 MB |
+| tiny.en q5_1 | 7.44 s | 0.113 | 8.9× | 179 MB |
+| **base.en f16** | 12.64 s | **0.192** | **5.2×** | 348 MB |
+| base.en q5_1 | 14.41 s | 0.218 | 4.6× | 256 MB |
+| small.en f16 | 50.52 s | 0.766 | 1.3× | 812 MB |
+| small.en q5_1 | 46.90 s | 0.711 | 1.4× | 524 MB |
 
-MEASURED: the encoder rows and the uncached decoder rows. ESTIMATED: the
-int8/CTranslate2 rows, extrapolated from the measured fp32 shapes by the
-commonly-reported 3–4× CTranslate2-int8-over-torch-fp32 factor — **this factor
-is the single most load-bearing unverified number in this section and the
-bakeoff in §3.1 exists partly to measure it.**
+**faster-whisper 1.2.1 / CTranslate2 4.8.1**, official manylinux aarch64 wheel:
 
-The engineering conclusions are independent of that factor, though:
+| model | wall | **RTF** | peak RSS¹ |
+|---|---|---|---|
+| tiny.en int8 | 57.91 s | **0.877** | 383 MB |
+| tiny.en float32 | 34.86 s | 0.528 | 570 MB |
+| base.en int8 | 68.35 s | **1.036** | 782 MB |
+| base.en float32 | 49.36 s | 0.748 | 967 MB |
+| small.en int8 | 193.11 s | **2.926** | 2032 MB |
+| small.en float32 | 179.85 s | 2.725 | 2399 MB |
 
-- **The decoder, not the encoder, is where a naive implementation dies.** A
-  67 ms/token uncached step is 20× what a KV-cached step should be. Whatever
-  arm wins, it must be a runtime that caches cross-attention K/V
-  (faster-whisper, whisper.cpp) — the `transformers` path in
-  `AudioListener._transcribe_local:360-366` calls bare `.generate()` and is the
-  slowest possible way to run this model.
-- **A real VAD is not an optimisation, it is a correctness requirement.**
-  `AudioListener._process_chunk` (lines 276-279) uses `rms >
-  silence_threshold`, a fixed energy threshold defaulting to 0.01 (line 47). Under it, a door slam, Jack's own footfalls and the fan all open a
-  "speech" segment and get sent to Whisper, which hallucinates fluent text on
-  non-speech. The fix is a learned VAD gate (silero-vad, ~1–2 MB, sub-millisecond
-  per 30 ms frame) **plus** `no_speech_prob` rejection **plus**
-  `condition_on_previous_text=False`. Cheap; each is separately falsifiable; the
-  spec in §3.1 makes the silence-hallucination test a hard control.
-- **Use the `.en` variants.** Jack is spoken to in English; the multilingual
-  models spend capacity on 98 other languages and are measurably worse at
-  English at the same size.
+¹ faster-whisper rows shared one Python process, so RSS is a cumulative
+high-water mark — an upper bound. whisper.cpp used a fresh process per row, so
+those are exact.
+
+**This document's earlier draft estimated faster-whisper tiny.en int8 at RTF
+≈ 0.12, extrapolating from measured fp32 transformer shapes by the
+"commonly-reported 3–4× CTranslate2-int8 speedup." The measured value is 0.877 —
+the estimate was wrong by 7×, and wrong in the dangerous direction.** It is left
+visible in §1.1.2 rather than deleted, because the mechanism of the error is the
+transferable part: a speedup factor measured on x86 was applied to aarch64 as if
+it were a property of the software.
+
+**Why**, verified from primary sources rather than inferred: the official
+CTranslate2 aarch64 Linux wheel is built `-DWITH_MKL=OFF -DWITH_OPENBLAS=ON
+-DWITH_RUY=ON` with **no oneDNN**, which per the install docs means "Ruy for
+quantized models and OpenBLAS for non quantized models". Ruy's int8 path on
+Neoverse-N1 has `dotprod` but **no `i8mm`**, and loses to OpenBLAS sgemm.
+Confirmed on-box: `ctranslate2.get_supported_compute_types('cpu')` returns
+exactly `{'int8', 'int8_float32', 'float32'}` — no fp16, bf16 or int16 on
+aarch64. This box's flags are `asimd asimdhp asimdrdm asimddp`: dotprod yes,
+**`i8mm`, `bf16` and SVE all absent.**
+
+Two further counter-intuitive [M] results worth acting on:
+
+- **Do not quantize below `small`.** ggml `q5_1` was *slower* than `f16` for
+  tiny and base and only marginally faster for small. Without `i8mm` the
+  dequantization overhead eats the bandwidth win until the model is large
+  enough to be memory-bound.
+- **The widely-cited faster-whisper issue #38, "Slower than original Whisper on
+  ARM 64bit", is misleading** — the reporter conceded in-thread that he had
+  filed against the wrong repo, and his own data had CTranslate2 *fastest* on a
+  Pi 400. Worth knowing before trusting either it or the numbers above.
+
+#### 1.1.2 The superseded estimate, kept as the worked example
+
+Encoder shapes timed here earlier (fp32, torch 2.8 CPU, **2** threads, nice 19),
+which remain correct as *architecture* measurements:
+
+```
+whisper-tiny  shape (d=384, L=4,  7.6 M enc)   30 s window 1.18 s   enc-only RTF 0.039
+whisper-base  shape (d=512, L=6, 19.8 M enc)               2.43 s                0.081
+whisper-small shape (d=768, L=12, 87.0 M enc)              5.92 s                0.197
+decoder step, NO KV cache:  tiny 67.6 ms @prefix 1 ... 87.8 ms @32
+                            base 140.3 ms @prefix 1 ... 188.6 ms @32
+```
+
+From these I predicted ~0.12 RTF for CT2-int8 tiny.en. §1.1.1 measured 0.877.
+**The shapes were right and the runtime model was wrong** — which is the whole
+lesson: an architecture measurement bounds the *compute*, and on a
+memory-bandwidth-bound ARM core without `i8mm` the compute is not what you are
+paying for.
+
+What survives unchanged from that analysis, because it is structural:
+
+- **Whisper always pads to 30 seconds.** A 3-second "come here, Jack" costs a
+  full 30-second encoder pass. This is why CTC/TDT models (§1.1.3) — one forward
+  pass, linear in *actual* audio length, no autoregressive loop — are so much
+  better suited to Jack's short-command register than any Whisper variant.
+- **A naive decoder is catastrophic.** 67.6 ms/token uncached is ~20× a
+  KV-cached step. `AudioListener._transcribe_local:360-366` calls bare
+  `.generate()` via `transformers` — the slowest possible way to run this model,
+  and it must go regardless of which arm wins.
+
+#### 1.1.3 The candidates, with the one that probably wins
+
+Whisper WER, LibriSpeech greedy, from the Whisper paper (arXiv 2212.04356) [V]:
+
+| model | params | test-clean | test-other |
+|---|---|---|---|
+| tiny.en / tiny | 39 M | **5.6** / 7.6 | 14.6 / 16.9 |
+| base.en / base | 74 M | **4.2** / 5.0 | 10.2 / 12.4 |
+| small.en / small | 244 M | 3.1 / 3.4 | 7.4 / 7.6 |
+| medium.en / medium | 769 M | 3.1 / 2.9 | 6.3 / 5.9 |
+| large-v2 | 1550 M | 2.7 | 5.2 |
+
+The `.en` advantage is real and concentrated at the small end — 5.6 vs 7.6 at
+tiny, 4.2 vs 5.0 at base — and vanishes by medium. Jack uses the small end, so
+`.en` it is.
+
+**Parakeet TDT 0.6B v2 is the strongest candidate and it is genuinely open
+(CC-BY-4.0).** The single best ARM datapoint available, from sherpa-onnx's own
+docs on an RK3588 Cortex-A76 [M, not our box]: RTF **0.220 / 0.142 / 0.118 /
+0.088** at 1/2/3/4 threads, for a model scoring **6.05 average WER** — better
+than whisper large-v3's 7.44 and roughly 9× faster than whisper.cpp small.en
+measured here. It is reachable three ways: sherpa-onnx, whisper.cpp's new ggml
+Parakeet path (`src/parakeet.cpp` is in the current tree), or `parakeet.cpp`.
+
+| model | params | disk | licence | WER | ARM RTF |
+|---|---|---|---|---|---|
+| **Parakeet TDT 0.6B v2** | 600 M | ~630 MB int8 | **CC-BY-4.0** | LS 1.69/3.19, avg **6.05** | **0.088 @4t (A76)** [M] |
+| parakeet-tdt_ctc-110m | 114 M | ~110 MB | CC-BY-4.0 | 2.4/5.2, avg 7.49 | none published |
+| NeMo FastConformer CTC large | 115 M | ~460 MB | CC-BY-4.0 | **2.1/4.2** | none published |
+| **Moonshine Small Streaming** | 123 M | — | **MIT** | avg 7.84 | **527 ms on RPi 5** [M] |
+| Moonshine Medium Streaming | 245 M | — | MIT | LS 2.08/5.00, avg **6.65** | 802 ms on RPi 5 (vs Whisper Small's 10,397 ms) [M] |
+| Vosk small-en-us-0.15 | — | **40 MB** | Apache-2.0 | LS 9.85 | none published |
+| wav2vec2-base-960h | 94 M | ~360 MB | Apache-2.0 | 3.4/8.6 | none published |
+| streaming-zipformer-en-20M | 20 M | **41 MB** int8 | Apache-2.0 | not published | 0.038 (hw unstated) |
+| canary-1b (original) | 1 B | — | ⚠ **CC-BY-NC-4.0** | — | excluded: non-commercial |
+| Kyutai stt-1b / 2.6b | 1–2.6 B | — | CC-BY-4.0 | avg 6.4 | **no CPU path** |
+
+**distil-whisper's headline speedup does not transfer to CPU, and this matters
+because it is the arm most likely to be picked on reputation.** Distillation cuts
+32 decoder layers to 2 while *freezing* the 32-layer encoder. On an A100 the
+decoder is >90 % of wall time, so 5.8× (arXiv 2311.00430) is real there; on CPU
+the encoder dominates and the ceiling collapses. The only ARM datapoint —
+whisper.cpp PR #1424, M1 Pro, 8 threads — measures **1.78×**, not 5.8×. If a
+distil arm is run it must be **distil-medium.en** (24-layer encoder *and* 2-layer
+decoder), never distil-large. `distil-large-v3.5` does exist and reaches 7.08 OOD
+WER, but its encoder is still 32 layers.
+
+#### 1.1.4 Hallucination on silence — worse than advertised, and the built-in guard does not work
+
+This is a correctness problem, not a quality one, and it is the reason HR.2's
+silence control is a hard disqualifier rather than a nice-to-have.
+
+- **On pure non-speech input, Whisper hallucinates at 72.63 % (small) and
+  86.88 % (large-v3)** [V, arXiv 2606.07473]. The familiar "~1 %" figure
+  (Koenecke et al., *Careless Whisper*, FAccT '24, arXiv 2402.08021) is the rate
+  on *speech*, of which 38 % were explicitly harmful — and that paper's key
+  finding for us is that hallucinations *"disproportionately occur for
+  individuals who speak with longer shares of non-vocal durations."* Jack's
+  microphone is mostly non-vocal duration.
+- **`no_speech_threshold` is ANDed with `logprob_threshold`, and that is exactly
+  why it fails.** From `openai/whisper/transcribe.py`:
+
+  ```python
+  should_skip = result.no_speech_prob > no_speech_threshold
+  if logprob_threshold is not None and result.avg_logprob > logprob_threshold:
+      # don't skip if the logprob is high enough, despite the no_speech_prob
+      should_skip = False
+  ```
+
+  A *confident* hallucination — "Thank you for watching!" — has a high
+  `avg_logprob` precisely because the model is fluent and sure, so the guard
+  resets `should_skip` to `False` and the fabricated text survives even at
+  `no_speech_prob = 0.99`. Worse, `no_speech_prob` is the softmax of the
+  `<|nospeech|>` token **at the SOT position only** — one classification over the
+  whole 30 s window, with no time resolution. **It cannot substitute for a VAD.**
+  This is the same shape as `docs/LESSONS.md`'s inert-gate family: an assertion
+  that cannot fire at the operating point that actually occurs.
+- **`condition_on_previous_text=True` is the positive feedback loop.** A
+  hallucination in window *N* becomes the prompt for *N+1*, and over silence the
+  highest-likelihood continuation is more of the same — this is the mechanism
+  behind "Thank you for watching ×69". Set it `False`.
+- **VAD choice is not interchangeable.** On ESC-50 noise rejection: silero v6
+  **0.87**, ten-vad 0.42, **webrtcvad 0.00** — webrtcvad passes essentially all
+  environmental noise straight through, which defeats the entire purpose of
+  gating Whisper in a room where things fall over. ten-vad is disqualified twice
+  over: its licence appends a **non-compete clause** (GitHub reads the repo as
+  `NOASSERTION`, not Apache-2.0) and it ships **no Linux arm64 build**.
+  **silero-vad v6 ONNX, 16 kHz-only, 1.23 MB, MIT** is the pick; the README's
+  "<1 ms per 30 ms chunk on one CPU thread" is verified and conservative
+  (measured 189 µs/chunk for v5 ONNX on x86; no ARM measurement published).
 
 ### 1.2 Speaker identification — job (b)
-
-*(pending: the speaker-ID survey agent's EER / params / license table.)*
 
 The distinction that decides the whole design:
 
 | | question | output | Jack needs it? |
 |---|---|---|---|
 | **diarization** | who spoke *when*, speakers unknown | `spk_0`, `spk_1`, … + time spans | **no** — anonymous cluster labels cannot fill `EpisodicMemory.speaker`, which needs *"ada"* |
-| **verification** | is this the claimed speaker? (1:1) | score + threshold, measured as **EER** | as the *scoring primitive* |
+| **verification** | is this the claimed speaker? (1:1) | score + threshold, measured as **EER** | as the *scoring primitive* only |
 | **identification, open-set** | which of N enrolled, or none? | one of N+1 labels | **yes — this is the job** |
 
 Jack's requirement is the third and it is the least-served by off-the-shelf
 pipelines, which are overwhelmingly built for the first. `pyannote.audio`'s
-headline product is diarization; the useful part for us is the *embedding model
-inside it*, not the pipeline around it.
+headline product is diarization; the useful part for us is the **embedding model
+inside it**, not the pipeline around it. Diarization only becomes relevant if
+two people talk *over each other* on one mic; for turn-taking speech,
+VAD-segmented utterances plus per-utterance identification is cheaper and more
+accurate.
 
-The architecture that follows:
+#### 1.2.1 The candidates
 
-```
-speech segment (from VAD)
-   -> speaker embedding model (frozen, ~192-256 dim)
-   -> cosine against N enrolled centroids
-   -> argmax; if max cosine < tau  ->  "unknown"
-   -> EpisodicMemory.record(channel="heard", speaker=<name or "unknown">, ...)
-```
+EER is VoxCeleb1-O (cleaned), cosine scoring — a **verification** number, and an
+optimistic proxy for our task (§1.2.3). Disk and RTF as reported by the model
+authors; RTF is ONNX Runtime, 1 thread, Xeon 8160, 5 s chunks.
 
-Four design commitments, each of which becomes a gate in §3.2:
+| model | params | emb dim | Vox1-O EER | disk | CPU RTF | licence | needs torch? |
+|---|---|---|---|---|---|---|---|
+| mean-MFCC nearest centroid | 0 | — | — (reference arm) | 0 | ~0 | — | no |
+| Resemblyzer / GE2E | ~4.3 M | 256 | **~4.5 %**, author's internal set — **no published Vox1-O number** | 17.1 MB | not published for CPU | Apache-2.0 | **yes** |
+| SpeechBrain x-vector | 4.2 M | 512 | **3.23 %** (PLDA) | 16.9 MB | — | Apache-2.0 | **yes** |
+| WeSpeaker x-vector | 4.61 M | 512 | 1.99 → **1.59** (LM+ASnorm) | ~19 MB | ~0.009 | Apache-2.0 | no |
+| WeSpeaker ECAPA c512 | 6.19 M | 192 | 1.07 → **0.78** | 24.9 MB | **0.0184** | CC-BY-4.0 | no |
+| **WeSpeaker / 3D-Speaker CAM++** | **7.18 M** | 192 | **0.80 → 0.66** | **29.3 MB** | **0.0230** | **Apache-2.0** | **no** |
+| WeSpeaker ResNet34-LM (= pyannote 3.1's embedder) | 6.63 M | 256 | 0.80 → **0.72** | 26.5 MB | 0.0607 | CC-BY-4.0, ungated | no |
+| SpeechBrain ECAPA-TDNN | **20.8 M** | 192 | **0.80** (s-norm) / 0.90 (raw) | 83.3 MB | 0.039 | Apache-2.0 | **yes** |
+| 3D-Speaker ERes2NetV2 | 17.8 M | 192 | **0.61** | 71.4 MB | 0.142 | Apache-2.0 | no |
+| NVIDIA TitaNet-Large | 25.3 M | 192 | **0.66** | 101.4 MB onnx | — | CC-BY-4.0 | no, via ONNX |
+| NVIDIA TitaNet-Small | 6.4 M | 192 | 1.15 | 40.3 MB onnx | — | CC-BY-4.0 | no, via ONNX |
+| NVIDIA Sortformer (diarization) | 123 M | — | DER 14.8 DIHARD3 | 493 MB | — | **CC-BY-NC-4.0** | yes |
 
-1. **Enrolment is a few tens of seconds per person, on disk, human-inspectable.**
-   Same discipline as `OwnerProfile.py` / the JSONL diary. A speaker profile is
-   `{name, centroid[192], n_enrol_utts, enrol_seconds, created_at}`.
-2. **"Unknown" is a first-class answer**, exactly as abstention is in
-   `EpisodicMemory` (`abstain_below`, and ME.1's fabricated-event rejection). A
-   misattribution is strictly worse than an abstention: an event filed under the
-   wrong name **poisons the diary permanently** and every later recall repeats
-   the error with confidence. `docs/LESSONS.md` already carries the matching
-   lesson — *"abstention is a feature; abstaining on everything is a bug"* — so
-   the spec must gate on **both** `misattribution_rate` (low) and
-   `abstain_rate` (not saturated).
-3. **The threshold `tau` is calibrated on a held-out split, never on test.**
-   Otherwise the open-set number is fitted, and the "unknown" reject is theatre.
-4. **Channel is the confound that will fake a pass.** If a speaker is enrolled
-   and tested from the *same recording session*, a classifier can win by
-   matching microphone, room and noise floor rather than voice. Every
-   speaker-ID number in this project must be **cross-session** or it is
-   worthless. This is the direct analogue of PG.5's circularity guard, and §3.2
-   makes it a control that must fail.
+Four things in that table change the design:
+
+1. **`sherpa-onnx` removes PyTorch from the critical path, and I verified it runs
+   on this interpreter.** Queried against PyPI 2026-08-09: `sherpa-onnx` 1.13.4
+   publishes a **cp39 `manylinux2014_aarch64` wheel of 4.13 MB** with exactly one
+   dependency (`sherpa-onnx-core`). Against torch's 427 MB aarch64 wheel, on a
+   box whose `/data` free space was observed at 725 MB, that is not an
+   optimisation — it is the difference between the arm being runnable and not.
+   Its API maps 1:1 onto the three tasks: `manager.Add(name, embedding_list)`
+   for multi-utterance enrolment (it averages them), `manager.Search(emb,
+   threshold)` returning `""` for **unknown**, `manager.Verify`, and
+   `manager.Score` for calibration logging. **The "unknown" reject is a
+   first-class return value, not something we bolt on.**
+2. **SpeechBrain ECAPA is 20.8 M params, not the paper's 14.7 M** — the shipped
+   checkpoint is wider than ECAPA C=1024. And **its x-vector is a trap at 3.23 %
+   EER**; WeSpeaker's x-vector is 1.99/1.59 for the same cost. If we want a cheap
+   deep arm, it must be WeSpeaker's, not SpeechBrain's.
+3. **CAM++ is the accuracy/cost sweet spot**: 0.66 % EER at 29 MB and roughly
+   **2× faster than ECAPA** — the CAM++ paper reports single-thread CPU RTF of
+   0.013 against ECAPA's 0.033 and ResNet34's 0.032.
+4. **Sortformer is CC-BY-NC-4.0 — non-commercial.** Also 123 M params, 493 MB,
+   offline-only, max 4 speakers, and it needs NeMo, whose Linux dependency list
+   pulls CUDA bindings whether or not a GPU exists. It is excluded twice over.
+
+#### 1.2.2 Scoring, thresholds and the "unknown" reject
+
+- **Cosine beats PLDA for margin-trained embeddings** — WeSpeaker's own ResNet34
+  scores 0.797 with cosine against 1.207 with PLDA. Do not build a PLDA backend.
+- **AS-Norm helps verification but NOT reliably open-set identification.**
+  VoxWatch (arXiv 2307.00169), the first public open-set-ID benchmark on
+  VoxCeleb, found adaptive score normalisation did *not* consistently improve
+  OSI, while **score calibration did**. This is a trap worth naming: the
+  technique every verification paper recommends is the one that does not
+  transfer to our task.
+- **Thresholds actually shipped**: SpeechBrain `verify_batch` uses cosine
+  similarity **0.25**; pyannote 3.1 clusters at cosine *distance* 0.7046
+  (≈ 0.295 similarity); sherpa-onnx's identification example uses **0.6**. The
+  first two agreeing is reassuring; the third is deliberately conservative
+  because false accepts cost more in identification than in clustering. **None
+  of them is transferable to Jack's microphone** — §1.2.3.
+- **Open-set false alarms compound with N.** For N enrolled speakers the chance
+  of misattributing a stranger to *someone* is roughly `1 − (1 − FA)^N`; at a 1 %
+  per-trial FA and 5 enrolled people, ~4.9 %.
+- **EER is the wrong headline for Jack.** EER assumes a balanced target /
+  non-target prior. Jack will hear far more non-target speech — strangers, a
+  radio, his own TTS — than target speech, so the operating point that matters
+  is deep in the low-false-alarm tail. HR.3 therefore gates on **open-set
+  balanced accuracy and a misattribution rate**, not on EER.
+
+#### 1.2.3 The number that should govern every threshold we set
+
+**SVeritas (arXiv 2509.17091, Findings of EMNLP 2025) measures the same models
+across corpora, and the degradation is an order of magnitude:**
+
+| model | Vox1-O (own paper) | CommonVoice, clean | + env. noise + RIR @ 15 dB SNR |
+|---|---|---|---|
+| ECAPA-TDNN | 0.8–1.0 % | **6.13 %** | **15.88 %** |
+| TitaNet | 0.66 % | 4.92 % | 22.52 % |
+| ReDimNet | ~0.3 % | 4.69 % | 19.36 % |
+| WavLM-Base | — | 23.05 % | 40.25 % |
+
+**ECAPA goes from 0.8 % to 6.1 % by changing corpus alone, and to ~16 % with
+realistic room noise and reverb.** Plan for 5–20 % EER in a real room, not 1 %.
+Two secondary findings matter as much: ECAPA is the *most* robust conventional
+model under reverb despite worse clean numbers, and self-supervised WavLM
+front-ends collapse — the same lesson as §1.3's wav2vec2 result, in a different
+task. 3D-Speaker's own benchmark shows the effect within a single table: ECAPA
+is 3rd best on Vox1-O and **last** on both CN-Celeb and 3D-Speaker.
+
+**Consequences, all of which become gates in HR.1 and HR.3:**
+
+- **Cross-session enrolment is mandatory.** Enrol and test from the same
+  recording session and a classifier can win by matching microphone, room and
+  noise floor rather than voice. This is the direct analogue of PG.5's
+  circularity guard, and HR.1 makes the leak detector itself testable with a
+  planted leak.
+- **The corpus must carry a noise/reverb stratum**, reported separately and
+  gated on the minimum — otherwise LibriSpeech's clean read speech reports the
+  method's best day as its average (`docs/LESSONS.md`, both the ME.11 register
+  lesson and the abstention lesson).
+- **Utterance duration is an axis, not a constant.** Measured curves agree that
+  the cliff sits between 2 s and 1 s: going 2 s → 1 s roughly *triples* EER, and
+  1 s → 0.5 s triples it again (one ECAPA baseline reads 2.30 % at 2 s, 6.98 % at
+  1 s, **17.29 % at 0.5 s**). ERes2NetV2, designed for short utterances, holds
+  0.61 % → 0.98 % at 3 s → 1.48 % at 2 s. Jack's real utterances — "stop",
+  "hello Jack" — are under a second, which is exactly where this fails.
+- **Enrolment length is also an axis.** [e] The engineering rule the curves
+  support is 5–10 utterances of 3–10 s, **30–60 s total per person**, recorded on
+  *Jack's* microphone, with the L2-normalised embeddings averaged. No published
+  EER-vs-number-of-enrolment-utterances curve was found, so the *number* of
+  utterances is judgement, not a citation.
+- **Family members score closer than random VoxCeleb pairs.** Jack's effective
+  EER within one household is worse than any population number.
 
 ### 1.3 Sound events — job (c), and the null hypothesis that it is not needed
 
@@ -477,16 +685,21 @@ property).
 
 Two specific notes worth carrying forward:
 
-- **CLAP zero-shot: do not ship it.** Its one impact-sound datapoint is flat
-  (§1.3.2), template choice swings it 5.5–8.0 points, and it costs 615–690 MB.
-  What *is* interesting is that acoustic properties (RT60, LUFS, relative pitch)
-  are **linearly recoverable from frozen CLAP embeddings** [V, arXiv 2607.03806]
-  — the physics is in there, it is just unreachable by text prompting. That
-  argues for frozen-features-plus-head, never for zero-shot.
-- **The honest ceiling.** Across all 33 models on HEAR's *Vocal Imitations*
-  task, the best score is **0.227** [V]. When the sound→label mapping is
-  non-lexical, every frozen embedding fails. Do not expect a tower to name
-  Jack's materials.
+- **CLAP zero-shot: the [V] facts are enough to skip it.** LAION-CLAP is
+  **615 MB, Apache-2.0**, and its audio tower is HTS-AT (31 M, 0.471 AudioSet
+  mAP). That size alone fails §6.1's disk accounting, and its text side is
+  trained on *captions* — the semantic register AudioSet is thinnest in for
+  exactly Jack's classes. **[u], do not cite:** one pass reported an impact-sound
+  zero-shot datapoint (SESA: MS-CLAP 2023 65.71 % vs the older model's 66.28 %,
+  prompt ensembling moving it by zero), template-choice swings of 5.5–8.0 points,
+  a HEAR *Vocal Imitations* ceiling of 0.227 across 33 models, and linear
+  recoverability of RT60/LUFS/pitch from frozen CLAP embeddings. Three later
+  passes reported CLAP and HEAR as **not researched**. If any of that matters to
+  a future decision, it must be re-derived.
+- **[u] The HEAR leaderboard comparison.** A single pass reported wav2vec2 at
+  0.561 on ESC-50 against PANNs' 0.909 and CED-base's 0.967. Later passes
+  reported HEAR as not covered. The wav2vec2 conclusion below does **not** rest
+  on it — PANNs' own published transfer table (§1.3.2, [V]) carries it.
 
 ### 1.4 How audio enters the brain — representation, and the bearing problem
 
@@ -494,7 +707,7 @@ Two specific notes worth carrying forward:
 |---|---|---|---|
 | raw waveform, wav2vec2-style strided conv stem (7 layers, 4.21 M) | ~50 | **65.5 ms** | yes in principle (ITD *and* ILD survive) |
 | **2-channel log-mel (64 bins, 10 ms hop) + conv stem (167 K)** | 100 frames → pooled to **4 tokens** | **5.6 ms** | **yes, via ILD — measured below** |
-| discrete codec tokens (EnCodec 24k / WavTokenizer-40 / Mimi) | 300 / 40 / 100 | encoder resident; no published ARM RTF | **predicted no — see below** |
+| discrete codec tokens (EnCodec 24k / DAC / WavTokenizer-40 / Mimi) | 75 fr/s × n_q / 40 / 12.5 | encoder resident, 93–307 MB; **no published ARM RTF for any codec** | **predicted no — see below** |
 | hand-crafted event vector `(t_onset, f0, level, pan)` | 1 per event | ~0 | exactly, by construction |
 
 #### 1.4.1 What the literature settles
@@ -523,61 +736,73 @@ Two specific notes worth carrying forward:
   average. Nobody has trained a small from-scratch transformer on
   *environmental* codec tokens with < 1000 h; that gap is real and it is not
   Jack's job to close it.
-- **If tokens are used at all, use a single-quantiser codec.** MusicGen's
-  Table 4 [V] measures the RVQ interleaving problem directly: **parallel is
-  catastrophic** (FAD 2.58 vs flattening's 0.86), delay recovers ~90 % of
-  flattening at 1/K the sequence length, flattening multiplies context by K.
-  **WavTokenizer-40** (arXiv 2408.16532 [V]) makes the question disappear: one
-  quantiser, V=4096, 40 tokens/s, MIT. Its caveat is measured and serious —
-  PESQ collapses **2.17 → 1.14** out of domain (speech→music) [V], and Jack's
-  impacts are further out of domain than music.
-- **EnCodec is the only codec with a published CPU RTF**: 9.8× real time
-  encoding, single thread, on a 2019 i7 — **but 1.6× with entropy coding on**
-  [V]. We want raw RVQ indices, not a bitstream; that path must be off. A
-  third-party Mimi measurement swings **~40× on runtime choice alone** (0.6× RT
-  in PyTorch eager on an Android CPU vs ~26× with ONNX).
+- **If tokens are used at all, use a single-quantiser codec.**
+  **WavTokenizer-40** (arXiv 2408.16532) is confirmed [V] two ways — the
+  abstract's "a single quantizer with 40 or 75 tokens" and the checkpoint
+  filenames encoding the hop (24000/600 = 40 Hz, 24000/320 = 75 Hz), MIT
+  licensed. One quantiser means no RVQ interleaving question at all. Two
+  caveats, both [V]: the published `.ckpt` files are **1.58–1.76 GB** because
+  they carry optimizer state (the model is ~80 M params, so it needs
+  re-exporting before it fits §6.1's budget), and on **Codec-SUPERB's
+  non-speech audio category DAC is the only codec to significantly beat
+  EnCodec** — so DAC, not WavTokenizer, is the defensible choice if fidelity on
+  environmental sound is what matters.
+- **Mimi is the wrong shape for impacts** [V]: 12.5 Hz confirmed on the model
+  card, 96.2 M params, CC-BY-4.0, and **explicitly "trained on speech data."**
+  12.5 Hz is **80 ms per token — longer than `ContactAudio`'s entire 0.30 s ring
+  is resolvable within**, and longer than the transient that carries the
+  material identity. Appealing token rate, wrong instrument.
+- **[u] — codec CPU cost, reported once and not corroborated.** One pass
+  reported EnCodec at 9.8× real-time encoding single-threaded on a 2019 i7,
+  dropping to 1.6× with entropy coding enabled, and a ~40× swing for Mimi
+  between PyTorch eager and ONNX on Android. Later passes reported **no
+  encoder CPU RTF found for any codec**. The actionable part is safe either way
+  and is a configuration note rather than a measurement: if a codec arm is ever
+  run, we want **raw RVQ indices, not a compressed bitstream**, so the entropy
+  coder must be off, and the encoder must be exported to ONNX rather than run
+  in PyTorch eager.
+- **[u] — the RVQ interleaving table.** One pass reported MusicGen's Table 4
+  (parallel FAD 2.58 vs flattening 0.86; delay recovering ~90 % at 1/K the
+  length). Not corroborated. It only matters for multi-quantiser codecs, and
+  the single-quantiser recommendation above sidesteps it.
 
 #### 1.4.2 The bearing problem, and why 2-channel stereo is the right scope
 
-The strongest single citation for `ContactAudio`'s design is one that reads at
-first like a criticism of it. Wilkins et al. (arXiv 2309.13343 [V]) run the
-identical 604.5 K-param SELD baseline on FOA, binaural and plain stereo:
+**The part that is not in question, and does not need a citation.** The pan law
+is arithmetic in the repo: `gL = √((1−p)/2)`, `gR = √((1+p)/2)` applied to the
+**identical** signal (`ContactAudio.py:188-195`). Therefore
 
-| input | localisation error | front→front | **front→back** | right→right |
-|---|---|---|---|---|
-| FOA (4 ch) | **16.9°** | 0.67 | **0.00** | 0.91 |
-| binaural (2 ch) | 30.1° | 0.53 | 0.22 | 0.90 |
-| **stereo (2 ch)** | 42.9° | 0.31 | **0.48** | **0.93** |
+- **ILD is the entire spatial content of this fixture**, and per-channel
+  log-magnitude preserves it exactly (proved and measured in §1.4.3);
+- **`ContactAudio` synthesises no interaural time difference at all.** So
+  GCC-PHAT, IPD, SALSA-Lite's phase channels and every ITD feature are
+  **identically zero on this fixture** — they would be extra channels of noise,
+  not extra information. A phase-preserving front end has nothing extra to
+  preserve here. That changes only if `ContactAudio` grows a propagation-delay
+  model, which §5 does not propose;
+- **summing to mono destroys bearing irrecoverably** — which is why PG.5's
+  `mode="mono"` control fails at ≤ 0.30, and why a stem whose first operation
+  averages the channel dimension *is* the mono control. One line, silently
+  deleting Jack's only directional sense. HR.7 (§4.1) is the guard.
 
-Read the last column against the fourth. **Stereo's lateral accuracy matches
-FOA (0.93 vs 0.91) while 48 % of front sources land in the back.** DCASE has
-formally conceded the point: **DCASE 2025 Task 3 moved to stereo and
-azimuth-only**, citing front-back and top-bottom ambiguity.
+**[u] — the field-scope argument, reported once and not corroborated.** One
+research pass reported Wilkins et al. (arXiv 2309.13343) running an identical
+604.5 K-param SELD baseline across formats — FOA 16.9° localisation error with
+**0.00** front→back confusion, binaural 30.1° / 0.22, stereo 42.9° / **0.48**,
+with stereo's *lateral* accuracy nonetheless matching FOA (0.93 vs 0.91) — plus
+a DCASE 2025 stereo log-mel-only baseline at DOAE 24.5°, SALSA/SALSA-Lite
+composition, and SALSA-Lite feature-extraction timings. **Three later passes from
+the same research reported the spatial section as "essentially uncited" and
+"not researched."** So: do not cite these numbers.
 
-That is exactly the scope `ContactAudio` documented for itself in 2026-08:
-*"Panning encodes left/right ONLY: front-back disambiguation needs ITD/spectral
-cues (future work)."* PG.5 correspondingly tests **folded** azimuth in
-[−90°, 90°]. The fixture is not under-ambitious; it is at the same operating
-point the field has ratified for two-channel audio, and the peer-reviewed
-numbers say lateral accuracy is the part that survives.
-
-The consequences for the stem:
-
-- **ILD is fully retained by log-magnitude; ITD/IPD is destroyed by it.** The
-  DCASE 2025 stereo baseline uses **log-mel and nothing else** — no IPD, no
-  GCC — and reaches DOAE 24.5° [V]. For Jack this is not even a trade-off:
-  `ContactAudio` synthesises **no interaural time difference at all** (both
-  channels receive the identical `sig`, scaled by `gL`/`gR`;
-  `ContactAudio.py:188-195`), so a phase-preserving front end has *nothing extra
-  to preserve*. **GCC-PHAT, SALSA-Lite's IPD channels and every ITD feature are
-  identically zero on this fixture** — they would be four channels of noise.
-  (SALSA-Lite is otherwise excellent — 9× faster than log-mel+GCC-PHAT *and*
-  more accurate, 0.30 s per 60 s clip [V, arXiv 2111.08192] — and becomes
-  relevant only if `ContactAudio` ever grows a propagation-delay model.)
-- **Summing to mono destroys bearing irrecoverably**, which is why PG.5's
-  `mode="mono"` control fails at ≤ 0.30. A stem whose first operation averages
-  the channel dimension *is* the mono control. One line, silently deleting
-  Jack's only directional sense — HR.7 (§4.1) is the guard.
+The *conclusion* they were supporting survives without them, from two things
+that are not in doubt: the arithmetic above, and `ContactAudio`'s own
+pre-registered scope — *"Panning encodes left/right ONLY: front-back
+disambiguation needs ITD/spectral cues (future work)"* — which PG.5 already
+tests as **folded** azimuth in [−90°, 90°]. Two-channel ILD gives lateral angle
+and cannot give front/back; that is a property of the pan law, not a research
+finding. If someone later wants to argue Jack needs 4-channel FOA, the Wilkins
+comparison is the right thing to go and verify first.
 
 #### 1.4.3 Measured here: mel keeps the bearing, but the naive probe throws it away
 
@@ -641,7 +866,8 @@ for a project to believe something it has not shown.
         ├──────────────────────────────┐
         ▼                              ▼
   [2] ASR (frozen)              [3] speaker embedder (frozen)
-      faster-whisper .en             ECAPA / WeSpeaker, 192-d
+      whisper.cpp base.en, or        CAM++ / WeSpeaker ONNX,
+      Parakeet TDT via sherpa        192-256 d, via sherpa-onnx
         │  text                       │  e
         │                             ▼
         │                        cosine vs N enrolled centroids
@@ -749,8 +975,9 @@ registry and a collision would be silent. `experiments/run.py:_module_for` globs
     Spec("HR.1", 2, "The voice corpus is honest before anyone is scored",
          hypothesis="A speaker corpus exists on this box with >=8 enrolled and "
                     ">=8 held-out UNKNOWN speakers, disjoint enrolment/test "
-                    "utterances, and CROSS-SESSION test material, such that no "
-                    "non-vocal channel cue can identify a speaker.",
+                    "utterances, CROSS-SESSION test material, and a "
+                    "NOISE/REVERB stratum, such that no non-vocal channel cue "
+                    "can identify a speaker in either stratum.",
          falsified_by="A probe on non-vocal features alone (silence-segment "
                       "spectrum, DC offset, noise floor, clip loudness) "
                       "identifies the speaker above chance+5% — then every "
@@ -785,7 +1012,19 @@ registry and a collision would be silent. `experiments/run.py:_module_for` globs
                "docs/research/HEARING_BAKEOFF.md section 1.0. LibriSpeech "
                "speakers are single-session per chapter, so cross-session "
                "means cross-CHAPTER at minimum and the control above is what "
-               "certifies that it is enough."),
+               "certifies that it is enough. "
+               "THE NOISE STRATUM IS NOT OPTIONAL. LibriSpeech is clean, "
+               "near-field, read speech — the most favourable possible domain, "
+               "and testing only on it reports the method's best day as its "
+               "average (docs/LESSONS.md, 'ask what your synthetic data makes "
+               "EASY'). SVeritas (arXiv:2509.17091) measures the size of the "
+               "gap: ECAPA at 0.8-1.0% EER on VoxCeleb1-O reads 6.13% on "
+               "CommonVoice clean and 15.88% with environmental noise and RIR "
+               "at 15 dB SNR. Build the stratum by convolving with room "
+               "impulse responses and adding environmental noise at 15 dB SNR "
+               "— both synthesisable on this box with scipy alone, no "
+               "download — and gate HR.3 on the MINIMUM over strata, never the "
+               "average (docs/LESSONS.md, ME.11's deleted register)."),
 
     # ── HEARING: the end-to-end chain ───────────────────────────────────
 
@@ -865,8 +1104,8 @@ gradient (an arm whose weights do not fit is not slow, it is impossible).
     Spec("HR.2", 2, "ASR bakeoff: the cheapest transcriber that gets Jack's words right",
          hypothesis="At least one open-weight, locally-runnable ASR arm "
                     "transcribes Jack's command register with word accuracy "
-                    ">= 0.90 at RTF <= 0.30 on 2 ARM threads, and beats the "
-                    "no-ASR null by >= 3 sigma.",
+                    ">= 0.90 at RTF <= 0.30 on this box, and beats the no-ASR "
+                    "null by >= 3 sigma.",
          falsified_by="Every arm that clears 0.90 accuracy has RTF > 0.30 (no "
                       "live transcription on this box — escalate: batch "
                       "transcription only, or a smaller command grammar), OR "
@@ -876,59 +1115,87 @@ gradient (an arm whose weights do not fit is not slow, it is impossible).
                        "command string regardless of the audio. Word accuracy "
                        "= the majority-class rate; the learning gate is 3 "
                        "sigma over it.",
-         metric="word_accuracy_at_rtf_budget", budget=Budget.CPU_LONG, seeds=3,
+         metric="min_register_word_accuracy_at_rtf_budget",
+         budget=Budget.CPU_LONG, seeds=3,
          depends_on=["HR.1"],
-         control="TWO controls that must fail. (a) SILENCE HALLUCINATION: 60 s "
-                 "of room tone and 60 s of ContactAudio impacts, containing no "
-                 "speech, must yield ZERO transcribed words. Whisper "
-                 "hallucinates fluent text on non-speech and the current "
-                 "energy-VAD (AudioListener.py:276, rms > 0.01) opens a speech "
-                 "segment for a door slam (AudioListener.py:276-279, "
-                 "silence_threshold 0.01). An arm that fails this is "
-                 "disqualified whatever its WER. (b) SHUFFLED AUDIO: "
-                 "phase-scrambled speech must transcribe to near-nothing — an "
-                 "arm that still emits plausible commands is decoding its "
-                 "language-model prior, not the audio.",
+         control="TWO controls that must fail, and the first is a hard "
+                 "DISQUALIFIER whatever an arm's WER. (a) SILENCE "
+                 "HALLUCINATION: 60 s of room tone and 60 s of ContactAudio "
+                 "impacts, containing no speech, must yield ZERO transcribed "
+                 "words. This is not hypothetical — on pure non-speech input "
+                 "Whisper hallucinates at 72.63% (small) and 86.88% "
+                 "(large-v3), and the current energy VAD "
+                 "(AudioListener.py:276-279, silence_threshold 0.01) opens a "
+                 "speech segment for a door slam. (b) PHASE-SCRAMBLED speech "
+                 "must transcribe to near-nothing; an arm that still emits "
+                 "plausible commands is decoding its language-model prior, "
+                 "not the audio.",
          kills="The transformers .generate() path in "
-               "AudioListener._transcribe_local (lines 360-366) and the entire "
-               "_transcribe_api path (line 372) — the latter unconditionally, "
+               "AudioListener._transcribe_local (lines 360-366) — MEASURED "
+               "here as the slowest possible way to run this model — and the "
+               "entire _transcribe_api path (line 372) unconditionally, "
                "because it calls a PAID OpenAI endpoint and SYSTEM.md forbids "
-               "paid compute. Deleting it is not contingent on this bakeoff.",
-         notes="ARMS, cost = MEASURED RTF on a 3 s utterance at nice 19, "
-               "OMP_NUM_THREADS=2 (state MB resident alongside): "
-               "A0 faster-whisper tiny.en int8 (cost ~0.12 est, ~75 MB). "
-               "A1 faster-whisper base.en int8 (cost ~0.27 est, ~145 MB). "
-               "A2 faster-whisper small.en int8 (cost ~0.63 est, ~480 MB - "
-               "EXCEEDS the worst-case observed free-disk budget of 725 MB "
-               "alongside anything else; "
-               "admit only if /data is freed first). "
-               "A3 distil-whisper distil-small.en via CTranslate2. "
-               "A4 whisper.cpp base.en Q5_0 (no Python deps, NEON). "
-               "INSTALLABILITY CHECKED 2026-08-09: ctranslate2 4.8.1 DOES ship "
-               "a cp39-aarch64 wheel (16.5 MB) and faster-whisper 1.2.1 is "
-               "pure Python, so A0-A3 are runnable on this interpreter. "
-               "onnxruntime's latest (1.28.0) has DROPPED cp39 — pin <=1.19.2. "
-               "librosa is a NO-GO on Python 3.9 (numba/llvmlite publish no "
-               "cp39 wheel); do feature extraction in torch. "
-               "A5 vosk-model-small-en-us (~40 MB, streaming, the cheap "
-               "reference arm whose FAILURE would indict the task per "
-               "docs/LESSONS.md). "
-               "Every arm runs behind the SAME silero-vad gate, or the "
-               "comparison is a comparison of VADs. "
-               "MEASURED HERE 2026-08-09 (torch fp32, 2 threads, nice 19): "
-               "whisper-shaped encoders over a 30 s window cost 1.18 s (tiny) "
-               "/ 2.43 s (base) / 5.92 s (small), and an UNCACHED decoder step "
-               "costs 68 ms (tiny) / 140 ms (base). Whisper always pads to "
-               "30 s, so a 3 s command pays the full encoder. The int8 "
-               "speedups above are EXTRAPOLATED, not measured; measuring them "
-               "is half the point of this spec. "
+               "paid compute. Deleting the API path is not contingent on this "
+               "bakeoff.",
+         notes="ARMS, cost = RTF MEASURED ON THIS BOX at 4 threads, nice 19 "
+               "(peak RSS reported alongside). "
+               "THE ARM ORDERING IS ALREADY PARTLY MEASURED, 2026-08-09, on "
+               "66 s of speech at beam 5, and it INVERTS the x86 conventional "
+               "wisdom, so pick arms from these numbers and not from a blog: "
+               "whisper.cpp tiny.en f16 RTF 0.106 / base.en f16 0.192 / "
+               "small.en f16 0.766, against faster-whisper tiny.en int8 0.877 "
+               "/ base.en int8 1.036 / small.en int8 2.926. whisper.cpp is "
+               "3.8-8.3x FASTER on this hardware, and CTranslate2 int8 is "
+               "SLOWER than its own float32 (0.877 vs 0.528 at tiny). Cause: "
+               "the aarch64 CT2 wheel is built WITH_RUY + OpenBLAS and no "
+               "oneDNN, and Neoverse-N1 has dotprod but NO i8mm. "
+               "A0 whisper.cpp base.en f16 (cost 0.192, 348 MB) - the "
+               "measured incumbent. "
+               "A1 whisper.cpp tiny.en f16 (cost 0.106, 233 MB) - cheapest "
+               "Whisper; the question is whether 5.6% LibriSpeech test-clean "
+               "WER survives Jack's proper nouns. "
+               "A2 PARAKEET TDT 0.6B v2 via sherpa-onnx (CC-BY-4.0, ~630 MB "
+               "int8). PREDICTED WINNER: published RTF 0.088 at 4 threads on "
+               "a Cortex-A76 with avg WER 6.05 - better than whisper "
+               "large-v3 and ~9x faster than whisper.cpp small.en here. It is "
+               "a TDT model: ONE forward pass, linear in ACTUAL audio length, "
+               "no autoregressive loop - whereas Whisper pays a full 30 s "
+               "encoder window for a 2 s command. That structural difference "
+               "is the whole decision on this hardware. "
+               "A3 Moonshine Small Streaming (MIT, 527 ms on an RPi 5) - "
+               "explicitly edge-designed, the other non-Whisper shape. "
+               "A4 vosk-model-small-en-us (40 MB, Apache-2.0, LibriSpeech WER "
+               "9.85) - the cheap REFERENCE ARM whose failure would indict the "
+               "task (docs/LESSONS.md, T1.02). "
+               "A5 distil-medium.en, ONLY IF a distil arm is run: distillation "
+               "freezes the 32-layer ENCODER and cuts the decoder to 2 layers, "
+               "so its 5.8x A100 speedup does NOT transfer to CPU where the "
+               "encoder dominates - the one ARM datapoint measures 1.78x. "
+               "Never distil-large. "
+               "DO NOT QUANTIZE below small: MEASURED here, ggml q5_1 is "
+               "SLOWER than f16 at tiny and base (0.113 vs 0.106; 0.218 vs "
+               "0.192) because without i8mm the dequantization overhead "
+               "outweighs the bandwidth win. "
+               "EXCLUDED ON LICENCE: canary-1b is CC-BY-NC-4.0. EXCLUDED ON "
+               "FEASIBILITY: Kyutai STT has no CPU path. "
+               "EVERY ARM RUNS BEHIND THE SAME silero-vad v6 ONNX GATE (1.23 "
+               "MB, MIT, 16 kHz-only) with condition_on_previous_text=False, "
+               "or the comparison is a comparison of VADs. Do NOT rely on "
+               "no_speech_threshold: openai/whisper ANDs it with "
+               "logprob_threshold, so a CONFIDENT hallucination (high "
+               "avg_logprob) resets should_skip to False and survives at "
+               "no_speech_prob 0.99 - an inert gate in the exact sense "
+               "docs/LESSONS.md/T0.13 describes. Do NOT use webrtcvad: it "
+               "scores 0.00 on ESC-50 noise rejection against silero v6's "
+               "0.87. Do NOT use ten-vad: non-compete licence clause and no "
+               "Linux arm64 build. "
                "TEST SET: two registers, reported SEPARATELY and gated on the "
                "MINIMUM (docs/LESSONS.md, ME.11's deleted register): "
                "(R1) short imperatives from Jack's actual command grammar "
-               "('climb the ladder', 'come here', 'what did ada tell you'); "
-               "(R2) PROPER NOUNS - the enrolled speakers' names - which small "
-               "Whisper models mangle, and which HR.4 depends on because a "
-               "question is addressed to a NAME."),
+               "('climb the ladder', 'come here'); (R2) PROPER NOUNS - the "
+               "enrolled speakers' names - which small models mangle and which "
+               "HR.4 depends on, because an attribution question is addressed "
+               "to a NAME."),
 ```
 
 ### 3.2 Speaker-ID bakeoff — HR.3
@@ -944,55 +1211,111 @@ the binding constraint.
                     "balanced open-set identification accuracy over "
                     "(N enrolled + unknown) on CROSS-SESSION audio, from "
                     "<= 30 s of enrolment per speaker, with the decision "
-                    "threshold calibrated on a held-out split.",
-         falsified_by="No arm reaches 0.85 cross-session at <= 30 s enrolment "
-                      "— then HR.4's 0.80 end-to-end bar is unreachable and "
-                      "the honest options are (i) more enrolment audio, "
-                      "(ii) fewer enrolled people, or (iii) Jack ASKS who is "
-                      "speaking. Record which, do not quietly lower the bar.",
+                    "threshold calibrated on a held-out split — AND holds "
+                    ">= 0.70 on the NOISE/REVERB stratum. Gated on the MINIMUM "
+                    "of the two strata, never the average.",
+         falsified_by="No arm reaches 0.85 clean / 0.70 noisy at <= 30 s "
+                      "enrolment — then HR.4's 0.80 end-to-end bar is "
+                      "unreachable and the honest options are (i) more "
+                      "enrolment audio, (ii) fewer enrolled people, (iii) "
+                      "longer minimum utterances, or (iv) Jack ASKS who is "
+                      "speaking. Record which; do not quietly lower the bar.",
          null_baseline="Chance = 1/(N+1) with balanced classes. PLUS a "
                        "REFERENCE ARM simple enough that its failure indicts "
                        "the task: nearest-centroid on mean MFCCs. If the "
                        "reference arm also fails, the corpus or the protocol "
                        "is broken, not the models (docs/LESSONS.md, T1.02).",
-         metric="open_set_balanced_accuracy", budget=Budget.CPU_LONG, seeds=3,
+         metric="min_stratum_open_set_balanced_accuracy",
+         budget=Budget.CPU_LONG, seeds=3,
          depends_on=["HR.1"],
-         control="THREE controls. (a) SAME-SESSION enrolment must score "
-                 "HIGHER; if it does not, HR.1's corpus has no session "
-                 "variation. (b) SILENCE segments must be rejected as "
-                 "'unknown' >= 0.95 of the time — an embedder that confidently "
-                 "names a speaker from room tone is scoring the channel. "
-                 "(c) THRESHOLD SENSITIVITY: sweep tau and report the full "
-                 "curve. An arm whose accuracy is flat in tau has an "
-                 "'unknown' class that is not doing anything, and its "
-                 "open-set number is a closed-set number wearing a hat.",
+         control="FOUR controls. (a) SAME-SESSION enrolment must score HIGHER; "
+                 "if it does not, HR.1's corpus has no session variation. "
+                 "(b) SILENCE segments must be rejected as 'unknown' >= 0.95 of "
+                 "the time — an embedder that confidently names a speaker from "
+                 "room tone is scoring the channel. (c) THRESHOLD SENSITIVITY: "
+                 "sweep tau and report the whole curve. An arm whose accuracy "
+                 "is FLAT in tau has an 'unknown' class that is not doing "
+                 "anything, and its open-set number is a closed-set number "
+                 "wearing a hat — this is the T0.13 lesson (a threshold you "
+                 "never watch fire is not a threshold) applied to a "
+                 "hyperparameter. (d) ABSTAIN-ON-EVERYTHING must FAIL: an arm "
+                 "that answers 'unknown' to every input scores perfectly on "
+                 "unknown-rejection, so abstain_rate_on_enrolled is gated at "
+                 "<= 0.15 in the opposite direction (docs/LESSONS.md).",
          kills="Five of six embedders. The survivor is what writes "
                "EpisodicMemory.speaker; the rest are deleted, not kept.",
          notes="ARMS, cost = MB RESIDENT (weights + runtime), measured with "
-               "one embedding computed; ms/s of audio reported alongside. "
-               "MB is the tie-breaker because /data free space was observed as "
-               "low as 725 MB. "
-               "A0 mean-MFCC nearest centroid (~0 MB, scipy only) - the "
-               "reference arm. "
-               "A1 SpeechBrain ECAPA-TDNN spkrec-ecapa-voxceleb (192-d). "
-               "A2 WeSpeaker ResNet34 via ONNX Runtime (the embedder inside "
-               "pyannote 3.1; ONNX avoids the speechbrain dependency tree). "
-               "PIN onnxruntime<=1.19.2 — checked 2026-08-09, the latest "
-               "(1.28.0) publishes no cp39-aarch64 wheel and this venv is "
-               "Python 3.9.25. "
-               "A3 x-vector spkrec-xvect-voxceleb - the cheap deep arm. "
-               "A4 Resemblyzer / GE2E d-vector (256-d, ~17 MB) - cheapest deep "
-               "arm; expected worse EER, may still clear 0.85 on N<=8 speakers, "
-               "which is the ONLY question that matters here. "
-               "A5 CAM++ / ERes2NetV2 (3D-Speaker) if an ONNX export exists. "
-               "DIARIZATION IS NOT AN ARM. pyannote's pipeline answers 'who "
-               "spoke when' with anonymous cluster ids; EpisodicMemory.speaker "
-               "needs a NAME. Only the embedder inside it is a candidate. "
-               "ENROLMENT LENGTH IS AN AXIS, NOT A CONSTANT: report accuracy "
-               "at 5 s / 15 s / 30 s / 60 s per speaker and gate on 30 s. What "
-               "a person will actually sit still for is the real constraint. "
-               "N IS AN AXIS TOO: report at N = 2, 4, 8 enrolled. Jack needs a "
-               "household, not VoxCeleb."),
+               "one embedding computed; ms per second of audio reported "
+               "alongside. MB is the tie-breaker because /data free space was "
+               "observed as low as 725 MB and torch's aarch64 wheel alone is "
+               "427 MB. "
+               "A0 mean-MFCC nearest centroid (~0 MB, scipy only) — the "
+               "reference arm whose failure indicts the task. "
+               "A1 CAM++ ONNX (7.18 M, 29.3 MB, Vox1-O 0.80 plain / 0.66 "
+               "LM+ASnorm, Apache-2.0) — the accuracy/cost sweet spot, ~2x "
+               "faster than ECAPA on CPU. "
+               "A2 WeSpeaker ResNet34-LM ONNX (6.63 M, 26.5 MB, 256-d, 0.797, "
+               "CC-BY-4.0, UNGATED) — the embedder inside pyannote 3.1, "
+               "obtainable without the pipeline or an HF token. "
+               "A3 WeSpeaker ECAPA c512 ONNX (6.19 M, 24.9 MB, 1.07/0.78). "
+               "A4 SpeechBrain ECAPA-TDNN (20.8 M, 83.3 MB, 0.80 s-norm / 0.90 "
+               "raw, Apache-2.0) — the incumbent of the literature, included "
+               "BECAUSE it costs torch: it is the arm that tests whether the "
+               "427 MB dependency buys anything. "
+               "A5 3D-Speaker ERes2NetV2 ONNX (17.8 M, 71.4 MB, 0.61) — "
+               "designed for SHORT utterances (0.98% at 3 s, 1.48% at 2 s), "
+               "which is Jack's actual regime. "
+               "RUNTIME: sherpa-onnx, VERIFIED 2026-08-09 to publish a "
+               "cp39-aarch64 manylinux2014 wheel of 4.13 MB with ONE "
+               "dependency — no torch, no HF token, no gated repos. Its "
+               "SpeakerEmbeddingManager gives enrolment-by-averaging "
+               "(Add(name, embedding_list)), open-set Search() returning \"\" "
+               "for unknown, and Score() for calibration logging, so the "
+               "'unknown' reject is a first-class return value rather than "
+               "something we bolt on. "
+               "NOT ARMS, each excluded on measured evidence: "
+               "DIARIZATION (pyannote, Sortformer) answers 'who spoke WHEN' "
+               "with anonymous cluster ids; EpisodicMemory.speaker needs a "
+               "NAME — only the embedder inside pyannote is a candidate, and "
+               "that is A2. Sortformer is additionally CC-BY-NC-4.0 "
+               "(non-commercial), 123 M params, 493 MB, and needs NeMo, whose "
+               "Linux deps pull CUDA bindings with no GPU present. "
+               "SpeechBrain x-vector at 3.23% EER is dominated by WeSpeaker's "
+               "x-vector at 1.99/1.59 for the same cost. Resemblyzer is "
+               "dominated twice: ~4.5% EER on the authors' own internal set "
+               "with NO published Vox1-O number, and it still needs torch. "
+               "SCORING: cosine, NOT PLDA — WeSpeaker's ResNet34 reads 0.797 "
+               "cosine vs 1.207 PLDA under margin training. And do NOT assume "
+               "AS-Norm helps: VoxWatch (arXiv:2307.00169), the first public "
+               "open-set-ID benchmark, found adaptive score normalisation did "
+               "NOT consistently improve OSI while score CALIBRATION did. The "
+               "technique every verification paper recommends is the one that "
+               "does not transfer to this task. "
+               "DO NOT SHIP A PAPER'S THRESHOLD. Shipped values disagree: "
+               "SpeechBrain 0.25 cosine similarity, pyannote 0.7046 cosine "
+               "DISTANCE (~0.295 similarity), sherpa-onnx 0.6. Calibrate on a "
+               "held-out split of HR.1's corpus. "
+               "CALIBRATE EXPECTATIONS FROM SVeritas (arXiv:2509.17091): the "
+               "same ECAPA that reads 0.8-1.0% EER on VoxCeleb1-O reads 6.13% "
+               "on CommonVoice clean and 15.88% with environmental noise and "
+               "RIR at 15 dB SNR — a ~20x degradation from the model card. Any "
+               "gate set against a 1% EER expectation has mis-specified itself. "
+               "That is why the noisy stratum exists and why the metric is the "
+               "MINIMUM over strata. "
+               "REPORT, DO NOT AVERAGE, THREE AXES: enrolment seconds "
+               "(5/15/30/60, gate on 30), N enrolled (2/4/8 — Jack needs a "
+               "household, not VoxCeleb), and test-utterance duration. The "
+               "duration cliff is between 2 s and 1 s: 2 s -> 1 s roughly "
+               "TRIPLES EER and 1 s -> 0.5 s triples it again (one ECAPA "
+               "baseline: 2.30% at 2 s, 6.98% at 1 s, 17.29% at 0.5 s). Jack's "
+               "real utterances — 'stop', 'hello Jack' — sit under a second, "
+               "so a minimum-duration gate before scoring is a DESIGN "
+               "REQUIREMENT, not a tuning detail. "
+               "EER IS THE WRONG HEADLINE and is deliberately not the metric: "
+               "it assumes a balanced target/non-target prior, and Jack will "
+               "hear far more non-target speech (strangers, a radio, his own "
+               "TTS) than target speech. Report false-accept at a fixed miss "
+               "rate alongside the headline."),
 ```
 
 ---
@@ -1140,10 +1463,18 @@ costs, already measured). Params reported alongside.
                "A3 A2 + EXPLICIT BEARING FEATURES: per-band interaural level "
                "difference appended as extra channels. Cheap; tests whether "
                "the stem needs help finding what PG.5 proved is there. "
-               "A4 DISCRETE TOKENS (EnCodec / WavTokenizer / Mimi encoder, "
-               "frozen). Predicted to fail HR.7 before it gets here, and its "
-               "encoder weights may not fit in the worst-case 725 MB of free "
-               "/data. "
+               "A4 DISCRETE TOKENS, frozen encoder. If run, use DAC 24k "
+               "(298.7 MB, MIT) — Codec-SUPERB finds DAC the only codec to "
+               "significantly beat EnCodec on the NON-SPEECH audio category — "
+               "or EnCodec 24k (93.1 MB) as the cheap variant. NOT Mimi: "
+               "12.5 Hz is 80 ms per token, longer than the transient that "
+               "carries material identity, and its model card says it was "
+               "trained on speech only. NOT WavTokenizer as shipped: the "
+               "published ckpt is 1.58-1.76 GB because it carries optimizer "
+               "state, and does not fit /data at any observed free-space "
+               "level without re-exporting the ~80 M-param model first. "
+               "Entropy coding OFF — we want raw RVQ indices, not a "
+               "bitstream. Predicted to fail HR.7 before it ever gets here. "
                "A6 FROZEN PRETRAINED TOWER: CED-tiny (5.5 M, 22 MB, 0.481 "
                "AudioSet mAP, Apache-2.0) embeddings -> 4 tokens. This is the "
                "arm that decides section 1.3's null hypothesis BY BAKEOFF "
@@ -1419,42 +1750,62 @@ that is not contingent on any bakeoff.
 Rough weight footprints, against a worst-case 725 MB:
 
 ```
-silero-vad                            ~2 MB      fits
-faster-whisper tiny.en int8          ~75 MB      fits
-faster-whisper base.en int8         ~145 MB      fits
-faster-whisper small.en int8        ~480 MB      fits ALONE, and nothing else
-ECAPA-TDNN (speechbrain)             ~80 MB      fits
-WeSpeaker ResNet34 ONNX             ~100 MB      fits
-Resemblyzer                          ~17 MB      fits
-LibriSpeech dev-clean corpus        ~337 MB      fits, but not beside small.en
-ctranslate2 + faster-whisper wheels  ~18 MB      fits
-onnxruntime 1.19.2 wheel (pinned)    ~12 MB      fits
-CED-tiny (HR.6 arm A6)               ~22 MB      fits — cheapest credible tower
-EfficientAT mn05_as                   ~6 MB      fits
-PANNs CNN14 / BEATs / AST         ~330 MB ea.    two of them IS the whole budget
-EnCodec 24k (HR.6 arm A4)            ~93 MB      fits
-DAC 44.1k                           ~307 MB      fits alone
-WavTokenizer ckpt                    ~1.8 GB     DOES NOT FIT (optimizer state
-                                                 included; model is ~285 MB fp32,
-                                                 so it needs re-exporting first)
-LAION-CLAP                          ~615 MB      does not fit with anything
+RUNTIME WHEELS  (all verified cp39-aarch64 on PyPI, 2026-08-09)
+  sherpa-onnx 1.13.4                  4.1 MB     GO  — one dep, no torch
+  ctranslate2 4.8.1                  16.5 MB     GO
+  faster-whisper 1.2.1 (pure py)      1.1 MB     GO
+  onnxruntime 1.19.2  <- PINNED      11.5 MB     GO  (1.28.0 dropped cp39)
+  torch (only if an arm needs it)     427 MB     the whole budget, twice over
+  librosa / numba                        --      NO-GO on Python 3.9
+
+MODELS
+  silero-vad v6 ONNX 16k-only        1.23 MB     fits
+  ggml whisper tiny.en f16           77.7 MB     fits   RTF 0.106 [M]
+  ggml whisper base.en f16          148.0 MB     fits   RTF 0.192 [M]  <- pick
+  ggml whisper small.en f16         487.6 MB     fits ALONE  RTF 0.766 [M]
+  Parakeet TDT 0.6B v2 int8          ~630 MB     fits alone; RTF 0.088 @4t (A76)
+  CAM++ ONNX          (HR.3 A1)      29.3 MB     fits — recommended
+  WeSpeaker ResNet34-LM ONNX (A2)    26.5 MB     fits
+  WeSpeaker ECAPA c512 ONNX  (A3)    24.9 MB     fits
+  SpeechBrain ECAPA   (HR.3 A4)      83.3 MB     fits, but drags torch (427 MB)
+  ERes2NetV2 ONNX     (HR.3 A5)      71.4 MB     fits
+  CED-tiny            (HR.6 A6)      22.0 MB     fits — cheapest credible tower
+  EfficientAT mn05_as                 5.9 MB     fits
+  EnCodec 24k         (HR.6 A4)      93.1 MB     fits
+  DAC 24k                           298.7 MB     fits alone
+  PANNs CNN14 / BEATs / AST      ~330 MB ea.     two of them IS the whole budget
+  LAION-CLAP                        615.0 MB     does not fit with anything
+  WavTokenizer ckpt                   ~1.8 GB    DOES NOT FIT (optimizer state;
+                                                 model is ~80 M params, so it
+                                                 needs re-exporting first)
+
+DATA
+  LibriSpeech dev-clean             337.9 MB     fits, but not beside small.en
+  LibriSpeech test-clean            346.7 MB     +338 = 685 MB, over worst case
+  VCTK                               11.75 GB    does not fit at any level
 ```
 
 Note the shape of that list. **The two jobs that genuinely cannot be solved from
 the simulator's own ground truth — ASR and speaker ID — are also the cheap
-ones** (~75–145 MB + ~80–100 MB). The expensive entries are all towers for a job
-the simulator already labels exactly. Skipping them is what makes the rest fit.
+ones**: `faster-whisper base.en int8` at ~145 MB plus CAM++ at 29 MB plus
+silero-vad at 2 MB plus every runtime wheel is **under 210 MB total**, and needs
+no PyTorch at all. The expensive entries are towers for a job the simulator
+already labels exactly, and PyTorch for arms that have ONNX equivalents.
+Skipping both is what makes the whole hearing programme fit inside the *worst*
+free-space reading we saw.
 
 **Read down that column and §1.3's null hypothesis stops being a research
 opinion and becomes an accounting fact.** The pretrained sound-event towers are
 the single most expensive thing on the list and the least justified: the sim
-already emits exact labels. Skipping them is what buys room for the ASR model,
-the speaker embedder and the corpus — the two jobs that genuinely cannot be
-solved from the sim's own ground truth.
+already emits exact labels.
 
-→ **Escalate to `docs/DECISIONS_NEEDED.md`:** free `/data`, or relocate `HF_HOME`
-to `/`, before HR.1 is implemented. HR.1 through HR.4 are blocked on disk, not on
-science.
+→ **Escalate to `docs/DECISIONS_NEEDED.md`** (this document may not edit it):
+pin a hearing model cache with a hard size cap, or relocate `HF_HOME` to `/`,
+before HR.1 is implemented. **HR.1 through HR.4 are blocked on disk, not on
+science**, and the failure mode if they are not is a mid-download ENOSPC into a
+shared cache — a corrupted `HF_HOME` for every tenant using it, not a clean
+error. Any hearing spec must check free space before fetching and refuse rather
+than truncate.
 
 ### 6.2 What dies on 4 ARM cores before anything costs a GPU-hour
 
@@ -1490,17 +1841,26 @@ by the simulator at 0.45 % of real time.
 ### 6.3 Ordering
 
 ```
-[disk escalation]  ->  HR.5  ->  HR.7  ->  HR.6(CPU arms)  ->  HR.1  ->  HR.2
-                                                                  |
-                                                                  v
-                                                       HR.3  ->  HR.4
-                                                                  |
-                            [GPU]  HR.6(full)  ->  HR.8  ->  UB.9 / UB.10
+  world-sound arm (needs no downloads, no disk, no network):
+      HR.5  ->  HR.7  ->  HR.6(CPU arms: A0, A0b, A2, A5)  ─┐
+                                                            │
+  speech arm (blocked on the disk escalation):              │
+      [disk]  ->  HR.1  ->  HR.2  ─┐                        │
+                          HR.3  ─┴─>  HR.4                  │
+                                                            │
+  then GPU:                                                 v
+      HR.6(full, incl. A1/A4/A6)  ->  HR.8  ->  UB.9 / UB.10
 ```
+
+**The two arms are independent and the world-sound arm is not blocked.** That
+matters: HR.5 → HR.7 → HR.6(CPU) needs no model download, no network and no free
+disk — it runs on `ContactAudio`, MuJoCo and torch, all already installed. So
+the disk escalation gates *speech*, not *hearing*, and there is useful work to
+do while it is pending.
 
 HR.5 goes first because it can invalidate everything downstream for 15 minutes
 of CPU, and because it is the only spec on the list that tests GOAL.md's own
-sentence.
+sentence. HR.7 goes before HR.6 because it kills stems before they train.
 
 ---
 
@@ -1529,10 +1889,11 @@ sentence.
   can win. §1.3.3 records the condition for re-opening (a real-microphone,
   no-ground-truth task) so the decision is not silently reinvented.
 - **That the wav2vec2 encoder currently in `UnifiedBrain.AudioEncoder`
-  (line 1020) is defensible.** On HEAR it scores 0.561 on ESC-50 against PANNs'
-  0.909 and CED-base's 0.967. Self-supervised *speech* features are the wrong
-  family for environmental sound by a measured 20–40 points, and it is excluded
-  from HR.6 on that basis rather than left in as a courtesy arm.
+  (line 1020) is defensible.** Self-supervised *speech* features are the wrong
+  family for environmental sound, and the evidence is doubled: PANNs' own
+  transfer table (§1.3.2, [V]) and the collapse of WavLM front-ends under noise
+  in SVeritas (§1.2.3, [V]). It is excluded from HR.6 on that basis rather than
+  left in as a courtesy arm.
 - **That contact audio has earned its parameters in the brain.** Until an audio
   arm beats the PLACEBO channel — not zero, the matched-noise channel — hearing
   is decorative at this scale and loses its parameters under the Tier-3 rule.
@@ -1541,3 +1902,75 @@ sentence.
   preserves interaural level difference; discrete codecs are predicted to
   destroy it. HR.7 is where that prediction gets tested, and a document that
   predicts and is wrong is worth more than one that hedges.
+- **That a performance factor measured on x86 transfers to this box.** This
+  document's own first draft estimated faster-whisper tiny.en at RTF ~0.12 by
+  applying the widely-quoted 3-4x CTranslate2-int8 speedup to correctly-measured
+  transformer shapes. The measured value on this hardware is **0.877 - wrong by
+  7x, and wrong in the optimistic direction** - because the aarch64 CTranslate2
+  wheel ships no oneDNN and Neoverse-N1 has no `i8mm`. The superseded estimate
+  is kept in §1.1.2 rather than deleted. Every remaining [e] in this document
+  should be read in the light of it.
+
+
+---
+
+## 8. What this pass owes the system
+
+`SYSTEM.md`: *"Before you finish, ask: is the machine better than I found it?"*
+This document may only edit itself, so the three items below are **staged, not
+landed** — each names the file that must receive it.
+
+### 8.1 Two lessons for `docs/LESSONS.md`
+
+**A probe's link function is part of the test, not an implementation detail.**
+HR.7 asks whether an encoder preserves bearing. Written the obvious way — a
+*linear* probe on log-mel — it scores **0.40** on a representation that the
+correct analytic link scores **1.00** on (§1.4.3, measured). The pan law makes
+the log-domain interaural level difference exactly `atanh(p)`, which saturates
+precisely at the lateral extremes that matter most. A linear-probe HR.7 would
+have reported a false negative on the *winning* arm and deleted it. The same
+trap has a second head: pooling per-bin log ILD by its **mean** scores 0.69
+against 1.00 for energy-weighted pooling, because the `+1e-6` that keeps the log
+finite pins silent bins to zero and drags the estimate toward centre.
+*Rule candidate:* before writing a probe, ask what function relates the quantity
+you are reading to the quantity you are claiming. A probe that is
+under-parameterised for that relationship measures its own inadequacy, and it
+fails in the direction that looks like a negative result. Generalises "measure
+the quantity you are claiming, not a proxy that correlates with it" from the
+metric to the *estimator*.
+
+**A research pass that contradicts itself about what it retrieved is a data
+integrity event.** One survey pass returned a rich, specific, internally
+consistent set of numbers — per-class AudioSet AP with a label-quality audit,
+CLAP zero-shot on impacts, a HEAR leaderboard, a stereo-vs-FOA localisation
+table — and three later passes of the *same* research reported having been
+unable to obtain any of them. Both accounts cannot be true. Nothing
+distinguished the two by *reading* them; only the disagreement did.
+*Rule candidate:* corroboration is a citation tier, not a nicety. A number
+reported once by a pass that later disclaims it is not weak evidence, it is
+**unattributable**, and it must be marked and excluded from conclusions rather
+than quietly averaged in with the rest. This document adds a **[u]** tier for
+exactly that (§1) and restructures §1.3.2 and §1.4.2 so their conclusions rest
+on corroborated data instead. Same family as "silence is not success", one level
+up: *a confident answer is not evidence that a question was asked.*
+
+### 8.2 One escalation for `docs/DECISIONS_NEEDED.md`
+
+**`/data` free space is a shared, volatile resource and the hearing programme's
+speech half is blocked on it.** Observed at **725 MB and 4.8 GB within one
+hour**; `HF_HOME` lives there, `/data/history` holds 73 GB of other tenants'
+data. Every model in §6.1 competes for whatever is left at the moment it runs,
+and an ENOSPC mid-download corrupts a cache shared with tenants rather than
+failing cleanly. Needs an owner decision: cap a hearing cache, or relocate
+`HF_HOME` to `/` (6.2 GB, of which ~3 GB is usable under `ladder_loop.sh`'s own
+floor). The world-sound half (HR.5 → HR.7 → HR.6 CPU arms) is unaffected and
+should proceed meanwhile.
+
+### 8.3 Eight specs for `experiments/registry_expansion.py`
+
+`HR.1`–`HR.8`, new prefix, all appended to `EXPANSION`. Checked mechanically
+against the live registry on 2026-08-09: **all eight parse as `Spec(...)`, none
+collides with an existing id, none is a prefix of another** (the `ME.11.0`
+failure mode from `docs/LESSONS.md`), and every `depends_on` resolves against
+`BY_ID` plus the new set. `experiments/run.py:_module_for` needs no change —
+`hr_1_*.py` follows from the id.

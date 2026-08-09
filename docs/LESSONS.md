@@ -418,3 +418,22 @@ numbers "looked like the obs dim".
 constant. Any dimension that appears in both your config and an external
 library's output is a contract, and it should be checked at least once in the
 ladder rather than assumed to have been copied correctly.
+
+## A world that passes physics tests may still have nobody living in it
+
+PG.1–PG.7 all PASS and all are honest: friction discriminates hold-from-slide
+1751x, water floats spheres at the exact Archimedes depth, contact audio pans
+to the true bearing, the ladder is climbable. Then a research agent listing
+the model's bodies found `[world, apple, obj0-4, seesaw]` and **nu = 0**.
+Verified directly: there is no humanoid in the playground and nothing in it
+can act. `build_mjcf(with_humanoid=False)` — and nothing in the repo has ever
+passed `True`. PG.3 climbs the ladder with what its own docstring calls "a
+certification jig, not a humanoid".
+
+Every fixture spec was true. The composition of all of them was an empty room.
+
+**Rule:** fixture specs certify PROPERTIES of a thing; they do not certify that
+the thing is connected to the system that needs it. After a family of fixtures
+passes, ask the composition question explicitly — who uses this, and is that
+wiring itself tested? The gap hides precisely where each individual spec is
+honest, which is why no amount of scrutinising them would have surfaced it.
