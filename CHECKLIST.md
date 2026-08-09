@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 48 / 128 demonstrated
+## 49 / 128 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -363,7 +363,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every cue shares NO content word with its target beyond an explicitly allowed speaker name; the lexical-containment null therefore scores <=0.10 on the cue set; gold sets are derived from the generator's concept bindings, not hand labels; and the ORACLE ceiling (score events by their concept-tuple overlap with the cue's concept constraints, re-parsed from the STORED TEXT) is >=0.95, proving the questions are answerable at all.
       - _dies if:_ Any cue-target content-word intersection outside the allowed set, OR lexical null >0.10 (the cues leaked surface form), OR oracle ceiling <0.95 (the cues are not answerable and every arm's score is a floor effect), OR the fixture hash differing across two builds at the same seed (the eval set is not frozen).
       - _then delete:_ The entire bakeoff. An arm scored against an unvalidated eval set produces a number nobody may cite.
-- [ ] **ME.11.A** Arm A — lexical containment, the incumbent, as the null
+- [x] **ME.11.A** Arm A — lexical containment, the incumbent, as the null
       - _asserts:_ The shipped EpisodicMemory retriever (content-word containment x recency x importance, abstain_below=0.34) scores <=0.10 paraphrase recall@1 while abstaining >=0.95 on adversarial negatives: honest and useless, quantified.
       - _dies if:_ Paraphrase recall@1 >0.30 — in which case the premise of ME.11 is wrong, lexical matching does generalise, and no encoder is needed. This arm is written to be beatable; if it is not beaten the bakeoff is cancelled and the compute is saved.
 - [ ] **ME.11.B** Arm B — BM25S with stemming, real lexical SOTA
