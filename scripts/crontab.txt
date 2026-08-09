@@ -7,4 +7,4 @@
 7 * * * * JACK_LOOP_MODEL=fable /home/opc/jackthelearner/scripts/ladder_loop.sh
 37 */6 * * * /home/opc/jackthelearner/scripts/overseer.sh
 37 5 * * 1 /home/opc/jackthelearner/scripts/field_watch.sh
-37 6 * * 0 /home/opc/jackthelearner/scripts/review.sh
+37 6 * * * /home/opc/jackthelearner/scripts/review.sh

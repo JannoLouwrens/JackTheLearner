@@ -4,6 +4,19 @@ field watch scouts outside (weekly). You do the two things none of them do:
 judge the BIG PICTURE of progress, and re-examine EXISTING TESTS against
 everything learned since they were written.
 
+## MODES — obey the "REVIEW MODE TODAY" line prepended above this prompt
+
+DAILY (every morning, ~15 minutes of work — the senior engineer's walk-through):
+  - Part 1, last-24h only: did the builder's iterations produce, thrash, or
+    stall? Is the queue moving? Anything in the journal that smells wrong?
+  - Part 2.5 in full: reconcile the builder's priorities, check organ liveness,
+    and consume FIELD_WATCH.md if it changed since the last review.
+  - Update PROGRESS.md's FOR THE BUILDER section ONLY if something needs the
+    builder's attention; append one line to PROGRESS_LOG.md.
+  - SKIP Part 2 entirely — tests are re-examined on Sundays; daily rewrites
+    would churn the ladder.
+FULL (Sundays): everything below, including Part 2 and the honest paragraph.
+
 READ FIRST: GOAL.md, SYSTEM.md, docs/LESSONS.md, docs/OVERSIGHT.md,
 docs/research/DIRECTION_AUDIT.md (the one-off ancestor of this job),
 docs/FIELD_WATCH.md if present, and experiments/ledger.json (entries carry

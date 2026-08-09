@@ -20,13 +20,19 @@ LOAD=$(awk '{print $1}' /proc/loadavg)
 awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenants first"; exit 0; }
 cd "$REPO" || exit 0
 MODEL="${JACK_REVIEW_MODEL:-opus}"
-say "sweep start — model ${MODEL}"
-nice -n 19 timeout 40m claude -p "$(cat "$REPO/scripts/review_prompt.md")" \
+# Two gears, one organ (owner, 2026-08-09: "every 24 hours the loop must be
+# reviewed... to fix itself... the senior engineer"). Steering rots in hours
+# — the builder's map went stale twice in one day. Science needs a week of
+# data. So: DAILY = the morning walk-through (steering only, ~15 min);
+# FULL on Sundays = everything, including test re-examination.
+if [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=40m; else MODE=DAILY; TMOUT=20m; fi
+say "review start — mode ${MODE}, model ${MODEL}"
+nice -n 19 timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
 RC=$?
 if tail -5 "$LOG" | grep -qi "out of usage credits"; then
   say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
-  nice -n 19 timeout 40m claude -p "$(cat "$REPO/scripts/review_prompt.md")" \
+  nice -n 19 timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
     --model sonnet --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
   RC=$?
 fi
