@@ -54,7 +54,20 @@ and T2.02 are VOID (the T0.14 dropout + obs-dim invalidation), and any text
 calling T2.01's plateau "the architecture verdict" is stale and wrong.
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
-0. FINISH THE LEARNING-CORE BAKEOFF FIRST — it decides HOW JACK LEARNS and it
+0aa. CHEAPEST HIGH-LEVERAGE WORK IN THE PROJECT, DO IT FIRST: run PG.6 and
+   PG.7 (~40 min CPU, both registered). FROZEN_VS_PLASTIC.md measured that
+   they unblock NINE specs plus the entire unison ladder — 0 of 37 unison
+   specs currently pass, and this is the gate. Then PL.00 and PL.02 (also
+   runnable today) decide the frozen-vs-plastic constitutional question.
+   THREE OVERTURNS from that research to act on: (a) LEARNING_CORE's
+   admission criterion U2 excludes every frozen tower BY ARITHMETIC — amend
+   it, it was never run against a frozen arm; (b) HNS cannot discriminate
+   frozen from adapted (it is a readout, not a reshaping) — the two new gates
+   are specced in FROZEN_VS_PLASTIC.md; (c) EWC in TrainingPipeline.py is
+   measured indistinguishable from vanilla at our scale — recommend deleting
+   rather than wiring, escalate to DECISIONS_NEEDED rather than deciding.
+
+0. FINISH THE LEARNING-CORE BAKEOFF — it decides HOW JACK LEARNS and it
    is the highest-leverage unblocked work in the project. LC.00 and LC.01 PASS
    (the framing survived its cheapest falsifier; the unison admission gate
    exists). Implement and run, in order: LC.02 (throughput floor, cpu<10min),
