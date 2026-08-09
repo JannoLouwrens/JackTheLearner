@@ -1,5 +1,0 @@
-{
-  "weekly_output_token_ceiling": 37700000,
-  "pause_at_pct": 90,
-  "_comment": "Ceiling calibrated 2026-08-09 against the owner's reported 82%: 30,943,713 observed / 0.82. Organs stop at 90%. NOTE the meter is a PROXY \u2014 it sums this machine's own transcript tokens over a rolling 7 days; the plan's real number is server-side and may count differently (input tokens, cache, a calendar week rather than rolling). Re-calibrate whenever the owner reports the true figure."
-}

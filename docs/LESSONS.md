@@ -802,3 +802,20 @@ Two different blindnesses, and we had only cured one:
 OUTSIDE the project's own documents — human capability, an external taxonomy,
 the goal as a person would state it fresh. Everything else can only tell you
 how well you are executing a plan that may itself be incomplete.
+
+## Test the mechanism before building around your assumption about it
+
+I told the owner the CLI could not report usage headlessly — slash commands
+looked like a REPL feature — and built a proxy that summed output tokens from
+transcripts and inferred its ceiling from a percentage the owner read aloud.
+He asked "are you certain?". `claude -p "/usage"` works, and returns the
+authoritative numbers including per-model limits and exact reset times, which
+the proxy could never have known. An hour spent building the wrong thing,
+undone by a two-line experiment.
+
+This is the SECOND time today: a research agent claimed a glob collision that
+`fnmatch` disproved in two lines, and I nearly "fixed" a bug that did not exist.
+
+**Rule:** a claim about how a mechanism behaves is almost always cheaper to TEST
+than to reason about. Test it before designing around it — especially when the
+assumption is what makes the hard version necessary.

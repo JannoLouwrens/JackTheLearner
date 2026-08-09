@@ -1,93 +1,78 @@
-"""How many Claude tokens the machine has spent in a rolling window.
+"""Real Claude usage, read from the CLI itself.
 
-The scar: on 2026-08-09 the builder hit "out of usage credits" FOUR times and
-the meta-audit recorded credits as "the binding resource, and the only one
-that is unmetered" — GPU hours are tracked to the second while the thing that
-powers every organ had no accounting at all.
+The owner asked whether `claude -p "/usage"` works headlessly. I assumed it did
+not — slash commands looked like a REPL feature — and said so without testing.
+It works, and it returns the authoritative numbers:
 
-No CLI exposes the plan's remaining percentage; that lives server-side. But
-every session writes its own usage records to the transcript, so the machine
-CAN meter its own consumption. This is the Claude equivalent of
-experiments/gpu_budget.json: a ceiling in a file, checked before spending.
+    Current session:            25% used · resets Aug 9, 11pm (UTC)
+    Current week (all models):  81% used · resets Aug 12, 12pm (UTC)
+    Current week (Fable):      100% used · resets Aug 12, 11:59am (UTC)
 
-    python scripts/claude_usage.py            # human summary
-    python scripts/claude_usage.py --pct      # percent of ceiling, for scripts
+That is strictly better than the transcript-summing proxy this file used to
+contain, which could not see per-model limits, could not see reset times, and
+inferred its ceiling from a number the owner read out loud. Deleted.
 
-Ceiling lives in scripts/claude_budget.json so the owner can change it without
-touching code. Set it from OBSERVED usage, not a guess — run this for a few
-days first.
+Lesson (also in LESSONS.md): a two-line experiment beats a confident assumption
+about a mechanism. This one cost an hour of building the wrong thing.
+
+    python scripts/claude_usage.py           # human summary
+    python scripts/claude_usage.py --pct     # weekly all-models percent
+    python scripts/claude_usage.py --model Fable --pct
 """
 from __future__ import annotations
 
-import json
+import re
+import subprocess
 import sys
-import time
-from pathlib import Path
 
-TRANSCRIPTS = Path.home() / ".claude" / "projects"
-BUDGET_FILE = Path(__file__).parent / "claude_budget.json"
-DEFAULT = {
-    "weekly_output_token_ceiling": 40_000_000,
-    "pause_at_pct": 90,
-    "_comment": "Set the ceiling from OBSERVED usage. pause_at_pct is where "
-                "the autonomous organs stop; the owner is never blocked.",
-}
+TIMEOUT = 90
 
 
-def budget() -> dict:
-    if BUDGET_FILE.exists():
-        try:
-            return {**DEFAULT, **json.loads(BUDGET_FILE.read_text())}
-        except Exception:
-            pass
-    BUDGET_FILE.write_text(json.dumps(DEFAULT, indent=2) + "\n")
-    return DEFAULT
-
-
-def spent(days: float = 7.0) -> int:
-    """Output tokens across all transcripts touched in the window.
-
-    Output tokens only: they dominate cost and are the cleanest single signal.
-    Counted by FILE MTIME rather than per-message timestamps — coarse on
-    purpose. A meter that is expensive to read gets read rarely, and this one
-    runs before every organ fires.
-    """
-    cutoff = time.time() - days * 86400
-    total = 0
-    if not TRANSCRIPTS.exists():
-        return 0
-    for f in TRANSCRIPTS.rglob("*.jsonl"):
-        try:
-            if f.stat().st_mtime < cutoff:
-                continue
-            for line in f.read_text(errors="ignore").splitlines():
-                i = line.find('"output_tokens":')
-                while i != -1:
-                    j = i + 16
-                    k = j
-                    while k < len(line) and line[k].isdigit():
-                        k += 1
-                    if k > j:
-                        total += int(line[j:k])
-                    i = line.find('"output_tokens":', k)
-        except Exception:
-            continue          # a meter must never break the thing it measures
-    return total
+def read() -> dict:
+    """Parse `claude -p /usage`. Returns {} on any failure — a meter must never
+    break the thing it measures, and callers must treat missing data as
+    'unknown', never as 'zero'."""
+    try:
+        out = subprocess.run(["claude", "-p", "/usage", "--max-turns", "1"],
+                             capture_output=True, text=True, timeout=TIMEOUT).stdout
+    except Exception:
+        return {}
+    d: dict = {"raw": out.strip()}
+    for line in out.splitlines():
+        m = re.match(r"\s*Current (session|week)\s*(?:\(([^)]+)\))?\s*:\s*(\d+)%\s*used"
+                     r"(?:\s*·\s*resets\s*(.+))?", line)
+        if not m:
+            continue
+        scope, model, pct, resets = m.groups()
+        key = scope if scope == "session" else f"week:{(model or 'all models').strip()}"
+        d[key] = {"pct": int(pct), "resets": (resets or "").strip()}
+    return d
 
 
 def main() -> int:
-    b = budget()
-    used = spent()
-    ceiling = max(1, int(b["weekly_output_token_ceiling"]))
-    pct = 100.0 * used / ceiling
-    if "--pct" in sys.argv:
-        print(f"{pct:.1f}")
+    d = read()
+    if not d or len([k for k in d if k != "raw"]) == 0:
+        print("usage unavailable (CLI did not report) — treat as UNKNOWN, not zero")
+        return 2
+
+    want_pct = "--pct" in sys.argv
+    model = None
+    if "--model" in sys.argv:
+        model = sys.argv[sys.argv.index("--model") + 1]
+
+    if want_pct:
+        key = f"week:{model}" if model else "week:all models"
+        entry = d.get(key)
+        if entry is None:
+            return 2
+        print(entry["pct"])
         return 0
-    bar = "#" * int(min(pct, 100) // 5)
-    print(f"Claude output tokens, last 7 days: {used:,} of {ceiling:,}")
-    print(f"  [{bar:<20}] {pct:.1f}%   (organs pause at {b['pause_at_pct']}%)")
-    if pct >= b["pause_at_pct"]:
-        print("  OVER THRESHOLD — autonomous organs will pause. You are not blocked.")
+
+    for key in sorted(k for k in d if k != "raw"):
+        e = d[key]
+        bar = "#" * (e["pct"] // 5)
+        resets = f"  resets {e['resets']}" if e["resets"] else ""
+        print(f"{key:22s} [{bar:<20}] {e['pct']:3d}%{resets}")
     return 0
 
 
