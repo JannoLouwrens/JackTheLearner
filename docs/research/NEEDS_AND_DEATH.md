@@ -28,6 +28,26 @@ training-time crutch to be deleted at deployment. They are permanent, and the
 question therefore **changes shape**: it is no longer *"can we take them away?"*
 but *"do they teach better, and can we prove it?"*
 
+> ### ⚠ TIME-CRITICAL, READ BEFORE REGISTERING `PS.*`
+>
+> `docs/DIRECTION_AUDIT.md` scheduled the ~28 designed-but-unregistered specs —
+> `PS.00`–`PS.06` among them — for registration at the next builder hour.
+> **`PS.00` prediction (c) and `PS.02`'s drive-cycling detector are written
+> against an exploit that does not exist**, and `PS.00` would therefore FAIL for
+> being correct. §0.2 shows why, with exact value iteration and with Keramati &
+> Gutkin's own theorem, which is in the paper `PS` cites for the drive function.
+> **Correct `PS.00(c)` and `PS.02` before they enter the registry**, or the
+> ladder will pre-register a false prediction and then record a red entry for a
+> harness that behaved correctly.
+>
+> **And one constraint that any death-loop design in this project must obey,
+> whichever document it lives in:** with a reachable death state, drive-difference
+> reward (`r = d(h) − d(h')`) is the **unique self-termination-safe** homeostatic
+> form. Cost-of-deviation makes suicide strictly optimal in **8 of 11** states and
+> a plain cost of living in **11 of 11**; drive difference, **0 of 11**. Any
+> `max(0, ·)` in a drive reward reintroduces farming — that is a real exploit
+> shipped in a NeurIPS benchmark, not a hypothetical. §0.2(d) and §0.2(e).
+
 ---
 
 ## Contents
@@ -135,53 +155,119 @@ has the sign backwards. PS's algebra compared cycling-from-deviation-`d` against
 the actually-available alternative (go to setpoint and stay, worth `d`), every
 cycle loses.
 
-**(d) The real pathology is the opposite one, it belongs to constant-cost, and it
-has a name in the literature.**
-Add a reachable death state. Then `Φ(terminal) = −d(h_death) ≠ 0`, the PBRS
-precondition fails, and DR and CC **diverge** — measured, at every γ. With
-`r = −d(h')` and no survival bonus, exact value iteration chooses **to die**:
-at the two hungriest living states the optimal action is `rest`, which is
-suicide, because `V(dead) = 0` beats any future stream of negative reward. Drive
-reduction does not do this, because its terminal transition charges the agent
-its entire remaining deviation — **DR gets death aversion for free, as an
-accounting consequence of the telescoping sum.** A survival bonus of
-`ρ ≥ 0.70 × max_h d(h)` per step makes CC agree with DR again; below that, CC is
-a suicide machine.
+**(d) THE RESULT THAT DECIDES THE REWARD FORM: with death in the world, the
+equivalence breaks, and drive reduction is the *unique* self-termination-safe
+member of the family.**
 
-This is **not** a new observation, and it should not be presented as one. Martin,
-Everitt & Hutter, "Death and Suicide in Universal Artificial Intelligence"
-(AGI 2016, arXiv **1606.00652**) **[V]** formalise death as an absorbing state
-pinned at reward 0 and prove the consequence exactly: agent behaviour "can change
-radically under positive linear transformations of the reward signal (**from
-suicidal to dogmatically self-preserving**)". Rewards in `[0,1]` make death the
-worst outcome; rewards in `[−1,0]` — a pure cost of living — make death optimal.
-The affine transform that is a no-op in a standard MDP flips the behaviour,
-because the value of the absorbing state does not transform with the rest.
-`ρ > max_h d(h)` is precisely the shift that moves the reward range from
-`[−max d, 0]` to `[0, ...]`. **[⚠] No canonical empirical deep-RL paper carries
-this as a headline result** — it is one theory paper plus folklore, which is why
-`NE.00(d)` measures it here rather than citing it and moving on.
+Add a reachable absorbing death state. Potential-based shaping requires
+`Φ(terminal) = 0` (Grześ, "Reward Shaping in Episodic Reinforcement Learning",
+AAMAS 2017) **[V]**. But **death happens at maximum deviation**, so
+`Φ(death) = −d(h_death) ≠ 0`, the precondition fails, and the two forms — which
+were the same objective one paragraph ago — **diverge completely**. Measured by
+exact value iteration on an 11-state drive MDP:
 
-**Consequences for the build, all four of them concrete:**
+| reward form | states where **suicide is strictly optimal** |
+|---|---|
+| constant cost of living (`r = −k`) | **11 / 11** |
+| cost of deviation (`r = −(1−γ)·d(h')`) | **8 / 11** |
+| **drive reduction (`r = d(h) − d(h')`)** | **0 / 11** |
+
+In the death-free MDP the same two forms are PBRS-equivalent to machine
+precision — identical optimal policies, and a value difference equal to exactly
+`d`, which is the potential. **The mechanism of the asymmetry:** under drive
+reduction the potential is *fully paid back on the way home*, so the only way to
+collect is to return to setpoint; dying banks the deficit permanently. Under a
+cost form the agent pays rent for being alive and death is the only way to stop
+paying. **DR gets death aversion for free, as an accounting consequence of the
+telescoping sum, and no other member of the family does.**
+
+For a design whose whole point is a death-and-retry loop, this is not a nuance —
+**it is the constraint.** Use the drive *difference*. Never a cost of living,
+never a cost of deviation.
+
+The formal precedent is Martin, Everitt & Hutter, "Death and Suicide in Universal
+Artificial Intelligence" (AGI 2016, arXiv **1606.00652**) **[V]**: agent behaviour
+"can change radically under positive linear transformations of the reward signal
+(**from suicidal to dogmatically self-preserving**)". Rewards in `[0,1]` make
+death the worst outcome; rewards in `[−1,0]` make it optimal — an affine shift
+that is a no-op in a standard MDP flips the behaviour, because the absorbing
+state's value does not transform with the rest. A survival bonus
+`ρ > max_h d(h)` is exactly that shift, and it is why `cc+ρ` is survivable while
+`cc` is not.
+
+**The specific framing — that PBRS equivalence between drive-difference and
+cost-of-deviation *breaks under termination because death occurs at maximum
+potential* — appears to be original to this project.** Martin et al. give the
+affine-shift result; Grześ gives the terminal-potential requirement; this is the
+composition of the two, applied to homeostatic rewards, and the survey found no
+paper stating it. It should be written up as such and not smuggled in as
+background.
+
+**(e) A drive reward is safe if and only if it is an exact difference of a state
+potential — and the field ships violations.** `NetHackEat`'s reward is
+`max(0, Δnutrition)` **[V]**: decay is free, eating pays the full delta, so a
+deplete-and-eat cycle is **net positive** — a genuine farming exploit shipped
+inside a NeurIPS benchmark task. That is PS §2.6(iii)'s predicted pathology,
+existing exactly where PS did not look: not in the drive-reduction form, but in
+**clipped, floored or one-sided variants of it**. The rule follows directly:
+
+> **Never clip, floor, rectify or one-side a drive reward.** `max(0, ·)`,
+> `relu`, "only reward improvements", "ignore small decreases" and per-need
+> asymmetric weighting all break the telescoping identity and reintroduce
+> farming. If the reward is not exactly `Φ(s) − Φ(s')` for a state potential
+> `Φ`, it is farmable, and the burden is on the implementer to show the
+> potential.
+
+`NE.00` therefore carries a fifth prediction and `NE.03` a static audit: the
+reward path must be expressible as an exact potential difference, and a
+`max(0, ...)` anywhere in it is **ERROR**, not FAIL.
+
+**(f) `γ < 1` is not a hyperparameter here — it is the anti-self-depletion
+mechanism.** Undiscounted, drive reduction telescopes and any deplete-then-
+restore excursion nets exactly zero (result (b)); it is *indifferent* to
+self-depletion, not opposed to it. Discounting is what makes the indifference
+strict:
+
+```
+SDR  =  D_0  +  (γ − 1)·SDD          with γ < 1, (γ−1) < 0
+```
+
+so maximising discounted drive-reduction return **strictly minimises the sum of
+discounted deviations**. That is K&G's theorem in one line, and it means the
+discount factor carries a safety property. **`γ = 1` is not an option in this
+design**, and a spec that anneals γ toward 1 for stability is annealing away the
+thing that forbids self-harm.
+
+**Consequences for the build, six of them concrete:**
 
 1. **Plain Keramati–Gutkin drive reduction is the default need reward** (§2.6),
-   and it is the default *because it is the one that cannot be farmed and does
-   not need a hand-tuned death penalty*, not because it is the literature's form.
-2. **Any constant-cost arm must declare its survival bonus `ρ` and prove
-   `ρ > max_h d(h)`** before it is allowed to run, or it will learn to die and
-   the run will be recorded as a needs failure when it is a reward-design bug.
-3. **`PS.00`'s prediction (c) must be rewritten before `PS` is committed to the
+   and it is the default *because it is the unique self-termination-safe member
+   of the family*, not because it is the literature's form. A death-loop design
+   has essentially no freedom here.
+2. **No explicit death penalty.** Death is plain termination, following Crafter
+   and NLE. Risk aversion already comes from the `n > m` geometry of `d(h)`, and
+   the terminal deficit is already charged by the telescoping sum. An added
+   penalty `K` would be a hand-tuned constant duplicating something the form
+   supplies for free — and `NE.00`'s numbers say what it would cost to get wrong.
+3. **Any cost-form arm must declare its survival bonus `ρ` and prove
+   `ρ > max_h d(h)` before it runs**, or it will learn to die and the run will be
+   recorded as a needs failure when it is a reward-design bug.
+4. **Never clip, floor or one-side the drive reward** — result (e). A static
+   audit for `max(0, ...)` in the reward path, and the burden of exhibiting the
+   potential.
+5. **`PS.00`'s prediction (c) must be rewritten before `PS` is committed to the
    registry**, or the ladder will pre-register a false prediction and then FAIL a
    spec for being right. `PS.02`'s cycling detector keeps its place but loses its
    theorem: it now guards a *learning-dynamics transient* (a partially-fit value
-   function can transiently prefer a cycle), which is a weaker and honest claim,
-   and its positive control must be a hand-coded oscillator rather than "the
-   derived optimum".
-4. **The `EAT`-style reward — a bounded `+1` per consumption event — is the one
-   that is genuinely farmable**, and it is what a careless implementation of a
-   need reward looks like. Measured: it produces a different (worse, always-
-   forage) policy at every γ. It enters NE.04 as a **control that must fail**,
-   which is a better use of it than a footnote.
+   function can transiently prefer a cycle) **and the clipped-reward family of
+   (e)**, which is a real target — that is a weaker and honest claim, and its
+   positive control must be a hand-coded oscillator plus a `max(0, ·)` reward,
+   not "the derived optimum".
+6. **The `EAT`-style reward — `+1` per consumption event — is genuinely
+   farmable**, and it is what a careless implementation looks like. Measured: it
+   produces a different (worse, always-forage) policy at every γ. It enters as a
+   **control that must fail**, alongside `NetHackEat`'s shipped `max(0, ·)` as
+   the real-world instance.
 
 This is the strongest single argument for the homeostatic form over the obvious
 alternative, and it applies most sharply to the social need: **a bounded need
@@ -229,10 +315,23 @@ and the **reward** of an outcome `K_t` is the **reduction in drive it causes**:
 r(H_t, K_t) = D(H_t) − D(H_t + K_t)
 ```
 
-with the free parameters constrained to **`n > m > 1`**, which is what makes the
-reward concave in the outcome and is required for their dose-dependence,
+**The constraint is `n > m ≥ 1` (equivalently `n/m > 1`)**, and it is what makes
+the reward concave in the outcome and delivers their dose-dependence,
 deprivation-sensitivity and risk-aversion results. For `m = n = 1` the drive
 degenerates to Euclidean distance.
+
+> **⚠ TWO OF THE THREE AVAILABLE SOURCES MISPRINT THIS INEQUALITY, AND THE
+> MISPRINT IS DANGEROUS.** Verified numerically in this pass: the eLife 2014 text
+> is correct; the **NIPS 2011 paper writes `m > n > 2`** and the **2025 CoBS
+> review's Math Box writes `m > n > 1`** — both with the inequality **reversed**.
+> Implementing from either as written builds an agent in which **deprivation
+> *reduces* the reward of eating** and which is therefore **risk-seeking** over
+> physiological outcomes: the exact opposite of the behaviour the theory is famous
+> for predicting. **Cite eLife 2014, and check the direction of the inequality
+> against a two-line numerical test before implementing.** `NE.00` carries that
+> test. This is the second time in this document that a load-bearing claim has
+> been wrong in a secondary source and right in the primary one (§0.2 is the
+> first), which is a pattern worth naming — see §10.
 
 **Their central theorem is the one this document leans on hardest**, and it is
 quoted in §0.2: *"if γ < 1: `argmin_π SDD_π(H₀) = argmax_π SDR_π(H₀)`"* — under
@@ -246,8 +345,42 @@ source.
 Their behavioural predictions — anticipatory responding, rise-then-satiation
 consumption patterns, risk aversion over uncertain rewards, and the
 dose-dependence of drug reward — all follow from the *non-linear* mapping between
-physiology and motivation, i.e. from `n > m > 1`. A linear drive predicts none of
-them.
+physiology and motivation, i.e. from `n > m`. A linear drive predicts none of
+them, and a *reversed* one predicts their opposites.
+
+**The termination result that decides the reward form.** Grześ, "Reward Shaping
+in Episodic Reinforcement Learning" (AAMAS 2017) **[V]** establishes the
+requirement that makes §0.2(d) work: potential-based shaping preserves the
+optimal policy in an episodic task **only if `Φ(terminal) = 0`**. Homeostatic
+death violates it by construction, because **death happens at maximum
+deviation**, so `Φ(death) = −d(h_death)` is as far from zero as it can be. The
+composition — *drive-difference and cost-of-deviation are PBRS-equivalent until
+you add death, and then only the drive-difference form is self-termination-safe*
+— **appears to be original to this project** and is written up in §0.2(d).
+
+**The truncation trap, which is a bug and not a theory.** Pardo, Tavakoli,
+Levdik & Kormushev, "Time Limits in Reinforcement Learning" (ICML 2018) **[V]**:
+a life that ends because the *budget* ran out must **bootstrap `V(s_T)`**, while
+a life that ends in death must not. Conflate them and the agent learns that dying
+is fine, because half the terminations it saw were free. Crafter ships this
+correctly (`info['discount'] = 1 − float(dead)`); `NE.08` must, since censored
+lives are a designed part of its protocol (§5.4).
+
+**Multiple needs: modules or a scalar?** Dulberg et al. (PNAS 2023) **[⚠]** report
+that **beyond roughly three needs, per-drive Q-modules beat scalarisation**. This
+design has seven, which makes `dr-modular` a live threat to the single-`d(h)`
+architecture rather than a §9 footnote. And Yoshida (PNAS Nexus 2024) **[⚠]** —
+homeostatic PPO on MuJoCo, **the closest published cousin to this whole design**
+and apparently the only prior agent coupling temperature to metabolic drain —
+normalises needs to a common bounded range with weights summing to a constant,
+which §2.6 adopts.
+
+**A shipped farming exploit, in a NeurIPS benchmark.** `NetHackEat`'s reward is
+`max(0, Δnutrition)` **[V]**. Decay is free; eating pays the full delta; so
+deplete-and-eat cycles are net positive. This is the pathology PS §2.6(iii)
+predicted, existing not in the plain drive-reduction form but in a **clipped**
+one — see §0.2(e) and the resulting rule: *a drive reward is safe iff it is an
+exact difference of a state potential.*
 
 **The suicide result, and its mirror.** Martin, Everitt & Hutter, "Death and
 Suicide in Universal Artificial Intelligence", AGI 2016, arXiv **1606.00652**
@@ -326,24 +459,30 @@ reproducing a known result. It is running the experiment the field skipped.**
 ### 1.2 Biology as the reference implementation — **CITATIONS NOT YET VERIFIED**
 
 > **READ THIS BEFORE USING ANYTHING IN THIS SUBSECTION.** The session's
-> web-search budget (200 calls) was exhausted before the biology sweep completed.
-> Every entry below is the *mechanism* the design mirrors together with the
-> source this document believes is primary — but **none of these were fetched and
-> read in this pass**, so every one is **[⚠]**. The design in §2.1b, §2.9, §2.10
-> and §3.0 does not depend on any *number* from this subsection, and the two
-> places where a biological number does enter the build — the thermal lethal
-> bounds of 28 °C and 42 °C, and the Borbély time-constant ratio of ≈4.4 : 1 —
-> are **flagged in place** and must be verified before `NE.01` fixes them.
+> web-search budget (200 calls) was exhausted before the biology sweep finished
+> fetching. A second sweep **did** return corrections, which are folded in below
+> and in the design — but **the primary sources were still not fetched and read
+> in this pass**, so no row is **[V]**. The one place where a biological number
+> enters the build and is still open is the **Borbély time-constant ratio
+> (≈4.4 : 1)**, which sets `τ_wake` and `τ_sleep`; it is flagged in place.
 > **The first job of the next agent on this document is to close this table.**
+>
+> **Four corrections the second sweep already forced, all now applied:** the
+> thermal bounds are **asymmetric** and the 42 °C ceiling is withdrawn; human
+> dehydration is **days to ~2 weeks**, not 3 days; sleep-deprivation lethality is
+> **rat-only**; and the synaptic-downscaling ↔ plasticity-loss link **does not
+> exist in the literature** and is this project's own analogy. Three of those four
+> were errors in an earlier draft of this document, which is the argument for
+> keeping this table visible rather than deleting it once it looks tidy.
 
 | what the design uses it for | mechanism | believed primary source | status |
 |---|---|---|---|
 | the need vector in the observation (§2.4b) | **interoception** — afferent sensing of bodily state and its role in motivated behaviour; interoceptive predictive coding | Craig, "How do you feel?" (Nat Rev Neurosci 2002; and 2009); Barrett & Simmons, "Interoceptive predictive coding" (2015); Seth on interoceptive inference | **[⚠]** |
 | the allostasis prediction (§2.1b) | **predictive** rather than reactive regulation — act before the deviation | Sterling & Eyer (1988); Sterling, "Allostasis: a model of predictive regulation" (2012) | **[⚠]** |
-| the allostasis *evidence* (§2.1b) | hypothalamic hunger and thirst neurons are **suppressed by the sight of food/water, before ingestion** | Chen, Lin, Kuo & Knight (Science 2015); Betley et al. (Nature 2015); Zimmerman et al. (Nature 2016) | **[⚠] exact PMIDs not resolved — two guesses returned unrelated papers, so no ID is recorded rather than a wrong one** |
+| the allostasis *evidence* (§2.1b) | AgRP (hunger) and SFO (thirst) neurons respond to **sensory cues seconds ahead of any blood-chemistry change** — anticipatory regulation at single-neuron resolution | **Chen et al., *Cell* 2015**; **Zimmerman et al., *Nature* 2016** | **partially resolved — journals corrected (Cell, not Science). [⚠] full author lists / DOIs still to be recorded.** |
 | energy's set-point form (§2.1b) | arcuate nucleus AgRP/NPY vs POMC; ghrelin (fast) and leptin (slow) | standard hypothalamic-feeding literature | **[⚠]** |
 | water's set-point form | circumventricular organs — SFO and OVLT — sensing plasma osmolality | standard osmoregulation literature | **[⚠]** |
-| **the thermal lethal bounds, 28 °C / 42 °C** (§2.5) | severe hypothermia below ~28 °C (Swiss staging); heat stroke above ~40 °C, upper survivable limit ~42–43 °C | clinical review needed | **[⚠] LOAD-BEARING — this is a design constant, not a background fact. Verify before `NE.01`.** |
+| **the thermal lethal bounds** (§2.5) | **ASYMMETRIC: ~9 °C survivable downward, ~3 °C upward.** Severe hypothermia below ~28 °C; heat stroke above ~40 °C. **The ~42 °C ceiling an earlier draft used is UNVERIFIED and has been withdrawn.** | hypothermia staging: **Durrer 2003; Paal 2016**. Heat stroke: **Bouchama 2022** | **corrected, sources named, [⚠] not yet fetched. LOAD-BEARING — verify before `NE.01` fixes the constants.** |
 | **the sleep time-constant ratio ≈4.4 : 1** (§2.3) | Borbély two-process model; process S rises with τ ≈ 18.2 h and decays with τ ≈ 4.2 h | Borbély (1982) and the two-process literature | **[⚠] LOAD-BEARING — §2.3's `τ_wake = 700 s`, `τ_sleep = 160 s` is this ratio, compressed.** |
 | the pain/reward split (§2.9) | nociception as a separate, fast, unconditioned channel (A-δ and C fibres → spinothalamic → thalamus/amygdala/PAG) that **sensitises rather than habituating**; opponent-process accounts of affect | Solomon & Corbit, opponent-process theory (1974); Daw, Kakade & Dayan on opponent serotonin/dopamine interactions (2002) | **[⚠]** |
 | the reflex set (§2.10) | palmar grasp, Moro, stepping, nociceptive withdrawal, righting and parachute reactions as innate scaffolds that are progressively suppressed | developmental-neurology literature | **[⚠] — and the specific claim "innate reflex priors ACCELERATE later learning" was NOT verified in animals or robots. §2.10 is written as a bakeoff arm precisely because this is unverified.** |
@@ -351,8 +490,8 @@ reproducing a known result. It is running the experiment the field skipped.**
 | the diary/weights split (§3.0) | **complementary learning systems** — fast hippocampus, slow neocortex, interleaved replay | McClelland, McNaughton & O'Reilly (Psychological Review, 1995) | **[⚠] — but `ME.10` PASSES on this box and is the operational evidence; the citation is for the framing, not for the result.** |
 | sleep replay (§3.0) | hippocampal sharp-wave ripples during slow-wave sleep replaying recent sequences to neocortex | standard systems-consolidation literature | **[⚠]** |
 | synaptic downscaling (§3.4 S4, `NE.06`) | **synaptic homeostasis hypothesis** — sleep downscales synaptic strength | Tononi & Cirelli (2003; 2014) | **[⚠]** |
-| the ML twin of downscaling (`NE.06`) | shrink-and-perturb; loss of plasticity in continual learning; dormant-unit recycling | Ash & Adams (2020); Dohare et al., *Nature* (2024); Sokar et al., ReDo (2023) | **[⚠] — the *identity* between synaptic downscaling and shrink-and-perturb is this document's claim, not a published one, and `NE.06` tests it rather than assuming it.** |
-| the compressed lethal timescales (§2.3) | dehydration ~3 days; starvation ~3 weeks (Minnesota Starvation Experiment); longest documented voluntary sleep deprivation ~11 days without death (Randy Gardner); total sleep deprivation lethal in rats (Rechtschaffen) | as named | **[⚠] — these set the *ordering* in §2.3's table, which is the part that matters; none is used as a precise constant.** |
+| the ML twin of downscaling (`NE.06`) | shrink-and-perturb; loss of plasticity in continual learning; dormant-unit recycling | Ash & Adams (2020); Dohare et al., *Nature* (2024); Sokar et al., ReDo (2023) | **the individual sources are real; THE LINK IS NOT. The survey searched and found no paper connecting synaptic homeostasis to the plasticity-loss literature. The identity is ORIGINATED IN THIS DOCUMENT and `NE.06` tests it. It must never be cited as literature.** |
+| the compressed lethal timescales (§2.3) | dehydration **days to ~2 weeks** — the "~3 days" figure is folklore and has been removed; starvation ~3 weeks (Minnesota Starvation Experiment); sleep-deprivation lethality is **rat-only** (Everson 1989, death at 11–32 days), human record **264 h with full recovery** | dehydration: **Ganzini 2003, NEJM**; the rest as named | **corrected in place; [⚠] not fetched. These set the *ordering* in §2.3, which is the part that matters — and one of them (thirst) is now explicitly a RANGE, so §2.3 no longer states a compression ratio for it.** |
 
 **One verified biology-adjacent result carried from §1.1**: metabolic/effort cost
 is standard in neuromechanical locomotion simulation (Song et al., *JNER* 18:126,
@@ -607,13 +746,19 @@ question the field has not answered in a control setting.
 
 ### 1.7 The one-line summary of the field
 
-**The homeostatic reward form is settled theory and unsettled practice.**
-Keramati & Gutkin proved in 2014 that maximising discounted drive reduction *is*
-minimising discounted deviation from setpoint, so the form needs no anti-farming
-patch and no hand-written stability term; but the deep-RL implementations are
-few, the multi-need scaling question is open (MO-MPO vs a single scalar), and the
-reward-design literature's own finding is that experts misdesign these rewards
-even when the unshaped version is learnable.
+**The homeostatic reward form is settled theory, unsettled practice, and — once
+you add death — not a free choice at all.** Keramati & Gutkin proved in 2014 that
+maximising discounted drive reduction *is* minimising discounted deviation from
+setpoint, so the form needs no anti-farming patch and no hand-written stability
+term. But that equivalence holds only while nothing terminates: PBRS requires
+`Φ(terminal) = 0`, homeostatic death happens at maximum deviation, and the forms
+diverge into a self-preserving one and two suicidal ones. Meanwhile the practice
+is thin and error-prone — few deep-RL implementations, an open multi-need scaling
+question (per-drive modules vs a single scalar), a reward-design literature whose
+own finding is that *experts misdesign these rewards even when the unshaped
+version is learnable*, a farmable clipped reward shipped inside a NeurIPS
+benchmark, and the defining inequality misprinted in two of its three available
+statements.
 
 **Needs-plus-death worlds are standard and nobody has ablated the needs.**
 Crafter and NetHack both ship metabolic drives and permadeath, and neither has an
@@ -726,14 +871,26 @@ Normalised deviations, all in `[0,1]`:
 
 ```
 δ_e = 1 − e      δ_w = 1 − w      δ_p = p
-δ_T = min(1, |T − 37| / 5)        δ_f = f      δ_c = 1 − c      δ_i = 1 − i
+δ_f = f      δ_c = 1 − c      δ_i = 1 − i
+
+δ_T = min(1, max(0, 37 − T) / 6)      if cold        ── ASYMMETRIC, on purpose
+    = min(1, max(0, T − 37) / 2)      if hot
 ```
 
-`δ_T`'s divisor of 5 °C is the *comfort* half-width, not the lethal one: at
-±5 °C the temperature term already saturates the drive, so the agent feels
-maximum thermal urgency long before the lethal bounds at 28/42 °C. That gap —
-saturated urgency at 32 °C, death at 28 °C — is the margin in which a policy can
-learn. A drive that saturates only at death gives no gradient while dying.
+**`δ_T` is asymmetric because human thermal tolerance is asymmetric, and an
+earlier draft of this document got it wrong.** Humans survive roughly **9 °C of
+cooling** (severe hypothermia is classified below ~28 °C) but only about **3 °C
+of warming** (heat stroke above ~40 °C). A symmetric `|T − 37| / 5` would have
+made overheating feel survivable until it was lethal. The divisors are the
+*comfort* half-widths, scaled to the lethal margins: the drive saturates at
+**31 °C** (3 °C of margin before death at 28 °C) and at **39 °C** (1 °C before
+death at 40 °C). That margin is where a policy can learn — a drive that saturates
+only at death gives no gradient while dying.
+
+> **[⚠] The 42 °C ceiling that appeared in an earlier draft has been REMOVED as
+> unverified.** The upper bound is **40 °C**, from the heat-stroke threshold.
+> Sources to close in §1.2: hypothermia staging (Durrer 2003; Paal 2016),
+> heat stroke (Bouchama 2022).
 
 **The whole suite on one page.** Every column below is specified in §2.3–§2.6;
 this table exists so the design can be argued with without reading them.
@@ -743,7 +900,7 @@ this table exists so the design can be argued with without reading them.
 | **`e` energy** | `−(M/M_basal)·b_e`, `b_e = 1/1800 s⁻¹` | a **physical consumption event** (mouth geom contacts food, food teleports out, respawn timer starts) | **cold triples the drain** via shivering; low `e` lowers `M`, so starving makes you colder | `e` | `λ_e = 1.0`, `δ_e = 1−e` | `e = 0` for **300 s** | clamp at setpoint, remove food from the world. `t_food` and the forage/explore interleave must collapse. |
 | **`w` water** | `−(1 + c_sw·max(0,T−37))·b_w`, `b_w = 1/450 s⁻¹` | a drinking event at the pool | **heat doubles the drain** via sweating; sweating is also how you shed heat | `w` | `λ_w = 1.0`, `δ_w = 1−w` | `w = 0` for **120 s** | clamp; the pool reverts to hazard-only. `t_water` must collapse. |
 | **`p` sleep** | `p ← p + (1−p)(1−e^{−Δt/700})` awake | sleeping: `p ← p·e^{−Δt/160}` | high `p` → **microsleeps** → falls; sleep is when consolidation runs | `p` | `λ_p = 0.5`, `δ_p = p` | **none directly** — indirect via microsleep, and the indirection is measured (`deaths_with_microsleep_within_10s`) | cannot be ablated fairly in `NE.02` (it also removes the consolidation trigger); its ablation is `NE.05`'s `timer` arm |
-| **`T` temperature** | `C_eff·Ṫ = M − k_eff(T−T_env) − E_evap` | shivering, activity, **shelter** (`sky_occlusion` cuts `k_eff` by up to 70 %), leaving the water, daylight | **the hub**: wet skin multiplies heat loss, night drops `T_env`, cold burns energy, heat burns water | `T_norm`, **signed** | `λ_T = 1.0`, `δ_T = min(1,\|T−37\|/5)` | `T ≤ 28` or `T ≥ 42` for **20 s** | clamp; shelter behaviour and `sky_occlusion_at_sleep_onset` must collapse. **The only mechanism that teaches construction.** |
+| **`T` temperature** | `C_eff·Ṫ = M − k_eff(T−T_env) − E_evap` | shivering, activity, **shelter** (`sky_occlusion` cuts `k_eff` by up to 70 %), leaving the water, daylight | **the hub**: wet skin multiplies heat loss, night drops `T_env`, cold burns energy, heat burns water | `T_norm`, **signed** | `λ_T = 1.0`, `δ_T` **asymmetric**: `(37−T)/6` cold, `(T−37)/2` hot | `T ≤ 28` or `T ≥ 40` for **20 s** — asymmetric, ~9 °C down vs ~3 °C up | clamp; shelter behaviour and `sky_occlusion_at_sleep_onset` must collapse. **The only mechanism that teaches construction.** |
 | **`f` fatigue** | `ḟ = P_mech/(P_max·τ_rise) − f/60` | resting (~60 s), and sleep sets `f → 0` | scales `gear_scale`; low `f` means more `P_mech`, which warms you | `f` | `λ_f = 0.3`, `δ_f = f` | none | **the sharpest deletion test**: clamp `f=0`, rescale `κ_act` to match total energy drain. If within-bout pacing is unchanged, fatigue was a slow duplicate of energy. |
 | **`c` social** | `−b_c`, `b_c = 1/3600 s⁻¹` | proximity, **reciprocated** conversation, being helped, helping — each a **recorded diary event**, each with within-bout decay `β = 0.6` | **none physical** — an empty row in §2.4, which is why it must earn its place behaviourally | `c` | `λ_c = 0.3`, `δ_c = 1−c` | none | clamp; `approach_lift` must fall to the placebo column. The companion angle then survives as language only (§6). |
 | **`i` integrity** | impact impulse above `J₀`, drowning, `\|T−37\| > 5` | heals at `1/900 s⁻¹` while at rest | weakness floor on `gear_scale`; injury → falls → more injury | `i` **and** `pain` (phasic) | `λ_i = 1.0`, `δ_i = 1−i`; §2.9 asks whether the phasic part should be a **separate channel** | `i = 0`, **immediate** | clamp; caution near the ladder and pool must vanish. PS §2.1 argued this is the only variable supplying *a cost of failing*, so this is the most consequential deletion available. |
@@ -765,9 +922,9 @@ suite preserves the **ordering** of human timescales and compresses the
 | need | human, at rest | here (sim-seconds) | compression | note |
 |---|---|---|---|---|
 | fatigue | minutes | `τ_f` = 60 s recovery | ~1× | fastest by design |
-| temperature | hours (wet/cold: <1 h) | `τ_T` = 240 s | ~50× | **deliberately over-weighted** |
+| temperature | hours (wet/cold: <1 h) | `τ_T` = 240 s | ~50× | **deliberately over-weighted**, and **asymmetric**: ~9 °C of survivable cooling vs ~3 °C of warming |
 | sleep | ~16 h awake | `τ_wake` = 700 s, `τ_sleep` = 160 s | ~80× | ratio 4.4 : 1, intended to match Borbély's ≈18.2 h / ≈4.2 h — **[⚠] §1.2: that ratio was not verified this pass and is load-bearing for these two constants** |
-| thirst | ~3 days | 450 s to empty | ~600× | ~3 drinks per sim-day |
+| thirst | **days to ~2 weeks** — the "3 days" rule is folklore (Ganzini 2003, NEJM, on voluntary refusal of food and fluids) | 450 s to empty | — | ~3 drinks per sim-day. The compression ratio is **not stated**, because the human figure is a range, not a number. |
 | hunger | ~3 weeks | 1,800 s to empty | ~1,000× | ~1 meal per 1.5 sim-days |
 | social | no lethal bound | 3,600 s to empty | — | 3 sim-days of solitude to bottom out |
 | integrity | event-driven | heal `τ_i` = 900 s | — | inherited from PS §2.2 |
@@ -911,7 +1068,9 @@ obs = concat( humanoid_obs(model, data),        # 348, from playground.py, UNMOD
                 d(h),                           # the scalar drive        (1)
                 pain ] )                        # rectified max(0, -Δi)   (1)
 
-NEED_DIM = 9        T_norm = (T − 37) / 5, signed and clipped to [−1, 1]
+NEED_DIM = 9        T_norm = signed, asymmetric: (T−37)/6 if cold, (T−37)/2 if
+                    hot, clipped to [−1, 1] — the same scaling as δ_T so the
+                    policy's input and the drive's term agree
 ```
 
 Five decisions, each with a reason and four of them paid for by something that
@@ -954,18 +1113,24 @@ rather than claimed as realism.
 ```
 starvation     e = 0 continuously for 300 s
 dehydration    w = 0 continuously for 120 s
-hypothermia    T <= 28 C for 20 s          <- [!] see 1.2: NOT VERIFIED this pass
-hyperthermia   T >= 42 C for 20 s          <- [!] and both are DESIGN CONSTANTS
+hypothermia    T <= 28 C for 20 s     severe-hypothermia staging, ~9 C of margin
+hyperthermia   T >= 40 C for 20 s     heat-stroke threshold, ~3 C of margin
+                                      ASYMMETRIC. An earlier draft used 42 C
+                                      symmetric-ish; that ceiling was unverified
+                                      and is withdrawn. [!] close 1.2 before NE.01
 injury         i = 0                                    (immediate)
 drowning       head geom submerged > 20 s               (routed through i)
 sleep          NO DIRECT DEATH CONDITION
 social         NO DIRECT DEATH CONDITION
 ```
 
-**Sleep has no lethal bound and that is a considered decision.** Total sleep
-deprivation is lethal in rats over weeks (Rechtschaffen) and has never killed a
-human volunteer; adding a lethal bound would mean inventing a number no source
-supports. Instead sleep kills *indirectly and legibly*: at `p ≥ 0.98` the
+**Sleep has no lethal bound and that is a considered decision — and the biology
+is more one-sided than an earlier draft of this section allowed.** Total sleep
+deprivation is lethal **in rats** (Everson et al. 1989: death at 11–32 days), and
+the species gap is not a detail: the longest documented human deprivation is
+**264 hours with full recovery**. There is no human lethal threshold to compress,
+so a lethal bound here would be a number invented and then dressed as
+physiology. Instead sleep kills *indirectly and legibly*: at `p ≥ 0.98` the
 policy's action output is zeroed for 1–2 s with rising probability (a microsleep),
 and a microsleep on a ladder is a fall. Every death record carries
 `microsleep_within_10s`, so **the indirect lethality of sleep debt is a measured
@@ -984,7 +1149,7 @@ agent must be able to be in trouble, notice, and act. 300 s of starvation is
 r_t = [ d(h_t) − d(h_{t+1}) ]  +  ρ · alive_t
 
 d(h) = ( Σ_k λ_k · δ_k^n )^{1/m}        n = 4, m = 2 (calibrated by NE.01)
-                                        CONSTRAINT: n > m > 1, from Keramati &
+                                        CONSTRAINT: n > m >= 1, from Keramati &
                                         Gutkin — it is what makes the reward
                                         concave in the outcome, and it is what
                                         their dose-dependence, deprivation-
@@ -992,9 +1157,34 @@ d(h) = ( Σ_k λ_k · δ_k^n )^{1/m}        n = 4, m = 2 (calibrated by NE.01)
                                         require. n = 4, m = 2 satisfies it;
                                         NE.01 may retune INSIDE the constraint
                                         and may not leave it.
-λ = (e 1.0, w 1.0, p 0.5, T 1.0, f 0.3, c 0.3, i 1.0)
+λ = (e 1.0, w 1.0, p 0.5, T 1.0, f 0.3, c 0.3, i 1.0)   Σλ = 5.1, HELD CONSTANT
 ρ = 1 / 6000  per decision   ≡  "one unit per sim-day survived"
+gamma < 1, ALWAYS                       not a hyperparameter — §0.2(f)
+death = plain termination, NO penalty   §0.2 consequence 2
 ```
+
+**Three constraints on this form that are not free parameters:**
+
+- **`Σλ` is held constant** and every `δ_k` is normalised to `[0,1]`. Yoshida's
+  homeostatic PPO+MuJoCo agent (PNAS Nexus 2024) — the closest published cousin
+  to this design, and the only prior agent this survey found that couples
+  temperature to metabolic drain — normalises needs to a common bounded range
+  with weights summing to a constant **[⚠ second-hand]**. `NE.02`'s ablation
+  rescaling exists to preserve it: an ablation that also changes `max_h d(h)` is
+  measuring the reward scale, not the need.
+- **`γ < 1` is load-bearing** (§0.2(f)). Annealing γ toward 1 for stability
+  anneals away the property that forbids self-depletion.
+- **No `max(0, ·)` anywhere in the reward path** (§0.2(e)). Statically audited;
+  a match is ERROR.
+
+**And one open question the survey turned into a real alternative.** Dulberg et
+al. (PNAS 2023) report that **beyond about three needs, per-drive Q-modules beat
+scalarisation** **[⚠ second-hand]**. This design has *seven*. Collapsing them into
+one scalar `d(h)` asserts they are commensurable and substitutable, which is a
+strong claim and may simply be wrong at this count. So `dr-modular` — one value
+head per need, actions chosen by summing per-need Q-values — enters `NE.03` as a
+candidate arm rather than sitting in §9 as a caveat. It is the single most
+likely way the scalar design loses.
 
 `ρ` exists for one reason and it is arithmetic, not philosophy. Drive reduction
 telescopes (§0.2b), so the *entire lifetime return* of a pure-DR agent is
@@ -1014,11 +1204,14 @@ inherited unchanged.
 | `surv` | `+ρ` per step alive, nothing else | The simplest possible needs reward: needs enter only through **death**. If this wins, `d(h)` is unnecessary machinery and the whole drive function is deleted. The Crafter/NetHack shape. | credible winner; the honest threat to the homeostatic design |
 | `dr` | `d(h_t) − d(h_{t+1})`, `ρ = 0` | Keramati & Gutkin, literally. | learns; may be indifferent to longevity (§2.6's arithmetic) |
 | **`dr+surv`** | the default above | The favourite. | favourite |
+| `dr-modular` | drive reduction, **one value head per need**, actions from the summed per-need Q | Dulberg et al. (PNAS 2023): beyond ~3 needs, per-drive modules beat scalarisation. This design has 7. **The most likely way the single scalar `d(h)` loses.** | live threat to the scalar design |
 | `dr+surv+pain` | as above, but the phasic `max(0, −Δi)` is a **second channel with its own value head and a fixed normaliser** | §2.9. Biology separates nociception from appetitive reward; a running normaliser makes a folded pain term habituate as an implementation accident. | decides §2.9 |
 | `myopic` **(CONTROL)** | `dr+surv` at `γ → 0.5` | §2.1b's allostasis control: it must eat only when nearly empty. If it anticipates as much as the discounted agent, `anticipatory_consumption_fraction` is reading food availability, not foresight. | anticipates less |
-| `cc+ρ` | `−d(h_{t+1}) + ρ`, with `ρ > max_h d(h)` **asserted before the run** | Constant-cost, the other half of the §0.2(a) identity. Must declare and prove its `ρ` or it learns to die. | ties `dr+surv`; if it does, take the cheaper |
+| `cc+ρ` | `−(1−γ)·d(h_{t+1}) + ρ`, with `ρ > max_h d(h)` **asserted before the run** | Cost-of-deviation, the other half of the §0.2(a) identity, made survivable by an affine shift. It is here to show **what `ρ` has to buy**: the same policy DR gets for free, at the price of a constant nobody can defend. | ties `dr+surv`; if it does, DR still wins on having one fewer undefendable constant |
 | `eat` **(CONTROL, must fail)** | `+1` per consumption event, unbounded | The careless implementation. Measured in §0.2 to produce a different and worse policy at every γ. Must lose *and* must show the highest `drive_cycle_rate` of any arm. | fails |
-| `cc` **(CONTROL, must fail)** | `−d(h_{t+1})`, `ρ = 0` | The suicide machine of §0.2(d). Must show `median_lifespan < no-needs` and a death-cause distribution dominated by *voluntary* inaction. | fails, by dying |
+| `clip` **(CONTROL, must fail)** | `max(0, d(h_t) − d(h_{t+1}))` — **`NetHackEat`'s shipped reward** | §0.2(e). Decay free, restoration paid in full, so deplete-and-eat cycles are net positive. **This is PS's predicted farming pathology, existing in the clipped variant rather than the plain one.** Must lose *and* trip the cycling detector. | fails, by farming |
+| `cc` **(CONTROL, must fail)** | `−(1−γ)·d(h_{t+1})`, `ρ = 0` | The suicide machine of §0.2(d) — suicide strictly optimal in **8 of 11** states in the tabular case. Must show `median_lifespan < no-needs` and a death-cause distribution dominated by *voluntary* inaction. | fails, by dying |
+| `col` **(CONTROL, must fail)** | `−k` per step, a plain cost of living | §0.2(d)'s worst case: suicide strictly optimal in **11 of 11** states. The cheapest possible demonstration that the reward's *sign structure*, not its information content, decides whether an agent wants to live. | fails, by dying immediately |
 | `statue` **(CONTROL, must fail)** | do nothing | PS §5/G-B, inherited. Best integrity, worst everything, dies of starvation. | fails |
 | `shuffle` **(CONTROL, must fail)** | `dr+surv`'s reward stream shuffled in time | The critical null: same reward magnitude distribution, no need semantics. If it matches, the effect was "any dense reward". | fails |
 
@@ -1257,11 +1450,18 @@ was never wired up**.
 Two more biological anchors, each with a machine-learning twin:
 
 - **Synaptic homeostasis** (Tononi & Cirelli): waking potentiates synapses, sleep
-  **downscales** them, restoring capacity and signal-to-noise. Its machine-
-  learning twin is shrink-and-perturb, the standard intervention against loss of
-  plasticity in long-running networks. §3.4's stage S4 and `NE.06` treat these as
-  **the same operation**, which is a reason to test the identity, not to assume
-  it.
+  **downscales** them, restoring capacity and signal-to-noise.
+
+  > **⚠ THE LINK TO MACHINE LEARNING IS THIS PROJECT'S ANALOGY, NOT A CITATION.**
+  > The survey looked for it and it **does not exist in the literature**: nobody
+  > has connected synaptic downscaling to the continual-learning
+  > loss-of-plasticity line (shrink-and-perturb; dormant-unit recycling; the
+  > *Nature* 2024 plasticity-loss result). The observation that they are
+  > structurally the same operation — pull weights toward their initialisation,
+  > restore trainable capacity — **originates here**, and it is exactly the kind
+  > of claim that becomes a fake citation if it is repeated twice without this
+  > paragraph attached. `NE.06` tests it. Until `NE.06` runs, it is a hypothesis
+  > with a nice story, and the nice story is the dangerous part.
 - **Sleep replay in artificial networks** is an established, published
   intervention: unsupervised "sleep-like" replay reduces catastrophic forgetting
   in ANNs, and SIESTA's wake/sleep split is the engineering form — frozen
@@ -1384,9 +1584,11 @@ stage is free, already tested, and today nothing calls it on a schedule. Sleep
 is its schedule.**
 
 **S4 — synaptic downscaling (the plasticity stage).** Tononi & Cirelli's
-synaptic homeostasis hypothesis says sleep *downscales* synaptic strength;
-the continual-learning literature says shrink-and-perturb restores trainability
-in networks whose plasticity has died. **These are the same operation.**
+synaptic homeostasis hypothesis says sleep *downscales* synaptic strength; the
+continual-learning literature says shrink-and-perturb restores trainability in
+networks whose plasticity has died. **This document's claim is that these are
+the same operation — and that claim is ORIGINAL HERE, not borrowed** (§3.0). It
+is a hypothesis with a spec attached, not a result with a citation attached.
 
 ```
 w  ←  α·w + (1 − α)·w_init  +  σ·ε        α = 0.995, σ small, ε ~ N(0, I)
@@ -2029,15 +2231,23 @@ NOT_RUN. The needs suite's headline claims are runnable the day `NE.00` lands.
                     "strictly BELOW staying at setpoint, so drive reduction is "
                     "not farmable; (d) once DEATH is reachable the two forms "
                     "DIVERGE, because Phi(terminal) = -d(h_death) != 0 violates "
-                    "the PBRS precondition, and constant cost with no survival "
-                    "bonus makes SUICIDE optimal at the hungriest living states "
-                    "while drive reduction does not.",
-         falsified_by="Any of the four fails. (a) failing means the shaping "
+                    "the PBRS precondition (Grzes, AAMAS 2017) and death occurs "
+                    "at MAXIMUM deviation — suicide is strictly optimal in 11/11 "
+                    "states under a plain cost of living, 8/11 under cost of "
+                    "deviation, and 0/11 under drive reduction, making drive "
+                    "reduction the UNIQUE self-termination-safe member of the "
+                    "family; and (e) CLIPPING breaks it — r = max(0, d - d') "
+                    "(NetHackEat's shipped reward) makes deplete-and-eat cycles "
+                    "strictly net positive.",
+         falsified_by="Any of the five fails. (a) failing means the shaping "
                       "identity is mis-implemented. (b) or (c) failing means "
                       "PURPOSE_AND_SCAFFOLDING 2.6(iii) was right after all and "
                       "this document's central correction is wrong. (d) failing "
-                      "means the suicide pathology is not real and the survival "
-                      "bonus rho is unnecessary machinery.",
+                      "means the suicide pathology is not real, the survival "
+                      "bonus rho is unnecessary machinery, and the reward form is "
+                      "a free choice rather than the constraint section 0.2 says "
+                      "it is. (e) failing means clipped drive rewards are safe "
+                      "and the static audit in NE.03 is guarding nothing.",
          null_baseline="An MDP on which every reward form gives the SAME policy "
                        "proves nothing, so the MDP itself is the thing to "
                        "validate: the reference is a non-potential reward (+1 "
@@ -2072,7 +2282,23 @@ NOT_RUN. The needs suite's headline claims are runnable the day `NE.00` lands.
                "telescoping: max|return| = 0.0 over 2,000 random closed paths. "
                "With death reachable: CC(rho=0) rests at the two hungriest "
                "states (i.e. chooses to die); first agreement with DR at "
-               "rho = 0.70 x max_h d(h)."),
+               "rho = 0.70 x max_h d(h). INDEPENDENT REPLICATION on an 11-state "
+               "drive MDP: suicide strictly optimal in 11/11 states under a plain "
+               "cost of living, 8/11 under cost of deviation, 0/11 under drive "
+               "reduction; and in the death-free MDP those two forms are PBRS-"
+               "equivalent to machine precision with a value difference of exactly "
+               "d, which is the potential. "
+               "THIS SPEC ALSO ASSERTS THE DIRECTION OF THE m/n INEQUALITY, "
+               "because two of the three available sources misprint it: eLife "
+               "2014 gives n > m >= 1, while NIPS 2011 writes m > n > 2 and the "
+               "2025 CoBS review's Math Box writes m > n > 1 — both REVERSED. "
+               "Implementing from either as written builds a RISK-SEEKING agent "
+               "in which deprivation REDUCES the reward of eating, i.e. the exact "
+               "opposite of the theory's headline prediction. The check is two "
+               "lines (the reward of a fixed intake must be LARGER when more "
+               "deprived) and it is ERROR, not FAIL, when it trips — a reversed "
+               "inequality is an implementation defect, not a refuted "
+               "hypothesis."),
 
     Spec("NE.01", 2, "The needs are a real control problem: nobody survives by accident",
          hypothesis="With PG.8's body under RANDOM action in the playground, "
@@ -2178,7 +2404,7 @@ NOT_RUN. The needs suite's headline claims are runnable the day `NE.00` lands.
                        "secondary observable rather than a confound.",
          metric="competence_battery_needs_clamped", budget=Budget.CPU_LONG,
          depends_on=["NE.01", "NE.02", "PG.8"], seeds=3,
-         control="FOUR controls, each with a pre-registered FAILURE SIGNATURE, "
+         control="SIX controls, each with a pre-registered FAILURE SIGNATURE, "
                  "not merely a pre-registered side. `statue` (do nothing) must "
                  "score worst competence and die of starvation — the dark-room "
                  "objection as a number. `shuffle` (the winning arm's reward "
@@ -2186,17 +2412,36 @@ NOT_RUN. The needs suite's headline claims are runnable the day `NE.00` lands.
                  "semantics) must fail the gate, else the effect was 'any dense "
                  "reward'. `eat` (+1 per consumption event, unbounded) must lose "
                  "AND show the highest drive_cycle_rate of any arm — NE.00 "
-                 "measured it to be the genuinely farmable form. `cc` (constant "
-                 "cost, rho = 0) must fail BY DYING: median lifespan below the "
-                 "no-needs null, with a death-cause distribution dominated by "
-                 "voluntary inaction. A control that must fail in a SPECIFIC WAY "
-                 "is a stronger instrument than one that must merely fail.",
+                 "measured it to be a genuinely farmable form. `clip` "
+                 "(r = max(0, d - d'), which is NetHackEat's SHIPPED reward) must "
+                 "lose AND trip the cycling detector — it is the real-world "
+                 "instance of the farming pathology and the positive control for "
+                 "the static audit. `cc` (cost of deviation, rho = 0) and `col` "
+                 "(a plain cost of living) must BOTH fail BY DYING: median "
+                 "lifespan below the no-needs null, death-cause distribution "
+                 "dominated by voluntary inaction. The tabular case puts suicide "
+                 "strictly optimal in 8/11 and 11/11 states respectively, so this "
+                 "is a quantitative prediction, not a hope. A control that must "
+                 "fail in a SPECIFIC WAY is a stronger instrument than one that "
+                 "must merely fail.",
          kills="Nothing on its own — screening declares no winner (the T2.02 "
                "discipline; LT.03/PS.03 precedent). It exists so NE.04 "
                "arbitrates only among arms that demonstrably learned.",
-         notes="ARMS: no-needs (NULL), surv (+rho alive only), dr (Keramati & "
-               "Gutkin, rho=0), dr+surv (the favourite), cc+rho (rho > max_h d(h) "
-               "ASSERTED BEFORE THE RUN or the arm learns to die — NE.00(d)), and "
+         notes="STATIC AUDIT, ERROR NOT FAIL: the reward path must be expressible "
+               "as an EXACT difference of a state potential. Any max(0, ...), "
+               "relu, floor, clip or one-sided term in it sets "
+               "reward_is_exact_potential_difference = 0 and the spec is ERROR — "
+               "NetHackEat's max(0, delta_nutrition) is a shipped farming exploit "
+               "in a NeurIPS benchmark and this is the guard that makes it "
+               "impossible here (section 0.2(e)). Runs alongside LT's G1 symbol "
+               "audit, which is inherited unchanged. "
+               "ARMS: no-needs (NULL), surv (+rho alive only), dr (Keramati & "
+               "Gutkin, rho=0), dr+surv (the favourite), dr-modular (one value "
+               "head per need — Dulberg PNAS 2023 reports per-drive modules beat "
+               "scalarisation beyond ~3 needs and this design has 7, so it is the "
+               "most likely way the single scalar d(h) loses), cc+rho "
+               "(rho > max_h d(h) ASSERTED BEFORE THE RUN or the arm learns to "
+               "die — NE.00(d)), and "
                "dr+surv+pain (the phasic damage signal as a SEPARATE channel with "
                "a FIXED normaliser — section 2.9). The pain arm exists because a "
                "running return normaliser, which T2.00 mandates, is divided by a "
@@ -2360,13 +2605,17 @@ NOT_RUN. The needs suite's headline claims are runnable the day `NE.00` lands.
          kills="Stage S4 of the sleep phase, if it ties. Also supplies T5.04 "
                "('plasticity does not die') with a MECHANISM and a SCHEDULE "
                "instead of an intervention someone remembers to run.",
-         notes="The biological claim (synaptic homeostasis: sleep downscales "
-               "synaptic strength) and the machine-learning claim "
-               "(shrink-and-perturb restores trainability in networks whose "
-               "plasticity has died) are the SAME OPERATION, and this spec is "
-               "the first place in the project where a biological mechanism and "
-               "an engineering fix turn out to be one thing. That is a reason to "
-               "test it, not a reason to believe it."),
+         notes="THE IDENTITY UNDER TEST IS ORIGINAL TO THIS PROJECT AND MUST NOT "
+               "BE CITED AS LITERATURE. The biological claim (synaptic "
+               "homeostasis: sleep downscales synaptic strength, Tononi & "
+               "Cirelli) and the machine-learning claim (shrink-and-perturb "
+               "restores trainability in networks whose plasticity has died) each "
+               "exist; the assertion that they are the SAME OPERATION does not "
+               "appear in the literature — the survey looked. So this spec is not "
+               "reproducing a known result, it is testing a hypothesis this "
+               "document invented, and the elegance of the story is precisely why "
+               "it needs the dose-response and timing controls rather than a "
+               "citation."),
 
     Spec("NE.07", 5, "The social need makes him seek people, not harass them",
          hypothesis="With social contact in the need vector, Jack approaches the "
@@ -2480,6 +2729,18 @@ NOT_RUN. The needs suite's headline claims are runnable the day `NE.00` lands.
                "survives' is unmeasurable. crosslife_speedup is the COMPOSITE "
                "that requires both stores; C-WIPE and C-FOREIGN attribute it, "
                "D1/D2 prove there are two stores to attribute it between. "
+               "TRUNCATION IS NOT DEATH, AND CONFLATING THEM TEACHES HIM THAT "
+               "DYING IS FINE. Lives that hit the L_max cap are TIME LIMITS and "
+               "must bootstrap V(s_T); lives that end in death must not (Pardo et "
+               "al., ICML 2018; Crafter ships this correctly as "
+               "info['discount'] = 1 - float(dead)). Censored lives are a "
+               "DESIGNED part of this protocol, so the distinction is not a "
+               "detail here — half the terminations the agent sees would "
+               "otherwise be free, and the death-aversion that section 0.2(d) "
+               "says drive reduction supplies for free would be trained away. "
+               "Asserted in the spec: every terminal transition carries a "
+               "cause tag, and the bootstrap flag is derived from it, never from "
+               "the step counter. "
                "t_secure is a MAX over the three components, not a mean: "
                "securing two of three and dying of the third is not survival. "
                "Lives that never secure a component are CENSORED at L_max and the "
@@ -2584,9 +2845,12 @@ whether Jack can actually run continuously on a box that serves paying tenants.
 | `surv` | 0.4 | reward is a constant |
 | `dr` | 0.6 | one drive function evaluation per decision |
 | `dr+surv` | 0.6 | as `dr` |
+| `dr-modular` | 1.4 | seven value heads instead of one |
 | `dr+surv+pain` | 0.9 | + a second value head and its fixed normaliser |
 | `cc+ρ` | 0.6 | as `dr` |
 | `eat` (control) | 0.4 | event counter |
+| `clip` (control) | 0.6 | as `dr`, one `max(0,·)` |
+| `cc` / `col` (controls) | 0.6 / 0.3 | as `dr` / a constant |
 | `myopic` (control) | 0.6 | as `dr+surv`, γ changed |
 | `+reflex` | 0.7 | ~20 lines of feedback control |
 | `+babble` | 0.8 | a goal sampler in the first phase only |
@@ -2634,16 +2898,16 @@ before sizing any budget."
 | **NE.00** | tabular, 4 MDPs × 3 arms × 3 seeds, exact VI, no MuJoCo, no torch | **0.05** | 0 |
 | **NE.01** | 3 seeds × (random + statue + scripted forager) × 3,000 decisions + a 5-point thermal calibration sweep | **0.4** | 0 |
 | **NE.02** | 8 columns (7 needs + placebo) × 3 seeds × 25,000 decisions | **2.3** | 0 |
-| **NE.03** | 6 arms (incl. `dr+surv+pain`) + null + 5 controls = 12 × 3 seeds × 50,000 decisions ÷ 72.5 dec/s, + battery eval | **7.2** | 0 |
+| **NE.03** | 7 arms (incl. `dr-modular`, `dr+surv+pain`) + null + 7 controls (`statue`, `shuffle`, `eat`, `clip`, `cc`, `col`, `myopic`) = 15 × 3 seeds × 50,000 decisions ÷ 72.5 dec/s, + battery eval. **`cc`/`col` terminate early by construction and cost far less than their nominal share.** | **8.6** | 0 |
 | **NE.04** | stage 1 re-scores NE.03's stored trajectories (0.05); stage 2 = 3 arms × 3 seeds × 50,000 | **1.8** | 0 |
 | **NE.05** | 5 arms + 1 control × 3 seeds × 50,000, matched gradient steps | **4.0** | 0 |
 | **NE.06** | 4 α settings + random-timing control × 3 seeds × 50,000 | **3.5** | 0 |
 | **NE.07** | 4 conditions × 3 seeds × 50,000 | **2.3** | 0 |
 | **NE.08** | 7 conditions × 3 seeds × 8 lives × ~6,000 decisions, + a 2-condition × 3-seed × 5-world fresh probe | **4.6** | 0 |
 | **NE.09** | evaluation only over NE.03/NE.08's stored lives + probe sets | **0.3** | 0 |
-| **Total** | | **≈ 26.5 core-hours** | **0.0** |
+| **Total** | | **≈ 27.9 core-hours** | **0.0** |
 
-≈ **8.8 h wall at 3 workers** (3, not 4 — the box serves paying tenants),
+≈ **9.3 h wall at 3 workers** (3, not 4 — the box serves paying tenants),
 `nice 19`, under 1.5 GB RAM, no process left running. **Zero GPU quota**, for the
 same reason `LT` and `PS` need none: the arms use ~150 K-parameter dedicated
 networks, not the 45.5 M `UnifiedBrain`. The humanoid version of any of this is
@@ -2711,10 +2975,11 @@ avoided later.
 - **THE BIOLOGY CITATIONS ARE NOT VERIFIED.** §1.2 is a table of mechanisms with
   believed-primary sources and **not one of them was fetched** — the session's
   200-call web-search budget ran out first. Two of them are *design constants*,
-  not background colour: the thermal lethal bounds (28 °C / 42 °C) and the
-  Borbély time-constant ratio (≈4.4 : 1) that sets `τ_wake` and `τ_sleep`.
-  **Closing §1.2 is the first job of the next agent on this document, and `NE.01`
-  must not fix those constants before it is closed.** Everything else here is
+  not background colour: the thermal lethal bounds (**28 °C / 40 °C, asymmetric**
+  — a second sweep already withdrew an earlier draft's unverified 42 °C ceiling)
+  and the Borbély time-constant ratio (≈4.4 : 1) that sets `τ_wake` and
+  `τ_sleep`. **Closing §1.2 is the first job of the next agent on this document,
+  and `NE.01` must not fix those constants before it is closed.** Everything else here is
   design, and design does not become true by being cited — but a number that
   claims to come from human physiology and does not is exactly the kind of quiet
   fiction `LESSONS.md` exists to prevent.
@@ -2739,13 +3004,13 @@ avoided later.
   sessions enter only in `NE.09`'s eval set, and the gap between "a bot that
   replies 70 % of the time" and "a person" is the largest unmodelled distance
   between the social spec and the product.
-- **Whether `d(h)` should be a single scalar at all.** Seven needs collapsed into
-  one number is a strong modelling assumption (it asserts the needs are
-  commensurable and substitutable). The alternative — per-need value heads, one
-  critic each — is architecturally cleaner and materially more expensive, and it
-  is not costed here. If `NE.02` finds that two needs consistently trade off
-  against each other in a way `λ` cannot express, that is the evidence that
-  reopens this.
+- **Whether `d(h)` should be a single scalar at all — now an ARM, no longer only
+  a caveat.** Seven needs collapsed into one number asserts they are commensurable
+  and substitutable. Dulberg et al. (PNAS 2023) report per-drive Q-modules beating
+  scalarisation beyond ~3 needs, so `dr-modular` enters `NE.03` as a candidate. What
+  remains unsettled is the *interaction*: if `dr-modular` wins, does it win because
+  of modularity or because seven heads are seven times the critic capacity? The
+  matched-capacity control is not costed here and it is the obvious follow-up.
 - **Whether sleep should compress time.** Stepping physics coarsely while asleep
   is what makes the sleep arms *faster*, and it also means the sleeping body
   experiences slightly different dynamics from the waking one. The thermal ODE is
@@ -2781,35 +3046,59 @@ Per `SYSTEM.md`, "is the machine better than I found it?"
    proves about that formula.** A citation used as a source of notation is a
    citation half-read, and this project has now spent a section of a research
    document and two pre-registered specs on a result its own source refutes.
-2. **A new pathology, named, measured and cheap to prevent.** Constant-cost
-   reward plus a reachable death state makes suicide optimal, and the fix is a
-   survival bonus `ρ > max_h d(h)` that must be *asserted before the run*.
+2. **A new result, apparently original, that decides a design question the
+   project was about to decide by preference.** Drive-difference and
+   cost-of-deviation rewards are exactly PBRS-equivalent — **until a death state
+   exists**, at which point the equivalence breaks, because PBRS requires
+   `Φ(terminal) = 0` (Grześ 2017) and homeostatic death occurs at *maximum*
+   deviation. Measured: suicide strictly optimal in **11/11** states under a cost
+   of living, **8/11** under cost of deviation, **0/11** under drive reduction.
+   **Drive reduction is the unique self-termination-safe member of the family**,
+   which for a death-and-retry design is not a preference but a constraint.
    Generalises: **any reward that is negative everywhere, in any environment
-   where termination is reachable, has a suicide incentive**, and this project
-   now has a place to check for it.
-3. **A validity gate that catches the specific way equality claims go vacuous.**
+   where termination is reachable, has a suicide incentive** — and the project
+   now has a two-minute tabular check for it.
+3. **A shipped-in-a-benchmark exploit turned into a general rule and a static
+   audit.** `NetHackEat`'s `max(0, Δnutrition)` is farmable, and it is farmable
+   for a reason that generalises: **a drive reward is safe if and only if it is
+   an exact difference of a state potential.** Clipping, flooring, rectifying or
+   one-siding any of it reintroduces farming. `NE.03` now audits the reward path
+   for `max(0, ·)` and records ERROR. This is also the *correct* home for PS's
+   drive-farming worry — the pathology is real, it just lives in the clipped
+   variant rather than the plain one.
+4. **A misprinted inequality in two of three sources, caught before
+   implementation.** The homeostatic drive exponents require `n > m ≥ 1`; the
+   NIPS 2011 paper writes `m > n > 2` and a 2025 review's Math Box writes
+   `m > n > 1`, **both reversed**. Implementing from either builds a
+   *risk-seeking* agent in which deprivation *reduces* the reward of eating.
+   **Generalises, and this is the second instance in one document (§0.2 was the
+   first): when a formula arrives from a secondary source, check its inequality
+   directions numerically before implementing.** `NE.00` now does, and returns
+   ERROR rather than FAIL, because a reversed inequality is a defect and not a
+   refuted hypothesis.
+5. **A validity gate that catches the specific way equality claims go vacuous.**
    `NE.00`'s MDP must be certified *discriminating* — non-constant optimal policy,
    and a negative-control reward that produces a different one — before any
    "identical" is asserted. The first draft of that experiment compared two
    policies that were `forage` in every state. Generalises `T0.12`'s saturated-
    quantity lesson from thresholds to **equivalence claims**: an equality is only
    evidence if the instrument could have shown a difference.
-4. **A reachability audit performed as part of writing the specs, not after.**
+6. **A reachability audit performed as part of writing the specs, not after.**
    Every `NE.*` dependency resolves to a PASSing spec or an earlier `NE.*`.
    Nothing is parented on `ME.7`, `T5.03`, `T2.01` or `T2.02`. `LESSONS.md` says
    to periodically ask which specs are unreachable; this block asks it at design
    time, and it moved `NE.05` off `ME.7` as a result.
-5. **A control that must fail *upward*.** `NE.07`'s `no-satiation` removes the
+7. **A control that must fail *upward*.** `NE.07`'s `no-satiation` removes the
    anti-harassment mechanism and requires the harassment metric to **rise**.
    Every other control in this repo must fail downward. A safety guard whose
    removal changes nothing is decoration, and until now the project had no
    pattern for testing one.
-6. **Controls with pre-registered failure *signatures*, not just failure sides.**
+8. **Controls with pre-registered failure *signatures*, not just failure sides.**
    `eat` must lose *and* show the highest cycling rate; `cc` must fail *by dying*
    with a death-cause distribution dominated by voluntary inaction. A control
    that lands on the right side for the wrong reason is a control that was never
    read, and naming the signature is what makes it readable.
-7. **A latent bug class in every project that normalises returns, named and
+9. **A latent bug class in every project that normalises returns, named and
    given an instrument.** `pain_habituation`: a running return normaliser is
    divided by a standard deviation that rare high-magnitude events *inflate*, so
    **the more often a rare bad thing happens, the less it counts**. `T2.00`
@@ -2817,7 +3106,7 @@ Per `SYSTEM.md`, "is the machine better than I found it?"
    currently looks for its side effect. The instrument is two numbers (effective
    magnitude of a fixed physical event, early vs late) and it generalises far
    beyond needs.
-8. **The static reward audit was extended to a second code path before that path
+10. **The static reward audit was extended to a second code path before that path
    existed.** `LT`'s G1 forbids `ladder|rung|rail|apple|platform|climb|height` in
    any reward path. The first draft of the grasp reflex triggered on contact with
    a `LADDER`-class geom — an instruction, in a module nobody had thought to
@@ -2825,13 +3114,13 @@ Per `SYSTEM.md`, "is the machine better than I found it?"
    under G1. **Generalises: the audit belongs on every path that can encode the
    task, not only the one it was written for** — the same shape as `LESSONS.md`'s
    "a guard built by fixing one file leaves the file that motivated it unfixed".
-9. **A control was re-read as a result.** `C-FOREIGN` was designed to fail. §5.10
+11. **A control was re-read as a result.** `C-FOREIGN` was designed to fail. §5.10
    points out that its "failure" — a stranger's diary transferring fully — is the
    discovery that the diary is a transmissible artefact, i.e. that Jack has
    culture. **Generalises: before writing a control that must fail, ask what its
    failure would mean if it happened**, because a control that can only ever be
    reported as a defect will hide a discovery.
-10. **The needs suite gave three already-PASSing but un-scheduled modules a
+12. **The needs suite gave three already-PASSing but un-scheduled modules a
    schedule.** `Reflections.consolidate()` (`ME.3`), `Forgetting` (`ME.4`) and
    diary distillation (`ME.10`) are all tested, all cheap, and all currently
    invoked by nothing on a recurring basis. Sleep is their cron. This is the
