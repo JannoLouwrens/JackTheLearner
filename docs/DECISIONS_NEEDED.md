@@ -458,3 +458,34 @@ The constraint here was never the budget. It was the CUTOFF CHOICE. A cutoff
 picked for convenience and then treated as a verdict is a resource limit
 masquerading as a result — and it would have been invisible in the ledger,
 because every number in it would have been true.
+
+## Was physics-first retired by argument instead of by bakeoff? (OPEN, owner)
+
+Owner, 2026-08-09: "I thought we started by training on physics, so Jack
+inherently learns the patterns of the universe — did we throw it away?"
+
+THE RECORD: physics-first was dropped as a TRAINING METHOD in docs/DECISIONS.md
+on literature grounds (arXiv:2507.06952, 2111.05458; nothing that walks in 2026
+got there via symbolic physics pre-training). SymbolicCalculator survived as a
+frozen regression gate. That document ALSO said: "T5.01 still runs, cheaply and
+early, so the decision rests on our own numbers." T5.01 — titled "THE thesis
+test" — is still NOT_RUN, and DIRECTION_AUDIT later recommended never starting
+it ("superseded premise").
+
+THE PROBLEM: SYSTEM.md law 3 is "decisions are made by bakeoff, never by
+argument." We enforced it on PPO, the trunk, memory retrieval and the learning
+core. We did NOT enforce it on the project's founding idea — that one was
+retired by citation. The audit's "superseded" reasoning is sound but it is
+still an argument, and the decision doc itself promised our own numbers.
+
+WHAT SURVIVED ANYWAY (worth stating, because the vision is not the method):
+"Jack sees the patterns of the universe" is precisely what a WORLD MODEL does —
+predicting the next observation IS learning physics, discovered by living
+rather than supplied as symbols. That route is alive and on trial in the LC
+bakeoff. Only the SUPERVISED-SYMBOLIC route was retired.
+
+OWNER'S CALL: (a) run T5.01 as promised — it is cheap and it makes the founding
+decision rest on our evidence rather than someone else's papers; (b) formally
+retire it, recording in DECISIONS_RESOLVED that this one decision was made by
+argument, so the exception is visible rather than silent. Either is defensible;
+leaving it NOT_RUN and unexplained is not.
