@@ -1161,4 +1161,323 @@ EXPANSION: list[Spec] = [
          depends_on=["T6.01", "ME.2"],
          control="Ablating the safety channel must bring violations back; "
                  "persona reset must drop identity to chance."),
+
+    # ── THE LEARNING CORE (docs/research/LEARNING_CORE.md) ──────────────
+    # Two-digit ids from the start. run.py::_module_for globs lc_00_*.py etc;
+    # verified by fnmatch on 2026-08-09 that no LC id shadows another. Do NOT
+    # add an LC.0 or an LC.1 — see LESSONS.md, "A spec id that is a prefix of
+    # another spec id disables one of them".
+
+    Spec("LC.00", 0, "The learning-core question is decidable in a gridworld first",
+         hypothesis="In a 12x12 survival gridworld with two depleting needs, "
+                    "death on depletion, random respawn and a persistent "
+                    "cross-life visit table, all four learning cores "
+                    "(tabular Q on drive reduction; the same plus absolute "
+                    "learning progress; a tabular latent-transition model with "
+                    "value iteration in the model; and the same model scored by "
+                    "expected free energy) run to completion, and at least two "
+                    "produce a life_gain that beats the random null by 3 sigma "
+                    "over 3 seeds.",
+         falsified_by="Fewer than two cores clear the null. Then the METRIC is "
+                      "wrong or the world is unlearnable, and no amount of "
+                      "MuJoCo will repair either — LC.03 onward must not run.",
+         null_baseline="Uniform random action on the same gridworld, same "
+                       "seeds: life_gain by construction ~0 (lives do not "
+                       "lengthen without learning).",
+         metric="life_gain_cores_clearing_null", budget=Budget.CPU_FAST,
+         depends_on=[], seeds=3,
+         control="A FROZEN core — the same tabular agent with learning "
+                 "disabled — must record life_gain within noise of zero. If a "
+                 "frozen agent's lives get longer, the world drifts and "
+                 "life_gain measures the world, not the learner. This control "
+                 "is the reason the spec exists; it is cheaper to discover "
+                 "here than after 25 CPU-hours.",
+         kills="The whole LC programme, for two CPU-minutes. It is the "
+               "cheapest thing that can falsify the metric, the world contract "
+               "and the four-core framing before any body, any physics, any "
+               "torch or any GPU is involved. Modelled on PS.00.",
+         notes="No MuJoCo, no torch. Tabular over (x, y, need0_bucket, "
+               "need1_bucket). Also emits the pre-registered numeric value of "
+               "the FROZEN control's life_gain, which LC.03/LC.04 reuse as "
+               "their own control threshold rather than inventing a new one."),
+
+    Spec("LC.01", 2, "Every candidate core takes every sense into one latent, or it is not a candidate",
+         hypothesis="For each admissible arm: (U1) every modality key reaches "
+                    "the shared state tensor and no modality has a private path "
+                    "to the action; (U2) perturbing modality A's input produces "
+                    "a NONZERO finite-difference gradient at modality B's "
+                    "encoder through the arm's declared binding loss; (U3) each "
+                    "modality can be dropped without a shape error and the "
+                    "core's internal uncertainty CHANGES when it is; (U4) the "
+                    "need-state modality holds at least 1/|M| of the total "
+                    "prediction loss at init.",
+         falsified_by="Any arm failing any of U1-U4. That arm is EXCLUDED from "
+                      "LC.03/LC.04 — not scored and beaten, excluded — per "
+                      "SYSTEM.md's constitutional constraint. An arm cannot buy "
+                      "admission with a task score.",
+         null_baseline="A deliberately unbound core: per-modality encoders "
+                       "feeding a concatenation with NO cross-modal loss term. "
+                       "U2's finite-difference gradient must read exactly 0.0 "
+                       "for it. That number is what U2 is measured against.",
+         metric="unison_admission_conjunction", budget=Budget.CPU, seeds=3,
+         depends_on=["PG.8"],
+         control="TWO. (a) The unbound core above must FAIL U2 — if a core "
+                 "with no binding term shows a cross-modal gradient, the probe "
+                 "is reading autograd plumbing rather than the objective. (b) A "
+                 "PLACEBO modality of matched dimension and matched statistics "
+                 "carrying no information must NOT acquire a loss share above "
+                 "1/|M| — if noise binds as well as a sense, U4 measures "
+                 "capacity, not binding.",
+         kills="Bare PPO as a candidate learning core. Per docs/research/"
+               "LEARNING_CORE.md 3.7, PPO's senses meet only through a scalar "
+               "reward, so an admissible PPO arm must carry "
+               "L_masked_cross_modal. Also kills TD-MPC2 outright "
+               "(arXiv:2310.16828 is state-based proprioception only, no "
+               "vision, by construction).",
+         notes="Runs BEFORE any learning. The finite-difference probe is the "
+               "load-bearing part: MULTIMODAL_BINDING.md records pi-0.5 "
+               "encoding its language prompt at 99.3% linear-probe accuracy "
+               "while behaving invariantly to it, so 'the trunk sees it' is not "
+               "evidence that the trunk USES it. U4 exists because DreamerV3's "
+               "shipped loss_scales.rec is shared across keys: a 64x64x3 image "
+               "contributes 12,288 reconstruction terms and a 10-dim needs "
+               "vector contributes 10."),
+
+    Spec("LC.02", 2, "A core that cannot live a life at survivable wall-clock is not a core",
+         hypothesis="Every admissible arm sustains at least 5.0 simulated "
+                    "seconds of Jack's life per real second on 3 ARM cores at "
+                    "nice 19 with the learner in the loop, at the train_ratio "
+                    "this spec selects for it; and the selected train_ratio is "
+                    "the largest power-of-two value that clears that floor.",
+         falsified_by="An arm below 5.0 sim-s/real-s at every train_ratio down "
+                      "to its minimum. That arm is EXCLUDED: GOAL.md requires "
+                      "lives, death and cross-life learning, and a core that "
+                      "cannot produce a second life inside a builder iteration "
+                      "cannot deliver them at any sample efficiency.",
+         null_baseline="Physics alone, zero-action, same body and world: the "
+                       "throughput ceiling no learner can exceed. Measured for "
+                       "the humanoid at 31.6 sim-s/real-s (DIRECTION_AUDIT.md "
+                       "4.1); measured here for the climber-rover.",
+         metric="sim_seconds_per_real_second", budget=Budget.CPU, seeds=3,
+         depends_on=["PG.8", "LC.01"],
+         control="The 57M UnifiedBrain trunk in the control path MUST FAIL this "
+                 "floor. DIRECTION_AUDIT.md 4.1 measured it at 0.17 sim-s/real-"
+                 "s against a 160K MLP's 22.97 — 133x. If the trunk PASSES a "
+                 "5.0 floor, the instrument is wrong, not the trunk.",
+         kills="Any arm's train_ratio above the largest affordable value, and "
+               "any arm that cannot reach the floor at all. NOTE THE "
+               "ANTI-GAMING RULE: this spec's _check MAY NOT READ life_gain. "
+               "Selecting a hyperparameter by its score is tuning on the "
+               "metric; selection here is on wall-clock fit only, and the "
+               "chosen value is committed to the ledger before LC.03 runs.",
+         notes="train_ratio and model size are the two things DreamerV3 does "
+               "NOT hold fixed across its 150+ tasks (arXiv:2301.04104 Table "
+               "A.1), and they are exactly the two that decide affordability. "
+               "Director (arXiv:2206.04114) ran at one gradient step per "
+               "sixteen policy steps — train_ratio ~0.06 — under 24h on one "
+               "V100, so a low ratio is not obviously crippling. Measured on "
+               "this box 2026-08-09: PPO 13.1 and a 1.9M RSSM at train_ratio 1 "
+               "19.6 CPU-core-seconds per 1,000 decisions, physics included."),
+
+    Spec("LC.03", 5, "Screening: which learning cores learn to survive at all",
+         hypothesis="At the LC.02-fixed train_ratio, run to the LC.04 envelope, "
+                    "each admissible arm's life_gain beats the random null by "
+                    ">=3 sigma AND beats its own untrained twin by >=3 sigma, "
+                    "over 3 seeds, with n_lives >= 12 per seed.",
+         falsified_by="Fewer than two arms clear both gates. Recorded VOID "
+                      "'fewer than two learners' — which blocks the decision "
+                      "instead of manufacturing one — and LC.04 does not run.",
+         null_baseline="Uniform random and random-repeat action, same world "
+                       "seeds, same evaluation lives. PLUS, per arm, that arm's "
+                       "own UNTRAINED twin: T2.02's untrained MLP already "
+                       "cleared random by 2.74 sigma against a 3.00 gate, so a "
+                       "gate against random alone is nearly cleared by a "
+                       "network that has never received a gradient.",
+         metric="life_gain", budget=Budget.CPU_LONG, seeds=3,
+         depends_on=["LC.00", "LC.01", "LC.02", "PS.01"],
+         control="FIVE, each on its pre-registered side. (a) statue (do "
+                 "nothing) must die soonest. (b) randrew (fixed random "
+                 "stationary reward projection) must miss the gate — it "
+                 "controls for 'any optimisation pressure looks like "
+                 "learning'. (c) FROZEN: the best arm with the optimiser never "
+                 "stepped must record life_gain within noise of zero; if lives "
+                 "lengthen without learning, the metric measures the world and "
+                 "everything here is void. (d) shuffled-diary must collapse "
+                 "cross_life_transfer. (e) darkroom (rewarded for minimising "
+                 "predicted observation entropy) must record strongly NEGATIVE "
+                 "life_gain — it is the positive control for the dark-room "
+                 "detector, and a detector that never sees its own positive "
+                 "control has measured nothing (T0.13).",
+         kills="Any arm that cannot survive better than a network which has "
+               "never received a gradient. Screening declares NO winner — that "
+               "is LC.04's job, and separating them is why LT.03/LT.04 are "
+               "separate.",
+         notes="Headline life_gain = mean survival time over the final third of "
+               "lives minus the mean over the first third, per seed. Reported "
+               "alongside and gated as a conjunction: n_lives>=12; "
+               "needs_satisfied_rate rising; cross_life_transfer > 0; "
+               "panel_dwell <= 0.15 per seed (else DISQUALIFIED, PG.4's own "
+               "threshold); chaos_occupancy>=3.0 AND chaos_reward_ratio>=2.0 => "
+               "VOID for that arm (CURIOSITY_BAKEOFF.md 2.10). Arm wm-efe "
+               "additionally VOIDs if its final-third action_entropy falls "
+               "below 10% of dreamer-xs's — the epistemic-term collapse "
+               "measured in arXiv:2303.01618, where the intrinsic reward stayed "
+               "nonzero while coverage collapsed to one action."),
+
+    Spec("LC.04", 5, "The learning core, arbitrated at matched EXPERIENCE",
+         hypothesis="Among the arms that cleared LC.03, one core's life_gain at "
+                    "exactly N_STEPS decisions of lived experience beats the "
+                    "runner-up by >=1.5 sigma of the pooled seed spread.",
+         falsified_by="No arm leads by 1.5 sigma => TIE, resolved to the "
+                      "cheapest by trainable parameters. That is a real result: "
+                      "the choice of learning core does not matter yet and the "
+                      "simplest one ships.",
+         null_baseline="The shared random null of LC.03, same seeds, same "
+                       "evaluation lives, paired.",
+         metric="life_gain_at_matched_experience", budget=Budget.CPU_LONG,
+         seeds=3, depends_on=["LC.03"],
+         control="Inherits LC.03's five controls, passed to run_bakeoff as "
+                 "controls= rather than arms= — a designed-to-fail control "
+                 "entered as an Arm would VOID this bakeoff permanently by "
+                 "construction (LESSONS.md). A control that CLEARS the learning "
+                 "gate inverts the verdict to VOID.",
+         kills="Three of four learning cores, and the answer to the owner's "
+               "question 'THIS is how it learns'. The winner is PROVISIONAL: "
+               "adoption is VOID until UB.9 and UB.11 pass under it "
+               "(SYSTEM.md's constitutional unison constraint), and the losers "
+               "are NOT deleted until then.",
+         notes="ARMS, cost declared in TRAINABLE PARAMETERS of the learning "
+               "core, asserted to +-5% against the measured value with VOID on "
+               "mismatch: ppo-needs 120841 (measured shape, tuned per "
+               "arXiv:2307.03486 — LayerNorm before every dense layer, "
+               "normalised value targets — plus L_masked_cross_modal for "
+               "admission); ppo-lp ~211000 (+ absolute learning progress, two "
+               "value heads); dreamer-xs 1896047 (measured: RSSM 1432160 + "
+               "actor/critic 463887, GRU deter 256, 32x8 categoricals, symlog/"
+               "twohot/free-bits/unimix/percentile-return-norm); wm-efe "
+               "~1900000 + 4 ensemble dynamics heads (dreamer-xs's world model "
+               "BYTE-IDENTICAL, only the actor objective differs: expected free "
+               "energy with ln C = -d(h) and ensemble information gain). "
+               "wm-latent ~1370000 is CONDITIONAL, promoted only if dreamer-xs "
+               "clears LC.03. REFERENCE ARM sb3-ppo (~121000) is scored but "
+               "INELIGIBLE FOR ADOPTION: if it fails to clear the null the "
+               "whole bakeoff is VOID because W0 is not a learnable survival "
+               "problem. Cost is parameters and NOT core-seconds on purpose: "
+               "compute is already LC.05's axis, and counting it twice would "
+               "let the tie-break re-decide the thing LC.05 decides."),
+
+    Spec("LC.05", 5, "The same arms, arbitrated at matched COMPUTE",
+         hypothesis="Scored off the SAME stored curves at exactly W_CLOCK "
+                    "core-seconds instead of N_STEPS decisions, the LC.04 "
+                    "winner still wins by >=1.5 sigma.",
+         falsified_by="A different arm wins => SPLIT. Recorded as VOID for the "
+                      "core decision and PASS for the finding: sample "
+                      "efficiency and compute efficiency point different ways "
+                      "at 30 GPU-h/week. Nothing ships; LC.05 re-runs at the "
+                      "10x deployment budget to break it.",
+         null_baseline="The same random null, scored at the same W_CLOCK.",
+         metric="life_gain_at_matched_compute", budget=Budget.CPU_LONG,
+         seeds=3, depends_on=["LC.04"],
+         control="The two scorings must come from ONE set of runs — each "
+                 "arm-seed runs until it has consumed BOTH N_STEPS decisions "
+                 "AND W_CLOCK core-seconds, whichever comes later, and both "
+                 "axes are recorded. A re-run for the second scoring is an "
+                 "ERROR, not a convenience: it would let the arms differ in "
+                 "anything other than the ruler.",
+         kills="The pretence that there is a neutral single budget. T2.02 "
+               "matched env-steps and hid a 16x optimiser-step gap "
+               "(LESSONS.md, \"'Matched steps' has more than one meaning\"). "
+               "Matching env-steps pre-decides for the world model; matching "
+               "wall-clock pre-decides for PPO; so both are pre-registered and "
+               "their disagreement is a reportable outcome rather than a "
+               "choice made after the numbers exist.",
+         notes="Every run records all four budgets — decisions, optimiser "
+               "steps, core-seconds (MuJoCo share reported separately) and a "
+               "gradient-FLOP estimate — plus a decimated curve of <=200 points "
+               "spanning all lives. T2.01 stored curve_seed0[:8], iterations "
+               "1-21 of 172, which is why its 'the curve PLATEAUED' claim was "
+               "not in the ledger."),
+
+    Spec("LC.06", 3, "The simplicity budget is enforced, not promised",
+         hypothesis="The adopted learning core satisfies all four "
+                    "pre-registered ceilings: B1 trainable parameters <= "
+                    "5,000,000; B2 free hyperparameters <= 25, of which ZERO "
+                    "are undocumented in the spec that used them; B3 <= 1,500 "
+                    "raw lines in the learning rule and learned model; B4 >= "
+                    "5.0 simulated seconds per real second on 3 ARM cores.",
+         falsified_by="Any ceiling exceeded. The core is not adopted at that "
+                      "size; it is reduced, or the ceiling is raised by the "
+                      "procedure in LEARNING_CORE.md 6.4 — a bakeoff in which "
+                      "the larger core beats the smaller by >=1.5 sigma at "
+                      "matched env-steps AND matched wall-clock — never by "
+                      "argument.",
+         null_baseline="The shipped codebase as of 2026-08-09, which is what "
+                       "the ceilings were written against.",
+         metric="simplicity_budget_conjunction", budget=Budget.CPU, seeds=1,
+         depends_on=["LC.04"],
+         control="THE SHIPPED CODEBASE MUST BREACH ALL FOUR. Measured "
+                 "2026-08-09: B1 41,525,008 > 5,000,000 (T1.11); B2 92 "
+                 "UnifiedBrainConfig fields + 20 PipelineConfig training knobs "
+                 "= 112 > 25; B3 6,114 + 1,220 = 7,334 lines > 1,500; B4 0.17 "
+                 "< 5.0 (DIRECTION_AUDIT.md 4.1). A budget checker that cannot "
+                 "flag the codebase it was written about is measuring nothing "
+                 "(T0.13: a detector that cannot see its own positive control "
+                 "has measured nothing). B4 needs this most — nothing in "
+                 "experiments/ measures sim-seconds per real second today, so "
+                 "the 133x gap went unmeasured until an audit looked.",
+         kills="Complexity that has not earned itself. The owner, 2026-08-09: "
+               "'it won't be the most complex model that Jack is. It will be "
+               "just a system that can learn and get input from every single "
+               "sense.' This spec is that sentence with numbers on it, and it "
+               "is the guard that makes the 57M-vs-124K lesson unrepeatable "
+               "rather than merely remembered.",
+         notes="Counting rules, fixed here so they cannot be argued later. A "
+               "hyperparameter fixed by a paper STILL COUNTS — DreamerV3's "
+               "'one configuration for 150+ tasks' is a claim about tuning "
+               "effort, not about count, and count is what determines how many "
+               "things can be silently wrong (its configs.yaml is 220 lines "
+               "and well over 100 knobs). A default counts twice: the audit "
+               "reports both the number of knobs and the number whose value is "
+               "never written down in the spec that used them, and the second "
+               "number must be ZERO. Frozen perception is excluded from B1 — "
+               "it is an input, not a learned parameter — which is what makes "
+               "the frozen-swappable-tower principle affordable."),
+
+    # -- PS.01, registered AHEAD of the rest of the PS family on purpose --
+    # LC.03 declares depends_on PS.01, and LEARNING_CORE.md 5.6 requires the
+    # two to land in one commit or LC.03 is permanently BLOCKED (the UB.1
+    # lesson). The PS family stays queue-BLOCKED-ON-CORRECTION for PS.00(c)/
+    # PS.02 (NEEDS_AND_DEATH.md 0.2 disproved the drive-cycling exploit);
+    # PS.01 is calibration/dynamic-range and is not implicated - cross-checked
+    # 2026-08-09 per INTEGRATION_QUEUE.md protocol step 1.
+    # Verbatim from PURPOSE_AND_SCAFFOLDING.md 4.4.
+    Spec("PS.01", 2, "The drive layer is a real control problem, and a statue loses",
+         hypothesis="With PG.8's humanoid under random action, energy and "
+                    "integrity both traverse a usable range (10th-90th percentile "
+                    "spread >= 0.3 over 3,000 decisions, neither pinned at 0 nor "
+                    "at 1), a fall from the ladder platform costs 0.10-0.20 "
+                    "integrity, floor food supports subsistence at rest but not "
+                    "activity, and the DO-NOTHING policy is strictly dominated: "
+                    "its energy reaches the weakness floor while an active random "
+                    "policy's does not.",
+         falsified_by="A random agent never depletes (the drive is inert and "
+                      "cannot pressure anything), or always flatlines at zero "
+                      "within a minute (no policy can learn under it), or the "
+                      "statue is NOT dominated (the dark room is a stable "
+                      "optimum and homeostasis will produce a corpse).",
+         null_baseline="The playground with the drive integrator disabled: every "
+                       "internal variable is constant, so every spread is 0.",
+         metric="drive_dynamic_range", budget=Budget.CPU,
+         depends_on=["PG.8"], seeds=3,
+         control="The do-nothing policy IS the control and it must fail: best "
+                 "integrity, worst energy, and unable to reach any food. If "
+                 "doing nothing is survivable indefinitely, the calibration is "
+                 "wrong and no homeostatic arm can be interpreted.",
+         kills="The specific numbers in PURPOSE_AND_SCAFFOLDING.md 2.2-2.3. It "
+               "cannot kill the idea, only the parameterisation — which is why "
+               "it runs before anything trains and after PS.00.",
+         notes="Also measures J_0 (the 95th percentile of impact impulse under "
+               "normal walking contact) which alpha is calibrated against, and "
+               "fixes n and m in the drive function. Every number in 2.2 is a "
+               "PROPOSAL until this spec replaces it with a measurement."),
 ]

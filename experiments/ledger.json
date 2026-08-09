@@ -1,6 +1,42 @@
 {
   "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
   "results": {
+    "LC.00": {
+      "attempt": 1,
+      "commit": "318ff4a",
+      "control_metrics": {
+        "lg_frozen": -6.341667,
+        "lg_frozen_std": 5.860935,
+        "lg_null": -3.008333,
+        "lg_null_std": 8.322668
+      },
+      "duration_s": 26.39,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "message": "",
+      "metrics": {
+        "cores_completed": 4.0,
+        "cores_completed_std": 0.0,
+        "lg_model_efe": 169.991667,
+        "lg_model_efe_std": 42.68728,
+        "lg_model_vi": 90.783333,
+        "lg_model_vi_std": 14.779382,
+        "lg_null": -3.008333,
+        "lg_null_std": 8.322668,
+        "lg_q_drive": 97.833333,
+        "lg_q_drive_std": 11.101132,
+        "lg_q_lp": 41.033333,
+        "lg_q_lp_std": 29.264913
+      },
+      "ran_at": "2026-08-09T17:18:39",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "LC.00",
+      "status": "PASS"
+    },
     "ME.1": {
       "attempt": 1,
       "commit": "55e5bda",

@@ -977,3 +977,30 @@ answered yes, push and launch T2.01 (one kernel, reuse pattern in the spec).
 Else ME.11.B (BM25S arm, CPU) is the next cheapest unit; then overseer #4
 (bakeoff TEST fixtures in DECISIONS_RESOLVED.md), #7 (Spec.control decorative),
 #5 (attempt:1 false for 4 specs).
+
+## 2026-08-09 ~17:25 — Queue top processed: LC.00–LC.06 + PS.01 registered, LC.00 PASS (50/136)
+
+Stage 0.1, top queue entry (LEARNING_CORE.md), 5-step protocol followed in
+full. CROSS-CHECK clean: no doc refutes LC.*; NEEDS_AND_DEATH §0.2 actively
+SUPPORTS LC.00's drive-reduction reward (unique self-termination-safe form);
+the LEARNING_CORE-vs-SURVIVAL_WORLD "W0" naming is reconciled by §5.0's
+contract, not a conflict. PS.01 verified NOT implicated in the PS.00(c)/PS.02
+refutation (it is calibration/dynamic-range) and registered in the same commit
+because LC.03 depends on it (LEARNING_CORE §5.6's own requirement). VERIFY:
+8 specs AST-parse with all required fields, zero id clashes vs 128 live ids,
+zero new glob hazards, all deps resolve. LC.00 implemented and PASS at 3
+seeds, 26 s: q_drive 97.8 (9.1σ over null), model_vi 90.8 (6.3σ), model_efe
+170.0 (4.1σ), q_lp 41.0 (1.5σ, ran but did not clear — 3 of 4 vs a ≥2 gate);
+frozen control −6.3±5.9 ≈ 0, so life_gain measures the learner, not the
+world. Its numeric value is in the ledger for LC.03/LC.04 to reuse. Honest
+note in the test docstring: first world parameterisation killed everything at
+~50 steps before any reward was observable (T1.02: the TASK was broken);
+recalibrated depletion/lives/buckets BEFORE the recorded run, thresholds
+untouched, calibration-on-same-seeds stated openly (margins 9.1/6.3/4.1σ vs
+3.0 gate). CONCURRENT SESSION is live (pts/3): it rewrote NEEDS_AND_DEATH +
+SURVIVAL_WORLD (left uncommitted — do NOT inherit while it runs) and updated
+the queue under me mid-iteration. NEXT ITERATION: queue top is now
+NEEDS_AND_DEATH (NE.00–NE.09) — only if its doc is committed and the owner
+session gone; else LC.01 (unison admission, CPU ~20 min, PG.8 PASSes) is the
+next cheapest LC unit. D3 (may the loop push?) still open; Kaggle ~23.6 h
+expire 2026-08-16; T2.01 re-run still blocked on a push.

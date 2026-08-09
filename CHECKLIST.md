@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 49 / 128 demonstrated
+## 50 / 136 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -496,3 +496,50 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T6.05** Companion battery
       - _asserts:_ Responses are contingent on user-avatar events; intent is inferred above majority-class; the user zone is violated <1/1000 episodes across reward scales; identity is distinguishable from a re-seeded twin.
       - _dies if:_ Any leg fails: time-shuffled events show identical response stats, intent at chance, safety trades off against reward, or the twin is indistinguishable.
+
+### Tier 0 — HARNESS — can we measure anything?
+
+- [x] **LC.00** The learning-core question is decidable in a gridworld first
+      - _asserts:_ In a 12x12 survival gridworld with two depleting needs, death on depletion, random respawn and a persistent cross-life visit table, all four learning cores (tabular Q on drive reduction; the same plus absolute learning progress; a tabular latent-transition model with value iteration in the model; and the same model scored by expected free energy) run to completion, and at least two produce a life_gain that beats the random null by 3 sigma over 3 seeds.
+      - _dies if:_ Fewer than two cores clear the null. Then the METRIC is wrong or the world is unlearnable, and no amount of MuJoCo will repair either — LC.03 onward must not run.
+      - _then delete:_ The whole LC programme, for two CPU-minutes. It is the cheapest thing that can falsify the metric, the world contract and the four-core framing before any body, any physics, any torch or any GPU is involved. Modelled on PS.00.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **LC.01** Every candidate core takes every sense into one latent, or it is not a candidate
+      - _asserts:_ For each admissible arm: (U1) every modality key reaches the shared state tensor and no modality has a private path to the action; (U2) perturbing modality A's input produces a NONZERO finite-difference gradient at modality B's encoder through the arm's declared binding loss; (U3) each modality can be dropped without a shape error and the core's internal uncertainty CHANGES when it is; (U4) the need-state modality holds at least 1/|M| of the total prediction loss at init.
+      - _dies if:_ Any arm failing any of U1-U4. That arm is EXCLUDED from LC.03/LC.04 — not scored and beaten, excluded — per SYSTEM.md's constitutional constraint. An arm cannot buy admission with a task score.
+      - _then delete:_ Bare PPO as a candidate learning core. Per docs/research/LEARNING_CORE.md 3.7, PPO's senses meet only through a scalar reward, so an admissible PPO arm must carry L_masked_cross_modal. Also kills TD-MPC2 outright (arXiv:2310.16828 is state-based proprioception only, no vision, by construction).
+- [ ] **LC.02** A core that cannot live a life at survivable wall-clock is not a core
+      - _asserts:_ Every admissible arm sustains at least 5.0 simulated seconds of Jack's life per real second on 3 ARM cores at nice 19 with the learner in the loop, at the train_ratio this spec selects for it; and the selected train_ratio is the largest power-of-two value that clears that floor.
+      - _dies if:_ An arm below 5.0 sim-s/real-s at every train_ratio down to its minimum. That arm is EXCLUDED: GOAL.md requires lives, death and cross-life learning, and a core that cannot produce a second life inside a builder iteration cannot deliver them at any sample efficiency.
+      - _then delete:_ Any arm's train_ratio above the largest affordable value, and any arm that cannot reach the floor at all. NOTE THE ANTI-GAMING RULE: this spec's _check MAY NOT READ life_gain. Selecting a hyperparameter by its score is tuning on the metric; selection here is on wall-clock fit only, and the chosen value is committed to the ledger before LC.03 runs.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **LC.03** Screening: which learning cores learn to survive at all
+      - _asserts:_ At the LC.02-fixed train_ratio, run to the LC.04 envelope, each admissible arm's life_gain beats the random null by >=3 sigma AND beats its own untrained twin by >=3 sigma, over 3 seeds, with n_lives >= 12 per seed.
+      - _dies if:_ Fewer than two arms clear both gates. Recorded VOID 'fewer than two learners' — which blocks the decision instead of manufacturing one — and LC.04 does not run.
+      - _then delete:_ Any arm that cannot survive better than a network which has never received a gradient. Screening declares NO winner — that is LC.04's job, and separating them is why LT.03/LT.04 are separate.
+- [ ] **LC.04** The learning core, arbitrated at matched EXPERIENCE
+      - _asserts:_ Among the arms that cleared LC.03, one core's life_gain at exactly N_STEPS decisions of lived experience beats the runner-up by >=1.5 sigma of the pooled seed spread.
+      - _dies if:_ No arm leads by 1.5 sigma => TIE, resolved to the cheapest by trainable parameters. That is a real result: the choice of learning core does not matter yet and the simplest one ships.
+      - _then delete:_ Three of four learning cores, and the answer to the owner's question 'THIS is how it learns'. The winner is PROVISIONAL: adoption is VOID until UB.9 and UB.11 pass under it (SYSTEM.md's constitutional unison constraint), and the losers are NOT deleted until then.
+- [ ] **LC.05** The same arms, arbitrated at matched COMPUTE
+      - _asserts:_ Scored off the SAME stored curves at exactly W_CLOCK core-seconds instead of N_STEPS decisions, the LC.04 winner still wins by >=1.5 sigma.
+      - _dies if:_ A different arm wins => SPLIT. Recorded as VOID for the core decision and PASS for the finding: sample efficiency and compute efficiency point different ways at 30 GPU-h/week. Nothing ships; LC.05 re-runs at the 10x deployment budget to break it.
+      - _then delete:_ The pretence that there is a neutral single budget. T2.02 matched env-steps and hid a 16x optimiser-step gap (LESSONS.md, "'Matched steps' has more than one meaning"). Matching env-steps pre-decides for the world model; matching wall-clock pre-decides for PPO; so both are pre-registered and their disagreement is a reportable outcome rather than a choice made after the numbers exist.
+
+### Tier 3 — ABLATION — does it earn its parameters?
+
+- [ ] **LC.06** The simplicity budget is enforced, not promised
+      - _asserts:_ The adopted learning core satisfies all four pre-registered ceilings: B1 trainable parameters <= 5,000,000; B2 free hyperparameters <= 25, of which ZERO are undocumented in the spec that used them; B3 <= 1,500 raw lines in the learning rule and learned model; B4 >= 5.0 simulated seconds per real second on 3 ARM cores.
+      - _dies if:_ Any ceiling exceeded. The core is not adopted at that size; it is reduced, or the ceiling is raised by the procedure in LEARNING_CORE.md 6.4 — a bakeoff in which the larger core beats the smaller by >=1.5 sigma at matched env-steps AND matched wall-clock — never by argument.
+      - _then delete:_ Complexity that has not earned itself. The owner, 2026-08-09: 'it won't be the most complex model that Jack is. It will be just a system that can learn and get input from every single sense.' This spec is that sentence with numbers on it, and it is the guard that makes the 57M-vs-124K lesson unrepeatable rather than merely remembered.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **PS.01** The drive layer is a real control problem, and a statue loses
+      - _asserts:_ With PG.8's humanoid under random action, energy and integrity both traverse a usable range (10th-90th percentile spread >= 0.3 over 3,000 decisions, neither pinned at 0 nor at 1), a fall from the ladder platform costs 0.10-0.20 integrity, floor food supports subsistence at rest but not activity, and the DO-NOTHING policy is strictly dominated: its energy reaches the weakness floor while an active random policy's does not.
+      - _dies if:_ A random agent never depletes (the drive is inert and cannot pressure anything), or always flatlines at zero within a minute (no policy can learn under it), or the statue is NOT dominated (the dark room is a stable optimum and homeostasis will produce a corpse).
+      - _then delete:_ The specific numbers in PURPOSE_AND_SCAFFOLDING.md 2.2-2.3. It cannot kill the idea, only the parameterisation — which is why it runs before anything trains and after PS.00.
