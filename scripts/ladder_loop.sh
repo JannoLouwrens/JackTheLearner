@@ -46,7 +46,24 @@ mkdir -p "$LOGDIR"
 LOG="$LOGDIR/ladder.log"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 
-[ -f "$PAUSE" ] && { say "paused (remove $PAUSE to resume)"; exit 0; }
+if [ -f "$PAUSE" ]; then
+  # Credit-caused pauses SELF-EXPIRE: credits refresh on their own schedule,
+  # so a machine that strands itself permanently over a transient exhaustion
+  # would wait days for a human who was told he could leave. Retry after 4h.
+  # Manual pauses (any other content) never self-expire — a human's stop
+  # means stop.
+  if grep -q "^credits" "$PAUSE" 2>/dev/null; then
+    AGE=$(( $(date +%s) - $(stat -c %Y "$PAUSE") ))
+    if [ "$AGE" -gt 14400 ]; then
+      say "credit pause aged out after ${AGE}s — self-resuming"
+      rm -f "$PAUSE"
+    else
+      say "paused (credits; self-retry in $((14400-AGE))s)"; exit 0
+    fi
+  else
+    say "paused (remove $PAUSE to resume)"; exit 0
+  fi
+fi
 
 exec 9>"$LOCK"
 flock -n 9 || { say "previous iteration still running — skipping"; exit 0; }
@@ -103,8 +120,8 @@ for FB in $FALLBACK_MODELS; do
   RC=$?
 done
 if tail -5 "$LOG" | grep -qi "out of usage credits"; then
-  say "OUT OF CREDITS on every model — pausing. Resume with: rm ${PAUSE}"
-  touch "$PAUSE"
+  say "OUT OF CREDITS on every model — credit-pausing (self-resumes in 4h)"
+  echo "credits $(date -Iseconds)" > "$PAUSE"
 fi
 
 AFTER=$(/data/venvs/jackthelearner/bin/python -c \
