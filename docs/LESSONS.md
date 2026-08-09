@@ -659,3 +659,21 @@ record's contents attributable. Corollary for auditing: a record whose entries
 are all self-declared fixtures is not an empty record, it is a *misleading* one —
 delete them and say in the file that it is empty, because "nine decisions" and
 "zero decisions" read very differently to anyone counting.
+
+## A lock must name the resource it protects, not the activity it observes
+
+The ladder had ONE lock. Its real job was preventing two torch processes from
+thrashing 4 shared CPU cores. But a GPU spec — which spends ~6 hours doing
+nothing but polling Kaggle over the network — took the same lock, so the
+hourly builder skipped every iteration while the box sat at **4% CPU** with
+~100 CPU-core-hours of designed science queued. Found only because the owner
+asked "is our CPU being utilised as we speak?"
+
+Ledger safety was never this lock's job — `Ledger.record` has its own fcntl
+lock and an atomic re-read-merge-write. The single lock was conflating "ladder
+work in progress" with "CPU busy", which are different resources.
+
+**Rule:** name the lock after the resource (CPU cores, GPU quota, a file), not
+after the activity. Two activities that never contend for the same resource
+must never share a lock — and the cost of getting this wrong is invisible,
+because nothing errors: the machine just quietly does less.

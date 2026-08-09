@@ -37,6 +37,10 @@ LOGDIR=/data/jack-logs          # /data, not /var/log — root is the tight volu
 # would make every in-loop runner invocation silently skip — an hour of
 # Claude reasoning against a ladder it was locked out of.
 LOCK=/tmp/jack-loop.lock
+# The loop's guards below check CPU load, not the ladder lock — a GPU spec
+# polling Kaggle holds only /tmp/jack-ladder-gpu.lock now, so the builder can
+# still do CPU work beside it (2026-08-09: the box sat at 4% for hours
+# because those two were the same lock).
 PAUSE="$REPO/.loop-paused"
 FALLBACK_MODELS="${JACK_LOOP_FALLBACK:-opus sonnet}"  # tried in order when the primary is out of credits
 MIN_FREE_GB=3

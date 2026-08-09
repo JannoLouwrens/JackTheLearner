@@ -28,8 +28,30 @@ TESTS_DIR = Path(__file__).parent / "tests"
 RUN_LOCK = "/tmp/jack-ladder.lock"          # shared with scripts/ladder_loop.sh
 
 
+def _lock_for(spec_ids) -> str:
+    """CPU work and remote-GPU work do not contend, so they must not share a lock.
+
+    Discovered 2026-08-09 with the box at 4% CPU: a T2.01 run holding the
+    single ladder lock for ~6 hours while merely POLLING Kaggle made the
+    hourly builder skip every iteration. Six hours of idle cores with ~100
+    CPU-core-hours of designed science queued, because a job waiting on a
+    REMOTE GPU held the LOCAL CPU-work lock.
+
+    The lock exists to stop two torch processes thrashing 4 shared cores —
+    a concern that simply does not apply to a process blocked on a network
+    poll. Ledger integrity is NOT this lock's job: Ledger.record already
+    takes its own fcntl lock and re-reads-merges-writes atomically (the T0.08
+    lesson), so concurrent CPU and GPU specs cannot lose each other's results.
+    """
+    from .registry import BY_ID as _B
+    budgets = {(_B[i].budget.value if i in _B else "") for i in spec_ids}
+    if budgets and all(b.startswith("gpu") for b in budgets):
+        return "/tmp/jack-ladder-gpu.lock"
+    return RUN_LOCK
+
+
 @contextmanager
-def _exclusive():
+def _exclusive(spec_ids=()):
     """Serialise ALL ladder work, manual or looped.
 
     The hourly loop and a manual session raced and each wrote a different T0.07;
@@ -37,11 +59,12 @@ def _exclusive():
     a human at a terminal did not, so the guard only protected one side. Holding
     it here means whoever starts second waits or skips, regardless of who they are.
     """
-    with open(RUN_LOCK, "w") as fh:
+    lock_path = _lock_for(spec_ids)
+    with open(lock_path, "w") as fh:
         try:
             fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            print("Another ladder run holds the lock (probably the hourly loop). "
+            print(f"Another run holds {lock_path} (probably the hourly loop). "
                   "Wait for it, or `touch .loop-paused` to stop the loop.")
             raise SystemExit(0)
         fh.write(f"{os.getpid()}\n"); fh.flush()
@@ -391,16 +414,17 @@ def main() -> int:
     if args.gate:
         ids = [s.id for s in LADDER if ledger.status(s.id) is Status.PASS]
         print(f"Regression gate: {len(ids)} previously-passing tests\n")
-        with _exclusive():
+        with _exclusive(ids):
             return cmd_run(ledger, ids)
     if args.tier is not None:
-        with _exclusive():
-            return cmd_run(ledger, [s.id for s in tier(args.tier)])
+        _tier_ids = [s.id for s in tier(args.tier)]
+        with _exclusive(_tier_ids):
+            return cmd_run(ledger, _tier_ids)
     if not args.spec or args.spec[0] == "status":
         return cmd_status(ledger)
     if args.spec[0] == "render":
         return cmd_render(ledger)
-    with _exclusive():
+    with _exclusive(args.spec):
         return cmd_run(ledger, args.spec)
 
 
