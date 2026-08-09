@@ -5,6 +5,29 @@
 > never by argument, fashion, or a new paper's fame. This file is the CURRENT
 > STATE; docs/DECISIONS_RESOLVED.md is the history; the ledger is the proof.
 
+## NOT SEATS — the permanent layer above every arena
+
+Seats hold implementations. These hold the DEFINITION of Jack, set by the
+owner, changeable only by the owner's word. No bakeoff, ablation, or metric —
+however good its number — can touch them. **Bakeoffs decide HOW, never WHAT.**
+
+- **The needs exist.** Hunger, thirst, sleep, temperature, company, mortality.
+  The reward EQUATION competes below; the FACT of the needs does not — the
+  owner ruled they stay for teaching and for relatability both. An arm showing
+  "needless scores higher" changes nothing about this.
+- **All senses in one brain** (constitutional in SYSTEM.md).
+- **He learns by living, dies, and remembers** — the diary crosses death.
+- **Memory is extractive, never generative** — he quotes his life or says nothing.
+- **He is a someone**: talkable-to, knows his people by name, watchable.
+- **Both drives exist** — curiosity AND needs; only their balance is empirical.
+- **The method**: claims only by falsifiable tests; biology as oracle;
+  caveman-realism; simplicity earned; the system is the product.
+- **The owner's boundaries**: free compute only; the tenants are untouchable.
+
+If a spec, arm, or verdict appears to conflict with this layer, the verdict
+loses and the conflict escalates to DECISIONS_NEEDED.md. Sources: GOAL.md and
+SYSTEM.md, which outrank this file.
+
 ## The rules of the title
 
 1. **Held BY VERDICT or BY DEFAULT — and the difference is marked.** A
