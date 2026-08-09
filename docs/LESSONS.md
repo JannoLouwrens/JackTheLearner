@@ -538,3 +538,29 @@ worse: a prompt is an instruction, so its staleness is obeyed, not just read.
 **Rule:** prompts state priorities and point at living sources for facts; they
 never cache counts, statuses, or summaries of other documents. If a prompt
 must reference state, reference the command that prints it.
+
+## A routing audit certifies the route it was handed, not the one the arm runs
+
+LC.01's U1 asks whether any modality has a *private path to the action*. The
+probe answers it by detaching the shared representation and requiring the
+action's gradient to every raw input to be exactly zero — which is a good
+measurement of whatever object it detaches. The first implementation detached
+`encode(obs)`, the modality-fusion latent, because that is what "the shared
+latent" obviously means. For the two world-model arms the actor was then
+reading that same pre-RSSM latent, so the RSSM — the entire mechanism that
+makes `dreamer-xs` a world model — sat off the action path, and U1 passed
+five arms of which two would run a *different* actor in LC.03. Every number
+was correct. The object under test was wrong.
+
+The fix is one line of ownership: the ARM declares `shared_state()` and the
+probe audits whatever comes back (`cores.py`), so a core cannot be audited
+through a path it does not use. Caught before the recorded run, by asking what
+the world model was contributing to a gradient that had not changed when the
+world model was added.
+
+**Rule:** when an audit has to name the thing it inspects, the *artifact* must
+name it, never the auditor — an auditor's own definition silently redefines
+the test whenever an implementation disagrees with it. Same family as "fixture
+specs certify PROPERTIES of a thing, not that the thing is connected to the
+system that needs it", one level up: here the fixture *was* connected, and it
+was the auditor that had the wrong end.

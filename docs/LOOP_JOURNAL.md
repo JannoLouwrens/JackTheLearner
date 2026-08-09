@@ -1004,3 +1004,54 @@ NEEDS_AND_DEATH (NE.00–NE.09) — only if its doc is committed and the owner
 session gone; else LC.01 (unison admission, CPU ~20 min, PG.8 PASSes) is the
 next cheapest LC unit. D3 (may the loop push?) still open; Kaggle ~23.6 h
 expire 2026-08-16; T2.01 re-run still blocked on a push.
+
+## 2026-08-09 ~18:35 — LC.01 PASS: all five candidate cores admitted on unison (51/136)
+
+Stage 0.1, queue top (LEARNING_CORE.md) step 4: implement + run its cheapest
+registered spec. LC.01 is ADMISSION-1 — the constitutional gate from
+SYSTEM.md's "no learning core without unison", run before any learning, that
+decides which arms LC.03/LC.04 are even allowed to score.
+
+Built `experiments/cores.py` as the one definition of the §5.4 arms (LESSONS:
+two kernels re-implementing one operation IS the defect) — ppo-needs and
+ppo-lp with `L_masked_cross_modal` attached (bare PPO is inadmissible),
+dreamer-xs, wm-efe (same world model + K=5 ensemble epistemic term),
+wm-latent (decoder deleted, latent prediction vs an EMA target). Declared
+in the open: `loss_scales` needs=2.0/others=1.0 with MEAN reduction over
+dims, and all probes take the stochastic state as its expectation, never a
+sample, so a finite difference measures the objective and not the sampler.
+
+Result, 3 seeds, 5.7 s: **5/5 arms admitted**, U1–U4 all clear. Margins, not
+just verdicts — needs loss share 0.232–0.257 (±0.02) against a 1/|M| = 0.167
+floor; placebo share 0.124–0.128 (±0.005) against the same ceiling; min
+cross-modal finite difference 0.093–0.159; min action reach 0.54–0.67;
+private-path gradient exactly 0.0 on every arm and seed. Params measured:
+ppo-needs 135,961 / ppo-lp 144,794 / dreamer-xs 1,612,825 / wm-efe 1,994,025
+/ wm-latent 803,305.
+
+The three controls all failed on their pre-registered side, which is what
+makes the above a measurement: `unbound` (no cross-modal term) read a U2
+finite difference of **exactly 0.0** on all three seeds — bit-identical
+backward passes, the ruler U2 is measured against; `leaky` (a private wire
+from proprioception to the action) failed U1 with a private-path gradient of
+271±44; `dreamer-naive` (DreamerV3's shipped shared `loss_scales.rec`, i.e.
+per-key loss summed over dimensions) failed U4 with a needs share of 0.113.
+T0.13 re-run after: 50 gates scanned, no new inert key.
+
+NEAR-MISS, now in LESSONS.md: the U1 probe originally detached `encode(obs)`
+and the world-model arms' actor read that same pre-RSSM latent — so the RSSM
+sat off the action path and U1 would have certified two arms whose LC.03
+actor is a different network. Fixed by making the ARM declare `shared_state()`
+and the probe audit whatever it returns.
+
+FOR THE NEXT ITERATION, two things that will bite:
+1. **F7 will VOID every world-model arm if LC.03 asserts §5.4's declared
+   params.** §5.4 declares 1,896,047 for A2; the measured count at LC.01's
+   modality contract is 1,612,825. §5.4's numbers were computed for a
+   different observation shape. Assert against the LEDGER's measured counts
+   (LC.01's metrics), or restate §5.4 — do not let a stale declaration VOID a
+   working arm.
+2. LC.02 (throughput) needs the W0 env, which does not exist yet; PS.01 (the
+   drive layer — CPU, no body) is likely the cheaper next LC unit. The queue's
+   second entry (NEEDS_AND_DEATH, NE.00–NE.09) is still PENDING and its NE.01
+   is gated on the §1.2 Borbély citation pass.

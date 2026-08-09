@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 50 / 136 demonstrated
+## 51 / 136 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -506,7 +506,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **LC.01** Every candidate core takes every sense into one latent, or it is not a candidate
+- [x] **LC.01** Every candidate core takes every sense into one latent, or it is not a candidate
       - _asserts:_ For each admissible arm: (U1) every modality key reaches the shared state tensor and no modality has a private path to the action; (U2) perturbing modality A's input produces a NONZERO finite-difference gradient at modality B's encoder through the arm's declared binding loss; (U3) each modality can be dropped without a shape error and the core's internal uncertainty CHANGES when it is; (U4) the need-state modality holds at least 1/|M| of the total prediction loss at init.
       - _dies if:_ Any arm failing any of U1-U4. That arm is EXCLUDED from LC.03/LC.04 — not scored and beaten, excluded — per SYSTEM.md's constitutional constraint. An arm cannot buy admission with a task score.
       - _then delete:_ Bare PPO as a candidate learning core. Per docs/research/LEARNING_CORE.md 3.7, PPO's senses meet only through a scalar reward, so an admissible PPO arm must carry L_masked_cross_modal. Also kills TD-MPC2 outright (arXiv:2310.16828 is state-based proprioception only, no vision, by construction).
