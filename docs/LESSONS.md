@@ -634,6 +634,38 @@ so the honest reading of a green T0.12 today is *"the meter is internally
 coherent and charges only what a job plausibly spent"*, not *"the meter agrees
 with Kaggle."*
 
+## A count that double-counts is a ranking, and a ranking is an instruction
+
+`run blocked` was built to answer "what one fix would free the most", and it
+answered a different question: it counted how many stuck specs *mention* each
+terminal root. A spec resting on two roots is counted under both. So the command
+printed `T2.03 blocks 11`, the iteration that built it wrote *"T2.03 ... frees 11
+specs including UB.1–8, the largest unblocking available without a GPU"* into its
+own hand-off line, and the next iteration was pointed at a spec that frees
+**two** — nine of the eleven also rest on `T2.01 = VOID` and stay dead either
+way. The same number lied in the other direction too: `PG.6 blocks 7`,
+`PG.7 blocks 7`, `LC.02 blocks 4`, `PS.01 blocks 4`, and each frees **nothing**
+alone, because every dependent needs a co-requisite root fixed as well. Four of
+the twelve entries had a true marginal value of zero and were printed as the
+third-, fourth-, fifth- and sixth-best moves on the board.
+
+Nothing was wrong with the graph walk — `_terminal_blockers` was right, and the
+overseer's hand-walked summary it reproduced was right. The defect is entirely in
+turning a set into a scalar: `len(mentions)` is not the marginal value of a fix
+when the sets overlap.
+
+**Rule:** when a diagnostic sorts, the sort key IS the recommendation, so it must
+be the quantity a reader would act on — here the *marginal* value of one fix, not
+a membership tally. Whenever items can belong to several buckets, ask what the
+number reads for an item that is worth nothing on its own; if that is not zero,
+the ranking will promote it. And report the co-requisite SETS explicitly, because
+"frees 0" is only actionable next to "PG.6 + PG.7 together free 5". Guarded:
+`_rank_blockers` reports `frees` (the ranking key), `blocks` (retained — a root
+that blocks many and frees none is exactly the signal a pair is needed) and the
+groups; `_check_ranker` re-runs the real walk on a four-spec graph whose answer
+is known and refuses to print if it gets it wrong. The pre-fix ranker fails that
+fixture, which is the only reason the fixture may be believed.
+
 ## A function that hard-codes the path to the record it mutates cannot be tested without corrupting it
 
 Two files, same shape, found on the same day. `gpu.submit()` opened `Budget()` on

@@ -162,20 +162,25 @@ def cmd_next(ledger: Ledger) -> int:
     return 0
 
 
-def _terminal_blockers(ledger: Ledger) -> dict:
+def _terminal_blockers(ledger: Ledger, ladder=None, by_id=None) -> dict:
     """For every spec, the ROOTS its unreachability actually rests on.
 
     A spec's immediate parent is almost never the answer. UB.1 reads as blocked
     by T4.01, which is blocked by T3.02, which is blocked by T2.01 = VOID — and
     only T2.01 can be acted on. Walking to the terminal blocker is what turns a
     list of 40 stuck specs into two things to fix.
+
+    `ladder`/`by_id` are injectable so the ranking below can be checked against a
+    graph whose answer is known — see `_RANKER_FIXTURE`.
     """
+    ladder = LADDER if ladder is None else ladder
+    by_id = BY_ID if by_id is None else by_id
     terminal: dict = {}
 
     def walk(sid: str, seen: frozenset) -> set:
         if sid in terminal:
             return terminal[sid]
-        spec = BY_ID.get(sid)
+        spec = by_id.get(sid)
         if spec is None or sid in seen:      # unknown dep, or a dependency cycle
             return {sid}
         roots: set = set()
@@ -189,9 +194,90 @@ def _terminal_blockers(ledger: Ledger) -> dict:
         terminal[sid] = roots
         return roots
 
-    for s in LADDER:
+    for s in ladder:
         walk(s.id, frozenset())
     return terminal
+
+
+def _rank_blockers(terminal: dict, ledger: Ledger, ladder=None) -> tuple:
+    """Split "mentions this root" from "fixing this root alone frees it".
+
+    The first version of this command ranked by MENTIONS, and mentions
+    double-count: a spec resting on two roots is counted under both. It reported
+    `T2.03 blocks 11` and the next iteration's hand-off line duly named T2.03
+    "the largest unblocking available without a GPU". Nine of those eleven are
+    UB.1-8 + T4.01, which also rest on `T2.01 = VOID` — so fixing T2.03 frees
+    **two** specs, not eleven. The ranking sent the loop at the wrong unit.
+
+    The converse error is in the same number: PG.6, PG.7, LC.02 and PS.01 read
+    "blocks 7, 7, 4, 4" and each frees **nothing** alone, because their
+    dependents need a co-requisite root fixed too. A marginal value of zero was
+    being presented as the third-best move on the board.
+
+    So: `frees` (the marginal value of this fix alone) is the ranking key,
+    `blocks` is still reported because a root that blocks many and frees none is
+    exactly the signal that a PAIR is needed, and `groups` names those pairs.
+    """
+    ladder = LADDER if ladder is None else ladder
+    mentions: dict = {}
+    frees: dict = {}
+    groups: dict = {}
+    for s in ladder:
+        if ledger.status(s.id) is Status.PASS:
+            continue
+        roots = {r for r in terminal.get(s.id, set()) if r != s.id}
+        if not roots:                              # runnable now, not blocked
+            continue
+        for root in roots:
+            mentions.setdefault(root, []).append(s.id)
+        if len(roots) == 1:
+            frees.setdefault(next(iter(roots)), []).append(s.id)
+        else:
+            groups.setdefault(frozenset(roots), []).append(s.id)
+    return mentions, frees, groups
+
+
+# A graph whose answer is known, checked on every `blocked` run. X is a root that
+# blocks two specs and frees one; W blocks one and frees NOTHING alone, because
+# Z needs both. That second case is the defect this fixture exists to catch, and
+# a ranker with the pre-fix "rank by mentions" logic puts W above nothing at all
+# while claiming it is worth one spec. (LESSONS.md: every audit tool needs a
+# known-positive fixture it must flag, exercising the same code path as the real
+# scan — so this runs `_terminal_blockers`/`_rank_blockers` themselves, not a
+# tidied restatement.)
+def _ranker_fixture() -> tuple:
+    from .protocol import Spec, Budget
+
+    def stub(sid, deps):
+        return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST, depends_on=deps)
+
+    ladder = [stub("X", []), stub("W", []), stub("Y", ["X"]), stub("Z", ["X", "W"])]
+    return ladder, {s.id: s for s in ladder}
+
+
+def _check_ranker(ledger: Ledger) -> None:
+    """Refuse to print a ranking the ranker cannot get right on a known graph."""
+    ladder, by_id = _ranker_fixture()
+
+    class _AllUnrun:
+        def status(self, sid):
+            return Status.NOT_RUN
+
+    fixt = _AllUnrun()
+    terminal = _terminal_blockers(fixt, ladder=ladder, by_id=by_id)
+    mentions, frees, groups = _rank_blockers(terminal, fixt, ladder=ladder)
+    expect = (
+        sorted(mentions.get("X", [])) == ["Y", "Z"],
+        sorted(mentions.get("W", [])) == ["Z"],
+        sorted(frees.get("X", [])) == ["Y"],
+        frees.get("W", []) == [],
+        groups.get(frozenset({"X", "W"})) == ["Z"],
+    )
+    if not all(expect):
+        raise RuntimeError(
+            "the blocked-ranker failed its own fixture "
+            f"(mentions={mentions}, frees={frees}, groups={ {set(k): v for k, v in groups.items()} }); "
+            "refusing to print a ranking that cannot be trusted")
 
 
 def cmd_blocked(ledger: Ledger) -> int:
@@ -204,32 +290,42 @@ def cmd_blocked(ledger: Ledger) -> int:
     now nothing answered "what is unreachable, and what one fix would free it".
     LESSONS.md carried that as advice to humans. This makes it a command.
     """
+    _check_ranker(ledger)
     terminal = _terminal_blockers(ledger)
-    by_root: dict = {}
-    for s in LADDER:
-        if ledger.status(s.id) is Status.PASS:
-            continue
-        for root in terminal.get(s.id, set()):
-            if root == s.id:                       # runnable now, not blocked
-                continue
-            by_root.setdefault(root, []).append(s.id)
+    mentions, frees, groups = _rank_blockers(terminal, ledger)
 
-    if not by_root:
+    if not mentions:
         print("Nothing is blocked — every unrun spec has its dependencies passing.")
         return 0
 
-    ranked = sorted(by_root.items(), key=lambda kv: -len(kv[1]))
-    total = len({sid for ids in by_root.values() for sid in ids})
+    def _st(root):
+        return ledger.status(root).value if root in BY_ID else "UNKNOWN-SPEC"
+
+    ranked = sorted(mentions.items(),
+                    key=lambda kv: (-len(frees.get(kv[0], [])), -len(kv[1])))
+    total = len({sid for ids in mentions.values() for sid in ids})
     print(f"\n{total} of {len(LADDER)} specs are unreachable. Terminal blockers, "
-          f"worst first:\n")
+          f"ranked by what fixing ONE of them alone would free:\n")
     for root, ids in ranked:
-        st = ledger.status(root).value if root in BY_ID else "UNKNOWN-SPEC"
         title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
-        print(f"  {root} = {st}  blocks {len(ids)}  — {title}")
-        print(f"        {', '.join(sorted(ids))}\n")
+        f = sorted(frees.get(root, []))
+        print(f"  {root} = {_st(root)}  frees {len(f)}  (blocks {len(ids)})  — {title}")
+        print(f"        frees:  {', '.join(f) if f else 'NOTHING on its own'}")
+        rest = sorted(set(ids) - set(f))
+        if rest:
+            print(f"        also blocks (needs a co-requisite too): {', '.join(rest)}")
+        print()
+
+    if groups:
+        print("  CO-REQUISITE SETS — no single fix frees these; the whole set must go:\n")
+        for roots, ids in sorted(groups.items(), key=lambda kv: -len(kv[1])):
+            names = " + ".join(f"{r}={_st(r)}" for r in sorted(roots))
+            print(f"    {names}  frees {len(ids)}: {', '.join(sorted(ids))}")
+        print()
+
     summary = "; ".join(
-        f"{root}={ledger.status(root).value if root in BY_ID else 'UNKNOWN'} "
-        f"blocks {len(ids)}" for root, ids in ranked)
+        f"{root}={_st(root)} frees {len(frees.get(root, []))}/blocks {len(ids)}"
+        for root, ids in ranked)
     print(f"  SUMMARY: {summary}\n")
     return 0
 
