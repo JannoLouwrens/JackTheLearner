@@ -278,6 +278,37 @@ EXPANSION: list[Spec] = [
          kills="Any design where conversation memory lives only in weights "
                "or skills live only in retrieved episodes."),
 
+    # OWNER PRINCIPLE (2026-08-09): "isn't it better if it isn't an LLM
+    # remembering?" Yes, and this spec makes it structural. Memory is
+    # EXTRACTIVE, NEVER GENERATIVE: what Jack reports about his past must be a
+    # literal stored record or nothing. A language model may INDEX the log
+    # (embeddings are a distance function) but must never author the answer,
+    # because a generator cannot abstain honestly -- fluency is not evidence.
+    # The weakness this fixes is real and measured: lexical containment nails
+    # "the ladder" and abstains on "what did ada say was broken about the
+    # steps", i.e. every question a person would actually ask.
+    Spec("ME.11", 2, "Finds the memory from a paraphrase, still never invents one",
+         hypothesis="Cued recall stays >=80% when cues are PARAPHRASES sharing "
+                    "no content words with the stored event (synonyms, "
+                    "circumlocutions, indirect questions), while fabricated-"
+                    "event abstention stays >=95% and every returned answer is "
+                    "byte-identical to a stored record.",
+         falsified_by="Paraphrase recall at the lexical baseline (i.e. the "
+                      "index did not help), OR abstention degrading as recall "
+                      "improves (the retriever bought recall with credulity), "
+                      "OR any returned string not present verbatim in the log.",
+         null_baseline="The current lexical-containment retriever, which "
+                       "measured 0/4 on paraphrased cues.",
+         metric="paraphrase_recall_at_fixed_abstention", budget=Budget.CPU,
+         depends_on=["ME.1"], seeds=3,
+         control="A DISTRACTOR store where the paraphrase's true target is "
+                 "removed but topically-similar events remain: the retriever "
+                 "must abstain rather than return the nearest neighbour. "
+                 "Semantic matching makes confabulation EASIER, so the "
+                 "abstention floor is the thing under test, not the recall.",
+         kills="Any retriever that generates its answer instead of quoting "
+               "one, however good its numbers."),
+
     # ── TIER-3 GAPS ─────────────────────────────────────────────────────
     Spec("T3.09", 3, "The creative loop earns its existence",
          hypothesis="Wiring AlphaGeometryLoop into a decision path measurably "
