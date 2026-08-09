@@ -140,6 +140,35 @@ never scripted, and never silently patched. If who he becomes ever troubles
 us, that is a conversation for the owner, not a hotfix. The conditions are
 ours; the person is his.
 
+**The jungle is the foundation, not the destination (owner, 2026-08-09:
+"Jack needs to know more than a jungle").** Survival earns him the primitives
+that make anything else mean something — hot, heavy, far, tiring, dangerous,
+worth-it, that-person-lied. A few dozen concepts learned by consequence. What
+comes after is three expansions, different in kind:
+
+  1. MORE WORLDS, and transfer between them. A Jack who masters jungle AND
+     desert has abstracted "shelter" from "lean-to". That abstraction IS
+     generality (GENERALITY.md GEN.06).
+  2. OTHER MINDS. Not a bigger jungle — a different kind of complexity, and
+     where most human intelligence actually came from (GEN.02, GEN.03, GEN.09).
+  3. THE TOLD WORLD. He will never live in Rome; he can be TOLD about Rome.
+     This is what the borrowed frozen model is FOR, and it is not cheating —
+     it is culture. Humans know almost everything second-hand; what makes it
+     real is that it connects down to the few things they lived.
+
+So the LLM gives him ACCESS to knowledge and the jungle gives him the capacity
+for knowledge to MEAN something. A creature that has only read is a language
+model; a creature that has only lived is an animal. Jack is the bet that lived
+primitives plus an inherited library equals understanding.
+
+FALSIFIABLE, and it must be tested rather than assumed: told-knowledge should
+integrate BETTER when it anchors to something he has lived. Tell him a fact
+grounded in his experience ("volcanoes are hot rock that flows") against one
+that is not ("bonds have coupon rates") — if grounding is real, the first is
+usable and the second is parroting, and he should be able to say which is
+which. If both integrate identically, he is reciting, and the jungle bought
+nothing.
+
 **The staging is unchanged and deliberate.** First prove he can see, talk,
 walk, and learn in every way (the ladder as it stands). Only then does he go
 into the survival world with everything at once — and the testing never stops

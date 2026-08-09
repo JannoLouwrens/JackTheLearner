@@ -112,6 +112,20 @@ creature never asked to count will not learn to. Downstream of GEN.01.
 trap safe on exactly the third crossing). Does the capability emerge, or must
 it be installed? Either answer is informative.
 
+## GEN.13 — Told knowledge must anchor to lived knowledge
+**Barrier.** Jack must know more than a jungle, and almost everything he will
+ever know must arrive second-hand — as it does for every human. But borrowed
+facts are only knowledge if they CONNECT to something lived. Otherwise the
+library sits inert beside the creature and he is a language model wearing a
+body after all.
+**Test.** Teach two facts of matched complexity: one anchored to his lived
+primitives (heat, weight, effort, danger), one entirely foreign (abstract
+finance). Measure integration — can he use it, reason with it, apply it to a
+novel case? **Grounded facts must integrate measurably better.** Control: if
+both integrate identically he is reciting, and the jungle bought nothing.
+**Status.** Named 2026-08-09; the falsifier is stated in GOAL.md's expansion
+path. Depends on the LG grounding family.
+
 ## GEN.12 — Experience efficiency versus a child
 **Barrier.** A human gets ~10^9 seconds plus 500My of evolutionary prior.
 Jack gets simulated hours on a free box. Even perfect architecture may need
