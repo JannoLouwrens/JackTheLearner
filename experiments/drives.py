@@ -173,9 +173,18 @@ class DriveLayer:
     term (`§2.2`'s `J_t`). `mj_step` does not call it (the PG.8 lesson,
     `LESSONS.md`). Omitting it, or calling it only once after the whole
     substep loop instead of after every `mj_step`, silently feeds `substep`
-    the PREVIOUS decision's contact state — found in `w0.py`'s own caller,
-    where it did not invalidate LC.02 (never gates on `j`) but would have
-    silently wrecked PS.01's calibration, which is the whole point of `j0`.
+    the PREVIOUS decision's contact state.
+
+    `w0.py`'s own caller does exactly that ON PURPOSE, not by oversight: the
+    correct per-substep call was tried there and cost enough (~10-25%
+    throughput) to drop 4 of LC.02's 5 candidate arms below the 5.0 floor at
+    every train_ratio, so it was reverted (`LESSONS.md`, "The same
+    instrumentation bug can recur inside a single day"). That is safe only
+    because LC.02 never reads `j` — it gates on `drive_gate_frac`, from
+    `_grounded()`'s own contact scan, not from `cfrc_ext`. A caller that DOES
+    need `j` to be accurate (PS.01, calibrating `j0` and `alpha`) must run its
+    OWN stepping loop with the per-substep call shown above, not reuse
+    `w0.py`'s `step()`.
 
     `j0` is the impulse below which contact is NORMAL and costs nothing, and
     `alpha` converts the excess into integrity. Both are measured by PS.01 and
