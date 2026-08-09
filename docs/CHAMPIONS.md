@@ -44,6 +44,13 @@
 | Language model | SmolLM2-360M, frozen, out-of-process | **BY DECREE** (owner; swappable by design) | — | any better frozen swap-in |
 | Consolidation | SIESTA wake/sleep, sleep-gated | BY ANALYSIS | NE.05 (queued) | — |
 | World | MuJoCo playground + needs overlays | **BY VERDICT** (measured 4–6× faster than Craftax AND goal-aligned) | W.1–W.7 fidelity gates (queued) | rematch at each fidelity stage |
+| Audio encoder (world-sound → brain) | undecided — mel favourite (raw costs 12–25×, measured) | — | HR audio-entry bakeoff (queued) | raw vs mel vs tokens vs no-audio null |
+| Language grounding (word → lived skill) | undecided — skills-then-language ordering unproven | — | LG bakeoff (queued; doc needs completeness check) | grounding approaches + the ordering experiment |
+
+**Future seats, named so they are not forgotten:** the body itself (Humanoid-v5
+has ball hands; fingers will compete one day) and the cross-life world
+curriculum (how worlds mutate between deaths). They get chairs when their
+first challenger exists.
 
 *Maintenance:* the builder updates this file as part of queue step 5 whenever
 a bakeoff completes; the daily Review checks seat staleness (rule 4); the

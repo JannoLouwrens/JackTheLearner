@@ -15,7 +15,12 @@ DAILY (every morning, ~15 minutes of work — the senior engineer's walk-through
     builder's attention; append one line to PROGRESS_LOG.md.
   - SKIP Part 2 entirely — tests are re-examined on Sundays; daily rewrites
     would churn the ladder.
-FULL (Sundays): everything below, including Part 2 and the honest paragraph.
+FULL (Sundays): everything below, including Part 2 and the honest paragraph —
+plus the ANATOMY AUDIT: check docs/CHAMPIONS.md's seat list against GOAL.md.
+A capability the goal requires with no seat is a missing organ — you may ADD
+seats directly with justification (adding a seat only invites competition).
+Merging or REMOVING seats is propose-only, FOR THE OWNER — a removed seat is
+a component escaping scrutiny.
 
 READ FIRST: GOAL.md, SYSTEM.md, docs/LESSONS.md, docs/OVERSIGHT.md,
 docs/research/DIRECTION_AUDIT.md (the one-off ancestor of this job),
