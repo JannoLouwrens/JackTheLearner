@@ -1,3 +1,13 @@
+> ## SUPERSEDED IN PART — 2026-08-09
+> **"Freeze a pretrained trunk and learn a small adapter" NO LONGER HOLDS for
+> anything INSIDE Jack.** Owner decree: PLASTIC ONLY — his encoders, core and
+> fusion all learn. Reason: a frozen tower's reshaping gain is identically
+> zero, foreclosing a class of learning, which GOAL.md's capability target
+> marks suspect by definition. Evidence, counterargument and re-open trigger:
+> docs/CHAMPIONS.md. Still standing from this document: the LLM is frozen and
+> swappable — but it is now a PARENT in his world, not a component inside him,
+> so it is not governed by the plastic-only rule.
+
 # Settled decisions
 
 Made by the owner 2026-08-04. The loop treats these as fixed and does not

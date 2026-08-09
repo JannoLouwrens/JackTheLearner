@@ -13,6 +13,32 @@ from __future__ import annotations
 
 from .protocol import Budget, Spec
 
+
+# ── PLASTIC-ONLY DECREE, 2026-08-09 — what it does to existing specs ─────
+# Owner decree: nothing INSIDE Jack is frozen (encoders, core, fusion all
+# learn). The parent LLM is unaffected — it is not inside him.
+#
+# NO THRESHOLD IS TOUCHED (law 4). What changes is what a result MEANS:
+#   T2.03  "pretrained vision beats random" — was a decision, is now
+#          INFORMATION ONLY. Even if pretrained wins, we do not adopt a frozen
+#          encoder; a win would instead be evidence for INITIALISING a plastic
+#          encoder from pretrained weights, which the decree permits (it
+#          forbids freezing, not inheriting).
+#   T3.08  "ablate the LLM" — still valid and now MORE important: it tests
+#          whether the parent is load-bearing from outside.
+#   T1.05  "frozen stays frozen" — still valid as a MECHANISM test (if we
+#          freeze anything, e.g. during a warmup, it must actually stay
+#          frozen). It no longer implies we ship frozen parts.
+#   T3.10  "trunk knowledge survives action training" — reframed: under
+#          plasticity this becomes a catastrophic-forgetting measurement, the
+#          risk the decree accepts.
+#   PL.*   the frozen-vs-plastic bakeoff collapses: three of four arms freeze
+#          at some stage, so only the pure arm survives. PL.00 (throughput)
+#          and PL.02 (reshaping gain) still run — as feasibility checks on the
+#          plastic path, and as the decree's own RE-OPEN TRIGGER.
+#   UB.7 / LC.00 / LC.06 / PG.6 / ME.11.0 — mention frozen only incidentally;
+#          unaffected.
+
 EXPANSION: list[Spec] = [
 
     Spec("T2.00", 2, "The RL update is sane",

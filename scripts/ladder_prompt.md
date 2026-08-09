@@ -181,7 +181,10 @@ the code.
 
 ## Settled decisions
 
-Read `docs/DECISIONS.md` first. Those are the owner's calls — freeze the trunk,
+Read `docs/DECISIONS.md` first — BUT NOTE ITS SUPERSEDED BANNER. As of
+2026-08-09 the owner decreed PLASTIC ONLY: nothing inside Jack is frozen
+(encoders, core, fusion all learn). The frozen LLM survives ONLY as a PARENT
+in his world, not as a part of him. Other owner calls that still stand —
 drop physics-first as a training method (SymbolicCalculator becomes a regression
 gate), continual learning on top, dialogue via a frozen swappable LLM with
 grounding on a separate local text tower. Do not relitigate them without new

@@ -819,3 +819,23 @@ This is the SECOND time today: a research agent claimed a glob collision that
 **Rule:** a claim about how a mechanism behaves is almost always cheaper to TEST
 than to reason about. Test it before designing around it — especially when the
 assumption is what makes the hard version necessary.
+
+## A settled decision can be overturned by a number nobody had computed
+
+"Freeze a pretrained trunk and learn a small adapter" was settled on 2026-08-04
+by two multi-agent reviews and held for five days. It fell on 2026-08-09 to one
+quantity nobody had asked for: the RESHAPING GAIN — does training with sense B
+improve sense A's own representation? For a frozen tower it is identically
+ZERO, by arithmetic, not by measurement. Against GOAL.md's capability target
+("a choice that makes some class of learning permanently impossible is
+suspect"), that settled it.
+
+The original justification was ALSO stale and nobody had rechecked it: "freeze
+because there is no data to train from scratch" — while T1.13 had since PASSED
+on 2,747 real CMU/KIT clips.
+
+**Rule:** when a decision is recorded, record the QUANTITY it rests on, not
+just the conclusion. A conclusion cannot tell you when it has expired; a
+quantity can. And re-check a settled decision's premises whenever the facts
+underneath it change — "no data" stopped being true and the decision built on
+it stood for five more days.
