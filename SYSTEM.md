@@ -131,6 +131,7 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 | `docs/PROGRESS.md` | the weekly Review: big picture + FOR THE BUILDER redesigns |
 | `docs/FIELD_WATCH.md` | the scout's nominations (consumed weekly by the Review) |
 | `docs/META_AUDIT.md` | the audit of the machine itself |
+| `docs/CHAMPIONS.md` | who holds each of Jack's seats, by verdict or default — the buildable current-best Jack |
 
 ## Hard constraints, non-negotiable
 

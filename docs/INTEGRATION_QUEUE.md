@@ -19,6 +19,9 @@
 4. IMPLEMENT + RUN the cheapest registered spec of the entry (CPU first).
 5. MARK the entry: status, commit hash, date. Never delete entries — this
    file is the provenance chain from research to ledger.
+6. IF the entry completed a BAKEOFF: update docs/CHAMPIONS.md — the seat, the
+   new holder, held-by VERDICT, the commit — and re-run the standing
+   integration gates under the new champion before calling adoption done.
 
 ## WHEN THE QUEUE IS EMPTY — the loop's research step is YOURS
 
@@ -34,9 +37,9 @@ own work; it never idles because nobody fed it.
 
 | research doc | specs | status |
 |---|---|---|
-| LEARNING_CORE.md | LC.00–LC.06 + PS.01 | REGISTERED by the builder autonomously, 2026-08-09 (registry 128→136) — implementation/runs proceed via Stage 0.1 |
+| LEARNING_CORE.md | LC.00–LC.06 + PS.01 | REGISTERED by the builder autonomously, 2026-08-09 (registry 128→136; cross-check clean — NEEDS_AND_DEATH §0.2 *supports* LC.00's drive-reduction reward; W0 naming reconciled by LEARNING_CORE §5.0's contract). **LC.00 PASS** same day: 3 of 4 tabular cores beat the null ≥3σ (q_drive 9.1σ, model_vi 6.3σ, model_efe 4.1σ; q_lp 1.5σ ran but did not clear), frozen control −6.3±5.9 ≈ 0 — the world does not drift. Next cheapest: LC.01 (CPU, ~20 min). |
 | NEEDS_AND_DEATH.md | NE.00–NE.09 | PENDING — note: doc §9 gates NE.01's constants on §1.2 citation verification (Borbély ratio is load-bearing and open); register all, but do not let NE.01 fix constants until a citation pass closes §1.2. NE.08 overlaps W.6 — see SURVIVAL_WORLD §5.0 reconciliation before registering |
-| PURPOSE_AND_SCAFFOLDING.md | PS.* | BLOCKED-ON-CORRECTION: PS.00(c)+PS.02 disproven by NEEDS_AND_DEATH (drive-farming cannot exist; exact VI + K&G eLife 2014 theorem). Correct, then register. |
+| PURPOSE_AND_SCAFFOLDING.md | PS.* | BLOCKED-ON-CORRECTION: PS.00(c)+PS.02 disproven by NEEDS_AND_DEATH (drive-farming cannot exist; exact VI + K&G eLife 2014 theorem). Correct, then register. NOTE: **PS.01 is already registered** (2026-08-09, with the LC family — LC.03 depends on it and LEARNING_CORE §5.6 required one commit; PS.01 is calibration, not implicated in the refutation). Do not register it twice. |
 | CURIOSITY_BAKEOFF.md | LT.01–LT.09 | PENDING |
 | D1_CONTROL_ARCHITECTURE.md | D1.0, T2.21 | PENDING |
 | HEARING_BAKEOFF.md | HR.1–HR.8 | PENDING |

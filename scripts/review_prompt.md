@@ -88,7 +88,10 @@ owner asked "who fixes the to-do lists?" (2026-08-09):
    INTEGRATION_QUEUE entries (a nomination becomes "design the bakeoff arm
    spec for X"), and mark the rest REJECTED with one line of reason in the
    queue — a scout whose reports nobody reads is wasted credits.
-3. ORGAN LIVENESS: check each organ's log (/data/jack-logs/*.log) — last
+3. SEAT STALENESS: read docs/CHAMPIONS.md — any DEFAULT champion with a
+   registered challenger whose match is not progressing, or any seat whose
+   arena context changed without a rematch, is a finding.
+4. ORGAN LIVENESS: check each organ's log (/data/jack-logs/*.log) — last
    fire time against its cadence (builder hourly, overseer 6h, field watch
    Mon, you Sun). An organ silent past 2x its cadence is a FOR THE OWNER
    finding; silence is never success.
