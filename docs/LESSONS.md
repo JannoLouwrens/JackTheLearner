@@ -998,12 +998,23 @@ hours later. It was found while calibrating PS.01's `J0`, not by any gated
 spec — `LC.02` never reads `j` and was not invalidated, but PS.01's calibration
 would have been silently wrong had it been built on the stale values.
 
+**The fix has a real cost, and the throughput-critical path may not be able to
+afford it.** Calling `mj_rnePostConstraint` every substep instead of once per
+decision is the CORRECT fix and was tried directly in `w0.py`'s stepping loop —
+it dropped `null_T` 10.09 -> 9.15 sim-s/real-s and took 4 of LC.02's 5 candidate
+arms from clearing 0.25 to clearing NOTHING, at every train_ratio down to 0.125.
+Reverted; `w0.py` keeps the one-call-per-decision form with the staleness
+documented as deliberate, not fixed. PS.01, which is not throughput-gated,
+should call it every substep in its OWN loop rather than "fix" this one.
+
 **Rule:** when a lesson is really about an API's contract ("X is unpopulated
 until Y is called"), write the rule at the API, not only at the one call site
 that broke first — a docstring on `DriveLayer`'s own usage example is a second
 caller's only defence, and `mj_rnePostConstraint`'s absence from `mj_step`'s
 own contract is exactly the kind of thing every future caller of `cfrc_ext`
-will get wrong once before someone points it out.
+will get wrong once before someone points it out. And: a "fix" to a path with a
+pre-registered floor is a change to the floor's own measurement — re-run the
+gate it feeds before trusting either the fix or the floor.
 
 ## "The box cannot do X" is a claim about every path to X
 
@@ -1037,3 +1048,30 @@ anything else already running on the machine does the same thing. Write the
 enumeration into the escalation, so a reader can see the shape of the search and
 not just its result. Then, when the escalation is withdrawn, leave the original
 text in place — a withdrawn ask that deletes its reasoning teaches nothing.
+
+### Corollary: a process matcher matches the process doing the matching
+
+Three times on 2026-08-09, in three different tools, the same mistake:
+
+1. `tmp_reaper.sh` scanned every process's argv for live session ids — and the
+   test command's own argv contained the fixture ids, so the reaper spared its
+   fixture and became a silent no-op that still logged success.
+2. `pkill -f "Xvfb :99"` killed the shell running it, because that shell's
+   command line contains the literal string `Xvfb :99`. Exit 144, no output, and
+   files that appeared never to have been written.
+3. `pkill -f pilot6c.py`, typed by someone who had just written lesson 2 down.
+
+`pgrep -f` and `pkill -f` match against the FULL command line of every process,
+and the shell executing your command is one of those processes. The pattern you
+type is, at that moment, inside a running command line by construction.
+
+Safe idioms on this box, in order of preference:
+
+    kill "$(cat /run/thing.pid)"          # best: the process recorded its own pid
+    pkill -x Xvfb                         # match the executable NAME, not argv
+    pgrep -f 'pilot''6c' | grep -v $$     # break the literal; exclude own shell
+
+And when scanning `/proc` or `ps` for "is this thing in use", scope the scan to
+the kind of process that can legitimately hold the resource (`ps -eo comm=,args=
+| awk '$1 ~ /claude/'`) rather than to all of them. The narrower scan is not an
+optimisation — it is what makes the answer mean anything.

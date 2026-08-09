@@ -18,13 +18,26 @@ about the IMAGE. This is also why the probe never sees which pixels matter: no
 crop, no attention, no object mask — the full frame, flattened.
 
 RESOLUTION WAS CHOSEN BY PILOT, THE GATE WAS NOT. The spec's own text says "at
-the chosen resolution", so choosing one is part of implementing it. A pilot on
-seeds 90-92 (disjoint from the registered seeds) swept 32/48/64/96 px and the
-operating point was fixed BEFORE the registered run. The thresholds R^2 >= 0.80
-and 5 deg come from the registry and were not touched. If the pilot had shown no
-resolution clears them, the honest output is a FAIL plus the escalation the
-registry already names — raise resolution, or move vision to a frozen tower with
-cached embeddings — not a softer number.
+the chosen resolution", so choosing one is part of implementing it. The pilot ran
+on seed 90 — disjoint from the registered seeds — and its numbers are recorded
+here so the choice can be audited rather than trusted (radius R^2 at the best l2,
+median bearing error):
+
+    n_train=350    32px 0.624/6.40deg  48px 0.693/5.81  64px 0.722/5.03  96px 0.734/3.98
+    n_train=700    96px 0.769/3.35     128px 0.775/3.27
+    n_train=1200   96px 0.806/3.38     128px 0.808/3.17
+    n_train=1800   96px 0.836/2.85   <- CHOSEN (l2=1.0)
+
+The 1200-sample points clear R^2 >= 0.80 by 0.006. Registering there would have
+been choosing an operating point that passes on the pilot seed and coin-flips on
+the rest — tuning to the threshold, which is the same sin as moving it. 1800
+samples buys 0.036 of real margin for about 25 seconds of extra rendering, and
+128 px was rejected because it costs 78% more pixels for +0.002.
+
+The thresholds R^2 >= 0.80 and 5 deg come from the registry and were not touched.
+If no resolution had cleared them, the honest output is a FAIL plus the
+escalation the registry already names — raise resolution, or move vision to a
+frozen tower with cached embeddings — not a softer number.
 
 WHAT THE CONTROL HAD TO CATCH. Objects OUTSIDE the FOV must be unrecoverable.
 The naive way to write this control is to put the object behind the camera,
@@ -64,9 +77,9 @@ import playground as pg  # noqa: E402
 from ..protocol import Ledger, Status, run_spec  # noqa: E402
 from ..registry import BY_ID  # noqa: E402
 
-RES = 64                    # px, square. Chosen by pilot; see module docstring.
-N_TRAIN, N_TEST = 700, 240
-L2 = 30.0                   # ridge strength, chosen on the pilot's train split
+RES = 96                    # px, square. Chosen by pilot; see module docstring.
+N_TRAIN, N_TEST = 1800, 300
+L2 = 1.0                    # ridge strength, chosen on the pilot
 DIST_RANGE = (2.2, 3.6)     # m from the eye — varied, so apparent size alone
                             # does not determine radius; the probe must use the
                             # ground-plane contact cue as well.
@@ -120,20 +133,41 @@ def _true_bearing(pos) -> float:
 
 
 # ── ridge, in numpy (no sklearn on this box) ─────────────────────────────
+class _Ridge:
+    """Ridge with the expensive part computed once.
+
+    Each arm regresses six targets off the SAME frames (radius, sin/cos of
+    bearing, and the shuffled-label null for each). The Gram matrix does not
+    depend on the target, and at n=1800 with 27,648 pixel features it is ~9e10
+    flops — six times more than the solve it feeds. Building it once per feature
+    matrix instead of once per target is the difference between a twenty-minute
+    spec and an hour-long one on four shared cores, which matters here because
+    the box has paying tenants on it.
+    """
+
+    def __init__(self, Xtr, l2=L2):
+        self.mu = Xtr.mean(0)
+        self.A = Xtr - self.mu
+        n, d = self.A.shape
+        self.dual = d > n                   # dual form: cheaper, identical result
+        if self.dual:
+            self.M = self.A @ self.A.T + l2 * np.eye(n)
+        else:
+            self.M = self.A.T @ self.A + l2 * np.eye(d)
+
+    def predict(self, ytr, Xte):
+        ym = ytr.mean()
+        yc = ytr - ym
+        B = Xte - self.mu
+        if self.dual:
+            alpha = np.linalg.solve(self.M, yc)
+            return B @ (self.A.T @ alpha) + ym
+        w = np.linalg.solve(self.M, self.A.T @ yc)
+        return B @ w + ym
+
+
 def _ridge_predict(Xtr, ytr, Xte, l2=L2):
-    mu = Xtr.mean(0)
-    A = Xtr - mu
-    B = Xte - mu
-    ym = ytr.mean()
-    yc = ytr - ym
-    n, d = A.shape
-    if d > n:                               # dual form: cheaper and identical
-        K = A @ A.T + l2 * np.eye(n)
-        alpha = np.linalg.solve(K, yc)
-        return B @ (A.T @ alpha) + ym
-    G = A.T @ A + l2 * np.eye(d)
-    w = np.linalg.solve(G, A.T @ yc)
-    return B @ w + ym
+    return _Ridge(Xtr, l2).predict(ytr, Xte)
 
 
 def _r2(y, pred) -> float:
@@ -142,14 +176,14 @@ def _r2(y, pred) -> float:
     return 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
 
 
-def _bearing_median_err(btr, bte, Xtr, Xte) -> float:
+def _bearing_median_err(btr, bte, fit: "_Ridge", Xte) -> float:
     """Regress sin and cos separately, recombine with atan2.
 
     Regressing the angle directly would punish the probe for the wrap at +-180
     deg, which is an artifact of the coordinate and not of the image.
     """
-    s = _ridge_predict(Xtr, np.sin(np.radians(btr)), Xte)
-    c = _ridge_predict(Xtr, np.cos(np.radians(btr)), Xte)
+    s = fit.predict(np.sin(np.radians(btr)), Xte)
+    c = fit.predict(np.cos(np.radians(btr)), Xte)
     pred = np.degrees(np.arctan2(s, c))
     err = np.abs((pred - bte + 180.0) % 360.0 - 180.0)
     return float(np.median(err))
@@ -275,31 +309,68 @@ def _arm(seed: int, bearing_lo: float, bearing_hi: float) -> dict:
     Xtr, rtr, btr = _episodes(eye, rng, N_TRAIN, bearing_lo, bearing_hi)
     Xte, rte, bte = _episodes(eye, rng, N_TEST, bearing_lo, bearing_hi)
 
-    rad_pred = _ridge_predict(Xtr, rtr, Xte)
+    fit = _Ridge(Xtr)                      # the Gram matrix, built once
+    rad_pred = fit.predict(rtr, Xte)
     out = {
         "radius_r2": round(_r2(rte, rad_pred), 4),
-        "bearing_med_deg": round(_bearing_median_err(btr, bte, Xtr, Xte), 3),
+        "bearing_med_deg": round(_bearing_median_err(btr, bte, fit, Xte), 3),
         "visible_frac": vis["visible_frac"],
         "geometric_col_err_deg": round(vis["geometric_col_err_deg"], 3),
     }
 
     # NULL 1 — shuffled pairing. Same probe, same frames, labels permuted.
     perm = rng.permutation(len(rtr))
-    out["radius_r2_shuffled"] = round(_r2(rte, _ridge_predict(Xtr, rtr[perm], Xte)), 4)
+    out["radius_r2_shuffled"] = round(_r2(rte, fit.predict(rtr[perm], Xte)), 4)
     out["bearing_med_shuffled"] = round(
-        _bearing_median_err(btr[perm], bte, Xtr, Xte), 3)
+        _bearing_median_err(btr[perm], bte, fit, Xte), 3)
 
     # NULL 2 — constant grey frame. Any skill left here is label statistics.
     Gtr = np.full_like(Xtr, 0.5)
     Gte = np.full_like(Xte, 0.5)
-    out["radius_r2_grey"] = round(_r2(rte, _ridge_predict(Gtr, rtr, Gte)), 4)
-    out["bearing_med_grey"] = round(_bearing_median_err(btr, bte, Gtr, Gte), 3)
+    gfit = _Ridge(Gtr)
+    out["radius_r2_grey"] = round(_r2(rte, gfit.predict(rtr, Gte)), 4)
+    out["bearing_med_grey"] = round(_bearing_median_err(btr, bte, gfit, Gte), 3)
     out["canary_stable"] = float(abs(eye.canary() - canary_in) < 1e-6)
     return out
 
 
+def _fixed_distance_diagnostic(eye: _Eye, rng) -> float:
+    """Radius R^2 with distance HELD CONSTANT. Diagnostic, never gated.
+
+    The registered arm varies distance over 2.2-3.6 m, so apparent size alone
+    does not determine radius — the probe must also read the ground-plane
+    contact cue, and a linear read-out combining two cues multiplicatively is
+    doing something it structurally cannot do well. This number separates the
+    two explanations for a marginal result, which are the two branches of the
+    spec's own escalation:
+
+      fixed >> varied  -> the SENSOR is fine; the linear probe cannot fuse size
+                          with distance. Raising resolution will not help much;
+                          the honest move is the frozen-tower/learned-encoder
+                          branch the registry already names.
+      fixed ~= varied  -> resolution-limited. Raise it.
+
+    Reported either way, so a PASS also records how much of its margin came from
+    the cue-fusion problem rather than from acuity.
+    """
+    n_tr, n_te, d0 = 350, 120, 2.9
+    def batch(n):
+        X, r = [], []
+        for _ in range(n):
+            b = rng.uniform(-IN_FOV_MAX, IN_FOV_MAX)
+            rad = rng.uniform(*RADIUS_RANGE)
+            X.append(eye.frame(b, d0, rad).ravel())
+            r.append(rad)
+        return np.asarray(X), np.asarray(r)
+    Xtr, rtr = batch(n_tr)
+    Xte, rte = batch(n_te)
+    return round(_r2(rte, _ridge_predict(Xtr, rtr, Xte)), 4)
+
+
 def _experiment(seed: int) -> dict:
     m = _arm(seed, 0.0, IN_FOV_MAX)
+    m["radius_r2_fixed_dist"] = _fixed_distance_diagnostic(
+        get_eye(seed), np.random.RandomState(seed + 7919))
     m["seed_gates_ok"] = float(
         m["radius_r2"] >= R2_GATE
         and m["bearing_med_deg"] <= BEARING_GATE_DEG

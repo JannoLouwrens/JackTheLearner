@@ -54,8 +54,29 @@ and T2.02 are VOID (the T0.14 dropout + obs-dim invalidation), and any text
 calling T2.01's plateau "the architecture verdict" is stale and wrong.
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
+0aaa. THIS BOX CAN RENDER. Do not re-escalate it. MuJoCo offscreen rendering
+   works via GLX under Xvfb — no libEGL, no libOSMesa, nothing installed, ~12 ms
+   per 64x64 frame. Use it in one line:
+
+       from experiments.render import ensure_gl
+       ensure_gl()          # MUST precede `import mujoco`
+       import mujoco
+
+   `python -m experiments.render` self-tests it. Two traps it already handles,
+   both of which produced plausible wrong data before they were found: a
+   `mujoco.Renderer` that gets garbage-collected poisons the shared X display so
+   the NEXT renderer returns corrupted-but-realistic frames with no error (hold
+   your renderers for the process lifetime — see `get_eye` in PG.6), and a GL
+   context can come up rendering a uniform frame, which looks exactly like a
+   blind sensor. Carry a canary frame and return `Status.VOID`, not FAIL, when
+   it moves.
+
 0aa. CHEAPEST HIGH-LEVERAGE WORK IN THE PROJECT, DO IT FIRST: run PG.6 and
-   PG.7 (~40 min CPU, both registered). FROZEN_VS_PLASTIC.md measured that
+   PG.7 (~40 min CPU, both registered). PG.7 PASSES. PG.6 is IMPLEMENTED as of
+   2026-08-09 (`experiments/tests/pg_6_playground_eyes.py`) and the playground
+   now carries an `eye` camera whose pose is part of the world contract
+   (`EYE_POS`/`EYE_XYAXES`/`EYE_FOVY` in playground.py) — moving it invalidates
+   every visual certificate downstream. FROZEN_VS_PLASTIC.md measured that
    they unblock NINE specs plus the entire unison ladder — 0 of 37 unison
    specs currently pass, and this is the gate. Then PL.00 and PL.02 (also
    runnable today) decide the frozen-vs-plastic constitutional question.
