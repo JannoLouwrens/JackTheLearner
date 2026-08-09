@@ -326,6 +326,43 @@ class TrainingPipeline:
             return raw
         return torch.tanh(raw) * self.config.action_limit
 
+    def act_deterministic(self, obs_raw: np.ndarray) -> np.ndarray:
+        """The ONE deterministic-action path. Eval mode is guaranteed, not hoped.
+
+        T0.14 fixed train/eval discipline INSIDE the pipeline —
+        collect_rollout_vec calls .eval(), rl_update calls .train(). It did not
+        and could not fix the consumers: T2.01 and T2.02 each carry their own
+        `eval_policy()` that reaches straight for `tp.model(tp.project_obs(...))`
+        and never touches the mode. Measured on the real net at that exact call
+        site, 2026-08-09: two forwards of one identical state differ by **103.6%**
+        of the policy mean's own magnitude in train mode, 0.0 in eval mode. Both
+        of their evaluations were in train mode — the untrained control because a
+        fresh nn.Module defaults to training=True, the trained arm because
+        rl_update leaves it there.
+
+        So the fix that closed the most expensive bug in the project would have
+        been undone by the very re-runs it was written to make honest, at a cost
+        of ~13 GPU-hours. Per LESSONS.md ("when you can reference, reference"),
+        the answer is not a third copy of the correct incantation but one method
+        both kernels call. Guarded by spec T0.16, whose control is the pre-fix
+        raw-forward and which fails without it.
+
+        The prior mode is restored on exit, so this is safe to call from inside a
+        training loop without perturbing T0.14's two mode invariants.
+        """
+        was_training = self.model.training
+        self.model.eval()
+        try:
+            obs_norm = self.normalize_obs(obs_raw)
+            ot = torch.tensor(obs_norm, dtype=torch.float32, device=self.device)
+            if ot.ndim == 1:
+                ot = ot.unsqueeze(0)
+            with torch.no_grad():
+                mean = self.policy_mean(self.model(self.project_obs(ot)))
+            return mean[0].cpu().numpy()
+        finally:
+            self.model.train(was_training)
+
     def normalize_obs(self, obs_raw: np.ndarray) -> np.ndarray:
         """Running observation normalization (RL-Zoo3 pattern).
         Keeps running mean/var and normalizes to ~N(0,1), clipped to [-10, 10].

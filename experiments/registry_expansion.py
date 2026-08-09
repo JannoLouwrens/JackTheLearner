@@ -87,6 +87,39 @@ EXPANSION: list[Spec] = [
                "the RECORDED value and finds the gate live either way: the "
                "saturation is manufactured downstream of every test."),
 
+    Spec("T0.16", 0, "The evaluation a spec SHIPS is deterministic, not the one the pipeline owns",
+         hypothesis="Replaying the exact call order a locomotion spec's kernel "
+                    "performs — untrained eval, rollout, PPO update, trained "
+                    "eval — the action-producing path is in eval mode and "
+                    "returns bit-identical actions for one identical state at "
+                    "BOTH evaluation points.",
+         falsified_by="Either evaluation point runs with dropout live, or two "
+                      "calls of the shipped eval path on one state differ.",
+         null_baseline="n/a — an invariant of the composition, not an effect.",
+         metric="max_shipped_eval_drift", budget=Budget.CPU, seeds=1,
+         depends_on=["T0.14"],
+         control="The PRE-FIX evaluation body — tp.model(tp.project_obs(...)) "
+                 "with no mode call, copied verbatim from T2.01 v4 — MUST show "
+                 "nonzero drift at both points. Without it this spec passes on "
+                 "the broken code it was written to catch.",
+         kills="Any locomotion number produced by an eval path that bypasses "
+               "act_deterministic.",
+         notes="FOUND 2026-08-09 while preparing the T2.01/T2.02 re-runs that "
+               "T0.14 made necessary. T0.14 fixed train/eval discipline INSIDE "
+               "TrainingPipeline (collect_rollout_vec .eval(), rl_update "
+               ".train()) and PASSes. Both locomotion kernels carry their own "
+               "eval_policy() that forwards through tp.model directly and never "
+               "sets the mode: the untrained control because a fresh nn.Module "
+               "defaults to training=True, the trained arm because rl_update "
+               "leaves train mode on. Measured at that call site on the real "
+               "57M net: 103.6% relative drift between two forwards of ONE "
+               "identical state. So the ~13 GPU-hours of re-runs whose entire "
+               "purpose was to remove the dropout confound would have "
+               "reintroduced it. This is LESSONS' 'a guard built by fixing one "
+               "file leaves the file that motivated it unfixed' at composition "
+               "scale: T0.14 could not see across the process boundary into a "
+               "kernel string."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "

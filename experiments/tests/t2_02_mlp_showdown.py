@@ -98,12 +98,16 @@ def eval_policy(tp, episodes, random_actions=False):
             if random_actions:
                 act = env.action_space.sample()
             else:
-                with torch.no_grad():
-                    on = tp.normalize_obs(obs)
-                    ot = torch.tensor(on, dtype=torch.float32,
-                                      device=tp.device).unsqueeze(0)
-                    out = tp.model(tp.project_obs(ot))
-                    act = tp.policy_mean(out)[0].cpu().numpy()
+                # tp.act_deterministic, NOT a local re-implementation of the
+                # forward. This function used to call tp.model(...) directly and
+                # never set eval mode, so both the untrained control (fresh
+                # nn.Module defaults to training=True) and the trained arm
+                # (rl_update leaves train mode on) evaluated with 36 dropout
+                # modules live -- 103.6% drift between two forwards of one
+                # identical state, measured on this net. T0.14 fixed the
+                # pipeline's internals and could not reach this file. T0.16
+                # guards the composition.
+                act = tp.act_deterministic(obs)
             act = np.clip(act, env.action_space.low, env.action_space.high)
             obs, r, term, trunc, _ = env.step(act)
             total += float(r)
