@@ -57,7 +57,7 @@ import json
 from pathlib import Path
 
 from ..gpu import build_job, submit
-from ..protocol import Ledger, run_spec
+from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
 SEEDS = [0, 1, 2]
@@ -299,20 +299,30 @@ def _control(seed: int) -> dict:
     }
 
 
-def _check(m: dict, c: dict) -> bool:
+def _check(m: dict, c: dict) -> Status | bool:
+    # These three paths are VOID, not FAIL: the run could not test the claim.
+    # They returned a bare `False` until 2026-08-09, and run_spec maps False ->
+    # FAIL "pre-registered threshold not met" — which fires this spec's `kills`
+    # field ("the transformer policy") off a comparison that explicitly refused
+    # to arbitrate. That corruption had to be repaired by hand once already.
     if m["step_match_ratio"] < MIN_STEP_MATCH:
         m["verdict"] = (f"VOID — MLP reached only {m['step_match_ratio']:.0%} of the "
                         "transformer's steps; the comparison is not at equal "
                         "experience. Raise MLP_MINUTES_CAP, do not compare.")
-        return False
+        return Status.VOID
     if m["tr_sigma_vs_random"] < MIN_LEARN_SIGMA or m["mlp_sigma_vs_random"] < MIN_LEARN_SIGMA:
         m["verdict"] = ("VOID — an arm failed the 3-sigma learning gate vs random "
                         f"(tr {m['tr_sigma_vs_random']}, mlp {m['mlp_sigma_vs_random']}). "
                         "Two non-learners cannot arbitrate the architecture.")
-        return False
+        return Status.VOID
     if c["untrained_tr_sigma"] >= MIN_LEARN_SIGMA or c["untrained_mlp_sigma"] >= MIN_LEARN_SIGMA:
-        # An untrained net clearing the gate means the gate measures bias.
-        return False
+        # An untrained net clearing the gate means the gate measures bias, not
+        # learning — the measurement is an artifact, so there is nothing to
+        # refute. VOID for the same reason as the two above.
+        m["verdict"] = ("VOID — an UNTRAINED net cleared the 3-sigma learning gate "
+                        f"(tr {c['untrained_tr_sigma']}, mlp {c['untrained_mlp_sigma']}). "
+                        "The gate is measuring architectural bias, not learning.")
+        return Status.VOID
     return (m["pair_sigma_advantage"] >= MIN_PAIR_SIGMA
             and m["transformer_wins_all_seeds"])
 

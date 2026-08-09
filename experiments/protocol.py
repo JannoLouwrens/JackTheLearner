@@ -248,6 +248,23 @@ class Ledger:
         return out
 
 
+class VoidStatusMismatch(RuntimeError):
+    """A `_check` said VOID in its metrics and returned FAIL in its status.
+
+    The two cannot both be recorded, and the FAIL is the dangerous one: it
+    fires the spec's `kills` field. Raised so the run lands as ERROR — visibly
+    unfinished — rather than as a confident wrong verdict.
+    """
+
+
+def _declares_void(metrics: Dict[str, Any]) -> Optional[str]:
+    """Return the metric value that declares VOID, if any."""
+    for v in metrics.values():
+        if isinstance(v, str) and "VOID" in v.upper():
+            return v[:120]
+    return None
+
+
 def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
              check: Callable[[Dict[str, Any], Dict[str, Any]], bool],
              control_fn: Optional[Callable[[int], Dict[str, Any]]] = None,
@@ -286,6 +303,19 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                        Status.VOID: "run did not test the claim; not a refutation"
                        }.get(status, "")
         else:
+            # A `_check` that writes "VOID" into its own metrics and then
+            # returns a bare False is a metrics/status disagreement: run_spec
+            # would record FAIL "pre-registered threshold not met", firing the
+            # spec's `kills` field off a run that refused to arbitrate. T2.02
+            # did exactly this and the ledger needed hand-repair. Refuse to
+            # record it — an ERROR is loud; a wrong FAIL is not.
+            if not ok:
+                _voided = _declares_void(metrics) or _declares_void(control_metrics)
+                if _voided:
+                    raise VoidStatusMismatch(
+                        f"{spec.id}: _check returned a bare False but its metrics "
+                        f"declare VOID ({_voided!r}). Return Status.VOID instead — "
+                        "FAIL means the hypothesis was tested and lost.")
             status = Status.PASS if ok else Status.FAIL
             message = "" if ok else "pre-registered threshold not met"
     except Exception as e:

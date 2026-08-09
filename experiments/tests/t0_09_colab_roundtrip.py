@@ -83,9 +83,15 @@ def _control(seed: int) -> dict:
 
 
 def _check(m: dict, c: dict) -> bool:
+    # The GPU-name disjunction MUST be parenthesised. Without the inner
+    # brackets `and` binds tighter than `or`, so the whole gate collapses to
+    # `(... and "NVIDIA" in gpu) or ("TESLA" in gpu)` — and Colab's device
+    # string is literally "Tesla T4", so the right branch was true on every
+    # real run and ok/cuda_available/matmul_finite were never consulted.
+    # Found by the 2026-08-09 overseer audit; T0.13 now gates the whole class.
+    is_nvidia = "NVIDIA" in m["gpu"].upper() or "TESLA" in m["gpu"].upper()
     return (m["ok"] and m["cuda_available"] and m["matmul_finite"]
-            and "NVIDIA" in m["gpu"].upper() or "TESLA" in m["gpu"].upper()) \
-        and m["artifact_bytes"] > 0 and not c["ok"]
+            and is_nvidia and m["artifact_bytes"] > 0 and not c["ok"])
 
 
 def run(ledger: Ledger | None = None):

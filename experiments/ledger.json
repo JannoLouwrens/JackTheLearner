@@ -851,24 +851,48 @@
       "status": "PASS"
     },
     "T0.12": {
-      "attempt": 1,
-      "commit": "55e5bda",
-      "control_metrics": {},
+      "attempt": 2,
+      "commit": "4f58dfd",
+      "control_metrics": {
+        "affords_within_quota": true,
+        "charge_recorded": true,
+        "colab_unmetered": true,
+        "drained_to_exact_ceiling": false,
+        "refuses_oversized": true,
+        "refuses_when_exhausted": true,
+        "stale_format_key_isolated": false,
+        "stale_key_collided_with_live": false,
+        "starts_full": true,
+        "survives_reload": true,
+        "test_key_format_matches_live_code": true,
+        "weeks_isolated": false
+      },
       "duration_s": 0.0,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:08:59",
+          "status": "PASS"
+        }
+      ],
       "message": "",
       "metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
         "colab_unmetered": true,
+        "drained_to_exact_ceiling": true,
         "refuses_oversized": true,
         "refuses_when_exhausted": true,
+        "stale_format_key_isolated": true,
+        "stale_key_collided_with_live": false,
         "starts_full": true,
         "survives_reload": true,
+        "test_key_format_matches_live_code": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-08T15:08:59",
+      "ran_at": "2026-08-09T13:11:08",
       "seeds": [
         0
       ],

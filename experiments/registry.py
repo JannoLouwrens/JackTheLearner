@@ -130,7 +130,33 @@ LADDER: list[Spec] = [
                     "to launch past quota.",
          falsified_by="A run proceeds with the budget exhausted.",
          null_baseline="n/a", metric="quota_enforced", budget=Budget.CPU_FAST,
-         depends_on=["T0.09"]),
+         depends_on=["T0.09"],
+         control="A Budget whose weeks deliberately leak must FAIL isolation.",
+         notes="REWRITTEN 2026-08-09: `weeks_isolated` was asserted after the "
+               "quota was drained to its ceiling, where remaining() is "
+               "max(0, 30-30) = 0 under EVERY implementation including total "
+               "isolation failure. True by construction, and the week-key "
+               "collision it exists to catch happened on 08-08 with this spec "
+               "green. Now asserted at 28.0 of 30 h, with a leaky-Budget control."),
+
+    Spec("T0.13", 0, "No gate in the ladder is decorative",
+         hypothesis="Every metric a `_check` reads can change that check's verdict "
+                    "at the operating point the run actually produced, and no "
+                    "`_check` mixes `and` with an unparenthesised `or`.",
+         falsified_by="A PASSing spec's gate references a metric that cannot move "
+                      "its verdict, or contains an operator-precedence hazard.",
+         null_baseline="n/a", metric="inert_gate_keys", budget=Budget.CPU_FAST,
+         depends_on=["T0.08"],
+         control="The pre-fix T0.09 `_check`, whose precedence bug made `ok`, "
+                 "`cuda_available` and `matmul_finite` unreachable, must be "
+                 "flagged by BOTH detectors.",
+         notes="Written 2026-08-09 in response to the overseer audit, which found "
+               "T0.09's gate bypassed by `and` binding tighter than `or` and "
+               "observed that 'this pattern is not detectable by any current "
+               "gate'. Law 1 says a capability is claimed only by a test that "
+               "COULD have failed; a gate whose assertions cannot fire is that "
+               "same disease one level up, in the machine rather than the "
+               "science. This spec is the meta-gate: it audits the auditors."),
 
     # ===================================================================
     # TIER 1 — LEARNING PRIMITIVES. Can each trainable piece learn ANYTHING?
