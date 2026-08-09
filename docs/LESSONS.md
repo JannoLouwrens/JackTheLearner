@@ -222,3 +222,52 @@ naming convention instead.
 *naming scheme*, not only the case it was written for. `_module_for` now lets a
 longer spec id claim its own files. And when introducing a hierarchical id,
 resolve the parent AND the child before writing any test.
+
+## An assertion made against a saturated quantity cannot fail
+
+T0.12 claims four independently-checkable properties of the GPU budget. The
+fourth, `weeks_isolated`, drains the Kaggle quota to exactly its 30 h ceiling,
+then injects 29 h into a *different* week and asserts `remaining() == 0.0`.
+`remaining()` is `max(0.0, 30.0 - used)`, and `used` is already 30.0 — so the
+assertion holds whatever the injection does. Even a total isolation failure that
+summed every week would give `max(0, 30 - 59) = 0`. The property is true under
+every possible implementation of the mechanism it tests.
+
+It was not caught by the control rule, because a vacuous assertion needs no
+control to be vacuous. And the bug it exists to catch **actually happened**: on
+2026-08-08 an ISO-format week key collided with the new `%U` key and would have
+reported 37.5 of 30 h used for a whole fresh quota week. A human found it in the
+budget file. T0.12 was green throughout. (Same family as T0.05, which passed by
+luck for four days because its random-offset SIGKILL landed inside `torch.save`'s
+flush burst only ~8–19% of the time, so the control corrupted nothing.)
+
+**Rule:** assert at a point where the state can still tell the two outcomes
+apart. Before writing a check, ask what the quantity reads when the mechanism is
+*broken* — if that is the same value you are asserting, the test is decorative.
+Clamped values (`max(0, ...)`), saturated counters, already-exhausted budgets and
+already-failed preconditions all destroy discriminating power, so measure a
+mid-range value that moves (charge 2 h, inject a foreign week, assert exactly
+28.0) rather than a boundary that cannot. Generalises "a control that also passes
+means the test measures nothing" to the case where there is no control to blame.
+
+## A guard built by fixing one file leaves the file that motivated it unfixed
+
+`Status.VOID` was created because T2.02 recorded FAIL while its own metrics read
+"VOID — two non-learners cannot arbitrate", making the ledger say machine-side
+that a kill criterion had fired on a run that refused to arbitrate. The fix
+landed in `protocol.py` (`check` may now return a `Status`) and the ledger entry
+was restated by hand. But `t2_02_mlp_showdown.py` still `return False` on all
+three of its VOID paths — so re-running the very spec that motivated the fix
+recreates the corruption, and would need hand-repairing again.
+
+The same shape appears in `blocked_by`: `Status.VOID`'s docstring says a VOID
+spec "does not BLOCK its dependents", while `blocked_by` returns any dependency
+that `is not Status.PASS`, so VOID blocks exactly like FAIL.
+
+**Rule:** when a defect motivates a new primitive, the acceptance criterion is
+that *the original artifact now exercises it* — not that the primitive exists.
+Re-run the motivating case, or write the guard that makes the old path
+impossible (here: refuse to record a bare `False` from a `_check` that wrote
+"VOID" into its own metrics). And when adding a status, grep every site that
+branches on status; a new enum member is silently absorbed by every `is not
+Status.PASS` in the codebase.

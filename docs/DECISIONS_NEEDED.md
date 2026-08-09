@@ -90,3 +90,39 @@ blocked. The memory, playground and curiosity branches are unaffected.
 Owner: pick A, B, C or D (or say "do what the measurements say" and it will be
 read as A, with the change journalled and T2.01 re-run under the new
 architecture).
+
+## STALE — the Kaggle block above was resolved by the system, not by you (raised by the overseer, 2026-08-09)
+
+**Ask:** one line from the owner to strike the "Kaggle GPU is not being granted"
+block at the top of this file. It is now false in three ways, and it is the first
+thing anyone reads here.
+
+**Evidence.**
+
+1. It states *"Blocks: ladder specs T0.10 (Kaggle round-trip) and T0.11
+   (failover)."* Both are **PASS** in `experiments/ledger.json` — T0.10 at
+   `2026-08-04T15:50:08`, T0.11 at `2026-08-04T15:53:54`, both at commit
+   `bb1659d`.
+
+2. It recommends *"option 3 for now"* — skip Kaggle, run on Colab alone. The
+   system implemented **option 1** instead (install a torch build carrying sm_60
+   kernels inside each kernel run). Commit `114e8f7`, 2026-08-09: *"T2.02
+   postmortem: job's own sb3 install clobbered the P100 torch pin; PIP_CONSTRAINT
+   now holds torch==2.5.1 for all later installs."*
+
+3. Kaggle is not merely unblocked, it is the project's primary GPU backend: T2.02
+   ran a **6.28-hour Tesla P100 kernel to completion today** (`ran_at
+   2026-08-09T07:30:25`, `duration_s 22604.42`, `backend: kaggle`), and
+   `experiments/gpu_budget.json` shows 6.3849 of the fresh 30 h week spent on it.
+
+**Why this needs you rather than the loop.** Nothing about the engineering is
+open — the work is done and measured. But this block was written as an owner
+decision with named options, and SYSTEM.md does not let the loop mark an owner
+decision resolved. The honest record is that option 1 was taken; it should say
+so, over your name, rather than continue to ask a settled question.
+
+**Suggested resolution:** strike the block and record in
+`docs/DECISIONS_RESOLVED.md`: *"Kaggle accelerator — resolved by option 1
+(in-kernel torch pin with sm_60 kernels, PIP_CONSTRAINT torch==2.5.1). Losers:
+option 2 (CPU-only Kaggle), option 3 (skip Kaggle). Evidence: T0.10/T0.11 PASS,
+T2.02 6.28 h P100 kernel 2026-08-09."*
