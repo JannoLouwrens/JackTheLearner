@@ -33,6 +33,72 @@ citations, arms, costs, and Spec(...) drafts in the house format. The output
 is a new research doc AND a new entry in this queue. The loop generates its
 own work; it never idles because nobody fed it.
 
+## OWNER DIRECTIVE, 2026-08-10 — FAST AND SLOW: research owed on a family already registered
+
+**The owner's words:** *"but Will he have fast and slow brain like a human?"* →
+*"all I know is we must figure that out right and it must still be connected but
+slightly different purposes? it must be in the research and tests"*
+
+**What was done immediately, and what is still owed.** DP.00–DP.03 are
+REGISTERED (`registry_expansion.py`, ladder 147 → 151) and GOAL.md carries the
+directive as a named section. That is the *tests* half. The *research* half is
+outstanding: **there is no `docs/research/DUAL_PROCESS.md`**, so these four specs
+are a first cut written from the directive plus this repo's existing evidence,
+not from a literature sweep. Under this file's own empty-queue rule that makes
+the research the next correct iteration, not an optional extra.
+
+**The specs, so the researcher knows what must survive contact:**
+
+    DP.00  tier 2  CPU       This world rewards looking ahead at all
+    DP.01  tier 3  CPU_LONG  Practice moves a behaviour off the deliberative path
+    DP.02  tier 3  CPU_LONG  Connected, not two brains: the substrate is shared
+    DP.03  tier 4  CPU_LONG  Deliberation is spent where it pays
+
+**Questions the research must answer, each of which can invalidate a spec above.
+Treat "the spec is wrong" as the expected outcome, not the failure case:**
+
+1. **Is the habitisation measurement right?** DP.01 uses a difference of
+   differences (practised minus unpractised, early minus late) and ablates by
+   disabling rollouts rather than zeroing weights. Does the model-based RL
+   literature have a better-validated operationalisation — and does the
+   devaluation paradigm from animal learning (the actual experimental test for
+   habit: does the animal still work for a reward it no longer wants?) transfer
+   to an agent? Devaluation may be a *stronger* test than ablation and it is not
+   currently in the spec.
+2. **Can DP.02's lesion instrument actually discriminate?** It requires a
+   shared-trunk lesion to degrade both modes together while a
+   deliberately-separated two-tower control dissociates. What lesion magnitude
+   and what layer? Is there a published measure of representational sharing
+   (CKA, linear-probe transfer between heads, gradient-conflict) that is less
+   blunt than lesioning and would work as a corroborating second instrument? A
+   single blunt instrument on the project's most load-bearing connectedness
+   claim is thin.
+3. **Does the matched-rate random gate null exist in this literature?** DP.03
+   asserts it is routinely omitted. Verify that claim or delete it — this repo
+   does not get to make sweeping claims about a literature it has not read.
+   Report FLOPs-per-decision conventions used by adaptive-computation work
+   (ACT, PonderNet, MoE routing, early-exit) so DP.03's compute accounting is
+   comparable rather than invented here.
+4. **What does the alternative look like?** If the evidence favours two
+   physically separate pathways in real brains (basal ganglia vs prefrontal is
+   the obvious challenge to "one substrate"), say so plainly and put the
+   counterargument in front of the owner via DECISIONS_NEEDED.md. The directive
+   says connected; the ladder's job is to find out whether connected survives,
+   and a research doc that only confirms the decree is worthless.
+
+**CROSS-CHECK BEFORE REGISTERING ANY REVISION** — per this file's step 1, the
+terms to grep are: `LEARNING_CORE.md` (LC.04 is already arbitrating reactive
+against world-model arms and may have settled part of DP.00), `MEMORY.md` and
+`ME.7`/`ME.10` (the fast/slow LEARNING axis — do NOT let it merge with fast/slow
+ACTING; GOAL.md now names all three axes precisely to prevent that),
+`NEEDS_AND_DEATH` (DP.00's claim that a survival world rewards lookahead is
+*expected* and therefore exactly the kind of unverified expectation this repo
+has been burned by), and `FROZEN_VS_PLASTIC.md` (a separate deliberative tower
+is a frozen-tower-shaped proposal and the plastic-only decree constrains it).
+
+**Status:** REGISTERED, RESEARCH OWED. Registered 2026-08-10. Do not treat the
+four specs as settled; a revision that strengthens them is the point.
+
 ## TOP — PS.01 v2: the probe policy, not the constants (from PS.01 attempt 2, 2026-08-10)
 
 **Why this is top.** PS.01 is the only thing between the ladder and LC.03–LC.06,

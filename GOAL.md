@@ -216,6 +216,50 @@ walk, and learn in every way (the ladder as it stands). Only then does he go
 into the survival world with everything at once — and the testing never stops
 there; it moves in with him.
 
+## Fast and slow, in one brain (owner directive, 2026-08-10)
+
+> *"all I know is we must figure that out right and it must still be connected
+> but slightly different purposes? it must be in the research and tests"*
+
+Jack acts immediately when he can and thinks first when he must — and these are
+**not two brains.** Differentiated function, shared substrate. A reflex tower
+and a planner tower with private representations would satisfy "fast and slow"
+in a demo and violate everything above it: one interconnected brain, every
+sense in unison, plastic throughout.
+
+The human version is not two systems bolted together. It is one substrate
+spending different amounts of time, where **habit is what happens when practice
+compresses deliberation into reflex**. A skill starts slow and effortful and
+becomes fast and automatic — and that transition is *learned*, not scheduled by
+a designer. That is the version this project builds, because it is the one that
+follows from the goal rather than being bolted onto it.
+
+**Three fast/slow axes exist in biology and this project keeps them apart.**
+Conflating them is how a system ends up claiming a dual process it never tested:
+
+  1. **Fast/slow ACTING** — habit vs deliberation. The DP family (DP.00–DP.03).
+     Arbitrated, not decreed: whether lookahead earns its keep at all is
+     DP.00, and the learning-core bakeoff (LC.04) is already testing reactive
+     PPO against world-model arms that can imagine.
+  2. **Fast/slow LEARNING** — one-shot episodic capture vs slow consolidation.
+     ME.7, ME.10, T5.03, T5.05. A system that does only one has failed.
+  3. **Fast SPECIALISED learners** — one-shot aversion. TA.01, TA.02. Survival
+     forced these: "eat the thing that nearly killed you 200 more times to get
+     the gradient" is not a learning rule an animal can afford.
+
+**The connectedness claim is the one that can quietly fail**, because an
+architecture can drift into two private towers while every capability number
+keeps improving. So it is tested directly and adversarially: DP.02 lesions the
+shared trunk and requires BOTH modes to degrade together, and it carries a
+deliberately-separated two-tower control that MUST dissociate — a connectedness
+test that cannot detect a disconnected system is measuring nothing.
+
+**What is NOT decided:** whether Jack ends up with a deliberative path at all.
+If DP.00 shows this world never rewards looking ahead, the finding is about the
+world, not about him, and it must get traps, delays and irreversibility before
+any dual-process claim can be made in it. Bakeoffs decide HOW; they never
+decide WHAT.
+
 ## The path (each stage gated by the ladder — see CHECKLIST.md)
 
 1. **Harness + primitives** (Tiers 0–1, DONE): measurement works, every part can learn.

@@ -1934,4 +1934,145 @@ EXPANSION: list[Spec] = [
                "requires a re-learning bottleneck plus an expressivity "
                "constraint (FROZEN_VS_PLASTIC.md 10.6b), not a bigger "
                "vocabulary."),
+
+    # ── DP: fast and slow, in ONE brain ──────────────────────────────────
+    # Owner decree, 2026-08-10: "we must figure that out... and it must still
+    # be connected but slightly different purposes... it must be in the
+    # research and tests."
+    #
+    # DIFFERENTIATED FUNCTION, SHARED SUBSTRATE. Two towers with private
+    # representations would satisfy "fast and slow" and violate the whole
+    # project — GOAL.md's one interconnected brain, and the plastic-only
+    # decree with it. So "connected" is not a design preference here; it is a
+    # claim that has to be able to fail, which is what DP.02 exists for.
+    #
+    # Human biology bundles three unrelated fast/slow axes and the ladder must
+    # not: fast/slow ACTING (habit vs deliberation, this family), fast/slow
+    # LEARNING (hippocampus vs neocortex - ME.7, ME.10, T5.05), and fast
+    # SPECIALISED learners (one-shot taste aversion - TA.01, TA.02). Conflating
+    # them is how a system ends up claiming a dual process it never tested.
+
+    Spec("DP.00", 2, "This world rewards looking ahead at all",
+         hypothesis="There exist states in Jack's world where an agent with a "
+                    "PERFECT model and unlimited rollouts beats the best "
+                    "reactive policy by a real margin. Deliberation buys "
+                    "something here.",
+         falsified_by="With a perfect model and unlimited lookahead, planning "
+                      "gains nothing over the reactive policy. Then this world "
+                      "has no slow system to find, DP.01-DP.03 are "
+                      "unregistrable as written, and the finding is about the "
+                      "WORLD - it needs traps, delays or irreversibility "
+                      "before any dual-process claim can be made in it.",
+         null_baseline="The best reactive policy at matched experience.",
+         metric="return_gap_oracle_plan_vs_reactive",
+         budget=Budget.CPU, seeds=3, depends_on=["LC.02"],
+         control="A world variant that is provably reactive-solvable - dense "
+                 "immediate reward, no traps, no irreversible states. Planning "
+                 "must NOT gain there. If it does, the measured gain is an "
+                 "implementation artifact (more compute, more samples, a "
+                 "better optimiser) rather than lookahead, and every later DP "
+                 "number inherits it.",
+         kills="The entire DP family, and the 'spend compute when it matters' "
+               "story with it.",
+         notes="CHEAPEST FALSIFIER FIRST, per LC.00's precedent. This costs an "
+               "oracle rollout, not a training run: give the planner the "
+               "simulator itself as its model, so the question is purely "
+               "'does lookahead pay in this world' with learning removed as a "
+               "confound. Run it BEFORE building any dual-process machinery - "
+               "a survival world with hunger, thirst and death is EXPECTED to "
+               "reward lookahead (a trap you can see is a trap you can avoid), "
+               "but expectation is not evidence and the jungle is not built "
+               "yet."),
+
+    Spec("DP.01", 3, "Practice moves a behaviour off the deliberative path",
+         hypothesis="For a task practised to criterion, the performance cost of "
+                    "ablating the deliberative path FALLS with practice - large "
+                    "early, small late - while the same ablation on a "
+                    "freshly-introduced task stays large. Habit is the learned "
+                    "compression of deliberation into reflex.",
+         falsified_by="Ablation cost does not fall with practice (nothing "
+                      "habituates), OR it falls equally on the never-practised "
+                      "task, which means the planner stopped contributing to "
+                      "anything and no behaviour migrated.",
+         null_baseline="Ablation cost at initialisation, and on a task the "
+                       "agent never practised.",
+         metric="planner_ablation_drop_early_vs_late",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["DP.00", "LC.04"],
+         control="A task whose optimal response CANNOT be cached: the goal is "
+                 "re-randomised every episode, so no fixed reaction exists. Its "
+                 "ablation cost must NOT fall. Without this control, a planner "
+                 "that simply decays into uselessness looks exactly like a "
+                 "brain forming habits - the two are indistinguishable from the "
+                 "practised task alone.",
+         kills="Any claim that Jack forms habits, and the claim that fast and "
+               "slow are one system operating at two depths rather than two "
+               "systems.",
+         notes="THE MEASUREMENT IS A DIFFERENCE OF DIFFERENCES, not a curve. "
+               "Report (early - late) ablation cost on the practised task MINUS "
+               "the same quantity on the unpractised task; a single falling "
+               "curve is consistent with at least three uninteresting stories "
+               "(planner decay, entropy collapse, the task getting easier). "
+               "Ablate by DISABLING ROLLOUTS, not by zeroing weights: zeroing "
+               "shared weights damages the fast path too and would confound "
+               "this with DP.02."),
+
+    Spec("DP.02", 3, "Connected, not two brains: the substrate is shared",
+         hypothesis="Fast and slow read the SAME representation. A lesion to the "
+                    "shared trunk degrades BOTH modes together; a lesion to the "
+                    "deliberative head degrades ONLY the slow mode.",
+         falsified_by="A trunk lesion that damages one mode while sparing the "
+                      "other. That is the signature of two systems with private "
+                      "representations - two brains wearing one wrapper - and it "
+                      "refutes the owner's 'must still be connected' directly.",
+         null_baseline="A random lesion of equal magnitude at a matched layer.",
+         metric="lesion_dissociation_index",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["DP.01"],
+         control="A DELIBERATELY SEPARATED architecture - two towers, no shared "
+                 "parameters - must show the dissociation this one must not. A "
+                 "connectedness test that cannot detect a genuinely "
+                 "disconnected system is measuring nothing, and this is the "
+                 "only arm that proves it can.",
+         kills="GOAL.md's one-interconnected-brain claim as it applies to "
+               "action selection. If refuted, either the architecture changes "
+               "or the goal statement does - not silently, and not both ways.",
+         notes="THE DIRECTION OF THIS TEST IS UNUSUAL AND IT IS THE POINT. "
+               "ME.10 is a double dissociation used to prove two capacities are "
+               "SEPARABLE; this one is used to prove two modes are NOT. Same "
+               "instrument, opposite verdict, so the control matters more than "
+               "usual: without the separated-tower arm, 'both degraded "
+               "together' is equally consistent with a lesion that was simply "
+               "too big to be selective. Report the magnitude at which the "
+               "separated control DOES dissociate, and use a lesion no larger."),
+
+    Spec("DP.03", 4, "Deliberation is spent where it pays",
+         hypothesis="The slow path is engaged more in novel, ambiguous or "
+                    "high-stakes states and less in familiar safe ones, and "
+                    "that gating loses less return per unit of compute than any "
+                    "fixed policy of when to think.",
+         falsified_by="Engagement uncorrelated with novelty or stakes, or a "
+                      "RANDOM gate at the same average rate matching it. "
+                      "Thinking sometimes is not the claim; thinking at the "
+                      "right times is.",
+         null_baseline="Always deliberate; never deliberate; and - the null "
+                       "that actually bites - deliberate at random with the "
+                       "SAME average rate and the same compute.",
+         metric="return_per_flop_vs_matched_random_gate",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["DP.01"],
+         control="A world stretch where nothing is novel and nothing is "
+                 "dangerous. Engagement must NOT rise there. If it does, the "
+                 "gate is reading elapsed time, episode index or its own "
+                 "uncertainty drift rather than the world.",
+         kills="The 'one brain that spends more compute when the situation "
+               "warrants it' design. If refuted, a fixed deliberation budget is "
+               "the honest default and the adaptive gate should be deleted "
+               "rather than kept as decoration.",
+         notes="MATCHED-RATE RANDOM IS THE ONLY NULL THAT MATTERS and it is "
+               "routinely omitted in this literature: any gate that fires often "
+               "enough will beat never-deliberating, which proves deliberation "
+               "helps and says nothing about the gate. Report compute in FLOPs "
+               "or wall-clock, never in 'number of deliberation events' - a gate "
+               "that thinks rarely but deeply is not cheaper. Interaction with "
+               "DP.01 is expected and must be reported, not controlled away: as "
+               "habits form, a working gate should fire LESS on practised "
+               "tasks, which is the same phenomenon seen from the other side."),
 ]
