@@ -1998,3 +1998,49 @@ separately what SCOPE the fixture covers: a probe planted inside the narrow path
 is silent about everything the wide claim added. (Related: `an audit inherits
 every hole in its own standard`; this is that hole arriving by drift rather than
 by design.)
+
+## A proxy detector fails in BOTH directions, and only the flattering direction stays hidden
+
+`experiments/coverage.py` matches GOAL.md commitments to specs by regex over
+spec titles. Its first failure was a false NEGATIVE: `BA.01` was written
+specifically to close the `balance` hole and the pattern could not see it. That
+got found within a day, and the lesson above (`the instrument that finds gaps
+can have a gap`) was written about it.
+
+The false POSITIVE half went unnoticed for two more days, and it was worse.
+Measured 2026-08-10 by matching all 21 commitment patterns against all 160 spec
+titles and inspecting every hit:
+
+    shelter/building   reported 4 specs / 1 PASS  -> real: 1 spec / 0 PASS
+    proprioception     reported 2 specs / 1 PASS  -> real: 1 spec / 0 PASS
+    touch/contact      reported 2 specs / 1 PASS  -> real: 1 spec / 0 PASS
+    death & retry      reported 11 specs / 6 PASS -> real: ~4 specs / ~2 PASS
+
+The passing spec credited to *"he builds a shelter"* — the owner's own image of
+success — was `ME.11.0`, *"The paraphrase eval set is **honest** before anyone
+is scored"*. The token `nest` matches inside `ho-nest`. Proprioception's PASS
+was `PG.3`, *"Ladder is c-**limb**-able"*. `dies` matches inside `bo-dies`.
+`sound` matched `PG.1`, *"physically sound"* — sound as in *valid*.
+
+**Why the two directions are not symmetric.** A false negative gets fixed the
+day someone writes a spec and notices it is not being counted: the author is
+motivated, present, and looking straight at it. A false positive is credit
+nobody audits, because **nobody goes looking for coverage they believe they
+already have**. The detector's failure mode is silence in exactly the case its
+existence was justified by, and every organ downstream — the overseer's
+first-run instruction, the builder's priority order — inherits it.
+
+**The load-bearing consequence, stated concretely.** `coverage.py` exits
+nonzero only when a commitment has ZERO specs. Today nothing hits zero — but if
+`SH.01` were deleted, `shelter/building` would still report 3 specs and 1 PASS
+from the word "honest", and the tool would still exit 0. **The alarm was
+resting on an accident.**
+
+**Rule:** when a check reads a proxy, do not ask only "can it miss the thing?"
+— ask "can it match something that is not the thing, and would anyone ever
+find out?" If the answer to the second is no, the proxy must be demoted to a
+NOMINATION and the subject must declare itself (`COVERS:`), because a
+nomination that goes uncounted is visible work and a false match is invisible
+comfort. And test it the way this file already prescribes for the other
+direction: feed it the case you know is broken — a synthetic spec titled *"The
+honest baseline"* must NOT count toward shelter.
