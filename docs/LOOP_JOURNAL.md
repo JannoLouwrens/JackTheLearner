@@ -2569,3 +2569,70 @@ unwritten; it is now written with the arithmetic attached.
    gone (0 unpushed commits). It is `run next`'s first entry.
 4. **Do NOT start LC.03** until D4 is answered; starting it dishonestly is
    worse than the delay.
+
+## 2026-08-10 ~15:30 — DP.00 PASS: this world pays for lookahead, and the payment scales with depth
+
+**Picked by the standing rule, not by fan-out.** `run coverage` read 15 GOAL.md
+commitments at 0 PASS. `fast/slow` has the most declared specs of any of them
+(5) and its cheapest runnable member is `DP.00` (`cpu<10min`, deps `LC.02`).
+It frees nothing, so `run blocked` will never surface it — that is the point of
+the rule. It is also the family's own gate: GOAL.md's fast/slow section says
+outright that *whether lookahead earns its keep at all is DP.00*, and DP.01-03
+are unregistrable as written if it fails.
+
+**Design — the arms differ in PLANNING DEPTH and nothing else.** The planner is
+handed the simulator itself as its model (that is what "oracle" means here), so
+learning is removed as a confound and the only variable is how far ahead it
+looks. World is LC.00's survival gridworld, imported rather than re-typed, with
+one declared change: `LIFE_CAP` 400 -> 200 for the CPU budget. Null is the
+per-seed MAXIMUM of two reactive arms (H=1 uniform, H=1 persistent) — a
+strengthened null; persistence in fact HURT (114.2 vs 121.7), which is recorded
+because a strengthened null that turns out not to be stronger is still evidence.
+
+**Measured (3 seeds, 106.4 s, clean stamp `433904f`):**
+
+    depth sweep   H=1 121.7  ->  H=2 125.8  ->  H=4 139.2  ->  H=8 197.5 steps
+    gap           +75.8 steps, 4.31 sigma against a 3.0 gate
+    per-seed      gap_clear = 1.0 — every seed cleared the 20-step margin
+    control       ctrl_gain = 0.0 EXACTLY; ctrl_react_optimal = 1.0
+    control's own positive control   broken null gains 48.9 vs a 10-step floor
+    model fidelity  0 / 2000 probe mismatches per seed, on the interior, the
+                    eat and the die branches (222 eats, 666 deaths per seed)
+
+**The control is provably reactive-solvable BY CONSTRUCTION** — a beacon world
+with dense distance-shaped reward, no needs, no death, no traps — so greedy is
+optimal and planning can only tie. That guarantee is also the control's weakness:
+a check that cannot fail on the science can only fail on the implementation, so
+it carries its own positive control (a deliberately broken uniform-random
+reactive arm, which must and does gain ~49 steps). A control whose expected
+outcome is a tautology needs a witness that its statistic can move.
+
+**The gap is a LOWER BOUND on three axes and the docstring says so:** lifespan is
+censored at the cap and the planner reaches it; the null is the max of two
+reactive arms; and the depth axis is not exhausted — the H=4 -> H=8 jump was the
+biggest of the sweep. Depth-8 is not "unlimited rollouts" and the entry does not
+pretend it is.
+
+**One thing I got wrong and corrected before it shipped as fact:** the
+calibration seeds (100-102, deliberately disjoint from the run's 0-2) showed the
+gain SATURATING at depth 4-8, and my first docstring said so. The recorded seeds
+say the opposite. Gates set off-run are conservative — the run has to beat them,
+so an unrepresentative calibration gets caught. Descriptions set off-run are
+merely asserted, and nothing in the harness can contradict a docstring. New
+lesson appended: *a calibration seed sets the GATE; it must never be allowed to
+describe the SHAPE.*
+
+**What this buys the ladder.** `fast/slow` goes 0/5 -> 1/5; 14 commitments still
+read 0 PASS. DP.01 does NOT unblock (it also needs LC.04). What DP.00 licenses is
+narrower and worth stating exactly: it says the WORLD rewards deliberation, which
+is a precondition for the dual-process story, not evidence for it. Nothing here
+shows Jack planning — only that a planner would be repaid if he learned to be one.
+
+**Next iteration.** Under the same standing rule the cheapest runnable member of
+a 0-PASS commitment is now `TA.01` (taste, 3 declared specs, `cpu<10min`,
+deps `PG.6`), then `SM.01` / `VO.01` / `PS.02` (2 declared each), then `BA.01`
+and `PS.03`. Still open and cheap: `PG.3`/`PG.8` are clear but `PS.01` (865 s)
+and `XL.00` (1163 s) are both on the STALE list — neither fits beside a spec in
+one iteration, but they are the only two entries a reader cannot distinguish
+from real debt. And the Kaggle quota still expires 2026-08-16 with nothing
+submitted since the push block lifted.

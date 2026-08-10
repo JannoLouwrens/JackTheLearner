@@ -2124,3 +2124,40 @@ stale fixtures.
   twelve specs stale forever and billed a needless re-run). The refactor was
   verified the boring way: `run stale` prints byte-identical output before and
   after.
+
+## A calibration seed sets the GATE; it must never be allowed to describe the SHAPE
+
+DP.00 sized its horizons, life counts and thresholds on seeds 100-102, chosen
+disjoint from the seeds `run_spec` actually uses (0-2) precisely so that no
+threshold was picked after seeing a run seed — LC.00's disclosure discipline,
+tightened. That part worked: the gates cleared with margin and none of them was
+touched afterwards.
+
+What did not work was the sentence beside them. The calibration sweep read
+129.6 -> 147.9 -> 184.0 -> 190.6 for planning depths 1/2/4/8, so the docstring
+said the gain "saturates" and cited that as evidence the horizon was not the
+binding constraint. The recorded run read **121.7 -> 125.8 -> 139.2 -> 197.5**:
+still climbing fastest at the last step. Three seeds of a randomised world
+inverted a *qualitative* claim while leaving every *quantitative* gate intact,
+and the claim would have shipped as description — in a docstring, which is the
+one part of a test nothing re-runs and nothing re-derives.
+
+The asymmetry is the lesson. A gate calibrated off-run is conservative by
+construction: it is a number that has to be BEATEN by the real seeds, and if
+calibration was unrepresentative the run fails and you find out. A description
+calibrated off-run is asserted, not beaten — nothing in the harness can
+contradict it, so an unrepresentative calibration survives as fact. Here the
+error was in the safe direction (the true gap is larger than described, so the
+hypothesis is stronger), and that is exactly why it is worth writing down:
+nothing would have caught it, in either direction.
+
+**Rule:** off-run seeds may set thresholds, sample sizes and budgets. They may
+not supply the words. Every claim about the SHAPE of a result — saturates,
+plateaus, monotone, dominated by X — must be restated from the recorded run's
+own metrics after it lands, and the metrics that support it must be IN the
+ledger entry rather than only in the prose. Concretely, if a docstring says a
+sweep saturates, the sweep belongs in `metrics` so the sentence can be checked
+against the record; DP.00 records `plan_h2`/`plan_h4`/`plan_h8` for that reason,
+and the docstring now carries both sweeps with the disagreement named. Same
+family as "generated artifacts go stale silently", one level in: the artifact
+here is a sentence, and the thing that went stale never existed.

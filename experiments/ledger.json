@@ -1,6 +1,71 @@
 {
   "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed. A change that did not come from a run goes through `run amend` and is recorded in that entry's `amended` list.",
   "results": {
+    "DP.00": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "433904f",
+      "control_metrics": {
+        "ctrl_broken_steps": 59.9,
+        "ctrl_broken_steps_std": 0.141421,
+        "ctrl_gain": 0.0,
+        "ctrl_gain_broken": 48.866667,
+        "ctrl_gain_broken_std": 0.478423,
+        "ctrl_gain_std": 0.0,
+        "ctrl_plan_steps": 11.033333,
+        "ctrl_plan_steps_std": 0.339935,
+        "ctrl_react_optimal": 1.0,
+        "ctrl_react_optimal_std": 0.0,
+        "ctrl_react_steps": 11.033333,
+        "ctrl_react_steps_std": 0.339935,
+        "ctrl_shortest": 11.033333,
+        "ctrl_shortest_std": 0.339935
+      },
+      "duration_s": 106.38,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "ee1a1bd+dirty",
+          "message": "",
+          "ran_at": "2026-08-10T15:22:06",
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "9d856fa3fb93f6da",
+      "message": "",
+      "metrics": {
+        "gap_clear": 1.0,
+        "gap_clear_std": 0.0,
+        "plan_h2": 125.833333,
+        "plan_h2_std": 17.834112,
+        "plan_h4": 139.166667,
+        "plan_h4_std": 9.42809,
+        "plan_h8": 197.5,
+        "plan_h8_std": 3.535534,
+        "probe_ate": 222.333333,
+        "probe_ate_std": 2.054805,
+        "probe_died": 666.0,
+        "probe_died_std": 0.0,
+        "probe_mismatch": 0.0,
+        "probe_mismatch_std": 0.0,
+        "react_best": 121.666667,
+        "react_best_std": 17.598927,
+        "react_greedy": 121.666667,
+        "react_greedy_std": 17.598927,
+        "react_persist": 114.166667,
+        "react_persist_std": 10.274023,
+        "return_gap_oracle_plan_vs_reactive": 75.833333,
+        "return_gap_oracle_plan_vs_reactive_std": 20.949675
+      },
+      "ran_at": "2026-08-10T15:25:22",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "DP.00",
+      "status": "PASS"
+    },
     "LC.00": {
       "amended": [],
       "attempt": 1,

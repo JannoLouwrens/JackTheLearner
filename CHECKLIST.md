@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 63 / 162 demonstrated
+## 64 / 162 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -618,7 +618,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **DP.00** This world rewards looking ahead at all
+- [x] **DP.00** This world rewards looking ahead at all
       - _asserts:_ There exist states in Jack's world where an agent with a PERFECT model and unlimited rollouts beats the best reactive policy by a real margin. Deliberation buys something here.
       - _dies if:_ With a perfect model and unlimited lookahead, planning gains nothing over the reactive policy. Then this world has no slow system to find, DP.01-DP.03 are unregistrable as written, and the finding is about the WORLD - it needs traps, delays or irreversibility before any dual-process claim can be made in it.
       - _then delete:_ The entire DP family, and the 'spend compute when it matters' story with it.
