@@ -28,7 +28,7 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-from .protocol import Ledger, Status
+from .protocol import Ledger, Status, impl_deps_of, impl_sha_of
 from .registry import BY_ID, LADDER, ready, tier
 
 TESTS_DIR = Path(__file__).parent / "tests"
@@ -296,7 +296,19 @@ def stale_claims(ledger: Ledger) -> list:
     worse than none: it trains its reader to ignore it.
 
     Returns (spec_id, status, kind, detail) where kind is "CHANGED" (the file
-    hash moved) or "UNVERIFIABLE" (the entry predates `impl_sha`).
+    hash moved), "UNVERIFIABLE" (the entry predates `impl_sha`) or "DIRTY" (the
+    run's commit stamp ends in `+dirty`).
+
+    DIRTY is the strictly worse cousin of CHANGED and was added 2026-08-10, one
+    iteration after `env_stamp()` learned to write the flag. The flag alone was
+    a fact nothing consumed — LESSONS.md's "a lesson that prescribes a guard is
+    not a guard", in its second form: a SIGNAL that no organ reads is not a
+    guard either. CHANGED says the file moved after the run, so the code that
+    ran is still recoverable from the recorded commit. DIRTY says the run
+    executed HEAD *plus* uncommitted edits, so the code that produced the entry
+    exists in no commit at all and cannot be recovered by anyone, ever. It is
+    reported ALONGSIDE the impl_sha verdict rather than instead of it: an entry
+    can be both, and they are different facts about it.
     """
     out = []
     for s in LADDER:
@@ -307,12 +319,19 @@ def stale_claims(ledger: Ledger) -> list:
         path = _module_path_for(s.id)
         if entry is None or path is None:
             continue
+        stamp = str(getattr(entry, "commit", "") or "")
+        if stamp.endswith("+dirty"):
+            out.append((s.id, st.value, "DIRTY",
+                        f"ran from a modified tree at {stamp.split('+')[0]}; "
+                        f"the code that ran was never committed"))
         recorded = getattr(entry, "impl_sha", None)
         if not recorded:
             out.append((s.id, st.value, "UNVERIFIABLE",
                         f"recorded at {(entry.commit or '?')[:8]} before impl_sha existed"))
             continue
-        cur = hashlib.sha256(path.read_bytes()).hexdigest()[:16]
+        # The SAME function the runner records with — see `impl_sha_of`'s last
+        # paragraph for what the second copy of this line cost.
+        cur = impl_sha_of(path)
         if cur != recorded:
             out.append((s.id, st.value, "CHANGED",
                         f"{path.name}: ran on {recorded}, now {cur}"))
@@ -340,6 +359,15 @@ def cmd_status(ledger: Ledger) -> int:
     rows = stale_claims(ledger)
     changed = [x for x in rows if x[2] == "CHANGED"]
     unknown = [x for x in rows if x[2] == "UNVERIFIABLE"]
+    dirty = [x for x in rows if x[2] == "DIRTY"]
+    if dirty:
+        # Above the CHANGED block deliberately: this is the more serious of the
+        # two and the scoreboard's top lines are what an iteration actually reads.
+        print("  ! DIRTY STAMPS — the run's code exists in no commit:")
+        for sid, st, _, detail in dirty:
+            print(f"      {sid}  recorded {st}; {detail}. Re-run it from a "
+                  f"clean tree.")
+        print()
     if changed:
         print("  ! STALE CLAIMS — the test changed after the run that recorded it:")
         for sid, st, _, detail in changed:
@@ -369,6 +397,13 @@ def _check_stale_detector(ledger: Ledger) -> None:
     silently returned an empty set (T0.13). So the real function is run, on a
     real spec, against a real file, with one `impl_sha` deliberately wrong — and
     a detector that cannot see that refuses to report at all.
+
+    TWO plants since 2026-08-10, one per bucket. The DIRTY bucket reads zero on
+    today's ledger and will read zero for as long as every run starts from a
+    clean tree — which is indistinguishable from a detector that cannot fire.
+    That is the same shape as the CHANGED plant above and it gets the same
+    treatment: a bucket whose known-positive has never been seen is not
+    evidence of anything.
     """
     import copy
 
@@ -377,16 +412,40 @@ def _check_stale_detector(ledger: Ledger) -> None:
                    and _module_path_for(s.id) is not None), None)
     if victim is None:
         return
-    probe = copy.copy(ledger)
-    probe.results = dict(ledger.results)
-    planted = copy.copy(probe.results[victim])
-    planted.impl_sha = "0" * 16          # a hash this file cannot have
-    probe.results[victim] = planted
-    hit = [r for r in stale_claims(probe) if r[0] == victim and r[2] == "CHANGED"]
-    if not hit:
+    # KNOWN-POSITIVE FOR THE DEPENDENCY HALF OF THE HASH, and the one check
+    # that would have caught the writer/reader split outright: the reader must
+    # actually SEE an `IMPL_DEPS` declaration somewhere in the ladder. The old
+    # reader hashed test files alone, saw zero dependencies, and reported the
+    # twelve specs that declare them stale in perpetuity — while every planted
+    # probe below passed, because a test-file-only hash detects a test-file-only
+    # edit perfectly well. A detector can be right about its own fixture and
+    # blind to the scope it claims to cover.
+    declared = [(sid, impl_deps_of(_module_path_for(sid)))
+                for sid in (s.id for s in LADDER)
+                if _module_path_for(sid) is not None]
+    problems = [f"{sid}({p})" for sid, (_, p) in declared if p]
+    if problems:
         raise RuntimeError(
-            f"the stale detector did not flag a planted mismatch on {victim}; "
-            "refusing to report a clean scan it may not have performed")
+            "IMPL_DEPS could not be read as a literal list in: "
+            + ", ".join(problems) + " — the recorded sha covers files this "
+            "scan cannot identify")
+    if not any(deps for _, (deps, _) in declared):
+        raise RuntimeError(
+            "no spec in the ladder declares IMPL_DEPS as far as this scan can "
+            "see; the dependency half of every impl_sha is invisible to it")
+
+    for field, value, kind in (("impl_sha", "0" * 16,          "CHANGED"),
+                               ("commit",   "0000000+dirty",   "DIRTY")):
+        probe = copy.copy(ledger)
+        probe.results = dict(ledger.results)
+        planted = copy.copy(probe.results[victim])
+        setattr(planted, field, value)   # a hash/stamp this entry cannot have
+        probe.results[victim] = planted
+        hit = [r for r in stale_claims(probe) if r[0] == victim and r[2] == kind]
+        if not hit:
+            raise RuntimeError(
+                f"the stale detector did not flag a planted {kind} on {victim}; "
+                "refusing to report a clean scan it may not have performed")
 
 
 def cmd_stale(ledger: Ledger) -> int:
@@ -394,6 +453,14 @@ def cmd_stale(ledger: Ledger) -> int:
     rows = stale_claims(ledger)
     changed = [r for r in rows if r[2] == "CHANGED"]
     unknown = [r for r in rows if r[2] == "UNVERIFIABLE"]
+    dirty = [r for r in rows if r[2] == "DIRTY"]
+    if dirty:
+        print(f"\n{len(dirty)} claim(s) recorded from a MODIFIED tree — the code "
+              f"that ran is in no commit:\n")
+        for sid, st, _, detail in dirty:
+            print(f"  {sid:8} {st:7} {detail}")
+        print("\nRe-run each from a clean tree. This is worse than CHANGED: "
+              "there is no commit\nto go back to.")
     if not changed:
         print("\nNo stale claims — every verifiable entry names the test as it "
               "stands today.")

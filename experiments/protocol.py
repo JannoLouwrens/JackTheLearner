@@ -488,8 +488,42 @@ def _declares_void(metrics: Dict[str, Any]) -> Optional[str]:
     return None
 
 
-def _impl_sha(fn: Callable) -> Optional[str]:
-    """sha256 of the file `fn` is defined in — the test as it was when it ran.
+def impl_deps_of(path) -> tuple:
+    """A test module's `IMPL_DEPS`, read STATICALLY from its source.
+
+    Static because the reader of a sha must not import the module to check it:
+    `run.stale_claims` scans the whole ladder and importing every test would
+    pull in mujoco, GL contexts and torch for a question about bytes on disk.
+
+    Returns `(deps, problem)`. `problem` is non-empty when the declaration
+    exists but cannot be read as a literal list of strings — reported rather
+    than swallowed, because falling back to "no deps" is exactly the silent
+    narrowing that produced the bug this function was extracted to fix.
+    """
+    import ast
+    try:
+        tree = ast.parse(Path(path).read_bytes())
+    except (OSError, SyntaxError) as e:
+        return (), f"unreadable:{type(e).__name__}"
+    for node in tree.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        if not any(isinstance(t, ast.Name) and t.id == "IMPL_DEPS"
+                   for t in node.targets):
+            continue
+        try:
+            value = ast.literal_eval(node.value)
+        except (ValueError, SyntaxError):
+            return (), "IMPL_DEPS is not a literal"
+        if not (isinstance(value, (list, tuple))
+                and all(isinstance(x, str) for x in value)):
+            return (), "IMPL_DEPS is not a list of paths"
+        return tuple(value), ""
+    return (), ""
+
+
+def impl_sha_of(path) -> Optional[str]:
+    """sha256 of a test file — the test as it was when it ran.
 
     PLUS any files the test module declares in `IMPL_DEPS`, because a test file
     is not the whole of what a test measures. PG.6 certifies what Jack's eye can
@@ -509,21 +543,57 @@ def _impl_sha(fn: Callable) -> Optional[str]:
     Paths that do not resolve are recorded as the literal string `missing:` plus
     the path rather than skipped, so a typo shows up as a permanent mismatch
     instead of silently reverting to test-file-only hashing.
+
+    THIS FUNCTION IS THE WHOLE DEFINITION OF `impl_sha`, and it takes a PATH so
+    that the writer and the reader are one code path. They were two, and they
+    disagreed: `_impl_sha` hashed file + `IMPL_DEPS` while `run.stale_claims`
+    hashed the file alone, so all twelve specs declaring `IMPL_DEPS` were
+    reported stale FOREVER and no re-run could clear the flag. XL.00 re-ran
+    clean on 2026-08-10 and was still listed. A checker whose false positives
+    survive the only action it recommends is worse than absent — it bills real
+    iterations for nothing (the previous hand-off had already queued a needless
+    LC.02 re-run on its say-so). Two functions computing "the same" hash is a
+    thing to remove, not to keep in sync.
     """
     import hashlib
+    try:
+        h = hashlib.sha256(Path(path).read_bytes())
+        deps, problem = impl_deps_of(path)
+        if problem:
+            h.update(f"undeclarable:{problem}".encode())
+        for rel in deps:
+            dep = Path(__file__).resolve().parent.parent / rel
+            h.update(dep.read_bytes() if dep.is_file()
+                     else f"missing:{rel}".encode())
+        return h.hexdigest()[:16]
+    except (OSError, TypeError):
+        return None
+
+
+def _impl_sha(fn: Callable) -> Optional[str]:
+    """`impl_sha_of` for the file a function is defined in.
+
+    Also the one moment when both the static and the runtime view of
+    `IMPL_DEPS` are available, so it checks that they agree. If the AST reader
+    ever stops seeing a declaration the running module has, the divergence
+    raises HERE — at write time, on the run that would have recorded the wrong
+    sha — instead of being discovered later as an unclearable stale flag.
+    """
     import inspect
     import sys
     try:
         src = inspect.getsourcefile(fn)
         if not src:
             return None
-        h = hashlib.sha256(Path(src).read_bytes())
+        static, problem = impl_deps_of(src)
         mod = sys.modules.get(getattr(fn, "__module__", ""), None)
-        for rel in getattr(mod, "IMPL_DEPS", ()) or ():
-            dep = Path(__file__).resolve().parent.parent / rel
-            h.update(dep.read_bytes() if dep.is_file()
-                     else f"missing:{rel}".encode())
-        return h.hexdigest()[:16]
+        runtime = tuple(getattr(mod, "IMPL_DEPS", ()) or ())
+        if not problem and static != runtime:
+            raise RuntimeError(
+                f"IMPL_DEPS disagree for {Path(src).name}: source says "
+                f"{list(static)}, the imported module says {list(runtime)}. "
+                "The recorded sha and the staleness checker would diverge.")
+        return impl_sha_of(src)
     except (OSError, TypeError):
         return None
 

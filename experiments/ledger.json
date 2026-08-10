@@ -2261,8 +2261,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 16,
-      "commit": "ced1393",
+      "attempt": 17,
+      "commit": "92bade0+dirty",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -2284,7 +2284,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.53,
+      "duration_s": 1.54,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2376,6 +2376,12 @@
           "message": "",
           "ran_at": "2026-08-10T04:19:47",
           "status": "PASS"
+        },
+        {
+          "commit": "ced1393",
+          "message": "",
+          "ran_at": "2026-08-10T09:25:53",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2383,7 +2389,7 @@
       "metrics": {
         "disarmed_conjunct_keys": 0,
         "disarmed_detail": "",
-        "gates_scanned": 59,
+        "gates_scanned": 60,
         "hazard_detail": "",
         "inert_gate_keys": 1,
         "precedence_hazards": 0,
@@ -2401,7 +2407,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-10T09:25:53",
+      "ran_at": "2026-08-10T12:31:35",
       "seeds": [
         0
       ],
@@ -2544,13 +2550,13 @@
     },
     "T0.17": {
       "amended": [],
-      "attempt": 2,
-      "commit": "6c0fcd1",
+      "attempt": 3,
+      "commit": "92bade0+dirty",
       "control_metrics": {
         "detector_sees_amendment": false,
         "hand_edit_took_effect": true
       },
-      "duration_s": 1.25,
+      "duration_s": 1.31,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2558,6 +2564,12 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-10T00:11:44",
           "status": "FAIL"
+        },
+        {
+          "commit": "6c0fcd1",
+          "message": "",
+          "ran_at": "2026-08-10T00:12:07",
+          "status": "PASS"
         }
       ],
       "impl_sha": "a68301d54b903b6e",
@@ -2571,7 +2583,7 @@
         "run_spec_leaves_amended_empty": true,
         "unknown_attempt_is_sticky": true
       },
-      "ran_at": "2026-08-10T00:12:07",
+      "ran_at": "2026-08-10T12:31:33",
       "seeds": [
         0
       ],
@@ -3684,8 +3696,8 @@
     },
     "XL.00": {
       "amended": [],
-      "attempt": 3,
-      "commit": "1480126",
+      "attempt": 4,
+      "commit": "92bade0",
       "control_metrics": {
         "c_at_death_attainable_ok": 1.0,
         "c_at_death_attainable_ok_std": 0.0,
@@ -3707,20 +3719,22 @@
         "c_calibrated_std": 0.0,
         "c_drift_attainable_ok": 1.0,
         "c_drift_attainable_ok_std": 0.0,
-        "c_drift_lives": 9.0,
-        "c_drift_lives_std": 0.0,
-        "c_drift_ok": 0.666667,
-        "c_drift_ok_std": 0.471405,
+        "c_drift_lives": 15.666667,
+        "c_drift_lives_ok": 1.0,
+        "c_drift_lives_ok_std": 0.0,
+        "c_drift_lives_std": 0.471405,
+        "c_drift_ok": 1.0,
+        "c_drift_ok_std": 0.0,
         "c_drift_perm_p_attainable": 1.99998e-05,
         "c_drift_perm_p_attainable_std": 0.0,
-        "c_drift_perm_z_ceiling": 2.828427,
-        "c_drift_perm_z_ceiling_std": 0.0,
-        "c_drift_slope": 9.305556,
-        "c_drift_slope_std": 0.655486,
-        "c_drift_trend_p": 0.000886658,
-        "c_drift_trend_p_std": 0.00122564,
-        "c_drift_trend_z": 2.685612,
-        "c_drift_trend_z_std": 0.174192,
+        "c_drift_perm_z_ceiling": 3.829208,
+        "c_drift_perm_z_ceiling_std": 0.0619077,
+        "c_drift_slope": 8.779496,
+        "c_drift_slope_std": 0.279092,
+        "c_drift_trend_p": 1.99998e-05,
+        "c_drift_trend_p_std": 0.0,
+        "c_drift_trend_z": 3.729112,
+        "c_drift_trend_z_std": 0.14724,
         "c_immortal_deaths": 0.0,
         "c_immortal_deaths_std": 0.0,
         "c_immortal_lives": 0.0,
@@ -3734,7 +3748,7 @@
         "c_wiped_rows": 0.0,
         "c_wiped_rows_std": 0.0
       },
-      "duration_s": 877.62,
+      "duration_s": 1162.68,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3748,17 +3762,23 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-10T11:05:55",
           "status": "FAIL"
+        },
+        {
+          "commit": "1480126",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-10T11:27:44",
+          "status": "FAIL"
         }
       ],
-      "impl_sha": "5e1fb80892c05926",
-      "message": "pre-registered threshold not met",
+      "impl_sha": "5716b043273341e7",
+      "message": "",
       "metrics": {
         "alpha": 0.027222,
         "alpha_std": 0.0,
         "calibrated": 1.0,
         "calibrated_std": 0.0,
-        "conjunction": 0.666667,
-        "conjunction_std": 0.471405,
+        "conjunction": 1.0,
+        "conjunction_std": 0.0,
         "corner_pose_accepted": 1.0,
         "corner_pose_accepted_std": 0.0,
         "death_by_energy": 13.666667,
@@ -3797,11 +3817,15 @@
         "n_legal_std": 1.414214,
         "n_lives": 13.666667,
         "n_lives_std": 0.471405,
-        "occupied_pose_rejected": 0.666667,
-        "occupied_pose_rejected_std": 0.471405,
-        "occupied_probe_x": -0.25,
+        "occupied_pose_rejected": 1.0,
+        "occupied_pose_rejected_std": 0.0,
+        "occupied_probe_depth": -0.09,
+        "occupied_probe_depth_std": 1.38778e-17,
+        "occupied_probe_margin": 90.0,
+        "occupied_probe_margin_std": 0.0,
+        "occupied_probe_x": -1.5,
         "occupied_probe_x_std": 0.0,
-        "occupied_probe_y": -2.6,
+        "occupied_probe_y": -1.5,
         "occupied_probe_y_std": 0.0,
         "paired_death_spawn_dist": 5.278175,
         "paired_death_spawn_dist_std": 0.624178,
@@ -3832,14 +3856,14 @@
         "uniform_z": 0.208145,
         "uniform_z_std": 0.764257
       },
-      "ran_at": "2026-08-10T11:27:44",
+      "ran_at": "2026-08-10T12:27:59",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "XL.00",
-      "status": "FAIL"
+      "status": "PASS"
     }
   }
 }

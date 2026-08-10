@@ -1928,3 +1928,73 @@ is more evidence, never a looser gate. XL.00 now carries `c_drift_lives_ok`,
 holding the control to the same life floor as the experiment and VOIDing below
 it. Corollary, learned the hard way here: **when choosing between two repairs,
 run both on the same data — the one with the better story lost.**
+
+## A flag nothing reads is a comment, not a signal
+
+`Result.env_stamp()` learned on 2026-08-10 to append `+dirty` to the commit when
+a spec runs from a modified working tree — the honest fix for the fact that a
+run executes HEAD *plus* uncommitted edits and `rev-parse` cannot tell. It was
+written, known-answer tested three ways, and committed.
+
+**And no command in the repo looked at it.** `run status` and `run stale` — the
+two organs whose whole job is "is this entry a claim about identifiable code?" —
+classified entries by `impl_sha` alone, so an entry stamped `1480126+dirty` read
+exactly as clean as one stamped `1480126`. The flag would have sat in
+`ledger.json` being true and unread for as long as anyone cared to look at the
+scoreboard instead of the raw JSON. That is the same failure as
+`a lesson that prescribes a guard is not a guard`, one layer lower: there the
+prescription was prose no organ could schedule, here the *measurement itself*
+existed and no organ consumed it. Writing the truth down is not the same as the
+system knowing it.
+
+The near-miss that makes it concrete: `+dirty` is the ordinary case for this
+loop, because a builder edits a test and runs it before committing. The first
+entry to carry the flag would have been reported clean by every command an
+iteration actually runs.
+
+**Rule:** the commit that starts recording a new signal must also land the organ
+that reads it, and that organ needs a planted known-positive — a bucket that
+reads zero because nothing has tripped it yet is indistinguishable from a bucket
+that cannot fire. *Actioned in the same commit:* `stale_claims` gained a third
+kind, `DIRTY`, reported above `CHANGED` because it is strictly worse (a CHANGED
+entry's code is still recoverable from its commit; a DIRTY entry's never was),
+and `_check_stale_detector` now plants one of each and refuses to report a clean
+scan it could not have performed. General form of the test: for every field a
+record gains, name the command that would say its name out loud — if there is
+none, the field is a comment.
+
+## Two functions computing "the same" hash is a defect, even while they agree
+
+`impl_sha` had two implementations. The writer (`protocol._impl_sha`) hashed the
+test file **plus** the module's `IMPL_DEPS`; the reader (`run.stale_claims`)
+hashed the test file **alone**. They agreed for every spec that declared no
+dependencies — which was every spec, until `IMPL_DEPS` shipped on 2026-08-10 to
+close a real hole (a certificate about the world, invalidated by a change to the
+world, undetectable by design). The widening landed in the writer only.
+
+The result was a checker whose false positives could not be cleared by the one
+action it recommends. XL.00 re-ran to PASS on a clean tree and `run status`
+still listed it stale, naming a hash the current code cannot produce. All twelve
+`IMPL_DEPS` specs were in that state, permanently, and three of the seven names
+on the stale list were pure noise. The previous hand-off had already queued an
+LC.02 re-run on its say-so; that re-run would have re-flagged itself.
+
+Two things generalise. First: **when a guard is widened, the widening belongs to
+the definition, not to one caller** — the fix here was not to teach the reader
+about `IMPL_DEPS` but to delete the second implementation, so `impl_sha_of(path)`
+is now the only thing that knows what an `impl_sha` is, and the writer calls it
+too. Two copies "kept in sync" is a promise about future edits, and this repo has
+already learned that promises in prose lose to whatever the loop can see. Second:
+**every planted probe passed the whole time.** `_check_stale_detector` plants a
+wrong hash and requires the detector to flag it; a test-file-only hash flags a
+test-file-only edit perfectly. The fixture exercised the mechanism and never
+touched the *scope* the mechanism claimed. So the new known-positive asserts the
+scope directly — the scan must be able to SEE an `IMPL_DEPS` declaration
+somewhere in the ladder, and refuses to report if it cannot.
+
+**Rule:** if two call sites compute a value that must be equal, one of them is
+not a computation — make it a call. And when a detector has a fixture, ask
+separately what SCOPE the fixture covers: a probe planted inside the narrow path
+is silent about everything the wide claim added. (Related: `an audit inherits
+every hole in its own standard`; this is that hole arriving by drift rather than
+by design.)
