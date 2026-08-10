@@ -33,10 +33,21 @@ here either.
 This spec excludes its own ledger entry and says so in `self_excluded_entries`:
 that entry is written AFTER the scan, so it always reflects the previous
 version of this file. Its own gate is exercised by the control instead.
+
+Probe C's debt was paid off on 2026-08-10 (19 undeclared -> 0), so this spec
+also carries the guard that keeps it paid: `run_spec` now REFUSES a spec that
+supplies a `control_fn` while declaring `Spec.control = None`. That guard is
+itself a claim, so it is tested here in both directions on throwaway specs and a
+throwaway ledger — a guard that refuses everything and a guard that refuses
+nothing produce the same clean-looking log, which is the reaper lesson.
 """
 from __future__ import annotations
 
-from ..protocol import Ledger, Status, run_spec
+import tempfile
+from pathlib import Path
+
+from ..protocol import (Budget, Ledger, Spec, Status, UndeclaredControl,
+                        run_spec)
 from ..registry import BY_ID
 from ..verify import UNDECLARED_CONTROL_BUDGET, collect, fixture, scan
 
@@ -50,8 +61,55 @@ MIN_VERDICTS = 30
 MIN_CONTROLS = 20
 
 
+def _guard_probe() -> dict:
+    """Does `run_spec` refuse an UNDECLARED control, and only that?
+
+    Two throwaway specs, identical but for the `control` declaration, both run
+    against a throwaway ledger — `Ledger(path=...)` and the injection rule that
+    made it possible (LESSONS.md: a function that hard-codes the path to the
+    record it mutates cannot be tested without corrupting it).
+
+    Both directions are asserted because they fail identically in a log: a
+    guard that refuses every spec and a guard that refuses none both leave "no
+    undeclared controls" behind them. The permissive arm must reach a real
+    verdict, not merely not-raise, so a future guard that swallows the run
+    instead of refusing it is also caught.
+    """
+    def _fn(seed: int) -> dict:
+        return {"x": 1.0}
+
+    def _ctl(seed: int) -> dict:
+        return {"x": 0.0}
+
+    def _chk(m: dict, c: dict) -> bool:
+        return m["x"] > c["x"]
+
+    def _spec(control):
+        return Spec("FIX.guard", 0, "throwaway",
+                    hypothesis="x beats the control's x",
+                    falsified_by="it does not",
+                    null_baseline="the control", metric="x",
+                    budget=Budget.CPU_FAST, control=control)
+
+    out = {"refused_undeclared": 0.0, "ran_declared": 0.0}
+    with tempfile.TemporaryDirectory(prefix="t018_guard_") as d:
+        led = Ledger(path=Path(d) / "ledger.json")
+        try:
+            run_spec(_spec(None), _fn, _chk, control_fn=_ctl, ledger=led)
+        except UndeclaredControl:
+            out["refused_undeclared"] = 1.0
+        # …and the same spec WITH a declaration must run through to a verdict.
+        res = run_spec(_spec("the control's x must be lower"), _fn, _chk,
+                       control_fn=_ctl, ledger=led)
+        out["ran_declared"] = 1.0 if res.status is Status.PASS else 0.0
+        # Nothing may have been written to the real ledger by either arm.
+        out["guard_ledger_entries"] = float(len(Ledger(
+            path=Path(d) / "ledger.json").results))
+    return out
+
+
 def _experiment(seed: int) -> dict:
-    return scan(collect(Ledger(), exclude=(SPEC_ID,)))
+    return {**scan(collect(Ledger(), exclude=(SPEC_ID,))), **_guard_probe()}
 
 
 def _control(seed: int) -> dict:
@@ -80,6 +138,11 @@ def _check(m: dict, c: dict) -> bool:
     scanned_enough = (m["verdicts_rejudged"] >= MIN_VERDICTS
                       and m["controls_probed"] >= MIN_CONTROLS)
 
+    # ── and the guard that keeps probe C at zero must bite, and only there ──
+    guard_works = (m["refused_undeclared"] == 1.0
+                   and m["ran_declared"] == 1.0
+                   and m["guard_ledger_entries"] == 1.0)
+
     # ── and the scan must find exactly the planted defects, and no others ──
     control_caught = (
         c["entries_seen"] == 5
@@ -105,7 +168,7 @@ def _check(m: dict, c: dict) -> bool:
         and c["unevaluable_gates"] == 0
         and c["unavailable_entries"] == 0
     )
-    return record_clean and scanned_enough and control_caught
+    return record_clean and scanned_enough and guard_works and control_caught
 
 
 def run(ledger: Ledger | None = None):

@@ -2083,3 +2083,107 @@ eliminate), the convergence check (no winner while the runner-up is still
 closing), and the scale-transfer gate before any winner is ADOPTED. Do NOT touch
 `drives.py`'s constants to make an arm survive — the world is now calibrated and
 its criterion is committed in `92aae6f` and `ad55a31`.
+
+---
+
+## 2026-08-10 ~09:30 — the audit surface, three carried findings closed
+
+**Attempted:** the overseer's FOR THE BUILDER items 2, 3 and 4 — all three
+unactioned at their FOURTH audit, all CPU, none needing the owner. Item 1 (the
+commit stamp) was closed by the previous iteration (`ccd0e84`). Not LC.03,
+deliberately, and §"what the next iteration should pick up" below says why.
+
+**Item 3 — `Spec.control` is now load-bearing.** `protocol.UndeclaredControl` is
+raised by `run_spec` when a spec supplies `control_fn` and declares
+`control=None`, checked BEFORE any compute (a warning at the end of a 20,000
+second run is a warning nobody reads). All **20** undeclared declarations
+backfilled with what the control is and WHICH WAY it must fail —
+`run verify` reads `0 / 19 budget`, and `UNDECLARED_CONTROL_BUDGET` is ratcheted
+19 -> 0.
+
+Twenty, not the audited nineteen: **T2.02 was invisible to the audit because it
+is VOID rather than PASS**, so no scan over PASSing entries could see it, and it
+is the spec next in line for a GPU re-run. A static scan of the test tree against
+the live registry found it in a second. Generalised in `LESSONS.md` — *a debt
+counted from the record is short by exactly what the record excludes*.
+
+**Item 2 — T1.03 and T1.05 have controls, and both bite.**
+- `T1.03` (gradient coverage) now plants two dead parameters into the same brain,
+  under the same loss, read by the same scan: a never-called module (`grad is
+  None`) and a parameter reached by autograd but multiplied by zero (`grad`
+  present, all-zero — a live wire behind a dead gate, which looks wired from
+  every angle except its gradient). Both detected. Gated on the plants BY NAME,
+  not on `orphan_fraction`: 80 planted params move that fraction by 1.6e-6, so
+  the headline gate could not tell a caught plant from a missed one. Re-run
+  3 seeds: PASS, `orphan_fraction` **0.0483** (gate 0.05), plants 1.0/1.0.
+  Budget CPU_FAST -> CPU, measured 107.6 s with the control.
+- `T1.05` (frozen stays frozen) now attaches an IDENTICAL sentinel OUTSIDE
+  `_PRETRAINED_PREFIXES` and requires it to move on both halves. Protected:
+  `construct_delta` **0.0**, `train_delta` **0.0**, std 0.505. Unprotected:
+  **1.653** and **1.655**, std pulled to **0.0176** — the initialiser's own 0.02.
+  seeds 1 -> 3 (the sentinel is randomly initialised, so one seed was one draw).
+  The control's attachment name is checked against the live
+  `_PRETRAINED_PREFIXES` rather than assumed: an accidentally-protected control
+  passes by looking exactly like the experiment.
+
+**Item 4 — ME.8 re-run at 3 seeds: PASS.** Its own commit message recorded a
+*seed-2 training collapse* fixed by a GRU retain-bias init and the fix had never
+been run at that seed. All three seeds: `holdout_acc` **1.0**, `resume_acc`
+**1.0**, `zeroed_acc` **0.104** (base rate 0.125), `resume_vs_zeroed` **0.896 ±
+0.059**, `killed_frac` **1.0** (every child died by SIGKILL). Control:
+`acc_true_cue` **0.0**, `match_restored` **1.0**. The weakest PASS on the board
+is no longer weak, and the seed that motivated the fix now certifies it.
+
+**T0.18 gained the guard's own known-answer test** (`refused_undeclared` 1.0,
+`ran_declared` 1.0, `guard_ledger_entries` 1.0 against a throwaway
+`Ledger(path=...)`). Necessary because backfilling all twenty declarations means
+the raise can never fire on a real spec again — when the fix removes every
+instance of a defect, the guard loses its positive control. Both directions are
+asserted: a guard that refuses everything and one that refuses nothing leave the
+same clean log. T0.18 and T0.13 both re-run PASS afterwards (59 gates scanned, 0
+disagreements, 0 control-blind, 0 declared-but-unrun, `inert_gate_keys` 1 — the
+known T1.09 disjunct).
+
+**NEXT ITERATION, and read this before reaching for LC.03.** The handoff said
+"run LC.03" and LC.03 is not runnable as one unit of work, for two reasons that
+are facts about the spec rather than about the box:
+
+1. **W0-2 and W0-3 DO NOT EXIST.** `w0.py`'s own header says so: *"W0-2 death —
+   NOT YET"*, *"W0-3 cross-life — EpisodicMemory is proven (ME.10), unwired
+   here"*. LC.03 needs `n_lives >= 12` per seed, a `life_gain` over first-vs-final
+   third, and `cross_life_transfer` — i.e. death, a uniformly-random legal
+   respawn, and a diary that survives death. Note the design tension already
+   resolved in the research: `drives.py` implements a *soft* incapacity and never
+   terminates (`PURPOSE_AND_SCAFFOLDING.md` §2.2), while `LEARNING_CORE.md` §5.0
+   W0-2 requires death and answers the "an episode boundary is an
+   experimenter-supplied curriculum" objection with the random respawn. Build it
+   at the W0 level, not by touching the calibrated drive constants.
+2. **Its declared budget is wrong by ~10x, and by its OWN envelope.** LC.03 is
+   `Budget.CPU_LONG` = "cpu<2h". `LEARNING_CORE.md` §5.7 fixes the envelope at
+   `N_STEPS = 100,000` decisions and `W_CLOCK = 1.2` core-hours per arm-seed, and
+   costs LC.03/04/05 at **19.8 core-hours** for 5 arms x 3 seeds plus 0.8 for the
+   untrained twins and 4.5 for the five controls. At LC.02's measured throughput
+   (5-7.9 sim-s/real-s at the committed train_ratios) one arm-seed alone is
+   ~35-55 minutes. There is no CPU budget above `cpu<2h`, and an iteration is
+   killed at 50 minutes, so the ladder currently offers no way to run a spec of
+   this size at all — `run next` lists it as "cpu<2h" and would truncate it.
+
+So the honest decomposition, cheapest first: (a) implement W0-2 + W0-3 and
+certify them with a cheap spec that could fail — death fires on depletion at
+1/b, the respawn sampler is uniform over the legal set and independent of the
+death site, the diary survives with a life index, and — the load-bearing one —
+a NON-learner's lives do not lengthen, which is LC.03's control (c) measured for
+minutes instead of after 25 core-hours, with a deliberately drifting world as its
+known-positive fixture; (b) the resumable multi-iteration runner LC.03/04/05 need
+(§5.3 already requires ONE set of runs scored twice, so the stored curves exist
+in the design); (c) then LC.03 itself. A budget label that cannot express the
+run is worth escalating rather than quietly overrunning.
+
+**Also for the next iteration, cheap and real:** 6 entries are stale (PG.3, PG.6,
+PG.8, PG.9, LC.02, PS.01) because `74f8631` added `IMPL_DEPS = ["playground.py"]`
+to eight test files. Those flags are CORRECT — those certificates were recorded
+before the world hashed into them, so they do not cover the world as it stands —
+and clearing them is a re-run, not an edit. Widening a certificate's scope
+retroactively invalidates every entry recorded under the narrow scope; budget the
+re-runs in the same iteration that widens it. `run status` also still reports 44
+entries that predate `impl_sha` entirely.

@@ -435,6 +435,24 @@ class VoidStatusMismatch(RuntimeError):
     """
 
 
+class UndeclaredControl(RuntimeError):
+    """A spec runs a control it never declared, so `Spec.control` reads None.
+
+    `Spec.control` is the field an auditor greps to ask "which claims here are
+    sabotage-tested?". On 2026-08-10 twenty specs ran a `control_fn` while
+    declaring nothing — 19 of 53 recorded entries, so the grep answered "no
+    control" for more than a third of the ladder's sabotage-tested claims and
+    was therefore useless in BOTH directions: it could not be trusted when it
+    said yes either. The overseer carried it for four audits.
+
+    The prose declaration is not decoration. It is the only place that says
+    which WAY the control must fail; `control_fn` returns numbers, and a
+    reader cannot tell a control that must collapse from one that must diverge
+    without being told. So the declaration is now a precondition of running,
+    checked BEFORE any compute is spent.
+    """
+
+
 def _declares_void(metrics: Dict[str, Any]) -> Optional[str]:
     """Return the metric value that declares VOID, if any."""
     for v in metrics.values():
@@ -494,6 +512,15 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     pre-registered threshold — it is supplied by the spec author before the run,
     never adjusted afterwards to make a result look better.
     """
+    # Before anything is spent: a control that runs must also be declared.
+    # Raised rather than warned, and raised BEFORE the experiment, because a
+    # warning at the end of a 20,000-second run is a warning nobody reads.
+    if control_fn is not None and not spec.control:
+        raise UndeclaredControl(
+            f"{spec.id} passes control_fn={control_fn.__name__} to run_spec but "
+            f"Spec.control is None. Declare in the registry WHAT the control is "
+            f"and WHICH WAY it must fail; that field is the audit surface.")
+
     ledger = ledger or Ledger()
     impl_sha = _impl_sha(fn)
     blocked = ledger.blocked_by(spec)

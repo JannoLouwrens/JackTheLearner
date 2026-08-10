@@ -863,28 +863,45 @@
     },
     "ME.8": {
       "amended": [],
-      "attempt": 1,
-      "commit": "aefc77f",
+      "attempt": 2,
+      "commit": "ced1393",
       "control_metrics": {
         "acc_true_cue": 0.0,
-        "match_restored": 1.0
+        "acc_true_cue_std": 0.0,
+        "match_restored": 1.0,
+        "match_restored_std": 0.0
       },
-      "duration_s": 37.25,
+      "duration_s": 109.24,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "aefc77f",
+          "message": "",
+          "ran_at": "2026-08-08T01:19:49",
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "f1ba8ecfc4fd5170",
       "message": "",
       "metrics": {
         "holdout_acc": 1.0,
+        "holdout_acc_std": 0.0,
         "killed_frac": 1.0,
-        "mean_ckpt_step": 14.12,
+        "killed_frac_std": 0.0,
+        "mean_ckpt_step": 15.373333,
+        "mean_ckpt_step_std": 0.89164,
         "resume_acc": 1.0,
-        "resume_vs_zeroed": 0.8125,
-        "zeroed_acc": 0.1875
+        "resume_acc_std": 0.0,
+        "resume_vs_zeroed": 0.895833,
+        "resume_vs_zeroed_std": 0.0589256,
+        "zeroed_acc": 0.104167,
+        "zeroed_acc_std": 0.0589256
       },
-      "ran_at": "2026-08-08T01:19:49",
+      "ran_at": "2026-08-10T09:17:03",
       "seeds": [
-        0
+        0,
+        1,
+        2
       ],
       "spec_id": "ME.8",
       "status": "PASS"
@@ -2244,8 +2261,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 15,
-      "commit": "1dff040",
+      "attempt": 16,
+      "commit": "ced1393",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -2267,7 +2284,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.51,
+      "duration_s": 1.53,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2353,6 +2370,12 @@
           "message": "",
           "ran_at": "2026-08-10T02:14:47",
           "status": "PASS"
+        },
+        {
+          "commit": "1dff040",
+          "message": "",
+          "ran_at": "2026-08-10T04:19:47",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2360,7 +2383,7 @@
       "metrics": {
         "disarmed_conjunct_keys": 0,
         "disarmed_detail": "",
-        "gates_scanned": 56,
+        "gates_scanned": 59,
         "hazard_detail": "",
         "inert_gate_keys": 1,
         "precedence_hazards": 0,
@@ -2378,7 +2401,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-10T04:19:47",
+      "ran_at": "2026-08-10T09:25:53",
       "seeds": [
         0
       ],
@@ -2557,8 +2580,8 @@
     },
     "T0.18": {
       "amended": [],
-      "attempt": 3,
-      "commit": "2cd0289",
+      "attempt": 4,
+      "commit": "ced1393",
       "control_metrics": {
         "control_blind_detail": "FIX.blind",
         "control_blind_specs": 1,
@@ -2582,7 +2605,7 @@
         "verdict_disagreements": 1,
         "verdicts_rejudged": 5
       },
-      "duration_s": 1.34,
+      "duration_s": 1.48,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2596,34 +2619,43 @@
           "message": "",
           "ran_at": "2026-08-10T01:14:18",
           "status": "PASS"
+        },
+        {
+          "commit": "2cd0289",
+          "message": "",
+          "ran_at": "2026-08-10T02:14:49",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "80fe15acf02d5efc",
+      "impl_sha": "b18c290e1beee2e6",
       "message": "",
       "metrics": {
         "control_blind_detail": "",
         "control_blind_specs": 0,
-        "control_read_by_key": 47,
+        "control_read_by_key": 53,
         "control_read_by_value": 4,
-        "controls_probed": 51,
+        "controls_probed": 57,
         "declared_control_never_ran": 0,
         "declared_never_ran_detail": "",
         "disagreement_detail": "",
-        "entries_seen": 56,
-        "no_control_detail": "T0.01, T0.10, T1.03, T1.05",
-        "no_control_specs": 4,
+        "entries_seen": 60,
+        "guard_ledger_entries": 1.0,
+        "no_control_detail": "T0.01, T0.10",
+        "no_control_specs": 2,
+        "ran_declared": 1.0,
+        "refused_undeclared": 1.0,
         "self_excluded_detail": "T0.18",
         "self_excluded_entries": 1,
         "unavailable_detail": "",
         "unavailable_entries": 0,
-        "undeclared_control_ran": 19,
-        "undeclared_ran_detail": "ME.5, ME.8, PG.1, PG.3, PG.4, T0.03, T0.05, T0.06, T0.07, T0.09, T0.11, T1.04, T1.06, T1.07, T1.08, T1.09, T1.10, T2.10, T2.12",
+        "undeclared_control_ran": 0,
+        "undeclared_ran_detail": "",
         "unevaluable_detail": "",
         "unevaluable_gates": 0,
         "verdict_disagreements": 0,
-        "verdicts_rejudged": 55
+        "verdicts_rejudged": 59
       },
-      "ran_at": "2026-08-10T02:14:49",
+      "ran_at": "2026-08-10T09:25:36",
       "seeds": [
         0
       ],
@@ -2787,13 +2819,28 @@
     },
     "T1.03": {
       "amended": [],
-      "attempt": 1,
-      "commit": "55e5bda",
-      "control_metrics": {},
-      "duration_s": 24.73,
+      "attempt": 2,
+      "commit": "ced1393",
+      "control_metrics": {
+        "orphan_fraction_with_plants": 0.0483,
+        "orphan_fraction_with_plants_std": 0.0,
+        "planted_none_detected": 1.0,
+        "planted_none_detected_std": 0.0,
+        "planted_zero_grad_detected": 1.0,
+        "planted_zero_grad_detected_std": 0.0,
+        "worst_offenders_with_plants": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539; orphan_never_called=72"
+      },
+      "duration_s": 107.59,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:15:35",
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "975b83d3df4c2f3a",
       "message": "",
       "metrics": {
         "modalities_fed": "vision,touch,audio,goal,task",
@@ -2807,7 +2854,7 @@
         "trainable_params_std": 0.0,
         "worst_offenders": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539"
       },
-      "ran_at": "2026-08-08T15:15:35",
+      "ran_at": "2026-08-10T09:23:12",
       "seeds": [
         0,
         1,
@@ -2860,23 +2907,43 @@
     },
     "T1.05": {
       "amended": [],
-      "attempt": 1,
-      "commit": "55e5bda",
-      "control_metrics": {},
-      "duration_s": 5.92,
+      "attempt": 2,
+      "commit": "ced1393",
+      "control_metrics": {
+        "unprotected_construct_delta": 1.652565,
+        "unprotected_construct_delta_std": 0.294977,
+        "unprotected_std": 0.0176333,
+        "unprotected_std_std": 0.00020548,
+        "unprotected_train_delta": 1.655311,
+        "unprotected_train_delta_std": 0.294653
+      },
+      "duration_s": 24.37,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "55e5bda",
+          "message": "",
+          "ran_at": "2026-08-08T15:09:39",
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "c3d56421b748282d",
       "message": "",
       "metrics": {
         "construct_delta": 0.0,
+        "construct_delta_std": 0.0,
         "expected_std": 0.5,
-        "sentinel_std": 0.5233,
-        "train_delta": 0.0
+        "expected_std_std": 0.0,
+        "sentinel_std": 0.505167,
+        "sentinel_std_std": 0.0157019,
+        "train_delta": 0.0,
+        "train_delta_std": 0.0
       },
-      "ran_at": "2026-08-08T15:09:39",
+      "ran_at": "2026-08-10T09:25:21",
       "seeds": [
-        0
+        0,
+        1,
+        2
       ],
       "spec_id": "T1.05",
       "status": "PASS"

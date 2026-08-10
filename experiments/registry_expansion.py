@@ -320,6 +320,7 @@ EXPANSION: list[Spec] = [
                       "draw produces an invalid MJCF.",
          null_baseline="n/a — physics validation fixture.",
          metric="physics_checks_passed", budget=Budget.CPU,
+         control="FRICTIONLESS: the shallow ramp that HELD must now slide. Without it, \"the box held\" could mean the box was wedged on geometry rather than obeying friction — and when both this and the experiment failed together, that is what localised the MJCF radians-vs-degrees bug in one step (LESSONS.md).",
          kills="Every curiosity claim — a broken world teaches broken lessons."),
 
     Spec("PG.2", 2, "Water works: buoyancy + drag",
@@ -340,6 +341,7 @@ EXPANSION: list[Spec] = [
          null_baseline="Zero adhesion — must slip.",
          metric="scripted_rung_ascent", budget=Budget.CPU, depends_on=["PG.1"],
          seeds=3,
+         control="ZERO ADHESION, identical script: the hang must slip and nothing may ascend. Otherwise the ascent could be the scripted kinematics dragging the body up geometry it is resting on.",
          notes="Seeds map to rung spacings 0.30/0.26/0.34 m — 'climbable' must "
                "hold across the middle of the mutation range, not one geometry."),
 
@@ -351,9 +353,11 @@ EXPANSION: list[Spec] = [
          null_baseline="Random walk's dwell time near the panel.",
          metric="icm_dwell_share", budget=Budget.CPU_LONG, depends_on=["PG.1"],
          seeds=3,
-         notes="Every later curiosity claim must report dwell share on this fixture. "
-               "Control: identical ICM agent with a STATIC panel texture must not "
-               "fixate — else dwell measures geometry, not noise."),
+         control="The IDENTICAL ICM agent with a STATIC panel texture must NOT fixate — else dwell measures the geometry of that corner of the room rather than its unpredictability.",
+         notes="Every later curiosity claim must report dwell share on this "
+               "fixture. The control above lived in this notes field until "
+               "2026-08-10: it ran on every seed and was invisible to a grep of "
+               "Spec.control, which is the field an auditor reads (OVERSIGHT 1.4)."),
 
     Spec("PG.5", 2, "Procedural contact audio with localization labels",
          hypothesis="Modal-resonator synthesis on MuJoCo contact events yields "
@@ -512,6 +516,7 @@ EXPANSION: list[Spec] = [
                        "the degradation curve).",
          metric="precision_at_scale", budget=Budget.CPU_LONG, depends_on=["ME.1"],
          seeds=3,
+         control="RECENCY-ONLY on the IDENTICAL seeded query sample — the newest event answers every cue, so its precision is ~1/N by construction and must sit below the experiment at EVERY decade. Same questions, or the two curves are not comparable.",
          notes="Standing spec: re-run at every decade of real store growth."),
 
     Spec("ME.6", 2, "Skill library accelerates composites",
@@ -538,7 +543,19 @@ EXPANSION: list[Spec] = [
                     "after a kill; zeroing it mid-episode hurts.",
          falsified_by="Post-restart behavior equals a zeroed-state agent.",
          null_baseline="Zeroed hidden state.",
-         metric="resume_vs_zeroed", budget=Budget.CPU, depends_on=["T0.05"]),
+         metric="resume_vs_zeroed", budget=Budget.CPU, depends_on=["T0.05"],
+         seeds=3,
+         control="CROSS-RESTORE: finish episode i from episode j's checkpoint. "
+                 "The answer must follow the FILE (j's cue, match_restored >= "
+                 "0.80) and accuracy on i's own cue must collapse (<= 0.30). If "
+                 "it can still name i's cue, the second half of the episode "
+                 "leaks the answer and nothing here measured memory.",
+         notes="seeds=3 since 2026-08-10 (OVERSIGHT 1.5, fourth audit). It "
+               "recorded PASS at seeds=[0] while its own commit message "
+               "(663270b) reads 'GRU retain-bias init fixes seed-2 training "
+               "collapse' — the fix was never verified at the seed that "
+               "motivated it, and GOAL.md's standard is >=3 seeds where the "
+               "claim rests on something trained. No threshold moved."),
 
     # OWNER DIRECTIVE (2026-08-07): "he must also remember what he hears, says
     # and does so when people interact with him... he must keep memory and ALSO

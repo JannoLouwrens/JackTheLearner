@@ -42,6 +42,7 @@ LADDER: list[Spec] = [
          falsified_by="Output delta > 1e-6 after a reload.",
          null_baseline="A randomly re-initialised model gives a large delta.",
          metric="output_delta", budget=Budget.CPU_FAST, depends_on=["T0.02"],
+         control="A DIFFERENT random init compared against the saved model must NOT match — a round-trip check whose comparison cannot see two different networks is measuring nothing.",
          kills="All GPU training — a checkpoint that does not restore is wasted compute."),
 
     Spec("T0.04", 0, "Resume continues, does not restart",
@@ -69,6 +70,7 @@ LADDER: list[Spec] = [
          falsified_by="Corrupt checkpoint, or >1 interval of progress lost.",
          null_baseline="Non-atomic writes corrupt under kill.",
          metric="steps_lost", budget=Budget.CPU, depends_on=["T0.04"],
+         control="The pre-fix NON-ATOMIC writer, replayed under the same SIGKILL hammer: it must produce a corrupt or unloadable checkpoint. If nothing corrupts, the hammer is not landing inside the write window and the atomic save was never tested (it passed by luck for four days for exactly that reason — LESSONS.md).",
          kills="Long GPU runs. Ephemeral VMs die without warning."),
 
     Spec("T0.06", 0, "Env/policy dimension contract",
@@ -76,6 +78,7 @@ LADDER: list[Spec] = [
          falsified_by="Mismatch that does not raise.",
          null_baseline="Current code silently writes a wrong-width tensor to mj_data.ctrl.",
          metric="nu_vs_action_dim", budget=Budget.CPU_FAST, depends_on=["T0.01"],
+         control="Every WRONG width driven through the real write path (VirtualWorld.apply_action) must be REFUSED. Raw NumPy is not a sufficient guard: nu-1 and nu+1 raise, but width 1 is silently broadcast across all actuators, so a control that only tests +-1 would certify a writer that accepts a scalar.",
          kills="Every locomotion result."),
 
     Spec("T0.07", 0, "CPU throughput baseline",
@@ -83,6 +86,7 @@ LADDER: list[Spec] = [
          falsified_by="n/a — measurement, not a claim.",
          null_baseline="n/a", metric="steps_per_s", budget=Budget.CPU,
          depends_on=["T0.06"],
+         control="The same timing harness with the BODY REMOVED — an empty loop must be orders of magnitude faster. If it is not, the reported rate is dominated by timing overhead and measures the harness rather than the subject.",
          notes="Measured 2026-08-04 (warmed, 3 trials, all spreads <1.1%): physics alone "
                "1831 steps/s; with the policy 11.8 steps/s — the forward costs 155x the "
                "physics it drives, so 2M steps = 47 CPU-hours. Sync vectorisation over 8 "
@@ -132,6 +136,7 @@ LADDER: list[Spec] = [
          falsified_by="No artifact returned, or the VM persists.",
          null_baseline="n/a", metric="artifact_bytes", budget=Budget.GPU_SHORT,
          depends_on=["T0.03"],
+         control="A job requesting an IMPOSSIBLE accelerator must report failure, not success. Silence is not success (LESSONS.md): a download that quietly failed once read as a passing round-trip.",
          notes="Verified working 2026-08-04: Tesla T4 15360MiB, torch 2.11.0+cu128."),
 
     Spec("T0.10", 0, "Kaggle job round-trip",
@@ -145,6 +150,7 @@ LADDER: list[Spec] = [
          falsified_by="A job that needs editing to switch backend.",
          null_baseline="n/a", metric="failover_ok", budget=Budget.GPU_SHORT,
          depends_on=["T0.09", "T0.10"],
+         control="BOTH backends made impossible: submit() must report failure. A failover mechanism that reports success when there is nowhere to fail over to is reporting on itself, not on the backends.",
          notes="One job spec, two executors. The 30 free Kaggle hrs/week are the "
                "scarce resource; Colab absorbs the short jobs. "
                "STRENGTHENED 2026-08-05: the original passed by checking a job RUNS "
@@ -251,22 +257,34 @@ LADDER: list[Spec] = [
          hypothesis="After one backward, no trainable tensor has grad None or all-zero.",
          falsified_by="Any orphaned parameter.",
          null_baseline="Current model: 45,538,295 params (38.6%) receive no gradient.",
-         metric="params_without_grad", budget=Budget.CPU_FAST, seeds=3, depends_on=["T0.01"],
+         metric="params_without_grad", budget=Budget.CPU, seeds=3, depends_on=["T0.01"],
+         control="TWO PLANTED ORPHANS in the same brain, under the same loss, read by the same scan: a module that is never called (grad None) and a parameter reached by autograd but multiplied by zero (grad present and all-zero). BOTH must be reported. Added 2026-08-10 — without it, \"0 orphans\" was never shown to be a statement this measurement could contradict on this build. Gated on the plants by NAME, not on orphan_fraction: 80 planted params move the fraction by 1.6e-6, so the headline gate cannot tell a caught plant from a missed one.",
          kills="Silent dead weight. This test is the direct fix for the repo's disease."),
 
     Spec("T1.04", 1, "Weights actually move",
          hypothesis="||theta_after - theta_before|| > 0 for every trainable module.",
          falsified_by="A module whose weights are unchanged after N steps.",
          null_baseline="Frozen modules must show exactly zero.",
-         metric="min_weight_delta", budget=Budget.CPU_FAST, seeds=3, depends_on=["T1.03"]),
+         metric="min_weight_delta", budget=Budget.CPU_FAST, seeds=3, depends_on=["T1.03"],
+         control="lr=0 — NOTHING may move. Without it, a delta could be numerical noise in a model that is not learning at all.",
+         kills="Any module that is wired but inert. A stuck submodule outside the pre-declared list fails this loudly."),
 
     Spec("T1.05", 1, "Frozen stays frozen",
          hypothesis="The pretrained trunk/LLM does not change during policy training.",
          falsified_by="Any delta in frozen parameters.",
-         null_baseline="n/a", metric="frozen_delta", budget=Budget.CPU_FAST,
-         depends_on=["T1.04"],
+         null_baseline="n/a", metric="frozen_delta", budget=Budget.CPU,
+         depends_on=["T1.04"], seeds=3,
+         control="AN UNFROZEN SENTINEL MUST MOVE. The identical module, attached OUTSIDE _PRETRAINED_PREFIXES and left trainable, must be re-randomised by construction AND updated by training. Added 2026-08-10 (OVERSIGHT 1.3): without it, two recorded zeros are satisfied by a measurement that reads zero for reasons of its own — an initialiser that never ran, an optimiser with an empty parameter list, a clone compared against itself.",
          notes="UnifiedBrain calls self.apply(_init_weights) — verify it does not "
-               "re-randomise a loaded pretrained backbone."),
+               "re-randomise a loaded pretrained backbone. seeds 1 -> 3 on "
+               "2026-08-10 alongside the control; the sentinel is randomly "
+               "initialised, so one seed was one draw. HYPOTHESIS READS "
+               "AGAINST THE PLASTIC-ONLY DECREE and is kept as a MECHANISM "
+               "test only: nothing inside Jack ships frozen, but "
+               "requires_grad_(False) still does not stop in-place init, and "
+               "that trap waits for any tensor loaded from disk. No threshold "
+               "touched (annotation was in registry_expansion.py where a "
+               "reader of the spec could not find it)."),
 
     Spec("T1.11", 1, "Train/inference path parity",
          hypothesis="Every module on the INFERENCE path that produces joint commands "
@@ -306,13 +324,15 @@ LADDER: list[Spec] = [
          hypothesis="No NaN/Inf in loss or grads over 1000 steps.",
          falsified_by="Any non-finite value.",
          null_baseline="n/a", metric="nonfinite_steps", budget=Budget.CPU, seeds=3,
-         depends_on=["T1.01"]),
+         depends_on=["T1.01"],
+         control="An ABSURD learning rate must break it and be REPORTED non-finite. A NaN detector that has never seen a NaN is decorative — this is the positive control T0.13 exists to demand."),
 
     Spec("T1.07", 1, "Not knife-edge on learning rate",
          hypothesis="Training succeeds across a 10x LR range.",
          falsified_by="Only one LR works.",
          null_baseline="n/a", metric="lrs_that_converged", budget=Budget.CPU,
          depends_on=["T1.01"],
+         control="An ABSURD learning rate outside the claimed range must DIVERGE and lose its advantage over the mean-prediction baseline. Otherwise \"every LR worked\" is a statement about a task nothing can fail.",
          notes="A result that survives only at one LR will not survive a new task."),
 
     Spec("T1.08", 1, "Seed variance measured",
@@ -320,6 +340,7 @@ LADDER: list[Spec] = [
          falsified_by="std >= the effect size being claimed.",
          null_baseline="n/a", metric="metric_std", budget=Budget.CPU, seeds=1,
          depends_on=["T1.01"],
+         control="Seeds must ACTUALLY change the outcome: an arm in which the seed is ignored must show a std of zero. A small measured std is only a noise floor if the seed was plumbed through at all.",
          kills="Any single-seed claim in this repo.",
          notes="seeds=1 AT THE SPEC LEVEL, deliberately, for a spec ABOUT seed "
                "variance: the GPU job varies seeds [0,1,2] internally in one "
@@ -334,13 +355,15 @@ LADDER: list[Spec] = [
          hypothesis="Peak VRAM < 14 GB at the intended batch size.",
          falsified_by="OOM on a 16 GB T4.",
          null_baseline="n/a", metric="peak_vram_gb", budget=Budget.GPU_SHORT,
-         depends_on=["T0.09"]),
+         depends_on=["T0.09"],
+         control="An ABSURD batch size must either OOM or exceed the ceiling. The two branches are read as a disjunction because a run that OOMs has no peak to report — a necessary dead operand, and T0.13 exempts it explicitly (LESSONS.md, \"structure cannot separate honest redundancy from a disarmed assertion\")."),
 
     Spec("T1.10", 1, "CPU and GPU agree",
          hypothesis="Same seed, same data: CPU and T4 losses agree within tolerance.",
          falsified_by="Divergence beyond float32 accumulation error.",
          null_baseline="n/a", metric="cpu_gpu_delta", budget=Budget.GPU_SHORT,
          depends_on=["T1.09", "T0.02"],
+         control="A DIFFERENT model seed must NOT agree. An agreement test whose comparison cannot separate two different networks would certify any two numbers as equal.",
          notes="Lets cheap CPU debugging predict GPU behaviour."),
 
     # ===================================================================
@@ -391,6 +414,7 @@ LADDER: list[Spec] = [
          null_baseline="RL-Zoo3 MuJoCo MLP: sac 6232+-280, td3 5567, tqc 7239 at 2M steps.",
          metric="return_at_matched_steps", budget=Budget.GPU_LONG, seeds=3,
          depends_on=["T2.00", "T1.08", "T0.10"],
+         control="UNTRAINED versions of BOTH arms must miss the 3-sigma learning gate. This is the control that produced VOID rather than a verdict: the untrained MLP cleared random by 2.74 sigma, so a gate against random alone is nearly cleared by a network that has never received a gradient.",
          kills="The transformer policy. If a 140K MLP wins, use the MLP.",
          notes="RL-Zoo3 publishes NO PPO row for Humanoid. Treat PPO-Humanoid as "
                "a weak baseline and prefer SAC/TD3/TQC. Two edits 2026-08-08, "
@@ -468,6 +492,7 @@ LADDER: list[Spec] = [
          falsified_by="Recency-only does as well.",
          null_baseline="Return the k most recent events.",
          metric="recall_at_k", budget=Budget.CPU, seeds=3, depends_on=["T0.08"],
+         control="TWO scorers that must LOSE, on the same seeded queries: pure recency, and similarity-only. Two because either one alone can be beaten by a scorer that is merely the other one.",
          notes="Generative Agents scoring: recency*0.5 + relevance*3 + importance*2."),
 
     Spec("T2.11", 2, "Skills are distinguishable",
@@ -506,6 +531,7 @@ LADDER: list[Spec] = [
          falsified_by="Indistinguishable from a random walk.",
          null_baseline="Random walk with matched variance.",
          metric="state_separability", budget=Budget.CPU, seeds=3, depends_on=["T0.02"],
+         control="TWO. A variance-matched RANDOM WALK must not be separable, and SHUFFLED labels on the real trajectories must collapse to chance. The first rules out separability that any drifting scalar would show; the second rules out a classifier reading trajectory identity rather than emotion.",
          kills="EmotionalState as an input modality."),
 
     # ===================================================================

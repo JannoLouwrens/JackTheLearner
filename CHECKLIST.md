@@ -75,6 +75,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T1.04** Weights actually move
       - _asserts:_ ||theta_after - theta_before|| > 0 for every trainable module.
       - _dies if:_ A module whose weights are unchanged after N steps.
+      - _then delete:_ Any module that is wired but inert. A stuck submodule outside the pre-declared list fails this loudly.
 - [x] **T1.05** Frozen stays frozen
       - _asserts:_ The pretrained trunk/LLM does not change during policy training.
       - _dies if:_ Any delta in frozen parameters.

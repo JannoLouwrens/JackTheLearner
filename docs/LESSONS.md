@@ -1698,3 +1698,42 @@ Note the follow-on gap this exposed: `Ledger.amend` can only move `status` and
 `attempt`, so an already-written wrong stamp has no sanctioned repair path — a
 re-run is the only way to correct one, which is a good reason to prevent rather
 than to detect.
+
+## A debt counted from the record is short by exactly what the record excludes
+
+The overseer's carried finding was *"19 entries record `control_metrics` while
+their spec declares `control=None`"*, and `verify.py` turned that into a ratchet
+(`UNDECLARED_CONTROL_BUDGET = 19`) so the debt could only be paid down. Both
+numbers came from the ledger, i.e. from a scan over PASSing entries.
+
+The true count was **20**. `T2.02` runs a `control_fn` and declared nothing, and
+it is invisible to that scan for a structural reason: it is `VOID`, not `PASS`,
+so no probe over PASSes can see it. The ratchet would therefore have read 0/19 —
+"debt paid, guard green" — while a spec still ran an undeclared control, and
+T2.02 is precisely the spec next in line for a GPU re-run, so the debt would
+have re-appeared from an entry nobody had counted.
+
+A **static** scan of `experiments/tests/` for `run_spec(..., control_fn=...)`
+against the live registry finds all twenty in a second, needs no run to have
+happened, and covers the specs that have never run at all — the ones a
+record-derived audit is structurally blind to.
+
+**Rule:** when the property you are auditing is a property of the CODE, scan the
+code; the record only contains the subset that executed and passed, and its
+exclusions are invisible in its own total. Same family as "a skipped item that
+leaves the numerator alone", one level up: here the skipped items were never in
+the population, so no `unavailable` counter could have reported them. Ask of any
+debt or coverage number: *what does this count for an item that has never been
+run?* If the answer is "nothing", it is not a coverage number.
+
+**Corollary — when the fix removes every instance, the guard loses its positive
+control.** `LESSONS.md` already records that a new primitive must be exercised by
+the artifact that motivated it (`Status.VOID` landing in `protocol.py` while
+`t2_02_mlp_showdown.py` still returned bare `False`). The inverse bites here:
+backfilling all twenty declarations means `protocol.UndeclaredControl` can never
+fire on a real spec again, so nothing would ever demonstrate it still works.
+T0.18 therefore plants two throwaway specs — identical but for the declaration —
+against a throwaway `Ledger(path=...)`, and asserts BOTH directions: the
+undeclared one is refused, and the declared one runs through to a real verdict.
+One direction alone is worthless, because a guard that refuses everything and a
+guard that refuses nothing leave the same clean log behind them.

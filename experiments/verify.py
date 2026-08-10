@@ -78,7 +78,16 @@ SELF_EXCLUDED = "self-excluded"
 #: raised. Raising it would convert a guard against the audit surface rotting
 #: further into a rubber stamp — the overseer watched this number go 19 -> 20
 #: across two audits with nothing to stop it.
-UNDECLARED_CONTROL_BUDGET = 19
+#:
+#: **PAID OFF 2026-08-10, 19 -> 0.** All twenty undeclared controls (the 19 the
+#: ledger showed, plus T2.02 which is VOID and so never appeared in a scan of
+#: PASSes) now declare what the control is and WHICH WAY it must fail. The debt
+#: cannot silently return: `protocol.UndeclaredControl` refuses to run a spec
+#: that passes `control_fn` without declaring it, checked before any compute.
+#: The ratchet stays as the RECORD-side half of that guard — the raise only
+#: fires when a spec runs, and 47 entries predate `impl_sha` and may not re-run
+#: for weeks.
+UNDECLARED_CONTROL_BUDGET = 0
 
 
 @dataclass
