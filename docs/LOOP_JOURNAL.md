@@ -2337,3 +2337,19 @@ measured (plus the power/sample-size corollary).
    to DECISIONS_NEEDED is still unwritten** and is worth an iteration on its own.
 4. Still stale, unrelated: PG.3, PG.6, PG.8, PG.9, PS.01; 44 entries predate
    `impl_sha` entirely.
+
+**Second commit, found while cleaning up the first.** Killing the in-flight
+re-run orphaned its child (`run.py` runs the spec in a subprocess, so killing
+the parent leaves the spec running and about to write the ledger under the wrong
+stamp — killed it too). That led to noticing the general form: **`env_stamp()`
+assumes a clean tree.** `ccd0e84` stopped HEAD *drifting* during a long GPU run,
+but a spec run from a MODIFIED tree executes HEAD plus uncommitted edits and
+`rev-parse` cannot tell — which is this loop's ordinary rhythm, and is exactly
+what XL.00 attempt 3 is (stamped `1480126`, ran `1480126` + a rewritten control
+gate). `impl_sha` catches it only afterwards, only once the file is committed,
+and only for the one file it hashes. `env_stamp()` now appends `+dirty`;
+`ledger.json` is excluded because it is the runner's own output. Known-answer
+tested three ways: modified -> `+dirty`, clean -> no flag, ledger-only-dirty ->
+no flag. **Two things this suggests for a later iteration:** `run stale` could
+list `+dirty` entries as a re-run queue, and `run verify` could treat a `+dirty`
+PASS as unverifiable rather than clean.
