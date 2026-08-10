@@ -1642,35 +1642,85 @@ EXPANSION: list[Spec] = [
     # PS.01 is calibration/dynamic-range and is not implicated - cross-checked
     # 2026-08-09 per INTEGRATION_QUEUE.md protocol step 1.
     # Verbatim from PURPOSE_AND_SCAFFOLDING.md 4.4.
+    # v2, 2026-08-10 — the PROBE was redesigned, not the world. Attempts 1 and 2
+    # stay in the ledger's history (T1.02 precedent); the amendment and the one
+    # clause that got EASIER are both spelled out in `notes` below, and the
+    # design is INTEGRATION_QUEUE.md's TOP entry, cross-checked 2026-08-10.
     Spec("PS.01", 2, "The drive layer is a real control problem, and a statue loses",
-         hypothesis="With PG.8's humanoid under random action, energy and "
-                    "integrity both traverse a usable range (10th-90th percentile "
-                    "spread >= 0.3 over 3,000 decisions, neither pinned at 0 nor "
-                    "at 1), a fall from the ladder platform costs 0.10-0.20 "
-                    "integrity, floor food supports subsistence at rest but not "
-                    "activity, and the DO-NOTHING policy is strictly dominated: "
-                    "its energy reaches the weakness floor while an active random "
-                    "policy's does not.",
-         falsified_by="A random agent never depletes (the drive is inert and "
-                      "cannot pressure anything), or always flatlines at zero "
-                      "within a minute (no policy can learn under it), or the "
-                      "statue is NOT dominated (the dark room is a stable "
-                      "optimum and homeostasis will produce a corpse).",
+         hypothesis="With PG.8's humanoid, energy and integrity both traverse a "
+                    "usable range (10th-90th percentile spread >= 0.3, neither "
+                    "pinned at 0 nor at 1) over a 4,500-decision (900 s) MIXED "
+                    "FIXTURE probe — random action, scripted platform drops, "
+                    "scripted rest — which is itself gated to have exercised "
+                    "them (>= 5 damaging impacts and >= 100 resting decisions, "
+                    "or the range is unmeasured rather than small); a fall from "
+                    "the ladder platform costs 0.10-0.20 integrity on held-out "
+                    "runs; floor food alone subsists a body acting at the "
+                    "derived duty cycle and does NOT fund constant activity, "
+                    "priced against the FULL-STRENGTH drain; and the DO-NOTHING "
+                    "policy is strictly dominated: its energy reaches the "
+                    "weakness floor strictly inside the observation window "
+                    "(< 0.8 x horizon) while a scripted FORAGER fixture's, run "
+                    "through the same shipped DriveLayer, never does.",
+         falsified_by="A probe that exercised both channels never depletes (the "
+                      "drive is inert and cannot pressure anything), or "
+                      "flatlines at zero within a minute (no policy can learn "
+                      "under it), or the statue is NOT dominated — either "
+                      "because no behaviour this world admits stays fed (the "
+                      "world is a countdown, not a control problem) or because "
+                      "the statue itself survives the window (the dark room is "
+                      "a stable optimum and homeostasis will produce a corpse).",
          null_baseline="The playground with the drive integrator disabled: every "
                        "internal variable is constant, so every spread is 0.",
          metric="drive_dynamic_range", budget=Budget.CPU,
          depends_on=["PG.8"], seeds=3,
          control="The do-nothing policy IS the control and it must fail: best "
-                 "integrity, worst energy, and unable to reach any food. If "
-                 "doing nothing is survivable indefinitely, the calibration is "
-                 "wrong and no homeostatic arm can be interpreted.",
+                 "integrity, worst energy, unable to reach any food, and its "
+                 "death must be OBSERVED inside the window rather than "
+                 "scheduled at its edge. If doing nothing is survivable "
+                 "indefinitely, the calibration is wrong and no homeostatic arm "
+                 "can be interpreted.",
          kills="The specific numbers in PURPOSE_AND_SCAFFOLDING.md 2.2-2.3. It "
                "cannot kill the idea, only the parameterisation — which is why "
                "it runs before anything trains and after PS.00.",
-         notes="Also measures J_0 (the 95th percentile of impact impulse under "
-               "normal walking contact) which alpha is calibrated against, and "
-               "fixes n and m in the drive function. Every number in 2.2 is a "
-               "PROPOSAL until this spec replaces it with a measurement."),
+         notes="Also measures J_0 (the 95th percentile of the impact channel "
+               "under ordinary ground contact) which alpha is calibrated "
+               "against, and fixes n and m in the drive function. Every number "
+               "in 2.2 is a PROPOSAL until this spec replaces it with a "
+               "measurement. "
+               "AMENDMENT v2 (2026-08-10, after attempt 2 = FAIL): all three "
+               "surviving failures were ONE defect — the probe could not "
+               "produce the events the gates were about. A random policy never "
+               "climbs, so `i` never moved (spread_i 2.96e-5 while the same "
+               "integrator scored 0.161 on a held-out platform fall); a random "
+               "policy is not a forager (1.0 items eaten in 600 s), so "
+               "`ok_random_survives` demanded that flailing beat resting, i.e. "
+               "kappa = 0; and the statue's death at t = 1/b = 600 s was "
+               "scheduled at the last sample of a 600 s window and missed by "
+               "4.35e-14. FOUR changes, three of them strictly harder: the "
+               "range is now gated on the probe having produced the events "
+               "(>= 5 damaging impacts, >= 100 resting decisions — a probe "
+               "that failed to exercise the variable is now a red entry rather "
+               "than a confident 2.96e-5); the horizon is 3,000 -> 4,500 "
+               "decisions AND the statue's death must land before 0.8 x it; "
+               "and subsistence is priced against the full-strength drain "
+               "(mean_power_w_full_strength, e = i pinned at 1) instead of "
+               "against the power a body already starved by the shortfall "
+               "happens to produce, which is the confound that exonerated "
+               "kappa in 2.3. ONE clause got EASIER and it is named here "
+               "rather than buried: `ok_random_survives` (a RANDOM policy "
+               "outlives the statue) is RETIRED and replaced by "
+               "`ok_forager_survives` (a scripted forager fixture does). Its "
+               "attempt-2 measurement (0.0) stays in the ledger's history and "
+               "is not re-measured. The reason is that PS.01 runs "
+               "BEFORE anything trains, so demanding that an untrained flailing "
+               "body forage is demanding locomotion the ladder has not built; "
+               "5 G-B's actual question is whether the dark room is beaten by "
+               "SOME behaviour this world admits. The fixture abstracts "
+               "locomotion (food is placed on him when it respawns) and nothing "
+               "else — it pays the real drain at the derived duty cycle D* = "
+               "0.217 through the shipped DriveLayer, so it verifies unit (a)'s "
+               "C2 on the shipped path instead of in arithmetic."),
 
     # ══ THE MISSING SENSES — smell, taste, voice ════════════════════════
     #
