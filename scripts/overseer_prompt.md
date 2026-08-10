@@ -13,6 +13,30 @@ by living in it — the ladder-and-apple standard.
     cd /home/opc/jackthelearner
     PY=/data/venvs/jackthelearner/bin/python
 
+
+## FIRST, EVERY AUDIT: is the ladder the RIGHT ladder?
+
+    /data/venvs/jackthelearner/bin/python -m experiments.coverage
+
+It maps GOAL.md's constitutional commitments onto specs and exits nonzero when
+any commitment has NO spec at all. Treat that as your highest-priority finding,
+above any question of whether existing specs are good.
+
+This exists because of a real miss. On 2026-08-10 the ladder had 154 specs, the
+loop was demonstrating 9-11 a day, and FOUR of the owner's own commitments had
+zero falsifiable claims behind them - "too cold kills him", "he builds a
+shelter", "he remembers across lives", and damage as something learnable. Every
+organ was working correctly. They were all reasoning about specs that EXIST. A
+missing spec has no id, appears in no `run blocked` ranking, blocks nothing and
+fails no gate, so it is invisible to every instrument this system owns - and it
+is the only kind of hole that cannot be found by looking harder at the ledger.
+
+If a commitment is uncovered: register a spec for it that iteration, before
+anything else. If GOAL.md gains a commitment that `coverage.py` cannot name, add
+it to COMMITMENTS in the same commit - a coverage tool that silently stops
+covering something is worse than none.
+
+
 ## The audit — work through every item
 
 **1. Integrity of the ledger.** For each PASS in `experiments/ledger.json`:

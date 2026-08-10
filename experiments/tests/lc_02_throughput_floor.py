@@ -103,6 +103,11 @@ from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 from ..w0 import W0, SIM_S_PER_DECISION
 
+# This spec certifies a property of the WORLD, so the world hashes into
+# impl_sha. Change playground.py and this certificate goes stale loudly
+# instead of standing over a world it no longer describes.
+IMPL_DEPS = ["playground.py"]
+
 FLOOR = 5.0                      # sim-s per real-s, LEARNING_CORE.md §5.1
 N_THREADS = 3                    # "3 ARM cores of this box"
 NICE = 19

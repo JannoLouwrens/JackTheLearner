@@ -53,6 +53,11 @@ from pathlib import Path
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# This spec certifies a property of the WORLD, so the world hashes into
+# impl_sha. Change playground.py and this certificate goes stale loudly
+# instead of standing over a world it no longer describes.
+IMPL_DEPS = ["playground.py"]
+
 REPO = Path(__file__).resolve().parents[2]
 
 PANEL_XY = (0.0, 5.9)           # playground.py: pos="0 {a-0.1} 1.2", a=6.0

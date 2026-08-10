@@ -2261,4 +2261,178 @@ EXPANSION: list[Spec] = [
                "The gap is wide enough that the threshold sits in empty space "
                "rather than beside either measurement. Do NOT relax it to admit "
                "a future camera; move the camera."),
+
+    # ── THE SURVIVAL WORLD'S MISSING PILLARS ─────────────────────────────
+    # Coverage audit 2026-08-10. The owner's directive was explicit: permanent
+    # human needs, too cold or too hot KILLS, a jungle, he builds a shelter, he
+    # dies and retries and REMEMBERS ACROSS LIVES. The ladder had 154 specs and
+    # ZERO about thermal death, zero about damage, zero about shelter, zero
+    # about anything surviving a death. The whole survival world rested on
+    # PS.01 alone, which is FAIL.
+    #
+    # Everything here is BLOCKED IN FACT until the survival world exists in
+    # code. Registered anyway and deliberately: an unregistered intention is
+    # invisible to `run blocked`, to the overseer, and to every audit — which
+    # is exactly how four constitutional commitments went a week without a
+    # single falsifiable claim behind them.
+
+    Spec("PS.02", 2, "The world can freeze him, and the cold is FELT before it kills",
+         hypothesis="The world carries a temperature field with pre-registered "
+                    "dynamics - body temperature falls at a measured rate in "
+                    "cold, rises near heat, death below a threshold within a "
+                    "bounded time - AND the approach of that death is legible "
+                    "from Jack's senses beforehand: a probe on his sensory "
+                    "vector predicts time-to-freezing well above chance while "
+                    "he is still alive.",
+         falsified_by="Time-to-death unpredictable from the senses. Then cold "
+                      "is an unlearnable instakill, not a need: no agent and no "
+                      "architecture could ever adapt to it, and every shelter "
+                      "result built on top would be measuring luck.",
+         null_baseline="A thermally inert variant where temperature never "
+                       "moves: nothing may die. And a shuffled probe pairing.",
+         metric="time_to_freeze_probe_r2",
+         budget=Budget.CPU, seeds=3, depends_on=[],
+         control="SILENT LETHALITY: temperature drops exactly as before, but "
+                 "the thermal channel is REMOVED from the sensory vector. The "
+                 "probe must fail there. Without this the probe could be "
+                 "reading the episode clock - every episode gets colder with "
+                 "time - and would report a sense that does not exist.",
+         kills="Every survival claim involving cold, and the jungle's entire "
+               "motive for shelter.",
+         notes="A LETHAL NEED YOU CANNOT PERCEIVE IS NOT A CURRICULUM, IT IS "
+               "NOISE. This is the half of 'too cold kills him' that the "
+               "directive does not say out loud and that decides whether the "
+               "world is teachable. Caveman realism (owner, 2026-08-09): he "
+               "does not need thermodynamics, he needs cold hurts / fire helps "
+               "/ shelter holds heat, consistent and discoverable. Do not model "
+               "chemistry. DO pre-register the rate constants and the lethal "
+               "threshold before implementing, so the world cannot be quietly "
+               "tuned until the agent survives."),
+
+    Spec("PS.03", 2, "Damage is a signal, not just an ending",
+         hypothesis="Harm produces a GRADED, sensed damage signal that precedes "
+                    "death, and a single exposure is enough to shift behaviour "
+                    "away from its cause.",
+         falsified_by="Damage is binary and instant, or avoidance needs many "
+                      "exposures. Either way the only way to learn about a "
+                      "danger is to die of it, repeatedly, which no animal "
+                      "does and no agent in a survival world can afford.",
+         null_baseline="A harmless world variant: no avoidance should form.",
+         metric="one_exposure_avoidance_delta",
+         budget=Budget.CPU, seeds=3, depends_on=[],
+         control="A HARMLESS TWIN - an event visually and acoustically "
+                 "identical to the damaging one but with no damage. Avoidance "
+                 "must NOT transfer to it, or he learned to avoid novelty and "
+                 "surprise rather than injury. (TA.01's identical-twin design, "
+                 "reused because it is the same failure mode.)",
+         kills="Any claim that Jack learns danger. Also weakens TA.02: taste "
+               "aversion would be the ONLY one-shot learner in the system, "
+               "which would make it a special case rather than a principle.",
+         notes="Nociception is not pain-as-suffering; it is the graded signal "
+               "that makes danger learnable before it is fatal. Register the "
+               "gradation explicitly - a scalar with a range, not a flag - "
+               "because a binary damage bit is exactly the unlearnable case "
+               "this spec exists to rule out."),
+
+    Spec("SH.01", 5, "Under cold, he shelters - and prefers the shelter that works",
+         hypothesis="With a thermal drive active, time spent sheltered rises "
+                    "far above an otherwise identical agent whose thermal drive "
+                    "is disabled, sheltering BEGINS before the lethal threshold "
+                    "rather than after it, and when offered two shelters he "
+                    "prefers the one that actually retains heat.",
+         falsified_by="No difference from the drive-disabled agent; or "
+                      "sheltering only starts after the threshold (a reflex to "
+                      "dying, not anticipation); or he is indifferent between "
+                      "a working shelter and a cosmetic one.",
+         null_baseline="The thermal-drive-disabled agent, and a random-walk "
+                       "policy with matched time in the arena.",
+         metric="sheltered_fraction_vs_drive_disabled",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["PS.02"],
+         control="THE COSMETIC SHELTER. Two shelters, visually identical, one "
+                 "with the thermal benefit removed. Preference for the working "
+                 "one is the whole claim - without it, 'sheltering' is "
+                 "indistinguishable from a preference for enclosed spaces, "
+                 "which many agents develop for reasons having nothing to do "
+                 "with warmth.",
+         kills="The owner's own image of success ('throw him in a jungle and "
+               "see how he builds a shelter'). If refuted, the honest report is "
+               "that we have an agent that survives cold by some other means, "
+               "and the shelter story is ours, not his.",
+         notes="OCCUPYING BEFORE BUILDING, DELIBERATELY. Construction is a much "
+               "harder claim and a much later spec; this one asks whether the "
+               "MOTIVE is real and directed, which is the precondition for "
+               "building to mean anything. A Jack who builds a shelter he does "
+               "not need has learned a trick. Report the anticipation lead time "
+               "(seconds between first sheltering and the lethal threshold) as "
+               "a first-class metric - it is the difference between foresight "
+               "and reflex, and it connects directly to DP.00's question of "
+               "whether this world rewards looking ahead."),
+
+    Spec("XL.01", 5, "Death does not erase what he learned",
+         hypothesis="A life that follows earlier lives reaches a survival "
+                    "criterion faster than the first life did, and faster than "
+                    "a life whose carried memory was wiped at death.",
+         falsified_by="No speedup across lives, or the memory-wiped control "
+                      "speeds up just as much - in which case the improvement "
+                      "lives in the world or the curriculum, not in him, and "
+                      "'he remembers across lives' is a description of our "
+                      "bookkeeping rather than of Jack.",
+         null_baseline="First-life learning curve; and the memory-wiped arm.",
+         metric="lives_to_criterion_vs_wiped",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["PS.02"],
+         control="ANOTHER JACK'S MEMORIES. Carry a different agent's store into "
+                 "the new life: it must NOT help, and should hurt. ME.3's "
+                 "precedent - reflections generated from another agent's log "
+                 "must hurt - and the same reason: a memory that helps "
+                 "regardless of whose life it came from is not memory, it is a "
+                 "prior.",
+         kills="The owner's survival-world directive at its core. Without this, "
+               "death is merely punishment and retry is merely a reset - the "
+               "loop would be running an agent that suffers consequences it "
+               "cannot accumulate.",
+         notes="REPORT WHAT SURVIVED, SEPARATELY. Weights and the episodic "
+               "store are different claims and the aggregate hides which one "
+               "carried: a system where only weights survive is 'trained by "
+               "many deaths', which is ordinary RL; the owner asked for "
+               "something that REMEMBERS. Run the two ablations (weights "
+               "carried / store wiped, and the reverse) and report both, "
+               "because the interesting answer is almost certainly that they "
+               "carry different things - the complementary-learning-systems "
+               "split (ME.10) predicts exactly that, and this is the first "
+               "spec that could show it in a lifetime rather than a session."),
+
+    Spec("BA.01", 2, "He feels himself falling before he falls",
+         hypothesis="Jack carries a sensed orientation signal - gravity's "
+                    "direction in his own body frame - from which a linear "
+                    "probe recovers tilt, and from which time-to-topple is "
+                    "predictable while he is still upright.",
+         falsified_by="Tilt unrecoverable, or a topple unpredictable until it "
+                       "has happened. Then balance is not a sense he has, it is "
+                       "an outcome he suffers, and no amount of training "
+                       "produces a creature that catches itself.",
+         null_baseline="Chance for tilt; and a predictor that only knows "
+                       "elapsed time in the episode.",
+         metric="time_to_topple_probe_auc",
+         budget=Budget.CPU, seeds=3, depends_on=[],
+         control="Remove the orientation channel from the sensory vector and "
+                 "leave the physics identical. The probe must fail. Without it "
+                 "the probe may be reading the episode clock - falls cluster "
+                 "late - and would report a sense that is not there. (Same "
+                 "design as PS.02's silent-lethality control, and for the same "
+                 "reason.)",
+         kills="Every locomotion and climbing claim that assumes he can tell "
+               "up from down. W0.BAL - 'the rover topples' - has been an open "
+               "queue entry rather than a spec; this is the falsifiable form of "
+               "it.",
+         notes="THE LAST UNCOVERED SENSE. Found by experiments/coverage.py on "
+               "2026-08-10: balance was the one commitment in GOAL.md with zero "
+               "specs, which is why it went unnoticed while a related problem "
+               "sat in the integration queue as prose. A sense with no spec is "
+               "invisible to every instrument the system owns.\n"
+               "Vestibular in animals is not one signal but two - linear "
+               "acceleration (otoliths) and angular velocity (canals). "
+               "Register BOTH channels and report them separately; a system "
+               "given only gravity's direction cannot distinguish falling from "
+               "being carried, and that distinction is exactly what a creature "
+               "in a jungle needs."),
 ]
