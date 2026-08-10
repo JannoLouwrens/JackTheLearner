@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 62 / 161 demonstrated
+## 63 / 162 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -291,6 +291,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ `experiments/coverage.py` credits a commitment ONLY to a spec that declared `COVERS:`, and it can see both bad cases: a spec whose title merely contains a commitment's word buys NO coverage, a spec that declares one with an unrelated title DOES, a declaration naming no known commitment is reported as malformed rather than silently dropped, and deleting a declaring spec loses the coverage instead of leaving stale credit.
       - _dies if:_ Any of the seven properties failing. Above all P3: if the decoy spec titled 'The honest baseline' reads as coverage for shelter/building, the audit has reproduced the exact artifact it was rewritten to end — the owner's own image of success credited to the letters in 'ho-nest'.
       - _then delete:_ `python -m experiments.coverage` as a report anyone may cite. If the battery cannot be made to pass, the audit is deleted rather than kept as a coverage number nobody may rely on.
+- [x] **T0.22** A number borrowed from another spec's entry cannot be stale
+      - _asserts:_ `protocol.borrow_metrics` hands over another spec's measured constants ONLY when that entry still describes the code that exists now — refusing a source that is not PASS, that ran from a modified tree, that predates `impl_sha`, or whose implementation hash has moved — while still handing over the honest case; it names the source's `impl_sha` in the borrower's own record whether it hands over or refuses; and no test in the ladder reads another spec's metrics around it.
+      - _dies if:_ Any of the nine properties failing. Above all P3: if a PASS entry whose implementation hash has moved still yields its numbers, the guard is the rule it replaced.
+      - _then delete:_ `borrow_metrics` as a guard anyone may rely on, and with it the claim that XL.00 and the LC family compute in the world PS.01 measured rather than in some earlier one.
 - [x] **T0.19** The bakeoff's `screen` gate eliminates arms without lowering the bar
       - _asserts:_ Under `Spec.gate_mode='screen'` an arm below the 3-sigma learning gate is ELIMINATED rather than VOIDing the run, and every guard that makes that safe holds: two survivors are still required, the winner still cleared 3 sigma, the eliminated arms are still recorded, an escaped control still inverts the verdict to VOID, `validity` behaves exactly as before, and the mode is refused without a written rationale on the committed Spec.
       - _dies if:_ Any of the seven properties failing — above all P2: if `screen` changes the verdict of PS.01/J round 1, the mode was reverse-engineered to rescue the run that motivated it and must be reverted.
