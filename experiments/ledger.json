@@ -1,7 +1,8 @@
 {
-  "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed.",
+  "_comment": "Written by experiments/run.py under an exclusive lock. Do not hand-edit \u2014 a claim here must come from a test that could have failed. A change that did not come from a run goes through `run amend` and is recorded in that entry's `amended` list.",
   "results": {
     "LC.00": {
+      "amended": [],
       "attempt": 1,
       "commit": "318ff4a",
       "control_metrics": {
@@ -39,6 +40,7 @@
       "status": "PASS"
     },
     "LC.01": {
+      "amended": [],
       "attempt": 2,
       "commit": "8876baa",
       "control_metrics": {
@@ -227,6 +229,7 @@
       "status": "PASS"
     },
     "LC.02": {
+      "amended": [],
       "attempt": 6,
       "commit": "5e2a2ef",
       "control_metrics": {
@@ -497,6 +500,7 @@
       "status": "PASS"
     },
     "ME.1": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -521,6 +525,7 @@
       "status": "PASS"
     },
     "ME.10": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -568,6 +573,7 @@
       "status": "PASS"
     },
     "ME.11.0": {
+      "amended": [],
       "attempt": 2,
       "commit": "0c1ff06",
       "control_metrics": {
@@ -625,6 +631,7 @@
       "status": "PASS"
     },
     "ME.11.A": {
+      "amended": [],
       "attempt": 1,
       "commit": "935d333",
       "control_metrics": {
@@ -679,6 +686,7 @@
       "status": "PASS"
     },
     "ME.2": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -705,6 +713,7 @@
       "status": "PASS"
     },
     "ME.3": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -733,6 +742,7 @@
       "status": "PASS"
     },
     "ME.4": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -765,6 +775,7 @@
       "status": "PASS"
     },
     "ME.5": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -838,6 +849,7 @@
       "status": "PASS"
     },
     "ME.8": {
+      "amended": [],
       "attempt": 1,
       "commit": "aefc77f",
       "control_metrics": {
@@ -865,6 +877,7 @@
       "status": "PASS"
     },
     "ME.9": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -900,6 +913,7 @@
       "status": "PASS"
     },
     "PG.1": {
+      "amended": [],
       "attempt": 2,
       "commit": "76ccc6c",
       "control_metrics": {
@@ -937,6 +951,7 @@
       "status": "PASS"
     },
     "PG.2": {
+      "amended": [],
       "attempt": 2,
       "commit": "76ccc6c",
       "control_metrics": {
@@ -985,6 +1000,7 @@
       "status": "PASS"
     },
     "PG.3": {
+      "amended": [],
       "attempt": 3,
       "commit": "8876baa",
       "control_metrics": {
@@ -1061,6 +1077,7 @@
       "status": "PASS"
     },
     "PG.4": {
+      "amended": [],
       "attempt": 1,
       "commit": "0d438f0",
       "control_metrics": {
@@ -1108,6 +1125,7 @@
       "status": "PASS"
     },
     "PG.5": {
+      "amended": [],
       "attempt": 2,
       "commit": "76ccc6c",
       "control_metrics": {
@@ -1158,6 +1176,7 @@
       "status": "PASS"
     },
     "PG.6": {
+      "amended": [],
       "attempt": 3,
       "commit": "185cb1c",
       "control_metrics": {
@@ -1226,6 +1245,7 @@
       "status": "PASS"
     },
     "PG.7": {
+      "amended": [],
       "attempt": 1,
       "commit": "5283cd3",
       "control_metrics": {
@@ -1283,6 +1303,7 @@
       "status": "PASS"
     },
     "PG.8": {
+      "amended": [],
       "attempt": 3,
       "commit": "8876baa",
       "control_metrics": {
@@ -1451,6 +1472,7 @@
       "status": "PASS"
     },
     "T0.01": {
+      "amended": [],
       "attempt": 2,
       "commit": "44c719c",
       "control_metrics": {},
@@ -1480,6 +1502,7 @@
       "status": "PASS"
     },
     "T0.02": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -1503,6 +1526,7 @@
       "status": "PASS"
     },
     "T0.03": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -1528,6 +1552,7 @@
       "status": "PASS"
     },
     "T0.04": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -1556,7 +1581,22 @@
       "status": "PASS"
     },
     "T0.05": {
-      "attempt": 1,
+      "amended": [
+        {
+          "at": "2026-08-10T00:12:32",
+          "by": "overseer 2026-08-09 \u00a71.2",
+          "changes": [
+            {
+              "field": "attempt",
+              "from": 1,
+              "to": null
+            }
+          ],
+          "commit": "6c0fcd1",
+          "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
+        }
+      ],
+      "attempt": null,
       "commit": "55e5bda",
       "control_metrics": {
         "checkpoints_checked": 12,
@@ -1583,6 +1623,7 @@
       "status": "PASS"
     },
     "T0.06": {
+      "amended": [],
       "attempt": 2,
       "commit": "76ccc6c",
       "control_metrics": {
@@ -1618,6 +1659,7 @@
       "status": "PASS"
     },
     "T0.07": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -1657,8 +1699,9 @@
       "status": "PASS"
     },
     "T0.08": {
-      "attempt": 3,
-      "commit": "44c719c",
+      "amended": [],
+      "attempt": 4,
+      "commit": "6c0fcd1",
       "control_metrics": {},
       "duration_s": 1.23,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
@@ -1674,9 +1717,15 @@
           "message": "",
           "ran_at": "2026-08-09T14:22:06",
           "status": "PASS"
+        },
+        {
+          "commit": "44c719c",
+          "message": "",
+          "ran_at": "2026-08-09T19:16:00",
+          "status": "PASS"
         }
       ],
-      "impl_sha": null,
+      "impl_sha": "445f709422703e1b",
       "message": "",
       "metrics": {
         "blocked_records_no_metrics": true,
@@ -1686,7 +1735,7 @@
         "roundtrip_ok": true,
         "survives_concurrent_writers": true
       },
-      "ran_at": "2026-08-09T19:16:00",
+      "ran_at": "2026-08-10T00:12:45",
       "seeds": [
         0
       ],
@@ -1694,7 +1743,22 @@
       "status": "PASS"
     },
     "T0.09": {
-      "attempt": 1,
+      "amended": [
+        {
+          "at": "2026-08-10T00:12:33",
+          "by": "overseer 2026-08-09 \u00a71.2",
+          "changes": [
+            {
+              "field": "attempt",
+              "from": 1,
+              "to": null
+            }
+          ],
+          "commit": "6c0fcd1",
+          "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
+        }
+      ],
+      "attempt": null,
       "commit": "bb1659d",
       "control_metrics": {
         "message": "exit 1",
@@ -1723,6 +1787,7 @@
       "status": "PASS"
     },
     "T0.10": {
+      "amended": [],
       "attempt": 1,
       "commit": "bb1659d",
       "control_metrics": {},
@@ -1750,6 +1815,7 @@
       "status": "PASS"
     },
     "T0.11": {
+      "amended": [],
       "attempt": 1,
       "commit": "bb1659d",
       "control_metrics": {
@@ -1779,6 +1845,7 @@
       "status": "PASS"
     },
     "T0.12": {
+      "amended": [],
       "attempt": 3,
       "commit": "44c719c",
       "control_metrics": {
@@ -1859,8 +1926,9 @@
       "status": "PASS"
     },
     "T0.13": {
-      "attempt": 11,
-      "commit": "44c719c",
+      "amended": [],
+      "attempt": 12,
+      "commit": "6c0fcd1",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -1882,7 +1950,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.29,
+      "duration_s": 1.43,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1944,14 +2012,20 @@
           "message": "",
           "ran_at": "2026-08-09T18:16:15",
           "status": "PASS"
+        },
+        {
+          "commit": "44c719c",
+          "message": "",
+          "ran_at": "2026-08-09T19:14:22",
+          "status": "PASS"
         }
       ],
-      "impl_sha": null,
+      "impl_sha": "3e3ae3ec2ec310e8",
       "message": "",
       "metrics": {
         "disarmed_conjunct_keys": 0,
         "disarmed_detail": "",
-        "gates_scanned": 50,
+        "gates_scanned": 54,
         "hazard_detail": "",
         "inert_gate_keys": 1,
         "precedence_hazards": 0,
@@ -1969,7 +2043,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-09T19:14:22",
+      "ran_at": "2026-08-10T00:12:47",
       "seeds": [
         0
       ],
@@ -1977,6 +2051,7 @@
       "status": "PASS"
     },
     "T0.14": {
+      "amended": [],
       "attempt": 4,
       "commit": "49529e6",
       "control_metrics": {
@@ -2024,8 +2099,9 @@
       "status": "PASS"
     },
     "T0.15": {
-      "attempt": 1,
-      "commit": "76ccc6c",
+      "amended": [],
+      "attempt": 2,
+      "commit": "6c0fcd1",
       "control_metrics": {
         "gate_verdict_on_3e7_drift": "PASS",
         "max_relative_error": 1.7091000155524961e-06,
@@ -2036,8 +2112,15 @@
       },
       "duration_s": 1.18,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "76ccc6c",
+          "message": "",
+          "ran_at": "2026-08-09T14:21:36",
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "76bc2d67806e7f18",
       "message": "",
       "metrics": {
         "end_to_end_drift": 3e-07,
@@ -2049,7 +2132,7 @@
         "recorded_drift": 3e-07,
         "true_drift": 3e-07
       },
-      "ran_at": "2026-08-09T14:21:36",
+      "ran_at": "2026-08-10T00:12:49",
       "seeds": [
         0
       ],
@@ -2057,6 +2140,7 @@
       "status": "PASS"
     },
     "T0.16": {
+      "amended": [],
       "attempt": 2,
       "commit": "44c719c",
       "control_metrics": {
@@ -2100,7 +2184,44 @@
       "spec_id": "T0.16",
       "status": "PASS"
     },
+    "T0.17": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "6c0fcd1",
+      "control_metrics": {
+        "detector_sees_amendment": false,
+        "hand_edit_took_effect": true
+      },
+      "duration_s": 1.25,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "6c0fcd1",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-10T00:11:44",
+          "status": "FAIL"
+        }
+      ],
+      "impl_sha": "a68301d54b903b6e",
+      "message": "",
+      "metrics": {
+        "amendment_is_attributable": true,
+        "detector_sees_amendment": true,
+        "history_keeps_amendment": true,
+        "refuses_pass_and_fail": true,
+        "refuses_unattributed": true,
+        "run_spec_leaves_amended_empty": true,
+        "unknown_attempt_is_sticky": true
+      },
+      "ran_at": "2026-08-10T00:12:07",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.17",
+      "status": "PASS"
+    },
     "T1.01": {
+      "amended": [],
       "attempt": 1,
       "commit": "a533ade",
       "control_metrics": {
@@ -2140,7 +2261,22 @@
       "status": "PASS"
     },
     "T1.02": {
-      "attempt": 1,
+      "amended": [
+        {
+          "at": "2026-08-10T00:12:30",
+          "by": "overseer 2026-08-09 \u00a71.2",
+          "changes": [
+            {
+              "field": "attempt",
+              "from": 1,
+              "to": null
+            }
+          ],
+          "commit": "6c0fcd1",
+          "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
+        }
+      ],
+      "attempt": null,
       "commit": "0a5ff6e",
       "control_metrics": {},
       "duration_s": 6.56,
@@ -2159,6 +2295,7 @@
       "status": "ERROR"
     },
     "T1.03": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {},
@@ -2189,6 +2326,7 @@
       "status": "PASS"
     },
     "T1.04": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -2230,6 +2368,7 @@
       "status": "PASS"
     },
     "T1.05": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {},
@@ -2252,6 +2391,7 @@
       "status": "PASS"
     },
     "T1.06": {
+      "amended": [],
       "attempt": 1,
       "commit": "10e3aef",
       "control_metrics": {
@@ -2301,6 +2441,7 @@
       "status": "PASS"
     },
     "T1.07": {
+      "amended": [],
       "attempt": 1,
       "commit": "1a69db6",
       "control_metrics": {
@@ -2332,6 +2473,7 @@
       "status": "PASS"
     },
     "T1.08": {
+      "amended": [],
       "attempt": 1,
       "commit": "29a6de2",
       "control_metrics": {
@@ -2363,6 +2505,7 @@
       "status": "PASS"
     },
     "T1.09": {
+      "amended": [],
       "attempt": 1,
       "commit": "a0b9569",
       "control_metrics": {
@@ -2392,6 +2535,7 @@
       "status": "PASS"
     },
     "T1.10": {
+      "amended": [],
       "attempt": 1,
       "commit": "a0b9569",
       "control_metrics": {
@@ -2418,6 +2562,7 @@
       "status": "PASS"
     },
     "T1.11": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -2445,6 +2590,7 @@
       "status": "PASS"
     },
     "T1.12": {
+      "amended": [],
       "attempt": 1,
       "commit": "3e38ed9",
       "control_metrics": {
@@ -2480,6 +2626,7 @@
       "status": "PASS"
     },
     "T1.13": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -2507,6 +2654,7 @@
       "status": "PASS"
     },
     "T2.00": {
+      "amended": [],
       "attempt": 2,
       "commit": "35e1134",
       "control_metrics": {
@@ -2541,7 +2689,27 @@
       "status": "PASS"
     },
     "T2.01": {
-      "attempt": 1,
+      "amended": [
+        {
+          "at": "2026-08-10T00:12:22",
+          "by": "T0.14",
+          "changes": [
+            {
+              "field": "status",
+              "from": "VOID",
+              "to": "VOID"
+            },
+            {
+              "field": "attempt",
+              "from": 1,
+              "to": null
+            }
+          ],
+          "commit": "6c0fcd1",
+          "reason": "Backfill of a hand-edit: commit 9b92d14 (2026-08-09 14:02) changed status FAIL->VOID directly in ledger.json with an agent-written message. The edit was right (T0.14 found eval ran with dropout live, so the run did not test the claim) but nothing in the entry said it was an edit. attempt/history are not reconstructible: git shows four versions (620b5c1, 79af208, v3, 10e3aef) against a recorded attempt of 1."
+        }
+      ],
+      "attempt": null,
       "commit": "a533ade",
       "control_metrics": {
         "untrained_mean": 150.5,
@@ -2684,7 +2852,27 @@
       "status": "VOID"
     },
     "T2.02": {
-      "attempt": 1,
+      "amended": [
+        {
+          "at": "2026-08-10T00:12:24",
+          "by": "T0.14",
+          "changes": [
+            {
+              "field": "status",
+              "from": "VOID",
+              "to": "VOID"
+            },
+            {
+              "field": "attempt",
+              "from": 1,
+              "to": null
+            }
+          ],
+          "commit": "6c0fcd1",
+          "reason": "Backfill of a hand-edit: this entry was restated by hand when Status.VOID was introduced (recorded in docs/LESSONS.md). The verdict is right - two non-learners cannot arbitrate an architecture, and the T0.14 dropout finding invalidates the runs - but it did not come from run_spec. attempt/history not reconstructible."
+        }
+      ],
+      "attempt": null,
       "commit": "114e8f7",
       "control_metrics": {
         "untrained_mlp_mean": 175.1,
@@ -2762,6 +2950,7 @@
       "status": "VOID"
     },
     "T2.10": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -2797,6 +2986,7 @@
       "status": "PASS"
     },
     "T2.12": {
+      "amended": [],
       "attempt": 1,
       "commit": "55e5bda",
       "control_metrics": {
@@ -2830,6 +3020,7 @@
       "status": "PASS"
     },
     "T2.20": {
+      "amended": [],
       "attempt": 2,
       "commit": "76ccc6c",
       "control_metrics": {
@@ -2876,6 +3067,7 @@
       "status": "PASS"
     },
     "T6.03": {
+      "amended": [],
       "attempt": 1,
       "commit": "4a4afb3",
       "control_metrics": {

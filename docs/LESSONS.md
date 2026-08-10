@@ -1139,3 +1139,40 @@ defensible, take the one that keeps the harder samples. If the gates then fail,
 that is a result about the capability. A selection rule tuned until the metric
 clears is a threshold move wearing a sampler's clothes — and unlike a threshold
 move, no reviewer grepping for changed constants will find it.
+
+## A rule that forbids an operation must be able to represent that operation happening
+
+`experiments/ledger.json` opens with *"Do not hand-edit — a claim here must come
+from a test that could have failed."* It had been hand-edited at least twice:
+T2.01's status was changed `FAIL -> VOID` in commit `9b92d14` with a prose
+message written by an agent rather than by any `_check`, and T2.02 was restated
+by hand when `Status.VOID` was introduced. The overseer ranked this its RANK 1
+finding and it sat unactioned across two audits.
+
+**Both edits were substantively right**, and that is the whole lesson. T0.14
+genuinely invalidated both runs, and leaving `FAIL` in place would have been
+worse — `FAIL` fires the spec's `kills` field, so the record would have said a
+kill criterion had fired on a comparison that explicitly refused to arbitrate.
+Because each edit was correct, nobody had a reason to look at it twice, and the
+defect it left was not in the science but in the *representability* of the
+record: a reader could not tell a runner-written verdict from an agent-written
+one, in a file whose header asserts that no such distinction exists.
+
+A prohibition backed by nothing but a comment does not stop the operation; it
+only guarantees that when the operation is necessary — and sooner or later it is
+— it happens invisibly. The same shape had already been recorded twice in this
+file: `Arm.cost` defaulting to a plausible number instead of null, and five
+ledger entries reading `attempt: 1, history: []` for specs with four versions in
+git. A field that cannot represent "unknown" or "not from a run" will silently
+claim the opposite.
+
+**Rule:** when you write "never do X" into a file's own header, add the field and
+the sanctioned path that record X being done, and put the teeth in the path
+rather than in the prohibition. Here that is `run amend --by --reason`, which
+keeps the runner the only writer, stamps author/reason/prior value/commit/time
+into the entry, and — the actual guard — refuses any status that ASSERTS
+something: an amendment can reach `VOID`, `SKIP` or `NOT_RUN`, never `PASS` or
+`FAIL`. The prohibition survives exactly where it earns its keep, and the
+legitimate 5% stops being indistinguishable from forgery. Ledger-tested as T0.17,
+whose control is the `9b92d14` edit replayed verbatim: it must remain invisible
+to the same audit, or the detector is answering "amended" to everything.

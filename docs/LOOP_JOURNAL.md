@@ -1477,3 +1477,57 @@ the in-FOV band is blind, so sample bearings through `_sample_unoccluded` or
 UB.9 will measure the ladder; and PG.6's `get_eye` cache must be reused rather
 than re-created, because a garbage-collected `mujoco.Renderer` poisons the
 shared X display and returns corrupted-but-plausible frames with no error.
+
+---
+
+## 2026-08-10 — the ledger can now tell a run from an edit (OVERSIGHT items 2 and 3)
+
+Took the auditor's queue rather than the science queue: the 18:37 audit's RANK 1
+finding had survived two audits, and its own summary named the pattern — *"the
+builder took the new science and left the bookkeeping."* Items 2 and 3 are one
+defect wearing two hats, so they were fixed as one unit.
+
+**T0.17 PASS, seven properties true, control refutes.** `Ledger.amend()` +
+`python -m experiments.run amend <SPEC> --by <SPEC> --reason "..." [--status
+VOID|SKIP|NOT_RUN] [--unknown-history]`. The runner stays the only writer; every
+non-run change lands in a new `Result.amended` list with author, reason, prior
+value, commit and time. The teeth are `Ledger.AMENDABLE`: an amendment may only
+reach a status that **asserts nothing**. `PASS` claims a capability and `FAIL`
+fires the spec's `kills`, so both still require a run — verified by the test and
+by the CLI (`Refusing to amend T0.05: amend may not set PASS`). Two more
+properties nobody had thought to want until the mechanism existed: `run_spec`
+must never write `amended` (the field means "not from a run", so a run able to
+set it would destroy the distinction), and an amended verdict pushed into
+`history` by a later run must KEEP its amendment — otherwise a re-run launders a
+hand-set status into an unqualified historical record. The control is the
+`9b92d14` hand-edit replayed verbatim on a temp ledger: it lands
+(`hand_edit_took_effect` true) and stays invisible (`detector_sees_amendment`
+false), which is what makes the detector's `true` mean anything.
+
+**`attempt: None` is now sticky, and five entries say it.** T2.01, T2.02, T1.02,
+T0.05 and T0.09 all read `attempt: 1, history: []`; T2.01 alone has four versions
+in git. `Ledger.record` recomputed `attempt = len(history) + 1` on every write,
+so a wrong integer was being re-asserted on each save. It now propagates `None`
+forward — a count that was never kept is not recovered by running again — and all
+five entries are backfilled through `amend`, with T2.01 and T2.02 additionally
+carrying the reason their status was hand-set. Ledger intact afterwards: 55 PASS
+of 137, `status`/`next`/`blocked`/`render`/`stale` all clean, and T0.08, T0.13,
+T0.15 re-run green against the changed `Result` shape.
+
+Lesson appended: *a rule that forbids an operation must be able to represent that
+operation happening.* Both hand-edits were RIGHT, which is exactly why nobody
+looked twice, and a prohibition backed only by a comment does not prevent the
+operation — it guarantees that when the operation is necessary, it happens
+invisibly.
+
+**NEXT ITERATION: implement and run UB.9** — unchanged from yesterday's note and
+still the most valuable unblocked spec in the project (CPU-only, deps PG.6/PG.7/
+T1.06 all PASS, 0 of 37 unison specs pass today). Carry the two PG.6 traps into
+it: sample through `_sample_unoccluded` (31.9% of the eye's 0-22 deg band is
+behind the ladder) and reuse PG.6's `get_eye` cache rather than building a second
+`mujoco.Renderer`. Still open from the same audit and cheap: item 1 (the Kaggle
+meter charges on failure, double-bills reattaches, and never caps an overrun),
+item 5 (`Spec.control` is declared `None` on 19 PASSes that ran a control, so
+"does this spec declare a control?" is unusable as an audit query), item 6
+(T1.03/T1.05 have no control), item 7 (ME.8 PASSes at seeds=1 on a fix motivated
+by a seed-2 collapse).

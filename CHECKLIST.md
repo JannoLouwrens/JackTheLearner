@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 54 / 136 demonstrated
+## 55 / 137 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -273,6 +273,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Replaying the exact call order a locomotion spec's kernel performs — untrained eval, rollout, PPO update, trained eval — the action-producing path is in eval mode and returns bit-identical actions for one identical state at BOTH evaluation points.
       - _dies if:_ Either evaluation point runs with dropout live, or two calls of the shipped eval path on one state differ.
       - _then delete:_ Any locomotion number produced by an eval path that bypasses act_deterministic.
+- [x] **T0.17** A verdict that did not come from a run cannot look like one
+      - _asserts:_ Every change to a ledger entry that was not produced by run_spec is attributable from the entry itself — author, reason, prior value, commit and time — and no such change can set a status that asserts a capability.
+      - _dies if:_ An amendment landing without author or reason; an amendment reaching PASS or FAIL; a run_spec result carrying an `amended` note it did not earn; an unreconstructible attempt count re-asserting an integer after a later run; or an amended verdict re-recorded into history with its amendment stripped.
+      - _then delete:_ Nothing. It re-arms the ledger header's own claim that a capability here came from a test that could have failed.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

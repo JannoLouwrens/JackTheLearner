@@ -146,6 +146,41 @@ EXPANSION: list[Spec] = [
                "scale: T0.14 could not see across the process boundary into a "
                "kernel string."),
 
+    Spec("T0.17", 0, "A verdict that did not come from a run cannot look like one",
+         hypothesis="Every change to a ledger entry that was not produced by "
+                    "run_spec is attributable from the entry itself — author, "
+                    "reason, prior value, commit and time — and no such change "
+                    "can set a status that asserts a capability.",
+         falsified_by="An amendment landing without author or reason; an "
+                      "amendment reaching PASS or FAIL; a run_spec result "
+                      "carrying an `amended` note it did not earn; an "
+                      "unreconstructible attempt count re-asserting an integer "
+                      "after a later run; or an amended verdict re-recorded "
+                      "into history with its amendment stripped.",
+         null_baseline="The PRE-FIX ledger: a Result has no field that can "
+                       "represent 'this did not come from a run', so a "
+                       "hand-set status is indistinguishable from a measured "
+                       "one — the null detector answers 'run' to everything.",
+         metric="amend_provenance_ok", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.08"],
+         control="Direct mutation of the row (the actual 9b92d14 hand-edit, "
+                 "replayed on a temp ledger) MUST be indistinguishable from a "
+                 "recorded verdict under the same audit. Without it this spec "
+                 "passes on a ledger where nothing was ever checkable.",
+         kills="Nothing. It re-arms the ledger header's own claim that a "
+               "capability here came from a test that could have failed.",
+         notes="FOUND by the overseer 2026-08-09 (RANK 1): "
+               "`experiments/ledger.json` says 'Do not hand-edit' and had been "
+               "hand-edited at least twice — T2.01's status FAIL->VOID in "
+               "9b92d14 with a prose message written by an agent, and T2.02 "
+               "restated when Status.VOID was introduced. Both edits were "
+               "substantively RIGHT, which is what makes this a record defect "
+               "rather than a science one: the file asserted a distinction "
+               "(runner-written vs hand-written) that it had no field to "
+               "carry. Same shape as `attempt: 1, history: []` on five "
+               "entries and as the Arm.cost lesson — a field that cannot "
+               "represent 'unknown' will silently claim a value."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "

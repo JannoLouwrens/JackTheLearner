@@ -114,7 +114,28 @@ class Result:
     message: str = ""
     history: List[Dict[str, Any]] = field(default_factory=list)
     """Previous attempts, trimmed. Written by Ledger.record — see the note there."""
-    attempt: int = 1
+    attempt: Optional[int] = 1
+    """Which attempt this is, or None when the count is NOT RECONSTRUCTIBLE.
+
+    Five entries (T2.01, T2.02, T1.02, T0.05, T0.09) read `attempt: 1,
+    history: []` because they predate the history mechanism — T2.01 alone has
+    four versions in git. A wrong integer is worse than a null: it is the
+    `Arm.cost` lesson in a second file, a default that cannot be told from a
+    measurement. None is STICKY (see Ledger.record): unknown + one more run is
+    still unknown, because no future run recovers a count that was never kept.
+    """
+    amended: List[Dict[str, Any]] = field(default_factory=list)
+    """Changes to this entry that did NOT come from a run.
+
+    `run_spec` never writes here — only `Ledger.amend`, i.e. only
+    `python -m experiments.run amend`. It exists because the ledger's own
+    header forbids hand-editing and the file had been hand-edited twice
+    anyway (T2.01 FAIL->VOID in 9b92d14; T2.02 restated when VOID was
+    introduced). Both edits were substantively right and the record could not
+    say they were edits. An `amend` may only set a status that ASSERTS
+    NOTHING — VOID, SKIP, NOT_RUN. PASS and FAIL still require a run: PASS
+    claims a capability, FAIL fires the spec's `kills`.
+    """
     impl_sha: Optional[str] = None
     """sha256 of the test file this result was produced by, at run time.
 
@@ -210,25 +231,25 @@ class Ledger:
                     prev = on_disk.get(rid)
                     hist = list(prev.get("history", [])) if prev else []
                     if prev and prev.get("ran_at") != r.ran_at:
-                        hist.append({k: prev.get(k) for k in
-                                     ("status", "ran_at", "commit", "message")})
+                        row_h = {k: prev.get(k) for k in
+                                 ("status", "ran_at", "commit", "message")}
+                        if prev.get("amended"):
+                            # An amendment is part of what that verdict WAS.
+                            # Dropping it here would let a re-run launder a
+                            # hand-set status back into an unqualified record.
+                            row_h["amended"] = prev["amended"]
+                        hist.append(row_h)
                     row = {**asdict(r), "status": r.status.value}
                     row["history"] = hist[-20:]
-                    row["attempt"] = len(hist) + 1
+                    # None is sticky: a count that was never kept is not
+                    # recovered by running again, and len(hist)+1 would quietly
+                    # re-assert a number nobody measured.
+                    unknown = r.attempt is None or (prev is not None
+                                                    and prev.get("attempt", 1) is None)
+                    row["attempt"] = None if unknown else len(hist) + 1
                     merged[rid] = row
 
-                payload = {
-                    "_comment": "Written by experiments/run.py under an exclusive lock. "
-                                "Do not hand-edit — a claim here must come from a test "
-                                "that could have failed.",
-                    "results": merged,
-                }
-                fd, tmp = tempfile.mkstemp(dir=str(self.path.parent), suffix=".tmp")
-                with os.fdopen(fd, "w") as f:
-                    f.write(json.dumps(payload, indent=2, sort_keys=True) + "\n")
-                    f.flush()
-                    os.fsync(f.fileno())
-                os.replace(tmp, self.path)
+                self._write_atomic(merged)
 
                 # Adopt the merged view so this instance stops being stale.
                 for rid, raw in merged.items():
@@ -238,6 +259,90 @@ class Ledger:
                         self.results[rid] = Result(**d)
             finally:
                 fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+
+    def _write_atomic(self, merged: Dict[str, Any]) -> None:
+        """tmp + fsync + os.replace. Callers hold the lock."""
+        payload = {
+            "_comment": "Written by experiments/run.py under an exclusive lock. "
+                        "Do not hand-edit — a claim here must come from a test "
+                        "that could have failed. A change that did not come "
+                        "from a run goes through `run amend` and is recorded "
+                        "in that entry's `amended` list.",
+            "results": merged,
+        }
+        fd, tmp = tempfile.mkstemp(dir=str(self.path.parent), suffix=".tmp")
+        with os.fdopen(fd, "w") as f:
+            f.write(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, self.path)
+
+    #: Statuses an amendment may set. All three ASSERT NOTHING. PASS is a
+    #: capability claim and FAIL fires `kills`; both must come from a run.
+    AMENDABLE = (Status.VOID, Status.SKIP, Status.NOT_RUN)
+
+    def amend(self, spec_id: str, by: str, reason: str,
+              status: Optional[Status] = None,
+              unknown_history: bool = False) -> Dict[str, Any]:
+        """Change an entry WITHOUT a run, and make the entry say so.
+
+        The ledger's header forbids hand-editing, and the file was hand-edited
+        twice anyway (T2.01's status FAIL->VOID in `9b92d14`, T2.02 restated
+        when VOID was introduced). Both edits were right — T0.14 genuinely
+        invalidated those runs and leaving FAIL in place would have fired the
+        `kills` field off a run that never arbitrated. The defect was that a
+        reader could not tell a runner-recorded verdict from an agent-restated
+        one, in a file asserting no such distinction exists.
+
+        So: the runner stays the only writer, and every non-run change lands in
+        `amended` with its author, reason, prior value, commit and time. The
+        guard that makes this safe rather than a licence is `AMENDABLE` — an
+        amendment can only ever move an entry to a status that claims nothing.
+        """
+        if not by or not reason:
+            raise ValueError("amend requires both --by (the spec or finding that "
+                             "invalidates this) and --reason; an unattributed edit "
+                             "is the thing this mechanism exists to prevent")
+        if status is not None and status not in self.AMENDABLE:
+            raise ValueError(
+                f"amend may not set {status.value}: only "
+                f"{', '.join(s.value for s in self.AMENDABLE)} assert nothing. "
+                "PASS claims a capability and FAIL fires the spec's `kills` — "
+                "both require a run that could have failed.")
+        if status is None and not unknown_history:
+            raise ValueError("amend with nothing to change")
+
+        lock_path = self.path.with_suffix(self.path.suffix + ".lock")
+        with open(lock_path, "w") as lock:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+            try:
+                on_disk = json.loads(self.path.read_text()).get("results", {})
+                row = on_disk.get(spec_id)
+                if row is None:
+                    raise KeyError(f"{spec_id} has no ledger entry to amend")
+
+                changes: List[Dict[str, Any]] = []
+                if status is not None:
+                    changes.append({"field": "status", "from": row.get("status"),
+                                    "to": status.value})
+                    row["status"] = status.value
+                if unknown_history:
+                    changes.append({"field": "attempt", "from": row.get("attempt"),
+                                    "to": None})
+                    row["attempt"] = None
+
+                note = {"at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                        "by": by, "reason": reason,
+                        "changes": changes, **Result.env_stamp()}
+                note.pop("hardware", None)      # an edit has no hardware
+                row["amended"] = list(row.get("amended") or []) + [note]
+                on_disk[spec_id] = row
+                self._write_atomic(on_disk)
+            finally:
+                fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+
+        self.load()
+        return row
 
     def save(self) -> None:
         """Retained for compatibility; record() is the safe path."""

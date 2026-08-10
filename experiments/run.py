@@ -5,6 +5,9 @@
     python -m experiments.run next            # what is legitimately runnable now
     python -m experiments.run blocked         # what is unreachable, and what frees it
     python -m experiments.run stale           # claims whose test changed since the run
+    python -m experiments.run amend T2.01 --by T0.14 --reason "..." --status VOID
+                                              # a change that did NOT come from a run,
+                                              # recorded as one. Cannot write PASS/FAIL.
     python -m experiments.run T0.02           # run one experiment
     python -m experiments.run --tier 0        # run a whole tier, in order
     python -m experiments.run --gate          # re-run every PASSing test (regression)
@@ -549,6 +552,37 @@ def _check_ranker(ledger: Ledger) -> None:
             "refusing to print a ranking that cannot be trusted")
 
 
+def cmd_amend(ledger: Ledger, args) -> int:
+    """Record a change to a ledger entry that did NOT come from a run.
+
+    Written 2026-08-10 for the overseer's RANK 1 finding: the ledger had been
+    hand-edited twice (T2.01 FAIL->VOID, T2.02 restated) while its own header
+    said hand-editing was forbidden, so nothing in the file distinguished a
+    runner-recorded verdict from an agent-restated one. This keeps the runner
+    the only writer and makes the edit part of the record instead of invisible
+    in it. `Ledger.AMENDABLE` is the teeth: an amendment can only reach a
+    status that asserts nothing.
+    """
+    if len(args.spec) != 2:
+        print("usage: run amend <SPEC> --by <SPEC-or-finding> --reason '...' "
+              "[--status VOID|SKIP|NOT_RUN] [--unknown-history]")
+        return 2
+    spec_id = args.spec[1]
+    try:
+        status = Status(args.status) if args.status else None
+        row = ledger.amend(spec_id, by=args.by or "", reason=args.reason or "",
+                           status=status, unknown_history=args.unknown_history)
+    except (ValueError, KeyError) as e:
+        print(f"Refusing to amend {spec_id}: {e}")
+        return 1
+    note = row["amended"][-1]
+    print(f"{spec_id}: amended by {note['by']} at {note['at']} ({note['commit']})")
+    for c in note["changes"]:
+        print(f"    {c['field']}: {c['from']!r} -> {c['to']!r}")
+    print(f"    reason: {note['reason']}")
+    return 0
+
+
 def cmd_blocked(ledger: Ledger) -> int:
     """What can this ladder NEVER do, and why — the converse of `next`.
 
@@ -750,8 +784,16 @@ def main() -> int:
     ap.add_argument("spec", nargs="*", help="spec ids, or 'status' / 'next'")
     ap.add_argument("--tier", type=int)
     ap.add_argument("--gate", action="store_true", help="re-run all passing tests")
+    ap.add_argument("--by", help="amend: the spec or finding that motivates the change")
+    ap.add_argument("--reason", help="amend: why, in a sentence")
+    ap.add_argument("--status", help="amend: new status (VOID, SKIP or NOT_RUN only)")
+    ap.add_argument("--unknown-history", action="store_true",
+                    help="amend: this entry's attempt count is not reconstructible")
     args = ap.parse_args()
     ledger = Ledger()
+
+    if args.spec and args.spec[0] == "amend":
+        return cmd_amend(ledger, args)
 
     # status/next/render are read-only and must not block on a running experiment.
     if args.spec and args.spec[0] in ("status", "next", "blocked", "render", "stale"):
