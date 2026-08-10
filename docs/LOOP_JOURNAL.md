@@ -2636,3 +2636,7 @@ and `XL.00` (1163 s) are both on the STALE list — neither fits beside a spec i
 one iteration, but they are the only two entries a reader cannot distinguish
 from real debt. And the Kaggle quota still expires 2026-08-16 with nothing
 submitted since the push block lifted.
+
+**Postscript, same iteration:** `T0.22` re-run from a clean tree (1.33 s, 9/9
+properties, `direct_ledger_reads = 0`) — the board now carries NO dirty stamps.
+Only `PS.01` and `XL.00` remain stale.

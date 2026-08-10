@@ -2913,8 +2913,8 @@
     },
     "T0.22": {
       "amended": [],
-      "attempt": 1,
-      "commit": "3cc52b4+dirty",
+      "attempt": 2,
+      "commit": "7494cd0",
       "control_metrics": {
         "direct_ledger_reads": 0.0,
         "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly",
@@ -2925,7 +2925,14 @@
       },
       "duration_s": 1.33,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "3cc52b4+dirty",
+          "message": "",
+          "ran_at": "2026-08-10T14:13:10",
+          "status": "PASS"
+        }
+      ],
       "impl_sha": "8286fbef0fa6a166",
       "message": "",
       "metrics": {
@@ -2936,7 +2943,7 @@
         "properties_failed": 0.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "ran_at": "2026-08-10T14:13:10",
+      "ran_at": "2026-08-10T15:26:53",
       "seeds": [
         0
       ],
