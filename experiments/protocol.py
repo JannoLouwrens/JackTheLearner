@@ -505,6 +505,20 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
         return res
 
     t0 = time.time()
+    # STAMPED BEFORE THE RUN, NOT AFTER IT. `env_stamp()` reads `HEAD`, and
+    # HEAD moves: this used to be read at Result construction, i.e. whenever
+    # the run happened to finish, so every entry named the commit that was
+    # checked out at the END. `gpu.py:assert_ref_is_current` refuses to build a
+    # job from a HEAD GitHub does not have, on the stated principle that a
+    # result is only attributable to a commit if the commit is what ran — and
+    # the record then discarded it. OVERSIGHT.md 1.2 ranked this #1 against
+    # T2.01's 5.58 GPU-hours, and it is NOT a GPU-only defect: on 2026-08-10 a
+    # 14-minute CPU run of PS.01 was stamped `248b160`, three commits after the
+    # `ad55a31` that ran it, because a CONCURRENT builder iteration committed
+    # while it was mid-flight. Any run longer than the interval between commits
+    # is exposed, the error is silent and plausible, and it grows with
+    # duration. One line moved fixes the whole class.
+    stamp = Result.env_stamp()
     seeds = list(range(spec.seeds))
     try:
         runs = [fn(s) for s in seeds]
@@ -546,7 +560,7 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                  control_metrics=control_metrics, seeds=seeds,
                  duration_s=round(time.time() - t0, 2), message=message,
                  impl_sha=impl_sha,
-                 ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"), **Result.env_stamp())
+                 ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"), **stamp)
     ledger.record(res)
     return res
 

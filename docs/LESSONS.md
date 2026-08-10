@@ -1672,3 +1672,29 @@ would take for the subject to declare itself directly, and prefer that.
 too. When it reports all-clear, the first question is whether it *could* have
 reported otherwise — and the cheapest way to answer that is to feed it the case
 you already know is broken.
+
+## A result's commit stamp is a race with every writer, not just with GPU latency
+
+`Result.env_stamp()` reads `HEAD`, and `run_spec` read it when the result
+LANDED. OVERSIGHT.md §1.2 caught this on T2.01: a 5.58-hour Kaggle job submitted
+at `496e951` was recorded as `2cd0289`, six commits later, so the ladder's most
+expensive entry named code that never ran it. The finding was filed as a
+long-GPU-job problem — *"the error grows with job duration"* — and that framing
+made it look rare.
+
+It is not rare. On 2026-08-10 a **14-minute CPU run** of PS.01 was stamped
+`248b160` while `ad55a31` is the commit that ran it, because a **concurrent**
+builder iteration committed three times while it was in flight. The exposure is
+not `duration > hours`; it is `duration > the interval between commits`, and
+with a second agent working the same tree that interval is minutes. Every
+multi-seed spec in this repo is exposed.
+
+**Rule:** capture any environment fact that identifies WHAT RAN — commit, ref,
+config hash, container tag — at the moment the run STARTS, and carry it to the
+record. Reading it afterwards records the state of the world at write time and
+silently calls it the state at run time. Fixed in `run_spec` (one `stamp = `
+hoisted above the loop) with a known-answer test that moves `HEAD` mid-run.
+Note the follow-on gap this exposed: `Ledger.amend` can only move `status` and
+`attempt`, so an already-written wrong stamp has no sanctioned repair path — a
+re-run is the only way to correct one, which is a good reason to prevent rather
+than to detect.
