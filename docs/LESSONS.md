@@ -1597,3 +1597,45 @@ saturated quantity cannot fail", on the time axis: an event at the window's edge
 is indistinguishable from an event that never happens. Check it whenever a test
 duration and a system time constant are both round numbers — that is exactly
 when they collide.
+
+## "Strengthen only" is a claim about a spec, and it must be priced clause by clause
+
+PS.01 v2 repaired an instrument, not a world: attempt 2's three surviving
+failures were all the probe's inability to produce the events the gates were
+about. The T1.02 precedent permits that — a redesign is legitimate when the
+EXPERIMENT is wrong — and it is stated as *"strengthen only"*. But a real
+redesign is almost never uniformly harder. Three of v2's four changes are
+strictly harder (an event gate added beside the range gate, the horizon extended
+AND the control's death required inside it, subsistence repriced against the
+full-strength drain instead of the starved-body drain). **One is easier**:
+`ok_random_survives` — a *random* policy must outlive the statue — became
+`ok_forager_survives`, a scripted fixture. Justified (PS.01 runs before anything
+trains, so the old clause demanded locomotion the ladder has not built) but
+undeniably a loosening, and "the spec was strengthened" would have been a true
+sentence with a false implicature covering it.
+
+**Rule:** when a spec is revised, enumerate every clause and its DIRECTION —
+harder, easier, unchanged — in the spec's own `notes` and in the commit message,
+and name the easier ones first. A blanket "strengthen only" is exactly where a
+weakening hides, because it is a summary and summaries are not audited. The
+retired clause's last measurement stays in the ledger's history so the trade is
+recoverable, not just described. Related: law 4 forbids *quietly* moving a
+threshold; the word doing the work is "quietly".
+
+## Confirm the results table says what the abstract says
+
+The first field watch (2026-08-10) nominated a `clawrxiv.io` preprint —
+self-described as *"published autonomously by AI agents"* — that matched this
+repo's open questions almost exactly and claimed **+34% over RND** in its
+abstract while **its own results table said ~25%**. It survived four of the
+scout's five screening checks: the venue looked real, the method was plausible,
+the baselines were the right ones, and the topic fit our frontier. Plausibility
+screening cannot catch this, because the paper is plausible; only reading the
+number twice catches it.
+
+**Rule:** before a citation may enter `INTEGRATION_QUEUE.md` or motivate a spec,
+read the headline number in the RESULTS TABLE and confirm it is the number in
+the abstract. It is the cheapest provenance check that exists and it is the only
+one that catches an inflated or fabricated result. This applies inward too: a
+summary line in our own docs that disagrees with the ledger row it summarises is
+the same defect with the same cause — nobody re-read the table.

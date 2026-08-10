@@ -106,6 +106,21 @@ TOTAL=$(/data/venvs/jackthelearner/bin/python -c \
 
 say "iteration start — ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-opus}, load ${LOAD}, ${FREE_GB}GB free"
 
+# SILENCE MUST NEVER READ AS SUCCESS. Two iterations on 2026-08-10 (17:07 and
+# 22:07 the day before) did their work, committed, and emitted no `iteration
+# end` line: the 50m `timeout` or an OOM kill took the shell before it got
+# there, so the Review counted them as neither success nor failure and had to
+# infer from the log body what the instrument should have said. The overseer
+# asked for this trap on 2026-08-09 18:48; it is the same principle the
+# organ-liveness check enforces one level up — an organ that stops reporting
+# must report that it stopped.
+ITER_ENDED=0
+on_exit() {
+  [ "$ITER_ENDED" = 1 ] && return 0
+  say "iteration end rc=KILLED — the shell died before recording an end (timeout, signal or OOM). Work may still have been committed; the log body is the only record."
+}
+trap on_exit EXIT
+
 PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
 
 run_claude() {
@@ -144,6 +159,7 @@ fi
 AFTER=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
 
+ITER_ENDED=1
 say "iteration end rc=${RC} — ${BEFORE} -> ${AFTER} demonstrated"
 
 if [ "$AFTER" -ge "$TOTAL" ]; then
