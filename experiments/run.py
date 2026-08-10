@@ -411,6 +411,25 @@ def cmd_stale(ledger: Ledger) -> int:
     return 0
 
 
+def cmd_senses(ledger: Ledger) -> int:
+    """Coverage of the HUMAN sensory inventory — the only report in this system
+    whose standard comes from outside the repository.
+
+    Every other organ measures us against what we wrote down, so a sense we
+    never wrote down is invisible to all of them: on 2026-08-10 five of
+    GOAL.md's constitutional senses had zero specs among 137 and no command
+    could say so. See `experiments/senses.py`; gated as T0.20.
+
+    Exit code is 0 even when senses are ABSENT. This reports a gap in ambition,
+    not a broken build, and turning it into a red exit would tempt someone to
+    shrink the inventory to make it green — which is precisely the failure it
+    exists to catch.
+    """
+    from .senses import audit, render
+    print(render(audit(ledger=ledger)))
+    return 0
+
+
 def cmd_verify(ledger: Ledger) -> int:
     """Re-judge every PASS from the record alone, and probe whether its gate
     actually reads its control. See `experiments/verify.py`; gated as T0.18.
@@ -850,10 +869,10 @@ def main() -> int:
 
     # status/next/render are read-only and must not block on a running experiment.
     if args.spec and args.spec[0] in ("status", "next", "blocked", "render",
-                                      "stale", "verify"):
+                                      "stale", "verify", "senses"):
         return {"status": cmd_status, "next": cmd_next, "blocked": cmd_blocked,
                 "render": cmd_render, "stale": cmd_stale,
-                "verify": cmd_verify}[args.spec[0]](ledger)
+                "verify": cmd_verify, "senses": cmd_senses}[args.spec[0]](ledger)
     if not args.spec and not args.gate and args.tier is None:
         return cmd_status(ledger)
 

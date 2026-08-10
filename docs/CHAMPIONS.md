@@ -75,9 +75,9 @@ SYSTEM.md, which outrank this file.
 | Audio encoder (world-sound → brain) | undecided — mel favourite (raw costs 12–25×, measured) | — | HR audio-entry bakeoff (queued); PL.* applies here too | raw vs mel vs tokens vs no-audio null |
 | Language grounding (word → lived skill) | undecided — skills-then-language ordering unproven | — | LG bakeoff (queued; doc needs completeness check) | grounding approaches + the ordering experiment |
 
-| Smell (olfaction) | **VACANT — sense not yet built** | — | under research (FROZEN_VS_PLASTIC.md) | finds food/fire/decay through occlusion |
-| Taste (gustation) | **VACANT — sense not yet built** | — | under research | one-trial aversion learning; poison |
-| Voice (vocalisation) | **VACANT — he cannot make a sound** | — | needs a spec | prerequisite for emergent language + GEN.02 |
+| Smell (olfaction) | **VACANT — sense not yet built**, but no longer unspecced: `SM.01` (field fidelity) + `SM.02` (occluded food) registered 2026-08-10 | — | SM.01 is CPU and runnable today | finds food/fire/decay through occlusion |
+| Taste (gustation) | **VACANT — sense not yet built**, `TA.01`–`TA.03` registered 2026-08-10 | — | TA.01 (poison fixture) is CPU and runnable today | one-trial aversion learning; poison |
+| Voice (vocalisation) | **VACANT — he still cannot make a sound**, but `VO.01`/`VO.02` registered 2026-08-10 | — | VO.01 is CPU, depends only on PG.5 (PASS) — the cheapest constitutional gap left | prerequisite for emergent language + GEN.02 |
 | Language acquisition | LLM-as-parent (speaks to him; he learns by hearing) | **BY DECREE** (owner 2026-08-09) | LG family + LG.00 anti-puppet | pure from-scratch; critical-period |
 
 ### DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK.

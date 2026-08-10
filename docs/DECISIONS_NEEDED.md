@@ -672,3 +672,31 @@ null. PG.5 already ships the modal-resonator synthesis and PG.7 already ships
 the leak-control pattern to copy.
 
 *Full working in `docs/OVERSIGHT.md` §3.2.*
+
+**BUILDER ACTION 2026-08-10 — three of the five are now registered; the ask that
+remains is narrower.** `SM.01`/`SM.02` (smell), `TA.01`–`TA.03` (taste) and
+`VO.01`/`VO.02` (voice) were registered verbatim from
+`FROZEN_VS_PLASTIC.md` §8.6 (registry 139→146, cross-check clean). They are now
+visible to `run next`, `run blocked` and `run status`, and `SM.01`, `TA.01` and
+`VO.01` are all CPU-budget with resolving dependencies — buildable without you.
+
+**PAIN and TEMPERATURE were deliberately NOT registered, and this is the part
+that needs you.** Neither has a free-standing design to register:
+
+- *temperature* is `SURVIVAL_WORLD.md` W.1/W.3 — it arrives with an entire
+  survival world (thermal ODE, shelter, `sky_occlusion`), so registering it is a
+  scope decision about building W, not about a sense;
+- *pain* is an open ARM inside `NEEDS_AND_DEATH.md` §2.9 (tonic `i` vs a
+  separate phasic `−Δi` channel), which that document itself calls *"a live
+  question, not a settled design"*. Registering it as written would decide by
+  argument a question the doc queues for a bakeoff — law 3.
+
+So the remaining ask is: **do you want the W family (temperature, and with it
+shelter — the only mechanism in the design that teaches construction) scheduled
+now, or after the LC bakeoff finishes?** Pain needs no decision from you; it
+needs NE.04's arm to run.
+
+Both are now reported as `ABSENT` by `python -m experiments.run senses` every
+time it is run — the outside-reference audit `LESSONS.md:783` prescribed, built
+and gated as **T0.20** in the same commit. The hole is no longer invisible; it
+is merely open.

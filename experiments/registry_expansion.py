@@ -227,6 +227,49 @@ EXPANSION: list[Spec] = [
                "which runs the fixture first and refuses to report a clean "
                "scan it may not have performed."),
 
+    Spec("T0.20", 0, "The sensory inventory is audited against biology, not against our own map",
+         hypothesis="`experiments/senses.py` reports, for every entry of the "
+                    "HUMAN sensory inventory, whether the live registry claims "
+                    "it — and it can see the bad case: a sense whose specs were "
+                    "never written reads ABSENT, a declared spec id that no "
+                    "longer resolves LOSES its coverage rather than keeping it, "
+                    "and a spec that merely CONTAINS a sense's word buys no "
+                    "coverage at all.",
+         falsified_by="Any of the six properties failing. Above all P4: if a "
+                      "decoy spec that merely mentions a sense reads as "
+                      "coverage, this audit has reproduced the exact artifact "
+                      "that hid the hole — the overseer's grep matched 'voiced' "
+                      "in PG.5 and voice did not exist.",
+         null_baseline="An EMPTY registry: every entry of the inventory must "
+                       "read ABSENT. If any sense reads covered against no "
+                       "specs at all, the audit is reading its own declarations "
+                       "instead of the ladder, and it would report coverage for "
+                       "a repository containing nothing.",
+         metric="properties_failed", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.01"],
+         control="The organ that FAILED, kept as executable code: coverage by "
+                 "keyword scan over spec text, which is what the overseer ran "
+                 "by hand. Against a registry with the SM/TA/VO families "
+                 "removed and PG.5's 'voiced' decoy left in, it must report "
+                 "smell/taste/voice as COVERED — breaking P3 and P4 — while the "
+                 "declaration-based audit reports them ABSENT. A control that "
+                 "also reports ABSENT is not a decoy and this test measures "
+                 "nothing (T0.08 property 5, T0.16, T0.19).",
+         kills="`run senses` as a trustworthy report. If the battery cannot be "
+               "made to pass, the inventory audit is deleted rather than kept "
+               "as a green light nobody may rely on.",
+         notes="SCAR: OVERSIGHT.md 3.2, 2026-08-10 — smell, taste, voice, pain "
+               "and temperature had ZERO specs among 137, and no organ could "
+               "say so, because every organ measures this project against what "
+               "it wrote down. LESSONS.md:783 named that blindness 30 hours "
+               "earlier and prescribed 'at least one recurring audit measured "
+               "against a reference from OUTSIDE the project's own documents'; "
+               "a lesson prescribing a guard is not a guard. `INVENTORY` is "
+               "that outside reference and is deliberately NOT derived from "
+               "LADDER or from GOAL.md's prose: adding specs cannot shrink it. "
+               "It reports; it never gates a build, because a red exit would "
+               "tempt someone to shrink the inventory to clear it."),
+
     Spec("T0.19", 0, "The bakeoff's `screen` gate eliminates arms without lowering the bar",
          hypothesis="Under `Spec.gate_mode='screen'` an arm below the 3-sigma "
                     "learning gate is ELIMINATED rather than VOIDing the run, "
@@ -1628,4 +1671,267 @@ EXPANSION: list[Spec] = [
                "normal walking contact) which alpha is calibrated against, and "
                "fixes n and m in the drive function. Every number in 2.2 is a "
                "PROPOSAL until this spec replaces it with a measurement."),
+
+    # ══ THE MISSING SENSES — smell, taste, voice ════════════════════════
+    #
+    # Registered 2026-08-10 in response to OVERSIGHT.md §3.2 (RANK 1 for
+    # drift) and FOR THE BUILDER item 7: five senses GOAL.md calls
+    # constitutional had ZERO specs among 137, which made them invisible to
+    # `run next`, `run blocked`, `run status` and the Review — a capability
+    # that was never registered reads as completeness in every organ we have.
+    #
+    # VERBATIM from docs/research/FROZEN_VS_PLASTIC.md §8.6. No threshold was
+    # edited during integration (INTEGRATION_QUEUE protocol step 3).
+    #
+    # CROSS-CHECK (protocol step 1), run 2026-08-10 over docs/research/*.md and
+    # docs/LESSONS.md for `smell|olfact|taste|gustat|voice|vocal`:
+    #   - NEEDS_AND_DEATH.md — no conflict; it designs the DRIVES, not the
+    #     exteroceptive channels. Its only overlap is the poison/illness
+    #     insult TA.01 needs, which it supplies rather than contradicts.
+    #   - SURVIVAL_WORLD.md — supplies the world content (§8.7's real cost);
+    #     no refutation.
+    #   - UNIFIED_BRAIN.md / FROZEN_VS_PLASTIC.md §P2 — REINFORCES: a channel
+    #     absent during the early transient may never integrate, so these are
+    #     wired at W0 with content arriving at W1. No conflict.
+    #   - LESSONS.md — the placebo-channel and blind-probe lessons are already
+    #     carried inside these specs' own controls (SM.02 (b), TA.01's
+    #     colour-coded variant, VO.01's muted emitter).
+    # NOT registered here, and why: PAIN and TEMPERATURE are also 0-of-137 but
+    # their designs are NOT free-standing — temperature is SURVIVAL_WORLD.md
+    # W.1/W.3 (a whole survival world) and pain is an ARM inside
+    # NEEDS_AND_DEATH.md §2.9, explicitly "a live question, not a settled
+    # design". Registering either as written would prejudge an open bakeoff.
+    # They stay ABSENT and are reported so by `run senses` (T0.20), which is
+    # the guard that keeps this hole visible instead of invisible.
+
+    # ── SM: smell ───────────────────────────────────────────────────────
+
+    Spec("SM.01", 2, "The odour field obeys its own pre-registered rules",
+         hypothesis="An Odour overlay in the Water pattern produces "
+                    "concentrations that match the declared field model to "
+                    "within 1%: inverse-exponential falloff with distance for "
+                    "O1, downwind displacement of the peak proportional to wind "
+                    "speed for O2, and non-zero concentration at a receiver "
+                    "with NO line of sight to the source (odour passes "
+                    "occlusion; light does not).",
+         falsified_by="Concentration at an occluded receiver is zero, or the "
+                       "wind term does not move the peak - then the field is a "
+                       "distance sensor wearing the word 'smell' and no value "
+                       "test built on it means anything.",
+         null_baseline="A receiver at the same distance with the source "
+                       "DISABLED must read the noise floor.",
+         metric="field_rule_max_deviation", budget=Budget.CPU, seeds=3,
+         depends_on=["PG.1"],
+         control="A DELIBERATELY BROKEN variant (wind term dropped) must be "
+                 "CAUGHT by the same assertions - else the fixture checker is "
+                 "blind and its pass means nothing (the PG.5 precedent).",
+         kills="SM.02 and SM.03. A value test on a leaky or trivial field "
+               "measures the field.",
+         notes="ARMS for the field model, decided by cost since all three can "
+               "satisfy the rules above: O1 static exponential (free, O(sources) "
+               "per sample); O2 + analytic drifting plume + one mj_ray per "
+               "source per sample for occlusion; O3 Farrell-style filaments for "
+               "TURBULENT INTERMITTENCY. O1 is the control that must be beaten "
+               "in SM.02: if O1 is as good as O2/O3, smell is a distance sensor "
+               "and the intermittency literature does not apply to us. Sampled "
+               "at 5 Hz (inside the 4-12 Hz mammalian sniff band). C=4 channels "
+               "- food, decay, smoke, water - tagged per source, never "
+               "chemistry (the caveman standard). Two receiver sites, left and "
+               "right of the head, so bilateral comparison is available. "
+               "MEASURE the O3 cost before adopting it; O1/O2 are expected to "
+               "sit near the fire CA's measured 0.06% of one core."),
+
+    Spec("SM.02", 4, "Smell finds what vision cannot see",
+         hypothesis="A Jack with the odour modality reaches OCCLUDED food in "
+                    "fewer simulated seconds than an identical no-smell twin, "
+                    "AND shows no significant advantage when the same food is "
+                    "in plain sight.",
+         falsified_by="No advantage when occluded (smell is decorative), OR an "
+                      "EQUAL advantage when visible (the channel is helping for "
+                      "some reason other than occlusion - extra capacity, a "
+                      "distance cue, or a leak).",
+         null_baseline="The no-smell twin, identical in every other respect "
+                       "including token count; PLUS a PLACEBO odour channel of "
+                       "matched dimension carrying noise.",
+         metric="occluded_minus_visible_advantage", budget=Budget.GPU, seeds=3,
+         depends_on=["SM.01", "PG.6"],
+         control="TWO that must fail. (a) SHUFFLED FIELD: odour concentrations "
+                 "drawn from a different episode's source layout must give NO "
+                 "advantage. (b) The PLACEBO channel must give no advantage. "
+                 "And ONE that must pass: with the occluder removed the smell "
+                 "and no-smell twins must be statistically indistinguishable.",
+         kills="The odour modality. A sense whose ablation column is "
+               "placebo-indistinguishable loses its parameters (Tier-3), and "
+               "this document carves no exception for a constitutional sense - "
+               "constitutional means it EXISTS, not that it is exempt from "
+               "earning its wiring.",
+         notes="The conditional IS the claim, and it mirrors the measured shape "
+               "of the audio result (ManiWAV, Audio-VLA: audio pays when vision "
+               "is occluded or ambiguous and approximately nothing otherwise). "
+               "A test that only measures the occluded condition cannot "
+               "distinguish 'smell works' from 'an extra channel helped'."),
+
+    # ── TA: taste ───────────────────────────────────────────────────────
+
+    Spec("TA.01", 2, "The poison fixture: sub-lethal first dose, visually identical twin",
+         hypothesis="Two plant types are IDENTICAL to a visual probe (a "
+                    "classifier on rendered frames is at chance) and DISTINCT "
+                    "to the taste vector; the toxic one produces a delayed, "
+                    "SURVIVABLE interoceptive insult on a first small dose, "
+                    "following a declared dose-response curve.",
+         falsified_by="A visual probe distinguishes them above chance (then "
+                      "TA.02 is a colour-discrimination task), or the first "
+                      "dose is lethal (then there is nothing to learn from - "
+                      "one-trial learning requires surviving trial one).",
+         null_baseline="Chance for the visual probe over the declared "
+                       "candidate set.",
+         metric="visual_probe_accuracy_x_first_dose_survival",
+         budget=Budget.CPU, seeds=3, depends_on=["PG.6"],
+         control="A DELIBERATELY COLOUR-CODED variant must be classified WELL "
+                 "above chance by the same probe - else the probe is blind and "
+                 "its null result is worthless (PG.7's precedent exactly).",
+         kills="TA.02.",
+         notes="Neophobia rides here: the world must make sampling cheaper than "
+               "consuming, and Jack carries a small innate prior toward small "
+               "first bites - one of GOAL.md's 'innate reflex priors', finally "
+               "used. The delay D between ingestion and illness is declared in "
+               "this spec and is the quantity TA.02's difficulty scales with."),
+
+    Spec("TA.02", 5, "Conditioned taste aversion: learning from ONE exposure",
+         hypothesis="After exactly ONE ingestion of the toxic plant followed by "
+                    "delayed illness, Jack avoids that plant on the next "
+                    "encounter above a pre-registered rate, and the aversion "
+                    "PERSISTS ACROSS A DEATH via the diary.",
+         falsified_by="Avoidance at the base rate after one exposure, or "
+                       "aversion that does not survive the life boundary. "
+                       "Either way the fastest learning in biology has no "
+                       "analogue in this system.",
+         null_baseline="Base encounter/consumption rate for the SAFE twin; and "
+                       "a standard-RL agent with the same reward and no taste "
+                       "trace, which is expected to require many exposures - "
+                       "the whole point is that a discounted return cannot "
+                       "bridge the delay D.",
+         metric="one_trial_avoidance_rate", budget=Budget.GPU, seeds=3,
+         depends_on=["TA.01"],
+         control="FOUR. Three MUST FAIL: (a) CUE-CONSEQUENCE SWAP - pairing the "
+                 "illness with an AUDIOVISUAL cue instead of a taste must "
+                 "produce no aversion, or far weaker aversion (Garcia & "
+                 "Koelling 1966); (b) SHUFFLED TASTE - illness paired with a "
+                 "random taste vector must not produce avoidance of the actual "
+                 "poison; (c) the PLACEBO taste channel must not support "
+                 "aversion. One MUST PASS: pairing an audiovisual cue with a "
+                 "FAST external insult (shock-analogue) MUST produce avoidance "
+                 "- if nothing one-shot works, (a) failing proves nothing.",
+         kills="The taste fast path. If aversion forms equally to any cue, the "
+               "mechanism is a generic one-shot memoriser and the "
+               "cue-consequence prior - the thing that makes it BIOLOGICAL "
+               "rather than a hack - is not there.",
+         notes="Control (a) is the single most beautiful control available to "
+               "this project: Garcia & Koelling's 1966 design is ALREADY a "
+               "control-that-must-fail, published sixty years before this "
+               "ladder existed. Standard RL cannot do this task - with gamma<1 "
+               "and D of thousands of steps the credit does not arrive - so a "
+               "dedicated fast path is REQUIRED, and it is one of the two such "
+               "paths this project budgets for (FROZEN_VS_PLASTIC.md 9.4). "
+               "VERIFY Garcia & Koelling 1966 and the CTA delay tolerance "
+               "against the primary sources before running; both are currently "
+               "carried as [k]."),
+
+    Spec("TA.03", 3, "Taste earns its parameters",
+         hypothesis="Ablating the taste modality degrades survival in a world "
+                    "containing the visually-identical toxic twin, "
+                    "significantly above the PLACEBO column of UB.11.",
+         falsified_by="No degradation - taste is decorative and loses its "
+                      "wiring (not its constitutional existence: the owner "
+                      "ruled the sense EXISTS; this spec decides whether the "
+                      "current implementation of it is load-bearing).",
+         null_baseline="UB.11's placebo modality column, re-estimated under "
+                       "this architecture.",
+         metric="taste_ablation_margin_over_placebo", budget=Budget.GPU,
+         seeds=3, depends_on=["TA.02", "UB.11"],
+         kills="The current WIRING of taste - its tokens, its stem, its fast "
+               "path - if the column is placebo-indistinguishable. Not the "
+               "sense itself: the owner ruled that it exists.",
+         control="In a world with NO toxic plants, the taste ablation must "
+                 "produce NO degradation. If removing taste hurts in a world "
+                 "where taste is uninformative, the matrix is measuring "
+                 "capacity rather than information.",
+         notes="Registered so that a constitutional sense still has to earn its "
+               "IMPLEMENTATION. GOAL.md's Tier-3 rule and the owner's decree do "
+               "not conflict: the decree says he HAS taste; this says our "
+               "wiring of it must do something measurable or be rebuilt."),
+
+    # ── VO: voice ───────────────────────────────────────────────────────
+
+    Spec("VO.01", 2, "He can make a sound, and it is heard as a sound in the world",
+         hypothesis="A policy-driven emission (f0, brightness, amplitude, "
+                    "duration) is rendered by ContactAudio into the shared "
+                    "stereo stream, is recoverable by a probe on a LISTENER's "
+                    "audio input, and attenuates with distance and occlusion by "
+                    "the amounts the fixture declares.",
+         falsified_by="The emission is not recoverable at the listener, or does "
+                      "not attenuate - then it is a wire between two brains "
+                      "wearing the word 'voice'.",
+         null_baseline="A MUTED emitter: the listener's probe must be at "
+                       "chance.",
+         metric="listener_recovery_x_attenuation_error", budget=Budget.CPU,
+         seeds=3, depends_on=["PG.5"],
+         control="A listener BEHIND A WALL must hear it attenuated by the "
+                 "declared amount, and a listener with the emitter muted must "
+                 "hear nothing above the noise floor.",
+         kills="Any emergent-signalling claim, and the two-way half of the "
+               "talkative-parent design (FROZEN_VS_PLASTIC.md 10.5, 10.7).",
+         notes="Cheapest constitutional gap in the audit: ContactAudio "
+               "synthesises in microseconds per event and the path already "
+               "exists. The action space grows by 4 dimensions. Deliberately "
+               "NOT a symbolic channel - an emergent protocol must survive "
+               "distance, occlusion and the listener's own encoder, and its "
+               "information content must be measurable AT THE EAR."),
+
+    Spec("VO.02", 5, "Do two Jacks invent a signal? (gated on a second Jack)",
+         hypothesis="With two Jacks in one world and a coordination problem "
+                    "that pays only if they act differently, the mutual "
+                    "information between an emitter's acoustic output and the "
+                    "referent, ESTIMATED AT THE LISTENER'S EAR, rises above the "
+                    "shuffled-channel floor, and coordination success rises "
+                    "with it.",
+         falsified_by="Coordination rises while I(signal;referent) at the ear "
+                      "stays at the floor - the pair coordinated through "
+                      "something other than the signal (position, timing, turn "
+                      "count), which is this field's most common false "
+                      "positive.",
+         null_baseline="THREE, all cheap and all mandatory (arXiv:1903.05168): "
+                       "(i) SCRAMBLED MESSAGES - permute the emission before "
+                       "delivery; (ii) UNTRAINED COMMUNICATION PARAMETERS - "
+                       "never train the emission head; (iii) a MUTED pair. "
+                       "Lowe et al. measured speaker consistency essentially "
+                       "UNCHANGED under (i) and (ii): 0.202 default vs 0.198 "
+                       "scrambled vs 0.171 untrained on the 2x2 game. Any "
+                       "metric that cannot separate those three is measuring "
+                       "the shared trunk, not communication.",
+         metric="ear_mutual_information_over_scrambled", budget=Budget.GPU,
+         seeds=3, depends_on=["VO.01"],
+         control="POSITIVE LISTENING, not merely positive signalling: the "
+                 "causal influence of communication must exceed its floor. In "
+                 "Lowe et al., 89.3% (2x2), 97.9% (4x4) and 99.9% (8x8) of "
+                 "games sat within 1.02x of the CIC minimum while LOOKING like "
+                 "they communicated. Report the floor and the measured value, "
+                 "never the value alone. Diagnostic: with SEPARATE emission and "
+                 "action networks their speaker consistency collapses from "
+                 "0.510 to 0.124 (4x4), which localises the artifact.",
+         kills="Every claim that Jack invented a language.",
+         notes="BLOCKED ON GEN.02 (a second Jack), and that is the point: a "
+               "lone agent has no reason to signal. STAGE IT CHEAPLY - the "
+               "floor of this literature is TABULAR: 2 agents, ZERO "
+               "parameters, 2 states/2 signals/2 acts, four Polya urns, "
+               "Roth-Erev reinforcement, convergence to a signalling system "
+               "with probability 1 (Argiento, Pemantle, Skyrms & Volkov 2009), "
+               "measured at ~0.2 s of one CPU core for 10^5 plays. Run that "
+               "as the harness check first. The 3x3 game converges only ~90.4% "
+               "of the time under basic reinforcement (Barrett 2009); "
+               "Roth-Erev WITH FORGETTING fixes it to 100% up to 32 symbols at "
+               "no extra cost. EXPECT A HOLISTIC PROTOCOL: compositionality "
+               "requires a re-learning bottleneck plus an expressivity "
+               "constraint (FROZEN_VS_PLASTIC.md 10.6b), not a bigger "
+               "vocabulary."),
 ]

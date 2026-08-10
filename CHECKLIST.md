@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 57 / 139 demonstrated
+## 58 / 147 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -282,6 +282,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Feeding each PASSing entry's RECORDED metrics back through its COMMITTED `_check` re-derives PASS for all of them; and deleting the control metrics from that same call changes the verdict for every spec that ran a control, so no gate certifies a capability while ignoring the condition that was supposed to fail.
       - _dies if:_ Any PASS whose committed gate no longer accepts its own recorded numbers; any gate that still returns PASS with `control_metrics = {}`; any spec declaring a control it never ran; any entry the scan could not judge; or the undeclared-control debt growing past its ratchet.
       - _then delete:_ Nothing. It re-arms law 2 ('a control that also passes means the test measures nothing'), which was unenforceable for any gate that never read its control.
+- [x] **T0.20** The sensory inventory is audited against biology, not against our own map
+      - _asserts:_ `experiments/senses.py` reports, for every entry of the HUMAN sensory inventory, whether the live registry claims it — and it can see the bad case: a sense whose specs were never written reads ABSENT, a declared spec id that no longer resolves LOSES its coverage rather than keeping it, and a spec that merely CONTAINS a sense's word buys no coverage at all.
+      - _dies if:_ Any of the six properties failing. Above all P4: if a decoy spec that merely mentions a sense reads as coverage, this audit has reproduced the exact artifact that hid the hole — the overseer's grep matched 'voiced' in PG.5 and voice did not exist.
+      - _then delete:_ `run senses` as a trustworthy report. If the battery cannot be made to pass, the inventory audit is deleted rather than kept as a green light nobody may rely on.
 - [x] **T0.19** The bakeoff's `screen` gate eliminates arms without lowering the bar
       - _asserts:_ Under `Spec.gate_mode='screen'` an arm below the 3-sigma learning gate is ELIMINATED rather than VOIDing the run, and every guard that makes that safe holds: two survivors are still required, the winner still cleared 3 sigma, the eliminated arms are still recorded, an escaped control still inverts the verdict to VOID, `validity` behaves exactly as before, and the mode is refused without a written rationale on the committed Spec.
       - _dies if:_ Any of the seven properties failing — above all P2: if `screen` changes the verdict of PS.01/J round 1, the mode was reverse-engineered to rescue the run that motivated it and must be reverted.
@@ -556,3 +560,49 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ With PG.8's humanoid under random action, energy and integrity both traverse a usable range (10th-90th percentile spread >= 0.3 over 3,000 decisions, neither pinned at 0 nor at 1), a fall from the ladder platform costs 0.10-0.20 integrity, floor food supports subsistence at rest but not activity, and the DO-NOTHING policy is strictly dominated: its energy reaches the weakness floor while an active random policy's does not.
       - _dies if:_ A random agent never depletes (the drive is inert and cannot pressure anything), or always flatlines at zero within a minute (no policy can learn under it), or the statue is NOT dominated (the dark room is a stable optimum and homeostasis will produce a corpse).
       - _then delete:_ The specific numbers in PURPOSE_AND_SCAFFOLDING.md 2.2-2.3. It cannot kill the idea, only the parameterisation — which is why it runs before anything trains and after PS.00.
+- [ ] **SM.01** The odour field obeys its own pre-registered rules
+      - _asserts:_ An Odour overlay in the Water pattern produces concentrations that match the declared field model to within 1%: inverse-exponential falloff with distance for O1, downwind displacement of the peak proportional to wind speed for O2, and non-zero concentration at a receiver with NO line of sight to the source (odour passes occlusion; light does not).
+      - _dies if:_ Concentration at an occluded receiver is zero, or the wind term does not move the peak - then the field is a distance sensor wearing the word 'smell' and no value test built on it means anything.
+      - _then delete:_ SM.02 and SM.03. A value test on a leaky or trivial field measures the field.
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **SM.02** Smell finds what vision cannot see
+      - _asserts:_ A Jack with the odour modality reaches OCCLUDED food in fewer simulated seconds than an identical no-smell twin, AND shows no significant advantage when the same food is in plain sight.
+      - _dies if:_ No advantage when occluded (smell is decorative), OR an EQUAL advantage when visible (the channel is helping for some reason other than occlusion - extra capacity, a distance cue, or a leak).
+      - _then delete:_ The odour modality. A sense whose ablation column is placebo-indistinguishable loses its parameters (Tier-3), and this document carves no exception for a constitutional sense - constitutional means it EXISTS, not that it is exempt from earning its wiring.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **TA.01** The poison fixture: sub-lethal first dose, visually identical twin
+      - _asserts:_ Two plant types are IDENTICAL to a visual probe (a classifier on rendered frames is at chance) and DISTINCT to the taste vector; the toxic one produces a delayed, SURVIVABLE interoceptive insult on a first small dose, following a declared dose-response curve.
+      - _dies if:_ A visual probe distinguishes them above chance (then TA.02 is a colour-discrimination task), or the first dose is lethal (then there is nothing to learn from - one-trial learning requires surviving trial one).
+      - _then delete:_ TA.02.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **TA.02** Conditioned taste aversion: learning from ONE exposure
+      - _asserts:_ After exactly ONE ingestion of the toxic plant followed by delayed illness, Jack avoids that plant on the next encounter above a pre-registered rate, and the aversion PERSISTS ACROSS A DEATH via the diary.
+      - _dies if:_ Avoidance at the base rate after one exposure, or aversion that does not survive the life boundary. Either way the fastest learning in biology has no analogue in this system.
+      - _then delete:_ The taste fast path. If aversion forms equally to any cue, the mechanism is a generic one-shot memoriser and the cue-consequence prior - the thing that makes it BIOLOGICAL rather than a hack - is not there.
+
+### Tier 3 — ABLATION — does it earn its parameters?
+
+- [ ] **TA.03** Taste earns its parameters
+      - _asserts:_ Ablating the taste modality degrades survival in a world containing the visually-identical toxic twin, significantly above the PLACEBO column of UB.11.
+      - _dies if:_ No degradation - taste is decorative and loses its wiring (not its constitutional existence: the owner ruled the sense EXISTS; this spec decides whether the current implementation of it is load-bearing).
+      - _then delete:_ The current WIRING of taste - its tokens, its stem, its fast path - if the column is placebo-indistinguishable. Not the sense itself: the owner ruled that it exists.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **VO.01** He can make a sound, and it is heard as a sound in the world
+      - _asserts:_ A policy-driven emission (f0, brightness, amplitude, duration) is rendered by ContactAudio into the shared stereo stream, is recoverable by a probe on a LISTENER's audio input, and attenuates with distance and occlusion by the amounts the fixture declares.
+      - _dies if:_ The emission is not recoverable at the listener, or does not attenuate - then it is a wire between two brains wearing the word 'voice'.
+      - _then delete:_ Any emergent-signalling claim, and the two-way half of the talkative-parent design (FROZEN_VS_PLASTIC.md 10.5, 10.7).
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **VO.02** Do two Jacks invent a signal? (gated on a second Jack)
+      - _asserts:_ With two Jacks in one world and a coordination problem that pays only if they act differently, the mutual information between an emitter's acoustic output and the referent, ESTIMATED AT THE LISTENER'S EAR, rises above the shuffled-channel floor, and coordination success rises with it.
+      - _dies if:_ Coordination rises while I(signal;referent) at the ear stays at the floor - the pair coordinated through something other than the signal (position, timing, turn count), which is this field's most common false positive.
+      - _then delete:_ Every claim that Jack invented a language.

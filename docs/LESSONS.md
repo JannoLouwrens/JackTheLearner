@@ -1441,3 +1441,37 @@ inherited by every future caller of a layer that no longer has the problem.
 caveats, workarounds and "must not reuse" instructions attached to the OLD one
 and re-derive each. A warning that is merely stale is worse than one that is
 wrong: nobody re-checks it, and it silently shapes designs downstream.
+
+## A lesson that prescribes a guard is not a guard
+
+On 2026-08-09 this file recorded AMBITION blindness — *"the map is the thing
+with the hole"* — after the owner found in one evening that smell, taste, voice
+and body-schema had zero specs among 136. It named the fix in the same
+paragraph: *"at least one recurring audit must measure against a reference from
+OUTSIDE the project's own documents."* Thirty hours and thirteen productive loop
+iterations later the overseer re-measured: **the hole was exactly the same
+size**, and no such organ existed. The lesson had been read, agreed with, and
+was sitting in the file every iteration opens with.
+
+Nothing was neglected out of laziness. Each iteration took the first item in
+priority order, and a prescription that lives in prose is in no priority order
+at all — `run next` cannot schedule it, `run status` cannot count it, and no
+spec depends on it. It competed for attention against work the machine could
+actually point at, and lost every hour, silently.
+
+**Rule:** when a lesson names a missing mechanism, the same commit must land the
+mechanism, a registered spec for it, or a queue entry — something an organ can
+see. The test of whether the loop will do it is not whether an agent agrees with
+it; it is whether some command in this repo will *say its name* unprompted. Text
+that only a reader can act on is a wish, and this repo already knows what
+happens to claims nobody re-checks (`a caveat outlives the mechanism it
+guarded`, and the README that read "Working" for eleven ungradient-ed
+components).
+
+*Actioned 2026-08-10 rather than merely recorded:* `experiments/senses.py` +
+`run senses`, gated by **T0.20**, whose null is an empty registry (everything
+must read ABSENT) and whose control is the failed organ kept executable — the
+keyword grep that matched "voiced" in PG.5 and concluded nothing about voice.
+Its reference list is human biology and is deliberately not derived from the
+ladder, so registering specs can never shrink the standard. It reports and never
+gates a build, because a red exit is an incentive to shrink the inventory.

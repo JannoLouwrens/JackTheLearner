@@ -1866,3 +1866,67 @@ idea. Nothing was tuned to make it green and nothing should be.
 LC.03 stays blocked on PS.01 and that is correct: a screening bakeoff run under
 a drive whose energy term is refuted would arbitrate learning cores on a world
 that starves every actor.
+
+---
+
+## 2026-08-10 06:07 UTC — the five missing senses: three registered, two escalated, and the hole made visible
+
+**Took OVERSIGHT.md FOR THE BUILDER items 7 and 8** (RANK 1 for drift, carried
+with item 8 for 30 hours). Not PS.01's follow-up: PS.01's two handoff units are
+still the right next science, but the auditor's finding outranks them and this
+one is the only item on the list that changes what Jack can *become*.
+
+**Registered, verbatim from `FROZEN_VS_PLASTIC.md` §8.6, registry 139 → 146:**
+`SM.01`/`SM.02` (smell), `TA.01`/`TA.02`/`TA.03` (taste), `VO.01`/`VO.02`
+(voice). No threshold edited during integration. Cross-check (protocol step 1)
+over `docs/research/*.md` + `LESSONS.md`: no refutation — NEEDS_AND_DEATH
+designs the drives and *supplies* TA.01's delayed illness rather than
+contradicting it; §P2 (a channel absent during the early transient may never
+integrate) reinforces wiring at W0 with content at W1. Step 2: all 7 ids new,
+no prefix shadowing, every `depends_on` resolves. **`SM.01`, `TA.01` and
+`VO.01` are in `run next` as of this commit** — three senses that no command in
+this repo could see this morning are now schedulable CPU work.
+
+**PAIN and TEMPERATURE were deliberately NOT registered**, and that is a finding
+rather than an omission. Neither has a free-standing design: temperature is
+`SURVIVAL_WORLD` W.1/W.3 (it arrives with an entire survival world), and pain is
+an open ARM inside `NEEDS_AND_DEATH` §2.9 which that document itself calls *"a
+live question, not a settled design"*. Registering either as written would
+decide by argument a question queued for a bakeoff — law 3. Escalated to
+`DECISIONS_NEEDED.md` as a narrowed ask (schedule the W family now or after LC?),
+and they now read **ABSENT** in a report anyone can run.
+
+**The guard, which is the half that makes it unrepeatable:** `experiments/senses.py`
++ `python -m experiments.run senses`, gated as **T0.20 — PASS** (6/6 properties,
+0.29 s). It is the only check in this system whose standard comes from *outside*
+the repository: `INVENTORY` is the human sensory inventory and is not derived
+from `LADDER` or from GOAL.md's prose, so registering specs can never shrink it.
+Coverage is claimed by explicit declaration, never by grep — the failure it
+guards was itself a grep artifact (the overseer's scan matched "voiced" in PG.5
+and voice did not exist). Null: an empty registry, where all 10 entries must read
+ABSENT. Control (must fail, and does, on exactly P3 and P4): the failed organ
+kept executable — keyword coverage over spec text, which against a registry with
+SM/TA/VO deleted reports smell, taste and voice as *covered*. It reports and
+never gates a build; a red exit would be an incentive to shrink the inventory.
+
+Measured today: **8/10 of the inventory registered, 2 ABSENT, 2 demonstrated**
+(sight via PG.6; hearing via PG.5+PG.7).
+
+`LESSONS.md` gained *"a lesson that prescribes a guard is not a guard"* — the
+2026-08-09 lesson named this exact hole and prescribed this exact organ, and
+thirteen productive iterations passed without building it, because a
+prescription in prose is in no priority order at all. New rule: a lesson naming
+a missing mechanism must land the mechanism, a spec, or a queue entry in the
+same commit — something `run next` can say the name of.
+
+**NEXT ITERATION — `VO.01`, the cheapest constitutional gap in the project.**
+CPU, `depends_on=["PG.5"]` (PASS), and the machinery exists:
+`ContactAudioSynth` in `ContactAudio.py` already has `set_listener(pos, yaw)`,
+`_voice(event)` modal synthesis, `render(duration, mode="stereo")` and
+`decode_lateral(stereo)`; `pg_7_hns_leakage.py` ships the leak-control pattern
+to copy. What to add: 4 policy-driven emission parameters (f0, brightness,
+amplitude, duration) injected as an `AudioEvent` at the emitter's body, a probe
+recovering them at a *listener's* ear, and the two controls VO.01 pre-registers
+— a muted emitter must leave the probe at chance, and a listener behind a wall
+must hear the declared attenuation. After that, PS.01's two handoff units above
+are still open and still the right science.

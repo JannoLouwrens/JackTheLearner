@@ -2570,6 +2570,38 @@
       "spec_id": "T0.19",
       "status": "PASS"
     },
+    "T0.20": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "f7a4d4c",
+      "control_metrics": {
+        "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
+        "inventory_size": 10.0,
+        "properties_checked": 6.0,
+        "properties_failed": 2.0,
+        "registry_size": 147.0,
+        "senses_absent_live": 2.0
+      },
+      "duration_s": 0.29,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "50357efa0cdbb096",
+      "message": "",
+      "metrics": {
+        "failed_names": "",
+        "inventory_size": 10.0,
+        "properties_checked": 6.0,
+        "properties_failed": 0.0,
+        "registry_size": 147.0,
+        "senses_absent_live": 2.0
+      },
+      "ran_at": "2026-08-10T06:13:55",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.20",
+      "status": "PASS"
+    },
     "T1.01": {
       "amended": [],
       "attempt": 1,
