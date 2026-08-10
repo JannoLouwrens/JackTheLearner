@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 64 / 162 demonstrated
+## 65 / 162 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -583,7 +583,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **TA.01** The poison fixture: sub-lethal first dose, visually identical twin
+- [x] **TA.01** The poison fixture: sub-lethal first dose, visually identical twin
       - _asserts:_ Two plant types are IDENTICAL to a visual probe (a classifier on rendered frames is at chance) and DISTINCT to the taste vector; the toxic one produces a delayed, SURVIVABLE interoceptive insult on a first small dose, following a declared dose-response curve.
       - _dies if:_ A visual probe distinguishes them above chance (then TA.02 is a colour-discrimination task), or the first dose is lethal (then there is nothing to learn from - one-trial learning requires surviving trial one).
       - _then delete:_ TA.02.

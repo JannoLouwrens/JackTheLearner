@@ -2640,3 +2640,81 @@ submitted since the push block lifted.
 **Postscript, same iteration:** `T0.22` re-run from a clean tree (1.33 s, 9/9
 properties, `direct_ledger_reads = 0`) — the board now carries NO dirty stamps.
 Only `PS.01` and `XL.00` remain stale.
+
+## 2026-08-10 16:32 — TA.01 PASS: the poison fixture is honest, and taste stops reading 0/3
+
+Took the standing rule (`ladder_prompt.md`: a GOAL.md commitment with ZERO
+passing specs outranks fan-out) at its word. `run coverage` listed 14 such
+commitments; the cheapest runnable declared spec across all of them, ties
+broken by the commitment with the most declared specs, was **TA.01** — taste,
+3 declared specs, `cpu<10min`, deps `PG.6` — exactly what the previous
+iteration's journal line predicted. **Taste now reads 1 of 3; the board is
+65/162 and 13 commitments still read 0 PASS.**
+
+**What was built.** `experiments/plants.py` (the two plant types, the taste
+vector, the declared dose-response curve, the delayed-malaise scheduler) and
+`experiments/tests/ta_01_poison_fixture.py`. Plants live in their own module
+rather than in `playground.py` because that file is hashed into nine specs'
+`impl_sha` and W1 content used by two specs should not mark nine stale;
+`hns_scene.py` is the precedent.
+
+**Measured, 3 seeds, all gates pre-registered before the run and unchanged:**
+
+    linear probe on 96px frames   0.5108   (chance band 0.425-0.575, two-sided)
+    kNN on segmented features     0.5142
+    both shuffled nulls           0.4825 / 0.4933
+    berry radius R^2              0.6869   (gate 0.40 — the probe HAS eyes)
+    taste probe                   0.9992   (placebo channel 0.5100)
+    colour-coded control          0.9675 linear / 1.0000 kNN  (gate 0.90)
+    first dose (q=0.15)           integrity 1.0 -> 0.8205, survived, fully healed
+    felt vs. the clock            4.64x    (gate 3.0)
+    onset                         30.0 s, nothing before it, full dose lethal
+    curve deviation               1.6e-15, monotone over an 8-point dose grid
+
+**The number that matters most is `radius_r2` and not any accuracy.** The
+headline result is a probe scoring chance, and chance is what a blind probe
+scores too. Three things defend it and all three are gated: the colour-coded
+control (same seed, same draws, only berry hue changes) must be caught by both
+probes; the same ridge on the same frames must recover berry radius; and a
+second, nonlinear probe runs on the nine summary features a leak would actually
+live in (pixel count, mean RGB, bbox, centroid, colour spread) rather than on
+raw pixels, because a linear read-out's null is weak evidence on its own.
+
+**Two things the pilot found that cost nothing to fix and would have cost a
+false certificate.** (1) Binding a second `_Scene` over the first freed its
+renderer and the next 800 frames rendered in ONE second with control accuracy
+1.000 and radius R^2 **-0.008** — PG.6's freed-renderer trap, reproduced from
+scratch, on the arm whose job is to prove the probe can see. Scenes are now
+cached for the process lifetime and each arm carries a canary that returns
+VOID. (2) The shuffled-label null is **not calibrated** on the 5-dim taste
+channel: 0.2725/0.3775/0.725/0.5875/0.285/0.6725 across seeds 0-5, and the mean
+over the registered seeds 0/1/2 is 0.458 — inside the band while wrong on every
+seed, which `_check` (which sees seed means) would have swallowed. Replaced with
+the placebo channel `FROZEN_VS_PLASTIC.md` §8.4 had already specified. New
+LESSONS.md entry: *a shuffled-label null is only a null when the estimator
+collapses under it.*
+
+**Disclosure, one judgment call.** The first recorded run (16:28, PASS, 180.14 s)
+carried a `+dirty` commit stamp because the implementation was still
+uncommitted. I reverted that ledger write in the working tree — it never entered
+git history — committed the implementation unchanged (`886254e`), and re-ran.
+The clean run recorded byte-identical metrics at 16:32 under a clean stamp. The
+DP.00 precedent ("implementation committed BEFORE the recorded run") is the rule
+I should have followed the first time; nothing about the gates or the code
+changed between the two runs.
+
+**What this does and does not license.** TA.02 may now be built: its world has a
+first dose that is survivable and felt, a full dose that kills, a delay of 30 s
+(5% of this world's starvation horizon — inside the 1.4-8.3% band that rat CTA's
+1-6 h maps to), and two plants that a probe with demonstrated eyesight cannot
+tell apart. It does NOT show that Jack survives a poisoning while doing anything
+else — that needs a policy in a live world, and it is TA.02's to show.
+
+**Next iteration.** Under the same standing rule the cheapest runnable member of
+a 0-PASS commitment is now `SM.01` (smell, 2 declared, `cpu<10min`, deps `PG.1`)
+or `VO.01` (voice, 2 declared) — take SM.01, it shares this iteration's shape
+(a world-fidelity certificate with a deliberately-broken positive control) and
+`plants.py` shows where the content belongs. Still open and cheap: `PS.01` and
+`XL.00` remain the only two STALE entries on the board. And the Kaggle quota
+(~18 h) still expires 2026-08-16 with nothing submitted since the push block
+lifted.
