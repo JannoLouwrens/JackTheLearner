@@ -314,3 +314,42 @@ which events move it and how many the run must contain.
 
 **Do NOT register this until PS.01's energy clause is re-derived (a) —** the
 two share a rollout, and re-running the probe twice is the avoidable cost.
+
+---
+
+## FIELD WATCH wk1 CONSUMED by the Review, 2026-08-10 (DAILY)
+
+Source: `docs/FIELD_WATCH.md`, sweep 2026-08-10, four nominations. The scout
+nominates; it never adopts. These are the dispositions. Full reasoning in
+`docs/PROGRESS.md § FOR THE BUILDER`.
+
+**N1 — ACCEPTED, and it is the one to do first.** Design the certificate
+pre-gate for `UB.11` ([arXiv:2607.27017]). `UB.11` is the standing modality
+ablation matrix whose verdict is *"deletion is the default action, not a
+discussion"* — it has a placebo column (negative control) and **no positive
+control**, so it cannot distinguish "this sense is decorative" from "this
+fixture gave this sense nothing to say", and it deletes the encoder either way.
+The certificate probes the raw observations first, proving a sense was
+recoverable before the model is blamed for ignoring it. This is a
+STRENGTHENING of an existing spec gating a DESTRUCTIVE action; register it as a
+mandatory pre-gate, not an optional arm. ~5M params, <1 h on our substrate.
+Take it before UB.9 results begin feeding the matrix.
+
+**N2 — ACCEPTED.** Design bakeoff arms `A4b` (SMWM, [arXiv:2606.20104]) and
+`A4c` (SIGReg/LeJEPA, [arXiv:2511.08544]) for `LEARNING_CORE` §5.4. Both would
+delete A4's EMA target encoder. They enter as ARMS and are decided in the
+arena — law 3, never by argument.
+
+**N4 — ACCEPTED with a caveat that must travel with it.** The entity-collision
+eval protocol ([arXiv:2605.29630]) enters `MEMORY_RETRIEVAL_BAKEOFF` §2 as an
+eval-set DESIGN question. Caveat: it floors BM25 by construction, which is the
+opposite discipline to our lexical-disjointness invariant. Register the design
+question; do not adopt its numbers as a result.
+
+**N3 — REJECTED.** Interoceptive precision allocation ([arXiv:2608.04232]).
+Reason, one line: SYSTEM.md's *no new organ without a scar* — no failure in
+this repo has been traced to uniform interoceptive precision, so there is
+nothing yet for it to fix. (The scout argued against its own nomination on this
+ground and was right to.) **RE-OPEN TRIGGER:** `NE.03` runs and the uniform
+nine-float design underperforms its arms — then this returns with a measured
+scar attached. A rejection without a re-open condition is just forgetting.

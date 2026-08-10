@@ -49,9 +49,13 @@ below and finish it. One spec per iteration is a good iteration.
 
 STATE LIVES IN THE LEDGER, NOT HERE. Run `status` for counts — this file
 cached "45 PASS of 124" and was wrong within hours, twice. This file states
-PRIORITIES; the ledger states facts. Standing history you must know: T2.01
-and T2.02 are VOID (the T0.14 dropout + obs-dim invalidation), and any text
-calling T2.01's plateau "the architecture verdict" is stale and wrong.
+PRIORITIES; the ledger states facts. Standing history you must know: T2.02 is
+VOID (the T0.14 dropout + obs-dim invalidation), and any text calling T2.01's
+plateau "the architecture verdict" is stale and wrong. T2.01 is no longer VOID
+— it RE-RAN on Kaggle 2026-08-10T01:17 and recorded **FAIL**: every seed beat
+random (`all_seeds_beat_random` 1.0) but not by the pre-registered 5 sigma.
+That is a real measurement, not a harness fault, and it is now the single
+largest blocker in the ladder (`run blocked`: frees 26, blocks 36).
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
 0aaa. THIS BOX CAN RENDER. Do not re-escalate it. MuJoCo offscreen rendering
@@ -71,15 +75,17 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    blind sensor. Carry a canary frame and return `Status.VOID`, not FAIL, when
    it moves.
 
-0aa. CHEAPEST HIGH-LEVERAGE WORK IN THE PROJECT, DO IT FIRST: run PG.6 and
-   PG.7 (~40 min CPU, both registered). PG.7 PASSES. PG.6 is IMPLEMENTED as of
-   2026-08-09 (`experiments/tests/pg_6_playground_eyes.py`) and the playground
-   now carries an `eye` camera whose pose is part of the world contract
-   (`EYE_POS`/`EYE_XYAXES`/`EYE_FOVY` in playground.py) — moving it invalidates
-   every visual certificate downstream. FROZEN_VS_PLASTIC.md measured that
-   they unblock NINE specs plus the entire unison ladder — 0 of 37 unison
-   specs currently pass, and this is the gate. Then PL.00 and PL.02 (also
-   runnable today) decide the frozen-vs-plastic constitutional question.
+0aa. DONE — PG.6 and PG.7 both PASS (2026-08-09/10). Do not re-run them as
+   "cheapest work"; they are spent. The playground `eye` camera pose is now
+   part of the world contract (`EYE_POS`/`EYE_XYAXES`/`EYE_FOVY` in
+   playground.py) — moving it invalidates every visual certificate downstream.
+   What that unblocked is now the work: the unison ladder's gate is UB.9
+   ("Heard, not seen"), which `run blocked` ranks second in the project —
+   frees 4, blocks 7, and 0 of the 37 unison specs pass. PL.00 and PL.02 are
+   still runnable today, but note their meaning CHANGED under the PLASTIC-ONLY
+   decree: PL.00 is now a feasibility check on the pure encoder and PL.02
+   measures what the plastic path BUYS. Neither decides frozen-vs-plastic any
+   more — the owner did.
    THREE OVERTURNS from that research to act on: (a) LEARNING_CORE's
    admission criterion U2 excludes every frozen tower BY ARITHMETIC — amend
    it, it was never run against a frozen arm; (b) HNS cannot discriminate
@@ -88,14 +94,18 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    measured indistinguishable from vanilla at our scale — recommend deleting
    rather than wiring, escalate to DECISIONS_NEEDED rather than deciding.
 
-0. FINISH THE LEARNING-CORE BAKEOFF — it decides HOW JACK LEARNS and it
-   is the highest-leverage unblocked work in the project. LC.00 and LC.01 PASS
-   (the framing survived its cheapest falsifier; the unison admission gate
-   exists). Implement and run, in order: LC.02 (throughput floor, cpu<10min),
-   LC.03 (screening: which cores learn to survive at all, cpu<2h), LC.04 (THE
-   ARBITRATION — PPO vs the world-model arms at matched experience, cpu<2h),
-   LC.05 (matched compute), LC.06 (simplicity budget). ZERO GPU, so it runs
-   beside any GPU job. Carry the three guards the owner added on 2026-08-09,
+0. THE LEARNING-CORE BAKEOFF IS BLOCKED — UNBLOCK IT FIRST. It decides HOW
+   JACK LEARNS. LC.00, LC.01 and LC.02 all PASS. But LC.03–LC.06 are NOT
+   runnable: `run blocked` shows all four sit behind **PS.01 = FAIL**
+   (2026-08-10T05:29 — the measured J0=2.405 m/s and alpha=0.0293 refuted the
+   pre-registered energy arithmetic). So the unit of work here is PS.01, not
+   LC.03: re-derive its threshold from the MEASURED constants and re-run it
+   under the T1.02 precedent (a redesign is legitimate only when the
+   EXPERIMENT is wrong — and here the arithmetic, not the drive layer, is what
+   failed). Only then LC.03 (screening, cpu<2h), LC.04 (THE ARBITRATION —
+   PPO vs world-model arms at matched experience, cpu<2h), LC.05 (matched
+   compute), LC.06 (simplicity budget). ZERO GPU, so it runs beside any GPU
+   job. Carry the three guards the owner added on 2026-08-09,
    all recorded in DECISIONS_NEEDED.md — data-starved != non-learner (positive
    curve slope at cutoff means re-screen, not eliminate); the convergence check
    (no winner while the runner-up is still closing); and the scale-transfer
@@ -123,10 +133,15 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    EpisodicMemory.py is the substrate and its docstring explains the contract),
    then UB.1-8 / CU.1-7 / T2.14-20 where implementable without GPU.
 2. GPU budget calendar — the owner chose FREE COMPUTE ONLY (no rented GPUs):
-   - Kaggle 30h/week resets SUNDAY. Before Sunday assume ~0h left. After reset,
-     the FIRST Kaggle job is T2.02 (the 140K-MLP-vs-transformer showdown at 2M
-     steps — its kill-criterion settles the D1 trunk decision). GPU_LONG goes to
-     Kaggle only.
+   - Kaggle 30h/week resets SUNDAY. NEVER assume how much is left — read
+     `experiments/gpu_budget.json` for the live week's charges; the T2.01
+     re-run already consumed part of this week. GPU_LONG goes to Kaggle only.
+   - **EVERY GPU SUBMISSION NEEDS A PUSH FIRST** (`gpu.py:assert_ref_is_current`
+     refuses a HEAD that is not an ancestor of `origin/main` — the VM clones
+     from GitHub). D3 in DECISIONS_NEEDED.md is still OPEN and unpushed commits
+     accumulate behind it. Before planning ANY GPU work, run
+     `git rev-list --count origin/main..HEAD`; if it is non-zero the job cannot
+     run, and escalating that is the useful iteration, not attempting it.
    - Colab takes GPU_SHORT jobs; if it returns "Service Unavailable" the GPUs
      are rationed — record the ERROR and retry next iteration, don't fight it.
 3. GPU work follows DIRECTION_AUDIT's sequencing: the T2.01/T2.02 re-runs are
@@ -214,9 +229,15 @@ evidence; do implement against them.
 ## Context worth carrying
 
 Settled decisions from the two committed reviews — do not relitigate without new
-evidence: freeze a pretrained trunk and learn a small adapter (there is no data
-for training a bespoke 105M brain; the MoCap URLs 404 and the loader fabricates
-sinusoids paired with RANDOM language labels). Dialogue = SmolLM2-360M frozen and
+evidence. **ONE OF THEM IS SUPERSEDED, read this before the list:** those
+reviews concluded "freeze a pretrained trunk and learn a small adapter". The
+owner's PLASTIC-ONLY decree of 2026-08-09 OVERRULES that — nothing inside Jack
+is frozen, encoders included. What survives from the finding is only its
+premise, which still binds: there is no data for training a bespoke 105M brain
+(the MoCap URLs 404 and the loader fabricates sinusoids paired with RANDOM
+language labels), so a pure encoder must earn its place on a small budget —
+that is what PL.00 now checks, and the decree's pre-registered re-open trigger
+fires if it cannot. Dialogue = SmolLM2-360M frozen and
 out-of-process, never an `nn.Module` submodule. Grounding = a separate small text
 tower so the chat model stays swappable. Continual learning = actor on CPU under
 `no_grad`, consolidation on the ephemeral GPU.
