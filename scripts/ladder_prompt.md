@@ -45,6 +45,20 @@ never received a gradient. Do not recreate it.
 `next` lists specs whose dependencies pass. Take the FIRST one in priority order
 below and finish it. One spec per iteration is a good iteration.
 
+**STANDING RULE, above the priority order: a GOAL.md commitment with ZERO
+passing specs outranks fan-out.** Run `run coverage`. Fifteen commitments read
+0 PASS today; take the CHEAPEST runnable declared spec across all of them (ties
+broken by the commitment with the most declared specs, because that is the one
+the project has invested in and never verified). It frees nothing, so
+`run blocked` will never surface it — that is the point. The two rankings
+measure different things — `blocked` measures what unsticks the ladder,
+`coverage` measures whether the ladder is the RIGHT ladder — and only the
+second can see a commitment the project has quietly never tested. Concretely
+today: `one brain / unison` has 21 declared specs and 1 passing, while
+SYSTEM.md calls unison the one thing no bakeoff may trade away, and `UB.14` has
+been runnable for over a day because it frees nothing. (Overseer, 2026-08-10,
+FOR THE BUILDER §5.)
+
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
 STATE LIVES IN THE LEDGER, NOT HERE. Run `status` for counts — this file
