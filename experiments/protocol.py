@@ -191,7 +191,7 @@ class Ledger:
             self.results[rid] = Result(**r)
 
     def record(self, result: Result) -> None:
-        """Merge one result into the ledger under an exclusive lock.
+        """Merge ONE result into the ledger under an exclusive lock.
 
         Naive save() lost data: each Ledger held an in-memory copy and wrote the
         whole file, so a writer with a stale view silently erased results it had
@@ -202,6 +202,28 @@ class Ledger:
         So: lock, RE-READ from disk, merge, write atomically. The tmp+os.replace
         is the same pattern T0.05 established, because a ledger truncated by a
         SIGKILL would erase the evidence for every capability claimed so far.
+
+        THE WORD `ONE` IS LOAD-BEARING, 2026-08-10. The re-read above was only
+        half a fix: having read the fresh file into `merged`, this method then
+        looped over **all** of `self.results` and wrote every entry it happened
+        to be holding back over it. So a long-lived Ledger did not merely fail to
+        see newer work — it actively reverted it, and the revert was disguised as
+        legitimate history, because the `ran_at` mismatch below pushed the FRESH
+        on-disk verdict down into `history` and re-asserted the stale one as
+        current with `attempt` incremented. A reader saw "re-run, attempt 4", not
+        "six hours of work deleted".
+
+        It happened. A `run T2.01` GPU poll constructed its Ledger at 19:42 on
+        2026-08-09, waited 5.6 h for a Kaggle P100, and recorded at 01:17 on
+        2026-08-10. That single write reverted six intervening entries (LC.01,
+        PG.3, PG.8, T0.08, T0.13, T0.15) to their 19:42 values and erased the
+        five `amended` records the overseer had written at 00:12. Only an
+        uncommitted working tree saved it.
+
+        So the merge is now strictly single-key: everything else on disk is
+        copied through untouched, whatever this instance believes about it. The
+        instance then adopts the merged file wholesale, so it cannot stay stale
+        after a write either.
         """
         self.results[result.spec_id] = result
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -218,7 +240,10 @@ class Ledger:
                         on_disk = {}          # corrupt: rebuild from memory rather than lose everything
 
                 merged = dict(on_disk)
-                for rid, r in self.results.items():
+                # EXACTLY ONE key may change per call — the one being recorded.
+                # See the docstring: iterating self.results here reverted six
+                # entries and erased five amendments on 2026-08-10.
+                for rid, r in ((result.spec_id, result),):
                     # KEEP THE PREVIOUS ATTEMPT. Overwriting by spec_id made
                     # SYSTEM.md's "the failing version stays in the ledger's
                     # history" unenforceable: a spec redesigned three times
@@ -251,12 +276,17 @@ class Ledger:
 
                 self._write_atomic(merged)
 
-                # Adopt the merged view so this instance stops being stale.
+                # Adopt the merged file WHOLESALE, not just the keys we lack.
+                # `if rid not in self.results` left every already-known entry at
+                # its load-time value, which is precisely how this instance's
+                # view went stale in the first place. After a write, memory ==
+                # file, so the next record() starts from the truth.
+                fresh: Dict[str, Result] = {}
                 for rid, raw in merged.items():
-                    if rid not in self.results:
-                        d = dict(raw)
-                        d["status"] = Status(d["status"])
-                        self.results[rid] = Result(**d)
+                    d = dict(raw)
+                    d["status"] = Status(d["status"])
+                    fresh[rid] = Result(**d)
+                self.results = fresh
             finally:
                 fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
 
@@ -345,9 +375,18 @@ class Ledger:
         return row
 
     def save(self) -> None:
-        """Retained for compatibility; record() is the safe path."""
-        if self.results:
-            self.record(next(iter(self.results.values())))
+        """Removed 2026-08-10. `record(result)` is the only write path.
+
+        This wrote "whatever this object happens to hold", which is the shape of
+        the bug documented on `record`: an instance's in-memory view is a
+        snapshot that goes stale the moment another writer runs, so flushing it
+        is never safe. It had no callers; it raises rather than being deleted so
+        that a caller added later fails loudly instead of quietly reverting the
+        file.
+        """
+        raise NotImplementedError(
+            "Ledger.save() is gone: it flushed a whole stale snapshot. "
+            "Call record(result) once per result — it merges exactly one key.")
 
     def status(self, spec_id: str) -> Status:
         r = self.results.get(spec_id)

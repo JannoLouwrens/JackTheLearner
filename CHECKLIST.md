@@ -38,9 +38,10 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T0.07** CPU throughput baseline
       - _asserts:_ Measured env-steps/s on this ARM box, recorded for planning.
       - _dies if:_ n/a — measurement, not a claim.
-- [x] **T0.08** Metrics land in the ledger
-      - _asserts:_ A run writes metrics retrievable by spec id.
-      - _dies if:_ Missing or unparseable ledger entry.
+- [x] **T0.08** Metrics land in the ledger, and only the recorded spec moves
+      - _asserts:_ A run writes metrics retrievable by spec id; an untouched spec reads NOT_RUN; a failing dependency yields BLOCKED rather than a number; and a writer holding an HOURS-OLD snapshot changes EXACTLY the entry it records — every other entry keeps its newest metrics, its attempt count and its amendments.
+      - _dies if:_ Missing or unparseable ledger entry; an untouched spec reading as passing; a stale writer reverting an entry it did not record, inflating its attempt count, or dropping an amendment written after the snapshot.
+      - _then delete:_ Nothing. It re-arms the ledger's durability claim, which the v1 spec asserted and the v1 test could not see.
 - [x] **T0.09** Colab T4 job round-trip
       - _asserts:_ A script submits to Colab, runs on a T4, returns artifacts, VM torn down.
       - _dies if:_ No artifact returned, or the VM persists.
@@ -108,7 +109,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [~] **T2.01** Locomotion beats a random policy  — all_seeds_beat_random=1.0; all_seeds_beat_random_std=0.0
+- [!] **T2.01** Locomotion beats a random policy  — all_seeds_beat_random=1.0; all_seeds_beat_random_std=0.0
       - _asserts:_ Trained policy return exceeds random-action return by >5 sigma.
       - _dies if:_ Return within seed noise of random.
 - [~] **T2.02** Locomotion beats the honest MLP baseline  — backend=kaggle; gpu=Tesla P100-PCIE-16GB

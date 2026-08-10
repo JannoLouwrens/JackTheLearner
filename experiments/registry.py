@@ -90,10 +90,42 @@ LADDER: list[Spec] = [
                "llm_enabled=False changes rollout speed by 0.0%: the 1.71B-param SmolLM2 "
                "is 6.9 GB resident and never runs in forward()."),
 
-    Spec("T0.08", 0, "Metrics land in the ledger",
-         hypothesis="A run writes metrics retrievable by spec id.",
-         falsified_by="Missing or unparseable ledger entry.",
-         null_baseline="n/a", metric="roundtrip_ok", budget=Budget.CPU_FAST),
+    Spec("T0.08", 0, "Metrics land in the ledger, and only the recorded spec moves",
+         hypothesis="A run writes metrics retrievable by spec id; an untouched "
+                    "spec reads NOT_RUN; a failing dependency yields BLOCKED "
+                    "rather than a number; and a writer holding an HOURS-OLD "
+                    "snapshot changes EXACTLY the entry it records — every "
+                    "other entry keeps its newest metrics, its attempt count "
+                    "and its amendments.",
+         falsified_by="Missing or unparseable ledger entry; an untouched spec "
+                      "reading as passing; a stale writer reverting an entry it "
+                      "did not record, inflating its attempt count, or dropping "
+                      "an amendment written after the snapshot.",
+         null_baseline="The pre-2026-08-10 merge: having re-read the fresh file, "
+                       "it wrote every entry the instance was holding back over "
+                       "it. It reverts 3 of the 4 properties above and passes "
+                       "the count-based concurrency check while doing so.",
+         metric="roundtrip_ok", budget=Budget.CPU_FAST,
+         control="The pre-fix merge replayed verbatim on the same battery "
+                 "(`_prefix_merge_record`). It MUST revert at least one of the "
+                 "four stale-writer properties while still landing its own "
+                 "result — a control that fails for an unrelated reason "
+                 "localises nothing.",
+         kills="Nothing. It re-arms the ledger's durability claim, which the "
+               "v1 spec asserted and the v1 test could not see.",
+         notes="STRENGTHENED 2026-08-10 under the T1.02 precedent; the v1 "
+               "verdict stays in this entry's history. v1 declared one "
+               "property ('a run writes metrics retrievable by spec id'), no "
+               "null and no control, while its test quietly checked five — and "
+               "its concurrency property asserted `len(results) >= 15`, a "
+               "COUNT. The real failure lost nothing by count: a 5.6 h T2.01 "
+               "GPU poll recorded at 2026-08-10T01:17 and REVERTED six entries "
+               "in place (LC.01, PG.3, PG.8, T0.08, T0.13, T0.15) plus five "
+               "amendments, disguised as history because the fresh verdict was "
+               "pushed into `history` with `attempt` incremented. v1 passed "
+               "throughout. Same shape as T2.00's loss-ratio: the metric moved "
+               "for reasons other than the thing claimed, and could not move "
+               "for the thing itself."),
 
     Spec("T0.09", 0, "Colab T4 job round-trip",
          hypothesis="A script submits to Colab, runs on a T4, returns artifacts, VM torn down.",

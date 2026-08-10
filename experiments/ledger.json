@@ -1706,10 +1706,17 @@
     },
     "T0.08": {
       "amended": [],
-      "attempt": 4,
-      "commit": "6c0fcd1",
-      "control_metrics": {},
-      "duration_s": 1.23,
+      "attempt": 5,
+      "commit": "2cd0289",
+      "control_metrics": {
+        "amendment_survived": false,
+        "attempt_not_inflated": false,
+        "entries_after_stale_write": 4,
+        "fresh_metric_survived": false,
+        "own_result_recorded": true,
+        "unseen_entry_survived": true
+      },
+      "duration_s": 1.27,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1729,19 +1736,31 @@
           "message": "",
           "ran_at": "2026-08-09T19:16:00",
           "status": "PASS"
+        },
+        {
+          "commit": "6c0fcd1",
+          "message": "",
+          "ran_at": "2026-08-10T00:12:45",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "445f709422703e1b",
+      "impl_sha": "ba529f6075f428a6",
       "message": "",
       "metrics": {
+        "amendment_survived": true,
+        "attempt_not_inflated": true,
         "blocked_records_no_metrics": true,
         "default_is_not_run": true,
         "dependency_blocks": true,
         "entries_after_concurrency": 18,
+        "entries_after_stale_write": 4,
+        "fresh_metric_survived": true,
+        "own_result_recorded": true,
         "roundtrip_ok": true,
-        "survives_concurrent_writers": true
+        "survives_concurrent_writers": true,
+        "unseen_entry_survived": true
       },
-      "ran_at": "2026-08-10T00:12:45",
+      "ran_at": "2026-08-10T02:14:30",
       "seeds": [
         0
       ],
@@ -1933,8 +1952,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 13,
-      "commit": "58f07f6",
+      "attempt": 14,
+      "commit": "2cd0289",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -1956,7 +1975,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.44,
+      "duration_s": 1.43,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2030,6 +2049,12 @@
           "message": "",
           "ran_at": "2026-08-10T00:12:47",
           "status": "PASS"
+        },
+        {
+          "commit": "58f07f6",
+          "message": "",
+          "ran_at": "2026-08-10T01:14:24",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2055,7 +2080,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-10T01:14:24",
+      "ran_at": "2026-08-10T02:14:47",
       "seeds": [
         0
       ],
@@ -2234,8 +2259,8 @@
     },
     "T0.18": {
       "amended": [],
-      "attempt": 2,
-      "commit": "58f07f6",
+      "attempt": 3,
+      "commit": "2cd0289",
       "control_metrics": {
         "control_blind_detail": "FIX.blind",
         "control_blind_specs": 1,
@@ -2259,13 +2284,19 @@
         "verdict_disagreements": 1,
         "verdicts_rejudged": 5
       },
-      "duration_s": 1.38,
+      "duration_s": 1.34,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
           "commit": "58f07f6",
           "message": "",
           "ran_at": "2026-08-10T01:13:27",
+          "status": "PASS"
+        },
+        {
+          "commit": "58f07f6",
+          "message": "",
+          "ran_at": "2026-08-10T01:14:18",
           "status": "PASS"
         }
       ],
@@ -2275,14 +2306,14 @@
         "control_blind_detail": "",
         "control_blind_specs": 0,
         "control_read_by_key": 47,
-        "control_read_by_value": 3,
-        "controls_probed": 50,
+        "control_read_by_value": 4,
+        "controls_probed": 51,
         "declared_control_never_ran": 0,
         "declared_never_ran_detail": "",
         "disagreement_detail": "",
         "entries_seen": 56,
-        "no_control_detail": "T0.01, T0.08, T0.10, T1.03, T1.05",
-        "no_control_specs": 5,
+        "no_control_detail": "T0.01, T0.10, T1.03, T1.05",
+        "no_control_specs": 4,
         "self_excluded_detail": "T0.18",
         "self_excluded_entries": 1,
         "unavailable_detail": "",
@@ -2294,7 +2325,7 @@
         "verdict_disagreements": 0,
         "verdicts_rejudged": 55
       },
-      "ran_at": "2026-08-10T01:14:18",
+      "ran_at": "2026-08-10T02:14:49",
       "seeds": [
         0
       ],
@@ -2770,167 +2801,175 @@
       "status": "PASS"
     },
     "T2.01": {
-      "amended": [
-        {
-          "at": "2026-08-10T00:12:22",
-          "by": "T0.14",
-          "changes": [
-            {
-              "field": "status",
-              "from": "VOID",
-              "to": "VOID"
-            },
-            {
-              "field": "attempt",
-              "from": 1,
-              "to": null
-            }
-          ],
-          "commit": "6c0fcd1",
-          "reason": "Backfill of a hand-edit: commit 9b92d14 (2026-08-09 14:02) changed status FAIL->VOID directly in ledger.json with an agent-written message. The edit was right (T0.14 found eval ran with dropout live, so the run did not test the claim) but nothing in the entry said it was an edit. attempt/history are not reconstructible: git shows four versions (620b5c1, 79af208, v3, 10e3aef) against a recorded attempt of 1."
-        }
-      ],
+      "amended": [],
       "attempt": null,
-      "commit": "a533ade",
+      "commit": "2cd0289",
       "control_metrics": {
-        "untrained_mean": 150.5,
+        "untrained_mean": 153.8,
         "untrained_mean_std": 0.0,
-        "untrained_sigma_advantage": 0.92,
+        "untrained_sigma_advantage": 0.68,
         "untrained_sigma_advantage_std": 0.0
       },
-      "duration_s": 27.05,
+      "duration_s": 20090.47,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "amended": [
+            {
+              "at": "2026-08-10T00:12:22",
+              "by": "T0.14",
+              "changes": [
+                {
+                  "field": "status",
+                  "from": "VOID",
+                  "to": "VOID"
+                },
+                {
+                  "field": "attempt",
+                  "from": 1,
+                  "to": null
+                }
+              ],
+              "commit": "6c0fcd1",
+              "reason": "Backfill of a hand-edit: commit 9b92d14 (2026-08-09 14:02) changed status FAIL->VOID directly in ledger.json with an agent-written message. The edit was right (T0.14 found eval ran with dropout live, so the run did not test the claim) but nothing in the entry said it was an edit. attempt/history are not reconstructible: git shows four versions (620b5c1, 79af208, v3, 10e3aef) against a recorded attempt of 1."
+            }
+          ],
+          "commit": "a533ade",
+          "message": "VOID (invalidated by T0.14, 2026-08-09): run predates the dropout fix. 36 nn.Dropout modules were live during rollout, update and eval \u2014 42% policy-mean drift on an identical state \u2014 and obs was padded 376 vs the env-emitted 348. The 4.06-sigma result is not a refutation of the architecture; it is an invalid run.",
+          "ran_at": "2026-08-07T19:29:50",
+          "status": "VOID"
+        }
+      ],
       "impl_sha": null,
-      "message": "VOID (invalidated by T0.14, 2026-08-09): run predates the dropout fix. 36 nn.Dropout modules were live during rollout, update and eval \u2014 42% policy-mean drift on an identical state \u2014 and obs was padded 376 vs the env-emitted 348. The 4.06-sigma result is not a refutation of the architecture; it is an invalid run.",
+      "message": "pre-registered threshold not met",
       "metrics": {
         "all_seeds_beat_random": 1.0,
         "all_seeds_beat_random_std": 0.0,
         "backend": "kaggle",
         "curve_seed0": [
           {
-            "action_absmax": 1.2911584377288818,
-            "action_std": 0.30013662576675415,
-            "entropy": 3.6618,
+            "action_absmax": 1.336797833442688,
+            "action_std": 0.30034324526786804,
+            "entropy": 3.6669,
             "iter": 1,
-            "mean_reward": 4.697486400604248,
-            "pg_loss": 0.1234,
+            "mean_reward": 4.68203592300415,
+            "pg_loss": 0.0879,
             "steps": 4096,
-            "value_mean": 0.03571271896362305,
-            "vf_loss": 0.8577
+            "value_mean": 0.0030436525121331215,
+            "vf_loss": 0.8431
           },
           {
-            "action_absmax": 1.218978762626648,
-            "action_std": 0.3001043200492859,
-            "entropy": 3.6597,
+            "action_absmax": 1.2566295862197876,
+            "action_std": 0.30041050910949707,
+            "entropy": 3.6776,
             "iter": 2,
-            "mean_reward": 4.6817216873168945,
-            "pg_loss": 0.0111,
+            "mean_reward": 4.712421417236328,
+            "pg_loss": 0.0158,
             "steps": 8192,
-            "value_mean": 2.848093032836914,
-            "vf_loss": 0.2108
+            "value_mean": 2.7594146728515625,
+            "vf_loss": 0.2291
           },
           {
-            "action_absmax": 1.4943243265151978,
-            "action_std": 0.2998836040496826,
-            "entropy": 3.6555,
+            "action_absmax": 1.303510069847107,
+            "action_std": 0.3005317747592926,
+            "entropy": 3.6808,
             "iter": 3,
-            "mean_reward": 4.698009967803955,
-            "pg_loss": 0.0061,
+            "mean_reward": 4.715437889099121,
+            "pg_loss": -0.0068,
             "steps": 12288,
-            "value_mean": 2.711918592453003,
-            "vf_loss": 0.1969
+            "value_mean": 2.925766944885254,
+            "vf_loss": 0.2053
           },
           {
-            "action_absmax": 1.4339406490325928,
-            "action_std": 0.29971984028816223,
-            "entropy": 3.6423,
+            "action_absmax": 1.2704086303710938,
+            "action_std": 0.3004904091358185,
+            "entropy": 3.685,
             "iter": 4,
-            "mean_reward": 4.702190399169922,
-            "pg_loss": 0.0042,
+            "mean_reward": 4.754912376403809,
+            "pg_loss": -0.0082,
             "steps": 16384,
-            "value_mean": 2.7637057304382324,
-            "vf_loss": 0.1851
+            "value_mean": 3.0679092407226562,
+            "vf_loss": 0.2363
           },
           {
-            "action_absmax": 1.3179960250854492,
-            "action_std": 0.29886236786842346,
-            "entropy": 3.5907,
+            "action_absmax": 1.4391599893569946,
+            "action_std": 0.3003784120082855,
+            "entropy": 3.6834,
             "iter": 6,
-            "mean_reward": 4.742998123168945,
-            "pg_loss": -0.0,
+            "mean_reward": 4.840204238891602,
+            "pg_loss": -0.0135,
             "steps": 24576,
-            "value_mean": 2.937385320663452,
-            "vf_loss": 0.2356
+            "value_mean": 3.1941440105438232,
+            "vf_loss": 0.2999
           },
           {
-            "action_absmax": 1.3709096908569336,
-            "action_std": 0.29916414618492126,
-            "entropy": 3.6043,
+            "action_absmax": 1.4211266040802002,
+            "action_std": 0.3002081513404846,
+            "entropy": 3.6644,
             "iter": 11,
-            "mean_reward": 4.883058547973633,
-            "pg_loss": -0.0053,
+            "mean_reward": 4.9034576416015625,
+            "pg_loss": -0.0265,
             "steps": 45056,
-            "value_mean": 3.075958251953125,
-            "vf_loss": 0.2864
+            "value_mean": 3.4777097702026367,
+            "vf_loss": 0.3695
           },
           {
-            "action_absmax": 1.3503386974334717,
-            "action_std": 0.2981862723827362,
-            "entropy": 3.5477,
+            "action_absmax": 1.4922280311584473,
+            "action_std": 0.29992297291755676,
+            "entropy": 3.6592,
             "iter": 16,
-            "mean_reward": 4.874356269836426,
-            "pg_loss": -0.0119,
+            "mean_reward": 4.919291019439697,
+            "pg_loss": -0.0103,
             "steps": 65536,
-            "value_mean": 3.3751163482666016,
-            "vf_loss": 0.3042
+            "value_mean": 3.6576900482177734,
+            "vf_loss": 0.326
           },
           {
-            "action_absmax": 1.4808658361434937,
-            "action_std": 0.2973274290561676,
-            "entropy": 3.5071,
+            "action_absmax": 1.4509299993515015,
+            "action_std": 0.3000243902206421,
+            "entropy": 3.6505,
             "iter": 21,
-            "mean_reward": 4.883285045623779,
-            "pg_loss": 0.0373,
+            "mean_reward": 4.864351272583008,
+            "pg_loss": -0.0296,
             "steps": 86016,
-            "value_mean": 3.6049087047576904,
-            "vf_loss": 0.3611
+            "value_mean": 3.549351215362549,
+            "vf_loss": 0.2957
           }
         ],
         "env_steps_per_seed": [
-          704512,
-          704512,
-          704512
+          692224,
+          696320,
+          692224
         ],
         "gpu": "Tesla P100-PCIE-16GB",
-        "random_mean": 118.2,
+        "random_mean": 118.0,
         "random_mean_std": 0.0,
-        "random_std": 35.18,
-        "random_std_std": 0.0,
-        "sigma_advantage": 4.06,
+        "random_std": 52.7,
+        "random_std_std": 7.10543e-15,
+        "sigma_advantage": 1.19,
         "sigma_advantage_std": 0.0,
-        "sigma_used": 35.18,
+        "sigma_used": 116.7,
         "sigma_used_std": 0.0,
-        "trained_mean": 261.0,
+        "trained_mean": 257.2,
         "trained_mean_std": 0.0,
         "trained_means": [
-          249.6,
-          292.7,
-          240.8
+          231.9,
+          384.5,
+          155.3
         ],
-        "trained_std": 27.74,
+        "trained_std": 116.7,
         "trained_std_std": 0.0,
-        "wall_minutes": 331.9,
+        "wall_minutes": 331.4,
         "wall_minutes_std": 0.0
       },
-      "ran_at": "2026-08-07T19:29:50",
+      "ran_at": "2026-08-10T01:17:15",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T2.01",
-      "status": "VOID"
+      "status": "FAIL"
     },
     "T2.02": {
       "amended": [

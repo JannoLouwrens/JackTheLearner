@@ -1254,3 +1254,39 @@ inert first, because "absent" is the default state of a string. Prefer pinning
 the whole value. And run the meta-gates against your own new spec *before*
 committing it: this project's audits are commands now, so "would T0.13 flag
 this?" is a 1.4-second question, not a judgement call.
+
+## An in-memory snapshot is a claim about the past; writing it back asserts it about the present
+
+`Ledger.record` re-read the file under a lock before merging — the documented
+fix for "a writer with a stale view silently erased results it had never seen".
+It then looped over **every** entry the instance was holding and wrote them all
+back over what it had just read. So the re-read protected entries the writer had
+never heard of, and protected nothing it had loaded at construction time.
+
+A `run T2.01` GPU poll built its Ledger at 19:42, waited 5.6 h for a Kaggle
+P100, and recorded at 01:17. That one write reverted six entries (LC.01, PG.3,
+PG.8, T0.08, T0.13, T0.15) to their 19:42 values and erased five `amended`
+records. Only an uncommitted working tree saved it.
+
+Two things made it survivable-looking rather than alarming. The revert was
+**disguised as history**: the merge pushes the previous on-disk row into
+`history` and increments `attempt`, so a fresher verdict being overwritten by a
+stale one reads as an honest re-run — `PG.3 attempt 3 -> 4` with an *older*
+`ran_at`. And T0.08, the spec that owns this property, **passed throughout**: its
+concurrency check asserted `len(results) >= 15`, a COUNT, and nothing was ever
+lost by count.
+
+**Rule:** a write path that takes a whole-object snapshot must merge exactly the
+key it was asked to change; everything else is copied through untouched no
+matter what the object believes about it. And after writing, adopt the merged
+file wholesale — an instance that stays stale after its own write will be stale
+again on the next one. Corollary, and the reason this one hid for a day: when a
+record carries an ordering field (`ran_at`, `attempt`, a sequence number),
+check that an update moves it FORWARD. A revert that increments the attempt
+counter is indistinguishable from progress to every reader that only counts.
+
+**Guard:** T0.08 property 5 — the pre-fix merge is kept as executable code
+(`_prefix_merge_record`) and replayed on the same four-property battery as the
+control. It reverts 3 of 4; the shipped path reverts 0. Prose could not have
+held this, because a tidied restatement of the bug would pass while the shipped
+merge stayed broken (the T0.16 lesson, second occurrence).

@@ -1575,3 +1575,86 @@ must be reported orphaned; an unfrozen sentinel that must move) and item 4
 `run verify` prints the exact list). Neither needs the owner. Unchanged and
 still the highest-leverage science: **PG.7 then PL.00/PL.02**, and the
 LC.03->LC.06 arbitration, all CPU and all unblocked.
+
+---
+
+## 2026-08-10 ~02:10 — The ledger reverted six hours of itself, and the spec that owns durability passed while it happened
+
+**What I found before doing any planned work.** The tree was dirty:
+`experiments/ledger.json` and `experiments/gpu_budget.json`. The budget diff was
+good news — a Kaggle job billed **5.5786 h** (W32 now 11.9635 / 30). The ledger
+diff was not. 56 of 59 entries had changed, `-331/+163` lines, and a semantic
+diff against HEAD showed six entries (**LC.01, PG.3, PG.8, T0.08, T0.13,
+T0.15**) reverted to values from ~19:42 the previous evening, plus **five
+`amended` records erased** (T0.05, T0.09, T1.02, T2.01, T2.02 — the overseer's
+00:12 backfills).
+
+**The writer.** The 5.6 h `run T2.01` GPU poll that OVERSIGHT §4.3 and three
+previous journal entries had noticed only as *a lock*. It constructed its
+`Ledger` at 19:42, blocked on a Kaggle P100, and recorded at **01:17:15**.
+`Ledger.record` re-reads the file under a lock — and then looped over **all** of
+`self.results`, writing every entry the instance was holding back over the fresh
+one. The docstring describes exactly this failure and claims to have fixed it;
+the re-read only ever protected entries the writer had *never loaded*.
+
+It hid because the revert **looks like history**. The merge pushes the previous
+on-disk row into `history` and sets `attempt = len(history)+1`, so PG.3 read
+`attempt 3 -> 4` with an *older* `ran_at`. Progress and reversion are the same
+shape to any reader that counts.
+
+**Fix (`experiments/protocol.py`).** `record()` now merges exactly one key — the
+result it was handed — and then adopts the merged file **wholesale**, so an
+instance cannot stay stale after its own write. `Ledger.save()`, which flushed a
+whole snapshot and had no callers, now raises rather than existing as a footgun.
+
+**T0.08 STRENGTHENED, not replaced** (T1.02 precedent; the v1 verdict is in the
+entry's history). v1 declared one property and no control, its test quietly
+checked five, and its concurrency property asserted `len(results) >= 15` — a
+COUNT, and nothing was ever lost by count. Property 5 reproduces 01:17 in
+miniature: a snapshot is taken, the world moves on four ways (a fresher metric,
+an amendment, a new entry, then the long job's own result), and nothing the job
+did not record may change. **The control is the pre-fix merge kept as executable
+code** and run on the same battery — a tidied restatement would pass while the
+shipped bug stayed live (T0.16's lesson, second occurrence). Measured:
+shipped **4/4** preserved; control **fresh_metric_survived False,
+attempt_not_inflated False, amendment_survived False**, `own_result_recorded
+True` in both, so the control fails for the right reason and localises. T0.08
+also drops off OVERSIGHT §1.2's "no control at all" list: **5 -> 4** (T0.01,
+T0.10, T1.03, T1.05 remain). T0.13 re-ran clean (55 gates, 0 disarmed) and
+T0.18 now probes **51** controls, 0 blind, `control_read_by_value` 3 -> 4.
+
+**The T2.01 science was rescued, not re-run.** Restoring HEAD's ledger would
+have thrown away 5.58 GPU-hours, so I restored it and then re-applied *only*
+that one row through the fixed `record()`. It merged correctly on its own terms:
+**VOID -> FAIL**, the prior VOID verdict pushed to history **with its amendment
+intact**, `attempt` staying `None` (sticky-unknown, as designed). Exactly one
+key moved. The number: **T2.01 post-dropout-fix, Kaggle P100, 3 seeds,
+~692K env-steps/seed, 331.4 wall-minutes — trained 257.2 (means [231.9, 384.5,
+155.3]) vs random 118.0 +- 52.7, sigma_advantage 1.19 against a 5 sigma bar.
+All seeds beat random; the effect size is not close.** Ladder 56 PASS, 1 FAIL,
+1 VOID, 1 ERROR.
+
+**Read that number carefully before planning GPU work.** This is the *clean*
+re-run — the first T2.01 evaluated with dropout off at both call sites (T0.14 +
+T0.16). It is WEAKER than the invalidated v4 it replaces, and the local 54K MLP
+probe journalled at line 33 reached 530.7 on the same step budget. That is a
+third independent signal pointing where T2.02 was already pointing. Do not cite
+it as an architecture verdict on its own — T2.02 is the spec built to arbitrate
+this, and it is still VOID.
+
+**Next iteration should pick up**, in order:
+1. **A provenance gap I found but did not close.** `Result.env_stamp()` runs at
+   *record* time, so this T2.01 row is stamped `commit 2cd0289` — the commit
+   HEAD happened to be at 01:17, six commits after the ref that actually ran on
+   Kaggle at 19:42. For a same-minute CPU spec the stamp is right; for a
+   multi-hour GPU spec it names the wrong code. `build_job` already pins and
+   prints the real ref. Cheapest fix: stamp the commit when `_experiment`
+   *starts*, not when the result lands.
+2. **The ordering guard I deliberately scoped out.** `record()` still accepts a
+   result whose `ran_at` is older than the row on disk. The single-key merge
+   makes that harmless in the case that happened, but it is the same class and
+   it is cheap: warn (or refuse) when an update moves `ran_at` backwards.
+3. Unchanged and still the highest-leverage science: **PG.7 then PL.00/PL.02**,
+   and **LC.03 -> LC.06**, all CPU and all unblocked. OVERSIGHT items 3 (T1.03
+   and T1.05 controls) and 4 (backfill the 19 `Spec.control` declarations) are
+   still the cheapest system work and neither needs the owner.
