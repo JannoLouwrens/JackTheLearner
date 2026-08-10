@@ -1716,3 +1716,68 @@ attack the reducer confound, and re-run. Cheap and specific:
       is now concrete rather than a suspicion.
 Runtime is ~2 minutes for the whole thing on 3 nice-19 cores, so round 2 is
 cheap. PS.01 stays NOT_RUN and LC.03 stays blocked until it lands.
+
+## 2026-08-10 04:10 — PS.01/J round 2: WINNER `impact_speed` (0.973 AUC, +10.32σ), and the gate grew a second reading
+
+Inherited the 03:10 handoff verbatim and ran its round 2. It needed a machinery
+change first, and finding that out is the more useful half of this iteration.
+
+**The blocker was structural, not empirical.** LESSONS.md had already recorded
+that a detector bakeoff is VOID *by construction* — `run_bakeoff` VOIDs when any
+arm misses the 3σ gate, and the sanctioned repair ("add arms, remove none") can
+only add more failures. Round 2 proves it: nine new channels, and **11 of 13**
+still miss the gate. Under the old module that is a VOID with a 10σ winner
+sitting inside it, forever. So `Spec.gate_mode` was added (`validity`, the
+default and unchanged; `screen`, which ELIMINATES a sub-gate arm). The
+justification is that the T2.02 rule assumes arms are LEARNERS — where a missed
+gate cannot be told from a broken run — and an observable has no run to break.
+Same shape as `controls=`: the framework was missing a category. **T0.19 PASS**
+is the price: 7 properties, control (`MIN_FINISHERS = 1`, the pre-guard version
+kept executable) breaks on exactly p1 and p2 with an IndexError on both. The
+load-bearing property is p2 — the mode does not rescue the run that motivated
+it; round 1 stays VOID either way, because one finisher is a race with one
+runner.
+
+**The result.** 13 arms, 3 seeds, null re-measured at 0.4966 ± 0.0122, both
+controls failing on their pre-registered side (`noise` 0.570 — chance still buys
+that much at 10 runs a side):
+
+    impact_speed  0.973  +10.32σ  PASS   root speed one substep before contact
+    evt_body6     0.840   +2.55   fail   whole-body 6-norm in the landing window
+    evt_dvel      0.837   +2.43   fail
+    evt_bodyf     0.837   +2.45   fail
+    peak_dvel     0.827   +5.99   PASS   round 1's only finisher
+    evt_bodyint   0.767   +1.44   fail
+    mean_dvel     0.573   +0.54   fail   (a rate, not an extremum — it did not help)
+    integral6     0.520   +0.44   fail   §2.2 AS WRITTEN
+    evt6/evt_force 0.422  -0.66   fail   torso sensor, landing window
+    evt_int6      0.415   -0.74   fail
+    peak6/peak_force 0.34 -2.6    fail   round 1's below-chance pair
+
+Winner by 2.66σ over the runner-up, so the margin rule is cleared, not squeaked.
+Round 1's four arms were carried in unchanged and **reproduced their round-1
+AUCs to the digit** (0.520/0.340/0.337/0.827) — `check_round1_reproduction`
+asserts this before any new arm is read, so a quietly-changed rollout cannot let
+new arms win against numbers that no longer exist.
+
+**Two findings worth more than the winner.** (1) Every FORCE channel failed,
+even event-anchored. Contact force on this body under a random policy is
+dominated by pose and exposure; kinematics carries the fall bit. (2) The three
+torso-sensor windowed arms read *identically zero on every FALL run* — a 3.2 m
+drop lands on the FEET and `cfrc_ext[torso]` stays 0 for the whole 0.30 s
+window, spiking only at 0.3–0.5 s. An empty window scores exactly 0.500 AUC,
+which is indistinguishable from an honest negative. Both are in LESSONS.md; the
+second is a new lesson with a general rule (a windowed metric and its trigger
+must read the same body, and assert the window was non-empty).
+
+`docs/research/PURPOSE_AND_SCAFFOLDING.md` §2.2 now carries the decided `J_t`
+with the old formulation kept beside it and the numbers that retired it. Note
+**J_t is no longer an impulse** — α absorbs the dimensional change.
+
+**NEXT ITERATION — implement PS.01.** Its blocker is gone: `J_0` is the 95th
+percentile of *arrival speed* under normal contact, on a channel measured to
+separate the regimes at 0.973 AUC, and PS.01 unblocks LC.03 → LC.04–06, the
+whole learning-core arbitration (priority 0). Two things to carry: PS.01 must
+still calibrate α against the 1.8 m fall as §2.2 says, and its own controls are
+unchanged. If it needs a threshold *sweep*, that is a new bakeoff, not a knob —
+`IMPACT_WINDOW_S = 0.30` was pre-registered and deliberately not swept here.

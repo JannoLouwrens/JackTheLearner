@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 56 / 138 demonstrated
+## 57 / 139 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -282,6 +282,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Feeding each PASSing entry's RECORDED metrics back through its COMMITTED `_check` re-derives PASS for all of them; and deleting the control metrics from that same call changes the verdict for every spec that ran a control, so no gate certifies a capability while ignoring the condition that was supposed to fail.
       - _dies if:_ Any PASS whose committed gate no longer accepts its own recorded numbers; any gate that still returns PASS with `control_metrics = {}`; any spec declaring a control it never ran; any entry the scan could not judge; or the undeclared-control debt growing past its ratchet.
       - _then delete:_ Nothing. It re-arms law 2 ('a control that also passes means the test measures nothing'), which was unenforceable for any gate that never read its control.
+- [x] **T0.19** The bakeoff's `screen` gate eliminates arms without lowering the bar
+      - _asserts:_ Under `Spec.gate_mode='screen'` an arm below the 3-sigma learning gate is ELIMINATED rather than VOIDing the run, and every guard that makes that safe holds: two survivors are still required, the winner still cleared 3 sigma, the eliminated arms are still recorded, an escaped control still inverts the verdict to VOID, `validity` behaves exactly as before, and the mode is refused without a written rationale on the committed Spec.
+      - _dies if:_ Any of the seven properties failing — above all P2: if `screen` changes the verdict of PS.01/J round 1, the mode was reverse-engineered to rescue the run that motivated it and must be reverted.
+      - _then delete:_ `Spec.gate_mode='screen'` itself. If the battery cannot be made to pass, the mode is deleted and detector bakeoffs go back to escalating to the owner instead.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

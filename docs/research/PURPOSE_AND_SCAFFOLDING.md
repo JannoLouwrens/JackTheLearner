@@ -311,12 +311,36 @@ falling cost something.**
 ```
 i ← clip( i − α·max(0, J_t − J₀) − drown(t) + ρ·Δt·[‖qvel‖ < q_rest] , 0, 1 )
 
-J_t = ‖cfrc_ext‖ summed over torso+head this decision   (impact impulse)
-J₀  = the 95th percentile of J under normal walking contact, MEASURED in PS.01
+J_t = the root's linear SPEED one substep before contact onset  (arrival speed)
+J₀  = the 95th percentile of J under normal contact, MEASURED in PS.01
 α   calibrated so a fall from the ladder platform (1.8 m) costs ≈ 0.15
 ρ   = 1/900  s⁻¹                   full heal in 15 minutes of rest
 drown(t) = 0.05·Δt while the head geom has been below the pool surface > 8 s
 ```
+
+> **`J_t` was DECIDED BY BAKEOFF, not by this document** (`PS.01/J`, `PS.01/J2`,
+> 2026-08-10 — `docs/DECISIONS_RESOLVED.md`, `experiments/bakeoffs/ps01_impulse*.py`).
+> The original formulation above was *`‖cfrc_ext‖ summed over torso+head this
+> decision`*, and it is kept here so the change is legible as a change. It was
+> measured **at chance**: AUC 0.520 against a label-shuffled null of 0.4966 ±
+> 0.0122 for telling a 3.2 m platform fall from an ordinary collapse to the
+> floor. Two of its proposed repairs scored *below* chance. Thirteen candidate
+> channels competed over two rounds; `impact_speed` won at **0.973 AUC, +10.32
+> sigma**, ahead of `peak_dvel` (0.827) by 2.66 sigma, with both controls
+> failing on their pre-registered side.
+>
+> Two things this cost, both worth knowing before re-opening it. (1) **Contact
+> force lost to kinematics.** Every force channel failed, including the
+> event-anchored ones. `max` over an episode reports *exposure* — a body lying
+> on the floor under a random policy out-spikes a single landing — and even
+> inside the landing window `cfrc_ext[torso]` is identically **zero** for 0.30 s,
+> because a 3.2 m drop lands on the FEET and the torso arrives 0.3–0.5 s later.
+> The torso sensor and a whole-body contact event are on different bodies.
+> (2) **`J_t` is no longer an impulse**, so it is no longer dimensionally an
+> impulse in the equation above; α absorbs the change and PS.01 calibrates it
+> against the same 1.8 m fall. Arrival speed is what a drop height actually
+> buys, and it is bounded by how fast you were going — which is why lying on the
+> floor cannot manufacture one, however long it lies.
 
 **Wetness `w`** — rises while any geom is in `Water`'s region, decays with time
 constant 120 s out of it. It is the cheapest way to give the pool a stake, and

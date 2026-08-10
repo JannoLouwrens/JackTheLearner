@@ -1343,3 +1343,44 @@ forbidden move (`bakeoff.py`: may not "drop an arm that embarrasses it, or re-ru
 until an arm wins"), and the difference between a legitimate second round and
 that failure mode is precisely that nothing is removed and both rounds are
 recorded in `docs/DECISIONS_RESOLVED.md`.
+
+*Resolved 2026-08-10, and the resolution is the lesson.* "Fix the arms" alone
+could never terminate: round 2 added nine channels and **eleven of thirteen**
+still missed the gate, so the bakeoff would have VOIDed again with a 10-sigma
+winner sitting in it. The missing piece was a category, not more arms —
+`Spec.gate_mode`. The T2.02 rule assumes arms are LEARNERS, where a missed gate
+is ambiguous (broken run, or worse architecture? you cannot tell, so it must not
+arbitrate). An OBSERVABLE has no run to break: every arm is a deterministic
+reduction of the same cached rollouts, so a low score is the arm's own property.
+`screen` eliminates it; `validity` still VOIDs. Guarded by **T0.19**, whose
+load-bearing property is that the new mode does NOT change the verdict of the
+run that motivated it — round 1 had one finisher, and one finisher is a race
+with one runner in both modes. That is the check to demand of any rule written
+after the result that embarrassed it.
+
+## A sensor and the event it is anchored to must be on the same body
+
+PS.01's round-2 bakeoff anchored six arms to the landing — the substeps from
+first humanoid/world contact through 0.30 s after it — which was the right
+repair for round 1's exposure confound. Three of them nonetheless read
+**identically zero on every FALL run**. §2.2's sensor is `cfrc_ext[torso]`, and
+a 3.2 m drop lands on the FEET: the torso itself reaches the floor 0.3–0.5 s
+later, entirely outside a window that starts at the first contact anywhere on
+the body. The event detector and the sensor were on different bodies, so the
+window reliably contained no signal. Moving the sensor to the whole 13-body
+subtree lifted the same statistic from 0.42 to 0.84 AUC.
+
+A zero here is especially dangerous because it is not an error and not a
+plateau: `max` of an empty signal is 0.0 for both regimes, which produces an AUC
+of exactly 0.500 — a number that looks like an honest negative result and is
+actually a measurement that never happened. It was caught only by printing the
+raw channel values for one run of each regime before trusting any AUC.
+
+**Rule:** when a metric is *windowed*, *triggered* or *gated* by a second
+signal, state which body/channel/subsystem each of the two reads and check they
+are the same one. And before believing a null result from a windowed statistic,
+assert the window was non-empty — count the runs in which the trigger fired
+(`contact onset found in 60/60 runs`) and look at the values inside it. Same
+family as "an assertion made against a saturated quantity cannot fail": an
+extremum over an empty window is saturated at its initial value, and a
+chance-level score is what saturation looks like from the outside.
