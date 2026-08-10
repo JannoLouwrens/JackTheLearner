@@ -154,3 +154,55 @@ def selftest() -> dict:
 
 if __name__ == "__main__":
     print(selftest())
+
+
+def view_diagnostics(model, data, camera: str = "eye", res: int = 192,
+                     near_m: float = 1.0) -> dict:
+    """What does this camera actually SEE? Numbers for a thing only eyes caught.
+
+    On 2026-08-10 PG.6 certified the playground eye five times — R^2 0.97,
+    bearing 1.27 deg, every null and control behaving — while the camera stared
+    into a ladder 0.8 m from its lens. A quarter of Jack's visual field was
+    rungs. No metric on the ladder reported it because no metric looked at the
+    image; a rendered frame showed it in one second. This function is that
+    second made automatic.
+
+    NEAR-FIELD OCCLUSION IS THE RIGHT MEASURE, and finding that took one failed
+    attempt. Per-geom coverage does NOT catch it: in the bad view no single geom
+    exceeded 15% of the frame — the ladder only reached 25.9% once rails and
+    rungs were summed, so any per-geom threshold passes it. Grouping by name
+    prefix works but is brittle and needs a list of what counts as a structure.
+    What actually makes an occluder harmful is that it is CLOSE: the ladder sat
+    0.8 m away, the arena walls 5 m. So the measure is the fraction of the frame
+    nearer than `near_m`, read from the depth buffer, which needs no names at
+    all and works on a world nobody has thought about yet.
+
+    Measured separation: bad pose 22.2% inside 1 m, good pose 0.0%.
+    """
+    import numpy as np
+    import mujoco
+
+    r = mujoco.Renderer(model, height=res, width=res)
+    try:
+        r.enable_depth_rendering()
+        r.update_scene(data, camera=camera)
+        depth = r.render()
+        near_frac = float((depth < near_m).mean())
+        med_depth = float(np.median(depth))
+        r.disable_depth_rendering()
+
+        r.enable_segmentation_rendering()
+        r.update_scene(data, camera=camera)
+        seg = r.render()[:, :, 0]
+        cover = {}
+        for gid in np.unique(seg):
+            if 0 <= gid < model.ngeom:
+                cover[model.geom(int(gid)).name] = float((seg == gid).mean())
+    finally:
+        # Do NOT let this renderer be collected implicitly — freeing a
+        # GLContext poisons the shared display and the next renderer returns
+        # corrupted-but-plausible frames (see get_eye in PG.6).
+        if hasattr(r, "close"):
+            r.close()
+    return {"near_field_frac": near_frac, "median_depth_m": med_depth,
+            "floor_frac": cover.get("floor", 0.0), "coverage": cover}

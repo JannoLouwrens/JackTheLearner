@@ -208,6 +208,16 @@ size it generously. And artifacts must be fetched by ABSOLUTE path (/content/x.j
   /home/opc/jackthelearner. Those are the owner's calls — write them into
   `docs/DECISIONS_NEEDED.md` instead and carry on with something else.
 
+YOU MAY `git push`. Owner answered D3 on 2026-08-10: YES. This is not "changing
+something outside the repo" — it is publishing the repo's own commits, and the
+GPU backends CLONE FROM GITHUB, so an unpushed commit is invisible to every GPU
+job. `assert_ref_is_current` will refuse to build a job whose HEAD is not on
+origin/main, and it is right to: on 2026-08-05 a fix that lived only in the
+working tree caused the clone to run the published file, killing two runs and
+producing a wrong diagnosis. Three iterations declined to push and cost real
+work (T0.09's Colab re-run, skipped 2026-08-08, still undone). PUSH AFTER YOU
+COMMIT, every iteration, and always before submitting a GPU job.
+
 ## When stuck on a method question
 
 Spawn research agents rather than guessing. Questions like "is this the right

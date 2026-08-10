@@ -245,7 +245,22 @@ re-run.
 
 ---
 
-## D3 — May the loop `git push`? It has blocked GPU work three times now (OPEN, one-line answer)
+## ~~D3 — May the loop `git push`?~~ **ANSWERED: YES (owner, 2026-08-10)**
+
+> Owner said yes, with the tradeoff understood: the repo is public, so pushing
+> publishes. 26 unpushed commits were flushed the same day and
+> `assert_ref_is_current` now passes — the entire GPU half of the ladder (13
+> specs runnable today, ~46 once LC.04 lands) went from blocked to available.
+> `scripts/ladder_prompt.md` now instructs every iteration to push after
+> committing and before any GPU submission.
+>
+> **If the repo is ever made private, this breaks immediately** and silently in
+> the worst way: `build_job` clones with no credentials
+> (`git clone https://github.com/JannoLouwrens/JackTheLearner`), so a private
+> repo fails at clone time on every backend. See the note appended below before
+> flipping that switch.
+
+## D3 (original) — May the loop `git push`? It has blocked GPU work three times now
 
 **The mechanism.** `experiments/gpu.py:assert_ref_is_current` refuses to build any
 GPU job whose HEAD is not an ancestor of `origin/main`, and it is right to: the VM

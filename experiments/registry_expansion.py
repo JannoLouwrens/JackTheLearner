@@ -2220,4 +2220,45 @@ EXPANSION: list[Spec] = [
                "LG.00 to depends_on the moment it is registered; until then "
                "this spec is blocked in fact even though the ladder shows only "
                "DP.00 and VO.01."),
+
+    Spec("PG.9", 2, "The eye's view is not mostly obstacle",
+         hypothesis="Any camera the ladder certifies has less than 5% of its "
+                    "frame occupied by geometry nearer than 1 m, and shows at "
+                    "least 35% workspace (floor). A certified eye looks AT the "
+                    "world, not INTO a nearby object.",
+         falsified_by="Near-field occlusion at or above 5%, or workspace below "
+                      "35%. Then every visual certificate taken through that "
+                      "camera is measuring what fits between obstructions.",
+         null_baseline="None meaningful — this is a property of a fixed camera "
+                       "pose, measured directly rather than learned. The "
+                       "CONTROL carries the falsifiability here.",
+         metric="near_field_occlusion_frac",
+         budget=Budget.CPU_FAST, seeds=3, depends_on=["PG.6"],
+         control="THE HISTORICAL BAD POSE MUST FAIL. Eye at (0,-3.4) looking "
+                 "north, which is where it sat on 2026-08-09 - 0.8 m behind the "
+                 "ladder, measured 22.2% of frame inside 1 m. Re-rendered and "
+                 "asserted to FAIL this spec's own threshold. A view-quality "
+                 "test that cannot flag the view that motivated it is "
+                 "decoration.",
+         kills="Nothing directly. It is a GUARD on PG.6, UB.9-UB.13 and every "
+               "later visual spec: those measure acuity and binding through a "
+               "camera whose framing they all assume and none of them check.",
+         notes="WRITTEN BECAUSE THE LADDER HAS NO EYES. PG.6 passed FIVE times "
+               "- R^2 0.97, bearing 1.27 deg, every null and control behaving - "
+               "while the camera stared into a ladder 0.8 m away and a quarter "
+               "of Jack's visual field was rungs. A human rendering one frame "
+               "saw it instantly; 153 specs never could, because exactly one of "
+               "them renders an image at all. This spec converts that blind "
+               "spot into a number.\n"
+               "PER-GEOM COVERAGE WAS TRIED FIRST AND FAILS: in the bad view no "
+               "single geom exceeded 15% of frame (the ladder reached 25.9% only "
+               "when rails and rungs were summed), so any per-geom threshold "
+               "passes it. Near-field depth needs no names and generalises to "
+               "worlds nobody has designed yet - which matters, because the "
+               "jungle is coming and it is by definition cluttered.\n"
+               "THE 5% AND 35% ARE PRE-REGISTERED FROM A MEASURED SEPARATION, "
+               "not tuned: bad pose 22.2% / 51.2%, current pose 0.0% / 61.8%. "
+               "The gap is wide enough that the threshold sits in empty space "
+               "rather than beside either measurement. Do NOT relax it to admit "
+               "a future camera; move the camera."),
 ]
