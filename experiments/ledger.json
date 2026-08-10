@@ -1177,8 +1177,8 @@
     },
     "PG.6": {
       "amended": [],
-      "attempt": 3,
-      "commit": "185cb1c",
+      "attempt": 4,
+      "commit": "b809b6b",
       "control_metrics": {
         "control_canary_stable": 1.0,
         "control_canary_stable_std": 0.0,
@@ -1189,7 +1189,7 @@
         "oof_radius_r2": -0.00203333,
         "oof_radius_r2_std": 0.0017632
       },
-      "duration_s": 605.62,
+      "duration_s": 605.71,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1203,6 +1203,12 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-09T23:36:22",
           "status": "FAIL"
+        },
+        {
+          "commit": "185cb1c",
+          "message": "",
+          "ran_at": "2026-08-09T23:49:26",
+          "status": "PASS"
         }
       ],
       "impl_sha": "f8b7cf05e21acbf5",
@@ -1235,7 +1241,7 @@
         "visible_frac": 1.0,
         "visible_frac_std": 0.0
       },
-      "ran_at": "2026-08-09T23:49:26",
+      "ran_at": "2026-08-10T00:39:05",
       "seeds": [
         0,
         1,
