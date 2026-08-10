@@ -2069,3 +2069,58 @@ Two things worth carrying beyond this instance:
   A proxy tuned until its known false positives disappear is still a proxy;
   T0.21's P3 carries the "physically sound" case specifically so the cheap half
   can never be mistaken for the fix.
+
+## Reading a constant LIVE is not the same as reading it CURRENT
+
+T0.14's scar taught this repo not to PASTE a measured constant into a second
+file, where it drifts from the measurement that produced it. XL.00 obeyed that
+exactly: it read PS.01's `j0`/`alpha` out of the ledger at run time, and its
+docstring says why. The read gated on `entry.status == Status.PASS` **and
+nothing else**.
+
+That is the right question about whether PS.01 *succeeded* and no question at
+all about whether its entry still describes the world the borrower is about to
+simulate. PS.01's numbers are properties of `playground.py`, `w0.py` and
+`drives.py`. Change any of those and the entry becomes a measurement of a world
+that no longer exists — while everything scored in that world keeps computing
+on it and cannot tell. PS.01 was on the stale list at the moment XL.00 recorded
+PASS from its numbers (2026-08-10 12:27:59). The instance was benign, checked
+rather than assumed: the flag was the `IMPL_DEPS` widening and the world had not
+moved. The *guard* was absent, and XL.00's own `kills` clause states what it was
+guarding: *"a wrong answer here is not a wrong answer about the world; it is a
+wrong answer about every arm scored in it."* LC.03 and LC.04 score `life_gain`
+in that same world.
+
+**Rule:** a value borrowed from another spec's ledger entry needs the same
+freshness check the scoreboard applies to the entry itself, and the borrow must
+carry the source's `impl_sha` into the borrower's own metrics. Provenance that
+lives in a docstring is not provenance — the record has to name the version it
+computed on, and it has to name it **on the refusal path too**, or a VOID cannot
+say why it voided. Refusing is cheap (VOID, never FAIL — an uncalibrated test
+refutes nothing) and clears with one re-run of the source.
+
+*Actioned:* `protocol.borrow_metrics` refuses on every reason `staleness_of`
+gives — not PASS, DIRTY, UNVERIFIABLE, CHANGED, missing or non-numeric metric —
+and returns provenance either way. Guarded by **T0.22**, whose control is the
+old `status == PASS` rule kept executable and which duly hands over all three
+stale fixtures.
+
+**Two second-order things, both of which shaped the fix more than the fix did.**
+
+- **The guard closed the CLASS, not the instance, because a guard nothing is
+  required to use is one edit away from being bypassed.** T0.22's P9 scans every
+  test in the ladder for a direct `results.get("<real spec id>")` lookup and
+  requires zero. Today it is zero; the point is that the next spec that wants a
+  borrowed constant must go through the door rather than around it. Note the
+  discrimination the check needed: T0.08 plants and reads its own synthetic rows
+  under `"X.01"`, which is deliberately not a spec id, so managing your own
+  fixture is distinguishable from borrowing someone's measurement.
+- **When a second consumer appears for a rule, CALL it — the moment before the
+  copy is the only cheap moment.** `staleness_of` had been inline inside
+  `run.stale_claims`, which is a *report*; `borrow_metrics` is a *gate*, and the
+  two must never disagree about whether an entry is current. This file already
+  carries what the alternative costs (`two functions computing "the same" hash
+  is a defect, even while they agree` — the `impl_sha` divergence that flagged
+  twelve specs stale forever and billed a needless re-run). The refactor was
+  verified the boring way: `run stale` prints byte-identical output before and
+  after.

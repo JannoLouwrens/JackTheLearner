@@ -791,3 +791,45 @@ tag, per SYSTEM.md's rule that a directive travels with its cost.
 
 *Evidence: `experiments/ledger.json` T2.01 metrics; `docs/OVERSIGHT.md` §3.2,
 §5.3, §6.1; dependency graph walked over all 147 registered specs.*
+
+## D4 — The LC bakeoff is labelled `cpu<2h` and the research costs it at ~20 core-hours (OPEN, owner)
+
+**Raised 2026-08-10 by the builder.** Carried unwritten by three hand-offs
+before this one; the escalation is the work, not the arithmetic.
+
+**The mismatch, stated plainly.** `LC.03` is registered `budget=Budget.CPU_LONG`,
+and `protocol.Budget` defines `CPU_LONG = "cpu<2h"`. `docs/research/LEARNING_CORE.md`
+§5.7 costs `LC.03/LC.04/LC.05` — one set of runs, two scorings, 4 arms + 1
+reference at 3 seeds — at **19.8 core-hours**, and the whole programme at
+**~33 core-hours with slack**. The label is wrong by an order of magnitude, and
+it is wrong in the direction that gets a job started and then killed.
+
+**Why this is not simply a typo the loop should fix.** `Budget` has no CPU tier
+above `cpu<2h`, so there is no honest label to move it to. Adding one is a
+one-line change inside the repo and I could make it — but the label is not the
+decision. The decision is whether ~20–33 CPU-core-hours may be spent on a
+4-shared-core box that serves paying tenants (SYSTEM.md: *"this box serves
+paying tenants… stay at nice 19, under ~1.5 GB RAM"*), and in what shape:
+
+  1. **Run it here, spread across iterations.** Zero money, zero quota. Costs
+     ~5–8 wall-clock hours per arm-seed set at `nice 19`, and needs
+     checkpoint/resume across hour-long iterations — the loop currently has no
+     spec that survives its own iteration boundary, so this is new machinery.
+  2. **Run it on Kaggle's 30 h/week.** It is CPU work and Kaggle would take it,
+     but `GPU_LONG` jobs are the only thing that quota is scarce for — spending
+     it on CPU arms trades the one resource the GPU ladder needs.
+  3. **Cut the envelope.** Fewer arms or fewer seeds. This is the option that
+     costs science: `LC.03`'s own `falsified_by` VOIDs at fewer than two
+     surviving arms, and the seed count is what the 3-sigma gate is made of.
+     Not recommended — it buys hours by weakening the gate.
+
+**What the loop will do meanwhile:** nothing that presumes an answer. `LC.03`
+stays registered as it is (moving the label without deciding the spend would
+make the ladder read as if the question were settled). If you pick option 1 I
+will add the tier and the resume machinery; option 2 needs your read on the
+quota trade; option 3 is a threshold change and is yours by law 4.
+
+**Cost of NOT deciding:** `run blocked` ranks `LC.03` third in the project
+(frees 4, blocks 7), and it is the head of the bakeoff that decides HOW JACK
+LEARNS. It has been runnable-on-paper since `XL.00` and `PS.01` passed and no
+iteration can start it honestly.

@@ -2501,3 +2501,71 @@ spec.
 4. **UB.9 "Heard, not seen"** — the unison gate. `one brain / unison` now reads
    21 declared specs and exactly **1** passing (`LC.01`), against SYSTEM.md
    calling unison the one thing no bakeoff may trade away.
+
+## 2026-08-10 ~14:05 — a borrowed constant must be CURRENT, not merely PASS (overseer RANK 2)
+
+**Attempted:** the hand-off's item 1 and item 2 — the freshness guard the
+overseer asked for on `xl_00_death_and_respawn._calibration()`, generalised to
+the class, plus the three definitional stale flags.
+
+**What was wrong.** XL.00 reads PS.01's `j0`/`alpha` out of the ledger at run
+time rather than pasting them into a second file — right instinct, T0.14's scar.
+It gated on `entry.status == Status.PASS` **and nothing else**. That is a
+question about whether PS.01 succeeded and no question at all about whether its
+entry still describes the world XL.00 is about to simulate. PS.01 measures
+`playground.py` + `w0.py` + `drives.py`; move any of them and its numbers are a
+measurement of a world that no longer exists, while XL.00 and LC.03/LC.04's
+`life_gain` keep computing in it. PS.01 was ON THE STALE LIST when XL.00
+recorded PASS at 12:27:59. Benign this time (the flag was the `IMPL_DEPS`
+widening; the world had not moved) — the guard was simply absent.
+
+**Built:**
+- `protocol.borrow_metrics(source, keys)` — refuses on any reason
+  `staleness_of` gives (not PASS / DIRTY / UNVERIFIABLE / CHANGED / missing or
+  non-numeric metric), and returns the source's `impl_sha` as provenance on
+  BOTH paths. A refusal is `Status.VOID`, never FAIL: an uncalibrated test
+  refutes nothing. XL.00 now records `borrowed_impl_sha` and, when refused,
+  `borrow_refusal` in its own metrics.
+- `protocol.staleness_of()` is now the ONE definition of "this entry is not
+  about the code that exists now"; `run.stale_claims` CALLS it. The second
+  consumer was the moment to make it a call rather than a copy — this repo
+  already paid for the alternative once (`impl_sha`, twelve specs flagged
+  stale forever). Verified the boring way: `run stale` output byte-identical
+  before and after. `module_path_for` moved to `protocol.py` the same way.
+
+**Measured:** `T0.22` **PASS at attempt 1 (1.33s)**, 9 properties, 0 failed.
+P2 is the honest case (a rule that refuses everything is not a guard), P3/P4/P5
+are the known answers, P8 requires provenance on the refusal path too, and P9
+checks the CLASS — `direct_ledger_reads = 0`, no test in the ladder reads
+another spec's metrics off the ledger directly. Control = the old
+`status == PASS` rule kept executable; it hands over the numbers for all three
+stale fixtures, as required. `run verify`: 62 PASS re-derive, 0 gates ignoring
+their control, 0 unreplayable.
+
+**Also cleared:** `T0.20` and `T0.21` re-run from a clean tree (the DIRTY stamps
+from the coverage commit are gone), `PG.3` PASS (9.56s), `PG.8` PASS (7.06s).
+
+**Also escalated:** `D4` in DECISIONS_NEEDED — `LC.03` is labelled `cpu<2h`
+(`Budget.CPU_LONG`) and `LEARNING_CORE.md` §5.7 costs LC.03/04/05 at **19.8
+core-hours**, ~33 with slack. `Budget` has no honest CPU tier above 2 h, and
+the real question is not the label but whether ~20-33 core-hours may be spent
+on a box that serves paying tenants, and in what shape (here across iterations
+with new resume machinery / on Kaggle's 30 h / with a cut envelope — the last
+weakens the gate and is not recommended). Three hand-offs carried this
+unwritten; it is now written with the arithmetic attached.
+
+**NEXT ITERATION, in order.**
+1. **Re-run `PS.01` and then `XL.00`.** PS.01 (~14.5 min CPU) was re-running
+   when this iteration ended; XL.00 (~19 min CPU) is stale because this commit
+   changed its file, and it is the first consumer of the new guard — it should
+   record `borrowed_impl_sha` equal to PS.01's current hash. Check the log
+   before re-running: if PS.01 already recorded, only XL.00 is owed.
+2. **`UB.9` "Heard, not seen"** — the unison gate, second in the project
+   (`run blocked`: frees 4, blocks 7), and `one brain / unison` still reads 1
+   passing spec out of 21 declared while SYSTEM.md calls unison the one thing
+   no bakeoff may trade away.
+3. **`T1.02`** — ERROR since 2026-08-08 on `"kaggle: 0.0h left"`, an
+   infrastructure error and not a verdict. Quota is back and the push block is
+   gone (0 unpushed commits). It is `run next`'s first entry.
+4. **Do NOT start LC.03** until D4 is answered; starting it dishonestly is
+   worse than the delay.

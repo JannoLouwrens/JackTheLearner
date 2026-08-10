@@ -1036,8 +1036,8 @@
     },
     "PG.3": {
       "amended": [],
-      "attempt": 3,
-      "commit": "8876baa",
+      "attempt": 4,
+      "commit": "83fa1a5",
       "control_metrics": {
         "ascent_frac": -1.3119,
         "ascent_frac_std": 0.593984,
@@ -1056,7 +1056,7 @@
         "start_rung_z": 1.173333,
         "start_rung_z_std": 0.115854
       },
-      "duration_s": 8.32,
+      "duration_s": 9.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1070,9 +1070,15 @@
           "message": "",
           "ran_at": "2026-08-09T14:22:21",
           "status": "PASS"
+        },
+        {
+          "commit": "8876baa",
+          "message": "",
+          "ran_at": "2026-08-09T22:33:11",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "254b72d9831d4f9c",
+      "impl_sha": "015457a468f29cd2",
       "message": "",
       "metrics": {
         "ascent_frac": 0.973267,
@@ -1102,7 +1108,7 @@
         "start_rung_z": 1.173333,
         "start_rung_z_std": 0.115854
       },
-      "ran_at": "2026-08-09T22:33:11",
+      "ran_at": "2026-08-10T14:14:22",
       "seeds": [
         0,
         1,
@@ -1351,8 +1357,8 @@
     },
     "PG.8": {
       "amended": [],
-      "attempt": 3,
-      "commit": "8876baa",
+      "attempt": 4,
+      "commit": "83fa1a5",
       "control_metrics": {
         "contact_cfrc_norm_ref": 243.0831,
         "contact_cfrc_norm_ref_std": 6.221094,
@@ -1415,7 +1421,7 @@
         "world_mutated": 0.666667,
         "world_mutated_std": 0.471405
       },
-      "duration_s": 5.84,
+      "duration_s": 7.06,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1429,9 +1435,15 @@
           "message": "",
           "ran_at": "2026-08-09T14:21:51",
           "status": "PASS"
+        },
+        {
+          "commit": "8876baa",
+          "message": "",
+          "ran_at": "2026-08-09T22:33:03",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "cc445cdb0f280498",
+      "impl_sha": "b7a67a7faa07cdf3",
       "message": "",
       "metrics": {
         "contact_cfrc_norm_ref": 243.0831,
@@ -1509,7 +1521,7 @@
         "world_mutated": 0.666667,
         "world_mutated_std": 0.471405
       },
-      "ran_at": "2026-08-09T22:33:03",
+      "ran_at": "2026-08-10T14:14:30",
       "seeds": [
         0,
         1,
@@ -2742,23 +2754,29 @@
     },
     "T0.20": {
       "amended": [],
-      "attempt": 2,
-      "commit": "dfe3bb0+dirty",
+      "attempt": 3,
+      "commit": "83fa1a5",
       "control_metrics": {
         "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
         "inventory_size": 10.0,
         "properties_checked": 6.0,
         "properties_failed": 2.0,
-        "registry_size": 161.0,
+        "registry_size": 162.0,
         "senses_absent_live": 2.0
       },
-      "duration_s": 1.55,
+      "duration_s": 1.58,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
           "commit": "f7a4d4c",
           "message": "",
           "ran_at": "2026-08-10T06:13:55",
+          "status": "PASS"
+        },
+        {
+          "commit": "dfe3bb0+dirty",
+          "message": "",
+          "ran_at": "2026-08-10T13:15:52",
           "status": "PASS"
         }
       ],
@@ -2769,10 +2787,10 @@
         "inventory_size": 10.0,
         "properties_checked": 6.0,
         "properties_failed": 0.0,
-        "registry_size": 161.0,
+        "registry_size": 162.0,
         "senses_absent_live": 2.0
       },
-      "ran_at": "2026-08-10T13:15:52",
+      "ran_at": "2026-08-10T14:14:11",
       "seeds": [
         0
       ],
@@ -2781,8 +2799,8 @@
     },
     "T0.21": {
       "amended": [],
-      "attempt": 2,
-      "commit": "dfe3bb0+dirty",
+      "attempt": 3,
+      "commit": "83fa1a5",
       "control_metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
@@ -2793,7 +2811,7 @@
         "properties_checked": 7.0,
         "properties_failed": 4.0
       },
-      "duration_s": 1.26,
+      "duration_s": 1.24,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2801,6 +2819,12 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-10T13:14:42",
           "status": "FAIL"
+        },
+        {
+          "commit": "dfe3bb0+dirty",
+          "message": "",
+          "ran_at": "2026-08-10T13:15:02",
+          "status": "PASS"
         }
       ],
       "impl_sha": "4d10e37def5d3056",
@@ -2815,7 +2839,7 @@
         "properties_checked": 7.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-10T13:15:02",
+      "ran_at": "2026-08-10T14:14:12",
       "seeds": [
         0
       ],
