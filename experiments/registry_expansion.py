@@ -323,6 +323,52 @@ EXPANSION: list[Spec] = [
                "be loud, and the cost is that a spec discussing the mechanism "
                "may not spell it."),
 
+    Spec("T0.22", 0, "A number borrowed from another spec's entry cannot be stale",
+         hypothesis="`protocol.borrow_metrics` hands over another spec's "
+                    "measured constants ONLY when that entry still describes "
+                    "the code that exists now — refusing a source that is not "
+                    "PASS, that ran from a modified tree, that predates "
+                    "`impl_sha`, or whose implementation hash has moved — while "
+                    "still handing over the honest case; it names the source's "
+                    "`impl_sha` in the borrower's own record whether it hands "
+                    "over or refuses; and no test in the ladder reads another "
+                    "spec's metrics around it.",
+         falsified_by="Any of the nine properties failing. Above all P3: if a "
+                      "PASS entry whose implementation hash has moved still "
+                      "yields its numbers, the guard is the rule it replaced.",
+         null_baseline="An EMPTY ledger: every borrow must be refused. A "
+                       "borrower that produces constants for a spec that never "
+                       "ran is reading its own defaults, which is the failure "
+                       "this whole mechanism exists to prevent.",
+         metric="properties_failed", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.08"],
+         control="THE RULE THAT FAILED, kept executable: `status == PASS` and "
+                 "nothing else, as `xl_00_death_and_respawn._calibration` "
+                 "carried it until 2026-08-10. It must hand over the numbers "
+                 "for all three stale fixtures (CHANGED, DIRTY, UNVERIFIABLE) "
+                 "while the guard refuses them. A control that also refuses "
+                 "them is not a decoy and this spec measures nothing.",
+         kills="`borrow_metrics` as a guard anyone may rely on, and with it the "
+               "claim that XL.00 and the LC family compute in the world PS.01 "
+               "measured rather than in some earlier one.",
+         notes="SCAR, found by the overseer 2026-08-10 (RANK 2), and it is "
+               "T0.14's lesson arriving from the other side. T0.14 stopped a "
+               "measured constant being COPIED into a second file, where it "
+               "drifts from what produced it; XL.00 obeyed that by reading "
+               "PS.01's `j0`/`alpha` live from the ledger at run time — and "
+               "gated on `status == PASS` alone. Live is not current. PS.01's "
+               "numbers are properties of `playground.py`, `w0.py` and "
+               "`drives.py`; change any of them and its entry measures a world "
+               "that no longer exists while every arm scored in that world "
+               "keeps computing. The instance found was benign (PS.01's flag "
+               "was the `IMPL_DEPS` widening and the world had not moved) — "
+               "the GUARD was absent, and XL.00's own `kills` states the "
+               "stakes: 'a wrong answer here is not a wrong answer about the "
+               "world; it is a wrong answer about every arm scored in it.' "
+               "LC.03/LC.04 score `life_gain` in that same world, which is why "
+               "P9 checks the CLASS — no test may read another spec's metrics "
+               "off the ledger directly — rather than only the instance."),
+
     Spec("T0.19", 0, "The bakeoff's `screen` gate eliminates arms without lowering the bar",
          hypothesis="Under `Spec.gate_mode='screen'` an arm below the 3-sigma "
                     "learning gate is ELIMINATED rather than VOIDing the run, "

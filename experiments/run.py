@@ -28,7 +28,8 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-from .protocol import Ledger, Status, impl_deps_of, impl_sha_of
+from .protocol import (Ledger, Status, impl_deps_of, impl_sha_of,
+                       module_path_for, staleness_of)
 from .registry import BY_ID, LADDER, ready, tier
 
 TESTS_DIR = Path(__file__).parent / "tests"
@@ -236,41 +237,22 @@ def _module_for(spec_id: str):
     again — while the ledger reported a PASS that belonged to whichever file won
     the sort. Two implementations of one spec is an unresolved disagreement about
     what the spec means; it must be settled by a person, not by alphabetical order.
+
+    The underscore before the slug is load-bearing: "me_1*" would also match
+    me_10_*, so ME.1 and ME.10 would each see two implementations and raise.
+    Hierarchical ids (ME.11 and its bakeoff arms ME.11.0/ME.11.A) defeat that
+    underscore, so a longer spec id owns its own files. Both rules live in
+    `protocol.module_path_for` — this is one call, not a second copy of them.
     """
-    prefix = spec_id.lower().replace(".", "_")
-    # The underscore before the slug is load-bearing: "me_1*" would also match
-    # me_10_*, so ME.1 and ME.10 would each see two implementations and raise.
-    matches = sorted(TESTS_DIR.glob(f"{prefix}_*.py"))
-    # Hierarchical ids (ME.11 and its bakeoff arms ME.11.0/ME.11.A) defeat that
-    # underscore: `me_11_*` matches `me_11_0_eval_set_honest.py` too, so ME.11
-    # would report a duplicate implementation and refuse to run — a naming
-    # choice silently disabling a spec. A longer spec id owns its own files.
-    longer = [s.id.lower().replace(".", "_") for s in LADDER
-              if s.id != spec_id and s.id.lower().replace(".", "_").startswith(prefix + "_")]
-    if longer:
-        matches = [m for m in matches
-                   if not any(m.stem.startswith(p + "_") for p in longer)]
-    if len(matches) > 1:
-        raise RuntimeError(
-            f"{spec_id} has {len(matches)} implementations: "
-            f"{', '.join(m.name for m in matches)}. Delete or merge — the runner "
-            "will not choose between them."
-        )
-    if not matches:
+    path = module_path_for(spec_id, strict=True)
+    if path is None:
         return None
-    return importlib.import_module(f"experiments.tests.{matches[0].stem}")
+    return importlib.import_module(f"experiments.tests.{path.stem}")
 
 
 def _module_path_for(spec_id: str):
     """The implementation FILE for a spec, without importing it."""
-    prefix = spec_id.lower().replace(".", "_")
-    matches = sorted(TESTS_DIR.glob(f"{prefix}_*.py"))
-    longer = [s.id.lower().replace(".", "_") for s in LADDER
-              if s.id != spec_id and s.id.lower().replace(".", "_").startswith(prefix + "_")]
-    if longer:
-        matches = [m for m in matches
-                   if not any(m.stem.startswith(p + "_") for p in longer)]
-    return matches[0] if len(matches) == 1 else None
+    return module_path_for(spec_id)
 
 
 def stale_claims(ledger: Ledger) -> list:
@@ -319,22 +301,12 @@ def stale_claims(ledger: Ledger) -> list:
         path = _module_path_for(s.id)
         if entry is None or path is None:
             continue
-        stamp = str(getattr(entry, "commit", "") or "")
-        if stamp.endswith("+dirty"):
-            out.append((s.id, st.value, "DIRTY",
-                        f"ran from a modified tree at {stamp.split('+')[0]}; "
-                        f"the code that ran was never committed"))
-        recorded = getattr(entry, "impl_sha", None)
-        if not recorded:
-            out.append((s.id, st.value, "UNVERIFIABLE",
-                        f"recorded at {(entry.commit or '?')[:8]} before impl_sha existed"))
-            continue
-        # The SAME function the runner records with — see `impl_sha_of`'s last
-        # paragraph for what the second copy of this line cost.
-        cur = impl_sha_of(path)
-        if cur != recorded:
-            out.append((s.id, st.value, "CHANGED",
-                        f"{path.name}: ran on {recorded}, now {cur}"))
+        # THE RULE IS CALLED, NOT RESTATED. `borrow_metrics` refuses a stale
+        # source through the same function, so the number a test may compute on
+        # and the number this report calls current cannot drift apart — which
+        # is exactly how the two impl_sha implementations diverged.
+        for kind, detail in staleness_of(entry, path):
+            out.append((s.id, st.value, kind, detail))
     return out
 
 

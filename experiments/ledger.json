@@ -2822,6 +2822,38 @@
       "spec_id": "T0.21",
       "status": "PASS"
     },
+    "T0.22": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "3cc52b4+dirty",
+      "control_metrics": {
+        "direct_ledger_reads": 0.0,
+        "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly",
+        "offenders": "",
+        "properties_checked": 9.0,
+        "properties_failed": 5.0,
+        "source_impl_sha": "94735681c2c21360"
+      },
+      "duration_s": 1.33,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "8286fbef0fa6a166",
+      "message": "",
+      "metrics": {
+        "direct_ledger_reads": 0.0,
+        "failed_names": "",
+        "offenders": "",
+        "properties_checked": 9.0,
+        "properties_failed": 0.0,
+        "source_impl_sha": "94735681c2c21360"
+      },
+      "ran_at": "2026-08-10T14:13:10",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.22",
+      "status": "PASS"
+    },
     "T1.01": {
       "amended": [],
       "attempt": 1,

@@ -570,6 +570,137 @@ def impl_sha_of(path) -> Optional[str]:
         return None
 
 
+def module_path_for(spec_id: str, strict: bool = False):
+    """The implementation FILE for a spec, without importing it.
+
+    Lives here rather than in `run.py` because `borrow_metrics` needs it and
+    `run.py` imports this module, not the other way round. `run._module_for`
+    and `run._module_path_for` call it, so there is one rule for "which file
+    implements this spec" — the duplicate-implementation trap it guards is
+    described at `run._module_for`, and `strict=True` keeps that raise.
+    """
+    from .registry import LADDER
+    tests = Path(__file__).resolve().parent / "tests"
+    prefix = spec_id.lower().replace(".", "_")
+    matches = sorted(tests.glob(f"{prefix}_*.py"))
+    longer = [s.id.lower().replace(".", "_") for s in LADDER
+              if s.id != spec_id and s.id.lower().replace(".", "_").startswith(prefix + "_")]
+    if longer:
+        matches = [m for m in matches
+                   if not any(m.stem.startswith(p + "_") for p in longer)]
+    if strict and len(matches) > 1:
+        raise RuntimeError(
+            f"{spec_id} has {len(matches)} implementations: "
+            f"{', '.join(m.name for m in matches)}. Delete or merge — the runner "
+            "will not choose between them.")
+    return matches[0] if len(matches) == 1 else None
+
+
+def staleness_of(entry: "Result", path) -> List[tuple]:
+    """Every reason this entry is not a claim about the code that exists now.
+
+    Returns a list of `(kind, detail)` — empty means the entry still describes
+    the current implementation. Kinds:
+
+      DIRTY        the run's commit stamp ends in `+dirty`, so the code that
+                   produced it exists in no commit and cannot be recovered.
+      UNVERIFIABLE the entry predates `impl_sha`; nothing can be compared.
+      CHANGED      the implementation hash moved since the run.
+
+    An entry can be DIRTY *and* CHANGED — they are different facts about it,
+    so this returns a list rather than one verdict.
+
+    THIS IS THE DEFINITION, and it has exactly one home on purpose. It was
+    inlined in `run.stale_claims`, which is a REPORT; the moment a second
+    consumer appeared (`borrow_metrics`, so a test cannot compute on a stale
+    number) the choice was to copy the rule or to call it. The last time this
+    repo kept two implementations of "the same" hash they diverged silently and
+    every `IMPL_DEPS` spec was flagged stale forever — see `impl_sha_of`.
+    """
+    out: List[tuple] = []
+    stamp = str(getattr(entry, "commit", "") or "")
+    if stamp.endswith("+dirty"):
+        out.append(("DIRTY", f"ran from a modified tree at {stamp.split('+')[0]}; "
+                             f"the code that ran was never committed"))
+    recorded = getattr(entry, "impl_sha", None)
+    if not recorded:
+        out.append(("UNVERIFIABLE",
+                    f"recorded at {(entry.commit or '?')[:8]} before impl_sha existed"))
+        return out
+    cur = impl_sha_of(path)
+    if cur != recorded:
+        out.append(("CHANGED",
+                    f"{Path(path).name}: ran on {recorded}, now {cur}"))
+    return out
+
+
+@dataclass
+class Borrowed:
+    """The outcome of one spec reading numbers out of another spec's entry."""
+    ok: bool
+    refusal: str
+    values: Dict[str, float] = field(default_factory=dict)
+    provenance: Dict[str, Any] = field(default_factory=dict)
+
+
+def borrow_metrics(source_id: str, keys, ledger: Optional[Ledger] = None) -> Borrowed:
+    """Read another spec's measured constants — or refuse, with a reason.
+
+    Reading a calibration live from the ledger is the RIGHT instinct: T0.14's
+    scar is a constant pasted into a second file and drifting from the
+    measurement that produced it. But live is not the same as current. XL.00
+    did this and gated on `status == PASS` and nothing else, so PS.01's entry
+    would have kept supplying `j0`/`alpha` after `playground.py` changed the
+    world those numbers describe — a certificate about a world that no longer
+    exists, feeding a test that cannot tell. (Found by the overseer, 2026-08-10,
+    RANK 2; the instance was benign and the guard was absent.)
+
+    So this refuses on ANY reason `staleness_of` gives, not just on a status,
+    and it returns the source's `impl_sha` so the borrower can record WHICH
+    version of the source it computed on. A provenance that lives in a docstring
+    is not provenance.
+
+    UNVERIFIABLE refuses too. 44 entries predate `impl_sha` and a number
+    borrowed from one of them cannot be shown to describe today's code — that
+    is precisely the claim borrowing needs. Refusing is a VOID for the borrower
+    (an uncalibrated test refutes nothing), which is cheap and honest; a re-run
+    of the source clears it.
+
+    Callers get `Borrowed.ok == False` and a human-readable `refusal`; the
+    convention is to record `provenance` in the metrics either way and return
+    `Status.VOID`, never FAIL.
+    """
+    led = ledger or Ledger()
+    entry = led.results.get(source_id)
+    prov: Dict[str, Any] = {"borrowed_from": source_id}
+    if entry is None:
+        return Borrowed(False, f"{source_id} has no ledger entry", {}, prov)
+    prov["borrowed_status"] = entry.status.value if hasattr(entry.status, "value") else str(entry.status)
+    prov["borrowed_impl_sha"] = str(getattr(entry, "impl_sha", None))
+    prov["borrowed_commit"] = str(getattr(entry, "commit", "") or "")
+    prov["borrowed_ran_at"] = str(getattr(entry, "ran_at", "") or "")
+    if entry.status != Status.PASS:
+        return Borrowed(False, f"{source_id} is {prov['borrowed_status']}, not PASS", {}, prov)
+    path = module_path_for(source_id)
+    if path is None:
+        return Borrowed(False, f"{source_id} has no single implementation file to hash",
+                        {}, prov)
+    stale = staleness_of(entry, path)
+    if stale:
+        why = "; ".join(f"{k}: {d}" for k, d in stale)
+        return Borrowed(False, f"{source_id} is stale — {why}", {}, prov)
+    values: Dict[str, float] = {}
+    for k in keys:
+        v = entry.metrics.get(k)
+        if v is None:
+            return Borrowed(False, f"{source_id} recorded no metric {k!r}", {}, prov)
+        try:
+            values[k] = float(v)
+        except (TypeError, ValueError):
+            return Borrowed(False, f"{source_id}.{k} is not a number: {v!r}", {}, prov)
+    return Borrowed(True, "", values, prov)
+
+
 def _impl_sha(fn: Callable) -> Optional[str]:
     """`impl_sha_of` for the file a function is defined in.
 

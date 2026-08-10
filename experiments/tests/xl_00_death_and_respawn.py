@@ -35,6 +35,14 @@ death at e=1.0 checks a single endpoint.
 a measurement copied into a second file is a constant that drifts away from what
 produced it (T0.14's 28 dead padded columns). If PS.01 is not PASS this spec is
 VOID, not FAIL: an uncalibrated drive layer cannot refute anything.
+
+Live is not the same as CURRENT, and that distinction is the guard added
+2026-08-10: the read goes through `protocol.borrow_metrics`, which also refuses
+when PS.01's entry is STALE, DIRTY or UNVERIFIABLE, and returns the source's
+`impl_sha` so this spec's own record names the version it computed on. PS.01
+measures a world (`playground.py`, `w0.py`, `drives.py`); change the world and
+its numbers describe a world that no longer exists, while everything scored in
+that world — this spec, and LC.03/LC.04's `life_gain` — keeps computing.
 """
 from __future__ import annotations
 
@@ -43,7 +51,7 @@ import math
 import numpy as np
 
 from .. import drives
-from ..protocol import Ledger, Status, run_spec
+from ..protocol import Ledger, Status, borrow_metrics, run_spec
 from ..registry import BY_ID
 from ..w0 import (MIN_LEGAL_SPAWNS, SIM_S_PER_DECISION, SPAWN_PENETRATION, W0,
                   random_action, uniform_legal_spawn)
@@ -147,14 +155,26 @@ DRIFT_DECISIONS = 7500
 
 
 def _calibration() -> tuple:
-    """(j0, alpha) as PS.01 measured them, or (None, None) if it has not passed."""
-    entry = Ledger().results.get("PS.01")
-    if entry is None or entry.status != Status.PASS:
-        return None, None
-    j0, alpha = entry.metrics.get("j0_ms"), entry.metrics.get("alpha")
-    if j0 is None or alpha is None:
-        return None, None
-    return float(j0), float(alpha)
+    """(j0, alpha, provenance) as PS.01 measured them — or (None, None, why).
+
+    `protocol.borrow_metrics` does the refusing, and it refuses on more than a
+    status. This function used to ask only `status == PASS`, which is the right
+    question about whether PS.01 SUCCEEDED and no question at all about whether
+    its entry still describes the world this run is about to simulate. PS.01's
+    numbers are properties of `playground.py` + `w0.py` + `drives.py`; change
+    any of them and its entry becomes a measurement of a world that no longer
+    exists, while every arm XL.00 and LC.03/LC.04 score keeps being scored in
+    it. (Overseer, 2026-08-10, RANK 2. The instance was benign — the guard was
+    missing.)
+
+    The provenance dict goes into this spec's own metrics, so the record says
+    WHICH version of PS.01 these numbers came from instead of a docstring
+    saying they came from PS.01.
+    """
+    b = borrow_metrics("PS.01", ("j0_ms", "alpha"))
+    if not b.ok:
+        return None, None, {**b.provenance, "borrow_refusal": b.refusal}
+    return b.values["j0_ms"], b.values["alpha"], b.provenance
 
 
 def _biased_sampler(legal, rng, death_xy):
@@ -406,10 +426,10 @@ def _statue_1_over_b(seed: int, e0: float, *, j0: float, alpha: float) -> float:
 
 
 def _experiment(seed: int) -> dict:
-    j0, alpha = _calibration()
+    j0, alpha, prov = _calibration()
     m: dict = {"calibrated": float(j0 is not None),
                "j0": float(j0 or 0.0), "alpha": float(alpha or 0.0),
-               "min_lives": float(MIN_LIVES), "short_e0": SHORT_E0}
+               "min_lives": float(MIN_LIVES), "short_e0": SHORT_E0, **prov}
     if j0 is None:
         return m
 
@@ -500,7 +520,7 @@ def _control(seed: int) -> dict:
     sampler cannot read the diary and the diary cannot read the sampler, so
     neither rigging can move the other's statistic. (a), (c) and (e) are their
     own — (c) needs no simulation at all."""
-    j0, alpha = _calibration()
+    j0, alpha, _ = _calibration()
     if j0 is None:
         return {"c_calibrated": 0.0}
 
@@ -563,7 +583,9 @@ def _control(seed: int) -> dict:
 def _check(m: dict, c: dict):
     # ── the instrument ──────────────────────────────────────────────────
     if m.get("calibrated", 0.0) != 1.0 or c.get("c_calibrated", 0.0) != 1.0:
-        return Status.VOID          # PS.01 has not measured j0/alpha
+        return Status.VOID          # PS.01 supplied no USABLE j0/alpha: not
+        # PASS, stale, dirty, or unverifiable. `borrow_metrics` writes the
+        # reason into `borrow_refusal`, which is in the recorded metrics.
     if m.get("legal_spawns", 0.0) < m.get("legal_spawns_floor", 1e9):
         return Status.VOID
     for k in ("indep_p", "trend_p", "uniform_z"):
