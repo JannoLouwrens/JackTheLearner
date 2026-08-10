@@ -700,3 +700,79 @@ Both are now reported as `ABSENT` by `python -m experiments.run senses` every
 time it is run — the outside-reference audit `LESSONS.md:783` prescribed, built
 and gated as **T0.20** in the same commit. The hole is no longer invisible; it
 is merely open.
+
+---
+
+## HOUSEKEEPING 2026-08-10 06:45 (4th overseer audit) — two entries above are false
+
+Read before anything else in this file. Two of the entries a reader hits first
+describe conditions that no longer exist, and a decisions file whose top items
+are obsolete trains everyone to skim it.
+
+1. **"Kaggle GPU is not being granted — needs your account action"** (top of
+   file). It states it blocks `T0.10` and `T0.11`. **Both have been PASS since
+   2026-08-04**, and Kaggle has been the *primary* GPU backend all week —
+   11.9635 h billed in W32, including T2.01's 5.58 h kernel on a Tesla P100.
+   Its option 1 shipped six days ago. The replacement `DECISIONS_RESOLVED.md`
+   entry is already drafted at the "STALE" note further down this file. **Fifth
+   audit asking.** One line from the owner strikes it.
+
+2. **"/data is 95% full and Jack is not the cause (OPEN, owner action)."**
+   Measured now: `/data` is **18 GB used of 100 GB, 83 GB available (18%)**.
+   The escalation was correct when written and the condition is gone. Mark it
+   resolved with the date; the WorldTwin retention question it raises may still
+   be worth someone's time, but it is not blocking Jack and should not sit in
+   this file as though it were.
+
+## D2 — PRICE CORRECTION 2026-08-10 06:45 (overseer). It just got much cheaper.
+
+The 2026-08-09 18:37 correction priced D2 ("does a VOID dependency BLOCK its
+dependents?") at **40 specs**, 36 of them behind `T2.01 = VOID`.
+
+**`T2.01` is no longer VOID. It is FAIL**, recorded 2026-08-10T01:17 after the
+clean post-dropout-fix re-run. A FAIL blocks its dependents under *every*
+answer to D2, so those 36 specs are now unreachable regardless of how you
+decide. Recomputed over all 147 registered specs against the live ledger:
+
+    specs with a FAIL/VOID/ERROR in their dependency chain:  44 of 147
+      behind T2.01 (FAIL):  36     <- unaffected by D2
+      behind T2.02 (VOID):   4     <- this is D2's entire remaining scope
+      behind PS.01 (FAIL):   4     <- unaffected by D2
+
+**D2 is now worth exactly 4 specs: UB.15, UB.16, T2.13, T5.09.** It is no
+longer urgent and it should stop being described as though it were. All of the
+weight it used to carry has moved to **D3**.
+
+## D3 — RESTATED 2026-08-10 06:45 with the number that changed the argument
+
+D3 (may the loop `git push`?) is unchanged and is now the only decision in this
+file that blocks a large amount of work. Two updates:
+
+**The backlog grew.** 9 commits unpushed at the 00:45 audit; **20 now**.
+Kaggle remaining: 23.6 h then, **18.04 h now**, expiring 2026-08-16 (W33
+resets Sunday). Unspent free quota is not saved.
+
+**The argument for it has changed shape, and the honest version is weaker.**
+This entry, and every prior audit, argued "the T2.01 re-run frees 36 specs."
+That re-run has now happened — it was submitted on 08-09 at 19:42 from
+`496e951`, the last commit that *was* pushed, and it **FAILED**:
+
+    trained 257.2 (seeds 231.9 / 384.5 / 155.3)   random 118.0 +- 52.7
+    untrained control 153.8                        sigma_advantage 1.19 vs a 5.0 bar
+    3 seeds, ~692K env-steps/seed, 331 wall-minutes, Kaggle P100, 5.58 GPU-h
+
+All seeds beat random and the effect size is not close. It is **weaker** than
+the 2.21 sigma it replaced, at 3.6x the steps, because the across-seed spread
+grew faster than the mean — and an *untrained* net already covers a third of
+the gap to random, so some of what remains is architectural bias rather than
+learning.
+
+So nobody should promise the owner that one more run turns 36 specs green.
+**The truthful case for D3 is: we cannot find out whether anything frees them
+without the push.** The question "is this architecture capable of learning to
+move at all?" is now the live one, T2.02 is the spec built to arbitrate it, and
+neither can be asked on 4 shared ARM cores. Same one-line ask; accurate price
+tag, per SYSTEM.md's rule that a directive travels with its cost.
+
+*Evidence: `experiments/ledger.json` T2.01 metrics; `docs/OVERSIGHT.md` §3.2,
+§5.3, §6.1; dependency graph walked over all 147 registered specs.*

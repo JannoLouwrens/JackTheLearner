@@ -1475,3 +1475,63 @@ keyword grep that matched "voiced" in PG.5 and concluded nothing about voice.
 Its reference list is human biology and is deliberately not derived from the
 ladder, so registering specs can never shrink the standard. It reports and never
 gates a build, because a red exit is an incentive to shrink the inventory.
+
+## A guard that ENFORCES a property at submission must also RECORD it, or the record loses the property
+
+`experiments/gpu.py:assert_ref_is_current` exists on a principle stated in its
+own docstring: *"A GPU result is only attributable to a commit if the commit is
+what ran."* It checks that HEAD is an ancestor of `origin/main` before any job
+is built, and it was written after unpushed code cost two GPU runs and produced
+a wrong diagnosis. It works. The guard has never once let a job ship against
+code the VM could not see.
+
+And the ledger throws the answer away. `Result.env_stamp()` runs when the result
+is *recorded*, not when the experiment *starts*, so T2.01 — 5.58 GPU-hours,
+submitted at 19:42 from `496e951`, landed by a detached poll at 01:17 — is
+stamped `commit 2cd0289`, **six commits after the code that actually ran**. The
+guard verified attributability at the door and nothing carried it inside.
+
+The error is silent, plausible, and scales with job duration: for a same-minute
+CPU spec the stamp is right, which is exactly why nothing caught it for six
+days. The most expensive entry in the ledger is the most wrong, and the cheapest
+entries are all correct — the inverse of the ordering any reviewer would guess.
+
+**Rule:** whenever a guard establishes a fact the record depends on, the record
+must capture *that guard's value*, not re-derive the fact later from ambient
+state. Ambient state at record time is a different world than ambient state at
+run time, and every asynchronous step widens the gap. The general test: for each
+field in a record, ask *when* it is evaluated versus *when* the thing it
+describes happened. Any field evaluated later than its subject is a guess
+wearing a measurement's clothes. (Related, different axis:
+`A ledger entry is a claim about code, and nothing was checking the code still
+matched` — that one is about the entry going stale afterwards; this one is about
+it being wrong when written.)
+
+## An audit organ's STATUS WORDS are claims, and they must be defined against the goal's standard
+
+`experiments/senses.py` was built to stop a hole reading as completeness, and it
+is a good organ: an outside reference the registry cannot edit, coverage by
+explicit declaration rather than grep, gated by its own spec with a control that
+is the failed organ kept executable.
+
+Then it prints `[PASS] sight — demonstrated: PG.6`, because its `DEMONSTRATED`
+tier means only *"some declared spec for this sense is PASS."* PG.6's own
+docstring is scrupulously clear that it certifies **the sensor, not the net** —
+a ridge probe on rendered pixels, deliberately linear so that a passing score is
+a statement about the image and not about a network. GOAL.md's standard for a
+sense is far harder and is written down: *"we PROVE each one is load-bearing —
+ablate a sense, something measurable must degrade."* By that standard zero of
+ten senses are demonstrated. The organ reports two.
+
+Nobody exaggerated. The word `DEMONSTRATED` was reasonable when the only
+available signal was PASS/not-PASS, and the number it produces will be quoted
+into the Review, PROGRESS.md and every future audit within days — headline
+counts propagate much faster than the definitions behind them.
+
+**Rule:** when an organ assigns a capability to a status tier, define each tier
+against the standard in GOAL.md, not against "a spec passed", and make the tier
+count as many distinctions as the goal makes. Here that is four, not three:
+`ABSENT -> REGISTERED -> SENSOR (the world emits it and a probe reads it) ->
+LOAD-BEARING (an ablation degrades a measured quantity)`. A measuring instrument
+whose categories are coarser than the thing it measures reports progress that
+has not happened, and it does so in the vocabulary everyone will repeat.
