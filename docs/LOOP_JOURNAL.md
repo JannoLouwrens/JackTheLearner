@@ -2187,3 +2187,76 @@ and clearing them is a re-run, not an edit. Widening a certificate's scope
 retroactively invalidates every entry recorded under the narrow scope; budget the
 re-runs in the same iteration that widens it. `run status` also still reports 44
 entries that predate `impl_sha` entirely.
+
+## 2026-08-10 ~10:15 — W0-2 and W0-3 built; XL.00 registered; FAIL, on my own arithmetic
+
+**Attempted:** the previous handoff said "run LC.03". LC.03 is not runnable and
+was never runnable: it gates on `n_lives >= 12` and `cross_life_transfer`, and
+`w0.py`'s header said **"W0-2 death — NOT YET"**. Its `depends_on` named only
+PASSing specs, so `run blocked` advertised it as free work three iterations
+running. So the unit of work was the missing half of the world.
+
+**Built** (`experiments/w0.py`, `experiments/drives.py`): death on e or i
+reaching 0; a legal spawn set DERIVED from the live model (612–614 of a 25×25
+grid; legal = a resting body penetrates nothing non-ground); a uniform sampler
+that RECEIVES the death site and ignores it (so independence is measurable, not
+true by type signature); `DriveLayer.new_body()`, which resets the body and
+deliberately NOT the world clock or the food regrowth timers — resetting those
+is the free teleport to a good state §5.0's random respawn exists to prevent;
+and diary rows written by the world at each death carrying `meta["life"]`.
+`lethal` defaults False because LC.02 certified ONE UNBROKEN LIFE.
+
+**Registered XL.00** and made the dependency declared rather than remembered:
+LC.03 and XL.01 now depend on it. `run blocked` immediately promoted XL.00 to
+the project's **second-largest lever — frees 5, blocks 9**. It was invisible
+before because it was not a blocked node; it was not a node.
+
+**XL.00 = FAIL (874.6 s, 3 seeds), and the mechanism is not what failed.**
+statue implied 1/b **600.000 and 599.867 s** against BASAL_B's 600.0 at two
+independent charges; `n_lives` 13.67 ± 0.47; `spawn_legal_frac` 1.0;
+`uniform_z` 0.21; `indep_z` 0.39; `trend_z` 0.56; diary life-0 rows / life-index
+coverage / recall-crosses-death all 1.0. Controls (a) immortal 0 deaths,
+(b) at-death z 6.11, (c) biased z 572.2, (d) wiped 0 rows — all fired correctly.
+
+Two of MY pre-registrations were wrong:
+- **(e) the drift control did not fire: z 2.69 against a gate of 3.0** — while
+  producing a slope of +9.31 s per life over 9 lives, which is as monotone as a
+  sequence gets. A permutation z for a linear statistic is bounded by exactly
+  **sqrt(n − 1)**; at n = 9 the ceiling is 2.83. The gate was unreachable, so it
+  measured the sample size.
+- **`ladder_pose_rejected` 0.667** — the legality control probed the literal
+  `(LADDER_X, LADDER_Y)`, the point BETWEEN the rails, whose penetration depends
+  on per-seed mutated geometry. One seed of three disagreed.
+
+**Repaired under the T1.02 precedent, both derivations in the commit; the FAIL
+stays in the ledger's history.** Gates are now two-sided rank p-values, which
+have no ceiling and are STRICTER here (|z| ≤ 3 admits out to p ≈ 0.003; the gate
+rejects at 0.01). The occupied-pose probe reads `ladder_railL`'s position off
+the live model. And the smoke run of the repair caught the same error in its
+second form — a rank p has a FLOOR of `2/(N_PERM+1)`, and at N_PERM = 2000 the
+control gate of 0.001 was cleared by 5e-7. So `N_PERM = 100_000` (5× cushion),
+a module-level `assert P_MAX_CONTROL >= PERM_MARGIN * PERM_P_FLOOR`, and a VOID
+for any run whose positive control could not have reached its own gate — which
+is the guard that makes this class unrepeatable here. Verified: it VOIDs at
+n = 5 lives instead of falsely failing.
+
+Also widened **LC.02's `IMPL_DEPS`** from `["playground.py"]` to include
+`w0.py` and `drives.py` — it times w0.py's decision loop, so this commit would
+otherwise have left its PASS standing over code it never ran. **The LC.02 re-run
+is owed** (154 s, must not run concurrently with anything — it is a throughput
+measurement).
+
+**NEXT ITERATION, in order.**
+1. **Check `git status` first.** The XL.00 re-run under the repaired gates was
+   launched at ~10:55 and may have landed in `ledger.json` after this commit —
+   an uncommitted ledger diff is that result, not damage. Read it, commit it.
+   If it did not land, just run `XL.00` (≈15 min, CPU, no GPU).
+2. **Re-run LC.02** (154 s) to clear the IMPL_DEPS widening. Alone — nothing
+   else on the box.
+3. Then LC.03 is genuinely unblocked for the first time — but read the previous
+   handoff's second point before starting it: its declared budget `cpu<2h` is
+   wrong by ~10× against `LEARNING_CORE.md` §5.7's own envelope (19.8 core-hours
+   for 5 arms × 3 seeds), and there is no CPU budget label above `cpu<2h`. That
+   escalation is still unwritten and is worth an iteration on its own.
+4. Still stale and unrelated: PG.3, PG.6, PG.8, PG.9, PS.01 (the `IMPL_DEPS`
+   widening of `74f8631`); 44 entries predate `impl_sha` entirely.

@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 60 / 159 demonstrated
+## 60 / 160 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -668,6 +668,16 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ With a thermal drive active, time spent sheltered rises far above an otherwise identical agent whose thermal drive is disabled, sheltering BEGINS before the lethal threshold rather than after it, and when offered two shelters he prefers the one that actually retains heat.
       - _dies if:_ No difference from the drive-disabled agent; or sheltering only starts after the threshold (a reflex to dying, not anticipation); or he is indifferent between a working shelter and a cosmetic one.
       - _then delete:_ The owner's own image of success ('throw him in a jungle and see how he builds a shelter'). If refuted, the honest report is that we have an agent that survives cold by some other means, and the shelter story is ours, not his.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [!] **XL.00** He dies, he reappears somewhere he did not choose, and the diary crosses  — alpha=0.027222; alpha_std=0.0
+      - _asserts:_ With `lethal=True`, W0 ends a life when energy or integrity reaches zero at the rate the drive arithmetic predicts (a resting body's implied 1/b is within 2% of 600 s at two independent starting charges); the body reappears at a pose drawn UNIFORMLY from the legal spawn set (chi-square z <= 4 over 20,000 draws), always legal, and statistically INDEPENDENT of where it died (two-sided permutation p >= 0.01 on paired-vs-shuffled death->spawn distance); the diary survives every death with a life index covering every life; and a NON-LEARNER's lives do not lengthen across >= 12 lives (two-sided permutation p >= 0.01 on the life-length slope).
+      - _dies if:_ Death never fires; or the implied drain disagrees with the arithmetic; or a spawn lands inside geometry; or the spawn distribution is non-uniform or correlated with the death site - which is `LT` 2.1's objection arriving through the respawn, an experimenter-supplied curriculum; or the diary does not survive; or the non-learner's lives lengthen anyway, in which case LC.03's `life_gain` measures the WORLD and every learning-core verdict built on it is void.
+      - _then delete:_ W0-2 and W0-3 as implemented, and with them LC.03/LC.04 - the learning-core bakeoff scores `life_gain` and `cross_life_transfer`, neither of which exists if death, the respawn or the diary is broken. A wrong answer here is not a wrong answer about the world; it is a wrong answer about every arm scored in it.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
 - [ ] **XL.01** Death does not erase what he learned
       - _asserts:_ A life that follows earlier lives reaches a survival criterion faster than the first life did, and faster than a life whose carried memory was wiped at death.
       - _dies if:_ No speedup across lives, or the memory-wiped control speeds up just as much - in which case the improvement lives in the world or the curriculum, not in him, and 'he remembers across lives' is a description of our bookkeeping rather than of Jack.

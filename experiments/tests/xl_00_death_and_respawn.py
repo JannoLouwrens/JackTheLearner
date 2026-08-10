@@ -72,9 +72,46 @@ STATUE_CHARGES = (0.2, 0.5)   # two independent drains of the resting body
 BASAL_TOL = 0.02              # implied 1/b within 2% of 1/BASAL_B, and of itself
 UNIFORM_DRAWS = 20_000        # chi-square draws from the sampler alone
 UNIFORM_Z_MAX = 4.0           # |z| on the chi-square, normal approximation
-INDEP_Z_MAX = 3.0             # |z| on paired-vs-shuffled death->spawn distance
-TREND_Z_MAX = 3.0             # |z| on the non-learner's life-length slope
-N_PERM = 2000                 # permutations for both null distributions
+N_PERM = 100_000              # permutations for both null distributions. Sized
+                              # by the assertion below, not by taste: at 20,000
+                              # the attainable floor is 1.0e-4 and the control
+                              # gate 1.0e-3 clears it by 1.0001x, which passes
+                              # the letter of the margin check and none of its
+                              # intent. 100,000 buys 5x.
+# THE PERMUTATION GATES ARE p-VALUES, NOT z-SCORES, AND THE FIRST VERSION OF
+# THIS SPEC FAILED BECAUSE THEY WERE z. A permutation z for a linear statistic
+# is bounded above by exactly sqrt(n - 1) — the extreme pairing is r = 1, and
+# z = r * sqrt(n - 1) — so a threshold of 3.0 is UNREACHABLE below n = 10
+# however strong the effect. The drifting-world control produced a slope of
+# +9.31 s per life across n = 9 lives, which is as monotone as a sequence can
+# be, and scored 2.69 against sqrt(8) = 2.83. The gate was not strict; it was
+# impossible. A rank p-value has no such ceiling: the same control reaches
+# 1/(N_PERM + 1).
+#
+# This is STRICTER on the experiment side, not looser, and that is checked
+# rather than asserted: the old |z| <= 3.0 admits everything out to a
+# two-sided p of ~0.003, where P_MIN_NULL = 0.01 rejects at 0.01. Both
+# directions are gated (a respawn that lands systematically FAR from the death
+# site is as much a leak as one that lands near it).
+P_MIN_NULL = 0.01             # experiment: two-sided permutation p must EXCEED
+P_MAX_CONTROL = 0.001         # control: two-sided permutation p must FALL BELOW
+
+# AND THE SAME MISTAKE HAS A SECOND FORM, CAUGHT IN THE SMOKE RUN OF THE REPAIR:
+# a rank p also has a FLOOR — the most extreme possible observation still scores
+# `2 / (N_PERM + 1)`, and separately `2 / n!` when there are fewer orderings than
+# draws. At the N_PERM = 2000 of the first repair the floor was 0.0009995 against
+# a control gate of 0.001, so the positive controls would have passed by 5e-7 and
+# a single tied draw would have failed them. A gate must clear the statistic's
+# attainable range by a MARGIN, and the margin is asserted at import rather than
+# hoped for: this is the one line that makes the whole class of error impossible
+# to reintroduce here, and it costs nothing.
+PERM_MARGIN = 10.0
+PERM_P_FLOOR = 2.0 / (N_PERM + 1.0)
+assert P_MAX_CONTROL >= PERM_MARGIN * PERM_P_FLOOR, (
+    f"control gate {P_MAX_CONTROL} is within {PERM_MARGIN}x of the attainable "
+    f"floor {PERM_P_FLOOR:.2e} at N_PERM={N_PERM}: a positive control could "
+    f"only clear it by rounding")
+assert P_MIN_NULL > P_MAX_CONTROL, "the two gates would overlap"
 DRIFT_E0 = (0.05, 0.025)      # the drifting world: e0 = 0.05 + 0.025 * life
 
 
@@ -108,29 +145,62 @@ def _at_death_sampler(legal, rng, death_xy):
 
 
 # ── statistics, both permutation-based, both computed from the run's own draws ─
-def _perm_z(paired: float, null: np.ndarray) -> float:
+def _perm_matrix(n: int, seed: int) -> np.ndarray:
+    """(N_PERM, n) independent permutations of range(n), as one array."""
+    rng = np.random.RandomState(seed)
+    return np.argsort(rng.rand(N_PERM, n), axis=1)
+
+
+def _attainable_p(n: int) -> float:
+    """The smallest two-sided p this many lives and draws can ever produce.
+
+    Two floors, and the binding one is whichever is larger: the draw count
+    (`2 / (N_PERM + 1)`) and the number of distinct orderings (`2 / n!`). A gate
+    below this is not strict, it is unreachable — which is exactly how the first
+    version of this spec failed.
+    """
+    if n < 2:
+        return 1.0
+    orderings = math.factorial(n) if n <= 20 else float("inf")
+    return max(PERM_P_FLOOR, 2.0 / orderings)
+
+
+def _perm_p_and_z(observed: float, null: np.ndarray) -> tuple:
+    """Two-sided rank p (the gate) and the z (a diagnostic, never a gate).
+
+    `p = 2 * min(P[null <= obs], P[null >= obs])`, each with the observed value
+    added to its own null — the standard +1 correction, which also makes p
+    strictly positive so "p = 0" can never mean "no permutation was as extreme"
+    and "the null was empty" at the same time.
+    """
+    n = len(null)
+    lo = (1.0 + float((null <= observed).sum())) / (n + 1.0)
+    hi = (1.0 + float((null >= observed).sum())) / (n + 1.0)
+    p = min(1.0, 2.0 * min(lo, hi))
     sd = float(null.std())
-    if sd == 0.0:
-        return float("nan")            # a null with no spread cannot detect
-    return float((float(null.mean()) - paired) / sd)
+    z = float("nan") if sd == 0.0 else float((observed - float(null.mean())) / sd)
+    return p, z
 
 
-def _independence_z(deaths: np.ndarray, spawns: np.ndarray, seed: int) -> tuple:
-    """Is the spawn closer to the death site than a shuffled pairing would be?
+def _independence(deaths: np.ndarray, spawns: np.ndarray, seed: int) -> tuple:
+    """Is the spawn closer (or farther) from the death site than chance?
 
     The statistic is the MEAN death->spawn distance. Under independence the
-    paired value is a draw from the shuffled distribution; under a leak it is
-    smaller. Reported as a z, positive meaning "closer than chance".
+    paired value is one exchangeable draw from the shuffled pairings; under a
+    leak it sits in a tail. Returns (p, z, paired distance); the z is signed so
+    that NEGATIVE means "closer than chance", which is the leak direction.
     """
-    if len(deaths) < 3:
-        return float("nan"), float("nan")
+    n = len(deaths)
+    if n < 3:
+        return float("nan"), float("nan"), float("nan")
     paired = float(np.linalg.norm(spawns - deaths, axis=1).mean())
-    rng = np.random.RandomState(seed * 6011 + 17)
-    null = np.empty(N_PERM)
-    for b in range(N_PERM):
-        null[b] = np.linalg.norm(spawns[rng.permutation(len(spawns))] - deaths,
-                                 axis=1).mean()
-    return _perm_z(paired, null), paired
+    # The full death x spawn distance matrix, so a permutation is an index, not
+    # a recomputation: 20,000 nulls in one vectorised pass.
+    dist = np.linalg.norm(deaths[:, None, :] - spawns[None, :, :], axis=2)
+    perm = _perm_matrix(n, seed * 6011 + 17)
+    null = dist[np.arange(n), perm].mean(axis=1)
+    p, z = _perm_p_and_z(paired, null)
+    return p, z, paired
 
 
 def _slope(y: np.ndarray) -> float:
@@ -139,24 +209,25 @@ def _slope(y: np.ndarray) -> float:
     return float((x * (y - y.mean())).sum() / (x * x).sum())
 
 
-def _trend_z(lengths: np.ndarray, seed: int) -> tuple:
+def _trend(lengths: np.ndarray, seed: int) -> tuple:
     """Do lives lengthen across the run, beyond what shuffling them produces?
 
     Gated against a PERMUTATION null rather than a fixed slope, because a life
     length here is not a low-variance quantity: one accidental apple is worth
-    150 simulated seconds under the short fixture, so a fixed threshold would
-    read variance as a trend. The null is the same lives in a shuffled order.
+    150 simulated seconds under the short fixture, so a fixed slope threshold
+    would read variance as a trend. The null is the same lives in a shuffled
+    order. Returns (p, z, slope).
     """
-    if len(lengths) < 4:
-        return float("nan"), float("nan")
+    n = len(lengths)
+    if n < 4:
+        return float("nan"), float("nan"), float("nan")
     s = _slope(lengths)
-    rng = np.random.RandomState(seed * 7717 + 31)
-    null = np.array([_slope(lengths[rng.permutation(len(lengths))])
-                     for _ in range(N_PERM)])
-    sd = float(null.std())
-    if sd == 0.0:
-        return float("nan"), s
-    return float((s - float(null.mean())) / sd), s
+    x = np.arange(n, dtype=float)
+    x = x - x.mean()
+    y = lengths[_perm_matrix(n, seed * 7717 + 31)]
+    null = (y - y.mean(axis=1, keepdims=True)) @ x / (x * x).sum()
+    p, z = _perm_p_and_z(s, null)
+    return p, z, s
 
 
 def _uniformity_z(sampler, legal: np.ndarray, seed: int) -> float:
@@ -214,8 +285,8 @@ def _live(seed: int, *, j0: float, alpha: float, lethal: bool = True,
     n_legal_spawn = sum(1 for x, y in spawns
                         if (round(x, 6), round(y, 6)) in legal_set)
 
-    indep_z, paired = _independence_z(deaths, spawns, seed)
-    trend_z, slope = _trend_z(lives, seed)
+    indep_p, indep_z, paired = _independence(deaths, spawns, seed)
+    trend_p, trend_z, slope = _trend(lives, seed)
 
     # W0-3. Read from the store, not from a recall score: "the rows are still
     # there, indexed by life" and "retrieval reaches across a death" are two
@@ -238,8 +309,13 @@ def _live(seed: int, *, j0: float, alpha: float, lethal: bool = True,
                                         if e.meta.get("cause") == "integrity")),
         "spawn_legal_frac": (float(n_legal_spawn / len(spawns))
                              if len(spawns) else 0.0),
+        "indep_p": indep_p,
         "indep_z": indep_z,
+        "perm_z_ceiling": (math.sqrt(len(lives) - 1) if len(lives) > 1
+                           else float("nan")),
+        "perm_p_attainable": _attainable_p(len(lives)),
         "paired_death_spawn_dist": paired,
+        "trend_p": trend_p,
         "trend_z": trend_z,
         "life_slope_s_per_life": slope,
         "life_drift_frac": (abs(slope) * max(0, len(lives) - 1)
@@ -294,11 +370,22 @@ def _experiment(seed: int) -> dict:
         and abs(implied[0] - implied[1]) <= BASAL_TOL * target)
 
     # ── the legality predicate, known-answer both ways ──────────────────
-    import playground as pg
+    # THE OCCUPIED POSE IS READ FROM THE MODEL, NOT WRITTEN DOWN. The first
+    # version probed the literal (LADDER_X, LADDER_Y), which is the point
+    # BETWEEN the two rails: whether the body penetrates there depends on the
+    # torso radius against a 0.25 m half-width in a per-seed MUTATED world, and
+    # two of three seeds said yes while the third said no. A known answer that
+    # the world can change is not a known answer. `ladder_railL` is a capsule
+    # spanning z = 0 to the full ladder height, so a body standing at its own
+    # centre overlaps it under every mutation.
     probe = W0(seed=seed, j0=j0, alpha=alpha)
-    probe._place(pg.LADDER_X, pg.LADDER_Y)
+    rail = int(probe.model.geom("ladder_railL").id)
+    rx, ry = (float(probe.data.geom_xpos[rail][0]),
+              float(probe.data.geom_xpos[rail][1]))
+    probe._place(rx, ry)
     probe.mujoco.mj_forward(probe.model, probe.data)
-    m["ladder_pose_rejected"] = float(probe._penetrating())
+    m["occupied_pose_rejected"] = float(probe._penetrating())
+    m["occupied_probe_x"], m["occupied_probe_y"] = rx, ry
     a = float(probe.params.arena_size) - 0.75
     probe._place(a, a)
     probe.mujoco.mj_forward(probe.model, probe.data)
@@ -314,12 +401,13 @@ def _experiment(seed: int) -> dict:
     m.update(_live(seed, j0=j0, alpha=alpha))
     m["conjunction"] = float(
         m["statue_rate_agrees"] == 1.0
-        and m["ladder_pose_rejected"] == 1.0 and m["corner_pose_accepted"] == 1.0
+        and m["occupied_pose_rejected"] == 1.0
+        and m["corner_pose_accepted"] == 1.0
         and m["n_lives"] >= MIN_LIVES
         and m["spawn_legal_frac"] == 1.0
         and abs(m["uniform_z"]) <= UNIFORM_Z_MAX
-        and abs(m["indep_z"]) <= INDEP_Z_MAX
-        and abs(m["trend_z"]) <= TREND_Z_MAX
+        and m["indep_p"] >= P_MIN_NULL
+        and m["trend_p"] >= P_MIN_NULL
         and m["diary_life0_rows"] == 1.0
         and m["diary_life_index_covers"] == 1.0
         and m["diary_recall_crosses_death"] == 1.0
@@ -345,12 +433,17 @@ def _control(seed: int) -> dict:
         "c_calibrated": 1.0,
         "c_immortal_deaths": immortal["deaths"],
         "c_immortal_lives": immortal["n_lives"],
+        "c_at_death_indep_p": rigged["indep_p"],
         "c_at_death_indep_z": rigged["indep_z"],
         "c_at_death_paired_dist": rigged["paired_death_spawn_dist"],
+        "c_at_death_perm_p_attainable": rigged["perm_p_attainable"],
+        "c_drift_perm_p_attainable": drifting["perm_p_attainable"],
         "c_wiped_life0_rows": rigged["diary_life0_rows"],
         "c_wiped_rows": rigged["diary_rows"],
         "c_biased_uniform_z": _uniformity_z(_biased_sampler, legal, seed),
+        "c_drift_trend_p": drifting["trend_p"],
         "c_drift_trend_z": drifting["trend_z"],
+        "c_drift_perm_z_ceiling": drifting["perm_z_ceiling"],
         "c_drift_slope": drifting["life_slope_s_per_life"],
         "c_drift_lives": drifting["n_lives"],
     }
@@ -362,23 +455,30 @@ def _check(m: dict, c: dict):
         return Status.VOID          # PS.01 has not measured j0/alpha
     if m.get("legal_spawns", 0.0) < m.get("legal_spawns_floor", 1e9):
         return Status.VOID
-    for k in ("indep_z", "trend_z", "uniform_z"):
+    for k in ("indep_p", "trend_p", "uniform_z"):
         if not math.isfinite(m.get(k, float("nan"))):
-            return Status.VOID      # a null with no spread detects nothing
-    if not math.isfinite(c.get("c_at_death_indep_z", float("nan"))) or \
-            not math.isfinite(c.get("c_drift_trend_z", float("nan"))):
+            return Status.VOID      # too few lives to permute, or a null with
+            # no spread; either way the statistic detects nothing
+    if not math.isfinite(c.get("c_at_death_indep_p", float("nan"))) or \
+            not math.isfinite(c.get("c_drift_trend_p", float("nan"))):
         return Status.VOID
+    # A positive control that CANNOT reach its own gate has not been run; it has
+    # been asked for the impossible, and reading its miss as a verdict is what
+    # produced the FAIL this spec was revised from.
+    for k in ("c_at_death_perm_p_attainable", "c_drift_perm_p_attainable"):
+        if c.get(k, 1.0) * PERM_MARGIN > P_MAX_CONTROL:
+            return Status.VOID
 
     # ── the controls, each on its declared side ─────────────────────────
     if c.get("c_immortal_deaths", 1.0) != 0.0:
         return False                # (a) death fires where there is no death
-    if c.get("c_at_death_indep_z", 0.0) <= INDEP_Z_MAX:
+    if c.get("c_at_death_indep_p", 1.0) > P_MAX_CONTROL:
         return False                # (b) the independence detector is blind
     if c.get("c_biased_uniform_z", 0.0) <= UNIFORM_Z_MAX:
         return False                # (c) the uniformity detector is blind
     if c.get("c_wiped_life0_rows", 1.0) != 0.0:
         return False                # (d) wiping the diary changed nothing
-    if c.get("c_drift_trend_z", 0.0) <= TREND_Z_MAX:
+    if c.get("c_drift_trend_p", 1.0) > P_MAX_CONTROL:
         return False                # (e) the trend detector is blind
 
     # ── the claim ───────────────────────────────────────────────────────

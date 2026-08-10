@@ -2400,10 +2400,11 @@ EXPANSION: list[Spec] = [
                     "reappears at a pose drawn UNIFORMLY from the legal spawn "
                     "set (chi-square z <= 4 over 20,000 draws), always legal, "
                     "and statistically INDEPENDENT of where it died "
-                    "(permutation |z| <= 3 on paired-vs-shuffled death->spawn "
-                    "distance); the diary survives every death with a life "
-                    "index covering every life; and a NON-LEARNER's lives do "
-                    "not lengthen across >= 12 lives (|slope z| <= 3).",
+                    "(two-sided permutation p >= 0.01 on paired-vs-shuffled "
+                    "death->spawn distance); the diary survives every death "
+                    "with a life index covering every life; and a NON-LEARNER's "
+                    "lives do not lengthen across >= 12 lives (two-sided "
+                    "permutation p >= 0.01 on the life-length slope).",
          falsified_by="Death never fires; or the implied drain disagrees with "
                       "the arithmetic; or a spawn lands inside geometry; or "
                       "the spawn distribution is non-uniform or correlated "
@@ -2426,15 +2427,15 @@ EXPANSION: list[Spec] = [
                  "budget, same starting charge): deaths must be 0 - a death "
                  "detector that fires in a world without death is reading "
                  "something else. (b) SPAWN-AT-DEATH (`spawn_sampler` returns "
-                 "the death site): the independence z MUST exceed 3, or the "
-                 "independence statistic cannot see the very leak it exists to "
+                 "the death site): the independence p MUST fall below 0.001, "
+                 "or the statistic cannot see the very leak it exists to "
                  "exclude. (c) BIASED SAMPLER (draws only from the half of the "
                  "legal set nearest the origin): the uniformity z MUST exceed "
                  "4. (d) WIPED DIARY (the store cleared at every death): "
                  "life-0 rows must NOT survive. (e) DRIFTING WORLD (each new "
-                 "body starts with more charge than the last): the trend z "
-                 "MUST exceed 3 - T0.13's rule, a detector that has never seen "
-                 "its own positive control has measured nothing.",
+                 "body starts with more charge than the last): the trend p "
+                 "MUST fall below 0.001 - T0.13's rule, a detector that has "
+                 "never seen its own positive control has measured nothing.",
          kills="W0-2 and W0-3 as implemented, and with them LC.03/LC.04 - the "
                "learning-core bakeoff scores `life_gain` and "
                "`cross_life_transfer`, neither of which exists if death, the "
@@ -2453,7 +2454,20 @@ EXPANSION: list[Spec] = [
                "measurement (T0.14). W0-2's random respawn is the answer to "
                "LEARNING_CORE.md 5.0's own objection that an episode boundary "
                "is a free teleport to a good state, so the independence test "
-               "is the load-bearing half of this spec, not a formality."),
+               "is the load-bearing half of this spec, not a formality. "
+               "REVISED after the FAIL of 2026-08-10T10:40, which stays in the "
+               "ledger's history: the two permutation gates were z-scores at "
+               "3.0, and a permutation z for a linear statistic is bounded by "
+               "sqrt(n-1), so at the drift control's n=9 lives the ceiling is "
+               "2.83 and the gate was UNREACHABLE - it measured the sample "
+               "size, not the trend. Rank p-values have no such ceiling and "
+               "are STRICTER here (|z|<=3 admits out to p~0.003; the gate "
+               "rejects at 0.01). Same run: the occupied-pose known-answer "
+               "probed the point BETWEEN the ladder rails, whose penetration "
+               "depends on per-seed mutated geometry, and 1 of 3 seeds "
+               "disagreed; it now reads `ladder_railL`'s own position off the "
+               "live model. Both are T1.02 repairs - the experiment was "
+               "wrong, and neither touched W0-2 or W0-3."),
 
     Spec("XL.01", 5, "Death does not erase what he learned",
          hypothesis="A life that follows earlier lives reaches a survival "

@@ -1780,3 +1780,49 @@ move?* — never by asking what the spec is conceptually about. And widen it in
 the same commit that changes the newly-declared file, budgeting the re-run: a
 certificate whose scope grows retroactively invalidates every entry recorded
 under the narrow scope, which is a cost, not a formality.
+
+## A gate must be checked against the statistic's ATTAINABLE RANGE, not just against intuition
+
+XL.00 pre-registered its two permutation gates as z-scores at 3.0 and FAILED —
+not on the mechanism, which measured clean on every other axis, but because a
+permutation z for a linear statistic is bounded above by exactly **sqrt(n − 1)**
+(the extreme pairing is r = 1, and z = r·sqrt(n − 1)). The drifting-world
+positive control produced a life-length slope of **+9.31 s per life across 9
+lives** — as monotone as a sequence can be — and scored 2.69 against a ceiling
+of sqrt(8) = 2.83. The gate was not strict. It was *unreachable*, so what it
+actually measured was the sample size.
+
+The repair had the same bug in its second form, caught only because the smoke
+run was read rather than assumed: a rank p-value has a FLOOR of `2/(N_PERM + 1)`
+(and `2/n!` when there are fewer orderings than draws), and the first repair set
+`N_PERM = 2000` against a control gate of 0.001 — a floor of 0.0009995, cleared
+by 5e-7. One tied draw would have failed a control that was working perfectly.
+
+**Rule:** before committing any threshold, compute what the statistic can
+actually produce at this sample size and this number of draws — its ceiling, its
+floor, or both — and require the gate to clear that range by a stated margin.
+Then *assert the margin in code*, at import, so the check cannot rot: XL.00 now
+carries `assert P_MAX_CONTROL >= PERM_MARGIN * PERM_P_FLOOR` and VOIDs any run
+whose positive control could not have reached its own gate. This is the same
+family as "measure the quantity you are claiming, not a proxy" — there, ask what
+the metric equals when the mechanism is absent; here, ask what it equals when
+the mechanism is as loud as it can possibly get. **A positive control that
+cannot reach its gate has not been run, and reading its miss as a verdict
+convicts the experiment of the experimenter's arithmetic.**
+
+## A "known answer" that a mutated world can change is not a known answer
+
+The same run had `ladder_pose_rejected = 0.667`: the legality predicate's
+positive control placed the body at the literal `(LADDER_X, LADDER_Y)`, which is
+the point *between* the two rails. Whether a body there penetrates anything is a
+function of the torso radius against a 0.25 m half-width in a world that
+`PlaygroundParams.mutate()` edits per seed — so two seeds said "rejected" and
+one said "legal", and the fixture had no answer of its own to be right about.
+Reading `ladder_railL`'s position off the live model instead gives a pose that
+overlaps a real capsule under every mutation.
+
+**Rule:** a known-answer test in a randomised world must derive its answer from
+the same live model the code under test reads (T0.14's rule, applied to
+fixtures), never from a constant that was true of the nursery seed. If you
+cannot state why the answer holds under *every* world the mutator can produce,
+you have written a probe, not a control.
