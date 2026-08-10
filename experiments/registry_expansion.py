@@ -181,6 +181,52 @@ EXPANSION: list[Spec] = [
                "entries and as the Arm.cost lesson — a field that cannot "
                "represent 'unknown' will silently claim a value."),
 
+    Spec("T0.18", 0, "Every PASS is re-derivable from the record, and every control is read",
+         hypothesis="Feeding each PASSing entry's RECORDED metrics back through "
+                    "its COMMITTED `_check` re-derives PASS for all of them; and "
+                    "deleting the control metrics from that same call changes "
+                    "the verdict for every spec that ran a control, so no gate "
+                    "certifies a capability while ignoring the condition that "
+                    "was supposed to fail.",
+         falsified_by="Any PASS whose committed gate no longer accepts its own "
+                      "recorded numbers; any gate that still returns PASS with "
+                      "`control_metrics = {}`; any spec declaring a control it "
+                      "never ran; any entry the scan could not judge; or the "
+                      "undeclared-control debt growing past its ratchet.",
+         null_baseline="The pre-2026-08-10 machine: nothing re-derived a stored "
+                       "verdict at all, and 'the control ran' was the strongest "
+                       "statement available — a gate that never reads `c` is "
+                       "indistinguishable from one that does, under every "
+                       "structural check the repo had (grep, non-empty "
+                       "control_metrics, and T0.13, which only perturbs keys a "
+                       "gate REFERENCES).",
+         metric="control_blind_specs", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.08", "T0.13"],
+         control="A planted five-entry record scanned by the SAME function: one "
+                 "healthy gate that must NOT be flagged, one whose recorded "
+                 "metrics no longer clear it, one that ignores its control "
+                 "entirely, one declaring a control it never ran, and one "
+                 "recording a control its spec does not declare. The scan must "
+                 "flag exactly the four and spare the first. Without it a clean "
+                 "scan and a scan that never ran are the same output — the "
+                 "failure T0.13 shipped on its own first attempt.",
+         kills="Nothing. It re-arms law 2 ('a control that also passes means "
+               "the test measures nothing'), which was unenforceable for any "
+               "gate that never read its control.",
+         notes="FROM the overseer 2026-08-10, FOR THE BUILDER item 1, and its "
+               "§1.2/§1.3 findings carried across three audits. Scope is "
+               "PASS entries only — a claim is what needs re-judging. Two "
+               "corrections to the ask, both recorded rather than quietly "
+               "applied: (a) probe A does NOT catch a loosened check, it "
+               "catches the opposite drift; `impl_sha` catches loosening. (b) "
+               "the undeclared-control count is 19 among PASSes, not 20 — the "
+               "20th (T2.02) is VOID. That count is gated as a RATCHET, not at "
+               "zero: it is a real debt, it went 19->20->19 across audits with "
+               "nothing to stop it growing, and a threshold nobody can meet is "
+               "a threshold nobody watches. Also exposed as `run verify`, "
+               "which runs the fixture first and refuses to report a clean "
+               "scan it may not have performed."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "

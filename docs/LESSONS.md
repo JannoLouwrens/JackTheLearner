@@ -1211,7 +1211,46 @@ the provenance of a verdict it never re-derived. And whenever a check consumes
 two inputs, delete one and demand the answer changes: that is how you learn which
 of them the check was actually reading.
 
-(Queued as **T0.18** / `run verify` — see `docs/OVERSIGHT.md` FOR THE BUILDER 1.
-Prescribing this as advice rather than building it would repeat the failure in
-`LESSONS.md`'s own "periodically ask which specs are unreachable" entry, which
-was advice to humans and failed twice before it became `run blocked`.)
+*Landed 2026-08-10* as `experiments/verify.py`, `run verify` and **T0.18**
+(PASS: 55 re-judged, 0 disagreements, 50 controls probed, 0 blind). Building it
+rather than prescribing it was the point — `LESSONS.md`'s own "periodically ask
+which specs are unreachable" entry was advice to humans and failed twice before
+it became `run blocked`.
+
+**One correction to the finding above, kept in the open.** Probe A does *not*
+catch a loosened check, which is what both the audit and the paragraph above
+claim for it. Loosen a threshold and the recorded numbers clear it more easily,
+so the replay returns True and the entry reads clean; probe A catches the
+opposite drift (a gate tightened, or an entry that stopped satisfying its own
+code). Loosening is caught by `impl_sha` / `run stale`, which see the file
+change — and 48 of 58 entries predate `impl_sha`, so the two are complements
+with a real gap between them, not one check stated twice.
+
+**Rule (a second instance of "verify a mechanism claim before fixing it, even
+from a careful source"):** when an audit hands you a defect AND the probe that
+would catch it, re-derive the link yourself. The probe was right, the defect was
+real, and the sentence joining them was wrong — which is the hardest shape to
+notice, because everything either side of it checks out.
+
+## The guard written to strengthen an audit was the next thing that audit caught
+
+T0.18's gate asserted that its known-answer fixture had spared the healthy
+entry, four times, as `"FIX.healthy" not in c["..._detail"]`. Every one of those
+four assertions is unfalsifiable at the operating point: T0.13 perturbs a string
+metric to `""` and to a sentinel, and neither contains `"FIX.healthy"`, so the
+verdict cannot move. A spec written to close the audit surface shipped with four
+decorative assertions — the exact defect T0.13 exists to catch — inside the
+check that certifies the audit surface.
+
+It cost nothing, because T0.13 is a command: running it on the new entry named
+them immediately. The repair is also strictly better science, which is the part
+worth generalising — `c["control_blind_detail"] == "FIX.blind"` pins *which*
+entry was flagged, where the negative form only said one particular entry was
+not. The inert assertion and the weak assertion were the same assertion.
+
+**Rule:** a negative containment check (`X not in blob`) is almost always the
+weak form of an equality you could have written, and it is the form that goes
+inert first, because "absent" is the default state of a string. Prefer pinning
+the whole value. And run the meta-gates against your own new spec *before*
+committing it: this project's audits are commands now, so "would T0.13 flag
+this?" is a 1.4-second question, not a judgement call.

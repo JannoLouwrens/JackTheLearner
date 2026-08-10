@@ -1933,8 +1933,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 12,
-      "commit": "6c0fcd1",
+      "attempt": 13,
+      "commit": "58f07f6",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -1956,7 +1956,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.43,
+      "duration_s": 1.44,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2024,6 +2024,12 @@
           "message": "",
           "ran_at": "2026-08-09T19:14:22",
           "status": "PASS"
+        },
+        {
+          "commit": "6c0fcd1",
+          "message": "",
+          "ran_at": "2026-08-10T00:12:47",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2031,7 +2037,7 @@
       "metrics": {
         "disarmed_conjunct_keys": 0,
         "disarmed_detail": "",
-        "gates_scanned": 54,
+        "gates_scanned": 55,
         "hazard_detail": "",
         "inert_gate_keys": 1,
         "precedence_hazards": 0,
@@ -2049,7 +2055,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-10T00:12:47",
+      "ran_at": "2026-08-10T01:14:24",
       "seeds": [
         0
       ],
@@ -2224,6 +2230,75 @@
         0
       ],
       "spec_id": "T0.17",
+      "status": "PASS"
+    },
+    "T0.18": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "58f07f6",
+      "control_metrics": {
+        "control_blind_detail": "FIX.blind",
+        "control_blind_specs": 1,
+        "control_read_by_key": 2,
+        "control_read_by_value": 1,
+        "controls_probed": 4,
+        "declared_control_never_ran": 1,
+        "declared_never_ran_detail": "FIX.promised",
+        "disagreement_detail": "FIX.disagree(BOOL:False)",
+        "entries_seen": 5,
+        "no_control_detail": "FIX.promised",
+        "no_control_specs": 1,
+        "self_excluded_detail": "",
+        "self_excluded_entries": 0,
+        "unavailable_detail": "",
+        "unavailable_entries": 0,
+        "undeclared_control_ran": 1,
+        "undeclared_ran_detail": "FIX.undeclared",
+        "unevaluable_detail": "",
+        "unevaluable_gates": 0,
+        "verdict_disagreements": 1,
+        "verdicts_rejudged": 5
+      },
+      "duration_s": 1.38,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "58f07f6",
+          "message": "",
+          "ran_at": "2026-08-10T01:13:27",
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "80fe15acf02d5efc",
+      "message": "",
+      "metrics": {
+        "control_blind_detail": "",
+        "control_blind_specs": 0,
+        "control_read_by_key": 47,
+        "control_read_by_value": 3,
+        "controls_probed": 50,
+        "declared_control_never_ran": 0,
+        "declared_never_ran_detail": "",
+        "disagreement_detail": "",
+        "entries_seen": 56,
+        "no_control_detail": "T0.01, T0.08, T0.10, T1.03, T1.05",
+        "no_control_specs": 5,
+        "self_excluded_detail": "T0.18",
+        "self_excluded_entries": 1,
+        "unavailable_detail": "",
+        "unavailable_entries": 0,
+        "undeclared_control_ran": 19,
+        "undeclared_ran_detail": "ME.5, ME.8, PG.1, PG.3, PG.4, T0.03, T0.05, T0.06, T0.07, T0.09, T0.11, T1.04, T1.06, T1.07, T1.08, T1.09, T1.10, T2.10, T2.12",
+        "unevaluable_detail": "",
+        "unevaluable_gates": 0,
+        "verdict_disagreements": 0,
+        "verdicts_rejudged": 55
+      },
+      "ran_at": "2026-08-10T01:14:18",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.18",
       "status": "PASS"
     },
     "T1.01": {

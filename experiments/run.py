@@ -411,6 +411,58 @@ def cmd_stale(ledger: Ledger) -> int:
     return 0
 
 
+def cmd_verify(ledger: Ledger) -> int:
+    """Re-judge every PASS from the record alone, and probe whether its gate
+    actually reads its control. See `experiments/verify.py`; gated as T0.18.
+
+    Costs no experiment: the ledger already stores the numbers and the repo
+    already stores the thresholds, so the decision can simply be re-taken.
+    """
+    from .verify import UNDECLARED_CONTROL_BUDGET, assert_detector_works, collect, scan
+
+    assert_detector_works()      # a scan that cannot see a planted defect is not reported
+    r = scan(collect(ledger, exclude=("T0.18",)))
+
+    print(f"\nRe-judged {r['verdicts_rejudged']} PASS entries from the record "
+          f"alone; probed {r['controls_probed']} controls.\n")
+    rows = [
+        ("verdicts that no longer re-derive", r["verdict_disagreements"],
+         r["disagreement_detail"]),
+        ("gates that IGNORE their control", r["control_blind_specs"],
+         r["control_blind_detail"]),
+        ("controls declared but never run", r["declared_control_never_ran"],
+         r["declared_never_ran_detail"]),
+        ("gates that could not be replayed", r["unevaluable_gates"],
+         r["unevaluable_detail"]),
+        ("entries that could not be audited", r["unavailable_entries"],
+         r["unavailable_detail"]),
+    ]
+    for label, n, detail in rows:
+        mark = "  " if n == 0 else "! "
+        print(f"  {mark}{label:38} {n}" + (f"   {detail}" if detail else ""))
+    print(f"\n  ? controls run but NOT declared in the spec      "
+          f"{r['undeclared_control_ran']} / {UNDECLARED_CONTROL_BUDGET} budget")
+    if r["undeclared_ran_detail"]:
+        print(f"      {r['undeclared_ran_detail']}")
+    print("      The science is fine — each of these gates is measured above to "
+          "read its\n      control. The DECLARATION is what rots: `Spec.control` "
+          "is the field an\n      auditor greps, and a false negative there makes "
+          "the grep useless.")
+    if r["no_control_specs"]:
+        print(f"\n  ? PASSes with NO control at all                 "
+              f"{r['no_control_specs']}\n      {r['no_control_detail']}")
+        print("      Probe B has nothing to say about these: there is no control "
+              "to delete.\n      An existence claim whose gate was never shown "
+              "capable of reporting the\n      bad case (OVERSIGHT §1.2).")
+    if r["self_excluded_entries"]:
+        print(f"\n  ? {r['self_excluded_entries']} entry self-excluded "
+              f"({r['self_excluded_detail']}) — a spec cannot re-judge its own "
+              f"entry;\n      that entry is written after the scan. Its gate is "
+              f"exercised by T0.18's control.")
+    print()
+    return 0
+
+
 def cmd_next(ledger: Ledger) -> int:
     avail = ready(ledger)
     if not avail:
@@ -781,7 +833,8 @@ def cmd_render(ledger: Ledger) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("spec", nargs="*", help="spec ids, or 'status' / 'next'")
+    ap.add_argument("spec", nargs="*",
+                    help="spec ids, or status / next / blocked / stale / verify / render")
     ap.add_argument("--tier", type=int)
     ap.add_argument("--gate", action="store_true", help="re-run all passing tests")
     ap.add_argument("--by", help="amend: the spec or finding that motivates the change")
@@ -796,9 +849,11 @@ def main() -> int:
         return cmd_amend(ledger, args)
 
     # status/next/render are read-only and must not block on a running experiment.
-    if args.spec and args.spec[0] in ("status", "next", "blocked", "render", "stale"):
+    if args.spec and args.spec[0] in ("status", "next", "blocked", "render",
+                                      "stale", "verify"):
         return {"status": cmd_status, "next": cmd_next, "blocked": cmd_blocked,
-                "render": cmd_render, "stale": cmd_stale}[args.spec[0]](ledger)
+                "render": cmd_render, "stale": cmd_stale,
+                "verify": cmd_verify}[args.spec[0]](ledger)
     if not args.spec and not args.gate and args.tier is None:
         return cmd_status(ledger)
 

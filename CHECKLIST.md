@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 55 / 137 demonstrated
+## 56 / 138 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -277,6 +277,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every change to a ledger entry that was not produced by run_spec is attributable from the entry itself — author, reason, prior value, commit and time — and no such change can set a status that asserts a capability.
       - _dies if:_ An amendment landing without author or reason; an amendment reaching PASS or FAIL; a run_spec result carrying an `amended` note it did not earn; an unreconstructible attempt count re-asserting an integer after a later run; or an amended verdict re-recorded into history with its amendment stripped.
       - _then delete:_ Nothing. It re-arms the ledger header's own claim that a capability here came from a test that could have failed.
+- [x] **T0.18** Every PASS is re-derivable from the record, and every control is read
+      - _asserts:_ Feeding each PASSing entry's RECORDED metrics back through its COMMITTED `_check` re-derives PASS for all of them; and deleting the control metrics from that same call changes the verdict for every spec that ran a control, so no gate certifies a capability while ignoring the condition that was supposed to fail.
+      - _dies if:_ Any PASS whose committed gate no longer accepts its own recorded numbers; any gate that still returns PASS with `control_metrics = {}`; any spec declaring a control it never ran; any entry the scan could not judge; or the undeclared-control debt growing past its ratchet.
+      - _then delete:_ Nothing. It re-arms law 2 ('a control that also passes means the test measures nothing'), which was unenforceable for any gate that never read its control.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

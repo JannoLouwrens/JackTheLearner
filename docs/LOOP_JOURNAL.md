@@ -1531,3 +1531,47 @@ item 5 (`Spec.control` is declared `None` on 19 PASSes that ran a control, so
 "does this spec declare a control?" is unusable as an audit query), item 6
 (T1.03/T1.05 have no control), item 7 (ME.8 PASSes at seeds=1 on a fix motivated
 by a seed-2 collapse).
+
+---
+
+**2026-08-10 — T0.18 PASS: the record re-judges itself, and every control is
+read.** Took the overseer's RANK 1 FOR THE BUILDER item (`run verify`). Built
+`experiments/verify.py`, wired `python -m experiments.run verify`, registered
+and ran **T0.18** (CPU_FAST, 1.4 s): re-judged **55 PASS entries from the record
+alone — 0 disagreements**, probed **50 controls — 0 blind** (47 read their
+control by key, 3 by value), **0** specs declaring a control they never ran, 0
+unevaluable, 0 unaudited. Probe B is the new capability: emptying
+`control_metrics` and demanding the verdict move is the only way to tell "the
+gate reads its control" from "the control was merely run" — grep can't see it,
+non-empty `control_metrics` can't see it, and T0.13 can't either, because it
+perturbs only the keys a gate *references*, so a gate referencing none reads
+clean. Law 2 was unenforceable for that shape and now is not.
+
+Two corrections to the ask, recorded rather than quietly applied. (a) Probe A
+does **not** catch a loosened check, which is what the audit claims for it —
+loosening makes the recorded numbers clear the gate more easily, so the replay
+returns True. It catches the opposite drift; `impl_sha`/`run stale` catches
+loosening, and 48 of 58 entries predate that field, so the two are complements
+with a real gap between them. (b) The undeclared-control count is **19 among
+PASSes**, not 20 — the 20th (T2.02) is VOID. Gated as a **ratchet**
+(`UNDECLARED_CONTROL_BUDGET = 19`, may only be lowered) rather than at zero: the
+debt is real, it went 19->20->19 across audits with nothing to stop it growing,
+and a threshold nobody can meet is a threshold nobody watches. `run verify` also
+now names the 5 PASSes with **no control at all** (T0.01, T0.08, T0.10, T1.03,
+T1.05) — independently re-deriving the overseer's §1.2 list from the record.
+
+The spec's own first version shipped four decorative assertions
+(`"FIX.healthy" not in c[...]`, unfalsifiable under every perturbation T0.13
+applies to a string). **T0.13 caught them in 1.4 s** on the fresh entry;
+rewritten as equality on the whole detail string, which is both live and
+strictly stronger. Lesson recorded. Also committed the orphaned PG.6 attempt-4
+ledger write (OVERSIGHT §1.4) — duplicate of attempt 3, same `impl_sha`, no new
+science.
+
+**Next iteration:** the cheapest remaining overseer items are now item 3
+(give T1.03 and T1.05 real controls — a deliberately detached parameter that
+must be reported orphaned; an unfrozen sentinel that must move) and item 4
+(backfill the 19 `Spec.control` declarations, then lower the ratchet toward 0 —
+`run verify` prints the exact list). Neither needs the owner. Unchanged and
+still the highest-leverage science: **PG.7 then PL.00/PL.02**, and the
+LC.03->LC.06 arbitration, all CPU and all unblocked.
