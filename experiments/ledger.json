@@ -1765,10 +1765,10 @@
     },
     "T0.01": {
       "amended": [],
-      "attempt": 2,
-      "commit": "44c719c",
+      "attempt": 3,
+      "commit": "ccd0e84",
       "control_metrics": {},
-      "duration_s": 1.86,
+      "duration_s": 1.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1776,9 +1776,15 @@
           "message": "",
           "ran_at": "2026-08-08T14:09:30",
           "status": "PASS"
+        },
+        {
+          "commit": "44c719c",
+          "message": "",
+          "ran_at": "2026-08-09T19:15:58",
+          "status": "PASS"
         }
       ],
-      "impl_sha": null,
+      "impl_sha": "d7af65c339695aa3",
       "message": "",
       "metrics": {
         "failed": "none",
@@ -1786,7 +1792,7 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-09T19:15:58",
+      "ran_at": "2026-08-10T08:36:40",
       "seeds": [
         0
       ],
