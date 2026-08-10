@@ -2161,3 +2161,40 @@ against the record; DP.00 records `plan_h2`/`plan_h4`/`plan_h8` for that reason,
 and the docstring now carries both sweeps with the disagreement named. Same
 family as "generated artifacts go stale silently", one level in: the artifact
 here is a sentence, and the thing that went stale never existed.
+
+## A shuffled-label null is only a null when the estimator collapses under it
+
+TA.01 needed a null for "the two plants are distinct to the taste vector", and
+the obvious one — permute the training labels, refit, re-score — was already in
+use two functions above it on the pixel probes, where it reads 0.480 and 0.537
+against a 0.425-0.575 band. On the 5-dimensional taste vector the same null
+measured **0.2725, 0.3775, 0.725, 0.5875, 0.285, 0.6725** across seeds 0-5:
+decisive every time, with a sign that flips per seed.
+
+The mechanism is dimension, not luck. A permuted fit does not become a *random*
+predictor; it becomes a *small* one. With 27,648 pixel features against 400
+samples the ridge regularises to the mean and there is no type-aligned direction
+for the residual weight to land on, so the null is genuinely at chance. With
+five features and one strongly separating axis, whatever residual weight the
+permutation leaves along that axis is applied to a test set that is bimodal
+along it — and a tiny weight classifies *everything*, in whichever direction the
+permutation happened to tilt.
+
+Two things make this worse than a wrong number. It looks like the control that
+is used everywhere else in the file, so it reads as calibrated. And **the mean
+over the registered seeds 0/1/2 is 0.458 — comfortably inside the band.**
+`_check` sees the mean over seeds (`protocol._aggregate`), so this null would
+have been recorded as passing while being wrong on every individual seed.
+
+The replacement is the control the research doc had already specified for this
+channel: a PLACEBO — matched dimension, matched statistics, zero information —
+which reads 0.47-0.525 on the same six seeds.
+
+**Rule:** before trusting a null, ask what the estimator *does* when the
+mechanism is removed, exactly as you would for a metric. A null is only
+calibrated if the degenerate estimator is also an uninformative one; in low
+dimensions with a strong signal direction, label-shuffling is neither. Prefer a
+null that removes the INFORMATION (placebo channel, grey frame, disabled
+mechanism) over one that removes the ALIGNMENT (shuffled labels), and check any
+seed-averaged null per seed before believing it — an unstable null hides inside
+its own mean.
