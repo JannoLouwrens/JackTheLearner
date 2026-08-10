@@ -45,8 +45,8 @@ import numpy as np
 from .. import drives
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
-from ..w0 import (MIN_LEGAL_SPAWNS, SIM_S_PER_DECISION, W0, random_action,
-                  uniform_legal_spawn)
+from ..w0 import (MIN_LEGAL_SPAWNS, SIM_S_PER_DECISION, SPAWN_PENETRATION, W0,
+                  random_action, uniform_legal_spawn)
 # After `..w0`, deliberately: importing it is what puts the repo root on
 # `sys.path`, and `EpisodicMemory` lives there rather than in the package.
 from EpisodicMemory import EpisodicMemory   # noqa: E402
@@ -66,6 +66,10 @@ N_DECISIONS = 3000            # 600 simulated seconds per condition. A life at
                               # margin is deliberate: sizing the budget to land
                               # exactly on the floor makes the gate a coin toss
                               # on seed noise rather than a claim.
+                              # The drifting control is the one condition this
+                              # budget does NOT buy ~15 lives for, because its
+                              # manipulation lengthens them — see
+                              # DRIFT_DECISIONS below.
 SHORT_E0 = 0.10               # the declared short-life fixture
 MIN_LIVES = 12                # LC.03's own floor, so this certifies what it needs
 STATUE_CHARGES = (0.2, 0.5)   # two independent drains of the resting body
@@ -113,6 +117,33 @@ assert P_MAX_CONTROL >= PERM_MARGIN * PERM_P_FLOOR, (
     f"only clear it by rounding")
 assert P_MIN_NULL > P_MAX_CONTROL, "the two gates would overlap"
 DRIFT_E0 = (0.05, 0.025)      # the drifting world: e0 = 0.05 + 0.025 * life
+
+# THE SAME MARGIN RULE, APPLIED TO A GEOMETRIC FIXTURE. The occupied-pose
+# control asks `_penetrating()` a question whose answer it claims to know in
+# advance, and `_penetrating()` thresholds at `SPAWN_PENETRATION`. A fixture
+# that overlaps by 0.02 m is not a known answer just because 0.02 > 0.001 — it
+# is a known answer only if NO mutation of the world can push it under. So the
+# depth is measured, not assumed, and required to clear the tolerance by this
+# factor; a run whose fixture cannot VOIDs instead of answering. `welded_block`
+# measures 90x on every seed tried, a 9x cushion over the margin.
+PENETRATION_MARGIN = 10.0
+
+# THE DRIFT CONTROL PAYS FOR ITS OWN MANIPULATION, SO IT GETS A LONGER BUDGET.
+# It plants a trend by LENGTHENING each successive life, which means that at a
+# fixed decision budget it collects FEWER lives than any other condition — 9,
+# where the experiment gets 13.7 — and the permutation p it can reach is set by
+# how many inversions n lives can absorb. Measured at N_DECISIONS = 3000: seeds
+# 0/2/3/4 came out perfectly monotone and hit the floor at 2.0e-5, while seed 1
+# drew two genuine inversions ([20, 31, 72, 50, 89, 69, 76, 87, 97]) and could
+# only reach p = 0.00262 against a gate of 0.001. The detector was not blind;
+# n = 9 was too small for the noise. Checked, not guessed: a rank statistic is
+# WORSE here (Spearman gave 0.00802 on that seed), because this is sampling
+# noise and not an outlier, so the fix is lives rather than a better statistic.
+# At 2.5x the budget all three seeds hit the floor — n = 15/16, and seed 1
+# clears its gate by 50x while carrying SIX inversions.
+# The gate P_MAX_CONTROL is UNCHANGED at 0.001. This buys the control the
+# evidence to reach it; it does not move it.
+DRIFT_DECISIONS = 7500
 
 
 def _calibration() -> tuple:
@@ -163,6 +194,29 @@ def _attainable_p(n: int) -> float:
         return 1.0
     orderings = math.factorial(n) if n <= 20 else float("inf")
     return max(PERM_P_FLOOR, 2.0 / orderings)
+
+
+def _deepest_obstacle_contact(w) -> float:
+    """The most negative contact distance between the body and a non-ground geom.
+
+    The same filter `w0._penetrating()` applies — rover-rover pairs excluded (the
+    arms fold against the torso in every pose) and ground excluded — but it
+    returns the DEPTH rather than a bool, so a fixture's margin over
+    `SPAWN_PENETRATION` can be measured instead of asserted. 0.0 means the pose
+    touches no obstacle at all, which is the failure mode that made two versions
+    of the occupied-pose control read as a coin flip.
+    """
+    deepest = 0.0
+    for k in range(int(w.data.ncon)):
+        con = w.data.contact[k]
+        g1, g2 = int(con.geom1), int(con.geom2)
+        mine = (g1 in w.body_gids, g2 in w.body_gids)
+        if not any(mine) or all(mine):
+            continue
+        if (g2 if mine[0] else g1) in w.ground_gids:
+            continue
+        deepest = min(deepest, float(con.dist))
+    return deepest
 
 
 def _perm_p_and_z(observed: float, null: np.ndarray) -> tuple:
@@ -265,7 +319,7 @@ def _live(seed: int, *, j0: float, alpha: float, lethal: bool = True,
         return SHORT_E0
 
     w.drives.state = drives.DriveState(e=charge(0))
-    for _ in range(N_DECISIONS):
+    for _ in range(DRIFT_DECISIONS if drift else N_DECISIONS):
         w.decide(random_action(rng))
         if w.died_this_decision:
             # The fixture, applied from OUTSIDE the world: `respawn()` has
@@ -370,21 +424,47 @@ def _experiment(seed: int) -> dict:
         and abs(implied[0] - implied[1]) <= BASAL_TOL * target)
 
     # ── the legality predicate, known-answer both ways ──────────────────
-    # THE OCCUPIED POSE IS READ FROM THE MODEL, NOT WRITTEN DOWN. The first
-    # version probed the literal (LADDER_X, LADDER_Y), which is the point
-    # BETWEEN the two rails: whether the body penetrates there depends on the
-    # torso radius against a 0.25 m half-width in a per-seed MUTATED world, and
-    # two of three seeds said yes while the third said no. A known answer that
-    # the world can change is not a known answer. `ladder_railL` is a capsule
-    # spanning z = 0 to the full ladder height, so a body standing at its own
-    # centre overlaps it under every mutation.
+    # THE OCCUPIED POSE IS READ FROM THE MODEL, AND ITS MARGIN IS MEASURED.
+    # This fixture has now been wrong twice, in the same way both times, and
+    # the second wrong version was a THEORY about geometry that was never
+    # checked against a contact:
+    #   v1  probed the literal (LADDER_X, LADDER_Y) — the point BETWEEN the
+    #       rails, where penetration depends on the torso radius against a
+    #       0.25 m half-width in a per-seed mutated world. 2 of 3 seeds agreed.
+    #   v2  probed `ladder_railL`'s live position, on the stated reasoning that
+    #       "a body standing at its own centre overlaps it under every
+    #       mutation". IT DOES NOT OVERLAP IT AT ALL. The whole ladder is
+    #       collision group contype/conaffinity = 4 and the rails never reach
+    #       the body; the ONLY obstacle contact at that pose is the TIP of
+    #       `rung1`, whose height is `ladder_rung_spacing` — a parameter
+    #       `mutate()` jitters. Measured across seeds 0..4: -0.023, +0.013,
+    #       -0.020, -0.025, -0.059 m against a 0.001 m tolerance. Reading the
+    #       pose off the live model fixed the wrong half; the answer was still
+    #       a coin flip on a mutated parameter, so v2 scored 0.667 exactly as
+    #       v1 had.
+    # `welded_block` is the fixture that cannot be dodged: an unconditional
+    # 0.15 m box welded at a fixed pos (playground.py:422 — note `fulcrum` is
+    # deeper but sits behind `if p.seesaw`, so it is not unconditional), in the
+    # body's own collision group. Measured depth -0.090 m on every seed of
+    # 0..4, invariant, and the contact names the block itself.
+    #
+    # AND THE MARGIN IS NO LONGER A CLAIM. The depth is recorded and gated:
+    # 90x the tolerance is the cushion, and a run whose fixture cannot clear
+    # PENETRATION_MARGIN VOIDs rather than answering. That is the same rule the
+    # permutation floor already carries, applied to geometry — a fixture must
+    # clear the ATTAINABLE range of the predicate it is interrogating, and the
+    # margin is measured rather than reasoned about.
     probe = W0(seed=seed, j0=j0, alpha=alpha)
-    rail = int(probe.model.geom("ladder_railL").id)
-    rx, ry = (float(probe.data.geom_xpos[rail][0]),
-              float(probe.data.geom_xpos[rail][1]))
+    block = int(probe.model.geom("welded_block").id)
+    probe.mujoco.mj_forward(probe.model, probe.data)
+    rx, ry = (float(probe.data.geom_xpos[block][0]),
+              float(probe.data.geom_xpos[block][1]))
     probe._place(rx, ry)
     probe.mujoco.mj_forward(probe.model, probe.data)
     m["occupied_pose_rejected"] = float(probe._penetrating())
+    m["occupied_probe_depth"] = _deepest_obstacle_contact(probe)
+    m["occupied_probe_margin"] = float(
+        abs(m["occupied_probe_depth"]) / SPAWN_PENETRATION)
     m["occupied_probe_x"], m["occupied_probe_y"] = rx, ry
     a = float(probe.params.arena_size) - 0.75
     probe._place(a, a)
@@ -429,6 +509,21 @@ def _control(seed: int) -> dict:
                    wipe_diary=True)
     drifting = _live(seed, j0=j0, alpha=alpha, drift=True)
     legal = W0(seed=seed, j0=j0, alpha=alpha).legal_spawns()
+    biased_z = _uniformity_z(_biased_sampler, legal, seed)
+
+    # EVERY CONTROL GATE IS REDUCED TO A PER-SEED BOOLEAN HERE, NOT LEFT AS A
+    # RAW STATISTIC FOR `_check` TO THRESHOLD. `run_spec` hands `_check` the
+    # MEAN over seeds (`protocol.py:_aggregate`), so thresholding a raw p there
+    # asks "was the control detective ON AVERAGE" — and averages of p-values
+    # near a floor are dominated by the seeds that saturate it. Measured on the
+    # 11:05 run: `c_drift_trend_p` came back mean 8.87e-4 against a 1e-3 gate
+    # with std 1.23e-3, i.e. two seeds pinned at the 2e-5 floor and ONE SEED
+    # BLIND at p ~ 2.6e-3. The gate passed. A control that is blind on a third
+    # of the seeds is not a control on those seeds, and law 2 does not average.
+    # The `*_ok` fields below are 1.0 only when THAT seed's control fired, so
+    # their mean is 1.0 iff every seed fired — the same trick the experiment
+    # side already uses for `conjunction`. The raw statistics stay in the
+    # ledger beside them; they are the diagnosis, the booleans are the gate.
     return {
         "c_calibrated": 1.0,
         "c_immortal_deaths": immortal["deaths"],
@@ -440,12 +535,28 @@ def _control(seed: int) -> dict:
         "c_drift_perm_p_attainable": drifting["perm_p_attainable"],
         "c_wiped_life0_rows": rigged["diary_life0_rows"],
         "c_wiped_rows": rigged["diary_rows"],
-        "c_biased_uniform_z": _uniformity_z(_biased_sampler, legal, seed),
+        "c_biased_uniform_z": biased_z,
         "c_drift_trend_p": drifting["trend_p"],
         "c_drift_trend_z": drifting["trend_z"],
         "c_drift_perm_z_ceiling": drifting["perm_z_ceiling"],
         "c_drift_slope": drifting["life_slope_s_per_life"],
         "c_drift_lives": drifting["n_lives"],
+        # ── the five gates, evaluated inside the seed ───────────────────
+        "c_immortal_ok": float(immortal["deaths"] == 0.0),
+        "c_at_death_ok": float(rigged["indep_p"] <= P_MAX_CONTROL),
+        "c_biased_ok": float(biased_z > UNIFORM_Z_MAX),
+        "c_wiped_ok": float(rigged["diary_life0_rows"] == 0.0),
+        "c_drift_ok": float(drifting["trend_p"] <= P_MAX_CONTROL),
+        # ── and the two attainability preconditions, likewise ───────────
+        "c_at_death_attainable_ok": float(
+            rigged["perm_p_attainable"] * PERM_MARGIN <= P_MAX_CONTROL),
+        "c_drift_attainable_ok": float(
+            drifting["perm_p_attainable"] * PERM_MARGIN <= P_MAX_CONTROL),
+        # And the power precondition that `attainable` cannot see: the extreme
+        # ordering is reachable at n = 9, but two ordinary inversions are not.
+        # Hold the control to the same life floor the experiment is held to, so
+        # a control starved of lives VOIDs instead of being read as a verdict.
+        "c_drift_lives_ok": float(drifting["n_lives"] >= MIN_LIVES),
     }
 
 
@@ -464,21 +575,32 @@ def _check(m: dict, c: dict):
         return Status.VOID
     # A positive control that CANNOT reach its own gate has not been run; it has
     # been asked for the impossible, and reading its miss as a verdict is what
-    # produced the FAIL this spec was revised from.
-    for k in ("c_at_death_perm_p_attainable", "c_drift_perm_p_attainable"):
-        if c.get(k, 1.0) * PERM_MARGIN > P_MAX_CONTROL:
+    # produced the FAIL this spec was revised from. Gated per seed (`_control`
+    # explains why the mean of a p-value is not a gate): ANY seed whose control
+    # was asked for the impossible VOIDs the run.
+    for k in ("c_at_death_attainable_ok", "c_drift_attainable_ok",
+              "c_drift_lives_ok"):
+        if c.get(k, 0.0) != 1.0:
             return Status.VOID
+    # And the geometric fixture, on the same rule: a probe pose that does not
+    # clear `SPAWN_PENETRATION` by PENETRATION_MARGIN has not asked the legality
+    # predicate a question it could be right or wrong about.
+    if m.get("occupied_probe_margin", 0.0) < PENETRATION_MARGIN:
+        return Status.VOID
 
-    # ── the controls, each on its declared side ─────────────────────────
-    if c.get("c_immortal_deaths", 1.0) != 0.0:
+    # ── the controls, each on its declared side, EVERY SEED ─────────────
+    # These are means of per-seed booleans, so `== 1.0` reads "fired on every
+    # seed". Thresholding the raw statistics here instead let a control that
+    # was blind on 1 of 3 seeds pass on the strength of the other two.
+    if c.get("c_immortal_ok", 0.0) != 1.0:
         return False                # (a) death fires where there is no death
-    if c.get("c_at_death_indep_p", 1.0) > P_MAX_CONTROL:
+    if c.get("c_at_death_ok", 0.0) != 1.0:
         return False                # (b) the independence detector is blind
-    if c.get("c_biased_uniform_z", 0.0) <= UNIFORM_Z_MAX:
+    if c.get("c_biased_ok", 0.0) != 1.0:
         return False                # (c) the uniformity detector is blind
-    if c.get("c_wiped_life0_rows", 1.0) != 0.0:
+    if c.get("c_wiped_ok", 0.0) != 1.0:
         return False                # (d) wiping the diary changed nothing
-    if c.get("c_drift_trend_p", 1.0) > P_MAX_CONTROL:
+    if c.get("c_drift_ok", 0.0) != 1.0:
         return False                # (e) the trend detector is blind
 
     # ── the claim ───────────────────────────────────────────────────────

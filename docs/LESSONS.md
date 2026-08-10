@@ -1826,3 +1826,105 @@ the same live model the code under test reads (T0.14's rule, applied to
 fixtures), never from a constant that was true of the nursery seed. If you
 cannot state why the answer holds under *every* world the mutator can produce,
 you have written a probe, not a control.
+
+## `_check` sees the MEAN over seeds, so a raw threshold there is not a per-seed gate
+
+XL.00's five positive controls were written as raw statistics and thresholded in
+`_check`. But `run_spec` hands `_check` `_aggregate(runs)` — the per-seed mean
+(`protocol.py:552`) — so `if c["c_drift_trend_p"] > P_MAX_CONTROL: return False`
+does not ask *"did the drift detector fire on every seed"*. It asks *"did it
+fire on average"*, and an average of p-values sitting near a floor is decided by
+the seeds that saturate the floor, not by the seed that missed.
+
+It was already happening and nothing noticed. The 11:05 run recorded
+`c_drift_trend_p` mean **8.86658e-4** against a gate of 1e-3, with std
+**1.22564e-3**. Those two numbers have one solution at n = 3: the per-seed
+values were **{2e-5, 2e-5, 2.62e-3}** — reproducing mean 8.86667e-4 and std
+1.225652e-3 to five figures. Two seeds pinned at the attainable floor carried a
+third seed whose detector was 2.6× over its own gate. The control gate passed
+while the control was blind on a third of the evidence, and the *smaller* the
+floor, the more seeds one saturating run can carry: raising `N_PERM` from 2000
+to 100 000 to fix the previous lesson made this masking 50× stronger.
+
+The experiment side of the same file never had the bug, which is what makes the
+asymmetry worth naming — `conjunction` is computed **inside** `_experiment`,
+per seed, and gated at `== 1.0`. A mean of per-seed booleans is exactly "every
+seed passed"; a mean of per-seed statistics is nothing in particular.
+
+**Rule:** any gate that must hold *per seed* is evaluated inside the per-seed
+function and returned as a 0.0/1.0, and `_check` compares that mean to 1.0.
+Return the raw statistic too — it is the diagnosis — but never gate on it. This
+applies to VOID preconditions as well as verdicts: XL.00's "could this control
+have reached its own gate" check was itself mean-aggregated, so one seed with
+too few lives to permute could have been averaged into attainability by two
+seeds with plenty. Corollary for auditors: a control metric whose `_std` is
+comparable to its own gate is a masking suspect, and the per-seed values are
+often recoverable from the recorded mean and std alone.
+
+## A fixture is a known answer only when its MARGIN is measured, not reasoned about
+
+XL.00's occupied-pose control asks `_penetrating()` a question it claims to know
+the answer to. It has now been wrong **twice, scoring 0.667 both times**, and
+the second version is the instructive one because it was a *repair* — written
+carefully, justified in a commit message, and never checked against a contact:
+
+- **v1** probed the literal `(LADDER_X, LADDER_Y)` — the point *between* the
+  rails, where penetration depends on the torso radius against a 0.25 m
+  half-width in a world `mutate()` edits per seed.
+- **v2** probed `ladder_railL`'s live position, on the written reasoning that "a
+  body standing at its own centre overlaps it under every mutation". **The body
+  never touches the rail at all.** The whole ladder is collision group
+  `contype/conaffinity = 4`; the only obstacle contact at that pose is the *tip*
+  of `rung1`, whose height is `ladder_rung_spacing` — a mutated parameter.
+  Measured across seeds 0..4: −0.023, **+0.013**, −0.020, −0.025, −0.059 m
+  against a 0.001 m tolerance.
+
+v2 fixed the half of v1 that the previous lesson named (read the pose off the
+live model, not from a constant) and left the half that actually decided the
+answer. Reading a *position* off the model is not the same as reading the
+*answer* off the model. `welded_block` — unconditional, welded, in the body's
+own collision group — measures −0.090 m on every seed, 90× the tolerance;
+`fulcrum` is deeper still and would have been the third wrong answer, because it
+sits behind `if p.seesaw`.
+
+**Rule:** a fixture must record the quantity the predicate thresholds on, and
+the gate must require it to clear that threshold by a stated margin — the same
+rule the permutation floor already carries, now applied to geometry. XL.00 keeps
+`occupied_probe_depth` and `occupied_probe_margin` in the ledger and VOIDs below
+`PENETRATION_MARGIN`, so a fixture that stops posing the question says so
+instead of answering it. The general form: **when you repair a control, measure
+the repaired control's margin before believing it — a plausible mechanism is
+what produced the bug you are fixing.**
+
+## A control that plants a trend pays for it in sample size — check its POWER, not just its floor
+
+The same run's drift control was blind on 1 seed in 3. It was not the detector
+and it was not the gate. `_attainable_p` said the gate was reachable (2/9! at
+n = 9 lives, far under the 0.001 gate) — and attainability is about the *extreme*
+ordering, which says nothing about whether ordinary noise can reach it. Seed 1
+drew two genuine inversions (`[20, 31, 72, 50, 89, 69, 76, 87, 97]`) and topped
+out at p = 0.00262.
+
+The cause is that **the manipulation shrinks its own sample**: this control plants
+a trend by *lengthening* each successive life, so at a fixed decision budget it
+collected 9 lives where every other condition collected ~14. The control was
+paying for its own signal in the currency the statistic needs.
+
+Two candidate fixes, and the measurement chose against the elegant one. A rank
+statistic (Spearman) *looks* right — the `_trend` docstring even argues that one
+lucky apple is worth 150 s — but measured on the same lives it was **worse**
+(0.00802 vs 0.00262 on the failing seed), because this is sampling noise across
+the whole sequence and not a single outlier. Raising the drift control's budget
+2.5× put all three seeds on the floor at 2.0e-5, with n = 15/16 and seed 1
+clearing its gate by 50× while carrying **six** inversions. `P_MAX_CONTROL` was
+not touched.
+
+**Rule:** size a positive control's sample against the noise it will actually
+draw, not against the best case its statistic could theoretically produce, and
+budget each condition separately when the manipulation changes how fast samples
+accrue. When a control misses, the first question is *"could this control have
+reached its gate with realistic noise?"* — and if the answer is no, the repair
+is more evidence, never a looser gate. XL.00 now carries `c_drift_lives_ok`,
+holding the control to the same life floor as the experiment and VOIDing below
+it. Corollary, learned the hard way here: **when choosing between two repairs,
+run both on the same data — the one with the better story lost.**

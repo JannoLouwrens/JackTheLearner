@@ -2260,3 +2260,80 @@ measurement).
    escalation is still unwritten and is worth an iteration on its own.
 4. Still stale and unrelated: PG.3, PG.6, PG.8, PG.9, PS.01 (the `IMPL_DEPS`
    widening of `74f8631`); 44 entries predate `impl_sha` entirely.
+
+---
+
+## 2026-08-10 ~11:10–11:55 — XL.00: the per-seed gate found the blind seed, and the "repaired" fixture was still a coin flip
+
+Inherited the previous iteration's handoff exactly as written: an uncommitted
+ledger diff holding a repaired-gate XL.00 re-run. Diffed it semantically first
+(memory says the uncommitted ledger can be damage) — it was a legitimate
+attempt 2, so it is committed here as history.
+
+**Three defects found, all in the MEASUREMENT, none in W0-2/W0-3.** The death,
+respawn and diary mechanisms measured clean on every axis in all three runs.
+
+**1. `_check` sees the MEAN over seeds, so the control gates were not per-seed.**
+`run_spec` hands `_check` `_aggregate(runs)` (`protocol.py:552`), so
+`if c["c_drift_trend_p"] > P_MAX_CONTROL` asked "did the detector fire *on
+average*". The recorded mean **8.86658e-4** against a 1e-3 gate, with std
+**1.22564e-3**, has one solution at n = 3: per-seed **{2e-5, 2e-5, 2.62e-3}**
+(reproducing both to five figures). Two seeds pinned at the floor carried a
+third that was 2.6× over its own gate, and raising `N_PERM` to 100 000 to fix
+the *previous* lesson made this masking 50× stronger. Every control is now
+reduced to a 0.0/1.0 **inside the seed** and gated at `== 1.0` — the trick the
+experiment side already used for `conjunction`. It worked on first contact:
+attempt 3 recorded `c_drift_ok = 0.667`, naming the blind seed instead of
+averaging it away.
+
+**2. The (f) fix from `1480126` did not fix (f).** `occupied_pose_rejected` was
+still 0.667 with the probe at an identical `(-0.25, -2.6)` on all three seeds —
+same pose, different answer, so the variance was never in the pose. Measured
+the contacts: **the body never touches the rail.** The ladder is collision group
+`contype/conaffinity = 4` and the rails do not reach the body; the only obstacle
+contact is the *tip* of `rung1`, whose height is `ladder_rung_spacing` — a
+mutated parameter. Depths across seeds 0..4: −0.023, **+0.013**, −0.020, −0.025,
+−0.059 m against a 0.001 m tolerance. v2 fixed the half the lesson named (read
+the pose off the live model) and left the half that decided the answer. Now
+probes `welded_block` (unconditional, welded, body's own collision group):
+**−0.090 m on every seed, 90× the tolerance**. `fulcrum` is deeper and would
+have been the third wrong answer — it sits behind `if p.seesaw`. And the margin
+is no longer a claim: `occupied_probe_depth` / `occupied_probe_margin` are
+recorded and the run VOIDs below `PENETRATION_MARGIN = 10`.
+
+**3. The drift control was under-powered, and the elegant fix lost the bakeoff.**
+`_attainable_p` passed it (2/9! at n = 9), because attainability is about the
+*extreme* ordering and says nothing about ordinary noise. Seed 1 drew two real
+inversions and topped out at 0.00262. Cause: **the manipulation shrinks its own
+sample** — it plants a trend by *lengthening* lives, so it collected 9 where
+every other condition collected ~14. Ran both candidate repairs on the same
+lives rather than arguing: **Spearman was WORSE** (0.00802 vs 0.00262 — this is
+sequence-wide sampling noise, not the outlier the `_trend` docstring worries
+about). 2.5× the decision budget put all three seeds on the floor at 2.0e-5 with
+n = 15/16, seed 1 clearing by 50× while carrying **six** inversions.
+`DRIFT_DECISIONS = 7500`; `P_MAX_CONTROL` untouched at 0.001; new
+`c_drift_lives_ok` holds the control to the experiment's own life floor and
+VOIDs below it.
+
+**Ledger:** XL.00 attempt 3 = **FAIL**, committed as history. It is an honest
+FAIL of the measurement, and both of its causes are repaired above.
+
+**Two lessons appended** — `_check` sees the mean, so a per-seed gate must be a
+per-seed boolean; and a fixture is a known answer only when its margin is
+measured (plus the power/sample-size corollary).
+
+**NEXT ITERATION, in order.**
+1. **Run `XL.00`** (~19 min now — the drift control's budget is 2.5×). I killed
+   an in-flight re-run deliberately rather than let it land: it started BEFORE
+   this commit, so its stamp would have named code that did not run, which is
+   the one thing `ccd0e84` exists to prevent. There is no in-flight job and no
+   uncommitted ledger this time. If it passes, XL.00 stops blocking 9 specs and
+   **LC.03–LC.06 (the learning-core bakeoff, priority 0) are free.**
+2. **Re-run LC.02** (154 s) — still owed for the `IMPL_DEPS` widening of
+   `74f8631`. Alone on the box; it is a throughput measurement.
+3. Then LC.03 — but read the standing warning first: its declared `cpu<2h` is
+   wrong by ~10× against `LEARNING_CORE.md` §5.7 (19.8 core-hours for 5 arms ×
+   3 seeds) and there is no CPU budget label above `cpu<2h`. **That escalation
+   to DECISIONS_NEEDED is still unwritten** and is worth an iteration on its own.
+4. Still stale, unrelated: PG.3, PG.6, PG.8, PG.9, PS.01; 44 entries predate
+   `impl_sha` entirely.
