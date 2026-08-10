@@ -1290,3 +1290,56 @@ counter is indistinguishable from progress to every reader that only counts.
 control. It reverts 3 of 4; the shipped path reverts 0. Prose could not have
 held this, because a tidied restatement of the bug would pass while the shipped
 merge stayed broken (the T0.16 lesson, second occurrence).
+
+## A "max over the episode" reducer measures exposure, not the event
+
+The first real bakeoff this project has ever run (`experiments/bakeoffs/ps01_impulse.py`,
+2026-08-10) asked which impact channel separates a 3.2 m fall from an ordinary
+collapse to the floor, so that PS.01 could finally measure `J_0` on an
+observable that carries the bit. Four candidate channels, scored per run as
+`max over the run's decisions`, AUC of FALL over GROUND, against a
+label-shuffled null measured at 0.4966 ± 0.0122.
+
+Two of the four scored **below chance** — `peak6` 0.340, `peak_force` 0.337, at
+-1.96 and -2.62 sigma. Not noise: a collapse reliably out-peaked a fall from
+platform height. The reason is the reducer, not the channel. FALL spends most of
+its 12 simulated seconds in free flight and lands once; GROUND is in contact
+almost throughout, under a random policy that keeps driving the actuators, so
+over 60 decisions it eventually throws a larger `cfrc_ext` spike than the single
+landing did. `max` over an episode is an extreme-value statistic, and extremes
+are won by whichever regime had more draws. The channel that survived —
+`peak_dvel`, the root's linear-velocity jump, 0.827 AUC at 5.99 sigma — survived
+because a velocity jump is bounded by how fast you were going, so lying on the
+floor cannot manufacture one no matter how long it lies there.
+
+The earlier stand-down (LOOP_JOURNAL 2026-08-09 22:35) read this as "no
+locomotion controller, so fall and ordinary contact are not distinguishable
+regimes". That was half right. They are distinguishable; the §2.2 statistic
+could not distinguish them, and neither could two of its three proposed repairs.
+
+**Rule:** when you compare two regimes by an extremum, first ask whether they had
+the same number of draws. If they did not, the extremum is reporting exposure
+and the effect has to be anchored to the event (the landing decision, the contact
+onset) or expressed as a rate. This is the same shape as the `Arm.cost` and
+`attempt: 1` defaults already in this file: a statistic that silently answers a
+question adjacent to the one asked.
+
+## The learning gate makes a DETECTOR bakeoff VOID by construction, and that is right
+
+`run_bakeoff` VOIDs when any arm misses the 3-sigma gate — the T2.02 rule that
+two non-learners cannot arbitrate an architecture. Applied to a bakeoff whose
+arms are *observables* rather than *learners*, that rule fires on the very
+outcome the bakeoff exists to produce: three of four channels could not separate
+the regimes, which IS the finding, and the module refused to crown the fourth.
+
+The verdict is correct and should not be tuned away. A single working detector is
+`one arm is just a test`, which the module already refuses at the door; crowning
+it would mean declaring a winner of a race with one runner. But it means any
+"which observable carries the bit" question will usually return VOID on its first
+round, and the sanctioned repair is the one the module names: **fix the arms**.
+Concretely — add further candidate channels and re-run with the failures still
+in. Dropping the embarrassing arms, or lowering the gate, is the explicitly
+forbidden move (`bakeoff.py`: may not "drop an arm that embarrasses it, or re-run
+until an arm wins"), and the difference between a legitimate second round and
+that failure mode is precisely that nothing is removed and both rounds are
+recorded in `docs/DECISIONS_RESOLVED.md`.

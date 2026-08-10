@@ -1658,3 +1658,61 @@ this, and it is still VOID.
    and **LC.03 -> LC.06**, all CPU and all unblocked. OVERSIGHT items 3 (T1.03
    and T1.05 controls) and 4 (backfill the 19 `Spec.control` declarations) are
    still the cheapest system work and neither needs the owner.
+
+## 2026-08-10 03:10 — PS.01's blocker taken to a bakeoff: 3 of 4 impact channels cannot see a fall (VOID)
+
+Inherited the 22:35 handoff verbatim: PS.01 blocks LC.03 (and with it LC.04-06,
+the whole learning-core arbitration), and it stalled because §2.2's `J_t` could
+not tell a platform fall from ordinary ground contact. The handoff named two
+candidate repairs and an escalation and said explicitly *worth a bakeoff rather
+than an argument*. So I wrote the bakeoff instead of picking one.
+
+`experiments/bakeoffs/ps01_impulse.py` — **the first real bakeoff this project
+has run.** `DECISIONS_RESOLVED.md` opened with "until a real bakeoff runs, this
+file is EMPTY — and that emptiness is the honest reading: SYSTEM.md's third law
+has never yet been exercised on a real question." It is no longer empty.
+
+Two labelled regimes from the real playground under the same random policy:
+FALL = released at `ladder_height + SPAWN_Z` beside the platform (a 3.2 m drop),
+GROUND = the ordinary spawn, which collapses within ~1 s. Metric
+`fall_vs_ground_auc`, 10 runs a side, 3 seeds, null = the same scores with
+labels shuffled 200 ways (**measured 0.4966 ± 0.0122**, not assumed).
+
+**The numbers.** Verdict **VOID** — the correct one:
+
+    peak_dvel     0.827   +5.99 sigma   gate pass    (root linear-velocity jump)
+    control:noise 0.570   +1.47 sigma   FAIL         (chance at 10 runs a side)
+    integral6     0.520   +0.44 sigma   FAIL         (§2.2 AS WRITTEN)
+    control:const 0.500   +0.28 sigma   FAIL
+    peak6         0.340   -1.96 sigma   FAIL         (handoff option (a))
+    peak_force    0.337   -2.62 sigma   FAIL
+
+Both controls died on their pre-registered side, and `noise` earned its keep:
+chance buys 0.57 AUC at this sample size, so anything near 0.6 would have been
+nothing.
+
+**§2.2 as written is at chance (0.520 vs a 0.497 null) — that is now measured,
+not suspected.** And handoff option (a), peak-over-substeps of the same 6-norm,
+is WORSE than chance, which kills it as the repair. The reason is the reducer,
+not the channel: `max over the run` is an extreme-value statistic and GROUND is
+in contact for nearly all 12 sim-seconds while FALL lands once, so GROUND
+eventually throws the bigger spike. `peak_dvel` survives because a velocity jump
+is bounded by how fast you were going — lying on the floor cannot manufacture
+one. Both lessons are in LESSONS.md, along with why a detector bakeoff VOIDs by
+construction and why that must not be tuned away.
+
+**NEXT ITERATION — round 2, and do not drop the losers.** The sanctioned repair
+for VOID is *fix the arms*: keep all four channels in, add candidates that
+attack the reducer confound, and re-run. Cheap and specific:
+  (a) anchor to the EVENT rather than the episode — score the decision of first
+      hard contact (or the max over the 3 decisions around it) instead of the
+      max over 60; this is the confound named above and probably rescues
+      `peak_force`, which is the dimensionally coherent channel;
+  (b) `peak_dvel` variants: root vertical velocity immediately pre-contact, and
+      the velocity jump normalised by decision count (a rate, not an extremum);
+  (c) if round 2 still leaves one arm standing, that is still VOID by the
+      module's own rule and the honest move is to escalate §2.2's formulation to
+      the owner (handoff option (c)) with these numbers attached — the evidence
+      is now concrete rather than a suspicion.
+Runtime is ~2 minutes for the whole thing on 3 nice-19 cores, so round 2 is
+cheap. PS.01 stays NOT_RUN and LC.03 stays blocked until it lands.
