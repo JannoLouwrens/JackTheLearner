@@ -61,6 +61,8 @@ SYSTEM.md, which outrank this file.
 | seat | champion | held | arena | challenger status |
 |---|---|---|---|---|
 | Learning core | PPO (tuned per Moon et al. — F9) | **DEFAULT, never defended** | LC.00–LC.06 (registered) | DreamerV3-class + others — match in progress |
+| Deliberation (the slow path) | **VACANT — never contested.** A reactive-only Jack is the *incumbent by default*, which is a position nobody argued for | — | DP.00–DP.04 (registered 2026-08-10) | model-based lookahead vs reactive-only vs verbal inner speech (DP.04). DP.00 asks first whether this world rewards lookahead AT ALL — if not, the seat is abolished rather than filled |
+| Fast/slow coupling | **DECREE, contestable by evidence.** Owner 2026-08-10: differentiated function, SHARED substrate — "connected but slightly different purposes" | DECREE | DP.02 (registered) | two private towers. Re-open trigger: DP.02 shows a shared-trunk lesion sparing one mode, i.e. the substrate is already separate in fact |
 | Control architecture (D1) | **VACANT** — prior holder's evidence voided (T0.14) | — | D1.0 + T2.21 (queued) | frozen-trunk+head vs tuned-PPO vs others |
 | Needs/reward form | drive-reduction, n>m≥1, γ<1 | **BY ANALYSIS** (suicide-safety proof) | NE.02 bakeoff (queued) | must confirm the analysis in the arena |
 | Curiosity signal | learning-progress | **BY ANALYSIS** (favourite on pilot data) | LT.03/LT.04 (queued) | ICM/RND enter as controls-that-must-fail |

@@ -2075,4 +2075,99 @@ EXPANSION: list[Spec] = [
                "DP.01 is expected and must be reported, not controlled away: as "
                "habits form, a working gate should fire LESS on practised "
                "tasks, which is the same phenomenon seen from the other side."),
+
+    # ── OP: a thing that goes behind something still exists ──────────────
+    # Found by LOOKING through the eye rather than by reading its numbers
+    # (2026-08-10): the eye sits 0.8 m behind the ladder and 25.6% of Jack's
+    # visual field is rungs. PG.6 handles that correctly for a SENSOR test - it
+    # rejects occluded samples geometrically and reports occluded_frac 0.32 -
+    # but note what that means: a third of this world is currently treated as
+    # measurement noise to be discarded. For a creature it is not noise. It is
+    # the single most common perceptual problem in any cluttered world, and
+    # every organism that survives one solves it.
+    #
+    # SEPARATE THE SENSOR CERTIFICATE FROM THE PERCEPTUAL CHALLENGE. PG.6 must
+    # keep measuring acuity without confound. This family deliberately keeps
+    # the occluder.
+
+    Spec("OP.01", 2, "A thing behind the rail still exists",
+         hypothesis="After a moving object passes behind an occluder, a linear "
+                    "probe on Jack's internal state recovers its CURRENT "
+                    "position better than a snapshot of where it was last seen. "
+                    "He carries an object forward, not a photograph of its "
+                    "disappearance.",
+         falsified_by="The probe does no better than the last-seen-position "
+                      "predictor. Then what persists is a memory of a vanishing "
+                      "event, not a belief about a thing, and every later claim "
+                      "about objects - affordances, tool use, the survival "
+                      "world's hidden food - is about visible objects only.",
+         null_baseline="The snapshot predictor: the object frozen at its "
+                       "last-seen position. Plus a shuffled state/label pairing.",
+         metric="occluded_position_error_vs_snapshot",
+         budget=Budget.CPU, seeds=3, depends_on=["PG.6", "LC.03"],
+         control="TWO, and the first is the one that catches a fake. (a) A "
+                 "STATIC occluded object, where the snapshot IS optimal - the "
+                 "probe must NOT beat it, or the 'extrapolation' is a bias in "
+                 "the probe rather than a belief in Jack. (b) No object at all: "
+                 "the probe must not report a phantom.",
+         kills="Object permanence, and with it any survival-world claim that "
+               "depends on remembering where food, water or a predator went.",
+         notes="THE STATIC CONTROL IS THE WHOLE SPEC. A probe with any inertial "
+               "prior will beat a snapshot on a moving object for reasons that "
+               "have nothing to do with Jack, and that is precisely how a "
+               "permanence claim gets made falsely. Do not sample occluders "
+               "uniformly - PG.6's lesson - and do not reuse its rejection "
+               "filter here: this spec wants the samples that one throws away. "
+               "The violation-of-expectation design (remove the object while it "
+               "is hidden, measure surprise when the occluder lifts) is the "
+               "stronger infant-research instrument and needs a predictive core; "
+               "register it as OP.02 if LC.04 adopts a world model."),
+
+    Spec("DP.04", 5, "The slow path may be verbal, and that is a claim, not a design",
+         hypothesis="Given a channel to emit and re-hear his own utterances, "
+                    "Jack's performance on lookahead-demanding tasks improves "
+                    "beyond a MATCHED-COMPUTE control, and the improvement "
+                    "scales with each task's deliberation demand as measured "
+                    "independently by DP.00's oracle-planning gap.",
+         falsified_by="No gain over matched-compute filler, or equal gain on "
+                      "tasks with zero planning demand. Either way the words "
+                      "are decoration on extra computation and he is not "
+                      "thinking in language, whatever the transcript looks like.",
+         null_baseline="The SAME extra internal steps carrying content-free "
+                       "tokens at matched FLOPs - the filler-token null. This "
+                       "is the null the claim lives or dies on.",
+         metric="lookahead_gain_over_matched_compute_filler",
+         budget=Budget.GPU_SHORT, seeds=3, depends_on=["DP.00", "VO.01"],
+         control="A SCRAMBLED VOCABULARY arm: his own tokens permuted by a "
+                 "fixed random map, so the channel carries identical statistics, "
+                 "identical bandwidth and identical compute but no learned "
+                 "meaning. It must NOT help. And the mute arm must still "
+                 "deliberate: if removing the verbal channel destroys lookahead "
+                 "entirely, language became load-bearing for thought, which "
+                 "contradicts one brain with all senses and a Jack who could "
+                 "think before he could speak.",
+         kills="Any claim that Jack reasons IN language rather than merely "
+               "producing it. Also kills the reading of DP.03 in which the slow "
+               "path is assumed verbal.",
+         notes="THIS IS CHAIN-OF-THOUGHT, ASKED HONESTLY. In LLMs the gain from "
+               "a reasoning trace is known to be partly the extra computation "
+               "rather than the content - which is why the filler-token null is "
+               "mandatory here and why a transcript that 'looks like reasoning' "
+               "is not evidence. The Vygotskian reading is what makes this "
+               "Jack-shaped rather than borrowed: a caregiver's external speech "
+               "is internalised and becomes the medium of deliberation, and this "
+               "project ALREADY decided the LLM is his talkative parent living "
+               "in his world (GOAL.md, owner 2026-08-09). So the prediction is "
+               "specific and falsifiable: inner speech should appear in the "
+               "order the parent's speech did, and should carry HIS meanings "
+               "attached to his own life, not the parent's. Do not build a "
+               "prompt-engineering scratchpad; that would be borrowing the "
+               "mechanism instead of testing whether he grows one. "
+               "DEPENDENCY NOT YET EXPRESSIBLE: this also requires LG.00 "
+               "(language grounding), which is written in the research docs but "
+               "NOT registered as of 2026-08-10 - the registry's depends_on "
+               "check refused the reference rather than let it dangle. Add "
+               "LG.00 to depends_on the moment it is registered; until then "
+               "this spec is blocked in fact even though the ladder shows only "
+               "DP.00 and VO.01."),
 ]

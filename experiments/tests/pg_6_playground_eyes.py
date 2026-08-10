@@ -132,6 +132,10 @@ import playground as pg  # noqa: E402
 from ..protocol import Ledger, Status, run_spec  # noqa: E402
 from ..registry import BY_ID  # noqa: E402
 
+# This spec's claim is about the WORLD's camera, not only about this file, so
+# the world hashes into impl_sha. Move the eye and PG.6 goes stale, loudly.
+IMPL_DEPS = ["playground.py"]
+
 RES = 96                    # px, square. Chosen by pilot; see module docstring.
 N_TRAIN, N_TEST = 1800, 300
 L2 = 1.0                    # ridge strength, chosen on the pilot

@@ -444,14 +444,41 @@ def _declares_void(metrics: Dict[str, Any]) -> Optional[str]:
 
 
 def _impl_sha(fn: Callable) -> Optional[str]:
-    """sha256 of the file `fn` is defined in — the test as it was when it ran."""
+    """sha256 of the file `fn` is defined in — the test as it was when it ran.
+
+    PLUS any files the test module declares in `IMPL_DEPS`, because a test file
+    is not the whole of what a test measures. PG.6 certifies what Jack's eye can
+    resolve; that claim is about `playground.py`'s camera pose, and on
+    2026-08-10 moving the eye would have left PG.6's PASS standing and the
+    staleness checker silent — a certificate about a world invalidated by a
+    change to the world, undetectable by design.
+
+    Modules that declare nothing hash EXACTLY as before, byte for byte. That is
+    deliberate: making this unconditional would change every recorded sha at
+    once and flag the whole ladder stale, which is a mass false alarm and would
+    teach the loop to ignore staleness warnings. Declaring a dependency is
+    opt-in and costs one line:
+
+        IMPL_DEPS = ["playground.py"]     # paths relative to the repo root
+
+    Paths that do not resolve are recorded as the literal string `missing:` plus
+    the path rather than skipped, so a typo shows up as a permanent mismatch
+    instead of silently reverting to test-file-only hashing.
+    """
     import hashlib
     import inspect
+    import sys
     try:
         src = inspect.getsourcefile(fn)
         if not src:
             return None
-        return hashlib.sha256(Path(src).read_bytes()).hexdigest()[:16]
+        h = hashlib.sha256(Path(src).read_bytes())
+        mod = sys.modules.get(getattr(fn, "__module__", ""), None)
+        for rel in getattr(mod, "IMPL_DEPS", ()) or ():
+            dep = Path(__file__).resolve().parent.parent / rel
+            h.update(dep.read_bytes() if dep.is_file()
+                     else f"missing:{rel}".encode())
+        return h.hexdigest()[:16]
     except (OSError, TypeError):
         return None
 

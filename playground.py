@@ -296,8 +296,29 @@ def rover_spawn(p: "PlaygroundParams") -> tuple:
 # Head height, standing at the south edge, looking north across the object
 # field with a slight downward tilt. xyaxes gives right and up; the camera
 # looks along -z = right x up, here (0, +0.94, -0.35).
-EYE_POS = (0.0, -3.4, 1.10)
-EYE_XYAXES = (1.0, 0.0, 0.0, 0.0, 0.35, 0.94)
+# MOVED 2026-08-10, and moved because someone LOOKED. At (0, -3.4) the eye
+# stood 0.8 m directly behind the ladder (LADDER_X=0, LADDER_Y=-2.6) and
+# measured 25.9% of the visual field as rungs and rails - Jack viewing his
+# world through bars. PG.6 still passed, honestly, because it rejects occluded
+# samples geometrically; but its own occluded_frac of 0.32 was the number
+# saying a third of this world was being discarded as noise. No metric on the
+# ladder was going to report "the view is bad". A rendered frame did, instantly.
+#
+# Candidates were measured, not guessed (segmentation coverage, seed 3):
+#     (0.0, -3.4) ladder 25.9%  floor 50.3%   <- was
+#     (-1.6, -3.4) + 20 deg yaw  ladder 0.0%  floor 61.8%   <- now
+#     (0.0, -2.0)  ladder 0.0%   floor 65.9%  (rejected: past the ladder, which
+#                  compresses object distance below PG.6's 2.2-3.6 m band)
+# The chosen pose keeps y and height unchanged so the distance geometry every
+# visual spec was written against still holds; only x and yaw move.
+#
+# Occlusion did not become uninteresting - it became a SUBJECT. OP.01 ("a thing
+# behind the rail still exists") deliberately keeps occluders, because for a
+# creature occlusion is the most common perceptual problem in any cluttered
+# world, not measurement noise. What changed is that the sensor certificate and
+# the perceptual challenge are no longer the same experiment.
+EYE_POS = (-1.6, -3.4, 1.10)
+EYE_XYAXES = (0.94, 0.34, 0.0, -0.12, 0.33, 0.94)
 EYE_FOVY = 60.0
 
 
