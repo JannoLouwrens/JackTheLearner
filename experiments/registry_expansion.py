@@ -2428,7 +2428,7 @@ EXPANSION: list[Spec] = [
                "2026-08-10: balance was the one commitment in GOAL.md with zero "
                "specs, which is why it went unnoticed while a related problem "
                "sat in the integration queue as prose. A sense with no spec is "
-               "invisible to every instrument the system owns.\n"
+               "invisible to every instrument the system owns. COVERS: balance\n"
                "Vestibular in animals is not one signal but two - linear "
                "acceleration (otoliths) and angular velocity (canals). "
                "Register BOTH channels and report them separately; a system "

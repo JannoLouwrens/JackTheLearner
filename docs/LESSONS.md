@@ -1639,3 +1639,36 @@ the abstract. It is the cheapest provenance check that exists and it is the only
 one that catches an inflated or fabricated result. This applies inward too: a
 summary line in our own docs that disagrees with the ledger row it summarises is
 the same defect with the same cause — nobody re-read the table.
+
+## The instrument that finds gaps can have a gap, and it will flatter you
+
+`experiments/coverage.py` was written on 2026-08-10 because a hand audit found
+four of the owner's constitutional commitments — thermal death, shelter, memory
+across lives, learnable damage — with zero specs behind them, while 154 specs
+existed and every organ reported healthy. The tool's job is to make that
+impossible to repeat.
+
+It failed on its first day. `BA.01` was registered *specifically* to close the
+last hole, `balance`. The tool still reported balance uncovered, because BA.01
+is titled *"He feels himself falling before he falls"* and the pattern read
+`balance|topple|upright|vestibul`. The spec written to satisfy the detector was
+invisible to the detector.
+
+**The tempting repair is the wrong one.** Adding `fall` to the pattern would
+have made it pass, and would have established the habit of editing the detector
+until it agrees with you — at which point it measures the patience of whoever
+maintains it, not the coverage of the ladder. The fix was to give specs an
+explicit `COVERS: <commitment>` declaration: a deliberate statement by an
+author, impossible to match by accident, with the regex demoted to a safety net
+for specs whose authors never thought about the tool.
+
+Note the shape, because it is the same one three times today: the reaper read a
+directory's mtime, the credit detector read a shared log's tail, and this read a
+title. **Each was a proxy that usually correlates with the thing, and each
+failed in the one case that mattered.** When a check reads a proxy, ask what it
+would take for the subject to declare itself directly, and prefer that.
+
+**Rule:** a tool that audits the system is part of the system and gets audited
+too. When it reports all-clear, the first question is whether it *could* have
+reported otherwise — and the cheapest way to answer that is to feed it the case
+you already know is broken.

@@ -28,6 +28,17 @@ Better would be deriving these from GOAL.md automatically; that is not
 attempted, because a regex over prose that silently matches nothing is worse
 than a list a human can read and correct.
 
+A SPEC MAY ALSO DECLARE ITSELF. Put `COVERS: <commitment>` in a spec's notes
+and it counts, regardless of title. This is not a convenience — it is the fix
+for a failure this file committed on its first day: BA.01 was registered
+specifically to close the `balance` hole, titled "He feels himself falling
+before he falls", and the balance regex (`balance|topple|upright|vestibul`)
+did not match it. **The gap-finder had a gap**, and the tempting repair —
+adding "fall" to the pattern — is how a detector gets tuned until it agrees
+with you. An explicit marker is a deliberate statement by the spec's author and
+cannot be matched by accident; the regex stays as a safety net for specs whose
+authors never thought about this file.
+
 MATCH ON TITLES, NOT ON EVERYTHING. Searching the whole spec text finds
 "temperature" inside an unrelated note and reports coverage that does not exist
 — measured: the loose search claimed 2 thermal specs and both were incidental
@@ -79,7 +90,9 @@ def report() -> List[dict]:
     out = []
     for name, (pat, why) in COMMITMENTS.items():
         rx = re.compile(pat, re.I)
-        hits = [s.id for s in LADDER if rx.search(s.title)]
+        marker = re.compile(r"COVERS:\s*" + re.escape(name), re.I)
+        hits = [s.id for s in LADDER
+                if rx.search(s.title) or marker.search(str(s.notes or ""))]
         passing = [i for i in hits if led.get(i, {}).get("status") == "PASS"]
         out.append({"commitment": name, "why": why, "specs": hits,
                     "n_specs": len(hits), "n_pass": len(passing)})

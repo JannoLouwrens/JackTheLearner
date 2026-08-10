@@ -99,7 +99,27 @@ is a frozen-tower-shaped proposal and the plastic-only decree constrains it).
 **Status:** REGISTERED, RESEARCH OWED. Registered 2026-08-10. Do not treat the
 four specs as settled; a revision that strengthens them is the point.
 
-## TOP — PS.01 v2: the probe policy, not the constants (from PS.01 attempt 2, 2026-08-10)
+## DONE — PS.01 v2: the probe policy, not the constants (from PS.01 attempt 2, 2026-08-10)
+
+> **STATUS: DONE. Registered, implemented and run 2026-08-10T08:33 — PS.01
+> attempt 3 = PASS at 3 seeds, 864.8 s CPU.** Pre-registration committed unrun
+> in `ad55a31`; result in the commit that follows it. All four changes shipped
+> as written; protocol steps 1-5 complete (step 6 does not apply — no bakeoff).
+> LC.03 is now RUNNABLE and LC.04-LC.06 + OP.01 sit behind it alone.
+>
+>     drive_dynamic_range   0.777   (gate 0.30)   spread_e 0.778 / spread_i 0.790
+>     n_damaging            32.7    (gate >= 5)   n_rest_decisions 2349 (gate >= 100)
+>     fall_cost_med         0.161   held out, [0.10, 0.20], 5 fresh runs
+>     statue_death_s        600.2 s (gate < 720)  = 1/b exactly, now OBSERVED
+>     forager e_min         0.841   at duty 0.216 and 28 floor items eaten
+>     P_bar(1)              1407.9 W (unit (a) measured 1434.8 +- 22.2 on
+>                                    HELD-OUT seeds 3-5; this is seeds 0-2)
+>
+> `spread_i` moved **2.96e-5 -> 0.790** on the same integrator and the same
+> constants: the variable was never inert, it was unmeasured. The forager
+> fixture's drain (2.263e-3 /s) lands under the floor supply (2.392e-3 /s), so
+> unit (a)'s C2 is now verified on the shipped path rather than in arithmetic.
+
 
 **Why this is top.** PS.01 is the only thing between the ladder and LC.03–LC.06,
 i.e. between it and the arbitration that decides HOW JACK LEARNS. Unit (a) — the

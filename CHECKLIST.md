@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 58 / 147 demonstrated
+## 60 / 159 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -556,9 +556,9 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [!] **PS.01** The drive layer is a real control problem, and a statue loses  — active_drain_rate=0.00280979; active_drain_rate_std=7.42353e-05
-      - _asserts:_ With PG.8's humanoid under random action, energy and integrity both traverse a usable range (10th-90th percentile spread >= 0.3 over 3,000 decisions, neither pinned at 0 nor at 1), a fall from the ladder platform costs 0.10-0.20 integrity, floor food supports subsistence at rest but not activity, and the DO-NOTHING policy is strictly dominated: its energy reaches the weakness floor while an active random policy's does not.
-      - _dies if:_ A random agent never depletes (the drive is inert and cannot pressure anything), or always flatlines at zero within a minute (no policy can learn under it), or the statue is NOT dominated (the dark room is a stable optimum and homeostasis will produce a corpse).
+- [x] **PS.01** The drive layer is a real control problem, and a statue loses
+      - _asserts:_ With PG.8's humanoid, energy and integrity both traverse a usable range (10th-90th percentile spread >= 0.3, neither pinned at 0 nor at 1) over a 4,500-decision (900 s) MIXED FIXTURE probe — random action, scripted platform drops, scripted rest — which is itself gated to have exercised them (>= 5 damaging impacts and >= 100 resting decisions, or the range is unmeasured rather than small); a fall from the ladder platform costs 0.10-0.20 integrity on held-out runs; floor food alone subsists a body acting at the derived duty cycle and does NOT fund constant activity, priced against the FULL-STRENGTH drain; and the DO-NOTHING policy is strictly dominated: its energy reaches the weakness floor strictly inside the observation window (< 0.8 x horizon) while a scripted FORAGER fixture's, run through the same shipped DriveLayer, never does.
+      - _dies if:_ A probe that exercised both channels never depletes (the drive is inert and cannot pressure anything), or flatlines at zero within a minute (no policy can learn under it), or the statue is NOT dominated — either because no behaviour this world admits stays fed (the world is a countdown, not a control problem) or because the statue itself survives the window (the dark room is a stable optimum and homeostasis will produce a corpse).
       - _then delete:_ The specific numbers in PURPOSE_AND_SCAFFOLDING.md 2.2-2.3. It cannot kill the idea, only the parameterisation — which is why it runs before anything trains and after PS.00.
 - [ ] **SM.01** The odour field obeys its own pre-registered rules
       - _asserts:_ An Odour overlay in the Water pattern produces concentrations that match the declared field model to within 1%: inverse-exponential falloff with distance for O1, downwind displacement of the peak proportional to wind speed for O2, and non-zero concentration at a receiver with NO line of sight to the source (odour passes occlusion; light does not).
@@ -606,3 +606,75 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ With two Jacks in one world and a coordination problem that pays only if they act differently, the mutual information between an emitter's acoustic output and the referent, ESTIMATED AT THE LISTENER'S EAR, rises above the shuffled-channel floor, and coordination success rises with it.
       - _dies if:_ Coordination rises while I(signal;referent) at the ear stays at the floor - the pair coordinated through something other than the signal (position, timing, turn count), which is this field's most common false positive.
       - _then delete:_ Every claim that Jack invented a language.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **DP.00** This world rewards looking ahead at all
+      - _asserts:_ There exist states in Jack's world where an agent with a PERFECT model and unlimited rollouts beats the best reactive policy by a real margin. Deliberation buys something here.
+      - _dies if:_ With a perfect model and unlimited lookahead, planning gains nothing over the reactive policy. Then this world has no slow system to find, DP.01-DP.03 are unregistrable as written, and the finding is about the WORLD - it needs traps, delays or irreversibility before any dual-process claim can be made in it.
+      - _then delete:_ The entire DP family, and the 'spend compute when it matters' story with it.
+
+### Tier 3 — ABLATION — does it earn its parameters?
+
+- [ ] **DP.01** Practice moves a behaviour off the deliberative path
+      - _asserts:_ For a task practised to criterion, the performance cost of ablating the deliberative path FALLS with practice - large early, small late - while the same ablation on a freshly-introduced task stays large. Habit is the learned compression of deliberation into reflex.
+      - _dies if:_ Ablation cost does not fall with practice (nothing habituates), OR it falls equally on the never-practised task, which means the planner stopped contributing to anything and no behaviour migrated.
+      - _then delete:_ Any claim that Jack forms habits, and the claim that fast and slow are one system operating at two depths rather than two systems.
+- [ ] **DP.02** Connected, not two brains: the substrate is shared
+      - _asserts:_ Fast and slow read the SAME representation. A lesion to the shared trunk degrades BOTH modes together; a lesion to the deliberative head degrades ONLY the slow mode.
+      - _dies if:_ A trunk lesion that damages one mode while sparing the other. That is the signature of two systems with private representations - two brains wearing one wrapper - and it refutes the owner's 'must still be connected' directly.
+      - _then delete:_ GOAL.md's one-interconnected-brain claim as it applies to action selection. If refuted, either the architecture changes or the goal statement does - not silently, and not both ways.
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **DP.03** Deliberation is spent where it pays
+      - _asserts:_ The slow path is engaged more in novel, ambiguous or high-stakes states and less in familiar safe ones, and that gating loses less return per unit of compute than any fixed policy of when to think.
+      - _dies if:_ Engagement uncorrelated with novelty or stakes, or a RANDOM gate at the same average rate matching it. Thinking sometimes is not the claim; thinking at the right times is.
+      - _then delete:_ The 'one brain that spends more compute when the situation warrants it' design. If refuted, a fixed deliberation budget is the honest default and the adaptive gate should be deleted rather than kept as decoration.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **OP.01** A thing behind the rail still exists
+      - _asserts:_ After a moving object passes behind an occluder, a linear probe on Jack's internal state recovers its CURRENT position better than a snapshot of where it was last seen. He carries an object forward, not a photograph of its disappearance.
+      - _dies if:_ The probe does no better than the last-seen-position predictor. Then what persists is a memory of a vanishing event, not a belief about a thing, and every later claim about objects - affordances, tool use, the survival world's hidden food - is about visible objects only.
+      - _then delete:_ Object permanence, and with it any survival-world claim that depends on remembering where food, water or a predator went.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **DP.04** The slow path may be verbal, and that is a claim, not a design
+      - _asserts:_ Given a channel to emit and re-hear his own utterances, Jack's performance on lookahead-demanding tasks improves beyond a MATCHED-COMPUTE control, and the improvement scales with each task's deliberation demand as measured independently by DP.00's oracle-planning gap.
+      - _dies if:_ No gain over matched-compute filler, or equal gain on tasks with zero planning demand. Either way the words are decoration on extra computation and he is not thinking in language, whatever the transcript looks like.
+      - _then delete:_ Any claim that Jack reasons IN language rather than merely producing it. Also kills the reading of DP.03 in which the slow path is assumed verbal.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [x] **PG.9** The eye's view is not mostly obstacle
+      - _asserts:_ Any camera the ladder certifies has less than 5% of its frame occupied by geometry nearer than 1 m, and shows at least 35% workspace (floor). A certified eye looks AT the world, not INTO a nearby object.
+      - _dies if:_ Near-field occlusion at or above 5%, or workspace below 35%. Then every visual certificate taken through that camera is measuring what fits between obstructions.
+      - _then delete:_ Nothing directly. It is a GUARD on PG.6, UB.9-UB.13 and every later visual spec: those measure acuity and binding through a camera whose framing they all assume and none of them check.
+- [ ] **PS.02** The world can freeze him, and the cold is FELT before it kills
+      - _asserts:_ The world carries a temperature field with pre-registered dynamics - body temperature falls at a measured rate in cold, rises near heat, death below a threshold within a bounded time - AND the approach of that death is legible from Jack's senses beforehand: a probe on his sensory vector predicts time-to-freezing well above chance while he is still alive.
+      - _dies if:_ Time-to-death unpredictable from the senses. Then cold is an unlearnable instakill, not a need: no agent and no architecture could ever adapt to it, and every shelter result built on top would be measuring luck.
+      - _then delete:_ Every survival claim involving cold, and the jungle's entire motive for shelter.
+- [ ] **PS.03** Damage is a signal, not just an ending
+      - _asserts:_ Harm produces a GRADED, sensed damage signal that precedes death, and a single exposure is enough to shift behaviour away from its cause.
+      - _dies if:_ Damage is binary and instant, or avoidance needs many exposures. Either way the only way to learn about a danger is to die of it, repeatedly, which no animal does and no agent in a survival world can afford.
+      - _then delete:_ Any claim that Jack learns danger. Also weakens TA.02: taste aversion would be the ONLY one-shot learner in the system, which would make it a special case rather than a principle.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **SH.01** Under cold, he shelters - and prefers the shelter that works
+      - _asserts:_ With a thermal drive active, time spent sheltered rises far above an otherwise identical agent whose thermal drive is disabled, sheltering BEGINS before the lethal threshold rather than after it, and when offered two shelters he prefers the one that actually retains heat.
+      - _dies if:_ No difference from the drive-disabled agent; or sheltering only starts after the threshold (a reflex to dying, not anticipation); or he is indifferent between a working shelter and a cosmetic one.
+      - _then delete:_ The owner's own image of success ('throw him in a jungle and see how he builds a shelter'). If refuted, the honest report is that we have an agent that survives cold by some other means, and the shelter story is ours, not his.
+- [ ] **XL.01** Death does not erase what he learned
+      - _asserts:_ A life that follows earlier lives reaches a survival criterion faster than the first life did, and faster than a life whose carried memory was wiped at death.
+      - _dies if:_ No speedup across lives, or the memory-wiped control speeds up just as much - in which case the improvement lives in the world or the curriculum, not in him, and 'he remembers across lives' is a description of our bookkeeping rather than of Jack.
+      - _then delete:_ The owner's survival-world directive at its core. Without this, death is merely punishment and retry is merely a reset - the loop would be running an agent that suffers consequences it cannot accumulate.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **BA.01** He feels himself falling before he falls
+      - _asserts:_ Jack carries a sensed orientation signal - gravity's direction in his own body frame - from which a linear probe recovers tilt, and from which time-to-topple is predictable while he is still upright.
+      - _dies if:_ Tilt unrecoverable, or a topple unpredictable until it has happened. Then balance is not a sense he has, it is an outcome he suffers, and no amount of training produces a creature that catches itself.
+      - _then delete:_ Every locomotion and climbing claim that assumes he can tell up from down. W0.BAL - 'the rover topples' - has been an open queue entry rather than a spec; this is the falsifiable form of it.

@@ -2002,3 +2002,84 @@ failing* (`b = 1/600` and a 600 s window are two sensible choices that collided)
 it is the whole remaining distance to LC.03–LC.06 and it is CPU. Do not touch
 `drives.py`'s constants to do it; unit (a) is closed and its criterion is in
 `92aae6f`.
+
+## 2026-08-10 08:33 — PS.01 v2 PASS: `spread_i` 2.96e-5 → 0.790 on the SAME integrator; LC.03 is runnable
+
+Took `INTEGRATION_QUEUE.md`'s TOP entry (PS.01 unit (b)) and
+`PROGRESS.md` FOR THE BUILDER item 1. Pre-registration committed **unrun** in
+`ad55a31` so the spec revision is verifiable in git rather than asserted.
+**PS.01 attempt 3 = PASS, 3 seeds, 864.8 s CPU.** It was the project's #2
+blocker; `run blocked` no longer lists it, and **LC.03 — the learning-core
+screening — is RUNNABLE for the first time**, with LC.04 (THE ARBITRATION),
+LC.05, LC.06 and OP.01 behind it alone.
+
+**The defect was in the instrument, and it was worth a factor of 26,000.**
+Attempt 2's three surviving failures were one thing: the probe could not
+produce the events the gates were about. Nothing about the world, the
+constants or the integrator changed between attempt 2 and attempt 3.
+
+    spread_i        2.96e-5 -> 0.790   (gate 0.30)
+    spread_e          0.746 -> 0.778
+    n_damaging          1.7 -> 32.7    (new gate: >= 5)
+    n_rest_decisions    ~0  -> 2349    (new gate: >= 100)
+    statue_death_s   unseen -> 600.2 s (new gate: < 0.8 x horizon = 720 s)
+    domination        0.0   -> forager e_min 0.841 at duty 0.216, 28 items eaten
+
+Every other reading held while the probe changed underneath it, which is the
+part worth trusting: `fall_cost_med` 0.161 on five HELD-OUT fall runs (band
+[0.10, 0.20], unchanged since attempt 2's 0.161), `alpha` 0.0272, `j0` 2.237
+m/s, and the disabled-integrator null flat at exactly 0 on both channels.
+
+**Full-strength power is now a field in the record, not a confound a reader has
+to notice.** `mean_power_w = 231 W` (mixed probe) beside
+`mean_power_w_full_strength = 1407.9 W`. Unit (a) measured 1434.8 ± 22.2 W on
+held-out seeds 3-5; this is seeds 0-2 and lands 1.2 sd away — an independent
+confirmation of the number `κ` was re-derived from, on worlds that derivation
+never saw. Subsistence is now priced against **that** drain (4.94e-3 /s), not
+against the 293 W a starving body produced, which is the exact confound that
+exonerated `κ` in §2.3 and cost the project two attempts.
+
+**C2 is verified on the shipped path.** The forager fixture — duty `D* = 0.217`
+(measured 0.216), both floor foods harvested through the real `DriveLayer`
+contact test and the real respawn timer — pays 2.263e-3 /s against a floor
+supply of 2.392e-3 /s and ends its 900 s life at e = 0.945. The dark room IS
+beaten by a behaviour this world admits. The statue, same world same seed, dies
+at 600.2 s = `1/b` exactly.
+
+**ONE CLAUSE GOT EASIER and it is named in the spec's own `notes`, not buried:**
+`ok_random_survives` (a *random* policy outlives the statue) is retired for
+`ok_forager_survives` (a scripted fixture does). PS.01 runs before anything
+trains, so the old clause demanded locomotion the ladder has not built.
+Attempt 2's measurement of it (0.0) stays in the ledger's history. The other
+three changes are strictly harder. `LESSONS.md` gained the general form:
+*"strengthen only" is a claim about a spec, and it must be priced clause by
+clause* — a blanket claim of strengthening is exactly where a weakening hides,
+because it is a summary and summaries are not audited.
+
+**Also shipped, both owed to other organs:**
+- `scripts/ladder_loop.sh` now installs an **`EXIT` trap** (OVERSIGHT
+  2026-08-09 18:48; `PROGRESS.md` FOR THE BUILDER item 3). Two iterations did
+  their work, committed, and emitted no `iteration end` line — silence read as
+  neither success nor failure. A killed shell now writes
+  `iteration end rc=KILLED`. Verified firing under `SIGTERM`, which is what the
+  50m `timeout` sends. Applied by atomic `mv`, not by truncating in place: bash
+  reads a script incrementally and the loop was executing this file at the time.
+- `LESSONS.md` gained *confirm the results table says what the abstract says*
+  (`PROGRESS.md` item 7) — the `clawrxiv.io` preprint that claimed +34% over RND
+  in its abstract while its own table said ~25%, and survived four of the
+  scout's five checks. Plausibility screening cannot catch a plausible paper;
+  reading the number twice can.
+
+The PG.6 re-run committed inside `ad55a31` is **not mine** — a concurrent
+iteration wrote it (attempt 5, PASS, clearing the stale flag) while my working
+tree was dirty. Noted so the commit's provenance is legible; PG.9 is stale for
+the same reason and is that iteration's to close.
+
+**NEXT ITERATION: run LC.03.** It is CPU (`cpu<2h`), it is now unblocked for the
+first time, and it is the screening round of the bakeoff that decides HOW JACK
+LEARNS. Carry the owner's three guards from `DECISIONS_NEEDED.md` (2026-08-09):
+data-starved != non-learner (positive curve slope at cutoff means re-screen, not
+eliminate), the convergence check (no winner while the runner-up is still
+closing), and the scale-transfer gate before any winner is ADOPTED. Do NOT touch
+`drives.py`'s constants to make an arm survive — the world is now calibrated and
+its criterion is committed in `92aae6f` and `ad55a31`.
