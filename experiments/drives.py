@@ -399,6 +399,35 @@ class DriveLayer:
         self._reset_decision()
         return self.state
 
+    # ── W0-2: a new body, without a new world ───────────────────────────
+    def new_body(self, state: Optional[DriveState] = None) -> None:
+        """Death: reset everything that belongs to the BODY, nothing else.
+
+        `LEARNING_CORE.md` §5.0 W0-2 asks for death and a respawn that is *not a
+        free teleport to a good state*. The body/world split is what makes that
+        precise, and it is the whole reason this is a method rather than a fresh
+        `DriveLayer`:
+
+          BODY, reset here      e, i, w; the contact-onset edge detector; the
+                                submersion clock; the part-decision accumulators
+          WORLD, deliberately   `self.t` (the world clock) and `_respawn_at`
+          NOT reset             (the food regrowth timers), and `ate_total`
+                                (a cumulative diagnostic, not a body state)
+
+        Reset the food timers too and every death would hand him a freshly
+        stocked larder — an experimenter-supplied curriculum arriving through
+        the back door, which is exactly the objection the random respawn exists
+        to answer. `state` overrides the (1, 1, 0) setpoint; W0's tests use it
+        to build a deliberately drifting world as the positive control for a
+        trend detector, and nothing in the ladder may use it to make an arm
+        survive.
+        """
+        self.state = state or DriveState()
+        self._touching_world = False
+        self._prev_speed = None
+        self._submerged_since = None
+        self._reset_decision()
+
     # ── observation, §2.4 ───────────────────────────────────────────────
     def obs(self, prev: Optional[DriveState] = None, dt: float = 1.0) -> np.ndarray:
         """[e, i, w, d(h), edot, idot]. Concatenated OUTSIDE `humanoid_obs`, so

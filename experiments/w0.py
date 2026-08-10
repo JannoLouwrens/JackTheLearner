@@ -7,10 +7,13 @@ arbitration). It is deliberately NOT a claim: nothing here is measured, and the
 only thing that may assert a capability is a spec in `experiments/tests/`.
 
     W0-1  needs        `drives.DriveLayer` on the rover, e/i/w + d(h)
-    W0-2  death        NOT YET — no arm has run; the respawn rule is stated in
-                       §5.0 and belongs to the spec that first needs a second
-                       life. LC.02 measures one unbroken life and says so.
-    W0-3  cross-life   same: `EpisodicMemory` is proven (ME.10), unwired here.
+    W0-2  death        `lethal=True`: e or i reaching 0 ends the life, and the
+                       body reappears at a UNIFORMLY RANDOM legal spawn drawn
+                       from `legal_spawns()`. Certified by XL.00.
+    W0-3  cross-life   `diary=EpisodicMemory(...)`: the store is never reset by
+                       death and every row it writes carries `meta["life"]`.
+                       The substrate is ME.10's; XL.00 certifies it crosses
+                       death here.
     W0-4  observation  the six-modality dict below
     W0-5  noise panel  `playground.PlaygroundParams.noise_panel`, unchanged
     W0-6  zero reward  there is no reward function in this file. Grep it.
@@ -56,8 +59,16 @@ T2.01's problem, not the learning rule's — and cannot contribute one newton of
 the ground, so ladder height is still earned by the arms. `drive_gate_frac` is
 reported every run: if it ever reads 1.0 the gate is not gating.
 
-WHAT THIS MODULE DOES NOT DO: it does not train, it does not reward, it does not
-end a life, and it does not decide anything. `LC.02` measures how fast it runs.
+DEATH IS OPT-IN, AND THAT IS NOT TIMIDITY. `lethal` defaults to False because
+`LC.02`'s certificate is a measurement of ONE UNBROKEN LIFE (its own hypothesis
+says so) and flipping the default would retroactively change what that ledger
+entry measured without changing a line of its test. A caller that wants W0-2
+asks for it; `LC.03` asks for it.
+
+WHAT THIS MODULE DOES NOT DO: it does not train, it does not reward, and it does
+not decide anything. `LC.02` measures how fast it runs. It now ENDS A LIFE when
+asked to, and that is the one behaviour here that a spec certifies (XL.00)
+rather than merely uses.
 """
 from __future__ import annotations
 
@@ -98,9 +109,34 @@ POOL_XY = (2.6, -2.4)
 _RAY_GROUPS = np.array([1, 1, 1, 0, 0, 0], dtype=np.uint8)
 
 
+# ── W0-2: death, and a respawn that is not a free teleport ─────────────────
+SPAWN_GRID = 25              # candidates per axis; 625 poses probed once, cached
+SPAWN_MARGIN = 0.75          # m inside the arena edge, so no spawn is off-world
+SPAWN_PENETRATION = 1e-3     # m; a resting body deeper than this is INSIDE
+                             # something and that pose is not a legal spawn
+MIN_LEGAL_SPAWNS = 100       # a world offering fewer is not one you can respawn
+                             # uniformly IN — refuse rather than sample from 3
+DEATH_FLOOR = 0.0            # e or i at the clip floor. `drives` clips to
+                             # [0, 1], so this is reached, never crossed.
+
+
 def band_edges() -> np.ndarray:
     """Log-spaced band boundaries over ContactAudio's fundamental range."""
     return np.geomspace(BAND_LO_HZ, BAND_HI_HZ, N_BANDS + 1)
+
+
+def uniform_legal_spawn(legal: np.ndarray, rng: np.random.RandomState,
+                        death_xy: Tuple[float, float]) -> Tuple[float, float]:
+    """§5.0 W0-2's rule: uniform over the legal set, blind to where he died.
+
+    `death_xy` is in the signature and deliberately unused. The alternative —
+    a sampler that cannot see the death site — makes the independence claim
+    true by a type signature rather than by measurement, and XL.00's positive
+    control (`spawn_at_death`, same signature, uses it) could not exist. A
+    property that no control can violate is not a property this repo may claim.
+    """
+    k = int(rng.randint(len(legal)))
+    return float(legal[k][0]), float(legal[k][1])
 
 
 class W0:
@@ -119,7 +155,9 @@ class W0:
     DROPPED: Tuple[str, ...] = ("language",)
 
     def __init__(self, seed: int = 0, *, j0: float, alpha: float,
-                 params: Optional[object] = None, mutate: bool = True):
+                 params: Optional[object] = None, mutate: bool = True,
+                 lethal: bool = False, diary: Optional[object] = None,
+                 spawn_sampler=None):
         import mujoco
         import playground as pg
 
@@ -187,6 +225,26 @@ class W0:
         self.decisions = 0
         self.sim_seconds = 0.0
         self.drive_gate_open = 0
+
+        # ── W0-2/W0-3 state ────────────────────────────────────────────
+        self.lethal = bool(lethal)
+        self.diary = diary
+        self.spawn_sampler = spawn_sampler or uniform_legal_spawn
+        # A SEPARATE stream from `self._rng`. `_rng` drives the noise panel's
+        # texture and the placebo channel, i.e. what he SEES; drawing respawns
+        # from it would make the sensory noise of life k+1 a function of how
+        # many times he had died, which is a channel from the death counter into
+        # the observation that no arm should be able to read.
+        self._spawn_rng = np.random.RandomState(seed * 104729 + 7)
+        self._legal: Optional[np.ndarray] = None
+        self.life = 0
+        self.deaths = 0
+        self.died_this_decision = False
+        self.last_death_cause = ""
+        self._life_started_at = 0.0
+        self.life_lengths: list = []        # sim-seconds, one per COMPLETED life
+        self.death_sites: list = []         # (x, y) where each life ended
+        self.spawn_sites: list = []         # (x, y) where the next one began
 
         mujoco.mj_forward(self.model, self.data)
         self.mujoco.mj_rnePostConstraint(self.model, self.data)
@@ -326,6 +384,144 @@ class W0:
         self.drive_gate_open += n_gated
         self.sim_seconds += SUBSTEPS * dt
 
+        # W0-2. Checked at the decision boundary, AFTER the clock advances, so
+        # the recorded life length is the time he actually lived.
+        self.died_this_decision = False
+        if self.lethal:
+            cause = self.death_cause()
+            if cause:
+                self._die(cause)
+
+    # ── W0-2: death and respawn ─────────────────────────────────────────
+    def death_cause(self) -> str:
+        """"energy" | "integrity" | "" — the empty string is alive.
+
+        A string, not a bool, because "he died" and "he starved" are different
+        facts and an aggregate death count would hide a world where every death
+        has one cause. XL.00 reports the split.
+        """
+        s = self.drives.state
+        if s.e <= DEATH_FLOOR:
+            return "energy"
+        if s.i <= DEATH_FLOOR:
+            return "integrity"
+        return ""
+
+    def legal_spawns(self) -> np.ndarray:
+        """(N, 2) legal respawn poses, computed ONCE against the live model.
+
+        Legal = the body, placed upright at rest height with its arms at zero,
+        penetrates nothing that is not ground. That is a geometric property of
+        THIS world, so it is derived from the model rather than declared: a
+        hand-written spawn list would be a constant that a mutated world could
+        silently invalidate, which is the T0.14 mistake.
+
+        Deliberately NOT excluded: the ladder base. §5.0 forbids respawning *at*
+        a useful location, not respawning uniformly over a set that contains one
+        cell near it — carving out "good" cells would be the experimenter
+        shaping the curriculum in the opposite direction.
+        """
+        if self._legal is not None:
+            return self._legal
+        a = float(self.params.arena_size) - SPAWN_MARGIN
+        axis = np.linspace(-a, a, SPAWN_GRID)
+        qpos0, qvel0 = self.data.qpos.copy(), self.data.qvel.copy()
+        ok = []
+        for x in axis:
+            for y in axis:
+                self._place(float(x), float(y))
+                self.mujoco.mj_forward(self.model, self.data)
+                if not self._penetrating():
+                    ok.append((float(x), float(y)))
+        self.data.qpos[:] = qpos0
+        self.data.qvel[:] = qvel0
+        self.mujoco.mj_forward(self.model, self.data)
+        if len(ok) < MIN_LEGAL_SPAWNS:
+            raise RuntimeError(
+                f"only {len(ok)} legal spawns in this world (need "
+                f"{MIN_LEGAL_SPAWNS}); 'uniformly random legal spawn' over a "
+                f"handful of poses is a fixed spawn wearing a random costume")
+        self._legal = np.asarray(ok, dtype=float)
+        return self._legal
+
+    def _place(self, x: float, y: float) -> None:
+        """Move the BODY to (x, y) at rest height, upright, arms zeroed, at rest.
+
+        Note what is not here: `mj_resetData`. Resetting the whole world on
+        death would put the objects back, refill the food and rewind the clock —
+        the free teleport to a good state that §5.0 names as the thing W0-2 must
+        not be.
+        """
+        qa, da = self.ix["root_qposadr"], self.ix["root_dofadr"]
+        self.data.qpos[qa:qa + 3] = (x, y, self.pg.ROVER_REST_Z + 0.01)
+        self.data.qpos[qa + 3:qa + 7] = (1.0, 0.0, 0.0, 0.0)
+        self.data.qvel[da:da + 6] = 0.0
+        for n in ("reachL", "liftL", "reachR", "liftR"):
+            self.data.qpos[self.ix["jnt_qposadr"][n]] = 0.0
+            self.data.qvel[self.ix["jnt_dofadr"][n]] = 0.0
+        self.data.qacc[:] = 0.0
+        self.data.xfrc_applied[self.rover_bid, :] = 0.0
+
+    def _penetrating(self) -> bool:
+        """Is any rover geom inside a non-ground geom by more than the tolerance?
+
+        Rover-rover pairs are excluded: the arms fold against the torso in every
+        pose and that is the body's own geometry, not the world's.
+        """
+        for k in range(int(self.data.ncon)):
+            con = self.data.contact[k]
+            g1, g2 = int(con.geom1), int(con.geom2)
+            mine = (g1 in self.body_gids, g2 in self.body_gids)
+            if not any(mine) or all(mine):
+                continue
+            other = g2 if mine[0] else g1
+            if other in self.ground_gids:
+                continue
+            if float(con.dist) < -SPAWN_PENETRATION:
+                return True
+        return False
+
+    def respawn(self, at: Optional[Tuple[float, float]] = None) -> Tuple[float, float]:
+        """Put a new body in the world. Returns the (x, y) it was placed at."""
+        legal = self.legal_spawns()
+        death_xy = (float(self.data.xpos[self.rover_bid][0]),
+                    float(self.data.xpos[self.rover_bid][1]))
+        x, y = (at if at is not None
+                else self.spawn_sampler(legal, self._spawn_rng, death_xy))
+        self._place(float(x), float(y))
+        self.mujoco.mj_forward(self.model, self.data)
+        self.mujoco.mj_rnePostConstraint(self.model, self.data)
+        self.drives.new_body()
+        self._prev_drive = drives.DriveState()
+        # The old body's last sounds do not follow the new one into the world.
+        self.synth.events = []
+        self._audio = np.zeros(MODALITIES["audio"], dtype=np.float32)
+        return float(x), float(y)
+
+    def _die(self, cause: str) -> None:
+        death_xy = (float(self.data.xpos[self.rover_bid][0]),
+                    float(self.data.xpos[self.rover_bid][1]))
+        self.life_lengths.append(self.sim_seconds - self._life_started_at)
+        self.death_sites.append(death_xy)
+        if self.diary is not None:
+            # W0-3: the row is written by the WORLD, carries the life index, and
+            # is never removed by what follows. `did`, because dying is
+            # something that happened to him, not something he was told.
+            self.diary.record(
+                "did", "jack",
+                f"life ended, {cause} gone, after "
+                f"{self.life_lengths[-1]:.1f} seconds",
+                importance=10.0,
+                meta={"life": self.life, "cause": cause,
+                      "sim_s": self.sim_seconds,
+                      "x": death_xy[0], "y": death_xy[1]})
+        self.deaths += 1
+        self.last_death_cause = cause
+        self.died_this_decision = True
+        self.life += 1
+        self.spawn_sites.append(self.respawn())
+        self._life_started_at = self.sim_seconds
+
     def _grounded(self) -> bool:
         """Is any rover geom touching floor, ramp or stair? The drive's gate.
 
@@ -388,6 +584,10 @@ class W0:
             "upright_cos": float(self.data.xmat[self.rover_bid][8]),
             "energy": float(self.drives.state.e),
             "integrity": float(self.drives.state.i),
+            "lethal": float(self.lethal),
+            "deaths": float(self.deaths),
+            "life": float(self.life),
+            "life_s": float(self.sim_seconds - self._life_started_at),
         }
 
 

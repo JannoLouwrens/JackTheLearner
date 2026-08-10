@@ -106,7 +106,12 @@ from ..w0 import W0, SIM_S_PER_DECISION
 # This spec certifies a property of the WORLD, so the world hashes into
 # impl_sha. Change playground.py and this certificate goes stale loudly
 # instead of standing over a world it no longer describes.
-IMPL_DEPS = ["playground.py"]
+# WIDENED 2026-08-10 to the two modules this spec actually times. It declared
+# only `playground.py`, so a change to `w0.py` — the module whose decision loop
+# IS the throughput being measured — left this PASS standing over code it had
+# never run. The narrower list was not a smaller claim; it was a blind spot in
+# exactly the direction the guard exists to cover.
+IMPL_DEPS = ["playground.py", "experiments/w0.py", "experiments/drives.py"]
 
 FLOOR = 5.0                      # sim-s per real-s, LEARNING_CORE.md §5.1
 N_THREADS = 3                    # "3 ARM cores of this box"

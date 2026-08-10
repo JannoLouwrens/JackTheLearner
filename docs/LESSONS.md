@@ -1737,3 +1737,46 @@ against a throwaway `Ledger(path=...)`, and asserts BOTH directions: the
 undeclared one is refused, and the declared one runs through to a real verdict.
 One direction alone is worthless, because a guard that refuses everything and a
 guard that refuses nothing leave the same clean log behind them.
+
+## A dependency that lives in a module's header comment is not a dependency
+
+`LC.03` — the screening round of the bakeoff that decides how Jack learns —
+declares `hypothesis="... n_lives >= 12 per seed"` and gates on
+`cross_life_transfer`. Neither quantity could exist: `w0.py`'s own header said
+**"W0-2 death — NOT YET"** and **"W0-3 cross-life — unwired here"**, so nothing
+in the world could end a life or carry a diary across one. Its `depends_on` was
+`["LC.00", "LC.01", "LC.02", "PS.01"]` — all PASS — so `run blocked` listed
+LC.03 as *runnable today, frees 4, blocks 7* for three iterations running, one
+handoff said "NEXT ITERATION: run LC.03", and the iteration that picked it up
+found the hole only by reading the world's source.
+
+The graph was not wrong about the specs; it was silent about a capability no
+spec owned. `run next` and `run blocked` both walk the DECLARED graph, so a
+missing producer is invisible to both — it is not a blocked node, it is not a
+node.
+
+**Rule:** for every quantity a spec's hypothesis names, ask *what code produces
+this, and is that code certified by something in the graph?* If nothing produces
+it, the honest repair is a spec that certifies the producer plus an edge into
+the consumer — not a note in a docstring and not a TODO in the module that lacks
+it. A prose "NOT YET" is a fact the machine cannot read, and this project's
+whole discipline is that the machine, not the reader, holds the state. (Guard:
+`XL.00` now certifies W0-2/W0-3 and is in `LC.03.depends_on` and
+`XL.01.depends_on`, so the gap is a BLOCKED row instead of an invitation.)
+
+## `IMPL_DEPS` must list the file that moves the number, not the file the docstring mentions
+
+`LC.02` measures the throughput of `w0.py`'s decision loop and declared
+`IMPL_DEPS = ["playground.py"]`. Its comment justified that choice honestly —
+"this spec certifies a property of the WORLD" — and it was still the wrong list:
+this iteration added death and respawn to `w0.py`, which is the module inside
+the stopwatch, and LC.02's PASS would have gone on standing over a decision loop
+it had never executed, with the staleness checker silent. The narrower list was
+not a more conservative claim; it was a blind spot pointing in exactly the
+direction the guard exists to cover.
+
+**Rule:** choose `IMPL_DEPS` by asking *if I edited this file, could the metric
+move?* — never by asking what the spec is conceptually about. And widen it in
+the same commit that changes the newly-declared file, budgeting the re-run: a
+certificate whose scope grows retroactively invalidates every entry recorded
+under the narrow scope, which is a cost, not a formality.

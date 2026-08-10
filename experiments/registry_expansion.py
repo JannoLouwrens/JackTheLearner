@@ -1502,7 +1502,14 @@ EXPANSION: list[Spec] = [
                        "gate against random alone is nearly cleared by a "
                        "network that has never received a gradient.",
          metric="life_gain", budget=Budget.CPU_LONG, seeds=3,
-         depends_on=["LC.00", "LC.01", "LC.02", "PS.01"],
+         # XL.00 added 2026-08-10: LC.03 scores `life_gain` over `n_lives >= 12`
+         # and `cross_life_transfer`, and until that commit NOTHING IN W0 COULD
+         # END A LIFE (`w0.py`'s own header said "W0-2 death — NOT YET"). The
+         # dependency was always real; it was simply not written down, so `run
+         # blocked` ranked LC.03 as runnable-today work three iterations running
+         # and an iteration reached for it before reading the world's header.
+         # A dependency a human has to remember is not a dependency.
+         depends_on=["LC.00", "LC.01", "LC.02", "PS.01", "XL.00"],
          control="FIVE, each on its pre-registered side. (a) statue (do "
                  "nothing) must die soonest. (b) randrew (fixed random "
                  "stationary reward projection) must miss the gate — it "
@@ -2385,6 +2392,69 @@ EXPANSION: list[Spec] = [
                "and reflex, and it connects directly to DP.00's question of "
                "whether this world rewards looking ahead."),
 
+    Spec("XL.00", 2, "He dies, he reappears somewhere he did not choose, and the diary crosses",
+         hypothesis="With `lethal=True`, W0 ends a life when energy or "
+                    "integrity reaches zero at the rate the drive arithmetic "
+                    "predicts (a resting body's implied 1/b is within 2% of "
+                    "600 s at two independent starting charges); the body "
+                    "reappears at a pose drawn UNIFORMLY from the legal spawn "
+                    "set (chi-square z <= 4 over 20,000 draws), always legal, "
+                    "and statistically INDEPENDENT of where it died "
+                    "(permutation |z| <= 3 on paired-vs-shuffled death->spawn "
+                    "distance); the diary survives every death with a life "
+                    "index covering every life; and a NON-LEARNER's lives do "
+                    "not lengthen across >= 12 lives (|slope z| <= 3).",
+         falsified_by="Death never fires; or the implied drain disagrees with "
+                      "the arithmetic; or a spawn lands inside geometry; or "
+                      "the spawn distribution is non-uniform or correlated "
+                      "with the death site - which is `LT` 2.1's objection "
+                      "arriving through the respawn, an experimenter-supplied "
+                      "curriculum; or the diary does not survive; or the "
+                      "non-learner's lives lengthen anyway, in which case "
+                      "LC.03's `life_gain` measures the WORLD and every "
+                      "learning-core verdict built on it is void.",
+         null_baseline="For the trend: the non-learner (uniform random action) "
+                       "itself - a random policy's lives may not lengthen. For "
+                       "uniformity and independence: the shuffled pairing and "
+                       "the flat multinomial, both computed from the run's own "
+                       "draws rather than assumed.",
+         metric="death_respawn_diary_conjunction",
+         budget=Budget.CPU, seeds=3, depends_on=["LC.02", "PS.01"],
+         control="FIVE, each on its pre-registered side, and three of them are "
+                 "POSITIVE controls for detectors that would otherwise be "
+                 "unfalsifiable. (a) IMMORTAL (`lethal=False`, same decision "
+                 "budget, same starting charge): deaths must be 0 - a death "
+                 "detector that fires in a world without death is reading "
+                 "something else. (b) SPAWN-AT-DEATH (`spawn_sampler` returns "
+                 "the death site): the independence z MUST exceed 3, or the "
+                 "independence statistic cannot see the very leak it exists to "
+                 "exclude. (c) BIASED SAMPLER (draws only from the half of the "
+                 "legal set nearest the origin): the uniformity z MUST exceed "
+                 "4. (d) WIPED DIARY (the store cleared at every death): "
+                 "life-0 rows must NOT survive. (e) DRIFTING WORLD (each new "
+                 "body starts with more charge than the last): the trend z "
+                 "MUST exceed 3 - T0.13's rule, a detector that has never seen "
+                 "its own positive control has measured nothing.",
+         kills="W0-2 and W0-3 as implemented, and with them LC.03/LC.04 - the "
+               "learning-core bakeoff scores `life_gain` and "
+               "`cross_life_transfer`, neither of which exists if death, the "
+               "respawn or the diary is broken. A wrong answer here is not a "
+               "wrong answer about the world; it is a wrong answer about every "
+               "arm scored in it.",
+         notes="THE SHORT-LIFE FIXTURE IS DECLARED, NOT HIDDEN. Every claim "
+               "except the drain arithmetic is invariant to the starting "
+               "charge, so lives after the first are started at e=0.10 to buy "
+               "16 deaths per seed in ~50 s instead of ~16 min. The drain "
+               "arithmetic is certified separately IN THIS SPEC at two full "
+               "charges, which is a stronger test of it than one death at "
+               "e=1.0 (it checks the RATE, not one endpoint). j0 and alpha are "
+               "READ FROM PS.01's LEDGER ENTRY, never copied: a calibration "
+               "pasted into a second file is a constant that drifts from its "
+               "measurement (T0.14). W0-2's random respawn is the answer to "
+               "LEARNING_CORE.md 5.0's own objection that an episode boundary "
+               "is a free teleport to a good state, so the independence test "
+               "is the load-bearing half of this spec, not a formality."),
+
     Spec("XL.01", 5, "Death does not erase what he learned",
          hypothesis="A life that follows earlier lives reaches a survival "
                     "criterion faster than the first life did, and faster than "
@@ -2396,7 +2466,7 @@ EXPANSION: list[Spec] = [
                       "bookkeeping rather than of Jack.",
          null_baseline="First-life learning curve; and the memory-wiped arm.",
          metric="lives_to_criterion_vs_wiped",
-         budget=Budget.CPU_LONG, seeds=3, depends_on=["PS.02"],
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["PS.02", "XL.00"],
          control="ANOTHER JACK'S MEMORIES. Carry a different agent's store into "
                  "the new life: it must NOT help, and should hurt. ME.3's "
                  "precedent - reflections generated from another agent's log "
