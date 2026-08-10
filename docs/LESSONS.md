@@ -1535,3 +1535,65 @@ count as many distinctions as the goal makes. Here that is four, not three:
 LOAD-BEARING (an ablation degrades a measured quantity)`. A measuring instrument
 whose categories are coarser than the thing it measures reports progress that
 has not happened, and it does so in the vocabulary everyone will repeat.
+
+## A defect that degrades the system also degrades the measurement that would convict it
+
+`PURPOSE_AND_SCAFFOLDING.md` §2.3's energy arithmetic was refuted by PS.01 on
+2026-08-10, and the refutation note exonerated `κ` explicitly and reasonably:
+*"the error is not in κ — 293 W producing 3.9× basal is what κ was chosen to
+do."* `κ`'s defining sentence is *"vigorous activity (~200 W) roughly triples
+b"*, 293 W gave 3.9×, and that is the sentence working.
+
+The 293 W was measured on a **starving** body. PS.01's rollout applies §2.2's
+weakness, `ctrl *= gear_scale = 0.4 + 0.6·min(e, i)`, and its energy is pinned
+at zero for 84.8% of the run — *because* `κ` was too large — so `gear_scale`
+sat at 0.4 for most of the measurement. Re-measured at full strength (`e = i`
+pinned at 1, held-out seeds 3–5): **1434.8 ± 22.2 W, 15.38× basal**. The 200 W
+premise is 7.17× wrong for Humanoid-v5 under the very policy the drain is
+priced against, and at the shipped `κ` the world could not feed a fully active
+body at *any* level of skill — every food in it, perfectly harvested at the
+instant of respawn, supplied 0.23× of what constant activity cost. Not a hard
+world; a countdown, and the learning-core bakeoff was queued to run inside it.
+
+The loop is the whole lesson. `κ` too large → the agent starves → weakness
+throttles it to 40% gear → measured power falls by 4.9× → the drain looks like
+what `κ` predicted → `κ` is cleared. **The defect suppressed its own symptom,
+and the suppression was mistaken for the absence of the defect.** Both numbers
+were in the same ledger entry (`mean_power_w` 293, `frac_e_zero` 0.848) and
+nobody joined them, because neither is surprising on its own.
+
+This is not "a proxy that correlates with the thing you are claiming" and not a
+saturated assertion: the measurement was accurate, of the right quantity, in the
+wrong regime — and the wrong regime was *created by the thing under test*.
+
+**Rule:** when a system has any self-limiting response to the failure — weakness,
+throttling, backoff, rate limiting, degraded mode, a clamp — a measurement taken
+while it is failing is not evidence about the healthy system, and it will
+systematically UNDER-state the defect and so exonerate its cause. Before pricing
+a design against a measured rate, name the state variables that modulate it and
+pin them to the regime the design is meant to produce. And report the regime
+next to the rate: a spec that records a rate without recording the state it was
+measured in has recorded half a number. (Guard, so this is not merely
+prescribed: PS.01 v2 must record `mean_power_w_full_strength` alongside
+`mean_power_w` — `INTEGRATION_QUEUE.md`, TOP entry, change 4.)
+
+## A control designed to fail at the edge of the observation window cannot be seen failing
+
+PS.01's control is the do-nothing statue and its pre-registered failure is
+`e_min <= 0` — it must starve. Basal drain is `b = 1/600 s⁻¹`, chosen because
+§2.2 wanted *"a resting body empties in 10 minutes"*. The rollout is 3,000
+decisions at 0.2 s, which is **600 s**. So the statue's energy reaches zero at
+exactly the last sample of the window, and floating point put it at
+`4.35e-14` — above the threshold. Two independent, sensible design choices
+happened to be the same number, and between them they made the control's
+required failure unobservable. It read as "the statue is not dominated", which
+is the falsifier for the entire drive design.
+
+**Rule:** when a control fails by an event with a TIMESCALE — starving,
+draining, timing out, filling — derive the observation window from that
+timescale with margin and gate on the event's time, not only on its occurrence
+(`statue_death_s < 0.8 × horizon`). Same family as "an assertion made against a
+saturated quantity cannot fail", on the time axis: an event at the window's edge
+is indistinguishable from an event that never happens. Check it whenever a test
+duration and a system time constant are both round numbers — that is exactly
+when they collide.

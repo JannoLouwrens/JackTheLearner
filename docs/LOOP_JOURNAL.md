@@ -1930,3 +1930,75 @@ recovering them at a *listener's* ear, and the two controls VO.01 pre-registers
 — a muted emitter must leave the probe at chance, and a listener behind a wall
 must hear the declared attenuation. After that, PS.01's two handoff units above
 are still open and still the right science.
+
+## 2026-08-10 — PS.01 unit (a) DONE: κ's premise was 7.17× wrong, the world could not feed any policy, spread_e 0.145 → 0.746
+
+Took `PROGRESS.md` FOR THE BUILDER item 1 (and the 05:30 handoff's unit (a)):
+re-derive the energy economy against the drain that is PAID. Criterion committed
+**unrun** in `92aae6f` so the pre-registration is verifiable in git rather than
+asserted; solved on held-out seeds 3–5;
+`experiments/calibrations/ps01_energy.py` prints every rejected alternative.
+
+**The refutation was bigger than the refutation said.** §2.3's note exonerated
+`κ` — *"293 W producing 3.9× basal is what κ was chosen to do"*. That 293 W was
+a **starving** body's power: PS.01 pins `e` at 0 for 84.8% of its life, so
+`gear_scale` sat at 0.4 for most of the measurement. Measured at full strength
+(`e = i` pinned at 1):
+
+    duty     0     0.125    0.25     0.5      1.0
+    P_bar    0 W   144 W    312 W    697 W    1434.8 ± 22.2 W   (15.38× basal)
+    P(D)/(D·P(1))  0.805    0.870    0.972    1.000   ← drain is SUB-linear in duty
+
+`κ = 1.67e-5` was never the number; it was §2.2's sentence *"vigorous activity
+(~200 W) roughly triples b"*. **200 W is 7.17× wrong for this body.** At the
+shipped constants every food in the world, perfectly harvested at the instant of
+respawn, supplied `5.94e-3 /s` against a cost of `2.56e-2 /s` — **0.23×**. No
+policy of any competence could have survived, and LC.03–LC.06 were queued to
+arbitrate learning cores inside it.
+
+**Shipped: κ re-derived from the measured body, honouring §2.2's own sentence.**
+`κ = (3−1)·b / P̄(1) = 2.3231e-6`, so constant activity costs exactly 3× basal.
+Then C1/C2/C3 with the pre-registered knob rule (respawn moves, per-item value
+never does — `ν_apple/ν_floor` is the climb-vs-forage ratio §2.3 calls
+load-bearing): `RESPAWN_FLOORFOOD_S 90 → 66.9`, `RESPAWN_APPLE_S 120 → 129.6`.
+Floor food now funds a duty cycle of **D\* = 0.217** and is 2.09× short of
+constant activity — §2.3's intent intact, priced against a measured drain.
+The alternative that keeps `κ` frozen is *arithmetically valid* and demands an
+apple respawning every **17.1 s**; it is printed and rejected in the module, not
+hidden — an apple that returns every 17 s is not a climb-gated resource.
+
+**PS.01 attempt 2 (428 s, 3 seeds): still FAIL, and it should be.**
+
+    spread_e     0.145 → 0.746   (gate 0.30)   CLEARS
+    e_at_60s     0.147 → 0.746   frac_e_zero 0.848 → 0.463
+    drain        6.57e-3 → 2.81e-3 /s (1.69× basal)
+    fall_cost_med 0.162 → 0.161  held out, still inside [0.10, 0.20] on 3 seeds
+    spread_i     2.4e-5 → 3.0e-5  ← unchanged, and no constant can move it
+    ok_random_survives 0   ok_statue_starves 0
+
+`J₀`/`α` re-measured under the corrected economy (2.237 m/s / 0.0272; a
+non-starving body makes 856 contact onsets in a life instead of 203) — §2.2
+updated, attempt 1's values kept beside them so the change is legible. That `α`
+survived a 7× change in `κ` with the held-out fall cost moving 0.162 → 0.161 is
+a robustness result the calibration did not have to produce.
+
+**Unit (b) is written up as the TOP entry of `INTEGRATION_QUEUE.md`, not edited
+into the registry.** All three surviving failures are ONE defect — the probe
+cannot produce the events the gates are about: a random policy never climbs (so
+`i` never moves), never forages (1.0 items in 600 s, so it cannot outlive the
+statue), and the statue dies at `t = 1/b` = **exactly** the 600 s horizon. The
+redesign is 4 changes: mixed probe for `i` with required event counts gated,
+forager fixture for the domination clause, horizon 3,000 → 4,500 decisions with
+`statue_death_s` gated, and `mean_power_w_full_strength` recorded beside
+`mean_power_w`.
+
+**LESSONS.md, two new:** *a defect that degrades the system also degrades the
+measurement that would convict it* (the κ exoneration loop — the defect
+suppressed its own symptom and the suppression read as its absence), and *a
+control designed to fail at the edge of the observation window cannot be seen
+failing* (`b = 1/600` and a 600 s window are two sensible choices that collided).
+
+**NEXT ITERATION:** register and implement PS.01 v2 from the queue's TOP entry —
+it is the whole remaining distance to LC.03–LC.06 and it is CPU. Do not touch
+`drives.py`'s constants to do it; unit (a) is closed and its criterion is in
+`92aae6f`.

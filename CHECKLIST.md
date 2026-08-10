@@ -556,7 +556,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [!] **PS.01** The drive layer is a real control problem, and a statue loses  — active_drain_rate=0.00656675; active_drain_rate_std=0.000104608
+- [!] **PS.01** The drive layer is a real control problem, and a statue loses  — active_drain_rate=0.00280979; active_drain_rate_std=7.42353e-05
       - _asserts:_ With PG.8's humanoid under random action, energy and integrity both traverse a usable range (10th-90th percentile spread >= 0.3 over 3,000 decisions, neither pinned at 0 nor at 1), a fall from the ladder platform costs 0.10-0.20 integrity, floor food supports subsistence at rest but not activity, and the DO-NOTHING policy is strictly dominated: its energy reaches the weakness floor while an active random policy's does not.
       - _dies if:_ A random agent never depletes (the drive is inert and cannot pressure anything), or always flatlines at zero within a minute (no policy can learn under it), or the statue is NOT dominated (the dark room is a stable optimum and homeostasis will produce a corpse).
       - _then delete:_ The specific numbers in PURPOSE_AND_SCAFFOLDING.md 2.2-2.3. It cannot kill the idea, only the parameterisation — which is why it runs before anything trains and after PS.00.

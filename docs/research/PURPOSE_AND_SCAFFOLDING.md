@@ -301,9 +301,37 @@ e ← clip( e − (b + κ·P_t)·Δt + Σ_f ν_f · ate_f(t) ,  0, 1 )
 
 P_t = Σ_j | τ_j · ω_j |            mechanical power, from qfrc_actuator · qvel
 b   = 1/600  s⁻¹                   basal: a resting body empties in 10 min
-κ   = 1.67e-5  J⁻¹                 vigorous activity (~200 W) roughly triples b
+κ   = 2.323e-6  J⁻¹                MEASURED, PS.01(a) 2026-08-10 (was 1.67e-5)
 ν_apple = 0.50    ν_floorfood = 0.08
 ```
+
+> **κ IS NO LONGER A PROPOSAL, and its old value was defined by a premise that
+> is false about this body (PS.01 unit (a), 2026-08-10).** κ was never really
+> the number `1.67e-5`; it was the sentence *"vigorous activity (~200 W) roughly
+> triples b"*, and `1.67e-5` was what that sentence implies **if the body does
+> 200 W**. Nobody had measured the body. Measured, on held-out seeds 3–5, at
+> FULL STRENGTH (`e = i = 1` pinned every decision, so §2.2's weakness is not in
+> the loop):
+>
+> | duty cycle D | 0 | 0.125 | 0.25 | 0.5 | 1.0 |
+> |---|---|---|---|---|---|
+> | mean mechanical power | 0 W | 144 W | 312 W | 697 W | **1435 ± 22 W** |
+> | drain, × basal, at old κ | 1.00 | 2.45 | 4.13 | 7.99 | **15.38** |
+>
+> The 200 W premise is **7.17× wrong** for Humanoid-v5 under the same random
+> policy the drain is priced against. The sentence is kept and the number
+> re-derived from the measured body: `κ = (3 − 1)·b / P̄(1) = 2.323e-6 J⁻¹`, so
+> constant activity costs exactly 3× basal as §2.2 always said it should.
+>
+> Two further measurements from the same run, both of which were assumptions
+> before it. **The drain is SUB-linear in duty cycle:** `P̄(D) / (D·P̄(1))` is
+> 0.805, 0.870, 0.972, 1.000 at D = 0.125, 0.25, 0.5, 1.0 — so the linear model
+> `drain(D) = b + κ·P̄(1)·D` over-prices intermittent action by up to 24%, and
+> the supply is sized against the measured `P̄(D)` rather than against it. And
+> PS.01's own **293 W was a starving body's power**: its life pins `e` at 0 for
+> 84.8% of the run, so `gear_scale = 0.4 + 0.6·min(e, i)` sat at 0.4 for most of
+> it. Sizing food against that number would have sized the supply against the
+> drain of an agent the supply had already failed to feed.
 
 **Integrity `i` — damaged by impact, heals slowly, and this is the one that makes
 falling cost something.**
@@ -312,8 +340,8 @@ falling cost something.**
 i ← clip( i − α·max(0, J_t − J₀) − drown(t) + ρ·Δt·[‖qvel‖ < q_rest] , 0, 1 )
 
 J_t = the root's linear SPEED one substep before contact onset  (arrival speed)
-J₀  = 2.405 m/s      MEASURED, PS.01 2026-08-10 (was: "to be measured")
-α   = 0.0293         MEASURED, PS.01 2026-08-10 (was: "to be calibrated")
+J₀  = 2.237 m/s      MEASURED, PS.01 att.2 2026-08-10 (was: "to be measured")
+α   = 0.0272         MEASURED, PS.01 att.2 2026-08-10 (was: "to be calibrated")
 ρ   = 1/900  s⁻¹                   full heal in 15 minutes of rest
 drown(t) = 0.05·Δt while the head geom has been below the pool surface > 8 s
 ```
@@ -333,6 +361,18 @@ drown(t) = 0.05·Δt while the head geom has been below the pool surface > 8 s
 > This is the one clause of PS.01 that passed outright. A fall from the
 > platform now costs something, measured through the shipped integrator rather
 > than through the arithmetic that produced the constant.
+>
+> **RE-MEASURED under the corrected economy (PS.01 attempt 2, same day):
+> `J₀ = 2.237 ± 0.06 m/s`, `α = 0.0272 ± 0.003`** — the values above are
+> attempt 1's and are kept so the change is legible. Both are calibrated
+> *inside* each run, so re-deriving `κ` moved them: a body that is no longer
+> starving is no longer weakened (`gear_scale` 0.4 → ~1), and it makes **856**
+> contact onsets in a life instead of 203. The number worth reading is that the
+> held-out fall cost barely moved — **median 0.161** against 0.162, still inside
+> the pre-registered [0.10, 0.20] on every seed. `α` is calibrated against a
+> 1.8 m drop, and a drop height is not something the energy economy can change;
+> that the constant survived a 7× change in `κ` is a robustness result the
+> calibration did not have to produce.
 
 > **`J_t` was DECIDED BY BAKEOFF, not by this document** (`PS.01/J`, `PS.01/J2`,
 > 2026-08-10 — `docs/DECISIONS_RESOLVED.md`, `experiments/bakeoffs/ps01_impulse*.py`).
@@ -388,10 +428,12 @@ load-bearing). The drive layer makes it **nutritious**, which is not the same as
 rewarded — it changes the world, not the objective.
 
 ```
-apple        on the platform (z = ladder_height + 0.09)   ν = 0.50   respawn 120 s
-floorfood0   re-tagging obj0 as edible                     ν = 0.08   respawn  90 s
-floorfood1   re-tagging obj1 as edible                     ν = 0.08   respawn  90 s
+apple        on the platform (z = ladder_height + 0.09)   ν = 0.50   respawn 129.6 s
+floorfood0   re-tagging obj0 as edible                     ν = 0.08   respawn  66.9 s
+floorfood1   re-tagging obj1 as edible                     ν = 0.08   respawn  66.9 s
 ```
+(respawn periods MEASURED — PS.01 unit (a), 2026-08-10, derivation below; the
+per-item values ν are unchanged and deliberately so.)
 
 The arithmetic is the design. Two floor foods supply `2 × 0.08 / 90 = 1.78e-3`
 energy per second; basal drain is `1.67e-3`. **Subsistence on the floor is
@@ -429,6 +471,45 @@ between a survival treadmill and a purpose, and it is a number, not a story.
 > the search and verified on held-out seeds, in the shape that worked for `α`
 > above. It is pre-registered in `LOOP_JOURNAL.md` (2026-08-10) and is NOT to
 > be done by adjusting constants until PS.01 turns green.
+
+> **RE-DERIVED, 2026-08-10 (PS.01 unit (a)).** The criterion was committed unrun
+> in `92aae6f` and solved on held-out seeds 3–5;
+> `experiments/calibrations/ps01_energy.py` is the whole derivation and it
+> prints every rejected alternative. **The sentence above under-states the
+> defect.** Against the *full-strength* drain (§2.2's table), the world could not
+> feed a fully active body at ANY level of skill: every food in it, perfectly
+> harvested at the instant of respawn, supplied `5.94e-3 /s` against a cost of
+> `2.56e-2 /s` — **0.23×**. That is not a hard world, it is a countdown, and no
+> policy the learning-core bakeoff could ever produce would have survived it.
+>
+> Three criteria, fixed before the search, and the constants that solve them:
+>
+> | | criterion | solved |
+> |---|---|---|
+> | **C1** | every food, perfectly harvested, feeds a fully active body that misses one respawn in five: `S_max ≥ drain(1)/0.8` | `RESPAWN_APPLE_S 120 → 129.6 s` |
+> | **C2** | floor food alone subsists a body acting SOME of the time: `S_f = min(1.7·b, b + κ·P̄(0.25))` — the smaller of a biological anchor (human PAL) and the journal's duty-cycle anchor, i.e. the harsher world | `RESPAWN_FLOORFOOD_S 90 → 66.9 s`, funding a duty cycle of **D\* = 0.217** |
+> | **C3** | floor food alone must NOT fund constant activity: `S_f < drain(1)` | holds, 2.09× short |
+>
+> **The knob rule was fixed before the search too: the respawn period moves and
+> the per-item value never does.** `ν_apple / ν_floor` is the climb-vs-forage
+> incentive ratio this section calls load-bearing, and only the *rate* is
+> constrained by C1–C3, so the split that leaves the ratio alone is the one that
+> changes only what was measured.
+>
+> **What this preserves, restated honestly.** The clause is no longer *"floor
+> food beats basal"*; it is *"floor food funds a fifth of a life spent acting,
+> and the platform apple is what pays for the rest."* He does not have to climb
+> to subsist; he has to climb to act. That is the same design the section always
+> claimed, priced for the first time against a drain that was measured rather
+> than assumed.
+>
+> **What it does NOT repair, deliberately.** PS.01 still FAILS, and it should:
+> `ok_random_survives` and `ok_statue_starves` are probe-policy defects that no
+> supply constant can reach — a random policy cannot forage (it ate 0.67 items
+> in 600 s), and the statue dies at `t = 1/b` = **exactly** the 600 s
+> observation horizon. Both are routed to `INTEGRATION_QUEUE.md` as a spec
+> redesign under the T1.02 precedent. Nothing here was checked against whether
+> it turned the ladder green.
 
 **Declare the cost of this honestly.** Putting nutrition on the platform is a far
 stronger environmental hint than an inert apple. It converts the Ladder Test's

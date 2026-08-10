@@ -92,6 +92,47 @@ foraging, which §2.3 calls load-bearing; a respawn change leaves every per-item
 value — and therefore that ratio — untouched, and changes only the rate the
 criterion actually constrains.
 
+## POST-HOC EXTENSION, added 2026-08-10 AFTER the first run, marked as such
+
+The pre-registered set was `(b, ν_floor, respawn)` with `κ` explicitly
+exculpated by §2.3's refutation note — *"the error is not in κ: 293 W producing
+3.9× basal is what κ was chosen to do."* **That exculpation was itself derived
+from the starving-body measurement**, and the full-strength run refutes it:
+
+    P̄(1) = 1434.8 ± 22.2 W   ->   drain(1) = 15.38 x basal, not 3.9 x
+
+`κ`'s defining sentence in §2.2 is not the number `1.67e-5`; it is a claim about
+this body — *"vigorous activity (~200 W) roughly triples b"*. 200 W is a human
+premise applied to a MuJoCo Humanoid-v5 whose actuators deliver **7.2×** that
+under the same random policy the drain is priced against. So the same class of
+defect §2.3 was caught for, in the same measurement: a constant defined by a
+premise that is false about the body it constrains (`LESSONS.md` — "assert
+contracts against the source of truth, not against another constant").
+
+Both solutions are computed and printed, so the choice is legible:
+
+  · **SOLUTION A — κ frozen, the pre-registered set only.** Satisfies C1–C3 and
+    requires `RESPAWN_APPLE_S = 17.1 s`. Arithmetically valid; not a world. An
+    apple that returns every 17 s is not a climb-gated resource, and §2.3's
+    whole claim is that the ladder is the difference between subsistence and
+    activity. Reported, not shipped.
+  · **SOLUTION B — κ re-derived from the measured power, restoring §2.2's own
+    sentence:** `drain(1) = 3·b` (§2.2: "roughly triples"), hence
+    `κ = 2b / P̄(1)`. Nothing about the intent changes; only the wrong power
+    estimate it was computed from. C1–C3 are then re-solved with the same
+    criterion and the same knob rule. SHIPPED.
+
+Identifying "the random policy at duty 1" with §2.2's "vigorous activity" is a
+choice and it is the conservative one: random flailing is the most wasteful
+policy this body can execute, so any learned policy costs less than the constant
+the world is sized against.
+
+**This does not turn PS.01 green and must not be checked against whether it
+does.** `ok_random_survives` and `ok_statue_starves` fail for probe-policy
+reasons no supply constant can reach (a random policy cannot forage; the statue
+dies at `t = 1/b` = exactly the 600 s horizon), and both are routed to
+`INTEGRATION_QUEUE.md` as a spec redesign.
+
 ## Held out
 
 Seeds **3, 4, 5** — PS.01 runs 0, 1, 2, so every world here is one the spec has
@@ -118,6 +159,9 @@ CTRL_SCALE = 0.4                  # PS.01's random policy, unchanged
 PAL = 1.7                         # human physical-activity level (C2 anchor 1)
 D_ALT = 0.25                      # the journal's duty-cycle form (C2 anchor 2)
 FORAGE_EFF = 0.8                  # C1: the world must feed an imperfect forager
+VIGOROUS_MULT = 3.0               # §2.2 verbatim: vigorous activity "roughly
+                                  # triples b". SOLUTION B re-derives kappa from
+                                  # the MEASURED power to honour that sentence.
 
 
 def _measured_j0_alpha() -> tuple[float, float]:
@@ -202,55 +246,75 @@ def main() -> dict:
               f"{drain:10.3e} {drain / b:8.2f}")
 
     p1 = pbar[1.0]
-    drain1 = b + kappa * p1
     # linearity of the drain in duty, which drain(D) = b + kappa*P_bar*D assumes
     lin = [(d, pbar[d] / (d * p1)) for d in DUTIES if d > 0]
     print("\n  linearity  P(D) / (D * P(1)):  "
           + "  ".join(f"D={d:.3f}: {r:.3f}" for d, r in lin))
 
-    # ── C2: the floor supply rate, the smaller of two anchors ───────────
-    s_pal = PAL * b
-    s_alt = b + kappa * pbar[D_ALT]
-    s_f = min(s_pal, s_alt)
-    which = "PAL" if s_pal <= s_alt else f"D_ALT={D_ALT}"
-    d_star = (s_f - b) / (kappa * p1)
+    def solve(k: float) -> dict:
+        """C1-C3 at a given kappa. Identical arithmetic for both solutions."""
+        drain1 = b + k * p1
+        # C2 — the smaller of the two anchors, i.e. the harsher world
+        s_pal = PAL * b
+        s_alt = b + k * pbar[D_ALT]
+        s_f = min(s_pal, s_alt)
+        d_star = (s_f - b) / (k * p1)
+        s_max_req = drain1 / FORAGE_EFF          # C1
+        apple_req = s_max_req - s_f
+        return {
+            "kappa": k, "drain1": drain1, "s_pal": s_pal, "s_alt": s_alt,
+            "s_f": s_f, "anchor": "PAL" if s_pal <= s_alt else f"D_ALT={D_ALT}",
+            "d_star": d_star, "s_max_req": s_max_req, "apple_req": apple_req,
+            "t_floor": 2.0 * drives.NU_FLOORFOOD / s_f,
+            "t_apple": drives.NU_APPLE / apple_req if apple_req > 0 else float("inf"),
+            "ok": (0.0 < d_star < 1.0) and (s_f < drain1),
+        }
 
-    # ── C1: the apple must close the gap for an imperfect forager ───────
-    s_max_req = drain1 / FORAGE_EFF
-    apple_req = s_max_req - s_f
-
-    t_floor = 2.0 * drives.NU_FLOORFOOD / s_f
-    t_apple = drives.NU_APPLE / apple_req
+    def report(name: str, s: dict) -> None:
+        print(f"\n── {name} ── kappa = {s['kappa']:.4e} /J")
+        print(f"  drain(1)            {s['drain1']:.4e} /s   "
+              f"({s['drain1'] / b:.2f}x basal, P_bar = {p1:.1f} W full strength)")
+        print(f"  C2 anchors: PAL*b = {s['s_pal']:.4e}   "
+              f"b+k*P(D_ALT) = {s['s_alt']:.4e}   -> take {s['anchor']} (smaller)")
+        print(f"  C2 S_f              {s['s_f']:.4e} /s   ({s['s_f'] / b:.2f}x basal)")
+        print(f"  C2 D* funded        {s['d_star']:.4f}          (required 0 < D* < 1)")
+        print(f"  C3 S_f < drain(1)   {s['s_f'] < s['drain1']}   "
+              f"({s['drain1'] / s['s_f']:.2f}x short of constant activity)")
+        print(f"  C1 S_max required   {s['s_max_req']:.4e} /s  "
+              f"(drain(1) / {FORAGE_EFF}); apple must supply {s['apple_req']:.4e} /s")
+        print(f"  -> RESPAWN_FLOORFOOD_S  {drives.RESPAWN_FLOORFOOD_S:.1f} -> "
+              f"{s['t_floor']:.1f} s")
+        print(f"  -> RESPAWN_APPLE_S      {drives.RESPAWN_APPLE_S:.1f} -> "
+              f"{s['t_apple']:.1f} s")
+        print(f"  CRITERION SATISFIABLE: {s['ok']}")
 
     s_f_old = 2.0 * drives.NU_FLOORFOOD / drives.RESPAWN_FLOORFOOD_S
     s_max_old = s_f_old + drives.NU_APPLE / drives.RESPAWN_APPLE_S
-
-    print(f"\n  drain(1)            {drain1:.4e} /s   ({drain1 / b:.2f}x basal, "
-          f"P_bar = {p1:.1f} W at full strength)")
-    print(f"  C2 anchors: PAL*b = {s_pal:.4e}   b+k*P(D_ALT) = {s_alt:.4e}"
-          f"   -> take {which}")
-    print(f"  C2 S_f              {s_f:.4e} /s   ({s_f / b:.2f}x basal)")
-    print(f"  C2 D* funded        {d_star:.4f}          (required 0 < D* < 1)")
-    print(f"  C3 S_f < drain(1)   {s_f < drain1}   ({drain1 / s_f:.2f}x short of "
-          f"constant activity)")
-    print(f"  C1 S_max required   {s_max_req:.4e} /s  (drain(1) / {FORAGE_EFF})")
-    print(f"     apple must supply{apple_req:.4e} /s")
+    drain1_shipped = b + kappa * p1
     print(f"\n  SHIPPED TODAY:  S_f {s_f_old:.4e}  S_max {s_max_old:.4e}  "
-          f"vs drain(1) {drain1:.4e}")
-    print(f"     C1 today: {'HOLDS' if s_max_old >= s_max_req else 'VIOLATED'} — "
-          f"a perfect forager harvests {s_max_old / drain1:.2f}x of what constant "
-          f"activity costs")
-    print("\n  DERIVED CONSTANTS (respawn moves, per-item value does not):")
-    print(f"     RESPAWN_FLOORFOOD_S  {drives.RESPAWN_FLOORFOOD_S:.1f} -> "
-          f"{t_floor:.1f} s")
-    print(f"     RESPAWN_APPLE_S      {drives.RESPAWN_APPLE_S:.1f} -> "
-          f"{t_apple:.1f} s")
+          f"vs drain(1) {drain1_shipped:.4e}")
+    print(f"     C1 today: "
+          f"{'HOLDS' if s_max_old * FORAGE_EFF >= drain1_shipped else 'VIOLATED'}"
+          f" — a PERFECT forager harvests {s_max_old / drain1_shipped:.2f}x of what "
+          f"constant activity costs")
 
-    ok = (0.0 < d_star < 1.0) and (s_f < drain1)
-    print(f"\n  CRITERION SATISFIABLE: {ok}")
-    return {"rows": rows, "drain1": drain1, "s_f": s_f, "d_star": d_star,
-            "t_floor": t_floor, "t_apple": t_apple, "anchor": which,
-            "s_f_old": s_f_old, "s_max_old": s_max_old, "ok": ok}
+    a = solve(kappa)
+    report("SOLUTION A — kappa frozen (the pre-registered set only)", a)
+
+    # SOLUTION B: restore §2.2's own sentence — "vigorous activity roughly
+    # triples b" — against the MEASURED power instead of its 200 W premise.
+    kappa_b = (VIGOROUS_MULT - 1.0) * b / p1
+    bsol = solve(kappa_b)
+    report(f"SOLUTION B — kappa re-derived so drain(1) = {VIGOROUS_MULT:.0f}x basal",
+           bsol)
+    print(f"\n  kappa {kappa:.4e} -> {kappa_b:.4e}  "
+          f"({kappa / kappa_b:.2f}x smaller; its 200 W premise is "
+          f"{p1 / 200.0:.2f}x wrong for this body)")
+    print("\n  SHIPPING SOLUTION B. A is arithmetically valid and is not a world:"
+          f" an apple returning every {a['t_apple']:.1f} s is not climb-gated.")
+    return {"rows": rows, "p1": p1, "linearity": lin, "A": a, "B": bsol,
+            "s_f_old": s_f_old, "s_max_old": s_max_old,
+            "drain1_shipped": drain1_shipped}
 
 
 if __name__ == "__main__":

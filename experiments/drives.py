@@ -16,6 +16,13 @@ them — `J0` and `alpha` — have no default at all and must be passed in, beca
 a default there would be a number nobody measured wearing the costume of one.
 `LESSONS.md`: "A default of zero is not 'unknown'."
 
+Four are no longer proposals. `J0` and `alpha` were measured by PS.01
+(2026-08-10T05:29, held out on five fresh fall runs). `KAPPA`,
+`RESPAWN_FLOORFOOD_S` and `RESPAWN_APPLE_S` were re-derived by PS.01 unit (a)
+the same day, on held-out seeds 3-5, after the shipped `KAPPA` was measured to
+make the world unsurvivable for *any* policy. Their derivations are inline
+below and the criterion was committed before it was solved.
+
 Ownership, deliberately: this layer does NOT step the physics. The caller owns
 `mj_step`; it calls `substep()` after each one and `decide()` at the end of a
 decision. Two reasons, both scars. A layer that owned the loop would be a second
@@ -57,11 +64,39 @@ import numpy as np
 
 # ── §2.2 proposals: energy ──────────────────────────────────────────────
 BASAL_B = 1.0 / 600.0        # s^-1   a resting body empties in 10 minutes
-KAPPA = 1.67e-5              # J^-1   ~200 W of mechanical work roughly triples b
 NU_APPLE = 0.50              # energy restored by the platform apple
 NU_FLOORFOOD = 0.08          # energy restored by one floor food
-RESPAWN_APPLE_S = 120.0
-RESPAWN_FLOORFOOD_S = 90.0
+
+# ── MEASURED, not proposed: the energy economy (PS.01 unit (a), 2026-08-10) ──
+# `experiments/calibrations/ps01_energy.py` — criterion committed unrun in
+# 92aae6f, solved on HELD-OUT seeds 3-5, full derivation in
+# PURPOSE_AND_SCAFFOLDING.md 2.3. In one line: this body's mechanical power was
+# never measured before the constants were written down.
+#
+#   P_bar(1) = 1434.8 +- 22.2 W   a full-strength random policy, seeds 3-5
+#
+# KAPPA was 1.67e-5, defined by 2.2's sentence "vigorous activity (~200 W)
+# roughly triples b". 200 W is a HUMAN premise; Humanoid-v5's actuators deliver
+# 7.17x it under the very policy the drain is priced against, so the shipped
+# kappa made constant activity cost 15.4x basal and NO policy of any competence
+# could have been fed (a perfect forager harvested 0.23x of what it cost). The
+# sentence is kept and the number re-derived from the measured body:
+#   KAPPA = (3 - 1) * BASAL_B / P_bar(1),  i.e. drain(1) = 3 x basal exactly.
+KAPPA = 2.3231e-06           # J^-1   §2.2's "roughly triples b", re-derived
+# Supply rates follow from the criterion, which moves the RESPAWN PERIOD and
+# never the per-item value — nu_apple/nu_floor is the climb-vs-forage incentive
+# ratio and 2.3 calls it load-bearing.
+#   C2: floor supply S_f = min(PAL*b, b + KAPPA*P_bar(0.25)) = 2.3914e-3 /s,
+#       the SMALLER of a biological anchor (PAL 1.7) and the journal's
+#       duty-cycle anchor, i.e. the harsher world. It funds a duty cycle of
+#       D* = 0.217: an agent acting a fifth of the time subsists on the floor.
+#   C3: S_f is 2.09x short of constant activity, so the ladder still decides
+#       between subsisting and acting -- 2.3's intent, priced against the drain
+#       an acting body pays instead of against basal.
+#   C1: every food perfectly harvested must feed a fully active body that misses
+#       one respawn in five: S_max >= drain(1)/0.8 = 6.25e-3 /s.
+RESPAWN_APPLE_S = 129.6      # was 120.0 — C1 closes the gap C2/C3 leave
+RESPAWN_FLOORFOOD_S = 66.9   # was  90.0 — C2
 
 # ── §2.2 proposals: integrity ───────────────────────────────────────────
 RHO_HEAL = 1.0 / 900.0       # s^-1   full heal in 15 minutes of rest

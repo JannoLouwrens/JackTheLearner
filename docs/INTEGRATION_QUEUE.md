@@ -33,6 +33,79 @@ citations, arms, costs, and Spec(...) drafts in the house format. The output
 is a new research doc AND a new entry in this queue. The loop generates its
 own work; it never idles because nobody fed it.
 
+## TOP — PS.01 v2: the probe policy, not the constants (from PS.01 attempt 2, 2026-08-10)
+
+**Why this is top.** PS.01 is the only thing between the ladder and LC.03–LC.06,
+i.e. between it and the arbitration that decides HOW JACK LEARNS. Unit (a) — the
+energy re-derivation — is DONE and shipped (`drives.py`, `PURPOSE_AND_
+SCAFFOLDING.md` §2.2–2.3, `experiments/calibrations/ps01_energy.py`, criterion
+committed unrun in `92aae6f`). Attempt 2 moved `spread_e` **0.145 → 0.746**
+against a 0.30 gate. What remains cannot be reached by any constant, and the
+journal (2026-08-10 05:30) directed it here rather than into an in-place
+registry edit. **This is unit (b).**
+
+**The three surviving failures are one defect: the probe cannot produce the
+events the gates are about.**
+
+| clause | measured, attempt 2 | why no constant fixes it |
+|---|---|---|
+| `spread_i ≥ 0.30` | **2.96e-5** | A random policy never climbs, so it never falls from height; it never holds still (`rest_frac` 5.3e-5), so `ρ` never heals. 856 contact onsets, **1.7** above `J₀`. The *same* integrator scored 0.161 on a held-out platform fall. The channel is live; the probe cannot get to it. |
+| `ok_random_survives` (`e_min > 0`) | **0.0** | A random policy is not a forager — it ate 1.0 items in 600 s. It acts at duty 1.0 and cannot navigate, so it starves under any supply the world can carry. Demanding that flailing beat resting is demanding `κ = 0`. |
+| `ok_statue_starves` (`e_min ≤ 0`) | **4.35e-14** | The statue dies at `t = 1/b` = **600 s** and the observation window is **exactly 600 s**. The control's pre-registered failure is scheduled at the last sample and misses by float. |
+
+**PROTOCOL STEP 1 — CROSS-CHECK, run 2026-08-10** over `docs/research/*.md` +
+`LESSONS.md` for `statue|dark room|do-nothing|dynamic range|probe`:
+`NEEDS_AND_DEATH.md:1196` and PS §5 **G-B** ("the dark room") are the governing
+prior art and both **REINFORCE**: G-B provision 1 is *"basal drain exceeds
+nothing a motionless agent can earn, so the statue starves to the weakness
+floor — verified as a spec, not asserted as a design intention"*, which is
+exactly the clause below, and G-B provision 2 makes `C-STATUE` mandatory. No
+refutation anywhere. `LESSONS.md` supplies the two rules this redesign is built
+from ("a probe policy that cannot produce the event cannot measure the
+variable"; "an assertion made against a saturated quantity cannot fail").
+
+**THE REDESIGN — strengthen only; attempt 1 and 2 stay in the ledger's history
+(T1.02 precedent).** Three changes, each naming the event it requires next to
+the threshold, per the LESSONS rule that motivated it:
+
+1. **The integrity range is measured over a MIXED probe, not a random one.** A
+   life of random-policy decisions with scripted drop-spawn segments (the fall
+   regime `ps_01_drive_calibration._params(fall=True)` already implements) and
+   scripted rest segments. This is a FIXTURE probe of the integrator, not a
+   claim about a policy, and the spec must say so — it certifies that `i` has
+   usable range over behaviours the world ADMITS, which is what "the drive is a
+   control problem" means. Gate the required events, not just the range:
+   `n_damaging ≥ 5` and `n_rest_decisions ≥ 100` become PASS conditions, so a
+   probe that failed to exercise the variable is a red entry rather than a
+   confident 2.96e-5.
+2. **The domination clause compares the statue against a FORAGER FIXTURE, not
+   against a random policy.** A scripted eater — placed at a food geom,
+   consuming on respawn, acting at the derived duty cycle `D* = 0.217` — run
+   through the real `DriveLayer`. It must not starve; the statue must. This
+   verifies through the shipped path what unit (a) established in rates (C1–C3),
+   and it is the honest form of G-B's question: *is the dark room beaten by some
+   behaviour this world admits*, not *is it beaten by flailing*. Note the
+   fixture needs no locomotion controller, which is why it is affordable today.
+3. **The observation window must strictly contain the control's death.**
+   `N_DECISIONS` 3,000 → **4,500** (900 s = 1.5 × `1/b`), and add
+   `statue_death_s < 0.8 × horizon` as a gate. A control designed to fail at the
+   boundary of the window cannot be observed failing.
+
+4. **Report every drain rate NEXT TO the regime it was measured in.** Attempt 1
+   recorded `mean_power_w = 293` and `frac_e_zero = 0.848` in the same entry and
+   nobody joined them: the power was a *starving* body's, because `gear_scale =
+   0.4 + 0.6·min(e, i)` sat at 0.4 for 85% of that run. §2.3 then exonerated `κ`
+   on that number. v2 must record `mean_power_w_full_strength` — the same
+   measurement with `e = i` pinned at 1 — beside it, so the confound is a field
+   in the record rather than a thing a reader has to notice. One extra rollout.
+
+Registering iteration: follow the protocol from step 2. `metric` stays
+`drive_dynamic_range`; note that it is `min(spread_e, spread_i)` and is
+therefore entirely gated on clause 1 today.
+
+**Cost:** CPU. Attempt 2 was 428 s at 3 seeds; the longer horizon and the extra
+fixture put v2 near ~15 min. No GPU, so it runs beside anything.
+
 ## GAP-FILL designed by the owner's question (2026-08-09) — register with the LC family
 
 **LC.07 — the capacity sweep, and it is a STANDING spec.** LC.06 enforces a
