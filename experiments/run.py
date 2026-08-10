@@ -497,6 +497,26 @@ def cmd_senses(ledger: Ledger) -> int:
     return 0
 
 
+def cmd_coverage(ledger: Ledger) -> int:
+    """Coverage of GOAL.md's constitutional commitments — is this the RIGHT ladder?
+
+    `run status` says how much of the ladder is demonstrated; a commitment with
+    no spec is invisible to it, to `run blocked`, and to every gate. See
+    `experiments/coverage.py`; gated as T0.21.
+
+    Coverage is DECLARED (`COVERS:` in a spec's notes), never inferred: the
+    regex half of this file once credited the owner's "he builds a shelter" to
+    a spec titled "The paraphrase eval set is HONEST...". Regex hits are
+    printed as NOMINATIONS — work to do, never coverage.
+
+    Nonzero exit means a commitment has NO declared spec, or a declaration
+    names a commitment that does not exist. Both are cheap to fix and expensive
+    to leave; "covered but not passing" is normal and exits 0.
+    """
+    from .coverage import check
+    return check()
+
+
 def cmd_verify(ledger: Ledger) -> int:
     """Re-judge every PASS from the record alone, and probe whether its gate
     actually reads its control. See `experiments/verify.py`; gated as T0.18.
@@ -936,10 +956,11 @@ def main() -> int:
 
     # status/next/render are read-only and must not block on a running experiment.
     if args.spec and args.spec[0] in ("status", "next", "blocked", "render",
-                                      "stale", "verify", "senses"):
+                                      "stale", "verify", "senses", "coverage"):
         return {"status": cmd_status, "next": cmd_next, "blocked": cmd_blocked,
                 "render": cmd_render, "stale": cmd_stale,
-                "verify": cmd_verify, "senses": cmd_senses}[args.spec[0]](ledger)
+                "verify": cmd_verify, "senses": cmd_senses,
+                "coverage": cmd_coverage}[args.spec[0]](ledger)
     if not args.spec and not args.gate and args.tier is None:
         return cmd_status(ledger)
 

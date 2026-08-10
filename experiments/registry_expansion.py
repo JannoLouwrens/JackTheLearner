@@ -270,6 +270,59 @@ EXPANSION: list[Spec] = [
                "It reports; it never gates a build, because a red exit would "
                "tempt someone to shrink the inventory to clear it."),
 
+    Spec("T0.21", 0, "The GOAL.md coverage audit cannot be flattered by a word",
+         hypothesis="`experiments/coverage.py` credits a commitment ONLY to a "
+                    "spec that declared `COVERS:`, and it can see both bad "
+                    "cases: a spec whose title merely contains a commitment's "
+                    "word buys NO coverage, a spec that declares one with an "
+                    "unrelated title DOES, a declaration naming no known "
+                    "commitment is reported as malformed rather than silently "
+                    "dropped, and deleting a declaring spec loses the coverage "
+                    "instead of leaving stale credit.",
+         falsified_by="Any of the seven properties failing. Above all P3: if "
+                      "the decoy spec titled 'The honest baseline' reads as "
+                      "coverage for shelter/building, the audit has reproduced "
+                      "the exact artifact it was rewritten to end — the owner's "
+                      "own image of success credited to the letters in "
+                      "'ho-nest'.",
+         null_baseline="An EMPTY registry: every commitment must read zero "
+                       "specs and zero passes. An audit that reported coverage "
+                       "for a repository containing nothing would be reading "
+                       "its own commitment list rather than the ladder.",
+         metric="properties_failed", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.01"],
+         control="The organ that FAILED, kept as executable code: the "
+                 "pre-2026-08-10 patterns granting coverage by regex over "
+                 "titles, verbatim and without word boundaries. It must break "
+                 "P3 and P4 — crediting 'The honest baseline' to "
+                 "shelter/building and refusing the declared spec — while the "
+                 "declaration rule gets both right. A control that also gets "
+                 "them right is not a decoy and this test measures nothing "
+                 "(T0.08 property 5, T0.16, T0.19, T0.20).",
+         kills="`python -m experiments.coverage` as a report anyone may cite. "
+               "If the battery cannot be made to pass, the audit is deleted "
+               "rather than kept as a coverage number nobody may rely on.",
+         notes="SCAR, and it is the SECOND from this file. The first was a "
+               "false NEGATIVE (BA.01 written to close the `balance` hole and "
+               "not matched), found within a day and fixed by adding the "
+               "`COVERS` marker as an OR alongside the regex. The false "
+               "POSITIVE half survived two more days: measured 2026-08-10, "
+               "shelter/building reported 4 specs / 1 PASS where the truth was "
+               "1 spec / 0 PASS, and the passing spec was ME.11.0, 'The "
+               "paraphrase eval set is HONEST before anyone is scored'. "
+               "Proprioception's PASS was PG.3, 'Ladder is c-LIMB-able'; `dies` "
+               "matched inside `bo-dies`. Word boundaries alone do not fix it "
+               "(PG.1's 'physically sound' still matches `hearing`), which is "
+               "why the repair is structural: a regex hit is now a NOMINATION "
+               "and only a declaration is coverage. P3 and P4 are the "
+               "known-answer test LESSONS.md:1673 prescribes — feed it the case "
+               "you already know is broken. P5 caught its own author on the "
+               "first run: this spec's notes originally wrote the marker "
+               "literally in prose and P7 read it as a malformed declaration. "
+               "That is the design, not a bug — a marker that buys nothing must "
+               "be loud, and the cost is that a spec discussing the mechanism "
+               "may not spell it."),
+
     Spec("T0.19", 0, "The bakeoff's `screen` gate eliminates arms without lowering the bar",
          hypothesis="Under `Spec.gate_mode='screen'` an arm below the 3-sigma "
                     "learning gate is ELIMINATED rather than VOIDing the run, "
@@ -357,7 +410,8 @@ EXPANSION: list[Spec] = [
          notes="Every later curiosity claim must report dwell share on this "
                "fixture. The control above lived in this notes field until "
                "2026-08-10: it ran on every seed and was invisible to a grep of "
-               "Spec.control, which is the field an auditor reads (OVERSIGHT 1.4)."),
+               "Spec.control, which is the field an auditor reads (OVERSIGHT 1.4)."
+               "  COVERS: curiosity"),
 
     Spec("PG.5", 2, "Procedural contact audio with localization labels",
          hypothesis="Modal-resonator synthesis on MuJoCo contact events yields "
@@ -367,7 +421,8 @@ EXPANSION: list[Spec] = [
          metric="bearing_decode_accuracy", budget=Budget.CPU, depends_on=["PG.1"],
          seeds=3,
          control="Mono and shuffled-pan renders of the SAME events must decode "
-                 "at chance — else the decoder reads something other than pan."),
+                 "at chance — else the decoder reads something other than pan.",
+         notes="COVERS: hearing"),
 
     Spec("PG.8", 2, "Jack is IN the playground and can act in it",
          hypothesis="make_playground(with_humanoid=True) yields a model that "
@@ -420,7 +475,8 @@ EXPANSION: list[Spec] = [
          metric="paraphrase_routing_accuracy", budget=Budget.GPU_SHORT, seeds=3,
          depends_on=["T2.06"],
          notes="The verb x object grid must be designed BEFORE grounding training "
-               "(CAPABILITIES.md L2) or the held-out cells cannot exist."),
+               "(CAPABILITIES.md L2) or the held-out cells cannot exist."
+               "  COVERS: language (parent)"),
 
     Spec("T2.16", 2, "Hindsight goal-reaching (the flow-matching weld)",
          hypothesis="Hindsight-relabeled flow regression reaches commanded "
@@ -536,7 +592,8 @@ EXPANSION: list[Spec] = [
          null_baseline="Wake-only forever; naive fine-tune.",
          metric="old_new_retention", budget=Budget.GPU, seeds=3,
          depends_on=["T5.03"],
-         control="Sleeping with the rehearsal buffer EMPTIED must forget."),
+         control="Sleeping with the rehearsal buffer EMPTIED must forget.",
+         notes="COVERS: sleep"),
 
     Spec("ME.8", 2, "Working memory survives restarts",
          hypothesis="A recurrent state checkpointed to disk resumes mid-episode "
@@ -602,7 +659,8 @@ EXPANSION: list[Spec] = [
                  "ablation killing BOTH means one store is masquerading as "
                  "two.",
          kills="Any design where conversation memory lives only in weights "
-               "or skills live only in retrieved episodes."),
+               "or skills live only in retrieved episodes.",
+         notes="COVERS: memory across lives"),
 
     # OWNER PRINCIPLE (2026-08-09): "isn't it better if it isn't an LLM
     # remembering?" Yes, and this spec makes it structural. Memory is
@@ -885,7 +943,8 @@ EXPANSION: list[Spec] = [
          notes="playground.py:217-243 emits no <camera>. This spec adds one and "
                "certifies it. Render on CPU via MUJOCO_GL=osmesa; only ~500 "
                "distinct layouts are needed because HNS reuses layouts across "
-               "episodes."),
+               "episodes."
+               "  COVERS: sight"),
 
     Spec("PG.7", 2, "The heard-not-seen fixture leaks nothing but the intended bit",
          hypothesis="In the HNS scene the two candidates are acoustically "
@@ -907,7 +966,8 @@ EXPANSION: list[Spec] = [
          notes="Closes, in order, the seven leaks tabulated in "
                "docs/research/UNIFIED_BRAIN_BAKEOFF.md section 3.2. PG.5's "
                "circularity guard is the precedent: ground truth is computed in "
-               "this file's own trig, never from the synth's labels."),
+               "this file's own trig, never from the synth's labels."
+               "  COVERS: hearing"),
 
     # ── THE BINDING TEST ────────────────────────────────────────────────
 
@@ -941,7 +1001,8 @@ EXPANSION: list[Spec] = [
          notes="I(audio;Y)=0, I(vision;Y)=0, I(audio,vision;Y)=1 bit — physical "
                "XOR, one bit of PURE synergy (PID framework, arXiv:2302.12247). "
                "Proprioception, Jack's dominant modality, is uninformative here "
-               "by design, which is precisely why collapse cannot hide."),
+               "by design, which is precisely why collapse cannot hide."
+               "  COVERS: hearing, one brain / unison"),
 
     Spec("UB.15", 4, "Heard, not seen — embodied",
          hypothesis="Jack turns toward and reaches the object he heard fall but "
@@ -957,7 +1018,8 @@ EXPANSION: list[Spec] = [
                  "are separately read.",
          notes="Deliberately the ONLY binding spec that depends on locomotion. "
                "Everything else in this block is falsifiable without a "
-               "controller, so decision D1 cannot block the unison claim."),
+               "controller, so decision D1 cannot block the unison claim."
+               "  COVERS: hearing, one brain / unison"),
 
     # ── THE BAKEOFF ─────────────────────────────────────────────────────
 
@@ -1000,7 +1062,8 @@ EXPANSION: list[Spec] = [
                "objective are separated. TOKEN BUDGET IS EQUALISED ACROSS ARMS "
                "or this measures token counts (arXiv:2601.16667). "
                "PAIRED bootstrap CIs and IQM per arXiv:2108.13264 - unpaired "
-               "3-seed architecture comparisons resolve nothing at this budget."),
+               "3-seed architecture comparisons resolve nothing at this budget."
+               "  COVERS: one brain / unison"),
 
     # ── THE STANDING AUDIT ──────────────────────────────────────────────
 
@@ -1037,7 +1100,8 @@ EXPANSION: list[Spec] = [
                "brittleness (arXiv:2410.03010). Logged alongside: per-layer "
                "cross-modal attention mass (arXiv:2410.16424) and the learned "
                "binary modality mask (arXiv:2209.07682) - both free, both "
-               "necessary-not-sufficient, both red flags rather than claims."),
+               "necessary-not-sufficient, both red flags rather than claims."
+               "  COVERS: one brain / unison"),
 
     Spec("UB.12", 4, "Synergy, not redundancy: beating the unimodal ensemble",
          hypothesis="On every task in the battery the fused model beats the "
@@ -1060,7 +1124,8 @@ EXPANSION: list[Spec] = [
                "sees two modalities jointly, so F > E is joint computation by "
                "construction. Costs 5 tiny models per task; compute it for "
                "every arm, every task, forever. Frame results as PID "
-               "redundancy/uniqueness/synergy (arXiv:2302.12247)."),
+               "redundancy/uniqueness/synergy (arXiv:2302.12247)."
+               "  COVERS: one brain / unison"),
 
     Spec("UB.13", 4, "Cross-modal retrieval: the gate, never the claim",
          hypothesis="Given a contact-audio window, the matching visual clip is "
@@ -1082,7 +1147,8 @@ EXPANSION: list[Spec] = [
                "the contrastive arm (A4) is interpretable: without it, 'A4 did "
                "not help control' cannot be distinguished from 'A4's loss never "
                "trained'. Retrieval is necessary, never sufficient "
-               "(arXiv:2603.19233: encoded is not used)."),
+               "(arXiv:2603.19233: encoded is not used).",
+         notes="COVERS: one brain / unison"),
 
     Spec("UB.14", 4, "Cross-modal prediction, against the null that usually wins",
          hypothesis="Masked touch is predicted from vision+proprioception "
@@ -1106,7 +1172,8 @@ EXPANSION: list[Spec] = [
                "fused-vs-vision-only force R^2 of 0.049/-0.001/0.187 across "
                "three robots, one of them NEGATIVE, p<=0.012. Real, clean, "
                "small. A bakeoff expecting a large effect has mis-specified "
-               "its success criterion."),
+               "its success criterion."
+               "  COVERS: one brain / unison"),
 
     Spec("UB.16", 4, "Sensory information reaches the controller (D1-agnostic)",
          hypothesis="Zeroing the trunk's percept vector z degrades tasks that "
@@ -1132,7 +1199,8 @@ EXPANSION: list[Spec] = [
                "same measurement applies. Locomotion is the task where "
                "proprioception is SUFFICIENT, so it is the wrong task to judge "
                "a binder by - which is why 'no degradation on flat walking' is "
-               "a PASS condition here, not a failure."),
+               "a PASS condition here, not a failure."
+               "  COVERS: proprioception, one brain / unison"),
 
     # ── TIER-3 GAPS ─────────────────────────────────────────────────────
     Spec("T3.09", 3, "The creative loop earns its existence",
@@ -1167,7 +1235,8 @@ EXPANSION: list[Spec] = [
          metric="ablation_matrix_min_column", budget=Budget.GPU, seeds=3,
          depends_on=["T4.01"],
          control="With proprio zeroed, the dropout-trained model must still "
-                 "briefly stand from vision."),
+                 "briefly stand from vision.",
+         notes="COVERS: one brain / unison"),
 
     Spec("UB.2", 4, "The shared trunk beats late fusion",
          hypothesis="One self-attention trunk over all modality tokens beats "
@@ -1178,7 +1247,8 @@ EXPANSION: list[Spec] = [
          metric="fusion_advantage", budget=Budget.GPU, seeds=3,
          depends_on=["UB.1"],
          control="Cross-modal TIME-SHUFFLE at eval must hurt the shared trunk — "
-                 "else attention never crossed modalities."),
+                 "else attention never crossed modalities.",
+         notes="COVERS: one brain / unison"),
 
     Spec("UB.3", 4, "Cross-modal masking helps the policy",
          hypothesis="Co-training with masked cross-modal prediction (touch from "
@@ -1189,7 +1259,8 @@ EXPANSION: list[Spec] = [
          metric="mask_cotrain_gain", budget=Budget.GPU, seeds=3,
          depends_on=["UB.2"],
          control="Touch-from-SHUFFLED-vision must collapse to the unconditional "
-                 "mean — else the head ignores vision and the fusion is fake."),
+                 "mean — else the head ignores vision and the fusion is fake.",
+         notes="COVERS: one brain / unison"),
 
     Spec("UB.4", 4, "Hearing is load-bearing",
          hypothesis="Jack turns toward an out-of-view falling object and times "
@@ -1199,7 +1270,8 @@ EXPANSION: list[Spec] = [
          metric="audio_task_delta", budget=Budget.GPU, seeds=3,
          depends_on=["PG.5", "UB.1"],
          control="Left/right channel swap must invert turning; 500ms audio lag "
-                 "must break contact timing — else hearing is decorative."),
+                 "must break contact timing — else hearing is decorative.",
+         notes="COVERS: hearing, one brain / unison"),
 
     Spec("UB.5", 4, "Touch is load-bearing (or honestly redundant)",
          hypothesis="Touch improves blind push-recovery beyond proprioception.",
@@ -1210,7 +1282,8 @@ EXPANSION: list[Spec] = [
          metric="blind_recovery_delta", budget=Budget.GPU_SHORT, seeds=3,
          depends_on=["UB.1"],
          control="Permuting the 10 touch channels must cause misattributed "
-                 "contacts if touch is load-bearing."),
+                 "contacts if touch is load-bearing.",
+         notes="COVERS: touch/contact, one brain / unison"),
 
     Spec("UB.6", 4, "Contrastive binding: keep only if it moves action",
          hypothesis="Audio<->vision alignment improves hearing-task success "
@@ -1221,7 +1294,8 @@ EXPANSION: list[Spec] = [
          depends_on=["UB.4"],
          control="The aligned model must retrieve audio->vision clips well "
                  "above chance — else the loss never worked and the null result "
-                 "is uninformative."),
+                 "is uninformative.",
+         notes="COVERS: one brain / unison"),
 
     Spec("UB.7", 4, "UNISON — the headline claim",
          hypothesis="The shared co-trained trunk beats BOTH per-sense "
@@ -1235,7 +1309,8 @@ EXPANSION: list[Spec] = [
          control="Leave-one-task-family-out retraining must SHIFT other tasks — "
                  "zero shift means the trunk partitioned into covert late fusion.",
          notes="Until this passes, the sentence 'the senses work in unison' "
-               "stays OUT of every capability list."),
+               "stays OUT of every capability list."
+               "  COVERS: one brain / unison"),
 
     Spec("UB.8", 4, "Flow-head attention ablation",
          hypothesis="Interleaved cross+self attention beats cross-only and "
@@ -1243,7 +1318,8 @@ EXPANSION: list[Spec] = [
          falsified_by="No difference — simplify to cross-only, bank the params.",
          null_baseline="The two single-attention variants.",
          metric="attention_ablation", budget=Budget.GPU_SHORT,
-         depends_on=["UB.7"]),
+         depends_on=["UB.7"],
+         notes="COVERS: one brain / unison"),
 
     # ── CURIOSITY (docs/research/CURIOSITY.md; tier 5 = the claims) ─────
     Spec("CU.1", 5, "Goal babbling beats action babbling",
@@ -1260,7 +1336,8 @@ EXPANSION: list[Spec] = [
          # without it the runner would happily attempt "goal babbling beats
          # action babbling" in a world where no action exists. PG.8's `kills`
          # field said so in prose; this line is what makes it enforced.
-         depends_on=["PG.1", "T2.16", "PG.8"]),
+         depends_on=["PG.1", "T2.16", "PG.8"],
+         notes="COVERS: curiosity"),
 
     Spec("CU.2", 5, "Learning progress produces an emergent curriculum",
          hypothesis="LP-driven goal sampling yields time-ordered mastery "
@@ -1273,7 +1350,8 @@ EXPANSION: list[Spec] = [
          control="Forever-unlearnable goals ('make the noise panel blue') must "
                  "decay to epsilon allocation — else the competence estimator "
                  "is broken.",
-         notes="The first falsifiable form of 'Jack teaches himself'."),
+         notes="The first falsifiable form of 'Jack teaches himself'."
+               "  COVERS: curiosity"),
 
     Spec("CU.3", 5, "Curious without being trapped",
          hypothesis="The LP stack explores (coverage grows) with near-zero "
@@ -1283,7 +1361,8 @@ EXPANSION: list[Spec] = [
          metric="coverage_vs_dwell", budget=Budget.CPU_LONG, seeds=3,
          depends_on=["PG.4", "CU.2"],
          control="The ICM control arm MUST fixate on the panel — proving the "
-                 "trap works and the LP immunity is real."),
+                 "trap works and the LP immunity is real.",
+         notes="COVERS: curiosity"),
 
     Spec("CU.4", 5, "Unsupervised skills are real and distilled",
          hypothesis="METRA skills on trunk embeddings are decodable from "
@@ -1296,7 +1375,8 @@ EXPANSION: list[Spec] = [
          metric="skill_decodability", budget=Budget.GPU_LONG, seeds=3,
          depends_on=["CU.2"],
          control="Ablating METRA's temporal-distance constraint must degrade "
-                 "toward static poses (arXiv:2310.08887)."),
+                 "toward static poses (arXiv:2310.08887).",
+         notes="COVERS: curiosity"),
 
     Spec("CU.5", 5, "The VLM proposes, learning progress disposes",
          hypothesis="VLM-proposed + LP-filtered goals engage the ladder and "
@@ -1309,7 +1389,8 @@ EXPANSION: list[Spec] = [
          depends_on=["CU.2", "PG.3"],
          control="A scrambled-caption VLM (fed another scene) must NOT beat "
                  "LP-only — else the benefit was 'more goals', not grounded "
-                 "interestingness."),
+                 "interestingness.",
+         notes="COVERS: curiosity"),
 
     Spec("CU.6", 5, "Affordances emerge from interaction",
          hypothesis="The interaction archive predicts pushability/liftability "
@@ -1319,7 +1400,8 @@ EXPANSION: list[Spec] = [
          metric="affordance_transfer", budget=Budget.CPU_LONG, seeds=3,
          depends_on=["CU.1"],
          control="A welded immovable object must classify un-pushable — else "
-                 "the representation captures action, not interaction."),
+                 "the representation captures action, not interaction.",
+         notes="COVERS: tool use"),
 
     Spec("CU.7", 5, "Lessons from failure improve retries",
          hypothesis="Retrieved one-line lessons written after failures raise "
@@ -1330,7 +1412,8 @@ EXPANSION: list[Spec] = [
          metric="lesson_gain", budget=Budget.CPU_LONG, seeds=3,
          depends_on=["ME.1", "CU.2"],
          control="Lessons from UNRELATED failures must not help — else the "
-                 "effect is generic prompt padding."),
+                 "effect is generic prompt padding.",
+         notes="COVERS: curiosity"),
 
     # ── TIER-5/6 GAPS ───────────────────────────────────────────────────
     Spec("T5.08", 5, "Open-endedness: learning does not saturate",
@@ -1343,7 +1426,8 @@ EXPANSION: list[Spec] = [
          metric="cluster_growth_curve", budget=Budget.GPU_LONG,
          depends_on=["CU.2", "T5.06"],
          control="Mutation WITHOUT the learnability filter must degenerate "
-                 "into unsolvable scenes — else the filter does nothing."),
+                 "into unsolvable scenes — else the filter does nothing.",
+         notes="COVERS: curiosity"),
 
     Spec("T5.09", 5, "Skills transfer across bodies",
          hypothesis="Pretraining on morphology variants (limb lengths, masses) "
@@ -1353,7 +1437,8 @@ EXPANSION: list[Spec] = [
          metric="transfer_speedup", budget=Budget.GPU_LONG, seeds=3,
          depends_on=["T2.02"],
          control="Pretraining on white-noise trajectories must give no gain — "
-                 "it is structure, not warm optimizer state."),
+                 "it is structure, not warm optimizer state.",
+         notes="COVERS: generality"),
 
     Spec("T6.05", 6, "Companion battery",
          hypothesis="Responses are contingent on user-avatar events; intent is "
@@ -1368,7 +1453,8 @@ EXPANSION: list[Spec] = [
          metric="companion_battery", budget=Budget.GPU_LONG,
          depends_on=["T6.01", "ME.2"],
          control="Ablating the safety channel must bring violations back; "
-                 "persona reset must drop identity to chance."),
+                 "persona reset must drop identity to chance.",
+         notes="COVERS: social/other agents"),
 
     # ── THE LEARNING CORE (docs/research/LEARNING_CORE.md) ──────────────
     # Two-digit ids from the start. run.py::_module_for globs lc_00_*.py etc;
@@ -1449,7 +1535,8 @@ EXPANSION: list[Spec] = [
                "evidence that the trunk USES it. U4 exists because DreamerV3's "
                "shipped loss_scales.rec is shared across keys: a 64x64x3 image "
                "contributes 12,288 reconstruction terms and a 10-dim needs "
-               "vector contributes 10."),
+               "vector contributes 10."
+               "  COVERS: one brain / unison"),
 
     Spec("LC.02", 2, "A core that cannot live a life at survivable wall-clock is not a core",
          hypothesis="Every admissible arm sustains at least 5.0 simulated "
@@ -1744,7 +1831,8 @@ EXPANSION: list[Spec] = [
                "locomotion (food is placed on him when it respawns) and nothing "
                "else — it pays the real drain at the derived duty cycle D* = "
                "0.217 through the shipped DriveLayer, so it verifies unit (a)'s "
-               "C2 on the shipped path instead of in arithmetic."),
+               "C2 on the shipped path instead of in arithmetic."
+               "  COVERS: hunger/thirst"),
 
     # ══ THE MISSING SENSES — smell, taste, voice ════════════════════════
     #
@@ -1813,7 +1901,8 @@ EXPANSION: list[Spec] = [
                "chemistry (the caveman standard). Two receiver sites, left and "
                "right of the head, so bilateral comparison is available. "
                "MEASURE the O3 cost before adopting it; O1/O2 are expected to "
-               "sit near the fire CA's measured 0.06% of one core."),
+               "sit near the fire CA's measured 0.06% of one core."
+               "  COVERS: smell"),
 
     Spec("SM.02", 4, "Smell finds what vision cannot see",
          hypothesis="A Jack with the odour modality reaches OCCLUDED food in "
@@ -1843,7 +1932,8 @@ EXPANSION: list[Spec] = [
                "of the audio result (ManiWAV, Audio-VLA: audio pays when vision "
                "is occluded or ambiguous and approximately nothing otherwise). "
                "A test that only measures the occluded condition cannot "
-               "distinguish 'smell works' from 'an extra channel helped'."),
+               "distinguish 'smell works' from 'an extra channel helped'."
+               "  COVERS: smell"),
 
     # ── TA: taste ───────────────────────────────────────────────────────
 
@@ -1869,7 +1959,8 @@ EXPANSION: list[Spec] = [
                "consuming, and Jack carries a small innate prior toward small "
                "first bites - one of GOAL.md's 'innate reflex priors', finally "
                "used. The delay D between ingestion and illness is declared in "
-               "this spec and is the quantity TA.02's difficulty scales with."),
+               "this spec and is the quantity TA.02's difficulty scales with."
+               "  COVERS: taste"),
 
     Spec("TA.02", 5, "Conditioned taste aversion: learning from ONE exposure",
          hypothesis="After exactly ONE ingestion of the toxic plant followed by "
@@ -1909,7 +2000,8 @@ EXPANSION: list[Spec] = [
                "paths this project budgets for (FROZEN_VS_PLASTIC.md 9.4). "
                "VERIFY Garcia & Koelling 1966 and the CTA delay tolerance "
                "against the primary sources before running; both are currently "
-               "carried as [k]."),
+               "carried as [k]."
+               "  COVERS: taste"),
 
     Spec("TA.03", 3, "Taste earns its parameters",
          hypothesis="Ablating the taste modality degrades survival in a world "
@@ -1933,7 +2025,8 @@ EXPANSION: list[Spec] = [
          notes="Registered so that a constitutional sense still has to earn its "
                "IMPLEMENTATION. GOAL.md's Tier-3 rule and the owner's decree do "
                "not conflict: the decree says he HAS taste; this says our "
-               "wiring of it must do something measurable or be rebuilt."),
+               "wiring of it must do something measurable or be rebuilt."
+               "  COVERS: taste"),
 
     # ── VO: voice ───────────────────────────────────────────────────────
 
@@ -1960,7 +2053,8 @@ EXPANSION: list[Spec] = [
                "exists. The action space grows by 4 dimensions. Deliberately "
                "NOT a symbolic channel - an emergent protocol must survive "
                "distance, occlusion and the listener's own encoder, and its "
-               "information content must be measurable AT THE EAR."),
+               "information content must be measurable AT THE EAR."
+               "  COVERS: hearing, voice"),
 
     Spec("VO.02", 5, "Do two Jacks invent a signal? (gated on a second Jack)",
          hypothesis="With two Jacks in one world and a coordination problem "
@@ -2007,7 +2101,8 @@ EXPANSION: list[Spec] = [
                "no extra cost. EXPECT A HOLISTIC PROTOCOL: compositionality "
                "requires a re-learning bottleneck plus an expressivity "
                "constraint (FROZEN_VS_PLASTIC.md 10.6b), not a bigger "
-               "vocabulary."),
+               "vocabulary."
+               "  COVERS: voice, social/other agents"),
 
     # ── DP: fast and slow, in ONE brain ──────────────────────────────────
     # Owner decree, 2026-08-10: "we must figure that out... and it must still
@@ -2056,7 +2151,8 @@ EXPANSION: list[Spec] = [
                "a survival world with hunger, thirst and death is EXPECTED to "
                "reward lookahead (a trap you can see is a trap you can avoid), "
                "but expectation is not evidence and the jungle is not built "
-               "yet."),
+               "yet."
+               "  COVERS: fast/slow"),
 
     Spec("DP.01", 3, "Practice moves a behaviour off the deliberative path",
          hypothesis="For a task practised to criterion, the performance cost of "
@@ -2088,7 +2184,8 @@ EXPANSION: list[Spec] = [
                "(planner decay, entropy collapse, the task getting easier). "
                "Ablate by DISABLING ROLLOUTS, not by zeroing weights: zeroing "
                "shared weights damages the fast path too and would confound "
-               "this with DP.02."),
+               "this with DP.02."
+               "  COVERS: fast/slow"),
 
     Spec("DP.02", 3, "Connected, not two brains: the substrate is shared",
          hypothesis="Fast and slow read the SAME representation. A lesion to the "
@@ -2116,7 +2213,8 @@ EXPANSION: list[Spec] = [
                "usual: without the separated-tower arm, 'both degraded "
                "together' is equally consistent with a lesion that was simply "
                "too big to be selective. Report the magnitude at which the "
-               "separated control DOES dissociate, and use a lesion no larger."),
+               "separated control DOES dissociate, and use a lesion no larger."
+               "  COVERS: one brain / unison, fast/slow"),
 
     Spec("DP.03", 4, "Deliberation is spent where it pays",
          hypothesis="The slow path is engaged more in novel, ambiguous or "
@@ -2148,7 +2246,8 @@ EXPANSION: list[Spec] = [
                "that thinks rarely but deeply is not cheaper. Interaction with "
                "DP.01 is expected and must be reported, not controlled away: as "
                "habits form, a working gate should fire LESS on practised "
-               "tasks, which is the same phenomenon seen from the other side."),
+               "tasks, which is the same phenomenon seen from the other side."
+               "  COVERS: fast/slow"),
 
     # ── OP: a thing that goes behind something still exists ──────────────
     # Found by LOOKING through the eye rather than by reading its numbers
@@ -2195,7 +2294,8 @@ EXPANSION: list[Spec] = [
                "The violation-of-expectation design (remove the object while it "
                "is hidden, measure surprise when the occluder lifts) is the "
                "stronger infant-research instrument and needs a predictive core; "
-               "register it as OP.02 if LC.04 adopts a world model."),
+               "register it as OP.02 if LC.04 adopts a world model."
+               "  COVERS: sight"),
 
     Spec("DP.04", 5, "The slow path may be verbal, and that is a claim, not a design",
          hypothesis="Given a channel to emit and re-hear his own utterances, "
@@ -2243,7 +2343,8 @@ EXPANSION: list[Spec] = [
                "check refused the reference rather than let it dangle. Add "
                "LG.00 to depends_on the moment it is registered; until then "
                "this spec is blocked in fact even though the ladder shows only "
-               "DP.00 and VO.01."),
+               "DP.00 and VO.01."
+               "  COVERS: fast/slow"),
 
     Spec("PG.9", 2, "The eye's view is not mostly obstacle",
          hypothesis="Any camera the ladder certifies has less than 5% of its "
@@ -2284,7 +2385,8 @@ EXPANSION: list[Spec] = [
                "not tuned: bad pose 22.2% / 51.2%, current pose 0.0% / 61.8%. "
                "The gap is wide enough that the threshold sits in empty space "
                "rather than beside either measurement. Do NOT relax it to admit "
-               "a future camera; move the camera."),
+               "a future camera; move the camera."
+               "  COVERS: sight"),
 
     # ── THE SURVIVAL WORLD'S MISSING PILLARS ─────────────────────────────
     # Coverage audit 2026-08-10. The owner's directive was explicit: permanent
@@ -2331,7 +2433,8 @@ EXPANSION: list[Spec] = [
                "/ shelter holds heat, consistent and discoverable. Do not model "
                "chemistry. DO pre-register the rate constants and the lethal "
                "threshold before implementing, so the world cannot be quietly "
-               "tuned until the agent survives."),
+               "tuned until the agent survives."
+               "  COVERS: thermal (kills)"),
 
     Spec("PS.03", 2, "Damage is a signal, not just an ending",
          hypothesis="Harm produces a GRADED, sensed damage signal that precedes "
@@ -2356,7 +2459,8 @@ EXPANSION: list[Spec] = [
                "that makes danger learnable before it is fatal. Register the "
                "gradation explicitly - a scalar with a range, not a flag - "
                "because a binary damage bit is exactly the unlearnable case "
-               "this spec exists to rule out."),
+               "this spec exists to rule out."
+               "  COVERS: damage/nociception"),
 
     Spec("SH.01", 5, "Under cold, he shelters - and prefers the shelter that works",
          hypothesis="With a thermal drive active, time spent sheltered rises "
@@ -2390,7 +2494,8 @@ EXPANSION: list[Spec] = [
                "(seconds between first sheltering and the lethal threshold) as "
                "a first-class metric - it is the difference between foresight "
                "and reflex, and it connects directly to DP.00's question of "
-               "whether this world rewards looking ahead."),
+               "whether this world rewards looking ahead."
+               "  COVERS: thermal (kills), shelter/building"),
 
     Spec("XL.00", 2, "He dies, he reappears somewhere he did not choose, and the diary crosses",
          hypothesis="With `lethal=True`, W0 ends a life when energy or "
@@ -2467,7 +2572,8 @@ EXPANSION: list[Spec] = [
                "depends on per-seed mutated geometry, and 1 of 3 seeds "
                "disagreed; it now reads `ladder_railL`'s own position off the "
                "live model. Both are T1.02 repairs - the experiment was "
-               "wrong, and neither touched W0-2 or W0-3."),
+               "wrong, and neither touched W0-2 or W0-3."
+               "  COVERS: death & retry, memory across lives"),
 
     Spec("XL.01", 5, "Death does not erase what he learned",
          hypothesis="A life that follows earlier lives reaches a survival "
@@ -2500,7 +2606,8 @@ EXPANSION: list[Spec] = [
                "because the interesting answer is almost certainly that they "
                "carry different things - the complementary-learning-systems "
                "split (ME.10) predicts exactly that, and this is the first "
-               "spec that could show it in a lifetime rather than a session."),
+               "spec that could show it in a lifetime rather than a session."
+               "  COVERS: death & retry, memory across lives"),
 
     Spec("BA.01", 2, "He feels himself falling before he falls",
          hypothesis="Jack carries a sensed orientation signal - gravity's "

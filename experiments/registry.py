@@ -252,7 +252,8 @@ LADDER: list[Spec] = [
                "plain-MSE REFERENCE ARM. When the simplest possible learner also fails, "
                "the task is at fault, not the model, and the correct verdict is 'void' "
                "rather than 'the architecture cannot learn'. Every later spec that "
-               "claims a learning result carries a reference arm for this reason."),
+               "claims a learning result carries a reference arm for this reason."
+               "  COVERS: generality"),
     Spec("T1.03", 1, "Gradient reaches every trainable parameter",
          hypothesis="After one backward, no trainable tensor has grad None or all-zero.",
          falsified_by="Any orphaned parameter.",
@@ -395,7 +396,8 @@ LADDER: list[Spec] = [
                "paired with RANDOMLY DRAWN language labels. That is anti-training - "
                "it teaches that words do not predict motion. No spec currently "
                "checks the data, only the model, so this is the cheapest test on "
-               "the ladder that could have caught the worst bug in it."),
+               "the ladder that could have caught the worst bug in it."
+               "  COVERS: language (parent)"),
     Spec("T2.01", 2, "Locomotion beats a random policy",
          hypothesis="Trained policy return exceeds random-action return by >5 sigma.",
          falsified_by="Return within seed noise of random.",
@@ -437,7 +439,8 @@ LADDER: list[Spec] = [
          falsified_by="From-scratch matches pretrained.",
          null_baseline="Random-projection features of equal dimension.",
          metric="probe_accuracy", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.08"],
-         kills="use_pretrained_vision=False. Currently DINOv2/SigLIP are never loaded."),
+         kills="use_pretrained_vision=False. Currently DINOv2/SigLIP are never loaded.",
+         notes="COVERS: sight"),
 
     Spec("T2.04", 2, "Behaviour cloning on scripted trajectories",
          hypothesis="The action head reproduces scripted MuJoCo trajectories above "
@@ -460,7 +463,8 @@ LADDER: list[Spec] = [
          falsified_by="At or near chance (1/n_anchors).",
          null_baseline="Chance = 1/len(ACTION_CATEGORIES); plus TF-IDF nearest match.",
          metric="retrieval_acc", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.01"],
-         control="Shuffled (command, action) pairing must collapse to chance."),
+         control="Shuffled (command, action) pairing must collapse to chance.",
+         notes="COVERS: language (parent)"),
 
     Spec("T2.07", 2, "Grounding generalises to held-out phrasings",
          hypothesis="Commands never seen in training map to the right anchor.",
@@ -469,13 +473,15 @@ LADDER: list[Spec] = [
          metric="heldout_retrieval_acc", budget=Budget.GPU_SHORT, seeds=3,
          depends_on=["T2.06"],
          kills="SemanticActionAnchors as a grounding mechanism.",
-         notes="THE test that separates understanding from a lookup table."),
+         notes="THE test that separates understanding from a lookup table."
+               "  COVERS: language (parent), generality"),
 
     Spec("T2.08", 2, "Curiosity drives coverage",
          hypothesis="Intrinsic reward increases state-space coverage over random exploration.",
          falsified_by="Coverage at or below random.",
          null_baseline="Uniform random actions; and epsilon-greedy.",
-         metric="state_coverage", budget=Budget.GPU, seeds=3, depends_on=["T1.01"]),
+         metric="state_coverage", budget=Budget.GPU, seeds=3, depends_on=["T1.01"],
+         notes="COVERS: curiosity"),
 
     Spec("T2.09", 2, "Noisy-TV control",
          hypothesis="Injecting an unpredictable observation channel does NOT capture "
@@ -485,7 +491,8 @@ LADDER: list[Spec] = [
          metric="noise_channel_dwell_frac", budget=Budget.GPU, seeds=3, depends_on=["T2.08"],
          kills="ICM alone. Forces RND or a learning-progress signal.",
          notes="Also covers the degenerate failure the owner should fear: an agent "
-               "that 'explores' by twitching in place to maximise proprioceptive novelty."),
+               "that 'explores' by twitching in place to maximise proprioceptive novelty."
+               "  COVERS: curiosity"),
 
     Spec("T2.10", 2, "Memory retrieval beats recency",
          hypothesis="Retrieval scoring beats a pure-recency baseline on recall questions.",
@@ -541,11 +548,13 @@ LADDER: list[Spec] = [
     Spec("T3.01", 3, "Ablate vision", hypothesis="Removing vision measurably hurts a vision-dependent task.",
          falsified_by="No measurable drop.", null_baseline="Full system.",
          metric="delta_vs_full", budget=Budget.GPU, seeds=3, depends_on=["T2.03"],
-         kills="The vision encoder."),
+         kills="The vision encoder.",
+         notes="COVERS: sight"),
     Spec("T3.02", 3, "Ablate proprioception", hypothesis="Removing proprioception hurts control.",
          falsified_by="No measurable drop.", null_baseline="Full system.",
          metric="delta_vs_full", budget=Budget.GPU, seeds=3, depends_on=["T2.01"],
-         kills="The proprioception encoder."),
+         kills="The proprioception encoder.",
+         notes="COVERS: proprioception"),
     Spec("T3.03", 3, "Ablate the world model", hypothesis="Removing it hurts sample efficiency.",
          falsified_by="Same sample efficiency without it.", null_baseline="Model-free control.",
          metric="steps_to_threshold", budget=Budget.GPU_LONG, seeds=3, depends_on=["T2.05"],
@@ -561,7 +570,8 @@ LADDER: list[Spec] = [
     Spec("T3.06", 3, "Ablate curiosity", hypothesis="Removing intrinsic reward reduces unprompted coverage.",
          falsified_by="Coverage unchanged.", null_baseline="Extrinsic-only.",
          metric="delta_coverage", budget=Budget.GPU, seeds=3, depends_on=["T2.08"],
-         kills="IntrinsicCuriosityModule."),
+         kills="IntrinsicCuriosityModule.",
+         notes="COVERS: curiosity"),
     Spec("T3.07", 3, "Ablate mood conditioning", hypothesis="Mood measurably changes behaviour, not just text.",
          falsified_by="Identical action distributions across moods.",
          null_baseline="Mood token zeroed.", metric="action_dist_divergence",
@@ -570,7 +580,8 @@ LADDER: list[Spec] = [
     Spec("T3.08", 3, "Ablate the LLM", hypothesis="The frozen LLM improves command following over a bag-of-words encoder.",
          falsified_by="Bag-of-words matches it.", null_baseline="TF-IDF command encoder.",
          metric="command_success_rate", budget=Budget.GPU, seeds=3, depends_on=["T2.07"],
-         kills="Carrying a 1.7B model. Decides SmolLM2 vs something larger or nothing."),
+         kills="Carrying a 1.7B model. Decides SmolLM2 vs something larger or nothing.",
+         notes="COVERS: language (parent)"),
 
     # ===================================================================
     # TIER 4 — COMPOSITION. Does adding B break A?
@@ -579,7 +590,8 @@ LADDER: list[Spec] = [
          hypothesis="Performance degrades gracefully when a modality is missing at test time.",
          falsified_by="Catastrophic failure when one sense drops.",
          null_baseline="Full-modality performance.",
-         metric="degradation_curve", budget=Budget.GPU, seeds=3, depends_on=["T3.01", "T3.02"]),
+         metric="degradation_curve", budget=Budget.GPU, seeds=3, depends_on=["T3.01", "T3.02"],
+         notes="COVERS: one brain / unison"),
     Spec("T4.02", 4, "No modality collapse",
          hypothesis="Per-modality gradient norms stay within an order of magnitude.",
          falsified_by="One modality's gradient dominates by >10x — the others are ignored.",
@@ -587,13 +599,15 @@ LADDER: list[Spec] = [
          metric="max_modality_grad_ratio", budget=Budget.GPU_SHORT, seeds=3,
          depends_on=["T1.03"],
          notes="The documented failure where vision drowns proprioception. Detected "
-               "only by instrumenting gradients per encoder."),
+               "only by instrumenting gradients per encoder."
+               "  COVERS: one brain / unison"),
     Spec("T4.03", 4, "Fusion actually fuses",
          hypothesis="Shuffling ONE modality across the batch degrades performance.",
          falsified_by="No degradation — the modality is being ignored.",
          null_baseline="Unshuffled.", metric="shuffle_sensitivity",
          budget=Budget.GPU_SHORT, seeds=3, depends_on=["T4.02"],
-         kills="CrossModalFusion. Distinguishes real integration from concat-and-project."),
+         kills="CrossModalFusion. Distinguishes real integration from concat-and-project.",
+         notes="COVERS: one brain / unison"),
     Spec("T4.04", 4, "Task interference",
          hypothesis="Training task B does not degrade task A beyond a set tolerance.",
          falsified_by="A drops >10% while learning B.",
@@ -617,7 +631,8 @@ LADDER: list[Spec] = [
          depends_on=["T2.01"],
          control="Shuffled-physics pre-training must NOT help.",
          kills="The project's entire differentiator. Run this EARLY and cheaply.",
-         notes="5 seeds because this is the headline claim and the effect may be small."),
+         notes="5 seeds because this is the headline claim and the effect may be small."
+               "  COVERS: generality"),
 
     Spec("T5.02", 5, "Physics violation detection",
          hypothesis="The model flags dynamics perturbed outside training distribution.",
@@ -631,7 +646,8 @@ LADDER: list[Spec] = [
          hypothesis="Sequential tasks retain prior performance above a replay-free baseline.",
          falsified_by="Catastrophic forgetting equal to naive sequential fine-tuning.",
          null_baseline="Naive sequential fine-tuning (expected: severe forgetting).",
-         metric="backward_transfer", budget=Budget.GPU_LONG, seeds=3, depends_on=["T4.04"]),
+         metric="backward_transfer", budget=Budget.GPU_LONG, seeds=3, depends_on=["T4.04"],
+         notes="COVERS: plasticity"),
 
     Spec("T5.04", 5, "Plasticity does not die",
          hypothesis="After N consolidation cycles the model still learns a NEW task as "
@@ -642,13 +658,15 @@ LADDER: list[Spec] = [
          kills="The word 'indefinitely'.",
          notes="Dohare et al., Nature 632:768-774 (2024). Instrument dormant-unit "
                "fraction, parameter-norm growth and per-layer effective rank every cycle. "
-               "Without this you cannot tell 'converged' from 'can no longer learn'."),
+               "Without this you cannot tell 'converged' from 'can no longer learn'."
+               "  COVERS: plasticity"),
 
     Spec("T5.05", 5, "Sleep consolidation beats online-only",
          hypothesis="The T2 offline GPU pass improves on the T1 online head alone.",
          falsified_by="No improvement from consolidation.",
          null_baseline="Online head with no consolidation.",
-         metric="post_sleep_delta", budget=Budget.GPU, seeds=3, depends_on=["T5.03"]),
+         metric="post_sleep_delta", budget=Budget.GPU, seeds=3, depends_on=["T5.03"],
+         notes="COVERS: sleep"),
 
     Spec("T5.06", 5, "Unprompted exploration is real",
          hypothesis="Left alone, the agent visits more distinct states than a scripted "
@@ -656,7 +674,8 @@ LADDER: list[Spec] = [
          falsified_by="Coverage matches a scripted wander.",
          null_baseline="Current code: a hardcoded string on a frame counter "
                        "(VirtualWorld.py:807).",
-         metric="unprompted_coverage", budget=Budget.GPU, seeds=3, depends_on=["T3.06"]),
+         metric="unprompted_coverage", budget=Budget.GPU, seeds=3, depends_on=["T3.06"],
+         notes="COVERS: curiosity"),
 
     Spec("T5.07", 5, "Behaviour visibly changes after training",
          hypothesis="A blind human rater distinguishes trained from untrained episodes.",

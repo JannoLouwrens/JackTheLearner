@@ -2434,3 +2434,70 @@ two functions computing "the same" hash is a defect even while they agree.
 3. Genuine stale debt, now actually dischargeable: **PG.3, PG.8, PS.01**.
 4. Still true, still unowned: 44 entries predate `impl_sha` and cannot be
    staleness-checked at all; each becomes verifiable on its next run.
+
+---
+
+## 2026-08-10 ~13:30 UTC — coverage is DECLARED now, and the honest correction was downward
+
+**Attempted:** the overseer's 5th-audit RANK 1 (`FOR THE BUILDER` §1). Found its
+report and its LESSONS.md entry **staged but never committed** — the audit run
+died between `git add` and `git commit` — so the first act was committing that
+work unmodified (`dfe3bb0`), attributed to the overseer.
+
+**What was wrong.** `experiments/coverage.py` granted a commitment coverage on a
+regex over spec TITLES *or* an explicit `COVERS` declaration. The OR was the
+bug. Measured before the change: `shelter/building` — the owner's own image of
+success — read **4 specs / 1 PASS**, and the passing one was `ME.11.0`, *"The
+paraphrase eval set is **honest** before anyone is scored"*. `nest` inside
+`ho-nest`. Proprioception's PASS was `PG.3`, *"Ladder is c-**limb**-able"*.
+`death & retry` read 11/6 off `surviv`, `dies` in `bo-dies`, and `statue`.
+
+**What changed.** A regex hit is now a **NOMINATION** and never coverage; only
+a declaration counts toward `n_specs`/`n_pass`. Patterns gained `\b` (a cheap
+partial — it does *not* fix `PG.1`'s "physically sound" matching `hearing`,
+which is the argument for the structural fix and is carried as a test case).
+A declaration naming an unknown commitment is now reported as **MALFORMED**
+rather than dropped. **86 declarations backfilled** across both registry files
+by reading every one of the ~110 regex hits and keeping only the specs the
+commitment is genuinely ABOUT. New subcommand: `run coverage`.
+
+**The numbers, after (`n_specs / n_pass`, 23 commitments, 0 uncovered):**
+
+    shelter/building   4/1 -> 1/0      proprioception  2/1 -> 2/0
+    death & retry     11/6 -> 2/1      touch/contact   2/1 -> 1/0
+    hearing            8/4 -> 6/2      sight           6/2 -> 5/2
+    one brain/unison   7/0 -> 21/1     19 nominations remain unclaimed
+
+15 of 23 commitments now read "specs but nothing passing". That is what the
+board actually looked like the whole time.
+
+**Guard: `T0.21` PASS (1.26s)** — 7 properties, control = the pre-2026-08-10
+title-regex rule kept executable, which must break on the two known answers and
+does. P3 is the false positive (*"The honest baseline"* must not be shelter),
+P4 the false negative (a declared spec with an unrelated title must count —
+`BA.01`'s case). **P7 caught its own author on the first run:** the spec's notes
+spelled the marker literally in prose and the parser correctly called it a
+malformed declaration. FAIL, reworded, PASS. Loud beats silent; the cost is that
+a spec discussing the mechanism may not spell it, and that is recorded in the
+spec.
+
+**Nothing was invalidated by this.** No test declares a registry file in
+`IMPL_DEPS`, so 86 notes edits moved no `impl_sha`; `run verify` re-derives
+61/61 with 0 gates ignoring their control, and `T0.20` re-runs PASS.
+
+**NEXT ITERATION, in order.**
+1. **Overseer §2 — give `_calibration()` a freshness check.**
+   `xl_00_death_and_respawn.py:151` consumes `PS.01`'s `j0`/`alpha` whenever the
+   entry is PASS, without asking whether that entry is STALE — and `PS.01` is on
+   the stale list right now. Return `Status.VOID` when `run.stale_claims` names
+   it, and record the source entry's `impl_sha` in XL.00's own metrics. This is
+   a class, not an instance: LC.03/LC.04 score `life_gain` in the same world.
+2. **Overseer §3 — clear the three stale flags: `PG.3`, `PG.8`, `PS.01`.** All
+   CPU, all fast, and `PS.01` is the one item 1 is about.
+3. **LC.03** — still the head of the learning-core bakeoff, and its `cpu<2h`
+   budget label is still wrong by ~10x (`LEARNING_CORE.md` §5.7: 19.8 core-hours).
+   **That escalation to DECISIONS_NEEDED has now been carried by three hand-offs
+   unwritten.** It is worth an iteration on its own.
+4. **UB.9 "Heard, not seen"** — the unison gate. `one brain / unison` now reads
+   21 declared specs and exactly **1** passing (`LC.01`), against SYSTEM.md
+   calling unison the one thing no bakeoff may trade away.

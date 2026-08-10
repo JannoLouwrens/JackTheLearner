@@ -2742,19 +2742,26 @@
     },
     "T0.20": {
       "amended": [],
-      "attempt": 1,
-      "commit": "f7a4d4c",
+      "attempt": 2,
+      "commit": "dfe3bb0+dirty",
       "control_metrics": {
         "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
         "inventory_size": 10.0,
         "properties_checked": 6.0,
         "properties_failed": 2.0,
-        "registry_size": 147.0,
+        "registry_size": 161.0,
         "senses_absent_live": 2.0
       },
-      "duration_s": 0.29,
+      "duration_s": 1.55,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "f7a4d4c",
+          "message": "",
+          "ran_at": "2026-08-10T06:13:55",
+          "status": "PASS"
+        }
+      ],
       "impl_sha": "50357efa0cdbb096",
       "message": "",
       "metrics": {
@@ -2762,14 +2769,57 @@
         "inventory_size": 10.0,
         "properties_checked": 6.0,
         "properties_failed": 0.0,
-        "registry_size": 147.0,
+        "registry_size": 161.0,
         "senses_absent_live": 2.0
       },
-      "ran_at": "2026-08-10T06:13:55",
+      "ran_at": "2026-08-10T13:15:52",
       "seeds": [
         0
       ],
       "spec_id": "T0.20",
+      "status": "PASS"
+    },
+    "T0.21": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "dfe3bb0+dirty",
+      "control_metrics": {
+        "commitments": 23.0,
+        "commitments_uncovered": 0.0,
+        "declared_specs_live": 86.0,
+        "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p6_deleted_spec_loses_coverage",
+        "malformed_declarations_live": 0.0,
+        "nominated_not_declared": 19.0,
+        "properties_checked": 7.0,
+        "properties_failed": 4.0
+      },
+      "duration_s": 1.26,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "dfe3bb0+dirty",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-10T13:14:42",
+          "status": "FAIL"
+        }
+      ],
+      "impl_sha": "4d10e37def5d3056",
+      "message": "",
+      "metrics": {
+        "commitments": 23.0,
+        "commitments_uncovered": 0.0,
+        "declared_specs_live": 86.0,
+        "failed_names": "",
+        "malformed_declarations_live": 0.0,
+        "nominated_not_declared": 19.0,
+        "properties_checked": 7.0,
+        "properties_failed": 0.0
+      },
+      "ran_at": "2026-08-10T13:15:02",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.21",
       "status": "PASS"
     },
     "T1.01": {

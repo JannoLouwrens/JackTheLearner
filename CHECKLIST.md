@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 61 / 160 demonstrated
+## 62 / 161 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -287,6 +287,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ `experiments/senses.py` reports, for every entry of the HUMAN sensory inventory, whether the live registry claims it — and it can see the bad case: a sense whose specs were never written reads ABSENT, a declared spec id that no longer resolves LOSES its coverage rather than keeping it, and a spec that merely CONTAINS a sense's word buys no coverage at all.
       - _dies if:_ Any of the six properties failing. Above all P4: if a decoy spec that merely mentions a sense reads as coverage, this audit has reproduced the exact artifact that hid the hole — the overseer's grep matched 'voiced' in PG.5 and voice did not exist.
       - _then delete:_ `run senses` as a trustworthy report. If the battery cannot be made to pass, the inventory audit is deleted rather than kept as a green light nobody may rely on.
+- [x] **T0.21** The GOAL.md coverage audit cannot be flattered by a word
+      - _asserts:_ `experiments/coverage.py` credits a commitment ONLY to a spec that declared `COVERS:`, and it can see both bad cases: a spec whose title merely contains a commitment's word buys NO coverage, a spec that declares one with an unrelated title DOES, a declaration naming no known commitment is reported as malformed rather than silently dropped, and deleting a declaring spec loses the coverage instead of leaving stale credit.
+      - _dies if:_ Any of the seven properties failing. Above all P3: if the decoy spec titled 'The honest baseline' reads as coverage for shelter/building, the audit has reproduced the exact artifact it was rewritten to end — the owner's own image of success credited to the letters in 'ho-nest'.
+      - _then delete:_ `python -m experiments.coverage` as a report anyone may cite. If the battery cannot be made to pass, the audit is deleted rather than kept as a coverage number nobody may rely on.
 - [x] **T0.19** The bakeoff's `screen` gate eliminates arms without lowering the bar
       - _asserts:_ Under `Spec.gate_mode='screen'` an arm below the 3-sigma learning gate is ELIMINATED rather than VOIDing the run, and every guard that makes that safe holds: two survivors are still required, the winner still cleared 3 sigma, the eliminated arms are still recorded, an escaped control still inverts the verdict to VOID, `validity` behaves exactly as before, and the mode is refused without a written rationale on the committed Spec.
       - _dies if:_ Any of the seven properties failing — above all P2: if `screen` changes the verdict of PS.01/J round 1, the mode was reverse-engineered to rescue the run that motivated it and must be reverted.

@@ -1,0 +1,208 @@
+"""T0.21 — the GOAL.md coverage audit can see both of its bad cases.
+
+`experiments/coverage.py` answers the question that outranks `run status`: is
+the ladder the RIGHT ladder? It has now been wrong in both directions.
+
+  Direction 1, a false NEGATIVE: `BA.01` was registered to close the `balance`
+  hole and the balance regex did not match its title. Found in a day, because
+  its author was looking straight at it.
+
+  Direction 2, a false POSITIVE: the regex kept granting coverage on its own,
+  and `shelter/building` — the owner's own image of success — read 4 specs / 1
+  PASS off the letters in "ho-NEST", "c-LIMB-able" and "bo-DIES". That survived
+  two more days, because nobody goes looking for coverage they believe they
+  already have.
+
+The repair is structural rather than a better pattern: a regex hit is a
+NOMINATION and only a `COVERS:` declaration is coverage. This battery is what
+makes that claim falsifiable, and its P3/P4 are the known-answer test
+`docs/LESSONS.md` prescribes — feed the instrument the case you already know is
+broken and require it to say so.
+
+The control is the organ that FAILED, kept executable: the pre-2026-08-10
+patterns, verbatim, granting coverage by title regex. Under it "The honest
+baseline" is shelter coverage and a declared spec with an unrelated title is
+not. Note that word boundaries alone would NOT have saved it — PG.1's
+"physically sound" still matches `hearing`, and P3 carries that case
+deliberately so nobody mistakes the cheap half of the fix for the fix.
+
+No physics, no training, no ledger writes: the fixtures are registry dicts
+built in-process, so the numbers hold still while the RULE varies. Same shape
+as T0.19 and T0.20.
+"""
+from __future__ import annotations
+
+import re
+from dataclasses import replace
+
+from ..coverage import COMMITMENTS, declarations, report
+from ..protocol import Ledger, Status, run_spec
+from ..registry import BY_ID
+
+SPEC_ID = "T0.21"
+
+# The four commitments the 2026-08-10 hand audit found at ZERO specs. They are
+# why coverage.py exists, so the battery asserts the list still NAMES them
+# however their coverage moves.
+CONSTITUTIONAL_GAPS_2026_08_10 = ("thermal (kills)", "shelter/building",
+                                  "death & retry", "damage/nociception")
+
+# THE ORGAN THAT FAILED, kept as executable code: the patterns as they stood
+# before this file existed, with no word boundaries. Reproducing them verbatim
+# is what makes the control a control rather than a tidied restatement
+# (T0.08 property 5).
+LEGACY_PATTERNS = {
+    "touch/contact":      r"touch|tactile|contact",
+    "proprioception":     r"propriocept|body schema|limb",
+    "death & retry":      r"death|dies|lethal|surviv|statue",
+    "shelter/building":   r"shelter|build|construct|nest",
+    "hearing":            r"audio|acoustic|sound|hear|binaural",
+}
+
+
+def _legacy_coverage(reg: dict, commitment: str) -> list[str]:
+    """Coverage by regex over titles — the rule this spec exists to retire."""
+    rx = re.compile(LEGACY_PATTERNS[commitment], re.I)
+    return [s.id for s in reg.values() if rx.search(s.title)]
+
+
+def _declared_coverage(reg: dict, commitment: str) -> list[str]:
+    """Coverage by declaration — the rule under test."""
+    declared, _ = declarations(reg)
+    return [i for i in declared[commitment] if i in reg]
+
+
+def _fixture() -> dict:
+    """The live registry plus two decoys and one honestly-declared outsider."""
+    reg = dict(BY_ID)
+    donor = BY_ID["T0.01"]
+    # D1 — the real 2026-08-10 artifact, reduced to its essence. Its title
+    # contains no shelter word a human would name; it contains "ho-NEST".
+    reg["ZZ.decoy1"] = replace(
+        donor, id="ZZ.decoy1", title="The honest baseline", notes=None)
+    # D2 — the case word boundaries do NOT fix: "sound" as in valid, not as in
+    # audible. PG.1's real title, so this is not a straw man.
+    reg["ZZ.decoy2"] = replace(
+        donor, id="ZZ.decoy2",
+        title="Playground generates and is physically sound", notes=None)
+    # D3 — the false-NEGATIVE case: declares the commitment, and its title says
+    # nothing a shelter pattern could match. This is BA.01's situation.
+    reg["ZZ.declared"] = replace(
+        donor, id="ZZ.declared", title="He keeps the rain off himself",
+        notes="A lean-to earns its keep. COVERS: shelter/building")
+    # D4 — a declaration naming a commitment that does not exist. A typo is the
+    # false positive wearing a new hat: it reads as a claim and buys nothing.
+    reg["ZZ.typo"] = replace(
+        donor, id="ZZ.typo", title="Something unrelated",
+        notes="COVERS: shelterr")
+    return reg
+
+
+N_PROPERTIES = 7
+
+
+def _probe(rule_is_regex: bool) -> dict:
+    failed: list[str] = []
+    cov = _legacy_coverage if rule_is_regex else _declared_coverage
+    fix = _fixture()
+
+    # P1 — the null. An EMPTY registry must credit nothing to anything. An
+    # audit reading its own commitment list rather than the ladder would report
+    # coverage for a repository containing no specs at all.
+    if any(cov({}, c) for c in LEGACY_PATTERNS):
+        failed.append("p1_empty_registry_covers_nothing")
+
+    # P2 — the commitment list does not shrink to make the ladder look covered.
+    # It still names the four holes the hand audit found at zero.
+    if (not set(CONSTITUTIONAL_GAPS_2026_08_10) <= set(COMMITMENTS)
+            or len(COMMITMENTS) < 20):
+        failed.append("p2_commitments_still_name_the_gaps")
+
+    # P3 — KNOWN ANSWER, the false positive. "The honest baseline" must NOT be
+    # shelter coverage, and "physically sound" must NOT be hearing coverage.
+    # The second is here because word boundaries fix the first and not the
+    # second: the cheap half of the fix must not be mistaken for the fix.
+    shelter = cov(fix, "shelter/building")
+    hearing = cov(fix, "hearing")
+    if "ZZ.decoy1" in shelter or "ZZ.decoy2" in hearing:
+        failed.append("p3_word_must_not_grant_coverage")
+
+    # P4 — KNOWN ANSWER, the false negative. A spec that DECLARES the
+    # commitment counts however its title reads. This is BA.01's case, and a
+    # rule that gets P3 right by refusing everything would fail here.
+    if "ZZ.declared" not in shelter:
+        failed.append("p4_declaration_grants_coverage")
+
+    # P5 — a malformed declaration is REPORTED, not dropped. Only the
+    # declaration rule can even see this; the regex rule never reads a marker,
+    # so it is scored as a failure for it, which is honest: an organ that
+    # cannot detect the failure mode does not get credit for not having it.
+    _, bad = declarations(fix)
+    if rule_is_regex or ("ZZ.typo", "shelterr") not in bad:
+        failed.append("p5_malformed_declaration_is_reported")
+
+    # P6 — no stale credit. Delete the declaring spec and the coverage goes
+    # with it. The failure this kills: a family gets renamed and the audit
+    # keeps reporting the commitment as covered off a declaration nobody holds.
+    minus = {k: v for k, v in fix.items() if k not in ("SH.01", "ZZ.declared")}
+    if cov(minus, "shelter/building"):
+        failed.append("p6_deleted_spec_loses_coverage")
+
+    # P7 — against the LIVE registry: no malformed declarations anywhere, and
+    # every commitment that reports a PASS reports it for a spec that declared
+    # itself. A green audit with a typo'd marker in it is not green.
+    live_declared, live_bad = declarations(BY_ID)
+    if live_bad:
+        failed.append("p7_live_declarations_are_well_formed")
+    else:
+        for row in report():
+            if not set(row["specs"]) <= set(live_declared[row["commitment"]]):
+                failed.append("p7_live_declarations_are_well_formed")
+                break
+
+    rows = report()
+    return {
+        "properties_checked": float(N_PROPERTIES),
+        "properties_failed": float(len(failed)),
+        "failed_names": ",".join(failed),
+        "commitments": float(len(COMMITMENTS)),
+        "commitments_uncovered": float(sum(1 for r in rows if not r["n_specs"])),
+        "declared_specs_live": float(sum(r["n_specs"] for r in rows)),
+        "nominated_not_declared": float(sum(r["n_nominated"] for r in rows)),
+        "malformed_declarations_live": float(len(live_bad)),
+    }
+
+
+def _experiment(seed: int) -> dict:
+    return _probe(rule_is_regex=False)
+
+
+def _control(seed: int) -> dict:
+    """Coverage by title regex — the organ that failed, kept executable.
+
+    It must break P3 (it credits "The honest baseline" to shelter and
+    "physically sound" to hearing) and P4 (it cannot see a declaration). Those
+    two are the whole difference between "a spec is ABOUT this commitment" and
+    "a spec contains these letters".
+    """
+    return _probe(rule_is_regex=True)
+
+
+def _check(m: dict, c: dict) -> Status | bool:
+    # All seven ran AND all seven held. Gating on `properties_failed == 0`
+    # alone would let a battery that stopped early read as clean (T0.13's own
+    # first bug; T0.19 and T0.20 carry the same guard).
+    experiment_clean = (m["properties_failed"] == 0.0
+                        and m["properties_checked"] == N_PROPERTIES
+                        and c["properties_checked"] == N_PROPERTIES)
+    # The control must fail, and fail on THE properties that define the guard.
+    control_names = set(str(c.get("failed_names", "")).split(","))
+    control_broken = (c["properties_failed"] > 0.0
+                      and {"p3_word_must_not_grant_coverage",
+                           "p4_declaration_grants_coverage"} <= control_names)
+    return bool(experiment_clean and control_broken)
+
+
+def run(ledger: Ledger | None = None):
+    return run_spec(BY_ID[SPEC_ID], _experiment, _check, control_fn=_control,
+                    ledger=ledger)

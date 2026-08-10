@@ -2044,3 +2044,28 @@ nomination that goes uncounted is visible work and a false match is invisible
 comfort. And test it the way this file already prescribes for the other
 direction: feed it the case you know is broken — a synthetic spec titled *"The
 honest baseline"* must NOT count toward shelter.
+
+**Implemented 2026-08-10, and the numbers moved the way an honest correction
+moves — downward.** `coverage.py` now credits a commitment only to a spec that
+declared `COVERS`; regex hits print as NOMINATIONS. 86 declarations were
+backfilled by reading every hit, and 19 title matches survive as nominations
+that no author has claimed. `shelter/building` went 4 specs / 1 PASS -> 1 spec
+/ 0 PASS, `proprioception` 2/1 -> 2/0, `death & retry` 11/6 -> 2/1. Guarded by
+**T0.21** (7 properties, control = the old title-regex rule kept executable,
+which must and does break on the two known answers). Wire-up: `run coverage`.
+
+Two things worth carrying beyond this instance:
+
+- **A loud parser beats a lenient one, and it will bill you first.** A marker
+  naming an unknown commitment is reported as MALFORMED rather than ignored,
+  because a typo'd declaration reads to a human exactly like a claim and buys
+  nothing — the same invisible-comfort failure in miniature. The first thing
+  the new check caught was T0.21's own spec notes, which spelled the marker in
+  prose. The cost is real (a spec discussing the mechanism may not spell it)
+  and it is the right trade: the alternative is silence.
+- **Word boundaries were the tempting fix and they are only half of one.**
+  `\b` kills `ho-nest`, `c-limb-able` and `bo-dies`, and it does nothing for
+  *"physically sound"* counting as hearing or *"curiosity drives"* as hunger.
+  A proxy tuned until its known false positives disappear is still a proxy;
+  T0.21's P3 carries the "physically sound" case specifically so the cheap half
+  can never be mistaken for the fix.
