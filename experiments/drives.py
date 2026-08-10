@@ -25,9 +25,28 @@ driven substep-by-substep could not be measured against a world it did not also
 control.
 
 Units are SI throughout and `dt` is always seconds of simulated time, so nothing
-here depends on `frame_skip`. That is not cosmetic: `J` is a genuine impulse
-(N·s, force integrated over the decision) rather than a per-decision force sum,
-precisely so a `frame_skip` change cannot move the damage threshold.
+here depends on `frame_skip`.
+
+**`J_t` IS NO LONGER AN IMPULSE (2026-08-10).** It was
+`sum_substeps ||cfrc_ext[torso]|| * dt` — a genuine N·s impulse — until the
+`PS.01/J` and `PS.01/J2` bakeoffs measured that formulation **at chance** for
+telling a fall from ordinary ground contact (AUC 0.520 against a shuffled null
+of 0.4966 ± 0.0122; two of its proposed repairs scored *below* chance).
+Thirteen channels competed over two rounds and `impact_speed` won at 0.973 AUC,
++10.32 sigma, 2.66 sigma clear of the runner-up:
+
+    J_t = the root's linear SPEED one substep before contact ONSET, maximised
+          over the onsets that occurred during this decision (0 if none).
+
+Two consequences worth knowing before re-opening it. (1) The channel is
+**kinematic**, so this layer no longer reads `cfrc_ext` at all — which retires
+the `mj_rnePostConstraint` staleness caveat that used to make `j` wrong in any
+caller that batched the call (see `w0.py`'s `step()` and `LESSONS.md`). It also
+means a `frame_skip` change still cannot move the threshold: a speed is a state
+variable, not an accumulation. (2) The dimensional change is absorbed by
+`alpha`, which PS.01 calibrates against the same 1.8 m platform fall §2.2 always
+named. Full evidence: `docs/DECISIONS_RESOLVED.md`,
+`experiments/bakeoffs/ps01_impulse*.py`, `PURPOSE_AND_SCAFFOLDING.md` §2.2.
 """
 from __future__ import annotations
 
@@ -77,11 +96,12 @@ DRIVE_DIM = 6                # §2.4: [e, i, w, d(h), edot, idot]
 FOOD_GEOMS = {"apple": NU_APPLE, "obj0": NU_FLOORFOOD, "obj1": NU_FLOORFOOD}
 RESPAWN_S = {"apple": RESPAWN_APPLE_S,
              "obj0": RESPAWN_FLOORFOOD_S, "obj1": RESPAWN_FLOORFOOD_S}
-# §2.2 writes "torso + head". In Humanoid-v5 the head is a GEOM on the torso
-# body, not a body of its own, so `cfrc_ext` has no head row to sum and "torso"
-# already carries the head's external force. Naming both would have summed the
-# torso twice. Checked against the live model rather than transcribed.
-IMPACT_BODIES = ("torso",)
+# The impact channel used to name a SENSOR BODY (`IMPACT_BODIES = ("torso",)`,
+# §2.2's "torso + head"). `PS.01/J2` retired it: a 1.8 m platform fall lands on
+# the FEET and `cfrc_ext[torso]` reads identically zero for the 0.30 s after
+# contact onset, so the torso sensor and a whole-body landing are on different
+# bodies. The winning channel reads the free root's velocity instead, which no
+# body choice can get wrong.
 HEAD_GEOM = "head"                    # for the drowning test, §2.2
 
 
@@ -100,9 +120,13 @@ class BodyRef:
     `head_geoms` is the drowning probe, not an anatomical claim: on the rover
     the torso capsule's own geom is the highest point of the body, and on the
     humanoid `head` is a geom on the torso body for the same reason.
+
+    There is deliberately no `impact` field. It named the bodies whose
+    `cfrc_ext` rows were the impact channel, and `PS.01/J2` measured that
+    channel at chance; the winner is the free root's arrival speed, which
+    `dofadr` already locates on either body.
     """
     bodies: frozenset       # every body id that is Jack — the eating/water test
-    impact: tuple           # body ids whose `cfrc_ext` rows are the impact channel
     head_geoms: tuple       # geom ids submerged == drowning
     dofadr: int             # first dof of the free root
     ndof: int               # free root (6) + actuated dofs
@@ -114,7 +138,6 @@ def humanoid_body_ref(model) -> BodyRef:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     from playground import HUMANOID_NV, humanoid_body_ids, humanoid_index
     return BodyRef(bodies=frozenset(humanoid_body_ids(model)),
-                   impact=tuple(int(model.body(n).id) for n in IMPACT_BODIES),
                    head_geoms=(int(model.geom(HEAD_GEOM).id),),
                    dofadr=humanoid_index(model)["dofadr"], ndof=HUMANOID_NV)
 
@@ -127,7 +150,6 @@ def rover_body_ref(model) -> BodyRef:
     from playground import rover_index
     ix = rover_index(model)
     return BodyRef(bodies=frozenset(ix["body"].values()),
-                   impact=(ix["body"]["rover"],),
                    head_geoms=(ix["geom"]["rover_torso"],),
                    dofadr=ix["root_dofadr"], ndof=10)
 
@@ -164,31 +186,24 @@ class DriveLayer:
         for _ in range(frame_skip):
             data.ctrl[:] = ctrl * layer.gear_scale()
             mujoco.mj_step(model, data)
-            mujoco.mj_rnePostConstraint(model, data)   # cfrc_ext is stale
-            layer.substep(model, data, model.opt.timestep)  # without this
+            layer.substep(model, data, model.opt.timestep)
         h = layer.decide()
 
-    The `mj_rnePostConstraint` call is NOT optional and NOT free to omit: it is
-    what populates `cfrc_ext`, which `substep` reads for the impact-impulse
-    term (`§2.2`'s `J_t`). `mj_step` does not call it (the PG.8 lesson,
-    `LESSONS.md`). Omitting it, or calling it only once after the whole
-    substep loop instead of after every `mj_step`, silently feeds `substep`
-    the PREVIOUS decision's contact state.
+    **No `mj_rnePostConstraint` is required.** It used to be, and the
+    requirement was load-bearing and expensive: `cfrc_ext` is filled by that
+    call and not by `mj_step` (the PG.8 lesson), so a caller that batched it to
+    once per decision — as `w0.py` deliberately does, because the per-substep
+    call costs ~15-25% throughput and dropped 4 of LC.02's 5 arms below the 5.0
+    floor — silently fed `substep` the PREVIOUS decision's contact state. That
+    hazard is **gone**: `PS.01/J2` replaced the force channel with the root's
+    arrival speed, and `qvel` is current after every `mj_step`. One measured
+    decision retired a documented instrumentation trap, which is worth more
+    than the AUC it was chosen for.
 
-    `w0.py`'s own caller does exactly that ON PURPOSE, not by oversight: the
-    correct per-substep call was tried there and cost enough (~10-25%
-    throughput) to drop 4 of LC.02's 5 candidate arms below the 5.0 floor at
-    every train_ratio, so it was reverted (`LESSONS.md`, "The same
-    instrumentation bug can recur inside a single day"). That is safe only
-    because LC.02 never reads `j` — it gates on `drive_gate_frac`, from
-    `_grounded()`'s own contact scan, not from `cfrc_ext`. A caller that DOES
-    need `j` to be accurate (PS.01, calibrating `j0` and `alpha`) must run its
-    OWN stepping loop with the per-substep call shown above, not reuse
-    `w0.py`'s `step()`.
-
-    `j0` is the impulse below which contact is NORMAL and costs nothing, and
-    `alpha` converts the excess into integrity. Both are measured by PS.01 and
-    neither has a default: a wrong number here is silent, and silence is the one
+    `j0` is the arrival speed (m/s) below which contact is NORMAL and costs
+    nothing — the 95th percentile of ordinary ground contact — and `alpha`
+    converts the excess into integrity. Both are measured by PS.01 and neither
+    has a default: a wrong number here is silent, and silence is the one
     failure mode this repo has paid for most.
     """
 
@@ -206,7 +221,6 @@ class DriveLayer:
 
         self.body = body or humanoid_body_ref(model)
         self._body_ids = set(self.body.bodies)
-        self._impact_ids = list(self.body.impact)
         self._geom_of_body = {g: int(model.geom_bodyid[g]) for g in range(model.ngeom)}
         self._jack_geoms = {g for g, b in self._geom_of_body.items()
                             if b in self._body_ids}
@@ -225,10 +239,18 @@ class DriveLayer:
         self.t = 0.0
         self._respawn_at = {name: 0.0 for name in self._food}
         self._submerged_since: Optional[float] = None
+        # Contact-onset state is LIFE-level, not decision-level: a landing that
+        # straddles a decision boundary is one landing, and resetting either of
+        # these in `begin_decision` would count it twice.
+        self._touching_world = False
+        self._prev_speed: Optional[float] = None
         self._reset_decision()
         # Diagnostics the caller may read after any decision.
         self.last_j = 0.0
         self.last_power_w = 0.0
+        self.last_dt = 0.0
+        self.last_rest_dt = 0.0
+        self.n_onsets = 0
         self.ate_total = {name: 0 for name in self._food}
 
     # ── the decision cycle ──────────────────────────────────────────────
@@ -236,7 +258,7 @@ class DriveLayer:
         self._reset_decision()
 
     def _reset_decision(self) -> None:
-        self._j_acc = 0.0
+        self._j_max = 0.0
         self._power_dt = 0.0
         self._dt_acc = 0.0
         self._ate = 0.0
@@ -264,28 +286,43 @@ class DriveLayer:
         self._power_dt += power * dt
         self._dt_acc += dt
 
-        f = np.asarray(data.cfrc_ext[self._impact_ids])   # (2, 6) force+torque
-        self._j_acc += float(np.linalg.norm(f)) * dt      # N·s, a real impulse
-
         qvel = np.asarray(data.qvel[d:d + n])
         if float(np.linalg.norm(qvel)) < Q_REST:
             self._rest_dt += dt
 
+        # ONE vectorised pass over `data.contact.geom` per substep, read by both
+        # the impact channel and eating. Identical semantics to a Python scan —
+        # LC.02 measured the old per-food-item form at 5.35 ms of a 20.4 ms
+        # decision, and a throughput floor that a lazy inner loop can fail is a
+        # floor on the loop, not the core.
+        partners = _contact_partners(data, self._jack_mask)
+
+        # impact, §2.2 as decided by PS.01/J2: the root's linear speed one
+        # substep BEFORE contact onset. `partners` may contain Jack's own geoms
+        # (he folds onto himself constantly under any policy, and that is not a
+        # landing), so WORLD contact is a partner that is not his — the same
+        # label-free predicate the bakeoff scored, which never sees which regime
+        # it is in. Only the False->True edge counts: while he lies on the floor
+        # the flag stays True and no speed is read, which is why lying there
+        # cannot manufacture damage however long it lies.
+        speed = float(np.linalg.norm(qvel[:3]))
+        touching = bool(partners - self._jack_geoms)
+        if touching and not self._touching_world:
+            arrival = speed if self._prev_speed is None else self._prev_speed
+            self._j_max = max(self._j_max, arrival)
+            self.n_onsets += 1
+        self._touching_world = touching
+        self._prev_speed = speed
+
         # eating: a physical contact between one of Jack's geoms and a food geom.
-        # ONE vectorised pass over `data.contact.geom` per substep rather than
-        # one Python scan per food item. Identical semantics — LC.02 measured
-        # the old form at 5.35 ms of a 20.4 ms decision, and a throughput floor
-        # that a lazy inner loop can fail is a floor on the loop, not the core.
-        if self._food:
-            partners = _contact_partners(data, self._jack_mask)
-            for name, (gid, nu) in self._food.items():
-                if self.t + self._dt_acc < self._respawn_at[name]:
-                    continue
-                if gid in partners:
-                    self._ate += nu
-                    self._respawn_at[name] = (self.t + self._dt_acc
-                                              + RESPAWN_S[name])
-                    self.ate_total[name] += 1
+        for name, (gid, nu) in self._food.items():
+            if self.t + self._dt_acc < self._respawn_at[name]:
+                continue
+            if gid in partners:
+                self._ate += nu
+                self._respawn_at[name] = (self.t + self._dt_acc
+                                          + RESPAWN_S[name])
+                self.ate_total[name] += 1
 
         # drowning: the head geom below the pool surface for > DROWN_DELAY_S
         if self.pool is not None and self._head_under(data):
@@ -304,7 +341,7 @@ class DriveLayer:
         """Close the decision: apply §2.2's three update rules and clip."""
         dt = self._dt_acc
         s = self.state
-        j = self._j_acc
+        j = self._j_max          # m/s, the worst arrival speed of this decision
         power_mean = self._power_dt / dt if dt > 0 else 0.0
 
         e = s.e - (BASAL_B * dt + KAPPA * self._power_dt) + self._ate
@@ -318,6 +355,12 @@ class DriveLayer:
         self.t += dt
         self.last_j = j
         self.last_power_w = power_mean
+        # Published because PS.01 has to report the drain it measured rather
+        # than the drain §2.2 guessed, and a caller that must reach into
+        # `_rest_dt` to do that is a caller reading a private accumulator after
+        # `_reset_decision` has already been scheduled to clear it.
+        self.last_dt = dt
+        self.last_rest_dt = self._rest_dt
         self._reset_decision()
         return self.state
 

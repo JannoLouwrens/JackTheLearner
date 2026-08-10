@@ -1781,3 +1781,88 @@ whole learning-core arbitration (priority 0). Two things to carry: PS.01 must
 still calibrate α against the 1.8 m fall as §2.2 says, and its own controls are
 unchanged. If it needs a threshold *sweep*, that is a new bakeoff, not a knob —
 `IMPACT_WINDOW_S = 0.30` was pre-registered and deliberately not swept here.
+
+## 2026-08-10 05:30 — PS.01 implemented and run: FAIL. `J₀`/`α` measured and held out; §2.3's energy arithmetic is REFUTED as dynamics
+
+Took the 04:10 handoff ("implement PS.01, its blocker is gone") and finished it.
+Two pieces of work: land the bakeoff winner in the substrate, then calibrate and
+run the spec. `experiments/tests/ps_01_drive_calibration.py`, 434 s, 3 seeds.
+
+**The substrate change.** `DriveLayer`'s impact term was still §2.2's retired
+`Σ‖cfrc_ext[torso]‖·dt`. It is now `PS.01/J2`'s winner: the root's linear speed
+one substep before contact ONSET, maximised over the onsets in the decision,
+where a world contact is a contact partner outside Jack's own subtree (the
+bakeoff's label-free predicate) and only the False→True edge counts — so lying
+on the floor cannot manufacture damage however long it lies. `BodyRef.impact`
+and `IMPACT_BODIES` are deleted: the channel no longer names a sensor body.
+
+**An unbudgeted win: a documented instrumentation trap is gone.** The old
+channel needed `mj_rnePostConstraint` after *every* `mj_step` — that is why
+`w0.py` carries a deliberate-staleness block, why doing it correctly cost
+15–25% throughput and dropped 4 of LC.02's 5 arms below the floor, and why the
+handoff said PS.01 must write its own stepping loop. The winner is KINEMATIC.
+`qvel` is current after every `mj_step`, the layer no longer touches `cfrc_ext`,
+and `j` is now correct in `w0.py`'s loop at zero cost. LESSONS.md, "a caveat
+outlives the mechanism it guarded".
+
+**PASSED, and this is the half worth keeping.** `J₀ = 2.405 ± 0.02 m/s` — the
+p95 of the per-decision arrival speed over decisions with a contact onset, 304
+such decisions per seed, ordinary spawn, random policy. `α = 0.0293 ± 0.002`,
+set so the median TOTAL excess of a platform fall costs 0.15. Verified on five
+fall runs the calibration never saw, driven through the real `DriveLayer`:
+**median 0.162, seed range 0.116–0.218, all inside the pre-registered
+[0.10, 0.20]**. A fall from the platform now costs something, measured through
+the shipped integrator rather than through the arithmetic that produced α.
+§2.2 has been amended: those two are measurements now, not proposals.
+Subsistence (`ok_subsistence`) and the null (a disabled integrator riding the
+live arm's own rollout: `null_spread == 0.0`) also passed.
+
+**FAILED, three clauses, and the diagnosis is the deliverable.**
+
+    spread_e        0.145   (gate 0.30)     e is 0 for 84.8% of the life
+    spread_i        2.4e-5  (gate 0.30)     drive_dynamic_range = 2.4e-5
+    random e_min    0.0     must be > 0     starves at t ≈ 90 s
+    statue e_min    4.4e-14 must reach 0    still alive at the 600 s horizon
+
+1. **§2.3's energy arithmetic is refuted AS DYNAMICS.** It prices floor food
+   (1.78e-3 /s) against BASAL (1.67e-3 /s). Measured: a random policy pays
+   6.57e-3 /s — 293 W of mechanical power, 3.9× basal, exactly what κ was chosen
+   to do, so κ is not the bug — and rests for 3.6e-5 of its life. Against the
+   drain an acting body actually pays, floor food is 3.7× short. So acting
+   always starves, the statue that cannot eat at all outlives it, and the
+   pre-registered domination clause comes out INVERTED. This is §5's G-B dark
+   room, measured, at this document's own parameterisation. The table is in
+   `PURPOSE_AND_SCAFFOLDING.md` §2.3.
+2. **The integrity probe cannot reach the variable it gates.** i moved 0.024
+   over 600 s while the same integrator scored 0.162 on a fall. A random policy
+   never climbs, so it never falls from height; it never holds still, so it
+   never heals. 203 onsets, 1.3 above `J₀`. The channel is live and the probe
+   cannot get to it.
+
+Per the spec's own `kills`, this kills §2.2-2.3's specific numbers, not the
+idea. Nothing was tuned to make it green and nothing should be.
+
+**NEXT ITERATION — two units, in this order, and neither is a knob-twiddle.**
+
+(a) **Re-derive `(b, ν_floorfood, respawn)` against the ACTIVE drain.**
+    PS.01's notes license exactly this ("every number in 2.2 is a PROPOSAL until
+    this spec replaces it with a measurement") and α is the worked precedent:
+    state the criterion first, solve, verify on HELD-OUT seeds. Criterion, fixed
+    here before the search: floor supply ≥ the measured active drain of a random
+    policy at a duty cycle of D, for a pre-registered D < 1 (i.e. an agent that
+    acts *some* of the time can subsist and one that acts constantly cannot),
+    and the statue's energy must reach 0 strictly before the actor's. Do NOT
+    search over the gate. Held-out verification on seeds 3–5.
+(b) **Split PS.01's integrity clause from its energy clause.** Under the T1.02
+    precedent (strengthen only, old version stays in the ledger's history) the
+    range gate on `i` should name the events it requires — the current spec asks
+    a random policy to exercise a variable only a climber can move. Candidate:
+    gate `i`'s range over a MIXED probe (random + drop-spawn lives, the fall
+    regime already implemented here), and state the required event counts next
+    to the threshold. This is a spec redesign, so write it into
+    `INTEGRATION_QUEUE.md` and let the protocol register it — do not edit the
+    registry entry in place.
+
+LC.03 stays blocked on PS.01 and that is correct: a screening bakeoff run under
+a drive whose energy term is refuted would arbitrate learning cores on a world
+that starves every actor.

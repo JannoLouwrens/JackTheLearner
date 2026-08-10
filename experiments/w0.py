@@ -306,18 +306,18 @@ class W0:
             self.drives.substep(self.model, self.data, dt)
         self.data.xfrc_applied[self.rover_bid, :2] = 0.0
         self.mujoco.mj_rnePostConstraint(self.model, self.data)
-        # KNOWN, DELIBERATE STALENESS, not an oversight: cfrc_ext is filled by
-        # mj_rnePostConstraint (the PG.8 lesson), which mj_step never calls, so
-        # every `drives.substep()` above read the PREVIOUS decision's contact
-        # state for its impact-impulse accumulation. Calling it every substep
-        # instead of once here is CORRECT and was tried (2026-08-09) — it costs
-        # ~15-25% throughput and drops 4 of 5 LC.02 arms below the 5.0 floor at
-        # every ratio, breaking a currently-PASSING gate. LC.02 never reads `j`
-        # (only `drive_gate_frac`, from `_grounded()`'s own contact scan), so
-        # this path is unaffected by the staleness. PS.01 needs the real
-        # per-substep value and must NOT reuse this loop uncorrected — see
-        # `DriveLayer`'s own docstring and `LESSONS.md`, "The same
-        # instrumentation bug can recur inside a single day".
+        # This call fills `cfrc_ext` for the OBSERVATION only. It used to carry
+        # a known, deliberate staleness for the drive layer as well: `cfrc_ext`
+        # is filled by mj_rnePostConstraint (the PG.8 lesson) and never by
+        # mj_step, so every `drives.substep()` above read the PREVIOUS
+        # decision's contact state for its impact-impulse accumulation. The
+        # correct per-substep call was tried (2026-08-09), cost ~15-25%
+        # throughput and dropped 4 of 5 LC.02 arms below the 5.0 floor, and was
+        # reverted; it was safe only because LC.02 never reads `j`.
+        # RESOLVED 2026-08-10: `PS.01/J2` replaced §2.2's force channel with the
+        # root's arrival speed, so `drives.substep` no longer touches
+        # `cfrc_ext` at all. `j` is now correct in THIS loop, at no throughput
+        # cost, and PS.01 no longer needs a stepping loop of its own to get it.
 
         self._prev_drive = drives.DriveState(**vars(self.drives.state))
         self.drives.decide()

@@ -1384,3 +1384,60 @@ assert the window was non-empty — count the runs in which the trigger fired
 family as "an assertion made against a saturated quantity cannot fail": an
 extremum over an empty window is saturated at its initial value, and a
 chance-level score is what saturation looks like from the outside.
+
+## A supply-vs-drain inequality must be checked against the drain the agent PAYS
+
+`PURPOSE_AND_SCAFFOLDING.md` §2.3 justified the food layout with one line of
+arithmetic: two floor foods supply `2×0.08/90 = 1.78e-3` energy per second and
+basal drain is `1.67e-3`, therefore *"subsistence on the floor is possible and
+activity on the floor is not"*. The arithmetic is correct. PS.01 measured what it
+predicts and got the opposite: a random policy pays **6.57e-3 /s** (293 W of
+mechanical power, 3.9× basal) and spends **0.004%** of its life at rest, so it
+starves at t ≈ 90 s and lies at zero for 85% of the run — while the do-nothing
+statue, which cannot eat at all, still has energy at the 600 s horizon. The
+statue outlived the actor, inverting the clause the spec pre-registered.
+
+κ was not wrong (293 W → 3.9× basal is what it was chosen to do) and the supply
+arithmetic was not wrong. The comparison was: it priced the supply against
+**basal**, the drain of a state nothing in a life is ever in.
+
+**Rule:** when a design justifies itself with a rate inequality, identify which
+*regime* each side is measured in, and re-derive it against the regime the claim
+is about. "Resting drain" is a constant in the equation, not a state any policy
+occupies. The same trap will fire for any budget argument — memory, compute,
+GPU-hours — that prices demand at idle.
+
+## A probe policy that cannot produce the event cannot measure the variable
+
+PS.01 gates the integrity drive on its dynamic range over 3,000 decisions of a
+random policy: `p90 − p10 ≥ 0.30`. Measured: **2.4e-5**. That reads as a dead
+drive, and the drive is not dead — the *same* integrator, on the *same* seeds,
+scored a fall from the ladder platform at 0.162 integrity (held out, inside its
+pre-registered [0.10, 0.20] band). A random policy never climbs, so it never
+falls from height; and it never holds still (rest fraction 3.6e-5), so the
+healing term never fires either. Both terms of the equation were unreachable
+from the probe. 203 contact onsets in the life and 1.3 of them above `J₀`.
+
+**Rule:** before gating a variable's *range* on a rollout, ask what events move
+that variable and whether the rollout's policy can produce them. If it cannot,
+a null result is a measurement of the probe, not of the mechanism — and it will
+be reported with the same confidence as a real one. State the required events in
+the spec next to the threshold, and count them in the metrics (`n_onsets`,
+`n_damaging`, `rest_frac` are in PS.01's record for exactly this reason).
+
+## A caveat outlives the mechanism it guarded, and keeps charging rent
+
+`DriveLayer` carried a loud, correct, expensive warning: `cfrc_ext` is filled by
+`mj_rnePostConstraint` and never by `mj_step`, so any caller batching that call
+feeds the impact term the PREVIOUS decision's contact state. It cost `w0.py` a
+documented deliberate-staleness block, cost LC.02 a measured 15–25% throughput
+to do properly, and told PS.01 it must write its own stepping loop rather than
+reuse `step()`. Then `PS.01/J2` replaced the force channel with the root's
+arrival speed — and `qvel` is current after every `mj_step`. The entire hazard
+evaporated, and the instruction to work around it would otherwise have been
+inherited by every future caller of a layer that no longer has the problem.
+
+**Rule:** when a bakeoff or a refactor replaces a mechanism, grep for the
+caveats, workarounds and "must not reuse" instructions attached to the OLD one
+and re-derive each. A warning that is merely stale is worse than one that is
+wrong: nobody re-checks it, and it silently shapes designs downstream.

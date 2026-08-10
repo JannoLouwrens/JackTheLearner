@@ -312,11 +312,27 @@ falling cost something.**
 i ← clip( i − α·max(0, J_t − J₀) − drown(t) + ρ·Δt·[‖qvel‖ < q_rest] , 0, 1 )
 
 J_t = the root's linear SPEED one substep before contact onset  (arrival speed)
-J₀  = the 95th percentile of J under normal contact, MEASURED in PS.01
-α   calibrated so a fall from the ladder platform (1.8 m) costs ≈ 0.15
+J₀  = 2.405 m/s      MEASURED, PS.01 2026-08-10 (was: "to be measured")
+α   = 0.0293         MEASURED, PS.01 2026-08-10 (was: "to be calibrated")
 ρ   = 1/900  s⁻¹                   full heal in 15 minutes of rest
 drown(t) = 0.05·Δt while the head geom has been below the pool surface > 8 s
 ```
+
+> **`J₀` and `α` ARE NO LONGER PROPOSALS (PS.01, 2026-08-10, ledger FAIL).**
+> `J₀ = 2.405 ± 0.02 m/s` is the 95th percentile, over three seeds, of the
+> per-decision arrival speed in decisions where contact ONSET occurred, in the
+> ordinary-spawn regime (304 such decisions per seed; median 0.671, max 3.83).
+> The population is the per-DECISION value because that is the statistic the
+> integrator compares against `j0` — a threshold calibrated on a quantity the
+> shipped path never computes is the T0.16 failure.
+>
+> `α = 0.0293 ± 0.002` is set so the MEDIAN total excess of a platform fall
+> costs 0.15, and it was verified on five fall runs the calibration never saw,
+> driven through the real `DriveLayer`: **median cost 0.162, seed range
+> 0.116–0.218, all three seeds inside the pre-registered [0.10, 0.20] band.**
+> This is the one clause of PS.01 that passed outright. A fall from the
+> platform now costs something, measured through the shipped integrator rather
+> than through the arithmetic that produced the constant.
 
 > **`J_t` was DECIDED BY BAKEOFF, not by this document** (`PS.01/J`, `PS.01/J2`,
 > 2026-08-10 — `docs/DECISIONS_RESOLVED.md`, `experiments/bakeoffs/ps01_impulse*.py`).
@@ -382,6 +398,37 @@ energy per second; basal drain is `1.67e-3`. **Subsistence on the floor is
 possible and activity on the floor is not.** He does not have to climb to
 survive; he has to climb to be able to *do* anything. That is the difference
 between a survival treadmill and a purpose, and it is a number, not a story.
+
+> **REFUTED AS DYNAMICS, 2026-08-10 (PS.01, ledger FAIL).** The arithmetic
+> above is true and it does not do what this section claims it does. Measured
+> over 3,000 decisions (600 simulated seconds), three seeds, random policy vs
+> do-nothing policy in the same world:
+>
+> | | statue | random policy |
+> |---|---|---|
+> | mean mechanical power | 0 W | **293 W** |
+> | drain rate | 1.67e-3 /s (basal) | **6.57e-3 /s (3.9× basal)** |
+> | fraction of the life at rest | 0.996 | **3.6e-5** |
+> | energy at the end of 600 s | 4.4e-14 — reaches the floor exactly at the horizon | **0 from t ≈ 90 s, 84.8% of the life** |
+> | food eaten | 0 | 0.67 items |
+>
+> **The statue outlives the actor**, which is the exact inverse of the clause
+> PS.01 pre-registered ("the do-nothing policy is strictly dominated: its
+> energy reaches the weakness floor while an active random policy's does not").
+> The error is not in κ — 293 W producing 3.9× basal is what κ was chosen to
+> do — and not in the supply arithmetic. It is that the arithmetic compares
+> floor supply against **basal**, while nothing in a life is ever at basal: a
+> random policy rests for 0.004% of it. Against the drain an *acting* body
+> actually pays, floor food is 3.7× short, so acting always starves and the
+> dark room wins on energy. §5's G-B worried about this in the abstract; this
+> is it, measured, at the parameterisation this document proposes.
+>
+> This kills the numbers, not the idea — which is exactly the scope PS.01's
+> `kills` field claims. The repair is a re-derivation of `(b, ν, respawn)`
+> against the ACTIVE drain rather than basal, with the criterion stated before
+> the search and verified on held-out seeds, in the shape that worked for `α`
+> above. It is pre-registered in `LOOP_JOURNAL.md` (2026-08-10) and is NOT to
+> be done by adjusting constants until PS.01 turns green.
 
 **Declare the cost of this honestly.** Putting nutrition on the platform is a far
 stronger environmental hint than an inert apple. It converts the Ladder Test's

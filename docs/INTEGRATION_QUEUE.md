@@ -264,3 +264,52 @@ is the natural sealer; a blind agent is the fallback.
 | OWNER DECISION: the owner's hands (no doc yet — empty-queue rule applies) | SO-family: provisioning channel (drop-in objects), provenance into the diary ("who left this"), anti-puppeteering limits | PENDING — approved by owner 2026-08-09; needs its research pass then specs. OWNER 2026-08-09: visualisation of needs (hunger bars, spectating) is deliberately LATE — it is a pure read layer, zero science cost. But the camera rolls from day one: NE.* implementation must log needs telemetry (a few floats/step) from the FIRST needful life, so any later viewer can replay any life. Recording is nearly free; retrofitting history is impossible |
 | UNIFIED_BRAIN_BAKEOFF.md | PG.6–7, UB.9–16 | REGISTERED a3129b2 2026-08-09 |
 | MEMORY_RETRIEVAL_BAKEOFF.md | ME.11.0, ME.11.A–F | REGISTERED 0c1ff06 (ME.11.0 PASSING) |
+
+## FROM A FAILED RUN, not from research — PS.01's integrity clause needs its own probe (2026-08-10)
+
+**Scar:** PS.01 ran and FAILED (`experiments/ledger.json`, 2026-08-10). Two of
+its four clauses failed for reasons that are about the PROBE, not the mechanism.
+`spread_i` measured **2.4e-5** against a 0.30 gate — while the *same* integrator,
+on the *same* seeds, scored a platform fall at **0.162** integrity, held out and
+inside its pre-registered [0.10, 0.20] band. A random policy never climbs (so it
+never falls from height: 203 contact onsets, 1.3 above `J₀`) and never holds
+still (rest fraction 3.6e-5, so the healing term never fires). Both terms of the
+integrity equation are unreachable from the probe the spec gates on.
+
+This is the T1.02 situation exactly: a spec whose threshold is right and whose
+*experiment* cannot test it. T1.02's precedent governs — **strengthen only, the
+old version stays in the ledger's history**, and the redesign gets registered
+through this queue rather than edited into the registry in place.
+
+**Draft, to be cross-checked (step 1) against `NEEDS_AND_DEATH`,
+`CURIOSITY_BAKEOFF`, `LEARNING_CORE` and `LESSONS.md` before registering:**
+
+    Spec("PS.02", 2, "Integrity has a usable range under a probe that can reach it",
+         hypothesis="Over a MIXED probe — random-policy lives interleaved with "
+                    "drop-spawn lives at the platform height PS.01 already "
+                    "implements — integrity's p90-p10 spread is >= 0.30, and "
+                    "the spread is carried by falls and by rest, not by one "
+                    "outlier: >= 5 damaging onsets and rest_frac >= 0.05 per "
+                    "life.",
+         falsified_by="Range still < 0.30 with the events present. Then the "
+                      "healing/damage constants are wrong, not the probe, and "
+                      "rho and alpha go back to calibration.",
+         null_baseline="The drive integrator disabled on the same rollout — "
+                       "PS.01's null, which already reads 0.0.",
+         metric="integrity_dynamic_range", budget=Budget.CPU, seeds=3,
+         depends_on=["PS.01"],
+         control="The random-only probe PS.01 used, which MUST still measure "
+                 "~0. If the mixed probe and the random probe agree, the "
+                 "redesign changed nothing and PS.01's reading stands.",
+         kills="The claim that integrity is a live drive at this "
+               "parameterisation. It cannot kill the channel — PS.01/J2 "
+               "measured that at 0.973 AUC.")
+
+**And the required event counts are the point.** PS.01's record already carries
+`n_onsets`, `n_damaging` and `rest_frac` for exactly this reason (LESSONS.md,
+"a probe policy that cannot produce the event cannot measure the variable"). Any
+successor spec that gates a variable's RANGE must state, next to the threshold,
+which events move it and how many the run must contain.
+
+**Do NOT register this until PS.01's energy clause is re-derived (a) —** the
+two share a rollout, and re-running the probe twice is the avoidable cost.
