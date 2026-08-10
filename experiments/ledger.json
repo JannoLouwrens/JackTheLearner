@@ -1952,8 +1952,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 14,
-      "commit": "2cd0289",
+      "attempt": 15,
+      "commit": "1dff040",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -1975,7 +1975,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.43,
+      "duration_s": 1.51,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2055,6 +2055,12 @@
           "message": "",
           "ran_at": "2026-08-10T01:14:24",
           "status": "PASS"
+        },
+        {
+          "commit": "2cd0289",
+          "message": "",
+          "ran_at": "2026-08-10T02:14:47",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2062,7 +2068,7 @@
       "metrics": {
         "disarmed_conjunct_keys": 0,
         "disarmed_detail": "",
-        "gates_scanned": 55,
+        "gates_scanned": 56,
         "hazard_detail": "",
         "inert_gate_keys": 1,
         "precedence_hazards": 0,
@@ -2080,7 +2086,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-10T02:14:47",
+      "ran_at": "2026-08-10T04:19:47",
       "seeds": [
         0
       ],
@@ -2330,6 +2336,55 @@
         0
       ],
       "spec_id": "T0.18",
+      "status": "PASS"
+    },
+    "T0.19": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "1dff040",
+      "control_metrics": {
+        "failed_names": "p1_one_finisher_voids,p2_round1_void_both_modes",
+        "p1_one_finisher_voids": 0.0,
+        "p2_round1_void_both_modes": 0.0,
+        "p3_validity_unchanged": 1.0,
+        "p4_two_finishers_decide": 1.0,
+        "p5_winner_cleared_gate": 1.0,
+        "p6_escaped_control_still_voids": 1.0,
+        "p7_undeclared_mode_refused": 1.0,
+        "properties_checked": 7.0,
+        "properties_failed": 2.0,
+        "raised": "p1_one_finisher_voids:IndexError,p2_round1_void_both_modes:IndexError"
+      },
+      "duration_s": 0.01,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "1dff040",
+          "message": "IndexError: list index out of range",
+          "ran_at": "2026-08-10T04:18:11",
+          "status": "ERROR"
+        }
+      ],
+      "impl_sha": "5f428312d22152f0",
+      "message": "",
+      "metrics": {
+        "failed_names": "none",
+        "p1_one_finisher_voids": 1.0,
+        "p2_round1_void_both_modes": 1.0,
+        "p3_validity_unchanged": 1.0,
+        "p4_two_finishers_decide": 1.0,
+        "p5_winner_cleared_gate": 1.0,
+        "p6_escaped_control_still_voids": 1.0,
+        "p7_undeclared_mode_refused": 1.0,
+        "properties_checked": 7.0,
+        "properties_failed": 0.0,
+        "raised": "none"
+      },
+      "ran_at": "2026-08-10T04:19:02",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.19",
       "status": "PASS"
     },
     "T1.01": {

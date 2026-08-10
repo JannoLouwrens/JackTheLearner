@@ -98,6 +98,28 @@ class Spec:
     """What we delete or abandon if this fails. Forces the cost of failure to be
     decided before the result is known."""
     notes: str = ""
+    gate_mode: str = "validity"
+    """How `run_bakeoff` reads an arm that misses the learning gate.
+
+    `validity` (default, and the T2.02 rule): a missing arm VOIDs the bakeoff,
+    because a LEARNER that did not learn cannot be told apart from a learner
+    that is worse, so it cannot arbitrate anything.
+
+    `screen`: a missing arm is ELIMINATED and the survivors still compete. Only
+    legitimate when the arms are OBSERVABLES rather than learners — a
+    deterministic function of shared, already-collected data, where a low score
+    is a property of the arm and not evidence that its run was broken. It is
+    NOT a weaker gate: the gate is unchanged, at least `bakeoff.MIN_FINISHERS`
+    arms must still clear it, and controls still invert the verdict.
+
+    It lives on the Spec, not on the `run_bakeoff` call, on purpose: the mode
+    is a pre-registration, and a caller that could pass it as an argument could
+    change it after seeing a VOID. (The LC.01 rule — the artifact names what it
+    is, never the auditor.)"""
+    screen_rationale: Optional[str] = None
+    """REQUIRED when `gate_mode == "screen"`: why these arms are observables and
+    not learners. Recorded verbatim in `docs/DECISIONS_RESOLVED.md`, so the
+    justification is re-readable next to the verdict it permitted."""
 
 
 @dataclass

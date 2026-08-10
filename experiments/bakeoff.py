@@ -34,6 +34,33 @@ WHAT A BAKEOFF MAY NOT DO: it may not choose its own metric after seeing the
 data, drop an arm that embarrasses it, or re-run until an arm wins. The metric,
 the arms, the gate and the margin live in the Spec, which is committed before
 the run.
+
+  4. THE GATE HAS TWO READINGS, AND THE SPEC PICKS ONE (`Spec.gate_mode`).
+     Property 1 assumes the arms are LEARNERS. The first real bakeoff run here
+     (`bakeoffs/ps01_impulse.py`) had arms that were OBSERVABLES — four
+     candidate impact channels, each a deterministic function of the same
+     shared rollouts. Three could not separate a fall from a collapse, which
+     IS the finding the bakeoff existed to produce, and the gate VOIDed it. A
+     "which observable carries the bit" question is VOID by construction under
+     `validity`, forever, because the sanctioned repair (add arms, remove
+     none) can only add more failures.
+
+     The distinction is not convenience. A learner that misses the gate is
+     ambiguous — broken run or worse architecture, and you cannot tell which,
+     so it must not arbitrate. An observable that misses the gate is not
+     ambiguous: there was no training to break, every arm read the same
+     physics, and a low score is the arm's own property. So `screen` ELIMINATES
+     it and lets the survivors compete.
+
+     Four things keep `screen` from being a loophole, and they are the point:
+     the gate itself is unchanged; at least `MIN_FINISHERS` (2) arms must clear
+     it, so "a race with one runner" still VOIDs; controls still invert the
+     verdict; and the mode plus its rationale live on the committed Spec, not
+     on this call, so it cannot be switched on after seeing a VOID.
+
+     The check that this was not reverse-engineered: `screen` does NOT change
+     the verdict of the run that motivated it. Round 1 had exactly one finisher
+     (`peak_dvel`, 5.99 sigma) and stays VOID under both modes.
 """
 from __future__ import annotations
 
@@ -46,6 +73,14 @@ from typing import Callable, Dict, List, Optional
 from .protocol import Ledger, Result, Spec, Status
 
 DECISIONS = Path(__file__).parent.parent / "docs" / "DECISIONS_RESOLVED.md"
+
+MIN_FINISHERS = 2
+"""How many arms must clear the gate before `screen` mode may crown anything.
+
+Two, because `run_bakeoff` already refuses a single-arm bakeoff at the door
+("one arm is just a test"), and an arm set that has been screened down to one
+survivor is the same object: a race with one runner. Eliminating three of four
+and declaring the fourth the winner would be a measurement of nothing."""
 
 
 @dataclass
@@ -89,11 +124,13 @@ class BakeoffResult:
     null_std: float
     reason: str
     metric: str = ""
+    gate_mode: str = "validity"
 
     def to_metrics(self) -> Dict[str, float | str]:
         m: Dict[str, float | str] = {
             "verdict": self.verdict,
             "winner": self.winner or "none",
+            "gate_mode": self.gate_mode,
             "reason": self.reason,
             "null_mean": round(self.null_mean, 4),
             "null_std": round(self.null_std, 4),
@@ -145,6 +182,15 @@ def run_bakeoff(spec: Spec,
     clash = {a.name for a in arms} & {c.name for c in controls}
     if clash:
         raise ValueError(f"{clash} declared as both arm and control")
+    gate_mode = getattr(spec, "gate_mode", "validity")
+    if gate_mode not in ("validity", "screen"):
+        raise ValueError(f"Spec.gate_mode must be 'validity' or 'screen', "
+                         f"not {gate_mode!r}")
+    if gate_mode == "screen" and not (spec.screen_rationale or "").strip():
+        # The mode is only defensible for observables, so the spec has to say
+        # why these arms are observables — in the record, next to the verdict.
+        raise ValueError("Spec.gate_mode='screen' requires Spec.screen_rationale: "
+                         "state why these arms are observables and not learners.")
 
     null_scores = [float(null_run(s)) for s in seeds]
     null_mean = st.mean(null_scores)
@@ -187,15 +233,34 @@ def run_bakeoff(spec: Spec,
             spec.metric), ledger, decisions_path)
 
     failed = [a.name for a in results if not a.passed_gate]
-    if failed:
+    competing = results
+    screened_note = ""
+    if failed and gate_mode == "validity":
         # See property 1 above. This is the whole point of the module.
         return _finish(spec, BakeoffResult(
             spec.id, "VOID", None, results + control_results, null_mean, null_std,
             f"arms below the {learning_gate_sigma}-sigma learning gate: "
             f"{', '.join(failed)}. An arm that has not demonstrably learned "
             f"cannot arbitrate the decision.", spec.metric), ledger, decisions_path)
+    if gate_mode == "screen":
+        # Property 4. The gate is unchanged; what changes is that a missed gate
+        # eliminates an OBSERVABLE instead of invalidating the run.
+        competing = [a for a in results if a.passed_gate]
+        if len(competing) < MIN_FINISHERS:
+            return _finish(spec, BakeoffResult(
+                spec.id, "VOID", None, results + control_results, null_mean,
+                null_std,
+                f"screen: only {len(competing)} arm(s) cleared the "
+                f"{learning_gate_sigma}-sigma gate "
+                f"({', '.join(a.name for a in competing) or 'none'}); "
+                f"{MIN_FINISHERS} are needed. Eliminated: {', '.join(failed)}. "
+                f"A field screened down to one survivor is a race with one "
+                f"runner, which this module refuses at the door.",
+                spec.metric), ledger, decisions_path)
+        screened_note = (f" Eliminated by the gate (not competing): "
+                         f"{', '.join(failed)}." if failed else "")
 
-    ranked = sorted(results, key=lambda a: a.mean, reverse=higher_is_better)
+    ranked = sorted(competing, key=lambda a: a.mean, reverse=higher_is_better)
     best, second = ranked[0], ranked[1]
     unit = max(best.std, second.std, null_std, 1e-9)
     gap = abs(best.mean - second.mean) / unit
@@ -221,16 +286,18 @@ def run_bakeoff(spec: Spec,
             f"{best.name} leads {second.name} by only {gap:.2f} sigma "
             f"(margin {margin_sigma}). The choice does not matter yet; "
             f"taking the cheapest tied arm ({cheapest.name}, cost "
-            f"{cheapest.cost:g}).", spec.metric), ledger, decisions_path)
+            f"{cheapest.cost:g}).{screened_note}", spec.metric), ledger, decisions_path)
 
     return _finish(spec, BakeoffResult(
         spec.id, "WINNER", best.name, results + control_results, null_mean, null_std,
         f"{best.name} beats {second.name} by {gap:.2f} sigma and clears the "
-        f"null by {best.sigma_over_null:.2f} sigma.", spec.metric), ledger, decisions_path)
+        f"null by {best.sigma_over_null:.2f} sigma.{screened_note}",
+        spec.metric), ledger, decisions_path)
 
 
 def _finish(spec: Spec, res: BakeoffResult, ledger: Optional[Ledger],
             decisions_path: Optional[Path] = None) -> BakeoffResult:
+    res.gate_mode = getattr(spec, "gate_mode", "validity")
     if ledger is not None:
         # VOID maps to Status.VOID, never FAIL. A bakeoff that could not
         # arbitrate has NOT refuted anything, and specs carry a `kills` field:
@@ -245,11 +312,13 @@ def _finish(spec: Spec, res: BakeoffResult, ledger: Optional[Ledger],
             ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"),
             **Result.env_stamp(),   # commit + hardware: an unattributable
         ))                          # result defeats the overseer's own audit
-    _append_decision(res, decisions_path)
+    _append_decision(res, decisions_path,
+                     rationale=getattr(spec, "screen_rationale", None))
     return res
 
 
-def _append_decision(res: BakeoffResult, path: Optional[Path] = None) -> None:
+def _append_decision(res: BakeoffResult, path: Optional[Path] = None,
+                     rationale: Optional[str] = None) -> None:
     """Write the decision — losers included — so it can be re-opened later.
 
     `path` exists because this function used to hard-code the real record, so
@@ -272,9 +341,14 @@ def _append_decision(res: BakeoffResult, path: Optional[Path] = None) -> None:
              + (f" — {res.winner}" if res.winner else ""),
              f"\n{res.reason}\n",
              f"\nmetric: `{res.metric}`  ·  null {res.null_mean:.3f} "
-             f"± {res.null_std:.3f}\n",
-             "\n| arm | mean | sigma over null | gate | cost |",
-             "\n|---|---|---|---|---|"]
+             f"± {res.null_std:.3f}  ·  gate mode: `{res.gate_mode}`\n"]
+    if res.gate_mode == "screen":
+        # The rationale is what makes `screen` legitimate, so it is stored with
+        # the verdict it permitted rather than only in the spec that claimed it.
+        lines.append(f"\n> **screen rationale** (why these arms are observables, "
+                     f"not learners): {rationale}\n")
+    lines += ["\n| arm | mean | sigma over null | gate | cost |",
+              "\n|---|---|---|---|---|"]
     for a in sorted(res.arms, key=lambda x: x.mean, reverse=True):
         lines.append(f"\n| {a.name} | {a.mean:.3f} | {a.sigma_over_null:.2f} | "
                      f"{'pass' if a.passed_gate else 'FAIL'} | "

@@ -227,6 +227,47 @@ EXPANSION: list[Spec] = [
                "which runs the fixture first and refuses to report a clean "
                "scan it may not have performed."),
 
+    Spec("T0.19", 0, "The bakeoff's `screen` gate eliminates arms without lowering the bar",
+         hypothesis="Under `Spec.gate_mode='screen'` an arm below the 3-sigma "
+                    "learning gate is ELIMINATED rather than VOIDing the run, "
+                    "and every guard that makes that safe holds: two survivors "
+                    "are still required, the winner still cleared 3 sigma, the "
+                    "eliminated arms are still recorded, an escaped control "
+                    "still inverts the verdict to VOID, `validity` behaves "
+                    "exactly as before, and the mode is refused without a "
+                    "written rationale on the committed Spec.",
+         falsified_by="Any of the seven properties failing — above all P2: if "
+                      "`screen` changes the verdict of PS.01/J round 1, the "
+                      "mode was reverse-engineered to rescue the run that "
+                      "motivated it and must be reverted.",
+         null_baseline="The pre-2026-08-10 module: one reading of the gate, so "
+                       "any 'which observable carries the bit' bakeoff was VOID "
+                       "by construction and no such decision could ever be "
+                       "made. Round 1 of PS.01/J is that null, and its per-seed "
+                       "AUCs are the fixture.",
+         metric="properties_failed", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.13"],
+         control="The pre-guard machinery kept as executable code: "
+                 "`MIN_FINISHERS = 1`, i.e. crown the best survivor however few "
+                 "survived — the version a hurried author writes, and the one "
+                 "that WOULD have rescued round 1. The same battery must break "
+                 "on exactly P1 and P2 under it. A tidied restatement would "
+                 "pass while the shipped path stayed broken (T0.08 property 5, "
+                 "T0.16).",
+         kills="`Spec.gate_mode='screen'` itself. If the battery cannot be made "
+               "to pass, the mode is deleted and detector bakeoffs go back to "
+               "escalating to the owner instead.",
+         notes="SCAR: `experiments/bakeoffs/ps01_impulse.py` round 1, "
+               "2026-08-10 — the first real bakeoff this project ran, VOID "
+               "because three of four impact CHANNELS could not separate a "
+               "fall, which is the finding it existed to produce. The T2.02 "
+               "gate assumes arms are LEARNERS, where a missed gate cannot be "
+               "told from a broken run; an observable has no run to break. "
+               "Same shape as `controls=`, which the curiosity bakeoff forced: "
+               "when a framework's validity check and a design's intent point "
+               "opposite ways, the framework is missing a category. This spec "
+               "is the price of adding one."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "
