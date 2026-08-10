@@ -578,3 +578,97 @@ loop can proceed WITHOUT owner action, at a cost worth knowing:
 **Recommendation:** install the package; take the fallback only if the install
 is unwanted. Either way PG.6 should not sit NOT_RUN — it is 7 specs and the
 entire unison ladder, and 0 of 37 unison specs currently pass.
+
+---
+
+## D1 — THE OPTION SET IS STALE: option A contradicts the PLASTIC-ONLY decree (raised by the overseer, 2026-08-10)
+
+**Ask:** one line reconciling D1's menu with your own decree. This is *not* a
+request to decide D1 — the evidence behind it is still confounded and still
+needs the re-run that D3 gates. It is a request to stop offering an option you
+have already ruled out.
+
+**Evidence.**
+
+1. `docs/DECISIONS_NEEDED.md:73` asks you to choose A/B/C/D and marks
+   **A. Freeze the trunk; small dedicated policy head does control** as
+   `RECOMMENDED`. Line 241, in the 2026-08-09 13:45 correction, reaffirms it:
+   *"Option A (freeze + small head) is still the recommendation."*
+
+2. At **2026-08-09 21:16** — eight hours later — you decreed (`eea7195`;
+   `GOAL.md:76`; `CHAMPIONS.md:83`): **PLASTIC ONLY. NO FROZEN COMPONENTS IN
+   JACK.** `CHAMPIONS.md:86-92` states the scope precisely: *"this governs
+   components INSIDE Jack — his encoders, his core, his fusion. It does NOT
+   touch the parent LLM… A frozen thing in his environment is not a frozen part
+   of him."*
+
+3. A frozen 57M trunk with a small trained head is a frozen component inside
+   Jack. **Option A is unconstitutional under the decree that postdates it.**
+
+4. `814ed89` ("Propagate the plastic-only decree everywhere it changes meaning")
+   swept `DECISIONS.md`, `scripts/ladder_prompt.md` and 9 registry specs — the
+   *answered* record. It did not reach the *open questions*. Two artefacts still
+   offer freezing as a live path:
+   - this file, line 73 (`A … RECOMMENDED`) and line 241;
+   - `docs/CHAMPIONS.md:64`, where the vacant Control-architecture seat lists
+     challengers as *"frozen-trunk+head vs tuned-PPO vs others"*.
+
+**Why this needs you rather than the loop.** SYSTEM.md does not let the loop
+edit an owner decision, and the reconciliation has a real fork in it that only
+you can pick:
+
+- **(i) Strike option A.** D1 becomes a choice between B (split trunks), C
+  (keep training end-to-end, which the 13:45 correction reclassified from
+  "refuted" to **UNTESTED**), and D (delete the transformer from the control
+  path). CHAMPIONS.md's challenger list for the D1 seat is corrected in the same
+  breath.
+- **(ii) Keep option A and narrow the decree.** Defensible — the decree's stated
+  reason is the reshaping gain of a frozen *sensory tower*, and a frozen
+  *control* trunk is arguably a different question. If that is what you meant,
+  it should be written into CHAMPIONS.md's SCOPE paragraph, because nothing
+  there currently distinguishes them.
+
+**Cost of leaving it.** Small but real and compounding: the next agent to read
+this file will design toward a recommendation the constitution forbids, and the
+PL.* bakeoff was already collapsed to a single arm on the strength of the decree
+(`CHAMPIONS.md:105-107`) — so the two documents are now instructing different
+work.
+
+*Raised without taking a side. Evidence gathered 2026-08-10 at `b809b6b`; full
+working in `docs/OVERSIGHT.md` §6.1.*
+
+## The senses you named as constitutional have no specs at all (raised by the overseer, 2026-08-10)
+
+**Ask:** a scope call — should the missing senses be REGISTERED now (cheap,
+makes them visible) even though building them is later work?
+
+**Evidence.** `GOAL.md:41-43`, your words of 2026-08-09, names the inventory:
+*"sight · hearing · touch · proprioception & balance · SMELL · TASTE · pain ·
+temperature · interoception … and VOICE — he must be able to make sound, not
+only receive it."* Grepping all **137** registered specs for
+`smell|olfact|taste|gustat|voice|vocal|pain|thermo|temperature|interocept|hunger|
+thirst|fatigue` returns **one** hit, and it is the word "voiced" describing a
+struck geom in PG.5's audio spec.
+
+    smell 0 · taste 0 · voice 0 · pain 0 · temperature 0 · interoception 1 (PS.01, NOT_RUN)
+
+`docs/CHAMPIONS.md:78-80` is honest — three seats read **"VACANT — sense not yet
+built"** and voice reads *"needs a spec"* — but no spec was ever written.
+
+**Why it is worse than a to-do.** A spec that is registered and blocked is
+visible to `run blocked`, `run next`, `run status` and the Review. A capability
+that was never registered is invisible to **every organ this system has**, and
+reads as completeness in all of them. `docs/LESSONS.md:783` recorded this exact
+blindness on 2026-08-09 and prescribed a guard ("at least one recurring audit
+must measure against a reference from OUTSIDE the project's own documents"); the
+guard was not built, and 30 hours later the hole is unchanged.
+
+**Recommendation, if you want one:** register all five, build **voice** first.
+GOAL.md calls it *"how a creature acts on other creatures"*; it gates the
+other-minds expansion (GEN.02/GEN.03) and emergent language; and a first
+falsifier is cheap on this box — he emits a sound whose parameters depend on his
+state, and a probe recovers the state from the sound above a shuffled-pairing
+null. PG.5 already ships the modal-resonator synthesis and PG.7 already ships
+the leak-control pattern to copy.
+
+*Full working in `docs/OVERSIGHT.md` §3.2.*

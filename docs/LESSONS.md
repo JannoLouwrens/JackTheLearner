@@ -1176,3 +1176,42 @@ something: an amendment can reach `VOID`, `SKIP` or `NOT_RUN`, never `PASS` or
 legitimate 5% stops being indistinguishable from forgery. Ledger-tested as T0.17,
 whose control is the `9b92d14` edit replayed verbatim: it must remain invisible
 to the same audit, or the detector is answering "amended" to everything.
+
+## The record can be re-judged without re-running anything, and nothing was doing it
+
+Every integrity check this project had ran *forward*: T0.13 perturbs a gate and
+verifies it still bites, `run stale` compares a test file's hash against the
+entry it produced, `impl_sha` catches an edited test. None of them re-judges the
+verdict itself. So the one failure that matters most — **a `_check` loosened
+after the run it certified, in a way that leaves the test file's other content
+plausible** — had no detector at all, and a `run stale` clean bill would coexist
+with it happily once the loosened test was itself committed.
+
+It costs nothing to close. The ledger stores each entry's `metrics` and
+`control_metrics`; the repo stores each spec's `_check`. Feeding the recorded
+numbers back through the committed function re-derives the verdict for free, on
+CPU, in seconds, with no experiment re-run:
+
+    for every PASS:  assert _check(entry.metrics, entry.control_metrics) is True
+
+Measured 2026-08-10 over 55 PASSes: 55 agree, 0 disagree, 0 unevaluable. And the
+same trick answers a second question no structural check can — **is the control
+load-bearing?** Re-evaluate with the control emptied and demand failure:
+
+    for every PASS:  assert _check(entry.metrics, {}) is not True   # 0/50 survived
+
+A spec can declare a control, run it, record its metrics and *still* never read
+them in the gate. Grepping for `_control` cannot see that; `control_metrics`
+being non-empty cannot see that. Only evaluating the gate without them can.
+
+**Rule:** a stored result plus a stored decision rule is a decision you can
+re-take at zero cost — so re-take it, routinely, over the whole record rather
+than the last entry. Any audit that only asks "did the code change?" is checking
+the provenance of a verdict it never re-derived. And whenever a check consumes
+two inputs, delete one and demand the answer changes: that is how you learn which
+of them the check was actually reading.
+
+(Queued as **T0.18** / `run verify` — see `docs/OVERSIGHT.md` FOR THE BUILDER 1.
+Prescribing this as advice rather than building it would repeat the failure in
+`LESSONS.md`'s own "periodically ask which specs are unreachable" entry, which
+was advice to humans and failed twice before it became `run blocked`.)
