@@ -2353,3 +2353,84 @@ tested three ways: modified -> `+dirty`, clean -> no flag, ledger-only-dirty ->
 no flag. **Two things this suggests for a later iteration:** `run stale` could
 list `+dirty` entries as a re-run queue, and `run verify` could treat a `+dirty`
 PASS as unverifiable rather than clean.
+
+---
+
+## 2026-08-10 12:50 — XL.00 PASSES; death and cross-life memory are certified, and the stale checker was lying about three of its seven names
+
+**The unit of work was XL.00, and it PASSED at attempt 4 — 1162.68 s, three
+seeds, `conjunction = 1.0`, all five positive controls firing on every seed.**
+The previous iteration repaired two things and committed them unrun; this ran
+them. Both repairs held. The drift control went 9 lives -> **15.67** and
+p = 8.9e-4 -> **1.99998e-05** against its 1e-3 gate (blind on 1 seed of 3 ->
+blind on none), and the `welded_block` pose fixture measured **-0.090 m, 90x**
+the 0.001 m tolerance on every seed. The claim itself: 13.67 lives per seed, all
+deaths by energy, `indep_p` = 0.448 and `trend_p` = 0.367 (both must EXCEED
+0.01 — the respawn does not know where he died and the world does not drift),
+`uniform_z` = 0.208 against a 4.0 bar, 613 legal spawns, and
+`diary_recall_crosses_death` = 1.0. The positive controls: at-death respawn
+p = 2.0e-5, biased sampler z = 572, immortal world 0 deaths, wiped diary 0 rows.
+
+**What it unblocks is the point.** XL.00 stops blocking 9 specs and
+**LC.03 is runnable for the first time** — the learning-core bakeoff, the
+priority-0 question of HOW JACK LEARNS. It now heads `run blocked` at frees 4 /
+blocks 7, second only to T2.01.
+
+**THE SECOND FINDING, and this run is what exposed it.** XL.00 re-ran clean and
+`run status` STILL called it stale, naming a hash the current code cannot
+produce. Cause: `impl_sha` had two implementations that disagreed. The writer
+(`protocol._impl_sha`) hashed the test file **plus** `IMPL_DEPS`; the reader
+(`run.stale_claims`) hashed the file **alone**. The `IMPL_DEPS` widening of
+74f8631 landed in the writer only, so **all twelve specs declaring `IMPL_DEPS`
+were flagged stale in perpetuity and no re-run could ever clear it** — a checker
+whose false positives survive the only action it recommends. Three of the seven
+names on the stale list were noise (XL.00, PG.6, PG.9 now clear correctly).
+It was already costing real work: *this file's own previous hand-off* queued an
+LC.02 re-run on its say-so, and that re-run would have re-flagged itself.
+
+The fix is a deletion rather than a sync: `protocol.impl_sha_of(path)` is now
+the only thing that knows what an `impl_sha` is and the writer calls it too;
+`impl_deps_of` reads the declaration statically, so the reader never imports
+mujoco to answer a question about bytes; and `_impl_sha` raises at write time if
+the static and runtime views of `IMPL_DEPS` ever disagree. Proven on the real
+case, not just the false positives: **LC.02 re-ran (142.09 s) and its flag
+cleared.** Genuine stale debt is down to 3 (PG.3, PG.8, PS.01).
+
+**The `+dirty` stamp from last iteration is now read by something.**
+`stale_claims` gained a third kind, DIRTY, printed above CHANGED because it is
+strictly worse — a CHANGED entry's code is recoverable from its commit, a DIRTY
+entry's never was. It fired on real entries within the hour: T0.13 and T0.17,
+re-run against an uncommitted `protocol.py`, were correctly flagged, and a
+clean-tree re-run cleared them. `_check_stale_detector` now plants one probe per
+bucket, plus a known-positive that would have caught the hash split outright —
+the scan must be able to SEE an `IMPL_DEPS` declaration somewhere in the ladder
+or it refuses to report at all. Every previously planted probe passed throughout
+the bug, because a test-file-only hash detects a test-file-only edit perfectly:
+the fixture exercised the mechanism and never touched the SCOPE it claimed.
+
+**A design note on `+dirty`, recorded so it is not re-litigated.** The stamp is
+taken once, before the seed loop, so edits made DURING a run are not flagged —
+I made some this iteration (`run.py`, `LESSONS.md`, neither in XL.00's import
+path or `IMPL_DEPS`, and XL.00's stamp is correctly clean). Flagging those would
+be a false positive on the ordinary case of an iteration doing unrelated work
+beside a long run, and this file already records what a diagnostic with false
+positives on healthy entries does to its reader. Leave it at t0.
+
+**Two lessons appended:** a flag nothing reads is a comment, not a signal; and
+two functions computing "the same" hash is a defect even while they agree.
+
+**NEXT ITERATION, in order.**
+1. **LC.03** — screening, the head of the learning-core bakeoff, runnable for
+   the first time. Read the standing warning BEFORE starting it: its declared
+   `cpu<2h` is wrong by ~10x against `LEARNING_CORE.md` §5.7 (19.8 core-hours
+   for 5 arms x 3 seeds) and there is no CPU budget label above `cpu<2h`. **That
+   escalation to DECISIONS_NEEDED is still unwritten and is worth an iteration
+   on its own** — it has now been carried by two hand-offs without being done.
+   Carry the owner's three guards (data-starved != non-learner; the convergence
+   check; the scale-transfer gate) into the run, not just into the reading.
+2. **UB.9 "Heard, not seen"** — tied with LC.03 at frees 4 / blocks 7, CPU, and
+   the gate on the entire unison ladder where 0 of 37 specs pass. PROGRESS.md
+   item 4 says read the N1 certificate pre-gate for UB.11 before running it.
+3. Genuine stale debt, now actually dischargeable: **PG.3, PG.8, PS.01**.
+4. Still true, still unowned: 44 entries predate `impl_sha` and cannot be
+   staleness-checked at all; each becomes verifiable on its next run.
