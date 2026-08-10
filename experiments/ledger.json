@@ -2261,8 +2261,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 17,
-      "commit": "92bade0+dirty",
+      "attempt": 18,
+      "commit": "1c58c3f",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -2284,7 +2284,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.54,
+      "duration_s": 1.52,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2382,6 +2382,12 @@
           "message": "",
           "ran_at": "2026-08-10T09:25:53",
           "status": "PASS"
+        },
+        {
+          "commit": "92bade0+dirty",
+          "message": "",
+          "ran_at": "2026-08-10T12:31:35",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2407,7 +2413,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-10T12:31:35",
+      "ran_at": "2026-08-10T12:32:29",
       "seeds": [
         0
       ],
@@ -2550,13 +2556,13 @@
     },
     "T0.17": {
       "amended": [],
-      "attempt": 3,
-      "commit": "92bade0+dirty",
+      "attempt": 4,
+      "commit": "1c58c3f",
       "control_metrics": {
         "detector_sees_amendment": false,
         "hand_edit_took_effect": true
       },
-      "duration_s": 1.31,
+      "duration_s": 1.32,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2569,6 +2575,12 @@
           "commit": "6c0fcd1",
           "message": "",
           "ran_at": "2026-08-10T00:12:07",
+          "status": "PASS"
+        },
+        {
+          "commit": "92bade0+dirty",
+          "message": "",
+          "ran_at": "2026-08-10T12:31:33",
           "status": "PASS"
         }
       ],
@@ -2583,7 +2595,7 @@
         "run_spec_leaves_amended_empty": true,
         "unknown_attempt_is_sticky": true
       },
-      "ran_at": "2026-08-10T12:31:33",
+      "ran_at": "2026-08-10T12:32:27",
       "seeds": [
         0
       ],
