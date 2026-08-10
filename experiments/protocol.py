@@ -172,13 +172,40 @@ class Result:
 
     @staticmethod
     def env_stamp() -> Dict[str, str]:
+        root = Path(__file__).parent.parent
         try:
             commit = subprocess.run(
                 ["git", "rev-parse", "--short", "HEAD"],
-                capture_output=True, text=True, cwd=Path(__file__).parent.parent, timeout=10,
+                capture_output=True, text=True, cwd=root, timeout=10,
             ).stdout.strip()
         except Exception:
             commit = "unknown"
+        # A COMMIT STAMP ASSUMES A CLEAN TREE, AND SAYS SO WHEN IT IS NOT.
+        # `ccd0e84` hoisted this stamp above the seed loop so a GPU entry names
+        # the code that RAN rather than whatever HEAD drifted to. That closed
+        # the drift; it did not close the other way the same sentence can be
+        # false. A spec run from a modified working tree executes HEAD *plus*
+        # uncommitted edits, and `rev-parse` cannot see the difference — which
+        # is the ordinary case for this loop, because a builder edits a test and
+        # runs it before committing. It happened on 2026-08-10: XL.00 attempt 3
+        # is stamped `1480126` and ran `1480126` plus a rewritten control gate.
+        # `impl_sha` catches it AFTERWARDS, once the file is committed and the
+        # hash no longer matches, but only for the one file it hashes and only
+        # in hindsight. Naming it at run time costs one subprocess.
+        # `ledger.json` is excluded on purpose: it is the runner's own output,
+        # not code, and it is legitimately dirty whenever a previous result is
+        # waiting to be committed.
+        try:
+            porcelain = subprocess.run(
+                ["git", "status", "--porcelain"],
+                capture_output=True, text=True, cwd=root, timeout=10,
+            ).stdout.splitlines()
+            dirty = [ln for ln in porcelain
+                     if ln[3:].strip() and not ln[3:].strip().endswith("ledger.json")]
+            if dirty and commit not in ("", "unknown"):
+                commit += "+dirty"
+        except Exception:
+            pass
         hw = f"{platform.machine()}/{platform.system()}"
         try:
             import torch
