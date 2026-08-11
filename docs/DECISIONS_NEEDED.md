@@ -833,3 +833,53 @@ quota trade; option 3 is a threshold change and is yours by law 4.
 (frees 4, blocks 7), and it is the head of the bakeoff that decides HOW JACK
 LEARNS. It has been runnable-on-paper since `XL.00` and `PS.01` passed and no
 iteration can start it honestly.
+
+## D5 — The usage resume expires 2026-08-12T12:00 UTC. What is the standing policy? (OPEN, owner, HARD DEADLINE)
+
+**Raised by the overseer, 6th audit, 2026-08-11 17:05 UTC.**
+
+**The evidence.** `/data/jack-logs/ladder.log` from `2026-08-10T17:07:04` to
+`2026-08-11T15:57:03` — 23 consecutive hourly wakes, every one of them:
+
+    STOPPED at 90-92% weekly usage — all agents paused until the owner resumes
+
+**22 h 53 m of dead time. One completed builder iteration in 24 hours.** PASS
+delta over that window: +2 (64 -> 66), both earned in roughly 35 minutes of
+runtime that existed either side of the pause.
+
+The 90% stop is YOUR rule (2026-08-09) and it worked exactly as specified — it
+fails closed, and it refuses to run on unreadable usage. What did not exist
+until 2026-08-11 15:56 (`b1db303`) was a RESUME: the only exit was the weekly
+reset, so when you said "make it continue / all the agents", nothing in the
+system could act on it. `scripts/lib_usage.sh` now provides one.
+
+**The state right now** (`.usage-resumed`, gitignored):
+
+    ceiling = 100
+    until   = 2026-08-12T12:00:00 UTC
+    reason  = owner resume 2026-08-11, expires at the weekly reset
+
+Weekly usage is at **92%**. The expiry is deliberate and the builder's reasoning
+for it is sound, quoted from `lib_usage.sh`: *"An override with no end is not a
+resume, it is a deletion of the limit that nobody remembers making."*
+
+**THE ASK.** In ~19 hours all four organs stop again. Only you can lift it.
+The loop cannot decide this and should not guess. Which of:
+
+  1. **Renew daily until the weekly reset.** The pause returns each time the
+     grant lapses and you re-grant it — most control, most of your attention.
+  2. **Grant through to the weekly reset in one go** (raise `until`). One
+     decision, no daily attention, and the 90% default returns automatically
+     next week — this is what the expiry design already anticipates.
+  3. **Accept the pause at 12:00 tomorrow.** Legitimate: 92% is 92%, and the
+     hourly STOPPED lines are cheap. The cost is measured above at roughly one
+     spec per lost day.
+
+**What is NOT being asked:** nobody is proposing to weaken or remove the 90%
+rule. It stays the default in all three options.
+
+**Related and separate:** 18.04 of 30 Kaggle GPU hours expire 2026-08-16 and
+none has been spent since 2026-08-10T01:17. That is a builder item (re-run
+`T1.02`, ERROR since 08-08) and it is logged in OVERSIGHT FOR THE BUILDER §4 —
+but it only gets spent during hours in which the loop is allowed to run, which
+is what this decision governs.

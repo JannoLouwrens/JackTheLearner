@@ -2239,3 +2239,52 @@ null that removes the INFORMATION (placebo channel, grey frame, disabled
 mechanism) over one that removes the ALIGNMENT (shuffled labels), and check any
 seed-averaged null per seed before believing it — an unstable null hides inside
 its own mean.
+
+## When a rule replaces an older one, find every place the OLD one is still spelled out
+
+`T0.22` retired `status == PASS` as the test for "may I use this ledger number".
+The replacement — `staleness_of`, reached through `protocol.borrow_metrics` —
+refuses on NOT PASS, DIRTY, UNVERIFIABLE, CHANGED, missing and non-numeric, and
+it was correctly unified with `run.stale_claims` in the same commit, on the
+explicit reasoning that *two functions computing "the same" rule is a defect
+even while they agree*. Two callers, one rule. Done properly.
+
+There was a third caller and it was not looked for. `run.py:590`, inside the
+blocker walk that `run next` and `run blocked` are built on:
+
+    for d in spec.depends_on:
+        if ledger.status(d) is Status.PASS:
+            continue
+
+Forty lines from the comment announcing that the rule is now CALLED rather than
+RESTATED, the same question is asked the old way — because it does not *look*
+like the same question. "Is this number usable?" and "is this dependency
+satisfied?" are different sentences about the same fact, and only one of them
+was on the list of things to fix.
+
+The instance: `XL.00` `depends_on` `PS.01` **and** now borrows `j0`/`alpha` from
+it. PS.01 is stale (definitionally — an `IMPL_DEPS` line added after its run).
+So `run next` offers XL.00 as runnable, and `borrow_metrics` VOIDs it the moment
+it runs. Two organs, both correct in isolation, disagreeing about whether one
+row is usable — and the disagreement is only visible from outside, because each
+organ is internally consistent. `LC.03` and `LC.04` sit behind the same pair.
+
+The shape is worth naming because the *good* version of the fix is what hides
+it. Unifying two known callers feels complete; it produces a commit that says
+"one rule, one implementation" and passes its own guard. The search that was
+skipped is the one that costs nothing and is easy to forget: **grep for the
+retired rule's syntax, not for the new rule's callers.** `Status.PASS` appears
+seven times in `run.py`; one of them was a survivor of the thing just deleted.
+
+**Rule:** retiring a rule is a two-sided job. Write the replacement AND run a
+mechanical search for the literal text of what it replaced — `status == PASS`,
+`== "PASS"`, `is Status.PASS` — then decide, for each hit, whether it is asking
+the retired question under a different name. Prefer to encode that search as a
+property in the guard spec (as `T0.22`'s P9 already does for direct
+`results.get("<spec id>")` lookups) so the next survivor is found by the ladder
+rather than by an auditor. A rule that has been replaced in the places you were
+thinking about is not replaced; it is forked.
+
+Corollary, from the same instance: `depends_on` is an edge between SPECS, but
+staleness is a fact about a ledger ROW. Any graph whose satisfaction test reads
+the ledger inherits every question the ledger's own freshness rules ask.
