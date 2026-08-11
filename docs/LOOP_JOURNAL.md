@@ -2900,3 +2900,52 @@ nothing), now declared and visibly blocked on a second Jack.
 **Also worth the next iteration's attention, unchanged from yesterday:** the
 Kaggle quota expires 2026-08-16 with nothing submitted, and `T1.02` is an ERROR
 from an infrastructure fault sitting at the top of `run next`.
+
+---
+
+## 2026-08-11 — the dependency graph learned to ask the freshness question, and PS.01 turned out to be the #2 blocker
+
+**Attempted, in priority order.** (1) `T1.02` submitted to GPU — the standing
+rule picks the cheapest runnable spec in a zero-pass GOAL.md commitment, ties
+to the commitment with the most declared specs, and that is `generality`
+(4 declared, 0 passing) whose cheapest runnable member is `T1.02` at
+`gpu<20min`. It was also Review §6 item 1 and OVERSIGHT item 4, third audit
+asking. Its ERROR was infrastructure (`colab: Session not found; kaggle: 0.0h
+left`), not a measurement; Kaggle now holds ~18 h expiring 2026-08-16.
+(2) `PS.01` re-run to clear its stale flag (OVERSIGHT item 3). (3) OVERSIGHT
+item 2, the dependency-freshness rule.
+
+**The measurement that mattered was not from a spec.** `run.py:590` still asked
+`ledger.status(d) is Status.PASS` — the rule `T0.22` retired on the borrow path
+— so dependency satisfaction and `borrow_metrics` disagreed about whether a row
+was usable. `Ledger.unsatisfied` is now the one definition and the walk calls
+it. Deciding WHICH staleness blocks was done by measuring, not arguing:
+refusing DIRTY/CHANGED moves the ladder from **29 runnable specs to 27**;
+refusing UNVERIFIABLE as well takes it to **7**, on 40 rows that are silent
+rather than contradicted. So UNVERIFIABLE passes the dependency path and
+refuses a borrow, and `T0.22` P11 pins that divergence in both directions.
+
+**What the ladder could not see before.** `run blocked` now prints
+`PS.01 = PASS but STALE  frees 8 (blocks 9)` as the second-largest blocker in
+the project and `PG.5 = PASS but STALE  frees 3 (blocks 7)` as the fourth.
+**`LC.03` was never runnable** — every hand-off for two days has called it "the
+biggest non-GPU unblock available" and it rests on two stale rows, `PS.01` and
+`XL.00`. `VO.01` has recorded two FAILs behind a `PG.5` certificate that ran
+from a modified tree. Neither was visible while the graph asked the old
+question.
+
+**Two things the fix broke and had to fix in turn**, both worth carrying:
+`_check_ranker`'s known-answer fixture fed the walk a duck-typed stub exposing
+`status()` alone, so it was structurally blind to the half of the rule that had
+just changed (now a real `Ledger` at a nonexistent path — prefer a real object
+with fake DATA over a fake object with the right METHODS); and `--gate` re-runs
+PASSes in `LADDER` order with `XL.00` five places after `PS.01`, which would
+have written BLOCKED over a legitimately earned PASS. `_dependency_order` is
+stable and cycle-safe: 66 specs, 0 ordering violations.
+
+**Next iteration, in this order.** `PG.5` is the cheapest unblock on the board
+— 11.45 s recorded duration, DIRTY, frees `VO.01`/`VO.02`/`DP.04`. Then `XL.00`
+(~19 min) which, with `PS.01` fresh, is the last thing between the ladder and
+`LC.03`'s eight dependents. Then `T0.20`, also DIRTY, at `cpu<1min`. Do not
+plan `LC.03` before both `PS.01` and `XL.00` read fresh in `run stale` — the
+runner will now refuse it by name and tell you why.

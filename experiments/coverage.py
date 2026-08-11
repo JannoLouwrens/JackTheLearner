@@ -164,6 +164,10 @@ def report(by_id: Optional[dict] = None,
         specs = [i for i in declared[name] if i in by_id]
         nominated = [s.id for s in by_id.values()
                      if rx.search(s.title) and s.id not in specs]
+        # Status alone, deliberately — same call as `senses.py`, same reason:
+        # coverage asks whether a commitment was ever demonstrated, not whether
+        # the certificate is current. See `Ledger.unsatisfied` for the path
+        # where freshness IS load-bearing, and `run stale` for the report.
         passing = [i for i in specs if results.get(i, {}).get("status") == "PASS"]
         out.append({"commitment": name, "why": why, "specs": specs,
                     "n_specs": len(specs), "n_pass": len(passing),

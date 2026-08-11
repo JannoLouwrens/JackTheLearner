@@ -218,6 +218,15 @@ def audit(by_id: Optional[Dict[str, object]] = None,
         cov.lb_missing = [sid for sid in sense.load_bearing if sid not in by_id]
         if ledger is not None:
             from .protocol import Status
+            # `status is Status.PASS` and nothing else, DELIBERATELY. This is
+            # the syntax `T0.22` retired on the borrow path and 2026-08-11
+            # retired on the dependency path, so it is the third hit of the
+            # grep that lesson prescribes — and here the weaker rule is the
+            # right one. Coverage asks "was this capability ever demonstrated",
+            # which a stale PASS still answers; a re-run pending is a fact about
+            # freshness and `run stale` is the organ that reports it. Counting
+            # coverage as zero because a file was edited would make this
+            # instrument swing on edits rather than on evidence.
             cov.passing = [sid for sid in cov.registered
                            if ledger.status(sid) is Status.PASS]
             cov.lb_passing = [sid for sid in sense.load_bearing
