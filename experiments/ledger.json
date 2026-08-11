@@ -1232,8 +1232,8 @@
     },
     "PG.5": {
       "amended": [],
-      "attempt": 3,
-      "commit": "9a387d4+dirty",
+      "attempt": 4,
+      "commit": "b2c3abc",
       "control_metrics": {
         "control_events_decoded": 9.0,
         "control_events_decoded_std": 0.0,
@@ -1242,7 +1242,7 @@
         "shuffled_accuracy": 0.148133,
         "shuffled_accuracy_std": 0.052373
       },
-      "duration_s": 11.45,
+      "duration_s": 11.39,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1255,6 +1255,12 @@
           "commit": "76ccc6c",
           "message": "",
           "ran_at": "2026-08-09T14:22:33",
+          "status": "PASS"
+        },
+        {
+          "commit": "9a387d4+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T17:26:06",
           "status": "PASS"
         }
       ],
@@ -1278,7 +1284,7 @@
         "spectral_match": 1.0,
         "spectral_match_std": 0.0
       },
-      "ran_at": "2026-08-11T17:26:06",
+      "ran_at": "2026-08-11T18:24:24",
       "seeds": [
         0,
         1,
@@ -1639,8 +1645,8 @@
     },
     "PS.01": {
       "amended": [],
-      "attempt": 3,
-      "commit": "248b160",
+      "attempt": 4,
+      "commit": "21d11d6",
       "control_metrics": {
         "acted_frac": 0.0,
         "acted_frac_std": 0.0,
@@ -1721,7 +1727,7 @@
         "w_max": 0.0,
         "w_max_std": 0.0
       },
-      "duration_s": 864.84,
+      "duration_s": 871.71,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1735,9 +1741,15 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-10T07:28:14",
           "status": "FAIL"
+        },
+        {
+          "commit": "248b160",
+          "message": "",
+          "ran_at": "2026-08-10T08:32:26",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "2cd686a317a01b39",
+      "impl_sha": "94735681c2c21360",
       "message": "",
       "metrics": {
         "acted_frac": 0.466667,
@@ -1859,7 +1871,7 @@
         "w_max": 0.0,
         "w_max_std": 0.0
       },
-      "ran_at": "2026-08-10T08:32:26",
+      "ran_at": "2026-08-11T18:23:41",
       "seeds": [
         0,
         1,
@@ -2966,8 +2978,8 @@
     },
     "T0.20": {
       "amended": [],
-      "attempt": 6,
-      "commit": "8306f4e+dirty",
+      "attempt": 7,
+      "commit": "b2c3abc",
       "control_metrics": {
         "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
         "inventory_size": 10.0,
@@ -2977,7 +2989,7 @@
         "senses_absent_live": 2.0,
         "senses_load_bearing_live": 0.0
       },
-      "duration_s": 1.74,
+      "duration_s": 1.71,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3009,6 +3021,12 @@
           "message": "",
           "ran_at": "2026-08-11T16:18:37",
           "status": "PASS"
+        },
+        {
+          "commit": "8306f4e+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T17:29:51",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d4d8cd17746bdd3b",
@@ -3022,7 +3040,7 @@
         "senses_absent_live": 2.0,
         "senses_load_bearing_live": 0.0
       },
-      "ran_at": "2026-08-11T17:29:51",
+      "ran_at": "2026-08-11T18:24:12",
       "seeds": [
         0
       ],
@@ -3092,17 +3110,17 @@
     },
     "T0.22": {
       "amended": [],
-      "attempt": 2,
-      "commit": "7494cd0",
+      "attempt": 3,
+      "commit": "b2c3abc",
       "control_metrics": {
         "direct_ledger_reads": 0.0,
-        "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly",
+        "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p12_graph_and_rule_agree_on_the_same_row",
         "offenders": "",
-        "properties_checked": 9.0,
-        "properties_failed": 5.0,
+        "properties_checked": 12.0,
+        "properties_failed": 8.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "duration_s": 1.33,
+      "duration_s": 1.45,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3110,19 +3128,25 @@
           "message": "",
           "ran_at": "2026-08-10T14:13:10",
           "status": "PASS"
+        },
+        {
+          "commit": "7494cd0",
+          "message": "",
+          "ran_at": "2026-08-10T15:26:53",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "8286fbef0fa6a166",
+      "impl_sha": "a96fdb021548a840",
       "message": "",
       "metrics": {
         "direct_ledger_reads": 0.0,
         "failed_names": "",
         "offenders": "",
-        "properties_checked": 9.0,
+        "properties_checked": 12.0,
         "properties_failed": 0.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "ran_at": "2026-08-10T15:26:53",
+      "ran_at": "2026-08-11T18:24:10",
       "seeds": [
         0
       ],
