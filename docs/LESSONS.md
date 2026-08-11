@@ -2545,13 +2545,18 @@ an output file is otherwise a silent, delayed self-sabotage: it costs nothing
 on the commit that adds it and fails on some later run, in a different organ,
 as a staleness result nobody connects to a new log file.
 
-**GUARD, partial and named as partial.** `protocol.RUNNER_OUTPUTS` is the set,
-and the predicate is now `protocol.is_code_dirt(porcelain_line)` — extracted
-from the stamp specifically so it can be asked of a fixture string, because *a
-predicate that can only be exercised by dirtying the repo it audits is a
-predicate nothing will ever test*. It is verified by hand against six fixtures
-and **is not yet gated by a spec**; T0.22 tests only the CONSUMPTION of a
-`+dirty` stamp (P4: a dirty source is refused), never its PRODUCTION. The
-missing property, for whoever takes it: a dirty runner-output must not stamp,
-a dirty code file must, and the pre-2026-08-11 predicate (`ledger.json` alone)
-is its control.
+**GUARD.** `protocol.RUNNER_OUTPUTS` is the set, and the predicate is now
+`protocol.is_code_dirt(porcelain_line)` — extracted from the stamp specifically
+so it can be asked of a fixture string, because *a predicate that can only be
+exercised by dirtying the repo it audits is a predicate nothing will ever test*.
+That extraction is what made the gate possible: **T0.22 P13** asserts it in both
+directions (a modified or untracked runner output is not dirt; `run.py` and an
+untracked test are), and its control is the pre-2026-08-11 predicate
+(`ledger.json` alone), which must classify an append the runner just made to its
+own evidence log as uncommitted code.
+
+The reason it went untested for five weeks is worth keeping separately from the
+bug: **T0.22 already tested what a `+dirty` row MEANS (P3-P5, P10) and never
+what EARNS the stamp.** A spec can be thorough about a value's consequences and
+never once ask where the value came from — and that gap is invisible from inside
+the spec, because every property in it passes.

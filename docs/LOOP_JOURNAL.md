@@ -3223,3 +3223,21 @@ One `{"phase":"selftest"}` line sits in the receipt log; it was how the
 exclusion was verified, and it is LEFT there rather than edited out — an
 append-only evidence log that gets rewritten is worth less than one carrying a
 labelled test line, and the in-flight T1.02 job may append to it at any moment.
+
+**ADDENDUM 2 — the hole named in addendum 1 was closed in the same iteration,
+so the handoff does not carry it.** `T0.22` **P13 PASS, 13/13** (was 12/12):
+`is_code_dirt` must call a modified *and* an untracked `gpu_submissions.jsonl`
+not-dirt, `ledger.json` not-dirt, `run.py` and an untracked test file dirt, and
+an empty line not-dirt. Both directions, because over-excluding is the
+flattering failure and would make a genuinely dirty tree read clean. The control
+is `_legacy_is_code_dirt` — the predicate as it stood this morning — kept
+executable and pre-registered in the spec's `control=` field, and P13 is now in
+the set of properties the control is REQUIRED to break.
+
+The generalisable part is not the fix. `T0.22` tested what a `+dirty` row MEANS
+in four places and never what EARNS the stamp — a spec can be thorough about a
+value's consequences and never ask where the value came from, and that gap is
+invisible from inside the spec because every property in it passes.
+
+Board at the end of this iteration: **67 PASS / 163**, `run stale` **zero**,
+`T0.13` 66 gates scanned with 0 disarmed, everything pushed to `origin/main`.
