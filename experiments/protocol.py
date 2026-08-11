@@ -36,6 +36,11 @@ from typing import Any, Callable, Dict, List, Optional
 
 LEDGER_PATH = Path(__file__).parent / "ledger.json"
 
+#: Files the RUNNER writes as it runs. A dirty working tree normally means "the
+#: code that ran is in no commit", but these are outputs, not code, so their
+#: being dirty says nothing about the code — see the `+dirty` stamp below.
+RUNNER_OUTPUTS = ("ledger.json", "gpu_submissions.jsonl")
+
 
 class Status(str, Enum):
     NOT_RUN = "NOT_RUN"      # default; never set by hand
@@ -192,16 +197,23 @@ class Result:
         # `impl_sha` catches it AFTERWARDS, once the file is committed and the
         # hash no longer matches, but only for the one file it hashes and only
         # in hindsight. Naming it at run time costs one subprocess.
-        # `ledger.json` is excluded on purpose: it is the runner's own output,
-        # not code, and it is legitimately dirty whenever a previous result is
-        # waiting to be committed.
+        # `RUNNER_OUTPUTS` are excluded on purpose: they are the runner's own
+        # output, not code, and they are legitimately dirty whenever a previous
+        # result is waiting to be committed. `gpu_submissions.jsonl` joined the
+        # set on 2026-08-11, the day it was first committed: it is APPEND-ONLY
+        # and written by `gpu.submit()` itself, so without this every spec run
+        # after any GPU dispatch would stamp `+dirty`, read as DIRTY in
+        # `run stale`, and BLOCK its dependents — an evidence log that
+        # invalidates the evidence. The rule the set encodes: a file the runner
+        # writes cannot be a file the runner audits itself against.
         try:
             porcelain = subprocess.run(
                 ["git", "status", "--porcelain"],
                 capture_output=True, text=True, cwd=root, timeout=10,
             ).stdout.splitlines()
             dirty = [ln for ln in porcelain
-                     if ln[3:].strip() and not ln[3:].strip().endswith("ledger.json")]
+                     if ln[3:].strip()
+                     and not any(ln[3:].strip().endswith(o) for o in RUNNER_OUTPUTS)]
             if dirty and commit not in ("", "unknown"):
                 commit += "+dirty"
         except Exception:
