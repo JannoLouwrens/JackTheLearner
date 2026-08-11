@@ -35,7 +35,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from ..protocol import (Ledger, Result, Status, borrow_metrics, impl_sha_of,
-                        module_path_for, run_spec)
+                        is_code_dirt, module_path_for, run_spec)
 from ..registry import BY_ID
 
 SPEC_ID = "T0.22"
@@ -122,7 +122,19 @@ def _dep_blocked(led: Ledger, rule_is_legacy: bool) -> bool:
                 else led.unsatisfied(spec))
 
 
-N_PROPERTIES = 12
+def _legacy_is_code_dirt(porcelain_line: str) -> bool:
+    """The `+dirty` predicate as it stood before 2026-08-11: `ledger.json` only.
+
+    Kept executable rather than described, for the T0.08/T0.16 reason — and it
+    is a real control here, not a decoy: on the day `gpu_submissions.jsonl` was
+    first committed, this version classified an append the runner had just made
+    to its own evidence log as "the code that ran is in no commit".
+    """
+    path = porcelain_line[3:].strip()
+    return bool(path) and not path.endswith("ledger.json")
+
+
+N_PROPERTIES = 13
 
 
 def _probe(rule_is_legacy: bool) -> dict:
@@ -238,6 +250,23 @@ def _probe(rule_is_legacy: bool) -> dict:
     if bool(graph.get(DEP_SPEC_ID)) != _dep_blocked(led, rule_is_legacy):
         failed.append("p12_graph_and_rule_agree_on_the_same_row")
 
+    # P13 — THE STAMP'S PRODUCTION SIDE. P3-P5 and P10 all ask what a `+dirty`
+    # or CHANGED row MEANS; nothing asked whether the stamp is applied to the
+    # right files in the first place, so every staleness verdict in this spec
+    # rested on an untested predicate. Widening T0.22 to cover it is deliberate:
+    # the borrow rule's inputs are this rule's outputs.
+    # A file the RUNNER WRITES is not evidence that CODE is uncommitted. Both
+    # directions, because the flattering one hides: over-excluding would make a
+    # genuinely dirty tree look clean.
+    dirt = _legacy_is_code_dirt if rule_is_legacy else is_code_dirt
+    if (dirt(" M experiments/gpu_submissions.jsonl")
+            or dirt("?? experiments/gpu_submissions.jsonl")
+            or dirt(" M experiments/ledger.json")
+            or not dirt(" M experiments/run.py")
+            or not dirt("?? experiments/tests/t9_99_not_a_real_test.py")
+            or dirt("")):
+        failed.append("p13_runner_output_is_not_code_dirt")
+
     return {
         "properties_checked": float(N_PROPERTIES),
         "properties_failed": float(len(failed)),
@@ -285,7 +314,10 @@ def _check(m: dict, c: dict) -> Status | bool:
                       # the same failure on the other organ, and the
                       # disagreement between them that hid it
                       "p10_stale_dependency_does_not_satisfy",
-                      "p12_graph_and_rule_agree_on_the_same_row"} <= control_names
+                      "p12_graph_and_rule_agree_on_the_same_row",
+                      # and the rule one level down, whose output every one of
+                      # the above consumes
+                      "p13_runner_output_is_not_code_dirt"} <= control_names
     return bool(experiment_clean and control_broken)
 
 

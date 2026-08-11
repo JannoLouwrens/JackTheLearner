@@ -349,7 +349,14 @@ EXPANSION: list[Spec] = [
                  "carried it until 2026-08-10. It must hand over the numbers "
                  "for all three stale fixtures (CHANGED, DIRTY, UNVERIFIABLE) "
                  "while the guard refuses them. A control that also refuses "
-                 "them is not a decoy and this spec measures nothing.",
+                 "them is not a decoy and this spec measures nothing. "
+                 "WIDENED 2026-08-11 (P13): the control also carries the "
+                 "pre-2026-08-11 `+dirty` predicate (`ledger.json` alone), "
+                 "which must classify an append the runner just made to its "
+                 "own evidence log as uncommitted CODE. The borrow rule's "
+                 "inputs are that predicate's outputs, so a spec that tests "
+                 "what a DIRTY row MEANS and never tests which files earn the "
+                 "stamp is resting on an unmeasured foundation.",
          kills="`borrow_metrics` as a guard anyone may rely on, and with it the "
                "claim that XL.00 and the LC family compute in the world PS.01 "
                "measured rather than in some earlier one.",

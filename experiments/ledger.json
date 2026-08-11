@@ -3144,17 +3144,17 @@
     },
     "T0.22": {
       "amended": [],
-      "attempt": 4,
-      "commit": "c2b2f43+dirty",
+      "attempt": 5,
+      "commit": "056ab27+dirty",
       "control_metrics": {
         "direct_ledger_reads": 0.0,
-        "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p12_graph_and_rule_agree_on_the_same_row",
+        "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt",
         "offenders": "",
-        "properties_checked": 12.0,
-        "properties_failed": 8.0,
+        "properties_checked": 13.0,
+        "properties_failed": 9.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "duration_s": 1.44,
+      "duration_s": 1.46,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3174,19 +3174,25 @@
           "message": "",
           "ran_at": "2026-08-11T18:24:10",
           "status": "PASS"
+        },
+        {
+          "commit": "c2b2f43+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T20:23:49",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "a96fdb021548a840",
+      "impl_sha": "f28acc9fce6d8b91",
       "message": "",
       "metrics": {
         "direct_ledger_reads": 0.0,
         "failed_names": "",
         "offenders": "",
-        "properties_checked": 12.0,
+        "properties_checked": 13.0,
         "properties_failed": 0.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "ran_at": "2026-08-11T20:23:49",
+      "ran_at": "2026-08-11T20:25:30",
       "seeds": [
         0
       ],
