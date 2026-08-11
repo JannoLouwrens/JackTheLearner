@@ -412,6 +412,46 @@ EXPANSION: list[Spec] = [
                "opposite ways, the framework is missing a category. This spec "
                "is the price of adding one."),
 
+    Spec("T0.23", 0, "A mistyped command cannot spend the GPU budget",
+         hypothesis="An argv containing any token the runner does not "
+                    "recognise is REFUSED whole — non-zero exit, and no spec "
+                    "dispatched, not even the ones it did recognise — while "
+                    "every well-formed argv (a read-only command, a bare spec "
+                    "id) behaves exactly as before.",
+         falsified_by="The runner reaching `cmd_run` for a spec named beside "
+                      "an unrecognised token, or the guard refusing an argv "
+                      "that was always legal.",
+         null_baseline="The dispatch as it stood before 2026-08-11: unknown "
+                       "tokens printed `unknown spec <x>` and the recognised "
+                       "specs RAN. Replayed verbatim as the control, it must "
+                       "reach the spec on the same argv this gate refuses.",
+         metric="properties_failed", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.01"],
+         control="THE PRE-GUARD DISPATCH, kept executable: `cmd_run(ledger, "
+                 "argv)` on the same malformed argv — which is literally the "
+                 "line `main()` used to end on. It MUST reach the spec. A "
+                 "control that also refuses would mean the fixture argv is "
+                 "harmless and this spec measures nothing.",
+         kills="The claim that reading `experiments.run`'s output tells you "
+               "what it did. If a token can be ignored, the command you typed "
+               "and the command that ran are different commands.",
+         notes="SCAR, 2026-08-11 20:08 UTC, made by the builder in this "
+               "iteration and caught 3 minutes later by an orphaned PID: "
+               "`python -m experiments.run show T1.02` — a subcommand that "
+               "does not exist — printed `unknown spec show` and then "
+               "SUBMITTED T1.02 to Colab, spending free-tier GPU quota that "
+               "no one asked for. The typo is not the interesting part; the "
+               "shape is. Between `cmd_run` and `gpu.submit()` there is no "
+               "further confirmation, so the runner's argv parser is the last "
+               "gate standing in front of the scarcest resource this project "
+               "has, and it was built to be forgiving. Forgiving is the wrong "
+               "setting for a spend. The fixture deliberately uses an "
+               "UNIMPLEMENTED cpu spec so the property under test — did "
+               "dispatch reach `cmd_run` — is observable without running or "
+               "charging anything; P0 fails loudly if that spec ever gains an "
+               "implementation, because a fixture that quietly starts doing "
+               "work is the same class of bug one level up."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "

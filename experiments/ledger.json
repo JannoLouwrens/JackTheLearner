@@ -2512,8 +2512,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 20,
-      "commit": "e39455b",
+      "attempt": 21,
+      "commit": "d0c8a6e+dirty",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -2535,7 +2535,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.56,
+      "duration_s": 1.53,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2651,6 +2651,12 @@
           "message": "",
           "ran_at": "2026-08-11T16:17:05",
           "status": "PASS"
+        },
+        {
+          "commit": "e39455b",
+          "message": "",
+          "ran_at": "2026-08-11T16:18:40",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2658,7 +2664,7 @@
       "metrics": {
         "disarmed_conjunct_keys": 0,
         "disarmed_detail": "",
-        "gates_scanned": 65,
+        "gates_scanned": 66,
         "hazard_detail": "",
         "inert_gate_keys": 1,
         "precedence_hazards": 0,
@@ -2676,7 +2682,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-11T16:18:40",
+      "ran_at": "2026-08-11T20:18:37",
       "seeds": [
         0
       ],
@@ -3173,6 +3179,52 @@
         0
       ],
       "spec_id": "T0.22",
+      "status": "PASS"
+    },
+    "T0.23": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "d0c8a6e+dirty",
+      "control_metrics": {
+        "prefix_rc": 1,
+        "prefix_reached_spec": true,
+        "prefix_saw_unknown_token": true
+      },
+      "duration_s": 5.7,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "d0c8a6e+dirty",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-11T20:16:15",
+          "status": "FAIL"
+        }
+      ],
+      "impl_sha": "cadd0d9f1ba388a0",
+      "message": "",
+      "metrics": {
+        "bad_argv_never_dispatched": true,
+        "bad_argv_refused": true,
+        "control_reached_spec": true,
+        "failed_properties": [],
+        "fixture_spec": "T6.02",
+        "fixture_unimplemented": true,
+        "good_argv_dispatched": false,
+        "good_argv_lock_skipped": true,
+        "good_argv_not_refused": true,
+        "mixed_argv_refused": true,
+        "properties_failed": 0,
+        "rc_bad": 2,
+        "rc_good": 0,
+        "rc_mixed": 2,
+        "rc_readonly": 0,
+        "readonly_still_works": true
+      },
+      "ran_at": "2026-08-11T20:17:29",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.23",
       "status": "PASS"
     },
     "T1.01": {

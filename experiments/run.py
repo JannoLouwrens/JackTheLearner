@@ -984,6 +984,15 @@ def cmd_render(ledger: Ledger) -> int:
     return 0
 
 
+#: The read-only sub-commands, named ONCE. They used to be a tuple in the
+#: dispatch test and a dict in the dispatch itself; a word present in one and
+#: absent from the other is how a command silently becomes "not a command".
+READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
+                      "blocked": cmd_blocked, "render": cmd_render,
+                      "stale": cmd_stale, "verify": cmd_verify,
+                      "senses": cmd_senses, "coverage": cmd_coverage}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("spec", nargs="*",
@@ -1002,14 +1011,21 @@ def main() -> int:
         return cmd_amend(ledger, args)
 
     # status/next/render are read-only and must not block on a running experiment.
-    if args.spec and args.spec[0] in ("status", "next", "blocked", "render",
-                                      "stale", "verify", "senses", "coverage"):
-        return {"status": cmd_status, "next": cmd_next, "blocked": cmd_blocked,
-                "render": cmd_render, "stale": cmd_stale,
-                "verify": cmd_verify, "senses": cmd_senses,
-                "coverage": cmd_coverage}[args.spec[0]](ledger)
+    if args.spec and args.spec[0] in READ_ONLY_COMMANDS:
+        return READ_ONLY_COMMANDS[args.spec[0]](ledger)
     if not args.spec and not args.gate and args.tier is None:
         return cmd_status(ledger)
+
+    # ARGV IS A SPEND. Everything below this line can start an experiment, and
+    # for a `gpu<*>` spec that means charging the weekly quota, so an argv this
+    # runner does not fully understand must stop here rather than run the part
+    # it recognised. See `t0_23_argv_is_not_a_spend.py` for the scar.
+    unknown = [x for x in (args.spec or []) if x not in BY_ID]
+    if unknown:
+        print("Refusing to run: unrecognised argument(s): " + ", ".join(unknown))
+        print("Commands: " + ", ".join(sorted(READ_ONLY_COMMANDS)) + ", amend.")
+        print("Everything else must be a spec id. Nothing was run.")
+        return 2
 
     # Fail fast on stale code. The guard used to live inside build_job, i.e.
     # AFTER the runner lock and any setup: T2.01 spent 70 minutes queued before

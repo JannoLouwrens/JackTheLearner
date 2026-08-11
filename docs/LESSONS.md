@@ -2480,3 +2480,46 @@ looks machine-checked. So the property battery also drains Kaggle's quota,
 prefers Kaggle, and requires that the skipped backend leave **no** receipt.
 A log you can only read as "something happened" cannot be read as
 "nothing happened", and it was the second reading this scar needed.
+
+## The last gate in front of a scarce resource is the argv parser, and it was built to be forgiving
+
+`python -m experiments.run show T1.02` was typed on 2026-08-11 20:08 UTC.
+`show` is not a sub-command. The runner printed `unknown spec show`, counted a
+failure, and then **ran T1.02** — a `gpu<20min` spec — which built a job and
+submitted it to Colab. Free-tier GPU quota was spent by a command nobody
+issued. Nothing detected it: the ledger row was legitimately being written, the
+budget file was legitimately being charged, and every organ that watches for
+*fabricated* work is blind to *unrequested* work, because unrequested work is
+real. It surfaced only because the launching shell was killed and the orphaned
+PID was still visible in `ps` three minutes later.
+
+The typo is not the lesson; the topology is. Between the argument parser and
+`gpu.submit()` there is no second confirmation of any kind — not a `--yes`, not
+a budget prompt, not a dry-run default. So the parser IS the gate in front of
+the scarcest resource the project has, and it had been written with the manners
+of a query interface: skip what you do not recognise, proceed with what you do.
+That is correct for `status` and catastrophic for a spend. A *partial* run is
+the specific failure — the tokens the parser understood were exactly the
+expensive ones.
+
+**Rule:** where an argument can start work that costs a metered resource,
+an argv containing any token the program does not understand must be refused
+**whole**, with a non-zero exit — never partially executed. More generally:
+before deciding how permissive a parser should be, ask what the most expensive
+thing reachable from it is, and let that set the manners. Permissiveness is a
+property of the interface; the cost is a property of what lies behind it.
+
+**GUARD:** `run.main()` refuses any positional that is not a spec id or a
+read-only command (`READ_ONLY_COMMANDS`, now named once instead of twice), and
+`T0.23` gates it with six properties and the pre-guard dispatch — literally the
+`cmd_run(ledger, args.spec)` line `main()` used to end on — as the control that
+must still reach the spec.
+
+**A second thing fell out of writing that test, and it is worth its own
+sentence.** `_exclusive` prints `Another run holds …` and exits **0**. So while
+any run is in flight, `python -m experiments.run <anything>` returns success
+having done nothing, and an exit code cannot distinguish "ran" from "declined
+to run". `T0.23` therefore gates on the refusal *line* rather than the return
+code, and says so. Anywhere else that reads this runner's exit status — a
+script, a cron wrapper, a future gate — is reading a value the lock can
+manufacture.
