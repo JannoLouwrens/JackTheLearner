@@ -3196,3 +3196,30 @@ finishes; the T0.08 property-5 fix means that write reverts nothing else.
 4. If `T1.02` did land and passed, `generality` leaves the zero-pass list for
    the first time; if it FAILED, that is a real measurement and the `kills`
    clause on the spec ("GPU hours cannot help") is the thing to read next.
+
+**ADDENDUM, same iteration — the guard commit contained its own delayed
+sabotage, found by reading the code that consumes it.** Committing
+`experiments/gpu_submissions.jsonl` made it TRACKED, and `Result`'s commit
+stamp appends `+dirty` for any uncommitted path — but that file is appended to
+by `gpu.submit()` *while a run is in progress*. The next GPU dispatch would
+have stamped its own row `+dirty`, `run stale` would have read DIRTY, and every
+dependent would have been BLOCKED: the organ built to prove a dispatch happened
+would have invalidated every certificate earned after one. `ledger.json` was
+already excluded for exactly this reason, as a hard-coded suffix, so nothing
+generalised. Now `protocol.RUNNER_OUTPUTS`, with the rule stated: *a file the
+runner writes cannot be a file the runner audits itself against.*
+
+The predicate is extracted as `protocol.is_code_dirt(porcelain_line)` because
+the old form could only be exercised by dirtying the repo it audits — which is
+why it went untested and silently acquired a second output file. Verified
+against six fixtures; **not yet gated by a spec**, and `LESSONS.md` says so
+plainly: `T0.22` P4 tests only that a `+dirty` row is REFUSED, never that the
+stamp is PRODUCED correctly. That property (dirty runner-output must not stamp,
+dirty code file must; control = the `ledger.json`-only predicate) is the
+cheapest thing on this board and belongs to the next iteration.
+
+Re-run after the refactor: `T0.22` PASS 12/12, `T0.23` PASS, `run stale` zero.
+One `{"phase":"selftest"}` line sits in the receipt log; it was how the
+exclusion was verified, and it is LEFT there rather than edited out — an
+append-only evidence log that gets rewritten is worth less than one carrying a
+labelled test line, and the in-flight T1.02 job may append to it at any moment.
