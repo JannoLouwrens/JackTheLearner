@@ -23,7 +23,12 @@ WHAT IS MEASURED, and each gate's rival
   RECOVERY. The emission is four continuous action dimensions (f0, brightness,
   amplitude, duration) — a policy can drive it, and VO.01's emitter drives it
   with uniform noise because this spec is about the channel, not about what to
-  say. A ridge probe on a crude log-band spectrogram of the received stereo
+  say. Those four have to be INDEPENDENT to be worth four action dimensions,
+  and the first recorded run proved they were not: the call was peak-normalised,
+  so a bright call came out 3.8x quieter than a dark one at identical `amp`, and
+  brightness recovery read 0.347 against a 0.50 gate. The emitter now normalises
+  to constant RMS with Schroeder phases; `amp` means loudness and `brightness`
+  means timbre. A ridge probe on a crude log-band spectrogram of the received stereo
   regresses those four back, TRAINED on one set of episodes and scored on
   HELD-OUT ones, with the emitter at a random bearing and a random distance in
   every episode so loudness alone can never identify the call, and with real
@@ -149,7 +154,15 @@ DIST_LADDER = (0.6, 1.0, 1.6, 2.5, 3.5, 4.5)
 R2_MIN_PER_DIM = 0.50       # half the variance of each emitted parameter
 R2_MIN_MEAN = 0.60          # ...and the four together
 MUTE_R2_MAX = 0.05          # the muted null must be at chance
-MUTE_RMS_MULT = 2.0         # ...and its ears at the noise floor
+MUTE_RMS_MULT = 2.0         # ...and, in a SILENT world, its ears at the floor.
+                            # v1 applied this to the muted ear WITH background
+                            # contact audio in it and recorded 0.0251 against a
+                            # 0.002 gate — it was measuring how loud the
+                            # playground is, which is not a claim about voice.
+                            # The registry's control ("hears nothing above the
+                            # noise floor") is about the VOICE, so the arm that
+                            # tests it shuts the mouth AND empties the world;
+                            # `mute_ear_rms` stays reported beside it.
 DIST_LAW_TOL = 0.05         # received RMS vs the declared 1/max(r, 0.5)
 DIST_INV2_DISCRIM_MIN = 0.10    # ...and the inverse-square rival must MISS
 OCC_RATIO_MAX = 0.50        # the block really attenuates
@@ -365,6 +378,31 @@ def _recovery(seed, mute: bool) -> dict:
     return out
 
 
+def _silence(seed: int) -> dict:
+    """The registry's control, correctly instrumented: mouth shut, world empty.
+    What is left in the ear must be the ear's own noise and nothing else — and
+    the SAME episodes with the mouth open must be loudly above it, or the
+    comparison is between two silences."""
+    model, data = _world(seed)
+    rng = np.random.RandomState(seed * 2749 + 31)
+    sr = CA.SAMPLE_RATE
+    shut, open_ = [], []
+    for _ in range(20):
+        ang, r = rng.uniform(-math.pi, math.pi), rng.uniform(*RANGE_M)
+        pos = np.array([HEAD[0] + r * math.cos(ang), HEAD[1] + r * math.sin(ang),
+                        HEAD[2]])
+        if _hit_geom(model, data, pos, HEAD) != "":
+            continue
+        action = rng.uniform(-1.0, 1.0, size=CA.VOICE_ACTION_DIM)
+        s = CA.ContactAudioSynth(model)
+        s.set_listener(HEAD, HEAD_YAW)
+        s.emit_voice(T_VOICE, pos, action, data=data)
+        shut.append(_rms(_ear(s, rng, mute_voice=True), sr))
+        open_.append(_rms(_ear(s, rng), sr))
+    return {"mute_silent_rms": float(np.mean(shut)),
+            "voiced_silent_rms": float(np.mean(open_))}
+
+
 # ── distance: the declared law, measured at the ear ─────────────────────
 def _distance(seed, voice_distance: bool = True) -> dict:
     model, data = _world(seed)
@@ -494,6 +532,7 @@ def _experiment(seed: int) -> dict:
 
     m.update(_recovery(seed, mute=False))
     m.update(_recovery(seed, mute=True))
+    m.update(_silence(seed))
     m.update(_distance(seed))
     m.update(_occ_ref(seed))
     m.update(_occ_recovery(seed))
@@ -532,7 +571,10 @@ def _experiment(seed: int) -> dict:
         and m["recov_r2_mean"] >= R2_MIN_MEAN
         # ...and the muted mouth is at chance, with ears at the noise floor
         and m["mute_r2_max"] <= MUTE_R2_MAX
-        and m["mute_ear_rms"] <= MUTE_RMS_MULT * EAR_NOISE_SIGMA
+        and m["mute_silent_rms"] <= MUTE_RMS_MULT * EAR_NOISE_SIGMA
+        # ...and the same episodes with the mouth OPEN are far above it, or
+        # the null passed because nothing was ever emitted
+        and m["voiced_silent_rms"] >= 5.0 * m["mute_silent_rms"]
         # ...and it gets quieter the way the fixture says it does
         and m["dist_line_clear"] == 1.0
         and m["dist_monotone"] == 1.0
@@ -596,6 +638,7 @@ def _check(m: dict, c: dict) -> bool:
         and all(m[f"recov_r2_{d}"] >= R2_MIN_PER_DIM for d in DIMS)
         and m["recov_r2_mean"] >= R2_MIN_MEAN
         and m["mute_r2_max"] <= MUTE_R2_MAX
+        and m["mute_silent_rms"] <= MUTE_RMS_MULT * EAR_NOISE_SIGMA
         and m["dist_law_dev"] <= DIST_LAW_TOL
         and m["dist_dev_inverse_square"] >= DIST_INV2_DISCRIM_MIN
         and OCC_RATIO_MIN <= m["occ_amp_ratio"] <= OCC_RATIO_MAX

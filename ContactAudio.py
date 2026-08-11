@@ -79,11 +79,30 @@ AMP_K = 0.03                # amp = min(1, AMP_K * sqrt(F_normal))
 VOICE_ACTION_DIM = 4
 VOICE_F0_HZ = (80.0, 700.0)
 VOICE_TILT = (3.0, 0.4)     # brightness 0 -> tilt 3.0 (dark); 1 -> 0.4 (bright)
-VOICE_AMP = (0.05, 1.0)
+VOICE_AMP = (0.05, 1.0)     # fraction of VOICE_RMS_FULL, NOT a peak
 VOICE_DUR_S = (0.10, 0.60)
 VOICE_HARMONICS = 24
 VOICE_RAMP_S = 0.02         # raised-cosine attack/release, so duration is the
                             # envelope length rather than a decay constant
+
+# THE CALL IS NORMALISED TO CONSTANT RMS, and this is a correction, not a
+# detail. v1 scaled by `amp / sum(weights)`, which made LOUDNESS A FUNCTION OF
+# TIMBRE: at identical `amp` a bright call came out 3.8x quieter at the mouth
+# than a dark one (measured), so two action dimensions that are supposed to be
+# independent were entangled, and bright calls sat systematically nearer the
+# masking floor. VO.01's first recorded run reported brightness recovery of
+# 0.347 against a 0.50 gate because of it. `amp` now means loudness and
+# `brightness` means timbre, which is what a policy driving four dimensions is
+# entitled to assume.
+#
+# VOICE_RMS_FULL is DERIVED, not chosen: the loudest call at the closest
+# representable range must peak below full scale.
+#     0.9 / (max crest factor 2.0 * max distance gain 1/MIN_DISTANCE = 2.0)
+# Schroeder phases (Schroeder 1970, "Synthesis of low-peak-factor signals")
+# are what make 2.0 available — with all harmonics phase-aligned the same call
+# is a pulse train and crests at 4.1, which would clip at close range and break
+# the linearity every attenuation measurement assumes.
+VOICE_RMS_FULL = 0.225
 
 # Occlusion, declared here and gated by VO.01. A solid between mouth and ear
 # transmits sound — it does not stop it, which is the whole reason voice and
@@ -292,22 +311,28 @@ class ContactAudioSynth:
         p = e.params
         n = max(1, int(p.duration * self.sr))
         t = np.arange(n) / self.sr
-        tilt = p.tilt
-        sig = np.zeros(n)
-        total = 0.0
-        for h in range(1, VOICE_HARMONICS + 1):
-            f = p.f0 * h
-            if f >= 0.45 * self.sr:
-                break
-            a_h = float(h) ** (-tilt)
-            g = 1.0
-            if occlusion and e.occluded:
-                g = OCC_TRANSMISSION if flat_occlusion else (
-                    OCC_TRANSMISSION * min(1.0, (OCC_FREF_HZ / f) ** OCC_ALPHA))
-            sig += a_h * g * np.sin(2 * math.pi * f * t)
-            total += a_h
-        if total > 0:
-            sig *= p.amp / total
+        h = np.arange(1, VOICE_HARMONICS + 1, dtype=float)
+        f = p.f0 * h
+        keep = f < 0.45 * self.sr
+        h, f = h[keep], f[keep]
+        w = h ** (-p.tilt)
+
+        # Constant-RMS normalisation, from the UNOCCLUDED weights: occlusion
+        # has to attenuate, so it is applied after the call's level is fixed.
+        scale = VOICE_RMS_FULL * p.amp / math.sqrt(max(np.sum(w ** 2) / 2.0, 1e-30))
+        g = np.ones_like(w)
+        if occlusion and e.occluded:
+            g = np.full_like(w, OCC_TRANSMISSION) if flat_occlusion else (
+                OCC_TRANSMISSION * np.minimum(1.0, (OCC_FREF_HZ / f) ** OCC_ALPHA))
+
+        # Generalised Schroeder phases: phi_i = -2*pi * sum_{k<i} (h_i - h_k) p_k
+        pw = w ** 2 / max(float(np.sum(w ** 2)), 1e-30)
+        cum_p = np.concatenate([[0.0], np.cumsum(pw)[:-1]])
+        cum_hp = np.concatenate([[0.0], np.cumsum(h * pw)[:-1]])
+        phi = -2 * math.pi * (h * cum_p - cum_hp)
+
+        sig = (scale * w * g) @ np.sin(
+            2 * math.pi * f[:, None] * t[None, :] + phi[:, None])
         # raised-cosine attack/release, so `duration` IS the envelope length
         r = min(int(VOICE_RAMP_S * self.sr), n // 2)
         if r > 0:
