@@ -586,9 +586,11 @@ def _terminal_blockers(ledger: Ledger, ladder=None, by_id=None) -> dict:
         if spec is None or sid in seen:      # unknown dep, or a dependency cycle
             return {sid}
         roots: set = set()
-        for d in spec.depends_on:
-            if ledger.status(d) is Status.PASS:
-                continue
+        # ONE rule, asked through `Ledger.unsatisfied` — this loop used to
+        # restate it as `status is Status.PASS`, which is the test `T0.22`
+        # retired, so a spec resting on a STALE pass read as runnable here
+        # while `borrow_metrics` VOIDed it the moment it ran.
+        for d, _why in ledger.unsatisfied(spec):
             upstream = walk(d, seen | {sid})
             # A dependency that is itself stuck resolves to ITS roots; one that
             # is merely not-yet-run is a root of its own.
@@ -647,25 +649,43 @@ def _rank_blockers(terminal: dict, ledger: Ledger, ladder=None) -> tuple:
 # known-positive fixture it must flag, exercising the same code path as the real
 # scan — so this runs `_terminal_blockers`/`_rank_blockers` themselves, not a
 # tidied restatement.)
+# `S` is deliberately a REAL spec id: the staleness half of the rule resolves an
+# implementation FILE through `module_path_for`, so a synthetic id would skip the
+# very branch this fixture is here to check. Its planted `impl_sha` is all zeroes,
+# which cannot be any file's hash, so the known answer holds whatever PG.1's real
+# entry or source happens to be today.
+_STALE_ID = "PG.1"
+
+
 def _ranker_fixture() -> tuple:
     from .protocol import Spec, Budget
 
     def stub(sid, deps):
         return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST, depends_on=deps)
 
-    ladder = [stub("X", []), stub("W", []), stub("Y", ["X"]), stub("Z", ["X", "W"])]
+    ladder = [stub("X", []), stub("W", []), stub("Y", ["X"]), stub("Z", ["X", "W"]),
+              stub(_STALE_ID, []), stub("V", [_STALE_ID])]
     return ladder, {s.id: s for s in ladder}
+
+
+def _fixture_ledger() -> Ledger:
+    """The fixture's ledger is a REAL `Ledger`, pointed at a path that does not
+    exist and never written. It used to be a duck-typed stub exposing `status`
+    alone, which meant the fixture could not see the freshness half of the
+    dependency rule at all — the stub would have kept passing while the rule it
+    is guarding changed underneath it. (T0.22's `_ledger_with` pattern.)"""
+    from .protocol import Result
+    led = Ledger(path=Path("/nonexistent/ranker_fixture_never_written.json"))
+    led.results = {_STALE_ID: Result(
+        spec_id=_STALE_ID, status=Status.PASS, metrics={}, seeds=[0],
+        commit="1234567", ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)}
+    return led
 
 
 def _check_ranker(ledger: Ledger) -> None:
     """Refuse to print a ranking the ranker cannot get right on a known graph."""
     ladder, by_id = _ranker_fixture()
-
-    class _AllUnrun:
-        def status(self, sid):
-            return Status.NOT_RUN
-
-    fixt = _AllUnrun()
+    fixt = _fixture_ledger()
     terminal = _terminal_blockers(fixt, ladder=ladder, by_id=by_id)
     mentions, frees, groups = _rank_blockers(terminal, fixt, ladder=ladder)
     expect = (
@@ -674,6 +694,10 @@ def _check_ranker(ledger: Ledger) -> None:
         sorted(frees.get("X", [])) == ["Y"],
         frees.get("W", []) == [],
         groups.get(frozenset({"X", "W"})) == ["Z"],
+        # KNOWN ANSWER for the freshness half: a PASS whose implementation hash
+        # has moved does NOT satisfy the specs that depend on it.
+        sorted(mentions.get(_STALE_ID, [])) == ["V"],
+        sorted(frees.get(_STALE_ID, [])) == ["V"],
     )
     if not all(expect):
         raise RuntimeError(
@@ -732,7 +756,19 @@ def cmd_blocked(ledger: Ledger) -> int:
         return 0
 
     def _st(root):
-        return ledger.status(root).value if root in BY_ID else "UNKNOWN-SPEC"
+        """The status, and — if it is a PASS that no longer describes the code —
+        SAY SO. A root printed bare as `PASS` is unreadable: the reader's next
+        question is why a passing spec is blocking anything."""
+        if root not in BY_ID:
+            return "UNKNOWN-SPEC"
+        st = ledger.status(root)
+        if st is Status.PASS:
+            path = module_path_for(root)
+            entry = ledger.results.get(root)
+            if path and entry and any(k in ("DIRTY", "CHANGED")
+                                      for k, _ in staleness_of(entry, path)):
+                return "PASS but STALE — re-run it"
+        return st.value
 
     ranked = sorted(mentions.items(),
                     key=lambda kv: (-len(frees.get(kv[0], [])), -len(kv[1])))
@@ -761,6 +797,45 @@ def cmd_blocked(ledger: Ledger) -> int:
         for root, ids in ranked)
     print(f"  SUMMARY: {summary}\n")
     return 0
+
+
+def _dependency_order(ids) -> list:
+    """Sort a batch so no spec runs before a dependency that is also in it.
+
+    Written 2026-08-11, the same hour dependency satisfaction started asking the
+    freshness question — because that change made batch ORDER able to destroy
+    evidence. `--gate` re-runs every PASS in `LADDER` order, and a run whose
+    dependency is unsatisfied records BLOCKED. Today `PS.01` is a stale PASS and
+    `XL.00` depends on it: reaching `XL.00` first writes BLOCKED over a PASS
+    that was legitimately earned, and the re-run of `PS.01` that would have
+    cleared it happens five specs later. A certificate deleted by an ordering
+    artifact is the thing law 4 exists to prevent. Under the old rule every
+    dependency of a PASS was itself a PASS, so the gate never needed to care.
+
+    Stable: ties keep the caller's order, so the tier/LADDER sequence survives
+    wherever dependencies do not constrain it. Cycles and out-of-batch
+    dependencies are left where they are rather than raising — this is a
+    convenience ordering, not a validator, and `run blocked` is where a cycle
+    is supposed to surface.
+    """
+    want = list(dict.fromkeys(ids))
+    inside = set(want)
+    out, placed = [], set()
+
+    def emit(sid, seen):
+        if sid in placed or sid in seen:
+            return
+        spec = BY_ID.get(sid)
+        for d in (spec.depends_on if spec else []):
+            if d in inside:
+                emit(d, seen | {sid})
+        if sid not in placed:
+            placed.add(sid)
+            out.append(sid)
+
+    for sid in want:
+        emit(sid, frozenset())
+    return out
 
 
 def _run_isolated(spec_id: str, ledger: Ledger):
@@ -953,12 +1028,13 @@ def main() -> int:
                 return 1
 
     if args.gate:
-        ids = [s.id for s in LADDER if ledger.status(s.id) is Status.PASS]
+        ids = _dependency_order([s.id for s in LADDER
+                                 if ledger.status(s.id) is Status.PASS])
         print(f"Regression gate: {len(ids)} previously-passing tests\n")
         with _exclusive(ids):
             return cmd_run(ledger, ids)
     if args.tier is not None:
-        _tier_ids = [s.id for s in tier(args.tier)]
+        _tier_ids = _dependency_order([s.id for s in tier(args.tier)])
         with _exclusive(_tier_ids):
             return cmd_run(ledger, _tier_ids)
     if not args.spec or args.spec[0] == "status":

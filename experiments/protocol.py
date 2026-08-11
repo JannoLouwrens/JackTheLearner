@@ -441,10 +441,64 @@ class Ledger:
         r = self.results.get(spec_id)
         return r.status if r else Status.NOT_RUN
 
+    def unsatisfied(self, spec: Spec) -> List[tuple]:
+        """`(dep_id, why)` for every dependency that cannot support a run yet.
+
+        THE ONE DEFINITION of "is this dependency satisfied?". `blocked_by`,
+        `registry.ready` (so `run next`), `run_spec`'s refusal and
+        `run._terminal_blockers` all reach the question through here; the walk
+        in `_terminal_blockers` used to restate it as `status is Status.PASS`
+        and disagreed with `borrow_metrics` about whether one row was usable
+        (overseer 2026-08-10 RANK 2, and LESSONS' *"retiring a rule is a
+        two-sided job"*). Two organs, each internally consistent, is exactly
+        the shape that hides.
+
+        A dependency must be a PASS **that still describes the code that
+        exists now**, because `depends_on` is an edge between specs while
+        staleness is a fact about a ledger ROW: `LC.03` reading "runnable" off
+        a `PS.01` entry measured against a world that has since changed is a
+        run on a foundation nobody checked.
+
+        WHICH staleness blocks, and why it is not all of it. `staleness_of`
+        reports three kinds, and they are not the same evidence:
+
+          DIRTY / CHANGED   POSITIVE evidence the implementation moved after
+                            the run. The dependency is blocked on a re-run.
+          UNVERIFIABLE      ABSENT evidence — the entry predates `impl_sha`
+                            and nothing can be compared either way.
+
+        `borrow_metrics` refuses on UNVERIFIABLE too, and is right to: it needs
+        the number to describe today's code, and that is precisely the claim it
+        cannot get. Dependency satisfaction asks something weaker — was this
+        capability demonstrated — so the same answer is not automatic, and it
+        was measured rather than argued: refusing DIRTY/CHANGED costs the two
+        specs that are genuinely resting on stale rows, while also refusing
+        UNVERIFIABLE takes the ladder from 29 runnable specs to 7 on the
+        strength of 40 rows that are silent, not contradicted. Blocking the
+        whole ladder on a backlog nobody is disputing would make `run next`
+        useless and get the rule turned off, so UNVERIFIABLE passes here and
+        is REPORTED (`run stale` lists all 40; a re-run clears each). If that
+        backfill ever lands, tighten this to match `borrow_metrics` exactly.
+        """
+        out: List[tuple] = []
+        for d in spec.depends_on:
+            if self.status(d) is not Status.PASS:
+                out.append((d, self.status(d).value))
+                continue
+            path = module_path_for(d)
+            if path is None:                 # no single impl file: nothing to hash
+                continue
+            blocking = [(k, det) for k, det in staleness_of(self.results[d], path)
+                        if k in ("DIRTY", "CHANGED")]
+            if blocking:
+                out.append((d, "PASS but stale — " +
+                            "; ".join(f"{k}: {det}" for k, det in blocking)))
+        return out
+
     def blocked_by(self, spec: Spec) -> List[str]:
-        """Dependencies that are not passing. A result computed on a broken
+        """Dependencies that cannot support a run. A result computed on a broken
         foundation is worse than no result, because it looks like evidence."""
-        return [d for d in spec.depends_on if self.status(d) is not Status.PASS]
+        return [d for d, _ in self.unsatisfied(spec)]
 
     def summary(self) -> Dict[str, int]:
         out = {s.value: 0 for s in Status}
@@ -751,10 +805,15 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
 
     ledger = ledger or Ledger()
     impl_sha = _impl_sha(fn)
-    blocked = ledger.blocked_by(spec)
+    blocked = ledger.unsatisfied(spec)
     if blocked:
+        # Carry the REASON, not just the id. "dependencies not passing: PS.01"
+        # is unactionable when PS.01 is a PASS — the reader needs to be told it
+        # is a PASS about code that has since changed, and that a re-run clears
+        # it. A refusal that cannot be acted on gets worked around.
         res = Result(spec_id=spec.id, status=Status.BLOCKED,
-                     message=f"dependencies not passing: {', '.join(blocked)}",
+                     message="dependencies not satisfied: " + "; ".join(
+                         f"{d} ({why})" for d, why in blocked),
                      **Result.env_stamp(), ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"))
         ledger.record(res)
         return res

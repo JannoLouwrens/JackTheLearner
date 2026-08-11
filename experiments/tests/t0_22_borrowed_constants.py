@@ -92,7 +92,37 @@ def _guard_borrow(led: Ledger, keys) -> tuple:
     return b.ok, b.values
 
 
-N_PROPERTIES = 9
+# ---------------------------------------------------------------- the DEPENDENCY
+# path, added 2026-08-11. Borrowing a NUMBER from a stale row and RUNNING ON a
+# stale row are the same question — "does this entry still describe the code that
+# exists?" — asked by two different organs, and only the borrow path was guarded.
+# `run._terminal_blockers` restated it as `status is Status.PASS`, so `LC.03` read
+# as runnable off a `PS.01` entry that `borrow_metrics` would have VOIDed the
+# moment it ran. Overseer 2026-08-10 RANK 2; LESSONS' *"retiring a rule is a
+# two-sided job"* is the generalisation, and P12 is that lesson made executable.
+DEP_SPEC_ID = "Z.99"          # not a real spec: this is a graph fixture, not a claim
+
+
+def _dep_spec():
+    """A stub spec that depends on the real `SOURCE`, so `module_path_for`
+    resolves an implementation file that actually exists."""
+    from ..protocol import Budget, Spec
+    return Spec(DEP_SPEC_ID, 0, "dependency fixture", "h", "f", "n", "m",
+                Budget.CPU_FAST, depends_on=[SOURCE])
+
+
+def _legacy_unsatisfied(led: Ledger, spec) -> list:
+    """`Ledger.blocked_by` as it stood until 2026-08-11: PASS, and nothing else."""
+    return [d for d in spec.depends_on if led.status(d) is not Status.PASS]
+
+
+def _dep_blocked(led: Ledger, rule_is_legacy: bool) -> bool:
+    spec = _dep_spec()
+    return bool(_legacy_unsatisfied(led, spec) if rule_is_legacy
+                else led.unsatisfied(spec))
+
+
+N_PROPERTIES = 12
 
 
 def _probe(rule_is_legacy: bool) -> dict:
@@ -170,6 +200,44 @@ def _probe(rule_is_legacy: bool) -> dict:
     if rule_is_legacy or offenders:
         failed.append("p9_no_test_reads_another_specs_metrics_directly")
 
+    # P10 — KNOWN ANSWER on the DEPENDENCY path. A dependency that PASSED but
+    # whose implementation has since moved (CHANGED) or was never committed
+    # (DIRTY) does not satisfy anything, and a current one still does. This is
+    # P2+P3+P4 asked of the other organ; the legacy rule accepts all three.
+    if (not _dep_blocked(_ledger_with(_entry(impl_sha="0" * 16)), rule_is_legacy)
+            or not _dep_blocked(_ledger_with(_entry(commit="1234567+dirty")),
+                                rule_is_legacy)
+            or _dep_blocked(_ledger_with(_entry()), rule_is_legacy)
+            or not _dep_blocked(_ledger_with(_entry(status=Status.FAIL)),
+                                rule_is_legacy)
+            or not _dep_blocked(_ledger_with(None), rule_is_legacy)):
+        failed.append("p10_stale_dependency_does_not_satisfy")
+
+    # P11 — the DELIBERATE divergence from P5, pinned so it cannot drift in
+    # either direction unnoticed. UNVERIFIABLE (predates `impl_sha`) REFUSES a
+    # borrow and PERMITS a dependency, because the two organs need different
+    # claims: a borrowed number must describe today's code, while a dependency
+    # only has to have been demonstrated. The evidence is absent, not contrary.
+    # It was measured, not argued — refusing it on the dependency path takes the
+    # ladder from 29 runnable specs to 7 on the strength of 40 silent rows.
+    unver = _ledger_with(_entry(impl_sha=None))
+    if borrow(unver, KEYS)[0] or _dep_blocked(unver, rule_is_legacy):
+        failed.append("p11_unverifiable_refuses_a_borrow_but_permits_a_dependency")
+
+    # P12 — THE CLASS. The blocker graph and the dependency rule must give the
+    # same answer about the same row. This is the defect itself: two organs,
+    # each internally consistent, disagreeing about whether one entry is usable
+    # — visible only from outside, which is why it survived the unification that
+    # was supposed to close it. A future organ that re-derives the rule instead
+    # of calling it fails here rather than in an audit.
+    from ..run import _terminal_blockers
+    led = _ledger_with(_entry(impl_sha="0" * 16))
+    dep, src = _dep_spec(), BY_ID[SOURCE]
+    graph = _terminal_blockers(led, ladder=[src, dep],
+                               by_id={SOURCE: src, DEP_SPEC_ID: dep})
+    if bool(graph.get(DEP_SPEC_ID)) != _dep_blocked(led, rule_is_legacy):
+        failed.append("p12_graph_and_rule_agree_on_the_same_row")
+
     return {
         "properties_checked": float(N_PROPERTIES),
         "properties_failed": float(len(failed)),
@@ -191,6 +259,12 @@ def _control(seed: int) -> dict:
     code has changed, whose run was never committed, and whose provenance
     cannot be checked at all. Those three are the whole difference between "the
     source succeeded" and "the source still describes this world".
+
+    It must ALSO break P10 and P12, which is the point of adding them: the same
+    rule was still live on the dependency path a day after it was retired on the
+    borrow path, and P12 fails for the legacy rule precisely because the graph
+    had already been fixed while the rule had not — a disagreement, not a
+    symmetric error.
     """
     return _probe(rule_is_legacy=True)
 
@@ -207,7 +281,11 @@ def _check(m: dict, c: dict) -> Status | bool:
     control_names = set(str(c.get("failed_names", "")).split(","))
     control_broken = {"p3_changed_source_is_refused",
                       "p4_dirty_source_is_refused",
-                      "p5_unverifiable_source_is_refused"} <= control_names
+                      "p5_unverifiable_source_is_refused",
+                      # the same failure on the other organ, and the
+                      # disagreement between them that hid it
+                      "p10_stale_dependency_does_not_satisfy",
+                      "p12_graph_and_rule_agree_on_the_same_row"} <= control_names
     return bool(experiment_clean and control_broken)
 
 

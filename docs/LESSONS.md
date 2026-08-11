@@ -2347,3 +2347,52 @@ where the light was. And when a fix that is verified-correct in isolation does
 not move the metric, that is a measurement about the CAUSE, not a reason to
 reach for the next mechanism: record it, because it eliminates a hypothesis,
 and it is the cheapest thing the failed iteration produced.
+
+## Unifying a rule across organs is not the same as copying its strictness
+
+The retired-rule lesson above said to hunt down every place the old rule is
+still spelled out, and `run.py:590` — `if ledger.status(d) is Status.PASS` —
+was the survivor it predicted. Fixing it looked like a transcription job: call
+`staleness_of`, "exactly as `borrow_metrics` and `stale_claims` already do,
+three callers one rule."
+
+Copying `borrow_metrics` verbatim would have been wrong, and only a
+measurement says so. `staleness_of` returns three kinds and they are not the
+same evidence: `DIRTY` and `CHANGED` are POSITIVE evidence that the
+implementation moved after the run, while `UNVERIFIABLE` means the entry
+predates `impl_sha` and nothing can be compared **either way**. Refusing
+DIRTY/CHANGED on the dependency path costs exactly the two specs genuinely
+resting on stale rows (`LC.03` behind `PS.01`, `VO.01` behind `PG.5`).
+Refusing UNVERIFIABLE as well takes the ladder from **29 runnable specs to 7**,
+on the strength of 40 rows that are silent rather than contradicted — which
+would not have made the ladder honest, it would have made `run next` useless
+and got the rule switched off within a day.
+
+The reason the two organs may legitimately differ is that they are asking
+different questions of the same row. `borrow_metrics` needs the number to
+DESCRIBE TODAY'S CODE, and absence of evidence is fatal to exactly that claim.
+Dependency satisfaction needs only that the capability WAS DEMONSTRATED. Same
+row, same staleness report, different burden of proof. "One rule, one
+implementation" is about where the rule LIVES, not about every caller reaching
+the same verdict — and the instinct to make the strict version universal is
+the same instinct that produces a green ladder nobody runs.
+
+**Rule:** when you unify a rule across organs, unify the DEFINITION and then
+ask each caller what claim it actually needs, separately. Before adopting the
+stricter reading, MEASURE its blast radius (`how many specs does this move`)
+and write the number into the docstring beside the choice, so the divergence
+reads as a decision with evidence rather than as an inconsistency someone will
+later "tidy up". Pin the divergence with a property that fails in BOTH
+directions (`T0.22` P11: UNVERIFIABLE must refuse a borrow AND permit a
+dependency), or it will drift.
+
+**Corollary — a duck-typed fixture is pinned to the rule that existed when it
+was written.** `_check_ranker`'s known-answer graph fed the blocker walk a stub
+exposing `status()` and nothing else. It was a good fixture, it caught the
+mentions-vs-frees bug it was built for, and it was structurally incapable of
+seeing the freshness half of the rule — a stub only implements the questions
+the old code knew how to ask, so it keeps passing while the rule it guards
+changes underneath it. It now uses a real `Ledger` pointed at a path that does
+not exist (`T0.22`'s `_ledger_with` pattern), which costs nothing and exercises
+the real code path. Prefer the real object with fake DATA over a fake object
+with the right METHODS.
