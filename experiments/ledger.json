@@ -2409,8 +2409,8 @@
     },
     "T0.12": {
       "amended": [],
-      "attempt": 4,
-      "commit": "bd6ebe0+dirty",
+      "attempt": 5,
+      "commit": "2e8d558",
       "control_metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
@@ -2442,7 +2442,7 @@
         "waste_not_counted_as_work": false,
         "weeks_isolated": false
       },
-      "duration_s": 1.31,
+      "duration_s": 1.27,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2461,6 +2461,12 @@
           "commit": "44c719c",
           "message": "",
           "ran_at": "2026-08-09T19:14:05",
+          "status": "PASS"
+        },
+        {
+          "commit": "bd6ebe0+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T19:28:28",
           "status": "PASS"
         }
       ],
@@ -2497,7 +2503,7 @@
         "waste_not_counted_as_work": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-11T19:28:28",
+      "ran_at": "2026-08-11T19:29:57",
       "seeds": [
         0
       ],
