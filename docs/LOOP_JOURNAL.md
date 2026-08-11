@@ -2949,3 +2949,20 @@ stable and cycle-safe: 66 specs, 0 ordering violations.
 `LC.03`'s eight dependents. Then `T0.20`, also DIRTY, at `cpu<1min`. Do not
 plan `LC.03` before both `PS.01` and `XL.00` read fresh in `run stale` — the
 runner will now refuse it by name and tell you why.
+
+**Handoff addendum, written before `T1.02` returned.** Its GPU poll was still in
+flight at the end of this iteration (17 min elapsed, `submit(timeout_s=3600)`).
+It is left running deliberately: it holds `/tmp/jack-ladder.lock` while using
+**0.00 local cores** — the runner's own lock message says a remote-GPU poll is
+exactly that — and killing it would discard a paid GPU run and record a second
+infrastructure ERROR, which is the thing this iteration set out to stop. So the
+next iteration should expect **an uncommitted `experiments/ledger.json`
+containing `T1.02`'s verdict, and should commit it** rather than treat it as
+damage. Read its `reference_gain` FIRST: below `MIN_REFERENCE_GAIN = 1.5` the
+run is VOID — a plain MLP could not learn the task either — and that is a
+statement about the task, not about the architecture. Do not report it as an
+architecture failure.
+
+Order for the next iteration: commit `T1.02`'s result, then `XL.00`
+(~19 min CPU, the last stale row and the project's #2 blocker at frees 8), then
+`LC.03` — which becomes genuinely runnable for the first time.
