@@ -169,10 +169,24 @@ LADDER: list[Spec] = [
          falsified_by="A run proceeds with the budget exhausted.",
          null_baseline="n/a", metric="quota_enforced", budget=Budget.CPU_FAST,
          depends_on=["T0.09"],
-         control="Two named broken meters: a Budget whose weeks deliberately "
-                 "leak must FAIL isolation, and the pre-2026-08-09 `charge()` "
-                 "plus `submit()` loop must FAIL every billing property.",
-         notes="EXTENDED 2026-08-09 (2nd overseer audit): every property this "
+         control="Three named broken mechanisms: a Budget whose weeks "
+                 "deliberately leak must FAIL isolation; the pre-2026-08-09 "
+                 "`charge()` plus `submit()` loop must FAIL every billing "
+                 "property; and the pre-2026-08-11 dispatch loop, run against a "
+                 "HEALTHY meter, must FAIL every receipt property — a submission "
+                 "it makes must be indistinguishable from one never made.",
+         notes="EXTENDED 2026-08-11 (7th overseer audit): a dispatch left no "
+               "trace of its own except a budget charge, so a submission that "
+               "was REPORTED but never made passed every gate the project owns "
+               "— unchanged `gpu_budget.json` reads as 'nothing spent', "
+               "unchanged ledger reads as 'not run', and commit 6b001e7's "
+               "claim of an in-flight T1.02 poll was contradicted only by prose "
+               "no gate reads. `submit()` now writes an append-only receipt to "
+               "`gpu_submissions.jsonl` BEFORE each remote call and again after "
+               "it, so absence of a receipt means not-dispatched. Asserted in "
+               "both directions: a skipped backend must leave NO receipt, or "
+               "the log would re-create the defect it exists to prevent. "
+               "EXTENDED 2026-08-09 (2nd overseer audit): every property this "
                "spec asserted was checked against synthetic charges the test "
                "made itself, so it could not see that `charge()` billed failed "
                "jobs as work, re-billed a reattached kernel, and billed this "

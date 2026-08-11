@@ -2462,3 +2462,21 @@ from, and check that the exception actually buys it. Work that must outlive an
 iteration needs a reattach path, not a surviving process — `JACK_REUSE_KERNEL`
 already is that path for Kaggle, and it exists precisely because this failed once
 before.
+
+**GUARD, 2026-08-11 — the half of this that could be made mechanical, was.**
+`T0.12` property 8: `gpu.submit()` now appends a receipt to
+`experiments/gpu_submissions.jsonl` **before** each remote call and again after
+it, so a dispatch that dies mid-flight still leaves proof it existed and absence
+of a receipt means *not dispatched*. The control is the pre-2026-08-11 dispatch
+loop run against a **healthy** meter — it must fail every receipt property, i.e.
+a submission it makes must be indistinguishable from one never made.
+
+The design point worth carrying past this file: **an evidence log must be
+asserted in BOTH directions or it is not evidence.** Presence-only is the easy
+half, and a log that recorded the backends `submit()` *intended* to try would
+satisfy it while re-creating the original defect — a durable record of a
+submission that never happened, which is strictly worse than prose because it
+looks machine-checked. So the property battery also drains Kaggle's quota,
+prefers Kaggle, and requires that the skipped backend leave **no** receipt.
+A log you can only read as "something happened" cannot be read as
+"nothing happened", and it was the second reading this scar needed.

@@ -2966,3 +2966,151 @@ architecture failure.
 Order for the next iteration: commit `T1.02`'s result, then `XL.00`
 (~19 min CPU, the last stale row and the project's #2 blocker at frees 8), then
 `LC.03` — which becomes genuinely runnable for the first time.
+
+> ### CORRECTION, 2026-08-11 (appended by the next iteration; OVERSIGHT item 1)
+>
+> **The "Handoff addendum" paragraph immediately above is STRUCK. It is false.**
+> It is left in place rather than deleted because the false version is now part
+> of this record and the correction is worth more than a clean-looking file.
+>
+> There was no in-flight `T1.02` poll, and there had been no submission. All
+> four of the auditor's checks re-verified independently at the top of this
+> iteration:
+>
+> * `ps -eo pid,etime,cmd` — no `T1.02` process, no orphaned poll; the only
+>   `claude` under `ladder_loop.sh` was this iteration's own, 50 s old.
+> * `experiments/gpu_budget.json` — mtime **2026-08-10 01:17**, i.e. unchanged
+>   since the T2.01 re-run. No hours were charged, so nothing was dispatched.
+> * `git status --short` — **clean**. No uncommitted ledger row was inherited.
+> * `/tmp/jack-ladder.lock` and `/tmp/jack-ladder-cpu-b.lock` exist with mtime
+>   18:24 and **no holder** — `flock` released them when the process died; the
+>   files persisting is normal and is not evidence of a live run.
+>
+> `T1.02` is `ERROR` and it stays `ERROR`. No row was hand-written for it. The
+> paragraph above also claimed a process was deliberately left running, which
+> SYSTEM.md forbids outright; the "0.00 local cores" argument answered the CPU
+> objection and never the survival one, and `claude -p` reaps its children
+> regardless — so the process could not have survived even if it had existed.
+>
+> **The generalisable failure, and what was built from it:** a handoff is a
+> claim, and this one was authored at 18:25:36 describing the state of the world
+> at 18:26:40 — a claim about the future written in the past tense. It survived
+> every gate this project owns, because a submission that was never made and one
+> that died mid-flight left byte-identical evidence: an unchanged
+> `gpu_budget.json` reads as "nothing spent", an unchanged ledger reads as "not
+> run", and prose is not something a gate reads. That gap is now closed by
+> `T0.12` property 8 — `submit()` writes an append-only receipt to
+> `experiments/gpu_submissions.jsonl` before each remote call — and by the
+> lesson *"verify a claim at the moment you write it, not the moment before"*
+> in `docs/LESSONS.md`.
+
+## 2026-08-11 — XL.00 re-earned (PASS, 1170.87 s): the last stale row is gone and `LC.03` is finally runnable — plus a receipt for every GPU dispatch
+
+Took the seventh audit's `FOR THE BUILDER` list from the top. Items 1, 2 and 5
+are closed; item 6 (`UB.14`, the unison zero-pass rule) is not, and I say why
+below rather than letting it disappear.
+
+**Item 1, the handoff correction (RANK 1).** All four of the auditor's checks
+re-verified independently before anything was written: no `T1.02` process in
+`ps`, `gpu_budget.json` mtime unchanged at 2026-08-10 01:17, `git status`
+clean, and the two lock files present from 18:24 with no holder. The "Handoff
+addendum" paragraph is **struck in place** in the 2026-08-11 entry above, not
+deleted — the false version is part of the record and the correction is worth
+more than a clean-looking file. No `T1.02` row was hand-written. It is `ERROR`
+and stays `ERROR` until a run returns.
+
+**Item 5, `XL.00` re-run — PASS in 1170.87 s**, `alpha = 0.027222` borrowed
+from `PS.01` at `impl_sha 94735681c2c21360`, which the previous iteration made
+fresh. That was the point of doing it in this order: the borrow path refuses a
+stale source, so `XL.00` could only be re-earned after `PS.01` was. **The last
+actionable stale row is now gone** (`run stale`: 1 → 0 CHANGED). The
+consequence the last three handoffs kept promising has actually happened —
+`run blocked` now ranks **`LC.03` second in the project at frees 7**
+(`DP.01`, `DP.02`, `DP.03`, `LC.04`, `LC.05`, `LC.06`, `OP.01`), and it is
+runnable for the first time rather than resting on a stale certificate.
+**`LC.03` is the next iteration's unit of work**: CPU, `cpu<2h`, zero GPU, and
+it is the screening round of the learning-core bakeoff that decides HOW Jack
+learns. Carry the owner's three guards from `DECISIONS_NEEDED.md` (data-starved
+≠ non-learner; the convergence check; the scale-transfer gate) — they bind on
+`LC.04`, not on screening, but read them before you start.
+
+**Item 2, the organ — a dispatch now leaves a receipt.** The class of failure
+`6b001e7` exposed is that a remote job reported as submitted but never
+submitted is **invisible to every instrument here**: an unchanged
+`gpu_budget.json` reads as "nothing spent", an unchanged ledger reads as "not
+run", and the only contradiction was prose no gate reads. A submission that
+never happened and one that died mid-flight left byte-identical evidence.
+`gpu.submit()` now appends a receipt to `experiments/gpu_submissions.jsonl`,
+fsync'd **before** each remote call and again after it — so a job SIGKILLed in
+flight still leaves proof it existed, and absence of a receipt can be read as
+*not dispatched*. Registered as `T0.12` property 8; **`T0.12` PASS (1.31 s)**
+with all five receipt properties True and all four required control properties
+False.
+
+**The design point that took the most thought, and the one worth stealing: an
+evidence log must be asserted in BOTH directions or it is not evidence.**
+Presence-only is the easy half, and an implementation that logged the backends
+`submit()` *intended* to try would satisfy it while re-creating the original
+defect in a worse form — a durable record of a submission that never happened,
+which beats prose at looking machine-checked. So the battery also drains
+Kaggle's quota, prefers Kaggle, and requires the **skipped** backend to leave
+**no** receipt (`no_receipt_for_skipped_backend`). A log you can only read as
+"something happened" cannot be read as "nothing happened", and it was the
+second reading this scar needed. The control is the pre-2026-08-11 dispatch
+loop run against a **healthy** `Budget`, so the only variable is the loop's
+silence.
+
+**A bug I introduced and caught before committing, which is itself the lesson.**
+The pre-existing `_probe_submit` called `submit()` with the default journal, so
+running `T0.12` appended **stub receipts** — `kaggle/u/stub`, a job that never
+existed — to the real `experiments/gpu_submissions.jsonl`. An evidence file a
+test can write fiction into is not evidence, and it would have poisoned the
+organ on its first use. `journal` is now a required parameter of that probe and
+the polluted file is deleted. This is the same rule `submit()` already applied
+to `budget` ("a function that hard-codes the path to the record it mutates
+cannot be tested except by corrupting it") — it just had not been extended to
+the new record.
+
+**One extra guard, cheap:** `IMPL_DEPS = ["experiments/gpu.py"]` on `T0.12`. Its
+every property is a property of that file, and without the line the meter could
+be rewritten while `T0.12` went on reading PASS against code it never saw. Its
+row also had `impl_sha: None`, so this re-run backfilled it — 43 unverifiable
+entries → 42, a one-row dent in item 7.
+
+**What I did NOT do, and why — say it plainly.**
+- **Item 6, `UB.14` / the unison zero-pass rule.** Not taken, fourth iteration
+  running. `CPU_LONG`, and this iteration's CPU was spent on `XL.00`'s 19.5
+  minutes, which was item 5 and the higher-ranked one. This is now the oldest
+  untaken finding on the board and the standing rule in `ladder_prompt.md`
+  points straight at it: `one brain / unison` is 21 declared specs and an
+  honest 0 passing, against a commitment SYSTEM.md calls constitutional.
+- **`T0.10`'s missing control (item 2's tail, seventh audit).** Deliberately
+  deferred, with the design written down so it is one step. The control should
+  be the same `PROBE` kernel pushed with `enable_gpu=False` — it must FAIL
+  `cuda_available` and `matmul_finite` while still reporting `ok` and returning
+  an artifact, which is exactly the historical lie (before phone verification,
+  kernels ran to COMPLETE on CPU with nothing signalling a problem). That needs
+  `run_on_kaggle` to take an `enable_gpu` argument and drop `--accelerator`.
+  The reason I stopped: implementing it marks `T0.10` CHANGED, and **`T2.02`
+  depends on `T0.10`** — so a spec I cannot re-run this iteration (it needs
+  Kaggle) would have pulled a `GPU_LONG` job out of the runnable set as a side
+  effect. Do it in an iteration that can spend the quota to re-earn it.
+- **`T0.09`/`T0.10`/`T0.11` have the same missing `IMPL_DEPS` on `gpu.py`** that
+  `T0.12` just got, and I changed `gpu.py` this iteration — so those three
+  certificates are now formally out of date and the ladder cannot see it.
+  Same reason as above: closing it costs GPU quota. Named in
+  `t0_12_gpu_budget.py` so it is not lost.
+- **No GPU submission.** Credits read 94% of the weekly ceiling
+  (`scripts/claude_usage.py`, resets Aug 12 12:00 UTC) and `XL.00` held the
+  lock for the first 20 minutes, so there was no room to submit AND poll. I did
+  not start a job I could not finish — that gamble is what produced the false
+  handoff being corrected above. The repo is pushed, which is the prerequisite
+  `assert_ref_is_current` enforces, so the next iteration can submit
+  immediately.
+
+**Next iteration, in order.** (1) `LC.03` — CPU, `cpu<2h`, frees 7, newly
+runnable and the largest non-GPU unblock in the project. (2) If credits are
+tight, submit `T1.02` to **Kaggle** instead (`prefer="kaggle"` — `prefer="colab"`
+is what put the last attempt out of reach of Kaggle's ~18 h, which expire
+2026-08-16); it is the standing coverage rule's pick, `generality` being 4
+declared and 0 passing. (3) `UB.14`, and stop deferring it.

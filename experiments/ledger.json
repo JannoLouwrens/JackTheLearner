@@ -2409,8 +2409,8 @@
     },
     "T0.12": {
       "amended": [],
-      "attempt": 3,
-      "commit": "44c719c",
+      "attempt": 4,
+      "commit": "bd6ebe0+dirty",
       "control_metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
@@ -2422,8 +2422,13 @@
         "failed_hours_visible": false,
         "idempotent_across_processes": false,
         "no_false_overrun": true,
+        "no_receipt_for_skipped_backend": false,
         "overrun_names_the_job": false,
         "overrun_recorded": false,
+        "receipt_names_the_job": false,
+        "receipt_pairs_attempt_with_result": false,
+        "receipt_survives_all_backends_failing": false,
+        "receipt_written_before_dispatch": false,
         "refuses_oversized": true,
         "refuses_when_exhausted": true,
         "stale_format_key_isolated": false,
@@ -2437,7 +2442,7 @@
         "waste_not_counted_as_work": false,
         "weeks_isolated": false
       },
-      "duration_s": 0.01,
+      "duration_s": 1.31,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2451,9 +2456,15 @@
           "message": "",
           "ran_at": "2026-08-09T13:11:08",
           "status": "PASS"
+        },
+        {
+          "commit": "44c719c",
+          "message": "",
+          "ran_at": "2026-08-09T19:14:05",
+          "status": "PASS"
         }
       ],
-      "impl_sha": null,
+      "impl_sha": "8218446b4f017304",
       "message": "",
       "metrics": {
         "affords_within_quota": true,
@@ -2466,8 +2477,13 @@
         "failed_hours_visible": true,
         "idempotent_across_processes": true,
         "no_false_overrun": true,
+        "no_receipt_for_skipped_backend": true,
         "overrun_names_the_job": true,
         "overrun_recorded": true,
+        "receipt_names_the_job": true,
+        "receipt_pairs_attempt_with_result": true,
+        "receipt_survives_all_backends_failing": true,
+        "receipt_written_before_dispatch": true,
         "refuses_oversized": true,
         "refuses_when_exhausted": true,
         "stale_format_key_isolated": true,
@@ -2481,7 +2497,7 @@
         "waste_not_counted_as_work": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-09T19:14:05",
+      "ran_at": "2026-08-11T19:28:28",
       "seeds": [
         0
       ],
@@ -4345,8 +4361,8 @@
     },
     "XL.00": {
       "amended": [],
-      "attempt": 4,
-      "commit": "92bade0",
+      "attempt": 5,
+      "commit": "bd6ebe0",
       "control_metrics": {
         "c_at_death_attainable_ok": 1.0,
         "c_at_death_attainable_ok_std": 0.0,
@@ -4397,7 +4413,7 @@
         "c_wiped_rows": 0.0,
         "c_wiped_rows_std": 0.0
       },
-      "duration_s": 1162.68,
+      "duration_s": 1170.87,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -4417,13 +4433,24 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-10T11:27:44",
           "status": "FAIL"
+        },
+        {
+          "commit": "92bade0",
+          "message": "",
+          "ran_at": "2026-08-10T12:27:59",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "5716b043273341e7",
+      "impl_sha": "811833ea7631191c",
       "message": "",
       "metrics": {
         "alpha": 0.027222,
         "alpha_std": 0.0,
+        "borrowed_commit": "21d11d6",
+        "borrowed_from": "PS.01",
+        "borrowed_impl_sha": "94735681c2c21360",
+        "borrowed_ran_at": "2026-08-11T18:23:41",
+        "borrowed_status": "PASS",
         "calibrated": 1.0,
         "calibrated_std": 0.0,
         "conjunction": 1.0,
@@ -4505,7 +4532,7 @@
         "uniform_z": 0.208145,
         "uniform_z_std": 0.764257
       },
-      "ran_at": "2026-08-10T12:27:59",
+      "ran_at": "2026-08-11T19:27:39",
       "seeds": [
         0,
         1,

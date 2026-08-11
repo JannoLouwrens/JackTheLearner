@@ -16,6 +16,8 @@ Properties, each independently checkable:
   6. The meter charges what was SPENT: the provider's metered window, not this
      box's wall clock; waste labelled as waste; each remote job billed once.
   7. Crossing the ceiling leaves a mark.
+  8. A dispatch leaves a receipt written BEFORE the remote call, and a backend
+     the budget skipped leaves none — so absence means not-dispatched.
 
 Uses a temporary budget file; must never touch the real accounting.
 
@@ -37,6 +39,14 @@ by that number, with this spec green throughout. Properties 6 and 7 are the
 three defects that produced it, and their control is the pre-fix `submit()` loop
 reproduced verbatim.
 
+EXTENDED 2026-08-11 after the seventh overseer audit, with property 8. Every
+property above audits the METER; none audited whether a dispatch happened at
+all. Commit `6b001e7` handed off a claim that a T1.02 GPU poll was in flight
+when nothing had been submitted, and that claim was contradicted by nothing a
+gate reads: the budget file was unchanged (= "nothing spent"), the ledger was
+unchanged (= "not run"), and the prose was the only witness. `submit()` now
+leaves a receipt, and the pre-2026-08-11 dispatch loop is the control.
+
 STILL OPEN, deliberately not claimed here: nothing reconciles the meter against
 Kaggle's OWN reported runtime for a kernel. That needs a live kernel and
 network, which a CPU_FAST spec must not spend. What is asserted below is the
@@ -54,6 +64,15 @@ from .. import gpu
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 from ..gpu import Budget, JobResult, KAGGLE_WEEKLY_HOURS
+
+# Every property here is a property of `experiments/gpu.py`, so a change to that
+# file must retire this certificate. Without this line the meter could be
+# rewritten and T0.12 would go on reading PASS against code it never saw — the
+# same class of blindness `impl_sha` exists to close, one level out. T0.12 is
+# CPU_FAST, so re-earning it costs seconds; the other GPU specs (T0.09/T0.10/
+# T0.11) have the same gap and clearing it costs real GPU quota, so it is left
+# for an iteration that can spend it. Named here so it is not lost.
+IMPL_DEPS = ["experiments/gpu.py"]
 
 LIVE_WEEK_FMT = "%Y-W%U"       # what Budget._week() produces (Sunday-start)
 RETIRED_WEEK_FMT = "%G-W%V"    # the ISO key format retired on 2026-08-08
@@ -203,11 +222,17 @@ _STUB_KAGGLE = dict(duration_s=3600.0, billable_s=1800.0, job_id="kaggle/u/stub"
 
 
 def _prefix_submit(script, prefer="colab", est_hours=0.1, gpu_name="T4",
-                   timeout_s=900, fetch=None, budget=None):
+                   timeout_s=900, fetch=None, budget=None, journal=None):
     """`gpu.submit`'s billing loop EXACTLY as it stood before 2026-08-09.
 
     Reproduced rather than referenced because the fixed version is now the only
     one in the tree. This is the control: it must fail the billing properties.
+
+    It accepts `journal` and ignores it. The pre-fix loop had no such parameter
+    at all; the kwarg exists only so the control can be called through the same
+    signature as the fixed function. What is being controlled for is that this
+    version WRITES NOTHING — a dispatch it makes is indistinguishable from a
+    dispatch that never happened, which is the 2026-08-11 defect (property 8).
     """
     order = ["colab", "kaggle"] if prefer == "colab" else ["kaggle", "colab"]
     for backend in order:
@@ -221,8 +246,18 @@ def _prefix_submit(script, prefer="colab", est_hours=0.1, gpu_name="T4",
     return JobResult(order[-1], False, message="all backends failed")
 
 
-def _probe_submit(submit_fn, budget: Budget) -> dict:
-    """The wiring: does submit() hand the meter the right number, once?"""
+def _probe_submit(submit_fn, budget: Budget, journal: Path) -> dict:
+    """The wiring: does submit() hand the meter the right number, once?
+
+    `journal` is not optional and there is a scar behind that. When the receipt
+    log landed (2026-08-11) this probe still called `submit()` with the default
+    journal, so running T0.12 appended STUB receipts — `kaggle/u/stub`, a job
+    that never existed — to the real `experiments/gpu_submissions.jsonl`. An
+    evidence file a test can write fiction into is not evidence. Same rule as
+    `budget`: a function that hard-codes the path to the record it mutates
+    cannot be tested except by corrupting it, and that rule now covers the
+    receipt log as well as the meter.
+    """
     real_colab, real_kaggle = gpu.run_on_colab, gpu.run_on_kaggle
     gpu.run_on_colab = lambda *a, **k: JobResult("colab", False, message="stub: no VM",
                                                  **_STUB_COLAB)
@@ -231,12 +266,14 @@ def _probe_submit(submit_fn, budget: Budget) -> dict:
         with tempfile.TemporaryDirectory() as sd:
             script = Path(sd) / "job.py"
             script.write_text("print('stub')\n")
-            submit_fn(script, prefer="colab", est_hours=0.1, budget=budget)
+            submit_fn(script, prefer="colab", est_hours=0.1, budget=budget,
+                      journal=journal)
             kaggle_after_one = budget.productive_hours("kaggle")
             colab_waste = budget.failed_hours("colab")
             colab_work = budget.productive_hours("colab")
             # Same two job ids: a re-run of the identical remote work.
-            submit_fn(script, prefer="colab", est_hours=0.1, budget=budget)
+            submit_fn(script, prefer="colab", est_hours=0.1, budget=budget,
+                      journal=journal)
             kaggle_after_two = budget.productive_hours("kaggle")
     finally:
         gpu.run_on_colab, gpu.run_on_kaggle = real_colab, real_kaggle
@@ -251,12 +288,109 @@ def _probe_submit(submit_fn, budget: Budget) -> dict:
     }
 
 
+def _probe_receipt(submit_fn, make, td: Path) -> dict:
+    """Does a dispatch leave evidence that it happened?
+
+    THE SCAR: commit `6b001e7` (2026-08-11) handed off a claim that a `T1.02`
+    GPU poll was in flight when nothing had been submitted. The claim survived
+    every gate the project owns — an unchanged `gpu_budget.json` reads as
+    "nothing spent", an unchanged ledger reads as "not run", and the only
+    contradiction was prose no gate reads. An iteration that never called
+    `submit()` and one whose submission died mid-flight left byte-identical
+    evidence, so the absence of a receipt could not be interpreted.
+
+    Asserted here in both directions, because only the pair is useful: a
+    dispatch must leave a receipt BEFORE the remote call (so absence means "not
+    dispatched" rather than "died early"), and a backend the budget SKIPPED must
+    leave none (so presence means "actually dispatched" rather than "intended
+    to"). One without the other is a log, not evidence.
+    """
+    td.mkdir(parents=True, exist_ok=True)
+    log = td / "submissions.jsonl"
+    seen: dict[str, int] = {}
+    real_colab, real_kaggle = gpu.run_on_colab, gpu.run_on_kaggle
+
+    def _stub(backend, ok, extra):
+        def _fn(*a, **k):
+            # How much was already on DISK at the instant the remote call was
+            # made. Read through the public reader, not the writer's own state.
+            seen[backend] = len(gpu.submissions(log))
+            return JobResult(backend, ok, message=f"stub: {backend}", **extra)
+        return _fn
+
+    with tempfile.TemporaryDirectory() as sd:
+        script = Path(sd) / "job.py"
+        script.write_text("print('stub')\n")
+
+        # (a) colab fails, kaggle succeeds: the ordinary failover.
+        gpu.run_on_colab = _stub("colab", False, _STUB_COLAB)
+        gpu.run_on_kaggle = _stub("kaggle", True, _STUB_KAGGLE)
+        try:
+            submit_fn(script, prefer="colab", est_hours=0.1,
+                      budget=make(td / "receipt_a.json"), journal=log)
+        finally:
+            gpu.run_on_colab, gpu.run_on_kaggle = real_colab, real_kaggle
+        recs = gpu.submissions(log)
+        attempts = [r for r in recs if r.get("phase") == "attempt"]
+        results = [r for r in recs if r.get("phase") == "result"]
+
+        before_dispatch = seen.get("colab", 0) >= 1 and seen.get("kaggle", 0) >= 3
+        paired = (len(attempts) == 2 and len(results) == 2
+                  and {a.get("attempt_id") for a in attempts}
+                  == {r.get("attempt_id") for r in results})
+        names_job = any(r.get("job_id") == "kaggle/u/stub" and r.get("ok") is True
+                        for r in results)
+
+        # (b) every backend fails: the receipt must survive the fact that
+        # nothing came back. This is the case the false handoff resembled.
+        log_b = td / "submissions_b.jsonl"
+        gpu.run_on_colab = _stub("colab", False, _STUB_COLAB)
+        gpu.run_on_kaggle = _stub("kaggle", False, _STUB_KAGGLE)
+        try:
+            submit_fn(script, prefer="colab", est_hours=0.1,
+                      budget=make(td / "receipt_b.json"), journal=log_b)
+        finally:
+            gpu.run_on_colab, gpu.run_on_kaggle = real_colab, real_kaggle
+        recs_b = gpu.submissions(log_b)
+        survives_failure = (len([r for r in recs_b if r.get("phase") == "attempt"]) == 2
+                            and gpu.last_submission(log_b) is not None)
+
+        # (c) THE FALSE-POSITIVE HALF. Drain kaggle so `afford()` skips it, then
+        # prefer kaggle. Only colab is really dispatched to, so only colab may
+        # appear. An implementation that logged its INTENDED order up front
+        # would pass (a) and (b) and fail here — and would have re-created the
+        # exact defect, a record claiming a submission that never happened.
+        drained = make(td / "receipt_c.json")
+        drained.charge("kaggle", KAGGLE_WEEKLY_HOURS * 3600.0, ok=True,
+                       job_id="kaggle/u/drain")
+        log_c = td / "submissions_c.jsonl"
+        gpu.run_on_colab = _stub("colab", False, _STUB_COLAB)
+        gpu.run_on_kaggle = _stub("kaggle", True, _STUB_KAGGLE)
+        try:
+            submit_fn(script, prefer="kaggle", est_hours=1.0,
+                      budget=drained, journal=log_c)
+        finally:
+            gpu.run_on_colab, gpu.run_on_kaggle = real_colab, real_kaggle
+        backends_c = {r.get("backend") for r in gpu.submissions(log_c)}
+        skipped_unlogged = backends_c == {"colab"}
+
+    return {
+        "receipt_written_before_dispatch": before_dispatch,
+        "receipt_pairs_attempt_with_result": paired,
+        "receipt_names_the_job": names_job,
+        "receipt_survives_all_backends_failing": survives_failure,
+        "no_receipt_for_skipped_backend": skipped_unlogged,
+    }
+
+
 def _experiment(seed: int) -> dict:
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "budget.json"
         out = _probe(Budget(path), path)
         out.update(_probe_metering(Budget, Path(td)))
-        out.update(_probe_submit(gpu.submit, Budget(Path(td) / "submit.json")))
+        out.update(_probe_submit(gpu.submit, Budget(Path(td) / "submit.json"),
+                                 Path(td) / "submit_receipts.jsonl"))
+        out.update(_probe_receipt(gpu.submit, Budget, Path(td) / "receipt"))
         return out
 
 
@@ -295,15 +429,19 @@ def _control(seed: int) -> dict:
     """Two named broken meters, each answering for the properties it breaks.
 
     `_LeakyBudget` is the 2026-08-08 week-key collision; `_PreFixBudget` is the
-    2026-08-09 billing defect. They are kept separate rather than merged into
-    one omni-broken fixture so that `_check` can name which failure proves which
-    assertion is discriminating.
+    2026-08-09 billing defect; `_prefix_submit` run against a HEALTHY `Budget`
+    is the 2026-08-11 missing-receipt defect — the meter is deliberately the
+    good one there, so the only variable is the dispatch loop's silence. They
+    are kept separate rather than merged into one omni-broken fixture so that
+    `_check` can name which failure proves which assertion is discriminating.
     """
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "budget.json"
         out = _probe(_LeakyBudget(path), path)
         out.update(_probe_metering(_PreFixBudget, Path(td)))
-        out.update(_probe_submit(_prefix_submit, _PreFixBudget(Path(td) / "submit.json")))
+        out.update(_probe_submit(_prefix_submit, _PreFixBudget(Path(td) / "submit.json"),
+                                 Path(td) / "submit_receipts.jsonl"))
+        out.update(_probe_receipt(_prefix_submit, Budget, Path(td) / "receipt"))
         return out
 
 
@@ -341,6 +479,14 @@ def _check(m: dict, c: dict) -> bool:
         and m["submit_buckets_failure_as_waste"]
         and m["submit_reattach_is_free"]
     )
+    # Property 8: a dispatch leaves a receipt, and only a real dispatch does.
+    receipt_ok = (
+        m["receipt_written_before_dispatch"]
+        and m["receipt_pairs_attempt_with_result"]
+        and m["receipt_names_the_job"]
+        and m["receipt_survives_all_backends_failing"]
+        and m["no_receipt_for_skipped_backend"]
+    )
     # Each control must fail on the property it exists to break — a control that
     # tripped on something unrelated would leave the assertion untested.
     # `_LeakyBudget` answers for isolation:
@@ -356,7 +502,20 @@ def _check(m: dict, c: dict) -> bool:
         and (not c["submit_buckets_failure_as_waste"])
         and (not c["submit_reattach_is_free"])
     )
-    return experiment_ok and billing_ok and isolation_detected and billing_detected
+    # The pre-fix dispatch loop answers for the receipt. `no_receipt_for_skipped
+    # _backend` is deliberately NOT required to fail: the control writes nothing
+    # at all, so it satisfies that property vacuously. Requiring it would mean
+    # demanding a control fail a property it cannot express, which is how a
+    # conjunction ends up asserting the control is broken rather than that the
+    # measurement is discriminating.
+    receipt_detected = (
+        (not c["receipt_written_before_dispatch"])
+        and (not c["receipt_pairs_attempt_with_result"])
+        and (not c["receipt_names_the_job"])
+        and (not c["receipt_survives_all_backends_failing"])
+    )
+    return (experiment_ok and billing_ok and receipt_ok
+            and isolation_detected and billing_detected and receipt_detected)
 
 
 def run(ledger: Ledger | None = None):

@@ -31,6 +31,9 @@ COLAB = "/data/venvs/colab/bin/colab"
 KAGGLE = "/data/venvs/kaggle/bin/kaggle"
 BUDGET_FILE = Path(__file__).parent / "gpu_budget.json"
 
+# Append-only receipt for every remote dispatch. See `_record_submission`.
+SUBMISSION_LOG = Path(__file__).parent / "gpu_submissions.jsonl"
+
 # Kaggle's free allowance. Colab's is unpublished and elastic, so it is not
 # budgeted — it is simply tried first for short work.
 KAGGLE_WEEKLY_HOURS = 30.0
@@ -134,6 +137,7 @@ def assert_ref_is_current(ref: str = "main") -> None:
         # so the first GPU run dirtied the tree and blocked the second. A guard
         # that fails on its own side effects trains people to bypass it.
         outputs = {"experiments/gpu_budget.json", "experiments/ledger.json",
+                   "experiments/gpu_submissions.jsonl",
                    "CHECKLIST.md", "docs/LOOP_JOURNAL.md"}
         # Parse by splitting, not by column: git() strips stdout, which eats the
         # leading space of the FIRST porcelain line only (' M path' -> 'M path'),
@@ -482,10 +486,69 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
                      job_id=job_id, billable_s=billable_s)
 
 
+def _head_sha() -> str:
+    p = subprocess.run(["git", "-C", str(Path(__file__).parent.parent),
+                        "rev-parse", "--short", "HEAD"],
+                       capture_output=True, text=True)
+    return p.stdout.strip() if p.returncode == 0 else ""
+
+
+def _record_submission(entry: dict, log: Optional[Path] = None) -> dict:
+    """Append one line to the submission receipt log, durably.
+
+    THE SCAR (2026-08-11, 7th overseer audit). Commit `6b001e7` handed off a
+    claim that a T1.02 GPU poll was in flight. Nothing had been submitted. That
+    false claim passed every gate the project owns: `gpu_budget.json` was
+    unchanged, which reads as "nothing spent"; the ledger was unchanged, which
+    reads as "not run yet"; and the only thing contradicting it was prose that
+    no gate reads. An iteration that never called `submit()` and one whose
+    submission died in flight left byte-identical evidence.
+
+    So a dispatch now leaves a trace that is written BEFORE the remote call and
+    survives the process dying mid-flight — a claim of "I submitted X" becomes
+    checkable rather than believable. The log is append-only and never read by
+    the ladder's decisions; it is evidence, not state.
+
+    fsync'd because the whole point is surviving a kill: a line sitting in the
+    page cache of a process that gets SIGKILLed is exactly the absent receipt
+    this exists to prevent.
+    """
+    path = Path(log) if log is not None else SUBMISSION_LOG
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "a") as fh:
+        fh.write(json.dumps(entry, sort_keys=True) + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
+    return entry
+
+
+def submissions(log: Optional[Path] = None) -> list[dict]:
+    """Every recorded dispatch, oldest first. Unparseable lines are skipped."""
+    path = Path(log) if log is not None else SUBMISSION_LOG
+    if not path.exists():
+        return []
+    out = []
+    for ln in path.read_text().splitlines():
+        ln = ln.strip()
+        if not ln:
+            continue
+        try:
+            out.append(json.loads(ln))
+        except json.JSONDecodeError:
+            continue
+    return out
+
+
+def last_submission(log: Optional[Path] = None) -> Optional[dict]:
+    recs = submissions(log)
+    return recs[-1] if recs else None
+
+
 def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
            gpu: str = "T4", timeout_s: int = 900,
            fetch: Optional[list[str]] = None,
-           budget: Optional["Budget"] = None) -> JobResult:
+           budget: Optional["Budget"] = None,
+           journal: Optional[Path] = None) -> JobResult:
     """Run a job on whichever backend can take it. The job does not know which.
 
     Order: try `prefer`, fall back to the other. Kaggle is checked against its
@@ -504,12 +567,29 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
     # zero-cost recovery of T2.01 v4 into a Colab failover and an ERROR.
     reuse = bool(os.environ.get("JACK_REUSE_KERNEL", "").strip())
 
+    head = _head_sha()
     for backend in order:
         if backend == "kaggle" and not reuse and not budget.afford("kaggle", est_hours):
             attempts.append(f"kaggle: {budget.remaining('kaggle'):.1f}h left, need {est_hours}h")
             continue
+        # BEFORE the call, so a job killed in flight still leaves evidence it
+        # existed. `attempt_id` is what links this to its outcome line.
+        started = time.time()
+        attempt_id = f"{int(started * 1000)}-{os.getpid()}-{backend}"
+        _record_submission({"phase": "attempt", "attempt_id": attempt_id,
+                            "ts": started, "iso": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                            "backend": backend, "prefer": prefer,
+                            "est_hours": est_hours, "timeout_s": timeout_s,
+                            "script": str(script), "head": head,
+                            "pid": os.getpid()}, journal)
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
                else run_on_kaggle(script, timeout_s, fetch))
+        _record_submission({"phase": "result", "attempt_id": attempt_id,
+                            "ts": time.time(), "backend": backend,
+                            "job_id": res.job_id, "ok": bool(res.ok),
+                            "duration_s": res.duration_s,
+                            "charge_seconds": res.charge_seconds,
+                            "message": (res.message or "")[:500]}, journal)
         # Charge the metered window, labelled by outcome, once per remote job.
         # All three of those qualifiers were missing until 2026-08-09.
         budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id)
