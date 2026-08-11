@@ -2472,8 +2472,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 19,
-      "commit": "17a6c3c+dirty",
+      "attempt": 20,
+      "commit": "e39455b",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -2605,6 +2605,12 @@
           "message": "",
           "ran_at": "2026-08-10T12:32:29",
           "status": "PASS"
+        },
+        {
+          "commit": "17a6c3c+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T16:17:05",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2630,7 +2636,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-11T16:17:05",
+      "ran_at": "2026-08-11T16:18:40",
       "seeds": [
         0
       ],
@@ -2954,8 +2960,8 @@
     },
     "T0.20": {
       "amended": [],
-      "attempt": 4,
-      "commit": "17a6c3c+dirty",
+      "attempt": 5,
+      "commit": "e39455b",
       "control_metrics": {
         "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
         "inventory_size": 10.0,
@@ -2965,7 +2971,7 @@
         "senses_absent_live": 2.0,
         "senses_load_bearing_live": 0.0
       },
-      "duration_s": 1.74,
+      "duration_s": 1.72,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2985,6 +2991,12 @@
           "message": "",
           "ran_at": "2026-08-10T14:14:11",
           "status": "PASS"
+        },
+        {
+          "commit": "17a6c3c+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T16:16:56",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d4d8cd17746bdd3b",
@@ -2998,7 +3010,7 @@
         "senses_absent_live": 2.0,
         "senses_load_bearing_live": 0.0
       },
-      "ran_at": "2026-08-11T16:16:56",
+      "ran_at": "2026-08-11T16:18:37",
       "seeds": [
         0
       ],
@@ -3007,8 +3019,8 @@
     },
     "T0.21": {
       "amended": [],
-      "attempt": 4,
-      "commit": "17a6c3c+dirty",
+      "attempt": 5,
+      "commit": "e39455b",
       "control_metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
@@ -3039,6 +3051,12 @@
           "message": "",
           "ran_at": "2026-08-10T14:14:12",
           "status": "PASS"
+        },
+        {
+          "commit": "17a6c3c+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T16:17:07",
+          "status": "PASS"
         }
       ],
       "impl_sha": "4d10e37def5d3056",
@@ -3053,7 +3071,7 @@
         "properties_checked": 7.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-11T16:17:07",
+      "ran_at": "2026-08-11T16:18:38",
       "seeds": [
         0
       ],

@@ -2718,3 +2718,89 @@ or `VO.01` (voice, 2 declared) — take SM.01, it shares this iteration's shape
 `XL.00` remain the only two STALE entries on the board. And the Kaggle quota
 (~18 h) still expires 2026-08-16 with nothing submitted since the push block
 lifted.
+
+## 2026-08-11 — SM.01 PASS: the odour field, and a fourth tier for `run senses`
+
+**Unit taken under the STANDING RULE** (a GOAL.md commitment with zero passing
+specs outranks fan-out): `smell` read 0 of 2, and `SM.01` was the cheapest
+runnable declared member across all thirteen zero-pass commitments. The
+previous iteration nominated it by name. `run coverage` now reads 12 zero-pass
+commitments, not 13.
+
+**Built.** `experiments/odour.py` — the field in the `Water` overlay pattern,
+two arms kept because `SM.02` needs the loser. **O1** `StaticField`, the
+`A0*exp(-d/LAMBDA_M)` distance sensor that `SM.02` must beat; **O2**
+`PuffField`, Poisson puffs, wind advection, an Ornstein-Uhlenbeck crosswind
+gust, and per-puff line-of-sight occlusion by GADEN's trick (3-sigma cutoff
+first, then one `mj_ray` per surviving candidate). Plus `OdourSensor`:
+bilateral sites, `2*C + C = 12` floats at `C = 4` (food/decay/smoke/water,
+tagged per source, never chemistry). O3 (baked CFD) is deliberately not built —
+a jungle Jack rebuilds is the world a pre-baked plume cannot follow.
+
+**Measured, 3 seeds, gates pre-registered and unchanged, run from a clean tree
+at `17a6c3c`:**
+
+    o1 falloff vs the declared exponential       0.0        (gate 0.01)
+    ...vs the inverse-square RIVAL               2.570      (gate 0.10, must miss)
+    superposition over 3 sources                 0.0
+    channel leak, food -> smoke/decay            0.0        (exact)
+    wind peak displacement vs u*T                2.4e-08    (gate 0.01)
+    proportionality slope                        4.000 s    (T = 4.0 s)
+    CONTROL, advection dropped, nothing else     1.0        caught every seed
+    hidden receiver, NO line of sight            SNR 477    (gate 50)
+    ...does light reach it                       NO — welded_block at 0.85 m
+    ...a LIT receiver at the same 2.0 m          YES
+    shadow receiver, occlusion on vs off         28.4% attenuated
+    one puff behind the block / clear line       0.0 / 0.00277, identical off
+    O1 14.5 us/step, O2 321 us/step              0.96% of a 30 Hz frame
+
+**The headline is the pair, not either number.** The same `mj_ray` against the
+same geometry the eye uses blocks light from source to receiver, and the
+receiver still reads 477x the noise floor. That is smell's entire
+non-redundancy argument, measured. It is gated in BOTH directions because
+"odour passes occlusion" is free if the ray-cast never blocks anything.
+
+**THE NUMBER THE NEXT ITERATION SHOULD READ FIRST, and it is a shortfall.**
+Blank fractions 0.41 / 0.55 / 0.63 at 2 / 5 / 10 m, against Farrell et al.
+(2002) field data of 0.852 / 0.901 / 0.837 — a mean gap of **0.33**. Per-puff
+diffusion alone measured 0.035 blank at 2 m (a plume that is essentially never
+off); the OU gust was added for exactly this reason and closes about a third of
+the distance. `FROZEN_VS_PLASTIC.md` §8.3 argues intermittency is the whole
+reason smell is a different sense rather than a blurred distance sensor, and
+this field does not reach it. It is REPORTED and not gated because it is not in
+SM.01's registered hypothesis — but `SM.02`'s difficulty rides on it, and
+building SM.02 on the assumption that this plume is intermittent would be
+building on a number now visible in the ledger as 0.33 short. Either close it
+(coherent filament structure, not more per-puff noise) or state plainly that
+SM.02 tests occlusion rather than intermittency.
+
+**Machine improvement — the overseer's FOR THE BUILDER §7, asked since audit 4.**
+`experiments/senses.py` gained the fourth status tier: `ABSENT -> REGISTERED ->
+SENSOR -> LOAD-BEARING`. `DEMONSTRATED` meant "some declared spec is PASS",
+which made `PG.6` — a ridge probe whose own docstring says it certifies the
+sensor and not the net — read sight as `[PASS]`. SM.01 is the same shape and
+would have done the same for smell within minutes of being written, which is
+what made this the right iteration to fix it. Each sense now declares a
+`load_bearing` tuple (the specs whose PASS would mean an *ablation* cost him
+something, GOAL.md's own standard), and `T0.20` gained **P7**, checked in both
+directions: a ledger where only SM.01 passes must read smell `SENSOR`; the same
+ledger with SM.02 passing must read `LOAD-BEARING`. Without the positive half
+the tier could have been unreachable by construction with every other property
+green. `run senses` now reads **0/10 LOAD-BEARING**. T0.20's `falsified_by`
+moved from "six properties" to "seven" — a tightening, nothing removed.
+
+**New LESSONS.md entry:** *a gate that re-derives the module's own formula is a
+tripwire, not a discrimination* — SM.01's falloff gate scored 0.0 against the
+same expression the module computes and could only ever fire on an edit. Naming
+the RIVAL model and requiring it to miss is what turns it into evidence.
+
+**Next iteration.** Under the same standing rule the cheapest runnable member
+of a zero-pass commitment is now `VO.01` (voice, 2 declared, `cpu<10min`, deps
+PG.1 — and `ContactAudio` plus PG.5's certified synth are the substrate), then
+`PS.02` / `PS.03` / `BA.01` (thermal, damage, balance — 2/1/1 declared,
+`cpu<10min` each). Still open and cheap: `PS.01` and `XL.00` are the only two
+STALE entries on the board and PS.01 is the one XL.00 and the whole LC family
+consume. And the Kaggle quota (~18 h) expires **2026-08-16** with nothing
+submitted since the push block lifted — `T1.02` is an ERROR from an
+infrastructure fault, is `run next`'s first entry, and is one of only four
+specs behind `generality`.
