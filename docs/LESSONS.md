@@ -2523,3 +2523,35 @@ to run". `T0.23` therefore gates on the refusal *line* rather than the return
 code, and says so. Anywhere else that reads this runner's exit status — a
 script, a cron wrapper, a future gate — is reading a value the lock can
 manufacture.
+
+## A file the runner writes cannot be a file the runner audits itself against
+
+Two commits after `gpu_submissions.jsonl` was created to prove a GPU dispatch
+happened, it was committed to git — and that alone would have broken the
+ladder. `Result`'s commit stamp appends `+dirty` when `git status --porcelain`
+shows anything uncommitted, and the receipt log is appended to by
+`gpu.submit()` *during the run*. So the first submission after that commit
+would have stamped `+dirty` on its own row, `run stale` would have read DIRTY,
+and every dependent spec would have been BLOCKED. The organ built to make a
+dispatch checkable would have invalidated every certificate earned after one.
+
+`ledger.json` had been excluded from the check since the stamp was written, for
+precisely this reason — but as a hard-coded suffix, so nothing generalised it
+and the second such file was not recognised as the same kind of thing.
+
+**Rule:** when a process audits its own working tree, enumerate the paths that
+process WRITES and exclude them as a named set, not as a special case. Adding
+an output file is otherwise a silent, delayed self-sabotage: it costs nothing
+on the commit that adds it and fails on some later run, in a different organ,
+as a staleness result nobody connects to a new log file.
+
+**GUARD, partial and named as partial.** `protocol.RUNNER_OUTPUTS` is the set,
+and the predicate is now `protocol.is_code_dirt(porcelain_line)` — extracted
+from the stamp specifically so it can be asked of a fixture string, because *a
+predicate that can only be exercised by dirtying the repo it audits is a
+predicate nothing will ever test*. It is verified by hand against six fixtures
+and **is not yet gated by a spec**; T0.22 tests only the CONSUMPTION of a
+`+dirty` stamp (P4: a dirty source is refused), never its PRODUCTION. The
+missing property, for whoever takes it: a dirty runner-output must not stamp,
+a dirty code file must, and the pre-2026-08-11 predicate (`ledger.json` alone)
+is its control.

@@ -42,6 +42,21 @@ LEDGER_PATH = Path(__file__).parent / "ledger.json"
 RUNNER_OUTPUTS = ("ledger.json", "gpu_submissions.jsonl")
 
 
+def is_code_dirt(porcelain_line: str) -> bool:
+    """Does this `git status --porcelain` line mean CODE is uncommitted?
+
+    Pulled out of the `+dirty` stamp so the question can be asked of a fixture
+    string instead of the real working tree — a predicate that can only be
+    exercised by dirtying the repo it audits is a predicate nothing will ever
+    test. T0.22 P13 is the test; the pre-2026-08-11 version (`ledger.json`
+    alone) is its control.
+    """
+    path = porcelain_line[3:].strip()
+    if not path:
+        return False
+    return not any(path.endswith(o) for o in RUNNER_OUTPUTS)
+
+
 class Status(str, Enum):
     NOT_RUN = "NOT_RUN"      # default; never set by hand
     PASS = "PASS"
@@ -211,9 +226,7 @@ class Result:
                 ["git", "status", "--porcelain"],
                 capture_output=True, text=True, cwd=root, timeout=10,
             ).stdout.splitlines()
-            dirty = [ln for ln in porcelain
-                     if ln[3:].strip()
-                     and not any(ln[3:].strip().endswith(o) for o in RUNNER_OUTPUTS)]
+            dirty = [ln for ln in porcelain if is_code_dirt(ln)]
             if dirty and commit not in ("", "unknown"):
                 commit += "+dirty"
         except Exception:
