@@ -2804,3 +2804,99 @@ consume. And the Kaggle quota (~18 h) expires **2026-08-16** with nothing
 submitted since the push block lifted — `T1.02` is an ERROR from an
 infrastructure fault, is `run next`'s first entry, and is one of only four
 specs behind `generality`.
+
+## 2026-08-11 — VO.01: voice exists, crosses a wall light cannot, and FAILS its own gate at 2 of 4 dimensions
+
+**Unit of work.** `VO.01` — the standing rule (a GOAL.md commitment with ZERO
+passing specs outranks fan-out) put voice first: 0 of 2, `cpu<10min`, deps
+`PG.5` which already passes, and it is the only EFFECTOR in the sensory
+inventory. `ContactAudio.py` gained the emission half of hearing.
+
+**RECORDED: FAIL, twice, and both stay in the ledger's history.** Attempt 1
+2026-08-11T17:21 (23.09s), attempt 2 (23.84s). No threshold was moved between
+them, and none should be moved by the next iteration either — read the number
+at the bottom of this entry first.
+
+**What the spec establishes, and it is not nothing.** Every one of the three
+sabotage controls was caught on every seed. A render with the wall disabled
+gives `noocc_amp_ratio` 1.0; a flat occluder gives `flat_centroid_drop`
+-2.2e-16; a render without 1/r gives `nodist_dist_law_dev` 6.5 and breaks
+monotonicity. The geometry is verified by this file's own ray-caster, not the
+synth's: light does NOT reach the hidden listener, the occluder IS
+`welded_block`, a second listener at the identical 2.0 m is lit, ranges equal.
+And then:
+
+    occ_amp_ratio          0.270      the block attenuates...
+    occ_snr                11.4       ...and does not silence
+    occ_centroid_drop      0.482      ...it MUFFLES — a low-pass, not a knob
+    occ_recov_r2_f0        0.627      HE IS HEARD THROUGH WHAT BLOCKS LIGHT
+    dist_law_dev           2.3e-16    the declared 1/max(r, 0.5), exactly
+    dist_dev_inverse_square 6.5       ...and the inverse-square rival misses
+    recov_r2_f0            0.827      f0 arrives
+    recov_r2_dur           0.747      duration arrives
+    mute_r2_max           -0.105      the muted mouth is at chance
+    mute_silent_rms        0.00100    mouth shut, world empty: the noise floor
+    voiced_silent_rms      0.0152     ...and 15x that with the mouth open
+
+**What FAILED.** `recov_r2_bright` 0.332, `recov_r2_amp` 0.432,
+`recov_r2_mean` 0.584 (gate 0.60), `occ_recov_r2_dur` 0.189. `occ_recov_r2_bright`
+came in at **-0.876**, which is the spec's own pre-registered prediction firing
+correctly: a low-pass occluder must make a probe trained on clear calls mis-read
+timbre, and a HIGH value there would have meant the occluder was not filtering.
+
+**Two code fixes between the attempts, no threshold touched.** (a) The emitter
+was peak-normalised, so at identical `amp` a bright call left the mouth 3.8x
+quieter than a dark one — `brightness` and `amplitude` were not independent
+action dimensions. Now constant-RMS with generalised Schroeder phases;
+`VOICE_RMS_FULL = 0.225` is derived as 0.9/(crest 2.0 x gain 2.0), verified at
+mouth RMS 0.2168 across the whole brightness range and worst-case peak 0.955.
+(b) `mute_ear_rms <= 2 sigma` was asking whether the PLAYGROUND is silent, not
+whether the mouth is; re-instrumented as the registry actually declares it
+(mouth shut AND world empty) with a companion gate requiring the same episodes
+with the mouth open to be >= 5x above it.
+
+**THE NUMBER THE NEXT ITERATION MUST READ FIRST, and it is the whole diagnosis.**
+Fix (a) was verified correct in isolation and brightness recovery moved
+**0.347 -> 0.332**. That is a measurement about the cause, and it eliminates the
+entanglement hypothesis. The actual limiter was one subtraction away in the same
+metrics block all along:
+
+    voice-only ear RMS        0.0152
+    background-only ear RMS   0.0251
+    voice-to-background SNR   -4.36 dB
+
+The voice is BELOW the playground's own contact noise. At that ratio the spec is
+measuring auditory scene analysis, not the channel it claims — and the constant
+that set it, `BG_EVENTS_PER_EP = (2, 7)`, was chosen by taste and never derived,
+while every gate around it was reasoned about at length. Both lessons are now in
+`docs/LESSONS.md` (*the interference level in a fixture is a threshold in
+disguise*; *a confound you can prove is real is not thereby the confound that is
+costing you*).
+
+**PRE-REGISTERED HERE, BEFORE IT IS RUN, so it is not a knob fitted to a score
+I have already seen.** The next iteration should DERIVE the background level
+from a stated target rather than adjust it: VO.01 claims the channel, so the
+target is a stated signal-to-interference ratio at the ear — I propose **+6 dB**
+(the voice audible over the room, still far from a clean synthetic signal),
+achieved by scaling the mixed background rather than by removing it, with
+`voice_to_background_db` reported as a metric and gated within +/-2 dB of target
+so the difficulty of the spec is itself pre-registered and checkable. The four
+recovery gates (0.50 per dimension, 0.60 mean) MUST NOT MOVE. If brightness
+still misses at +6 dB, the finding is about the emission design — a brightness
+dimension the channel cannot carry is a dead action dimension, and VO.02's
+mutual-information claim would be riding on 4 dims of which 1 is mute, which is
+worth knowing before that spec is built.
+
+**Machine improvements.** `PG.5`'s `IMPL_DEPS` never named `ContactAudio.py` —
+the module it is entirely about — so today's edit to `render()` would have left
+its certificate green over code it had never been run against. Fixed; PG.5
+re-run and PASS (11.45s, bearing decode 1.0), which also backfills the `impl_sha`
+it had never had (overseer FOR THE BUILDER §6). `senses.py`: voice carried an
+EMPTY `load_bearing` tuple, so it could not reach `LOAD-BEARING` by construction
+— indistinguishable in the report from "no route exists". Its route is `VO.02`,
+not `UB.11` (that matrix ablates INPUTS; muting a mouth costs a lone agent
+nothing), now declared and visibly blocked on a second Jack.
+
+**Also worth the next iteration's attention, unchanged from yesterday:** the
+Kaggle quota expires 2026-08-16 with nothing submitted, and `T1.02` is an ERROR
+from an infrastructure fault sitting at the top of `run next`.

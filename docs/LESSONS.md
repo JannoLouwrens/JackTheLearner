@@ -2288,3 +2288,62 @@ thinking about is not replaced; it is forked.
 Corollary, from the same instance: `depends_on` is an edge between SPECS, but
 staleness is a fact about a ledger ROW. Any graph whose satisfaction test reads
 the ledger inherits every question the ledger's own freshness rules ask.
+
+## The interference level in a fixture is a threshold in disguise
+
+VO.01 mixes real contact audio into the ears so its probe cannot read a
+pristine synthetic waveform. How much? `BG_EVENTS_PER_EP = (2, 7)`, a range
+chosen by taste and never derived. Two recorded FAILs later, the measurement
+that mattered was one subtraction away in the same metrics block: the voice
+reaches the ear at RMS 0.0152 and the background at 0.0251 — **the signal is
+4.36 dB BELOW the interference.** At that ratio, recovering four continuous
+emission parameters is auditory scene analysis, which VO.01 does not claim and
+which nothing in this project has yet built. Every pre-registered gate in that
+spec was reasoned about carefully; the one number that actually set its
+difficulty was written in passing and never justified.
+
+The generalisation is not "use less noise". It is that a nuisance term competes
+with the effect on exactly the same axis a threshold does, so it *is* one:
+`background = 2..7 events` and `the gate is R^2 >= 0.5` are the same sentence
+said twice, and only one of them was pre-registered, defended in a docstring,
+and protected by law 4. A knob that silently sets the difficulty of the claim
+is worse than a wrong threshold, because a wrong threshold is at least visible
+in the commit that moves it.
+
+**Rule:** in any spec carrying masking, distractors, clutter or noise, DERIVE
+the interference level from a stated target (a signal-to-interference ratio, a
+distractor-to-target count, a corruption fraction), record it beside the gates,
+and report the achieved ratio as a metric. If you cannot say what the level is
+*for*, the spec's difficulty is an accident and its verdict is about the
+accident.
+
+## A confound you can prove is real is not thereby the confound that is costing you
+
+Same two runs, and this is the more expensive half. VO.01's first FAIL was
+`recov_r2_bright = 0.347` against a 0.50 gate. Diagnosing it found a genuine
+bug: the emitter was peak-normalised, so at identical `amp` a bright call left
+the mouth 3.8x quieter than a dark one — two action dimensions that were
+supposed to be independent, measurably entangled. It was real, it was worth
+fixing on its own terms, the fix was principled (constant-RMS with Schroeder
+phases, both derived), and it was verified in isolation: mouth RMS 0.2168 at
+every brightness.
+
+Brightness recovery then went **0.347 -> 0.332.** The confound was real and it
+was not the cause, and a whole iteration went into it — with a commit message
+that reads like progress, because every sentence in it is true.
+
+What would have caught it in two minutes, before any code changed, is the
+question this project already knows to ask in other forms (*"ask what your
+synthetic data makes easy"*, *"check `n` and provenance before believing an
+effect"*): **what is the measurement's own noise floor?** A defect can only be
+worth this much effort if the measurement has the headroom for fixing it to
+show. At -4.4 dB it did not.
+
+**Rule:** when a metric comes in low, bound what the measurement could report
+AT BEST — its interference level, its sample size, its resolution — before
+attributing the shortfall to any mechanism. Finding a real bug in the mechanism
+is not evidence that the bug is the limiter; it is evidence that you looked
+where the light was. And when a fix that is verified-correct in isolation does
+not move the metric, that is a measurement about the CAUSE, not a reason to
+reach for the next mechanism: record it, because it eliminates a hypothesis,
+and it is the cheapest thing the failed iteration produced.
