@@ -14,6 +14,7 @@ LOG=/data/jack-logs/review.log
 PAUSE="$REPO/.review-paused"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
+. "$REPO/scripts/lib_usage.sh"
 [ -f "$PAUSE" ] && { say "paused"; exit 0; }
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt 3 ] && { say "ABORT: ${FREE_GB}GB free on /"; exit 0; }
@@ -24,12 +25,7 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenant
 # proxy. Nothing else is throttled — this is the only limit.
 # UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
 # open is not a limit.
-PCT=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --pct 2>/dev/null)
-case "$PCT" in ''|*[!0-9]*) say "ABORT: usage unreadable — refusing to run"; exit 0;; esac
-if [ "$PCT" -ge 90 ]; then
-  say "STOPPED at ${PCT}% weekly usage — all agents paused until the owner resumes"
-  exit 0
-fi
+usage_gate say || exit 0
 cd "$REPO" || exit 0
 MODEL="${JACK_REVIEW_MODEL:-opus}"
 # Two gears, one organ (owner, 2026-08-09: "every 24 hours the loop must be

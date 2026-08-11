@@ -26,6 +26,7 @@ mkdir -p "$LOGDIR"
 LOG="$LOGDIR/overseer.log"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
+. "$REPO/scripts/lib_usage.sh"
 
 [ -f "$PAUSE" ] && { say "paused"; exit 0; }
 
@@ -40,12 +41,7 @@ FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 # proxy. Nothing else is throttled — this is the only limit.
 # UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
 # open is not a limit.
-PCT=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --pct 2>/dev/null)
-case "$PCT" in ''|*[!0-9]*) say "ABORT: usage unreadable — refusing to run"; exit 0;; esac
-if [ "$PCT" -ge 90 ]; then
-  say "STOPPED at ${PCT}% weekly usage — all agents paused until the owner resumes"
-  exit 0
-fi
+usage_gate say || exit 0
 cd "$REPO" || exit 0
 MODEL="${JACK_OVERSEER_MODEL:-opus}"
 say "audit start — model ${MODEL}, $(git rev-parse --short HEAD)"
