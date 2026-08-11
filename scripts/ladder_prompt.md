@@ -46,8 +46,9 @@ never received a gradient. Do not recreate it.
 below and finish it. One spec per iteration is a good iteration.
 
 **STANDING RULE, above the priority order: a GOAL.md commitment with ZERO
-passing specs outranks fan-out.** Run `run coverage`. Fifteen commitments read
-0 PASS today; take the CHEAPEST runnable declared spec across all of them (ties
+passing specs outranks fan-out.** Run `run coverage` and read the zero-pass
+count THERE — do not trust any number written on this page. Take the CHEAPEST
+runnable declared spec across all of them (ties
 broken by the commitment with the most declared specs, because that is the one
 the project has invested in and never verified). It frees nothing, so
 `run blocked` will never surface it — that is the point. The two rankings
@@ -94,8 +95,9 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    part of the world contract (`EYE_POS`/`EYE_XYAXES`/`EYE_FOVY` in
    playground.py) — moving it invalidates every visual certificate downstream.
    What that unblocked is now the work: the unison ladder's gate is UB.9
-   ("Heard, not seen"), which `run blocked` ranks second in the project —
-   frees 4, blocks 7, and 0 of the 37 unison specs pass. PL.00 and PL.02 are
+   ("Heard, not seen"), which `run blocked` ranks THIRD in the project as of
+   2026-08-11 (frees 4, blocks 7) — behind T2.01 and LC.03. Read the live
+   ranking, not this line. 0 of the 37 unison specs pass. PL.00 and PL.02 are
    still runnable today, but note their meaning CHANGED under the PLASTIC-ONLY
    decree: PL.00 is now a feasibility check on the pure encoder and PL.02
    measures what the plastic path BUYS. Neither decides frozen-vs-plastic any
@@ -108,15 +110,19 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    measured indistinguishable from vanilla at our scale — recommend deleting
    rather than wiring, escalate to DECISIONS_NEEDED rather than deciding.
 
-0. THE LEARNING-CORE BAKEOFF IS BLOCKED — UNBLOCK IT FIRST. It decides HOW
-   JACK LEARNS. LC.00, LC.01 and LC.02 all PASS. But LC.03–LC.06 are NOT
-   runnable: `run blocked` shows all four sit behind **PS.01 = FAIL**
-   (2026-08-10T05:29 — the measured J0=2.405 m/s and alpha=0.0293 refuted the
-   pre-registered energy arithmetic). So the unit of work here is PS.01, not
-   LC.03: re-derive its threshold from the MEASURED constants and re-run it
-   under the T1.02 precedent (a redesign is legitimate only when the
-   EXPERIMENT is wrong — and here the arithmetic, not the drive layer, is what
-   failed). Only then LC.03 (screening, cpu<2h), LC.04 (THE ARBITRATION —
+0. THE LEARNING-CORE BAKEOFF IS UNBLOCKED AND THE RING IS EMPTY. It decides
+   HOW JACK LEARNS. LC.00, LC.01, LC.02 all PASS — and as of 2026-08-10T08:32
+   **PS.01 PASSES too** (attempt 3; the re-derivation this section used to ask
+   for was done). The old text here said "the unit of work is PS.01, not
+   LC.03" and it is now spent work — do not do it. **LC.03 is runnable today
+   and `run blocked` ranks it SECOND in the project (frees 7, blocks 7):
+   DP.01, DP.02, DP.03, LC.04, LC.05, LC.06, OP.01.** It is the single largest
+   NON-GPU unblock available.
+   ONE CAVEAT, and it is cheap to clear: `run stale` reports PS.01 as a PASS
+   recorded against code that has since changed. LC.03 would then be built on
+   a stale certificate. PS.01 is CPU — re-run it in the same iteration first,
+   or say plainly in the commit that you did not. Then LC.03 (screening,
+   cpu<2h), LC.04 (THE ARBITRATION —
    PPO vs world-model arms at matched experience, cpu<2h), LC.05 (matched
    compute), LC.06 (simplicity budget). ZERO GPU, so it runs beside any GPU
    job. Carry the three guards the owner added on 2026-08-09,
@@ -147,15 +153,27 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    EpisodicMemory.py is the substrate and its docstring explains the contract),
    then UB.1-8 / CU.1-7 / T2.14-20 where implementable without GPU.
 2. GPU budget calendar — the owner chose FREE COMPUTE ONLY (no rented GPUs):
+   - **TWO CLOCKS ARE RUNNING AND THEY POINT THE SAME WAY (Review, 2026-08-11).**
+     Kaggle hours expire unspent at the weekly reset, and Claude credits are
+     the binding resource on this box (`scripts/claude_usage.py` is the live
+     source; the loop self-paused for 23 consecutive hours on 2026-08-10/11 at
+     the 90% gate). A GPU submission costs a handful of tool calls and buys
+     hours of compute — it is the highest value-per-credit iteration
+     available, and the first four entries of `run next` are GPU jobs that
+     were impossible until D3 was answered. When credits are scarce, SUBMIT;
+     do not spend the last iterations writing CPU specs.
    - Kaggle 30h/week resets SUNDAY. NEVER assume how much is left — read
      `experiments/gpu_budget.json` for the live week's charges; the T2.01
      re-run already consumed part of this week. GPU_LONG goes to Kaggle only.
    - **EVERY GPU SUBMISSION NEEDS A PUSH FIRST** (`gpu.py:assert_ref_is_current`
      refuses a HEAD that is not an ancestor of `origin/main` — the VM clones
-     from GitHub). D3 in DECISIONS_NEEDED.md is still OPEN and unpushed commits
-     accumulate behind it. Before planning ANY GPU work, run
-     `git rev-list --count origin/main..HEAD`; if it is non-zero the job cannot
-     run, and escalating that is the useful iteration, not attempting it.
+     from GitHub). **D3 IS ANSWERED: YES, you may push** (owner, 2026-08-10 —
+     see the section below and DECISIONS_NEEDED.md). This paragraph used to
+     say D3 was open and that escalating it was the useful iteration; that was
+     true for three days and is now false, and following it would burn an
+     iteration re-escalating a settled decision. Before planning GPU work run
+     `git rev-list --count origin/main..HEAD`; if it is non-zero, **push** —
+     do not escalate, do not stop.
    - Colab takes GPU_SHORT jobs; if it returns "Service Unavailable" the GPUs
      are rationed — record the ERROR and retry next iteration, don't fight it.
 3. GPU work follows DIRECTION_AUDIT's sequencing: the T2.01/T2.02 re-runs are
