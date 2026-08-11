@@ -3241,3 +3241,13 @@ invisible from inside the spec because every property in it passes.
 
 Board at the end of this iteration: **67 PASS / 163**, `run stale` **zero**,
 `T0.13` 66 gates scanned with 0 disarmed, everything pushed to `origin/main`.
+
+**Regression sweep after touching two core files** (`protocol.py`'s commit stamp
+and `run.py`'s dispatch): `T0.01`, `T0.02`, `T0.06`, `T0.08`, `T0.17`, `T0.19`,
+`T0.21` all PASS, `run stale` zero. Not a `--gate` — seven cheap specs chosen
+because they read the runner and the ledger writer directly, which is what
+changed.
+
+**T1.02 was still in flight at 20:37 (29 minutes elapsed, PID 2034160, no
+`result` line).** It stays `ERROR`. Read the receipt first; see the numbered
+handoff above.
