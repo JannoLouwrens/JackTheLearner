@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 65 / 162 demonstrated
+## 66 / 162 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -284,8 +284,8 @@ Every line here is backed by an experiment that could have failed;
       - _dies if:_ Any PASS whose committed gate no longer accepts its own recorded numbers; any gate that still returns PASS with `control_metrics = {}`; any spec declaring a control it never ran; any entry the scan could not judge; or the undeclared-control debt growing past its ratchet.
       - _then delete:_ Nothing. It re-arms law 2 ('a control that also passes means the test measures nothing'), which was unenforceable for any gate that never read its control.
 - [x] **T0.20** The sensory inventory is audited against biology, not against our own map
-      - _asserts:_ `experiments/senses.py` reports, for every entry of the HUMAN sensory inventory, whether the live registry claims it — and it can see the bad case: a sense whose specs were never written reads ABSENT, a declared spec id that no longer resolves LOSES its coverage rather than keeping it, and a spec that merely CONTAINS a sense's word buys no coverage at all.
-      - _dies if:_ Any of the six properties failing. Above all P4: if a decoy spec that merely mentions a sense reads as coverage, this audit has reproduced the exact artifact that hid the hole — the overseer's grep matched 'voiced' in PG.5 and voice did not exist.
+      - _asserts:_ `experiments/senses.py` reports, for every entry of the HUMAN sensory inventory, whether the live registry claims it — and it can see the bad case: a sense whose specs were never written reads ABSENT, a declared spec id that no longer resolves LOSES its coverage rather than keeping it, a spec that merely CONTAINS a sense's word buys no coverage at all, and a passing SENSOR certificate does not buy the LOAD-BEARING tier that GOAL.md's 'ablate a sense, something measurable must degrade' actually asks for.
+      - _dies if:_ Any of the seven properties failing. Above all P4: if a decoy spec that merely mentions a sense reads as coverage, this audit has reproduced the exact artifact that hid the hole — the overseer's grep matched 'voiced' in PG.5 and voice did not exist.
       - _then delete:_ `run senses` as a trustworthy report. If the battery cannot be made to pass, the inventory audit is deleted rather than kept as a green light nobody may rely on.
 - [x] **T0.21** The GOAL.md coverage audit cannot be flattered by a word
       - _asserts:_ `experiments/coverage.py` credits a commitment ONLY to a spec that declared `COVERS:`, and it can see both bad cases: a spec whose title merely contains a commitment's word buys NO coverage, a spec that declares one with an unrelated title DOES, a declaration naming no known commitment is reported as malformed rather than silently dropped, and deleting a declaring spec loses the coverage instead of leaving stale credit.
@@ -569,7 +569,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ With PG.8's humanoid, energy and integrity both traverse a usable range (10th-90th percentile spread >= 0.3, neither pinned at 0 nor at 1) over a 4,500-decision (900 s) MIXED FIXTURE probe — random action, scripted platform drops, scripted rest — which is itself gated to have exercised them (>= 5 damaging impacts and >= 100 resting decisions, or the range is unmeasured rather than small); a fall from the ladder platform costs 0.10-0.20 integrity on held-out runs; floor food alone subsists a body acting at the derived duty cycle and does NOT fund constant activity, priced against the FULL-STRENGTH drain; and the DO-NOTHING policy is strictly dominated: its energy reaches the weakness floor strictly inside the observation window (< 0.8 x horizon) while a scripted FORAGER fixture's, run through the same shipped DriveLayer, never does.
       - _dies if:_ A probe that exercised both channels never depletes (the drive is inert and cannot pressure anything), or flatlines at zero within a minute (no policy can learn under it), or the statue is NOT dominated — either because no behaviour this world admits stays fed (the world is a countdown, not a control problem) or because the statue itself survives the window (the dark room is a stable optimum and homeostasis will produce a corpse).
       - _then delete:_ The specific numbers in PURPOSE_AND_SCAFFOLDING.md 2.2-2.3. It cannot kill the idea, only the parameterisation — which is why it runs before anything trains and after PS.00.
-- [ ] **SM.01** The odour field obeys its own pre-registered rules
+- [x] **SM.01** The odour field obeys its own pre-registered rules
       - _asserts:_ An Odour overlay in the Water pattern produces concentrations that match the declared field model to within 1%: inverse-exponential falloff with distance for O1, downwind displacement of the peak proportional to wind speed for O2, and non-zero concentration at a receiver with NO line of sight to the source (odour passes occlusion; light does not).
       - _dies if:_ Concentration at an occluded receiver is zero, or the wind term does not move the peak - then the field is a distance sensor wearing the word 'smell' and no value test built on it means anything.
       - _then delete:_ SM.02 and SM.03. A value test on a leaky or trivial field measures the field.

@@ -233,9 +233,11 @@ EXPANSION: list[Spec] = [
                     "it — and it can see the bad case: a sense whose specs were "
                     "never written reads ABSENT, a declared spec id that no "
                     "longer resolves LOSES its coverage rather than keeping it, "
-                    "and a spec that merely CONTAINS a sense's word buys no "
-                    "coverage at all.",
-         falsified_by="Any of the six properties failing. Above all P4: if a "
+                    "a spec that merely CONTAINS a sense's word buys no "
+                    "coverage at all, and a passing SENSOR certificate does not "
+                    "buy the LOAD-BEARING tier that GOAL.md's 'ablate a sense, "
+                    "something measurable must degrade' actually asks for.",
+         falsified_by="Any of the seven properties failing. Above all P4: if a "
                       "decoy spec that merely mentions a sense reads as "
                       "coverage, this audit has reproduced the exact artifact "
                       "that hid the hole — the overseer's grep matched 'voiced' "

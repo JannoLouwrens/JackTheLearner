@@ -45,6 +45,25 @@ class Sense:
     """What this channel buys that no other channel can. Biology's argument, not ours."""
     specs: tuple[str, ...] = ()
     """Spec ids that CLAIM this channel. Declared, never inferred."""
+    load_bearing: tuple[str, ...] = ()
+    """Spec ids that would prove this channel is LOAD-BEARING, not merely present.
+
+    GOAL.md's own standard, quoted: *"we PROVE each one is — ablate a sense,
+    something measurable must degrade"*. A spec belongs here only if removing
+    THIS channel is the manipulation and a measured quantity is required to
+    degrade against a matched placebo. A fixture certificate never belongs
+    here, however good its numbers: `SM.01` proves the odour field obeys its
+    declared rules, `PG.6` proves the eye resolves — neither says the brain
+    uses the channel for anything.
+
+    Deliberately NOT required to be a subset of `specs`: `UB.11` is the
+    standing ablation matrix and gives EVERY sense a row, but it is not a
+    spec about smell any more than it is a spec about hearing, and putting it
+    in `specs` would let a sense keep its coverage after its own family was
+    deleted — the exact failure `T0.20` P3 exists to catch. The tiers compose
+    instead: LOAD-BEARING requires the sense to already be SENSOR *and* to
+    have a passing entry here.
+    """
     mentions: str = ""
     """Advisory regex — for the unmapped-mention scan only. NEVER grants coverage."""
     effector: bool = False
@@ -59,30 +78,30 @@ class Sense:
 INVENTORY: tuple[Sense, ...] = (
     Sense("sight", "sight (vision)",
           "the dominant human channel; spatial layout at a distance",
-          specs=("PG.6", "T2.03", "T3.01"),
+          specs=("PG.6", "T2.03", "T3.01"), load_bearing=("T3.01", "UB.11"),
           mentions=r"vision|visual|camera|\beye\b|pixel|rendered frame"),
     Sense("hearing", "hearing (audition)",
           "works around corners and in the dark; carries events sight misses",
-          specs=("PG.5", "PG.7", "UB.4"),
+          specs=("PG.5", "PG.7", "UB.4"), load_bearing=("UB.4", "UB.11"),
           mentions=r"audio|acoustic|hearing|stereo|spectrogram"),
     Sense("touch", "touch (mechanoreception)",
           "contact is the only sense that confirms a manipulation happened",
-          specs=("UB.5",),
+          specs=("UB.5",), load_bearing=("UB.5", "UB.11"),
           mentions=r"touch|tactile|mechanorecept"),
     Sense("proprioception", "proprioception & balance (vestibular)",
           "where his body is without looking; the substrate of every motor skill",
-          specs=("T3.02", "UB.16"),
+          specs=("T3.02", "UB.16"), load_bearing=("T3.02", "UB.11"),
           mentions=r"propriocept|vestibul|body schema"),
     Sense("smell", "smell (olfaction)",
           "finds food, fire and decay at a distance AND THROUGH OCCLUSION — "
           "the sense that works when sight fails",
-          specs=("SM.01", "SM.02"),
+          specs=("SM.01", "SM.02"), load_bearing=("SM.02", "UB.11"),
           mentions=r"smell|olfact|odour|odor"),
     Sense("taste", "taste (gustation)",
           "conditioned taste aversion: one-trial learning with long delay "
           "tolerance, the fastest learning in biology and a capability nothing "
           "else in his design has",
-          specs=("TA.01", "TA.02", "TA.03"),
+          specs=("TA.01", "TA.02", "TA.03"), load_bearing=("TA.03", "UB.11"),
           mentions=r"taste|gustat|flavour|flavor"),
     Sense("pain", "pain (nociception)",
           "a fast unconditioned cost signal that sensitises rather than "
@@ -96,7 +115,7 @@ INVENTORY: tuple[Sense, ...] = (
     Sense("interoception", "interoception (hunger, thirst, fatigue)",
           "the needs ARE the curriculum — curiosity is the explorer, needs are "
           "the reason",
-          specs=("PS.01",),
+          specs=("PS.01",), load_bearing=("UB.11",),
           mentions=r"interocept|hunger|thirst|fatigue|homeostat"),
     Sense("voice", "voice (vocalisation) — an EFFECTOR, listed by the owner",
           "how a creature acts on other creatures; gates emergent language and "
@@ -105,9 +124,36 @@ INVENTORY: tuple[Sense, ...] = (
           mentions=r"\bvoice\b|vocalis|vocaliz|utterance"),
 )
 
+# ── THE FOUR TIERS ───────────────────────────────────────────────────────
+# Asked for by the overseer at audits 4 through 8 and correct: the file used to
+# have three tiers, and its top one — DEMONSTRATED, "some declared spec is PASS"
+# — said something GOAL.md never asks for. `PG.6` is a ridge probe whose own
+# docstring says it certifies THE SENSOR, NOT THE NET, and it made sight read
+# `[PASS]`. `SM.01` (2026-08-11) is the same shape and would have done the same
+# for smell within minutes of being written.
+#
+# GOAL.md's standard is one sentence and it is not "a spec passed": *"we PROVE
+# each one is load-bearing — ablate a sense, something measurable must
+# degrade"*. So the tiers now say which of the two things happened:
+#
+#   ABSENT        nothing in this repo claims the channel
+#   REGISTERED    a spec claims it; none has run green
+#   SENSOR        the channel EXISTS and behaves — a fixture certificate passes.
+#                 This is real work and it is where smell, taste, sight and
+#                 hearing genuinely stand today.
+#   LOAD-BEARING  removing the channel measurably COSTS him something, against a
+#                 matched placebo. This is the claim GOAL.md actually makes, and
+#                 as of 2026-08-11 nothing in the inventory has reached it.
+#
+# The point of the split is that the gap is now VISIBLE rather than flattering:
+# a report that says SENSOR for ten senses and LOAD-BEARING for none is telling
+# the truth about a project that has built sensors and not yet earned them.
 ABSENT = "ABSENT"
 REGISTERED = "REGISTERED"
-DEMONSTRATED = "DEMONSTRATED"
+SENSOR = "SENSOR"
+LOAD_BEARING = "LOAD-BEARING"
+
+TIERS = (ABSENT, REGISTERED, SENSOR, LOAD_BEARING)
 
 
 @dataclass
@@ -118,6 +164,12 @@ class Coverage:
     missing: List[str] = field(default_factory=list)
     """Declared ids that do NOT resolve in the live registry — a broken claim."""
     passing: List[str] = field(default_factory=list)
+    lb_declared: List[str] = field(default_factory=list)
+    """Load-bearing spec ids, as declared."""
+    lb_missing: List[str] = field(default_factory=list)
+    """...that do NOT resolve in the live registry."""
+    lb_passing: List[str] = field(default_factory=list)
+    """...that are PASS. Non-empty is the ONLY route to LOAD-BEARING."""
     unmapped_mentions: List[str] = field(default_factory=list)
 
     @property
@@ -128,7 +180,12 @@ class Coverage:
     def status(self) -> str:
         if not self.registered:
             return ABSENT
-        return DEMONSTRATED if self.passing else REGISTERED
+        if not self.passing:
+            return REGISTERED
+        # A passing ablation is necessary AND it is not sufficient on its own:
+        # the sense must also have a passing spec of its own, or `UB.11` alone
+        # would promote a channel this repo has never built.
+        return LOAD_BEARING if self.lb_passing else SENSOR
 
 
 def audit(by_id: Optional[Dict[str, object]] = None,
@@ -147,12 +204,17 @@ def audit(by_id: Optional[Dict[str, object]] = None,
 
     out: List[Coverage] = []
     for sense in inventory:
-        cov = Coverage(sense=sense, declared=list(sense.specs))
+        cov = Coverage(sense=sense, declared=list(sense.specs),
+                       lb_declared=list(sense.load_bearing))
         cov.missing = [sid for sid in sense.specs if sid not in by_id]
+        cov.lb_missing = [sid for sid in sense.load_bearing if sid not in by_id]
         if ledger is not None:
             from .protocol import Status
             cov.passing = [sid for sid in cov.registered
                            if ledger.status(sid) is Status.PASS]
+            cov.lb_passing = [sid for sid in sense.load_bearing
+                              if sid not in cov.lb_missing
+                              and ledger.status(sid) is Status.PASS]
         if sense.mentions:
             pat = re.compile(sense.mentions, re.I)
             for sp in specs:
@@ -170,20 +232,41 @@ def absent(covs: List[Coverage]) -> List[str]:
     return [c.sense.key for c in covs if c.status == ABSENT]
 
 
+def load_bearing(covs: List[Coverage]) -> List[str]:
+    """The senses that meet GOAL.md's actual standard. Today: none."""
+    return [c.sense.key for c in covs if c.status == LOAD_BEARING]
+
+
 def render(covs: List[Coverage]) -> str:
     lines = ["", "  THE HUMAN SENSORY INVENTORY — the reference is biology,",
              "  not this repository. A sense with no spec is ABSENT, and",
              "  ABSENT is invisible to every other report this system makes.",
+             "",
+             "  SENSOR = the channel exists and behaves (a fixture certificate).",
+             "  LOAD-BEARING = ablating it measurably costs him something. That",
+             "  is what GOAL.md asks for; a passing sensor spec is not it.",
              ""]
     width = max(len(c.sense.name) for c in covs)
     for c in covs:
         mark = {ABSENT: "[ABSENT ]", REGISTERED: "[spec'd ]",
-                DEMONSTRATED: "[PASS   ]"}[c.status]
+                SENSOR: "[SENSOR ]", LOAD_BEARING: "[LOADBRG]"}[c.status]
         ids = ", ".join(c.registered) or "—"
         lines.append(f"    {mark} {c.sense.name:<{width}}  {ids}")
         if c.passing:
-            lines.append(f"              {'':<{width}}  demonstrated: "
+            lines.append(f"              {'':<{width}}  sensor: "
                          f"{', '.join(c.passing)}")
+        if c.lb_passing:
+            lines.append(f"              {'':<{width}}  load-bearing: "
+                         f"{', '.join(c.lb_passing)}")
+        elif c.lb_declared:
+            lines.append(f"              {'':<{width}}  load-bearing awaits: "
+                         f"{', '.join(c.lb_declared)}")
+        else:
+            lines.append(f"              {'':<{width}}  load-bearing: NO SPEC "
+                         f"would prove it")
+        if c.lb_missing:
+            lines.append(f"              {'':<{width}}  !! load-bearing id NOT "
+                         f"in the registry: {', '.join(c.lb_missing)}")
         if c.missing:
             lines.append(f"              {'':<{width}}  !! declared but NOT in "
                          f"the registry: {', '.join(c.missing)}")
@@ -192,8 +275,11 @@ def render(covs: List[Coverage]) -> str:
                          f" by {len(c.unmapped_mentions)}: "
                          f"{', '.join(c.unmapped_mentions[:6])})")
     gone = absent(covs)
+    lb = load_bearing(covs)
     lines += ["", f"  {len(covs) - len(gone)}/{len(covs)} of the inventory has a "
-                  f"registered spec."]
+                  f"registered spec.",
+              f"  {len(lb)}/{len(covs)} are LOAD-BEARING — the standard GOAL.md "
+              f"sets: {', '.join(lb) if lb else 'none'}."]
     if gone:
         lines += [f"  ABSENT: {', '.join(gone)} — not blocked, not failing. "
                   f"Nothing in this repo claims them.", ""]

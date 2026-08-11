@@ -26,7 +26,8 @@ from dataclasses import replace
 
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID, LADDER
-from ..senses import ABSENT, DEMONSTRATED, INVENTORY, absent, audit
+from ..senses import (ABSENT, INVENTORY, LOAD_BEARING, SENSOR, absent, audit,
+                      load_bearing)
 
 SPEC_ID = "T0.20"
 
@@ -77,6 +78,23 @@ def _keyword_coverage(reg: dict) -> set[str]:
                 covered.add(sense.key)
                 break
     return covered
+
+
+class _FakeLedger:
+    """A ledger whose PASS set is stated, not read.
+
+    P7 needs to ask "what would this report say if exactly these specs passed",
+    and the honest way to ask is a stub — reading the real ledger would make the
+    property's answer depend on which specs happen to be green today, i.e. it
+    would stop being a property. Same reason the registry fixtures above are
+    built in-process.
+    """
+
+    def __init__(self, passing: set[str]):
+        self._passing = set(passing)
+
+    def status(self, spec_id: str):
+        return Status.PASS if spec_id in self._passing else Status.NOT_RUN
 
 
 def _probe(coverage_is_keyword: bool) -> dict:
@@ -137,10 +155,36 @@ def _probe(coverage_is_keyword: bool) -> dict:
     if any(c.missing for c in live_cov):
         failed.append("p6_live_declarations_all_resolve")
     for c in live_cov:
-        if c.status == DEMONSTRATED and not all(
+        if c.status in (SENSOR, LOAD_BEARING) and not all(
                 led.status(s) is Status.PASS for s in c.passing):
             failed.append("p6_live_declarations_all_resolve")
             break
+
+    # P7 — LOAD-BEARING IS NOT REACHABLE BY PASSING A SENSOR SPEC. The tier
+    # that GOAL.md actually asks for ("ablate a sense, something measurable must
+    # degrade") must require a passing ABLATION, and this property is checked in
+    # both directions because a one-sided version is satisfied by a tier nothing
+    # can ever reach — which is a green light spelled differently.
+    #   (a) live: every load-bearing id resolves, and no sense reads
+    #       LOAD-BEARING without one of them PASSing;
+    #   (b) negative: a ledger where ONLY the fixture certificates pass must
+    #       read SENSOR for smell — the case that motivated the tier;
+    #   (c) positive: the SAME ledger with the ablation spec passing must read
+    #       LOAD-BEARING. Without (c) the tier could be unreachable by
+    #       construction and every other property would still be green
+    #       (LESSONS.md: "a detector that cannot see its own positive control
+    #       has measured nothing").
+    if any(c.lb_missing for c in live_cov):
+        failed.append("p7_load_bearing_ids_resolve")
+    if any(c.status == LOAD_BEARING and not c.lb_passing for c in live_cov):
+        failed.append("p7_load_bearing_needs_an_ablation")
+    sensor_only = audit(by_id=live, ledger=_FakeLedger({"SM.01"}))
+    if next(c.status for c in sensor_only if c.sense.key == "smell") != SENSOR:
+        failed.append("p7_sensor_spec_does_not_buy_load_bearing")
+    with_ablation = audit(by_id=live, ledger=_FakeLedger({"SM.01", "SM.02"}))
+    if (next(c.status for c in with_ablation if c.sense.key == "smell")
+            != LOAD_BEARING):
+        failed.append("p7_ablation_does_reach_load_bearing")
 
     return {
         "properties_checked": float(N_PROPERTIES),
@@ -148,11 +192,12 @@ def _probe(coverage_is_keyword: bool) -> dict:
         "failed_names": ",".join(failed),
         "inventory_size": float(len(INVENTORY)),
         "senses_absent_live": float(len(absent(audit(by_id=live)))),
+        "senses_load_bearing_live": float(len(load_bearing(live_cov))),
         "registry_size": float(len(LADDER)),
     }
 
 
-N_PROPERTIES = 6
+N_PROPERTIES = 7
 
 
 def _experiment(seed: int) -> dict:

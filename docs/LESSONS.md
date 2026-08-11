@@ -1536,6 +1536,47 @@ LOAD-BEARING (an ablation degrades a measured quantity)`. A measuring instrument
 whose categories are coarser than the thing it measures reports progress that
 has not happened, and it does so in the vocabulary everyone will repeat.
 
+**GUARD BUILT, 2026-08-11** (this lesson had been prescribed and unbuilt for a
+day, which is the failure named in *"A lesson that prescribes a guard is not a
+guard"*). `senses.py` now carries the four tiers above, each sense declares a
+`load_bearing` tuple — the spec ids whose PASS would mean an *ablation* of that
+channel cost him something — and `T0.20` gained **P7**, which asserts in both
+directions that the top tier is reachable only by a passing ablation: a ledger
+where only `SM.01` passes must read smell `SENSOR`, and the same ledger with
+`SM.02` passing must read `LOAD-BEARING`. Without that positive half the tier
+could have been unreachable by construction and every other property would
+still have been green. `run senses` today reads **0/10 LOAD-BEARING**, which is
+the number GOAL.md's standard actually produces.
+
+## A gate that re-derives the module's own formula is a tripwire, not a discrimination
+
+`SM.01` certifies that the odour field obeys its declared rules. Its first
+falloff gate sampled `StaticField` and compared the result against
+`A0 * exp(-d / LAMBDA_M)` — written out independently in the test file, with the
+constants imported live rather than pasted, which is the discipline `T0.14` and
+`T0.22` ask for. It measured a deviation of **0.0** and it was the weakest gate
+in the file, because the expression the test checks against is the expression
+the module computes. It can only ever fire if someone *edits* the field, which
+makes it a regression tripwire; it cannot say the field's shape is the claimed
+one rather than one of the many smooth decays that would have satisfied a reader
+of the number.
+
+The repair costs three lines and changes what the gate means: measure the SAME
+samples against the obvious RIVAL model — an inverse-square field, normalised to
+agree at d = 1 m — and require it to **miss** by a wide margin. Measured 2.57
+relative deviation against a 0.10 floor. Now "exponential falloff" is a
+statement about this field and not about smooth decay in general, and the gate
+has two sides: the declared model must fit and the rival must not.
+
+**Rule:** after writing a gate of the form *"the output matches the declared
+model"*, ask what OTHER model would also pass it. If the answer is "many", you
+have a tripwire — keep it, they are cheap and they catch edits, but do not count
+it as evidence about the world. The discriminating gate is the rival's
+deviation, and naming the rival is the same act as naming a control: it is the
+alternative that must fail for the claim to mean anything. This generalises past
+fixtures — a curve fit, a scaling law, a calibration, and any `_check` whose
+expected value is computed by the code under test all have the same hole.
+
 ## A defect that degrades the system also degrades the measurement that would convict it
 
 `PURPOSE_AND_SCAFFOLDING.md` §2.3's energy arithmetic was refuted by PS.01 on
