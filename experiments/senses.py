@@ -121,6 +121,14 @@ INVENTORY: tuple[Sense, ...] = (
           "how a creature acts on other creatures; gates emergent language and "
           "the other-minds expansion",
           specs=("VO.01", "VO.02"), effector=True,
+          # Voice is the one entry whose load-bearing route is NOT `UB.11`:
+          # that matrix ablates INPUT modalities, and muting a mouth degrades
+          # nothing a lone agent does. The only test that can cost him
+          # something for losing his voice needs someone to talk to — VO.02,
+          # blocked on a second Jack. Declared anyway, and deliberately: an
+          # empty tuple would have made voice unable to reach LOAD-BEARING by
+          # construction, which reads identically to "no route exists".
+          load_bearing=("VO.02",),
           mentions=r"\bvoice\b|vocalis|vocaliz|utterance"),
 )
 

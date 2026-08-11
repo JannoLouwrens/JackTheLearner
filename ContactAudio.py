@@ -27,6 +27,14 @@ Conventions (pre-registered, tested by PG.5):
   gains      gL = sqrt((1-p)/2), gR = sqrt((1+p)/2)  (constant power)
 Decoding therefore is: p_hat = (ER-EL)/(EL+ER), lateral_hat = -asin(p_hat).
 
+Voice (VO.01) — the same stream, from the other end. Jack VOCALISES by writing
+a 4-D action (f0, brightness, amplitude, duration) into `emit_voice`, which is
+synthesised as a harmonic call, panned and attenuated by the SAME laws as a
+contact, and mixed into the SAME buffer. A listener therefore receives his
+voice as stereo samples and nothing else — there is no side channel between two
+brains wearing the word "voice". Occlusion is one `mj_ray` against the geometry
+the eye uses, and it MUFFLES rather than silences (see OCC_TRANSMISSION).
+
 Usage:
     synth = ContactAudioSynth(model)
     synth.set_listener(pos=[0,0,1.4], yaw=0.7)   # later: Jack's head pose
@@ -52,6 +60,92 @@ TAU0 = 0.06                 # fundamental decay time constant, s
 REFRACTORY_S = 0.10         # per contact-pair retrigger guard
 MIN_DISTANCE = 0.5          # attenuation floor, m
 AMP_K = 0.03                # amp = min(1, AMP_K * sqrt(F_normal))
+
+# ── VOICE: the effector half of hearing (VO.01) ─────────────────────────
+# GOAL.md lists voice among the constitutional senses precisely because it is
+# the only one that is an EFFECTOR: "how a creature acts on other creatures".
+# A vocalisation is not a message in a side channel — it is synthesised here,
+# spatialized by the same pan law as a contact, attenuated by the same 1/r, and
+# it arrives at the listener as nothing but stereo samples. Whatever a listener
+# knows about it, it knows through its ears.
+#
+# The emission is FOUR CONTINUOUS ACTION DIMENSIONS, so a policy can drive it:
+#   a[0] -> f0          fundamental, log-spaced over VOICE_F0_HZ
+#   a[1] -> brightness  spectral tilt: harmonic h has amplitude h**-tilt
+#   a[2] -> amp         emitted amplitude, log-spaced over VOICE_AMP
+#   a[3] -> duration    linear over VOICE_DUR_S
+# Deliberately NOT a symbolic channel (registry VO.01): an emergent protocol
+# has to survive distance, occlusion and the listener's own encoder.
+VOICE_ACTION_DIM = 4
+VOICE_F0_HZ = (80.0, 700.0)
+VOICE_TILT = (3.0, 0.4)     # brightness 0 -> tilt 3.0 (dark); 1 -> 0.4 (bright)
+VOICE_AMP = (0.05, 1.0)
+VOICE_DUR_S = (0.10, 0.60)
+VOICE_HARMONICS = 24
+VOICE_RAMP_S = 0.02         # raised-cosine attack/release, so duration is the
+                            # envelope length rather than a decay constant
+
+# Occlusion, declared here and gated by VO.01. A solid between mouth and ear
+# transmits sound — it does not stop it, which is the whole reason voice and
+# smell are worth having when sight fails — and it transmits LOW frequencies
+# better than high (the mass law). So a wall does not silence him; it MUFFLES
+# him, and the received spectral centroid falling is the falsifiable signature
+# that separates this from a flat volume knob. VO.01 carries a flat-occluder
+# control that must miss that gate.
+#   gain(f) = OCC_TRANSMISSION * min(1, (OCC_FREF_HZ / f) ** OCC_ALPHA)
+# KNOWN MODEL GAP, stated rather than hidden: this is transmission only. Real
+# low-frequency sound also DIFFRACTS around a small obstacle, so a 0.3 m block
+# in the real world attenuates far less than this model says. VO.01 therefore
+# claims the ordering (sound crosses what light does not) and not the decibels.
+OCC_TRANSMISSION = 0.32
+OCC_FREF_HZ = 250.0
+OCC_ALPHA = 1.0
+
+
+@dataclass
+class VoiceParams:
+    """Physical emission parameters, decoded from an action vector."""
+    f0: float               # Hz
+    brightness: float       # [0, 1]; 1 is bright
+    amp: float              # [0, 1] peak amplitude at the mouth
+    duration: float         # s
+
+    @property
+    def tilt(self) -> float:
+        return VOICE_TILT[0] + (VOICE_TILT[1] - VOICE_TILT[0]) * self.brightness
+
+
+def voice_params_from_action(action) -> VoiceParams:
+    """Map a 4-D action in [-1, 1] to physical emission parameters.
+
+    f0 and amp are LOG-spaced because both are perceived that way and because a
+    linear map would spend most of its action range on differences no listener
+    could resolve.
+    """
+    a = np.clip(np.asarray(action, dtype=float).reshape(-1), -1.0, 1.0)
+    if a.size != VOICE_ACTION_DIM:
+        raise ValueError(f"voice action must have {VOICE_ACTION_DIM} dims, got {a.size}")
+    u = (a + 1.0) / 2.0
+    f0 = VOICE_F0_HZ[0] * (VOICE_F0_HZ[1] / VOICE_F0_HZ[0]) ** u[0]
+    amp = VOICE_AMP[0] * (VOICE_AMP[1] / VOICE_AMP[0]) ** u[2]
+    dur = VOICE_DUR_S[0] + (VOICE_DUR_S[1] - VOICE_DUR_S[0]) * u[3]
+    return VoiceParams(f0=float(f0), brightness=float(u[1]), amp=float(amp),
+                       duration=float(dur))
+
+
+@dataclass
+class VoiceEvent:
+    """One vocalisation, with its ground-truth localization labels."""
+    t: float                # sim time, s
+    pos: np.ndarray         # mouth position, world frame [3]
+    action: np.ndarray      # the 4-D action that produced it
+    params: VoiceParams
+    azimuth: float          # rad, listener frame, positive left
+    lateral: float          # rad, azimuth folded to [-pi/2, pi/2]
+    elevation: float        # rad, positive up
+    distance: float         # m
+    occluded: bool          # is there a solid between mouth and ear?
+    occluder_geom: int      # which one, or -1
 
 
 @dataclass
@@ -79,6 +173,7 @@ class ContactAudioSynth:
         self.listener_pos = np.array([0.0, 0.0, 1.4])
         self.listener_yaw = 0.0
         self.events: List[AudioEvent] = []
+        self.voice_events: List[VoiceEvent] = []
         self._prev_pairs: set = set()
         self._last_fired: Dict[Tuple[int, int], float] = {}
         # Characteristic size per geom: geometric mean of its nonzero size
@@ -97,6 +192,19 @@ class ContactAudioSynth:
     def fundamental(self, gid: int) -> float:
         """Fundamental frequency of a geom's modal bank, Hz."""
         return float(np.clip(180.0 / self._char_size[gid], 80.0, 4000.0))
+
+    def localize(self, pos) -> Tuple[float, float, float, float]:
+        """(azimuth, lateral, elevation, distance) of a world point in the
+        listener frame. ONE implementation, shared by contacts and by voice, so
+        the two cannot drift into disagreeing about where the world is."""
+        rel = np.asarray(pos, dtype=float) - self.listener_pos
+        cy, sy = math.cos(self.listener_yaw), math.sin(self.listener_yaw)
+        fwd = rel[0] * cy + rel[1] * sy
+        left = -rel[0] * sy + rel[1] * cy
+        azimuth = math.atan2(left, fwd)
+        horiz = math.hypot(rel[0], rel[1])
+        return (azimuth, math.asin(math.sin(azimuth)),
+                math.atan2(rel[2], horiz), float(np.linalg.norm(rel)))
 
     # ── contact onset detection ──────────────────────────────────────────
 
@@ -133,19 +241,80 @@ class ContactAudioSynth:
                     force: float) -> AudioEvent:
         g1, g2 = pair
         voiced = g1 if self._char_size[g1] <= self._char_size[g2] else g2
-        rel = pos - self.listener_pos
-        cy, sy = math.cos(self.listener_yaw), math.sin(self.listener_yaw)
-        fwd = rel[0] * cy + rel[1] * sy
-        left = -rel[0] * sy + rel[1] * cy
-        azimuth = math.atan2(left, fwd)
-        dist = float(np.linalg.norm(rel))
-        horiz = math.hypot(rel[0], rel[1])
-        elevation = math.atan2(rel[2], horiz)
+        azimuth, lateral, elevation, dist = self.localize(pos)
         amp = min(1.0, AMP_K * math.sqrt(max(force, 1.0)))
         return AudioEvent(t=t, geom1=g1, geom2=g2, voiced_geom=voiced, pos=pos,
                           force=force, amp=amp, azimuth=azimuth,
-                          lateral=math.asin(math.sin(azimuth)),
-                          elevation=elevation, distance=dist)
+                          lateral=lateral, elevation=elevation, distance=dist)
+
+    # ── voice: he makes a sound ──────────────────────────────────────────
+
+    def emit_voice(self, t: float, pos, action, data=None) -> VoiceEvent:
+        """Vocalise at `pos` with a 4-D action, into the SAME stereo stream.
+
+        `data` (an `mjData` at the pose the emission happens in) enables the
+        occlusion test: one `mj_ray` from mouth to ear, against the same
+        geometry and the same `flg_static` the eye's ray-caster uses, so
+        "sound crosses what light does not" is a measurement rather than a
+        flag. Without `data` the emission is treated as unoccluded.
+        """
+        pos = np.asarray(pos, dtype=float).copy()
+        azimuth, lateral, elevation, dist = self.localize(pos)
+        occluded, gid = False, -1
+        if data is not None:
+            occluded, gid = self.occluded_by(data, pos)
+        e = VoiceEvent(t=float(t), pos=pos,
+                       action=np.asarray(action, dtype=float).reshape(-1).copy(),
+                       params=voice_params_from_action(action),
+                       azimuth=azimuth, lateral=lateral, elevation=elevation,
+                       distance=dist, occluded=occluded, occluder_geom=gid)
+        self.voice_events.append(e)
+        return e
+
+    def occluded_by(self, data, pos) -> Tuple[bool, int]:
+        """(is the mouth->ear line blocked, by which geom). -1 when clear."""
+        import mujoco
+        a = np.asarray(pos, dtype=float)
+        delta = self.listener_pos - a
+        dist = float(np.linalg.norm(delta))
+        if dist <= 1e-9:
+            return False, -1
+        gid = np.zeros(1, dtype=np.int32)
+        hit = mujoco.mj_ray(self.model, data, a, delta / dist, None, 1, -1, gid)
+        if 0.0 <= hit < dist - 1e-6 and gid[0] >= 0:
+            return True, int(gid[0])
+        return False, -1
+
+    def _voice_wave(self, e: VoiceEvent, occlusion: bool = True,
+                    flat_occlusion: bool = False) -> np.ndarray:
+        """Mono harmonic call for one vocalisation, occlusion applied per
+        harmonic (that is where the muffling lives)."""
+        p = e.params
+        n = max(1, int(p.duration * self.sr))
+        t = np.arange(n) / self.sr
+        tilt = p.tilt
+        sig = np.zeros(n)
+        total = 0.0
+        for h in range(1, VOICE_HARMONICS + 1):
+            f = p.f0 * h
+            if f >= 0.45 * self.sr:
+                break
+            a_h = float(h) ** (-tilt)
+            g = 1.0
+            if occlusion and e.occluded:
+                g = OCC_TRANSMISSION if flat_occlusion else (
+                    OCC_TRANSMISSION * min(1.0, (OCC_FREF_HZ / f) ** OCC_ALPHA))
+            sig += a_h * g * np.sin(2 * math.pi * f * t)
+            total += a_h
+        if total > 0:
+            sig *= p.amp / total
+        # raised-cosine attack/release, so `duration` IS the envelope length
+        r = min(int(VOICE_RAMP_S * self.sr), n // 2)
+        if r > 0:
+            ramp = 0.5 * (1.0 - np.cos(np.pi * np.arange(r) / r))
+            sig[:r] *= ramp
+            sig[n - r:] *= ramp[::-1]
+        return sig
 
     # ── synthesis ────────────────────────────────────────────────────────
 
@@ -167,15 +336,43 @@ class ContactAudioSynth:
         return sig
 
     def render(self, duration: float, mode: str = "stereo",
-               pan_override: Optional[Dict[int, float]] = None) -> np.ndarray:
-        """Render all events into a stereo buffer [2, T].
+               pan_override: Optional[Dict[int, float]] = None,
+               mute_voice: bool = False, voice_occlusion: bool = True,
+               voice_distance: bool = True,
+               flat_occlusion: bool = False) -> np.ndarray:
+        """Render all events — contacts and vocalisations — into one stereo
+        buffer [2, T]. One stream: a listener cannot tell them apart except by
+        listening.
 
-        mode="mono" duplicates the mid signal into both channels (a null arm:
-        bearing must become undecodable). pan_override maps event index -> pan
-        in [-1, 1], replacing the truth-derived pan (the shuffled-pan null arm).
+        The keyword arguments are NULL ARMS, and they exist only so a spec can
+        sabotage a mechanism and prove its gate can report the bad case.
+        mode="mono" duplicates the mid signal into both channels (bearing must
+        become undecodable). pan_override maps event index -> pan in [-1, 1]
+        (the shuffled-pan null). mute_voice renders the mouth shut (VO.01's
+        null baseline). voice_occlusion=False lets the wall do nothing;
+        voice_distance=False removes 1/r; flat_occlusion=True makes the wall a
+        volume knob instead of a low-pass — each is a rival the corresponding
+        VO.01 gate must catch.
         """
         T = int(duration * self.sr)
         buf = np.zeros((2, T))
+        if not mute_voice:
+            for e in self.voice_events:
+                start = int(e.t * self.sr)
+                if start >= T:
+                    continue
+                sig = self._voice_wave(e, occlusion=voice_occlusion,
+                                       flat_occlusion=flat_occlusion)
+                n = min(len(sig), T - start)
+                if mode == "mono":
+                    gl = gr = math.sqrt(0.5)
+                else:
+                    p = -math.sin(e.azimuth)
+                    gl = math.sqrt((1.0 - p) / 2.0)
+                    gr = math.sqrt((1.0 + p) / 2.0)
+                g = 1.0 / max(e.distance, MIN_DISTANCE) if voice_distance else 1.0
+                buf[0, start:start + n] += gl * g * sig[:n]
+                buf[1, start:start + n] += gr * g * sig[:n]
         for i, e in enumerate(self.events):
             start = int(e.t * self.sr)
             if start >= T:

@@ -40,7 +40,14 @@ from ..registry import BY_ID
 # This spec certifies a property of the WORLD, so the world hashes into
 # impl_sha. Change playground.py and this certificate goes stale loudly
 # instead of standing over a world it no longer describes.
-IMPL_DEPS = ["playground.py"]
+#
+# `ContactAudio.py` was MISSING from this list until 2026-08-11, and it is the
+# module this spec is entirely about — the pan law, the decode, the labels
+# UB.4 will train on. So an edit to the synth left this certificate green over
+# code it had never been run against, which is the exact failure `impl_sha`
+# exists to prevent, aimed at the one file that mattered most. Found while
+# adding VO.01's voice path to `render()`; see docs/LESSONS.md.
+IMPL_DEPS = ["playground.py", "ContactAudio.py"]
 
 REPO = Path(__file__).resolve().parents[2]
 
