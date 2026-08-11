@@ -2589,3 +2589,55 @@ them reported success while doing nothing, or the wrong thing.
 **Rule:** when a control is described in the plural — all agents, every job,
 each service — enumerate the members and prove the control reaches each one.
 Nobody re-checks a switch they believe they already threw.
+
+## A declaration fixes WHO a spec covers; it says nothing about WHAT KIND of evidence it is
+
+`coverage.py` was corrected on 2026-08-10 because a title regex let the word
+"honest" discharge `shelter/building`. The fix — only an author's `COVERS:`
+declaration counts, regex hits demote to nominations — was right, and the
+numbers moved downward the way an honest correction does.
+
+It closed the wrong-subject hole and left the wrong-evidence hole open.
+
+Today (8th audit) the two commitments GOAL.md calls the thesis both read
+*covered, 1 passing*:
+
+| commitment | specs | pass | and the passing spec is |
+|---|---|---|---|
+| one brain / unison | 21 | 1 | **LC.01** — an ADMISSION RULE for cores not yet run |
+| curiosity | 12 | 1 | **PG.4** — the noisy-TV FIXTURE works as a trap |
+
+Both declarations are honest. Both specs genuinely bear on their commitment.
+Neither is evidence that Jack fuses senses or that Jack is curious — LC.01
+constrains future arms, PG.4 certifies a property of the *environment*. All 16
+UB specs and all 7 CU specs are `NOT_RUN`. Independently, `run senses` reads
+**0/10 LOAD-BEARING**, which is the same fact arriving through an instrument
+that does not consult `COVERS:` at all.
+
+**Why this shape recurs, and why it is worse than the regex bug.** A loop
+optimising for green reaches for the cheap adjacent spec first — the fixture,
+the rule, the sensor probe — because those are genuinely easier and genuinely
+related. So the first PASS a commitment receives is *systematically* the one
+least likely to be the claim. And the moment it lands, the commitment leaves the
+"nothing passing" list: **the instrument goes quiet exactly when the cheap work
+displaces the real work.** The regex bug produced a false match nobody authored;
+this produces a true declaration that discharges the wrong thing, which no audit
+of the declarations can catch.
+
+**Rule:** a coverage declaration must state the KIND of evidence, not only its
+subject — `COVERS: curiosity (claim)` vs `(fixture)` / `(rule)` / `(sensor)` —
+and the "is anything passing?" count must admit only `(claim)`. The other kinds
+still print, in their own column, because they are real work; they are just not
+the thing being promised. Test it in both directions, as [T0.21] already does
+for the previous fix: a ledger where only a `(fixture)` spec passes must read
+zero for that commitment, and the same ledger with a `(claim)` spec passing must
+read one.
+
+**The general form, and it is the third turn of the same screw.** The tool asked
+*does a spec exist?*, then *did its author say so?*, and still not *is what
+passed the thing we promised?* Each fix moved the question one step closer to
+the claim and stopped one step short. Of any coverage number, ask not "what does
+this count for an item never run?" (already recorded above) but the harder
+sibling: **"what does this count for an item that ran, passed, and was about
+something adjacent?"** If the answer is "full credit", the number measures
+activity near a commitment, not progress on it.

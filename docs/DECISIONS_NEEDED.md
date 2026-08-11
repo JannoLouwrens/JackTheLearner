@@ -883,3 +883,64 @@ none has been spent since 2026-08-10T01:17. That is a builder item (re-run
 `T1.02`, ERROR since 08-08) and it is logged in OVERSIGHT FOR THE BUILDER §4 —
 but it only gets spent during hours in which the loop is allowed to run, which
 is what this decision governs.
+
+---
+
+## D5 — CORRECTION 2026-08-11 21:10 (8th overseer audit). Two pauses now, not one.
+
+D5 above asks which of three options governs the usage grant expiring
+**2026-08-12T12:00 UTC**. Since it was filed the state changed and the question
+as written can no longer be answered cleanly.
+
+**What changed.** At `2026-08-11T21:03:25` a second, independent stop appeared:
+
+    $ cat /home/opc/jackthelearner/.loop-paused
+    owner paused 2026-08-11T21:03:25+00:00 — requested pause, does NOT self-expire
+
+The loop is now halted by **two** mechanisms with different owners and different
+expiries:
+
+| mechanism | set | expires | lifted by |
+|---|---|---|---|
+| `.usage-resumed` ceiling lapsing back to 90% | 15:56 by owner | 2026-08-12T12:00 UTC | renewing the grant |
+| `.loop-paused` | 21:03 by owner | **never** | deleting the file |
+
+**Why this matters.** Answering D5 with option 1 or 2 — renew the grant — will
+**not** restart the loop. `.loop-paused` does not self-expire, so at 12:00
+tomorrow the outcome is identical under all three of D5's options: the loop
+stays down. The decision as posed has become unfalsifiable by its own terms.
+
+**THE ASK, restated.** Two questions, and the first one is now the load-bearing
+one:
+
+  1. **Was the 21:03 pause meant to be temporary?** If yes, `.loop-paused` must
+     be removed — and only then does D5's original question matter. If it was
+     deliberate and open-ended, D5 can be closed as moot and the grant allowed
+     to lapse.
+  2. If temporary: D5's original options 1/2/3 stand unchanged.
+
+**The measured cost of getting this wrong, for whichever way you decide.**
+
+- **18.04 of 30 free Kaggle GPU-hours remain in W32 and expire 2026-08-16**
+  (`experiments/gpu_budget.json`: `2026-W32.kaggle = 11.9635`).
+- The project's #1 blocker, **T2.01** (`FAIL`), is registered at
+  `est_hours=6.5`, `prefer="kaggle"`. `run blocked` puts it at **frees 26,
+  blocks 36** — 3.7x the next-largest blocker. Behind it sit **every** curiosity
+  spec (CU.1-CU.7, T2.08), every Tier-5 claim, and every Tier-6 living-Jack
+  spec.
+- Those hours are only spendable during hours the loop is permitted to run.
+
+So the cost of an indefinite pause is not "a slower week". It is that the
+curiosity thesis — GOAL.md's north star, currently **12 specs and zero ever
+run** — stays untestable until the next weekly grant.
+
+**Not being asked:** nothing here proposes weakening the 90% rule or the pause
+mechanism. Both are working exactly as specified. The question is only whether
+the 21:03 pause was meant to outlive tonight.
+
+**One in-flight item you should know about either way.** A GPU job for T1.02 is
+running orphaned right now (PID 2034160, PPID 1, on Kaggle since 21:07:42). It
+will write a legitimate result into `experiments/ledger.json` around 22:07 with
+no iteration alive to commit it. Whoever resumes will find a dirty tree
+containing a real, uncommitted ledger row — that is expected, not damage. It is
+handled in `OVERSIGHT.md` FOR THE BUILDER item 3.
