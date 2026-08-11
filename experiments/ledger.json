@@ -2512,8 +2512,8 @@
     },
     "T0.13": {
       "amended": [],
-      "attempt": 21,
-      "commit": "d0c8a6e+dirty",
+      "attempt": 22,
+      "commit": "c555f11",
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -2535,15 +2535,9 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.53,
+      "duration_s": 1.56,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "b30166a",
-          "message": "AttributeError: 'Ledger' object has no attribute 'data'",
-          "ran_at": "2026-08-09T13:13:30",
-          "status": "ERROR"
-        },
         {
           "commit": "b30166a",
           "message": "pre-registered threshold not met",
@@ -2657,6 +2651,12 @@
           "message": "",
           "ran_at": "2026-08-11T16:18:40",
           "status": "PASS"
+        },
+        {
+          "commit": "d0c8a6e+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T20:18:37",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
@@ -2682,7 +2682,7 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-11T20:18:37",
+      "ran_at": "2026-08-11T20:19:31",
       "seeds": [
         0
       ],
@@ -2873,8 +2873,8 @@
     },
     "T0.18": {
       "amended": [],
-      "attempt": 4,
-      "commit": "ced1393",
+      "attempt": 5,
+      "commit": "c555f11",
       "control_metrics": {
         "control_blind_detail": "FIX.blind",
         "control_blind_specs": 1,
@@ -2898,7 +2898,7 @@
         "verdict_disagreements": 1,
         "verdicts_rejudged": 5
       },
-      "duration_s": 1.48,
+      "duration_s": 1.5,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2918,6 +2918,12 @@
           "message": "",
           "ran_at": "2026-08-10T02:14:49",
           "status": "PASS"
+        },
+        {
+          "commit": "ced1393",
+          "message": "",
+          "ran_at": "2026-08-10T09:25:36",
+          "status": "PASS"
         }
       ],
       "impl_sha": "b18c290e1beee2e6",
@@ -2925,13 +2931,13 @@
       "metrics": {
         "control_blind_detail": "",
         "control_blind_specs": 0,
-        "control_read_by_key": 53,
-        "control_read_by_value": 4,
-        "controls_probed": 57,
+        "control_read_by_key": 56,
+        "control_read_by_value": 8,
+        "controls_probed": 64,
         "declared_control_never_ran": 0,
         "declared_never_ran_detail": "",
         "disagreement_detail": "",
-        "entries_seen": 60,
+        "entries_seen": 67,
         "guard_ledger_entries": 1.0,
         "no_control_detail": "T0.01, T0.10",
         "no_control_specs": 2,
@@ -2946,9 +2952,9 @@
         "unevaluable_detail": "",
         "unevaluable_gates": 0,
         "verdict_disagreements": 0,
-        "verdicts_rejudged": 59
+        "verdicts_rejudged": 66
       },
-      "ran_at": "2026-08-10T09:25:36",
+      "ran_at": "2026-08-11T20:19:33",
       "seeds": [
         0
       ],
@@ -3183,14 +3189,14 @@
     },
     "T0.23": {
       "amended": [],
-      "attempt": 2,
-      "commit": "d0c8a6e+dirty",
+      "attempt": 3,
+      "commit": "c555f11",
       "control_metrics": {
         "prefix_rc": 1,
         "prefix_reached_spec": true,
         "prefix_saw_unknown_token": true
       },
-      "duration_s": 5.7,
+      "duration_s": 5.71,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3198,6 +3204,12 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-11T20:16:15",
           "status": "FAIL"
+        },
+        {
+          "commit": "d0c8a6e+dirty",
+          "message": "",
+          "ran_at": "2026-08-11T20:17:29",
+          "status": "PASS"
         }
       ],
       "impl_sha": "cadd0d9f1ba388a0",
@@ -3220,7 +3232,7 @@
         "rc_readonly": 0,
         "readonly_still_works": true
       },
-      "ran_at": "2026-08-11T20:17:29",
+      "ran_at": "2026-08-11T20:19:29",
       "seeds": [
         0
       ],

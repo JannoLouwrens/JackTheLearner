@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 66 / 162 demonstrated
+## 67 / 163 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -299,6 +299,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Under `Spec.gate_mode='screen'` an arm below the 3-sigma learning gate is ELIMINATED rather than VOIDing the run, and every guard that makes that safe holds: two survivors are still required, the winner still cleared 3 sigma, the eliminated arms are still recorded, an escaped control still inverts the verdict to VOID, `validity` behaves exactly as before, and the mode is refused without a written rationale on the committed Spec.
       - _dies if:_ Any of the seven properties failing — above all P2: if `screen` changes the verdict of PS.01/J round 1, the mode was reverse-engineered to rescue the run that motivated it and must be reverted.
       - _then delete:_ `Spec.gate_mode='screen'` itself. If the battery cannot be made to pass, the mode is deleted and detector bakeoffs go back to escalating to the owner instead.
+- [x] **T0.23** A mistyped command cannot spend the GPU budget
+      - _asserts:_ An argv containing any token the runner does not recognise is REFUSED whole — non-zero exit, and no spec dispatched, not even the ones it did recognise — while every well-formed argv (a read-only command, a bare spec id) behaves exactly as before.
+      - _dies if:_ The runner reaching `cmd_run` for a spec named beside an unrecognised token, or the guard refusing an argv that was always legal.
+      - _then delete:_ The claim that reading `experiments.run`'s output tells you what it did. If a token can be ignored, the command you typed and the command that ran are different commands.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

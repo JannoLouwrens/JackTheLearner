@@ -3114,3 +3114,85 @@ tight, submit `T1.02` to **Kaggle** instead (`prefer="kaggle"` — `prefer="cola
 is what put the last attempt out of reach of Kaggle's ~18 h, which expire
 2026-08-16); it is the standing coverage rule's pick, `generality` being 4
 declared and 0 passing. (3) `UB.14`, and stop deferring it.
+
+---
+
+## 2026-08-11 20:07 UTC — the runner ran a spec I did not ask it to run
+
+**Unit of work: `T0.23` — a mistyped sub-command cannot spend the GPU budget.
+PASS (5.71 s, 6/6 properties, control does the forbidden thing). 66 → 67.**
+
+**What happened, in order, because the order is the finding.** Twelve minutes
+in, reading the board, I typed `python -m experiments.run show T1.02` to inspect
+a ledger row. `show` is not a sub-command. The runner printed `unknown spec
+show`, counted one failure, and **ran T1.02** — `gpu<20min` — which built a job
+and submitted it to Colab at 20:08:13. I did not notice. A second command of
+mine (`pkill -f "experiments.run show"`) matched its own shell's command line
+and killed the parent, orphaning the child. I found it as **PID 2034160,
+ppid 1**, in `ps`, three minutes later, and confirmed it from
+`/proc/2034160/environ`: `CLAUDE_CODE_SESSION_ID` is this session's.
+
+**Nothing on the board could have told me.** The ledger row it will write is
+legitimate. The budget charge it will make is legitimate. Every organ this
+project has watches for *fabricated* work; unrequested work is real work, and
+real work is invisible to all of them. The only reason this is written down
+rather than discovered next week is that the launching shell died and left a PID
+behind — an accident, not an instrument.
+
+**The topology, not the typo.** Between the argv parser and `gpu.submit()` there
+is no second confirmation: no `--yes`, no dry-run default, no budget prompt. So
+the parser is the last gate standing in front of the scarcest resource the
+project has, and it had been written with a query interface's manners — skip the
+token you do not recognise, proceed with the ones you do. The tokens it
+understood were exactly the expensive ones. **Partial execution is the failure
+mode, so partial execution is what the guard forbids:** any positional that is
+not a spec id or a read-only command now refuses the whole argv with rc=2.
+
+**`T0.23`, tier 0, `cpu<1min`, depends `T0.01`.** Six properties, each able to
+fail alone: `fixture_unimplemented`, `bad_argv_refused`,
+`bad_argv_never_dispatched`, `readonly_still_works`, `good_argv_not_refused`,
+`mixed_argv_refused`. The control is the pre-guard dispatch kept executable —
+`cmd_run(ledger, argv)`, literally the line `main()` used to end on — and it
+must still reach the spec on the same argv (`control_reached_spec = True`).
+The gate is demonstrably live: the first revision of this file **FAILED** on
+`good_argv_dispatched`, which is how the next paragraph got found.
+
+**A second defect, found by that failure and worth more than the first.**
+`_exclusive` prints `Another run holds …` and **exits 0**. So while any run is
+in flight, `python -m experiments.run <anything>` returns success having done
+nothing — this runner's exit code cannot distinguish *ran* from *declined to
+run*. `T0.23` therefore gates on the refusal **line**, not the return code, and
+says so in its docstring. Everything else that reads this runner's `rc` — the
+loop script's `rc=`, any future wrapper — is reading a value the lock can
+manufacture. **Not fixed, and I am not smuggling it into this commit:** changing
+`_exclusive`'s exit code changes how `ladder_loop.sh` reports every iteration.
+It is named here and in `LESSONS.md` for whoever takes it.
+
+**Re-certified from the clean tree** after committing: `T0.23` PASS, `T0.13`
+PASS (66 gates scanned, 0 disarmed, 0 precedence hazards — it now includes
+T0.23's own gate), `T0.18` PASS. `run stale` reads **zero**.
+
+**IN FLIGHT — a claim I am deliberately not making.** The accidental T1.02 job
+was still running as PID 2034160 when this was written, submitted 20:08:13
+against head `d0c8a6e`. Its receipt is in `experiments/gpu_submissions.jsonl`
+(`attempt_id 1786478893361-2034160-colab`) with **no `result` line yet** — which
+is the previous iteration's organ doing exactly its job, and the reason this
+paragraph is checkable instead of believable. **T1.02 stays `ERROR` in the
+ledger.** The orphan holds its own `Ledger` and writes its own row if it
+finishes; the T0.08 property-5 fix means that write reverts nothing else.
+
+**For the next iteration, in order.**
+1. **Check the receipt first**: `python -c "from experiments.gpu import
+   submissions; print(submissions()[-3:])"`. A `result` line for
+   `1786478893361-2034160-colab` means the job landed — read `run status` for
+   T1.02's verdict; no result line and no PID 2034160 means it died in flight
+   and the row is honestly still `ERROR`. Do not re-submit without checking
+   `gpu_budget.json` for the charge.
+2. **`LC.03`** — `cpu<2h`, `frees 7`, still the largest non-GPU unblock and
+   still runnable.
+3. **`UB.14`** — `cpu<2h`, fifth iteration deferred, now the oldest untaken
+   finding on the board. `one brain / unison` is 21 declared specs and an
+   honest 0 passing, and the standing rule in `ladder_prompt.md` points at it.
+4. If `T1.02` did land and passed, `generality` leaves the zero-pass list for
+   the first time; if it FAILED, that is a real measurement and the `kills`
+   clause on the spec ("GPU hours cannot help") is the thing to read next.
