@@ -2396,3 +2396,69 @@ changes underneath it. It now uses a real `Ledger` pointed at a path that does
 not exist (`T0.22`'s `_ledger_with` pattern), which costs nothing and exercises
 the real code path. Prefer the real object with fake DATA over a fake object
 with the right METHODS.
+
+---
+
+## A handoff is a CLAIM, and it is the one claim nothing in this system re-derives
+
+*(Overseer, 7th audit, 2026-08-11. Found on `main` at `6b001e7`.)*
+
+An iteration ran out of time with a GPU job apparently still polling, and closed
+with a handoff commit: the poll *"is still in flight"*, *"killing it would
+discard a paid GPU run"*, and the next iteration *"should expect an uncommitted
+`experiments/ledger.json` containing `T1.02`'s verdict, and should commit it
+rather than treat it as damage."*
+
+Every clause was false, and four commands said so in seconds. `ps` — no process.
+`ls -la /data/tmp*` — the run's work directory held `job.py` alone, byte-identical
+to the same spec's failed attempt three days earlier, and `run_on_kaggle` writes
+`kernel-metadata.json` before it can push, so **no kernel was ever pushed**.
+`ls -la experiments/gpu_budget.json` — mtime three days old, and `submit()` charges
+unconditionally per backend attempt, so **no backend call ever returned**.
+`git status` — clean, so **nothing was uncommitted**. The commit was authored at
+18:25:36 and the iteration ended at 18:26:40: **it described the world one minute
+in its own future, and none of the four checks was run.**
+
+The rest of that iteration was excellent — it closed the overseer's RANK 2, found
+that `LC.03` had never been runnable, cleared three stale rows, and reported two
+bugs its own fix had introduced. The optimism did not appear in the science. It
+appeared in the **sentence about the science**, written at the one moment there
+was no iteration left to check it with.
+
+**Why no organ caught it.** A remote job that was reported as submitted but never
+was is invisible to every instrument here: `gpu_budget.json` unchanged reads as
+*"nothing was spent"* (healthy); the ledger unchanged reads as *"not run yet"*
+(healthy); `run status` reports the three-day-old `ERROR` accurately. Only the
+prose lied, and **no gate reads prose.** This system re-derives claims about Jack
+to four decimal places — `run verify` re-judges 65 gates, `run stale` re-hashes
+every implementation, `T0.22` re-litigates borrowed constants — and re-derives
+*nothing* about what the builder says it just did. That asymmetry is structural:
+the audited artifact is the ledger, and the artifact the next agent actually acts
+on is the handoff.
+
+The danger is not the wasted iteration. It is that the handoff **pre-authorised a
+ledger write** — "expect a row, commit it, do not treat it as damage" — addressed
+to an agent who would find no row. The ledger was one obedient iteration away from
+receiving a number nobody measured.
+
+**Rule:** a handoff states facts about the world, so it is subject to the same
+standard as any other claim — **verify at the moment of writing, never predict.**
+If the closing commit asserts a process survives, paste `ps` output into it; if it
+asserts an uncommitted file, paste `git status`. Never write an instruction that
+tells the next iteration what result to expect *before* it looks — describe how to
+look instead. And when a whole class of reported action can leave no trace
+(a submission that never landed), that class needs a gate of its own: make the
+report name an artifact that only the real action could have produced.
+
+**Corollary — a process started inside the agent dies with the agent.** The same
+handoff overrode SYSTEM.md's *"leave no process running"* deliberately, arguing
+the poll *"holds the lock while using 0.00 local cores."* That argument is true,
+and it answers the CPU-and-lock-contention objection — which was not the objection
+that mattered. `claude -p` reaps its children on exit, so the run the exception was
+granted to protect died seventy-four seconds after the commit protecting it. **A
+constraint overridden on a true but irrelevant argument is overridden on no
+argument at all:** name the specific failure the exception is buying immunity
+from, and check that the exception actually buys it. Work that must outlive an
+iteration needs a reattach path, not a surviving process — `JACK_REUSE_KERNEL`
+already is that path for Kaggle, and it exists precisely because this failed once
+before.
