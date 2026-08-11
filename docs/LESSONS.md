@@ -2560,3 +2560,32 @@ bug: **T0.22 already tested what a `+dirty` row MEANS (P3-P5, P10) and never
 what EARNS the stamp.** A spec can be thorough about a value's consequences and
 never once ask where the value came from — and that gap is invisible from inside
 the spec, because every property in it passes.
+
+## A switch that looks global and is local is worse than no switch
+
+The owner said "please pause for now all agents". `.loop-paused` was written,
+the builder stopped, and the pause was reported as done. Three organs kept
+running — each had its OWN pause file (`.overseer-paused`, `.review-paused`,
+`.fieldwatch-paused`), and the overseer was still going a minute later. It was
+caught only because the verification ran each organ and one returned exit 124
+instead of exiting instantly.
+
+The near-miss is the point. The check that found it was almost skipped: a grep
+had already confirmed all four scripts *mention* `PAUSE`, which reads exactly
+like confirmation and is not. **Grepping for the presence of a mechanism is not
+testing that the mechanism fires.**
+
+`.paused` now stops every organ, checked from `scripts/lib_pause.sh` before any
+other work. Per-organ files still stop one. The verification asserts both
+directions — with the file, all four exit in 0 seconds; without it, they are
+willing to run — because a pause that is stuck on is a different outage.
+
+This is the fourth instance today of one shape: **a control that reads a proxy
+for the thing it governs.** The reaper read a directory's mtime for "in use".
+The credit detector read a shared log's tail for "this run". The coverage tool
+read a title for "covers". This read one file for "all agents". Every one of
+them reported success while doing nothing, or the wrong thing.
+
+**Rule:** when a control is described in the plural — all agents, every job,
+each service — enumerate the members and prove the control reaches each one.
+Nobody re-checks a switch they believe they already threw.

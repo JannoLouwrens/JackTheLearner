@@ -27,8 +27,9 @@ LOG="$LOGDIR/overseer.log"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
+. "$REPO/scripts/lib_pause.sh"
 
-[ -f "$PAUSE" ] && { say "paused"; exit 0; }
+pause_gate say "$PAUSE" || exit 0
 
 exec 9>"$LOCK"
 flock -n 9 || { say "previous audit still running — skipping"; exit 0; }

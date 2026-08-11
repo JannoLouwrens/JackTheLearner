@@ -51,6 +51,9 @@ LOG="$LOGDIR/ladder.log"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
+. "$REPO/scripts/lib_pause.sh"
+
+pause_gate say || exit 0
 
 if [ -f "$PAUSE" ]; then
   # Credit-caused pauses SELF-EXPIRE: credits refresh on their own schedule,

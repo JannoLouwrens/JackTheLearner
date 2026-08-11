@@ -15,7 +15,8 @@ PAUSE="$REPO/.review-paused"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
-[ -f "$PAUSE" ] && { say "paused"; exit 0; }
+. "$REPO/scripts/lib_pause.sh"
+pause_gate say "$PAUSE" || exit 0
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt 3 ] && { say "ABORT: ${FREE_GB}GB free on /"; exit 0; }
 LOAD=$(awk '{print $1}' /proc/loadavg)
