@@ -11,22 +11,29 @@
 > `SYSTEM.md` law 3: decisions are made by bakeoff, never by argument — and a
 > field watch that argued would be making decisions.
 
-**Sweep date:** 2026-08-11 · **Window:** ~2026-02 → 2026-08 (6 months)
-**Scout:** field watch, week 2.
+**Sweep date:** 2026-08-12 · **Window:** ~2026-02 → 2026-08 (6 months)
+**Scout:** field watch, week 3.
 
-**This is a GAP-CLOSING sweep, and that choice needs stating up front.** The
-first sweep was **2026-08-10 — one day ago**, and its own §6 queued the next one
-for 2026-08-17. A one-day delta against a six-month window is not a new sweep:
-re-running fronts 1–5 broadly would have re-read the same papers and produced
-the *appearance* of coverage. So this sweep executed the previous one's queue
-instead — the three constitutional senses it never searched, the four abstracts
-it listed without opening, and the biology citation whose fetch failed.
+**This sweep executed the previous one's queue item #1: a genuine six-month
+sweep of fronts 1, 2 and 3** (learning cores, multimodal fusion, memory), which
+week 2 deliberately did not touch and carried forward verbatim from week 1. It
+also closed queued #2 (Optimistic World Models, which is now nominated), #4
+(SmallWorlds), and #3 (conference proceedings — **now blocked for a reason, see
+§4**).
 
-That turned out to be the right call for a reason that was not visible when the
-queue was written: **in the 24 hours between the two sweeps, the builder shipped
-and PASSed `SM.01` (smell) and `TA.01` (taste)** — the exact senses the last
-sweep declared it had not searched. The field watch was one day from being
-overtaken on the front it had already flagged as its largest hole.
+**The cadence needs stating, again and honestly.** Week 1 was 2026-08-10, week 2
+was 2026-08-11, this is 2026-08-12. Three sweeps in three days against a
+six-month window. The justification for running today rather than on 08-17 is
+specific and expires immediately: fronts 1–3 had been swept exactly **once**,
+eight weeks of new arXiv content had never been read against them, and the queue
+put that first. That mandate is now spent. **Fronts 1–3 have been swept properly
+and should not be re-swept before ~2026-08-19**; a fourth consecutive daily sweep
+would be theatre.
+
+One event in the interval also bears on the report: **`VO.01` FAILed at attempt 2
+on 2026-08-11 (23.84 s)** — after last week's sweep declared NO-ACTION on voice.
+§2 reports what the acoustics literature says about it, and what it does *not*
+say.
 
 ---
 
@@ -34,452 +41,571 @@ overtaken on the front it had already flagged as its largest hole.
 
 | Front | Searched this sweep | Depth reached |
 |---|---|---|
-| **SMELL** (queued #1) | olfactory navigation/plume-tracking RL, turbulent search, intermittency, released environments | **full HTML + quantitative results** for the nomination; abstracts for 2 siblings |
-| **TASTE** (queued #1) | computational gustation, CTA models, chemosensory embodied agents; **plus primary-source verification of two `TA.02` citations carried as [k]** | abstracts + multiple independent secondary sources |
-| **VOICE** (queued #1) | emergent communication, positive listening, causal-influence metrics, 2026 work | abstract fetched; compared against `VO.02`'s existing controls |
-| Biology-as-oracle (queued #3) | the replay paper last week could not fetch | **full text via PMC — resolved and promoted** |
-| Watchlist backlog (queued #2) | the four unopened abstracts | **all four fetched; two removed as off-target** |
-| Conference proceedings (queued #4) | ICML/NeurIPS/ICLR 2026 accepted lists | **attempted, low yield — see §4** |
-| Fronts 1, 2, 3 (cores, fusion, memory) | **NOT re-swept — deliberate, see above** | carried forward unchanged from 2026-08-10 |
+| **1 · LEARNING CORES** | world-model sample efficiency; Dreamer successors incl. Dreamer 4; SSM/RSSM alternatives; JEPA-family control results; optimistic exploration | **full HTML + tables** for the nomination (2602.10044); abstracts for 5 siblings |
+| **2 · MULTIMODAL FUSION** | binding objectives; modality collapse; visuo-tactile/proprioceptive cross-modal prediction; unified tokenisation for VLA-world models | abstracts + search-level; **cross-checked against `UNIFIED_BRAIN_BAKEOFF.md` §1.2–1.5's existing citations** |
+| **3 · MEMORY** | episodic/agent memory; consolidation; retrieval benchmarks; abstention & calibration | abstracts; **`HAKARI-Bench` (2606.22778) abstract fetched** |
+| **4 · CURIOSITY & OPEN-ENDEDNESS** | intrinsic reward vs disagreement/RND; autotelic & lifelong curricula; unsupervised environment design | **full HTML + formulas + result tables** for the nomination (2605.20878) |
+| **5 · WORLDS & EMBODIMENT** | survival/homeostatic sims; MuJoCo ecosystem; cheap embodied benchmarks; UED | **full HTML + throughput numbers** for MuJoCoUni (2605.24922), resolved as inapplicable |
+| Biology-as-oracle | infant sleep consolidation / category abstraction; acoustic transmission ecology | secondary sources; **the VO.01-relevant acoustics checked against two meta-analyses** |
+| Small-model end | tiny-model control results | abstract fetched (2604.07385) |
+| Queued #2 (OWM full text) | **DONE** — numbers extracted, now a nomination | full HTML |
+| Queued #3 (proceedings) | **attempted via the OpenReview API — now hard-blocked, see §4** | HTTP 403 |
+| Queued #4 (SmallWorlds) | **DONE** — abstract fetched, stays on watchlist | abstract |
+| Queued #5 (SM.02 / TA.02) | **checked the ledger: neither has run.** N1 of week 2 is still live and still un-moot | ledger read |
 
 **Known gaps, stated so nobody assumes coverage:**
-- Fronts 1/2/3 carry last week's state verbatim. If a core/fusion/memory result
-  landed in the last seven days, this sweep would not have seen it.
-- The olfaction nomination's code is **announced but not released** (§1, N1).
-- Garcia & Koelling 1966 is a two-page 1966 *Psychonomic Science* article that is
-  not freely available; it is verified to **secondary-source** level only (§2).
-- No non-English sources.
+- Front 2 got **one search pass and a cross-check against our own citations**,
+  not the full-text treatment fronts 1 and 4 got. If a fusion result landed that
+  our existing vocabulary does not name, this sweep would not have seen it.
+- **CIG's hardware and wall-clock (§1, N1) are in its appendix A.6 and I did not
+  extract them.** That is the single most decision-relevant missing number in
+  this report, because B4 is a throughput gate.
+- Neither nomination's **code release is confirmed**. Both are marked [c].
+- No non-English sources. No OpenReview main-track enumeration (§4).
+- Week 2's nominations (whiff clock → `SM.02`; RPE-prioritised replay → `NE.05`
+  S1) are **live and not re-litigated here**; neither spec has run.
 
 ---
 
 ## 1. NOMINATIONS
 
-Two. Both are **CPU-only and cheap** — neither needs the GPU quota. Each states
-the source, what is **[V]**erified (fetched and read) versus **[c]**laimed,
+Two. Both are **loss-term / reward-term changes to arms this project has already
+specified** — no new module, no new network, no new dependency. Each states the
+source and its **arXiv primary category** (week 2's discipline finding, applied),
+what is **[V]**erified (fetched and read), **[c]**laimed, or **[C]**omputed here,
 which spec it enters, its cost on **our** substrate, and — steelmanned both ways
 — why it might win and why it might lose.
 
 ---
 
-### N1 — The whiff clock: `SM.02` may be about to measure its own observation vector
+### N1 — Ensemble disagreement is measured against the wrong context, and the fix reuses the ensemble we were already going to build
 
-**Sources — three independent 2026 groups, converging on one variable:**
-- *Clock-state olfactory search in turbulent flows using Q-learning: the geometry
-  of plume recovery* — [arXiv:2605.15938](https://arxiv.org/abs/2605.15938),
-  2026-05-15 (Rando, Heinonen, Qi, Seminara). **Full HTML read.**
-- *Smart strategies to navigate turbulent odor plumes reorienting to local wind*
-  — [arXiv:2605.21329](https://arxiv.org/abs/2605.21329), 2026-05.
-- *Emergence of a Flow-Assisted Casting Strategy for Olfactory Navigation via
-  Memory-Augmented RL* — [arXiv:2605.18881](https://arxiv.org/abs/2605.18881),
-  2026-05-16 (Zhao, Zhao, Bian, Li).
+**Source:** *CIG: Exploration via Conditional Information Gain* —
+[arXiv:2605.20878](https://arxiv.org/abs/2605.20878) **v1, 2026-05-20**,
+primary category **cs.LG**. Joseph, Fechner, Stegmaier, Daaboul, Zöllner
+(FZI Karlsruhe / KIT). **Full HTML read: formulas, algorithm, result figures.**
 
-**None is cited anywhere in this repo.** `odour.py` cites FlyGym, Celani/
-Villermaux/Vergassola, Farrell and GADEN — good, primary, and all about **the
-field**. This is the adjacent literature about **the agent that has to use it**,
-and it is the half the module's own docstring does not cover.
+**Not cited anywhere in this repo.**
 
-**The verified claim [V].** Rando et al. train a **tabular Q-learner** whose
-entire memory is *a running clock since the last whiff* — incremented each
-timestep odour is below threshold, reset to 0 on detection. Measured on DNS
-turbulent-channel-flow data (2598 timesteps, 123×27 grid):
+**The problem it names, in our own words.** `CURIOSITY_BAKEOFF.md` §1.1 and
+`LEARNING_CORE.md` §3.3.3 both settle on the same estimator from opposite
+directions: our `disagree` candidate is *"variance across a 5-member one-step
+forward-model ensemble"*, and `LEARNING_CORE.md` §3.3.3 records that active
+inference's epistemic term **is** expected information gain and **is** estimated
+in the literature with exactly Plan2Explore's ensemble — which is why arm `A3`
+(`wm-efe`) is specified as *"disagreement across a K=5 ensemble of latent
+dynamics heads"*. One estimator, load-bearing in two separate bakeoffs.
 
-| | value |
-|---|---|
-| success rate | **≥ 90 %** across sparsity settings, → ~100 % at low sparsity |
-| vs. `cast-and-surge` biomimetic baseline | **significantly outperforms** |
-| vs. Bayesian optimal-policy reference | **near-matches**, with far simpler memory |
-| state space | **500 states** (single-Q, horizon H = 500); 999 (two-Q) |
-| training | 3 × 10⁶ episodes, ε-greedy 1.0 → 10⁻⁴ |
+CIG's claim is that this estimator conditions on the **replay buffer only**. It
+scores each transition against everything the agent has ever seen and is blind to
+what the *current rollout* has already probed — so a rollout that revisits its own
+novel region collects the bonus repeatedly. Episodic methods (E3B) have the
+opposite blindness. Its reward keeps both:
 
-The learned strategy is interpretable and reproduces the insect repertoire —
-**surging, casting, downwind return**. The two other groups reach the same place
-independently: 2605.21329 uses "elapsed time since the last odor detection" as
-its *single* internal variable and finds performance peaks at an *intermediate*
-wind-memory integration time; 2605.18881 finds a **non-monotonic** dependence of
-navigation speed on memory length. Three groups, three methods, one state
-variable.
-
-**Why this bears on us, specifically.** `experiments/odour.py` defines the nose
-Jack actually carries:
-
-```python
-OBS_DIM = 2 * C + C          # 12 floats at C = 4
-# [left C, right C, d(mean)/dt C]
+```
+r_t = log( K_tt  +  σ²d  −  k_<t ᵀ K̃_<t⁻¹ k_<t )
+         ^^^^      ^^^^     ^^^^^^^^^^^^^^^^^^^
+      lifelong   aleatoric   prefix redundancy
+      (= P2E)     ridge      (Cholesky of the disagreement kernel)
 ```
 
-Bilateral concentrations plus a **one-step temporal derivative**. There is no
-blank-duration state anywhere in the vector, and `OdourSensor` is documented as
-owning "no clock". Meanwhile the module's own docstring reports this world's
-measured intermittency at **roughly 40–55 % blanks** — so on nearly half of all
-samples the derivative is computed across a blank, where it is zero and carries
-no information about *how long* the blank has lasted. That duration is precisely
-the quantity all three papers identify as sufficient.
-
-**Which spec it enters.** `SM.02` ("smell finds what vision cannot see"), in two
-parts — and the second is the load-bearing one:
-
-1. **As an observation arm.** A `+C` whiff-clock (per channel, time since that
-   channel last exceeded threshold) against the current 12-float vector. One
-   changed term, `odour.py`'s existing isolation discipline. A third arm —
-   **wind-relative action framing** with an exponential wind-memory kernel
-   (2605.21329) — is available but Jack has no wind sense in the odour path, so
-   it implies a spec rather than fitting one.
-
-2. **As a cheap CPU pre-gate on the GPU run.** `SM.02` is `Budget.GPU`, and its
-   `kills` field is unambiguous: *"The odour modality. A sense whose ablation
-   column is placebo-indistinguishable loses its parameters... this document
-   carves no exception for a constitutional sense."* A tabular Q-learner on the
-   clock state, run against **our** `PuffField`, is a reference arm simple enough
-   that **its failure indicts the task** — `LESSONS.md`, "when the simplest
-   possible learner also fails, the TASK is broken". If a 500-state table cannot
-   find the source in our field, `SM.02` cannot distinguish "smell is decorative"
-   from "this field is not navigable by anything" — and the default action on
-   that ambiguity is deletion of a constitutional sense's wiring.
-
-This is the same shape as last week's N1 certificate, one front over: a positive
-control that makes a null result attributable to the mechanism rather than to
-the fixture.
-
-**Cost on our substrate.** The cheapest nomination in either sweep. A 500-state
-Q-table over 3 × 10⁶ episodes is a NumPy loop — **minutes on 4 ARM cores at
-`nice 19`**, no GPU, no new dependency. The observation arm is `+4 floats` and a
-per-channel counter. The `PuffField` and `mj_ray` occlusion already exist and are
-certified by `SM.01` (PASS, 3.9 s).
-
-**Why it might WIN (falsifiable).** Run the tabular reference arm on our `O2`
-field before `SM.02` burns GPU. Two discoverable outcomes, both valuable: if the
-table succeeds with the clock and fails without it, then the whiff clock is
-load-bearing in *this* world and `SM.02`'s current 12-float vector is
-under-specified — caught before a GPU run whose kill criterion deletes an
-encoder. If the table fails *with* the clock, our field is not navigable and
-`SM.02` was never going to measure smell at all.
-
-**Why it might LOSE (steelmanned).** Four real ways:
-1. **Our field is far less intermittent than theirs, and that may be decisive.**
-   Farrell's field data is 83–90 % blank; `odour.py` measures this world at
-   **40–55 %**. At 40 % blanks a reactive bilateral gradient may simply suffice,
-   and the clock buys nothing — which is exactly the hypothesis `SM.02` already
-   tests with `O1` (static field) as its control. If `O1` is as good as `O2`,
-   this whole literature is inapplicable to us and `SM.01`'s notes say so
-   already.
-2. **A hand-designed feature is in tension with `GOAL.md`.** "PLASTIC ONLY —
-   nothing inside him is frozen" and the capability target both lean against
-   engineering a sufficient statistic the network could derive. Jack's policy is
-   not a 500-state table: it has 348-dim proprioception and, if recurrent, can
-   in principle construct its own blank-duration state. Adding the clock by hand
-   may be solving a problem the architecture should solve, and would then be a
-   permanent hand-hold in a constitutional sense.
-3. **Substrate gap, per `LESSONS.md`.** Every number above is a 2-D point agent
-   on DNS turbulence data with one source and no body, no other senses, no
-   contact physics. Jack is a humanoid. "What transfers is the protocol, not the
-   ceiling" applies here at least as hard as it did to last week's N1.
-4. **`SYSTEM.md`: no new organ without a scar — and `SM.02` has not run.**
-   Nothing has failed. This is a pre-emptive nomination, and that is the
-   strongest argument against it. The counter, stated so the builder can weigh
-   it rather than take my word: the pre-gate is CPU-minutes and the run it
-   guards is GPU-hours with an irreversible `kills` clause, so the asymmetry is
-   unusually lopsided. But it is still a nomination against an unscarred spec,
-   and that is a real cost under this project's own rules.
-
-**Code status [c]:** Rando et al. state *"the dataset and code will be shared
-shortly."* It is **not released**. Nothing above depends on their code — the
-method is a Q-table and four lines of state update — but any claim that we could
-reuse their environment is unsupported today.
-
----
-
-### N2 — Replay is prioritised by prediction ERROR, and reward magnitude is a published control that FAILS
-
-**Source:** *Post-learning replay of hippocampal-striatal activity is biased by
-reward-prediction signals* — Roscow, Howe, Lepora & Jones (University of
-Bristol), **Nature Communications**, `s41467-025-65354-2`, 2025-11-24. Open
-preprint: [bioRxiv 10.1101/716290](https://www.biorxiv.org/content/10.1101/716290v3).
-
-**This resolves last week's watchlist entry**, which carried the flag *"UNVERIFIED
-— the fetch failed. Do not cite until read."* Full text now read via PMC
-(`PMC12644820`). The finding is **sharper than last week's guess**: last week's
-line said "biased by reward-prediction signals"; the measured result is
-specifically **reward-prediction ERROR**, and **reward magnitude specifically
-fails**.
+`K_tt` is **exactly Plan2Explore's per-step disagreement** — i.e. exactly what
+`disagree` and `A3` already compute. The other two terms are arithmetic on top of
+it.
 
 **The verified claim [V].**
 
 | | |
 |---|---|
-| species / n | adult male Lister hooded rats; **6** behavioural (22 sessions), **3** ephys (17–20 sessions) |
-| units | **617** CA1, **1406** striatal |
-| design | probabilistic arms (75/50/25 %, then revaluation to 87.5/12.5 %) so that reward receipt yields low / medium / high RPE **per arm** — this is what dissociates RPE from reward |
-| **RPE-prioritised replay** | Q-learning error score **significantly improved, p < 0.05** |
-| **reward-magnitude-prioritised replay** | **no improvement over baseline, p > 0.05** |
-| controls | shuffled-data control eliminates the effect; holds in **all 6** animals and all state–action pairs |
-| effect size | "modest but consistent"; significant at **1 replay event per session**, persisting over 22 sessions |
-| timescale | offline rest/sleep **between daily sessions** |
+| backbone | **DreamerV2, unchanged**; *"identical training budget across CIG and P2E; any performance difference is attributable to the reward computation alone"* |
+| ensemble | **M = 5** one-step latent MLPs — *"same ensemble as Plan2Explore; no bootstrap masks or diversity penalties"* |
+| new hyperparameters | **none.** The aleatoric scale σ̂² is estimated post-hoc from ensemble-mean residuals (their Algorithm 2), not tuned |
+| tasks | **12**: MiniGrid (MultiRoom N7S8, KeyCorridor S4R3, ObstructedMaze 2Dlh) and **OGBench continuous control** (AntMaze, Cube-Triple, Puzzle 3×3, Scene-Explore), each with noisy-TV variants |
+| baselines | **6**: P2E, RND, ICM, APT, E3B, **E3B × P2E** (the obvious hybrid, run explicitly) |
+| statistics | **5 seeds**, IQM with 95 % stratified bootstrap CIs. *"CIG's IQM confidence interval does not overlap with any baseline"*; P(CIG better on a random task) **≥ 0.79 against every baseline** |
+| aggregate | CIG ≈ **0.80** normalised vs P2E ≈ **0.65** — **read off Figure 5, not a table**; treat as weaker than the per-task statements |
+| **noisy-TV** | RND, ICM, APT, E3B and E3B×P2E **collapse to ≈ 0 successes**; CIG and P2E retain near-full coverage, and **CIG beats P2E on every noisy-TV task** |
+| cost | kernel O(T²Md), Cholesky O(T³); at imagination horizon **T ≈ 15** both are *"negligible relative to the O(TMd) ensemble forward passes"* |
 
-**Why this one is worth the builder's attention.** The design contains a
-**control that must fail and does** — reward-biased replay, run alongside
-RPE-biased replay in the same animals on the same data, showing no improvement.
-That is the Garcia & Koelling shape `TA.02` already prizes: *a
-control-that-must-fail, published in advance by someone else.* It is also the
-cheapest kind of evidence to import, because the control comes with it.
+**Which spec it enters — and this is the load-bearing part, because it is not
+where a reader would first put it.**
 
-**Which spec it enters.** `NEEDS_AND_DEATH.md` §3.4, stage **S1** — the SIESTA
-latent-rehearsal stage — whose sampling rule is currently declared as:
+1. **`LEARNING_CORE.md` §5.4, arm `A3` (`wm-efe`) — the natural home.** `A3` is
+   defined as *"A2's world model, byte-identical, same training loss, same
+   train_ratio. The only change is the actor"*, scoring imagined rollouts by
+   expected free energy whose epistemic term is the K=5 ensemble disagreement.
+   CIG is a **drop-in replacement for that epistemic term over the same imagined
+   rollouts at the same horizon** — the regime its O(T³) cost was measured in.
+   It enters as `A3b`, or as a variant of `A3`, with `A3` itself as the control
+   that isolates the prefix term.
+2. **`CURIOSITY_BAKEOFF.md` §3.1 — where it does NOT cleanly fit, stated so the
+   builder does not discover it late.** `disagree` runs on a ~150 K model-free
+   policy with **no world model and no imagined rollout**. The only "prefix"
+   available there is the real episode, whose length is thousands of steps, and
+   O(T³) at T = 2,000 is ~8 × 10⁹ operations per bonus — **not** negligible. A
+   `disagree`+CIG arm in LT.04 would need a windowed prefix (a design decision
+   with its own hyperparameter, which forfeits the "no new hyperparameters"
+   property that is half of why this nomination is cheap). **`LEARNING_CORE`
+   `A3` is the honest home; `CURIOSITY_BAKEOFF` is a stretch.**
 
-> *"Sample transitions from the compressed lifetime buffer: a mixture of this
-> day's experience and a reservoir sample from **earlier lives**."*
+**Cost on our substrate.** Near zero *in the world-model setting*. No new
+parameters. No new network. No new hyperparameter. The ensemble is one we have
+already specified and costed — `LEARNING_CORE.md` §5.5 puts `A3` at ≈1.9 M
+parameters plus 4 extra ensemble heads, and that cost is unchanged. The added
+work per imagined rollout is a 15×15 kernel and its Cholesky, which is a NumPy
+call. **This is the rare nomination that costs a few dozen lines and no compute
+budget.** Against that: **CIG's own wall-clock is in an appendix I did not
+open**, and B4's 5.0 sim-s/real-s floor is the gate that has already killed one
+design, so *"negligible"* is their word on an A100-class machine and not a
+measurement on 4 ARM cores.
 
-That is uniform-plus-reservoir. Nothing prioritises. The nomination is an S1
-sampling arm — **|RPE|-prioritised** — carrying **reward-magnitude
-prioritisation as a control that must fail**, scored on the same ruler and never
-competing (the `controls=` pattern `run_bakeoff` already supports, per
-`LESSONS.md` "a designed-to-fail control is not a weak arm").
+**Why it might WIN (falsifiable).** `CURIOSITY_BAKEOFF.md` §3.1 already records
+the exact failure mode CIG's prefix term is built to remove, as `disagree`'s
+declared risk: *"the ensemble sharing so much data that disagreement collapses
+everywhere, not only on noise."* If `A3b` beats `A3` at ≥1.5σ over 3 seeds while
+both clear the learning gate, then the epistemic term this project inherited from
+Plan2Explore was under-specified, and the fix cost nothing. If they tie, the
+prefix redundancy does not exist in a survival world where the agent moves
+continuously through a non-repeating state space — which is also a finding, and a
+cheap one, and it would let `A3` keep the simpler estimator with a reason rather
+than by default.
 
-It also converges with the ML side from an independent direction: last week's
-watchlist flagged **Simulus**'s prioritised world-model replay. Biology and the
-sample-efficiency literature arriving at the same mechanism from opposite ends
-is the kind of agreement `GOAL.md`'s biology-as-oracle principle says to take
-seriously — and to then make win a bakeoff like anything else.
-
-**Cost.** Near zero. A sampling-distribution change over an existing buffer; no
-new parameters, no new forward passes. `NEEDS_AND_DEATH` §2903 budgets `NE.05`
-at **4.0 GPU-hours** for 5 arms + 1 control × 3 seeds; one added control is
-roughly **+0.7 GPU-h** on that line, and the arm itself is free.
-
-**Why it might WIN (falsifiable).** If |RPE|-prioritised S1 beats uniform S1 at
-≥3σ over 3 seeds **while reward-magnitude prioritisation does not**, then the
-consolidation stage has a mechanism with a biological rationale, a measured
-effect, and a control that separates it from the obvious confound. If both win
-equally, the prioritisation is just "replay the salient stuff" and the biology
-bought nothing — which is also a finding, and one nothing currently measures.
-
-**Why it might LOSE (steelmanned).** Four, and the first is the strongest:
-1. **The ML version of this is eleven years old.** Prioritised Experience Replay
-   (Schaul et al., 2015) prioritises by **TD error**, which *is* the RPE. So the
-   mechanism is not new and arguably not nominatable — a bakeoff arm that
-   re-derives a 2015 standard is not news. What is genuinely new here is the
-   **control**, not the arm: PER's literature does not routinely run
-   reward-magnitude prioritisation as a must-fail condition. If the builder takes
-   only one thing from N2, it should be the control, not the mechanism.
-2. **Small n, modest effect.** 6 rats, 3 with ephys, an effect its own authors
-   call "modest". This is a real animal result, not a press release — but it is
-   not a large one.
-3. **The regime does not match S1.** The rats consolidate across **days within
-   one life**. S1's distinguishing feature is a reservoir sample from **earlier
-   lives** — Lamarckian inheritance across death, which `GOAL.md` explicitly
-   names as the place Jack *surpasses* biology. Nothing in this paper speaks to
-   cross-life prioritisation, which is the part we care most about.
-4. **RPE may not be available where S1 needs it.** S1 rehearses in latent space
-   to update the trunk; computing |RPE| per stored transition at sleep time
-   needs a value function and per-transition bookkeeping the compressed lifetime
-   buffer may not carry. The mechanism could be sound and simply not have a
-   cheap port — which must be settled before it is an arm.
+**Why it might LOSE (steelmanned). Five, and the third is the strongest.**
+1. **Its own evidence says the ensemble was already enough on noise.** In the
+   noisy-TV tasks *both* CIG and P2E survive — the paper's own explanation is
+   that *"ensemble disagreement vanishes for irreducible stochastic transitions,
+   so CIG and P2E are immune to the distractor by construction."* CIG's margin
+   there is an improvement in an already-solved column. Our `LT.02`/`PG.4` trap is
+   precisely a noise trap. **On the axis this project cares most about, CIG's
+   contribution is second-order.**
+2. **Twelve tasks, none of them a body.** MiniGrid is a gridworld; OGBench's
+   AntMaze/Cube/Puzzle are manipulation and quadruped navigation.
+   `CURIOSITY_BAKEOFF.md` §1.1's "Humanoid?" column is **No** for every method in
+   the family and stays No for this one. `LESSONS.md`: what transfers is the
+   protocol, not the ceiling.
+3. **`SYSTEM.md`: no new organ without a scar — and neither `A3` nor `disagree`
+   has ever run.** `LC.02` PASSed 2026-08-10; `LC.03` has not run; no `LT` spec
+   has run. This is a pre-emptive nomination against an unscarred spec, exactly
+   like week 2's N1, and the same objection applies with the same force. The
+   counter, offered rather than asserted: the change is a few dozen lines inside
+   an arm that has to be written anyway, so the marginal cost of carrying it as
+   `A3b` from the start is far below the cost of retro-fitting it after `A3`
+   loses ambiguously.
+4. **The aggregate number I quoted is a figure, not a table.** ≈0.80 vs ≈0.65 is
+   read off Figure 5. The per-task and CI statements are stronger evidence than
+   that ratio and should be the ones weighed.
+5. **Code release unconfirmed [c].** The paper is CC BY 4.0 with full pseudocode
+   (their Algorithms 1 and 2), so the method is reimplementable from the text —
+   but I searched and could not find a released repository, and nothing above
+   should be read as "we can clone it".
 
 ---
 
-## 2. CORROBORATION — two `TA.02` citations moved off [k]
+### N2 — Optimistic World Models: last week's numberless abstract now has numbers, and they argue both ways
 
-Not nominations. `TA.02`'s own notes instruct: *"VERIFY Garcia & Koelling 1966
-and the CTA delay tolerance against the primary sources before running; both are
-currently carried as [k]."* That is queued work the field watch is the right
-organ to do, so this sweep did it.
+**Source:** *Optimistic World Models* —
+[arXiv:2602.10044](https://arxiv.org/abs/2602.10044), **2026-02-10**, primary
+category **cs.LG**. Mete, Sheikh, Lin, Kalathil, Kumar. **Full HTML read.**
 
-**Garcia & Koelling 1966 — citation and design CONFIRMED [c+, secondary sources].**
-*Relation of Cue to Consequence in Avoidance Learning*, **Psychonomic Science 4:
-123–124, 1966**. The design is as `TA.02`'s control (a) describes it: a taste CS
-(saccharin water) and an audiovisual CS ("bright-noisy water") each paired with
-either nausea (X-irradiation / toxin) or shock. Rats made ill avoided **the
-taste**; rats shocked avoided **the audiovisual cue**. A double dissociation, and
-`TA.02`'s control (a) is a faithful reading of it.
+**This resolves last week's highest-value outstanding fetch**, which was carried
+as *"the abstract claims 'significant improvements' and the landing page reports
+no benchmarks, no numbers, no parameter counts, no hardware, no code.
+Unnominatable until someone opens the full text."* Opened.
 
-**Honest verification level:** confirmed consistently across several independent
-secondary sources (a published review, the journal's own reference record, a
-history-of-science treatment). The original two-page 1966 article is **not
-freely available and I did not read it.** This is stronger than [k] and weaker
-than [V]; it should be recorded as such rather than promoted to verified.
+**The method.** Classical reward-biased maximum-likelihood estimation (RBMLE)
+brought into deep RL as an extra term on the **dynamics** loss that tilts the
+learned model toward higher-reward transitions:
 
-**CTA delay tolerance — CONSISTENT with `plants.py`'s declared band [V].**
-`plants.py` derives `DELAY_S` from *"Rat CTA tolerates 1–6 h reliably (Riley,
-Hempel & Clasen, Psychon. Bull. Rev. 25:429–441, 2018)"* against a ~3-day
-starvation horizon, giving `DELAY_FRAC_BAND = (0.014, 0.083)` and `DELAY_S = 30 s`
-in this world. Independently found: typical CTA protocols use **15 min – 1 h**;
-Garcia et al. 1966 demonstrated learning at delays up to **3 h**; Smith & Roll
-1967 extended it to **12 h**; and the contrast that matters is that other
-classical conditioning tolerates **milliseconds to seconds**.
+```
+L_opt = −α(t)·Σ A_ℓ log p_φ(s_{ℓ+1}|s_ℓ,a_ℓ)  −  η·Σ H(p_φ(s_{ℓ+1}|s_ℓ,a_ℓ))
+```
 
-So the band is defensible and, if anything, **conservative at both edges** — it
-excludes the 15-minute typical case at the bottom and the 12-hour reported case
-at the top. One observation for the builder, offered as a number rather than a
-change: the lower edge (1.4 % ≈ 1 h in rat terms) sits at the *upper* end of the
-"typical protocol" range, so this world's delay is on the demanding side of the
-biology rather than the easy side. That makes `TA.02` harder, not easier, which
-is the right direction for a claim — but it is worth knowing deliberately.
+Fully gradient-based: *"requires neither uncertainty estimates nor constrained
+optimization"* — no ensemble, no extra forward passes, **no new parameters**.
 
-The 3-orders-of-magnitude gap between CTA delays and all other conditioning is
-the quantitative backing for `TA.02`'s assertion that *"standard RL cannot do
-this task"*. That assertion is now sourced.
+**The verified claim [V].**
+
+| | value |
+|---|---|
+| Atari100K, mean HNS | **O-DreamerV3 152.68 %** vs DreamerV3 **97.45 %** |
+| Atari100K, mean HNS | **O-STORM 80.68 %** vs STORM **75.90 %** |
+| seeds | **10** for O-DreamerV3 on Atari100K and DMC; **5** for everything else |
+| DMC **Proprio**, Acrobot Swingup Sparse | **8.4 → 34.6** |
+| DMC Proprio, Cartpole Swingup Sparse | **664.2 → 747.1** |
+| DMC Proprio, Cartpole Balance Sparse | **964.0 → 1000.0** |
+| training wall-clock | O-DreamerV3 **138 min** vs DreamerV3 115 min (**+20 %**); O-STORM 178 vs STORM 170 (+4.7 %) — measured on an **RTX 4090**; experiments run on **one A100** |
+| hyperparameters | **two new**: α (optimism), η (entropy). Used **α = 1×10⁻⁴, η = 3×10⁻⁶** |
+| sensitivity | *"high values such as α = 0.1 or η = 0.03 can degrade performance drastically, while smaller values are beneficial"* |
+| parameter counts | **not stated** |
+| code | modifications of the official DreamerV3 / STORM repos; **no release of their own stated** [c] |
+
+**Which spec it enters.** `LEARNING_CORE.md` §5.4 as a variant of **`A2`
+(`dreamer-xs`)** — `A2` byte-identical, plus the optimistic dynamics term — with
+`A2` itself as the control that isolates it. It is a **loss-term arm**, the same
+shape as week 1's `A4b`/`A4c` anti-collapse nominations, and it bears on the
+exploration question `CURIOSITY_BAKEOFF` owns without needing a curiosity module:
+optimism *is* an exploration mechanism, priced at zero extra parameters.
+
+**The relevant number for us is not the Atari one.** The DMC **Proprio** rows are
+the only ones measured in a regime that resembles W0 — a low-dimensional **state
+vector**, no pixels. `LEARNING_CORE.md` §5.4 puts `A4`'s prior as *"unknown at 2M
+parameters on a ray retina; reconstruction is a much stronger learning signal
+when the observation is 96-dimensional"* — the same regime argument applies here,
+and here it points the *other* way: proprio-state DMC is close to us, and the
+sparse-task gains there (Acrobot 8.4 → 34.6) are the ones worth weighing.
+
+**Cost on our substrate.** No new parameters. One added loss term. The honest
+cost is the **+20 % training wall-clock**, and that is not free here: `LC.02`
+measured the arms at `train_ratio` **0.25**, sixteen times below what
+`LEARNING_CORE.md` §5.1's derivation had assumed, and B4's 5.0 sim-s/real-s floor
+is what killed the 36.7 M trunk. A 20 % tax on the learner, measured on a 4090
+against a full-size DreamerV3, is a number that must be re-measured on `A2` at
+our scale before it is believed — `LESSONS.md`, *"a budget is a claim about a
+composition and must be measured as one."*
+
+**Why it might WIN (falsifiable).** If `A2`+optimism beats `A2` at ≥1.5σ over 3
+seeds on `life_gain` **without** violating B4, then W0's exploration problem has a
+solution that costs zero parameters and no separate curiosity module — which
+would be evidence bearing directly on `PURPOSE_AND_SCAFFOLDING.md` §2.1's open
+question of whether needs and curiosity are substitutes. And unlike most
+exploration results, this one comes with 10 seeds.
+
+**Why it might LOSE (steelmanned). Five, and the first two are close to
+disqualifying.**
+1. **The optimistic term deliberately makes the world model WRONG, and in this
+   project the world model IS the unified brain.** `LEARNING_CORE.md` §5.4 says
+   of `A2`: *"the brief's candidate 2, and simultaneously
+   `UNIFIED_BRAIN_BAKEOFF.md`'s binding objective: a model that predicts all
+   senses jointly is the unified brain."* `SYSTEM.md`'s unison constraint says an
+   adoption is VOID until the UB gates pass under it. Biasing the dynamics toward
+   high-reward futures corrupts the very representation the UB ablation matrix
+   measures — and nothing in this paper tests representation quality, only
+   return. **This is the objection that could make it inadmissible rather than
+   merely losing.**
+2. **In a survival world, an optimistic model is a dead agent.** W0's reward is
+   the drive channel `r_h`. A dynamics model tilted toward higher-reward
+   transitions is one that imagines food where there is none, warmth where there
+   is none, and water on the far side of a river. Atari and DMC have no death.
+   `NEEDS_AND_DEATH.md`'s whole premise is that they should. This is a concrete,
+   falsifiable prediction: **if the optimistic arm dies younger while its
+   imagined returns rise, that is the mechanism showing itself**, and it is worth
+   measuring even if the arm loses.
+3. **α = 1 × 10⁻⁴, and 0.1 "degrades performance drastically".** A three-order-of-
+   magnitude window between "beneficial" and "drastic degradation", tuned on
+   Atari and DMC, on a coefficient whose correct value at our scale is unknown.
+   `LEARNING_CORE.md` §6's simplicity budget counts hyperparameters, and this arm
+   adds **two**. Compare N1, which adds none.
+4. **Mean HNS on Atari100K is an outlier statistic, and the paper's own per-game
+   table says so.** The largest gains are Private Eye (893.9 → 1,676.4) and Up N
+   Down (24,954 → 91,717) — the two games most notorious for dominating Atari100K
+   means. **I could not cleanly extract a median HNS and am not asserting one.**
+   The headline 152.68 % vs 97.45 % should be read as "driven by a few games
+   until someone reads the median", not as a broad 57-point improvement.
+5. **Nothing here is multimodal, and nothing is a body.** Atari is pixels; DMC
+   Proprio is a handful of joint angles. No touch, no audio, no smell, no needs.
+
+---
+
+## 2. CORROBORATION AND ONE RULED-OUT HYPOTHESIS — the voice front, after `VO.01` FAILed
+
+Not a nomination. `VO.01` FAILed on 2026-08-11 at attempt 2, one day after this
+file declared NO-ACTION on voice. A scout that reports "nothing new" on a front
+that then fails owes it a look.
+
+**The acoustics `VO.01` relies on: the physics half holds, the famous half does
+not.** `VO.01`'s docstring justifies its muffling gate with the mass law —
+*"`OCC_TRANSMISSION` is frequency-dependent (the mass law: walls pass bass), so
+the received spectral centroid must FALL behind the block"* — and carries **no
+citation**. Checked:
+
+- **The physics is uncontested [V, secondary].** Frequency-dependent attenuation
+  is real and steep: absorption, scattering and reverberation are all greater for
+  high frequencies, and the slope steepens in dense media. `VO.01`'s measured
+  `ref_clear_centroid` **485.7 Hz → `ref_occ_centroid` 251.4 Hz** and
+  `occ_centroid_drop` **0.482** are the expected sign and a plausible magnitude.
+- **The *biological* corollary — the Acoustic Adaptation Hypothesis, that animals
+  in dense habitat evolve lower-frequency calls — is REFUTED by the current
+  literature.** Freitas et al., *Biological Reviews* 2025
+  ([10.1111/brv.13163](https://onlinelibrary.wiley.com/doi/10.1111/brv.13163),
+  PMID 39530314): a meta-analysis across terrestrial vertebrates finding **no
+  support for an effect of vegetation structure on acoustic signalling**. Mikula
+  et al., *Ecology Letters* 2021
+  ([10.1111/ele.13662](https://onlinelibrary.wiley.com/doi/10.1111/ele.13662)):
+  a global passerine analysis finding **no support for AAH**, and pointing at
+  sexual selection instead.
+
+**Why this matters to us specifically.** `GOAL.md` names biology as the oracle,
+and the oracle's *acoustics* is sound while the oracle's *adaptationism* is not.
+`VO.01` happens to claim only the physics half, so it is clean. But it is exactly
+the sort of place where a future spec might reach for "animals in the jungle
+evolved low calls, so Jack's emitter should" — and that inference has now been
+tested twice at scale and failed. **Recorded so it is not made.**
+
+**And one hypothesis about the FAIL, computed and RULED OUT — so the builder does
+not spend a run on it.** `VO.01` fails its clear-line gate: `recov_r2_amp`
+**0.432** and `recov_r2_bright` **0.332** against `R2_MIN_PER_DIM = 0.50`, mean
+**0.584** against `R2_MIN_MEAN = 0.60`. The obvious explanation is a
+self-inflicted confound of exactly the kind `LESSONS.md` warns about — the
+docstring randomises range *"so loudness alone can never identify the call"*
+(`RANGE_M = (1.0, 4.5)`), and the probe receives only a log-band spectrogram with
+**no range channel**, so it must invert `ear ∝ amp / r` while blind to `r`. That
+is textbook "the step that removes a confound is itself a confound until
+measured."
+
+It is measurable in five lines, so I measured it rather than writing it up as an
+insight. `amp` is log-spaced over `VOICE_AMP = (0.05, 1.0)` (26.0 dB) and range
+spans 4.5× (13.1 dB of geometric spread):
+
+```
+Var(ln amp) = 0.748    Var(ln r) = 0.169
+R² ceiling on the emitted amp from received LEVEL alone, range-blind = 0.816   [C]
+```
+
+**0.816 is well above the 0.50 gate, so range-blindness does not explain the
+failure.** It caps amplitude recovery at ~0.82, and the run measured 0.432. The
+confound is real and quantified, and it is **not** the cause. Whatever is
+costing amplitude and brightness their gates is something else — and brightness,
+at 0.347 on attempt 1 and **0.332** on attempt 2, did not move when the emitter's
+loudness/timbre entanglement was fixed, which is itself information.
+
+**This is a measurement, not a recommendation.** I am not proposing a threshold
+change, a gate change, or a fixture change; `SYSTEM.md` law 4 and my own brief
+both forbid it, and diagnosis is the builder's step of the loop, not mine. The
+one thing the scout owed here was to stop a plausible wrong answer from being
+chased, and the arithmetic above is that.
 
 ---
 
 ## 3. WATCHLIST
 
-**Carried forward, unchanged** (fronts 1–3 were not re-swept, so these are
-last week's state, not this week's judgement):
+Every entry now records its **arXiv primary category** — week 2's discipline
+finding, adopted here as a convention on this file.
 
-| item | status |
-|---|---|
-| **Simulus** ([arXiv:2502.11537v4](https://arxiv.org/abs/2502.11537)) | Unchanged. Still blocked on **a parameter count and a per-step wall-clock**, which `B4`'s 5.0 sim-s/real-s floor needs and the paper does not report. Its **prioritised replay** component now has independent biological support (§1, N2) and is the cheapest piece to test in isolation. |
-| **Survival RL** ([arXiv:2605.31273](https://arxiv.org/abs/2605.31273)) | Unchanged disambiguation — "survival" = dwell time at goals, not homeostatic needs. |
-| Last week's N1–N4 | Live nominations, not re-litigated here. See `FIELD_WATCH_LOG.md` 2026-08-10. |
+**Carried forward from week 2, genuinely re-examined this sweep:**
+
+| item | cat | status |
+|---|---|---|
+| **Simulus** ([arXiv:2502.11537](https://arxiv.org/abs/2502.11537)) | cs.LG | Unchanged and still the oldest open item. Still blocked on **a parameter count and a per-step wall-clock**, which B4's 5.0 sim-s/real-s floor needs and the paper does not report. Its prioritised-replay component is now nominated separately (week 2 N2) and is the cheapest piece to test in isolation. |
+| **Var-JEPA** ([arXiv:2603.20111](https://arxiv.org/abs/2603.20111)) | cs.LG | **Partially superseded by TD-JEPA below**, which supplies the dynamics/control result Var-JEPA was blocked on — from a different paper and a different mechanism. Var-JEPA's own single-ELBO anti-collapse route remains tabular-only. |
+| **Survival RL** ([arXiv:2605.31273](https://arxiv.org/abs/2605.31273)) | cs.LG | Unchanged disambiguation — "survival" = dwell time at goals, not homeostatic needs. Kept so a fourth sweep does not chase the title. |
+| **SmallWorlds** ([arXiv:2511.23465](https://arxiv.org/abs/2511.23465)) | cs.LG | **Queued #4 — fetched.** *SmallWorld Benchmark*: world-model evaluation *"under isolated and precisely controlled dynamics without relying on handcrafted reward signals"*, **in the fully observable state space**, over six domains, comparing RSSM / Transformer / Diffusion / Neural-ODE and measuring **how predictions deteriorate over extended rollouts**. Fully-observable state-space is *our* regime, and rollout-horizon decay is what a world-model arm lives or dies by. **Still blocked on the same question as before: no compute cost, no hardware, no environment size, no code statement anywhere on the landing page.** Promote on: any statement that a domain runs on CPU. Note it is dated **2025-11-28 — outside the six-month window** and stays here on relevance, not recency. |
 
 **New this sweep:**
 
-| item | what it is | what would PROMOTE it |
-|---|---|---|
-| **Optimistic World Models** ([arXiv:2602.10044](https://arxiv.org/abs/2602.10044), 2026-02) | Brings reward-biased maximum-likelihood estimation (RBMLE) from adaptive control into deep RL as an **optimistic dynamics loss** biasing imagined transitions toward higher-reward outcomes. Fully gradient-based — **no uncertainty estimates, no constrained optimisation**, which is what makes it cheap in principle. Instantiated as Optimistic DreamerV3 and Optimistic STORM. Would be an exploration arm bearing on `CURIOSITY_BAKEOFF` (`disagree`/`lp`/`metra`) and on `LEARNING_CORE`. | **Any quantitative result at all.** The abstract claims "significant improvements" and the landing page reports **no benchmarks, no numbers, no parameter counts, no hardware, no code**. Unnominatable until someone opens the full text. Flagged as the highest-value single fetch for next sweep. |
-| **Var-JEPA** ([arXiv:2603.20111](https://arxiv.org/abs/2603.20111), 2026-03-20, Gögl & Yau) | **Fetched — a third anti-collapse approach**, bearing directly on last week's N2 (`A4b`/`A4c`). Reframes JEPA as variational inference over coupled latent-variable models, optimising a single ELBO, which it claims **"eliminates the need for ad-hoc anti-collapse regularizers"** and adds latent uncertainty quantification — i.e. it would delete `A4`'s EMA target encoder by a third, independent route. | **A dynamics or control result.** It is instantiated only as **Var-T-JEPA on tabular data**, with no world model, no RL, no sequential prediction, and no reported hardware or parameter counts. `LEARNING_CORE` §5.4's regime objection applies with full force. Promote if anyone runs it on sequences. |
-| **SmallWorlds** ([arXiv:2511.23465](https://arxiv.org/abs/2511.23465), 2025-11) | A benchmark for assessing world-model dynamics understanding in **isolated, minimal environments** — potentially a cheap fidelity-ladder instrument. **Outside the 6-month window; abstract not fetched.** | Read it, and check whether "minimal" means CPU-runnable on 4 ARM cores. Listed so it is not re-discovered as new. |
-
-**REMOVED from the watchlist — resolved as off-target:**
-
-- **Equilibrium World Models** ([arXiv:2606.23463](https://arxiv.org/abs/2606.23463))
-  — **not machine learning.** Primary category **`econ.GN` (General Economics)**;
-  Scheidegger & Schaab, a deep-learning method for globally solving *dynamic
-  stochastic economic models* with rare disasters and binding constraints. "World
-  model" here is the economics term. It has nothing to do with Jack. **Deleted.**
-- **Multimodal Latent Reasoning via Predictive Embeddings**
-  ([arXiv:2604.08065](https://arxiv.org/abs/2604.08065)) — fetched. "Pearl", a
-  JEPA-inspired framework that learns **VLM tool-use trajectories** (cropping,
-  depth estimation) in latent space, from expert demonstrations. It is a
-  vision-language tool-use method, not a multimodal-binding objective, and it
-  learns from **expert trajectories** rather than from living. Not a unified-brain
-  arm. **Deleted.**
+| item | cat | what it is | what would PROMOTE it |
+|---|---|---|---|
+| **TD-JEPA** ([arXiv:2607.25337](https://arxiv.org/abs/2607.25337), 2026-07) | cs.LG | *Temporal-Distance JEPA: Plan-Aware Representation Learning for Latent World Model Predictive Control.* A **fourth** independent route into `LEARNING_CORE` §5.4's `A4` (`wm-latent`) neighbourhood, and the first with a control result: **15 M parameters, end-to-end from raw pixels on a single GPU in hours**, OGB-Cube **+14.2 points** over LeWM, Two-Room **100.0 % vs 97.4 %**, plans **48× faster** than world models on frozen foundation encoders, and *"detecting physically implausible rollouts more reliably than reconstruction-based baselines"* [c — search-level, abstract not fetched]. | **A state-vector or proprioceptive result, or a parameter-count ablation below ~2 M.** All of it is pixels at 15 M params, against `A4`'s ≈1.37 M on a 96-d ray retina — the same regime objection `LEARNING_CORE` §5.4 already records against the whole JEPA argument. One full-text fetch decides whether this is an `A4` arm or another pixels-only datapoint. |
+| **Probing the Impact of Scale on Data-Efficient Generalist Transformer World Models for Atari** ([arXiv:2605.08578](https://arxiv.org/abs/2605.08578), 2026-05-09) | cs.LG | Single-author. Finds *"environments fundamentally fall into distinct scaling regimes"* at identical data budgets, and that **joint training across 26 environments stabilises scaling dynamics, ensuring monotonic gains**, where individual tasks show **degradation in larger models**. Median expert-random-normalised **0.770** for policies acting entirely inside the learned model. Bears on the 54K-beat-57M lesson and on `LEARNING_CORE` §6's simplicity budget: it is a direct claim that *bigger is sometimes worse, and multi-task training is what fixes it*. | **The parameter axis.** The landing page states **no parameter counts, no hardware, no seed count, no code** — which is the whole content of a scaling paper. Highest-value single fetch outstanding for front 1. |
+| **On the Identifiability of Controlled World Models** ([arXiv:2607.22430](https://arxiv.org/abs/2607.22430), 2026-07) | cs.LG | Adjacent to week 1's N1 (certificate-gated identifiability, arXiv:2607.27017 → `UB.11` pre-gate) and possibly the theory under it. Not read. | Read it, and check whether it strengthens or undercuts week 1's N1 — which is a **live nomination**, so this is the higher-priority of the two identifiability items. |
 
 ---
 
 ## 4. NO-ACTION — fronts where nothing cleared the bar
 
-Stated plainly. An empty week honestly reported beats a padded one.
+Stated plainly. An empty front honestly reported beats a padded one.
 
-**TASTE — no arm exists to nominate, and the reason is constitutional.** The
-2026 computational-gustation literature runs in two directions, and both are
-inadmissible here. One is **receptor biophysics**: multiscale models with
-modality-specific receptor dynamics (T1R/T2R for sweet and bitter, ENaC for
-salty, H⁺ for sour) and Goldman–Hodgkin–Katz ion-current calculations, aimed at
-"ionic realism" from transduction to neural coding. That is **chemistry**, and
-`GOAL.md`'s caveman standard rules it out by construction — *"we don't actually
-need to understand chemistry for this — just like cavemen didn't"* — as does
-`plants.py`'s own declaration that its taste vector is "never chemistry". The
-other is **gustatory VR hardware** (e-Taste and the bioelectronic-tongue line):
-real electrochemical sensors and edible-chemical actuators for remote tasting.
-Excellent work; there is no virtual creature in it. **Nothing to nominate.** The
-useful taste work this sweep was verification, not discovery — §2.
+**FRONT 3 · MEMORY — nothing, for the second consecutive sweep, and the reason is
+the same constitutional one.** The 2026 agent-memory literature is, without
+exception in what surfaced, **generative recall**: MemRL ([arXiv:2601.03192],
+runtime RL over episodic memory), RecMem ([arXiv:2605.16045], LLM-extracted
+episodic/semantic memory on recurrence), E-mem, RaMem, AgeMem, SSGM. Every one
+routes retrieval through a language model that *writes* the memory. `GOAL.md`
+forbids it and `MEMORY_RETRIEVAL_BAKEOFF.md` §5.1 makes it structurally
+impossible on purpose (*"retrieval returns provenance-stamped POINTERS, never
+prose"*).
 
-**VOICE — nothing clears `VO.02`'s existing bar, which is higher.** The one
-in-window hit is *Do Latent Channels Actually Communicate? A Causal Audit of
-Latent Multi-Agent LLM Communication*
-([arXiv:2607.26773](https://arxiv.org/abs/2607.26773), 2026-07-29, Zhang & Emu).
-Its method — controlled message replacement at the boundary where the
-sender-produced representation enters the receiver — is **a subset of what
-`VO.02` already specifies**: `VO.02` carries scrambled messages, untrained
-communication parameters, a muted pair, *and* the positive-listening/causal-
-influence requirement, all from Lowe et al. (arXiv:1903.05168) with the exact
-numbers recorded. The 2026 paper does not cite Lowe, is measured on **Qwen3-4B
-and Qwen3-8B latent relay** rather than any embodied or RL setting, reports
-results that **reverse sign between the 4B and 8B scales**, and releases no code.
-Nothing here strengthens `VO.02`. Recording it mainly so a future sweep does not
-mistake it for a methodological advance over the controls we already have.
+The one non-generative candidate was **HAKARI-Bench**
+([arXiv:2606.22778](https://arxiv.org/abs/2606.22778), **cs.IR**, 2026-06-22,
+MIT-licensed, code + data + leaderboard released) — "Nano-sets" over 35
+benchmarks and 551 tasks in 43 languages, comparing **five retrieval families**
+(BM25, dense, sparse, late-interaction, rerankers) with **Spearman > 0.97**
+against full MTEB/MMTEB/BEIR rankings across 55 models. Attractive as an
+instrument. **Rejected on three counts, all checkable:** it reports **no hardware
+and no latency**, so it cannot inform §1.9's CPU-cost table, which is the table
+that decides feasibility here; it **does not measure abstention at all**, which
+§1.8 identifies as *"the actual hard part"*; and its corpora are public IR
+datasets while **Jack's corpus is his own life**, which §2 built a generative
+grammar for precisely because no public set has the property we need.
 
-**CONFERENCE PROCEEDINGS (queued #4) — attempted, low yield, reported as
-partial.** ICML/NeurIPS/ICLR 2026 accepted lists are not enumerable through
-search in the form this sweep needed; what surfaced was workshop pages (a NeurIPS
-2026 test-time-continual-learning-agents workshop, an ICLR 2026 recursive-self-
-improvement workshop) rather than main-track paper lists. This queue item is
-**not complete** and should not be marked so. It needs OpenReview enumeration,
-which is a different tool than web search.
+Worth recording plainly: **on abstention, our own bakeoff document is ahead of
+what the field is publishing.** §1.8 already carries split conformal coverage,
+Clopper–Pearson certification of the false-answer rate with the sample sizes
+derived, Learn-then-Test with fixed-sequence testing to avoid selection bias, and
+E-AURC as the whole-curve metric. The 2024–2026 abstention literature is
+generator-side almost in its entirety. There is nothing to import.
 
-**FRONTS 1, 2, 3 (learning cores, multimodal fusion, memory) — not re-swept, by
-design.** One day is not a research window. Their state is last week's, and last
-week's four nominations stand as written. This is a deliberate non-action, not a
-finding of emptiness.
+**FRONT 2 · MULTIMODAL FUSION — nothing that adds an arm.** Everything found sits
+inside families `UNIFIED_BRAIN_BAKEOFF.md` §1.2–1.5 already cites with better
+sources:
+- *ViTacFormer* ([arXiv:2506.15953]) and *MSDP* / masked visual-tactile
+  pre-training are the **same cross-modal-masked-prediction family** as M3L
+  (2311.00924 [V]) and Fang et al. (2410.16424 [V]), which §1.2 already reads for
+  the sharper finding — that **cross-modal reconstruction beats joint masking and
+  beats contrastive**. ViTacFormer's ablation ("removing the tactile prediction
+  module significantly degrades performance") restates week 1's N1 result
+  (stiffness enters the latent only when touch is a prediction TARGET) with less
+  rigour and no certificate.
+- *Cross-Modal Visuo-Tactile Object Perception* ([arXiv:2604.02108]) — a Bayesian
+  latent filter for object properties; perception, no policy, no unified agent.
+- The **unified-tokenisation** line (WorldBagel 2607.03461, LatentUM 2604.02097,
+  UniAR 2606.18249) is **VLA-scale autoregressive multimodal modelling** —
+  vision, language, action, video. No touch, no proprioception-as-dominant-
+  modality, no audio, and parameter counts far outside anything this box runs.
+  Noted for ideas, inadmissible as arms.
+- *A Closer Look at Multimodal Representation Collapse* (2505.22483) remains the
+  best mechanism paper and is **already cited** in §1.5. Corroboration is not
+  news.
+
+**FRONT 5 · WORLDS & EMBODIMENT — nothing, and one candidate resolved with
+numbers so it is not chased again.** **MuJoCoUni**
+([arXiv:2605.24922](https://arxiv.org/abs/2605.24922), **cs.RO**, 2026-05-24,
+`pip install mujoco-uni`, open source) looked like the front's best hope, because
+throughput is this project's actual binding constraint — `LC.02` measured
+`train_ratio` at 0.25, sixteen times below the derived budget. Full text read.
+**It does not apply to us, and the numbers say why:**
+
+| its claim | our situation |
+|---|---|
+| ~290 k steps/s (CMU Humanoid), ~1.8 M (Allegro hand) | measured on an **Intel i9-14900HX with 16 simulation threads** |
+| throughput *"saturates around 256–512 environments"* | we run **one** environment — a life, serially |
+| 15× reset, 22× Jacobian, 555× height-field speedups | all **batched** primitives; the paper states **no special optimisation for single-threaded scenarios** |
+
+`SURVIVAL_WORLD.md` §2.2 already ruled out the GPU-parallel-env axis. This is the
+same axis in C++ on a 16-thread x86 laptop, and **`LESSONS.md`'s "flag any
+nomination whose numbers come from hardware unlike ours" disposes of it at a
+glance.** Recorded with its numbers so a fourth sweep does not re-discover it.
+
+The UED line (*Efficient UED through Hierarchical Policy Representation
+Learning*, [arXiv:2602.09813]) is a **teacher generating environment parameters
+for a student**, which is the opposite of `GOAL.md`'s position that the
+environment plus intrinsic motivation IS the curriculum. Not an arm; possibly a
+future contrast.
+
+**BIOLOGY-AS-ORACLE — nothing new in-window.** The infant sleep-consolidation
+line that surfaced traces back to Friedrich et al., *Nature Communications* 2015
+(*Generalization of word meanings during infant sleep*) and Seehagen's 2020–2022
+work — real, relevant to `NEEDS_AND_DEATH.md` §3.4's S1 stage, and **outside the
+six-month window**. The one in-window item found was a 2026 review, not a result.
+The useful biology this sweep produced was **negative** and is in §2: a famous
+adaptationist hypothesis that two meta-analyses have now failed to support.
+
+**SMALL-MODEL END — one candidate, rejected.** *Playing DOOM with 1.3M
+Parameters* ([arXiv:2604.07385](https://arxiv.org/abs/2604.07385), cs.LG,
+2026-04-08): a 1.3 M-parameter ModernBERT-based model at **31 ms/decision**
+scoring **178 frags across 10 episodes** against **13 total** for Nemotron-120B,
+Qwen3.5-27B and GPT-4o-mini combined; code and weights released. Rejected as a
+nomination on three counts: it is **imitation learning from 31,000 human
+demonstrations**, not RL and not learning-by-living; **no seed count is stated**;
+and asking a 120 B LLM to act at 31 ms is a baseline that cannot win, so the
+comparison measures latency, not architecture. It corroborates the 54K-beat-57M
+lesson, and corroboration is not news.
+
+**CONFERENCE PROCEEDINGS (queued #4 in week 1, #3 in week 2) — now BLOCKED, with
+a cause.** Week 2 recorded this as *"not complete... it needs OpenReview
+enumeration, which is a different tool than web search."* I tried that tool. The
+OpenReview API now returns:
+
+```
+HTTP 403  {"name":"ChallengeRequiredError",
+           "message":"Challenge verification required (2026-08-12-3326298)"}
+```
+
+— an interactive bot challenge on `api2.openreview.net/notes`, and
+`/venues?id=venues` returns an empty list. **Programmatic main-track enumeration
+is closed to an automated scout.** This is no longer "not done"; it is "the route
+is shut", and the item should either be re-planned (per-paper search by author or
+title, which does not enumerate) or dropped with that reason recorded. Marking it
+as pending for a third week would be pretending.
 
 ---
 
-## 5. A DISCIPLINE FINDING — a title is a claim about a field, and nothing was checking the field
+## 5. A DISCIPLINE FINDING — this week the unverified claim was mine
 
-**Three of the five items last week's watchlist carried on title-and-abstract
-alone turned out to be off-target when opened, and one of them was not machine
-learning at all.**
+Week 1's finding was *an abstract is a claim about a table, and nothing was
+checking the table agreed*. Week 2's was *a title is a claim about a field, and
+the primary category is the field's own statement of itself*. Both are about
+other people's papers. This week's is not.
 
-- *Equilibrium World Models* — primary category **`econ.GN`**. A method for
-  solving dynamic stochastic **economic** models. It sat on our watchlist for a
-  week as a world-model paper.
-- *Multimodal Latent Reasoning via Predictive Embeddings* — a **VLM tool-use**
-  method learning from expert trajectories, not a multimodal binding objective.
-- *Survival RL* — already caught last week by the previous scout, who recorded
-  the disambiguation explicitly so it would not be chased again. That entry is
-  the reason this is a pattern and not an incident.
+**I formed a confident, mechanically specific, literature-shaped diagnosis of
+`VO.01`'s failure — and five lines of arithmetic refuted it.** The story was
+good: the fixture randomises range to kill a loudness shortcut, the probe gets no
+range channel, so amplitude recovery is underdetermined by construction; it is
+`LESSONS.md`'s own *"the step that removes a confound is itself a confound until
+measured"*, it names the right lesson, it cites the right physics, and it would
+have read as insight. The ceiling it actually implies is **R² = 0.816** against a
+**0.50** gate. The mechanism is real and it is not the cause.
 
-All three were surfaced by title-similarity search against our own vocabulary —
-"world model", "multimodal", "survival" — which is exactly the failure mode that
-vocabulary creates: **our search terms are the terms other fields also use.**
+Had I written it as a nomination, the builder would have had a plausible
+paper-shaped explanation pointing at the fixture, and the real defect — whatever
+is costing brightness its gate, unmoved across two attempts — would have been
+one step further away.
 
-**The cheap guard that catches all three costs nothing:** every watchlist entry
-records the **arXiv primary category** alongside its identifier. `econ.GN` would
-have been visible at zero marginal cost at the moment the entry was written, and
-would have prevented a week of a dead item occupying a watchlist slot and a
-future scout's fetch budget.
-
-This generalises last week's discipline finding one level up. That one was *an
-abstract is a claim about a table, and nothing was checking the table agreed*.
-This one is **a title is a claim about a field, and the primary category is the
-field's own statement of itself.** Same shape, cheaper check, and it applies to
-the watchlist rather than to nominations — which matters because watchlist
-entries are exactly the ones that get carried forward unverified by design.
+The rule this project already has covers it exactly, twice over: *"a claim about
+how a mechanism behaves is a two-line experiment. Run it"*, and *"this applies
+hardest to reports from sources that have just been right about several harder
+things."* **The field-watch-specific form is the one worth adding: a nomination
+derived from a local FAIL is not a literature claim, it is a mechanism claim
+about our own code, and it must carry the arithmetic that survives — not the
+literature that motivated it.** A scout reading papers is protected by the
+verify-before-nominating rule. A scout reading our own ledger has no such
+protection, because there is no abstract to be sceptical of; the story is one it
+wrote itself.
 
 Recorded for the builder as a candidate `LESSONS.md` entry. **I am not writing
-it; `LESSONS.md` is not mine to edit.** It is nominated like everything else
-here. If it is taken, the cheapest form is a convention on this file, not a new
-organ — `SYSTEM.md`'s "no new organ without a scar" applies to the field watch's
-own machinery too, and a one-column change to a markdown table is not an organ.
+it; `LESSONS.md` is not mine to edit.** Note also that week 2's proposed
+convention — record the arXiv primary category on every watchlist entry — **is
+adopted in §3 of this file**, which is the cheapest possible form and needs no
+organ.
 
 ---
 
 ## 6. What this report does NOT claim
 
-- **No arm here has been run.** Every number is someone else's measurement on
-  someone else's hardware. Nothing in this file is evidence about Jack.
+- **No arm here has been run.** Every number except the one marked **[C]** in §2
+  is someone else's measurement on someone else's hardware. Nothing in this file
+  is evidence about Jack.
 - **No nomination is a recommendation to adopt.** `SYSTEM.md` law 3 stands.
-- **Nothing here changes a spec, a threshold, a decision, or a line of code.**
-  N1 in particular *describes* `odour.py`'s observation vector in order to
-  nominate an arm against it; it does not touch it.
-- **This sweep did not cover fronts 1, 2 and 3 at all**, and says so in §0 and
-  §4 rather than restating last week's findings as if they were re-checked.
-- **Verification is uneven and marked as such**: N1 full HTML with numbers for
-  the primary source, abstracts for its two siblings, **code not released**; N2
-  full text via PMC; Garcia & Koelling **secondary sources only [c+]**; the CTA
-  delay band verified against multiple independent sources [V]; Optimistic World
-  Models **abstract only, with no numbers in it**.
-- **N1 is a pre-emptive nomination against a spec that has not run or failed**,
-  which `SYSTEM.md`'s "no new organ without a scar" counts against it. That is
-  stated in the nomination itself, not buried here.
+- **Nothing here changes a spec, a threshold, a decision, or a line of code** —
+  including §2, which measures a quantity about `VO.01` in order to *withdraw* a
+  hypothesis, not to move a gate.
+- **Both nominations are pre-emptive, against specs that have never run.**
+  `LC.03` has not run; no `LT` spec has run; `NE.05` has not run. `SYSTEM.md`'s
+  "no new organ without a scar" counts against both, and it is stated in each
+  nomination rather than buried here.
+- **Verification is uneven and marked as such:** N1 full HTML with formulas,
+  algorithms and result figures, **hardware/wall-clock not extracted**, **code
+  release unconfirmed**; N2 full HTML with tables, **median HNS not extracted**,
+  **no parameter counts published**, code release unconfirmed; TD-JEPA and the
+  scale-probing paper are **search-level and abstract-level respectively**; the
+  AAH meta-analyses are **secondary-source**; MuJoCoUni full HTML.
+- **Front 2 was swept less deeply than fronts 1, 4 and 5** and §0 says so.
+- **Week 2's two nominations are untouched and unresolved.** `SM.02` and `TA.02`
+  have not run — the ledger was read to confirm it.
 
 ---
 
-## 7. Queued for next sweep (2026-08-17)
+## 7. Queued for next sweep (**not before ~2026-08-19** — see the header)
 
-1. **Fronts 1, 2, 3 — a genuine six-month sweep.** They will then be two weeks
-   stale, which is the right cadence for a research window.
-2. **Optimistic World Models full text** ([arXiv:2602.10044](https://arxiv.org/abs/2602.10044))
-   — the single highest-value fetch outstanding; an exploration method with no
-   published numbers is either a nomination or a deletion, and one read decides.
-3. **Conference proceedings, properly** — via OpenReview enumeration, not web
-   search. Queued #4 last week and **still not done**; recorded as incomplete
-   rather than quietly dropped.
-4. **SmallWorlds** ([arXiv:2511.23465](https://arxiv.org/abs/2511.23465)) — is
-   "minimal environments" cheap enough for 4 ARM cores?
-5. **Watch `SM.02` and `TA.02`.** Both are now the next specs in their families,
-   both are `Budget.GPU`, and both carry `kills` clauses aimed at constitutional
-   senses. If either runs before the next sweep, this file's N1 either mattered
-   or is moot — and which one it is should be recorded here honestly.
-6. **Track whether the primary-category convention (§5) was adopted**, and if so
-   apply it retroactively to every carried watchlist entry.
+1. **TD-JEPA full text** ([arXiv:2607.25337](https://arxiv.org/abs/2607.25337))
+   — the highest-value fetch outstanding. A parameter-count ablation or a
+   state-vector result promotes it to an `A4` arm; anything else and the JEPA
+   family stays a pixels-only argument for a fourth consecutive week.
+2. **CIG appendix A.6** — the hardware and wall-clock behind N1's *"negligible"*.
+   B4 is a throughput gate and this project has been burned three times by
+   published speedups that did not transfer.
+3. **The scale-probing paper's parameter axis**
+   ([arXiv:2605.08578](https://arxiv.org/abs/2605.08578)) — a scaling paper whose
+   landing page states no parameter counts is either a real result about the
+   small end or nothing, and one read decides.
+4. **On the Identifiability of Controlled World Models**
+   ([arXiv:2607.22430](https://arxiv.org/abs/2607.22430)) — it bears on week 1's
+   N1, which is a **live** nomination; that ranks it above the other watchlist
+   reads.
+5. **Conference proceedings — decide, do not re-queue.** The OpenReview route is
+   hard-blocked (§4). Either re-plan it as targeted per-venue searches, or drop
+   the item with the reason recorded. A third "still pending" would be a lie by
+   deferral.
+6. **Watch `SM.02`, `TA.02` and `VO.01` attempt 3.** All three bear on live
+   entries in this file. If `VO.01` passes on a fix unrelated to §2's ruled-out
+   confound, say so here plainly — a scout's withdrawn hypothesis is worth as
+   much on the record as a confirmed one.
