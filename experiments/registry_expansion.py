@@ -459,6 +459,61 @@ EXPANSION: list[Spec] = [
                "implementation, because a fixture that quietly starts doing "
                "work is the same class of bug one level up."),
 
+    Spec("T0.24", 0, "A finished GPU run cannot be lost on the way home",
+         hypothesis="Once a remote kernel has COMPUTED the answer, no step "
+                    "between the provider and the ledger may discard it: "
+                    "Kaggle's console log is parsed into `stdout` so the "
+                    "printed RESULT line is reachable, the log is never "
+                    "offered as an artifact, `result_json` takes the named "
+                    "artifact or the RESULT line and NEVER guesses at some "
+                    "other file, and a reattach never routes to Colab.",
+         falsified_by="A Kaggle JobResult with an empty stdout when a log was "
+                      "downloaded; the log appearing in `artifacts`; "
+                      "`result_json` returning a file it was not asked for; or "
+                      "`submit` calling Colab while JACK_REUSE_KERNEL is set.",
+         null_baseline="The delivery path as it stood on 2026-08-11, replayed "
+                       "verbatim as the control: log-in-artifacts plus "
+                       "`next(iter(artifacts.values()))`. On the SAME fixture "
+                       "it must still raise the original ValueError.",
+         metric="properties_failed", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.12"],
+         control="THE PRE-FIX DELIVERY, kept executable: collect every "
+                 "downloaded file as an artifact, then take an arbitrary one "
+                 "as the result. Against the real 2026-08-11 log fixture it "
+                 "MUST fail with `dictionary update sequence element #0 has "
+                 "length 3; 2 is required`. A control that now succeeds would "
+                 "mean the fixture no longer reproduces the bug and this spec "
+                 "guards nothing.",
+         kills="The assumption that a paid run's cost is bounded by whether it "
+               "ran. It is not: the money is spent when the kernel completes, "
+               "and every line after that is an uninsured chance to throw the "
+               "answer away.",
+         notes="SCAR, 2026-08-11 21:47 UTC. Kaggle kernel "
+               "`jannolouwrens/jack-ladder-1786482462` ran T1.02 to completion, "
+               "charged 0.6561 h, and printed all three seeds' numbers. The "
+               "harness then recorded ERROR: `ValueError: dictionary update "
+               "sequence element #0 has length 3; 2 is required`. Three "
+               "independent defects lined up. (1) `run_on_kaggle` never "
+               "populated `stdout` — Kaggle has no stdout pipe, the console "
+               "arrives afterwards as a JSON record array — so EVERY spec's "
+               "'fall back to the printed RESULT line' branch was dead code on "
+               "the one backend that runs the long jobs. (2) That log was "
+               "handed back as an artifact. (3) T1.02 looked up "
+               "`artifacts['/content/out.json']` — a remote path, while both "
+               "backends key by basename, so the lookup could never hit — and "
+               "fell through to `next(iter(artifacts.values()))`, which took "
+               "the log. Each defect alone is survivable; together they turn a "
+               "correct, paid-for measurement into a crash. The answer was "
+               "recovered from the log by hand and the run was NOT repeated. "
+               "The fourth property is a near-miss found while fixing this: "
+               "`submit` walked its normal `prefer` order during a reattach, "
+               "so recovering a finished free kernel would have paid for a "
+               "fresh Colab job first.\n"
+               "Deliberately declares NO `COVERS:` commitment. It guards the "
+               "harness, not a capability, and counting a delivery gate toward "
+               "`honesty` is the adjacent-PASS inflation the 8th audit asked "
+               "the builder to stop doing."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "

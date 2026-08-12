@@ -2434,8 +2434,8 @@
     },
     "T0.12": {
       "amended": [],
-      "attempt": 5,
-      "commit": "2e8d558",
+      "attempt": 6,
+      "commit": "b059a13+dirty",
       "control_metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
@@ -2467,7 +2467,7 @@
         "waste_not_counted_as_work": false,
         "weeks_isolated": false
       },
-      "duration_s": 1.27,
+      "duration_s": 1.25,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2493,9 +2493,15 @@
           "message": "",
           "ran_at": "2026-08-11T19:28:28",
           "status": "PASS"
+        },
+        {
+          "commit": "2e8d558",
+          "message": "",
+          "ran_at": "2026-08-11T19:29:57",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "8218446b4f017304",
+      "impl_sha": "bd02072d4be3d49f",
       "message": "",
       "metrics": {
         "affords_within_quota": true,
@@ -2528,7 +2534,7 @@
         "waste_not_counted_as_work": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-11T19:29:57",
+      "ran_at": "2026-08-12T06:54:04",
       "seeds": [
         0
       ],
@@ -3365,31 +3371,39 @@
       "status": "PASS"
     },
     "T1.02": {
-      "amended": [
+      "amended": [],
+      "attempt": null,
+      "commit": "d0c8a6e",
+      "control_metrics": {},
+      "duration_s": 5940.64,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
         {
-          "at": "2026-08-10T00:12:30",
-          "by": "overseer 2026-08-09 \u00a71.2",
-          "changes": [
+          "amended": [
             {
-              "field": "attempt",
-              "from": 1,
-              "to": null
+              "at": "2026-08-10T00:12:30",
+              "by": "overseer 2026-08-09 \u00a71.2",
+              "changes": [
+                {
+                  "field": "attempt",
+                  "from": 1,
+                  "to": null
+                }
+              ],
+              "commit": "6c0fcd1",
+              "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
             }
           ],
-          "commit": "6c0fcd1",
-          "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
+          "commit": "0a5ff6e",
+          "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1 | fetch failed: /content/out.json: rc=1 exists=False [colab] Session 'ladder-1786226866' not found.; kaggle: 0.0h left, need 0.7h",
+          "ran_at": "2026-08-08T22:07:50",
+          "status": "ERROR"
         }
       ],
-      "attempt": null,
-      "commit": "0a5ff6e",
-      "control_metrics": {},
-      "duration_s": 6.56,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
-      "message": "RuntimeError: GPU job failed on kaggle: all backends failed: colab: exit 1 | fetch failed: /content/out.json: rc=1 exists=False [colab] Session 'ladder-1786226866' not found.; kaggle: 0.0h left, need 0.7h",
+      "impl_sha": "487632de74ab74b6",
+      "message": "ValueError: dictionary update sequence element #0 has length 3; 2 is required",
       "metrics": {},
-      "ran_at": "2026-08-08T22:07:50",
+      "ran_at": "2026-08-11T21:47:10",
       "seeds": [
         0,
         1,

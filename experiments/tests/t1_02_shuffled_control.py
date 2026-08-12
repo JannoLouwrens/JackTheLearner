@@ -30,10 +30,9 @@ Three arms:
 """
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
-from ..gpu import build_job, submit
+from ..gpu import build_job, result_json, submit
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
@@ -137,14 +136,19 @@ def _submit() -> dict:
                fetch=["/content/out.json"])
     if not r.ok:
         raise RuntimeError(f"GPU job failed on {r.backend}: {r.message}")
-    path = r.artifacts.get("/content/out.json") or next(iter(r.artifacts.values()), None)
-    if path:
-        return json.loads(Path(path).read_text())
-    # Colab buffers stdout to the end; the printed line is the fallback.
-    for line in r.stdout.splitlines():
-        if line.startswith("RESULT "):
-            return json.loads(line[7:])
-    raise RuntimeError("job produced no result")
+    # Artifact if it came back, else the printed RESULT line. `result_json`
+    # owns both paths and refuses to guess — see the scar in its docstring.
+    payload = result_json(r, "out.json")
+    # WHICH remote compute produced these numbers, carried into the metrics.
+    # The ledger stamps the LOCAL commit, and on a reattach the two differ:
+    # the 2026-08-11 kernel was pushed while HEAD read d0c8a6e and the clone
+    # on the VM came up at 0d05a5a. A row that names only the local commit
+    # asserts a provenance nobody checked.
+    payload["gpu_job_id"] = r.job_id
+    payload["gpu_repo_sha"] = next(
+        (l.split()[1] for l in (r.stdout or "").splitlines()
+         if l.startswith("REPO ") and len(l.split()) > 1), "")
+    return payload
 
 
 # One kernel runs all three seeds; an unguarded _submit here would pay for the
@@ -160,7 +164,9 @@ def _experiment(seed: int) -> dict:
     return {"structured_heldout": s["heldout"],
             "mean_baseline": s["mean_baseline"],
             "reference_heldout": ref["heldout"],
-            "device": _CACHE["device"]}
+            "device": _CACHE["device"],
+            "gpu_job_id": _CACHE.get("gpu_job_id", ""),
+            "gpu_repo_sha": _CACHE.get("gpu_repo_sha", "")}
 
 
 def _control(seed: int) -> dict:

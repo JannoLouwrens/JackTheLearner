@@ -196,6 +196,10 @@ class JobResult:
     # Colab session. Two JobResults with the same id are the SAME compute, so
     # the budget may bill it once — that is what makes a reattach free.
     job_id: str = ""
+    # Where the backend's own console log landed locally, when it is a file
+    # rather than a pipe. Kaggle returns one; it is EVIDENCE, not an artifact,
+    # and conflating the two cost T1.02 a completed run (see `result_json`).
+    log_path: str = ""
     # The window the provider actually meters, when it is narrower than this
     # box's wall clock. `duration_s` includes pushing the kernel, waiting in
     # Kaggle's queue and downloading artifacts; none of that is GPU time, and
@@ -389,6 +393,87 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
                      artifacts, gpu_name, msg, job_id=session)
 
 
+def _kaggle_log_streams(path: Path) -> tuple[str, str]:
+    """Split a Kaggle kernel log into (stdout, stderr).
+
+    Kaggle has no stdout pipe — the console arrives afterwards as a JSON array
+    of `{stream_name, time, data}` records. Until 2026-08-12 nothing parsed it,
+    so `JobResult.stdout` was ALWAYS empty on Kaggle and every spec's
+    "fall back to the printed RESULT line" branch was dead code on the one
+    backend that runs the long jobs. Unparseable is not fatal: the raw text is
+    still more useful than nothing, so it is returned as stdout.
+    """
+    try:
+        recs = json.loads(path.read_text())
+        if not isinstance(recs, list):
+            raise ValueError("not a record array")
+    except Exception:
+        return path.read_text(errors="replace"), ""
+    out, err = [], ""
+    errs = []
+    for r in recs:
+        if not isinstance(r, dict):
+            continue
+        (errs if r.get("stream_name") == "stderr" else out).append(str(r.get("data", "")))
+    return "".join(out), "".join(errs)
+
+
+def _kaggle_collect(outdir: Path, slug: str) -> tuple[dict, str, str, str]:
+    """Sort what `kernels output` downloaded into (artifacts, log, stdout, stderr).
+
+    `kernels output` ships the console log ALONGSIDE the artifacts, named after
+    the kernel. It is not an artifact. On 2026-08-11 T1.02 took it as one,
+    `json.loads`'d the log's own array-of-records straight into `dict.update`,
+    and died with "dictionary update sequence element #0 has length 3" — AFTER
+    0.66 paid GPU-hours had already produced the right answer, which was sitting
+    in that very log on the `RESULT` line. Separated here, once, rather than in
+    each spec: the log becomes stdout, where every spec already knows to look.
+    """
+    artifacts, log_path, out, err = {}, "", "", ""
+    for f in sorted(outdir.rglob("*")):
+        if not f.is_file():
+            continue
+        if f.name == f"{slug}.log":
+            log_path = str(f)
+            out, err = _kaggle_log_streams(f)
+            continue
+        artifacts[f.name] = str(f)
+    return artifacts, log_path, out, err
+
+
+def result_json(res: "JobResult", name: str) -> dict:
+    """The one sanctioned way to read a GPU job's JSON result.
+
+    Artifact named `name` first, then the `RESULT {...}` line the job printed.
+    Both are checked; a job that delivered NEITHER raises, and the message says
+    which of the two was tried, because "no result" and "the wrong file" need
+    opposite fixes.
+
+    THE SCAR (2026-08-11). T1.02 hand-rolled this as
+    `artifacts.get("/content/out.json") or next(iter(artifacts.values()))` —
+    two defects in one line. Artifacts are keyed by BASENAME on both backends,
+    so the first lookup could never hit; and the `next(iter(...))` fallback
+    accepts *any* file the backend happened to return. It got the console log,
+    and a completed 0.66 GPU-hour run became a ValueError. A blind pick is not
+    a fallback: it is a guess about which file is the answer.
+    """
+    key = Path(name).name
+    if key != name:
+        raise ValueError(
+            f"result_json takes a BASENAME; {name!r} is a remote path. "
+            f"Both backends key artifacts by basename — pass {key!r}.")
+    path = res.artifacts.get(key)
+    if path:
+        return json.loads(Path(path).read_text())
+    for line in (res.stdout or "").splitlines():
+        if line.startswith("RESULT "):
+            return json.loads(line[7:])
+    raise RuntimeError(
+        f"job produced no result: no artifact named {key!r} "
+        f"(got {sorted(res.artifacts)}) and no 'RESULT ' line in "
+        f"{len(res.stdout or '')} chars of stdout")
+
+
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   fetch: Optional[list[str]] = None) -> JobResult:
     """Push a kernel, poll to completion, retrieve output.
@@ -472,18 +557,16 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
             status = "error"; break
     billable_s = time.time() - t_meter_open
 
-    artifacts = {}
+    artifacts, log_path, k_out, k_err = {}, "", "", ""
     if status == "complete":
         outdir = work / "out"
         outdir.mkdir(exist_ok=True)
         _run([KAGGLE, "kernels", "output", f"{username}/{slug}", "-p", str(outdir)], 300)
-        for f in outdir.rglob("*"):
-            if f.is_file():
-                artifacts[f.name] = str(f)
+        artifacts, log_path, k_out, k_err = _kaggle_collect(outdir, slug)
 
-    return JobResult("kaggle", status == "complete", "", "", time.time() - t0,
+    return JobResult("kaggle", status == "complete", k_out, k_err, time.time() - t0,
                      artifacts, "", "" if status == "complete" else f"status={status}",
-                     job_id=job_id, billable_s=billable_s)
+                     job_id=job_id, log_path=log_path, billable_s=billable_s)
 
 
 def _head_sha() -> str:
@@ -566,6 +649,12 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
     # not be blocked by the affordability gate — that exact gate turned a
     # zero-cost recovery of T2.01 v4 into a Colab failover and an ERROR.
     reuse = bool(os.environ.get("JACK_REUSE_KERNEL", "").strip())
+    if reuse:
+        # A reattach names ONE Kaggle kernel. Walking the normal order would run
+        # `prefer="colab"` first — paying a full fresh job to recover a finished
+        # free one, and returning a DIFFERENT run's numbers if it succeeded.
+        # Colab burned 0.99 h on exactly this shape of waste on 2026-08-11.
+        order = ["kaggle"]
 
     head = _head_sha()
     for backend in order:
