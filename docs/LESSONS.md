@@ -3024,3 +3024,27 @@ or hiding them. Expect this to recur one level up: the next version is a
 reading the test catches that. Guard: T0.21 P8, both directions (a claim PASS
 must count, a fixture PASS must not, a typo'd kind is reported not credited),
 with the kind-blind rule kept as the control that fails it.
+
+## A null measured by one fixed draw is a sample, not a null — and sharing the draw across seeds makes its error systematic
+
+BA.01 v1's shuffled-tilt null used a single permutation from a FIXED RNG seed
+(`RandomState(RFF_SEED + 1)`), a pattern copied from PS.02. On the registered
+run it read 0.063 ± 0.018 — consistently positive on all three seeds, over the
+0.05 gate, contributing to a FAIL. The permutation null's actual mean was ~0:
+the 8-permutation mean on the same data reads −0.018 (spread 0.04–0.09). The
+0.063 was ONE draw of a statistic with real variance — and because the same
+fixed permutation was applied to similarly-ordered row sets on similar worlds,
+the draw's error did not average out across seeds; it repeated. The seeds were
+buying independence and the fixed draw silently spent it. (PG.6 and TA.01
+derive their permutation from the spec seed, which at least decorrelates
+seeds; it is still one draw per seed.)
+
+**Rule:** when a control statistic comes from a randomization — a shuffle, a
+permutation, a bootstrap — one draw is a sample from the null distribution,
+not the null. Gate on the mean over enough draws that the draw variance is
+small next to the gate's margin, report the spread beside it, and never share
+one fixed draw across seeds: whatever bias it happens to carry becomes
+systematic exactly where multi-seeding is supposed to buy independence.
+PS.02 still carries the fixed-draw pattern; its PASS stands (its draw landed
+well below its cap) but the pattern should die the next time that file is
+touched, with a re-run.
