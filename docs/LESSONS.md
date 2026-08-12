@@ -3092,3 +3092,38 @@ a second role, it needs a second name.
 
 Corollary for review: "no threshold was touched" is necessary and NOT
 sufficient. Ask what the threshold now bounds.
+
+## A threshold outside the rig's attainable range tests the tail lottery, not the failure mode
+
+BA.01 v3 restored `TF_FALL_SPREAD_MIN = 2.5` at its v1 value — the right move
+under law 4, gating the right statistic. The registered run then VOIDed on
+seed 2 (fall spread 1.49), and the diagnosis showed the value was UNREACHABLE
+on honest ground under the v2/v3 rig: open-ground fall times are floored by
+the contact solver (0.1 deg of tilt at zero arm noise still topples in 9-10
+decisions) and capped by the horizon of fast falls, so their std physically
+lives under ~2.2 — below the 2.5 gate BY CONSTRUCTION, on every world. v3's
+two "passing" seeds cleared it on 1-2 rare structure-outlier falls; seed 2
+just drew no outliers. The gate was not measuring whether fall dynamics
+spread; it was measuring whether the world won an outlier lottery. The fix
+was the RIG (v4: tilt-proportional kicks so the drawn spread survives, and
+boundary spawns so geometry — where v1's spread had always come from — is
+sampled on purpose), after which the same untouched gate reads 6.4 +/- 1.0
+with every seed clearing it.
+
+This is the complement of "a rig change can leave a constant untouched and
+still make its gate inert": inert means a BROKEN world still clears the gate;
+unreachable means an HONEST world cannot. Both come from carrying a constant
+across rig versions whose dynamics moved underneath it — v1's spread came
+from structure spawns its rig sampled by accident, and the v2 hold-and-kick
+redesign quietly stopped sampling them.
+
+**Rule:** a pre-registered threshold is a claim that the gated statistic's
+attainable range under THIS rig straddles it. When a rig changes — even when
+every constant is provably historical — measure the statistic's range in the
+new rig's bulk regime (not its tail) before registering: a gate above the
+physical ceiling converts every honest run into a VOID lottery, and a run
+that passes it is evidence about the tail draw, not about the claim. The
+executable form pairs with the degenerate-fixture check: the degenerate
+fixture must score BELOW the gate, and the HONEST rig's bulk must score
+ABOVE it — reachability and inertness are the two directions of the same
+assertion.

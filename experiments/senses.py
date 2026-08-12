@@ -90,7 +90,7 @@ INVENTORY: tuple[Sense, ...] = (
           mentions=r"touch|tactile|mechanorecept"),
     Sense("proprioception", "proprioception & balance (vestibular)",
           "where his body is without looking; the substrate of every motor skill",
-          specs=("T3.02", "UB.16"), load_bearing=("T3.02", "UB.11"),
+          specs=("T3.02", "UB.16", "BA.01"), load_bearing=("T3.02", "UB.11"),
           mentions=r"propriocept|vestibul|body schema"),
     Sense("smell", "smell (olfaction)",
           "finds food, fire and decay at a distance AND THROUGH OCCLUSION — "
