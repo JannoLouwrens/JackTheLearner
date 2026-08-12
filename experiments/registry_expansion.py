@@ -566,6 +566,72 @@ EXPANSION: list[Spec] = [
                "Deliberately declares NO `COVERS:` commitment. It guards the "
                "learning machinery, not a capability."),
 
+    Spec("T0.26", 0, "A rig-health gate refuses a broken world and admits an honest one",
+         hypothesis="BA.01's per-seed rig-health gate is live in BOTH "
+                    "directions, measured through the spec's own episode and "
+                    "statistic path (`rollout_rig` + `rig_health`, never a "
+                    "restatement): a world exhibiting its named failure mode "
+                    "— every fall on one schedule — scores tf_fall_spread "
+                    "BELOW TF_FALL_SPREAD_MIN and is refused (`rig_ok` 0), "
+                    "while the honest rig's bulk on the SAME world scores "
+                    "ABOVE it and is admitted. Inert and unreachable are the "
+                    "two ways a carried constant dies when the rig moves "
+                    "underneath it; this asserts both, executably.",
+         falsified_by="The declared degenerate rig clearing "
+                      "TF_FALL_SPREAD_MIN (the gate is inert — BA.01 v2's "
+                      "defect), or the honest rig's bulk falling under it "
+                      "(the gate is a tail lottery — BA.01 v3's defect), or "
+                      "`rig_ok` disagreeing with its own statistics, or the "
+                      "degenerate fixture failing every OTHER rig-health "
+                      "gate too (a world broken in all dimensions cannot "
+                      "show that THIS gate is the one doing the refusing).",
+         null_baseline="THE PRE-FIX (v2) GATE, kept executable as the "
+                       "control: toppled_frac + tf_abs_spread only, no "
+                       "fall-spread term. On the SAME degenerate episodes it "
+                       "MUST certify the broken world healthy — the hold's "
+                       "own uniform t_r puts its abs-spread (pilot 11.13) "
+                       "4.5x over the 2.5 gate while fall variance is "
+                       "exactly zero. A control that refuses the degenerate "
+                       "world means the fixture no longer reproduces the v2 "
+                       "disease and this spec guards nothing.",
+         metric="properties_failed", budget=Budget.CPU, seeds=1,
+         depends_on=[],
+         control="See null_baseline: the v2 conjunction replayed verbatim "
+                 "against the fixture that fooled it.",
+         kills="The assumption that a pre-registered threshold survives a "
+               "rig change because its number did. A gate is a claim that "
+               "the statistic's attainable range under THIS rig straddles "
+               "it — and that claim needs re-measuring every time the rig "
+               "moves (law 4 protects the number; this protects the "
+               "measurement).",
+         notes="SCAR, twice in one day (2026-08-12, 11th audit RANK 1 + the "
+               "v3 VOID). BA.01 v2 redefined tf_spread from FALL times to "
+               "ABSOLUTE topple times, so the rig's own uniform hold "
+               "(std 11.85) cleared the unmoved 2.5 gate 4.7x and a "
+               "zero-fall-variance world would have read healthy: the gate "
+               "kept its number and lost its meaning. v3 restored the gate "
+               "to the right statistic and promptly VOIDed on seed 2 — the "
+               "2.5 was UNREACHABLE on open ground (contact-solver floor "
+               "caps bulk fall std at ~2.2), so v3's passing seeds had been "
+               "clearing it on 1-2 structure-outlier falls: a tail lottery, "
+               "not a measurement. Overseer B2 asked for the executable "
+               "form of the guard. The degenerate rig is DECLARED IN BA.01 "
+               "(one fixed 6.3-deg tilt, zero kick, zero arm noise, every "
+               "spawn at the model-derived most-open cell) per the LC.01 "
+               "lesson — the artifact names the object under audit. Pilot "
+               "(world seed 90, 60 episodes/rig): degenerate toppled 1.0, "
+               "tf_abs 11.13, tf_fall 0.0, rig_ok 0.0; honest toppled "
+               "0.983, tf_abs 16.01, tf_fall 9.38, rig_ok 1.0. A first "
+               "fixture that kept arm noise and uniform spawns measured "
+               "tf_fall 3.51 — over the gate — because uniform legal spawns "
+               "land beside structure often enough to buy outlier falls; "
+               "the fixture pins both, and that near-miss is recorded in "
+               "its docstring. EXTENSIBILITY: the next spec that carries a "
+               "rig-health gate (PS.02 is the standing candidate) should "
+               "declare its own degenerate rig and join this battery.\n"
+               "Deliberately declares NO `COVERS:` commitment. It guards "
+               "the measurement machinery, not a capability."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "

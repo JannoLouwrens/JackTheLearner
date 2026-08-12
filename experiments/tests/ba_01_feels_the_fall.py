@@ -348,6 +348,20 @@ def _tilt_quat(theta: float, lean_bearing: float) -> np.ndarray:
                      math.cos(phi) * s, math.sin(phi) * s, 0.0])
 
 
+def _spawn_grid(w: W0) -> tuple:
+    """(legal, illegal, step) on the world's own spawn grid — the one
+    derivation both the boundary sites and the T0.26 open site share."""
+    a = float(w.params.arena_size) - SPAWN_MARGIN
+    axis = np.linspace(-a, a, SPAWN_GRID)
+    step = float(axis[1] - axis[0])
+    legal = w.legal_spawns()
+    legal_set = {(round(float(x), 9), round(float(y), 9)) for x, y in legal}
+    illegal = np.array([(x, y) for x in axis for y in axis
+                        if (round(float(x), 9), round(float(y), 9))
+                        not in legal_set])
+    return legal, illegal, step
+
+
 def _boundary_sites(w: W0) -> np.ndarray:
     """(S, 3) rows of (x, y, bearing-to-structure), derived from the model.
 
@@ -358,14 +372,7 @@ def _boundary_sites(w: W0) -> np.ndarray:
     The bearing points at that nearest illegal cell, so an aimed tilt sends
     the fall INTO the geometry rather than merely near it.
     """
-    a = float(w.params.arena_size) - SPAWN_MARGIN
-    axis = np.linspace(-a, a, SPAWN_GRID)
-    step = float(axis[1] - axis[0])
-    legal = w.legal_spawns()
-    legal_set = {(round(float(x), 9), round(float(y), 9)) for x, y in legal}
-    illegal = np.array([(x, y) for x in axis for y in axis
-                        if (round(float(x), 9), round(float(y), 9))
-                        not in legal_set])
+    legal, illegal, step = _spawn_grid(w)
     if len(illegal) == 0:
         return np.zeros((0, 3))
     sites = []
@@ -376,6 +383,20 @@ def _boundary_sites(w: W0) -> np.ndarray:
             b = math.atan2(illegal[k, 1] - y, illegal[k, 0] - x)
             sites.append((float(x), float(y), b))
     return np.asarray(sites, dtype=np.float64)
+
+
+def _open_site(w: W0) -> np.ndarray:
+    """The anti-boundary site: the legal cell FARTHEST from any illegal
+    cell, so world geometry cannot vary a fall started there. Derived from
+    the same grid as `_boundary_sites`, for T0.26's degenerate rig."""
+    legal, illegal, _step = _spawn_grid(w)
+    if len(illegal) == 0:
+        x, y = legal[0]
+        return np.asarray([[float(x), float(y), 0.0]])
+    dmin = [float(np.min(np.hypot(illegal[:, 0] - x, illegal[:, 1] - y)))
+            for x, y in legal]
+    k = int(np.argmax(dmin))
+    return np.asarray([[float(legal[k][0]), float(legal[k][1]), 0.0]])
 
 
 def _episode(w: W0, rng: np.random.RandomState,
@@ -598,6 +619,79 @@ def _tilt_sets(eps: list) -> tuple:
     return np.asarray(X, dtype=np.float64), np.asarray(y, dtype=np.float64)
 
 
+def rig_health(eps: list) -> dict:
+    """The rig-health statistics and their per-seed gate, in ONE place.
+
+    tf_abs_spread is the spread of ABSOLUTE topple times (hold + fall): the
+    quantity that must be wide for the clock null to be able to fail. Under
+    this rig it includes the hold's own uniform t_r, so it says nothing
+    about fall dynamics. tf_fall_spread is the spread of FALL times alone —
+    the detector for every episode toppling on one schedule (failure mode
+    #2) — and v3 gates it in `rig_ok`.
+
+    Extracted from `_evaluate` so T0.26 can drive the REAL statistic path on
+    fixture rigs (a tidied restatement would pass while the shipped
+    computation drifted — the T0.16 lesson).
+    """
+    t_fs = [T_SETTLE + ep["t_r"] + ep["t_f"]
+            for ep in eps if ep["t_f"] is not None]
+    falls = [ep["t_f"] for ep in eps if ep["t_f"] is not None]
+    toppled_frac = len(t_fs) / len(eps)
+    tf_abs_spread = float(np.std(t_fs)) if t_fs else 0.0
+    tf_fall_spread = float(np.std(falls)) if falls else 0.0
+    return {"toppled_frac": toppled_frac, "tf_abs_spread": tf_abs_spread,
+            "tf_fall_spread": tf_fall_spread,
+            "median_t_f": float(np.median(t_fs)) if t_fs else float("nan"),
+            "rig_ok": 1.0 if (toppled_frac >= TOPPLED_FRAC_MIN
+                              and tf_abs_spread >= TF_ABS_SPREAD_MIN
+                              and tf_fall_spread >= TF_FALL_SPREAD_MIN)
+            else 0.0}
+
+
+def rollout_rig(world_seed: int, n_ep: int, degenerate: bool) -> list | None:
+    """Episodes from the real rig, or from this spec's DECLARED degenerate rig.
+
+    The degenerate rig is docstring failure mode #2 made executable — every
+    episode topples on ONE schedule: a single fixed tilt (10^0.8 = 6.3 deg),
+    zero kick, zero arm noise, zero aim jitter, every spawn at the model's
+    own most-open cell (`_open_site`, where geometry cannot catch a fall).
+    Only the hold t_r still varies, so ABSOLUTE topple times stay wide while
+    fall dynamics carry no variance at all — precisely the world v2's
+    abs-spread gate wrongly certified. (A first fixture that kept arm noise
+    and uniform spawns measured tf_fall_spread 3.51 — uniform legal spawns
+    land beside structure often enough to buy outlier falls, the v3 tail
+    lottery in miniature — which is why the fixture pins BOTH.)
+
+    T0.26 drives both branches through the same `_episode` the recorded
+    runs use and asserts the rig-health gate in both directions: the broken
+    world must score BELOW TF_FALL_SPREAD_MIN, the honest rig's bulk ABOVE
+    it (reachability and inertness are two directions of one assertion —
+    LESSONS, 2026-08-12). The degeneracy is declared HERE, in the artifact,
+    never invented by the auditor (the LC.01 lesson). BA.01's own recorded
+    runs never call this. Returns None on a PS.01 borrow refusal.
+    """
+    global TILT0_LOG10_DEG, KICK_JIT, KICK_OMEGA_P, ARM_NOISE, \
+        P_STRUCT, AIM_JITTER
+    j0, alpha, _prov = _calibration()
+    if j0 is None:
+        return None
+    w = W0(seed=world_seed, j0=j0, alpha=alpha, lethal=False)
+    rng = np.random.RandomState(world_seed * 104729 + 13)
+    saved = (TILT0_LOG10_DEG, KICK_JIT, KICK_OMEGA_P, ARM_NOISE,
+             P_STRUCT, AIM_JITTER)
+    try:
+        if degenerate:
+            TILT0_LOG10_DEG, KICK_JIT, KICK_OMEGA_P = (0.8, 0.8), (0.0, 0.0), 0.0
+            ARM_NOISE, P_STRUCT, AIM_JITTER = 0.0, 1.0, 0.0
+            sites = _open_site(w)
+        else:
+            sites = _boundary_sites(w)
+        return [_episode(w, rng, sites) for _ in range(n_ep)]
+    finally:
+        (TILT0_LOG10_DEG, KICK_JIT, KICK_OMEGA_P, ARM_NOISE,
+         P_STRUCT, AIM_JITTER) = saved
+
+
 def _evaluate(seed: int, blind: bool) -> dict:
     """The headline probe reads the graviceptive suffix; the control reads
     the blind prefix. Same rollouts, one slice apart — the only difference
@@ -610,26 +704,16 @@ def _evaluate(seed: int, blind: bool) -> dict:
     tr, te = eps[:N_EP_TRAIN], eps[N_EP_TRAIN:]
     sl_x = slice(None, -GRAV_DIM) if blind else slice(-VEST_DIM, None)
 
-    # tf_abs_spread is the spread of ABSOLUTE topple times (hold + fall): the
-    # quantity that must be wide for the clock null to be able to fail. Under
-    # this rig it includes the hold's own uniform t_r, so it says nothing
-    # about fall dynamics. tf_fall_spread is the spread of FALL times alone —
-    # the detector for every episode toppling on one schedule (failure mode
-    # #2) — and v3 gates it in seed_rig_ok.
-    t_fs = [T_SETTLE + ep["t_r"] + ep["t_f"]
-            for ep in eps if ep["t_f"] is not None]
-    falls = [ep["t_f"] for ep in eps if ep["t_f"] is not None]
-    toppled_frac = len(t_fs) / len(eps)
-    tf_abs_spread = float(np.std(t_fs)) if t_fs else 0.0
-    tf_fall_spread = float(np.std(falls)) if falls else 0.0
+    rig = rig_health(eps)
 
     Xtr, ytr, ttr = _stack(tr)
     Xte, yte, tte = _stack(te)
     n_pos, n_neg = int(yte.sum()), int((1 - yte).sum())
 
-    out = {"toppled_frac": toppled_frac, "tf_abs_spread": tf_abs_spread,
-           "tf_fall_spread": tf_fall_spread,
-           "median_t_f": float(np.median(t_fs)) if t_fs else float("nan"),
+    out = {"toppled_frac": rig["toppled_frac"],
+           "tf_abs_spread": rig["tf_abs_spread"],
+           "tf_fall_spread": rig["tf_fall_spread"],
+           "median_t_f": rig["median_t_f"],
            "n_rows_train": float(len(ytr)), "n_pos_test": float(n_pos),
            "n_neg_test": float(n_neg),
            # V4 rig descriptors, reported never gated: how much of the fall
@@ -685,11 +769,9 @@ def _evaluate(seed: int, blind: bool) -> dict:
         # verdicts — a degenerate rig is VOID, a failed sense is FAIL.
         # V3 adds the fall-spread gate: a world whose falls all share one
         # schedule could not have tested the claim, however wide the hold
-        # makes the absolute spread.
-        out["seed_rig_ok"] = 1.0 if (
-            toppled_frac >= TOPPLED_FRAC_MIN
-            and tf_abs_spread >= TF_ABS_SPREAD_MIN
-            and tf_fall_spread >= TF_FALL_SPREAD_MIN) else 0.0
+        # makes the absolute spread. The conjunction lives in `rig_health`,
+        # where T0.26 gates it in both directions.
+        out["seed_rig_ok"] = rig["rig_ok"]
         gates = (out["auc"] >= AUC_MIN
                  and out["auc"] - out["auc_time"] >= AUC_TIME_MARGIN_MIN
                  and out["tilt_r2"] >= TILT_R2_MIN)
