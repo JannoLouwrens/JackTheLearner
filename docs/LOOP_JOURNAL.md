@@ -3484,3 +3484,45 @@ still passes.
 5. Carried: **the 2 MALFORMED `COVERS:` declarations** (`run coverage` names
    T0.24 and T0.25 — both parse to '` commitment'), and the overseer's item 5,
    giving `COVERS:` a kind so a fixture cannot read as a claim.
+
+## 2026-08-12 ~10:5x — PS.02 PRE-REGISTRATION: cold, and whether it can be felt
+
+Picked by the STANDING RULE, not by `run blocked`: `run coverage` reports 11
+commitments with declared specs and nothing passing, and `thermal (kills)` is
+one of them — 2 declared specs, 0 passing, while GOAL.md's survival directive
+says "too cold kills him, too hot kills him" in the owner's own words. It frees
+nothing, which is exactly why no ranking surfaces it. Cheapest runnable spec
+across the zero-pass set (`Budget.CPU`), tie broken by declared-spec count.
+
+**The world had no temperature in it at all.** `experiments/thermal.py` is new.
+Its constants are PRE-REGISTERED HERE, before the probe was scored on any
+registered seed:
+
+    dTb/dt = G_RATE * (T_eff - T_NEUTRAL)          G_RATE 0.010, T_NEUTRAL 20 degC
+    T_eff  = T_cold + f*(T_FIRE - T_cold), f = exp(-(d/R_FIRE)^2)   T_FIRE 45, R_FIRE 1.5 m
+    death at TB_LETHAL = 28 degC
+    per life: T_cold ~ U(-20, 0), Tb0 ~ U(30, 38), fire distance ~ U(2.5, 6.0) m
+
+LINEAR, not Newtonian, and the CONTROL is why. Newton's law drives Tb to an
+asymptote and compresses every life into a narrow band, at which point "mean
+lifetime minus elapsed time" predicts well and the silent-lethality control
+could not have failed however honest the probe was. A control that cannot fail
+is not a control, so the world was designed against it: time-to-freezing is a
+ratio of two per-life quantities and no clock reconstructs it.
+
+The heat source is INVISIBLE — no geom at `fire_xy` — so the fire cannot reach
+the feature matrix through `vision`'s rays. The sense is 2 floats (core
+temperature, felt ambient) added as an OVERLAY: `cores.MODALITIES`, `W0.observe`
+and the drive layer are untouched, because the obs-dim scar (T2.02, still VOID)
+is what happens when a width changes under arms admitted at the old one.
+
+Gates, pre-registered: probe R2 >= 0.50 held out BY RUN; shuffled pairing
+<= 0.05; control (thermal channel deleted, same lives) <= 0.20 AND at least
+0.35 below the experiment; every cold life dies, in [3, 70] s; the inert null
+kills nobody and moves Tb by exactly 0; +2.0 degC in 20 s at the fire with mean
+distance <= 1.0 m; integrator within 2% of the closed form.
+
+PILOT, seed 90, disjoint from the registered 0/1/2 (PG.6/SM.01 precedent):
+probe R2 **0.685**, control **-0.091** (margin 0.776), shuffled **-0.497**,
+deaths 6.4-36.2 s over 16 lives, warm +3.24 degC at 0.64 m, law_dev 0.0083.
+Gates were then set with margin, not at the pilot values.
