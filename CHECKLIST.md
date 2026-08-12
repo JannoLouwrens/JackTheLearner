@@ -616,7 +616,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [!] **VO.01** He can make a sound, and it is heard as a sound in the world  — clear_recov_r2_amp=0.526469; clear_recov_r2_amp_std=0.0496416
+- [!] **VO.01** He can make a sound, and it is heard as a sound in the world  — bg_gain=0.262751; bg_gain_std=0.0223748
       - _asserts:_ A policy-driven emission (f0, brightness, amplitude, duration) is rendered by ContactAudio into the shared stereo stream, is recoverable by a probe on a LISTENER's audio input, and attenuates with distance and occlusion by the amounts the fixture declares.
       - _dies if:_ The emission is not recoverable at the listener, or does not attenuate - then it is a wire between two brains wearing the word 'voice'.
       - _then delete:_ Any emergent-signalling claim, and the two-way half of the talkative-parent design (FROZEN_VS_PLASTIC.md 10.5, 10.7).

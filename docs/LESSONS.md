@@ -2317,6 +2317,40 @@ and report the achieved ratio as a metric. If you cannot say what the level is
 *for*, the spec's difficulty is an accident and its verdict is about the
 accident.
 
+**COROLLARY 1, from the iteration that implemented this rule — REPORTING IS NOT
+ENOUGH, GATE IT, AND GATE IT TWO-SIDED.** "Report the achieved ratio as a
+metric" leaves the hole open, because a reported-only ratio is exactly as
+adjustable as the constant it replaced: an iteration that wants a PASS quiets
+the room, the metric faithfully reports a quieter room, and nothing fails.
+VO.01 v3 gates it instead — `|voice_to_background_db - 6| <= 2` — and the gate
+is two-sided on purpose. One-sided ("the room must not be louder than X") is
+the version that reads as rigour and permits a silent room. The difficulty of a
+spec belongs under law 4 with every other threshold, and the only way to put it
+there is to make it something that can FAIL.
+
+**COROLLARY 2, and it cost this iteration a run — SIZE THE ESTIMATOR FROM THE
+TOLERANCE BEFORE YOU RUN.** The first v3 run FAILED that new gate on two seeds
+of three: +3.53, +6.76, +9.92 dB, for a quantity that is set BY CONSTRUCTION
+and should have been near-identical on all three. The gate was right; the
+instrument behind it was not. A call's level at the ear is `amp/r` with both
+draws log-uniform, so one episode's RMS has a coefficient of variation near
+1.0, and a ratio of two 60-episode means carries about 2 dB of standard error —
+the entire tolerance. n=400 brought the same three seeds to +5.34 / +5.65 /
++6.93 with nothing else changed.
+
+The general shape is worth more than the arithmetic: **a tolerance gate on a
+quantity you SET rather than OBSERVE is a self-test of your own instrument, and
+its failure is indistinguishable from the phenomenon failing.** It presents as
+"the spec still doesn't pass" — the same sentence as a real negative result —
+and telling the two apart costs a per-seed breakdown that the ledger's
+mean-and-std does not show. Two lines of arithmetic before the run prevent it:
+a `+/- t` dB gate needs relative standard error `t / (4 * 8.686)` to leave a
+4-sigma margin, so `n ~ 2 * CV^2 * (34.7 / t)^2`; the analogous sum for a ratio,
+a fraction or a count is the same shape. Do it whenever you add a `+/-` gate,
+and put the derivation in the constant's own comment — otherwise the sample
+size is a number chosen by taste sitting underneath a threshold, which is the
+failure this entire entry is about, one level up.
+
 ## A confound you can prove is real is not thereby the confound that is costing you
 
 Same two runs, and this is the more expensive half. VO.01's first FAIL was

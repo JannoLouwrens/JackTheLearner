@@ -3565,3 +3565,97 @@ holds the pre-`71f7f03` strict `Result(**row)`) — `deps_sha` stays blocked unt
 it is gone, `pgrep` before you add any ledger row field. (3) LC.03 (frees 7) and
 the overseer's items 2/3/5 (the T1.02 write half, the SUBMISSION_LOG fields,
 `COVERS:` kinds) are all still open and all CPU.
+
+## 2026-08-12 — VO.01 v3: the pre-registered SIR fix WORKED, and the FAIL is now ONE gate
+
+**Unit of work.** `VO.01` again, under the standing rule (a GOAL.md commitment
+with ZERO passing specs outranks fan-out): `voice` is 0 of 2, and VO.01 is the
+cheapest runnable declared spec across all ten zero-pass commitments, ties
+broken toward the commitment with the most declared specs. `run blocked` ranks
+it a terminal blocker (frees 2, blocks 2).
+
+**RECORDED: FAIL (37.59s, 3 seeds, commit `9357573`).** Third FAIL, and the
+first one that is about a single number.
+
+**The 08-11 pre-registration was right, and it is now measured.** It said:
+derive the background level from a stated signal-to-interference ratio of
++6 dB, scale rather than remove, report `voice_to_background_db`, gate it
+within +/-2 dB, and DO NOT MOVE the four recovery gates. Implemented exactly
+that and nothing else, so the diagnosis stayed single-variable.
+
+    metric                v2 (-4.36 dB)   v3 (+5.97 dB)   gate
+    recov_r2_bright           0.332           0.602       >= 0.50   FIXED
+    recov_r2_amp              0.432           0.572       >= 0.50   FIXED
+    recov_r2_mean             0.584           0.711       >= 0.60   FIXED
+    recov_r2_f0               0.827           0.875       >= 0.50
+    recov_r2_dur              0.747           0.797       >= 0.50
+    mute_r2_max              -0.105          -0.266       <= 0.05
+    occ_recov_r2_f0           0.627           0.656       >= 0.50
+    occ_recov_r2_dur          0.189           0.242       >= 0.50   STILL FAILS
+    voice_to_background_db   (uncomputed)     5.97+/-0.69  6 +/- 2
+
+Per seed, every set-A gate clears on every seed (bright 0.554 / 0.666 / 0.584;
+amp 0.591 / 0.579 / 0.546; mean 0.706 / 0.727 / 0.701) and `occ_recov_r2_f0`
+clears on every seed (0.630 / 0.716 / 0.622). **`occ_recov_r2_dur` — 0.285 /
+0.336 / 0.104 — is the only gate failing anywhere in the spec.** The confirming
+detail is unchanged and still correct: `occ_recov_r2_bright` came in at -0.851,
+which is the spec's own pre-registered prediction that a low-pass wall must make
+a clear-trained probe mis-read timbre.
+
+**A DEFECT I SHIPPED AND CAUGHT IN THE SAME ITERATION, worth more than the
+fix.** The first v3 run FAILED the new +/-2 dB gate on two seeds of three:
+**+3.53, +6.76, +9.92 dB** — for a quantity that is set BY CONSTRUCTION and
+should have been identical on all three. The gate was fine; its estimator was
+not. A call's level at the ear is `amp/r` with both draws log-uniform, so one
+episode's RMS has CV ~1.0 and a ratio of two 60-episode means carries ~2 dB of
+standard error — the whole tolerance. `N_CALIB` 60 -> 400 brought the same three
+seeds to **+5.34 / +5.65 / +6.93**, spread 6.4 dB -> 1.6 dB, nothing else
+changed. A tolerance gate on a quantity you SET is a self-test of your own
+instrument, and its failure reads exactly like the phenomenon failing. Both
+halves are in `docs/LESSONS.md` as corollaries 1 and 2 under *"The interference
+level in a fixture is a threshold in disguise"* — corollary 1 is that
+**reporting** the achieved ratio (which is all the 08-11 rule asked for) leaves
+the hole open, because a reported-only ratio is as adjustable as the constant it
+replaced; only a TWO-SIDED gate puts the difficulty under law 4.
+
+**THE NEXT ITERATION'S UNIT, PRE-REGISTERED HERE BEFORE IT IS RUN.** The
+occluded-recovery arm has TWO named instrument defects, and each is diagnosed
+from a CONTROL rather than from the score under test, so neither is a knob
+fitted to a number I have already seen:
+
+1. **Its difficulty is undeclared — the 08-11 lesson, unapplied to the arm
+   nobody applied it to.** The clear line is pinned to +6 +/- 2 dB by
+   construction; behind the wall the new `occ_voice_to_background_db` reads
+   **-7.1 / -12.9 / -14.6 dB**, uncontrolled, with a 7.5 dB spread across seeds
+   that comes from where each seed's contact events happened to land relative to
+   a FIXED `L_HIDDEN`. `OCC_R2_MIN = 0.50` was pre-registered in v1 without
+   anyone knowing that number. Declare the occluded SIR the same way the clear
+   one is now declared — target = clear target minus the wall's own measured
+   attenuation, so the wall costs what the wall costs and the ROOM does not
+   additionally vary by 7.5 dB between seeds — and gate it two-sided.
+2. **The occluded probe is data-starved before the wall is even considered.**
+   `N_OCC = 160` gives it 80 training examples for 115 features, and its
+   clear-on-clear control — same fixture, same 80 samples, no wall — reaches
+   only **0.687 / 0.651 / 0.551** for duration against set A's 0.797 at 300
+   samples. A probe that cannot recover duration in its own domain cannot be
+   used to conclude the channel does not carry duration through a wall.
+   **Criterion, stated in advance: raise `N_OCC` until `clear_recov_r2_dur`
+   reaches set A's level, and only then read `occ_recov_r2_dur`.**
+
+Do these ONE AT A TIME, in that order — v3 is worth this much only because it
+changed one variable. `OCC_R2_MIN` MUST NOT MOVE; if duration still misses at a
+declared occluded SIR with an unstarved probe, the finding is real and it is
+about the emission design, exactly as the 08-11 entry said of brightness: a
+dimension the channel cannot carry through a wall is a dimension VO.02's
+mutual-information claim must not lean on.
+
+**Machine improvements.** Two LESSONS corollaries above; the two-sided
+difficulty gate itself, which is a reusable shape (SM.01 reports
+`hidden_conc_snr` but does not gate it; ME.8's `N_NOISE = 4` distractor channels
+and TA.01's `TASTE_SIGMA` are both difficulty constants chosen by taste and
+neither is reported — three candidates for the same treatment, in ascending
+order of cost).
+
+**Also still open, unchanged:** LC.03 (frees 7, CPU, the largest non-GPU
+unblock), T2.01 (frees 26, `gpu<8h`, and its Kaggle bucket closes Sunday
+2026-08-16), UB.9 (frees 4), and the overseer's items 2/3/5.

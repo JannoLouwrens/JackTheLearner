@@ -165,7 +165,8 @@ SIR_TOL_DB = 2.0
 # dB. At n=60 that is ~2 dB of standard error against a +/-2 dB gate — an
 # instrument that cannot satisfy its own tolerance, which the first v3 run
 # recorded as +3.53 / +6.76 / +9.92 dB on the three seeds. n=400 puts the
-# standard error near 0.5 dB, a quarter of the tolerance.
+# standard error near 0.9 dB once the two measurement-side means are counted
+# too — measured spread across the three seeds fell 6.4 dB -> 1.6 dB.
 N_CALIB = 400                   # calibration episodes, on their own RNG stream
 
 # ── features and probe ──────────────────────────────────────────────────
