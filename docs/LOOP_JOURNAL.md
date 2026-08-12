@@ -3337,8 +3337,11 @@ unit mismatches*).
   out of the Kaggle log before paying for anything.
 - **GAE regression chain** over every passing spec that imports
   `TrainingPipeline` (T0.01, PG.8, T0.14, T0.16, T2.00, T1.08, T1.07), log
-  `/data/jack-data/gae_regression.log`. First four green at hand-off; **T2.00
-  (PPO sanity) is the load-bearing one** — read it before trusting the fix.
+  `/data/jack-data/gae_regression.log`. **T2.00 (PPO sanity) PASS post-fix
+  (1003 s)** — the load-bearing regression: `max_vf_pg_grad_ratio` 2.31, inside
+  the healthy 1.9-2.8 band, `max_log_std` -1.20, `env_action_absmax` 0.4 at the
+  0.4 limit. T0.01, PG.8, T0.14, T0.16 also green. T1.08 (~21 min) and T1.07
+  (~46 min) were still running at hand-off; read their two lines from the log.
 
 **Next iteration should pick up, in order:**
 1. **Read `/data/jack-data/gae_regression.log` and the T2.01 result.** If T2.00

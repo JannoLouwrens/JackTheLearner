@@ -3929,12 +3929,12 @@
     },
     "T2.00": {
       "amended": [],
-      "attempt": 2,
-      "commit": "35e1134",
+      "attempt": 3,
+      "commit": "08444b2+dirty",
       "control_metrics": {
-        "unnormalized_grad_ratio": 144.98
+        "unnormalized_grad_ratio": 105.6
       },
-      "duration_s": 658.75,
+      "duration_s": 1003.37,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3942,20 +3942,26 @@
           "message": "",
           "ran_at": "2026-08-07T06:41:38",
           "status": "PASS"
+        },
+        {
+          "commit": "35e1134",
+          "message": "",
+          "ran_at": "2026-08-09T14:01:33",
+          "status": "PASS"
         }
       ],
-      "impl_sha": null,
+      "impl_sha": "78afd5efe9b73ce6",
       "message": "",
       "metrics": {
         "action_limit": 0.4,
         "env_action_absmax": 0.4,
-        "final_vf_pg_grad_ratio": 0.36,
-        "max_log_std": -1.1988,
-        "max_vf_pg_grad_ratio": 2.56,
-        "max_vf_pg_loss_ratio": 65.07,
-        "min_log_std": -1.2026
+        "final_vf_pg_grad_ratio": 0.15,
+        "max_log_std": -1.2002,
+        "max_vf_pg_grad_ratio": 2.31,
+        "max_vf_pg_loss_ratio": 180.54,
+        "min_log_std": -1.2027
       },
-      "ran_at": "2026-08-09T14:01:33",
+      "ran_at": "2026-08-12T07:44:32",
       "seeds": [
         0
       ],
