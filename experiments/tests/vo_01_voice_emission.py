@@ -20,6 +20,21 @@ it knows from the waveform.
 
 WHAT IS MEASURED, and each gate's rival
 
+  THE DIFFICULTY, which is now itself a gate. A recovery number means nothing
+  without the level of the interference it was measured against, and v2's
+  interference level was an undeclared constant: `BG_EVENTS_PER_EP = (2, 7)`,
+  chosen by taste, which put the voice at **-4.36 dB** relative to the
+  playground's own contact noise. Below the room, the four recovery gates were
+  measuring auditory scene analysis, not the channel this spec claims. v3
+  DERIVES the level instead: the mixed background is scaled per seed by
+  `_bg_gain` to hit `SIR_TARGET_DB = +6` — audible over the room, nowhere near
+  alone in it — and `voice_to_background_db` is reported and gated within
+  +/-2 dB. The gate is TWO-SIDED on purpose: quieting the room to buy a PASS
+  now fails exactly as loudly as a room that drowns the voice. The background
+  is scaled, never removed; the four recovery gates below are unchanged from
+  v1. (Pre-registered in docs/LOOP_JOURNAL.md, 2026-08-11, before any recovery
+  number at the new level had been seen.)
+
   RECOVERY. The emission is four continuous action dimensions (f0, brightness,
   amplitude, duration) — a policy can drive it, and VO.01's emitter drives it
   with uniform noise because this spec is about the channel, not about what to
@@ -123,6 +138,26 @@ N_TRAIN = 300
 N_TEST = 100
 RANGE_M = (1.0, 4.5)            # inside the 6 m arena, outside arm's reach
 BG_EVENTS_PER_EP = (2, 7)       # real contact audio, mixed into the same ears
+
+# ── the interference level: DERIVED from a stated target, then GATED ────
+# v2 recorded voice 0.0152 against background 0.0251 — a signal-to-interference
+# ratio of -4.36 dB, i.e. the voice sat BELOW the playground's own contact
+# noise, and at that ratio the recovery gates were measuring auditory scene
+# analysis rather than the channel this spec claims. The constant that set it,
+# `BG_EVENTS_PER_EP`, was chosen by taste and never derived, while every gate
+# around it was reasoned about at length.
+#
+# The background is NOT removed — a clean synthetic channel would prove
+# nothing about a world that is also making noise. Instead the mixed
+# background is SCALED, per seed, to hit a stated SIR, and that SIR is then a
+# reported metric with a TWO-SIDED gate: too quiet fails exactly as loudly as
+# too loud, so the difficulty of this spec can never again be adjusted without
+# the ledger showing it. Pre-registered in docs/LOOP_JOURNAL.md on 2026-08-11,
+# before any recovery number at the new level had been seen; the four recovery
+# gates below are unchanged from v1.
+SIR_TARGET_DB = 6.0             # the voice audible over the room, not alone in it
+SIR_TOL_DB = 2.0
+N_CALIB = 60                    # calibration episodes, on their own RNG stream
 
 # ── features and probe ──────────────────────────────────────────────────
 # A crude log-band spectrogram — what a cochlea gives you before anything is
@@ -248,9 +283,15 @@ def _background(seed):
     return _BG[seed]
 
 
-def _episode_synth(model, listener, bg, rng, n_bg):
+def _episode_synth(model, listener, bg, rng, n_bg, bg_gain=1.0):
     """A fresh synth at `listener`, preloaded with `n_bg` background contacts
-    re-localized to this listener and scattered in time."""
+    re-localized to this listener and scattered in time.
+
+    `bg_gain` scales the contact events' amplitude — `render` applies `e.amp`
+    linearly, so this is a level control on the room and nothing else: the same
+    events, at the same times, from the same real drops, arriving quieter. It
+    is derived by `_bg_gain` from `SIR_TARGET_DB`, never chosen.
+    """
     synth = CA.ContactAudioSynth(model)
     synth.set_listener(listener, HEAD_YAW)
     if bg and n_bg > 0:
@@ -260,7 +301,7 @@ def _episode_synth(model, listener, bg, rng, n_bg):
             synth.events.append(CA.AudioEvent(
                 t=float(rng.uniform(0.0, RENDER_S - 0.35)), geom1=e.geom1,
                 geom2=e.geom2, voiced_geom=e.voiced_geom, pos=e.pos,
-                force=e.force, amp=e.amp, azimuth=az, lateral=lat,
+                force=e.force, amp=e.amp * bg_gain, azimuth=az, lateral=lat,
                 elevation=el, distance=dist))
     return synth
 
@@ -320,6 +361,55 @@ def _rms(ear, sr) -> float:
     return float(np.sqrt(np.mean(_window(ear, sr) ** 2)))
 
 
+# ── the room's level, measured against the voice rather than chosen ─────
+_GAIN: dict = {}
+
+
+def _bg_gain(seed: int) -> float:
+    """The scale that puts the room `SIR_TARGET_DB` below the voice.
+
+    Measured, not chosen. `N_CALIB` episodes drawn from set A's own pose
+    distribution are rendered TWICE — once with the mouth open into an EMPTY
+    world (the voice alone) and once with the mouth shut into the full
+    background at unit gain (the room alone). Both renders are clean, so the
+    ratio belongs to the two sources and not to the ear's noise floor. The gain
+    then follows in closed form, because `render` scales a contact event
+    linearly in `amp`.
+
+    Its own RNG stream, and its own episodes: the calibration never sees a pose
+    the probe is scored on.
+    """
+    if seed in _GAIN:
+        return _GAIN[seed]
+    model, data = _world(seed)
+    bg = _background(seed)
+    rng = np.random.RandomState(seed * 15485863 + 41)
+    sr = CA.SAMPLE_RATE
+    v, b = [], []
+    tries = 0
+    while len(v) < N_CALIB:
+        tries += 1
+        if tries > 40 * N_CALIB:
+            raise RuntimeError("calibration: could not find clear emitter poses")
+        ang = rng.uniform(-math.pi, math.pi)
+        r = rng.uniform(*RANGE_M)
+        pos = np.array([HEAD[0] + r * math.cos(ang), HEAD[1] + r * math.sin(ang),
+                        HEAD[2]])
+        if _hit_geom(model, data, pos, HEAD) != "":
+            continue
+        action = rng.uniform(-1.0, 1.0, size=CA.VOICE_ACTION_DIM)
+        n_bg = int(rng.randint(*BG_EVENTS_PER_EP))
+        room = _episode_synth(model, HEAD, bg, rng, n_bg)
+        b.append(_rms(_ear(room, None, mute_voice=True), sr))
+        alone = CA.ContactAudioSynth(model)
+        alone.set_listener(HEAD, HEAD_YAW)
+        alone.emit_voice(T_VOICE, pos, action, data=data)
+        v.append(_rms(_ear(alone, None), sr))
+    ratio = float(np.mean(v)) / max(float(np.mean(b)), EPS)
+    _GAIN[seed] = float(ratio / (10.0 ** (SIR_TARGET_DB / 20.0)))
+    return _GAIN[seed]
+
+
 # ── the probe ───────────────────────────────────────────────────────────
 def _ridge_r2(xtr, ytr, xte, yte) -> np.ndarray:
     """Held-out R^2 per target dimension. Standardisation statistics come from
@@ -341,6 +431,7 @@ def _set_a(seed, mute: bool):
     Returns (features, actions, mean ear RMS)."""
     model, data = _world(seed)
     bg = _background(seed)
+    gain = _bg_gain(seed)
     rng = np.random.RandomState(seed * 104729 + 17)
     sr = CA.SAMPLE_RATE
     feats, acts, rmss = [], [], []
@@ -358,7 +449,7 @@ def _set_a(seed, mute: bool):
             continue
         action = rng.uniform(-1.0, 1.0, size=CA.VOICE_ACTION_DIM)
         n_bg = int(rng.randint(*BG_EVENTS_PER_EP))
-        synth = _episode_synth(model, HEAD, bg, rng, n_bg)
+        synth = _episode_synth(model, HEAD, bg, rng, n_bg, gain)
         synth.emit_voice(T_VOICE, pos, action, data=data)
         ear = _ear(synth, rng, mute_voice=mute)
         feats.append(_features(ear, sr))
@@ -386,8 +477,12 @@ def _silence(seed: int) -> dict:
     model, data = _world(seed)
     rng = np.random.RandomState(seed * 2749 + 31)
     sr = CA.SAMPLE_RATE
+    # N_CALIB episodes, not the 20 of v1: `voiced_silent_rms` is now the
+    # numerator of a GATED quantity (`voice_to_background_db`), so its standard
+    # error has to be small next to the +/-2 dB tolerance. More samples of the
+    # same estimator — no gate moved.
     shut, open_ = [], []
-    for _ in range(20):
+    for _ in range(N_CALIB):
         ang, r = rng.uniform(-math.pi, math.pi), rng.uniform(*RANGE_M)
         pos = np.array([HEAD[0] + r * math.cos(ang), HEAD[1] + r * math.sin(ang),
                         HEAD[2]])
@@ -485,20 +580,32 @@ def _occ_recovery(seed) -> dict:
     OCCLUDED half. Same ranges, same bearings, same calls — only the block."""
     model, data = _world(seed)
     bg = _background(seed)
+    gain = _bg_gain(seed)
     rng = np.random.RandomState(seed * 3571 + 23)
     sr = CA.SAMPLE_RATE
     fx_c, fx_o, ys = [], [], []
     n_hidden_blocked = 0
-    for hid, lit, action in _occ_pairs(seed):
+    v_o, room_o = [], []
+    for i, (hid, lit, action) in enumerate(_occ_pairs(seed)):
         n_bg = int(rng.randint(*BG_EVENTS_PER_EP))
-        s_o = _episode_synth(model, L_HIDDEN, bg, rng, n_bg)
+        s_o = _episode_synth(model, L_HIDDEN, bg, rng, n_bg, gain)
         e_o = s_o.emit_voice(T_VOICE, hid, action, data=data)
         n_hidden_blocked += int(e_o.occluded)
         fx_o.append(_features(_ear(s_o, rng), sr))
-        s_c = _episode_synth(model, L_LIT, bg, rng, n_bg)
+        s_c = _episode_synth(model, L_LIT, bg, rng, n_bg, gain)
         s_c.emit_voice(T_VOICE, lit, action, data=data)
         fx_c.append(_features(_ear(s_c, rng), sr))
         ys.append(action)
+        # REPORTED, NOT GATED. The clear-line SIR is set to target by
+        # construction; behind the wall it is whatever the occluder leaves,
+        # and that number is the context for `occ_recov_r2_*`. Measured on a
+        # subsample because it costs two extra renders per pair.
+        if i < N_CALIB:
+            room_o.append(_rms(_ear(s_o, None, mute_voice=True), sr))
+            alone = CA.ContactAudioSynth(model)
+            alone.set_listener(L_HIDDEN, HEAD_YAW)
+            alone.emit_voice(T_VOICE, hid, action, data=data)
+            v_o.append(_rms(_ear(alone, None), sr))
     fx_c, fx_o, ys = np.array(fx_c), np.array(fx_o), np.array(ys)
     half = N_OCC // 2
     r2_occ = _ridge_r2(fx_c[:half], ys[:half], fx_o[half:], ys[half:])
@@ -508,6 +615,8 @@ def _occ_recovery(seed) -> dict:
     out["occ_recov_r2_mean"] = float(np.mean(r2_occ))
     out["clear_recov_r2_mean"] = float(np.mean(r2_clear))
     out["occ_all_blocked"] = float(n_hidden_blocked == N_OCC)
+    out["occ_voice_to_background_db"] = float(20.0 * math.log10(
+        max(float(np.mean(v_o)), EPS) / max(float(np.mean(room_o)), EPS)))
     return out
 
 
@@ -549,6 +658,16 @@ def _experiment(seed: int) -> dict:
     m["occ_snr"] = float(m["ref_occ_call_rms"] / EAR_NOISE_SIGMA)
     m["clear_snr"] = float(m["ref_clear_call_rms"] / EAR_NOISE_SIGMA)
 
+    # THE DIFFICULTY OF THIS SPEC, MADE A MEASUREMENT. The voice alone (mouth
+    # open, empty world) against the room alone (mouth shut, background
+    # present), both over set A's pose distribution and both at the ear. v2
+    # recorded -4.36 dB here without ever computing it; the gate below is
+    # two-sided, so a future iteration cannot quiet the room to buy a PASS any
+    # more than a loud room can hide the channel.
+    m["bg_gain"] = _bg_gain(seed)
+    m["voice_to_background_db"] = float(20.0 * math.log10(
+        max(m["voiced_silent_rms"], EPS) / max(m["mute_ear_rms"], EPS)))
+
     # ears that are not saturating, and audio that is finite
     s = CA.ContactAudioSynth(model)
     s.set_listener(HEAD, HEAD_YAW)
@@ -566,8 +685,12 @@ def _experiment(seed: int) -> dict:
         m["recov_r2_mean"] * (1.0 - min(1.0, m["dist_law_dev"] / DIST_LAW_TOL)))
 
     m["seed_gates_ok"] = float(
+        # the spec is being run at the difficulty it declares — checked FIRST,
+        # because every recovery number below is only meaningful at a stated
+        # signal-to-interference ratio
+        abs(m["voice_to_background_db"] - SIR_TARGET_DB) <= SIR_TOL_DB
         # the emission arrives, and every dimension of it survives the trip
-        all(m[f"recov_r2_{d}"] >= R2_MIN_PER_DIM for d in DIMS)
+        and all(m[f"recov_r2_{d}"] >= R2_MIN_PER_DIM for d in DIMS)
         and m["recov_r2_mean"] >= R2_MIN_MEAN
         # ...and the muted mouth is at chance, with ears at the noise floor
         and m["mute_r2_max"] <= MUTE_R2_MAX
@@ -634,6 +757,8 @@ def _control(seed: int) -> dict:
 def _check(m: dict, c: dict) -> bool:
     return bool(
         m["seed_gates_ok"] == 1.0
+        # the declared difficulty, restated at the aggregate
+        and abs(m["voice_to_background_db"] - SIR_TARGET_DB) <= SIR_TOL_DB
         # the headline, restated at the aggregate so a lucky seed cannot carry it
         and all(m[f"recov_r2_{d}"] >= R2_MIN_PER_DIM for d in DIMS)
         and m["recov_r2_mean"] >= R2_MIN_MEAN
