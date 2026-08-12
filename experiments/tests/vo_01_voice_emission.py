@@ -157,7 +157,16 @@ BG_EVENTS_PER_EP = (2, 7)       # real contact audio, mixed into the same ears
 # gates below are unchanged from v1.
 SIR_TARGET_DB = 6.0             # the voice audible over the room, not alone in it
 SIR_TOL_DB = 2.0
-N_CALIB = 60                    # calibration episodes, on their own RNG stream
+# N_CALIB is set by the TOLERANCE, not by taste — the mistake this whole block
+# exists to stop. A call's level at the ear is amp/r with `amp` log-uniform over
+# 26 dB and `r` over 13 dB, so a single episode's RMS has a coefficient of
+# variation of ~1.0; the mean of n of them carries a standard error of
+# 1/sqrt(n), and the ratio of two such means carries about sqrt(2) of that in
+# dB. At n=60 that is ~2 dB of standard error against a +/-2 dB gate — an
+# instrument that cannot satisfy its own tolerance, which the first v3 run
+# recorded as +3.53 / +6.76 / +9.92 dB on the three seeds. n=400 puts the
+# standard error near 0.5 dB, a quarter of the tolerance.
+N_CALIB = 400                   # calibration episodes, on their own RNG stream
 
 # ── features and probe ──────────────────────────────────────────────────
 # A crude log-band spectrogram — what a cochlea gives you before anything is
@@ -600,7 +609,7 @@ def _occ_recovery(seed) -> dict:
         # construction; behind the wall it is whatever the occluder leaves,
         # and that number is the context for `occ_recov_r2_*`. Measured on a
         # subsample because it costs two extra renders per pair.
-        if i < N_CALIB:
+        if i < min(N_CALIB, N_OCC):
             room_o.append(_rms(_ear(s_o, None, mute_voice=True), sr))
             alone = CA.ContactAudioSynth(model)
             alone.set_listener(L_HIDDEN, HEAD_YAW)
