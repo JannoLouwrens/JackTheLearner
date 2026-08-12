@@ -15,6 +15,18 @@ tested like one. Properties, each with a way to fail:
      constructed hours ago and written to now must change exactly the one entry
      it is recording: every other entry keeps its newest value, its attempt
      count and its amendments.
+  6. NEW 2026-08-13 (D2 resolved) — A VOID DEPENDENCY BLOCKS, exactly like
+     NOT_RUN and distinguishably from FAIL. VOID means "the run could not test
+     its claim", which is the same epistemic state as never having run, so
+     recording one must never enlarge the set of runnable specs — otherwise a
+     broken rig MINTS runnability and dependents record results on a foundation
+     nobody measured. Measured, not argued: replaying the ledger's own history
+     at 2026-08-10T01:00, the opposite semantics would have admitted 11 specs,
+     9 of them resting on T2.01's VOID — and T2.01's next measurement, at
+     01:17, was FAIL. The why-string must say VOID is not a refutation (the
+     asymmetry that matters is `kills`, which VOID suppresses), and FAIL's
+     why must stay plain — one message carrying both meanings is the exact
+     docstring-vs-code contradiction that sat shipped for four days as D2.
 
 Property 5 exists because properties 1–4 all PASSED while the bug was live.
 Property 4 asserted `len(final.results) >= 15` — a COUNT. Nothing was ever lost
@@ -173,6 +185,21 @@ def _experiment(seed: int) -> dict:
                        lambda m, c: True, ledger=reread)
         blocked_not_run = ran.status is Status.BLOCKED and ran.metrics == {}
 
+        # 6. a VOID dependency blocks like NOT_RUN, distinguishably from FAIL
+        v_dependent = Spec("X.05", 0, "dependent of void", hypothesis="h",
+                           falsified_by="f", null_baseline="n", metric="m",
+                           budget=Budget.CPU_FAST, depends_on=["X.04"])
+        blocked_as_not_run = reread.blocked_by(v_dependent) == ["X.04"]
+        reread.record(Result(spec_id="X.04", status=Status.VOID))
+        after = dict(reread.unsatisfied(v_dependent))
+        void_dep_blocks = (blocked_as_not_run and list(after) == ["X.04"])
+        void_why = after.get("X.04", "")
+        fail_why = dict(reread.unsatisfied(dependent)).get("X.02", "")
+        void_why_not_a_refutation = ("VOID" in void_why
+                                     and "not demonstrated" in void_why
+                                     and "refutation" in void_why
+                                     and fail_why == "FAIL")
+
         # 4. survives interleaved writers
         a, b = Ledger(path), Ledger(path)
         for i in range(15):
@@ -188,6 +215,8 @@ def _experiment(seed: int) -> dict:
         "default_is_not_run": default_not_run,
         "dependency_blocks": blocked,
         "blocked_records_no_metrics": blocked_not_run,
+        "void_dep_blocks": void_dep_blocks,
+        "void_why_not_a_refutation": void_why_not_a_refutation,
         "survives_concurrent_writers": concurrent_ok,
         "entries_after_concurrency": len(final.results),
     }
@@ -209,6 +238,7 @@ _STALE_PROPS = ("fresh_metric_survived", "attempt_not_inflated",
 def _check(m: dict, c: dict) -> bool:
     shipped = all([m["roundtrip_ok"], m["default_is_not_run"],
                    m["dependency_blocks"], m["blocked_records_no_metrics"],
+                   m["void_dep_blocks"], m["void_why_not_a_refutation"],
                    m["survives_concurrent_writers"],
                    m["own_result_recorded"],
                    all(m[k] for k in _STALE_PROPS)])

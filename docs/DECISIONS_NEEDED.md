@@ -1080,3 +1080,18 @@ what the project values.
 still-blocked-on-owner. It has been handed to the builder as item **B3** in
 `docs/OVERSIGHT.md`. If you disagree and want to keep the call, say so and it
 comes straight back here.
+
+## D2 — RESOLVED 2026-08-13 (builder, per overseer 11th-audit B3). Off your desk.
+
+The overseer ruled D2 a property question with a testable answer and assigned
+it to the loop. Resolved by replaying the ledger's own recorded history:
+**VOID BLOCKS its dependents**, and the docstring was the defect. The deciding
+quantity: at 2026-08-10T01:00 the "VOID does not block" reading would have
+admitted 11 specs, 9 of them onto T2.01's VOID — and T2.01's next measurement,
+17 minutes later, was FAIL; the shipped blocking semantics admitted 0. Today's
+entire benefit of not blocking is 3 unimplemented specs behind T2.02's refusal
+to arbitrate. Full working, loser, and re-open trigger in
+`docs/DECISIONS_RESOLVED.md`; the invariant is executable as T0.08 property 6;
+`Status.VOID`'s docstring and `unsatisfied`'s blocking message now distinguish
+"not demonstrated" from "refuted". Nothing here needs you — recorded so the
+D2 sections above stop reading as open.

@@ -137,9 +137,19 @@ class Status(str, Enum):
     the architecture". Read machine-side, that ledger said the kill criterion
     had fired on a comparison that explicitly refused to arbitrate.
 
-    A VOID spec is not demonstrated and must not be counted as PASS, but it
-    also does not trigger `kills` and does not BLOCK its dependents on the
-    grounds that the claim was refuted. It means: fix the run and try again.
+    A VOID spec is not demonstrated and must not be counted as PASS, and it
+    does not trigger `kills`. It DOES block its dependents — exactly as
+    NOT_RUN does, because the two are the same epistemic state: no verdict on
+    the hypothesis. It means: fix the run and try again. (D2, resolved
+    2026-08-13 by replaying the ledger's own history: at 2026-08-10T01:00,
+    "VOID does not block" would have admitted 11 specs, 9 of them resting on
+    T2.01's VOID — and T2.01's very next measurement, 17 minutes later, was
+    FAIL. Every one of those results would have rested on a refuted
+    foundation. Blocking cost nothing that a re-run does not recover; the
+    full working is in docs/DECISIONS_RESOLVED.md. An earlier version of this
+    docstring said VOID "does not BLOCK its dependents" while `unsatisfied`
+    blocked on it — the contradiction sat shipped for four days as open
+    decision D2.)
     """
 
 
@@ -621,8 +631,15 @@ class Ledger:
         """
         out: List[tuple] = []
         for d in spec.depends_on:
-            if self.status(d) is not Status.PASS:
-                out.append((d, self.status(d).value))
+            st = self.status(d)
+            if st is not Status.PASS:
+                # VOID blocks exactly like NOT_RUN (D2, resolved 2026-08-13),
+                # but the reader must not mistake it for a refutation: the
+                # asymmetry that matters is `kills`, which VOID suppresses.
+                why = ("VOID — not demonstrated (the run could not test its "
+                       "claim; a fixed re-run clears this, it is not a "
+                       "refutation)") if st is Status.VOID else st.value
+                out.append((d, why))
                 continue
             path = module_path_for(d)
             if path is None:                 # no single impl file: nothing to hash

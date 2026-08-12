@@ -284,7 +284,9 @@ Status.PASS` in the codebase.
 
 *Closed 2026-08-09:* `protocol.VoidStatusMismatch` now raises on that exact
 disagreement, and `t2_02_mlp_showdown.py` returns `Status.VOID` on all three
-paths. The `blocked_by` half is still open — see `DECISIONS_NEEDED.md`.
+paths. The `blocked_by` half closed 2026-08-13: D2 resolved by ledger replay
+(VOID blocks, docstring fixed, T0.08 property 6 holds the invariant — see
+`DECISIONS_RESOLVED.md`).
 
 ## The gate itself is a claim, and it needs a test that could have failed
 

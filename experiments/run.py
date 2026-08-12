@@ -909,9 +909,10 @@ def cmd_run(ledger: Ledger, spec_ids: list[str]) -> int:
         if not mod:
             print(f"[{sid}] no implementation in experiments/tests/ — skipping")
             continue
-        blocked = ledger.blocked_by(spec)
+        blocked = ledger.unsatisfied(spec)
         if blocked:
-            print(f"[{sid}] BLOCKED by {', '.join(blocked)}")
+            print(f"[{sid}] BLOCKED by "
+                  + ", ".join(f"{d} ({why})" for d, why in blocked))
             failures += 1
             continue
         print(f"[{sid}] {spec.title} ... ", end="", flush=True)

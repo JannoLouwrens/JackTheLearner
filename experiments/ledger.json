@@ -2485,8 +2485,8 @@
     },
     "T0.08": {
       "amended": [],
-      "attempt": 6,
-      "commit": "68b95bd",
+      "attempt": 7,
+      "commit": "3695ee7+dirty",
       "control_metrics": {
         "amendment_survived": false,
         "attempt_not_inflated": false,
@@ -2495,7 +2495,7 @@
         "own_result_recorded": true,
         "unseen_entry_survived": true
       },
-      "duration_s": 1.3,
+      "duration_s": 1.31,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2527,9 +2527,15 @@
           "message": "",
           "ran_at": "2026-08-10T02:14:30",
           "status": "PASS"
+        },
+        {
+          "commit": "68b95bd",
+          "message": "",
+          "ran_at": "2026-08-11T20:37:35",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "ba529f6075f428a6",
+      "impl_sha": "989fa3d1cb6af184",
       "message": "",
       "metrics": {
         "amendment_survived": true,
@@ -2537,15 +2543,17 @@
         "blocked_records_no_metrics": true,
         "default_is_not_run": true,
         "dependency_blocks": true,
-        "entries_after_concurrency": 18,
+        "entries_after_concurrency": 19,
         "entries_after_stale_write": 4,
         "fresh_metric_survived": true,
         "own_result_recorded": true,
         "roundtrip_ok": true,
         "survives_concurrent_writers": true,
-        "unseen_entry_survived": true
+        "unseen_entry_survived": true,
+        "void_dep_blocks": true,
+        "void_why_not_a_refutation": true
       },
-      "ran_at": "2026-08-11T20:37:35",
+      "ran_at": "2026-08-12T23:13:29",
       "seeds": [
         0
       ],
