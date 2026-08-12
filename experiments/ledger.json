@@ -2434,8 +2434,8 @@
     },
     "T0.12": {
       "amended": [],
-      "attempt": 6,
-      "commit": "b059a13+dirty",
+      "attempt": 7,
+      "commit": "8d74c07",
       "control_metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
@@ -2467,7 +2467,7 @@
         "waste_not_counted_as_work": false,
         "weeks_isolated": false
       },
-      "duration_s": 1.25,
+      "duration_s": 1.24,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2498,6 +2498,12 @@
           "commit": "2e8d558",
           "message": "",
           "ran_at": "2026-08-11T19:29:57",
+          "status": "PASS"
+        },
+        {
+          "commit": "b059a13+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T06:54:04",
           "status": "PASS"
         }
       ],
@@ -2534,7 +2540,7 @@
         "waste_not_counted_as_work": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-12T06:54:04",
+      "ran_at": "2026-08-12T06:55:44",
       "seeds": [
         0
       ],
@@ -3328,6 +3334,32 @@
         0
       ],
       "spec_id": "T0.23",
+      "status": "PASS"
+    },
+    "T0.24": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "8d74c07",
+      "control_metrics": {
+        "pre_fix_message": "dictionary update sequence element #0 has length 3; 2 is required",
+        "pre_fix_raised": "ValueError"
+      },
+      "duration_s": 1.17,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "ad66f179eb884983",
+      "message": "",
+      "metrics": {
+        "control_reproduces_scar": true,
+        "failures": [],
+        "properties_checked": 6,
+        "properties_failed": 0
+      },
+      "ran_at": "2026-08-12T06:55:46",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.24",
       "status": "PASS"
     },
     "T1.01": {
