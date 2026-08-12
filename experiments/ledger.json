@@ -3,8 +3,8 @@
   "results": {
     "BA.01": {
       "amended": [],
-      "attempt": 2,
-      "commit": "0fce271",
+      "attempt": 3,
+      "commit": "c1bd242",
       "control_metrics": {
         "auc": 0.657352,
         "auc_std": 0.0740343,
@@ -16,16 +16,16 @@
         "n_pos_test_std": 9.030811,
         "n_rows_train": 351.0,
         "n_rows_train_std": 18.384776,
+        "tf_abs_spread": 12.448866,
+        "tf_abs_spread_std": 0.490682,
         "tf_fall_spread": 3.725252,
         "tf_fall_spread_std": 1.814444,
-        "tf_spread": 12.448866,
-        "tf_spread_std": 0.490682,
         "tilt_r2": 0.015483,
         "tilt_r2_std": 0.0424185,
         "toppled_frac": 0.969444,
         "toppled_frac_std": 0.0103935
       },
-      "duration_s": 217.43,
+      "duration_s": 217.99,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -33,10 +33,16 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-12T17:33:27",
           "status": "FAIL"
+        },
+        {
+          "commit": "0fce271",
+          "message": "",
+          "ran_at": "2026-08-12T18:40:56",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "33c7cf6907e730c0",
-      "message": "",
+      "impl_sha": "4905bc0da710575b",
+      "message": "run did not test the claim; not a refutation",
       "metrics": {
         "auc": 0.926041,
         "auc_canals": 0.895731,
@@ -62,12 +68,12 @@
         "n_rows_train_std": 18.384776,
         "seed_gates_ok": 1.0,
         "seed_gates_ok_std": 0.0,
-        "seed_rig_ok": 1.0,
-        "seed_rig_ok_std": 0.0,
+        "seed_rig_ok": 0.666667,
+        "seed_rig_ok_std": 0.471405,
+        "tf_abs_spread": 12.448866,
+        "tf_abs_spread_std": 0.490682,
         "tf_fall_spread": 3.725252,
         "tf_fall_spread_std": 1.814444,
-        "tf_spread": 12.448866,
-        "tf_spread_std": 0.490682,
         "tilt_r2": 0.99937,
         "tilt_r2_shuffled": -0.0531421,
         "tilt_r2_shuffled_spread": 0.10045,
@@ -77,14 +83,14 @@
         "toppled_frac": 0.969444,
         "toppled_frac_std": 0.0103935
       },
-      "ran_at": "2026-08-12T18:40:56",
+      "ran_at": "2026-08-12T19:17:06",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "BA.01",
-      "status": "PASS"
+      "status": "VOID"
     },
     "DP.00": {
       "amended": [],

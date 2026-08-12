@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 74 / 165 demonstrated
+## 73 / 165 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -705,7 +705,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [x] **BA.01** He feels himself falling before he falls
+- [~] **BA.01** He feels himself falling before he falls  — auc=0.926041; auc_canals=0.895731
       - _asserts:_ Jack carries a sensed orientation signal - gravity's direction in his own body frame - from which a linear probe recovers tilt, and from which time-to-topple is predictable while he is still upright.
       - _dies if:_ Tilt unrecoverable, or a topple unpredictable until it has happened. Then balance is not a sense he has, it is an outcome he suffers, and no amount of training produces a creature that catches itself.
       - _then delete:_ Every locomotion and climbing claim that assumes he can tell up from down. W0.BAL - 'the rover topples' - has been an open queue entry rather than a spec; this is the falsifiable form of it.
