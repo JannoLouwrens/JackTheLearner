@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 72 / 165 demonstrated
+## 73 / 165 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -432,7 +432,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 4 — COMPOSITION — does adding B break A?
 
-- [ ] **UB.9** Heard, not seen: the task that is impossible without fusion
+- [x] **UB.9** Heard, not seen: the task that is impossible without fusion
       - _asserts:_ On a scene where audio gives object IDENTITY (modal fundamental) but not position, and a pre-event frame gives position but not which object fell, the fused model identifies the fallen object well above chance (>=0.75 mean over 3 seeds, lower bootstrap CI > 0.5).
       - _dies if:_ Fused accuracy indistinguishable from 0.5, OR indistinguishable from the unimodal late ensemble — either way nothing was bound.
       - _then delete:_ The sentence 'his senses work in unison'. This is the smallest experiment that could establish it and it costs no GPU; if it fails, no larger experiment rescues the claim.
@@ -705,7 +705,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **BA.01** He feels himself falling before he falls
+- [!] **BA.01** He feels himself falling before he falls  — auc=0.879834; auc_canals=0.8874
       - _asserts:_ Jack carries a sensed orientation signal - gravity's direction in his own body frame - from which a linear probe recovers tilt, and from which time-to-topple is predictable while he is still upright.
       - _dies if:_ Tilt unrecoverable, or a topple unpredictable until it has happened. Then balance is not a sense he has, it is an outcome he suffers, and no amount of training produces a creature that catches itself.
       - _then delete:_ Every locomotion and climbing claim that assumes he can tell up from down. W0.BAL - 'the rover topples' - has been an open queue entry rather than a spec; this is the falsifiable form of it.
