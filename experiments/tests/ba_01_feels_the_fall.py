@@ -65,16 +65,23 @@ the control and reported separately in the metrics.
    only feature — the headline must beat it by a pre-registered margin, not by
    rounding.
 
-2. **The rig makes every episode identical** — if every spawn topples on the
-   same schedule (the zero-perturbation pilot measured exactly this: passive
+2. **The rig makes every episode identical** — if every fall shares one
+   schedule (the zero-perturbation pilot measured exactly this: passive
    topple at ~10 decisions on most spawns), time-to-topple degenerates into
    the clock and the control could not have failed however honest the probe.
    So each episode draws a pre-registered LOG-uniform initial tilt (fall
    time goes as log(1/theta), so only a log draw spreads it) plus an
-   angular-velocity kick, and respawns to a fresh site; TF_SPREAD_MIN gates
-   that the spread actually happened, and rows are only eligible while
-   upright cosine >= UPRIGHT_ROW — the claim is about feeling the fall
-   EARLY, not about reading a body already at 45 degrees.
+   angular-velocity kick, and respawns to a fresh site. Two statistics
+   guard two different things and carry two names (v3): TF_FALL_SPREAD_MIN
+   gates the spread of FALL times alone — the detector for THIS failure
+   mode, fall dynamics degenerating onto one schedule — and
+   TF_ABS_SPREAD_MIN gates the spread of ABSOLUTE topple times (hold +
+   fall), which is what the clock null needs in order to be able to fail.
+   Under v2's rig the absolute spread includes the rig's own uniform hold,
+   so it can no longer see this failure mode — that discovery is v3's scar
+   (see the V3 section). Rows are only eligible while upright cosine >=
+   UPRIGHT_ROW — the claim is about feeling the fall EARLY, not about
+   reading a body already at 45 degrees.
 
 3. **The task is unscoreable and reports FAIL anyway** — too few topples, too
    few eligible rows, or a test set with one class. Those are rig failures,
@@ -149,6 +156,29 @@ Two more v1 defects fixed, neither a threshold:
 
 All pre-registered thresholds are UNTOUCHED from v1. V2 pilot numbers (seed
 90) are pre-registered in docs/LOOP_JOURNAL.md before the recorded run.
+
+## V3 (attempt 3, T1.02 precedent: strengthen only; v2's PASS stays in history)
+
+The overseer's 11th audit (RANK 1) found that v2 changed what TF_SPREAD_MIN
+BOUNDS without moving its number. v2 redefined tf_spread from the spread of
+FALL times to the spread of ABSOLUTE topple times, which include the rig's
+own uniform hold t_r ~ U{0..40}: std(t_r) alone is 11.85 decisions against
+the 2.5 gate, so a world with ZERO fall-time variance — failure mode #2 in
+its purest form — would clear the gate 4.7x on the strength of the rig's own
+RNG. The correct statistic, tf_fall_spread, was computed in the v2 diff and
+left ungated. Law 4 protects the number; nothing protected the measurement.
+
+V3 gates it: TF_FALL_SPREAD_MIN joins seed_rig_ok. Its value, 2.5, is the
+value already in the file's history — v1's TF_SPREAD_MIN gated exactly this
+quantity (no hold existed) and was set to 2.5 after the v1 pilot measured
+fall-time spread at 5.69; v1's registered run read 3.68 +/- 2.32. It is NOT
+chosen from v2's numbers. The absolute-spread statistic and its gate are
+RENAMED (tf_abs_spread, TF_ABS_SPREAD_MIN; value byte-identical) so that one
+name no longer carries two jobs: the absolute spread is what the clock null
+needs to be able to fail; the fall spread is failure mode #2's detector. A
+new gate on a previously ungated statistic is a strengthening — law 4
+permits it — and it is pre-registered in docs/LOOP_JOURNAL.md with the
+seed-90 pilot's tf_fall_spread beside it before the recorded run.
 """
 from __future__ import annotations
 
@@ -226,7 +256,14 @@ GRAV_DIM = 8 + VEST_DIM      # the orientation channel: touch + vestibular
 # ── pre-registered gates (set with margin after the seed-90 pilot;
 #    pilot numbers recorded beside each gate and in LOOP_JOURNAL.md) ─────
 TOPPLED_FRAC_MIN = 0.60      # a world with nothing falling tests nothing (VOID)
-TF_SPREAD_MIN = 2.5          # decisions, std of topple times (pilot 5.69)
+# V3: two spreads, two jobs, two names (11th audit, RANK 1 — see docstring).
+TF_ABS_SPREAD_MIN = 2.5      # decisions, std of ABSOLUTE topple times (hold +
+                             # fall): the clock null must be able to fail.
+                             # Renamed from TF_SPREAD_MIN, value untouched.
+TF_FALL_SPREAD_MIN = 2.5     # decisions, std of FALL times alone: failure mode
+                             # #2's detector. v1 gated this quantity at 2.5
+                             # (pilot 5.69, registered 3.68 +/- 2.32); v2 left
+                             # it ungated; v3 restores the gate at v1's value.
 MIN_CLASS_ROWS = 25          # test rows per class, else unscoreable (VOID)
 TILT_R2_MIN = 0.90           # linear probe recovers tilt-cosine (pilot 0.998)
 TILT_SHUF_R2_MAX = 0.05      # shuffled pairing must collapse (pilot < 0)
@@ -471,21 +508,25 @@ def _evaluate(seed: int, blind: bool) -> dict:
     tr, te = eps[:N_EP_TRAIN], eps[N_EP_TRAIN:]
     sl_x = slice(None, -GRAV_DIM) if blind else slice(-VEST_DIM, None)
 
-    # tf_spread is the spread of ABSOLUTE topple times (hold + fall): the
-    # quantity that must be wide for the clock null to be able to fail.
-    # tf_fall_spread reports the fall-dynamics spread alone, for the reader.
+    # tf_abs_spread is the spread of ABSOLUTE topple times (hold + fall): the
+    # quantity that must be wide for the clock null to be able to fail. Under
+    # this rig it includes the hold's own uniform t_r, so it says nothing
+    # about fall dynamics. tf_fall_spread is the spread of FALL times alone —
+    # the detector for every episode toppling on one schedule (failure mode
+    # #2) — and v3 gates it in seed_rig_ok.
     t_fs = [T_SETTLE + ep["t_r"] + ep["t_f"]
             for ep in eps if ep["t_f"] is not None]
     falls = [ep["t_f"] for ep in eps if ep["t_f"] is not None]
     toppled_frac = len(t_fs) / len(eps)
-    tf_spread = float(np.std(t_fs)) if t_fs else 0.0
+    tf_abs_spread = float(np.std(t_fs)) if t_fs else 0.0
+    tf_fall_spread = float(np.std(falls)) if falls else 0.0
 
     Xtr, ytr, ttr = _stack(tr)
     Xte, yte, tte = _stack(te)
     n_pos, n_neg = int(yte.sum()), int((1 - yte).sum())
 
-    out = {"toppled_frac": toppled_frac, "tf_spread": tf_spread,
-           "tf_fall_spread": float(np.std(falls)) if falls else 0.0,
+    out = {"toppled_frac": toppled_frac, "tf_abs_spread": tf_abs_spread,
+           "tf_fall_spread": tf_fall_spread,
            "median_t_f": float(np.median(t_fs)) if t_fs else float("nan"),
            "n_rows_train": float(len(ytr)), "n_pos_test": float(n_pos),
            "n_neg_test": float(n_neg)}
@@ -536,8 +577,13 @@ def _evaluate(seed: int, blind: bool) -> dict:
         # V2 split: rig health (the world could test the claim) is separate
         # from the sense gates (the claim held), because they carry different
         # verdicts — a degenerate rig is VOID, a failed sense is FAIL.
-        out["seed_rig_ok"] = 1.0 if (toppled_frac >= TOPPLED_FRAC_MIN
-                                     and tf_spread >= TF_SPREAD_MIN) else 0.0
+        # V3 adds the fall-spread gate: a world whose falls all share one
+        # schedule could not have tested the claim, however wide the hold
+        # makes the absolute spread.
+        out["seed_rig_ok"] = 1.0 if (
+            toppled_frac >= TOPPLED_FRAC_MIN
+            and tf_abs_spread >= TF_ABS_SPREAD_MIN
+            and tf_fall_spread >= TF_FALL_SPREAD_MIN) else 0.0
         gates = (out["auc"] >= AUC_MIN
                  and out["auc"] - out["auc_time"] >= AUC_TIME_MARGIN_MIN
                  and out["tilt_r2"] >= TILT_R2_MIN)
