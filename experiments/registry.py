@@ -345,7 +345,7 @@ LADDER: list[Spec] = [
     Spec("T1.07", 1, "Not knife-edge on learning rate",
          hypothesis="Training succeeds across a 10x LR range.",
          falsified_by="Only one LR works.",
-         null_baseline="n/a", metric="lrs_that_converged", budget=Budget.CPU,
+         null_baseline="n/a", metric="lrs_that_converged", budget=Budget.GPU,
          depends_on=["T1.01"],
          control="An ABSURD learning rate outside the claimed range must DIVERGE and lose its advantage over the mean-prediction baseline. Otherwise \"every LR worked\" is a statement about a task nothing can fail.",
          notes="A result that survives only at one LR will not survive a new task."),
@@ -353,7 +353,7 @@ LADDER: list[Spec] = [
     Spec("T1.08", 1, "Seed variance measured",
          hypothesis="Across 3 seeds the metric's std is small relative to the effect.",
          falsified_by="std >= the effect size being claimed.",
-         null_baseline="n/a", metric="metric_std", budget=Budget.CPU, seeds=1,
+         null_baseline="n/a", metric="metric_std", budget=Budget.GPU, seeds=1,
          depends_on=["T1.01"],
          control="Seeds must ACTUALLY change the outcome: an arm in which the seed is ignored must show a std of zero. A small measured std is only a noise floor if the seed was plumbed through at all.",
          kills="Any single-seed claim in this repo.",
@@ -364,7 +364,16 @@ LADDER: list[Spec] = [
                "jobs (_experiment ignores its seed argument) — 3x quota for zero "
                "information. That is also how a completed 37-min Kaggle result "
                "was thrown away on 2026-08-06: run #2 re-ran the staleness guard "
-               "against the budget file run #1 had just dirtied."),
+               "against the budget file run #1 had just dirtied. "
+               "BUDGET CPU->GPU 2026-08-12, a correction not a re-scope: this "
+               "spec has always dispatched a Colab job (est_hours=0.3, "
+               "timeout_s=3000) and the declaration said cpu<10min, so "
+               "`run._lock_for` routed it to the LOCAL CPU lock, which it then "
+               "held at 0.00 cores for the whole remote poll. That is the exact "
+               "failure the overflow slot exists to close, and the slot cannot "
+               "fire because it requires every holder to be `remote_only` — read "
+               "off THIS field. Measured: it blocked the builder's T0.22 run at "
+               "08:36 with the box idle. T1.07 carried the same lie."),
 
     Spec("T1.09", 1, "Fits in T4 memory",
          hypothesis="Peak VRAM < 14 GB at the intended batch size.",

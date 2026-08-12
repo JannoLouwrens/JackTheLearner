@@ -2749,3 +2749,42 @@ under every PASS that trains, and `run stale` flagged none of them, because
 `impl_sha` hashes the TEST file only. A capability claim depends on the
 production code it exercised just as much as on its own test. Staleness that
 stops at the test file is staleness with a blind spot the size of the codebase.
+
+## A field added to the ledger row is a schema change to a CROSS-PROCESS contract
+
+Both `Ledger.load` and `Ledger.record` rebuilt **every** row of the merged file
+with `Result(**row)`, so a key one process writes is a `TypeError` in any
+process holding an older class — raised *after* that process's run, *before* its
+result reaches disk, and reported upstream as "child recorded nothing". Two
+recorders overlapping is the normal state here, not an edge case: a CPU spec
+runs beside a GPU poll by design, and a poll can hold its class for six hours.
+
+Caught 2026-08-12 one edit before it fired. The queued unit of work added a
+`deps_sha` field while `T2.01` (6.5 Kaggle-hours, 45 minutes into its poll) and
+`T1.08` were both mid-flight on the previous class.
+
+**Rule:** a durable record read by more than one process at a time must tolerate
+keys it does not know BEFORE any writer emits one — forward-compatibility is a
+prerequisite for the field, not a follow-up to it. Tolerate, but do not swallow:
+report the unknown keys (`Result.unknown_keys`), or a hand-edited typo becomes
+indistinguishable from a future field. Guard: T0.22 P14, whose control is the
+strict `Result(**row)` kept executable.
+
+## A declaration that MACHINERY reads is code, and a false one is a live defect
+
+`T1.08` and `T1.07` declared `budget=CPU` while their implementations dispatched
+Colab jobs. That field is not documentation: `run._lock_for` routes on it, and
+`_exclusive`'s overflow slot — built precisely so an idle remote poll cannot
+block local work — requires every holder to be `remote_only`, which is read off
+the same field. So the two specs took the LOCAL CPU lock and held it at 0.00
+cores for the entire remote poll, re-creating the exact failure the overflow
+slot exists to close, and making it unfixable from inside that mechanism. It
+blocked this iteration's own `run T0.22` at 08:36 with the box idle.
+
+**Rule:** when a declared attribute is consumed by scheduling, routing,
+accounting or gating, an inaccurate value is not stale prose — it is a defect
+that the mechanism it feeds cannot detect, because the mechanism trusts it by
+construction. Any field of that kind needs a check that the declaration matches
+the behaviour (here: a test module that calls `gpu.submit` must declare a `gpu`
+budget, both directions). Specced for the next iteration; the scan that found
+the two is five lines over `module_path_for` + a regex.

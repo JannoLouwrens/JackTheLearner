@@ -31,7 +31,7 @@ broken one.
 from __future__ import annotations
 
 import re
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 
 from ..protocol import (Ledger, Result, Status, borrow_metrics, impl_sha_of,
@@ -134,7 +134,23 @@ def _legacy_is_code_dirt(porcelain_line: str) -> bool:
     return bool(path) and not path.endswith("ledger.json")
 
 
-N_PROPERTIES = 13
+def _legacy_from_row(row: dict) -> Result:
+    """Row -> Result as it stood before 2026-08-12: strict keyword expansion.
+
+    Kept executable, not described (T0.08 P5). This is not a decoy: it is the
+    exact expression that `Ledger.load` and `Ledger.record` both used, and the
+    one that raises inside a recorder holding an older class than the writer.
+    """
+    return Result(**row)
+
+
+#: A row from a hypothetical NEWER version of the runner. `deps_sha` is the
+#: field the next unit of work adds — named here on purpose, so this fixture is
+#: the actual migration and not an invented key.
+FUTURE_KEY = "deps_sha"
+
+
+N_PROPERTIES = 14
 
 
 def _probe(rule_is_legacy: bool) -> dict:
@@ -267,6 +283,54 @@ def _probe(rule_is_legacy: bool) -> dict:
             or dirt("")):
         failed.append("p13_runner_output_is_not_code_dirt")
 
+    # P14 — THE ROW SCHEMA IS A CROSS-PROCESS CONTRACT. Every property above
+    # asks whether a row still MEANS what it says; this one asks whether the row
+    # SURVIVES being read by a version that did not write it. Two processes
+    # record into this file at once by design (the hourly loop and a manual
+    # session, a CPU spec beside a GPU poll), and each rebuilds every row of the
+    # merged file in memory — so a field added by one is a `TypeError` in the
+    # other, thrown after its run and before its result reaches disk. Adding
+    # `deps_sha` on 2026-08-12 would have fired it on `T2.01` mid-poll, 6.5
+    # Kaggle-hours already spent.
+    # Both directions, because the tolerant half hides the strict half: a reader
+    # that accepts anything cannot tell a future field from a hand-edited typo,
+    # so the unknown key must be REPORTED, and a row with no unknown keys must
+    # report none.
+    reader = _legacy_from_row if rule_is_legacy else Result.from_row
+    healthy = _entry()
+    known_row = {**asdict(healthy), "status": healthy.status.value}
+    future_row = {**known_row, FUTURE_KEY: {"TrainingPipeline.py": "0" * 12}}
+    p14_ok = True
+    try:
+        back = reader({**future_row, "status": Status(future_row["status"])})
+        p14_ok = (back.spec_id == SOURCE
+                  and back.metrics == dict(VALUES)
+                  and tuple(getattr(back, "unknown_keys", ())) == (FUTURE_KEY,)
+                  # ...and the strict direction: nothing invented on a plain row
+                  and not getattr(reader({**known_row,
+                                          "status": Status(known_row["status"])}),
+                                  "unknown_keys", ()))
+    except TypeError:
+        p14_ok = False                      # the defect itself, kept executable
+    if p14_ok:
+        # The other half of the contract: an unknown key must not be DELETED by a
+        # writer that cannot parse it. Tolerating a field and then dropping it on
+        # the next write is the same data loss, one merge later.
+        import json as _json
+        import tempfile as _tempfile
+        with _tempfile.TemporaryDirectory() as td:
+            lp = Path(td) / "ledger.json"
+            lp.write_text(_json.dumps({"results": {SOURCE: future_row}}))
+            led = Ledger(path=lp)
+            led.record(Result(spec_id=DEP_SPEC_ID, status=Status.PASS,
+                              ran_at="2026-08-12T08:00:00", commit="7654321"))
+            raw = _json.loads(lp.read_text())["results"]
+            if (raw.get(SOURCE, {}).get(FUTURE_KEY) != future_row[FUTURE_KEY]
+                    or DEP_SPEC_ID not in raw):
+                p14_ok = False
+    if not p14_ok:
+        failed.append("p14_unknown_row_key_survives_a_foreign_reader")
+
     return {
         "properties_checked": float(N_PROPERTIES),
         "properties_failed": float(len(failed)),
@@ -317,7 +381,11 @@ def _check(m: dict, c: dict) -> Status | bool:
                       "p12_graph_and_rule_agree_on_the_same_row",
                       # and the rule one level down, whose output every one of
                       # the above consumes
-                      "p13_runner_output_is_not_code_dirt"} <= control_names
+                      "p13_runner_output_is_not_code_dirt",
+                      # and the row's own readability: a staleness verdict about
+                      # an entry nobody can load is not a weaker guard, it is a
+                      # crashed recorder
+                      "p14_unknown_row_key_survives_a_foreign_reader"} <= control_names
     return bool(experiment_clean and control_broken)
 
 

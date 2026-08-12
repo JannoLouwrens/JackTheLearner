@@ -3356,3 +3356,60 @@ unit mismatches*).
    nothing said so.
 3. LC.03 (frees 7, CPU, runs beside the GPU job) and UB.9 (frees 4, six
    iterations deferred now) are unchanged and untaken.
+
+---
+
+2026-08-12 08:07-08:55 — **Made the ledger row survivable before adding a field to
+it, and found the reason the box was idle.**
+
+**Attempted:** the hand-off's item 2 — `deps_sha`, so `run stale` can see that a
+change to production code invalidated a PASS. **Did not land it, deliberately,
+and this is the finding.** Adding the field would have killed the two runs in
+flight: `Ledger.record` and `Ledger.load` rebuilt every row of the merged file
+with `Result(**row)`, so the first new-schema row written by any process is a
+`TypeError` inside every process holding the previous class — after its run,
+before its result reaches disk. `T2.01` (PID 2160973, 6.5 Kaggle-hours, 45 min
+into its poll) and `T1.08` were both exactly that. `_run_isolated` would have
+reported "child recorded nothing" and the loss would have read as a crashed test.
+
+**Landed instead — the prerequisite:** `Result.from_row` drops unknown keys and
+records them on `unknown_keys` (tolerate, do not swallow); `load` and `record`
+both go through it; unknown keys already survive the merge on disk, and now
+survive the reader too. **T0.22 PASS, 14/14 properties** (was 13), P14 checking
+both directions plus the write path, control = the strict `Result(**row)` kept
+executable, and the control fails P14. `deps_sha` is now a safe edit for any
+process started after this commit.
+
+**Measured, unplanned:** `run T0.22` refused to start — `T1.08` held the local
+CPU lock at **0.00 cores for 30 minutes** while polling Colab. Cause: `T1.08`
+and `T1.07` declared `budget=CPU` while their implementations call
+`gpu.submit()`. `_lock_for` routes on that field, and `_exclusive`'s overflow
+slot (built for exactly this) needs every holder to be `remote_only`, read off
+the same field — so the mechanism could not see the case it was written for.
+**Both corrected to `Budget.GPU`** (a correction, not a re-scope: neither ever
+ran locally; rationale recorded in T1.08's `notes`). A five-line scan found
+exactly these two; T0.12/T0.23/T0.24 import `gpu` but only exercise fakes.
+
+T0.22 was run through the child path `_module_for(...).run(Ledger())` — the same
+call `_run_isolated` makes — because the lock was held by the defect being
+fixed, both holders measured at 0.00 cores. Stating it rather than hiding it.
+
+**Next iteration, in order:**
+1. **`deps_sha` is now unblocked and is the top hand-off** — record at run time
+   the repo-root `.py` modules the test actually imported (walk `sys.modules`,
+   filter to the repo root, exclude `experiments/`), store `{relpath: sha12}`,
+   add a `DEPS_CHANGED` kind to `staleness_of`, report it in `run stale`. Old
+   rows have no field, so today's blast radius is zero and it accrues honestly.
+   T0.22's `FUTURE_KEY` fixture already names it. **Check first that no process
+   started before commit `<this one>` is still recording** — that is the whole
+   point of the guard above.
+2. **T2.00 re-run, still the #1 blocker** (`run blocked`: frees 30, blocks 47).
+   It is PASS-but-DIRTY — the 1003 s run at 07:27 came from a modified tree. The
+   tree is clean now; ~17 min of CPU converts the largest blocker in the ladder
+   into a verified certificate. `T0.25` carries the same dirty stamp.
+3. **The guard for the lie found today:** a test module that calls `gpu.submit`
+   must declare a `gpu` budget, and one that declares `gpu` must submit. Both
+   directions, in T0.23's family (a budget mis-declaration is an accounting
+   defect: the field is what the GPU calendar plans against).
+4. `T2.01`'s Kaggle result and `T1.08`/`T1.07` in `/data/jack-data/*.log` were
+   still in flight at hand-off. Do not resubmit either.

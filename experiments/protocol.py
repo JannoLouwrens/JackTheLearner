@@ -29,7 +29,7 @@ import platform
 import subprocess
 import tempfile
 import time
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field, asdict, fields
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
@@ -190,6 +190,53 @@ class Result:
     valid value cannot be detected (the `Arm.cost` lesson).
     """
 
+    unknown_keys = ()
+    """Row keys this version's dataclass does not define, set by `from_row`.
+
+    Deliberately NOT a dataclass field: it describes how a row was READ, not
+    what a run measured, and `asdict` must never write it back into the ledger.
+    """
+
+    @classmethod
+    def from_row(cls, row: Dict[str, Any]) -> "Result":
+        """Build a Result from a ledger row, IGNORING keys this version lacks.
+
+        THE LEDGER ROW IS A CROSS-PROCESS CONTRACT, and `Result(**row)` made it a
+        contract that cannot be changed while anything is running. Every recorder
+        re-reads the whole file under the lock and rebuilds EVERY row in memory
+        (`Ledger.record`, `Ledger.load`), so one process writing a field a second
+        process's dataclass does not define raises `TypeError: unexpected keyword
+        argument` inside the second process's `record()` — after its run, before
+        its result reaches disk.
+
+        Caught 2026-08-12 as a near-miss, one edit before it fired: the next unit
+        of work adds a `deps_sha` field, and at that moment `T2.01` (a 6.5-hour
+        Kaggle job, PID 2160973, started 07:24) and `T1.08` were both mid-poll
+        holding the PREVIOUS class. Adding the field would have cost both runs at
+        the instant they tried to record — a schema change destroying finished
+        science it never touched, in a file whose whole purpose is to be the only
+        durable record. `run_isolated` would have reported "child recorded
+        nothing", so the loss would have read as a crashed test.
+
+        A field addition is therefore only safe if OLD readers tolerate it, which
+        must be true BEFORE the field exists — a rolling migration, not a flag
+        day. Unknown keys are kept on disk regardless (`record` merges the file
+        and only ever replaces the one row it is writing), so tolerating them
+        here loses nothing: a future version that defines the field reads its
+        value back.
+
+        Dropped keys are NOT silent — they are recorded on the instance as
+        `unknown_keys` so a hand-edited typo (`impl_shaa`) is discoverable rather
+        than swallowed. They are not dataclass fields, so `asdict` cannot write
+        them back out.
+        """
+        names = {f.name for f in fields(cls)}
+        known = {k: v for k, v in row.items() if k in names}
+        unknown = tuple(sorted(k for k in row if k not in names))
+        obj = cls(**known)
+        obj.unknown_keys = unknown
+        return obj
+
     @staticmethod
     def env_stamp() -> Dict[str, str]:
         root = Path(__file__).parent.parent
@@ -262,7 +309,10 @@ class Ledger:
         raw = json.loads(self.path.read_text())
         for rid, r in raw.get("results", {}).items():
             r["status"] = Status(r["status"])
-            self.results[rid] = Result(**r)
+            # from_row, not Result(**r): a row written by a NEWER version must
+            # still load here. See Result.from_row — the ledger row is a
+            # cross-process contract.
+            self.results[rid] = Result.from_row(r)
 
     def record(self, result: Result) -> None:
         """Merge ONE result into the ledger under an exclusive lock.
@@ -359,7 +409,10 @@ class Ledger:
                 for rid, raw in merged.items():
                     d = dict(raw)
                     d["status"] = Status(d["status"])
-                    fresh[rid] = Result(**d)
+                    # THIS is the line that would have killed a 6.5-hour GPU run
+                    # the first time a concurrent process wrote a field this
+                    # version does not define. See Result.from_row.
+                    fresh[rid] = Result.from_row(d)
                 self.results = fresh
             finally:
                 fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
