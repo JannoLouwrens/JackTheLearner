@@ -2485,8 +2485,8 @@
     },
     "T0.08": {
       "amended": [],
-      "attempt": 7,
-      "commit": "3695ee7+dirty",
+      "attempt": 8,
+      "commit": "2eaf2d0",
       "control_metrics": {
         "amendment_survived": false,
         "attempt_not_inflated": false,
@@ -2533,6 +2533,12 @@
           "message": "",
           "ran_at": "2026-08-11T20:37:35",
           "status": "PASS"
+        },
+        {
+          "commit": "3695ee7+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T23:13:29",
+          "status": "PASS"
         }
       ],
       "impl_sha": "989fa3d1cb6af184",
@@ -2553,7 +2559,7 @@
         "void_dep_blocks": true,
         "void_why_not_a_refutation": true
       },
-      "ran_at": "2026-08-12T23:13:29",
+      "ran_at": "2026-08-12T23:14:54",
       "seeds": [
         0
       ],
