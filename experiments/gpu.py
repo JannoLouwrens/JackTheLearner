@@ -27,7 +27,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
-from .protocol import DOC_OUTPUTS, is_code_dirt, porcelain_path
+from .protocol import is_code_dirt
 
 COLAB = "/data/venvs/colab/bin/colab"
 KAGGLE = "/data/venvs/kaggle/bin/kaggle"
@@ -120,19 +120,19 @@ def offending_dirt(porcelain_lines) -> list:
     first GPU run dirtied the tree and blocked the second. A guard that fails on
     its own side effects trains people to bypass it.
 
-    The exclusion is `protocol.RUNNER_OUTPUTS` — NOT a second list that happens
-    to agree. On 2026-08-12 the two lists disagreed by exactly one entry
-    (`gpu_budget.json`, which only this file knew about) and the `+dirty` stamp
-    on the other side blocked 47 specs off the runner's own accounting file.
-    `DOC_OUTPUTS` is the one place the two organs are allowed to differ.
+    The exclusion is `protocol.is_code_dirt` — NOT a second list that happens to
+    agree. On 2026-08-12 the two lists disagreed by exactly one entry each way:
+    this file knew `gpu_budget.json` was an output and `protocol.py` did not,
+    while `protocol.py`'s stamp called a `LOOP_JOURNAL.md` edit uncommitted code
+    and blocked 47 specs on it. Both organs answer ONE question — does this
+    uncommitted file mean the code moved — so there is now one predicate and
+    zero permitted difference. T0.22 P15 pins them together.
 
     A function over a fixture list, not an inline filter over the real tree, for
     the reason `is_code_dirt` was extracted: a predicate exercisable only by
     dirtying the repo it audits is a predicate nothing will ever test.
     """
-    allowed = set(DOC_OUTPUTS)
-    return [ln for ln in porcelain_lines
-            if is_code_dirt(ln) and porcelain_path(ln) not in allowed]
+    return [ln for ln in porcelain_lines if is_code_dirt(ln)]
 
 
 def assert_ref_is_current(ref: str = "main") -> None:

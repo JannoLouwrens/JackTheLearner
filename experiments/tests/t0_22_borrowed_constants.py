@@ -275,20 +275,33 @@ def _probe(rule_is_legacy: bool) -> dict:
     # A file the RUNNER WRITES is not evidence that CODE is uncommitted. Both
     # directions, because the flattering one hides: over-excluding would make a
     # genuinely dirty tree look clean.
-    # `gpu_budget.json` is named here for the same reason the others are: it is
-    # written by `Budget.charge()` at the end of every GPU job, so it is dirty
-    # for the whole window between a charge and the next commit — and until
-    # 2026-08-12 the stamp read that window as "the code that ran is in no
-    # commit". The stripped-first-line case is P13's too: `.stdout.strip()` eats
-    # one leading space, and a column slice then reads a different filename.
+    # Four fixtures were added on 2026-08-12, each naming a file the stamp got
+    # WRONG rather than a file invented to be gotten right:
+    #   gpu_budget.json  — written by `Budget.charge()` at the end of every GPU
+    #     job, so it is dirty for the whole window between a charge and the next
+    #     commit, and the stamp read that window as "code is in no commit".
+    #   LOOP_JOURNAL.md / CHECKLIST.md — this is the one that actually fired.
+    #     T2.00 was stamped `08444b2+dirty` by a journal edit; the commit that
+    #     cleaned that tree (`ae9693f`) contains three files and no code. 47
+    #     specs blocked, 998 s to re-run. The loop is INSTRUCTED to write both
+    #     files every iteration, so the collision is scheduled, not unlucky.
+    #   TrainingPipeline.py — the direction that must NOT move. T0.25's
+    #     `1ddcd27+dirty` was a TRUE positive from exactly this file, and an
+    #     exclusion list that grew until the true positive stopped firing would
+    #     have deleted the guard while passing every other property here.
+    # The stripped-first-line case is P13's too: `.stdout.strip()` eats one
+    # leading space, and a column slice then reads a different filename.
     dirt = _legacy_is_code_dirt if rule_is_legacy else is_code_dirt
     if (dirt(" M experiments/gpu_submissions.jsonl")
             or dirt("?? experiments/gpu_submissions.jsonl")
             or dirt(" M experiments/ledger.json")
             or dirt(" M experiments/gpu_budget.json")
             or dirt("M experiments/gpu_budget.json")
+            or dirt(" M docs/LOOP_JOURNAL.md")
+            or dirt(" M CHECKLIST.md")
             or not dirt(" M experiments/run.py")
             or not dirt("M experiments/run.py")
+            or not dirt(" M TrainingPipeline.py")
             or not dirt("?? experiments/tests/t9_99_not_a_real_test.py")
             or dirt("")):
         failed.append("p13_runner_output_is_not_code_dirt")
@@ -346,23 +359,22 @@ def _probe(rule_is_legacy: bool) -> dict:
     # answer "is this uncommitted line evidence that code moved", and each kept
     # its own hand-maintained exclusion list. They diverged by exactly one entry:
     # `gpu.py` had learned (twice, by deadlocking on it) that `gpu_budget.json`
-    # is an output, `protocol.py` never did — and the half that had not learned
-    # was the half wired to `blocked_by`, so the runner's own accounting file
-    # stamped `+dirty` on every CPU run in the window after a GPU charge.
-    # Neither organ could see it from inside; only the comparison can.
-    # Both directions: a real source file must offend BOTH, or an exclusion that
+    # is an output and `protocol.py` never did; `protocol.py` called a journal
+    # edit uncommitted code and `gpu.py` never did. Each list was missing what
+    # the other had paid to learn, and the half wired to `blocked_by` was the
+    # half that blocked 47 specs. Neither organ could see it from inside; only
+    # the comparison can. There is now ONE predicate and no permitted
+    # difference, which is what this property pins.
+    # Both directions: real source files must offend BOTH, or an exclusion that
     # swallowed everything would score full marks here.
     from ..gpu import offending_dirt
-    code_lines = [" M experiments/run.py", "?? experiments/tests/t9_99.py"]
+    code_lines = [" M experiments/run.py", "?? experiments/tests/t9_99.py",
+                  " M TrainingPipeline.py"]
     out_lines = [f" M experiments/{o}" for o in RUNNER_OUTPUTS]
+    out_lines += [f" M {d}" for d in DOC_OUTPUTS]
     disagree = [ln for ln in code_lines + out_lines
                 if dirt(ln) != bool(offending_dirt([ln]))]
-    # ...and the sanctioned difference stays sanctioned rather than drifting:
-    # docs are code dirt for the stamp and allowed by the push guard, because a
-    # journal edit cannot change what the VM runs.
-    docs_ok = all(dirt(f" M {d}") and not offending_dirt([f" M {d}"])
-                  for d in DOC_OUTPUTS)
-    if disagree or not docs_ok or offending_dirt(code_lines) != code_lines:
+    if disagree or offending_dirt(code_lines) != code_lines:
         failed.append("p15_stamp_and_push_guard_agree_on_the_same_file")
 
     return {

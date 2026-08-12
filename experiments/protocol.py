@@ -50,13 +50,32 @@ LEDGER_PATH = Path(__file__).parent / "ledger.json"
 #: itself); this list did not, which is why they are now ONE list.
 RUNNER_OUTPUTS = ("ledger.json", "gpu_submissions.jsonl", "gpu_budget.json")
 
-#: Files the LOOP writes around a run — rendered status and the journal. Not
-#: runner outputs (no run writes them mid-flight), so they still count as code
-#: dirt for the `+dirty` stamp; but they cannot make a GPU job's code differ
-#: from ours, so `gpu.assert_ref_is_current` allows them. The two organs differ
-#: here ON PURPOSE, and the difference is named in one place instead of being
-#: an accident of two hand-maintained lists.
+#: Files the LOOP writes around a run — rendered status and the journal. Also
+#: not code, and the evidence is a stamp this project already paid for: T2.00's
+#: `08444b2+dirty` was caused by `docs/LOOP_JOURNAL.md`, nothing else. Commit
+#: `ae9693f`, which cleaned that tree, touches THREE files and not one of them
+#: is code. The stamp said "the code that ran is in no commit" about a run whose
+#: code was fully committed, `blocked_by` propagated it to 47 specs, and it cost
+#: a 998-second re-run to clear.
+#:
+#: This is not incidental — it is guaranteed by the loop's own instructions.
+#: Every iteration is told to finish by appending to `LOOP_JOURNAL.md` and
+#: re-rendering `CHECKLIST.md`, and the hourly builder overlaps runs that last
+#: hours. So a doc edit is uncommitted at the moment some OTHER spec records,
+#: routinely. The next occurrence was T2.01, 6.5 Kaggle-hours, recording while
+#: this was written.
+#:
+#: `CHECKLIST.md` is generated FROM the ledger (`run.render`) and
+#: `LOOP_JOURNAL.md` is read by no code at all: both are write-only outputs, so
+#: excluding them cannot mask a real change to anything executable. The genuine
+#: positive is preserved and was checked, not assumed: T0.25's `1ddcd27+dirty`
+#: came from an uncommitted `TrainingPipeline.py`, and still stamps.
 DOC_OUTPUTS = ("CHECKLIST.md", "docs/LOOP_JOURNAL.md")
+
+#: The whole answer to "does this uncommitted file mean CODE moved". One list,
+#: because the two organs that ask it — the `+dirty` stamp and the GPU push
+#: guard — were two lists, and they diverged by exactly one entry.
+NOT_CODE = RUNNER_OUTPUTS + DOC_OUTPUTS
 
 
 def porcelain_path(porcelain_line: str) -> str:
@@ -85,7 +104,7 @@ def is_code_dirt(porcelain_line: str) -> bool:
     path = porcelain_path(porcelain_line)
     if not path:
         return False
-    return not any(path.endswith(o) for o in RUNNER_OUTPUTS)
+    return not any(path.endswith(o) for o in NOT_CODE)
 
 
 class Status(str, Enum):
