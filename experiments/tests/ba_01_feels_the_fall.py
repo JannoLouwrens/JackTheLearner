@@ -179,6 +179,44 @@ needs to be able to fail; the fall spread is failure mode #2's detector. A
 new gate on a previously ungated statistic is a strengthening — law 4
 permits it — and it is pre-registered in docs/LOOP_JOURNAL.md with the
 seed-90 pilot's tf_fall_spread beside it before the recorded run.
+
+## V4 (attempt 4, T1.02 precedent: strengthen only; v3's VOID stays in history)
+
+V3's new gate promptly took back v2's PASS — seed 2's world read
+tf_fall_spread 1.49 — and the diagnosis (three measurements, journal
+2026-08-12 ~20:45) says the gate was unreachable on OPEN GROUND by
+construction, on every world: (1) the post-release fall-time bulk is
+~7 +/- 1.5-2.2 decisions per world (q10-q90 = 4-10); v3's passing seeds
+cleared 2.5 on 1-2 rare structure-outlier falls — tail lottery, and seed 2
+just drew no outliers. (2) The slow side is FLOORED by the contact solver:
+with zero arm noise and 0.1 deg tilt the body still falls in 9-10 decisions,
+so open-ground fall times live in [3,10] and their std cannot exceed ~2.2.
+(3) The v3 kick draw, independent of the tilt draw, erased the tilt spread —
+a 0.6 rad/s kick is ~8.6 deg equivalent and overrides a 0.1 deg tilt.
+
+V4 changes the RIG so fall dynamics genuinely spread; every gate is
+byte-identical to v3's (nothing moved, nothing renamed):
+
+  KICK IS TILT-PROPORTIONAL. |kick| = theta * KICK_OMEGA_P * 10^U[KICK_JIT],
+  random direction, so the two-decade log-tilt spread survives into fall
+  times instead of being overwritten by an independent kick.
+
+  BOUNDARY SPAWNS. With probability P_STRUCT the episode spawns at a legal
+  cell whose nearest ILLEGAL spawn-grid cell is within STRUCT_STEPS grid
+  steps — "beside an obstacle", derived from the live model's own legal-spawn
+  probe (the PG.8 reference-don't-transcribe rule; 42-65 such sites per
+  world) — and the tilt's fall direction aims at that cell's bearing plus
+  AIM_JITTER*randn. Falls then lean, slide and catch on world geometry,
+  which is where v1's fall spread always came from.
+
+  Rig health measured before registration at N_EP=120 on ALL FOUR worlds
+  (rig-health quantities only — no sense gate was computed outside pilot
+  seed 90): fall std 6.14-8.27, toppled 0.93-0.98, boundary sites 42-65.
+
+  KNOWN RISK, gated by the UNMOVED control gates: struct episodes could leak
+  structure proximity into the blind block (arm slides stalling on walls),
+  which the control cap 0.70 / margin 0.15 exists to catch; the pilot must
+  show the margin before the registered run.
 """
 from __future__ import annotations
 
@@ -193,7 +231,8 @@ ensure_gl()
 
 from ..protocol import Ledger, Status, borrow_metrics, run_spec   # noqa: E402
 from ..registry import BY_ID                                      # noqa: E402
-from ..w0 import W0, SIM_S_PER_DECISION                           # noqa: E402
+from ..w0 import (W0, SIM_S_PER_DECISION,                         # noqa: E402
+                  SPAWN_GRID, SPAWN_MARGIN)
 
 # The claim is about the world's body and its senses, so it goes stale when
 # either moves.
@@ -219,14 +258,24 @@ HORIZON = 80                 # decisions = 16 s; worst case hold 40 + fall ~15
 HOLD_MAX = 40                # v2: t_r ~ U{0..40} decisions of pinned-in-place
 T_SETTLE = 3                 # v2: settle decisions before the hold pose is set
 TILT0_LOG10_DEG = (-1.0, 1.15)   # theta ~ 10^U[...]: 0.1 to 14 deg
-# V2: the kick MAGNITUDE is drawn log-uniformly per episode, for the same
-# reason the tilt is (fall time goes as log of the perturbation, so only a
-# log draw spreads it). One fixed kick scale sent every episode down in
-# ~7-12 decisions and starved the negative class: with all falls fast, the
-# only scoreable question left was "<=5 vs 6-11 decisions from topple".
-# Slow-kick episodes fall over tens of decisions and supply the honest
-# "falling, but not yet" rows.
-OMEGA0_LOG10 = (-2.0, -0.22)     # |kick| ~ 10^U[...]: 0.01 to 0.6 rad/s
+# V4: the kick is TILT-PROPORTIONAL. v2's independent log-uniform kick draw
+# (10^U[-2.0,-0.22] rad/s) kept the negative class alive but ERASED the tilt
+# spread it was meant to complement — a 0.6 rad/s kick is ~8.6 deg
+# equivalent and overrides a 0.1 deg tilt, so fall times collapsed onto the
+# kick's own schedule. |kick| = theta * KICK_OMEGA_P * 10^U[KICK_JIT],
+# random direction: the perturbation ENERGY now spans the tilt draw's two
+# decades and the jitter varies it another ~1.2 decades around that.
+KICK_OMEGA_P = 3.5               # 1/s: kick rad/s per rad of drawn tilt
+KICK_JIT = (-0.7, 0.5)           # log10 jitter around the proportional kick
+# V4: boundary spawns. Fall-time spread on open ground is capped at ~2.2
+# decisions by the contact solver's own floor (measured: 0.1 deg tilt at
+# zero arm noise still falls in 9-10 decisions), so the fall-dynamics
+# spread the tf_fall_spread gate demands must come from world GEOMETRY —
+# falls that lean, slide and catch on structure. Sites are derived from the
+# live model's legal-spawn grid, never written down (PG.8).
+P_STRUCT = 0.65                  # P(episode spawns beside structure)
+STRUCT_STEPS = 1.5               # grid steps to nearest illegal cell, max
+AIM_JITTER = 0.4                 # rad, randn jitter on the aimed bearing
 ARM_NOISE = 0.3              # slide actions ~ U[-1,1] * this; drive+adhesion 0
 GRAVITY = 9.81
 N_SHUF = 8                   # v2: permutations averaged for the shuffle null
@@ -284,15 +333,53 @@ def _calibration() -> tuple:
     return b.values["j0_ms"], b.values["alpha"], b.provenance
 
 
-def _tilt_quat(rng: np.random.RandomState) -> np.ndarray:
-    theta = math.radians(10.0 ** rng.uniform(*TILT0_LOG10_DEG))
-    phi = rng.uniform(0.0, 2.0 * math.pi)
+def _tilt_quat(theta: float, lean_bearing: float) -> np.ndarray:
+    """World-frame tilt of `theta` rad whose LEAN points at `lean_bearing`.
+
+    A rotation about the horizontal axis (cos phi, sin phi, 0) leans the
+    body's up-axis toward (sin phi, -cos phi): Rodrigues with v = z_hat and
+    u.v = 0 gives v' = z_hat cos(theta) + (u x z_hat) sin(theta), and
+    u x z_hat = (sin phi, -cos phi, 0). So aiming the lean at bearing b
+    means phi = b + pi/2. Verified numerically in the v4 pilot rig.
+    """
+    phi = lean_bearing + math.pi / 2.0
     s = math.sin(theta / 2.0)
     return np.array([math.cos(theta / 2.0),
                      math.cos(phi) * s, math.sin(phi) * s, 0.0])
 
 
-def _episode(w: W0, rng: np.random.RandomState) -> dict:
+def _boundary_sites(w: W0) -> np.ndarray:
+    """(S, 3) rows of (x, y, bearing-to-structure), derived from the model.
+
+    A boundary site is a LEGAL spawn cell whose nearest ILLEGAL cell on the
+    same spawn grid lies within STRUCT_STEPS grid steps — "beside an
+    obstacle" as the world's own legal-spawn probe defines obstacle, never a
+    hand-written list (the PG.8 rule: when you can reference, reference).
+    The bearing points at that nearest illegal cell, so an aimed tilt sends
+    the fall INTO the geometry rather than merely near it.
+    """
+    a = float(w.params.arena_size) - SPAWN_MARGIN
+    axis = np.linspace(-a, a, SPAWN_GRID)
+    step = float(axis[1] - axis[0])
+    legal = w.legal_spawns()
+    legal_set = {(round(float(x), 9), round(float(y), 9)) for x, y in legal}
+    illegal = np.array([(x, y) for x in axis for y in axis
+                        if (round(float(x), 9), round(float(y), 9))
+                        not in legal_set])
+    if len(illegal) == 0:
+        return np.zeros((0, 3))
+    sites = []
+    for x, y in legal:
+        d = np.hypot(illegal[:, 0] - x, illegal[:, 1] - y)
+        k = int(np.argmin(d))
+        if d[k] <= STRUCT_STEPS * step:
+            b = math.atan2(illegal[k, 1] - y, illegal[k, 0] - x)
+            sites.append((float(x), float(y), b))
+    return np.asarray(sites, dtype=np.float64)
+
+
+def _episode(w: W0, rng: np.random.RandomState,
+             sites: np.ndarray) -> dict:
     """One hold-then-release episode: respawn, hold upright, release, fall.
 
     Actions move ONLY the four arm slides. The drive dims are a world-frame
@@ -311,7 +398,16 @@ def _episode(w: W0, rng: np.random.RandomState) -> dict:
     it, so a pre-release label would be noise on both sides of the test.
     """
     mujoco = w.mujoco
-    w.respawn()
+    # V4: boundary spawn with an aimed fall, else uniform legal with a
+    # uniform fall direction. The struct flag is reported, never gated.
+    struct = bool(len(sites) > 0 and rng.rand() < P_STRUCT)
+    if struct:
+        k = int(rng.randint(len(sites)))
+        w.respawn(at=(sites[k][0], sites[k][1]))
+        aim = float(sites[k][2]) + float(rng.randn()) * AIM_JITTER
+    else:
+        w.respawn()
+        aim = float(rng.uniform(0.0, 2.0 * math.pi))
     qa, da = w.ix["root_qposadr"], w.ix["root_dofadr"]
     t_r = int(rng.randint(0, HOLD_MAX + 1))
     # Settle: let the spawn's 1 cm drop dissipate with only orientation
@@ -337,15 +433,19 @@ def _episode(w: W0, rng: np.random.RandomState) -> dict:
         w.data.qpos[qa:qa + 7] = q_hold
         w.data.qvel[da:da + 6] = 0.0
         mujoco.mj_forward(w.model, w.data)
-    # Release: tilt the root about the world frame, kick its angular velocity.
+    # Release: tilt the root about the world frame (lean aimed per the spawn),
+    # kick its angular velocity in proportion to the drawn tilt (V4).
+    theta = math.radians(10.0 ** rng.uniform(*TILT0_LOG10_DEG))
     q0 = w.data.qpos[qa + 3:qa + 7].copy()
-    qt = _tilt_quat(rng)
+    qt = _tilt_quat(theta, aim)
     out = np.zeros(4)
     mujoco.mju_mulQuat(out, qt, q0)
     w.data.qpos[qa + 3:qa + 7] = out
     w.data.qvel[da:da + 6] = 0.0
-    mag = 10.0 ** rng.uniform(*OMEGA0_LOG10)
-    w.data.qvel[da + 3:da + 6] = rng.randn(3) * mag
+    mag = theta * KICK_OMEGA_P * 10.0 ** rng.uniform(*KICK_JIT)
+    u = rng.randn(3)
+    u /= max(float(np.linalg.norm(u)), 1e-12)
+    w.data.qvel[da + 3:da + 6] = u * mag
     mujoco.mj_forward(w.model, w.data)
 
     rows, uprights = [], []
@@ -376,7 +476,7 @@ def _episode(w: W0, rng: np.random.RandomState) -> dict:
         w.decide(act)
     return {"X": np.asarray(rows, dtype=np.float64),
             "upright": np.asarray(uprights, dtype=np.float64),
-            "t_f": t_f, "t_r": t_r}
+            "t_f": t_f, "t_r": t_r, "struct": struct}
 
 
 def _collect(seed: int) -> dict:
@@ -393,9 +493,11 @@ def _collect(seed: int) -> dict:
         _CACHE[seed] = {"refused": prov}
         return _CACHE[seed]
     w = W0(seed=seed, j0=j0, alpha=alpha, lethal=False)
+    sites = _boundary_sites(w)          # V4: derived once per seed, cached
     rng = np.random.RandomState(seed * 7907 + 11)
-    eps = [_episode(w, rng) for _ in range(N_EP_TRAIN + N_EP_TEST)]
-    _CACHE[seed] = {"eps": eps, "prov": prov}
+    eps = [_episode(w, rng, sites) for _ in range(N_EP_TRAIN + N_EP_TEST)]
+    _CACHE[seed] = {"eps": eps, "prov": prov,
+                    "n_boundary_sites": float(len(sites))}
     return _CACHE[seed]
 
 
@@ -529,7 +631,11 @@ def _evaluate(seed: int, blind: bool) -> dict:
            "tf_fall_spread": tf_fall_spread,
            "median_t_f": float(np.median(t_fs)) if t_fs else float("nan"),
            "n_rows_train": float(len(ytr)), "n_pos_test": float(n_pos),
-           "n_neg_test": float(n_neg)}
+           "n_neg_test": float(n_neg),
+           # V4 rig descriptors, reported never gated: how much of the fall
+           # spread rides on geometry, and whether this world offers any.
+           "n_boundary_sites": c["n_boundary_sites"],
+           "struct_frac": float(np.mean([ep["struct"] for ep in eps]))}
     if n_pos < MIN_CLASS_ROWS or n_neg < MIN_CLASS_ROWS or len(ytr) < 100:
         out["probe"] = "VOID"
         out["auc"] = float("nan")
