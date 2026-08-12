@@ -3760,30 +3760,37 @@
     },
     "T1.08": {
       "amended": [],
-      "attempt": 1,
-      "commit": "29a6de2",
+      "attempt": 2,
+      "commit": "d74e1bd",
       "control_metrics": {
         "distinct_results": 3,
-        "spread": 0.04209012
+        "spread": 0.00566095
       },
-      "duration_s": 1291.45,
+      "duration_s": 1983.01,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "29a6de2",
+          "message": "",
+          "ran_at": "2026-08-06T07:40:15",
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "64162192cce522dd",
       "message": "",
       "metrics": {
-        "backend": "kaggle",
-        "effect": 0.23644,
-        "gpu": "Tesla P100-PCIE-16GB",
-        "heldout_cv_pct": 40.006,
-        "heldout_mean": 0.05849,
-        "heldout_std": 0.023399,
-        "min_detectable_effect": 0.046797,
-        "seed_noise": 0.023399,
+        "backend": "colab",
+        "effect": 0.24513,
+        "gpu": "Tesla T4",
+        "heldout_cv_pct": 5.717,
+        "heldout_mean": 0.0498,
+        "heldout_std": 0.002847,
+        "min_detectable_effect": 0.005694,
+        "seed_noise": 0.002847,
         "seeds": 3,
-        "snr": 10.1
+        "snr": 86.09
       },
-      "ran_at": "2026-08-06T07:40:15",
+      "ran_at": "2026-08-12T08:17:36",
       "seeds": [
         0
       ],
