@@ -511,6 +511,25 @@ class TrainingPipeline:
         """
         gamma = self.config.gamma
         gae_lambda = self.config.gae_lambda
+        normalize = getattr(self.config, "normalize_returns", True)
+
+        # ── ONE UNIT SYSTEM. Read this before touching the recursion. ──
+        # The critic is trained on returns AFTER they are divided by the running
+        # return-std (below), so at rollout time it emits V/scale -- not V. The
+        # delta below adds RAW rewards to those values. Un-normalising the
+        # baseline first is what makes the subtraction mean anything.
+        #
+        # Without this line the estimator was measured (T0.25) to leave 76% of
+        # the advantage variance standing under a PERFECTLY trained critic: the
+        # baseline was ~28x too small at Humanoid scale, delta reduced to r_t,
+        # and PPO ran as REINFORCE with a batch-mean baseline. It cost 6.5
+        # Kaggle-hours as T2.01 v4's plateau (1.19 sigma, one seed trained BELOW
+        # its untrained control) before anyone asked what the critic subtracted.
+        # It is invisible at a fresh pipeline, where the running scale is
+        # exactly 1.0 and the two unit systems agree by coincidence.
+        scale_in = (torch.sqrt(self.ret_var + 1e-8).clamp(min=1e-3) if normalize
+                    else torch.ones((), device=rewards.device))
+        old_values = old_values * scale_in
 
         # ── GAE advantage estimation ──
         # Accepts both layouts: (T,) from collect_rollout, or (T, N) from
@@ -529,7 +548,7 @@ class TrainingPipeline:
             advantages[t] = last_gae = delta + gamma * gae_lambda * (1 - dones[t]) * last_gae
         returns = advantages + old_values
 
-        if getattr(self.config, "normalize_returns", True):
+        if normalize:
             # Scale (not centre) by a running std of returns: centring would bias
             # the value target, scaling only fixes the loss magnitude. Advantages
             # are normalised separately below, per batch, as PPO expects.

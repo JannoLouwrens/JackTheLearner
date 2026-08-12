@@ -3362,6 +3362,47 @@
       "spec_id": "T0.24",
       "status": "PASS"
     },
+    "T0.25": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "1ddcd27+dirty",
+      "control_metrics": {
+        "fresh_null_adv_std": 1.0,
+        "fresh_residual_ratio": 0.0,
+        "fresh_scale": 1.0,
+        "max_residual_ratio": 0.76207,
+        "warmed_null_adv_std": 1.0,
+        "warmed_residual_ratio": 0.76207,
+        "warmed_scale": 7.9038
+      },
+      "duration_s": 3.01,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "1ddcd27",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-12T07:15:37",
+          "status": "FAIL"
+        }
+      ],
+      "impl_sha": "4ee1474acc3efee2",
+      "message": "",
+      "metrics": {
+        "fresh_null_adv_std": 1.0,
+        "fresh_residual_ratio": 0.0,
+        "fresh_scale": 1.0,
+        "max_residual_ratio": 0.0,
+        "warmed_null_adv_std": 1.0,
+        "warmed_residual_ratio": 0.0,
+        "warmed_scale": 7.9038
+      },
+      "ran_at": "2026-08-12T07:16:03",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.25",
+      "status": "PASS"
+    },
     "T1.01": {
       "amended": [],
       "attempt": 1,
