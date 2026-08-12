@@ -2997,3 +2997,30 @@ literally — and either apply the same discipline to each or write down why it
 is not needed. Guard: `Budget.charge()` now locks, re-reads, and atomically
 replaces (T0.12 property 10, with the pre-fix stale writer kept executable as
 the control that must fail both concurrency properties).
+
+## A count that gates decisions inherits the meaning of its loosest member
+
+`coverage.report`'s `n_pass` answered "has this commitment been demonstrated",
+and it counted every passing spec that declared the commitment. Two of those
+passes were not demonstrations: PG.4 proved the noisy-TV **trap** traps a
+naive agent (apparatus for a curiosity claim), and LC.01 proved the admission
+**rule** excludes unbound cores (a gate on candidates, not a capability). With
+them credited, `curiosity` read 1/12 and `one brain / unison` read 1/21, and
+the standing rule that hunts zero-pass constitutional commitments — the
+project's only instrument for "the ladder quietly never started this" — could
+not see either hole. It took the overseer three consecutive audits to get the
+distinction acted on, precisely because a nonzero count is coverage nobody
+audits (the same asymmetry as scar 2 in `coverage.py`, one level up: first
+accidental WORDS bought coverage, then honest-but-heterogeneous DECLARATIONS
+did).
+
+**Rule:** when a single count aggregates heterogeneous contributors and
+something routes or ranks on it, the count silently means whatever its
+weakest contributor means. Type the contributors at declaration time — here
+`COVERS: <name> (claim|fixture|rule|sensor)` — count only the kind the
+question asks about, and REPORT the rest beside the count rather than merging
+or hiding them. Expect this to recur one level up: the next version is a
+`(claim)` spec whose test in fact measures its own apparatus, and only
+reading the test catches that. Guard: T0.21 P8, both directions (a claim PASS
+must count, a fixture PASS must not, a typo'd kind is reported not credited),
+with the kind-blind rule kept as the control that fails it.

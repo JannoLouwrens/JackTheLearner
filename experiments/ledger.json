@@ -3289,17 +3289,17 @@
     },
     "T0.21": {
       "amended": [],
-      "attempt": 8,
-      "commit": "97f9419",
+      "attempt": 10,
+      "commit": "60686ac",
       "control_metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
         "declared_specs_live": 86.0,
-        "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p6_deleted_spec_loses_coverage",
+        "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p6_deleted_spec_loses_coverage,p8_kind_decides_what_a_pass_buys",
         "malformed_declarations_live": 0.0,
         "nominated_not_declared": 19.0,
-        "properties_checked": 7.0,
-        "properties_failed": 4.0
+        "properties_checked": 8.0,
+        "properties_failed": 5.0
       },
       "duration_s": 1.23,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
@@ -3345,9 +3345,21 @@
           "message": "",
           "ran_at": "2026-08-12T12:19:52",
           "status": "PASS"
+        },
+        {
+          "commit": "97f9419",
+          "message": "",
+          "ran_at": "2026-08-12T13:23:28",
+          "status": "PASS"
+        },
+        {
+          "commit": "d4b7777+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T14:11:52",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "4d0501462a6560fe",
+      "impl_sha": "e4aec98215f138bb",
       "message": "",
       "metrics": {
         "commitments": 23.0,
@@ -3356,10 +3368,10 @@
         "failed_names": "",
         "malformed_declarations_live": 0.0,
         "nominated_not_declared": 19.0,
-        "properties_checked": 7.0,
+        "properties_checked": 8.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-12T13:23:28",
+      "ran_at": "2026-08-12T14:12:22",
       "seeds": [
         0
       ],
