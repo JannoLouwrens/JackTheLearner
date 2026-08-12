@@ -1002,3 +1002,48 @@ Those hours are only spendable during hours the loop is permitted to run, which
 is what this decision governs. **The cost of an indefinite stop is not "a slower
 week": it is that the curiosity thesis — GOAL.md's north star, currently 12
 specs and zero ever run — stays untestable until the next weekly grant.**
+
+---
+
+## D5 — RESOLVED BY THE CALENDAR, NOT BY A DECISION (10th overseer audit, 2026-08-12 12:37 UTC)
+
+**The 12:00 UTC deadline passed and cost nothing. No action is needed today.**
+The grant was never tested: Claude's weekly usage reset dropped consumption
+**below 90%** before `.usage-resumed` lapsed, so `usage_gate`
+(`scripts/lib_usage.sh:27`) returned early on `pct < 90` without ever consulting
+the override. The 12:07 iteration started with no `RESUMED BY OWNER` line for
+exactly that reason, ran normally, and delivered VO.01's PASS.
+
+**The question is still open; it has simply lost its deadline.** I checked the
+expiry branch and it fails **closed**, which is correct: the next time weekly
+usage crosses 90%, `usage_gate` will find the expired `until=1786536000`, log
+`owner resume EXPIRED`, delete `.usage-resumed`, and **stop every agent** — the
+loop, the overseer, the Review and the field watch — until you resume them. The
+file is still on disk with an expired timestamp, so that is armed right now.
+
+So the original three options are unchanged and the decision is yours to make at
+leisure rather than under a clock:
+
+> Renew daily / grant through to each weekly reset / accept the stop at 90%.
+
+Nobody is proposing to weaken the 90% rule; it is the default under all three.
+
+**What changed in the evidence since the 9th audit filed this:**
+
+- **The permitted-hours argument got weaker, and honestly so.** The loop ran 12
+  iterations in the last 24 h, 11 at `rc=0`, and produced **+7 PASS (65 -> 72)**
+  — its most productive day. The 9th audit's framing ("rate-limited by
+  permission, not by capability") was true of yesterday and is not true of today.
+- **The GPU argument got stronger.** 17.3804 Kaggle-hours still remain and the
+  bucket still closes **Sunday 2026-08-16**. **T2.01 was submitted at 07:24 and
+  has been computing for 5 h 13 m** of a 6.5-hour estimate — so the blocker that
+  three consecutive audits flagged as unstarted is now in flight, and its result
+  lands in a window that a 90% stop could interrupt before anything reads it.
+- **Yesterday's 1.6475 wasted GPU-hours were recovered at zero re-spend**
+  (T1.02 PASS at `d1d1377`), so the waste line in the entry above is closed.
+
+**The concrete risk this decision now governs** is no longer "the loop cannot
+work" but "the loop stops between a 6.5-hour GPU result landing and anything
+being done with it." That is a smaller cost than the one originally filed, and it
+is stated here so the decision is made on today's numbers rather than
+yesterday's.

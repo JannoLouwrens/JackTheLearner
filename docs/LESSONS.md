@@ -634,6 +634,43 @@ so the honest reading of a green T0.12 today is *"the meter is internally
 coherent and charges only what a job plausibly spent"*, not *"the meter agrees
 with Kaggle."*
 
+**CORRECTION, 2026-08-12 (10th overseer audit). The GUARD above is wrong about
+reattach, and the way it is wrong is the generalisable part.** `job_id=` closed
+*billed twice*. It never closed *billed wrong*, and the reattach path computes a
+wrong amount: `run_on_kaggle` rewinds `t0` to the slug's submission epoch and
+sets `t_meter_open = t0`, so `billable_s` runs to `time.time()` — the moment the
+*local process noticed* — and bills every idle hour between the kernel reaching a
+terminal state and someone coming back to look. Measured on the 06:56 recovery of
+`jack-ladder-1786482462`: **35 330 s charged for a kernel whose own metered
+window, recorded by the original poll, was 2 361.88 s. 14.96×.** The meter opens
+correctly and never closes.
+
+Nobody saw it for five hours because **the idempotency check fired first**:
+`charge()` returns early on a known `job_id`, so the wrong number was computed,
+written to `gpu_submissions.jsonl`, and thrown away without touching the budget.
+And idempotency only fires when the original poll *already charged* — which is
+the one case `JACK_REUSE_KERNEL` does not exist for. Its whole purpose is the
+poll that died before charging.
+
+**Rule: a guard that suppresses a bad WRITE also suppresses the evidence that the
+VALUE was bad.** Deduplication, clamping, `max(0, ...)`, "ignore if already
+present" — each converts a wrong quantity into a silent no-op, so the defect
+accumulates behind the guard and surfaces only in the case the guard does not
+cover. When you add one, assert the value it is suppressing, not just that the
+total held still. And check where the assertion sits relative to the defect:
+`T0.12`'s `submit_reattach_is_free` calls `charge()` twice **with an amount the
+test itself supplies**, so it gates the ledger of charges and can never observe a
+meter that measures the wrong window. A property that feeds the quantity in
+cannot test how the quantity was derived — it must drive the deriving path, or it
+is testing bookkeeping and calling it accounting.
+
+Corollary for this file: the "GUARD" paragraph on a lesson is a claim like any
+other, and it decayed here into a false all-clear that outlived the code it
+described. Three audits read it as closed. When a guard covers a failure mode
+only *conditionally*, write the condition into the guard note — "a reattach
+cannot re-bill a kernel **whose first poll charged**" would have named its own
+hole.
+
 ## A shared observation can be dead in three quarters of one column block and every fixture still passes
 
 `playground.humanoid_obs` reproduces `HumanoidEnv._get_obs`, and 78 of its 348
