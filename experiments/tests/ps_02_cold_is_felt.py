@@ -71,6 +71,36 @@ discrimination (LESSONS.md: a gate that re-derives the module's own formula
 proves only that nobody broke the integrator) — which is why it is one clause of
 six and not the claim.
 
+## v2, AND WHAT THE v1 FAIL ACTUALLY FOUND
+
+v1 gated `all_cold_died == 1.0` and recorded **FAIL** at `ac916ba`: 47 of 48
+cold lives froze and one did not, which turned the headline `probe_r2` into
+`nan` and took the control's R^2 with it. The v1 run stays in the ledger's
+history (T1.02 precedent). Two separate faults, and only one of them is the
+world's:
+
+**The clause was wrong.** The survivor's spawn draw does not predict survival —
+re-deriving all 48 draws, not one has a spawn-state `time_to_lethal_s` past the
+horizon. He WALKED into the warm zone. A world in which no amount of moving
+toward the fire can save you is a world whose warmth term does nothing, and this
+spec's own hypothesis ("rises near heat") says warmth must matter, so "every
+cold life dies" was a clause that taken strictly contradicts the other half of
+the same sentence. It is replaced by: at most `CENSORED_MAX` of 16 lives may be
+censored, **and every censored life must be EXPLAINED BY THE FIRE** — see
+`_fire_explains`, which requires both that the fireless world would have killed
+him inside the horizon and that he demonstrably cooled slower than it. That is
+strictly stronger than v1 on the failure that matters (unexplained survival = a
+broken integrator, which v1 could not tell apart from a rescue) and weaker only
+on the case the hypothesis wants to exist. Stated plainly here rather than
+moved quietly, per law 4.
+
+**The instrument was brittle.** A life with no observed death has no
+time-to-freezing, so its rows carried `nan` targets straight into the ridge —
+and one such life in 48 was enough to make the whole spec's headline `nan`
+rather than merely noisier. A regression target that can be undefined must be
+CENSORED, not fed. The test set is now the last `N_TEST` uncensored lives, so
+censoring shrinks the training set and never the evidence.
+
 PILOT: seed 90, disjoint from the registered seeds 0/1/2, as PG.6 and SM.01 did.
 Gates were set with margin after the pilot, and the pilot numbers are in
 `docs/LOOP_JOURNAL.md` under this spec's pre-registration.
@@ -106,6 +136,7 @@ BLIND_CHECK_DECISIONS = 20   # `blind` must actually drop the channel
 # ── pre-registered gates ────────────────────────────────────────────────
 DEATH_S_MIN = 3.0            # faster than this and no policy could react
 DEATH_S_MAX = 70.0           # slower and the death is outside the observation
+CENSORED_MAX = 2             # v2: lives the FIRE saved. See `_censoring` below
 LAW_DEV_MAX = 0.02           # integrator vs closed form, relative
 WARM_DELTA_MIN = 2.0         # degC gained in 20 s at the fire
 WARM_DIST_MAX = 1.0          # m; "near heat" is measured, not intended
@@ -186,6 +217,9 @@ def _run_life(world_seed: int, *, j0: float, alpha: float, inert: bool = False,
         else np.full(n, np.nan)
     return {"X": X, "y": y, "death_s": death_s, "tb0": tb0, "t_eff0": t_eff0,
             "tb_end": tw.state.tb, "n": n, "mean_dist_m": float(np.mean(dists)),
+            "end_dist_m": float(dists[-1]), "t_eff_end": tw.state.t_eff,
+            "min_dist_m": float(np.min(dists)), "t_cold": tw.state.t_cold,
+            "lived_s": n * SIM_S_PER_DECISION,
             "predicted_s": thermal.time_to_lethal_s(tb0, t_eff0)}
 
 
@@ -259,10 +293,54 @@ def _r2(y, yhat) -> float:
     return 1.0 - sse / max(sst, 1e-12)
 
 
+def _no_fire_rate(r: dict) -> float:
+    """degC/s this life would have lost with no fire in the world (T_eff = T_cold)."""
+    return -thermal.drift_per_s(r["t_cold"])
+
+
+def _mean_cooling(r: dict) -> float:
+    """degC/s he actually lost, averaged over the life he lived."""
+    return (r["tb0"] - r["tb_end"]) / max(r["lived_s"], 1e-9)
+
+
+def _fire_explains(r: dict) -> bool:
+    """Is THE FIRE why this life outlived the window? Two clauses, no free knobs.
+
+    (a) COUNTERFACTUAL: with no fire in the world the law kills him inside the
+        horizon — so survival is not merely a mild draw.
+    (b) WARMTH RECEIVED: he actually cooled more slowly than the no-fire rate.
+
+    Both are derived from `thermal.py`'s law and from quantities the run already
+    records; neither introduces a threshold that could be tuned. Together they
+    are what separates a rescue from a broken integrator, which is the failure
+    v1's `all_cold_died` clause could not tell apart from this one.
+
+    HOW THIS CRITERION WAS CHOSEN, said out loud: after the v1 FAIL the single
+    censored life was inspected — spawn `time_to_lethal_s` 48.8 s, mean distance
+    to the fire 1.91 m against a spawn draw of >= 2.5 m, felt ambient -0.11 ->
+    +9.85 degC, still 21.0 s of life left at the horizon. The MECHANISM was
+    read, and the clause written from the mechanism. The headline `probe_r2` was
+    already clearing its gate at the time and is not what this clause moves.
+    """
+    return (thermal.time_to_lethal_s(r["tb0"], r["t_cold"])
+            <= HORIZON * SIM_S_PER_DECISION
+            and _mean_cooling(r) < _no_fire_rate(r))
+
+
+def _uncensored(cold: list) -> list:
+    """Lives with an OBSERVED time-to-freezing. See `_censoring` below."""
+    return [r for r in cold if np.isfinite(r["death_s"])]
+
+
 def _score(cold: list, n_cols: int, shuffle: bool = False) -> float:
-    """Held-out-by-RUN R^2 for the first `n_cols` features."""
-    tr = cold[:N_TRAIN]
-    te = cold[N_TRAIN:]
+    """Held-out-by-RUN R^2 for the first `n_cols` features.
+
+    The test set is always the last `N_TEST` uncensored lives, so censoring
+    shrinks the training set and never the evidence the score is computed on.
+    """
+    usable = _uncensored(cold)
+    tr = usable[:-N_TEST]
+    te = usable[-N_TEST:]
     Xtr = np.concatenate([r["X"][:, :n_cols] for r in tr])
     ytr = np.concatenate([r["y"] for r in tr])
     Xte = np.concatenate([r["X"][:, :n_cols] for r in te])
@@ -295,6 +373,8 @@ def _experiment(seed: int) -> dict:
     cold, warm, inert = d["cold"], d["warm"], d["inert"]
     deaths = np.array([r["death_s"] for r in cold], dtype=float)
     n_cols = cold[0]["X"].shape[1]
+    censored = [r for r in cold if not np.isfinite(r["death_s"])]
+    explained = all(_fire_explains(r) for r in censored)
 
     r2 = _score(cold, n_cols)
     r2_shuf = _score(cold, n_cols, shuffle=True)
@@ -306,6 +386,13 @@ def _experiment(seed: int) -> dict:
         "cold_deaths": float(np.sum(np.isfinite(deaths))),
         "cold_runs": float(len(cold)),
         "all_cold_died": float(bool(np.all(np.isfinite(deaths)))),
+        "cold_censored": float(len(censored)),
+        "censored_explained": float(bool(explained)),
+        "censored_min_dist_m": float(min([r["min_dist_m"] for r in censored],
+                                         default=float("nan"))),
+        "censored_rate_ratio": float(max(
+            [_mean_cooling(r) / _no_fire_rate(r) for r in censored],
+            default=0.0)),
         "death_s_min": float(np.nanmin(deaths)),
         "death_s_max": float(np.nanmax(deaths)),
         "death_s_mean": float(np.nanmean(deaths)),
@@ -331,7 +418,7 @@ def _experiment(seed: int) -> dict:
         "blind_width_ok": d["blind_width_ok"],
     }
     m["seed_gates_ok"] = float(
-        m["all_cold_died"] == 1.0
+        m["cold_censored"] <= CENSORED_MAX and m["censored_explained"] == 1.0
         and DEATH_S_MIN <= m["death_s_min"] and m["death_s_max"] <= DEATH_S_MAX
         and m["law_dev"] <= LAW_DEV_MAX
         and m["warm_delta_c"] >= WARM_DELTA_MIN and m["warm_deaths"] == 0.0

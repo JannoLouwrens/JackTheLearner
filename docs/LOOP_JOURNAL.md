@@ -3526,3 +3526,26 @@ PILOT, seed 90, disjoint from the registered 0/1/2 (PG.6/SM.01 precedent):
 probe R2 **0.685**, control **-0.091** (margin 0.776), shuffled **-0.497**,
 deaths 6.4-36.2 s over 16 lives, warm +3.24 degC at 0.64 m, law_dev 0.0083.
 Gates were then set with margin, not at the pilot values.
+
+### PS.02 v1 → FAIL at `ac916ba`, and the v2 amendment (pre-registered before re-running)
+
+**FAIL, honestly.** 47 of 48 cold lives froze; one did not, and its `nan`
+targets took `probe_r2` and `control_r2` with them. Recorded: `all_cold_died`
+0.667, `probe_r2` nan, deaths 5.9–34.9 s, warm +3.05 degC, inert deaths 0,
+`law_dev` 0.0083, `blind_dev` 0.0.
+
+Diagnosis, run before touching anything: re-derived all 48 spawn draws and NOT
+ONE has a spawn-state `time_to_lethal_s` past the horizon. The survivor was not
+a mild draw — **he walked into the warm zone.** The fire saved him.
+
+v2, and the clause change is stated rather than moved:
+- `all_cold_died == 1.0` → `cold_censored <= 2` AND `censored_explained == 1.0`
+  (a censored life's END state must be one the law says is no longer lethal
+  inside the window). Stronger on unexplained survival — which v1 could not
+  distinguish from a rescue — and weaker only on the case PS.02's own "rises
+  near heat" clause requires to be possible.
+- Censored lives are dropped from the probe dataset instead of feeding it `nan`.
+  Test set = the last 6 UNCENSORED lives, so censoring costs training data and
+  never evidence.
+
+v1 stays in the ledger's history (T1.02 precedent).

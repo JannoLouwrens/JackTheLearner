@@ -106,11 +106,11 @@ INVENTORY: tuple[Sense, ...] = (
     Sense("pain", "pain (nociception)",
           "a fast unconditioned cost signal that sensitises rather than "
           "habituating; the only thing that makes failing expensive",
-          specs=(),
+          specs=("PS.03",),
           mentions=r"\bpain\b|nocicept"),
     Sense("temperature", "temperature (thermoception)",
           "cold nights are the only pressure that teaches shelter-building",
-          specs=(),
+          specs=("PS.02",), load_bearing=("SH.01",),
           mentions=r"thermo|temperature|\bcold\b|hypothermi"),
     Sense("interoception", "interoception (hunger, thirst, fatigue)",
           "the needs ARE the curriculum — curiosity is the explorer, needs are "

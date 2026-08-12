@@ -2852,3 +2852,37 @@ answer; `gpu.offending_dirt` is one line over `is_code_dirt` with zero permitted
 difference; **T0.22 P15** asserts the two organs agree file-by-file over the
 whole set and that real source still offends both. P12 pinned two organs to one
 ROW; P15 pins them to one FILE.
+
+## When you build the world AND its control, the world's spread IS the control's power
+
+PS.02 declares SILENT LETHALITY: the body freezes on the same schedule, the
+thermal channel is deleted from the sensory vector, and the probe must fail.
+The failure mode it exists to catch is the probe reading the CLOCK — energy
+drains monotonically, every life gets colder with time, so "mean lifetime minus
+elapsed time" predicts time-to-death without sensing anything.
+
+The obvious cooling law is Newton's, and it would have made that control
+**incapable of failing**. Newton drives body temperature to an asymptote
+`T_amb + metabolic/k`, which compresses every life's length into a narrow band
+however cold the world is: with across-life spread small next to within-life
+spread, the clock is a good predictor by construction, the control scores well,
+and the spec reports a sense that does not exist. Nothing in the implementation
+would have been wrong. The world would have been.
+
+The fix was to choose the law FROM the control: linear cooling makes
+time-to-freezing `(Tb - lethal) / rate`, a ratio of two per-life draws that no
+clock reconstructs. Measured on the pilot, across-life lifetimes spanned 5.7×
+(6.4–36.2 s) and the control landed at R² **-0.09** against the experiment's
+0.685.
+
+**Rule:** when one spec authors both the world and the control that must fail in
+it, the control's power is a parameter of the WORLD, not only of the observer —
+so derive the world's generative law and its per-instance draws from what the
+control has to be able to detect, and report the across-instance vs
+within-instance spread as evidence that it could. Same family as "check its
+POWER, not just its floor", one level up: there the manipulation shrank its own
+sample, here the world's parameterisation would have removed the confound's
+separability before any sample existed. Ask it in this order — *what must my
+control be able to see, and does the world I am about to write let it?* — and
+you are choosing physics on evidence rather than on which equation is more
+famous.

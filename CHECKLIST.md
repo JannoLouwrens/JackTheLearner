@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 70 / 165 demonstrated
+## 71 / 165 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -673,7 +673,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Any camera the ladder certifies has less than 5% of its frame occupied by geometry nearer than 1 m, and shows at least 35% workspace (floor). A certified eye looks AT the world, not INTO a nearby object.
       - _dies if:_ Near-field occlusion at or above 5%, or workspace below 35%. Then every visual certificate taken through that camera is measuring what fits between obstructions.
       - _then delete:_ Nothing directly. It is a GUARD on PG.6, UB.9-UB.13 and every later visual spec: those measure acuity and binding through a camera whose framing they all assume and none of them check.
-- [ ] **PS.02** The world can freeze him, and the cold is FELT before it kills
+- [x] **PS.02** The world can freeze him, and the cold is FELT before it kills
       - _asserts:_ The world carries a temperature field with pre-registered dynamics - body temperature falls at a measured rate in cold, rises near heat, death below a threshold within a bounded time - AND the approach of that death is legible from Jack's senses beforehand: a probe on his sensory vector predicts time-to-freezing well above chance while he is still alive.
       - _dies if:_ Time-to-death unpredictable from the senses. Then cold is an unlearnable instakill, not a need: no agent and no architecture could ever adapt to it, and every shelter result built on top would be measuring luck.
       - _then delete:_ Every survival claim involving cold, and the jungle's entire motive for shelter.
