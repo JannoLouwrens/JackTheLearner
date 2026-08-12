@@ -92,6 +92,63 @@ can tell up from down inherits that hole.
 PILOT: seed 90, disjoint from the registered seeds 0/1/2 (PS.02, PG.6, SM.01
 precedent). Gates were set with margin after the pilot; the pilot numbers are
 pre-registered in docs/LOOP_JOURNAL.md under this spec before the recorded run.
+
+## V2 (attempt 2, T1.02 precedent: strengthen only, v1's FAIL stays in history)
+
+V1 recorded FAIL 2026-08-12T17:33 and the failure was the RIG'S, not clearly
+the sense's: tilt_r2 0.9997 with the blind control at -0.08, but the
+ELAPSED-TIME NULL scored 0.856 on the registered worlds (0.72 on the pilot
+world) against the headline's 0.880 — margin 0.024 < the pre-registered 0.10.
+tf_spread read 3.68 +/- 2.32 ACROSS seeds: world mutation changes spawn-site
+statistics, and on some seeds every episode topples on nearly one schedule, so
+the clock knew almost everything the vestibular channel knows. The spec's own
+docstring names this rig failure mode (#2) and v1's rig only defended against
+it with the tilt draw, which the spawn statistics of a mutated world can undo.
+
+V2 removes the correlation by construction rather than by draw (the PS.02
+order: derive the world from what the control must be able to detect — here,
+what the clock null must NOT be able to see):
+
+  HOLD-THEN-RELEASE. Each episode settles for T_SETTLE decisions, then pins
+  the FULL root pose for a random hold of t_r ~ U{0..HOLD_MAX} decisions
+  (arms keep moving under noise, so the blind block stays live), then applies
+  the v1 tilt + a log-uniform-magnitude kick at release. Absolute topple time
+  is now t_r + fall_time with t_r uniform, so episode-elapsed time carries
+  almost no information about time-to-topple on ANY seed's world, whatever
+  its spawn statistics. Rows before release are not scored on either side:
+  before the kick exists, no sensor could know it — a label the sensors
+  cannot know is censored, not asserted (the same principle as the survivor
+  trim). Scored rows live in a uniform box — the first K_POST post-release
+  decisions, at absolute time within [K_POST-1, HOLD_MAX] of the hold range —
+  where t_r uniform makes P(y|t) flat by construction. Three pilot
+  measurements forced the box and the two pins, in order: survivors running
+  to the horizon made late time purely negative (P(y=1|t) 0.59 -> 0.00, raw
+  t alone AUC 0.90); an orientation-only pin let arm noise DRIFT the body
+  against structure, so survival rose 0.08 -> 0.70 with hold length and the
+  clock read the outcome through the floor; and a fixed kick scale sent
+  every episode down in ~7-12 decisions, starving the negative class. Each
+  fix is documented at its site; no gate moved for any of them.
+
+Two more v1 defects fixed, neither a threshold:
+
+  THE SHUFFLE NULL WAS ONE DRAW, NOT A NULL. v1 used a single permutation from
+  a FIXED seed, shared by all three spec seeds. A fixed permutation applied to
+  similarly-ordered rows (same episode/time structure on similar worlds) is
+  one correlated draw of a statistic with real variance — v1 measured
+  0.063 +/- 0.018, consistently positive across seeds, the signature of that
+  coincidence. v2 reports the MEAN over N_SHUF=8 permutations drawn from a
+  seed-derived RNG. The gate is unchanged.
+
+  RIG DEGENERACY IS VOID, PER SEED. v1 folded toppled_frac and tf_spread into
+  the FAIL conjunction, contradicting its own docstring (#3: rig failures are
+  VOID — only a run that tested the claim may say FAIL, the T2.02 lesson).
+  v2 returns Status.VOID when any seed's world is degenerate (seed_rig_ok),
+  which is STRICTER as a PASS bar than v1's aggregate-mean gates, and honest
+  as a verdict: a world where every fall shares one schedule cannot test
+  whether he feels falling. FAIL remains reserved for the sense failing.
+
+All pre-registered thresholds are UNTOUCHED from v1. V2 pilot numbers (seed
+90) are pre-registered in docs/LOOP_JOURNAL.md before the recorded run.
 """
 from __future__ import annotations
 
@@ -128,16 +185,36 @@ IMPL_DEPS = ["experiments/w0.py", "playground.py"]
 # late-time negative rows come from — so every episode respawns.
 N_EP_TRAIN = 84              # episodes the probes fit on
 N_EP_TEST = 36               # episodes they are scored on — held out by EPISODE
-HORIZON = 80                 # decisions = 16 s; passive topple is far inside
+HORIZON = 80                 # decisions = 16 s; worst case hold 40 + fall ~15
+HOLD_MAX = 40                # v2: t_r ~ U{0..40} decisions of pinned-in-place
+T_SETTLE = 3                 # v2: settle decisions before the hold pose is set
 TILT0_LOG10_DEG = (-1.0, 1.15)   # theta ~ 10^U[...]: 0.1 to 14 deg
-OMEGA0_STD = 0.3             # rad/s, initial angular-velocity kick per axis
+# V2: the kick MAGNITUDE is drawn log-uniformly per episode, for the same
+# reason the tilt is (fall time goes as log of the perturbation, so only a
+# log draw spreads it). One fixed kick scale sent every episode down in
+# ~7-12 decisions and starved the negative class: with all falls fast, the
+# only scoreable question left was "<=5 vs 6-11 decisions from topple".
+# Slow-kick episodes fall over tens of decisions and supply the honest
+# "falling, but not yet" rows.
+OMEGA0_LOG10 = (-2.0, -0.22)     # |kick| ~ 10^U[...]: 0.01 to 0.6 rad/s
 ARM_NOISE = 0.3              # slide actions ~ U[-1,1] * this; drive+adhesion 0
 GRAVITY = 9.81
+N_SHUF = 8                   # v2: permutations averaged for the shuffle null
 
 # ── labels ──────────────────────────────────────────────────────────────
 TOPPLE_UP = 0.5              # upright cosine below this = toppled (60 deg)
 UPRIGHT_ROW = 0.9            # rows eligible for the AUC while above this
 W_WARN = 5                   # decisions: "topples within the next 1.0 s"
+# V2: scored rows live in the first K_POST decisions after release, at
+# absolute episode time in [K_POST-1, HOLD_MAX]. Outside that box the class
+# composition is position-biased by construction — survivors run to the
+# horizon (the pilot measured P(y=1|t) falling 0.59 -> 0.00 with t, raw t
+# alone scoring AUC 0.90), and early absolute times over-represent
+# early-window rows. Inside it, t_r uniform makes the within-window position
+# uniform at every absolute t, so P(y|t) is flat BY CONSTRUCTION and the
+# clock null (and any diffusion clock in the blind block) has nothing to
+# read. Rows outside the box are censored, not asserted.
+K_POST = 12                  # scored post-release window, decisions
 
 # ── the probes ──────────────────────────────────────────────────────────
 N_RFF = 300                  # PS.02's generic probe, one fixed draw
@@ -179,7 +256,7 @@ def _tilt_quat(rng: np.random.RandomState) -> np.ndarray:
 
 
 def _episode(w: W0, rng: np.random.RandomState) -> dict:
-    """One perturbed passive episode: respawn, tilt, fall (or don't).
+    """One hold-then-release episode: respawn, hold upright, release, fall.
 
     Actions move ONLY the four arm slides. The drive dims are a world-frame
     force — a hidden push knob the blind features could read through its
@@ -188,24 +265,56 @@ def _episode(w: W0, rng: np.random.RandomState) -> dict:
     the control probe genuinely gets to try: a control fed constants cannot
     fail meaningfully (PS.02: a control that cannot fail is not a control —
     the mirror rule: a control that cannot PASS proves nothing either).
+
+    V2: for t_r ~ U{0..HOLD_MAX} decisions the root's ORIENTATION is pinned
+    upright after every step (the structural ~0.8 deg/decision contact-solver
+    tilt is undone; linear dofs stay free so the body settles honestly, arms
+    keep diffusing). At release the v1 tilt + kick is applied. Rows are
+    recorded only from release — before the kick exists no sensor could know
+    it, so a pre-release label would be noise on both sides of the test.
     """
     mujoco = w.mujoco
     w.respawn()
     qa, da = w.ix["root_qposadr"], w.ix["root_dofadr"]
-    # Tilt the root about the world frame, then kick its angular velocity.
+    t_r = int(rng.randint(0, HOLD_MAX + 1))
+    # Settle: let the spawn's 1 cm drop dissipate with only orientation
+    # pinned, so the held pose is a real resting state, not a hover.
+    for _ in range(T_SETTLE):
+        act = np.zeros(8)
+        act[:4] = rng.uniform(-1.0, 1.0, 4) * ARM_NOISE
+        w.decide(act)
+        w.data.qpos[qa + 3:qa + 7] = (1.0, 0.0, 0.0, 0.0)
+        w.data.qvel[da + 3:da + 6] = 0.0
+        mujoco.mj_forward(w.model, w.data)
+    # Hold: the FULL root pose is pinned — held in place, arms still moving.
+    # The first pilot pinned orientation only, and the body drifted with the
+    # arm noise: longer holds slid it against structure it could then lean
+    # on, so survival rose 0.08 -> 0.70 across the t_r range and the episode
+    # clock legitimately predicted the outcome. A hold that does not hold
+    # position re-couples the clock to the world through the floor.
+    q_hold = w.data.qpos[qa:qa + 7].copy()
+    for _ in range(t_r):
+        act = np.zeros(8)
+        act[:4] = rng.uniform(-1.0, 1.0, 4) * ARM_NOISE
+        w.decide(act)
+        w.data.qpos[qa:qa + 7] = q_hold
+        w.data.qvel[da:da + 6] = 0.0
+        mujoco.mj_forward(w.model, w.data)
+    # Release: tilt the root about the world frame, kick its angular velocity.
     q0 = w.data.qpos[qa + 3:qa + 7].copy()
     qt = _tilt_quat(rng)
     out = np.zeros(4)
     mujoco.mju_mulQuat(out, qt, q0)
     w.data.qpos[qa + 3:qa + 7] = out
     w.data.qvel[da:da + 6] = 0.0
-    w.data.qvel[da + 3:da + 6] = rng.randn(3) * OMEGA0_STD
+    mag = 10.0 ** rng.uniform(*OMEGA0_LOG10)
+    w.data.qvel[da + 3:da + 6] = rng.randn(3) * mag
     mujoco.mj_forward(w.model, w.data)
 
     rows, uprights = [], []
     v_prev = w.data.qvel[da:da + 3].copy()
     t_f = None
-    for t in range(HORIZON):
+    for t in range(HORIZON - T_SETTLE - t_r):
         xmat = w.data.xmat[w.rover_bid]
         R = np.asarray(xmat, dtype=np.float64).reshape(3, 3)
         up = float(xmat[8])
@@ -230,7 +339,7 @@ def _episode(w: W0, rng: np.random.RandomState) -> dict:
         w.decide(act)
     return {"X": np.asarray(rows, dtype=np.float64),
             "upright": np.asarray(uprights, dtype=np.float64),
-            "t_f": t_f}
+            "t_f": t_f, "t_r": t_r}
 
 
 def _collect(seed: int) -> dict:
@@ -305,14 +414,20 @@ def _label_rows(ep: dict) -> tuple:
     n = len(up)
     t_f = ep["t_f"]
     last = n if t_f is not None else n - W_WARN
+    last = min(last, K_POST)                      # V2: the scored window
     rows, ys, ts = [], [], []
     for t in range(max(last, 0)):
+        t_abs = ep["t_r"] + t
+        if not (K_POST - 1 <= t_abs <= HOLD_MAX):  # V2: the uniform box
+            continue
         if up[t] < UPRIGHT_ROW:
             continue
         y = 1.0 if (t_f is not None and t_f - t <= W_WARN) else 0.0
         rows.append(ep["X"][t])
         ys.append(y)
-        ts.append(t * SIM_S_PER_DECISION)
+        # The clock null reads ABSOLUTE episode time — settle and hold
+        # included — because that is the clock a fake probe would be reading.
+        ts.append((T_SETTLE + t_abs) * SIM_S_PER_DECISION)
     return rows, ys, ts
 
 
@@ -356,7 +471,12 @@ def _evaluate(seed: int, blind: bool) -> dict:
     tr, te = eps[:N_EP_TRAIN], eps[N_EP_TRAIN:]
     sl_x = slice(None, -GRAV_DIM) if blind else slice(-VEST_DIM, None)
 
-    t_fs = [ep["t_f"] for ep in eps if ep["t_f"] is not None]
+    # tf_spread is the spread of ABSOLUTE topple times (hold + fall): the
+    # quantity that must be wide for the clock null to be able to fail.
+    # tf_fall_spread reports the fall-dynamics spread alone, for the reader.
+    t_fs = [T_SETTLE + ep["t_r"] + ep["t_f"]
+            for ep in eps if ep["t_f"] is not None]
+    falls = [ep["t_f"] for ep in eps if ep["t_f"] is not None]
     toppled_frac = len(t_fs) / len(eps)
     tf_spread = float(np.std(t_fs)) if t_fs else 0.0
 
@@ -365,6 +485,7 @@ def _evaluate(seed: int, blind: bool) -> dict:
     n_pos, n_neg = int(yte.sum()), int((1 - yte).sum())
 
     out = {"toppled_frac": toppled_frac, "tf_spread": tf_spread,
+           "tf_fall_spread": float(np.std(falls)) if falls else 0.0,
            "median_t_f": float(np.median(t_fs)) if t_fs else float("nan"),
            "n_rows_train": float(len(ytr)), "n_pos_test": float(n_pos),
            "n_neg_test": float(n_neg)}
@@ -387,10 +508,19 @@ def _evaluate(seed: int, blind: bool) -> dict:
         # feature. What survivorship makes predictable, it gets for free.
         out["auc_time"] = _auc(yte, _ridge_predict(ttr, ytr, tte, rff=True))
         # Shuffled tilt pairing (chance for tilt, the registry's null).
-        sh = np.random.RandomState(RFF_SEED + 1).permutation(len(Ttr_y))
-        out["tilt_r2_shuffled"] = _r2(
-            Tte_y, _ridge_predict(Ttr_X[:, sl_x], Ttr_y[sh],
-                                  Tte_X[:, sl_x], rff=False))
+        # V2: the MEAN over N_SHUF permutations from a seed-derived RNG. One
+        # fixed permutation shared across seeds is a single correlated draw
+        # of a statistic with real variance, not the null's value — v1
+        # measured that draw at 0.063 +/- 0.018, consistently positive.
+        prng = np.random.RandomState(RFF_SEED + 1 + 7919 * seed)
+        shufs = []
+        for _ in range(N_SHUF):
+            sh = prng.permutation(len(Ttr_y))
+            shufs.append(_r2(
+                Tte_y, _ridge_predict(Ttr_X[:, sl_x], Ttr_y[sh],
+                                      Tte_X[:, sl_x], rff=False)))
+        out["tilt_r2_shuffled"] = float(np.mean(shufs))
+        out["tilt_r2_shuffled_spread"] = float(np.std(shufs))
         # The organs of the graviceptive block, reported separately as the
         # registry demands — a system given only gravity's direction cannot
         # tell falling from being carried, and touch must not hide the
@@ -403,9 +533,12 @@ def _evaluate(seed: int, blind: bool) -> dict:
                          ("otoliths", slice(nb + 14, nb + 17))):
             out[f"auc_{name}"] = _auc(
                 yte, _ridge_predict(Xtr[:, sl], ytr, Xte[:, sl], rff=True))
-        gates = (toppled_frac >= TOPPLED_FRAC_MIN
-                 and tf_spread >= TF_SPREAD_MIN
-                 and out["auc"] >= AUC_MIN
+        # V2 split: rig health (the world could test the claim) is separate
+        # from the sense gates (the claim held), because they carry different
+        # verdicts — a degenerate rig is VOID, a failed sense is FAIL.
+        out["seed_rig_ok"] = 1.0 if (toppled_frac >= TOPPLED_FRAC_MIN
+                                     and tf_spread >= TF_SPREAD_MIN) else 0.0
+        gates = (out["auc"] >= AUC_MIN
                  and out["auc"] - out["auc_time"] >= AUC_TIME_MARGIN_MIN
                  and out["tilt_r2"] >= TILT_R2_MIN)
         out["seed_gates_ok"] = 1.0 if gates else 0.0
@@ -428,9 +561,14 @@ def _declared_void(m: dict) -> bool:
 def _check(m: dict, c: dict):
     if _declared_void(m) or _declared_void(c):
         return Status.VOID
+    # Rig degeneracy is VOID, per seed: a world where nothing topples, or
+    # where every topple shares one schedule, could not have tested the claim
+    # (docstring #3; the T2.02 lesson — only a run that tested it may FAIL).
+    # seed_rig_ok is the per-seed conjunction, so its mean is 1.0 only when
+    # EVERY seed's world was healthy — stricter than v1's aggregate means.
+    if m["seed_rig_ok"] < 1.0:
+        return Status.VOID
     ok = (m["seed_gates_ok"] == 1.0
-          and m["toppled_frac"] >= TOPPLED_FRAC_MIN
-          and m["tf_spread"] >= TF_SPREAD_MIN
           and m["tilt_r2"] >= TILT_R2_MIN
           and m["tilt_r2_shuffled"] <= TILT_SHUF_R2_MAX
           and m["auc"] >= AUC_MIN
