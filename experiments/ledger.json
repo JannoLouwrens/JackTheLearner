@@ -1434,8 +1434,8 @@
     },
     "PG.8": {
       "amended": [],
-      "attempt": 4,
-      "commit": "83fa1a5",
+      "attempt": 5,
+      "commit": "08444b2",
       "control_metrics": {
         "contact_cfrc_norm_ref": 243.0831,
         "contact_cfrc_norm_ref_std": 6.221094,
@@ -1498,7 +1498,7 @@
         "world_mutated": 0.666667,
         "world_mutated_std": 0.471405
       },
-      "duration_s": 7.06,
+      "duration_s": 7.03,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1517,6 +1517,12 @@
           "commit": "8876baa",
           "message": "",
           "ran_at": "2026-08-09T22:33:03",
+          "status": "PASS"
+        },
+        {
+          "commit": "83fa1a5",
+          "message": "",
+          "ran_at": "2026-08-10T14:14:30",
           "status": "PASS"
         }
       ],
@@ -1598,7 +1604,7 @@
         "world_mutated": 0.666667,
         "world_mutated_std": 0.471405
       },
-      "ran_at": "2026-08-10T14:14:30",
+      "ran_at": "2026-08-12T07:26:55",
       "seeds": [
         0,
         1,
@@ -2011,10 +2017,10 @@
     },
     "T0.01": {
       "amended": [],
-      "attempt": 4,
-      "commit": "68b95bd",
+      "attempt": 5,
+      "commit": "08444b2",
       "control_metrics": {},
-      "duration_s": 1.55,
+      "duration_s": 1.54,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2034,6 +2040,12 @@
           "message": "",
           "ran_at": "2026-08-10T08:36:40",
           "status": "PASS"
+        },
+        {
+          "commit": "68b95bd",
+          "message": "",
+          "ran_at": "2026-08-11T20:37:29",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d7af65c339695aa3",
@@ -2044,7 +2056,7 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-11T20:37:29",
+      "ran_at": "2026-08-12T07:26:47",
       "seeds": [
         0
       ],
@@ -2728,12 +2740,12 @@
     },
     "T0.14": {
       "amended": [],
-      "attempt": 4,
-      "commit": "49529e6",
+      "attempt": 5,
+      "commit": "08444b2",
       "control_metrics": {
         "train_mode_action_drift": 0.634769
       },
-      "duration_s": 19.46,
+      "duration_s": 18.74,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2753,9 +2765,15 @@
           "message": "",
           "ran_at": "2026-08-09T13:50:28",
           "status": "PASS"
+        },
+        {
+          "commit": "49529e6",
+          "message": "",
+          "ran_at": "2026-08-09T15:15:28",
+          "status": "PASS"
         }
       ],
-      "impl_sha": null,
+      "impl_sha": "e6aca0cb6811e9dc",
       "message": "",
       "metrics": {
         "config_obs_dim": 348,
@@ -2767,7 +2785,7 @@
         "obs_dim_matches": true,
         "train_mode_after_update": true
       },
-      "ran_at": "2026-08-09T15:15:28",
+      "ran_at": "2026-08-12T07:27:14",
       "seeds": [
         0
       ],
@@ -2817,14 +2835,14 @@
     },
     "T0.16": {
       "amended": [],
-      "attempt": 2,
-      "commit": "44c719c",
+      "attempt": 3,
+      "commit": "08444b2",
       "control_metrics": {
         "prefix_max_drift": 1.6337,
         "prefix_trained_train_mode": true,
         "prefix_untrained_train_mode": true
       },
-      "duration_s": 33.91,
+      "duration_s": 33.41,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2832,9 +2850,15 @@
           "message": "",
           "ran_at": "2026-08-09T15:14:32",
           "status": "PASS"
+        },
+        {
+          "commit": "44c719c",
+          "message": "",
+          "ran_at": "2026-08-09T19:16:34",
+          "status": "PASS"
         }
       ],
-      "impl_sha": null,
+      "impl_sha": "6a43177c1254ab0b",
       "message": "",
       "metrics": {
         "kernels_scanned": 2,
@@ -2853,7 +2877,7 @@
         "untrained_forwards": 4,
         "untrained_mode_restored": true
       },
-      "ran_at": "2026-08-09T19:16:34",
+      "ran_at": "2026-08-12T07:27:48",
       "seeds": [
         0
       ],

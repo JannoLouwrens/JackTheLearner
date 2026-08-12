@@ -2702,3 +2702,50 @@ re-running anything expensive that ERRORed, ask whether it FAILED or was merely
 undelivered** — check the backend's own log for the payload first. T1.02 landed
 PASS (reference_gain 8.10, structure advantage 21.0, beats-mean 11.2) at zero
 additional GPU cost, from a kernel the harness had already written off.
+
+## A component can fit its targets perfectly and still contribute nothing
+
+T2.01 v4 spent 6.5 Kaggle-hours and returned FAIL at 1.19 sigma with a curve
+that had plateaued by ~300K of 692K env-steps, at `mean_reward` ~5.1 — which is
+Humanoid-v5's `healthy_reward` of 5.0 and almost nothing else. One seed's
+TRAINED policy (155.3) scored below its own UNTRAINED control (186.0). Two
+organs read that as "needs more compute" and recommended re-running the same
+configuration.
+
+The actor-critic's critic was decorative. `vf_loss` fits the value head to
+returns *after* they are divided by the running return-std, so at rollout time
+the head emits `V/scale`; GAE's `delta` then added RAW rewards to those
+normalised values. At Humanoid scale the baseline was ~28x too small — the
+ledger's own `value_mean` ~3.5 against a true gamma=0.95 return of ~100 — so
+`delta` reduced to `r_t` and PPO ran as REINFORCE with a batch-mean baseline.
+Every health metric looked fine throughout: `vf_loss` was small and falling
+(the head fit its targets *exactly*, they were simply the wrong targets),
+entropy was stable, the gradient-norm balance T2.00 guards read healthy, and
+returns beat random. Nothing on the dashboard measured whether the subtraction
+*did anything*.
+
+**Rule:** for any component whose job is to CANCEL something — a baseline, a
+whitening step, a residual, a bias correction, a control variate — the health
+check is not "does it fit" but "does the thing it subtracts actually go away".
+Feed it the analytic input for which its output is known in closed form and
+require the residual to vanish. `std(adv | perfect V) / std(adv | V=0)` is 0
+for a correct advantage estimator and 1.0 for no critic at all; ours measured
+0.76, and a loss curve could never have said so.
+
+**Corollary, and it is the reason this survived so long: run the check at more
+than one state of every scale factor.** At a fresh pipeline the running
+return-std is *exactly* 1.0, the two unit systems agree by coincidence, and the
+residual is a clean 0.0. Any single-regime test — and every test that
+instantiates a fresh object is single-regime — passes on the broken estimator.
+The defect exists only after the normaliser has seen data, which is every
+moment of every real run and no moment of any unit test. **When a quantity is
+normalised by running statistics, the identity `scale == 1` at initialisation
+is a coincidence that hides unit mismatches; exercise the warmed state or you
+are testing a special case.** (Guard: T0.25, which takes the max over both.)
+
+**Second corollary, unactioned and specced in LOOP_JOURNAL for the next
+iteration:** this one-line change to `TrainingPipeline.py` altered the maths
+under every PASS that trains, and `run stale` flagged none of them, because
+`impl_sha` hashes the TEST file only. A capability claim depends on the
+production code it exercised just as much as on its own test. Staleness that
+stops at the test file is staleness with a blind spot the size of the codebase.

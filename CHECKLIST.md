@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 69 / 164 demonstrated
+## 70 / 165 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -307,6 +307,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Once a remote kernel has COMPUTED the answer, no step between the provider and the ledger may discard it: Kaggle's console log is parsed into `stdout` so the printed RESULT line is reachable, the log is never offered as an artifact, `result_json` takes the named artifact or the RESULT line and NEVER guesses at some other file, and a reattach never routes to Colab.
       - _dies if:_ A Kaggle JobResult with an empty stdout when a log was downloaded; the log appearing in `artifacts`; `result_json` returning a file it was not asked for; or `submit` calling Colab while JACK_REUSE_KERNEL is set.
       - _then delete:_ The assumption that a paid run's cost is bounded by whether it ran. It is not: the money is spent when the kernel completes, and every line after that is an uninsured chance to throw the answer away.
+- [x] **T0.25** The critic is a baseline, or it is decoration
+      - _asserts:_ Subtracting a PERFECT value function from the return leaves nothing behind. Feed `compute_gae` the analytic value function of its own reward sequence and every advantage must be zero — at any state of the return normaliser, not only at the fresh scale=1 where the two unit systems happen to agree.
+      - _dies if:_ Advantages that survive a perfect critic. The residual ratio std(adv | perfect V) / std(adv | V=0) is 0 for any correct advantage estimator; anything above 0.02 means the value head is not being subtracted in the units the rewards are measured in, and PPO is running as REINFORCE with a batch-mean baseline.
+      - _then delete:_ The assumption that an actor-critic is doing credit assignment because it has a value head and its vf_loss is small. A critic can fit its targets perfectly and still contribute nothing.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

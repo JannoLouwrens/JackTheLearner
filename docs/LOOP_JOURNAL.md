@@ -3285,3 +3285,71 @@ expire Sunday 2026-08-16 with ~17.4 h left. The delivery path it depends on is
 now the fixed one, and if that kernel orphans again its result is recoverable
 from the log instead of lost. Untaken after that, in order: LC.03 (frees 7,
 CPU) and UB.9 (frees 4 — five iterations deferred now, the oldest finding).
+
+## 2026-08-12 07:30 UTC — the critic was decorative; PPO has been REINFORCE
+
+**Attempted:** the overseer's rank-4 and the Review's rank-2, both "submit
+T2.01, this week or not at all". Read the FAIL first instead of re-paying for
+it. The v4 artifact was still on disk (`/data/tmp1bym0wfz/out/t201.json`, the
+same unprotected `/data/tmp*` the last iteration was nearly burned by) and it
+answers the question the spec pre-registered: **the curve had plateaued** —
+`mean_reward` 4.68 -> 5.09 by 311K steps and 5.14 at 680K, against Humanoid-v5's
+`healthy_reward` of 5.0. He learned to stand a little longer and never learned
+to move. Seed 2's trained policy scored 155.3 against its OWN untrained control
+at 186.0. T2.01's own text says a plateaued curve is an architecture verdict,
+not a compute shortage, so a seventh GPU-hour of the same configuration was the
+wrong buy.
+
+**Measured:** the mechanism, and it is arithmetic. `vf_loss` fits the value
+head to returns AFTER division by the running return-std, so the head emits
+`V/scale`, and GAE's `delta` added RAW rewards to those normalised values. The
+ledger's own numbers show it: `value_mean` ~3.5 while `mean_reward` ~5.0/step
+and the true gamma=0.95 return is ~100 — a baseline ~28x too small, so `delta`
+collapsed to `r_t`. **T0.25**, pre-registered and committed before running
+(1ddcd27), feeds `compute_gae` the analytic value function of its own reward
+sequence and requires the advantages to vanish:
+
+| normaliser | residual ratio before | after |
+|---|---|---|
+| fresh (scale = 1.0) | 0.0 | 0.0 |
+| warmed (scale = 8.9) | **0.76207** | **0.0** |
+
+FAIL recorded first, then the one-line fix (08444b2), then PASS. The fresh row
+is why this survived: at scale exactly 1.0 the two unit systems agree by
+coincidence, so every fresh-instance unit test passes on the broken estimator.
+The control — the pre-fix recursion, kept executable in the test file — still
+leaves 0.76207 on the same fixture.
+
+**Machine improved:** T0.25 itself, plus `TrainingPipeline.compute_gae`
+extracted from a 100-line `rl_update` so the estimator can be checked against
+closed form at all; plus a LESSONS entry generalising it (*a component that
+CANCELS is healthy only if the thing it subtracts goes away — fitting its
+targets proves nothing*, and *`scale == 1` at init is a coincidence that hides
+unit mismatches*).
+
+**Running when this iteration ended (do not resubmit either):**
+- **T2.01 on Kaggle**, attempt `1786519461638-2160973-kaggle`, head `08444b2`,
+  est 6.5 h of the week's 17.38 remaining, detached PID 2160960, log
+  `/data/jack-data/t201_postfix.log`. Same 3 seeds, same 110 min/seed, same
+  5-sigma bar as v4 — one line of maths different, so it is a NEW measurement
+  and directly comparable to v4's 1.19 sigma. If the parent died, the kernel
+  did not: recover with `JACK_REUSE_KERNEL` per T0.24, and read the RESULT line
+  out of the Kaggle log before paying for anything.
+- **GAE regression chain** over every passing spec that imports
+  `TrainingPipeline` (T0.01, PG.8, T0.14, T0.16, T2.00, T1.08, T1.07), log
+  `/data/jack-data/gae_regression.log`. First four green at hand-off; **T2.00
+  (PPO sanity) is the load-bearing one** — read it before trusting the fix.
+
+**Next iteration should pick up, in order:**
+1. **Read `/data/jack-data/gae_regression.log` and the T2.01 result.** If T2.00
+   regressed, the fix is wrong and that outranks everything.
+2. **Staleness is blind to production code.** This change altered the maths
+   under every PASS that trains and `run stale` flagged *none* of them, because
+   `impl_sha` hashes the TEST file only. Spec it: record a `deps_sha` at run
+   time over the repo-root `.py` modules the test actually imported (walk
+   `sys.modules`, filter to the repo root, exclude `experiments/`), report the
+   mismatch in `run stale`, and give it a two-direction property in T0.22's
+   family. The scar is this commit; the blast radius was 10 test files and
+   nothing said so.
+3. LC.03 (frees 7, CPU, runs beside the GPU job) and UB.9 (frees 4, six
+   iterations deferred now) are unchanged and untaken.

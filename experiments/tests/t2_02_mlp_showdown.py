@@ -3,10 +3,27 @@
 This is the arbitration run that T2.01 v4 made necessary. The facts going in,
 so the next reader does not need the journal:
 
-  - T2.01 v4 (Kaggle P100, 704,512 env-steps/seed): the 140K-trainable
-    transformer policy FAILED at 4.06 sigma vs random (bar 5), trained means
-    [249.6, 292.7, 240.8] -> 261.0, and the curve had PLATEAUED. Verdict on
-    the architecture, not the compute.
+  - CORRECTED 2026-08-12. This paragraph used to cite "4.06 sigma, trained
+    means [249.6, 292.7, 240.8] -> 261.0" as the fact going in. Those numbers
+    come from the run T0.14 INVALIDATED (36 dropout modules live during eval,
+    obs padded 376 vs the env's 348); the ledger's standing instruction is
+    never to cite them as architecture evidence, and this file was still doing
+    it. The valid measurement is T2.01 v4, Kaggle P100, 2026-08-10, 692,224
+    env-steps/seed: FAILED at 1.19 sigma vs random (bar 5), trained means
+    [231.9, 384.5, 155.3] -> 257.2, and the curve had PLATEAUED by ~300K steps
+    at mean_reward ~5.1 — Humanoid-v5's healthy_reward of 5.0 and little else.
+    Seed 2's trained policy (155.3) scored BELOW its own untrained control
+    (186.0).
+  - AND THE PREMISE HAS MOVED. T0.25 (2026-08-12) found why: GAE subtracted a
+    baseline that was ~28x too small, because the critic is trained on
+    normalised returns and emits V/scale while delta added raw rewards. PPO was
+    running as REINFORCE with a batch-mean baseline. Fixed in 08444b2. So the
+    transformer arm's 1.19 sigma is a measurement of a broken estimator, not of
+    the architecture, and THIS SPEC MUST NOT BE RUN until T2.01 has re-run
+    post-fix: its validity gate needs BOTH arms to clear 3 sigma vs random, and
+    a pre-fix transformer arm at 1.19 sigma would VOID the run and spend ~7
+    Kaggle-hours to arbitrate nothing. Re-read the numbers above from the
+    ledger before submitting.
   - The local CPU probe (/tmp/mlp_probe.json, journaled 2026-08-07): a
     54K-param SB3 PPO MLP at the SAME 704,512 steps/seed reached
     [583.9, 546.8, 461.4] -> 530.7, 12.3 sigma by T2.01's own metric. Double
