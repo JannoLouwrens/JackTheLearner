@@ -2641,3 +2641,64 @@ this count for an item never run?" (already recorded above) but the harder
 sibling: **"what does this count for an item that ran, passed, and was about
 something adjacent?"** If the answer is "full credit", the number measures
 activity near a commitment, not progress on it.
+
+## A run's cost is committed when the provider finishes; everything after that is uninsured
+
+On 2026-08-11 Kaggle kernel `jannolouwrens/jack-ladder-1786482462` ran T1.02's
+three arms across three seeds, reached `complete`, charged 0.6561 h, and
+printed every number the project needed. The ledger recorded:
+
+    ERROR: ValueError: dictionary update sequence element #0 has length 3;
+           2 is required
+
+The science was fine. The answer died in the last ten metres, and the message
+describes nothing that happened, because the crash is three defects downstream
+of the cause. **A failed run and a lost result look nothing alike in the
+budget: one leaves the quota intact, the other leaves it spent and the ledger
+red.** Everything between "the provider finished" and "the ledger has the row"
+is code that can only lose money, never make it, and it had no test.
+
+The three defects, and the reason they hid, is the transferable part:
+
+  1. `run_on_kaggle` returned `stdout=""`, always — Kaggle has no stdout pipe,
+     the console arrives afterwards as a JSON record array, and nothing parsed
+     it. So the `RESULT`-line fallback that six specs carry was **dead code on
+     the one backend that runs the long jobs.** It had never fired there, so
+     it had never been observed not firing.
+  2. The log was returned inside `artifacts`, indistinguishable from a file the
+     job wrote deliberately.
+  3. T1.02 read `artifacts["/content/out.json"]` — a remote path, while both
+     backends key by basename, so the lookup could **never** hit — then fell
+     through to `next(iter(artifacts.values()))`.
+
+Defect 3 is the one to internalise. `a or next(iter(b))` reads like a fallback
+and is not one: a fallback names what it will accept, a blind pick asserts that
+whatever arrives must be the answer. And defect 1 is what made it lethal —
+because the *real* fallback was dead, the *blind* one was the only branch left
+standing. **A dead branch beside a wrong branch is worse than the wrong branch
+alone: it makes the code read as though it had a safety net.**
+
+Rules, all now enforced by [T0.24]:
+
+- **One sanctioned reader per delivery channel.** `gpu.result_json(res, name)`
+  takes the named artifact or the printed `RESULT` line, and RAISES with both
+  attempts named when it has neither. No spec hand-rolls the dance again; a
+  helper that returns something no matter what is the same bug with manners.
+- **Evidence is not an artifact.** The console log is now `log_path` and
+  `stdout`, never a key in `artifacts`.
+- **A recovery path must not walk the spend path.** `JACK_REUSE_KERNEL` names
+  one finished Kaggle kernel, and `submit` was still walking `prefer="colab"`
+  first — paying for a fresh job to recover a free one, and liable to return a
+  *different run's numbers* if it succeeded. Found only while fixing the above.
+- **Carry the remote identity into the metrics.** T1.02's row now records
+  `gpu_job_id` and the remote `REPO <sha>`. The ledger stamps the LOCAL commit,
+  and on a reattach the two differ: this kernel was pushed at local HEAD
+  `d0c8a6e` and the VM's clone came up at `0d05a5a`. A row naming only the
+  local commit asserts a provenance nobody checked.
+
+The recovery itself is the corollary worth keeping: the answer was still in the
+log, so re-running would have paid twice for one measurement. **Before
+re-running anything expensive that ERRORed, ask whether it FAILED or was merely
+undelivered** — check the backend's own log for the payload first. T1.02 landed
+PASS (reference_gain 8.10, structure advantage 21.0, beats-mean 11.2) at zero
+additional GPU cost, from a kernel the harness had already written off.

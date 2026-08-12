@@ -3251,3 +3251,37 @@ changed.
 **T1.02 was still in flight at 20:37 (29 minutes elapsed, PID 2034160, no
 `result` line).** It stays `ERROR`. Read the receipt first; see the numbered
 handoff above.
+
+2026-08-12 — **Collected the orphaned T1.02 kernel (8th audit, FOR THE BUILDER §3) and it PASSES.**
+Attempted: recover the run rather than repeat it. Kaggle
+`jannolouwrens/jack-ladder-1786482462` had completed and charged 0.6561 h on
+2026-08-11 but the harness recorded `ValueError: dictionary update sequence
+element #0 has length 3; 2 is required`. The payload was still sitting in the
+kernel's own log on the `RESULT` line — the run was never lost, only
+undelivered. Root cause was three defects in series: Kaggle never populated
+`JobResult.stdout` (so every spec's RESULT-line fallback was dead code on that
+backend), the console log was handed back as an artifact, and T1.02 keyed on a
+remote path that could never hit and then blind-picked
+`next(iter(artifacts.values()))`. Fixed in `gpu.py` — `_kaggle_log_streams`,
+`_kaggle_collect`, and `result_json` as the single sanctioned reader — plus a
+near-miss found on the way: `submit` walked its normal `prefer` order during a
+reattach, so a free recovery would have paid for a fresh Colab job first.
+Measured: **T1.02 PASS, 3 seeds, reference_gain 8.097 (VOID floor 1.5, so this
+is a verdict on the architecture and not on the task), heldout structure
+advantage 21.014 (floor 1.25), beats_mean_baseline 11.175 (floor 1.10);
+control shuffled_heldout 0.5375 vs structured 0.0256.** Recovered for **zero
+additional GPU hours** — the budget is unchanged at kaggle 12.6196 h for
+2026-W32, because `charge` is idempotent per job_id. Row carries
+`gpu_job_id` and `gpu_repo_sha=0d05a5a` (the VM's clone sha, which differs
+from the local HEAD the submission log recorded — d0c8a6e).
+Machine improved: new spec **T0.24 PASS (6/6 properties)**, "A finished GPU run
+cannot be lost on the way home", whose control replays the pre-fix delivery on
+the real log fixture and must still raise the original ValueError — it does.
+LESSONS: *"A run's cost is committed when the provider finishes; everything
+after that is uninsured."*
+Next iteration: **T2.01 on Kaggle, and nothing cheaper first.** It is still the
+#1 blocker (frees 26, blocks 36), `est_hours=6.5`, and the week's Kaggle hours
+expire Sunday 2026-08-16 with ~17.4 h left. The delivery path it depends on is
+now the fixed one, and if that kernel orphans again its result is recoverable
+from the log instead of lost. Untaken after that, in order: LC.03 (frees 7,
+CPU) and UB.9 (frees 4 — five iterations deferred now, the oldest finding).

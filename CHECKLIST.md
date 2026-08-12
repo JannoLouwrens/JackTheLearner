@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 67 / 163 demonstrated
+## 69 / 164 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -64,7 +64,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Each trainable module drives loss below 1e-2 on ONE fixed batch.
       - _dies if:_ Loss plateaus above 1e-2 after 500 steps.
       - _then delete:_ The module. If it cannot memorise one batch it will never learn a task.
-- [!] **T1.02** Shuffled-target control (generalisation)
+- [x] **T1.02** Shuffled-target control (generalisation)
       - _asserts:_ On HELD-OUT states, a structured task generalises and a shuffled one does not.
       - _dies if:_ Held-out error is the same whether or not a state->action mapping exists.
       - _then delete:_ The premise that this architecture can learn a state->action mapping at all. If structure gives no held-out advantage, GPU hours cannot help.
@@ -303,6 +303,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ An argv containing any token the runner does not recognise is REFUSED whole — non-zero exit, and no spec dispatched, not even the ones it did recognise — while every well-formed argv (a read-only command, a bare spec id) behaves exactly as before.
       - _dies if:_ The runner reaching `cmd_run` for a spec named beside an unrecognised token, or the guard refusing an argv that was always legal.
       - _then delete:_ The claim that reading `experiments.run`'s output tells you what it did. If a token can be ignored, the command you typed and the command that ran are different commands.
+- [x] **T0.24** A finished GPU run cannot be lost on the way home
+      - _asserts:_ Once a remote kernel has COMPUTED the answer, no step between the provider and the ledger may discard it: Kaggle's console log is parsed into `stdout` so the printed RESULT line is reachable, the log is never offered as an artifact, `result_json` takes the named artifact or the RESULT line and NEVER guesses at some other file, and a reattach never routes to Colab.
+      - _dies if:_ A Kaggle JobResult with an empty stdout when a log was downloaded; the log appearing in `artifacts`; `result_json` returning a file it was not asked for; or `submit` calling Colab while JACK_REUSE_KERNEL is set.
+      - _then delete:_ The assumption that a paid run's cost is bounded by whether it ran. It is not: the money is spent when the kernel completes, and every line after that is an uninsured chance to throw the answer away.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
