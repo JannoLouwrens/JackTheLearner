@@ -492,6 +492,59 @@ class TrainingPipeline:
     # THE ONE RL UPDATE (PPO-style, RL-Zoo3 Humanoid tuned)
     # ─────────────────────────────────────────────────────────────────────
 
+    def compute_gae(self, rewards: torch.Tensor, dones: torch.Tensor,
+                    old_values: torch.Tensor):
+        """GAE(lambda) advantages and value targets. THE single advantage path.
+
+        Extracted from `rl_update` so it can be exercised against an analytic
+        ground truth (spec T0.25): a value function is only a baseline if
+        subtracting it removes the advantage, and that is checkable in closed
+        form. Inlined in a 100-line update method it was not.
+
+        Args:
+            rewards / dones: (T,) or (T, N), time on dim 0.
+            old_values: the critic's own output for those states, in whatever
+                units the critic emits.
+        Returns:
+            (advantages, returns, old_values) — all normalised the same way, so
+            `returns` is the value target and `advantages` the policy weight.
+        """
+        gamma = self.config.gamma
+        gae_lambda = self.config.gae_lambda
+
+        # ── GAE advantage estimation ──
+        # Accepts both layouts: (T,) from collect_rollout, or (T, N) from
+        # collect_rollout_vec. The recursion is identical — with (T, N) rows,
+        # delta and last_gae are (N,) vectors and every env's advantage chain is
+        # computed in parallel. What would NOT work is flattening (T, N) to
+        # (T*N,) first: that interleaves envs into one fake trajectory, so env
+        # k's first step would bootstrap from env k-1's last value. Time must
+        # stay dim 0 until the advantages exist; flattening is safe only after.
+        T = rewards.shape[0]
+        advantages = torch.zeros_like(rewards)
+        last_gae = torch.zeros_like(rewards[0])
+        for t in reversed(range(T)):
+            next_value = old_values[t + 1] if t < T - 1 else torch.zeros_like(rewards[0])
+            delta = rewards[t] + gamma * next_value * (1 - dones[t]) - old_values[t]
+            advantages[t] = last_gae = delta + gamma * gae_lambda * (1 - dones[t]) * last_gae
+        returns = advantages + old_values
+
+        if getattr(self.config, "normalize_returns", True):
+            # Scale (not centre) by a running std of returns: centring would bias
+            # the value target, scaling only fixes the loss magnitude. Advantages
+            # are normalised separately below, per batch, as PPO expects.
+            batch_var = returns.detach().var()
+            n = returns.numel()
+            self.ret_count += n
+            w = n / self.ret_count
+            self.ret_var = (1 - w) * self.ret_var + w * batch_var
+            scale = torch.sqrt(self.ret_var + 1e-8).clamp(min=1e-3)
+            returns = returns / scale
+            old_values = old_values / scale
+            advantages = advantages / scale
+
+        return advantages, returns, old_values
+
     def rl_update(self, rollout: Dict[str, torch.Tensor],
                   term_grad_diag: bool = False) -> Dict[str, float]:
         """
@@ -530,39 +583,7 @@ class TrainingPipeline:
         rewards = rollout['rewards']
         dones = rollout['dones']
 
-        gamma = self.config.gamma
-        gae_lambda = self.config.gae_lambda
-
-        # ── GAE advantage estimation ──
-        # Accepts both layouts: (T,) from collect_rollout, or (T, N) from
-        # collect_rollout_vec. The recursion is identical — with (T, N) rows,
-        # delta and last_gae are (N,) vectors and every env's advantage chain is
-        # computed in parallel. What would NOT work is flattening (T, N) to
-        # (T*N,) first: that interleaves envs into one fake trajectory, so env
-        # k's first step would bootstrap from env k-1's last value. Time must
-        # stay dim 0 until the advantages exist; flattening is safe only after.
-        T = rewards.shape[0]
-        advantages = torch.zeros_like(rewards)
-        last_gae = torch.zeros_like(rewards[0])
-        for t in reversed(range(T)):
-            next_value = old_values[t + 1] if t < T - 1 else torch.zeros_like(rewards[0])
-            delta = rewards[t] + gamma * next_value * (1 - dones[t]) - old_values[t]
-            advantages[t] = last_gae = delta + gamma * gae_lambda * (1 - dones[t]) * last_gae
-        returns = advantages + old_values
-
-        if getattr(self.config, "normalize_returns", True):
-            # Scale (not centre) by a running std of returns: centring would bias
-            # the value target, scaling only fixes the loss magnitude. Advantages
-            # are normalised separately below, per batch, as PPO expects.
-            batch_var = returns.detach().var()
-            n = returns.numel()
-            self.ret_count += n
-            w = n / self.ret_count
-            self.ret_var = (1 - w) * self.ret_var + w * batch_var
-            scale = torch.sqrt(self.ret_var + 1e-8).clamp(min=1e-3)
-            returns = returns / scale
-            old_values = old_values / scale
-            advantages = advantages / scale
+        advantages, returns, old_values = self.compute_gae(rewards, dones, old_values)
 
         if states.dim() == 3:                      # (T, N, D) -> flat for PPO
             states = states.reshape(-1, states.shape[-1])

@@ -514,6 +514,58 @@ EXPANSION: list[Spec] = [
                "`honesty` is the adjacent-PASS inflation the 8th audit asked "
                "the builder to stop doing."),
 
+    Spec("T0.25", 0, "The critic is a baseline, or it is decoration",
+         hypothesis="Subtracting a PERFECT value function from the return "
+                    "leaves nothing behind. Feed `compute_gae` the analytic "
+                    "value function of its own reward sequence and every "
+                    "advantage must be zero — at any state of the return "
+                    "normaliser, not only at the fresh scale=1 where the two "
+                    "unit systems happen to agree.",
+         falsified_by="Advantages that survive a perfect critic. The residual "
+                      "ratio std(adv | perfect V) / std(adv | V=0) is 0 for "
+                      "any correct advantage estimator; anything above 0.02 "
+                      "means the value head is not being subtracted in the "
+                      "units the rewards are measured in, and PPO is running "
+                      "as REINFORCE with a batch-mean baseline.",
+         null_baseline="V = 0 (no critic at all). Its advantages are the raw "
+                       "lambda-discounted reward sums, and the residual ratio "
+                       "is 1.0 by construction — that is the denominator, and "
+                       "it is what a critic has to improve on.",
+         metric="max_residual_ratio", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["T0.14"],
+         control="THE PRE-FIX RECURSION, kept executable: GAE with the critic "
+                 "output used verbatim while the rewards stay raw. On the SAME "
+                 "fixture, at a warmed normaliser, it MUST leave a residual "
+                 "ratio above the threshold. A control that now cancels would "
+                 "mean the fixture no longer reproduces the defect and this "
+                 "spec guards nothing.",
+         kills="The assumption that an actor-critic is doing credit assignment "
+               "because it has a value head and its vf_loss is small. A critic "
+               "can fit its targets perfectly and still contribute nothing.",
+         notes="SCAR, 2026-08-12. T2.01 v4 (Kaggle P100, 692K env-steps/seed, "
+               "6.5 GPU-h) recorded FAIL at 1.19 sigma against a 5-sigma bar, "
+               "with trained means [231.9, 384.5, 155.3] — and seed 2's "
+               "TRAINED policy (155.3) scored below its own UNTRAINED control "
+               "(186.0). The rollout curve plateaued by ~300K steps at "
+               "mean_reward ~5.1, which is Humanoid-v5's healthy_reward of 5.0 "
+               "plus almost nothing: the policy learned to stand a little "
+               "longer and never learned to move. The mechanism is a unit "
+               "mismatch, not a compute shortage. `vf_loss` fits the critic to "
+               "returns AFTER they are divided by the running return-std, so "
+               "the critic emits V/scale; GAE's delta then adds RAW rewards to "
+               "those normalised values. Measured on the ledger's own numbers: "
+               "value_mean ~3.5 while mean_reward ~5.0/step and the true "
+               "discounted return at gamma=0.95 is ~100 — the baseline was "
+               "~28x too small, so delta reduced to r_t and the advantage "
+               "became a discounted reward sum with a constant offset. With a "
+               "PERFECTLY trained critic, 79% of the advantage variance "
+               "survives (probe, 2026-08-12). Two organs were recommending a "
+               "seventh GPU-hour re-run of the same configuration; T2.01's own "
+               "pre-registration says a plateaued curve is an architecture "
+               "verdict, and this is what the architecture was actually doing.\n"
+               "Deliberately declares NO `COVERS:` commitment. It guards the "
+               "learning machinery, not a capability."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "
