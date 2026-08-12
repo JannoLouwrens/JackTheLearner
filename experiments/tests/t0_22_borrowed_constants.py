@@ -303,6 +303,9 @@ def _probe(rule_is_legacy: bool) -> dict:
             or not dirt("M experiments/run.py")
             or not dirt(" M TrainingPipeline.py")
             or not dirt("?? experiments/tests/t9_99_not_a_real_test.py")
+            # B4 (11th audit): a foreign file that merely ENDS with a runner
+            # output's name is code, and `endswith` granted it the exclusion.
+            or not dirt("?? experiments/tests/fixtures/my_ledger.json")
             or dirt("")):
         failed.append("p13_runner_output_is_not_code_dirt")
 
@@ -370,7 +373,7 @@ def _probe(rule_is_legacy: bool) -> dict:
     from ..gpu import offending_dirt
     code_lines = [" M experiments/run.py", "?? experiments/tests/t9_99.py",
                   " M TrainingPipeline.py"]
-    out_lines = [f" M experiments/{o}" for o in RUNNER_OUTPUTS]
+    out_lines = [f" M {o}" for o in RUNNER_OUTPUTS]
     out_lines += [f" M {d}" for d in DOC_OUTPUTS]
     disagree = [ln for ln in code_lines + out_lines
                 if dirt(ln) != bool(offending_dirt([ln]))]
