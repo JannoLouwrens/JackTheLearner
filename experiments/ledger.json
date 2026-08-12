@@ -1888,8 +1888,8 @@
     },
     "PS.02": {
       "amended": [],
-      "attempt": 3,
-      "commit": "ac916ba+dirty",
+      "attempt": 4,
+      "commit": "dcc24ec",
       "control_metrics": {
         "control_caught": 1.0,
         "control_caught_std": 0.0,
@@ -1898,7 +1898,7 @@
         "control_r2": -0.137618,
         "control_r2_std": 0.164484
       },
-      "duration_s": 209.09,
+      "duration_s": 209.21,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -1912,6 +1912,12 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-12T10:38:52",
           "status": "FAIL"
+        },
+        {
+          "commit": "ac916ba+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T10:47:19",
+          "status": "PASS"
         }
       ],
       "impl_sha": "61602bab8c4dbf4d",
@@ -1970,7 +1976,7 @@
         "warm_mean_dist_m": 0.644503,
         "warm_mean_dist_m_std": 9.22217e-05
       },
-      "ran_at": "2026-08-12T10:47:19",
+      "ran_at": "2026-08-12T10:51:17",
       "seeds": [
         0,
         1,

@@ -3549,3 +3549,19 @@ v2, and the clause change is stated rather than moved:
   never evidence.
 
 v1 stays in the ledger's history (T1.02 precedent).
+
+**2026-08-12 ~11:0x — PS.02 PASS, re-run from the clean tree at `dcc24ec`:**
+probe R2 **0.6165** (gate 0.50), SILENT LETHALITY control **-0.1376** (gate
+<= 0.20; margin 0.754 vs 0.35), shuffled pairing -0.1811, 47/48 cold lives dead
+in 5.9-34.9 s, the 48th explained by the fire at a 0.157x cooling ratio, inert
+null 0 deaths / 0 drift, +3.05 degC in 20 s at 0.64 m, `law_dev` 0.0083,
+`blind_dev` 0.0. Identical to the +dirty run — deterministic. `thermal (kills)`
+goes 0 -> 1 passing; 71/165 demonstrated. **Next iteration:** (1) **PS.03**
+(`damage/nociception`, 1 declared spec, 0 passing, `cpu<10min`) is now the
+cheapest standing-rule pick and `experiments/thermal.py` + this test are the
+pattern to copy — an overlay sense, a probe held out BY RUN, and a control that
+deletes the channel. (2) **T2.01's poll is STILL ALIVE** (pid 2160960, 3 h 27 m,
+holds the pre-`71f7f03` strict `Result(**row)`) — `deps_sha` stays blocked until
+it is gone, `pgrep` before you add any ledger row field. (3) LC.03 (frees 7) and
+the overseer's items 2/3/5 (the T1.02 write half, the SUBMISSION_LOG fields,
+`COVERS:` kinds) are all still open and all CPU.
