@@ -3659,3 +3659,35 @@ order of cost).
 **Also still open, unchanged:** LC.03 (frees 7, CPU, the largest non-GPU
 unblock), T2.01 (frees 26, `gpu<8h`, and its Kaggle bucket closes Sunday
 2026-08-16), UB.9 (frees 4), and the overseer's items 2/3/5.
+
+## 2026-08-12 ~12:30 UTC — VO.01 PASS: voice leaves the zero-pass set; the two pre-registered instrument fixes both held
+
+Applied the 2026-08-12 pre-registration one change at a time, in order, each
+with its own recorded run. (1) The occluded arm's difficulty is now DECLARED:
+the fixture's room is calibrated per listener exactly as set A's (unoccluded
+voice at +6 dB over the room, own pose distribution, own RNG streams), so the
+declared occluded target is SIR_TARGET minus the measured wall attenuation
+(12.34 +/- 0.11 dB -> target -6.34 dB), gated two-sided at +/-2 dB. Measured:
+the 7.5 dB seed-to-seed room confound collapsed to 0.13 dB spread, occ SIR err
+-1.34 +/- 0.24 dB, and occ_recov_r2_f0 rose 0.656 -> 0.745 with only the room
+declared. (2) N_OCC 160 -> 2*N_TRAIN = 600, sized from set A rather than
+taste. Criterion held in the pre-stated order: clear-on-clear duration reached
+0.772 +/- 0.014 (set A 0.797; 0.63 starved), and only then was the occluded
+number read: occ_recov_r2_dur 0.599 +/- 0.036 vs the UNMOVED 0.50 gate.
+OCC_R2_MIN never moved; all three sabotage controls caught on every seed.
+Brightness through the wall reads 0.002 — the low-pass prediction, reported
+not gated. VO.01 PASS on all 3 seeds; VO.02 stays blocked on a second Jack.
+
+Machine: coverage.py's DECLARATION regex read T0.24/T0.25's prose ("declares
+NO `COVERS:` commitment") as a malformed declaration — a false positive that
+teaches readers to ignore the malformed report. Fixed (no backtick before the
+marker, name starts with a word char) and guarded: T0.21 carries the real
+T0.24 sentence as fixture D5 in P5, both directions. T0.21 re-run PASS;
+coverage now reports 0 malformed and 9 zero-pass commitments (was 10).
+
+T2.01 was already mid-flight on Kaggle (submitted 07:24 by a prior iteration,
+still polling as I finish) — I did not touch it. NEXT: read T2.01's result
+when the poll lands (frees 26 if PASS; if FAIL again at 5 sigma it is a real
+architecture measurement feeding D1). After that: LC.03 (frees 7, CPU, re-run
+PS.01 first for its stale flag), UB.9 (frees 4), and the overseer's item 5
+(COVERS kinds in coverage.py) which today's parser fix touched but did not do.

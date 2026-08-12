@@ -108,7 +108,14 @@ COMMITMENTS: Dict[str, Tuple[str, str]] = {
 
 # `COVERS: a, b` — consumes to end of line, sentence, or string. A spec may
 # carry several markers. Names never contain a comma, a period or a semicolon.
-DECLARATION = re.compile(r"COVERS:\s*([^\n.;]+)", re.I)
+# Two guards separate a DECLARATION from a PROSE MENTION, because T0.24's
+# notes — "declares NO `COVERS:` commitment" — were read by the bare pattern
+# as a malformed declaration named "` commitment", invented from the sentence
+# disclaiming one: the marker may not be preceded by a backtick, and the name
+# must start with a word character. Either alone stops that artifact; both,
+# because a false malformed-declaration report trains its reader to ignore
+# the real ones (the LESSONS.md staleness-detector rule).
+DECLARATION = re.compile(r"(?<!`)COVERS:\s*(\w[^\n.;]*)", re.I)
 
 _CANON = {k.lower(): k for k in COMMITMENTS}
 

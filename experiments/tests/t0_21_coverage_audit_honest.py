@@ -95,6 +95,15 @@ def _fixture() -> dict:
     reg["ZZ.typo"] = replace(
         donor, id="ZZ.typo", title="Something unrelated",
         notes="COVERS: shelterr")
+    # D5 — the real 2026-08-12 artifact: a PROSE MENTION of the marker is not
+    # a declaration. T0.24's notes say it deliberately declares NO commitment,
+    # and the v1 parser read that sentence as a malformed declaration named
+    # "` commitment" — a false positive that makes the malformed-declaration
+    # report cry wolf.
+    reg["ZZ.prose"] = replace(
+        donor, id="ZZ.prose", title="Guards the harness, not a capability",
+        notes="Deliberately declares NO `COVERS:` commitment. It guards the "
+              "harness, not a capability.")
     return reg
 
 
@@ -133,12 +142,18 @@ def _probe(rule_is_regex: bool) -> dict:
     if "ZZ.declared" not in shelter:
         failed.append("p4_declaration_grants_coverage")
 
-    # P5 — a malformed declaration is REPORTED, not dropped. Only the
-    # declaration rule can even see this; the regex rule never reads a marker,
-    # so it is scored as a failure for it, which is honest: an organ that
-    # cannot detect the failure mode does not get credit for not having it.
-    _, bad = declarations(fix)
-    if rule_is_regex or ("ZZ.typo", "shelterr") not in bad:
+    # P5 — a malformed declaration is REPORTED, not dropped — and a PROSE
+    # MENTION of the marker is NEITHER reported NOR credited (D5, T0.24's real
+    # sentence). The two directions together are the property: a reporter that
+    # drops typos hides claims, and one that reports prose trains its reader
+    # to ignore it. Only the declaration rule can even see this; the regex
+    # rule never reads a marker, so it is scored as a failure for it, which is
+    # honest: an organ that cannot detect the failure mode does not get credit
+    # for not having it.
+    dec, bad = declarations(fix)
+    if (rule_is_regex or ("ZZ.typo", "shelterr") not in bad
+            or any(sid == "ZZ.prose" for sid, _ in bad)
+            or any("ZZ.prose" in ids for ids in dec.values())):
         failed.append("p5_malformed_declaration_is_reported")
 
     # P6 — no stale credit. Delete the declaring spec and the coverage goes
