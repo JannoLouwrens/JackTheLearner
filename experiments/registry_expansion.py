@@ -613,7 +613,7 @@ EXPANSION: list[Spec] = [
                "fixture. The control above lived in this notes field until "
                "2026-08-10: it ran on every seed and was invisible to a grep of "
                "Spec.control, which is the field an auditor reads (OVERSIGHT 1.4)."
-               "  COVERS: curiosity"),
+               "  COVERS: curiosity (fixture)"),
 
     Spec("PG.5", 2, "Procedural contact audio with localization labels",
          hypothesis="Modal-resonator synthesis on MuJoCo contact events yields "
@@ -1738,7 +1738,7 @@ EXPANSION: list[Spec] = [
                "shipped loss_scales.rec is shared across keys: a 64x64x3 image "
                "contributes 12,288 reconstruction terms and a 10-dim needs "
                "vector contributes 10."
-               "  COVERS: one brain / unison"),
+               "  COVERS: one brain / unison (rule)"),
 
     Spec("LC.02", 2, "A core that cannot live a life at survivable wall-clock is not a core",
          hypothesis="Every admissible arm sustains at least 5.0 simulated "

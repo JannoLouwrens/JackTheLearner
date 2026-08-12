@@ -117,23 +117,48 @@ COMMITMENTS: Dict[str, Tuple[str, str]] = {
 # the real ones (the LESSONS.md staleness-detector rule).
 DECLARATION = re.compile(r"(?<!`)COVERS:\s*(\w[^\n.;]*)", re.I)
 
+# A declaration carries a KIND: `COVERS: curiosity (fixture)`. Absent = claim.
+#
+# WHY (Overseer, 8th-10th audits). `n_pass` answered "has this commitment been
+# demonstrated", and two passing specs made constitutional commitments read as
+# demonstrated when nothing had been: PG.4 passing proved the noisy-TV PANEL
+# traps a naive agent — apparatus for a curiosity claim, not one — and LC.01
+# passing proved the ADMISSION RULE excludes unbound cores, not that any brain
+# binds. With them credited, `curiosity` and `one brain / unison` each read
+# 1 pass and the standing zero-pass rule could not see either hole.
+#
+#   claim   — a capability test that could have failed; the ONLY kind n_pass counts
+#   fixture — apparatus a claim will need (a trap, a world property)
+#   rule    — a gate/admission criterion enforced on candidates
+#   sensor  — an instrument measures/emits a channel; nothing acts on it yet
+#
+# Parsing order is load-bearing: canonical names themselves end in parentheses
+# — `thermal (kills)`, `language (parent)` — so the full name is looked up
+# FIRST and a trailing `(kind)` is stripped only when that fails. An
+# unrecognised kind is REPORTED like any malformed declaration, never dropped:
+# `(fixure)` reads as a claim to a human and must not silently buy one.
+KINDS = ("claim", "fixture", "rule", "sensor")
+_KIND = re.compile(r"^(.*\S)\s*\(\s*([\w-]+)\s*\)$")
+
 _CANON = {k.lower(): k for k in COMMITMENTS}
 
 
 def declarations(by_id: Optional[dict] = None
-                 ) -> Tuple[Dict[str, List[str]], List[Tuple[str, str]]]:
+                 ) -> Tuple[Dict[str, List[Tuple[str, str]]],
+                            List[Tuple[str, str]]]:
     """Read every spec's `COVERS:` markers.
 
-    Returns `(commitment -> [spec ids], [(spec id, unrecognised name)])`. The
-    second half is the point: a declaration naming a commitment that does not
-    exist is reported, never dropped. A typo'd marker looks exactly like a
-    claim to a human reader and buys exactly nothing from this file, which is
-    the false-positive failure this module was rewritten to end.
+    Returns `(commitment -> [(spec id, kind)], [(spec id, unrecognised name)])`.
+    The second half is the point: a declaration naming a commitment that does
+    not exist — or carrying a kind that is not one of `KINDS` — is reported,
+    never dropped. A typo'd marker looks exactly like a claim to a human reader
+    and buys exactly nothing from this file, which is the false-positive
+    failure this module was rewritten to end.
     """
     if by_id is None:
         from .registry import BY_ID
         by_id = BY_ID
-    declared: Dict[str, List[str]] = {k: [] for k in COMMITMENTS}
+    declared: Dict[str, List[Tuple[str, str]]] = {k: [] for k in COMMITMENTS}
     bad: List[Tuple[str, str]] = []
     for sid, spec in by_id.items():
         for group in DECLARATION.findall(str(getattr(spec, "notes", "") or "")):
@@ -141,11 +166,18 @@ def declarations(by_id: Optional[dict] = None
                 name = raw.strip()
                 if not name:
                     continue
-                canon = _CANON.get(name.lower())
+                # Full name first: `thermal (kills)` is a commitment, not a
+                # kind annotation. Only an unmatched trailing paren is a kind.
+                canon, kind = _CANON.get(name.lower()), "claim"
+                if canon is None:
+                    m = _KIND.match(name)
+                    if m and m.group(2).lower() in KINDS:
+                        canon = _CANON.get(m.group(1).strip().lower())
+                        kind = m.group(2).lower()
                 if canon is None:
                     bad.append((sid, name))
-                elif sid not in declared[canon]:
-                    declared[canon].append(sid)
+                elif sid not in [i for i, _ in declared[canon]]:
+                    declared[canon].append((sid, kind))
     return declared, bad
 
 
@@ -155,6 +187,12 @@ def report(by_id: Optional[dict] = None,
 
     `n_specs`/`n_pass` count DECLARED specs only. `nominations` lists specs a
     pattern matched that have not declared — work to do, not coverage.
+
+    `n_pass` counts passing `claim` declarations ONLY. A passing fixture, rule
+    or sensor is real work and is reported in `support_pass` — but apparatus
+    demonstrating itself is not the commitment being demonstrated, and merging
+    the two is how `curiosity` and `one brain / unison` each read as started
+    for three audits while no capability test had ever run.
     """
     if by_id is None:
         from .registry import BY_ID
@@ -168,16 +206,22 @@ def report(by_id: Optional[dict] = None,
     out = []
     for name, (pat, why) in COMMITMENTS.items():
         rx = re.compile(pat, re.I)
-        specs = [i for i in declared[name] if i in by_id]
+        pairs = [(i, k) for i, k in declared[name] if i in by_id]
+        specs = [i for i, _ in pairs]
         nominated = [s.id for s in by_id.values()
                      if rx.search(s.title) and s.id not in specs]
         # Status alone, deliberately — same call as `senses.py`, same reason:
         # coverage asks whether a commitment was ever demonstrated, not whether
         # the certificate is current. See `Ledger.unsatisfied` for the path
         # where freshness IS load-bearing, and `run stale` for the report.
-        passing = [i for i in specs if results.get(i, {}).get("status") == "PASS"]
+        passing = [i for i, k in pairs if k == "claim"
+                   and results.get(i, {}).get("status") == "PASS"]
+        support = {i: k for i, k in pairs if k != "claim"
+                   and results.get(i, {}).get("status") == "PASS"}
         out.append({"commitment": name, "why": why, "specs": specs,
+                    "kinds": dict(pairs),
                     "n_specs": len(specs), "n_pass": len(passing),
+                    "support_pass": support,
                     "nominations": nominated, "n_nominated": len(nominated),
                     "bad_declarations": [d for d in bad]})
     return out
@@ -198,6 +242,9 @@ def check() -> int:
     for r in sorted(rows, key=lambda z: (z["n_specs"], z["n_pass"])):
         mark = "NO SPECS" if not r["n_specs"] else (
             "none passing" if not r["n_pass"] else "")
+        if r["support_pass"]:
+            kinds = ", ".join(f"{i} ({k})" for i, k in r["support_pass"].items())
+            mark = (mark + f"  [support passing, not credited: {kinds}]").strip()
         print(f"  {r['commitment']:{width}}  {r['n_specs']:>3} specs "
               f"{r['n_pass']:>3} pass   {r['n_nominated']:>3} nominated   {mark}")
         if not r["n_specs"]:

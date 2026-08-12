@@ -69,7 +69,7 @@ def _legacy_coverage(reg: dict, commitment: str) -> list[str]:
 def _declared_coverage(reg: dict, commitment: str) -> list[str]:
     """Coverage by declaration — the rule under test."""
     declared, _ = declarations(reg)
-    return [i for i in declared[commitment] if i in reg]
+    return [i for i, _kind in declared[commitment] if i in reg]
 
 
 def _fixture() -> dict:
@@ -107,7 +107,7 @@ def _fixture() -> dict:
     return reg
 
 
-N_PROPERTIES = 7
+N_PROPERTIES = 8
 
 
 def _probe(rule_is_regex: bool) -> dict:
@@ -153,7 +153,8 @@ def _probe(rule_is_regex: bool) -> dict:
     dec, bad = declarations(fix)
     if (rule_is_regex or ("ZZ.typo", "shelterr") not in bad
             or any(sid == "ZZ.prose" for sid, _ in bad)
-            or any("ZZ.prose" in ids for ids in dec.values())):
+            or any(any(sid == "ZZ.prose" for sid, _k in pairs)
+                   for pairs in dec.values())):
         failed.append("p5_malformed_declaration_is_reported")
 
     # P6 — no stale credit. Delete the declaring spec and the coverage goes
@@ -171,9 +172,45 @@ def _probe(rule_is_regex: bool) -> dict:
         failed.append("p7_live_declarations_are_well_formed")
     else:
         for row in report():
-            if not set(row["specs"]) <= set(live_declared[row["commitment"]]):
+            if not set(row["specs"]) <= {i for i, _k in
+                                         live_declared[row["commitment"]]}:
                 failed.append("p7_live_declarations_are_well_formed")
                 break
+
+    # P8 — a declaration's KIND decides what a PASS buys (Overseer, items
+    # carried across the 8th-10th audits: PG.4 passing made `curiosity` read
+    # as demonstrated when what passed was the TRAP; LC.01 did the same to
+    # `one brain / unison` off the ADMISSION RULE). Both directions on fixed
+    # fake results, plus the two parses that could silently corrupt it: a
+    # canonical name that itself ends in parens — `thermal (kills)` — must
+    # still be a claim of that commitment, and a typo'd kind must be REPORTED,
+    # not read as a claim. The regex rule reads no markers, so it cannot
+    # distinguish apparatus from capability; scored as its failure, same
+    # honesty as P5.
+    donor = BY_ID["T0.01"]
+    kinds_reg = {
+        "ZZ.kclaim": replace(donor, id="ZZ.kclaim", title="He keeps rain off",
+                             notes="COVERS: shelter/building (claim)"),
+        "ZZ.kfix":   replace(donor, id="ZZ.kfix", title="The rain exists",
+                             notes="COVERS: shelter/building (fixture)"),
+        "ZZ.ktherm": replace(donor, id="ZZ.ktherm", title="Cold is felt",
+                             notes="COVERS: thermal (kills)"),
+        "ZZ.kbad":   replace(donor, id="ZZ.kbad", title="Unrelated",
+                             notes="COVERS: shelter/building (fixure)"),
+    }
+    fake_pass = {i: {"status": "PASS"} for i in kinds_reg}
+    krows = {r["commitment"]: r for r in report(kinds_reg, fake_pass)}
+    kdec, kbad = declarations(kinds_reg)
+    shelter_row, therm_row = krows["shelter/building"], krows["thermal (kills)"]
+    if (rule_is_regex
+            or shelter_row["n_pass"] != 1                       # claim counts,
+            or "ZZ.kclaim" not in shelter_row["specs"]
+            or shelter_row["support_pass"] != {"ZZ.kfix": "fixture"}  # fixture
+            or shelter_row["n_specs"] != 2                      # does not
+            or therm_row["n_pass"] != 1                         # paren name OK
+            or dict(kdec["thermal (kills)"]) != {"ZZ.ktherm": "claim"}
+            or ("ZZ.kbad", "shelter/building (fixure)") not in kbad):
+        failed.append("p8_kind_decides_what_a_pass_buys")
 
     rows = report()
     return {
