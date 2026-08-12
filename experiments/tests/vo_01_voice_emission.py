@@ -87,6 +87,23 @@ WHAT IS MEASURED, and each gate's rival
   and if `occ_recov_r2_bright` ever came out HIGH, the occluder would not be
   filtering.
 
+  ...AND AT A DECLARED DIFFICULTY, which the first v3 run showed this arm did
+  not have (pre-registered in docs/LOOP_JOURNAL.md, 2026-08-12, from that
+  run's CONTROLS, before any occluded recovery number at a declared level had
+  been seen). The clear line is pinned to +6 +/- 2 dB by calibration; behind
+  the wall `occ_voice_to_background_db` read -7.1 / -12.9 / -14.6 dB across
+  seeds — a 7.5 dB spread that belonged to where each seed's background
+  contacts happened to land around a FIXED listener, not to the wall. So the
+  occluded gate was scored against a room whose level nobody had declared.
+  v4 calibrates the fixture's room per listener exactly as set A's is
+  calibrated — the UNOCCLUDED voice over the fixture's own pose distribution
+  is set to `SIR_TARGET_DB` above the room — so the wall subtracts what the
+  wall subtracts and nothing else moves the difficulty. The declared occluded
+  target is therefore `SIR_TARGET_DB - occ_wall_atten_db`, with the wall's
+  attenuation MEASURED (same episodes rendered with and without occlusion),
+  and `occ_sir_err_db` is gated two-sided at the same +/-2 dB as the clear
+  line. `OCC_R2_MIN` did not move.
+
 WHAT THIS SPEC DOES NOT CLAIM. Not that the emission is a signal (nothing here
 learns), not that two agents coordinate (VO.02, blocked on a second Jack), and
 not the decibels: `ContactAudio.OCC_TRANSMISSION` models transmission through a
@@ -540,16 +557,20 @@ def _distance(seed, voice_distance: bool = True) -> dict:
 
 
 # ── occlusion: two-sided, against independently-checked geometry ────────
-def _occ_pairs(seed):
+def _occ_pairs(seed, n=N_OCC, salt=5):
     """Matched (occluded, clear) emitter poses: same range, same jitter, one
-    behind the block and one on an open line. Only the block differs."""
+    behind the block and one on an open line. Only the block differs.
+
+    `salt` picks the RNG stream: the scored pairs and the calibration draw
+    from the SAME distribution on DIFFERENT streams, so the calibration never
+    sees a pose the probe is scored on (the `_bg_gain` rule)."""
     model, data = _world(seed)
-    rng = np.random.RandomState(seed * 6151 + 5)
+    rng = np.random.RandomState(seed * 6151 + salt)
     pairs = []
     tries = 0
-    while len(pairs) < N_OCC:
+    while len(pairs) < n:
         tries += 1
-        if tries > 40 * N_OCC:
+        if tries > 40 * n:
             raise RuntimeError("occlusion fixture: matched poses not found")
         d = rng.uniform(*OCC_D_RANGE)
         j = rng.uniform(-OCC_JITTER, OCC_JITTER, size=3)
@@ -562,6 +583,59 @@ def _occ_pairs(seed):
         action = rng.uniform(-1.0, 1.0, size=CA.VOICE_ACTION_DIM)
         pairs.append((hid, lit, action))
     return pairs
+
+
+# ── the fixture's room level, declared per listener ─────────────────────
+_OCC_CAL: dict = {}
+
+
+def _occ_calibration(seed: int) -> dict:
+    """The occluded arm's difficulty, DECLARED rather than inherited.
+
+    Same construction as `_bg_gain`, at the fixture's own listeners over the
+    fixture's own pose distribution: the voice alone against the room alone,
+    both clean, and the gain follows in closed form. The hidden listener's
+    voice is measured UNOCCLUDED (the same emitted call rendered with
+    `voice_occlusion=False`), so the calibrated room puts the pre-wall voice
+    at `SIR_TARGET_DB` and the wall then costs exactly what the wall costs —
+    `occ_wall_atten_db`, measured on the same episodes rendered both ways, so
+    numerator and denominator share every draw and the ratio is tight. Own RNG
+    streams; the calibration never sees a pose the probe is scored on.
+    """
+    if seed in _OCC_CAL:
+        return _OCC_CAL[seed]
+    model, data = _world(seed)
+    bg = _background(seed)
+    rng = np.random.RandomState(seed * 9973 + 7)
+    sr = CA.SAMPLE_RATE
+    v_occ, v_clr, v_lit, r_hid, r_lit = [], [], [], [], []
+    for hid, lit, action in _occ_pairs(seed, n=N_CALIB, salt=8887):
+        n_bg = int(rng.randint(*BG_EVENTS_PER_EP))
+        r_hid.append(_rms(_ear(_episode_synth(model, L_HIDDEN, bg, rng, n_bg),
+                               None, mute_voice=True), sr))
+        r_lit.append(_rms(_ear(_episode_synth(model, L_LIT, bg, rng, n_bg),
+                               None, mute_voice=True), sr))
+        s = CA.ContactAudioSynth(model)
+        s.set_listener(L_HIDDEN, HEAD_YAW)
+        s.emit_voice(T_VOICE, hid, action, data=data)
+        v_occ.append(_rms(_ear(s, None), sr))
+        v_clr.append(_rms(_ear(s, None, voice_occlusion=False), sr))
+        s = CA.ContactAudioSynth(model)
+        s.set_listener(L_LIT, HEAD_YAW)
+        s.emit_voice(T_VOICE, lit, action, data=data)
+        v_lit.append(_rms(_ear(s, None), sr))
+    scale = 10.0 ** (SIR_TARGET_DB / 20.0)
+    wall_db = float(20.0 * math.log10(
+        max(float(np.mean(v_clr)), EPS) / max(float(np.mean(v_occ)), EPS)))
+    _OCC_CAL[seed] = {
+        "gain_hid": float(np.mean(v_clr) / max(float(np.mean(r_hid)), EPS)
+                          / scale),
+        "gain_lit": float(np.mean(v_lit) / max(float(np.mean(r_lit)), EPS)
+                          / scale),
+        "wall_atten_db": wall_db,
+        "sir_target_db": float(SIR_TARGET_DB - wall_db),
+    }
+    return _OCC_CAL[seed]
 
 
 def _occ_ref(seed, **render_kw) -> dict:
@@ -590,7 +664,7 @@ def _occ_recovery(seed) -> dict:
     OCCLUDED half. Same ranges, same bearings, same calls — only the block."""
     model, data = _world(seed)
     bg = _background(seed)
-    gain = _bg_gain(seed)
+    cal = _occ_calibration(seed)
     rng = np.random.RandomState(seed * 3571 + 23)
     sr = CA.SAMPLE_RATE
     fx_c, fx_o, ys = [], [], []
@@ -598,17 +672,18 @@ def _occ_recovery(seed) -> dict:
     v_o, room_o = [], []
     for i, (hid, lit, action) in enumerate(_occ_pairs(seed)):
         n_bg = int(rng.randint(*BG_EVENTS_PER_EP))
-        s_o = _episode_synth(model, L_HIDDEN, bg, rng, n_bg, gain)
+        s_o = _episode_synth(model, L_HIDDEN, bg, rng, n_bg, cal["gain_hid"])
         e_o = s_o.emit_voice(T_VOICE, hid, action, data=data)
         n_hidden_blocked += int(e_o.occluded)
         fx_o.append(_features(_ear(s_o, rng), sr))
-        s_c = _episode_synth(model, L_LIT, bg, rng, n_bg, gain)
+        s_c = _episode_synth(model, L_LIT, bg, rng, n_bg, cal["gain_lit"])
         s_c.emit_voice(T_VOICE, lit, action, data=data)
         fx_c.append(_features(_ear(s_c, rng), sr))
         ys.append(action)
-        # REPORTED, NOT GATED. The clear-line SIR is set to target by
-        # construction; behind the wall it is whatever the occluder leaves,
-        # and that number is the context for `occ_recov_r2_*`. Measured on a
+        # GATED, since v4, against the DECLARED target: the calibrated room
+        # plus the measured wall put the occluded voice at
+        # `SIR_TARGET_DB - occ_wall_atten_db` by construction, and this
+        # re-measures it on the scored episodes themselves. Measured on a
         # subsample because it costs two extra renders per pair.
         if i < min(N_CALIB, N_OCC):
             room_o.append(_rms(_ear(s_o, None, mute_voice=True), sr))
@@ -625,8 +700,14 @@ def _occ_recovery(seed) -> dict:
     out["occ_recov_r2_mean"] = float(np.mean(r2_occ))
     out["clear_recov_r2_mean"] = float(np.mean(r2_clear))
     out["occ_all_blocked"] = float(n_hidden_blocked == N_OCC)
+    out["occ_bg_gain_hid"] = cal["gain_hid"]
+    out["occ_bg_gain_lit"] = cal["gain_lit"]
+    out["occ_wall_atten_db"] = cal["wall_atten_db"]
+    out["occ_sir_target_db"] = cal["sir_target_db"]
     out["occ_voice_to_background_db"] = float(20.0 * math.log10(
         max(float(np.mean(v_o)), EPS) / max(float(np.mean(room_o)), EPS)))
+    out["occ_sir_err_db"] = float(
+        out["occ_voice_to_background_db"] - cal["sir_target_db"])
     return out
 
 
@@ -726,7 +807,12 @@ def _experiment(seed: int) -> dict:
         and m["occ_amp_ratio"] >= OCC_RATIO_MIN
         # ...it MUFFLES: a low-pass, not a volume knob
         and m["occ_centroid_drop"] >= OCC_CENTROID_DROP_MIN
-        # ...and he is still heard through it
+        # ...and he is still heard through it, AT THE DECLARED DIFFICULTY:
+        # the occluded room is calibrated, so its SIR may differ from the
+        # declared `SIR_TARGET_DB - occ_wall_atten_db` only by sampling error,
+        # two-sided — a quieter room buys nothing and a louder one hides
+        # nothing, on the arm whose difficulty v3 left undeclared
+        and abs(m["occ_sir_err_db"]) <= SIR_TOL_DB
         and m["occ_all_blocked"] == 1.0
         and m["occ_recov_r2_f0"] >= OCC_R2_MIN
         and m["occ_recov_r2_dur"] >= OCC_R2_MIN
@@ -778,6 +864,7 @@ def _check(m: dict, c: dict) -> bool:
         and m["dist_dev_inverse_square"] >= DIST_INV2_DISCRIM_MIN
         and OCC_RATIO_MIN <= m["occ_amp_ratio"] <= OCC_RATIO_MAX
         and m["occ_centroid_drop"] >= OCC_CENTROID_DROP_MIN
+        and abs(m["occ_sir_err_db"]) <= SIR_TOL_DB
         and m["occ_recov_r2_f0"] >= OCC_R2_MIN
         and m["occ_recov_r2_dur"] >= OCC_R2_MIN
         # every sabotage caught, on every seed
