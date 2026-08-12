@@ -3223,8 +3223,8 @@
     },
     "T0.22": {
       "amended": [],
-      "attempt": 7,
-      "commit": "ae9693f+dirty",
+      "attempt": 8,
+      "commit": "71f7f03",
       "control_metrics": {
         "direct_ledger_reads": 0.0,
         "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader",
@@ -3233,7 +3233,7 @@
         "properties_failed": 10.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "duration_s": 1.46,
+      "duration_s": 1.45,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3271,6 +3271,12 @@
           "message": "",
           "ran_at": "2026-08-11T20:26:07",
           "status": "PASS"
+        },
+        {
+          "commit": "ae9693f+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T08:15:23",
+          "status": "PASS"
         }
       ],
       "impl_sha": "8a145403e9ff045e",
@@ -3283,7 +3289,7 @@
         "properties_failed": 0.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "ran_at": "2026-08-12T08:15:23",
+      "ran_at": "2026-08-12T08:16:50",
       "seeds": [
         0
       ],
