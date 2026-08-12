@@ -4125,14 +4125,14 @@
     "T2.01": {
       "amended": [],
       "attempt": null,
-      "commit": "2cd0289",
+      "commit": "08444b2",
       "control_metrics": {
-        "untrained_mean": 153.8,
+        "untrained_mean": 158.0,
         "untrained_mean_std": 0.0,
-        "untrained_sigma_advantage": 0.68,
+        "untrained_sigma_advantage": 1.26,
         "untrained_sigma_advantage_std": 0.0
       },
-      "duration_s": 20090.47,
+      "duration_s": 20097.42,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -4160,9 +4160,15 @@
           "message": "VOID (invalidated by T0.14, 2026-08-09): run predates the dropout fix. 36 nn.Dropout modules were live during rollout, update and eval \u2014 42% policy-mean drift on an identical state \u2014 and obs was padded 376 vs the env-emitted 348. The 4.06-sigma result is not a refutation of the architecture; it is an invalid run.",
           "ran_at": "2026-08-07T19:29:50",
           "status": "VOID"
+        },
+        {
+          "commit": "2cd0289",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-10T01:17:15",
+          "status": "FAIL"
         }
       ],
-      "impl_sha": null,
+      "impl_sha": "9cc96fc7bb04222b",
       "message": "pre-registered threshold not met",
       "metrics": {
         "all_seeds_beat_random": 1.0,
@@ -4170,121 +4176,121 @@
         "backend": "kaggle",
         "curve_seed0": [
           {
-            "action_absmax": 1.336797833442688,
-            "action_std": 0.30034324526786804,
-            "entropy": 3.6669,
+            "action_absmax": 1.3406221866607666,
+            "action_std": 0.3007219135761261,
+            "entropy": 3.681,
             "iter": 1,
-            "mean_reward": 4.68203592300415,
-            "pg_loss": 0.0879,
+            "mean_reward": 4.6932878494262695,
+            "pg_loss": 0.1346,
             "steps": 4096,
-            "value_mean": 0.0030436525121331215,
-            "vf_loss": 0.8431
+            "value_mean": 0.003336072200909257,
+            "vf_loss": 0.8102
           },
           {
-            "action_absmax": 1.2566295862197876,
-            "action_std": 0.30041050910949707,
-            "entropy": 3.6776,
+            "action_absmax": 1.2619264125823975,
+            "action_std": 0.30095431208610535,
+            "entropy": 3.701,
             "iter": 2,
-            "mean_reward": 4.712421417236328,
-            "pg_loss": 0.0158,
+            "mean_reward": 4.722209930419922,
+            "pg_loss": 0.0064,
             "steps": 8192,
-            "value_mean": 2.7594146728515625,
-            "vf_loss": 0.2291
+            "value_mean": 2.759443759918213,
+            "vf_loss": 0.3755
           },
           {
-            "action_absmax": 1.303510069847107,
-            "action_std": 0.3005317747592926,
-            "entropy": 3.6808,
+            "action_absmax": 1.2947593927383423,
+            "action_std": 0.3011690676212311,
+            "entropy": 3.7156,
             "iter": 3,
-            "mean_reward": 4.715437889099121,
-            "pg_loss": -0.0068,
+            "mean_reward": 4.745426654815674,
+            "pg_loss": -0.0207,
             "steps": 12288,
-            "value_mean": 2.925766944885254,
-            "vf_loss": 0.2053
+            "value_mean": 3.187009811401367,
+            "vf_loss": 0.2847
           },
           {
-            "action_absmax": 1.2704086303710938,
-            "action_std": 0.3004904091358185,
-            "entropy": 3.685,
+            "action_absmax": 1.3388463258743286,
+            "action_std": 0.3011547029018402,
+            "entropy": 3.7203,
             "iter": 4,
-            "mean_reward": 4.754912376403809,
-            "pg_loss": -0.0082,
+            "mean_reward": 4.872282028198242,
+            "pg_loss": -0.0203,
             "steps": 16384,
-            "value_mean": 3.0679092407226562,
-            "vf_loss": 0.2363
+            "value_mean": 3.175347328186035,
+            "vf_loss": 0.2885
           },
           {
-            "action_absmax": 1.4391599893569946,
-            "action_std": 0.3003784120082855,
-            "entropy": 3.6834,
+            "action_absmax": 1.4993553161621094,
+            "action_std": 0.3006007969379425,
+            "entropy": 3.698,
             "iter": 6,
-            "mean_reward": 4.840204238891602,
-            "pg_loss": -0.0135,
+            "mean_reward": 4.926004409790039,
+            "pg_loss": -0.0156,
             "steps": 24576,
-            "value_mean": 3.1941440105438232,
-            "vf_loss": 0.2999
+            "value_mean": 3.4438161849975586,
+            "vf_loss": 0.3303
           },
           {
-            "action_absmax": 1.4211266040802002,
-            "action_std": 0.3002081513404846,
-            "entropy": 3.6644,
+            "action_absmax": 1.5163161754608154,
+            "action_std": 0.3005311191082001,
+            "entropy": 3.6767,
             "iter": 11,
-            "mean_reward": 4.9034576416015625,
-            "pg_loss": -0.0265,
+            "mean_reward": 5.0092363357543945,
+            "pg_loss": -0.0143,
             "steps": 45056,
-            "value_mean": 3.4777097702026367,
-            "vf_loss": 0.3695
+            "value_mean": 3.424124240875244,
+            "vf_loss": 0.3116
           },
           {
-            "action_absmax": 1.4922280311584473,
-            "action_std": 0.29992297291755676,
-            "entropy": 3.6592,
+            "action_absmax": 1.5419416427612305,
+            "action_std": 0.3013670742511749,
+            "entropy": 3.7294,
             "iter": 16,
-            "mean_reward": 4.919291019439697,
-            "pg_loss": -0.0103,
+            "mean_reward": 4.917965888977051,
+            "pg_loss": -0.0015,
             "steps": 65536,
-            "value_mean": 3.6576900482177734,
-            "vf_loss": 0.326
+            "value_mean": 3.343587636947632,
+            "vf_loss": 0.263
           },
           {
-            "action_absmax": 1.4509299993515015,
-            "action_std": 0.3000243902206421,
-            "entropy": 3.6505,
+            "action_absmax": 1.4480708837509155,
+            "action_std": 0.30249759554862976,
+            "entropy": 3.7724,
             "iter": 21,
-            "mean_reward": 4.864351272583008,
-            "pg_loss": -0.0296,
+            "mean_reward": 5.018294334411621,
+            "pg_loss": -0.0043,
             "steps": 86016,
-            "value_mean": 3.549351215362549,
-            "vf_loss": 0.2957
+            "value_mean": 3.322739601135254,
+            "vf_loss": 0.2915
           }
         ],
         "env_steps_per_seed": [
-          692224,
-          696320,
-          692224
+          700416,
+          700416,
+          704512
         ],
         "gpu": "Tesla P100-PCIE-16GB",
-        "random_mean": 118.0,
+        "random_mean": 113.3,
         "random_mean_std": 0.0,
-        "random_std": 52.7,
-        "random_std_std": 7.10543e-15,
-        "sigma_advantage": 1.19,
+        "random_std": 33.52,
+        "random_std_std": 0.0,
+        "sigma_advantage": 2.67,
         "sigma_advantage_std": 0.0,
-        "sigma_used": 116.7,
+        "sigma_used": 108.83,
         "sigma_used_std": 0.0,
-        "trained_mean": 257.2,
-        "trained_mean_std": 0.0,
+        "trained_mean": 403.9,
+        "trained_mean_std": 5.68434e-14,
         "trained_means": [
-          231.9,
-          384.5,
-          155.3
+          280.1,
+          447.1,
+          484.5
         ],
-        "trained_std": 116.7,
+        "trained_std": 108.83,
         "trained_std_std": 0.0,
-        "wall_minutes": 331.4,
+        "wall_minutes": 331.5,
         "wall_minutes_std": 0.0
       },
-      "ran_at": "2026-08-10T01:17:15",
+      "ran_at": "2026-08-12T12:59:15",
       "seeds": [
         0,
         1,
