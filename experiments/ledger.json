@@ -3,8 +3,8 @@
   "results": {
     "BA.01": {
       "amended": [],
-      "attempt": 4,
-      "commit": "fe16e06",
+      "attempt": 5,
+      "commit": "ed49b73",
       "control_metrics": {
         "auc": 0.691781,
         "auc_std": 0.0362163,
@@ -29,7 +29,7 @@
         "toppled_frac": 0.947222,
         "toppled_frac_std": 0.0306816
       },
-      "duration_s": 226.76,
+      "duration_s": 227.51,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -49,9 +49,15 @@
           "message": "run did not test the claim; not a refutation",
           "ran_at": "2026-08-12T19:17:06",
           "status": "VOID"
+        },
+        {
+          "commit": "fe16e06",
+          "message": "",
+          "ran_at": "2026-08-12T21:17:29",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "0b96c7c63a79c4ec",
+      "impl_sha": "7b57d29c3a6540aa",
       "message": "",
       "metrics": {
         "auc": 0.908685,
@@ -97,7 +103,7 @@
         "toppled_frac": 0.947222,
         "toppled_frac_std": 0.0306816
       },
-      "ran_at": "2026-08-12T21:17:29",
+      "ran_at": "2026-08-12T22:27:01",
       "seeds": [
         0,
         1,
@@ -3753,6 +3759,39 @@
         0
       ],
       "spec_id": "T0.25",
+      "status": "PASS"
+    },
+    "T0.26": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "ed49b73",
+      "control_metrics": {
+        "prefix_certifies_broken_world": 1.0
+      },
+      "duration_s": 103.82,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "5b6494d78ce6662e",
+      "message": "",
+      "metrics": {
+        "deg_rig_ok": 0.0,
+        "deg_tf_abs_spread": 11.127842957594652,
+        "deg_tf_fall_spread": 0.0,
+        "deg_toppled_frac": 1.0,
+        "hon_rig_ok": 1.0,
+        "hon_tf_abs_spread": 16.014213738260676,
+        "hon_tf_fall_spread": 9.375624081497318,
+        "hon_toppled_frac": 0.9833333333333333,
+        "p1_broken_world_refused": 1.0,
+        "p2_degeneracy_isolated": 1.0,
+        "p3_honest_bulk_admitted": 1.0,
+        "properties_failed": 0.0
+      },
+      "ran_at": "2026-08-12T22:23:02",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.26",
       "status": "PASS"
     },
     "T1.01": {

@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 74 / 165 demonstrated
+## 75 / 166 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -311,6 +311,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Subtracting a PERFECT value function from the return leaves nothing behind. Feed `compute_gae` the analytic value function of its own reward sequence and every advantage must be zero — at any state of the return normaliser, not only at the fresh scale=1 where the two unit systems happen to agree.
       - _dies if:_ Advantages that survive a perfect critic. The residual ratio std(adv | perfect V) / std(adv | V=0) is 0 for any correct advantage estimator; anything above 0.02 means the value head is not being subtracted in the units the rewards are measured in, and PPO is running as REINFORCE with a batch-mean baseline.
       - _then delete:_ The assumption that an actor-critic is doing credit assignment because it has a value head and its vf_loss is small. A critic can fit its targets perfectly and still contribute nothing.
+- [x] **T0.26** A rig-health gate refuses a broken world and admits an honest one
+      - _asserts:_ BA.01's per-seed rig-health gate is live in BOTH directions, measured through the spec's own episode and statistic path (`rollout_rig` + `rig_health`, never a restatement): a world exhibiting its named failure mode — every fall on one schedule — scores tf_fall_spread BELOW TF_FALL_SPREAD_MIN and is refused (`rig_ok` 0), while the honest rig's bulk on the SAME world scores ABOVE it and is admitted. Inert and unreachable are the two ways a carried constant dies when the rig moves underneath it; this asserts both, executably.
+      - _dies if:_ The declared degenerate rig clearing TF_FALL_SPREAD_MIN (the gate is inert — BA.01 v2's defect), or the honest rig's bulk falling under it (the gate is a tail lottery — BA.01 v3's defect), or `rig_ok` disagreeing with its own statistics, or the degenerate fixture failing every OTHER rig-health gate too (a world broken in all dimensions cannot show that THIS gate is the one doing the refusing).
+      - _then delete:_ The assumption that a pre-registered threshold survives a rig change because its number did. A gate is a claim that the statistic's attainable range under THIS rig straddles it — and that claim needs re-measuring every time the rig moves (law 4 protects the number; this protects the measurement).
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
