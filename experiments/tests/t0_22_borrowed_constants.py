@@ -34,8 +34,9 @@ import re
 from dataclasses import asdict, replace
 from pathlib import Path
 
-from ..protocol import (Ledger, Result, Status, borrow_metrics, impl_sha_of,
-                        is_code_dirt, module_path_for, run_spec)
+from ..protocol import (DOC_OUTPUTS, RUNNER_OUTPUTS, Ledger, Result, Status,
+                        borrow_metrics, impl_sha_of, is_code_dirt,
+                        module_path_for, run_spec)
 from ..registry import BY_ID
 
 SPEC_ID = "T0.22"
@@ -150,7 +151,7 @@ def _legacy_from_row(row: dict) -> Result:
 FUTURE_KEY = "deps_sha"
 
 
-N_PROPERTIES = 14
+N_PROPERTIES = 15
 
 
 def _probe(rule_is_legacy: bool) -> dict:
@@ -274,11 +275,20 @@ def _probe(rule_is_legacy: bool) -> dict:
     # A file the RUNNER WRITES is not evidence that CODE is uncommitted. Both
     # directions, because the flattering one hides: over-excluding would make a
     # genuinely dirty tree look clean.
+    # `gpu_budget.json` is named here for the same reason the others are: it is
+    # written by `Budget.charge()` at the end of every GPU job, so it is dirty
+    # for the whole window between a charge and the next commit — and until
+    # 2026-08-12 the stamp read that window as "the code that ran is in no
+    # commit". The stripped-first-line case is P13's too: `.stdout.strip()` eats
+    # one leading space, and a column slice then reads a different filename.
     dirt = _legacy_is_code_dirt if rule_is_legacy else is_code_dirt
     if (dirt(" M experiments/gpu_submissions.jsonl")
             or dirt("?? experiments/gpu_submissions.jsonl")
             or dirt(" M experiments/ledger.json")
+            or dirt(" M experiments/gpu_budget.json")
+            or dirt("M experiments/gpu_budget.json")
             or not dirt(" M experiments/run.py")
+            or not dirt("M experiments/run.py")
             or not dirt("?? experiments/tests/t9_99_not_a_real_test.py")
             or dirt("")):
         failed.append("p13_runner_output_is_not_code_dirt")
@@ -330,6 +340,30 @@ def _probe(rule_is_legacy: bool) -> dict:
                 p14_ok = False
     if not p14_ok:
         failed.append("p14_unknown_row_key_survives_a_foreign_reader")
+
+    # P15 — THE CLASS, on the other axis. P12 pinned two organs to one ROW; this
+    # pins two organs to one FILE. The `+dirty` stamp and the GPU push guard both
+    # answer "is this uncommitted line evidence that code moved", and each kept
+    # its own hand-maintained exclusion list. They diverged by exactly one entry:
+    # `gpu.py` had learned (twice, by deadlocking on it) that `gpu_budget.json`
+    # is an output, `protocol.py` never did — and the half that had not learned
+    # was the half wired to `blocked_by`, so the runner's own accounting file
+    # stamped `+dirty` on every CPU run in the window after a GPU charge.
+    # Neither organ could see it from inside; only the comparison can.
+    # Both directions: a real source file must offend BOTH, or an exclusion that
+    # swallowed everything would score full marks here.
+    from ..gpu import offending_dirt
+    code_lines = [" M experiments/run.py", "?? experiments/tests/t9_99.py"]
+    out_lines = [f" M experiments/{o}" for o in RUNNER_OUTPUTS]
+    disagree = [ln for ln in code_lines + out_lines
+                if dirt(ln) != bool(offending_dirt([ln]))]
+    # ...and the sanctioned difference stays sanctioned rather than drifting:
+    # docs are code dirt for the stamp and allowed by the push guard, because a
+    # journal edit cannot change what the VM runs.
+    docs_ok = all(dirt(f" M {d}") and not offending_dirt([f" M {d}"])
+                  for d in DOC_OUTPUTS)
+    if disagree or not docs_ok or offending_dirt(code_lines) != code_lines:
+        failed.append("p15_stamp_and_push_guard_agree_on_the_same_file")
 
     return {
         "properties_checked": float(N_PROPERTIES),
@@ -385,7 +419,11 @@ def _check(m: dict, c: dict) -> Status | bool:
                       # and the row's own readability: a staleness verdict about
                       # an entry nobody can load is not a weaker guard, it is a
                       # crashed recorder
-                      "p14_unknown_row_key_survives_a_foreign_reader"} <= control_names
+                      "p14_unknown_row_key_survives_a_foreign_reader",
+                      # and the cross-organ agreement: the legacy rule calls the
+                      # runner's own budget file code dirt while the push guard
+                      # excludes it, which IS the 2026-08-12 divergence
+                      "p15_stamp_and_push_guard_agree_on_the_same_file"} <= control_names
     return bool(experiment_clean and control_broken)
 
 

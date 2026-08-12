@@ -27,6 +27,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
+from .protocol import DOC_OUTPUTS, is_code_dirt, porcelain_path
+
 COLAB = "/data/venvs/colab/bin/colab"
 KAGGLE = "/data/venvs/kaggle/bin/kaggle"
 BUDGET_FILE = Path(__file__).parent / "gpu_budget.json"
@@ -108,6 +110,31 @@ print("REPO", _sp.run(["git", "-C", "/tmp/jack", "rev-parse", "--short", "HEAD"]
 """
 
 
+def offending_dirt(porcelain_lines) -> list:
+    """Which uncommitted lines mean the GPU would run DIFFERENT code than we test.
+
+    OUTPUTS, not inputs, are excluded. These are written BY a run and never read
+    by the remote job, so a modification to one says nothing about whether the
+    GPU's code matches ours. Including them deadlocked the guard against itself:
+    `Budget.charge()` writes `gpu_budget.json` at the end of every job, so the
+    first GPU run dirtied the tree and blocked the second. A guard that fails on
+    its own side effects trains people to bypass it.
+
+    The exclusion is `protocol.RUNNER_OUTPUTS` — NOT a second list that happens
+    to agree. On 2026-08-12 the two lists disagreed by exactly one entry
+    (`gpu_budget.json`, which only this file knew about) and the `+dirty` stamp
+    on the other side blocked 47 specs off the runner's own accounting file.
+    `DOC_OUTPUTS` is the one place the two organs are allowed to differ.
+
+    A function over a fixture list, not an inline filter over the real tree, for
+    the reason `is_code_dirt` was extracted: a predicate exercisable only by
+    dirtying the repo it audits is a predicate nothing will ever test.
+    """
+    allowed = set(DOC_OUTPUTS)
+    return [ln for ln in porcelain_lines
+            if is_code_dirt(ln) and porcelain_path(ln) not in allowed]
+
+
 def assert_ref_is_current(ref: str = "main") -> None:
     """Refuse to ship a job whose code is not the code being tested.
 
@@ -130,27 +157,7 @@ def assert_ref_is_current(ref: str = "main") -> None:
 
     rc, dirty = git("status", "--porcelain", "--untracked-files=no")
     if rc == 0 and dirty:
-        # OUTPUTS, not inputs. These are written BY a run and never read by the
-        # remote job, so a modification to one says nothing about whether the
-        # GPU's code matches ours. Including them deadlocked the guard against
-        # itself: Budget.charge() writes gpu_budget.json at the end of every job,
-        # so the first GPU run dirtied the tree and blocked the second. A guard
-        # that fails on its own side effects trains people to bypass it.
-        outputs = {"experiments/gpu_budget.json", "experiments/ledger.json",
-                   "experiments/gpu_submissions.jsonl",
-                   "CHECKLIST.md", "docs/LOOP_JOURNAL.md"}
-        # Parse by splitting, not by column: git() strips stdout, which eats the
-        # leading space of the FIRST porcelain line only (' M path' -> 'M path'),
-        # so a column-3 slice yielded 'periments/gpu_budget.json' for whichever
-        # file happened to be listed first — and the exclusion silently missed
-        # it. That is why this guard kept firing on its own budget file after
-        # being "fixed": the fix was validated against subprocess output that
-        # had not been stripped, i.e. against code that was not the code running.
-        def _path(ln: str) -> str:
-            parts = ln.strip().split(None, 1)
-            return parts[1] if len(parts) == 2 else ln.strip()
-        offending = [ln for ln in dirty.splitlines()
-                     if _path(ln) not in outputs]
+        offending = offending_dirt(dirty.splitlines())
         if offending:
             raise RuntimeError(
                 "Uncommitted changes to tracked files -- the GPU would run "

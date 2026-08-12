@@ -39,7 +39,38 @@ LEDGER_PATH = Path(__file__).parent / "ledger.json"
 #: Files the RUNNER writes as it runs. A dirty working tree normally means "the
 #: code that ran is in no commit", but these are outputs, not code, so their
 #: being dirty says nothing about the code — see the `+dirty` stamp below.
-RUNNER_OUTPUTS = ("ledger.json", "gpu_submissions.jsonl")
+#:
+#: `gpu_budget.json` joined on 2026-08-12, and its absence was a live defect
+#: rather than an omission: `Budget.charge()` writes it at the end of EVERY GPU
+#: job, so from the moment a job charged until the next commit, every CPU spec
+#: run in that window stamped `+dirty` and BLOCKED its dependents — the same
+#: "evidence log that invalidates the evidence" failure `gpu_submissions.jsonl`
+#: was added to close the day before, in the sibling file, missed. `gpu.py`
+#: already knew (it had excluded the file since the guard deadlocked against
+#: itself); this list did not, which is why they are now ONE list.
+RUNNER_OUTPUTS = ("ledger.json", "gpu_submissions.jsonl", "gpu_budget.json")
+
+#: Files the LOOP writes around a run — rendered status and the journal. Not
+#: runner outputs (no run writes them mid-flight), so they still count as code
+#: dirt for the `+dirty` stamp; but they cannot make a GPU job's code differ
+#: from ours, so `gpu.assert_ref_is_current` allows them. The two organs differ
+#: here ON PURPOSE, and the difference is named in one place instead of being
+#: an accident of two hand-maintained lists.
+DOC_OUTPUTS = ("CHECKLIST.md", "docs/LOOP_JOURNAL.md")
+
+
+def porcelain_path(porcelain_line: str) -> str:
+    """The path out of a `git status --porcelain` line, stripped or not.
+
+    Split, never a column slice. `subprocess.run(...).stdout.strip()` eats the
+    leading space of the FIRST line only (`' M path'` -> `'M path'`), so a
+    `line[3:]` slice silently yields `'periments/gpu_budget.json'` for whichever
+    file git happened to list first — which is exactly how `gpu.py`'s exclusion
+    kept missing its own budget file after being "fixed" twice. A parser that is
+    right for one caller's whitespace and wrong for another's is not a parser.
+    """
+    parts = porcelain_line.strip().split(None, 1)
+    return parts[1].strip() if len(parts) == 2 else ""
 
 
 def is_code_dirt(porcelain_line: str) -> bool:
@@ -51,7 +82,7 @@ def is_code_dirt(porcelain_line: str) -> bool:
     test. T0.22 P13 is the test; the pre-2026-08-11 version (`ledger.json`
     alone) is its control.
     """
-    path = porcelain_line[3:].strip()
+    path = porcelain_path(porcelain_line)
     if not path:
         return False
     return not any(path.endswith(o) for o in RUNNER_OUTPUTS)
