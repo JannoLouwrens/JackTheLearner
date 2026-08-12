@@ -2545,8 +2545,8 @@
     },
     "T0.12": {
       "amended": [],
-      "attempt": 10,
-      "commit": "dd7186b+dirty",
+      "attempt": 11,
+      "commit": "97f9419",
       "control_metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
@@ -2583,7 +2583,7 @@
         "waste_not_counted_as_work": false,
         "weeks_isolated": false
       },
-      "duration_s": 1.25,
+      "duration_s": 1.27,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2639,6 +2639,12 @@
           "message": "NameError: name 'os' is not defined",
           "ran_at": "2026-08-12T13:18:19",
           "status": "ERROR"
+        },
+        {
+          "commit": "dd7186b+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T13:18:28",
+          "status": "PASS"
         }
       ],
       "impl_sha": "3ab4329982e3e7b3",
@@ -2679,7 +2685,7 @@
         "waste_not_counted_as_work": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-12T13:18:28",
+      "ran_at": "2026-08-12T13:23:25",
       "seeds": [
         0
       ],
@@ -3283,8 +3289,8 @@
     },
     "T0.21": {
       "amended": [],
-      "attempt": 7,
-      "commit": "f239118+dirty",
+      "attempt": 8,
+      "commit": "97f9419",
       "control_metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
@@ -3295,7 +3301,7 @@
         "properties_checked": 7.0,
         "properties_failed": 4.0
       },
-      "duration_s": 1.21,
+      "duration_s": 1.23,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3333,6 +3339,12 @@
           "message": "",
           "ran_at": "2026-08-11T20:37:40",
           "status": "PASS"
+        },
+        {
+          "commit": "f239118+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T12:19:52",
+          "status": "PASS"
         }
       ],
       "impl_sha": "4d0501462a6560fe",
@@ -3347,7 +3359,7 @@
         "properties_checked": 7.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-12T12:19:52",
+      "ran_at": "2026-08-12T13:23:28",
       "seeds": [
         0
       ],
@@ -3356,8 +3368,8 @@
     },
     "T0.22": {
       "amended": [],
-      "attempt": 11,
-      "commit": "dd7186b+dirty",
+      "attempt": 12,
+      "commit": "97f9419",
       "control_metrics": {
         "direct_ledger_reads": 0.0,
         "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader,p15_stamp_and_push_guard_agree_on_the_same_file",
@@ -3366,7 +3378,7 @@
         "properties_failed": 11.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "duration_s": 1.46,
+      "duration_s": 1.48,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3428,6 +3440,12 @@
           "message": "",
           "ran_at": "2026-08-12T09:31:24",
           "status": "PASS"
+        },
+        {
+          "commit": "dd7186b+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T13:20:14",
+          "status": "PASS"
         }
       ],
       "impl_sha": "67f0a0818270d2b1",
@@ -3440,7 +3458,7 @@
         "properties_failed": 0.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "ran_at": "2026-08-12T13:20:14",
+      "ran_at": "2026-08-12T13:23:27",
       "seeds": [
         0
       ],
@@ -4682,8 +4700,8 @@
     },
     "VO.01": {
       "amended": [],
-      "attempt": 6,
-      "commit": "41d7b5b+dirty",
+      "attempt": 7,
+      "commit": "97f9419",
       "control_metrics": {
         "control_dist_caught": 1.0,
         "control_dist_caught_std": 0.0,
@@ -4708,7 +4726,7 @@
         "noocc_amp_ratio": 1.0,
         "noocc_amp_ratio_std": 0.0
       },
-      "duration_s": 76.48,
+      "duration_s": 73.51,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -4740,6 +4758,12 @@
           "message": "pre-registered threshold not met",
           "ran_at": "2026-08-12T12:15:25",
           "status": "FAIL"
+        },
+        {
+          "commit": "41d7b5b+dirty",
+          "message": "",
+          "ran_at": "2026-08-12T12:17:55",
+          "status": "PASS"
         }
       ],
       "impl_sha": "bf92c5162f9f9d4a",
@@ -4874,7 +4898,7 @@
         "voiced_silent_rms": 0.0132879,
         "voiced_silent_rms_std": 0.000482093
       },
-      "ran_at": "2026-08-12T12:17:55",
+      "ran_at": "2026-08-12T13:23:08",
       "seeds": [
         0,
         1,
