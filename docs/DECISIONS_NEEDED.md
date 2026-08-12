@@ -944,3 +944,61 @@ will write a legitimate result into `experiments/ledger.json` around 22:07 with
 no iteration alive to commit it. Whoever resumes will find a dirty tree
 containing a real, uncommitted ledger row — that is expected, not damage. It is
 handled in `OVERSIGHT.md` FOR THE BUILDER item 3.
+
+---
+
+## D5 — UPDATE 2026-08-12 06:54 (9th overseer audit). Question 1 is ANSWERED; the original question is live with ~5 hours left.
+
+**The 8th audit's correction asked you one load-bearing question:** *"Was the
+21:03 pause meant to be temporary?"* You answered it by action.
+
+    $ git status --short
+     D .loop-paused
+     D .paused
+    $ grep RESUMED /data/jack-logs/ladder.log | tail -1
+    2026-08-12T06:47:37+00:00 RESUMED BY OWNER — 95% weekly (ceiling 100%, expires 2026-08-12T12:00:00+00:00)
+
+Both stop files were deleted at 06:47 and an iteration started in the same
+second. **The pause was temporary.** D5 is therefore NOT moot, and its original
+three options are live again — with the deadline much closer than when they were
+filed. Recorded here rather than closed: closing an owner decision is not the
+overseer's to do.
+
+**THE ASK, unchanged from the original D5, with today's numbers:**
+
+| fact | value at 06:54 UTC |
+|---|---|
+| weekly Claude usage | **95%** (ceiling 100%) |
+| `.usage-resumed` grant expires | **2026-08-12T12:00:00 UTC — 5 h 6 m away** |
+| approximate headroom at recent burn rate | **~5 iterations** |
+| permitted runtime in the last 24 h | **≈ 4 h 40 m** of 24 |
+
+  1. **Renew daily until the weekly reset.** Most control, most of your attention.
+  2. **Grant through to the weekly reset in one go** (raise `until`). One
+     decision; the 90% default returns automatically next week — this is what the
+     expiry design already anticipates.
+  3. **Accept the stop at 12:00.** Legitimate: 95% is 95%.
+
+**Nobody is proposing to weaken or remove the 90% rule.** It stays the default
+under all three options.
+
+**What changed in the cost since the correction was filed** — the GPU deadline
+moved closer and the waste became measurable:
+
+- **17.3804 of 30 Kaggle GPU-hours remain in W32** (`gpu_budget.json`:
+  `2026-W32.kaggle = 12.6196`), and the bucket closes **Sunday 2026-08-16**.
+- **T2.01** (`FAIL`, `est_hours=6.5`, `prefer="kaggle"`) is still the project's
+  #1 blocker at **frees 26 / blocks 36** — 3.7x the next-largest. Every curiosity
+  spec (CU.1-CU.7, T2.08), every Tier-5 claim and every Tier-6 living-Jack spec
+  is behind it. Nothing has been submitted for it since the v4 re-spec.
+- **1.6475 GPU-hours were spent overnight and produced an `ERROR` row** — 100%
+  of the week's dispatches. The cause is a stale artifact key in one file, not a
+  science failure, and the measurement has been recovered intact
+  (OVERSIGHT 9th audit, RANK 1). It is reported here because it is the second
+  consecutive week in which GPU budget has expired or been wasted rather than
+  spent on the blocker.
+
+Those hours are only spendable during hours the loop is permitted to run, which
+is what this decision governs. **The cost of an indefinite stop is not "a slower
+week": it is that the curiosity thesis — GOAL.md's north star, currently 12
+specs and zero ever run — stays untestable until the next weekly grant.**
