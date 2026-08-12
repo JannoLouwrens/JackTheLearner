@@ -3413,3 +3413,74 @@ fixed, both holders measured at 0.00 cores. Stating it rather than hiding it.
    defect: the field is what the GPU calendar plans against).
 4. `T2.01`'s Kaggle result and `T1.08`/`T1.07` in `/data/jack-data/*.log` were
    still in flight at hand-off. Do not resubmit either.
+
+## 2026-08-12 09:07-11:0x — the +dirty stamp was firing on the loop's own paperwork
+
+Took hand-off item 2 (T2.00, the #1 blocker) and found on the way in that its
+DIRTY stamp was **false**. Evidence, not inference: T2.00 was recorded
+`08444b2+dirty`, and `ae9693f` — the commit that cleaned that tree — contains
+`docs/LOOP_JOURNAL.md`, `gpu_submissions.jsonl`, `ledger.json` and **no code**.
+Two of those were already excluded from `is_code_dirt`. The journal was not.
+So a markdown append marked a 998-second locomotion gate as "the code that ran
+is in no commit", and `blocked_by` propagated that to 47 specs.
+
+That collision is scheduled, not unlucky: every iteration is *instructed* to
+finish by appending to LOOP_JOURNAL.md and re-rendering CHECKLIST.md, while the
+hourly builder overlaps runs lasting hours. The next one due was **T2.01, 6.5
+Kaggle-hours, recording this afternoon.**
+
+A second missing entry found alongside it: `gpu_budget.json`, written by
+`Budget.charge()` at the end of every GPU job, so every CPU spec recorded
+between a charge and the next commit stamped `+dirty` too. `gpu.py` had known
+about that file for weeks (its push guard had deadlocked on it twice);
+`protocol.py` never did. Two organs, two hand-maintained lists, each missing
+what the other had paid to learn — invisible from inside either, obvious from
+the comparison. `LESSONS.md:2527` had already prescribed "a named set, not a
+special case" on 08-11 and it did not prevent this, because naming a list does
+not make it complete. New LESSONS entry written about *that*, not about the
+instance.
+
+**Measured / recorded this iteration** (all from clean trees):
+
+| spec | result | numbers |
+|---|---|---|
+| T1.08 | PASS (inherited, uncommitted on disk) | Colab T4, effect 0.245, seed noise 0.0028, SNR 86.1 vs attempt 1's 10.1; MDE 0.0468 -> 0.0057 |
+| T2.00 | PASS 998.57 s | max_vf_pg_grad_ratio 2.87, final 0.79, max_log_std -1.1991, action_limit 0.4 |
+| T0.25 | PASS 3.0 s | residual ratio 0.0 fresh AND warmed, null 1.0 |
+| T0.22 | PASS 1.46 s | 15/15 properties (was 14), control fails 11 incl. p15 |
+| T0.12 | PASS 1.28 s | re-run because it declares `IMPL_DEPS = [gpu.py]` and I changed gpu.py — the mechanism working |
+
+`run stale`: **zero stale, zero dirty.** `run blocked` is back to its true shape
+— T2.01 (frees 26, mid-flight), LC.03 (frees 7), UB.9 (frees 4). T2.00 is gone
+from the list.
+
+Fix: `NOT_CODE = RUNNER_OUTPUTS + DOC_OUTPUTS`, `porcelain_path` (split, never a
+column slice — `.strip()` eats the first line's leading space), and
+`gpu.offending_dirt` is now one line over `is_code_dirt` with zero permitted
+difference. T0.22 P13 gains the two false-positive files; **P15 is new** and
+pins the two organs together file-by-file, with ` M TrainingPipeline.py` as the
+true-positive control line — that was T0.25's genuine `1ddcd27+dirty`, kept so
+an exclusion list cannot grow until the guard is gone while everything else
+still passes.
+
+**Next iteration, in order:**
+1. **`deps_sha` — STILL BLOCKED, and check before you start.** The T2.01 poll
+   (pid 2160960, started 07:24 from `08444b2`) holds the **pre-`71f7f03`
+   strict `Result(**row)`**, so adding a row field while it is alive is a
+   `TypeError` after 6.5 Kaggle-hours and before its result reaches disk. It was
+   still running at 11:0x. `pgrep -f "experiments.run T2.01"` first; if it is
+   gone and its row is recorded, the field is safe and it is the top hand-off.
+2. **T2.01's result.** If it lands FAIL again at real numbers that is a
+   measurement, not a fault — do not re-submit blind and do not touch the 5σ
+   bar. It frees 26.
+3. **LC.03** (`cpu<2h`, frees 7) — the largest non-GPU unblock, runs beside any
+   GPU job, and PS.01's stale flag is now clear so nothing bars it. Carry the
+   owner's three guards (data-starved != non-learner, the convergence check, the
+   scale-transfer gate) from DECISIONS_NEEDED.md.
+4. Carried, unstarted, from 08-11: **the budget-declaration guard** — a test
+   module that calls `gpu.submit` must declare a `gpu` budget and vice versa,
+   both directions (T1.07/T1.08 declared CPU while dispatching Colab and took
+   the local lock at 0.00 cores). Five lines over `module_path_for` + a regex.
+5. Carried: **the 2 MALFORMED `COVERS:` declarations** (`run coverage` names
+   T0.24 and T0.25 — both parse to '` commitment'), and the overseer's item 5,
+   giving `COVERS:` a kind so a fixture cannot read as a claim.

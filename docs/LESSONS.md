@@ -2788,3 +2788,67 @@ construction. Any field of that kind needs a check that the declaration matches
 the behaviour (here: a test module that calls `gpu.submit` must declare a `gpu`
 budget, both directions). Specced for the next iteration; the scan that found
 the two is five lines over `module_path_for` + a regex.
+
+## Naming a set does not make it complete — a second organ asking the same question does
+
+`docs/LESSONS.md:2527` ends with the rule *"enumerate the paths that process
+WRITES and exclude them as a named set, not as a special case"*. That rule was
+followed on 2026-08-11: `protocol.RUNNER_OUTPUTS` was created, `is_code_dirt`
+was extracted so it could be asked of a fixture string, and **T0.22 P13** gated
+it in both directions. The named set contained the file that had just bitten and
+the one excluded before it.
+
+Within twenty-four hours the same bug fired twice more, from files the set never
+named:
+
+- `gpu_budget.json`, written by `Budget.charge()` at the end of **every** GPU
+  job — so every CPU spec recorded between a charge and the next commit stamped
+  `+dirty`.
+- `docs/LOOP_JOURNAL.md`, and this is the one that actually cost: T2.00 was
+  recorded `08444b2+dirty`, and the commit that cleaned that tree (`ae9693f`)
+  touches three files, **none of them code**. A 998-second locomotion gate was
+  marked unattributable by a markdown edit, `blocked_by` propagated it to 47
+  specs, and clearing it cost the run again.
+
+So the lesson that was supposed to close the class did not, and the reason is
+the part worth keeping: **a named set is still a hand-maintained list, and
+naming it changes nothing about whether it is complete.** The 08-11 entry added
+the instance that had just bitten and derived no rule for finding the next one —
+which is the same shape as the bug it was written about, one level up.
+
+What actually found both is not a better list. It is that **two organs were
+answering the same question and could be made to disagree in public.**
+`gpu.assert_ref_is_current` and the `+dirty` stamp both decide "does this
+uncommitted file mean the code moved", and each had learned, painfully and
+separately, something the other had not: `gpu.py` knew about `gpu_budget.json`
+(it had deadlocked on it twice), `protocol.py` knew nothing about it; neither
+had thought about docs. Each list was missing what the other had already paid
+for. From inside either organ the omission is invisible — every property passes
+— and it is visible instantly from the comparison.
+
+**Rule:** when two pieces of machinery answer the same question about the same
+input, do not maintain two lists and check each against intuition. Collapse them
+to one predicate, and if they must differ, make the difference itself a named
+constant and pin it with a property that enumerates the set — so adding an entry
+to one is either shared automatically or fails loudly. A duplicated definition
+does not have to be *wrong* to be a defect (`LESSONS.md:2007`); it only has to be
+*maintained twice*, and the second maintainer is always the one who has not yet
+been bitten.
+
+**Corollary, on the direction that hides.** A provenance guard's FALSE POSITIVE
+is not a safe failure. `+dirty` is indistinguishable from the real thing by
+construction — that is its whole job — so a false one blocks its dependents just
+as hard, and it presents as "re-run it", which is cheap enough to obey and never
+cheap enough to investigate. Two iterations obeyed. **Any guard whose output
+blocks work needs its false-positive direction fixtured as explicitly as its
+true-positive one**, and the true positive must be a *real recorded instance*,
+not an invented one: T0.25's `1ddcd27+dirty` came from an uncommitted
+`TrainingPipeline.py` and is now P13/P15's control line, precisely so an
+exclusion list cannot grow until the guard is gone while every other property
+still passes.
+
+**GUARD.** `protocol.NOT_CODE = RUNNER_OUTPUTS + DOC_OUTPUTS` is the single
+answer; `gpu.offending_dirt` is one line over `is_code_dirt` with zero permitted
+difference; **T0.22 P15** asserts the two organs agree file-by-file over the
+whole set and that real source still offends both. P12 pinned two organs to one
+ROW; P15 pins them to one FILE.
