@@ -3048,3 +3048,47 @@ systematic exactly where multi-seeding is supposed to buy independence.
 PS.02 still carries the fixed-draw pattern; its PASS stands (its draw landed
 well below its cap) but the pattern should die the next time that file is
 touched, with a re-run.
+
+## Law 4 protects the threshold. Nothing protects the MEASUREMENT — a rig change can leave a constant untouched and still make its gate inert
+
+BA.01 v2 (`0fce271`) rebuilt the rig to decorrelate the elapsed-time null,
+under a commit message that was true in the letter it claimed: *"all v1
+thresholds untouched"*. Every gate constant was byte-identical. But v2
+redefined the STATISTIC one of them gates. `TF_SPREAD_MIN = 2.5` exists,
+per the spec's own docstring (failure mode #2), to detect a world where
+every episode topples on the same schedule — the condition under which the
+task degenerates into reading the clock. v2 changed `tf_spread` from the
+spread of FALL times to the spread of ABSOLUTE topple times, which now
+include a uniform hold `t_r ~ U{0..40}` injected by the rig itself:
+
+    std(t_r) alone = 11.85 decisions     gate = 2.5     margin = 4.7x
+
+So a world with ZERO fall-time variance — failure mode #2 in its purest
+form — would clear the gate by nearly five times, on the strength of the
+rig's own RNG. The v2 pilot reported `tf_spread 12.79` (v1: 5.69) and the
+number read as healthy rather than as a warning. Worse, the same change
+defeated the OTHER detector of the same failure mode by construction (the
+uniform scoring box makes `P(y|t)` flat whatever the world does), so both
+independent guards against one failure mode were disabled by one commit —
+one deliberately and correctly, one silently. The correct statistic
+(`tf_fall_spread`) was computed in the same diff and left ungated "for the
+reader".
+
+This is the second instance of the same disease: `60686ac` fixed a COUNT
+that kept its number and lost its meaning (fixtures credited as claims).
+The class is *semantic drift under a stable name*, and law 4 as written
+cannot see it — law 4 asks whether the number moved, and the number did not.
+
+**Rule:** when a rig or a fixture changes, re-derive what every gated
+statistic MEASURES, not just whether its threshold moved. Two guards:
+(1) a gate whose statistic changed definition must be RE-PRE-REGISTERED with
+a fresh pilot number, and the docstring sentence that justifies it must be
+rewritten in the same commit, or the file ends up holding two incompatible
+readings of one constant; (2) prefer the executable version — assert that a
+DELIBERATELY DEGENERATE fixture scores BELOW the gate. A gate that a broken
+world still clears is inert, and unlike a prose argument, that is
+machine-checkable. Never let one name carry two jobs: if a statistic acquires
+a second role, it needs a second name.
+
+Corollary for review: "no threshold was touched" is necessary and NOT
+sufficient. Ask what the threshold now bounds.

@@ -1047,3 +1047,36 @@ work" but "the loop stops between a 6.5-hour GPU result landing and anything
 being done with it." That is a smaller cost than the one originally filed, and it
 is stated here so the decision is made on today's numbers rather than
 yesterday's.
+
+---
+
+## D2 — CAN BE TAKEN OFF YOUR DESK (11th overseer audit, 2026-08-12 18:50 UTC)
+
+**Recommendation: D2 should not be an owner decision. The system can answer it
+by bakeoff, and the evidence to run one arrived today.**
+
+D2 asks whether a `VOID` dependency BLOCKS its dependents. It has sat here as an
+owner decision, but it is a property question with a testable answer, not a
+values question — and SYSTEM.md's third law says decisions like this are made by
+bakeoff, never by argument.
+
+**What changed today:**
+
+- **T2.02 is `VOID` and blocks 4 specs** (T2.13, T5.09, UB.15, and UB.16 as a
+  co-requisite). Under "VOID blocks" those 4 are unreachable; under "VOID does
+  not block" they are runnable now. Nothing decides which, so they sit.
+- **BA.01 v2 (`0fce271`) just made `VOID` a ROUTINE verdict.** Its `_check` now
+  returns `Status.VOID` per-seed whenever a world is rig-degenerate, per the
+  T2.02 lesson. VOID is no longer a rare event in this ladder — it is a
+  designed-for outcome, and the scheduling question it raises is now permanent
+  rather than incidental.
+
+**Why it is the system's call:** the two readings make different predictions
+that can be measured — run the dependents of a VOID parent and see whether their
+results are interpretable or garbage. That is a bakeoff, not a judgement about
+what the project values.
+
+**No action is requested from you.** This is filed so the entry is not read as
+still-blocked-on-owner. It has been handed to the builder as item **B3** in
+`docs/OVERSIGHT.md`. If you disagree and want to keep the call, say so and it
+comes straight back here.
