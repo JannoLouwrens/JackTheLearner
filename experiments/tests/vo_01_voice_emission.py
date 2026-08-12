@@ -205,7 +205,15 @@ L_HIDDEN = BLOCK + np.array([1.00, 0.0, 0.0])   # listener 1.0 m past the block
 L_LIT = np.array([-2.5, -3.5, 0.15])            # listener on a clear line
 OCC_D = 2.0                                     # mouth-to-ear range, both cases
 OCC_JITTER = 0.04
-N_OCC = 160                                     # matched occluded / clear pairs
+# Sized from set A, not by taste (the N_CALIB rule, applied to the arm nobody
+# applied it to): the occluded probe is the SAME 115-feature ridge as set A's,
+# so its train split gets set A's train size by construction. At the old 160
+# (80 train examples for 115 features) the probe was data-starved before the
+# wall was even considered — its clear-on-clear control read 0.63 for duration
+# against set A's 0.80, so a low `occ_recov_r2_dur` was uninterpretable. The
+# criterion, stated in advance (docs/LOOP_JOURNAL.md, 2026-08-12): the clear
+# control must reach set A's level, and only then is `occ_recov_r2_dur` read.
+N_OCC = 2 * N_TRAIN                             # matched occluded / clear pairs
 OCC_D_RANGE = (1.6, 2.4)
 REF_ACTION = (-0.05, 0.5, 0.6, 0.0)             # f0 ~ 226 Hz, bright, mid-length
 
