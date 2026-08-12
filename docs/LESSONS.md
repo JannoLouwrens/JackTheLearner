@@ -671,6 +671,17 @@ only *conditionally*, write the condition into the guard note — "a reattach
 cannot re-bill a kernel **whose first poll charged**" would have named its own
 hole.
 
+**GUARD, 2026-08-12 (same day).** `run_on_kaggle` now closes the reuse window
+from the kernel's OWN console log (the record stamps are seconds since kernel
+start, so the last stamp is the provider's report of the run window); with no
+readable log it bills the local window as an announced upper bound on stderr,
+never silently. T0.12 property 9 drives the shipped reuse path with a kernel
+that finished 10 hours before the reattach, and its control is the pre-fix
+rewind kept executable, which must fail the window property. Condition on this
+guard: it covers the REATTACH path only — a fresh submission's poll-window
+charge is still unreconciled against Kaggle's report, which needs a live
+kernel and stays open.
+
 ## A shared observation can be dead in three quarters of one column block and every fixture still passes
 
 `playground.humanoid_obs` reproduces `HumanoidEnv._get_obs`, and 78 of its 348
@@ -2957,3 +2968,32 @@ separability before any sample existed. Ask it in this order — *what must my
 control be able to see, and does the world I am about to write let it?* — and
 you are choosing physics on evidence rather than on which equation is more
 famous.
+
+## A write-discipline fix is a fix to a PATTERN, and the pattern had a second instance two files away
+
+On 2026-08-10 `Ledger.record` was rewritten to lock, RE-READ from disk and
+single-key merge, after a stale 5.6-hour GPU poll reverted six entries. Its
+docstring names the disease precisely: "each Ledger held an in-memory copy and
+wrote the whole file, so a writer with a stale view silently erased results it
+had never seen." `Budget.charge` — written by the SAME overlapping processes,
+holding its construction-time copy for the SAME hours — kept exactly that
+pattern for two more days. On 2026-08-12 the T2.01 poll (Budget loaded 07:24,
+charged 12:59) erased the 0.5498 h colab charge another iteration had recorded
+at 08:17, plus its `charged_jobs` entry — repaired by hand in `dd7186b`. The
+idempotency check read the same stale copy, so a job billed by another process
+would also have billed twice.
+
+Three standing lessons would each have caught this if applied to the meter —
+"grep every site that branches on status", "enumerate the copies of the thing
+you fixed", "two organs answering the same question" — and none was, because
+each was filed under the artifact that motivated it. The co-written records
+were even already enumerated as a set (`RUNNER_OUTPUTS`), for a different
+question.
+
+**Rule:** a concurrency or durability fix to one record is a claim about a
+WRITE PATTERN, not about a file. Before closing it, list the other durable
+records the same overlapping processes write — `RUNNER_OUTPUTS` is that list,
+literally — and either apply the same discipline to each or write down why it
+is not needed. Guard: `Budget.charge()` now locks, re-reads, and atomically
+replaces (T0.12 property 10, with the pre-fix stale writer kept executable as
+the control that must fail both concurrency properties).

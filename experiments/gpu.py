@@ -17,6 +17,7 @@ runs here rather than in a cloud runner.
 """
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import subprocess
@@ -229,12 +230,16 @@ class Budget:
 
     def __init__(self, path: Path = BUDGET_FILE):
         self.path = path
-        self.data = json.loads(path.read_text()) if path.exists() else {}
+        self.data = self._load()
+
+    def _load(self) -> dict:
+        data = json.loads(self.path.read_text()) if self.path.exists() else {}
         # Lazily migrate older files rather than hand-editing the accounting
         # record: a budget written before 2026-08-09 has weeks and nothing else.
-        self.data.setdefault("weeks", {})
-        self.data.setdefault("charged_jobs", {})
-        self.data.setdefault("overruns", [])
+        data.setdefault("weeks", {})
+        data.setdefault("charged_jobs", {})
+        data.setdefault("overruns", [])
+        return data
 
     @staticmethod
     def _week() -> str:
@@ -286,36 +291,56 @@ class Budget:
         above `if res.ok`, so a kernel that crashed, timed out or lost its
         artifact download was indistinguishable in the record from work.
         """
-        if job_id and job_id in self.data["charged_jobs"]:
-            return False
-        key = backend if ok else backend + FAILED_SUFFIX
-        wk = self.data["weeks"].setdefault(self._week(), {})
-        wk[key] = round(wk.get(key, 0.0) + seconds / 3600.0, 4)
-        if job_id:
-            self.data["charged_jobs"][job_id] = {
-                "week": self._week(), "backend": backend,
-                "hours": round(seconds / 3600.0, 4), "ok": ok,
-            }
-            # Unbounded growth would eventually make the file the largest thing
-            # in the repo. Insertion order is the age order.
-            while len(self.data["charged_jobs"]) > MAX_TRACKED_JOBS:
-                self.data["charged_jobs"].pop(next(iter(self.data["charged_jobs"])))
-        # `afford()` gates on the DECLARED estimate and this bills the ACTUAL
-        # elapsed time, so nothing prevents an overrun — but an overrun that
-        # leaves no mark is how week 31 closed at 37.4554 of a 30.0 h ceiling
-        # with T0.12 green throughout, and denied T1.02 its 0.7 h.
-        used = self.used_hours(backend)
-        if backend == "kaggle" and used > KAGGLE_WEEKLY_HOURS:
-            self.data["overruns"].append({
-                "week": self._week(), "backend": backend,
-                "used_hours": round(used, 4), "ceiling": KAGGLE_WEEKLY_HOURS,
-                "job_id": job_id, "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
-            })
-            print(f"!! GPU BUDGET OVERRUN: {backend} {used:.4f}h of "
-                  f"{KAGGLE_WEEKLY_HOURS}h this week ({self._week()}) — "
-                  f"the ceiling is not being enforced, only observed",
-                  file=sys.stderr, flush=True)
-        self.path.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
+        # Lock, RE-READ from disk, mutate, write atomically — the same pattern
+        # `Ledger.record` adopted on 2026-08-10 for the same disease. Until
+        # 2026-08-12 this method wrote the whole file from `self.data`, loaded
+        # at construction: a `submit()` poll builds its Budget when the job is
+        # dispatched and charges hours later, so its write carried a stale view
+        # of every charge made in between. Measured that day: the T2.01 poll
+        # (Budget loaded 07:24) erased a colab charge recorded at 08:17 —
+        # 0.5498 h and its charged_jobs entry gone, repaired by hand in
+        # `dd7186b`. The idempotency check must also run against the FRESH
+        # state, or a job charged by another process bills twice here.
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        lock_path = self.path.with_suffix(self.path.suffix + ".lock")
+        with open(lock_path, "w") as lockf:
+            fcntl.flock(lockf.fileno(), fcntl.LOCK_EX)
+            self.data = self._load()
+            if job_id and job_id in self.data["charged_jobs"]:
+                return False
+            key = backend if ok else backend + FAILED_SUFFIX
+            wk = self.data["weeks"].setdefault(self._week(), {})
+            wk[key] = round(wk.get(key, 0.0) + seconds / 3600.0, 4)
+            if job_id:
+                self.data["charged_jobs"][job_id] = {
+                    "week": self._week(), "backend": backend,
+                    "hours": round(seconds / 3600.0, 4), "ok": ok,
+                }
+                # Unbounded growth would eventually make the file the largest
+                # thing in the repo. Insertion order is the age order.
+                while len(self.data["charged_jobs"]) > MAX_TRACKED_JOBS:
+                    self.data["charged_jobs"].pop(next(iter(self.data["charged_jobs"])))
+            # `afford()` gates on the DECLARED estimate and this bills the
+            # ACTUAL elapsed time, so nothing prevents an overrun — but an
+            # overrun that leaves no mark is how week 31 closed at 37.4554 of a
+            # 30.0 h ceiling with T0.12 green throughout, and denied T1.02 its
+            # 0.7 h.
+            used = self.used_hours(backend)
+            if backend == "kaggle" and used > KAGGLE_WEEKLY_HOURS:
+                self.data["overruns"].append({
+                    "week": self._week(), "backend": backend,
+                    "used_hours": round(used, 4), "ceiling": KAGGLE_WEEKLY_HOURS,
+                    "job_id": job_id, "at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                })
+                print(f"!! GPU BUDGET OVERRUN: {backend} {used:.4f}h of "
+                      f"{KAGGLE_WEEKLY_HOURS}h this week ({self._week()}) — "
+                      f"the ceiling is not being enforced, only observed",
+                      file=sys.stderr, flush=True)
+            # tmp + os.replace so a SIGKILL mid-write cannot truncate the
+            # accounting record (the T0.05 pattern).
+            tmp = self.path.with_suffix(self.path.suffix + ".tmp")
+            tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
+            os.replace(tmp, self.path)
         return True
 
     def afford(self, backend: str, est_hours: float) -> bool:
@@ -423,6 +448,25 @@ def _kaggle_log_streams(path: Path) -> tuple[str, str]:
             continue
         (errs if r.get("stream_name") == "stderr" else out).append(str(r.get("data", "")))
     return "".join(out), "".join(errs)
+
+
+def _kaggle_log_window(path: Path) -> Optional[float]:
+    """Kaggle's own report of how long a kernel ran, in seconds, or None.
+
+    The console log is a JSON array of `{stream_name, time, data}` records whose
+    `time` is seconds since the kernel started, so the last record's stamp is
+    the kernel's run window as the PROVIDER measured it. This is the only number
+    on this box that can close a reattached kernel's billing window honestly:
+    the local clock only knows when the local process came back to look, which
+    on a reattach can be hours after the kernel went terminal.
+    """
+    try:
+        recs = json.loads(path.read_text())
+        stamps = [float(r["time"]) for r in recs
+                  if isinstance(r, dict) and "time" in r]
+        return max(stamps) if stamps else None
+    except Exception:
+        return None
 
 
 def _kaggle_collect(outdir: Path, slug: str) -> tuple[dict, str, str, str]:
@@ -564,12 +608,34 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
             status = "error"; break
     billable_s = time.time() - t_meter_open
 
+    # An errored kernel still leaves a console log, and on a reattach that log
+    # is the only honest meter (below) — so fetch output for any terminal
+    # status when reusing, not only for `complete`.
     artifacts, log_path, k_out, k_err = {}, "", "", ""
-    if status == "complete":
+    if status == "complete" or reuse:
         outdir = work / "out"
         outdir.mkdir(exist_ok=True)
         _run([KAGGLE, "kernels", "output", f"{username}/{slug}", "-p", str(outdir)], 300)
         artifacts, log_path, k_out, k_err = _kaggle_collect(outdir, slug)
+
+    if reuse:
+        # THE 15x SCAR (10th overseer audit, 2026-08-12). With the meter opened
+        # at the slug's submission epoch and closed at `time.time()`, a reattach
+        # billed every idle hour between the kernel going terminal and the local
+        # process coming back: 35 330 s charged for a kernel whose own metered
+        # window was 2 361.88 s. The idempotency key never covered this — it
+        # only fires when the original poll already charged, and JACK_REUSE_
+        # KERNEL exists precisely for the poll that died before charging. Close
+        # the window from Kaggle's OWN report of what the kernel ran, never the
+        # local clock.
+        window = _kaggle_log_window(Path(log_path)) if log_path else None
+        if window is not None:
+            billable_s = window
+        else:
+            print(f"!! reattach meter: no readable kernel log for {job_id}; "
+                  f"billing the local window {billable_s:.0f}s, an UPPER BOUND "
+                  f"that includes idle time since submission",
+                  file=sys.stderr, flush=True)
 
     return JobResult("kaggle", status == "complete", k_out, k_err, time.time() - t0,
                      artifacts, "", "" if status == "complete" else f"status={status}",

@@ -169,12 +169,16 @@ LADDER: list[Spec] = [
          falsified_by="A run proceeds with the budget exhausted.",
          null_baseline="n/a", metric="quota_enforced", budget=Budget.CPU_FAST,
          depends_on=["T0.09"],
-         control="Three named broken mechanisms: a Budget whose weeks "
+         control="Five named broken mechanisms: a Budget whose weeks "
                  "deliberately leak must FAIL isolation; the pre-2026-08-09 "
                  "`charge()` plus `submit()` loop must FAIL every billing "
-                 "property; and the pre-2026-08-11 dispatch loop, run against a "
+                 "property; the pre-2026-08-11 dispatch loop, run against a "
                  "HEALTHY meter, must FAIL every receipt property — a submission "
-                 "it makes must be indistinguishable from one never made.",
+                 "it makes must be indistinguishable from one never made; the "
+                 "pre-2026-08-12 reattach meter (window opened at the slug epoch, "
+                 "closed at the local clock) must FAIL the kernel-window "
+                 "property; and the pre-2026-08-12 stale-writer `charge()` must "
+                 "FAIL both concurrency properties.",
          notes="EXTENDED 2026-08-11 (7th overseer audit): a dispatch left no "
                "trace of its own except a budget charge, so a submission that "
                "was REPORTED but never made passed every gate the project owns "

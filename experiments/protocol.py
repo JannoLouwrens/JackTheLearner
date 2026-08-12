@@ -48,7 +48,13 @@ LEDGER_PATH = Path(__file__).parent / "ledger.json"
 #: was added to close the day before, in the sibling file, missed. `gpu.py`
 #: already knew (it had excluded the file since the guard deadlocked against
 #: itself); this list did not, which is why they are now ONE list.
-RUNNER_OUTPUTS = ("ledger.json", "gpu_submissions.jsonl", "gpu_budget.json")
+RUNNER_OUTPUTS = ("ledger.json", "gpu_submissions.jsonl", "gpu_budget.json",
+                  # Budget.charge's atomic-write staging file (2026-08-12). It
+                  # exists only between write_text and os.replace, but a writer
+                  # SIGKILLed in that window orphans it, and an orphan that is
+                  # not in this set reads as uncommitted code — the exact
+                  # T2.00 `+dirty` failure, from a file the meter itself wrote.
+                  "gpu_budget.json.tmp")
 
 #: Files the LOOP writes around a run — rendered status and the journal. Also
 #: not code, and the evidence is a stamp this project already paid for: T2.00's

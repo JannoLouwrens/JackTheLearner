@@ -2545,22 +2545,27 @@
     },
     "T0.12": {
       "amended": [],
-      "attempt": 8,
-      "commit": "e25108b",
+      "attempt": 10,
+      "commit": "dd7186b+dirty",
       "control_metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
         "charged_once": false,
         "colab_unmetered": true,
+        "concurrent_charge_survives": false,
+        "concurrent_idempotency_reads_disk": false,
         "distinct_jobs_both_charged": false,
-        "drained_to_exact_ceiling": false,
+        "drained_to_exact_ceiling": true,
         "failed_counts_against_quota": true,
         "failed_hours_visible": false,
+        "fresh_bills_poll_window": true,
         "idempotent_across_processes": false,
         "no_false_overrun": true,
         "no_receipt_for_skipped_backend": false,
         "overrun_names_the_job": false,
         "overrun_recorded": false,
+        "reattach_bills_kernel_window": false,
+        "reattach_missing_log_falls_back_upper_bound": true,
         "receipt_names_the_job": false,
         "receipt_pairs_attempt_with_result": false,
         "receipt_survives_all_backends_failing": false,
@@ -2578,7 +2583,7 @@
         "waste_not_counted_as_work": false,
         "weeks_isolated": false
       },
-      "duration_s": 1.28,
+      "duration_s": 1.25,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -2622,24 +2627,41 @@
           "message": "",
           "ran_at": "2026-08-12T06:55:44",
           "status": "PASS"
+        },
+        {
+          "commit": "e25108b",
+          "message": "",
+          "ran_at": "2026-08-12T09:31:26",
+          "status": "PASS"
+        },
+        {
+          "commit": "dd7186b+dirty",
+          "message": "NameError: name 'os' is not defined",
+          "ran_at": "2026-08-12T13:18:19",
+          "status": "ERROR"
         }
       ],
-      "impl_sha": "3665c29437175aa9",
+      "impl_sha": "3ab4329982e3e7b3",
       "message": "",
       "metrics": {
         "affords_within_quota": true,
         "charge_recorded": true,
         "charged_once": true,
         "colab_unmetered": true,
+        "concurrent_charge_survives": true,
+        "concurrent_idempotency_reads_disk": true,
         "distinct_jobs_both_charged": true,
         "drained_to_exact_ceiling": true,
         "failed_counts_against_quota": true,
         "failed_hours_visible": true,
+        "fresh_bills_poll_window": true,
         "idempotent_across_processes": true,
         "no_false_overrun": true,
         "no_receipt_for_skipped_backend": true,
         "overrun_names_the_job": true,
         "overrun_recorded": true,
+        "reattach_bills_kernel_window": true,
+        "reattach_missing_log_falls_back_upper_bound": true,
         "receipt_names_the_job": true,
         "receipt_pairs_attempt_with_result": true,
         "receipt_survives_all_backends_failing": true,
@@ -2657,7 +2679,7 @@
         "waste_not_counted_as_work": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-12T09:31:26",
+      "ran_at": "2026-08-12T13:18:28",
       "seeds": [
         0
       ],
@@ -3334,8 +3356,8 @@
     },
     "T0.22": {
       "amended": [],
-      "attempt": 10,
-      "commit": "e25108b",
+      "attempt": 11,
+      "commit": "dd7186b+dirty",
       "control_metrics": {
         "direct_ledger_reads": 0.0,
         "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader,p15_stamp_and_push_guard_agree_on_the_same_file",
@@ -3400,6 +3422,12 @@
           "message": "",
           "ran_at": "2026-08-12T09:12:31",
           "status": "PASS"
+        },
+        {
+          "commit": "e25108b",
+          "message": "",
+          "ran_at": "2026-08-12T09:31:24",
+          "status": "PASS"
         }
       ],
       "impl_sha": "67f0a0818270d2b1",
@@ -3412,7 +3440,7 @@
         "properties_failed": 0.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "ran_at": "2026-08-12T09:31:24",
+      "ran_at": "2026-08-12T13:20:14",
       "seeds": [
         0
       ],
