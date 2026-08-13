@@ -3383,3 +3383,38 @@ justification contains a checkable fact claim ("X never ran", "Y is ready",
 binding resource. Declining a ranked-first directive on ledger evidence, in
 writing, is the system working; following it into a measurement that cannot
 change anyone's mind is not.
+
+## A diagnosis of our own failure must carry the arithmetic that survives, not the literature that motivated it
+
+The field-watch scout drafted a diagnosis of VO.01's FAIL that had everything a
+good finding has: the fixture randomises range to kill a loudness shortcut, the
+probe gets no range channel, so amplitude recovery is underdetermined by
+construction — it named the right standing lesson ("the step that removes a
+confound is itself a confound until measured"), cited the right physics, and
+would have read as insight. Five lines of arithmetic refuted it before it
+shipped: `Var(ln amp) = 0.748` against `Var(ln r) = 0.169` puts the R² ceiling
+on range-blind amplitude recovery at **0.816**, well above the 0.50 gate — the
+run measured 0.432, so the named mechanism, though real and quantified, cannot
+be the cause. Corroborating signal: brightness read 0.347 and then 0.332 across
+two attempts, unmoved by the emitter fix the story would have implicated. Had
+the diagnosis shipped, the builder would have chased a plausible, paper-shaped
+explanation pointing at the fixture while the real defect sat one step further
+away.
+
+The existing rules almost cover it — "a claim about how a mechanism behaves is
+a two-line experiment; run it", and "this applies hardest to sources that have
+just been right about harder things" — but they protect a reader of EXTERNAL
+claims, where there is an abstract to doubt. A diagnosis of our own FAIL is a
+story the reader wrote itself: there is no external claim to be sceptical of,
+so verify-before-believing has nothing to grip unless the diagnosis is made to
+carry its own falsifiable load.
+
+**Rule:** a diagnosis of one of our own failures is a mechanism claim about our
+own code, and it must carry the arithmetic that survives — the bound, the
+measured quantity, the two-line computation showing the proposed mechanism CAN
+account for the observed number — not the literature that motivated it. Before
+acting on (or shipping) any explanation of a FAIL, compute what the explanation
+predicts the failing metric should read; if the prediction and the measurement
+disagree, the mechanism is real but not the cause, and saying so is the
+finding. Literature tells you which mechanisms exist; only arithmetic on the
+run's own numbers tells you which one fired.
