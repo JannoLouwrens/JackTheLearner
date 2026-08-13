@@ -654,7 +654,13 @@ LADDER: list[Spec] = [
     Spec("T4.02", 4, "No modality collapse",
          hypothesis="Per-modality gradient norms stay within an order of magnitude.",
          falsified_by="One modality's gradient dominates by >10x — the others are ignored.",
-         null_baseline="Balanced contribution.",
+         null_baseline="Balanced contribution (matched-information fixture: every "
+                       "sense carries an equal, measured variance share of the target).",
+         control="ONE, a plant the detector must catch: vision's fusion token is "
+                 "wrapped forward-identity / backward-x100, and the measured vision "
+                 "boundary gradient must dominate the other senses' minimum by >10x. "
+                 "If the imposed dominance is not seen, the detector is blind and the "
+                 "run is VOID, not evidence.",
          metric="max_modality_grad_ratio", budget=Budget.GPU_SHORT, seeds=3,
          depends_on=["T1.03"],
          notes="The documented failure where vision drowns proprioception. Detected "
