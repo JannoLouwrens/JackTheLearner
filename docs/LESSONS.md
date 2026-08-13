@@ -3418,3 +3418,35 @@ predicts the failing metric should read; if the prediction and the measurement
 disagree, the mechanism is real but not the cause, and saying so is the
 finding. Literature tells you which mechanisms exist; only arithmetic on the
 run's own numbers tells you which one fired.
+
+## A world that never resets turns sequential arm evaluation into a measurement of block order
+
+W0 deliberately omits `mj_resetData` — death must not be a free teleport, so
+`respawn` resets the BODY and never the world, and the playground holds 2-10
+free-joint objects that ~2,600 tilt+kick episodes shove around. BA.02 v1
+evaluated its arms in consecutive 48-episode blocks on one W0 instance, and its
+pilot's blocks, in execution order, read vest 1.238 -> deprived 0.842 -> noise
+0.704 -> random 0.638 -> anatomy 0.642-0.667: monotone decreasing, decelerating
+toward a battered steady state. The drift between the first two blocks
+(-0.40 s) equalled the claimed vest-over-deprived gain (+0.40 s) exactly — the
+"gain" was the schedule, and the anatomy story ("the policy reads the whole
+suffix jointly") was the fully-battered world scoring every condition at
+battered-random level. Proof was two lines of replay arithmetic: identical RNG
+streams and eval packs on a FRESH seed-90 world gave up_random 1.454 s where
+the pilot, evaluating after ~2,600 episodes, measured 0.638 s. The registered
+run (seeds 0/1/2) evaluated near steady state (blocks 1.60/1.52/1.52/1.54,
+flat), honestly read ~zero separation, and the rig gate VOIDed — the gate
+caught a real defect, one nobody had guessed. Note the docstring had asserted
+the opposite ("episodes are exchangeable across a whole run") because respawn
+resets the drive state; body state and world state are different ledgers.
+
+**Rule:** on stateful apparatus — and W0 is CONSTITUTIONALLY stateful — any
+between-condition comparison must interleave conditions per episode (rotating
+the within-episode order), never run them in sequential blocks; that bounds the
+drift differential at per-episode size instead of per-block. Train arms
+interleaved too, or the first-trained arm gets a systematically fresher world.
+And make the drift visible: re-run one condition on the earliest draws at the
+very end and REPORT the difference (BA.02 v2's `drift_recheck`), so a reader
+can see the apparatus moving instead of inferring it from a monotone eval
+sequence after the fact. When two spec results disagree, check WHERE IN THE
+RUN each number was measured before comparing them.

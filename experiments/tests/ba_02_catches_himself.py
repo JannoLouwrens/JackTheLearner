@@ -127,6 +127,54 @@ here before the registered run per the pre-registration:
 Every PILOT-FINAL candidate is finalised UNCHANGED — the pilot sits 2.7-5x
 inside each. Tier re-cost: 923.5 s x 3 seeds (control shares the per-seed
 cache) ~= 46 min, inside CPU_LONG cpu<2h; tier unchanged.
+
+## V2 (2026-08-13) — THE DRIFT AMENDMENT. v1's registered run (seeds 0/1/2,
+commit ad24b62) returned VOID: best_trained 1.624 - up_random 1.543 = 0.081
+< IMPROVE_MARGIN_MIN 0.20, all arms AT random. The diagnosis, with the
+arithmetic (LESSONS rule):
+
+  W0 NEVER RESETS ITS WORLD — `_place` deliberately omits `mj_resetData`
+  (death must not be a free teleport), and the playground holds 2-10
+  free-joint objects. ~2,600 episodes of tilt+kick falls shove them around,
+  so the world's catchability DRIFTS across a run. Measured: with identical
+  RNG streams and identical eval packs, a FRESH seed-90 world gives
+  up_random 1.454 s; the pilot, whose random eval ran after ~2,600 episodes,
+  measured 0.638 s. v1's docstring claim "episodes are exchangeable across a
+  whole run" is FALSE — respawn resets the body, never the world.
+
+  v1 evaluated arms in consecutive 48-episode blocks, so arm identity was
+  confounded with world state. The pilot's eval blocks, in execution order:
+  vest 1.238 -> deprived 0.842 -> noise 0.704 -> random 0.638 -> anatomy
+  0.642-0.667 — monotone decreasing, decelerating. The drift between the
+  first two blocks (-0.40 s) EQUALS the claimed gain (+0.40 s): drift alone
+  accounts for the pilot's entire "gain", and the anatomy story ("reads the
+  whole suffix jointly") was the fully-battered world scoring everything at
+  battered-random level. The registered run evaluated near drift
+  steady-state (blocks 1.60/1.52/1.52/1.54, flat) and honestly read ~zero
+  separation; its rig VOID caught a real defect.
+
+  Also measured, secondary: v1 declared "NO boundary spawns" but sampled ALL
+  legal cells (6.8-10.6% boundary per world); seed 2's boundary draws
+  survived 3.90 s vs 1.81 s open — leaning on the obstacle scores as
+  catching, exactly as the docstring warned.
+
+WHAT V2 CHANGES — measurement scheduling and the spawn list, NOTHING else:
+  (a) CEM training interleaves: one iteration per arm in rotation (per-arm
+      `g` streams keep v1's identical seeds, so packs and perturbations stay
+      paired across arms) — no arm trains on a systematically fresher world.
+  (b) Eval interleaves: all nine conditions (vest/deprived/noise/random +
+      five anatomy ablations) run per episode in rotating order — the drift
+      differential between any two conditions is bounded by per-episode
+      drift, not per-block.
+  (c) Spawns draw from OPEN legal cells only: boundary cells (BA.01's own
+      `_boundary_sites` definition) are filtered out, implementing the
+      deviation v1 declared but did not implement.
+  (d) A drift recheck is REPORTED, never gated: the vest arm re-runs the
+      first 8 eval packs after everything else; `drift_recheck` = late mean
+      - interleaved mean on those packs. A reader can now SEE the drift.
+EVERY pre-registered constant, gate and threshold is UNCHANGED. The claim,
+the arms, the learner, the paired-draw structure are unchanged. Per the
+T1.02 precedent v1 stays in the ledger's history and in git (ad24b62).
 """
 from __future__ import annotations
 
@@ -148,7 +196,7 @@ from ..w0 import W0, SIM_S_PER_DECISION                           # noqa: E402
 # BA.01's rig constants and helpers, by reference (one definition of the fall).
 from .ba_01_feels_the_fall import (GRAVITY, KICK_JIT, KICK_OMEGA_P,  # noqa: E402
                                    TILT0_LOG10_DEG, TOPPLE_UP, VEST_DIM,
-                                   _tilt_quat)
+                                   _boundary_sites, _tilt_quat)
 
 # The claim goes stale when the world, the body, the drive layer or the sense's
 # own defining rig moves.
@@ -311,49 +359,54 @@ def _random_policy(rng: np.random.RandomState):
     return act
 
 
-def _cem_train(w: W0, legal: np.ndarray, hold: np.ndarray, mu, sd, cond: str,
-               seed: int, iters=CEM_ITERS, pop=CEM_POP, elite=CEM_ELITE,
-               k_fit=CEM_K_FIT, horizon=HORIZON) -> tuple:
-    """CEM on upright time. Common draws per iteration: every candidate in an
-    iteration faces the same k_fit packs, so within-iteration ranking is
-    paired. The noise condition's per-decision draws come from a stream
-    seeded by (seed, iter, candidate, episode) — deterministic, never shared
-    with the world draws."""
-    theta = np.zeros(THETA_DIM)
-    sig = np.full(THETA_DIM, CEM_SIG_INIT)
-    g = np.random.RandomState(seed * 9973 + 101)
-    curve = []
-    for it in range(iters):
-        packs = [_draw_pack(g, legal) for _ in range(k_fit)]
-        cands = [theta + sig * g.randn(THETA_DIM) for _ in range(pop)]
-        fits = []
-        for ci, th in enumerate(cands):
-            ups = []
-            for ei, pack in enumerate(packs):
-                nr = (np.random.RandomState(
-                    seed * 1_000_003 + it * 10_007 + ci * 101 + ei)
-                      if cond == "noise" else None)
-                up, _ = _episode(w, pack, _policy(th, mu, sd, cond, nr),
-                                 hold, horizon)
-                ups.append(up)
-            fits.append(float(np.mean(ups)))
-        order = np.argsort(fits)[::-1]
-        el = np.stack([cands[i] for i in order[:elite]])
-        theta = el.mean(0)
-        sig = np.maximum(el.std(0), CEM_SIG_FLOOR)
-        curve.append(float(np.mean([fits[i] for i in order[:elite]])))
-    return theta, curve
+def _open_legal(w: W0) -> np.ndarray:
+    """V2(c): the OPEN-GROUND spawn list the docstring always declared.
+
+    Boundary cells — BA.01's own `_boundary_sites` definition, never a
+    hand-written list — are removed, so no fall can end leaning on the
+    geometry (measured: seed 2 boundary draws survived 3.90 s vs 1.81 s
+    open)."""
+    legal = w.legal_spawns()
+    bs = _boundary_sites(w)
+    if len(bs) == 0:
+        return legal
+    bset = {(round(float(x), 9), round(float(y), 9)) for x, y, _b in bs}
+    keep = [i for i, (x, y) in enumerate(legal)
+            if (round(float(x), 9), round(float(y), 9)) not in bset]
+    return np.asarray(legal)[keep]
 
 
-def _eval_policy(w: W0, packs: list, hold: np.ndarray, act_builder,
-                 horizon=HORIZON) -> np.ndarray:
-    """Mean upright time (sim-s) over the PAIRED eval packs. `act_builder(ei)`
-    returns the per-episode act_fn (noise streams differ per episode)."""
-    ups = []
-    for ei, pack in enumerate(packs):
-        up, _ = _episode(w, pack, act_builder(ei), hold, horizon)
-        ups.append(up * SIM_S_PER_DECISION)
-    return np.asarray(ups)
+def _cem_step(w: W0, st: dict, legal: np.ndarray, hold: np.ndarray, mu, sd,
+              cond: str, seed: int, it: int, pop, elite, k_fit,
+              horizon) -> None:
+    """One CEM iteration for one arm (V2(a): _collect interleaves these).
+
+    Common draws per iteration: every candidate faces the same k_fit packs,
+    so within-iteration ranking is paired — and every ARM's `g` stream is
+    seeded identically, so arms face the same packs and the same candidate
+    perturbations too. The noise condition's per-decision draws come from a
+    stream seeded by (seed, iter, candidate, episode) — deterministic, never
+    shared with the world draws."""
+    g = st["g"]
+    packs = [_draw_pack(g, legal) for _ in range(k_fit)]
+    cands = [st["theta"] + st["sig"] * g.randn(THETA_DIM)
+             for _ in range(pop)]
+    fits = []
+    for ci, th in enumerate(cands):
+        ups = []
+        for ei, pack in enumerate(packs):
+            nr = (np.random.RandomState(
+                seed * 1_000_003 + it * 10_007 + ci * 101 + ei)
+                  if cond == "noise" else None)
+            up, _ = _episode(w, pack, _policy(th, mu, sd, cond, nr),
+                             hold, horizon)
+            ups.append(up)
+        fits.append(float(np.mean(ups)))
+    order = np.argsort(fits)[::-1]
+    el = np.stack([cands[i] for i in order[:elite]])
+    st["theta"] = el.mean(0)
+    st["sig"] = np.maximum(el.std(0), CEM_SIG_FLOOR)
+    st["curve"].append(float(np.mean([fits[i] for i in order[:elite]])))
 
 
 def _collect(seed: int, iters=CEM_ITERS, pop=CEM_POP, elite=CEM_ELITE,
@@ -372,7 +425,7 @@ def _collect(seed: int, iters=CEM_ITERS, pop=CEM_POP, elite=CEM_ELITE,
         return _CACHE[key]
     t0 = time.time()
     w = W0(seed=seed, j0=j0, alpha=alpha, lethal=False)
-    legal = w.legal_spawns()
+    legal = _open_legal(w)
     hold = _arm_hold(w)
 
     # Stats pre-pass: mu/sd for standardization AND the matched-noise scale.
@@ -386,46 +439,71 @@ def _collect(seed: int, iters=CEM_ITERS, pop=CEM_POP, elite=CEM_ELITE,
     X = np.asarray(rows_all)
     mu, sd = X.mean(0), X.std(0) + 1e-8
 
-    arms = {}
-    curves = {}
-    for cond in ("vest", "deprived", "noise"):
-        arms[cond], curves[cond] = _cem_train(
-            w, legal, hold, mu, sd, cond, seed,
-            iters=iters, pop=pop, elite=elite, k_fit=k_fit, horizon=horizon)
+    # V2(a): interleaved CEM — one iteration per arm in rotating order, so no
+    # arm trains on a systematically fresher world than another.
+    tconds = ("vest", "deprived", "noise")
+    st = {c: {"theta": np.zeros(THETA_DIM),
+              "sig": np.full(THETA_DIM, CEM_SIG_INIT),
+              "g": np.random.RandomState(seed * 9973 + 101),
+              "curve": []} for c in tconds}
+    for it in range(iters):
+        r = it % len(tconds)
+        for cond in tconds[r:] + tconds[:r]:
+            _cem_step(w, st[cond], legal, hold, mu, sd, cond, seed, it,
+                      pop, elite, k_fit, horizon)
+    arms = {c: st[c]["theta"] for c in tconds}
+    curves = {c: st[c]["curve"] for c in tconds}
 
-    # Paired eval draws, one list per seed, shared by every arm.
+    # Paired eval draws, one list per seed, shared by every condition.
     erng = np.random.RandomState(seed * 271 + 17)
     packs = [_draw_pack(erng, legal) for _ in range(n_eval)]
-
-    def builder(cond, th):
-        def build(ei):
-            nr = (np.random.RandomState(seed * 41 + 900_000 + ei)
-                  if cond == "noise" else None)
-            return _policy(th, mu, sd, cond, nr)
-        return build
-
-    ev = {c: _eval_policy(w, packs, hold, builder(c, arms[c]), horizon)
-          for c in arms}
     rrng = np.random.RandomState(seed * 83 + 5)
-    ev["random"] = _eval_policy(w, packs, hold,
-                                lambda ei: _random_policy(rrng), horizon)
-    toppled_random = float(np.mean(ev["random"] <
-                                   horizon * SIM_S_PER_DECISION - 1e-9))
 
-    # Anatomy: the trained vest policy with one sub-block pinned (reported).
     nb = BLIND_DIM
     blocks = {"touch": (nb, nb + 8), "grav": (nb + 8, nb + 11),
               "canals": (nb + 11, nb + 14), "otoliths": (nb + 14, nb + 17),
               "vxvy": (nb + 17, nb + 19)}
-    anatomy = {}
-    for name, (a0, b0) in blocks.items():
-        cond = f"ablate:{a0}:{b0}"
-        anatomy[name] = float(np.mean(_eval_policy(
-            w, packs, hold,
-            lambda ei: _policy(arms["vest"], mu, sd, cond, None), horizon)))
+
+    def _act_for(c: str, ei: int):
+        if c == "random":
+            return _random_policy(rrng)
+        if c.startswith("anat:"):
+            a0, b0 = blocks[c[5:]]
+            return _policy(arms["vest"], mu, sd, f"ablate:{a0}:{b0}", None)
+        nr = (np.random.RandomState(seed * 41 + 900_000 + ei)
+              if c == "noise" else None)
+        return _policy(arms[c], mu, sd, c, nr)
+
+    # V2(b): interleaved eval — all nine conditions run per episode in
+    # rotating order, so the drift differential between any two conditions is
+    # bounded by per-episode drift, never per-block.
+    econds = ["vest", "deprived", "noise", "random"] \
+        + [f"anat:{n}" for n in blocks]
+    ups: dict = {c: [] for c in econds}
+    for ei, pack in enumerate(packs):
+        r = ei % len(econds)
+        for c in econds[r:] + econds[:r]:
+            up, _ = _episode(w, pack, _act_for(c, ei), hold, horizon)
+            ups[c].append(up * SIM_S_PER_DECISION)
+
+    ev = {c: np.asarray(ups[c]) for c in ("vest", "deprived", "noise",
+                                          "random")}
+    toppled_random = float(np.mean(ev["random"] <
+                                   horizon * SIM_S_PER_DECISION - 1e-9))
+    anatomy = {n: float(np.mean(ups[f"anat:{n}"])) for n in blocks}
+
+    # V2(d): drift recheck, REPORTED never gated — the vest arm re-runs the
+    # first eval packs after everything else; a drifting world shows here.
+    n_re = min(8, n_eval)
+    re_ups = []
+    for ei in range(n_re):
+        up, _ = _episode(w, packs[ei], _act_for("vest", ei), hold, horizon)
+        re_ups.append(up * SIM_S_PER_DECISION)
+    drift_recheck = float(np.mean(re_ups) - np.mean(ups["vest"][:n_re]))
 
     _CACHE[key] = {"ev": ev, "curves": curves, "anatomy": anatomy,
                    "toppled_random": toppled_random, "prov": prov,
+                   "drift_recheck": drift_recheck,
                    "wall_s": time.time() - t0, "horizon": horizon}
     return _CACHE[key]
 
@@ -458,6 +536,7 @@ def _experiment(seed: int, **env) -> dict:
            "vest_fit_last": c["curves"]["vest"][-1],
            "deprived_fit_first": c["curves"]["deprived"][0],
            "deprived_fit_last": c["curves"]["deprived"][-1],
+           "drift_recheck": c["drift_recheck"],
            "wall_s": c["wall_s"]}
     for k, v in c["anatomy"].items():
         out[f"up_ablate_{k}"] = v
