@@ -45,7 +45,11 @@ margin t-statistic T2.08 standardised) where it says sigma:
 
 THE FIVE CONTROLS and their pre-registered sides (a wrong side is VOID — a
 control landing wrong means the instrument, not the hypothesis, failed):
-  (a) statue      must die soonest (see PILOT CAUTION below)
+  (a) statue      AMENDED 2026-08-13 (see PILOT RESOLUTION): must RIDE THE
+                  BASAL CEILING, |mean_life - e0/BASAL_B| <= 10% — the
+                  passive path is clean; nothing but basal starvation may
+                  kill a body that never acts. life_gain reported, ungated
+                  (zero by construction — the saturated-quantity lesson).
   (b) randrew     fixed random stationary reward projection on the ppo-needs
                   core: must MISS the 3-sigma null gate
   (c) frozen      every untrained twin's |life_gain| within noise of zero
@@ -57,19 +61,31 @@ control landing wrong means the instrument, not the hypothesis, failed):
                   arms use is the learner state, and wiping it is the
                   corruption the control needs
   (e) darkroom    dreamer-xs rewarded with MINUS its own posterior entropy:
-                  must record strongly negative life_gain (margin vs the
-                  half-budget null, t <= -3.0) (see PILOT CAUTION below)
+                  AMENDED 2026-08-13 (see PILOT RESOLUTION): must NOT be
+                  strongly negative (margin vs the half-budget null,
+                  t > -3.0) — the measured inversion locked in as the
+                  executable record that life_gain carries LEARNING, not
+                  curiosity's sign.
 
-PILOT CAUTION — TWO CONTROL SIDES ARE SUSPECT IN W0 AS MEASURED, AND THE
-PILOT DECIDES THEM BEFORE REGISTRATION. PS.01 measured basal drain 0.00167/s
-against active drain 0.0022/s, and random action barely eats (1.33 floor
-items/run): in this world PASSIVITY may maximise life LENGTH (quiet
-starvation at the basal ceiling ~600 s), in which case (a) "statue dies
-soonest" and (e) "darkroom strongly negative" are unattainable as written —
-the same inversion T2.08 measured for positive-reward curiosity. The pilot
-(disjoint seed 90, compressed envelope) measures both sides; if either is
-inverted, the registry control is amended OPENLY with the pilot numbers
-BEFORE the registered run, exactly as PS.03 did. Gates MUST NOT MOVE after
+PILOT RESOLUTION, 2026-08-13 (seed 90, 12k decisions, e0=0.3, 7667 s —
+numbers recorded verbatim; both suspect sides were measured INVERTED and
+both controls were amended in the registry and here IN THE SAME COMMIT,
+BEFORE the registered run; T1.02 precedent, the old sides stay in git
+history). The caution this block replaces predicted it: PS.01's basal drain
+0.00167/s against active 0.0022/s means PASSIVITY maximises life LENGTH in
+W0. Measured: statue mean life 180.0 s = e0/BASAL_B (0.3 x 600 s) to 0.02%
+— the basal-starvation ceiling, an arithmetic fact, LONGEST of every run in
+the pilot (arms 109.0-161.5 s, nulls 118.3/126.2 s, darkroom 183.5 s). The
+darkroom LEARNED PASSIVITY and prospered on the length ruler: life_gain
++23.6, margin +49.7 s over its paired null. So (a) 'dies soonest' and (e)
+'strongly negative' were unattainable as written — T2.08's passivity
+inversion, as flagged. What the pilot ALSO showed, and the claim gates keep
+unmoved: four of five arms cleared their null margins on life_gain (ppo-lp
++54.6, wm-efe +52.0, wm-latent +47.7, dreamer-xs +45.7; ppo-needs -1.8),
+every chaos and dwell gate read clean, and every arm's needs_rise was
+NEGATIVE at the compressed pilot envelope — the registered envelope
+(N_STEPS=100k, e0=1.0) is 8.3x longer and the claim conjunction stands as
+pre-registered. Gates MUST NOT MOVE after registration; this commit IS the
 registration.
 
 PORTS, not paraphrases:
@@ -137,6 +153,7 @@ import numpy as np
 import torch
 
 from ..cores import ACTION_DIM, CANDIDATE_ARMS
+from ..drives import BASAL_B
 from ..protocol import Ledger, Status, borrow_metrics, run_spec
 from ..registry import BY_ID
 from ..survival import run_survival
@@ -604,16 +621,26 @@ def _check(m: dict, c: dict):
         # this envelope — a world problem, not an arm result
 
     # ── controls, each on its pre-registered side ───────────────────────
-    # (a) statue must die soonest: shorter mean life than every arm and null.
-    lives = [m.get(f"{a}/mean_life_s", 0.0) for a in CANDIDATE_ARMS]
-    lives.append(c.get("ctrl_null_mean_life_s", 0.0))
-    if not c.get("statue_mean_life_s", 1e9) < min(lives):
+    # (a) AMENDED 2026-08-13 from 'dies soonest' (seed-90 pilot, same commit,
+    # T1.02 precedent — see PILOT RESOLUTION in the docstring): passivity
+    # maximises life length in W0 (statue 180.0 s = e0/BASAL_B to 0.02%,
+    # longest of every pilot run), so the statue now certifies the passive
+    # path is CLEAN — nothing but basal starvation may kill a body that
+    # never acts (a phantom-damage rig fault, PS.03's servo scar, is what
+    # this catches; ctrl runs at module E0, so the ceiling is E0/BASAL_B).
+    ceiling = E0 / BASAL_B
+    if not abs(c.get("statue_mean_life_s", 0.0) - ceiling) <= 0.10 * ceiling:
         return Status.VOID
     # (b) randrew must miss the null gate.
     if _tstat(c, "randrew_margin") >= SIGMA_GATE:
         return Status.VOID
-    # (e) darkroom must be strongly negative vs its paired null.
-    if not _tstat(c, "darkroom_margin") <= -SIGMA_GATE:
+    # (e) AMENDED 2026-08-13 from 't <= -3' (same pilot, same commit): the
+    # darkroom learned passivity and prospered on the length ruler (margin
+    # +49.7 s, mean life 183.5 s vs null 126.2 s) — anti-curiosity WINS life
+    # length in W0, so life_gain cannot carry curiosity's sign. The measured
+    # inversion is locked in: if the world ever punishes anti-curiosity
+    # strongly, this fires and the rig is re-derived, never silently re-read.
+    if _tstat(c, "darkroom_margin") <= -SIGMA_GATE:
         return Status.VOID
     # (c) frozen and (d) wiped-store: every twin within noise of zero.
     for arm in CANDIDATE_ARMS:
