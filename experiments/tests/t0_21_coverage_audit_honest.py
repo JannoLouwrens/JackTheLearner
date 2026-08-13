@@ -41,6 +41,11 @@ from ..registry import BY_ID
 
 SPEC_ID = "T0.21"
 
+# The battery is ABOUT coverage.py, so its certificate must die when that file
+# changes (same reasoning as PG.6 hashing playground.py: a claim about X that
+# survives edits to X is a certificate about nothing).
+IMPL_DEPS = ["experiments/coverage.py"]
+
 # The four commitments the 2026-08-10 hand audit found at ZERO specs. They are
 # why coverage.py exists, so the battery asserts the list still NAMES them
 # however their coverage moves.
@@ -86,10 +91,12 @@ def _fixture() -> dict:
         donor, id="ZZ.decoy2",
         title="Playground generates and is physically sound", notes=None)
     # D3 — the false-NEGATIVE case: declares the commitment, and its title says
-    # nothing a shelter pattern could match. This is BA.01's situation.
+    # nothing a shelter pattern could match. This is BA.01's situation. (The
+    # kind is explicit because P9 made kindless an ERROR; P4's property — a
+    # declaration counts however the title reads — is unchanged by it.)
     reg["ZZ.declared"] = replace(
         donor, id="ZZ.declared", title="He keeps the rain off himself",
-        notes="A lean-to earns its keep. COVERS: shelter/building")
+        notes="A lean-to earns its keep. COVERS: shelter/building (claim)")
     # D4 — a declaration naming a commitment that does not exist. A typo is the
     # false positive wearing a new hat: it reads as a claim and buys nothing.
     reg["ZZ.typo"] = replace(
@@ -107,7 +114,7 @@ def _fixture() -> dict:
     return reg
 
 
-N_PROPERTIES = 8
+N_PROPERTIES = 9
 
 
 def _probe(rule_is_regex: bool) -> dict:
@@ -182,11 +189,11 @@ def _probe(rule_is_regex: bool) -> dict:
     # as demonstrated when what passed was the TRAP; LC.01 did the same to
     # `one brain / unison` off the ADMISSION RULE). Both directions on fixed
     # fake results, plus the two parses that could silently corrupt it: a
-    # canonical name that itself ends in parens — `thermal (kills)` — must
-    # still be a claim of that commitment, and a typo'd kind must be REPORTED,
-    # not read as a claim. The regex rule reads no markers, so it cannot
-    # distinguish apparatus from capability; scored as its failure, same
-    # honesty as P5.
+    # canonical name that itself ends in parens — `thermal (kills) (claim)` —
+    # must still be a claim of that commitment, and a typo'd kind must be
+    # REPORTED, not read as a claim. The regex rule reads no markers, so it
+    # cannot distinguish apparatus from capability; scored as its failure,
+    # same honesty as P5.
     donor = BY_ID["T0.01"]
     kinds_reg = {
         "ZZ.kclaim": replace(donor, id="ZZ.kclaim", title="He keeps rain off",
@@ -194,7 +201,7 @@ def _probe(rule_is_regex: bool) -> dict:
         "ZZ.kfix":   replace(donor, id="ZZ.kfix", title="The rain exists",
                              notes="COVERS: shelter/building (fixture)"),
         "ZZ.ktherm": replace(donor, id="ZZ.ktherm", title="Cold is felt",
-                             notes="COVERS: thermal (kills)"),
+                             notes="COVERS: thermal (kills) (claim)"),
         "ZZ.kbad":   replace(donor, id="ZZ.kbad", title="Unrelated",
                              notes="COVERS: shelter/building (fixure)"),
     }
@@ -211,6 +218,30 @@ def _probe(rule_is_regex: bool) -> dict:
             or dict(kdec["thermal (kills)"]) != {"ZZ.ktherm": "claim"}
             or ("ZZ.kbad", "shelter/building (fixure)") not in kbad):
         failed.append("p8_kind_decides_what_a_pass_buys")
+
+    # P9 — a KINDLESS declaration is REPORTED, never silently a `claim`, and
+    # an explicit `(claim)` is credited (Overseer, 12th audit). The failure
+    # this kills happened in this repo two days after P8 shipped: the kind
+    # mechanism was applied to 2 of 78 declarations, the other 76 inherited
+    # the implicit default `claim`, and the standing zero-pass rule steered
+    # off a coverage report flattered by ten fixtures and sensors counted as
+    # capability claims. A default on the field that routes work is the
+    # defect; only an error is safe. The control is THE DEFAULTING RULE
+    # ITSELF, kept executable via `default_kind="claim"`: under it the
+    # kindless marker silently buys a claim and this property must fail.
+    nk_reg = {
+        "ZZ.nokind": replace(donor, id="ZZ.nokind", title="Rain kept off",
+                             notes="COVERS: shelter/building"),
+        "ZZ.expl":   replace(donor, id="ZZ.expl", title="Rain kept off, twice",
+                             notes="COVERS: shelter/building (claim)"),
+    }
+    ndec, nbad = declarations(
+        nk_reg, default_kind="claim" if rule_is_regex else None)
+    npairs = dict(ndec["shelter/building"])
+    if (npairs.get("ZZ.expl") != "claim"              # explicit claim credited
+            or "ZZ.nokind" in npairs                  # kindless buys nothing
+            or not any(sid == "ZZ.nokind" for sid, _ in nbad)):  # and is seen
+        failed.append("p9_kindless_declaration_is_reported")
 
     rows = report()
     return {
@@ -241,7 +272,7 @@ def _control(seed: int) -> dict:
 
 
 def _check(m: dict, c: dict) -> Status | bool:
-    # All seven ran AND all seven held. Gating on `properties_failed == 0`
+    # All nine ran AND all nine held. Gating on `properties_failed == 0`
     # alone would let a battery that stopped early read as clean (T0.13's own
     # first bug; T0.19 and T0.20 carry the same guard).
     experiment_clean = (m["properties_failed"] == 0.0

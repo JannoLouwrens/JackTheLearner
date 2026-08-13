@@ -3171,3 +3171,9 @@ the parser and in zero declarations is an un-run migration.
 level up"* — arriving inside the same file, on the same day, in 76 places. The
 prediction was written and the sweep still was not done, which is the real
 lesson about predictions.)
+
+CLOSED 2026-08-13: all 86 declared (spec, name) pairs carry an explicit kind,
+a kindless declaration is now REPORTED like a malformed one (`coverage.py`
+takes `default_kind=` only so T0.21's control can run the organ that failed),
+T0.21 P9 gates both directions, and T0.21 hashes `coverage.py` via `IMPL_DEPS`
+so the guard's certificate dies with the file it guards.

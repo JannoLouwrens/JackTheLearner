@@ -117,7 +117,8 @@ COMMITMENTS: Dict[str, Tuple[str, str]] = {
 # the real ones (the LESSONS.md staleness-detector rule).
 DECLARATION = re.compile(r"(?<!`)COVERS:\s*(\w[^\n.;]*)", re.I)
 
-# A declaration carries a KIND: `COVERS: curiosity (fixture)`. Absent = claim.
+# A declaration carries a KIND: `COVERS: curiosity (fixture)`. A missing kind
+# is REPORTED like a malformed declaration — it buys nothing.
 #
 # WHY (Overseer, 8th-10th audits). `n_pass` answered "has this commitment been
 # demonstrated", and two passing specs made constitutional commitments read as
@@ -132,6 +133,17 @@ DECLARATION = re.compile(r"(?<!`)COVERS:\s*(\w[^\n.;]*)", re.I)
 #   rule    — a gate/admission criterion enforced on candidates
 #   sensor  — an instrument measures/emits a channel; nothing acts on it yet
 #
+# WHY ABSENT IS AN ERROR AND NOT A DEFAULT (Overseer, 12th audit). v1 of the
+# kind mechanism defaulted a kindless declaration to `claim`. The mechanism
+# shipped, was applied to 2 of 78 declarations, and the other 76 inherited the
+# default — at least ten of them apparatus or sensor-legibility by their own
+# titles — so `coverage.py` reported 9 zero-pass commitments when the honest
+# figure was 15+, and the standing zero-pass rule steered off the flattered
+# list for two days. A default on a field that routes work IS the defect: the
+# only safe meaning for silence is a report. (The old defaulting rule stays
+# executable via `default_kind=` because T0.21 keeps it as the control that
+# must fail.)
+#
 # Parsing order is load-bearing: canonical names themselves end in parentheses
 # — `thermal (kills)`, `language (parent)` — so the full name is looked up
 # FIRST and a trailing `(kind)` is stripped only when that fails. An
@@ -143,17 +155,24 @@ _KIND = re.compile(r"^(.*\S)\s*\(\s*([\w-]+)\s*\)$")
 _CANON = {k.lower(): k for k in COMMITMENTS}
 
 
-def declarations(by_id: Optional[dict] = None
+def declarations(by_id: Optional[dict] = None,
+                 default_kind: Optional[str] = None
                  ) -> Tuple[Dict[str, List[Tuple[str, str]]],
                             List[Tuple[str, str]]]:
     """Read every spec's `COVERS:` markers.
 
     Returns `(commitment -> [(spec id, kind)], [(spec id, unrecognised name)])`.
     The second half is the point: a declaration naming a commitment that does
-    not exist — or carrying a kind that is not one of `KINDS` — is reported,
-    never dropped. A typo'd marker looks exactly like a claim to a human reader
-    and buys exactly nothing from this file, which is the false-positive
-    failure this module was rewritten to end.
+    not exist — carrying a kind that is not one of `KINDS` — or carrying NO
+    kind at all — is reported, never dropped and never defaulted. A typo'd
+    marker looks exactly like a claim to a human reader and buys exactly
+    nothing from this file, which is the false-positive failure this module
+    was rewritten to end; a kindless marker silently defaulting to `claim` was
+    the same failure one level up (76 of 78 declarations, 12th audit).
+
+    `default_kind` is THE ORGAN THAT FAILED, kept executable: pass `"claim"`
+    to get the pre-2026-08-13 defaulting behaviour. Only T0.21's control may
+    want that.
     """
     if by_id is None:
         from .registry import BY_ID
@@ -168,7 +187,7 @@ def declarations(by_id: Optional[dict] = None
                     continue
                 # Full name first: `thermal (kills)` is a commitment, not a
                 # kind annotation. Only an unmatched trailing paren is a kind.
-                canon, kind = _CANON.get(name.lower()), "claim"
+                canon, kind = _CANON.get(name.lower()), None
                 if canon is None:
                     m = _KIND.match(name)
                     if m and m.group(2).lower() in KINDS:
@@ -176,6 +195,12 @@ def declarations(by_id: Optional[dict] = None
                         kind = m.group(2).lower()
                 if canon is None:
                     bad.append((sid, name))
+                    continue
+                if kind is None:
+                    kind = default_kind
+                if kind is None:
+                    bad.append((sid, f"{name}  [KINDLESS — say (claim), "
+                                     f"(fixture), (rule) or (sensor)]"))
                 elif sid not in [i for i, _ in declared[canon]]:
                     declared[canon].append((sid, kind))
     return declared, bad
@@ -255,8 +280,8 @@ def check() -> int:
     print(f"\n  {len(uncovered)} commitment(s) with NO declared spec, "
           f"{len(unproven)} with specs but nothing passing.")
     if bad:
-        print(f"  {len(bad)} MALFORMED declaration(s) — these name no "
-              f"commitment and buy nothing:")
+        print(f"  {len(bad)} MALFORMED declaration(s) — a typo'd commitment "
+              f"name or a missing kind; either buys nothing:")
         for sid, name in bad:
             print(f"      {sid}: COVERS: {name!r}")
     if uncovered:

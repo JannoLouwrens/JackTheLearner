@@ -690,7 +690,7 @@ EXPANSION: list[Spec] = [
          seeds=3,
          control="Mono and shuffled-pan renders of the SAME events must decode "
                  "at chance — else the decoder reads something other than pan.",
-         notes="COVERS: hearing"),
+         notes="COVERS: hearing (fixture)"),
 
     Spec("PG.8", 2, "Jack is IN the playground and can act in it",
          hypothesis="make_playground(with_humanoid=True) yields a model that "
@@ -744,7 +744,7 @@ EXPANSION: list[Spec] = [
          depends_on=["T2.06"],
          notes="The verb x object grid must be designed BEFORE grounding training "
                "(CAPABILITIES.md L2) or the held-out cells cannot exist."
-               "  COVERS: language (parent)"),
+               "  COVERS: language (parent) (claim)"),
 
     Spec("T2.16", 2, "Hindsight goal-reaching (the flow-matching weld)",
          hypothesis="Hindsight-relabeled flow regression reaches commanded "
@@ -861,7 +861,7 @@ EXPANSION: list[Spec] = [
          metric="old_new_retention", budget=Budget.GPU, seeds=3,
          depends_on=["T5.03"],
          control="Sleeping with the rehearsal buffer EMPTIED must forget.",
-         notes="COVERS: sleep"),
+         notes="COVERS: sleep (claim)"),
 
     Spec("ME.8", 2, "Working memory survives restarts",
          hypothesis="A recurrent state checkpointed to disk resumes mid-episode "
@@ -928,7 +928,7 @@ EXPANSION: list[Spec] = [
                  "two.",
          kills="Any design where conversation memory lives only in weights "
                "or skills live only in retrieved episodes.",
-         notes="COVERS: memory across lives"),
+         notes="COVERS: memory across lives (claim)"),
 
     # OWNER PRINCIPLE (2026-08-09): "isn't it better if it isn't an LLM
     # remembering?" Yes, and this spec makes it structural. Memory is
@@ -1212,7 +1212,7 @@ EXPANSION: list[Spec] = [
                "certifies it. Render on CPU via MUJOCO_GL=osmesa; only ~500 "
                "distinct layouts are needed because HNS reuses layouts across "
                "episodes."
-               "  COVERS: sight"),
+               "  COVERS: sight (sensor)"),
 
     Spec("PG.7", 2, "The heard-not-seen fixture leaks nothing but the intended bit",
          hypothesis="In the HNS scene the two candidates are acoustically "
@@ -1235,7 +1235,7 @@ EXPANSION: list[Spec] = [
                "docs/research/UNIFIED_BRAIN_BAKEOFF.md section 3.2. PG.5's "
                "circularity guard is the precedent: ground truth is computed in "
                "this file's own trig, never from the synth's labels."
-               "  COVERS: hearing"),
+               "  COVERS: hearing (fixture)"),
 
     # ── THE BINDING TEST ────────────────────────────────────────────────
 
@@ -1270,7 +1270,7 @@ EXPANSION: list[Spec] = [
                "XOR, one bit of PURE synergy (PID framework, arXiv:2302.12247). "
                "Proprioception, Jack's dominant modality, is uninformative here "
                "by design, which is precisely why collapse cannot hide."
-               "  COVERS: hearing, one brain / unison"),
+               "  COVERS: hearing (claim), one brain / unison (claim)"),
 
     Spec("UB.15", 4, "Heard, not seen — embodied",
          hypothesis="Jack turns toward and reaches the object he heard fall but "
@@ -1287,7 +1287,7 @@ EXPANSION: list[Spec] = [
          notes="Deliberately the ONLY binding spec that depends on locomotion. "
                "Everything else in this block is falsifiable without a "
                "controller, so decision D1 cannot block the unison claim."
-               "  COVERS: hearing, one brain / unison"),
+               "  COVERS: hearing (claim), one brain / unison (claim)"),
 
     # ── THE BAKEOFF ─────────────────────────────────────────────────────
 
@@ -1331,7 +1331,7 @@ EXPANSION: list[Spec] = [
                "or this measures token counts (arXiv:2601.16667). "
                "PAIRED bootstrap CIs and IQM per arXiv:2108.13264 - unpaired "
                "3-seed architecture comparisons resolve nothing at this budget."
-               "  COVERS: one brain / unison"),
+               "  COVERS: one brain / unison (claim)"),
 
     # ── THE STANDING AUDIT ──────────────────────────────────────────────
 
@@ -1369,7 +1369,7 @@ EXPANSION: list[Spec] = [
                "cross-modal attention mass (arXiv:2410.16424) and the learned "
                "binary modality mask (arXiv:2209.07682) - both free, both "
                "necessary-not-sufficient, both red flags rather than claims."
-               "  COVERS: one brain / unison"),
+               "  COVERS: one brain / unison (claim)"),
 
     Spec("UB.12", 4, "Synergy, not redundancy: beating the unimodal ensemble",
          hypothesis="On every task in the battery the fused model beats the "
@@ -1393,7 +1393,7 @@ EXPANSION: list[Spec] = [
                "construction. Costs 5 tiny models per task; compute it for "
                "every arm, every task, forever. Frame results as PID "
                "redundancy/uniqueness/synergy (arXiv:2302.12247)."
-               "  COVERS: one brain / unison"),
+               "  COVERS: one brain / unison (claim)"),
 
     Spec("UB.13", 4, "Cross-modal retrieval: the gate, never the claim",
          hypothesis="Given a contact-audio window, the matching visual clip is "
@@ -1416,7 +1416,7 @@ EXPANSION: list[Spec] = [
                "not help control' cannot be distinguished from 'A4's loss never "
                "trained'. Retrieval is necessary, never sufficient "
                "(arXiv:2603.19233: encoded is not used).",
-         notes="COVERS: one brain / unison"),
+         notes="COVERS: one brain / unison (rule)"),
 
     Spec("UB.14", 4, "Cross-modal prediction, against the null that usually wins",
          hypothesis="Masked touch is predicted from vision+proprioception "
@@ -1441,7 +1441,7 @@ EXPANSION: list[Spec] = [
                "three robots, one of them NEGATIVE, p<=0.012. Real, clean, "
                "small. A bakeoff expecting a large effect has mis-specified "
                "its success criterion."
-               "  COVERS: one brain / unison"),
+               "  COVERS: one brain / unison (claim)"),
 
     Spec("UB.16", 4, "Sensory information reaches the controller (D1-agnostic)",
          hypothesis="Zeroing the trunk's percept vector z degrades tasks that "
@@ -1468,7 +1468,7 @@ EXPANSION: list[Spec] = [
                "proprioception is SUFFICIENT, so it is the wrong task to judge "
                "a binder by - which is why 'no degradation on flat walking' is "
                "a PASS condition here, not a failure."
-               "  COVERS: proprioception, one brain / unison"),
+               "  COVERS: proprioception (claim), one brain / unison (claim)"),
 
     # ── TIER-3 GAPS ─────────────────────────────────────────────────────
     Spec("T3.09", 3, "The creative loop earns its existence",
@@ -1504,7 +1504,7 @@ EXPANSION: list[Spec] = [
          depends_on=["T4.01"],
          control="With proprio zeroed, the dropout-trained model must still "
                  "briefly stand from vision.",
-         notes="COVERS: one brain / unison"),
+         notes="COVERS: one brain / unison (claim)"),
 
     Spec("UB.2", 4, "The shared trunk beats late fusion",
          hypothesis="One self-attention trunk over all modality tokens beats "
@@ -1516,7 +1516,7 @@ EXPANSION: list[Spec] = [
          depends_on=["UB.1"],
          control="Cross-modal TIME-SHUFFLE at eval must hurt the shared trunk — "
                  "else attention never crossed modalities.",
-         notes="COVERS: one brain / unison"),
+         notes="COVERS: one brain / unison (claim)"),
 
     Spec("UB.3", 4, "Cross-modal masking helps the policy",
          hypothesis="Co-training with masked cross-modal prediction (touch from "
@@ -1528,7 +1528,7 @@ EXPANSION: list[Spec] = [
          depends_on=["UB.2"],
          control="Touch-from-SHUFFLED-vision must collapse to the unconditional "
                  "mean — else the head ignores vision and the fusion is fake.",
-         notes="COVERS: one brain / unison"),
+         notes="COVERS: one brain / unison (claim)"),
 
     Spec("UB.4", 4, "Hearing is load-bearing",
          hypothesis="Jack turns toward an out-of-view falling object and times "
@@ -1539,7 +1539,7 @@ EXPANSION: list[Spec] = [
          depends_on=["PG.5", "UB.1"],
          control="Left/right channel swap must invert turning; 500ms audio lag "
                  "must break contact timing — else hearing is decorative.",
-         notes="COVERS: hearing, one brain / unison"),
+         notes="COVERS: hearing (claim), one brain / unison (claim)"),
 
     Spec("UB.5", 4, "Touch is load-bearing (or honestly redundant)",
          hypothesis="Touch improves blind push-recovery beyond proprioception.",
@@ -1551,7 +1551,7 @@ EXPANSION: list[Spec] = [
          depends_on=["UB.1"],
          control="Permuting the 10 touch channels must cause misattributed "
                  "contacts if touch is load-bearing.",
-         notes="COVERS: touch/contact, one brain / unison"),
+         notes="COVERS: touch/contact (claim), one brain / unison (claim)"),
 
     Spec("UB.6", 4, "Contrastive binding: keep only if it moves action",
          hypothesis="Audio<->vision alignment improves hearing-task success "
@@ -1563,7 +1563,7 @@ EXPANSION: list[Spec] = [
          control="The aligned model must retrieve audio->vision clips well "
                  "above chance — else the loss never worked and the null result "
                  "is uninformative.",
-         notes="COVERS: one brain / unison"),
+         notes="COVERS: one brain / unison (claim)"),
 
     Spec("UB.7", 4, "UNISON — the headline claim",
          hypothesis="The shared co-trained trunk beats BOTH per-sense "
@@ -1578,7 +1578,7 @@ EXPANSION: list[Spec] = [
                  "zero shift means the trunk partitioned into covert late fusion.",
          notes="Until this passes, the sentence 'the senses work in unison' "
                "stays OUT of every capability list."
-               "  COVERS: one brain / unison"),
+               "  COVERS: one brain / unison (claim)"),
 
     Spec("UB.8", 4, "Flow-head attention ablation",
          hypothesis="Interleaved cross+self attention beats cross-only and "
@@ -1587,7 +1587,7 @@ EXPANSION: list[Spec] = [
          null_baseline="The two single-attention variants.",
          metric="attention_ablation", budget=Budget.GPU_SHORT,
          depends_on=["UB.7"],
-         notes="COVERS: one brain / unison"),
+         notes="COVERS: one brain / unison (claim)"),
 
     # ── CURIOSITY (docs/research/CURIOSITY.md; tier 5 = the claims) ─────
     Spec("CU.1", 5, "Goal babbling beats action babbling",
@@ -1605,7 +1605,7 @@ EXPANSION: list[Spec] = [
          # action babbling" in a world where no action exists. PG.8's `kills`
          # field said so in prose; this line is what makes it enforced.
          depends_on=["PG.1", "T2.16", "PG.8"],
-         notes="COVERS: curiosity"),
+         notes="COVERS: curiosity (claim)"),
 
     Spec("CU.2", 5, "Learning progress produces an emergent curriculum",
          hypothesis="LP-driven goal sampling yields time-ordered mastery "
@@ -1619,7 +1619,7 @@ EXPANSION: list[Spec] = [
                  "decay to epsilon allocation — else the competence estimator "
                  "is broken.",
          notes="The first falsifiable form of 'Jack teaches himself'."
-               "  COVERS: curiosity"),
+               "  COVERS: curiosity (claim)"),
 
     Spec("CU.3", 5, "Curious without being trapped",
          hypothesis="The LP stack explores (coverage grows) with near-zero "
@@ -1630,7 +1630,7 @@ EXPANSION: list[Spec] = [
          depends_on=["PG.4", "CU.2"],
          control="The ICM control arm MUST fixate on the panel — proving the "
                  "trap works and the LP immunity is real.",
-         notes="COVERS: curiosity"),
+         notes="COVERS: curiosity (claim)"),
 
     Spec("CU.4", 5, "Unsupervised skills are real and distilled",
          hypothesis="METRA skills on trunk embeddings are decodable from "
@@ -1644,7 +1644,7 @@ EXPANSION: list[Spec] = [
          depends_on=["CU.2"],
          control="Ablating METRA's temporal-distance constraint must degrade "
                  "toward static poses (arXiv:2310.08887).",
-         notes="COVERS: curiosity"),
+         notes="COVERS: curiosity (claim)"),
 
     Spec("CU.5", 5, "The VLM proposes, learning progress disposes",
          hypothesis="VLM-proposed + LP-filtered goals engage the ladder and "
@@ -1658,7 +1658,7 @@ EXPANSION: list[Spec] = [
          control="A scrambled-caption VLM (fed another scene) must NOT beat "
                  "LP-only — else the benefit was 'more goals', not grounded "
                  "interestingness.",
-         notes="COVERS: curiosity"),
+         notes="COVERS: curiosity (claim)"),
 
     Spec("CU.6", 5, "Affordances emerge from interaction",
          hypothesis="The interaction archive predicts pushability/liftability "
@@ -1669,7 +1669,7 @@ EXPANSION: list[Spec] = [
          depends_on=["CU.1"],
          control="A welded immovable object must classify un-pushable — else "
                  "the representation captures action, not interaction.",
-         notes="COVERS: tool use"),
+         notes="COVERS: tool use (claim)"),
 
     Spec("CU.7", 5, "Lessons from failure improve retries",
          hypothesis="Retrieved one-line lessons written after failures raise "
@@ -1681,7 +1681,7 @@ EXPANSION: list[Spec] = [
          depends_on=["ME.1", "CU.2"],
          control="Lessons from UNRELATED failures must not help — else the "
                  "effect is generic prompt padding.",
-         notes="COVERS: curiosity"),
+         notes="COVERS: curiosity (claim)"),
 
     # ── TIER-5/6 GAPS ───────────────────────────────────────────────────
     Spec("T5.08", 5, "Open-endedness: learning does not saturate",
@@ -1695,7 +1695,7 @@ EXPANSION: list[Spec] = [
          depends_on=["CU.2", "T5.06"],
          control="Mutation WITHOUT the learnability filter must degenerate "
                  "into unsolvable scenes — else the filter does nothing.",
-         notes="COVERS: curiosity"),
+         notes="COVERS: curiosity (claim)"),
 
     Spec("T5.09", 5, "Skills transfer across bodies",
          hypothesis="Pretraining on morphology variants (limb lengths, masses) "
@@ -1706,7 +1706,7 @@ EXPANSION: list[Spec] = [
          depends_on=["T2.02"],
          control="Pretraining on white-noise trajectories must give no gain — "
                  "it is structure, not warm optimizer state.",
-         notes="COVERS: generality"),
+         notes="COVERS: generality (claim)"),
 
     Spec("T6.05", 6, "Companion battery",
          hypothesis="Responses are contingent on user-avatar events; intent is "
@@ -1722,7 +1722,7 @@ EXPANSION: list[Spec] = [
          depends_on=["T6.01", "ME.2"],
          control="Ablating the safety channel must bring violations back; "
                  "persona reset must drop identity to chance.",
-         notes="COVERS: social/other agents"),
+         notes="COVERS: social/other agents (claim)"),
 
     # ── THE LEARNING CORE (docs/research/LEARNING_CORE.md) ──────────────
     # Two-digit ids from the start. run.py::_module_for globs lc_00_*.py etc;
@@ -2100,7 +2100,7 @@ EXPANSION: list[Spec] = [
                "else — it pays the real drain at the derived duty cycle D* = "
                "0.217 through the shipped DriveLayer, so it verifies unit (a)'s "
                "C2 on the shipped path instead of in arithmetic."
-               "  COVERS: hunger/thirst"),
+               "  COVERS: hunger/thirst (fixture)"),
 
     # ══ THE MISSING SENSES — smell, taste, voice ════════════════════════
     #
@@ -2170,7 +2170,7 @@ EXPANSION: list[Spec] = [
                "right of the head, so bilateral comparison is available. "
                "MEASURE the O3 cost before adopting it; O1/O2 are expected to "
                "sit near the fire CA's measured 0.06% of one core."
-               "  COVERS: smell"),
+               "  COVERS: smell (fixture)"),
 
     Spec("SM.02", 4, "Smell finds what vision cannot see",
          hypothesis="A Jack with the odour modality reaches OCCLUDED food in "
@@ -2201,7 +2201,7 @@ EXPANSION: list[Spec] = [
                "is occluded or ambiguous and approximately nothing otherwise). "
                "A test that only measures the occluded condition cannot "
                "distinguish 'smell works' from 'an extra channel helped'."
-               "  COVERS: smell"),
+               "  COVERS: smell (claim)"),
 
     # ── TA: taste ───────────────────────────────────────────────────────
 
@@ -2228,7 +2228,7 @@ EXPANSION: list[Spec] = [
                "first bites - one of GOAL.md's 'innate reflex priors', finally "
                "used. The delay D between ingestion and illness is declared in "
                "this spec and is the quantity TA.02's difficulty scales with."
-               "  COVERS: taste"),
+               "  COVERS: taste (fixture)"),
 
     Spec("TA.02", 5, "Conditioned taste aversion: learning from ONE exposure",
          hypothesis="After exactly ONE ingestion of the toxic plant followed by "
@@ -2269,7 +2269,7 @@ EXPANSION: list[Spec] = [
                "VERIFY Garcia & Koelling 1966 and the CTA delay tolerance "
                "against the primary sources before running; both are currently "
                "carried as [k]."
-               "  COVERS: taste"),
+               "  COVERS: taste (claim)"),
 
     Spec("TA.03", 3, "Taste earns its parameters",
          hypothesis="Ablating the taste modality degrades survival in a world "
@@ -2294,7 +2294,7 @@ EXPANSION: list[Spec] = [
                "IMPLEMENTATION. GOAL.md's Tier-3 rule and the owner's decree do "
                "not conflict: the decree says he HAS taste; this says our "
                "wiring of it must do something measurable or be rebuilt."
-               "  COVERS: taste"),
+               "  COVERS: taste (claim)"),
 
     # ── VO: voice ───────────────────────────────────────────────────────
 
@@ -2322,7 +2322,7 @@ EXPANSION: list[Spec] = [
                "NOT a symbolic channel - an emergent protocol must survive "
                "distance, occlusion and the listener's own encoder, and its "
                "information content must be measurable AT THE EAR."
-               "  COVERS: hearing, voice"),
+               "  COVERS: hearing (sensor), voice (sensor)"),
 
     Spec("VO.02", 5, "Do two Jacks invent a signal? (gated on a second Jack)",
          hypothesis="With two Jacks in one world and a coordination problem "
@@ -2370,7 +2370,7 @@ EXPANSION: list[Spec] = [
                "requires a re-learning bottleneck plus an expressivity "
                "constraint (FROZEN_VS_PLASTIC.md 10.6b), not a bigger "
                "vocabulary."
-               "  COVERS: voice, social/other agents"),
+               "  COVERS: voice (claim), social/other agents (claim)"),
 
     # ── DP: fast and slow, in ONE brain ──────────────────────────────────
     # Owner decree, 2026-08-10: "we must figure that out... and it must still
@@ -2420,7 +2420,7 @@ EXPANSION: list[Spec] = [
                "reward lookahead (a trap you can see is a trap you can avoid), "
                "but expectation is not evidence and the jungle is not built "
                "yet."
-               "  COVERS: fast/slow"),
+               "  COVERS: fast/slow (fixture)"),
 
     Spec("DP.01", 3, "Practice moves a behaviour off the deliberative path",
          hypothesis="For a task practised to criterion, the performance cost of "
@@ -2453,7 +2453,7 @@ EXPANSION: list[Spec] = [
                "Ablate by DISABLING ROLLOUTS, not by zeroing weights: zeroing "
                "shared weights damages the fast path too and would confound "
                "this with DP.02."
-               "  COVERS: fast/slow"),
+               "  COVERS: fast/slow (claim)"),
 
     Spec("DP.02", 3, "Connected, not two brains: the substrate is shared",
          hypothesis="Fast and slow read the SAME representation. A lesion to the "
@@ -2482,7 +2482,7 @@ EXPANSION: list[Spec] = [
                "together' is equally consistent with a lesion that was simply "
                "too big to be selective. Report the magnitude at which the "
                "separated control DOES dissociate, and use a lesion no larger."
-               "  COVERS: one brain / unison, fast/slow"),
+               "  COVERS: one brain / unison (claim), fast/slow (claim)"),
 
     Spec("DP.03", 4, "Deliberation is spent where it pays",
          hypothesis="The slow path is engaged more in novel, ambiguous or "
@@ -2515,7 +2515,7 @@ EXPANSION: list[Spec] = [
                "DP.01 is expected and must be reported, not controlled away: as "
                "habits form, a working gate should fire LESS on practised "
                "tasks, which is the same phenomenon seen from the other side."
-               "  COVERS: fast/slow"),
+               "  COVERS: fast/slow (claim)"),
 
     # ── OP: a thing that goes behind something still exists ──────────────
     # Found by LOOKING through the eye rather than by reading its numbers
@@ -2563,7 +2563,7 @@ EXPANSION: list[Spec] = [
                "is hidden, measure surprise when the occluder lifts) is the "
                "stronger infant-research instrument and needs a predictive core; "
                "register it as OP.02 if LC.04 adopts a world model."
-               "  COVERS: sight"),
+               "  COVERS: sight (claim)"),
 
     Spec("DP.04", 5, "The slow path may be verbal, and that is a claim, not a design",
          hypothesis="Given a channel to emit and re-hear his own utterances, "
@@ -2612,7 +2612,7 @@ EXPANSION: list[Spec] = [
                "LG.00 to depends_on the moment it is registered; until then "
                "this spec is blocked in fact even though the ladder shows only "
                "DP.00 and VO.01."
-               "  COVERS: fast/slow"),
+               "  COVERS: fast/slow (claim)"),
 
     Spec("PG.9", 2, "The eye's view is not mostly obstacle",
          hypothesis="Any camera the ladder certifies has less than 5% of its "
@@ -2654,7 +2654,7 @@ EXPANSION: list[Spec] = [
                "The gap is wide enough that the threshold sits in empty space "
                "rather than beside either measurement. Do NOT relax it to admit "
                "a future camera; move the camera."
-               "  COVERS: sight"),
+               "  COVERS: sight (fixture)"),
 
     # ── THE SURVIVAL WORLD'S MISSING PILLARS ─────────────────────────────
     # Coverage audit 2026-08-10. The owner's directive was explicit: permanent
@@ -2702,7 +2702,7 @@ EXPANSION: list[Spec] = [
                "chemistry. DO pre-register the rate constants and the lethal "
                "threshold before implementing, so the world cannot be quietly "
                "tuned until the agent survives."
-               "  COVERS: thermal (kills)"),
+               "  COVERS: thermal (kills) (fixture)"),
 
     Spec("PS.03", 2, "Damage is a signal, not just an ending",
          hypothesis="Harm produces a GRADED, sensed damage signal that precedes "
@@ -2728,7 +2728,7 @@ EXPANSION: list[Spec] = [
                "gradation explicitly - a scalar with a range, not a flag - "
                "because a binary damage bit is exactly the unlearnable case "
                "this spec exists to rule out."
-               "  COVERS: damage/nociception"),
+               "  COVERS: damage/nociception (claim)"),
 
     Spec("SH.01", 5, "Under cold, he shelters - and prefers the shelter that works",
          hypothesis="With a thermal drive active, time spent sheltered rises "
@@ -2763,7 +2763,7 @@ EXPANSION: list[Spec] = [
                "a first-class metric - it is the difference between foresight "
                "and reflex, and it connects directly to DP.00's question of "
                "whether this world rewards looking ahead."
-               "  COVERS: thermal (kills), shelter/building"),
+               "  COVERS: thermal (kills) (claim), shelter/building (claim)"),
 
     Spec("XL.00", 2, "He dies, he reappears somewhere he did not choose, and the diary crosses",
          hypothesis="With `lethal=True`, W0 ends a life when energy or "
@@ -2841,7 +2841,7 @@ EXPANSION: list[Spec] = [
                "disagreed; it now reads `ladder_railL`'s own position off the "
                "live model. Both are T1.02 repairs - the experiment was "
                "wrong, and neither touched W0-2 or W0-3."
-               "  COVERS: death & retry, memory across lives"),
+               "  COVERS: death & retry (fixture), memory across lives (fixture)"),
 
     Spec("XL.01", 5, "Death does not erase what he learned",
          hypothesis="A life that follows earlier lives reaches a survival "
@@ -2875,7 +2875,7 @@ EXPANSION: list[Spec] = [
                "carry different things - the complementary-learning-systems "
                "split (ME.10) predicts exactly that, and this is the first "
                "spec that could show it in a lifetime rather than a session."
-               "  COVERS: death & retry, memory across lives"),
+               "  COVERS: death & retry (claim), memory across lives (claim)"),
 
     Spec("BA.01", 2, "He feels himself falling before he falls",
          hypothesis="Jack carries a sensed orientation signal - gravity's "
@@ -2904,7 +2904,7 @@ EXPANSION: list[Spec] = [
                "2026-08-10: balance was the one commitment in GOAL.md with zero "
                "specs, which is why it went unnoticed while a related problem "
                "sat in the integration queue as prose. A sense with no spec is "
-               "invisible to every instrument the system owns. COVERS: balance\n"
+               "invisible to every instrument the system owns. COVERS: balance (sensor)\n"
                "Vestibular in animals is not one signal but two - linear "
                "acceleration (otoliths) and angular velocity (canals). "
                "Register BOTH channels and report them separately; a system "
