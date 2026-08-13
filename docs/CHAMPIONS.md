@@ -60,15 +60,15 @@ SYSTEM.md, which outrank this file.
 
 | seat | champion | held | arena | challenger status |
 |---|---|---|---|---|
-| Learning core | PPO (tuned per Moon et al. — F9) | **DEFAULT, never defended** | LC.00–LC.06 (registered) | DreamerV3-class + others — match in progress |
+| Learning core | PPO (tuned per Moon et al. — F9) | **DEFAULT, never defended** | LC.00–LC.06 (LC.00–LC.02 + PS.01 PASS; LC.03 NOT_RUN) | DreamerV3-class + others — the match has NOT started; LC.03's seed-90 pilot first ran 2026-08-13 |
 | Deliberation (the slow path) | **VACANT — never contested.** A reactive-only Jack is the *incumbent by default*, which is a position nobody argued for | — | DP.00–DP.04 (registered 2026-08-10) | model-based lookahead vs reactive-only vs verbal inner speech (DP.04). DP.00 asks first whether this world rewards lookahead AT ALL — if not, the seat is abolished rather than filled |
 | Fast/slow coupling | **DECREE, contestable by evidence.** Owner 2026-08-10: differentiated function, SHARED substrate — "connected but slightly different purposes" | DECREE | DP.02 (registered) | two private towers. Re-open trigger: DP.02 shows a shared-trunk lesion sparing one mode, i.e. the substrate is already separate in fact |
 | Control architecture (D1) | **VACANT** — prior holder's evidence voided (T0.14) | — | D1.0 + T2.21 (queued) | frozen-trunk+head vs tuned-PPO vs others |
 | Needs/reward form | drive-reduction, n>m≥1, γ<1 | **BY ANALYSIS** (suicide-safety proof) | NE.02 bakeoff (queued) | must confirm the analysis in the arena |
 | Curiosity signal | learning-progress | **BY ANALYSIS** (favourite on pilot data) | LT.03/LT.04 (queued) | ICM/RND enter as controls-that-must-fail |
 | Episodic retrieval | lexical containment | BY VERDICT (ME.1/ME.9) — **known weakness: 0.000 on paraphrase** | ME.11.A–F (registered) | potion-8M favourite, cascade the risk |
-| Sensory fusion | undecided — token-trunk favourite | — | UB.10 (registered) | six arms, matched params |
-| Vision encoder | from-scratch 0.24M | **DEFAULT, never defended — and the FROZEN alternative is now CONTESTED, see below** | T2.03 (registered) + PL.02 (pending registration) | frozen DINOv2/SigLIP vs adapters vs plastic vs pure |
+| Sensory fusion | undecided — token-trunk favourite | — | UB.10 (registered; `UB.9` **PASS 2026-08-12** — fused 0.993 vs unimodal/ensemble nulls at chance — so the matrix has something to eat, and UB.10 is now the project's third-ranked blocker) | six arms, matched params |
+| Vision encoder | from-scratch 0.24M | **DEFAULT, never defended — and the FROZEN alternative is now CONTESTED, see below** | T2.03 **PASS 2026-08-13** (pretrained 0.9867/0.9833/0.9533 vs from-scratch 0.4467/0.4667/0.4933 vs random-projection 0.40, seeds 0/1/2 — the gap is measured, ~half the accuracy range; seats nobody frozen per PLASTIC-ONLY) + PL.02 (pending registration) | frozen DINOv2/SigLIP vs adapters vs plastic vs pure; PROGRESS §7 asks the owner to admit a warm-start-plastic arm |
 | ASR (speech→text) | whisper.cpp | BY ANALYSIS (3.8–8.3× measured on this box) | HR bakeoff (queued) | — |
 | Speaker ID | CAM++ / TitaNet-small | BY ANALYSIS (research only) | HR speaker spec (queued) | needs ARM benchmark — no published numbers exist |
 | Language model | SmolLM2-360M as a TALKATIVE PARENT — in his world, speaking to him; NOT inside him | **BY DECREE** (owner 2026-08-09; supersedes the earlier 'frozen mouth' framing) | LG.00 anti-puppet applies to any role | any better frozen swap-in |
@@ -77,9 +77,9 @@ SYSTEM.md, which outrank this file.
 | Audio encoder (world-sound → brain) | undecided — mel favourite (raw costs 12–25×, measured) | — | HR audio-entry bakeoff (queued); PL.* applies here too | raw vs mel vs tokens vs no-audio null |
 | Language grounding (word → lived skill) | undecided — skills-then-language ordering unproven | — | LG bakeoff (queued; doc needs completeness check) | grounding approaches + the ordering experiment |
 
-| Smell (olfaction) | **VACANT — sense not yet built**, but no longer unspecced: `SM.01` (field fidelity) + `SM.02` (occluded food) registered 2026-08-10 | — | SM.01 is CPU and runnable today | finds food/fire/decay through occlusion |
-| Taste (gustation) | **VACANT — sense not yet built**, `TA.01`–`TA.03` registered 2026-08-10 | — | TA.01 (poison fixture) is CPU and runnable today | one-trial aversion learning; poison |
-| Voice (vocalisation) | **VACANT — he still cannot make a sound**, but `VO.01`/`VO.02` registered 2026-08-10 | — | VO.01 is CPU, depends only on PG.5 (PASS) — the cheapest constitutional gap left | prerequisite for emergent language + GEN.02 |
+| Smell (olfaction) | **VACANT — sense fixture certified, seat unclaimed**: `SM.01` (field fidelity) **PASS 2026-08-11** | — | `SM.02` (occluded food, the claim) is runnable today | finds food/fire/decay through occlusion |
+| Taste (gustation) | **VACANT — poison fixture certified, seat unclaimed**: `TA.01` **PASS** | — | `TA.02` (one-trial aversion, the claim) is runnable today | one-trial aversion learning; poison |
+| Voice (vocalisation) | **VACANT — but he CAN make a sound**: `VO.01` **PASS 2026-08-12** after four honest FAILs (the emitter is certified; no arm is seated) | — | `VO.02` (voice as act, the claim) is runnable today | prerequisite for emergent language + GEN.02 |
 | Language acquisition | LLM-as-parent (speaks to him; he learns by hearing) | **BY DECREE** (owner 2026-08-09) | LG family + LG.00 anti-puppet | pure from-scratch; critical-period |
 
 ### DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK.
