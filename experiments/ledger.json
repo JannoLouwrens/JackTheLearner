@@ -3232,13 +3232,13 @@
     },
     "T0.17": {
       "amended": [],
-      "attempt": 5,
-      "commit": "68b95bd",
+      "attempt": 6,
+      "commit": "584a85c+dirty",
       "control_metrics": {
         "detector_sees_amendment": false,
         "hand_edit_took_effect": true
       },
-      "duration_s": 1.27,
+      "duration_s": 1.28,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3264,20 +3264,45 @@
           "message": "",
           "ran_at": "2026-08-10T12:32:27",
           "status": "PASS"
+        },
+        {
+          "commit": "68b95bd",
+          "control_metrics": {
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true
+          },
+          "impl_sha": "a68301d54b903b6e",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "detector_sees_amendment": true,
+            "history_keeps_amendment": true,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "unknown_attempt_is_sticky": true
+          },
+          "ran_at": "2026-08-11T20:37:37",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "a68301d54b903b6e",
+      "impl_sha": "05b951b175d12241",
       "message": "",
       "metrics": {
         "amendment_is_attributable": true,
         "detector_sees_amendment": true,
+        "history_absence_preserved": true,
+        "history_carries_evidence": true,
         "history_keeps_amendment": true,
         "refuses_pass_and_fail": true,
         "refuses_unattributed": true,
         "run_spec_leaves_amended_empty": true,
         "unknown_attempt_is_sticky": true
       },
-      "ran_at": "2026-08-11T20:37:37",
+      "ran_at": "2026-08-13T07:15:58",
       "seeds": [
         0
       ],

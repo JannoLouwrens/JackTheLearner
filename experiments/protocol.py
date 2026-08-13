@@ -445,14 +445,23 @@ class Ledger:
                     # (T1.02) or fixed after a real bug (T2.01) showed only its
                     # final green tick, so the system could not measure its own
                     # first-attempt pass rate — the one number that says whether
-                    # the specs are honestly risky or written to pass. History
-                    # is a trimmed record: status, when, commit and message, not
-                    # full metrics, so the file stays readable.
+                    # the specs are honestly risky or written to pass.
+                    # History carries the EVIDENCE, not just the verdict
+                    # (overseer B1, 2026-08-13): metrics, control_metrics,
+                    # impl_sha and seeds ride along, because a threshold moved
+                    # after a FAIL can only be audited against the failing
+                    # measurement, and a verdict-only history entry made every
+                    # amend-after-FAIL auditable by nobody but its author. The
+                    # 163 entries written before this date stay evidence-free;
+                    # back-filling them would invent numbers nobody recorded.
                     prev = on_disk.get(rid)
                     hist = list(prev.get("history", [])) if prev else []
                     if prev and prev.get("ran_at") != r.ran_at:
                         row_h = {k: prev.get(k) for k in
-                                 ("status", "ran_at", "commit", "message")}
+                                 ("status", "ran_at", "commit", "message",
+                                  "metrics", "control_metrics", "impl_sha",
+                                  "seeds")
+                                 if k in prev}
                         if prev.get("amended"):
                             # An amendment is part of what that verdict WAS.
                             # Dropping it here would let a re-run launder a

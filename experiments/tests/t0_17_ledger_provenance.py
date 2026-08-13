@@ -8,7 +8,7 @@ Both edits were substantively right. The defect is that the file asserted a
 distinction it had no field to carry, so a reader could not tell a
 runner-recorded verdict from an agent-restated one.
 
-Six properties, each with a way to fail:
+Seven properties, each with a way to fail:
 
   1. An amendment is attributable: author, reason, prior value, commit, time.
   2. An amendment cannot reach PASS or FAIL — only statuses that assert
@@ -22,6 +22,12 @@ Six properties, each with a way to fail:
   6. An amended verdict pushed into `history` by a later run keeps its
      amendment. Otherwise a re-run launders a hand-set status into an
      unqualified historical record.
+  7. A superseded verdict carries its EVIDENCE into history — `metrics`,
+     `control_metrics`, `impl_sha`, `seeds` — not just the verdict line
+     (overseer B1, 2026-08-13). Without it, a threshold moved after a FAIL
+     cannot be audited against the failing measurement by anyone but its
+     author. Entries recorded before the fields existed stay evidence-free:
+     absence must be preserved, never back-filled with invented numbers.
 
 CONTROL — the pre-fix path: the literal `9b92d14` edit (read the JSON, set
 `status`, write it back) replayed on a temp ledger. Under the same audit it
@@ -120,6 +126,38 @@ def _experiment(seed: int) -> dict:
         history_keeps_amendment = (len(hist) == 1 and hist[0]["status"] == "VOID"
                                    and bool(hist[0].get("amended")))
 
+        # 7. a superseded verdict carries its evidence into history
+        led4 = Ledger(path)
+        led4.record(Result(spec_id="X.20", status=Status.FAIL,
+                           metrics={"sigma_advantage": 2.67},
+                           control_metrics={"untrained_sigma_advantage": 1.26},
+                           seeds=[0, 1, 2], impl_sha="deadbeefdeadbeef",
+                           ran_at="2026-01-01T00:00:00"))
+        Ledger(path).record(Result(spec_id="X.20", status=Status.PASS,
+                                   metrics={"sigma_advantage": 6.0},
+                                   ran_at="2026-04-04T00:00:00"))
+        h20 = json.loads(path.read_text())["results"]["X.20"]["history"]
+        history_carries_evidence = (
+            len(h20) == 1
+            and h20[0]["metrics"] == {"sigma_advantage": 2.67}
+            and h20[0]["control_metrics"] == {"untrained_sigma_advantage": 1.26}
+            and h20[0]["impl_sha"] == "deadbeefdeadbeef"
+            and h20[0]["seeds"] == [0, 1, 2])
+        # ... and an entry that never had the fields is NOT back-filled: a
+        # pre-B1 history row (verdict-only) superseded again must stay
+        # evidence-free rather than acquire invented numbers.
+        raw = json.loads(path.read_text())
+        raw["results"]["X.21"] = {
+            "spec_id": "X.21", "status": "FAIL", "ran_at": "2026-01-01T00:00:00",
+            "commit": "old", "message": "", "history": [], "attempt": 1,
+        }
+        path.write_text(json.dumps(raw, indent=2, sort_keys=True) + "\n")
+        Ledger(path).record(Result(spec_id="X.21", status=Status.PASS,
+                                   ran_at="2026-05-05T00:00:00"))
+        h21 = json.loads(path.read_text())["results"]["X.21"]["history"]
+        absence_preserved = (len(h21) == 1 and "metrics" not in h21[0]
+                             and "impl_sha" not in h21[0])
+
         return {
             "amendment_is_attributable": attributable,
             "refuses_pass_and_fail": all(refused_claims),
@@ -127,6 +165,8 @@ def _experiment(seed: int) -> dict:
             "run_spec_leaves_amended_empty": run_leaves_clean,
             "unknown_attempt_is_sticky": unknown_is_sticky,
             "history_keeps_amendment": history_keeps_amendment,
+            "history_carries_evidence": history_carries_evidence,
+            "history_absence_preserved": absence_preserved,
             "detector_sees_amendment": detector_sees,
         }
 
@@ -164,6 +204,8 @@ def _check(m: dict, c: dict) -> bool:
         m["run_spec_leaves_amended_empty"],
         m["unknown_attempt_is_sticky"],
         m["history_keeps_amendment"],
+        m["history_carries_evidence"],
+        m["history_absence_preserved"],
         m["detector_sees_amendment"],
         # the control must fail: the hand-edit lands and stays invisible
         c["hand_edit_took_effect"],

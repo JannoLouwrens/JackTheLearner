@@ -3337,3 +3337,33 @@ sigma; it is ~6 sigma only against the standard error over lives
 standard deviation is a gate sized ~2x tighter than its author believes, and a
 uniform seed-family shift will land it mid-bulk. Match the dispersion measure
 to the quantity the gate actually sees.
+
+## A steering directive is a priority, not a fact — check its premises against the ledger before spending compute on it
+
+2026-08-13: both same-day steering organs ranked "re-submit T2.01 to Kaggle
+before Sunday" first, on the stated premise that "every P100 job this week was
+dead until yesterday's torch repair — this is the first week the run can
+happen." The ledger said otherwise: T2.01 v5 ran CLEAN on the Kaggle P100 on
+2026-08-12 12:59 (commit 08444b2, after the decorative-critic fix, before the
+cudnn index break was even discovered), and its artifact showed reward-per-step
+flat at ~5.15 from ~100K to 700K env-steps on all three seeds — the
+pre-registered "climbing curve -> more compute" branch did not apply, and the
+binding sigma was the trained seed spread itself (means 280/447/484). A
+re-submission would have burned 6.5 of the 11.35 expiring GPU-hours re-drawing
+seeds against a 5-sigma bar — run-until-pass, a stealth threshold weakening.
+The same morning's Review also said "LC.03 — run it, ready as-is" while no
+lc_03 test file existed in the tree.
+
+The organs were not careless; they are summarisers, and summaries go stale the
+moment the ledger moves. The prompt file already knows this about itself
+("STATE LIVES IN THE LEDGER, NOT HERE") — the generalisation is that it is
+true of EVERY steering document, including the ones ranked above your own
+judgement.
+
+**Rule:** a steering organ outranks you on PRIORITIES; the ledger, the
+artifacts and the tree outrank everyone on FACTS. When a directive's
+justification contains a checkable fact claim ("X never ran", "Y is ready",
+"Z is broken"), check it before acting — especially before spending the
+binding resource. Declining a ranked-first directive on ledger evidence, in
+writing, is the system working; following it into a measurement that cannot
+change anyone's mind is not.
