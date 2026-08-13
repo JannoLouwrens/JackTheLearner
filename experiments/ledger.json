@@ -3426,8 +3426,8 @@
     },
     "T0.21": {
       "amended": [],
-      "attempt": 12,
-      "commit": "b15dabb",
+      "attempt": 13,
+      "commit": "a703604",
       "control_metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
@@ -3438,7 +3438,7 @@
         "properties_checked": 9.0,
         "properties_failed": 6.0
       },
-      "duration_s": 1.24,
+      "duration_s": 1.23,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3506,6 +3506,12 @@
           "message": "",
           "ran_at": "2026-08-13T01:16:48",
           "status": "PASS"
+        },
+        {
+          "commit": "b15dabb",
+          "message": "",
+          "ran_at": "2026-08-13T01:18:58",
+          "status": "PASS"
         }
       ],
       "impl_sha": "0b5f1e62fc3b4ada",
@@ -3520,7 +3526,7 @@
         "properties_checked": 9.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-13T01:18:58",
+      "ran_at": "2026-08-13T01:19:33",
       "seeds": [
         0
       ],
