@@ -3450,3 +3450,49 @@ very end and REPORT the difference (BA.02 v2's `drift_recheck`), so a reader
 can see the apparatus moving instead of inferring it from a monotone eval
 sequence after the fact. When two spec results disagree, check WHERE IN THE
 RUN each number was measured before comparing them.
+
+## A provenance mechanism cannot cover the records that predate it — and those are the foundations
+
+*(14th overseer audit, 2026-08-13)*
+
+`impl_sha` and `IMPL_DEPS` exist so a certificate goes stale loudly when the
+thing it certifies moves. `74f8631` fitted `IMPL_DEPS = ["playground.py"]` to
+eleven world certificates with exactly that rationale in the source: *"Change
+`playground.py` and this certificate goes stale loudly instead of standing
+over a world it no longer describes."*
+
+Four of the eleven — PG.1, PG.2, PG.4, T2.20 — were recorded **before**
+`impl_sha` existed, so they carry the declaration and none of its protection.
+`playground.py` has since taken five commits, **+430 / −14 lines**, including
+one that changed the observation vector (*"78 of the playground's 348
+observation columns were identically zero"*). PG.1/PG.2/T2.20 were recorded at
+14:22–14:23 on 2026-08-09; the next `playground.py` commit landed at
+**14:24:45**, 98 seconds later. `run stale` reads clean for all four and
+always will. The alarm is fitted, wired, and inert.
+
+**Why waiting does not fix it.** `run status` already says *"N entries predate
+`impl_sha` and cannot be checked; a re-run fixes each one"* — which is true and
+which quietly assumes attrition will do the work. It will not, and the bias
+runs the wrong way: cheap T0/T1 specs re-run constantly and pick up `impl_sha`
+for free, while the expensive science specs (PG.4 and T2.20 are both
+`CPU_LONG` × 3 seeds) are exactly the ones nobody re-runs without a reason. So
+the unprotected set decays into *the oldest, most expensive, most depended-upon
+certificates* — the foundations. PG.4 is apparatus under T2.08, curiosity's
+only claim-kind PASS, and its `CONTROL_DWELL_MAX = 0.15` is ported into LC.03's
+per-arm disqualification gate.
+
+**Rule:** the day you ship a provenance mechanism, enumerate the records it
+cannot cover and **re-run them on purpose** — that list is finite and it is
+never smaller later. Until then, "cannot be checked" must be split from
+"cannot be checked AND its declared dependency has since moved": the first
+number is bookkeeping, the second is the one that can bite, and only the
+second belongs in a report. A count of unverifiable records is not a finding;
+a count of unverifiable records whose dependency has demonstrably changed is.
+
+**Corollary, for copied thresholds.** Transcribing another spec's
+pre-registered constant is legitimate and `borrow_metrics` does not apply —
+it borrows measurements, not constants. But the constant inherits the source's
+auditability, not its own: copying PG.4's `0.15` copies a number whose
+licensing evidence was measured against a world that has since changed. When
+you port a constant, check the staleness of the certificate that gave it
+meaning, not just the value.

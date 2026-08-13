@@ -1212,3 +1212,69 @@ differentiated function on a shared, still-learning substrate — as distinct
 from *freezing the trunk*? If yes, D1 becomes a question the loop can settle
 with a bakeoff. If no, options A and B both die and D1 needs a new option set
 before it can be put to you again.
+
+## D1 — COST UPDATE 2026-08-13 (14th overseer audit). Nine days open, and it is now the reason a GPU quota expires unused.
+
+**No new evidence, and that is the point.** D1's evidence has been marked
+complete since 2026-08-09. Nothing in the four days since has changed the
+measurements, and nothing will, because the measurement is not what is
+missing — the decision is.
+
+**What the delay cost this week, measured:**
+
+- T2.01 (the ladder's **only FAIL**) and T2.02 (a **VOID**) are both
+  `gpu<8h` and both dependent on D1. The builder examined re-running T2.01 on
+  2026-08-13 and **correctly declined** (`a3b12f6`): v5 already ran clean
+  post-critic-fix with `r/step` flat ~5.15 from 100 K to 700 K steps on all
+  seeds, so a re-run is a seed redraw against a 5σ bar — run-until-pass. Its
+  own words: *"WHETHER the trunk learns is answered; WHERE it belongs is D1,
+  with the owner."*
+- **11.35 Kaggle GPU-hours expire Sunday 2026-08-16** (18.65 h of 30 used in
+  week 32). The two GPU specs with implementations ready to run are the two
+  D1 blocks. The rest of the runnable GPU set is unimplemented.
+- The locomotion branch has now been frozen for **9 days** while 42+ other
+  specs passed around it. That is the loop correctly routing around a block,
+  not the block going away.
+
+**Nothing has changed about the options or the recommendation** (A/B/C/D as
+written above; **A — freeze the trunk for control, small dedicated policy
+head, trunk keeps perception/language/memory** — remains the loop's
+recommendation and the only option that explains the data rather than fighting
+it).
+
+**One line settles it.** *"Do what the measurements say"* will be read as A,
+journalled, and T2.01 re-run under the new architecture.
+
+**What the overseer is NOT claiming.** The expiring GPU hours are not D1's
+fault alone — nine of the eleven currently-runnable GPU specs are
+unimplemented, which is a builder item and is filed as such in
+`docs/OVERSIGHT.md` (B3). D1 is why the two *implemented* GPU specs cannot
+consume them.
+
+## Claude credits — the ceiling is no longer theoretical (14th overseer audit, 2026-08-13)
+
+Attached as the first measured instance of the standing entry *"Claude credits
+are the binding resource and are unmetered"* above.
+
+**Measured 2026-08-13**, from `/data/jack-logs/ladder.log`:
+
+```
+2026-08-13T10:07:04 iteration start — 78/166 demonstrated, load 0.05
+You've hit your session limit · resets 1pm (UTC)
+2026-08-13T10:07:07 iteration end rc=1 — 78 -> 78 demonstrated
+```
+
+Identical at 11:07 and 12:07. **Three consecutive builder iterations lost,
+3–4 seconds each — 12.5 % of the day's capacity.** It self-resolved at 13:07
+and no work was corrupted. First occurrence of this failure mode in the log.
+
+**No decision is requested.** Two things worth knowing:
+
+1. The system cannot currently see this happen. The limit message is a stdout
+   string; no counter increments, no retry is scheduled, and the 13:07
+   iteration began with no idea it had inherited a three-hour gap. Filed as a
+   builder item (`docs/OVERSIGHT.md` B4).
+2. If the loop's hourly cadence is now routinely hitting a session ceiling,
+   the throughput the ladder plans around is not the throughput it gets. Say
+   the word if you want the cadence reduced to fit the ceiling rather than
+   losing whole iterations to it.
