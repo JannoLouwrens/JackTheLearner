@@ -4655,6 +4655,52 @@
       "spec_id": "T2.02",
       "status": "VOID"
     },
+    "T2.08": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "75a1938+dirty",
+      "control_metrics": {
+        "shuf_auc": 0.3481,
+        "shuf_auc_std": 0.0266024,
+        "shuf_coverage": 0.5666,
+        "shuf_coverage_std": 0.0267593
+      },
+      "duration_s": 204.23,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "84150ccd4cfc2aa6",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "auc_bored": 0.407733,
+        "auc_bored_std": 0.0186909,
+        "auc_margin": 0.0149,
+        "auc_margin_std": 0.00707531,
+        "auc_random": 0.379233,
+        "auc_random_std": 0.00953496,
+        "bored_worst_life": 0.629467,
+        "bored_worst_life_std": 0.0429069,
+        "coverage_margin": 0.0544,
+        "coverage_margin_std": 0.0187325,
+        "eps0_coverage": 0.6257,
+        "eps0_coverage_std": 0.0294653,
+        "null_agreement_gap": 0.0589,
+        "null_agreement_gap_std": 0.00708378,
+        "null_best_life": 0.734167,
+        "null_best_life_std": 0.0277135,
+        "random_coverage": 0.601567,
+        "random_coverage_std": 0.0392684,
+        "state_coverage": 0.697533,
+        "state_coverage_std": 0.0229217
+      },
+      "ran_at": "2026-08-13T02:34:06",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T2.08",
+      "status": "FAIL"
+    },
     "T2.10": {
       "amended": [],
       "attempt": 1,

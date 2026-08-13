@@ -506,9 +506,20 @@ LADDER: list[Spec] = [
     Spec("T2.08", 2, "Curiosity drives coverage",
          hypothesis="Intrinsic reward increases state-space coverage over random exploration.",
          falsified_by="Coverage at or below random.",
-         null_baseline="Uniform random actions; and epsilon-greedy.",
-         metric="state_coverage", budget=Budget.GPU, seeds=3, depends_on=["T1.01"],
-         notes="COVERS: curiosity (claim)"),
+         null_baseline="Uniform random actions; and epsilon-greedy (zero-reward "
+                       "Q with the experiment's own machinery — the two must "
+                       "agree, and any margin is then the reward signal's).",
+         metric="state_coverage", budget=Budget.CPU, seeds=3, depends_on=["T1.01"],
+         control="Time-permuted, magnitude-matched novelty reward (a uniform "
+                 "draw from the agent's own past bonuses, fresh draw per step): "
+                 "must NOT beat the random-walk null by the experiment's margin. "
+                 "If information-free reward magnitude explores, the metric "
+                 "credits the machinery, not the signal.",
+         notes="Budget re-declared GPU->CPU 2026-08-13: the honest rig is the "
+               "PG.4 rover fixture (~70 s/seed, numpy+MuJoCo, no torch), and a "
+               "declared budget that machinery routes on must match the "
+               "implementation. Mechanism arbitration is LT.03/LT.04, not this."
+               "  COVERS: curiosity (claim)"),
 
     Spec("T2.09", 2, "Noisy-TV control",
          hypothesis="Injecting an unpredictable observation channel does NOT capture "
