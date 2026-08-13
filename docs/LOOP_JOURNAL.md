@@ -3860,3 +3860,26 @@ re-roll). (4) Kaggle W32 ~11.35 h dies Sunday 2026-08-16: T3.07/T4.02
 (gpu<20min) are the queue — PROGRESS B3; T2.01 re-submission stays DECLINED
 per the 08-13 lesson. (5) Overseer B3 bullets 1-2 from the 13th audit
 (live-receipt property + charge-at-attempt) still open as one designed unit.
+
+## 2026-08-13 ~20:20 — B1 closed end-to-end: four re-recorded certificates committed, closers re-verified
+
+Inherited the detached re-runs' uncommitted ledger (pid 2581791, finished
+19:33): PG.1/PG.2/PG.4/T2.20 all PASS against current playground.py, each now
+carrying impl_sha — PG.4's dwell 0.667 vs null 0.061 re-licenses T2.08's
+apparatus and LC.03's 0.15/2.0 constants on the CURRENT world. Re-ran the two
+specs b5db2d4 changed: T0.17 PASS (detector_flags_moved_dependency=True — the
+UNVERIFIABLE_MOVED detector fires on a fabricated moved-dep record, spares an
+unmoved one) and T0.27 PASS. `run stale` now splits the counts as B1 demanded:
+UNVERIFIABLE_MOVED is ZERO, 30 merely predate impl_sha, only BA.02 flagged
+(expected — its v2 code is committed but the envelope amendment is not yet
+registered). Rendered (79/169), committed 5738b4d, pushed.
+
+LC.03 registered run STILL IN FLIGHT (pid 2536994, since 15:23, 3 workers) —
+do NOT relaunch; when it lands, render+commit from a clean tree. NEXT
+ITERATION, in order: (1) B3/Kaggle — implement T3.07 or T4.02 (gpu<20min) and
+dispatch; W32 has ~11.4 h charged of 30 and the remainder dies Sunday
+2026-08-16; T2.01 re-submission stays DECLINED per the 08-13 lesson. (2) BA.02:
+register the envelope amendment (strengthen tilt/kick draw OPENLY, re-pilot on
+a fresh world; constants move by registration, not re-roll), then re-run — it
+is the only stale flag left. (3) Overseer 13th-audit B3 bullets 1-2
+(live-receipt property + charge-at-attempt) still open as one designed unit.
