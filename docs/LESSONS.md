@@ -3129,3 +3129,45 @@ executable form pairs with the degenerate-fixture check: the degenerate
 fixture must score BELOW the gate, and the HONEST rig's bulk must score
 ABOVE it — reachability and inertness are the two directions of the same
 assertion.
+
+## A declaration format gains a field when the EXISTING declarations are migrated, not when the parser lands
+
+On 2026-08-12 `coverage.py` gained typed coverage declarations —
+`COVERS: <name> (claim|fixture|rule|sensor)` — precisely so apparatus could
+stop being counted as capability, with `claim` as the implicit default for a
+bare declaration. The parser shipped, T0.21 P8 gated it in both directions, and
+the commit re-typed the **two** specs the previous audit had named by id. The
+other **76 declarations were left bare** and silently became claims. A day
+later `coverage.py` reported 9 zero-pass commitments against an honest 15:
+`taste` rested on TA.01, whose own title is *"The poison FIXTURE"*; `smell` on
+SM.01 (*"the odour field obeys its own pre-registered rules"*); `sight` on PG.6
+and PG.9, both certifications of the camera; `balance` on BA.01's linear probe;
+`hunger/thirst` on PS.01; `language (parent)` on T1.13's corpus check. Ten
+mislabels, none of them a lie in the spec — one word missing from a `notes`
+field, ten times. And the standing zero-pass rule, which is the only instrument
+this project owns for "the ladder quietly never started this", spent two days
+choosing work off the flattered list.
+
+The tell was visible from the outside and nobody looked: **`(sensor)` was
+defined, documented in the module header, and used zero times.** A kind that
+exists in the vocabulary and appears in no declaration means the sweep never
+happened — a one-line grep that would have caught this on the day it shipped.
+
+**Rule:** when a fix adds a field to a declaration format that machinery routes
+or ranks on, the fix is not shipped until every existing declaration carries the
+new field explicitly. Until then the default IS the answer for everything
+already written, silently and with no malformed-declaration report to betray it,
+because a bare declaration is well-formed by construction. Two corollaries:
+(1) migrate in the same commit as the parser, and count the migrated
+declarations in the commit message against the total, so an incomplete sweep is
+visible in the record; (2) once migrated, make the field REQUIRED — report a
+bare declaration as malformed rather than defaulting it — so the next
+declaration written cannot re-open the hole. Guard: the coverage report should
+fail loud on a kindless declaration, with the defaulting rule kept executable as
+the control. Grep tell, cheap and general: a vocabulary value that appears in
+the parser and in zero declarations is an un-run migration.
+
+(This is the recurrence predicted one entry above — *"expect this to recur one
+level up"* — arriving inside the same file, on the same day, in 76 places. The
+prediction was written and the sweep still was not done, which is the real
+lesson about predictions.)

@@ -1095,3 +1095,74 @@ to arbitrate. Full working, loser, and re-open trigger in
 `Status.VOID`'s docstring and `unsatisfied`'s blocking message now distinguish
 "not demonstrated" from "refuted". Nothing here needs you — recorded so the
 D2 sections above stop reading as open.
+
+## D1 — THE COST OF DELAY IS UNDERSTATED, AND WAS WRONG THE DAY IT WAS WRITTEN (12th overseer audit, 2026-08-13 00:45 UTC)
+
+**Ask:** nothing new. This corrects the evidence under a question you already
+have. Combined with the option-A staleness raised 2026-08-10 (line 599, still
+unanswered after three days), D1 now has two defects in the block you are being
+asked to decide from.
+
+**The defect.** `docs/DECISIONS_NEEDED.md:87-89`, written 2026-08-09 in
+`7addc20`, says:
+
+> *"COST OF DELAY: T2.01/T2.02 and everything downstream of locomotion stay
+> blocked. The memory, playground and **curiosity branches are unaffected**."*
+
+`python -m experiments.run blocked`, today:
+
+```
+T2.01 = FAIL  frees 26  (blocks 36)  — Locomotion beats a random policy
+   frees: CU.1, CU.2, CU.3, CU.4, CU.5, CU.6, CU.7, ME.7, T2.16, T2.17, T2.18,
+          T3.02, T3.04, T3.05, T4.04, T4.05, T5.01, T5.02, T5.03, T5.04,
+          T5.05, T5.07, T6.01, T6.02, T6.04, T6.05
+```
+
+The dependency trace is `CU.1 -> T2.16 -> T2.01`, and CU.2-CU.7 all descend
+from CU.1. **Every curiosity spec in the ladder is blocked behind D1.**
+
+**It was never true.** The CU family was registered 2026-08-06 (`c02e590`),
+with the T2.16 dependency it still carries. The "unaffected" line was written
+2026-08-09 — three days later. This is not staleness; it was wrong on arrival.
+
+**The file already contradicts itself.** Line 366 of this same document, an
+overseer entry from 2026-08-10, correctly lists T2.01's blast radius as
+including *"CU.1-CU.7 (**every curiosity spec**)"*. The wrong version is the one
+at the top, inside the block you are asked to decide from; the right one is 280
+lines below it.
+
+**Why it matters to your decision and not just to the record.** GOAL.md's north
+star is *"He explores because he wants to... If there is a ladder with an apple
+on top, he must try to climb the ladder, fall, and learn from falling, purely
+out of curiosity."* Measured today:
+
+```
+specs declaring COVERS: curiosity        12
+ever run                                  1   (PG.4 — and it is a fixture, not a claim)
+runnable without D1                       1   (T2.08, gpu<2h, never implemented)
+blocked behind D1                         7
+```
+
+D1 has been open nine days. Read with the correct cost line, it is not "the
+locomotion branch is stalled" — it is **"the locomotion branch, all of Tier 5,
+and the entire curiosity programme are stalled."**
+
+**What is actually being asked of you, restated in one place:**
+
+1. **One line reconciling D1's menu with the PLASTIC-ONLY decree** (the 08-10
+   ask, unanswered): either strike option A (freeze the trunk + small head), or
+   write into `CHAMPIONS.md`'s SCOPE paragraph that a frozen *control* trunk is
+   a different question from a frozen *sensory* tower. Right now option A is
+   marked `RECOMMENDED` and your own decree forbids it, so the two documents
+   instruct different work.
+
+2. **Nothing else.** If A is struck, D1 reduces to B (split trunks) vs D (delete
+   the transformer from the control path) — C is unsupported by the plateau
+   data. That is a two-arm bakeoff with a learning gate, and SYSTEM.md law 3
+   says the system runs it rather than arguing about it. The verdict does not
+   need you; the menu does.
+
+*Raised without taking a side. Evidence gathered 2026-08-13 at `1b82da6`;
+full working in `docs/OVERSIGHT.md` RANK 3. The cost-of-delay line above is
+left in place rather than edited — the overseer does not rewrite an owner
+decision, only annotates it.*
