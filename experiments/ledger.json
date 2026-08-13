@@ -4657,19 +4657,26 @@
     },
     "T2.08": {
       "amended": [],
-      "attempt": 1,
-      "commit": "75a1938+dirty",
+      "attempt": 2,
+      "commit": "1454525",
       "control_metrics": {
         "shuf_auc": 0.3481,
         "shuf_auc_std": 0.0266024,
         "shuf_coverage": 0.5666,
         "shuf_coverage_std": 0.0267593
       },
-      "duration_s": 204.23,
+      "duration_s": 204.21,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": "84150ccd4cfc2aa6",
-      "message": "pre-registered threshold not met",
+      "history": [
+        {
+          "commit": "75a1938+dirty",
+          "message": "pre-registered threshold not met",
+          "ran_at": "2026-08-13T02:34:06",
+          "status": "FAIL"
+        }
+      ],
+      "impl_sha": "877f3e3d570e7b58",
+      "message": "",
       "metrics": {
         "auc_bored": 0.407733,
         "auc_bored_std": 0.0186909,
@@ -4692,14 +4699,14 @@
         "state_coverage": 0.697533,
         "state_coverage_std": 0.0229217
       },
-      "ran_at": "2026-08-13T02:34:06",
+      "ran_at": "2026-08-13T02:40:42",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T2.08",
-      "status": "FAIL"
+      "status": "PASS"
     },
     "T2.10": {
       "amended": [],

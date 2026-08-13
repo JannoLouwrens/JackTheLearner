@@ -3192,3 +3192,35 @@ The DIRTY check cannot see it: the tree was clean when the run happened.
 load-bearing history — do not amend or rebase it. Clear dirty stamps with the
 sequence commit -> push -> re-run -> **new** commit for the ledger delta, so
 every stamp lands on a hash that is already an ancestor of `origin/main`.
+
+## An absolute gate calibrated from the experiment's own pilot is a second bet on the pilot's draw
+
+T2.08 v1 carried an auxiliary floor `state_coverage >= 0.70`, set "~6 sigma
+below the pilot bulk" (0.772 ± 0.023, seed-90 family) — comfortably safe on
+the numbers it was derived from. The official seed families then shifted
+EVERY arm down uniformly (random 0.638 → 0.602, experiment 0.772 → 0.698):
+not a signal change — the margin, its all-seeds floor and the control all
+held — but a family-level shift in absolute level, which put the floor
+mid-bulk and turned it into a per-run lottery. The spec FAILED by 0.0025,
+one ninth of its own seed std, on a gate the registered hypothesis never
+asked for, while the hypothesis's own falsification criterion ("at or below
+random") was rejected at paired t = 5.0.
+
+This is BA.01-v3's mid-bulk-lottery disease from a new cause: there the rig
+CHANGED under a historical constant; here nothing changed — the pilot's
+sample was simply one draw of a family-level random effect, and every
+ABSOLUTE quantity derived from it inherited that draw's luck wholesale.
+Relative statistics (margins, paired effects, controls measured in the same
+worlds) are invariant to a family shift; absolute anchors are not.
+
+**Rule:** a threshold on an ABSOLUTE level must be anchored outside the
+pilot that motivated it — to an exogenous meaning ("covers the majority of
+the reachable world", 0.5), to the NULL's measured bulk, or to a quantity
+the claim itself names. Anchoring it to the experiment arm's pilot bulk
+makes the gate a second sample of the same random effect the seeds exist to
+average over, and "6 sigma of headroom" computed within one family is not
+headroom across families. Corollary: when a run fails ONLY on a gate the
+registered hypothesis does not require, check whether the gate is measuring
+the claim or the pilot before reading the verdict as the hypothesis's —
+law 4's open-move clause exists for exactly this, and the failing attempt
+stays in the ledger's history (T2.08 attempt 1).

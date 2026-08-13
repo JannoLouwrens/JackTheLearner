@@ -3738,3 +3738,36 @@ spend the 11.80 expiring Kaggle hours, T2.08 first (curiosity, gpu<2h, the
 only runnable spec for the north star), then T2.03 (gpu<20min, read PROGRESS
 §5's PLASTIC-ONLY caution); PS.03's pre-registered design still pending
 implementation; LC.03 (re-run PS.01 first) remains the biggest non-GPU unblock.
+
+## 2026-08-13 ~03:0x UTC — T2.08 PASS (attempt 2): the curiosity commitment has its first claim; zero-pass 19 -> 18
+
+Overseer B2 said spend Kaggle on T2.08 (gpu<2h); the honest implementation
+turned out to need NO GPU: the PG.4 rover rig with a position pseudo-count
+reward is ~70 s/seed of numpy+MuJoCo, so the registry now says CPU (a routed
+declaration must match behaviour) and the expiring 11.80 Kaggle h belong to
+T2.03/T2.05/T2.11. WHAT THE PILOT MEASURED (seed-90 family, /tmp, recorded in
+the module docstring): every positive-reward construction anti-explores in
+bootstrapped tabular Q — naive ICM 0.283, running-std-normed ICM 0.194 (the
+normalizer eats the decay signal), RND 0.289, additive 1/sqrt(N) 0.327, all
+below random 0.829 — because the visited core's accumulated Q beats one-shot
+frontier bonuses. What explores is valuing the FRONTIER above the familiar:
+optimistic init (0.915) or the boredom form r = 1/sqrt(N)-0.5 (0.772 vs
+random 0.638 at the discriminating 4000-decision horizon). That finding is
+context for T2.09/LT.03: prediction-error curiosity fails here WITHOUT any
+noisy TV. OFFICIAL RUN seeds 0/1/2: state_coverage 0.6975+/-0.023, margin
+over max(random, eps0) 0.0544 (all seeds positive, paired t 5.0), eps0
+null == random within 0.059 (machinery adds nothing without the signal),
+shuffled-reward control 0.5666 (LOSES to random by 0.035 — information-free
+magnitude does not explore). Attempt 1 FAILED v1's auxiliary absolute floor
+0.70 by 0.0025 (1/9 seed-std) — a pilot-bulk-anchored lottery, new LESSONS
+entry — v2 moved the floor to its purpose (0.50 anti-collapse) in the open
+per law 4's clause and STRENGTHENED with a 3-sigma paired gate (reads 5.0);
+FAIL kept in history, PASS stamped at pushed 1454525. NOTE for T2.09's
+implementer: the passing arm reads POSITION, not the retina — an
+observation-noise channel cannot trap it by construction; T2.09 must inject
+unpredictability into the state the curiosity reads (PG.4's percept trap
+stays the reference for percept-keyed arms). NEXT: overseer B2 continues —
+T2.03 submission (gpu<20min, PROGRESS §5 PLASTIC-ONLY caution first), then
+T3.07/T4.02 (gpu<20min each); Kaggle W32 has 11.80 h, resets Sun 2026-08-16.
+PS.03's pre-registered design still pending implementation; LC.03 (re-run
+PS.01 first) remains the biggest non-GPU unblock.

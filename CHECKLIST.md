@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 75 / 166 demonstrated
+## 76 / 166 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -134,7 +134,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Commands never seen in training map to the right anchor.
       - _dies if:_ Accuracy collapses on held-out synonyms.
       - _then delete:_ SemanticActionAnchors as a grounding mechanism.
-- [ ] **T2.08** Curiosity drives coverage
+- [x] **T2.08** Curiosity drives coverage
       - _asserts:_ Intrinsic reward increases state-space coverage over random exploration.
       - _dies if:_ Coverage at or below random.
 - [ ] **T2.09** Noisy-TV control
