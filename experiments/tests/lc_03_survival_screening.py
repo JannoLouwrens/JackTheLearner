@@ -242,7 +242,10 @@ class _LPRegions:
                          n=0, buf=[])
                 a["hi"][d] = cut
                 b["lo"][d] = cut
-                self.regions.remove(reg)
+                # remove by IDENTITY: list.remove scans with ==, and dict
+                # equality on numpy-array values raises the moment the split
+                # region is not at index 0 (the smoke only ever split the root).
+                self.regions = [r for r in self.regions if r is not reg]
                 self.regions += [a, b]
         return abs(reg["ema"] - prev)
 
@@ -687,6 +690,20 @@ def _smoke():
     cal, prov = _borrow()
     assert cal is not None, f"borrow refused: {prov}"
     j0, alpha = cal["j0"], cal["alpha"]
+
+    # Force NON-ROOT region splits: list.remove scans with == (identity
+    # short-circuit), so the crash only reachable when the splitting region
+    # is not at index 0 — the 400-decision runs below never get there.
+    _rng = np.random.RandomState(0)
+    _regs = _LPRegions()
+    for _ in range(LP_SPLIT_N * 40):
+        _regs.update(_rng.randn(6) * 3.0, err=float(_rng.rand()))
+    assert len(_regs.regions) > 2, "forced splits did not happen"
+    for _ in range(200):
+        _oz = _rng.randn(6) * 3.0
+        assert sum(1 for rg in _regs.regions
+                   if np.all(_oz >= rg["lo"]) and np.all(_oz < rg["hi"])) == 1
+    print("lp regions ok:", len(_regs.regions), "regions, partition intact")
 
     lp = _lp_intrinsic_factory(0)
     r = run_survival(0, j0=j0, alpha=alpha, e0=0.12, n_decisions=400,

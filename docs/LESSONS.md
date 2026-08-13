@@ -953,6 +953,22 @@ paid Kaggle kernel, 131 s in. When smoking an entry point, feed it each call
 site's actual argument *extremes* (the largest derived seed, the longest list,
 the deepest path), not a value chosen for the smoke's convenience.
 
+*Second extension, same day:* argument extremes are still not enough when the
+failure depends on *internal state the arguments do not name*. LC.03's
+SAGG-RIAC partition crashed the seed-90 pilot ~30 min in on
+`self.regions.remove(reg)`: `list.remove` scans with `==` but short-circuits
+on identity, so splitting the region at index 0 (the only case a short smoke
+reaches) never evaluates `==` at all, while splitting any later region first
+compares it against non-identical dicts holding numpy arrays — which raises.
+The smoke DID exercise the split path; it exercised it at the one list
+position where the defect is unreachable. When an operation's behaviour
+depends on an element's position, a container's size, or which branch of a
+grown structure is hit, the smoke must *force the other positions* (here:
+enough spread points that non-root regions split — now a permanent guard in
+`_smoke()`). Mechanically: never `list.remove`/`in`/`.index` an object whose
+equality is not total (numpy-holding dicts); rebuild by identity
+(`[r for r in xs if r is not reg]`).
+
 ## A budget derived from a component measured alone is wrong by everything else
 
 `LEARNING_CORE.md` §5.1 derived the 5.0 sim-s/real-s floor from two measured
