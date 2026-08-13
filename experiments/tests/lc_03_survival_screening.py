@@ -43,8 +43,20 @@ margin t-statistic T2.08 standardised) where it says sigma:
 
   PASS iff >= 2 arms clear everything. Fewer => Status.VOID.
 
-THE FIVE CONTROLS and their pre-registered sides (a wrong side is VOID — a
-control landing wrong means the instrument, not the hypothesis, failed):
+FOUR CONTROLS AND ONE WORLD-TRIPWIRE, each with a pre-registered side (a
+wrong side is VOID — a control landing wrong means the instrument, not the
+hypothesis, failed). Four falsifiers, not five: after the 2026-08-13
+amendment, (e) can no longer fail by the mechanism the amendment itself
+documents — basal drain 0.00167/s < active 0.0022/s means passivity wins
+life LENGTH structurally, not by draw, so "not strongly negative" is the
+world's arithmetic, not a test of the arms. (e) is kept as a TRIPWIRE: it
+fires only if W0 ever starts punishing anti-curiosity, which means the rig
+must be re-derived. A reader counting five falsifiers is counting one that
+is not there. And to be explicit about what DOES exclude learned passivity
+in the claim conjunction: not the dwell/chaos gates — a statue scores
+perfectly on panel_dwell and every chaos_* signal — but `needs_rise > 0`,
+the conjunct every pilot arm failed and the one the registered envelope is
+betting 8.3x more experience will flip.
   (a) statue      AMENDED 2026-08-13 (see PILOT RESOLUTION): must RIDE THE
                   BASAL CEILING, |mean_life - e0/BASAL_B| <= 10% — the
                   passive path is clean; nothing but basal starvation may
