@@ -452,7 +452,18 @@ _CACHE: dict = {}
 def _submit(seeds: list) -> dict:
     body = JOB.replace("__SEEDS__", repr(list(seeds)))
     job = build_job(body)
-    res = submit(job, prefer="colab", est_hours=0.4, timeout_s=2940,
+    # Kaggle first, deliberately (2026-08-13). The first pilot attempt went to
+    # Colab and was lost whole: the ladder's 50-min iteration timeout killed
+    # the local watcher at ~46 min, Colab buffers stdout until the run ends and
+    # the kept session was pruned with nothing fetched — ~0.4 GPU-h bought
+    # nothing. A Kaggle kernel computes server-side whether or not anyone is
+    # watching, and JACK_REUSE_KERNEL reattaches a dead watcher's kernel at
+    # zero quota; the expiring W32 hours are assigned to this spec (OVERSIGHT
+    # B2). Timeout scales with seeds — one submission runs them all serially
+    # (LESSONS: multiply by seeds before sizing any budget or timeout).
+    res = submit(job, prefer="kaggle",
+                 est_hours=round(0.15 + 0.25 * len(seeds), 2),
+                 timeout_s=2400 + 1200 * len(seeds),
                  fetch=["t203.json"])
     if not res.ok:
         raise RuntimeError(f"T2.03 job failed on {res.backend}: {res.message}")
