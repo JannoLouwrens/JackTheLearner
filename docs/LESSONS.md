@@ -3539,3 +3539,31 @@ training loss that descends is not evidence the trained artifact does
 anything — Phase 8.2's loss fell while producing 5% of its designed effect
 range; gate effect size against the design's own scale, not the loss's
 direction.
+
+## A referenced constant imports its source's PURPOSE, not just its value
+
+BA.02 imported BA.01's tilt draw (`TILT0_LOG10_DEG`, log-uniform 0.1–14
+deg) under the standing "reference, don't transcribe" rule — one definition
+of the fall, IMPL_DEPS carrying the dependency. Two VOIDs later, a probe
+with constant slide actions measured why no arm could beat random: below
+~4 deg tilt the contact-solver floor and the damping-10 free joint make
+fall time invariant to ANY slide action (best constant-action delta 0.000 s
+at the range's median), so the mild-tilt bulk of the inherited draw made
+BA.02's claim untestable BY CONSTRUCTION. The range was never wrong in
+BA.01 — its two-decade spread exists to spread fall TIMES for BA.01's clock
+null. BA.02 needs the opposite regime: falls the channel can act on.
+Referencing shared the definition and silently shared a design intent that
+does not transfer.
+
+**Rule:** "reference, don't transcribe" prevents drift, not misfit. When a
+spec imports another spec's rig constant, ask what that constant was TUNED
+FOR in its source, and whether this spec's claim needs the same regime; if
+the purposes differ, declare a local constant beside a sentence naming the
+divergence (BA02_TILT0_LOG10_DEG), and let IMPL_DEPS keep watching the
+mechanism that is genuinely shared (the kick rule, the fall machinery).
+Sibling of "when you port a constant, check the staleness of the
+certificate that gave it meaning" — that one is about the evidence behind a
+copied value going stale; this one is about a live, correct value serving
+the wrong master. The probe that settles it is cheap: sweep the regime and
+measure whether the claim's action channel is live there at all, BEFORE
+paying for arms.
