@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 76 / 166 demonstrated
+## 77 / 166 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -681,7 +681,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ The world carries a temperature field with pre-registered dynamics - body temperature falls at a measured rate in cold, rises near heat, death below a threshold within a bounded time - AND the approach of that death is legible from Jack's senses beforehand: a probe on his sensory vector predicts time-to-freezing well above chance while he is still alive.
       - _dies if:_ Time-to-death unpredictable from the senses. Then cold is an unlearnable instakill, not a need: no agent and no architecture could ever adapt to it, and every shelter result built on top would be measuring luck.
       - _then delete:_ Every survival claim involving cold, and the jungle's entire motive for shelter.
-- [ ] **PS.03** Damage is a signal, not just an ending
+- [x] **PS.03** Damage is a signal, not just an ending
       - _asserts:_ Harm produces a GRADED, sensed damage signal that precedes death, and a single exposure is enough to shift behaviour away from its cause.
       - _dies if:_ Damage is binary and instant, or avoidance needs many exposures. Either way the only way to learn about a danger is to die of it, repeatedly, which no animal does and no agent in a survival world can afford.
       - _then delete:_ Any claim that Jack learns danger. Also weakens TA.02: taste aversion would be the ONLY one-shot learner in the system, which would make it a special case rather than a principle.

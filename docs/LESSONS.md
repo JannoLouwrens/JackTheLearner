@@ -3224,3 +3224,30 @@ registered hypothesis does not require, check whether the gate is measuring
 the claim or the pilot before reading the verdict as the hypothesis's —
 law 4's open-move clause exists for exactly this, and the failing attempt
 stays in the ledger's history (T2.08 attempt 1).
+
+## A scripted policy is part of the world it measures — a null survives only if the rig trips none of the world's other channels
+
+PS.03's rig walks the rover into a hazard site; its null (ETA = 0) declares the
+site harmless and requires that no aversion form. Two pilot failures, same
+shape. First, the "do nothing" action `a = 0` is not nothing: the arm actuators
+are position servos and 0 maps to their MID-RANGE target, so at trial start the
+arms snapped outward and the body's hop registered on the impact channel as a
+~2.2 m/s fall — a phantom onset with no drive applied at all. Second, at drive
+scale 0.8 the walk's own hops crossed PS.01's measured j0, so an ordinary
+approach inflicted real FALL damage — and the ETA=0 null's learner, honestly
+reading felt damage from the needs channel, formed an aversion to the walk
+itself: null_delta read 1.0 on a world whose hazard was disabled. Nothing was
+wrong with the null's implementation; the rig's motion was tripping a world
+channel the null does not disable.
+
+**Rule:** a scripted policy that drives a body is a physical actor in the
+world, and every world channel it can trip (impact damage, eating, drowning,
+audio events) is a confound for whatever the spec meant to isolate. Before
+registering: (1) derive the HOLD action from the live ctrlrange — a
+neutral-looking action value is not a neutral action ("a default of zero is
+not 'unknown'", applied to action space); (2) enumerate the world's other
+sensed channels and measure in the pilot whether the rig's motion moves them
+(here: max onset speed vs j0); (3) make the null's cleanliness a measured,
+gated quantity (null_felt == 0), never an assumption — it is the one number
+that distinguishes "the null formed no aversion" from "the null had nothing
+to be averse to".
