@@ -3177,3 +3177,18 @@ a kindless declaration is now REPORTED like a malformed one (`coverage.py`
 takes `default_kind=` only so T0.21's control can run the organ that failed),
 T0.21 P9 gates both directions, and T0.21 hashes `coverage.py` via `IMPL_DEPS`
 so the guard's certificate dies with the file it guards.
+
+## A ledger stamp is provenance only while its commit stays pushed and reachable — never `--amend` after a run has stamped that commit
+
+Clearing T0.21's dirty stamp on 2026-08-13 used the sequence commit -> re-run
+-> `git commit --amend` -> push. The re-run stamped the ledger entry with the
+pre-amend hash (`b15dabb`); the amend then replaced that commit, leaving the
+certificate attributable to an object that exists only as a local orphan and
+was never pushed — exactly the disease `assert_ref_is_current` exists to stop
+on the GPU path, reproduced locally by a history edit instead of a lazy push.
+The DIRTY check cannot see it: the tree was clean when the run happened.
+
+**Rule:** once any spec has recorded a result against a commit, that commit is
+load-bearing history — do not amend or rebase it. Clear dirty stamps with the
+sequence commit -> push -> re-run -> **new** commit for the ledger delta, so
+every stamp lands on a hash that is already an ancestor of `origin/main`.
