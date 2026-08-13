@@ -724,7 +724,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
-- [ ] **BA.02** He catches himself - the felt fall changes what he does
+- [~] **BA.02** He catches himself - the felt fall changes what he does  — best_trained=1.623611; best_trained_std=0.386795
       - _asserts:_ A learner given BA.01's vestibular channel ACTS on it: trained in a topple-costly regime, it stays upright measurably longer than an identical learner trained with the channel deleted (>= 3 sigma across seeds), and the gain vanishes when the channel is replaced by matched-statistics noise.
       - _dies if:_ No upright-time gain from having the channel. Then balance is decoded but not used - a sense he has and ignores - and BA.01's probe measured a spectator, not a participant in control.
       - _then delete:_ The assumption, load-bearing in every locomotion and climbing claim, that he can use up-from-down. If refuted, balance stays a dashboard light he never reads, and the honest status of W0.BAL is 'sensed, unused'.
