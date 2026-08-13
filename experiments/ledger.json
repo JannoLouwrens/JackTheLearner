@@ -5475,6 +5475,132 @@
       "spec_id": "T2.20",
       "status": "PASS"
     },
+    "T4.02": {
+      "amended": [],
+      "attempt": 2,
+      "commit": "cdbb08e",
+      "control_metrics": {
+        "ctrl_finite_all": 1.0,
+        "ctrl_finite_all_std": 0.0,
+        "ctrl_fired_ok_all": 1.0,
+        "ctrl_fired_ok_all_std": 0.0,
+        "ctrl_norms_per_seed": [
+          {
+            "audio": 0.001846,
+            "language": 0.067749,
+            "proprio": 0.000848,
+            "touch": 0.004747,
+            "vision": 13.595792
+          },
+          {
+            "audio": 0.001717,
+            "language": 0.070697,
+            "proprio": 0.000852,
+            "touch": 0.004715,
+            "vision": 10.200427
+          },
+          {
+            "audio": 0.001575,
+            "language": 0.062962,
+            "proprio": 0.000753,
+            "touch": 0.003854,
+            "vision": 9.229442
+          }
+        ],
+        "ctrl_ratio_per_seed": [
+          16035.0099,
+          11973.214,
+          12259.9932
+        ],
+        "ctrl_vision_dominance_min": 11973.214,
+        "ctrl_vision_dominance_min_std": 0.0
+      },
+      "duration_s": 431.28,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "",
+          "control_metrics": {},
+          "impl_sha": null,
+          "message": "child recorded nothing (rc=1): arner/experiments/protocol.py\", line 1182, in run_spec\n    raise UndeclaredControl(\nexperiments.protocol.UndeclaredControl: T4.02 passes control_fn=_control to run_spec but Spec.control is None. Declare in the registry WHAT the control is and WHICH WAY it must fail; that field is the audit surface.",
+          "metrics": {},
+          "ran_at": "",
+          "seeds": [],
+          "status": "ERROR"
+        }
+      ],
+      "impl_sha": "e3e6a8efe54cef96",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "backend": "kaggle",
+        "finite_all": 1.0,
+        "finite_all_std": 0.0,
+        "fired_ok_all": 1.0,
+        "fired_ok_all_std": 0.0,
+        "gpu": "Tesla P100-PCIE-16GB",
+        "loss_decreased_all": 1.0,
+        "loss_decreased_all_std": 0.0,
+        "loss_first_per_seed": [
+          0.8888,
+          0.8778,
+          0.8913
+        ],
+        "loss_last_per_seed": [
+          0.5065,
+          0.5394,
+          0.5162
+        ],
+        "max_modality_grad_ratio": 29.7811,
+        "max_modality_grad_ratio_std": 0.0,
+        "n_params": 58244744.0,
+        "n_params_std": 0.0,
+        "norms_per_seed": [
+          {
+            "audio": 0.000102,
+            "language": 0.000971,
+            "proprio": 0.000785,
+            "touch": 0.002978,
+            "vision": 0.000982
+          },
+          {
+            "audio": 8e-05,
+            "language": 0.000831,
+            "proprio": 0.00081,
+            "touch": 0.001003,
+            "vision": 0.000484
+          },
+          {
+            "audio": 9e-05,
+            "language": 0.000774,
+            "proprio": 0.00055,
+            "touch": 0.002671,
+            "vision": 0.00057
+          }
+        ],
+        "ratio_first_per_seed": [
+          37.7137,
+          29.6179,
+          33.9198
+        ],
+        "ratio_per_seed": [
+          29.1312,
+          12.4991,
+          29.7811
+        ],
+        "share_max": 0.198,
+        "share_max_std": 2.77556e-17,
+        "share_min": 0.1979,
+        "share_min_std": 0.0
+      },
+      "ran_at": "2026-08-13T21:32:05",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T4.02",
+      "status": "FAIL"
+    },
     "T6.03": {
       "amended": [],
       "attempt": 1,

@@ -197,7 +197,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T4.01** Modality dropout robustness
       - _asserts:_ Performance degrades gracefully when a modality is missing at test time.
       - _dies if:_ Catastrophic failure when one sense drops.
-- [ ] **T4.02** No modality collapse
+- [!] **T4.02** No modality collapse  — backend=kaggle; finite_all=1.0
       - _asserts:_ Per-modality gradient norms stay within an order of magnitude.
       - _dies if:_ One modality's gradient dominates by >10x — the others are ignored.
 - [ ] **T4.03** Fusion actually fuses
