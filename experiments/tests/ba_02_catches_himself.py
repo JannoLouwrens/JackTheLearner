@@ -108,6 +108,25 @@ re-costing the TIER, never the thresholds), catchability, and the null/noise
 levels. Auxiliary gate constants marked PILOT-FINAL below are finalised in the
 registration commit BEFORE the registered run; T_GAIN_MIN = 3.0 is the
 registry's own bar and does not move.
+
+PILOT DELIVERED 2026-08-13 (seed 90, 923.5 s wall under the concurrent LC.03
+registered run's 3 workers; JSON in /data/ba02_pilot.log). Numbers, recorded
+here before the registered run per the pre-registration:
+  up_vest 1.2375 s | up_deprived 0.8417 | gain +0.3958, gain_positive 1.0
+  up_random 0.6375 | best_trained 1.2375 (margin over random 0.60, gate 0.20)
+  toppled_frac_random 1.00 (gate >= 0.60) | seed_rig_ok 1.0 both sides
+  control: up_noise 0.7042, gain_noise -0.1375 (vanishes: -0.35x of gain
+  against the 0.50x cap; vest-over-noise 0.533 against the 0.20 floor)
+  CEM curves flat, not climbing (vest 7.5 -> 7.22, deprived 6.5 -> 6.39,
+  noise last 6.94 fit-decisions) — the data-starved guard does not fire,
+  CEM_ITERS stays 12.
+  anatomy (vest policy, one block pinned): touch 0.642, grav 0.650,
+  canals 0.646, otoliths 0.650, vxvy 0.667 — ablating ANY sub-block drops
+  upright time to ~random (0.64), i.e. the winning policy reads the whole
+  suffix jointly rather than one organ.
+Every PILOT-FINAL candidate is finalised UNCHANGED — the pilot sits 2.7-5x
+inside each. Tier re-cost: 923.5 s x 3 seeds (control shares the per-seed
+cache) ~= 46 min, inside CPU_LONG cpu<2h; tier unchanged.
 """
 from __future__ import annotations
 
@@ -163,14 +182,14 @@ CEM_SIG_FLOOR = 0.05
 # seeds, every seed positive.
 T_GAIN_MIN = 3.0
 # Rig gates (VOID, not FAIL — a world that could not test the claim).
-# PILOT-FINAL: values below are candidates; finalised in the registration
-# commit with the seed-90 pilot numbers beside them, per BA.01 precedent.
-TOPPLED_FRAC_MIN = 0.60       # random policy must actually fall   [PILOT-FINAL]
-RANDOM_UP_FRAC_MAX = 0.80     # ...but not survive ~the horizon    [PILOT-FINAL]
-IMPROVE_MARGIN_MIN = 0.20     # sim-s: best trained arm over random [PILOT-FINAL]
+# FINALISED in the registration commit, unchanged from their candidates, with
+# the seed-90 pilot numbers beside them (BA.01 precedent). Pilot margins:
+TOPPLED_FRAC_MIN = 0.60       # random policy must actually fall    (pilot 1.00)
+RANDOM_UP_FRAC_MAX = 0.80     # ...but not survive ~the horizon     (pilot 0.64 s vs cap 9.6 s)
+IMPROVE_MARGIN_MIN = 0.20     # sim-s: best trained arm over random (pilot 0.60)
 # Control gates (the noise gain must VANISH).
-NOISE_GAIN_FRAC_MAX = 0.50    # gain_noise <= this fraction of gain [PILOT-FINAL]
-VEST_OVER_NOISE_MIN = 0.20    # sim-s: gain - gain_noise floor      [PILOT-FINAL]
+NOISE_GAIN_FRAC_MAX = 0.50    # gain_noise <= this fraction of gain (pilot -0.35x)
+VEST_OVER_NOISE_MIN = 0.20    # sim-s: gain - gain_noise floor      (pilot 0.53)
 
 _CACHE: dict = {}
 
