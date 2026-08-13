@@ -75,11 +75,24 @@ relative or exogenous, never pilot-bulk absolutes — T2.08 lesson):
                         dimension-matched projection of the same pixels is
                         what "features" means
   CONTROL |acc_shuffled − 0.25| <= SHUFFLE_BAND
-PILOT PENDING — the MARGIN_FLOOR / NULL_MARGIN constants below are
-PROVISIONAL until the seed-90 pilot has actually run; its numbers will be
-recorded here and in LOOP_JOURNAL.md, and the constants finalised in a
-commit BEFORE the registered run. SHUFFLE_BAND is exogenous (chance ± ~4σ of
-binomial noise at n_test=300) and is final now.
+PILOT RAN 2026-08-13 05:38 UTC (Colab T4, session ladder-1786598726, 757 s,
+after two Kaggle attempts died on ambient-stack faults — seed overflow, then
+cudnn/torchvision pins — all fixed and journaled). Seed-90 numbers:
+  acc_pretrained 0.9433   acc_pre_shipped 0.9633   acc_scratch 0.47
+  acc_rp2048 0.4033       acc_rp1024 0.40          acc_pixels 0.3733
+  acc_shuffled 0.2467     per_class_min 0.8933     mean_tries 1.29
+  canary_ok true, canary_colors 2295, n_params_scratch 244960
+Margin (pretrained − scratch) = 0.4733; null gap (pretrained − rp2048) =
+0.54. The constants below were set BEFORE the pilot and the pilot gives no
+reason to move them: both floors sit at ~1/5 of the observed effect — far
+below the pilot bulk (the T2.08 anti-lottery lesson) yet far above probe
+noise (binomial σ at n_test=300 is ~0.025). FINAL as of this commit; they
+must not move for the registered run. SHUFFLE_BAND is exogenous (chance ±
+~4σ of binomial noise at n_test=300).
+DIAGNOSTIC NOTE: pre_shipped (raw /255, no normalisation) reads 0.9633 —
+the shipped forward's missing normalisation costs NOTHING on this task
+(−0.02, inside noise). The wrapper-defect price is ~zero; the feature-family
+comparison is clean either way.
 
 GPU. One submission for the whole spec (module cache — the T2.01 pattern;
 run_spec calls _experiment once per seed). The job clones the pushed repo,
