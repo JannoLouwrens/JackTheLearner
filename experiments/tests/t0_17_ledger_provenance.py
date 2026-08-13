@@ -28,6 +28,18 @@ Seven properties, each with a way to fail:
      cannot be audited against the failing measurement by anyone but its
      author. Entries recorded before the fields existed stay evidence-free:
      absence must be preserved, never back-filled with invented numbers.
+  8. A certificate that declares `IMPL_DEPS` while lacking `impl_sha` cannot
+     stand over a dependency that has moved (14th audit B1, 2026-08-13).
+     `impl_sha`'s staleness alarm was fitted to four world certificates that
+     were recorded before the mechanism existed — the alarm was wired and
+     structurally could not fire while `playground.py` took +430/-14 lines
+     under them. Three sub-properties: `staleness_of` flags a pre-`impl_sha`
+     entry whose declared dependency has commits after `ran_at`
+     (known-positive), does NOT flag one whose `ran_at` postdates every such
+     commit (known-negative), and the REAL ladder holds zero PASS records in
+     the flagged state. The third is the class-closer: the four that motivated
+     this were re-run on purpose the day it was written, and the next
+     unprotected certificate turns this spec red instead of hiding.
 
 CONTROL — the pre-fix path: the literal `9b92d14` edit (read the JSON, set
 `status`, write it back) replayed on a temp ledger. Under the same audit it
@@ -42,8 +54,9 @@ import json
 import tempfile
 from pathlib import Path
 
-from ..protocol import Ledger, Result, Status, run_spec
-from ..registry import BY_ID, Spec, Budget
+from ..protocol import (Ledger, Result, Status, module_path_for, run_spec,
+                        staleness_of)
+from ..registry import BY_ID, LADDER, Spec, Budget
 
 # Every property here is a claim about the recorder. Without this, an edit to
 # protocol.py leaves T0.17's PASS describing a recorder that no longer exists
@@ -163,7 +176,44 @@ def _experiment(seed: int) -> dict:
         absence_preserved = (len(h21) == 1 and "metrics" not in h21[0]
                              and "impl_sha" not in h21[0])
 
+        # 8. unprotected certificates cannot hide. The wire-through uses THIS
+        # file as the probe module: it declares IMPL_DEPS =
+        # ["experiments/protocol.py"], and protocol.py has commits after 2020
+        # and none after 2999, which gives a known-positive and a
+        # known-negative through the real detector against the real git
+        # history — no synthetic repo needed.
+        me = module_path_for("T0.17")
+        kinds_old = {k for k, _ in staleness_of(
+            Result(spec_id="X.22", status=Status.PASS, impl_sha=None,
+                   ran_at="2020-01-01T00:00:00"), me)}
+        kinds_new = {k for k, _ in staleness_of(
+            Result(spec_id="X.22", status=Status.PASS, impl_sha=None,
+                   ran_at="2999-01-01T00:00:00"), me)}
+        detector_flags_moved = ("UNVERIFIABLE_MOVED" in kinds_old
+                                and "UNVERIFIABLE" in kinds_old)
+        detector_spares_unmoved = ("UNVERIFIABLE_MOVED" not in kinds_new
+                                   and "UNVERIFIABLE" in kinds_new)
+        # ... and the REAL ladder holds no PASS in the flagged state. Read-only
+        # on the real ledger (this test never writes it). The day this was
+        # written the four (PG.1, PG.2, PG.4, T2.20) had just been re-run on
+        # purpose; a name appearing here again means a new certificate slipped
+        # into the unprotected class.
+        real = Ledger()
+        unprotected = []
+        for s in LADDER:
+            e = real.results.get(s.id)
+            p = module_path_for(s.id)
+            if e is None or p is None or real.status(s.id) is not Status.PASS:
+                continue
+            if any(k == "UNVERIFIABLE_MOVED" for k, _ in staleness_of(e, p)):
+                unprotected.append(s.id)
+        if unprotected:
+            print(f"    T0.17 P8: unprotected PASS certificates: {unprotected}")
+
         return {
+            "detector_flags_moved_dependency": detector_flags_moved,
+            "detector_spares_unmoved_dependency": detector_spares_unmoved,
+            "unprotected_pass_certificates": len(unprotected),
             "amendment_is_attributable": attributable,
             "refuses_pass_and_fail": all(refused_claims),
             "refuses_unattributed": all(refused_unattributed),
@@ -203,6 +253,9 @@ def _control(seed: int) -> dict:
 
 def _check(m: dict, c: dict) -> bool:
     return all([
+        m["detector_flags_moved_dependency"],
+        m["detector_spares_unmoved_dependency"],
+        m["unprotected_pass_certificates"] == 0,
         m["amendment_is_attributable"],
         m["refuses_pass_and_fail"],
         m["refuses_unattributed"],

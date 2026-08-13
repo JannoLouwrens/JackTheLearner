@@ -861,6 +861,74 @@ def module_path_for(spec_id: str, strict: bool = False):
     return matches[0] if len(matches) == 1 else None
 
 
+def deps_moved_since(path, ran_at, repo_root=None) -> tuple:
+    """Declared `IMPL_DEPS` with commits after `ran_at` — the one staleness
+    question still answerable for an entry recorded before `impl_sha` existed.
+
+    The 14th overseer audit (2026-08-13): four world certificates carried
+    `IMPL_DEPS = ["playground.py"]` and none of its protection, because they
+    were recorded before `impl_sha` was born — `playground.py` took +430/-14
+    lines and `run stale` read clean for all four, forever. "Cannot be checked"
+    and "cannot be checked AND its declared dependency has demonstrably moved"
+    are different facts; only the second can bite, and it was invisible.
+
+    Compares against `ran_at`, NOT against the recorded commit — deliberately.
+    `stale_claims` documents why commit-ancestry lies here: code is edited,
+    RUN, and only then committed, so the commit that lands minutes after a run
+    often contains the very bytes that ran. A commit date after the wall-clock
+    moment of the run is the claim actually being made.
+
+    Returns `(moved, problem)` like `impl_deps_of`: `problem` non-empty when
+    git could not answer, reported rather than swallowed — an unanswerable
+    check that returns "nothing moved" is a clean scan nobody performed.
+
+    The date comparison happens HERE, not in git. The first draft passed
+    `--since={ran_at}` and its known-negative probe (ran_at=2999) still
+    returned a commit: approxidate quietly reinterprets a date it finds
+    implausible instead of erroring — a silent fallback inside the very guard
+    against silent staleness. So git is asked only for the dependency's last
+    commit date (`%cI`, which carries its offset) and Python does the
+    comparison, converting to the box's local clock because `ran_at` is
+    recorded from it.
+    """
+    import subprocess
+    from datetime import datetime
+    deps, problem = impl_deps_of(path)
+    if problem:
+        return (), problem
+    if not deps or not ran_at:
+        return (), ""
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
+    try:
+        ran = datetime.fromisoformat(str(ran_at))
+    except ValueError:
+        return (), f"ran_at unparseable: {ran_at!r}"
+    if ran.tzinfo is not None:
+        ran = ran.astimezone().replace(tzinfo=None)
+    moved = []
+    for rel in deps:
+        try:
+            r = subprocess.run(
+                ["git", "-C", str(root), "log", "-1", "--format=%cI", "--", rel],
+                capture_output=True, text=True, timeout=30)
+        except (OSError, subprocess.TimeoutExpired) as e:
+            return (), f"git:{type(e).__name__}"
+        if r.returncode != 0:
+            return (), f"git:rc{r.returncode}"
+        stamp = r.stdout.strip()
+        if not stamp:
+            continue  # never committed: impl_sha_of already reports `missing:`
+        try:
+            # %cI can end in 'Z', which fromisoformat rejects before 3.11.
+            last = (datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+                    .astimezone().replace(tzinfo=None))
+        except ValueError:
+            return (), f"commit date unparseable: {stamp!r}"
+        if last > ran:
+            moved.append(rel)
+    return tuple(moved), ""
+
+
 def staleness_of(entry: "Result", path) -> List[tuple]:
     """Every reason this entry is not a claim about the code that exists now.
 
@@ -870,6 +938,11 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
       DIRTY        the run's commit stamp ends in `+dirty`, so the code that
                    produced it exists in no commit and cannot be recovered.
       UNVERIFIABLE the entry predates `impl_sha`; nothing can be compared.
+      UNVERIFIABLE_MOVED  alongside UNVERIFIABLE when the module declares
+                   `IMPL_DEPS` and a declared dependency has commits after
+                   `ran_at` — the alarm is fitted and structurally cannot
+                   fire, over a world that has demonstrably moved. This is
+                   the one that bites (14th audit: PG.1/PG.2/PG.4/T2.20).
       CHANGED      the implementation hash moved since the run.
 
     An entry can be DIRTY *and* CHANGED — they are different facts about it,
@@ -891,6 +964,18 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
     if not recorded:
         out.append(("UNVERIFIABLE",
                     f"recorded at {(entry.commit or '?')[:8]} before impl_sha existed"))
+        moved, problem = deps_moved_since(path, getattr(entry, "ran_at", None))
+        if problem:
+            # Conservative direction: a check that cannot run is reported as
+            # fired-with-reason, never as clean (the T0.13 shape).
+            out.append(("UNVERIFIABLE_MOVED",
+                        f"declares IMPL_DEPS but the moved-check could not run "
+                        f"({problem})"))
+        elif moved:
+            out.append(("UNVERIFIABLE_MOVED",
+                        f"declares {list(moved)} which took commits after "
+                        f"ran_at {getattr(entry, 'ran_at', '?')}; the "
+                        f"staleness alarm it declares cannot fire"))
         return out
     cur = impl_sha_of(path)
     if cur != recorded:

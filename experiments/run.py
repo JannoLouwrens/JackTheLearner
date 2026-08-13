@@ -278,8 +278,10 @@ def stale_claims(ledger: Ledger) -> list:
     worse than none: it trains its reader to ignore it.
 
     Returns (spec_id, status, kind, detail) where kind is "CHANGED" (the file
-    hash moved), "UNVERIFIABLE" (the entry predates `impl_sha`) or "DIRTY" (the
-    run's commit stamp ends in `+dirty`).
+    hash moved), "UNVERIFIABLE" (the entry predates `impl_sha`),
+    "UNVERIFIABLE_MOVED" (predates `impl_sha` AND a declared IMPL_DEPS
+    dependency has commits after `ran_at` — the subset that bites) or "DIRTY"
+    (the run's commit stamp ends in `+dirty`).
 
     DIRTY is the strictly worse cousin of CHANGED and was added 2026-08-10, one
     iteration after `env_stamp()` learned to write the flag. The flag alone was
@@ -330,7 +332,9 @@ def cmd_status(ledger: Ledger) -> int:
     _check_stale_detector(ledger)
     rows = stale_claims(ledger)
     changed = [x for x in rows if x[2] == "CHANGED"]
-    unknown = [x for x in rows if x[2] == "UNVERIFIABLE"]
+    moved = [x for x in rows if x[2] == "UNVERIFIABLE_MOVED"]
+    moved_ids = {x[0] for x in moved}
+    unknown = [x for x in rows if x[2] == "UNVERIFIABLE" and x[0] not in moved_ids]
     dirty = [x for x in rows if x[2] == "DIRTY"]
     if dirty:
         # Above the CHANGED block deliberately: this is the more serious of the
@@ -345,6 +349,16 @@ def cmd_status(ledger: Ledger) -> int:
         for sid, st, _, detail in changed:
             print(f"      {sid}  recorded {st}; {detail}. Re-run it — the entry "
                   f"is about older code.")
+        print()
+    if moved:
+        # The subset of the pre-impl_sha entries that actually bites: the
+        # certificate names a dependency, the dependency has moved, and the
+        # alarm it declares structurally cannot fire (14th audit, B1).
+        print("  ! UNPROTECTED CERTIFICATES — recorded before `impl_sha`, and a "
+              "declared dependency\n    has since moved; `run stale` would read "
+              "clean forever. Re-run these ON PURPOSE:")
+        for sid, st, _, detail in moved:
+            print(f"      {sid}  recorded {st}; {detail}.")
         print()
     if unknown:
         # Printed, not filed under "clean". The entry that MOTIVATED this guard
@@ -424,7 +438,9 @@ def cmd_stale(ledger: Ledger) -> int:
     _check_stale_detector(ledger)
     rows = stale_claims(ledger)
     changed = [r for r in rows if r[2] == "CHANGED"]
-    unknown = [r for r in rows if r[2] == "UNVERIFIABLE"]
+    moved = [r for r in rows if r[2] == "UNVERIFIABLE_MOVED"]
+    moved_ids = {r[0] for r in moved}
+    unknown = [r for r in rows if r[2] == "UNVERIFIABLE" and r[0] not in moved_ids]
     dirty = [r for r in rows if r[2] == "DIRTY"]
     if dirty:
         print(f"\n{len(dirty)} claim(s) recorded from a MODIFIED tree — the code "
@@ -443,10 +459,17 @@ def cmd_stale(ledger: Ledger) -> int:
             print(f"  {sid:8} {st:7} {detail}")
         print("\nRe-run these (or `--gate`). A ledger entry is a claim about a "
               "specific piece of code.")
+    if moved:
+        print(f"\n{len(moved)} UNPROTECTED certificate(s) — recorded before "
+              f"`impl_sha`, and a declared\ndependency has since moved. The "
+              f"alarm they declare cannot fire; re-run ON PURPOSE:\n")
+        for sid, st, _, detail in moved:
+            print(f"  {sid:8} {st:7} {detail}")
     # Reported, never hidden: a skipped item that leaves the numerator alone is
     # how a clean scan and a scan that never ran become the same number.
-    print(f"\n{len(unknown)} entr(y/ies) predate `impl_sha` and cannot be "
-          f"checked at all; they become verifiable on their next run.\n")
+    print(f"\n{len(unknown)} further entr(y/ies) predate `impl_sha` and cannot "
+          f"be checked at all (no declared\ndependency has moved); they become "
+          f"verifiable on their next run.\n")
     return 0
 
 
