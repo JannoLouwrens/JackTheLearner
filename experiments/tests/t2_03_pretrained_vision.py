@@ -252,7 +252,13 @@ def _build_dataset(seed: int, n: int):
     (X uint8 [n,RES,RES,3], y int [n], mean rejection tries)."""
     assert n % len(CLASSES) == 0
     eye = _get_eye(seed)
-    rng = np.random.RandomState(seed * 100_003 + n)
+    # Mod 2**32: numpy refuses seeds above 2**32-1, and the TEST split's
+    # derived seed (seed + 500_009) * 100_003 overflows it — the local smoke
+    # only ever exercised the tame train-path seed, so the first place this
+    # line met its real argument range was a Kaggle kernel 131 s in
+    # (2026-08-13, jack-ladder-1786597987). Values for all small seeds are
+    # unchanged by the mod; the overflowing ones never had a value.
+    rng = np.random.RandomState((seed * 100_003 + n) % 2**32)
     X = np.empty((n, RES, RES, 3), dtype=np.uint8)
     y = np.empty(n, dtype=np.int64)
     tries_total = 0

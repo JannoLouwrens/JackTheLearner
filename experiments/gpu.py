@@ -64,6 +64,29 @@ KAGGLE_TORCH_FIX = """
 import subprocess as _sp, sys as _sys, os as _os
 _sp.run([_sys.executable, "-m", "pip", "install", "-q", "torch==2.5.1",
          "--index-url", "https://download.pytorch.org/whl/cu121"], check=False)
+# 2026-08-13: the exact-pin install above started failing UPSTREAM — torch
+# 2.5.1's metadata pins nvidia-cudnn-cu12==9.1.0.70 and the package index no
+# longer serves that version (nearest survivor 9.1.1.17), so pip resolution
+# fails after downloading the 780 MB wheel, check=False swallows it, and the
+# AMBIENT torch (sm_70+, no Pascal kernels) silently stays: the P100 warns
+# "sm_60 is not compatible" and every CUDA op is doomed. Detect the miss and
+# fall back to --no-deps plus the nearest available cudnn 9.1.x — CUDA 12.x
+# runtime libraries are minor-version compatible, and what the P100 needs is
+# torch's own sm_60 fatbins, not exact dependency pins. The kernel prints
+# TORCH_PIN so the console log says which torch actually ran.
+import importlib.metadata as _md
+def _torch_v():
+    try:
+        return _md.version("torch")
+    except _md.PackageNotFoundError:
+        return ""
+if not _torch_v().startswith("2.5.1"):
+    _sp.run([_sys.executable, "-m", "pip", "install", "-q", "--no-deps",
+             "torch==2.5.1", "--index-url",
+             "https://download.pytorch.org/whl/cu121"], check=False)
+    _sp.run([_sys.executable, "-m", "pip", "install", "-q",
+             "nvidia-cudnn-cu12==9.1.1.17"], check=False)
+print("TORCH_PIN", _torch_v() or "MISSING", flush=True)
 # Pin torch for every later pip install in this job. On 2026-08-09 T2.02's own
 # dependency install (stable-baselines3, whose torch range 2.5.1 satisfies)
 # nevertheless dragged torch up to 2.13.0+cu130 — no sm_60 kernels — and the
