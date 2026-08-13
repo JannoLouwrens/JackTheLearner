@@ -2807,6 +2807,54 @@ EXPANSION: list[Spec] = [
                "this spec exists to rule out."
                "  COVERS: damage/nociception (claim)"),
 
+    Spec("PS.04", 5, "He eats because he is hungry - feeding is need-contingent",
+         hypothesis="A learner in W0 acquires food CONTINGENT on its sensed "
+                    "energy state: feeding events concentrate at low sensed "
+                    "energy (the need->behaviour coupling beats a need-blind "
+                    "account of the same behaviour by >= 3 sigma across seeds), "
+                    "and a SATIETY-CLAMPED twin - hunger channel pinned to "
+                    "'full' while the body drains identically - measurably "
+                    "reduces its food acquisition. The sensed need, not the "
+                    "food's mere presence, is what moves him.",
+         falsified_by="Feeding is uncorrelated with sensed need, or the "
+                      "satiety-clamped twin forages just as much. Then food "
+                      "acquisition is a fixed policy the drive layer merely "
+                      "narrates, 'hunger' is bookkeeping rather than a drive, "
+                      "and the needs-are-the-curriculum premise (GOAL.md) has "
+                      "no mechanism in him.",
+         null_baseline="A random policy's need-conditioned feeding rate: with "
+                       "no policy coupling, feeding is independent of the "
+                       "sensed state and the contingency statistic reads its "
+                       "chance level.",
+         metric="need_contingent_feeding_margin",
+         budget=Budget.CPU_DAYS, seeds=3, depends_on=["PS.01", "LC.03"],
+         control="THE SATIETY CLAMP, and its cleanliness is a GATED quantity "
+                 "(PS.03's lesson): the clamped twin's sensed energy must read "
+                 "full at every decision, its true drain must match the "
+                 "experiment arm's within tolerance, and no other channel may "
+                 "differ - measured, not assumed. The clamp must reduce "
+                 "food-seeking; if it does not, the channel is decorative.",
+         kills="The claim that W0's needs teach anything. If feeding is not "
+               "need-contingent, cold and hunger are punishments, not "
+               "curriculum, and the survival-world directive is running on an "
+               "agent that cannot be pressured by it.",
+         notes="COVERS: hunger/thirst (claim)\n"
+               "Registered under overseer B5 (2026-08-13): hunger/thirst had "
+               "no claim-kind spec, so its n_pass could not move no matter "
+               "what ran. SCOPE, stated honestly: W0 exposes energy (food) "
+               "and integrity; there is no water channel yet, so this spec "
+               "demonstrates the HUNGER half. When W0 gains thirst, register "
+               "a sibling rather than averaging the two (the ME.11 "
+               "per-partition lesson). CAUTION carried from LC.03/T2.08: in "
+               "W0 as measured, passivity may maximise life LENGTH - this "
+               "claim is about CONTINGENCY (need drives behaviour), not "
+               "survival optimality, and a need-blind statue outliving a "
+               "forager rescues nothing. Depends on LC.03 because the claim "
+               "needs a screened learning core that demonstrably learns in "
+               "W0; the implementer should reuse LC.03's harness "
+               "(experiments/survival.py) rather than a second loop - the "
+               "two-kernels lesson."),
+
     Spec("SH.01", 5, "Under cold, he shelters - and prefers the shelter that works",
          hypothesis="With a thermal drive active, time spent sheltered rises "
                     "far above an otherwise identical agent whose thermal drive "
@@ -2988,4 +3036,44 @@ EXPANSION: list[Spec] = [
                "given only gravity's direction cannot distinguish falling from "
                "being carried, and that distinction is exactly what a creature "
                "in a jungle needs."),
+
+    Spec("BA.02", 5, "He catches himself - the felt fall changes what he does",
+         hypothesis="A learner given BA.01's vestibular channel ACTS on it: "
+                    "trained in a topple-costly regime, it stays upright "
+                    "measurably longer than an identical learner trained with "
+                    "the channel deleted (>= 3 sigma across seeds), and the "
+                    "gain vanishes when the channel is replaced by "
+                    "matched-statistics noise.",
+         falsified_by="No upright-time gain from having the channel. Then "
+                      "balance is decoded but not used - a sense he has and "
+                      "ignores - and BA.01's probe measured a spectator, not "
+                      "a participant in control.",
+         null_baseline="The channel-deprived twin's upright time; and a "
+                       "random policy in the same rig.",
+         metric="upright_gain_vs_deprived",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["BA.01"],
+         control="MATCHED-NOISE CHANNEL: replace the vestibular input with "
+                 "amplitude-matched noise (or a shuffled replay of another "
+                 "episode's channel). The gain must vanish - this separates "
+                 "information content from input-width or regularisation "
+                 "effects, which a deprived-vs-present comparison alone "
+                 "cannot. BA.01's own control (channel removed, physics "
+                 "identical) is inherited by the deprived arm.",
+         kills="The assumption, load-bearing in every locomotion and "
+               "climbing claim, that he can use up-from-down. If refuted, "
+               "balance stays a dashboard light he never reads, and the "
+               "honest status of W0.BAL is 'sensed, unused'.",
+         notes="COVERS: balance (claim)\n"
+               "Registered under overseer B5 (2026-08-13): balance had no "
+               "claim-kind spec, so its n_pass could not move no matter what "
+               "ran. BA.01's two-channel note applies here as ablation "
+               "structure: report the linear-acceleration and "
+               "angular-velocity channels' contributions SEPARATELY (ME.11's "
+               "per-partition lesson) - a gain carried wholly by one channel "
+               "is a finding, not a rounding detail. BUDGET is declared "
+               "CPU_LONG on the expectation that BA.01's rover rig trains "
+               "far under LC.03's envelope; per the LC.03 budget scar, the "
+               "implementer must re-cost the envelope at measured throughput "
+               "in the pilot and amend the TIER (never the thresholds) "
+               "BEFORE the registered run if it does not fit."),
 ]

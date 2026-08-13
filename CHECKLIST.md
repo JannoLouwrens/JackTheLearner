@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 79 / 167 demonstrated
+## 79 / 169 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -692,6 +692,10 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
+- [ ] **PS.04** He eats because he is hungry - feeding is need-contingent
+      - _asserts:_ A learner in W0 acquires food CONTINGENT on its sensed energy state: feeding events concentrate at low sensed energy (the need->behaviour coupling beats a need-blind account of the same behaviour by >= 3 sigma across seeds), and a SATIETY-CLAMPED twin - hunger channel pinned to 'full' while the body drains identically - measurably reduces its food acquisition. The sensed need, not the food's mere presence, is what moves him.
+      - _dies if:_ Feeding is uncorrelated with sensed need, or the satiety-clamped twin forages just as much. Then food acquisition is a fixed policy the drive layer merely narrates, 'hunger' is bookkeeping rather than a drive, and the needs-are-the-curriculum premise (GOAL.md) has no mechanism in him.
+      - _then delete:_ The claim that W0's needs teach anything. If feeding is not need-contingent, cold and hunger are punishments, not curriculum, and the survival-world directive is running on an agent that cannot be pressured by it.
 - [ ] **SH.01** Under cold, he shelters - and prefers the shelter that works
       - _asserts:_ With a thermal drive active, time spent sheltered rises far above an otherwise identical agent whose thermal drive is disabled, sheltering BEGINS before the lethal threshold rather than after it, and when offered two shelters he prefers the one that actually retains heat.
       - _dies if:_ No difference from the drive-disabled agent; or sheltering only starts after the threshold (a reflex to dying, not anticipation); or he is indifferent between a working shelter and a cosmetic one.
@@ -717,3 +721,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Jack carries a sensed orientation signal - gravity's direction in his own body frame - from which a linear probe recovers tilt, and from which time-to-topple is predictable while he is still upright.
       - _dies if:_ Tilt unrecoverable, or a topple unpredictable until it has happened. Then balance is not a sense he has, it is an outcome he suffers, and no amount of training produces a creature that catches itself.
       - _then delete:_ Every locomotion and climbing claim that assumes he can tell up from down. W0.BAL - 'the rover topples' - has been an open queue entry rather than a spec; this is the falsifiable form of it.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **BA.02** He catches himself - the felt fall changes what he does
+      - _asserts:_ A learner given BA.01's vestibular channel ACTS on it: trained in a topple-costly regime, it stays upright measurably longer than an identical learner trained with the channel deleted (>= 3 sigma across seeds), and the gain vanishes when the channel is replaced by matched-statistics noise.
+      - _dies if:_ No upright-time gain from having the channel. Then balance is decoded but not used - a sense he has and ignores - and BA.01's probe measured a spectator, not a participant in control.
+      - _then delete:_ The assumption, load-bearing in every locomotion and climbing claim, that he can use up-from-down. If refuted, balance stays a dashboard light he never reads, and the honest status of W0.BAL is 'sensed, unused'.
