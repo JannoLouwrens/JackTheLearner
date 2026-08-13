@@ -159,6 +159,10 @@ class Budget(str, Enum):
     CPU_FAST = "cpu<1min"
     CPU = "cpu<10min"
     CPU_LONG = "cpu<2h"
+    CPU_DAYS = "cpu<48h"     # detached multi-iteration runs (LC.03's envelope
+    # measured ~90 core-h against CPU_LONG's label; a declaration machinery
+    # reads is code, and run.py kills a child at the declared budget's timeout
+    # — the T2.08 routing lesson and the T2.01 timeout scar, one tier up)
     GPU_SHORT = "gpu<20min"
     GPU = "gpu<2h"
     GPU_LONG = "gpu<8h"      # must checkpoint; Kaggle caps sessions at 12h

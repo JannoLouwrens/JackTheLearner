@@ -1856,7 +1856,13 @@ EXPANSION: list[Spec] = [
                        "cleared random by 2.74 sigma against a 3.00 gate, so a "
                        "gate against random alone is nearly cleared by a "
                        "network that has never received a gradient.",
-         metric="life_gain", budget=Budget.CPU_LONG, seeds=3,
+         metric="life_gain", budget=Budget.CPU_DAYS, seeds=3,
+         # Budget AMENDED CPU_LONG -> CPU_DAYS 2026-08-13: the §5.7 envelope
+         # (N_STEPS=100k x 5 arms + wiped twins + twins + nulls + controls,
+         # per seed) re-costed at LC.02's MEASURED throughput is ~90 core-h,
+         # and run.py kills a child at the declared budget's timeout. The
+         # declaration must match behaviour (T2.08); the envelope does not
+         # shrink to fit a label.
          # XL.00 added 2026-08-10: LC.03 scores `life_gain` over `n_lives >= 12`
          # and `cross_life_transfer`, and until that commit NOTHING IN W0 COULD
          # END A LIFE (`w0.py`'s own header said "W0-2 death — NOT YET"). The
@@ -1872,8 +1878,19 @@ EXPANSION: list[Spec] = [
                  "learning'. (c) FROZEN: the best arm with the optimiser never "
                  "stepped must record life_gain within noise of zero; if lives "
                  "lengthen without learning, the metric measures the world and "
-                 "everything here is void. (d) shuffled-diary must collapse "
-                 "cross_life_transfer. (e) darkroom (rewarded for minimising "
+                 "everything here is void. (d) wiped-store [AMENDED 2026-08-13 "
+                 "from 'shuffled-diary permuted before retrieval': no admitted "
+                 "core retrieves the diary — its rows cross death unread, "
+                 "XL.00's certificate — so permuting them cannot change "
+                 "behaviour and that control could never fail for the right "
+                 "reason; T0.13, a detector that cannot see its own positive "
+                 "control has measured nothing]: each arm's twin with weights, "
+                 "optimiser and replay reinitialised from the init seed at "
+                 "every death must record life_gain within noise of zero — "
+                 "cross_life_transfer IS the paired difference against this "
+                 "twin, so the control demonstrates the collapse the shuffle "
+                 "was meant to buy, on the store the arms actually use. "
+                 "(e) darkroom (rewarded for minimising "
                  "predicted observation entropy) must record strongly NEGATIVE "
                  "life_gain — it is the positive control for the dark-room "
                  "detector, and a detector that never sees its own positive "

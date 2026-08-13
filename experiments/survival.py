@@ -146,8 +146,12 @@ def run_survival(seed: int, *, j0: float, alpha: float,
                  train_ratio: float = 0.25,
                  e0: float = 1.0,
                  reward_fn: Optional[Callable] = None,
+                 intrinsic_fn: Optional[Callable] = None,
                  wipe_at_death: bool = False,
                  explore_std: tuple = EXPLORE_STD,
+                 min_core_s: Optional[float] = None,
+                 record_xy: bool = False,
+                 record_transitions: int = 0,
                  diary=None) -> dict:
     """One arm-seed (or null/control) run: `n_decisions` of lethal W0.
 
@@ -156,11 +160,30 @@ def run_survival(seed: int, *, j0: float, alpha: float,
                 exploration schedule, optimiser NEVER stepped.
     reward_fn   (r_h, w, obs_t, core) -> float. None = homeo-dr unchanged.
                 This is where randrew/darkroom/EFE reinterpret the channel.
+    intrinsic_fn  (w, obs_t, action, core) -> float, called AFTER `w.decide`
+                (the world is in the post-transition state). A SECOND reward
+                channel for `lp=True` cores only: it gets its own GAE pass,
+                fills the `value_lp` target slot, and its per-segment
+                normalised advantage is ADDED to the homeostatic advantage
+                (PURPOSE_AND_SCAFFOLDING.md §2.8 option 2 — two heads, unit
+                weights). Never called across a death boundary (a respawn is
+                a teleport, not a transition).
     wipe_at_death  reinitialise core+optimiser+replay from the init seed at
                 every death (S3's wiped twin). Weights are the cross-life
                 store for these arms; wiping them is wiping what crosses.
     e0          starting/respawn energy. 1.0 is LC.03's regime; XL.00 used
                 0.1 to force fast deaths and specs may do the same to pilot.
+    min_core_s  LC.05's "whichever comes later" rule: keep living past
+                `n_decisions` until this much `time.process_time()` has been
+                consumed, so one set of runs covers both the matched-experience
+                and the matched-compute scoring axes. None = decisions only.
+    record_xy   keep the rover's per-decision (x, y); the spec layer computes
+                PG.4's panel_dwell from it (the harness's own `panel_near_frac`
+                stays a diagnostic — see the module docstring).
+    record_transitions  every k-th transition, store (obs_t, action, mean
+                action, obs_{t+1}, r_total) as float32 rows — the substrate
+                for CURIOSITY_BAKEOFF.md §2.10's chaos detector. 0 = off.
+                Death-crossing transitions are never stored.
 
     Returns per-run facts only — no verdicts. Spec layer gates.
     """
@@ -168,6 +191,9 @@ def run_survival(seed: int, *, j0: float, alpha: float,
         raise ValueError(f"policy {policy!r} not in {POLICIES}")
     if policy == "core" and arm is None:
         raise ValueError("policy='core' needs arm=")
+    if intrinsic_fn is not None and arm not in ("ppo-lp",):
+        raise ValueError("intrinsic_fn is the lp channel; only ppo-lp has a "
+                         "critic_lp head to learn its value")
 
     w = W0(seed=seed, j0=j0, alpha=alpha, lethal=True, diary=diary)
     if e0 != 1.0:
@@ -197,6 +223,8 @@ def run_survival(seed: int, *, j0: float, alpha: float,
     seg_act: list = []
     seg_rew: list = []
     seg_val: list = []
+    seg_rew_lp: list = []
+    seg_val_lp: list = []
     held_action, held_left = None, 0
     optimiser_steps = 0
     reward_sum = 0.0
@@ -204,27 +232,47 @@ def run_survival(seed: int, *, j0: float, alpha: float,
     act_log: List[np.ndarray] = []
     panel_near = 0
     d_half = drives.drive(0.0, 1.0, 0.0) / 2.0   # halfway to a dead need
+    has_lp = intrinsic_fn is not None
+    xy_log: List[tuple] = []
+    trans_rows: List[np.ndarray] = []            # [obs_t | a | mean | obs_t1 | r]
+    pending: Optional[tuple] = None              # (concat_obs, a, mean) awaiting obs_t1
+    life_ends: List[tuple] = []                  # (decisions, core_s, opt_steps) at death
     t_cpu0, t_wall0 = time.process_time(), time.perf_counter()
 
-    def _close_segment(boot: float, terminal: bool):
-        nonlocal seg_obs, seg_act, seg_rew, seg_val
+    def _concat(o: Dict[str, np.ndarray]) -> np.ndarray:
+        return np.concatenate([o[kk] for kk in o]).astype(np.float32)
+
+    def _close_segment(boot: float, terminal: bool, boot_lp: float = 0.0):
+        nonlocal seg_obs, seg_act, seg_rew, seg_val, seg_rew_lp, seg_val_lp
         if not seg_rew:
             return
         adv, tgt = _gae(seg_rew, seg_val, boot, terminal)
+        if has_lp:
+            adv_lp, tgt_lp = _gae(seg_rew_lp, seg_val_lp, boot_lp, terminal)
+            adv = adv + adv_lp        # two heads, unit weights (§2.8 option 2)
+        else:
+            tgt_lp = np.zeros(len(seg_rew))
         for i in range(len(seg_rew)):
-            ring.push(seg_obs[i], seg_act[i], float(tgt[i]), float(adv[i]))
+            ring.push(seg_obs[i], seg_act[i], float(tgt[i]), float(adv[i]),
+                      value_lp=float(tgt_lp[i]))
         seg_obs, seg_act, seg_rew, seg_val = [], [], [], []
+        seg_rew_lp, seg_val_lp = [], []
 
-    for k in range(n_decisions):
+    k = 0
+    while (k < n_decisions
+           or (min_core_s is not None
+               and time.process_time() - t_cpu0 < min_core_s)):
         obs = w.observe()
+        v_lp = 0.0
         if policy == "statue":
-            a = np.zeros(ACTION_DIM)
+            a = mean = np.zeros(ACTION_DIM)
         elif policy == "random":
-            a = random_action(rng)
+            a = mean = random_action(rng)
         elif policy == "random-repeat":
             if held_left == 0:
                 held_action, held_left = random_action(rng), HOLD_K
             a, held_left = held_action, held_left - 1
+            mean = a
         else:
             obs_t = {kk: torch.from_numpy(v).unsqueeze(0)
                      for kk, v in obs.items()}
@@ -232,7 +280,9 @@ def run_survival(seed: int, *, j0: float, alpha: float,
                 s = core.shared_state(obs_t, dropped=W0.DROPPED)
                 mean = core.act(obs_t, s).squeeze(0).numpy()
                 v = float(core.critic(s))
-            frac = k / max(1, n_decisions - 1)
+                if has_lp:
+                    v_lp = float(core.critic_lp(s))
+            frac = min(1.0, k / max(1, n_decisions - 1))
             std = explore_std[0] + (explore_std[1] - explore_std[0]) * frac
             a = np.clip(mean + std * rng.randn(ACTION_DIM), -1.0, 1.0)
 
@@ -243,12 +293,32 @@ def run_survival(seed: int, *, j0: float, alpha: float,
         r = d_before - d_after
         if reward_fn is not None:
             r = float(reward_fn(r, w, obs, core))
-        reward_sum += r
+        r_lp = 0.0
+        if has_lp and not died:
+            r_lp = float(intrinsic_fn(w, obs, a, core))
+        r_total = r + r_lp
+        reward_sum += r_total
         needs_ok.append(int(d_after < d_half))
         act_log.append(a)
-        if panel_xy is not None:
+        if record_xy or panel_xy is not None:
             xy = np.array(w.data.xpos[w.rover_bid][:2], dtype=float)
-            panel_near += int(np.linalg.norm(xy - panel_xy) <= PANEL_NEAR_M)
+            if panel_xy is not None:
+                panel_near += int(np.linalg.norm(xy - panel_xy) <= PANEL_NEAR_M)
+            if record_xy:
+                xy_log.append((float(xy[0]), float(xy[1])))
+        if record_transitions:
+            if pending is not None:
+                po, pa, pm, pr = pending
+                trans_rows.append(np.concatenate(
+                    [po, pa, pm, _concat(obs),
+                     np.array([pr], dtype=np.float32)]))
+                pending = None
+            # a transition that ends in death is a termination, not a
+            # (s, a, s') row — the next observe() is a respawned body.
+            if k % record_transitions == 0 and not died:
+                pending = (_concat(obs), a.astype(np.float32),
+                           np.asarray(mean, dtype=np.float32),
+                           np.float32(r_total))
 
         if policy == "core":
             seg_obs.append({kk: torch.from_numpy(v.copy())
@@ -256,8 +326,11 @@ def run_survival(seed: int, *, j0: float, alpha: float,
             seg_act.append(torch.from_numpy(a.astype(np.float32)))
             seg_rew.append(r)
             seg_val.append(v)
+            if has_lp:
+                seg_rew_lp.append(r_lp)
+                seg_val_lp.append(v_lp)
             if died or len(seg_rew) >= SEG:
-                _close_segment(boot=v, terminal=died)
+                _close_segment(boot=v, terminal=died, boot_lp=v_lp)
             if train and ring.n >= LC_BATCH:
                 for _ in range(_updates_due(w.decisions, train_ratio)):
                     batch, targets = ring.sample(gen)
@@ -265,12 +338,18 @@ def run_survival(seed: int, *, j0: float, alpha: float,
                     optimiser_steps += 1
 
         if died:
+            life_ends.append((int(w.decisions),
+                              round(time.process_time() - t_cpu0, 3),
+                              int(optimiser_steps)))
+            pending = None
             if e0 != 1.0:
                 w.drives.state = drives.DriveState(e=e0)
             if wipe_at_death and policy == "core":
                 core, opt = _fresh_learner()
                 ring = _TargetRing(obs)
                 seg_obs, seg_act, seg_rew, seg_val = [], [], [], []
+                seg_rew_lp, seg_val_lp = [], []
+        k += 1
 
     spans = list(w.life_lengths)
     third = len(spans) // 3
@@ -291,6 +370,11 @@ def run_survival(seed: int, *, j0: float, alpha: float,
                                  if n >= 3 else 0.0),
         "action_std_final_third": (float(acts[-(len(acts) // 3):].std())
                                    if len(acts) >= 3 else 0.0),
+        # §2.10's model-free second signal: mean L1 action change between
+        # consecutive decisions, per dim, over the action range 2.0. The spec
+        # layer divides by the null's value to get thrash_ratio.
+        "thrash_l1": (float(np.abs(np.diff(acts, axis=0)).mean() / 2.0)
+                      if len(acts) >= 2 else 0.0),
         "panel_near_frac": float(panel_near / max(1, n)),
         "decisions": float(w.decisions),
         "sim_seconds": float(w.sim_seconds),
@@ -304,8 +388,21 @@ def run_survival(seed: int, *, j0: float, alpha: float,
     ends = np.cumsum([s / SIM_S_PER_DECISION for s in spans])
     step = max(1, len(spans) // 200)
     out["deaths_at_decision"] = [round(float(d), 1) for d in ends[::step]]
+    # LC.05's four budgets need per-life resource coordinates, not only sim
+    # time: (decisions, core-seconds, optimiser steps) at each death, same
+    # decimation. A curve stored too coarsely is how T2.01's plateau claim
+    # ended up outside the ledger.
+    out["life_ends"] = life_ends[::step]
     if core is not None:
         out["params"] = float(n_params(core))
+        # declared estimate, not a measurement: fwd+bwd ~ 6 FLOPs/param/sample
+        out["grad_flops_est"] = float(6.0 * n_params(core) * LC_BATCH
+                                      * optimiser_steps)
+    if record_xy:
+        out["xy"] = np.asarray(xy_log, dtype=np.float32)
+    if record_transitions:
+        out["transitions"] = (np.stack(trans_rows) if trans_rows
+                              else np.zeros((0, 1), dtype=np.float32))
     return out
 
 

@@ -857,7 +857,7 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     # harness that discards finished science is worse than a slow one.
     from .registry import BY_ID as _BY_ID
     _budget_seconds = {
-        "cpu<1min": 300, "cpu<10min": 1800, "cpu<2h": 9000,
+        "cpu<1min": 300, "cpu<10min": 1800, "cpu<2h": 9000, "cpu<48h": 172800,
         "gpu<20min": 3600, "gpu<2h": 10800, "gpu<8h": 36000,
     }
     _spec = _BY_ID.get(spec_id)
