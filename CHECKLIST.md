@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 77 / 166 demonstrated
+## 78 / 166 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -117,7 +117,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ The chosen architecture beats a ~140K-param MLP actor-critic at equal environment steps.
       - _dies if:_ The MLP matches or wins.
       - _then delete:_ The transformer policy. If a 140K MLP wins, use the MLP.
-- [ ] **T2.03** Pretrained vision features beat random features
+- [x] **T2.03** Pretrained vision features beat random features
       - _asserts:_ A linear probe on frozen DINOv2/SigLIP features beats the same probe on the current 0.24M from-scratch encoder.
       - _dies if:_ From-scratch matches pretrained.
       - _then delete:_ use_pretrained_vision=False. Currently DINOv2/SigLIP are never loaded.
