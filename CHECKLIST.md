@@ -183,7 +183,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Removing intrinsic reward reduces unprompted coverage.
       - _dies if:_ Coverage unchanged.
       - _then delete:_ IntrinsicCuriosityModule.
-- [ ] **T3.07** Ablate mood conditioning
+- [!] **T3.07** Ablate mood conditioning  — acc_per_seed=[0.225, 0.275, 0.375]; action_dist_divergence=-0.025
       - _asserts:_ Mood measurably changes behaviour, not just text.
       - _dies if:_ Identical action distributions across moods.
       - _then delete:_ MovementMoodCoupling as anything but cosmetics.

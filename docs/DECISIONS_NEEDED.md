@@ -1278,3 +1278,42 @@ and no work was corrupted. First occurrence of this failure mode in the log.
    the throughput the ladder plans around is not the throughput it gets. Say
    the word if you want the cadence reduced to fit the ceiling rather than
    losing whole iterations to it.
+
+## D7 — MovementMoodCoupling failed its ablation: delete, redesign, or accept it as cosmetics (T3.07, 2026-08-13)
+
+**The measurement (T3.07, FAIL, commit 741f7cf, 3 seeds).** Mood's only path
+to action in the shipped brain is MovementMoodCoupling (UnifiedBrain.act's
+"Apply mood modulation" — the single call site). After the pipeline's own
+Phase-8.2 training (reproduced verbatim), a 4-way classifier reading the
+regime (thriving/struggling/exploring/neglected) from the modulated action
+streams scores **0.225 / 0.275 / 0.375 against chance 0.25** — the action
+distributions across moods are statistically identical. The registered kill
+criterion ("MovementMoodCoupling as anything but cosmetics") fired.
+
+**Why, localised — the component is NOT unlearnable.** The shipped training
+(150 single-sample AdamW steps at lr 3e-4 on a zero-initialised head, whose
+loss dutifully descended 0.057 -> 0.052) leaves the mood->speed map at
+**span 0.026–0.036 of the designed 0.6**. A reference arm — same net, same
+loss, adequate budget — reaches span 0.52 and classification **0.625 / 0.40
+/ 0.575**. So: the training is ~20x too weak, and even converged, the
+designed channel is one-dimensional (speed = f(arousal)); pleasure and
+dominance never reach behaviour, because style_net and posture_net never
+receive a gradient anywhere in the repo. Also noteworthy: Phase 8.2 spends
+100 env steps per update on a rollout with no gradient path to its loss —
+the decorative-critic disease again, in training rather than evaluation.
+
+**Options (deleting a component is yours, not the loop's):**
+ 1. **Delete MovementMoodCoupling** (Tier-3 law: dead weight is deleted).
+    1,539 params, and T2.12's PASS is untouched — mood STATES are real and
+    separable; it is only their route to the body that is dead.
+ 2. **Redesign the mood->behaviour path and re-run T3.07** — train all three
+    nets with an adequate budget, or route mood into the brain as an input
+    token instead of a post-hoc multiplier. The reference arm's 0.40-seed
+    shows even a converged speed-only map tops out near the bar, so a real
+    redesign is more than fixing the step count.
+ 3. **Accept cosmetics**: keep it for companion UI (idle posture, style
+    text), stated as such — no spec may then cite mood as a behavioural
+    channel, and GOAL's interoception claims must route elsewhere.
+The loop's read: option 2's token route is the only one compatible with
+"every sense load-bearing, one brain" if mood is to be a sense at all;
+option 1 is the honest default if it is not.

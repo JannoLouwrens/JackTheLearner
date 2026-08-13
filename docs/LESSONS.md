@@ -3496,3 +3496,46 @@ auditability, not its own: copying PG.4's `0.15` copies a number whose
 licensing evidence was measured against a world that has since changed. When
 you port a constant, check the staleness of the certificate that gave it
 meaning, not just the value.
+
+## A learning gate must know which side of the claim the learner is on
+
+T3.07's first draft copied the T2.02 learning-gate pattern: "the shipped
+training's speed map spans < 0.30 -> VOID, a non-learner cannot arbitrate."
+The smoke then measured the shipped training AT span 0.03 — and the gate,
+as drafted, would have VOIDed every future run identically, because the
+weakness is deterministic (150 single-sample Adam steps at lr 3e-4 move each
+coordinate at most steps*lr = 0.045 from a zero init; the designed span is
+0.6). The spec's hypothesis — "mood measurably changes behaviour" — would
+have been UNFALSIFIABLE against the one system it was registered to test:
+the run that should have read FAIL would forever read "invalid run".
+
+The error is a category confusion with T2.02's gate. There, two ARMS
+arbitrate an architecture and the arms' training is APPARATUS — an arm that
+did not learn invalidates the comparison, so VOID is right. Here, the
+shipped training is part of the SYSTEM UNDER CLAIM — "the brain as built,
+trained as the pipeline trains it, moves differently by mood" — so the
+training being too weak to produce the behaviour IS the hypothesis failing.
+Same measurement, opposite verdict, depending only on which side of the
+claim boundary the learner sits.
+
+What licenses the FAIL reading is a must-succeed reference arm (the T1.02
+reference-arm lesson pointed at training instead of task): same net, same
+loss, adequate budget. Reference learns (span 0.52) -> the map is learnable
+by this rig and the shipped arm's weakness is attributable to the shipped
+system: FAIL. Reference cannot learn -> the rig or the architecture is
+broken and nothing is attributable: VOID. T3.07 recorded exactly this
+shape: shipped span 0.03 and chance-level separability beside a reference
+at 0.52 and 0.63 — a FAIL whose diagnosis is already localised.
+
+**Rule:** before writing any learning/validity gate, ask whether the thing
+that must learn is apparatus (its failure invalidates the run -> VOID) or
+the object of the claim (its failure falsifies the hypothesis -> FAIL). If
+the claim names "the system as shipped", the shipped training is inside the
+claim, and gating the run's validity on its success makes the claim
+unfalsifiable in the direction it is most likely to fail. Pair the FAIL
+reading with a reference arm that must succeed, so weakness is attributed
+by measurement rather than assumed. Corollary from the same run: a
+training loss that descends is not evidence the trained artifact does
+anything — Phase 8.2's loss fell while producing 5% of its designed effect
+range; gate effect size against the design's own scale, not the loss's
+direction.
