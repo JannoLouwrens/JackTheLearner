@@ -3883,3 +3883,25 @@ register the envelope amendment (strengthen tilt/kick draw OPENLY, re-pilot on
 a fresh world; constants move by registration, not re-roll), then re-run — it
 is the only stale flag left. (3) Overseer 13th-audit B3 bullets 1-2
 (live-receipt property + charge-at-attempt) still open as one designed unit.
+
+2026-08-13 ~22:45 UTC — Inherited the T4.02 Kaggle result (prior iteration's
+submission): honest FAIL, max fusion-boundary grad ratio 29.78/12.50/29.13 vs
+the registered 10, control plant seen at ~12,000x, matched-info fixture clean
+— touch (~3e-3) drowns audio (~1e-4), not the documented vision direction.
+Committed 2d78651. Then B3/journal-next-1: implemented + ran T3.07 (first
+Tier-3 ledger entry, ran local — the rig is 1.5K params, T2.12's generator,
+29 s for 3 seeds; a P100 would have been all overhead). FAIL: regime-from-
+actions acc 0.225/0.275/0.375 vs chance 0.25 (bar 0.45); shipped Phase-8.2
+leaves mood->speed span at 0.03 of the designed 0.6 (its loss descends —
+decorative training); must-succeed reference arm (span 0.52, acc up to 0.63)
+licenses the attribution. Kill fired -> D7 escalated (delete/redesign/
+cosmetics). LESSONS: learning gates must know which side of the claim the
+learner sits (apparatus->VOID vs claim->FAIL); first draft of this very spec
+had it wrong and the smoke caught it. Commits 741f7cf, 0cfb066, pushed.
+NEXT: (1) LC.03 lands overnight (pid 2536994, since 15:23) — render+commit
+from a clean tree, do NOT relaunch. (2) BA.02 envelope amendment registration
++ re-run — still the only stale flag. (3) Kaggle W32 has ~11.2h dying Sunday;
+B3's two named specs are now both done, so spending it means implementing
+another gpu spec (T2.04/T2.06 are gpu<20min, T2.05/T2.09 gpu<2h) — same
+smoke-first pattern. (4) 13th-audit B3 bullets 1-2 (live-receipt +
+charge-at-attempt) still open as one designed unit.
