@@ -17,3 +17,12 @@ mark_log() { MARK=$(wc -c < "$LOG" 2>/dev/null || echo 0); }
 credits_out() {
   tail -c "+$(( ${MARK:-0} + 1 ))" "$LOG" 2>/dev/null | grep -qi "out of usage credits"
 }
+# "You've hit your session limit · resets 1pm (UTC)" is NOT "out of usage
+# credits": three iterations died on it in 3 s each on 2026-08-13 (10:07,
+# 11:07, 12:07) and nothing detected, retried or counted them — 12.5% of a
+# day, invisible (14th audit, B4). Same bounded-read discipline as
+# credits_out: only the bytes this run wrote.
+session_limited() {
+  tail -c "+$(( ${MARK:-0} + 1 ))" "$LOG" 2>/dev/null | grep -qi "hit your session limit"
+}
+limit_hit() { credits_out || session_limited; }

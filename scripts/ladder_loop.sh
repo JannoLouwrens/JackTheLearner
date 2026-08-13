@@ -48,6 +48,11 @@ MAX_LOAD=6.0
 
 mkdir -p "$LOGDIR"
 LOG="$LOGDIR/ladder.log"
+# Iterations lost to credit/session limits, one line each, appended when a
+# run dies limited and cleared by the next SUCCESSFUL iteration — which
+# announces the count it inherited, so lost capacity is a number in the log
+# rather than a pattern someone has to notice (14th audit, B4).
+LOST="$LOGDIR/lost_iterations.log"
 say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
@@ -104,6 +109,9 @@ TOTAL=$(/data/venvs/jackthelearner/bin/python -c \
   "from experiments.registry import LADDER; print(len(LADDER))" 2>/dev/null || echo 105)
 
 say "iteration start — ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-opus}, load ${LOAD}, ${FREE_GB}GB free"
+if [ -s "$LOST" ]; then
+  say "inheriting $(wc -l < "$LOST") iteration(s) lost to limits since the last success (see $LOST)"
+fi
 
 # SILENCE MUST NEVER READ AS SUCCESS. Two iterations on 2026-08-10 (17:07 and
 # 22:07 the day before) did their work, committed, and emitted no `iteration
@@ -147,10 +155,13 @@ RC=$?
 # prints "out of usage credits" and exits in ~3 seconds, so an hourly loop
 # burns every remaining slot doing nothing. It cost 8 dead iterations on
 # 2026-08-09 before anyone looked. Walk a fallback chain instead of idling.
+# A SESSION LIMIT gets the same walk (it cost 3 iterations on 2026-08-13
+# before anyone looked): a limit on the primary may not bind a fallback, and
+# a failed fallback attempt costs ~3 s.
 for FB in $FALLBACK_MODELS; do
-  credits_out || break
+  limit_hit || break
   [ "$FB" = "$MODEL" ] && continue
-  say "OUT OF CREDITS on ${MODEL} — falling back to ${FB}"
+  say "LIMITED on ${MODEL} (credits or session) — falling back to ${FB}"
   MODEL="$FB"
   run_claude "$FB"
   RC=$?
@@ -158,6 +169,13 @@ done
 if credits_out; then
   say "OUT OF CREDITS on every model — credit-pausing (self-resumes in 4h)"
   echo "credits $(date -Iseconds)" > "$PAUSE"
+  echo "$(date -Iseconds) credits model=${MODEL}" >> "$LOST"
+elif session_limited; then
+  # No pause: the message names its own reset time, and an hourly ~3 s retry
+  # is cheaper than stranding the loop for 4 h past the reset. The marker is
+  # the point — a dead iteration must be a number, not a silence.
+  say "SESSION LIMIT on every model — marking the lost iteration"
+  echo "$(date -Iseconds) session-limit model=${MODEL}" >> "$LOST"
 fi
 
 AFTER=$(/data/venvs/jackthelearner/bin/python -c \
@@ -165,6 +183,11 @@ AFTER=$(/data/venvs/jackthelearner/bin/python -c \
 
 ITER_ENDED=1
 say "iteration end rc=${RC} — ${BEFORE} -> ${AFTER} demonstrated"
+
+if [ "$RC" = 0 ] && [ -s "$LOST" ] && ! limit_hit; then
+  say "recovered — clearing $(wc -l < "$LOST") lost-iteration marker(s)"
+  : > "$LOST"
+fi
 
 if [ "$AFTER" -ge "$TOTAL" ]; then
   say "LADDER COMPLETE — all ${TOTAL} specs demonstrated. Pausing the loop."
