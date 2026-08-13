@@ -944,6 +944,15 @@ The cheapest version of this is to make the probe call every entry point once,
 even where it asserts nothing about the result: a shape error is free to
 detect and expensive to inherit.
 
+*Extension, 2026-08-13:* calling the entry point is still not exercising it if
+the probe's ARGUMENTS are tamer than the callers'. T2.03's smoke ran
+`_build_dataset(90, 8)` and passed; the real run derives its TEST-split seed as
+`(seed + 500_009)`, and `seed * 100_003 + n` then overflows numpy's 2**32-1
+seed cap — the first place that line met its production argument range was a
+paid Kaggle kernel, 131 s in. When smoking an entry point, feed it each call
+site's actual argument *extremes* (the largest derived seed, the longest list,
+the deepest path), not a value chosen for the smoke's convenience.
+
 ## A budget derived from a component measured alone is wrong by everything else
 
 `LEARNING_CORE.md` §5.1 derived the 5.0 sim-s/real-s floor from two measured
