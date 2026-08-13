@@ -54,11 +54,12 @@ the project has invested in and never verified). It frees nothing, so
 `run blocked` will never surface it — that is the point. The two rankings
 measure different things — `blocked` measures what unsticks the ladder,
 `coverage` measures whether the ladder is the RIGHT ladder — and only the
-second can see a commitment the project has quietly never tested. Concretely
-today: `one brain / unison` has 21 declared specs and 1 passing, while
-SYSTEM.md calls unison the one thing no bakeoff may trade away, and `UB.14` has
-been runnable for over a day because it frees nothing. (Overseer, 2026-08-10,
-FOR THE BUILDER §5.)
+second can see a commitment the project has quietly never tested. (Overseer,
+2026-08-10, FOR THE BUILDER §5.) Do not take the example that used to sit here
+as today's answer — it named a count and a spec, both of which moved.
+**Run `run coverage` and read the zero-pass list yourself.** It has been the
+right ranking for three days running: it produced VO.01, BA.01, PS.02, PS.03,
+T2.08 and SM.01, which is six of Jack's constitutional senses in three days.
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
@@ -67,10 +68,12 @@ cached "45 PASS of 124" and was wrong within hours, twice. This file states
 PRIORITIES; the ledger states facts. Standing history you must know: T2.02 is
 VOID (the T0.14 dropout + obs-dim invalidation), and any text calling T2.01's
 plateau "the architecture verdict" is stale and wrong. T2.01 is no longer VOID
-— it RE-RAN on Kaggle 2026-08-10T01:17 and recorded **FAIL**: every seed beat
-random (`all_seeds_beat_random` 1.0) but not by the pre-registered 5 sigma.
-That is a real measurement, not a harness fault, and it is now the single
-largest blocker in the ladder (`run blocked`: frees 26, blocks 36).
+— it has re-run twice and recorded **FAIL** both times: every seed beat random
+(`all_seeds_beat_random` 1.0) but not by the pre-registered 5 sigma. The LIVE
+number is **v5, 2026-08-12: 2.67 sigma** (the decorative-critic fix doubled the
+advantage from v4's 1.19). Do not cite the older figures. The threshold is 5 and
+it does not move. That is a real measurement, not a harness fault, and T2.01 is
+the single largest blocker in the ladder (`run blocked`: frees 26, blocks 36).
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
 0aaa. THIS BOX CAN RENDER. Do not re-escalate it. MuJoCo offscreen rendering
@@ -94,10 +97,13 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    "cheapest work"; they are spent. The playground `eye` camera pose is now
    part of the world contract (`EYE_POS`/`EYE_XYAXES`/`EYE_FOVY` in
    playground.py) — moving it invalidates every visual certificate downstream.
-   What that unblocked is now the work: the unison ladder's gate is UB.9
-   ("Heard, not seen"), which `run blocked` ranks THIRD in the project as of
-   2026-08-11 (frees 4, blocks 7) — behind T2.01 and LC.03. Read the live
-   ranking, not this line. 0 of the 37 unison specs pass. PL.00 and PL.02 are
+   What that unblocked is now the work. **UB.9 PASSED 2026-08-12 17:09** (fused
+   0.993 vs unimodal and ensemble nulls at chance) — it is SPENT; do not re-run
+   it as cheap work. The unison gate is now **UB.10** ("Fusion bakeoff: six
+   arms, matched params, matched steps"), which `run blocked` ranks THIRD in
+   the project as of 2026-08-13 (frees UB.11/UB.12/UB.13; co-blocks TA.03,
+   UB.16). Read the live ranking, not this line. 1 of the 21 unison specs
+   passes. PL.00 and PL.02 are
    still runnable today, but note their meaning CHANGED under the PLASTIC-ONLY
    decree: PL.00 is now a feasibility check on the pure encoder and PL.02
    measures what the plastic path BUYS. Neither decides frozen-vs-plastic any
@@ -118,11 +124,21 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    and `run blocked` ranks it SECOND in the project (frees 7, blocks 7):
    DP.01, DP.02, DP.03, LC.04, LC.05, LC.06, OP.01.** It is the single largest
    NON-GPU unblock available.
-   ONE CAVEAT, and it is cheap to clear: `run stale` reports PS.01 as a PASS
-   recorded against code that has since changed. LC.03 would then be built on
-   a stale certificate. PS.01 is CPU — re-run it in the same iteration first,
-   or say plainly in the commit that you did not. Then LC.03 (screening,
-   cpu<2h), LC.04 (THE ARBITRATION —
+   THE CAVEAT THIS SECTION CARRIED IS CLEARED (Review, 2026-08-13): PS.01's
+   stale flag is gone and `run stale` reads ZERO. **LC.03 is ready to run
+   as-is. Do not spend an iteration re-running PS.01.**
+   AND READ THIS BEFORE THE STANDING RULE SENDS YOU ELSEWHERE. LC.03 has been
+   named "the biggest non-GPU unblock" in this file and in the journal's NEXT
+   line for three consecutive days and has not been run once, because the
+   STANDING RULE (zero-pass commitments outrank fan-out) legitimately outranked
+   it every time. That rule is right and the builder was right to follow it —
+   but a rule that always wins starves everything behind it, and 16 commitments
+   still read zero. The tie-break, and it is not a loophole: **LC.03 SERVES the
+   standing rule transitively.** `fast/slow` has 5 declared specs and 0 passing,
+   and its only claim-kind specs — DP.01, DP.02, DP.03 — are ALL blocked behind
+   LC.03. LC.03 is therefore the cheapest existing path to that commitment's
+   first pass as well as the largest unblock; it satisfies both rankings at
+   once, which no other runnable spec does. Take it. Then LC.04 (THE ARBITRATION —
    PPO vs world-model arms at matched experience, cpu<2h), LC.05 (matched
    compute), LC.06 (simplicity budget). ZERO GPU, so it runs beside any GPU
    job. Carry the three guards the owner added on 2026-08-09,
@@ -153,15 +169,19 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    EpisodicMemory.py is the substrate and its docstring explains the contract),
    then UB.1-8 / CU.1-7 / T2.14-20 where implementable without GPU.
 2. GPU budget calendar — the owner chose FREE COMPUTE ONLY (no rented GPUs):
-   - **TWO CLOCKS ARE RUNNING AND THEY POINT THE SAME WAY (Review, 2026-08-11).**
-     Kaggle hours expire unspent at the weekly reset, and Claude credits are
-     the binding resource on this box (`scripts/claude_usage.py` is the live
-     source; the loop self-paused for 23 consecutive hours on 2026-08-10/11 at
-     the 90% gate). A GPU submission costs a handful of tool calls and buys
-     hours of compute — it is the highest value-per-credit iteration
-     available, and the first four entries of `run next` are GPU jobs that
-     were impossible until D3 was answered. When credits are scarce, SUBMIT;
-     do not spend the last iterations writing CPU specs.
+   - **ONLY ONE CLOCK IS BINDING NOW, AND IT IS KAGGLE (Review, 2026-08-13,
+     superseding the 08-11 two-clocks note).** The Claude week reset on
+     2026-08-12 12:00 UTC: `week:all models` reads **32%**, Fable 35%, and the
+     loop is running on Fable again rather than falling back to Opus. Credits
+     are not scarce this week — **do not ration iterations against them**; read
+     `scripts/claude_usage.py` before you believe any number written here.
+     What IS scarce: **Kaggle W32 has ~11.5 h of 30 h left and it resets Sunday
+     2026-08-16 — unspent hours are destroyed, not carried.** The single job
+     that both fits and matters is **T2.01 (gpu<8h)**, the ladder's largest
+     blocker (frees 26, blocks 36). Every P100 job was silently dead until the
+     torch+torchvision pin was repaired and verified live on 2026-08-13; this
+     is the first week T2.01 can actually run there. Submit it before Sunday or
+     say in the commit why not.
    - Kaggle 30h/week resets SUNDAY. NEVER assume how much is left — read
      `experiments/gpu_budget.json` for the live week's charges; the T2.01
      re-run already consumed part of this week. GPU_LONG goes to Kaggle only.
@@ -178,7 +198,19 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
      are rationed — record the ERROR and retry next iteration, don't fight it.
 3. GPU work follows DIRECTION_AUDIT's sequencing: the T2.01/T2.02 re-runs are
    worth doing but RE-SCOPED behind registering and running D1.0 + T2.21 — they
-   should answer WHERE the trunk belongs, not merely whether it learned. Keep
+   should answer WHERE the trunk belongs, not merely whether it learned.
+   **REVIEW, 2026-08-13 — THIS GATE HAS NEVER BEEN EXECUTED AND IS FENCING OFF
+   THE LADDER'S LARGEST BLOCKER WITH SPECS THAT DO NOT EXIST.** `D1.0` and
+   `T2.21` are NOT in the registry, nine days after this line was written, and
+   nobody is building them; meanwhile T2.01 re-ran twice anyway (1.19 sigma ->
+   2.67 sigma after the critic fix) and the sequencing note was silently
+   ignored both times. A gate that is ignored rather than met is worse than no
+   gate. Resolve it EXPLICITLY, one of two ways, and say which in the commit:
+   (a) register D1.0 + T2.21 in an iteration and run them first, or (b) run
+   T2.01 without them and state that it measures WHETHER the trunk learns, not
+   WHERE it belongs — the WHERE question is D1, it is with the owner, and it
+   cannot be answered by any run while its option set stays unconstitutional.
+   Do not choose by drifting past it a third time. Keep
    D1_CONTROL_ARCHITECTURE's lesson: match optimiser steps as well as
    env-steps, report both. The dropout/obs-dim history is in LESSONS.md — read
    it before touching any eval code; never cite the old 4.06-sigma or

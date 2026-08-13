@@ -512,3 +512,120 @@ nothing yet for it to fix. (The scout argued against its own nomination on this
 ground and was right to.) **RE-OPEN TRIGGER:** `NE.03` runs and the uniform
 nine-float design underperforms its arms — then this returns with a measured
 scar attached. A rejection without a re-open condition is just forgetting.
+
+## FIELD WATCH wk2 + wk3 CONSUMED by the Review, 2026-08-13 (DAILY)
+
+**Why two sweeps at once.** Week 2 (`2026-08-11`) landed *after* the 08-11
+Review had already read the file, and the 08-12 Review died on an API 529
+before it reached Part 2.5 — so wk2's nominations were never dispositioned, and
+wk3 (`2026-08-12`) rewrote `FIELD_WATCH.md` over them. Both sweeps are
+reconstructed here from `docs/FIELD_WATCH_LOG.md`, which is append-only and is
+the reason nothing was lost. **That is the log earning its keep**: a
+state-file-only scout would have had one week of work silently overwritten.
+Four nominations, all four dispositioned below. The scout nominates; it never
+adopts.
+
+**wk2-N1 — ACCEPTED, and it is the one to do first of these four.** The whiff
+clock → `SM.02`. Three independent 2026 groups (arXiv:2605.15938 full-text,
+2605.21329, 2605.18881) converge on ONE state variable for intermittent plumes:
+**time since last detection**. Our `OdourSensor` carries 12 floats — bilateral
+concentration plus a one-step derivative — and **no blank-duration state at
+all**, in a field the same literature measures 40–55% blank. Design (a) an
+observation arm adding the blank clock, and (b) a tabular-Q CPU-minutes
+reference arm, as a **pre-gate on `SM.02`**. The reason it ranks first is not
+its novelty, it is the destructiveness of what it gates: `SM.02`'s kills clause
+deletes a constitutional sense's wiring on a negative result, and right now a
+negative result cannot distinguish "olfaction does not help" from "we withheld
+the one state variable the field says the task needs". Same shape as wk1-N1
+(the `UB.11` certificate pre-gate) and accepted for the same reason — a
+positive control in front of a deletion. Their code is announced, NOT released;
+budget for reimplementation.
+
+**wk2-N2 — ACCEPTED as an arm.** RPE-prioritised replay → `NEEDS_AND_DEATH`
+§3.4 S1, whose sampling is currently uniform+reservoir. Roscow/Howe/Lepora/
+Jones, Nat. Comms s41467-025-65354-2. **Take the control, not the mechanism.**
+The scout is right that the mechanism is arguably just PER (Schaul 2015) and
+recorded that objection itself; what is genuinely ours to reuse is the
+published **double dissociation** — reward-prediction ERROR biases replay
+(p<0.05) while reward MAGNITUDE does not (p>0.05), with a shuffled control that
+kills the effect. A must-fail control that a wet-lab already ran is worth more
+to this ladder than another sampler. Register the magnitude arm as the control
+that must fail; if it wins, our RPE signal is measuring salience, not surprise.
+
+**wk3-N1 — ACCEPTED as an arm, and it is the cheapest nomination in three
+weeks.** CIG, Conditional Information Gain (arXiv:2605.20878, cs.LG) →
+`LEARNING_CORE` §5.4 arm `A3`'s epistemic term, and the same estimator inside
+`CURIOSITY_BAKEOFF`'s `disagree`. The finding that earns it entry is a
+correctness observation about machinery we had already committed to on two
+independent paths: both compute Plan2Explore's per-step ensemble disagreement,
+and that estimator conditions on the replay buffer alone — it is blind to what
+the *current rollout* has already probed, so a rollout that re-enters its own
+novel region collects the bonus repeatedly. Same M=5 ensemble, zero new
+hyperparameters, a few dozen lines, no compute budget. **Two conditions travel
+with it.** (1) The scout states plainly that it does NOT fit `LT.04` (model-free,
+no imagined rollout; the O(T³) term is negligible at imagination horizon T≈15
+and is not negligible at T=2000) — do not let it leak into the model-free arm.
+(2) **It must not delay `LC.03`.** It enters a bakeoff (`LC.04`+) that cannot
+start until the screening round has run, and `LC.03` is already three days
+overdue; this is queue material for after it, not a reason to reorder.
+
+**wk3-N2 — ACCEPTED INTO THE ARENA, WITH ITS WIN CONDITION AMENDED. Read this
+disposition, it is not a plain accept.** Optimistic World Models
+(arXiv:2602.10044, cs.LG) → an arm on `A2`. The numbers are real and now
+verified (Atari100K mean HNS 152.68% vs DreamerV3 97.45% at 10 seeds; DMC
+proprio-sparse — the only regime resembling `W0` — Acrobot Swingup Sparse
+8.4 → 34.6; zero new parameters, +20% train wall-clock).
+
+The scout's lead objection is **constitutional, not empirical**, and it is
+correct: the optimistic term deliberately biases the dynamics model toward
+high-reward futures, and *in this project the world model IS the unified brain*
+(`LEARNING_CORE` §5.4 is `UB`'s binding objective). An arm that improves return
+by corrupting the representation would win its own bakeoff and quietly damage
+every `UB` gate measured downstream — and in a survival world, an optimistic
+model imagines food that is not there.
+
+Rejecting it on that reasoning would be deciding by argument, which SYSTEM.md
+law 3 forbids. So the disposition converts the argument into a test instead:
+**this arm may not be adopted on task return alone. Its win condition must
+additionally include the `UB` representation gates re-run under it** — if it
+buys return by degrading what the fusion gates measure, that is a loss, not a
+trade. Register the arm and the amended win condition in the same entry. Also
+carry: α=1e-4 with "drastic degradation" at 0.1 is two new hyperparameters
+against `B2`, and the headline mean HNS is driven by Private Eye and Up N Down
+with no median extracted — ask for the median before believing the headline.
+
+**Three DISC (methodology) items, dispositioned separately from the arms:**
+
+- wk1's *"confirm the results table says what the abstract says"* — **CLOSED,
+  already written**: `docs/LESSONS.md:1725`. The last two Reviews carried it as
+  outstanding; it is not. Stop re-nominating it.
+- wk2's *record the arXiv PRIMARY CATEGORY on every watchlist entry* —
+  **CLOSED BY ADOPTION.** The scout adopted it in its own file the same week
+  (wk3's watchlist carries categories throughout), and two off-target entries
+  were deleted by it on first use — one of them econ.GN. It is a scout-local
+  convention that is already running; it does not need a LESSONS entry.
+- wk3's *"this week the unverified claim was mine"* — **ACCEPTED as a
+  `docs/LESSONS.md` entry for the builder to write** (the Review does not
+  commit LESSONS.md). It generalises past the scout and is the sharpest thing
+  in three sweeps: verify-before-nominating protects a reader of *papers*,
+  because there is an abstract to doubt. It protects nobody reading **our own
+  ledger**, where the diagnosis is a story the reader wrote itself and there is
+  no external claim to check it against. The scar is concrete: a fully
+  literature-shaped, correctly-cited diagnosis of `VO.01`'s FAIL (range-blind
+  amp recovery), which the scout then falsified with its own arithmetic —
+  R² ceiling 0.816 against a 0.50 gate, so the named mechanism could not be the
+  cause, and measured amp was 0.432 with brightness unmoved. **Rule to write: a
+  diagnosis of one of our own failures must carry the arithmetic that survives,
+  not the literature that motivated it.**
+
+**One VERIF worth not losing** (no action, recorded so no future spec reaches
+for it): the "walls pass bass" physics behind `VO.01` is confirmed, but its
+famous biological corollary — the Acoustic Adaptation Hypothesis, dense habitat
+→ lower-frequency calls — is **REFUTED** (Freitas et al., Biol. Rev. 2025,
+10.1111/brv.13163; Mikula et al., Ecol. Lett. 2021). No jungle spec may argue
+"jungle animals evolved low calls, so Jack's emitter should."
+
+**Scout cadence, noted and endorsed:** three sweeps in three days was justified
+each time by a queue item, and the scout says its own mandate is now spent —
+fronts 1–3 should not be re-swept before ~2026-08-19. Agreed. Its cron is
+Mondays; the extra sweeps were resume-triggered catch-ups, not a runaway.

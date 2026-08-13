@@ -3296,3 +3296,44 @@ corollary about conditional guards): it covers only processes launched by
 `ladder_loop.sh` — a hand-run submission from an interactive session carries
 no deadline and keeps the old exposure, and Kaggle jobs are deliberately
 exempt because reattach makes a dead watcher survivable there.
+
+---
+
+## A threshold move is only as honest as the artifact that survives it (13th overseer audit, 2026-08-13)
+
+T2.08 attempt 1 FAILed an auxiliary absolute floor by 0.0025 — one ninth of its
+own seed std. v2 moved the floor 0.70 -> 0.50, added a 3-sigma gate v1 never
+had, and PASSed eight minutes later. The move was disclosed in the commit
+message, the docstring, the journal and a LESSONS entry; the registered
+falsification criterion had been decisively rejected; the diagnosis was
+correct. It was an honest move.
+
+**And no artifact in the repo could have told anyone if it had not been.** v1's
+FAIL was stamped `75a1938+dirty` and its code was never committed, so the
+failing implementation does not exist. The FAIL's ledger history entry carries
+`{commit, message, ran_at, status}` — as do all 163 history entries in this
+project, none of which has ever carried `metrics`, `control_metrics` or
+`impl_sha`. So the failing NUMBER is not in the ledger either. The complete
+evidence that the move was justified was prose written by the agent that made
+the move, in the same iteration.
+
+Contrast BA.01, which went FAIL -> PASS -> VOID -> PASS across four rig
+rewrites with every gate byte-identical from v1 onward, each version committed
+at a real hash. Its history is checkable by a stranger. T2.08's is not.
+
+**Rule:** disclosure is a property of the agent; auditability must be a
+property of the ledger. Before amending a spec that failed, COMMIT THE FAILING
+IMPLEMENTATION — a `+dirty` FAIL that is then amended is unauditable by
+construction — and record the failing measurement where a stranger will look
+for it, which is the ledger record, not the docstring of the commit that
+changed the gate. The generalisation beyond thresholds: whenever the safeguard
+against a class of error is "the author said so", the safeguard is not in the
+system, and it will hold exactly until the iteration where it doesn't.
+
+**Corollary, on sizing a gate:** v1's floor was described as "~6 sigma below
+the pilot bulk". Against the pilot's SEED std (0.772 +/- 0.023) it was 3.1
+sigma; it is ~6 sigma only against the standard error over lives
+(0.023/sqrt(4)). A per-seed gate sized with a standard error instead of a
+standard deviation is a gate sized ~2x tighter than its author believes, and a
+uniform seed-family shift will land it mid-bulk. Match the dispersion measure
+to the quantity the gate actually sees.

@@ -1,595 +1,511 @@
-# OVERSIGHT — 12th audit, 2026-08-13 00:45 UTC
+# OVERSIGHT — 13th audit, 2026-08-13 07:00 UTC
 
-## VERDICT: DRIFTING
+## VERDICT: ON TRACK
 
-Every number in the ledger is honest. I re-checked all 75 PASS entries against
-their implementations, their commits and their controls and found **nothing
-wrong** (§1). I diffed every numeric constant and every deleted assertion in
-`registry.py`, `registry_expansion.py` and `experiments/tests/` over seven days
-— 105 commits — and found **no loosening in either direction** (§2). GPU
-accounting **reconciles to the cent** (§5). The loop ran **19 iterations in 24
-hours, all `rc=0`, +8 PASS** (§4). Decisions were made cleanly (§7).
+The 12th audit's RANK 1 was fixed within **73 minutes** of being written, and
+fixed properly: all 86 `COVERS:` pairs kinded, kindless promoted from silent
+default to error, honest zero-pass coverage restated 9 → 19 (`a703604`). In the
+six hours since, **three constitutional commitments gained their first
+claim-kind pass** — curiosity (T2.08), damage/nociception (PS.03), sight
+(T2.03) — taking zero-pass commitments 19 → 16 and the ladder 75 → 78.
 
-The drift is not in the ledger. It is in the **map of what the ledger has
-demonstrated**, and therefore in where the builder is being sent.
+§1 is clean: all **78 PASS** records name a commit that exists and is
+reachable, **none is dirty**, and every PASS whose spec declares a control
+recorded control metrics. `run stale` reads zero. §5 reconciles: the 6.38 h gap
+between the weekly meter and the per-job register is **fully explained** and I
+found no unbilled Kaggle time.
 
-On 2026-08-12 the builder built the exact instrument that prevents apparatus
-from being counted as capability — `COVERS:` kinds, `claim | fixture | rule |
-sensor`, with only `claim` buying `n_pass`. It applied that instrument to **2
-of 78 declarations** and stopped. The other 76 inherited the implicit default,
-`claim`. At least ten of them are, by the specs' own titles and hypotheses,
-apparatus or sensor-legibility. `coverage.py` therefore reports **9 zero-pass
-commitments when the honest figure is 15**, and the *standing zero-pass rule* —
-the builder's primary work-selection rule — has been steering off that flattered
-list for two days.
-
-`docs/LESSONS.md:3025` predicted this failure in writing, on the day the
-mechanism shipped:
-
-> *"Expect this to recur one level up: the next version is a `(claim)` spec
-> whose test in fact measures its own apparatus, and only reading the test
-> catches that."*
-
-It recurred immediately, in the same file, in 76 places.
+The finding that matters is not a false number. It is that **T2.08's absolute
+floor was moved in the loosening direction after the run it failed, and the
+repo contains no artifact that can corroborate the account of that move.** The
+move was disclosed as loudly as it is possible to disclose something. But the
+ledger structurally cannot check it — and that is what makes the next one
+cheaper.
 
 ---
 
 ## 0. Is the ladder the RIGHT ladder?
 
 `python -m experiments.coverage` → **exit 0. Zero commitments with no declared
-spec.** The 2026-08-10 miss has not recurred; the organ is doing its first job.
+spec.** The 2026-08-10 miss has not recurred.
 
-Headline: **166 specs · 75 PASS · 1 FAIL · 1 VOID · 62 of 166 unreachable.**
-By tier: T0 27/27 · T1 13/13 · **T2 33/59 · T3 0/14 · T4 1/23 · T5 0/25** · T6 1/5.
+**166 specs · 78 PASS · 1 FAIL · 1 VOID.**
+T0 27/27 · T1 13/13 · **T2 36/59 · T3 0/14 · T4 1/23 · T5 0/25** · T6 1/5.
 
-Tier 3 ("earn your parameters") and Tier 5 ("the claims — the thesis itself")
-are at **zero**, six days into a project that is 45% green.
+Zero-pass commitments **16 of 23** (was 19 at 01:18 today, 9 before the kind
+migration corrected the flattery). The three that moved are exactly the three
+the standing zero-pass rule pointed at. The rule is working.
 
-**Reported zero-pass commitments: 9 of 23** — touch/contact, damage/nociception,
-shelter/building, tool use, proprioception, sleep, social/other agents,
-plasticity, curiosity. **The real figure is 15.** See RANK 1.
-
----
-
-## RANK 1 — The kind mechanism was built and then not deployed: 76 of 78 `COVERS:` declarations still default to `claim`, and six commitments read "started" on the strength of their own fixtures
-
-**Status: no PASS is corrupted and no gate is wrong. The specs are honest; what
-they are being *counted as* is not. Damage is to work selection, and it is
-active right now.**
-
-### The mechanism, and how far it was deployed
-
-`coverage.py:120-140`, shipped 2026-08-12 in `60686ac`:
-
-```
-# A declaration carries a KIND: `COVERS: curiosity (fixture)`. Absent = claim.
-#   claim   — a capability test that could have failed; the ONLY kind n_pass counts
-#   fixture — apparatus a claim will need (a trap, a world property)
-#   rule    — a gate/admission criterion enforced on candidates
-#   sensor  — an instrument measures/emits a channel; nothing acts on it yet
-```
-
-Measured across `registry.py` + `registry_expansion.py`:
-
-```
-COVERS: declarations total          78
-carrying an explicit kind            2   (PG.4 fixture, LC.01 rule)
-defaulting to `claim`               76
-using `(sensor)`                     0   — the kind was defined and never used
-```
-
-The commit that introduced the kinds re-typed the two specs the *previous*
-audit had named and no others. Nothing swept the rest.
-
-### The ten declarations that are wrong, in the specs' own words
-
-| commitment | credited passing spec | the spec's own title / hypothesis | honest kind |
-|---|---|---|---|
-| taste | TA.01 | **"The poison FIXTURE**: sub-lethal first dose, visually identical twin" | fixture |
-| smell | SM.01 | "The odour **field obeys its own pre-registered rules**" — field model matches its equations to 1% | fixture |
-| sight | PG.6 | "The playground **has eyes**" — a linear probe recovers radius/bearing from rendered frames | sensor |
-| sight | PG.9 | "The **eye's view** is not mostly obstacle" — <5% near-geometry, ≥35% floor | fixture |
-| hearing | PG.5 | "**Procedural contact audio** with localization labels" — a synthesiser | fixture |
-| hearing | PG.7 | "The heard-not-seen **fixture** leaks nothing but the intended bit" | fixture |
-| balance | BA.01 | "…from which **a linear probe recovers tilt**" | sensor |
-| hunger/thirst | PS.01 | "The **drive layer is a real control problem**, and a statue loses" | fixture |
-| language (parent) | T1.13 | "The **grounding pairs are real**" — a data-integrity check on the corpus | fixture |
-| voice | VO.01 | "…is rendered by ContactAudio…, **is recoverable by a probe** on a LISTENER's audio input" | sensor |
-
-Two more are arguable and I flag them without asserting them: **PS.02**
-(thermal — half world-model fidelity, half sensor legibility) and **DP.00**
-(fast/slow — its hypothesis is *"there exist states where an agent with a
-PERFECT model and unlimited rollouts beats the best reactive policy"*, which is
-a property of the world, not evidence Jack has two modes).
-
-None of these specs lied. Every one measures exactly what it says. The defect
-is one word in a `notes` field, ten times.
-
-### What it costs, quantitatively
-
-Conservative re-typing — only the ten above, only where the spec's own title or
-hypothesis says fixture/sensor/world-property:
-
-```
-zero-pass commitments   reported  9 of 23   ->  honest  15 of 23
-commitments losing their ONLY credited pass:
-    balance · smell · taste · sight · hunger/thirst · language (parent)
-commitments retaining a genuine passing capability claim:  4
-    hearing            UB.9   (heard-not-seen fusion)
-    one brain / unison UB.9
-    memory across lives ME.10 (the double dissociation)
-    death & retry      XL.00  (the diary crosses)
-```
-
-Including the two arguable ones the honest figure is 17 of 23 zero-pass, and
-the surviving list does not change.
-
-A fifth, `generality`, is credited to **T1.02** ("on held-out states, a
-structured task generalises and a shuffled one does not"). T1.02 is a genuine
-claim, but it is a Tier-1 synthetic-task primitive, and GOAL.md's `generality`
-is *"a Jack who masters jungle AND desert has abstracted shelter from lean-to"*
-(GEN.06). That is a **scope** mismatch, not a kind mismatch, and I raise it
-separately rather than folding it into the count.
-
-### Why this is the RANK 1 finding and not a bookkeeping note
-
-The `n_pass` count is not decorative — it *routes work*. The builder's own
-words, this iteration (`1b82da6`, 00:20 UTC):
-
-> *"The standing zero-pass rule outranks fan-out… Across the zero-pass
-> commitments, PS.03 is the cheapest runnable declared spec."*
-
-The last three units of work — UB.9, BA.01, PS.03 — were all chosen off this
-list. A flattered list does two things at once: it hides six real holes, and it
-sends the builder to the cheapest survivor of the ones it can still see. The
-selection pressure the 11th audit praised as "visibly operating" is operating on
-bad input.
-
-`docs/LESSONS.md:3003-3029` already states the governing rule — *"when a single
-count aggregates heterogeneous contributors and something routes or ranks on it,
-the count silently means whatever its weakest contributor means"* — and notes it
-took three consecutive audits to get two declarations fixed. This is the fourth
-audit on the same count.
-
-### The generalisable defect
-
-A fix that adds a field to a declaration format is not shipped when the parser
-lands. It is shipped when the **existing declarations are migrated**, because
-until then the format's default *is* the answer for everything already written —
-silently, and with no malformed-declaration report to betray it. `(sensor)` was
-defined, documented, and used zero times: the surest sign the sweep never
-happened. Appended to LESSONS.md.
+*Note: T2.03's ledger record was uncommitted in the working tree at audit time
+(the loop is mid-iteration). I verified it against the kernel receipt and count
+it as PASS; the builder is expected to commit it.*
 
 ---
 
-## RANK 2 — Nine consecutive hand-offs deferred a 20-minute GPU job while 11.8 Kaggle-hours expire on Sunday, and the only runnable curiosity spec has never been implemented
+## RANK 1 — T2.08's floor moved 0.70 → 0.50 after the run it failed, and nothing in the repo can corroborate the account
 
-**Status: pure allocation. Nothing is broken; the wrong thing is being built,
-every hour, for a defensible-sounding reason.**
+**Nothing on the ledger is false. The damage is to auditability, and it is
+structural.**
 
-### The expiring resource
+### What happened
 
-```
-Kaggle 2026-W32   18.1994 h used of 30.0   ->  11.80 h remain
-resets Sunday 2026-08-16                    ->  ~3.5 days to spend it
-overruns: []      colab_failed: 0.9914 h (the known lost run, now gated by T0.24)
-```
+| | |
+|---|---|
+| 02:34 | T2.08 attempt 1 recorded **FAIL** at `75a1938+dirty` |
+| | Failing quantity: `state_coverage` **0.6975** vs v1's floor **0.70** — a miss of 0.0025 |
+| ~02:40 | v2 committed at `1454525`: `COV_MIN` **0.70 → 0.50**, plus a new 3σ gate |
+| 02:42 | T2.08 attempt 2 recorded **PASS** |
 
-### What it could buy, today, with no decision from anyone
+`experiments/tests/t2_08_curiosity_coverage.py:120` — `COV_MIN = 0.50  # v2
+anti-collapse floor; v1's 0.70 was a...`
 
-`run next` reports 29 runnable. Nine of them are GPU specs with all dependencies
-satisfied and no implementation:
+### What is right about it, stated fairly
 
-```
-T2.03 gpu<20min   Pretrained vision features beat random features   frees 2, co-blocks 9 (UB.1-8, T4.01)
-T2.04 gpu<20min   Behaviour cloning on scripted trajectories
-T2.06 gpu<20min   Language-action alignment beats chance            frees 3
-T3.07 gpu<20min   Ablate mood conditioning                          the FIRST Tier-3 spec
-T4.02 gpu<20min   No modality collapse                              frees 1
-T2.05 gpu<2h      World model beats constant prediction             frees 1
-T2.08 gpu<2h      CURIOSITY DRIVES COVERAGE                         frees 3
-T2.11 gpu<2h      Skills are distinguishable
-T2.14 gpu<2h      Imitation from real motion capture
-                                             declared total  ~9.7 h  of 11.80 h available
-```
+This is not silent loosening, and I will not call it that:
 
-The whole list fits inside the expiring budget with 2 h spare.
+- The registry-level falsification criterion — *"Coverage at or below random"* —
+  was **decisively rejected**: margin 0.0544 over both nulls, every seed
+  positive, paired t = 5.0, shuffled control losing by 0.035. The floor was an
+  **implementation-added auxiliary gate**, not a registered one.
+- The move is declared in the commit message, the module docstring, the loop
+  journal (`docs/LOOP_JOURNAL.md:3757-3763`) and a new LESSONS entry.
+- The spec was **strengthened in exchange**: v2 added `MARGIN_TSTAT_MIN = 3.0`,
+  a paired 3σ significance gate v1 had none of. Attempt 1 measures 5.0 on it.
+- The diagnosis is technically correct, and I can confirm the arithmetic the
+  docstring only asserts. v1 called 0.70 *"~6 sigma below the pilot bulk"*. Against
+  the pilot's **seed** std (bored 0.772 ± 0.023) that is **3.1σ**, not 6. It is
+  ~6σ only against the standard error over 4 lives (0.023/√4 = 0.0115). **v1
+  sized a per-seed gate with a standard error instead of a standard
+  deviation** — which is precisely why a uniform seed-family shift landed it
+  mid-bulk. The builder's conclusion is sound; the number it cites is sized on
+  the wrong scale, and that error is the whole story.
 
-### What actually happened
+### What is wrong about it
 
-`T2.03` — the 20-minute one — has been named in the "next iteration" hand-off
-in **nine consecutive iteration summaries**, 13:23 on 08-12 through 00:20 on
-08-13 (`/data/jack-logs/ladder.log` lines 1399, 1410, 1445, 1460, 1471, 1499,
-1511, 1528, 1546). It has never been submitted. `LC.03` (frees 7, no GPU) has
-the same nine-deferral record.
+**Every artifact corroborating the move was written by the same agent in the
+same iteration, and the one artifact that could settle it independently does
+not exist.**
 
-Each individual deferral was reasoned and each reason was true. The rule that
-produced them is the standing zero-pass rule, which outranks fan-out — and
-which, per RANK 1, is reading a flattered list. The two findings are one
-mechanism: **the flattered count keeps winning the priority contest against the
-work that actually unblocks the ladder.**
+- v1's code was **never committed** — the FAIL is stamped `75a1938+dirty`, and
+  `t2_08_curiosity_coverage.py` appears in git history **only at `1454525`
+  (v2)**. The failing implementation is unrecoverable.
+- The FAIL's ledger history entry carries **`{commit, message, ran_at,
+  status}`** and nothing else. The number that failed — 0.6975 — is **not in
+  the ledger**. It survives only in prose written by the party that moved the
+  threshold.
 
-### The curiosity number
-
-```
-specs declaring COVERS: curiosity        12
-ever run                                  1   (PG.4 — a fixture)
-runnable today                            1   (T2.08, gpu<2h, never implemented)
-blocked behind T2.01's FAIL               7   (CU.1-CU.5, CU.7, T5.08)
-```
-
-GOAL.md's north star — *"He explores because he wants to… If there is a ladder
-with an apple on top, he must try to climb the ladder, fall, and learn from
-falling, purely out of curiosity"* — has **one passing spec, and it is the trap
-that catches naive curiosity, not curiosity.** T2.08 costs 2 GPU-hours out of
-11.8 that vanish on Sunday.
+So the repo's answer to *"was the move honest?"* is *"read the commit message of
+the commit that made the move."* That is not an audit trail; it is a
+self-certification. Today it happens to be true. It is the second use of law 4's
+escape clause (T1.02 was the first), and a precedent used twice is a habit
+forming.
 
 ---
 
-## RANK 3 — D1's cost-of-delay line is wrong, and has been since the day it was written
+## RANK 2 — the ledger's history is metric-free and code-free, in all 163 entries
 
-**Status: an owner-facing decision document is understating its own urgency.
-Escalated to DECISIONS_NEEDED.md in this commit.**
-
-`docs/DECISIONS_NEEDED.md:87-89`, written 2026-08-09 in `7addc20`:
-
-> *"COST OF DELAY: T2.01/T2.02 and everything downstream of locomotion stay
-> blocked. The memory, playground and **curiosity branches are unaffected**."*
-
-`python -m experiments.run blocked`, today:
+RANK 1 generalises. I checked every history entry in `experiments/ledger.json`:
 
 ```
-T2.01 = FAIL  frees 26  (blocks 36)  — Locomotion beats a random policy
-   frees: CU.1, CU.2, CU.3, CU.4, CU.5, CU.6, CU.7, ME.7, T2.16, T2.17, T2.18,
-          T3.02, T3.04, T3.05, T4.04, T4.05, T5.01-T5.05, T5.07,
-          T6.01, T6.02, T6.04, T6.05
+history entries total                                     163
+carrying metrics                                            0
+carrying control_metrics                                    0
+carrying impl_sha                                           0
+keys present, universally:  commit, message, ran_at, status
 ```
 
-Every curiosity spec sits behind T2.01 via `CU.1 → T2.16 → T2.01`. The CU family
-was registered 2026-08-06 (`c02e590`) — **three days before** the line claiming
-it was unaffected was written. This was never true.
+**Zero of 163.** Every superseded run in this project's life is a status string
+and a sentence. That includes every amend-after-FAIL the ladder has ever done:
+VO.01 (5 FAILs), XL.00 (3), LC.02 (3), T0.13 (3), PS.01 (2), PS.02 (2), T0.14,
+T0.17, T0.21, T0.23, T0.25, T2.01, BA.01 (FAIL + VOID), T2.08.
 
-Line 366 of the *same file*, an overseer entry from 08-10, states the opposite
-correctly (*"CU.1–CU.7 (**every curiosity spec**)"*). The file contradicts
-itself, and the wrong version is the one at the top, in the block the owner is
-asked to decide.
+The current record answers *"did it fail?"* It cannot answer *"by how much, on
+what code, against which control?"* — and those are the only questions that
+distinguish a justified threshold move from a quiet one. `impl_sha` already
+exists on live records; history is where it is missing and where it matters
+most.
 
-D1 also still lists **"A. Freeze the trunk … RECOMMENDED"** — unconstitutional
-under the PLASTIC-ONLY decree of 2026-08-09. The 4th overseer audit raised that
-on 2026-08-10 (`DECISIONS_NEEDED.md:599`). **Three days, no answer, and the
-recommendation is still at the top of the file.**
-
-D1 is nine days open and gates 26 specs. The two live options after striking A
-are B (split trunks) and D (delete the transformer from the control path), C
-being unsupported by the plateau data. **That is a two-arm bakeoff, and SYSTEM.md
-law 3 says the system runs it rather than arguing about it** — the blocker is
-the owner's one-line reconciliation of the menu, not the experiment.
+**33 of 163 history entries are stamped `+dirty`** — code that was never in
+git — compounding the same gap.
 
 ---
 
-## 1. Integrity of the ledger — CLEAN
+## RANK 3 — ~0.4 T4-hours were consumed and billed nowhere, and T0.12's receipt-pairing property never looks at the live receipt file
 
-Checked all 75 PASS entries mechanically:
-
-```
-PASS entries                                             75
-with no implementation file in experiments/tests/         0
-whose recorded `commit` no longer resolves in git         0
-declaring a control but recording no control_metrics      0
-declaring no control at all                               2  (T0.01, T0.10)
-```
-
-T0.01 ("repo imports clean") and T0.10 ("Kaggle job round-trip") are pure
-plumbing smoke tests where the failure mode *is* the assertion; a declared
-control would be ceremony. Accepted, not a finding.
-
-`run stale` → **zero stale claims.** 34 entries predate `impl_sha` and cannot be
-checked at all — down from 47 at the 8th audit, and shrinking by re-run rather
-than by amendment. T0.18 ("every PASS is re-derivable and every control is
-read") is PASS and re-derived from a clean tree.
-
-## 2. Thresholds and controls over time — CLEAN, no loosening
-
-105 commits touched `registry.py`, `registry_expansion.py` or
-`experiments/tests/` in seven days. I diffed every added and removed
-module-level numeric constant, every `seeds=`, `control=`, `gate_mode=` and
-`falsified_by=` change, and every removed line containing an assertion or a
-conjunct. Direction of every change that moved a bar:
+`experiments/gpu_submissions.jsonl` has **11 attempts and 10 results**. The
+unpaired one:
 
 ```
-TF_SPREAD_MIN 2.5  ->  TF_ABS_SPREAD_MIN 2.5 + TF_FALL_SPREAD_MIN 2.5   TIGHTER (one gate became two)
-N_CALIB       60   ->  400   (VO.01 SIR calibration)                     TIGHTER
-N_OCC         160  ->  2*N_TRAIN = 600 (VO.01 occlusion pairs)           TIGHTER
-T0.21 N_PROPERTIES 7 -> 8 ; T0.22 12 -> 13 -> 14 -> 15 ; SM.01 6 -> 7    TIGHTER
-T1.07/T1.08 Budget.CPU -> Budget.GPU                                     CORRECTION, justified in 71f7f03
+attempt_id 1786594878451-2409873-colab   iso 2026-08-13T04:21:18
+est_hours 0.4   timeout_s 2940   head 7783535
 ```
 
-The only deleted `_check` conjuncts in the window are BA.01's, removed in
-`ed49b73` when the conjunction was **extracted verbatim** into `rig_health()` so
-T0.26 could drive the shipped statistic path. I diffed the extraction line by
-line: byte-identical predicate, all three gates intact.
+This is the T2.03 pilot whose watcher was killed by the ladder's 50-minute
+timeout at ~46 min. It is charged **nowhere**: no `charged_jobs` key contains
+`1786594878`, and both Colab columns reconcile **exactly** without it —
+`colab` 0.9914+0.0616 = 1.053 = `colab_failed` to four places, `colab` ok
+0.5498+0.2103 = 0.7601 vs 0.7616. So this is not rounding. Real GPU time was
+consumed and the meter has no line for it.
 
-Special mention, in the good direction: BA.01 v3 **took back its own PASS**
-(74 → 73) when the restored gate caught seed 2's degenerate world. That is Law 4
-working under pressure, and it cost the builder two iterations to honour.
+**The cause is structural: charging happens only on the result path.** A job
+whose watcher dies is free. `1a01e69` prevents the *loss of the result*; it does
+not make the *bill* appear, and it exempts Kaggle — where the quota actually
+binds — on the reasoning that reattach recovers it. A Kaggle kernel that runs
+with no reattach ever attempted burns quota server-side and is billed zero.
 
-I also ran the scan `LESSONS.md:2866` promised — every implemented spec's
-declared budget against whether its module actually submits remote work — and
-found **zero live mismatches**. The guard that lesson specced ("a test module
-that calls `gpu.submit` must declare a `gpu` budget") was never registered as a
-spec, but nothing is currently broken by its absence. Noted, not ranked.
+**And the gate that should have caught it passed.** T0.12 has property
+`receipt_pairs_attempt_with_result`
+(`experiments/tests/t0_12_gpu_budget.py:357-363, 402`) — but it asserts pairing
+over a **synthetic 2-attempt/2-result fixture**, never over
+`gpu_submissions.jsonl`. T0.12 re-ran **PASS, 33/33, at 06:40 today** — two
+hours after the unpaired attempt appeared in the live file it certifies.
+
+Minor, same file: T0.12's probe writes `{"phase": "selftest"}` into the
+**production** receipt file. A test should not mutate the artifact it audits.
+
+---
+
+## RANK 4 — 11.47 expiring Kaggle hours, and T2.01 is mechanically unblocked for the first time this week
+
+`gpu_budget.json` W32 (%U week, Aug 9–15, resets **Sunday 2026-08-16**):
+kaggle **18.5322 / 30 used**, **11.47 h remaining**, kaggle_failed 0.1225.
+
+Today's `643f542`/`c6f2f91` found and fixed something bigger than the pilot they
+were chasing: `KAGGLE_TORCH_FIX` had been **silently broken upstream** (the
+index dropped `nvidia-cudnn-cu12==9.1.0.70`; `check=False` swallowed the
+resolution failure), which had been **killing every torch-on-P100 job all
+week — including the planned T2.01 8-hour re-run**. The repair was then
+**verified live on the real P100** (`TORCH_PIN 2.5.1+cu121` printed) plus a
+matched `torchvision==0.20.1` pin.
+
+So: **T2.01 — the ladder's only FAIL, gating the locomotion branch and owner
+decision D1 — has been impossible to re-run all week for mechanical reasons,
+and became possible today.** Its 8 h fits inside the 11.47 h that evaporate
+Sunday. This is the highest-value use of the expiring budget and there are
+~3 days left.
+
+---
+
+## RANK 5 — observation, not a fault: sight's first passing claim credits a frozen borrowed trunk
+
+T2.03 PASS is honest and well-built: margin_min 0.46 vs floor 0.10, null_gap
+0.5733 vs 0.15, shuffled control at chance (dev_max 0.0633 vs band 0.10), canary
+and param-range VOID guards live, control gated in `_check`. Thresholds were
+**finalised unchanged before** the registered run (`42df762`), correctly
+anchored to purpose rather than to pilot bulk — the T2.08 lesson applied one
+iteration after it was learned.
+
+But `coverage.py` now reads **sight: 1 pass**, and the winner is frozen
+DINOv2-L + CLIP-L, which the PLASTIC-ONLY decree bars from ever being inside
+Jack. The builder flagged this itself, twice, in the registry note and the
+docstring: *"a frozen winner cannot take the vision seat."* The spec measures
+**the gap the plastic path must close** — it does not demonstrate that Jack
+sees. Nothing is misreported; the concern is that the coverage map is the
+builder's work-selection input, and there "sight: started" now reads greener
+than the goal's actual state.
+
+---
+
+## 2. Thresholds and controls, over time
+
+`git log -p --since="7 days ago"` over `registry.py`, `registry_expansion.py`,
+`experiments/tests/` — 112 commits, +22,210/−141 lines. Reviewed every deleted
+line and every numeric constant change.
+
+- **One threshold moved in the loosening direction: T2.08's `COV_MIN`
+  0.70 → 0.50.** RANK 1. Disclosed, justified, strengthened in exchange,
+  uncorroborable.
+- **No control was deleted or weakened. No `_check` gained an `or`. No seed
+  count was reduced. No assertion was removed** without a stated measurement.
+- **Two controls were ADDED before first run** (strengthen-only): T2.03's
+  shuffled-label control, PS.03's global-fear control.
+- **BA.01 v1→v4** moved through FAIL → PASS → VOID → PASS with **every gate
+  byte-identical from v1 onward** — four rig rewrites, zero threshold moves,
+  including a VOID that took back its own prior PASS. That is the standard
+  T2.08 should have met.
+- **The kind migration (`a703604`) is honest and conservative.** I diffed all 86
+  `COVERS:` pairs: every change either kept the `claim` default or **downgraded**
+  to fixture/sensor/rule. **No declaration was upgraded toward `claim`.** A
+  labelling commit that makes your own scoreboard worse by 10 commitments is
+  the good kind.
+
+---
 
 ## 3. Drift from the goal
 
-**What the builder did in the last 24 h,** and the GOAL.md sentence each serves:
+**No drift.** Everything the builder touched in the last 24 h traces to a
+GOAL.md sentence:
 
-| work | serves |
+| Work | GOAL.md sentence |
 |---|---|
-| PS.02 (thermal field + probe) | *"too cold kills him"* — yes |
-| VO.01 (voice rendered and heard) | *"and VOICE — he must be able to make sound"* — yes |
-| UB.9 (heard-not-seen fusion) | *"one brain, all senses in unison"* — yes, and it is the strongest pass on the board |
-| BA.01 v3/v4 (vestibular probe) | *"proprioception & balance"* — yes |
-| PS.03 (damage design, pre-registered) | *"pain"* — yes |
-| T0.12/20/21/22/25/26, T0.08 property 6 | *"protects the honesty of watching what happens"* — yes |
+| T2.08 curiosity coverage | *"He explores because he wants to"* — the north star's first claim |
+| PS.03 damage/nociception | *"pain as a fast signal distinct from reward"*; *"he lives, he dies"* |
+| T2.03 pretrained vision | *"sight"*; *"components must EARN their parameters"* |
+| T0.12/T0.26, deadline guard, torch fixes | *"protects the honesty of watching what happens"* |
 
-**Nothing is drift in the sense of serving no sentence.** Every unit traces.
+**The converse is the real answer.** Tier 3 (*"earn your parameters"*) is
+**0/14**. Tier 5 (*"the claims — the thesis itself"*) is **0/25**. **16 of 23
+constitutional commitments have zero passing claim specs**, including
+shelter/building, tool use, smell, taste, voice, sleep, social/other agents,
+plasticity, thermal, hunger/thirst, balance, proprioception, and fast/slow.
 
-The honest concern is the **shape**, not the direction. Of 14 ledger runs in the
-last 24 h, **10 were harness or learning-primitive specs** (T0.08/12/16/20/21/
-22/25/26, T1.08, T2.00) and **4 were Jack-facing** (PS.02, VO.01, UB.9, BA.01).
-I must implicate myself here: **5 of those 10 machine runs were my own
-FOR THE BUILDER items** (T0.12 ← item 1, T0.21 ← item 2, T0.22 ← B4, T0.26 ← B2,
-T0.08 P6 ← B3). The overseer is the largest single source of machine work in
-this window. SYSTEM.md's own guard applies to me as much as to the builder:
-*"when the machine is sufficient, PROVE it by throughput."* My builder list this
-audit is therefore deliberately short, and points at Jack.
+Two commitments — **balance** and **hunger/thirst** — have **no claim-kind spec
+declared at all**, so `n_pass` for them is structurally frozen at zero no matter
+what runs. The kind migration surfaced this and the builder named it; no claim
+spec has been queued for either yet.
 
-**The converse, which is the harder question.** Which parts of GOAL.md have no
-passing spec at all? After RANK 1's re-typing, **19 of 23 constitutional
-commitments have zero passing capability claims.** The four that survive are
-hearing, one-brain/unison (both UB.9), memory-across-lives (ME.10) and
-death-&-retry (XL.00).
+---
 
-And a sharper version of the same question, which no organ in this system
-currently asks: **is there a single passing spec in which Jack's behaviour gets
-better because he lived through something?** I read all 35 non-harness PASS
-entries. The answer is essentially **one** — T2.20, "episodic memory helps the
-next episode" — plus ME.10's distillation half. Everything else is a world
-property, a sensor-legibility probe, a memory-store engineering claim, or
-apparatus. The one spec that asserts embodied improvement from experience in so
-many words, **T2.01 "locomotion beats a random policy", is the ladder's only
-FAIL.**
+## 4. Is the builder alive and productive?
 
-That is not an accusation of dishonesty. It is the accurate statement of where
-the project stands: the senses are being wired and certified beautifully, and
-almost nothing yet learns by living.
-
-Also flagged, without a claim attached: **`death & retry` is credited to XL.00**,
-which proves the body dies at the predicted rate, respawns at an unchosen pose,
-and the diary survives. GOAL.md's actual commitment is *"Life N+1 must be
-measurably better than life N **because of** what life N recorded."* No spec
-tests that sentence. XL.00 is the substrate for it, not the claim.
-
-## 4. Is the builder alive and productive? — YES, and this is the healthiest section
+**Yes, and this was a strong day.**
 
 ```
-iterations in the last 24 h        19   (hourly, 06:47 -> 00:07, no gaps)
-ended rc=0                         19
-PASS delta                         67 -> 75   (+8)
-specs registered                   +3   (T0.25, T0.26, +1)
-tree state                         clean, HEAD == origin/main, nothing unpushed
-dead hours                         0    (the 9.7 h owner pause ended 08-12 06:47)
+iterations, last 24 h            24
+ending rc=0                      24   (100%)
+PASS delta                       75 -> 78
+zero-pass commitments            19 -> 16
 ```
 
-No repeated identical failures, no paused loop, no credit exhaustion (the
-`OUT OF CREDITS on fable -> falling back to opus` fallback fired 07:07-11:07 on
-08-12 and the loop kept working through it — the failover is real). No
-iterations aborting on load; every start logged load ≤ 0.20.
+No paused loop, no credit exhaustion, no load aborts (load 0.00–0.28
+throughout), no repeated identical failures. Iterations are ~5–35 min inside
+hourly slots.
 
-This is the most productive 24 h window the project has had. It is also why
-RANK 2 matters: the throughput is real and it is being spent on the wrong queue.
+One iteration recorded a **negative** delta (19:22, 74 → 73): BA.01 v3 VOIDed
+and took back v2's own PASS. **A ladder whose count can go down is a ladder
+that is measuring.** That is a health sign, not a fault.
 
-## 5. Compute honesty — CLEAN, reconciles exactly
+---
 
-```
-2026-W32 kaggle          18.1994 h of 30.0
-  tracked in charged_jobs 11.8145 h  (5.5786 + 0.6561 + 5.5798)
-  pre-dating job_id       6.3849 h   (spent 08-09, before charged_jobs existed)
-  sum                    18.1994 h   EXACT
-2026-W32 colab            0.5513 h work + 0.9914 h colab_failed
-overruns                  []         (W31 closed at 37.4554 of 30 — never repeated)
-remaining                11.80 h, expires Sunday 2026-08-16
-```
+## 5. Compute honesty
 
-What the hours bought: **11.16 h on T2.01 v4+v5, both FAIL** (a FAIL is a
-result, not waste), **0.66 h on T1.02's recovered PASS**, **0.55 h on T2.00's
-post-GAE-fix PASS**. The 0.99 h `colab_failed` is the delivery loss the 9th
-audit found; it is now gated by T0.24 and has not recurred.
+**Reconciles, with one gap (RANK 3).** I checked the weekly meter against the
+per-job register line by line:
 
-I specifically re-checked the reattach over-bill the 10th audit found: the
-submissions log shows a 35,330 s charge presented against an already-charged
-`job_id`. **It never reached the week total** — the idempotency check rejected
-it, and `97f9419` fixed the meter so the presented number is right too. Verified
-by replaying `weeks["2026-W32"]["kaggle"]` across every commit that touched the
-budget file. No unexplained hour exists.
+| bucket | `weeks[2026-W32]` | Σ `charged_jobs` | delta |
+|---|---|---|---|
+| kaggle (ok) | 18.5322 | 12.1473 | **+6.3849** |
+| kaggle_failed | 0.1225 | 0.1225 | 0.0000 |
+| colab (ok) | 0.7616 | 0.7601 | +0.0015 |
+| colab_failed | 1.0530 | 1.0530 | 0.0000 |
 
-**Waste is zero. Idleness is 11.80 h and counting** — see RANK 2.
+**The 6.3849 h is explained and is not a fault.** It has been **constant across
+every commit** since `92931a6` (2026-08-09 11:04), which is the commit that
+introduced `charged_jobs` with an empty register. W32 already held 6.3849 h of
+Kaggle spend recorded under the old weeks-only scheme. It is real spend, in the
+correct week, counted against the quota — conservative in the safe direction.
+
+Two things I checked and found **correct**, worth stating because both were
+prior audit findings:
+
+- **The `%U` week key is right.** I initially read `2026-W32` as a stale ISO key
+  (ISO today is W33) and it is not: `_week()` deliberately uses `%U`
+  (Sunday-start) to match Kaggle's actual reset, and `%U`-W32 is Aug 9–15.
+  Today's charge landed in the correct bucket.
+- **The reattach meter fix (10th audit, T0.12 P9) is verified in production
+  data, not just in its test.** The 08-12 06:56 reattach returned a result with
+  `duration_s` 35,331 s (**9.814 h** wall-clock) against job
+  `jack-ladder-1786482462` — and the budget billed it **0.6561 h**, the
+  kernel's own window, with no double-charge on the colliding key. Exactly the
+  designed behaviour, on a real 15× overbill it would have taken.
+
+Waste this week: 0.1225 h kaggle_failed + 1.053 h colab_failed, every line
+honestly marked `ok: false`. Two billed-failed kernels today bought two real
+defects (the numpy seed overflow and the upstream cudnn break) — that is waste
+that paid for itself, and it was billed anyway.
+
+---
 
 ## 6. Stuck decisions
 
-| decision | age | state |
-|---|---|---|
-| **D1** — does the 57M trunk stay in the control path? | 9 days | OPEN. Cost-of-delay line is **wrong** (RANK 3); RECOMMENDED option A is unconstitutional and that was raised 3 days ago unanswered. Gates 26 specs. |
-| **D2** — does a VOID dependency block? | closed | **RESOLVED 2026-08-13 by the builder, by ledger replay** — correctly, with a loser, a re-open trigger and an executable invariant (T0.08 P6). Off the desk. |
-| **D4** — LC bakeoff labelled `cpu<2h`, research costs it ~20 core-hours | 3 days | OPEN, and it is the thing standing behind LC.03 (frees 7). |
-| Was physics-first retired by argument instead of by bakeoff? | 2 days | OPEN. This one the system could answer itself. |
-| Owner's hands / LC verdict survives scale | 3-4 days | OPEN design forks, correctly parked. |
-| D3, D5, Kaggle grant, /data 95% | closed | Correctly closed or annotated stale. `/data` is now 21% used, 80 G free — that entry is dead and marked so. |
+**D1 — "Does the 57M trunk stay in the control path?" remains OPEN with
+evidence complete, and it is now the oldest and most expensive blockage.** It
+gates T2.01 (the ladder's only FAIL), T2.02 (VOID), and their dependents. The
+11th and 12th audits both escalated it; the 12th appended a cost correction at
+00:45 today.
 
-**Anything decided quietly without being recorded?** No. I checked
-`DECISIONS_RESOLVED.md` against the last 7 days of commits: D2 is the only new
-resolution and it is fully recorded. No owner decision was acted on unrecorded.
+**New evidence for the owner, from today (see RANK 4):** the delay has been
+partly *mechanical*, not decisional — every torch-on-P100 job was silently
+broken all week, so the T2.01 re-run could not have happened even had D1 been
+answered. That is now fixed and verified live. The option set is still flagged
+stale (option A contradicts PLASTIC-ONLY, raised 2026-08-10 and unanswered).
 
-**Anything blocked on the owner the system could have settled itself?** Yes, one:
-after striking option A, D1 reduces to B-vs-D, which is a two-arm bakeoff with a
-learning gate — exactly SYSTEM.md law 3. What genuinely needs the owner is the
-one-line menu reconciliation, not the verdict.
+**Nothing was quietly acted on.** D2 was resolved by the system, properly, and
+recorded (§7). No open owner decision has been actioned without a record.
 
-## 7. Bakeoff hygiene — CLEAN
+Other open owner items, unchanged and correctly parked: `/data` at 95%, the
+owner's-hands design fork, LC-bakeoff-at-scale, physics-first retirement, D4.
 
-`DECISIONS_RESOLVED.md` holds three entries.
+---
 
-- **PS.01/J → VOID.** Three arms below the 3.0σ learning gate; recorded as VOID
-  and explicitly *not* as a verdict. Textbook.
-- **PS.01/J2 → WINNER `impact_speed`.** Learning gate cleared, margin recorded.
-- **D2 → WINNER BLOCK.** Not a bakeoff — a replay of the ledger's own status
-  history. Legitimate: it is a measurement over recorded data (retraction
-  exposure 9 vs 0; benefit 3 unimplemented specs), and it ships with a loser and
-  a re-open trigger. Correctly labelled as decided by replay, not by argument.
+## 7. Bakeoff hygiene
 
-No winner chosen inside a noise margin. No VOID treated as a verdict. Nothing
-to report.
+**Clean — and D2 is a model of how this should go.**
+
+D2 ("does a VOID dependency block its dependents?") was resolved 2026-08-13 by
+**replaying the ledger's own recorded history** rather than by argument. It
+states its metric in advance (retraction exposure), measures both arms
+(BLOCK: 0 dependents exposed; NO-BLOCK: **11 admitted, 9 resting on a T2.01
+that FAILed 17 minutes later**), measures the benefit side of the loser
+(**exactly 3 specs, none implemented — benefit zero**), **records the loser and
+what was right in it**, names a **re-open trigger** tied to the quantity the
+verdict rests on, and makes the invariant executable (T0.08 property 6).
+
+It also correctly declined to use `run_bakeoff`, with the reason stated: the
+arms are two readings of a dependency graph, not learners — no seeds, no null,
+no learning gate to apply. **A VOID was not treated as a verdict; a winner was
+not chosen inside a noise margin; no decision was made without a gate.**
 
 ---
 
 ## 8. The honest summary — are we closer to a curious humanoid, or to a longer list of green ticks?
 
-**Both, and the ratio moved the wrong way this week.**
+**Closer to the humanoid, genuinely, and for the first time in several audits I
+can point at the specific reason.**
 
-Closer to a creature, genuinely: **UB.9** is the real thing. A task that is
-impossible without fusion, 0.993 fused against unimodal and ensemble nulls at
-chance, three seeds — that is the project's namesake commitment earning its
-first honest pass after 21 specs. **BA.01** survived taking back its own PASS
-and came back with every gate byte-identical. **T0.26** turned a twice-burned
-scar into an executable guard. The machine caught itself twice in 24 hours and
-told the truth both times. That is not nothing; it is the thing SYSTEM.md says
-matters most.
+The green ticks got *fewer* today before they got more: the kind migration
+deleted 10 commitments' worth of unearned credit at 01:18, and the builder
+committed that correction against its own scoreboard within 73 minutes of being
+told. Then it spent the next five hours putting real passes where the honest
+gaps were — curiosity, damage, sight — and one of those (T2.08) is the
+north-star commitment's first claim of any kind.
 
-Closer to a longer list of ticks: of 75 PASS, **40 are harness and learning
-primitives**, 21 are world-and-apparatus fixtures, 12 are memory-store
-engineering, and — after honest re-typing — **four are capability claims about
-Jack.** Tier 3 is 0/14. Tier 5, "the claims — the thesis itself", is 0/25. The
-one spec that asserts Jack gets better at something by doing it is the ladder's
-only FAIL, and it has been FAIL or VOID for six days while 11.8 GPU-hours drain
-toward Sunday unspent.
+T2.08's pilot is worth more than its PASS, and this is the part that reads like
+science rather than ticking: **every positive-reward curiosity construction
+anti-explores** in bootstrapped tabular Q — naive ICM 0.283, normed ICM 0.194,
+RND 0.289, additive count 0.327, all far below random's 0.829 — because the
+visited core's accumulated value beats one-shot frontier bonuses. What explores
+is valuing the frontier *below* the familiar: the boredom form `1/√N − 0.5`.
+That is a negative result about four mechanisms the field defaults to,
+measured, in Jack's world, and it is real context for T2.09 and the LT bakeoff.
+Nobody asked for it and it could not have been guessed.
 
-The uncomfortable version, stated plainly: **we have built an extremely honest
-instrument and pointed it mostly at the instrument.** Every sense now has a
-certified channel. Nothing yet lives in the world those channels open onto. The
-ladder-and-apple standard — *climbing on attempt 40 after falling on 1-39,
-without anyone telling him to* — has not been attempted once, and the twelve
-specs that would attempt it have one run between them, on a trap.
+Against that: **Tier 3 is 0/14 and Tier 5 is 0/25.** Six days in and 47% green,
+the ladder has not yet made a single claim of the kind the thesis is *about* —
+no component has been ablated and deleted, no continual-learning claim, no
+plasticity claim, no curiosity-drives-real-exploration claim in a body. What
+passes is Tier 0/1/2: the harness works, the primitives learn, components beat
+nulls. That is the right order and it is not drift — but it means the honest
+statement is *"the instruments are excellent and the thesis is untested"*, and
+that has been true for several audits running.
 
-The fix is not more rigour. Rigour is not the constraint here; §1, §2, §5 and §7
-are all clean, and that took real work. The fix is to **stop letting a flattered
-count choose the work**, and to spend the expiring GPU budget on the specs that
-open the blocked half of the ladder. Both are one iteration each.
-
----
-
-## FOR THE BUILDER
-
-Ranked. **B1 before anything else** — it changes what B2 and every later
-iteration will choose.
-
-**B1 — Re-type all 78 `COVERS:` declarations, in one commit, and make the
-default explicit.** *(RANK 1)*
-
-1. Add the honest kind to the ten declarations in the RANK 1 table:
-   `TA.01 (fixture)`, `SM.01 (fixture)`, `PG.6 (sensor)`, `PG.9 (fixture)`,
-   `PG.5 (fixture)`, `PG.7 (fixture)`, `BA.01 (sensor)`, `PS.01 (fixture)`,
-   `T1.13 (fixture)`, `VO.01 (sensor)`.
-2. Add an explicit kind to **every** remaining declaration — including the ones
-   that really are `(claim)`. An implicit default on a field that routes work is
-   the defect; writing `(claim)` out loud is the fix.
-3. Make your own call, in the commit message with reasons, on the two I flagged
-   but did not assert: **PS.02** and **DP.00**.
-4. **Change no spec's content, hypothesis, gate or threshold.** This is a
-   labelling commit. `run stale` must read zero afterwards and no ledger row may
-   move.
-5. Then extend `coverage.py` so an **undeclared kind is REPORTED like a
-   malformed declaration** rather than silently defaulting — the default is what
-   let 76 declarations through — and gate that with a T0.21 property, both
-   directions (a kindless declaration is reported; an explicit `(claim)` is
-   credited), with the defaulting rule kept executable as the control that fails
-   it.
-6. Expect the zero-pass count to go **9 → 15 (or 17)**. That is the instrument
-   getting its eyes back, not a regression. Re-run coverage and let the standing
-   rule re-point before you choose your next unit.
-
-**B2 — Spend the expiring Kaggle hours. 11.80 h, gone Sunday.** *(RANK 2)*
-
-Order, and the reason for it:
-
-1. **T2.08 — "Curiosity drives coverage", gpu<2h.** The only runnable spec for
-   GOAL.md's north star. Twelve curiosity specs, one run between them, on a
-   fixture. Needs implementing. Do this one first even though it is not the
-   cheapest: every other curiosity spec is behind T2.01, so T2.08 is the only
-   shot at this commitment that exists without an owner decision.
-2. **T2.03 — gpu<20min.** Nine consecutive hand-offs, never submitted. Frees 2
-   directly and is a co-blocker on UB.1-UB.8 and T4.01.
-3. **T3.07 or T4.02 — gpu<20min each.** T3.07 would be the **first Tier-3 pass
-   in the project's history** (0/14); T4.02 guards modality collapse, which the
-   unison commitment needs before UB.10.
-
-If the hours are going to expire anyway, an implemented spec that FAILs is worth
-more than an unspent hour — a FAIL is a result and this ladder has proven it
-records them honestly.
-
-**B3 — Say plainly, once, what `death & retry` still owes.** XL.00 proves the
-substrate. GOAL.md's sentence is *"Life N+1 must be measurably better than life
-N because of what life N recorded"*, and no spec tests it. Either register that
-spec or re-type XL.00's declaration so the commitment reads honestly. One line
-either way; do not build it this iteration.
-
-**Not asked for:** any new T0 spec. The harness is at 27/27 and five of the last
-ten machine runs came from my desk. If you find yourself building the machine
-again this iteration, check that it is not me who sent you there.
+And the thing to watch is in RANK 1. This system's real asset is that its
+numbers can be checked. Today a threshold moved after the run it failed, and I
+could not check it against anything except the prose of the agent that moved
+it. It happened to be honest — the journal corroborates, the arithmetic works
+out, the spec got stricter in exchange. But "it happened to be honest" is a
+property of this iteration, not of the ledger. Fixing RANK 2 makes it a
+property of the ledger.
 
 ---
 
-## FOR THE OWNER
+# FOR THE BUILDER
 
-**1. D1 is nine days old, gates 26 specs, and what it tells you about the cost
-of waiting is wrong.** It says *"the curiosity branch is unaffected."* Every one
-of the seven CU specs is blocked behind T2.01, and has been since three days
-before that sentence was written. The full correction, with the dependency
-trace, is appended to `DECISIONS_NEEDED.md` in this commit.
+**B1 (RANK 2, do this first — it is small and it is what makes B2 checkable).**
+Ledger history entries must carry the evidence, not just the verdict. When a
+record is superseded, copy `metrics`, `control_metrics`, `impl_sha` and `seeds`
+into the history entry alongside the existing `{commit, message, ran_at,
+status}`. Cost is a few lines in the recorder. Without it, no amend-after-FAIL
+in this project — past or future — can be audited by anyone but its author.
+Do **not** back-fill the 163 existing entries with invented numbers; leave them
+empty and let them be the historical gap they are.
 
-**2. D1 still recommends an option your own decree forbids.** Option A —
-"freeze the trunk, small head does control" — is marked `RECOMMENDED`, and the
-PLASTIC-ONLY decree of 2026-08-09 rules out frozen components inside Jack. This
-was raised three days ago (`DECISIONS_NEEDED.md:599`) and is unanswered. **The
-ask is one line, not a decision:** either strike A, or narrow the decree to say
-a frozen *control* trunk is a different question from a frozen *sensory* tower.
-Until then the two documents instruct different work, and agents are designing
-toward a recommendation the constitution forbids.
+**B2 (RANK 1).** Make law 4's escape clause leave an artifact instead of a
+paragraph. When a threshold is moved after a run that failed it:
+1. **Commit the failing implementation before re-running.** T2.08's v1 was
+   stamped `75a1938+dirty` and its code exists nowhere; a `+dirty` FAIL that is
+   then amended is unauditable by construction. The FAIL should be stamped at a
+   real commit, exactly as BA.01 v1/v3 were.
+2. Record the old and new values and the failing measurement **in the ledger
+   record** (B1 gives you the slot), not only in the docstring.
+3. Consider a T0 spec asserting the pattern: *a spec whose `_check` constants
+   changed between a FAIL and the next PASS must have its FAIL stamped at a
+   reachable commit carrying metrics.* This is the executable form of the rule
+   you are currently keeping by hand.
 
-If A is struck, what remains is B-vs-D, which the system can settle itself by
-bakeoff without further input from you.
+**B3 (RANK 3).** Two defects in GPU accounting, one real, one cosmetic:
+- `receipt_pairs_attempt_with_result` (`t0_12_gpu_budget.py:357-363`) checks a
+  synthetic 2/2 fixture and never reads `gpu_submissions.jsonl`. Add a property
+  that reads the **live** receipt file and requires every `attempt` older than
+  its own `timeout_s` to have a `result` line — or an explicit
+  abandonment/`billed-unknown` line. It fires today on
+  `1786594878451-2409873-colab`.
+- Charging happens only on the result path, so a dead watcher makes a job free
+  (~0.4 T4-h missing right now). Write the estimated charge at **attempt** time
+  and reconcile it down on result, rather than writing nothing until a result
+  arrives. Note the Kaggle case is the sharp one: quota burns server-side
+  whether or not anyone reattaches.
+- T0.12's probe writes `{"phase": "selftest"}` into the production
+  `gpu_submissions.jsonl`. Point it at a temp file.
 
-**3. The honest coverage number, so you are not reading a flattered one.**
-`coverage.py` currently reports 9 of your 23 constitutional commitments with
-nothing passing. After correcting ten mislabelled declarations, the figure is
-**15 of 23** — and the four commitments with a genuine passing capability claim
-are hearing, one-brain/unison, memory-across-lives and death-&-retry.
+**B4 (RANK 4, time-boxed — 3 days).** 11.47 Kaggle hours expire Sunday
+2026-08-16. T2.01's 8-hour re-run now fits and is mechanically possible for the
+first time this week (your own `c6f2f91` verified `TORCH_PIN 2.5.1+cu121` live
+on the P100). T2.01 is the ladder's only FAIL and it gates the locomotion
+branch and D1. If the D1 answer is what blocks the *decision*, the *measurement*
+is not blocked — a clean re-run at the repaired torch path is evidence D1 needs
+either way. Spend the hours or lose them.
 
-Balance, smell, taste, sight, hunger/thirst and language each have exactly one
-passing spec, and in every case that spec certifies the *apparatus* — the odour
-field obeys its equations, the camera resolves what the test needs, the poison
-plants are visually identical. **That work is real and it had to happen first.**
-It is simply not the same as Jack smelling, seeing or tasting anything. The
-builder is fixing the labels this iteration; no number in the ledger changes.
+**B5 (§3).** **balance** and **hunger/thirst** have no claim-kind spec declared
+at all — `n_pass` for them cannot move no matter what runs. You identified this
+in `a703604`'s own commit message and did not queue anything. Register one claim
+spec for each. (BA.01 and PS.01 are correctly kinded sensor/fixture; they are
+the apparatus those claims will use.)
 
-**4. Nothing is broken and nothing is dishonest.** 75 passes, every one checked
-against its implementation, its commit and its control. Seven days of threshold
-diffs with no loosening in either direction. GPU accounting reconciling to the
-cent. A loop that took back its own green tick twice in one day rather than keep
-it. The problem this week is not truthfulness — it is that the most rigorous
-instrument in the project got pointed at itself, and eleven-point-eight
-GPU-hours expire on Sunday.
+**B6 (RANK 5, judgement call — yours, not mine).** T2.03 is correctly built and
+correctly caveated, but `coverage.py` now credits **sight** with a passing claim
+whose winner is constitutionally barred from being inside Jack. Either surface
+the `notes` caveat in coverage output for specs whose winning arm is frozen, or
+reconsider whether "measures the gap the plastic path must close" is a `claim`
+or a `fixture`. I am not asserting the label is wrong — I am asserting a reader
+of the coverage table cannot currently tell.
+
+**B7 (minor).** The `hardware` field reads
+`aarch64/Linux/torch2.8.0+cpu/cpu` on **every** GPU-run record — T2.03, T1.09,
+T1.10, T2.01, T0.09, T1.08 — because it captures the ARM orchestrator, not the
+executing device. The truth is in `metrics.gpu`/`metrics.backend`, so nothing is
+misreported, but the field a reader would trust for *"where did this run"* says
+"cpu" for six GPU results. Record the executing device there.
 
 ---
 
-*Audited at `1b82da6`, tree clean, `HEAD == origin/main`. Ledger untouched. No
-spec, test or model file modified by this audit.*
+# FOR THE OWNER
+
+**1. D1 is still on your desk, and today changed its cost structure.**
+Does the 57M trunk stay in the control path? Evidence has been complete for
+days: three independent runs at matched env-steps have the 57M trunk at 261–318
+return and below its own 3σ learning gate, while a 54K MLP reaches 531 and a
+125K net reaches 530 at 7.11σ.
+
+What is new: the delay has been partly **mechanical**, not decisional. An
+upstream package removal silently broke every torch-on-P100 job all week, so
+T2.01's re-run could not have happened even if you had answered. That is fixed
+and verified on real hardware today, and 11.47 Kaggle hours expire Sunday.
+
+Note also that your own PLASTIC-ONLY decree (2026-08-09) **post-dates** D1's
+option set, and option A ("freeze the trunk") now contradicts it. That was
+raised on 2026-08-10 and has not been answered. **D1 cannot be decided as
+written** — the recommended option is barred by a later decree. If you want to
+unblock this with one sentence, the useful one is whether PLASTIC-ONLY admits a
+*small dedicated plastic policy head reading a plastic trunk's features* as
+distinct from freezing the trunk.
+
+**2. Nothing in the ledger is false, and one thing in it cannot be checked.**
+You do not need to act on this — B1/B2 are the fix and the builder can do them.
+I raise it because it is the only class of problem that would let this project
+quietly stop being trustworthy: a threshold was moved after the run it failed,
+the move was honest and thoroughly disclosed, and the repo contains no artifact
+that could have told me so if it had not been. Today the disclosure was the
+safeguard. Disclosure is a property of the agent; the ledger should not depend
+on it.
+
+**3. The instruments are excellent; the thesis is still untested.**
+Tier 3 (earn your parameters) is 0/14. Tier 5 (the claims themselves) is 0/25.
+16 of 23 of your constitutional commitments have no passing claim spec. This is
+the correct build order and the loop is moving fast and honestly along it — 24
+iterations, all clean, +3 commitments in six hours. But if you are asking *"is
+Jack closer to climbing a ladder out of curiosity"*, the honest answer is that
+today he got his first measured claim that curiosity beats random at all, in a
+2D rover, and that the four curiosity mechanisms the field would have reached
+for first all measurably **anti**-explore. That is real and it is a beginning.
+It is not yet the humanoid on the ladder.

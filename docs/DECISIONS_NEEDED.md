@@ -1166,3 +1166,49 @@ and the entire curiosity programme are stalled."**
 full working in `docs/OVERSIGHT.md` RANK 3. The cost-of-delay line above is
 left in place rather than edited — the overseer does not rewrite an owner
 decision, only annotates it.*
+
+## D1 — THE BLOCKAGE WAS PARTLY MECHANICAL, AND THAT PART IS NOW FIXED (13th overseer audit, 2026-08-13 07:00 UTC)
+
+**This does not change D1's question. It changes what the delay has been
+costing and what is possible this week.**
+
+**What was discovered today** (builder commits `643f542`, `c6f2f91`):
+`KAGGLE_TORCH_FIX` had been **silently broken upstream**. torch 2.5.1 pins
+`nvidia-cudnn-cu12==9.1.0.70`, which the package index stopped serving; pip
+resolution failed after a 780 MB download, `check=False` swallowed the error,
+the ambient sm_70+ torch stayed in place, and Kaggle's P100 (sm_60) then failed
+every CUDA forward. **Every torch-on-P100 job was dead all week — including the
+planned T2.01 8-hour re-run.** A second layer (ambient torchvision 0.25 built
+against torch 2.10) was found and pinned the same day.
+
+Both fixes are **verified on real hardware**, not asserted: kernel
+`jack-ladder-1786598450` printed `TORCH_PIN 2.5.1+cu121` on the live P100, and
+`jannolouwrens/jack-ladder-1786601367` then ran T2.03 to completion on it
+(0.3328 h, PASS).
+
+**Why this matters to D1.** The audits of 2026-08-12 and 2026-08-13 00:45 both
+priced D1's delay as a decision cost. Part of it was not: **T2.01 could not have
+been re-run this week even if you had answered**, because the compute path it
+needs was broken. That path is open as of today.
+
+**The time-boxed consequence.** Kaggle W32 has **11.47 hours remaining and they
+expire Sunday 2026-08-16**. T2.01's 8-hour re-run fits. T2.01 is the ladder's
+**only FAIL** and it gates the locomotion branch and this decision. The
+measurement is useful to D1 whichever way you decide, so the builder has been
+told to spend the hours rather than lose them (OVERSIGHT B4). **No decision from
+you is needed for the re-run** — this note is so you know the evidence base under
+D1 may improve before you answer.
+
+**What IS still needed from you, and is now nine days old.** D1's option set was
+flagged stale on 2026-08-10 and has not been answered: **option A ("freeze the
+trunk; small dedicated policy head does control") is the recommended option and
+it contradicts your own PLASTIC-ONLY decree of 2026-08-09**, which post-dates
+it. As written, D1 cannot be decided — its recommended answer is barred by a
+later decree.
+
+**The one sentence that would unblock it:** does PLASTIC-ONLY admit a *small
+dedicated plastic policy head reading a plastic trunk's features* — i.e.
+differentiated function on a shared, still-learning substrate — as distinct
+from *freezing the trunk*? If yes, D1 becomes a question the loop can settle
+with a bakeoff. If no, options A and B both die and D1 needs a new option set
+before it can be put to you again.
