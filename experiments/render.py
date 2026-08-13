@@ -98,6 +98,16 @@ def ensure_gl(width: int = 640, height: int = 480) -> str:
     if _DISPLAY is not None:
         return _DISPLAY
 
+    # A machine that has already bound a self-contained offscreen backend —
+    # EGL on a GPU VM, OSMesa anywhere — needs no X display, and Colab/Kaggle
+    # have no Xvfb to start. ensure_gl's contract is "MuJoCo can render
+    # offscreen", and on those backends the environment has already met it.
+    # Without this, any repo module that calls ensure_gl at import (pg_6 and
+    # friends) cannot be imported by a GPU job at all, which forces science
+    # code back into JOB strings — the exact defect the T0.16 lesson names.
+    if os.environ.get("MUJOCO_GL") in ("egl", "osmesa"):
+        return os.environ.get("DISPLAY", "")
+
     disp = os.environ.get("DISPLAY", "")
     if not (disp and _display_is_live(disp)):
         disp = _start_xvfb(width, height)

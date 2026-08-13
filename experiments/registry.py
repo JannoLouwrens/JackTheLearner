@@ -466,8 +466,18 @@ LADDER: list[Spec] = [
          falsified_by="From-scratch matches pretrained.",
          null_baseline="Random-projection features of equal dimension.",
          metric="probe_accuracy", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.08"],
+         control="Shuffled (frame, label) pairing: the same probe on the BEST "
+                 "feature family must collapse to chance (1/4) when labels are "
+                 "shuffled. If it does not, the probe is leaking labels and no "
+                 "arm comparison means anything.",
          kills="use_pretrained_vision=False. Currently DINOv2/SigLIP are never loaded.",
-         notes="COVERS: sight (claim)"),
+         notes="COVERS: sight (claim)\n"
+               "Control added 2026-08-13, before first run (strengthen-only, "
+               "T1.02 precedent): run_spec refuses an undeclared control, and "
+               "the spec had none. PLASTIC-ONLY caution (Review 2026-08-11): "
+               "this is a MEASUREMENT of the gap between the current encoder "
+               "and a pretrained yardstick, not a seating contest — a frozen "
+               "winner cannot take the vision seat under the decree."),
 
     Spec("T2.04", 2, "Behaviour cloning on scripted trajectories",
          hypothesis="The action head reproduces scripted MuJoCo trajectories above "
