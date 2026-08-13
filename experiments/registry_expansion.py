@@ -632,6 +632,66 @@ EXPANSION: list[Spec] = [
                "Deliberately declares NO `COVERS:` commitment. It guards "
                "the measurement machinery, not a capability."),
 
+    Spec("T0.27", 0, "A threshold moved after a FAIL leaves an artifact, "
+                     "not a paragraph",
+         hypothesis="Amend-after-FAIL is auditable by someone who is not its "
+                    "author, mechanically: (1) a verdict that supersedes a "
+                    "FAIL carries the failing evidence IN the record "
+                    "(`supersedes_fail`: failing commit, dirty flag, "
+                    "impl_sha, measurement, plus machine-readable "
+                    "`impl_changed`), and the pairing survives into history "
+                    "when superseded again; (2) `audit_supersedes_fail` "
+                    "flags, in any PASS record, a FAIL whose implementation "
+                    "differs from the run that amended it unless that FAIL "
+                    "is stamped at a clean commit that exists in this repo "
+                    "and carries its metrics; (3) the LIVE ledger has zero "
+                    "such violations; (4) pre-impl_sha pairs read "
+                    "unauditable, never violated — absence is a historical "
+                    "gap, not evidence.",
+         falsified_by="The recorder writing no artifact on a FAIL->PASS "
+                      "supersede; the artifact vanishing from history on the "
+                      "next supersede; the auditor certifying the T2.08 "
+                      "shape (FAIL stamped +dirty, threshold moved, PASS on "
+                      "top); the auditor inventing violations for pre-B1 "
+                      "verdict-only history; or a live-ledger violation — "
+                      "someone amended a FAIL without committing the failing "
+                      "implementation, and the gate re-run catches it.",
+         null_baseline="The pre-B2 ledger path: T2.08's exact shape (FAIL at "
+                       "a +dirty commit with its measurement, impl changed, "
+                       "PASS recorded on top) replayed on a fixture. The "
+                       "auditor MUST flag it; an auditor that certifies the "
+                       "very case that motivated it measures nothing.",
+         metric="properties_failed", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=[],
+         control="See null_baseline: the control fixture is the disease "
+                 "this spec exists to make impossible, and it must be "
+                 "caught, not certified.",
+         kills="The practice of amending a FAIL from an uncommitted tree. "
+               "After this spec, a moved threshold whose FAIL is "
+               "unrecoverable fails the gate re-run — law 4's escape clause "
+               "leaves `git diff <fail> <pass>` as its artifact or it is "
+               "not taken.",
+         notes="SCAR (overseer 13th audit RANK 1, 2026-08-13): T2.08's "
+               "auxiliary floor moved 0.70 -> 0.50 after the run it failed. "
+               "The move was honest, loudly disclosed, and structurally "
+               "uncheckable: the FAIL was stamped 75a1938+dirty (v1's code "
+               "exists in no commit) and the failing 0.6975 survived only "
+               "in prose written by the party that moved the floor. B1 gave "
+               "history the evidence slots; this is B2 — the recorder now "
+               "pairs every amending PASS with the FAIL it amends, and the "
+               "auditor makes 'commit the failing implementation before "
+               "re-running' executable. impl_sha cannot distinguish a "
+               "threshold move from a code fix, so the rule binds the "
+               "conservative superset: ANY FAIL amended by different code "
+               "must be recoverable. Pre-B1 history (163 verdict-only "
+               "entries) is exempt by absence, per B1's no-back-fill rule. "
+               "Property (3) reads the LIVE ledger (B3's lesson: a guard "
+               "that only ever sees fixtures guards nothing), so this spec "
+               "FAILS at gate re-run the next time anyone repeats T2.08's "
+               "shape — that is the point, not a flake.\n"
+               "Deliberately declares NO `COVERS:` commitment. It guards "
+               "the measurement machinery, not a capability."),
+
     # ── PLAYGROUND (docs/research/CURIOSITY.md §7) ──────────────────────
     Spec("PG.1", 2, "Playground generates and is physically sound",
          hypothesis="A procedural room (ramp, stairs, ladder, objects, seesaw, "

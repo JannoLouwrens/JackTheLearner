@@ -45,6 +45,11 @@ from pathlib import Path
 from ..protocol import Ledger, Result, Status, run_spec
 from ..registry import BY_ID, Spec, Budget
 
+# Every property here is a claim about the recorder. Without this, an edit to
+# protocol.py leaves T0.17's PASS describing a recorder that no longer exists
+# — found 2026-08-13 while building T0.27, the same hole T0.12 had with gpu.py.
+IMPL_DEPS = ["experiments/protocol.py"]
+
 _DUMMY = Spec("X.17", 0, "dummy", hypothesis="h", falsified_by="f",
               null_baseline="n", metric="m", budget=Budget.CPU_FAST)
 

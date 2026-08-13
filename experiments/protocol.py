@@ -471,9 +471,51 @@ class Ledger:
                             # Dropping it here would let a re-run launder a
                             # hand-set status back into an unqualified record.
                             row_h["amended"] = prev["amended"]
+                        if prev.get("supersedes_fail"):
+                            # Same reason as `amended`: the pairing with the
+                            # FAIL it amended is part of what that verdict WAS.
+                            row_h["supersedes_fail"] = prev["supersedes_fail"]
                         hist.append(row_h)
                     row = {**asdict(r), "status": r.status.value}
                     row["history"] = hist[-20:]
+                    # A verdict that supersedes a FAIL carries the failing
+                    # evidence IN the record, not only in history (overseer
+                    # B2, 2026-08-13): the failing commit, whether that commit
+                    # was dirty (a `+dirty` FAIL later amended is unauditable
+                    # by construction — the failing code exists nowhere), the
+                    # failing impl_sha and measurement. `impl_changed` is the
+                    # machine-readable "the code moved between the FAIL and
+                    # this verdict"; None when either side predates impl_sha,
+                    # because unknowable must never read as false (Arm.cost).
+                    # The old and new thresholds themselves are recovered by
+                    # `git diff <fail commit> <this commit> -- <test file>`,
+                    # which is exactly why the fail commit must be real and
+                    # clean — `audit_supersedes_fail` enforces that.
+                    # Deliberately NOT a Result field: old readers tolerate
+                    # unknown row keys (see Result.from_row), so this is the
+                    # rolling-migration-safe shape.
+                    if prev and prev.get("status") == Status.FAIL.value \
+                            and prev.get("ran_at") != r.ran_at:
+                        both = bool(prev.get("impl_sha")) and bool(r.impl_sha)
+                        row["supersedes_fail"] = {
+                            "commit": prev.get("commit"),
+                            "dirty": str(prev.get("commit") or ""
+                                         ).endswith("+dirty"),
+                            "impl_sha": prev.get("impl_sha"),
+                            "impl_changed": (prev.get("impl_sha") != r.impl_sha
+                                             if both else None),
+                            "metrics": prev.get("metrics"),
+                            "ran_at": prev.get("ran_at"),
+                        }
+                    if r.status is Status.FAIL and \
+                            str(row.get("commit") or "").endswith("+dirty"):
+                        print("  ! FAIL recorded from a MODIFIED tree. If this "
+                              "FAIL is later amended (threshold moved, code "
+                              "changed), the failing implementation exists "
+                              "nowhere and the amendment is unauditable by "
+                              "construction (overseer B2, T2.08's 75a1938+dirty"
+                              "). Commit the failing implementation before "
+                              "re-running.")
                     # None is sticky: a count that was never kept is not
                     # recovered by running again, and len(hist)+1 would quietly
                     # re-assert a number nobody measured.
@@ -855,6 +897,91 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
         out.append(("CHANGED",
                     f"{Path(path).name}: ran on {recorded}, now {cur}"))
     return out
+
+
+def audit_supersedes_fail(results: Dict[str, Any],
+                          repo_root=None) -> Dict[str, Any]:
+    """Every amend-after-FAIL must be auditable by someone who is not its author.
+
+    The executable form of overseer B2 (2026-08-13). T2.08's floor moved
+    0.70 -> 0.50 between a FAIL and a PASS; the move was disclosed loudly and
+    honestly, and the repo could not have caught a dishonest one: the FAIL was
+    stamped `75a1938+dirty` (the failing code exists in no commit) and its
+    measurement survived only in prose written by the party that moved the
+    threshold. Disclosure is a property of the agent; this makes it a property
+    of the ledger.
+
+    THE RULE: in any record whose CURRENT status is PASS, a FAIL whose
+    implementation differs from the run that superseded it (the threshold or
+    the code moved in between — impl_sha cannot tell those apart, and the
+    conservative superset is the point) must be
+
+      * stamped at a CLEAN commit (no `+dirty` — else the failing code is
+        unrecoverable by construction),
+      * a commit that EXISTS in this repository (else `git diff` between the
+        failing and passing code — the artifact that shows exactly which
+        constants moved — is impossible), and
+      * carrying its METRICS (else the failing measurement exists only in
+        prose).
+
+    Pairs where either side predates `impl_sha` are counted `unauditable`, not
+    violated: absence is a historical gap, never evidence of dishonesty, and
+    back-filling judgement onto it would be inventing verdicts (B1's rule).
+    Records whose CURRENT status is not PASS are ignored entirely — no
+    capability is asserted until a PASS stands on top, and mid-loop iteration
+    on a still-failing spec is the loop working. Once a PASS stands, EVERY
+    amended FAIL under it is checked (including FAIL -> FAIL links), because
+    the constants' path from first FAIL to the standing PASS is what an
+    auditor has to reconstruct.
+
+    `results` is the raw ledger dict (`json.loads(...)["results"]`).
+    `repo_root=None` skips the git-existence check (fixture ledgers carry
+    synthetic commits); pass the repo root to audit the real ledger.
+    """
+    violations: List[Dict[str, Any]] = []
+    checked = unauditable = 0
+
+    def _commit_exists(sha: str) -> bool:
+        try:
+            p = subprocess.run(
+                ["git", "rev-parse", "--verify", "--quiet", sha + "^{commit}"],
+                capture_output=True, text=True, cwd=repo_root, timeout=10)
+            return p.returncode == 0
+        except Exception:
+            return False
+
+    for sid, row in results.items():
+        if row.get("status") != Status.PASS.value:
+            continue
+        seq = list(row.get("history") or []) + [row]
+        for e, nxt in zip(seq, seq[1:]):
+            if e.get("status") != Status.FAIL.value:
+                continue
+            if not e.get("impl_sha") or not nxt.get("impl_sha"):
+                unauditable += 1
+                continue
+            if e["impl_sha"] == nxt["impl_sha"]:
+                continue          # same code re-run; nothing was amended
+            checked += 1
+            reasons = []
+            stamp = str(e.get("commit") or "")
+            if not stamp or stamp == "unknown":
+                reasons.append("FAIL carries no commit stamp")
+            elif stamp.endswith("+dirty"):
+                reasons.append(f"FAIL stamped {stamp}: the failing "
+                               "implementation was never committed")
+            elif repo_root is not None and not _commit_exists(stamp):
+                reasons.append(f"FAIL commit {stamp} does not exist in this "
+                               "repository")
+            if not e.get("metrics"):
+                reasons.append("FAIL history entry carries no metrics — the "
+                               "failing measurement exists only in prose")
+            if reasons:
+                violations.append({"spec_id": sid, "fail_commit": stamp,
+                                   "fail_ran_at": e.get("ran_at"),
+                                   "reasons": reasons})
+    return {"violations": violations, "checked_pairs": checked,
+            "unauditable_pairs": unauditable}
 
 
 @dataclass
