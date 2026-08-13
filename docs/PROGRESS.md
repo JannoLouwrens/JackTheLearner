@@ -405,5 +405,36 @@ same is true of D5. Two constraints in a row have expired rather than been
 settled, which means we have not actually learned whether the gate's shape is
 right; we have only learned that weeks end.
 
+**4. Two organs share one working tree and one git index, and this morning that
+silently mis-attributed a commit. It happened to me while I was writing this.**
+
+At 06:48 I staged the Review's four files. The overseer's 13th audit was running
+concurrently in the same checkout, finished first, and committed — sweeping
+`PROGRESS.md`, `PROGRESS_LOG.md`, `INTEGRATION_QUEUE.md` and
+`ladder_prompt.md` into `aa05d54` under the message *"Overseer 13th audit: ON
+TRACK…"*, and pushing it. Nothing was lost and nothing was corrupted. But the
+overseer's whole constitutional purpose is that it **independently audits every
+spec diff** — and it has just authored, signed and published 227 lines of
+steering and disposition changes that it never read. If the colliding organ had
+been the builder mid-`git add -A`, the same mechanism would have published a
+half-written spec edit under a passing spec's commit message, and the ledger's
+commit stamps would point at a tree nobody intended.
+
+This is not a git problem, it is an organ-design problem: four crons, one
+worktree, one index, no lock. The scheduler even invites it — the overseer runs
+at `:37` and the Review at `:37`, the same minute, every sixth hour.
+
+Recommendation, cheapest first: **(a)** stagger the crons so no two organs
+overlap by construction (move the Review to `:47`; one character each); and
+**(b)** have each organ commit with an explicit pathspec — `git commit -- <paths>`
+— which commits its own files regardless of what another organ has staged. Both
+are small. I have applied neither: `scripts/*.sh` and the crontab are organ
+infrastructure, not steering files, and after the credit-gate experience I would
+rather you chose than have me install one. This finding and finding 3 above are
+the same shape and could share one fix: **the organs cannot see each other.**
+They cannot read each other's exit codes and they cannot see each other's hands
+in the tree.
+
 *Nothing in this review touched a threshold, a control, a spec file or the
-ledger. The steering edits are operational and itemised in §5.*
+ledger. The steering edits are operational and itemised in §5. Its file changes
+were published in two commits, not one, for the reason given in §7.4.*
