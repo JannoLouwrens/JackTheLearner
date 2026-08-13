@@ -3814,3 +3814,49 @@ ran clean, curves flat; re-drawing seeds is run-until-pass). NEXT: read
 v2 registered run (seeds 0/1/2, ~46 min, detached); if the rig VOIDs again the
 task envelope itself (median tilt 0.7-2 deg) has no policy headroom and the
 tilt/kick draw needs a registered amendment, not a re-roll.
+
+## 2026-08-13 ~19:3x UTC — BA.02 v2 pilot: rig VOID on a FRESH world too (the envelope has no headroom); overseer B1 shipped (UNVERIFIABLE_MOVED detector, four certificates re-running); B2 landed before LC.03 records
+
+BA.02 v2 pilot delivered (seed 90, 1018.7 s, /data/ba02_pilot_v2.log):
+`seed_rig_ok 0.0`. best_trained 1.654 - up_random 1.608 = 0.046 < 0.20, every
+arm AT random (vest 1.654 / deprived 1.621 / noise 1.642 / random 1.608),
+toppled_frac_random 0.979. The interleaving itself WORKED — drift_recheck
+-0.175 vs v1's -0.40 block drift, and CEM fitness climbs honestly 13.2->24.3 —
+but on a fresh open-ground world the tilt/kick draw (median tilt 0.7-2 deg)
+leaves random surviving 1.6 s with nothing for a policy to add. That is the
+journal's own pre-stated second branch: the TASK ENVELOPE has no policy
+headroom, and it needs a registered amendment (a stronger tilt/kick draw so
+random topples fast on a FRESH world), then a fresh pilot. The v2 registered
+run was NOT launched; a rig that cannot test the claim must not be paid for
+three seeds.
+
+Overseer 14th audit B1, both halves: (i) `deps_moved_since` +
+`UNVERIFIABLE_MOVED` in protocol.py/run.py (b5db2d4) — "34 predate impl_sha"
+now splits into 30 bookkeeping + 4 that bite, and T0.17's new property 8
+(known-positive ran_at=2020, known-negative ran_at=2999, real-ladder scan of
+zero flagged PASSes) makes the next unprotected certificate turn T0.17 red.
+Scar worth knowing: the first draft passed `--since={ran_at}` to git and the
+known-negative probe STILL returned a commit — approxidate silently
+reinterprets implausible dates, a silent fallback inside the staleness guard;
+the date comparison now happens in Python on `%cI`. (ii) PG.4/PG.1/PG.2/T2.20
+re-running DETACHED (pid 2581791, nice 10, log /data/b1_reruns.log) — launched
+TWICE and killed twice first, both times because the tree had gone dirty under
+them (my own detector edits, then B2), which would have minted +dirty stamps on
+the exact certificates being repaired; third launch is from clean e2f89a7.
+B2 also landed (e2f89a7): LC.03's "FIVE CONTROLS" corrected to four falsifiers
++ one world-tripwire, and the registry's wrong "dwell/chaos carry the curiosity
+burden" rationale replaced with the true conjunct, `needs_rise > 0`.
+
+LC.03 registered run ALIVE throughout (pid 2536994, started 15:23, ~15-20 h —
+do NOT relaunch). NEXT ITERATION: (1) read /data/b1_reruns.log / check pid
+2581791 — when the four land, a FAIL among them is a FINDING about the moved
+world, not a regression you caused; then re-run T0.17 and T0.27 (both CHANGED
+by b5db2d4; T0.17's P8 scan needs the four re-recorded first, and will fail
+honestly if any still lacks impl_sha), then `run render`, commit ledger+render,
+push. (2) LC.03: when it lands, render+commit its numbers from a clean tree.
+(3) BA.02: registered envelope amendment (strengthen the tilt/kick draw
+OPENLY, re-pilot on a fresh world; constants move by registration, not
+re-roll). (4) Kaggle W32 ~11.35 h dies Sunday 2026-08-16: T3.07/T4.02
+(gpu<20min) are the queue — PROGRESS B3; T2.01 re-submission stays DECLINED
+per the 08-13 lesson. (5) Overseer B3 bullets 1-2 from the 13th audit
+(live-receipt property + charge-at-attempt) still open as one designed unit.
