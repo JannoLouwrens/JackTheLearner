@@ -3232,13 +3232,13 @@
     },
     "T0.17": {
       "amended": [],
-      "attempt": 7,
-      "commit": "a3b12f6",
+      "attempt": 8,
+      "commit": "90676c6",
       "control_metrics": {
         "detector_sees_amendment": false,
         "hand_edit_took_effect": true
       },
-      "duration_s": 1.29,
+      "duration_s": 1.35,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3312,9 +3312,34 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "a3b12f6",
+          "control_metrics": {
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true
+          },
+          "impl_sha": "05b951b175d12241",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "detector_sees_amendment": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "unknown_attempt_is_sticky": true
+          },
+          "ran_at": "2026-08-13T07:17:33",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "05b951b175d12241",
+      "impl_sha": "f63af5dc5aa35aae",
       "message": "",
       "metrics": {
         "amendment_is_attributable": true,
@@ -3327,7 +3352,7 @@
         "run_spec_leaves_amended_empty": true,
         "unknown_attempt_is_sticky": true
       },
-      "ran_at": "2026-08-13T07:17:33",
+      "ran_at": "2026-08-13T14:19:21",
       "seeds": [
         0
       ],
@@ -3966,15 +3991,45 @@
     },
     "T0.27": {
       "amended": [],
-      "attempt": 1,
-      "commit": "32b6b0d+dirty",
+      "attempt": 2,
+      "commit": "90676c6",
       "control_metrics": {
         "dirty_named": 1.0,
         "violations": 1
       },
-      "duration_s": 1.28,
+      "duration_s": 1.3,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "32b6b0d+dirty",
+          "control_metrics": {
+            "dirty_named": 1.0,
+            "violations": 1
+          },
+          "impl_sha": "e1f91029944589e0",
+          "message": "",
+          "metrics": {
+            "artifact_survives_history": true,
+            "artifact_written": true,
+            "audit_admits_clean_shape": true,
+            "audit_flags_missing_metrics": true,
+            "audit_flags_unreachable_commit": true,
+            "live_checked_pairs": 0,
+            "live_ledger_clean": true,
+            "live_unauditable_pairs": 27,
+            "live_violations": 0,
+            "properties_failed": 0,
+            "rerun_visible_not_amendment": true,
+            "unknowable_is_none_and_unauditable": true,
+            "warns_on_dirty_fail": true
+          },
+          "ran_at": "2026-08-13T14:17:49",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
       "impl_sha": "e1f91029944589e0",
       "message": "",
       "metrics": {
@@ -3992,7 +4047,7 @@
         "unknowable_is_none_and_unauditable": true,
         "warns_on_dirty_fail": true
       },
-      "ran_at": "2026-08-13T14:17:49",
+      "ran_at": "2026-08-13T14:18:53",
       "seeds": [
         0
       ],

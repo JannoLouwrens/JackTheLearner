@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 78 / 166 demonstrated
+## 79 / 167 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -315,6 +315,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ BA.01's per-seed rig-health gate is live in BOTH directions, measured through the spec's own episode and statistic path (`rollout_rig` + `rig_health`, never a restatement): a world exhibiting its named failure mode — every fall on one schedule — scores tf_fall_spread BELOW TF_FALL_SPREAD_MIN and is refused (`rig_ok` 0), while the honest rig's bulk on the SAME world scores ABOVE it and is admitted. Inert and unreachable are the two ways a carried constant dies when the rig moves underneath it; this asserts both, executably.
       - _dies if:_ The declared degenerate rig clearing TF_FALL_SPREAD_MIN (the gate is inert — BA.01 v2's defect), or the honest rig's bulk falling under it (the gate is a tail lottery — BA.01 v3's defect), or `rig_ok` disagreeing with its own statistics, or the degenerate fixture failing every OTHER rig-health gate too (a world broken in all dimensions cannot show that THIS gate is the one doing the refusing).
       - _then delete:_ The assumption that a pre-registered threshold survives a rig change because its number did. A gate is a claim that the statistic's attainable range under THIS rig straddles it — and that claim needs re-measuring every time the rig moves (law 4 protects the number; this protects the measurement).
+- [x] **T0.27** A threshold moved after a FAIL leaves an artifact, not a paragraph
+      - _asserts:_ Amend-after-FAIL is auditable by someone who is not its author, mechanically: (1) a verdict that supersedes a FAIL carries the failing evidence IN the record (`supersedes_fail`: failing commit, dirty flag, impl_sha, measurement, plus machine-readable `impl_changed`), and the pairing survives into history when superseded again; (2) `audit_supersedes_fail` flags, in any PASS record, a FAIL whose implementation differs from the run that amended it unless that FAIL is stamped at a clean commit that exists in this repo and carries its metrics; (3) the LIVE ledger has zero such violations; (4) pre-impl_sha pairs read unauditable, never violated — absence is a historical gap, not evidence.
+      - _dies if:_ The recorder writing no artifact on a FAIL->PASS supersede; the artifact vanishing from history on the next supersede; the auditor certifying the T2.08 shape (FAIL stamped +dirty, threshold moved, PASS on top); the auditor inventing violations for pre-B1 verdict-only history; or a live-ledger violation — someone amended a FAIL without committing the failing implementation, and the gate re-run catches it.
+      - _then delete:_ The practice of amending a FAIL from an uncommitted tree. After this spec, a moved threshold whose FAIL is unrecoverable fails the gate re-run — law 4's escape clause leaves `git diff <fail> <pass>` as its artifact or it is not taken.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
