@@ -175,6 +175,46 @@ WHAT V2 CHANGES — measurement scheduling and the spawn list, NOTHING else:
 EVERY pre-registered constant, gate and threshold is UNCHANGED. The claim,
 the arms, the learner, the paired-draw structure are unchanged. Per the
 T1.02 precedent v1 stays in the ledger's history and in git (ad24b62).
+
+## V3 (2026-08-13) — THE ENVELOPE AMENDMENT. v2's pilot on a FRESH seed-90
+world VOIDed the rig's third conjunct AGAIN: best_trained 1.654 - up_random
+1.608 = 0.046 < 0.20, all arms AT random (vest 1.654 / deprived 1.621 /
+noise 1.642 / random 1.608), toppled 0.979, drift_recheck -0.175. The v2
+interleaving WORKED — the drift confound is gone — so the VOID is the task
+envelope itself, which is the journal's pre-stated second branch
+(2026-08-13 ~18:5x): the tilt/kick draw has no policy headroom, and it
+moves by REGISTRATION, not re-roll.
+
+The amendment was chosen by measurement (probe, fresh seed-90 world per
+config, 8 paired packs each, horizon 30; probes are CONSTANT slide actions
+plus the hold — never the claim's trained arms, so no claim gate was
+sampled):
+
+  tilt draw (deg)          kick  random_s  best-constant delta vs random
+  0.1-14 (v1/v2, med 1.2)   1x    1.55     +0.000  <- nothing acts
+  1-20   (med 4.5)          1x    1.125    +0.025
+  4-25   (med 10)           1x    0.875    +0.325  all_out   <- V3
+  0.1-14                    5x    1.475    +0.000  <- kick alone: nothing
+  4-25                      2x    1.15     +0.275  all_out
+
+The mechanism, now measured twice (BA.01's near-separatrix diagnosis, and
+rows 1/2/4 here): below ~4 deg tilt the contact-solver floor and the
+damping-10 free joint quench any influence the slides have on fall time —
+every policy topples on one schedule, so the claim is untestable there BY
+CONSTRUCTION, which is exactly what IMPROVE_MARGIN_MIN exists to catch. At
+4-25 deg falls are fast (random 0.875 s) and the channel is live in BOTH
+directions (all_out +0.325 s, all_in -0.050 s).
+
+WHAT V3 CHANGES — one constant: the tilt draw becomes BA02_TILT0_LOG10_DEG
+(0.6, 1.4), declared locally rather than imported from BA.01, whose
+two-decade range serves its CLOCK NULL (spread fall times), a purpose this
+spec never had. The kick rule stays BA.01's tilt-proportional schedule,
+verbatim. Every gate, arm, control and eval structure is unchanged; the
+registry's own hypothesis names the freedom being used ("trained in a
+TOPPLE-COSTLY regime"). And the claim is NOT decided by this amendment: a
+constant brace needs no sensing, so the deprived twin can learn it too —
+V3 restores the rig's ability to ASK whether feeling the fall's direction
+adds anything over blind bracing, which is BA.02's actual question.
 """
 from __future__ import annotations
 
@@ -195,7 +235,7 @@ from ..registry import BY_ID                                      # noqa: E402
 from ..w0 import W0, SIM_S_PER_DECISION                           # noqa: E402
 # BA.01's rig constants and helpers, by reference (one definition of the fall).
 from .ba_01_feels_the_fall import (GRAVITY, KICK_JIT, KICK_OMEGA_P,  # noqa: E402
-                                   TILT0_LOG10_DEG, TOPPLE_UP, VEST_DIM,
+                                   TOPPLE_UP, VEST_DIM,
                                    _boundary_sites, _tilt_quat)
 
 # The claim goes stale when the world, the body, the drive layer or the sense's
@@ -210,6 +250,15 @@ CH_DIM = TOUCH_DIM + VEST_DIM  # the graviceptive suffix BA.01 registered (19)
 OBS_DIM = BLIND_DIM + CH_DIM   # 27
 ACT_DIM = 4                    # the slides; adhesion OFF, drive zero
 THETA_DIM = ACT_DIM * OBS_DIM + ACT_DIM  # 112 linear-policy parameters
+
+# ── the tilt draw (V3 — BA.02's OWN range; see the V3 docstring section) ─
+# BA.01's TILT0_LOG10_DEG (-1.0, 1.15) spreads fall TIMES for its clock
+# null. Catching needs draws the channel can ACT on, and below ~4 deg the
+# contact-solver floor + the damping-10 free joint make fall time invariant
+# to any slide action (probe: best constant-action delta 0.000 s at median
+# tilt 1.2 deg). The kick rule (tilt-proportional, KICK_OMEGA_P, KICK_JIT)
+# stays BA.01's, verbatim.
+BA02_TILT0_LOG10_DEG = (0.6, 1.4)   # theta ~ 10^U[...]: 4 to 25 deg
 
 # ── the rig envelope (PRE-REGISTERED) ───────────────────────────────────
 HORIZON = 60                  # decisions = 12 s; catches run to the horizon
@@ -270,7 +319,7 @@ def _arm_hold(w: W0) -> np.ndarray:
 def _draw_pack(rng: np.random.RandomState, legal: np.ndarray) -> dict:
     """One episode's world draw — everything that must be PAIRED across arms."""
     k = int(rng.randint(len(legal)))
-    theta = math.radians(10.0 ** rng.uniform(*TILT0_LOG10_DEG))
+    theta = math.radians(10.0 ** rng.uniform(*BA02_TILT0_LOG10_DEG))
     mag = theta * KICK_OMEGA_P * 10.0 ** rng.uniform(*KICK_JIT)
     u = rng.randn(3)
     u /= max(float(np.linalg.norm(u)), 1e-12)
