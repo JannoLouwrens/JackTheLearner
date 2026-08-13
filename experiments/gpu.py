@@ -86,6 +86,15 @@ if not _torch_v().startswith("2.5.1"):
              "https://download.pytorch.org/whl/cu121"], check=False)
     _sp.run([_sys.executable, "-m", "pip", "install", "-q",
              "nvidia-cudnn-cu12==9.1.1.17"], check=False)
+    # torchvision must move WITH torch: the ambient 0.25.0+cu128 was built
+    # against torch 2.10, and under 2.5.1 its C++ ops fail to register
+    # ("operator torchvision::nms does not exist") — which surfaces two
+    # imports away, inside transformers' image_utils, as Dinov2Model refusing
+    # to import (kernel jack-ladder-1786598450, 2026-08-13, 251 s in). 0.20.1
+    # is torch 2.5.1's published pair.
+    _sp.run([_sys.executable, "-m", "pip", "install", "-q", "--no-deps",
+             "torchvision==0.20.1", "--index-url",
+             "https://download.pytorch.org/whl/cu121"], check=False)
 print("TORCH_PIN", _torch_v() or "MISSING", flush=True)
 # Pin torch for every later pip install in this job. On 2026-08-09 T2.02's own
 # dependency install (stable-baselines3, whose torch range 2.5.1 satisfies)
@@ -94,7 +103,7 @@ print("TORCH_PIN", _torch_v() or "MISSING", flush=True)
 # by the installed 2.5.1+cu121, so constrained installs leave it alone, and a
 # dependency that genuinely cannot live with 2.5.1 now fails resolution loudly
 # instead of silently un-fixing Pascal.
-open("/tmp/jack_torch_pin.txt", "w").write("torch==2.5.1\\n")
+open("/tmp/jack_torch_pin.txt", "w").write("torch==2.5.1\\ntorchvision==0.20.1\\n")
 _os.environ["PIP_CONSTRAINT"] = "/tmp/jack_torch_pin.txt"
 for _m in [m for m in list(_sys.modules) if m.startswith("torch")]:
     del _sys.modules[_m]
