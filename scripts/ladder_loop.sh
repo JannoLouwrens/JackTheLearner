@@ -124,9 +124,14 @@ PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
 
 run_claude() {
   mark_log            # bound the credit check to THIS run's output
+  # JACK_ITER_DEADLINE: epoch seconds after which this iteration is dead (the
+  # `timeout 50m` below, minus 60 s of margin). gpu.submit() refuses to start a
+  # Colab job that cannot return before it — a Colab result dies with its
+  # watcher, and the 2026-08-13 T2.03 pilot was lost to exactly that.
   nice -n 19 ionice -c3 env TMPDIR=/data/tmp OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 \
     PLAYWRIGHT_BROWSERS_PATH=/data/caches/ms-playwright \
     HF_HOME=/data/caches/huggingface \
+    JACK_ITER_DEADLINE=$(( $(date +%s) + 2940 )) \
     timeout 50m claude -p "$PROMPT" \
       --model "$1" \
       --dangerously-skip-permissions \

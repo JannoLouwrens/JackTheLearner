@@ -3251,3 +3251,39 @@ sensed channels and measure in the pilot whether the rig's motion moves them
 gated quantity (null_felt == 0), never an assumption — it is the one number
 that distinguishes "the null formed no aversion" from "the null had nothing
 to be averse to".
+
+## A job may not be handed to a process with a shorter lifetime than the job
+
+The T2.03 pilot was submitted to Colab at 04:21 by an hourly iteration whose
+`timeout 50m` had ~46 minutes left. `colab run` blocks for the whole job,
+buffers stdout until the run ends, and delivers artifacts only through the
+still-attached CLI — so when the ladder's timeout killed the watcher, the run's
+entire outcome (still computing? finished? crashed?) became unknowable, the
+kept session was pruned at next contact, and ~0.4 T4-hours bought nothing.
+Nothing errored anywhere: the receipt log holds an attempt line with no result
+line, which is the receipt design telling the truth about a loss no other gate
+could see. The same machinery on Kaggle has now been recovered twice at zero
+quota, because a Kaggle kernel computes server-side whether or not anyone
+local is watching and `JACK_REUSE_KERNEL` reattaches a dead watcher's kernel.
+
+The est_hours=0.4 was not the defect — the estimate priced the GPU compute,
+while the watcher's clock also pays for session provisioning, the repo clone,
+pip installs and ~3 GB of pretrained weights. The defect is structural: the
+two backends differ in a property no budget number captures — WHERE THE RESULT
+LIVES. Colab couples the result to the local process; Kaggle persists it
+remotely. A submission from a process that can die before the job ends is only
+safe on the second kind.
+
+**Rule:** before handing work to a blocking external call, compare the call's
+worst-case duration against the *calling process's own remaining lifetime* —
+an hourly iteration is itself a bounded budget, and it was the one budget
+nobody sized against. Route work that could outlive its watcher to a backend
+whose results persist independently of the watcher. Guarded, conditionally:
+`ladder_loop.sh` now exports `JACK_ITER_DEADLINE` (epoch seconds, 60 s inside
+the kill) and `gpu.submit()` refuses to start a Colab job whose `timeout_s`
+does not fit before it, recording the refusal in `attempts` where the caller
+and the failover can see it. CONDITION on this guard (per the 2026-08-12
+corollary about conditional guards): it covers only processes launched by
+`ladder_loop.sh` — a hand-run submission from an interactive session carries
+no deadline and keeps the old exposure, and Kaggle jobs are deliberately
+exempt because reattach makes a dead watcher survivable there.

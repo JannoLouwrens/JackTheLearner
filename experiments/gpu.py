@@ -734,6 +734,29 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
         if backend == "kaggle" and not reuse and not budget.afford("kaggle", est_hours):
             attempts.append(f"kaggle: {budget.remaining('kaggle'):.1f}h left, need {est_hours}h")
             continue
+        if backend == "colab":
+            # A Colab result lives in THIS process: `colab run` blocks for the
+            # whole job, stdout is buffered until the run ends, and artifacts
+            # arrive through the still-attached CLI — so a watcher killed
+            # mid-job loses the run entirely (T2.03 pilot, 2026-08-13: the
+            # ladder's 50-min timeout took the watcher at ~46 min, the kept
+            # session was pruned, ~0.4 T4-h bought nothing). If the ladder
+            # iteration's own deadline lands before this job's worst case, do
+            # not start a run nobody will be alive to collect. Kaggle is
+            # exempt: kernels persist server-side and JACK_REUSE_KERNEL
+            # reattaches a dead watcher's kernel.
+            _dl = os.environ.get("JACK_ITER_DEADLINE", "").strip()
+            if _dl:
+                try:
+                    _left = float(_dl) - time.time()
+                except ValueError:
+                    _left = None
+                if _left is not None and timeout_s > _left:
+                    attempts.append(
+                        f"colab: skipped — timeout_s {timeout_s}s exceeds the "
+                        f"{_left:.0f}s left before JACK_ITER_DEADLINE; a Colab "
+                        f"result cannot outlive its watcher")
+                    continue
         # BEFORE the call, so a job killed in flight still leaves evidence it
         # existed. `attempt_id` is what links this to its outcome line.
         started = time.time()
