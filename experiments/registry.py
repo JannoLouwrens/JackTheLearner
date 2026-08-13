@@ -634,6 +634,22 @@ LADDER: list[Spec] = [
     Spec("T3.07", 3, "Ablate mood conditioning", hypothesis="Mood measurably changes behaviour, not just text.",
          falsified_by="Identical action distributions across moods.",
          null_baseline="Mood token zeroed.", metric="action_dist_divergence",
+         control="TWO at-chance arms the rig must hold, both classified with "
+                 "real regime labels: (a) the ablation itself — the same "
+                 "episodes with MovementMoodCoupling bypassed (raw base "
+                 "actions), and (b) the registered null — mood token zeroed "
+                 "through the live modulation path. Mood cannot reach the "
+                 "action features except through the coupling, so both must "
+                 "read ~chance (<= 0.40 vs 0.25); either clearing it means "
+                 "the separability is not attributable to mood conditioning "
+                 "and the run is VOID, not evidence. Plus ONE must-SUCCEED "
+                 "probe: a reference arm (same net, same loss, adequate "
+                 "budget) must reach speed span >= 0.30, proving the mood->"
+                 "speed map is learnable by this rig — else a weak shipped "
+                 "arm cannot be attributed to the shipped system and the run "
+                 "is VOID. The shipped arm's own training strength is part "
+                 "of the system under test: too weak to separate moods is "
+                 "the hypothesis FAILING, never a VOID.",
          budget=Budget.GPU_SHORT, seeds=3, depends_on=["T2.12"],
          kills="MovementMoodCoupling as anything but cosmetics."),
     Spec("T3.08", 3, "Ablate the LLM", hypothesis="The frozen LLM improves command following over a bag-of-words encoder.",
