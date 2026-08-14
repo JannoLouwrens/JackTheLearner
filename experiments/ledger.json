@@ -4919,30 +4919,57 @@
     },
     "T1.07": {
       "amended": [],
-      "attempt": 1,
-      "commit": "1a69db6",
+      "attempt": 2,
+      "commit": "e29bd82",
       "control_metrics": {
-        "absurd_advantage": 0.0092,
+        "absurd_advantage": 0.9162,
         "absurd_diverged": false,
         "absurd_lr": 1.0
       },
-      "duration_s": 2738.42,
+      "duration_s": 1606.68,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "1a69db6",
+          "control_metrics": {
+            "absurd_advantage": 0.0092,
+            "absurd_diverged": false,
+            "absurd_lr": 1.0
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "backend": "colab",
+            "gpu": "Tesla T4",
+            "lr_0.0001": 4.088,
+            "lr_0.0003": 5.585,
+            "lr_0.001": 1.298,
+            "lrs_beating_baseline": 3,
+            "reference_advantage": 7.605,
+            "spread_ratio": 4.304,
+            "worst_lr_advantage": 1.298
+          },
+          "ran_at": "2026-08-05T09:30:48",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "a8cb322b0a3a177c",
       "message": "",
       "metrics": {
-        "backend": "colab",
-        "gpu": "Tesla T4",
-        "lr_0.0001": 4.088,
-        "lr_0.0003": 5.585,
-        "lr_0.001": 1.298,
+        "backend": "kaggle",
+        "gpu": "Tesla P100-PCIE-16GB",
+        "lr_0.0001": 3.917,
+        "lr_0.0003": 6.804,
+        "lr_0.001": 1.38,
         "lrs_beating_baseline": 3,
         "reference_advantage": 7.605,
-        "spread_ratio": 4.304,
-        "worst_lr_advantage": 1.298
+        "spread_ratio": 4.931,
+        "worst_lr_advantage": 1.38
       },
-      "ran_at": "2026-08-05T09:30:48",
+      "ran_at": "2026-08-14T02:37:02",
       "seeds": [
         0
       ],

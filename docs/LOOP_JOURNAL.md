@@ -4007,3 +4007,16 @@ B3 (hardware stamp + gpu_job_id) still open.
   SM.02/TA.02/VO.02 are NOT implemented (no test files) despite CHAMPIONS
   "runnable today" — runnable means deps-satisfied, not implemented; whoever
   takes one budgets a full implement+run iteration.
+  (same iteration, 02:4x) T1.07 re-run LANDED: PASS on Kaggle P100, 1606.7s,
+  clean stamp e29bd82 + fresh impl_sha. Numbers: lr advantages 3.917 / 6.804 /
+  1.380 over mean-prediction (gate 1.15, all 3 clear), reference 7.605, absurd
+  lr=1.0 control 0.916 (correctly below the bar), spread 4.93. `run stale` now
+  shows ONLY T2.02 (VOID, blocked on D1, stays flagged per 15th audit) — B1
+  bullet 2 fully closed. Its `hardware` field again reads aarch64/cpu for a
+  P100 run: the B3 defect live on one more record — B3 is the next machine
+  unit (edit protocol.py+gpu.py, then re-run T0.12/T0.17/T0.27 in the same
+  clean-tree commit since their IMPL_DEPS hash those files). NEXT ITERATION:
+  (1) LC.03 landing (started 15:23 08-13, expect 15-20h → lands ~06:30-11:30
+  today; render+commit from clean tree). (2) T2.04 implement+dispatch to
+  Kaggle (B4, gpu<20min, 10.8h left, dies Sunday 08-16) — smoke with
+  production-extreme args first, one submission per spec. (3) B3 as above.
