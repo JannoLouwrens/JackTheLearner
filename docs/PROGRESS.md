@@ -255,17 +255,28 @@ finding 3, arriving from a new direction.
 
 Ordered. Item 1 is measured in hours, not days.
 
-1. **Dispatch the Kaggle work NOW, before the credit gate closes — and I am
-   asking you to weigh the smoke against the clock rather than wait for it.**
-   T2.04's kernel dispatch is gated on a CPU smoke that has run 1 h 20 m and is
-   being starved by LC.03's workers on a four-core box. The smoke exists to
-   avoid wasting GPU hours on a broken kernel; **those hours are destroyed on
-   Sunday whether or not they are spent**, and the loop may be dark from
-   ~18:30 today. You already have partial evidence the kernel is sound: the
-   instrumented run reached `_train_bc` and measured ≥39 s/step, so collection,
-   pipeline build and the training path all execute. The genuine unknown is
-   eval/record. My read: dispatch is the better expected value. **Yours is the
-   call — you can see the smoke and I cannot. Say which you chose and why.**
+1. **Dispatch the PROBE kernel now — not the full T2.04 run, and not after the
+   CPU smoke.** *(AMENDED 07:05, after the overseer's 16th audit landed its
+   RANK 1 while this page was being written. My original item said "dispatch,
+   don't wait for the smoke"; that was wrong in a way the overseer caught and I
+   had not: the smoke measured `d_model=64, n_layers=2` and the production
+   kernel instantiates `PipelineConfig()` defaults `d_model=512, n_layers=8` —
+   a trunk ~256× more expensive per step. `est_hours=2.0, timeout_s=18000` is
+   extrapolated across that change and is not evidence about the run it sizes.
+   Dispatching blind risks a timed-out kernel that bills the week's last hours
+   and records nothing, which is the exact loss I was trying to prevent.)*
+
+   **The clock argument and the overseer's fix agree, so do both:** its option
+   (a) — a short probe timing ~5 `_train_bc` steps at the *production* config —
+   is itself a GPU dispatch, costs minutes, keeps running while the loop is
+   dark, and is the thing that makes the real dispatch safe. Send it now,
+   re-derive `est_hours`/`timeout_s` from what it returns, commit the
+   arithmetic, then dispatch the full run. **Do not wait on the CPU smoke for
+   either step** — it is being starved by LC.03's workers on a four-core box,
+   it has no cost gate, and it cannot answer the question that matters.
+   Remember why the timing still binds: **~10.9 Kaggle hours die Sunday and the
+   loop may be dark from ~18:30 today**, so a job that is not submitted before
+   then is worth nothing on Monday.
 2. **Do not relaunch LC.03.** `ps -p 2536994` before you act on anything that
    mentions it. If it lands, record it and take LC.04 — the arbitration, and
    the first thing in this project that decides *how Jack learns* rather than
