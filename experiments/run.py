@@ -332,9 +332,10 @@ def cmd_status(ledger: Ledger) -> int:
     _check_stale_detector(ledger)
     rows = stale_claims(ledger)
     changed = [x for x in rows if x[2] == "CHANGED"]
+    unstamped_changed = [x for x in rows if x[2] == "UNSTAMPED_CHANGED"]
+    intact = [x for x in rows if x[2] == "UNSTAMPED_INTACT"]
     moved = [x for x in rows if x[2] == "UNVERIFIABLE_MOVED"]
-    moved_ids = {x[0] for x in moved}
-    unknown = [x for x in rows if x[2] == "UNVERIFIABLE" and x[0] not in moved_ids]
+    unknown = [x for x in rows if x[2] == "UNVERIFIABLE"]
     dirty = [x for x in rows if x[2] == "DIRTY"]
     if dirty:
         # Above the CHANGED block deliberately: this is the more serious of the
@@ -350,6 +351,17 @@ def cmd_status(ledger: Ledger) -> int:
             print(f"      {sid}  recorded {st}; {detail}. Re-run it — the entry "
                   f"is about older code.")
         print()
+    if unstamped_changed:
+        # Declaration-free staleness (15th audit, B1): no impl_sha to compare,
+        # but git can answer anyway, and the answer is "the file moved". These
+        # sat inside "cannot be checked" while being the only unstamped entries
+        # that actually bite.
+        print("  ! STALE PRE-impl_sha CLAIMS — git shows the test file changed "
+              "since the run\n    (declaration-free content check). Re-run "
+              "these ON PURPOSE:")
+        for sid, st, _, detail in unstamped_changed:
+            print(f"      {sid}  recorded {st}; {detail}.")
+        print()
     if moved:
         # The subset of the pre-impl_sha entries that actually bites: the
         # certificate names a dependency, the dependency has moved, and the
@@ -360,16 +372,23 @@ def cmd_status(ledger: Ledger) -> int:
         for sid, st, _, detail in moved:
             print(f"      {sid}  recorded {st}; {detail}.")
         print()
+    n_unstamped = len(unstamped_changed) + len(intact) + len(unknown)
+    if n_unstamped:
+        # Denominator alongside every count (15th audit, B1). The intact set is
+        # printed, not filed under "clean": a re-run still upgrades each to a
+        # real stamp, and content identity says nothing about undeclared
+        # dependencies. The entry that MOTIVATED the original guard (PG.8,
+        # strengthened but un-re-runnable behind a held lock) lived in this
+        # population.
+        declare = _unstamped_deps_denominator(unstamped_changed, intact, unknown)
+        print(f"  ? {n_unstamped} entr(y/ies) predate `impl_sha`: "
+              f"{len(unstamped_changed)} stale by content (above), "
+              f"{len(intact)} verified byte-identical by git, {len(unknown)} "
+              f"unanswerable;\n    {declare} of {n_unstamped} declare "
+              f"IMPL_DEPS. A re-run upgrades each to a real stamp.\n")
     if unknown:
-        # Printed, not filed under "clean". The entry that MOTIVATED this guard
-        # (PG.8, strengthened but un-re-runnable behind a held lock) is itself
-        # in this bucket, because it was recorded before `impl_sha` existed. A
-        # guard whose own motivating case reads green is the "guard built by
-        # fixing one file leaves the file that motivated it unfixed" lesson
-        # repeating; saying the number out loud is the cheapest way not to.
-        print(f"  ? {len(unknown)} entr(y/ies) predate `impl_sha` and CANNOT be "
-              f"checked for staleness — `run stale` lists them; a re-run fixes "
-              f"each one.\n")
+        print(f"  ? {len(unknown)} of those could not be checked even by "
+              f"content — `run stale` prints why.\n")
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
 
@@ -438,10 +457,12 @@ def cmd_stale(ledger: Ledger) -> int:
     _check_stale_detector(ledger)
     rows = stale_claims(ledger)
     changed = [r for r in rows if r[2] == "CHANGED"]
+    unstamped_changed = [r for r in rows if r[2] == "UNSTAMPED_CHANGED"]
+    intact = [r for r in rows if r[2] == "UNSTAMPED_INTACT"]
     moved = [r for r in rows if r[2] == "UNVERIFIABLE_MOVED"]
-    moved_ids = {r[0] for r in moved}
-    unknown = [r for r in rows if r[2] == "UNVERIFIABLE" and r[0] not in moved_ids]
+    unknown = [r for r in rows if r[2] == "UNVERIFIABLE"]
     dirty = [r for r in rows if r[2] == "DIRTY"]
+    declare = _unstamped_deps_denominator(unstamped_changed, intact, unknown)
     if dirty:
         print(f"\n{len(dirty)} claim(s) recorded from a MODIFIED tree — the code "
               f"that ran is in no commit:\n")
@@ -459,18 +480,59 @@ def cmd_stale(ledger: Ledger) -> int:
             print(f"  {sid:8} {st:7} {detail}")
         print("\nRe-run these (or `--gate`). A ledger entry is a claim about a "
               "specific piece of code.")
+    if unstamped_changed:
+        print(f"\n{len(unstamped_changed)} pre-`impl_sha` claim(s) whose file "
+              f"git shows CHANGED since the run\n(declaration-free content "
+              f"check, 15th audit B1) — stale, re-run ON PURPOSE:\n")
+        for sid, st, _, detail in unstamped_changed:
+            print(f"  {sid:8} {st:7} {detail}")
     if moved:
         print(f"\n{len(moved)} UNPROTECTED certificate(s) — recorded before "
               f"`impl_sha`, and a declared\ndependency has since moved. The "
               f"alarm they declare cannot fire; re-run ON PURPOSE:\n")
         for sid, st, _, detail in moved:
             print(f"  {sid:8} {st:7} {detail}")
-    # Reported, never hidden: a skipped item that leaves the numerator alone is
-    # how a clean scan and a scan that never ran become the same number.
-    print(f"\n{len(unknown)} further entr(y/ies) predate `impl_sha` and cannot "
-          f"be checked at all (no declared\ndependency has moved); they become "
-          f"verifiable on their next run.\n")
+    # Denominators, not just counts (15th audit B1): a detector that reports a
+    # count must report the size of the population it examined, and how much of
+    # that population its opt-in sibling could ever have seen.
+    n_unstamped = len(unstamped_changed) + len(intact) + len(unknown)
+    if n_unstamped:
+        print(f"\nOf {n_unstamped} entr(y/ies) predating `impl_sha`: "
+              f"{len(unstamped_changed)} stale by content, {len(intact)} "
+              f"verified byte-identical by git,\n{len(unknown)} unanswerable; "
+              f"{declare} of {n_unstamped} declare IMPL_DEPS (the opt-in "
+              f"detector's whole domain).")
+    if unknown:
+        # Reported, never hidden: a skipped item that leaves the numerator
+        # alone is how a clean scan and a scan that never ran become the same
+        # number.
+        print(f"\n{len(unknown)} entr(y/ies) could not be checked even by "
+              f"content:\n")
+        for sid, st, _, detail in unknown:
+            print(f"  {sid:8} {st:7} {detail}")
+    print()
     return 0
+
+
+def _unstamped_deps_denominator(*row_groups) -> int:
+    """How many of the pre-`impl_sha` entries declare IMPL_DEPS at all.
+
+    The 15th audit's tell: `UNVERIFIABLE_MOVED`'s domain is declarations, and
+    0 of 30 unstamped records carried one — the detector's domain and the
+    at-risk population were disjoint by construction, and nothing printed the
+    fraction. This is that fraction's numerator.
+    """
+    from .protocol import impl_deps_of
+    n = 0
+    for rows in row_groups:
+        for sid, *_ in rows:
+            path = _module_path_for(sid)
+            if path is None:
+                continue
+            deps, _problem = impl_deps_of(path)
+            if deps:
+                n += 1
+    return n
 
 
 def cmd_senses(ledger: Ledger) -> int:
@@ -788,7 +850,8 @@ def cmd_blocked(ledger: Ledger) -> int:
         if st is Status.PASS:
             path = module_path_for(root)
             entry = ledger.results.get(root)
-            if path and entry and any(k in ("DIRTY", "CHANGED")
+            if path and entry and any(k in ("DIRTY", "CHANGED",
+                                            "UNSTAMPED_CHANGED")
                                       for k, _ in staleness_of(entry, path)):
                 return "PASS but STALE — re-run it"
         return st.value

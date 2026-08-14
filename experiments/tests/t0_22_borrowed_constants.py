@@ -249,9 +249,26 @@ def _probe(rule_is_legacy: bool) -> dict:
     # only has to have been demonstrated. The evidence is absent, not contrary.
     # It was measured, not argued — refusing it on the dependency path takes the
     # ladder from 29 runnable specs to 7 on the strength of 40 silent rows.
-    unver = _ledger_with(_entry(impl_sha=None))
+    #
+    # The fixture's ran_at predates the repository, so the declaration-free
+    # content check (15th audit B1) cannot answer either — which is what
+    # "absent evidence" MEANS now that the check exists. The previous fixture
+    # (impl_sha=None at a 2026 ran_at) stopped being absent the day the
+    # content check landed: git can show PS.01's file changed after that
+    # ran_at, and contrary evidence must block. That case is pinned as P11b.
+    unver = _ledger_with(_entry(impl_sha=None, ran_at="2001-01-01T00:00:00"))
     if borrow(unver, KEYS)[0] or _dep_blocked(unver, rule_is_legacy):
         failed.append("p11_unverifiable_refuses_a_borrow_but_permits_a_dependency")
+
+    # P11b — UNSTAMPED_CHANGED blocks BOTH paths, exactly like CHANGED. No
+    # stamp was recorded, but git shows the source file took commits after
+    # ran_at+30min (74f8631, 2026-08-10T08:32Z, touches ps_01_*.py — immutable
+    # history, so this fixture's verdict cannot drift). Same evidence as
+    # CHANGED, minus the stamp; treating it as "absent" was the 15th audit's
+    # finding.
+    unst = _ledger_with(_entry(impl_sha=None, ran_at="2026-08-10T05:29:00"))
+    if borrow(unst, KEYS)[0] or not _dep_blocked(unst, rule_is_legacy):
+        failed.append("p11b_unstamped_changed_blocks_borrow_and_dependency")
 
     # P12 — THE CLASS. The blocker graph and the dependency rule must give the
     # same answer about the same row. This is the defect itself: two organs,

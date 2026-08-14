@@ -114,62 +114,125 @@
     },
     "BA.02": {
       "amended": [],
-      "attempt": 1,
-      "commit": "1861b18",
+      "attempt": 2,
+      "commit": "ea2bdbf",
       "control_metrics": {
-        "gain_noise": 0.00555556,
-        "gain_noise_std": 0.0799547,
-        "noise_fit_last": 11.722222,
-        "noise_fit_last_std": 9.470661,
+        "gain_noise": 0.0361111,
+        "gain_noise_std": 0.0816733,
+        "noise_fit_last": 4.37037,
+        "noise_fit_last_std": 0.419026,
         "seed_rig_ok": 0.0,
         "seed_rig_ok_std": 0.0,
-        "up_noise": 1.523611,
-        "up_noise_std": 0.348614
+        "up_noise": 1.029167,
+        "up_noise_std": 0.0900103
       },
-      "duration_s": 1839.08,
+      "duration_s": 1915.11,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": "c6503b29d3e7ee2f",
+      "history": [
+        {
+          "commit": "1861b18",
+          "control_metrics": {
+            "gain_noise": 0.00555556,
+            "gain_noise_std": 0.0799547,
+            "noise_fit_last": 11.722222,
+            "noise_fit_last_std": 9.470661,
+            "seed_rig_ok": 0.0,
+            "seed_rig_ok_std": 0.0,
+            "up_noise": 1.523611,
+            "up_noise_std": 0.348614
+          },
+          "impl_sha": "c6503b29d3e7ee2f",
+          "message": "run did not test the claim; not a refutation",
+          "metrics": {
+            "best_trained": 1.623611,
+            "best_trained_std": 0.386795,
+            "deprived_fit_first": 11.407407,
+            "deprived_fit_first_std": 8.140021,
+            "deprived_fit_last": 12.092593,
+            "deprived_fit_last_std": 8.846349,
+            "gain": 0.0861111,
+            "gain_positive": 0.666667,
+            "gain_positive_std": 0.471405,
+            "gain_std": 0.149278,
+            "seed_rig_ok": 0.0,
+            "seed_rig_ok_std": 0.0,
+            "toppled_frac_random": 0.965278,
+            "toppled_frac_random_std": 0.00982093,
+            "up_ablate_canals": 1.545833,
+            "up_ablate_canals_std": 0.371231,
+            "up_ablate_grav": 1.579167,
+            "up_ablate_grav_std": 0.389102,
+            "up_ablate_otoliths": 1.580556,
+            "up_ablate_otoliths_std": 0.380885,
+            "up_ablate_touch": 1.563889,
+            "up_ablate_touch_std": 0.353837,
+            "up_ablate_vxvy": 1.605556,
+            "up_ablate_vxvy_std": 0.389895,
+            "up_deprived": 1.518056,
+            "up_deprived_std": 0.269265,
+            "up_random": 1.543056,
+            "up_random_std": 0.380003,
+            "up_vest": 1.604167,
+            "up_vest_std": 0.410045,
+            "vest_fit_first": 13.907407,
+            "vest_fit_first_std": 8.739524,
+            "vest_fit_last": 11.203704,
+            "vest_fit_last_std": 9.519779,
+            "wall_s": 613.009803,
+            "wall_s_std": 71.431433
+          },
+          "ran_at": "2026-08-13T17:41:32",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "status": "VOID"
+        }
+      ],
+      "impl_sha": "b697bfda33b312e3",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
-        "best_trained": 1.623611,
-        "best_trained_std": 0.386795,
-        "deprived_fit_first": 11.407407,
-        "deprived_fit_first_std": 8.140021,
-        "deprived_fit_last": 12.092593,
-        "deprived_fit_last_std": 8.846349,
-        "gain": 0.0861111,
-        "gain_positive": 0.666667,
+        "best_trained": 1.045833,
+        "best_trained_std": 0.0752311,
+        "deprived_fit_first": 10.444444,
+        "deprived_fit_first_std": 8.968165,
+        "deprived_fit_last": 4.444444,
+        "deprived_fit_last_std": 0.31427,
+        "drift_recheck": -0.05,
+        "drift_recheck_std": 0.0540062,
+        "gain": 0.0486111,
+        "gain_positive": 0.333333,
         "gain_positive_std": 0.471405,
-        "gain_std": 0.149278,
+        "gain_std": 0.077604,
         "seed_rig_ok": 0.0,
         "seed_rig_ok_std": 0.0,
-        "toppled_frac_random": 0.965278,
+        "toppled_frac_random": 0.986111,
         "toppled_frac_random_std": 0.00982093,
-        "up_ablate_canals": 1.545833,
-        "up_ablate_canals_std": 0.371231,
-        "up_ablate_grav": 1.579167,
-        "up_ablate_grav_std": 0.389102,
-        "up_ablate_otoliths": 1.580556,
-        "up_ablate_otoliths_std": 0.380885,
-        "up_ablate_touch": 1.563889,
-        "up_ablate_touch_std": 0.353837,
-        "up_ablate_vxvy": 1.605556,
-        "up_ablate_vxvy_std": 0.389895,
-        "up_deprived": 1.518056,
-        "up_deprived_std": 0.269265,
-        "up_random": 1.543056,
-        "up_random_std": 0.380003,
-        "up_vest": 1.604167,
-        "up_vest_std": 0.410045,
-        "vest_fit_first": 13.907407,
-        "vest_fit_first_std": 8.739524,
-        "vest_fit_last": 11.203704,
-        "vest_fit_last_std": 9.519779,
-        "wall_s": 613.009803,
-        "wall_s_std": 71.431433
+        "up_ablate_canals": 1.038889,
+        "up_ablate_canals_std": 0.0726749,
+        "up_ablate_grav": 1.077778,
+        "up_ablate_grav_std": 0.0379347,
+        "up_ablate_otoliths": 1.038889,
+        "up_ablate_otoliths_std": 0.0765529,
+        "up_ablate_touch": 1.034722,
+        "up_ablate_touch_std": 0.100308,
+        "up_ablate_vxvy": 1.044444,
+        "up_ablate_vxvy_std": 0.073938,
+        "up_deprived": 0.993056,
+        "up_deprived_std": 0.0878191,
+        "up_random": 1.027778,
+        "up_random_std": 0.0861559,
+        "up_vest": 1.041667,
+        "up_vest_std": 0.0778026,
+        "vest_fit_first": 10.444444,
+        "vest_fit_first_std": 9.008569,
+        "vest_fit_last": 4.851852,
+        "vest_fit_last_std": 0.261891,
+        "wall_s": 638.327526,
+        "wall_s_std": 85.970429
       },
-      "ran_at": "2026-08-13T17:41:32",
+      "ran_at": "2026-08-14T01:07:52",
       "seeds": [
         0,
         1,
@@ -3484,13 +3547,13 @@
     },
     "T0.17": {
       "amended": [],
-      "attempt": 9,
-      "commit": "a46e186",
+      "attempt": 10,
+      "commit": "26fc2f6+dirty",
       "control_metrics": {
         "detector_sees_amendment": false,
         "hand_edit_took_effect": true
       },
-      "duration_s": 1.74,
+      "duration_s": 4.5,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -3614,12 +3677,43 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "a46e186",
+          "control_metrics": {
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true
+          },
+          "impl_sha": "d82e20f52ea27ec2",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "detector_flags_moved_dependency": true,
+            "detector_sees_amendment": true,
+            "detector_spares_unmoved_dependency": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "unknown_attempt_is_sticky": true,
+            "unprotected_pass_certificates": 0
+          },
+          "ran_at": "2026-08-13T20:08:35",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "d82e20f52ea27ec2",
+      "impl_sha": "9ae9152b626592a0",
       "message": "",
       "metrics": {
         "amendment_is_attributable": true,
+        "content_check_fires_on_postrun_edit": true,
+        "content_check_reports_unanswerable": true,
+        "content_check_spares_unedited_file": true,
         "detector_flags_moved_dependency": true,
         "detector_sees_amendment": true,
         "detector_spares_unmoved_dependency": true,
@@ -3630,9 +3724,12 @@
         "refuses_unattributed": true,
         "run_spec_leaves_amended_empty": true,
         "unknown_attempt_is_sticky": true,
-        "unprotected_pass_certificates": 0
+        "unprotected_pass_certificates": 0,
+        "unstamped_answered_by_content": 30,
+        "unstamped_records_examined": 30,
+        "unstamped_unanswerable": 0
       },
-      "ran_at": "2026-08-13T20:08:35",
+      "ran_at": "2026-08-14T01:18:29",
       "seeds": [
         0
       ],
@@ -3978,17 +4075,17 @@
     },
     "T0.22": {
       "amended": [],
-      "attempt": 14,
-      "commit": "3bebcd2",
+      "attempt": 15,
+      "commit": "26fc2f6+dirty",
       "control_metrics": {
         "direct_ledger_reads": 0.0,
-        "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader,p15_stamp_and_push_guard_agree_on_the_same_file",
+        "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p11b_unstamped_changed_blocks_borrow_and_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader,p15_stamp_and_push_guard_agree_on_the_same_file",
         "offenders": "",
         "properties_checked": 15.0,
-        "properties_failed": 11.0,
+        "properties_failed": 12.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "duration_s": 1.46,
+      "duration_s": 1.93,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -4068,9 +4165,35 @@
           "message": "",
           "ran_at": "2026-08-12T20:43:51",
           "status": "PASS"
+        },
+        {
+          "commit": "3bebcd2",
+          "control_metrics": {
+            "direct_ledger_reads": 0.0,
+            "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader,p15_stamp_and_push_guard_agree_on_the_same_file",
+            "offenders": "",
+            "properties_checked": 15.0,
+            "properties_failed": 11.0,
+            "source_impl_sha": "94735681c2c21360"
+          },
+          "impl_sha": "95ecbcd01892d9ad",
+          "message": "",
+          "metrics": {
+            "direct_ledger_reads": 0.0,
+            "failed_names": "",
+            "offenders": "",
+            "properties_checked": 15.0,
+            "properties_failed": 0.0,
+            "source_impl_sha": "94735681c2c21360"
+          },
+          "ran_at": "2026-08-12T21:08:12",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "95ecbcd01892d9ad",
+      "impl_sha": "fef787824c7b5be3",
       "message": "",
       "metrics": {
         "direct_ledger_reads": 0.0,
@@ -4080,7 +4203,7 @@
         "properties_failed": 0.0,
         "source_impl_sha": "94735681c2c21360"
       },
-      "ran_at": "2026-08-12T21:08:12",
+      "ran_at": "2026-08-14T01:18:36",
       "seeds": [
         0
       ],
@@ -4271,13 +4394,13 @@
     },
     "T0.27": {
       "amended": [],
-      "attempt": 3,
-      "commit": "a46e186",
+      "attempt": 4,
+      "commit": "26fc2f6+dirty",
       "control_metrics": {
         "dirty_named": 1.0,
         "violations": 1
       },
-      "duration_s": 1.32,
+      "duration_s": 1.36,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -4337,9 +4460,38 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "a46e186",
+          "control_metrics": {
+            "dirty_named": 1.0,
+            "violations": 1
+          },
+          "impl_sha": "7b66b922f99aff79",
+          "message": "",
+          "metrics": {
+            "artifact_survives_history": true,
+            "artifact_written": true,
+            "audit_admits_clean_shape": true,
+            "audit_flags_missing_metrics": true,
+            "audit_flags_unreachable_commit": true,
+            "live_checked_pairs": 0,
+            "live_ledger_clean": true,
+            "live_unauditable_pairs": 27,
+            "live_violations": 0,
+            "properties_failed": 0,
+            "rerun_visible_not_amendment": true,
+            "unknowable_is_none_and_unauditable": true,
+            "warns_on_dirty_fail": true
+          },
+          "ran_at": "2026-08-13T20:08:41",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "7b66b922f99aff79",
+      "impl_sha": "cee77fcd92ae6bde",
       "message": "",
       "metrics": {
         "artifact_survives_history": true,
@@ -4356,7 +4508,7 @@
         "unknowable_is_none_and_unauditable": true,
         "warns_on_dirty_fail": true
       },
-      "ran_at": "2026-08-13T20:08:41",
+      "ran_at": "2026-08-14T01:18:38",
       "seeds": [
         0
       ],

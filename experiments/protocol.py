@@ -664,12 +664,19 @@ class Ledger:
         run on a foundation nobody checked.
 
         WHICH staleness blocks, and why it is not all of it. `staleness_of`
-        reports three kinds, and they are not the same evidence:
+        reports kinds that are not the same evidence:
 
-          DIRTY / CHANGED   POSITIVE evidence the implementation moved after
+          DIRTY / CHANGED / UNSTAMPED_CHANGED
+                            POSITIVE evidence the implementation moved after
                             the run. The dependency is blocked on a re-run.
-          UNVERIFIABLE      ABSENT evidence — the entry predates `impl_sha`
-                            and nothing can be compared either way.
+                            (UNSTAMPED_CHANGED joined 2026-08-14, 15th audit
+                            B1: an entry with no `impl_sha` whose file git
+                            nonetheless shows changed since the run is the
+                            same evidence as CHANGED, minus the stamp.)
+          UNVERIFIABLE / UNSTAMPED_INTACT
+                            ABSENT or benign evidence — the entry predates
+                            `impl_sha` and either nothing can be compared or
+                            git shows the file unchanged.
 
         `borrow_metrics` refuses on UNVERIFIABLE too, and is right to: it needs
         the number to describe today's code, and that is precisely the claim it
@@ -700,7 +707,7 @@ class Ledger:
             if path is None:                 # no single impl file: nothing to hash
                 continue
             blocking = [(k, det) for k, det in staleness_of(self.results[d], path)
-                        if k in ("DIRTY", "CHANGED")]
+                        if k in ("DIRTY", "CHANGED", "UNSTAMPED_CHANGED")]
             if blocking:
                 out.append((d, "PASS but stale — " +
                             "; ".join(f"{k}: {det}" for k, det in blocking)))
@@ -929,6 +936,94 @@ def deps_moved_since(path, ran_at, repo_root=None) -> tuple:
     return tuple(moved), ""
 
 
+# Memo for `blob_sha_at_run`: a report scan asks the same (path, ran_at)
+# question several times per invocation (`_check_stale_detector` replays the
+# real scan on probe ledgers), and the answer is a function of git history,
+# which does not change within a process.
+_BLOB_SHA_MEMO: Dict[tuple, tuple] = {}
+
+
+def blob_sha_at_run(path, ran_at, repo_root=None, grace_min=30) -> tuple:
+    """sha256 of a file's content as git last recorded it at run time.
+
+    The declaration-free half of provenance (15th overseer audit, B1).
+    `impl_sha` and `IMPL_DEPS` are opt-in: every record old enough to lack the
+    stamp is old enough to lack the declaration, so the `UNVERIFIABLE_MOVED`
+    detector's domain and the at-risk population are disjoint BY CONSTRUCTION
+    — the planted positive lived in the domain and no real record did. This
+    check needs nobody's opt-in: its input is a property the artifact cannot
+    help having (the file's committed content and the entry's `ran_at`).
+
+    Baseline = the newest commit touching the file whose committer date is at
+    most `ran_at + grace_min` minutes. The grace window exists because code is
+    edited, RUN, and only then committed — the recording commit routinely lands
+    seconds after its own run and contains the very bytes that ran. Comparing
+    against the recorded commit alone reports 8 stale where the truth is 3
+    (measured, 15th audit); the window fixes exactly that. An over-reporting
+    auditor is a defect too.
+
+    Date comparison happens in Python on `%cI`, never via `--since`/`--until`:
+    approxidate silently reinterprets implausible dates instead of erroring —
+    a silent fallback inside the very guard against silent staleness (the
+    `deps_moved_since` scar, kept).
+
+    Returns `(sha, problem)`: `sha` is None whenever `problem` is non-empty,
+    and a check that cannot run says so rather than reading clean.
+    """
+    import hashlib
+    import subprocess
+    from datetime import datetime, timedelta
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
+    key = (str(root), str(Path(path)), str(ran_at), grace_min)
+    if key in _BLOB_SHA_MEMO:
+        return _BLOB_SHA_MEMO[key]
+
+    def _done(sha, problem):
+        _BLOB_SHA_MEMO[key] = (sha, problem)
+        return (sha, problem)
+
+    try:
+        rel = str(Path(path).resolve().relative_to(root.resolve()))
+    except ValueError:
+        return _done(None, f"{path} is not under {root}")
+    try:
+        ran = datetime.fromisoformat(str(ran_at))
+    except (TypeError, ValueError):
+        return _done(None, f"ran_at unparseable: {ran_at!r}")
+    if ran.tzinfo is not None:
+        ran = ran.astimezone().replace(tzinfo=None)
+    cutoff = ran + timedelta(minutes=grace_min)
+    try:
+        r = subprocess.run(
+            ["git", "-C", str(root), "log", "--format=%H %cI", "--", rel],
+            capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return _done(None, f"git:{type(e).__name__}")
+    if r.returncode != 0:
+        return _done(None, f"git:rc{r.returncode}")
+    best = best_date = None
+    for line in r.stdout.splitlines():
+        try:
+            commit, stamp = line.split()
+            when = (datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+                    .astimezone().replace(tzinfo=None))
+        except ValueError:
+            return _done(None, f"commit line unparseable: {line!r}")
+        if when <= cutoff and (best_date is None or when > best_date):
+            best, best_date = commit, when
+    if best is None:
+        return _done(None, f"no commit touches {rel} at or before "
+                           f"ran_at+{grace_min}min")
+    try:
+        s = subprocess.run(["git", "-C", str(root), "show", f"{best}:{rel}"],
+                           capture_output=True, timeout=30)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return _done(None, f"git:{type(e).__name__}")
+    if s.returncode != 0:
+        return _done(None, f"git show rc{s.returncode} at {best[:8]}")
+    return _done(hashlib.sha256(s.stdout).hexdigest(), "")
+
+
 def staleness_of(entry: "Result", path) -> List[tuple]:
     """Every reason this entry is not a claim about the code that exists now.
 
@@ -937,12 +1032,29 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
 
       DIRTY        the run's commit stamp ends in `+dirty`, so the code that
                    produced it exists in no commit and cannot be recovered.
-      UNVERIFIABLE the entry predates `impl_sha`; nothing can be compared.
-      UNVERIFIABLE_MOVED  alongside UNVERIFIABLE when the module declares
-                   `IMPL_DEPS` and a declared dependency has commits after
-                   `ran_at` — the alarm is fitted and structurally cannot
-                   fire, over a world that has demonstrably moved. This is
-                   the one that bites (14th audit: PG.1/PG.2/PG.4/T2.20).
+      UNSTAMPED_CHANGED  the entry predates `impl_sha`, but git can answer
+                   anyway: the file's content at HEAD differs from the blob
+                   that stood at run time (`blob_sha_at_run`). This is STALE
+                   with positive evidence, not "cannot be checked" — the 15th
+                   audit's B1: three genuinely stale records (T0.09, T1.07,
+                   T2.02) sat inside a bucket the report called unchecked,
+                   because the opt-in detector's domain and the at-risk
+                   population were disjoint by construction.
+      UNSTAMPED_INTACT  the entry predates `impl_sha` and git shows the file
+                   byte-identical since the run. Bookkeeping, not a hazard;
+                   a re-run still upgrades it to a real stamp (and is still
+                   required before `borrow_metrics` will read it — content
+                   identity says nothing about undeclared dependencies).
+      UNVERIFIABLE the entry predates `impl_sha` AND the declaration-free
+                   check could not run (reason in the detail); nothing can be
+                   compared. The honest remainder, kept separate on purpose:
+                   a clean scan and a scan that never ran must not share a
+                   bucket.
+      UNVERIFIABLE_MOVED  alongside any of the three above when the module
+                   declares `IMPL_DEPS` and a declared dependency has commits
+                   after `ran_at` — the alarm is fitted and structurally
+                   cannot fire, over a world that has demonstrably moved
+                   (14th audit: PG.1/PG.2/PG.4/T2.20).
       CHANGED      the implementation hash moved since the run.
 
     An entry can be DIRTY *and* CHANGED — they are different facts about it,
@@ -962,8 +1074,33 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
                              f"the code that ran was never committed"))
     recorded = getattr(entry, "impl_sha", None)
     if not recorded:
-        out.append(("UNVERIFIABLE",
-                    f"recorded at {(entry.commit or '?')[:8]} before impl_sha existed"))
+        import hashlib
+        ran_at = getattr(entry, "ran_at", None)
+        base, cc_problem = blob_sha_at_run(path, ran_at)
+        if cc_problem:
+            out.append(("UNVERIFIABLE",
+                        f"recorded at {(entry.commit or '?')[:8]} before "
+                        f"impl_sha existed; content check could not run "
+                        f"({cc_problem})"))
+        else:
+            try:
+                cur = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+            except OSError as e:
+                cur = None
+                out.append(("UNVERIFIABLE",
+                            f"recorded before impl_sha existed; "
+                            f"{Path(path).name} unreadable ({type(e).__name__})"))
+            if cur is not None and cur != base:
+                out.append(("UNSTAMPED_CHANGED",
+                            f"{Path(path).name}: content at HEAD differs from "
+                            f"the blob that stood at ran_at "
+                            f"{ran_at or '?'} ({base[:12]}); the entry is "
+                            f"about older code"))
+            elif cur is not None:
+                out.append(("UNSTAMPED_INTACT",
+                            f"recorded at {(entry.commit or '?')[:8]} before "
+                            f"impl_sha existed; git shows {Path(path).name} "
+                            f"byte-identical since the run"))
         moved, problem = deps_moved_since(path, getattr(entry, "ran_at", None))
         if problem:
             # Conservative direction: a check that cannot run is reported as
