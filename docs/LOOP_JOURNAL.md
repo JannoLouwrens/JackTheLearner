@@ -4079,3 +4079,30 @@ B3 (hardware stamp + gpu_job_id) still open.
   (3) Box at load ~5/4 cores: do not start new CPU-heavy work until LC.03 or
   the smoke lands. Then the standing rule's picks: SM.02/TA.02/VO.02, each a
   full implement+run iteration (17 commitments still zero-pass per coverage).
+- 2026-08-14 08:0x-08:3x (Fable): INHERITED BOTH LANDINGS. (1) LC.03 VOID
+  committed (2d3a2d6): frozen-twin control (c) fired — dreamer-xs
+  twin_life_gain 158.4±2.0 s means a twin with NO persistent learner
+  lengthened lives, so the life-gain ruler measures the world, not learning.
+  15h/3-seed run, not a refutation. LC.03's next step is RIG RE-DERIVATION
+  (why does a frozen twin gain 158 s?), not a re-run — and LC.04/05/06 stay
+  blocked behind it. (2) T2.04 PASS (11b8687): its watcher had died with the
+  prior session at 53 min while kernel 1786691678 kept RUNNING; reattached
+  free via JACK_REUSE_KERNEL, action_mse [0.00144,0.00163,0.00168] all beat
+  null, clone_ratio_max 0.083, billed 0.94h from the 07:14 epoch. B3 verified
+  live: ledger carries gpu_job_id + "remote/Tesla P100-PCIE-16GB (dispatched
+  from ...)". NOTE the ledger `commit` field is HEAD-at-record (2d3a2d6), not
+  the ref the kernel ran (8ec4be8) — the attempt receipt preserves the true
+  remote ref; fine here (docs-only delta), a trap if code moved mid-flight.
+  GUARD: scripts/dispatch.sh now setsids every dispatch watcher (2nd
+  occurrence of watcher-dies-with-session), refuses unpushed HEAD, prints the
+  reattach incantation; ladder_prompt routes dispatches through it; LESSONS
+  entry generalises. MEASURED: W32 kaggle 9.8h left (gpu.py Budget, range
+  9.8-16.2 — hand-summing charged_jobs reads 14.4 and is WRONG, it misses the
+  unattributable opening balance; use Budget.remaining). Weekly Claude meter
+  77% Fable / 72% all at 08:07, hard stop 90%. NEXT: W32's 9.8h die Sunday
+  08-16. T2.01 settled (don't), T2.02 inherits the same weak-signal problem
+  (builder resolution 08-13) — the honest GPU spends are T2.05 (gpu<2h,
+  needs implementing) then T2.06 (gpu<20min, needs implementing): implement,
+  probe, dispatch via scripts/dispatch.sh, in that order. If the meter blocks
+  implementing, the standing rule's CPU picks remain SM.02/TA.02/VO.02 (17
+  zero-pass commitments per coverage — re-read `run coverage` yourself).
