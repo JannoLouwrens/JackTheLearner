@@ -4055,3 +4055,27 @@ B3 (hardware stamp + gpu_job_id) still open.
   single-row act_deterministic forwards), the fix is a BATCHED
   act_deterministic owned by TrainingPipeline (T0.16: one place), never a
   re-implemented forward in the test.
+- 2026-08-14 06:0x-06:2x (Fable): B3 CLOSED (overseer, carried 3 audits) — GPU
+  records now attributable. protocol.py: Result.gpu_job_id (None = no
+  dispatch); run_spec drains gpu.drain_job_ids() before+after the runs, sets
+  JACK_SPEC_ID so receipts name their spec, and rewrites hardware to
+  remote/{metrics.gpu} (dispatched from {local}) when the run names a GPU.
+  gpu.py: submit() appends every res.job_id (failed attempts too) and stamps
+  spec into attempt+result receipts. Gated as T0.12 property 11
+  (receipt_names_the_spec, recorder_recovers_job_ids; pre-2026-08-11 loop is
+  the control, fails both). T0.12/T0.17/T0.27 re-run PASS at f90a533 (their
+  IMPL_DEPS hash those files), ledger committed 9fbe91e, PUSHED. Measured:
+  synthetic GPU spec records remote/Tesla FakeGPU + job id; CPU spec None.
+  NEXT: (1) T2.04 smoke STILL RUNNING at handoff (pid 2700966, ~55 min, 127%
+  CPU, healthy — second pipeline banner just appeared, so it advanced past
+  the first _train_bc; /data/tmp/t204_smoke.log). Dispatch ONLY on SMOKE OK:
+  `python -m experiments.run T2.04` (kaggle, est 2.0h, 10.78h left in W32,
+  DIES SUNDAY 08-16; one submission covers 3 seeds via module cache; if the
+  watcher dies mid-poll reattach with JACK_REUSE_KERNEL=<slug from `kaggle
+  kernels list`>, do NOT submit fresh — this dispatch is also B3's first live
+  exercise: the record should carry gpu_job_id + remote/P100 hardware, CHECK
+  IT). (2) LC.03 ALIVE (pid 2536994, 3 workers ~100% CPU each, ~15h of 15-20h
+  expected) — do NOT relaunch; if landed, render+commit from clean tree.
+  (3) Box at load ~5/4 cores: do not start new CPU-heavy work until LC.03 or
+  the smoke lands. Then the standing rule's picks: SM.02/TA.02/VO.02, each a
+  full implement+run iteration (17 commitments still zero-pass per coverage).
