@@ -5739,6 +5739,34 @@ class SemanticActionAnchors(nn.Module):
 # TRAINING LOSSES
 # ==============================================================================
 
+# The fallback grounding vocabulary. 20 words; anything else — including whole
+# synonym phrasings like "sprint" or "wave" — tokenizes to <pad>. That ceiling
+# is a property of the shipped system and T2.06 measures through it.
+GROUNDING_FALLBACK_VOCAB = {
+    "<pad>": 0, "walk": 1, "forward": 2, "run": 3, "fast": 4,
+    "jump": 5, "in": 6, "place": 7, "move": 8, "naturally": 9,
+    "stand": 10, "idle": 11, "turn": 12, "left": 13, "right": 14,
+    "backward": 15, "slow": 16, "stop": 17, "crouch": 18, "up": 19}
+GROUNDING_FALLBACK_MAX_LEN = 10
+
+
+def grounding_fallback_tokens(language_labels) -> torch.Tensor:
+    """Tokenize command strings for the fallback (LSTM) grounding path.
+
+    Extracted from compute_language_grounding_loss so training and any
+    evaluation share ONE tokenization (two copies of an operation is the
+    defect; divergence is only its symptom — LESSONS, T0.16).
+    """
+    rows = []
+    for label in language_labels:
+        words = label.lower().split()
+        tokens = [GROUNDING_FALLBACK_VOCAB.get(w, 0) for w in words]
+        tokens = (tokens[:GROUNDING_FALLBACK_MAX_LEN]
+                  + [0] * (GROUNDING_FALLBACK_MAX_LEN - len(tokens)))
+        rows.append(tokens)
+    return torch.tensor(rows, dtype=torch.long)
+
+
 def compute_physics_loss(model, state, action, next_state, physics_targets):
     """Phase 0: Learn physics from SymPy"""
     output = model(state, action=action)
@@ -5903,21 +5931,10 @@ def compute_language_grounding_loss(model, state, target_actions, language_label
         # Get language embeddings directly from LLMEncoder
         language_emb = model.language_encoder(language_labels)  # (B, d_model)
     else:
-        # Fallback: tokenize and get embeddings
-        language_tokens = []
-        max_len = 10
-        vocab = {"<pad>": 0, "walk": 1, "forward": 2, "run": 3, "fast": 4,
-                 "jump": 5, "in": 6, "place": 7, "move": 8, "naturally": 9,
-                 "stand": 10, "idle": 11, "turn": 12, "left": 13, "right": 14,
-                 "backward": 15, "slow": 16, "stop": 17, "crouch": 18, "up": 19}
-
-        for label in language_labels:
-            words = label.lower().split()
-            tokens = [vocab.get(w, vocab["<pad>"]) for w in words]
-            tokens = tokens[:max_len] + [0] * (max_len - len(tokens))
-            language_tokens.append(tokens)
-
-        language_tensor = torch.tensor(language_tokens, dtype=torch.long, device=device)
+        # Fallback: tokenize and get embeddings (single source: any evaluation
+        # of this path must tokenize through the same function, or train and
+        # eval silently diverge — the T0.16 two-kernels lesson).
+        language_tensor = grounding_fallback_tokens(language_labels).to(device)
         language_emb = model.language_encoder(language_tensor)  # (B, d_model)
 
     # Forward pass with language

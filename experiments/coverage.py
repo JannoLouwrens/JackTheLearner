@@ -252,8 +252,24 @@ def report(by_id: Optional[dict] = None,
     return out
 
 
+def counts() -> tuple[int, int]:
+    """(n_uncovered, n_malformed) — two different fires, separately assertable.
+
+    Uncovered means zero DECLARED specs for a constitutional commitment: the
+    case invisible to every other instrument, and the reason this module
+    exists. Malformed means a `COVERS:` naming a commitment that does not
+    exist or missing its kind: a typo that buys nothing. Summing them (the
+    pre-2026-08-14 behaviour) gave the two fires one bell; the 17th audit
+    watched the bell ring on a typo and read it as the constitutional case.
+    """
+    rows = report()
+    bad = rows[0]["bad_declarations"] if rows else []
+    return sum(1 for r in rows if r["n_specs"] == 0), len(bad)
+
+
 def check() -> int:
-    """Print the audit; return UNCOVERED commitments + malformed declarations.
+    """Print the audit; exit 2 if any commitment is UNCOVERED, 1 if only
+    malformed declarations exist, 0 clean.
 
     Uncovered means zero DECLARED specs. "Covered but not passing" is normal —
     it is a ladder, not a scoreboard — so it is reported and not counted.
@@ -279,20 +295,20 @@ def check() -> int:
                       f"{', '.join(r['nominations'][:8])}")
     print(f"\n  {len(uncovered)} commitment(s) with NO declared spec, "
           f"{len(unproven)} with specs but nothing passing.")
-    if bad:
-        print(f"  {len(bad)} MALFORMED declaration(s) — a typo'd commitment "
-              f"name or a missing kind; either buys nothing:")
-        for sid, name in bad:
-            print(f"      {sid}: COVERS: {name!r}")
     if uncovered:
         print("  A commitment with no spec is invisible to `run blocked`, to the\n"
               "  overseer, and to every gate. Register one before demonstrating\n"
               "  anything else — this is the cheapest possible bug to fix and the\n"
               "  most expensive to leave.")
+    if bad:
+        print(f"  {len(bad)} MALFORMED declaration(s) — a typo'd commitment "
+              f"name or a missing kind; either buys nothing:")
+        for sid, name in bad:
+            print(f"      {sid}: COVERS: {name!r}")
     print("\n  A nomination is NOT coverage. It is a spec whose title looks\n"
           "  related and whose author has not said so; only `COVERS:` counts.")
-    return len(uncovered) + len(bad)
+    return 2 if uncovered else (1 if bad else 0)
 
 
 if __name__ == "__main__":
-    raise SystemExit(1 if check() else 0)
+    raise SystemExit(check())

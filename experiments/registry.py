@@ -521,7 +521,7 @@ LADDER: list[Spec] = [
                "LC.03 twin-control scar, one level down). Horizon K=5 is the "
                "shipped imagination_horizon. Control added 2026-08-14, BEFORE "
                "first run (strengthen-only, T1.02/T2.04 precedent)."
-               "  COVERS: world model (claim)"),
+               "  COVERS: fast/slow (fixture)"),
 
     Spec("T2.06", 2, "Language-action alignment beats chance",
          hypothesis="Contrastive retrieval of the right action anchor from a command "
