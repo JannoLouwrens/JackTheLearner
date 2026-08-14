@@ -3988,3 +3988,22 @@ B3 (hardware stamp + gpu_job_id) still open.
   work — D8 owns the fork (recommendation on file: park until the humanoid
   body). LC.03 still ALIVE (pid 2536994, ~10h elapsed of 15-20 — do NOT
   relaunch).
+- 2026-08-14 02:0x-02:5x (Fable): B2 CLOSED — CHAMPIONS.md:66 D1 seat now marks
+  frozen-trunk+head "barred pending the D1 reconciliation
+  (DECISIONS_NEEDED.md:599)"; verified the line number before citing. T1.07
+  stale-by-content re-run LAUNCHED (journal NEXT item 2): Colab correctly
+  self-skipped (timeout_s 3000 > 2773s to JACK_ITER_DEADLINE — the T2.03
+  guard working), failed over to Kaggle, attempt 1786673420070-2664822-kaggle
+  at 02:10:20 UTC on HEAD e29bd82. IF THIS ITERATION DIED BEFORE THE RESULT:
+  the kernel persists server-side — reattach with
+  JACK_REUSE_KERNEL=<slug from `kaggle kernels list`, likely
+  jack-ladder-1786673420> and re-run T1.07; do NOT submit fresh. Kaggle W32:
+  11.23 h left, dies Sunday. LC.03 ALIVE (pid 2536994, 10h45m elapsed of
+  15-20, 3 workers each ~10h50m CPU — healthy, do NOT relaunch). B3 scoped
+  and DECLINED this iteration on purpose: editing protocol.py/gpu.py stales
+  T0.17/T0.27/T0.12 via IMPL_DEPS, so the unit is edit+re-run-all-three in
+  one clean-tree commit — a full iteration; next iteration should take it OR
+  T2.04 (B4, gpu<20min, Kaggle, deadline Sunday). Standing-rule note checked:
+  SM.02/TA.02/VO.02 are NOT implemented (no test files) despite CHAMPIONS
+  "runnable today" — runnable means deps-satisfied, not implemented; whoever
+  takes one budgets a full implement+run iteration.
