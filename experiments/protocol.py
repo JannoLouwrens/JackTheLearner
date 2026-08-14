@@ -27,6 +27,7 @@ import math
 import os
 import platform
 import subprocess
+import sys
 import tempfile
 import time
 from dataclasses import dataclass, field, asdict, fields
@@ -253,6 +254,17 @@ class Result:
     NOTHING — VOID, SKIP, NOT_RUN. PASS and FAIL still require a run: PASS
     claims a capability, FAIL fires the spec's `kills`.
     """
+    gpu_job_id: Optional[str] = None
+    """Comma-joined remote job ids this run dispatched (overseer B3).
+
+    Folded in by `run_spec` from `gpu.drain_job_ids()` — no spec has to
+    remember to record it (only T1.02 ever did, by hand, into its metrics).
+    `None` means no remote dispatch happened during the run — deliberately not
+    `""`, because a sentinel that is also a valid value cannot be detected
+    (the `Arm.cost` lesson). This is the one field the ledger shares with
+    `gpu_submissions.jsonl`, so "which hours bought which result" is a join,
+    not timestamp arithmetic.
+    """
     impl_sha: Optional[str] = None
     """sha256 of the test file this result was produced by, at run time.
 
@@ -464,7 +476,7 @@ class Ledger:
                         row_h = {k: prev.get(k) for k in
                                  ("status", "ran_at", "commit", "message",
                                   "metrics", "control_metrics", "impl_sha",
-                                  "seeds")
+                                  "seeds", "gpu_job_id")
                                  if k in prev}
                         if prev.get("amended"):
                             # An amendment is part of what that verdict WAS.
@@ -1301,6 +1313,23 @@ def _impl_sha(fn: Callable) -> Optional[str]:
         return None
 
 
+def _drain_gpu_job_ids() -> List[str]:
+    """Job ids `gpu.submit()` recorded in this process, cleared on read.
+
+    Read through `sys.modules` rather than an import: a spec that never
+    imported the gpu module cannot have dispatched anything, and the recorder
+    must not be the thing that first loads it. `gpu` imports from this module,
+    so an eager import here would also be a cycle.
+    """
+    mod = sys.modules.get("experiments.gpu")
+    if mod is None:
+        return []
+    try:
+        return list(mod.drain_job_ids())
+    except Exception:
+        return []
+
+
 def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
              check: Callable[[Dict[str, Any], Dict[str, Any]], bool],
              control_fn: Optional[Callable[[int], Dict[str, Any]]] = None,
@@ -1352,6 +1381,13 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # duration. One line moved fixes the whole class.
     stamp = Result.env_stamp()
     seeds = list(range(spec.seeds))
+    # GPU dispatch provenance (overseer B3). Drained BEFORE the runs so another
+    # spec's leftover job ids in this process cannot be attributed to this one;
+    # the env var lets `gpu.submit()` write the spec id into its receipt log
+    # without every spec having to thread it through.
+    _drain_gpu_job_ids()
+    _prev_spec_env = os.environ.get("JACK_SPEC_ID")
+    os.environ["JACK_SPEC_ID"] = spec.id
     try:
         runs = [fn(s) for s in seeds]
         metrics = _aggregate(runs)
@@ -1387,11 +1423,30 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
         metrics, control_metrics = {}, {}
         status = Status.ERROR
         message = f"{type(e).__name__}: {e}"[:400]
+    finally:
+        if _prev_spec_env is None:
+            os.environ.pop("JACK_SPEC_ID", None)
+        else:
+            os.environ["JACK_SPEC_ID"] = _prev_spec_env
+
+    # Every remote job the runs paid for, folded in here so the ledger and
+    # `gpu_submissions.jsonl` share a join key (overseer B3). Includes failed
+    # attempts — those spent quota too, and a record that names only the job
+    # that succeeded cannot answer "which hours bought this".
+    job_ids = _drain_gpu_job_ids()
+    # The stamp names the machine that RAN the work, not the dispatcher: nine
+    # GPU records read aarch64/…/cpu while the truth sat in metrics["gpu"]
+    # (overseer B3). The dispatcher stays visible because it is also true.
+    _gpu_name = metrics.get("gpu")
+    if isinstance(_gpu_name, str) and _gpu_name.strip():
+        stamp = {**stamp, "hardware":
+                 f"remote/{_gpu_name} (dispatched from {stamp['hardware']})"}
 
     res = Result(spec_id=spec.id, status=status, metrics=metrics,
                  control_metrics=control_metrics, seeds=seeds,
                  duration_s=round(time.time() - t0, 2), message=message,
                  impl_sha=impl_sha,
+                 gpu_job_id=",".join(job_ids) if job_ids else None,
                  ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"), **stamp)
     ledger.record(res)
     return res

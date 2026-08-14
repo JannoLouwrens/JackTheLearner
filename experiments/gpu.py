@@ -37,6 +37,31 @@ BUDGET_FILE = Path(__file__).parent / "gpu_budget.json"
 # Append-only receipt for every remote dispatch. See `_record_submission`.
 SUBMISSION_LOG = Path(__file__).parent / "gpu_submissions.jsonl"
 
+# Job ids of every remote dispatch THIS PROCESS has made since the last drain,
+# appended by `submit()` and drained by `protocol.run_spec` into the ledger
+# record (`Result.gpu_job_id`). Overseer B3, carried three audits: the receipt
+# log and the ledger shared no field, so "which hours bought which result" was
+# answerable only by timestamp arithmetic — a coincidence of durations, not an
+# audit trail. Folding it in at the recorder means no spec has to remember
+# (only T1.02 ever did).
+_SUBMITTED_JOB_IDS: list[str] = []
+
+
+def drain_job_ids() -> list[str]:
+    """Return and clear the job ids `submit()` recorded since the last drain.
+
+    Deduplicated, order preserved. The recorder drains BEFORE a spec's runs
+    (so another spec's leftovers cannot be attributed to it) and AFTER them
+    (to fold this spec's dispatches into its ledger record). A test that
+    drives `submit()` through stub backends must also drain in its own
+    cleanup, or its stub ids would reach the ledger as fiction — the same
+    scar as `_probe_submit` writing stub receipts into the real
+    `gpu_submissions.jsonl`, one field over.
+    """
+    out = list(dict.fromkeys(_SUBMITTED_JOB_IDS))
+    _SUBMITTED_JOB_IDS.clear()
+    return out
+
 # Kaggle's free allowance. Colab's is unpublished and elastic, so it is not
 # budgeted — it is simply tried first for short work.
 KAGGLE_WEEKLY_HOURS = 30.0
@@ -793,11 +818,15 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
         # existed. `attempt_id` is what links this to its outcome line.
         started = time.time()
         attempt_id = f"{int(started * 1000)}-{os.getpid()}-{backend}"
+        # `spec` is set by run_spec around the seed loop (JACK_SPEC_ID), so a
+        # receipt names the spec whose runs bought the hours — the one field
+        # this log shares with the ledger's `gpu_job_id` (overseer B3).
         _record_submission({"phase": "attempt", "attempt_id": attempt_id,
                             "ts": started, "iso": time.strftime("%Y-%m-%dT%H:%M:%S"),
                             "backend": backend, "prefer": prefer,
                             "est_hours": est_hours, "timeout_s": timeout_s,
                             "script": str(script), "head": head,
+                            "spec": os.environ.get("JACK_SPEC_ID", ""),
                             "pid": os.getpid()}, journal)
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
                else run_on_kaggle(script, timeout_s, fetch))
@@ -806,7 +835,12 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
                             "job_id": res.job_id, "ok": bool(res.ok),
                             "duration_s": res.duration_s,
                             "charge_seconds": res.charge_seconds,
+                            "spec": os.environ.get("JACK_SPEC_ID", ""),
                             "message": (res.message or "")[:500]}, journal)
+        if res.job_id:
+            # Failed attempts append too: a crashed kernel still spent quota,
+            # and the record should name every remote job the run paid for.
+            _SUBMITTED_JOB_IDS.append(res.job_id)
         # Charge the metered window, labelled by outcome, once per remote job.
         # All three of those qualifiers were missing until 2026-08-09.
         budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id)

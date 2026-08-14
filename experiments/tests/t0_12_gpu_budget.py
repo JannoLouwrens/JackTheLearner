@@ -22,6 +22,10 @@ Properties, each independently checkable:
      idle hours until the local process came back to look.
  10. A stale writer cannot erase another process's charges, and idempotency is
      judged against the file, not against a copy loaded hours ago.
+ 11. A dispatch is attributable: the receipt names the SPEC whose runs bought
+     the hours, and the job ids are recoverable by the recorder
+     (`gpu.drain_job_ids()`), so the ledger and the receipt log share a join
+     key instead of being reconciled by timestamp arithmetic.
 
 Uses a temporary budget file; must never touch the real accounting.
 
@@ -67,6 +71,16 @@ whole file from state loaded at construction, so the T2.01 poll's 12:59 write
 erased a colab charge made at 08:17 (0.5498 h, repaired by hand in dd7186b) —
 the stale-writer clobber `Ledger.record` fixed on 2026-08-10 and the meter
 never learned.
+
+EXTENDED 2026-08-14 (overseer B3, carried three audits), with property 11. The
+receipt log and the ledger shared no field, so "which hours bought which
+result" was answerable only by timestamp arithmetic — the 15th audit did the
+reconciliation by hand and called the fact that it worked "a coincidence of
+durations, not an audit trail". `submit()` now writes the spec id (from
+JACK_SPEC_ID, set by `run_spec`) into every receipt, and records job ids for
+`run_spec` to drain into `Result.gpu_job_id`. The pre-2026-08-11 dispatch loop
+is again the control: it writes nothing and bypasses `submit()`, so both
+halves of attribution must read as failures under it.
 
 STILL OPEN, deliberately not claimed here: nothing reconciles a FRESH
 submission's poll-window charge against Kaggle's own report — that needs a live
@@ -300,6 +314,9 @@ def _probe_submit(submit_fn, budget: Budget, journal: Path) -> dict:
             kaggle_after_two = budget.productive_hours("kaggle")
     finally:
         gpu.run_on_colab, gpu.run_on_kaggle = real_colab, real_kaggle
+        # Stub dispatches must not leave their job ids for the recorder to
+        # fold into THIS spec's ledger record as if they were real jobs.
+        gpu.drain_job_ids()
 
     return {
         # 1800 s metered, not the 3600 s of wall clock around it.
@@ -345,14 +362,24 @@ def _probe_receipt(submit_fn, make, td: Path) -> dict:
         script = Path(sd) / "job.py"
         script.write_text("print('stub')\n")
 
-        # (a) colab fails, kaggle succeeds: the ordinary failover.
+        # (a) colab fails, kaggle succeeds: the ordinary failover. Run under a
+        # fixture spec id, the way run_spec sets one around a real spec's
+        # seed loop, so attribution (property 11) is measured on this case.
         gpu.run_on_colab = _stub("colab", False, _STUB_COLAB)
         gpu.run_on_kaggle = _stub("kaggle", True, _STUB_KAGGLE)
+        prev_spec = os.environ.get("JACK_SPEC_ID")
+        os.environ["JACK_SPEC_ID"] = "T9.99-fixture"
+        gpu.drain_job_ids()      # start clean: earlier probes leave stub ids
         try:
             submit_fn(script, prefer="colab", est_hours=0.1,
                       budget=make(td / "receipt_a.json"), journal=log)
         finally:
             gpu.run_on_colab, gpu.run_on_kaggle = real_colab, real_kaggle
+            if prev_spec is None:
+                os.environ.pop("JACK_SPEC_ID", None)
+            else:
+                os.environ["JACK_SPEC_ID"] = prev_spec
+        drained = gpu.drain_job_ids()
         recs = gpu.submissions(log)
         attempts = [r for r in recs if r.get("phase") == "attempt"]
         results = [r for r in recs if r.get("phase") == "result"]
@@ -363,6 +390,13 @@ def _probe_receipt(submit_fn, make, td: Path) -> dict:
                   == {r.get("attempt_id") for r in results})
         names_job = any(r.get("job_id") == "kaggle/u/stub" and r.get("ok") is True
                         for r in results)
+        # Property 11, both halves. The failed colab attempt must be recovered
+        # too — it spent (stub) hours, and a record naming only the job that
+        # succeeded cannot answer "which hours bought this result".
+        names_spec = (len(attempts) == 2
+                      and all(a.get("spec") == "T9.99-fixture" for a in attempts))
+        recorder_recovers = ("kaggle/u/stub" in drained
+                             and "colab/ladder-stub" in drained)
 
         # (b) every backend fails: the receipt must survive the fact that
         # nothing came back. This is the case the false handoff resembled.
@@ -397,10 +431,16 @@ def _probe_receipt(submit_fn, make, td: Path) -> dict:
         backends_c = {r.get("backend") for r in gpu.submissions(log_c)}
         skipped_unlogged = backends_c == {"colab"}
 
+    # Cases (b) and (c) dispatched through stubs too; their ids must not reach
+    # the ledger through the recorder's post-run drain.
+    gpu.drain_job_ids()
+
     return {
         "receipt_written_before_dispatch": before_dispatch,
         "receipt_pairs_attempt_with_result": paired,
         "receipt_names_the_job": names_job,
+        "receipt_names_the_spec": names_spec,
+        "recorder_recovers_job_ids": recorder_recovers,
         "receipt_survives_all_backends_failing": survives_failure,
         "no_receipt_for_skipped_backend": skipped_unlogged,
     }
@@ -730,10 +770,14 @@ def _check(m: dict, c: dict) -> bool:
         and m["concurrent_idempotency_reads_disk"]
     )
     # Property 8: a dispatch leaves a receipt, and only a real dispatch does.
+    # Property 11: the receipt names its spec, and the recorder can recover
+    # the job ids to fold into the ledger record.
     receipt_ok = (
         m["receipt_written_before_dispatch"]
         and m["receipt_pairs_attempt_with_result"]
         and m["receipt_names_the_job"]
+        and m["receipt_names_the_spec"]
+        and m["recorder_recovers_job_ids"]
         and m["receipt_survives_all_backends_failing"]
         and m["no_receipt_for_skipped_backend"]
     )
@@ -762,6 +806,13 @@ def _check(m: dict, c: dict) -> bool:
         (not c["receipt_written_before_dispatch"])
         and (not c["receipt_pairs_attempt_with_result"])
         and (not c["receipt_names_the_job"])
+        # Property 11 on the pre-fix loop: it writes no receipt (so nothing
+        # names the spec) and calls the backends directly rather than through
+        # `submit()` (so no job id is ever recorded for the drain). Both
+        # halves must read as failures, or the assertion is not measuring
+        # the mechanism.
+        and (not c["receipt_names_the_spec"])
+        and (not c["recorder_recovers_job_ids"])
         and (not c["receipt_survives_all_backends_failing"])
     )
     # The pre-fix reattach meter answers for property 9. Only the window
