@@ -3729,3 +3729,34 @@ measured `103 s/step` (3096 s / 30 steps). An in-flight number is a lower
 bound, not a measurement. Do not commit a threshold derived from a job that has
 not finished — wait for it, or label the number as provisional in the same
 line that uses it.
+
+## A waiting process is part of the apparatus, and it dies with its parent
+
+T2.04's Kaggle dispatch, 2026-08-14: the kernel was submitted at 07:14 and ran
+fine; the local watcher — the process that would poll, fetch the artifact, and
+write the ledger — was a child of the Claude session that launched it, and when
+that session ended the watcher died at 53 minutes with the kernel still
+RUNNING. The identical failure killed T2.01 v3's waiter at ~80 minutes
+(session restart, SIGPIPE). Both times the expensive remote computation
+survived and the cheap local process did not — and the recorded result, the
+thing the ladder actually needs, depends on the cheap one.
+
+The general form: **an experiment's apparatus includes every process that must
+outlive a step of it, and a process inherits its lifetime from its parent
+unless you sever it.** The remote kernel is durable by construction (Kaggle
+owns it); the watcher is ephemeral by default (the session owns it). Any
+design where a durable computation reports through an ephemeral reporter has a
+window in which the work succeeds and the system never learns of it. The tax
+is not re-running — `JACK_REUSE_KERNEL` reattaches for free — it is an
+iteration of archaeology: the next session must notice the dangling attempt
+receipt, verify the kernel's status remotely, and reconstruct the reattach
+incantation, all before any new work.
+
+The fix is mechanical, not advisory: `scripts/dispatch.sh` setsids every
+dispatch watcher out of the session's process tree, and the prompt now routes
+all multi-hour dispatches through it. When you build anything that waits on
+remote work — a poller, a fetcher, a consolidation step — ask who its parent
+is and whether the parent is guaranteed to outlive the wait. If not, detach it
+at birth, and make sure a receipt of the *attempt* exists somewhere durable
+(gpu_submissions.jsonl's attempt phase is what made this morning's recovery a
+10-minute job instead of a lost run).

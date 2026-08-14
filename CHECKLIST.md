@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 79 / 169 demonstrated
+## 80 / 169 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -121,7 +121,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A linear probe on frozen DINOv2/SigLIP features beats the same probe on the current 0.24M from-scratch encoder.
       - _dies if:_ From-scratch matches pretrained.
       - _then delete:_ use_pretrained_vision=False. Currently DINOv2/SigLIP are never loaded.
-- [ ] **T2.04** Behaviour cloning on scripted trajectories
+- [x] **T2.04** Behaviour cloning on scripted trajectories
       - _asserts:_ The action head reproduces scripted MuJoCo trajectories above a nearest-neighbour baseline.
       - _dies if:_ Fails to beat nearest-neighbour retrieval.
 - [ ] **T2.05** World model beats constant prediction

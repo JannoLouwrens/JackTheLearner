@@ -264,6 +264,14 @@ Colab first for short work; Kaggle's 30 h/week is the scarce resource.
 Two things that will bite: `submit(timeout_s=N)` caps the remote run at N-60 s, so
 size it generously. And artifacts must be fetched by ABSOLUTE path (/content/x.json).
 
+**LAUNCH EVERY MULTI-HOUR DISPATCH VIA `scripts/dispatch.sh <SPEC_ID>`** — never
+as a plain foreground/background command in your session. A watcher that is a
+child of your session dies when the session dies (it has, twice: T2.01 v3 at
+~80 min, T2.04 on 2026-08-14 at 53 min), the kernel keeps computing, and the
+next iteration pays an archaeology tax to recover it. The script setsids the
+watcher so the result lands in the ledger regardless, refuses an unpushed HEAD,
+and prints the `JACK_REUSE_KERNEL` reattach command for the failure case.
+
 ## The loop
 
 - Implement the spec as `experiments/tests/t{tier}_{nn}_{slug}.py`, following the

@@ -6166,6 +6166,84 @@
       "spec_id": "T2.03",
       "status": "PASS"
     },
+    "T2.04": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "2d3a2d6",
+      "control_metrics": {
+        "mse_shuffled": [
+          0.129316,
+          0.13762,
+          0.126692
+        ],
+        "shuffled_beats_null": 0.0,
+        "shuffled_beats_null_std": 0.0
+      },
+      "duration_s": 69.32,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1786691678",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "history": [],
+      "impl_sha": "838ec5389b530702",
+      "message": "",
+      "metrics": {
+        "action_mse": [
+          0.001441,
+          0.001627,
+          0.001683
+        ],
+        "all_seeds_beat_null": 1.0,
+        "all_seeds_beat_null_std": 0.0,
+        "backend": "kaggle",
+        "clone_ratio_all": [
+          0.0702,
+          0.0831,
+          0.0739
+        ],
+        "clone_ratio_max": 0.0831,
+        "clone_ratio_max_std": 0.0,
+        "det_ok_all": 1.0,
+        "det_ok_all_std": 0.0,
+        "dims_ok_all": 1.0,
+        "dims_ok_all_std": 0.0,
+        "falls_train": [
+          52,
+          52,
+          51
+        ],
+        "finite_all": 1.0,
+        "finite_all_std": 0.0,
+        "gpu": "Tesla P100-PCIE-16GB",
+        "loss_bc_final_max": 0.00031,
+        "loss_bc_final_max_std": 0.0,
+        "mse_mean": [
+          0.088833,
+          0.089987,
+          0.088783
+        ],
+        "mse_nn": [
+          0.020514,
+          0.019569,
+          0.022777
+        ],
+        "mse_ridge": [
+          0.006569,
+          0.005129,
+          0.006043
+        ],
+        "nn_informative_all": 1.0,
+        "nn_informative_all_std": 0.0,
+        "ridge_beats_null_any": 1.0,
+        "ridge_beats_null_any_std": 0.0
+      },
+      "ran_at": "2026-08-14T08:11:00",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T2.04",
+      "status": "PASS"
+    },
     "T2.08": {
       "amended": [],
       "attempt": 2,
