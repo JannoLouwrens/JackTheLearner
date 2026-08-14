@@ -4020,3 +4020,27 @@ B3 (hardware stamp + gpu_job_id) still open.
   today; render+commit from clean tree). (2) T2.04 implement+dispatch to
   Kaggle (B4, gpu<20min, 10.8h left, dies Sunday 08-16) — smoke with
   production-extreme args first, one submission per spec. (3) B3 as above.
+- 2026-08-14 05:1x-05:5x (Fable): T2.04 (B4) COMPLETED-AND-COMMITTED, smoke in
+  flight at handoff. Inherited the timed-out iteration's uncommitted T2.04
+  (registry control + test file), verified the TrainingPipeline API surface it
+  touches (policy_mean/project_obs/normalize_obs/act_deterministic/obs_mean/
+  obs_var/obs_count all real), committed d4be9c5, PUSHED. First smoke attempt
+  killed by my own 900s timeout wrapper — exit 143, no output (buffered), no
+  defect. Instrumented detached re-run (/data/tmp/t204_smoke_driver.py ->
+  /data/tmp/t204_smoke.log, pid 2700966, survives iteration death) showed WHY:
+  everything through collection+pipeline-build takes 2.1s; the time all goes
+  into _train_bc — the UnifiedBrain forward on CPU is seconds/step (world
+  model + fusion + temporal memory on the path), so a "tiny" 30-step smoke is
+  ~15+ min on this loaded box. Not a bug; the reason the spec is GPU-budgeted.
+  NEXT ITERATION, IN ORDER: (1) read /data/tmp/t204_smoke.log — if last line
+  is "SMOKE OK", dispatch immediately: `python -m experiments.run T2.04`
+  (code already on origin/main at d4be9c5; Kaggle W32 10.78h left, DIES SUNDAY
+  08-16; est 0.36h, one submission covers all 3 seeds via module cache; if
+  your watcher dies mid-poll the kernel persists — reattach with
+  JACK_REUSE_KERNEL=<slug from `kaggle kernels list`>, do NOT submit fresh).
+  If the log shows a traceback instead, fix, re-smoke detached, then dispatch.
+  (2) LC.03 ALIVE at handoff (pid 2536994, ~14h of 15-20h expected, started
+  15:23 08-13) — do NOT relaunch; if it landed, render+commit from clean tree.
+  (3) B3 (hardware stamp + gpu_job_id) remains the next machine unit: edit
+  protocol.py+gpu.py then re-run T0.12/T0.17/T0.27 in ONE clean-tree commit
+  (their IMPL_DEPS hash those files).
