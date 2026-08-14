@@ -4044,3 +4044,14 @@ B3 (hardware stamp + gpu_job_id) still open.
   (3) B3 (hardware stamp + gpu_job_id) remains the next machine unit: edit
   protocol.py+gpu.py then re-run T0.12/T0.17/T0.27 in ONE clean-tree commit
   (their IMPL_DEPS hash those files).
+  (same iteration, 05:4x) TIMEOUT RESIZED before any dispatch: the smoke
+  measured >=39 s/train-step on CPU (30-step tiny smoke still inside
+  _train_bc at 20 min), so the production kernel overruns the original
+  timeout_s 3300 at any plausible GPU speedup. Now est_hours 2.0 /
+  timeout_s 18000 (fits the 21600 s child timeout). No gate touched —
+  apparatus sizing only. Smoke STILL RUNNING at handoff
+  (/data/tmp/t204_smoke.log, pid 2700966): dispatch ONLY after its last
+  line reads SMOKE OK. If the kernel later proves eval-dominated (12000
+  single-row act_deterministic forwards), the fix is a BATCHED
+  act_deterministic owned by TrainingPipeline (T0.16: one place), never a
+  re-implemented forward in the test.

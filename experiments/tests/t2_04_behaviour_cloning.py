@@ -328,12 +328,18 @@ def _submit(seeds: list) -> dict:
     job = build_job(body)
     # Kaggle first: W32's expiring hours are assigned to this spec (B4), and
     # the kernel survives a dead local watcher (JACK_REUSE_KERNEL). Timeout
-    # scales with seeds — one submission runs them all serially (LESSONS:
-    # multiply by seeds before sizing any budget or timeout) — and stays
-    # under the runner's own GPU_SHORT child timeout (1200s x 3 seeds x 2).
+    # sized from the smoke's MEASURED cost, not the budget label: the tiny
+    # smoke (d64, 30 steps, batch 256) ran >39 s/step on this box, so the
+    # production kernel (7200 train steps + 12000 single-row evals across
+    # seeds x arms) overruns the original 3300 s cap even at a 40x GPU
+    # speedup. 18000 s fits inside the runner's child timeout (21600 s) with
+    # setup+fetch headroom; billable charges only what the kernel's own log
+    # reports, so a generous cap costs nothing when the run is short
+    # (LESSONS: size it generously; a timeout that kills finished science is
+    # worse than a slow one).
     res = submit(job, prefer="kaggle",
-                 est_hours=round(0.06 + 0.10 * len(seeds), 2),
-                 timeout_s=1500 + 600 * len(seeds),
+                 est_hours=2.0,
+                 timeout_s=18000,
                  fetch=["t204.json"])
     if not res.ok:
         raise RuntimeError(f"T2.04 job failed on {res.backend}: {res.message}")
