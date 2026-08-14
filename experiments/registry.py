@@ -496,8 +496,14 @@ LADDER: list[Spec] = [
          falsified_by="Fails to beat nearest-neighbour retrieval.",
          null_baseline="Nearest-neighbour lookup in the demo set.",
          metric="action_mse", budget=Budget.GPU_SHORT, seeds=3, depends_on=["T1.01"],
+         control="The same action path trained on a shuffled (obs, action) "
+                 "pairing must NOT beat the nearest-neighbour null. If "
+                 "information-free supervision beats real retrieval, the "
+                 "metric is not measuring imitation.",
          notes="Procedurally generated in-sim. Needs no external dataset — the "
-               "CMU MoCap URLs 404 and the loader fabricates sinusoids."),
+               "CMU MoCap URLs 404 and the loader fabricates sinusoids.\n"
+               "Control added 2026-08-14, BEFORE first run (strengthen-only, "
+               "T1.02 precedent; run_spec refuses an undeclared control)."),
 
     Spec("T2.05", 2, "World model beats constant prediction",
          hypothesis="k-step latent prediction error < a persistence baseline.",
