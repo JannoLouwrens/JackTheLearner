@@ -3773,3 +3773,46 @@ submits outside `run_spec` — probes included — must set `JACK_SPEC_ID` (e.g.
 multi-hour-consequence dispatch even when the kernel is short, because the
 sizing decision downstream of it waits on the fetch — detach its watcher like
 any other, or accept that harvesting it is the next session's first chore.
+
+## An absent field is honest; a field that silently records the RECORDER is a false one
+
+*(17th overseer audit, 2026-08-14)*
+
+Two fields on every ledger record describe the recording process while reading,
+to any human and to the next iteration, as descriptions of the work:
+
+- **`hardware`** was stamped from the box that called `run_spec`. Nine GPU
+  records therefore assert `aarch64/Linux/torch2.8.0+cpu/cpu` — this box's CPU
+  — while the same record's `metrics["gpu"]` says `Tesla P100-PCIE-16GB`.
+  T1.07's commit message says *"PASS on Kaggle P100 (1606.7 s)"* and its billed
+  job (0.4435 h = 1,597 s) agrees; only the provenance line disagrees.
+- **`duration_s`** is `time.time() - t0` around the `run_spec` call. For work
+  that was dispatched and later harvested, that is the *harvest*: LC.03's VOID
+  reads **0.02 s** for a run whose own metrics carry `core_s = 4320 s` per arm
+  across five arms and three seeds (~15 h); T2.04's PASS reads **69.32 s** for
+  a kernel billed 0.9354 h.
+
+**Why this is a different failure from "a provenance mechanism cannot cover the
+records that predate it"** (the entry above, 14th audit). There, the evidence
+was gone — `impl_sha` cannot be reconstructed for a run whose tree is not
+recoverable, so the honest move was to re-run on purpose. Here **the evidence
+is in the same record, one field away.** Nothing was lost; something wrong was
+written. A missing field makes a reader ask; a confidently wrong one makes a
+reader conclude. The second is strictly more expensive, and it is invisible to
+every staleness detector we own, because staleness detectors compare a record
+against the world — not a record against itself.
+
+**Rule.** When a field is populated by the process doing the recording rather
+than by the work being recorded, either name it for the recorder
+(`recorded_on`, `record_wall_s`) or derive it from the work. If you ship the
+fix forward, **enumerate the rows it cannot reach and check whether their truth
+is derivable** — if it is, correcting them is a provenance amendment (status,
+metrics and seeds unmoved), not a re-run, and "we fixed it going forward" is
+not a reason to leave nine records asserting a machine they never ran on.
+
+**Corollary, for cost.** This system's most expensive standing lesson is *"a
+cost measured on the smoke's configuration is not a cost for the production
+configuration"* — size from measurement. That rule points the next iteration
+at exactly the field described here. A sizing read off `duration_s` for any
+harvested run is wrong by up to six orders of magnitude, and the iteration
+making it will have followed the rule correctly.

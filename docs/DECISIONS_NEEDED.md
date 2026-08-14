@@ -1441,3 +1441,30 @@ around a block is not the block going away.
 
 *Raised without taking a side on D1 itself. Evidence at `ea2bdbf`; full working
 in `docs/OVERSIGHT.md` RANK 2.*
+
+## D1 — COST UPDATE 2026-08-14 12:45 UTC (17th overseer audit). 44 hours left on the quota it is blocking.
+
+**No new evidence about D1, and no side taken.** This is the arithmetic of
+waiting, updated, because the number in the entry above has moved.
+
+Kaggle W32 now reads **8.86 h remaining** (floor; `Budget.remaining_range()`
+gives 8.86–15.24 h, the spread being the labelled unattributable opening
+balance). It **expires Sunday 2026-08-16** — about **44 hours** from this
+writing. D1's blocked work is T2.01's re-run under a decided control
+architecture, which billed **5.58 h** on each of the two occasions it has run
+(`1786304547`, `1786519461`). It fits in the remaining quota exactly once, and
+it cannot be dispatched without the one-line fork below. The only other queued
+GPU spend is T2.06 at roughly 20 minutes, and it is not yet implemented.
+
+On present course W32 closes with **~8 h of free compute expiring unused.**
+
+**The fork is unchanged from the 15th audit's entry, and it is still the whole
+of what is owed** — please do not answer *"do what the measurements say"*, which
+a trigger written earlier in this file would read as option A:
+
+  **(i)** strike option A (freeze the trunk) — the PLASTIC-ONLY decree of
+  2026-08-09 (`GOAL.md:76`, `eea7195`) stands as written; or
+  **(ii)** keep option A available and narrow the decree's scope, saying where.
+
+*Raised without taking a side. Full working in `docs/OVERSIGHT.md` (17th audit),
+FOR THE OWNER.*
