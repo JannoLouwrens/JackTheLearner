@@ -2882,43 +2882,69 @@
       "status": "PASS"
     },
     "T0.09": {
-      "amended": [
-        {
-          "at": "2026-08-10T00:12:33",
-          "by": "overseer 2026-08-09 \u00a71.2",
-          "changes": [
-            {
-              "field": "attempt",
-              "from": 1,
-              "to": null
-            }
-          ],
-          "commit": "6c0fcd1",
-          "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
-        }
-      ],
+      "amended": [],
       "attempt": null,
-      "commit": "bb1659d",
+      "commit": "06eab9e",
       "control_metrics": {
         "message": "exit 1",
         "ok": false
       },
-      "duration_s": 34.73,
+      "duration_s": 36.0,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "amended": [
+            {
+              "at": "2026-08-10T00:12:33",
+              "by": "overseer 2026-08-09 \u00a71.2",
+              "changes": [
+                {
+                  "field": "attempt",
+                  "from": 1,
+                  "to": null
+                }
+              ],
+              "commit": "6c0fcd1",
+              "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
+            }
+          ],
+          "commit": "bb1659d",
+          "control_metrics": {
+            "message": "exit 1",
+            "ok": false
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "artifact_bytes": 124,
+            "cuda_available": true,
+            "device": "Tesla T4",
+            "duration_s": 31.6,
+            "gpu": "Tesla T4, 15360 MiB",
+            "matmul_finite": true,
+            "message": "",
+            "ok": true
+          },
+          "ran_at": "2026-08-04T15:46:53",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "99c5042d8fa77c5f",
       "message": "",
       "metrics": {
         "artifact_bytes": 124,
         "cuda_available": true,
         "device": "Tesla T4",
-        "duration_s": 31.6,
+        "duration_s": 31.9,
         "gpu": "Tesla T4, 15360 MiB",
         "matmul_finite": true,
         "message": "",
         "ok": true
       },
-      "ran_at": "2026-08-04T15:46:53",
+      "ran_at": "2026-08-14T01:21:25",
       "seeds": [
         0
       ],

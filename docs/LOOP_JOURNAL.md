@@ -3973,3 +3973,9 @@ spec) and dispatch; if BA.02 parks per D8, the zero-pass rule's next picks
 are SM.02/TA.02/VO.02 per CHAMPIONS. T2.01 re-submission stays DECLINED per
 the 08-13 lesson. (4) B2 (CHAMPIONS.md:66 frozen-trunk+head annotation) and
 B3 (hardware stamp + gpu_job_id) still open.
+  (same iteration, ~10:1x) B1 bullet-2 first half done: T0.09 re-run on Colab
+  — PASS 36s, Tesla T4, matmul finite, artifact fetched; clean stamp at
+  06eab9e + impl_sha, so its UNSTAMPED_CHANGED flag cleared and T2.01's dep
+  path is unblocked. Remaining stale-by-content: T1.07 (gpu, needs a real
+  Colab training run — next iteration's first pick alongside T2.04) and
+  T2.02 (VOID, blocked on D1, stays flagged per the audit).
