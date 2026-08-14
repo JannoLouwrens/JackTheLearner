@@ -73,6 +73,10 @@ class PipelineConfig:
                                 # anyway (see the dropout note in
                                 # collect_rollout_vec).
     action_dim: int = 17
+    enable_world_model: bool = False  # forwarded to UnifiedBrainConfig; without
+                                      # this passthrough the shipped TD-MPC2
+                                      # WorldModel was uninstantiable through
+                                      # the pipeline (found by T2.05)
 
     # Training
     batch_size: int = 64
@@ -244,6 +248,7 @@ class TrainingPipeline:
             n_layers=self.config.n_layers,
             obs_dim=self.config.obs_dim,
             action_dim=self.config.action_dim,
+            enable_world_model=self.config.enable_world_model,
             llm_enabled=False,
             vision_enabled=False,
             audio_enabled=False,

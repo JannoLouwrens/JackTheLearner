@@ -509,7 +509,19 @@ LADDER: list[Spec] = [
          hypothesis="k-step latent prediction error < a persistence baseline.",
          falsified_by="Predicting 'next state = current state' does as well.",
          null_baseline="Persistence (copy current state) and mean-state.",
-         metric="k_step_mse", budget=Budget.GPU, seeds=3, depends_on=["T1.01"]),
+         metric="k_step_mse", budget=Budget.GPU, seeds=3, depends_on=["T1.01"],
+         control="The same world-model path trained identically on a shuffled "
+                 "(window, target) pairing must NOT beat the persistence null. "
+                 "If information-free supervision predicts the future better "
+                 "than copying the present, the metric is not measuring "
+                 "prediction.",
+         notes="Error is measured in z-scored RAW observation space, not "
+               "latent space: a latent ruler is owned by the model under test "
+               "(a collapsed latent scores zero error on everything — the "
+               "LC.03 twin-control scar, one level down). Horizon K=5 is the "
+               "shipped imagination_horizon. Control added 2026-08-14, BEFORE "
+               "first run (strengthen-only, T1.02/T2.04 precedent)."
+               "  COVERS: world model (claim)"),
 
     Spec("T2.06", 2, "Language-action alignment beats chance",
          hypothesis="Contrastive retrieval of the right action anchor from a command "
