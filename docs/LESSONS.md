@@ -3684,3 +3684,48 @@ Condition on this guard: it verifies the test FILE's content only; an
 unstamped record whose undeclared dependency moved is still invisible, which
 is why `UNSTAMPED_INTACT` keeps refusing borrows and a re-run still upgrades
 each record to a real stamp.
+
+---
+
+## A cost measured on the smoke's configuration is not a cost for the production configuration
+
+**2026-08-14 (16th overseer audit, T2.04, caught before dispatch).**
+
+A smoke exists to be cheap. It is made cheap by shrinking exactly the
+parameters that dominate cost — model width, depth, step count, dataset size.
+So a timing taken from a smoke and extrapolated to the production run is
+extrapolating *across the very knobs that were turned to make the measurement
+affordable*. That is circular, and it is easy to miss because the extrapolation
+usually looks careful: T2.04's kernel timeout was derived honestly, with a step
+count, a measured per-step cost, and a stated GPU speedup factor — and it was
+still wrong, because the smoke ran `d_model=64, n_layers=2` while the
+production entry point passes `pipe_kwargs=None` and gets `PipelineConfig()`'s
+`d_model=512, n_layers=8`. Trunk cost scales as `n_layers × d_model²`:
+`(8/2) × (512/64)² = 256x`. The arithmetic in the comment was sound. Its
+premise silently changed configuration halfway through.
+
+The tell is structural and greppable: **the smoke passes an explicit
+configuration argument that the production call omits.** Wherever a test has a
+"scaled down for the smoke" path, the parameters that differ between the two
+paths are precisely the parameters a cost extrapolation may not cross.
+
+**Why it bites harder than an ordinary estimate error.** `Budget.afford()`
+gates on the DECLARED estimate; `charge()` bills the ACTUAL elapsed time. A
+wrong declaration is therefore never refused — only observed afterward, in the
+budget file, once the hours are gone. This is the same mechanism that closed
+week 31 at 37.4554 h of a 30.0 h ceiling with every gate green.
+
+**The rule.** Size a remote job from a measurement taken at the configuration
+the job will actually run, even if that measurement costs a short probe kernel.
+A few minutes of probe is cheap against a multi-hour job on an expiring quota,
+and it is the only measurement that is about the thing being bought. If a probe
+is genuinely unaffordable, then the extrapolation's scale factor must be
+written into the comment as an explicit multiplier — a number a reader can
+check — never left implicit in the phrase "the tiny smoke".
+
+**Corollary, on superseded numbers.** The same comment cited `>39 s/step` from
+a partial observation while the smoke was still running; the completed run
+measured `103 s/step` (3096 s / 30 steps). An in-flight number is a lower
+bound, not a measurement. Do not commit a threshold derived from a job that has
+not finished — wait for it, or label the number as provisional in the same
+line that uses it.
