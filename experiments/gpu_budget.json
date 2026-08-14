@@ -73,6 +73,13 @@
       "week": "2026-W32"
     }
   },
+  "opening_balances": {
+    "2026-W32:kaggle": {
+      "hours": 6.3849,
+      "labelled_at": "2026-08-14T07:1x builder, per overseer B2",
+      "reason": "Pre-per-job-records balance: weeks counter carried 6.3849h when charged_jobs was still empty (gap opened at 92931a6, frozen through every commit since \u2014 overseer 16th audit, RANK 2). Unattributable to any job; NOT lowered, because over-stating spend is the safe direction. remaining() is therefore a FLOOR this week; Budget.remaining_range() reports the honest interval."
+    }
+  },
   "overruns": [],
   "weeks": {
     "2026-W31": {

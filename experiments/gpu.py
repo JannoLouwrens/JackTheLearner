@@ -332,6 +332,47 @@ class Budget:
             return float("inf")
         return max(0.0, KAGGLE_WEEKLY_HOURS - self.used_hours("kaggle"))
 
+    def unattributable_hours(self, backend: str) -> float:
+        """This week's productive hours that no `charged_jobs` row accounts for.
+
+        A positive value means `remaining()` is a FLOOR, not a fact: the week
+        counter carries hours no known job spent. W32 opened with 6.3849 such
+        Kaggle hours — a pre-per-job-records balance, frozen since `92931a6`
+        when `charged_jobs` was empty (overseer 16th audit, RANK 2) — labelled
+        in the file's `opening_balances`. If this number ever EXCEEDS the
+        labelled opening balance, hours are leaking NOW, not historically, and
+        `remaining_range` says so on stderr.
+        """
+        wk = self._week()
+        attributed = sum(j["hours"] for j in self.data["charged_jobs"].values()
+                         if j["week"] == wk and j["backend"] == backend
+                         and j["ok"])
+        return max(0.0, round(self.productive_hours(backend) - attributed, 4))
+
+    def labelled_opening_balance(self, backend: str) -> float:
+        entry = self.data.get("opening_balances", {}).get(
+            f"{self._week()}:{backend}", {})
+        return float(entry.get("hours", 0.0))
+
+    def remaining_range(self, backend: str) -> tuple:
+        """(floor, ceiling) for hours remaining. The floor is `remaining()`,
+        which treats unattributable hours as spent — the safe direction, kept
+        deliberately. The ceiling is what it would read if none of them were
+        real GPU time. Anyone RATIONING against the number should see the
+        range, not the floor presented as a fact."""
+        lo = self.remaining(backend)
+        if backend != "kaggle":
+            return lo, lo
+        gap = self.unattributable_hours(backend)
+        excess = round(gap - self.labelled_opening_balance(backend), 4)
+        if excess > 0.05:
+            print(f"!! GPU BUDGET LEAK: {excess:.4f}h of this week's {backend} "
+                  f"hours are unattributable BEYOND the labelled opening "
+                  f"balance — a job charged the week counter without a "
+                  f"charged_jobs row, live, not legacy", file=sys.stderr,
+                  flush=True)
+        return lo, min(KAGGLE_WEEKLY_HOURS, lo + gap)
+
     def overruns(self) -> list:
         return list(self.data.get("overruns", []))
 
@@ -789,7 +830,12 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
     head = _head_sha()
     for backend in order:
         if backend == "kaggle" and not reuse and not budget.afford("kaggle", est_hours):
-            attempts.append(f"kaggle: {budget.remaining('kaggle'):.1f}h left, need {est_hours}h")
+            lo, hi = budget.remaining_range("kaggle")
+            attempts.append(
+                f"kaggle: {lo:.1f}h left (floor; up to {hi:.1f}h — "
+                f"{budget.unattributable_hours('kaggle'):.1f}h of the week's "
+                f"charge is unattributable, see opening_balances), "
+                f"need {est_hours}h")
             continue
         if backend == "colab":
             # A Colab result lives in THIS process: `colab run` blocks for the
