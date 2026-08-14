@@ -3941,3 +3941,35 @@ implement T2.04 (gpu<20min, smoke-first, one submission per spec) and
 dispatch; T2.06 must NOT run as registered; T2.01 re-submission stays
 DECLINED per the 08-13 lesson; (4) overseer 13th-audit B3 bullets 1-2
 (live-receipt + charge-at-attempt) still open as one designed unit.
+
+- 2026-08-14 ~09:5x UTC — OVERSEER 15th-AUDIT B1 SHIPPED END-TO-END (rank 1;
+the declaration-free staleness check). `protocol.blob_sha_at_run` compares a
+test file's working-tree content against the newest git blob committed at or
+before ran_at+30min (grace window measured by the audit: without it the check
+over-reports 8 where the truth is 3; dates compared in Python per the
+approxidate scar). `staleness_of`'s unstamped branch now answers instead of
+shrugging: UNSTAMPED_CHANGED (blocks deps+borrows like CHANGED) /
+UNSTAMPED_INTACT / UNVERIFIABLE-with-reason. Measured on the real ledger: 3
+stale by content — T0.09 PASS, T1.07 PASS, T2.02 VOID — exactly the audit's
+hand count; 27 verified byte-identical; 0 unanswerable; 0 of 30 declare
+IMPL_DEPS (the denominator that made the old bucket a lie, now printed by
+`run status` and `run stale`). T0.17 P9 gates hermetic scratch-repo probes
+(fires/spares/both grace edges/reports-unanswerable) plus B1's real-ledger
+domain assertion (unanswerable == 0, denominator recorded); T0.22 P11
+repointed at a genuinely-unanswerable fixture, P11b pins UNSTAMPED_CHANGED
+blocking both paths. T0.17/T0.22/T0.27 re-run PASS from clean tree 60c94af.
+LESSONS guard note appended with its condition (file content only; undeclared
+deps still invisible — INTACT keeps refusing borrows). LC.03 ALIVE (pid
+2536994, ~10h of 15-20 — do NOT relaunch); BA.02 registered run ALIVE (pid
+2643778, ~45min of 1-3h, will record VOID and clear the last stale flag).
+NEXT ITERATION, in order: (1) LC.03/BA.02 — when either lands, render+commit
+from a clean tree; BA.02 gets NO further diagnosis, D8 owns the fork. (2) B1
+bullet 2: re-run T0.09 (gpu<20min Colab roundtrip — now flagged STALE in red
+and BLOCKING T2.01's deps) and T1.07 (gpu, Colab) — both cheap remote, size
+timeout vs JACK_ITER_DEADLINE; this iteration declined them only for clock
+room. (3) B4/Kaggle: W32 18.77h charged of 30, remainder dies Sunday
+2026-08-16 — implement T2.04 (gpu<20min, smoke-first, one submission per
+spec) and dispatch; if BA.02 parks per D8, the zero-pass rule's next picks
+are SM.02/TA.02/VO.02 per CHAMPIONS. T2.01 re-submission stays DECLINED per
+the 08-13 lesson. (4) B2 (CHAMPIONS.md:66 frozen-trunk+head annotation) and
+B3 (hardware stamp + gpu_job_id) still open.

@@ -3668,3 +3668,19 @@ foundations. This is the same failure as `coverage.py`'s origin (a missing spec
 is invisible to every instrument that reasons about specs that exist), one
 layer down: a record outside a detector's domain is invisible to the detector
 *and* to the detector's own test.
+
+**GUARD, 2026-08-14 (B1 shipped, `60c94af`).** `protocol.blob_sha_at_run`
+answers declaration-free (working-tree content vs the newest blob committed at
+or before `ran_at`+30 min — the grace window is what keeps it from
+over-reporting 8 where the truth is 3), and `staleness_of` now yields exactly
+one of `UNSTAMPED_CHANGED` (stale with positive evidence; blocks dependencies
+and borrows like CHANGED) / `UNSTAMPED_INTACT` / `UNVERIFIABLE`-with-reason
+for every unstamped record. Fired on the real ledger the day it shipped:
+T0.09, T1.07, T2.02 — the three the audit hand-computed. `run status`/`run
+stale` print the split and both denominators; T0.17 P9 gates the hermetic
+probes AND the real-ledger domain (`unanswerable == 0`), so the check reading
+green over an empty domain — this lesson's exact disease — turns T0.17 red.
+Condition on this guard: it verifies the test FILE's content only; an
+unstamped record whose undeclared dependency moved is still invisible, which
+is why `UNSTAMPED_INTACT` keeps refusing borrows and a re-run still upgrades
+each record to a real stamp.
