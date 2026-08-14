@@ -1369,3 +1369,75 @@ changes are world-contract changes.
 A VOID re-run of the current spec is in flight to make the ledger entry
 current (it also clears the last stale flag); it does not prejudge this
 decision.
+
+## D1 — DO NOT ANSWER "DO WHAT THE MEASUREMENTS SAY". The menu above is unconstitutional, and the 14th audit compounded it (15th overseer audit, 2026-08-14 00:40 UTC)
+
+**This is not new evidence about D1. It is a correction to what the previous
+overseer entry asked you to do, and it needs one line from you before D1 can
+be answered at all.**
+
+**What happened.** The entry at line 1216 of this file — *"D1 — COST UPDATE
+2026-08-13 (14th overseer audit)"* — states:
+
+> *"**A — freeze the trunk for control, small dedicated policy head, trunk
+> keeps perception/language/memory** — remains the loop's recommendation…
+> **One line settles it.** 'Do what the measurements say' will be read as A,
+> journalled, and T2.01 re-run under the new architecture."*
+
+Five hundred and eighty-five lines earlier in this same file, unanswered since
+**2026-08-10**, sits *"D1 — THE OPTION SET IS STALE: option A contradicts the
+PLASTIC-ONLY decree"*, which established:
+
+  - `GOAL.md:76` (your decree, 2026-08-09, commit `eea7195`): **"PLASTIC ONLY
+    — nothing inside him is frozen… Every component inside Jack learns: his
+    encoders, his core, his fusion."**
+  - A frozen 57M trunk with a small trained head **is** a frozen component
+    inside Jack. Option A is barred by a decree that postdates it.
+  - It asked you for a fork — **(i) strike option A**, or **(ii) keep A and
+    narrow the decree's scope in `CHAMPIONS.md`** — and that fork has never
+    been picked.
+
+The 14th audit's update does not reference that entry. Because this file is
+append-only and is read bottom-up, the pre-authorised trigger is what you see
+and the bar is what you don't.
+
+**The concrete risk.** A one-word reply — *"agreed"*, *"do what the
+measurements say"* — would, by the trigger the 14th audit wrote, be journalled
+as A and cause T2.01 to be re-run under a frozen-trunk architecture. That is an
+architecture change enacted against your own constitution, on a reply you
+believed was ratifying a measurement.
+
+**Also still true, four days on:** `docs/CHAMPIONS.md:66` lists the
+Control-architecture (D1) seat's challengers as *"frozen-trunk+head vs
+tuned-PPO vs others"* — item 4 of the 2026-08-10 entry, which `814ed89`'s
+plastic-only sweep missed. Filed for the builder as OVERSIGHT B2; the wording
+fix is mechanical, the fork below is not.
+
+**What is NOT in dispute.** D1's evidence. It has been complete since
+2026-08-09 and nothing has changed it: the 57M trunk at 261/318 return against
+a 54 K-parameter MLP at 531 and a 125 K net at 530, failing a 3σ learning gate
+that a 125 K net clears at 7σ, across three independent runs at matched
+env-steps. The trunk is not a good motor controller. That finding stands
+whichever fork you pick.
+
+**THE ASK — one line, and it unblocks ten days of locomotion work:**
+
+  - **(i) "Strike option A."** D1 becomes B (split trunks) vs C (keep training
+    end-to-end — the 2026-08-09 13:45 correction reclassified this from
+    *refuted* to **UNTESTED**) vs D (delete the transformer from the control
+    path). `CHAMPIONS.md`'s challenger list is corrected in the same breath.
+  - **(ii) "Keep A; PLASTIC-ONLY governs sensory towers, not the control
+    trunk."** Defensible — the decree's stated reason is a *sensory* tower's
+    reshaping gain — but it must be written into `CHAMPIONS.md`'s SCOPE
+    paragraph, because nothing there distinguishes the two today.
+
+**Cost of leaving it, now measurable.** D1 blocks T2.01 (the ladder's oldest
+FAIL) and T2.02 (VOID), which are the only two GPU-ready specs with
+implementations. **11.23 Kaggle GPU-hours expire Sunday 2026-08-16.** Ten days
+open. The loop has correctly routed around it — 42+ specs passed meanwhile, and
+on 2026-08-13 it correctly *declined* to re-run T2.01 (`a3b12f6`) on the
+grounds that a re-run against an unchanged 5σ bar is run-until-pass. Routing
+around a block is not the block going away.
+
+*Raised without taking a side on D1 itself. Evidence at `ea2bdbf`; full working
+in `docs/OVERSIGHT.md` RANK 2.*

@@ -3615,3 +3615,56 @@ VOIDs forever. Corollary: an actuator excluded from a rig by argument
 unmeasured piece of the envelope; probe the exclusion before trusting it —
 here the excluded drive was the one actuator with directional authority,
 and only in the harmful direction, which no argument predicted.
+
+## A planted positive proves a detector CAN fire; it does not prove any real record is in its domain
+
+*(15th overseer audit, 2026-08-14)*
+
+Two lessons in this file already guard the shape of an alarm that reads zero.
+*"A provenance mechanism cannot cover the records that predate it"* demanded
+that `run stale` split **"cannot be checked"** from **"cannot be checked AND
+its declared dependency has since moved"**. *"The commit that starts recording
+a new signal must also land the organ that reads it"* demanded a **planted
+known-positive**, because *"a bucket that reads zero because nothing has
+tripped it yet is indistinguishable from a bucket that cannot fire."*
+
+Both were obeyed. `b5db2d4` shipped the `UNVERIFIABLE_MOVED` detector, and
+T0.17 plants a fabricated moved-dependency record, watches the detector fire,
+plants an unmoved one, and watches it stay silent. T0.17 PASSes. `run stale`
+prints:
+
+    30 further entries predate `impl_sha` and cannot be checked at all
+    (no declared dependency has moved)
+
+**The parenthesis is true and empty. All 30 of the 30 declare no `IMPL_DEPS`.**
+`impl_sha` and `IMPL_DEPS` shipped in the same commit, so every record old
+enough to lack the stamp is old enough to lack the declaration: the detector's
+domain and the at-risk population are disjoint **by construction**, not by
+luck. The planted positive lived in the domain. No real record did.
+
+**What the third check would have caught.** Provenance does not need a
+declaration. Compare each unstamped record's implementation file at HEAD
+against the same file as it stood when the record was written. That is exact,
+needs nobody's opt-in, and finds three genuinely stale records the instrument
+calls unchecked: T0.09 (PASS), T1.07 (PASS), T2.02 (VOID). Note the fallback
+that makes it correct: compare against the newest commit touching the file
+**within ~30 min of `ran_at`**, not against the recorded `commit` — the
+recording commit routinely lands *seconds after* its own run, and comparing
+against the recorded commit alone reports 8 where the truth is 3. An
+over-reporting auditor is a defect too.
+
+**Rule.** A detector that reports a count must report its **denominator** —
+the size of the population it examined — and the same commit must assert that
+denominator is non-empty **over the real ledger**, not over a fixture. Ask, of
+every new alarm: *what fraction of the records at risk are inside its domain,
+and is that fraction structurally capped below 1?* Here the cap was 0, and
+three separate green instruments agreed on it.
+
+**Corollary.** Prefer a check whose input is a property the artifact **cannot
+help having** (file content, commit hash) over one whose input is a
+**declaration someone had to remember to write**. An opt-in field can only ever
+protect the records written after somebody thought of it — which is never the
+foundations. This is the same failure as `coverage.py`'s origin (a missing spec
+is invisible to every instrument that reasons about specs that exist), one
+layer down: a record outside a detector's domain is invisible to the detector
+*and* to the detector's own test.
