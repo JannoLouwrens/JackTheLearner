@@ -3760,3 +3760,16 @@ is and whether the parent is guaranteed to outlive the wait. If not, detach it
 at birth, and make sure a receipt of the *attempt* exists somewhere durable
 (gpu_submissions.jsonl's attempt phase is what made this morning's recovery a
 10-minute job instead of a lost run).
+
+**Corollary, third occurrence (2026-08-14, the T2.05 probe): a receipt is only
+as good as its label.** The probe kernel's watcher died with its session — the
+detached-watcher guard existed by then, but the probe was submitted ad hoc from
+session code, not through `dispatch.sh`, and its attempt receipt carried
+`"spec": ""`. The next iteration could only attribute it by reading the job
+script out of `/data/tmp`. Recovery stayed a 10-minute job, but only because
+that directory had not been reaped yet. Two rules fall out: (1) anything that
+submits outside `run_spec` — probes included — must set `JACK_SPEC_ID` (e.g.
+`T2.05-probe`) so the receipt names its purpose durably; (2) a probe IS a
+multi-hour-consequence dispatch even when the kernel is short, because the
+sizing decision downstream of it waits on the fetch — detach its watcher like
+any other, or accept that harvesting it is the next session's first chore.

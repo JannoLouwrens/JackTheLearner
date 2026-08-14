@@ -4106,3 +4106,26 @@ B3 (hardware stamp + gpu_job_id) still open.
   probe, dispatch via scripts/dispatch.sh, in that order. If the meter blocks
   implementing, the standing rule's CPU picks remain SM.02/TA.02/VO.02 (17
   zero-pass commitments per coverage — re-read `run coverage` yourself).
+- 2026-08-14 11:0x-11:2x (Fable): T2.05 DISPATCHED — written for a reader who
+  may arrive Aug 19 (Fable meter 95% at 11:07, past the 90% stop; all-models
+  83%). INHERITED: the T2.05 production-config probe (kernel 1786702211,
+  attempt 10:10, spec "" — see the new LESSONS corollary) had a dead watcher;
+  kernel was COMPLETE server-side, harvested via kaggle CLI. MEASURED (P100,
+  PipelineConfig defaults): train 0.4276 s/step, build 1.54 s, collect
+  0.00072 s/row, eval 0.68 s/600 rows. Billed 150 s idempotently, closed the
+  dangling receipt. SIZED: 2 trainings x 1200 steps x 0.4276 x 3 seeds + setup
+  = 0.92 h measured -> est_hours 1.2 / timeout_s 7200, arithmetic in 9128d69,
+  pushed. DISPATCHED via scripts/dispatch.sh: kernel
+  jannolouwrens/jack-ladder-1786705853 RUNNING at 11:11, detached watcher pid
+  2772293, log /data/tmp/dispatch_t2_05.log (tmp gets reaped — the durable
+  records are the attempt receipt at head 9128d69 and the kernel itself).
+  NEXT ITERATION, in order: (1) if a T2.05 result receipt + ledger row exist,
+  render + commit from the clean tree — the watcher records but does NOT
+  commit. (2) If the watcher is dead with NO result receipt: check
+  `kaggle kernels status jannolouwrens/jack-ladder-1786705853`; if COMPLETE,
+  reattach FREE with JACK_REUSE_KERNEL=jack-ladder-1786705853
+  scripts/dispatch.sh T2.05 — do NOT submit fresh. (3) W32 kaggle floor ~8.5 h
+  after this run bills, DIES SUNDAY 08-16: the remaining honest spend is T2.06
+  (gpu<20min, NEEDS IMPLEMENTING first — probe-size it per B1 if >30 min).
+  (4) LC.03's next step is rig re-derivation (why did a frozen twin gain
+  158 s?) — CPU work, fine in a dark-GPU week. T2.01 settled, do not touch.
