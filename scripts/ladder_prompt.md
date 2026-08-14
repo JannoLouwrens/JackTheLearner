@@ -120,25 +120,33 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    HOW JACK LEARNS. LC.00, LC.01, LC.02 all PASS — and as of 2026-08-10T08:32
    **PS.01 PASSES too** (attempt 3; the re-derivation this section used to ask
    for was done). The old text here said "the unit of work is PS.01, not
-   LC.03" and it is now spent work — do not do it. **LC.03 is runnable today
-   and `run blocked` ranks it SECOND in the project (frees 7, blocks 7):
-   DP.01, DP.02, DP.03, LC.04, LC.05, LC.06, OP.01.** It is the single largest
-   NON-GPU unblock available.
-   THE CAVEAT THIS SECTION CARRIED IS CLEARED (Review, 2026-08-13): PS.01's
-   stale flag is gone and `run stale` reads ZERO. **LC.03 is ready to run
-   as-is. Do not spend an iteration re-running PS.01.**
-   AND READ THIS BEFORE THE STANDING RULE SENDS YOU ELSEWHERE. LC.03 has been
-   named "the biggest non-GPU unblock" in this file and in the journal's NEXT
-   line for three consecutive days and has not been run once, because the
-   STANDING RULE (zero-pass commitments outrank fan-out) legitimately outranked
-   it every time. That rule is right and the builder was right to follow it —
-   but a rule that always wins starves everything behind it, and 16 commitments
-   still read zero. The tie-break, and it is not a loophole: **LC.03 SERVES the
-   standing rule transitively.** `fast/slow` has 5 declared specs and 0 passing,
-   and its only claim-kind specs — DP.01, DP.02, DP.03 — are ALL blocked behind
-   LC.03. LC.03 is therefore the cheapest existing path to that commitment's
-   first pass as well as the largest unblock; it satisfies both rankings at
-   once, which no other runnable spec does. Take it. Then LC.04 (THE ARBITRATION —
+   LC.03" and it is now spent work — do not do it.
+   **LC.03 IS IN FLIGHT. DO NOT RUN IT AND DO NOT RELAUNCH IT** (Review,
+   2026-08-14). The registered run started 2026-08-13 15:23 (pid 2536994, three
+   worker children) and had passed 15 h of its expected 15–20 h at 06:40.
+   Verify before acting on this line — `ps -p 2536994` — and if it has landed,
+   read the result; if it has died, read the journal's handoff before
+   relaunching. Its workers are why `load` reads 3–5 and why any CPU timing you
+   measure while it runs is pessimistic: that is apparatus noise, not a finding.
+   TWO CORRECTIONS, both against the Review that wrote this section:
+   (a) "LC.03 is ready to run as-is" was **WRONG** — no `lc_03` test file
+   existed and the builder had to implement it first. A spec whose dependencies
+   pass is not a spec that exists; check `experiments/tests/` before you believe
+   any organ that calls something runnable.
+   (b) `run blocked` now scores it **frees 8 / blocks 8** (PS.04 joined), still
+   SECOND in the project. Read the live ranking, not this line.
+   WHY IT WAS RIGHT TO TAKE — kept because it is the reasoning, not the status.
+   LC.03 was named "the biggest non-GPU unblock" for three days and displaced
+   every time by the STANDING RULE
+   (zero-pass commitments outrank fan-out). That rule is right and
+   the builder was right to follow it — but a rule that always wins starves
+   everything behind it, and `run coverage` still reads **17 commitments with
+   specs and nothing passing** (read it yourself; it has not moved in 24 h).
+   The tie-break, and it is not a loophole: **LC.03 SERVES the standing rule
+   transitively.** `fast/slow` has 5 declared specs and 0 passing, and its only
+   claim-kind specs — DP.01, DP.02, DP.03 — are ALL blocked behind LC.03. It
+   satisfies both rankings at once, which no other runnable spec does.
+   WHEN IT LANDS: LC.04 (THE ARBITRATION —
    PPO vs world-model arms at matched experience, cpu<2h), LC.05 (matched
    compute), LC.06 (simplicity budget). ZERO GPU, so it runs beside any GPU
    job. Carry the three guards the owner added on 2026-08-09,
@@ -169,19 +177,37 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    EpisodicMemory.py is the substrate and its docstring explains the contract),
    then UB.1-8 / CU.1-7 / T2.14-20 where implementable without GPU.
 2. GPU budget calendar — the owner chose FREE COMPUTE ONLY (no rented GPUs):
-   - **ONLY ONE CLOCK IS BINDING NOW, AND IT IS KAGGLE (Review, 2026-08-13,
-     superseding the 08-11 two-clocks note).** The Claude week reset on
-     2026-08-12 12:00 UTC: `week:all models` reads **32%**, Fable 35%, and the
-     loop is running on Fable again rather than falling back to Opus. Credits
-     are not scarce this week — **do not ration iterations against them**; read
-     `scripts/claude_usage.py` before you believe any number written here.
-     What IS scarce: **Kaggle W32 has ~11.5 h of 30 h left and it resets Sunday
-     2026-08-16 — unspent hours are destroyed, not carried.** The single job
-     that both fits and matters is **T2.01 (gpu<8h)**, the ladder's largest
-     blocker (frees 26, blocks 36). Every P100 job was silently dead until the
-     torch+torchvision pin was repaired and verified live on 2026-08-13; this
-     is the first week T2.01 can actually run there. Submit it before Sunday or
-     say in the commit why not.
+   - **BOTH CLOCKS BIND, AND THEY COLLIDE THIS WEEKEND (Review, 2026-08-14 —
+     THIS REVERSES THE 08-13 LINE THAT SAID CREDITS ARE NOT SCARCE. That line
+     was true when written and is now false; read the meter, not the prose.)**
+     Run `scripts/claude_usage.py` FIRST, every iteration that plans anything
+     multi-hour. At 2026-08-14 06:40 it read **`week:all models` 71%, Fable
+     75%, resetting Aug 19 11:59 UTC** — up from 32% twenty-four hours earlier.
+     The hard stop in `lib_usage.sh` is **90%**, it takes the overseer and the
+     Review down with you, and only an owner-written `.usage-resumed` lifts it.
+     At the observed burn (~39 points/day) 90% arrives roughly 12 h after that
+     reading, leaving ~5 days dark. Three fires were already lost to a
+     *session* limit on 08-13 (10:07/11:07/12:07 UTC) — a different, faster
+     meter than the weekly one, and the loop has no gate for it.
+     **The collision: Kaggle W32 has ~10.9 h of 30 h left and it dies Sunday
+     2026-08-16** (read `experiments/gpu_budget.json`, never assume). If the
+     weekly gate closes first, those hours cannot be spent at all. **So GPU
+     dispatch is the work that must not wait** — a submitted job keeps running
+     while the loop is dark; an unsubmitted one is worth nothing on Monday.
+     **T2.01 IS SETTLED — DO NOT RE-SUBMIT IT AND DO NOT RE-LITIGATE THE
+     DECLINE** (builder, `a3b12f6`, 2026-08-13, endorsed by the Review
+     2026-08-14). The 08-13 Review ordered it re-run on the premise that the
+     dead P100 had made the run impossible; the ledger disagreed. T2.01 v5 ran
+     clean on the P100 on **08-12 12:59** (commit `08444b2`, after the critic
+     fix, before the cudnn break) and its artifact shows reward-per-step flat at
+     ~5.15 from 100K to 700K steps on all three seeds. The curve has converged,
+     so the pre-registered "climbing curve → more compute" branch does not
+     apply, and the binding sigma is the trained-seed spread itself (means
+     280/447/484 → 2.67σ against a bar of 5 that does not move). Re-submitting
+     would be a seed-lottery redraw — **run-until-pass, a stealth threshold
+     weakening**, and refusing it was correct. T2.01 frees 26 and blocks 36 and
+     it will not be unblocked by GPU hours: it needs a better locomotion claim
+     or a better body, which is design work, not compute.
    - Kaggle 30h/week resets SUNDAY. NEVER assume how much is left — read
      `experiments/gpu_budget.json` for the live week's charges; the T2.01
      re-run already consumed part of this week. GPU_LONG goes to Kaggle only.
@@ -199,18 +225,15 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 3. GPU work follows DIRECTION_AUDIT's sequencing: the T2.01/T2.02 re-runs are
    worth doing but RE-SCOPED behind registering and running D1.0 + T2.21 — they
    should answer WHERE the trunk belongs, not merely whether it learned.
-   **REVIEW, 2026-08-13 — THIS GATE HAS NEVER BEEN EXECUTED AND IS FENCING OFF
-   THE LADDER'S LARGEST BLOCKER WITH SPECS THAT DO NOT EXIST.** `D1.0` and
-   `T2.21` are NOT in the registry, nine days after this line was written, and
-   nobody is building them; meanwhile T2.01 re-ran twice anyway (1.19 sigma ->
-   2.67 sigma after the critic fix) and the sequencing note was silently
-   ignored both times. A gate that is ignored rather than met is worse than no
-   gate. Resolve it EXPLICITLY, one of two ways, and say which in the commit:
-   (a) register D1.0 + T2.21 in an iteration and run them first, or (b) run
-   T2.01 without them and state that it measures WHETHER the trunk learns, not
-   WHERE it belongs — the WHERE question is D1, it is with the owner, and it
-   cannot be answered by any run while its option set stays unconstitutional.
-   Do not choose by drifting past it a third time. Keep
+   **RESOLVED 2026-08-13 AS (b), by the builder, in `a3b12f6` — DO NOT REOPEN
+   IT.** The 08-13 Review found this gate had never been executed and was
+   fencing off the ladder's largest blocker with two specs (`D1.0`, `T2.21`)
+   that were not in the registry nine days later, while T2.01 re-ran past it
+   twice regardless. It demanded an explicit choice. The builder chose (b) and
+   recorded the reasoning: **T2.01 measures WHETHER the trunk learns, not WHERE
+   it belongs. The WHERE question is D1, it is on the owner's desk, and no run
+   can answer it while its option set stays unconstitutional.** That stands.
+   D1.0 and T2.21 remain unregistered by decision, not by neglect. Keep
    D1_CONTROL_ARCHITECTURE's lesson: match optimiser steps as well as
    env-steps, report both. The dropout/obs-dim history is in LESSONS.md — read
    it before touching any eval code; never cite the old 4.06-sigma or
