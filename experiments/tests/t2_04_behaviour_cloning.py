@@ -328,18 +328,24 @@ def _submit(seeds: list) -> dict:
     job = build_job(body)
     # Kaggle first: W32's expiring hours are assigned to this spec (B4), and
     # the kernel survives a dead local watcher (JACK_REUSE_KERNEL). Timeout
-    # sized from the smoke's MEASURED cost, not the budget label: the tiny
-    # smoke (d64, 30 steps, batch 256) ran >39 s/step on this box, so the
-    # production kernel (7200 train steps + 12000 single-row evals across
-    # seeds x arms) overruns the original 3300 s cap even at a 40x GPU
-    # speedup. 18000 s fits inside the runner's child timeout (21600 s) with
-    # setup+fetch headroom; billable charges only what the kernel's own log
-    # reports, so a generous cap costs nothing when the run is short
-    # (LESSONS: size it generously; a timeout that kills finished science is
-    # worse than a slow one).
+    # sized from a PROBE AT THE PRODUCTION CONFIG on the target P100
+    # (overseer 16th audit B1: the earlier declaration extrapolated the d64/
+    # 2-layer smoke's cost across a ~256x trunk-size gap — LESSONS: a cost
+    # measured on the smoke's configuration is not a cost for the production
+    # configuration). Probe 2026-08-14 07:10 UTC, kernel
+    # jack-ladder-1786691401, PipelineConfig() defaults d512 x 8 verified in
+    # its artifact: 0.4225 s/train-step (25 timed after 5 warmup),
+    # 0.0157 s/eval-row (act_deterministic), 0.00063 s/collect-row.
+    # Projection: 7200 train steps (1200 x 2 arms x 3 seeds) = 3042 s
+    # + 12000 eval rows = 189 s + 12000 collect rows = 8 s + 6 builds = 8 s
+    # = 3247 s core; + ~250 s setup (probe's whole billable window incl. pip
+    # was 192 s) ~= 3500 s ~= 0.97 h -> est_hours 1.0. timeout_s 7200 is
+    # ~2x the projection (queue + variance headroom, fits the runner's
+    # 21600 s child timeout); billable charges only what the kernel's own
+    # log reports, so the generous cap costs nothing when the run is short.
     res = submit(job, prefer="kaggle",
-                 est_hours=2.0,
-                 timeout_s=18000,
+                 est_hours=1.0,
+                 timeout_s=7200,
                  fetch=["t204.json"])
     if not res.ok:
         raise RuntimeError(f"T2.04 job failed on {res.backend}: {res.message}")
