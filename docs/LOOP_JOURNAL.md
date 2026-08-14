@@ -4129,3 +4129,28 @@ B3 (hardware stamp + gpu_job_id) still open.
   (gpu<20min, NEEDS IMPLEMENTING first — probe-size it per B1 if >30 min).
   (4) LC.03's next step is rig re-derivation (why did a frozen twin gain
   158 s?) — CPU work, fine in a dark-GPU week. T2.01 settled, do not touch.
+- 2026-08-14 ~13:2x (Fable): T2.05 LANDED AS VOID — this iteration only
+  harvested/committed; the detached dispatch watcher (dispatch.sh, pid
+  2772293) did its job and recorded the result + billing before dying.
+  MEASURED (kernel jack-ladder-1786705853, P100, 3232s billed, W32 now
+  ~21.1/30 h -> ~8.9 h left, dies Sun 08-16): wm k_step_mse
+  [0.178, 0.196, 0.231] vs persistence [1.092, 1.128, 1.187] — LOOKS like a
+  crushing 0.17x win, and is NOT one. The pre-registered rig gate fired:
+  mse_mean [0.824, 0.860, 0.914] < mse_persist, so persistence is worse than
+  ignoring the input (persist_informative_all=0), and the shuffled control
+  [0.824, 0.864, 0.916] beat persistence too — the ruler leaks marginal
+  statistics. VOID, correctly: without that gate this would have been a false
+  PASS on a broken ruler. REDESIGN FACTS for the next iteration (strengthen
+  only, T1.02 precedent): the honest ruler is the best uninformed/reference
+  predictor, and against ridge [0.114, 0.117, 0.131] the WM currently LOSES
+  (0.178 vs 0.114 best-seed) — a redesigned T2.05 fails today unless the WM
+  earns it. That is a finding, not a fault. NEXT, in order: (1) T2.06
+  (gpu<20min) still NEEDS IMPLEMENTING; W32's ~8.9 h die Sunday and the
+  weekly Claude meter (Fable 97% at 13:1x, hard stop 90%) may keep the loop
+  dark until Aug 19 — if any iteration fires before Sunday with headroom,
+  implement T2.06, probe-size it (B1), dispatch via scripts/dispatch.sh.
+  (2) T2.05 redesign: replace the persistence ruler with
+  max(informative nulls) = min-MSE of {mean, persistence} and gate the claim
+  against ridge as reference arm; pre-register before any re-run. (3) LC.03
+  rig re-derivation (CPU) remains fine dark-week work. T2.01 settled — do
+  not touch.
