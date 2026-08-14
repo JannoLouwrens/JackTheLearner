@@ -3979,3 +3979,12 @@ B3 (hardware stamp + gpu_job_id) still open.
   path is unblocked. Remaining stale-by-content: T1.07 (gpu, needs a real
   Colab training run — next iteration's first pick alongside T2.04) and
   T2.02 (VOID, blocked on D1, stays flagged per the audit).
+  (same iteration, ~10:2x) BA.02 REGISTERED v3 RUN LANDED mid-iteration (pid
+  2643778, 1915s, seeds 0/1/2): VOID as pre-stated — "run did not test the
+  claim; not a refutation" — best_trained 1.046+/-0.075, drift_recheck -0.05.
+  Attempt 2, fresh impl_sha, entry merged into 47a6d45 by the ledger's atomic
+  write and already pushed; the last stale flag is clear (`run stale`: only
+  T1.07 + T2.02 remain, both pre-impl_sha content-stale). No further BA.02
+  work — D8 owns the fork (recommendation on file: park until the humanoid
+  body). LC.03 still ALIVE (pid 2536994, ~10h elapsed of 15-20 — do NOT
+  relaunch).
