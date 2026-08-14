@@ -1317,3 +1317,55 @@ the decorative-critic disease again, in training rather than evaluation.
 The loop's read: option 2's token route is the only one compatible with
 "every sense load-bearing, one brain" if mood is to be a sense at all;
 option 1 is the honest default if it is not.
+
+## D8 — BA.02 is unmeasurable in the rover body: no actuator has directional catch authority (2026-08-14)
+
+**The measurement.** After V2 (drift) and V3 (envelope) both fixed real
+defects, the v3 pilot VOIDed the rig a third time with every arm at random.
+Four scratch probes (120 paired packs each, the claim's own rig, fresh
+seed-90 world — full numbers in the spec's DIAGNOSIS section) separate the
+task's headroom from the claim's:
+
+- **Blind headroom exists**: constant "both hands up" (raised CoM = slower
+  inverted pendulum) gains +0.275 s over random (paired SE 0.137), monotone
+  in tilt. The world can be learned in. V3's amendment was correct.
+- **Claim headroom does not.** BA.02 gates on a CONTRAST — the sensing arm
+  over its blind twin, ≥ noise gain + 0.20 s at ≥ 3σ. Probing every
+  actuator group with fall-direction-keyed policies: slides +0.09 ± 0.07 s
+  over the best blind policy; adhesion grip (rig-disabled, probe re-enabled
+  it) +0.005 ± 0.09; the ground-gated 600 N drive is directionally potent
+  only in the HARMFUL direction (toward-lean −0.685 ± 0.16 s; a footed
+  capsule cannot step). The contrast's measured ceiling is ~0.0–0.1 s —
+  below the spec's own pre-registered floor.
+- Two compounding apparatus facts, for whoever redesigns: the registered
+  CEM learner needs k_fit ≈ (2σ/S)² ≈ 119 vs the registered 3 to resolve
+  even the blind signal (per-episode paired σ 7.5 decisions vs 1.375
+  signal — heavy-tailed fitness from rare catches), and N_EVAL=48 puts the
+  margin gate's SE at ~0.22 s against a 0.20 s threshold. Any successor
+  spec must size both against measured noise, not convenience.
+
+**Why this is yours.** The rover (two 0.4 kg hands on rails under a 32 kg
+damping-10 capsule) has no actuation whose useful effect depends on fall
+direction — "he catches himself" needs a body that can catch, and body
+changes are world-contract changes.
+
+**Options:**
+ 1. **PARK BA.02 until a body with directional catch authority exists**
+    (the playground humanoid, post-locomotion): re-parent it in the
+    registry, claim text unchanged. BA.01 stands — the sense exists and is
+    decoded; only "he ACTS on it" waits for a body that can act. Cost: a
+    constitutional-sense claim untested until the humanoid line lands.
+    **The loop's recommendation** — it is the only option that changes no
+    certificate and no claim.
+ 2. **Give the rover catch authority** (steerable base force at the ground,
+    leg-like supports, heavier arms). World-contract change: PG.3/PS/BA
+    certificates downstream of the body re-run, and the "arms are slides"
+    rig convenience that PG.3 certified is re-opened.
+ 3. **Re-scope the claim to a scenario in this body where direction
+    matters.** The probes found none on open ground; candidates
+    (ladder-hang grip choice, wall-brace) are NEW specs with new nulls,
+    not amendments of BA.02.
+
+A VOID re-run of the current spec is in flight to make the ledger entry
+current (it also clears the last stale flag); it does not prejudge this
+decision.

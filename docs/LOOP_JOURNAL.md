@@ -3907,3 +3907,37 @@ smoke-first pattern. (4) 13th-audit B3 bullets 1-2 (live-receipt +
 charge-at-attempt) still open as one designed unit.
 
 - 2026-08-13 ~23:5x UTC — BA.02 V3 ENVELOPE AMENDMENT registered (5dc0620), chosen by measurement per the pre-stated branch (draw moves by registration, not re-roll). Probe (scratch /tmp, fresh seed-90 world per config, 8 paired packs, CONSTANT slide actions + hold only — never the claim's arms): current draw (med tilt 1.2 deg) best delta +0.000 s vs random 1.55 s; 1-20 deg +0.025; **4-25 deg: random 0.875 s, all_out +0.325 s (rig gate 0.20), all_in -0.050 — channel live both directions**; kick x5 at current tilt +0.000; 4-25 deg kick x2 +0.275. Mechanism measured twice now (BA.01's quench diagnosis + this probe): below ~4 deg the solver floor + damping-10 free joint make fall time invariant to any slide action — the inherited BA.01 range served its CLOCK NULL (spread fall times), the opposite of what catching needs. ONE constant moved: BA02_TILT0_LOG10_DEG (0.6, 1.4) declared locally; kick rule, gates, arms, controls, eval structure byte-identical. Smoke PASS (all entry points, VOID on starved envelope). LESSONS gained: a referenced constant imports its source's PURPOSE, not just its value. V3 PILOT RUNNING DETACHED (setsid pid 2627749, nice 19, started 23:47, JSON to /data/ba02_pilot_v3.log — block-buffered, empty means running; est ~20-40 min beside LC.03). LC.03 REGISTERED RUN ALIVE THROUGHOUT (pid 2536994, 3 workers 101% CPU, elapsed 8h20m of ~15-20h — do NOT relaunch). NEXT ITERATION, in order: (1) check pid 2536994 (LC.03) — when it lands, render+commit its numbers from a clean tree; (2) read /data/ba02_pilot_v3.log — if seed_rig_ok 1.0 and the noise control behaves, launch the registered run detached (`python -m experiments.run BA.02`, seeds 0/1/2, ~46-90 min, writes the ledger itself); if the rig VOIDs a THIRD time on a fresh world with measured headroom, the CEM learner itself is the suspect (elite fitness 13->24 on k_fit=3 common draws while eval stayed flat = selection bias, not learning — raise k_fit openly or diagnose before paying again); (3) Kaggle W32 ~11.2h charged of 30, remainder dies Sunday 2026-08-16 — T2.04 (gpu<20min, needs implementing, smoke-first) is the queue; T2.06 must NOT run as registered (DIRECTION_AUDIT ADAPT, LG.00 first); T2.01 re-submission stays DECLINED per the 08-13 lesson; (4) overseer 13th-audit B3 bullets 1-2 (live-receipt + charge-at-attempt) still open as one designed unit.
+
+- 2026-08-14 ~00:5x-01:4x UTC — BA.02 DIAGNOSIS COMPLETE (journal next-2; the
+pre-stated third-VOID branch fired). Pilot v3 read seed_rig_ok 0.0, gain
+-0.021, and the smoking gun: noise-control elite fitness 23.0 == deprived
+23.0 == vest 22.7 while all evals sat at random — selection bias, not
+learning. Four scratch probes (120 paired packs each, claim's rig, fresh
+seed-90 world, /tmp/ba02_probe_{diag,dir,adh,drive}.py): (1) blind headroom
+REAL (all_out +0.275 s paired SE 0.137, monotone in tilt — V3's amendment was
+right) but fitness noise structural: paired sigma 7.5 decisions vs signal
+1.375 -> CEM needs k_fit ~119 vs registered 3 (~40x, dead by arithmetic;
+also N_EVAL=48 puts margin SE ~0.22 s vs the 0.20 gate); (2) directional
+slides ~zero (best keyed +0.09+/-0.07 over blind); (3) keyed adhesion grip
++0.005+/-0.09; (4) drive toward-lean -0.685 (harm only — no legs, can't
+step). CONCLUSION: the claim's CONTRAST (vest-minus-deprived >= noise+0.20 s)
+has a measured envelope ceiling ~0.0-0.1 s in this body — BA.02 is
+unmeasurable in the rover, full stop. ESCALATED D8 (park until humanoid /
+change body / re-scope; recommendation: park). Spec docstring carries the
+full DIAGNOSIS section; LESSONS gained two: "an elite's fitness curve rises
+under pure selection noise" (size k against measured sigma before
+registering a selection learner) and "a rig-headroom gate on the TASK cannot
+see the claim's CONTRAST has no room" (probe the differential, and probe
+argued-away actuators). Registered BA.02 run launched detached AFTER this
+commit (nice 19, ~1-3 h beside LC.03) — it will record VOID for the current
+code and clear the last stale flag; it does not prejudge D8. LC.03 ALIVE
+THROUGHOUT (pid 2536994, 3 workers 101%, elapsed ~9.5 h of ~15-20 — do NOT
+relaunch). NEXT ITERATION, in order: (1) check LC.03 (pid 2536994) — when it
+lands, render+commit its numbers from a clean tree; (2) check the BA.02
+registered run (log /data/ba02_registered_v3.log, ledger writes itself) —
+when it lands, render+commit; do NOT diagnose further, D8 owns the fork now;
+(3) Kaggle W32: 18.77 h charged of 30, remainder dies Sunday 2026-08-16 —
+implement T2.04 (gpu<20min, smoke-first, one submission per spec) and
+dispatch; T2.06 must NOT run as registered; T2.01 re-submission stays
+DECLINED per the 08-13 lesson; (4) overseer 13th-audit B3 bullets 1-2
+(live-receipt + charge-at-attempt) still open as one designed unit.

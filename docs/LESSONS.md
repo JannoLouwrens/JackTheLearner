@@ -3567,3 +3567,51 @@ copied value going stale; this one is about a live, correct value serving
 the wrong master. The probe that settles it is cheap: sweep the regime and
 measure whether the claim's action channel is live there at all, BEFORE
 paying for arms.
+
+## An elite's fitness curve rises under pure selection noise
+
+BA.02's v3 pilot: all three CEM arms' elite fitness climbed ~6 -> 23
+decisions — the vest arm, the deprived twin, AND the matched-noise control,
+identically — while every arm's evaluated mean policy sat exactly at the
+random baseline (gain −0.021 s). A top-6-of-24 selection on k_fit=3 noisy
+episode-means is an order statistic: it rises as sigma shrinks and elites
+surf the estimator's tail, whether or not anything is learned. Measured on
+the rig, the paired per-episode fitness noise was 7.5 decisions against a
+1.375-decision signal — selection SNR 0.32, so theta random-walked for
+three straight VOIDs while every "learning curve" climbed.
+
+**Rule:** a selected subset's score is not a learning curve; only
+fresh-draw evaluation of the SELECTED parameters measures progress
+(BA.02's rig gate did exactly that, which is why it VOIDed instead of
+lying). Before registering any selection-based learner, measure the
+per-episode fitness noise sigma and the signal S it must resolve on the
+actual rig, and size the per-candidate sample at k >= (2*sigma/S)^2 — if
+that k is unaffordable, the learner is dead by arithmetic before the first
+seed is paid for. And the tell costs nothing: a designed-to-fail arm whose
+fitness curve matches the real arms' says the curve is measuring the
+selector, not the learner.
+
+## A rig-headroom gate on the TASK cannot see that the claim's CONTRAST has no room
+
+BA.02's rig gate ("some trained arm beats random by 0.20 s") and the V3
+envelope probe that amended the tilt draw both measured BLIND headroom:
+constant, channel-free policies gaining +0.26–0.36 s by raising the CoM.
+The claim, though, gates on a DIFFERENTIAL — sensing arm over blind twin,
+>= noise + 0.20 s. Probing that contrast directly (fall-direction-keyed
+policies on every actuator group: slides +0.09 ± 0.07 s over the best
+blind policy, adhesion +0.005 ± 0.09, drive helpful in no direction) put
+the contrast's ceiling at ~0.0–0.1 s — below the spec's own floor. Two
+amendments (drift, envelope) fixed real defects while the claim stayed
+untestable for a reason neither touched: the body has no actuation whose
+useful effect depends on fall direction.
+
+**Rule:** for a differential claim "A beats B by >= m", the envelope probe
+and the rig gate must measure the CONTRAST's headroom — a hand-crafted
+proxy of the A-side advantage against the best B-side (blind) strategy —
+not the task's learnability. A world can be perfectly learnable and offer
+the claim zero room, and every task-side gate will pass while the claim
+VOIDs forever. Corollary: an actuator excluded from a rig by argument
+("catching is an arm-mass problem, not a thruster problem") is an
+unmeasured piece of the envelope; probe the exclusion before trusting it —
+here the excluded drive was the one actuator with directional authority,
+and only in the harmful direction, which no argument predicted.

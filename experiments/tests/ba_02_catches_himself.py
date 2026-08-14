@@ -215,6 +215,53 @@ TOPPLE-COSTLY regime"). And the claim is NOT decided by this amendment: a
 constant brace needs no sensing, so the deprived twin can learn it too —
 V3 restores the rig's ability to ASK whether feeling the fall's direction
 adds anything over blind bracing, which is BA.02's actual question.
+
+## DIAGNOSIS (2026-08-14) — WHY V3 STILL VOIDs. NOT an amendment: no
+constant, gate or arm changes; this section records why none would help.
+The v3 pilot (seed 90, /data/ba02_pilot_v3.log) VOIDed the rig a THIRD
+time: every arm at random (vest 1.042 / deprived 1.063 / noise 1.050 /
+random 1.042 s; margin 0.021 vs gate 0.20) while ALL THREE arms' elite
+fitness climbed ~6 -> 23 decisions — including the matched-noise control.
+An elite curve that a pure-noise arm reproduces is order statistics, not
+learning. Four scratch probes (120 paired packs each, fresh seed-90 world,
+the claim's own rig; hand-written envelope policies only, never trained
+arms — the constant-action probes are channel-blind, the keyed probes read
+the channel and are declared as envelope upper-bound proxies):
+
+  1. BLIND headroom is real and V3 was right: constant all-out (raise both
+     hands = raise CoM = slower inverted pendulum) gains +0.275 s over
+     random, paired SE 0.137, monotone in tilt (0.185/0.28/0.36 s across
+     terciles). But the fitness noise is structural: catches (horizon 60)
+     vs falls (~5 decisions) put the paired per-episode sigma at 7.5
+     decisions against a 1.375-decision signal. CEM selection needs
+     k_fit >= (2*sigma/S)^2 ~= 119 vs the registered 3 (~40x budget,
+     ~8 h/seed) — at k_fit=3 the selection SNR is 0.32 and theta
+     random-walks, which is what three VOIDs measured. Separately,
+     N_EVAL=48 puts the SE of the margin at ~0.22 s against a 0.20 s
+     gate: even a perfect blind policy passes a seed's rig gate only
+     ~64% of the time.
+  2. DIRECTIONAL headroom via the slides is ~zero: best azimuth-keyed
+     policy (reach toward the fall) +0.09 +/- 0.07 s over blind all-out;
+     every other toward/away variant at or below blind.
+  3. Adhesion (900 N/hand, rig-disabled; probe re-enabled a[4:6] locally):
+     fall-side-keyed plant+grip +0.005 +/- 0.09 s over blind all-out;
+     blind grip variants <= +0.04. Grip adds nothing directional.
+  4. The drive (600 N ground-gated, rig-zeroed as "a thruster problem"):
+     toward-lean -0.685 +/- 0.16 s (a footed capsule with no legs cannot
+     step; pushing toward the fall adds angular momentum), away-lean
+     -0.06 +/- 0.16 vs not driving. Directional authority exists only in
+     the harmful direction — no positive headroom.
+
+CONCLUSION. The claim gates on a CONTRAST — vest over deprived, >= noise
+gain + 0.20 s at >= 3 sigma — and the measured envelope ceiling of that
+contrast is ~0.0-0.1 s in this body, below the spec's own floor, for every
+actuator group. V2 fixed drift, V3 fixed the draw; neither could fix this,
+because the rover (two 0.4 kg hands on rails under a 32 kg damping-10
+capsule) has no actuation whose USEFUL effect depends on fall direction.
+"He catches himself" needs a body that can catch. Escalated as D8
+(docs/DECISIONS_NEEDED.md): park until a body with catch authority exists,
+change the body (world contract, owner), or re-scope. The registered run
+stays as-is and honestly records VOID for the current code.
 """
 from __future__ import annotations
 
