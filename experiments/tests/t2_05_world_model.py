@@ -379,11 +379,18 @@ def _submit(seeds: list) -> dict:
     job = build_job(body)
     # SIZED FROM A PROBE AT THE PRODUCTION CONFIG on the target GPU (the
     # T2.04/B1 lesson: a cost measured on the smoke's configuration is not a
-    # cost for the production configuration). Numbers filled in from the
-    # probe kernel before dispatch — see the commit that set them.
+    # cost for the production configuration). Probe kernel 1786702211
+    # (P100, PipelineConfig() defaults, 2026-08-14): train 0.4276 s/step,
+    # collect 0.00072 s/row, build 1.54 s, eval(600 rows, 2 passes) 0.68 s.
+    # Per seed: 2 trainings (wm + shuffled) x 1200 steps x 0.4276 = 1026 s,
+    # collect 4000 rows ~3 s, 2 builds ~3 s, 2 evals ~3 s, ridge ~10 s
+    # -> ~1045 s. 3 seeds ~3135 s + clone/pip setup ~180 s = ~3315 s = 0.92 h.
+    # timeout_s 7200 caps the remote run at 7140 s = 2.15x measured;
+    # est_hours 1.2 = 1.3x measured (afford() gates on it, charge() bills
+    # actual — the declaration errs high on purpose).
     res = submit(job, prefer="kaggle",
-                 est_hours=__EST_HOURS__,
-                 timeout_s=__TIMEOUT_S__,
+                 est_hours=1.2,
+                 timeout_s=7200,
                  fetch=["t205.json"])
     if not res.ok:
         raise RuntimeError(f"T2.05 job failed on {res.backend}: {res.message}")
