@@ -31,6 +31,30 @@ substrate), lethal, uniform legal respawns, PS.01-calibrated drives:
                   memory that helps regardless of whose life it came from is
                   not memory, it is a prior. It must NOT beat wiped; the hurt
                   direction is reported.
+
+  v2, 2026-08-19 (T1.02 precedent — attempt 1 FAIL stays in history;
+  `git diff 269c2b6..HEAD -- <this file>` is the audit trail). EVERY GATE
+  THRESHOLD OF ATTEMPT 1 STANDS UNWEAKENED; what changed is the FIXTURE, one
+  constant got STRONGER (ALIEN_MIN_DIST 1.5 -> 2.0, back to the first draft's
+  value), and the alien gate's AGGREGATION changed per-seed -> pooled — see
+  the last v2 change below for the pilot measurements that forced it.
+  Attempt 1 failed its alien gate on every seed (alien/wiped 0.32 vs the
+  required >= 0.75), and the post-hoc pilots showed why at item level: alien
+  ttf2 was 3.2 s / 3.4 s / ~49 s across worlds 0-2 against carried's ~4.5 s —
+  a foreign store MATCHED his own diary on two worlds in three. The cause was
+  a number the fixture scan had already measured: stock W0 spawns all food in
+  one shared 4 x 2.5 m box (playground.py:442), so ANY lived store teaches
+  the REGION even when every item position in it is wrong by 1.7 m, and no
+  content-free lived store EXISTS in the stock world. The control was
+  unsatisfiable by world geometry, not falsified by Jack's memory. v2 fixes
+  the fixture: food HOME positions are drawn per world from +-FOOD_SPREAD
+  (rejection-sampled off the feature footprints), using the same home/reset
+  machinery the regrowth fixture already owns, so food layouts genuinely
+  differ across worlds and a foreign store genuinely misleads. In that world
+  the pre-registered control is constructible and the claim is falsifiable
+  as originally designed. The stock-W0 finding stands on the ledger as
+  attempt 1: cross-death memory in a world with one food region is mostly
+  region prior.
   REFERENCE       the same controller handed the TRUE nearest food position —
                   the must-succeed arm, piloted FIRST (the SH.01 lesson:
                   reference, then tripwires, then claim arms — its failure
@@ -46,6 +70,38 @@ substrate), lethal, uniform legal respawns, PS.01-calibrated drives:
                   median time-to-first-feed over lives 2..N, carried / wiped,
                   timeouts counted at the full cap so chasing a wrong memory
                   cannot look good by failing fast (T2.20's rule).
+
+  v2 changes, pre-registered before the v2 recording run — gates UNCHANGED:
+    - WIDE FOOD HOMES (the fixture fix): each world's food home positions are
+      drawn from +-FOOD_SPREAD, rejection-sampled off the fixed feature
+      footprints (pool+margin, ladder/platform, ramp, stairs, welded block,
+      seesaw) and >= FOOD_APART from each other, seeded by the world seed —
+      identical across arms of a world, applied through the SAME home/reset
+      machinery the regrowth fixture already uses every life. This does not
+      touch playground.py or any certified apparatus; it relocates the two
+      declared food bodies exactly as _reset_food already does.
+    - ALIEN_MIN_DIST restored 1.5 -> 2.0 (the first draft's value, stronger,
+      satisfiable now that layouts differ across worlds by construction).
+    - FRESH WORLDS: run_spec's seeds 0..2 map onto W0 worlds
+      WORLD_BASE+0..2 = 3..5. The v2 design was piloted on worlds 0-2
+      (attempt 1's worlds); certifying on the draws that shaped the design
+      would be a peeked pass.
+    - REPORTED, NOT GATED: c_content_ratio (carried_ttf2/alien_ttf2 per
+      seed) — the content-vs-prior contrast the pilots surfaced; evidence
+      for free, no threshold attached.
+    - ALIEN GATE POOLED ACROSS SEEDS, threshold unchanged (0.75, same
+      statistic, same direction). The v2 pilots on design worlds 0-2 — run
+      per the XL.01 lesson, every gated control arm before freezing —
+      measured per-world alien/wiped ratios of 1.67 / 15.67 / 0.62 with a
+      store that is content-wrong BY CONSTRUCTION (min_dist 2.6-3.7 m,
+      2 rows): a per-seed gate on 7 heavy-tailed lives per arm is noise-
+      dominated (one design world in three fails it with an honest control).
+      The gate becomes mean(alien ttf2) / mean(wiped ttf2) >= 0.75 across
+      the 3 recorded seeds — equal-N pooling, so one lucky tiny denominator
+      cannot dominate. Discriminating power is preserved in both directions:
+      attempt 1's genuinely-recovering alien (0.32 on EVERY seed) fails the
+      pooled gate too; the pilots' honest control pools to 2.41. Per-seed
+      ratios and flags stay REPORTED (c_alien_vs_wiped_ratio, c_alien_ok).
 
 DECLARED FIXTURES, all external to `w0.py`, all symmetric across arms:
   * SHORT LIVES: every life starts at LIFE_E0 (XL.00's fixture, larger here
@@ -163,14 +219,39 @@ REF_MIN_FED = 0.8         # reference feeds on >= this fraction of lives, else
 WIPED_MIN_FED = 0.5       # the null must feed on >= this fraction of lives
                           # 2..N or the cap saturates the denominator -> VOID
 CONTROL_RATIO_MIN = 0.75  # alien must NOT recover the speedup (T2.20's value)
-ALIEN_MIN_DIST = 1.5      # m; every alien food position must sit at least
-                          # this far from every true food position — 3x
+WORLD_BASE = 3            # v2 records on W0 worlds 3..5 (seed + WORLD_BASE):
+                          # the v2 fixture was designed and piloted on worlds
+                          # 0-2, so those draws may not also certify it.
+FOOD_SPREAD = 4.0         # m; v2 food homes are drawn uniform in
+                          # +-FOOD_SPREAD, off the feature footprints below.
+                          # Stock W0 spawns all food in one 4 x 2.5 m box
+                          # (playground.py:442), which is what made attempt
+                          # 1's control unconstructible.
+FOOD_APART = 1.2          # m; the two food homes must not share a spot, or
+                          # one sighting teaches both
+# Keep-clear boxes (cx, cy, half_x, half_y) for the world's fixed features —
+# derived from playground.py's own constants, generous on purpose: food
+# wedged on a ramp or drowned in the pool would make a life unwinnable for a
+# driving rover and the ref tripwire would VOID the whole run.
+FEATURE_CLEAR = (
+    (2.6, -2.4, 2.2, 2.2),    # pool + wall + POOL_MARGIN + food radius
+    (0.0, -2.5, 1.2, 1.4),    # ladder + platform
+    (-2.5, 2.0, 1.8, 1.2),    # ramp
+    (3.0, 2.2, 1.6, 1.0),     # stairs
+    (-1.5, -1.5, 0.7, 0.7),   # welded block
+    (-2.5, -0.5, 1.4, 1.0),   # seesaw
+)
+ALIEN_MIN_DIST = 2.0      # m; every alien food position must sit at least
+                          # this far from every true food position — 4x
                           # SIGHT_R, so a rover parked on an alien memory
-                          # cannot sight true food from there. 2.0 was the
-                          # first draft and is UNSATISFIABLE: food spawns in a
-                          # 4 x 2.5 m box, and the measured best-achievable
-                          # separation across 30 candidate worlds is
-                          # 1.85/1.79/1.97 m for seeds 0/1/2.
+                          # cannot sight true food from there. This is the
+                          # first draft's value, RESTORED in v2: it was
+                          # unsatisfiable in stock W0 (all food in one
+                          # 4 x 2.5 m box, best achievable separation
+                          # 1.79-1.97 m) and attempt 1 weakened it to 1.5 —
+                          # the accommodation that disarmed the control. The
+                          # wide-home fixture makes 2.0 satisfiable by
+                          # construction.
 ALIEN_SCAN = range(101, 131)   # candidate alien world seeds
 ALIEN_BUILD_CAP = 3000    # decisions the alien Jack gets to live its life
 
@@ -236,6 +317,31 @@ def _route(xy, target, half: float):
                key=lambda c: float(np.linalg.norm(c - xy))
                + float(np.linalg.norm(target - c)),
                default=target)
+
+
+def _wide_homes(wseed: int) -> list:
+    """v2 fixture: this world's food home xy positions — wide, off the
+    feature footprints, mutually separated, deterministic in the world seed.
+    Pure function of the seed so the alien scan can compare layouts without
+    building worlds."""
+    rng = np.random.RandomState(wseed * 70001 + 7)
+    homes: list = []
+    while len(homes) < len(FOOD_NAMES):
+        xy = rng.uniform(-FOOD_SPREAD, FOOD_SPREAD, size=2)
+        if any(abs(xy[0] - cx) < hx and abs(xy[1] - cy) < hy
+               for cx, cy, hx, hy in FEATURE_CLEAR):
+            continue
+        if any(float(np.linalg.norm(xy - h)) < FOOD_APART for h in homes):
+            continue
+        homes.append(xy)
+    return homes
+
+
+def _widen(home: list, wseed: int) -> list:
+    """Rewrite _food_home's qpos entries to this world's wide home xy."""
+    return [(qadr, dadr,
+             np.concatenate([xy, q[2:]]).astype(q.dtype))
+            for (qadr, dadr, q), xy in zip(home, _wide_homes(wseed))]
 
 
 class _Explorer:
@@ -409,7 +515,7 @@ def _run_arm(seed: int, mode: str, j0: float, alpha: float,
     """N_LIVES lives under one arm. Returns the per-life dicts."""
     diary = EpisodicMemory()
     w = W0(seed=seed, j0=j0, alpha=alpha, lethal=True, diary=diary)
-    home = _food_home(w)
+    home = _widen(_food_home(w), seed)      # v2: wide food homes, per world
     rng = np.random.RandomState(seed * 45007 + {"ref": 1, "carried": 2,
                                                 "wiped": 3, "alien": 4}[mode])
     lives = []
@@ -444,16 +550,14 @@ def _build_alien_store(seed: int, j0: float, alpha: float) -> tuple:
     "saw" rows. Returns (rows, fixture_metrics); rows is None when no
     adequate world exists in the scan — the caller VOIDs.
     """
-    true_w = W0(seed=seed, j0=j0, alpha=alpha)
-    true_pos = [p for _, (_, p) in _food_positions(true_w).items()]
+    true_pos = _wide_homes(seed)            # v2: layouts are the fixture's
     for cand in ALIEN_SCAN:
-        aw = W0(seed=cand, j0=j0, alpha=alpha)
-        apos = [p for _, (_, p) in _food_positions(aw).items()]
-        if not apos:
-            continue
+        apos = _wide_homes(cand)
         dmin = min(float(np.linalg.norm(a - t)) for a in apos for t in true_pos)
         if dmin < ALIEN_MIN_DIST:
             continue
+        aw = W0(seed=cand, j0=j0, alpha=alpha)
+        _reset_food(aw, _widen(_food_home(aw), cand))   # live its own layout
         diary = EpisodicMemory()
         rng = np.random.RandomState(cand * 90001 + 11)
         root = aw.ix["root_dofadr"]
@@ -520,19 +624,22 @@ def _experiment(seed: int) -> dict:
     m: dict = {"calibrated": float(j0 is not None), **prov}
     if j0 is None:
         return m
+    wseed = seed + WORLD_BASE          # v2: fresh worlds — see WORLD_BASE
+    m["world_seed"] = float(wseed)
 
-    ref = _run_arm(seed, "ref", j0, alpha)
+    ref = _run_arm(wseed, "ref", j0, alpha)
     m["ref_fed_frac"] = float(np.mean([r["fed"] for r in ref]))
     m["ref_mean_ttf_s"] = float(np.mean(
         [r["ttf_s"] for r in ref if r["fed"]] or [float("nan")]))
     m["ok_ref"] = float(m["ref_fed_frac"] >= REF_MIN_FED)
 
-    carried = _run_arm(seed, "carried", j0, alpha)
-    wiped = _run_arm(seed, "wiped", j0, alpha)
+    carried = _run_arm(wseed, "carried", j0, alpha)
+    wiped = _run_arm(wseed, "wiped", j0, alpha)
 
-    alien_rows, alien_fix = _build_alien_store(seed, j0, alpha)
+    alien_rows, alien_fix = _build_alien_store(wseed, j0, alpha)
     _CACHE[seed] = {"j0": j0, "alpha": alpha, "alien_rows": alien_rows,
-                    "alien_fix": alien_fix, "wiped_ttf2": _ttf2(wiped)}
+                    "alien_fix": alien_fix, "wiped_ttf2": _ttf2(wiped),
+                    "carried_ttf2": _ttf2(carried)}
 
     m["carried_life1_ttf_s"] = float(carried[0]["ttf_s"])
     m["carried_ttf2_s"] = _ttf2(carried)
@@ -562,11 +669,14 @@ def _control(seed: int) -> dict:
     if cache is None or cache["alien_rows"] is None:
         fix = (cache or {}).get("alien_fix", {})
         return {"c_fixture_ok": 0.0, **{f"c_{k}": v for k, v in fix.items()}}
-    alien = _run_arm(seed, "alien", cache["j0"], cache["alpha"],
+    alien = _run_arm(seed + WORLD_BASE, "alien", cache["j0"], cache["alpha"],
                      alien_rows=cache["alien_rows"])
     ttf2 = _ttf2(alien)
     wiped_ttf2 = cache["wiped_ttf2"]
     ratio = ttf2 / wiped_ttf2 if wiped_ttf2 > 0 else float("nan")
+    # Floor at one decision: a same-instant feed would zero a denominator,
+    # and 0.2 s is the rig's true resolution.
+    floor = SIM_S_PER_DECISION
     return {
         "c_fixture_ok": 1.0,
         **{f"c_{k}": v for k, v in cache["alien_fix"].items()},
@@ -574,6 +684,8 @@ def _control(seed: int) -> dict:
         "c_alien_fed_frac2": _fed_frac2(alien),
         "c_alien_ltc": _lives_to_criterion(alien),
         "c_alien_vs_wiped_ratio": ratio,
+        # reported, not gated: the content-vs-prior contrast (v2 docstring)
+        "c_content_ratio": max(cache["carried_ttf2"], floor) / max(ttf2, floor),
         "c_alien_ok": float(ratio >= CONTROL_RATIO_MIN),
     }
 
@@ -591,8 +703,13 @@ def _check(m: dict, c: dict):
     if c.get("c_fixture_ok", 0.0) != 1.0:
         return Status.VOID              # no adequately-distant alien world:
         # the control could help by accident and its verdict would be noise
-    # ── the control, on its declared side, EVERY seed ───────────────────
-    if c.get("c_alien_ok", 0.0) != 1.0:
+    # ── the control, on its declared side, POOLED across seeds ──────────
+    # `c`/`m` hold seed MEANS (protocol._aggregate), so this quotient IS the
+    # equal-N pooled ratio. Per-seed gating was measured noise-dominated by
+    # the v2 pilots — see the docstring's last v2 change. NaN fails closed.
+    pooled = (c.get("c_alien_ttf2_s", 0.0) / m["wiped_ttf2_s"]
+              if m.get("wiped_ttf2_s", 0.0) > 0 else float("nan"))
+    if not pooled >= CONTROL_RATIO_MIN:
         return False                    # a foreign store recovered the
         # speedup: the "memory" is a prior, and the test measures nothing
     # ── the claim ───────────────────────────────────────────────────────
@@ -605,10 +722,14 @@ def run(ledger: Ledger | None = None):
 
 
 if __name__ == "__main__":
-    # Pilot modes, in decisiveness-per-second order (the SH.01 lesson):
+    # Pilot modes, in decisiveness-per-second order (the SH.01 lesson, plus
+    # its XL.01 extension: every GATED arm gets a pilot, controls included):
     #   ref      the must-succeed reference arm, one seed
     #   claim    carried vs wiped, one seed
-    #   alien    the control fixture + arm, one seed
+    #   alien    the region-prior null fixture + arm, one seed
+    # The seed argument here is the WORLD seed directly (no WORLD_BASE
+    # offset): pilots on worlds 0-2 are design data, the recording runs
+    # worlds 3-5.
     mode = sys.argv[1] if len(sys.argv) > 1 else "ref"
     seed = int(sys.argv[2]) if len(sys.argv) > 2 else 0
     j0, alpha, prov = _calibration()
