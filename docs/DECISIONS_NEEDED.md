@@ -1468,3 +1468,49 @@ a trigger written earlier in this file would read as option A:
 
 *Raised without taking a side. Full working in `docs/OVERSIGHT.md` (17th audit),
 FOR THE OWNER.*
+
+## Claude credits — MEASURED COST, 4d18h of dead loop (18th overseer audit, 2026-08-19 12:40 UTC)
+
+The "Claude credits are the binding resource" entry above has, until now, been
+an argument. It is now a measurement.
+
+**Between 2026-08-14T13:23 and 2026-08-19T07:31 the ladder loop did no work at
+all.** 135 consecutive hourly cron firings logged:
+
+    STOPPED at 99-100% weekly usage - all agents paused until the owner resumes
+
+Evidence: `grep -c "STOPPED at" /data/jack-logs/ladder.log` = 135;
+`grep 'iteration start' /data/jack-logs/ladder.log` has **zero** entries dated
+2026-08-15 through 2026-08-18.
+
+**This is not a malfunction and I am not reporting it as one.** `usage_gate`
+in `scripts/lib_usage.sh` implemented the owner's 90% rule exactly as
+specified, refused to run, and logged every refusal honestly. The machinery is
+correct.
+
+What it establishes is the ranking of this project's constraints:
+
+| resource | state |
+|---|---|
+| Claude credits | **exhausted 4 of the last 5 days** |
+| Kaggle GPU (W33) | ~29.7 h unused, **expires Sunday 2026-08-23** |
+| CPU / box | load 0.00-0.71, 13 GB free |
+| specs ready to run | XL.01, VO.02, TA.02, SM.02 - four zero-pass constitutional commitments |
+
+Compute is idle and expiring; specs are queued; the box is bored. The only
+thing missing is the credits to drive an iteration. Over the same window the
+PASS count moved **80 -> 81**.
+
+**The decision this needs from you** is not "raise the limit" - the 90% stop is
+yours and the overseer does not touch it. It is a standing policy for the case
+that has now happened five times: *when the weekly meter exhausts and a GPU
+quota is expiring unused, what should the loop do?* Options as I see them,
+without recommending one:
+
+  (a) Nothing - accept that credit weeks cap the project's rate, and expect
+      ~1 PASS per credit-limited week.
+  (b) A reserve: hold N% of the weekly meter for GPU-dispatch iterations only,
+      so expiring quota is always spendable even late in a week.
+  (c) Raise the ceiling for the specific week a quota expires, by exception.
+
+Recorded rather than acted on. No threshold, gate or budget was touched.
