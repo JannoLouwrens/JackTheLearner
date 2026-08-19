@@ -4203,3 +4203,20 @@ B3 (hardware stamp + gpu_job_id) still open.
   GPU note: W33 has 29.7h and no queued honest GPU spend is implemented yet
   (SM.02/TA.02/VO.02/T3.01 all gpu<2h, none implemented; T2.07 gpu<20min
   needs implementing). T2.01/T2.02 settled — do not touch.
+- 2026-08-19 ~08:2x (Fable, same iteration, ADDENDUM — read before touching
+  the ladder): the shelters commit (761121a) flipped ~20 certificates to
+  CHANGED via IMPL_DEPS (impl_sha = test file + declared dep bytes): PG.1-9,
+  PS.01/PS.03, XL.00, BA.01/BA.02, LC.02/LC.03, SM.01, TA.01, VO.01, T2.08,
+  T2.20. My PS.02 "regression check" re-run then recorded VOID (borrow of
+  PS.01's j0/alpha refused on staleness) — see the new LESSONS entry. RECOVERY
+  IN FLIGHT, detached (setsid, survives this session): chain
+  PG.1 -> PG.8 -> PS.01 -> PS.02, log /data/tmp/sh01_path_rerun.log
+  (tmp reaped ~4-hourly; the durable record is the ledger rows' ran_at
+  2026-08-19T08:2x+). PG.1+PG.8 already re-recorded clean; PS.01 (~15 min) and
+  PS.02 (~4 min) follow. NEXT ITERATION: (1) verify PS.02 is PASS again
+  (expected — behavior proven identical; if it is NOT, that is a REAL finding,
+  diagnose before touching SH.01); commit the ledger. (2) Implement SH.01 per
+  the design above. (3) The remaining CHANGED set: clear the cheap CPU ones
+  opportunistically (--gate or singly, bottom-up); do NOT burn GPU re-runs on
+  stamp refreshes (T2.03/04/05 were already CHANGED before this edit; LC.03 is
+  VOID and 15h — leave it to the rig re-derivation).

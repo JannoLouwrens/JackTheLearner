@@ -3816,3 +3816,40 @@ configuration"* — size from measurement. That rule points the next iteration
 at exactly the field described here. A sizing read off `duration_s` for any
 harvested run is wrong by up to six orders of magnitude, and the iteration
 making it will have followed the rule correctly.
+
+## An additive edit to a declared dependency invalidates certificates in FILE units, and the cascade is priced in re-runs
+
+SH.01's substrate (2026-08-19) added an opt-in `shelters=` to `playground.py`,
+`w0.py` and `thermal.py`, with the default path PROVEN inert — six pre-edit
+XML sha256s reproduced byte-for-byte, the thermal law asserted bit-equal with
+shelters absent. None of that reached the staleness detector, and none of it
+should have: `impl_sha` is sha256(test file + declared `IMPL_DEPS` bytes), so
+the commit flipped ~20 certificates to CHANGED at once — every PG.*, PS.*,
+XL/BA, LC.02/LC.03, SM.01/TA.01/VO.01 entry that declares those files. Then a
+well-meant "regression check" re-run of PS.02 recorded **VOID** — not because
+anything regressed, but because its `borrow_metrics` source (PS.01) had been
+flagged stale by the same edit seconds earlier — displacing a PASS row and
+blocking SH.01, the very spec the edit was built to serve. The runner refuses
+stale dependencies too, so the recovery is a bottom-up re-run of the stale
+ancestry (here PG.1 → PG.8 → PS.01 → PS.02, ~18 min — cheap because this
+chain happens to be cheap, not because the mechanism is).
+
+Three rules:
+
+**Price the cascade before committing the edit.** Run `stale_claims` before
+and after touching any file that appears in an `IMPL_DEPS` declaration; the
+diff of the two lists is part of the edit's cost, and it is invisible in the
+git diff. An edit whose cascade includes a 15-hour or GPU-priced re-run needs
+that fact in the commit message, not discovered by the next iteration.
+
+**Re-run bottom-up, sources before borrowers.** A borrower re-run ahead of its
+stale source records an honest VOID that displaces its own row and blocks its
+dependents. VOID-on-refusal is only "cheap and honest" if the same session
+clears it; left overnight it reads as a lost capability.
+
+**Behaviour-identity proofs do not transfer to the detector — by design.**
+Byte-identical output and bit-equal laws make the re-runs SAFE and their
+outcome predictable; they do not substitute for them. The detector's unit is
+the file because that is the only unit checkable without running the science.
+The temptation to "just amend the stamp because the change was provably inert"
+is the temptation to make the ladder lie faster.
