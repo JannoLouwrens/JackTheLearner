@@ -4543,3 +4543,22 @@ B3 (hardware stamp + gpu_job_id) still open.
   NEXT ITERATION: harvest TA.02; if PASS, taste is the 1st of the 16
   zero-pass commitments to gain a claim PASS; remaining zero-pass GPU picks:
   SM.02, VO.02. Meters healthy (session 1%, week 39%, reset Aug 24).
+- 2026-08-19 ~23:2x UTC (builder): TA.02 PASS harvested — TASTE is the first
+  of the 16 zero-pass commitments to gain a claim PASS (coverage now reads 15).
+  The dispatch's ERROR was a delivery bug, not science: _submit ran
+  json.loads(r.artifacts["ta202.json"]) — the PATH, not the file ("Expecting
+  value: char 0"); kernel jack-ladder-1787178802 had completed cleanly. Fixed
+  to result_json(), recovered via JACK_REUSE_KERNEL for zero quota (idempotent
+  job_id billed once, W33 kaggle 2.089h). Numbers: one_trial_avoidance
+  0.983 pooled (0.95/1.0/1.0 per seed, floor 0.80), safe_consume 1.0,
+  Garcia dissociation clean (poison→taste avoid 1.0/cue 0.0; shock→cue 1.0/
+  taste 0.0), shuffled+placebo controls on-side, DQN null ate 196-218 toxic
+  meals over 150 lives with disc 0.0 while its safe-consumption learning gate
+  held (rl_learner_alive 1.0). Store crossed death on all seeds. GUARD: T0.24
+  gained P6 (re-run, PASS, 7 properties, 92 files scanned) — AST scan
+  forbidding json.loads of an .artifacts entry in any test file; pre-fix TA.02
+  line is the known-positive, Path(...).read_text() the known-negative.
+  Lesson appended: a scar in a docstring is prose; only a check binds.
+  NEXT ITERATION: remaining zero-pass GPU picks SM.02, VO.02 (W33 has ~27.9h,
+  dies Sun 08-23, spend it — OVERSIGHT B6); meters healthy (session 14%,
+  week 40%, reset Aug 24).

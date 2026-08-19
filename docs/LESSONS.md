@@ -4038,3 +4038,33 @@ tests "how we got here" rather than "what is true now", hoist the fix.
 Verified on the shipped string (not a restatement): both install paths plus a
 no-op path simulated with stubbed pip/metadata, and the dd07693 text as the
 control, which must — and does — leave torchvision at 0.25 on the healed path.
+
+## A scar recorded in a docstring is prose; only a check binds the next author
+
+`result_json` is the sanctioned reader for GPU artifacts, and its docstring
+tells the 2026-08-11 story in detail: artifacts are keyed basename → LOCAL
+PATH, a hand-rolled read took the console log for the answer, and 0.66 paid
+GPU-hours became a ValueError. Eight days later TA.02's `_submit` hand-rolled
+the read anyway — `json.loads(r.artifacts["ta202.json"])`, one `Path(...).
+read_text()` short of correct — and parsed the path string itself. A completed,
+paid-for kernel (one-trial taste aversion, all controls on-side) was recorded
+as `ERROR: Expecting value: char 0`, and it cost the next iteration a manual
+recovery to learn the science had been a PASS all along. The smoke test could
+not have caught it: it called `remote_run` directly, so the delivery path it
+certified was not the one the dispatch used (the T2.03 extension of
+"instantiating a module is not exercising it", now on the harvest side).
+
+Two mitigations, in the order they mattered: the RECOVERY was free — a Kaggle
+artifact persists server-side, so `JACK_REUSE_KERNEL` re-fetched it for zero
+quota, and the idempotent `job_id` billing meant no double charge. And the
+GUARD is now a check rather than a convention: T0.24 P6 AST-scans every test
+file for `json.loads` applied directly to an `.artifacts` entry (subscript or
+`.get`), with the pre-fix TA.02 line as the scanner's known-positive fixture
+and the honest `Path(...).read_text()` read as its known-negative.
+
+**Rule:** when a defect class gets a sanctioned helper, enforcement is part of
+the fix — add the static check that flags the bypass, or the helper is advice
+that decays. Corollary for diagnosis: a JSON parse failure at `char 0` on a
+"successful" harvest means *look at what object you parsed* before concluding
+the artifact is empty — a path, a log, and an empty file all die on the first
+character, and only one of them means the kernel failed.

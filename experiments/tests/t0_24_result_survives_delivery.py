@@ -51,6 +51,19 @@ Six properties, each able to fail alone:
       names one finished Kaggle kernel; walking the normal `prefer` order pays
       for a fresh job to recover a free one — and could return a different
       run's numbers.
+  P6  no test in the ladder parses an artifact PATH as JSON. Second scar,
+      2026-08-19: TA.02's `_submit` read `json.loads(r.artifacts["ta202.json"])`
+      — `.artifacts` maps basename -> LOCAL PATH on both backends, so this
+      parses `/data/tmp.../ta202.json` itself and dies with "Expecting value:
+      char 0" after the kernel completed and the quota was spent. `result_json`
+      existed, was tested (P2-P4), and its docstring told the 2026-08-11 story;
+      TA.02 hand-rolled the read anyway. A scar recorded in a docstring is
+      prose, and prose does not bind the next author — so the sanctioned path
+      is now enforced by a static AST scan over every test file, with the
+      pre-fix TA.02 line as the scan's known-positive fixture and the honest
+      hand-rolled read (`json.loads(Path(...).read_text())`) as its
+      known-negative. Unreadable files are counted and gate the property,
+      because a clean scan and a scan that never ran are the same number.
 
 THE CONTROL is the pre-fix delivery replayed verbatim: every downloaded file
 becomes an artifact, then `next(iter(...))` picks one. Against the same real
@@ -63,6 +76,7 @@ and a temporary budget file.
 """
 from __future__ import annotations
 
+import ast
 import json
 import os
 import tempfile
@@ -107,6 +121,37 @@ def _pre_fix_delivery(outdir: Path) -> dict:
     path = artifacts.get("/content/out.json") or next(iter(artifacts.values()), None)
     cache.update(json.loads(Path(path).read_text()))   # ValueError lives here
     return cache
+
+
+def _artifact_parse_misuse(src: str, fname: str) -> list[str]:
+    """Sites that `json.loads` an entry of `.artifacts` DIRECTLY.
+
+    `.artifacts` maps basename -> local path on both backends; parsing the path
+    string as JSON is the TA.02 scar. The honest hand-rolled read,
+    `json.loads(Path(res.artifacts[...]).read_text())`, wraps the subscript in
+    a call and is structurally distinct — not flagged. Reads source as an AST,
+    never as substrings, because a substring cannot tell code from prose
+    (T0.16's corollary).
+    """
+    hits: list[str] = []
+    for node in ast.walk(ast.parse(src)):
+        if not (isinstance(node, ast.Call) and node.args):
+            continue
+        f = node.func
+        is_loads = ((isinstance(f, ast.Attribute) and f.attr == "loads")
+                    or (isinstance(f, ast.Name) and f.id == "loads"))
+        if not is_loads:
+            continue
+        arg = node.args[0]
+        target = None
+        if isinstance(arg, ast.Subscript):                      # x.artifacts[k]
+            target = arg.value
+        elif (isinstance(arg, ast.Call)                          # x.artifacts.get(k)
+              and isinstance(arg.func, ast.Attribute) and arg.func.attr == "get"):
+            target = arg.func.value
+        if isinstance(target, ast.Attribute) and target.attr == "artifacts":
+            hits.append(f"{fname}:{node.lineno}")
+    return hits
 
 
 def _experiment(seed: int) -> dict:
@@ -191,8 +236,39 @@ def _experiment(seed: int) -> dict:
         else:
             os.environ["JACK_REUSE_KERNEL"] = prev
 
+    # P6 — nothing in the ladder parses an artifact PATH as JSON.
+    tests_dir = Path(__file__).resolve().parent
+    misuse: list[str] = []
+    unreadable = 0
+    for f in sorted(tests_dir.glob("*.py")):
+        try:
+            misuse += _artifact_parse_misuse(f.read_text(), f.name)
+        except (OSError, SyntaxError):
+            unreadable += 1
+    if misuse:
+        failed.append(f"P6:artifact path parsed as JSON at {misuse}")
+    if unreadable:
+        failed.append(f"P6:{unreadable} test files unreadable — scan incomplete")
+    # Known-positive: the pre-fix TA.02 line, through the SAME scanner the live
+    # scan uses. A detector that cannot see its own positive control has
+    # measured nothing.
+    if _artifact_parse_misuse(
+            'data = json.loads(r.artifacts["ta202.json"])\n',
+            "ta02_pre_fix") != ["ta02_pre_fix:1"]:
+        failed.append("P6:scanner blind to the TA.02 pre-fix line")
+    if not _artifact_parse_misuse(
+            'x = json.loads(res.artifacts.get("a.json"))\n', "get_form"):
+        failed.append("P6:scanner blind to the .get() form")
+    # Known-negative: the honest hand-rolled read must NOT be flagged, or the
+    # guard makes five correct tests unpassable.
+    if _artifact_parse_misuse(
+            'out = json.loads(Path(res.artifacts["t204.json"]).read_text())\n',
+            "legit"):
+        failed.append("P6:scanner flags the legitimate Path(...).read_text() read")
+
     return {"properties_failed": len(failed), "failures": failed,
-            "properties_checked": 6}
+            "properties_checked": 7, "p6_files_scanned": len(list(tests_dir.glob("*.py"))),
+            "p6_unreadable": unreadable}
 
 
 def _control(seed: int) -> dict:

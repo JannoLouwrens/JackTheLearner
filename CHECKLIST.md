@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 81 / 169 demonstrated
+## 82 / 169 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -305,7 +305,7 @@ Every line here is backed by an experiment that could have failed;
       - _then delete:_ The claim that reading `experiments.run`'s output tells you what it did. If a token can be ignored, the command you typed and the command that ran are different commands.
 - [x] **T0.24** A finished GPU run cannot be lost on the way home
       - _asserts:_ Once a remote kernel has COMPUTED the answer, no step between the provider and the ledger may discard it: Kaggle's console log is parsed into `stdout` so the printed RESULT line is reachable, the log is never offered as an artifact, `result_json` takes the named artifact or the RESULT line and NEVER guesses at some other file, and a reattach never routes to Colab.
-      - _dies if:_ A Kaggle JobResult with an empty stdout when a log was downloaded; the log appearing in `artifacts`; `result_json` returning a file it was not asked for; or `submit` calling Colab while JACK_REUSE_KERNEL is set.
+      - _dies if:_ A Kaggle JobResult with an empty stdout when a log was downloaded; the log appearing in `artifacts`; `result_json` returning a file it was not asked for; `submit` calling Colab while JACK_REUSE_KERNEL is set; or any test file json.loads-ing an `.artifacts` entry directly (the path, not the file — the TA.02 scar of 2026-08-19).
       - _then delete:_ The assumption that a paid run's cost is bounded by whether it ran. It is not: the money is spent when the kernel completes, and every line after that is an uninsured chance to throw the answer away.
 - [x] **T0.25** The critic is a baseline, or it is decoration
       - _asserts:_ Subtracting a PERFECT value function from the return leaves nothing behind. Feed `compute_gae` the analytic value function of its own reward sequence and every advantage must be zero — at any state of the return normaliser, not only at the fresh scale=1 where the two unit systems happen to agree.
@@ -610,7 +610,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
-- [ ] **TA.02** Conditioned taste aversion: learning from ONE exposure
+- [x] **TA.02** Conditioned taste aversion: learning from ONE exposure
       - _asserts:_ After exactly ONE ingestion of the toxic plant followed by delayed illness, Jack avoids that plant on the next encounter above a pre-registered rate, and the aversion PERSISTS ACROSS A DEATH via the diary.
       - _dies if:_ Avoidance at the base rate after one exposure, or aversion that does not survive the life boundary. Either way the fastest learning in biology has no analogue in this system.
       - _then delete:_ The taste fast path. If aversion forms equally to any cue, the mechanism is a generic one-shot memoriser and the cue-consequence prior - the thing that makes it BIOLOGICAL rather than a hack - is not there.
