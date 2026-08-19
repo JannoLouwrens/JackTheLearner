@@ -6435,6 +6435,90 @@
       "spec_id": "T2.05",
       "status": "VOID"
     },
+    "T2.06": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "f47c372",
+      "control_metrics": {
+        "acc_joint_ctrl": [
+          0.0975,
+          0.11,
+          0.12
+        ],
+        "ctrl_beats_chance_any": 0.0,
+        "ctrl_beats_chance_any_std": 0.0,
+        "z_ctrl_max": -0.302,
+        "z_ctrl_max_std": 0.0
+      },
+      "duration_s": 1077.44,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1787124880",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "history": [],
+      "impl_sha": "ee0e5195de14b3e9",
+      "message": "",
+      "metrics": {
+        "acc_act": [
+          0.99,
+          0.9875,
+          0.995
+        ],
+        "acc_lang": [
+          0.6425,
+          0.68,
+          0.69
+        ],
+        "acc_ref": [
+          0.99,
+          0.9425,
+          0.995
+        ],
+        "acc_tfidf_name": [
+          0.5375,
+          0.5375,
+          0.565
+        ],
+        "acc_tfidf_train": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "backend": "kaggle",
+        "beats_chance_all": 1.0,
+        "beats_chance_all_std": 0.0,
+        "beats_tfidf_all": 1.0,
+        "beats_tfidf_all_std": 0.0,
+        "det_ok_all": 1.0,
+        "det_ok_all_std": 0.0,
+        "finite_all": 1.0,
+        "finite_all_std": 0.0,
+        "gpu": "Tesla P100-PCIE-16GB",
+        "loss_final_max": 1.88084,
+        "loss_final_max_std": 0.0,
+        "min_per_cat": 50.0,
+        "min_per_cat_std": 0.0,
+        "n_cats_tokenizable": 7.0,
+        "n_cats_tokenizable_std": 0.0,
+        "ref_ok_all": 1.0,
+        "ref_ok_all_std": 0.0,
+        "retrieval_acc": [
+          0.635,
+          0.6725,
+          0.6875
+        ],
+        "z_joint_min": 30.842,
+        "z_joint_min_std": 0.0,
+        "z_ref_min": 49.438,
+        "z_ref_min_std": 7.10543e-15
+      },
+      "ran_at": "2026-08-19T07:52:34",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T2.06",
+      "status": "PASS"
+    },
     "T2.08": {
       "amended": [],
       "attempt": 2,

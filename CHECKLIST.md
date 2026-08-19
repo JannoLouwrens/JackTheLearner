@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 80 / 169 demonstrated
+## 81 / 169 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -127,7 +127,7 @@ Every line here is backed by an experiment that could have failed;
 - [~] **T2.05** World model beats constant prediction  — all_seeds_beat_null=1.0; all_seeds_beat_null_std=0.0
       - _asserts:_ k-step latent prediction error < a persistence baseline.
       - _dies if:_ Predicting 'next state = current state' does as well.
-- [ ] **T2.06** Language-action alignment beats chance
+- [x] **T2.06** Language-action alignment beats chance
       - _asserts:_ Contrastive retrieval of the right action anchor from a command beats chance and a bag-of-words baseline.
       - _dies if:_ At or near chance (1/n_anchors).
 - [ ] **T2.07** Grounding generalises to held-out phrasings
