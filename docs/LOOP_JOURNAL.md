@@ -4362,3 +4362,18 @@ B3 (hardware stamp + gpu_job_id) still open.
   path is the claim and weights-carried is reported honestly as its ablation).
   W33 Kaggle ~29.7h dies Sunday 08-23; after XL.01, SM.02/TA.02 (GPU) are the
   zero-pass picks that can spend it - push first, dispatch.sh only.
+- 2026-08-19 ~16:1x (Fable): XL.01 RECORDING RUN LAUNCHED, detached. The 14:xx
+  iteration implemented + piloted + committed the pre-registration (269c2b6)
+  but timed out before recording; this iteration found the tree clean, HEAD
+  pushed, no run in flight, and launched it: pid 4071347, launcher
+  /data/xl01_record.py (chdir+sys.path pinned per the detached-import lesson),
+  log /data/xl01_record.log. Verified computing at ~100% CPU 30s in. Commit
+  stamp for the run is 269c2b6 (clean). NEXT ITERATION: grep the log for
+  "[xl01_record] done"; if done, read the XL.01 ledger row (ratio gate 0.5,
+  alien must NOT recover >=0.75, ref must feed or VOID), commit the ledger +
+  this journal's follow-up, push. If the pid is dead with no done-line, the
+  log tail has the traceback. If still running, leave it alone — do NOT
+  relaunch (flock protects the ledger but a second run wastes 4 shared
+  cores). After XL.01: SM.02/TA.02 are the zero-pass GPU picks for W33
+  Kaggle (~29.7h, dies Sunday 08-23) — push first, dispatch.sh only. Session
+  meter read 91% at 16:07 (resets 16:29 UTC); week meters healthy (26/34%).
