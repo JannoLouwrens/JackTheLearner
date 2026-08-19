@@ -4293,3 +4293,38 @@ B3 (hardware stamp + gpu_job_id) still open.
   (pid note: setsid forks — the live python is 3963665, not 3963630; find it
   with `pgrep -af sh01_oracle_n12k`, never by remembered pid. Verified alive
   ~1 min in, log still block-buffered-empty as expected.)
+- 2026-08-19 ~12:1x (Fable): SH.01 decisive probe READ (per handoff):
+  oracle-vs-twin at N=12000/arm (the registered run's full per-arm budget)
+  reads z_shelter 1.028 < 3 — 4/84 outside lives sheltered (twin 0.0),
+  pref_working 0.9898, 5969 opt steps, 1093.8 s wall
+  (/data/sh01_oracle_n12k.log). Pre-registered branch taken: the must-succeed
+  reference cannot learn at the envelope, so the finding went to LC.04's
+  design notes (new dated section at the end of docs/research/LEARNING_CORE.md):
+  behaviour EXECUTABLE (P-controller enters 4/12) and senses CARRY it (the
+  oracle is told the answer), but the certified ppo-needs update cannot
+  ACQUIRE it at cpu<2h. Slope is positive (0.0 -> 1.03 sigma, 3k -> 12k
+  decisions) = data-starved screen, and LC.04's matched-experience envelope
+  is the re-screen; SH.01's rig is a ready-made LC.04 probe task (~550 s/arm
+  at N=12000). SH.01 registered run NOT launched (it could only record VOID);
+  SH.01 parked until the learning-core seat holds something that can learn
+  it. No ledger row for SH.01 — correct, no registered run happened.
+  SECOND UNIT, same iteration: the remaining stale-certificate debt from the
+  shelters commit (761121a) is what blocks most zero-pass commitments
+  (BA.02<-BA.01, VO.02/DP.04<-VO.01, TA.02<-TA.01, SM.02<-SM.01+PG.6,
+  XL.01<-XL.00), so the cheap bottom-up chain the 08:2x note asked for is
+  LAUNCHED, detached (setsid, /data/stale_rerun_chain.sh, bash pid ~3979902 —
+  verify with `pgrep -af stale_rerun_chain`, never by remembered pid): order
+  T0.27 T0.21 T0.17 PG.2 PG.3 PG.5 SM.01 T2.20 VO.01 LC.02 PS.03 BA.01 PG.6
+  PG.9 TA.01 PG.4 XL.00, log /data/sh01_stale_chain.log (durable /data root),
+  ETA ~60-70 min from 12:12 UTC at nice 19. Verified 25 s in: T0.27, T0.21,
+  T0.17, PG.2, PG.3 already re-recorded PASS, identical numbers. EXCLUDED on
+  purpose: LC.03 (VOID 15h, awaits rig re-derivation), BA.02 (VOID, parked
+  per D8), T4.02/T2.02 (GPU stamp refreshes forbidden). NEXT ITERATION:
+  (1) read the chain log tail; any verdict that CHANGED from its prior row is
+  a REAL finding — diagnose before anything else; commit the ledger rows
+  (explicit pathspec, the chain may still be writing). (2) After the chain,
+  the zero-pass claim specs whose deps go fresh are XL.01, VO.02, TA.02,
+  SM.02 — ALL four still need implementing; run coverage/next fresh and take
+  the cheapest (XL.01 is CPU_LONG and its "fact-blocked on LC.03 rig
+  re-derivation" note refers to XL.02+, re-check; SM.02/TA.02/VO.02 are GPU
+  and W33 has ~29.7h — read gpu_budget.json, push before any GPU work).

@@ -2760,3 +2760,56 @@ Per `SYSTEM.md`: *"is the machine better than I found it?"*
    > check whether anyone has published a tuned version of that baseline. The
    > incumbent in your bakeoff must be the *best* implementation of the
    > incumbent, not the one that is easiest to cite.
+
+---
+
+## Evidence from SH.01's pilots (2026-08-19): the certified reactive core cannot acquire a survival behaviour the body can execute and the senses can carry
+
+Recorded here because SH.01's pre-registered escalation clause says exactly
+this: "if the reference cannot learn at the full cpu<2h envelope the finding
+goes to LC.04, not this ledger row." The reference could not, and the numbers
+belong to the arbitration's design, not to the shelter ledger row.
+
+**The rig.** W0 + thermal + working/cosmetic huts, spawn curriculum
+(CURRICULUM_FRAC=0.3 inside-hut spawns from the per-life RNG, gates scoring
+outside-spawned lives only), the certified ppo-needs update (PS.01 lineage).
+Must-succeed reference arm per the T3.07 lesson: a byte-identical learner
+whose placebo slot carries the **unit direction to the working hut** —
+privileged perception, same body, same update.
+
+**The measurements, in decisiveness order:**
+
+- A hand P-controller that knows the hut location enters 4/12 lives (median
+  entry 13.5 s, median lead 10.9 s > LEAD_MIN_S 5). The behaviour is
+  *executable* by this body and *reachable* inside a life.
+- Oracle at N=3000 decisions/arm: z_shelter **0.0** (1 hut-touching outside
+  life of 21, 1469 optimiser steps).
+- Oracle at N=12000/arm (~the registered run's full per-arm cpu<2h budget;
+  probe log /data/sh01_oracle_n12k.log, 1093.8 s wall for the pair):
+  z_shelter **1.028** — frac_shelt 0.0279 vs twin 0.0, 4/84 outside lives,
+  pref_working 0.9898, lead_med_s 5.48, 5969 optimiser steps. Below the
+  pre-registered z >= 3 reference gate; `_check` VOIDs on ref_ok != 1, so a
+  registered run can only record VOID.
+
+**What this says for LC.04.** Perception is not the limit (the oracle is
+*told* the answer); execution is not the limit (the P-controller does it);
+the acquisition rate of the reactive core is. The slope is positive
+(0.0 -> 1.03 sigma from 3k -> 12k decisions), so by the owner's data-starved
+guard this screens as "re-screen at larger budget", not "non-learner" — and
+LC.04's matched-experience envelope is precisely that re-screen. Two design
+consequences:
+
+1. **SH.01's rig is a ready-made LC.04 probe task.** Sparse, delayed,
+   survival-coupled, with a wired oracle reference and blind twin — the
+   contrast a world-model arm that imagines is supposed to win. An arm that
+   reaches z >= 3 on the oracle rig at the same budget where PPO reads 1.0
+   demonstrates exactly the acquisition-speed difference the arbitration
+   exists to measure. The task costs ~550 s per arm at N=12000 on this box.
+2. **SH.01 stays unrecorded until the seat has a core that can learn it.**
+   Re-piloting SH.01 at larger N under PPO would be paying to re-measure a
+   known deficit; the spec re-enters the queue when LC.04 lands a winner (or
+   when PPO itself clears the oracle gate at a budget the envelope permits).
+
+Lesson already generalised in LESSONS.md the same day: *pilot the
+must-succeed arm first; until it succeeds, no other pilot number is
+informative.*
