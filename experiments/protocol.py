@@ -226,6 +226,15 @@ class Result:
     control_metrics: Dict[str, Any] = field(default_factory=dict)
     seeds: List[int] = field(default_factory=list)
     duration_s: float = 0.0
+    """Wall clock of the RECORDING CALL, not the cost of the work: a harvested
+    or reattached run records in seconds what a kernel computed for hours
+    (LC.03: 0.02 s for ~45 GPU-hours). For remote work the cost is
+    `compute_s`. (Overseer 17th-audit B3.)"""
+    compute_s: Optional[float] = None
+    """Provider-metered seconds behind this record, summed over every remote
+    job the runs paid for (failed attempts included — they spent quota too).
+    None, never 0.0, when nothing remote ran: a CPU-only run has no remote
+    cost rather than a zero one (the `Arm.cost` lesson)."""
     commit: str = ""
     hardware: str = ""
     ran_at: str = ""
@@ -578,7 +587,8 @@ class Ledger:
 
     def amend(self, spec_id: str, by: str, reason: str,
               status: Optional[Status] = None,
-              unknown_history: bool = False) -> Dict[str, Any]:
+              unknown_history: bool = False,
+              fix_hardware: bool = False) -> Dict[str, Any]:
         """Change an entry WITHOUT a run, and make the entry say so.
 
         The ledger's header forbids hand-editing, and the file was hand-edited
@@ -593,6 +603,16 @@ class Ledger:
         `amended` with its author, reason, prior value, commit and time. The
         guard that makes this safe rather than a licence is `AMENDABLE` — an
         amendment can only ever move an entry to a status that claims nothing.
+
+        `fix_hardware` (17th-audit B2): nine pre-fix GPU records stamped the
+        DISPATCHER (`aarch64/.../cpu`) as `hardware` while the machine that ran
+        the work sat in `metrics["gpu"]`. The correction is derivable from data
+        already in the row, so unlike `impl_sha` it may be back-filled — but
+        only DERIVED, never supplied: this path reconciles `hardware` with the
+        row's own `metrics["gpu"]` in the same format `run_spec` now stamps,
+        and refuses when there is no gpu recorded or the stamp is already
+        remote. Status, metrics and seeds are untouched — a provenance
+        amendment, not a re-verdict.
         """
         if not by or not reason:
             raise ValueError("amend requires both --by (the spec or finding that "
@@ -604,7 +624,7 @@ class Ledger:
                 f"{', '.join(s.value for s in self.AMENDABLE)} assert nothing. "
                 "PASS claims a capability and FAIL fires the spec's `kills` — "
                 "both require a run that could have failed.")
-        if status is None and not unknown_history:
+        if status is None and not unknown_history and not fix_hardware:
             raise ValueError("amend with nothing to change")
 
         lock_path = self.path.with_suffix(self.path.suffix + ".lock")
@@ -625,6 +645,21 @@ class Ledger:
                     changes.append({"field": "attempt", "from": row.get("attempt"),
                                     "to": None})
                     row["attempt"] = None
+                if fix_hardware:
+                    gpu = (row.get("metrics") or {}).get("gpu")
+                    if not (isinstance(gpu, str) and gpu.strip()):
+                        raise ValueError(
+                            f"{spec_id}: fix_hardware needs metrics['gpu'] in the "
+                            "row itself — the correction must be derived, never "
+                            "supplied")
+                    old_hw = row.get("hardware", "")
+                    if old_hw.startswith("remote/"):
+                        raise ValueError(
+                            f"{spec_id}: hardware already names the remote machine")
+                    new_hw = f"remote/{gpu} (dispatched from {old_hw})"
+                    changes.append({"field": "hardware", "from": old_hw,
+                                    "to": new_hw})
+                    row["hardware"] = new_hw
 
                 note = {"at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                         "by": by, "reason": reason,
@@ -1330,6 +1365,20 @@ def _drain_gpu_job_ids() -> List[str]:
         return []
 
 
+def _drain_gpu_charge_s() -> Optional[float]:
+    """Metered seconds `gpu.submit()` accumulated in this process, cleared on
+    read. Same sys.modules discipline as `_drain_gpu_job_ids`, same call
+    sites — the two drains must stay paired or one spec's charges could be
+    attributed to the next."""
+    mod = sys.modules.get("experiments.gpu")
+    if mod is None:
+        return None
+    try:
+        return mod.drain_charge_seconds()
+    except Exception:
+        return None
+
+
 def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
              check: Callable[[Dict[str, Any], Dict[str, Any]], bool],
              control_fn: Optional[Callable[[int], Dict[str, Any]]] = None,
@@ -1386,6 +1435,7 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # the env var lets `gpu.submit()` write the spec id into its receipt log
     # without every spec having to thread it through.
     _drain_gpu_job_ids()
+    _drain_gpu_charge_s()
     _prev_spec_env = os.environ.get("JACK_SPEC_ID")
     os.environ["JACK_SPEC_ID"] = spec.id
     try:
@@ -1434,6 +1484,7 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # attempts — those spent quota too, and a record that names only the job
     # that succeeded cannot answer "which hours bought this".
     job_ids = _drain_gpu_job_ids()
+    compute_s = _drain_gpu_charge_s()
     # The stamp names the machine that RAN the work, not the dispatcher: nine
     # GPU records read aarch64/…/cpu while the truth sat in metrics["gpu"]
     # (overseer B3). The dispatcher stays visible because it is also true.
@@ -1445,6 +1496,7 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     res = Result(spec_id=spec.id, status=status, metrics=metrics,
                  control_metrics=control_metrics, seeds=seeds,
                  duration_s=round(time.time() - t0, 2), message=message,
+                 compute_s=(round(compute_s, 2) if compute_s is not None else None),
                  impl_sha=impl_sha,
                  gpu_job_id=",".join(job_ids) if job_ids else None,
                  ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"), **stamp)

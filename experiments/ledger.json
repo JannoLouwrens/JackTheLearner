@@ -3179,7 +3179,21 @@
       "status": "PASS"
     },
     "T0.09": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-19T07:36:18",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla T4, 15360 MiB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+        }
+      ],
       "attempt": null,
       "commit": "06eab9e",
       "control_metrics": {
@@ -3187,7 +3201,7 @@
         "ok": false
       },
       "duration_s": 36.0,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla T4, 15360 MiB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "amended": [
@@ -5519,7 +5533,21 @@
       "status": "PASS"
     },
     "T1.07": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-19T07:36:19",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+        }
+      ],
       "attempt": 2,
       "commit": "e29bd82",
       "control_metrics": {
@@ -5528,7 +5556,7 @@
         "absurd_lr": 1.0
       },
       "duration_s": 1606.68,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "commit": "1a69db6",
@@ -5578,7 +5606,21 @@
       "status": "PASS"
     },
     "T1.08": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-19T07:36:21",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+        }
+      ],
       "attempt": 2,
       "commit": "d74e1bd",
       "control_metrics": {
@@ -5586,7 +5628,7 @@
         "spread": 0.00566095
       },
       "duration_s": 1983.01,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla T4 (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "commit": "29a6de2",
@@ -5617,7 +5659,21 @@
       "status": "PASS"
     },
     "T1.09": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-19T07:36:23",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+        }
+      ],
       "attempt": 1,
       "commit": "a0b9569",
       "control_metrics": {
@@ -5626,7 +5682,7 @@
         "absurd_peak_gb": -1
       },
       "duration_s": 221.29,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
       "impl_sha": null,
       "message": "",
@@ -5647,14 +5703,28 @@
       "status": "PASS"
     },
     "T1.10": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-19T07:36:24",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+        }
+      ],
       "attempt": 1,
       "commit": "a0b9569",
       "control_metrics": {
         "wrong_seed_max_diff": 0.503418
       },
       "duration_s": 203.56,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
       "impl_sha": null,
       "message": "",
@@ -5813,7 +5883,21 @@
       "status": "PASS"
     },
     "T2.01": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-19T07:36:26",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+        }
+      ],
       "attempt": null,
       "commit": "08444b2",
       "control_metrics": {
@@ -5823,7 +5907,7 @@
         "untrained_sigma_advantage_std": 0.0
       },
       "duration_s": 20097.42,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "amended": [
@@ -6008,6 +6092,19 @@
           ],
           "commit": "6c0fcd1",
           "reason": "Backfill of a hand-edit: this entry was restated by hand when Status.VOID was introduced (recorded in docs/LESSONS.md). The verdict is right - two non-learners cannot arbitrate an architecture, and the T0.14 dropout finding invalidates the runs - but it did not come from run_spec. attempt/history not reconstructible."
+        },
+        {
+          "at": "2026-08-19T07:36:27",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
         }
       ],
       "attempt": null,
@@ -6023,7 +6120,7 @@
         "untrained_tr_sigma_std": 0.0
       },
       "duration_s": 22604.42,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
       "impl_sha": null,
       "message": "VOID (restated 2026-08-09): the run refused to arbitrate \u2014 transformer 2.46 sigma is below the 3-sigma learning gate. Originally recorded FAIL, which read machine-side as the kills criterion (the transformer policy) having fired.",
@@ -6088,7 +6185,21 @@
       "status": "VOID"
     },
     "T2.03": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-19T07:36:29",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+        }
+      ],
       "attempt": 1,
       "commit": "42df762",
       "control_metrics": {
@@ -6101,7 +6212,7 @@
         "shuffled_dev_max_std": 0.0
       },
       "duration_s": 1206.63,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
       "impl_sha": "86c61174fb4d52b7",
       "message": "",
@@ -6649,7 +6760,21 @@
       "status": "FAIL"
     },
     "T4.02": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-19T07:36:30",
+          "by": "overseer-17th-audit-B2",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "f47c372+dirty",
+          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+        }
+      ],
       "attempt": 2,
       "commit": "cdbb08e",
       "control_metrics": {
@@ -6689,7 +6814,7 @@
         "ctrl_vision_dominance_min_std": 0.0
       },
       "duration_s": 431.28,
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "commit": "",

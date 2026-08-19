@@ -804,13 +804,14 @@ def cmd_amend(ledger: Ledger, args) -> int:
     """
     if len(args.spec) != 2:
         print("usage: run amend <SPEC> --by <SPEC-or-finding> --reason '...' "
-              "[--status VOID|SKIP|NOT_RUN] [--unknown-history]")
+              "[--status VOID|SKIP|NOT_RUN] [--unknown-history] [--fix-hardware]")
         return 2
     spec_id = args.spec[1]
     try:
         status = Status(args.status) if args.status else None
         row = ledger.amend(spec_id, by=args.by or "", reason=args.reason or "",
-                           status=status, unknown_history=args.unknown_history)
+                           status=status, unknown_history=args.unknown_history,
+                           fix_hardware=args.fix_hardware)
     except (ValueError, KeyError) as e:
         print(f"Refusing to amend {spec_id}: {e}")
         return 1
@@ -1008,7 +1009,13 @@ def cmd_run(ledger: Ledger, spec_ids: list[str]) -> int:
         # with paying tenants that is not an inconvenience, it is a hazard.
         # A subprocess also isolates a crashing test from the ledger.
         res = _run_isolated(sid, ledger)
-        print(f"{res.status.value} ({res.duration_s}s) {res.message}")
+        # duration_s is the recording call, not the work: name the metered
+        # remote cost when there is one (17th-audit B3 — LC.03 read 0.02 s
+        # for ~45 GPU-hours).
+        cost = (f"{res.duration_s}s"
+                if getattr(res, "compute_s", None) is None
+                else f"gpu {res.compute_s}s metered, recorded in {res.duration_s}s")
+        print(f"{res.status.value} ({cost}) {res.message}")
         if res.metrics:
             for k, v in list(res.metrics.items())[:6]:
                 print(f"        {k} = {v}")
@@ -1091,6 +1098,9 @@ def main() -> int:
     ap.add_argument("--status", help="amend: new status (VOID, SKIP or NOT_RUN only)")
     ap.add_argument("--unknown-history", action="store_true",
                     help="amend: this entry's attempt count is not reconstructible")
+    ap.add_argument("--fix-hardware", action="store_true",
+                    help="amend: reconcile `hardware` with the row's own "
+                         "metrics['gpu'] (17th-audit B2 provenance amendment)")
     args = ap.parse_args()
     ledger = Ledger()
 

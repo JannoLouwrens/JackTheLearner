@@ -46,6 +46,27 @@ SUBMISSION_LOG = Path(__file__).parent / "gpu_submissions.jsonl"
 # (only T1.02 ever did).
 _SUBMITTED_JOB_IDS: list[str] = []
 
+# Provider-metered seconds for the same window, appended once per attempt
+# result (including failed attempts — they spent quota too) and drained by the
+# recorder into `Result.compute_s`. Overseer 17th-audit B3: `duration_s` names
+# the recording call, not the work, so LC.03's record read 0.02 s for ~45 h of
+# GPU; this is the field that names the work.
+_SUBMITTED_CHARGE_S: list[float] = []
+
+
+def drain_charge_seconds() -> Optional[float]:
+    """Summed metered seconds since the last drain, None when nothing remote ran.
+
+    None, never 0.0, for the no-dispatch case — the `Arm.cost` lesson: a
+    sentinel that is also a valid value cannot be detected, and a CPU-only run
+    has NO remote compute cost rather than a zero one.
+    """
+    if not _SUBMITTED_CHARGE_S:
+        return None
+    total = sum(_SUBMITTED_CHARGE_S)
+    _SUBMITTED_CHARGE_S.clear()
+    return total
+
 
 def drain_job_ids() -> list[str]:
     """Return and clear the job ids `submit()` recorded since the last drain.
@@ -887,6 +908,7 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
             # Failed attempts append too: a crashed kernel still spent quota,
             # and the record should name every remote job the run paid for.
             _SUBMITTED_JOB_IDS.append(res.job_id)
+        _SUBMITTED_CHARGE_S.append(res.charge_seconds)
         # Charge the metered window, labelled by outcome, once per remote job.
         # All three of those qualifiers were missing until 2026-08-09.
         budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id)
