@@ -22,7 +22,7 @@ mechanisms, both in `experiments/protocol.py`:
     FAIL whose impl_sha differs from the run that amended it must be stamped
     at a clean commit that exists in this repo and must carry its metrics.
 
-Nine properties, each with a way to fail:
+Ten properties, each with a way to fail:
 
   1. A PASS superseding a FAIL carries `supersedes_fail`, with the failing
      commit, measurement and `impl_changed: True` when the code moved.
@@ -46,6 +46,16 @@ Nine properties, each with a way to fail:
      that only ever sees fixtures guards nothing). The next amend-after-FAIL
      done from an uncommitted tree fails the gate re-run HERE. That is the
      spec working, not flaking.
+ 10. THE LIVE AUDIT CALL CAN ACTUALLY CHECK. Property 9 has been vacuous
+     since birth: every live FAIL->PASS pair predates `impl_sha`, so
+     `checked_pairs` reads 0 and "zero violations" is a statement about an
+     empty set (overseer, 18th audit, RANK 2). Plant one clean pair and one
+     T2.08-shaped pair INSIDE a copy of the live results and re-run the same
+     call as property 9: checked must rise by exactly 2, unauditable must
+     not move, and exactly one new violation must appear, naming the planted
+     dirty spec. This is the difference between "the auditor has never
+     flagged anything" and "the auditor cannot flag" — the first is today's
+     honest state, the second is what this property rules out.
 
 CONTROL — the T2.08 shape replayed verbatim on a fixture: FAIL stamped
 `75a1938+dirty` carrying its 0.6975, impl changed, PASS recorded on top. The
@@ -191,9 +201,43 @@ def _experiment(seed: int) -> dict:
         warns_on_dirty_fail = ("unauditable" in buf_dirty.getvalue()
                                and "unauditable" not in buf_clean.getvalue())
 
+        # Planted rows for property 10, captured while the fixture ledger is
+        # still on disk. X.1 (as it stands after property 3) is the clean
+        # auditable pair; X.8 replays the T2.08 shape through the real
+        # recorder, so the live call below gets one of each to find.
+        led6 = Ledger(path)
+        led6.record(Result(spec_id="X.8", status=Status.FAIL,
+                           commit="75a1938+dirty",
+                           metrics={"state_coverage": 0.6975},
+                           impl_sha="7" * 16, ran_at="2026-01-01T00:00:00"))
+        Ledger(path).record(Result(spec_id="X.8", status=Status.PASS,
+                                   commit=real,
+                                   metrics={"state_coverage": 0.71},
+                                   impl_sha="8" * 16,
+                                   ran_at="2026-01-02T00:00:00"))
+        planted_clean = _row(path, "X.1")
+        planted_dirty = _row(path, "X.8")
+
     # 9. The live ledger passes its own audit. Read-only, real file.
-    live = audit_supersedes_fail(
-        json.loads(LEDGER_PATH.read_text())["results"], repo_root=_ROOT)
+    live_results = json.loads(LEDGER_PATH.read_text())["results"]
+    live = audit_supersedes_fail(live_results, repo_root=_ROOT)
+
+    # 10. The same call, on the same results, with one clean and one dirty
+    #     pair planted. Gated on DELTAS, not absolutes, so the property
+    #     survives the day a real checkable pair enters the ledger: checked
+    #     +2, unauditable unmoved, exactly one NEW violation, and it names
+    #     the planted dirty spec for the planted reason.
+    seeded = {**live_results,
+              "X.PLANT.CLEAN": planted_clean, "X.PLANT.DIRTY": planted_dirty}
+    sa = audit_supersedes_fail(seeded, repo_root=_ROOT)
+    new_viol = [v for v in sa["violations"] if v["spec_id"] not in live_results]
+    live_audit_can_flag = (
+        sa["checked_pairs"] == live["checked_pairs"] + 2
+        and sa["unauditable_pairs"] == live["unauditable_pairs"]
+        and len(sa["violations"]) == len(live["violations"]) + 1
+        and len(new_viol) == 1
+        and new_viol[0]["spec_id"] == "X.PLANT.DIRTY"
+        and any("never committed" in r for r in new_viol[0]["reasons"]))
 
     props = {
         "artifact_written": artifact_written,
@@ -205,12 +249,15 @@ def _experiment(seed: int) -> dict:
         "audit_flags_missing_metrics": flags_missing_metrics,
         "warns_on_dirty_fail": warns_on_dirty_fail,
         "live_ledger_clean": not live["violations"],
+        "live_audit_can_flag": live_audit_can_flag,
     }
     return {**{k: bool(v) for k, v in props.items()},
             "properties_failed": sum(1 for v in props.values() if not v),
             "live_checked_pairs": live["checked_pairs"],
             "live_unauditable_pairs": live["unauditable_pairs"],
-            "live_violations": len(live["violations"])}
+            "live_violations": len(live["violations"]),
+            "seeded_checked_pairs": sa["checked_pairs"],
+            "seeded_violations": len(sa["violations"])}
 
 
 def _control(seed: int) -> dict:
