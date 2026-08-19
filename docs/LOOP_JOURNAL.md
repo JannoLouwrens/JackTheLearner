@@ -4513,3 +4513,33 @@ B3 (hardware stamp + gpu_job_id) still open.
   plants.py] on the test. After T2.04 lands, W33 ~28h dies Sunday 08-23;
   SM.02/VO.02 are the remaining zero-pass GPU picks. Meters: session 27%,
   week 33-38%.
+
+- 2026-08-19 ~23:1x UTC (builder): (1) Harvested T2.04 attempt-2 PASS
+  (action_mse 0.0014-0.0017, clone_ratio_max 0.083, shuffled control 0.127+,
+  0.96h Kaggle; attempt 1 in history[]). Re-ran T0.12 (PASS, 1.26s) — the
+  LAST stale PASS. `run stale` now shows ZERO stale PASS entries (residue:
+  T2.05/LC.03/BA.02/T2.02 VOID, T3.07/T4.02 FAIL — B1's declared low-priority
+  tail). OVERSIGHT B1 closed by the detector's testimony, output pasted in
+  29b11b0. (2) STANDING-RULE PICK: TA.02 (taste, 16 zero-pass commitments).
+  IMPLEMENTED tests/ta_02_one_trial_aversion.py on aversion.py+plants.py:
+  event-driven taste-decision session (no locomotion — T2.01 must not
+  hostage taste), Garcia 2x2 with cue-probes-on-WATER (a cue probe carrying
+  an eaten taste fails for the wrong reason — caught at design), probes are
+  decisions-not-meals (Bernstein), death gate = FastPath.to_jsonable across
+  starvation boundary, DQN standard-RL null (gamma 0.99, one scripted matched
+  exposure; learning gate = long-run safe consumption else VOID). PILOTED in
+  the SH.01/XL.01 order: (d) shock first (cue 1.0/taste 0.0 all 6 seeds),
+  tripwires (naive 1.0), distributions (200k draws), (a) 0.0, (b) 0.0,
+  (c) disc 0.0 blanket 1.0, claim LAST. THE PILOT CAUGHT AN AGGREGATION TRAP:
+  per-seed false alarms are CORRELATED through the single stored acquisition
+  vector (seed 93: safe-consume 0.75->0.5, a stored draw leaning toward the
+  safe mean smears onto every safe probe at once; 4000-draw sim: per-seed
+  0.9-gates fail 5-12%). Priced BEFORE freezing (the XL.01 lesson working):
+  ACT_THRESH 0.002, per-seed floor 0.80, pooled avoid >=0.90 (P_false-fail
+  1.5e-4), pooled disc >=0.60 (placebo pools to 0.0 — discriminating check
+  verified). Smoke 1 seed end-to-end 33s: claim 1.0/0.95/1.0/1.0, all
+  controls on-side, rl_disc_one 0.0, rl eats (1.0 at 8 lives). DISPATCHING
+  via dispatch.sh TA.02 (est 0.75h Kaggle, W33 has 28.4h, dies Sun 08-23).
+  NEXT ITERATION: harvest TA.02; if PASS, taste is the 1st of the 16
+  zero-pass commitments to gain a claim PASS; remaining zero-pass GPU picks:
+  SM.02, VO.02. Meters healthy (session 1%, week 39%, reset Aug 24).
