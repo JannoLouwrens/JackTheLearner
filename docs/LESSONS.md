@@ -3917,3 +3917,38 @@ science and missed the stamp. A row's usability to dependents is
 verdict × freshness × cleanliness; after launching a recorder, check the
 recorded row's commit stamp for `+dirty` — one grep — before believing the
 chain is doing what it was launched to do.
+
+## A constant weakened to be satisfiable is a measurement of the control's power
+
+XL.01's alien-store control had to be constructible: a diary lived in a
+DIFFERENT world whose every food position sits far from every true food
+position here. The first draft demanded 2.0 m of separation and the scan
+measured it UNSATISFIABLE — across 30 candidate worlds the best achievable
+separation was 1.85/1.79/1.97 m, because W0's food always spawns inside one
+shared 4 × 2.5 m box. The constant was lowered to 1.5 m so a fixture world
+existed, the reason it had to be lowered was written into the code as a
+comment, and the gate it protected ("an alien store must not recover the
+speedup, ratio >= 0.75") was pre-registered unchanged. The recording run then
+FAILED on exactly that gate, every seed: the alien store recovered two thirds
+of the speedup (alien/wiped 0.32), because the fact that forced the weakening
+IS information the alien store carries — any lived diary points into the one
+small box where food grows, so it teaches the REGION even when every item
+position in it is wrong by 1.74 m. The run itself was honest and the ordering
+it measured is real (carried 4.5 s < alien 18.5 s < wiped 47.7 s); the gate
+was lost at design time, by a number the designer had already measured,
+recorded, and acted on for a different purpose.
+
+The ref and claim arms were piloted first, per the SH.01 ordering. The alien
+ARM was never run before the recording; a 90-second pilot
+(`python -m experiments.tests.xl_01_... alien 0`) would have shown 0.32
+before the gate was frozen.
+
+**Rule:** when a fixture constant must be weakened for the fixture to exist
+at all, the reason it was unsatisfiable is data about what the control can
+distinguish — stop and re-derive the control's discriminating power under
+that fact before gating on it. And extend the SH.01 pilot ordering: reference
+arm, rig tripwires, **then every gated control arm**, then claim arms. A
+control gate is a bet about the world; a control that has never run is a bet
+nobody priced. Same family as "the step that removes a confound is itself a
+confound until measured" — here the accommodation that made the control
+constructible is what disarmed it.

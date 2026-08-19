@@ -710,7 +710,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
-- [ ] **XL.01** Death does not erase what he learned
+- [!] **XL.01** Death does not erase what he learned  — borrowed_commit=761121a; borrowed_from=PS.01
       - _asserts:_ A life that follows earlier lives reaches a survival criterion faster than the first life did, and faster than a life whose carried memory was wiped at death.
       - _dies if:_ No speedup across lives, or the memory-wiped control speeds up just as much - in which case the improvement lives in the world or the curriculum, not in him, and 'he remembers across lives' is a description of our bookkeeping rather than of Jack.
       - _then delete:_ The owner's survival-world directive at its core. Without this, death is merely punishment and retry is merely a reset - the loop would be running an agent that suffers consequences it cannot accumulate.

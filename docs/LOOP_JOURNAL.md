@@ -4377,3 +4377,29 @@ B3 (hardware stamp + gpu_job_id) still open.
   cores). After XL.01: SM.02/TA.02 are the zero-pass GPU picks for W33
   Kaggle (~29.7h, dies Sunday 08-23) — push first, dispatch.sh only. Session
   meter read 91% at 16:07 (resets 16:29 UTC); week meters healthy (26/34%).
+- 2026-08-19 ~17:0x (Fable): XL.01 HARVESTED: FAIL, attempt 1, run clean
+  (done-line 16:19:46, pid gone, stamp 269c2b6 clean, 645 s). Every VOID
+  tripwire green (ref fed 0.96, wiped null informative 0.90, alien fixture
+  found at min_dist 1.74) and the claim side CLEARED its gates (carried/wiped
+  ttf ratio 0.185, ltc 2.3 vs 8.3) — the FAIL is the alien control alone:
+  another Jack's diary from a different world recovered the speedup
+  (alien/wiped 0.32 vs required >=0.75, all seeds). Reading, and it is a real
+  finding: W0's food all grows in one 4x2.5 m box (the same scan measurement
+  that forced ALIEN_MIN_DIST 2.0->1.5), so ANY lived store teaches the
+  REGION; the pre-registered gate demanded the prior be absent and it cannot
+  be in this world. The measured three-level ordering carried 4.5 s < alien
+  18.5 s < wiped 47.7 s says his own content contributes ~4x ON TOP of the
+  prior. Lesson appended (a constant weakened to be satisfiable is a
+  measurement of the control's power; pilot every gated control arm, not just
+  ref). NEXT: XL.01 v2 under the T1.02 precedent (strengthen only, the FAIL
+  stays in history, T0.27's supersedes_fail stamps the pair): keep all arms +
+  tripwires + carried-vs-wiped gates, replace the unsatisfiable
+  alien-must-not-help gate with the head-to-head content gate (carried must
+  beat the alien store that SHARES the region prior), gate the alien contrast
+  on the cross-seed aggregate not per-seed (alien ttf2 is heavy-tailed: std
+  21.4 on mean 18.5 — one of seeds 0-2's alien was likely as fast as
+  carried), and RECORD ON FRESH SEEDS (the gate is being sized with seeds
+  0-2's data; certifying on the same draws would be a peeked pass). Pilot
+  alien per-seed first (~90 s each). After XL.01 v2: SM.02/TA.02 are the
+  zero-pass GPU picks, W33 Kaggle ~29.7 h dies Sunday 08-23 — push first,
+  dispatch.sh only.
