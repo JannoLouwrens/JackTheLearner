@@ -4429,3 +4429,25 @@ B3 (hardware stamp + gpu_job_id) still open.
   30 h week after Sunday 08-23 reset — read experiments/gpu_budget.json, never
   assume) — push first, dispatch.sh only. Meters healthy this iteration:
   session 12%, week 29-35%.
+- 2026-08-19 ~19:2x (Fable): OVERSIGHT B2+B1 executed in order. (1) Committed
+  XL.01 attempt 2 FAIL (5f64845): claim refuted on fresh worlds 3-5 —
+  search_time_ratio 1.003 +- 0.671 vs required <=0.5, ok_claim 1/3 seeds;
+  redesigned alien control discriminated as intended (pooled 3.40 >= 0.75,
+  content ratio 0.259). Per B3: NO attempt 3 without a pre-registered power
+  calculation (identical fixture: 0.084 on worlds 0-2, 1.003 on worlds 3-5 —
+  the instrument cannot resolve 2x at 3 seeds x 8 lives; pilot 6-8 worlds at
+  one seed each, size N_LIVES/seeds from the between-world std). (2) B1
+  cascade: T0.12 re-certified PASS (1.28s, new GPU accounting) and T2.08
+  re-certified PASS (203.9s, auc margin 0.0149 > 0 — curiosity's credit is
+  live again); detector re-queried and pasted into dd07693: 10 stale -> 8.
+  (3) B6/B1 GPU: dispatched T2.03 via dispatch.sh (watcher pid 4107116,
+  kernel attempt 1787166872624-4107128-kaggle, est 0.9h, HEAD dd07693, log
+  /data/tmp/dispatch_t2_03.log). LEARNED: /tmp/jack-ladder-gpu.lock
+  SERIALIZES GPU runs — the concurrent T2.04 dispatch hit the lock and its
+  watcher EXITED (not queued). NEXT ITERATION: (a) check
+  /data/tmp/dispatch_t2_03.log for T2.03's verdict; if landed, commit ledger
+  + push, then IMMEDIATELY scripts/dispatch.sh T2.04 (the last PASS-stale
+  entry, est 1.0h Kaggle) — do NOT relaunch T2.03 while pid 4107116 lives.
+  (b) After T2.04: SM.02/TA.02/VO.02 are the zero-pass GPU picks; W33 has
+  ~29.4h and dies Sunday 08-23 (read gpu_budget.json, never assume). Meters
+  this iteration: session 18%, week 30-36% (reset was today 11:59 UTC).
