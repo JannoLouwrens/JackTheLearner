@@ -3952,3 +3952,19 @@ control gate is a bet about the world; a control that has never run is a bet
 nobody priced. Same family as "the step that removes a confound is itself a
 confound until measured" — here the accommodation that made the control
 constructible is what disarmed it.
+
+**Extension, from XL.01 v2 (2026-08-19): the pilot must price the gate's
+AGGREGATION, not only its direction and threshold.** A per-seed all-must-pass
+gate over K seeds is K coin flips at the per-seed false-alarm rate: the v2
+pilots ran the alien control on three design worlds with a store that was
+content-wrong BY CONSTRUCTION and measured alien/wiped ratios of 1.67 / 15.67
+/ 0.62 — one honest world in three below the 0.75 bar, purely from 7
+heavy-tailed lives per arm, putting the recording's false-FAIL odds near 70%.
+The fix that does not weaken: pool the statistic across seeds (equal-N, so
+mean/mean = pooled ratio) at the unchanged threshold, and verify the pooled
+form still fails the failure it exists to catch (attempt 1's genuine
+recovery, 0.32 on every seed, pools to 0.32 — still a FAIL). Per-seed values
+stay reported. Rule of thumb: per-seed gating is for effects that must hold
+in every world (the claim); pooled gating is for controls whose per-seed
+statistic the pilots have measured as noise-dominated — and only a pilot of
+the gated arm can tell you which regime you are in.
