@@ -4290,3 +4290,6 @@ B3 (hardware stamp + gpu_job_id) still open.
   caught by verifying the artifact, not the exit). The LIVE probe is pid
   3963630 (relaunched 10:41 with os.chdir+sys.path pinned in the script,
   verified 20 s in at 119% CPU). Same log, same instructions as above.
+  (pid note: setsid forks — the live python is 3963665, not 3963630; find it
+  with `pgrep -af sh01_oracle_n12k`, never by remembered pid. Verified alive
+  ~1 min in, log still block-buffered-empty as expected.)
