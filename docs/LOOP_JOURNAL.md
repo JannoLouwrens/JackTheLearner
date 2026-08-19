@@ -4451,3 +4451,29 @@ B3 (hardware stamp + gpu_job_id) still open.
   (b) After T2.04: SM.02/TA.02/VO.02 are the zero-pass GPU picks; W33 has
   ~29.4h and dies Sunday 08-23 (read gpu_budget.json, never assume). Meters
   this iteration: session 18%, week 30-36% (reset was today 11:59 UTC).
+- 2026-08-19 ~20:1x (Fable): T2.03 re-cert post-mortem + re-dispatch. Inherited
+  uncommitted ERROR (kernel 1787166872, 336s metered, 0.0935h -> kaggle_failed):
+  Dinov2Model refused to import because Kaggle's ambient torchvision
+  0.25.0+cu128 (torch-2.10-built) cannot register its C++ ops under our pinned
+  torch 2.5.1 — and the 08-13 torchvision==0.20.1 fix lived INSIDE the
+  --no-deps fallback branch, which stopped firing when the upstream cudnn
+  index healed today. The fix had unshipped itself; the encoder's
+  refuse-to-downgrade guard turned what would have been a silent 245K-CNN
+  "pretrained" result into a clean ERROR. Fixed in gpu.py by keying the pin on
+  the INSTALLED torchvision version outside all branches (TV_PIN now printed
+  beside TORCH_PIN); verified the SHIPPED string via stubbed-pip simulation on
+  healed/broken/already-correct paths with the dd07693 text as control (it
+  leaves tv at 0.25 on the healed path — reproduces the kernel error). LESSONS
+  gains: key a repair on the state it maintains, never on the path that
+  historically violated it. Committed 1355d51 (ERROR row kept, old PASS in
+  history) + pushed, then re-dispatched T2.03 via dispatch.sh: watcher pid
+  4118020, attempt 1787170366431-4118036-kaggle, HEAD 1355d51, est 0.9h,
+  timeout 6000s, kernel confirmed RUNNING. NEXT ITERATION: (a) read
+  /data/tmp/dispatch_t2_03.log; if landed, check the kernel log printed
+  "TV_PIN 0.20.1" (the fix's live verification), commit ledger + push. Do NOT
+  relaunch T2.03 while pid 4118020 lives; if the watcher died mid-run,
+  JACK_REUSE_KERNEL=jack-ladder-1787170366 scripts/dispatch.sh T2.03. (b) Then
+  IMMEDIATELY dispatch.sh T2.04 — the last PASS-stale entry (est 1.0h Kaggle).
+  (c) After T2.04: SM.02/TA.02/VO.02 are the zero-pass GPU picks; W33 has
+  ~29.3h and dies Sunday 08-23 (read gpu_budget.json, never assume). Meters
+  this iteration: session 24%, week 32-37%.
