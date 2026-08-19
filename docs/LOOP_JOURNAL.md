@@ -4477,3 +4477,39 @@ B3 (hardware stamp + gpu_job_id) still open.
   (c) After T2.04: SM.02/TA.02/VO.02 are the zero-pass GPU picks; W33 has
   ~29.3h and dies Sunday 08-23 (read gpu_budget.json, never assume). Meters
   this iteration: session 24%, week 32-37%.
+- 2026-08-19 ~21:2x (Fable): T2.03 HARVESTED + TA.02 substrate. (1) T2.03
+  re-cert PASS landed via detached watcher (kernel 1787170366, P100, 1159s
+  metered, W33 now 0.619/30h): pretrained 0.95-0.99 vs scratch 0.44-0.49,
+  shuffled control at chance; pulled the kernel log and confirmed
+  "TORCH_PIN 2.5.1+cu121 TV_PIN 0.20.1+cu121" — the hoisted torchvision pin
+  fired on the HEALED pip path, the fix's first live verification. Committed
+  4cd43c5, pushed. (2) Dispatched T2.04 (last PASS-stale GPU cert, B1):
+  watcher pid 4128609, attempt 1787173733415-4128624-kaggle, HEAD 4cd43c5,
+  est 1.0h, timeout 7200s, kernel CONFIRMED RUNNING at +8min. If it lands:
+  harvest /data/tmp/dispatch_t2_04.log, commit, then re-run stale_claims and
+  paste output in the commit (closure = detector quiet, not worklist done).
+  If watcher died mid-run: JACK_REUSE_KERNEL=jack-ladder-1787173733
+  scripts/dispatch.sh T2.04. (3) STANDING-RULE PICK (16 zero-pass
+  commitments; all runnable picks are Budget.GPU so tie-break = most
+  declared specs): TA.02, taste (3 declared). SH.01 stays PARKED (learning
+  core can't learn its rig), XL.01 power-blocked per OVERSIGHT B3, DP.04
+  blocked on unregistered LG.00. BUILT the substrate experiments/aversion.py
+  (commit 30f3233, NEW file — zero IMPL_DEPS cascade): routed one-shot
+  associator; selectivity = eligibility windows (taste 50s/100s = 6h/12h as
+  starvation-horizon fraction; extero 0.8s by ratio) AND illness->taste /
+  shock->extero routing — windows alone can't explain why shocked rats
+  don't avert the taste still in its long trace (Domjan 2015; the registry's
+  "verify G&K 1966" ask is already done in FROZEN_VS_PLASTIC.md §8.4).
+  Smoke 9/9: one-shot aversion 0.0133 toxic vs 0.000445 safe twin (30x),
+  both halves of the 1966 dissociation, latent inhibition <0.5x, no clock
+  decay, exact death round-trip (values cross, traces don't). NEXT
+  ITERATION: implement tests/ta_02_*.py on aversion.py + plants.py + XL.00
+  respawn. PILOT ORDER (SH.01 + XL.01 lessons, binding): must-PASS control
+  (d) shock->AV avoidance FIRST; then rig tripwires (encounter/base-rate
+  headroom); then EVERY gated control arm (a)(b)(c) piloted and their
+  aggregation+power priced BEFORE freezing gates; claim arms LAST. The
+  standard-RL null (gamma cannot bridge DELAY_S=30s=150 steps) is the
+  gpu<2h part; fast-path arms are CPU-cheap. Declare IMPL_DEPS=[aversion.py,
+  plants.py] on the test. After T2.04 lands, W33 ~28h dies Sunday 08-23;
+  SM.02/VO.02 are the remaining zero-pass GPU picks. Meters: session 27%,
+  week 33-38%.
