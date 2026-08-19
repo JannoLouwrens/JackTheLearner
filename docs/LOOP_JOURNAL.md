@@ -4403,3 +4403,29 @@ B3 (hardware stamp + gpu_job_id) still open.
   alien per-seed first (~90 s each). After XL.01 v2: SM.02/TA.02 are the
   zero-pass GPU picks, W33 Kaggle ~29.7 h dies Sunday 08-23 — push first,
   dispatch.sh only.
+- 2026-08-19 ~18:2x (Fable): XL.01 v2 PRE-REGISTERED (265e683) AND RECORDING
+  LAUNCHED: inherited the timed-out iteration's uncommitted v2 (wide-food-homes
+  fixture — food homes drawn from +-4.0 m off the feature footprints instead of
+  stock W0's one 4x2.5 m box, ALIEN_MIN_DIST restored 1.5->2.0, fresh worlds
+  3-5 via WORLD_BASE), verified it semantically (FEATURE_CLEAR boxes checked
+  against playground.py's actual coordinates; arena is +-6 m so +-4 m spread is
+  inside the walls; removed a dead FOOD_Z_EPS constant). Piloted EVERY gated
+  arm per the XL.01 lesson, worlds 0-2 = design data: ref fed 8/8; claim
+  carried 4.2 s vs wiped 50.0 s (ratio 0.084, ltc 2 vs 7); alien min_dist
+  2.6-3.7 m, per-world alien/wiped ratios 1.67 / 15.67 / 0.62. That last spread
+  — measured with a store content-wrong BY CONSTRUCTION — priced the per-seed
+  gate at ~1-in-3 false-FAIL per seed, so the alien gate is POOLED across
+  seeds (mean alien ttf2 / mean wiped ttf2 >= 0.75, threshold and direction
+  unchanged; pilots pool to 2.41, attempt 1's 0.32-every-seed alien still
+  fails pooled; per-seed ratios stay reported). Recording run launched
+  detached against clean stamp 265e683: pid 4095411 (child of setsid launcher
+  /data/xl01_record.py), log /data/xl01_record_v2.log, verified 100% CPU with
+  start-line 18:22:57Z. NEXT ITERATION if this one dies: grep the log for
+  "[xl01_record] done"; if done, read the XL.01 ledger row (claim ratio <= 0.5
+  and ltc ordering per seed; alien gate pooled >= 0.75; ref/null/fixture
+  tripwires VOID) and commit ledger + journal + push. If pid 4095411 is gone
+  with no done-line the tail has the traceback. Do NOT relaunch while it runs.
+  After XL.01: SM.02/TA.02 are the zero-pass GPU picks for W34 Kaggle (fresh
+  30 h week after Sunday 08-23 reset — read experiments/gpu_budget.json, never
+  assume) — push first, dispatch.sh only. Meters healthy this iteration:
+  session 12%, week 29-35%.
