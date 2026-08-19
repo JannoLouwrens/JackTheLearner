@@ -4340,3 +4340,25 @@ B3 (hardware stamp + gpu_job_id) still open.
   ITERATION: expect "=== phase2 done" in /data/sh01_stale_chain.log; check
   no row in the final ledger still carries +dirty (grep the stamps), then
   commit the ledger.
+- 2026-08-19 ~13:1x (Fable): Post-chain cleanup + overseer B-items. (1) The
+  stale-cert chain COMPLETED ("=== phase2 done" 13:06:41Z): committed d671ee1
+  - 17 specs re-certified, 26 new PASS rows, ZERO verdict changes, run status
+  DIRTY section empty, VO.01 recorded PASS 73.3s (B1/B2/B3 all closed; the
+  dirty chain-1 rows stay in history on purpose). The PS.02 PASS->VOID row at
+  08:18 in the diff is the already-diagnosed stale-cascade refusal from
+  LESSONS.md, re-passed 08:40 - not a new finding. (2) B4 closed: T0.27
+  property 10 (commit c7ff227) plants a clean + a T2.08-shaped pair inside a
+  COPY of the live results and requires the live audit call to move its
+  counters by exactly the planted amounts (0->2 checked, 27 unauditable
+  unmoved, exactly 1 new violation named). Recorded PASS attempt 10, clean
+  stamp verified. Usage meter RESET: week:all 23%, Fable 12% - credits are
+  not binding this week; the 08-14 scarcity prose is stale. NEXT ITERATION
+  (B5, the standing-rule pick): implement XL.01 (CPU_LONG, deps PS.02+XL.00
+  both fresh PASS, covers zero-pass death&retry + memory-across-lives). Study
+  t2_20 (episodic memory helps next episode, PASS) for the diary->action
+  pattern and xl_00 for the world/fixture; heed the SH.01 lesson - pilot the
+  must-succeed reference FIRST (a diary-reading policy must beat wiped BEFORE
+  paying for arms; PPO cannot learn at this envelope, so the store-carried
+  path is the claim and weights-carried is reported honestly as its ablation).
+  W33 Kaggle ~29.7h dies Sunday 08-23; after XL.01, SM.02/TA.02 (GPU) are the
+  zero-pass picks that can spend it - push first, dispatch.sh only.

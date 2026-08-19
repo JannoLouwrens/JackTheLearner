@@ -6720,14 +6720,14 @@
     },
     "T0.27": {
       "amended": [],
-      "attempt": 9,
-      "commit": "024ad93",
+      "attempt": 10,
+      "commit": "c7ff227",
       "compute_s": null,
       "control_metrics": {
         "dirty_named": 1.0,
         "violations": 1
       },
-      "duration_s": 1.28,
+      "duration_s": 1.27,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -6965,9 +6965,39 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "024ad93",
+          "control_metrics": {
+            "dirty_named": 1.0,
+            "violations": 1
+          },
+          "gpu_job_id": null,
+          "impl_sha": "ab699cbc41098adf",
+          "message": "",
+          "metrics": {
+            "artifact_survives_history": true,
+            "artifact_written": true,
+            "audit_admits_clean_shape": true,
+            "audit_flags_missing_metrics": true,
+            "audit_flags_unreachable_commit": true,
+            "live_checked_pairs": 0,
+            "live_ledger_clean": true,
+            "live_unauditable_pairs": 27,
+            "live_violations": 0,
+            "properties_failed": 0,
+            "rerun_visible_not_amendment": true,
+            "unknowable_is_none_and_unauditable": true,
+            "warns_on_dirty_fail": true
+          },
+          "ran_at": "2026-08-19T13:04:17",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "ab699cbc41098adf",
+      "impl_sha": "b463ebb5fa9869e8",
       "message": "",
       "metrics": {
         "artifact_survives_history": true,
@@ -6975,16 +7005,19 @@
         "audit_admits_clean_shape": true,
         "audit_flags_missing_metrics": true,
         "audit_flags_unreachable_commit": true,
+        "live_audit_can_flag": true,
         "live_checked_pairs": 0,
         "live_ledger_clean": true,
         "live_unauditable_pairs": 27,
         "live_violations": 0,
         "properties_failed": 0,
         "rerun_visible_not_amendment": true,
+        "seeded_checked_pairs": 2,
+        "seeded_violations": 1,
         "unknowable_is_none_and_unauditable": true,
         "warns_on_dirty_fail": true
       },
-      "ran_at": "2026-08-19T13:04:17",
+      "ran_at": "2026-08-19T13:13:33",
       "seeds": [
         0
       ],
