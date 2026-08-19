@@ -3853,3 +3853,32 @@ outcome predictable; they do not substitute for them. The detector's unit is
 the file because that is the only unit checkable without running the science.
 The temptation to "just amend the stamp because the change was provably inert"
 is the temptation to make the ladder lie faster.
+
+## Pilot the must-succeed arm first; until it succeeds, no other pilot number is informative
+
+SH.01's pre-registration cost three pilots where one would have done. Pilot v1
+(claim arms) found zero hut entries and diagnosed a flat reward field — fixed
+with a spawn curriculum. Pilot v2 (claim arms again) found the curriculum
+delivers experience but the learner still scores 0.0 — which posed FAIL-or-VOID,
+and only THEN was the T3.07 reference arm built: an oracle given the exact
+direction to the goal, whose success is what licenses reading the learner's 0.0
+as FAIL. The oracle also scored 0.0 (1 hut-touching outside life of 21, 1469
+optimiser steps at N=3000) — so the rig could not produce the behaviour under
+ANY perception, every claim-arm number from all three pilots was uninformative
+about the claim, and the two claim-arm pilots measured nothing a reference
+pilot would not have subsumed.
+
+The existing rules each cover a piece: BA.02's ("probe the contrast's headroom
+before paying for arms") was followed — a hand-crafted P-controller entered
+4/12 — but a hand policy proves the behaviour is EXECUTABLE, not LEARNABLE at
+budget, and those are different headrooms. T3.07's ("pair FAIL with a
+must-succeed reference") was followed too — but as a gate wired in at the end,
+not as the first measurement.
+
+**Rule:** when a spec carries a must-succeed reference (and any spec whose FAIL
+reading depends on attribution does), the reference arm is the FIRST thing to
+pilot, because its failure makes every other pilot number moot while its
+success costs one arm-run. Order pilots by decisiveness per second: reference
+arm, then rig tripwires, then claim arms. The claim arms are the LAST thing
+worth measuring, not the first — they are only interpretable inside a rig the
+reference has already validated.

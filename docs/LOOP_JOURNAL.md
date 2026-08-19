@@ -4220,3 +4220,57 @@ B3 (hardware stamp + gpu_job_id) still open.
   opportunistically (--gate or singly, bottom-up); do NOT burn GPU re-runs on
   stamp refreshes (T2.03/04/05 were already CHANGED before this edit; LC.03 is
   VOID and 15h — leave it to the rig re-derivation).
+- 2026-08-19 ~10:2x (Fable): SH.01 — inherited the uncommitted test file from
+  the previous window (timed out mid-unit; its docstring claimed a seed-90
+  pilot "recorded in LOOP_JOURNAL" that was never run or recorded — the false
+  claim is removed; gates therefore carried NO measured margin, which is why
+  the pilot below came first). PILOT v1 (seed 90, N=3000/arm, 354 s): rig
+  DEAD — hut occupancy 0.0 in EVERY arm (learner/twin/random), hut_dec 0,
+  while 31 random lives ended frozen. Diagnosis measured, not argued: outside
+  the huts the thermal field is spatially FLAT (fire 50 m away by the spec's
+  own design), so the homeo-dr shaping carries ZERO spatial gradient — the
+  learner and its twin receive byte-identical training signal; and discovery
+  by exploration measured 0 hut entries in ~2,900 random decisions against a
+  22.5-45 s outside clock (time_to_lethal_s from healthy across T_COLD_RANGE).
+  The claim's CONTRAST had no headroom — the BA.02 lesson, caught by a pilot
+  this time instead of three VOIDs. HEADROOM PROBES (scratch, seed 90):
+  shelter_index()=0 with the body placed at the hut centre (detection live);
+  full-drive rover covers ~2.9 m/s but overshoots and pins at the arena wall;
+  a P-controller that KNOWS the hut location enters 4/12 lives (median entry
+  13.5 s, median lead 10.9 s > LEAD_MIN_S 5; failures = stuck on arena
+  clutter) — entry from outside spawns is physically possible, gates
+  reachable. AMENDMENT (test file ONLY — no world-file edit, no IMPL_DEPS
+  cascade; priced per the 08-19 lesson): pre-registered spawn curriculum,
+  CURRICULUM_FRAC=0.3 of lives spawn INSIDE a hut, drawn from the per-life
+  RNG so the schedule is byte-identical in every arm (learner/twin/random/
+  ctrl); ALL gates score ONLY outside-spawned lives (occupancy handed to him
+  counts nothing; only sheltering he SOUGHT); the unreachable-geometry
+  tripwire (hut_dec_any_arm) counts outside-spawned entries only. GOAL.md
+  licence: "their hands may leave things in his world for him to find —
+  never puppeteering"; born under a roof is not told to seek one.
+  PILOT v2 (seed 90, N=3000/arm, curriculum active, 362 s): curriculum
+  DELIVERS the experience (inside-spawn lives shelter from birth; micro-smoke
+  showed a working-hut spawn living to the 300-decision cap vs its cosmetic
+  sibling frozen at 59) but the learner shows ZERO transfer to seeking — eval
+  z_shelter 0.0, hut_dec 0 over 29 lives. So the FAIL-vs-VOID question became
+  live, and per the T3.07 lesson a FAIL needs a must-succeed reference:
+  implemented mode "oracle" — byte-identical learner whose placebo slot
+  additionally carries the unit direction to the WORKING hut (privileged
+  perception, dims 2-3 of the 6-dim slot). ORACLE PILOT (seed 90, N=3000):
+  the reference ALSO reads 0.0 — 1 hut-touching outside life of 21, 1469
+  optimiser steps. VERDICT, by the spec's own new reference gate (_check now
+  VOIDs on ref_ok != 1): the rig at N=3000 cannot produce the behaviour under
+  ANY perception; a registered run today would burn ~80 min of CPU to record
+  a VOID that this pilot already proves. REGISTERED RUN DELIBERATELY NOT
+  LAUNCHED. NEXT ITERATION, in order: (1) pilot the ORACLE ARM ONLY at
+  N=10000-15000 (~8-12 min, seed 90) — the cheapest decisive probe; if the
+  reference learns (z >= 3 vs twin), pre-register any gate moves OPENLY,
+  commit, and launch the registered run detached (cost ~5 arms x 3 seeds,
+  fits cpu<2h at N<=10000; recheck the arithmetic); (2) if the reference
+  CANNOT learn even at the full budget, the finding is not SH.01's — it is
+  evidence for the learning-core arbitration (LC.04: the certified ppo-needs
+  update cannot acquire a survival behaviour the body can execute and the
+  senses can carry) — journal it there and take the next zero-pass spec
+  (XL.01 is fact-blocked on LC.03's rig re-derivation; run coverage fresh).
+  File committed with curriculum + oracle + reference gate wired; nothing
+  recorded in the ledger for SH.01 (correct: no run happened).
