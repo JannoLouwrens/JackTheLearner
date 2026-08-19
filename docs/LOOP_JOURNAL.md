@@ -4274,3 +4274,14 @@ B3 (hardware stamp + gpu_job_id) still open.
   (XL.01 is fact-blocked on LC.03's rig re-derivation; run coverage fresh).
   File committed with curriculum + oracle + reference gate wired; nothing
   recorded in the ledger for SH.01 (correct: no run happened).
+- 2026-08-19 ~10:5x (Fable, same iteration): the decisive probe is ALREADY IN
+  FLIGHT, detached (setsid pid 3963352, survives this session): oracle-vs-twin
+  at N=12000/arm, seed 90 -> /data/sh01_oracle_n12k.log (script kept at
+  /data/sh01_oracle_n12k.py; /data root is NOT the 4-hourly-reaped tmp). ETA
+  ~20 min from 10:50. READ IT FIRST next iteration: if ref z_shelter >= 3 the
+  rig is validated at N=12000 — re-check the cpu<2h arithmetic (5 arms x 3
+  seeds at N=12000 is ~2.6h; either trim N to ~10000 or note the overrun
+  openly in the commit), set N_DECISIONS accordingly, commit, launch the
+  registered run detached. If the oracle is still flat, do NOT keep scaling by
+  pilots — take the finding to LC.04's design notes and move to the next
+  zero-pass spec per run coverage.
