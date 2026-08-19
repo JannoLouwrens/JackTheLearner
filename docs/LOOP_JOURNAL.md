@@ -4328,3 +4328,15 @@ B3 (hardware stamp + gpu_job_id) still open.
   the cheapest (XL.01 is CPU_LONG and its "fact-blocked on LC.03 rig
   re-derivation" note refers to XL.02+, re-check; SM.02/TA.02/VO.02 are GPU
   and W33 has ~29.7h — read gpu_budget.json, push before any GPU work).
+  CORRECTION, same iteration (~12:2x): the chain's first EIGHT rows (T0.27
+  T0.21 T0.17 PG.2 PG.3 PG.5 SM.01 T2.20, recorded 12:12:23-12:13:35Z) are
+  stamped 92c632a+dirty — my LEARNING_CORE.md append was uncommitted until
+  12:14, and docs/research/*.md is code-dirt to the runner. VO.01 was
+  REFUSED on PG.5's DIRTY row. Recovery armed: /data/stale_rerun_chain2.sh
+  (detached, pid ~4017542) waits for "=== chain done" in the log, asserts
+  the tree clean of code dirt, then re-runs the eight + VO.01 (~2 min).
+  New LESSONS.md entry: commit BEFORE launching anything that records;
+  verify a recorded row's commit stamp, not only its verdict. NEXT
+  ITERATION: expect "=== phase2 done" in /data/sh01_stale_chain.log; check
+  no row in the final ledger still carries +dirty (grep the stamps), then
+  commit the ledger.

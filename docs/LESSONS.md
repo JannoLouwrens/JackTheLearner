@@ -3882,3 +3882,38 @@ success costs one arm-run. Order pilots by decisiveness per second: reference
 arm, then rig tripwires, then claim arms. The claim arms are the LAST thing
 worth measuring, not the first — they are only interpretable inside a rig the
 reference has already validated.
+
+## A detached recorder stamps the tree it finds at each RECORD moment, and your own unpushed prose is dirt
+
+The 12:12 stale-certificate chain (2026-08-19) was launched 100 seconds
+before the iteration's docs commit landed. The runner stamps every row with
+the tree state at record time, and `docs/research/LEARNING_CORE.md` —
+uncommitted prose, appended two minutes earlier by the same iteration — is
+not in `NOT_CODE`, so the chain's first eight rows recorded `92c632a+dirty`.
+Each printed `PASS (1.2s)` and `exit=0`; nothing at launch or at any of the
+eight records said anything was wrong. The taint surfaced 80 seconds later,
+as a REFUSAL of a different spec: `VO.01 BLOCKED by PG.5 (PASS but stale —
+DIRTY)`. The fix cost a second detached phase re-running all eight from the
+committed tree; the exposure, had the dependent not been in the same chain,
+was eight foundation certificates quietly re-poisoned by the very chain
+launched to clean them, discovered only when some later iteration needed one.
+
+Two rules:
+
+**Commit before launching anything that records.** A detached chain is not a
+snapshot of the tree you launched it from — every row inherits the tree of
+its own record moment, so the launch-vs-commit ORDER is part of the
+apparatus. The safe sequence is edit -> commit -> launch, never edit ->
+launch -> commit, even when the edits are prose (only `LOOP_JOURNAL.md`,
+`CHECKLIST.md` and the runner's own outputs are excluded from the dirt
+check, and the narrowness is deliberate — see the `NOT_CODE` docstring).
+Cheap mechanical guard, now in the phase-2 script and worth copying into any
+future chain: refuse to start if `git status --porcelain` shows anything
+outside `NOT_CODE`.
+
+**"Verify the artifact" includes its provenance, not only its verdict.** The
+launch-verification habit (read the log ~20 s in, see a PASS) checked the
+science and missed the stamp. A row's usability to dependents is
+verdict × freshness × cleanliness; after launching a recorder, check the
+recorded row's commit stamp for `+dirty` — one grep — before believing the
+chain is doing what it was launched to do.
