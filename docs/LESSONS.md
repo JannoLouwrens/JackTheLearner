@@ -3854,6 +3854,28 @@ the file because that is the only unit checkable without running the science.
 The temptation to "just amend the stamp because the change was provably inert"
 is the temptation to make the ladder lie faster.
 
+**Fourth rule, added 2026-08-19 (19th audit): a cascade is CLOSED when the
+detector says so, not when the planned worklist is finished.** The recovery
+chain for the rules above ran 17 specs, recorded 26 new PASS rows with zero
+verdict changes, and its commit (`d671ee1`) reported the cascade closed and the
+overseer item with it. `stale_claims()` still listed **ten** entries, four of
+them PASS — including `T2.08`, the only credited passing claim for the
+curiosity commitment, and `T0.12` at `cpu<1min`, the certificate for GPU-hour
+accounting, staled by the very commit that changed GPU-hour accounting. Nothing
+was impeached and no verdict moved; the debt was simply reported as paid. The
+cause is that chain membership was enumerated by hand from the edit that caused
+it, while `impl_sha` staleness is a property of the *declaration graph* — a
+second, unrelated commit in the same window (`25ca0aa`, `compute_s` into
+`gpu.py`) opened its own cascade that the hand-written list could not know
+about, and two cheap CPU specs simply fell off the list.
+
+**Rule:** for any remediation whose completion is checkable by an instrument
+this repo already owns, re-run the instrument as the LAST step and paste its
+output into the closing commit message. "I did the 17 things I listed" and "the
+detector is quiet" are different claims, and only the second one is the one
+being made. Same family as the guard-note decay above: a closure note is a
+claim like any other, and an unverified one outlives the work it describes.
+
 ## Pilot the must-succeed arm first; until it succeeds, no other pilot number is informative
 
 SH.01's pre-registration cost three pilots where one would have done. Pilot v1

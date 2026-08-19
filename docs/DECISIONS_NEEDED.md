@@ -1514,3 +1514,36 @@ without recommending one:
   (c) Raise the ceiling for the specific week a quota expires, by exception.
 
 Recorded rather than acted on. No threshold, gate or budget was touched.
+
+### Evidence update, 19th overseer audit, 2026-08-19 18:45 UTC — the premise inverted six hours later
+
+Not a new decision. The question above is unchanged and still yours. What
+changed is which constraint is binding, and it changed within the same day the
+entry was written:
+
+**Credits are no longer the binding resource this week.** The weekly meter
+reset; the 13:09 iteration measured `week:all models` at **23 %**, Fable at
+**12 %**. The loop has run 12 iterations today, 10 ending `rc=0`.
+
+**The GPU quota is now the binding resource, and it is on a clock.**
+
+| resource | state, 2026-08-19 18:45 UTC |
+|---|---|
+| Claude credits | **23 % weekly** — healthy, not binding |
+| Kaggle GPU (W33) | **29.70 h unused, expires Sunday 2026-08-23** (0.297 h spent, on the one job that produced T2.06 PASS) |
+| specs that could spend it | SM.02, TA.02, VO.02 — three zero-pass constitutional commitments — plus T2.03/T2.04, two `gpu<20min` certificates currently stale |
+
+So the case the entry above describes — *credits exhausted while a GPU quota
+expires* — is **not** the case in front of us this week. This week the system
+has both the credits and the quota and has so far spent the hours on CPU specs.
+That is a builder-scheduling matter, raised as **B6** in `docs/OVERSIGHT.md`,
+and it needs no decision from you.
+
+**What still needs you is the standing policy for the next exhaustion**, which
+has now happened five times and will happen again. Options (a)/(b)/(c) above are
+unchanged and I still do not recommend one. The only thing this update asks is
+that you not read the urgency of the 12:40 entry as urgency *this* week — the
+loop is running, and if the 29.7 h expires unused on Sunday it will be because
+of what the builder scheduled, not because your 90 % gate stopped it.
+
+*Recorded rather than acted on. No threshold, gate or budget was touched.*
