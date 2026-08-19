@@ -8052,97 +8052,115 @@
       "status": "VOID"
     },
     "T2.03": {
-      "amended": [
+      "amended": [],
+      "attempt": 2,
+      "commit": "dd07693",
+      "compute_s": 336.46,
+      "control_metrics": {},
+      "duration_s": 343.12,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1787166872",
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
         {
-          "at": "2026-08-19T07:36:29",
-          "by": "overseer-17th-audit-B2",
-          "changes": [
+          "amended": [
             {
-              "field": "hardware",
-              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
-              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+              "at": "2026-08-19T07:36:29",
+              "by": "overseer-17th-audit-B2",
+              "changes": [
+                {
+                  "field": "hardware",
+                  "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+                  "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+                }
+              ],
+              "commit": "f47c372+dirty",
+              "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
             }
           ],
-          "commit": "f47c372+dirty",
-          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+          "commit": "42df762",
+          "control_metrics": {
+            "acc_shuffled": [
+              0.2967,
+              0.2367,
+              0.1867
+            ],
+            "shuffled_dev_max": 0.0633,
+            "shuffled_dev_max_std": 0.0
+          },
+          "impl_sha": "86c61174fb4d52b7",
+          "message": "",
+          "metrics": {
+            "acc_pixels": [
+              0.3833,
+              0.3733,
+              0.33
+            ],
+            "acc_pre_shipped": [
+              0.9733,
+              0.9833,
+              0.96
+            ],
+            "acc_pretrained": [
+              0.9867,
+              0.9833,
+              0.9533
+            ],
+            "acc_rp1024": [
+              0.4267,
+              0.3767,
+              0.3867
+            ],
+            "acc_rp2048": [
+              0.4467,
+              0.4,
+              0.3567
+            ],
+            "acc_scratch": [
+              0.4467,
+              0.4667,
+              0.4933
+            ],
+            "all_seeds_positive": 1.0,
+            "all_seeds_positive_std": 0.0,
+            "backend": "kaggle",
+            "canary_colors_min": 2295.0,
+            "canary_colors_min_std": 0.0,
+            "canary_ok_all": 1.0,
+            "canary_ok_all_std": 0.0,
+            "gpu": "Tesla P100-PCIE-16GB",
+            "margin_mean": 0.5055,
+            "margin_mean_std": 0.0,
+            "margin_min": 0.46,
+            "margin_min_std": 0.0,
+            "mean_tries": 1.27,
+            "mean_tries_std": 0.0,
+            "n_params_scratch": 244960.0,
+            "n_params_scratch_std": 0.0,
+            "null_gap_mean": 0.5733,
+            "null_gap_mean_std": 0.0,
+            "per_class_min": 0.9067,
+            "per_class_min_std": 0.0
+          },
+          "ran_at": "2026-08-13T06:29:30",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "status": "PASS"
         }
       ],
-      "attempt": 1,
-      "commit": "42df762",
-      "control_metrics": {
-        "acc_shuffled": [
-          0.2967,
-          0.2367,
-          0.1867
-        ],
-        "shuffled_dev_max": 0.0633,
-        "shuffled_dev_max_std": 0.0
-      },
-      "duration_s": 1206.63,
-      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
-      "history": [],
-      "impl_sha": "86c61174fb4d52b7",
-      "message": "",
-      "metrics": {
-        "acc_pixels": [
-          0.3833,
-          0.3733,
-          0.33
-        ],
-        "acc_pre_shipped": [
-          0.9733,
-          0.9833,
-          0.96
-        ],
-        "acc_pretrained": [
-          0.9867,
-          0.9833,
-          0.9533
-        ],
-        "acc_rp1024": [
-          0.4267,
-          0.3767,
-          0.3867
-        ],
-        "acc_rp2048": [
-          0.4467,
-          0.4,
-          0.3567
-        ],
-        "acc_scratch": [
-          0.4467,
-          0.4667,
-          0.4933
-        ],
-        "all_seeds_positive": 1.0,
-        "all_seeds_positive_std": 0.0,
-        "backend": "kaggle",
-        "canary_colors_min": 2295.0,
-        "canary_colors_min_std": 0.0,
-        "canary_ok_all": 1.0,
-        "canary_ok_all_std": 0.0,
-        "gpu": "Tesla P100-PCIE-16GB",
-        "margin_mean": 0.5055,
-        "margin_mean_std": 0.0,
-        "margin_min": 0.46,
-        "margin_min_std": 0.0,
-        "mean_tries": 1.27,
-        "mean_tries_std": 0.0,
-        "n_params_scratch": 244960.0,
-        "n_params_scratch_std": 0.0,
-        "null_gap_mean": 0.5733,
-        "null_gap_mean_std": 0.0,
-        "per_class_min": 0.9067,
-        "per_class_min_std": 0.0
-      },
-      "ran_at": "2026-08-13T06:29:30",
+      "impl_sha": "f265e4c69db78801",
+      "message": "RuntimeError: T2.03 job failed on colab: all backends failed: kaggle: status=error; colab: skipped \u2014 timeout_s 6000s exceeds the 2152s left before JACK_ITER_DEADLINE; a Colab result cannot outlive its watcher",
+      "metrics": {},
+      "ran_at": "2026-08-19T19:20:12",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T2.03",
-      "status": "PASS"
+      "status": "ERROR"
     },
     "T2.04": {
       "amended": [],

@@ -4004,3 +4004,37 @@ stay reported. Rule of thumb: per-seed gating is for effects that must hold
 in every world (the claim); pooled gating is for controls whose per-seed
 statistic the pilots have measured as noise-dominated — and only a pilot of
 the gated arm can tell you which regime you are in.
+
+## A fix that lives on an environment-triggered branch dies when the environment heals
+
+The Kaggle torch pin has two install paths: a plain `pip install torch==2.5.1`,
+and a `--no-deps` fallback for when the upstream index cannot resolve 2.5.1's
+dead cudnn pin. The torchvision pairing fix (ambient 0.25.0+cu128 is built
+against torch 2.10; under 2.5.1 its C++ ops fail to register and DINOv2
+refuses to import two layers up, inside transformers) was written on 2026-08-13
+**inside the fallback branch** — because on 2026-08-13 the fallback was the
+only path that ran. On 2026-08-19 the upstream index healed, the primary
+install succeeded again, the fallback stopped firing, and kernel
+jack-ladder-1787166872 died in exactly the way the fix was written to prevent:
+`operator torchvision::nms does not exist` → `Could not import module
+'Dinov2Model'` → T2.03 re-cert ERROR, 0.0935 failed Kaggle hours. The fix had
+repaired the failure that motivated it, not the invariant it was named for.
+
+Same family as "a guard that covers a failure mode only conditionally" (the
+reattach billing correction), but the condition here was not a code path the
+author chose — it was the STATE OF SOMEONE ELSE'S SERVER, which changes
+without a commit. Any branch taken because an external system is currently
+broken will stop being taken when that system is fixed, and everything living
+only on that branch silently unships itself.
+
+**Rule:** key a repair on the state it maintains, never on the path that
+historically violated it. "torchvision must be 0.20.1 whenever torch is 2.5.1"
+is checkable directly (`if torch==2.5.1 and torchvision!=0.20.1: install`) —
+the pin now does that, outside all branches, and prints `TV_PIN` beside
+`TORCH_PIN` so the kernel log names both versions that actually ran. When you
+write a fix inside an `if`, ask what makes the condition true and whether the
+invariant you are protecting is narrower than that condition; if the `if`
+tests "how we got here" rather than "what is true now", hoist the fix.
+Verified on the shipped string (not a restatement): both install paths plus a
+no-op path simulated with stubbed pip/metadata, and the dd07693 text as the
+control, which must — and does — leave torchvision at 0.25 on the healed path.

@@ -132,16 +132,28 @@ if not _torch_v().startswith("2.5.1"):
              "https://download.pytorch.org/whl/cu121"], check=False)
     _sp.run([_sys.executable, "-m", "pip", "install", "-q",
              "nvidia-cudnn-cu12==9.1.1.17"], check=False)
-    # torchvision must move WITH torch: the ambient 0.25.0+cu128 was built
-    # against torch 2.10, and under 2.5.1 its C++ ops fail to register
-    # ("operator torchvision::nms does not exist") — which surfaces two
-    # imports away, inside transformers' image_utils, as Dinov2Model refusing
-    # to import (kernel jack-ladder-1786598450, 2026-08-13, 251 s in). 0.20.1
-    # is torch 2.5.1's published pair.
+# torchvision must move WITH torch: the ambient 0.25.0+cu128 was built
+# against torch 2.10, and under 2.5.1 its C++ ops fail to register
+# ("operator torchvision::nms does not exist") — which surfaces two
+# imports away, inside transformers' image_utils, as Dinov2Model refusing
+# to import (kernel jack-ladder-1786598450, 2026-08-13, 251 s in). 0.20.1
+# is torch 2.5.1's published pair. This pin is keyed on the INSTALLED
+# torchvision, never on which torch install path ran: it first lived inside
+# the fallback branch above, and when the upstream cudnn index healed
+# (2026-08-19, kernel jack-ladder-1787166872) the primary install succeeded,
+# the branch stopped firing, and the ambient torchvision came back — the fix
+# had repaired the failure that motivated it, not the invariant.
+def _tv_v():
+    try:
+        return _md.version("torchvision")
+    except _md.PackageNotFoundError:
+        return ""
+if _torch_v().startswith("2.5.1") and not _tv_v().startswith("0.20.1"):
     _sp.run([_sys.executable, "-m", "pip", "install", "-q", "--no-deps",
              "torchvision==0.20.1", "--index-url",
              "https://download.pytorch.org/whl/cu121"], check=False)
-print("TORCH_PIN", _torch_v() or "MISSING", flush=True)
+print("TORCH_PIN", _torch_v() or "MISSING", "TV_PIN", _tv_v() or "MISSING",
+      flush=True)
 # Pin torch for every later pip install in this job. On 2026-08-09 T2.02's own
 # dependency install (stable-baselines3, whose torch range 2.5.1 satisfies)
 # nevertheless dragged torch up to 2.13.0+cu130 — no sm_60 kernels — and the
