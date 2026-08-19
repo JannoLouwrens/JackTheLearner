@@ -159,7 +159,7 @@ import numpy as np
 from .. import aversion, drives, plants
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
-from ..gpu import build_job, submit
+from ..gpu import build_job, result_json, submit
 
 # The claim is about the fast path in the world's chemistry and metabolism —
 # all three hash into the certificate.
@@ -645,7 +645,7 @@ def _submit(seeds: list) -> dict:
                fetch=["ta202.json"])
     if not r.ok:
         raise RuntimeError(f"GPU submission failed: {r.message}")
-    data = json.loads(r.artifacts["ta202.json"])
+    data = result_json(r, "ta202.json")
     data["backend"] = r.backend
     return data
 

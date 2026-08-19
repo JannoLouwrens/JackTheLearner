@@ -9439,6 +9439,28 @@
       "spec_id": "TA.01",
       "status": "PASS"
     },
+    "TA.02": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "40e6bad",
+      "compute_s": 1836.52,
+      "control_metrics": {},
+      "duration_s": 1844.94,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1787178802",
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "2e7ec0969fa1e598",
+      "message": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+      "metrics": {},
+      "ran_at": "2026-08-19T23:04:03",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "TA.02",
+      "status": "ERROR"
+    },
     "UB.9": {
       "amended": [],
       "attempt": 1,
