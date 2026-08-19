@@ -337,19 +337,16 @@ _CACHE: dict = {}
 def _submit(seeds: list) -> dict:
     body = JOB.replace("__SEEDS__", repr(list(seeds)))
     job = build_job(body)
-    # Sizing (16th-audit rule: measure at the PRODUCTION configuration; the
-    # explicit multiplier below is the honest label for the one hop that is
-    # not measured). Local smoke at the production config (d512 brain, the
-    # shipped loss, BATCH 64) measured __SMOKE_SPS__ s/step on this box's ARM
-    # CPU. Total steps = STEPS x 2 arms x 3 seeds = 6000, plus 6 brain builds
-    # and 4800 eval rows (negligible beside training). CPU->GPU multiplier
-    # taken as >= 4x (T2.04's probe measured 0.42 s/step on the P100 for a
-    # d512x8 trunk step that costs ~2 s here — a 4-5x floor; ours is the same
-    # trunk plus the LSTM tower). Estimate ~= 6000 x (smoke_sps / 4) + 300 s
-    # setup; est_hours declared from that, timeout ~2x — Kaggle bills the
-    # kernel's own metered window, so the generous cap costs nothing.
+    # Sizing (16th-audit rule: measured at the PRODUCTION configuration on the
+    # target GPU — probe kernel jack-ladder-1786713772, P100, 2026-08-14:
+    # build 1.47 s, train 0.1444 s/step at BATCH 64 with the shipped loss,
+    # eval 0.01 s per two passes over 400 rows. Total = STEPS x 2 arms x
+    # 3 seeds = 6000 steps x 0.1444 = 866 s + 6 builds x 1.47 + eval ~= 875 s
+    # compute + ~300 s clone/setup ~= 0.33 h measured. est_hours 0.4; timeout
+    # generous — Kaggle bills the kernel's own metered window, so the cap
+    # costs nothing.
     res = submit(job, prefer="kaggle",
-                 est_hours=0.6,
+                 est_hours=0.4,
                  timeout_s=7200,
                  fetch=["t206.json"])
     if not res.ok:
