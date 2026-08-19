@@ -4285,3 +4285,8 @@ B3 (hardware stamp + gpu_job_id) still open.
   registered run detached. If the oracle is still flat, do NOT keep scaling by
   pilots — take the finding to LC.04's design notes and move to the next
   zero-pass spec per run coverage.
+  CORRECTION, same iteration: the first two launches of that probe died at
+  import (ModuleNotFoundError — /data-rooted script, repo not on sys.path;
+  caught by verifying the artifact, not the exit). The LIVE probe is pid
+  3963630 (relaunched 10:41 with os.chdir+sys.path pinned in the script,
+  verified 20 s in at 119% CPU). Same log, same instructions as above.
