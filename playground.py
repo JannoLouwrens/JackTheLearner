@@ -61,6 +61,23 @@ LADDER_HALF_WIDTH = 0.25            # rail offset from LADDER_X
 SPAWN_OFFSET_Y = 1.0
 SPAWN_Z = 1.4
 
+# ── shelters (SH.01's substrate) ────────────────────────────────────────────
+# A shelter is three walls and no roof — a wind-break, which is what a caveman
+# builds first. EVERY shelter emitted by build_mjcf is geometrically identical
+# (same boxes, same rgba, same opening, always facing -y): SH.01's control is a
+# cosmetic shelter that differs from the working one ONLY thermally, and that
+# contrast is manufactured here, in one place, by construction. Which shelter
+# WORKS is not in this file at all — thermal.py owns warmth (heat is not light,
+# and a functional difference expressed in geometry would leak through vision).
+# NOTE for spec authors: W0 textures geoms by geom id, so two shelters' walls
+# carry different (arbitrary, per-build-order) textures. Randomise which
+# shelter is the working one across seeds, or a probe can pass by memorising a
+# texture instead of learning warmth.
+SHELTER_HALF = 0.45          # m, interior half-extent of the footprint
+SHELTER_WALL_T = 0.04        # m, wall half-thickness
+SHELTER_WALL_H = 0.5         # m, wall half-height (walls are 1.0 m tall)
+SHELTER_RGBA = "0.5 0.42 0.3 1"
+
 # ── the climber-rover (CURIOSITY_BAKEOFF.md §2.3, LEARNING_CORE.md §5.0) ────
 # The body the LC bakeoff runs on. Its arm geometry, adhesion gain and contact
 # classes are PG.3's, unchanged, so the rover inherits PG.3's certification by
@@ -322,9 +339,26 @@ EYE_XYAXES = (0.94, 0.34, 0.0, -0.12, 0.33, 0.94)
 EYE_FOVY = 60.0
 
 
+def _shelter_fragments(name: str, x: float, y: float) -> list:
+    """Three identical walls, open to -y. See the SHELTER_* block for why."""
+    h = SHELTER_HALF
+    t = SHELTER_WALL_T
+    z = SHELTER_WALL_H
+    span = h + t                 # side walls run the full footprint depth
+    return [
+        f'<geom name="{name}_wallN" type="box" pos="{x:.3f} {y + h + t:.3f} {z:.3f}" '
+        f'size="{span:.3f} {t:.3f} {z:.3f}" rgba="{SHELTER_RGBA}"/>',
+        f'<geom name="{name}_wallW" type="box" pos="{x - h - t:.3f} {y:.3f} {z:.3f}" '
+        f'size="{t:.3f} {span:.3f} {z:.3f}" rgba="{SHELTER_RGBA}"/>',
+        f'<geom name="{name}_wallE" type="box" pos="{x + h + t:.3f} {y:.3f} {z:.3f}" '
+        f'size="{t:.3f} {span:.3f} {z:.3f}" rgba="{SHELTER_RGBA}"/>',
+    ]
+
+
 def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False,
                with_rover: bool = False,
-               probe_objects: tuple = ()) -> str:
+               probe_objects: tuple = (),
+               shelters: tuple = ()) -> str:
     """Emit the playground as MJCF XML.
 
     Kept as plain string templating rather than dm_control.mjcf: the artifact is
@@ -336,6 +370,11 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False,
     Default empty, so every existing world is byte-identical apart from the
     camera. It adds no actuator, no joint and no dof — only geoms — so obs
     dimensions are untouched.
+
+    `shelters` places identical wind-breaks at exact `(name, x, y)` — SH.01's
+    substrate, same contract as `probe_objects`: default empty, geoms only,
+    byte-identical world when unused (the fragments join the walls list, so no
+    template line changes either).
     """
     rng = np.random.RandomState(p.seed)
     a = p.arena_size
@@ -446,6 +485,8 @@ def build_mjcf(p: PlaygroundParams, with_humanoid: bool = False,
         walls.append(
             f'<geom name="wall{i}" type="box" pos="{wx} {wy} 1.25" '
             f'size="{sx} {sy} 1.25" rgba="0.75 0.73 0.68 1"/>')
+    for _sname, _sx, _sy in shelters:
+        walls.extend(_shelter_fragments(_sname, _sx, _sy))
 
     # ── the noisy-TV panel: a fixture, not scenery ──────────────────────
     noise = ""
@@ -760,13 +801,14 @@ def _has_geom(model, name: str) -> bool:
 
 def make_playground(params: Optional[PlaygroundParams] = None,
                     with_water: bool = True, with_humanoid: bool = False,
-                    with_rover: bool = False, probe_objects: tuple = ()):
+                    with_rover: bool = False, probe_objects: tuple = (),
+                    shelters: tuple = ()):
     """Build the world and return (model, data, water). CPU-only, no rendering."""
     import mujoco
 
     p = params or PlaygroundParams()
     xml = build_mjcf(p, with_humanoid=with_humanoid, with_rover=with_rover,
-                     probe_objects=probe_objects)
+                     probe_objects=probe_objects, shelters=shelters)
     model = mujoco.MjModel.from_xml_string(xml)
     data = mujoco.MjData(model)
     water = None

@@ -157,7 +157,7 @@ class W0:
     def __init__(self, seed: int = 0, *, j0: float, alpha: float,
                  params: Optional[object] = None, mutate: bool = True,
                  lethal: bool = False, diary: Optional[object] = None,
-                 spawn_sampler=None):
+                 spawn_sampler=None, shelters: tuple = ()):
         import mujoco
         import playground as pg
 
@@ -173,8 +173,11 @@ class W0:
                 # in one world would not be three seeds.
                 p = p.mutate(np.random.RandomState(seed))
         self.params = p
+        # `shelters` rides the probe_objects contract: geoms only, default
+        # empty, byte-identical world when unused. SH.01's substrate.
+        self.shelters = tuple(shelters)
         self.model, self.data, self.water = pg.make_playground(
-            p, with_water=True, with_rover=True)
+            p, with_water=True, with_rover=True, shelters=self.shelters)
         self.ix = pg.rover_index(self.model)
 
         # F5: every width is asserted against the LIVE model, never a constant.

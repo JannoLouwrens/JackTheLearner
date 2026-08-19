@@ -4154,3 +4154,52 @@ B3 (hardware stamp + gpu_job_id) still open.
   against ridge as reference arm; pre-register before any re-run. (3) LC.03
   rig re-derivation (CPU) remains fine dark-week work. T2.01 settled — do
   not touch.
+- 2026-08-19 ~08:0x-08:4x (Fable): T2.06 HARVESTED (PASS, committed dbe6b7e —
+  see that message for numbers; the detached dispatch.sh watcher had already
+  recorded result + 0.297h billing to the FRESH W33 Kaggle week). Meters at
+  08:10: Fable 2%, all-models 9%, session 45% — the dark week is over.
+  STANDING-RULE PICK (run coverage: 16 zero-pass commitments): cheapest
+  runnable claim specs are SH.01 and XL.01 (both cpu<2h). Chose SH.01 — it
+  covers TWO zero-pass commitments (thermal (kills) + shelter/building), and
+  XL.01 is FACT-BLOCKED on LC.03's pending rig re-derivation (its wiped-twin
+  contrast reads the same life-length ruler the frozen twin impeached at
+  158.4s; running it now measures the world). DP.04 looked cheaper (gpu<20min)
+  but its own notes declare it blocked behind unregistered LG.00 — checked,
+  still unregistered.
+  BUILT THIS ITERATION (substrate only, spec next — the T2.06 staging
+  precedent): (1) playground.py `shelters=` on build_mjcf/make_playground —
+  identical 3-wall wind-breaks (open -y, no roof) appended to the walls list
+  so unused worlds stay BYTE-IDENTICAL (verified against 6 pre-edit sha256s);
+  (2) w0.py W0(shelters=) pass-through; (3) thermal.py equation (4):
+  T_eff_inside = T_NEUTRAL + SHELTER_LEAK*(T_eff_outside - T_NEUTRAL),
+  SHELTER_LEAK=0.15 PRE-REGISTERED before any run (drift ratio 0.15, freeze
+  postponed ~6.7x, still lethal — sheltering can't be a terminal strategy);
+  cosmetic shelter = same geoms, equation never fires; ThermalWorld(shelters=
+  ((x,y,working),...)), .shelter_index(), empty tuple bit-equal to old law
+  (PS.02's certificate intact, asserted). All in `python -m experiments.thermal`
+  (_smoke, permanent). MEASURED: live dTb ratio 0.144 in/out, legal spawns 603
+  with two huts, A/B walls allclose in size+rgba.
+  NEXT ITERATION — implement tests/sh_01_*.py against this substrate, then run
+  (cpu<2h, 3 seeds; detach via setsid if it won't fit the hour):
+  * ARMS: learner with thermal drive (reward gets a thermal-deviation term —
+    keep homeo-dr shape, e.g. r_th = d_th(t)-d_th(t+1) on |Tb-TB_HEALTHY|);
+    DRIVE-DISABLED twin = identical world+lethality+obs, ONLY the reward term
+    zeroed; random-walk null at matched time.
+  * REUSE cores.build_arm/lc_update + survival._TargetRing/_gae — do NOT fork
+    the update (two-kernels lesson). run_survival cannot host ThermalWorld;
+    write the episodic loop in the test importing those certified pieces.
+  * WORLD: fire_dist=50 makes the shelter the only warmth (option, decide and
+    pre-register); RANDOMISE which hut works per seed AND per life — W0
+    textures geoms by id, so a fixed assignment leaks through vision (noted in
+    playground.py docstring).
+  * GATES to pre-register BEFORE the recorded run: sheltered_frac vs
+    drive-disabled twin (3σ shape), anticipation lead time (first entry while
+    time_to_lethal_s > 0 margin — foresight vs reflex, first-class metric per
+    the registry), preference working vs cosmetic occupancy. Smoke at
+    production argument extremes (LESSONS: tame-argument smokes).
+  * CAUTION: sheltered_frac for the TWIN may be nonzero (huts are obstacles /
+    enclosure preference) — that is exactly what the cosmetic control exists
+    for; gate the CONTRAST, not the absolute.
+  GPU note: W33 has 29.7h and no queued honest GPU spend is implemented yet
+  (SM.02/TA.02/VO.02/T3.01 all gpu<2h, none implemented; T2.07 gpu<20min
+  needs implementing). T2.01/T2.02 settled — do not touch.

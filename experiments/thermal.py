@@ -98,6 +98,40 @@ CORE_SPAN = TB_HEALTHY - TB_LETHAL       # 9 degC from healthy to dead
 SKIN_SPAN = 30.0                          # degC of ambient offset per unit
 THERMAL_DIM = 2
 
+# ── shelter (SH.01's substrate; pre-registered 2026-08-19, before any run) ──
+# A WORKING shelter is a wind-break: inside it, only this fraction of the
+# ambient's offset from thermoneutral is felt.
+#
+#     T_eff_inside = T_NEUTRAL + SHELTER_LEAK * (T_eff_outside - T_NEUTRAL) (4)
+#
+# 0.15 keeps the world CONSEQUENTIAL in both directions: at T_cold = -20 degC a
+# body inside still cools (felt ambient 14 degC, drift -0.06 degC/s), so a
+# shelter postpones freezing ~6.7x rather than abolishing it — an agent that
+# shelters and then never leaves still dies, which is what makes leaving to
+# warm at the fire a decision worth learning. A COSMETIC shelter applies no
+# term at all: same geoms (playground._shelter_fragments emits identical
+# boxes), the difference is entirely in this equation firing or not.
+# Geometry stays playground's: the footprint half-extent is REFERENCED from
+# the file that builds the walls, never transcribed (the PG.8 rule).
+SHELTER_LEAK = 0.15
+
+
+def _shelter_half() -> float:
+    import sys
+    from pathlib import Path
+    repo = Path(__file__).resolve().parent.parent
+    if str(repo) not in sys.path:
+        sys.path.insert(0, str(repo))
+    from playground import SHELTER_HALF
+    return float(SHELTER_HALF)
+
+
+def inside_shelter(xy, sxy, half: Optional[float] = None) -> bool:
+    """Is a horizontal position within a shelter's (axis-aligned) footprint?"""
+    h = _shelter_half() if half is None else float(half)
+    return (abs(float(xy[0]) - float(sxy[0])) <= h and
+            abs(float(xy[1]) - float(sxy[1])) <= h)
+
 
 def ambient(xy, fire_xy, t_cold: float) -> float:
     """Equation (2): the felt air temperature at a horizontal position."""
@@ -164,10 +198,17 @@ class ThermalWorld:
     """
 
     def __init__(self, w0, seed: int, *, inert: bool = False,
-                 blind: bool = False, fire_dist: Optional[float] = None):
+                 blind: bool = False, fire_dist: Optional[float] = None,
+                 shelters: tuple = ()):
         self.w0 = w0
         self.inert = bool(inert)
         self.blind = bool(blind)
+        # `shelters`: ((x, y, working), ...). Geometry is the CALLER's job —
+        # build the W0 with matching playground shelters, or these are ghosts
+        # no ray can see; SH.01's visual-identity control needs the geoms.
+        self.shelters = tuple((float(x), float(y), bool(wk))
+                              for x, y, wk in shelters)
+        self._shalf = _shelter_half() if self.shelters else 0.0
         rng = np.random.RandomState(seed * 7717 + 101)
         t_cold = float(rng.uniform(*T_COLD_RANGE))
         tb0 = float(rng.uniform(*TB0_RANGE))
@@ -176,9 +217,27 @@ class ThermalWorld:
         theta = float(rng.uniform(0.0, 2.0 * math.pi))
         xy = self._xy()
         fire_xy = (xy[0] + d * math.cos(theta), xy[1] + d * math.sin(theta))
-        self.state = ThermalState(tb=tb0, t_eff=ambient(xy, fire_xy, t_cold),
+        self.state = ThermalState(tb=tb0,
+                                  t_eff=self._felt(xy, fire_xy, t_cold),
                                   t_cold=t_cold, fire_xy=fire_xy)
         self.tb_trace = [tb0]
+
+    # ── the shelter law ─────────────────────────────────────────────────
+    def shelter_index(self, xy=None) -> int:
+        """Index into `self.shelters` of the one he is inside, else -1."""
+        p = self._xy() if xy is None else xy
+        for i, (sx, sy, _wk) in enumerate(self.shelters):
+            if inside_shelter(p, (sx, sy), self._shalf):
+                return i
+        return -1
+
+    def _felt(self, xy, fire_xy, t_cold: float) -> float:
+        """Equation (2), then equation (4) if inside a WORKING shelter."""
+        t = ambient(xy, fire_xy, t_cold)
+        i = self.shelter_index(xy)
+        if i >= 0 and self.shelters[i][2]:
+            t = T_NEUTRAL + SHELTER_LEAK * (t - T_NEUTRAL)
+        return t
 
     def _xy(self) -> Tuple[float, float]:
         p = self.w0.data.xpos[self.w0.rover_bid]
@@ -204,7 +263,7 @@ class ThermalWorld:
         """Advance W0 by one decision, then integrate equation (1) over it."""
         self.w0.decide(action)
         s = self.state
-        s.t_eff = ambient(self._xy(), s.fire_xy, s.t_cold)
+        s.t_eff = self._felt(self._xy(), s.fire_xy, s.t_cold)
         if not self.inert:
             s.tb += drift_per_s(s.t_eff) * dt_s
         self.tb_trace.append(s.tb)
@@ -220,3 +279,68 @@ class ThermalWorld:
         if self.inert:
             return float("inf")
         return time_to_lethal_s(self.state.tb, self.state.t_eff)
+
+
+# ── self-test: `python -m experiments.thermal` ──────────────────────────────
+def _smoke() -> None:
+    """The shelter substrate's own checks, kept runnable so a change to this
+    file or to playground's shelter geometry re-verifies the contract in
+    seconds. NOT a spec: SH.01 owns the claims; this owns the arithmetic.
+    """
+    import numpy as np
+    from experiments.w0 import W0, MIN_LEGAL_SPAWNS
+
+    SH = (("shelterA", -1.0, 1.0), ("shelterB", 1.0, 1.0))
+    j0, alpha = 0.001157, 0.5           # world params, any sane value works
+
+    # 1. unused shelters change nothing: no shelter geom, XML identical
+    import playground as pg
+    p = pg.PlaygroundParams(seed=0)
+    assert pg.build_mjcf(p) == pg.build_mjcf(p, shelters=())
+    assert "shelter" not in pg.build_mjcf(p)
+
+    # 2. shelters compile, are geometrically identical, leave the spawn set legal
+    w = W0(seed=0, j0=j0, alpha=alpha, shelters=SH)
+    for suf in ("_wallN", "_wallW", "_wallE"):
+        a, b = w.model.geom("shelterA" + suf), w.model.geom("shelterB" + suf)
+        assert np.allclose(a.size, b.size) and np.allclose(a.rgba, b.rgba)
+    assert len(w.legal_spawns()) >= MIN_LEGAL_SPAWNS
+
+    # 3. the law: equation (4) at the working hut, no term at the cosmetic one,
+    #    untouched outside, and the empty tuple reproduces ambient() exactly
+    tw = ThermalWorld(w, seed=3, fire_dist=5.0,
+                      shelters=((-1.0, 1.0, True), (1.0, 1.0, False)))
+    fire, tc = tw.state.fire_xy, tw.state.t_cold
+    for xy, working in [((-1.0, 1.0), True), ((1.0, 1.0), False),
+                        ((0.0, -1.5), False)]:
+        base = ambient(xy, fire, tc)
+        want = T_NEUTRAL + SHELTER_LEAK * (base - T_NEUTRAL) if working else base
+        assert abs(tw._felt(xy, fire, tc) - want) < 1e-12, xy
+    tw0 = ThermalWorld(W0(seed=5, j0=j0, alpha=alpha), seed=5)
+    for xy in [(0, 0), (2, -2), (-1.0, 1.0)]:
+        assert tw0._felt(xy, tw0.state.fire_xy, tw0.state.t_cold) == \
+               ambient(xy, tw0.state.fire_xy, tw0.state.t_cold)
+
+    # 4. membership: edge-inclusive, -1 outside
+    assert tw.shelter_index((-1.0, 1.0)) == 0
+    assert tw.shelter_index((1.0, 1.0)) == 1
+    assert tw.shelter_index((-1.0 + tw._shalf, 1.0)) == 0
+    assert tw.shelter_index((-1.0 + tw._shalf + 1e-6, 1.0)) == -1
+
+    # 5. a live decide() integrates the sheltered rate (ratio ~ SHELTER_LEAK)
+    def drop_at(xy):
+        wi = W0(seed=3, j0=j0, alpha=alpha, shelters=SH)
+        ti = ThermalWorld(wi, seed=3, fire_dist=5.0,
+                          shelters=((-1.0, 1.0, True), (1.0, 1.0, False)))
+        wi._place(*xy)
+        tb0 = ti.state.tb
+        ti.decide(np.zeros(8), dt_s=0.2)
+        return tb0 - ti.state.tb
+    d_in, d_out = drop_at((-1.0, 1.0)), drop_at((0.0, -1.5))
+    assert 0.0 < d_in < d_out * 0.25, (d_in, d_out)
+    print(f"thermal._smoke OK: leak {SHELTER_LEAK}, live dTb ratio "
+          f"{d_in / d_out:.3f}, spawns legal, worlds byte-identical unused")
+
+
+if __name__ == "__main__":
+    _smoke()
