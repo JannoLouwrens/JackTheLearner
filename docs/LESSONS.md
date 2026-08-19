@@ -100,6 +100,20 @@ The loop ran out of credits and burned 8 hourly slots exiting in 3 seconds.
 count went up — never on the absence of an error. When automating, ask: "if
 this failed right now, would anything say so?"
 
+Third instance, subtler: a refusal that exits ZERO is silence wearing a
+success code. On 2026-08-19 two specs were dispatched together; the second
+watcher hit the GPU lock, whose contention path is `SystemExit(0)` by design
+(correct for the hourly loop, where "someone else is running" is a skip, not
+a failure) — and it took >2 s of imports to get there, so `dispatch.sh`'s
+liveness check printed "watcher pid (detached)" for a process that queued
+nothing. The caller believed both runs were in flight. GUARD: `dispatch.sh`
+now pre-flights the GPU lock with `flock -n` and refuses loudly, naming the
+holder via `lsof` (the pid *inside* the lock file is unreliable — every
+failed contender truncates it by opening with mode "w"). Corollary to the
+rule: an exit code is a *claim by the callee about itself*; when the callee's
+"not my turn" and the caller's "successfully started" disagree, only an
+artifact (the attempt row in `gpu_submissions.jsonl`) settles it.
+
 ## The budget names one experiment; the spec runs seeds × arms
 
 `run_spec` calls `_experiment` once **per declared seed**. An unguarded GPU

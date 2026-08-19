@@ -28,6 +28,21 @@ if [ "$(git rev-list --count origin/main..HEAD)" != 0 ]; then
     exit 1
 fi
 
+# A held GPU lock makes the runner print "Wait for it" and exit ZERO — and it
+# takes >2s of imports to get there, so the liveness check below reports
+# success for a watcher that is already doomed (T2.04, 2026-08-19: dispatched
+# beside T2.03, "watcher pid (detached)" printed, watcher dead on the lock
+# seconds later, nothing queued). Refuse loudly up front instead.
+GPULOCK=/tmp/jack-ladder-gpu.lock
+if [ -e "$GPULOCK" ] && ! flock -n "$GPULOCK" true 2>/dev/null; then
+    # NB: the pid inside the file is unreliable — every failed contender opens
+    # it with mode "w" and truncates it. lsof sees who holds it open.
+    echo "REFUSING: $GPULOCK is held (holder pid $(lsof -t "$GPULOCK" 2>/dev/null | tr '\n' ' ' || true))." >&2
+    echo "GPU runs are serialised; a second one exits without queuing." >&2
+    echo "Wait for the holder, then re-run: scripts/dispatch.sh $SPEC" >&2
+    exit 1
+fi
+
 setsid nohup "$PY" -m experiments.run "$SPEC" >"$LOG" 2>&1 </dev/null &
 PID=$!
 sleep 2
