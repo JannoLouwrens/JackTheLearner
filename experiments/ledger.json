@@ -6045,14 +6045,14 @@
     },
     "T0.17": {
       "amended": [],
-      "attempt": 16,
-      "commit": "b062ccd",
+      "attempt": 17,
+      "commit": "2dc8afd",
       "compute_s": null,
       "control_metrics": {
         "detector_sees_amendment": false,
         "hand_edit_took_effect": true
       },
-      "duration_s": 2.98,
+      "duration_s": 4.35,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -6413,9 +6413,44 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "b062ccd",
+          "control_metrics": {
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "75fabf81e8092330",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "content_check_fires_on_postrun_edit": true,
+            "content_check_reports_unanswerable": true,
+            "content_check_spares_unedited_file": true,
+            "detector_flags_moved_dependency": true,
+            "detector_sees_amendment": true,
+            "detector_spares_unmoved_dependency": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "unknown_attempt_is_sticky": true,
+            "unprotected_pass_certificates": 0,
+            "unstamped_answered_by_content": 29,
+            "unstamped_records_examined": 29,
+            "unstamped_unanswerable": 0
+          },
+          "ran_at": "2026-08-20T01:22:49",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "75fabf81e8092330",
+      "impl_sha": "3c13c26fcf9621a8",
       "message": "",
       "metrics": {
         "amendment_is_attributable": true,
@@ -6433,11 +6468,11 @@
         "run_spec_leaves_amended_empty": true,
         "unknown_attempt_is_sticky": true,
         "unprotected_pass_certificates": 0,
-        "unstamped_answered_by_content": 29,
-        "unstamped_records_examined": 29,
+        "unstamped_answered_by_content": 28,
+        "unstamped_records_examined": 28,
         "unstamped_unanswerable": 0
       },
-      "ran_at": "2026-08-20T01:22:49",
+      "ran_at": "2026-08-20T16:12:16",
       "seeds": [
         0
       ],
@@ -9775,8 +9810,9 @@
     },
     "T3.07": {
       "amended": [],
-      "attempt": 1,
-      "commit": "741f7cf",
+      "attempt": 2,
+      "commit": "2dc8afd",
+      "compute_s": null,
       "control_metrics": {
         "ctrl_acc_per_seed": [
           0.2125,
@@ -9793,10 +9829,126 @@
         "null_zeroed_acc_max": 0.25,
         "null_zeroed_acc_max_std": 0.0
       },
-      "duration_s": 29.23,
+      "duration_s": 27.5,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": "32037b403e51b8f5",
+      "history": [
+        {
+          "commit": "741f7cf",
+          "control_metrics": {
+            "ctrl_acc_per_seed": [
+              0.2125,
+              0.175,
+              0.25
+            ],
+            "ctrl_bypass_acc_max": 0.25,
+            "ctrl_bypass_acc_max_std": 0.0,
+            "null_acc_per_seed": [
+              0.2125,
+              0.175,
+              0.25
+            ],
+            "null_zeroed_acc_max": 0.25,
+            "null_zeroed_acc_max_std": 0.0
+          },
+          "impl_sha": "32037b403e51b8f5",
+          "message": "pre-registered threshold not met",
+          "metrics": {
+            "acc_per_seed": [
+              0.225,
+              0.275,
+              0.375
+            ],
+            "action_dist_divergence": -0.025,
+            "action_dist_divergence_std": 3.46945e-18,
+            "arousal_by_regime_per_seed": [
+              {
+                "0": 0.2238,
+                "1": -0.07,
+                "2": -0.0407,
+                "3": 0.1523
+              },
+              {
+                "0": 0.7036,
+                "1": -0.8999,
+                "2": 0.7271,
+                "3": -0.9188
+              },
+              {
+                "0": -0.638,
+                "1": 0.842,
+                "2": 0.708,
+                "3": 0.6932
+              }
+            ],
+            "chance": 0.25,
+            "chance_std": 0.0,
+            "clip_acc_per_seed": [
+              0.1625,
+              0.35,
+              0.2625
+            ],
+            "idle_acc_per_seed": [
+              0.225,
+              0.3,
+              0.375
+            ],
+            "n_params": 1539.0,
+            "n_params_std": 0.0,
+            "pad_separability_min": 0.825,
+            "pad_separability_min_std": 1.11022e-16,
+            "ref_acc_per_seed": [
+              0.625,
+              0.4,
+              0.575
+            ],
+            "ref_speed_span_min": 0.5233,
+            "ref_speed_span_min_std": 0.0,
+            "separability_acc_min": 0.225,
+            "separability_acc_min_std": 0.0,
+            "shipped_speed_span_per_seed": [
+              0.0259,
+              0.0364,
+              0.0353
+            ],
+            "speed_by_regime_per_seed": [
+              {
+                "0": 1.0044,
+                "1": 1.0009,
+                "2": 1.0015,
+                "3": 1.0035
+              },
+              {
+                "0": 1.0163,
+                "1": 0.989,
+                "2": 1.0165,
+                "3": 0.9887
+              },
+              {
+                "0": 0.9879,
+                "1": 1.0122,
+                "2": 1.0099,
+                "3": 1.0098
+              }
+            ],
+            "train_loss_decreased_all": 1.0,
+            "train_loss_decreased_all_std": 0.0,
+            "untrained_acc_per_seed": [
+              0.2125,
+              0.175,
+              0.25
+            ]
+          },
+          "ran_at": "2026-08-13T22:25:11",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "status": "FAIL"
+        }
+      ],
+      "impl_sha": "5c54411e01e07f70",
       "message": "pre-registered threshold not met",
       "metrics": {
         "acc_per_seed": [
@@ -9884,14 +10036,108 @@
           0.25
         ]
       },
-      "ran_at": "2026-08-13T22:25:11",
+      "ran_at": "2026-08-20T16:11:45",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T3.07",
-      "status": "FAIL"
+      "status": "FAIL",
+      "supersedes_fail": {
+        "commit": "741f7cf",
+        "dirty": false,
+        "impl_changed": true,
+        "impl_sha": "32037b403e51b8f5",
+        "metrics": {
+          "acc_per_seed": [
+            0.225,
+            0.275,
+            0.375
+          ],
+          "action_dist_divergence": -0.025,
+          "action_dist_divergence_std": 3.46945e-18,
+          "arousal_by_regime_per_seed": [
+            {
+              "0": 0.2238,
+              "1": -0.07,
+              "2": -0.0407,
+              "3": 0.1523
+            },
+            {
+              "0": 0.7036,
+              "1": -0.8999,
+              "2": 0.7271,
+              "3": -0.9188
+            },
+            {
+              "0": -0.638,
+              "1": 0.842,
+              "2": 0.708,
+              "3": 0.6932
+            }
+          ],
+          "chance": 0.25,
+          "chance_std": 0.0,
+          "clip_acc_per_seed": [
+            0.1625,
+            0.35,
+            0.2625
+          ],
+          "idle_acc_per_seed": [
+            0.225,
+            0.3,
+            0.375
+          ],
+          "n_params": 1539.0,
+          "n_params_std": 0.0,
+          "pad_separability_min": 0.825,
+          "pad_separability_min_std": 1.11022e-16,
+          "ref_acc_per_seed": [
+            0.625,
+            0.4,
+            0.575
+          ],
+          "ref_speed_span_min": 0.5233,
+          "ref_speed_span_min_std": 0.0,
+          "separability_acc_min": 0.225,
+          "separability_acc_min_std": 0.0,
+          "shipped_speed_span_per_seed": [
+            0.0259,
+            0.0364,
+            0.0353
+          ],
+          "speed_by_regime_per_seed": [
+            {
+              "0": 1.0044,
+              "1": 1.0009,
+              "2": 1.0015,
+              "3": 1.0035
+            },
+            {
+              "0": 1.0163,
+              "1": 0.989,
+              "2": 1.0165,
+              "3": 0.9887
+            },
+            {
+              "0": 0.9879,
+              "1": 1.0122,
+              "2": 1.0099,
+              "3": 1.0098
+            }
+          ],
+          "train_loss_decreased_all": 1.0,
+          "train_loss_decreased_all_std": 0.0,
+          "untrained_acc_per_seed": [
+            0.2125,
+            0.175,
+            0.25
+          ]
+        },
+        "ran_at": "2026-08-13T22:25:11",
+        "status": "FAIL"
+      }
     },
     "T4.02": {
       "amended": [
