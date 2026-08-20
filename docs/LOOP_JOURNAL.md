@@ -4782,3 +4782,32 @@ B3 (hardware stamp + gpu_job_id) still open.
   (3) if R3's bad branch fires (warmstart degrades at every LR), that is
   evidence FOR falsified_by — write the FAIL-lane reasoning into the spec,
   do not stack repairs. Meters at 14:1x: session 11%, week Fable 66%.
+- 2026-08-20 ~15:0x-15:2x UTC (builder): T3.01 CURVES PROBE HARVESTED, V2
+  DISPATCHED. Probe (kernel 1787235257, /data/t3_01_curves.json) read
+  against its pre-stated rules: R1 BUDGET FIRED — at the registered run's
+  chosen LRs (ledger "lrs" [1e-3, 3e-4, 1e-3]) all seeds enter the
+  attribution band with all classes alive by epochs 24/28/31, dead classes
+  revive, nothing plateaus below band (R2 silent). R3 silent BOTH ways:
+  warmstart premise failed (head_acc 0.31-0.36 tests BELOW acc_ref — head
+  fit on frozen train features != T2.03's probe procedure), so it never
+  held the band at every epoch; and joint training IMPROVED it to
+  0.69-0.78 at 3e-4/1e-3 on all seeds, so no destructive-first-gradient
+  evidence for the FAIL lane. Repair per the rule verbatim: EPOCHS 62
+  (smallest all-seeds-clear epoch 31, doubled), uniform, control included,
+  gates untouched, VOID stays in history (0b2b41b; dry 9/9 re-checked).
+  V2 REGISTERED RUN DISPATCHED via dispatch.sh: kernel
+  jack-ladder-1787238645 RUNNING at 15:12, watcher pid 154223 detached
+  (verified reparented to init), est ~0.5-1.05 h, log
+  /data/tmp/dispatch_t3_01.log. ONE-DIAGNOSTIC CAP stands: a second
+  attribution VOID parks T3.01 per SM.02/B5. LESSON appended: a
+  diagnostic's "by construction" premise is a claim — record its verifying
+  number, phrase readings as observables. LC.03 ALIVE (workers ~4h51m
+  cputime at 15:07, was ~3h56m; ~10 h to go of ~15). W33 ~24.7 h left,
+  dies Sun 08-23. Meters 15:10: session 28%, week Fable 71% — note 71% is
+  19 pts from the 90% hard stop; next iterations should stay lean.
+  NEXT ITERATION: (1) harvest T3.01 v2 from the watcher — if PASS, sight's
+  first claim lands AND T3.07's stale FAIL becomes the natural re-run; if
+  attribution-VOID, PARK (write the parking record in the test docstring,
+  registry note, no third repair); if FAIL, that is a real verdict on the
+  encoder — record it and let the redesign go through PROGRESS. (2) LC.03
+  liveness via worker cputime only. (3) render count 82/169.

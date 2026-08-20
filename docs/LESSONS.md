@@ -4290,3 +4290,34 @@ skipping infrastructure statuses, or the most common event in your system
 and walks back through ERROR rows; `audit_supersedes_fail` audits FAIL and
 VOID sources across ERRORs and states its coverage in its docstring; T0.27
 P11/P12 keep both properties under test.*
+
+## A diagnostic's "by construction" premise is a claim, and it fails like one
+
+T3.01's curves probe (2026-08-20) carried a warmstart arm whose docstring said
+it "begins at ~acc_ref by construction": pre-fit the head on the frozen
+encoder's train features, and end-to-end training literally starts at the
+frozen-probe solution the attribution gate compares against. The premise was
+false. The head fit tested at 0.31-0.36 against acc_ref 0.4467-0.4933 —
+fitting a head on frozen TRAIN features is not the same procedure as T2.03's
+registered probe, and the two land 10+ points apart at n=300. So reading R3's
+repair branch ("stays >= acc_ref - 0.05 at EVERY epoch") was unsatisfiable
+before the first gradient: not because joint training destroyed anything but
+because the arm never started where the docstring said it did.
+
+The probe survived its own bad premise, and the reasons it survived are the
+lesson. First, it RECORDED the number that verifies the premise (`head_acc`
+per seed) rather than asserting the construction in prose only — so the
+failure was one read, not a mystery. Second, its readings were phrased as
+observables on the curves, not as consequences of the premise: R3's bad branch
+("joint training degrades it below the band at every LR") was checkable and
+came out clean regardless of where the arm started, so the probe still
+discharged its FAIL-lane duty honestly.
+
+**Rule:** inside any diagnostic or control, "by construction" is a hypothesis
+about the rig, not a property of it. For every such premise, (a) record the
+measurement that would verify it in the artifact, and (b) write the
+pre-registered readings so they remain interpretable when the premise fails —
+a reading of the form "since it starts at X, watch whether it leaves X" turns
+into garbage silently, while "watch whether it is ever/always above the band"
+stays meaningful. A premise you did not measure is a second experiment hiding
+inside your diagnostic, running unregistered.
