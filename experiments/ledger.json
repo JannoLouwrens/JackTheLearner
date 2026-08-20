@@ -9563,20 +9563,20 @@
     },
     "T3.01": {
       "amended": [],
-      "attempt": 2,
-      "commit": "616c59c",
-      "compute_s": 717.69,
+      "attempt": 3,
+      "commit": "0b2b41b",
+      "compute_s": 1096.23,
       "control_metrics": {
         "acc_shuffled": [
           0.25,
-          0.2233,
-          0.25
+          0.2433,
+          0.1967
         ],
-        "shuffled_dev_max": 0.0267,
-        "shuffled_dev_max_std": 0.0
+        "shuffled_dev_max": 0.0533,
+        "shuffled_dev_max_std": 6.93889e-18
       },
-      "duration_s": 726.02,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1787231872",
+      "duration_s": 1104.81,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1787238645",
       "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
@@ -9589,10 +9589,79 @@
           "ran_at": "",
           "seeds": [],
           "status": "ERROR"
+        },
+        {
+          "commit": "616c59c",
+          "control_metrics": {
+            "acc_shuffled": [
+              0.25,
+              0.2233,
+              0.25
+            ],
+            "shuffled_dev_max": 0.0267,
+            "shuffled_dev_max_std": 0.0
+          },
+          "gpu_job_id": "jannolouwrens/jack-ladder-1787231872",
+          "impl_sha": "828f04206c0bcf47",
+          "message": "run did not test the claim; not a refutation",
+          "metrics": {
+            "ablated_max": 0.25,
+            "ablated_max_std": 0.0,
+            "acc_ablated": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "acc_full": [
+              0.48,
+              0.39,
+              0.3833
+            ],
+            "acc_pixshuf": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "acc_ref": [
+              0.4467,
+              0.4667,
+              0.4933
+            ],
+            "backend": "kaggle",
+            "canary_colors_min": 2295.0,
+            "canary_colors_min_std": 0.0,
+            "canary_ok_all": 1.0,
+            "canary_ok_all_std": 0.0,
+            "drop_min": 0.1333,
+            "drop_min_std": 0.0,
+            "full_min": 0.3833,
+            "full_min_std": 0.0,
+            "gpu": "Tesla P100-PCIE-16GB",
+            "lrs": [
+              0.001,
+              0.0003,
+              0.001
+            ],
+            "n_params_enc": 244960.0,
+            "n_params_enc_std": 0.0,
+            "per_class_min": 0.0,
+            "per_class_min_std": 0.0,
+            "ref_min": 0.4467,
+            "ref_min_std": 5.55112e-17,
+            "train_vs_ref_min": -0.11,
+            "train_vs_ref_min_std": 0.0
+          },
+          "ran_at": "2026-08-20T13:29:54",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "status": "VOID"
         }
       ],
-      "impl_sha": "828f04206c0bcf47",
-      "message": "run did not test the claim; not a refutation",
+      "impl_sha": "9ace487fd3b4d01e",
+      "message": "",
       "metrics": {
         "ablated_max": 0.25,
         "ablated_max_std": 0.0,
@@ -9602,9 +9671,9 @@
           0.25
         ],
         "acc_full": [
-          0.48,
-          0.39,
-          0.3833
+          0.6433,
+          0.6333,
+          0.5533
         ],
         "acc_pixshuf": [
           0.25,
@@ -9621,9 +9690,9 @@
         "canary_colors_min_std": 0.0,
         "canary_ok_all": 1.0,
         "canary_ok_all_std": 0.0,
-        "drop_min": 0.1333,
+        "drop_min": 0.3033,
         "drop_min_std": 0.0,
-        "full_min": 0.3833,
+        "full_min": 0.5533,
         "full_min_std": 0.0,
         "gpu": "Tesla P100-PCIE-16GB",
         "lrs": [
@@ -9633,21 +9702,76 @@
         ],
         "n_params_enc": 244960.0,
         "n_params_enc_std": 0.0,
-        "per_class_min": 0.0,
+        "per_class_min": 0.24,
         "per_class_min_std": 0.0,
         "ref_min": 0.4467,
         "ref_min_std": 5.55112e-17,
-        "train_vs_ref_min": -0.11,
+        "train_vs_ref_min": 0.06,
         "train_vs_ref_min_std": 0.0
       },
-      "ran_at": "2026-08-20T13:29:54",
+      "ran_at": "2026-08-20T15:29:06",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T3.01",
-      "status": "VOID"
+      "status": "PASS",
+      "supersedes_void": {
+        "commit": "616c59c",
+        "dirty": false,
+        "impl_changed": true,
+        "impl_sha": "828f04206c0bcf47",
+        "metrics": {
+          "ablated_max": 0.25,
+          "ablated_max_std": 0.0,
+          "acc_ablated": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "acc_full": [
+            0.48,
+            0.39,
+            0.3833
+          ],
+          "acc_pixshuf": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "acc_ref": [
+            0.4467,
+            0.4667,
+            0.4933
+          ],
+          "backend": "kaggle",
+          "canary_colors_min": 2295.0,
+          "canary_colors_min_std": 0.0,
+          "canary_ok_all": 1.0,
+          "canary_ok_all_std": 0.0,
+          "drop_min": 0.1333,
+          "drop_min_std": 0.0,
+          "full_min": 0.3833,
+          "full_min_std": 0.0,
+          "gpu": "Tesla P100-PCIE-16GB",
+          "lrs": [
+            0.001,
+            0.0003,
+            0.001
+          ],
+          "n_params_enc": 244960.0,
+          "n_params_enc_std": 0.0,
+          "per_class_min": 0.0,
+          "per_class_min_std": 0.0,
+          "ref_min": 0.4467,
+          "ref_min_std": 5.55112e-17,
+          "train_vs_ref_min": -0.11,
+          "train_vs_ref_min_std": 0.0
+        },
+        "ran_at": "2026-08-20T13:29:54",
+        "status": "VOID"
+      }
     },
     "T3.07": {
       "amended": [],
