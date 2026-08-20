@@ -9563,21 +9563,91 @@
     },
     "T3.01": {
       "amended": [],
-      "attempt": 1,
-      "commit": "",
-      "compute_s": null,
-      "control_metrics": {},
-      "duration_s": 0.0,
-      "gpu_job_id": null,
-      "hardware": "",
-      "history": [],
-      "impl_sha": null,
-      "message": "child recorded nothing (rc=1): arner/experiments/protocol.py\", line 1467, in run_spec\n    raise UndeclaredControl(\nexperiments.protocol.UndeclaredControl: T3.01 passes control_fn=_control to run_spec but Spec.control is None. Declare in the registry WHAT the control is and WHICH WAY it must fail; that field is the audit surface.",
-      "metrics": {},
-      "ran_at": "",
-      "seeds": [],
+      "attempt": 2,
+      "commit": "616c59c",
+      "compute_s": 717.69,
+      "control_metrics": {
+        "acc_shuffled": [
+          0.25,
+          0.2233,
+          0.25
+        ],
+        "shuffled_dev_max": 0.0267,
+        "shuffled_dev_max_std": 0.0
+      },
+      "duration_s": 726.02,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1787231872",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "history": [
+        {
+          "commit": "",
+          "control_metrics": {},
+          "gpu_job_id": null,
+          "impl_sha": null,
+          "message": "child recorded nothing (rc=1): arner/experiments/protocol.py\", line 1467, in run_spec\n    raise UndeclaredControl(\nexperiments.protocol.UndeclaredControl: T3.01 passes control_fn=_control to run_spec but Spec.control is None. Declare in the registry WHAT the control is and WHICH WAY it must fail; that field is the audit surface.",
+          "metrics": {},
+          "ran_at": "",
+          "seeds": [],
+          "status": "ERROR"
+        }
+      ],
+      "impl_sha": "828f04206c0bcf47",
+      "message": "run did not test the claim; not a refutation",
+      "metrics": {
+        "ablated_max": 0.25,
+        "ablated_max_std": 0.0,
+        "acc_ablated": [
+          0.25,
+          0.25,
+          0.25
+        ],
+        "acc_full": [
+          0.48,
+          0.39,
+          0.3833
+        ],
+        "acc_pixshuf": [
+          0.25,
+          0.25,
+          0.25
+        ],
+        "acc_ref": [
+          0.4467,
+          0.4667,
+          0.4933
+        ],
+        "backend": "kaggle",
+        "canary_colors_min": 2295.0,
+        "canary_colors_min_std": 0.0,
+        "canary_ok_all": 1.0,
+        "canary_ok_all_std": 0.0,
+        "drop_min": 0.1333,
+        "drop_min_std": 0.0,
+        "full_min": 0.3833,
+        "full_min_std": 0.0,
+        "gpu": "Tesla P100-PCIE-16GB",
+        "lrs": [
+          0.001,
+          0.0003,
+          0.001
+        ],
+        "n_params_enc": 244960.0,
+        "n_params_enc_std": 0.0,
+        "per_class_min": 0.0,
+        "per_class_min_std": 0.0,
+        "ref_min": 0.4467,
+        "ref_min_std": 5.55112e-17,
+        "train_vs_ref_min": -0.11,
+        "train_vs_ref_min_std": 0.0
+      },
+      "ran_at": "2026-08-20T13:29:54",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
       "spec_id": "T3.01",
-      "status": "ERROR"
+      "status": "VOID"
     },
     "T3.07": {
       "amended": [],
