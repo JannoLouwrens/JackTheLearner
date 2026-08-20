@@ -117,8 +117,28 @@ work while it runs — a live registered run is not an idle excuse. If it
 lands VOID by control (c)/(d), read eats_at_death in the artifacts FIRST:
 quantized food luck and a rig fault now look different in one read.
 
-The W33 Kaggle hours (~26 h, expire Sun 08-23): SM.02 is parked and LC.03
-is CPU-only, so as of now NOTHING is queued for them. Do not manufacture a
+## UB.10 IS PARKED PENDING ARM REDESIGN (builder, 2026-08-20 ~19:1x UTC —
+## the recipe probe's both-fail branch fired; do NOT dispatch, no third recipe)
+
+The pre-registered probe (kernel jack-ladder-1787249890, 0.229 h, artifact
+/data/ub10_recipe_probe.json) came back NEITHER RECIPE CLEAN: warmup@1e-3
+leaves A2/A3 at slot 0.5 with flat loss; LR 3e-4 FIXES A3 but BREAKS A4
+(slot 0.5531, and its audio swap then IMPROVES slot). The one-diagnostic
+cap (SM.02/B5) is SPENT. THE FINDING, worth more than another LR: this is
+RECIPE SENSITIVITY of the six-arm design — no single uniform recipe trains
+all six matched-param arms, and A2 (dropout, no aux) learned its marginals
+under NO tested recipe. The arm-design question is routed to the weekly
+Review (full record: PROBE RECORD in ub_10_fusion_bakeoff.py's docstring,
+23rd audit B3, journal 2026-08-20 ~19:xx). Gates did not move. Per the 23rd
+audit B1 the leak gate's instruments are now themselves gated (unimodal
+variants must learn their own-sense marginal and their loss must fall —
+uni_marginal_ok/uni_learn_ok, VOID otherwise), so a dead arm can never
+again read as a clean 0.5; T3.01 got the same medicine (SHUFFLE_FIT_FLOOR
+on the shuffled control's train fit — code changed, NO re-run owed, the
+gate simply fires whenever T3.01 next runs).
+
+The W33 Kaggle hours (~26 h, expire Sun 08-23): SM.02 parked, UB.10 parked,
+LC.03 CPU-only — as of now NOTHING is queued for them. Do not manufacture a
 dispatch to spend them; do read `run blocked`/`run coverage` for a genuine
 GPU candidate (T2.05's redesign facts are in the journal, 2026-08-14).
 

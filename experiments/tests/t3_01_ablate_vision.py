@@ -49,7 +49,10 @@ ARMS, per seed (train N=1200, test N=300, T2.03's sizes and split seeds):
            that cannot reproduce it cannot attribute anything -> VOID.
   shuffled CONTROL, must fail: same architecture, same budget, trained on
            permuted labels; TEST accuracy must sit at chance. Clears -> the
-           rig leaks episode identity -> VOID, not evidence.
+           rig leaks episode identity -> VOID, not evidence. Its TRAIN
+           accuracy on the shuffled labels is recorded and gated too
+           (added 2026-08-20, 23rd audit B1): at-chance test from an arm
+           that never fit its own train set is a dead arm, not a control.
 
 PRE-REGISTERED GATES — all exogenous or loaned from T2.03's registered
 certificate (nothing calibrated from a pilot; sd at chance with n=300 is
@@ -64,7 +67,9 @@ sqrt(.25*.75/300) ~= 0.025):
       optimisation defect of THIS rig, not evidence about the encoder. The
       lr grid exists to make this gate hard to trip honestly.
   CONTROL (VOID): |acc_shuffled - 0.25| <= SHUFFLE_BAND (0.10) per seed
-      (T2.03's registered control read max dev 0.0633 at the same n).
+      (T2.03's registered control read max dev 0.0633 at the same n); and
+      acc_shuffled_train >= SHUFFLE_FIT_FLOOR (0.35) per seed — control
+      liveness, see the constant's comment (strengthen-only, 2026-08-20).
   CLAIM (every seed, else FAIL):
       acc_full >= MIN_FULL  = 0.45   chance + 8 sd; equals the floor of the
                                      frozen-probe band — a trained encoder
@@ -146,6 +151,12 @@ MIN_FULL = 0.45
 MIN_DROP = 0.15
 ABL_CEIL = 0.40
 SHUFFLE_BAND = 0.10
+# Control-liveness floor (23rd audit, B1; added 2026-08-20, gates only runs
+# from here on): the shuffled arm's accuracy on its OWN shuffled train set.
+# Chance is 0.25; a same-budget net that cannot exceed chance + 0.10 on data
+# it was fitted to did not train, and its at-chance test reading proves
+# nothing about leakage.
+SHUFFLE_FIT_FLOOR = 0.35
 
 
 # ── training (runs wherever the job runs) ────────────────────────────────
@@ -275,6 +286,11 @@ def remote_run(seeds: list, n_train: int | None = None,
         m_sh = _train_one(seed + 7_001, best_idx, itr,
                           torch.from_numpy(ysh), device, epochs)
         acc_shuffled = _acc(m_sh, ite, tte, device)
+        # Liveness of the control (23rd audit, B1): a shuffled arm that
+        # never trained also reads chance on test, so record whether it fit
+        # the shuffled train set it was given — chance there means the
+        # control never ran, not that it failed honestly.
+        acc_shuffled_train = _acc(m_sh, itr, torch.from_numpy(ysh), device)
 
         out["seeds"].append({
             "seed": seed, "n_params_enc": n_params,
@@ -287,6 +303,7 @@ def remote_run(seeds: list, n_train: int | None = None,
             "acc_ablated": round(acc_abl, 4),
             "acc_pixshuf": round(acc_pixshuf, 4),
             "acc_shuffled": round(acc_shuffled, 4),
+            "acc_shuffled_train": round(acc_shuffled_train, 4),
             "drop": round(acc_full - acc_abl, 4),
         })
     return out
@@ -363,8 +380,12 @@ def _experiment(seed: int) -> dict:
 def _control(seed: int) -> dict:
     rows = _CACHE["seeds"]
     dev = [abs(r["acc_shuffled"] - 0.25) for r in rows]
+    # .get: absent in pre-2026-08-20 artifacts -> reads 0.0 -> VOID, loudly.
+    fit = [r.get("acc_shuffled_train", 0.0) for r in rows]
     return {"shuffled_dev_max": round(max(dev), 4),
-            "acc_shuffled": [r["acc_shuffled"] for r in rows]}
+            "shuffled_fit_min": round(min(fit), 4),
+            "acc_shuffled": [r["acc_shuffled"] for r in rows],
+            "acc_shuffled_train": fit}
 
 
 def _check(m: dict, c: dict):
@@ -382,6 +403,10 @@ def _check(m: dict, c: dict):
         return Status.VOID          # training lost to its own frozen subset
     if c["shuffled_dev_max"] > SHUFFLE_BAND:
         return Status.VOID          # rig leaks episode identity
+    if c["shuffled_fit_min"] < SHUFFLE_FIT_FLOOR:
+        return Status.VOID          # shuffled arm never fit its own train
+                                    # set: the control did not run (23rd
+                                    # audit, B1)
     if m["ablated_max"] > ABL_CEIL:
         return Status.VOID          # a constant input carried the task
     # The claim: trained vision is load-bearing, on every seed.
@@ -398,7 +423,7 @@ def _dry():
     base = dict(canary_ok_all=True, canary_colors_min=2295,
                 n_params_enc=244_960, ref_min=0.45, train_vs_ref_min=0.10,
                 ablated_max=0.26, full_min=0.72, drop_min=0.46)
-    ctrl = {"shuffled_dev_max": 0.05}
+    ctrl = {"shuffled_dev_max": 0.05, "shuffled_fit_min": 0.85}
     cases = [
         ("planted pass", base, ctrl, Status.PASS),
         ("no drop -> FAIL", {**base, "drop_min": 0.05, "ablated_max": 0.30,
@@ -408,7 +433,11 @@ def _dry():
         ("ref collapse -> VOID", {**base, "ref_min": 0.30}, ctrl, Status.VOID),
         ("train<ref -> VOID", {**base, "train_vs_ref_min": -0.10}, ctrl,
          Status.VOID),
-        ("control leak -> VOID", base, {"shuffled_dev_max": 0.20},
+        ("control leak -> VOID", base, {"shuffled_dev_max": 0.20,
+                                        "shuffled_fit_min": 0.85},
+         Status.VOID),
+        ("dead control arm -> VOID", base, {"shuffled_dev_max": 0.05,
+                                            "shuffled_fit_min": 0.25},
          Status.VOID),
         ("canary drift -> VOID", {**base, "canary_ok_all": False}, ctrl,
          Status.VOID),

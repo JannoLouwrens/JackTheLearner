@@ -4329,7 +4329,13 @@ structurally incapable of synergy, so on slot it MUST sit at chance" and
 treated any ensemble slot accuracy above 0.60 as proof of a fixture leak. The
 seed-90 pilot (2026-08-20) measured ensembles at 0.25, 0.51, 0.48, 0.65 and
 0.7469 across arms — while every unimodal model it averaged read exactly
-0.5000, which PROVES the fixture clean. The "must sit at chance" claim was
+0.5000. (Amended per the 23rd audit: those 0.5000s did NOT prove the fixture
+clean — a constant predictor reads exactly 0.5000 on a balanced test set
+whether the fixture is clean or the model never trained, and four of the
+twelve came from arms that provably never trained; see the next entry. What
+they did show is that the ensemble readings above chance arose WITHOUT any
+unimodal argmax leaving chance, which is what falsifies the gate's "must sit
+at chance" premise.) The "must sit at chance" claim was
 simply false mathematics: the averaged-softmax decision is
 sign(s(vision) + t(audio)), and an additive composition of two unimodal
 scorers reaches 3-of-4 cells (0.75) on a balanced XOR — or 1-of-4 (0.25) —

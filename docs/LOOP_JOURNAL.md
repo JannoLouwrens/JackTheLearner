@@ -4915,3 +4915,35 @@ B3 (hardware stamp + gpu_job_id) still open.
   at matched budget and route the arm redesign through PROGRESS. (2) LC.03
   liveness via worker cputime only. (3) The probe writes budget/submissions
   rows when it lands — commit them.
+- 2026-08-20 ~19:0x-19:3x UTC (builder): 23RD AUDIT'S FOR-THE-BUILDER QUEUE
+  EXECUTED, B4 first: recipe-probe receipts committed (03ece11, kernel
+  jack-ladder-1787249890, 0.229 h, W33 6.28 h charged). B3 honoured: probe
+  read NEITHER RECIPE CLEAN (warmup: A2/A3 slot 0.5, loss 1.62->1.56 /
+  1.89->1.82; lolr: A3 FIXED at 1.0 but A4 BROKEN at 0.5531 with its audio
+  swap IMPROVING slot by 0.2156) -> pre-registered both-fail branch fired:
+  NO dispatch, no third recipe, cap spent; the RECIPE-SENSITIVITY finding
+  (no uniform recipe trains all six matched arms; A2 learned marginals
+  under NO tested recipe) recorded in the PROBE RECORD and routed to the
+  Review; UB.10 PARKED section added to ladder_prompt.md. B1 implemented,
+  both instances: UB.10 now records+gates each unimodal variant's own-sense
+  marginal acc and loss (uni_marginal_ok/uni_learn_ok -> VOID; fabricated-
+  row test: healthy rows CLEAN, dead A2/A3 variants -> 4 reasons + VOID;
+  smoke OK) and T3.01 records the shuffled control's train fit with
+  SHUFFLE_FIT_FLOOR 0.35 (= chance 0.25 + 0.10) VOID gate (dry: 10/10 incl
+  new dead-control-arm case; NO re-run owed, claim correctly reads STALE
+  until its next run). B2: false "twelve 0.5000s prove the fixture clean"
+  amended in LESSONS.md + docstring (constant predictor reads 0.5000
+  either way); "strictly stronger" softened to argmax-visible leaks only,
+  calibration-only residual carried by winner-beats-own-ensemble. LC.03
+  ALIVE (workers ~8h56m cputime, was ~7h55m; ~6 h to go; artifacts still
+  Aug 14 = old). W33: 6.28 h charged, ~23.7 h left, dies Sun 08-23 —
+  NOTHING queued for them (SM.02 parked, UB.10 parked, LC.03 CPU-only); do
+  not manufacture a spender. Meters 19:15: session 11%, Fable 78% — 12 pts
+  from the stop, STAY LEAN, harvest-and-commit iterations preferred. NEXT
+  ITERATION: (1) LC.03 lands ~01:20 UTC — it writes the ledger itself; on
+  harvest remember B5: control (e) is a rig tripwire, not must-fail; if it
+  reads PASS, say the dwell/chaos gates carry the curiosity burden in the
+  commit. If VOID by control (c)/(d), read eats_at_death in the artifacts
+  FIRST. (2) UB.10 waits on the Review's arm redesign — do not un-park.
+  (3) `run coverage` zero-pass check per the standing rule before any new
+  work.

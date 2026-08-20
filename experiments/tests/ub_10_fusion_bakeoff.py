@@ -82,19 +82,32 @@ composition of two unimodal scorers reaches up to 0.75 on a balanced XOR
 each scorer's own argmax accuracy pinned at exactly 0.5. The seed-90 pilot
 measured precisely this: ens_slot {A0 0.525, A1 0.653, A2 0.513, A3 0.484,
 A4 0.250, A5 0.747} — the 0.75 ceiling and a below-chance 0.25 in one rig —
-while EVERY unimodal variant of every arm read exactly 0.5000, proving the
-fixture clean. The gate as written fired VOID on a certifiably clean
-fixture, and it is also WEAKER than the correct detector against a real
-leak (a leaky channel averaged with a chance channel dilutes below 0.60).
+while EVERY unimodal variant of every arm read exactly 0.5000. (CORRECTED
+per the 23rd audit, B2: twelve 0.5000 readings do NOT prove the fixture
+clean — a constant predictor also reads exactly 0.5000 on a balanced test
+set, and four of those twelve came from A2/A3, whose full arms provably
+never trained. The fixture's cleanliness becomes established only when a
+unimodal variant demonstrably learns its own sense's marginal task AND
+still reads 0.5 on slot — the liveness observables below buy exactly
+that.) The gate as written fired VOID on what the false theorem cannot
+distinguish from a clean fixture, and it is also WEAKER than the correct
+detector against an argmax-visible leak (a leaky channel averaged with a
+chance channel dilutes below 0.60).
 THE CORRECT LEAK DETECTOR, gating VOID from now on: the unimodal variants'
 own slot accuracy. Any function of one modality must sit at chance on a
 clean XOR (that one IS a theorem), so any (arm, seed, sense) unimodal slot
 acc deviating from 0.5 by more than NULL_GATE - 0.5 (same 0.10 = ~3.5 sigma
 at n_test = 320, now two-sided) -> VOID, investigate, do not celebrate.
-This replacement is a strengthening for every physically possible leak and
-removes only the provably-false firing mode; ens_slot stays recorded per
-arm. (LESSONS.md: a null's value under H0 is a theorem to prove, not a
-property to assert.)
+This replacement is strictly stronger against any leak visible in a
+unimodal argmax and removes the provably-false firing mode; it is BLIND to
+a calibration-only leak (one that shifts confidences without moving any
+argmax), which the old ensemble gate could see — the
+winner-beats-own-ensemble PASS clause carries that residual exposure.
+ens_slot stays recorded per arm. A dead unimodal variant would blind this
+detector too, so each variant's own-sense marginal acc and loss curve are
+recorded and gated (uni_marginal_ok / uni_learn_ok, added 2026-08-20 per
+the 23rd audit B1, before any registered seed ran). (LESSONS.md: a null's
+value under H0 is a theorem to prove, not a property to assert.)
 
 CONTROL (registry, must fail): cross-episode SWAP per sense at eval — the
 test set's audio (resp. vision) rows rolled by SWAP_ROLL so every episode
@@ -110,8 +123,11 @@ inherited, the rest are stated here before the first run):
       loss did not decrease (first-quarter mean -> last-quarter mean) on any
       seed; any unimodal variant's slot acc off chance by > NULL_GATE - 0.5
       (two-sided; the leak detector — amended 2026-08-20, see the ensemble
-      section); any arm swap-invariant on all senses on any seed;
-      dropped-quads fraction > DROP_MAX.
+      section); any unimodal variant below MARGINAL_FLOOR on its own sense's
+      marginal task, or whose loss did not decrease (leak-detector liveness
+      — added 2026-08-20 per the 23rd audit B1, before any registered seed
+      ran; strengthen-only); any arm swap-invariant on all senses on any
+      seed; dropped-quads fraction > DROP_MAX.
   Then, winner = argmax over A1..A5 of median-across-seeds slot accuracy.
   PASS iff ALL of:
       winner slot acc > A0 slot acc on EVERY seed (paired, same data order);
@@ -154,12 +170,26 @@ Healthy elsewhere: params all within +-2.9%, canary intact, dropped_frac 0,
 swap controls fire correctly for every trained arm (vision swap zeroes the
 vision-dependent tasks), A0/A1/A4/A5 all at 1.0/1.0/1.0.
 
-RECIPE (pending the seed-90 recipe probe, `recipe_probe` mode): WARMUP_FRAC
-defaults to 0.0 (the pilot's recipe). The probe compares linear-warmup@LR
-1e-3 vs LR 3e-4 uniformly across all six arms; its pre-registered decision
-rule lives in remote_recipe_probe's docstring. Whatever it adopts becomes
-the registered run's recipe for EVERY arm — matched training is preserved,
-verdict gates untouched.
+PROBE RECORD, seed 90, kernel jack-ladder-1787249890 (P100, 0.229 h,
+2026-08-20; artifact /data/ub10_recipe_probe.json). NEITHER RECIPE CLEAN —
+the pre-registered both-fail branch fired: NO registered dispatch, no third
+recipe, the one-diagnostic cap is spent, and the arm-design question routes
+through PROGRESS.
+  warmup (LR 1e-3, 10% linear warmup): A2 and A3 still at slot/vslot 0.5
+      with flat loss (1.62->1.56, 1.89->1.82); A0/A1/A4/A5 all >= 0.9875.
+      NOT CLEAN: A2:marginal, A3:marginal.
+  lolr (LR 3e-4, no warmup): A3 FIXED (1.0/1.0/1.0) but A4 BROKEN (slot
+      0.5531, vslot 0.5625, loss 3.27->2.37, and its audio swap now
+      IMPROVES slot by 0.2156). A2 unchanged at 0.5/flat.
+      NOT CLEAN: A2:marginal, A4:marginal.
+  THE FINDING (23rd audit B3): lolr fixing A3 while breaking A4 is not a
+  stuck arm — it is RECIPE SENSITIVITY of the six-arm design itself. No
+  single uniform recipe in {1e-3+warmup, 3e-4} trains all six matched-param
+  arms, so "matched training" as specced under-determines the comparison;
+  A2 (modality dropout, no aux loss) learned its marginals under NO tested
+  recipe at matched budget. That finding is the input the redesign needs,
+  and it is worth more than a third LR would have been. Verdict gates did
+  not move on the probe's account in any branch.
 
 COVERS: one brain / unison (claim)
 """
@@ -560,6 +590,14 @@ def _run_seed(seed: int, device: str) -> dict:
         full["ens_slot"] = round(float((ens == te_y).mean()), 4)
         full["uni_vision_slot"] = uni_v["acc"]["slot"]
         full["uni_audio_slot"] = uni_a["acc"]["slot"]
+        # Liveness of the leak gate's own instruments (23rd audit, B1): a
+        # constant predictor also reads exactly 0.5 on slot, so each unimodal
+        # variant must demonstrably learn its own sense's marginal task for
+        # its slot reading to mean anything.
+        full["uni_vision_vslot"] = uni_v["acc"]["vslot"]
+        full["uni_audio_afell"] = uni_a["acc"]["afell"]
+        full["uni_vision_loss"] = [uni_v["loss_first"], uni_v["loss_last"]]
+        full["uni_audio_loss"] = [uni_a["loss_first"], uni_a["loss_last"]]
         _ = pv  # per-episode slot probabilities live in slot_correct
         arms_out[arm] = full
         print("ARM_DONE", seed, arm, json.dumps(full["acc"]), flush=True)
@@ -635,6 +673,12 @@ def _seed_row_clean(s: dict) -> tuple:
         if max(abs(r["uni_vision_slot"] - 0.5),
                abs(r["uni_audio_slot"] - 0.5)) > NULL_GATE - 0.5:
             reasons.append(f"{a}:uni_leak")
+        if (r["uni_vision_vslot"] < MARGINAL_FLOOR
+                or r["uni_audio_afell"] < MARGINAL_FLOOR):
+            reasons.append(f"{a}:uni_marginal")
+        if not (r["uni_vision_loss"][1] < r["uni_vision_loss"][0]
+                and r["uni_audio_loss"][1] < r["uni_audio_loss"][0]):
+            reasons.append(f"{a}:uni_loss")
         if max(r["swap_drop"][sn][t]
                for sn in ("vision", "audio") for t in TASKS) < SWAP_HURT:
             reasons.append(f"{a}:swap")
@@ -648,7 +692,9 @@ def _print_seed_row(s: dict):
                  for sn in ("vision", "audio") for t in TASKS)
         print(f"  {a} acc={r['acc']} loss={r['loss_first']}->{r['loss_last']}"
               f" ens={r['ens_slot']} uni_v={r['uni_vision_slot']}"
-              f" uni_a={r['uni_audio_slot']} max_swap_drop={sw}")
+              f" uni_a={r['uni_audio_slot']}"
+              f" uni_vslot={r['uni_vision_vslot']}"
+              f" uni_afell={r['uni_audio_afell']} max_swap_drop={sw}")
     clean, reasons = _seed_row_clean(s)
     print("  CLEAN" if clean else f"  NOT CLEAN: {reasons}")
 
@@ -794,6 +840,14 @@ def _aggregate() -> dict:
         abs(s["arms"][a][k] - 0.5)
         for s in rows for a in ARMS
         for k in ("uni_vision_slot", "uni_audio_slot"))
+    uni_marginal_ok = all(
+        s["arms"][a]["uni_vision_vslot"] >= MARGINAL_FLOOR
+        and s["arms"][a]["uni_audio_afell"] >= MARGINAL_FLOOR
+        for s in rows for a in ARMS)
+    uni_learn_ok = all(
+        s["arms"][a][k][1] < s["arms"][a][k][0]
+        for s in rows for a in ARMS
+        for k in ("uni_vision_loss", "uni_audio_loss"))
     swap_ok = all(
         max(s["arms"][a]["swap_drop"][sense][t]
             for sense in ("vision", "audio") for t in TASKS) >= SWAP_HURT
@@ -822,6 +876,8 @@ def _aggregate() -> dict:
         "a0_slot_median": round(med["A0"], 4),
         "ens_slot_max": round(ens_max, 4),
         "uni_slot_dev_max": round(uni_dev_max, 4),
+        "uni_marginal_ok": float(uni_marginal_ok),
+        "uni_learn_ok": float(uni_learn_ok),
         "marginal_ok": float(marginal_ok),
         "learn_ok": float(learn_ok),
         "swap_ok_all_arms": float(swap_ok),
@@ -866,6 +922,11 @@ def _check(m: dict, c: dict):
         return Status.VOID          # the match failed; ranking measures size
     if m["marginal_ok"] != 1.0 or m["learn_ok"] != 1.0:
         return Status.VOID          # a non-learner cannot arbitrate (T2.02)
+    if m["uni_marginal_ok"] != 1.0 or m["uni_learn_ok"] != 1.0:
+        return Status.VOID          # a dead unimodal variant blinds the
+                                    # leak gate below: a constant predictor
+                                    # reads exactly 0.5 whether the fixture
+                                    # is clean or not (23rd audit, B1)
     if m["uni_slot_dev_max"] > NULL_GATE - 0.5:
         return Status.VOID          # a unimodal model off chance = fixture
                                     # leak (amended 2026-08-20: the old
@@ -905,6 +966,8 @@ if __name__ == "__main__":
         for a in ARMS:
             r = s["arms"][a]
             assert "swap_drop" in r and "ens_slot" in r, a
+            assert "uni_vision_vslot" in r and "uni_audio_afell" in r, a
+            assert "uni_vision_loss" in r and "uni_audio_loss" in r, a
             assert len(r["slot_correct"]) == 24, "test-episode count wrong"
         tgt = out["widths"]["A1"][1]
         spread = {a: round(abs(w[1] - tgt) / tgt, 3)
