@@ -8899,13 +8899,21 @@
     },
     "T2.05": {
       "amended": [],
-      "attempt": 3,
-      "commit": "d2c0b1c",
-      "compute_s": 189.56,
-      "control_metrics": {},
-      "duration_s": 196.34,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1787225777",
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "attempt": 4,
+      "commit": "f14c8fa",
+      "compute_s": 3307.31,
+      "control_metrics": {
+        "mse_shuffled": [
+          0.824435,
+          0.863733,
+          0.916009
+        ],
+        "shuffled_beats_null": 0.0,
+        "shuffled_beats_null_std": 0.0
+      },
+      "duration_s": 3315.81,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1787226047",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "commit": "9128d69",
@@ -8995,19 +9003,92 @@
             2
           ],
           "status": "ERROR"
+        },
+        {
+          "commit": "d2c0b1c",
+          "control_metrics": {},
+          "gpu_job_id": "jannolouwrens/jack-ladder-1787225777",
+          "impl_sha": "d1fa6eb43c023283",
+          "message": "RuntimeError: T2.05 job failed on colab: all backends failed: kaggle: status=error; colab: skipped \u2014 timeout_s 7200s exceeds the 994s left before JACK_ITER_DEADLINE; a Colab result cannot outlive its watcher",
+          "metrics": {},
+          "ran_at": "2026-08-20T11:39:29",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "status": "ERROR"
         }
       ],
-      "impl_sha": "d1fa6eb43c023283",
-      "message": "RuntimeError: T2.05 job failed on colab: all backends failed: kaggle: status=error; colab: skipped \u2014 timeout_s 7200s exceeds the 994s left before JACK_ITER_DEADLINE; a Colab result cannot outlive its watcher",
-      "metrics": {},
-      "ran_at": "2026-08-20T11:39:29",
+      "impl_sha": "e0be1138ebf5aaf1",
+      "message": "pre-registered threshold not met",
+      "metrics": {
+        "all_seeds_beat_null": 1.0,
+        "all_seeds_beat_null_std": 0.0,
+        "backend": "kaggle",
+        "det_ok_all": 1.0,
+        "det_ok_all_std": 0.0,
+        "dims_ok_all": 1.0,
+        "dims_ok_all_std": 0.0,
+        "falls_train": [
+          57,
+          57,
+          55
+        ],
+        "finite_all": 1.0,
+        "finite_all_std": 0.0,
+        "gpu": "Tesla P100-PCIE-16GB",
+        "horizon_k": 5.0,
+        "horizon_k_std": 0.0,
+        "k_step_mse": [
+          0.178315,
+          0.195556,
+          0.231187
+        ],
+        "loss_wm_final_max": 0.038368,
+        "loss_wm_final_max_std": 0.0,
+        "mse_mean": [
+          0.824001,
+          0.860121,
+          0.914231
+        ],
+        "mse_null": [
+          0.824001,
+          0.860121,
+          0.914231
+        ],
+        "mse_persist": [
+          1.092063,
+          1.128248,
+          1.187072
+        ],
+        "mse_ridge": [
+          0.114301,
+          0.116804,
+          0.130912
+        ],
+        "persist_informative_all": 0.0,
+        "persist_informative_all_std": 0.0,
+        "ridge_beats_null_any": 1.0,
+        "ridge_beats_null_any_std": 0.0,
+        "wm_beats_ridge_all": 0.0,
+        "wm_beats_ridge_all_std": 0.0,
+        "wm_ratio_all": [
+          0.2164,
+          0.2274,
+          0.2529
+        ],
+        "wm_ratio_max": 0.2529,
+        "wm_ratio_max_std": 0.0
+      },
+      "ran_at": "2026-08-20T12:35:59",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T2.05",
-      "status": "ERROR"
+      "status": "FAIL"
     },
     "T2.06": {
       "amended": [],
