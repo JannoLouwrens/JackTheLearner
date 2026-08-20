@@ -639,6 +639,12 @@ LADDER: list[Spec] = [
          falsified_by="No measurable drop.", null_baseline="Full system.",
          metric="delta_vs_full", budget=Budget.GPU, seeds=3, depends_on=["T2.03"],
          kills="The vision encoder.",
+         control="Shuffled-label training: same architecture, same budget, "
+                 "labels permuted. Its TEST accuracy MUST sit at chance "
+                 "(|acc - 0.25| <= 0.10, ~4 sd at n=300). If it clears "
+                 "chance the rig leaks episode identity into the frames and "
+                 "the run is VOID, not evidence — the same direction T2.03's "
+                 "registered control failed (0.0633 dev).",
          notes="COVERS: sight (claim)"),
     Spec("T3.02", 3, "Ablate proprioception", hypothesis="Removing proprioception hurts control.",
          falsified_by="No measurable drop.", null_baseline="Full system.",
