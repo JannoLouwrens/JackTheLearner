@@ -124,7 +124,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T2.04** Behaviour cloning on scripted trajectories
       - _asserts:_ The action head reproduces scripted MuJoCo trajectories above a nearest-neighbour baseline.
       - _dies if:_ Fails to beat nearest-neighbour retrieval.
-- [!] **T2.05** World model beats constant prediction
+- [!] **T2.05** World model beats constant prediction  — all_seeds_beat_null=1.0; all_seeds_beat_null_std=0.0
       - _asserts:_ k-step latent prediction error < a persistence baseline.
       - _dies if:_ Predicting 'next state = current state' does as well.
 - [x] **T2.06** Language-action alignment beats chance
@@ -159,7 +159,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 
-- [ ] **T3.01** Ablate vision
+- [~] **T3.01** Ablate vision  — ablated_max=0.25; ablated_max_std=0.0
       - _asserts:_ Removing vision measurably hurts a vision-dependent task.
       - _dies if:_ No measurable drop.
       - _then delete:_ The vision encoder.
@@ -316,7 +316,7 @@ Every line here is backed by an experiment that could have failed;
       - _dies if:_ The declared degenerate rig clearing TF_FALL_SPREAD_MIN (the gate is inert — BA.01 v2's defect), or the honest rig's bulk falling under it (the gate is a tail lottery — BA.01 v3's defect), or `rig_ok` disagreeing with its own statistics, or the degenerate fixture failing every OTHER rig-health gate too (a world broken in all dimensions cannot show that THIS gate is the one doing the refusing).
       - _then delete:_ The assumption that a pre-registered threshold survives a rig change because its number did. A gate is a claim that the statistic's attainable range under THIS rig straddles it — and that claim needs re-measuring every time the rig moves (law 4 protects the number; this protects the measurement).
 - [x] **T0.27** A threshold moved after a FAIL leaves an artifact, not a paragraph
-      - _asserts:_ Amend-after-FAIL is auditable by someone who is not its author, mechanically: (1) a verdict that supersedes a FAIL carries the failing evidence IN the record (`supersedes_fail`: failing commit, dirty flag, impl_sha, measurement, plus machine-readable `impl_changed`), and the pairing survives into history when superseded again; (2) `audit_supersedes_fail` flags, in any PASS record, a FAIL whose implementation differs from the run that amended it unless that FAIL is stamped at a clean commit that exists in this repo and carries its metrics; (3) the LIVE ledger has zero such violations; (4) pre-impl_sha pairs read unauditable, never violated — absence is a historical gap, not evidence.
+      - _asserts:_ Amend-after-adverse-verdict is auditable by someone who is not its author, mechanically: (1) a verdict that supersedes a FAIL or a VOID carries the prior evidence IN the record (`supersedes_fail`/`supersedes_void`: commit, dirty flag, impl_sha, measurement, source status, plus machine-readable `impl_changed`), and the pairing survives into history when superseded again; (2) `audit_supersedes_fail` flags, in any PASS record, a FAIL or VOID whose implementation differs from the run that amended it unless it is stamped at a clean commit that exists in this repo and carries its metrics — pairing across intervening ERROR rows, which are infrastructure events, not verdicts (widened 2026-08-20, 22nd audit B1/B2, strengthen-only); (3) the LIVE ledger has zero such violations; (4) pre-impl_sha pairs read unauditable, never violated — absence is a historical gap, not evidence.
       - _dies if:_ The recorder writing no artifact on a FAIL->PASS supersede; the artifact vanishing from history on the next supersede; the auditor certifying the T2.08 shape (FAIL stamped +dirty, threshold moved, PASS on top); the auditor inventing violations for pre-B1 verdict-only history; or a live-ledger violation — someone amended a FAIL without committing the failing implementation, and the gate re-run catches it.
       - _then delete:_ The practice of amending a FAIL from an uncommitted tree. After this spec, a moved threshold whose FAIL is unrecoverable fails the gate re-run — law 4's escape clause leaves `git diff <fail> <pass>` as its artifact or it is not taken.
 

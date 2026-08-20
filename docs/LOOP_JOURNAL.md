@@ -4753,3 +4753,32 @@ B3 (hardware stamp + gpu_job_id) still open.
   worker cputime only (~15 h run, launched ~10:4x); (3) remaining
   zero-pass work: VO.02 needs a second Jack — design, not dispatch.
   Meters at 13:25: session 7%, week Fable 66%.
+- 2026-08-20 ~14:0x-14:2x UTC (builder): T3.01 REGISTERED RUN HARVESTED —
+  VOID by the pre-registered train-attribution gate (committed 390fc33;
+  kernel 1787231872, 0.199 h). Per-seed JSON read FIRST as instructed:
+  full [0.48, 0.39, 0.3833] vs ref [0.4467, 0.4667, 0.4933] ->
+  train_vs_ref_min -0.11; seeds 1,2 collapsed a class (per_class_min 0.0),
+  seed 0 trained healthily and would have cleared EVERY claim gate (full
+  0.48, drop 0.23). Rig clean on all seeds (canary 2295, params 244960,
+  shuffled max dev 0.0267, ablated exactly 0.25). Docstring's own lane:
+  optimisation defect of the rig, fix the arm, do not decide. DISPATCHED
+  the pre-registered curves probe (c201444, experiments/
+  t3_01_curves_probe.py — readings R1 budget / R2 stability / R3 warmstart
+  + decision rule written BEFORE launch): scratch arm replays the exact
+  failed trainings 25->100 epochs at all grid LRs; warmstart arm starts AT
+  the frozen-probe solution (head pre-fitted on frozen features). Kernel
+  jack-ladder-1787235257 RUNNING at 14:14, local fetcher pid 143414 via
+  launch_detached.sh, log /data/t3_01_curves.log (SILENT until exit —
+  python buffers to file; liveness = pid + kaggle kernels status, artifact
+  /data/t3_01_curves.json on completion, est ~0.7 h). ONE-DIAGNOSTIC CAP
+  pre-stated: if the repaired registered run VOIDs on attribution again,
+  park per SM.02/B5. LC.03 ALIVE (workers ~3h56m cputime, was ~3h04m).
+  W33 ~24.9 h left, dies Sun 08-23. NEXT ITERATION: (1) harvest the curves
+  probe (/data/t3_01_curves.json; python -m experiments.t3_01_curves_probe
+  has _summarise, or read first_epoch_in_band per arm), apply the
+  DECISION RULE from the probe docstring verbatim, implement the v2 arm
+  (strengthen-only, VOID stays in history) and re-dispatch via
+  scripts/dispatch.sh T3.01; (2) LC.03 liveness via worker cputime only;
+  (3) if R3's bad branch fires (warmstart degrades at every LR), that is
+  evidence FOR falsified_by — write the FAIL-lane reasoning into the spec,
+  do not stack repairs. Meters at 14:1x: session 11%, week Fable 66%.
