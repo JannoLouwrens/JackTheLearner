@@ -6789,14 +6789,14 @@
     },
     "T0.24": {
       "amended": [],
-      "attempt": 2,
-      "commit": "926541c+dirty",
+      "attempt": 3,
+      "commit": "ec8b3bd",
       "compute_s": 0.0,
       "control_metrics": {
         "pre_fix_message": "dictionary update sequence element #0 has length 3; 2 is required",
         "pre_fix_raised": "ValueError"
       },
-      "duration_s": 1.64,
+      "duration_s": 1.63,
       "gpu_job_id": "u/jack-ladder-1786482462",
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -6819,6 +6819,29 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "926541c+dirty",
+          "control_metrics": {
+            "pre_fix_message": "dictionary update sequence element #0 has length 3; 2 is required",
+            "pre_fix_raised": "ValueError"
+          },
+          "gpu_job_id": "u/jack-ladder-1786482462",
+          "impl_sha": "d083dd348931b468",
+          "message": "",
+          "metrics": {
+            "control_reproduces_scar": true,
+            "failures": [],
+            "p6_files_scanned": 92,
+            "p6_unreadable": 0,
+            "properties_checked": 7,
+            "properties_failed": 0
+          },
+          "ran_at": "2026-08-19T23:14:29",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "d083dd348931b468",
@@ -6831,7 +6854,7 @@
         "properties_checked": 7,
         "properties_failed": 0
       },
-      "ran_at": "2026-08-19T23:14:29",
+      "ran_at": "2026-08-20T00:08:51",
       "seeds": [
         0
       ],
