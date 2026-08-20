@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 83 / 169 demonstrated
+## 82 / 169 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -159,7 +159,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 
-- [x] **T3.01** Ablate vision
+- [~] **T3.01** Ablate vision  — ablated_max=0.25; ablated_max_std=0.0
       - _asserts:_ Removing vision measurably hurts a vision-dependent task.
       - _dies if:_ No measurable drop.
       - _then delete:_ The vision encoder.
