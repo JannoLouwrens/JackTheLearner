@@ -492,10 +492,12 @@ class Ledger:
                             # Dropping it here would let a re-run launder a
                             # hand-set status back into an unqualified record.
                             row_h["amended"] = prev["amended"]
-                        if prev.get("supersedes_fail"):
-                            # Same reason as `amended`: the pairing with the
-                            # FAIL it amended is part of what that verdict WAS.
-                            row_h["supersedes_fail"] = prev["supersedes_fail"]
+                        for sk in ("supersedes_fail", "supersedes_void"):
+                            if prev.get(sk):
+                                # Same reason as `amended`: the pairing with
+                                # the verdict it amended is part of what that
+                                # verdict WAS.
+                                row_h[sk] = prev[sk]
                         hist.append(row_h)
                     row = {**asdict(r), "status": r.status.value}
                     row["history"] = hist[-20:]
@@ -515,19 +517,47 @@ class Ledger:
                     # Deliberately NOT a Result field: old readers tolerate
                     # unknown row keys (see Result.from_row), so this is the
                     # rolling-migration-safe shape.
-                    if prev and prev.get("status") == Status.FAIL.value \
-                            and prev.get("ran_at") != r.ran_at:
-                        both = bool(prev.get("impl_sha")) and bool(r.impl_sha)
-                        row["supersedes_fail"] = {
-                            "commit": prev.get("commit"),
-                            "dirty": str(prev.get("commit") or ""
-                                         ).endswith("+dirty"),
-                            "impl_sha": prev.get("impl_sha"),
-                            "impl_changed": (prev.get("impl_sha") != r.impl_sha
-                                             if both else None),
-                            "metrics": prev.get("metrics"),
-                            "ran_at": prev.get("ran_at"),
-                        }
+                    # Pair against the previous row CARRYING A REAL VERDICT,
+                    # walking back through ERROR rows: an ERROR is an
+                    # infrastructure event, not a verdict on the hypothesis,
+                    # and a dead kernel between a FAIL and its amended re-run
+                    # severed this pairing — worse, the dead kernel records
+                    # the UNCHANGED impl_sha, so the pair read as "same code
+                    # re-run" (overseer 22nd audit B2; T2.05's live chain
+                    # VOID -> ERROR -> ERROR -> FAIL). VOID joins FAIL as a
+                    # paired source (B1, same audit): SYSTEM.md's "fix the
+                    # arm, do not decide" makes VOID the verdict that
+                    # doctrinally precedes a redesign, and it was the one
+                    # lane with no artifact — three honest VOID->verdict
+                    # transitions were recoverable only from commit messages.
+                    # COVERAGE (LESSONS rule — say it): FAIL pairs as
+                    # `supersedes_fail`, VOID as `supersedes_void`, each with
+                    # a `status` key; ERROR rows are skipped in the walk;
+                    # the walk STOPS at PASS/SKIP/BLOCKED/NOT_RUN (a re-run
+                    # on top of those amends no adverse verdict).
+                    if prev and prev.get("ran_at") != r.ran_at:
+                        chain = [prev] + list(reversed(
+                            prev.get("history") or []))
+                        src = next((e for e in chain
+                                    if e.get("status") != Status.ERROR.value),
+                                   None)
+                        if src and src.get("status") in (Status.FAIL.value,
+                                                         Status.VOID.value):
+                            both = bool(src.get("impl_sha")) and bool(r.impl_sha)
+                            key = ("supersedes_fail"
+                                   if src["status"] == Status.FAIL.value
+                                   else "supersedes_void")
+                            row[key] = {
+                                "status": src["status"],
+                                "commit": src.get("commit"),
+                                "dirty": str(src.get("commit") or ""
+                                             ).endswith("+dirty"),
+                                "impl_sha": src.get("impl_sha"),
+                                "impl_changed": (src.get("impl_sha") != r.impl_sha
+                                                 if both else None),
+                                "metrics": src.get("metrics"),
+                                "ran_at": src.get("ran_at"),
+                            }
                     if r.status is Status.FAIL and \
                             str(row.get("commit") or "").endswith("+dirty"):
                         print("  ! FAIL recorded from a MODIFIED tree. If this "
@@ -1170,7 +1200,8 @@ def staleness_of(entry: "Result", path) -> List[tuple]:
 
 def audit_supersedes_fail(results: Dict[str, Any],
                           repo_root=None) -> Dict[str, Any]:
-    """Every amend-after-FAIL must be auditable by someone who is not its author.
+    """Every amend-after-adverse-verdict must be auditable by someone who is
+    not its author.
 
     The executable form of overseer B2 (2026-08-13). T2.08's floor moved
     0.70 -> 0.50 between a FAIL and a PASS; the move was disclosed loudly and
@@ -1180,10 +1211,20 @@ def audit_supersedes_fail(results: Dict[str, Any],
     threshold. Disclosure is a property of the agent; this makes it a property
     of the ledger.
 
-    THE RULE: in any record whose CURRENT status is PASS, a FAIL whose
-    implementation differs from the run that superseded it (the threshold or
-    the code moved in between — impl_sha cannot tell those apart, and the
-    conservative superset is the point) must be
+    COVERAGE (22nd audit B1/B2; the LESSONS rule is to say it): the audited
+    sources are FAIL **and VOID** — SYSTEM.md's "fix the arm, do not decide"
+    makes VOID the verdict that doctrinally precedes a redesign, and it was
+    the one lane with no guard. ERROR rows are dropped before pairing (an
+    ERROR is infrastructure, not a verdict, and a dead kernel carries the
+    UNCHANGED impl_sha — adjacency pairing let the "same code" shortcut skip
+    the real amendment; T2.05's chain VOID -> ERROR -> ERROR -> FAIL is the
+    fixture). NOT covered: PASS/SKIP/BLOCKED as sources — a re-run on top of
+    those amends no adverse verdict.
+
+    THE RULE: in any record whose CURRENT status is PASS, a FAIL (or VOID)
+    whose implementation differs from the run that superseded it (the
+    threshold or the code moved in between — impl_sha cannot tell those
+    apart, and the conservative superset is the point) must be
 
       * stamped at a CLEAN commit (no `+dirty` — else the failing code is
         unrecoverable by construction),
@@ -1222,10 +1263,20 @@ def audit_supersedes_fail(results: Dict[str, Any],
     for sid, row in results.items():
         if row.get("status") != Status.PASS.value:
             continue
-        seq = list(row.get("history") or []) + [row]
+        # ERROR rows are dropped BEFORE pairing: an ERROR is an infrastructure
+        # event, not a verdict, and a dead kernel records the UNCHANGED
+        # impl_sha — so pairing on adjacency let the "same code re-run"
+        # shortcut skip the real amendment whenever a kernel died between the
+        # adverse verdict and its re-run (overseer 22nd audit B2; T2.05
+        # produced three ERROR rows in one day). COVERAGE: FAIL and VOID are
+        # audited sources; PASS/SKIP/BLOCKED rows pass through as pair
+        # boundaries but are never themselves flagged.
+        seq = [e for e in list(row.get("history") or []) + [row]
+               if e.get("status") != Status.ERROR.value]
         for e, nxt in zip(seq, seq[1:]):
-            if e.get("status") != Status.FAIL.value:
+            if e.get("status") not in (Status.FAIL.value, Status.VOID.value):
                 continue
+            lbl = e["status"]
             if not e.get("impl_sha") or not nxt.get("impl_sha"):
                 unauditable += 1
                 continue
@@ -1235,18 +1286,19 @@ def audit_supersedes_fail(results: Dict[str, Any],
             reasons = []
             stamp = str(e.get("commit") or "")
             if not stamp or stamp == "unknown":
-                reasons.append("FAIL carries no commit stamp")
+                reasons.append(f"{lbl} carries no commit stamp")
             elif stamp.endswith("+dirty"):
-                reasons.append(f"FAIL stamped {stamp}: the failing "
-                               "implementation was never committed")
+                reasons.append(f"{lbl} stamped {stamp}: that implementation "
+                               "was never committed")
             elif repo_root is not None and not _commit_exists(stamp):
-                reasons.append(f"FAIL commit {stamp} does not exist in this "
+                reasons.append(f"{lbl} commit {stamp} does not exist in this "
                                "repository")
             if not e.get("metrics"):
-                reasons.append("FAIL history entry carries no metrics — the "
-                               "failing measurement exists only in prose")
+                reasons.append(f"{lbl} history entry carries no metrics — "
+                               "the measurement exists only in prose")
             if reasons:
-                violations.append({"spec_id": sid, "fail_commit": stamp,
+                violations.append({"spec_id": sid, "status": lbl,
+                                   "fail_commit": stamp,
                                    "fail_ran_at": e.get("ran_at"),
                                    "reasons": reasons})
     return {"violations": violations, "checked_pairs": checked,

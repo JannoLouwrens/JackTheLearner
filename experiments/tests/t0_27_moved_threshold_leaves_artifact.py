@@ -22,7 +22,7 @@ mechanisms, both in `experiments/protocol.py`:
     FAIL whose impl_sha differs from the run that amended it must be stamped
     at a clean commit that exists in this repo and must carry its metrics.
 
-Ten properties, each with a way to fail:
+Twelve properties, each with a way to fail:
 
   1. A PASS superseding a FAIL carries `supersedes_fail`, with the failing
      commit, measurement and `impl_changed: True` when the code moved.
@@ -56,6 +56,22 @@ Ten properties, each with a way to fail:
      dirty spec. This is the difference between "the auditor has never
      flagged anything" and "the auditor cannot flag" — the first is today's
      honest state, the second is what this property rules out.
+ 11. THE VOID LANE IS GUARDED (overseer, 22nd audit, B1 — RANK 1). VOID is
+     the verdict SYSTEM.md says precedes a redesign ("fix the arm, do not
+     decide"), and it was the one lane with no artifact: three live
+     VOID->verdict transitions were honest and provable only from commit
+     messages. A VOID superseded at a moved impl_sha writes
+     `supersedes_void` (source status inside, never reusing the FAIL name),
+     and the auditor flags a dirty-stamped VOID exactly as a dirty FAIL.
+     Known-negative, PS.02's real shape: VOID -> PASS at an IDENTICAL
+     impl_sha carries `impl_changed: False` and must NOT flag.
+ 12. AN INTERVENING ERROR DOES NOT SEVER THE PAIRING (overseer, 22nd audit,
+     B2 — RANK 2). FAIL (sha A) -> ERROR (dead kernel, unchanged sha A) ->
+     PASS (sha B) must still pair the PASS with the FAIL in both the
+     recorder and the auditor. Without the ERROR-skip, the dead kernel's
+     unchanged impl_sha reads as "same code re-run" and the real amendment
+     is never examined (T2.05's live chain VOID -> ERROR -> ERROR -> FAIL;
+     three ERROR rows were produced in a single day).
 
 CONTROL — the T2.08 shape replayed verbatim on a fixture: FAIL stamped
 `75a1938+dirty` carrying its 0.6975, impl changed, PASS recorded on top. The
@@ -201,6 +217,71 @@ def _experiment(seed: int) -> dict:
         warns_on_dirty_fail = ("unauditable" in buf_dirty.getvalue()
                                and "unauditable" not in buf_clean.getvalue())
 
+        # 11. The VOID lane (22nd audit B1). VOID -> PASS with the code
+        #     moved: `supersedes_void` written (source status inside, never
+        #     the FAIL name), and a dirty VOID is flagged like a dirty FAIL.
+        led7 = Ledger(path)
+        led7.record(Result(spec_id="X.9", status=Status.VOID,
+                           commit="75a1938+dirty", metrics={"sigma": 1.2},
+                           impl_sha="9" * 16, ran_at="2026-01-01T00:00:00"))
+        Ledger(path).record(Result(spec_id="X.9", status=Status.PASS,
+                                   commit=real, metrics={"sigma": 5.4},
+                                   impl_sha="a1" * 8,
+                                   ran_at="2026-01-02T00:00:00"))
+        row9 = _row(path, "X.9")
+        art9 = row9.get("supersedes_void") or {}
+        a9 = audit_supersedes_fail({"X.9": row9}, repo_root=_ROOT)
+        # Known-negative, PS.02's real shape: VOID -> PASS at an IDENTICAL
+        # impl_sha — artifact present but impl_changed False, never flagged.
+        led8 = Ledger(path)
+        led8.record(Result(spec_id="X.10", status=Status.VOID, commit=real,
+                           metrics={"sigma": 0.4}, impl_sha="b2" * 8,
+                           ran_at="2026-01-01T00:00:00"))
+        Ledger(path).record(Result(spec_id="X.10", status=Status.PASS,
+                                   commit=real, metrics={"sigma": 5.0},
+                                   impl_sha="b2" * 8,
+                                   ran_at="2026-01-02T00:00:00"))
+        row10 = _row(path, "X.10")
+        art10 = row10.get("supersedes_void") or {}
+        a10 = audit_supersedes_fail({"X.10": row10}, repo_root=_ROOT)
+        void_lane_guarded = (
+            art9.get("status") == "VOID"
+            and art9.get("impl_changed") is True
+            and art9.get("dirty") is True
+            and "supersedes_fail" not in row9
+            and len(a9["violations"]) == 1
+            and a9["violations"][0].get("status") == "VOID"
+            and any("never committed" in r
+                    for r in a9["violations"][0]["reasons"])
+            and art10.get("impl_changed") is False
+            and not a10["violations"])
+
+        # 12. An intervening ERROR does not sever the pairing (22nd audit
+        #     B2): the dead kernel records the UNCHANGED impl_sha, so
+        #     adjacency pairing read FAIL->ERROR as "same code re-run" and
+        #     the real amendment (ERROR->PASS) was never examined.
+        led9 = Ledger(path)
+        led9.record(Result(spec_id="X.11", status=Status.FAIL, commit=real,
+                           metrics={"m": 1.0}, impl_sha="c3" * 8,
+                           ran_at="2026-01-01T00:00:00"))
+        Ledger(path).record(Result(spec_id="X.11", status=Status.ERROR,
+                                   commit=real, metrics={},
+                                   impl_sha="c3" * 8,
+                                   ran_at="2026-01-02T00:00:00"))
+        Ledger(path).record(Result(spec_id="X.11", status=Status.PASS,
+                                   commit=real, metrics={"m": 2.0},
+                                   impl_sha="d4" * 8,
+                                   ran_at="2026-01-03T00:00:00"))
+        row11 = _row(path, "X.11")
+        art11 = row11.get("supersedes_fail") or {}
+        a11 = audit_supersedes_fail({"X.11": row11}, repo_root=_ROOT)
+        error_does_not_sever = (
+            art11.get("metrics") == {"m": 1.0}
+            and art11.get("ran_at") == "2026-01-01T00:00:00"
+            and art11.get("impl_changed") is True
+            and a11["checked_pairs"] == 1
+            and not a11["violations"])
+
         # Planted rows for property 10, captured while the fixture ledger is
         # still on disk. X.1 (as it stands after property 3) is the clean
         # auditable pair; X.8 replays the T2.08 shape through the real
@@ -250,6 +331,8 @@ def _experiment(seed: int) -> dict:
         "warns_on_dirty_fail": warns_on_dirty_fail,
         "live_ledger_clean": not live["violations"],
         "live_audit_can_flag": live_audit_can_flag,
+        "void_lane_guarded": void_lane_guarded,
+        "error_does_not_sever": error_does_not_sever,
     }
     return {**{k: bool(v) for k, v in props.items()},
             "properties_failed": sum(1 for v in props.values() if not v),
