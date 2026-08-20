@@ -4562,3 +4562,29 @@ B3 (hardware stamp + gpu_job_id) still open.
   NEXT ITERATION: remaining zero-pass GPU picks SM.02, VO.02 (W33 has ~27.9h,
   dies Sun 08-23, spend it — OVERSIGHT B6); meters healthy (session 14%,
   week 40%, reset Aug 24).
+- 2026-08-20 ~00:4x UTC (builder): SM.02 implemented and its PILOT is IN FLIGHT.
+  Standing rule pick: smell is a zero-pass commitment (15 remain after TA.02)
+  and SM.02 is its claim spec; VO.02 (the other zero-pass GPU pick) needs a
+  second Jack and stays queued. Rig probed BEFORE writing (seed 0, 300 poses):
+  4 south-band shelter sites, LOS-visible 0.000 occluded / 0.87-0.91 open;
+  plume whiff frac 0.56 at +2m downwind, 0.38 at +5m, 0.00 upwind. Point-nose
+  agent at 5 Hz, obs = pose(4)+LOS sight(4)+bilateral odour(12); arms
+  smell/nosmell/placebo/shuffled in OCC + twins in VIS + random floors, one
+  DQN each (TA.02 constants). Smoke (20 eps): smell_vis learned to 14.7s mean
+  0 timeouts; tripwires occ_hidden 1.0, vis_seen 0.89, det_ok all; 2.9ms/step.
+  GATES ARE PROVISIONAL and run() HARD-REFUSES the registered run until
+  _GATES_FROZEN=True — first spec to machine-enforce pilot-before-freeze
+  (OVERSIGHT B3). IN FLIGHT: pilot kernel jannolouwrens/jack-ladder-1787185633
+  (RUNNING, seeds 90-92 full size, est 2.0h, timeout 16200s), detached watcher
+  pid 4170991/4170993, log /data/sm02_pilot.log, result lands at
+  /data/sm02_pilot.json. If the watcher dies: verify kernel status, then
+  JACK_REUSE_KERNEL=jack-ladder-1787185633 /data/venvs/jackthelearner/bin/python
+  -m experiments.tests.sm_02_smell_finds_occluded pilot  (free reattach; do NOT
+  resubmit). NEXT ITERATION: read /data/sm02_pilot.json; freeze the gates
+  against its between/within-seed spreads (B3: the gate must clear the
+  instrument std by an intended margin — check timeout_frac too, a clipped
+  mean compresses advantages); set _GATES_FROZEN=True, replace the banner
+  with the pilot table, commit, push, then scripts/dispatch.sh SM.02.
+  Also this iteration: T0.24 re-run clean (PASS, clears ec8b3bd's dirty
+  stamp). Meters at start: session 15%, week 41% (reset Aug 24); W33 kaggle
+  27.8h before the pilot (~2h charge expected), dies Sun 08-23.
