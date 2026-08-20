@@ -4350,3 +4350,33 @@ gate is a hypothesis about the rig and belongs in a pilot reading, not in a
 VOID condition. Corollary of "by construction is a claim", one entry up —
 this one fired as a pre-registered verdict condition, which is the most
 expensive place to store a false theorem.
+
+## A null that reads "clean" and a null that never ran return the same number
+
+The entry directly above proved the *chance level* of UB.10's leak detector.
+It did not prove the detector can fire. The replacement gate reads each
+unimodal variant's slot accuracy and VOIDs when it is off 0.5 by more than
+0.10 — but `_run_seed` keeps only `acc["slot"]` from those variants and
+discards their marginal accuracies and their loss curve, and `_check`'s
+`learn_ok`/`marginal_ok` are computed over the *full* arms only. So a
+unimodal variant that converged and correctly found the XOR undecodable
+reads exactly 0.5000, and a unimodal variant that never trained at all reads
+exactly 0.5000, and the recorded row cannot tell them apart. Across the
+seed-90 pilot and both recipe-probe arms, **36 of 36 unimodal trainings read
+exactly 0.5000 with zero variance** — including A2's and A3's, whose full
+arms provably never trained under either recipe (loss 1.60→1.56, 1.90→1.82
+over 150 epochs). Those readings were nonetheless cited as proof the fixture
+was clean. The same shape sits under T3.01's shuffled-label control, which is
+observed through `acc_shuffled` alone: an honest control that memorised its
+shuffled labels and failed to generalise, and a control that silently never
+trained, both land at chance and both read as "control held".
+
+**Rule:** a must-fail arm needs a must-succeed reading of its own, or its
+failure is unfalsifiable. Record one liveness observable per null/control arm
+— the loss it did decrease, or the *other* task it can still do — and put
+that observable in the same VOID checklist as the arm under test. "It shares
+a code path with an arm that trained" is an argument; the number is evidence,
+and it is almost always already computed and thrown away. Test of whether you
+have this right: name the reading that would look different if the control
+had never run. If there isn't one, you are not running a control, you are
+recording a constant.

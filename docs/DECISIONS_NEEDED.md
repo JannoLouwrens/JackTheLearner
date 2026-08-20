@@ -1594,3 +1594,92 @@ you.
 
 *Raised without taking a side. Full working in `docs/OVERSIGHT.md` (20th audit),
 sections 6 and 8.*
+
+## D1 — COST UPDATE 2026-08-20 18:45 UTC (23rd overseer audit). The cost can now be NAMED, not just counted: six of your senses are behind it.
+
+**No new evidence about D1, no side taken.** The fork is unchanged and is still
+the whole of what is owed:
+
+  **(i)** strike option A (freeze the trunk) — the PLASTIC-ONLY decree of
+  2026-08-09 (`GOAL.md:76`) stands as written; or
+  **(ii)** keep option A available and narrow the decree's scope, saying where.
+
+Please do not answer *"do what the measurements say"* — a trigger earlier in
+this file would read that as option A, and the 15th audit established this is a
+constitutional question about what the decree admits, not a measurement
+question a bakeoff can settle.
+
+**What changed today is that the blocked set has been resolved into
+commitments.** Previous updates reported `T2.01 = FAIL` as *frees 35 / blocks
+36* — a number. Mapping every zero-pass commitment's claim spec to its
+dependency chain says what those 36 actually are:
+
+| your commitment | its ONLY claim spec | blocked by |
+|---|---|---|
+| touch / contact | UB.5 | UB.1 ← **T2.01=FAIL** |
+| tool use | CU.6 | CU.1 ← **T2.01=FAIL** |
+| proprioception | T3.02, UB.16 | **T2.01=FAIL** / T2.02=VOID |
+| sleep | ME.7, T5.05 | T5.03 ← T4.04 ← **T2.01=FAIL** |
+| plasticity | T5.03, T5.04 | T4.04 ← **T2.01=FAIL** |
+| social / other agents | T6.05, VO.02 | T6.01 ← **T2.01=FAIL** |
+
+**Eleven of the fourteen commitments with nothing passing are downstream of
+T2.01 or of LC.03.** None of the six above is even *implemented*, and none can
+be — implementing a spec whose dependency is FAIL buys nothing. This is not the
+builder neglecting them; it is the builder being unable to reach them.
+
+**The arithmetic, this week.** `T2.01` has read **FAIL since 2026-08-12T12:59 —
+nine days**, history `VOID` (08-07), `FAIL` (08-10), `FAIL` (08-12). It is
+`Budget.GPU_LONG`, 5.58 h per run, and cannot be re-dispatched without the
+one-line fork above. **~23.5 of 30 W33 Kaggle hours expire Sunday 2026-08-23**
+— T2.01 fits four times over. As of 18:31 UTC tonight the loop's designated
+spender for those hours (UB.10's registered run, ~1.25 h) **barred its own
+dispatch** on rig grounds, correctly and by a rule it wrote before the probe
+ran. So there is currently **nothing queued** for the expiring quota.
+
+That makes this the **third consecutive week** in which D1's openness converts
+into expired GPU hours — and unlike the 14th audit's version, this one is not a
+builder-scheduling matter that better queueing could fix. Credits are healthy
+(Fable week 75 % against a 90 % stop) and the loop ran 25 clean iterations in
+the last 24 h. Neither compute nor the loop is the constraint. One line is.
+
+**What is genuinely good this week, for balance:** sight became load-bearing
+today (`T3.01` PASS — ablate vision, brain falls to exactly chance on all three
+seeds), and two FAILs landed that were written into their own docstrings before
+the runs that produced them. The machine is honest and it is working. It is
+working inside a shrinking room.
+
+*Raised without taking a side. Full working in `docs/OVERSIGHT.md` (23rd audit),
+sections 0, 5 and 8.*
+
+## D7 — READY TO DECIDE 2026-08-20 18:45 UTC (23rd overseer audit). The evidence is complete; no further measurement will inform it.
+
+D7 was raised 2026-08-13: **MovementMoodCoupling failed its ablation — delete
+it, redesign it, or accept it on the record as cosmetics.**
+
+Today the builder re-ran `T3.07` on current code (local, 27 s) and it recorded
+**FAIL, bit-identical to the 08-13 row**: `acc_per_seed [0.225, 0.275, 0.375]`
+against `MIN_ACC 0.45`, divergence −0.025. The value of the re-run is what it
+rules out: two `IMPL_DEPS` drifts had landed since the original verdict
+(`TrainingPipeline.enable_world_model` passthrough `c030106`, the
+`UnifiedBrain` grounding-tokenizer extraction `a1c2f9d`), and the identical
+numbers prove neither touched the mood→action path. **Mood does not reach
+behaviour, on current code, measured twice.**
+
+There is no experiment left to run that would change this. The decision is
+yours only because it is *delete authority* over a shipped component, which the
+system may not take for itself:
+
+  **(a)** delete `MovementMoodCoupling`; or
+  **(b)** redesign it, in which case say what the new claim is; or
+  **(c)** accept it on the record as cosmetics — explicitly exempt from
+  GOAL.md's *"components that must EARN their parameters via ablation or be
+  deleted"* (`GOAL.md:87`), with that exemption written down.
+
+Any of the three closes it. **(c) is a legitimate answer** and takes ten
+seconds; what is not sustainable is leaving it open, because until it is
+answered the model carries a component that has twice failed to earn its
+parameters, which is exactly the disease the ablation rule exists to prevent.
+
+*Evidence: `experiments/ledger.json` T3.07 history; commit `b2ef02b`. Working in
+`docs/OVERSIGHT.md` (23rd audit), section 6.*
