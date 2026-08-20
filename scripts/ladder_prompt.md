@@ -106,11 +106,16 @@ THE REGISTERED RUN IS LAUNCHED (this iteration, detached via
 launch_detached.sh; pid and liveness proof in LOOP_JOURNAL's 2026-08-20
 ~10:4x entry; log /data/lc03_registered.log, ~15 h wall, CPU-only, zero
 Kaggle, 3 seeds in a Pool(3) at nice 19). It writes the ledger itself when
-it finishes. NEXT ITERATIONS: verify liveness (pgrep -f lc_03 AND the log
-growing) and do OTHER work — the liveness rule applies, but a live
-registered run is not an idle excuse. If it lands VOID by control (c)/(d),
-read eats_at_death in the artifacts FIRST: quantized food luck and a rig
-fault now look different in one read.
+it finishes. KNOWN AND ACCEPTED: the run prints NOTHING until it ends
+(run() has no per-step prints), so the log stays at its 146-byte header for
+~15 h — log-bytes is NOT its liveness signal. NEXT ITERATIONS verify
+liveness by `ps -o time --ppid <pid of pgrep -f lc_03>`: three workers'
+CPU TIME must be growing (they hold ~99% of a core each; ~930 MB RSS
+total, measured at launch). Per-seed artifacts land at
+experiments/artifacts/lc03_curves_seed{N}.json as seeds finish. Do OTHER
+work while it runs — a live registered run is not an idle excuse. If it
+lands VOID by control (c)/(d), read eats_at_death in the artifacts FIRST:
+quantized food luck and a rig fault now look different in one read.
 
 The W33 Kaggle hours (~26 h, expire Sun 08-23): SM.02 is parked and LC.03
 is CPU-only, so as of now NOTHING is queued for them. Do not manufacture a

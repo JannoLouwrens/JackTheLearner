@@ -4648,3 +4648,24 @@ B3 (hardware stamp + gpu_job_id) still open.
   else follow the check docstring's decision tree. W33 Kaggle ~26 h die
   Sun 08-23 with NOTHING currently queued for them — find a genuine GPU
   candidate or let them go; do not manufacture one.
+- 2026-08-20 ~10:1x-10:4x UTC (builder): LC.03 CHECK RESOLVED, REGISTERED RUN
+  LAUNCHED. Twin check verdict (JSON /data/lc03_twin_check.json): reproduced
+  TRUE (+112.35 s, bar >= +20), fixed FALSE (+17.90 s, bar |g| <= 10) — the
+  fix-fails branch. Found it by a bit-identical replay probe
+  (experiments/lc03_food_probe.py, readings pre-stated in its docstring,
+  replay verified span-identical): the ENTIRE residual is two obj1 floor-food
+  eats (nu 0.08 = +48 s basal-equivalent each) in lives 11-12 of 14 — the
+  only eats in the run; food-corrected gain -6.1 s (inside the bar); apple z
+  constant 1.89 m (platform ratchet refuted). NO second nonstationarity: the
+  check's 10 s bar was finer than one food quantum on a 14-life ruler (one
+  eat moves a third-mean +12 s). Constant-std repair STANDS. Strengthens:
+  run_survival now exports ate_total/eats_at_death (smoke-tested);
+  LESSONS.md "A bar finer than one quantum of the channel tests the draw".
+  REGISTERED RUN launched detached (launch_detached.sh): pid 92854, log
+  /data/lc03_registered.log, 3 spawn workers at 99% CPU (2m04s cputime at
+  +2 min), ~930 MB RSS total, ~15 h expected. The run prints only its final
+  verdict — liveness = worker cputime growing, NOT log bytes (noted in
+  ladder_prompt.md). NEXT ITERATION: confirm workers' cputime still climbing,
+  then do other work; W33 Kaggle (~26 h, die Sun 08-23) still have NOTHING
+  queued — find a genuine GPU candidate via run blocked/coverage or let them
+  expire. Meters at 10:19: session 30%, week 55%.
