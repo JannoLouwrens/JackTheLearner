@@ -4622,3 +4622,29 @@ B3 (hardware stamp + gpu_job_id) still open.
   after pilot charge, dies Sun 08-23. Remaining zero-pass GPU pick after
   SM.02: VO.02 (needs second Jack); cheapest non-GPU per OVERSIGHT B3: OP.01
   (object permanence, sight's first claim spec).
+- 2026-08-20 ~09:0x-09:2x UTC (builder): TWO CLOSURES. (1) SM.02 PARKED
+  (d7be64c): REPAIR 3's checks landed NEGATIVE — vis 0.92 (bar 0.60), occ
+  0.98 (bar 0.85), seed 90. Removing the measured hover annuity moved occ
+  1.00->0.98, i.e. nothing; three real repairs, zero outcome movement =>
+  the bottleneck is not the shaping chain (budget/memorylessness/bar).
+  Pre-registered both-fail branch executed: parked, gates provisional,
+  run() refusing, LESSONS fourth corollary written. (2) LC.03 RIG
+  RE-DERIVED (Review 08-20 item 4). The 08-14 VOID's mechanism is the RIG's
+  exploration schedule: EXPLORE_STD decays 0.5->0.1 over the run and drives
+  price actuator power at <=3x basal, so every core policy — twin included —
+  gets quieter and longer-lived with time. Evidence already in the VOID row:
+  twins +158..190 s with +/-2.0 seed spread (schedule signature), random
+  null +6.5 +/- 12.0 and statue +0.013 (both stationary, both ~0). Also
+  inflated lg_margin_null and darkroom's +162 margin. REPAIR: constant
+  EXPLORE_STD_LC03=(0.3,0.3) (schedule's time-mean) on every policy="core"
+  run in the test file only — no other certificate staled, gates unmoved,
+  strengthen-only (an inflator removed). CHECK IN FLIGHT (pre-registered
+  bars, SM.02's cheap-check pattern): dreamer-xs twin, seed 90, pilot
+  envelope; old schedule must reproduce >= +20 s, constant must kill it to
+  |gain| <= 10 s. Launched via launch_detached.sh, ALIVE pid 80688, log
+  /data/lc03_twin_check.log, JSON /data/lc03_twin_check.json. NEXT
+  ITERATION: read the JSON verdict; both-pass -> relaunch registered LC.03
+  detached (command in ladder_prompt.md, ~15 h wall, CPU-only, frees 8);
+  else follow the check docstring's decision tree. W33 Kaggle ~26 h die
+  Sun 08-23 with NOTHING currently queued for them — find a genuine GPU
+  candidate or let them go; do not manufacture one.

@@ -100,6 +100,40 @@ NEGATIVE at the compressed pilot envelope — the registered envelope
 pre-registered. Gates MUST NOT MOVE after registration; this commit IS the
 registration.
 
+RIG RE-DERIVATION, 2026-08-20 (attempt 1, 2026-08-14, VOID — control (c)
+fired: every untrained twin's life_gain read +158..190 s with per-arm seed
+spread as tight as +/-2.0 s, so a non-learner moved the ruler and the run
+did not test the claim). THE MECHANISM, found in the rig, not the world:
+run_survival's exploration std decays linearly over the RUN (EXPLORE_STD
+0.5 -> 0.1, frac = k/n_decisions) and drives.py prices actuator power at up
+to 3x basal drain — so every policy="core" run gets structurally quieter,
+and therefore longer-lived, as the run proceeds, learning or not. The
+controls that SHOULD be stationary confirmed it in the same run: random
+null +6.5 +/- 12.0 (constant full-range actions — no trend), statue +0.013.
+The confound also contaminated the CLAIM gate: lg_margin_null compared a
+decaying-activity arm against a constant-activity null, so part of every
+arm's pilot "learning" was the schedule riding the passivity arithmetic.
+THE REPAIR (strengthen-only; removing an inflator makes the claim harder):
+every policy="core" run — arms, wiped twins, frozen twins, and the randrew
+and darkroom controls (whose margins the schedule also inflated: darkroom
+read +162 against its stationary null in the VOID run) — now passes
+EXPLORE_STD_LC03 = (0.3, 0.3), a CONSTANT std at the old schedule's
+time-mean, so exploration total is matched and the policy process is
+time-stationary for non-learners. explore_std is a run_survival parameter,
+so no other spec's certificate is touched. Gates UNMOVED (SIGMA_GATE 3.0,
+NOISE_FLOOR_S 5.0, the claim conjunction verbatim). Side effects accepted
+and declared: arms lose annealing (all arms equally; the twin pairing is
+what the gates lean on), and the half-budget twin's schedule-timescale
+mismatch (its frac reached 0.1 twice as fast) disappears outright.
+PRE-REGISTERED CHECK before any relaunch (experiments/lc03_twin_check.py,
+bars in its docstring, set before launch): the dreamer-xs twin at the pilot
+envelope must REPRODUCE the spurious gain under the old schedule
+(life_gain >= +20 s) and the constant std must KILL it (|life_gain| <=
+10 s). Reproduce-fails => diagnosis wrong, stop. Fix-fails => a second
+nonstationarity exists, find it first. Both-pass => relaunch the registered
+run; a second VOID for the schedule reason is then impossible by
+construction.
+
 PORTS, not paraphrases:
   * panel_dwell — PG.4's `_dwell` (strict < DWELL_RADIUS 2.0 m) over the
     late half, threshold 0.15 = PG.4's CONTROL_DWELL_MAX. The harness's
@@ -184,6 +218,11 @@ W_CLOCK_CORE_S = 4_320.0        # 1.2 core-h; arms run to whichever is LATER
 HALF_STEPS = N_STEPS // 2       # twins + designed-to-fail controls
 E0 = 1.0                        # LC.03's regime (XL.00 compressed with 0.1)
 TRACE_EVERY = 8                 # transition subsample for the chaos detector
+EXPLORE_STD_LC03 = (0.3, 0.3)   # RIG RE-DERIVATION 2026-08-20: CONSTANT std
+                                # (old schedule's time-mean) for every core
+                                # run — the decaying default made every core
+                                # policy quieter-and-longer-lived over the
+                                # run, learning or not (see the docstring)
 
 # ── THE GATES ───────────────────────────────────────────────────────────────
 SIGMA_GATE = 3.0                # the house learning gate (T2.02's invention)
@@ -503,14 +542,18 @@ def _experiment(seed: int, n_steps: int = N_STEPS, half_steps: int = HALF_STEPS,
         runs[arm] = go(policy="core", arm=arm, train=True,
                        train_ratio=ratios[arm], n_decisions=n_steps,
                        record_xy=True, record_transitions=TRACE_EVERY,
-                       min_core_s=w_clock, **arm_hooks(arm))
+                       min_core_s=w_clock, explore_std=EXPLORE_STD_LC03,
+                       **arm_hooks(arm))
         runs[f"{arm}/wiped"] = go(policy="core", arm=arm, train=True,
                                   train_ratio=ratios[arm],
                                   n_decisions=n_steps, wipe_at_death=True,
+                                  explore_std=EXPLORE_STD_LC03,
                                   **arm_hooks(arm))
         runs[f"{arm}/twin"] = go(policy="core", arm=arm, train=False,
                                  train_ratio=ratios[arm],
-                                 n_decisions=half_steps, **arm_hooks(arm))
+                                 n_decisions=half_steps,
+                                 explore_std=EXPLORE_STD_LC03,
+                                 **arm_hooks(arm))
 
     # ── the ported detectors, once per seed ────────────────────────────
     w_probe = W0(seed=seed, j0=j0, alpha=alpha)
@@ -597,9 +640,11 @@ def _control(seed: int, n_steps: int = HALF_STEPS, e0: float = E0) -> dict:
     statue = go(policy="statue")
     randrew = go(policy="core", arm="ppo-needs", train=True,
                  train_ratio=ratios["ppo-needs"],
+                 explore_std=EXPLORE_STD_LC03,
                  reward_fn=_randrew_factory(seed))
     darkroom = go(policy="core", arm="dreamer-xs", train=True,
                   train_ratio=ratios["dreamer-xs"],
+                  explore_std=EXPLORE_STD_LC03,
                   reward_fn=_uncertainty_reward_factory(-1.0, None))
     return {
         "borrowed_ok": 1.0,
