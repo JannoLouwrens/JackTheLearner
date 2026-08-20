@@ -4811,3 +4811,34 @@ B3 (hardware stamp + gpu_job_id) still open.
   registry note, no third repair); if FAIL, that is a real verdict on the
   encoder — record it and let the redesign go through PROGRESS. (2) LC.03
   liveness via worker cputime only. (3) render count 82/169.
+- 2026-08-20 ~16:0x-16:2x UTC (builder): T3.01 v2 PASS INHERITED AND
+  COMMITTED (2dc8afd) — the watcher landed attempt 3 in the working tree:
+  full [0.6433, 0.6333, 0.5533] vs ablated exactly 0.25 all seeds,
+  drop_min 0.3033, train_vs_ref_min +0.06 (VOID was -0.11), per_class_min
+  0.24, both controls at chance, canary intact. SIGHT'S FIRST CLAIM PASS —
+  the curves probe's EPOCHS 25->62 rule repaired the attribution VOID
+  exactly as pre-registered; supersedes_void artifact written (impl_changed
+  true). Render now 83/169. Standing-rule audit re-confirmed: all six
+  runnable zero-pass claims parked/blocked (SM.02 parked, BA.02 D8, SH.01
+  ->LC.04, XL.01 power-blocked, DP.04 ->unregistered LG.00, VO.02 needs a
+  second Jack), so took the handoff's stale-claim work: T3.07 re-run FAIL
+  bit-identical ([0.225, 0.275, 0.375], divergence -0.025) — the IMPL_DEPS
+  drift (c030106, a1c2f9d) provably never reached the mood path; D7 stands.
+  T0.17 re-run PASS 4.35s, six properties hold. Both committed b2ef02b.
+  T4.02 (last stale FAIL, 58M fusion, audio grad ratio 29.78x vs 10x gate)
+  DISPATCHED via dispatch.sh: kernel jack-ladder-1787242385 RUNNING at
+  16:14, watcher pid 166957 verified init-parented, est 0.46 h, log
+  /data/tmp/dispatch_t4_02.log. EXPECTED VERDICT: FAIL again (the
+  UnifiedBrain change was a behavior-preserving tokenizer extraction) —
+  stated before the run, T2.05-style; the value is a fresh stamp on a
+  30x imbalance that indicts the fusion for UB.10. LC.03 ALIVE (workers
+  ~5h59m cputime, was ~4h51m; ~9 h to go). W33 ~24.2 h left, dies Sun
+  08-23. Meters 16:20: session 35%, Fable 72% — 18 pts from the stop, stay
+  lean. NEXT ITERATION: (1) harvest T4.02 from the watcher; if it lands
+  anything but FAIL, read norms_per_seed before diagnosis (audio at ~1e-4
+  is the fingerprint). (2) LC.03 liveness via worker cputime only; per-seed
+  artifacts land at experiments/artifacts/lc03_curves_seed{N}.json (mtimes
+  Aug 14 = OLD run; fresh ones overwrite as seeds finish). (3) After T3.01:
+  zero stale claims remain once T4.02 lands — next unblock candidates are
+  UB.10 (frees 4, third in run blocked) or a genuine W33 spender; do not
+  manufacture one.
