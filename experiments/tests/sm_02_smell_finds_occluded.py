@@ -144,8 +144,61 @@ makes the potential geometry-aware:
 where geodesic_dist is a Dijkstra distance field on a GRID_STEP lattice whose
 edge passability is decided by THE SAME mj_ray + R_AGENT test step() moves
 by — descent of this potential can never dead-end against geometry the agent
-cannot cross. CPU verification at full budget (seed 90) before dispatch:
-    [PENDING — numbers land here from the check before any dispatch]
+cannot cross. CPU verification at full budget (seed 90) before dispatch —
+NEGATIVE, and it stopped pilot 2 (2026-08-20 07:14/07:16 UTC):
+    nosmell/vis  trained 52.9 s vs random 59.2 s  (ratio 0.89; bar 0.60;
+                 WORSE than the Euclidean phi's 0.72 on the same seed)
+    nosmell/occ  trained 60.0 s vs random 60.0 s  (ratio 1.00 — NOTHING)
+The lattice is not the fault: probed directly, 3338/3364 cells reach every
+site and geodesic > Euclid at every probe point, so the potential really was
+geodesic. Overseer 21st B5 fired ("negative again -> say so and stop").
+
+DIAGNOSIS OF THE SECOND FAILURE (measured, 2026-08-20 ~08:10, deterministic
+retrain of nosmell/occ seed 90 + traced greedy eval): the discounted shaping
+term itself pays the agent to hover. For a stationary action (a turn),
+phi' = phi, so r' = RL_GAMMA*phi - phi = (1-RL_GAMMA)*geo/ARENA > 0 — a hover
+annuity that grows with DISTANCE from food and beats the -1/MAX_STEPS step
+cost at exactly geo > ARENA/((1-RL_GAMMA)*MAX_STEPS) = 2.0 m. Trace: the
+greedy policy turns on 3388 of 3600 steps (94%) and every one of 12 episodes
+ends parked at geo 2.7-9.0 m — descend to just outside break-even, spin
+forever. This also explains vis regressing 0.72 -> 0.89 under the geodesic
+phi: geodesic distance >= Euclidean everywhere, so the annuity is strictly
+larger. The Euclidean occ pin-at-the-back-wall was the same attractor wearing
+geometry; removing the wall dead-end exposed the arithmetic one.
+
+REPAIR 3, pre-registered before its CPU check (the B5-required reason to
+expect a different answer, mechanism-level and measured above): UNDISCOUNTED
+shaping, F = phi(s') - phi(s). Idling then pays exactly 0 (step cost
+dominates everywhere), and the summed shaping telescopes to phi(s_T) -
+phi(s_0) — path-independent, so it can neither dead-end (geodesic) nor
+manufacture a hover attractor (no annuity term). HONEST CAVEAT: Ng's exact
+policy-invariance theorem requires gamma_shape = RL_GAMMA; with gamma_shape=1
+invariance is approximate. What the claim actually rests on is untouched:
+shaping identical in every arm, eval unshaped. Fallback arm if the check
+still fails vis: keep RL_GAMMA-shaping but scale phi by ARENA -> 45 so the
+annuity sits under the step cost arena-wide (costs 8x approach signal — run
+only if the primary arm fails). If occ STILL fails while vis clears 0.60:
+stop repairing the shaping — the question becomes whether LEARN_OCC_FRAC is
+testing rig learnability or demanding a memorised multi-site sweep from a
+memoryless DQN, which is a gate-design question for the overseer, not a
+fourth rig repair. These gates are provisional (_GATES_FROZEN=False), so
+re-deriving that bar pre-freeze is legitimate; doing it to make the ladder
+look better is not.
+
+REPAIR 3 CPU CHECK — NEGATIVE, AND SM.02 IS PARKED (2026-08-20 08:23/08:25
+UTC, seed 90, /data/sm02_learnability_{vis,occ}.json):
+    nosmell/vis  trained 54.4 s vs random 59.2 s  (ratio 0.92; bar 0.60)
+    nosmell/occ  trained 58.9 s vs random 60.0 s  (ratio 0.98; bar 0.85)
+Removing the hover annuity moved vis 0.89 -> 0.92 and occ 1.00 -> 0.98 —
+i.e. NOTHING. The annuity was real (measured, above) but it was not the
+binding fault: with idling paid exactly 0 the DQN still cannot learn the
+approach inside this budget (400 episodes, 64-hidden, memoryless). Per the
+pre-registered decision tree (both-fail branch): PARKED. No fourth repair —
+three mechanism-level repairs (Euclid shaping, geodesic phi, undiscounted F)
+each fixed a genuine fault and none moved the outcome, which is the
+signature of a rig whose learnability bottleneck is elsewhere (budget,
+memory, or the bar itself). The gates stay provisional (_GATES_FROZEN=False)
+and run() keeps refusing; un-parking requires new evidence, not a re-roll.
 ────────────────────────────────────────────────────────────────────────────
 
 COVERS: smell (claim).
@@ -519,11 +572,13 @@ def _train_arm(rig: _Rig, arm: str, seed: int, n_train: int,
                                          device=dev).unsqueeze(0))
                 act = int(q.argmax(1).item())
             reached = e.step(act)
-            # potential-based shaping (docstring REPAIR): training only,
-            # identical in every arm, phi(terminal) = 0
+            # potential-based shaping (docstring REPAIR + REPAIR 3): training
+            # only, identical in every arm, phi(terminal) = 0. Undiscounted on
+            # purpose — RL_GAMMA-discounted shaping pays (1-RL_GAMMA)*|phi|
+            # per step for idling, a measured hover attractor at geo > 2.0 m.
             phi2 = 0.0 if reached else e.phi()
             r = ((1.0 if reached else -1.0 / MAX_STEPS)
-                 + RL_GAMMA * phi2 - phi)
+                 + phi2 - phi)
             phi = phi2
             obs2 = e.obs()
             if len(buf) >= RL_BUFFER:

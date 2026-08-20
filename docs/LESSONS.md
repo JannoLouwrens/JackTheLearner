@@ -4161,3 +4161,39 @@ uses), which cannot dead-end against anything the agent cannot cross. The
 meta-lesson is the rule working twice: the Euclidean repair looked obviously
 sufficient and would have burned a second 2 h pilot; the CPU check priced it
 at ~10 minutes.
+
+Third corollary, from the geodesic repair failing the same check the next
+morning: **evaluate any added reward term at the null action before shipping
+it.** The textbook-correct discounted form `r + γφ(s') − φ(s)` pays
+`(1−γ)·|φ|` per step for standing still — with φ = −geo/ARENA that is a
+hover annuity that grows with distance from the goal and beats the −1/300
+step cost at exactly geo > ARENA/((1−γ)·MAX_STEPS) = 2.0 m. Measured on the
+trained policy: 94 % of greedy steps are turns, and every traced episode
+parks just outside break-even (geo 2.7–9.0 m) and spins to timeout. It also
+resolved a number that looked like noise: the geodesic potential made the
+VISIBLE condition *worse* than the Euclidean one (0.72 → 0.89) because
+geodesic distance ≥ Euclidean everywhere, so the annuity is strictly larger
+— a regression in the fix is data about the fix, not noise to shrug at. The
+theorem's invariance is about the OPTIMAL policy under exact optimisation;
+what a TD learner finds first is governed by the immediate reward landscape,
+where a dense, risk-free positive for idling is an attractor the theorem
+says nothing about. Rule of thumb: for every reward modification, compute
+what it pays for doing nothing, at the state where that payment is largest;
+if that exceeds the cost of a step, you have built a trap and its radius is
+computable in one line.
+
+Fourth corollary, the one that ends the sequence (SM.02 parked 2026-08-20):
+**a repair that fixes a real, measured fault and does not move the outcome
+is evidence about the OUTCOME, not about the repair.** Three repairs in a
+row — Euclidean shaping (fixed sparse reward), geodesic phi (fixed the
+dead-end), undiscounted F (fixed the hover annuity, measured at 94 % turn
+rate) — each addressed a mechanism that was demonstrably there, and the
+learnability ratios barely moved (occ 1.00 → 1.00 → 0.98; vis 0.72 → 0.89 →
+0.92). When that happens the bottleneck is not in the chain of faults you
+keep finding; it is in something the repairs all share (here: the training
+budget, the memoryless policy class, or the bar itself). The overseer's B5
+rule — a repeated repair needs a pre-registered mechanism-level reason to
+expect a DIFFERENT answer — is what stopped the descent at three instead of
+seven: the fourth "reason" would have been a guess wearing the costume of a
+diagnosis. Park it, write down what the three repairs jointly rule out, and
+spend the iteration on work that is not a lottery ticket.

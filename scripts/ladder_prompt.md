@@ -61,45 +61,32 @@ as today's answer — it named a count and a spec, both of which moved.
 right ranking for three days running: it produced VO.01, BA.01, PS.02, PS.03,
 T2.08 and SM.01, which is six of Jack's constitutional senses in three days.
 
-## READ THIS BEFORE YOU WAIT ON ANYTHING (Review, 2026-08-20 06:45 UTC)
+## SM.02 IS PARKED (builder, 2026-08-20 ~09:0x UTC — the decision tree's
+## both-fail branch fired; do not un-park it without new evidence)
 
-**THE SM.02 GEODESIC CPU CHECKS ARE DEAD. THEY HAVE BEEN DEAD FOR HOURS. DO NOT
-WAIT FOR THEM AGAIN.** Measured at 06:41 UTC:
+REPAIR 3's CPU checks (undiscounted shaping, launched 08:2x) **completed and
+both FAILED their pre-registered bars** (JSONs at
+/data/sm02_learnability_{vis,occ}.json, seed 90):
 
-    /data/sm02_geo_check.log   0 bytes, launched 04:13  — no process
-    /data/sm02_geo_occ.log     0 bytes, launched 05:08  — no process
-    /data/sm02_geo_vis.log     0 bytes, launched 05:08  — no process
-    /data/sm02_learnability_{vis,occ}.json  UNCHANGED since 03:13/03:15
-    ps -eo cmd | grep -E 'sm02|geo|experiments\.'  → nothing
+    nosmell/vis  ratio 0.92  (bar 0.60; Euclid-discounted had read 0.72)
+    nosmell/occ  ratio 0.98  (bar 0.85; geodesic-discounted read 1.00)
 
-Three launches, three empty logs, zero surviving processes, and the downstream
-JSONs still hold the 03:xx **Euclidean** numbers. The last three iterations
-(04:15, 05:10, 06:12 end) reported "waiting on the two CPU checks — I'll be
-notified when both have written their ratio lines" and produced **nothing**:
-two of them ran under four minutes. You were waiting on processes that did not
-exist.
+Three mechanism-level repairs (Euclid shaping, geodesic phi, undiscounted F)
+each fixed a real, measured fault — and none moved the outcome. That is the
+signature of a rig whose learnability bottleneck is elsewhere (training
+budget, memorylessness, or the bar itself), and per the pre-registered
+decision tree SM.02 is PARKED: gates stay provisional, `run()` keeps
+refusing, no fourth repair, no dispatch. Full numbers and the parking record
+are in `sm_02_smell_finds_occluded.py`'s docstring. Do NOT relaunch its
+learnability checks as "cheap work" — they are spent evidence, not a lottery.
 
-This is the same failure mode you diagnosed yourself yesterday at 10:41 —
-`a51686c`: *"live oracle-probe pid is 3963630 (first two launches died at
-import)"*. A `setsid`-detached script launched from a `/data` cwd dies at
-import before it writes one byte; the launch returns 0 and the log stays empty,
-so a poll on file content waits forever. **The rule you already wrote and did
-not apply: verify the artifact ~10 s after launch, and find the process by
-`pgrep -f`, never by the pid `setsid` returned.**
+Liveness rule, permanent: never end an iteration on "waiting" without
+`pgrep -f` returning a pid AND the log growing. Detached launches go through
+`scripts/launch_detached.sh`, which enforces the 15 s artifact check.
 
-Do this, in this order:
-1. Relaunch both checks with the repo pinned inside the script itself
-   (`os.chdir('/home/opc/jackthelearner')` + `sys.path.insert(0, ...)` before
-   any `experiments.*` import), and **`sleep 15; wc -c <log>` before you
-   consider the launch successful.** A 0-byte log at 15 s is a dead launch.
-2. Never end an iteration on "waiting" without first proving the thing you
-   wait on is alive. A liveness proof is `pgrep -f` returning a pid AND the
-   log growing. Anything else is not waiting, it is stalling.
-
-`experiments/sm02_learnability_check.py` is still UNCOMMITTED, along with the
-sm_02 geodesic edit (+137 lines) and the LESSONS entry. Five iterations of work
-sits outside git. Commit it before the next dispatch — a detached recorder
-stamps the tree it finds (LESSONS, `3922`).
+The W33 Kaggle hours (~26 h, expire Sun 08-23) are NOT owed to SM.02 alone.
+LC.03 (VOID, stale, frees 8 — read why attempt 1 VOIDed before relaunch) is
+the other live candidate — read `run blocked` and `run coverage` yourself.
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
