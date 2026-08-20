@@ -32,7 +32,8 @@ a deterministic net fed one constant frame predicts one constant class.
 
 ARMS, per seed (train N=1200, test N=300, T2.03's sizes and split seeds):
   full     encoder (default config CNN, seeded init) + nn.Linear(1024,4),
-           trained end-to-end, AdamW wd 1e-4, batch 64, 25 epochs; lr chosen
+           trained end-to-end, AdamW wd 1e-4, batch 64, EPOCHS epochs (v2:
+           62, raised from 25 by the curves probe — see V2 REPAIR); lr chosen
            from LR_GRID on the every-5th-row train-internal split (VAL_EVERY,
            T2.03's protocol), then retrained at the chosen lr on all 1200.
            Test labels are never consulted before the single test pass.
@@ -86,6 +87,29 @@ DRY-CHECKED verdict paths (python -m experiments.tests.t3_01_ablate_vision
 dry): planted pass -> PASS; no-drop / weak-full -> FAIL; planted ref
 collapse, control leak, canary drift, param drift, train<ref -> VOID.
 
+V2 REPAIR (2026-08-20, after the attempt-2 VOID; pre-registered by the
+curves probe's decision rule, experiments/t3_01_curves_probe.py). Attempt 2
+(kernel jack-ladder-1787231872) VOIDed on the train-attribution gate:
+acc_full [0.48, 0.39, 0.3833] vs acc_ref [0.4467, 0.4667, 0.4933],
+train_vs_ref_min -0.11; seeds 1,2 collapsed a class at 25 epochs. The probe
+replayed the exact failed trainings (same init and shuffle seeds) to 100
+epochs and applied readings pre-stated before its launch:
+  R1 BUDGET fired — at the registered run's chosen LRs the collapsed seeds
+     enter the attribution band with all classes alive at epochs 28 (seed 1,
+     3e-4) and 31 (seed 2, 1e-3); seed 0 (1e-3) at 24. Dead classes revive;
+     nothing plateaus below band (R2 silent).
+  R3 did NOT fire either way: the warmstart arm's premise failed (head fit
+     on frozen TRAIN features tests at 0.31-0.36, below acc_ref, so it never
+     held the band at every epoch) — and joint training IMPROVED it to
+     0.69-0.78 everywhere, so there is no destructive-first-gradient
+     evidence for the FAIL lane.
+  REPAIR, per the rule verbatim: EPOCHS = smallest recorded epoch where all
+     seeds clear the band (31), doubled for margin -> 62. Uniform, control
+     included; every gate unchanged; the VOID stays in history.
+ONE-DIAGNOSTIC CAP (pre-stated at probe dispatch): if this repaired run
+VOIDs on attribution again, T3.01 is PARKED per the SM.02 / overseer-B5
+rule — the next move would need a new mechanism-level reason, not a lottery.
+
 COVERS: sight (claim).
 """
 
@@ -111,7 +135,7 @@ PILOT_SEED = 90
 
 # Training budget (pre-registered; per-coordinate reasoning in the docstring).
 LR_GRID = (1e-4, 3e-4, 1e-3)
-EPOCHS = 25
+EPOCHS = 62  # v2: was 25; probe R1 — all seeds in band by 31, doubled (see docstring)
 BATCH = 64
 WEIGHT_DECAY = 1e-4
 
