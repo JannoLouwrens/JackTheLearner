@@ -4873,8 +4873,8 @@
     },
     "T0.12": {
       "amended": [],
-      "attempt": 19,
-      "commit": "2ac76f4+dirty",
+      "attempt": 20,
+      "commit": "b062ccd",
       "compute_s": 7800.0,
       "control_metrics": {
         "affords_within_quota": true,
@@ -4914,7 +4914,7 @@
         "waste_not_counted_as_work": false,
         "weeks_isolated": false
       },
-      "duration_s": 1.27,
+      "duration_s": 1.26,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -5582,6 +5582,93 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "2ac76f4+dirty",
+          "control_metrics": {
+            "affords_within_quota": true,
+            "charge_recorded": true,
+            "charged_once": false,
+            "colab_unmetered": true,
+            "concurrent_charge_survives": false,
+            "concurrent_idempotency_reads_disk": false,
+            "distinct_jobs_both_charged": false,
+            "drained_to_exact_ceiling": true,
+            "failed_counts_against_quota": true,
+            "failed_hours_visible": false,
+            "fresh_bills_poll_window": true,
+            "idempotent_across_processes": false,
+            "no_false_overrun": true,
+            "no_receipt_for_skipped_backend": false,
+            "overrun_names_the_job": false,
+            "overrun_recorded": false,
+            "reattach_bills_kernel_window": false,
+            "reattach_missing_log_falls_back_upper_bound": true,
+            "receipt_names_the_job": false,
+            "receipt_names_the_spec": false,
+            "receipt_pairs_attempt_with_result": false,
+            "receipt_survives_all_backends_failing": false,
+            "receipt_written_before_dispatch": false,
+            "recorder_recovers_job_ids": false,
+            "refuses_oversized": true,
+            "refuses_when_exhausted": true,
+            "stale_format_key_isolated": false,
+            "stale_key_collided_with_live": false,
+            "starts_full": true,
+            "submit_buckets_failure_as_waste": false,
+            "submit_charges_metered_window": false,
+            "submit_reattach_is_free": false,
+            "survives_reload": true,
+            "test_key_format_matches_live_code": true,
+            "waste_not_counted_as_work": false,
+            "weeks_isolated": false
+          },
+          "gpu_job_id": null,
+          "impl_sha": "c5456665cbec79f4",
+          "message": "",
+          "metrics": {
+            "affords_within_quota": true,
+            "charge_recorded": true,
+            "charged_once": true,
+            "colab_unmetered": true,
+            "concurrent_charge_survives": true,
+            "concurrent_idempotency_reads_disk": true,
+            "distinct_jobs_both_charged": true,
+            "drained_to_exact_ceiling": true,
+            "failed_counts_against_quota": true,
+            "failed_hours_visible": true,
+            "fresh_bills_poll_window": true,
+            "idempotent_across_processes": true,
+            "no_false_overrun": true,
+            "no_receipt_for_skipped_backend": true,
+            "overrun_names_the_job": true,
+            "overrun_recorded": true,
+            "reattach_bills_kernel_window": true,
+            "reattach_missing_log_falls_back_upper_bound": true,
+            "receipt_names_the_job": true,
+            "receipt_names_the_spec": true,
+            "receipt_pairs_attempt_with_result": true,
+            "receipt_survives_all_backends_failing": true,
+            "receipt_written_before_dispatch": true,
+            "recorder_recovers_job_ids": true,
+            "refuses_oversized": true,
+            "refuses_when_exhausted": true,
+            "stale_format_key_isolated": true,
+            "stale_key_collided_with_live": false,
+            "starts_full": true,
+            "submit_buckets_failure_as_waste": true,
+            "submit_charges_metered_window": true,
+            "submit_reattach_is_free": true,
+            "survives_reload": true,
+            "test_key_format_matches_live_code": true,
+            "waste_not_counted_as_work": true,
+            "weeks_isolated": true
+          },
+          "ran_at": "2026-08-20T01:21:28",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "c5456665cbec79f4",
@@ -5624,7 +5711,7 @@
         "waste_not_counted_as_work": true,
         "weeks_isolated": true
       },
-      "ran_at": "2026-08-20T01:21:28",
+      "ran_at": "2026-08-20T01:22:46",
       "seeds": [
         0
       ],
@@ -5958,14 +6045,14 @@
     },
     "T0.17": {
       "amended": [],
-      "attempt": 15,
-      "commit": "024ad93",
+      "attempt": 16,
+      "commit": "b062ccd",
       "compute_s": null,
       "control_metrics": {
         "detector_sees_amendment": false,
         "hand_edit_took_effect": true
       },
-      "duration_s": 4.25,
+      "duration_s": 2.98,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -6291,9 +6378,44 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "024ad93",
+          "control_metrics": {
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "eb4ac85106636290",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "content_check_fires_on_postrun_edit": true,
+            "content_check_reports_unanswerable": true,
+            "content_check_spares_unedited_file": true,
+            "detector_flags_moved_dependency": true,
+            "detector_sees_amendment": true,
+            "detector_spares_unmoved_dependency": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "unknown_attempt_is_sticky": true,
+            "unprotected_pass_certificates": 0,
+            "unstamped_answered_by_content": 28,
+            "unstamped_records_examined": 28,
+            "unstamped_unanswerable": 0
+          },
+          "ran_at": "2026-08-19T13:04:24",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "eb4ac85106636290",
+      "impl_sha": "75fabf81e8092330",
       "message": "",
       "metrics": {
         "amendment_is_attributable": true,
@@ -6311,11 +6433,11 @@
         "run_spec_leaves_amended_empty": true,
         "unknown_attempt_is_sticky": true,
         "unprotected_pass_certificates": 0,
-        "unstamped_answered_by_content": 28,
-        "unstamped_records_examined": 28,
+        "unstamped_answered_by_content": 29,
+        "unstamped_records_examined": 29,
         "unstamped_unanswerable": 0
       },
-      "ran_at": "2026-08-19T13:04:24",
+      "ran_at": "2026-08-20T01:22:49",
       "seeds": [
         0
       ],
@@ -6963,12 +7085,15 @@
     },
     "T0.24": {
       "amended": [],
-      "attempt": 5,
-      "commit": "2ac76f4+dirty",
-      "compute_s": null,
-      "control_metrics": {},
-      "duration_s": 0.0,
-      "gpu_job_id": null,
+      "attempt": 6,
+      "commit": "b062ccd",
+      "compute_s": 0.0,
+      "control_metrics": {
+        "pre_fix_message": "dictionary update sequence element #0 has length 3; 2 is required",
+        "pre_fix_raised": "ValueError"
+      },
+      "duration_s": 0.46,
+      "gpu_job_id": "u/jack-ladder-1786482462",
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -7047,15 +7172,35 @@
           "ran_at": "2026-08-20T01:19:21",
           "seeds": [],
           "status": "BLOCKED"
+        },
+        {
+          "commit": "2ac76f4+dirty",
+          "control_metrics": {},
+          "gpu_job_id": null,
+          "impl_sha": null,
+          "message": "dependencies not satisfied: T0.12 (PASS but stale \u2014 DIRTY: ran from a modified tree at 2ac76f4; the code that ran was never committed)",
+          "metrics": {},
+          "ran_at": "2026-08-20T01:21:45",
+          "seeds": [],
+          "status": "BLOCKED"
         }
       ],
-      "impl_sha": null,
-      "message": "dependencies not satisfied: T0.12 (PASS but stale \u2014 DIRTY: ran from a modified tree at 2ac76f4; the code that ran was never committed)",
-      "metrics": {},
-      "ran_at": "2026-08-20T01:21:45",
-      "seeds": [],
+      "impl_sha": "3c2cbd8837ef62a6",
+      "message": "",
+      "metrics": {
+        "control_reproduces_scar": true,
+        "failures": [],
+        "p6_files_scanned": 93,
+        "p6_unreadable": 0,
+        "properties_checked": 8,
+        "properties_failed": 0
+      },
+      "ran_at": "2026-08-20T01:22:50",
+      "seeds": [
+        0
+      ],
       "spec_id": "T0.24",
-      "status": "BLOCKED"
+      "status": "PASS"
     },
     "T0.25": {
       "amended": [],
@@ -7139,14 +7284,14 @@
     },
     "T0.27": {
       "amended": [],
-      "attempt": 10,
-      "commit": "c7ff227",
+      "attempt": 11,
+      "commit": "b062ccd",
       "compute_s": null,
       "control_metrics": {
         "dirty_named": 1.0,
         "violations": 1
       },
-      "duration_s": 1.27,
+      "duration_s": 0.12,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -7414,9 +7559,42 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "c7ff227",
+          "control_metrics": {
+            "dirty_named": 1.0,
+            "violations": 1
+          },
+          "gpu_job_id": null,
+          "impl_sha": "b463ebb5fa9869e8",
+          "message": "",
+          "metrics": {
+            "artifact_survives_history": true,
+            "artifact_written": true,
+            "audit_admits_clean_shape": true,
+            "audit_flags_missing_metrics": true,
+            "audit_flags_unreachable_commit": true,
+            "live_audit_can_flag": true,
+            "live_checked_pairs": 0,
+            "live_ledger_clean": true,
+            "live_unauditable_pairs": 27,
+            "live_violations": 0,
+            "properties_failed": 0,
+            "rerun_visible_not_amendment": true,
+            "seeded_checked_pairs": 2,
+            "seeded_violations": 1,
+            "unknowable_is_none_and_unauditable": true,
+            "warns_on_dirty_fail": true
+          },
+          "ran_at": "2026-08-19T13:13:33",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "b463ebb5fa9869e8",
+      "impl_sha": "891f7d0117020b9f",
       "message": "",
       "metrics": {
         "artifact_survives_history": true,
@@ -7436,7 +7614,7 @@
         "unknowable_is_none_and_unauditable": true,
         "warns_on_dirty_fail": true
       },
-      "ran_at": "2026-08-19T13:13:33",
+      "ran_at": "2026-08-20T01:22:49",
       "seeds": [
         0
       ],

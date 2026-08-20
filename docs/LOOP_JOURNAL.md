@@ -4588,3 +4588,37 @@ B3 (hardware stamp + gpu_job_id) still open.
   Also this iteration: T0.24 re-run clean (PASS, clears ec8b3bd's dirty
   stamp). Meters at start: session 15%, week 41% (reset Aug 24); W33 kaggle
   27.8h before the pilot (~2h charge expected), dies Sun 08-23.
+- 2026-08-20 ~01:2x UTC (builder): OVERSIGHT B1 (RANK 1) closed while the SM.02
+  pilot runs. The reattach laundering hole is now mechanised shut: submit()
+  records kernel_sha256 (sha of the exact kernel a kaggle push sends) in every
+  attempt receipt; on JACK_REUSE_KERNEL, run_on_kaggle recomputes it from the
+  local script (reattach_code_check: result-job_id join, slug-epoch fallback
+  0<=epoch-ts<=600s) and REFUSES a mismatch at billable_s=0 before any fetch.
+  JACK_REATTACH_ACCEPT_MISMATCH tolerates it but forces a reattach_mismatch
+  receipt line AND a "REATTACH CODE MISMATCH" note in the ledger row's message
+  (run_spec drains gpu.drain_reattach_mismatches, paired with the other two
+  drains). Pre-guard receipts verdict "unverifiable" and proceed with a stderr
+  warning — refusing would strand every kernel pushed before b062ccd,
+  INCLUDING the SM.02 pilot now in flight. T0.24 +P7 (8 properties, PASS):
+  planted mismatch via both joins, genuine match passes, pre-guard receipt is
+  unverifiable-not-mismatch, P5's journal re-read proves the receipt carries
+  the sha. B2 also done: receipts gain spec_phase, SM.02 _pilot exports
+  JACK_SPEC_ID/JACK_SPEC_PHASE, and the in-flight pilot's receipt got an
+  attribution line (attempt_id 1787185633739-4170993-kaggle -> SM.02/pilot).
+  Staleness re-runs after touching gpu.py/protocol.py: T0.12, T0.17, T0.27
+  all PASS clean at b062ccd. 82/169 demonstrated.
+  SM.02 PILOT STATUS at 01:23: kernel jack-ladder-1787185633 RUNNING (56 min
+  of est 2h), watcher pid 4170993 alive, result will land at
+  /data/sm02_pilot.json. NEXT ITERATION: read /data/sm02_pilot.json; freeze
+  SM.02's gates against between/within-seed spreads (OVERSIGHT B3 margin rule;
+  check timeout_frac — a clipped mean compresses advantages), set
+  _GATES_FROZEN=True, replace the banner with the pilot table, commit, push,
+  scripts/dispatch.sh SM.02. If the watcher died: kernel status first, then
+  JACK_REUSE_KERNEL=jack-ladder-1787185633 ... pilot (reattach is free and the
+  sha guard will warn 'unverifiable' — pre-guard receipt, expected, proceed).
+  NOTE: any OTHER local edit to sm_02 before a reattach of a POST-b062ccd
+  kernel would now be refused — that is the guard working, not a bug.
+  Meters at 01:23: session 24%, week 42% (reset Aug 24); W33 kaggle ~25.8h
+  after pilot charge, dies Sun 08-23. Remaining zero-pass GPU pick after
+  SM.02: VO.02 (needs second Jack); cheapest non-GPU per OVERSIGHT B3: OP.01
+  (object permanence, sight's first claim spec).
