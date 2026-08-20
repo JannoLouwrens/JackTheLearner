@@ -134,6 +134,29 @@ nonstationarity exists, find it first. Both-pass => relaunch the registered
 run; a second VOID for the schedule reason is then impossible by
 construction.
 
+CHECK RESOLUTION, 2026-08-20 (~10:3x UTC; JSONs /data/lc03_twin_check.json
+and /data/lc03_food_probe.json — numbers verbatim). REPRODUCE passed:
++112.35 s under the old schedule (bar >= +20). The raw fix bar FAILED:
+constant std read +17.90 s against |gain| <= 10 s, so the fix-fails branch
+ran. FOUND, by a bit-identical instrumented replay
+(experiments/lc03_food_probe.py, readings pre-stated in its docstring
+before launch, replay verified span-identical to the checked run): the
+ENTIRE residual is TWO obj1 floor-food eats (nu = 0.08 = +48 s of
+basal-equivalent life each) landing by draw in lives 11-12 of 14 — the
+only eats in the whole 12k-decision run. Food-corrected life_gain
+(span - eaten/BASAL_B) reads -6.1 s, INSIDE the bar; apple z constant at
+1.89 m all run, so the platform-apple accessibility ratchet is refuted.
+VERDICT: there is no second nonstationarity — the policy process under
+constant std is time-stationary, and the check's 10 s bar was smaller than
+ONE quantum of the world's food channel on a 14-life ruler (a single eat
+moves a 4-life third-mean by +12 s). The constant-std repair STANDS and
+the registered relaunch proceeds. Food shot noise remains the failable
+territory of controls (c)/(d), whose two-sided branch (|t| >= 3 AND
+|mean| > NOISE_FLOOR_S) is sized for symmetric quanta at the registered
+envelope; run_survival now exports ate_total / eats_at_death so any future
+twin life_gain anomaly is attributable in one read instead of a 385 s
+replay probe.
+
 PORTS, not paraphrases:
   * panel_dwell — PG.4's `_dwell` (strict < DWELL_RADIUS 2.0 m) over the
     late half, threshold 0.15 = PG.4's CONTROL_DWELL_MAX. The harness's

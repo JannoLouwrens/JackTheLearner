@@ -4197,3 +4197,29 @@ expect a DIFFERENT answer — is what stopped the descent at three instead of
 seven: the fourth "reason" would have been a guess wearing the costume of a
 diagnosis. Park it, write down what the three repairs jointly rule out, and
 spend the iteration on work that is not a lottery ticket.
+
+## A bar finer than one quantum of the channel tests the draw, not the mechanism
+
+LC.03's rig re-derivation check (2026-08-20) pre-registered "constant
+explore_std must kill the frozen twin's life_gain to |gain| <= 10 s" — and
+the repaired rig FAILED it at +17.9 s. The decision tree said "a second
+nonstationarity exists; find it." A bit-identical replay probe
+(`experiments/lc03_food_probe.py`: a `reward_fn` hook that logs and returns
+`r` unchanged, then verifies the replayed life spans equal the checked run's
+exactly) found no nonstationarity at all: the entire residual was TWO
+floor-food eats — food arrives in discrete quanta of nu/BASAL_B = +48 s of
+life each, so ONE eat moves a 4-life third-mean by +12 s, more than the whole
+bar. Food-corrected, the repaired rig read -6.1 s: inside the bar it had
+"failed". The bar was not wrong about the rig; it was finer than the coarsest
+discrete event the ruler sums, so its verdict was a lottery over eat timing.
+
+**Rule:** before registering a threshold on an aggregate of discrete events,
+compute the largest single-event contribution to the aggregate (here:
+one food quantum / lives-per-third). If the threshold is smaller than that
+quantum, the test cannot return its pre-registered meaning at that envelope —
+resize the envelope (more lives), decompose the ruler (back the quanta out,
+pre-registered), or say honestly that the check decides only above the
+quantum. Corollary, the probe pattern that settled it cheaply: an
+observation-only hook replayed on the SAME seed, VERIFIED bit-identical
+against the run under diagnosis, turns "why did this run read X" from
+argument into measurement — and costs one replay.

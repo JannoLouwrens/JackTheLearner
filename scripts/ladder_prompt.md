@@ -84,29 +84,33 @@ Liveness rule, permanent: never end an iteration on "waiting" without
 `pgrep -f` returning a pid AND the log growing. Detached launches go through
 `scripts/launch_detached.sh`, which enforces the 15 s artifact check.
 
-## LC.03 STATE (builder, 2026-08-20 ~09:2x UTC): RIG RE-DERIVED, CHECK IN
-## FLIGHT — do NOT relaunch the registered run before reading the check
+## LC.03 STATE (builder, 2026-08-20 ~10:4x UTC): CHECK RESOLVED, REGISTERED
+## RUN IN FLIGHT — do not relaunch, do not kill; read the log, then wait
 
-Attempt 1's VOID mechanism is FOUND, in the rig: run_survival's exploration
-std decays over the RUN (0.5 -> 0.1) and actuator power drains at up to 3x
-basal, so every core policy gets quieter-and-longer-lived with time,
-learning or not — that is the frozen twin's +158 s (seed spread +/-2.0, a
-schedule signature), while the stationary random null (+6.5 +/- 12.0) and
-statue (+0.01) correctly read zero. It also inflated lg_margin_null and the
-darkroom margin (+162). REPAIR (in lc_03_survival_screening.py, gates
-unmoved, strengthen-only): EXPLORE_STD_LC03 = (0.3, 0.3) constant on every
-policy="core" run. PRE-REGISTERED CHECK running detached (pid was 80688,
-log /data/lc03_twin_check.log, JSON /data/lc03_twin_check.json, ~10-30 min
-expected): old schedule must REPRODUCE (twin life_gain >= +20 s at the
-pilot envelope), constant std must KILL it (|life_gain| <= 10 s). Both pass
--> relaunch the registered run DETACHED via launch_detached.sh (~15 h wall,
-CPU only, zero Kaggle):
-  scripts/launch_detached.sh /data/lc03_registered.log \
-      /data/venvs/jackthelearner/bin/python -m \
-      experiments.tests.lc_03_survival_screening
-Reproduce-fails -> diagnosis wrong, stop, re-derive. Fix-fails -> a second
-nonstationarity exists; find it before any relaunch. The decision tree is
-in the check's docstring — do not improvise past it.
+The rig re-derivation CHECK completed and its fix-fails branch was RESOLVED
+BY MEASUREMENT (full record in lc_03_survival_screening.py's docstring,
+"CHECK RESOLUTION"): old schedule REPRODUCED the phantom (+112.35 s, bar
++20); constant std read +17.9 s against the |gain| <= 10 bar, and a
+bit-identical replay probe (experiments/lc03_food_probe.py, readings
+pre-stated before launch, JSON /data/lc03_food_probe.json) attributed the
+ENTIRE residual to two obj1 floor-food eats (+48 s basal-equivalent each,
+lives 11-12 of 14, the only eats in the run); food-corrected gain -6.1 s,
+inside the bar; apple never left its platform (z = 1.89 m all run). There
+is NO second nonstationarity — the check's bar was finer than one food
+quantum on a 14-life ruler (see LESSONS.md, "A bar finer than one
+quantum"). The constant-std repair STANDS. run_survival now exports
+ate_total / eats_at_death so the next twin anomaly is one read, not a
+385 s replay.
+
+THE REGISTERED RUN IS LAUNCHED (this iteration, detached via
+launch_detached.sh; pid and liveness proof in LOOP_JOURNAL's 2026-08-20
+~10:4x entry; log /data/lc03_registered.log, ~15 h wall, CPU-only, zero
+Kaggle, 3 seeds in a Pool(3) at nice 19). It writes the ledger itself when
+it finishes. NEXT ITERATIONS: verify liveness (pgrep -f lc_03 AND the log
+growing) and do OTHER work — the liveness rule applies, but a live
+registered run is not an idle excuse. If it lands VOID by control (c)/(d),
+read eats_at_death in the artifacts FIRST: quantized food luck and a rig
+fault now look different in one read.
 
 The W33 Kaggle hours (~26 h, expire Sun 08-23): SM.02 is parked and LC.03
 is CPU-only, so as of now NOTHING is queued for them. Do not manufacture a

@@ -237,6 +237,7 @@ def run_survival(seed: int, *, j0: float, alpha: float,
     trans_rows: List[np.ndarray] = []            # [obs_t | a | mean | obs_t1 | r]
     pending: Optional[tuple] = None              # (concat_obs, a, mean) awaiting obs_t1
     life_ends: List[tuple] = []                  # (decisions, core_s, opt_steps) at death
+    eats_at_death: List[int] = []                # cumulative food eaten, at death
     t_cpu0, t_wall0 = time.process_time(), time.perf_counter()
 
     def _concat(o: Dict[str, np.ndarray]) -> np.ndarray:
@@ -341,6 +342,7 @@ def run_survival(seed: int, *, j0: float, alpha: float,
             life_ends.append((int(w.decisions),
                               round(time.process_time() - t_cpu0, 3),
                               int(optimiser_steps)))
+            eats_at_death.append(int(sum(w.drives.ate_total.values())))
             pending = None
             if e0 != 1.0:
                 w.drives.state = drives.DriveState(e=e0)
@@ -383,6 +385,14 @@ def run_survival(seed: int, *, j0: float, alpha: float,
         "wall_s": float(time.perf_counter() - t_wall0),
         "physics_finite": float(bool(np.all(np.isfinite(w.data.qpos))
                                      and np.all(np.isfinite(w.data.qvel)))),
+        # Food is the only energy source and it arrives in DISCRETE quanta
+        # (nu/BASAL_B: one floor food = +48 s of basal-equivalent life), so a
+        # life_gain anomaly on a non-learner is unattributable without knowing
+        # WHO ATE WHEN. The 2026-08-20 twin check paid a 385 s bit-identical
+        # replay probe to learn that two obj1 eats were the whole +17.9 s
+        # residual; these two keys make that a one-read answer next time.
+        "ate_total": {kk: int(v) for kk, v in w.drives.ate_total.items()},
+        "eats_at_death": list(eats_at_death),
     }
     # F6: the curve, decimated to <=200 points — (decisions consumed, span).
     ends = np.cumsum([s / SIM_S_PER_DECISION for s in spans])
