@@ -4112,3 +4112,52 @@ receipt at push time; `reattach_code_check` recompares at reattach and
 it, but writes the divergence into the receipt log AND the ledger row's
 message). Guarded by T0.24 P7 with the planted mismatch as known-positive and
 the pre-guard receipt as the deliberate "unverifiable, not mismatch" case.
+
+## An RL rig's learnability is a precondition, and it is priceable on CPU for free
+
+SM.02's local smoke (`n_train=20`, one seed) certified the plumbing — obs
+shapes, remote entry point, JSON home. Its 1.56-hour GPU pilot then measured
+six DQN arms flailing at 83–100 % timeout on every seed: reward was
+terminal-only (+1 on reach, −1/300 per step) and the random-policy reach rate
+was ~0–2 % per episode, so 400 training episodes carried almost no positive
+signal. The pilot did its designed job — it caught the non-learning BEFORE the
+registered run recorded a VOID — but the learnability half of its verdict was
+predictable locally, in minutes, before any kernel was pushed.
+
+Two CPU checks would have said so, and together they localise the failure the
+way a failing control localises a bug:
+
+  1. **Scripted-policy solvability.** A hand-coded turn-to-bearing policy
+     solved SM.02's visible condition in 18–20 s (timeout 0.12–0.19) on the
+     same rig where the trained DQN timed out at ~100 %. A scripted policy
+     bounds the information in the observation channels: if it solves the task,
+     the rig and obs are sound and the failure is the learner's.
+  2. **Random-policy success rate.** For terminal-reward RL, random success
+     is the signal density the learner bootstraps from. If random ~never
+     succeeds inside the training budget, a from-scratch value learner has
+     nothing to propagate — the outcome is decided before the GPU spins up.
+     Fix learnability first (potential-based shaping, a budget the arithmetic
+     supports, or a task the arithmetic supports), then pilot.
+
+**Rule:** before any GPU RL dispatch, run both checks on CPU and put the two
+numbers in the test's docstring beside the timing smoke. A smoke that checks
+plumbing does not check learnability; the pilot should price GATES against
+spread, not discover that there is nothing to gate. Corollary, from the same
+day: when the pilot does surface non-learning, the repair must preserve the
+experiment's meaning — potential-based shaping (identical in every arm,
+training only, eval unshaped) changes what is learnable without changing what
+is optimal or leaking anything into any arm's observations.
+
+Second corollary, from the same day, because the CPU check then caught the
+repair itself: **a shaping potential must respect the world's geometry.** The
+first repair used phi = -euclid_dist(food), and the full-budget CPU re-check
+showed the occluded condition STILL at 100 % timeout while the open condition
+learned — because occluded food sits inside a three-walled shelter, so the
+Euclidean potential's steepest descent runs INTO the shelter's back wall: the
+shaping manufactures a local minimum exactly where the wall is and greedy
+descent pins the agent to it. The fix is a geodesic potential (Dijkstra on a
+lattice whose edge passability uses the SAME collision test the agent's step
+uses), which cannot dead-end against anything the agent cannot cross. The
+meta-lesson is the rule working twice: the Euclidean repair looked obviously
+sufficient and would have burned a second 2 h pilot; the CPU check priced it
+at ~10 minutes.

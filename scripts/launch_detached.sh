@@ -1,0 +1,45 @@
+#!/bin/sh
+# launch_detached.sh LOGFILE CMD [ARGS...] — detach a long-running job and
+# PROVE it survived its imports before reporting success.
+#
+# This is the mechanical form of the LESSONS rule "verify the artifact ~10 s
+# after launch" (overseer 21st audit B1). Four detached launches in 24 h died
+# at import with exit 0 at the launch site and a 0-byte log, and three
+# iterations idled waiting on processes that did not exist. The failure modes
+# it closes, each of which has actually happened here:
+#   - died at import from a wrong cwd  -> cwd is pinned to the repo
+#   - traceback into a severed stderr  -> 2>&1 into the log
+#   - reaped with the launching session -> setsid
+#   - "launched" believed on exit code -> at 15 s the PROCESS must be alive
+#     and the LOG non-empty, or this script exits 1 loudly with the log tail
+#
+# The header line written before exec makes "log non-empty" meaningful even
+# when the payload buffers its stdout. Meant for jobs that run minutes or
+# hours: a job that legitimately finishes in under 15 s is reported DEAD —
+# read the printed log tail to tell success from a crash.
+set -u
+REPO=/home/opc/jackthelearner
+[ $# -ge 2 ] || { echo "usage: launch_detached.sh LOGFILE CMD [ARGS...]" >&2; exit 2; }
+LOG=$1; shift
+cd "$REPO" || { echo "REFUSED: cannot cd $REPO" >&2; exit 2; }
+: > "$LOG" || { echo "REFUSED: cannot write $LOG" >&2; exit 2; }
+echo "LAUNCH $(date -u +%FT%TZ) cwd=$REPO cmd: $*" >> "$LOG"
+setsid nice -n 19 "$@" >> "$LOG" 2>&1 < /dev/null &
+pid=$!
+sleep 15
+alive=$(ps -o args= -p "$pid" 2>/dev/null || true)
+bytes=$(wc -c < "$LOG")
+if [ -z "$alive" ]; then
+    echo "DEAD at 15s: pid $pid gone. Log $LOG ($bytes bytes) tail:" >&2
+    tail -20 "$LOG" >&2
+    exit 1
+fi
+if [ "$bytes" -le 80 ]; then
+    # only the header (or nothing): the payload has not written a byte.
+    # Alive-but-silent is not proof of death, but it is not proof of life
+    # either — warn, do not fail; the caller owns the follow-up check.
+    echo "WARN: pid $pid alive but log has only the header at 15s" >&2
+fi
+echo "ALIVE pid=$pid log=$LOG bytes=$bytes"
+echo "  cmd: $alive"
+exit 0

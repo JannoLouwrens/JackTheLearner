@@ -92,6 +92,60 @@ registered 0-2, full production size, on the GPU) must price:
 The next iteration replaces the constants below with the pilot's numbers,
 records the pilot table here, sets `_GATES_FROZEN = True`, commits, and only
 then dispatches `scripts/dispatch.sh SM.02`.
+
+PILOT 1 (2026-08-20, kernel jack-ladder-1787185633, P100, seeds 90-92,
+n_train=400, n_eval=48 — /data/sm02_pilot.json). VERDICT: the rig's own
+learning gates fail on ALL THREE seeds — gates cannot be frozen from a
+non-learning pilot, and a registered run would have recorded VOID.
+
+    t_mean (s) / timeout_frac      seed 90        seed 91        seed 92
+    smell/occ                      58.56 / 0.96   51.95 / 0.83   60.00 / 1.00
+    nosmell/occ                    60.00 / 1.00   60.00 / 1.00   60.00 / 1.00
+    placebo/occ                    60.00 / 1.00   60.00 / 1.00   60.00 / 1.00
+    shuffled/occ                   60.00 / 1.00   60.00 / 1.00   58.53 / 0.96
+    smell/vis                      60.00 / 1.00   60.00 / 1.00   60.00 / 1.00
+    nosmell/vis                    60.00 / 1.00   41.45 / 0.65   58.86 / 0.98
+    random/vis                     60.00 / 1.00   58.91 / 0.94   59.60 / 0.98
+    rig tripwires: occ_hidden 1.00/1.00/1.00, vis_seen 0.89/0.89/0.88,
+    smell/occ whiff 0.12/0.09/0.11, det_ok 1.0 everywhere.
+
+DIAGNOSIS (probed locally the same day, before any code change). A scripted
+turn-to-bearing policy solves the VISIBLE condition in 18-20 s (timeout
+0.12-0.19) on the same rig the DQN times out on, and a straight 3-step walk
+enters a shelter mouth and reaches food — so the apparatus is sound and the
+failure is the learner's: reward is terminal-only (+1 on reach, -1/300 per
+step) and the random-policy reach rate is ~0-2 % per episode, so 400 training
+episodes carry almost no positive signal. Seed 91's nosmell/vis (41.45 s) and
+smell/occ (51.95 s) show the budget sits exactly at the learnability edge.
+
+REPAIR, pre-registered before pilot 2: potential-based reward shaping
+(Ng, Harada & Russell 1999), TRAINING ONLY, identical in every arm:
+    r' = r + RL_GAMMA * phi(s') - phi(s),   phi(terminal) = 0
+Potential-based shaping provably preserves optimal policies FOR ANY phi; it
+changes what is LEARNABLE at this budget, not what is optimal. It is computed
+from the true food position in every arm alike, so no arm's OBSERVATIONS gain
+anything — the twins differ only in the smell channel, exactly as before —
+and eval remains raw unshaped time-to-food. The shuffled/placebo must-fail
+controls keep their meaning: their smell channels still carry zero/wrong
+information and their shaping is identical to the twin's.
+
+THE POTENTIAL MUST RESPECT THE WALLS (CPU check, LESSONS rule, 2026-08-20,
+seed 90, full budget, /data/sm02_learnability_{vis,occ}.json). The first
+repair used phi = -euclid_dist(s, food)/ARENA and the pre-dispatch CPU check
+caught what pilot 2 would have paid 2 GPU hours to learn:
+    nosmell/vis  trained 42.4 s vs random 59.2 s  (ratio 0.72 — learning)
+    nosmell/occ  trained 60.0 s vs random 60.0 s  (ratio 1.00 — NOTHING)
+Diagnosis: occluded food sits inside a three-walled shelter, so the Euclidean
+potential has its steepest descent INTO the shelter's back wall — the shaping
+itself builds a local minimum exactly where the wall is, and greedy descent
+pins the agent there. The fix keeps the identical-in-every-arm shaping but
+makes the potential geometry-aware:
+    phi(s) = -geodesic_dist(s, food)/ARENA
+where geodesic_dist is a Dijkstra distance field on a GRID_STEP lattice whose
+edge passability is decided by THE SAME mj_ray + R_AGENT test step() moves
+by — descent of this potential can never dead-end against geometry the agent
+cannot cross. CPU verification at full budget (seed 90) before dispatch:
+    [PENDING — numbers land here from the check before any dispatch]
 ────────────────────────────────────────────────────────────────────────────
 
 COVERS: smell (claim).
@@ -100,6 +154,7 @@ COVERS: smell (claim).
 from __future__ import annotations
 
 import fcntl
+import heapq
 import json
 import math
 import os
@@ -146,6 +201,7 @@ SPAWN_SITE_CLEAR = 1.5         # never spawn on top of a site
 ODOUR_GAIN = 3.0               # tanh gain on concentrations (probe: 0.08-0.30)
 DERIV_GAIN = 0.5               # tanh gain on the derivative channel
 WHIFF_THR_MULT = 10.0          # a whiff is > this * NOISE_SIGMA (SM.01's line)
+GRID_STEP = 0.2                # geodesic lattice pitch = one forward step
 
 # Spawn exclusion rectangles (xlo, xhi, ylo, yhi): the declared fixtures a
 # point should not materialise inside. At Z_NOSE most clutter is below the
@@ -202,6 +258,68 @@ class _Rig:
         self.data = mujoco.MjData(self.model)
         mujoco.mj_forward(self.model, self.data)
         self.occluded = occluded
+        self._geo_edges = None         # lazy: built on first geodesic() call
+        self._geo_dist: dict = {}      # site_idx -> Dijkstra distance field
+
+    def _geo_build(self):
+        """Passability graph on a GRID_STEP lattice at Z_NOSE. An edge exists
+        exactly when the SAME mj_ray + R_AGENT test that gates step() clears
+        it, so descent of the resulting distance field can never dead-end
+        against geometry the agent cannot cross."""
+        n = int(round(2 * POS_CLAMP / GRID_STEP)) + 1
+        xs = np.linspace(-POS_CLAMP, POS_CLAMP, n)
+        edges: list = [[] for _ in range(n * n)]
+        gid = np.zeros(1, dtype=np.int32)
+        for i in range(n):
+            for j in range(n):
+                p = np.array([xs[i], xs[j], Z_NOSE])
+                for di, dj in ((1, 0), (0, 1), (1, 1), (1, -1)):
+                    i2, j2 = i + di, j + dj
+                    if not (0 <= i2 < n and 0 <= j2 < n):
+                        continue
+                    seg = math.hypot(di, dj) * GRID_STEP
+                    v = np.array([di * GRID_STEP / seg,
+                                  dj * GRID_STEP / seg, 0.0])
+                    hit = mujoco.mj_ray(self.model, self.data, p, v,
+                                        None, 1, -1, gid)
+                    if 0.0 <= hit < seg + R_AGENT:
+                        continue
+                    a, b = i * n + j, i2 * n + j2
+                    edges[a].append((b, seg))
+                    edges[b].append((a, seg))
+        self._geo_n, self._geo_xs, self._geo_edges = n, xs, edges
+
+    def geodesic(self, site_idx: int, pos) -> float:
+        """Walkable distance (m) from pos to SITES[site_idx] on the lattice;
+        Euclidean fallback for the (unreachable-cell) corner case."""
+        if self._geo_edges is None:
+            self._geo_build()
+        if site_idx not in self._geo_dist:
+            n = self._geo_n
+            sx, sy = SITES[site_idx]
+            src = (int(round((sx + POS_CLAMP) / GRID_STEP)) * n
+                   + int(round((sy + POS_CLAMP) / GRID_STEP)))
+            dist = np.full(n * n, np.inf)
+            dist[src] = 0.0
+            heap = [(0.0, src)]
+            while heap:
+                d, u = heapq.heappop(heap)
+                if d > dist[u]:
+                    continue
+                for v2, w in self._geo_edges[u]:
+                    nd = d + w
+                    if nd < dist[v2]:
+                        dist[v2] = nd
+                        heapq.heappush(heap, (nd, v2))
+            self._geo_dist[site_idx] = dist
+        n = self._geo_n
+        i = int(np.clip(round((pos[0] + POS_CLAMP) / GRID_STEP), 0, n - 1))
+        j = int(np.clip(round((pos[1] + POS_CLAMP) / GRID_STEP), 0, n - 1))
+        d = float(self._geo_dist[site_idx][i * n + j])
+        if not math.isfinite(d):
+            sx, sy = SITES[site_idx]
+            return math.hypot(pos[0] - sx, pos[1] - sy)
+        return d
 
     def los_tripwire(self, n: int = 300, seed: int = 7) -> float:
         """Fraction of random clear poses with line of sight to a site,
@@ -326,8 +444,17 @@ class _Episode:
         if self.field is not None:
             self.field.step(DT)
         self.t += DT
+        return self.dist() < R_REACH
+
+    def dist(self) -> float:
+        """xy distance to the food — the reach test's argument."""
         return math.hypot(self.pos[0] - self.food[0],
-                          self.pos[1] - self.food[1]) < R_REACH
+                          self.pos[1] - self.food[1])
+
+    def phi(self) -> float:
+        """Shaping potential (docstring REPAIR): negative geodesic distance
+        to the TRUE food, identical in every arm, never in any observation."""
+        return -self.rig.geodesic(self.site_idx, self.pos) / ARENA
 
 
 # ── the learner (TA.02's DQN, navigation-shaped) ─────────────────────────
@@ -382,6 +509,7 @@ def _train_arm(rig: _Rig, arm: str, seed: int, n_train: int,
         e = _Episode(rig, site_idx=int(rng.randint(len(SITES))),
                      ep_seed=seed * 100_003 % (2**31) + ep, arm=arm)
         obs = e.obs()
+        phi = e.phi()
         for _ in range(MAX_STEPS):
             if rng.rand() < eps:
                 act = int(rng.randint(N_ACTIONS))
@@ -391,7 +519,12 @@ def _train_arm(rig: _Rig, arm: str, seed: int, n_train: int,
                                          device=dev).unsqueeze(0))
                 act = int(q.argmax(1).item())
             reached = e.step(act)
-            r = 1.0 if reached else -1.0 / MAX_STEPS
+            # potential-based shaping (docstring REPAIR): training only,
+            # identical in every arm, phi(terminal) = 0
+            phi2 = 0.0 if reached else e.phi()
+            r = ((1.0 if reached else -1.0 / MAX_STEPS)
+                 + RL_GAMMA * phi2 - phi)
+            phi = phi2
             obs2 = e.obs()
             if len(buf) >= RL_BUFFER:
                 buf.pop(0)
