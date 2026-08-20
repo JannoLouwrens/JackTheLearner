@@ -4669,3 +4669,32 @@ B3 (hardware stamp + gpu_job_id) still open.
   then do other work; W33 Kaggle (~26 h, die Sun 08-23) still have NOTHING
   queued — find a genuine GPU candidate via run blocked/coverage or let them
   expire. Meters at 10:19: session 30%, week 55%.
+- 2026-08-20 ~11:5x UTC (builder): T2.05 REDESIGNED AND DISPATCHED — the
+  "genuine GPU candidate" the 10:4x entry asked for. Standing-rule audit
+  first: 15 zero-pass commitments; the cheapest runnable declared specs are
+  all parked or blocked (SM.02 parked, BA.02 parked per D8, SH.01 parked to
+  LC.04, XL.01 power-blocked, DP.04 blocked on unregistered LG.00, T3.01/
+  VO.02 need implementing) — T2.05 (stale VOID, gpu<2h, COVERS fast/slow)
+  is the runnable pick and carries the 08-14 pre-registered redesign.
+  IMPLEMENTED (ecf92cc, strengthen-only): null = min(persistence, mean) per
+  seed (08-14 measured persistence UNINFORMATIVE at K=5: 1.092-1.187 vs mean
+  0.824-0.914, and the shuffled control beat persistence by learning marginal
+  stats); claim additionally gated on mse_wm <= mse_ridge every seed
+  (08-14: wm 0.178-0.231 vs ridge 0.114-0.131 — EXPECTED verdict of this
+  re-run is FAIL, stated in the docstring; that finding prices the WM arms
+  for LC.04); CTRL_TOL 0.98 registered before the run (a no-leak shuffled
+  arm's asymptote IS the null; exact `<` would coin-flip VOID on a tie —
+  quantum-bar lesson). Dry-checked all verdict paths against the 08-14 rows
+  + 6 planted faults; local CPU smoke OK. DISPATCH burned two kernels
+  (~211 s each) on mujoco 3.12.0's sdist-before-wheels window — pinned
+  mujoco==3.11.0 (wheels verified via PyPI JSON), new LESSONS entry, -q
+  dropped from remote installs. THIRD attempt (f14c8fa, kernel
+  jack-ladder-1787226047, attempt 1787226047307-109677-kaggle) confirmed
+  RUNNING at +488 s — past the pip-death mark; detached watcher pid 109662,
+  log /data/tmp/dispatch_t2_05.log, est 1.2 h, W33 had ~26 h. LC.03 ALIVE
+  (workers' cputime 45m -> 1h27m this iteration; do not touch). NEXT
+  ITERATION: (1) harvest T2.05 from the watcher log — expected FAIL clears
+  the stale VOID honestly; if VOID by control or task-indictment, read the
+  per-seed JSON before any diagnosis; (2) LC.03 liveness via worker cputime
+  only; (3) remaining zero-pass GPU pick VO.02 still needs a second Jack —
+  design work, not a dispatch. Meters at 11:53: session 45%, week ~58%.

@@ -124,7 +124,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T2.04** Behaviour cloning on scripted trajectories
       - _asserts:_ The action head reproduces scripted MuJoCo trajectories above a nearest-neighbour baseline.
       - _dies if:_ Fails to beat nearest-neighbour retrieval.
-- [~] **T2.05** World model beats constant prediction  — all_seeds_beat_null=1.0; all_seeds_beat_null_std=0.0
+- [!] **T2.05** World model beats constant prediction
       - _asserts:_ k-step latent prediction error < a persistence baseline.
       - _dies if:_ Predicting 'next state = current state' does as well.
 - [x] **T2.06** Language-action alignment beats chance
