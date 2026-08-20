@@ -27,7 +27,7 @@ both nulls), reached from the decoder through a jointly-trained linear readout
 `config.obs_dim=256`, a dimension that corresponds to nothing the real
 pipeline observes — recorded here as a finding about the component, not
 repaired silently. The readout cannot cheat the ruler: the targets are fixed,
-and a model that only matches persistence fails the 20% margin.
+and a model that only matches the uninformed null fails the 20% margin.
 
 HORIZON. K = 5 — the shipped `imagination_horizon` default. Deep supervision
 at horizons 1..K during training; the gate reads horizon K only.
@@ -54,23 +54,59 @@ THE ARMS:
 
 CONTROL (registry, must fail): identical training on a shuffled (window,
 target) pairing — inputs and actions keep their true joint distribution, the
-future they are asked to predict belongs to another window. Must NOT beat
-persistence. A control that clears its gate is VOID, not FAIL.
+future they are asked to predict belongs to another window. Must NOT beat the
+strongest uninformed null (min of persistence/mean — the 08-14 run showed the
+shuffled arm beating persistence by learning marginal statistics, which the
+redesigned null now owns). A control that clears its gate is VOID, not FAIL.
 
-PRE-REGISTERED GATES — relative/exogenous, no pilot constants:
-  CLAIM    mse_wm <= WM_RATIO * mse_persist on EVERY seed (WM_RATIO = 0.8:
-           at least 20% below persistence, per seed, reported per seed).
-  CONTROL  mse_shuffled >= mse_persist on every seed.
+PRE-REGISTERED GATES — relative/exogenous, no pilot constants. REDESIGNED
+2026-08-20 from the 08-14 VOID (strengthen-only, T1.02 precedent; the VOID
+row and the v1 gates stay in the ledger's history). What the VOID measured
+(kernel jack-ladder-1786705853, P100): persistence was UNINFORMATIVE at K=5
+— mse_persist [1.092, 1.128, 1.187] vs mse_mean [0.824, 0.860, 0.914] — so
+"beats persistence" was a bar an arm could clear by learning MARGINAL
+statistics, and the shuffled control did exactly that (0.824-0.916, beating
+persistence on every seed). The v1 rig gate (persist_informative_all) fired
+and VOIDed the run correctly; these gates replace the broken ruler rather
+than re-rolling it.
+  NULL     mse_null = min(mse_persist, mse_mean), PER SEED — the strongest
+           uninformed predictor. Marginal statistics now live INSIDE the
+           null, so nothing can win by learning them.
+  CLAIM    mse_wm <= WM_RATIO * mse_null on EVERY seed (WM_RATIO = 0.8),
+           AND mse_wm <= mse_ridge on EVERY seed. Ridge is the reference
+           arm: a "world model" that loses K-step prediction to one linear
+           map has not demonstrated world modelling, whatever it does to
+           the uninformed nulls. No ratio on the ridge gate — matching the
+           reference is the bar; the 20% margin stays on the null, where
+           the registry's hypothesis lives.
+  CONTROL  mse_shuffled >= CTRL_TOL * mse_null on every seed (CTRL_TOL =
+           0.98, set at this redesign's registration): measured against the
+           null that OWNS marginal statistics — the 08-14 leak, closed. The
+           2% tolerance exists because under no leak the shuffled arm's
+           asymptote IS the null (08-14: 0.824 vs 0.824 on seed 0); an
+           exact `<` would turn a tie into a coin-flip VOID (the "bar finer
+           than one quantum" lesson). A real leak clears 2% easily — the
+           08-14 one beat persistence by ~25%.
   RIG → VOID, not FAIL (an invalid run is not evidence):
     - obs/action dims match the config contract (348/17 — T0.14 scar) and
       `tp.model.world_model` is not None (the wiring this spec exists to test);
     - every recorded loss finite;
     - eval determinism ASSERTED, not hoped (the .eval() scar): the full eval
       runs twice and the two prediction arrays must be bit-identical;
-    - mse_persist < mse_mean — persistence no better than the mean means the
-      horizon is degenerate and the comparison would be against noise;
-    - if the claim fails AND ridge also fails to beat persistence, the TASK is
-      indicted, not the model (T1.02 lesson) → VOID.
+    - if the claim fails AND ridge also fails to beat mse_null on every
+      seed, the TASK is indicted, not the model (T1.02 lesson) → VOID.
+  (v1's persist-informative VOID gate is deliberately GONE: under min(),
+  persistence losing to the mean is data about the horizon, not a rig
+  fault. mse_persist stays reported per seed.)
+
+KNOWN STATE AT REGISTRATION, said out loud (anti-run-until-pass): the 08-14
+run's own numbers — wm [0.178, 0.196, 0.231] vs ridge [0.114, 0.117, 0.131]
+— mean the shipped path is EXPECTED to record FAIL under these gates unless
+this run's draw differs. That is the point: the redesign was pre-registered
+on 08-14 BEFORE this re-run, and a FAIL here is the honest finding that the
+shipped WorldModel has not earned better-than-linear prediction (a fact the
+learning-core bakeoff's world-model arms need to know), not a threshold
+mishap.
 
 GPU. One submission for the whole spec (module cache — run_spec calls
 _experiment once per seed; the 5.5-GPU-hour scar). Kaggle first: W32's
@@ -111,8 +147,14 @@ WM_LR = 3e-4
 L2_GRID = (1e-2, 1e-1, 1.0, 1e1, 1e2, 1e3)
 VAL_EVERY = 5                    # every 5th train row is the l2-selection split
 
-# Pre-registered gate (relative — see docstring). FINAL.
+# Pre-registered gates (relative — see docstring). FINAL.
 WM_RATIO = 0.8
+# Control tolerance, set AT the 2026-08-20 redesign's registration, before
+# the re-run: under no leak the shuffled arm's asymptote IS the null (08-14:
+# shuffled 0.824 vs mean 0.824 on seed 0), so an exact `<` would void on the
+# noise of a tie — the "bar finer than one quantum" lesson. A leak must beat
+# the null by >2% to count; the real 08-14 leak beat persistence by ~25%.
+CTRL_TOL = 0.98
 
 
 def _collect_windows(env, n: int, seed: int, domain: int) -> tuple:
@@ -399,26 +441,34 @@ def _submit(seeds: list) -> dict:
     return out
 
 
+def _null(r: dict) -> float:
+    """The strongest uninformed predictor, per seed (redesign, 2026-08-20)."""
+    return min(r["mse_persist"], r["mse_mean"])
+
+
 def _experiment(seed: int) -> dict:
     if not _CACHE:
         _CACHE.update(_submit(SEEDS))
     rows = _CACHE["seeds"]
-    ratios = [r["mse_wm"] / r["mse_persist"] for r in rows]
+    ratios = [r["mse_wm"] / _null(r) for r in rows]
     return {
         "gpu": _CACHE["gpu"], "backend": _CACHE["backend"],
         "k_step_mse": [r["mse_wm"] for r in rows],
         "mse_persist": [r["mse_persist"] for r in rows],
         "mse_mean": [r["mse_mean"] for r in rows],
+        "mse_null": [_null(r) for r in rows],
         "mse_ridge": [r["mse_ridge"] for r in rows],
         "horizon_k": K,
         "wm_ratio_max": round(max(ratios), 4),
         "wm_ratio_all": [round(x, 4) for x in ratios],
-        "all_seeds_beat_null": all(r["mse_wm"] <= WM_RATIO * r["mse_persist"]
+        "all_seeds_beat_null": all(r["mse_wm"] <= WM_RATIO * _null(r)
                                    for r in rows),
-        "ridge_beats_null_any": any(r["mse_ridge"] < r["mse_persist"]
+        "wm_beats_ridge_all": all(r["mse_wm"] <= r["mse_ridge"]
+                                  for r in rows),
+        "ridge_beats_null_any": any(r["mse_ridge"] < _null(r)
                                     for r in rows),
         "persist_informative_all": all(r["mse_persist"] < r["mse_mean"]
-                                       for r in rows),
+                                       for r in rows),   # reported, not gated
         "det_ok_all": all(r["det_ok"] for r in rows),
         "dims_ok_all": all(r["dims_ok"] for r in rows),
         "finite_all": all(r["finite"] for r in rows),
@@ -431,7 +481,7 @@ def _control(seed: int) -> dict:
     rows = _CACHE["seeds"]
     return {
         "mse_shuffled": [r["mse_shuffled"] for r in rows],
-        "shuffled_beats_null": any(r["mse_shuffled"] < r["mse_persist"]
+        "shuffled_beats_null": any(r["mse_shuffled"] < CTRL_TOL * _null(r)
                                    for r in rows),
     }
 
@@ -444,13 +494,11 @@ def _check(m: dict, c: dict):
         return Status.VOID          # training diverged; nothing was measured
     if not m["det_ok_all"]:
         return Status.VOID          # eval path not deterministic (dropout scar)
-    if not m["persist_informative_all"]:
-        return Status.VOID          # persistence no better than the mean:
-                                    # degenerate horizon, comparison meaningless
-    # Control: information-free supervision must NOT beat persistence.
+    # Control: information-free supervision must NOT beat the strongest
+    # uninformed null (marginal statistics live inside the null now).
     if c["shuffled_beats_null"]:
         return Status.VOID          # the metric leaks; not measuring prediction
-    claim = m["all_seeds_beat_null"]
+    claim = m["all_seeds_beat_null"] and m["wm_beats_ridge_all"]
     if not claim and not m["ridge_beats_null_any"]:
         return Status.VOID          # the reference arm fails too: task
                                     # indicted, not the model (T1.02 lesson)

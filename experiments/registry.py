@@ -508,19 +508,32 @@ LADDER: list[Spec] = [
     Spec("T2.05", 2, "World model beats constant prediction",
          hypothesis="k-step latent prediction error < a persistence baseline.",
          falsified_by="Predicting 'next state = current state' does as well.",
-         null_baseline="Persistence (copy current state) and mean-state.",
+         null_baseline="The strongest uninformed predictor, per seed: "
+                       "min-MSE of persistence (copy current state) and "
+                       "mean-state. (Redesign 2026-08-20: the 08-14 VOID "
+                       "measured persistence UNINFORMATIVE at K=5, so a "
+                       "persistence-only bar was clearable by learning "
+                       "marginal statistics.)",
          metric="k_step_mse", budget=Budget.GPU, seeds=3, depends_on=["T1.01"],
          control="The same world-model path trained identically on a shuffled "
-                 "(window, target) pairing must NOT beat the persistence null. "
-                 "If information-free supervision predicts the future better "
-                 "than copying the present, the metric is not measuring "
-                 "prediction.",
+                 "(window, target) pairing must NOT beat the strongest "
+                 "uninformed null (min of persistence/mean). If "
+                 "information-free supervision predicts the future better "
+                 "than the null that owns marginal statistics, the metric is "
+                 "not measuring prediction.",
          notes="Error is measured in z-scored RAW observation space, not "
                "latent space: a latent ruler is owned by the model under test "
                "(a collapsed latent scores zero error on everything — the "
                "LC.03 twin-control scar, one level down). Horizon K=5 is the "
                "shipped imagination_horizon. Control added 2026-08-14, BEFORE "
-               "first run (strengthen-only, T1.02/T2.04 precedent)."
+               "first run (strengthen-only, T1.02/T2.04 precedent). "
+               "REDESIGNED 2026-08-20 per the 08-14 VOID's pre-registered "
+               "redesign facts (journal): null = min(mean, persistence) per "
+               "seed, and the claim is additionally gated against the ridge "
+               "reference arm (mse_wm <= mse_ridge every seed) — a world "
+               "model that loses K-step prediction to one linear map has "
+               "not demonstrated modelling. Strengthen-only; the VOID row "
+               "stays in history."
                "  COVERS: fast/slow (fixture)"),
 
     Spec("T2.06", 2, "Language-action alignment beats chance",
