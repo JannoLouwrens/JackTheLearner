@@ -403,8 +403,17 @@ def remote_run(seeds: list, n_train: int = N_TRAIN, n_test: int = N_TEST,
 # ── GPU submission (one per spec — module cache, T2.01 pattern) ───────────
 JOB = r'''
 import subprocess as _sp, sys as _sys, os as _o
-_sp.run([_sys.executable, "-m", "pip", "install", "-q", "gymnasium[mujoco]"],
-        check=True)
+# mujoco FIRST and PLAIN, then gymnasium WITHOUT the [mujoco] extra: on the
+# 2026-08-20 Kaggle image `gymnasium[mujoco]`'s resolution picked a mujoco
+# with no usable wheel and died building it from source (kernel
+# jack-ladder-1787225429, 211 s charged, science never started), while the
+# SM.02 pilot's plain `mujoco` install resolved a wheel on the same image
+# hours earlier. Humanoid-v5 needs mujoco importable, which the plain
+# install provides; the extra adds only the pin that broke. Not -q: the -q
+# on the failed attempt suppressed WHICH version pip chose to build, and the
+# diagnosis had to come from a second source.
+_sp.run([_sys.executable, "-m", "pip", "install", "mujoco"], check=True)
+_sp.run([_sys.executable, "-m", "pip", "install", "gymnasium"], check=True)
 import json
 from experiments.tests.t2_05_world_model import remote_run
 out = remote_run(__SEEDS__)
