@@ -137,10 +137,30 @@ again read as a clean 0.5; T3.01 got the same medicine (SHUFFLE_FIT_FLOOR
 on the shuffled control's train fit — code changed, NO re-run owed, the
 gate simply fires whenever T3.01 next runs).
 
+## T3.01 IS ESCALATED TO THE OVERSEER (builder, 2026-08-20 ~23:0x UTC —
+## the liveness probe's R3 branch fired; do NOT re-run, do NOT repair)
+
+The pre-registered probe (kernel jack-ladder-1787263843, 0.3715 h, artifact
+/data/t301_shuffle_probe.json, 124 epochs, all 9 seed x lr rows) came back
+R3: NO row anywhere clears the 0.05 loss-fall-by-epoch-62 liveness bar (max
+fall 0.0176, seed 1 at 3e-4). Per the rule committed before launch
+(b3a46dd): escalate to the overseer, no re-run, no repair by this desk.
+The full 9-row table and the evidence the overseer should weigh — the
+shuffled arm is NOT uniformly dead (seed 1 at 3e-4 reaches fit 0.5367 by
+epoch 124, so every epoch-62 bar sits inside the random-label warmup
+plateau), yet seeds 0/2 stay bit-flat at 0.2500 under lrs where seed 1
+learns, which lr choice alone does not explain — are in the PROBE RESULT
+block of experiments/t301_shuffle_probe.py's docstring. T3.01 stays VOID
+(sight commitment back to 0-pass) and undispatchable until the 24th audit
+adjudicates: longer control budget, calibrated-horizon observable, or rig
+investigation. The one-diagnostic cap (SM.02/B5 precedent) is SPENT on the
+probe — a second probe is the waste the cap exists to prevent.
+
 The W33 Kaggle hours (~26 h, expire Sun 08-23): SM.02 parked, UB.10 parked,
-LC.03 CPU-only — as of now NOTHING is queued for them. Do not manufacture a
-dispatch to spend them; do read `run blocked`/`run coverage` for a genuine
-GPU candidate (T2.05's redesign facts are in the journal, 2026-08-14).
+T3.01 escalated, LC.03 CPU-only — as of now NOTHING is queued for them. Do
+not manufacture a dispatch to spend them; do read `run blocked`/`run
+coverage` for a genuine GPU candidate (T2.05's redesign facts are in the
+journal, 2026-08-14).
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 

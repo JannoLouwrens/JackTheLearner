@@ -65,6 +65,46 @@ branch, top-down, mechanically:
 Artifact: /data/t301_shuffle_probe.json (written by the local driver after
 fetch). Log: /data/tmp/t301_shuffle_probe.log. Budget: W33 Kaggle (~23 h
 unspent, expires Sun 2026-08-23), est 0.5 h.
+
+PROBE RESULT (attempt 2, kernel jack-ladder-1787263843, P100, 0.3715 h,
+harvested 2026-08-20 22:33 UTC; artifact /data/t301_shuffle_probe.json) —
+BRANCH R3 FIRED. All nine (seed, lr) rows, mechanically:
+
+    seed lr    reg  loss_init loss@62 loss@124 fit62  fit124  LIVE FIT
+    0    1e-4  .    1.3866    1.3865  1.3769   0.2500 0.3175  no   no
+    0    3e-4  .    1.3863    1.3871  1.3871   0.2500 0.2500  no   no
+    0    1e-3  REG  1.3863    1.3880  1.3864   0.2500 0.2500  no   no
+    1    1e-4  .    1.3872    1.3857  1.3705   0.2575 0.2875  no   no
+    1    3e-4  REG  1.3865    1.3689  1.0276   0.3108 0.5367  no   no
+    1    1e-3  .    1.3869    1.3868  1.3864   0.2500 0.2500  no   no
+    2    1e-4  .    1.3871    1.3866  1.3745   0.2708 0.2800  no   no
+    2    3e-4  .    1.3866    1.3872  1.3869   0.2500 0.2500  no   no
+    2    1e-3  REG  1.3863    1.3869  1.3864   0.2500 0.2500  no   no
+
+R0 no (no reg arm LIVE+FIT). R1 no (no seed reaches fit62 0.35; best
+0.3108). R2 no (its premise "every seed has some LIVE lr" fails — NO row
+anywhere clears the 0.05 loss-fall bar by epoch 62; the max is seed 1 at
+3e-4, fall 0.0176). R3 YES: every seed lacks a live lr. Per the rule:
+ESCALATED TO THE OVERSEER, no re-run, no repair by this desk. T3.01 stays
+VOID and undispatchable until the overseer adjudicates.
+
+EVIDENCE THE OVERSEER SHOULD WEIGH, recorded not adjudicated: the R3 branch
+was written as "deeper rig fault", but the 124-epoch tails complicate that
+reading in both directions. (a) The shuffled arm is NOT uniformly dead:
+seed 1 at 3e-4 is a slow learner (loss 1.3865 -> 1.0276, fit124 0.5367 —
+it would clear the 0.35 floor at roughly double the registered budget), and
+seeds 0/2 at 1e-4 drift down slowly by 124. This matches the docstring's own
+Zhang-et-al. premise that random labels fit far slower than real ones, and
+suggests every bar this probe pre-registered at epoch 62 (fit floor AND
+loss-fall liveness) sits inside the random-label warmup plateau. (b) Yet it
+is not purely "slow": at FULL double budget, seeds 0 and 2 still have no lr
+fitting shuffled labels above 0.3175 — nine of nine rows at lr >= 3e-4 for
+those seeds are bit-flat at 0.2500 while the main real-label arm trains to
+full_min 0.6333 under identical code. Seed-1-vs-seeds-0/2 at the SAME lr
+(3e-4: one learns to 0.5367, two sit at exactly 0.2500) is the sharpest
+anomaly and is not explained by lr choice alone. Whether the repair is a
+longer control budget, a loss-fall observable at a calibrated horizon, or a
+rig investigation is the overseer's call.
 """
 import json
 import os

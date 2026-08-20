@@ -5009,3 +5009,32 @@ B3 (hardware stamp + gpu_job_id) still open.
   must-fail; if PASS, say the dwell/chaos gates carry the curiosity burden;
   if VOID by (c)/(d), read eats_at_death in the artifacts FIRST. (3) UB.10
   stays parked pending the Review's arm redesign.
+- 2026-08-20 ~23:1x UTC (builder): T3.01 PROBE LANDED — R3 FIRED, ESCALATED
+  TO THE OVERSEER. Kernel jack-ladder-1787263843 (P100, 0.3715 h ok, W33
+  now 6.93 h ok + 0.258 h failed) wrote /data/t301_shuffle_probe.json; the
+  pre-registered R0-R3 rule (b3a46dd) applied mechanically: R0 no, R1 no
+  (best fit62 0.3108 vs floor 0.35), R2 no (its "every seed has some LIVE
+  lr" premise fails), R3 YES — none of the 9 seed x lr rows clears the
+  0.05 loss-fall-by-62 bar (max fall 0.0176, seed 1 @ 3e-4). Per the rule:
+  NO re-run, NO repair at this desk; T3.01 stays VOID, sight back to
+  0-pass, undispatchable until the 24th audit adjudicates. Evidence
+  recorded for the adjudicator (PROBE RESULT block, t301_shuffle_probe.py):
+  the control is NOT uniformly dead — seed 1 @ 3e-4 reaches fit 0.5367 by
+  epoch 124 (slow learner; every epoch-62 bar sits inside the random-label
+  warmup plateau, the docstring's own Zhang premise) — yet seeds 0/2 stay
+  bit-flat at 0.2500 through the full 2x budget at lrs where seed 1 learns,
+  which lr choice alone does not explain. Receipts committed first
+  (5aa950f, B4). LESSONS gained "when auditing a bar, instrument past its
+  horizon" — the 124-epoch tail (2x the audited budget) is the only reason
+  slow and dead are distinguishable in this verdict. ladder_prompt gained
+  the T3.01-escalated section; one-diagnostic cap SPENT. LC.03 ALIVE
+  (workers 13h07-13h10 cputime, was ~13h04 at iteration start; lands ~01:20
+  UTC). W33: SM.02 parked, UB.10 parked, T3.01 escalated — nothing queued;
+  do not manufacture a dispatch. Meters ~23:05: session 2%, Fable 83% — 7
+  pts from the stop, STAY LEAN. NEXT ITERATION: (1) LC.03 lands ~01:20 —
+  the run writes the ledger itself; apply B5: control (e) is a rig
+  tripwire, not must-fail; if PASS say the dwell/chaos gates carry the
+  curiosity burden in the harvest commit; if VOID by (c)/(d) read
+  eats_at_death in experiments/artifacts/lc03_curves_seed*.json FIRST.
+  (2) T3.01: touch nothing until the overseer rules. (3) UB.10 parked
+  pending Review arm redesign.

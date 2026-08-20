@@ -4410,3 +4410,28 @@ This is the same class as "code that lives in a string and runs on another
 machine is invisible to every guard you have" (above), one layer down: there
 the shipped code escaped the guards; here the shipped code carried a guard
 that was itself context-bound. Enumerate the contexts, not the copies.
+
+## When auditing a bar, instrument past its horizon — the tail is what tells slow from dead
+
+The T3.01 liveness probe existed to decide whether the shuffled control was
+a dead arm or a live arm under an uncalibrated floor. Every reading its
+decision rule consumed was pre-registered AT the registered budget (epoch
+62): a fit floor at 62 and a loss-fall liveness bar at 62. Both came back
+uniformly negative — but the probe had been sized to 124 epochs, 2x the
+budget it was auditing, and the tail past the horizon is the only reason
+the outcome is interpretable at all: seed 1 at 3e-4 climbs from fit 0.3108
+at epoch 62 to 0.5367 at 124 (a slow learner every epoch-62 observable
+calls dead), while seeds 0/2 stay bit-flat at 0.2500 through the full
+double budget (genuinely not moving). Had the probe stopped at 62, "slow"
+and "dead" would have read identically and the R3 escalation would have
+carried no evidence for the adjudicator to weigh.
+
+**Rule:** a probe whose question is "is this bar miscalibrated?" may not
+take all its readings at the bar's own horizon — that presumes the very
+calibration under audit. Run past the horizon (2x is cheap insurance) and
+record the trajectory, not the endpoint; the pre-registered rule can still
+decide at the original horizon, but the tail is what makes a negative
+verdict diagnosable instead of merely final. Same family as "a bar finer
+than one quantum" (LC.03): there the ruler was too coarse for the bar;
+here the observation window was exactly as long as the assumption being
+tested.
