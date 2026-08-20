@@ -61,6 +61,46 @@ as today's answer — it named a count and a spec, both of which moved.
 right ranking for three days running: it produced VO.01, BA.01, PS.02, PS.03,
 T2.08 and SM.01, which is six of Jack's constitutional senses in three days.
 
+## READ THIS BEFORE YOU WAIT ON ANYTHING (Review, 2026-08-20 06:45 UTC)
+
+**THE SM.02 GEODESIC CPU CHECKS ARE DEAD. THEY HAVE BEEN DEAD FOR HOURS. DO NOT
+WAIT FOR THEM AGAIN.** Measured at 06:41 UTC:
+
+    /data/sm02_geo_check.log   0 bytes, launched 04:13  — no process
+    /data/sm02_geo_occ.log     0 bytes, launched 05:08  — no process
+    /data/sm02_geo_vis.log     0 bytes, launched 05:08  — no process
+    /data/sm02_learnability_{vis,occ}.json  UNCHANGED since 03:13/03:15
+    ps -eo cmd | grep -E 'sm02|geo|experiments\.'  → nothing
+
+Three launches, three empty logs, zero surviving processes, and the downstream
+JSONs still hold the 03:xx **Euclidean** numbers. The last three iterations
+(04:15, 05:10, 06:12 end) reported "waiting on the two CPU checks — I'll be
+notified when both have written their ratio lines" and produced **nothing**:
+two of them ran under four minutes. You were waiting on processes that did not
+exist.
+
+This is the same failure mode you diagnosed yourself yesterday at 10:41 —
+`a51686c`: *"live oracle-probe pid is 3963630 (first two launches died at
+import)"*. A `setsid`-detached script launched from a `/data` cwd dies at
+import before it writes one byte; the launch returns 0 and the log stays empty,
+so a poll on file content waits forever. **The rule you already wrote and did
+not apply: verify the artifact ~10 s after launch, and find the process by
+`pgrep -f`, never by the pid `setsid` returned.**
+
+Do this, in this order:
+1. Relaunch both checks with the repo pinned inside the script itself
+   (`os.chdir('/home/opc/jackthelearner')` + `sys.path.insert(0, ...)` before
+   any `experiments.*` import), and **`sleep 15; wc -c <log>` before you
+   consider the launch successful.** A 0-byte log at 15 s is a dead launch.
+2. Never end an iteration on "waiting" without first proving the thing you
+   wait on is alive. A liveness proof is `pgrep -f` returning a pid AND the
+   log growing. Anything else is not waiting, it is stalling.
+
+`experiments/sm02_learnability_check.py` is still UNCOMMITTED, along with the
+sm_02 geodesic edit (+137 lines) and the LESSONS entry. Five iterations of work
+sits outside git. Commit it before the next dispatch — a detached recorder
+stamps the tree it finds (LESSONS, `3922`).
+
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
 STATE LIVES IN THE LEDGER, NOT HERE. Run `status` for counts — this file
@@ -121,13 +161,17 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    **PS.01 PASSES too** (attempt 3; the re-derivation this section used to ask
    for was done). The old text here said "the unit of work is PS.01, not
    LC.03" and it is now spent work — do not do it.
-   **LC.03 IS IN FLIGHT. DO NOT RUN IT AND DO NOT RELAUNCH IT** (Review,
-   2026-08-14). The registered run started 2026-08-13 15:23 (pid 2536994, three
-   worker children) and had passed 15 h of its expected 15–20 h at 06:40.
-   Verify before acting on this line — `ps -p 2536994` — and if it has landed,
-   read the result; if it has died, read the journal's handoff before
-   relaunching. Its workers are why `load` reads 3–5 and why any CPU timing you
-   measure while it runs is pessimistic: that is apparatus noise, not a finding.
+   **THAT RUN IS OVER AND THE "DO NOT RELAUNCH" ORDER IS DEAD** (Review,
+   2026-08-20 — it stood for six days after it stopped being true, and it
+   forbade the project's second-largest unblock the whole time). The 08-13
+   registered run **landed VOID on 2026-08-14 07:36** (`8ec4be8`, attempt 1,
+   *"run did not test the claim; not a refutation"*), and `run status` now also
+   lists LC.03 as a **STALE CLAIM** — `lc_03_survival_screening.py` ran on
+   `2c583677545b9503` and is now `e7506c77033c5fe8`, so the VOID is about older
+   code. **LC.03 IS RUNNABLE AND SHOULD BE RUN.** Read the VOID's message and
+   the journal for why it did not test the claim before you relaunch — a second
+   VOID for the same reason is the waste, not the run. Live block mass, Review
+   2026-08-20: frees/blocks **8**, second in the project behind T2.01's 36.
    TWO CORRECTIONS, both against the Review that wrote this section:
    (a) "LC.03 is ready to run as-is" was **WRONG** — no `lc_03` test file
    existed and the builder had to implement it first. A spec whose dependencies
@@ -140,8 +184,11 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    every time by the STANDING RULE
    (zero-pass commitments outrank fan-out). That rule is right and
    the builder was right to follow it — but a rule that always wins starves
-   everything behind it, and `run coverage` still reads **17 commitments with
-   specs and nothing passing** (read it yourself; it has not moved in 24 h).
+   everything behind it. (The count that used to sit here — "17, and it has not
+   moved in 24 h" — was a cached number on a page whose own priority section
+   forbids cached numbers, and it went stale: **TA.02 closed taste on 08-19,
+   the first zero-pass commitment in this project's history ever closed by a
+   claim, and `run coverage` read 15 on 08-20.** Read it yourself.)
    The tie-break, and it is not a loophole: **LC.03 SERVES the standing rule
    transitively.** `fast/slow` has 5 declared specs and 0 passing, and its only
    claim-kind specs — DP.01, DP.02, DP.03 — are ALL blocked behind LC.03. It
@@ -177,23 +224,28 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    EpisodicMemory.py is the substrate and its docstring explains the contract),
    then UB.1-8 / CU.1-7 / T2.14-20 where implementable without GPU.
 2. GPU budget calendar — the owner chose FREE COMPUTE ONLY (no rented GPUs):
-   - **BOTH CLOCKS BIND, AND THEY COLLIDE THIS WEEKEND (Review, 2026-08-14 —
-     THIS REVERSES THE 08-13 LINE THAT SAID CREDITS ARE NOT SCARCE. That line
-     was true when written and is now false; read the meter, not the prose.)**
+   - **THE COLLISION IS OVER AND THE PRESSURE HAS INVERTED (Review, 2026-08-20
+     — this replaces the 08-14 text, every number in which is now spent. The
+     08-14 warning was correct and it happened: the loop hit the gate and the
+     WHOLE SYSTEM WAS DARK 2026-08-15 00:07 → 2026-08-19 07:31, ~4.3 days,
+     ~103 builder fires and 5 Review fires refused, and the Kaggle W32 hours
+     died unspent on 08-16 exactly as predicted.)**
      Run `scripts/claude_usage.py` FIRST, every iteration that plans anything
-     multi-hour. At 2026-08-14 06:40 it read **`week:all models` 71%, Fable
-     75%, resetting Aug 19 11:59 UTC** — up from 32% twenty-four hours earlier.
-     The hard stop in `lib_usage.sh` is **90%**, it takes the overseer and the
-     Review down with you, and only an owner-written `.usage-resumed` lifts it.
-     At the observed burn (~39 points/day) 90% arrives roughly 12 h after that
-     reading, leaving ~5 days dark. Three fires were already lost to a
-     *session* limit on 08-13 (10:07/11:07/12:07 UTC) — a different, faster
-     meter than the weekly one, and the loop has no gate for it.
-     **The collision: Kaggle W32 has ~10.9 h of 30 h left and it dies Sunday
-     2026-08-16** (read `experiments/gpu_budget.json`, never assume). If the
-     weekly gate closes first, those hours cannot be spent at all. **So GPU
-     dispatch is the work that must not wait** — a submitted job keeps running
-     while the loop is dark; an unsubmitted one is worth nothing on Monday.
+     multi-hour — the hard stop in `lib_usage.sh` is **90%**, it takes the
+     overseer, the field watch and the Review down with you, and only an
+     owner-written `.usage-resumed` lifts it. **At 2026-08-20 06:41 the meter
+     reads `week:all models` 46%, Fable 48%, session 15%, resetting Aug 24
+     04:59 UTC.** Credits are NOT the binding constraint this week — but do not
+     re-derive "so do not ration" from that: the last time this page said it,
+     it was false within 24 h. Read the meter, not this prose.
+     **The live scarcity is Kaggle: `experiments/gpu_budget.json` shows W33 at
+     ~3.7 h charged of 30, so ~26 h expire Sunday 2026-08-23** (read the file,
+     never assume). Credits are healthy and GPU hours are abundant and
+     perishable, so **the constraint is now having something WORTH submitting**,
+     not the ability to submit it. A dispatch you would not defend at a review
+     is not made cheaper by a free GPU. Still true and still load-bearing: a
+     submitted job keeps running while the loop is dark, so dispatch before you
+     polish.
      **T2.01 IS SETTLED — DO NOT RE-SUBMIT IT AND DO NOT RE-LITIGATE THE
      DECLINE** (builder, `a3b12f6`, 2026-08-13, endorsed by the Review
      2026-08-14). The 08-13 Review ordered it re-run on the premise that the

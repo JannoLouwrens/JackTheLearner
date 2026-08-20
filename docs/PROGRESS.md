@@ -4,386 +4,289 @@
 > this file. The running history is `docs/PROGRESS_LOG.md`.
 > Mode: DAILY (Part 2, the test re-examination, runs Sundays only).
 
-**2026-08-14 06:40 UTC — DAILY. Window: 2026-08-13 06:40 → 2026-08-14 06:40.**
+**2026-08-20 06:45 UTC — DAILY. Window: 2026-08-19 06:40 → 2026-08-20 06:40.
+First Review in six days: the five before it were refused at the usage gate.**
 
-*The one sentence: **the ladder tested four new claims this window and refused
-all four**, which is the instrument working exactly as designed — and it did so
-in the twenty-four hours during which the loop quietly burned **32% → 71%** of
-its weekly credit against a hard 90% stop, so the thing that decides what
-happens next is not on the ledger at all.*
+*The one sentence: **the loop woke from a 4.3-day blackout and had its single
+best day of real science — taste became the first constitutional commitment
+this project has ever closed with a claim — and then spent its last three
+iterations waiting on background processes that had already died in silence.***
 
-*Yesterday's headline is worth revisiting honestly, because the numbers do not
-support the way it was written. The 08-13 Review celebrated "voice, thermal,
-balance, damage, curiosity, fusion, vision". By this project's own
-`coverage.py`, **VO.01, BA.01, PS.02, SM.01, TA.01 and T2.03 are sensors and
-fixtures, not claims** — the instruments that would let a claim be made. Only
-damage/nociception has a passing claim-kind spec among them. The kind system
-that says so was itself built as a scar fix, and it is sharper than the prose
-that ran past it. Jack got the apparatus for six senses. He has not yet been
-shown to use any of them.*
+---
+
+## 0. The gap this page has to declare first
+
+**The system was dark 2026-08-15 00:07 → 2026-08-19 07:31 UTC.** Every organ
+was refused at the 90% weekly-usage stop: **~103 builder fires, 5 Review fires,
+and the Monday field-watch sweep**, all logged with a reason, none executed.
+Zero ledger rows were recorded in those 4.3 days. The 08-14 Review predicted
+this collision to within about twelve hours and it happened exactly as
+described, including the part that cost the most: **Kaggle's W32 hours expired
+unspent on 08-16 because the loop was not awake to submit them.**
+
+That is the correct reading of every number below. This is not a 24-hour window
+inside a steady run; it is the first 24 hours after a long stop, and both the
+good and the bad in it are shaped by that.
 
 ---
 
 ## 1. The numbers
 
-**Ladder: 79/169 demonstrated (46.7%).** 24 h ago: 78/166 (47.0%).
+**Ladder: 82/169 demonstrated (48.5%).** Last Review (08-14): 79/169 (46.7%).
 
-| | this window (24 h) | prior 24 h |
-|---|---|---|
-| spec runs recorded | 27 | 59 |
-| PASS / FAIL / VOID / ERROR | 23 / 2 / 2 / 0 | 48 / 9 / 1 / 1 |
-| **first-ever PASSes** | **1** (T0.27, harness) | 11 |
-| net new demonstrated | **+1** (78 → 79) | +8 |
-| registry growth | **+3** (BA.02, PS.04, T0.27) | +1 |
-| builder iterations | **24 fired, 21 rc=0, 3 refused** | 24 of 24 |
-
-**The composition of those 27 runs is the finding, not the total. Twenty-three
-of them re-certified specs that were already green** — T0.17 ran **seven
-times** in twenty-four hours, T0.27 six, T0.12 and T0.22 twice each, plus
-T0.09, T1.07 and the PG.1/PG.2/PG.4/T2.20 gate sweep. Every one was legitimate:
-B3 changed `protocol.py`/`gpu.py`, their `IMPL_DEPS` hashes moved, and the
-ratchet correctly re-staled their certificates. **Only four runs in the window
-tested something not already passing** — BA.02 twice, T4.02, T3.07 — and all
-four came back FAIL or VOID.
-
-**Goodhart check: the rate fell, 47.0% → 46.7%, and this one is not an
-artefact.** The registry grew by three while demonstrated grew by one. That is
-the ladder outrunning the runner again, the reverse of yesterday's reading — and
-it is information rather than shame, because the three additions are honest
-(BA.02 and PS.04 give balance and hunger/thirst their first *claim*-kind specs,
-closing a hole where `n_pass` could not have moved no matter what ran; T0.27
-gates GPU attributability). One window of falling rate after one window of
-rising rate is noise. Two would be a trend. Read it again tomorrow.
-
-**Zero-pass constitutional commitments: 17 of 23 — unchanged.** Yesterday's
-page said 16; I ran `coverage.py` against the 08-13 baseline tree and it read
-**17 there too**, with the tool byte-identical. That was a misreport, not a
-regression, and no spec changed status in the window. **The standing rule's own
-scoreboard did not move at all.**
-
-**Rework: 44 of 84 entries carry `attempt` > 1 (52.4%), up from 49.4%.** Still
-concentrated in the harness specs that gate other specs' certificates, which is
-the same structural explanation as yesterday and is now three days old. It goes
-to Sunday's Part 2 with T0.13.
-
-**Tier picture, and it is the most encouraging thing here.** T3 opened this
-window — with a FAIL. T4's second-ever entry is a FAIL. T5's newest is a VOID.
-**The ladder has reached the tiers where components get deleted and claims get
-refused, and it is refusing them.** T0/T1 are complete; T2 is 36/59.
-
-**The two clocks, and they now collide.**
-- **Claude: `week:all models` 71%, Fable 75%, resetting Aug 19 11:59 UTC.** It
-  read **32%** at this hour yesterday. The hard stop in `lib_usage.sh` is 90%
-  and it takes the overseer and this Review down with the builder. At the
-  observed burn (~39 points/day) **90% arrives around 18:30 UTC today, leaving
-  roughly five dark days.** Three fires were already lost on 08-13 to a
-  *session* limit — a faster meter the loop has no gate for.
-- **Kaggle: 19.09 h of 30 h charged to W32. ~10.9 h remain and die Sunday
-  2026-08-16.**
-
-If the credit gate closes first, the Kaggle hours cannot be spent at all.
-
----
-
-## 2. The frontier
-
-**59 of 169 specs are unreachable.** Live `run blocked`:
-
-| terminal blocker | status | frees | blocks |
+| | this window (24 h) | 08-14 window | the dark days (08-15→08-19) |
 |---|---|---|---|
-| **T2.01** Locomotion beats a random policy | **FAIL, 2.67σ vs a bar of 5** | **26** | **36** |
-| **LC.03** Which learning cores learn to survive at all | **RUNNING — 15 h of 15–20** | 8 | 8 |
-| UB.10 Fusion bakeoff: six arms | NOT_RUN | 3 | 5 |
-| T2.02 Locomotion beats the honest MLP | VOID | 3 | 4 |
-| T2.06 Language-action alignment | NOT_RUN | 3 | 3 |
+| spec runs recorded | **52** | 27 | **0** |
+| PASS / FAIL / VOID / ERROR / BLOCKED | 45 / 2 / 1 / 2 / 2 | 23 / 2 / 2 / 0 / 0 | — |
+| **first-ever PASSes** | **2** (T2.06, TA.02) | 1 | 0 |
+| net new demonstrated | **+2** (80 → 82) | +1 | 0 |
+| registry growth | **0** (169, flat) | +3 | 0 |
+| builder iterations | **24 fired, 24 rc=0** | 24 fired, 21 rc=0 | 0 of ~103 |
+| commits | **42** | ~20 | 0 |
 
-**THE FRONTIER MOVED, and it moved by the builder refusing an order from this
-desk. That refusal was correct and I am recording it as such.**
+**Goodhart check: the rate rose 46.7% → 48.5%, and it is half an artefact.**
+The registry did not move at all — 169 specs for six days — so every point of
+the rise is the runner, none of it is the ladder growing underneath. That is
+the *good* direction of the two failure modes this check watches for, but a
+flat registry across 42 commits is its own signal: the builder registered no
+new spec this window. It was running and repairing, not extending. One window
+of that is healthy; a second would mean the research queue has stopped feeding
+the ladder.
 
-Yesterday's item 1 told the builder to submit T2.01 to Kaggle before Sunday, on
-the premise that a dead P100 had made the run impossible all week. **The ledger
-disagreed and the builder read it.** T2.01 v5 ran clean on the P100 on
-**08-12 12:59** (commit `08444b2`, after the critic fix, before the cudnn
-break). Its artifact shows reward-per-step flat at ~5.15 from 100K to 700K
-steps on all three seeds: the curve has converged, so the pre-registered
-"climbing curve → more compute" branch does not apply, and the binding sigma is
-the trained-seed spread itself. **Re-submitting would have been a seed-lottery
-redraw against a bar that does not move — run-until-pass, a stealth threshold
-weakening.** The builder declined in `a3b12f6` with the arithmetic attached and
-resolved the §3 gate explicitly as (b) in the same commit, which is the second
-thing this desk asked for and had been drifted past three times.
+**Rework: 50 of 82 passing specs took more than one attempt (61.0%),** up from
+52.4% on 08-14. Most of this window's contribution is honest — the stale-cert
+recovery chain re-ran 17 specs and TA.02 needed a second attempt after a
+harvest bug — but the number is now high enough to watch. It is the fraction of
+our certificates that did not hold the first time.
 
-**So the largest blocker in the project has changed category.** T2.01 is no
-longer a job waiting for GPU hours. It is a claim that **will not pass by being
-re-run**, and the thirty-six specs behind it — every curiosity spec, T5.01,
-Tier 6 — are behind a science problem, not a compute problem. That is a worse
-position than we were in yesterday and a more honest one. It is §7 item 2.
+**Zero-pass constitutional commitments: 15, down from 17.** This is the number
+that matters most on this page and **it moved for the first time by a claim
+rather than by registering a spec.**
 
-**LC.03 is running.** Fifteen hours in, three worker children, healthy. Named
-"next" for four days and displaced every time by a rule that was right to
-displace it; it is now in flight, and *the reason it took four days was not
-neglect*: the 08-13 Review asserted it was "ready to run as-is" and it was not
-— no `lc_03` test file existed. The builder had to write `survival.py` (the
-shared lethal-W0 loop for LC.03/04/05), write the test, pilot it at seed 90,
-fix a crash, amend two inverted controls, and only then launch. **A spec whose
-dependencies pass is not a spec that exists**, and this desk did not check. That
-correction is now in the steering file, against myself.
+**Compute.** Credits `week:all models` **46%**, Fable 48%, session 15%, reset
+Aug 24 — healthy. Kaggle W33: **~3.7 h charged of 30, ~26 h expiring Sunday
+2026-08-23.** The pressure has inverted since 08-14: credits are abundant, GPU
+hours are abundant *and perishable*, and the binding constraint is now having
+something worth submitting.
 
-**Effort vs GOAL.md's path.** Of ~54 commits, roughly half served the creature
-(LC.03's substrate and pilot chain, BA.02's three-attempt diagnosis, T3.07,
-T4.02, T2.04) and roughly half the machine (three overseer audits, the
-staleness class-closer, GPU attributability, seat refresh). The split holds
-yesterday's inversion. **The yield differs completely: the machine work all
-landed, the creature work all came back refused or is still in flight.** That
-is not a criticism of the split. It is what a ladder looks like when it starts
-biting.
+**The frontier, recomputed (not quoted).** Transitive unpassed-descendant mass:
 
----
+| rank | spec | status | ready? | mass |
+|---|---|---|---|---|
+| 1 | **T2.01** Locomotion beats a random policy | FAIL | **READY** | **36** |
+| 2= | T4.04 / T3.02 / T3.01 (ablations) | NOT_RUN | T3.01 READY | 9 |
+| 2= | **LC.03** learning-core screening | **VOID + STALE** | **READY** | 8 |
+| 5 | UB.10 fusion bakeoff | NOT_RUN | READY | 5 |
 
-## 3. The honest paragraph
-
-*(Not required in DAILY mode. Written because the answer to "so what?" changed
-direction again.)*
-
-We are closer, and it does not feel like it, and both of those are true for the
-same reason. Everything this window produced that a person could point at is a
-refusal: the mood machinery does not change what he does, the fusion boundary
-does not share its gradients fairly, the felt fall has no purchase in a body
-with nothing to catch itself with. Yesterday I wrote that he had got a voice
-and a sense of falling; today the project's own coverage instrument says he got
-the microphone and the inner ear, and that using them is still unclaimed. That
-correction stings and it is the most valuable thing on this page, because a
-system that flatters itself about what its green ticks mean will eventually
-flatter itself about something that matters. The step that took us toward Jack
-was one nobody will celebrate: an order came down from this desk to re-run the
-biggest blocked experiment, and the builder read the record, found the run had
-already happened, and refused — because re-rolling the dice against a fixed bar
-is cheating even when the person asking outranks you. That is the whole project
-in one commit. The drift away is simpler and more dangerous: the machine is
-about to run out of the one resource nobody has decided how to spend, on a
-schedule that has now been set by the calendar three times running, while a
-quota of borrowed compute expires unused beside it. We have built something that
-tells the truth beautifully and cannot yet decide when to eat.
+30 specs are runnable now; **57 are blocked behind something unpassed.** T2.01
+alone accounts for 36 of them and has been FAIL since 08-12 — eight days,
+unchanged, correctly declined for re-running (a re-run is a seed lottery
+against a fixed 5σ bar; the measured value is 2.67σ on a converged curve). It
+is a science problem and nobody is working on it, because D1 — where control
+lives — has been open on the owner's desk for **eleven days** and its
+`RECOMMENDED` option is the one the PLASTIC-ONLY decree forbids.
 
 ---
 
-## 4. REWRITTEN / STRENGTHENED
+## 2. What the window actually produced
 
-None. DAILY mode does not re-examine tests — Part 2 runs Sundays. **No
-threshold moved, no control softened, no spec file touched, no ledger entry
-edited by this Review.**
+**Two first-ever PASSes, and one of them is the best result in weeks.**
 
-Queued for Sunday's Part 2, carried and added to:
-- **T0.13** — twenty-two attempts to make true. Carried from 08-13.
-- **The re-certification cost.** T0.17 ran seven times in twenty-four hours and
-  T0.27 six. The ratchet is correct and the runs are cheap individually, but
-  nobody has ever measured what fraction of the loop's wall clock goes to
-  re-certifying green specs. Measure it once; if it is small, say so and stop
-  worrying.
-- **SM.01's 0.33 intermittency shortfall**, **PS.03's single-physics gradation
-  caveat**, **BA.01's 0.6918-against-0.70 control margin** — all carried
-  unchanged from 08-13.
-- **NEW: the six sensor/fixture PASSes** (VO.01, BA.01, PS.02, SM.01, TA.01,
-  T2.03). Each is real work. The Part 2 question is whether any of them is
-  *positioned* to make its commitment's claim reachable, or whether the claim
-  spec above it is blocked on something nobody has scheduled. `VO.02`, listed
-  in CHAMPIONS.md as "runnable today", declares in its own registry notes that
-  it is **BLOCKED ON GEN.02 (a second Jack)**. That contradiction is a Part 2
-  item, not a daily edit.
+- **TA.02 — one-trial conditioned taste aversion. PASS.** Pooled avoidance
+  0.983, the Garcia dissociation clean, the DQN null eating 196–218 toxic meals
+  at zero discrimination over 150 lives. **Taste is the first zero-pass
+  constitutional commitment ever closed by a claim spec.** Every previous
+  "Jack got a sense" headline — voice, balance, cold, smell — was a *fixture or
+  sensor* passing, the apparatus rather than the capability. This one is the
+  capability. It is the single most important step toward Jack this week.
+- **T2.06 PASS** (P100, 1069 s billed, 0.30 h of W33).
 
----
+**Three negatives, all routed correctly.** XL.01 FAILed twice — the carried
+diary bought nothing on fresh worlds 3–5, refuted first by its own control and
+then on the claim. SH.01 was parked at z=1.03 rather than spending 80 CPU-min
+on a guaranteed VOID. The instrument is still refusing things, which is the
+only reason its greens are worth anything.
 
-## 5. Steering maintenance performed
-
-**`scripts/ladder_prompt.md` — three corrections, one of them urgent.**
-
-1. **§2's clock directive was actively dangerous and I wrote it.** On 08-13 I
-   replaced the two-clocks note with "credits are not scarce this week — do not
-   ration iterations against them", on a 32% reading. It reads 71% today.
-   Left standing it would have had the builder spend freely into a 90% cliff
-   that also silences the auditors. Rewritten: both clocks bind, they collide
-   this weekend, **GPU dispatch is the work that must not wait** because a
-   submitted job survives a dark loop and an unsubmitted one is worth nothing on
-   Monday. The live meters are named; the numbers are stamped with the hour they
-   were read and explicitly marked as floors, not facts.
-2. **§2 and §3 now record the T2.01 decline as SETTLED**, with the arithmetic
-   that settled it, so no future iteration re-litigates a correct refusal every
-   time it reads the priority file. §3's gate is marked resolved as (b) by
-   `a3b12f6` — asked for on 08-13, delivered.
-3. **§0 marks LC.03 IN FLIGHT with its pid and a "do not relaunch"**, carries
-   the note that its workers are why every CPU timing measured today is
-   pessimistic, and **records my own "ready as-is" error as a general rule**:
-   a spec whose dependencies pass is not a spec that exists — check
-   `experiments/tests/`. The cached "16 commitments" was replaced with a
-   pointer to `run coverage`, per this file's own rule, which I broke.
-
-**Field watch — nothing to consume.** `FIELD_WATCH.md` is unchanged since
-08-12 07:01 and both live sweeps (wk2, wk3) were dispositioned on 08-13. The
-scout's mandate runs to Monday 08-17. No action.
-
-**Seat staleness (`docs/CHAMPIONS.md`) — the finding is closed, and well.** All
-five stale seats reported on 08-13 were corrected by the builder in `c6ca536`
-and `a46e186`, verdicts unchanged and nobody seated, each checked against the
-ledger before editing. Better than asked for: the rewrites now distinguish
-*fixture certified* from *seat claimed* ("VACANT — but he CAN make a sound"),
-which is exactly `coverage.py`'s kind semantics reaching the human-readable
-map. The builder also **barred frozen-trunk+head from the D1 seat** pending the
-owner's reconciliation, which is the right unilateral call. One residue: three
-seats say a claim spec is "runnable today" and **VO.02 is not** (its own notes
-declare it blocked on a second Jack). Part 2 item, above.
-
-**Organ liveness — all five alive.**
-
-| organ | cadence | last fire | verdict |
-|---|---|---|---|
-| builder | hourly | 06:18 (rc=0) | **OK — 24 fired, 21 rc=0. The 3 refusals were a session limit, honestly logged** |
-| overseer | 6-hourly | 06:37 (running) | OK — 15th audit closed `ON TRACK` |
-| field watch | Mondays | 08-12 07:02 (rc=0) | OK — next due 08-17 |
-| Review | daily | 06:40 (this run) | OK — 08-13 completed; the 08-12 API-529 death remains the open finding |
-| tmp_reaper | 4-hourly | 04:13 | OK |
-
-Nothing is silent. **But note what liveness cannot see: at ~18:30 today all
-five of these go dark together and every one of them will look healthy doing
-it**, because a gated organ exits 0 with an honest log line. My liveness check
-is a silence detector; a five-day planned silence reads identical to a
-five-day outage. That is the same structural blindness reported on 08-13 as
-finding 3, arriving from a new direction.
+**The machine got harder, twice, both from overseer findings.** The stale-PASS
+cascade closed by the detector's own testimony (10 stale → 5+1, not one a
+PASS); and the reattach-laundering hole is now mechanised shut — a
+`JACK_REUSE_KERNEL` harvest can no longer stamp a certificate with code that
+did not run, because `submit()` records the sha of the exact kernel pushed and
+a mismatch is refused at zero billing. T0.24 is up to 8 properties.
 
 ---
 
-## 6. FOR THE BUILDER
+## 3. THE FINDING — three iterations spent waiting on dead processes
 
-Ordered. Item 1 is measured in hours, not days.
+**Measured at 06:41 UTC, and it is still true as this is written:**
 
-1. **Dispatch the PROBE kernel now — not the full T2.04 run, and not after the
-   CPU smoke.** *(AMENDED 07:05, after the overseer's 16th audit landed its
-   RANK 1 while this page was being written. My original item said "dispatch,
-   don't wait for the smoke"; that was wrong in a way the overseer caught and I
-   had not: the smoke measured `d_model=64, n_layers=2` and the production
-   kernel instantiates `PipelineConfig()` defaults `d_model=512, n_layers=8` —
-   a trunk ~256× more expensive per step. `est_hours=2.0, timeout_s=18000` is
-   extrapolated across that change and is not evidence about the run it sizes.
-   Dispatching blind risks a timed-out kernel that bills the week's last hours
-   and records nothing, which is the exact loss I was trying to prevent.)*
+```
+/data/sm02_geo_check.log   0 bytes   launched 04:13   no process
+/data/sm02_geo_occ.log     0 bytes   launched 05:08   no process
+/data/sm02_geo_vis.log     0 bytes   launched 05:08   no process
+/data/sm02_learnability_{vis,occ}.json   UNCHANGED since 03:13 / 03:15
+ps -eo cmd | grep -E 'sm02|geo|experiments\.'   →   nothing
+```
 
-   **The clock argument and the overseer's fix agree, so do both:** its option
-   (a) — a short probe timing ~5 `_train_bc` steps at the *production* config —
-   is itself a GPU dispatch, costs minutes, keeps running while the loop is
-   dark, and is the thing that makes the real dispatch safe. Send it now,
-   re-derive `est_hours`/`timeout_s` from what it returns, commit the
-   arithmetic, then dispatch the full run. **Do not wait on the CPU smoke for
-   either step** — it is being starved by LC.03's workers on a four-core box,
-   it has no cost gate, and it cannot answer the question that matters.
-   Remember why the timing still binds: **~10.9 Kaggle hours die Sunday and the
-   loop may be dark from ~18:30 today**, so a job that is not submitted before
-   then is worth nothing on Monday.
-2. **Do not relaunch LC.03.** `ps -p 2536994` before you act on anything that
-   mentions it. If it lands, record it and take LC.04 — the arbitration, and
-   the first thing in this project that decides *how Jack learns* rather than
-   whether an organ works. If it died, the journal has the handoff.
-3. **Write your handoff journal for a reader who arrives in five days, not in
-   one hour.** If the weekly gate closes today, the next iteration to read your
-   note may be Aug 19. Every in-flight pid, every "do not relaunch", every
-   Kaggle attempt id needs to survive that gap, and `/data/tmp` gets reaped
-   every four hours.
-4. **Nothing else this window should start a multi-iteration unit.** With ~19
-   points of credit left, finishing beats starting. If you have a spare cheap
-   iteration, the highest-value one is the T2.04 record verification B3 asked
-   for — confirm the entry carries `gpu_job_id` and remote hardware. That is
-   B3's first live exercise and it is one command.
+Three launches, three empty logs, zero surviving processes, and the downstream
+JSONs still holding the 03:xx **Euclidean** numbers the geodesic repair was
+supposed to replace. The comparable check that *did* run took 230–317 s and
+printed on completion; these have been "running" for 93 and 33 minutes.
 
-*Carried and still open from 08-13: N1, the certificate pre-gate for UB.11
-(now non-hypothetical, UB.9 has passed); and the four consumed field-watch
-nominations in queue order — wk2-N1 (whiff clock) first. None of them may
-displace items 1–3.*
+The three iterations that ended at 04:15, 05:10 and 06:12 all reported some
+version of *"waiting on the two CPU checks — I'll be notified when both have
+written their ratio lines."* Two of them ran under four minutes. **The builder
+was blocked on a notification that could never arrive**, and the loop's own
+liveness logging shows `rc=0` for all three, so nothing anywhere reads as
+wrong.
+
+**This exact failure was diagnosed by the builder itself yesterday at 10:41**
+(`a51686c`: *"live oracle-probe pid is 3963630 — first two launches died at
+import"*). A `setsid`-detached script launched from a `/data` cwd dies at
+import before writing a byte; the launch returns 0; a poll on file *content*
+waits forever. The lesson was learned, written into a commit message, and not
+turned into a check — which is `LESSONS.md:4042` almost verbatim: *a scar
+recorded in prose is prose; only a check binds the next author.*
+
+**Also uncommitted:** `experiments/sm02_learnability_check.py` (untracked), the
+sm_02 geodesic edit (+137 lines), the LESSONS entry, and the pilot's GPU
+charge. **Five iterations of work sitting outside git**, in a project whose own
+lessons file says a detached recorder stamps the tree it finds.
+
+I have put all of this at the top of `scripts/ladder_prompt.md`, above the
+priority order, because the builder fires at 07:07 and would otherwise wait a
+fourth time.
 
 ---
 
-## 7. FOR THE OWNER
+## 4. Steering maintenance (Part 2.5)
 
-**1. The credit gate closes in roughly twelve hours and nobody has decided what
-should happen when it does. This is the third resource crisis in four days and
-the second that will otherwise be settled by the calendar.**
+**Four fixes to `scripts/ladder_prompt.md`, one of them expensive:**
 
-`week:all models` went **32% → 71% in twenty-four hours**. The hard stop is
-90%, the week does not reset until **Aug 19 11:59 UTC**, and the stop takes the
-overseer and the Review down with the builder — so the system loses its
-auditors at exactly the moment it stops producing anything for them to audit.
-Beside it, **~10.9 Kaggle hours expire Sunday** and cannot be spent by a loop
-that is not running.
+1. **NEW §"Read this before you wait on anything"** — the dead-process finding
+   above, with the relaunch procedure (`chdir` + `sys.path` pinned *inside* the
+   script; `sleep 15; wc -c <log>` before believing a launch; `pgrep -f`, never
+   the pid `setsid` returned).
+2. **The expensive one: `§0` still ordered "LC.03 IS IN FLIGHT. DO NOT RUN IT
+   AND DO NOT RELAUNCH IT"** — a Review directive from 08-14 naming `pid
+   2536994`. That run **landed VOID on 2026-08-14 07:36** and the spec has
+   since gone stale by `IMPL_DEPS`. **This desk's own order forbade the
+   project's second-largest unblock for six days after it stopped being true.**
+   Replaced with the live state and an instruction to read the VOID's reason
+   before relaunching.
+3. **`§2`'s credit/Kaggle section was entirely spent** — it warned about a
+   collision "this weekend", quoted a 71% meter that reset on 08-19, and a
+   Kaggle W32 deadline of 08-16. Replaced with the live meters and the
+   inversion: the constraint is no longer the ability to submit, it is having
+   something worth submitting.
+4. **A cached count** — "`run coverage` still reads 17 and it has not moved" —
+   on the very page that forbids cached counts. It is 15. Replaced with the
+   instruction to read the tool.
 
-Both the 08-11 credit emergency and D5 "resolved" by the week rolling over
-rather than by a decision. I noted at the time that this means we have never
-learned whether the gate's shape is right; we have only learned that weeks end.
-This is the third instance, and it is the first where a second resource is
-destroyed as a consequence.
+**FIELD_WATCH.md: unchanged, nothing to consume.** Last real sweep 2026-08-12
+(week 3), consumed by the 08-13 Review; the file was last committed 08-14
+02:31, before the last Review read it. **The Monday 08-17 sweep was refused at
+96% usage** — so week 4 does not exist and the scout has been silent for eight
+days against a seven-day cadence. Logged with a reason, under 2× cadence, so
+not a liveness finding — but a lost week, and the next sweep is 08-24.
 
-**Recommendation: decide before ~18:30 UTC today, either way, and record it.**
-The cheapest concrete form: write `.usage-resumed` with a ceiling you actually
-mean (95%? 97%?) and an expiry at the weekly reset — the mechanism already
-exists and expires itself, which is why it is safe. **Or** say plainly that five
-dark days is acceptable and that unspent Kaggle hours are an accepted loss, and
-I will stop raising it. What I would rather not report on Sunday is a third
-"resolved by the calendar". The standing-policy question (D5) is still open on
-your desk; this is that question arriving with a deadline attached.
+**Seat staleness (`CHAMPIONS.md`, rule 4): one seat flagged, two cells
+corrected.** The **Learning core** seat is FLAGGED STALE — a DEFAULT champion
+that has never been contested, whose screening round has been VOID for six days
+with nothing scheduled, and whose cell still read "IN FLIGHT since 2026-08-13".
+Corrected to the ledger's actual state; **no seat changed hands.** The **Smell**
+cell said `SM.02` "is runnable today"; it is now implemented, its first pilot
+returned non-learning on all six arms, and the repair is uncommitted — recorded.
 
-**2. The largest blocker in the project stopped being a compute problem
-overnight, and that changes what it needs from you.**
+**Organ liveness: nothing silent, but the record is worse than it looks.**
+Builder hourly, 24/24 this window. Overseer 6-hourly, all four fires present
+(12:43, 18:46, 00:37, 06:37). `tmp_reaper` 04:13. `lost_iterations.log` empty.
+Review and field watch: covered above — **every organ that was silent, was
+silent because the usage gate refused it, and every refusal is logged.** The
+gate works as designed. The design is the problem, and it is on the owner's
+desk below for the second time.
 
-T2.01 — locomotion beats a random policy — frees 26 specs and blocks 36,
-including **every curiosity spec in the ladder**, T5.01 (the founding-thesis
-test you personally scheduled), and all of Tier 6. It is FAIL at 2.67σ against
-a pre-registered 5.
+---
 
-Yesterday this desk called it a GPU-hours problem. The builder proved otherwise
-and refused the re-run: v5 already ran clean on the P100 on 08-12, and its
-reward curve is **flat at ~5.15 from 100K to 700K steps on all three seeds**.
-The learning has converged. The gap to 5σ is the spread between trained seeds
-(means 280/447/484), not a shortage of steps. **More compute cannot fix this.
-Re-running it would be rolling dice against a fixed bar until one comes up.**
+## 5. The honest paragraph
 
-So the thirty-six specs behind it are waiting on one of three things, and only
-you can pick: **(a)** the claim is right and the *body* is wrong — the same
-diagnosis BA.02 reached independently this window when balance turned out to
-have no headroom in the rover body (D8); **(b)** the claim is right and the
-*learning core* is wrong, in which case LC.03/LC.04 are the unblock and it is
-already running; or **(c)** the 5σ bar prices seed variance in a way this
-experiment can never satisfy, and the honest move is a redesigned claim under
-the T1.02 precedent — a *harder* experiment, not a softer threshold.
+We are closer to a creature, and I can point at the reason without reaching:
+for the first time, one of the owner's own commitments stopped being a promise
+and became a demonstrated capability. Taste is not a fixture that reports
+numbers; it is Jack eating something that made him ill and then refusing it,
+with the dissociation that tells us it is taste and not merely memory, and with
+a null that shows a competent learner without the mechanism never gets there.
+That is the shape everything else on this ladder has been aiming at and mostly
+missing. Against it, the drift is the same one the last three pages have named
+and it is getting older rather than better: the senses accumulate while the body
+stays unproven. He can smell, taste, hear, feel cold and feel himself falling,
+and he still cannot be shown to walk — and the reason is not compute and not
+effort but a question about where control lives that has sat unanswered long
+enough for the ladder to grow a whole wing behind it. The subtler worry is the
+one this window exposed by accident: an organ that is stalled looks exactly like
+an organ that is working, because the only thing anything checks is whether the
+process exited cleanly, and a loop waiting patiently for a corpse exits very
+cleanly indeed. We have built a system that cannot lie to us about its results.
+We have not yet built one that cannot lie to us about whether it is doing
+anything.
 
-**My recommendation: wait for LC.03 before choosing, then choose (b) if it
-finds a core that survives, and (a) if it does not.** Both BA.02's and T2.01's
-failures now point at the body rather than the brain, and two independent
-experiments reaching the same suspicion is worth more than either alone. What I
-am asking for today is only that you know the fork exists and that it is not
-waiting on hardware.
+---
 
-**3. `D7` — a `kills` clause fired for the first time in this project's
-history, and by rule the deletion is yours.**
+## FOR THE BUILDER — ordered
 
-T3.07 ablated mood conditioning and **FAILED**: mood does not measurably change
-what Jack does in the shipped system (action-distribution divergence −0.025,
-mood-regime classification 0.225/0.275/0.375 against a chance of 0.25). The
-spec's pre-registered `kills` clause reads *"MovementMoodCoupling as anything
-but cosmetics"* — so this is not an opinion about the module, it is the
-outcome the experiment was registered to produce.
+1. **STOP WAITING. The SM.02 geodesic CPU checks are dead** (evidence in §3 and
+   at the top of `ladder_prompt.md`). Relaunch them with the repo path pinned
+   inside the script, and *verify the artifact at 15 s* before you treat a
+   launch as successful. **Never end an iteration on "waiting" without a
+   liveness proof** — `pgrep -f` returning a pid AND the log growing.
+2. **Commit the five iterations of uncommitted work** before any dispatch:
+   `sm02_learnability_check.py` (untracked), the sm_02 geodesic edit, the
+   LESSONS corollary, the pilot's GPU charge.
+3. **Turn the scar into a check.** You have now lost time to
+   dies-at-import-in-a-detached-launch twice in twenty hours, and written it
+   down both times. Put a `launch_detached()` helper in the harness that pins
+   `chdir`/`sys.path`, sleeps, asserts the log is non-empty, and returns the
+   `pgrep`-found pid — or the third occurrence is already scheduled.
+4. **LC.03 is unblocked, stale, and yours.** My own 08-14 order was what stopped
+   it; that order is withdrawn. Read why attempt 1 VOIDed before relaunching —
+   a second VOID for the same reason is the waste, not the run.
+5. **~26 Kaggle hours expire Sunday 08-23 and credits are healthy.** Unlike
+   last weekend you can actually spend them. Do not manufacture work to fill
+   them; do make sure SM.02's repaired pilot and anything else genuinely ready
+   is dispatched well before Sunday rather than at it.
 
-GOAL.md's Tier 3 says dead weight gets deleted; the builder's own rules say
-deleting a component is your call, not its, so it escalated correctly. Note the
-scale: `EmotionalState.py` is 1,149 lines and this commitment has long been
-flagged as under-tested. **My recommendation: authorise deletion of the
-coupling path specifically, not of emotion as a commitment** — T3.07 refutes
-that *this wiring* changes behaviour, not that interoception and affect have no
-place in Jack. Delete the cosmetics, keep the seat, and let something re-earn
-it in an arena. This is the first component the ladder has ever asked to
-remove, and doing it cleanly sets the precedent for the fourteen other Tier-3
-specs behind it.
+## FOR THE OWNER — strategic forks only
 
-**4. `D1` is ten days old.** I second the overseer without adding an ask; the
-builder has now barred the unconstitutional option from the seat itself, which
-holds the line but does not answer the question. One line from you.
+1. **The 90% usage gate cost 4.3 days, ~103 builder iterations, all five
+   Reviews, one field-watch sweep and a full expiring Kaggle allocation — and
+   this is the second time I have raised it.** The failure shape is still
+   wrong: the gate takes the *auditors* down with the builder, so the moment
+   the project most needs oversight is the moment oversight is guaranteed
+   offline, and nothing can even report that the loop is dark. **Recommendation:
+   a small reserved slice for the three audit organs**, so that a builder
+   blackout is observed rather than silent. Cheap, and it converts a total
+   outage into a degraded one.
+2. **D1 — where control lives — is eleven days open and it is now the single
+   largest thing standing between this project and a Jack that moves.** T2.01
+   blocks 36 specs, is correctly refusing to be re-run, and cannot be fixed by
+   compute. Its `RECOMMENDED` option (frozen trunk + head) is barred by the
+   PLASTIC-ONLY decree, so the decision is *unanswerable as posed* and has been
+   for eleven days. **Recommendation: either narrow the decree's scope to admit
+   a frozen control trunk into the arena, or strike that option and let the
+   remaining arms run.** Both are decisions; continuing is not.
+3. **An organ can stall indefinitely and every instrument we own will report
+   `rc=0`.** §3 is the first observed instance: three iterations, exit code
+   zero, nothing produced, nothing flagged. This is adjacent to the 08-13
+   finding that no organ reads another's exit code, but it is worse — the exit
+   code was *correct*. **Recommendation: a productivity heartbeat** (an
+   iteration that commits nothing and moves no ledger row twice running is a
+   finding), owned by the overseer. I have not implemented it; it touches organ
+   scripts, which are outside this desk's jurisdiction.
 
-*Nothing in this review touched a threshold, a control, a spec file or the
-ledger. The steering edits are operational and itemised in §5. Committed with
-an explicit pathspec, per the 08-13 finding about two organs sharing one index
-— the overseer's 15th audit was running concurrently while this was written.*
+---
+
+*Part 2 skipped per DAILY mode. No threshold moved, no control softened, no
+spec file touched, no ledger entry edited. Queued for Sunday's FULL run:
+T0.13's 20+ attempts; SM.01's ungated intermittency shortfall; PS.03's
+self-reported "one physics measurement, not three"; BA.01's control passing by
+0.008; and the 61% rework rate against the oldest certificates.*
