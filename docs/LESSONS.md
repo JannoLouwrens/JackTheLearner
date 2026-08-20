@@ -4223,3 +4223,29 @@ quantum. Corollary, the probe pattern that settled it cheaply: an
 observation-only hook replayed on the SAME seed, VERIFIED bit-identical
 against the run under diagnosis, turns "why did this run read X" from
 argument into measurement — and costs one replay.
+
+## A release's sdist reaches the index before its wheels — "latest" can mean "build from source" for a window of hours
+
+Two Kaggle kernels died on 2026-08-20 (~211 s charged each, science never
+started) installing mujoco: `gymnasium[mujoco]` and then plain `mujoco` both
+resolved to `mujoco-3.12.0.tar.gz` — the sdist — because 3.12.0 had reached
+PyPI within the previous hours and its wheels had not. The ephemeral GPU
+image has no toolchain to build it, and the same install line had worked in
+a different spec's kernel ELEVEN HOURS EARLIER (it drew 3.11.0, whose wheels
+exist). Nothing in the repo changed between the working install and the
+broken one; the INDEX changed underneath an unpinned requirement.
+
+The first failure was undiagnosable from its own log: `pip install -q`
+suppressed which version pip had chosen to build, and finding the cause
+needed a second kernel with the -q removed plus a PyPI JSON API query
+(`releases[v]` filtered to cp312 manylinux wheels — one line, free, and it
+would have priced the fix BEFORE the second kernel).
+
+**Rule:** a remote job's dependency line is a bet on the index at kernel
+time, not at commit time. For anything installed on an ephemeral machine,
+pin the exact version whose wheel you have verified exists for the image's
+python/platform (the PyPI JSON API answers in one request), and never -q the
+install of a package you would have to diagnose remotely — quiet success
+saves nothing and quiet failure costs a kernel. Corollary: "it worked in
+another spec's kernel this morning" dates the evidence, it does not
+generalise it; the index moves on its own clock.

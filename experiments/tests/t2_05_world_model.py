@@ -403,16 +403,18 @@ def remote_run(seeds: list, n_train: int = N_TRAIN, n_test: int = N_TEST,
 # ── GPU submission (one per spec — module cache, T2.01 pattern) ───────────
 JOB = r'''
 import subprocess as _sp, sys as _sys, os as _o
-# mujoco FIRST and PLAIN, then gymnasium WITHOUT the [mujoco] extra: on the
-# 2026-08-20 Kaggle image `gymnasium[mujoco]`'s resolution picked a mujoco
-# with no usable wheel and died building it from source (kernel
-# jack-ladder-1787225429, 211 s charged, science never started), while the
-# SM.02 pilot's plain `mujoco` install resolved a wheel on the same image
-# hours earlier. Humanoid-v5 needs mujoco importable, which the plain
-# install provides; the extra adds only the pin that broke. Not -q: the -q
-# on the failed attempt suppressed WHICH version pip chose to build, and the
-# diagnosis had to come from a second source.
-_sp.run([_sys.executable, "-m", "pip", "install", "mujoco"], check=True)
+# mujoco PINNED, then gymnasium WITHOUT the [mujoco] extra. Two kernels died
+# on this line on 2026-08-20 (jack-ladder-1787225429 via gymnasium[mujoco],
+# jack-ladder-1787225777 via plain mujoco; ~211 s charged each, science never
+# started): mujoco 3.12.0's sdist reached PyPI before its wheels, so for a
+# window of hours "latest" meant "build from source", and the build needs a
+# toolchain the image lacks. 3.11.0 has cp312 manylinux wheels (verified
+# against the PyPI JSON API before this pin). Humanoid-v5 needs mujoco
+# importable, which this provides; the extra adds nothing but resolution
+# freedom. Not -q: the first failure's -q suppressed WHICH version pip chose
+# to build, and the diagnosis needed a second kernel.
+_sp.run([_sys.executable, "-m", "pip", "install", "mujoco==3.11.0"],
+        check=True)
 _sp.run([_sys.executable, "-m", "pip", "install", "gymnasium"], check=True)
 import json
 from experiments.tests.t2_05_world_model import remote_run
