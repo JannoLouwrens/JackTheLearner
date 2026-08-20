@@ -4068,3 +4068,40 @@ that decays. Corollary for diagnosis: a JSON parse failure at `char 0` on a
 "successful" harvest means *look at what object you parsed* before concluding
 the artifact is empty — a path, a log, and an empty file all die on the first
 character, and only one of them means the kernel failed.
+
+## Staleness detects a certificate about OLDER code; nothing detects one about NEWER code
+
+`impl_sha` exists so a ledger row cannot outlive the code it describes:
+`stale_claims()` recomputes the hash of the test file (plus `IMPL_DEPS`) and
+flags any row whose recorded sha no longer matches. That catches the case it
+was built for — the code moved after the run — and it is structurally blind to
+the mirror image, because it compares *recorded* against *current* and a row
+written from the current tree always matches by construction.
+
+The mirror image is reachable. `JACK_REUSE_KERNEL` reattaches to a kernel that
+is already running or finished, and `submit` deliberately skips `kernels push`
+on that path (recovering a completed run must cost zero quota, which is the
+whole point). So the remote code is whatever the ORIGINAL submission pushed,
+while `run_spec` stamps `impl_sha` from the LOCAL tree at the moment it records.
+Any edit made to the test file between dispatch and reattach-harvest is written
+into the certificate as though it had run. Measured 2026-08-19 on TA.02: the row
+records `impl_sha f30e1ba6…` / `commit 926541c`; kernel `jack-ladder-1787178802`
+executed `2e7ec096…` / `40e6bad`. The two-line diff was confined to `_submit`'s
+harvest path, so the science was untouched — by the author's care, not by any
+mechanism, and `stale_claims()` reported the ladder clean throughout.
+
+Found by scanning every ledger row for a `gpu_job_id` that also appears in
+`history[]` under a DIFFERENT `impl_sha` — one hit in the project's history.
+That query is the detector this direction never had; run it, don't trust the
+staleness report to cover it.
+
+**Rule:** the invariant is not "the recorded sha equals the current sha", it is
+"the recorded sha is the sha of what EXECUTED". Any path that decouples *when
+the code ran* from *when the row was written* — a reattach today, a resumed
+checkpoint or a cached artifact tomorrow — breaks the second while satisfying
+the first. When you build such a path, make it carry the executed code's
+identity home (hash the script at push time, compare at harvest) rather than
+letting the recorder re-derive an identity from a tree that has since moved.
+Generalisation of "an absent field is honest; a field that silently records the
+RECORDER is a false one": here the field records the recorder's TREE, and
+reports it as the experiment's.

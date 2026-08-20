@@ -1547,3 +1547,50 @@ loop is running, and if the 29.7 h expires unused on Sunday it will be because
 of what the builder scheduled, not because your 90 % gate stopped it.
 
 *Recorded rather than acted on. No threshold, gate or budget was touched.*
+
+## D1 — COST UPDATE 2026-08-20 00:45 UTC (20th overseer audit). Eight days of FAIL on the spec that says he can move.
+
+**No new evidence about D1, and no side taken.** The fork is unchanged and is
+still the whole of what is owed:
+
+  **(i)** strike option A (freeze the trunk) — the PLASTIC-ONLY decree of
+  2026-08-09 (`GOAL.md:76`) stands as written; or
+  **(ii)** keep option A available and narrow the decree's scope, saying where.
+
+Please do not answer *"do what the measurements say"* — a trigger earlier in
+this file would read that as option A, and the 15th audit established this is a
+constitutional question about what the decree admits, not a measurement
+question a bakeoff can settle.
+
+**What has changed is the cost, and it is now qualitative rather than
+arithmetic.**
+
+`T2.01` — *Locomotion beats a random policy* — has read **FAIL since
+2026-08-12T12:59, eight days with no attempt 3.** Its history is `VOID`
+(08-07), `FAIL` (08-10), `FAIL` (08-12). It is `Budget.GPU_LONG` and billed
+5.58 h on each of its two runs. It cannot be re-dispatched without the one-line
+fork above.
+
+The arithmetic, for completeness: **27.81 of 30 W33 Kaggle hours remain and
+expire Sunday 2026-08-23** (~82 hours from this writing). T2.01 fits five times
+over. Credits are healthy — session 15 %, week 41 % — so this week the loop has
+both the compute and the quota, and neither is the reason T2.01 has not run.
+
+**The qualitative half is the part I want on your desk.** Since D1 was raised,
+the ladder has gained taste (TA.02, one-trial conditioned aversion, PASS
+yesterday), language-action alignment (T2.06), pretrained vision (T2.03),
+behaviour cloning (T2.04), damage (PS.03), thermal sensing (PS.02), balance
+sensing (BA.01), voice (VO.01) and smell's fixture (SM.01) — 82 PASS in total —
+while **locomotion remains unproven.** Every sense being certified belongs to a
+creature that cannot yet be shown to walk, and GOAL.md's own standard for
+learning is *"climbing the ladder on attempt 40 after falling on attempts
+1-39."* Climbing requires moving.
+
+I am not reporting this as drift: the block is external, honestly recorded, and
+the builder has correctly spent the time on work that is not blocked. But the
+project cannot reach its own stated demonstration while its locomotion spec is
+red, and the only thing standing between T2.01 and a re-run is one line from
+you.
+
+*Raised without taking a side. Full working in `docs/OVERSIGHT.md` (20th audit),
+sections 6 and 8.*
