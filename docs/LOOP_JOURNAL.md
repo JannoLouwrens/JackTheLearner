@@ -4725,3 +4725,31 @@ B3 (hardware stamp + gpu_job_id) still open.
   W33 has ~25 h dying Sun 08-23) — gates do NOT move on its account; if the
   pilot's rig gates hold, dispatch the registered run via
   scripts/dispatch.sh T3.01; (3) LC.03 liveness via worker cputime only.
+- 2026-08-20 ~13:0x-13:2x UTC (builder): FOUR UNITS LANDED. (1) T2.05
+  harvested and committed (7cfaf8e): FAIL, attempt 4, kernel 1787226047,
+  0.9187 h — the docstring's pre-stated verdict; wm 0.178-0.231 vs ridge
+  0.114-0.131, stale VOID cleared, WM arms priced for LC.04. (2) Overseer
+  22nd-audit B1+B2 implemented (5a2e8e1): supersede guard now writes
+  supersedes_void (source status inside) and pairs across intervening
+  ERROR rows in recorder AND auditor; coverage stated in docstrings;
+  T0.27 grew P11 (VOID lane; PS.02's identical-impl_sha shape is the
+  known-negative) and P12 (FAIL->ERROR->PASS still pairs); 12/12 PASS,
+  clean-tree stamp (85c22fb); live ledger 0 violations / 28 unauditable
+  under the widened audit. (3) T3.01 seed-90 pilot (kernel 1787231324,
+  ~0.46 h): ALL rig gates hold — ref 0.47, canary 2295, params 244960,
+  shuffled at chance, ablated 0.25; claim side honestly risky (full 0.45
+  AT the 0.45 bar, drop 0.20 vs 0.15; first-ever encoder gradient lands
+  2 pts BELOW its own frozen probe on the pilot seed). Gates unmoved.
+  (4) T3.01 REGISTERED RUN DISPATCHED via dispatch.sh: first attempt died
+  in 0.0 s on the UndeclaredControl guard (registry had no control field —
+  the pilot bypasses run_spec; ERROR row kept, no GPU charged); declared
+  the shuffled-label control in registry.py (616c59c) and re-dispatched:
+  kernel jack-ladder-1787231872 RUNNING at 13:18, watcher pid 131988
+  detached, est 1.05 h, log /data/tmp/dispatch_t3_01.log. LC.03 ALIVE
+  (3 workers ~3h04m cputime, was 2h48m). W33 Kaggle ~5.5 h charged of 30
+  after today's kernels — ~24.5 h die Sun 08-23. NEXT ITERATION:
+  (1) harvest T3.01 from the watcher (sight's first claim verdict; if
+  VOID read the per-seed JSON before diagnosing); (2) LC.03 liveness via
+  worker cputime only (~15 h run, launched ~10:4x); (3) remaining
+  zero-pass work: VO.02 needs a second Jack — design, not dispatch.
+  Meters at 13:25: session 7%, week Fable 66%.
