@@ -4842,3 +4842,37 @@ B3 (hardware stamp + gpu_job_id) still open.
   zero stale claims remain once T4.02 lands — next unblock candidates are
   UB.10 (frees 4, third in run blocked) or a genuine W33 spender; do not
   manufacture one.
+- 2026-08-20 ~17:0x-17:3x UTC (builder): T4.02 HARVEST COMMITTED (20f8e86,
+  inherited from watcher 166957): FAIL as pre-stated, ratio 27.28 vs 10x
+  gate (per-seed 29.13/12.50/29.78), audio norms ~1e-4, control ~12000
+  fires, loss fell all seeds — a fresh impl_sha stamp indicting the fusion.
+  Zero stale claims remain. Standing-rule check re-run live: same six
+  runnable zero-pass claims, all parked/blocked (no input changed in 1 h),
+  so fell to `run blocked`: T2.01 settled, LC.03 in flight -> **UB.10
+  IMPLEMENTED** (c7c90e6, experiments/tests/ub_10_fusion_bakeoff.py): six
+  arms on the certified HNS battery (slot XOR + two marginal tasks as the
+  T2.02 learning gate), identical 50-token layout, shared per-seed batch
+  order, widths matched to A1@128's 314,886 params (all within +-2.9%;
+  +-5% VOID gate — D_SCAN had to go step-8->step-4, A4 was +5.33% at
+  step 8). Per-arm unimodal-mean ensembles (ens slot > 0.60 = fixture
+  leak -> VOID), per-sense cross-episode swap control (>= 0.10 hurt
+  somewhere per arm else VOID). PASS = stable top-1 trunk arm beats A0 on
+  slot every paired seed + cluster-boot CI > 0 + winner >= 0.75 + beats
+  own ensemble; A0 TYING IS THE PRE-REGISTERED FAIL (report, restate
+  GOAL.md claim — do not re-roll). Local smoke all-arms OK. PILOT seed 90
+  LAUNCHED detached (pid 179934 via launch_detached.sh, log
+  /data/tmp/ub10_pilot.log, attempt 1787246533736, est 0.55 h, timeout
+  3900 s, head c7c90e6) — SM.02/T3.01 lesson: pilot before the registered
+  spend; gates do not move on its account. LC.03 ALIVE (workers ~7h11m
+  cputime, was ~5h59m; ~8 h to go; artifacts still Aug 14 = old). W33:
+  5.91 h charged, ~24 h left, dies Sun 08-23. Meters 17:35: session 46%,
+  Fable 75% — 15 pts from the hard stop, STAY LEAN, prefer harvest-and-
+  commit iterations until the Sunday reset. NEXT ITERATION: (1) read
+  /data/tmp/ub10_pilot.log — if the pilot ran clean (all arms trained,
+  params_ok, marginals >= 0.80, swaps hurt, no canary move), dispatch the
+  registered run via scripts/dispatch.sh UB.10 (seeds 0/1/2, ~1.25 h
+  kernel); if the pilot shows a rig fault, fix the RIG, never the gates;
+  if arms are at chance on the marginals, suspect EPOCHS/LR before
+  architecture (the T3.01 attribution-VOID shape). (2) LC.03 liveness via
+  worker cputime only. (3) Do not manufacture another W33 spender beyond
+  UB.10's registered run.
