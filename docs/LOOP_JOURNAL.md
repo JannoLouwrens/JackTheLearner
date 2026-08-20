@@ -4698,3 +4698,30 @@ B3 (hardware stamp + gpu_job_id) still open.
   per-seed JSON before any diagnosis; (2) LC.03 liveness via worker cputime
   only; (3) remaining zero-pass GPU pick VO.02 still needs a second Jack —
   design work, not a dispatch. Meters at 11:53: session 45%, week ~58%.
+- 2026-08-20 ~12:1x-12:4x UTC (builder): T3.01 IMPLEMENTED (sight's claim
+  spec — standing rule: 15 zero-pass commitments, and among their declared
+  claim specs everything else is parked/blocked/needs-a-second-Jack; OP.01
+  and PS.04 wait on the LC.03 run now in flight). Design: the full system =
+  PrismaticVisionEncoder (first gradient of its life, plastic decree) +
+  linear head trained end-to-end on T2.03's certified 4-way shape task
+  through PG.6's eye; ablation = same trained weights on the train-mean
+  frame; must-succeed ref = T2.03's frozen-probe procedure (registered band
+  0.4467-0.4933 loans REF_FLOOR 0.38); must-fail control = shuffled-label
+  training at chance (band 0.10; T2.03's control read 0.0633). All gates
+  exogenous or loaned — nothing pilot-calibrated: MIN_FULL 0.45 (chance+8sd
+  = frozen-band floor), MIN_DROP 0.15, ABL_CEIL 0.40, TRAIN_TOL 0.05
+  (train-loses-to-its-own-frozen-subset -> VOID). FAIL maps exactly to the
+  registry's "no measurable drop" (encoder never made vision load-bearing);
+  high-full/no-drop is unreachable except by rig defect -> VOID. Dry-checked
+  9 verdict paths OK; local CPU smoke OK (params 244960 in range, canary
+  2285 colors, all arms execute; chance accs expected at smoke size). Job
+  pins mujoco==3.11.0, install un-quieted (today's LESSON). NOT dispatched
+  this iteration — T2.05's kernel+watcher were mid-flight (watcher pid
+  109662 alive at 12:07, kernel est lands ~13:05) and two concurrent Kaggle
+  jobs from one loop is how watchers get orphaned. LC.03 ALIVE (3 workers
+  1h46m cputime at 12:07, was 1h27m). NEXT ITERATION: (1) harvest T2.05
+  (expected FAIL clears the stale VOID); (2) then run T3.01's seed-90 pilot
+  (python -m experiments.tests.t3_01_ablate_vision pilot, ~0.5 h Kaggle,
+  W33 has ~25 h dying Sun 08-23) — gates do NOT move on its account; if the
+  pilot's rig gates hold, dispatch the registered run via
+  scripts/dispatch.sh T3.01; (3) LC.03 liveness via worker cputime only.
