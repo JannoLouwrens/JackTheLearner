@@ -102,6 +102,7 @@ from __future__ import annotations
 import fcntl
 import json
 import math
+import os
 import time
 
 import numpy as np
@@ -635,6 +636,12 @@ def _pilot():
     except BlockingIOError:
         raise SystemExit(f"REFUSING: {GPU_LOCK} is held; one GPU run at a "
                          "time. Retry when the holder finishes.")
+    # A pilot runs outside run_spec, so JACK_SPEC_ID is unset and its receipt
+    # would read spec:"" — 27 of 49 receipts were unattributable that way
+    # (overseer 20th-audit B2). Name the spec and the phase so pilot spend is
+    # summable separately from registered spend.
+    os.environ["JACK_SPEC_ID"] = "SM.02"
+    os.environ["JACK_SPEC_PHASE"] = "pilot"
     out = _submit([90, 91, 92])
     path = "/data/sm02_pilot.json"
     with open(path, "w") as f:

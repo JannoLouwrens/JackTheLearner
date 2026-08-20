@@ -466,14 +466,23 @@ EXPANSION: list[Spec] = [
                     "printed RESULT line is reachable, the log is never "
                     "offered as an artifact, `result_json` takes the named "
                     "artifact or the RESULT line and NEVER guesses at some "
-                    "other file, and a reattach never routes to Colab.",
+                    "other file, and a reattach never routes to Colab. Nor may "
+                    "the way home REWRITE the answer's provenance: a reattach "
+                    "recovers a kernel that ran the ORIGINAL submission's "
+                    "code, so the attempt receipt records the pushed kernel's "
+                    "sha256 and a reattach whose local script hashes "
+                    "differently is refused (or, explicitly tolerated, states "
+                    "the divergence in the receipt log and the ledger row).",
          falsified_by="A Kaggle JobResult with an empty stdout when a log was "
                       "downloaded; the log appearing in `artifacts`; "
                       "`result_json` returning a file it was not asked for; "
                       "`submit` calling Colab while JACK_REUSE_KERNEL is set; "
-                      "or any test file json.loads-ing an `.artifacts` entry "
+                      "any test file json.loads-ing an `.artifacts` entry "
                       "directly (the path, not the file — the TA.02 scar of "
-                      "2026-08-19).",
+                      "2026-08-19); or `reattach_code_check` missing a planted "
+                      "kernel-sha divergence, refusing an identical-code "
+                      "reattach, or calling a pre-guard receipt a mismatch "
+                      "(the impl_sha laundering scar, overseer 20th-audit B1).",
          null_baseline="The delivery path as it stood on 2026-08-11, replayed "
                        "verbatim as the control: log-in-artifacts plus "
                        "`next(iter(artifacts.values()))`. On the SAME fixture "

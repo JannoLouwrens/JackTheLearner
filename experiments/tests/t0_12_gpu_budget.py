@@ -524,18 +524,27 @@ def _probe_reattach() -> dict:
         with tempfile.TemporaryDirectory() as sd:
             script = Path(sd) / "job.py"
             script.write_text("print('stub')\n")
+            # Scope the reattach guard's receipt log to this test: the fixture
+            # slug embeds a REAL epoch (now - idle), so against the shared log
+            # a coincidental real attempt receipt in the join window could turn
+            # this stubbed recovery into a refusal with no cause in the test's
+            # own inputs. An empty journal reads as "unverifiable", which
+            # proceeds — the path this probe is actually about.
+            receipts = Path(sd) / "receipts.jsonl"
 
             gpu._run = _fake_cli(write_log=True)
             os.environ["JACK_REUSE_KERNEL"] = slug
             try:
-                reattach = gpu.run_on_kaggle(script, timeout_s=120)
+                reattach = gpu.run_on_kaggle(script, timeout_s=120,
+                                             journal=receipts)
             finally:
                 del os.environ["JACK_REUSE_KERNEL"]
 
             gpu._run = _fake_cli(write_log=False)
             os.environ["JACK_REUSE_KERNEL"] = slug
             try:
-                no_log = gpu.run_on_kaggle(script, timeout_s=120)
+                no_log = gpu.run_on_kaggle(script, timeout_s=120,
+                                           journal=receipts)
             finally:
                 del os.environ["JACK_REUSE_KERNEL"]
 

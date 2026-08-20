@@ -18,6 +18,7 @@ runs here rather than in a cloud runner.
 from __future__ import annotations
 
 import fcntl
+import hashlib
 import json
 import os
 import subprocess
@@ -45,6 +46,30 @@ SUBMISSION_LOG = Path(__file__).parent / "gpu_submissions.jsonl"
 # audit trail. Folding it in at the recorder means no spec has to remember
 # (only T1.02 ever did).
 _SUBMITTED_JOB_IDS: list[str] = []
+
+# Reattaches that went ahead DESPITE the pushed kernel's code differing from
+# the local script (JACK_REATTACH_ACCEPT_MISMATCH), drained by the recorder
+# into the row's `message`. Overseer 20th-audit B1: TA.02's PASS names
+# `impl_sha f30e1ba6…` for numbers produced by `2e7ec096…`, because
+# JACK_REUSE_KERNEL skips the push while `run_spec` stamps the LOCAL tree at
+# recording time — staleness was built to catch a certificate about OLDER code
+# and has no instrument for one about NEWER code. The invariant is not "the
+# sha is current"; it is "the sha is the sha of what executed", so a tolerated
+# divergence must reach the ledger row, not just this process's stderr.
+_REATTACH_MISMATCHES: list[dict] = []
+
+
+def drain_reattach_mismatches() -> list[dict]:
+    """Return and clear tolerated reattach code mismatches, oldest first.
+
+    Same drain discipline as `drain_job_ids`: the recorder drains before a
+    spec's runs (so another spec's leftovers cannot be attributed to it) and
+    after them (to fold this spec's divergences into its ledger record).
+    """
+    out = list(_REATTACH_MISMATCHES)
+    _REATTACH_MISMATCHES.clear()
+    return out
+
 
 # Provider-metered seconds for the same window, appended once per attempt
 # result (including failed attempts — they spent quota too) and drained by the
@@ -656,12 +681,92 @@ def result_json(res: "JobResult", name: str) -> dict:
         f"{len(res.stdout or '')} chars of stdout")
 
 
+def _kernel_sha256(script: Path) -> Optional[str]:
+    """sha256 of EXACTLY the bytes `run_on_kaggle` pushes as kernel.py.
+
+    Computed from the same construction (`KAGGLE_TORCH_FIX + "\\n" + script`)
+    at both ends — recorded into the attempt receipt at submit time, recomputed
+    from the local script at reattach time — so equality means "the kernel that
+    ran is byte-identical to what this tree would push", not something weaker.
+    None when the script is unreadable (a push would fail anyway; the receipt
+    must not invent a hash for a file that was never read).
+    """
+    try:
+        body = script.read_text()
+    except OSError:
+        return None
+    return hashlib.sha256((KAGGLE_TORCH_FIX + "\n" + body).encode()).hexdigest()
+
+
+def reattach_code_check(slug: str, local_sha: Optional[str],
+                        receipts: list[dict]) -> tuple[str, dict]:
+    """Does the kernel named by a reattach run the code this tree would push?
+
+    Overseer 20th-audit B1 (RANK 1). `JACK_REUSE_KERNEL` skips `kernels push`,
+    so the remote code is the ORIGINAL submission's while `run_spec` stamps
+    `impl_sha` from the local tree at recording time — a local edit between
+    submit and reattach is silently laundered into the certificate, and
+    `stale_claims()` can never fire on this direction (it was built for
+    certificates about OLDER code, not NEWER). The instrument: the attempt
+    receipt records `kernel_sha256` at push time; a reattach recomputes it and
+    compares.
+
+    Returns (verdict, info): verdict is "match", "mismatch", or "unverifiable"
+    (no receipt found for the slug, or one that predates `kernel_sha256`).
+    Unverifiable is deliberately NOT a mismatch — refusing it would strand
+    every kernel submitted before the guard existed, and a warned recovery
+    beats a lost artifact. The original attempt is found by joining a
+    result-phase receipt's `job_id` back to its attempt, falling back to the
+    slug's embedded epoch (`jack-ladder-<int(t0)>`, taken moments after the
+    attempt receipt's `ts`).
+    """
+    attempts = [r for r in receipts if r.get("phase") == "attempt"
+                and r.get("backend") == "kaggle"]
+    # Join 1: a result line that names this kernel points at its attempt_id.
+    ids = {r.get("attempt_id") for r in receipts
+           if r.get("phase") == "result"
+           and str(r.get("job_id", "")).endswith("/" + slug)}
+    matched = [a for a in attempts if a.get("attempt_id") in ids]
+    # Join 2: the watcher died before writing a result line — the exact case
+    # JACK_REUSE_KERNEL exists for. The slug embeds int(t0), taken within
+    # seconds of the attempt receipt's ts.
+    if not matched:
+        try:
+            epoch = float(slug.rsplit("-", 1)[-1])
+        except ValueError:
+            epoch = None
+        if epoch is not None:
+            matched = [a for a in attempts
+                       if isinstance(a.get("ts"), (int, float))
+                       and 0 <= epoch - a["ts"] <= 600]
+    stamped = [a for a in matched if a.get("kernel_sha256")]
+    if not stamped:
+        return "unverifiable", {
+            "slug": slug,
+            "reason": ("no attempt receipt found for this kernel" if not matched
+                       else "attempt receipt predates kernel_sha256")}
+    orig = stamped[-1]
+    info = {"slug": slug, "attempt_id": orig.get("attempt_id"),
+            "recorded_sha": orig.get("kernel_sha256"), "local_sha": local_sha,
+            "submitted_head": orig.get("head", "")}
+    if local_sha and orig["kernel_sha256"] == local_sha:
+        return "match", info
+    return "mismatch", info
+
+
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
-                  fetch: Optional[list[str]] = None) -> JobResult:
+                  fetch: Optional[list[str]] = None,
+                  journal: Optional[Path] = None) -> JobResult:
     """Push a kernel, poll to completion, retrieve output.
 
     Kaggle has no ephemeral-run primitive — a kernel is pushed, queued, and its
     output collected afterwards, so this polls rather than blocking on a process.
+
+    `journal` is the receipt log the reattach guard reads and writes — passed
+    through from `submit` so a test driving stub scenarios consults its OWN
+    receipts. Without it, a fixture slug whose embedded epoch happened to land
+    within the join window of a real attempt receipt would be checked against
+    the real log — a refusal with no cause in the test's own inputs.
     """
     t0 = time.time()
     work = Path(tempfile.mkdtemp(dir="/data"))
@@ -708,6 +813,46 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     }, indent=2))
 
     job_id = f"{username}/{slug}"
+
+    if reuse:
+        # A reattach must not launder a code edit into a certificate (overseer
+        # 20th-audit B1): the kernel runs the ORIGINAL submission's code, so if
+        # the local script has since diverged, refuse before anything is
+        # fetched or recorded — the kernel and its artifact stay on Kaggle, and
+        # reattaching from the submitting commit recovers them at zero quota.
+        local_sha = _kernel_sha256(script)
+        verdict, info = reattach_code_check(slug, local_sha, submissions(journal))
+        if verdict == "mismatch":
+            if not os.environ.get("JACK_REATTACH_ACCEPT_MISMATCH", "").strip():
+                return JobResult(
+                    "kaggle", False, job_id=job_id, billable_s=0.0,
+                    message=(f"reattach refused: kernel {job_id} was pushed with "
+                             f"code sha {info['recorded_sha'][:16]}… (attempt "
+                             f"{info['attempt_id']}, head {info['submitted_head']}) "
+                             f"but the local script hashes to "
+                             f"{(local_sha or 'unreadable')[:16]}…. The certificate "
+                             f"would claim code that did not run. Either reattach "
+                             f"from the submitting commit, or — if the divergence "
+                             f"is provably outside the kernel body — set "
+                             f"JACK_REATTACH_ACCEPT_MISMATCH=1, which records the "
+                             f"divergence in the receipt log and the ledger row."))
+            # Tolerated: proceed, but the divergence must outlive this process —
+            # a receipt line now, and the ledger row's message when run_spec
+            # drains it. Silence is the failure mode this guard exists for.
+            _record_submission({"phase": "reattach_mismatch", "ts": time.time(),
+                                "iso": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                                "job_id": job_id, **info,
+                                "spec": os.environ.get("JACK_SPEC_ID", "")},
+                               journal)
+            _REATTACH_MISMATCHES.append({"job_id": job_id, **info})
+            print(f"!! reattach code mismatch TOLERATED for {job_id}: kernel ran "
+                  f"{info['recorded_sha'][:16]}…, local script is "
+                  f"{(local_sha or 'unreadable')[:16]}… — recorded to the receipt "
+                  f"log and the ledger row", file=sys.stderr, flush=True)
+        elif verdict == "unverifiable":
+            print(f"!! reattach unverifiable for {job_id}: {info['reason']} — "
+                  f"proceeding; kernels submitted before the kernel_sha256 guard "
+                  f"cannot be checked", file=sys.stderr, flush=True)
 
     if not reuse:
         rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work),
@@ -906,15 +1051,25 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
                             "est_hours": est_hours, "timeout_s": timeout_s,
                             "script": str(script), "head": head,
                             "spec": os.environ.get("JACK_SPEC_ID", ""),
+                            # "pilot" for gate-sizing runs outside run_spec, ""
+                            # for registered runs — so pilot spend is summable
+                            # separately (overseer 20th-audit B2).
+                            "spec_phase": os.environ.get("JACK_SPEC_PHASE", ""),
+                            # sha of the exact kernel a kaggle push would send,
+                            # recorded so a later reattach can prove the kernel
+                            # it recovers ran THIS code (overseer 20th-audit B1).
+                            "kernel_sha256": (_kernel_sha256(script)
+                                              if backend == "kaggle" else None),
                             "pid": os.getpid()}, journal)
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
-               else run_on_kaggle(script, timeout_s, fetch))
+               else run_on_kaggle(script, timeout_s, fetch, journal))
         _record_submission({"phase": "result", "attempt_id": attempt_id,
                             "ts": time.time(), "backend": backend,
                             "job_id": res.job_id, "ok": bool(res.ok),
                             "duration_s": res.duration_s,
                             "charge_seconds": res.charge_seconds,
                             "spec": os.environ.get("JACK_SPEC_ID", ""),
+                            "spec_phase": os.environ.get("JACK_SPEC_PHASE", ""),
                             "message": (res.message or "")[:500]}, journal)
         if res.job_id:
             # Failed attempts append too: a crashed kernel still spent quota,

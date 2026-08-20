@@ -4105,3 +4105,10 @@ letting the recorder re-derive an identity from a tree that has since moved.
 Generalisation of "an absent field is honest; a field that silently records the
 RECORDER is a false one": here the field records the recorder's TREE, and
 reports it as the experiment's.
+
+*Mechanised 2026-08-20:* `submit` records `kernel_sha256` in the attempt
+receipt at push time; `reattach_code_check` recompares at reattach and
+`run_on_kaggle` refuses a mismatch (`JACK_REATTACH_ACCEPT_MISMATCH` tolerates
+it, but writes the divergence into the receipt log AND the ledger row's
+message). Guarded by T0.24 P7 with the planted mismatch as known-positive and
+the pre-guard receipt as the deliberate "unverifiable, not mismatch" case.

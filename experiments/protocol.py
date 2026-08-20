@@ -1365,6 +1365,24 @@ def _drain_gpu_job_ids() -> List[str]:
         return []
 
 
+def _drain_gpu_reattach_mismatches() -> List[Dict[str, Any]]:
+    """Tolerated reattach code divergences, cleared on read (overseer 20th B1).
+
+    Same sys.modules discipline and the same paired call sites as the other
+    two drains. When a reattach went ahead under JACK_REATTACH_ACCEPT_MISMATCH,
+    the kernel's code differs from the tree `impl_sha` will name — the row's
+    `message` must state that fact, or the certificate silently claims code
+    that did not run.
+    """
+    mod = sys.modules.get("experiments.gpu")
+    if mod is None:
+        return []
+    try:
+        return list(mod.drain_reattach_mismatches())
+    except Exception:
+        return []
+
+
 def _drain_gpu_charge_s() -> Optional[float]:
     """Metered seconds `gpu.submit()` accumulated in this process, cleared on
     read. Same sys.modules discipline as `_drain_gpu_job_ids`, same call
@@ -1436,6 +1454,7 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # without every spec having to thread it through.
     _drain_gpu_job_ids()
     _drain_gpu_charge_s()
+    _drain_gpu_reattach_mismatches()
     _prev_spec_env = os.environ.get("JACK_SPEC_ID")
     os.environ["JACK_SPEC_ID"] = spec.id
     try:
@@ -1485,6 +1504,17 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # that succeeded cannot answer "which hours bought this".
     job_ids = _drain_gpu_job_ids()
     compute_s = _drain_gpu_charge_s()
+    # A reattach that proceeded despite a code divergence must surface in the
+    # row itself: `impl_sha` names the local tree, but the kernel's numbers
+    # came from the sha the receipt recorded at push time (overseer 20th B1 —
+    # "the sha is the sha of what executed"). Message, not a silent field.
+    for _mm in _drain_gpu_reattach_mismatches():
+        _note = (f"REATTACH CODE MISMATCH tolerated: kernel {_mm.get('job_id')} "
+                 f"ran code sha {str(_mm.get('recorded_sha'))[:16]} (head "
+                 f"{_mm.get('submitted_head')}), local script hashed "
+                 f"{str(_mm.get('local_sha'))[:16]} — impl_sha names code that "
+                 f"did not run remotely; see gpu_submissions.jsonl")
+        message = f"{message} | {_note}" if message else _note
     # The stamp names the machine that RAN the work, not the dispatcher: nine
     # GPU records read aarch64/…/cpu while the truth sat in metrics["gpu"]
     # (overseer B3). The dispatcher stays visible because it is also true.

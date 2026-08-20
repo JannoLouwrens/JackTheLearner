@@ -31,7 +31,7 @@ finishes, so every line after that point is an uninsured chance to throw the
 answer away** — and unlike a failed run, this failure leaves the budget spent
 and the ledger red.
 
-Six properties, each able to fail alone:
+Eight properties, each able to fail alone:
 
   P0  `_kaggle_log_streams` on the REAL 2026-08-11 log fixture recovers the
       RESULT line and splits stderr out. This is the property that makes the
@@ -64,6 +64,23 @@ Six properties, each able to fail alone:
       hand-rolled read (`json.loads(Path(...).read_text())`) as its
       known-negative. Unreadable files are counted and gate the property,
       because a clean scan and a scan that never ran are the same number.
+  P7  a reattach cannot launder a code edit into a certificate. Third scar,
+      2026-08-19 (overseer 20th-audit B1, RANK 1): `JACK_REUSE_KERNEL` skips
+      `kernels push`, so the kernel runs the ORIGINAL submission's code while
+      `run_spec` stamps `impl_sha` from the LOCAL tree at recording time —
+      TA.02's PASS names `impl_sha f30e1ba6…` for numbers produced by
+      `2e7ec096…`, and `stale_claims()` can never fire on this direction (it
+      catches certificates about OLDER code, not NEWER). The fix: `submit`
+      records `kernel_sha256` in the attempt receipt at push time;
+      `reattach_code_check` recomputes it from the local script on reuse, and
+      `run_on_kaggle` refuses a mismatch (JACK_REATTACH_ACCEPT_MISMATCH
+      tolerates it but forces the divergence into the receipt log and the
+      ledger row's message). Checked here: the detector sees a planted
+      mismatch through BOTH receipt joins (result job_id and slug epoch),
+      passes a genuine match, and reports pre-guard receipts as UNVERIFIABLE
+      rather than mismatched — refusing those would strand every kernel
+      submitted before the guard existed. P5's stubbed submit journal is also
+      re-read to prove the attempt receipt actually carries the sha.
 
 THE CONTROL is the pre-fix delivery replayed verbatim: every downloaded file
 becomes an artifact, then `next(iter(...))` picks one. Against the same real
@@ -83,7 +100,8 @@ import tempfile
 from pathlib import Path
 
 from .. import gpu
-from ..gpu import Budget, JobResult, _kaggle_collect, _kaggle_log_streams, result_json
+from ..gpu import (Budget, JobResult, _kaggle_collect, _kaggle_log_streams,
+                   reattach_code_check, result_json)
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
@@ -218,6 +236,9 @@ def _experiment(seed: int) -> dict:
 
     real_colab, real_kaggle = gpu.run_on_colab, gpu.run_on_kaggle
     prev = os.environ.get("JACK_REUSE_KERNEL")
+    # The script must exist: P7 reads the attempt receipt back and expects the
+    # sha of THIS file's would-be kernel, not None-for-unreadable.
+    (tmp / "job.py").write_text("print('RESULT {}')\n")
     try:
         gpu.run_on_colab = _stub("colab", True)
         gpu.run_on_kaggle = _stub("kaggle", True)
@@ -266,8 +287,51 @@ def _experiment(seed: int) -> dict:
             "legit"):
         failed.append("P6:scanner flags the legitimate Path(...).read_text() read")
 
+    # P7 — a reattach cannot launder a code edit into a certificate.
+    # The detector first, against planted receipts: a kernel pushed with
+    # sha_ran, reattached from a tree whose script hashes to sha_edited.
+    sha_ran, sha_edited = "a" * 64, "b" * 64
+    slug7 = "jack-ladder-1786000000"
+    attempt7 = {"phase": "attempt", "attempt_id": "at-7", "backend": "kaggle",
+                "ts": 1785999998.5, "kernel_sha256": sha_ran, "head": "d0c8a6e"}
+    result7 = {"phase": "result", "attempt_id": "at-7", "backend": "kaggle",
+               "job_id": f"u/{slug7}"}
+    # Known-positive, found through the result-line join.
+    verdict, p7info = reattach_code_check(slug7, sha_edited, [attempt7, result7])
+    if verdict != "mismatch":
+        failed.append("P7:planted mismatch not seen via the result job_id join")
+    elif p7info.get("recorded_sha") != sha_ran or p7info.get("local_sha") != sha_edited:
+        failed.append("P7:mismatch reported without naming both shas")
+    # Known-positive when the watcher died before writing a result line — the
+    # exact case JACK_REUSE_KERNEL exists for: the slug's epoch is the join.
+    verdict, _ = reattach_code_check(slug7, sha_edited, [attempt7])
+    if verdict != "mismatch":
+        failed.append("P7:planted mismatch not seen via the slug epoch join")
+    # Known-negative: identical code must pass, or every honest reattach dies.
+    verdict, _ = reattach_code_check(slug7, sha_ran, [attempt7, result7])
+    if verdict != "match":
+        failed.append("P7:genuine match refused")
+    # A receipt from before the guard existed is UNVERIFIABLE, not a mismatch —
+    # refusing it would strand every kernel submitted before this commit.
+    pre_guard = {k: val for k, val in attempt7.items() if k != "kernel_sha256"}
+    verdict, _ = reattach_code_check(slug7, sha_edited, [pre_guard, result7])
+    if verdict != "unverifiable":
+        failed.append("P7:pre-guard receipt not reported as unverifiable")
+    verdict, _ = reattach_code_check("jack-ladder-1780000000", sha_edited, [attempt7])
+    if verdict != "unverifiable":
+        failed.append("P7:unknown kernel not reported as unverifiable")
+    # And the recording half: P5's stubbed submit wrote a real attempt receipt
+    # to its journal — it must carry the sha of the script it would have pushed.
+    p5_subs = [json.loads(l) for l
+               in (tmp / "submissions.jsonl").read_text().splitlines() if l.strip()]
+    p5_attempts = [s for s in p5_subs if s.get("phase") == "attempt"]
+    want_sha = gpu._kernel_sha256(tmp / "job.py")
+    if not want_sha or not p5_attempts or \
+            p5_attempts[-1].get("kernel_sha256") != want_sha:
+        failed.append("P7:attempt receipt does not carry the pushed kernel's sha")
+
     return {"properties_failed": len(failed), "failures": failed,
-            "properties_checked": 7, "p6_files_scanned": len(list(tests_dir.glob("*.py"))),
+            "properties_checked": 8, "p6_files_scanned": len(list(tests_dir.glob("*.py"))),
             "p6_unreadable": unreadable}
 
 
