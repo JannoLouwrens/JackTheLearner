@@ -4876,3 +4876,42 @@ B3 (hardware stamp + gpu_job_id) still open.
   architecture (the T3.01 attribution-VOID shape). (2) LC.03 liveness via
   worker cputime only. (3) Do not manufacture another W33 spender beyond
   UB.10's registered run.
+- 2026-08-20 ~18:0x-18:3x UTC (builder): UB.10 PILOT HARVESTED — RIG NOT
+  CLEAN, registered dispatch correctly withheld; the pilot did exactly what
+  it exists for. Two faults, both repaired-or-probed this iteration
+  (accounting b68164a, code dcef2fb, both pushed). (1) A2/A3 (the modality-
+  dropout trunk arms) NEVER TRAINED: loss 1.60->1.56 / 1.90->1.82 across all
+  150 epochs vs A1's 1.43->0.00; slot/vslot exactly 0.5 (constant
+  predictor), afell 1.0 — the audio-only-basin fingerprint. vslot < 0.80
+  floor means the registered run would have VOIDed on the learning gate
+  (~1.25 h saved). A4 shares the dropout and trained to 1.0; its clean-
+  forward NCE pass is the visible difference. Recipe suspected before
+  architecture (T3.01 precedent). (2) THE ENS VOID GATE'S PREMISE IS FALSE
+  MATHEMATICS: ens_slot read {0.525, 0.653, 0.513, 0.484, 0.250, 0.747}
+  while ALL 12 unimodal accs read exactly 0.5000 — an additive ensemble
+  sign(s(v)+t(a)) reaches 0.75 (or 0.25, sign-luck) on clean XOR; 'must sit
+  at chance' was never a theorem. Gate replaced per law 4, loudly, with the
+  detector whose chance level IS a theorem: any unimodal slot acc off 0.5
+  by > 0.10 two-sided -> VOID (strictly stronger vs real leaks — no
+  dilution; ens stays recorded; winner-beats-own-ensemble PASS clause
+  untouched; no registered seed has run). LESSONS.md entry added ("a null's
+  value under H0 is a theorem to prove"). RECIPE PROBE DISPATCHED (the ONE
+  diagnostic, SM.02/B5 cap, decision rule pre-registered in
+  remote_recipe_probe's docstring BEFORE launch): warmup@1e-3 vs LR 3e-4,
+  uniform across all six arms, full _run_seed at seed 90 each, est ~0.3 h.
+  Launched via launch_detached.sh, pid 190543, log
+  /data/tmp/ub10_recipe_probe.log, artifact will land at
+  /data/ub10_recipe_probe.json. Smoke re-run OK after edits; warmup path
+  unit-exercised. LC.03 ALIVE (workers ~7h55m cputime, was ~7h11m; ~7 h to
+  go; artifacts still Aug 14 = old). W33: 6.05 h charged, ~24 h left, dies
+  Sun 08-23. Meters 18:05: session ~0% (reset 23:00), Fable 75% — 15 pts
+  from the stop, stay lean. NEXT ITERATION: (1) read
+  /data/tmp/ub10_recipe_probe.log — the probe prints a per-recipe CLEAN /
+  NOT-CLEAN line (_seed_row_clean); apply the decision rule VERBATIM: first
+  clean recipe in (warmup, lolr) order -> set LR/WARMUP_FRAC constants to
+  it, commit, push, dispatch the registered run via scripts/dispatch.sh
+  UB.10 (~1.25 h, well before Sunday); NEITHER clean -> NO dispatch, no
+  third recipe — record that A2/A3 as specced cannot learn their marginals
+  at matched budget and route the arm redesign through PROGRESS. (2) LC.03
+  liveness via worker cputime only. (3) The probe writes budget/submissions
+  rows when it lands — commit them.
