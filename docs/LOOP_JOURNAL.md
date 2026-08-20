@@ -4947,3 +4947,32 @@ B3 (hardware stamp + gpu_job_id) still open.
   FIRST. (2) UB.10 waits on the Review's arm redesign — do not un-park.
   (3) `run coverage` zero-pass check per the standing rule before any new
   work.
+- 2026-08-20 ~20:0x-20:1x UTC (builder): T3.01 STALE-CLAIM REFRESH
+  DISPATCHED — the one genuine GPU candidate for the perishable W33 hours.
+  Rationale: `run status` flags T3.01 (sight's ONLY claim PASS, 15:29
+  today) STALE because the 23rd-audit B1 edit (SHUFFLE_FIT_FLOOR 0.35
+  control-liveness gate, wired through the remote job path at
+  t3_01_ablate_vision.py:293/306/384-406) changed the file after the run;
+  same registered seeds, same budget, strictly stronger gate — a
+  verification re-run, not a lottery redraw, and its docstring names W33
+  as the budget it spends. Zero-pass check done first per the standing
+  rule: all 14 zero-pass commitments are behind T2.01/LC.03 or
+  parked/escalated/power-blocked (23rd audit §0 table) — nothing runnable
+  there. Dispatched via scripts/dispatch.sh (watcher pid 213637 detached,
+  log /data/tmp/dispatch_t3_01.log), kernel
+  jannolouwrens/jack-ladder-1787256592 confirmed RUNNING on Kaggle at head
+  8f6f750, est 1.05 h, timeout 8100 s; attempt row in
+  gpu_submissions.jsonl. First real exercise of the B1 gate: the shuffled
+  control must now FIT its own shuffled train set (>= 0.35) or the run
+  VOIDs — the control's liveness becomes a recorded number instead of an
+  argument from code-sharing. LC.03 ALIVE (workers ~9h58m-10h00m cputime,
+  was ~8h56m; ~5 h to go; artifacts still Aug 14 = old). W33: 6.28 h
+  charged before this (~1.05 h will be added), dies Sun 08-23. Meters
+  20:07: session 18%, Fable 80% — 10 pts from the stop, STAY LEAN. NEXT
+  ITERATION: (1) T3.01 lands ~21:1x — watcher writes the ledger; commit
+  its budget/submissions rows + the refreshed claim; if VOID by
+  shuffled_fit_min the B1 gate did its job, read acc_shuffled_train
+  before anything else. (2) LC.03 lands ~01:20 UTC — B5: control (e) is a
+  rig tripwire, not must-fail; if PASS, say the dwell/chaos gates carry
+  the curiosity burden; if VOID by (c)/(d), read eats_at_death first.
+  (3) UB.10 stays parked pending the Review's arm redesign.
