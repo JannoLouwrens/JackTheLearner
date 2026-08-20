@@ -4321,3 +4321,32 @@ a reading of the form "since it starts at X, watch whether it leaves X" turns
 into garbage silently, while "watch whether it is ever/always above the band"
 stays meaningful. A premise you did not measure is a second experiment hiding
 inside your diagnostic, running unregistered.
+
+## A null baseline's value under H0 is a theorem to prove, not a property to assert
+
+UB.10's pre-registered VOID gate said its per-arm unimodal-mean ensemble "is
+structurally incapable of synergy, so on slot it MUST sit at chance" and
+treated any ensemble slot accuracy above 0.60 as proof of a fixture leak. The
+seed-90 pilot (2026-08-20) measured ensembles at 0.25, 0.51, 0.48, 0.65 and
+0.7469 across arms — while every unimodal model it averaged read exactly
+0.5000, which PROVES the fixture clean. The "must sit at chance" claim was
+simply false mathematics: the averaged-softmax decision is
+sign(s(vision) + t(audio)), and an additive composition of two unimodal
+scorers reaches 3-of-4 cells (0.75) on a balanced XOR — or 1-of-4 (0.25) —
+through miscalibrated confidences alone, with each scorer's own argmax pinned
+at exactly 0.5. Init sign-luck picks which. The gate would have VOIDed every
+honest registered run forever, and it was simultaneously WEAKER than the
+correct detector against a real leak, because averaging a leaky channel with
+a chance channel dilutes the signal below the bar.
+
+The repair generalises: the correct leak detector was the quantity whose
+chance-level IS a theorem — any function of one modality must sit at chance
+on a clean XOR — applied two-sided to the unimodal accuracies themselves.
+
+**Rule:** before gating anything on "this null must read X", write down the
+proof that it must, at the level of the actual decision function (argmax of
+an average is not an average of argmaxes). If the proof does not exist, the
+gate is a hypothesis about the rig and belongs in a pilot reading, not in a
+VOID condition. Corollary of "by construction is a claim", one entry up —
+this one fired as a pre-registered verdict condition, which is the most
+expensive place to store a false theorem.

@@ -70,10 +70,31 @@ THE ARMS (registry notes, made runnable):
 THE ENSEMBLE NULL, PER ARM (registry null_baseline). For every arm, two
 unimodal variants of the SAME architecture are trained with the other
 modality's raw input clamped to its train mean (uninformative but on-shape),
-and their softmax outputs averaged. The ensemble is structurally incapable of
-synergy, so on slot it MUST sit at chance: any (arm, seed) ensemble above
-NULL_GATE on slot means the fixture leaks and PG.7's certificate is violated
--> VOID, investigate, do not celebrate (UB.12's control, inherited here).
+and their softmax outputs averaged. The ensemble remains the null the winner
+must beat (PASS clause below) — but it is NOT a leak detector, and the
+original VOID gate on it rested on a false theorem. AMENDED 2026-08-20,
+before any registered seed ran; the original text said the ensemble "is
+structurally incapable of synergy, so on slot it MUST sit at chance", and
+gated VOID on ens_slot > NULL_GATE. That premise is mathematically wrong:
+the averaged-softmax decision is sign(s(vision) + t(audio)), and an additive
+composition of two unimodal scorers reaches up to 0.75 on a balanced XOR
+(3 of 4 cells; dually 0.25) through miscalibrated confidences ALONE, with
+each scorer's own argmax accuracy pinned at exactly 0.5. The seed-90 pilot
+measured precisely this: ens_slot {A0 0.525, A1 0.653, A2 0.513, A3 0.484,
+A4 0.250, A5 0.747} — the 0.75 ceiling and a below-chance 0.25 in one rig —
+while EVERY unimodal variant of every arm read exactly 0.5000, proving the
+fixture clean. The gate as written fired VOID on a certifiably clean
+fixture, and it is also WEAKER than the correct detector against a real
+leak (a leaky channel averaged with a chance channel dilutes below 0.60).
+THE CORRECT LEAK DETECTOR, gating VOID from now on: the unimodal variants'
+own slot accuracy. Any function of one modality must sit at chance on a
+clean XOR (that one IS a theorem), so any (arm, seed, sense) unimodal slot
+acc deviating from 0.5 by more than NULL_GATE - 0.5 (same 0.10 = ~3.5 sigma
+at n_test = 320, now two-sided) -> VOID, investigate, do not celebrate.
+This replacement is a strengthening for every physically possible leak and
+removes only the provably-false firing mode; ens_slot stays recorded per
+arm. (LESSONS.md: a null's value under H0 is a theorem to prove, not a
+property to assert.)
 
 CONTROL (registry, must fail): cross-episode SWAP per sense at eval — the
 test set's audio (resp. vision) rows rolled by SWAP_ROLL so every episode
@@ -87,8 +108,10 @@ inherited, the rest are stated here before the first run):
   VOID if any: eye canary moved; any arm's params outside +-5% of anchor;
       any arm below MARGINAL_FLOOR on a marginal task on any seed; any arm's
       loss did not decrease (first-quarter mean -> last-quarter mean) on any
-      seed; any ensemble slot acc > NULL_GATE; any arm swap-invariant on all
-      senses on any seed; dropped-quads fraction > DROP_MAX.
+      seed; any unimodal variant's slot acc off chance by > NULL_GATE - 0.5
+      (two-sided; the leak detector — amended 2026-08-20, see the ensemble
+      section); any arm swap-invariant on all senses on any seed;
+      dropped-quads fraction > DROP_MAX.
   Then, winner = argmax over A1..A5 of median-across-seeds slot accuracy.
   PASS iff ALL of:
       winner slot acc > A0 slot acc on EVERY seed (paired, same data order);
@@ -114,6 +137,29 @@ Science lives in THIS module; the JOB string only imports it (T0.16 lesson).
 PILOT: seed 90, disjoint from the registered seeds, prints and records
 nothing — it exists to catch rig faults before the registered spend (SM.02
 lesson). Gates do not move on its account.
+
+PILOT RECORD, seed 90, kernel jack-ladder-1787246533 (P100, 0.147 h,
+2026-08-20). NOT CLEAN, two rig faults, no registered dispatch:
+  1. A2 and A3 — the two arms whose only shared novelty is modality
+     dropout — never trained: loss 1.60->1.56 and 1.90->1.82 across all
+     150 epochs (A1, same trunk, went 1.43->0.00), slot/vslot exactly 0.5
+     (constant predictor), afell 1.0. vslot 0.5 is below MARGINAL_FLOOR ->
+     the registered run would VOID on the learning gate. A4 carries the
+     same dropout and trained fine; its clean-forward NCE pass is the
+     visible difference. Fingerprint says audio-only basin: optimiser
+     recipe suspected before architecture (T3.01 curves-probe precedent).
+  2. The ensemble VOID gate fired on a provably clean fixture — see the
+     amended ensemble section above.
+Healthy elsewhere: params all within +-2.9%, canary intact, dropped_frac 0,
+swap controls fire correctly for every trained arm (vision swap zeroes the
+vision-dependent tasks), A0/A1/A4/A5 all at 1.0/1.0/1.0.
+
+RECIPE (pending the seed-90 recipe probe, `recipe_probe` mode): WARMUP_FRAC
+defaults to 0.0 (the pilot's recipe). The probe compares linear-warmup@LR
+1e-3 vs LR 3e-4 uniformly across all six arms; its pre-registered decision
+rule lives in remote_recipe_probe's docstring. Whatever it adopts becomes
+the registered run's recipe for EVERY arm — matched training is preserved,
+verdict gates untouched.
 
 COVERS: one brain / unison (claim)
 """
@@ -158,6 +204,7 @@ PARAM_TOL = 0.05
 EPOCHS = 150
 BATCH = 128
 LR = 1e-3
+WARMUP_FRAC = 0.0            # linear LR warmup over this fraction of steps
 WEIGHT_DECAY = 1e-4
 P_DROP = 0.25                # A2+ modality dropout
 LAMBDA_AUX = 0.5             # A3 mse / A4 nce weight
@@ -415,9 +462,17 @@ def _train_arm(arm: str, seed: int, data: dict, perms: list,
     opt = torch.optim.Adam(net.parameters(), lr=LR,
                            weight_decay=WEIGHT_DECAY)
     ce = torch.nn.CrossEntropyLoss()
+    total_steps = len(perms) * int(np.ceil(len(perms[0]) / BATCH))
+    warm_steps = int(round(WARMUP_FRAC * total_steps))
+    step_i = 0
     losses = []
     for perm in perms:
         for i in range(0, len(perm), BATCH):
+            if warm_steps:
+                lr_now = LR * min(1.0, (step_i + 1) / warm_steps)
+                for g in opt.param_groups:
+                    g["lr"] = lr_now
+            step_i += 1
             b = torch.tensor(perm[i:i + BATCH], device=device)
             v, a = Vtr[b], Atr[b]
             logits, (_, _, _, _, _) = net(v, a, train_mode=True, gen=gen)
@@ -563,14 +618,132 @@ def _submit(seeds: list) -> dict:
     return out
 
 
+def _seed_row_clean(s: dict) -> tuple:
+    """The registered run's VOID checklist applied to one seed row. Returns
+    (clean, reasons) so a pilot/probe read is one look, not a spelunk."""
+    reasons = []
+    if not s["canary_ok"]:
+        reasons.append("canary")
+    if s["dropped_frac"] > DROP_MAX:
+        reasons.append("dropped_frac")
+    for a in ARMS:
+        r = s["arms"][a]
+        if any(r["acc"][t] < MARGINAL_FLOOR for t in ("vslot", "afell")):
+            reasons.append(f"{a}:marginal")
+        if not r["loss_last"] < r["loss_first"]:
+            reasons.append(f"{a}:loss")
+        if max(abs(r["uni_vision_slot"] - 0.5),
+               abs(r["uni_audio_slot"] - 0.5)) > NULL_GATE - 0.5:
+            reasons.append(f"{a}:uni_leak")
+        if max(r["swap_drop"][sn][t]
+               for sn in ("vision", "audio") for t in TASKS) < SWAP_HURT:
+            reasons.append(f"{a}:swap")
+    return (not reasons, reasons)
+
+
+def _print_seed_row(s: dict):
+    for a in ARMS:
+        r = s["arms"][a]
+        sw = max(r["swap_drop"][sn][t]
+                 for sn in ("vision", "audio") for t in TASKS)
+        print(f"  {a} acc={r['acc']} loss={r['loss_first']}->{r['loss_last']}"
+              f" ens={r['ens_slot']} uni_v={r['uni_vision_slot']}"
+              f" uni_a={r['uni_audio_slot']} max_swap_drop={sw}")
+    clean, reasons = _seed_row_clean(s)
+    print("  CLEAN" if clean else f"  NOT CLEAN: {reasons}")
+
+
 def pilot():
     """Seed-90 pilot at production scale, disjoint from the registered seeds.
     Prints, records nothing; numbers go to the docstring/journal by hand. The
     gates are exogenous and do NOT move on its account (SM.02 lesson)."""
     out = _submit([PILOT_SEED])
-    slim = {s["seed"]: {a: r["acc"] for a, r in s["arms"].items()}
-            for s in out["seeds"]}
-    print(json.dumps({"widths": out["widths"], "acc": slim}, indent=1))
+    print(json.dumps({"widths": out["widths"]}, indent=1))
+    for s in out["seeds"]:
+        _print_seed_row(s)
+    return out
+
+
+RECIPES = (("warmup", 1e-3, 0.10), ("lolr", 3e-4, 0.0))
+
+
+def remote_recipe_probe() -> dict:
+    """Runs REMOTELY. The A2/A3 repair probe, pre-registered 2026-08-20
+    BEFORE dispatch (T3.01 curves-probe pattern; this is UB.10's ONE
+    diagnostic under the SM.02/B5 cap).
+
+    FAULT: pilot seed 90 — A2/A3 (the modality-dropout trunk arms) sat at
+    constant-predictor chance on slot/vslot with loss flat for 150 epochs,
+    while A1 (same trunk, no dropout) and A4 (same dropout + NCE aux) both
+    trained to 1.0. Suspect the optimiser recipe (norm_first transformer at
+    Adam 1e-3, no warmup -> audio-only basin), not the architecture, per the
+    T3.01 precedent.
+
+    ARMS OF THE PROBE, uniform over all six bakeoff arms, full production
+    scale, seed 90 only: (1) 'warmup' = LR 1e-3 with linear warmup over the
+    first 10% of steps; (2) 'lolr' = LR 3e-4, no warmup. Same EPOCHS, same
+    per-seed data order, same param match; each recipe runs the complete
+    _run_seed (18 trainings) so the swap/ensemble/leak checks are read under
+    the candidate recipe too.
+
+    READINGS (observables, not premises): per recipe, the _seed_row_clean
+    checklist — every arm >= 0.80 on both marginals, every loss decreasing,
+    no unimodal slot acc off 0.5 by > 0.10, every arm's best swap drop
+    >= 0.10, canary intact, dropped_frac <= 0.02.
+
+    DECISION RULE: adopt the FIRST clean recipe in the order (warmup, lolr)
+    — warmup preferred because it is the minimal deviation (identical LR for
+    90% of steps, and the healthy arms provably train at 1e-3). Set LR /
+    WARMUP_FRAC to the adopted values in a follow-up commit and dispatch the
+    registered run via scripts/dispatch.sh UB.10; the adopted recipe's probe
+    row IS the pilot (seed 90, disjoint). If NEITHER recipe is clean: no
+    registered dispatch, no third recipe — the cap fires, record that A2/A3
+    as specced cannot learn their marginals at matched budget under either
+    standard recipe, and route the arm-design question through PROGRESS.
+    Verdict gates do not move on this probe's account in any branch."""
+    import torch
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    out = {"gpu": (torch.cuda.get_device_name(0) if device == "cuda"
+                   else "cpu"),
+           "widths": {a: list(_matched_width(a)) for a in ARMS},
+           "recipes": {}}
+    for name, lr, wf in RECIPES:
+        globals()["LR"] = lr
+        globals()["WARMUP_FRAC"] = wf
+        out["recipes"][name] = _run_seed(PILOT_SEED, device)
+        print("RECIPE_DONE", name, flush=True)
+    return out
+
+
+JOB_PROBE = r'''
+import os as _o
+_o.environ["MUJOCO_GL"] = "egl"   # preamble sets "disabled"; this job renders
+import subprocess as _sp, sys as _sys
+_sp.run([_sys.executable, "-m", "pip", "install", "mujoco==3.11.0"],
+        check=True)
+import json
+from experiments.tests.ub_10_fusion_bakeoff import remote_recipe_probe
+out = remote_recipe_probe()
+json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "ub10_probe.json"),
+                    "w"))
+print("DONE", out["gpu"], flush=True)
+'''
+
+
+def recipe_probe():
+    """Local side of the probe: submit, save the artifact where the next
+    iteration expects it, print the decision-rule read per recipe."""
+    job = build_job(JOB_PROBE)
+    res = submit(job, prefer="kaggle", est_hours=0.5, timeout_s=4500,
+                 fetch=["ub10_probe.json"])
+    if not res.ok:
+        raise RuntimeError(f"UB.10 recipe probe failed on {res.backend}: "
+                           f"{res.message}")
+    out = json.loads(Path(res.artifacts["ub10_probe.json"]).read_text())
+    Path("/data/ub10_recipe_probe.json").write_text(json.dumps(out))
+    for name, _, _ in RECIPES:
+        print(f"RECIPE {name}:")
+        _print_seed_row(out["recipes"][name])
     return out
 
 
@@ -617,6 +790,10 @@ def _aggregate() -> dict:
     learn_ok = all(s["arms"][a]["loss_last"] < s["arms"][a]["loss_first"]
                    for s in rows for a in ARMS)
     ens_max = max(s["arms"][a]["ens_slot"] for s in rows for a in ARMS)
+    uni_dev_max = max(
+        abs(s["arms"][a][k] - 0.5)
+        for s in rows for a in ARMS
+        for k in ("uni_vision_slot", "uni_audio_slot"))
     swap_ok = all(
         max(s["arms"][a]["swap_drop"][sense][t]
             for sense in ("vision", "audio") for t in TASKS) >= SWAP_HURT
@@ -644,6 +821,7 @@ def _aggregate() -> dict:
         "winner_slot_median": round(med[winner], 4),
         "a0_slot_median": round(med["A0"], 4),
         "ens_slot_max": round(ens_max, 4),
+        "uni_slot_dev_max": round(uni_dev_max, 4),
         "marginal_ok": float(marginal_ok),
         "learn_ok": float(learn_ok),
         "swap_ok_all_arms": float(swap_ok),
@@ -688,8 +866,12 @@ def _check(m: dict, c: dict):
         return Status.VOID          # the match failed; ranking measures size
     if m["marginal_ok"] != 1.0 or m["learn_ok"] != 1.0:
         return Status.VOID          # a non-learner cannot arbitrate (T2.02)
-    if m["ens_slot_max"] > NULL_GATE:
-        return Status.VOID          # ensemble above chance = fixture leak
+    if m["uni_slot_dev_max"] > NULL_GATE - 0.5:
+        return Status.VOID          # a unimodal model off chance = fixture
+                                    # leak (amended 2026-08-20: the old
+                                    # ens_slot gate's premise was false —
+                                    # additive ensembles reach 0.75 on clean
+                                    # XOR; see docstring. ens stays reported.)
     if c["ctrl_swap_ok"] != 1.0:
         return Status.VOID          # a swap-invariant arm is uninterpretable
     # The claim.
@@ -732,5 +914,7 @@ if __name__ == "__main__":
         print("SMOKE OK")
     elif len(sys.argv) > 1 and sys.argv[1] == "pilot":
         pilot()
+    elif len(sys.argv) > 1 and sys.argv[1] == "recipe_probe":
+        recipe_probe()
     else:
         run()
