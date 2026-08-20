@@ -70,8 +70,14 @@ import json
 import os
 import sys
 
-os.chdir("/home/opc/jackthelearner")
-sys.path.insert(0, "/home/opc/jackthelearner")
+# Pin cwd/sys.path to the repo root DERIVED FROM THIS FILE, never hardcoded:
+# this module runs in two contexts — detached driver on this box (repo at
+# /home/opc/jackthelearner) and remote import on the GPU VM (repo cloned to
+# /tmp/jack). Attempt 1 (kernel jack-ladder-1787260513) hardcoded the local
+# path and died FileNotFoundError at remote import, before touching the GPU.
+_REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(_REPO)
+sys.path.insert(0, _REPO)
 
 OUT = "/data/t301_shuffle_probe.json"
 LIVE_FALL = 0.05
