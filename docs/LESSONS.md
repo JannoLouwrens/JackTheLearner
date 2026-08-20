@@ -4285,3 +4285,8 @@ an uncovered commitment is (the coverage.py scar). And never pair on
 "the previous row": pair on *the previous row carrying a real verdict*,
 skipping infrastructure statuses, or the most common event in your system
 (a job that died) will quietly defeat the guard.
+
+*Guard shipped 2026-08-20 (`5a2e8e1`): the recorder writes `supersedes_void`
+and walks back through ERROR rows; `audit_supersedes_fail` audits FAIL and
+VOID sources across ERRORs and states its coverage in its docstring; T0.27
+P11/P12 keep both properties under test.*
