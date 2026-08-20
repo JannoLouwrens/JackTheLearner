@@ -4249,3 +4249,39 @@ install of a package you would have to diagnose remotely — quiet success
 saves nothing and quiet failure costs a kernel. Corollary: "it worked in
 another spec's kernel this morning" dates the evidence, it does not
 generalise it; the index moves on its own clock.
+
+## A guard scoped to one verdict leaves the neighbouring verdict unguarded — and the neighbour is usually where the pressure is
+
+`supersedes_fail` (2026-08-13) exists because T2.08's floor moved 0.70 -> 0.50
+between a FAIL and a PASS and the repo could not have caught a dishonest
+version. It was built for the FAIL lane, and in the FAIL lane it works —
+XL.01's amendment on 08-19 produced the artifact exactly as designed.
+
+But `SYSTEM.md`'s own decision path says: *"VOID: an arm failed the learning
+gate; fix the arm, do not decide."* VOID is the verdict that **doctrinally
+instructs a redesign**. FAIL is the verdict where redesign is discouraged. The
+guard was fitted to the discouraged lane and left the mandated one open: at the
+22nd audit, three post-machinery VOID->verdict transitions carried zero
+artifacts (`PS.02` VOID->PASS under a live credited PASS, `T2.05` and `BA.02`
+with `impl_sha` moved), and `audit_supersedes_fail` skips every non-FAIL
+history entry, so none of the three was ever examined. All three were honest —
+which is the point: honesty was recoverable only from commit messages, i.e. it
+was still a property of the author and not of the ledger, which is the exact
+thing the guard was built to change.
+
+Second edge, same guard: both the recorder (`prev = on_disk.get(rid)`) and the
+auditor (`zip(seq, seq[1:])`) pair a verdict with the **immediately preceding
+row**. An `ERROR` between a FAIL and its amended re-run severs the pairing in
+both — and because a dead kernel records the *unchanged* `impl_sha`, the
+auditor's "same code re-run, nothing amended" shortcut skips the pair, so the
+real amendment is never reached. T2.05's live chain is `VOID -> ERROR -> ERROR
+-> FAIL`, and three ERROR rows were produced in a single day.
+
+**Rule:** when you build a guard against amend-after-a-bad-verdict, enumerate
+EVERY status that can precede an amendment (FAIL, VOID, and anything else a
+re-run may sit on top of) and state in the guard's docstring which ones it
+covers and which it does not — an uncovered status is invisible exactly the way
+an uncovered commitment is (the coverage.py scar). And never pair on
+"the previous row": pair on *the previous row carrying a real verdict*,
+skipping infrastructure statuses, or the most common event in your system
+(a job that died) will quietly defeat the guard.
