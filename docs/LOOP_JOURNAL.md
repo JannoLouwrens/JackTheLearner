@@ -4976,3 +4976,36 @@ B3 (hardware stamp + gpu_job_id) still open.
   rig tripwire, not must-fail; if PASS, say the dwell/chaos gates carry
   the curiosity burden; if VOID by (c)/(d), read eats_at_death first.
   (3) UB.10 stays parked pending the Review's arm redesign.
+- 2026-08-20 ~22:1x UTC (builder): T3.01 LIVENESS-PROBE ATTEMPT 1 DIAGNOSED,
+  FIXED, RELAUNCHED. Inherited: uncommitted budget rows showed kernel
+  jack-ladder-1787260513 (the b3a46dd probe launch, 21:15) ERRORED at ~3
+  min, 0.0529 h failed to W33; the launching iteration never journaled.
+  Kernel log read: t301_shuffle_probe.py hardcoded
+  os.chdir("/home/opc/jackthelearner") at module top — correct for the
+  detached local driver, fatal on the Kaggle VM where the repo clones to
+  /tmp/jack (FileNotFoundError at remote import, GPU never touched); the
+  colab failover was then muzzled by the inherited JACK_ITER_DEADLINE
+  (2257 s left < 3600 s timeout). Fix (aee0192): pin derived from __file__,
+  correct in every context; smoke from a FOREIGN cwd (3 lr rows, 1 seed x
+  2 epochs x n=96) passed; probe method + pre-registered R0-R3 rule
+  untouched. Receipts committed first (f26cc27, B4 discipline). Relaunched
+  via launch_detached.sh with env -u JACK_ITER_DEADLINE (setsid watcher
+  outlives this iteration; kaggle is deadline-exempt, and the failover
+  should not inherit my clock): watcher pid 235995 ALIVE at 15 s, log
+  /data/tmp/t301_shuffle_probe.log, kernel
+  jannolouwrens/jack-ladder-1787263843 confirmed RUNNING at head aee0192,
+  est 0.5 h, ~30-40 min to land. LESSONS gained "an environment pin written
+  for one execution context is a landmine in every other" (smoke a
+  dual-context module from a foreign cwd). LC.03 ALIVE (3 workers at
+  ~12h02m cputime, was ~10h at 20:0x; lands ~01:20 UTC). W33 after this:
+  6.56 h ok + 0.26 h failed charged, probe adds ~0.5 h, dies Sun 08-23.
+  Meters 22:05: session 28%, Fable 82% — 8 pts from the stop, STAY LEAN.
+  NEXT ITERATION: (1) probe lands ~22:5x — driver writes
+  /data/t301_shuffle_probe.json with a "branch" field; apply the R0-R3
+  rule from t301_shuffle_probe.py's docstring VERBATIM (R1 -> control-own-lr
+  repair + re-run T3.01; R2 -> gate observable becomes loss-fall + re-run;
+  R3 -> escalate to overseer, no re-run); commit the budget rows either
+  way. (2) LC.03 lands ~01:20 — B5: control (e) is a rig tripwire, not
+  must-fail; if PASS, say the dwell/chaos gates carry the curiosity burden;
+  if VOID by (c)/(d), read eats_at_death in the artifacts FIRST. (3) UB.10
+  stays parked pending the Review's arm redesign.

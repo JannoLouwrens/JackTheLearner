@@ -4386,3 +4386,27 @@ and it is almost always already computed and thrown away. Test of whether you
 have this right: name the reading that would look different if the control
 had never run. If there isn't one, you are not running a control, you are
 recording a constant.
+
+## An environment pin written for one execution context is a landmine in every other
+
+`t301_shuffle_probe.py` was written as one module with two lives: a detached
+local driver (which the LESSONS rule "pin chdir+sys.path in the script"
+rightly demands) and a remote import on the GPU VM, where the repo is cloned
+to `/tmp/jack`. The pin was hardcoded — `os.chdir("/home/opc/jackthelearner")`
+at module top — so the *fix for the detached-launch scar became the bug in
+the remote context*: kernel jack-ladder-1787260513 died at import with
+`FileNotFoundError` three minutes in, before touching the GPU, charging
+0.053 h of W33 as failed. The smoke test could not have caught it, because
+the smoke ran in the home context where the path exists — a smoke that only
+exercises one of a module's execution contexts certifies only that context.
+
+**Rule:** a module that runs in more than one execution context (local
+driver / remote VM / detached child) may not hardcode facts of any single
+context. Derive environment pins from the environment itself —
+`os.path.dirname(os.path.abspath(__file__))` gives the repo root wherever
+the clone lives — and smoke the module from a *foreign* cwd, since that is
+the cheapest available proxy for the context you cannot locally reproduce.
+This is the same class as "code that lives in a string and runs on another
+machine is invisible to every guard you have" (above), one layer down: there
+the shipped code escaped the guards; here the shipped code carried a guard
+that was itself context-bound. Enumerate the contexts, not the copies.
