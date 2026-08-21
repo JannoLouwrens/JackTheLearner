@@ -294,7 +294,21 @@ the motor system for movement. Muscles do not choose the destination.
                "rule extended from memory to speech. The LLM-swap arm doubles "
                "as a live test of the swappable-LLM decree.")
 
-## TOP OF QUEUE — W0.BAL: the rover topples, and LC.03 cannot mean anything until it is decided by bakeoff
+## W0.BAL: the rover topples, and LC.03 cannot mean anything until it is decided by bakeoff
+
+> **STATUS: PROCESSED 2026-08-21 (builder) — ESCALATED to DECISIONS_NEEDED.md
+> D9, not registered, per protocol step 1.** The cross-check found the entry
+> superseded in part and owner-gated in whole, all post-dating it: LC.03 was
+> redesigned 08-13/08-20 with rig gates that carry its meaning on the as-built
+> body (the title's premise is dead — its registered run is in flight, not
+> waiting); D8 (08-14) measured this body's actuation authority in detail and
+> established that body changes are world-contract changes on the owner's
+> desk; and every spec a body fix would serve (LT.* unregistered, T5.01)
+> is blocked behind T2.01/D1, so no bakeoff outcome is adoptable by this desk
+> today. The pre-registered arms/metric/null/kill survive VERBATIM in D9 and
+> the bakeoff runs unchanged the day the owner orders it (D9 option b) or a
+> ladder-branch spec becomes unblocked. Nothing here was decided by argument:
+> no arm was picked; the pick was routed to the authority that can adopt it.
 
 **Raised by a MEASUREMENT, 2026-08-09, not by an argument.** LC.02 built the
 climber-rover exactly as `CURIOSITY_BAKEOFF.md` §2.3 specifies and ran it. A

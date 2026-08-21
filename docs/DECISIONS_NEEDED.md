@@ -1683,3 +1683,64 @@ parameters, which is exactly the disease the ablation rule exists to prevent.
 
 *Evidence: `experiments/ledger.json` T3.07 history; commit `b2ef02b`. Working in
 `docs/OVERSIGHT.md` (23rd audit), section 6.*
+
+## D9 — The body fork: three independent measurements now say the rover body is the binding constraint (builder, 2026-08-21)
+
+Raised by processing the INTEGRATION_QUEUE's top entry (W0.BAL, written
+2026-08-09), whose protocol step-1 cross-check found it superseded in part
+and owner-gated in whole. Nothing here is a new measurement; it is three
+existing ones that have never been put side by side:
+
+1. **He topples.** The rover as built falls within ~20 decisions under random
+   action and lives on its side (`upright_cos` −0.041, all 3 seeds, recorded
+   in LC.02's ledger entry). His `lift` slides travel along the BODY z axis,
+   so a prone rover cannot raise a hand to a rung (W0.BAL).
+2. **He cannot catch himself.** D8's four scratch probes (2026-08-14): no
+   actuator group has directional catch authority — slides +0.09 ± 0.07 s,
+   adhesion +0.005 ± 0.09, the ground-gated drive potent only in the harmful
+   direction (−0.685 ± 0.16 s). BA.02 is unmeasurable in this body.
+3. **He does not really locomote.** T2.01, settled 2026-08-13: 2.67σ over
+   random against a 5σ bar that does not move, curve converged — "it needs a
+   better locomotion claim or a better body." It blocks 36 specs, including
+   the only claim specs for six GOAL.md senses.
+
+W0.BAL pre-registered the decision instrument and it survives verbatim: arms
+**A** (accept: the rover is a slider; ladder specs move to a body that can
+stand), **B** (bounded righting torque, floor-contact-gated exactly as the
+drive is), **C** (wide base + lowered COM, statically stable); metric
+`upright_frac` (upright_cos >= 0.7) and `hand_reach_z_max` under an identical
+uniform-random policy, 3 seeds x 500 decisions, same mutated worlds; null =
+the rover as built (already measured, −0.041); kill = no arm reaches a hand
+above the first rung, in which case the ladder branch moves to a different
+body, not a better rig.
+
+**Why this desk did not run the bakeoff** (and it is cheap — CPU, no
+learning, minutes): adoption of ANY winner is outside this desk's authority.
+B and C change the world contract (PG.3 inherited geometry; BA.01/PS.02/PS.03
+certificates), which D8 already established is yours; A re-parents the ladder
+branch, a direction call. And every spec a body fix would serve is blocked
+behind T2.01/D1 today (LT.* unregistered, T5.01 owner-scheduled behind
+T2.01), so no outcome is actionable until you pick a lane. Escalating without
+spending the measurement is the queue protocol's own instruction when the
+cross-check finds a conflict.
+
+**Options — any one closes it:**
+  **(a)** Park the rover-body question until the playground-humanoid line
+  (consistent with D8's option 1, the loop's recommendation there). The
+  bakeoff stays pre-registered and runs the day a ladder-branch spec becomes
+  unblocked.
+  **(b)** Order the W0.BAL bakeoff run as written. This desk runs it within
+  one iteration, CPU-only, and brings you the numbers; you then pick A/B/C
+  with evidence instead of taste.
+  **(c)** Fold it into your D1 answer: if D1 lands anywhere that implies the
+  humanoid body, W0.BAL is moot and the entry closes as superseded.
+
+One premise correction, recorded so the queue entry is not read as still
+true: W0.BAL claimed "LC.03 cannot mean anything until this is decided."
+LC.03 was redesigned 08-13/08-20 with rig gates (statue basal ceiling,
+needs_rise, paired twins, food-quantum accounting) that carry its meaning on
+the as-built body; its registered run is in flight and is not waiting on
+this decision.
+
+*Evidence: INTEGRATION_QUEUE.md "TOP OF QUEUE — W0.BAL"; LC.02 ledger entry;
+D8 above; T2.01 settlement `a3b12f6`; LC.03 docstring "RIG RE-DERIVATION".*

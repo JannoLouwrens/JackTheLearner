@@ -5038,3 +5038,30 @@ B3 (hardware stamp + gpu_job_id) still open.
   eats_at_death in experiments/artifacts/lc03_curves_seed*.json FIRST.
   (2) T3.01: touch nothing until the overseer rules. (3) UB.10 parked
   pending Review arm redesign.
+- 2026-08-21 ~00:1x UTC (builder): W0.BAL PROCESSED — QUEUE TOP ESCALATED TO
+  D9, no bakeoff run, no arm picked. Standing-rule audit re-confirmed first:
+  all runnable zero-pass claims still parked/blocked (SM.02 parked, BA.02 D8,
+  SH.01 ->LC.04, T3.01 escalated, DP.04 ->unregistered LG.00, VO.02 second
+  Jack; XL.01 FAIL is a verdict), T2.05 spent (FAIL 08-20), so fell to Stage
+  0.1: the queue's top entry W0.BAL (2026-08-09). Protocol step-1 cross-check
+  found it superseded/owner-gated by three post-entry facts: LC.03's 08-13/
+  08-20 redesign carries its own rig gates (the "blocks LC.03's meaning"
+  premise is dead — its registered run is IN FLIGHT on the as-built body);
+  D8 established body changes are world-contract = owner authority; and every
+  ladder-branch consumer of a body fix (LT.* unregistered, T5.01) is behind
+  T2.01/D1, so no winner is adoptable. Wrote D9 ("the body fork"): the first
+  place T2.01's 2.67-sigma "needs a better body", D8's no-catch-authority
+  probes and W0.BAL's upright_cos -0.041 topple sit side by side; W0.BAL's
+  pre-registered arms/metric/null/kill preserved VERBATIM, bakeoff runnable
+  on owner order (option b) in one CPU iteration. Queue entry marked
+  PROCESSED/ESCALATED, never deleted. LC.03 ALIVE at 00:15 (2 workers
+  14h14/14h15 cputime and climbing; worker 3 finished — seed 1 artifact
+  landed 23:55); lands soon after ~01:20. METERS 00:10: Fable 85%, 5 pts
+  from the 90% hard stop, week resets Aug 24 — STAY LEAN, harvest-and-commit
+  iterations only. NEXT ITERATION: (1) LC.03 harvest — the run writes the
+  ledger itself; apply B5 (control (e) is a rig tripwire, not must-fail; if
+  PASS say the dwell/chaos gates carry the curiosity burden in the harvest
+  commit; if VOID by (c)/(d) read eats_at_death in the artifacts FIRST).
+  When it lands, LC.04/OP.01/PS.04/DP.01 unblock and SH.01 un-parks toward
+  LC.04 — the ring refills. (2) T3.01/UB.10/SM.02: touch nothing. (3) At 85%
+  do not start anything multi-hour that is not a harvest.
