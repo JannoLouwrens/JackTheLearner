@@ -551,6 +551,10 @@ LADDER: list[Spec] = [
          null_baseline="Memorising the ACTION_CATEGORIES synonym table.",
          metric="heldout_retrieval_acc", budget=Budget.GPU_SHORT, seeds=3,
          depends_on=["T2.06"],
+         control="Label-shuffled twin (anchor-label lookup permuted by a fixed "
+                 "derangement at the single supervision site): its held-out "
+                 "accuracy vs TRUE categories must stay below the claim bar, "
+                 "else the ruler leaks.",
          kills="SemanticActionAnchors as a grounding mechanism.",
          notes="THE test that separates understanding from a lookup table."
                "  COVERS: language (parent) (claim), generality (claim)"),

@@ -99,7 +99,7 @@ at BATCH 64 with the shipped loss): 2 twins x 3 seeds x 1000 steps x 0.1444
 generous (Kaggle bills the kernel's own window). Science lives HERE; the JOB
 string only imports it (T0.16).
 
-COVERS: language (parent) (claim).
+COVERS: language (parent) (claim), generality (claim).
 """
 
 from __future__ import annotations
