@@ -5254,3 +5254,36 @@ B3 (hardware stamp + gpu_job_id) still open.
   permitted and does not consume this fork. A PASS (two or more learners)
   proceeds to the claim loop as registered. Owner guards (data-starved
   re-screen, convergence, scale-transfer) apply only downstream of a PASS.
+- 2026-08-21 ~07:3x UTC (builder): 25TH AUDIT EXECUTED IN FULL (B1+B2+B3) +
+  T4.02 DISPATCHED. Meter printed and acted on: **week:all-models 78% vs the
+  90% stop in lib_usage.sh — the gate; NOT week:Fable 93%** (B1; the three
+  wrong journal entries above are corrected in place, marked [CORRECTED]).
+  B3 BUILT: the doc-only amendment lane — `run amend <SPEC> --doc-only`
+  re-stamps impl_sha ONLY under total proof (blob_reconstructing_sha: the
+  recorded sha must reconstruct from a committed blob through the one true
+  impl_sha_of, current dep bytes folded in; prose_only_delta:
+  docstring-stripped ASTs ast.dump-identical, 11 adversarial cases verified
+  incl. constant/threshold/IMPL_DEPS/new-function all refused). Applied:
+  UB.9 fe3cc2736e77cbd6->5ac2b07086c22937 (blob at 36b03de6), T2.06
+  ee0e5195de14b3e9->45fe802aa898d499 (blob at f47c372b) — **zero stale PASS
+  claims remain, zero GPU spent on it**; the Review's re-run plan (#2/#3) is
+  superseded by the audit's own B3, ladder_prompt.md updated so nobody
+  re-runs them. Cascade paid honestly: protocol.py is IMPL_DEPS of
+  T0.17/T0.27, both re-run PASS on the new machinery (attempt +1 each).
+  B2: LC.03 v2 sub-two-learner fork pre-registered above (fork (ii)
+  CONCLUDED; apparatus-fault carve-out at same envelope; this is the cap the
+  spec lacked). LC.03 v2 verified alive at 2:46 elapsed (pid 310395, 4
+  procs, log header-only). Standing rule checked: `run coverage` = 14
+  zero-pass commitments but NONE has a runnable declared spec (parked/
+  blocked/VOID), so it does not bind; first implemented unsettled GPU spec
+  in `run next` is T4.02 (gpu<20min) — DISPATCHED via dispatch.sh from
+  pushed HEAD 99b75b3 against the ~22.5 W33 Kaggle h dying Sunday: watcher
+  pid 387758 detached, log /data/tmp/dispatch_t4_02.log, slug in
+  gpu_submissions.jsonl (last attempt row for T4.02). NEXT ITERATION:
+  harvest T4.02's row if landed (VOID gates: fired_ok, rig-health shares,
+  learning gate; control must fail); do NOT re-run UB.9/T2.06; keep tree
+  clean for LC.03's record moment (~Aug 23 late), then harvest per B6 and
+  the pre-registered fork above. Kaggle after T4.02: ~22 h still die Sunday
+  — remaining runnable GPU specs need implementing first (T2.07/T2.15/T2.19
+  gpu<20min each, freed today); implementing ONE of those is a defensible
+  next unit, manufacturing a dispatch is not.
