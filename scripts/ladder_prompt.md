@@ -77,10 +77,20 @@ and unsettled; do not manufacture a dispatch beyond that. **T4.02 is SETTLED
 vs the exogenous 10x gate, every rig gate green, touch (~2.9e-3) dominates
 audio (~1e-4) at the fusion boundary. That is a real architecture measurement;
 do not re-dispatch it as cheap work, and route any fusion-balancing redesign
-through the Review, not an argument. **T2.07 (held-out grounding) is IN FLIGHT
-on Kaggle since 08-21 ~08:26** (attempt 1787300777687-403775, est 0.4 h, head
-c6895b2) — harvest its row, do not relaunch while the attempt row's watcher
-pid is alive.
+through the Review, not an argument. **T2.07 (held-out grounding) is
+HARVESTED: FAIL (attempt 2, Kaggle P100, 0.29 h W33, ran 08-21 08:43,
+head c6895b2)** — _check replayed offline against the recorded row: every
+rig gate green (construction_ok, memorisers 0.0/0.0, NB reference 5/5,
+seen-fit 11/11, losses fell on both twins, deterministic eval,
+label-shuffle control [0,0,1] far under the bar) and the claim branch
+alone fired: held-out correct **[2,2,2] on all three seeds vs the
+pre-registered 4/5 bar**. That is a real measurement, not a harness fault
+or a seed lottery (three seeds, identical score): the model fits its
+supervision perfectly and beats the shuffled twin, but its grounding only
+weakly transfers to held-out phrasings — while the 5/5 NB lexical
+reference proves the split is resolvable by token overlap alone. Do not
+re-dispatch T2.07 unchanged; any redesign (longer training, richer phrase
+table, compositional encoder) routes through the Review, not an argument.
 
 ## Start here, every time
 

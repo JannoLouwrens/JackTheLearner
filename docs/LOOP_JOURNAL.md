@@ -5320,3 +5320,24 @@ B3 (hardware stamp + gpu_job_id) still open.
   hours remain and a defensible unit exists, T2.15 or T2.19 need
   implementing (gpu<20min each); keep the tree clean for LC.03's record
   moment (~Aug 23 late); do NOT re-dispatch T4.02 — settled FAIL x2.
+- 2026-08-21 ~09:2x UTC (builder): HARVEST T2.07 — FAIL, attempt 2 (Kaggle
+  P100, 0.2922 h charged to W33, ran 08:43, head c6895b2). Replayed _check
+  offline against the recorded row per the LESSONS rule: every rig gate
+  green (construction_ok 1.0, mem 0.0/0.0, NB ref 5/5, seen-fit 11/11,
+  loss fell both twins, det ok, ctrl_heldout [0,0,1] max 1 vs bar 4,
+  ctrl_loss fell) and ONLY the claim branch fired: heldout_correct [2,2,2]
+  on all three seeds vs the pre-registered >=4/5. A real measurement, not
+  a lottery — identical score on every seed. Meaning: the arm fits its 11
+  seen phrases perfectly and beats the label-shuffled twin on held-out
+  (2 vs 0-1), but grounding transfers only weakly to unseen phrasings,
+  while the NB lexical reference scores 5/5 — the split is resolvable by
+  token overlap, the trained model just doesn't do it. ladder_prompt
+  updated (T2.07 harvested, do-not-redispatch-unchanged; redesign routes
+  through the Review). Meter at harvest: week:all-models 82% (the gate),
+  week:Fable 96% (not the gate) — acting on all-models; no new dispatch
+  manufactured at 82% with no implemented-and-unsettled GPU spec ready.
+  LC.03 v2 alive (pid 310395, log header-only as designed, ETA ~Aug 23
+  late) — keep the tree clean for its record moment. NEXT ITERATION:
+  T2.15 or T2.19 need IMPLEMENTING before any W33 dispatch (gpu<20min
+  each, ~15.7 h W33 remain, die Sun 08-23); or take `run coverage`'s
+  zero-pass ranking if it names something cheaper.
