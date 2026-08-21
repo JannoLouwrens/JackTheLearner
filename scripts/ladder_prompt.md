@@ -36,6 +36,43 @@ A capability may only be claimed by a test that could have failed. This repo's
 disease was a README status table reading "Working" for eleven components that had
 never received a gradient. Do not recreate it.
 
+## READ THIS BEFORE YOU DECIDE YOU ARE IN A BLACKOUT (Review, 2026-08-21 06:4x)
+
+**You have been stopping on the wrong meter for three iterations.** The hard
+stop lives in `scripts/lib_usage.sh` and it reads
+`claude_usage.py --pct`, which is **`week:all models`** — nothing else. At
+06:40 on 08-21 that line reads **77%**, thirteen points below the stop. The
+number your last three journal entries called "the 90% hard stop" is
+**`week:Fable` 93%**, which is the meter for the model cron happens to pass
+in (`JACK_LOOP_MODEL=fable`) and is **not the gate**. `ladder_loop.sh` already
+handles Fable running out: `FALLBACK_MODELS="opus sonnet"` fires on the
+refusal. **If the gate lets you run, you are not in a blackout.** Print both
+lines (`claude_usage.py`, no flags) and say which one you are acting on.
+
+The judgement call this changes is real and it is yours, so make it explicitly:
+running on opus draws the same `all models` pool the Review and the overseer
+draw from, so burning it to 90% takes the AUDITORS down too (PROGRESS FOR THE
+OWNER #1, twice raised). That argues for restraint — **it does not argue for
+zero.** The cheapest correct posture is *dispatch, then idle*: a Kaggle
+submission and a `launch_detached.sh` run compute through any blackout and
+write their own receipts. Your own B6 plan says exactly this — *"W33 hours die
+Sun 08-23 REGARDLESS, so anything worth W33 must be dispatched before ~88%,
+not queued behind the stop"* — and then nothing was dispatched after 03:13.
+
+**~22.8 Kaggle GPU-hours expire Sunday 2026-08-23** (`gpu_budget.json`: W33 is
+7.20 h ok + 0.26 h failed of 30). W32's whole allocation died unspent on 08-16
+for the same reason. **Two units are ready right now, need no design work, and
+are the highest-value things on the board:**
+
+1. **UB.9 is `PASS but STALE`** — `run blocked` ranks it **#3, frees 5,
+   blocks 7**, including UB.10. It went stale while the loop was reporting
+   "zero stale claims remain"; a blackout-lean pass never ran `run status`, so
+   nothing noticed. A stale re-run is mechanical: no threshold, no redesign.
+2. **T2.06 is `PASS but STALE`** — frees 3 (T2.07, T2.15, T3.08), `GPU_SHORT`.
+
+Do those before Sunday even if you do nothing else. Then go lean if you judge
+the pool needs protecting — but log the number you protected and from what.
+
 ## Start here, every time
 
     cd /home/opc/jackthelearner
@@ -113,9 +150,12 @@ branch in every future row. Log /data/lc03_rescreen.log; artifacts
 regenerate into experiments/artifacts/ (gitignored). LC.04/OP.01/PS.04/
 DP.01 stay blocked behind a future LC.03 PASS.
 
-METER AT LAUNCH: Fable 89% vs the 90% hard stop (resets Aug 24 04:59 UTC).
-The B6 plan (journal, 08-21 ~01:0x) governs: the run computes through the
-blackout and writes its own receipt; the first post-resume iteration is
+METER AT LAUNCH: `week:Fable` 89% — which the launch note called "the 90%
+hard stop" and which is NOT the stop; see the meter section at the top of
+this file. Read both lines yourself; do not reuse this one.
+The B6 plan (journal, 08-21 ~01:0x) governs the RUN regardless of the meter:
+it computes through any blackout and writes its own receipt; the first
+post-resume iteration is
 HARVEST-ONLY — read the ledger row's `void_reason`/`data_starved` keys
 directly, replay _check if narrating (LESSONS: "A generic VOID message
 admits every narrative"), commit receipts, keep the tree clean.

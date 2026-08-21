@@ -4,284 +4,273 @@
 > this file. The running history is `docs/PROGRESS_LOG.md`.
 > Mode: DAILY (Part 2, the test re-examination, runs Sundays only).
 
-**2026-08-20 06:45 UTC — DAILY. Window: 2026-08-19 06:40 → 2026-08-20 06:40.
-First Review in six days: the five before it were refused at the usage gate.**
+**2026-08-21 06:45 UTC — DAILY. Window: 2026-08-20 06:40 → 2026-08-21 06:40.**
 
-*The one sentence: **the loop woke from a 4.3-day blackout and had its single
-best day of real science — taste became the first constitutional commitment
-this project has ever closed with a claim — and then spent its last three
-iterations waiting on background processes that had already died in silence.***
-
----
-
-## 0. The gap this page has to declare first
-
-**The system was dark 2026-08-15 00:07 → 2026-08-19 07:31 UTC.** Every organ
-was refused at the 90% weekly-usage stop: **~103 builder fires, 5 Review fires,
-and the Monday field-watch sweep**, all logged with a reason, none executed.
-Zero ledger rows were recorded in those 4.3 days. The 08-14 Review predicted
-this collision to within about twelve hours and it happened exactly as
-described, including the part that cost the most: **Kaggle's W32 hours expired
-unspent on 08-16 because the loop was not awake to submit them.**
-
-That is the correct reading of every number below. This is not a 24-hour window
-inside a steady run; it is the first 24 hours after a long stop, and both the
-good and the bad in it are shaped by that.
+*The one sentence: **the window's first eighteen hours were the most disciplined
+science this loop has produced — sight's first real claim, a body bakeoff that
+adopted nothing, a VOID diagnosed by replay instead of by story — and then the
+builder put itself into a three-day blackout by reading the wrong meter, with
+twenty-two GPU-hours expiring Sunday and two stale certificates it never looked
+for.***
 
 ---
 
 ## 1. The numbers
 
-**Ladder: 82/169 demonstrated (48.5%).** Last Review (08-14): 79/169 (46.7%).
+**Ladder: 83/169 demonstrated (49.1%).** Yesterday: 82/169 (48.5%).
 
-| | this window (24 h) | 08-14 window | the dark days (08-15→08-19) |
-|---|---|---|---|
-| spec runs recorded | **52** | 27 | **0** |
-| PASS / FAIL / VOID / ERROR / BLOCKED | 45 / 2 / 1 / 2 / 2 | 23 / 2 / 2 / 0 / 0 | — |
-| **first-ever PASSes** | **2** (T2.06, TA.02) | 1 | 0 |
-| net new demonstrated | **+2** (80 → 82) | +1 | 0 |
-| registry growth | **0** (169, flat) | +3 | 0 |
-| builder iterations | **24 fired, 24 rc=0** | 24 fired, 21 rc=0 | 0 of ~103 |
-| commits | **42** | ~20 | 0 |
+| | this window (24 h) | 08-20 window |
+|---|---|---|
+| ledger events recorded | **13** | 52 |
+| PASS / FAIL / VOID / ERROR | 5 / 3 / 3 / 2 | 45 / 2 / 1 / 2 |
+| **first-ever PASSes** | **1** (T3.01) | 2 |
+| net new demonstrated | **+1** (82 → 83) | +2 |
+| registry growth | **0** (169, flat — third window running) | 0 |
+| builder iterations | **24 fired, 24 rc=0** | 24 fired, 24 rc=0 |
+| commits | **55** | 42 |
 
-**Goodhart check: the rate rose 46.7% → 48.5%, and it is half an artefact.**
-The registry did not move at all — 169 specs for six days — so every point of
-the rise is the runner, none of it is the ladder growing underneath. That is
-the *good* direction of the two failure modes this check watches for, but a
-flat registry across 42 commits is its own signal: the builder registered no
-new spec this window. It was running and repairing, not extending. One window
-of that is healthy; a second would mean the research queue has stopped feeding
-the ladder.
+**Goodhart check: rate rose 48.5% → 49.1% on a registry flat at 169 for eight
+days.** All runner, no ladder — the good direction of the two failure modes,
+and for the third consecutive window it also means **nothing new was
+registered.** One flat window is healthy; three is the research queue not
+feeding the ladder. The queue's own empty-queue rule says the correct response
+is to *generate* work (`INTEGRATION_QUEUE.md`, "WHEN THE QUEUE IS EMPTY"), and
+that has not happened either.
 
-**Rework: 50 of 82 passing specs took more than one attempt (61.0%),** up from
-52.4% on 08-14. Most of this window's contribution is honest — the stale-cert
-recovery chain re-ran 17 specs and TA.02 needed a second attempt after a
-harvest bug — but the number is now high enough to watch. It is the fraction of
-our certificates that did not hold the first time.
+**Rework: 51 of 83 passing specs took more than one attempt (61.4%),** flat on
+yesterday's 61.0%. T3.01 alone contributed attempts 2–5 this window.
 
-**Zero-pass constitutional commitments: 15, down from 17.** This is the number
-that matters most on this page and **it moved for the first time by a claim
-rather than by registering a spec.**
+**Compute.** Meters at 06:40: session 16%, **`week:Fable` 93%**, **`week:all
+models` 77%**, all resetting Aug 24 05:00 UTC. Kaggle W33: **7.20 h charged ok
++ 0.26 h failed of 30 — ~22.8 h expire Sunday 2026-08-23.**
 
-**Compute.** Credits `week:all models` **46%**, Fable 48%, session 15%, reset
-Aug 24 — healthy. Kaggle W33: **~3.7 h charged of 30, ~26 h expiring Sunday
-2026-08-23.** The pressure has inverted since 08-14: credits are abundant, GPU
-hours are abundant *and perishable*, and the binding constraint is now having
-something worth submitting.
+**The frontier, recomputed (`run blocked`, not quoted).** 60 of 169 specs are
+unreachable; 26 are runnable now.
 
-**The frontier, recomputed (not quoted).** Transitive unpassed-descendant mass:
-
-| rank | spec | status | ready? | mass |
+| rank | spec | status | frees | note |
 |---|---|---|---|---|
-| 1 | **T2.01** Locomotion beats a random policy | FAIL | **READY** | **36** |
-| 2= | T4.04 / T3.02 / T3.01 (ablations) | NOT_RUN | T3.01 READY | 9 |
-| 2= | **LC.03** learning-core screening | **VOID + STALE** | **READY** | 8 |
-| 5 | UB.10 fusion bakeoff | NOT_RUN | READY | 5 |
-
-30 specs are runnable now; **57 are blocked behind something unpassed.** T2.01
-alone accounts for 36 of them and has been FAIL since 08-12 — eight days,
-unchanged, correctly declined for re-running (a re-run is a seed lottery
-against a fixed 5σ bar; the measured value is 2.67σ on a converged curve). It
-is a science problem and nobody is working on it, because D1 — where control
-lives — has been open on the owner's desk for **eleven days** and its
-`RECOMMENDED` option is the one the PLASTIC-ONLY decree forbids.
+| 1 | **T2.01** Locomotion beats a random policy | FAIL | **35** (blocks 36) | science problem, not compute; behind D1 |
+| 2 | **LC.03** learning-core screening | VOID ×2 | 8 | **v2 re-screen in flight**, ETA ~Aug 23 late |
+| 3 | **UB.9** Heard, not seen | **PASS but STALE** | **5** (blocks 7) | **new this window; nobody noticed** |
+| 4 | **T2.06** Language-action alignment | **PASS but STALE** | 3 | **new this window; nobody noticed** |
+| 5 | T2.02 / T3.06 / T2.05 / T4.02 | VOID/NOT_RUN/FAIL | 1–2 each | |
 
 ---
 
-## 2. What the window actually produced
+## 2. What the window actually produced — and it was good
 
-**Two first-ever PASSes, and one of them is the best result in weeks.**
+**Sight got its first claim.** `T3.01` PASS (v3, attempt 5): `acc_full`
+0.61–0.63 against its own frozen probe's 0.4467 reference, ablated and
+pixel-shuffled arms sitting *exactly* at chance 0.25, `hash_overlap` 0.0. The
+plastic vision encoder is load-bearing, not decorative — the first defence the
+PLASTIC-ONLY decree has ever been given on our own substrate. It took two VOIDs
+and a pre-registered curves probe to get there, and every one of those was
+routed by a decision rule written before the run.
 
-- **TA.02 — one-trial conditioned taste aversion. PASS.** Pooled avoidance
-  0.983, the Garcia dissociation clean, the DQN null eating 196–218 toxic meals
-  at zero discrimination over 150 lives. **Taste is the first zero-pass
-  constitutional commitment ever closed by a claim spec.** Every previous
-  "Jack got a sense" headline — voice, balance, cold, smell — was a *fixture or
-  sensor* passing, the apparatus rather than the capability. This one is the
-  capability. It is the single most important step toward Jack this week.
-- **T2.06 PASS** (P100, 1069 s billed, 0.30 h of W33).
+**Three things I want to name as *method*, because they are what a healthy
+week looks like:**
 
-**Three negatives, all routed correctly.** XL.01 FAILed twice — the carried
-diary bought nothing on fresh worlds 3–5, refuted first by its own control and
-then on the claim. SH.01 was parked at z=1.03 rather than spending 80 CPU-min
-on a guaranteed VOID. The instrument is still refusing things, which is the
-only reason its greens are worth anything.
+- **The W0.BAL body bakeoff ran and adopted NOTHING.** Arm C (a 0.35 m plinth,
+  mass in the base) scores `upright_frac` 1.000 on every seed against arm A's
+  0.002–0.004, and the builder attached the table to D9 and left the seat
+  alone, because a winner still needs owner adoption. That is the constitution
+  working under temptation.
+- **A VOID was diagnosed by replaying its own `_check`.** LC.03's v1 VOID had
+  been narrated wrongly; the correction came from replaying the recorded row
+  against the code, not from a better story, and the resulting lesson
+  ("a generic VOID message admits every narrative") is now written.
+- **The kill clause did NOT fire when it was invited to.** W0.BAL's premise
+  was narrowed rather than declared dead, because even the worst arm clears
+  rung 1 in its pre-topple seconds. Refusing a satisfying deletion on the
+  evidence is the same muscle as refusing a satisfying PASS.
 
-**The machine got harder, twice, both from overseer findings.** The stale-PASS
-cascade closed by the detector's own testimony (10 stale → 5+1, not one a
-PASS); and the reattach-laundering hole is now mechanised shut — a
-`JACK_REUSE_KERNEL` harvest can no longer stamp a certificate with code that
-did not run, because `submit()` records the sha of the exact kernel pushed and
-a mismatch is refused at zero billing. T0.24 is up to 8 properties.
+**Two doc-code gaps closed machine-readably** — `{arm}/data_starved` was
+promised at registration and computed nowhere; every `_check` VOID now names
+its firing branch, key and values in its own ledger row.
 
 ---
 
-## 3. THE FINDING — three iterations spent waiting on dead processes
+## 3. THE FINDING — a three-day self-imposed blackout, on a meter that is not the gate
 
-**Measured at 06:41 UTC, and it is still true as this is written:**
+**The last three iterations (04:24, 05:07, 06:07) did no work by choice.** Each
+logged the same reason: *"the usage meter reads Fable 91% (93% now), past the
+90% hard stop, so per the standing B6 blackout plan I planned no new work."*
+
+**The 90% hard stop is not measured on Fable.** `scripts/lib_usage.sh` calls
+`claude_usage.py --pct`, which returns **`week:all models`** and nothing else:
 
 ```
-/data/sm02_geo_check.log   0 bytes   launched 04:13   no process
-/data/sm02_geo_occ.log     0 bytes   launched 05:08   no process
-/data/sm02_geo_vis.log     0 bytes   launched 05:08   no process
-/data/sm02_learnability_{vis,occ}.json   UNCHANGED since 03:13 / 03:15
-ps -eo cmd | grep -E 'sm02|geo|experiments\.'   →   nothing
+session                [###                 ]  16%   resets Aug 21,  9am
+week:Fable             [##################  ]  93%   resets Aug 24,  5am   <- what the builder is stopping on
+week:all models        [###############     ]  77%   resets Aug 24,  5am   <- what the GATE reads
 ```
 
-Three launches, three empty logs, zero surviving processes, and the downstream
-JSONs still holding the 03:xx **Euclidean** numbers the geodesic repair was
-supposed to replace. The comparable check that *did* run took 230–317 s and
-printed on completion; these have been "running" for 93 and 33 minutes.
+The gate has thirteen points of headroom and has not fired once this window.
+`week:Fable` is high only because cron passes `JACK_LOOP_MODEL=fable`, and
+`ladder_loop.sh` already handles that exact case —
+`FALLBACK_MODELS="opus sonnet"` fires on the refusal. **The builder is not
+gated. It has grounded itself.**
 
-The three iterations that ended at 04:15, 05:10 and 06:12 all reported some
-version of *"waiting on the two CPU checks — I'll be notified when both have
-written their ratio lines."* Two of them ran under four minutes. **The builder
-was blocked on a notification that could never arrive**, and the loop's own
-liveness logging shows `rc=0` for all three, so nothing anywhere reads as
-wrong.
+**What it costs, concretely.** The self-imposed blackout runs to the Aug 24
+reset. **Kaggle's W33 allocation expires Sunday Aug 23 — one day earlier —
+with ~22.8 of 30 hours unspent.** This is the second consecutive week the
+allocation dies unused; W32's died on 08-16 while the loop was genuinely dark.
+And the builder's *own* B6 plan, written at 01:0x this window, names the
+deadline exactly: *"W33 hours die Sun 08-23 REGARDLESS, so anything worth W33
+must be dispatched before ~88%, not queued behind the stop."* Nothing was
+dispatched after 03:13.
 
-**This exact failure was diagnosed by the builder itself yesterday at 10:41**
-(`a51686c`: *"live oracle-probe pid is 3963630 — first two launches died at
-import"*). A `setsid`-detached script launched from a `/data` cwd dies at
-import before writing a byte; the launch returns 0; a poll on file *content*
-waits forever. The lesson was learned, written into a commit message, and not
-turned into a check — which is `LESSONS.md:4042` almost verbatim: *a scar
-recorded in prose is prose; only a check binds the next author.*
+**And there was something to dispatch.** `run blocked` now ranks **UB.9 at #3,
+`PASS but STALE`, frees 5 and blocks 7 — including UB.10.** T2.06 is stale too
+(frees 3). Both are mechanical re-runs: no threshold to set, no arm to design,
+no diagnostic cap to spend. **Neither appears in any journal entry from this
+window**, because a blackout-lean liveness pass checks pids and log bytes and
+never runs `run status` — so the loop's cheapest, highest-value available work
+was invisible for the same reason it decided it had none.
 
-**Also uncommitted:** `experiments/sm02_learnability_check.py` (untracked), the
-sm_02 geodesic edit (+137 lines), the LESSONS entry, and the pilot's GPU
-charge. **Five iterations of work sitting outside git**, in a project whose own
-lessons file says a detached recorder stamps the tree it finds.
+**The generalisable shape, and it is not the arithmetic.** Yesterday's finding
+was *an organ can stall with a correct `rc=0`.* Today's is one turn worse: the
+organ is not stalled, it is **correctly executing a rule it applied to the
+wrong number**, and every instrument agrees — `rc=0`, tree clean, HEAD pushed,
+liveness receipts committed, journal current. A wrong premise held with good
+discipline produces a perfect audit trail of doing nothing.
 
-I have put all of this at the top of `scripts/ladder_prompt.md`, above the
-priority order, because the builder fires at 07:07 and would otherwise wait a
-fourth time.
+**In fairness to the builder, the underlying caution is sound and I do not
+want it discarded.** Falling back to opus draws on the same `all models` pool
+the Review and the overseer draw from, so burning it takes the auditors down —
+which is this desk's own FOR THE OWNER #1, twice raised. The error is not
+"be careful with the pool"; it is *reading the pool's number off the wrong
+line, and concluding that careful means zero.* The correct posture is
+**dispatch, then idle**: Kaggle kernels and `launch_detached.sh` runs compute
+through any blackout and write their own receipts. That is B6's own sentence.
 
 ---
 
 ## 4. Steering maintenance (Part 2.5)
 
-**Four fixes to `scripts/ladder_prompt.md`, one of them expensive:**
+**`scripts/ladder_prompt.md` — two fixes, one new section.**
 
-1. **NEW §"Read this before you wait on anything"** — the dead-process finding
-   above, with the relaunch procedure (`chdir` + `sys.path` pinned *inside* the
-   script; `sleep 15; wc -c <log>` before believing a launch; `pgrep -f`, never
-   the pid `setsid` returned).
-2. **The expensive one: `§0` still ordered "LC.03 IS IN FLIGHT. DO NOT RUN IT
-   AND DO NOT RELAUNCH IT"** — a Review directive from 08-14 naming `pid
-   2536994`. That run **landed VOID on 2026-08-14 07:36** and the spec has
-   since gone stale by `IMPL_DEPS`. **This desk's own order forbade the
-   project's second-largest unblock for six days after it stopped being true.**
-   Replaced with the live state and an instruction to read the VOID's reason
-   before relaunching.
-3. **`§2`'s credit/Kaggle section was entirely spent** — it warned about a
-   collision "this weekend", quoted a 71% meter that reset on 08-19, and a
-   Kaggle W32 deadline of 08-16. Replaced with the live meters and the
-   inversion: the constraint is no longer the ability to submit, it is having
-   something worth submitting.
-4. **A cached count** — "`run coverage` still reads 17 and it has not moved" —
-   on the very page that forbids cached counts. It is 15. Replaced with the
-   instruction to read the tool.
+1. **NEW section at the top, above the priority order**: which meter the gate
+   actually reads, both lines printed, the fallback chain named, the
+   dispatch-then-idle posture, the Sunday deadline with the live budget
+   arithmetic, and UB.9/T2.06 named as the two ready units. The builder fires
+   at 07:07 and would otherwise ground itself a fourth time.
+2. **A cached, mislabelled meter inside the LC.03 section** — "METER AT LAUNCH:
+   Fable 89% vs the 90% hard stop" — is the sentence that propagated the error
+   into three iterations. Corrected to point at the tool, per this page's own
+   rule that priorities never cache a number.
 
 **FIELD_WATCH.md: unchanged, nothing to consume.** Last real sweep 2026-08-12
-(week 3), consumed by the 08-13 Review; the file was last committed 08-14
-02:31, before the last Review read it. **The Monday 08-17 sweep was refused at
-96% usage** — so week 4 does not exist and the scout has been silent for eight
-days against a seven-day cadence. Logged with a reason, under 2× cadence, so
-not a liveness finding — but a lost week, and the next sweep is 08-24.
+(week 3), dispositioned by the 08-13 Review. The Monday 08-17 sweep was refused
+at 96% usage, so week 4 does not exist; the scout has now been silent nine days
+against a seven-day cadence — **under 2×, so not yet a liveness finding**, and
+the next fire is Mon 08-24 05:37, thirty-eight minutes after the weekly reset.
+Its own week-3 note said fronts 1–3 should not be re-swept before ~08-19, so
+the mandate is ripe and waiting.
 
-**Seat staleness (`CHAMPIONS.md`, rule 4): one seat flagged, two cells
-corrected.** The **Learning core** seat is FLAGGED STALE — a DEFAULT champion
-that has never been contested, whose screening round has been VOID for six days
-with nothing scheduled, and whose cell still read "IN FLIGHT since 2026-08-13".
-Corrected to the ledger's actual state; **no seat changed hands.** The **Smell**
-cell said `SM.02` "is runnable today"; it is now implemented, its first pilot
-returned non-learning on all six arms, and the repair is uncommitted — recorded.
+**Seat staleness (`CHAMPIONS.md`, rule 4): five cells corrected, one seat still
+flagged, no seat changed hands.**
 
-**Organ liveness: nothing silent, but the record is worse than it looks.**
-Builder hourly, 24/24 this window. Overseer 6-hourly, all four fires present
-(12:43, 18:46, 00:37, 06:37). `tmp_reaper` 04:13. `lost_iterations.log` empty.
-Review and field watch: covered above — **every organ that was silent, was
-silent because the usage gate refused it, and every refusal is logged.** The
-gate works as designed. The design is the problem, and it is on the owner's
-desk below for the second time.
+- **Taste** still read *"`TA.02` is runnable today"* — two days after TA.02
+  passed. Corrected: the claim is closed, and the cell now says plainly that
+  no mechanism *arm* is seated, so the win is not mistaken for an adoption.
+- **Sensory fusion** claimed UB.9's PASS as live evidence "so the matrix has
+  something to eat". UB.9 is stale and UB.10 is parked; both recorded.
+- **Learning core** still described the 08-14 VOID. Refreshed to the second
+  VOID (08-21 02:11) and the v2 re-screen in flight. **The seat stays FLAGGED
+  STALE** — the default champion has still never been contested — but the flag
+  now has a scheduled resolution for the first time since it was raised.
+- **Smell** said the SM.02 repair was "in progress and UNCOMMITTED"; SM.02 is
+  parked, the repair is committed, and the cell said neither.
+- **Vision encoder** gained T3.01's numbers — the from-scratch encoder's first
+  actual defence, which belongs where the seat is argued.
+
+**Organ liveness: all four organs healthy, nothing silent.** Builder 24/24
+hourly, all `rc=0`. Overseer 6-hourly, all four fires present (12:37, 18:37,
+00:37, 06:37) and the 24th audit returned ON TRACK. Review daily, firing.
+`tmp_reaper` 04:13. `lost_iterations.log` empty. **The gate did not refuse a
+single organ this window** — which is exactly what makes §3 worth writing: the
+first blackout this project has had that nothing in it caused.
 
 ---
 
 ## 5. The honest paragraph
 
-We are closer to a creature, and I can point at the reason without reaching:
-for the first time, one of the owner's own commitments stopped being a promise
-and became a demonstrated capability. Taste is not a fixture that reports
-numbers; it is Jack eating something that made him ill and then refusing it,
-with the dissociation that tells us it is taste and not merely memory, and with
-a null that shows a competent learner without the mechanism never gets there.
-That is the shape everything else on this ladder has been aiming at and mostly
-missing. Against it, the drift is the same one the last three pages have named
-and it is getting older rather than better: the senses accumulate while the body
-stays unproven. He can smell, taste, hear, feel cold and feel himself falling,
-and he still cannot be shown to walk — and the reason is not compute and not
-effort but a question about where control lives that has sat unanswered long
-enough for the ladder to grow a whole wing behind it. The subtler worry is the
-one this window exposed by accident: an organ that is stalled looks exactly like
-an organ that is working, because the only thing anything checks is whether the
-process exited cleanly, and a loop waiting patiently for a corpse exits very
-cleanly indeed. We have built a system that cannot lie to us about its results.
-We have not yet built one that cannot lie to us about whether it is doing
-anything.
+We are closer to a creature, and the reason is that he can now be shown to
+*see* — not to carry an encoder that produces numbers, but to have his
+performance collapse to chance when the thing he sees is taken away, which is
+the only form of "he sees" this project accepts. Put beside taste closing two
+days ago, two of his senses have stopped being apparatus and started being
+capabilities, and both of them got there by failing first and being allowed to.
+The window's best hour was the one where a bakeoff produced a clean winner and
+the loop adopted nothing, because the person who could adopt it was asleep;
+that is a system with a conscience rather than a scoreboard. And then the drift,
+which is subtler than any we have named and worse for it: the builder spent its
+last three hours performing custody — checking pids, confirming clean trees,
+writing receipts about the absence of work — and every organ we own reported
+that as health. We have taught this system that stopping is safe, and it has
+learned the lesson so well that it now stops for reasons it has not checked. It
+did not lie, it did not thrash, it did not cut a corner. It read one number off
+the wrong line and stood still for three hours in front of a deadline it had
+itself written down that morning, and nothing anywhere was able to notice,
+because everything it did while standing still it did impeccably.
 
 ---
 
 ## FOR THE BUILDER — ordered
 
-1. **STOP WAITING. The SM.02 geodesic CPU checks are dead** (evidence in §3 and
-   at the top of `ladder_prompt.md`). Relaunch them with the repo path pinned
-   inside the script, and *verify the artifact at 15 s* before you treat a
-   launch as successful. **Never end an iteration on "waiting" without a
-   liveness proof** — `pgrep -f` returning a pid AND the log growing.
-2. **Commit the five iterations of uncommitted work** before any dispatch:
-   `sm02_learnability_check.py` (untracked), the sm_02 geodesic edit, the
-   LESSONS corollary, the pilot's GPU charge.
-3. **Turn the scar into a check.** You have now lost time to
-   dies-at-import-in-a-detached-launch twice in twenty hours, and written it
-   down both times. Put a `launch_detached()` helper in the harness that pins
-   `chdir`/`sys.path`, sleeps, asserts the log is non-empty, and returns the
-   `pgrep`-found pid — or the third occurrence is already scheduled.
-4. **LC.03 is unblocked, stale, and yours.** My own 08-14 order was what stopped
-   it; that order is withdrawn. Read why attempt 1 VOIDed before relaunching —
-   a second VOID for the same reason is the waste, not the run.
-5. **~26 Kaggle hours expire Sunday 08-23 and credits are healthy.** Unlike
-   last weekend you can actually spend them. Do not manufacture work to fill
-   them; do make sure SM.02's repaired pilot and anything else genuinely ready
-   is dispatched well before Sunday rather than at it.
+1. **You are not in a blackout. Print both meter lines before you decide you
+   are.** The gate is `week:all models` (77%), not `week:Fable` (93%). Full
+   reasoning is now at the top of `ladder_prompt.md`. If you still judge the
+   pool worth protecting, that is legitimate — but say which number you are
+   protecting and from what, rather than citing a stop that has not fired.
+2. **Re-run UB.9 before Sunday.** `PASS but STALE`, ranked #3, frees 5 and
+   blocks 7 including UB.10. Mechanical: no threshold, no redesign. It went
+   stale under a loop that was reporting "zero stale claims remain".
+3. **Re-run T2.06** (`PASS but STALE`, `GPU_SHORT`, frees T2.07/T2.15/T3.08).
+   With #2 that is two of the top four blockers cleared for a couple of the
+   ~22.8 Kaggle hours that die Sunday.
+4. **Add `run status` to the blackout-lean pass.** A liveness pass that checks
+   pids and log bytes but not the ledger is why #2 and #3 were invisible. Two
+   certificates decayed in silence inside a window with 55 commits in it.
+5. **The registry has been flat at 169 for eight days.** After #2–#3, the
+   correct unit is `INTEGRATION_QUEUE.md`'s own empty-queue rule: research the
+   next stage that has no design doc and register from it. Do not manufacture a
+   GPU dispatch to spend hours — but do not let the ladder stop growing either.
 
 ## FOR THE OWNER — strategic forks only
 
-1. **The 90% usage gate cost 4.3 days, ~103 builder iterations, all five
-   Reviews, one field-watch sweep and a full expiring Kaggle allocation — and
-   this is the second time I have raised it.** The failure shape is still
-   wrong: the gate takes the *auditors* down with the builder, so the moment
-   the project most needs oversight is the moment oversight is guaranteed
-   offline, and nothing can even report that the loop is dark. **Recommendation:
-   a small reserved slice for the three audit organs**, so that a builder
-   blackout is observed rather than silent. Cheap, and it converts a total
-   outage into a degraded one.
-2. **D1 — where control lives — is eleven days open and it is now the single
-   largest thing standing between this project and a Jack that moves.** T2.01
-   blocks 36 specs, is correctly refusing to be re-run, and cannot be fixed by
-   compute. Its `RECOMMENDED` option (frozen trunk + head) is barred by the
-   PLASTIC-ONLY decree, so the decision is *unanswerable as posed* and has been
-   for eleven days. **Recommendation: either narrow the decree's scope to admit
-   a frozen control trunk into the arena, or strike that option and let the
-   remaining arms run.** Both are decisions; continuing is not.
-3. **An organ can stall indefinitely and every instrument we own will report
-   `rc=0`.** §3 is the first observed instance: three iterations, exit code
-   zero, nothing produced, nothing flagged. This is adjacent to the 08-13
-   finding that no organ reads another's exit code, but it is worse — the exit
-   code was *correct*. **Recommendation: a productivity heartbeat** (an
-   iteration that commits nothing and moves no ledger row twice running is a
-   finding), owned by the overseer. I have not implemented it; it touches organ
-   scripts, which are outside this desk's jurisdiction.
+1. **The usage gate has now failed in the opposite direction, and it cost a
+   second consecutive GPU allocation.** Last week the gate fired and took the
+   auditors down with the builder (raised twice). This week it did *not* fire —
+   and the builder grounded itself anyway for three days on the per-model meter,
+   with ~22.8 Kaggle hours expiring Sunday. The common cause is that **"90%" is
+   a number in prose with no single authoritative source**: the shell reads
+   `all models`, the builder reads `Fable`, and both call it "the hard stop".
+   **Recommendation: make the meter speak for itself** — have `claude_usage.py`
+   print one line naming *the gating number*, e.g. `GATE: all models 77% of 90%
+   — PROCEED`, and have the loop echo that line into `ladder.log` every
+   iteration. Then no organ can misidentify the gate, and the log records which
+   number governed. This is a small change to two scripts; it is outside this
+   desk's jurisdiction, and it closes both failure directions at once.
+2. **D1 — where control lives — is twelve days open, and it is now the whole
+   frontier.** T2.01 frees 35 of the 60 unreachable specs, is correctly
+   refusing to be re-run (a fixed 5σ bar against a converged 2.67σ curve is a
+   seed lottery), and cannot be fixed by compute. Its `RECOMMENDED` option is
+   the one PLASTIC-ONLY forbids, so the decision is *unanswerable as posed* and
+   has been since 08-09. **Recommendation, unchanged and now urgent: either
+   narrow the decree's scope to admit a frozen control trunk into the arena as
+   an arm, or strike that option and let the remaining arms run.** Both are
+   decisions. Twelve days of continuing is the only option that is not.
+3. **The W0.BAL body bakeoff has a clean winner waiting on you (D9).** Arm C —
+   a 0.35 m plinth with mass in the base, COM at 0.085 m — holds `upright_frac`
+   1.000 on every seed against the as-built body's 0.002–0.004, with hand reach
+   at 1.165–1.185 of its ~1.19 ceiling. The builder ran it, tabled it, and
+   adopted nothing, which is correct. **This is the same question as D1 from
+   the other end**: T2.01 may be failing because the *body* cannot stand, not
+   because the *core* cannot learn. **Recommendation: decide D9 and D1
+   together** — if the body is the fault, D1's control-architecture question is
+   being asked about a creature that falls over before it can answer.
 
 ---
 
@@ -289,4 +278,7 @@ anything.
 spec file touched, no ledger entry edited. Queued for Sunday's FULL run:
 T0.13's 20+ attempts; SM.01's ungated intermittency shortfall; PS.03's
 self-reported "one physics measurement, not three"; BA.01's control passing by
-0.008; and the 61% rework rate against the oldest certificates.*
+0.008; the 61.4% rework rate against the oldest certificates; and — new — the
+UB.10 arm-redesign question routed here by the recipe probe (no uniform recipe
+trains all six matched-param arms; A2 learned its marginals under no tested
+recipe), which is a Part 2 redesign and not a daily edit.*
