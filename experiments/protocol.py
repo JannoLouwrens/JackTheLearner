@@ -618,7 +618,8 @@ class Ledger:
     def amend(self, spec_id: str, by: str, reason: str,
               status: Optional[Status] = None,
               unknown_history: bool = False,
-              fix_hardware: bool = False) -> Dict[str, Any]:
+              fix_hardware: bool = False,
+              doc_only: bool = False) -> Dict[str, Any]:
         """Change an entry WITHOUT a run, and make the entry say so.
 
         The ledger's header forbids hand-editing, and the file was hand-edited
@@ -643,6 +644,25 @@ class Ledger:
         and refuses when there is no gpu recorded or the stamp is already
         remote. Status, metrics and seeds are untouched — a provenance
         amendment, not a re-verdict.
+
+        `doc_only` (25th-audit B3): re-stamps `impl_sha` when — and only when
+        — the drift from the recorded sha is PROVABLY prose. The claim a
+        ledger row makes is about executable behaviour; a docstring or
+        comment edit changes the file's bytes without changing what the run
+        measured, and before this lane existed such an edit turned a PASS
+        amber forever unless re-bought with a full re-run — so documentation
+        was being routed AWAY from the files it describes (UB.9 and T2.06
+        both went STALE from writing an audit answer where it belongs, and
+        seven more answers were diverted to LESSONS.md to dodge the alarm).
+        The proof obligation is total, never argued: the exact code the entry
+        certifies is recovered from git by `blob_reconstructing_sha` (it must
+        hash back to the recorded sha through the one true `impl_sha_of`,
+        current dependency bytes included — so a moved dependency can never
+        ride this lane), and `prose_only_delta` must find the
+        docstring-stripped ASTs identical. Anything that moves the AST —
+        a threshold, a gate, an `IMPL_DEPS` line — is refused loudly and
+        stays stale. Status, metrics and seeds are untouched; the old sha,
+        the new sha and the reconstruction commit land in `amended`.
         """
         if not by or not reason:
             raise ValueError("amend requires both --by (the spec or finding that "
@@ -654,7 +674,8 @@ class Ledger:
                 f"{', '.join(s.value for s in self.AMENDABLE)} assert nothing. "
                 "PASS claims a capability and FAIL fires the spec's `kills` — "
                 "both require a run that could have failed.")
-        if status is None and not unknown_history and not fix_hardware:
+        if status is None and not unknown_history and not fix_hardware \
+                and not doc_only:
             raise ValueError("amend with nothing to change")
 
         lock_path = self.path.with_suffix(self.path.suffix + ".lock")
@@ -690,6 +711,40 @@ class Ledger:
                     changes.append({"field": "hardware", "from": old_hw,
                                     "to": new_hw})
                     row["hardware"] = new_hw
+                if doc_only:
+                    recorded = row.get("impl_sha")
+                    if not recorded:
+                        raise ValueError(
+                            f"{spec_id}: no impl_sha recorded — the doc-only "
+                            "lane re-stamps a hash and this entry never "
+                            "carried one; a re-run is the only upgrade")
+                    path = module_path_for(spec_id)
+                    if path is None:
+                        raise ValueError(
+                            f"{spec_id}: no implementation file to compare")
+                    cur = impl_sha_of(path)
+                    if cur == recorded:
+                        raise ValueError(
+                            f"{spec_id}: impl_sha is current ({cur}); "
+                            "nothing is stale, nothing to amend")
+                    old_bytes, old_commit, problem = \
+                        blob_reconstructing_sha(path, recorded)
+                    if problem:
+                        raise ValueError(
+                            f"{spec_id}: cannot recover the code this entry "
+                            f"certifies — {problem}")
+                    delta = prose_only_delta(old_bytes, Path(path).read_bytes())
+                    if delta:
+                        raise ValueError(
+                            f"{spec_id}: the edit since {recorded} is not "
+                            f"prose-only ({delta}); a moved AST stays stale — "
+                            "re-run the spec instead")
+                    changes.append({
+                        "field": "impl_sha", "from": recorded, "to": cur,
+                        "proof": (f"reconstructed {recorded} from git "
+                                  f"{old_commit[:12]}; docstring-stripped "
+                                  "ASTs identical (prose_only_delta)")})
+                    row["impl_sha"] = cur
 
                 note = {"at": time.strftime("%Y-%m-%dT%H:%M:%S"),
                         "by": by, "reason": reason,
@@ -837,12 +892,17 @@ def _declares_void(metrics: Dict[str, Any]) -> Optional[str]:
     return None
 
 
-def impl_deps_of(path) -> tuple:
+def impl_deps_of(path, source: Optional[bytes] = None) -> tuple:
     """A test module's `IMPL_DEPS`, read STATICALLY from its source.
 
     Static because the reader of a sha must not import the module to check it:
     `run.stale_claims` scans the whole ladder and importing every test would
     pull in mujoco, GL contexts and torch for a question about bytes on disk.
+
+    `source`, when given, is read instead of the file at `path` — the doc-only
+    amendment lane reconstructs shas for HISTORICAL versions of a test, and the
+    declaration must come from the same bytes being hashed or the writer and
+    the reader split into two code paths again (see `impl_sha_of`).
 
     Returns `(deps, problem)`. `problem` is non-empty when the declaration
     exists but cannot be read as a literal list of strings — reported rather
@@ -851,7 +911,8 @@ def impl_deps_of(path) -> tuple:
     """
     import ast
     try:
-        tree = ast.parse(Path(path).read_bytes())
+        tree = ast.parse(source if source is not None
+                         else Path(path).read_bytes())
     except (OSError, SyntaxError) as e:
         return (), f"unreadable:{type(e).__name__}"
     for node in tree.body:
@@ -871,8 +932,15 @@ def impl_deps_of(path) -> tuple:
     return (), ""
 
 
-def impl_sha_of(path) -> Optional[str]:
+def impl_sha_of(path, file_bytes: Optional[bytes] = None) -> Optional[str]:
     """sha256 of a test file — the test as it was when it ran.
+
+    `file_bytes`, when given, is hashed in place of the file at `path` (deps
+    are still read from disk, i.e. as they stand NOW). This is the doc-only
+    amendment lane asking "which historical version of this test does the
+    recorded sha certify?" — and it deliberately reuses THIS function, because
+    the last time two implementations computed "the same" hash they diverged
+    silently (the story two paragraphs down).
 
     PLUS any files the test module declares in `IMPL_DEPS`, because a test file
     is not the whole of what a test measures. PG.6 certifies what Jack's eye can
@@ -906,8 +974,9 @@ def impl_sha_of(path) -> Optional[str]:
     """
     import hashlib
     try:
-        h = hashlib.sha256(Path(path).read_bytes())
-        deps, problem = impl_deps_of(path)
+        data = Path(path).read_bytes() if file_bytes is None else file_bytes
+        h = hashlib.sha256(data)
+        deps, problem = impl_deps_of(path, source=data)
         if problem:
             h.update(f"undeclarable:{problem}".encode())
         for rel in deps:
@@ -917,6 +986,98 @@ def impl_sha_of(path) -> Optional[str]:
         return h.hexdigest()[:16]
     except (OSError, TypeError):
         return None
+
+
+def prose_only_delta(old_bytes: bytes, new_bytes: bytes) -> str:
+    """'' when the edit between two versions is PROVABLY prose-only, else why not.
+
+    Prose-only means comments, whitespace, or docstrings — nothing that
+    executes. Proved, never argued: both versions are parsed, every docstring
+    (module, class, function) is blanked, and the remaining trees must be
+    `ast.dump`-identical. Comments and formatting never reach the AST, so a
+    single comparison covers both licensed cases; ANY change that survives it
+    — a constant, a threshold, an `IMPL_DEPS` entry, a reordered statement —
+    is code, and the caller must refuse.
+
+    Written for the 25th audit's B3 (2026-08-21). `impl_sha` hashes whole
+    files because the pre-registered gates LIVE in docstrings, so a
+    documentation edit and a threshold edit are indistinguishable to it — and
+    the loop had started routing audit answers AWAY from the files they
+    describe to avoid staling their claims (LESSONS: "A whole-file integrity
+    hash taxes documentation — pay it with an amendment lane, never by
+    writing less"). This function is the lane's proof obligation. It must
+    stay CONSERVATIVE: a false '' here would let a pre-registration edit
+    masquerade as prose, which is the exact T0.27 hazard the whole-file hash
+    exists to catch. When in doubt, return a reason.
+    """
+    import ast
+
+    def _stripped_dump(src: bytes) -> str:
+        tree = ast.parse(src)
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Module, ast.ClassDef,
+                                 ast.FunctionDef, ast.AsyncFunctionDef)):
+                body = getattr(node, "body", None)
+                if (body and isinstance(body[0], ast.Expr)
+                        and isinstance(body[0].value, ast.Constant)
+                        and isinstance(body[0].value.value, str)):
+                    body[0].value.value = ""
+        return ast.dump(tree)
+
+    try:
+        old_d = _stripped_dump(old_bytes)
+        new_d = _stripped_dump(new_bytes)
+    except (SyntaxError, ValueError) as e:
+        return f"unparseable ({type(e).__name__}: {e})"
+    if old_d != new_d:
+        return "the docstring-stripped ASTs differ — code moved, not prose"
+    return ""
+
+
+def blob_reconstructing_sha(path, want_sha: str, repo_root=None) -> tuple:
+    """The committed version of `path` whose `impl_sha` is `want_sha`.
+
+    Walks the file's git history newest-first and re-derives each version's
+    sha THROUGH `impl_sha_of` (historical file bytes + dependency files as
+    they stand now). Returns `(blob_bytes, commit, problem)` — `blob_bytes`
+    is None whenever `problem` is non-empty.
+
+    Failure to find a match is itself informative, so the reasons are spelled
+    out: either the recorded sha folded in `IMPL_DEPS` content that has ITSELF
+    moved since the run (real staleness — a dependency change can never be
+    prose), or the run executed a tree that was never committed (the DIRTY
+    shape). Both must stay stale; the doc-only lane refuses.
+    """
+    import subprocess
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
+    try:
+        rel = str(Path(path).resolve().relative_to(root.resolve()))
+    except ValueError:
+        return None, None, f"{path} is not under {root}"
+    try:
+        r = subprocess.run(
+            ["git", "-C", str(root), "log", "--format=%H", "--", rel],
+            capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return None, None, f"git:{type(e).__name__}"
+    if r.returncode != 0:
+        return None, None, f"git:rc{r.returncode}"
+    for commit in r.stdout.split():
+        try:
+            s = subprocess.run(
+                ["git", "-C", str(root), "show", f"{commit}:{rel}"],
+                capture_output=True, timeout=30)
+        except (OSError, subprocess.TimeoutExpired) as e:
+            return None, None, f"git:{type(e).__name__} at {commit[:8]}"
+        if s.returncode != 0:
+            continue
+        if impl_sha_of(path, file_bytes=s.stdout) == want_sha:
+            return s.stdout, commit, ""
+    return None, None, (
+        f"no committed version of {rel} reconstructs {want_sha} — either a "
+        "declared IMPL_DEPS file has itself changed since the run (real "
+        "staleness: a dependency edit is never prose) or the run executed "
+        "uncommitted code (the DIRTY shape); both stay stale")
 
 
 def module_path_for(spec_id: str, strict: bool = False):
