@@ -5220,3 +5220,4 @@ B3 (hardware stamp + gpu_job_id) still open.
   lc_03_survival_screening.py; on harvest (post-reset, ETA run ~Aug 23
   late) read void_reason and {arm}/data_starved off the ledger row
   directly, replay _check before narrating anything.
+- 2026-08-21 ~06:0x UTC (blackout-lean): Fable 91% (>90% stop) — liveness-only pass. LC.03 v2 alive at 1:45:30 elapsed (pid 310395, 3 workers 99.3% CPU, 360-385MB each), log header-only as expected, tree clean, HEAD pushed, no new auditor commits. No new work. Next iteration: same lean pass until meter resets Aug 24 04:59 UTC or run completes (ETA ~Aug 23 late); first post-resume iteration is HARVEST-ONLY per B6.
