@@ -1742,6 +1742,47 @@ needs_rise, paired twins, food-quantum accounting) that carry its meaning on
 the as-built body; its registered run is in flight and is not waiting on
 this decision.
 
+**B4 EXECUTED 2026-08-21 ~03:2x UTC (builder, ordered by the 24th audit):
+the pre-registered bakeoff was RUN on CPU. Numbers attached; NOTHING ADOPTED
+— the A/B/C choice is unchanged and still yours.** Probe:
+`experiments/w0bal_probe.py`; artifact
+`experiments/artifacts/w0bal_bakeoff.json`. Identical per-seed
+uniform-random action sequences across all three arms, 3 seeds x 500
+decisions, same mutated worlds, per the pre-registration above. Arm B's
+"bounded" was priced just above gravity before running (KP = TMAX = 120 N-m
+against the ~88 N-m worst-case toppling torque, KD = 15, yaw component
+zeroed so righting grants no free turning); arm C is a 0.35 m plinth foot
+with the 30 kg moved into it (COM ~0.085 m above floor; tip margin
+113 N-m vs the drive's 51 N-m — statically stable by arithmetic, and now by
+measurement).
+
+    arm  seed  upright_frac  hand_z_max  rung1_z  above_rung1
+    A    0     0.002         0.670       0.300    yes
+    A    1     0.002         0.867       0.282    yes
+    A    2     0.004         0.816       0.299    yes
+    B    0     0.092         0.987       0.300    yes
+    B    1     0.258         1.030       0.282    yes
+    B    2     0.094         0.895       0.299    yes
+    C    0     1.000         1.165       0.300    yes
+    C    1     1.000         1.185       0.282    yes
+    C    2     1.000         1.171       0.299    yes
+
+The KILL CRITERION DID NOT FIRE: every arm, including the as-built rover,
+gets a hand above the first rung at some moment — for A that moment is the
+few seconds before it topples, which also honestly narrows the entry's
+"a prone rover cannot raise a hand to a rung" from *never* to *not for the
+~99.7% of its life it spends prone*. What the numbers say, left for your
+read, not decided here: A is upright 0.2–0.4% of decisions (the −0.041
+story, as a fraction); B at a just-sufficient bound rights it 9–26% of the
+time — once the body tumbles the feet leave the floor and the gate
+(correctly) cuts the torque, so a bounded gated righting torque mostly
+cannot recover what it failed to prevent, and raising the bound until it
+can would make it a crane; C is upright 100.0% of decisions on all three
+seeds and posts the highest hand reach (~1.17 m of a ~1.19 m full-extension
+ceiling). C's cost is unchanged from the entry: it rewrites PG.3's
+inherited geometry, so the inheritance-by-construction claim needs
+re-checking before any spec trusts the new body.
+
 *Evidence: INTEGRATION_QUEUE.md "TOP OF QUEUE — W0.BAL"; LC.02 ledger entry;
 D8 above; T2.01 settlement `a3b12f6`; LC.03 docstring "RIG RE-DERIVATION".*
 

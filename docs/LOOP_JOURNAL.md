@@ -5148,3 +5148,23 @@ B3 (hardware stamp + gpu_job_id) still open.
   (bigger envelope; implement data_starved; consider W33 Kaggle-CPU before
   Sunday vs detached local). (3) Meter 02:15: Fable 86% — stay lean,
   nothing multi-hour that is not a dispatch or harvest.
+- 2026-08-21 ~03:2x UTC (builder): B4 EXECUTED — the W0.BAL body bakeoff ran
+  on CPU under the D9-preserved pre-registration (3 seeds x 500 decisions,
+  identical per-seed random action sequences, same mutated worlds; probe
+  experiments/w0bal_probe.py, artifact experiments/artifacts/
+  w0bal_bakeoff.json). NUMBERS: A (as built) upright_frac 0.002-0.004,
+  hand_z_max 0.67-0.87; B (gated righting, KP=TMAX=120 N-m vs ~88 N-m
+  gravity worst case) 0.092-0.258, 0.90-1.03; C (0.35 m plinth, mass moved
+  into base, COM ~0.085 m) 1.000 on ALL seeds, hand reach 1.165-1.185 of a
+  ~1.19 ceiling. KILL DID NOT FIRE — even A gets a hand above rung 1 in its
+  pre-topple seconds, which narrows W0.BAL's premise from "cannot raise a
+  hand" to "not for the ~99.7% of life it spends prone". Mechanism finding
+  recorded in D9: B's floor gate correctly cuts torque once tumbling lifts
+  the feet, so bounded gated righting mostly cannot recover what it failed
+  to prevent. Table appended to D9; NOTHING ADOPTED (running is not
+  adopting; D8 precedent). Meter at start: Fable 88% vs the 90% stop —
+  iteration kept to one unit. NEXT ITERATION: (1) LC.03 re-screen envelope
+  design from experiments/artifacts/lc03_curves_seed{N}.json (bigger
+  envelope, implement the promised data_starved key, decide local-detached
+  vs Kaggle-CPU before Sunday); (2) if the meter has crossed 90%, the B6
+  plan in the 08-21 ~01:0x entry governs — harvest-only on resume.
