@@ -72,8 +72,15 @@ the docstring-stripped ASTs are identical (`prose_only_delta` — a moved
 threshold, constant or IMPL_DEPS line refuses loudly). Both amends are in the
 ledger with proof lines. Do NOT re-run UB.9 or T2.06 for staleness — nothing
 is stale. The next GPU-worthy unit is whatever `run next` says is implemented
-and unsettled (T4.02, gpu<20min, was the first such on 08-21); do not
-manufacture a dispatch beyond that.
+and unsettled; do not manufacture a dispatch beyond that. **T4.02 is SETTLED
+(FAIL, twice: attempts 3 and 4, 08-21)** — worst-seed fusion grad ratio 30.12
+vs the exogenous 10x gate, every rig gate green, touch (~2.9e-3) dominates
+audio (~1e-4) at the fusion boundary. That is a real architecture measurement;
+do not re-dispatch it as cheap work, and route any fusion-balancing redesign
+through the Review, not an argument. **T2.07 (held-out grounding) is IN FLIGHT
+on Kaggle since 08-21 ~08:26** (attempt 1787300777687-403775, est 0.4 h, head
+c6895b2) — harvest its row, do not relaunch while the attempt row's watcher
+pid is alive.
 
 ## Start here, every time
 

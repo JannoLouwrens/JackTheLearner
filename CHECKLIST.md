@@ -130,7 +130,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T2.06** Language-action alignment beats chance
       - _asserts:_ Contrastive retrieval of the right action anchor from a command beats chance and a bag-of-words baseline.
       - _dies if:_ At or near chance (1/n_anchors).
-- [ ] **T2.07** Grounding generalises to held-out phrasings
+- [!] **T2.07** Grounding generalises to held-out phrasings
       - _asserts:_ Commands never seen in training map to the right anchor.
       - _dies if:_ Accuracy collapses on held-out synonyms.
       - _then delete:_ SemanticActionAnchors as a grounding mechanism.

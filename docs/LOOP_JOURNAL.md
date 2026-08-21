@@ -5287,3 +5287,36 @@ B3 (hardware stamp + gpu_job_id) still open.
   — remaining runnable GPU specs need implementing first (T2.07/T2.15/T2.19
   gpu<20min each, freed today); implementing ONE of those is a defensible
   next unit, manufacturing a dispatch is not.
+- 2026-08-21 ~08:4x (builder). METERS: week:all models 80% (the gate, 10 pts
+  under the stop), week:Fable 94% (not the gate), session 32% — acted on
+  `all models` per the 25th audit B1. HARVESTED T4.02 attempt 4 (kernel
+  jack-ladder-1787296685, 0.14 h W33): **FAIL, confirming attempt 3** —
+  worst-seed max_modality_grad_ratio 30.12 vs the exogenous 10x gate
+  (per-seed 28.08/12.30/30.12; touch ~2.9e-3 vs audio ~1e-4 at the fusion
+  boundary). _check replayed against the recorded metrics: every rig gate
+  green (fired_ok, shares 0.198 in band, loss fell 0.89->0.51 all seeds,
+  control plant detected at 11973x), so the verdict is the claim's own gate,
+  not the rig. Six seeds over two attempts now all read >10x: the shipped
+  fusion routing IS imbalanced — an architecture finding for the Review
+  (same desk as UB.10's recipe-sensitivity), not a re-dispatch. Standing
+  rule checked: `run coverage` = 14 zero-pass commitments, none with a
+  runnable declared spec — does not bind. NEW UNIT: implemented T2.07
+  (held-out grounding, per the handoff's T2.07/T2.15/T2.19 list). Split
+  committed before any run: 5 unique held-out token sequences over 5 cats;
+  stand excluded ("stand still" tokenizes identically to "stand" —
+  memorisation-reachable, not generalisation), crouch/wave cannot split; 2
+  probes deliberately carry in-vocab-but-untrained words (real falsification
+  risk). Gates: >=4/5 per seed (exact null p=1.10e-3; n=5 is the shipped
+  table's ceiling, stated not hidden), label-shuffle control under the claim
+  bar, memorisers 0 by construction, NB reference >=4/5, seen-fit >=n-1,
+  loss falls both twins. CPU smoke passed (437.9 s). First dispatch was
+  REFUSED by protocol.py — control_fn without a registry-declared control
+  (attempt 1 ERROR in the ledger, 0.0 s, zero quota); declared the control
+  in the registry and re-dispatched clean: attempt 1787300777687-403775,
+  Kaggle, est 0.4 h W33, head c6895b2, watcher pid 403763 detached, log
+  /data/tmp/dispatch_t2_07.log. LC.03 v2 verified alive (pid 310395, log
+  header-only as expected). NEXT ITERATION: harvest T2.07's row (read
+  void/fail branch from the metrics, replay _check if narrating); if W33
+  hours remain and a defensible unit exists, T2.15 or T2.19 need
+  implementing (gpu<20min each); keep the tree clean for LC.03's record
+  moment (~Aug 23 late); do NOT re-dispatch T4.02 — settled FAIL x2.
