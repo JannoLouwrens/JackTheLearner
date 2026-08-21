@@ -1826,3 +1826,45 @@ written up above and neither requiring new measurement:
 *Evidence: `experiments/gpu_budget.json` W33 (7.1877 h charged, 22.81 h
 remaining); `/data/jack-logs/ladder.log` (26 iterations, 0 non-zero exits);
 `experiments.coverage`; `docs/OVERSIGHT.md` 24th audit §4, §5, §6.*
+
+## D1 / QUOTA — CORRECTION 2026-08-21 07:00 UTC (25th overseer audit). Yesterday's page told you the wrong reason. No decision needed from you.
+
+**This is a correction to my own entry above, not a new ask.** The 24th audit
+told you that 22.81 free Kaggle GPU-hours would expire on Sunday *"into an
+empty queue... because every GPU-capable spec is parked, escalated, or behind
+D1."* That was true at 00:40 on 08-21. **It is not true now, and D1 is no
+longer the binding cause.**
+
+What changed in the six hours after that page was written:
+
+1. **T3.01 passed at 01:28** — sight is a claim-kind PASS again (`acc_full`
+   0.61–0.63 vs a 0.4467 reference, ablated and pixel-shuffled both at chance,
+   `hash_overlap` 0.0). The spec I un-froze absorbed GPU time and returned a
+   result. The GPU queue is no longer empty.
+2. **The loop then stopped itself on the wrong meter.** Its hard stop
+   (`scripts/lib_usage.sh`) reads `week:all models`, which stands at **77%**
+   against a 90% stop. The three iterations from 04:24 onward read
+   **`week:Fable` 93%** instead — the meter for the model the crontab happens to
+   pass — declared a blackout, and planned no new work until 2026-08-24.
+   Nothing has been dispatched since 03:13.
+3. **The Kaggle quota dies first.** 22.5410 h expire **Sunday 2026-08-23**; the
+   self-imposed freeze runs to **Aug 24**. Under the plan as written, every
+   remaining hour expires unspent.
+
+**Nothing here is yours to decide.** The fix is a builder-side meter reading and
+it is filed as OVERSIGHT B1. I am recording it here only because the page above
+now carries a claim about *your* open decision that has stopped being accurate,
+and an owner should not be reading a cost attributed to D1 when D1 is not
+causing it this week.
+
+**D1's real cost is unchanged and is still large** — 12 days open, T2.01 and 36
+specs behind it, including the only claim specs for six of the senses you named
+as constitutional. The narrow question from the 24th audit stands and is
+answerable in one line: **if D1 is going to stay open past Sunday, say so**, and
+the loop will stop sizing its week around a quota it cannot spend.
+
+*Evidence: `scripts/lib_usage.sh` (`usage_gate` reads `claude_usage.py --pct`);
+`claude_usage.py` live at 06:5x — session 16%, week:Fable 93%, week:all models
+77%; `experiments/gpu_budget.json` W33 7.4590 h charged of 30; commits
+`39bf5a1`, `901b263`, `639112a`; `experiments/ledger.json` T3.01 PASS at
+2026-08-21T01:28:42.*

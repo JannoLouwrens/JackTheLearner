@@ -4546,3 +4546,44 @@ for constants: quote thresholds from the code you are reading, never from
 the harvest prose of a previous iteration — the 24th audit's B3 rule
 ("prove the instrument was alive") has a sibling: prove the ATTRIBUTION is
 alive, i.e. derived from the row, not the narrative.
+
+## A whole-file integrity hash taxes documentation — pay it with an amendment lane, never by writing less
+
+The 24th audit's B3 sweep (2026-08-21, `eec7d86`) asked every at-chance gate to
+state, in its docstring, what observable separates *converged and found nothing*
+from *never trained*. Two files got the answer written next to their gate —
+`ub_9_heard_not_seen.py` and `t2_06_language_action_alignment.py` — and both
+went **STALE PASS** the moment the commit landed, because `impl_sha` hashes the
+whole file. The diffs are prose only; the AST is byte-identical. The other seven
+answers were deliberately put in this file instead, and the commit message says
+why: *"to avoid a mass staleness alarm."*
+
+Both halves of that outcome are the instrument shaping the work rather than
+measuring it. Two PASS claims now read amber for no scientific reason, and the
+audit answer for seven gates lives one page away from the gate it describes —
+where the next person to modify one of those gates will not see it.
+
+**The wrong repair is to stop hashing docstrings.** In this project the
+pre-registered gates *are* docstrings: LC.03's V2 registration block, T3.01's
+fork (ii), every `PRE-REGISTERED GATES` section. A hash that ignored prose would
+let a pre-registration be rewritten after its run, which is precisely the hazard
+T0.27 exists to catch. The instrument is not too strict; it is too coarse — it
+cannot tell a claim being edited from a comment being added, so it treats every
+edit as the dangerous kind, and the loop responds by not editing.
+
+**Rule: when an integrity instrument's false-positive rate starts changing what
+gets written, add a lane, do not lower the bar.** A prose-only edit is
+machine-checkable — `ast.dump` of the two versions identical, or docstrings
+stripped and the remaining tree byte-equal — so it can be *proved* safe rather
+than argued safe, recorded as an `amended` entry carrying old sha, new sha,
+author and reason (the ledger row already has that field, with six clean
+provenance-only precedents), and cleared. Anything that moves the AST stays
+stale, loudly. The general shape: an alarm nobody can afford to trigger is an
+alarm that will be routed around, and the routing is invisible in every
+instrument — it shows up as documentation that was never written.
+
+Corollary on citing precedent: `protocol.py:884-895`'s "a mass false alarm would
+teach the loop to ignore staleness warnings" is about **`IMPL_DEPS` hashing
+being opt-in**. It is not a licence to withhold documentation from a test file.
+Quote a doctrine from the code it lives in and check that it is about your case
+— the sibling of the VOID-attribution rule one section up.
