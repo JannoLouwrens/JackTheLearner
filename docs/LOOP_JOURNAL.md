@@ -5168,3 +5168,41 @@ B3 (hardware stamp + gpu_job_id) still open.
   envelope, implement the promised data_starved key, decide local-detached
   vs Kaggle-CPU before Sunday); (2) if the meter has crossed 90%, the B6
   plan in the 08-21 ~01:0x entry governs — harvest-only on resume.
+- 2026-08-21 ~04:4x UTC (builder): LC.03 v2 RE-SCREEN DESIGNED, REGISTERED
+  (commit 5074440) AND LAUNCHED — and the v1 VOID's diagnosis CORRECTED.
+  Replaying _check against the recorded row (a 20-line script) showed the
+  08-21 02:11 VOID fired at CONTROL (c), not at the claim:
+  ppo-needs/twin_life_gain -7.71 s, |t|=3.16 vs gate 3.0, |mean| 7.71 vs
+  NOISE_FLOOR_S 5.0 — the claim loop NEVER RAN. eec7d86's "all controls
+  clean ... ±10 s noise floor / fewer than two learners" narrative used a
+  floor that exists nowhere in the code and back-filled the generic VOID
+  message with the expected branch. Magnitude = ONE FOOD QUANTUM on the v1
+  twin's 22-life ruler (48/7 = 6.9 s > 5.0) — the docstring's pre-declared
+  symmetric-quanta failure territory. ALSO true from the same metrics
+  (claim gates evaluated offline): zero arms at 3 sigma, 4/5 slopes
+  positive, so the data-starved branch applies on the evidence. NEW LESSONS
+  ENTRY: "A generic VOID message admits every narrative — attribute a VOID
+  only by replaying its check." GUARDS ADDED (machine-readable, gates
+  unmoved): _check now records void_reason (names branch, key, values) and
+  {arm}/data_starved (the promised-but-never-computed key) into its own
+  ledger row; both verified by replay (v1 metrics -> the (c) trip; twin
+  gate neutralised -> "fewer than two learners (0 cleared)", data_starved
+  1/1/1/1/0). V2 ENVELOPE: 4x (N_STEPS 400k, W_CLOCK 17280, HALF 200k),
+  sized in the docstring's V2 block from the recorded curves — the
+  2-learner gate binds on the SECOND arm (dreamer-xs: needs ~+226 s at its
+  measured std 156; weakest-seed slope 2.95 s/life x half-persistence over
+  ~150 added lives = +221 s; k=2 sufficed only for wm-efe) — and the same
+  4x takes the twin's food quantum to ~1.7 s < the 5.0 floor, so one
+  growth answers both faults. Smoke OK. LAUNCHED via launch_detached.sh
+  from clean pushed HEAD 5074440: main pid 310395, 3 spawn workers at
+  ~99.5% CPU / ~240 MB each at 100 s, log /data/lc03_rescreen.log
+  (block-buffered — header-only means running). ~190 core-h, ~63 h wall,
+  ETA ~Aug 23 late; it writes the ledger itself. Meter at start: Fable
+  89% vs the 90% stop — the run computes through the blackout (B6 plan);
+  RAM peak est ~1.5 GB across workers, transient, box has ~17 GB free.
+  NEXT ITERATION: (1) if the meter allows, stay lean — do NOT touch
+  lc_03_survival_screening.py (stale-claim trap) and KEEP THE TREE CLEAN
+  (the recorder stamps the tree at record moment; v1's dirty stamp was the
+  builder's own uncommitted B3 edits at 02:11). (2) On harvest, read
+  void_reason and {arm}/data_starved off the row — do not narrate. (3) If
+  past 90%: B6 governs, harvest-only on resume.
