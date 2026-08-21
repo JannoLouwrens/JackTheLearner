@@ -4471,3 +4471,42 @@ would have started a rig investigation into a network behaving exactly as
 theory predicts. Same family as "when auditing a bar, instrument past its
 horizon" (above): that lesson buys the tail, this one is about being willing
 to *use* the tail against the rule that collected it.
+
+## An at-chance control must carry proof its instrument was alive
+
+Twice in one week (UB.10's dead arms reading as clean 0.5, T3.01's shuffled
+control on the max-entropy plateau) a control whose PASS condition was "sits
+at chance" produced a reading indistinguishable from an arm that never
+trained. The 24th audit ordered the whole ladder swept (B3). The sweep's
+result, 2026-08-21, with the generalised rule it produced:
+
+**Rule: an at-chance gate is trustworthy iff the reading could NOT have been
+produced by a dead instrument.** Two designs achieve that, and every healthy
+gate in this ladder uses one of them:
+
+  1. **Closed-form probes** (ridge / IRLS / nearest-centroid) have no
+     training loop to silently die — they always converge — AND the same
+     machinery must clear a positive gate in the same run. PG.7 (GEOMETRY/
+     MASS controls >= 0.70 through the identical probe), TA.01 (colour-coded
+     control >= 0.90, radius-R^2 must-read — its docstring's "the probe
+     demonstrably has eyes" section is the reference statement), T2.03
+     (acc_shuffled from the same features+ridge that must deliver
+     acc_pretrained), T2.12 (deterministic centroid, MIN_ACC 0.80 on real
+     labels same run), BA.01 (tilt_r2_shuffled through the ridge that must
+     produce the positive tilt R^2).
+  2. **Trained arms need a same-run liveness observable**: a must-learn
+     target for the SAME weights (T3.01 v3's arms), the same trainer proven
+     live on a positive arm (UB.9's fused gate), a recorded loss descent
+     (T2.06's loss_ctrl_final; T3.07's diagnostics), or a pre-revert
+     above-chance reading of the same net (ME.10).
+
+The residual hazard is the one UB.10 measured: a PER-ARM recipe pathology —
+one uniform recipe, one arm dead — which a shared-trainer proof does not
+exclude. UB.9 carries that gap, now recorded in its docstring rather than
+silently gated. When designing a new at-chance control, write the
+distinguishing observable into the docstring AT DESIGN TIME — retrofitting
+it costs an impl_sha staleness flag on a passing spec, which is why this
+sweep put the answers for already-covered gates HERE (one page every
+iteration reads) instead of editing seven more passing test files into
+stale claims (protocol.py's own doctrine: mass staleness flags teach the
+loop to ignore staleness).

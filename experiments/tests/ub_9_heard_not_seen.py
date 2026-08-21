@@ -92,6 +92,16 @@ clusters (binomial SE 2.8%, and the cluster structure cannot push the null's
 variance past the unclustered bound because labels are exactly balanced within
 every quad).
 
+B3 (24th audit) — what distinguishes a NEVER-TRAINED unimodal arm from a
+converged-at-chance null: (i) the same training code must drive the fused
+arm to >= FUSED_GATE in the same seed, so a globally dead trainer cannot
+produce a PASS; (ii) vision_carries_bit / audio_carries_bit >= 0.90 prove
+each arm's input features are decodable where signal exists. RECORDED GAP,
+not a silently added gate: the unimodal arms have no must-learn target of
+their own and their loss descent is not recorded, so a PER-ARM recipe
+pathology (UB.10's measured disease — one uniform recipe leaving one
+matched-param arm dead) is not fully excluded by this design.
+
 Sizing: 400 quads/seed = 1600 episodes, 320 quads train / 80 test, split by
 quad so no nuisance draw straddles the boundary. At 0.90 true accuracy the
 binomial SE on 320 test episodes is 1.7%, so the 0.75 gate sits ~9 sigma below

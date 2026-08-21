@@ -84,38 +84,31 @@ Liveness rule, permanent: never end an iteration on "waiting" without
 `pgrep -f` returning a pid AND the log growing. Detached launches go through
 `scripts/launch_detached.sh`, which enforces the 15 s artifact check.
 
-## LC.03 STATE (builder, 2026-08-20 ~10:4x UTC): CHECK RESOLVED, REGISTERED
-## RUN IN FLIGHT — do not relaunch, do not kill; read the log, then wait
+## LC.03 LANDED VOID 2026-08-21 02:11 — "fewer than two learners", the
+## DATA-STARVED branch fires: re-screen at a BIGGER ENVELOPE, do not
+## eliminate, do not relaunch as-is
 
-The rig re-derivation CHECK completed and its fix-fails branch was RESOLVED
-BY MEASUREMENT (full record in lc_03_survival_screening.py's docstring,
-"CHECK RESOLUTION"): old schedule REPRODUCED the phantom (+112.35 s, bar
-+20); constant std read +17.9 s against the |gain| <= 10 bar, and a
-bit-identical replay probe (experiments/lc03_food_probe.py, readings
-pre-stated before launch, JSON /data/lc03_food_probe.json) attributed the
-ENTIRE residual to two obj1 floor-food eats (+48 s basal-equivalent each,
-lives 11-12 of 14, the only eats in the run); food-corrected gain -6.1 s,
-inside the bar; apple never left its platform (z = 1.89 m all run). There
-is NO second nonstationarity — the check's bar was finer than one food
-quantum on a 14-life ruler (see LESSONS.md, "A bar finer than one
-quantum"). The constant-std repair STANDS. run_survival now exports
-ate_total / eats_at_death so the next twin anomaly is one read, not a
-385 s replay.
+The registered run (15.8 h wall, 3 seeds, ~47 worker core-hours) completed
+and wrote the ledger itself. THE SCREEN WORKED: instrument valid
+(borrowed_ok, physics finite, 12+ lives), ALL FIVE CONTROLS CLEAN — statue
+599.98 s vs 600 ceiling, randrew t=1.63 (<3), darkroom t=-0.84, every
+twin/wiped gain inside the ±10 s noise floor. But ZERO arms cleared the
+claim gate: best null-margins wm-efe +74.5 s (t=1.25) and dreamer-xs
++44.2 s (t=0.49) against seed spreads of 150–220 s. This VOID's reason is
+DIFFERENT from the 08-14 VOID (that one didn't test the claim; this one
+tested it and the envelope was too small to decide it).
 
-THE REGISTERED RUN IS LAUNCHED (this iteration, detached via
-launch_detached.sh; pid and liveness proof in LOOP_JOURNAL's 2026-08-20
-~10:4x entry; log /data/lc03_registered.log, ~15 h wall, CPU-only, zero
-Kaggle, 3 seeds in a Pool(3) at nice 19). It writes the ledger itself when
-it finishes. KNOWN AND ACCEPTED: the run prints NOTHING until it ends
-(run() has no per-step prints), so the log stays at its 146-byte header for
-~15 h — log-bytes is NOT its liveness signal. NEXT ITERATIONS verify
-liveness by `ps -o time --ppid <pid of pgrep -f lc_03>`: three workers'
-CPU TIME must be growing (they hold ~99% of a core each; ~930 MB RSS
-total, measured at launch). Per-seed artifacts land at
-experiments/artifacts/lc03_curves_seed{N}.json as seeds finish. Do OTHER
-work while it runs — a live registered run is not an idle excuse. If it
-lands VOID by control (c)/(d), read eats_at_death in the artifacts FIRST:
-quantized food luck and a rig fault now look different in one read.
+THE PRE-REGISTERED NEXT STEP (owner's data-starved guard, in the docstring):
+4 of 5 arms show POSITIVE final-half life-span slopes — wm-efe 9.02±2.87
+(t≈5.4) and dreamer-xs 6.41±3.17 (t≈3.5) are still climbing at cutoff —
+so the re-screen happens at a BIGGER ENVELOPE. Design work for a fresh
+iteration: size the envelope from the recorded curves
+(experiments/artifacts/lc03_curves_seed{N}.json), decide CPU-detached vs
+Kaggle-CPU, and note wm-latent is the one arm with a NEGATIVE slope
+(-4.94±7.74). KNOWN DOC-CODE GAP to fix in the redesign: the docstring
+promises `{arm}/data_starved = 1.0` but no code computes it (grep hits
+only the docstring) — implement it so the guard is machine-readable, not
+prose. LC.04/OP.01/PS.04/DP.01 stay blocked behind a future LC.03 PASS.
 
 ## UB.10 IS PARKED PENDING ARM REDESIGN (builder, 2026-08-20 ~19:1x UTC —
 ## the recipe probe's both-fail branch fired; do NOT dispatch, no third recipe)
@@ -137,38 +130,32 @@ again read as a clean 0.5; T3.01 got the same medicine (SHUFFLE_FIT_FLOOR
 on the shuffled control's train fit — code changed, NO re-run owed, the
 gate simply fires whenever T3.01 next runs).
 
-## T3.01 IS ADJUDICATED, REDESIGNED (v3) AND ITS REGISTERED RUN IS IN
-## FLIGHT (builder, 2026-08-21 ~01:1x UTC — do NOT resubmit; harvest it)
+## T3.01 PASSED (v3, attempt 5, 2026-08-21 01:28 UTC, commit f702251) —
+## it is SPENT; do not re-run it as cheap work
 
-The 24th audit (2026-08-21 00:40, docs/OVERSIGHT.md) adjudicated the R3
-escalation: NO RIG FAULT — the flat shuffled rows sit on the ln 4
-max-entropy fixed point (correct pre-memorisation behaviour on random
-labels), the seed-1 "anomaly" is a plateau-escape threshold between lr 1e-4
-and 1e-3, and the substantive finding is R2's (the 0.35 floor sits above
-what a live matched-budget arm reads at epoch 62). Full adjudication is
-appended to t301_shuffle_probe.py's PROBE RESULT block. Per the audit's B2
-the builder committed the v3 redesign BEFORE re-running (f702251): (a) a
-deterministic structural leak gate — sha256 over all raw train/test frames
-per seed, any collision VOIDs — carries the identity-leak burden; (b) the
-pre-registered fork chose fate (ii): SHUFFLE_FIT_FLOOR demoted to a
-recorded diagnostic (constant unmoved; fate (i) rejected on the probe's
-pricing — seeds 0/2 never memorise at any tested lr in 2x budget), no
-loss-fall liveness proxy adopted, SHUFFLE_BAND stays VOID (fires only on
-positive leak evidence). The registered run went up 2026-08-21 01:12:18:
-kernel jack-ladder-1787274738, head f702251, est 1.05 h W33, watcher pid
-274269 detached, log /data/tmp/dispatch_t3_01.log. The watcher writes the
-ledger itself. If it lands VOID on attribution the ONE-DIAGNOSTIC CAP fires
-and T3.01 is PARKED (pre-stated in the test docstring).
+The v3 registered run (kernel jack-ladder-1787274738, P100, 0.27 h W33)
+landed PASS: acc_full [0.63, 0.62, 0.6133] vs acc_ref min 0.4467, ablated
+AND pixshuf at chance 0.25 on all seeds, drop_min 0.3633, per_class_min
+0.2533, and the new deterministic leak gate read hash_overlap_max 0.0
+(zero train/test frame collisions). Vision is proven load-bearing: ablate
+it and the arm falls to chance. The R3-escalation history, adjudication
+(24th audit: no rig fault — ln 4 max-entropy fixed point) and the fate-(ii)
+fork (SHUFFLE_FIT_FLOOR a recorded diagnostic, structural hash gate
+carries the leak burden, SHUFFLE_BAND fires only on positive evidence) are
+recorded in t3_01_ablate_vision.py and t301_shuffle_probe.py — read them
+before touching any at-chance control.
 
-The W33 Kaggle hours (~21.8 h after this dispatch, expire Sun 08-23):
+The W33 Kaggle hours (~21.5 h after that harvest, expire Sun 08-23):
 SM.02 parked, UB.10 parked, LC.03 CPU-only. Do not manufacture a dispatch
 to spend them; do read `run blocked`/`run coverage` for a genuine GPU
 candidate (T2.05's redesign facts are in the journal, 2026-08-14).
-Still open from the 24th audit: B3 (sweep every gate whose PASS condition
-is "the control sits at chance" — one docstring line each naming the
-observable that distinguishes converged-found-nothing from never-trained)
-and B4 (run the W0.BAL bakeoff on CPU, attach numbers to D9, ADOPT
-NOTHING — running is not adopting; D8's scratch probes are the precedent).
+Still open from the 24th audit: B4 (run the W0.BAL bakeoff on CPU when
+LC.03 releases its cores, attach numbers to D9, ADOPT NOTHING — running
+is not adopting; D8's scratch probes are the precedent). B3 (the
+at-chance-control sweep) was executed 2026-08-21 ~02:xx — the generalised
+rule and full 9-gate table are in LESSONS.md ("An at-chance control must
+carry proof its instrument was alive"); UB.9 and T2.06 got docstring lines
+(both now honestly flagged stale, re-stamp at the next --gate sweep).
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 

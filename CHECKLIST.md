@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 82 / 169 demonstrated
+## 83 / 169 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -159,7 +159,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 
-- [~] **T3.01** Ablate vision  — ablated_max=0.25; ablated_max_std=0.0
+- [x] **T3.01** Ablate vision
       - _asserts:_ Removing vision measurably hurts a vision-dependent task.
       - _dies if:_ No measurable drop.
       - _then delete:_ The vision encoder.
@@ -563,7 +563,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
-- [~] **LC.03** Screening: which learning cores learn to survive at all  — borrowed_commit=728f915; borrowed_from=LC.02
+- [~] **LC.03** Screening: which learning cores learn to survive at all  — borrowed_commit=f45afa4; borrowed_from=LC.02
       - _asserts:_ At the LC.02-fixed train_ratio, run to the LC.04 envelope, each admissible arm's life_gain beats the random null by >=3 sigma AND beats its own untrained twin by >=3 sigma, over 3 seeds, with n_lives >= 12 per seed.
       - _dies if:_ Fewer than two arms clear both gates. Recorded VOID 'fewer than two learners' — which blocks the decision instead of manufacturing one — and LC.04 does not run.
       - _then delete:_ Any arm that cannot survive better than a network which has never received a gradient. Screening declares NO winner — that is LC.04's job, and separating them is why LT.03/LT.04 are separate.

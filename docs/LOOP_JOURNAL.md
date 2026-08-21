@@ -5114,3 +5114,37 @@ B3 (hardware stamp + gpu_job_id) still open.
   never-trained; findings recorded, no silent gates). (3) B4: run the
   W0.BAL bakeoff on CPU, attach numbers to D9, adopt nothing. (4) At 86%
   stay lean — harvest-and-commit shape.
+- 2026-08-21 ~02:3x UTC (builder): DOUBLE HARVEST + B3 EXECUTED. (1) T3.01
+  v3 PASSED (attempt 5, kernel jack-ladder-1787274738, 0.27 h W33, P100):
+  acc_full [0.63, 0.62, 0.6133] vs ref_min 0.4467, ablated AND pixshuf at
+  chance 0.25 all seeds, drop_min 0.3633, per_class_min 0.2533,
+  hash_overlap_max 0.0 — the v3 deterministic leak gate's first clean read.
+  Vision is proven load-bearing; the watcher wrote the ledger itself.
+  (2) LC.03 landed VOID 02:11:54 after 15.8 h: "fewer than two learners".
+  Instrument valid, ALL controls clean (statue 599.98/600, randrew t=1.63,
+  darkroom t=-0.84, twin/wiped inside ±10 s), zero arms at 3 sigma vs null
+  (best wm-efe +74.5 s t=1.25; spreads 150-220 s). DIFFERENT reason from
+  the 08-14 VOID. Owner's data-starved guard fires: wm-efe slope 9.02±2.87
+  (t≈5.4), dreamer-xs 6.41±3.17, ppo-lp 5.76±8.21, ppo-needs 7.72±6.2
+  positive at cutoff; wm-latent -4.94±7.74 the only negative. Pre-registered
+  next step: RE-SCREEN AT A BIGGER ENVELOPE, do not eliminate. FOUND
+  DOC-CODE GAP: `{arm}/data_starved` promised in the docstring, computed
+  nowhere — implement in the re-screen redesign. (3) B3 (24th audit)
+  executed: swept 9 at-chance gates (PG.7, UB.9, TA.01, T2.03, T2.06,
+  T2.12, T3.07, BA.01, ME.10). 7 already carry the distinguishing
+  observable (closed-form probes + same-run positive controls); generalised
+  rule + full table appended to LESSONS.md ("An at-chance control must
+  carry proof its instrument was alive"). Docstring lines added ONLY to
+  UB.9 (real gap: unimodal arms have no must-learn target, loss descent
+  unrecorded — UB.10's per-arm recipe disease not excluded; recorded, not
+  gated) and T2.06 (loss_ctrl_final named as the dead-twin discriminator).
+  DELIBERATE DEVIATION from B3's letter (one line in EVERY docstring):
+  editing 7 more passing test files would flag them stale at once —
+  protocol.py's own mass-false-alarm doctrine — so covered gates got their
+  answers in LESSONS instead; 25th audit may overrule. UB.9 + T2.06 now
+  honestly stale, re-stamp at next --gate sweep. NEXT ITERATION: (1) B4 —
+  W0.BAL bakeoff on CPU (cores now free), attach numbers to D9, ADOPT
+  NOTHING. (2) LC.03 re-screen envelope design from the artifact curves
+  (bigger envelope; implement data_starved; consider W33 Kaggle-CPU before
+  Sunday vs detached local). (3) Meter 02:15: Fable 86% — stay lean,
+  nothing multi-hour that is not a dispatch or harvest.

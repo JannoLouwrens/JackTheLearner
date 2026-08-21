@@ -63,6 +63,13 @@ PRE-REGISTERED GATES (all exogenous, per seed, before first run):
            anchor from the label string itself, so the shuffle destroys the
            ACTION side's meaning (and with it the joint metric), which is
            exactly what "pairing collapses to chance" can honestly mean here.
+           B3 (24th audit) — the observable distinguishing this twin
+           "converged at chance" from "never trained": loss_ctrl_final,
+           recorded per seed (the language->anchor loss term survives the
+           shuffle, so a LIVE twin's loss falls while its joint acc stays at
+           chance; a dead twin's loss does not move), plus the `finite` gate
+           which covers both twins. Per-side control accuracies are computed
+           but unrecorded — noted, not silently gated.
   RIG -> VOID, not FAIL: non-finite loss; eval not bit-deterministic across
            two passes (dropout scar — asserted, not hoped); reference arm
            below 5 sigma (task indicted); < 6 tokenizable categories;
