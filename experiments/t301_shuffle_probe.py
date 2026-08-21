@@ -105,6 +105,32 @@ full_min 0.6333 under identical code. Seed-1-vs-seeds-0/2 at the SAME lr
 anomaly and is not explained by lr choice alone. Whether the repair is a
 longer control budget, a loss-fall observable at a calibrated horizon, or a
 rig investigation is the overseer's call.
+
+ADJUDICATION (24th audit, 2026-08-21 00:40 UTC, docs/OVERSIGHT.md — appended
+per its B1; the R3 finding above is preserved, not rewritten). The overseer
+ruled: R3's trigger fired correctly; its attached conclusion ("deeper rig
+fault") is REFUTED by this probe's own tail. THERE IS NO RIG FAULT.
+  (1) "No seed has a live lr" is an artefact of the LIVE predicate's epoch-62
+      horizon: at lr 1e-4 all three seeds are escaping the plateau by epoch
+      124 (loss 1.3866->1.3769, 1.3872->1.3705, 1.3871->1.3745; fit off flat
+      0.2500 to 0.3175/0.2875/0.2800).
+  (2) Every "dead" row sits on the ln 4 = 1.386294 max-entropy fixed point to
+      four decimals with fit exactly 0.2500 — the CORRECT pre-memorisation
+      behaviour of a live network on random labels (this file's own
+      Zhang-et-al. premise), not a broken rig.
+  (3) The seed-1-vs-seeds-0/2 "anomaly" dissolves read ACROSS the lr axis:
+      a single plateau-escape threshold between 1e-4 and 1e-3, with 3e-4
+      straddling it and escape seed-dependent at the boundary.
+The substantive finding is R2's diagnosis (the 0.35 floor sits above what a
+live matched-budget arm reads on random labels), but R2's repair as written
+is NOT licensed: a loss-fall proxy at a recalibrated horizon re-labels
+"moved a little" as liveness, with no calibrated relationship to
+leak-detection power (memorisation here costs >124 epochs on the single best
+row and is unreached by 2 of 3 seeds at ANY tested lr). T3.01 is UN-FROZEN
+FOR REDESIGN per the audit's B2 — deterministic train/test hash-disjointness
+gate plus a pre-registered fork on the shuffled arm's fate — and is not
+cleared to re-run as-is. The redesign record lives in
+experiments/tests/t3_01_ablate_vision.py (V3 REDESIGN block).
 """
 import json
 import os

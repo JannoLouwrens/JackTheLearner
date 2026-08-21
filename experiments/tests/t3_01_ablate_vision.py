@@ -49,10 +49,20 @@ ARMS, per seed (train N=1200, test N=300, T2.03's sizes and split seeds):
            that cannot reproduce it cannot attribute anything -> VOID.
   shuffled CONTROL, must fail: same architecture, same budget, trained on
            permuted labels; TEST accuracy must sit at chance. Clears -> the
-           rig leaks episode identity -> VOID, not evidence. Its TRAIN
-           accuracy on the shuffled labels is recorded and gated too
-           (added 2026-08-20, 23rd audit B1): at-chance test from an arm
-           that never fit its own train set is a dead arm, not a control.
+           control exploited a leak -> VOID, not evidence. Its TRAIN
+           accuracy on the shuffled labels is RECORDED as a liveness
+           diagnostic but no longer gated (v3 — see the V3 REDESIGN block:
+           the 0.35 floor sat inside the random-label pre-memorisation
+           plateau, so it labelled a correctly-behaving network a dead rig).
+           HONEST CAVEAT, carried per the 24th audit's B2: with liveness
+           un-gated, an at-chance shuffled TEST reading is NOT evidence of
+           no distributional leak unless acc_shuffled_train shows the arm
+           memorised — read the diagnostic before citing the control as
+           exculpatory. The hash gate below and a LIVE shuffled arm are
+           complements: the hash gate proves identity disjointness; only a
+           live shuffled arm can catch a distributional leak (a per-class
+           rendering artefact reproduced in both streams passes the hash
+           gate and still leaks).
 
 PRE-REGISTERED GATES — all exogenous or loaned from T2.03's registered
 certificate (nothing calibrated from a pilot; sd at chance with n=300 is
@@ -66,10 +76,18 @@ sqrt(.25*.75/300) ~= 0.025):
       the encoder at init, fit the head); losing to your own subset is an
       optimisation defect of THIS rig, not evidence about the encoder. The
       lr grid exists to make this gate hard to trip honestly.
+  STRUCTURAL LEAK (VOID, v3 — deterministic): sha256 of every raw train
+      frame vs every raw test frame, per seed; ANY collision -> the two
+      generator streams share an episode -> VOID. O(n), CPU, milliseconds.
+      This PROVES the identity-contamination hazard the shuffled arm was
+      documented to infer stochastically.
   CONTROL (VOID): |acc_shuffled - 0.25| <= SHUFFLE_BAND (0.10) per seed
-      (T2.03's registered control read max dev 0.0633 at the same n); and
-      acc_shuffled_train >= SHUFFLE_FIT_FLOOR (0.35) per seed — control
-      liveness, see the constant's comment (strengthen-only, 2026-08-20).
+      (T2.03's registered control read max dev 0.0633 at the same n). This
+      gate fires only on POSITIVE evidence (the control actually exploited
+      a leak), so a dead arm cannot false-fire it; its blind spot (a dead
+      arm cannot catch a real leak either) is priced by the hash gate and
+      the recorded liveness diagnostic. acc_shuffled_train is recorded, not
+      gated (v3; was SHUFFLE_FIT_FLOOR, see V3 REDESIGN).
   CLAIM (every seed, else FAIL):
       acc_full >= MIN_FULL  = 0.45   chance + 8 sd; equals the floor of the
                                      frozen-probe band — a trained encoder
@@ -90,7 +108,8 @@ install. Science code lives in this module, not the JOB string (T0.16).
 
 DRY-CHECKED verdict paths (python -m experiments.tests.t3_01_ablate_vision
 dry): planted pass -> PASS; no-drop / weak-full -> FAIL; planted ref
-collapse, control leak, canary drift, param drift, train<ref -> VOID.
+collapse, control leak, hash overlap, pre-v3 artifact, canary drift, param
+drift, train<ref -> VOID; dead control arm -> recorded, not gated (v3).
 
 V2 REPAIR (2026-08-20, after the attempt-2 VOID; pre-registered by the
 curves probe's decision rule, experiments/t3_01_curves_probe.py). Attempt 2
@@ -114,6 +133,39 @@ epochs and applied readings pre-stated before its launch:
 ONE-DIAGNOSTIC CAP (pre-stated at probe dispatch): if this repaired run
 VOIDs on attribution again, T3.01 is PARKED per the SM.02 / overseer-B5
 rule — the next move would need a new mechanism-level reason, not a lottery.
+
+V3 REDESIGN (2026-08-21, ordered by the 24th audit's B1/B2 after it
+adjudicated the liveness probe's R3 escalation: NO RIG FAULT — the flat
+shuffled rows sit on the ln 4 max-entropy fixed point, the correct
+pre-memorisation behaviour on random labels; full adjudication appended to
+experiments/t301_shuffle_probe.py's docstring). Two changes, committed
+BEFORE any new number was seen:
+  (a) STRUCTURAL LEAK GATE ADDED. Train and test come from independent
+      seed streams (_build_dataset(seed, .) vs _build_dataset(seed+500_009,
+      .)), so "the rig leaks episode identity" is a deterministic property
+      of two generators. remote_run now hashes all raw frames per seed and
+      records hash_overlap; any collision is VOID. The project had spent
+      0.70 GPU-hours across three kernels inferring stochastically what
+      this assertion proves in milliseconds (audit's arithmetic).
+  (b) THE PRE-REGISTERED FORK ON THE SHUFFLED ARM — the audit offered two
+      fates and required committing one before re-running. CHOSEN: fate
+      (ii), demote SHUFFLE_FIT_FLOOR from a VOID gate to a recorded
+      diagnostic, with (a) carrying the identity-leak gate. Fate (i) —
+      budget the control to demonstrated memorisation — is rejected on the
+      probe's own pricing: the single best row needs >124 epochs (2x the
+      claim budget) to clear 0.35, and seeds 0/2 reach NO memorisation at
+      ANY tested lr within the full doubled budget, so no finite budget
+      demonstrably buys liveness; the honest cost is several times the
+      claim's budget with no assurance. The audit's proscription is also
+      honoured: NO loss-fall liveness proxy at a recalibrated horizon was
+      adopted (it would re-label "moved a little" as liveness — the UB.10
+      disease with a new observable). SHUFFLE_BAND stays a VOID gate: it
+      fires only on positive leak evidence, which a dead arm cannot fake.
+      The constant SHUFFLE_FIT_FLOOR is retained unmoved as the diagnostic
+      reference line. Law 4 accounting: this narrows a gate, loudly, on the
+      audit's order, citing the probe's measurement that the gate as
+      written voided correct behaviour; the 08-20 20:26 VOID it caused
+      stays in the ledger's history.
 
 COVERS: sight (claim).
 """
@@ -151,11 +203,11 @@ MIN_FULL = 0.45
 MIN_DROP = 0.15
 ABL_CEIL = 0.40
 SHUFFLE_BAND = 0.10
-# Control-liveness floor (23rd audit, B1; added 2026-08-20, gates only runs
-# from here on): the shuffled arm's accuracy on its OWN shuffled train set.
-# Chance is 0.25; a same-budget net that cannot exceed chance + 0.10 on data
-# it was fitted to did not train, and its at-chance test reading proves
-# nothing about leakage.
+# Control-liveness reference (23rd audit B1 added it as a VOID gate; the
+# 24th audit's adjudication demoted it to a RECORDED DIAGNOSTIC — V3
+# REDESIGN (b) in the docstring). Kept unmoved as the line against which
+# acc_shuffled_train is read: below it, the shuffled arm's at-chance test
+# reading is not evidence of no distributional leak.
 SHUFFLE_FIT_FLOOR = 0.35
 
 
@@ -233,6 +285,14 @@ def remote_run(seeds: list, n_train: int | None = None,
     for seed in seeds:
         Xtr, ytr, _ = _build_dataset(seed, n_train)
         Xte, yte, _ = _build_dataset(seed + 500_009, n_test)  # T2.03's split
+        # Structural leak gate (v3): the two generator streams must share no
+        # frame. Raw bytes, before any tensor conversion.
+        import hashlib
+        htr = {hashlib.sha256(np.ascontiguousarray(f).tobytes()).hexdigest()
+               for f in Xtr}
+        hte = {hashlib.sha256(np.ascontiguousarray(f).tobytes()).hexdigest()
+               for f in Xte}
+        hash_overlap = len(htr & hte)
         eye = _get_eye(seed)
         itr, ite = _to_tensor(Xtr), _to_tensor(Xte)
         ttr = torch.from_numpy(ytr)
@@ -294,6 +354,8 @@ def remote_run(seeds: list, n_train: int | None = None,
 
         out["seeds"].append({
             "seed": seed, "n_params_enc": n_params,
+            "hash_overlap": hash_overlap,
+            "n_hash_train": len(htr), "n_hash_test": len(hte),
             "canary_ok": bool(eye.canary() == eye._canary0),
             "canary_colors": eye.canary_colors(),
             "acc_ref": round(acc_ref, 4),
@@ -372,6 +434,8 @@ def _experiment(seed: int) -> dict:
         "per_class_min": min(r["per_class_min"] for r in rows),
         "canary_ok_all": all(r["canary_ok"] for r in rows),
         "canary_colors_min": min(r["canary_colors"] for r in rows),
+        # .get(999): absent in pre-v3 artifacts -> reads 999 -> VOID, loudly.
+        "hash_overlap_max": max(r.get("hash_overlap", 999) for r in rows),
         "n_params_enc": rows[0]["n_params_enc"],
         "lrs": [r["lr"] for r in rows],
     }
@@ -401,12 +465,14 @@ def _check(m: dict, c: dict):
         return Status.VOID          # rig cannot reproduce T2.03's certificate
     if m["train_vs_ref_min"] < -TRAIN_TOL:
         return Status.VOID          # training lost to its own frozen subset
+    if m["hash_overlap_max"] != 0:
+        return Status.VOID          # train/test share a frame (v3 structural
+                                    # gate) — or pre-v3 artifact (999)
     if c["shuffled_dev_max"] > SHUFFLE_BAND:
-        return Status.VOID          # rig leaks episode identity
-    if c["shuffled_fit_min"] < SHUFFLE_FIT_FLOOR:
-        return Status.VOID          # shuffled arm never fit its own train
-                                    # set: the control did not run (23rd
-                                    # audit, B1)
+        return Status.VOID          # the control exploited a leak
+    # shuffled_fit_min is RECORDED, not gated (V3 REDESIGN (b)): below
+    # SHUFFLE_FIT_FLOOR the control's at-chance test reading proves nothing
+    # about a distributional leak; the hash gate above carries identity.
     if m["ablated_max"] > ABL_CEIL:
         return Status.VOID          # a constant input carried the task
     # The claim: trained vision is load-bearing, on every seed.
@@ -422,7 +488,8 @@ def run(ledger: Ledger | None = None):
 def _dry():
     base = dict(canary_ok_all=True, canary_colors_min=2295,
                 n_params_enc=244_960, ref_min=0.45, train_vs_ref_min=0.10,
-                ablated_max=0.26, full_min=0.72, drop_min=0.46)
+                ablated_max=0.26, full_min=0.72, drop_min=0.46,
+                hash_overlap_max=0)
     ctrl = {"shuffled_dev_max": 0.05, "shuffled_fit_min": 0.85}
     cases = [
         ("planted pass", base, ctrl, Status.PASS),
@@ -436,9 +503,12 @@ def _dry():
         ("control leak -> VOID", base, {"shuffled_dev_max": 0.20,
                                         "shuffled_fit_min": 0.85},
          Status.VOID),
-        ("dead control arm -> VOID", base, {"shuffled_dev_max": 0.05,
-                                            "shuffled_fit_min": 0.25},
+        ("hash overlap -> VOID", {**base, "hash_overlap_max": 3}, ctrl,
          Status.VOID),
+        ("pre-v3 artifact -> VOID", {**base, "hash_overlap_max": 999}, ctrl,
+         Status.VOID),
+        ("dead control arm -> recorded, not gated (v3)", base,
+         {"shuffled_dev_max": 0.05, "shuffled_fit_min": 0.25}, Status.PASS),
         ("canary drift -> VOID", {**base, "canary_ok_all": False}, ctrl,
          Status.VOID),
         ("param drift -> VOID", {**base, "n_params_enc": 500_000}, ctrl,
