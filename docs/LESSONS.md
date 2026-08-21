@@ -4435,3 +4435,39 @@ verdict diagnosable instead of merely final. Same family as "a bar finer
 than one quantum" (LC.03): there the ruler was too coarse for the bar;
 here the observation window was exactly as long as the assumption being
 tested.
+
+## A decision rule's escape branch may not be gated on the instrument it exists to indict
+
+T3.01's liveness probe pre-registered R0–R3 before launch, which is exactly
+right — and the rule still could not reach its own correct answer. **R2** was
+the branch for *"the fit floor is miscalibrated; demote it and gate on
+loss-fall instead"*. Its trigger was `every seed has some LIVE lr`, where
+`LIVE := loss_init - loss_at_62 >= 0.05`. But epoch 62 is the registered
+budget, and *"is 62 epochs long enough for this arm?"* is precisely the
+question R2 exists to answer. When the horizon is the thing that is wrong,
+R2's trigger fails for the same reason the floor did, and the rule falls
+through to **R3 — "a deeper rig fault", escalate**. Nine rows of data that
+say "the bar is in the wrong place" got routed as "the rig is broken."
+
+The evidence to overturn it was already in the artifact and cost nothing
+extra: at lr 1e-4 all three seeds escape the plateau by epoch 124, and every
+"dead" row sits on the ln 4 = 1.386294 max-entropy fixed point — the correct
+pre-memorisation behaviour on random labels, not a dead rig.
+
+**Rule:** when writing a branch that says *"instrument X is miscalibrated"*,
+its trigger must be independent of X. Gate it on a raw trajectory (did the
+loss move at all, over the whole run), on a different horizon, or on an
+observable X does not use — never on X's own reading at X's own threshold.
+Cheap test while drafting: for each branch, ask *"if the thing this branch
+accuses were true, would this branch still fire?"* If the answer is no, the
+branch is decorative and the rule will escalate instead of repairing.
+
+Corollary, and the sharper half: **an escalation is evidence about the RULE
+as well as about the system.** Read a fired escalation branch adversarially
+before acting on its diagnosis — the branch text is a hypothesis written
+before the data existed, and the data can refute it. Here the trigger was
+correct and the conclusion attached to it was not; obeying the conclusion
+would have started a rig investigation into a network behaving exactly as
+theory predicts. Same family as "when auditing a bar, instrument past its
+horizon" (above): that lesson buys the tail, this one is about being willing
+to *use* the tail against the rule that collected it.

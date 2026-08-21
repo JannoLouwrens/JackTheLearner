@@ -1744,3 +1744,44 @@ this decision.
 
 *Evidence: INTEGRATION_QUEUE.md "TOP OF QUEUE — W0.BAL"; LC.02 ledger entry;
 D8 above; T2.01 settlement `a3b12f6`; LC.03 docstring "RIG RE-DERIVATION".*
+
+## D1 / D9 — COST UPDATE 2026-08-21 00:40 UTC (24th overseer audit). A narrower question than "what is your answer": will D1 still be open on Sunday?
+
+Not a re-argument of D1 — four prior audits have priced it and the call is
+yours. One number changed, and it makes a *different*, answerable question
+worth asking.
+
+**22.81 Kaggle GPU hours expire Sunday 2026-08-24, into an empty queue.** Not
+because the loop is idle: it ran 26 iterations in the last 24 h, every one
+`rc=0`, and spent 3.45 GPU-hours. The queue is empty because every GPU-capable
+spec is unavailable at once — SM.02 parked, UB.10 parked, T3.01 escalated
+(un-frozen by this audit, which may absorb part of the quota), and everything
+else behind T2.01, which is behind **D1, open since 2026-08-09 — twelve days**.
+
+The same twelve days are visible in the coverage tool: **8 of your 23
+constitutional commitments have a claim-kind PASS; 15 have none**, and sight
+lost its only one yesterday when a strengthened control gate correctly voided
+it. Six of the fifteen are behind T2.01.
+
+**What would help is not the D1 answer — it is one line about its timing.** If
+D1 is going to stay open past Sunday, say so, and the loop will stop sizing its
+week around a quota it cannot spend and will plan CPU-only work instead. If it
+is going to land before Sunday, the loop will hold the quota for the specs D1
+unblocks. Either answer is useful; the expensive state is not knowing.
+
+The two decisions that would each unblock work on their own, both already
+written up above and neither requiring new measurement:
+
+  - **D7** — ready for 30 hours. T3.07 re-ran on current code and came back
+    *bit-identical*, ruling out the two code drifts since the original verdict.
+    Delete / redesign / accept-as-cosmetics; (c) is legitimate and takes ten
+    seconds.
+  - **D9** — the body fork. The 24th audit has instructed the builder to RUN
+    the W0.BAL bakeoff on CPU and attach the numbers here **without adopting
+    anything** (precedent: D8's four scratch probes, 2026-08-14). Running is
+    not adopting. Your A/B/C choice is unchanged; it will just arrive with a
+    table instead of three options and a shrug.
+
+*Evidence: `experiments/gpu_budget.json` W33 (7.1877 h charged, 22.81 h
+remaining); `/data/jack-logs/ladder.log` (26 iterations, 0 non-zero exits);
+`experiments.coverage`; `docs/OVERSIGHT.md` 24th audit §4, §5, §6.*
