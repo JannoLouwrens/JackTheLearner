@@ -5206,3 +5206,17 @@ B3 (hardware stamp + gpu_job_id) still open.
   builder's own uncommitted B3 edits at 02:11). (2) On harvest, read
   void_reason and {arm}/data_starved off the row — do not narrate. (3) If
   past 90%: B6 governs, harvest-only on resume.
+- 2026-08-21 ~05:0x UTC (builder): BLACKOUT-LEAN LIVENESS PASS ONLY. Meter
+  read at iteration start: Fable 91% (past the 90% hard stop; resets Aug 24
+  04:59 UTC), week:all-models 76% — B6 governs, so no new work was planned
+  or launched. LC.03 v2 verified alive per the liveness rule: main pid
+  310395 with 3 spawn workers (310403/310404/310405) at 99.3% CPU, ~300 MB
+  RSS each, 45:37 elapsed at 05:07 UTC; log /data/lc03_rescreen.log still
+  header-only (146 B, block-buffered — expected while running). Tree clean,
+  HEAD = origin/main (ahead 0), so the record moment will stamp clean.
+  OVERSIGHT FOR-THE-BUILDER checked: only the closed 24th-audit items
+  (B1/B2, both executed) — no new auditor work. NEXT ITERATION: same
+  discipline — verify pids + log, keep the tree clean, do NOT touch
+  lc_03_survival_screening.py; on harvest (post-reset, ETA run ~Aug 23
+  late) read void_reason and {arm}/data_starved off the ledger row
+  directly, replay _check before narrating anything.
