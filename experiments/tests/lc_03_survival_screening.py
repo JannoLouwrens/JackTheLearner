@@ -8,15 +8,16 @@ at least two of them learn to survive AT ALL. Screening declares no winner
 (LC.04's job); it can only exclude, and its VOID ("fewer than two learners")
 blocks the decision instead of manufacturing one.
 
-THE ENVELOPE (LEARNING_CORE.md §5.7, fixed HERE for the ledger). Each arm-seed
-runs N_STEPS = 100,000 decisions (= 20,000 sim-s) at e0 = 1.0, and keeps
-living until it has ALSO consumed W_CLOCK = 4,320 core-seconds (1.2 core-h) —
-whichever comes later — so LC.04 (matched experience) and LC.05 (matched
-compute) can score the SAME stored curves. Per-life resource coordinates and
+THE ENVELOPE (LEARNING_CORE.md §5.7, fixed HERE for the ledger; v2 sizes,
+2026-08-21 — see V2 RE-SCREEN below; v1 was 100k / 4,320 and recorded VOID
+data-starved). Each arm-seed runs N_STEPS = 400,000 decisions (= 80,000
+sim-s) at e0 = 1.0, and keeps living until it has ALSO consumed W_CLOCK =
+17,280 core-seconds (4.8 core-h) — whichever comes later — so LC.04 (matched
+experience) and LC.05 (matched compute) can score the SAME stored curves. Per-life resource coordinates and
 the decimated span curve are written to
 `experiments/artifacts/lc03_curves_seed{N}.json`; LC.04/LC.05 read that file
 and run nothing. Untrained twins and the designed-to-fail controls run at
-HALF_STEPS = 50,000 (§5.7's "controls at half budget"): their quantities are
+HALF_STEPS = 200,000 (§5.7's "controls at half budget"): their quantities are
 stationary points, not curves. Wiped twins run the FULL envelope — they are
 the S3 pairing, and a paired difference needs matched windows.
 
@@ -157,6 +158,59 @@ envelope; run_survival now exports ate_total / eats_at_death so any future
 twin life_gain anomaly is attributable in one read instead of a 385 s
 replay probe.
 
+V2 RE-SCREEN, 2026-08-21 (this commit is the registration; gates UNMOVED,
+only the envelope grows). CORRECTED DIAGNOSIS of attempt 2 (v1 envelope,
+100k / 4,320, recorded 2026-08-21T02:11), found by replaying _check
+against the row's own recorded metrics before this redesign: the VOID did
+NOT fire at "fewer than two learners" as the 08-21 harvest and commit
+eec7d86 narrated — it fired at CONTROL (c), first in the loop:
+ppo-needs/twin_life_gain -7.71 s, t = -3.16 vs the 3.0 gate, |mean| 7.71
+vs NOISE_FLOOR_S 5.0. The claim loop never ran. The harvest read a 10 s
+floor that does not exist (it is 5.0) and back-filled the generic VOID
+message with the branch it expected. The magnitude is ONE FOOD QUANTUM:
+at the v1 twin envelope (HALF_STEPS 50k, ~22 lives, thirds of 7) a single
+obj1 eat moves a third-mean by ~48/7 = 6.9 s — the exact "sized for
+symmetric quanta" assumption the CHECK RESOLUTION above flagged as the
+failable territory of (c)/(d), failing. A one-eat draw in a frozen twin
+is not a ruler drift; but the gate was right to fire — the bar was finer
+than the channel's quantum at that envelope, and a gate that cannot tell
+a draw from a drift did not test the claim.
+  What is ALSO true, from the same recorded metrics (the claim gates,
+evaluated offline): zero arms at 3 sigma — best margins wm-efe
+lg_margin_null +74.5 s (t=1.25, seed std ~103) and dreamer-xs +44.1 s
+(t=0.49, std ~156) — and final-half life-span slopes POSITIVE on 4 of 5
+arms (per-seed: wm-efe 10.02/11.93/5.11 s-per-life, dreamer-xs
+2.95/10.61/5.68, ppo-needs 15.64/7.01/0.50, ppo-lp 17.15/-1.84/1.96;
+wm-latent -13.00/5.50/-7.33). Still climbing at cutoff: the owner's
+data-starved branch (2026-08-09) applies on the evidence even though the
+recorded VOID formally fired upstream of it — re-screen bigger, do not
+eliminate. ONE envelope growth answers BOTH faults: more lives per twin
+takes the food quantum back under the floor (v2 twin: 200k steps, ~88
+lives, thirds of ~29, one eat = ~1.7 s < 5.0 — and real drift resolves
+BETTER, so this strengthens (c), never loosens it), and more lives per
+arm gives the climbing margins room to clear 3 sigma or flatten out. SIZING, from the recorded curves and nothing else: at the
+measured seed stds, t >= 3 needs a margin of ~179 s for wm-efe and ~270 s
+for dreamer-xs, and the claim needs TWO learners, so the envelope is sized
+to the SECOND arm. A 1x envelope yields ~50 lives; assume an arm holds its
+WEAKEST per-seed slope for half the added lives (slope decay priced in):
+k=4 gives dreamer-xs 2.95 * 150/2 = +221 s ~= its +226 s requirement, and
+wm-efe 5.11 * 75 = +383 s >> its +105 s. k=2 sufficed only for wm-efe —
+one learner cannot pass this gate. Hence 4x: N_STEPS 400,000, W_CLOCK
+17,280, HALF_STEPS follows. Unpriced and in the claim's favour: seeds
+converging toward the span ceiling shrink the std, raising t faster than
+the margin model. needs_rise, the conjunct every pilot arm failed, moved
+from all-negative (pilot) to -0.011..+0.010 (v1 registered) — the bet that
+more experience flips it continues on trend. Cost: ~4x attempt 2's 47
+worker core-h = ~190 core-h, ~63 h wall on 3 nice-19 workers, zero GPU.
+TWO GAPS CLOSED in the same commit, both machine-readable, not prose:
+`{arm}/data_starved`, promised below since registration and computed
+nowhere (the 08-21 harvest found grep hits only in this docstring), is now
+computed in _check and recorded in the ledger row; and `void_reason` — the
+generic "run did not test the claim" message is what let the harvest
+mis-attribute the firing branch, so _check now writes WHICH gate voided
+into the metrics it returns through. A VOID that names its branch cannot
+be back-filled with the story the reader expected.
+
 PORTS, not paraphrases:
   * panel_dwell — PG.4's `_dwell` (strict < DWELL_RADIUS 2.0 m) over the
     late half, threshold 0.15 = PG.4's CONTROL_DWELL_MAX. The harness's
@@ -194,10 +248,12 @@ the gate WITH a positive final-half life-span slope is reported
 `{arm}/data_starved = 1.0` — re-screen at a bigger envelope, do not
 eliminate. The convergence and scale-transfer guards are LC.04's.
 
-RUNNING IT. The registered run is ~90 core-hours and MUST be detached:
+RUNNING IT. The v2 registered run is ~190 core-hours (~63 h wall) and MUST
+be detached, via the helper that proves the launch survived its imports:
 
-    nohup setsid nice -n 19 /data/venvs/jackthelearner/bin/python -m \
-        experiments.tests.lc_03_survival_screening > /data/lc03_registered.log 2>&1 &
+    scripts/launch_detached.sh /data/lc03_rescreen.log \
+        /data/venvs/jackthelearner/bin/python -m \
+        experiments.tests.lc_03_survival_screening
 
 It parallelises the three seeds over 3 single-threaded workers (the memoised
 run_spec pattern T2.01 established) and writes the ledger itself on
@@ -236,8 +292,13 @@ REPO = Path(__file__).resolve().parents[2]
 ARTIFACTS = REPO / "experiments" / "artifacts"
 
 # ── THE ENVELOPE (LEARNING_CORE.md §5.7) — fixed for the registered run ─────
-N_STEPS = 100_000               # decisions per arm-seed (20,000 sim-s)
-W_CLOCK_CORE_S = 4_320.0        # 1.2 core-h; arms run to whichever is LATER
+N_STEPS = 400_000               # decisions per arm-seed (80,000 sim-s).
+                                # v2 (2026-08-21): 4x v1's 100k, sized in the
+                                # V2 RE-SCREEN docstring block from attempt
+                                # 2's recorded slopes — the second learner
+                                # (dreamer-xs) binds. v1 recorded VOID
+                                # data-starved; gates unmoved.
+W_CLOCK_CORE_S = 17_280.0       # 4.8 core-h (4x v1); whichever is LATER
 HALF_STEPS = N_STEPS // 2       # twins + designed-to-fail controls
 E0 = 1.0                        # LC.03's regime (XL.00 compressed with 0.1)
 TRACE_EVERY = 8                 # transition subsample for the chaos detector
@@ -690,15 +751,23 @@ def _tstat(m: dict, key: str) -> float:
     return m.get(key, 0.0) * math.sqrt(3) / max(m.get(f"{key}_std", 0.0), 1e-9)
 
 
+def _void(m: dict, reason: str):
+    """Name the firing branch in the recorded metrics (v2). The generic VOID
+    message admits every narrative; attempt 2's harvest proved it by
+    attributing a control-(c) trip to the claim loop that never ran."""
+    m["void_reason"] = reason
+    return Status.VOID
+
+
 def _check(m: dict, c: dict):
     # ── instrument validity ─────────────────────────────────────────────
     if m.get("borrowed_ok", 0.0) != 1.0 or c.get("borrowed_ok", 0.0) != 1.0:
-        return Status.VOID              # uncalibrated: refuses, never refutes
+        return _void(m, "uncalibrated borrow")  # refuses, never refutes
     if m.get("physics_finite_min", 0.0) != 1.0:
-        return Status.VOID
+        return _void(m, "non-finite physics")
     if m.get("null_n_lives_ok", 0.0) != 1.0:
-        return Status.VOID              # the world cannot produce 12 lives at
-        # this envelope — a world problem, not an arm result
+        return _void(m, "nulls under 12 lives")  # the world cannot produce
+        # 12 lives at this envelope — a world problem, not an arm result
 
     # ── controls, each on its pre-registered side ───────────────────────
     # (a) AMENDED 2026-08-13 from 'dies soonest' (seed-90 pilot, same commit,
@@ -710,10 +779,10 @@ def _check(m: dict, c: dict):
     # this catches; ctrl runs at module E0, so the ceiling is E0/BASAL_B).
     ceiling = E0 / BASAL_B
     if not abs(c.get("statue_mean_life_s", 0.0) - ceiling) <= 0.10 * ceiling:
-        return Status.VOID
+        return _void(m, "control (a): statue off the basal ceiling")
     # (b) randrew must miss the null gate.
     if _tstat(c, "randrew_margin") >= SIGMA_GATE:
-        return Status.VOID
+        return _void(m, "control (b): randrew cleared the null gate")
     # (e) AMENDED 2026-08-13 from 't <= -3' (same pilot, same commit): the
     # darkroom learned passivity and prospered on the length ruler (margin
     # +49.7 s, mean life 183.5 s vs null 126.2 s) — anti-curiosity WINS life
@@ -721,38 +790,50 @@ def _check(m: dict, c: dict):
     # inversion is locked in: if the world ever punishes anti-curiosity
     # strongly, this fires and the rig is re-derived, never silently re-read.
     if _tstat(c, "darkroom_margin") <= -SIGMA_GATE:
-        return Status.VOID
+        return _void(m, "tripwire (e): darkroom strongly negative")
     # (c) frozen and (d) wiped-store: every twin within noise of zero.
     for arm in CANDIDATE_ARMS:
         for kind in ("twin_life_gain", "wiped_life_gain"):
             k = f"{arm}/{kind}"
             if (abs(_tstat(m, k)) >= SIGMA_GATE
                     and abs(m.get(k, 0.0)) > NOISE_FLOOR_S):
-                return Status.VOID      # lives lengthen without a persistent
-                # learner: the metric measures the world (registry (c)/(d))
+                return _void(m, f"control (c)/(d): {k} = "
+                             f"{m.get(k, 0.0):.2f} s, |t| = "
+                             f"{abs(_tstat(m, k)):.2f}")
+                # lives lengthen (or shorten) without a persistent learner:
+                # the metric measures the world (registry (c)/(d))
 
     # ── the claim ───────────────────────────────────────────────────────
     dreamer_ent = m.get("dreamer-xs/action_entropy_final", 0.0)
     cleared = 0
     for arm in CANDIDATE_ARMS:
+        ok = False
         if m.get(f"{arm}/chaos_ok", 0.0) != 1.0:
-            continue                    # §2.10: VOID for that arm
-        if (arm == "wm-efe" and dreamer_ent > 0.0
+            pass                        # §2.10: VOID for that arm
+        elif (arm == "wm-efe" and dreamer_ent > 0.0
                 and m.get(f"{arm}/action_entropy_final", 0.0)
                 < EFE_ENTROPY_FRAC * dreamer_ent):
-            continue                    # epistemic collapse: VOID for wm-efe
-        ok = (_tstat(m, f"{arm}/lg_margin_null") >= SIGMA_GATE
-              and _tstat(m, f"{arm}/lg_margin_twin") >= SIGMA_GATE
-              and m.get(f"{arm}/lives_ok", 0.0) == 1.0
-              and m.get(f"{arm}/needs_rise", -1.0) > 0.0
-              and m.get(f"{arm}/clt", -1.0) > 0.0
-              and m.get(f"{arm}/dwell_ok", 0.0) == 1.0)
+            pass                        # epistemic collapse: VOID for wm-efe
+        else:
+            ok = (_tstat(m, f"{arm}/lg_margin_null") >= SIGMA_GATE
+                  and _tstat(m, f"{arm}/lg_margin_twin") >= SIGMA_GATE
+                  and m.get(f"{arm}/lives_ok", 0.0) == 1.0
+                  and m.get(f"{arm}/needs_rise", -1.0) > 0.0
+                  and m.get(f"{arm}/clt", -1.0) > 0.0
+                  and m.get(f"{arm}/dwell_ok", 0.0) == 1.0)
+        # The owner's data-starved guard, machine-readable (v2 — the 08-21
+        # harvest found this key promised in the docstring and computed
+        # nowhere). run_spec records the same dict this mutates, so the
+        # flag lands in the ledger row beside the margins it qualifies.
+        m[f"{arm}/data_starved"] = float(
+            not ok and m.get(f"{arm}/final_slope", 0.0) > 0.0)
         cleared += int(ok)
     if cleared >= 2:
         return True
-    return Status.VOID                  # "fewer than two learners" — blocks
-    # the decision instead of manufacturing one. Data-starved arms (positive
-    # final_slope) are re-screened at a bigger envelope, not eliminated.
+    return _void(m, f"fewer than two learners ({cleared} cleared)")
+    # Blocks the decision instead of manufacturing one. Data-starved arms
+    # (positive final_slope) are re-screened at a bigger envelope, not
+    # eliminated.
 
 
 def run(ledger: Ledger | None = None):

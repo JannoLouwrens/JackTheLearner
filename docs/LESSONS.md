@@ -4510,3 +4510,39 @@ sweep put the answers for already-covered gates HERE (one page every
 iteration reads) instead of editing seven more passing test files into
 stale claims (protocol.py's own doctrine: mass staleness flags teach the
 loop to ignore staleness).
+
+## A generic VOID message admits every narrative — attribute a VOID only by replaying its check
+
+LC.03 attempt 2 (2026-08-21) recorded VOID with the harness's generic message
+("run did not test the claim; not a refutation"). The harvest — same
+iteration, commit eec7d86 — narrated it as "fewer than two learners: all
+controls clean, zero arms at 3 sigma", and that narrative propagated into the
+commit message, the journal, the builder prompt, and the next iteration's
+redesign framing. Replaying `_check` against the row's own recorded metrics
+during the v2 redesign showed the VOID actually fired UPSTREAM of the claim
+loop, at control (c): `ppo-needs/twin_life_gain` −7.71 s, |t| = 3.16 vs the
+3.0 gate — and the "all controls clean" line rested on a noise floor of
+±10 s that exists nowhere in the code (NOISE_FLOOR_S is 5.0). The claim loop
+never executed. The harvester had read the metrics that supported the branch
+it EXPECTED (the docstring's own data-starved guard, primed by the pilot
+history) and back-filled the generic message with it.
+
+Two failures, one mechanism: (1) a check with multiple VOID exits and one
+shared message makes the firing branch unrecoverable from the ledger row —
+attribution then comes from the reader's prior, which is exactly where it
+must not come from; (2) a constant cited from memory (±10 s) instead of read
+from the code is how the wrong branch survives scrutiny. Both are cheap to
+close and now closed for LC.03: `_check` writes `void_reason` — naming the
+branch, key, and values — into the metrics dict it returns through, which
+`run_spec` records verbatim (the dict is recorded AFTER check runs, so a
+check may annotate its own row). The replay itself cost one 20-line script.
+
+**Rule: before narrating any VOID/FAIL whose check has more than one exit,
+replay the check function against the row's recorded metrics and let it name
+its own branch. A check with multiple VOID exits should write WHICH exit
+into its metrics (`void_reason`) at design time — a verdict that names its
+branch cannot be back-filled with the story the reader expected.** Corollary
+for constants: quote thresholds from the code you are reading, never from
+the harvest prose of a previous iteration — the 24th audit's B3 rule
+("prove the instrument was alive") has a sibling: prove the ATTRIBUTION is
+alive, i.e. derived from the row, not the narrative.

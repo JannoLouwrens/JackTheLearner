@@ -84,31 +84,41 @@ Liveness rule, permanent: never end an iteration on "waiting" without
 `pgrep -f` returning a pid AND the log growing. Detached launches go through
 `scripts/launch_detached.sh`, which enforces the 15 s artifact check.
 
-## LC.03 LANDED VOID 2026-08-21 02:11 — "fewer than two learners", the
-## DATA-STARVED branch fires: re-screen at a BIGGER ENVELOPE, do not
-## eliminate, do not relaunch as-is
+## LC.03 v2 RE-SCREEN IS IN FLIGHT (launched 2026-08-21 ~04:4x UTC, 4x
+## envelope, ~63 h wall, ETA ~Aug 23 late; it writes the ledger itself —
+## do NOT relaunch, do NOT edit lc_03_survival_screening.py while it runs,
+## and KEEP THE TREE CLEAN so the record moment stamps clean)
 
-The registered run (15.8 h wall, 3 seeds, ~47 worker core-hours) completed
-and wrote the ledger itself. THE SCREEN WORKED: instrument valid
-(borrowed_ok, physics finite, 12+ lives), ALL FIVE CONTROLS CLEAN — statue
-599.98 s vs 600 ceiling, randrew t=1.63 (<3), darkroom t=-0.84, every
-twin/wiped gain inside the ±10 s noise floor. But ZERO arms cleared the
-claim gate: best null-margins wm-efe +74.5 s (t=1.25) and dreamer-xs
-+44.2 s (t=0.49) against seed spreads of 150–220 s. This VOID's reason is
-DIFFERENT from the 08-14 VOID (that one didn't test the claim; this one
-tested it and the envelope was too small to decide it).
+CORRECTED DIAGNOSIS of the 08-21 02:11 VOID (found by replaying _check
+against the row's recorded metrics — see the new LESSONS entry "A generic
+VOID message admits every narrative"): it did NOT fire at "fewer than two
+learners" as the harvest commit eec7d86 narrated. It fired at CONTROL (c):
+ppo-needs/twin_life_gain −7.71 s, |t| = 3.16 vs the 3.0 gate (the harvest's
+"±10 s noise floor" does not exist; NOISE_FLOOR_S is 5.0). The claim loop
+never ran. The magnitude is ONE FOOD QUANTUM on the v1 twin's 22-life ruler
+(one eat ≈ 48/7 ≈ 6.9 s per third-mean) — the docstring's pre-declared
+"sized for symmetric quanta" territory failing. ALSO true from the same
+metrics, evaluated offline: zero arms at 3σ (best wm-efe +74.5 s t=1.25)
+with 4/5 final-half slopes POSITIVE — the owner's data-starved branch
+applies on the evidence.
 
-THE PRE-REGISTERED NEXT STEP (owner's data-starved guard, in the docstring):
-4 of 5 arms show POSITIVE final-half life-span slopes — wm-efe 9.02±2.87
-(t≈5.4) and dreamer-xs 6.41±3.17 (t≈3.5) are still climbing at cutoff —
-so the re-screen happens at a BIGGER ENVELOPE. Design work for a fresh
-iteration: size the envelope from the recorded curves
-(experiments/artifacts/lc03_curves_seed{N}.json), decide CPU-detached vs
-Kaggle-CPU, and note wm-latent is the one arm with a NEGATIVE slope
-(-4.94±7.74). KNOWN DOC-CODE GAP to fix in the redesign: the docstring
-promises `{arm}/data_starved = 1.0` but no code computes it (grep hits
-only the docstring) — implement it so the guard is machine-readable, not
-prose. LC.04/OP.01/PS.04/DP.01 stay blocked behind a future LC.03 PASS.
+THE v2 RE-SCREEN (registered in lc_03_survival_screening.py's V2 block,
+commit of 2026-08-21): envelope 4x (N_STEPS 400k, W_CLOCK 17,280; sized so
+the SECOND learner, dreamer-xs, can clear — weakest-seed slope 2.95 s/life
+× half-persistence over ~150 added lives ≈ its +226 s requirement), gates
+UNMOVED. The 4x twin (~88 lives) also takes the food quantum back under
+the 5 s floor (~1.7 s), so ONE growth answers BOTH faults. Gaps closed:
+`{arm}/data_starved` now computed in _check; `void_reason` names the firing
+branch in every future row. Log /data/lc03_rescreen.log; artifacts
+regenerate into experiments/artifacts/ (gitignored). LC.04/OP.01/PS.04/
+DP.01 stay blocked behind a future LC.03 PASS.
+
+METER AT LAUNCH: Fable 89% vs the 90% hard stop (resets Aug 24 04:59 UTC).
+The B6 plan (journal, 08-21 ~01:0x) governs: the run computes through the
+blackout and writes its own receipt; the first post-resume iteration is
+HARVEST-ONLY — read the ledger row's `void_reason`/`data_starved` keys
+directly, replay _check if narrating (LESSONS: "A generic VOID message
+admits every narrative"), commit receipts, keep the tree clean.
 
 ## UB.10 IS PARKED PENDING ARM REDESIGN (builder, 2026-08-20 ~19:1x UTC —
 ## the recipe probe's both-fail branch fired; do NOT dispatch, no third recipe)
@@ -149,9 +159,8 @@ The W33 Kaggle hours (~21.5 h after that harvest, expire Sun 08-23):
 SM.02 parked, UB.10 parked, LC.03 CPU-only. Do not manufacture a dispatch
 to spend them; do read `run blocked`/`run coverage` for a genuine GPU
 candidate (T2.05's redesign facts are in the journal, 2026-08-14).
-Still open from the 24th audit: B4 (run the W0.BAL bakeoff on CPU when
-LC.03 releases its cores, attach numbers to D9, ADOPT NOTHING — running
-is not adopting; D8's scratch probes are the precedent). B3 (the
+The 24th audit is fully closed: B4 was executed 2026-08-21 ~03:2x (W0.BAL
+table attached to D9, commit e9cc914, NOTHING adopted). B3 (the
 at-chance-control sweep) was executed 2026-08-21 ~02:xx — the generalised
 rule and full 9-gate table are in LESSONS.md ("An at-chance control must
 carry proof its instrument was alive"); UB.9 and T2.06 got docstring lines
