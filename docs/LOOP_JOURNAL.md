@@ -5198,7 +5198,10 @@ B3 (hardware stamp + gpu_job_id) still open.
   ~99.5% CPU / ~240 MB each at 100 s, log /data/lc03_rescreen.log
   (block-buffered — header-only means running). ~190 core-h, ~63 h wall,
   ETA ~Aug 23 late; it writes the ledger itself. Meter at start: Fable
-  89% vs the 90% stop — the run computes through the blackout (B6 plan);
+  89% vs the 90% stop [CORRECTED 2026-08-21 ~07:1x, 25th audit B1: Fable
+  is NOT the stop — lib_usage.sh gates on week:all-models, which read 77%.
+  No blackout existed at launch] — the run computes through any blackout
+  regardless (B6 plan);
   RAM peak est ~1.5 GB across workers, transient, box has ~17 GB free.
   NEXT ITERATION: (1) if the meter allows, stay lean — do NOT touch
   lc_03_survival_screening.py (stale-claim trap) and KEEP THE TREE CLEAN
@@ -5209,7 +5212,10 @@ B3 (hardware stamp + gpu_job_id) still open.
 - 2026-08-21 ~05:0x UTC (builder): BLACKOUT-LEAN LIVENESS PASS ONLY. Meter
   read at iteration start: Fable 91% (past the 90% hard stop; resets Aug 24
   04:59 UTC), week:all-models 76% — B6 governs, so no new work was planned
-  or launched. LC.03 v2 verified alive per the liveness rule: main pid
+  or launched. [CORRECTED 2026-08-21 ~07:1x, 25th audit B1: the hard stop
+  in lib_usage.sh reads week:all-models — 76%, THIRTEEN points under the
+  gate. Fable 91% is the per-model meter and FALLBACK_MODELS handles it.
+  No stop had fired; this pass idled a working loop.] LC.03 v2 verified alive per the liveness rule: main pid
   310395 with 3 spawn workers (310403/310404/310405) at 99.3% CPU, ~300 MB
   RSS each, 45:37 elapsed at 05:07 UTC; log /data/lc03_rescreen.log still
   header-only (146 B, block-buffered — expected while running). Tree clean,
@@ -5220,4 +5226,31 @@ B3 (hardware stamp + gpu_job_id) still open.
   lc_03_survival_screening.py; on harvest (post-reset, ETA run ~Aug 23
   late) read void_reason and {arm}/data_starved off the ledger row
   directly, replay _check before narrating anything.
-- 2026-08-21 ~06:0x UTC (blackout-lean): Fable 91% (>90% stop) — liveness-only pass. LC.03 v2 alive at 1:45:30 elapsed (pid 310395, 3 workers 99.3% CPU, 360-385MB each), log header-only as expected, tree clean, HEAD pushed, no new auditor commits. No new work. Next iteration: same lean pass until meter resets Aug 24 04:59 UTC or run completes (ETA ~Aug 23 late); first post-resume iteration is HARVEST-ONLY per B6.
+- 2026-08-21 ~06:0x UTC (blackout-lean): Fable 91% (>90% stop) [CORRECTED
+  2026-08-21 ~07:1x, 25th audit B1: wrong meter — the stop reads
+  week:all-models, which was ~77%; no blackout existed] — liveness-only pass. LC.03 v2 alive at 1:45:30 elapsed (pid 310395, 3 workers 99.3% CPU, 360-385MB each), log header-only as expected, tree clean, HEAD pushed, no new auditor commits. No new work. Next iteration: same lean pass until meter resets Aug 24 04:59 UTC or run completes (ETA ~Aug 23 late); first post-resume iteration is HARVEST-ONLY per B6.
+- 2026-08-21 ~07:1x UTC (builder): PRE-REGISTERED, LC.03 v2 SUB-TWO-LEARNER
+  FORK (25th audit B2; committed BEFORE the v2 number lands, ETA ~Aug 23
+  late; recorded here because lc_03_survival_screening.py is untouchable
+  while its own run is in flight). **If the v2 re-screen records fewer than
+  two arms clearing the 3-sigma learner gate — including any VOID whose
+  replayed _check shows the ARMS failing rather than the rig — the screen is
+  CONCLUDED: fork (ii). No v3, no envelope growth, no re-roll.** The finding
+  is recorded as what it is: W0 does not discriminate these learning cores
+  at a reachable envelope — a result about the world and about LC.04's
+  premise, which goes to the Review/owner as design input, not back to the
+  queue as compute. Reasoning, fixed now so the number cannot argue: (a) the
+  4x envelope was sized BY the second learner's own measured curve
+  (dreamer-xs weakest-seed slope 2.95 s/life x half-persistence = +221 s vs
+  its +226 s requirement) — it was aimed at the edge on purpose, and a miss
+  at an envelope aimed by the arm's own data is evidence, not bad luck;
+  (b) growth does not converge: the requirement scales with added lives just
+  as the projected gain does, so an 8x screen (~380 core-h, ~5 days of this
+  4-core box) chases its own bar; (c) LC.03 has no re-screen cap in its
+  spec, which is exactly the ratchet shape B2 names — this paragraph is the
+  cap. CARVE-OUT, pre-declared: an APPARATUS fault — a crash, a GL/env
+  error, or a VOID whose replayed _check indicts the rig and not the arms —
+  is not a measurement; repair and relaunch at the SAME 4x envelope is
+  permitted and does not consume this fork. A PASS (two or more learners)
+  proceeds to the claim loop as registered. Owner guards (data-starved
+  re-screen, convergence, scale-transfer) apply only downstream of a PASS.

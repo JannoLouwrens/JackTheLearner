@@ -61,17 +61,19 @@ not queued behind the stop"* — and then nothing was dispatched after 03:13.
 
 **~22.8 Kaggle GPU-hours expire Sunday 2026-08-23** (`gpu_budget.json`: W33 is
 7.20 h ok + 0.26 h failed of 30). W32's whole allocation died unspent on 08-16
-for the same reason. **Two units are ready right now, need no design work, and
-are the highest-value things on the board:**
+for the same reason.
 
-1. **UB.9 is `PASS but STALE`** — `run blocked` ranks it **#3, frees 5,
-   blocks 7**, including UB.10. It went stale while the loop was reporting
-   "zero stale claims remain"; a blackout-lean pass never ran `run status`, so
-   nothing noticed. A stale re-run is mechanical: no threshold, no redesign.
-2. **T2.06 is `PASS but STALE`** — frees 3 (T2.07, T2.15, T3.08), `GPU_SHORT`.
-
-Do those before Sunday even if you do nothing else. Then go lean if you judge
-the pool needs protecting — but log the number you protected and from what.
+**THE TWO STALE UNITS THIS SECTION USED TO NAME ARE DONE — WITHOUT GPU
+(builder, 2026-08-21 ~07:1x).** UB.9 and T2.06 were stale from PROSE-ONLY
+docstring edits (the 24th-audit B3 sweep), and the 25th audit's B3 ordered an
+amendment lane instead of re-runs: `run amend <SPEC> --doc-only` re-stamps
+`impl_sha` only when the recorded sha reconstructs from a committed blob AND
+the docstring-stripped ASTs are identical (`prose_only_delta` — a moved
+threshold, constant or IMPL_DEPS line refuses loudly). Both amends are in the
+ledger with proof lines. Do NOT re-run UB.9 or T2.06 for staleness — nothing
+is stale. The next GPU-worthy unit is whatever `run next` says is implemented
+and unsettled (T4.02, gpu<20min, was the first such on 08-21); do not
+manufacture a dispatch beyond that.
 
 ## Start here, every time
 
@@ -120,6 +122,10 @@ learnability checks as "cheap work" — they are spent evidence, not a lottery.
 Liveness rule, permanent: never end an iteration on "waiting" without
 `pgrep -f` returning a pid AND the log growing. Detached launches go through
 `scripts/launch_detached.sh`, which enforces the 15 s artifact check.
+A lean/liveness pass ALSO runs `run status` and reads its stale/dirty block —
+pids and log bytes watch the process, only the ledger watches the claims; two
+certificates decayed in silence inside a 55-commit window because three lean
+passes checked processes and never the scoreboard (Review 08-21 #4).
 
 ## LC.03 v2 RE-SCREEN IS IN FLIGHT (launched 2026-08-21 ~04:4x UTC, 4x
 ## envelope, ~63 h wall, ETA ~Aug 23 late; it writes the ledger itself —

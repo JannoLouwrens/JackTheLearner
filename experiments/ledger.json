@@ -6339,14 +6339,14 @@
     },
     "T0.17": {
       "amended": [],
-      "attempt": 17,
-      "commit": "2dc8afd",
+      "attempt": 18,
+      "commit": "69f8f69",
       "compute_s": null,
       "control_metrics": {
         "detector_sees_amendment": false,
         "hand_edit_took_effect": true
       },
-      "duration_s": 4.35,
+      "duration_s": 4.38,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -6742,9 +6742,44 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "2dc8afd",
+          "control_metrics": {
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "3c13c26fcf9621a8",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "content_check_fires_on_postrun_edit": true,
+            "content_check_reports_unanswerable": true,
+            "content_check_spares_unedited_file": true,
+            "detector_flags_moved_dependency": true,
+            "detector_sees_amendment": true,
+            "detector_spares_unmoved_dependency": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "unknown_attempt_is_sticky": true,
+            "unprotected_pass_certificates": 0,
+            "unstamped_answered_by_content": 28,
+            "unstamped_records_examined": 28,
+            "unstamped_unanswerable": 0
+          },
+          "ran_at": "2026-08-20T16:12:16",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "3c13c26fcf9621a8",
+      "impl_sha": "ca4173dc965be8fe",
       "message": "",
       "metrics": {
         "amendment_is_attributable": true,
@@ -6766,7 +6801,7 @@
         "unstamped_records_examined": 28,
         "unstamped_unanswerable": 0
       },
-      "ran_at": "2026-08-20T16:12:16",
+      "ran_at": "2026-08-21T07:14:03",
       "seeds": [
         0
       ],
@@ -7613,14 +7648,14 @@
     },
     "T0.27": {
       "amended": [],
-      "attempt": 13,
-      "commit": "5a2e8e1",
+      "attempt": 14,
+      "commit": "69f8f69",
       "compute_s": null,
       "control_metrics": {
         "dirty_named": 1.0,
         "violations": 1
       },
-      "duration_s": 1.39,
+      "duration_s": 1.34,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -7989,9 +8024,44 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "5a2e8e1",
+          "control_metrics": {
+            "dirty_named": 1.0,
+            "violations": 1
+          },
+          "gpu_job_id": null,
+          "impl_sha": "4a2c365cd05a54d7",
+          "message": "",
+          "metrics": {
+            "artifact_survives_history": true,
+            "artifact_written": true,
+            "audit_admits_clean_shape": true,
+            "audit_flags_missing_metrics": true,
+            "audit_flags_unreachable_commit": true,
+            "error_does_not_sever": true,
+            "live_audit_can_flag": true,
+            "live_checked_pairs": 0,
+            "live_ledger_clean": true,
+            "live_unauditable_pairs": 28,
+            "live_violations": 0,
+            "properties_failed": 0,
+            "rerun_visible_not_amendment": true,
+            "seeded_checked_pairs": 2,
+            "seeded_violations": 1,
+            "unknowable_is_none_and_unauditable": true,
+            "void_lane_guarded": true,
+            "warns_on_dirty_fail": true
+          },
+          "ran_at": "2026-08-20T13:13:42",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
-      "impl_sha": "4a2c365cd05a54d7",
+      "impl_sha": "1e593c763af5e72d",
       "message": "",
       "metrics": {
         "artifact_survives_history": true,
@@ -8001,19 +8071,19 @@
         "audit_flags_unreachable_commit": true,
         "error_does_not_sever": true,
         "live_audit_can_flag": true,
-        "live_checked_pairs": 0,
+        "live_checked_pairs": 2,
         "live_ledger_clean": true,
         "live_unauditable_pairs": 28,
         "live_violations": 0,
         "properties_failed": 0,
         "rerun_visible_not_amendment": true,
-        "seeded_checked_pairs": 2,
+        "seeded_checked_pairs": 4,
         "seeded_violations": 1,
         "unknowable_is_none_and_unauditable": true,
         "void_lane_guarded": true,
         "warns_on_dirty_fail": true
       },
-      "ran_at": "2026-08-20T13:13:42",
+      "ran_at": "2026-08-21T07:14:04",
       "seeds": [
         0
       ],
@@ -9490,7 +9560,22 @@
       "status": "FAIL"
     },
     "T2.06": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-21T07:14:13",
+          "by": "25th audit B3",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "ee0e5195de14b3e9",
+              "proof": "reconstructed ee0e5195de14b3e9 from git f47c372bb755; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "45fe802aa898d499"
+            }
+          ],
+          "commit": "69f8f69",
+          "reason": "24th-audit B3 sweep (eec7d86) wrote the converged-vs-never-trained observable into the docstring where it belongs; the AST is unchanged and the recorded sha reconstructs from git \u2014 prose, not code"
+        }
+      ],
       "attempt": 1,
       "commit": "f47c372",
       "control_metrics": {
@@ -9508,7 +9593,7 @@
       "gpu_job_id": "jannolouwrens/jack-ladder-1787124880",
       "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
-      "impl_sha": "ee0e5195de14b3e9",
+      "impl_sha": "45fe802aa898d499",
       "message": "",
       "metrics": {
         "acc_act": [
@@ -11323,7 +11408,22 @@
       "status": "PASS"
     },
     "UB.9": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-21T07:14:11",
+          "by": "25th audit B3",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "fe3cc2736e77cbd6",
+              "proof": "reconstructed fe3cc2736e77cbd6 from git 36b03de677ef; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "5ac2b07086c22937"
+            }
+          ],
+          "commit": "69f8f69",
+          "reason": "24th-audit B3 sweep (eec7d86) wrote the converged-vs-never-trained observable into the docstring where it belongs; the AST is unchanged and the recorded sha reconstructs from git \u2014 prose, not code"
+        }
+      ],
       "attempt": 1,
       "commit": "380e0bb",
       "control_metrics": {
@@ -11335,7 +11435,7 @@
       "duration_s": 206.6,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "impl_sha": "fe3cc2736e77cbd6",
+      "impl_sha": "5ac2b07086c22937",
       "message": "",
       "metrics": {
         "audio_carries_bit": 1.0,
