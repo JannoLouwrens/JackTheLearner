@@ -10729,9 +10729,9 @@
     },
     "T4.02": {
       "amended": [],
-      "attempt": 3,
-      "commit": "b2ef02b",
-      "compute_s": 547.41,
+      "attempt": 4,
+      "commit": "99b75b3",
+      "compute_s": 506.19,
       "control_metrics": {
         "ctrl_finite_all": 1.0,
         "ctrl_finite_all_std": 0.0,
@@ -10768,8 +10768,8 @@
         "ctrl_vision_dominance_min": 11973.2142,
         "ctrl_vision_dominance_min_std": 0.0
       },
-      "duration_s": 556.28,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1787242385",
+      "duration_s": 514.69,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1787296685",
       "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
@@ -10905,6 +10905,185 @@
             2
           ],
           "status": "FAIL"
+        },
+        {
+          "commit": "b2ef02b",
+          "control_metrics": {
+            "ctrl_finite_all": 1.0,
+            "ctrl_finite_all_std": 0.0,
+            "ctrl_fired_ok_all": 1.0,
+            "ctrl_fired_ok_all_std": 0.0,
+            "ctrl_norms_per_seed": [
+              {
+                "audio": 0.001846,
+                "language": 0.067748,
+                "proprio": 0.000848,
+                "touch": 0.004747,
+                "vision": 13.595792
+              },
+              {
+                "audio": 0.001717,
+                "language": 0.070697,
+                "proprio": 0.000852,
+                "touch": 0.004715,
+                "vision": 10.200428
+              },
+              {
+                "audio": 0.001575,
+                "language": 0.062962,
+                "proprio": 0.000753,
+                "touch": 0.003854,
+                "vision": 9.229445
+              }
+            ],
+            "ctrl_ratio_per_seed": [
+              16035.0094,
+              11973.2142,
+              12259.9808
+            ],
+            "ctrl_vision_dominance_min": 11973.2142,
+            "ctrl_vision_dominance_min_std": 0.0
+          },
+          "gpu_job_id": "jannolouwrens/jack-ladder-1787242385",
+          "impl_sha": "803cafd075f5e93c",
+          "message": "pre-registered threshold not met",
+          "metrics": {
+            "backend": "kaggle",
+            "finite_all": 1.0,
+            "finite_all_std": 0.0,
+            "fired_ok_all": 1.0,
+            "fired_ok_all_std": 0.0,
+            "gpu": "Tesla P100-PCIE-16GB",
+            "loss_decreased_all": 1.0,
+            "loss_decreased_all_std": 0.0,
+            "loss_first_per_seed": [
+              0.8888,
+              0.8778,
+              0.8913
+            ],
+            "loss_last_per_seed": [
+              0.5065,
+              0.5398,
+              0.5161
+            ],
+            "max_modality_grad_ratio": 27.2781,
+            "max_modality_grad_ratio_std": 0.0,
+            "n_params": 58244744.0,
+            "n_params_std": 0.0,
+            "norms_per_seed": [
+              {
+                "audio": 0.000106,
+                "language": 0.000679,
+                "proprio": 0.000775,
+                "touch": 0.002904,
+                "vision": 0.000732
+              },
+              {
+                "audio": 8e-05,
+                "language": 0.000971,
+                "proprio": 0.000817,
+                "touch": 0.001025,
+                "vision": 0.000704
+              },
+              {
+                "audio": 0.000105,
+                "language": 0.000688,
+                "proprio": 0.000547,
+                "touch": 0.002686,
+                "vision": 0.000923
+              }
+            ],
+            "ratio_first_per_seed": [
+              37.7172,
+              29.6162,
+              33.9213
+            ],
+            "ratio_per_seed": [
+              27.2781,
+              12.8071,
+              25.5003
+            ],
+            "share_max": 0.198,
+            "share_max_std": 2.77556e-17,
+            "share_min": 0.1979,
+            "share_min_std": 0.0
+          },
+          "ran_at": "2026-08-20T16:22:17",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "status": "FAIL",
+          "supersedes_fail": {
+            "commit": "cdbb08e",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "e3e6a8efe54cef96",
+            "metrics": {
+              "backend": "kaggle",
+              "finite_all": 1.0,
+              "finite_all_std": 0.0,
+              "fired_ok_all": 1.0,
+              "fired_ok_all_std": 0.0,
+              "gpu": "Tesla P100-PCIE-16GB",
+              "loss_decreased_all": 1.0,
+              "loss_decreased_all_std": 0.0,
+              "loss_first_per_seed": [
+                0.8888,
+                0.8778,
+                0.8913
+              ],
+              "loss_last_per_seed": [
+                0.5065,
+                0.5394,
+                0.5162
+              ],
+              "max_modality_grad_ratio": 29.7811,
+              "max_modality_grad_ratio_std": 0.0,
+              "n_params": 58244744.0,
+              "n_params_std": 0.0,
+              "norms_per_seed": [
+                {
+                  "audio": 0.000102,
+                  "language": 0.000971,
+                  "proprio": 0.000785,
+                  "touch": 0.002978,
+                  "vision": 0.000982
+                },
+                {
+                  "audio": 8e-05,
+                  "language": 0.000831,
+                  "proprio": 0.00081,
+                  "touch": 0.001003,
+                  "vision": 0.000484
+                },
+                {
+                  "audio": 9e-05,
+                  "language": 0.000774,
+                  "proprio": 0.00055,
+                  "touch": 0.002671,
+                  "vision": 0.00057
+                }
+              ],
+              "ratio_first_per_seed": [
+                37.7137,
+                29.6179,
+                33.9198
+              ],
+              "ratio_per_seed": [
+                29.1312,
+                12.4991,
+                29.7811
+              ],
+              "share_max": 0.198,
+              "share_max_std": 2.77556e-17,
+              "share_min": 0.1979,
+              "share_min_std": 0.0
+            },
+            "ran_at": "2026-08-13T21:32:05",
+            "status": "FAIL"
+          }
         }
       ],
       "impl_sha": "803cafd075f5e93c",
@@ -10924,53 +11103,53 @@
           0.8913
         ],
         "loss_last_per_seed": [
-          0.5065,
-          0.5398,
-          0.5161
+          0.507,
+          0.5389,
+          0.516
         ],
-        "max_modality_grad_ratio": 27.2781,
-        "max_modality_grad_ratio_std": 0.0,
+        "max_modality_grad_ratio": 30.1197,
+        "max_modality_grad_ratio_std": 3.55271e-15,
         "n_params": 58244744.0,
         "n_params_std": 0.0,
         "norms_per_seed": [
           {
-            "audio": 0.000106,
-            "language": 0.000679,
-            "proprio": 0.000775,
-            "touch": 0.002904,
-            "vision": 0.000732
+            "audio": 0.000104,
+            "language": 0.00084,
+            "proprio": 0.000792,
+            "touch": 0.002933,
+            "vision": 0.000919
           },
           {
             "audio": 8e-05,
-            "language": 0.000971,
-            "proprio": 0.000817,
-            "touch": 0.001025,
-            "vision": 0.000704
+            "language": 0.000579,
+            "proprio": 0.000809,
+            "touch": 0.000981,
+            "vision": 0.000471
           },
           {
-            "audio": 0.000105,
-            "language": 0.000688,
-            "proprio": 0.000547,
-            "touch": 0.002686,
-            "vision": 0.000923
+            "audio": 8.8e-05,
+            "language": 0.000762,
+            "proprio": 0.000555,
+            "touch": 0.002654,
+            "vision": 0.000565
           }
         ],
         "ratio_first_per_seed": [
-          37.7172,
-          29.6162,
-          33.9213
+          37.7173,
+          29.6161,
+          33.9214
         ],
         "ratio_per_seed": [
-          27.2781,
-          12.8071,
-          25.5003
+          28.0783,
+          12.2995,
+          30.1197
         ],
         "share_max": 0.198,
         "share_max_std": 2.77556e-17,
         "share_min": 0.1979,
         "share_min_std": 0.0
       },
-      "ran_at": "2026-08-20T16:22:17",
+      "ran_at": "2026-08-21T07:26:36",
       "seeds": [
         0,
         1,
@@ -10979,10 +11158,10 @@
       "spec_id": "T4.02",
       "status": "FAIL",
       "supersedes_fail": {
-        "commit": "cdbb08e",
+        "commit": "b2ef02b",
         "dirty": false,
-        "impl_changed": true,
-        "impl_sha": "e3e6a8efe54cef96",
+        "impl_changed": false,
+        "impl_sha": "803cafd075f5e93c",
         "metrics": {
           "backend": "kaggle",
           "finite_all": 1.0,
@@ -10999,52 +11178,52 @@
           ],
           "loss_last_per_seed": [
             0.5065,
-            0.5394,
-            0.5162
+            0.5398,
+            0.5161
           ],
-          "max_modality_grad_ratio": 29.7811,
+          "max_modality_grad_ratio": 27.2781,
           "max_modality_grad_ratio_std": 0.0,
           "n_params": 58244744.0,
           "n_params_std": 0.0,
           "norms_per_seed": [
             {
-              "audio": 0.000102,
-              "language": 0.000971,
-              "proprio": 0.000785,
-              "touch": 0.002978,
-              "vision": 0.000982
+              "audio": 0.000106,
+              "language": 0.000679,
+              "proprio": 0.000775,
+              "touch": 0.002904,
+              "vision": 0.000732
             },
             {
               "audio": 8e-05,
-              "language": 0.000831,
-              "proprio": 0.00081,
-              "touch": 0.001003,
-              "vision": 0.000484
+              "language": 0.000971,
+              "proprio": 0.000817,
+              "touch": 0.001025,
+              "vision": 0.000704
             },
             {
-              "audio": 9e-05,
-              "language": 0.000774,
-              "proprio": 0.00055,
-              "touch": 0.002671,
-              "vision": 0.00057
+              "audio": 0.000105,
+              "language": 0.000688,
+              "proprio": 0.000547,
+              "touch": 0.002686,
+              "vision": 0.000923
             }
           ],
           "ratio_first_per_seed": [
-            37.7137,
-            29.6179,
-            33.9198
+            37.7172,
+            29.6162,
+            33.9213
           ],
           "ratio_per_seed": [
-            29.1312,
-            12.4991,
-            29.7811
+            27.2781,
+            12.8071,
+            25.5003
           ],
           "share_max": 0.198,
           "share_max_std": 2.77556e-17,
           "share_min": 0.1979,
           "share_min_std": 0.0
         },
-        "ran_at": "2026-08-13T21:32:05",
+        "ran_at": "2026-08-20T16:22:17",
         "status": "FAIL"
       }
     },
