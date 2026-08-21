@@ -5065,3 +5065,52 @@ B3 (hardware stamp + gpu_job_id) still open.
   When it lands, LC.04/OP.01/PS.04/DP.01 unblock and SH.01 un-parks toward
   LC.04 — the ring refills. (2) T3.01/UB.10/SM.02: touch nothing. (3) At 85%
   do not start anything multi-hour that is not a harvest.
+- 2026-08-21 ~01:1x UTC (builder): 24TH-AUDIT B1+B2 EXECUTED — T3.01
+  ADJUDICATION RECORDED, v3 REDESIGN COMMITTED, REGISTERED RUN DISPATCHED.
+  B1: the overseer's ruling (NO RIG FAULT — flat rows on the ln 4
+  max-entropy fixed point are correct pre-memorisation behaviour; the
+  seed-1 "anomaly" is a plateau-escape threshold between lr 1e-4 and 1e-3)
+  appended to t301_shuffle_probe.py's PROBE RESULT block, R3 finding
+  preserved. B2(a): deterministic structural leak gate added to
+  t3_01_ablate_vision.py — sha256 over all raw train/test frames per seed,
+  any collision VOIDs, absent key reads 999 -> VOID loudly. B2(b): fork
+  committed BEFORE any new number, fate (ii) — SHUFFLE_FIT_FLOOR demoted to
+  recorded diagnostic (constant unmoved at 0.35; fate (i) rejected on the
+  probe's own pricing: best row needs >124 epochs, seeds 0/2 never memorise
+  at any tested lr in the doubled budget); no loss-fall proxy adopted per
+  the audit's proscription; SHUFFLE_BAND stays VOID (positive-evidence-only
+  gate). Dry 12/12 verdict paths ok (3 new cases); CPU smoke hash_overlap 0.
+  DISPATCHED via dispatch.sh: kernel jack-ladder-1787274738, head f702251,
+  est 1.05 h W33 (~21.8 h left after), watcher pid 274269 detached, log
+  /data/tmp/dispatch_t3_01.log — the watcher writes the ledger itself. If
+  VOID on attribution again, the ONE-DIAGNOSTIC CAP fires: PARK, no lottery.
+  ladder_prompt's T3.01 section rewritten (escalation -> in-flight).
+  LC.03 at 01:14: main pid 92854 alive, all 3 seed artifacts landed
+  (23:55/00:17/00:30), workers ~15 h cputime, post-seed phase — it writes
+  the ledger itself; NOT harvested this iteration, it had not exited.
+  B6, THE HARD-STOP PLAN (meter 01:14: Fable 86%, all-models 74%, stop 90%,
+  resets Aug 24 04:59 UTC) — what the loop does if lib_usage.sh trips with
+  LC.03 harvested and D1 still open: (1) BEFORE the stop, every iteration
+  is dispatch-before-polish and commit+push-before-finish, so the dark
+  window can contain zero stranded work — detached locals (LC.03 pattern)
+  and Kaggle kernels compute through a blackout and write their own
+  receipts; W33 hours die Sun 08-23 REGARDLESS, so anything worth W33 must
+  be dispatched before ~88%, not queued behind the stop. (2) AT the stop,
+  nothing is running at this desk that needs tending: the two standing
+  watchers (dispatch.sh setsid, launch_detached.sh) are session-independent
+  by construction. (3) ON RESUME (owner .usage-resumed or the Aug 24
+  reset), the first iteration is harvest-only: read ledger + journal tail,
+  collect any artifacts/ledger rows written while dark, commit receipts —
+  the 08-15 blackout's lesson (4.3 days, nothing lost server-side, but the
+  loop paid archaeology tax) is the reason this plan now exists in writing.
+  (4) The structural fix (reserved auditor slice so a blackout is OBSERVED)
+  is on the owner's desk, PROGRESS FOR THE OWNER #1 — not re-escalated.
+  NEXT ITERATION: (1) harvest LC.03 (apply B5: control (e) is a rig
+  tripwire, not must-fail; if VOID by (c)/(d) read eats_at_death in
+  experiments/artifacts/lc03_curves_seed*.json FIRST) and harvest T3.01
+  (~02:15 ETA; do NOT resubmit — JACK_REUSE_KERNEL reattach if the watcher
+  died). (2) B3: the at-chance-control sweep (one docstring line per gate
+  naming the observable that separates converged-found-nothing from
+  never-trained; findings recorded, no silent gates). (3) B4: run the
+  W0.BAL bakeoff on CPU, attach numbers to D9, adopt nothing. (4) At 86%
+  stay lean — harvest-and-commit shape.
