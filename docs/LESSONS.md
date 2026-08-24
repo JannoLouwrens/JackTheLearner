@@ -4625,3 +4625,31 @@ replay; the v2 row named its own branch (`fewer than two learners
 (1 cleared)`) and the offline replay merely CONFIRMED it. A verdict that
 names its branch at write time turns every future harvest from archaeology
 into a read.
+
+## A gap-filler spec can lap a stronger design already sitting in the queue — cross-check runs in BOTH directions
+
+**The instance (found 2026-08-24, cost paid 2026-08-19).** NE.08 — the
+death-and-retry claim with a C-ONELIFE null, censoring rules and bootstrap-flag
+discipline — was fully designed in `NEEDS_AND_DEATH.md` §7 on 2026-08-09 and
+sat in the INTEGRATION_QUEUE, unregistered, for fifteen days. Meanwhile the
+coverage audit (correctly) flagged death & retry as a zero-spec commitment,
+and XL.01 was registered on 08-19 as a gap-filler — a narrower instrument for
+the same claim, designed fresh instead of pulled from the queue. XL.01 then
+ran and FAILED partly on power (identical fixture read 0.084 on worlds 0-2
+and 1.003 on worlds 3-5: the instrument cannot resolve 2x at 3 seeds x 8
+lives) — a hazard the queued design had already priced with its shared
+fresh-world probe and per-life-curve reporting. The run was not wasted (its
+power measurement now BINDS NE.08's implementer, carried in the registry
+notes), but the project spent a CPU_LONG run learning what a queue grep would
+have surfaced for free.
+
+**The general rule.** The queue protocol's cross-check runs from the queue
+OUTWARD: before registering a queue entry, grep the other research docs for
+refutations. This failure is the MIRROR: before registering a spec born
+anywhere else — a coverage gap, an overseer order, an audit finding — grep
+the PENDING queue entries for a designed spec covering the same claim.
+Register the designed one, or carry its guards into yours and say so. A
+commitment gap makes gap-filling feel urgent, and urgency is exactly when the
+fifteen-day-old stronger design is invisible: it frees nothing, it blocks
+nothing, and no ranking surfaces it — the same blindness the standing
+zero-pass rule exists to fix, one shelf over.
