@@ -70,6 +70,42 @@ The `costs N specs` column is COMPUTED from the live dependency graph, not
 typed. Rank your attention by it.
 
 
+## THIRD, EVERY AUDIT: can the architecture still lose?
+
+    /data/venvs/jackthelearner/bin/python -m experiments.champions --check
+
+Owner ruling, 2026-08-24: *"this project depends on research and testing at
+EVEERY SINGLE STAGE"* — and specifically on architecture. An audit that day
+found that of 179 specs **not one raced brain organisations against each
+other**: one shared brain was a premise of the ladder, never an outcome of it.
+`SYSTEM.md` now carries the three-class invariant (ENDS fixed, **ARCHITECTURE
+always contested**, CONDUCT fixed) and the standing rule that **no architectural
+seat may be held without a registered, EXISTING challenger**.
+
+This tool resolves every arena named in `docs/CHAMPIONS.md` against `BY_ID`.
+Findings:
+
+- **`ARENA-MISSING`** — the seat names a spec that does not exist, so it looks
+  contestable and is immovable. **8 seats today**, including four whole empty
+  families: `W.1`-`W.7` (and note the World seat is held **BY VERDICT** — the
+  strongest marking in the file — with a rematch trigger pointing at seven
+  specs nobody wrote), `PL.*`, `LG.*`, `LT.*`, plus `T2.21`/`D1.0`.
+  **The ratchet shrinks by REGISTERING the spec, never by deleting the arena
+  reference** — deleting converts an ARENA-MISSING into a NO-ARENA and makes the
+  seat permanently safe, which is the opposite of the repair.
+- **`NO-ARENA`** — no challenger named at all; nothing could ever unseat the
+  holder. Name one, or say in `CHAMPIONS.md` why the seat is an END rather than
+  an architecture.
+- **`UNCONTESTED`** — held BY DEFAULT or BY DECREE with a real arena that has
+  never run. Schedule it.
+
+A known limitation, stated rather than papered over: `CHAMPIONS.md` has no
+declaration syntax, so markings are inferred from the table structure. The
+durable repair is a per-seat `HELD:` / `ARENA:` marker in the same idiom as
+`COVERS:` and `DECIDE:` — proposed in the tool's docstring, not yet taken. If
+you take it, the parser gets simpler and stops guessing.
+
+
 ## The audit — work through every item
 
 **1. Integrity of the ledger.** For each PASS in `experiments/ledger.json`:
