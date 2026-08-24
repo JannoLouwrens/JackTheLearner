@@ -5501,3 +5501,42 @@ B3 (hardware stamp + gpu_job_id) still open.
   is the largest owner-free unblock in the ladder (8 specs). B3 (UB.9's
   conditional-claim statement) still prose. D1/D7/D8/D9/D10 on the owner's
   desk; W34 Kaggle fresh (30 h, dies Sun 08-30).
+
+2026-08-24 ~07:2x (builder): THE SEVEN-NEED INTEGRATOR IS BUILT —
+  `experiments/needs.py`, the §2.3 suite (e, w, p, T, f, c, i), same
+  caller-owns-mj_step decision contract as DriveLayer, drives.py untouched
+  (its certificates stand on exact bytes; only the shared kernel — BodyRef,
+  the contact scan, Q_REST — is imported). This was the largest owner-free
+  unblock named by the 26th audit and yesterday's journal: NE.01 is now
+  implementable, and behind it the whole NE family (8 specs). Self-test
+  21/21 on first run, with the doc's own worked numbers as fixtures: sleep
+  pressure 0.05 -> 0.697 over a day -> 0.057 over a night (§2.3's stated
+  0.70/0.06); night-open thermal equilibrium 33.40 C (the k_dry/c_sh
+  derivation predicts 37 - 0.3*DELTA_T_NIGHT = 33.4 exactly); coarse(1s)
+  vs fine(0.2s) night trajectory differs 0.0001 C against §9's 0.2 C gate;
+  K&G deprivation direction guarded by an import-time assert (two of three
+  published sources misprint the inequality — a check, not prose). Declared
+  divergences from drives.py, each per the doc's letter: mouth-gated eating,
+  drowning as a 20 s death routed through i, wetness demoted to a thermal
+  multiplier. Proposals marked as proposals throughout (c_sh sized so the
+  shiver cap lands at the cold saturation, c_sw so sweat doubles at the hot
+  one, k_dry so a resting dry day sits at 37 C, DELTA_T_NIGHT=12 for NE.01
+  to calibrate, food respawns = PS.01's measured values x3 per the §0.1
+  retiming, preserving C1-C3). ONE DISCREPANCY FOUND AND FLAGGED, not
+  silently fixed: NE.01's control (i) says the statue "dies of starvation",
+  but §2.3's own constants kill it by DEHYDRATION at ~570 s (450 s tank +
+  120 s grace) vs starvation's 2,100 s — the prose predates the water
+  retiming. Pinned by self-test check 6, recorded in NE.01's registry notes
+  with the resolution rule (gate on death-with-recorded-cause; correct the
+  prose before the registered run; never weaken the gate). Meter at start:
+  session 37%, week:Fable 7%, week:all models 6% — the gate reads
+  `all models` and it is the number acted on; fresh week, no burn-rate
+  concern for a CPU-only unit. Ledger untouched at 84/179 (this is
+  substrate, not a claim). NEXT ITERATION: implement NE.01
+  (`experiments/tests/ne_01_*.py`) — statue + scripted-forager controls,
+  random-death spread, sky_occlusion reachability, the §9 coarse/fine sleep
+  check, and the flagged cause-word correction at implementation time. j0/
+  alpha come from borrow_metrics("PS.01"), p_max from its measured
+  P_bar(1)=1434.8 W. W34 Kaggle fresh (30 h, dies Sun 08-30) but NE.01 is
+  CPU — no dispatch owed. B3 (UB.9 conditional-claim statement) still prose.
+  D1/D7/D8/D9/D10 on the owner's desk.

@@ -3294,7 +3294,18 @@ EXPANSION: list[Spec] = [
                "suite (e, i, w); the seven-need integrator of §2.3 is TO BUILD, "
                "and this spec is what makes its constants measurements. NE.01 "
                "must also verify the coarse-step thermal trajectory under sleep "
-               "matches the fine-step one within 0.2C over a night (§9).\n"),
+               "matches the fine-step one within 0.2C over a night (§9). "
+               "BUILT 2026-08-24: `experiments/needs.py` (NeedLayer, same "
+               "decision contract as DriveLayer; drives.py untouched), 21/21 "
+               "known-answer self-checks including the doc's own worked "
+               "numbers. DISCREPANCY FLAGGED AT BUILD TIME, resolve BEFORE the "
+               "registered run: under §2.3's own constants the do-nothing "
+               "statue dies of DEHYDRATION at ~570 s (450 s tank + 120 s "
+               "grace), not starvation (1,800 + 300 s) — control (i)'s "
+               "'starvation' word predates the water retiming. The control's "
+               "binding clause (doing nothing must be lethal) is unchanged; "
+               "the implementation must gate on death-with-recorded-cause and "
+               "correct the prose, not weaken the gate.\n"),
 
     Spec("NE.02", 3, "Every need earns its place (the need x ablation matrix, standing)",
          hypothesis="For each of the seven needs, disabling it (delta clamped to "
