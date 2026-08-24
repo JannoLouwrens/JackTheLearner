@@ -5645,3 +5645,39 @@ B3 (hardware stamp + gpu_job_id) still open.
   if the Review has not run, leave it routed — do not re-roll. (3) Then
   `run next` / `run coverage` as usual; W34 has fresh Kaggle hours and the
   constraint is a candidate worth submitting, not the hours.
+- 2026-08-24 ~17:4x UTC (builder): BA.02 harvested + DP.05 implemented, piloted,
+  and REGISTERED RUN LAUNCHED. Meters at 17:40: week:all models 30% (the gate;
+  pace line comfortable), week:Fable 53% (not the gate), session 27%.
+  (1) BA.02 attempt-3 harvest committed promptly (38e2a6d): the detached
+  re-run landed the predicted D8-reason VOID with a fresh clean stamp
+  (impl_sha 452de81d, ran 16:45:57); metrics identical to the 08-14 row on
+  every digit except wall_s. Re-certification complete; BA.02 stays behind D8.
+  (2) The unit: standing rule -> run coverage read 14 zero-pass commitments;
+  every runnable zero-pass claim is parked/blocked (SM.02, BA.02/D8,
+  SH.01->LC.04/D10, XL.01 FAIL) EXCEPT fast/slow (8 declared, 0 passing, the
+  most-invested) whose DP.05 had deps PASS and no test file. Implemented
+  dp_05_lookahead_pays_in_w0.py: DP.00's design re-pointed at W0 — snapshot/
+  restore MPC (the model IS the simulator by construction), arms react_k5/
+  react_k10 (strengthened null, doubled search) vs plan_h4/plan_h10, metric =
+  lifespan gap (MIN 20 s + 3 sigma), reference chaser as instrument gate,
+  disarmed-W0 dense-reward control. Four pilots on seeds 90-91 (disjoint from
+  run seeds), all green after the fidelity pilot caught TWO real holes —
+  Water.apply's stale xfrc row on pool-exit (a phantom force, a REAL WORLD BUG
+  now routed to the Review with its staleness bill — see LESSONS d1bc3d1) and
+  W0's one-substep-stale derived state at the decision boundary (every
+  compared path now passes the same refreshed boundary). Reference: 200.0 s
+  cap/8 eats (s90), 183.8/6 (s91) vs 132 s ceiling — food pays. Control: plan
+  gains NOTHING disarmed (-0.006/-0.028 vs tol 0.02, broken_gap ~3x floor).
+  Committed eacafe2 BEFORE launch (clean stamp), pushed, then
+  launch_detached.sh: pid 1331178, log /data/dp05_registered.log, LAUNCH
+  17:39 UTC per header, worst-case ~115 min -> lands ~19:15-19:35.
+  NEXT ITERATION: (1) harvest DP.05 — commit the ledger row PROMPTLY (an
+  uncommitted row condemns the next attempt to a dirty stamp — NE.01's scar).
+  Any verdict is informative: PASS unblocks the fast/slow axis in the real
+  world; FAIL at a declared K5xH10 envelope with the reference green routes
+  "fix the world" (traps/delays/irreversibility) to the Review beside NE.01's
+  occlusion fork; VOID names its gate — read the log before believing it.
+  (2) The Water.apply pool-exit phantom-force bug awaits the Review's
+  world-design desk (fix changes dynamics under existing certificates).
+  (3) W34 Kaggle is fresh (30 h); the constraint is still a candidate worth
+  submitting, not hours — do not manufacture a dispatch.
