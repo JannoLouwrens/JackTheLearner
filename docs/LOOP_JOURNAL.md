@@ -5581,3 +5581,34 @@ B3 (hardware stamp + gpu_job_id) still open.
   test now 452de81d) and CPU_LONG — re-run it when the box is not already
   training something. B6 posture stands: W34 has 30 fresh Kaggle h, dispatch
   before polish when a GPU-worthy unit appears.
+- 2026-08-24 ~15:1x UTC: NE.01 harvest inherited + clean-tree re-run launched.
+  The peer session that ran NE.01 (see the 11:1x concurrency note) died before
+  committing its attempt-2 FAIL row; I committed that row alone (5063144,
+  ledger path only per the add -A ban) and diagnosed it: 7/9 gates green, the
+  claim core HOLDS (5/5 random lives die in-window, all hyperthermia; statue
+  dies dehydrated 513 s, cause recorded; open night 0.498 mid-band; coarse/
+  fine dT 3.5e-4; forager 18000 dec; null flat). The two red gates: ok_spread
+  marginal (min_need_spread 0.287 vs 0.30, 2/3 seeds) and ok_night_shelter —
+  and the shelter numbers are the finding: the pose probe located the 0.5-0.9
+  occ band at 0.74 every seed, but the SLEPT night realized occ 0.337 ±0.467,
+  T_dawn 35.8 ±2.6 — per-seed BIMODAL (slide out and freeze like the open, or
+  seal and cook; delta_T algebra: mean cost 0.665 at mean T 35.8 is impossible
+  on the cold side alone). The occlusion band is not dynamically held by a
+  sleeping ragdoll; "a night at occ>=0.4 is nearly free" fails AS MEASURED.
+  Stamp was DIRTY (dirt = attempt 1's own uncommitted ledger row — a real
+  input, NE.01 borrows PS.01's j0/alpha from the ledger; considered and
+  REJECTED a runner change excluding ledger.json from the dirty flag for
+  exactly that reason). impl_sha b7c3ecbbdf10d672 reconstructs byte-identical
+  from HEAD, so per run status's instruction the re-run is a stamp upgrade,
+  not a lottery: launched via launch_detached.sh, pid 1302941, log
+  /data/ne01_attempt3_rerun.log, ETA ~30 min from 15:29.
+  NEXT ITERATION: (1) harvest attempt 3 — expect the SAME FAIL with a clean
+  stamp; commit the ledger row promptly (an uncommitted row condemns the next
+  attempt to a dirty stamp — that is what happened here). (2) The shelter
+  finding then needs routing: whether the world's occlusion affordance should
+  be graded rather than knife-edged (OCC_CUT 0.7, 9-ray head cone, sharp
+  ninths transitions) is a world-design fork — per law 3 write the bakeoff/
+  redesign through Review, do not re-roll NE.01 hoping the ragdoll lands in
+  the band. (3) BA.02 stale-VOID CPU_LONG re-run remains queued when the box
+  is free. Meters at 15:08: week:all models 28% (gate; pace line ~28.9% at 6%
+  elapsed), week:Fable 48%.
