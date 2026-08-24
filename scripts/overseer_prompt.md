@@ -37,6 +37,39 @@ it to COMMITMENTS in the same commit - a coverage tool that silently stops
 covering something is worse than none.
 
 
+## SECOND, EVERY AUDIT: is anything waiting on the owner that should not be?
+
+    /data/venvs/jackthelearner/bin/python -m experiments.decisions --check
+
+This exists because of a worse miss than the coverage one. `D1` sat OPEN for
+twenty days with `evidence complete` in its own title, blocking **38 specs** -
+the whole curiosity family, the whole unified-brain family, six of seven Tier 5
+claims - while all four of its arms were runnable and nobody wrote the bakeoff.
+Every audit reported it correctly. None of them could act on it, because
+SYSTEM.md said both "decisions are made by bakeoff, never by argument" and
+"architecture calls are the owner's". Rule 3 now beats that clause explicitly.
+
+What to do with what it prints:
+
+- **`MEANS-ESCALATED`** - a fork that a measurement could settle is sitting on
+  the owner's desk. This is the D1 disease and it is a HARD violation: write the
+  bakeoff, run it, delete the entry. Do not ask.
+- **`UNDECLARED`** - an open decision with no default and no deadline, so
+  silence deadlocks it forever. Arm it: classify `means` or `goal`, and for a
+  goal give a `default` and a `decide_by`. **A default may only pick among
+  ALREADY-PERMITTED actions** - never editing GOAL.md, never weakening a
+  threshold, never widening what is allowed. Arm at least one per audit; the
+  ratchet may shrink and may never grow.
+- **`OVERDUE - DEFAULT IS DUE TO FIRE`** - the owner did not answer by the date
+  they were given. Fire the default, journal it loudly with the words "the
+  owner did not rule by <date>, so the pre-registered default fired", and say
+  how to reverse it. Do not silently extend the deadline; a deadline that moves
+  when it is reached is the deadlock it replaced.
+
+The `costs N specs` column is COMPUTED from the live dependency graph, not
+typed. Rank your attention by it.
+
+
 ## The audit — work through every item
 
 **1. Integrity of the ledger.** For each PASS in `experiments/ledger.json`:

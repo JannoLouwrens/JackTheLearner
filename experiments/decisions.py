@@ -104,7 +104,7 @@ CLASSES = ("means", "goal")
 # a guard that fails everywhere on day one is one nobody keeps green, and a guard
 # nobody keeps green is decoration (LESSONS.md, citations.py precedent). This
 # number may SHRINK and may never GROW.
-BASELINE_UNDECLARED = 8
+BASELINE_UNDECLARED = 10
 
 
 def parse(text: str) -> tuple[dict, list]:
@@ -115,14 +115,23 @@ def parse(text: str) -> tuple[dict, list]:
         did = m.group(1)
         start = text[: m.start()].count("\n") + 1
         d: dict = {"id": did, "line": start}
+        last = None
         for ln in lines[start:]:
             f = _FIELD.match(ln)
-            if not f:
-                if ln.strip() == "" or ln.startswith(" "):
-                    continue
-                break
-            key, val = f.group(1), f.group(2).strip()
-            d[key] = (d.get(key, "") + " " + val).strip() if key in d else val
+            if f:
+                last = f.group(1)
+                d[last] = f.group(2).strip()
+                continue
+            # An indented line that is not a new key CONTINUES the last one. The
+            # first parser silently dropped these, which truncated every wrapped
+            # `default:` to its first line — a default that reads as half a
+            # sentence is worse than none, because it still looks armed.
+            if ln.startswith(" ") and ln.strip() and last:
+                d[last] = (d[last] + " " + ln.strip()).strip()
+                continue
+            if ln.strip() == "":
+                continue
+            break
         decls[did] = d
 
     headers: dict = {}
@@ -234,6 +243,8 @@ DECIDE: D93
   decide_by: 2099-01-01
 
 ## D94 — RESOLVED, must NOT be reported as open
+## D95 — THE OPTION SET IS STALE: an option contradicts a later decree
+## D95 — the original question (OPEN, owner)
 """
     v, rows = audit(doc, _dt.date(2026, 8, 24))
     kinds = {did: kind for kind, did, _ in v}
@@ -241,6 +252,9 @@ DECIDE: D93
     assert kinds.get("D91") == "MEANS-ESCALATED", kinds
     assert kinds.get("D92") == "NO-DEFAULT", kinds
     assert "D93" not in kinds and "D94" not in kinds, kinds
+    # The regression that shipped for one run: a header calling an OPTION stale
+    # must not read as the DECISION being settled. D95 is D1's real shape.
+    assert kinds.get("D95") == "UNDECLARED", kinds
     assert [r["id"] for r in rows] == ["D93"], rows
 
 

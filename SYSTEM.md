@@ -67,6 +67,46 @@ task.
    gate, and a margin. See `experiments/bakeoff.py`. If you find yourself
    reasoning about which approach is better, stop and write the bakeoff.
 
+   **This rule beats "escalate architecture calls" below, and it says so here
+   because for twenty days it did not** (owner ruling, 2026-08-24: *"in the
+   future he mustnt get blocked by anything like this but instead test and try
+   and research both and decide at end which works better"*). `D1 — does the 57M
+   trunk stay in the control path?` sat OPEN with `evidence complete` in its own
+   title, blocking **35 specs**, while all four of its arms were runnable and one
+   line further down this file said architecture calls belong to the owner. The
+   loop obeyed both rules perfectly and stalled for three weeks. **A fork whose
+   arms can both be run is not an escalation. It is an experiment somebody has
+   not written yet.**
+
+   **THE ONE INVARIANT THAT KEEPS THAT SAFE:**
+
+   > **A measurement may choose among PERMITTED arms.
+   > It may never choose WHAT IS PERMITTED.**
+
+   *Which architecture learns better* is a question about **means**: run both,
+   let the margin decide, never ask. *Is a frozen component permitted inside
+   Jack* is a question about the **goal** — it defines what winning is, and an
+   experiment allowed to pick its own success criterion will drift to whatever
+   is cheapest to demonstrate. That is the exact failure pre-registration exists
+   to prevent, so goal questions still go to the owner, and **only** those.
+
+   **AND AN ESCALATION MAY NOT DEADLOCK.** D1's real defect was not that it was
+   asked — it was that it had no default and no clock, so silence and "not yet"
+   were indistinguishable forever. Every goal-class entry in
+   `docs/DECISIONS_NEEDED.md` now carries a `DECIDE:` block with a **default**
+   and a **decide_by**; if the date passes unanswered the default fires, loudly
+   and in the journal. A default may only pick among **already-permitted**
+   actions — never editing `GOAL.md`, never weakening a threshold, never
+   widening what is allowed — so an unattended firing costs at worst an
+   experiment the owner would have sequenced differently, and the ledger's
+   history makes it reversible. `experiments/decisions.py` enforces this; the
+   overseer runs it every audit.
+
+   *The cost of this rule, recorded beside it as owner directives must be:* the
+   loop will sometimes spend free compute running an arm the owner would have
+   ruled out in one line. That is the price of never again spending three weeks
+   spending nothing.
+
 4. **Never weaken a threshold, loosen a control, or delete a failing test.**
    If a threshold is genuinely wrong, say so in the commit message with the
    reason, and record the failure in the ledger's history. A red ladder that
@@ -160,8 +200,14 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
 - **This box serves paying tenants.** Never `systemctl restart docker` or any
   daemon-wide restart. Act on a single container or not at all. Stay at
   `nice 19`, under ~1.5 GB RAM, and leave no process running.
-- **Nothing outside `/home/opc/jackthelearner` changes.** Deleting components,
-  spending money, and architecture calls are the owner's — escalate them.
+- **Nothing outside `/home/opc/jackthelearner` changes.** Deleting components
+  and spending money are the owner's — escalate them. **Architecture calls are
+  NOT on that list any more** (owner ruling, 2026-08-24): if the arms can be
+  run, rule 3 governs and you write the bakeoff. Escalate an architecture call
+  only when the fork turns on what is *permitted* rather than on what *works* —
+  and then only with a default and a deadline. This clause used to read
+  "…and architecture calls are the owner's", which quietly cancelled rule 3 for
+  the one class of question it was written for and cost D1 twenty days.
 - **One GPU submission per spec.** `run_spec` calls `_experiment` once *per
   seed*; guard submissions with a module cache or pay three times for one
   kernel. (This cost 5.5 GPU-hours on 2026-08-07.)

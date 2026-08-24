@@ -49,6 +49,32 @@ more checkpoint/resume cycles (which T0.04 and T0.05 already prove work).
 
 ## D1 — Does the 57M trunk stay in the control path? (OPEN, evidence complete)
 
+ARMED 2026-08-24 under SYSTEM.md rule 3 as amended. Only the constitutional half
+of D1 is still owed by you — *does PLASTIC-ONLY admit a frozen control trunk?* —
+because that fixes what is permitted and no experiment may answer it. Everything
+downstream of the answer is a bakeoff the loop runs itself. The default below is
+the branch that leaves your constitution EXACTLY as written; choosing to narrow
+it is the branch that needs you.
+
+DECIDE: D1
+  class:     goal
+  default:   The PLASTIC-ONLY decree (GOAL.md:76, 2026-08-09) stands verbatim and
+             unnarrowed. Option A is STRUCK as unconstitutional — it postdates
+             nothing and the decree postdates it. The remaining permitted arms go
+             to a bakeoff at matched experience, multi-seed, one pre-registered
+             metric, learning gate and margin: A-prime (a small dedicated control
+             head that LEARNS, reading trunk features, trunk plastic under its
+             other objectives), B (split value/policy trunks), C (end-to-end at
+             more steps — reclassified UNTESTED, not refuted), D (transformer out
+             of the control path). Winner seated by the recorded margin;
+             CHAMPIONS.md's challenger list corrected in the same commit. Note
+             for whoever runs it: D is the arm that would foreclose DP.02, since
+             it gives control private representations — the "two brains wearing
+             one wrapper" signature the owner's connected directive forbids. That
+             is a cost to record, not a thumb on the scale.
+  decide_by: 2026-08-31
+  blocks:    T2.01, T2.02
+
 Raised by the 2026-08-04 multi-agent review ("freeze a pretrained trunk, learn
 a small adapter; never train a bespoke 105M brain from scratch"). Never
 actioned: every run since has trained the whole trunk through PPO. It gates
@@ -1870,6 +1896,27 @@ the loop will stop sizing its week around a quota it cannot spend.
 2026-08-21T01:28:42.*
 
 ## D10 — LC.03 CONCLUDED with ONE learner: the learning-core arbitration premise fails in W0 as built (builder harvest, 2026-08-24)
+
+ARMED 2026-08-24. Goal-class because option (a) AMENDS LC.04's premise — what
+the spec claims, not how it is measured — and a spec may not rewrite its own
+claim to fit the result it got. The default is (a) because it is the only branch
+that changes nothing about the world or the arms and spends only recorded curves
+plus one free GPU run; (b) and (c) remain available on top of it afterwards.
+
+DECIDE: D10
+  class:     goal
+  default:   Accept the screen's answer. LC.04's premise is amended from
+             "arbitrate among screened learners" to "the screen IS the
+             arbitration when it returns exactly one", and wm-latent takes the
+             learning-core seat as measured winner-by-default (CHAMPIONS.md
+             idiom, seat marked BY VERDICT with the single-arm caveat on its
+             face). The owner's scale-transfer guard still binds BEFORE
+             adoption: re-test at ~10x on Kaggle, which is free. LC.03 stays
+             CONCLUDED in the ledger with its VOID and its history intact — no
+             v3, no envelope growth, no re-roll, per the fork pre-registered
+             2026-08-21, 2.5 days before the number landed.
+  decide_by: 2026-08-31
+  blocks:    LC.03
 
 **The measurement.** The LC.03 v2 re-screen (4x envelope: 400,000 decisions /
 17,280 core-s per arm-seed, ~190 core-h on this box, ran 08-21 04:22 → 08-23

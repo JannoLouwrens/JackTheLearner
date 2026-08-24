@@ -4805,3 +4805,66 @@ because integer division truncated the last point away, leaving one point of an
 untouched 90% ceiling permanently unreachable. **A pace line must converge ON
 the limit, not beside it** — otherwise it is a lower ceiling wearing a
 schedule's clothes, which is the one thing it promised not to be.
+
+## A fork whose arms can both be run is not an escalation — it is an experiment nobody wrote
+
+**The measurement.** `D1 — does the 57M trunk stay in the control path?` sat
+OPEN for **twenty days** with the words `evidence complete` in its own title,
+blocking **38 specs**: the entire curiosity family, the entire unified-brain
+family, and six of the seven Tier 5 claims — every spec that could show whether
+Jack is getting smarter. Nothing was missing. Three independent runs at matched
+env-steps already said a 125K network learns locomotion at 7.11 sigma while the
+57M trunk cannot clear its own 3-sigma gate. All four arms were runnable on free
+compute. The bakeoff was never written.
+
+**The cause was not negligence. It was two rules, both obeyed perfectly.**
+
+    SYSTEM.md rule 3    "Decisions are made by bakeoff, never by argument. If you
+                         find yourself reasoning about which approach is better,
+                         stop and write the bakeoff."
+    SYSTEM.md line 164  "Deleting components, spending money, and architecture
+                         calls are the owner's - escalate them."
+
+D1 is an architecture call. So line 164 won, rule 3 was cancelled for precisely
+the class of question it existed to govern, and the system stalled for three
+weeks while reporting itself healthy every six hours. **A constitution can
+contain a clause that silently repeals another, and no instrument in this
+project could see it, because each audit read one rule at a time and each rule
+was being followed.**
+
+**The general shape.** Escalation feels safe — it defers to the owner, it cannot
+be accused of overreach, and it always looks like the humble choice. But an
+escalation is a *halt*, and a halt with no default and no clock is indefinite by
+construction. Silence and "not yet" become indistinguishable, and the cost
+compounds invisibly: D1's price was not "one unanswered question", it was
+38 specs and three weeks of the loop working on whatever was left.
+
+**The rule that replaces it.**
+
+> **A measurement may choose among PERMITTED arms.
+> It may never choose WHAT IS PERMITTED.**
+
+Which architecture learns better is a question about **means** — run both, let
+the margin decide, never ask. Whether a frozen component is permitted inside
+Jack is a question about the **goal**; it defines what winning is, and an
+experiment allowed to pick its own success criterion drifts to whatever is
+cheapest to demonstrate. That is the exact failure pre-registration exists to
+prevent, so goal questions still go to the owner — **and only those.**
+
+**And the deadlock guard, which is the load-bearing half.** Every goal-class
+escalation carries a `default` and a `decide_by`. If the date passes unanswered
+the default fires, loudly, journalled, reversible. A default may only pick among
+already-permitted actions — never editing GOAL.md, never weakening a threshold,
+never widening what is allowed — so an unattended firing costs at worst an
+experiment the owner would have sequenced differently. `experiments/decisions.py`
+enforces it and the overseer runs it every audit.
+
+**Corollary, from this tool's own first run.** Its settled-marker regex included
+`STALE`, so D1's second header — *"THE OPTION SET IS STALE: option A contradicts
+the PLASTIC-ONLY decree"* — read as **resolved**. The guard written to catch the
+most expensive open decision in the project exonerated exactly that decision, on
+its first execution, and reported a clean ratchet while doing it. **A settled
+marker must name the decision's fate, never an entry's freshness.** This is the
+fourth instance of the same disease already in this file: *a control that reads
+a proxy for the thing it governs.* Directory mtime for "in use", a shared log's
+tail for "this run", a title for "covers", and now a header's tone for "closed".
