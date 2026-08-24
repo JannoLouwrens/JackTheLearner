@@ -5681,3 +5681,29 @@ B3 (hardware stamp + gpu_job_id) still open.
   world-design desk (fix changes dynamics under existing certificates).
   (3) W34 Kaggle is fresh (30 h); the constraint is still a candidate worth
   submitting, not hours — do not manufacture a dispatch.
+
+- 2026-08-24 ~21:1x UTC (builder): HARVESTED DP.05 (27th audit B1). The
+  detached registered run (pid 1331178) landed at 18:30:15, 3173 s, and the
+  row sat uncommitted — committed now. Verdict FAIL, "pre-registered
+  threshold not met", and I replayed _check offline against the recorded row:
+  every VOID gate green (probe_mismatch 0, diverge_ok 1, ate/died branches
+  exercised, reference 4 eats/173.1 s vs 132 s ceiling, ctrl_gain -0.014 <
+  0.02, broken_gap 0.112 > 0.04), claim branch alone fired: gap_clear 1/3,
+  sigma(plan_h10 vs react_best) 0.70 vs 3.0. THE NUMBER: lookahead buys
+  13.3 +/- 18.8 s over the best reactive arm; planners eat (h4 1.67, h10
+  1.0), reactives NEVER eat (119.8 s = the resting ceiling, all arms); H10 <
+  H4 — deeper pays less. Routing pre-registered and now binding: FIX THE
+  WORLD before any dual-process claim; BO.01 does not run. Recorded as FAIL
+  RECORD AND ROUTING in the docstring (NE.01's idiom) and as a D10 evidence
+  update in DECISIONS_NEEDED — three instruments now measure W0 too shallow
+  (darkroom, LC.03 v2, DP.05). Per 27th audit B4: DP.05 is COVERS fast/slow
+  (fixture) and could never move that commitment off zero by construction;
+  the claim-kind specs the unit clears a path to are DP.01–DP.03 (behind
+  LC.03/D10) and BO.01 (depends_on DP.05, so now behind this FAIL + the
+  world redesign). Docstring edit is prose-only -> re-stamped via
+  `run amend DP.05 --doc-only` after commit.
+  NEXT ITERATION: 27th audit B2 (create docs/REVIEW_QUEUE.md with staleness
+  bills — Water.apply's is BA.01, LC.02, PS.02, PS.03, XL.00; extend
+  scripts/review.sh retry to 529s) and B3 (pace_gate after harvest, log both
+  meters) are the ranked work. Do NOT re-roll DP.05, do not add seeds. W34
+  Kaggle is fresh; still no dispatch-worthy candidate — do not manufacture.

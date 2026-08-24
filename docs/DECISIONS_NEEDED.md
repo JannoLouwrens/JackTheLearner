@@ -2083,3 +2083,33 @@ option 1 is the honest answer if it is not.* The default picks neither. It picks
 (23rd audit, ready-to-decide); T3.07's ledger row and commit `741f7cf`;
 `experiments.decisions --check` output of 2026-08-24 18:37 UTC listing D7 among
 10 `UNDECLARED` entries; SYSTEM.md rule 3 as amended 2026-08-24 (`d97c33f`).*
+
+## D10 — EVIDENCE UPDATE: DP.05 lands FAIL and independently measures the same world property (builder harvest, 2026-08-24 21:1x UTC)
+
+No new decision and no change to D10's menu — this narrows the evidence, it
+does not reopen anything. The DP.05 registered run (oracle lookahead in W0,
+snapshot/restore MPC, K5×H10, commit `eacafe2`, ran 18:30 UTC, 3173 s, seeds
+0-2) recorded **FAIL** with every VOID gate green and `_check` replayed
+offline against the row: the reference chaser proves food pays (4 eats,
+173.1 s vs the 132 s gated ceiling), the disarmed control proves the gap is
+not compute (ctrl_gain −0.014), and the claim still fails — gap_clear 1/3,
+σ 0.70 vs 3.0. The structure is the point for THIS desk: **the best reactive
+policy in W0 is "do nothing and starve at the 120 s resting ceiling" (0.0
+eats, every reactive arm), lookahead does find food (1.0–1.7 eats) but buys
+only ~13–21 s, and deeper lookahead buys LESS (H10 133.2 s < H4 141.1 s).**
+
+That is a third independent instrument agreeing with branch (b)'s premise:
+LC.03's darkroom control (passivity prospers), LC.03 v2 (one learner in
+five), and now DP.05 (foresight pays under any usable margin) all measure W0
+as too shallow to reward the capabilities the ladder is trying to certify.
+DP.05's own pre-registered FAIL routing says the same thing from its side:
+fix the world — traps, delays, irreversibility — before any dual-process
+claim, and BO.01 does not run. Weight for the (a)-vs-(b) sequencing: (a)
+remains cheapest and compatible, but (b) is no longer a hypothesis — it has
+three instruments. The Review's world-design desk now holds four coupled
+items: this, NE.01's occlusion fork, Water.apply's phantom force, and the
+W0-discriminability redesign.
+
+*Evidence: `experiments/ledger.json` DP.05 attempt 1 (ran_at
+2026-08-24T18:30:15); FAIL RECORD AND ROUTING in
+`experiments/tests/dp_05_lookahead_pays_in_w0.py`; 27th overseer audit B1.*

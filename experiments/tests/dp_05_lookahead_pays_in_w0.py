@@ -132,6 +132,39 @@ input, never a finding):
   - control: numbers above; both gates hold with the pre-written constants.
   - arm smoke (LIFE_CAP=60, not a finding): the machinery runs end to end;
     in a 12 s window plan_h10 ate once, react_k5 zero times.
+
+## FAIL RECORD AND ROUTING (builder, 2026-08-24 — do not re-roll unchanged,
+## do not add seeds; 27th audit B1)
+
+Attempt 1, the registered run: clean stamp, commit eacafe2, impl_sha
+a3facc5e6f8ceaa8, ran 2026-08-24T18:30:15 (3173 s detached, pid 1331178),
+seeds 0-2. Verdict FAIL, and _check was replayed offline against the recorded
+row (builder, 21:1x UTC): every VOID gate green — borrow ok both worlds,
+probe_mismatch 0.0, diverge_ok 1.0, eat AND death branches exercised
+(probe_ate 2.0, probe_died 1.33), reference chaser 4.0 eats / 173.1 s span vs
+the 132 s gated ceiling (food pays), control broken_gap 0.112 vs the 0.04
+floor with ctrl_gain -0.014 under the 0.02 tolerance (the gap is not
+compute). The claim branch alone fired: gap_clear 0.33 (1 of 3 seeds cleared
+MIN_GAP_S) and sigma(plan_h10 vs react_best) = 0.70 against the 3.0 gate.
+
+THE STRUCTURE, which is the finding: the planners EAT and the reactives never
+do — plan_h4 141.1 s / 1.67 eats, plan_h10 133.2 s / 1.0 eats, while
+react_k5 and react_k10 both pin at 119.8 s / 0.0 eats, i.e. the best
+reactive W0 policy is "do nothing and starve at the resting ceiling".
+Lookahead finds food where reaction finds none, but the payoff is ~13-21 s of
+life — under half of one exploited food's 48 s — and DEEPER lookahead pays
+LESS (H10 < H4). W0's food affordance rewards foresight weakly and shallowly.
+
+ROUTING, pre-registered in falsified_by and now binding: FIX THE WORLD
+(traps, delays, irreversibility — the preconditions GOAL.md already names)
+before any dual-process or brain-organisation claim is made in it; BO.01
+does not run. This is the THIRD independent instrument measuring the same
+world property — LC.03's darkroom control (passivity prospers), LC.03 v2
+(one learner in five), now DP.05 (lookahead pays under the margin) — and it
+binds to D10 branch (b) in DECISIONS_NEEDED.md as evidence, beside NE.01's
+occlusion fork and Water.apply's phantom force on the Review's world-design
+desk. Any envelope question (K, H, E0, food density) is a REGISTERED
+redesign, not a wider seed set on this spec.
 """
 from __future__ import annotations
 
