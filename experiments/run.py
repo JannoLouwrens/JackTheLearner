@@ -231,6 +231,13 @@ MARK = {
 def _module_for(spec_id: str):
     """tests/t0_02_*.py implements T0.02. Missing module = not yet written.
 
+    IMPORT ONLY TO RUN, never to list. `status`/`next` ask this question for
+    many specs in one process, and test modules are not import-compatible in
+    bulk: a module that calls `ensure_gl()` at import (sh_01) raises if any
+    earlier-listed module already imported mujoco bare, so which subset a
+    listing walks decides whether the listing survives. Existence questions go
+    through `module_path_for(strict=True)` — same duplicate check, no import.
+
     Duplicates RAISE. Taking the first alphabetical match silently shadowed a
     second implementation: the hourly loop and a manual session each wrote a
     T0.07, `t0_07_cpu_throughput.py` sorted first, and the other was never run
@@ -326,7 +333,7 @@ def cmd_status(ledger: Ledger) -> int:
                      5: "THE CLAIMS", 6: "INTEGRATION"}
             print(f"\n  TIER {current} — {names.get(current, '')}")
         st = ledger.status(s.id)
-        impl = "" if _module_for(s.id) else "  (not implemented)"
+        impl = "" if module_path_for(s.id, strict=True) else "  (not implemented)"
         print(f"    [{MARK[st]}] {s.id}  {s.title}{impl}")
     print(f"\n  {counts}\n")
     _check_stale_detector(ledger)
@@ -639,7 +646,7 @@ def cmd_next(ledger: Ledger) -> int:
     more = f" — showing {shown} of {len(avail)}" if len(avail) > shown else ""
     print(f"\nRunnable now (dependencies satisfied){more}:\n")
     for s in avail[:12]:
-        impl = "" if _module_for(s.id) else "  [needs implementing]"
+        impl = "" if module_path_for(s.id, strict=True) else "  [needs implementing]"
         print(f"  {s.id}  {s.title}  ({s.budget.value}){impl}")
         print(f"        hypothesis:  {s.hypothesis}")
         print(f"        falsified by: {s.falsified_by}")
