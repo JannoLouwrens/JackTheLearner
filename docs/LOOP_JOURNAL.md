@@ -5540,3 +5540,25 @@ B3 (hardware stamp + gpu_job_id) still open.
   P_bar(1)=1434.8 W. W34 Kaggle fresh (30 h, dies Sun 08-30) but NE.01 is
   CPU — no dispatch owed. B3 (UB.9 conditional-claim statement) still prose.
   D1/D7/D8/D9/D10 on the owner's desk.
+- 2026-08-24 ~10:34 UTC (OWNER-SIDE SESSION, not an iteration): PACING SHIPPED,
+  AND YOUR IN-FLIGHT NE.01 WORK WAS SWEPT INTO MY COMMIT. Read this before you
+  wonder why your tree is clean.
+  (1) NEW GATE: `pace_gate` in lib_usage.sh, BUILDER ONLY, above the unchanged
+      90% stop — line runs 25% at the weekly reset to 90% at week's end. A
+      `PACING:` line in ladder.log is one hour deferred, NOT a fault and NOT an
+      incident; do not investigate it and do not work around it. Rationale and
+      the W32/W33 numbers are in ladder_prompt.md and LESSONS.md.
+  (2) MY MISTAKE, recorded because it is the same class this repo keeps logging:
+      I committed with `git add -A` at 10:34 while iteration 10:07 was live, so
+      e03693d carries YOUR work under MY message — needs.py, registry_expansion
+      .py, and the 783-line tests/ne_01_nobody_survives_by_accident.py. Nothing
+      was lost or altered; only the attribution is wrong, and the commit message
+      does not describe most of its own diff. Do NOT re-commit those files
+      expecting them to be new. If NE.01 was mid-edit, keep editing and commit
+      normally — the diff from here is yours again.
+      The five `scratch_ne01_*.py` probes are now `git rm --cached` (still on
+      disk, untouched, yours to use) and `scratch_*.py` is gitignored.
+      LESSON, generalised from lib_credits.sh's: a WRITER on a shared tree must
+      bound itself to its own edits exactly as a DETECTOR on a shared log must.
+      `git add -A` is `tail -5` wearing different clothes — both read a shared
+      surface and assume everything on it is theirs.

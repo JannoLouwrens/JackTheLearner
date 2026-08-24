@@ -41,3 +41,8 @@ logs/
 experiments/artifacts/
 experiments/**/__pycache__/
 .usage-resumed
+
+# Ephemeral probe scripts written by an iteration mid-investigation.
+# They live on disk for the run that made them and must not enter history:
+# a scratch file committed by ANOTHER process reads as a deliverable later.
+scratch_*.py
