@@ -4698,3 +4698,58 @@ cannot see. This generalises past `COVERS:`: any declaration duplicated between
 a machine-read field and a human-read docstring — thresholds, controls,
 dependencies, pre-registrations — inherits the same failure, and the copy a
 human reads first is usually the copy nothing validates.
+
+## A citation can refute the claim it is attached to — read the paper's negative results, not its title
+
+**The instance (found 2026-08-24, closing `NEEDS_AND_DEATH.md` §1.2).** The
+document's allostasis argument — the one biological result it says *changes the
+design* — read: *"hypothalamic hunger **and thirst** neurons are suppressed by
+the mere sight of food **or water**, seconds before any ingestion"*, citing Chen
+et al. (*Cell* 2015) and Zimmerman et al. (*Nature* 2016). The Chen half is
+exactly right (AgRP neurons, τ = 12–20 s, 96 ± 6 % complete before the first
+bite, driven by smell alone and by food behind a barrier). **The Zimmerman half
+is the finding that paper looked for and did not find.** Zimmerman tested SFO
+thirst neurons against the sight of water, the expectation of water, a week of
+Pavlovian conditioning, and several hundred "air licks", and reported negative
+results on all four: *"SFO neuron activity was unaffected by allowing mice to
+see but not consume water."* Thirst neurons need liquid in the mouth.
+
+**How a careful author gets there.** The paper is titled *"Thirst neurons
+**anticipate** the homeostatic consequences of eating and drinking."* The word
+in the title is the word the claim needed — but the anticipation in that title
+is of **blood chemistry** (the response beats plasma osmolality by tens of
+minutes), not of a **distal cue**. Two different anticipations, one word. The
+citation was chosen from the title and the abstract's headline, which is where
+a paper advertises what it found, never where it records what it ruled out.
+
+Two more of the same family in the same table: *"starvation ~3 weeks (Minnesota
+Starvation Experiment)"* cited a 24-week **semi**-starvation study with **zero
+deaths**, which supports neither that number nor any number (the real figure is
+46–73 days); and the Borbély time constants were credited to Borbély (1982),
+which contains no numeric time constant at all — they are from Daan et al.
+(1984). Three fictions, one table, none of them detectable without opening the
+papers.
+
+**The rule.** Before a source may carry a claim, read the part of it that could
+have *contradicted* the claim — the negative results, the controls, the "we
+also tested" paragraph. A title tells you the paper's topic; an abstract tells
+you its headline; only the body tells you what it failed to find, and a
+borrowed claim dies there or nowhere. Corollary worth carrying separately:
+**check citations even when the design looks fine.** The Minnesota error was
+making this design look *worse* than it was — the sim's 450 s : 1,800 s thirst
+: hunger ratio (4 : 1) contradicted the doc's own stated biology (1.4 : 1) and
+matched the corrected figure (3.1–4.9 : 1). Verification is not only for
+deflating overclaims; a false citation can hide a design that was right.
+
+**The guard, because the class is partly mechanical.** No checker can read a
+paper's negative results — but the disease those three grew in *is* detectable:
+a research doc where a verification marker is a typed character rather than a
+fetched source. `experiments/citations.py` requires every `[V]` to carry a
+resolvable identifier (DOI / arXiv / PMID / PMC / ISBN) in the same block, and
+distinguishes `[V-abs]` — metadata and abstract confirmed, full text paywalled
+and NOT read — which is now the honest marker for a source you could not open.
+It found **74 unbacked markers across 7 research docs** on its first run, so it
+ships as a **ratchet rather than a gate**: the per-file debt is recorded in
+`BASELINE`, it may shrink, and it may never grow. A guard that fails everywhere
+on day one is one nobody keeps green, and a guard nobody keeps green is
+decoration — the failure this file already records one shelf over.

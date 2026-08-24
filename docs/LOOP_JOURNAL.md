@@ -5433,3 +5433,71 @@ B3 (hardware stamp + gpu_job_id) still open.
   a genuine zero-pass candidate — run coverage/blocked yourself; the NE.01
   §1.2 citation pass is the named research unit; D1/D9/D10 still on the
   owner's desk.
+- 2026-08-24 ~08:2x UTC (builder): CLOSED THE §1.2 CITATION PASS — the gate
+  that blocked NE.01, and with it the largest block mass the builder can
+  move without an owner decision (NE.01 blocks 8 specs; CPU; no D-number).
+  METERS printed, acting on week:all-models **4%** vs the 90% stop
+  (week:Fable 6%, session 27% — fresh week, reset Aug 24 04:59). Standing
+  rule checked: `run coverage` reads 14 commitments with specs but nothing
+  passing, and every runnable zero-pass claim remains parked/blocked
+  (SM.02 parked, BA.02 per D8, LC.03 concluded per D10, UB.10 parked), so
+  the named research unit was the unit. FOUR PARALLEL AGENTS against
+  primary sources; every §1.2 row now carries a DOI/PMID/arXiv ID and a
+  verdict. NEW MARKER `[V-abs]` = metadata + abstract confirmed, full text
+  paywalled and NOT read — a `[V]` may no longer be used for a paper
+  nobody opened.
+  **THE FIND: one row was refuted by its own citation.** §2.1b's allostasis
+  argument — "the one biological result that changes the design" — read
+  "hunger AND THIRST neurons are suppressed by the mere sight of food OR
+  WATER", citing Zimmerman et al. (Nature 2016). Zimmerman ran exactly that
+  experiment on SFO thirst neurons (sight of water, expectation, a week of
+  Pavlovian conditioning, several hundred air licks) and reported NEGATIVE
+  results on all four: SFO needs liquid in the mouth. The Chen 2015 AgRP
+  half is right and quantitatively strong (tau 12-20 s, 96+/-6% complete
+  before the first bite, smell alone, food behind a barrier), and the design
+  prediction survives on it — but the doc was asserting, on a paper's
+  authority, what that paper had measured and failed to find. Corrected in
+  §2.1b and in NE.03's registry notes.
+  THREE MORE CORRECTIONS, two of which touch design constants. (a) HUNGER
+  WAS WRONG BY 3x WITH A CITATION THAT SUPPORTED NO NUMBER: "~3 weeks
+  (Minnesota)" — Minnesota was 24 weeks of SEMI-starvation with ZERO
+  deaths; real total-starvation survival is 46-73 days (1981 Maze). This
+  makes the suite BETTER, not worse: §2.3's 450 s : 1,800 s (4:1) matched
+  the old figures at 1.4:1 and matches the corrected ones at 3.1-4.9:1, so
+  the ordering was right and had a false receipt attached. (b) THERMAL
+  BOUNDS ARE CORRECTLY VALUED AND WERE WRONGLY NAMED: 28C/40C are
+  INCAPACITATION thresholds (Swiss staging HT III; heatstroke diagnostic),
+  not survival bounds — documented recovery runs to 13.7C (Gilbert 2000)
+  and 46.5C (Slovis 1982). They stand as death in W0 (no medicine, an
+  unconscious creature alone is dead) but the "~9C vs ~3C" asymmetry may
+  never again be called a SURVIVAL asymmetry (by rescued survival it is
+  23.3 vs 9.5 — direction preserved, magnitude not), and the 42C ceiling is
+  now FALSIFIED rather than merely unverified. (c) BORBELY: ratio is
+  4.33:1 not 4.4:1, and the numbers are from Daan/Beersma/Borbely 1984 via
+  Borbely & Achermann 1999 — Borbely (1982) states NO number and the 2016
+  reappraisal none either. tau_wake=700/tau_sleep=160 (4.375:1) LEFT
+  UNCHANGED deliberately: a 1% deviation is far below NE.01's resolution,
+  and these are MODEL parameters, not a measured invariant (individual
+  human EEG fits span 2.9:1 to 10.5:1).
+  **NE.01's REGISTRATION GATE IS LIFTED**, replaced in the registry by the
+  two binding constraints above. NE.01 remains unimplemented and still
+  needs the seven-need integrator of §2.3 (drives.py has 3).
+  MACHINE BETTER: `experiments/citations.py` — a `[V]` must carry a
+  resolvable identifier (DOI/arXiv/PMID/PMC/ISBN) in the same block; a
+  backticked marker is a MENTION (the legend that defines the marker no
+  longer trips the check that enforces it); bare arXiv IDs count, per the
+  corpus's own declared convention. 13/13 known-answer fixtures, and
+  NEGATIVE-TESTED (a planted bare marker returns exit 1, cleanup verified).
+  First live run found **74 unbacked markers across 7 research docs**, so it
+  ships as a RATCHET not a gate: per-file BASELINE, may shrink, may never
+  grow. LESSONS entry added ("A citation can refute the claim it is attached
+  to — read the paper's negative results, not its title"), carrying the
+  corollary that a false citation can hide a design that was RIGHT.
+  Ledger untouched at 84/179 — no certificate was touched; this was a
+  research-doc + registry-notes unit. NEXT ITERATION: the 74-marker debt is
+  now visible and shrinkable (`python -m experiments.citations --list`);
+  LEARNING_CORE.md and HEARING_BAKEOFF.md carry 20 each. NE.01 is
+  implementable the moment someone builds the seven-need integrator — that
+  is the largest owner-free unblock in the ladder (8 specs). B3 (UB.9's
+  conditional-claim statement) still prose. D1/D7/D8/D9/D10 on the owner's
+  desk; W34 Kaggle fresh (30 h, dies Sun 08-30).

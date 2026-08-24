@@ -456,48 +456,122 @@ never ablates them; Voyager shows the LLM its hunger and never varies it;
 Humanoid Agents adds needs but has no matched no-needs arm. **`NE.03` is not
 reproducing a known result. It is running the experiment the field skipped.**
 
-### 1.2 Biology as the reference implementation — **CITATIONS NOT YET VERIFIED**
+### 1.2 Biology as the reference implementation — **CITATION PASS CLOSED 2026-08-24**
 
-> **READ THIS BEFORE USING ANYTHING IN THIS SUBSECTION.** The session's
-> web-search budget (200 calls) was exhausted before the biology sweep finished
-> fetching. A second sweep **did** return corrections, which are folded in below
-> and in the design — but **the primary sources were still not fetched and read
-> in this pass**, so no row is **[V]**. The one place where a biological number
-> enters the build and is still open is the **Borbély time-constant ratio
-> (≈4.4 : 1)**, which sets `τ_wake` and `τ_sleep`; it is flagged in place.
-> **The first job of the next agent on this document is to close this table.**
+> **STATUS: CLOSED.** The pass §9 demanded — and that gated `NE.01` — was run on
+> 2026-08-24 by four parallel research agents against primary sources. Every row
+> below now carries a real citation with a DOI/PMID and a verdict. **The gate on
+> `NE.01` is lifted**, with the two constraints recorded at the end of this
+> subsection.
 >
-> **Four corrections the second sweep already forced, all now applied:** the
-> thermal bounds are **asymmetric** and the 42 °C ceiling is withdrawn; human
-> dehydration is **days to ~2 weeks**, not 3 days; sleep-deprivation lethality is
-> **rat-only**; and the synaptic-downscaling ↔ plasticity-loss link **does not
-> exist in the literature** and is this project's own analogy. Three of those four
-> were errors in an earlier draft of this document, which is the argument for
-> keeping this table visible rather than deleting it once it looks tidy.
+> **Marker meanings, tightened by this pass.** `[V]` = the primary source was
+> fetched and the claim read *in it*. `[V-abs]` = the paper's existence,
+> venue and metadata were confirmed and its abstract read, but the full text is
+> paywalled and was **not** read — the claim rests on the abstract only.
+> `[⚠]` = not verified. A `[V-abs]` row is not a `[V]` row and must not be
+> promoted to one by later readers; the distinction is the whole point of
+> keeping the marker.
+>
+> **THE FOUR FINDINGS OF THIS PASS, in descending order of what they cost:**
+>
+> **(1) The thermal bounds are real numbers with the wrong name on them.**
+> 28 °C and 40 °C are **diagnostic/severity thresholds** — the temperatures at
+> which a clinical syndrome is *named* — and **not survival bounds**. Documented
+> survival with full neurological recovery runs to **13.7 °C** (Gilbert et al.,
+> *Lancet* 2000) and **46.5 °C** (Slovis et al., *Ann Emerg Med* 1982). §2.5 was
+> calling them lethal bounds; it now calls them incapacitation thresholds, which
+> is what they are and what the design actually needs. **The direction of the
+> asymmetry survives** (the cold tail is longer either way: 9 vs 3 °C by
+> incapacitation, 23.3 vs 9.5 °C by rescued survival) — the *magnitude* does not,
+> so no text may claim "~9 °C vs ~3 °C" is a survival ratio.
+>
+> **(2) The hunger timescale was wrong by 3× and its citation did not support
+> it.** "~3 weeks, Minnesota Starvation Experiment" is false twice over:
+> Minnesota was **24 weeks of semi-starvation at ~1,570 kcal/d with zero
+> deaths** and contains no time-to-death data at all. Documented total-starvation
+> survival (fluids permitted) is **46–73 days** — the ten 1981 Maze hunger
+> strikers. **This is good news for the build, not bad**: §2.3 gives thirst
+> 450 s and hunger 1,800 s, a 4 : 1 ratio, which the *old* figure (15 d vs 21 d
+> ≈ 1.4 : 1) contradicted and the *corrected* one (≈15 d vs 46–73 d = 3.1–4.9 : 1)
+> supports. The suite's ordering was right for a reason the document had not yet
+> earned.
+>
+> **(3) One row is refuted by its own citation.** The claim that AgRP **and** SFO
+> neurons respond to *sensory cues* ahead of ingestion is true for AgRP and
+> **false for SFO**: Zimmerman et al. 2016 ran exactly that experiment — sight of
+> water, expectation of water, Pavlovian cue, and several hundred "air licks" —
+> and reported **negative results in all four**. SFO thirst neurons require oral
+> contact with liquid. What that paper *does* establish is the other half: the
+> response precedes any change in plasma osmolality by tens of minutes. §2.1b's
+> "sight of food **or water**" sentence has been corrected accordingly.
+>
+> **(4) The Borbély numbers are right, and cited to two papers that do not
+> contain them.** τ_rise = 18.2 h and τ_decay = 4.2 h are canonical — but they
+> appear in **Daan, Beersma & Borbély (1984)**, restated with the explicit
+> parameter set in **Borbély & Achermann (1999)**. Borbély (1982) is *qualitative*
+> on this point ("the time constant for the rising part of the process is longer
+> than for the declining part") and states no number; the 2016 reappraisal
+> contains no numeric time constants either. The ratio is **4.33 : 1**, not 4.4.
+>
+> **Two prior corrections from the second sweep are confirmed by this pass:**
+> sleep-deprivation lethality is rat-only (Everson 1989, 11–32 days), and no
+> paper links synaptic downscaling to the deep-learning plasticity-loss
+> literature — that identity remains this project's own analogy. The 42 °C
+> ceiling withdrawn by that sweep is now **falsified**, not merely unsourced.
 
 | what the design uses it for | mechanism | believed primary source | status |
 |---|---|---|---|
-| the need vector in the observation (§2.4b) | **interoception** — afferent sensing of bodily state and its role in motivated behaviour; interoceptive predictive coding | Craig, "How do you feel?" (Nat Rev Neurosci 2002; and 2009); Barrett & Simmons, "Interoceptive predictive coding" (2015); Seth on interoceptive inference | **[⚠]** |
-| the allostasis prediction (§2.1b) | **predictive** rather than reactive regulation — act before the deviation | Sterling & Eyer (1988); Sterling, "Allostasis: a model of predictive regulation" (2012) | **[⚠]** |
-| the allostasis *evidence* (§2.1b) | AgRP (hunger) and SFO (thirst) neurons respond to **sensory cues seconds ahead of any blood-chemistry change** — anticipatory regulation at single-neuron resolution | **Chen et al., *Cell* 2015**; **Zimmerman et al., *Nature* 2016** | **partially resolved — journals corrected (Cell, not Science). [⚠] full author lists / DOIs still to be recorded.** |
+| the need vector in the observation (§2.4b) | **interoception** — afferent sensing of bodily state and its role in motivated behaviour; interoceptive predictive coding | Craig, "How do you feel? Interoception: the sense of the physiological condition of the body", *Nat Rev Neurosci* 3(8):655–666, 2002, doi 10.1038/nrn894, PMID 12154366; Craig, "How do you feel — now? The anterior insula and human awareness", *Nat Rev Neurosci* 10(1):59–70, 2009, doi 10.1038/nrn2555; **Barrett & Simmons, "Interoceptive predictions in the brain"**, *Nat Rev Neurosci* 16(7):419–429, 2015, doi 10.1038/nrn3950; Seth, "Interoceptive inference, emotion, and the embodied self", *TiCS* 17(11):565–573, 2013, doi 10.1016/j.tics.2013.09.007 | **[V-abs]** — all four exist as stated and their abstracts support the claim. **Title corrected**: Barrett & Simmons is *"Interoceptive predictions in the brain"*, not "Interoceptive predictive coding". Do not confuse Craig 2002 (NRN) with the near-identically-titled Craig 2003 (*Curr Opin Neurobiol* 13:500–505). |
+| the allostasis prediction (§2.1b) | **predictive** rather than reactive regulation — act before the deviation | Sterling & Eyer, "Allostasis: a new paradigm to explain arousal pathology", in Fisher & Reason (eds.), *Handbook of Life Stress, Cognition and Health*, Wiley 1988, pp. 629–649; Sterling, "Allostasis: a model of predictive regulation", *Physiology & Behavior* 106(1):5–15, 2012, doi 10.1016/j.physbeh.2011.06.004 | **[V-abs]** — both confirmed, venues correct. Trap recorded: the 2012 paper is in *Physiology & Behavior*; the commonly-miscited *Trends in Neurosciences* allostasis paper is a **different** one (Ramsay & Woods 2019). |
+| the allostasis *evidence* (§2.1b) | AgRP (hunger) neurons are inhibited within ~10–20 s by the **sight or smell** of food, ~96 % complete **before the first bite**. SFO (thirst) neurons are **not** cue-driven — they need liquid in the mouth — but their inhibition precedes any change in plasma osmolality by tens of minutes. Both channels run ahead of blood chemistry; only AgRP anticipates from a distal cue. | **Chen Y, Lin Y-C, Kuo T-W & Knight ZA, "Sensory Detection of Food Rapidly Modulates Arcuate Feeding Circuits", *Cell* 160(5):829–841, 2015**, doi 10.1016/j.cell.2015.01.033, PMID 25703096, PMC4373539; **Zimmerman CA, Lin Y-C, Leib DE, Guo L, Huey EL, Daly GE, Chen Y & Knight ZA, "Thirst neurons anticipate the homeostatic consequences of eating and drinking", *Nature* 537(7622):680–684, 2016**, doi 10.1038/nature18950, PMID 27487211, PMC5161740 | **[V] — both full texts read, and the row's ORIGINAL CLAIM WAS HALF REFUTED BY ITS OWN CITATION.** Chen 2015 verbatim: τ = 12–20 s, *"96 ± 6 % complete before feeding"*, driven by inaccessible peanut butter behind a barrier and by smell alone. Zimmerman 2016 verbatim: SFO activity *"was unaffected by allowing mice to see but not consume water"*, *"not inhibited by cue presentation after one week of Pavlovian conditioning"*, and *"the act of licking per se was insufficient"* (air licks). Journals confirmed **Cell** and **Nature**. §2.1b corrected 2026-08-24. |
 | energy's set-point form (§2.1b) | arcuate nucleus AgRP/NPY vs POMC; ghrelin (fast) and leptin (slow) | standard hypothalamic-feeding literature | **[⚠]** |
 | water's set-point form | circumventricular organs — SFO and OVLT — sensing plasma osmolality | standard osmoregulation literature | **[⚠]** |
-| **the thermal lethal bounds** (§2.5) | **ASYMMETRIC: ~9 °C survivable downward, ~3 °C upward.** Severe hypothermia below ~28 °C; heat stroke above ~40 °C. **The ~42 °C ceiling an earlier draft used is UNVERIFIED and has been withdrawn.** | hypothermia staging: **Durrer 2003; Paal 2016**. Heat stroke: **Bouchama 2022** | **corrected, sources named, [⚠] not yet fetched. LOAD-BEARING — verify before `NE.01` fixes the constants.** |
-| **the sleep time-constant ratio ≈4.4 : 1** (§2.3) | Borbély two-process model; process S rises with τ ≈ 18.2 h and decays with τ ≈ 4.2 h | Borbély (1982) and the two-process literature | **[⚠] LOAD-BEARING — §2.3's `τ_wake = 700 s`, `τ_sleep = 160 s` is this ratio, compressed.** |
-| the pain/reward split (§2.9) | nociception as a separate, fast, unconditioned channel (A-δ and C fibres → spinothalamic → thalamus/amygdala/PAG) that **sensitises rather than habituating**; opponent-process accounts of affect | Solomon & Corbit, opponent-process theory (1974); Daw, Kakade & Dayan on opponent serotonin/dopamine interactions (2002) | **[⚠]** |
+| **the thermal INCAPACITATION thresholds** (§2.5) — renamed from "lethal bounds" by this pass | Swiss staging HT III (severe: unconscious, vital signs present) begins **below 28 °C**; heatstroke is defined by core temperature **above 40 °C** (or >40.5 °C) **with concomitant CNS dysfunction**. Neither is a survival bound: documented recovery runs to **13.7 °C** and **46.5 °C**. | staging: **Durrer B, Brugger H, Syme D (ICAR-MEDCOM), *High Alt Med Biol* 4(1):99–103, 2003**, doi 10.1089/152702903321489031, PMID 12713717; **Paal P et al., *Scand J Trauma Resusc Emerg Med* 24(1):111, 2016**, doi 10.1186/s13049-016-0303-7, PMC5025630; **Paal P et al., *IJERPH* 19(1):501, 2022**, doi 10.3390/ijerph19010501. Heatstroke: **Bouchama A et al., *Nat Rev Dis Primers* 8(1):8, 2022**, doi 10.1038/s41572-021-00334-6; **Epstein & Yanovich, *NEJM* 380(25):2449–2459, 2019**, doi 10.1056/NEJMra1810762. Survival extremes: **Gilbert M et al., *Lancet* 355(9201):375–6, 2000**, doi 10.1016/S0140-6736(00)01021-7 (13.7 °C, full recovery); **Slovis CM et al., *Ann Emerg Med* 11(5):269–71, 1982**, PMID 7073052 (46.5 °C, *"the highest human body temperature elevation reported without permanent residua"*) | **[V] for Paal 2016/2022 (open access, full text read, Table 1/2: HT I 35–32, HT II <32–28, HT III <28, HT IV classically <24 °C). [V-abs] for Durrer 2003, Bouchama 2022, Epstein 2019, Gilbert 2000, Slovis 1982. FOUR CORRECTIONS: (a) the venue is *High Alt Med Biol*, not *Resuscitation*; (b) 28/40 are severity thresholds, NOT lethal bounds — §2.5 renamed; (c) the 42 °C ceiling is FALSIFIED, not merely unverified (46.5 °C survived); (d) the "~9 vs ~3 °C" asymmetry is an INCAPACITATION asymmetry — by rescued survival it is 23.3 vs 9.5 °C. Also carry: ICAR has since moved off temperature-based staging entirely because field temperature estimates are imprecise (Musi et al., *Resuscitation* 162:182–187, 2021, doi 10.1016/j.resuscitation.2021.02.038).** |
+| **the sleep time-constant ratio = 4.33 : 1** (§2.3) — was written 4.4 : 1 | Borbély two-process model; process S rises during wake with τ_r = 18.2 h toward a saturating asymptote and decays during sleep with τ_d = 4.2 h | **Daan S, Beersma DGM & Borbély AA, "Timing of human sleep: recovery process gated by a circadian pacemaker", *Am J Physiol* 246(2 Pt 2):R161–R183, 1984**, doi 10.1152/ajpregu.1984.246.2.R161, PMID 6696142 — restated with the explicit parameter set in **Borbély AA & Achermann P, *J Biol Rhythms* 14(6):557–568, 1999**, doi 10.1177/074873099129000894 | **[V] via the 1999 restatement (PDF read: verbatim *"τd = 4.2 h; τr = 18.2 h; … Hm = 0.67; Lm = 0.17"*) and two independent modern restatements (Skeldon, Dijk & Derks, arXiv:1311.1734; Skeldon & Dijk, *npj Biol Timing Sleep*, 2025, doi 10.1038/s44323-025-00039-z). [V-abs] for Daan 1984 itself (paywalled). ATTRIBUTION CORRECTED: Borbély (1982) contains NO numeric time constants — only *"the time constant for the rising part of the process is longer than for the declining part"* — and the 2016 reappraisal contains none either. Cite 1982 for the qualitative claim ONLY. These are MODEL PARAMETERS carried forward since 1984, not a measured biological invariant: per-subject fits to human EEG slow-wave activity give τ_d ≈ 1.8–3.1 h and τ_r ≈ 9–19 h, i.e. ratios from 2.9 : 1 to 10.5 : 1 (Jenni, Achermann & Carskadon, *Sleep* 28(11):1446–1454, 2005, PMID 16335485).** |
+| the pain/reward split (§2.9) | nociception as a separate, fast, unconditioned channel (A-δ and C fibres → spinothalamic → thalamus/amygdala/PAG) that **sensitises rather than habituating**; opponent-process accounts of affect | Solomon RL & Corbit JD, "An opponent-process theory of motivation: I. Temporal dynamics of affect", *Psychological Review* 81(2):119–145, 1974, doi 10.1037/h0036128; Daw ND, Kakade S & Dayan P, "Opponent interactions between serotonin and dopamine", *Neural Networks* 15(4–6):603–616, 2002, doi 10.1016/S0893-6080(02)00052-7, PMID 12371515 | **[V-abs] for the citations — BUT THE ROW OVERSTATES THEM AND IS NOW SPLIT.** Both papers exist as stated (the *Neural Networks* venue guess was right) and support the **opponent-process affect** half: Daw 2002 treats the aversive channel as separable and opponent. Neither addresses **nociception** specifically, and *"sensitises rather than habituating"* is close to the **opposite** of opponent-process theory's standard reading, in which the primary a-process habituates (tolerance) while the slow opponent b-process strengthens. **The sensitisation claim is therefore UNSOURCED here and must not be attributed to Solomon & Corbit** — the central-sensitisation literature (Woolf) is the right body of work and has not been surveyed. §2.9 keeps the separate-fast-channel design; the sensitisation half is a design choice, not a cited fact. |
 | the reflex set (§2.10) | palmar grasp, Moro, stepping, nociceptive withdrawal, righting and parachute reactions as innate scaffolds that are progressively suppressed | developmental-neurology literature | **[⚠] — and the specific claim "innate reflex priors ACCELERATE later learning" was NOT verified in animals or robots. §2.10 is written as a bakeoff arm precisely because this is unverified.** |
 | motor/goal babbling (§2.10) | goal babbling as a developmental phase, and its robotics form | Rolf, Steil & Gienger on goal babbling; Baranes & Oudeyer, SAGG-RIAC (already cited in `CURIOSITY_BAKEOFF` as arXiv 1301.4862 **[c]**) | **[c]** for SAGG-RIAC, **[⚠]** for the rest |
-| the diary/weights split (§3.0) | **complementary learning systems** — fast hippocampus, slow neocortex, interleaved replay | McClelland, McNaughton & O'Reilly (Psychological Review, 1995) | **[⚠] — but `ME.10` PASSES on this box and is the operational evidence; the citation is for the framing, not for the result.** |
+| the diary/weights split (§3.0) | **complementary learning systems** — fast hippocampus, slow neocortex, interleaved replay | McClelland JL, McNaughton BL & O'Reilly RC, "Why there are complementary learning systems in the hippocampus and neocortex: Insights from the successes and failures of connectionist models of learning and memory", *Psychological Review* 102(3):419–457, 1995, doi 10.1037/0033-295X.102.3.419, PMID 7624455 | **[V-abs] — all three elements are in the abstract verbatim: fast hippocampus (*"permits rapid learning of new items without disrupting this structure"*), slow neocortex (*"learns slowly to discover the structure in ensembles of experiences"*), interleaved replay (*"reinstatement… interleaves them with others"*). Volume/pages confirmed. `ME.10` PASSES on this box and remains the operational evidence; the citation is for the framing, not for the result.** |
 | sleep replay (§3.0) | hippocampal sharp-wave ripples during slow-wave sleep replaying recent sequences to neocortex | standard systems-consolidation literature | **[⚠]** |
-| synaptic downscaling (§3.4 S4, `NE.06`) | **synaptic homeostasis hypothesis** — sleep downscales synaptic strength | Tononi & Cirelli (2003; 2014) | **[⚠]** |
-| the ML twin of downscaling (`NE.06`) | shrink-and-perturb; loss of plasticity in continual learning; dormant-unit recycling | Ash & Adams (2020); Dohare et al., *Nature* (2024); Sokar et al., ReDo (2023) | **the individual sources are real; THE LINK IS NOT. The survey searched and found no paper connecting synaptic homeostasis to the plasticity-loss literature. The identity is ORIGINATED IN THIS DOCUMENT and `NE.06` tests it. It must never be cited as literature.** |
-| the compressed lethal timescales (§2.3) | dehydration **days to ~2 weeks** — the "~3 days" figure is folklore and has been removed; starvation ~3 weeks (Minnesota Starvation Experiment); sleep-deprivation lethality is **rat-only** (Everson 1989, death at 11–32 days), human record **264 h with full recovery** | dehydration: **Ganzini 2003, NEJM**; the rest as named | **corrected in place; [⚠] not fetched. These set the *ordering* in §2.3, which is the part that matters — and one of them (thirst) is now explicitly a RANGE, so §2.3 no longer states a compression ratio for it.** |
+| synaptic downscaling (§3.4 S4, `NE.06`) | **synaptic homeostasis hypothesis** — wake nets potentiation, sleep slow-wave activity downscales synaptic strength by proportional **down-selection** (strong synapses preserved) | Tononi G & Cirelli C, "Sleep and synaptic homeostasis: a hypothesis", *Brain Res Bull* 62(2):143–150, 2003, doi 10.1016/j.brainresbull.2003.09.004; Tononi G & Cirelli C, "Sleep and the price of plasticity: from synaptic and cellular homeostasis to memory consolidation and integration", *Neuron* 81(1):12–34, 2014, doi 10.1016/j.neuron.2013.12.025, PMID 24411729 | **[V-abs] — both confirmed against the authors' own institutional publication list. CARRY THE CAVEAT: SHY is CONTESTED, not consensus (see the eLife 2021 work on synapse stability across sleep/wake in rats). `NE.06` tests a hypothesis with live opposition; do not write it as settled biology.** |
+| the ML twin of downscaling (`NE.06`) | shrink-and-perturb; loss of plasticity in continual learning; dormant-unit recycling | Ash JT & Adams RP, "On Warm-Starting Neural Network Training", NeurIPS 2020, arXiv:1910.08475; Dohare S, Hernandez-Garcia JF, Lan Q, Rahman P, Mahmood AR & Sutton RS, "Loss of plasticity in deep continual learning", *Nature* 632(8026):768–774, 2024, doi 10.1038/s41586-024-07711-7, PMC11338828; Sokar G, Agarwal R, Castro PS & Evci U, "The Dormant Neuron Phenomenon in Deep Reinforcement Learning", ICML 2023, PMLR 202:32145–32168, arXiv:2302.12902 | **[V] all three (abstracts fetched verbatim; venues and author lists confirmed — note *Lan* is routinely dropped from secondhand Dohare listings). THE LINK IS STILL NOT IN THE LITERATURE, and this pass hunted for a counterexample rather than assuming: the field's own survey (Klein et al., "Plasticity Loss in Deep RL: A Survey", arXiv:2411.04832) contains ZERO occurrences of "sleep", "synaptic homeostasis", "Tononi" or "Cirelli"; and four SHY-invoking ML papers were checked and all target catastrophic FORGETTING, none citing Ash/Dohare/Sokar. CLAIM NARROWED ACCORDINGLY: sleep-inspired ML does exist and does cite SHY — what does not exist is any paper joining SHY to the PLASTICITY-LOSS literature. That identity is ORIGINATED IN THIS DOCUMENT, `NE.06` tests it, and it must never be cited as literature. The negative rests on targeted bibliography checks, not an exhaustive citation-intersection query.** |
+| the compressed lethal timescales (§2.3) | dehydration: **85 % dead within 15 days** in bedbound terminally-ill patients who stopped food *and* fluids. Starvation with fluids: **46–73 days**. Sleep-deprivation lethality is **rat-only**: 11–32 days, and *"died **or were sacrificed** when death seemed imminent"*. Human wakefulness record 264 h. | dehydration: **Ganzini L, Goy ER, Miller LL, Harvath TA, Jackson A & Delorit MA, "Nurses' experiences with hospice patients who refuse food and fluids to hasten death", *NEJM* 349(4):359–365, 2003**, doi 10.1056/NEJMsa035086, PMID 12878744. Starvation: the ten 1981 Maze hunger strikers, **46/59/60/61/61/61/62/66/71/73 days** (CAIN Archive, Ulster University); Peel M, "Hunger strikes", *BMJ* 315(7112):829–830, 1997, PMID 9353494. Sleep: **Everson CA, Bergmann BM & Rechtschaffen A, "Sleep Deprivation in the Rat: III. Total Sleep Deprivation", *Sleep* 12(1):13–21, 1989**, doi 10.1093/sleep/12.1.13; Gulevich, Dement & Johnson, *Arch Gen Psychiatry* 15(1):29–35, 1966 (the Gardner case) | **[V] Everson 1989 (abstract verbatim). [V-abs] Ganzini 2003. THREE CORRECTIONS, one of which moves a design constant's justification: (a) THE MINNESOTA CITATION IS WRONG AND THE "~3 WEEKS" NUMBER WITH IT — Minnesota was 24 weeks of SEMI-starvation at ~1,570 kcal/d with ZERO deaths and contains no time-to-death data; it may still be cited for functional degradation under caloric restriction, never for a lethal timescale. Real total-starvation survival is 46–73 days, which REVERSES the document's implied ordering: starvation is ~3–5× SLOWER than dehydration, not comparable to it. **This makes §2.3's 450 s : 1,800 s ratio MORE defensible, not less** (see §2.3). (b) Ganzini reports no MEDIAN — it reports 85 % within 15 days — and it is a nurse-recall survey of VSED at end of life, so it does not generalise to a healthy adult; the honest line is "the ~3-day figure has no traceable primary source", not "it is folklore". (c) The Gardner "full recovery" is CONTESTED by Gardner's own 2017 self-report of later chronic insomnia, and 264 h is not the record (453 h 40 min, McDonald). Cite Gulevich/Dement/Johnson 1966, not a popular retelling.** |
 
 **One verified biology-adjacent result carried from §1.1**: metabolic/effort cost
 is standard in neuromechanical locomotion simulation (Song et al., *JNER* 18:126,
 2021) **[V]** — but as an *effort penalty*, not as a depleting lethal state. The
 only prior agent this survey found that couples temperature to metabolic drain
 the way §2.3 does is Yoshida's embodied neural homeostat **[⚠]**.
+
+#### What closing this table permits and forbids — the two constraints on `NE.01`
+
+The `NE.01` registration gate ("MUST NOT fix the thermal constants or the
+Borbély ratio until a citation pass closes §1.2") is **LIFTED**, subject to two
+constraints that are now part of the spec rather than part of the folklore:
+
+1. **The thermal constants may be fixed at 28 °C / 40 °C — but only as
+   INCAPACITATION thresholds, and the design must say so.** In a world with no
+   medicine, the temperature at which an unaided creature loses consciousness
+   *is* the temperature at which it dies, so the numbers are usable and the
+   modelling choice is sound. What is now forbidden is the *justification*: no
+   text may call 28/40 survival bounds, cite "~9 °C vs ~3 °C" as a survival
+   asymmetry, or reintroduce a 42 °C ceiling. `NE.01` measures the realised
+   thermal trajectory regardless, and §2.5's `kills` clause already says every
+   constant in §2.3 is a proposal until it does.
+
+2. **The sleep ratio is 4.33 : 1 and is a MODEL parameter, not a measurement.**
+   `τ_wake = 700 s` / `τ_sleep = 160 s` gives 4.375 : 1 — a 1 % deviation from
+   the canonical 18.2 h / 4.2 h, far below anything `NE.01` can resolve, so the
+   constants stand as written and are **not** being changed to chase a third
+   significant figure. What must not survive is the claim that 4.4 : 1 is *the*
+   measured biological ratio: fits to individual human EEG give 2.9 : 1 to
+   10.5 : 1, so this is the canonical parameter pair, sitting at the low end of
+   the empirical range.
+
+Everything else this table touches is framing, and framing is exactly what a
+citation is for. The one row that changed a *design* claim is the allostasis
+evidence (§2.1b), and it changed because the paper cited for it reported the
+opposite of what it was cited for.
 
 ### 1.3 Survival benchmarks: what a death-terminated world actually teaches
 
@@ -827,9 +901,25 @@ being a story.
 
 Homeostasis is reactive — act once you have deviated. **Biology does not do
 that.** Sterling's allostasis is *predictive* regulation: the organism acts
-*before* the deviation. The decisive modern evidence is that hypothalamic hunger
-and thirst neurons are **suppressed by the mere sight of food or water, seconds
-before any ingestion** — the correction begins before the nutrient arrives.
+*before* the deviation. The decisive modern evidence is that AgRP hunger neurons
+are **suppressed within ~10–20 s by the sight or smell of food — 96 ± 6 %
+complete before the first bite** (Chen et al., *Cell* 2015; the cue works through
+a barrier and through smell alone). The correction begins before the nutrient
+arrives.
+
+**Corrected 2026-08-24, and the correction is worth reading rather than
+skipping.** This paragraph used to say *"hunger **and thirst** neurons are
+suppressed by the mere sight of food **or water**"*, citing Zimmerman et al.
+2016 alongside Chen. Zimmerman ran exactly that experiment on SFO thirst neurons
+— sight of water, expectation of water, a week of Pavlovian conditioning, and
+several hundred "air licks" — and reported **negative results in all four**. SFO
+neurons need liquid in the mouth. The paper's actual finding is a *different*
+anticipation: the inhibition precedes any change in plasma osmolality by tens of
+minutes, so the signal beats blood chemistry without being cue-driven. The
+design point below is unaffected, because it only ever needed one channel that
+anticipates from a distal cue and AgRP is that channel — but the document was
+asserting, on the authority of a paper, the thing that paper had measured and
+failed to find.
 
 This could have been implemented as a hand-coded anticipatory term. It should
 not be, for the same reason a hand-written climb reward should not be: it would
@@ -878,19 +968,25 @@ Normalised deviations, all in `[0,1]`:
 ```
 
 **`δ_T` is asymmetric because human thermal tolerance is asymmetric, and an
-earlier draft of this document got it wrong.** Humans survive roughly **9 °C of
-cooling** (severe hypothermia is classified below ~28 °C) but only about **3 °C
-of warming** (heat stroke above ~40 °C). A symmetric `|T − 37| / 5` would have
-made overheating feel survivable until it was lethal. The divisors are the
-*comfort* half-widths, scaled to the lethal margins: the drive saturates at
-**31 °C** (3 °C of margin before death at 28 °C) and at **39 °C** (1 °C before
-death at 40 °C). That margin is where a policy can learn — a drive that saturates
-only at death gives no gradient while dying.
+earlier draft of this document got it wrong.** A human loses consciousness after
+roughly **9 °C of cooling** (Swiss staging HT III, below ~28 °C) but only about
+**3 °C of warming** (heatstroke, above ~40 °C). A symmetric `|T − 37| / 5` would
+have made overheating feel survivable until it was lethal. The divisors are the
+*comfort* half-widths, scaled to those margins: the drive saturates at **31 °C**
+(3 °C of margin before death at 28 °C) and at **39 °C** (1 °C before death at
+40 °C). That margin is where a policy can learn — a drive that saturates only at
+death gives no gradient while dying.
 
-> **[⚠] The 42 °C ceiling that appeared in an earlier draft has been REMOVED as
-> unverified.** The upper bound is **40 °C**, from the heat-stroke threshold.
-> Sources to close in §1.2: hypothermia staging (Durrer 2003; Paal 2016),
-> heat stroke (Bouchama 2022).
+> **[V] §1.2 CLOSED 2026-08-24. The 42 °C ceiling an earlier draft used is now
+> FALSIFIED, not merely unverified** — Slovis et al. 1982 documents survival
+> with no permanent sequelae at **46.5 °C**. The upper bound stays **40 °C**,
+> and the correction that matters is to the *name*: 28 °C and 40 °C are
+> **incapacitation** thresholds, not survival bounds (survival is documented at
+> 13.7 °C and 46.5 °C under intensive rescue). The asymmetry above therefore
+> holds in **direction** — the cold tail is the longer one on either measure —
+> but **not in magnitude**: by rescued survival it is 23.3 °C against 9.5 °C,
+> not 9 against 3. Sources are now in §1.2 with DOIs (Durrer 2003; Paal
+> 2016/2022; Bouchama 2022; Epstein & Yanovich 2019; Gilbert 2000; Slovis 1982).
 
 **The whole suite on one page.** Every column below is specified in §2.3–§2.6;
 this table exists so the design can be argued with without reading them.
@@ -922,12 +1018,25 @@ suite preserves the **ordering** of human timescales and compresses the
 | need | human, at rest | here (sim-seconds) | compression | note |
 |---|---|---|---|---|
 | fatigue | minutes | `τ_f` = 60 s recovery | ~1× | fastest by design |
-| temperature | hours (wet/cold: <1 h) | `τ_T` = 240 s | ~50× | **deliberately over-weighted**, and **asymmetric**: ~9 °C of survivable cooling vs ~3 °C of warming |
-| sleep | ~16 h awake | `τ_wake` = 700 s, `τ_sleep` = 160 s | ~80× | ratio 4.4 : 1, intended to match Borbély's ≈18.2 h / ≈4.2 h — **[⚠] §1.2: that ratio was not verified this pass and is load-bearing for these two constants** |
-| thirst | **days to ~2 weeks** — the "3 days" rule is folklore (Ganzini 2003, NEJM, on voluntary refusal of food and fluids) | 450 s to empty | — | ~3 drinks per sim-day. The compression ratio is **not stated**, because the human figure is a range, not a number. |
-| hunger | ~3 weeks | 1,800 s to empty | ~1,000× | ~1 meal per 1.5 sim-days |
+| temperature | hours (wet/cold: <1 h) | `τ_T` = 240 s | ~50× | **deliberately over-weighted**, and **asymmetric**: ~9 °C of cooling vs ~3 °C of warming **to incapacitation** (§1.2 closed 08-24 — these are severity thresholds, not survival bounds; the *direction* of the asymmetry holds either way, the magnitude does not) |
+| sleep | ~16 h awake | `τ_wake` = 700 s, `τ_sleep` = 160 s | ~80× | ratio 4.375 : 1 against the canonical **4.33 : 1** (τ_r 18.2 h / τ_d 4.2 h, Daan et al. 1984 via Borbély & Achermann 1999) — **[V] §1.2, a 1 % deviation left unchanged deliberately.** These are model parameters, not a measured invariant: individual human EEG fits span 2.9 : 1 to 10.5 : 1 |
+| thirst | **85 % dead within 15 days** in terminally-ill VSED patients (Ganzini 2003, NEJM) — the "3 days" rule has no traceable primary source | 450 s to empty | — | ~3 drinks per sim-day. The compression ratio is **not stated**, because the human figure is a range from a population that does not generalise to a healthy adult. |
+| hunger | **46–73 days** with fluids (1981 Maze hunger strikes) — **NOT "~3 weeks", and not Minnesota**, which was 24 weeks of semi-starvation with zero deaths (§1.2, corrected 08-24) | 1,800 s to empty | ~2,900× | ~1 meal per 1.5 sim-days |
 | social | no lethal bound | 3,600 s to empty | — | 3 sim-days of solitude to bottom out |
 | integrity | event-driven | heal `τ_i` = 900 s | — | inherited from PS §2.2 |
+
+**The thirst : hunger ratio got its justification back on 2026-08-24, and it is
+worth recording how.** This table used to pair a 4 : 1 sim ratio (450 s vs
+1,800 s) with human figures — "days to ~2 weeks" against "~3 weeks" — that imply
+about **1.4 : 1**. The sim was three times more aggressive than its own stated
+biology and nobody had noticed, because the row that would have shown it was
+carrying a citation (Minnesota) that did not support its number. The citation
+pass replaced "~3 weeks" with the documented 46–73 days, and the corrected
+human ratio is **≈15 d : 46–73 d = 3.1 : 1 to 4.9 : 1** — which contains the
+suite's 4 : 1. The ordering §2.3 promises to preserve was in fact preserved; it
+just had a false receipt attached to it until now. **The lesson runs the other
+way from the usual one: an unverified citation had been making the design look
+worse than it was, and the honest fix was to check rather than to tune.**
 
 Temperature is the deliberate distortion: relative to a human, cold here is
 roughly 20× more dangerous than hunger. That is a choice, and the reason is that
@@ -1113,11 +1222,23 @@ rather than claimed as realism.
 ```
 starvation     e = 0 continuously for 300 s
 dehydration    w = 0 continuously for 120 s
-hypothermia    T <= 28 C for 20 s     severe-hypothermia staging, ~9 C of margin
-hyperthermia   T >= 40 C for 20 s     heat-stroke threshold, ~3 C of margin
-                                      ASYMMETRIC. An earlier draft used 42 C
-                                      symmetric-ish; that ceiling was unverified
-                                      and is withdrawn. [!] close 1.2 before NE.01
+hypothermia    T <= 28 C for 20 s     Swiss staging HT III (unconscious, vital
+                                      signs present) begins below 28 C.
+                                      ~9 C of margin to INCAPACITATION.
+hyperthermia   T >= 40 C for 20 s     heatstroke diagnostic threshold (>40 C
+                                      with CNS dysfunction; NEJM uses >40.5).
+                                      ~3 C of margin to INCAPACITATION.
+                                      ASYMMETRIC. [V] 1.2 CLOSED 2026-08-24.
+                                      These are SEVERITY thresholds, NOT
+                                      survival bounds: documented recovery runs
+                                      to 13.7 C (Gilbert 2000) and 46.5 C
+                                      (Slovis 1982). W0 has no medicine, so a
+                                      creature that loses consciousness alone in
+                                      it is dead -- the numbers therefore stand
+                                      AS DEATH HERE, but the justification is
+                                      incapacitation and never survival. The
+                                      42 C ceiling an earlier draft used is now
+                                      FALSIFIED, not merely unverified.
 injury         i = 0                                    (immediate)
 drowning       head geom submerged > 20 s               (routed through i)
 sleep          NO DIRECT DEATH CONDITION
@@ -2972,17 +3093,24 @@ avoided later.
 
 ## 9. WHAT THIS DOCUMENT DOES NOT SETTLE
 
-- **THE BIOLOGY CITATIONS ARE NOT VERIFIED.** §1.2 is a table of mechanisms with
-  believed-primary sources and **not one of them was fetched** — the session's
-  200-call web-search budget ran out first. Two of them are *design constants*,
-  not background colour: the thermal lethal bounds (**28 °C / 40 °C, asymmetric**
-  — a second sweep already withdrew an earlier draft's unverified 42 °C ceiling)
-  and the Borbély time-constant ratio (≈4.4 : 1) that sets `τ_wake` and
-  `τ_sleep`. **Closing §1.2 is the first job of the next agent on this document,
-  and `NE.01` must not fix those constants before it is closed.** Everything else here is
-  design, and design does not become true by being cited — but a number that
-  claims to come from human physiology and does not is exactly the kind of quiet
-  fiction `LESSONS.md` exists to prevent.
+- **~~THE BIOLOGY CITATIONS ARE NOT VERIFIED.~~ CLOSED 2026-08-24 — and it was
+  worth doing.** §1.2 was a table of believed-primary sources, not one of them
+  fetched. The pass ran against primary sources and every row now carries a DOI
+  and a verdict. **What it found justifies the gate having existed:** one row
+  (the allostasis evidence) asserted, on a paper's authority, the finding that
+  paper had measured and *failed to find*; one design constant's citation
+  (starvation ~3 weeks, Minnesota) supported neither the number nor any number,
+  and the corrected figure moved the human thirst : hunger ratio from 1.4 : 1 to
+  3.1–4.9 : 1 — which is the first real justification the suite's 4 : 1 has ever
+  had; and the two flagged constants turned out to be *correctly valued and
+  wrongly named* (28/40 °C are incapacitation thresholds, not survival bounds;
+  the Borbély numbers are canonical but come from Daan 1984, not the 1982 paper
+  they were credited to, and the ratio is 4.33 not 4.4). **The `NE.01` gate is
+  lifted** subject to the two constraints recorded at the end of §1.2.
+  Everything else in that table is framing, and design does not become true by
+  being cited — but a number that claims to come from human physiology and does
+  not is exactly the kind of quiet fiction `LESSONS.md` exists to prevent, and
+  this document was carrying three of them.
 - **Whether the climber-rover is a fair stand-in for Jack.** Inherited unchanged
   from `CURIOSITY_BAKEOFF` §7 and `PS` §7. Every needs result is a result about
   8 actuated DoF until `T2.01` lands.
