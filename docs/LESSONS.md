@@ -5007,3 +5007,40 @@ re-pointed at state instead of at a model copy). The phantom-force bug itself
 is deliberately UNFIXED: patching `Water.apply` changes dynamics under every
 certificate that ran with it, so it is routed to the weekly Review as a
 world-design fix with a staleness bill attached, not patched in passing.
+
+## A routing is not a record — "sent to the Review" has no id, so it cannot be late
+
+2026-08-24, 27th overseer audit. Three separate world-design findings had been
+**correctly** refused an in-passing patch and "routed to the weekly Review":
+recipe sensitivity (`8f6f750`, 08-20), NE.01's knife-edged shelter occlusion
+(`e25d285`), and `Water.apply`'s pool-exit phantom force (`d1bc3d1`). Each
+refusal was right — patching W0 changes dynamics under every certificate that
+ran with it, and the phantom-force bill is **five PASS certificates** (BA.01,
+LC.02, PS.02, PS.03, XL.00). Each routing was written down honestly, in a test
+docstring, `LOOP_JOURNAL.md`, `LESSONS.md`.
+
+And none of them existed as an item. `grep` was the only index. There is no
+queue file, no `--check`, nothing that could print *"3 routed, 0 acted on,
+oldest 4 days"*. The destination organ, meanwhile, had died on its last run —
+`review.sh` retries on out-of-credits but not on a transient `API Error: 529`,
+so one overloaded server cost the whole daily sweep and nobody noticed, because
+nothing was watching for the absence of a result.
+
+This is the **missing-spec disease one level up**, and it fails in exactly the
+same way: a routed finding has no id, appears in no ranking, blocks nothing and
+fails no gate, so it is invisible to every instrument the system owns — while
+each individual decision that produced it was correct. `coverage.py` catches a
+commitment with no spec; `champions.py` catches a seat with no existing
+challenger; nothing catches a *finding with no ticket*.
+
+GENERALISED: **deferring work correctly is only half the act — the other half is
+creating the object that can be found later.** Whenever the right answer is "not
+here, not now, route it", the routing must produce a row with an id, a date, a
+source commit, the question, and its **staleness bill** (which certificates the
+fix would invalidate). If the only trace of a deferral is prose, the deferral is
+indistinguishable from a decision never made — and the more disciplined the
+refusal to patch in passing, the more of this invisible backlog a well-behaved
+loop accumulates. Corollary: an organ that is the *destination* of routed work
+must have liveness watched by something other than itself, and must retry a
+transient failure; a queue whose consumer is silently dead reads exactly like a
+queue that is empty.

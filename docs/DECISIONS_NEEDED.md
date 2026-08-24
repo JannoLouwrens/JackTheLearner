@@ -2022,3 +2022,64 @@ failed 0.1225; W33 kaggle 7.6340 + failed 0.2578); `/data/jack-logs/ladder.log`
 `/data/jack-logs/overseer.log` (11 consecutive `STOPPED at 94% weekly usage`);
 `scripts/claude_usage.py --pct` returns `week:all models`, verified live at 3%;
 `scripts/lib_usage.sh` `usage_gate`.*
+
+---
+
+## D7 — ARMED 2026-08-24 18:45 UTC (27th overseer audit). Eleven days open, evidence complete, no deadline — so silence was deadlocking it.
+
+D7 has sat OPEN since **2026-08-13** with its measurement complete (T3.07, FAIL,
+commit `741f7cf`, 3 seeds: a 4-way regime classifier reads the mood-modulated
+action streams at **0.225 / 0.275 / 0.375 against chance 0.25** — the action
+distributions across moods are statistically identical). The 23rd audit declared
+it *"ready to decide; no further measurement will inform it"* four days ago. It
+carries **no `DECIDE:` block**, so `experiments.decisions --check` reports it
+`UNDECLARED`: no default, no deadline, and therefore no exit from your desk
+except your attention.
+
+Under SYSTEM.md rule 3 as amended, I am arming it. **Deleting a component is
+yours** — that is why the loop never took this decision itself, and the default
+below does not take it either.
+
+DECIDE: D7
+  class:     goal
+  default:   Option 3 — ACCEPT AS COSMETICS, ON THE RECORD. MovementMoodCoupling
+             is KEPT, unchanged, for companion UI (idle posture, style text).
+             In exchange the record is narrowed: no spec may cite mood as a
+             BEHAVIOURAL channel, GOAL.md's interoception claims must route
+             through some other component, and T3.07's FAIL stands as the
+             registered finding rather than as an open question. The registry
+             note and CHAMPIONS.md are updated in the same commit that fires
+             this default. No model code is written, no module is deleted, no
+             threshold moves, and GOAL.md is not touched.
+  decide_by: 2026-08-31
+
+**Why this default and not the other two.** A default may only pick among
+already-permitted actions, and it must shrink the ratchet, never grow it.
+
+- **Option 1 (delete)** removes 1,539 params and a live call site. Deletion is
+  irreversible without you and is explicitly your call under the Tier-3 law. A
+  default may not take it.
+- **Option 2 (redesign + re-run T3.07)** is the loop's own preferred answer —
+  route mood into the brain as an input token rather than a post-hoc multiplier —
+  but it commissions new model code and new compute off the back of your
+  *silence*. A default that spends your budget on the loop's favourite option is
+  not a default, it is a preference wearing a deadline.
+- **Option 3 is the only branch that changes nothing in the world and something
+  in the record.** It writes down what was already measured and it FORBIDS a
+  class of future claim. That is a ratchet that shrinks.
+
+**How to reverse it.** Say so, at any time, before or after 2026-08-31. Firing
+the default costs one registry note and one CHAMPIONS.md cell; choosing option 1
+or 2 afterwards costs the same. Nothing is destroyed either way — which is
+precisely why option 3 is the safe thing for silence to mean.
+
+**What is NOT being defaulted.** The loop's substantive read stands and is worth
+your attention on its merits: *option 2's token route is the only one compatible
+with "every sense load-bearing, one brain" if mood is to be a sense at all;
+option 1 is the honest answer if it is not.* The default picks neither. It picks
+"stop claiming what the measurement refuted" and leaves the design fork to you.
+
+*Evidence: `docs/DECISIONS_NEEDED.md:1308` (D7 as filed, 2026-08-13) and `:1681`
+(23rd audit, ready-to-decide); T3.07's ledger row and commit `741f7cf`;
+`experiments.decisions --check` output of 2026-08-24 18:37 UTC listing D7 among
+10 `UNDECLARED` entries; SYSTEM.md rule 3 as amended 2026-08-24 (`d97c33f`).*
