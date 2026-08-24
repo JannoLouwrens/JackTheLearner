@@ -93,12 +93,15 @@ C_SW = 0.5                   # 1/C  PROPOSAL: water drain doubles exactly at
 
 # ── thermal ODE (§2.3). PROPOSALS, sized so a resting dry agent in the open
 # by day sits at the 37 C setpoint (k_dry = M_basal / (37 - T_day)), and a
-# night in the open equilibrates ~3.6 C cold (delta_T 0.6, no frostbite,
-# shiver at ~2.2x basal) — "survivable once, costly", the §2.3 pedagogy.
-# NE.01 calibrates DELTA_T_NIGHT against its 0.3-0.6 night-cost gate.
+# night in the open equilibrates ~3.0 C cold (dawn delta_T ~0.50, mid-band
+# of NE.01's 0.3-0.6 gate, no frostbite) — "survivable once, costly", the
+# §2.3 pedagogy. DELTA_T_NIGHT was CALIBRATED 12 -> 10 by NE.01's assigned
+# pre-run sweep (2026-08-24): 12 put the open-night cost at 0.598, on the
+# gate's own edge, where physics drift decides the verdict instead of the
+# world; 10 reads 0.498. The 5-point table ships in NE.01's metrics.
 T_SETPOINT = 37.0
 T_DAY = 30.0                 # C  PROPOSAL
-DELTA_T_NIGHT = 12.0         # C  PROPOSAL — NE.01's calibration target
+DELTA_T_NIGHT = 10.0         # C  calibrated by NE.01's sweep (see above)
 T_WATER = 24.0               # C  PROPOSAL: the pool is cool, so soaking at
                              # night is the fastest available way to die
 TAU_T = 240.0                # s  §2.3 gives it: the thermoneutral time constant

@@ -4753,3 +4753,55 @@ ships as a **ratchet rather than a gate**: the per-file debt is recorded in
 `BASELINE`, it may shrink, and it may never grow. A guard that fails everywhere
 on day one is one nobody keeps green, and a guard nobody keeps green is
 decoration — the failure this file already records one shelf over.
+
+## A limit says how much, never when — and "how much" alone starves the tail of the week
+
+**The measurement.** The 90% weekly-usage stop has worked correctly every hour
+since it was built. It has never once let the loop overspend. And every week it
+produced the same outcome:
+
+    week   loop went dark        dark for   free Kaggle GPU-h expired unspent
+    W32    Fri 2026-08-14 15:07     ~4.5 d   8.82 of 30
+    W33    Fri 2026-08-21 12:07     ~2.7 d  22.11 of 30
+
+Both blackouts started on a **Friday**, and Kaggle's free 30 h expire on the
+**Sunday** inside them. **30.9 free GPU-hours died in two weeks** — on a project
+whose owner has ruled free compute only. Nothing was misspent: every charged
+hour produced a ledger row or a pre-registered diagnostic. The loss was entirely
+that nobody was awake to press the button.
+
+**The cause is subtler than overspending, and it is worth stating exactly.**
+`week:all models` is a **shared** pool. The owner's interactive sessions draw on
+the very meter that stops the loop — at 2026-08-24 10:31 the reading was
+week:all-models **16%** against week:Fable **25%**, i.e. the builder's own model
+is metered separately and the gate reads the total. So the loop is halted by
+consumption it does not control, and being the only consumer with a gate, it is
+the one that starves. At that same reading it was **5x ahead of an even pace**:
+16% spent into 3% of the week.
+
+**The general shape.** A ceiling is a scalar and a week is an interval. A gate
+that compares one number to one number cannot express *earliness*, so it will
+happily approve spending the whole budget on day one and then report, correctly
+and uselessly, that the budget is gone. The missing quantity was never the
+percentage — it was the percentage's position in time, and the meter had been
+printing it all along (`resets Aug 31, 5am (UTC)`) with nobody reading it.
+
+**The repair, and why it is not a lower ceiling.** `pace_gate` draws a line from
+25% at the reset to the unchanged 90% at week's end and skips an iteration that
+is above it. Three properties keep it honest:
+
+1. **It is strictly tighter and structurally cannot loosen anything** — it runs
+   only *after* `usage_gate` has already said yes, so it can never return
+   proceed where the real limit returned stop.
+2. **It fails OPEN.** If the week's position is unreadable, pacing steps aside.
+   Unknown must not invent a second limit nobody set — while the real limit,
+   one function above, still refuses to run on an unreadable meter. Same word,
+   opposite correct answers, because one is the limit and one is a smoothing.
+3. **An owner resume outranks it.** `.usage-resumed` suspends pacing entirely:
+   an explicit "make it continue" beats a heuristic about tidiness.
+
+**Corollary, from the test that failed.** The first pace line topped out at 89%
+because integer division truncated the last point away, leaving one point of an
+untouched 90% ceiling permanently unreachable. **A pace line must converge ON
+the limit, not beside it** — otherwise it is a lower ceiling wearing a
+schedule's clothes, which is the one thing it promised not to be.

@@ -100,6 +100,12 @@ fi
 # UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
 # open is not a limit.
 usage_gate say || exit 0
+# ...and spread what is left across the week, so the loop is still awake on the
+# Sunday that Kaggle's free quota expires. Builder ONLY: it is ~82% of all organ
+# runs (168/wk against the overseer's 28, review's 7, field watch's 1), so
+# pacing it captures nearly all the benefit while the oversight organs — the
+# machinery that catches drift — keep the plain 90% gate at full strength.
+pace_gate say || exit 0
 cd "$REPO" || exit 0
 BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)

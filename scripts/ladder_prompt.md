@@ -46,6 +46,23 @@ cron happens to pass in (`JACK_LOOP_MODEL=fable`) and is **not the gate**.
 Print both lines (`claude_usage.py`, no flags) and say which one you are
 acting on. **No number is cached on this page — read the tool.**
 
+**THERE IS NOW A SECOND GATE ABOVE THE FIRST: pacing (added 2026-08-24).**
+`pace_gate` in the same file draws a line from 25% at the weekly reset to the
+unchanged 90% at week's end, and skips an iteration sitting above it. Read
+`claude_usage.py --week-elapsed` for the position. Three things to know:
+
+- **A `PACING:` line in `ladder.log` is NOT a fault and NOT a stop.** It is one
+  hour deferred so the budget survives to Saturday. Do not investigate it, do
+  not report it as an incident, and never work around it.
+- **It applies to the builder only.** Overseer, review and field watch keep the
+  plain 90% gate — they are ~18% of organ runs and they are the machinery that
+  catches drift, so they are not throttled.
+- **Why it exists:** two consecutive weeks went dark on a Friday and 30.9 free
+  Kaggle GPU-hours expired unspent on the Sundays inside those blackouts. If you
+  are awake late in a week, **that is what the pacing bought** — check whether
+  free GPU quota is about to expire and whether anything is genuinely worth
+  dispatching. Do not manufacture a dispatch to use it up.
+
 **What this section got wrong, recorded because it cost 66 hours.** On 08-21
 it told you the gate had "thirteen points of headroom" and that you were not
 in a blackout. Both were true at 06:40. By **12:07 the same day the gate
