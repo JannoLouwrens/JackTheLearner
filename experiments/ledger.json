@@ -501,7 +501,22 @@
       "status": "PASS"
     },
     "DP.05": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-24T21:11:08",
+          "by": "27th-audit-B1",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "a3facc5e6f8ceaa8",
+              "proof": "reconstructed a3facc5e6f8ceaa8 from git eacafe24b380; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "6f1e2b973c31db4c"
+            }
+          ],
+          "commit": "78699b9",
+          "reason": "FAIL RECORD AND ROUTING docstring block added at harvest (NE.01 idiom); code untouched, docstring-stripped AST identical"
+        }
+      ],
       "attempt": 1,
       "commit": "eacafe2",
       "compute_s": null,
@@ -523,7 +538,7 @@
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "impl_sha": "a3facc5e6f8ceaa8",
+      "impl_sha": "6f1e2b973c31db4c",
       "message": "pre-registered threshold not met",
       "metrics": {
         "borrow_ok": 1.0,
