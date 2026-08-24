@@ -100,12 +100,49 @@ fi
 # UNKNOWN IS NOT ZERO: if usage cannot be read, do NOT run. A meter that fails
 # open is not a limit.
 usage_gate say || exit 0
+# A PACE SKIP DEFERS CLAUDE SPEND — IT MUST NOT DEFER WORK THAT COSTS NONE.
+# A detached run (dispatch.sh / launch_detached.sh) can finish during a gated
+# hour and write its row into experiments/ledger.json; committing that row
+# spends no meter, and leaving it uncommitted is exactly what stalled DP.05's
+# finished FAIL overnight on 2026-08-24 (27th audit, B3) — and what an
+# owner-side `git add -A` swept into an unrelated commit the same day. Stage
+# ONLY the ledger: every other path in this tree may be the owner's or a live
+# session's (the add -A ban, one level down). The full harvest write-up
+# (docstring FAIL RECORD, journal, amend) still belongs to the next unskipped
+# iteration — this commits the evidence, not the interpretation.
+harvest_bookkeeping() {
+  cd "$REPO" || return 0
+  git diff --quiet -- experiments/ledger.json 2>/dev/null && return 0
+  # Refuse a torn file: the detached runner may be mid-write at this instant.
+  /data/venvs/jackthelearner/bin/python -c \
+    "import json; json.load(open('experiments/ledger.json'))" 2>/dev/null || {
+    say "bookkeeping: ledger.json dirty but unparseable (runner mid-write?) — left for the next iteration"
+    return 0; }
+  ROWS=$(/data/venvs/jackthelearner/bin/python - <<'PY' 2>/dev/null
+import json, subprocess
+old = subprocess.run(["git", "show", "HEAD:experiments/ledger.json"],
+                     capture_output=True, text=True).stdout
+old = (json.loads(old) if old else {}).get("results", {})
+new = json.load(open("experiments/ledger.json")).get("results", {})
+changed = {k for k in new if new.get(k) != old.get(k)} | {k for k in old if k not in new}
+print(" ".join(sorted(changed)) or "unknown")
+PY
+)
+  git add experiments/ledger.json 2>/dev/null || return 0
+  if git commit -q -m "pace-skip bookkeeping: detached-run ledger row(s) [${ROWS:-unknown}] committed while the builder was pace-gated (27th audit B3). Mechanical commit from ladder_loop.sh; the next unskipped iteration owes the harvest write-up. Only experiments/ledger.json staged." 2>/dev/null; then
+    say "bookkeeping: committed detached ledger row(s) [${ROWS:-unknown}] during pace skip"
+    git push -q 2>/dev/null && say "bookkeeping: pushed" || say "bookkeeping: push failed — next iteration retries"
+  else
+    say "bookkeeping: commit failed — left for the next iteration"
+  fi
+}
+
 # ...and spread what is left across the week, so the loop is still awake on the
 # Sunday that Kaggle's free quota expires. Builder ONLY: it is ~82% of all organ
 # runs (168/wk against the overseer's 28, review's 7, field watch's 1), so
 # pacing it captures nearly all the benefit while the oversight organs — the
 # machinery that catches drift — keep the plain 90% gate at full strength.
-pace_gate say || exit 0
+pace_gate say || { harvest_bookkeeping; exit 0; }
 cd "$REPO" || exit 0
 BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)

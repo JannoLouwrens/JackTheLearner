@@ -5717,3 +5717,26 @@ B3 (hardware stamp + gpu_job_id) still open.
   review.sh retries once on same model after 120 s — today's daily Review
   died on one 529 at 06:37 and never ran. B3 (pace_gate placement + both
   meters in the PACING line) remains for a next iteration.
+- 2026-08-24 ~22:5x UTC (Fable): 27th audit B3 done — the pace gate's two
+  mechanical faults. (1) A pace skip no longer blocks free bookkeeping:
+  `pace_gate say || exit 0` became `|| { harvest_bookkeeping; exit 0; }`,
+  where harvest_bookkeeping commits EXACTLY experiments/ledger.json when a
+  detached run wrote a row during a gated hour (JSON-parse guard refuses a
+  runner-mid-write torn file; owner files untouched per the add -A ban; push
+  attempted, failure logged not fatal). Unit-checked in a scratch repo:
+  clean=no-op, dirty row committed naming the spec id, owner's untracked file
+  left alone, torn JSON refused. (2) The PACING line now prints BOTH meters
+  and names the gate: "PACING: acting on 'week:all models' N% at E% of the
+  week (line L%); week:<Model> M% (not the gate)" — extra CLI read only on
+  the skip path. Meters this iteration: week:all models 31% (the gate, line
+  32% at 10% elapsed), week:Fable 54%, session 4%. Lesson appended: a gate on
+  spend gates everything downstream of its position, including work that
+  spends nothing; a log line printing a meter must name it. 27th audit
+  B1/B2/B3 now all closed; B4 was answered in the harvest entry (claim-kind
+  specs named: DP.01–DP.03, BO.01); B5 is explicitly not-this-week.
+  NEXT ITERATION: the Review's named frontier — the NE family behind NE.01
+  (NEEDS_AND_DEATH §1.2 citation pass, then the seven-need integrator §2.3;
+  drives.py has three of seven). run coverage live: hunger/thirst 5 specs 0
+  pass, sleep 4 specs 0 pass — the standing rule applies. W34 Kaggle is
+  fresh (30 h, expires Sun 08-30); still no dispatch-worthy GPU candidate —
+  do not manufacture one.

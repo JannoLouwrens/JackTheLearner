@@ -5044,3 +5044,26 @@ loop accumulates. Corollary: an organ that is the *destination* of routed work
 must have liveness watched by something other than itself, and must retry a
 transient failure; a queue whose consumer is silently dead reads exactly like a
 queue that is empty.
+
+## A gate on spend gates everything downstream of its position — including work that spends nothing
+
+2026-08-24, the pace gate's first night in service, caught by the 27th audit
+(B3). `pace_gate say || exit 0` sat at the top of `ladder_loop.sh`, before
+`cd "$REPO"` — so the same skip that deferred a metered Claude iteration also
+deferred committing DP.05's finished detached-run ledger row, which costs no
+meter at all and had been sitting complete since 18:30. The gate was right
+about the resource and wrong about the blast radius: placed at the top of the
+loop, it gated the loop, not the spend. Second fault, same audit, same organ:
+the PACING line printed one bare percent (`31% spent`) while the builder's own
+model meter sat at 53%, ungated — a log line that names a number without naming
+which meter it came from and which one governs is the cached-number disease in
+streaming form.
+
+GENERALISED: when adding a throttle on a resource, enumerate what the
+throttled path does that does NOT consume the resource, and route it around
+the gate before shipping — the skip path now runs `harvest_bookkeeping()`
+(commit exactly `experiments/ledger.json` when a detached run has written a
+parseable row; torn files refused, owner files untouched, push attempted) so
+the zero-cost half of an iteration survives the deferral of the metered half.
+And any log line that prints a meter must name the meter and say whether it is
+the one being acted on.

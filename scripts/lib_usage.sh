@@ -84,7 +84,15 @@ pace_gate() {
   # be unreachable — a pace line must converge ON the limit, not beside it.
   allow=$(( PACE_FLOOR + ((PACE_CAP - PACE_FLOOR) * elapsed + 99) / 100 ))
   if [ "$pct" -ge "$allow" ]; then
-    "$say_fn" "PACING: ${pct}% spent at ${elapsed}% of the week (line ${allow}%) — skipping, budget held for later in the week"
+    # Both meters, and the gate named (27th audit, B3): the old line printed one
+    # bare percent and read as "the loop is ${pct}% spent" when the builder's own
+    # model meter can sit 20+ points hotter, ungated. The extra CLI read costs a
+    # few seconds and only on the skip path — the path where no iteration runs.
+    local mdl mpct extra
+    mdl="${JACK_LOOP_MODEL:-opus}"; mdl="${mdl^}"
+    mpct=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --model "$mdl" --pct 2>/dev/null)
+    case "$mpct" in ''|*[!0-9]*) extra="week:${mdl} unreadable";; *) extra="week:${mdl} ${mpct}% (not the gate)";; esac
+    "$say_fn" "PACING: acting on 'week:all models' ${pct}% at ${elapsed}% of the week (line ${allow}%); ${extra} — skipping, budget held for later in the week"
     return 1
   fi
   return 0
