@@ -4978,3 +4978,32 @@ the reading drifted to "Jack's world rewards deliberation" regardless, and was
 repeated to the owner in that form. **The precondition for the entire fast/slow
 axis had never been tested in the world Jack is actually embodied in.** A PASS
 carries the world it was earned in, and a spec id does not.
+
+## A conditional writer's last write outlives its condition — a guarded apply() is a state machine
+
+2026-08-24, DP.05's fidelity pilot, before any registered run. `Water.apply`
+writes a body's `xfrc_applied` row only while the body is inside the pool;
+when the body leaves, the last force row stays applied forever — a phantom
+force on any object that exits the water, and invisible dynamics STATE inside
+an array everyone treats as per-step scratch. It surfaced only because
+DP.05's snapshot/restore machinery demands BYTE-IDENTICAL replay: seed 90
+(whose mutated world floats an object) mismatched 5/8 probes, seed 91 was
+clean on 8/8 — a rig fault that manifests in some worlds and not others, the
+kind that reads as seed noise forever if nothing insists on exactness. Second
+instance, same pilot, same shape: W0 carries one-substep-stale
+xipos/cvel/contacts across its decision boundary, so "the current state" that
+a boundary consumer (Water.apply, the drive gate) reads is not what
+`mj_forward(qpos, qvel)` would return — the derived fields inherit the
+staleness of whoever computed them last.
+
+GENERALISED: a writer that writes under a condition leaves its last write
+behind when the condition ends; a consumer of derived quantities inherits the
+staleness of the last computer. Before snapshotting, restoring, or comparing
+"the same state", enumerate every array a conditional writer touches and
+every derived field a boundary consumer reads — then prove the enumeration
+complete with a byte-identical replay probe that carries its own divergence
+check (a restore check that cannot fail is not a check; DP.00's probe rule,
+re-pointed at state instead of at a model copy). The phantom-force bug itself
+is deliberately UNFIXED: patching `Water.apply` changes dynamics under every
+certificate that ran with it, so it is routed to the weekly Review as a
+world-design fix with a staleness bill attached, not patched in passing.
