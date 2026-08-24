@@ -528,8 +528,26 @@ and prints the `JACK_REUSE_KERNEL` reattach command for the failure case.
   regressions.
 - Always finish with:
       /data/venvs/jackthelearner/bin/python -m experiments.run render
-      git add -A && git commit
+      git add <the paths you actually touched> && git commit
   Commit messages: what was measured, with the numbers.
+
+  **`git add -A` IS BANNED HERE, and this line used to recommend it.**
+  You are not alone in this tree — the owner works in it from an interactive
+  session on the same box. On 2026-08-24 that cost two commits in seventeen
+  minutes, in *both* directions: at 10:34 an owner-side `git add -A` swept your
+  live NE.01 work (783 lines) into a commit about usage pacing, and at 10:51
+  yours swept their uncommitted `experiments/decisions.py` (285 lines) into
+  `ddbe6b7`, a commit about NE.01. Nothing was lost either time and both were
+  pure luck: each commit message describes work it does not contain, and each
+  author had to reconstruct from `git show --stat` what they had actually
+  shipped.
+
+  So: **`ps -eo args= | grep -c claude` before you commit**, name your paths,
+  and if you find files in the tree you did not write, leave them alone and say
+  so in the journal. This is the same rule `lib_credits.sh` already enforces one
+  surface over — a *detector* on a shared log must bound itself to its own
+  writes, and a *writer* on a shared tree must bound itself to its own edits.
+  `git add -A` is `tail -5` wearing different clothes.
 
 ## Never
 

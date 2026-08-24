@@ -4868,3 +4868,41 @@ marker must name the decision's fate, never an entry's freshness.** This is the
 fourth instance of the same disease already in this file: *a control that reads
 a proxy for the thing it governs.* Directory mtime for "in use", a shared log's
 tail for "this run", a title for "covers", and now a header's tone for "closed".
+
+## Two writers, one tree: the sweep goes both ways, and both times it looked like success
+
+**The measurement, 2026-08-24, seventeen minutes apart.**
+
+    10:34  an owner-side session ran `git add -A` while builder iteration 10:07
+           was live. Commit e03693d, message about usage pacing, actually
+           contains the loop's in-flight NE.01 work — 783 lines it never
+           mentions.
+    10:51  the builder ran `git add -A` while the owner-side session had an
+           uncommitted new file in the tree. Commit ddbe6b7, message about
+           NE.01, actually contains 285 lines of `experiments/decisions.py`
+           written by someone else.
+
+Each author diagnosed the other's sweep and neither noticed their own until they
+read `git show --stat` on a commit they had written themselves. **Nothing was
+lost either time, and that was luck, not design** — both sweeps happened to
+capture complete files rather than half-saved ones.
+
+**Why it is worth a lesson rather than an apology.** The damage is not corruption,
+it is *attribution*: two commits now describe work they do not contain, and the
+history a future audit reads says the pacing change included a survival spec.
+`impl_sha` and the ledger are unharmed, so no certificate lies — but the
+narrative record does, and this project's whole method is that the narrative
+record can be trusted to say what was measured and when.
+
+**The general shape, and it is one this file already carries.** `lib_credits.sh`
+exists because a **detector on a shared log** must bound itself to its own
+writes — a `tail -5` on a file two processes append to will confidently report
+another process's message as its own. `git add -A` is that same `tail -5`: a
+**writer on a shared tree** assuming everything present is his. Same error,
+opposite side of the read/write line, and the second instance was committed by
+the very session that had just finished writing up the first.
+
+**The guard.** Name your paths. `ps` for a live peer before committing. If there
+are files in the tree you did not write, leave them and say so in the journal.
+`scripts/ladder_prompt.md` used to recommend `git add -A` in its finish-every-
+iteration block; it now bans it and explains why with these two commit hashes.
