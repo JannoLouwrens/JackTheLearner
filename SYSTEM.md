@@ -78,17 +78,47 @@ task.
    arms can both be run is not an escalation. It is an experiment somebody has
    not written yet.**
 
-   **THE ONE INVARIANT THAT KEEPS THAT SAFE:**
+   **THE INVARIANT THAT KEEPS THAT SAFE — and it takes THREE classes, not two.**
+   The first version of this section had two, and the owner caught the hole the
+   same day (2026-08-24): *"this project won't work if you can't let them
+   research and test stuff like that!!! architectural stuff. cause then we would
+   go one brain and NEVER EVEN SEE what would be fast slow brain."* They were
+   right. A binary means/goal split silently files every architectural bet on
+   the goal side, where nothing may test it.
 
-   > **A measurement may choose among PERMITTED arms.
-   > It may never choose WHAT IS PERMITTED.**
+   > **1. ENDS — fixed by the owner, never measured.**
+   >    What Jack must BECOME: he learns from lived experience; he has every
+   >    sense; he dies and remembers; nothing borrowed sits inside him; who he
+   >    becomes is not written down. No experiment can answer these, because
+   >    they are what "winning" MEANS.
+   >
+   > **2. ARCHITECTURE — always contested, never assumed.**
+   >    HOW he is built: one brain or fast/slow or separate systems; plastic or
+   >    frozen; which core; which fusion; which control path. **Every one of
+   >    these is a hypothesis. An architectural decree is a CHAMPION, not a
+   >    constitution** — it holds its seat until something beats it, and
+   >    `docs/CHAMPIONS.md` is where it lives, not here.
+   >
+   > **3. CONDUCT — fixed, and not up for measurement either.**
+   >    Pre-registration, controls that must fail, never weakening a threshold,
+   >    free compute only, tenant safety. The method is not an arm.
 
-   *Which architecture learns better* is a question about **means**: run both,
-   let the margin decide, never ask. *Is a frozen component permitted inside
-   Jack* is a question about the **goal** — it defines what winning is, and an
-   experiment allowed to pick its own success criterion will drift to whatever
-   is cheapest to demonstrate. That is the exact failure pre-registration exists
-   to prevent, so goal questions still go to the owner, and **only** those.
+   **A measurement may choose among class 2. It may never rewrite class 1 or 3.**
+
+   **AND THE STANDING RULE THAT MAKES "we never even saw it" IMPOSSIBLE:**
+
+   > **No architectural seat may be held without a REGISTERED, EXISTING
+   > challenger spec.** Not a named one — an existing one, resolvable in
+   > `BY_ID`. A seat whose arena does not exist is not contestable, whatever the
+   > file says.
+
+   This is not hypothetical hygiene. On 2026-08-24 an audit found that
+   `CHAMPIONS.md` cites `PL.00`, `PL.02`, `LG.00`, `LT.03`, `LT.04` and `T2.21`
+   as the arenas that would unseat the plastic-only decree, the LLM-as-parent
+   decree, the curiosity signal and the control architecture — **and not one of
+   those six specs exists in the registry.** Four of the project's most
+   consequential design choices had falsifiers that were never written.
+   `experiments/champions.py` now checks arena ids against `BY_ID` every audit.
 
    **AND AN ESCALATION MAY NOT DEADLOCK.** D1's real defect was not that it was
    asked — it was that it had no default and no clock, so silence and "not yet"
@@ -187,14 +217,33 @@ directive, and the scaffolding-vs-permanent needs correction of 2026-08-09.)
   Corollary: when the machine is sufficient, PROVE it by throughput — the
   Review's weekly question ("closer to a creature, or just busier?") is the
   guard against polishing the machine instead of running it.
-- **No learning core without unison.** Any candidate learning core — however it
-  scores on task metrics — is INADMISSIBLE unless it accepts every modality
-  into one shared representation, and its adoption is VOID until the standing
-  unison gates (the UB ablation matrix, placebo modality, binding test) pass
-  under it. A core that wins the task but fails binding has not won; it has
-  changed the subject. "All senses in one brain, trained together" is
-  constitutional (GOAL.md), and constitutional means: no bakeoff can trade it
-  away for a better score.
+- **No learning core is ADOPTED without unison — but every one may be RACED.**
+  A candidate core's *adoption* is VOID until the standing unison gates (the UB
+  ablation matrix, placebo modality, binding test) pass under it. A core that
+  wins the task but fails binding has not won the seat; it has changed the
+  subject. **What it HAS done is produce a number, and that number is kept.**
+
+  **This bullet used to end differently, and the difference is the whole point**
+  (owner ruling, 2026-08-24). It read: *"'All senses in one brain, trained
+  together' is constitutional, and constitutional means: no bakeoff can trade it
+  away for a better score"*, and `LC.01` implemented it as *"that arm is
+  EXCLUDED from LC.03/LC.04 — not scored and beaten, excluded."* So a
+  non-unified architecture could not enter the race at all, and the one-brain
+  organisation could never be shown to be the wrong shape however badly it lost.
+  **An assumption that cannot lose is not a finding, and this project claims
+  nothing it has not measured.** It also directly contradicted `UB.10`'s own A5
+  arm, which says in the registry: *"the credible non-trunk alternative; if A5
+  wins, 'one brain' is the wrong shape and we say so."* Two governing documents
+  gave opposite answers to "can one-brain be refuted?" — this one was wrong.
+
+  **The replacement: excluded becomes SCORED-AND-INELIGIBLE.** A non-unified arm
+  runs, is measured on the same ruler, and its number goes in the ledger and into
+  `docs/CHAMPIONS.md` as a standing challenger. It simply cannot be *seated*
+  while it fails binding. If it beats the unified arm, that is a finding the
+  owner is owed — loudly, in the Review — not a result the harness was built to
+  be unable to see. `bakeoff.py` already supports this exactly: pass the arm in
+  `arms=` and record its ineligibility, the way `LC.04` already treats `sb3-ppo`
+  as *"scored-but-ineligible reference"*.
 - **Free compute only.** 4 shared ARM CPU cores here; Kaggle 30 h/week (resets
   Sunday); Colab T4, elastic. Never propose or buy paid compute.
 - **This box serves paying tenants.** Never `systemctl restart docker` or any

@@ -1848,10 +1848,23 @@ EXPANSION: list[Spec] = [
                     "core's internal uncertainty CHANGES when it is; (U4) the "
                     "need-state modality holds at least 1/|M| of the total "
                     "prediction loss at init.",
-         falsified_by="Any arm failing any of U1-U4. That arm is EXCLUDED from "
-                      "LC.03/LC.04 — not scored and beaten, excluded — per "
-                      "SYSTEM.md's constitutional constraint. An arm cannot buy "
-                      "admission with a task score.",
+         falsified_by="Any arm failing any of U1-U4. That arm is INELIGIBLE FOR "
+                      "THE SEAT — it cannot be adopted, and it cannot buy "
+                      "adoption with a task score. It is still RUN AND SCORED, "
+                      "and its number is recorded as a standing challenger. "
+                      "[AMENDED 2026-08-24, owner ruling. This clause read "
+                      "'EXCLUDED from LC.03/LC.04 - not scored and beaten, "
+                      "excluded'. That made the one-brain organisation "
+                      "unfalsifiable: a non-unified arm could not enter, so it "
+                      "could never be shown to win, however badly one-brain "
+                      "lost. An assumption that cannot lose is not a finding. "
+                      "The MEASURED gate is unchanged - the conjunction U1-U4 "
+                      "and its thresholds are byte-identical, and the bar to "
+                      "HOLD the seat is exactly what it was. What changed is "
+                      "that the loser's number is now kept instead of never "
+                      "taken. Strengthen-only: this adds evidence and removes "
+                      "no gate. Requires a re-run to re-buy the certificate "
+                      "under the amended text.]",
          null_baseline="A deliberately unbound core: per-modality encoders "
                        "feeding a concatenation with NO cross-modal loss term. "
                        "U2's finite-difference gradient must read exactly 0.0 "
@@ -2541,6 +2554,123 @@ EXPANSION: list[Spec] = [
                "but expectation is not evidence and the jungle is not built "
                "yet."
                "  COVERS: fast/slow (fixture)"),
+
+    Spec("DP.05", 2, "Lookahead pays in the world he ACTUALLY lives in",
+         hypothesis="The DP.00 result reproduces in W0 - the MuJoCo climber-rover "
+                    "world with drives, heat and death that Jack is actually "
+                    "embodied in - not only in LC.00's 12x12 gridworld. An oracle "
+                    "planner given the simulator as its model beats the best "
+                    "reactive policy at matched experience by a real margin.",
+         falsified_by="Lookahead gains nothing in W0. Then DP.00's PASS was a "
+                      "statement about a gridworld and nothing more, there is no "
+                      "slow system to find in the world Jack inhabits, and the "
+                      "honest next move is to FIX THE WORLD (traps, delays, "
+                      "irreversibility - the preconditions GOAL.md already names) "
+                      "before any dual-process or brain-organisation claim is "
+                      "made in it. BO.01 does not run until this passes.",
+         null_baseline="The best reactive policy at matched experience in W0, "
+                       "plus DP.00's own gridworld gap as the reference the "
+                       "transfer is measured against.",
+         metric="return_gap_oracle_plan_vs_reactive_w0",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["DP.00", "LC.02"],
+         control="W0 with its traps disarmed - no lethal heat, no irreversible "
+                 "falls, food dense and immediate. Planning must NOT gain there. "
+                 "Without it a measured gain is indistinguishable from the "
+                 "planner simply having more compute or a better optimiser, and "
+                 "every later organisation number inherits the artifact. This is "
+                 "DP.00's own control, re-pointed at the real world.",
+         kills="Any reading of DP.00 as evidence about JACK. If this fails, the "
+               "DP family and BO.01 are claims about a world that does not exist "
+               "yet, and the ladder must say so rather than build on it.",
+         notes="WHY THIS EXISTS, and it is a correction. DP.00 PASSED on "
+               "2026-08-10 with return_gap 75.83 and a clean control, and has "
+               "been cited since as 'Jack's world rewards deliberation'. It is "
+               "not: dp_00_lookahead_pays.py imports _World/_Life from "
+               "lc_00_gridworld_decidable - a 12x12 tabular gridworld with "
+               "LIFE_CAP=200. Its own notes said the jungle was not built yet "
+               "and the reading drifted anyway. The precondition for every "
+               "fast/slow claim has therefore never been tested in W0.  "
+               "CHEAPEST FALSIFIER FIRST, exactly as DP.00 was: an oracle "
+               "rollout against the simulator, learning removed as a confound. "
+               "No new model code - w0.py + survival.py's policy hooks are "
+               "enough. This is the FIRST unblocked step on the whole fast/slow "
+               "axis: deps DP.00 and LC.02 are both PASS, so it is runnable the "
+               "moment it is written."
+               "  COVERS: fast/slow (fixture)"),
+
+    Spec("BO.01", 5, "Brain organisation: raced, not assumed",
+         hypothesis="Among organisations of the SAME parameters and the SAME "
+                    "compute, one shared substrate carrying a fast reflexive path "
+                    "and a slow deliberative path beats both a reactive-only "
+                    "single brain and two separate towers, on survival in W0.",
+         falsified_by="A reactive-only single brain matches or beats the "
+                      "fast/slow arm at matched compute - then deliberation is "
+                      "not earning its cost in this world and Jack should be "
+                      "reactive, whatever the design documents say. OR the "
+                      "two-tower arm wins - then 'one interconnected brain' is "
+                      "the wrong shape for action selection, and GOAL.md's claim "
+                      "changes rather than the result being discarded.",
+         null_baseline="The shared random-action null LC.03 already uses, so "
+                       "every arm is gated for having learned anything at all "
+                       "before any of them is compared to another.",
+         metric="life_gain_at_matched_compute",
+         # DELIBERATELY NOT gated on LC.04. Holding the core constant across the
+         # three arms is what the comparison needs, and the SEATED core does that
+         # whoever it is - waiting for the core to be ARBITRATED would re-create
+         # the exact blockage the owner ruled against on 2026-08-24. All three
+         # arms take whatever holds the CHAMPIONS.md learning-core seat, and the
+         # seat changing is a pre-registered REMATCH trigger for this spec, which
+         # is the idiom CHAMPIONS.md already uses ("a W0 champion must re-defend
+         # at W1"). An organisation result under a superseded core is a result
+         # that must be re-earned, not one that was never allowed to exist.
+         budget=Budget.CPU_DAYS, seeds=3, depends_on=["DP.05"],
+         control="A MATCHED-COMPUTE REACTIVE arm: the single brain given exactly "
+                 "the core-seconds per decision that the planner spends, burned "
+                 "on a wider forward pass rather than on rollouts. It must NOT "
+                 "match the fast/slow arm. Without it, 'deliberation helps' is "
+                 "indistinguishable from 'more FLOPs help', which is the known "
+                 "confound the DP family was written around (DP.04 carries the "
+                 "same null in verbal form) and the one that would make this "
+                 "whole spec decoration. Plus LC.03's statue and frozen-twin, "
+                 "inherited unchanged.",
+         kills="The one-brain organisation as an ASSUMPTION. Whatever wins, "
+               "afterwards the project holds its brain organisation by verdict "
+               "instead of by decree - and CHAMPIONS.md's Deliberation seat "
+               "stops reading 'VACANT - never contested. A reactive-only Jack is "
+               "the incumbent by default, which is a position nobody argued "
+               "for.'",
+         notes="THE SPEC THIS LADDER DID NOT HAVE. An audit on 2026-08-24 found "
+               "that of 179 specs, NOT ONE raced brain organisations against "
+               "each other. One shared brain was a PREMISE of the ladder, never "
+               "an outcome of it - so the project could have shipped a "
+               "reactive-only Jack and never once seen what fast/slow would have "
+               "done. The owner's ruling that day: 'this project depends on "
+               "research and testing at EVERY SINGLE STAGE'.  "
+               "THREE ARMS, matched params and matched core-seconds: "
+               "(A) REACTIVE-ONE-BRAIN, the incumbent - today's Core, one "
+               "forward pass per decision, no rollout; "
+               "(B) FAST-SLOW-SHARED, one trunk, a reflex head and a "
+               "deliberative head that rolls the learned model forward, with an "
+               "uncertainty gate deciding which runs; "
+               "(C) TWO-TOWER-SEPARATE, no shared parameters - the arm SYSTEM.md "
+               "used to exclude outright. It is now SCORED-AND-INELIGIBLE: it "
+               "runs and its number is kept, it simply cannot take the seat "
+               "while it fails the unison gates. If it wins, the owner is owed "
+               "that finding loudly, not protected from it.  "
+               "BUILD COST, measured not guessed (audit 2026-08-24): no core in "
+               "cores.py plans - WorldModelCore.rssm() hardcodes h0=zeros, "
+               "a0=zeros, so a rollout is impossible without changing it. Arm B "
+               "needs a PlanningCore (~120-180 lines), a gate (~40-80), a "
+               "survival.py act-path split with per-path compute accounting "
+               "(~30-60), and arm C a two-tower core (~60). LC.02's throughput "
+               "floor is the real constraint: wm-latent measured 6.37 sim-s/s "
+               "against a 5.0 floor, ~1.27x headroom, so 512x5 random shooting "
+               "is NOT affordable - size the search to the headroom (order 16 "
+               "samples x horizon 4) and declare it before running.  "
+               "This arm set also finally gives DP.02 its two-tower control, "
+               "which the spec requires and which does not exist today."
+               "  COVERS: fast/slow (claim)\n"
+               "  COVERS: one brain / unison (claim)"),
 
     Spec("DP.01", 3, "Practice moves a behaviour off the deliberative path",
          hypothesis="For a task practised to criterion, the performance cost of "
