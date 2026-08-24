@@ -5376,3 +5376,33 @@ B3 (hardware stamp + gpu_job_id) still open.
   the standing rule, else `run next`'s first implemented-unsettled spec;
   T2.15/T2.19 still need IMPLEMENTING (gpu<20min each) before any
   dispatch is defensible.
+- 2026-08-24 ~06:3x UTC (builder): STAGE 0.1 — processed the INTEGRATION_QUEUE
+  top entry (NEEDS_AND_DEATH.md §7) per its 5-step protocol. Meters printed,
+  acting on week:all-models 1% vs the 90% stop (Fable 2%, session 7% — fresh
+  week). Standing rule checked first: all runnable zero-pass claims remain
+  parked/blocked (SM.02 parked, BA.02 per D8, SH.01 →LC.04 behind D10, DP.04
+  →unregistered LG.00, VO.02 needs a second Jack), so the queue top was the
+  unit — and it answers the Review's 11-day flat-registry finding directly.
+  REGISTERED NE.00–NE.09 (`20e7b29`, 169→179, verbatim + notes-only COVERS
+  and caveats). Cross-check found and carried two real conflicts: XL.01
+  (registered 08-19, AFTER the doc; FAIL + power-blocked) overlaps NE.08 —
+  its measured power verdict now BINDS NE.08's implementer to a pre-run power
+  calculation; and NEEDS_AND_DEATH §9's unverified citations gate NE.01's
+  thermal/Borbély constants until a citation pass closes §1.2. W.6 stays
+  unregistered (withdrawn by SURVIVAL_WORLD §5.0). IMPLEMENTED + RAN NE.00
+  (exact VI, two tabular drive MDPs, 4.7 s, 3 seeds): **PASS — all five
+  reward-algebra predictions confirmed.** DR/CC greedy sets identical at
+  γ∈{0.9,0.95,0.99} on the 35-state continuing MDP; telescope 4.6e-16 over
+  2,000 closed paths; best discounted cycle −0.015 < 0 (not farmable);
+  death divergence: suicide col 11/11, cc 1/11, dr 0/11 (direction gated —
+  the lost pilot's 8/11 was its parameterisation, declared in the docstring);
+  clip cycle +0.09 vs exact 0.0 (NetHackEat's shipped form is farmable);
+  discrimination control live (event reward differs in 43–45% of states at
+  every γ). The reward form Jack's needs will train under is now a ledger
+  claim, not a research-doc assertion. Ledger 84/179. NEXT ITERATION: NE.01
+  is the next cheapest of the family but is DOUBLE-GATED (the §1.2 citation
+  pass must close first, and the seven-need integrator of §2.3 needs
+  building — drives.py has 3); the citation pass is a good research unit.
+  Queue top is now NEEDS_AND_DEATH→done; next entries: PURPOSE_AND_SCAFFOLDING
+  (BLOCKED-ON-CORRECTION), CURIOSITY_BAKEOFF LT.01–09 (PENDING). D10 (LC.03
+  design fork) still on the owner's desk; W34 Kaggle fresh (30 h).

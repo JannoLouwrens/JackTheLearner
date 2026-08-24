@@ -2720,6 +2720,56 @@
       "spec_id": "ME.9",
       "status": "PASS"
     },
+    "NE.00": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "20e7b29",
+      "compute_s": null,
+      "control_metrics": {
+        "event_differs_mean": 0.447619,
+        "event_differs_mean_std": 0.0,
+        "event_differs_min": 0.428571,
+        "event_differs_min_std": 0.0
+      },
+      "duration_s": 4.7,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "d4b6a13e42502598",
+      "message": "",
+      "metrics": {
+        "clip_cycle_return": 0.09,
+        "clip_cycle_return_std": 0.0,
+        "cycle_best_discounted": -0.0145949,
+        "cycle_best_discounted_std": 0.0152871,
+        "dr_cc_identical": 1.0,
+        "dr_cc_identical_std": 0.0,
+        "dr_cycle_return": 0.0,
+        "dr_cycle_return_std": 0.0,
+        "policy_nonconstant": 1.0,
+        "policy_nonconstant_std": 0.0,
+        "reward_algebra_predictions_confirmed": 5.0,
+        "reward_algebra_predictions_confirmed_std": 0.0,
+        "rho_first_frac": 0.1,
+        "rho_first_frac_std": 1.38778e-17,
+        "suicide_cc": 1.0,
+        "suicide_cc_std": 0.0,
+        "suicide_col": 11.0,
+        "suicide_col_std": 0.0,
+        "suicide_dr": 0.0,
+        "suicide_dr_std": 0.0,
+        "telescope_max_abs": 4.62593e-16,
+        "telescope_max_abs_std": 2.61682e-17
+      },
+      "ran_at": "2026-08-24T06:27:26",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "NE.00",
+      "status": "PASS"
+    },
     "PG.1": {
       "amended": [],
       "attempt": 4,
