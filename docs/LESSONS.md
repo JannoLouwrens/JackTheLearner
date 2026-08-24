@@ -4906,3 +4906,75 @@ the very session that had just finished writing up the first.
 are files in the tree you did not write, leave them and say so in the journal.
 `scripts/ladder_prompt.md` used to recommend `git add -A` in its finish-every-
 iteration block; it now bans it and explains why with these two commit hashes.
+
+## An assumption that cannot lose is not a finding — and this ladder had four of them
+
+**The measurement, 2026-08-24.** Of **179 specs**, **not one** raced brain
+organisations against each other. One shared brain was a *premise* of the
+ladder, never an outcome of it. The nearest three things all fall short in the
+same instructive way:
+
+- `DP.02` does contain a two-tower architecture — as a **control**, to prove the
+  lesion probe can detect disconnection. It is never *scored* against shared
+  substrate on capability.
+- `UB.10` races six fusion topologies — a different axis entirely.
+- `LC.03/04/05` race five learning *rules* inside one organisation.
+
+Each tests that **the chosen design has a property**. None asks whether a
+different design would have been better.
+
+**And the exclusion was deliberate.** `SYSTEM.md` said *"'All senses in one
+brain, trained together' is constitutional, and constitutional means: no bakeoff
+can trade it away for a better score"*, which `LC.01` implemented as *"that arm
+is EXCLUDED from LC.03/LC.04 — **not scored and beaten, excluded**."* A
+non-unified arm could not enter the race, so one-brain could never be shown to
+be the wrong shape however badly it lost.
+
+**The tell was already inside the repo, in two places, and nobody joined them.**
+`UB.10`'s A5 arm reads: *"the credible non-trunk alternative; if A5 wins, 'one
+brain' is the wrong shape and we say so."* And `CHAMPIONS.md`'s Deliberation
+seat reads: *"VACANT — never contested. A reactive-only Jack is the incumbent by
+default, **which is a position nobody argued for**."* Two governing documents
+gave opposite answers to "can one-brain be refuted?", and a third confessed the
+consequence in plain language. The project was honest at every individual point
+and wrong in aggregate.
+
+**The general shape, and it is the deepest one in this file.** A method that
+demands falsifiable claims can still smuggle in unfalsifiable *premises*, and
+the premises are more dangerous precisely because the method's rigour vouches
+for everything downstream of them. Every one of those 179 specs was
+pre-registered, controlled and honestly scored — **on top of an architecture
+nobody was allowed to question.** Rigour below the assumption does not test the
+assumption; it decorates it.
+
+**Four ways the smuggling happened here**, worth recognising by shape:
+
+1. **Excluded, not beaten** — the alternative cannot enter (`LC.01`).
+2. **The alternative cast as the loser in advance** — `CU.3` writes ICM/RND in
+   as *"controls-that-must-fail"*, so if learning-progress is wrong, no spec in
+   the ladder can say so.
+3. **Property-tested instead of competed** — `ME.10` proves two memory stores
+   dissociate; it never races a single store. `DP.02` proves the substrate is
+   shared; it never races a separated one on capability.
+4. **A falsifier that does not exist** — `CHAMPIONS.md` names `PL.00`, `PL.02`,
+   `LG.00`, `LT.03`, `LT.04`, `T2.21` as the arenas that would unseat the
+   plastic-only decree, the LLM-as-parent decree, the curiosity signal and the
+   control architecture. **None of the six is in the registry.** A re-open
+   trigger keyed to a spec nobody wrote is not a trigger, and a seat that names
+   a non-existent arena looks contestable while being immovable.
+
+**The guards.** `SYSTEM.md`'s invariant now has three classes rather than two —
+ENDS (fixed), **ARCHITECTURE (always contested)**, CONDUCT (fixed) — because a
+binary means/goal split files every architectural bet on the goal side, where
+nothing may test it. A standing rule: **no architectural seat may be held
+without a registered, EXISTING challenger**, resolvable in `BY_ID`, not merely
+named. `experiments/champions.py` checks arena ids every audit.
+
+**And a correction that belongs here.** `DP.00` — *"this world rewards looking
+ahead at all"* — **PASSED in a 12×12 tabular gridworld**, not in W0.
+`dp_00_lookahead_pays.py` imports `_World`/`_Life` from
+`lc_00_gridworld_decidable`. Its own notes said the jungle was not built yet;
+the reading drifted to "Jack's world rewards deliberation" regardless, and was
+repeated to the owner in that form. **The precondition for the entire fast/slow
+axis had never been tested in the world Jack is actually embodied in.** A PASS
+carries the world it was earned in, and a spec id does not.
