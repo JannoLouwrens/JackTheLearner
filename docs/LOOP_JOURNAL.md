@@ -5406,3 +5406,30 @@ B3 (hardware stamp + gpu_job_id) still open.
   Queue top is now NEEDS_AND_DEATH→done; next entries: PURPOSE_AND_SCAFFOLDING
   (BLOCKED-ON-CORRECTION), CURIOSITY_BAKEOFF LT.01–09 (PENDING). D10 (LC.03
   design fork) still on the owner's desk; W34 Kaggle fresh (30 h).
+- 2026-08-24 ~07:2x UTC (builder): 26th-audit builder items executed. Meters
+  printed, acting on week:all-models 3% vs the 90% stop (Fable 4%, fresh
+  week). Committed the 08-24 Review's uncommitted ladder_prompt.md rewrite.
+  B1: T3.01's registry control now records acc_shuffled_train as RECORDED
+  not gated (v3 read 0.25/0.3167/0.25 vs the 0.35 line; leak burden on
+  hash_overlap + pixshuf). B2: T0.21 gained P10 — every COVERS: marker in a
+  test-file docstring must parse under the registry grammar AND be backed
+  pair-for-pair by its spec's registry declaration (file->spec via
+  module_path_for; known-answer fixtures for the kind-flip and unbacked
+  diseases). Live sweep found the audit's three PLUS t3_01's run-on marker
+  (parsed malformed); all four fixed, T0.21 re-run PASS 10/10 at clean
+  commit, live problems 0. THE FIND OF THE ITERATION: the docstring fixes
+  stranded T3.01 and T2.05 because t2_03/t2_04 are their IMPL_DEPS and the
+  doc-only lane read deps at current bytes — extended it with
+  tree_reconstructing_sha (file+deps at one committed tree state, prose
+  proof owed for every drifted dep; negative-tested, all old refusals kept);
+  all four rows amended, proofs name the drifted deps. T0.17/T0.27 re-bought
+  PASS after the protocol.py edit. B4: CHAMPIONS learning-core cell now
+  states the LC.03 conclusion, seat PENDING D10, wm-latent NOT seated. B5:
+  NE.03 notes now require a pre-run power calc vs LC.03 v2 spreads and hold
+  it if D10 redesigns W0. LESSONS corollary: a neighbourhood hash needs a
+  neighbourhood-proof lane. Ledger 84/179; stale block back to the two old
+  VOIDs (BA.02, T2.02). NEXT ITERATION: B3 (UB.9's conditional-claim registry
+  statement) remains prose and unhurried; B6 says W34's 30 Kaggle h belong to
+  a genuine zero-pass candidate — run coverage/blocked yourself; the NE.01
+  §1.2 citation pass is the named research unit; D1/D9/D10 still on the
+  owner's desk.
