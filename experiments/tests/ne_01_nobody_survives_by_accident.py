@@ -122,6 +122,38 @@ spread is a statement about the reduction, not about a second quieter world.
 WHAT THIS CANNOT SAY: that needs teach anything (NE.03), that any need earns
 its parameters (NE.02), or that the compression of human timescales into a
 1,200 s sim-day is harmless (§9 declares it unsettled; gate 5 only bounds it).
+
+## FAIL RECORD AND ROUTING (builder, 2026-08-24 — do not re-roll unchanged)
+
+Three attempts, ONE measurement: attempt 3 (clean stamp, commit 5063144, ran
+15:45 UTC) reproduced attempt 2's metrics to every recorded digit — the run
+is deterministic, so relaunching unchanged is not a lottery, it is a replay.
+7/9 gates green; the claim core HOLDS (5/5 random lives die in-window, statue
+dies dehydrated with cause recorded, coarse/fine dT 3.5e-4, forager survives
+all 18,000 decisions, null flat). The two red gates, as measured:
+
+* ok_spread 1/3 seeds — min_need_spread 0.287 vs the 0.30 bar. Marginal, and
+  not the finding.
+* ok_night_shelter 0.0 EVERY seed — and this one is a statement about the
+  world, not the rig. The static pose probe finds the occ 0.5-0.9 band at
+  0.741 every seed, but the SLEPT night realizes occ 0.337 +/- 0.467 and
+  T_dawn 35.8 +/- 2.6 C, cost 0.665 vs the open night's 0.498. Per-seed the
+  outcome is BIMODAL: the sleeping ragdoll either slides out of the band
+  (and freezes like the open) or seals against the roof (occ -> 1, and
+  cooks — the delta_T algebra proves it: mean cost 0.665 at mean T 35.8 is
+  impossible on the cold side alone). The band exists statically and is not
+  dynamically HELD by a sleeping body; "a night at occ >= 0.4 is nearly
+  free" fails AS MEASURED.
+
+ROUTING, per law 3: the fork this opens is WORLD DESIGN — whether the
+occlusion affordance should be graded rather than knife-edged (the 9-ray
+head cone yields sharp ninths transitions in occ that a settling body cannot
+hold; grading the cone, widening the band geometry, or damping the sleeper
+are all runnable arms). It moves the world's occlusion law — an IMPL_DEP of
+this spec that also feeds the thermal shelter term — so sequencing and the
+downstream-certificate cost belong to the weekly Review as a redesign
+bakeoff, not to an iteration re-rolling NE.01 until the ragdoll lands in the
+band. Full diagnosis in LOOP_JOURNAL 2026-08-24 ~15:1x.
 """
 from __future__ import annotations
 
