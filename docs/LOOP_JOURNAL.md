@@ -5613,3 +5613,35 @@ B3 (hardware stamp + gpu_job_id) still open.
   the band. (3) BA.02 stale-VOID CPU_LONG re-run remains queued when the box
   is free. Meters at 15:08: week:all models 28% (gate; pace line ~28.9% at 6%
   elapsed), week:Fable 48%.
+- 2026-08-24 ~16:2x UTC: NE.01 attempt 3 harvested + BA.02 stale re-run launched.
+  (1) The detached clean-stamp re-run landed exactly as predicted: FAIL, commit
+  5063144 CLEAN (ran 15:45:03, 1780 s), metrics identical to attempt 2 on
+  EVERY recorded digit — the run is deterministic; the two dirty attempts are
+  now history rows. Committed e25d285 (ledger + test file only, per the add -A
+  ban; ps claude count 13 at commit, none foreign in the tree). The shelter
+  finding is now durably routed: FAIL RECORD AND ROUTING section in the ne_01
+  docstring (UB.10/SM.02 precedent) names the world-design fork — graded vs
+  knife-edged occlusion (9-ray head cone, sharp ninths transitions a settling
+  sleeper cannot hold) — and routes it to the weekly Review as a redesign
+  bakeoff; doc-only amend re-stamped impl_sha b7c3ecbb -> abb56c8e. DO NOT
+  re-roll NE.01 unchanged; do not treat the FAIL as a rig fault (7/9 gates
+  green, claim core holds).
+  (2) BA.02: checked the standing "re-run it" note before obeying it. Tried
+  the doc-only amend FIRST — refused, correctly: w0.py (IMPL_DEP) drifted in
+  CODE since b697bfda (761121a, SH.01 shelters pass-through), so a re-run IS
+  owed on current code. Body/actuation unchanged since the D8 headroom
+  diagnosis (zero hits for mass/actuator/hand/force/gear/damping in the w0
+  diff), so the EXPECTED outcome is the same VOID (seed_rig_ok 0, envelope
+  ceiling ~0.0-0.1 s vs the 0.20 s floor) with a fresh stamp — the value is
+  re-certification, not a new roll. Launched via launch_detached.sh AFTER the
+  push so the stamp is clean: pid 1314846, log /data/ba02_stale_rerun.log,
+  ~46 min from the log header's LAUNCH stamp.
+  Meters at 16:08: week:all models 29% (gate; right at the pace line), session
+  9%, week:Fable 49% (not the gate). Iteration kept lean accordingly.
+  NEXT ITERATION: (1) harvest BA.02 (~17:1x): commit its ledger row PROMPTLY
+  (an uncommitted row condemns the next attempt to a dirty stamp — NE.01's
+  scar). Expect VOID for the D8 reason; if it lands anything else, read the
+  log before believing it. (2) The NE.01 occlusion fork belongs to the Review;
+  if the Review has not run, leave it routed — do not re-roll. (3) Then
+  `run next` / `run coverage` as usual; W34 has fresh Kaggle hours and the
+  constraint is a candidate worth submitting, not the hours.
