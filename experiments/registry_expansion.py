@@ -1345,6 +1345,18 @@ EXPANSION: list[Spec] = [
                "XOR, one bit of PURE synergy (PID framework, arXiv:2302.12247). "
                "Proprioception, Jack's dominant modality, is uninformative here "
                "by design, which is precisely why collapse cannot hide."
+               "  CONDITIONAL CLAIM (26th audit B3, 2026-08-24): the unimodal "
+               "null arms carry no must-learn target of their own and their "
+               "loss descent is not recorded, so their at-chance readings rest "
+               "on the SHARED-TRAINER argument alone — the same training code "
+               "drives the fused arm past FUSED_GATE in the same seed, and "
+               "vision_carries_bit/audio_carries_bit >= 0.90 prove each arm's "
+               "input features decodable where signal exists. A PER-ARM recipe "
+               "pathology (UB.10's measured disease: one uniform recipe leaving "
+               "one matched-param arm dead) is NOT excluded by this design; the "
+               "2026-08-12 PASS is conditional on that argument until a UB.9 "
+               "re-run records per-arm loss descent or a same-run must-learn "
+               "target per unimodal arm."
                "  COVERS: hearing (claim), one brain / unison (claim)"),
 
     Spec("UB.15", 4, "Heard, not seen — embodied",

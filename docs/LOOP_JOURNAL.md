@@ -5562,3 +5562,22 @@ B3 (hardware stamp + gpu_job_id) still open.
       bound itself to its own edits exactly as a DETECTOR on a shared log must.
       `git add -A` is `tail -5` wearing different clothes — both read a shared
       surface and assume everything on it is theirs.
+- 2026-08-24 ~11:1x UTC: 26th-audit B3 CLOSED (the last open builder item from
+  that audit): UB.9's recorded gap is now a registry statement, not docstring
+  prose — its notes state the CONDITIONAL CLAIM verbatim (unimodal null arms
+  have no must-learn target and no recorded loss descent; the at-chance
+  readings rest on the shared-trainer argument + carries-bit >= 0.90; UB.10's
+  measured per-arm recipe pathology is NOT excluded; the 2026-08-12 PASS is
+  conditional until a re-run records per-arm descent). Inserted BEFORE the
+  COVERS: marker because DECLARATION consumes to end of sentence/line —
+  appending after it would have corrupted the unison declaration. Verified:
+  coverage exit 0, zero bad markers, UB.9 still declares hearing+unison
+  (claim), `run verify` 83/83 re-judged, 0 failures. Doc-only; no re-run owed,
+  no threshold moved. CONCURRENCY NOTE: NE.01 was live (pids 1247703/1248272)
+  in a peer session the whole iteration — I took no runnable unit to avoid the
+  4-core contention and the harvest is THEIRS; do not double-record it.
+  NEXT ITERATION: if NE.01 has landed, harvest-side duties are the peer's;
+  yours is `run next`/`run coverage` as usual. BA.02 is STALE (recorded VOID,
+  test now 452de81d) and CPU_LONG — re-run it when the box is not already
+  training something. B6 posture stands: W34 has 30 fresh Kaggle h, dispatch
+  before polish when a GPU-worthy unit appears.
