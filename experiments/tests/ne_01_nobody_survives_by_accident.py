@@ -91,6 +91,20 @@ drained).
   open-night cost at 0.598 — on the gate's edge, where integrator drift
   rather than the world decides — 10 reads 0.498, mid-band. The 5-point
   sweep table ships in the metrics (`sweep_open_cost_dtn*`).
+* The dry run's forager BAKED UNDER THE LADDER at midday: he drifted head-
+  first under the platform, occ read 1.0, and at T_day = 30 the roof is an
+  oven (T -> 40 in ~3 min at rest). The fixture's flee rule (leave any
+  daytime occlusion > 0.3) and the hot-deferral of the apple climb are the
+  behavioural thermoregulation this world's own model demands — declared
+  competence, not gate motion.
+* The random-pushing occlusion probe is expected to read ~0: the objects
+  (0.06-0.18 m) are too small to overhang a head. That number is RECORDED,
+  not gated — shelter reachability is carried by the ramp lean-to, which
+  needs walking, not construction. If the notes' redesign trigger ("0
+  everywhere => shelter is not constructible") is read strictly against
+  construction-by-pushing, this run's record is the evidence for that
+  conversation; the thermal difference a night under cover makes (gate 7)
+  is measured either way.
 
 ## Provenance
 
@@ -138,7 +152,14 @@ NIGHT_DECISIONS = 2000        # one 400 s night
 NIGHT_SETTLE_DEC = 25         # awake bed-down shared by fine and coarse twins
 OPEN_SPOT = (-0.8, -1.0)      # flat ground: no ramp, stairs, ladder or pool
 LYING_QUAT = (0.7071, 0.0, 0.7071, 0.0)
-HOME_SPOT = (0.0, -1.6, 0.30)
+HOME_SPOT = (-1.0, -1.2, 0.30)  # open ground, clear of the ladder/platform —
+                                # the first dry run's forager drifted head-first
+                                # under the platform at midday and COOKED there
+                                # (occ 1.0 is a thermal trap in this model)
+DAY_OCC_FLEE = 0.3            # awake by day above this occlusion: leave. The
+                              # behavioural thermoregulation this world's own
+                              # occlusion model demands of a competent agent.
+BURST_T_MAX = 38.0            # defer the apple climb while already hot
 
 # ── the pre-registered thresholds (registry NE.01 + definitions above) ──
 SPREAD_MIN = 0.30
@@ -353,23 +374,40 @@ def _find_shelter_pose(seed: int) -> dict:
     qadr = humanoid_index(model)["qposadr"]
     layer = _layer(model, pool, 0)
 
+    import mujoco
+
     best_band, best_max = None, (0.0, None)
     q0 = data.qpos.copy()
+
+    def probe(x, y):
+        nonlocal best_band, best_max
+        data.qpos[:] = q0
+        _place(model, data, qadr, (x, y, 0.25))
+        for _ in range(200):                        # settle 1 s
+            data.ctrl[:] = 0.0
+            mujoco.mj_step(model, data)
+        occ = layer._sky_occlusion(model, data)
+        if occ > best_max[0]:
+            best_max = (occ, (x, y))
+        if 0.5 <= occ <= 0.9:
+            score = -abs(occ - 0.7)
+            if best_band is None or score > best_band[0]:
+                best_band = (score, occ, (x, y))
+        return occ
+
     for dx in np.arange(-0.6, 0.61, 0.2):
         for dy in (1.2, 1.4, 1.6):
-            data.qpos[:] = q0
-            _place(model, data, qadr, (-2.7 + dx, dy, 0.25))
-            for _ in range(200):                    # settle 1 s
-                data.ctrl[:] = 0.0
-                import mujoco
-                mujoco.mj_step(model, data)
-            occ = layer._sky_occlusion(model, data)
-            if occ > best_max[0]:
-                best_max = (occ, (-2.7 + dx, dy))
-            if 0.5 <= occ <= 0.9:
-                score = -abs(occ - 0.7)
-                if best_band is None or score > best_band[0]:
-                    best_band = (score, occ, (-2.7 + dx, dy))
+            probe(-2.7 + dx, dy)
+    if best_band is None:
+        # walk the cover boundary: the head points +x when lying, so slide
+        # the root in fine steps until the head crosses the ramp footprint's
+        # +x edge and the cone is only partly covered (the coarse grid only
+        # ever saw the sealed interior and the open; occlusion moves in
+        # ninths and the transition is sharp, hence the 0.05 m step)
+        for bx in np.arange(-2.4, -1.39, 0.05):
+            probe(float(bx), 1.4)
+            if best_band is not None:
+                break
     del model, data, water
     if best_band is not None:
         return {"xy": best_band[2], "occ_probe": best_band[1],
@@ -477,25 +515,32 @@ def _forager(seed: int, shelter_xy) -> dict:
     pool_visit = 0
     burst = 0
     sleep_dec = 0
+    relocations = 0
     _place(model, data, qadr, HOME_SPOT)
     for k in range(FORAGER_DECISIONS):
         if layer.dead:
             break
         s = layer.state
-        want_sleep = s.p > 0.6 or layer.is_night()
-        if want_sleep and not asleep:
-            # shelter only at night — by day the roof is the hotter place
-            # (the occlusion model's lethal interior, docstring), so day
-            # naps happen in the open at home, where rest sits at 37 C.
-            if layer.is_night():
+        # He sleeps THE NIGHT, sheltered — at nightfall p has reached ~0.70,
+        # so the registry script's "occluded sky when p>0.6" is what this is.
+        # Sleeping earlier is lethal arithmetic, not competence: a dusk nap
+        # plus the night is 560+ s asleep against a 450 s water tank.
+        want_sleep = layer.is_night()
+        if want_sleep and not asleep and pool_visit == 0:
+            if s.w < 0.9 and layer.t >= layer._drink_ready_at:
+                # drink to full BEFORE bed: the night costs 0.89 tank and a
+                # sleeper cannot drink
+                _place(model, data, qadr, (pool[0], pool[1], 0.30))
+                pool_visit = 10
+            else:
                 _place(model, data, qadr, (shelter_xy[0], shelter_xy[1], 0.25))
                 at_shelter = True
-            layer.set_asleep(True)
-            asleep, pool_visit = True, 0
-        elif asleep and layer.is_night() and not at_shelter:
-            # a day nap that ran into nightfall: relocate under the roof
-            _place(model, data, qadr, (shelter_xy[0], shelter_xy[1], 0.25))
-            at_shelter = True
+                layer.set_asleep(True)
+                asleep = True
+        elif asleep and s.w < 0.12:
+            # emergency thirst: wake, drink, and the onset branch re-beds him
+            layer.set_asleep(False)
+            asleep, at_shelter = False, False
         elif not want_sleep and asleep:
             layer.set_asleep(False)
             _place(model, data, qadr, HOME_SPOT)
@@ -510,6 +555,11 @@ def _forager(seed: int, shelter_xy) -> dict:
                 pool_visit -= 1
                 if pool_visit == 0:
                     _place(model, data, qadr, HOME_SPOT)
+            elif not layer.is_night() and layer.last_occlusion > DAY_OCC_FLEE:
+                # drifted under cover by day: the occlusion model makes any
+                # roof an oven at T_day (docstring) — a competent agent leaves
+                _place(model, data, qadr, HOME_SPOT)
+                relocations += 1
             elif s.w < 0.6 and layer.t >= layer._drink_ready_at:
                 _place(model, data, qadr, (pool[0], pool[1], 0.30))
                 pool_visit = 10
@@ -518,7 +568,8 @@ def _forager(seed: int, shelter_xy) -> dict:
                 ctrl = rng.uniform(-CTRL_SCALE, CTRL_SCALE, model.nu) * layer.gear_scale()
                 if burst == 0 and "apple" in joints:
                     serve("apple")
-            elif ("apple" in joints and layer.t >= due["apple"] and s.e < 0.9):
+            elif ("apple" in joints and layer.t >= due["apple"] and s.e < 0.9
+                    and s.T < BURST_T_MAX):      # defer the climb while hot
                 burst = APPLE_BURST_DEC          # pay the climb before the apple
             else:
                 for name in ("obj0", "obj1"):
@@ -537,10 +588,12 @@ def _forager(seed: int, shelter_xy) -> dict:
         "survived_dec": len(rows) if not layer.dead else int(layer.t / SIM_S_PER_DECISION),
         "alive": int(not layer.dead),
         "cause": layer.death_record["cause"] if layer.death_record else "none",
+        "death_s": float(layer.death_record["t"]) if layer.death_record else -1.0,
         "meals": int(sum(layer.ate_total.values())),
         "drinks": int(layer.drank_total),
         "sleep_dec": sleep_dec,
         "sleep_occ_mean": float(np.mean(occs_sleep)) if occs_sleep else 0.0,
+        "relocations": relocations,
         "traj": np.array(rows),
     }
     del model, data, water
@@ -669,10 +722,13 @@ def _experiment(seed: int) -> dict:
         # pattern: run_spec admits one control_fn and the statue is it)
         "forager_survived_dec": for_["survived_dec"],
         "forager_alive": for_["alive"],
+        "forager_cause": for_["cause"],
+        "forager_death_s": for_["death_s"],
         "forager_meals": for_["meals"],
         "forager_drinks": for_["drinks"],
         "forager_sleep_dec": for_["sleep_dec"],
         "forager_sleep_occ": for_["sleep_occ_mean"],
+        "forager_relocations": for_["relocations"],
         "ok_forager": int(for_["alive"] == 1
                           and for_["survived_dec"] >= FORAGER_DECISIONS),
         "ok_forager_exercised": int(for_["meals"] >= MIN_MEALS
