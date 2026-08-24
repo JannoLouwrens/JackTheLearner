@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 84 / 179 demonstrated
+## 84 / 181 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -554,7 +554,7 @@ Every line here is backed by an experiment that could have failed;
 
 - [x] **LC.01** Every candidate core takes every sense into one latent, or it is not a candidate
       - _asserts:_ For each admissible arm: (U1) every modality key reaches the shared state tensor and no modality has a private path to the action; (U2) perturbing modality A's input produces a NONZERO finite-difference gradient at modality B's encoder through the arm's declared binding loss; (U3) each modality can be dropped without a shape error and the core's internal uncertainty CHANGES when it is; (U4) the need-state modality holds at least 1/|M| of the total prediction loss at init.
-      - _dies if:_ Any arm failing any of U1-U4. That arm is EXCLUDED from LC.03/LC.04 — not scored and beaten, excluded — per SYSTEM.md's constitutional constraint. An arm cannot buy admission with a task score.
+      - _dies if:_ Any arm failing any of U1-U4. That arm is INELIGIBLE FOR THE SEAT — it cannot be adopted, and it cannot buy adoption with a task score. It is still RUN AND SCORED, and its number is recorded as a standing challenger. [AMENDED 2026-08-24, owner ruling. This clause read 'EXCLUDED from LC.03/LC.04 - not scored and beaten, excluded'. That made the one-brain organisation unfalsifiable: a non-unified arm could not enter, so it could never be shown to win, however badly one-brain lost. An assumption that cannot lose is not a finding. The MEASURED gate is unchanged - the conjunction U1-U4 and its thresholds are byte-identical, and the bar to HOLD the seat is exactly what it was. What changed is that the loser's number is now kept instead of never taken. Strengthen-only: this adds evidence and removes no gate. Requires a re-run to re-buy the certificate under the amended text.]
       - _then delete:_ Bare PPO as a candidate learning core. Per docs/research/LEARNING_CORE.md 3.7, PPO's senses meet only through a scalar reward, so an admissible PPO arm must carry L_masked_cross_modal. Also kills TD-MPC2 outright (arXiv:2310.16828 is state-based proprioception only, no vision, by construction).
 - [x] **LC.02** A core that cannot live a life at survivable wall-clock is not a core
       - _asserts:_ Every admissible arm sustains at least 5.0 simulated seconds of Jack's life per real second on 3 ARM cores at nice 19 with the learner in the loop, at the train_ratio this spec selects for it; and the selected train_ratio is the largest power-of-two value that clears that floor.
@@ -642,6 +642,17 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ There exist states in Jack's world where an agent with a PERFECT model and unlimited rollouts beats the best reactive policy by a real margin. Deliberation buys something here.
       - _dies if:_ With a perfect model and unlimited lookahead, planning gains nothing over the reactive policy. Then this world has no slow system to find, DP.01-DP.03 are unregistrable as written, and the finding is about the WORLD - it needs traps, delays or irreversibility before any dual-process claim can be made in it.
       - _then delete:_ The entire DP family, and the 'spend compute when it matters' story with it.
+- [ ] **DP.05** Lookahead pays in the world he ACTUALLY lives in
+      - _asserts:_ The DP.00 result reproduces in W0 - the MuJoCo climber-rover world with drives, heat and death that Jack is actually embodied in - not only in LC.00's 12x12 gridworld. An oracle planner given the simulator as its model beats the best reactive policy at matched experience by a real margin.
+      - _dies if:_ Lookahead gains nothing in W0. Then DP.00's PASS was a statement about a gridworld and nothing more, there is no slow system to find in the world Jack inhabits, and the honest next move is to FIX THE WORLD (traps, delays, irreversibility - the preconditions GOAL.md already names) before any dual-process or brain-organisation claim is made in it. BO.01 does not run until this passes.
+      - _then delete:_ Any reading of DP.00 as evidence about JACK. If this fails, the DP family and BO.01 are claims about a world that does not exist yet, and the ladder must say so rather than build on it.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **BO.01** Brain organisation: raced, not assumed
+      - _asserts:_ Among organisations of the SAME parameters and the SAME compute, one shared substrate carrying a fast reflexive path and a slow deliberative path beats both a reactive-only single brain and two separate towers, on survival in W0.
+      - _dies if:_ A reactive-only single brain matches or beats the fast/slow arm at matched compute - then deliberation is not earning its cost in this world and Jack should be reactive, whatever the design documents say. OR the two-tower arm wins - then 'one interconnected brain' is the wrong shape for action selection, and GOAL.md's claim changes rather than the result being discarded.
+      - _then delete:_ The one-brain organisation as an ASSUMPTION. Whatever wins, afterwards the project holds its brain organisation by verdict instead of by decree - and CHAMPIONS.md's Deliberation seat stops reading 'VACANT - never contested. A reactive-only Jack is the incumbent by default, which is a position nobody argued for.'
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 
@@ -738,8 +749,8 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **NE.01** The needs are a real control problem: nobody survives by accident
-      - _asserts:_ With PG.8's body under RANDOM action in the playground, every need traverses a usable range (10th-90th percentile spread >= 0.3, none pinned), a random agent DIES within 300-6,000 decisions, a DO-NOTHING statue dies of starvation, a scripted competent forager survives >= 3 sim-days, no single need causes more than 60% of random deaths, a night in the open costs 0.3-0.6 of drive and is survivable ONCE, and a night at sky_occlusion >= 0.4 is nearly free.
+- [!] **NE.01** The needs are a real control problem: nobody survives by accident  — all_finite=1.0; all_finite_std=0.0
+      - _asserts:_ With PG.8's body under RANDOM action in the playground, every need traverses a usable range (10th-90th percentile spread >= 0.3, none pinned), a random agent DIES within 300-6,000 decisions, a DO-NOTHING statue dies with its cause recorded (dehydration under §2.3's own constants — the water retiming outran the original 'starvation' prose; corrected 2026-08-24 per the build-time flag in notes), a scripted competent forager survives >= 3 sim-days, no single need causes more than 60% of random deaths, a night in the open costs 0.3-0.6 of drive and is survivable ONCE, and a night at sky_occlusion >= 0.4 is nearly free.
       - _dies if:_ A random agent never dies (the needs are inert and cannot pressure anything), or dies within 300 decisions (no policy can learn under them), or the statue survives (the dark room is a stable optimum and homeostasis will produce a corpse), or one need causes >60% of deaths (the other six are decorative in practice whatever their lambda says), or shelter makes no measurable difference to a night (the only mechanism that teaches construction is dead on arrival).
       - _then delete:_ Every number in NEEDS_AND_DEATH 2.3. It cannot kill the idea, only the parameterisation — which is why it runs before anything trains. Every constant in 2.3 is a PROPOSAL until this spec replaces it with a measurement.
 

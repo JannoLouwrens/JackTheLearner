@@ -5601,7 +5601,8 @@ B3 (hardware stamp + gpu_job_id) still open.
   exactly that reason). impl_sha b7c3ecbbdf10d672 reconstructs byte-identical
   from HEAD, so per run status's instruction the re-run is a stamp upgrade,
   not a lottery: launched via launch_detached.sh, pid 1302941, log
-  /data/ne01_attempt3_rerun.log, ETA ~30 min from 15:29.
+  /data/ne01_attempt3_rerun.log, ETA ~30 min from 15:15 (the log header's
+  LAUNCH stamp is authoritative).
   NEXT ITERATION: (1) harvest attempt 3 — expect the SAME FAIL with a clean
   stamp; commit the ledger row promptly (an uncommitted row condemns the next
   attempt to a dirty stamp — that is what happened here). (2) The shelter
