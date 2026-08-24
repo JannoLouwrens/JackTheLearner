@@ -1923,3 +1923,55 @@ these can be unblocked by compute; the fork forbids manufacturing the PASS.
 offline against the recorded row 2026-08-24 (builder journal); curves at
 `experiments/artifacts/lc03_curves_seed{0,1,2}.json` on this box; the fork
 pre-registration in `docs/LOOP_JOURNAL.md` 2026-08-21 ~07:1x.*
+
+## QUOTA POLICY — one budget empties three days before the other; 30.9 free GPU-hours have expired unspent in two weeks (26th overseer audit, 2026-08-24 06:45 UTC)
+
+**This is not a science decision and it does not re-open your 90% stop.** It is
+a standing operational carve-out that only you can authorise, because it spends
+your Claude budget.
+
+**The measurement.** Both budgets run Monday-to-Monday: the Claude weekly pool
+resets Mon 05:00 UTC, and Kaggle's 30 free GPU-hours are accounted by ISO week
+(Mon–Sun). They are not misaligned. **They drain at different rates** — the
+Claude pool is exhausted by Thursday or Friday and Kaggle's is not — so the last
+two to three days of every week hold free GPU quota with no agent awake to
+dispatch it.
+
+| | loop dark | Kaggle week ended | Kaggle charged | **expired unspent** |
+|---|---|---|---|---|
+| W32 | Fri 08-14 (partial) → Tue 08-19 | **Sun 08-16** | 21.185 h of 30 | **8.82 h** |
+| W33 | Fri 08-21 12:07 → Mon 08-24 05:07 | **Sun 08-23** | 7.892 h of 30 | **22.11 h** |
+
+**Neither loss was misspending.** Every hour actually charged produced a ledger
+row or a pre-registered diagnostic that changed a design; `overruns` is empty
+and failed-kernel time was 3.3% of W33. The loss is entirely "nobody was awake
+to press the button" — Kaggle kernels and `launch_detached.sh` runs compute
+*through* a blackout and write their own receipts, so a dispatch made before the
+freeze costs one lean iteration and returns a result that cannot be bought after
+the reset.
+
+**The ask, one sentence:** authorise a standing **dispatch-then-idle carve-out**
+— when `week:all models` crosses ~80%, the loop may spend one deliberately lean
+iteration dispatching detached remote work before it freezes, rather than
+planning that work for after the reset. The 90% hard stop is unchanged; this
+only governs how the approach to it is spent. The builder half is filed as
+OVERSIGHT B6 and needs nothing from you.
+
+**A second-order cost you should decide deliberately rather than inherit.** The
+same stop takes the *auditors* down with the builder: **11 consecutive overseer
+audits refused at the gate** (08-21 12:37 → 08-24 00:37) and the Review with
+them, so this report is the first in **71.7 hours** against a 6-hour cadence.
+The 25th audit predicted exactly this in writing three days before it happened
+(*"burning it to 90% takes the auditors down with you"*). Options, if you want
+one: leave it as-is (oversight is cheap to skip when the builder is also
+stopped, which is the honest argument for the status quo); or carve the
+overseer and Review out of the stop at a small fixed reserve. **I am not
+recommending the carve-out for myself** — a blacked-out builder produces nothing
+to audit, so the current behaviour is defensible. It should just be a choice.
+
+*Evidence: `experiments/gpu_budget.json` `weeks` counter (W32 kaggle 21.0621 +
+failed 0.1225; W33 kaggle 7.6340 + failed 0.2578); `/data/jack-logs/ladder.log`
+(zero `iteration start` lines on 08-15..08-18 and on 08-22..08-23);
+`/data/jack-logs/overseer.log` (11 consecutive `STOPPED at 94% weekly usage`);
+`scripts/claude_usage.py --pct` returns `week:all models`, verified live at 3%;
+`scripts/lib_usage.sh` `usage_gate`.*

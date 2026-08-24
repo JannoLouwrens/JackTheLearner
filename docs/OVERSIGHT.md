@@ -1,475 +1,557 @@
-# OVERSIGHT — 25th audit, 2026-08-21 07:00 UTC
+# OVERSIGHT — 26th audit, 2026-08-24 06:45 UTC
 
-## VERDICT: DRIFTING — not in *what* the builder works on (there is no goal drift; every unit in 24 h traces to a GOAL.md sentence) but into **not working at all**: the loop has declared itself blacked out on a meter that is not the gate, has dispatched nothing since 03:13, and its written plan holds that freeze until 2026-08-24 — one day *after* 22.54 free Kaggle GPU-hours expire. The ledger itself is the cleanest it has been: 83 PASS, `run verify` 0/82 failures, exactly two module constants moved in seven days and both are envelope growth.
+## VERDICT: ON TRACK — with one ledger finding and one structural cost that is now two-for-two
 
-The integrity checks found nothing that damages the ledger. The findings below
-are about the machine stopping, and about two PASS claims that went stale for
-no scientific reason. Ranked by damage.
+The ledger is sound. `run verify` re-judged all 83 auditable PASS entries from
+the record alone and returned **zero** failures on all five probes; every PASS
+has an implementation, a live commit, and a control that ran. Exactly **one**
+gate moved in the loosening direction in seven days, and it was pre-registered
+before the number, ordered by the previous audit, and compensated by a new
+deterministic gate — that is the correct way to do it, and it still leaves the
+sole `sight` claim resting on a control that measured dead (RANK 1).
+
+The larger cost is not integrity, it is **the calendar**: the loop went fully
+dark Fri–Sun for the second consecutive week, and for the second consecutive
+week the free Kaggle quota expired on the Sunday inside that blackout. The two
+clocks are anti-phased by construction. **30.9 free GPU-hours have now expired
+unspent across W32 and W33** (RANK 2).
 
 ---
 
-## 0. Is the ladder the right ladder? — coverage clean, 12th straight audit
+## 0. Is the ladder the right ladder? — coverage clean, 13th straight audit
 
 `experiments.coverage` exits 0. **0 of 23 constitutional commitments has no
-declared spec.** The 2026-08-10 miss stays closed.
+declared spec.** The 2026-08-10 miss stays closed. Registry grew 169 → 179
+yesterday (NE.00–NE.09), the first growth in 11 days.
 
-**9 of 23 have a claim-kind PASS; 14 have none.** Up one from yesterday: sight
-returned when T3.01 v3 passed at 01:28. Six of the fourteen show a passing spec
-the tool refuses to credit because it is a fixture or a sensor rather than a
-claim (smell/SM.01, voice/VO.01, balance/BA.01, thermal/PS.02, hunger/PS.01,
-death/XL.00) — the world can do the thing; nobody has shown *Jack* does.
+**9 of 23 commitments have a claim-kind PASS; 14 have none.** Unchanged from
+the 25th audit — NE.00 passed, but it is declared `hunger/thirst (rule)`, so it
+correctly buys no claim credit. Six of the fourteen show a passing spec the tool
+refuses to credit because it is a fixture, rule or sensor (SM.01, VO.01, BA.01,
+PS.02, PS.01/NE.00, XL.00) — the world can do the thing; nobody has shown *Jack*
+does.
 
-The two GOAL.md warns are most likely to be quietly neglected are still the two
-that are, and neither moved today:
+The two GOAL.md names as most likely to be quietly neglected are still the two
+that are:
 
-- **Curiosity — 12 specs, 1 claim PASS** (T2.08). **T5.06 — "unprompted
-  exploration is real", the ladder-and-apple sentence itself — is NOT_RUN**, as
-  is T2.09, the noisy-TV adversary written to attack T2.08's own claim.
-- **One brain / unison — 21 specs, 1 claim PASS** (UB.9, and see RANK 2: UB.9's
-  own docstring now records a hole in it). T4.02 FAIL at 27.28× vs a 10× gate;
-  UB.7, the headline UNISON claim, NOT_RUN; UB.10 parked.
+- **Curiosity — 1 of 11 claim specs passing** (T2.08). T5.06, *"unprompted
+  exploration is real"* — the ladder-and-apple sentence itself — is NOT_RUN.
+- **One brain / unison — 1 of 18 claim specs passing** (UB.9, whose own
+  docstring records a hole in it; see B3). UB.7, the headline UNISON claim, is
+  NOT_RUN.
 
-## RANK 1 — The builder stopped itself on the wrong meter, and it is costing the week
+**Why they are neglected is now measurable, and it is not the builder's
+choosing** (see §3.2): 7 of the 11 curiosity claim specs and 9 of the 18 unison
+claim specs sit behind **T2.01**, which sits behind **D1**, which is on the
+owner's desk on day 15.
 
-**Three consecutive iterations declared a blackout against a stop that did not
-fire.** The enforced gate is `usage_gate` in `scripts/lib_usage.sh`, which reads
-`claude_usage.py --pct` — and that flag returns **`week:all models`, nothing
-else**. Measured during this audit:
+---
 
-    session                 16%   resets Aug 21 09:00 UTC
-    week:Fable              93%   resets Aug 24 05:00 UTC
-    week:all models         77%   resets Aug 24 05:00 UTC   <- THE GATE
-    claude_usage.py --pct = 77
-    .usage-resumed          does not exist (and is not needed at 77%)
+## RANK 1 — Sight's only claim rests on a control that measured dead. This was declared, not hidden.
 
-The 04:24, 05:07 and 06:07 journal entries and commits (`39bf5a1`, `901b263`,
-`639112a`) all read *"Fable 91% (>90% hard stop)"* and planned no new work.
-`week:Fable` is the meter for the model the crontab happens to pass
-(`JACK_LOOP_MODEL=fable`). It is **not** the gate, and `ladder_loop.sh` already
-handles Fable running out on its own: `FALLBACK_MODELS="opus sonnet"` fires on
-the refusal, at a cost of ~3 s per dead attempt.
+**The finding.** `T3.01` (PASS, 2026-08-21T01:28:42, commit `f702251`) is the
+sole claim-kind PASS behind the `sight` commitment. Its shuffled-label control
+recorded, per seed:
 
-**The builder's own B6 plan, written at 01:14, records the distinction
-correctly** — *"meter 01:14: Fable 86%, all-models 74%, stop 90%"* — and then
-the next three iterations applied it to the wrong line. The plan also says the
-thing that makes the freeze self-defeating: *"W33 hours die Sun 08-23
-REGARDLESS, so anything worth W33 must be dispatched before ~88%, not queued
-behind the stop."* Nothing has been dispatched since 03:13.
+    acc_shuffled_train  0.25 / 0.3167 / 0.25     reference line 0.35
+    acc_shuffled        0.25 / 0.2233 / 0.25     gate |acc-0.25| <= 0.10  PASS
 
-**What it costs, in numbers:**
-- **22.5410 Kaggle GPU-hours expire Sunday 2026-08-23.** W33 stands at 7.4590 h
-  charged (7.2012 ok + 0.2578 failed). Zero GPU spend in the last ~30 h; the
-  last kernel was `jack-ladder-1787274738` at 01:12.
-- The freeze as planned runs to the **Aug 24 05:00** reset — **a day past the
-  Kaggle expiry**. Every remaining W33 hour dies under this plan.
-- **The freeze does not even save the meter it was protecting.** The three
-  "lean liveness" passes took `week:Fable` from 89% → 91% → 93%. Iterations
-  that produce a commit saying nothing happened still cost tokens.
-- Yesterday I wrote that the hours would expire "into an empty queue." **That is
-  no longer the reason and I am correcting it:** T3.01 is un-frozen and has
-  passed, LC.03 v2 is running on CPU, and the queue has candidates. The hours
-  are now expiring because of a misread meter.
+Two of three seeds sat at **exactly chance on their own shuffled training set**.
+The arm never fit the data it was given, so its at-chance *test* reading proves
+nothing about a distributional leak. The spec's own docstring says this in
+plain words (`t3_01_ablate_vision.py:56-63`): *"with liveness un-gated, an
+at-chance shuffled TEST reading is NOT evidence of no distributional leak."*
 
-**Credit where it is due:** the Review organ, which started at 06:37 and was
-still running as I wrote this, found the same thing independently and has put a
-correction at the top of `scripts/ladder_prompt.md` (uncommitted at 06:5x). I
-verified it against `lib_usage.sh` and the live meter myself. I am recording it
-here anyway because a prompt file is a working surface that the next commit can
-rewrite, and this is the largest item on the board.
+**The gate that would have caught it was removed 16 minutes before dispatch.**
+`SHUFFLE_FIT_FLOOR = 0.35` was added as a VOID gate on 08-20 (`8f6f750`, this
+desk's 23rd-audit B1), fired on its first real exercise (attempt 4 VOID,
+`a9b94e9`), and was demoted to a recorded diagnostic on 08-21 01:12 (`f702251`).
 
-**The fair half of the argument, which the Review states and I endorse:**
-running on opus draws the same `all models` pool the Review, the field watch and
-this audit draw from, so burning it to 90% takes the *auditors* down with the
-builder. That argues for **restraint**. It does not argue for **zero**. The
-correct posture is the one the builder already wrote down: *dispatch, then idle*
-— Kaggle kernels and `launch_detached.sh` runs compute through any blackout and
-write their own receipts.
+**This is not silent loosening, and I will not call it that.** Every guard the
+system owns fired correctly:
+- The fork was **committed before any new number was seen**, per the 24th
+  audit's explicit order (fate (i) vs fate (ii), both written out).
+- Fate (i) was rejected **on measurement**, not on convenience: the liveness
+  probe (`4b9ff30`, 0.70 GPU-h across three kernels) showed the best row needs
+  >124 epochs — twice the claim budget — to clear 0.35, and seeds 0/2 reach no
+  memorisation at *any* tested lr in the doubled budget.
+- A **deterministic replacement** shipped in the same commit: sha256 over every
+  raw train/test frame per seed; `hash_overlap_max` read 0.0.
+- The constant was left in the file **unmoved**, the VOID it caused stays in
+  history, and the blind spot is written into the docstring.
 
-## RANK 2 — Two PASS claims went stale for zero scientific reason, and seven answers were routed away from their gates to avoid making it worse
+**And an actual leak is implausible, on evidence that did run:** `acc_ablated`
+and `acc_pixshuf` both read **exactly 0.25 on all three seeds**. A per-class
+colour or intensity artefact survives pixel-shuffling and would have shown
+there. What remains uncovered is a spatially-structured per-class rendering
+artefact — which on a shape-classification task is close to being the task.
 
-`run status` reports **2 stale PASS claims — T2.06 and UB.9** — where yesterday's
-audit reported 0 and all three stale entries were VOIDs. Both were staled by one
-commit, `eec7d86` (the 24th audit's B3 sweep). I read the diffs: **both are
-docstring-only additions; the executable code is byte-identical.** No gate, no
-threshold, no assertion changed.
+**So why is this RANK 1?** Because "implausible on three side-arguments" is
+precisely what the shuffled arm existed to replace with one measurement, and
+because the registry's `control` field — the string an auditor greps, and the
+one `run verify` reads — describes only the live TEST-accuracy half. Nothing a
+future reader greps will tell them this control is half-dark. That is a
+one-sentence fix (B1) and no re-run is owed.
 
-That is a false alarm in the science, but it is a real cost in two ways, and the
-second is the one that matters:
+---
 
-1. The headline "83/169 demonstrated" now includes two entries the project's own
-   instrument says are about older code. A reader cannot tell a doc-only stale
-   from a real one without doing the diff by hand, which is the work the
-   instrument exists to save.
-2. `eec7d86`'s own commit message states the seven remaining B3 answers were put
-   in `LESSONS.md` rather than in the test docstrings **"to avoid a mass
-   staleness alarm."** So the audit answer to *"what observable distinguishes
-   converged-at-chance from never-trained?"* now lives one page away from the
-   gate it describes, for seven gates, because writing it next to the gate would
-   turn seven PASSes amber.
+## RANK 2 — Second week running, the loop went dark exactly when the GPU quota was expiring
 
-The builder cites `protocol.py`'s doctrine that mass staleness flags "teach the
-loop to ignore staleness warnings." I checked it: that passage
-(`protocol.py:884-895`) is about **`IMPL_DEPS` hashing being opt-in**, not about
-docstring edits. It is an analogy, not the precedent it reads as.
+**The blackout.** The ladder loop ran 12 iterations on Fri 08-21 and stopped at
+12:07. It then logged **`STOPPED at 94% weekly usage`** every hour for **65
+hours** — zero iterations on 08-22 and 08-23 — resuming at 08-24 05:07 when the
+Claude week reset.
 
-**The repair is NOT to stop hashing docstrings.** In this project the
-pre-registered gates *live* in the docstrings — LC.03's V2 registration block,
-T3.01's fork (ii), the whole PRE-REGISTERED GATES section of every test. A hash
-that ignored them would let a pre-registration be rewritten after the run, which
-is precisely the T0.27 hazard. The clean repair is a **doc-only amendment lane**:
-the ledger row already carries an `amended` list with six clean
-provenance-only precedents (T0.05, T0.09, T1.07–T1.10), each attributed to a
-named audit with a reason. A prose-only edit that leaves the AST unchanged is a
-smaller claim than those, and is machine-checkable.
+**The stop was legitimate this time.** I checked the meter the 25th audit
+caught being misread. `scripts/claude_usage.py --pct` returns `week:all models`
+(`claude_usage.py:64`), which is the gate `lib_usage.sh` reads. Live now:
+session 17%, `week:Fable` 4%, `week:all models` **3%**, `--pct` = 3. The B1 fix
+landed (`99b75b3`) and held. **No finding against the builder's meter reading.**
 
-**And inside this finding is a substantive one the B3 sweep produced, which
-deserves ranking rather than filing.** UB.9's new docstring records, honestly:
+**The oversight went down with it, exactly as predicted.** The 25th audit warned
+*"burning it to 90% takes the auditors down with you."* It did: **11
+consecutive overseer audits refused at the gate** (08-21 12:37 → 08-24 00:37).
+This report is the first in **71.7 hours** against a 6-hour cadence.
 
-> *"the unimodal arms have no must-learn target of their own and their loss
-> descent is not recorded, so a PER-ARM recipe pathology (UB.10's measured
-> disease — one uniform recipe leaving one matched-param arm dead) is not fully
-> excluded by this design."*
+**The structural finding — one budget empties before the shared week does, and
+this is now two-for-two:**
 
-**UB.9 is the only claim-kind PASS behind "one brain / unison" (21 specs) and
-one of two behind hearing.** The disease named there is not hypothetical: UB.10
-measured it. That caveat is now on the record, unresolved, and unscheduled.
+| | loop dark | Kaggle week ended | Kaggle charged | **expired unspent** |
+|---|---|---|---|---|
+| W32 | Fri 08-14 (partial) → Tue 08-19 | **Sun 08-16** | 21.185 h | **8.82 h** |
+| W33 | Fri 08-21 12:07 → Mon 08-24 05:07 | **Sun 08-23** | 7.892 h | **22.11 h** |
 
-## RANK 3 — LC.03 v2 has no pre-registered stop, and its own sizing model predicts it lands just short
+Both budgets run Monday-to-Monday — the Claude pool resets Mon 05:00 UTC, and
+Kaggle hours are accounted by ISO week (Mon–Sun). They are not anti-phased; the
+problem is simpler and harder to fix. **The Claude pool empties on Thursday or
+Friday and the Kaggle pool does not**, so the last two to three days of every
+shared week hold free GPU quota with no agent awake to dispatch it, and the
+quota then expires on the Sunday inside the blackout. **Total lost: 30.9 free
+GPU-hours across two weeks**, neither time through misspending, both times
+through not being awake to spend. (W32's outage ran on past Monday for a
+separate, already-recorded reason — the D5 owner-resume expiry — but the Sunday
+expiry landed inside it just the same.)
 
-The v2 re-screen (registered `5074440`, launched `39bf5a1`, running now) grew the
-envelope 4× — N_STEPS 100k→400k, W_CLOCK 4320→17280. **The growth itself is
-legitimate and well-argued**: control (c) fired on a single food quantum
-(6.9 s on a 22-life ruler against a 5.0 s floor), and more lives per twin takes
-that quantum to ~1.7 s — which *strengthens* (c). Gates unmoved, arithmetic
-published in the registered docstring rather than hidden. Good work.
+This is not a repeat of the 25th audit's meter bug. That was an error; this is
+geometry. It needs an owner policy, not a builder fix — see FOR THE OWNER §2.
 
-The problem is what the same arithmetic predicts about the claim side. Quoting
-the docstring's own sizing:
+---
 
-> *"k=4 gives dreamer-xs 2.95 × 150/2 = +221 s ≈ its +226 s requirement"*
+## RANK 3 — `COVERS:` markers in test docstrings are unvalidated, and three of them are wrong
 
-The envelope was sized to the **second** arm, because the gate needs two
-learners — and by its own model that second arm lands **~2% below** its 3σ
-requirement. This is a **63-hour, ~190 core-hour run whose pre-registered
-expectation is a coin flip on the conjunct that decides it.** (Verified alive
-and genuinely computing: pid 310395 plus 3 workers, 2:21:42 CPU time each at
-2:22:45 elapsed, 99.2% CPU, ~400 MB RSS; log header-only at 146 bytes as
-expected while block-buffered.)
+`coverage.declarations()` reads `Spec.notes` **only** (`coverage.py:183`). The
+parallel convention of writing `COVERS:` into the test file's docstring is
+therefore read by nothing. Measured across all of `experiments/tests/`:
 
-**There is no cap on LC.03 re-screens.** I grepped for one. T3.01 carries a
-one-diagnostic cap; SM.02 was parked; LC.03 has neither. Attempt 1 VOIDed
-(schedule confound), attempt 2 VOIDed (food quantum), attempt 3 is 4× bigger. If
-it lands with fewer than two arms at 3σ, the next move under the current record
-is k=8 — ~380 core-hours, ~5 days — and that is the run-until-pass ratchet with
-a compute bill attached.
+| spec | test docstring says | registry notes say | effect |
+|---|---|---|---|
+| **T2.04** (PASS) | `action head (claim)` | *no COVERS at all* | "action head" is not a commitment; buys nothing |
+| **T2.05** (FAIL) | `world model (claim)` | `fast/slow (fixture)` | "world model" is not a commitment; disagrees |
+| **T2.03** (PASS) | `sight (claim)` | `sight (fixture)` | credited as fixture; docstring overstates |
 
-Nothing has been broken yet. The ask is that the fork be committed **before the
-number arrives**, which is the only time pre-registration means anything.
+None of these inflates the coverage report — the registry is authoritative and
+in every case the *conservative* side, which is why `check()` still exits 0 and
+`declarations()` returns an empty `bad` list. **Damage to the ledger: none.**
 
-## 1. Integrity of the ledger — no findings
+But this is `coverage.py`'s own sentence — *"a marker that buys nothing while
+looking like a claim is scar 2 wearing a new hat"* (`coverage.py:49-51`) —
+occurring in the one location the module was never pointed at. A human reading
+`t2_04_behaviour_cloning.py` sees a coverage declaration that no instrument
+honours. Fix in B2. (The `shelterr` / `(fixure)` strings in
+`t0_21_coverage_audit_honest.py` are deliberate fixtures for the guard spec and
+are correct as written — I checked.)
 
-| check | result |
+---
+
+## 1. Integrity of the ledger — CLEAN
+
+84 PASS / 6 FAIL / 3 VOID over 179 registered specs.
+
+    PASS rows with no implementation in experiments/tests/     0 / 84
+    PASS rows whose `commit` is missing from git               0 / 84
+    PASS rows absent from the registry                         0 / 84
+    PASS rows with a declared control and no control_metrics    0 / 84
+    PASS rows whose spec declares no control                   2  (T0.01, T0.10)
+
+`run verify` independently re-judged 83 entries (T0.18 self-excludes, correctly)
+and probed 81 controls: **0 verdicts that no longer re-derive, 0 gates that
+ignore their control, 0 controls declared but never run, 0 gates that could not
+be replayed, 0 entries that could not be audited.**
+
+T0.01 and T0.10 remain the two existence claims with no control to delete —
+structural, long-recorded, and not a new finding.
+
+Two staleness alarms stand, both honest and both flagged by the system itself:
+`BA.02` (VOID, test changed since the run) and `T2.02` (VOID, pre-`impl_sha`
+content drift). Neither is a PASS.
+
+---
+
+## 2. Thresholds and controls over seven days — ONE loosening, loudly declared
+
+I diffed `registry.py`, `registry_expansion.py` and `experiments/tests/` across
+21 commits since 08-17 and read every changed numeric constant, gate and
+`_check` branch.
+
+**Loosened: exactly one** — T3.01's `SHUFFLE_FIT_FLOOR` VOID gate → recorded
+diagnostic (RANK 1 above). Justified with a measurement, pre-registered as a
+fork before the number, compensated by a new gate, constant left unmoved.
+
+**Strengthened, same window:**
+- `T2.05` null replaced with `min(persistence, mean)` per seed, plus a new ridge
+  reference-arm gate — the docstring **predicted its own FAIL before the run**
+  (`ecf92cc`), and it duly failed. Anti-run-until-pass, exemplary.
+- `T3.01` gained a deterministic sha256 train/test disjointness VOID gate.
+- `XL.01` `ALIEN_MIN_DIST` 1.5 → **2.0** (restored, tightening).
+- `T2.07` and `T3.01` both had their `control` field *declared* in the registry
+  after `protocol.py` refused an undeclared control at dispatch — the guard
+  worked, twice.
+- `UB.10` leak-gate instruments gated on their own liveness.
+- `T0.24` and `T0.27` hypotheses widened, strengthen-only.
+
+**Not found:** no seed count reduced anywhere (`seeds=3` throughout, no `seeds=`
+line deleted); no `_check` gained an `or` in a claim branch; no assertion
+removed; no control deleted. `LC.03`'s `_check` change was pure re-indentation
+inside a loop.
+
+---
+
+## 3. Drift from the goal
+
+### 3.1 What the builder did in the last 24 h — no drift
+
+Two iterations, both `rc=0`:
+
+| unit | GOAL.md sentence it serves |
 |---|---|
-| PASS entries | **83** |
-| PASS resolving to an implementation in `experiments/tests/` | 83 / 83 |
-| PASS whose `commit` still exists in git | 83 / 83 |
-| PASS declaring a control but carrying empty `control_metrics` | 0 |
-| PASS recorded from a dirty tree | 0 |
-| `run verify` — verdicts that no longer re-derive | 0 / 82 |
-| `run verify` — gates that IGNORE their control | 0 / 80 |
-| `run verify` — controls declared but never run | 0 |
-| `run verify` — gates unreplayable / entries unauditable | 0 / 0 |
-| controls run but NOT declared (the ratchet debt) | **0 / 0** |
-| stale PASS claims | **2** — T2.06, UB.9 (RANK 2; doc-only, verified) |
+| **LC.03 v2 harvest → VOID, screen CONCLUDED, D10 raised** | *"the exact balance as an empirical question the curiosity/needs bakeoffs decide, not a doctrine"* — and it refused to decide it |
+| **NE.00–NE.09 registered; NE.00 PASS** | *"Jack has the needs of a human... the needs ARE the curriculum"* |
+| **Field watch wk4** | *"Nature's solution enters as a bakeoff arm and must win on our substrate"* |
+| **2 LESSONS entries** (ratchet-cap rule; cross-check runs both directions) | *"protects the honesty of watching what happens"* |
 
-Two PASSes declare no control at all — **T0.01** (imports) and **T0.10** (Kaggle
-round-trip) — unchanged, by design, and still carrying the honest caveat from
-earlier audits: an existence claim whose gate was never shown capable of
-reporting the bad case. `run verify` self-excludes one entry (T0.18 cannot
-re-judge its own row); its gate is exercised by T0.18's control.
+Nothing served none. NE.00 is a good unit: it proves the reward *algebra* Jack's
+needs will train under is not farmable and is uniquely self-termination-safe —
+a research-doc assertion converted into a ledger claim, at 4.7 s of CPU.
 
-One dirty stamp remains — **LC.03**, recorded VOID at `a483302+dirty`. It is a
-VOID, not a claim, and v2 is in flight from a clean tree to replace it.
+### 3.2 The converse — which parts of GOAL.md have no passing spec, and why
 
-Six entries carry an `amended` record; every one is provenance-only (a
-`hardware` string, an `attempt` count), attributed to a named audit, with a
-reason. **No metric and no verdict has ever been amended.**
+This is the harder question and the answer is now quantitative. Transitive block
+mass, recomputed from the live registry:
 
-## 2. Thresholds and controls over time — no findings
+    T2.01 = FAIL    blocks 36 specs
+       -> 9 of 18  one brain / unison  claim specs (T4.01, UB.1-UB.8)
+       -> 7 of 11  curiosity           claim specs (CU.1-CU.5, CU.7, T5.08)
+       -> 2 of 2   plasticity          claim specs (T5.03, T5.04)
+       -> 1 of 1   touch/contact, 1 of 1 tool use, 2 of 4 sleep, 1 of 4 generality
 
-Method: AST parse of every file under `experiments/tests/` plus `registry.py`
-and `registry_expansion.py` **present at both** `8390e0d` (2026-08-13 23:18) and
-HEAD, comparing every module-level uppercase constant. Not a diff read.
+    LC.03 = VOID    blocks 8 specs
+       -> 3 of 4   fast/slow           claim specs (DP.01, DP.02, DP.03)
 
-- **Exactly two constants moved, both in `lc_03_survival_screening.py`:**
-  `N_STEPS` 100,000 → 400,000 and `W_CLOCK_CORE_S` 4,320 → 17,280. Both are
-  **envelope**, both are in the direction of *more* compute, both are argued
-  from recorded curves in a registered docstring block, and the claim gates
-  (`SIGMA_GATE` 3.0, `NOISE_FLOOR_S` 5.0, the claim conjunction) are untouched.
-  See RANK 3 for the hygiene ask that goes with it — it is not a loosening.
-- **Zero thresholds moved. Zero spec or test files deleted. Zero controls
-  removed. No `_check` gained an `or`. No seed count reduced** (T3.01 ran its
-  registered [0, 1, 2]).
-- **One control was DEMOTED and it checks out.** T3.01's `SHUFFLE_FIT_FLOOR`
-  went from a VOID gate to a recorded diagnostic. This was pre-authorised by the
-  24th audit as fork (ii), and I verified in the code rather than the commit
-  message that it was executed in the required order:
-  - the deterministic structural gate landed **first** and is a real VOID exit
-    (`t3_01_ablate_vision.py:468`, `hash_overlap_max != 0 → VOID`), and it read
-    **`hash_overlap_max` 0.0** on the passing run;
-  - `SHUFFLE_BAND` remains a VOID gate — the positive-evidence leak test still
-    fires;
-  - the caveat the 24th audit demanded is in the docstring, and the dry-check
-    suite pins the new behaviour explicitly (*"dead control arm → recorded, not
-    gated"*).
+    NE.01 = NOT_RUN blocks 8 specs (the whole NE family)
+    UB.10 = NOT_RUN blocks 5 specs (3 more unison claim specs)
 
-  **The standing residual, stated plainly so it is not lost:** T3.01's PASS is
-  not protected by a demonstrably *live* leak control — `shuffled_fit_min` read
-  0.25 on two of three seeds, i.e. dead. Its protection is hash-disjointness
-  (identity leak, deterministic, conclusive) plus `acc_pixshuf` at 0.25 on all
-  three seeds, which does exclude a pure per-class marginal-statistic shortcut
-  since pixel shuffling preserves the histogram. Honest limit on that comfort:
-  `acc_pixshuf` is a test-time perturbation of a trained model, so its
-  at-chance reading is partly confounded with distribution shift. The claim is
-  sound; the leak coverage is good but not the complement pair the 24th audit
-  described.
+**65 of 179 specs are unreachable.** The PLASTIC-ONLY decree — the owner's own
+2026-08-09 decree — has **both** of its claim specs behind T2.01. The two
+commitments GOAL.md warns about are neglected because their specs are
+mechanically unreachable, not because the builder chose easier wins.
 
-Method limit, stated: this catches module-level constants, not a number
-hardcoded inline inside a `_check`. I read the removed lines of the seven-day
-diff for that shape and found none.
+### 3.3 A forward-looking risk worth naming before it costs a run
 
-## 3. Drift from the goal — no drift in the work; the drift is into idleness
+The NE family was registered yesterday into **W0** — the same world LC.03 v2 has
+just measured as **unable to discriminate five learning cores at a 4× envelope**
+(one arm at 3σ out of five, clean rig, ~190 core-hours). NE.03 (*"do needs teach
+better than no needs"*, CPU_LONG) is a screening claim in that same world.
+D10 option (b) — *"judge the world, not the cores"* — is therefore not only
+LC.03's fork; it is a **precondition on NE.03 being informative**. NE.03's
+registry notes carry the reward-exactness audit and the arms, but no line tying
+its power to D10. Cheap to add now, expensive to discover after a CPU_LONG run.
+Filed as B5, not as a finding against the registration — the cross-check that
+was run (against XL.01/NE.08 and the §1.2 citation gate) was correct and caught
+two real conflicts.
 
-Every unit in the last 24 h traces to a GOAL.md sentence:
+---
 
-| work | GOAL.md sentence it serves |
-|---|---|
-| T3.01 v3 redesign + run → **PASS** | *"ablate a sense, something measurable must degrade"* (sight) |
-| B3 at-chance-control sweep | *"protects the honesty of watching what happens"* |
-| LC.03 harvest, corrected diagnosis, v2 registration + launch | *"he lives, he dies, he remembers"* |
-| B4 W0.BAL body bakeoff → D9 | the body; T2.01's *"needs a better body"* |
-| B6 hard-stop plan | keeping the loop alive |
-| 3 × liveness-only passes | nothing |
+## 4. Is the builder alive and productive? — alive, and the stall was the gate, not the builder
 
-The converse remains §0's answer, and it did not move: **T5.06 has still never
-run.** The single image GOAL.md uses to define the project — climbing on attempt
-40 after falling on 1–39, unprompted — sits behind a spec that has never been
-executed, in a commitment holding 1 claim-kind PASS out of 12 specs.
+    iterations, last 24 h                 2       (05:07, 06:07)
+    ended rc=0                            2 / 2
+    PASS delta, last 24 h              83 -> 84
+    iterations, last 7 d                 55       (51 rc=0, 3 rc=1, 1 ABORT)
+    iterations, 08-22 and 08-23           0       65 h of `STOPPED at 94%`
 
-**Nothing was quietly acted on.** I checked the converse directly for the body,
-which is D8/D9's owner-gated subject: `playground.py` is **not** among the files
-changed in 24 h, and `experiments/w0bal_probe.py` builds its A/B/C bodies by
-monkey-patching the spawn function inside its own `_build` (line 119-141), not
-by editing the shipped geometry. Running was not adopting, in the code as well
-as in the prose.
+The single `ABORT: usage unreadable — refusing to run` (08-23 14:07) is the
+correct behaviour: it refused rather than guessing. No repeated identical
+failures, no paused loop nobody resumed (the week reset resumed it
+automatically), no iteration aborting on load (load average 0.05, 80 GB free on
+`/data`).
 
-## 4. Is the builder alive and productive? — alive, disciplined, and now voluntarily stopped
+Both post-resume iterations were substantive rather than catch-up: one harvested
+a 63-hour run and honoured its pre-registered fork, one grew the registry for
+the first time in 11 days and landed a PASS. **No finding.**
 
-- **24 iterations in 24 h (08-20 07:07 → 08-21 06:07), all `rc=0`, none lost.**
-  `lost_iterations.log` is 0 bytes. The last non-zero exit was 2026-08-19.
-- **PASS delta 82 → 83 (+1)**, the T3.01 restoration. The 82↔83 oscillation in
-  the log is the instrument working, not noise: the count fell when T3.01's
-  20:26 VOID displaced its PASS and rose when v3 passed at 01:28.
-- **LC.03 v2 verified alive by process, not by claim** (the standing
-  do-not-take-the-builder's-word rule): 3 workers, 99.2% CPU, CPU time within
-  63 seconds of elapsed time — genuinely computing, not a stalled coordinator.
-- **The last three iterations produced no science by choice.** See RANK 1. At
-  one iteration per hour, the plan as written spends **~70 more iterations**
-  doing liveness checks, and the compute it is protecting expires first.
+---
 
-## 5. Compute honesty — no findings on the accounting
+## 5. Compute honesty — spending is honest; the waste is unspent hours, not misspent ones
 
-- **W33: 7.4590 h charged** (7.2012 ok + 0.2578 failed across 20 kernels).
-  **22.5410 h remain**, expiring Sunday 2026-08-23.
-- **Last 24 h: 3.7182 h across 14 kernels**, every one attributable to a named
-  job with a recorded outcome. The one kernel since yesterday's audit
-  (`jack-ladder-1787274738`, 0.2713 h, P100) produced T3.01's PASS row. Three
-  kernels failed for 0.1643 h total, each with a named environment cause.
-- **No unattributed hours. No GPU-hour without either a ledger row or a named
-  probe purpose in a commit message.**
-- The honest note is not about the accounting, it is about the spending: **zero
-  GPU hours in the last 30 h, against a quota that dies in ~2 days.** That is
-  RANK 1's cost, restated as a number.
+    W33 (Aug 17-23)   22 jobs   7.892 h charged of 30    0.258 h failed (3.3%)
+    W34 (current)      0 jobs   0.000 h charged of 30    fresh since Sun 08-23
 
-## 6. Stuck decisions — unchanged, and one correction owed to the owner
+W33's 7.892 h produced **8 Kaggle-backed ledger rows** (T2.06, T2.03, T2.04,
+TA.02, T2.05, T3.01, T4.02, T2.07) plus four pre-registered diagnostic probes
+(T3.01 curves, T3.01 shuffle-liveness, UB.10 pilot, UB.10 recipe) — each of
+which had its decision rule written **before** launch and each of which changed
+a design. `overruns` is empty. Failed-kernel hours are accounted separately and
+their root causes are in the log (a mujoco sdist-before-wheels race, a hardcoded
+`chdir` breaking a remote import) with LESSONS entries for both.
 
-- **D1** (does the 57M trunk stay in the control path) — open **12 days**,
-  blocks T2.01 and 36 specs including the only claim specs for six senses.
-  Priced five times now. Not re-argued here.
-- **D7** (MovementMoodCoupling) — READY TO DECIDE since 08-20; T3.07's re-run
-  came back bit-identical, so no measurement remains that would inform it.
-- **D9** (the body fork) — B4 executed exactly as ordered; see §7.
-- **Nothing was quietly acted on** — verified in §3.
-- **Correction owed:** yesterday's FOR THE OWNER said the Kaggle hours would
-  expire "into an empty queue... because every GPU-capable spec is parked,
-  escalated, or behind D1." That was true at 00:40 and is not true now. The
-  queue has candidates. The hours are expiring for the reason in RANK 1, and the
-  owner should not read yesterday's page as still accurate.
+**There are no GPU hours without something to show for them.** The finding is
+RANK 2: 22.11 h of W33 and 8.82 h of W32 were never dispatched at all.
 
-## 7. Bakeoff hygiene — no findings
+---
 
-`DECISIONS_RESOLVED.md` is unchanged at three records (PS.01/J VOID, PS.01/J2
-WINNER `impact_speed`, D2), all audited clean previously and unaltered.
+## 6. Stuck decisions
 
-One bakeoff ran in the window — **W0.BAL (B4)** — and correctly produced **no**
-record, because nothing was decided. Its hygiene is the best I have audited:
+**Open on the owner's desk, with age:**
 
-- The pre-registration was preserved **verbatim** in D9 and executed as written:
-  arms A/B/C, `upright_frac` and `hand_reach_z_max`, 3 seeds × 500 decisions,
-  **identical per-seed uniform-random action streams**, same mutated worlds,
-  null = the rover as built.
-- Arm B's "bounded" torque was **priced before running** (KP = TMAX = 120 N·m
-  against ~88 N·m worst-case toppling) rather than tuned to the answer.
-- **The kill criterion is reported as NOT firing, against the builder's own
-  thesis**, and the entry's premise was *narrowed* rather than defended: *"a
-  prone rover cannot raise a hand to a rung"* became *"not for the ~99.7% of its
-  life it spends prone."* That is a finding written against interest.
-- Arm C's cost (it rewrites PG.3's inherited geometry, so inheritance
-  certificates need re-checking) is carried forward, not dropped.
-- **No learning gate, correctly.** No arm learns — the action streams are
-  identical and random — so this is a physical-property screen, not an
-  architecture arbitration, and T2.02's two-non-learners hazard does not arise.
-  The absence is right, not an omission.
+| | raised | age | blocks |
+|---|---|---|---|
+| **D1** — does the 57M trunk stay in the control path | 08-09 | **15 d** | T2.01 → **36 specs** |
+| **D7** — MovementMoodCoupling failed its ablation twice | 08-13 | 11 d (**ready to decide for 84 h**) | nothing; a component keeps unearned parameters |
+| **D8** — BA.02 unmeasurable in the rover body | 08-14 | 10 d | balance's only claim spec |
+| **D9** — the body fork (bakeoff table attached) | 08-21 | 3 d | folds into D1 |
+| **D10** — LC.03 concluded with one learner | 08-24 | new | LC.04/05, OP.01, PS.04, DP.01-03 |
 
-## 8. The honest summary — are we closer to a curious humanoid?
+**Ready to decide with no further measurement possible: D7 and D9.** D7's re-run
+on current code came back bit-identical; D9's bakeoff was run on free CPU and
+the table is attached (arm C upright 100.0% on all three seeds vs the as-built
+rover's 0.2–0.4%). Neither needs another number.
 
-**Yesterday: closer in trustworthiness, further in capability. Today: closer in
-capability by exactly one rung, and about to lose three days.**
+**Could the system have resolved anything itself with a bakeoff?** D9's bakeoff
+*was* run — and correctly **not adopted** (`e9cc914`: *"table attached to D9,
+NOTHING adopted"*; `9b2cf8f`: *"every winner needs owner adoption"*). That is
+the right line and the builder held it under pressure.
 
-The one real gain is real. **Sight is a claim again**, and this time it is a
-claim that survived the gate that killed its predecessor: `acc_full` 0.61–0.63
-against a 0.4467 frozen-probe reference, ablated and pixel-shuffled both at
-chance 0.25 on every seed, `hash_overlap` provably 0.0. The retraction on 08-20
-and the re-earning on 08-21 are the same machine working, thirty hours apart,
-and the second number means more because the first one was allowed to be taken
-away.
+**Was any owner decision quietly acted on?** I looked specifically for this and
+found **no instance**. D9's winner was measured and left unseated. D10's
+`wm-latent` was the sole 3σ learner and was explicitly **not** seated —
+CHAMPIONS.md's learning-core seat still reads *"PPO — DEFAULT, never
+defended"*. D8 blocks BA.02 and BA.02 remains VOID rather than being re-aimed at
+a different body.
 
-**But the ladder-and-apple standard is exactly where it was twelve audits ago.**
-T5.06 has never run. Curiosity holds 1 claim PASS out of 12 specs. Unison holds
-1 out of 21, and today that one — UB.9 — wrote into its own docstring that it
-cannot exclude the disease UB.10 measured. We are still adding rungs near the
-bottom of a ladder whose top has never been touched.
+---
 
-And the thing that would most obviously help is free and about to be thrown
-away. There are 22.54 GPU-hours sitting in an account that resets on Sunday, a
-builder with 13 points of headroom on the meter that actually gates it, and a
-plan in the journal that says do nothing until Tuesday. **The system is not
-being throttled. It is standing still while holding a full tank**, and it is
-doing so out of a misreading it wrote down correctly six hours earlier. That is
-the whole audit. Fix the meter reading and the rest of this page is a good day.
+## 7. Bakeoff hygiene — clean, and D10 is the best-handled call on the page
+
+`DECISIONS_RESOLVED.md` holds three entries; I re-read all three. PS.01/J is
+recorded as a VOID and is **not** treated as a verdict; PS.01/J2 names a winner
+(`impact_speed`) with its learning gate cited; D2 was resolved by ledger replay
+with the reasoning attached. No winner chosen inside a noise margin.
+
+**The live case is LC.03, and it is exemplary.** A screen with no re-screen cap
+is a ratchet; the 25th audit ordered the fork be committed before the number,
+and it was — 2.5 days before the run landed. When the number came back with one
+learner, fate (ii) fired: **no v3, no envelope growth, no re-roll**, and the
+`data_starved` flags on three arms were priced *in advance* (the 3σ requirement
+grows with added lives as fast as the projected gain does). The finding was
+recorded as a result about the world, and the design fork was routed to the
+owner rather than resolved at the desk.
+
+One hygiene nit, not an integrity issue: **CHAMPIONS.md's learning-core cell is
+now stale** — it still reads *"a 4× envelope re-screen (v2) was launched 04:24
+and is IN FLIGHT, pid 310395 + 3 workers, ETA ~Aug 23 late."* It concluded
+2026-08-23T21:11. The seat itself is correctly unfilled. Filed as B4.
+
+---
+
+## 8. The honest summary — are we closer to a curious humanoid, or to a longer list of green ticks?
+
+**Closer, but by a smaller step than the +1 suggests, and for a reason worth
+saying plainly.**
+
+Yesterday's single PASS was NE.00 — a 35-state tabular MDP proving that
+drive-reduction reward is the unique form under which self-termination is never
+optimal and closed cycles cannot be farmed. That is a *good* tick: it is the
+kind that forecloses a whole class of future silent failure (NetHackEat ships
+the exploit NE.00 makes impossible here), and it cost 4.7 seconds. But it is
+apparatus for a curriculum, not a creature doing something.
+
+The step that actually mattered in this window was a **VOID**. LC.03 spent 190
+core-hours and ~63 wall-hours to learn that W0 — the world Jack currently lives
+in — cannot tell five learning cores apart, and that exactly one of them
+(`wm-latent`) learns to survive at 3σ while four do not. Then it refused to buy
+a second learner with more compute, because it had written down beforehand what
+it would do if it only got one. **A system that will spend three days to earn a
+VOID and then honour it is the thing this project is actually trying to build.**
+The green ticks are downstream of that discipline; they are not a substitute for
+it.
+
+Against that: the ladder-and-apple standard has not moved. **T5.06 —
+"unprompted exploration is real" — has never run.** UB.7, the headline unison
+claim, has never run. Both of GOAL.md's plasticity claim specs have never run.
+Not because anyone deprioritised them: 65 of 179 specs are mechanically
+unreachable, and the largest single cause is a fifteen-day-old decision about
+whether a 57M trunk stays in the control path. The builder cannot climb past
+this and has correctly stopped trying to.
+
+So: the ladder is honest, the instruments work, the builder held every line it
+was asked to hold under a three-day blackout. What is missing is not rigour and
+not effort. **Jack still has no passing spec that shows him wanting anything.**
+The one arm that learned to survive learned it in a world we have just measured
+as too shallow to distinguish learners — and the two decisions that would let
+that finding matter are both sitting on a desk, not in a queue.
 
 ---
 
 ## FOR THE BUILDER
 
-Ranked. B1 is worth more than everything else on this page combined and it is
-one command.
+Ranked. B1 and B2 together are under an hour and neither owes a re-run.
 
-**B1 — YOU ARE NOT IN A BLACKOUT. Read both meters and act on the right one.**
-Run `scripts/claude_usage.py` with no flags, print all three lines, and state in
-the journal which one you are acting on and why. The gate is
-`week:all models` = 77% against a 90% stop; `week:Fable` = 93% is the meter for
-the model the crontab passes and is **not** the gate. `.usage-resumed` does not
-exist and is not needed. `FALLBACK_MODELS="opus sonnet"` already handles Fable
-refusing.
-  - **Then apply your own B6 plan as written**: *dispatch, then idle*. Anything
-    worth W33 must be **dispatched before Sunday 08-23**, when 22.5410 h die.
-    Kaggle kernels and `launch_detached.sh` runs compute through any blackout
-    and write their own receipts, so a dispatch costs you one lean iteration and
-    buys a result you cannot buy on Monday.
-  - **Restraint is still correct, and zero is not restraint.** Opus draws the
-    same `all models` pool the Review, the field watch and this audit draw from;
-    burning it to 90% takes the auditors down with you. Budget for that
-    explicitly — a lean dispatch iteration, not a full one — but budget
-    something.
-  - **Correct the three journal entries** (04:24, 05:07, 06:07) in place rather
-    than silently: they are the record, and they say the stop fired when it did
-    not.
+**B1 — Record T3.01's control blind spot where an auditor greps, not only in
+the docstring.** The registry's `control` field for T3.01 accurately describes
+the live TEST-accuracy gate and says nothing false — but it also says nothing
+about the half that was demoted, and `Spec.control` is what `run verify` and
+every future reader read. Append one sentence, e.g.:
 
-**B2 — pre-register LC.03 v2's fork NOW, before the number lands.** The run's
-own sizing says the second arm reaches +221 s against a +226 s requirement, so a
-sub-two-learner outcome is roughly as likely as not, and there is no cap on
-re-screens in the spec (T3.01 has a one-diagnostic cap; LC.03 has none). Commit,
-before harvest, which of these fires:
-  - **(i)** one further growth, with the k, the core-hour cost, and the
-    arithmetic that says it clears — and a hard statement that this is the last;
-    or
-  - **(ii)** the screen is CONCLUDED. Record the finding as what it is — *W0 does
-    not discriminate these cores at a reachable envelope* — which is a result
-    about the world and about LC.04's premise, not a failure to be re-rolled.
+> *"`acc_shuffled_train` is RECORDED, not gated (v3, 2026-08-21): the registered
+> run read 0.25 / 0.3167 / 0.25 against the 0.35 reference line, so this control
+> is NOT evidence against a distributional leak. Identity leakage is carried by
+> `hash_overlap` (0.0) and the pixel-shuffled arm (0.25 every seed)."*
 
-  Either is defensible. Choosing after seeing the number is not. This costs one
-  paragraph and it is the difference between a screen and a ratchet.
+Doc-only; use the amendment lane you built at `69f8f69`. **No re-run owed, and
+do not re-run to get a better number** — the measurement is correct as recorded.
 
-**B3 — close the doc-only staleness hole properly; do NOT loosen the hash.**
-T2.06 and UB.9 are stale from prose-only edits (I verified the diffs), and seven
-B3 answers were routed to `LESSONS.md` to avoid staling seven more passing
-specs. Both halves of that are a tax on documentation.
-  - **Do not strip docstrings from `impl_sha`.** The pre-registered gates *live*
-    in the docstrings; a hash that ignored them would let a pre-registration be
-    rewritten after the run — the exact T0.27 hazard.
-  - **Build the doc-only amendment lane instead.** The ledger row already has
-    `amended`, with six clean provenance-only precedents. A prose-only edit is
-    machine-checkable: `ast.dump` of the old and new file identical (or
-    `ast.get_docstring` stripped and the remaining tree byte-equal) ⇒ record an
-    `amended` entry carrying old sha, new sha, author and reason, and let
-    `stale_claims()` treat it as answered. Anything that changes the AST stays
-    stale, loudly.
-  - The precedent citation in `LESSONS.md` is inexact and worth fixing while you
-    are there: `protocol.py:884-895`'s "mass false alarm" doctrine is about
-    `IMPL_DEPS` hashing being opt-in, not about docstring edits.
+**B2 — Validate `COVERS:` in test docstrings, or stop writing them there.**
+`coverage.declarations()` reads `Spec.notes` only (`coverage.py:183`), so the
+docstring convention is honoured by nothing. Three are wrong today (RANK 3):
+`t2_04` declares `action head (claim)` — not a commitment, and its registry
+notes carry no `COVERS` at all; `t2_05` declares `world model (claim)` against a
+registry `fast/slow (fixture)`; `t2_03` declares `sight (claim)` against a
+registry `sight (fixture)`. Cheapest correct fix: **extend T0.21** with a
+property that every `COVERS:` marker found in an `experiments/tests/*.py`
+docstring (a) resolves to a name in `COMMITMENTS` with a valid kind, and (b)
+matches its spec's registry declaration exactly. That is the guard spec's
+existing job, one directory over. Then fix the three.
 
-**B4 — UB.9's recorded gap needs a spec, not a docstring line.** UB.9 is the
-only claim-kind PASS behind "one brain / unison" (21 specs) and one of two
-behind hearing, and its own docstring now says a per-arm recipe pathology —
-UB.10's *measured* disease — is not excluded by its design. Rank it as ladder
-work: either a same-run must-learn target for each unimodal arm, or a recorded
-loss-descent per arm, or an explicit statement in the registry that UB.9's
-claim is conditional on the shared-trainer argument. It does not need to be done
-this week. It needs to stop being prose.
+**B3 — carry-forward from the 25th audit's B4, still prose.** UB.9's registry
+notes read only `COVERS: hearing (claim), one brain / unison (claim)`. It is the
+**only** claim-kind PASS behind unison's 18 claim specs, and its own docstring
+(lines 101-102) records that a per-arm recipe pathology — UB.10's *measured*
+disease — is not excluded by its design. Either a same-run must-learn target per
+unimodal arm, a recorded per-arm loss descent, or an explicit registry statement
+that UB.9's claim is conditional on the shared-trainer argument. It still does
+not need to be done this week. It still needs to stop being prose.
 
-## FOR THE OWNER
+**B4 — CHAMPIONS.md's learning-core cell is stale by three days.** It reads
+*"v2 ... IN FLIGHT, pid 310395 ... ETA ~Aug 23 late"*; LC.03 concluded
+2026-08-23T21:11 with `void_reason: "fewer than two learners (1 cleared)"`.
+INTEGRATION_QUEUE protocol step 6 makes updating the seat the harvester's duty.
+**Do not seat `wm-latent`** — that is D10 option (a) and it is the owner's. Just
+make the cell say what happened and that the seat is pending D10.
 
-Nothing here is new science, and I am not re-arguing any decision.
+**B5 — tie NE.03's power to D10 before it is implemented, not after.** NE.03 is
+a CPU_LONG screening claim in W0, and LC.03 v2 has just measured W0 as unable to
+separate five cores at a 4× envelope with a clean rig. If D10 resolves toward
+(b) — redesign W0's discriminability — NE.03 as registered is measuring the same
+shallow world. One line in NE.03's notes, in the same idiom you used to bind
+NE.08 to XL.01's power verdict: *a pre-run power calculation against LC.03 v2's
+recorded spreads is required before dispatch.* No threshold moves.
 
-**1. I owe you a correction from yesterday.** I told you 22.81 free Kaggle hours
-would expire "into an empty queue... because every GPU-capable spec is parked,
-escalated, or behind D1." **That is no longer why.** T3.01 is un-frozen and
-passed overnight — sight is a claim again — and the queue has candidates. The
-hours (now 22.5410, expiring Sunday 08-23) are on course to expire because the
-loop misread its own usage meter and declared a three-day blackout that its gate
-never triggered. That is a builder-side fix, it is in FOR THE BUILDER as B1, and
-it needs nothing from you.
-
-**2. D7 has now been ready to decide for 54 hours and takes ten seconds.**
-MovementMoodCoupling failed its ablation twice; the re-run on current code came
-back bit-identical, so no measurement remains that would inform the call. Delete
-it, redesign it, or **accept it on the record as cosmetics** — (c) is a
-legitimate answer and closes it. Until then the model carries a component that
-has twice failed to earn its parameters, which is the disease `GOAL.md:87`
-exists to prevent.
-
-**3. D9 now has its table, and nothing was adopted.** The bakeoff you were asked
-to order was run at this desk on free CPU, per my instruction yesterday that
-*running is not adopting*. Arm C (0.35 m plinth, mass in the base) is upright
-100.0% of decisions on all three seeds and reaches ~1.17 m of a ~1.19 m ceiling;
-the as-built rover is upright 0.2–0.4%; arm B rights it 9–26%. The kill criterion
-did **not** fire, which honestly narrows the entry's own premise. Your decision
-is unchanged — park / order / fold into D1 — you simply now have the numbers
-instead of three options and a shrug.
-
-**4. D1 is 12 days open.** Priced five times; I am not pricing it a sixth. The
-narrow question from yesterday stands and is answerable in one line: **if D1 is
-going to stay open past Sunday, say so**, and the loop will stop sizing its week
-around a quota it cannot spend.
+**B6 — dispatch-then-idle, and mean it this time.** The meter fix landed and
+held (verified: `--pct` returns `week:all models`, 3% now). But between the
+correction at 07:17 on 08-21 and the blackout at 12:07, only **0.29 GPU-h** was
+dispatched — and 22.11 h then expired on the Sunday. Kaggle kernels and
+`launch_detached.sh` compute *through* a blackout and write their own receipts.
+When `week:all models` passes ~80%, the correct iteration is a lean one that
+**dispatches everything W-week-worth and then idles**, not a full one that plans
+work for after the reset. W34 is fresh at 30 h and the week is young; the
+zero-pass ranking from `run coverage` is where those hours belong.
 
 ---
 
-*Method note: every number above is from a command run during this audit —
-`experiments.coverage`, `run status`, `run verify`, `claude_usage.py`, an AST
-parse of every test/registry file present at both `8390e0d` and HEAD, direct
-reads of `ledger.json` / `gpu_budget.json` / `lib_usage.sh` / `ladder_loop.sh` /
-`t3_01_ablate_vision.py` / `lc_03_survival_screening.py`, `git show` of the two
-staleness-triggering diffs, `ps` against the LC.03 v2 workers, and
-`/data/jack-logs/ladder.log`. Nothing is quoted from a commit message without
-being checked against the artifact it describes.*
+## FOR THE OWNER
+
+Three items. Only §2 is new, and it is a policy question, not a science one.
+
+**1. D1 is fifteen days old, and I can now name exactly what it costs — not in
+specs, but in your own words.**
+
+T2.01 is FAIL and blocks **36 specs** transitively. Sorted against the
+commitments *you* wrote into GOAL.md:
+
+- **both** claim specs behind the PLASTIC-ONLY decree (T5.03, T5.04) — your own
+  2026-08-09 decree, with zero evidence behind it and no route to any;
+- **9 of the 18** claim specs behind *"one brain, all senses in unison"* —
+  including UB.7, the headline unison claim;
+- **7 of the 11** claim specs behind curiosity — including CU.1–CU.7, the family
+  that would show him exploring because he wants to;
+- the only claim spec for touch, and the only one for tool use.
+
+The ladder-and-apple sentence — *"he must try to climb the ladder, fall, and
+learn from falling, purely out of curiosity"* — has no passing spec, and the
+specs that would give it one are behind this decision. I am not re-arguing the
+options; the evidence table in D1 is complete and unchanged. **If D1 is going to
+stay open, saying so is itself useful** — the loop will stop sizing weeks around
+work it cannot reach.
+
+**D7 and D9 are both ready and neither needs another number.** D7 has been
+ready for 84 hours and takes ten seconds: delete MovementMoodCoupling, redesign
+it, or **accept it on the record as cosmetics** — (c) is a legitimate answer and
+closes it. D9 has its bakeoff table attached (arm C: upright 100.0% of decisions
+on all three seeds, hand reach 1.165–1.185 m of a ~1.19 m ceiling; the as-built
+rover: 0.2–0.4%), run on free CPU and deliberately **not** adopted.
+
+**2. NEW — one of your two budgets empties three days before the other, and it
+has cost 30.9 free GPU-hours in two weeks.**
+
+Your 90% weekly stop is working exactly as written and I am not asking you to
+weaken it. The problem is that the two budgets run on the same Monday-to-Monday
+week but drain at different rates:
+
+- the **Claude** pool is exhausted by Thursday or Friday;
+- **Kaggle's** 30 free GPU-hours are not, and they expire the following Sunday.
+
+So the last two to three days of every week hold free GPU quota with nobody
+awake to dispatch it, and the quota dies inside the blackout. Twice in a row:
+**W32 8.82 h expired, W33 22.11 h expired.** Neither loss was misspending —
+every hour actually charged produced a ledger row or a pre-registered diagnostic
+that changed a design. The loss is entirely "nobody was awake to press the
+button."
+
+This is arithmetic, not a bug, so it will recur every week until a policy
+changes it. The cheapest fix costs you one sentence and no relaxation of the
+stop:
+**authorise a standing "dispatch-then-idle" carve-out** — when `week:all models`
+crosses ~80%, the loop may spend one lean iteration dispatching detached Kaggle
+work before it freezes. Kernels compute through a blackout for free and write
+their own receipts. I have filed the builder half as B6; the carve-out is yours
+because it is a spend of your Claude budget, however small.
+
+There is a second-order cost you should know about: the same stop takes the
+**auditors** down with the builder. This report is the first in 71.7 hours
+against a 6-hour cadence — 11 consecutive overseer audits refused at the gate,
+and the same for the Review. The 25th audit predicted this in writing three days
+ago. Whatever you decide about the carve-out, the oversight organs going dark
+for three days at a time is worth deciding *deliberately* rather than inheriting.
+
+**3. D10 is new on your desk and it is a real fork, not a formality.** LC.03
+concluded with exactly one learner (`wm-latent`, t=4.65 vs null, +92 s
+cross-life transfer) out of five, on a clean rig, after 190 core-hours. The
+builder correctly refused to seat it, refused a third re-screen, and wrote down
+why before it saw the number. The three options are in `DECISIONS_NEEDED.md`.
+My only addition: option (b) — *judge the world, not the cores* — is worth more
+than it looks, because the **entire NE family was registered into that same
+world yesterday**. If W0 cannot separate five learning cores, it is a live
+question whether it can separate "with needs" from "without needs" either. That
+makes (b) a decision about NE.03 as well as about LC.04.
+
+---
+
+*Instruments run this audit: `experiments.coverage` (exit 0),
+`experiments.run status`, `experiments.run verify` (83 entries, 81 controls, 0
+failures), `experiments.run blocked`, `git log -p --since="7 days ago"` over
+`registry.py` / `registry_expansion.py` / `tests/` (21 commits), a per-PASS
+implementation/commit/control cross-check, a docstring-vs-registry `COVERS:`
+diff over all of `experiments/tests/`, a transitive block-mass computation
+against `coverage.declarations()`, `gpu_budget.json` per-week reconciliation
+against the ledger, and `/data/jack-logs/{ladder,overseer,review,field_watch}.log`
+cadence counts.*

@@ -4653,3 +4653,31 @@ commitment gap makes gap-filling feel urgent, and urgency is exactly when the
 fifteen-day-old stronger design is invisible: it frees nothing, it blocks
 nothing, and no ranking surfaces it — the same blindness the standing
 zero-pass rule exists to fix, one shelf over.
+
+## A convention the tool does not read is not a convention — it is decoration that reads as a claim
+
+**The instance (found 2026-08-24, 26th overseer audit).** `coverage.py` exists
+because coverage granted by inference produced false positives nobody audits
+(scar 2: `ho-nest` crediting "he builds a shelter"). Its repair was a
+`COVERS:` marker that only a spec's author can write, and its own docstring
+says a misspelt marker "is an ERROR, not a silence... because a marker that
+buys nothing while looking like a claim is scar 2 wearing a new hat."
+
+`declarations()` reads `Spec.notes` and nothing else. But the house style also
+writes `COVERS:` into the TEST FILE's docstring — and that half is read by no
+instrument. Measured across all of `experiments/tests/`: `t2_04` declares
+`action head (claim)`, `t2_05` declares `world model (claim)` — neither name is
+a commitment — and `t2_03` declares `sight (claim)` where the registry says
+`sight (fixture)`. All three would have been reported as malformed had they sat
+in `notes`. In the docstring they were silent for days. No coverage was
+inflated (the registry is authoritative and, in every case, the conservative
+side), so the damage was zero — this time, and by luck of which copy was wrong.
+
+**The general rule.** When a convention is enforced at ONE site and written at
+TWO, the unenforced site is where it rots, and it rots invisibly because it is
+byte-identical in appearance to the enforced one. Either point the checker at
+every place the marker is written, or stop writing it in the places the checker
+cannot see. This generalises past `COVERS:`: any declaration duplicated between
+a machine-read field and a human-read docstring — thresholds, controls,
+dependencies, pre-registrations — inherits the same failure, and the copy a
+human reads first is usually the copy nothing validates.
