@@ -26,3 +26,13 @@ session_limited() {
   tail -c "+$(( ${MARK:-0} + 1 ))" "$LOG" 2>/dev/null | grep -qi "hit your session limit"
 }
 limit_hit() { credits_out || session_limited; }
+# "API Error: 529 Overloaded" is server-side and transient — nothing about our
+# credits. The 2026-08-24 daily Review died on exactly this line (rc=1, 8 min)
+# and never ran; one retry would have cost nothing and saved the day's audit
+# (27th audit, B2). Anchored to line start because the organs' own OUTPUT
+# discusses these incidents in prose ("died on an API 529") and an unanchored
+# match on this shared log would fire on the post-mortem of a previous failure.
+# Same bounded-read discipline: only the bytes this run wrote.
+api_overloaded() {
+  tail -c "+$(( ${MARK:-0} + 1 ))" "$LOG" 2>/dev/null | grep -qE "^API Error: 5[0-9][0-9]"
+}

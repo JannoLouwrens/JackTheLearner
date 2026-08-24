@@ -46,6 +46,15 @@ if credits_out; then
   nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
     --model sonnet --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
   RC=$?
+elif [ "$RC" -ne 0 ] && api_overloaded; then
+  # Transient server-side 5xx (the 08-24 daily died on one 529 and never ran).
+  # Same model, one retry, after a pause — this is not a credit event.
+  say "API overloaded on ${MODEL} — waiting 120s, retrying once"
+  sleep 120
+  mark_log
+  nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
+    --model "$MODEL" --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
+  RC=$?
 fi
 say "sweep end rc=${RC} — $(grep -c STRENGTHEN docs/PROGRESS.md 2>/dev/null || echo 0) strengthen lines"
 exit 0

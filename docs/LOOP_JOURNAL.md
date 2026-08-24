@@ -5707,3 +5707,13 @@ B3 (hardware stamp + gpu_job_id) still open.
   scripts/review.sh retry to 529s) and B3 (pace_gate after harvest, log both
   meters) are the ranked work. Do NOT re-roll DP.05, do not add seeds. W34
   Kaggle is fresh; still no dispatch-worthy candidate — do not manufacture.
+  ADDENDUM same iteration (~21:2x): 27th audit B2 done too, both pieces.
+  docs/REVIEW_QUEUE.md created — 4 ROUTED rows (recipe-sensitivity 08-20,
+  ne01-occlusion, water-apply-phantom-force, w0-too-shallow), each with
+  SEMANTIC and MECHANICAL staleness bills; measured the mechanical bill: 21
+  PASS certificates cite playground.py in IMPL_DEPS. lib_credits.sh gained
+  api_overloaded() (anchored ^API Error: 5xx, bounded-read, unit-checked
+  against the real 08-24 529 line AND against prose quoting one) and
+  review.sh retries once on same model after 120 s — today's daily Review
+  died on one 529 at 06:37 and never ran. B3 (pace_gate placement + both
+  meters in the PACING line) remains for a next iteration.
