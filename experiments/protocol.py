@@ -655,14 +655,16 @@ class Ledger:
         both went STALE from writing an audit answer where it belongs, and
         seven more answers were diverted to LESSONS.md to dodge the alarm).
         The proof obligation is total, never argued: the exact code the entry
-        certifies is recovered from git by `blob_reconstructing_sha` (it must
-        hash back to the recorded sha through the one true `impl_sha_of`,
-        current dependency bytes included — so a moved dependency can never
-        ride this lane), and `prose_only_delta` must find the
-        docstring-stripped ASTs identical. Anything that moves the AST —
-        a threshold, a gate, an `IMPL_DEPS` line — is refused loudly and
-        stays stale. Status, metrics and seeds are untouched; the old sha,
-        the new sha and the reconstruction commit land in `amended`.
+        certifies is recovered from git by `blob_reconstructing_sha`
+        (historical file, current dependency bytes), falling back to
+        `tree_reconstructing_sha` (file AND deps at one committed tree
+        state) when a declared dependency has itself drifted — in which case
+        `prose_only_delta` must clear the file's delta AND every drifted
+        dependency's delta. Anything that moves ANY of those ASTs —
+        a threshold, a gate, an `IMPL_DEPS` line, a dependency's constant —
+        is refused loudly and stays stale. Status, metrics and seeds are
+        untouched; the old sha, the new sha, the reconstruction commit and
+        the proven-drifted dep list land in `amended`.
         """
         if not by or not reason:
             raise ValueError("amend requires both --by (the spec or finding that "
@@ -729,21 +731,48 @@ class Ledger:
                             "nothing is stale, nothing to amend")
                     old_bytes, old_commit, problem = \
                         blob_reconstructing_sha(path, recorded)
+                    drifted: Dict[str, Any] = {}
                     if problem:
-                        raise ValueError(
-                            f"{spec_id}: cannot recover the code this entry "
-                            f"certifies — {problem}")
+                        # The dep lane (2026-08-24): a prose-only edit to a
+                        # file OTHER specs declare in IMPL_DEPS strands THEIR
+                        # certificates — reconstruct the whole tree state and
+                        # owe the same proof for every drifted dependency.
+                        old_bytes, old_commit, drifted, tree_problem = \
+                            tree_reconstructing_sha(path, recorded)
+                        if tree_problem:
+                            raise ValueError(
+                                f"{spec_id}: cannot recover the code this "
+                                f"entry certifies — {problem}; tree search: "
+                                f"{tree_problem}")
                     delta = prose_only_delta(old_bytes, Path(path).read_bytes())
                     if delta:
                         raise ValueError(
                             f"{spec_id}: the edit since {recorded} is not "
                             f"prose-only ({delta}); a moved AST stays stale — "
                             "re-run the spec instead")
+                    root = Path(__file__).resolve().parent.parent
+                    for d, db in sorted(drifted.items()):
+                        if db is None:
+                            raise ValueError(
+                                f"{spec_id}: dependency {d} appeared or "
+                                f"vanished since {recorded}; existence is "
+                                "never prose — re-run the spec instead")
+                        ddelta = prose_only_delta(db, (root / d).read_bytes())
+                        if ddelta:
+                            raise ValueError(
+                                f"{spec_id}: the drift in dependency {d} "
+                                f"since {recorded} is not prose-only "
+                                f"({ddelta}); a moved dependency AST stays "
+                                "stale — re-run the spec instead")
+                    proof = (f"reconstructed {recorded} from git "
+                             f"{old_commit[:12]}; docstring-stripped ASTs "
+                             "identical (prose_only_delta)")
+                    if drifted:
+                        proof += ("; drifted IMPL_DEPS proven prose-only: "
+                                  + ", ".join(sorted(drifted)))
                     changes.append({
                         "field": "impl_sha", "from": recorded, "to": cur,
-                        "proof": (f"reconstructed {recorded} from git "
-                                  f"{old_commit[:12]}; docstring-stripped "
-                                  "ASTs identical (prose_only_delta)")})
+                        "proof": proof})
                     row["impl_sha"] = cur
 
                 note = {"at": time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -932,7 +961,8 @@ def impl_deps_of(path, source: Optional[bytes] = None) -> tuple:
     return (), ""
 
 
-def impl_sha_of(path, file_bytes: Optional[bytes] = None) -> Optional[str]:
+def impl_sha_of(path, file_bytes: Optional[bytes] = None,
+                dep_bytes: Optional[dict] = None) -> Optional[str]:
     """sha256 of a test file — the test as it was when it ran.
 
     `file_bytes`, when given, is hashed in place of the file at `path` (deps
@@ -941,6 +971,12 @@ def impl_sha_of(path, file_bytes: Optional[bytes] = None) -> Optional[str]:
     recorded sha certify?" — and it deliberately reuses THIS function, because
     the last time two implementations computed "the same" hash they diverged
     silently (the story two paragraphs down).
+
+    `dep_bytes`, when given, overrides the disk read for the dep paths it
+    names (a value of None means "missing at that tree state", hashed with
+    the same `missing:` rule as a missing file on disk). This is
+    `tree_reconstructing_sha` asking the same question about a whole tree
+    state, through the same one true code path.
 
     PLUS any files the test module declares in `IMPL_DEPS`, because a test file
     is not the whole of what a test measures. PG.6 certifies what Jack's eye can
@@ -980,6 +1016,10 @@ def impl_sha_of(path, file_bytes: Optional[bytes] = None) -> Optional[str]:
         if problem:
             h.update(f"undeclarable:{problem}".encode())
         for rel in deps:
+            if dep_bytes is not None and rel in dep_bytes:
+                b = dep_bytes[rel]
+                h.update(b if b is not None else f"missing:{rel}".encode())
+                continue
             dep = Path(__file__).resolve().parent.parent / rel
             h.update(dep.read_bytes() if dep.is_file()
                      else f"missing:{rel}".encode())
@@ -1078,6 +1118,75 @@ def blob_reconstructing_sha(path, want_sha: str, repo_root=None) -> tuple:
         "declared IMPL_DEPS file has itself changed since the run (real "
         "staleness: a dependency edit is never prose) or the run executed "
         "uncommitted code (the DIRTY shape); both stay stale")
+
+
+def tree_reconstructing_sha(path, want_sha: str, repo_root=None) -> tuple:
+    """The committed TREE STATE (file + declared deps, all at one commit)
+    whose `impl_sha` is `want_sha`.
+
+    `blob_reconstructing_sha` reads deps as they stand NOW, so a spec whose
+    recorded sha folded in a dependency that later moved cannot be
+    reconstructed by it even when the dependency's own edit was provably
+    prose. The instance that forced this (2026-08-24, straight after the
+    26th audit's B2): the audit-ordered docstring fix to
+    `t2_03_pretrained_vision.py` — itself cleared through the doc-only lane —
+    stranded T3.01's certificate, because T3.01 declares that file in
+    IMPL_DEPS and the lane had no way to prove the dependency's drift safe.
+    Per LESSONS ("add a lane, do not lower the bar"), this widens the PROOF,
+    not the permission.
+
+    Walks the union history of the file and its declared deps newest-first
+    and re-derives each commit's sha THROUGH `impl_sha_of` with every byte
+    taken from that commit (the historical source names its own dep list).
+    Returns `(file_bytes, commit, drifted, problem)`: `drifted` maps each
+    dep whose bytes at the matching commit differ from its bytes on disk now
+    to those historical bytes (None when it existed on only one side). A
+    match proves NOTHING by itself — it only names the exact bytes the entry
+    certifies; the caller owes a prose proof for the file AND every entry in
+    `drifted`, or must refuse.
+    """
+    import subprocess
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
+    try:
+        rel = str(Path(path).resolve().relative_to(root.resolve()))
+    except ValueError:
+        return None, None, None, f"{path} is not under {root}"
+
+    def _show(commit, r):
+        s = subprocess.run(["git", "-C", str(root), "show", f"{commit}:{r}"],
+                           capture_output=True, timeout=30)
+        return s.stdout if s.returncode == 0 else None
+
+    deps_now, _ = impl_deps_of(path)
+    try:
+        r = subprocess.run(
+            ["git", "-C", str(root), "log", "--format=%H", "--",
+             rel, *(deps_now or [])],
+            capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return None, None, None, f"git:{type(e).__name__}"
+    if r.returncode != 0:
+        return None, None, None, f"git:rc{r.returncode}"
+    for commit in r.stdout.split():
+        fb = _show(commit, rel)
+        if fb is None:
+            continue
+        hist_deps, _ = impl_deps_of(path, source=fb)
+        dep_bytes = {d: _show(commit, d) for d in (hist_deps or [])}
+        if impl_sha_of(path, file_bytes=fb, dep_bytes=dep_bytes) != want_sha:
+            continue
+        drifted = {}
+        for d, db in dep_bytes.items():
+            cur = root / d
+            curb = cur.read_bytes() if cur.is_file() else None
+            if db != curb:
+                drifted[d] = db if (db is not None and curb is not None) \
+                    else None
+        return fb, commit, drifted, ""
+    return None, None, None, (
+        f"no committed tree state reconstructs {want_sha} for {rel} — the "
+        "run executed uncommitted code (the DIRTY shape) or predates this "
+        "repository's history; both stay stale")
 
 
 def module_path_for(spec_id: str, strict: bool = False):

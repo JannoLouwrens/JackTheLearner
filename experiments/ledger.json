@@ -7647,8 +7647,8 @@
     },
     "T0.21": {
       "amended": [],
-      "attempt": 16,
-      "commit": "5e7a8e2+dirty",
+      "attempt": 17,
+      "commit": "9449a1b",
       "compute_s": null,
       "control_metrics": {
         "commitments": 23.0,
@@ -7661,7 +7661,7 @@
         "properties_checked": 10.0,
         "properties_failed": 7.0
       },
-      "duration_s": 1.87,
+      "duration_s": 1.84,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -7828,6 +7828,39 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "5e7a8e2+dirty",
+          "control_metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 97.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p6_deleted_spec_loses_coverage,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 21.0,
+            "properties_checked": 10.0,
+            "properties_failed": 7.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "a76374b9f1a10378",
+          "message": "",
+          "metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 97.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 21.0,
+            "properties_checked": 10.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-08-24T07:14:38",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "a76374b9f1a10378",
@@ -7843,7 +7876,7 @@
         "properties_checked": 10.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-24T07:14:38",
+      "ran_at": "2026-08-24T07:15:29",
       "seeds": [
         0
       ],
@@ -9672,7 +9705,22 @@
       "status": "VOID"
     },
     "T2.03": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-24T07:15:30",
+          "by": "26th-audit-B2",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "f265e4c69db78801",
+              "proof": "reconstructed f265e4c69db78801 from git 42df762799c6; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "6a16c10c0f9e7365"
+            }
+          ],
+          "commit": "9449a1b",
+          "reason": "prose-only docstring edit: COVERS marker corrected to match the registry declaration (B1 appendix for T3.01) \u2014 AST unchanged, proved by prose_only_delta"
+        }
+      ],
       "attempt": 3,
       "commit": "1355d51",
       "compute_s": 1159.09,
@@ -9793,7 +9841,7 @@
           "status": "ERROR"
         }
       ],
-      "impl_sha": "f265e4c69db78801",
+      "impl_sha": "6a16c10c0f9e7365",
       "message": "",
       "metrics": {
         "acc_pixels": [
@@ -9857,7 +9905,22 @@
       "status": "PASS"
     },
     "T2.04": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-24T07:15:31",
+          "by": "26th-audit-B2",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "fbc4517c5711b462",
+              "proof": "reconstructed fbc4517c5711b462 from git 8ec4be87858c; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "9105d6c606f9b463"
+            }
+          ],
+          "commit": "9449a1b",
+          "reason": "prose-only docstring edit: COVERS marker corrected to match the registry declaration (B1 appendix for T3.01) \u2014 AST unchanged, proved by prose_only_delta"
+        }
+      ],
       "attempt": 2,
       "commit": "4cd43c5",
       "compute_s": 3455.72,
@@ -9947,7 +10010,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "fbc4517c5711b462",
+      "impl_sha": "9105d6c606f9b463",
       "message": "",
       "metrics": {
         "action_mse": [
@@ -10009,7 +10072,22 @@
       "status": "PASS"
     },
     "T2.05": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-24T07:19:07",
+          "by": "26th-audit-B2",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "e0be1138ebf5aaf1",
+              "proof": "reconstructed e0be1138ebf5aaf1 from git f14c8fac6aa5; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: experiments/tests/t2_04_behaviour_cloning.py",
+              "to": "7479c97cb27cdae6"
+            }
+          ],
+          "commit": "9449a1b+dirty",
+          "reason": "prose-only docstring edit to this file and/or a declared IMPL_DEPS test file (COVERS marker corrected to match the registry); tree-state reconstruction, all drifted ASTs proven identical"
+        }
+      ],
       "attempt": 4,
       "commit": "f14c8fa",
       "compute_s": 3307.31,
@@ -10131,7 +10209,7 @@
           "status": "ERROR"
         }
       ],
-      "impl_sha": "e0be1138ebf5aaf1",
+      "impl_sha": "7479c97cb27cdae6",
       "message": "pre-registered threshold not met",
       "metrics": {
         "all_seeds_beat_null": 1.0,
@@ -10728,7 +10806,22 @@
       "status": "PASS"
     },
     "T3.01": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-24T07:19:09",
+          "by": "26th-audit-B2",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "3868bf69b66abdcb",
+              "proof": "reconstructed 3868bf69b66abdcb from git f7022515dffb; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: experiments/tests/t2_03_pretrained_vision.py",
+              "to": "5f5e769623c0cd01"
+            }
+          ],
+          "commit": "9449a1b+dirty",
+          "reason": "prose-only docstring edit to this file and/or a declared IMPL_DEPS test file (COVERS marker corrected to match the registry); tree-state reconstruction, all drifted ASTs proven identical"
+        }
+      ],
       "attempt": 5,
       "commit": "f702251",
       "compute_s": 976.75,
@@ -11033,7 +11126,7 @@
           "status": "VOID"
         }
       ],
-      "impl_sha": "3868bf69b66abdcb",
+      "impl_sha": "5f5e769623c0cd01",
       "message": "",
       "metrics": {
         "ablated_max": 0.25,

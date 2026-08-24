@@ -4588,6 +4588,23 @@ being opt-in**. It is not a licence to withhold documentation from a test file.
 Quote a doctrine from the code it lives in and check that it is about your case
 — the sibling of the VOID-attribution rule one section up.
 
+Corollary, 2026-08-24: **the tax recursed one level up on the lane's first
+group use, and the same rule closed it.** The 26th audit's B2 ordered four
+docstring `COVERS:` markers fixed; two of the fixed files are OTHER specs'
+`IMPL_DEPS` (t2_03 is T3.01's, t2_04 is T2.05's), and the doc-only lane
+reconstructed only the target file from git with CURRENT dep bytes — so a
+prose fix cleared through the lane stranded the certificates of every spec
+depending on the fixed file, with no lane of their own ("a dependency edit
+is never prose" was the doctrine, and it was false for exactly this shape).
+The repair widened the PROOF, not the permission: `tree_reconstructing_sha`
+recovers file AND deps at one committed tree state, and the amend must clear
+`prose_only_delta` for the file and every drifted dependency, refusing None
+of its old cases (an AST-moved dep, an existence flip, the DIRTY shape all
+still refuse). General form: an integrity instrument that hashes a
+NEIGHBOURHOOD (file + deps) needs its amnesty lane to prove the whole
+neighbourhood, or the lane re-creates the tax on every shared file — which
+is where documentation is most valuable and least written.
+
 ## A screen with no re-screen cap is a ratchet — pre-register the outcome fork before the number lands
 
 LC.03 was re-screened once (v1 → v2, 4x envelope) under the owner's
