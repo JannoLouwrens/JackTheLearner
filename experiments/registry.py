@@ -648,7 +648,13 @@ LADDER: list[Spec] = [
                  "(|acc - 0.25| <= 0.10, ~4 sd at n=300). If it clears "
                  "chance the rig leaks episode identity into the frames and "
                  "the run is VOID, not evidence — the same direction T2.03's "
-                 "registered control failed (0.0633 dev).",
+                 "registered control failed (0.0633 dev). "
+                 "acc_shuffled_train is RECORDED, not gated (v3, 2026-08-21): "
+                 "the registered run read 0.25 / 0.3167 / 0.25 against the "
+                 "0.35 reference line, so this control is NOT evidence "
+                 "against a distributional leak. Identity leakage is carried "
+                 "by hash_overlap (0.0) and the pixel-shuffled arm (0.25 "
+                 "every seed).",
          notes="COVERS: sight (claim)"),
     Spec("T3.02", 3, "Ablate proprioception", hypothesis="Removing proprioception hurts control.",
          falsified_by="No measurable drop.", null_baseline="Full system.",

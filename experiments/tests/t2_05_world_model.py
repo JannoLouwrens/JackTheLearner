@@ -114,7 +114,11 @@ expiring hours die Sunday, and a Kaggle kernel computes server-side even if
 the local watcher dies (JACK_REUSE_KERNEL reattaches at zero quota). Science
 code lives HERE and the JOB string only imports it (T0.16).
 
-COVERS: world model (claim).
+COVERS: fast/slow (fixture). ("world model" is not a commitment name — an
+earlier revision declared it here anyway. The registry declares fast/slow
+(fixture): this spec is apparatus for the fast/slow family, whose claim
+specs DP.01-DP.03 sit behind the learning-core question, not a capability
+claim of its own.)
 """
 
 from __future__ import annotations

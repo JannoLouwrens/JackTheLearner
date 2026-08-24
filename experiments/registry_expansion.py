@@ -3415,7 +3415,19 @@ EXPANSION: list[Spec] = [
                "discounted value function should reproduce that without any "
                "anticipatory term in the reward. Its control is the `myopic` arm "
                "(gamma -> 0.5), which must NOT anticipate; if it does, the metric "
-               "is reading food availability rather than foresight."),
+               "is reading food availability rather than foresight.\n"
+               "POWER GATE BEFORE DISPATCH (26th audit B5, binding the way "
+               "XL.01's power verdict binds NE.08): LC.03 v2 measured W0 "
+               "unable to separate five learning cores at a 4x envelope with "
+               "a clean rig (VOID 'fewer than two learners (1 cleared)', "
+               "2026-08-23). NE.03 is a CPU_LONG screening claim in the same "
+               "W0, so a pre-run power calculation against LC.03 v2's "
+               "recorded spreads (the ledger row plus "
+               "experiments/artifacts/lc03_curves_seed*.json on this box) is "
+               "REQUIRED before dispatch — and if D10 resolves toward "
+               "redesigning W0's discriminability, NE.03 as registered is "
+               "measuring the same shallow world; hold it until the redesign "
+               "lands. No threshold moves."),
 
     Spec("NE.04", 5, "BAKEOFF: which need reward, and do innate reflexes help?",
          hypothesis="STAGE 1: among the arms that cleared NE.03, one beats the "

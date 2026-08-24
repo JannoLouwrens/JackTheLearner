@@ -100,7 +100,11 @@ sets MUJOCO_GL=egl (the preamble's "disabled" is for training jobs that never
 render), pip-installs mujoco, and imports THIS module — science code lives
 here where guards can see it, never in the JOB string (T0.16 lesson).
 
-COVERS: sight (claim).
+COVERS: sight (fixture). Re-kinded claim -> fixture 2026-08-13 (overseer B6,
+recorded in the registry notes): this spec MEASURES the gap against a
+pretrained yardstick, it does not demonstrate that Jack sees — and the
+yardstick is barred from the vision seat by PLASTIC-ONLY. Sight's claim
+specs are T3.01 (ablate vision) and OP.01.
 """
 
 from __future__ import annotations

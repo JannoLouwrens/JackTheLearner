@@ -74,7 +74,11 @@ computes server-side even if the local watcher dies (JACK_REUSE_KERNEL
 reattaches at zero quota). Science code lives HERE and the JOB string only
 imports it (T0.16: code in strings is invisible to every guard).
 
-COVERS: action head (claim).
+Declares no `COVERS:` commitment. "action head" is not a name in
+`coverage.COMMITMENTS`, and the registry — the copy `declarations()` reads,
+and the authoritative one — carries no marker for T2.04. An earlier revision
+wrote `action head (claim)` here; that bought nothing and read as a claim
+(26th audit B2).
 """
 
 from __future__ import annotations

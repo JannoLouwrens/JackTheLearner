@@ -29,14 +29,27 @@ deliberately so nobody mistakes the cheap half of the fix for the fix.
 No physics, no training, no ledger writes: the fixtures are registry dicts
 built in-process, so the numbers hold still while the RULE varies. Same shape
 as T0.19 and T0.20.
+
+P10 (26th audit B2) extends the repair to the marker's OTHER copy. The house
+style also writes `COVERS:` into test-file docstrings, and `declarations()`
+reads `Spec.notes` only — so that copy was read by no instrument, and it
+rotted invisibly: one file's kind flipped against the registry, one declared
+a commitment that does not exist, one kept a family's old name. P10 parses
+every docstring under `experiments/tests/` with the registry's own grammar
+and requires each marker to be well-formed AND backed, pair-for-pair (kind
+included), by its own spec's registry declaration. A convention enforced at
+one site and written at two rots at the unenforced site (LESSONS.md,
+2026-08-24); this points the checker at the second site.
 """
 from __future__ import annotations
 
+import ast
 import re
 from dataclasses import replace
+from pathlib import Path
 
 from ..coverage import COMMITMENTS, declarations, report
-from ..protocol import Ledger, Status, run_spec
+from ..protocol import Ledger, Status, module_path_for, run_spec
 from ..registry import BY_ID
 
 SPEC_ID = "T0.21"
@@ -63,6 +76,63 @@ LEGACY_PATTERNS = {
     "shelter/building":   r"shelter|build|construct|nest",
     "hearing":            r"audio|acoustic|sound|hear|binaural",
 }
+
+
+TESTS_DIR = Path(__file__).resolve().parent
+
+
+def _docstring_covers(source: str) -> tuple[set, list]:
+    """`(pairs, bad)` for every `COVERS:` marker in a file's DOCSTRINGS,
+    parsed with the SAME grammar `declarations()` applies to registry notes.
+
+    Docstrings only, by AST: a marker inside a code string (this battery's
+    own fixtures) is data, not a declaration, and a backticked prose mention
+    is already excluded by DECLARATION itself (P5)."""
+    texts = []
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, (ast.Module, ast.ClassDef,
+                             ast.FunctionDef, ast.AsyncFunctionDef)):
+            doc = ast.get_docstring(node, clean=False)
+            if doc:
+                texts.append(doc)
+    fake = replace(BY_ID["T0.01"], id="ZZ.doc", notes="\n".join(texts))
+    dec, bad = declarations({"ZZ.doc": fake})
+    return ({(c, kind) for c, lst in dec.items() for _sid, kind in lst},
+            bad)
+
+
+def _docstring_audit(files: dict, by_id: dict,
+                     spec_of: dict[str, str]) -> list[str]:
+    """One problem per docstring `COVERS:` marker that is malformed or that
+    its own spec's registry entry does not declare, pair-for-pair — the kind
+    must match too. The registry is the copy `declarations()` reads; a
+    docstring marker it does not back is decoration wearing a claim's face.
+
+    `spec_of` maps file name -> spec id. The live caller builds it from
+    `module_path_for` — the ONE rule for which file implements a spec —
+    never from parsing the file itself. A marker in a file no spec owns
+    (a helper module) is pure decoration and flagged as such."""
+    declared, _ = declarations(by_id)
+    reg_pairs: dict[str, set] = {}
+    for c, lst in declared.items():
+        for sid, kind in lst:
+            reg_pairs.setdefault(sid, set()).add((c, kind))
+    problems = []
+    for name, source in sorted(files.items()):
+        pairs, bad = _docstring_covers(source)
+        for _sid, marker in bad:
+            problems.append(f"{name}: malformed docstring marker {marker!r}")
+        if not pairs:
+            continue
+        sid = spec_of.get(name)
+        if sid is None:
+            problems.append(f"{name}: docstring COVERS in a file no spec "
+                            "owns")
+            continue
+        for c, kind in sorted(pairs - reg_pairs.get(sid, set())):
+            problems.append(f"{name}: docstring declares '{c} ({kind})' but "
+                            f"the registry entry for {sid} does not")
+    return problems
 
 
 def _legacy_coverage(reg: dict, commitment: str) -> list[str]:
@@ -114,7 +184,7 @@ def _fixture() -> dict:
     return reg
 
 
-N_PROPERTIES = 9
+N_PROPERTIES = 10
 
 
 def _probe(rule_is_regex: bool) -> dict:
@@ -243,6 +313,48 @@ def _probe(rule_is_regex: bool) -> dict:
             or not any(sid == "ZZ.nokind" for sid, _ in nbad)):  # and is seen
         failed.append("p9_kindless_declaration_is_reported")
 
+    # P10 — the DOCSTRING copy of a `COVERS:` marker is validated against the
+    # registry copy, or it stops being written (26th audit B2). Known answers
+    # first — the kind-flip disease (t2_03: docstring `(claim)`, registry
+    # `(fixture)`), the unbacked disease (t2_04: a marker its registry entry
+    # never made), and the shape that must STAY legal (a matching pair, plus
+    # a backticked prose mention) — then the LIVE tests directory must be
+    # clean. The regex rule reads no markers, so it is scored as its failure,
+    # same honesty as P5/P8.
+    live_doc_problems: list[str] = []
+    if rule_is_regex:
+        failed.append("p10_docstring_covers_match_registry")
+    else:
+        ka_reg = {"ZZ.dfix": replace(donor, id="ZZ.dfix", title="Apparatus",
+                                     notes="COVERS: shelter/building (fixture)")}
+        ka_files = {
+            "ka_kind_mismatch.py": ('"""COVERS: shelter/building (claim)."""\n'
+                                    'SPEC_ID = "ZZ.dfix"\n'),
+            "ka_unbacked.py":      ('"""COVERS: hearing (claim)."""\n'
+                                    'SPEC_ID = "ZZ.dfix"\n'),
+            "ka_clean.py":         ('"""COVERS: shelter/building (fixture).\n'
+                                    'A prose mention of `COVERS:` is not a\n'
+                                    'declaration."""\n'
+                                    'SPEC_ID = "ZZ.dfix"\n'),
+        }
+        ka = _docstring_audit(ka_files, ka_reg,
+                              {"ka_kind_mismatch.py": "ZZ.dfix",
+                               "ka_unbacked.py": "ZZ.dfix",
+                               "ka_clean.py": "ZZ.dfix"})
+        live_spec_of = {}
+        for sid in BY_ID:
+            path = module_path_for(sid)
+            if path is not None:
+                live_spec_of[path.name] = sid
+        live_doc_problems = _docstring_audit(
+            {p.name: p.read_text() for p in sorted(TESTS_DIR.glob("*.py"))},
+            BY_ID, live_spec_of)
+        if (not any("ka_kind_mismatch" in p for p in ka)
+                or not any("ka_unbacked" in p for p in ka)
+                or any("ka_clean" in p for p in ka)
+                or live_doc_problems):
+            failed.append("p10_docstring_covers_match_registry")
+
     rows = report()
     return {
         "properties_checked": float(N_PROPERTIES),
@@ -253,6 +365,7 @@ def _probe(rule_is_regex: bool) -> dict:
         "declared_specs_live": float(sum(r["n_specs"] for r in rows)),
         "nominated_not_declared": float(sum(r["n_nominated"] for r in rows)),
         "malformed_declarations_live": float(len(live_bad)),
+        "docstring_covers_problems_live": float(len(live_doc_problems)),
     }
 
 

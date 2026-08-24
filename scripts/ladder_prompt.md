@@ -36,32 +36,55 @@ A capability may only be claimed by a test that could have failed. This repo's
 disease was a README status table reading "Working" for eleven components that had
 never received a gradient. Do not recreate it.
 
-## READ THIS BEFORE YOU DECIDE YOU ARE IN A BLACKOUT (Review, 2026-08-21 06:4x)
+## WHICH METER IS THE GATE — and what happened when this section first said it
+## (Review, 2026-08-21; CORRECTED BY THE OUTCOME, Review 2026-08-24)
 
-**You have been stopping on the wrong meter for three iterations.** The hard
-stop lives in `scripts/lib_usage.sh` and it reads
-`claude_usage.py --pct`, which is **`week:all models`** — nothing else. At
-06:40 on 08-21 that line reads **77%**, thirteen points below the stop. The
-number your last three journal entries called "the 90% hard stop" is
-**`week:Fable` 93%**, which is the meter for the model cron happens to pass
-in (`JACK_LOOP_MODEL=fable`) and is **not the gate**. `ladder_loop.sh` already
-handles Fable running out: `FALLBACK_MODELS="opus sonnet"` fires on the
-refusal. **If the gate lets you run, you are not in a blackout.** Print both
-lines (`claude_usage.py`, no flags) and say which one you are acting on.
+**The rule, unchanged and still right.** The hard stop lives in
+`scripts/lib_usage.sh` and reads `claude_usage.py --pct`, which is
+**`week:all models`** — nothing else. `week:Fable` is the meter for the model
+cron happens to pass in (`JACK_LOOP_MODEL=fable`) and is **not the gate**.
+Print both lines (`claude_usage.py`, no flags) and say which one you are
+acting on. **No number is cached on this page — read the tool.**
 
-The judgement call this changes is real and it is yours, so make it explicitly:
-running on opus draws the same `all models` pool the Review and the overseer
-draw from, so burning it to 90% takes the AUDITORS down too (PROGRESS FOR THE
-OWNER #1, twice raised). That argues for restraint — **it does not argue for
-zero.** The cheapest correct posture is *dispatch, then idle*: a Kaggle
+**What this section got wrong, recorded because it cost 66 hours.** On 08-21
+it told you the gate had "thirteen points of headroom" and that you were not
+in a blackout. Both were true at 06:40. By **12:07 the same day the gate
+fired at 91%**, and the whole system — builder, overseer, field watch, Review
+— was dark until the weekly reset at **08-24 05:00**. The W33 Kaggle
+allocation (**22.1 h of 30**) died unspent on Sunday 08-23 anyway. The
+headroom was about five hours, not three days, and this page did not know the
+difference between the two.
+
+**So the operative rule is neither "stop" nor "go" — it is BURN RATE.** The
+pool moved 77% → 91% in roughly five hours of ordinary work, and the two
+auditors draw on the same pool. Before you plan anything multi-hour, ask how
+many points an iteration costs at the current rate and how many are left, not
+merely whether you are under 90.
+
+**And the safety net this section cited DOES NOT WORK — verify before you rely
+on it.** It said *"`FALLBACK_MODELS="opus sonnet"` fires on the refusal."*
+At **10:07 and 11:07 on 08-21 it did not fire.** The CLI printed
+`You've reached your Fable 5 limit.` and both iterations exited `rc=1` in
+three seconds. `lib_credits.sh` greps for `out of usage credits`
+(`credits_out`) and `hit your session limit` (`session_limited`); this third
+wording matches neither, so `limit_hit` returned false, the fallback loop
+`break`ed on its first test, **and no lost-iteration marker was written** —
+`lost_iterations.log` is still 0 bytes. Two dead iterations, uncounted, with
+every organ reporting health. This is the same scar `lib_credits.sh`'s own
+header documents from 2026-08-13, recurring on a third message wording. The
+fix is routed to the owner (PROGRESS FOR THE OWNER #1) because it is an organ
+script; **until it lands, an `rc=1` three-second iteration is a silent dead
+slot, not a crash.**
+
+**The posture that survives all of this: DISPATCH, THEN IDLE.** A Kaggle
 submission and a `launch_detached.sh` run compute through any blackout and
-write their own receipts. Your own B6 plan says exactly this — *"W33 hours die
-Sun 08-23 REGARDLESS, so anything worth W33 must be dispatched before ~88%,
-not queued behind the stop"* — and then nothing was dispatched after 03:13.
+write their own receipts. Anything worth GPU hours must be dispatched
+*before* the meter matters, not queued behind the stop.
 
-**~22.8 Kaggle GPU-hours expire Sunday 2026-08-23** (`gpu_budget.json`: W33 is
-7.20 h ok + 0.26 h failed of 30). W32's whole allocation died unspent on 08-16
-for the same reason.
+**Kaggle: read `experiments/gpu_budget.json`, never this line.** W34 opened
+2026-08-24 and its hours expire **Sunday 2026-08-30**. W32's and W33's whole
+allocations both died unspent — two consecutive weeks — and in both cases the
+loop was dark when they expired.
 
 **THE TWO STALE UNITS THIS SECTION USED TO NAME ARE DONE — WITHOUT GPU
 (builder, 2026-08-21 ~07:1x).** UB.9 and T2.06 were stale from PROSE-ONLY
@@ -214,10 +237,14 @@ carries the leak burden, SHUFFLE_BAND fires only on positive evidence) are
 recorded in t3_01_ablate_vision.py and t301_shuffle_probe.py — read them
 before touching any at-chance control.
 
-The W33 Kaggle hours (~21.5 h after that harvest, expire Sun 08-23):
-SM.02 parked, UB.10 parked, LC.03 CPU-only. Do not manufacture a dispatch
-to spend them; do read `run blocked`/`run coverage` for a genuine GPU
-candidate (T2.05's redesign facts are in the journal, 2026-08-14).
+**W33 IS OVER: 22.1 h of 30 expired unspent on Sun 08-23** while the loop was
+gate-dark — the second consecutive allocation to die. W34 is fresh; read
+`gpu_budget.json`. The GPU-candidate problem has not changed and it is not
+scarcity: SM.02 parked, UB.10 parked pending arm redesign, LC.03 concluded,
+T2.01/T2.07/T4.02 settled FAIL. **The constraint is having something worth
+submitting.** Do not manufacture a dispatch to spend hours; do read
+`run blocked`/`run coverage` for a genuine candidate (T2.05's redesign facts
+are in the journal, 2026-08-14).
 The 24th audit is fully closed: B4 was executed 2026-08-21 ~03:2x (W0.BAL
 table attached to D9, commit e9cc914, NOTHING adopted). B3 (the
 at-chance-control sweep) was executed 2026-08-21 ~02:xx — the generalised
@@ -226,6 +253,20 @@ carry proof its instrument was alive"); UB.9 and T2.06 got docstring lines
 (both now honestly flagged stale, re-stamp at the next --gate sweep).
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
+
+**THE SHAPE OF THE FRONTIER CHANGED — read this before you rank anything
+(Review, 2026-08-24).** Run `run blocked` yourself for the live numbers; what
+follows is structure, not counts. **Three of the four largest blockers are no
+longer waiting on compute — they are waiting on a HUMAN DECISION**: T2.01 is
+settled FAIL and behind D1/D9 (owner), LC.03 is CONCLUDED and behind D10
+(owner/Review), UB.10 is parked with its arm redesign routed to the Review.
+Together they account for roughly three quarters of every unreachable spec.
+**You cannot dispatch your way out of this, and you should stop trying.** The
+largest block mass you CAN move is the newly-registered NE family behind
+`NE.01` — CPU, no owner gate, double-gated only by work that is yours to do
+(the NEEDS_AND_DEATH §1.2 citation pass, then the seven-need integrator of
+§2.3; `drives.py` has three). Take that, or take the queue, or take a
+zero-pass commitment. Do not take a re-run.
 
 STATE LIVES IN THE LEDGER, NOT HERE. Run `status` for counts — this file
 cached "45 PASS of 124" and was wrong within hours, twice. This file states
@@ -364,19 +405,20 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
      Run `scripts/claude_usage.py` FIRST, every iteration that plans anything
      multi-hour — the hard stop in `lib_usage.sh` is **90%**, it takes the
      overseer, the field watch and the Review down with you, and only an
-     owner-written `.usage-resumed` lifts it. **At 2026-08-20 06:41 the meter
-     reads `week:all models` 46%, Fable 48%, session 15%, resetting Aug 24
-     04:59 UTC.** Credits are NOT the binding constraint this week — but do not
-     re-derive "so do not ration" from that: the last time this page said it,
-     it was false within 24 h. Read the meter, not this prose.
-     **The live scarcity is Kaggle: `experiments/gpu_budget.json` shows W33 at
-     ~3.7 h charged of 30, so ~26 h expire Sunday 2026-08-23** (read the file,
-     never assume). Credits are healthy and GPU hours are abundant and
-     perishable, so **the constraint is now having something WORTH submitting**,
-     not the ability to submit it. A dispatch you would not defend at a review
-     is not made cheaper by a free GPU. Still true and still load-bearing: a
-     submitted job keeps running while the loop is dark, so dispatch before you
-     polish.
+     owner-written `.usage-resumed` lifts it. **NO METER READING IS CACHED ON
+     THIS PAGE. Every number that ever was cached here went stale and misled an
+     iteration — twice.** Read the tool, print both lines, name the one you are
+     acting on, and see the burn-rate section at the top of this file: the
+     question is not "am I under 90" but "how many points does an iteration
+     cost and how many are left". The system has now gone fully dark TWICE by
+     crossing this gate (08-15 → 08-19, ~4.3 d; 08-21 12:07 → 08-24 05:00,
+     ~66 h) and lost a Kaggle allocation each time.
+     **Kaggle: read `experiments/gpu_budget.json`, never assume.** GPU hours
+     are perishable and reset Sunday, so **the constraint is having something
+     WORTH submitting**, not the ability to submit it. A dispatch you would not
+     defend at a review is not made cheaper by a free GPU. Still true and still
+     load-bearing: a submitted job keeps running while the loop is dark, so
+     dispatch before you polish.
      **T2.01 IS SETTLED — DO NOT RE-SUBMIT IT AND DO NOT RE-LITIGATE THE
      DECLINE** (builder, `a3b12f6`, 2026-08-13, endorsed by the Review
      2026-08-14). The 08-13 Review ordered it re-run on the premise that the

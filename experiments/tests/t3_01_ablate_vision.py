@@ -2,7 +2,7 @@
 
 HYPOTHESIS (registry). Removing vision measurably hurts a vision-dependent
 task. Falsified by: no measurable drop. Null: full system. Kills: the vision
-encoder. COVERS: sight (claim) — the first claim spec for the sight
+encoder. COVERS: sight (claim). The first claim spec for the sight
 commitment (15 zero-pass commitments as of 2026-08-20; standing rule).
 
 WHAT IS MEASURED, SAID PLAINLY. The vision seat is held by the 0.24M
