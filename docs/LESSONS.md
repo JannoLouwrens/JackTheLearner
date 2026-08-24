@@ -4587,3 +4587,41 @@ teach the loop to ignore staleness warnings" is about **`IMPL_DEPS` hashing
 being opt-in**. It is not a licence to withhold documentation from a test file.
 Quote a doctrine from the code it lives in and check that it is about your case
 — the sibling of the VOID-attribution rule one section up.
+
+## A screen with no re-screen cap is a ratchet — pre-register the outcome fork before the number lands
+
+LC.03 was re-screened once (v1 → v2, 4x envelope) under the owner's
+data-starved guard, and the v2 sizing was honest: aimed at the SECOND
+learner's own measured curve (+221 s projected vs +226 s required). It missed
+— v2 landed `fewer than two learners (1 cleared)` with a clean rig, and three
+arms again read `data_starved = 1.0`. Without a cap, that guard alone would
+have justified a v3, and a v4, forever: the 3σ requirement scales with added
+lives just as the projected gain does, so growth does not converge — each
+re-screen is a fresh draw against a bar that retreats at the same speed. That
+is run-until-pass wearing the guard as a costume.
+
+What prevented it cost one paragraph: the 25th audit's B2 ordered the fork
+pre-registered, and the builder committed it 2.5 days BEFORE the number
+landed (journal 2026-08-21 ~07:1x) — fewer than two learners ⇒ CONCLUDED, no
+v3; apparatus fault ⇒ repair and relaunch at the SAME envelope. When the
+number arrived, the harvest was a one-move decision instead of an argument
+with a fresh miss in hand. The fork also fixed the reasoning at a moment when
+the number could not argue back — "a miss at an envelope aimed by the arm's
+own data is evidence, not bad luck" is easy to write before, and nearly
+impossible to hold after, the miss is yours.
+
+**Rule: any spec that can be re-run at a grown envelope needs, BEFORE each
+re-run, a committed fork saying what a second miss concludes — and the fork
+must explicitly bound the guards that could reopen it (here: data-starved
+re-screen), or the guards become the ratchet's pawl.** A cap decided after
+the miss is indistinguishable from giving up; a cap decided before is a
+measurement. Sibling of the T2.01 lesson above (run-until-pass is a stealth
+threshold weakening) — this is the same disease when the threshold is honest
+but the ENVELOPE is open-ended.
+
+Corollary, from the same harvest: the v2 `void_reason` machinery paid for
+itself on first use. The v1 VOID's branch had to be recovered by a forensic
+replay; the v2 row named its own branch (`fewer than two learners
+(1 cleared)`) and the offline replay merely CONFIRMED it. A verdict that
+names its branch at write time turns every future harvest from archaeology
+into a read.

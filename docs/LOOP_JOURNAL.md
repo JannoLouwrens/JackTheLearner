@@ -5341,3 +5341,38 @@ B3 (hardware stamp + gpu_job_id) still open.
   T2.15 or T2.19 need IMPLEMENTING before any W33 dispatch (gpu<20min
   each, ~15.7 h W33 remain, die Sun 08-23); or take `run coverage`'s
   zero-pass ranking if it names something cheaper.
+- 2026-08-24 ~05:3x UTC (builder): HARVEST LC.03 v2 (the B6 plan's
+  harvest-only iteration). METERS printed, acting on week:all-models 0%
+  vs the 90% stop (week:Fable 0%, session 1% — week reset Aug 24 04:59).
+  The re-screen completed 08-23 21:11 UTC after ~63 h wall / ~190 core-h
+  and wrote its own row: **VOID, void_reason "fewer than two learners
+  (1 cleared)"** — the first VOID in this spec's history that names its
+  branch in the row. _check replayed offline against the recorded
+  metrics per the LESSONS rule: CONFIRMED verbatim. Rig clean end to
+  end — statue 599.92 s on the 600 s basal ceiling, randrew t 0.21,
+  darkroom t −1.08, ZERO twin/wiped trips (the v1 food-quantum fault is
+  gone at the 4x twin, exactly as the sizing arithmetic predicted) — so
+  the claim loop itself fired. Per-arm t_null/t_twin: wm-latent
+  4.65/4.00 with needs_rise +0.022 and clt +92.2 — the sole clean 3σ
+  learner, every conjunct green; wm-efe 2.05/2.07 (data_starved 1);
+  ppo-lp 1.20/1.10 needs FALLING; ppo-needs 1.06/0.99 (data_starved 1);
+  dreamer-xs −0.94/−0.99 (data_starved 1). dreamer-xs, the arm the 4x
+  envelope was sized FOR, flipped +46 → −48.5 s; wm-latent flipped
+  −165 → +96.8 s. **THE PRE-REGISTERED FORK (08-21 ~07:1x) FIRES ON ITS
+  (ii) BRANCH: the screen is CONCLUDED — no v3, no growth, no re-roll;
+  the apparatus-fault carve-out does not apply (arms failed, rig
+  measured); the three data_starved flags are priced by the fork and do
+  not reopen it.** Receipts: ladder_prompt.md updated (in-flight section
+  → CONCLUDED, priority-0 "SHOULD BE RUN" superseded), D10 written to
+  DECISIONS_NEEDED.md (the design fork: accept-one-learner / redesign
+  W0 discriminability / redesign arms — Review/owner's call, with the
+  scale-transfer guard kept live under (a)), LESSONS entry added ("a
+  screen with no re-screen cap is a ratchet — pre-register the outcome
+  fork before the number lands"). Curves for any redesign are at
+  experiments/artifacts/lc03_curves_seed{0,1,2}.json. NEXT ITERATION:
+  LC.03 is spent — do not relaunch; LC.04/LC.05/OP.01/PS.04/DP.01 stay
+  blocked pending D10. W34 Kaggle is fresh (30 h, resets Sunday) and the
+  credit week just reset — take `run coverage`'s zero-pass ranking per
+  the standing rule, else `run next`'s first implemented-unsettled spec;
+  T2.15/T2.19 still need IMPLEMENTING (gpu<20min each) before any
+  dispatch is defensible.

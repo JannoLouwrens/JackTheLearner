@@ -144,44 +144,40 @@ pids and log bytes watch the process, only the ledger watches the claims; two
 certificates decayed in silence inside a 55-commit window because three lean
 passes checked processes and never the scoreboard (Review 08-21 #4).
 
-## LC.03 v2 RE-SCREEN IS IN FLIGHT (launched 2026-08-21 ~04:4x UTC, 4x
-## envelope, ~63 h wall, ETA ~Aug 23 late; it writes the ledger itself —
-## do NOT relaunch, do NOT edit lc_03_survival_screening.py while it runs,
-## and KEEP THE TREE CLEAN so the record moment stamps clean)
+## LC.03 IS CONCLUDED — fork (ii) of the pre-registered sub-two-learner
+## fork FIRED (harvested 2026-08-24; v2 row recorded 2026-08-23 21:11 UTC).
+## NO v3, NO envelope growth, NO re-roll. Do not relaunch it as cheap work.
 
-CORRECTED DIAGNOSIS of the 08-21 02:11 VOID (found by replaying _check
-against the row's recorded metrics — see the new LESSONS entry "A generic
-VOID message admits every narrative"): it did NOT fire at "fewer than two
-learners" as the harvest commit eec7d86 narrated. It fired at CONTROL (c):
-ppo-needs/twin_life_gain −7.71 s, |t| = 3.16 vs the 3.0 gate (the harvest's
-"±10 s noise floor" does not exist; NOISE_FLOOR_S is 5.0). The claim loop
-never ran. The magnitude is ONE FOOD QUANTUM on the v1 twin's 22-life ruler
-(one eat ≈ 48/7 ≈ 6.9 s per third-mean) — the docstring's pre-declared
-"sized for symmetric quanta" territory failing. ALSO true from the same
-metrics, evaluated offline: zero arms at 3σ (best wm-efe +74.5 s t=1.25)
-with 4/5 final-half slopes POSITIVE — the owner's data-starved branch
-applies on the evidence.
+The v2 re-screen (4x envelope, 400k decisions / 17,280 core-s per arm-seed,
+~190 core-h, ran 08-21 04:22 → 08-23 21:11) recorded **VOID,
+`void_reason: "fewer than two learners (1 cleared)"`** — and this time the
+verdict names its own branch, so no narrative back-fill is possible. _check
+replayed offline against the recorded row (builder, 08-24): every control on
+its pre-registered side (statue 599.92 s on the 600 s basal ceiling, randrew
+t 0.21, darkroom t −1.08, zero twin/wiped trips — the v1 food-quantum fault
+is gone at the 4x twin, as the sizing predicted), so the CLAIM loop fired,
+not the rig. Per-arm (t_null / t_twin / needs_rise / clt): **wm-latent 4.65
+/ 4.00 / +0.022 / +92.2 — the sole clean learner, every conjunct green**;
+wm-efe 2.05 / 2.07 / +0.021 / +84.5 (data_starved 1); ppo-needs 1.06 / 0.99
+(data_starved 1); ppo-lp 1.20 / 1.10, needs_rise NEGATIVE; dreamer-xs
+−0.94 / −0.99 (data_starved 1). dreamer-xs — the arm the 4x envelope was
+sized FOR, by its own measured curve — went from +46 s (v1) to −48.5 s;
+wm-latent went from −165 s (v1) to the only 3σ learner. The apparatus-fault
+carve-out does NOT apply: the arms failed, the rig measured.
 
-THE v2 RE-SCREEN (registered in lc_03_survival_screening.py's V2 block,
-commit of 2026-08-21): envelope 4x (N_STEPS 400k, W_CLOCK 17,280; sized so
-the SECOND learner, dreamer-xs, can clear — weakest-seed slope 2.95 s/life
-× half-persistence over ~150 added lives ≈ its +226 s requirement), gates
-UNMOVED. The 4x twin (~88 lives) also takes the food quantum back under
-the 5 s floor (~1.7 s), so ONE growth answers BOTH faults. Gaps closed:
-`{arm}/data_starved` now computed in _check; `void_reason` names the firing
-branch in every future row. Log /data/lc03_rescreen.log; artifacts
-regenerate into experiments/artifacts/ (gitignored). LC.04/OP.01/PS.04/
-DP.01 stay blocked behind a future LC.03 PASS.
-
-METER AT LAUNCH: `week:Fable` 89% — which the launch note called "the 90%
-hard stop" and which is NOT the stop; see the meter section at the top of
-this file. Read both lines yourself; do not reuse this one.
-The B6 plan (journal, 08-21 ~01:0x) governs the RUN regardless of the meter:
-it computes through any blackout and writes its own receipt; the first
-post-resume iteration is
-HARVEST-ONLY — read the ledger row's `void_reason`/`data_starved` keys
-directly, replay _check if narrating (LESSONS: "A generic VOID message
-admits every narrative"), commit receipts, keep the tree clean.
+THE FINDING (recorded per the fork, journal 08-21 ~07:1x): W0 does not
+discriminate these five learning cores at a reachable envelope — one core
+learns to survive in it, four do not. That is a result about the world and
+about LC.04's premise (arbitration needs ≥2 learners), and it is DESIGN
+INPUT for the Review/owner — see the DECISIONS_NEEDED entry of 2026-08-24 —
+not compute to be re-rolled. Three data_starved flags do not reopen it: the
+fork priced exactly that ("growth does not converge: the requirement scales
+with added lives just as the projected gain does"). LC.04/LC.05/OP.01/
+PS.04/DP.01 stay blocked behind an LC.03 PASS that this fork says will not
+be manufactured; unblocking them is a redesign decision, not a dispatch.
+Curves for all arms are in experiments/artifacts/lc03_curves_seed{0,1,2}.json
+(gitignored, on this box) — LC.04/LC.05 were designed to read them and run
+nothing, which matters to any redesign discussion.
 
 ## UB.10 IS PARKED PENDING ARM REDESIGN (builder, 2026-08-20 ~19:1x UTC —
 ## the recipe probe's both-fail branch fired; do NOT dispatch, no third recipe)
@@ -284,7 +280,14 @@ Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
    measured indistinguishable from vanilla at our scale — recommend deleting
    rather than wiring, escalate to DECISIONS_NEEDED rather than deciding.
 
-0. THE LEARNING-CORE BAKEOFF IS UNBLOCKED AND THE RING IS EMPTY. It decides
+0. **SUPERSEDED 2026-08-24: THE SCREEN IS CONCLUDED — see "LC.03 IS
+   CONCLUDED" above.** Everything below in this entry is history: the v2
+   re-screen ran to completion and fork (ii) fired (one learner, wm-latent;
+   the arbitration premise fails). "LC.03 IS RUNNABLE AND SHOULD BE RUN" is
+   DEAD — running it again is the ratchet the fork exists to prevent. The
+   learning-core question now moves by Review/owner redesign (DECISIONS_NEEDED
+   2026-08-24), not by dispatch. Kept below for the reasoning:
+   THE LEARNING-CORE BAKEOFF IS UNBLOCKED AND THE RING IS EMPTY. It decides
    HOW JACK LEARNS. LC.00, LC.01, LC.02 all PASS — and as of 2026-08-10T08:32
    **PS.01 PASSES too** (attempt 3; the re-derivation this section used to ask
    for was done). The old text here said "the unit of work is PS.01, not

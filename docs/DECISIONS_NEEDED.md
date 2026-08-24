@@ -1868,3 +1868,58 @@ the loop will stop sizing its week around a quota it cannot spend.
 77%; `experiments/gpu_budget.json` W33 7.4590 h charged of 30; commits
 `39bf5a1`, `901b263`, `639112a`; `experiments/ledger.json` T3.01 PASS at
 2026-08-21T01:28:42.*
+
+## D10 — LC.03 CONCLUDED with ONE learner: the learning-core arbitration premise fails in W0 as built (builder harvest, 2026-08-24)
+
+**The measurement.** The LC.03 v2 re-screen (4x envelope: 400,000 decisions /
+17,280 core-s per arm-seed, ~190 core-h on this box, ran 08-21 04:22 → 08-23
+21:11 UTC) recorded VOID with `void_reason: "fewer than two learners
+(1 cleared)"`. The rig was clean end to end — all four controls on their
+pre-registered sides (statue 599.92 s on the 600 s basal ceiling, randrew
+t 0.21, darkroom t −1.08, zero twin/wiped-store trips; the v1 food-quantum
+fault is gone at the 4x twin exactly as the sizing arithmetic predicted) —
+so the claim loop itself fired. Per arm (t vs null / t vs twin):
+**wm-latent 4.65 / 4.00, needs rising +0.022, cross-life transfer +92 s —
+every conjunct green, a real 3σ survival learner**; wm-efe 2.05 / 2.07;
+ppo-lp 1.20 / 1.10 (needs FALLING); ppo-needs 1.06 / 0.99; dreamer-xs
+−0.94 / −0.99. dreamer-xs, the arm the envelope was sized FOR by its own
+v1 curve (+221 s projected vs +226 s required), went from +46 s to −48.5 s.
+
+**The pre-registered fork fired and is binding** (journal 2026-08-21 ~07:1x,
+committed 2.5 days before the number landed, per the 25th audit's B2): fewer
+than two learners with a clean rig ⇒ the screen is CONCLUDED — no v3, no
+envelope growth, no re-roll. Three arms carry `data_starved = 1.0`, and the
+fork priced exactly that: growth does not converge, because the 3σ
+requirement scales with added lives just as the projected gain does. An 8x
+screen (~380 core-h, ~5 days of this 4-core box) chases its own bar.
+
+**What this blocks.** LC.04 (the arbitration — "which core learns BEST" —
+premised on ≥2 screened learners), LC.05 (matched compute), and behind them
+OP.01, PS.04, DP.01/DP.02/DP.03 (the entire fast/slow acting axis). None of
+these can be unblocked by compute; the fork forbids manufacturing the PASS.
+
+**The design fork that is now yours/the Review's — I am not deciding it:**
+  (a) **Accept the screen's answer**: one learner exists. Amend LC.04's
+      premise from "arbitrate among screened learners" to "the screen IS the
+      arbitration when it returns exactly one" — wm-latent takes the
+      learning-core seat as measured winner-by-default (CHAMPIONS.md idiom),
+      the owner's scale-transfer guard (re-test at ~10x on Kaggle, free) still
+      applies before ADOPTION, and the fast/slow axis unblocks against the
+      wm-latent core. Cheapest; uses only recorded curves + one GPU run.
+  (b) **Judge the world, not the cores**: W0's survival task may be too
+      shallow to separate cores (the darkroom control already proved passivity
+      prospers there). Route a W0-discriminability redesign through the
+      Review — traps, delays, irreversibility (the DP.00 preconditions GOAL.md
+      already names) — then a NEW screen spec (LC.03 stays concluded in the
+      ledger; T1.02 precedent: strengthen only, history stays).
+  (c) **Judge the arms**: four cores failing while one clears may mean the
+      four need recipe/architecture work (UB.10 measured exactly this disease
+      elsewhere). That is design work with no current owner of record.
+  (a) is compatible with (b)/(c) later; the ledger loses nothing under any of
+  them. What is NOT on the menu: re-running LC.03 unchanged.
+
+*Evidence: `experiments/ledger.json` LC.03 attempt 3 (ran_at
+2026-08-23T21:11:17, commit of record in the harvest); `_check` replayed
+offline against the recorded row 2026-08-24 (builder journal); curves at
+`experiments/artifacts/lc03_curves_seed{0,1,2}.json` on this box; the fork
+pre-registration in `docs/LOOP_JOURNAL.md` 2026-08-21 ~07:1x.*
