@@ -1418,7 +1418,12 @@ EXPANSION: list[Spec] = [
                "or this measures token counts (arXiv:2601.16667). "
                "PAIRED bootstrap CIs and IQM per arXiv:2108.13264 - unpaired "
                "3-seed architecture comparisons resolve nothing at this budget."
-               "  COVERS: one brain / unison (claim)"),
+               "  COVERS: one brain / unison (claim). "
+               "PARKED: 2026-08-20 — recipe probe both-fail: no single "
+               "uniform recipe trains all six matched-param arms (warmup@1e-3 "
+               "leaves A2/A3 flat; 3e-4 fixes A3 but breaks A4), A2 learned "
+               "its marginals under NO tested recipe, the one-diagnostic cap "
+               "is spent; arm redesign routed to the weekly Review."),
 
     # ── THE STANDING AUDIT ──────────────────────────────────────────────
 
@@ -2346,7 +2351,12 @@ EXPANSION: list[Spec] = [
                "is occluded or ambiguous and approximately nothing otherwise). "
                "A test that only measures the occluded condition cannot "
                "distinguish 'smell works' from 'an extra channel helped'."
-               "  COVERS: smell (claim)"),
+               "  COVERS: smell (claim). "
+               "PARKED: 2026-08-20 — the pre-registered both-fail branch "
+               "fired: three mechanism-level repairs each fixed a measured "
+               "fault and none moved the learnability ratios (nosmell/vis "
+               "0.92 vs bar 0.60, nosmell/occ 0.98 vs bar 0.85); gates stay "
+               "provisional, run() refuses, no fourth repair, no dispatch."),
 
     # ── TA: taste ───────────────────────────────────────────────────────
 
@@ -3073,7 +3083,14 @@ EXPANSION: list[Spec] = [
                "a first-class metric - it is the difference between foresight "
                "and reflex, and it connects directly to DP.00's question of "
                "whether this world rewards looking ahead."
-               "  COVERS: thermal (kills) (claim), shelter/building (claim)"),
+               "  COVERS: thermal (kills) (claim), shelter/building (claim). "
+               "PARKED: 2026-08-25 — oracle pilot ORACLE_CANNOT at the full "
+               "envelope (z_shelter 0.0: the certified core with the working "
+               "hut's direction IN its observation sheltered in 0 of 27 "
+               "lives); per the pre-registered rule: no ledger row, no "
+               "envelope growth, no re-roll. Thermal/shelter coverage needs a "
+               "successor spec that does not require this core to learn "
+               "seeking from an outside spawn."),
 
     Spec("XL.00", 2, "He dies, he reappears somewhere he did not choose, and the diary crosses",
          hypothesis="With `lethal=True`, W0 ends a life when energy or "

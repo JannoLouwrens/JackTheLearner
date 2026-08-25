@@ -82,9 +82,17 @@ fi
 exec 9>"$LOCK"
 flock -n 9 || { say "previous iteration still running — skipping"; exit 0; }
 
+# Both filesystems: the repo and logs sit on /, but the venvs, artifacts and
+# /data/jack-logs live on /data — which is where a 45 GB WAL actually filled a
+# disk once, and where this guard was NOT pointed until the 28th audit (B6).
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
+FREE_DATA_GB=$(df -BG --output=avail /data | tail -1 | tr -dc '0-9')
 if [ "${FREE_GB:-0}" -lt "$MIN_FREE_GB" ]; then
   say "ABORT: only ${FREE_GB}GB free on / (need ${MIN_FREE_GB}GB)"
+  exit 0
+fi
+if [ "${FREE_DATA_GB:-0}" -lt "$MIN_FREE_GB" ]; then
+  say "ABORT: only ${FREE_DATA_GB}GB free on /data (need ${MIN_FREE_GB}GB)"
   exit 0
 fi
 
@@ -112,7 +120,10 @@ usage_gate say || exit 0
 # iteration — this commits the evidence, not the interpretation.
 harvest_bookkeeping() {
   cd "$REPO" || return 0
-  git diff --quiet -- experiments/ledger.json 2>/dev/null && return 0
+  # Against HEAD, not the index: an iteration killed between `git add` and
+  # `git commit` leaves the row STAGED, where a worktree-vs-index diff reads
+  # clean and the harvest skips it (28th audit B2).
+  git diff --quiet HEAD -- experiments/ledger.json 2>/dev/null && return 0
   # Refuse a torn file: the detached runner may be mid-write at this instant.
   /data/venvs/jackthelearner/bin/python -c \
     "import json; json.load(open('experiments/ledger.json'))" 2>/dev/null || {
@@ -129,7 +140,11 @@ print(" ".join(sorted(changed)) or "unknown")
 PY
 )
   git add experiments/ledger.json 2>/dev/null || return 0
-  if git commit -q -m "pace-skip bookkeeping: detached-run ledger row(s) [${ROWS:-unknown}] committed while the builder was pace-gated (27th audit B3). Mechanical commit from ladder_loop.sh; the next unskipped iteration owes the harvest write-up. Only experiments/ledger.json staged." 2>/dev/null; then
+  # The pathspec is load-bearing (28th audit B2): without it this commits the
+  # WHOLE index, so anything a killed iteration left pre-staged rides along
+  # under a message asserting one file — the add -A sweep through a new door,
+  # in the one path that runs unattended with no agent watching.
+  if git commit -q -m "pace-skip bookkeeping: detached-run ledger row(s) [${ROWS:-unknown}] committed while the builder was pace-gated (27th audit B3). Mechanical commit from ladder_loop.sh; the next unskipped iteration owes the harvest write-up. Only experiments/ledger.json staged." -- experiments/ledger.json 2>/dev/null; then
     say "bookkeeping: committed detached ledger row(s) [${ROWS:-unknown}] during pace skip"
     git push -q 2>/dev/null && say "bookkeeping: pushed" || say "bookkeeping: push failed — next iteration retries"
   else

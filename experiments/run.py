@@ -573,9 +573,11 @@ def cmd_coverage(ledger: Ledger) -> int:
     a spec titled "The paraphrase eval set is HONEST...". Regex hits are
     printed as NOMINATIONS — work to do, never coverage.
 
-    Nonzero exit means a commitment has NO declared spec, or a declaration
-    names a commitment that does not exist. Both are cheap to fix and expensive
-    to leave; "covered but not passing" is normal and exits 0.
+    Nonzero exit means a commitment has NO declared spec, OR every claim-kind
+    spec it ever had is PARKED (a retirement is not coverage — 28th audit), or
+    a declaration/PARKED marker is malformed. All are cheap to fix and
+    expensive to leave; "covered but not passing" is normal and exits 0. The
+    repair for a claim-dead commitment is a SUCCESSOR SPEC, never unparking.
     """
     from .coverage import check
     return check()

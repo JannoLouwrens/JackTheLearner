@@ -63,6 +63,29 @@ Better would be deriving these from GOAL.md automatically; that is not
 attempted, because a regex over prose that silently matches nothing is worse
 than a list a human can read and correct.
 
+A PARKED SPEC IS NOT COVERAGE (28th audit, 2026-08-25 — the third scar). At
+00:11 that morning the loop retired `SH.01` under its own pre-registered rule
+("no ledger row, no envelope growth, no re-roll") — the correct call on the
+evidence, and exactly the conduct this system asks for. But `SH.01` was the
+ONLY claim-kind spec behind BOTH `shelter/building` and `thermal (kills)`, two
+of the four original 2026-08-10 misses that caused this file to exist — and
+this tool printed `0 commitment(s) with NO declared spec` and exited 0,
+because a parked spec is still a declaration and the ratchet counts
+declarations. `smell` had been in the same state via `SM.02` for five days.
+The distinction the tool did not draw: **blocked is a queue position; parked
+is a retirement.** A spec pre-registered never to run again is not a
+falsifiable claim behind a commitment — it is a docstring. So a spec whose
+notes carry `PARKED: <YYYY-MM-DD> — <reason>` no longer counts as a
+declaration, a commitment with no passing claim and no un-parked claim-kind
+declaration prints as claim-dead and `check()` exits 2, and the repair for
+that red is to REGISTER A SUCCESSOR SPEC, never to delete the marker or
+quiet the tool. Write the marker as its own sentence (the `COVERS:` grammar
+consumes to end of sentence, so a marker glued onto a `COVERS:` line would be
+swallowed into a malformed declaration). A malformed `PARKED:` — no date, no
+reason — is REPORTED, never dropped: an unparseable retirement leaves the
+spec silently counting as coverage, which is the false-positive direction,
+the one nobody audits.
+
 Guarded by spec `T0.21`, which feeds it the cases already known to be broken.
 """
 
@@ -152,7 +175,42 @@ DECLARATION = re.compile(r"(?<!`)COVERS:\s*(\w[^\n.;]*)", re.I)
 KINDS = ("claim", "fixture", "rule", "sensor")
 _KIND = re.compile(r"^(.*\S)\s*\(\s*([\w-]+)\s*\)$")
 
+# `PARKED: 2026-08-25 — reason` — the spec's own decision tree retired it: no
+# re-run, no envelope growth, no re-roll. Same anti-prose guard as DECLARATION
+# (a backticked mention is discussion, not a retirement). The date and dash are
+# REQUIRED: a bare `PARKED: soon` parses as nothing, and a marker that parses
+# as nothing leaves the spec counting as coverage — so it is reported like a
+# malformed COVERS, loudly, in `bad`.
+PARKED_MARK = re.compile(r"(?<!`)PARKED:\s*([^\n]*)")
+_PARKED_OK = re.compile(r"^(\d{4}-\d{2}-\d{2})\s*[—–-]\s*(\S.*)$")
+
 _CANON = {k.lower(): k for k in COMMITMENTS}
+
+
+def parked(by_id: Optional[dict] = None
+           ) -> Tuple[Dict[str, str], List[Tuple[str, str]]]:
+    """`(spec id -> 'date — reason', [(spec id, malformed marker)])`.
+
+    A spec is parked when its registry notes carry a well-formed
+    `PARKED: <YYYY-MM-DD> — <reason>` marker. Malformed markers are the second
+    half and they are the point: an unparseable retirement silently leaves the
+    spec counting as coverage — the false-positive direction, the one nobody
+    goes looking for.
+    """
+    if by_id is None:
+        from .registry import BY_ID
+        by_id = BY_ID
+    out: Dict[str, str] = {}
+    bad: List[Tuple[str, str]] = []
+    for sid, spec in by_id.items():
+        for raw in PARKED_MARK.findall(str(getattr(spec, "notes", "") or "")):
+            m = _PARKED_OK.match(raw.strip())
+            if m:
+                out.setdefault(sid, f"{m.group(1)} — {m.group(2)}")
+            else:
+                bad.append((sid, f"PARKED: {raw.strip()!r}  [needs "
+                                 f"'PARKED: YYYY-MM-DD — reason']"))
+    return out, bad
 
 
 def declarations(by_id: Optional[dict] = None,
@@ -207,7 +265,8 @@ def declarations(by_id: Optional[dict] = None,
 
 
 def report(by_id: Optional[dict] = None,
-           results: Optional[dict] = None) -> List[dict]:
+           results: Optional[dict] = None,
+           credit_parked: bool = False) -> List[dict]:
     """Coverage (declared) and nominations (regex), never mixed.
 
     `n_specs`/`n_pass` count DECLARED specs only. `nominations` lists specs a
@@ -218,6 +277,18 @@ def report(by_id: Optional[dict] = None,
     demonstrating itself is not the commitment being demonstrated, and merging
     the two is how `curiosity` and `one brain / unison` each read as started
     for three audits while no capability test had ever run.
+
+    A PARKED spec is excluded from `specs`/`kinds`/`n_specs` and reported in
+    the row's `parked` map instead — a retirement is not a declaration (28th
+    audit). Excluding it from `n_pass` too is the conservative direction: the
+    only spec-parking precedents (SH.01, SM.02, UB.10) all concluded WITHOUT a
+    ledger PASS, and a marker that could keep credit while retiring the run
+    would flatter coverage, the direction nobody audits.
+
+    `credit_parked` is THE ORGAN THAT FAILED, kept executable — the
+    pre-2026-08-25 behaviour under which SH.01's retirement left two
+    constitutional commitments reading as covered. Only T0.21's control may
+    want it (same pattern as `declarations(default_kind=)`).
     """
     if by_id is None:
         from .registry import BY_ID
@@ -228,10 +299,15 @@ def report(by_id: Optional[dict] = None,
         if p.is_file():
             results = json.load(open(p)).get("results", {})
     declared, bad = declarations(by_id)
+    parked_map, parked_bad = parked(by_id)
+    if credit_parked:
+        parked_map = {}
+    bad = bad + parked_bad
     out = []
     for name, (pat, why) in COMMITMENTS.items():
         rx = re.compile(pat, re.I)
-        pairs = [(i, k) for i, k in declared[name] if i in by_id]
+        all_pairs = [(i, k) for i, k in declared[name] if i in by_id]
+        pairs = [(i, k) for i, k in all_pairs if i not in parked_map]
         specs = [i for i, _ in pairs]
         nominated = [s.id for s in by_id.values()
                      if rx.search(s.title) and s.id not in specs]
@@ -245,6 +321,7 @@ def report(by_id: Optional[dict] = None,
                    and results.get(i, {}).get("status") == "PASS"}
         out.append({"commitment": name, "why": why, "specs": specs,
                     "kinds": dict(pairs),
+                    "parked": {i: k for i, k in all_pairs if i in parked_map},
                     "n_specs": len(specs), "n_pass": len(passing),
                     "support_pass": support,
                     "nominations": nominated, "n_nominated": len(nominated),
@@ -252,62 +329,144 @@ def report(by_id: Optional[dict] = None,
     return out
 
 
-def counts() -> tuple[int, int]:
-    """(n_uncovered, n_malformed) — two different fires, separately assertable.
+def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
+    """`commitment -> [(claim spec id, state)]` — the join the 28th audit had
+    to compute by hand: `declarations()` × the ledger × the blocker graph.
 
-    Uncovered means zero DECLARED specs for a constitutional commitment: the
-    case invisible to every other instrument, and the reason this module
-    exists. Malformed means a `COVERS:` naming a commitment that does not
-    exist or missing its kind: a typo that buys nothing. Summing them (the
-    pre-2026-08-14 behaviour) gave the two fires one bell; the 17th audit
-    watched the bell ring on a typo and read it as the constitutional case.
+    States: `PASS`, `RUNNABLE` (every dependency satisfied today), `PARKED`
+    (retired by its own decision tree — no path back without a new spec), or
+    `blocked<-ROOTS` (a queue position: the terminal blockers its
+    unreachability actually rests on). The distinction the states encode is
+    the 28th audit's finding: blocked resolves when the blocker does; parked
+    resolves never. `run blocked` cannot see the difference and `coverage`
+    could not either, so nine of twenty-three commitments sat at zero-passing
+    AND zero-runnable with every instrument green.
+    """
+    from .protocol import Ledger
+    from .run import _terminal_blockers
+    if rows is None:
+        rows = report()
+    ledger = Ledger()
+    terminal = _terminal_blockers(ledger)
+    out: Dict[str, list] = {}
+    for r in rows:
+        entries = []
+        for sid, kind in r["kinds"].items():
+            if kind != "claim":
+                continue
+            res = ledger.results.get(sid)
+            status = getattr(getattr(res, "status", None), "name", None)
+            if status == "PASS":
+                entries.append((sid, "PASS"))
+            else:
+                roots = terminal.get(sid, set()) - {sid}
+                entries.append((sid, "RUNNABLE") if not roots else
+                               (sid, "blocked<-" + ",".join(sorted(roots))))
+        entries += [(sid, "PARKED") for sid, kind in r["parked"].items()
+                    if kind == "claim"]
+        out[r["commitment"]] = entries
+    return out
+
+
+def _claim_dead(r: dict) -> bool:
+    """No passing claim AND no un-parked claim-kind declaration: nothing this
+    commitment promises can currently be falsified by any run. Blocked claims
+    do NOT make a commitment claim-dead — blocked is a queue position."""
+    return (not r["n_pass"]
+            and not any(k == "claim" for k in r["kinds"].values()))
+
+
+def counts() -> tuple[int, int]:
+    """(n_claim_dead, n_malformed) — two different fires, separately
+    assertable.
+
+    Claim-dead means no passing claim and zero un-parked claim-kind
+    declarations for a constitutional commitment — which includes the original
+    zero-declared-specs case, and since the 28th audit also the case where
+    every claim spec is PARKED: both are invisible to every other instrument,
+    and the reason this module exists. Malformed means a `COVERS:` naming a
+    commitment that does not exist, missing its kind, or a `PARKED:` without
+    its date — a marker that buys/retires nothing while reading like it does.
+    Summing the two fires (the pre-2026-08-14 behaviour) gave them one bell;
+    the 17th audit watched the bell ring on a typo and read it as the
+    constitutional case.
     """
     rows = report()
     bad = rows[0]["bad_declarations"] if rows else []
-    return sum(1 for r in rows if r["n_specs"] == 0), len(bad)
+    return sum(1 for r in rows if _claim_dead(r)), len(bad)
 
 
 def check() -> int:
-    """Print the audit; exit 2 if any commitment is UNCOVERED, 1 if only
-    malformed declarations exist, 0 clean.
+    """Print the audit; exit 2 if any commitment is UNCOVERED or CLAIM-DEAD,
+    1 if only malformed declarations exist, 0 clean.
 
-    Uncovered means zero DECLARED specs. "Covered but not passing" is normal —
-    it is a ladder, not a scoreboard — so it is reported and not counted.
+    Uncovered means zero DECLARED specs. Claim-dead means no passing claim and
+    no un-parked claim-kind spec — every falsifiable claim it ever had has
+    been retired (28th audit: `shelter/building` and `thermal (kills)` both
+    went claim-dead in one commit when SH.01 was parked, and this tool exited
+    0). "Covered but not passing" is normal — it is a ladder, not a
+    scoreboard — so it is reported and not counted. The repair for a red here
+    is to REGISTER a successor spec, never to unpark or quiet the tool.
     """
     rows = report()
     bad = rows[0]["bad_declarations"] if rows else []
+    reach = claim_reachability(rows)
+    parked_notes = parked()[0]
     width = max(len(r["commitment"]) for r in rows)
-    uncovered = [r for r in rows if r["n_specs"] == 0]
-    unproven = [r for r in rows if r["n_specs"] and not r["n_pass"]]
-    print(f"  {'commitment':{width}}  covered (declared)   nominated")
-    for r in sorted(rows, key=lambda z: (z["n_specs"], z["n_pass"])):
-        mark = "NO SPECS" if not r["n_specs"] else (
-            "none passing" if not r["n_pass"] else "")
+    uncovered = [r for r in rows if r["n_specs"] == 0 and not r["parked"]]
+    dead = [r for r in rows if _claim_dead(r)]
+    unproven = [r for r in rows if r["n_specs"] and not r["n_pass"]
+                and not _claim_dead(r)]
+    print(f"  {'commitment':{width}}  covered (declared)   runnable   nominated")
+    n_runnable = {r["commitment"]: sum(1 for _s, st in reach[r["commitment"]]
+                                       if st == "RUNNABLE") for r in rows}
+    for r in sorted(rows, key=lambda z: (not _claim_dead(z),
+                                         z["n_specs"], z["n_pass"])):
+        mark = ("NO SPECS" if not r["n_specs"] and not r["parked"] else
+                "CLAIM-DEAD (all claim specs parked)" if _claim_dead(r) else
+                "none passing" if not r["n_pass"] else "")
         if r["support_pass"]:
             kinds = ", ".join(f"{i} ({k})" for i, k in r["support_pass"].items())
             mark = (mark + f"  [support passing, not credited: {kinds}]").strip()
         print(f"  {r['commitment']:{width}}  {r['n_specs']:>3} specs "
-              f"{r['n_pass']:>3} pass   {r['n_nominated']:>3} nominated   {mark}")
-        if not r["n_specs"]:
+              f"{r['n_pass']:>3} pass   {n_runnable[r['commitment']]:>3} now   "
+              f"{r['n_nominated']:>3} nominated   {mark}")
+        if _claim_dead(r):
             print(f"  {'':{width}}  ^ {r['why']}")
+            for sid, note in sorted(
+                    (s, parked_notes.get(s, "")) for s, st in
+                    reach[r["commitment"]] if st == "PARKED"):
+                print(f"  {'':{width}}    {sid} PARKED {note}")
             if r["nominations"]:
                 print(f"  {'':{width}}    nominations (declare or ignore): "
                       f"{', '.join(r['nominations'][:8])}")
+        elif not r["n_pass"]:
+            # The zero-pass rule is stated over commitments and executed over
+            # specs; this line is the join it needs at selection time (28th
+            # audit B4): which claim specs could actually move this
+            # commitment, and what each is waiting on.
+            claims = ", ".join(f"{s} {st}" for s, st in reach[r["commitment"]])
+            print(f"  {'':{width}}    claims: {claims}")
     print(f"\n  {len(uncovered)} commitment(s) with NO declared spec, "
-          f"{len(unproven)} with specs but nothing passing.")
-    if uncovered:
-        print("  A commitment with no spec is invisible to `run blocked`, to the\n"
-              "  overseer, and to every gate. Register one before demonstrating\n"
-              "  anything else — this is the cheapest possible bug to fix and the\n"
-              "  most expensive to leave.")
+          f"{len(dead)} CLAIM-DEAD (no passing claim, every claim spec "
+          f"parked),\n  {len(unproven)} with live claim specs but nothing "
+          f"passing.")
+    if uncovered or dead:
+        print("  A commitment with no runnable falsifiable claim is invisible\n"
+              "  to `run blocked`, to the overseer, and to every gate. The\n"
+              "  repair is to REGISTER a successor spec — parking was the\n"
+              "  right call on its evidence; leaving the commitment claim-dead\n"
+              "  is the bug, and deleting the PARKED marker would be worse.")
     if bad:
-        print(f"  {len(bad)} MALFORMED declaration(s) — a typo'd commitment "
-              f"name or a missing kind; either buys nothing:")
+        print(f"  {len(bad)} MALFORMED marker(s) — a typo'd commitment name, "
+              f"a missing kind, or a dateless PARKED; none buys anything:")
         for sid, name in bad:
-            print(f"      {sid}: COVERS: {name!r}")
+            print(f"      {sid}: {name!r}")
     print("\n  A nomination is NOT coverage. It is a spec whose title looks\n"
-          "  related and whose author has not said so; only `COVERS:` counts.")
-    return 2 if uncovered else (1 if bad else 0)
+          "  related and whose author has not said so; only `COVERS:` counts.\n"
+          "  A PARKED spec is NOT coverage either: a retirement is not a\n"
+          "  falsifiable claim, however honest the retiring was.")
+    return 2 if (uncovered or dead) else (1 if bad else 0)
 
 
 if __name__ == "__main__":

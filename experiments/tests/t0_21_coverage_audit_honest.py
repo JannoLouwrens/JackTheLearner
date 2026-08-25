@@ -30,6 +30,20 @@ No physics, no training, no ledger writes: the fixtures are registry dicts
 built in-process, so the numbers hold still while the RULE varies. Same shape
 as T0.19 and T0.20.
 
+P11 (28th audit B1) closes the THIRD leak: a PARKED spec counted as coverage.
+On 2026-08-25 00:11 the loop retired `SH.01` by its own pre-registered rule —
+the right call — and `shelter/building` and `thermal (kills)`, two of the four
+original misses this tool exists for, silently lost their last runnable claim
+while `coverage.py` printed `0 commitment(s) with NO declared spec` and exited
+0. Blocked is a queue position; parked is a retirement; the tool credited
+both. P11 requires: a `PARKED:`-marked claim spec buys no coverage and is
+reported in the row's `parked` map; a commitment whose only claims are parked
+reads claim-dead; a dateless `PARKED:` is REPORTED, never dropped (an
+unparseable retirement silently keeps counting as coverage — the direction
+nobody audits); a backticked prose mention is neither; and the live registry's
+markers are all well-formed. The organ that failed is kept executable as
+`report(credit_parked=True)` and must reproduce the leak.
+
 P10 (26th audit B2) extends the repair to the marker's OTHER copy. The house
 style also writes `COVERS:` into test-file docstrings, and `declarations()`
 reads `Spec.notes` only — so that copy was read by no instrument, and it
@@ -48,7 +62,8 @@ import re
 from dataclasses import replace
 from pathlib import Path
 
-from ..coverage import COMMITMENTS, declarations, report
+from ..coverage import (COMMITMENTS, _claim_dead, declarations, parked,
+                        report)
 from ..protocol import Ledger, Status, module_path_for, run_spec
 from ..registry import BY_ID
 
@@ -184,7 +199,7 @@ def _fixture() -> dict:
     return reg
 
 
-N_PROPERTIES = 10
+N_PROPERTIES = 11
 
 
 def _probe(rule_is_regex: bool) -> dict:
@@ -354,6 +369,57 @@ def _probe(rule_is_regex: bool) -> dict:
                 or any("ka_clean" in p for p in ka)
                 or live_doc_problems):
             failed.append("p10_docstring_covers_match_registry")
+
+    # P11 — a PARKED spec is not coverage (28th audit B1: SH.01's honest,
+    # pre-registered retirement left `shelter/building` and `thermal (kills)`
+    # with no runnable claim while this tool exited 0). Known answers on a
+    # fixed fixture, then the live registry's markers must parse. The regex
+    # rule reads no markers, so it is scored as its failure, same honesty as
+    # P5/P8/P10. The organ that failed is kept executable —
+    # `report(credit_parked=True)` — and must reproduce the leak, or the
+    # control controls nothing.
+    if rule_is_regex:
+        failed.append("p11_parked_is_not_coverage")
+    else:
+        pk_reg = {
+            # The essence of SH.01: a claim spec retired by its own rule.
+            "ZZ.pclaim": replace(
+                donor, id="ZZ.pclaim", title="He keeps rain off",
+                notes="COVERS: shelter/building (claim). "
+                      "PARKED: 2026-08-01 — concluded by its own fork."),
+            # Apparatus stays live: parking the claim must not touch it.
+            "ZZ.pfix": replace(
+                donor, id="ZZ.pfix", title="The rain exists",
+                notes="COVERS: shelter/building (fixture)"),
+            # A dateless marker parses as NOTHING and must be reported: an
+            # unparseable retirement silently keeps counting as coverage.
+            "ZZ.pbad": replace(
+                donor, id="ZZ.pbad", title="Unrelated",
+                notes="COVERS: hearing (claim). PARKED: soon"),
+            # A backticked prose mention is discussion, not a retirement.
+            "ZZ.pprose": replace(
+                donor, id="ZZ.pprose", title="Discusses the mechanism",
+                notes="A spec may be `PARKED:` by its own decision tree. "
+                      "COVERS: hearing (claim)"),
+        }
+        prows = {r["commitment"]: r for r in report(pk_reg, {})}
+        pmap, pbad = parked(pk_reg)
+        shelter_p, hearing_p = prows["shelter/building"], prows["hearing"]
+        leak = {r["commitment"]: r
+                for r in report(pk_reg, {}, credit_parked=True)}
+        live_pmap, live_pbad = parked(BY_ID)
+        if ("ZZ.pclaim" in shelter_p["specs"]              # parked buys nothing
+                or shelter_p["parked"] != {"ZZ.pclaim": "claim"}  # and is seen
+                or not _claim_dead(shelter_p)          # commitment reads dead
+                or shelter_p["n_specs"] != 1               # fixture stays live
+                or _claim_dead(hearing_p)              # live claim ≠ dead
+                or not any(sid == "ZZ.pbad" for sid, _ in pbad)  # dateless seen
+                or "ZZ.pbad" in pmap                       # ...and not parked
+                or "ZZ.pprose" in pmap                     # prose parks nothing
+                or any(sid == "ZZ.pprose" for sid, _ in pbad)   # nor cries wolf
+                or "ZZ.pclaim" not in leak["shelter/building"]["specs"]  # organ
+                or live_pbad):                             # live markers parse
+            failed.append("p11_parked_is_not_coverage")
 
     rows = report()
     return {

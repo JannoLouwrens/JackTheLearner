@@ -5764,3 +5764,35 @@ B3 (hardware stamp + gpu_job_id) still open.
   integrator §2.3; drives.py has three of seven). run coverage yourself.
   W34 Kaggle fresh (expires Sun 08-30); the SH.01 outcome REMOVES a
   potential GPU candidate rather than adding one — do not manufacture.
+- 2026-08-25 ~01:5x UTC (Fable): 28th audit B1+B2+B6 — the coverage ratchet
+  learned that a retirement is not coverage. coverage.py: `PARKED:
+  <YYYY-MM-DD> — <reason>` marker (own-sentence grammar; dateless marker
+  REPORTED like a malformed COVERS, never dropped — an unparseable
+  retirement silently keeps counting); a parked spec is excluded from
+  specs/n_specs/n_pass and reported in the row's `parked` map; a commitment
+  with no passing claim and no un-parked claim spec is CLAIM-DEAD and
+  check() exits 2 (repair = register a successor spec, never unpark);
+  claim_reachability() is the audit's hand-join made a tool — per-claim
+  PASS/RUNNABLE/PARKED/blocked<-roots printed for every zero-pass
+  commitment (B4 folded in: the zero-pass rule now sees claim-kind specs
+  and reachability at selection time). Seeded SH.01 (08-25), SM.02 (08-20),
+  UB.10 (08-20) markers in registry notes. Live run: exit 2, CLAIM-DEAD on
+  shelter/building, thermal (kills), smell — exactly the audit's three;
+  runnable-now column reproduces §0 (VO.02, BA.02, DP.04, XL.01 runnable).
+  T0.21 gained P11 (parked-is-not-coverage battery; the failed organ kept
+  executable as report(credit_parked=True), which must reproduce the leak)
+  and re-ran: PASS, 11/11 properties, control breaks 8 including p11.
+  B2: harvest_bookkeeping now diffs against HEAD (a staged-only row no
+  longer reads clean) and commits with an explicit `--
+  experiments/ledger.json` pathspec (whole-index commit reproduced and
+  fixed in a scratch repo: pre-staged foreign file stays staged,
+  uncommitted). B6: free-space guard now also checks /data (80G free
+  today). Meters: week:all models 33% (the gate) at 13% elapsed, Fable 57%.
+  NEXT ITERATION: audit B3 before Sunday — implement ONE GPU-budget
+  claim spec from the enumerated five; the audit's cheapest-first read is
+  DP.04 (GPU_SHORT, deps DP.00+VO.01 PASS, fast/slow's only unblocked
+  claim), then T2.15 (GPU_SHORT, dep T2.06 PASS). ALSO owed, distinct
+  unit: successor specs for the three claim-dead commitments (thermal/
+  shelter needs a claim that does not require the core to learn seeking
+  from an outside spawn; smell likewise post-SM.02). W34 Kaggle: 30 h,
+  expires Sun 08-30, 0 spent.
