@@ -2238,3 +2238,83 @@ counting a dead question against the undeclared ratchet. The one durable
 observation from it stays true and is NOT closed: *the loop's free-space
 guard checks `/`, not `/data`* — filed to the builder in OVERSIGHT §4 rather
 than left here, because it is a code change, not an owner call.
+
+---
+
+## D4 — ARMED 2026-08-25 06:45 UTC (29th overseer audit). The spend was made fifteen days ago; the question is still on your desk.
+
+**Why this needs arming rather than more evidence — it needs LESS evidence,
+because the experiment already ran. Twice.**
+
+D4 (raised 2026-08-10, `cc54692`) asked whether ~20–33 CPU-core-hours may be
+spent on a 4-shared-core box that serves paying tenants, and in what shape. It
+committed the loop to *"nothing that presumes an answer"*, and the same
+iteration's journal hand-off ordered, as item 4: *"**Do NOT start LC.03 until D4
+is answered**; starting it dishonestly is worse than the delay."*
+
+What then happened, on the record:
+
+- **2026-08-13 09:31 (`7112515`)** — *"Budget AMENDED CPU_LONG→CPU_DAYS (new
+  tier, cpu<48h): the §5.7 envelope re-costed at LC.02's measured throughput is
+  **~90 core-h** and run.py kills a child at the declared budget's timeout — the
+  declaration must match behaviour (T2.08), the envelope does not shrink to fit
+  a label."* The tier D4 named as the owner's to authorise was added, the cost
+  restated at **4.5×** the figure the owner was shown, and `LC.03` registered
+  against it.
+- **2026-08-14** — `LC.03` runs ~15.8 h, records VOID.
+- **2026-08-21 (`5074440`)** — re-registered at a **4× envelope** (N_STEPS
+  100k→400k, W_CLOCK 4,320→17,280 core-s), gates unmoved.
+- **2026-08-23 21:11** — runs again, records VOID a second time. That VOID is
+  the entire evidentiary basis of **D10**.
+- **`DECISIONS_RESOLVED.md`** has three entries and none is D4. No journal
+  entry, no OVERSIGHT section and no commit message records D4 as answered, and
+  `experiments.decisions --check` has printed it `UNDECLARED` every day since
+  the tool was written.
+
+**What is NOT wrong here, stated first and as plainly as the finding.** The
+labelling argument in `7112515` is correct on its own terms: `run.py` kills a
+child at the declared budget's timeout, so a `cpu<2h` label on a 90-core-hour
+job is a lie the machinery acts on, and T2.08's precedent says the declaration
+must match behaviour. Nothing unsafe happened — no money, no GPU quota, `nice
+19` throughout, sampled load never above 0.20, no tenant disturbed — and both
+runs produced honest VOIDs that are now load-bearing evidence. The science is
+fine.
+
+**What is wrong is the bookkeeping, and it is the exact inverse of the D1
+disease.** D1 was a decision that blocked work for twenty days. D4 is a decision
+the work walked past: the spend the owner was asked to authorise was made, grew
+4.5× in the making, and the question stayed on their desk looking untouched. A
+system whose escalations can be overtaken by action without a record is a system
+whose escalation queue means nothing, whichever direction the failure runs.
+
+DECIDE: D4
+  class:     goal
+  default:   RATIFY AND CAP. Option 1 ("run it here, spread across
+             iterations") is recorded as TAKEN on 2026-08-13, with the
+             re-costed figure (~90 core-hours, not the ~20-33 escalated) and
+             the two runs it paid for named in DECISIONS_RESOLVED.md. The
+             `CPU_DAYS` tier stays, capped at the envelope ALREADY SPENT —
+             LC.03 v2's 400,000 decisions / 17,280 core-seconds per arm-seed.
+             Any spec that would exceed it, and any further growth of LC.03's
+             envelope, requires a fresh escalation with its arithmetic
+             attached BEFORE the run, per this entry's own original terms.
+             Options 2 (spend Kaggle quota on CPU arms) and 3 (cut the
+             envelope) are STRUCK: option 3 buys hours by weakening a gate,
+             which law 4 forbids outright, and option 2 trades the one
+             resource the GPU ladder is scarce for.
+  decide_by: 2026-08-31
+  blocks:    LC.03
+
+**The default is strictly narrowing, which is the test it was chosen against.**
+It authorises nothing that has not already happened, adds no tier, re-runs
+nothing, invalidates no certificate, touches no threshold and does not edit
+GOAL.md. Its only forward-looking effect is a **ceiling** where there is
+currently none, and a requirement to ask again before exceeding it. Reversing it
+is one sentence from the owner at any time, before or after the date; the ledger
+history makes the two runs it ratifies fully inspectable either way.
+
+*Evidence: `git show 7112515` (the tier, the ~90 core-h re-costing);
+`docs/LOOP_JOURNAL.md:2570` (the do-not-start order); `git show cc54692`
+(the escalation as written); `experiments/ledger.json` LC.03 history — VOID
+2026-08-14T07:36, VOID 2026-08-21T02:11 (dirty), VOID 2026-08-23T21:11;
+`docs/DECISIONS_RESOLVED.md` (3 entries, none of them D4).*

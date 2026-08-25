@@ -5122,3 +5122,52 @@ register the missing spec or carry the block in a field tools read — not
 prose. Until an idiom exists (`BLOCKED_IN_FACT:` in the audit's own
 marker grammar would do), anyone selecting a spec must read its `notes`
 before believing any list that calls it runnable.
+
+## A design that is written but not registered is, to every instrument, identical to a design that was never conceived
+
+2026-08-25 (29th audit). `GOAL.md` cites sixteen spec ids. **Five of them do not
+exist in the registry** — `LG.00`, `GEN.02`, `GEN.03`, `GEN.06`, `GEN.09` — and
+one of the five is the falsifier the document itself calls *"the proof he is a
+creature and not a costume."* Nothing in this repository resolves the
+constitution's own citations, so the gap had been open since 2026-08-09 with
+every organ green: `coverage.py` reads `language (parent)` as covered **and
+passing**, because its unit is the commitment and `GOAL.md` makes claims one
+level finer than that.
+
+**The instruments each saw a different symptom of one cause.** `champions.py`
+reported 8 seats whose arena "does not exist". `run blocked` and the audit's own
+budget×dependency join called `DP.04` and `VO.02` runnable. `coverage.py`
+reported `fast/slow` as 8-declared-0-passing without being able to say why
+nothing moved. All of it reduces to eight PENDING rows in
+`INTEGRATION_QUEUE.md`: `LANGUAGE_GROUNDING.md` → `LG.*`, `SURVIVAL_WORLD.md` →
+`W.1–W.7`, `CURIOSITY_BAKEOFF.md` → `LT.*`, `D1_CONTROL_ARCHITECTURE.md`,
+`HEARING_BAKEOFF.md`, the SO family — plus `docs/GENERALITY.md`, which is cited
+four times by `GOAL.md` and **is not in the queue's own table at all.** The
+designs are written. They are on disk. The registry grew once in fifteen days.
+
+**Two rules, and the second is the one that generalises past this repo.**
+
+1. **Every id a governing document cites is a promise; resolve citations
+   mechanically or a constitution silently accumulates dangling pointers.** This
+   project already learned it twice and built the check twice — `champions.py`
+   for `CHAMPIONS.md`, `T0.21` P10 for docstring `COVERS:` markers, both after a
+   real miss. Neither generalisation reached `GOAL.md`, the document all the
+   others defer to. *When you build a citation checker, ask immediately which
+   OTHER document cites ids, and do that one too — especially the one you would
+   never suspect.*
+
+2. **A backlog with no clock is a deadlock with better manners.**
+   `INTEGRATION_QUEUE.md` is `DECISIONS_NEEDED.md` before `decisions.py`: a real
+   queue, honestly maintained, with no `decide_by`, no ratchet, and no tool — so
+   nothing can print *"8 pending, oldest 16 days, blocking 8 champion seats and
+   5 GOAL.md citations."* D1 taught this project that an escalation without a
+   default deadlocks; `REVIEW_QUEUE.md` was created for the same reason one
+   document over. **The pattern is a third instance and it is now nameable: any
+   conveyor between organs needs an age, a cost, and a check — otherwise the
+   most disciplined possible behaviour (write the design, queue it, cross-check
+   before extracting) is indistinguishable from having never started.**
+
+Related: *"A dependency named only in prose is invisible to every ranking that
+reads the graph"* — same week, one layer down. That lesson says a constraint in
+`notes` will be scheduled against. This one says the constraint's *repair* was
+already written and filed, and no instrument could join to it.
