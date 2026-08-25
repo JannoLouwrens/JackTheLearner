@@ -5067,3 +5067,36 @@ parseable row; torn files refused, owner files untouched, push attempted) so
 the zero-cost half of an iteration survives the deferral of the metered half.
 And any log line that prints a meter must name the meter and say whether it is
 the one being acted on.
+
+## A retirement is not a queue position — and a ratchet that counts declarations counts retired ones too
+
+2026-08-25, 28th audit. `SH.01` was killed at 00:11 by its own pre-registered
+launch gate (oracle pilot ORACLE_CANNOT: *"no ledger row, no envelope growth, no
+re-roll"*). The kill was method-perfect — the rule was written five days before
+the number landed, the instrument was proven alive before the zero was believed,
+the VOID carve-outs were checked and refused. Fourteen hours later
+`experiments.coverage` printed `0 commitment(s) with NO declared spec` and
+exited 0. But `SH.01` was the **only** claim-kind spec behind BOTH *"too cold
+kills him"* and *"he builds a shelter"* — and those are two of the FOUR original
+2026-08-10 misses that caused `coverage.py` to be built. The exact hole the tool
+exists to scream about had re-opened, and the tool was green, because a parked
+spec is still a declaration and `COVERS:` is all the ratchet reads. `smell` had
+been in the same state via `SM.02` for five days. Joining
+`declarations()` × ledger × `_terminal_blockers` by hand showed **9 of 23
+commitments with nothing passing AND nothing runnable**, a number no instrument
+in the repo prints.
+
+GENERALISED: **a coverage ratchet must distinguish BLOCKED from PARKED.**
+Blocked is a queue position — it resolves when its blocker does, and counting it
+as coverage is honest. Parked is a retirement — no blocker to fix, no spec to
+run, no path back without writing a new one — and counting it as coverage is a
+lie the tool tells in the tool's own voice. The pattern generalises past
+coverage: **any instrument that measures the EXISTENCE of an object must also
+read that object's liveness, because the well-behaved half of this system
+retires things honestly and the retirement is invisible to a census.** Same
+shape as the routed-to-Review backlog one level down: a disciplined refusal to
+proceed produces an object whose absence nothing watches for. Corollary for
+whoever kills a spec next: **price the coverage in the same commit that fires
+the kill** — the commit, the journal entry and the decision evidence for SH.01
+all correctly described the *finding* and not one of them said which
+commitments had just gone dark.

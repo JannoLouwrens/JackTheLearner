@@ -2145,3 +2145,96 @@ unlaunched: no ledger row, no envelope growth, no re-roll.
 *Evidence: ORACLE PILOT record in
 `experiments/tests/sh_01_shelters_under_cold.py`;
 `/data/sh01_oracle_pilot.json`; launch commit `bdac2af`.*
+
+## D8 / D9 — ARMED 2026-08-25 00:45 UTC (28th overseer audit). The body fork has had its bakeoff for four days and no clock.
+
+Both entries are armed together because they are one question and D9's own
+option (a) says so verbatim: *"Park the rover-body question until the
+playground-humanoid line (consistent with D8's option 1, the loop's
+recommendation there)."* Arming them apart would let one fire and leave the
+other deadlocked on the same facts.
+
+**Why they need arming, not more evidence.** D8 has been open since
+2026-08-14 (**11 days**) with four scratch probes that measured the claim's
+ceiling at ~0.0–0.1 s against its own 0.20 s pre-registered floor. D9 has
+been open since 2026-08-21 (**4 days**) and its pre-registered W0.BAL bakeoff
+was **already run** on 2026-08-21 (`experiments/w0bal_probe.py`, artifact
+`experiments/artifacts/w0bal_bakeoff.json`): arm C is upright 1.000 on all
+three seeds against the as-built rover's 0.002–0.004, and nothing was
+adopted because adoption is a world-contract change. Neither entry is
+waiting on a measurement. Both are waiting on silence, with no default and
+no deadline — the D1 disease, twice.
+
+DECIDE: D8
+  class:     goal
+  default:   Option 1 — PARK BA.02 until a body with directional catch
+             authority exists. BA.02 is re-parented in the registry behind
+             the playground-humanoid line; its claim text, its gates and its
+             thresholds are unchanged; its VOID and history stay in the
+             ledger exactly as recorded. BA.01 stands untouched — the sense
+             exists and is decoded; only "he ACTS on it" waits for a body
+             that can act. No certificate moves, no threshold moves, no
+             world contract changes, and the commitment `balance` goes from
+             "has a runnable claim spec" to "has none" — the ratchet
+             SHRINKS, which is why this branch and not option 2 or 3.
+  decide_by: 2026-08-31
+  blocks:    BA.02
+
+DECIDE: D9
+  class:     goal
+  default:   Option (a) — PARK the rover-body question until the
+             playground-humanoid line. The W0.BAL bakeoff stays
+             pre-registered with its numbers attached and runs the day a
+             ladder-branch spec becomes unblocked; arms B and C are NOT
+             adopted, so PG.3's inherited geometry and the BA.01 / PS.02 /
+             PS.03 certificates downstream of the body are untouched. This
+             is the only branch of the three that adopts nothing, re-runs
+             nothing, and leaves every recorded certificate valid.
+  decide_by: 2026-08-31
+  blocks:    BA.02
+
+**Both defaults are strictly narrowing, and that is the test they were
+chosen against.** Neither edits GOAL.md, neither weakens a threshold,
+neither widens what may be claimed. Each *removes* a claim from the
+reachable set and says so on the record. Option 2/(b)/(c) all either change
+the world contract (invalidating live certificates) or re-scope a claim to
+fit the body — the widening direction, which a default may not take.
+
+**How to reverse.** One sentence from the owner naming option 2 or 3 (D8) /
+(b) or (c) (D9) at any time, before or after 2026-08-31. Nothing is deleted
+by either default, so reversal costs a registry re-parent and no re-run.
+
+**What firing costs, stated plainly.** `balance` is a constitutional
+commitment (GOAL.md's sensory inventory: *"proprioception & balance"*). If
+these defaults fire, it joins `shelter/building`, `smell`, `thermal (kills)`
+and six others as a commitment with **nothing passing and nothing
+runnable** — 10 of 23. That is the honest state either way; parking makes it
+VISIBLE instead of leaving a spec on the books that four probes say cannot
+be measured in this body.
+
+*Evidence: D8 above (four scratch probes, 2026-08-14); D9 above (W0.BAL
+bakeoff table, executed 2026-08-21 ~03:2x UTC, nothing adopted); ledger
+BA.02 = VOID attempt 3, re-certified 2026-08-24 `38e2a6d`.*
+
+## /data is 95% full and Jack is not the cause (OPEN, owner action) — RESOLVED BY EVENT, not by a decision (28th overseer audit, 2026-08-25 00:45 UTC)
+
+This entry's premise is no longer true and has not been for two days, so it
+was sitting on the owner's desk asking for an action that is already done.
+Measured this audit:
+
+    /dev/sdb  100G  21G used  80G avail  21%   /data      (entry said 95-100%, 661 MB free)
+    /data/history/history.sqlite          36 KB           (entry said 75.6 GB)
+    /data/history/history.sqlite-wal       0 B            (entry said 1.7 GB)
+
+The `worldtwin` aggregator restarted 2026-08-23 03:43 UTC (pid 890346,
+`python -u -m worldtwin`) and the history database was rebuilt or pruned at
+that moment. The risk the entry named — *"at 0 bytes free, WorldTwin's
+writes fail, and Jack's ladder also stops"* — is gone with 80 GB of
+headroom.
+
+**Nothing was done by this project and nothing is asked of the owner.** The
+entry is closed as resolved-by-event so that `decisions --check` stops
+counting a dead question against the undeclared ratchet. The one durable
+observation from it stays true and is NOT closed: *the loop's free-space
+guard checks `/`, not `/data`* — filed to the builder in OVERSIGHT §4 rather
+than left here, because it is a code change, not an owner call.
