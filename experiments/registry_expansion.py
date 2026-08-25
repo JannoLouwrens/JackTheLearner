@@ -817,6 +817,12 @@ EXPANSION: list[Spec] = [
          null_baseline="Chance routing; bag-of-words retrieval.",
          metric="paraphrase_routing_accuracy", budget=Budget.GPU_SHORT, seeds=3,
          depends_on=["T2.06"],
+         control="A label-shuffle twin (LAW 2): the designed grid's "
+                 "phrase->cluster supervision composed with a fixed "
+                 "derangement at the single supervision site. Its held-out "
+                 "routing vs TRUE clusters must NOT reach the claim bar on "
+                 "any seed — and its loss must fall, proving the twin "
+                 "trained — else the ruler leaks and the run is VOID.",
          notes="The verb x object grid must be designed BEFORE grounding training "
                "(CAPABILITIES.md L2) or the held-out cells cannot exist."
                "  COVERS: language (parent) (claim)"),
