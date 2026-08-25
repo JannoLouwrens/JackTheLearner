@@ -643,3 +643,110 @@ famous biological corollary — the Acoustic Adaptation Hypothesis, dense habita
 each time by a queue item, and the scout says its own mandate is now spent —
 fronts 1–3 should not be re-swept before ~2026-08-19. Agreed. Its cron is
 Mondays; the extra sweeps were resume-triggered catch-ups, not a runaway.
+
+## FIELD WATCH wk4 CONSUMED by the Review, 2026-08-25 (DAILY)
+
+Source: `docs/FIELD_WATCH.md`, sweep **2026-08-24**, three nominations. Twelve
+days since wk3 — the first sweep on the intended weekly-or-slower cadence.
+Consumed one day late: the 08-24 Review died on an API 529 before Part 2.5 (the
+same failure mode that orphaned wk2; `review.sh` now retries once, `7f3a907`).
+The scout nominates; it never adopts. Dispositions below.
+
+**A jurisdictional fact that governs all three, and the scout stated it itself:
+`LC.04`/`LC.05` are BLOCKED behind D10, so none of these can enter an
+arbitration this week.** D10 is now ARMED with `decide_by 2026-08-31` and a
+default of "accept the screen's answer", so the block has an end date for the
+first time. All three are therefore ACCEPTED AS DESIGN WORK — written up now,
+runnable the week D10 resolves — and none is a dispatch today.
+
+**wk4-N1 — ACCEPTED as an `A4` variant, NARROWED exactly as nominated.** The
+spectral parameterisation of the deterministic latent transition, extracted
+from Koopman Dreamer ([arXiv:2607.19719], cs.LG) and **nominated ALONE**. The
+scout's own framing is the reason this clears a bar four world-model
+nominations have died on: all nine of the paper's DMC tasks are
+**proprioceptive/state-vector**, which is W0's regime, and the constraint was
+confirmed on re-fetch to be decoder-independent — so it ports to `A4` (which is
+`A2` minus the decoder) rather than to the arm that measured −0.94. Two
+hyperparameters (ρ_min, ρ_max), no new network, no new loss term, and `A4`'s
+≈1.37 M parameters stay put or fall. **The condition that travels with it, and
+it is the scout's own strongest objection, not mine:** the headline 8/9 win rate
+has **no stated seed count and no CIs**, assembled from "available seeds" under
+a public protocol — precisely the statistic `UNIFIED_BRAIN_BAKEOFF.md` §1.8
+adopted Agarwal et al. to distrust. So it enters as an ARM measured here at
+≥3 seeds against plain `A4`; the paper's numbers are the motivation and are not
+admissible as evidence about Jack. Register the arm design, do not dispatch.
+
+**wk4-N2 — ACCEPTED, and it is the one to design FIRST of these three, because
+the nomination arrives already split into its own control.** PSG-JEPA
+([arXiv:2608.06799], cs.RO) → `LEARNING_CORE` §5.4, as **two arms, not one**:
+`A4`+`ℒ_dynamic` and `A4`+`ℒ_static`. The scout's asymmetry is correct and is
+the whole value of the entry: in W0 the observation dict **already contains**
+proprioception, so `ℒ_static` is a decoder on a slice of the input — the exact
+thing `A4` deleted and `A2` kept while measuring −0.94 — whereas `ℒ_dynamic`
+(multi-horizon joint-angle CHANGE across latent PAIRS) is a temporal quantity
+that appears nowhere in any single-step observation. **Run both and they are
+each other's control**, distinguishing "grounding helps" from "any auxiliary
+reconstruction helps", which one combined arm would leave permanently
+ambiguous. **Pre-register the prediction the scout already made: `ℒ_static`
+alone should not help and may hurt.** A nomination that ships a falsifiable
+prediction about itself is worth more than one that ships a number. Cheapest of
+the three: one MLP head per loss, discarded after training, zero inference
+parameters, one shared hyperparameter. **Carry objection 4 into the entry**: its
+target is joint-angle kinematics and D9's body fork is open — if the owner
+adopts a different body the loss's target set changes underneath it, so this
+arm is sequenced AFTER D9, not before.
+
+**wk4-N3 — ACCEPTED, but ONLY in its W0-diagnostic form, and that form is
+promoted above the other two.** Infant motor noise ([arXiv:2606.16590], cs.LG;
+code released, 10 seeds — the best seed discipline in the sweep). **REJECTED as
+an exploration arm on `A0`/`A1`**, for the reason the scout raised against its
+own nomination: those are PPO, whose exploration *is* the policy distribution,
+and injecting autocorrelated noise into an on-policy actor breaks the
+likelihood ratio the update is built on. That is a design decision with its own
+cost and no paper behind it, and this desk will not make it by argument.
+**What IS accepted is the diagnostic**: run the existing `random` and
+`random-repeat` nulls that `LC.03` already defines against a β-scheduled random
+policy in W0, and read whether temporally-structured *random* action changes
+`life_gain` at all. **This is now the cheapest instrument on the most important
+open question in the project.** Four independent measurements (LC.03's
+darkroom, LC.03 v2, DP.05's FAIL, SH.01's ORACLE_CANNOT) say W0 is too shallow,
+and every one of them is expensive. This one costs CPU-minutes and asks a
+sharply different question: **is part of what we measured as "the cores cannot
+learn" actually "the exploration process never reaches the food"?** If a
+β-scheduled null beats plain `random` on `life_gain`, that is evidence about
+the world on the cheapest possible substrate, and it lands directly in D10's
+fork (b) and in the `w0-too-shallow` Review row. If it does not, the shallowness
+finding survives an attack that costs almost nothing — which is what a good
+control is for. **Sequence it BEFORE any W1 world redesign**, not after: a
+redesign informed by four expensive instruments and one cheap contradicting one
+is better than a redesign informed by four.
+
+**DISC items, dispositioned separately from the arms:**
+
+- wk4's **`[s]` marker for search-level claims** (§6) — **ACCEPTED as a
+  `docs/LESSONS.md` entry for the builder to write** (the Review does not commit
+  LESSONS.md). The scar is real, self-reported, and sitting in an append-only
+  file: `FIELD_WATCH_LOG.md`'s 08-12 entries attribute to arXiv:2607.25337 a
+  "48× faster" claim and a "single GPU in hours" claim that **two full-text
+  fetches confirm appear nowhere in the paper**, plus an OGB-Cube figure the
+  table contradicts. The generalisation past the scout is the point: `[c]` means
+  "the authors claim this and I have not checked", `[s]` means "a third party
+  asserts the authors claim this" — and only the second can be a number **nobody
+  ever wrote**. One character, and it separates unchecked from possibly-invented.
+  **Retraction accepted and recorded here so it is not re-quoted.**
+- wk4's **structural finding — three of four nomination-grade papers report no
+  hardware and no wall-clock, two report no parameter count** — **NOTED, no
+  action, and it is not a complaint.** `B4` is a throughput gate; the literature
+  is increasingly un-pre-priceable against it. The correct response is the one
+  the scout already took: every nomination now carries "must be re-measured here
+  before it is believed" as a structural property rather than a caveat. Nothing
+  to register.
+- **Front 4 (curiosity) got two searches and no fetch, and the scout says so
+  in its own §1.** Endorsed as an honest gap, and its own queue item 4 ("next
+  sweep it goes first, not last") is the right fix. No action here.
+- **Conference-proceedings enumeration: the DROP is ENDORSED.** Week 3 set the
+  rule that a third "still pending" would be a lie by deferral; the scout dropped
+  it with cause rather than renaming existing work. That is the rule working.
+
+**Cadence:** cron is Mondays, wk4 ran Monday 08-24, embargo to ~2026-08-31.
+Correct and on schedule for the first time in three weeks.

@@ -24,7 +24,23 @@ PS.01–PS.03, SM.01, T2.03, T2.08, T2.20, T3.01, TA.01, VO.01, XL.00.
 
 ---
 
-ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | OPEN
+## THE BUNDLING RULE — added by the Review 2026-08-25 on first use of this file
+
+Three of the four rows below edit `playground.py`, and each one bills the SAME
+21 PASS certificates mechanically. **Paying that bill three times is three times
+the re-certification cost for one world.** So: world-touching rows are acted on
+in ONE edit window, not as they arrive. `ne01-occlusion-knife-edge` and
+`water-apply-phantom-force` are both held for the window that `w0-too-shallow`'s
+design opens — not because either is unimportant, but because merging them costs
+21 re-runs instead of 63. If `w0-too-shallow` resolves toward a NEW world (W1)
+rather than an edit to W0, both rows follow it there and the bill goes to zero,
+which is the asymmetry the `w0-too-shallow` row already flagged as design input.
+
+**The rule generalises, and it is the reason this file exists**: a backlog with
+a computed bill can be SEQUENCED. A backlog scattered across commit messages
+can only be serviced in arrival order, which is the most expensive order.
+
+ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2026-08-25 (design in docs/PROGRESS.md § FOR THE BUILDER item 2)
     Question: no single uniform training recipe trains all six matched-param
     UB.10 arms (warmup@1e-3 leaves A2/A3 dead; 3e-4 fixes A3 but breaks A4);
     A2 learned its marginals under NO tested recipe. Per-arm recipes, arm
@@ -32,8 +48,22 @@ ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | OPEN
     Full record: PROBE RECORD in ub_10_fusion_bakeoff.py; 23rd audit B3.
     Staleness bill: NONE — UB.10 has no PASS and no certificate cites its
     arms. This is the cheapest row to act on.
+    DISPOSITION 2026-08-25 (Review): **matched TUNING BUDGET, not matched
+    hyperparameters** — and it is STRICTLY HARDER than what it replaces.
+    Dropping the uniform-recipe constraint destroys the comparison (an arm
+    would win by getting a better LR); keeping it is what left A2 dead. So
+    every arm gets the IDENTICAL pre-registered LR grid, the same number of
+    trials, selected by the same pre-registered criterion, all declared before
+    any arm runs. Cost rises from N to N x K runs — that is the point, the
+    budget is what is matched. The gate that makes it honest already exists:
+    per the 23rd audit B1, `uni_marginal_ok`/`uni_learn_ok` mean a dead arm can
+    no longer read as a clean 0.5, so "did this arm's recipe train it" is
+    machine-checkable per arm. An arm that clears `uni_learn_ok` NOWHERE on the
+    grid is recorded SCORED-AND-INELIGIBLE (SYSTEM.md's new language, 0345f0d)
+    — measured on the same ruler, kept as a standing challenger, not seated and
+    not silently a 0.5. Full reasoning in PROGRESS.md.
 
-ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | OPEN
+ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
     Question: the 9-ray head-cone occlusion law yields knife-edged ninths a
     sleeping ragdoll cannot hold — the statically-found 0.5–0.9 band realises
     occ 0.337±0.467 overnight (slides out and freezes, or seals and cooks).
@@ -44,7 +74,7 @@ ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | OPEN
     law (NE.01 itself is FAIL); MECHANICAL — the 21 playground.py rows above
     if the fix edits playground.py.
 
-ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | OPEN
+ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
     Question: Water.apply (playground.py:627) writes a body's xfrc row only
     while it is in the pool, so any body that exits keeps its last buoyancy/
     drag force forever — a phantom force in live dynamics, found by DP.05's
@@ -54,7 +84,7 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | OPEN
     BA.01, LC.02, PS.02, PS.03, XL.00 — 5 PASS certificates; MECHANICAL —
     all 21 playground.py rows above.
 
-ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN
+ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Review 2026-08-30 (Sunday FULL); one cheap falsifier sequenced first, 2026-08-25
     Question: three independent instruments now measure W0 as too shallow to
     reward the capabilities the ladder certifies — LC.03's darkroom control
     (passivity prospers), LC.03 v2 (one learner in five), DP.05 (lookahead
@@ -77,3 +107,20 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN
     Staleness bill: depends on the design — a new-world spec (W1, T1.02
     strengthen-only precedent) bills NOTHING; editing W0's playground.py
     bills the 21 rows above. That asymmetry is itself design input.
+    DISPOSITION 2026-08-25 (Review): **STAYS OPEN, and the design is owed by
+    this desk on 2026-08-30, dated so it cannot drift.** DAILY mode does not
+    have the budget for a world redesign and pretending otherwise is how a
+    routed row rots. But one thing IS ordered today, and it is ordered BEFORE
+    the design, not after: **run the cheap falsifier first.** All four
+    instruments behind this row are expensive (LC.03 v2 ~190 core-h, DP.05
+    ~115 min, SH.01's pilot at N=10000), they were run by this project on this
+    world, and they all point the same way — which is exactly the condition
+    under which a shared confound is invisible. Field-watch wk4-N3 supplies a
+    CPU-minutes attack on that confound: a beta-scheduled colored-noise random
+    policy against the plain `random` and `random-repeat` nulls LC.03 already
+    defines. It asks whether "the cores cannot learn in W0" is partly "the
+    exploration process never reaches the food". If it fires, the diagnosis
+    changes before we spend a redesign on it; if it does not, the shallowness
+    finding survives an attack that cost almost nothing. **A redesign informed
+    by four expensive agreeing instruments plus one cheap disagreeing one beats
+    a redesign informed by four.** Queue entry: INTEGRATION_QUEUE, wk4-N3.

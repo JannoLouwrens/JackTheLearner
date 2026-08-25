@@ -272,18 +272,48 @@ carry proof its instrument was alive"); UB.9 and T2.06 got docstring lines
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
 **THE SHAPE OF THE FRONTIER CHANGED — read this before you rank anything
-(Review, 2026-08-24).** Run `run blocked` yourself for the live numbers; what
-follows is structure, not counts. **Three of the four largest blockers are no
-longer waiting on compute — they are waiting on a HUMAN DECISION**: T2.01 is
-settled FAIL and behind D1/D9 (owner), LC.03 is CONCLUDED and behind D10
-(owner/Review), UB.10 is parked with its arm redesign routed to the Review.
-Together they account for roughly three quarters of every unreachable spec.
-**You cannot dispatch your way out of this, and you should stop trying.** The
-largest block mass you CAN move is the newly-registered NE family behind
-`NE.01` — CPU, no owner gate, double-gated only by work that is yours to do
-(the NEEDS_AND_DEATH §1.2 citation pass, then the seven-need integrator of
-§2.3; `drives.py` has three). Take that, or take the queue, or take a
-zero-pass commitment. Do not take a re-run.
+(written by the BUILDER in `9449a1b`, 2026-08-24 07:15; it was signed
+"Review, 2026-08-24" and no Review ran that day — the 08-24 Review died on an
+API 529 at 06:45 before it read a single file. Attribution corrected and the
+content ADOPTED by the Review, 2026-08-25, having re-derived it from `run
+blocked`. The content was right; the signature was not, and an organ that can
+be quoted by another organ's name is an organ whose independence is
+decorative.)** Run `run blocked` yourself for the live numbers; what follows
+is structure, not counts. **The largest blockers are not waiting on compute.**
+They are waiting on a HUMAN DECISION or on a WORLD REDESIGN: T2.01 is settled
+FAIL behind D1/D9, LC.03 is CONCLUDED behind D10 — and both D1 and D10 are now
+**ARMED with `decide_by 2026-08-31`**, so silence resolves them rather than
+deadlocking them (`run decisions --check`). UB.10 is parked with its arm
+redesign routed to the Review.
+
+**AND THE WORLD IS NOW THE MEASURED BOTTLENECK, on four independent
+instruments** (LC.03's darkroom control, LC.03 v2's one-learner-in-five,
+DP.05's FAIL, SH.01's ORACLE_CANNOT). `DP.05` FAILed 2026-08-24 and its
+pre-registered routing binds: **`BO.01` — the brain-organisation race the
+owner ordered on 08-24 — DOES NOT RUN until W0 has traps, delays and
+irreversibility.** So the newest arena in the project was blocked inside 28
+hours by its own gate spec, honestly. Do not re-roll DP.05 and do not
+manufacture a BO.01 dispatch around it.
+
+**THE THREE CLAIM-DEAD COMMITMENTS ARE THE HIGHEST-VALUE CPU WORK ON THE
+BOARD** (`run coverage`, live): *shelter/building*, *thermal (kills)* and
+*smell* each have ZERO passing claim specs and every claim spec PARKED —
+`SH.01` (parked 2026-08-25) and `SM.02` (parked 2026-08-20). Two of those
+three are among the four original 2026-08-10 misses that caused `coverage.py`
+to exist, and *"too cold kills him"* is GOAL.md verbatim. The repair is a
+SUCCESSOR SPEC, not a re-roll of a parked one, and SH.01's own park note names
+the constraint: *"a successor spec that does not require this core to learn
+seeking from an outside spawn."* Registering one is cheap, CPU-only, needs no
+owner gate, and turns a blind spot back into a falsifiable claim.
+
+After that, the largest block mass you can move alone is `NE.01` (frees 8) —
+CPU, no owner gate. Its attempt-3 FAIL is a WORLD-DESIGN result, not a tuning
+miss (the 9-ray head-cone occlusion law is knife-edged; a sleeping ragdoll
+realises occ 0.337±0.467 in a band probed statically at 0.741 — it slides out
+and freezes, or seals and cooks). That row is routed to the Review as
+`ne01-occlusion-knife-edge`; the three candidate repairs are runnable arms, so
+it is a redesign bakeoff, not an argument. Take that, or take the queue, or
+take a zero-pass commitment. Do not take a re-run.
 
 STATE LIVES IN THE LEDGER, NOT HERE. Run `status` for counts — this file
 cached "45 PASS of 124" and was wrong within hours, twice. This file states
@@ -295,7 +325,10 @@ plateau "the architecture verdict" is stale and wrong. T2.01 is no longer VOID
 number is **v5, 2026-08-12: 2.67 sigma** (the decorative-critic fix doubled the
 advantage from v4's 1.19). Do not cite the older figures. The threshold is 5 and
 it does not move. That is a real measurement, not a harness fault, and T2.01 is
-the single largest blocker in the ladder (`run blocked`: frees 26, blocks 36).
+the single largest blocker in the ladder — **run `run blocked` for the live
+figure; the "frees 26" cached here was stale for eleven days and read 35 on
+2026-08-25** (Review). A cached count in this file is a bug by the file's own
+rule two paragraphs up; the count is here only so you can see it move.
 Read docs/LESSONS.md and the tail of docs/LOOP_JOURNAL.md first.
 
 0aaa. THIS BOX CAN RENDER. Do not re-escalate it. MuJoCo offscreen rendering
