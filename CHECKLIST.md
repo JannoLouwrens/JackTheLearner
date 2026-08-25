@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 84 / 181 demonstrated
+## 84 / 183 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -603,6 +603,10 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
+- [ ] **SM.03** The nose reports what the eye cannot: occluded-source localisation
+      - _asserts:_ A small supervised readout on the certified odour channel (bilateral receivers, SM.01's field) reports the direction of an OCCLUDED source well above chance on held-out source layouts, while an identical readout on vision alone stays at chance - and the vision readout proves itself alive by rising well above chance the moment the occluder is removed.
+      - _dies if:_ The odour readout is at chance (the certified field carries no usable direction information at the sniff rate and receiver geometry Jack actually has), or the vision-only readout matches it while occluded (the occlusion is decorative and 'through the nose' means nothing). If the unoccluded vision probe stays at chance the instrument is dead and the run is VOID, not FAIL.
+      - _then delete:_ The claim that smell is the sense that works when sight fails (GOAL.md verbatim). If the odour channel cannot even support a SUPERVISED report of an occluded source, no policy claim built on it can mean anything, and the odour modality's Tier-3 seat is forfeit.
 - [x] **TA.01** The poison fixture: sub-lethal first dose, visually identical twin
       - _asserts:_ Two plant types are IDENTICAL to a visual probe (a classifier on rendered frames is at chance) and DISTINCT to the taste vector; the toxic one produces a delayed, SURVIVABLE interoceptive insult on a first small dose, following a declared dose-response curve.
       - _dies if:_ A visual probe distinguishes them above chance (then TA.02 is a colour-discrimination task), or the first dose is lethal (then there is nothing to learn from - one-trial learning requires surviving trial one).
@@ -714,6 +718,10 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
+- [ ] **SH.02** Born sheltered, he stays while it is cold - and only while it is cold
+      - _asserts:_ Spawned INSIDE a hut under lethal cold, the certified learner's sheltered fraction is far above its drive-disabled twin's (staying warm is CHOSEN, not inherited: a random policy drifts out through the opening and freezes); the contrast is need-contingent (with the cold disabled, learner and twin are indistinguishable); and it is thermally DISCRIMINATING: lives born in the working hut hold shelter far longer than lives born in the cosmetic one, where staying buys nothing.
+      - _dies if:_ No contrast vs the twin (the drive fails to couple to behaviour even when the behaviour is only 'stay where you already are'); or the contrast survives in the warm world (an enclosure preference wearing a thermal costume); or no working-vs-cosmetic differential (he cannot tell warmth even while standing in it).
+      - _then delete:_ 'Too cold kills him' as a live claim. If a creature that only has to STAY under a roof to survive still shows no drive-coupled sheltering, the thermal drive teaches nothing at any horizon, and the shelter story is ours, not his.
 - [x] **XL.00** He dies, he reappears somewhere he did not choose, and the diary crosses
       - _asserts:_ With `lethal=True`, W0 ends a life when energy or integrity reaches zero at the rate the drive arithmetic predicts (a resting body's implied 1/b is within 2% of 600 s at two independent starting charges); the body reappears at a pose drawn UNIFORMLY from the legal spawn set (chi-square z <= 4 over 20,000 draws), always legal, and statistically INDEPENDENT of where it died (two-sided permutation p >= 0.01 on paired-vs-shuffled death->spawn distance); the diary survives every death with a life index covering every life; and a NON-LEARNER's lives do not lengthen across >= 12 lives (two-sided permutation p >= 0.01 on the life-length slope).
       - _dies if:_ Death never fires; or the implied drain disagrees with the arithmetic; or a spawn lands inside geometry; or the spawn distribution is non-uniform or correlated with the death site - which is `LT` 2.1's objection arriving through the respawn, an experimenter-supplied curriculum; or the diary does not survive; or the non-learner's lives lengthen anyway, in which case LC.03's `life_gain` measures the WORLD and every learning-core verdict built on it is void.
