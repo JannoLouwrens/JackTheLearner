@@ -64,6 +64,14 @@ if credits_out; then
   exit 0
 fi
 
+# OVERSIGHT.md is the PREVIOUS audit's file until this run rewrites it. A run
+# that died (rc!=0) did not write it, so grepping it publishes the STALE verdict
+# in the vocabulary of success — a dead audit logged "ON TRACK" on 2026-08-24
+# 12:37 after 2s on a session limit (Review 2026-08-25, FOR THE BUILDER 1).
+if [ "$RC" -ne 0 ]; then
+  say "audit end rc=${RC} — verdict: UNKNOWN (audit did not complete)"
+  exit 0
+fi
 VERDICT=$(grep -m1 -oE "ON TRACK|DRIFTING|INTEGRITY RISK" docs/OVERSIGHT.md 2>/dev/null || echo "no-verdict")
 say "audit end rc=${RC} — verdict: ${VERDICT}"
 exit 0

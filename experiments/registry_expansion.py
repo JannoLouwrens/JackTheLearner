@@ -2362,7 +2362,58 @@ EXPANSION: list[Spec] = [
                "fired: three mechanism-level repairs each fixed a measured "
                "fault and none moved the learnability ratios (nosmell/vis "
                "0.92 vs bar 0.60, nosmell/occ 0.98 vs bar 0.85); gates stay "
-               "provisional, run() refuses, no fourth repair, no dispatch."),
+               "provisional, run() refuses, no fourth repair, no dispatch. "
+               "Successor: SM.03."),
+
+    Spec("SM.03", 2, "The nose reports what the eye cannot: occluded-source localisation",
+         hypothesis="A small supervised readout on the certified odour channel "
+                    "(bilateral receivers, SM.01's field) reports the direction "
+                    "of an OCCLUDED source well above chance on held-out source "
+                    "layouts, while an identical readout on vision alone stays "
+                    "at chance - and the vision readout proves itself alive by "
+                    "rising well above chance the moment the occluder is "
+                    "removed.",
+         falsified_by="The odour readout is at chance (the certified field "
+                      "carries no usable direction information at the sniff "
+                      "rate and receiver geometry Jack actually has), or the "
+                      "vision-only readout matches it while occluded (the "
+                      "occlusion is decorative and 'through the nose' means "
+                      "nothing). If the unoccluded vision probe stays at "
+                      "chance the instrument is dead and the run is VOID, "
+                      "not FAIL.",
+         null_baseline="Chance over the pre-registered direction bins; and a "
+                       "PLACEBO channel of matched dimension carrying noise, "
+                       "trained identically, must sit at chance.",
+         metric="occluded_direction_accuracy_vs_chance",
+         budget=Budget.GPU_SHORT, seeds=3, depends_on=["SM.01", "PG.6"],
+         control="SHUFFLED FIELD (SM.02's control, kept): odour input drawn "
+                 "from a DIFFERENT layout's field must fall to chance - "
+                 "above-chance there means the readout keys on something "
+                 "other than the declared field. And the alive-proof that "
+                 "must PASS: the vision-only arm with the occluder removed, "
+                 "well above chance (an at-chance control must carry proof "
+                 "its instrument was alive - the T3.01/24th-audit rule, "
+                 "designed in rather than retrofitted).",
+         kills="The claim that smell is the sense that works when sight "
+               "fails (GOAL.md verbatim). If the odour channel cannot even "
+               "support a SUPERVISED report of an occluded source, no policy "
+               "claim built on it can mean anything, and the odour "
+               "modality's Tier-3 seat is forfeit.",
+         notes="SUCCESSOR TO SM.02 (parked 2026-08-20), designed around its "
+               "measured failure mode: the park was a LEARNABILITY "
+               "bottleneck in the RL rig (three mechanism-level repairs, no "
+               "ratio moved), so this claim removes policy learning "
+               "entirely - a supervised readout, the T3.01/UB.9 pattern the "
+               "certified stack demonstrably supports. It keeps SM.02's "
+               "non-redundancy conditional in supervised form: smell must "
+               "beat vision UNDER OCCLUSION specifically, and buy nothing "
+               "the placebo cannot when the eye works. Uses SM.01's "
+               "certified field only through its public sample(); held-out "
+               "layouts (train/test split on source positions, zero overlap) "
+               "close the memorisation route T2.15 just measured on "
+               "language. Chance level, bin count and accuracy bars are "
+               "pre-registered in the test file before any dispatch."
+               "  COVERS: smell (claim)"),
 
     # ── TA: taste ───────────────────────────────────────────────────────
 
@@ -3096,7 +3147,68 @@ EXPANSION: list[Spec] = [
                "lives); per the pre-registered rule: no ledger row, no "
                "envelope growth, no re-roll. Thermal/shelter coverage needs a "
                "successor spec that does not require this core to learn "
-               "seeking from an outside spawn."),
+               "seeking from an outside spawn. Successor: SH.02."),
+
+    Spec("SH.02", 2, "Born sheltered, he stays while it is cold - and only while it is cold",
+         hypothesis="Spawned INSIDE a hut under lethal cold, the certified "
+                    "learner's sheltered fraction is far above its "
+                    "drive-disabled twin's (staying warm is CHOSEN, not "
+                    "inherited: a random policy drifts out through the "
+                    "opening and freezes); the contrast is need-contingent "
+                    "(with the cold disabled, learner and twin are "
+                    "indistinguishable); and it is thermally DISCRIMINATING: "
+                    "lives born in the working hut hold shelter far longer "
+                    "than lives born in the cosmetic one, where staying "
+                    "buys nothing.",
+         falsified_by="No contrast vs the twin (the drive fails to couple to "
+                      "behaviour even when the behaviour is only 'stay where "
+                      "you already are'); or the contrast survives in the "
+                      "warm world (an enclosure preference wearing a thermal "
+                      "costume); or no working-vs-cosmetic differential (he "
+                      "cannot tell warmth even while standing in it).",
+         null_baseline="The drive-disabled twin (byte-identical, reward "
+                       "zeroed, encoders still training - SH.01's twin, "
+                       "kept) and a random walk at matched decisions, whose "
+                       "lives must end frozen - a world random lives "
+                       "survive cannot test the claim and the run is VOID.",
+         metric="sheltered_fraction_contrast_maintenance",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["PS.02"],
+         control="BOTH-COSMETIC world (SH.01's control, kept): the thermal "
+                 "benefit never fires anywhere, staying buys nothing, and "
+                 "every contrast must COLLAPSE - if 'sheltering' survives a "
+                 "world where shelter does not work, it was never thermal. "
+                 "Plus the must-pass warm-world clause in the hypothesis.",
+         kills="'Too cold kills him' as a live claim. If a creature that "
+               "only has to STAY under a roof to survive still shows no "
+               "drive-coupled sheltering, the thermal drive teaches nothing "
+               "at any horizon, and the shelter story is ours, not his.",
+         notes="SUCCESSOR TO SH.01 (parked 2026-08-25), designed around the "
+               "park note's own constraint: a successor that does not "
+               "require the core to learn SEEKING from an outside spawn. "
+               "SH.01's oracle pilot localised the failure exactly there - "
+               "the thermal field outside is spatially FLAT (fire 50 m "
+               "away), so no gradient ever reaches the policy - while its "
+               "curriculum inside-spawn lives DID shelter from birth. "
+               "Maintenance inverts the geometry: at the hut boundary the "
+               "felt-warmth gradient is local, dense and immediate, the "
+               "signal shape the certified cores are actually screened on. "
+               "Arm choice is pre-registered here: wm-latent, LC.03 v2's "
+               "only 3-sigma learner - not SH.01's ppo-needs, a measured "
+               "non-learner at a 4x envelope; a result earned by the one "
+               "core the screen cleared is the only kind D10 can use. "
+               "Reuse sh_01's world, per-life spawn machinery and "
+               "shelter_index detector (the two-kernels lesson); ALL lives "
+               "spawn inside a hut, working/cosmetic balanced per life, "
+               "identical schedule in every arm, thermal sense riding the "
+               "placebo slot exactly as sh_01 declares. SCOPE, stated "
+               "honestly: this is occupancy-MAINTENANCE, one step below "
+               "SH.01's seeking and two below building; seeking stays with "
+               "the D10/world redesign, and a PASS here re-arms that "
+               "discussion with the missing half-fact - that the drive can "
+               "steer behaviour when the gradient reaches it. Relocation "
+               "cosmetic-to-working (2 m) is REPORTED as a first-class "
+               "metric, never gated."
+               "  COVERS: thermal (kills) (claim), shelter/building (claim)"),
 
     Spec("XL.00", 2, "He dies, he reappears somewhere he did not choose, and the diary crosses",
          hypothesis="With `lethal=True`, W0 ends a life when energy or "

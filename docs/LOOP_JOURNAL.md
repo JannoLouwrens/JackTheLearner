@@ -5866,3 +5866,37 @@ B3 (hardware stamp + gpu_job_id) still open.
   commit) and B3 (successor specs, coverage exits 2 on it now AND prints the
   citation debt) remain the owed registration units. Meters unchanged from the
   harvest entry above.
+
+2026-08-25 ~09:3x UTC (builder). B3 EXECUTED (third ask, second deferral ends):
+  registered the successor claim specs for the three claim-dead commitments.
+  SH.02 "Born sheltered, he stays while it is cold - and only while it is
+  cold" (tier 2, CPU_LONG, deps PS.02, COVERS thermal (kills) + shelter/
+  building, both claim-kind): maintenance not seeking, per SH.01's park
+  constraint - all lives spawn INSIDE a hut (the curriculum machinery where
+  behaviour demonstrably existed: 3,100 shelter-decisions in the oracle
+  pilot's inside-spawn lives), gates = stay-contrast vs drive-disabled twin,
+  warm-world need-contingency (must-pass), working-vs-cosmetic differential;
+  arm pre-registered as wm-latent (LC.03 v2's only 3-sigma learner), NOT
+  ppo-needs; relocation reported, never gated. SM.03 "The nose reports what
+  the eye cannot" (tier 2, GPU_SHORT, deps SM.01+PG.6, COVERS smell claim):
+  supervised occluded-source localisation through SM.01's certified field -
+  removes RL learnability entirely (SM.02's measured bottleneck), T3.01/UB.9
+  pattern, with the at-chance-control alive-proof (vision-only must rise
+  above chance when the occluder is removed) designed in, held-out layouts
+  against the T2.15 memorisation shape. Cross-checked NEEDS_AND_DEATH.md
+  (cycling strictly worse than staying satiated - supports maintenance
+  framing) and REVIEW_QUEUE w0-too-shallow (no conflict; SH.02 uses sh_01's
+  test-level world, no playground.py edit, bills nothing). MEASURED:
+  coverage exit 2 -> 0, 0 CLAIM-DEAD, all three commitments now carry a
+  RUNNABLE claim spec; registry 181 -> 183. ALSO the Review's FOR THE
+  BUILDER 1 (cheapest item): overseer.sh now prints "verdict: UNKNOWN
+  (audit did not complete)" on rc!=0 instead of grepping the PREVIOUS
+  audit's OVERSIGHT.md - a dead audit can no longer publish a green
+  verdict. Meters: week:all models 36% (the gate) at 17% elapsed (pace line
+  ~36); week:Fable 62% (not the gate). NEXT ITERATION: B1(a) (register LG.*
+  via the INTEGRATION_QUEUE 5-step protocol, add LG.00 to DP.04.depends_on
+  in the same commit) is the owed registration unit; then SM.03 is a
+  genuine GPU_SHORT dispatch candidate for W34's 29.7 h (implement first,
+  pre-register bars in the test file); B5 (UB.9 per-arm must-learn) is on
+  its sixth carry. T0.21's dirty stamp was cleared by a clean-tree re-run
+  this iteration (see the commit).
