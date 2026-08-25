@@ -480,7 +480,7 @@ recorded beside it.
 block). Graph walked over all 136 registered specs against
 `experiments/ledger.json` at `db9fd7b`. Full working in `docs/OVERSIGHT.md` §1.3.*
 
-## Does the LC bakeoff's verdict survive scale? (OPEN — owner flagged the risk)
+## D12 — Does the LC bakeoff's verdict survive scale? (OPEN — owner flagged the risk)
 
 Owner, 2026-08-09: "are you sure it isn't holding us back that agents are
 making CPU tasks and not GPU?" Audited. Verdict: the CPU scoping is mostly
@@ -2373,3 +2373,101 @@ history makes the two runs it ratifies fully inspectable either way.
 (the escalation as written); `experiments/ledger.json` LC.03 history — VOID
 2026-08-14T07:36, VOID 2026-08-21T02:11 (dirty), VOID 2026-08-23T21:11;
 `docs/DECISIONS_RESOLVED.md` (3 entries, none of them D4).*
+
+---
+
+## D12 — ARMED 2026-08-25 18:50 UTC (31st overseer audit). The convergence check is prose, and D10's default would retire it without ever running it.
+
+> **Disclosure — this heading was renumbered, not merely appended to.** The entry
+> this arms is *"Does the LC bakeoff's verdict survive scale? (OPEN — owner
+> flagged the risk)"* at `:483`, open since 2026-08-09. It was title-keyed, and
+> the 30th audit measured why that makes it unarmable: `decisions.py:parse()`
+> keys an un-numbered heading by a 52-character slice of its title (spaces
+> included) while `_DECIDE = ^DECIDE:\s*([A-Za-z0-9._-]+)$` forbids spaces in an
+> id — so no `DECIDE:` line can ever join back to it. Giving the heading a number
+> is the only move that arms it. Same disclosure, same reason, as `D11`.
+> The tool bug itself is still open as builder item **B2(a)**.
+
+**What is actually left of this entry, checked item by item — and most of it has
+already been honoured.** I went looking for a violation here and did not find
+one; that result is worth as much as a finding:
+
+1. **The scale-transfer check** (re-run the top two arms at ~10× on Kaggle,
+   require the ranking to hold). **Alive and binding** — carried forward
+   verbatim inside `D10`'s armed default: *"The owner's scale-transfer guard
+   still binds BEFORE adoption: re-test at ~10x on Kaggle, which is free."*
+2. **The data-starved rule** (an arm failing the screen with a positive curve
+   slope at cutoff is not eliminated; re-screen at ~10×). **Measured, disclosed,
+   and bounded — not quietly dropped.** `{arm}/data_starved` is a real key on the
+   LC.03 v2 row and it fired on **three of the four eliminated arms**: `ppo-needs`
+   1.0, `dreamer-xs` 1.0, `wm-efe` 1.0 (`ppo-lp` 0.0, `wm-latent` 0.0). The fork
+   that declined the re-screen was committed **2.5 days before the number landed**
+   (journal 2026-08-21 ~07:1x), `D10`'s own body states the three flags in the
+   open, and `LESSONS.md` carries the general rule the refusal rests on — *a
+   screen with no re-screen cap is a ratchet*, because the 3σ bar retreats with
+   added lives at the same speed the projected gain grows. That is a
+   pre-registered cap, not a post-hoc excuse, and I record it as correct conduct.
+   **One caveat, declared rather than pressed:** the refusal prices the re-screen
+   at *"~380 core-h, ~5 days of this 4-core box"* — the CPU option. The owner's
+   clause specified **Kaggle**, where 29.7 free GPU-hours expire this Sunday and
+   22.4 expired unused last week. The σ-bar argument stands on its own and does
+   not depend on the cost, so this does not change the conclusion; but the cost
+   half of the sentence answers a question the owner did not ask.
+3. **The convergence check** (Addendum 2: declare a WINNER only if the runner-up's
+   slope is ≤ 0, or the projected crossover lies beyond 3× the tested budget;
+   otherwise SPLIT-PENDING and extend both finalists). **This one has no home.**
+   It exists only as prose in this file. `LC.04.notes` and `LC.05.notes` were read
+   live today: LC.04 declares its arms and their parameter costs, LC.05 declares
+   its four budgets and a ≤200-point decimated curve — **neither carries the
+   convergence rule, and no `_check` can enforce a rule that is not in the spec.**
+
+**Why this is now time-critical rather than merely untidy.** `D10`'s default
+fires on **2026-08-31** and its branch (a) amends LC.04's premise to *"the screen
+IS the arbitration when it returns exactly one"* — that is, **LC.04 never runs as
+a two-finalist bakeoff.** Addendum 2 binds the winner decision in LC.04/LC.05.
+If the default fires with the rule still in prose, the convergence check is not
+overruled, considered and set aside — it is **bypassed by construction**, because
+the experiment it was written to constrain is retired before it happens. A guard
+that is skipped rather than failed leaves no trace in any instrument this system
+owns. This is the third instance this week of the standing lesson *a prose-only
+dependency is invisible to every graph ranking* (`a14d56d`), and the first where
+the invisible thing is an **owner-authored guard** rather than a dependency edge.
+
+DECIDE: D12
+  class:     goal
+  default:   TRANSCRIBE, DO NOT DILUTE. The three guards stop being prose: the
+             convergence check (Addendum 2, verbatim — runner-up slope <= 0 OR
+             projected crossover beyond 3x the tested budget, else SPLIT-PENDING)
+             and the data-starved rule (Addendum 1) are written into the
+             `notes` of LC.04 and LC.05, and the scale-transfer check is written
+             onto the CHAMPIONS.md learning-core seat as a named pre-condition of
+             ADOPTION. If D10's default has fired and LC.04 will not run as a
+             two-finalist bakeoff, the convergence check is recorded on the
+             learning-core seat instead, as a binding pre-condition on any FUTURE
+             arbitration that seats a core against a runner-up. Nothing is
+             weakened, no threshold moves, no experiment is retired: this default
+             only moves rules the owner already wrote from a place where they
+             bind nothing to the place where gates bind. This entry then closes
+             as SUPERSEDED-BY-D10 for its live question.
+  decide_by: 2026-08-31
+  blocks:    LC.04
+
+**Ordering, stated so the two defaults cannot collide.** D12's default is a
+tightening that is valid under *every* branch of D10 — accept-one-learner,
+redesign-W0, or redesign-arms — so it may fire before, with, or after D10 without
+changing D10's meaning. It is classed `goal` because it asks what standard of
+evidence an adopted learning core must clear, which is a what-winning-means
+question no experiment can answer. It is deliberately **not** classed `means`:
+there is no bakeoff to run here, LC.04 is blocked behind LC.03's VOID, and
+classing it `means` would raise a MEANS-ESCALATED violation against an entry that
+has no measurement to escalate.
+
+**Reversing it costs one line.** If you want the convergence check dropped rather
+than transcribed, say so and it is dropped — but say it, so the record shows a
+guard was retired by a ruling instead of by a deadline passing over prose.
+
+*Evidence: `experiments/registry.py` LC.04/LC.05 `notes` read live 2026-08-25;
+`experiments/ledger.json` LC.03 attempt 3 metrics `{arm}/data_starved` and
+`{arm}/final_slope`; `docs/DECISIONS_NEEDED.md:483-556` (the original entry, all
+three addenda); `docs/DECISIONS_NEEDED.md:1953+` (D10's armed default);
+`docs/LESSONS.md` "A screen with no re-screen cap is a ratchet".*
