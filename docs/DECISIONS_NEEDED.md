@@ -334,7 +334,18 @@ whether the loop may perform the routine step its own toolchain requires.
 **Recommendation: option 1 or 2.** Either unblocks the re-run today; option 3
 should be chosen deliberately, not by default, because its cost is the quota.
 
-## Claude credits are the binding resource and are unmetered (OPEN, owner)
+## D11 — Claude credits are the binding resource and are unmetered (OPEN, owner)
+
+> **RENUMBERED 2026-08-25 by the 30th overseer audit, and why the renumber was
+> forced.** This entry had no D-number, so `decisions.py:parse()` keyed it by a
+> 52-character slice of its title — while `_DECIDE = ^DECIDE:\s*([A-Za-z0-9._-]+)$`
+> forbids spaces in an id. **A title-keyed entry therefore cannot be armed at
+> all**: there is no id you can write in a `DECIDE:` line that the parser will
+> join back to the heading. Three of the five `UNDECLARED` entries are in that
+> state, so the standing duty "arm at least one per audit" was unsatisfiable for
+> them by construction. Giving the heading a number is the whole fix. Nothing
+> about the question changed; see `OVERSIGHT.md` (30th audit, RANK 3 and
+> builder item B2).
 
 Found by the 2026-08-09 meta-audit. GPU hours are metered to the second
 (gpu_budget.json, weekly ledger, affordability gate). Claude usage — which
@@ -349,6 +360,50 @@ slots; (b) set a cadence budget (e.g. drop the builder to every 2h overnight);
 credit balance, so any budget must be time/cadence-based, not token-based.
 Note: experiments/audit.py (queued for the builder) gives zero-credit
 integrity checking either way.
+
+ARMED 2026-08-25 by the 30th overseer audit, under the standing duty to arm at
+least one undeclared decision per audit. Class is `goal`, not `means`: how much
+of a budget may be spent fixes what is PERMITTED, and no experiment can settle
+it — the system cannot read its own credit balance, which is the entry's own
+central fact. So this is not a means fork hiding on your desk.
+
+**Why the default is "accept as-is", and why that is not the same answer as
+doing nothing in 2026-08-09.** When this was written the usage was genuinely
+unmetered. The mechanical half of option (b) has since shipped, unasked, as
+engineering rather than as a policy change:
+
+- `scripts/ladder_loop.sh` + `lib_usage.sh` (`e03693d`, `06b76ba`, 2026-08-24)
+  gate every iteration on a **pace line**: it reads `week:all models`, prints
+  BOTH meters, names which one governs, and skips the hour when spend runs
+  ahead of week-elapsed. Live in the last 24 h: 9 of 24 hourly slots skipped,
+  holding 37% spend against an 18%-elapsed week.
+- `lib_credits.sh` carries the model fallback chain and a 529 retry; iterations
+  lost to a session limit are written to `/data/jack-logs/lost_iterations.log`
+  and **inherited** by the next successful iteration (exercised 3 times on
+  2026-08-24 13:07–15:07, worked).
+
+So the status quo is no longer "unmetered": it is *metered by cadence and acted
+on hourly*, which is what option (b) asked for. The default picks the
+already-permitted action of changing nothing, widens nothing, weakens no
+threshold, and touches no GOAL.md sentence.
+
+**How to reverse it:** one line from you naming (b) or (c). The cadence
+constants live in `scripts/lib_usage.sh` and the schedule in the crontab; either
+is a one-line change, so choosing (b) later costs nothing that choosing (a) now
+spends.
+
+DECIDE: D11
+  class:     goal
+  default:   ACCEPT AS-IS (option a), on the record that the cadence meter
+             shipped 2026-08-24 and now governs: the pace gate reads
+             'week:all models', names itself as the gate in every log line, and
+             holds budget across the week, while the fallback chain plus
+             lost-iteration inheritance keep a limited hour from costing a unit
+             of work. No cadence change, no new budget, nothing widened. If the
+             owner later wants option (b) or (c), the constants are one line in
+             lib_usage.sh and the schedule is one line in cron.
+  decide_by: 2026-08-31
+  blocks:
 
 ## The owner's hands — how does a human TOUCH Jack's world? (OPEN, design fork)
 
