@@ -11843,7 +11843,22 @@
       "status": "PASS"
     },
     "T2.15": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-25T07:11:00",
+          "by": "T2.15 harvest",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "712facc54b1976bd",
+              "proof": "reconstructed 712facc54b1976bd from git 50baf1d8e1e3; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "4dc7131639719dcc"
+            }
+          ],
+          "commit": "f5d8f1c",
+          "reason": "FAIL RECORD appended to the module docstring after the attempt-2 harvest; no code changed"
+        }
+      ],
       "attempt": 2,
       "commit": "20b8660",
       "compute_s": 1120.08,
@@ -11879,7 +11894,7 @@
           "status": "ERROR"
         }
       ],
-      "impl_sha": "712facc54b1976bd",
+      "impl_sha": "4dc7131639719dcc",
       "message": "pre-registered threshold not met",
       "metrics": {
         "backend": "kaggle",
