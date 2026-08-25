@@ -5796,3 +5796,37 @@ B3 (hardware stamp + gpu_job_id) still open.
   shelter needs a claim that does not require the core to learn seeking
   from an outside spawn; smell likewise post-SM.02). W34 Kaggle: 30 h,
   expires Sun 08-30, 0 spent.
+- 2026-08-25 ~04:2x UTC (Fable): 28th audit B3 — T2.15 implemented,
+  pre-registered and DISPATCHED (first W34 GPU submission; 0 of 30 h had
+  been spent). Chose T2.15 over the audit's cheapest-first pick DP.04
+  because DP.04 is blocked IN FACT: its notes require LG.00, still
+  unregistered — the audit's budget-x-dependency join reads only
+  depends_on and cannot see a prose dependency (lesson appended to
+  LESSONS.md; VO.02 likewise leans on unregistered GEN.02 but its notes
+  pre-authorise a cheap tabular staging, left for a future unit). T2.15's
+  design, committed BEFORE any run (50baf1d): verb x modifier grid inside
+  the shipped 20-word vocab, 32 trained / 16 held-out unique sequences,
+  wave an explicit scope exclusion (zero in-vocab words); supervision =
+  the grid's own truth map at the single supervision site (T2.07's
+  instance-level machinery — the shipped lookup defaults to walk on
+  designed phrases); CLAIM heldout >= 12/16 per seed, exact binomial at
+  conservative 1/7 (tail 7.47e-8 > 5 sigma); derangement control twin
+  with alive proof; NB resolvability floor 13/16 (measured 14/16 — the
+  two NB misses are the deliberately-hard 'in place' probes); TF-IDF BOW
+  retrieval null measured 11/16, so the 12/16 bar beats the registered
+  BOW null. Docstring states the T2.07 relation: designed-grid routing is
+  the different registered question; neither outcome re-litigates the
+  settled FAIL. First dispatch refused by protocol's UndeclaredControl
+  guard at 0.0s (control_fn without a registry control declaration) —
+  control declared in registry_expansion.py, nothing spent, guard praised.
+  Second dispatch live: kernel attempt 1787631708427-1457639-kaggle,
+  head 20b8660, est 0.4 h, watcher pid 1457626 detached, log
+  /data/tmp/dispatch_t2_15.log. ALSO: T0.21 re-run from the clean tree
+  (PASS 11/11) clearing the dirty stamp its pre-commit run left.
+  Meters: week:all models 34% (the gate) at 14% elapsed (pace line ~34);
+  week:Fable 59% (not the gate). NEXT ITERATION: harvest T2.15 if the
+  watcher died (JACK_REUSE_KERNEL reattach command is in the log tail) —
+  otherwise the row is already in the ledger, commit it. Then the two
+  successor specs for the claim-dead commitments (thermal/shelter, smell)
+  remain the owed distinct unit, and audit B5 (UB.9 per-arm must-learn
+  measurement) is on its fourth carry.

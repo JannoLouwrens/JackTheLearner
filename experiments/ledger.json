@@ -11842,6 +11842,24 @@
       "spec_id": "T2.12",
       "status": "PASS"
     },
+    "T2.15": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "",
+      "compute_s": null,
+      "control_metrics": {},
+      "duration_s": 0.0,
+      "gpu_job_id": null,
+      "hardware": "",
+      "history": [],
+      "impl_sha": null,
+      "message": "child recorded nothing (rc=1): arner/experiments/protocol.py\", line 1737, in run_spec\n    raise UndeclaredControl(\nexperiments.protocol.UndeclaredControl: T2.15 passes control_fn=_control to run_spec but Spec.control is None. Declare in the registry WHAT the control is and WHICH WAY it must fail; that field is the audit surface.",
+      "metrics": {},
+      "ran_at": "",
+      "seeds": [],
+      "spec_id": "T2.15",
+      "status": "ERROR"
+    },
     "T2.20": {
       "amended": [],
       "attempt": 5,

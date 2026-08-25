@@ -5100,3 +5100,25 @@ whoever kills a spec next: **price the coverage in the same commit that fires
 the kill** — the commit, the journal entry and the decision evidence for SH.01
 all correctly described the *finding* and not one of them said which
 commitments had just gone dark.
+
+## A dependency named only in prose is invisible to every ranking that reads the graph
+
+2026-08-25. The 28th audit's B3 enumerated five unblocked GPU-budget claim
+specs and put `DP.04` first, cheapest. `DP.04`'s own registry notes say it is
+**blocked in fact**: it needs `LG.00`, which was never registered, so the
+author wrote *"the registry's depends_on check refused the reference rather
+than let it dangle"* and parked the dependency in prose — where `run next`,
+`run blocked`, the coverage join and the audit's own budget×dependency join
+all read `depends_on=["DP.00","VO.01"]`, both PASS, runnable. The builder
+nearly implemented it on the audit's ordering; only reading the full notes
+field caught it. This is the third instance of one shape: LC.03 "runnable"
+with no test file (a spec whose deps pass is not a spec that exists), the
+phantom champion arenas (a falsifier cited but never registered), and now a
+dependency that exists as a sentence. GENERALISED: **the registry's
+machine-readable fields are the only ones any ranking reads, so a constraint
+that lives in `notes` is a constraint the whole system will schedule
+against.** When `depends_on` refuses a dangling id, the honest moves are to
+register the missing spec or carry the block in a field tools read — not
+prose. Until an idiom exists (`BLOCKED_IN_FACT:` in the audit's own
+marker grammar would do), anyone selecting a spec must read its `notes`
+before believing any list that calls it runnable.
