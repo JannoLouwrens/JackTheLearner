@@ -257,6 +257,17 @@ real test. Two things stay on the record anyway: for four days the four
 for the Review's absence.** The builder's liveness is checked by `ITER_ENDED`;
 the Review's is checked by whoever happens to read `review.log`.
 
+**And a defect in THIS organ, found by the Review while I was writing — recorded
+here because an auditor that omits its own faults is the thing it audits for.**
+`overseer.sh:67` greps the **previous** audit's `OVERSIGHT.md` for its log line,
+so an overseer session that dies on a session limit — `rc=1`, 2 s, nothing read,
+nothing written — logs the *last* audit's verdict as if it were this one's. A
+dead audit has published `verdict: ON TRACK`. The builder's own path handles the
+same wall correctly. The Review routed it as its `FOR THE BUILDER 1` at 06:5x
+today (`197b55b`); I am not re-filing it, only recording that **the log line
+this organ emits is not evidence that this organ ran**, and that my §4 checked
+the builder's liveness and the Review's and never my own.
+
 **One mechanical gap, minor but real.** `harvest_bookkeeping` commits with
 `-- experiments/ledger.json` — correct for the index-scope bug it was written to
 fix, and incomplete for a **GPU** harvest, which writes three files. At 05:07
