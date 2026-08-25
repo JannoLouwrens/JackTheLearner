@@ -225,6 +225,11 @@ experience grows. Draft:
 
 ## GAP-FILL — THE ANTI-PUPPET TEST (owner, 2026-08-09). Register with the LG family.
 
+> **STATUS: REGISTERED 2026-08-25 (`ed2d969`), verbatim** — only a `COVERS:`
+> marker appended (the declaration idiom postdates this draft). The dangling
+> `LG.01` dependency now resolves: it is the probe-set certification fixture,
+> registered in the same commit. See the LANGUAGE_GROUNDING.md row above.
+
 The owner's question: "will Jack be smarter than the local LLM on him? He MUST
 develop knowledge and connect it to words instead of just the LLM communicating
 and PRETENDING to be Jack." Nothing in 136 specs tested this. It is the
@@ -258,6 +263,9 @@ project's existential claim and it had no falsifier.
                "Knowledge in the parts that lived; language as the mouth.")
 
 ## GAP-FILL — WHO CHOOSES THE WORDS (owner, 2026-08-09). Register with LG.00.
+
+> **STATUS: REGISTERED 2026-08-25 (`ed2d969`), verbatim** — only a `COVERS:`
+> marker appended. See the LANGUAGE_GROUNDING.md row above.
 
 Owner: "but the LLM will always be the one talking — how will Jack choose what
 to say?" Speaking is an ACTION: his core selects it the way it selects any
@@ -431,7 +439,7 @@ is the natural sealer; a blind agent is the fallback.
 | CURIOSITY_BAKEOFF.md | LT.01–LT.09 | PENDING |
 | D1_CONTROL_ARCHITECTURE.md | D1.0, T2.21 | PENDING |
 | HEARING_BAKEOFF.md | HR.1–HR.8 | PENDING |
-| LANGUAGE_GROUNDING.md | LG.* | PENDING — doc was truncated (agent killed); verify completeness before extracting. MUST INCLUDE THE LIAR TEST (owner-designed 2026-08-09): two advisors, one systematically truthful, one systematically false, advice verifiable by his own experience. PASS = advice-following diverges by advisor track record (trusts the truthful, discounts the liar), with attribution intact. CONTROL = swap the advisors' roles mid-life; the trust must MIGRATE, or it was measuring voices, not veracity. NULL = an agent with attribution stripped must treat both advisors identically. This is the emergence stone's first falsifiable claim: trust earned, checked, and unscripted |
+| LANGUAGE_GROUNDING.md | LG.* | **PARTIALLY REGISTERED 2026-08-25** (`ed2d969`, registry 183→187, OVERSIGHT B1(a)): the completeness check CONFIRMED the truncation — §2.2–§11 are headers with no body, §7 ("registry entries") is empty — so what was registered is exactly the owner-designed material that EXISTS: **LG.00** (anti-puppet, the GOAL.md-cited asymmetry, verbatim from this file's GAP-FILL), **LG.10** (who chooses the words, verbatim), **LG.02** (THE LIAR TEST as specified on this row: track-record divergence, mid-life swap control, attribution-stripped null), and **LG.01** (the certification fixture LG.00's depends_on named: every probe question certified lived-necessary per-question against the LLM-alone leg — Finding 1's §1.1 lesson, the only part of the truncated doc that binds a design). CROSS-CHECK (step 1): no refutation; FROZEN_VS_PLASTIC §10.8 strengthens LG.00 (RT-2 knowledge-loss backs the control clause); one prose id collision found and recorded in the registry comment — DIRECTION_AUDIT.md's "LG.00 = certification" numbering loses to GOAL.md's constitutional citation. DP.04.depends_on += LG.00 same commit, per its own notes. Step 4 (implement + run cheapest) NOT done this iteration: LG.01 is the next unit — CPU, ME.9 PASSES, SmolLM2 is cached on this box. **STILL OWED: the doc's §2.2–§11** (understanding test LG.05, grounding bakeoff arms, ordering experiment) — a research pass with citations, per the empty-queue rule; registering unwritten designs would be the disease coverage.py exists to catch. |
 | DIRECTION_AUDIT.md | WP.01–04, LF.01–05, SO.01–05, PS.07, T0.17–18 (stubs) | PENDING — stubs need full Spec fields before registration |
 | SURVIVAL_WORLD.md | W.1–W.7 | PENDING — CROSS-CHECK REQUIRED: W.6 overlaps NE.08 (reconciliation written in SURVIVAL_WORLD §5.0); register the reconciled pair or the ledger gets two specs testing one claim. Also carries recommendation 6b: contype/conaffinity audit of the playground, worth ~3x throughput, do before any W.* runs |
 | OWNER DECISION: the owner's hands (no doc yet — empty-queue rule applies) | SO-family: provisioning channel (drop-in objects), provenance into the diary ("who left this"), anti-puppeteering limits | PENDING — approved by owner 2026-08-09; needs its research pass then specs. OWNER 2026-08-09: visualisation of needs (hunger bars, spectating) is deliberately LATE — it is a pure read layer, zero science cost. But the camera rolls from day one: NE.* implementation must log needs telemetry (a few floats/step) from the FIRST needful life, so any later viewer can replay any life. Recording is nearly free; retrofitting history is impossible |

@@ -5911,3 +5911,31 @@ B3 (hardware stamp + gpu_job_id) still open.
   (1b6c108). Third instance of the cached-list disease, this time inside the
   guard built to catch it - recorded in the property's own comment rather
   than LESSONS.md (dedup: the cached-number lesson already generalises it).
+
+2026-08-25 ~11:0x UTC (builder). ATTEMPTED: OVERSIGHT B1(a) — register the LG
+  family, the previous iteration's named next unit. The queue's completeness
+  check CONFIRMED LANGUAGE_GROUNDING.md is truncated (§2.2-§11 headers only,
+  §7 empty), so registered exactly what exists owner-designed: LG.00
+  (anti-puppet, GOAL.md's cited "creature not costume" proof), LG.10 (who
+  chooses the words), LG.02 (the LIAR TEST, waiting since 08-09: track-record
+  divergence, mid-life swap control, attribution-stripped null), LG.01 (the
+  certification fixture LG.00's depends_on named: every probe question
+  certified lived-necessary PER-QUESTION against the LLM-alone leg).
+  Cross-check clean; one prose id collision recorded (DIRECTION_AUDIT's
+  "LG.00 = certification" loses to GOAL.md's constitutional citation;
+  certification is LG.01). DP.04.depends_on += LG.00 same commit per its own
+  notes; GOAL_DANGLING_BASELINE shrunk 5 -> 4 per its docstring. MEASURED:
+  registry 183 -> 187; coverage exit 0, GOAL.md dangling 5 -> 4 (GEN.* remain,
+  blocked on GENERALITY.md's queue row); champions: Language model + Language
+  acquisition seats ARENA-MISSING -> UNCONTESTED (arena exists, never run) —
+  2 of 8 cleared as B1(a) predicted; T0.21 re-ran PASS from clean tree
+  ed2d969 (23 commitments, 104 live declared, 0 malformed). Meters:
+  week:all models 37% (the gate) at 17% elapsed (pace line ~36, so no
+  multi-hour plan this slot); week:Fable 63% (not the gate). NOT done, said
+  plainly: protocol step 4 (implement + run cheapest) — LG.01 needs the
+  SmolLM2 probe rig (~a full iteration; model IS cached on this box, offline
+  leg only, never in a control loop). NEXT ITERATION: implement LG.01 (CPU,
+  ME.9 PASSES, next cheapest constitutional unit), or B6 (T2.09/T3.06
+  curiosity GPU specs — W34's 29.7 h expire Sunday and the LG registration
+  does not consume them); the doc's §2.2-§11 research pass (LG.05,
+  bakeoff arms, ordering experiment) stays owed on the queue row.
