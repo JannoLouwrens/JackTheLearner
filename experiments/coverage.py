@@ -86,6 +86,24 @@ reason — is REPORTED, never dropped: an unparseable retirement leaves the
 spec silently counting as coverage, which is the false-positive direction,
 the one nobody audits.
 
+A CITATION IN GOAL.md IS A PROMISE (29th audit, 2026-08-25 — the fourth
+scar). `GOAL.md` cited sixteen spec ids and FIVE did not exist in the
+registry — `LG.00`, `GEN.02`, `GEN.03`, `GEN.06`, `GEN.09` — one of them the
+test the constitution itself calls "the proof he is a creature and not a
+costume". The gap stood open since 2026-08-09 with every organ green,
+because this module's unit is the COMMITMENT and `GOAL.md` makes claims one
+level finer: `language (parent)` read covered-and-passing while its named
+falsifier was never registered. The project had already built this exact
+check twice — `champions.py` for `CHAMPIONS.md` arenas, `T0.21` P10 for
+docstring markers — and neither generalisation reached the document all the
+others defer to. So `goal_citations()` resolves every spec-shaped id in
+`GOAL.md` against `BY_ID`; a NEW dangling citation exits 2 (a promise the
+constitution just made that the ladder cannot keep), the seeded baseline of
+five is standing registration debt reported but not fatal (it is B1(a)'s
+work; a permanently red check trains its reader to ignore red), and a
+baseline entry that RESOLVES must be removed from the baseline — shrink-only,
+enforced at exit 1 like a malformed marker.
+
 Guarded by spec `T0.21`, which feeds it the cases already known to be broken.
 """
 
@@ -211,6 +229,51 @@ def parked(by_id: Optional[dict] = None
                 bad.append((sid, f"PARKED: {raw.strip()!r}  [needs "
                                  f"'PARKED: YYYY-MM-DD — reason']"))
     return out, bad
+
+
+GOAL_MD = Path(__file__).resolve().parent.parent / "GOAL.md"
+
+# Spec-shaped id: 1-4 capitals, optional tier digit, then .NN — matches T5.03
+# and GEN.06 alike. "π0.5" and bare version numbers have no capital prefix and
+# do not match; a capitalised non-spec token like "U.S." would dangle LOUDLY,
+# which is the safe failure direction for a citation checker.
+GOAL_CITATION = re.compile(r"\b([A-Z]{1,4}[0-9]?\.[0-9]{1,2})\b")
+
+# The five citations measured dangling on 2026-08-25 (29th audit). This set
+# may ONLY shrink: registering one of these makes `goal_citations()` demand
+# its removal here, and a NEW dangler is never added — it is a red exit.
+GOAL_DANGLING_BASELINE = frozenset(
+    {"LG.00", "GEN.02", "GEN.03", "GEN.06", "GEN.09"})
+
+
+def goal_citations(text: Optional[str] = None,
+                   by_id: Optional[dict] = None,
+                   baseline: frozenset = GOAL_DANGLING_BASELINE) -> dict:
+    """Resolve every spec-shaped id `GOAL.md` cites against the registry.
+
+    Returns `{"cited", "dangling", "new", "known", "stale_baseline"}` —
+    `new` (dangling and NOT in the baseline) is the fatal class: the
+    constitution just promised a falsifier nobody registered, the exact hole
+    that stood open 16 days. `known` is seeded registration debt (B1(a)).
+    `stale_baseline` (baseline entries that now resolve) must be deleted from
+    `GOAL_DANGLING_BASELINE` in the same commit that registered them, so the
+    baseline only shrinks; leaving one would let the id dangle AGAIN later
+    without a red.
+    """
+    if by_id is None:
+        from .registry import BY_ID
+        by_id = BY_ID
+    if text is None:
+        text = GOAL_MD.read_text()
+    cited = sorted(set(GOAL_CITATION.findall(text)))
+    dangling = {i for i in cited if i not in by_id}
+    return {
+        "cited": cited,
+        "dangling": sorted(dangling),
+        "new": sorted(dangling - baseline),
+        "known": sorted(dangling & baseline),
+        "stale_baseline": sorted(i for i in baseline if i in by_id),
+    }
 
 
 def declarations(by_id: Optional[dict] = None,
@@ -462,11 +525,28 @@ def check() -> int:
               f"a missing kind, or a dateless PARKED; none buys anything:")
         for sid, name in bad:
             print(f"      {sid}: {name!r}")
+    gc = goal_citations()
+    print(f"\n  GOAL.md citations: {len(gc['cited'])} spec ids cited, "
+          f"{len(gc['dangling'])} dangling.")
+    if gc["new"]:
+        print(f"  {len(gc['new'])} NEW dangling citation(s) — the constitution "
+              f"names a falsifier nobody registered:\n"
+          f"      {', '.join(gc['new'])}\n"
+          "  Register the spec (or fix the id in GOAL.md if it is a typo);\n"
+          "  never add it to GOAL_DANGLING_BASELINE — that set only shrinks.")
+    if gc["known"]:
+        print(f"  {len(gc['known'])} known-dangling (seeded 2026-08-25, 29th "
+              f"audit; registration debt, B1(a)): {', '.join(gc['known'])}")
+    if gc["stale_baseline"]:
+        print(f"  {len(gc['stale_baseline'])} baseline entr(y/ies) now RESOLVE "
+              f"and must be removed from GOAL_DANGLING_BASELINE: "
+              f"{', '.join(gc['stale_baseline'])}")
     print("\n  A nomination is NOT coverage. It is a spec whose title looks\n"
           "  related and whose author has not said so; only `COVERS:` counts.\n"
           "  A PARKED spec is NOT coverage either: a retirement is not a\n"
           "  falsifiable claim, however honest the retiring was.")
-    return 2 if (uncovered or dead) else (1 if bad else 0)
+    return (2 if (uncovered or dead or gc["new"])
+            else (1 if (bad or gc["stale_baseline"]) else 0))
 
 
 if __name__ == "__main__":

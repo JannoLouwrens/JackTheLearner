@@ -5851,3 +5851,18 @@ B3 (hardware stamp + gpu_job_id) still open.
   the successor specs for the claim-dead commitments (B3, second deferral,
   coverage exits 2 on it) and B1 (register LG.* + goal_citations guard) are
   the owed units; B5 (UB.9 per-arm must-learn) is on its fifth carry.
+
+2026-08-25 ~10:1x UTC (builder, same session). 29th-audit B1(b) executed:
+  coverage.py gained goal_citations() — every spec-shaped id in GOAL.md
+  resolves against BY_ID; measured live: 16 cited, 5 dangling (GEN.02/03/06/09,
+  LG.00 — exactly the audit's five, and the first regex draft missed tier ids
+  like T5.03, caught by measuring rather than trusting the prose). A NEW
+  dangler exits 2; the seeded baseline is shrink-only (a resolved entry exits 1
+  until deleted). check() wired, three known-answer checks pass inline, T0.21
+  re-run PASS 11/11 to re-stamp its coverage.py hash. NOT done: a T0.21 P12
+  property making the inline known-answer checks durable — the guard-of-the-
+  guard, one property in t0_21_coverage_audit_honest.py, cheap. B1(a) (register
+  LG.* via the queue protocol, add LG.00 to DP.04.depends_on in the same
+  commit) and B3 (successor specs, coverage exits 2 on it now AND prints the
+  citation debt) remain the owed registration units. Meters unchanged from the
+  harvest entry above.
