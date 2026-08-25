@@ -8736,12 +8736,12 @@
     "T0.21": {
       "amended": [],
       "attempt": 22,
-      "commit": "b624d78",
+      "commit": "ed2d969",
       "compute_s": null,
       "control_metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
-        "declared_specs_live": 99.0,
+        "declared_specs_live": 104.0,
         "docstring_covers_problems_live": 0.0,
         "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
         "malformed_declarations_live": 0.0,
@@ -8749,16 +8749,10 @@
         "properties_checked": 11.0,
         "properties_failed": 7.0
       },
-      "duration_s": 2.41,
+      "duration_s": 2.43,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "dfe3bb0+dirty",
-          "message": "",
-          "ran_at": "2026-08-10T13:15:02",
-          "status": "PASS"
-        },
         {
           "commit": "83fa1a5",
           "message": "",
@@ -9108,14 +9102,66 @@
             0
           ],
           "status": "FAIL"
+        },
+        {
+          "commit": "b624d78",
+          "control_metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 99.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 26.0,
+            "properties_checked": 11.0,
+            "properties_failed": 7.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "8b7dd06ecd9c1e5e",
+          "message": "",
+          "metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 99.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 26.0,
+            "properties_checked": 11.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-08-25T09:16:02",
+          "seeds": [
+            0
+          ],
+          "status": "PASS",
+          "supersedes_fail": {
+            "commit": "f0cb81d",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "a7a608b7586c5312",
+            "metrics": {
+              "commitments": 23.0,
+              "commitments_uncovered": 0.0,
+              "declared_specs_live": 99.0,
+              "docstring_covers_problems_live": 0.0,
+              "failed_names": "p6_deleted_spec_loses_coverage",
+              "malformed_declarations_live": 0.0,
+              "nominated_not_declared": 26.0,
+              "properties_checked": 11.0,
+              "properties_failed": 1.0
+            },
+            "ran_at": "2026-08-25T09:14:46",
+            "status": "FAIL"
+          }
         }
       ],
-      "impl_sha": "8b7dd06ecd9c1e5e",
+      "impl_sha": "817a5a7879ba84af",
       "message": "",
       "metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
-        "declared_specs_live": 99.0,
+        "declared_specs_live": 104.0,
         "docstring_covers_problems_live": 0.0,
         "failed_names": "",
         "malformed_declarations_live": 0.0,
@@ -9123,31 +9169,12 @@
         "properties_checked": 11.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-25T09:16:02",
+      "ran_at": "2026-08-25T10:14:52",
       "seeds": [
         0
       ],
       "spec_id": "T0.21",
-      "status": "PASS",
-      "supersedes_fail": {
-        "commit": "f0cb81d",
-        "dirty": false,
-        "impl_changed": true,
-        "impl_sha": "a7a608b7586c5312",
-        "metrics": {
-          "commitments": 23.0,
-          "commitments_uncovered": 0.0,
-          "declared_specs_live": 99.0,
-          "docstring_covers_problems_live": 0.0,
-          "failed_names": "p6_deleted_spec_loses_coverage",
-          "malformed_declarations_live": 0.0,
-          "nominated_not_declared": 26.0,
-          "properties_checked": 11.0,
-          "properties_failed": 1.0
-        },
-        "ran_at": "2026-08-25T09:14:46",
-        "status": "FAIL"
-      }
+      "status": "PASS"
     },
     "T0.22": {
       "amended": [],
