@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 84 / 183 demonstrated
+## 84 / 187 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -802,3 +802,31 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Jack's self-reports are a deterministic function of logged need values and the diary, and nothing else: per-band accuracy >= 0.90 for EVERY need x band cell, abstention >= 0.95 on unmodelled interoceptive states ('are you dizzy?'), every answer byte-identical to a template instantiated with a logged value, attributed answers ('who gave you the water?') resolved through ME.9's channels, and report_behaviour_agreement >= 2.0 — saying 'I'm cold' predicts moving toward shelter within 30 s.
       - _dies if:_ Any band cell below 0.90 (gate on the MINIMUM, never the mean), OR abstention degrading below 0.95 as accuracy rises (fidelity bought with credulity), OR any returned string not derivable from a logged value, OR report_behaviour_agreement ~ 1.0 — the words and the actions are not two readouts of one state, and he is a narrator rather than an agent.
       - _then delete:_ Any self-report path that generates its answer instead of reading one, however fluent. The extractive-never-generative rule of ME.11, extended from memory to interoception.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **LG.01** The life-questions are real questions — certified lived-necessary
+      - _asserts:_ Every probe question RETAINED for LG.00 is certified on two legs before any arm is scored: a deterministic extractive diary-oracle (ME.9's attributed channels, no generation) answers it correctly (>= 0.95 on the retained set), AND the frozen LLM alone — identical prompt scaffold, no diary, no learned core — sits inside its pre-registered chance band on it, PER QUESTION, never on average. A question the LLM answers from priors is EXCLUDED and the exclusion logged; >= 20 questions per category (his world / his body / his history) must survive exclusion.
+      - _dies if:_ Any category retaining fewer than 20 questions — the generator cannot produce lived-necessary probes and LG.00 is unrunnable until it can. OR the diary-oracle below 0.95 on retained questions — a question unanswerable from the record certifies nothing.
+      - _then delete:_ Any LG.00 run scored on an uncertified probe set. Lived-necessity is a property of the QUESTION, not the model (LANGUAGE_GROUNDING.md Finding 1, 2603.19233: libero_object scores 60-100% REGARDLESS of the prompt — a cell where the prior suffices cannot measure grounding at any scale).
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **LG.00** Jack knows what his LLM cannot — he is not a puppet
+      - _asserts:_ On questions about HIS world, HIS body and HIS history, full Jack (learned core + diary + LLM) beats LLM-ALONE given the identical prompt context, by >=3 sigma. The knowledge is in the parts that LIVED, not in the frozen weights that never did.
+      - _dies if:_ LLM-alone matches full Jack on world questions. Then Jack is a costume on a language model, the learned core and diary are decorative, and the project has not built a creature.
+      - _then delete:_ The frozen-LLM architecture as implemented. If the mouth is doing the knowing, the mind was never built.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **LG.02** Trust is earned by track record — the liar loses him
+      - _asserts:_ Two advisors speak into his world: one systematically truthful, one systematically false, every piece of advice verifiable by his own subsequent experience. His advice-following DIVERGES by advisor track record: follow-rate(truthful) - follow-rate(liar) > 0 at >= 3 sigma across seeds by end of life, with attribution intact (the diary records who said what, through ME.9's channels).
+      - _dies if:_ Follow rates statistically indistinguishable — he cannot learn whom to trust from consequences — or divergence achieved with attribution broken (then it is not trust, it is something the rig leaked).
+      - _then delete:_ Any scripted-trust design. If trust must be initialised, annotated or hard-coded to diverge, the emergence claim is dead and GOAL.md's 'trust earned and checked' is decoration.
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **LG.10** Jack chooses what to say; the LLM only chooses how
+      - _asserts:_ Utterance MEANING tracks Jack's internal state and diary, not the language model. Three independent measurements: (a) same state, different LLM sampling seeds -> same meaning, different wording; (b) different state, same LLM -> different meaning; (c) SWAP THE LLM for a different frozen model -> meaning preserved, style changes.
+      - _dies if:_ Meaning varies with the sampler, or survives a state change, or changes when the LLM is swapped. Any of the three means the language model is choosing the content and Jack is being ventriloquised.
+      - _then delete:_ Any speech path where the LLM receives free rein over content. If the model swap changes what he means, the mind was in the mouth.

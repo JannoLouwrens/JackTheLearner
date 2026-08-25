@@ -2908,7 +2908,8 @@ EXPANSION: list[Spec] = [
                        "tokens at matched FLOPs - the filler-token null. This "
                        "is the null the claim lives or dies on.",
          metric="lookahead_gain_over_matched_compute_filler",
-         budget=Budget.GPU_SHORT, seeds=3, depends_on=["DP.00", "VO.01"],
+         budget=Budget.GPU_SHORT, seeds=3,
+         depends_on=["DP.00", "VO.01", "LG.00"],
          control="A SCRAMBLED VOCABULARY arm: his own tokens permuted by a "
                  "fixed random map, so the channel carries identical statistics, "
                  "identical bandwidth and identical compute but no learned "
@@ -2934,13 +2935,10 @@ EXPANSION: list[Spec] = [
                "attached to his own life, not the parent's. Do not build a "
                "prompt-engineering scratchpad; that would be borrowing the "
                "mechanism instead of testing whether he grows one. "
-               "DEPENDENCY NOT YET EXPRESSIBLE: this also requires LG.00 "
-               "(language grounding), which is written in the research docs but "
-               "NOT registered as of 2026-08-10 - the registry's depends_on "
-               "check refused the reference rather than let it dangle. Add "
-               "LG.00 to depends_on the moment it is registered; until then "
-               "this spec is blocked in fact even though the ladder shows only "
-               "DP.00 and VO.01."
+               "DEPENDENCY RESOLVED 2026-08-25: LG.00 is registered and now in "
+               "depends_on, exactly as the instruction that stood here since "
+               "2026-08-10 ordered ('add LG.00 to depends_on the moment it is "
+               "registered'). The ladder now shows the true block."
                "  COVERS: fast/slow (claim)"),
 
     Spec("PG.9", 2, "The eye's view is not mostly obstacle",
@@ -4104,4 +4102,155 @@ EXPANSION: list[Spec] = [
                "Nuisance disqualifier: spontaneous_report_rate <= 6 per sim-hour "
                "per seed — a companion that announces every band crossing is as "
                "bad as one that pesters."),
+
+    # ── LG — LANGUAGE: the anti-puppet family (owner-designed 2026-08-09,
+    # registered 2026-08-25 per OVERSIGHT B1(a) / INTEGRATION_QUEUE row
+    # LANGUAGE_GROUNDING.md). The research doc is TRUNCATED (§2.2–§11 are
+    # headers only); what is registered here is exactly the material that
+    # exists owner-designed in the queue plus the one dependency it names.
+    # ID COLLISION RECORDED: DIRECTION_AUDIT.md uses 'LG.00' for the
+    # eval-certification idea and 'LG.05' for the understanding test; GOAL.md's
+    # constitutional citation reserves LG.00 for the anti-puppet claim, so
+    # certification is LG.01 here and DIRECTION_AUDIT's numbering is stale
+    # prose, not this registry's. LG.05 (understanding test), the grounding
+    # bakeoff arms and the ordering experiment stay UNREGISTERED until the doc
+    # is completed — registering a design that was never written is the
+    # disease coverage.py exists to catch, not a debt to clear blind. ─────────
+
+    Spec("LG.01", 2, "The life-questions are real questions — certified "
+                     "lived-necessary",
+         hypothesis="Every probe question RETAINED for LG.00 is certified on "
+                    "two legs before any arm is scored: a deterministic "
+                    "extractive diary-oracle (ME.9's attributed channels, no "
+                    "generation) answers it correctly (>= 0.95 on the retained "
+                    "set), AND the frozen LLM alone — identical prompt "
+                    "scaffold, no diary, no learned core — sits inside its "
+                    "pre-registered chance band on it, PER QUESTION, never on "
+                    "average. A question the LLM answers from priors is "
+                    "EXCLUDED and the exclusion logged; >= 20 questions per "
+                    "category (his world / his body / his history) must "
+                    "survive exclusion.",
+         falsified_by="Any category retaining fewer than 20 questions — the "
+                      "generator cannot produce lived-necessary probes and "
+                      "LG.00 is unrunnable until it can. OR the diary-oracle "
+                      "below 0.95 on retained questions — a question "
+                      "unanswerable from the record certifies nothing.",
+         null_baseline="The frozen LLM alone, identical prompt scaffold. Its "
+                       "per-question accuracy DEFINES the exclusion; it is "
+                       "the leg that makes retention falsifiable rather than "
+                       "curated.",
+         metric="retained_questions_per_category_min", budget=Budget.CPU,
+         depends_on=["ME.9"], seeds=3,
+         control="The diary-oracle with the diary STRIPPED (empty record, "
+                 "same machinery) must collapse to the LLM-alone level on the "
+                 "retained set. If it survives, the questions were answerable "
+                 "without the lived record and the certification is void.",
+         kills="Any LG.00 run scored on an uncertified probe set. "
+               "Lived-necessity is a property of the QUESTION, not the model "
+               "(LANGUAGE_GROUNDING.md Finding 1, 2603.19233: libero_object "
+               "scores 60-100% REGARDLESS of the prompt — a cell where the "
+               "prior suffices cannot measure grounding at any scale).",
+         notes="PG.7's leak probe transported to Q&A: certify the instrument "
+               "before any arm is scored on it. SmolLM2 is cached on this box; "
+               "the LLM leg is offline, batched, and NEVER in any control "
+               "loop (T0.07's throughput lesson). "
+               "  COVERS: language (parent) (fixture)"),
+
+    Spec("LG.00", 4, "Jack knows what his LLM cannot — he is not a puppet",
+         hypothesis="On questions about HIS world, HIS body and HIS history, "
+                    "full Jack (learned core + diary + LLM) beats LLM-ALONE "
+                    "given the identical prompt context, by >=3 sigma. The "
+                    "knowledge is in the parts that LIVED, not in the frozen "
+                    "weights that never did.",
+         falsified_by="LLM-alone matches full Jack on world questions. Then "
+                      "Jack is a costume on a language model, the learned core "
+                      "and diary are decorative, and the project has not built "
+                      "a creature.",
+         null_baseline="LLM-alone, same prompt, no diary, no learned core.",
+         metric="grounded_knowledge_advantage", budget=Budget.CPU,
+         depends_on=["ME.9", "LG.01"], seeds=3,
+         control="GENERAL-KNOWLEDGE questions (history, arithmetic, "
+                 "vocabulary) — here LLM-alone must MATCH OR BEAT full Jack. "
+                 "If Jack wins everywhere, the test is measuring scaffolding "
+                 "or prompt advantage, not grounding. The two results together "
+                 "are the claim: he is smarter INSIDE his life and dumber "
+                 "outside it, which is exactly what a creature should be.",
+         kills="The frozen-LLM architecture as implemented. If the mouth is "
+               "doing the knowing, the mind was never built.",
+         notes="Double dissociation, the ME.10 pattern applied to selfhood: "
+               "ablate the diary -> his history answers collapse, general "
+               "knowledge survives; ablate the LLM -> he still ACTS correctly "
+               "in his world while losing only the ability to say so. "
+               "Knowledge in the parts that lived; language as the mouth. "
+               "GOAL.md cites this id verbatim as 'the proof he is a creature "
+               "and not a costume'. RT-2's measured 11-point general-knowledge "
+               "loss from task-only finetuning (FROZEN_VS_PLASTIC.md §10.8) is "
+               "what the control's 'survives untouched' clause guards. "
+               "  COVERS: language (parent) (claim)"),
+
+    Spec("LG.02", 5, "Trust is earned by track record — the liar loses him",
+         hypothesis="Two advisors speak into his world: one systematically "
+                    "truthful, one systematically false, every piece of advice "
+                    "verifiable by his own subsequent experience. His "
+                    "advice-following DIVERGES by advisor track record: "
+                    "follow-rate(truthful) - follow-rate(liar) > 0 at >= 3 "
+                    "sigma across seeds by end of life, with attribution "
+                    "intact (the diary records who said what, through ME.9's "
+                    "channels).",
+         falsified_by="Follow rates statistically indistinguishable — he "
+                      "cannot learn whom to trust from consequences — or "
+                      "divergence achieved with attribution broken (then it "
+                      "is not trust, it is something the rig leaked).",
+         null_baseline="ATTRIBUTION STRIPPED: same advice stream, no record "
+                       "of who said what. This agent must treat both advisors "
+                       "identically; if it diverges, speaker identity leaks "
+                       "outside the attributed diary and the test measures "
+                       "the leak.",
+         metric="follow_rate_divergence_by_track_record",
+         budget=Budget.CPU_LONG, depends_on=["ME.9"], seeds=3,
+         control="THE SWAP (owner-designed): the advisors exchange roles "
+                 "mid-life. Trust must MIGRATE to the newly-truthful voice "
+                 "within the second half, or the test was measuring voices, "
+                 "not veracity.",
+         kills="Any scripted-trust design. If trust must be initialised, "
+               "annotated or hard-coded to diverge, the emergence claim is "
+               "dead and GOAL.md's 'trust earned and checked' is decoration.",
+         notes="THE LIAR TEST, owner-designed 2026-08-09, waiting in "
+               "INTEGRATION_QUEUE.md since then: 'the emergence stone's first "
+               "falsifiable claim: trust earned, checked, and unscripted.' "
+               "Advice enters through the world like any parent utterance; "
+               "verifiability by his own experience is what makes track "
+               "record computable without an annotator. "
+               "  COVERS: social/other agents (claim), language (parent) (claim)"),
+
+    Spec("LG.10", 4, "Jack chooses what to say; the LLM only chooses how",
+         hypothesis="Utterance MEANING tracks Jack's internal state and diary, "
+                    "not the language model. Three independent measurements: "
+                    "(a) same state, different LLM sampling seeds -> same "
+                    "meaning, different wording; (b) different state, same LLM "
+                    "-> different meaning; (c) SWAP THE LLM for a different "
+                    "frozen model -> meaning preserved, style changes.",
+         falsified_by="Meaning varies with the sampler, or survives a state "
+                      "change, or changes when the LLM is swapped. Any of the "
+                      "three means the language model is choosing the content "
+                      "and Jack is being ventriloquised.",
+         null_baseline="LLM free-generation from the same prompt with no "
+                       "core-selected intent — its meaning must NOT track his "
+                       "state.",
+         metric="meaning_tracks_state_not_model", budget=Budget.CPU,
+         depends_on=["LG.00"], seeds=3,
+         control="SILENCE. Drive his core to a state with nothing to report "
+                 "and he must say NOTHING. A mouth that always speaks is a "
+                 "generator running free; choosing not to speak is the "
+                 "cheapest proof that something is choosing at all.",
+         kills="Any speech path where the LLM receives free rein over content. "
+               "If the model swap changes what he means, the mind was in the "
+               "mouth.",
+         notes="Practical form: core emits a structured intent (report/ask/"
+               "describe + referent + source) OR selects among LLM-proposed "
+               "phrasings; a verification gate rejects any utterance asserting "
+               "something not present in his state or diary — the extractive "
+               "rule extended from memory to speech. The LLM-swap arm doubles "
+               "as a live test of the swappable-LLM decree. "
+               "  COVERS: language (parent) (claim)"),
 ]

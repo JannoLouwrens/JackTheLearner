@@ -239,11 +239,12 @@ GOAL_MD = Path(__file__).resolve().parent.parent / "GOAL.md"
 # which is the safe failure direction for a citation checker.
 GOAL_CITATION = re.compile(r"\b([A-Z]{1,4}[0-9]?\.[0-9]{1,2})\b")
 
-# The five citations measured dangling on 2026-08-25 (29th audit). This set
-# may ONLY shrink: registering one of these makes `goal_citations()` demand
-# its removal here, and a NEW dangler is never added — it is a red exit.
+# The citations measured dangling on 2026-08-25 (29th audit; five seeded).
+# This set may ONLY shrink: registering one of these makes `goal_citations()`
+# demand its removal here, and a NEW dangler is never added — it is a red
+# exit. LG.00 registered 2026-08-25 (B1(a)) and removed in the same commit.
 GOAL_DANGLING_BASELINE = frozenset(
-    {"LG.00", "GEN.02", "GEN.03", "GEN.06", "GEN.09"})
+    {"GEN.02", "GEN.03", "GEN.06", "GEN.09"})
 
 
 def goal_citations(text: Optional[str] = None,
