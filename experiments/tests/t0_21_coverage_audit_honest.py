@@ -249,10 +249,19 @@ def _probe(rule_is_regex: bool) -> dict:
                    for pairs in dec.values())):
         failed.append("p5_malformed_declaration_is_reported")
 
-    # P6 — no stale credit. Delete the declaring spec and the coverage goes
-    # with it. The failure this kills: a family gets renamed and the audit
+    # P6 — no stale credit. Delete the declaring specs and the coverage goes
+    # with them. The failure this kills: a family gets renamed and the audit
     # keeps reporting the commitment as covered off a declaration nobody holds.
-    minus = {k: v for k, v in fix.items() if k not in ("SH.01", "ZZ.declared")}
+    # (Generalised 2026-08-25: this fixture hard-coded ("SH.01","ZZ.declared")
+    # as THE declarers of shelter/building; SH.02's registration made the
+    # commitment two-declarer and the stale pair failed an honest registry.
+    # The property is "remove EVERY credited spec and coverage must vanish" —
+    # so the removal set is computed from the rule under test, and registry
+    # growth can never stale it again. Semantics unchanged, set strictly
+    # larger; the third instance of the cached-list disease, this time inside
+    # the guard that exists to catch stale credit.)
+    minus = {k: v for k, v in fix.items()
+             if k not in set(cov(fix, "shelter/building"))}
     if cov(minus, "shelter/building"):
         failed.append("p6_deleted_spec_loses_coverage")
 
