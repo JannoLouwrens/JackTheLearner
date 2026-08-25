@@ -98,6 +98,25 @@ generous (Kaggle bills the kernel's own window). Science lives HERE; the JOB
 string only imports it (T0.16).
 
 COVERS: language (parent) (claim).
+
+FAIL RECORD (attempt 2, Kaggle P100, kernel jack-ladder-1787631708, 0.31 h
+W34, ran 2026-08-25 04:40 UTC, head 20b8660; harvested by the next unskipped
+iteration per the pace-skip contract). Every rig gate green: construction_ok,
+memorisers 0.0/0.0, seen-fit 32/32 on every seed, loss fell on both twins,
+deterministic eval, NB reference 14/16 (>= 13 bar — the split IS lexically
+resolvable), control twin under the bar with falling loss
+(ctrl_heldout_correct [2,1,2]). The CLAIM branch alone fired:
+heldout_correct [8,9,5] of 16 vs the pre-registered 12/16-per-seed bar —
+above chance (1/7 ~ 2.3/16) but under the bar on all three seeds, and on
+seed 2 the mechanism (5/16) routes WORSE than both registered bag-of-words
+nulls (TF-IDF 11/16, NB 14/16). Read with T2.07 (FAIL, shipped-table
+composition), this localises the defect in the MECHANISM: a grid designed
+for composition, provably resolvable by token overlap at 14/16, transfers at
+most 9/16 through the shipped anchor-argmax router. That is a real
+architecture measurement, not a harness fault or a seed lottery. Do NOT
+re-dispatch T2.15 unchanged; the routing-seat question is routed to the
+Review (REVIEW_QUEUE.md, t215-router-under-lexical-null) with its staleness
+bill computed there.
 """
 
 from __future__ import annotations

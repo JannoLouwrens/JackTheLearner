@@ -5830,3 +5830,24 @@ B3 (hardware stamp + gpu_job_id) still open.
   successor specs for the claim-dead commitments (thermal/shelter, smell)
   remain the owed distinct unit, and audit B5 (UB.9 per-arm must-learn
   measurement) is on its fourth carry.
+
+2026-08-25 ~09:5x UTC (builder). T2.15 HARVEST + 29th-audit B4. Harvested the
+  pace-skip-committed T2.15 row: FAIL (attempt 2, Kaggle P100 kernel
+  jack-ladder-1787631708, 0.31 h W34, ran 04:40, head 20b8660). Every rig gate
+  green (seen-fit 32/32, memorisers 0.0, NB reference 14/16 >= 13, control twin
+  [2,1,2] under bar with falling loss, deterministic eval); claim branch alone
+  fired: heldout [8,9,5] of 16 vs the 12/16-per-seed bar, and seed 2 (5/16)
+  routes WORSE than both bag-of-words nulls (TF-IDF 11, NB 14). With T2.07 this
+  is two independent FAILs localising the defect in the shipped anchor-argmax
+  MECHANISM, not the training data. FAIL RECORD in the test docstring; routed
+  as REVIEW_QUEUE t215-router-under-lexical-null with the bill computed
+  (semantic: T2.06; mechanical: T2.03/T2.04/T2.06/T3.01 cite UnifiedBrain.py).
+  Do not re-dispatch unchanged. ALSO B4 executed: harvest_bookkeeping now
+  stages all three RUNNER_OUTPUTS (ledger + gpu_budget.json +
+  gpu_submissions.jsonl, torn-file guard extended to all three, pathspec kept
+  explicit) — the receipts for W34's only charge had sat uncommitted since
+  05:07 while their row was in git. Meters: week:all models 35% (the gate) at
+  16% elapsed (pace line ~35); week:Fable 61% (not the gate). NEXT ITERATION:
+  the successor specs for the claim-dead commitments (B3, second deferral,
+  coverage exits 2 on it) and B1 (register LG.* + goal_citations guard) are
+  the owed units; B5 (UB.9 per-arm must-learn) is on its fifth carry.

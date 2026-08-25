@@ -124,3 +124,20 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     finding survives an attack that cost almost nothing. **A redesign informed
     by four expensive agreeing instruments plus one cheap disagreeing one beats
     a redesign informed by four.** Queue entry: INTEGRATION_QUEUE, wk4-N3.
+
+ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | OPEN
+    Question: the shipped routing mechanism (UnifiedBrain semantic-anchor
+    argmax over compute_language_grounding_loss) transfers held-out phrasings
+    at [8,9,5] of 16 vs a 12/16 bar on a grid DESIGNED for composition and
+    provably lexically resolvable (NB 14/16, TF-IDF 11/16) — on seed 2 it
+    routes WORSE than both registered bag-of-words nulls. Paired with T2.07
+    (FAIL: shipped-table composition [2,2,2] of 5), two independent FAILs now
+    localise the defect in the MECHANISM, not the training data: does the
+    anchor-argmax router keep the language-routing seat, or is the seat's
+    challenger a retrieval/bag-of-words baseline that currently outperforms
+    it? Full record: FAIL RECORD in t2_15_freeform_routing.py.
+    Staleness bill: SEMANTIC — T2.06 (PASS) is the only certificate about
+    this mechanism's behaviour. MECHANICAL — any edit to UnifiedBrain.py
+    stales 4 PASS rows whose IMPL_DEPS hash it: T2.03, T2.04, T2.06, T3.01.
+    A challenger registered as a NEW spec (bakeoff arm, T1.02 precedent)
+    bills NOTHING; that asymmetry is the same design input as w0-too-shallow.
