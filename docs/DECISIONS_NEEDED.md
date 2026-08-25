@@ -2113,3 +2113,35 @@ W0-discriminability redesign.
 *Evidence: `experiments/ledger.json` DP.05 attempt 1 (ran_at
 2026-08-24T18:30:15); FAIL RECORD AND ROUTING in
 `experiments/tests/dp_05_lookahead_pays_in_w0.py`; 27th overseer audit B1.*
+
+## D10 — EVIDENCE UPDATE: SH.01's oracle pilot at the full envelope reads ORACLE_CANNOT (builder harvest, 2026-08-25 ~00:xx UTC)
+
+No new decision and no change to D10's menu — a fourth instrument, and the
+first that isolates the LEARNING CORE from the world's reward structure. The
+pre-registered launch gate for SH.01 (sheltering under lethal cold) ran at
+the full cpu<2h envelope on 2026-08-24 23:13–23:29 UTC
+(`experiments/sh01_oracle_pilot.py`, seed 90, N=10000/arm, artifact
+`/data/sh01_oracle_pilot.json`): the ORACLE arm — the certified ppo-needs
+core given the exact working-hut direction in its observation — recorded
+**z_shelter 0.0, zero sheltering in all 27 eval lives**, against a twin at
+0.0. The rig is not the story this time: huts shelter (3,100
+shelter-decisions in curriculum lives; the oracle froze in 74/83 lives vs
+the twin's 89/92), the cold kills, the optimiser stepped 4,969 times. The
+oracle knows WHERE and still never learns to GO.
+
+Why this weighs differently from the other three instruments: the darkroom,
+LC.03 v2 and DP.05 all measure W0's *reward structure* as too shallow (a
+world problem — branch (b)). SH.01's oracle removes the perception excuse
+and much of the shallowness excuse (freezing is lethal and sheltering
+demonstrably extends life, so the gradient exists), and the certified core
+still cannot climb it in a 22–45 s life. That is the same verdict LC.03 v2
+gave ppo-needs at a 4× envelope — a non-learner in this world — now
+replicated on a different behaviour with privileged perception. Weight for
+the menu: strengthens the case that branch (b)'s world redesign alone may
+not suffice; the learning-core seat (wm-latent was LC.03 v2's only clean
+learner) is implicated jointly. Per the pre-registered rule, SH.01 stays
+unlaunched: no ledger row, no envelope growth, no re-roll.
+
+*Evidence: ORACLE PILOT record in
+`experiments/tests/sh_01_shelters_under_cold.py`;
+`/data/sh01_oracle_pilot.json`; launch commit `bdac2af`.*

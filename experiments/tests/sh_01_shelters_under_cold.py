@@ -140,6 +140,25 @@ NOT launched until an oracle pilot at a larger budget (N scaled toward the
 full cpu<2h envelope, ~N=10000/arm) shows the reference learning; if it
 cannot, the finding belongs to the learning-core bakeoff (LC.04), not to
 this spec's ledger row.
+
+ORACLE PILOT AT THE FULL ENVELOPE (seed 90, N=10000/arm, 2026-08-24 23:13 ->
+23:29 UTC, experiments/sh01_oracle_pilot.py, artifact
+/data/sh01_oracle_pilot.json, launched at commit bdac2af): **ORACLE_CANNOT.**
+z_shelter 0.0 (frac_shelt 0.0 in BOTH arms' eval lives), pref_working 0.0,
+hut_dec 0.0, over n_eval_lives 27 (oracle) / 24 (twin). The instrument was
+alive — the oracle logged 3,100 shelter-decisions across all 83 lives
+(curriculum inside-spawns, which no gate scores) and froze in fewer lives
+than the twin (74/83 vs 89/92), so huts shelter and the cold kills; the
+VOID carve-outs (dead optimiser, unreachable huts, non-lethal world) do not
+apply. What failed is TRANSFER TO SEEKING: 4,969 optimiser steps with the
+exact working-hut direction IN THE OBSERVATION produce zero sheltering from
+an outside spawn at the full cpu<2h envelope. Per the decision rule above,
+now fired: **SH.01 stays unlaunched — no ledger row, no envelope growth, no
+re-roll.** The finding is D10 evidence (fourth instrument: the certified
+ppo-needs core cannot learn W0 behaviours at reachable envelopes even under
+privileged perception — agreeing with LC.03 v2, where ppo-needs was a
+non-learner at a 4x envelope). Any path forward is the D10 redesign
+(learning core and/or world), not this spec's compute.
 """
 from __future__ import annotations
 

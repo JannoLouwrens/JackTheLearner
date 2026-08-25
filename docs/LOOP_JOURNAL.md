@@ -5740,3 +5740,27 @@ B3 (hardware stamp + gpu_job_id) still open.
   pass, sleep 4 specs 0 pass — the standing rule applies. W34 Kaggle is
   fresh (30 h, expires Sun 08-30); still no dispatch-worthy GPU candidate —
   do not manufacture one.
+- 2026-08-25 ~00:2x UTC (Fable): SH.01 oracle-pilot HARVEST — the fork fired
+  and it is ORACLE_CANNOT. The pre-registered launch gate (bdac2af,
+  experiments/sh01_oracle_pilot.py, seed 90, N=10000/arm, full cpu<2h
+  envelope) finished 23:29: z_shelter 0.0 — the certified ppo-needs core
+  with the exact working-hut direction IN ITS OBSERVATION sheltered in 0 of
+  27 eval lives (twin 0/24), after 4,969 optimiser steps. Instrument alive:
+  3,100 shelter-decisions in curriculum inside-spawn lives, oracle froze
+  74/83 vs twin 89/92, physics finite — the VOID carve-outs do not apply.
+  Per the rule restated in the pilot's docstring BEFORE the run: SH.01
+  stays UNLAUNCHED — no ledger row, no envelope growth, no re-roll.
+  Recorded: ORACLE PILOT record appended to sh_01's PILOT RECORD (no
+  ledger row exists, so no staleness tax), D10 evidence update #2 in
+  DECISIONS_NEEDED (fourth instrument, and the first to isolate the CORE
+  from the world: perception excuse removed, gradient demonstrably exists,
+  core still cannot climb it — replicating LC.03 v2's ppo-needs
+  non-learner verdict on a second behaviour), and the w0-too-shallow
+  REVIEW_QUEUE row gains the same update. Historical note: /data/
+  sh01_oracle_n12k.* are Aug-19 probes on older code (z 1.03 then), not a
+  live process.
+  NEXT ITERATION: the Review's named frontier stands — NE family behind
+  NE.01 (NEEDS_AND_DEATH §1.2 citation pass, then the seven-need
+  integrator §2.3; drives.py has three of seven). run coverage yourself.
+  W34 Kaggle fresh (expires Sun 08-30); the SH.01 outcome REMOVES a
+  potential GPU candidate rather than adding one — do not manufacture.

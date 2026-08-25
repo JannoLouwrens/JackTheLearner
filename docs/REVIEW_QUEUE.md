@@ -66,6 +66,14 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN
     owner sequences.
     Full record: D10 + its 08-24 evidence update; FAIL RECORD in
     dp_05_lookahead_pays_in_w0.py.
+    UPDATE 2026-08-25: a FOURTH instrument, weighing differently — SH.01's
+    pre-registered oracle pilot at the full envelope (ORACLE_CANNOT,
+    z_shelter 0.0 with the working-hut direction IN the observation) removes
+    the perception excuse and implicates the certified ppo-needs CORE
+    jointly with the world: sheltering demonstrably pays (curriculum lives
+    shelter, freezing kills) and the core still cannot learn to seek it.
+    See D10's 08-25 evidence update. Design input: world redesign (b) alone
+    may not suffice; the learning-core seat is part of the same question.
     Staleness bill: depends on the design — a new-world spec (W1, T1.02
     strengthen-only precedent) bills NOTHING; editing W0's playground.py
     bills the 21 rows above. That asymmetry is itself design input.
