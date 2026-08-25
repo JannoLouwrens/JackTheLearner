@@ -5900,3 +5900,14 @@ B3 (hardware stamp + gpu_job_id) still open.
   pre-register bars in the test file); B5 (UB.9 per-arm must-learn) is on
   its sixth carry. T0.21's dirty stamp was cleared by a clean-tree re-run
   this iteration (see the commit).
+
+2026-08-25 ~09:4x UTC (builder, same session, addendum). The T0.21 clean-tree
+  re-run first FAILed honestly: P6 hard-coded ("SH.01","ZZ.declared") as the
+  complete declarer set of shelter/building, so SH.02's registration - the
+  correct act - broke the guard that checks stale credit. Generalised: P6 now
+  computes the removal set from the rule under test ("remove EVERY credited
+  spec, coverage must vanish"), so registry growth can never stale it again;
+  semantics unchanged, no threshold moved (b624d78). Then PASS 11/11
+  (1b6c108). Third instance of the cached-list disease, this time inside the
+  guard built to catch it - recorded in the property's own comment rather
+  than LESSONS.md (dedup: the cached-number lesson already generalises it).
