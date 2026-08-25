@@ -345,7 +345,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T2.14** Imitation from real motion capture
       - _asserts:_ BC on the CMU corpus reaches held-out action error below mean-action AND below nearest-neighbour retrieval.
       - _dies if:_ A lookup table (NN retrieval) matches the model.
-- [!] **T2.15** Free-form language routes to the right task
+- [!] **T2.15** Free-form language routes to the right task  — backend=kaggle; construction_ok=1.0
       - _asserts:_ Novel paraphrases of known commands map to the correct command cluster above chance (the LLM->task handoff).
       - _dies if:_ Held-out phrasings route at chance.
 - [ ] **T2.16** Hindsight goal-reaching (the flow-matching weld)
