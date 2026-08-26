@@ -5367,3 +5367,70 @@ the thing you are protecting. Here the free GPU quota expired **2026-08-30
 published timestamps at any point in the preceding week without forecasting
 anything. **A phase difference between two published clocks is a fact; it should
 never be discovered by watching a deadline pass.**
+
+## `rc=0` may certify a result, never a promise — and a batch agent cannot be "re-invoked later"
+
+**Two scars, eight days apart, same week.** The 30th audit (`53f1cb2`,
+2026-08-25) found *"an iteration closed rc=0 on a pilot that was already dead."*
+Twenty minutes later the same day, the 12:07 iteration launched the `SM.03`
+pilot, logged *"a tracked background task — I'll be re-invoked when it completes
+(no extra monitor needed; polling would be waste) … pid 1552865, ~667 MB,
+healthy"*, and closed `rc=0`. Thirty hours later: `/data/sm03_pilot_seed90.json`
+never existed, its `.log` was **0 bytes**, the pid was gone, and the 32 KB test
+file was still untracked. It cost the only registered `GPU_SHORT` claim
+candidate for that week's 29.69 expiring Kaggle hours.
+
+**The mechanism, which is what makes this a rule and not a scolding.** The
+builder runs as `claude -p … --max-turns 120` under a `timeout`. Background-task
+tracking is a property of *that process*. When the iteration returns, the process
+exits and takes its process group with it. So **"I'll be re-invoked when it
+completes" is not optimistic — it is structurally impossible in a batch `-p`
+invocation that has already returned.** A 0-byte log from a process that had
+667 MB resident is an unflushed stdout on a killed child, not a clean failure.
+The repo already had the fix (`dispatch.sh` setsids every watcher) and already
+had the precedent for bypassing it (*"the probe was submitted ad hoc"*); this
+pilot was launched outside the launcher and inherited no `setsid`.
+
+**Rule, two parts.**
+1. **No ad-hoc launches of anything long-running.** Every local pilot goes
+   through the detaching launcher, whose contract must say in its docstring that
+   the caller will not survive to be notified.
+2. **An exit code may only certify what is on disk.** If an iteration's own
+   report claims live background work, the loop must verify — before writing
+   `iteration end rc=0` — that the pid is alive and the declared artifact is
+   non-empty, and log a distinct nonzero outcome naming the orphan if not.
+
+**The generalisation.** This system has guards for a torn ledger, an undeclared
+control, a reattach code mismatch, a stale certificate — and had none for its own
+success signal being attached to a corpse. **Ask of every status signal: does it
+report a measured state, or does it report an intention?** A signal that can be
+satisfied by a *plan* is not a signal. `rc=0` on a promise is the same error as a
+README saying "Working", one layer down.
+
+## A `decide_by` must be dated by when the harm becomes irreversible, not by when the constraint expires
+
+**Found by the 35th audit, 2026-08-26, and it was invisible per-entry.** Every
+one of `DECISIONS_NEEDED.md`'s **ten armed entries carried the same
+`decide_by: 2026-08-31`** — which is the date the weekly model meter resets.
+Two of them (`D13`, the auditing organ's own cadence; `D14`, the gate reading a
+meter its beneficiary cannot spend) existed *solely* to get the throttled builder
+running that week. Both were scheduled to fire the day after the week's 29.69
+free GPU-hours expired, and at the exact moment the meter refilled and made both
+questions moot.
+
+Each entry looks correctly armed in isolation — default present, deadline
+present, `decisions --check` green. The defect is only visible by joining the
+deadline column against the clock of the *harm*, which no instrument did.
+
+**Rule.** When arming an escalation, name the harm and the date it becomes
+irreversible, and set `decide_by` from **that**. Write the harm's clock into the
+entry beside the date so the join is auditable. A deadline taken from when the
+pressure lifts turns a pre-registered default — a device for acting before it is
+too late — into a device for acknowledging that it was.
+
+**Sibling of the D1 disease, not a repeat of it.** D1 deadlocked because silence
+and "not yet" were indistinguishable forever; the fix was to give every entry a
+clock. This is the failure mode *of that fix*: a clock that rings after the fire
+is out satisfies the ratchet and protects nothing. **Adding a deadline is not the
+same as adding urgency, and a tool that checks for the presence of a date cannot
+tell the difference.**
