@@ -5315,3 +5315,55 @@ on it before recommending that anyone else reduce theirs. The 33rd audit measure
 ~1 point of the weekly meter per overseer run — the same units as the 8-point
 deficit it was reporting as the builder's binding constraint. An auditor that
 consumes the resource it reports scarce owes that number in the report.
+
+---
+
+## A rate-limiting gate has a recovery rate. If it never compares that rate to the observed burn, it cannot tell a throttle from a lockout.
+
+**Found:** 34th overseer audit, 2026-08-26, after the builder sat dark for
+**twenty-four consecutive hourly slots** with no organ raising an alarm.
+
+**The shape.** `pace_gate` draws an allowance from `PACE_FLOOR=25` at the weekly
+reset to `PACE_CAP=90` at its end. That line rises at a fixed, computable rate:
+
+    elapsed rises at 100/168      = 0.5952 %/h
+    allow   rises at 0.65 × that  = 0.3869 points/h   ← the recovery rate
+
+**0.387 pts/h is the gate's entire budget for catching up.** The pool it meters
+is *shared* with consumers the project does not control. Above that burn rate the
+gap widens monotonically, no mechanism anywhere closes it, and the only exit is
+the weekly reset. Measured burn in the six hours to 12:07 was **1.17 pts/h** —
+3.0× the recovery rate — and the gap went 8 → 12.
+
+**Why nobody saw it for a day.** Each skip is individually correct and logs a
+reassuring sentence: *"budget held for later in the week."* Twenty-four correct
+skips in a row are indistinguishable, in the log, from twenty-four routine ones.
+**The failure had no event.** Two consecutive audits reasoned about it by
+extrapolating the burn to a wake-up date instead — one said the deficit "cannot
+close by itself", the next falsified that and said no action was needed. Both
+were arguing about a forecast when the gate's own arithmetic answered the
+question exactly: *is the burn above 0.387?* A yes/no, recomputable every hour,
+needing no prediction about anyone's behaviour.
+
+**Rule.** Any gate that throttles against a *shared* meter must publish its own
+recovery rate beside the reading, and must escalate — a distinct log line and a
+countable marker, not a repeat of the routine one — once the observed burn has
+exceeded that rate for N consecutive readings. *A skip that can never be
+recovered is not a skip; it is a loss, and it must be counted as one.*
+
+**The generalisation, which is where the real damage was.** A conserving
+mechanism must be checked against the *currency the consumer can actually
+spend*, not against the pool it happens to sit in. The same audit found the
+builder's own model line at **99%** while both gates read a different, 59% pool
+and skipped the slot to save budget. The gate was conserving money in a currency
+its beneficiary could no longer use. **Ask of every throttle: what exactly is it
+holding, for whom, and can they spend it?**
+
+**Corollary — the two clocks.** Before waiting for a reset to fix a shortage,
+check the *phase* between the clock you are waiting on and the clock that expires
+the thing you are protecting. Here the free GPU quota expired **2026-08-30
+00:00** and the model meter reset **2026-08-31 04:59** — a 29-hour gap that made
+"wait for the reset" arithmetically hopeless, and which was knowable from two
+published timestamps at any point in the preceding week without forecasting
+anything. **A phase difference between two published clocks is a fact; it should
+never be discovered by watching a deadline pass.**

@@ -2598,3 +2598,100 @@ DECIDE: D13
              immediately and there is no state to unwind.
   decide_by: 2026-08-31
   blocks:    (nothing — no spec depends on this; it costs meter, not specs)
+
+---
+
+## D14 — The builder's own model is exhausted while the gate meters a different pool. Which meter should govern, and what should happen when the builder's model runs out? (OPEN, resourcing)
+
+**Raised by the 34th overseer audit, 2026-08-26 12:37 UTC.**
+
+**The measurement, read directly from `scripts/claude_usage.py` at 12:37:**
+
+```
+week:Fable             [################### ]  99%  resets Aug 31, 4:59am (UTC)
+week:all models        [###########         ]  59%  resets Aug 31, 4:59am (UTC)
+```
+
+The builder runs on Fable (`crontab`: `7 * * * * JACK_LOOP_MODEL=fable …`).
+**Both gates read `all models`.** `usage_gate`'s 90% stop and `pace_gate`'s line
+both compare against `_usage_pct()`, the all-models figure; `pace_gate`'s
+`week:Fable` read exists only to print, in a string that says `(not the gate)`
+(`lib_usage.sh:112`). So the loop's entire control surface is blind to the one
+meter that decides whether it can run.
+
+Three consequences, none of them forecast:
+
+1. The pace gate is conserving 41 points of `all models` that the builder cannot
+   spend on Fable, in service of a comment that says the line exists so *"the
+   loop is still awake when the GPU quota expires."*
+2. `ladder_loop.sh:45` sets `FALLBACK_MODELS="opus sonnet"`, and the chain fires
+   only *after* a primary attempt fails. So the next slot the gate admits will
+   burn ~3 s on Fable, log `LIMITED on fable`, and run a full 50-minute
+   iteration on **Opus** — the most expensive model on the shared meter the gate
+   was built to protect — with nothing recording that as an event.
+3. Fable is the only model with a distinct weekly line (Opus and Sonnet return
+   empty from `--model` and roll into `all models`). The one meter that can be
+   watched belongs to the only organ that produces science, and nothing watches
+   it.
+
+**Why this is a decision and not a chore.** The narrow half is a chore and is
+already routed to the builder (`OVERSIGHT.md` B3: a pre-flight abort at ≥95%,
+which only ever refuses more). The half that is a genuine fork is what should
+happen to *this week*: the pace line's recovery rate is **0.387 pts/h**, measured
+burn is **1.17 pts/h**, and the Kaggle W34 quota (29.69 h unspent) expires
+**2026-08-30 00:00 UTC**, which is **28 h 59 m before** the model meter resets on
+**2026-08-31 04:59 UTC**. Waiting cannot save those hours. The option that could
+turns on what is *permitted*, not on what works — which is the one class
+`SYSTEM.md` still reserves for the owner.
+
+**THE OPTIONS.**
+
+- **(a) DO NOTHING.** The builder wakes whenever the shared pool drifts back
+  under the line, and runs on Opus via the existing silent fallback. Cost: this
+  week's 29.69 free GPU-hours expire (fourth consecutive week, ~65 h cumulative),
+  and the switch to the most expensive model stays invisible.
+- **(b) LOUD REFUSAL (the narrowing).** Add the pre-flight: if the loop model's
+  own weekly line is ≥95%, log `ABORT: builder model <M> exhausted` and exit 0
+  without consuming the slot. Strictly tighter than the 90% stop; cannot weaken
+  it. Cost: the same GPU-hours still expire — this option buys honesty, not
+  throughput.
+- **(c) GATE ON `max(all models, loop model)`.** Also strictly tighter, since
+  the max is never below the current gate. Same cost as (b), plus it makes the
+  blindness structurally impossible to reintroduce.
+- **(d) RUN UNPACED FOR A BOUNDED WINDOW — owner only.** `pace_gate` already
+  honours `JACK_NO_PACE` (`lib_usage.sh:88`), and pacing is checked strictly
+  *after* `usage_gate`, so the owner's 90% stop stays fully in force. Setting it
+  for a bounded window before 2026-08-30 would let the builder spend the free
+  GPU-hours. **This is NOT available as a default** — it disables a throttle,
+  and a default may only pick among already-permitted actions and may never
+  widen what is allowed. It is on this desk precisely because only the owner may
+  take it.
+
+**THE COUNTERARGUMENT, recorded as owner directives require.** Pacing exists
+because the loop went dark on a Friday two weeks running and 30.9 free GPU-hours
+died; the line was the repair. Option (d) suspends the repair to chase the same
+resource the repair was protecting, which is a real tension and not a
+technicality. The honest reading is that pacing solved the wrong half: it
+smooths *this project's* spend, and the record now shows this project is not
+what is spending it — all 12 points of Fable burned in the six hours to 12:07
+came from outside jackthelearner, with the builder at zero iterations.
+
+DECIDE: D14
+  class:     goal
+  default:   Option (b) — the LOUD REFUSAL, implemented as a pre-flight check in
+             scripts/ladder_loop.sh before run_claude, at a 95% floor on the loop
+             model's own weekly line. This is a NARROWING and only a narrowing:
+             it refuses strictly more than the 90% stop already refuses, moves no
+             threshold, deletes no control, edits nothing the owner owns, and
+             widens nothing that is permitted. Option (d) is deliberately NOT the
+             default even though it is the only option that saves this week's
+             free GPU-hours, because it suspends a throttle and no default may
+             widen what is allowed. Option (a) is not the default because a
+             silent switch to the most expensive model, on the shared meter the
+             gate exists to protect, is the kind of thing this project registers
+             a guard against rather than tolerates. To reverse, revert the
+             ladder_loop.sh commit; there is no state to unwind.
+  decide_by: 2026-08-31
+  blocks:    (nothing directly — it costs meter and free GPU-hours, not specs;
+             but it is upstream of every runnable claim spec, because a builder
+             that cannot run demonstrates nothing)
