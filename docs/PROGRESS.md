@@ -4,427 +4,307 @@
 > this file. The running history is `docs/PROGRESS_LOG.md`.
 > Mode: DAILY (Part 2, the test re-examination, runs Sundays only).
 
-**2026-08-25 06:40 UTC — DAILY. Window: 2026-08-24 06:40 → 2026-08-25 06:40.**
-**First Review in four days** — 08-22 and 08-23 were refused at the 94% weekly
-gate, and the 08-24 run died on a single API 529 at 06:45 before it read a file.
-Where the 24-hour window is misleading on its own, the four-day figure is given
-beside it and labelled.
+**2026-08-26 06:40 UTC — DAILY. Window: 2026-08-25 06:40 → 2026-08-26 06:40.**
 
-*The one sentence: **the owner intervened twice on Monday and the builder turned
-both rulings into machinery inside four hours — architecture is now raced rather
-than decreed, and an escalation can no longer deadlock — and then the ladder
-spent the next twenty-four hours proving, on four independent instruments, that
-the thing actually blocking Jack is the world he lives in.***
+*The one sentence: **the builder has been dark for eighteen consecutive hourly
+slots, throttled by a spend meter that its own auditors are driving — measured,
+not inferred: in the eighteen hours it was skipped, the un-throttled organs were
+98.9% of the burn, and the throttle is on the only organ that produces
+science.***
 
 ---
 
 ## 1. The numbers
 
-**Ladder: 84/181 demonstrated (46.4%).** At window start: 84/179 (46.9%). At the
-last Review, 08-21: 83/169 (49.1%).
+**Ladder: 84/187 demonstrated (44.9%).** At window start: 84/181 (46.4%). At
+the 08-21 Review: 83/169 (49.1%).
 
-| | this window (24 h) | since the last Review (4 d) |
+| | this window | previous |
 |---|---|---|
-| ledger events recorded | **12** | 18 |
-| PASS / FAIL / VOID / ERROR | **6 / 5 / 1 / 0** | 9 / 7 / 2 / 0 |
-| **first-ever PASSes** | **0** | 1 (NE.00, 06:27 — 13 min before this window) |
-| net new demonstrated | **+0** | +1 (83 → 84) |
-| registry growth | **+2** (179 → 181: DP.05, BO.01) | **+12** (169 → 181) |
-| builder iterations | **17 fired / 24 slots** (14 rc=0, 3 rc=1, 7 pace-skipped) | — |
-| commits | **37** | 45 |
+| demonstrated | **84** | 84 |
+| registered | **187** | 181 |
+| rate | **44.9%** | 46.4% |
+| net new PASS | **+0** | +0 |
+| rework (attempt > 1) | **62.5%** (60/96) | 60.7% |
+| ledger totals | 84 PASS / 9 FAIL / 3 VOID | — |
 
-**Every one of this window's six PASSes was a re-certification** — T0.21 ×4,
-T0.17, T0.27, all of them buying back a stamp after a lane edit or a clean-tree
-re-run. **Nothing new was demonstrated in twenty-four hours.** What the ladder
-actually did was record **five FAILs and a VOID**: NE.01 ×3, DP.05, T2.15,
-BA.02. Every one landed at a pre-registered gate with its rig gates green. That
-is not a bad day; it is the tier where things get refused, and the refusals were
-clean. But it must be said plainly, because six green ticks in a row look like
-progress and none of them was.
+**Runs in the window: four. All four were the same spec.** `T0.21` at 07:13
+(PASS), 09:14 (FAIL), 09:16 (PASS), 10:14 (PASS) — the guard-of-the-guard that
+audits `coverage.py`, re-stamping its own hash after each edit to the file it
+audits. **Not one run in twenty-four hours tested a capability of Jack's.**
 
-**Goodhart check: the rate FELL, 49.1% → 46.4%, and this is the good direction.**
-The registry grew by twelve while demonstrated grew by one. Three windows ago
-this page complained that the registry had been **flat at 169 for eight days** —
-"the research queue not feeding the ladder". It is feeding now: NE.00–NE.09 came
-off the top queue entry (first growth in eleven days), and DP.05 and BO.01 came
-from the owner's Monday ruling. A falling rate on registry growth of that kind is
-the ladder correctly outrunning the runner. **Both failure modes are real and
-this is the one to want.**
+**Registry +6, demonstrated +0.** `SH.02` and `SM.03` (`f0cb81d`) and the `LG`
+family — `LG.00/01/02/10` (`ed2d969`). Both commits were correct and both were
+the top item on an auditor's page. Both are registrations.
 
-**Rework: 51 of 84 passing specs took more than one attempt (60.7%),** down from
-61.4%. Unchanged in substance.
+**Goodhart check — and this window is the clean example.** Three ratchets went
+green in it: `coverage` exit 2 → 0, `0 CLAIM-DEAD`; GOAL.md dangling citations
+5 → 4; two champion seats `ARENA-MISSING` → `UNCONTESTED`. Every one of those
+was discharged by **declaring a falsifiable claim**, not by Jack passing one.
+*shelter/building*, *thermal (kills)* and *smell* all still read **`0 pass`**.
+The rate fall (46.4% → 44.9%) is the honest direction of that: the denominator
+is the truth. **14 of 23 commitments have a live claim spec and nothing
+passing.**
 
-**Compute.** Meters at 06:40: **`week:all models` 35% at 15% of the week**
-(the gate), `week:Fable` 61% (not the gate). Kaggle **W34: 0.31 h charged of 30**
-— one job, T2.15, the first GPU dispatch in four days. 29.7 h expire Sunday
-2026-08-30.
+**Last first-ever PASS: `NE.00`, 2026-08-24** (a `rule`-kind spec — not credited
+as a claim by `coverage`). **Last *claim* PASS: `T3.01`, 2026-08-20 15:29 —
+5.7 days ago.** Eight of the 84 PASS carry a claim marker. *(Correcting my own
+08-21 line, which dated T3.01 at 08-21 01:28: that is the attempt-5 re-run's
+timestamp, not the first PASS. The overseer's 08-20 was right.)*
 
-**The three blackouts, stated once because they are the loop's dominant cost.**
-W33 died at 94% from 08-22 00:07 to 08-24 05:07 — ~53 hours dark, taking the
-overseer and two Reviews with the builder, and **22.1 of 30 Kaggle hours expired
-unspent on Sunday 08-23, the second consecutive allocation to die.** The builder
-shipped the fix on Monday morning (`e03693d`): a PACE LINE rising from a 25%
-floor at the reset to the unchanged 90% ceiling, so the loop is still awake on
-the Sunday the quota expires. It is doing exactly what it was built to do — 7 of
-24 slots skipped this window at 31–35% spent against a 15%-elapsed week — and
-**this is the first week it will be tested against the deadline it was built
-for.** Verdict due Sunday.
+**The frontier, recomputed live (not quoted).** `T2.01` (FAIL, 2.67σ against a
+5σ bar) has a transitive block mass of **36** — up from 35 on 08-25 and still
+the largest single blocker in the ladder. Behind it: `T4.04` 9, `T3.02` 9,
+`T4.01` 8, `T2.16` 8, `NE.01` 8, `LC.03` 8. **69 of 187 specs carry at least one
+non-PASS transitive dependency; 34 are runnable now.** T2.01 is settled behind
+D1/D9, and none of the top seven waits on compute.
 
-**The frontier, recomputed live (`run blocked`, not quoted).** 66 of 181 specs
-are unreachable.
+**GPU: W34 has spent 0.31 of 30 hours.** 29.69 free Kaggle hours expire at the
+weekly reset on **2026-08-30**. W32 lost ~13.4 h unspent; W33 lost 22.1 h. This
+would be the **fourth consecutive week**, and ~65 hours cumulative.
 
-| rank | spec | status | frees | what it is actually waiting for |
+**Is the builder working on the frontier?** It cannot be. It has not run since
+2026-08-25 12:23.
+
+---
+
+## 2. THE FINDING — the throttle is on the wrong side of a feedback loop
+
+**What happened.** The builder ran six iterations on 08-25 (00:07 → 12:07), all
+`rc=0`, and has run **zero** since. From 13:07 through 06:07 the log carries
+**eighteen consecutive `PACING:` lines**. No commit has landed from the builder
+since 10:16 on 08-25. Three consecutive overseer audits have returned
+**DRIFTING** and named this; the 31st audit's item B1 was scheduled *on the
+organ that was being skipped*, which is why it is still un-executed.
+
+**The gate.** `pace_gate` draws a line from 25% at the weekly reset to 90% at
+week's end and skips the builder above it. Right now: `week:all models` **52%**
+at **29%** of the week, line **44%**. The gate is functioning exactly as
+written.
+
+**The premise is what fails.** `ladder_prompt.md` justified exempting the
+auditors with *"they are ~18% of organ runs"* — a **run count standing in for a
+spend**. Measured from the session transcripts, 2026-08-19 → 08-26:
+
+| organ | sessions | requests | output tokens | cache-write | per-session out |
+|---|---|---|---|---|---|
+| builder (Fable) | 84 | 6,960 | 8,030,013 | 24,635,862 | **95,595** |
+| overseer + review (Opus) | 23 | 1,857 | 2,181,741 | 7,552,501 | **94,858** |
+
+The per-run cost is a **dead heat**. The auditors are ~21% of sessions and ~21%
+of output tokens — but they run **Opus** where the builder runs **Fable**, so
+their share of the *meter* is larger than their share of the tokens. And in the
+blackout window itself:
+
+| session | window | model | requests | output tokens |
 |---|---|---|---|---|
-| 1 | **T2.01** Locomotion beats random | FAIL (2.67σ vs 5) | **35** (blocks 36) | D1/D9 — **now ARMED, `decide_by 2026-08-31`** |
-| 2 | **LC.03** learning-core screening | VOID (concluded) | 8 | D10 — **ARMED, `decide_by 2026-08-31`** |
-| 3 | **NE.01** needs are a real control problem | FAIL ×3 | 8 | **world design** — the occlusion law is knife-edged |
-| 4 | UB.10 fusion bakeoff | NOT_RUN | 4 | arm redesign — **dispositioned today, §4** |
-| 5 | T2.02 | VOID | 3 | the ladder's only stale claim |
-| — | DP.05 → **BO.01** | FAIL | 1 | **world design** — traps, delays, irreversibility |
+| overseer 00:37 | 00:37–00:48 | opus | 99 | 146,526 |
+| overseer 18:37 | 18:37–18:48 | opus | 65 | 118,553 |
+| overseer 12:37 | 12:37–12:47 | opus | 91 | 98,428 |
+| builder (dying tail) | 12:23 | fable | 6 | 4,047 |
 
-**Read the right-hand column, not the ranks.** Roughly **52 of the 66
-unreachable specs sit behind two owner decisions that now have expiry dates, and
-a world that four instruments say is too shallow.** Not one of them is waiting
-on compute, and the GPU quota is nearly untouched with five days to run.
+**98.9% of the on-box spend during the builder's blackout was the organ auditing
+the blackout.** That is not greed — it is a loop. Skipping the builder raises
+the auditors' share of the burn, which pushes the meter further above the line,
+which skips the builder again. Measured: over the twelve hours 13:07 → 01:07 the
+meter rose **+14 points** while the allowance rose **+4**. **The builder lost ten
+points of headroom in a day in which it did nothing**, and *not running is its
+only lever.*
 
----
+**The forecast, with its assumptions named.** The line rises 0.387 pts/h. Each
+overseer audit costs ~4.5 all-models points and there are four a day (~0.75
+pts/h). The deficit is 8 points and widening at ~0.36 pts/h. **The builder does
+not run again this week under the current configuration.** The meter reaches the
+90% hard stop — which silences *all four* organs — after roughly eight more
+audits, around **2026-08-28**. The 29.69 Kaggle hours expire on 08-30, inside
+that blackout. The eight armed owner decisions fire on 08-31, at the reset.
 
-## 2. What the window produced — and the largest thing in it was not ours
+**One correction to the 32nd audit, on the evidence.** It attributed the burn to
+"two interactive sessions in `/home/opc` (30.3 MB and 5.9 MB), live through the
+blackout, carrying **both** Opus and Fable turns". I read both transcripts: their
+last messages carrying a `usage` block are **2026-08-24T11:10** and
+**2026-08-04T11:04**. Neither has had a model turn during the blackout. Their
+recent mtimes are not model turns. The overseer was right that it was one of the
+suspects and right to say so; it was wrong about who the other one was, and the
+correct answer is that there was no other one.
 
-**THE OWNER RULED TWICE ON MONDAY, AND BOTH RULINGS WERE STRUCTURAL.**
-
-> *"in the future he mustnt get blocked by anything like this but instead test
-> and try and research both and decide at end which works better"*
-
-> *"this project won't work if you can't let them research and test stuff like
-> that!!! architectural stuff. cause then we would go one brain and NEVER EVEN
-> SEE what would be fast slow brain or whatever? this project depends on
-> research and testing at EVEERY SINGLE STAGE"*
-
-The builder turned both into machinery inside four hours, and the audit it ran
-first is the most valuable thing anyone has produced here in a week:
-
-- **Of 179 specs, not one raced brain organisations.** One shared brain was a
-  PREMISE of the ladder, never an outcome of it. SYSTEM.md made it unfalsifiable
-  on purpose — a non-unified arm was *"not scored and beaten, EXCLUDED"* — while
-  UB.10's own A5 arm in the same repo said *"if A5 wins, 'one brain' is the wrong
-  shape and we say so."* Two documents, opposite answers.
-- **Six fictional falsifiers.** CHAMPIONS.md named PL.00, PL.02, LG.00, LT.03,
-  LT.04 and T2.21 as the arenas that would unseat four consequential design
-  choices. **None of the six existed in the registry.** `champions.py` now
-  enforces that every seat's challenger resolves in `BY_ID`.
-- **DP.00 passed in a 12×12 gridworld, not in W0** — and its reading had drifted
-  to "Jack's world rewards deliberation". The precondition for the entire
-  fast/slow axis had never been tested in the world Jack is embodied in.
-
-Shipped from it: SYSTEM.md's invariant split into **ENDS / ARCHITECTURE /
-CONDUCT** (an architectural decree is a CHAMPION, not a constitution);
-EXCLUDED became **SCORED-AND-INELIGIBLE**, so a losing arm's number is kept and
-the owner is owed the finding loudly rather than protected from it;
-`experiments/decisions.py`, which parses `DECIDE:` blocks, joins `blocks:` to
-the **live** dependency graph so cost is computed rather than typed, and ships as
-a ratchet; and **D1, D7, D8, D9 and D10 ARMED with `decide_by 2026-08-31` and
-written defaults.** An escalation can no longer deadlock. D1 had been open
-twenty days with "evidence complete" in its own title.
-
-**This desk should say plainly that it did not find any of this.** Four
-Reviews reported D1's cost correctly every day and none of them found the rule
-that made it unanswerable — SYSTEM.md line 164 silently repealing rule 3 for
-exactly the class of question rule 3 exists for. The owner found it in two
-sentences.
-
-**And then the world answered.** Within twenty-eight hours of BO.01 being
-registered, its gate spec DP.05 came back **FAIL**: lookahead buys 13.3 ± 18.8 s
-in W0, σ 0.70 against a 3.0 gate, `gap_clear` 1/3 — and **H10 pays LESS than
-H4**. Every VOID gate green (reference 4 eats/173.1 s vs a 132 s ceiling,
-`ctrl_gain` −0.014, `broken_gap` 0.112), so the world measured and the rig did
-not fail. Planners eat; reactives never do; the best reactive policy in W0 is
-*starve at the resting ceiling*. Pre-registered routing binds: fix the world
-before any dual-process claim, **BO.01 does not run**.
-
-Then, six hours later, **SH.01's oracle pilot read ORACLE_CANNOT at the full
-N=10000 envelope** — `z_shelter` 0.0, the certified core with the working hut's
-direction *in its observation* sheltered in **0 of 27 lives**, while sheltering
-demonstrably pays. That removes the perception excuse and implicates the core
-jointly with the world. SH.01 was parked per its own pre-registered rule.
-
-Method held under pressure in three places worth naming: DP.05's fidelity pilot
-caught two real physics faults **before** the registered run (Water.apply leaves
-a phantom xfrc row on any body that exits the pool; W0 carried one-substep-stale
-`xipos`/`cvel` across decision boundaries) and the water fault was **routed, not
-patched in passing**; NE.01 was re-run from a clean tree to convert a dirty
-stamp into a real one, landing metrics identical on every digit; and BA.02's
-stale re-run landed the *expected* D8-reason VOID rather than being quietly
-left alone.
+**And `week:Fable` is not the builder's meter.** This has been stated as fact on
+the builder's page three times. In the 18 hours when the only on-box spend was
+three Opus audits and a 6-request Fable tail, `week:Fable` went **66% → 86%**.
+Read straight off the log: one builder Fable iteration moves it ~1 point; one
+overseer Opus audit moves it ~7. It stands at **88%** — under two points of room,
+and less than one audit's worth. I am not going to guess at the mechanism; the
+measurement stands on its own and the operational rule follows from it.
 
 ---
 
-## 3. THE FINDING — a dead audit published a green verdict
+## 3. The second finding — a registered spec whose only copy is untracked
 
-`scripts/overseer.sh:67` extracts the audit's verdict by grepping
-`docs/OVERSIGHT.md` for the first of `ON TRACK|DRIFTING|INTEGRITY RISK`. That
-file is the *previous* audit's output. So when an audit dies before writing
-anything, the wrapper reports the **stale** verdict as if it were this audit's:
+`SM.03` — *"The nose reports what the eye cannot"*, the successor spec that
+took *smell* off the CLAIM-DEAD list — is registered in
+`registry_expansion.py:2368` and **its ~710-line implementation is untracked in
+the working tree**, 18 hours on. It was orphaned when the 12:07 iteration
+reported a pilot as "pid 1552865, ~667 MB, healthy" that had already died with
+its session: pid gone, `/data/sm03_pilot_seed90.json.log` **0 bytes**, no result
+JSON. `scripts/launch_detached.sh` exists for precisely this and was not called.
 
-```
-2026-08-24T12:37:03  audit start — model opus, 71c879f
-You've hit your session limit · resets 3pm (UTC)
-2026-08-24T12:37:05  audit end rc=1 — verdict: ON TRACK
-```
-
-Two seconds, `rc=1`, nothing read, nothing written — **and a green verdict in
-the log.** The same session-limit wall took three builder iterations that hour
-(12:07, 13:07, 14:07), and there the loop handled it correctly: it tried Fable →
-opus → sonnet, marked the lost iteration, and the 13:07 and 14:07 runs each
-announced *"inheriting N iteration(s) lost to limits"*. The builder's failure is
-loud and recovered; the overseer's is silent and flattering.
-
-This is one turn past 08-20's *"an organ can stall indefinitely with a correct
-`rc=0`"* and 08-21's *"an organ correctly executed a rule applied to the wrong
-number"*. The shape here is narrower and worse: **the failure is not that the
-audit died — deaths are fine and this one was recovered six hours later — it is
-that the death was reported in the vocabulary of success.** A human or organ
-scanning `overseer.log` for the last verdict reads ON TRACK. The fix is two
-lines and belongs to the builder (§ FOR THE BUILDER item 1): when `rc≠0`, print
-`verdict: UNKNOWN (audit did not complete)` and never consult a file the dead
-run did not write.
-
-**Also noted and NOT a finding, because it was checked:** `gpu_budget.json` and
-`gpu_submissions.jsonl` are uncommitted at HEAD after the pace-skip bookkeeping
-commit staged only `ledger.json`. This does **not** dirty-stamp anything —
-`protocol.py`'s `RUNNER_OUTPUTS` has excluded both since 2026-08-12, and that
-exclusion exists precisely because it once did. The accounting is intact on
-disk; the next unskipped iteration commits it.
+Two audits declined to sweep it into an auditor's commit, correctly — `c0afded`
+banned exactly that — and so do I. But the consequence is now a state nothing in
+the system can see: **`run coverage` reports `SM.03 RUNNABLE` for a spec that
+does not exist in git.** Every instrument reads the registry; none joins the
+registry to the index. That is the same shape as the CLAIM-DEAD hole and the
+prose-only dependencies — a fact true in the world and absent from the standard
+the audits measure against. A guard for it is item 2 below.
 
 ---
 
-## 4. Steering maintenance (Part 2.5) — done, five changes
+## 4. Steering maintenance (Part 2.5) — done
 
-**1. `ladder_prompt.md` PRIORITY, reconciled — and one correction is against the
-builder.** The frontier block was signed **"(Review, 2026-08-24)"** and no
-Review ran on 08-24; it was written by the builder in `9449a1b`. The *content*
-was correct — I re-derived it from `run blocked` and have adopted it under my own
-name — but **an organ that can be quoted under another organ's name is an organ
-whose independence is decorative**, and the separation of builder from Review is
-the only reason this desk's judgement is worth anything. Attribution corrected in
-place. Also: the cached **"frees 26"** for T2.01 had been wrong for eleven days
-(live: **35**) in a file whose own next paragraph forbids caching counts — now
-replaced with a live-read instruction. And the block was re-pointed: **the three
-CLAIM-DEAD commitments are now named as the highest-value CPU work on the
-board**, DP.05's routing is stated so BO.01 is not manufactured around it, and
-NE.01's FAIL is labelled a world-design result rather than a tuning miss.
+**1. `scripts/ladder_prompt.md` — two fixes, both mine to make.**
 
-**2. `FIELD_WATCH.md` wk4 CONSUMED** (sweep 08-24, three nominations; consumed
-one day late for the 529). All three ACCEPTED as design work, none as a dispatch
-— they enter LC.04/LC.05, which D10 blocks until 08-31. **N1** (Koopman
-Dreamer's spectral radius, narrowed to a two-hyperparameter reparameterisation of
-`A4`'s existing transition matrix) — accepted with the scout's own strongest
-objection attached: no seed count, no CIs on the headline table. **N2**
-(PSG-JEPA) — accepted as **two arms that are each other's control**, with the
-scout's falsifiable prediction pre-registered: in W0 the observation already
-contains proprioception, so `ℒ_static` is a decoder on a slice of the input and
-should not help, while `ℒ_dynamic` is a temporal quantity present in no single
-step and might. **N3** (infant motor noise) — **REJECTED as an arm** (PPO's
-exploration *is* its policy distribution; autocorrelated noise breaks the
-likelihood ratio, and this desk will not make that design call by argument),
-**ACCEPTED and PROMOTED in its W0-diagnostic form** — see item 4. The scout's
-`[s]`-marker proposal accepted as a LESSONS entry for the builder to write; its
-self-retraction of two invented arXiv:2607.25337 numbers is recorded so they are
-not re-quoted.
+- The meter section's exemption clause (*"~18% of organ runs… so they are not
+  throttled"*) is replaced with the measured table above and named as a feedback
+  loop. Added: a run of `PACING:` lines is not the same animal as one, and the
+  builder must count and report a streak in its first paragraph — **a skip
+  streak is the one fault this gate cannot report about itself, because the
+  organ that would report it is the organ being skipped.**
+- Added the `week:Fable` correction with the measured per-organ prices. The rule
+  it protects (all-models is the gate) is unchanged; only its false premise is
+  gone.
+- The priority block's *"THE THREE CLAIM-DEAD COMMITMENTS ARE THE HIGHEST-VALUE
+  CPU WORK"* was discharged on 08-25 and would have sent the next iteration to
+  write a third successor spec. Re-pointed at what is actually live —
+  implementation, and the orphaned `SM.03` file first — with the honest note that
+  CLAIM-DEAD → RUNNABLE moves a commitment from *unmeasurable* to *unmeasured*.
 
-**3. `REVIEW_QUEUE.md` — first use, four rows, and the file immediately earned
-itself.** Three of the four edit `playground.py`, and **each bills the same 21
-PASS certificates mechanically**. Servicing them in arrival order costs 63
-re-runs; servicing them in one world-edit window costs 21. A **BUNDLING RULE** is
-now written into the file, `ne01-occlusion-knife-edge` and
-`water-apply-phantom-force` are HELD for that window, and if `w0-too-shallow`
-resolves toward a new world (W1) rather than an edit to W0 the bill goes to
-**zero** — which the row itself had already flagged as design input. *This is the
-argument for the file: a backlog with a computed bill can be sequenced; a backlog
-in commit messages can only be serviced in arrival order, the most expensive
-order.* `recipe-sensitivity` ACTED (design below).
+**2. `docs/FIELD_WATCH.md` — nothing owed.** Unchanged since sweep wk4
+(`474061d`, 08-24), consumed in full by the 08-25 Review. Next sweep Mon 08-31.
 
-**4. `w0-too-shallow` — the design is MINE and it is dated 2026-08-30.** DAILY
-mode cannot fund a world redesign and pretending otherwise is how a routed row
-rots. But one thing is ordered **today, before the design**: all four
-instruments behind this row are expensive, were run by this project, on this
-world — the exact condition under which a shared confound is invisible. wk4-N3
-supplies a **CPU-minutes attack**: a β-scheduled colored-noise random policy
-against the `random` and `random-repeat` nulls LC.03 already defines. It asks
-whether "the cores cannot learn in W0" is partly "**the exploration process
-never reaches the food**". A redesign informed by four expensive agreeing
-instruments and one cheap disagreeing one beats a redesign informed by four.
+**3. Seat staleness — no new finding.** `champions --check` exits 0, ratchet
+steady at 6/8 phantom arenas. Both DEFAULT seats have tracked resolutions:
+*Learning core* is PENDING D10 (armed, 08-31), *Vision encoder* is contested and
+carries T3.01 as its first real defence. *Sensory fusion*'s `UB.10` arm redesign
+is routed to this desk and lands with the W1 design on 08-30.
 
-**5. `CHAMPIONS.md` — two cells corrected, one of them a rule-3 violation.**
-The **Deliberation** seat still named its arena as *DP.00–DP.04* a day after
-`DP.05` and `BO.01` were registered into it and one of them had already run and
-FAILed. Rule 3 says *every seat names its ARENA*; for the newest arena in the
-project it did not, so `champions.py` could not check it and the field watch
-could not target it. Corrected: the seat is **contested for the first time**,
-BO.01 is named as the real challenger, and DP.05's FAIL is recorded as the
-answer to "does this world reward lookahead at all" — **no**. The **Sensory
-fusion** cell still called UB.9 `PASS but STALE` and ranked it "#3, frees 5";
-`run status` now flags exactly one stale claim and it is T2.02, and `run blocked`
-does not list UB.9 at all. Corrected — and what replaced the staleness is
-smaller but real: per the 26th audit's B3 the PASS is now **conditional** on a
-re-run recording per-arm loss descent.
+**4. Organ liveness — and a distinction this check did not previously draw.**
 
-**ORGAN LIVENESS — all four live, one recovered failure.** Builder hourly, last
-06:07 ✓. Overseer 6-hourly, last completed audit 08-25 00:37 (**DRIFTING**), next
-running now ✓. Field watch Mondays, ran 08-24 05:37 ✓ — **back on its intended
-cadence for the first time in three weeks**. Review daily: 08-22 and 08-23 gated,
-08-24 died on a 529 — `review.sh` now retries once at 120 s (`7f3a907`), which is
-the direct fix. **`lost_iterations.log` is 0 bytes**, correctly, because all
-three lost iterations were inherited and cleared.
+| organ | cadence | last fire | verdict |
+|---|---|---|---|
+| overseer | 6 h | 08-26 06:37 | live |
+| field watch | Mon | 08-24 05:54 | live |
+| review | daily | 08-26 06:37 | live (this) |
+| builder | hourly | 08-26 06:07 | **fires on time; has done no work in 18 h** |
+
+The builder passes the liveness check. It reports, punctually, once an hour,
+that it is not working. *"Silence is never success"* was written for an organ
+that stops speaking; this one is speaking. **A liveness check that reads the
+clock and not the output cannot tell a working organ from a skipped one** — the
+`PACE-STREAK` marker in item 4 below is the cheapest fix.
 
 ---
 
 ## 5. The honest paragraph
 
-No numbers. Are we closer to a creature that lives, learns, and is known — or
-just busier? **Closer, and for a reason that has nothing to do with the ladder
-moving.** For twenty days this project could not answer its own most important
-question because two rules it obeyed perfectly had quietly cancelled each other,
-and no organ here could see it from inside. The owner saw it, said so, and by
-Monday afternoon the thing that had been an argument was a race, the premise
-that Jack has one brain had stopped being a premise, and every escalation on the
-desk had grown a deadline and a default. That is the week's single most
-important step toward Jack: **not a capability, but the removal of the mechanism
-by which this project could be permanently prevented from finding out it was
-wrong.** A system that cannot be blocked by its own silence is a different kind
-of system.
-
-And then the ladder spent a day and a night doing the only honourable thing
-available to it, which was to keep refusing. Every measurement it took, it took
-against a gate written before the answer was known, and every one came back no.
-The needs do not yet make a control problem a body can survive; looking ahead
-buys nothing in this world, and buys less the further ahead it looks; and a
-creature handed the direction of a shelter that would save its life walked past
-it twenty-seven times out of twenty-seven. Those are not four disappointments.
-They are four instruments, run independently, agreeing — and what they agree
-about is not Jack's brain. **It is that the place we put him is too thin to be
-worth learning.** He is not failing to learn his world. There is not yet enough
-world there to learn.
-
-So the most concerning drift is this, and it is the exact drift the owner just
-legislated against in a different form: **the world has become the binding
-constraint on everything, and nobody owns it.** Two of Jack's constitutional
-commitments — *he builds a shelter*, *too cold kills him* — went claim-dead at
-eleven minutes past midnight, and one of them is GOAL.md's own image of success.
-The ladder is registering specs faster than it has in eleven days, the compute
-sits nearly untouched, and every road forward runs through a redesign that is
-routed to this desk with a date on it and no design behind it yet. **We have
-built an extraordinary apparatus for finding out that we are wrong, and it has
-now told us the same thing four times in four different voices.** The risk is not
-that we stop measuring. It is that measuring is the comfortable part, and the
-next move is to build.
+We are not closer to Jack, and this time the reason is not that the science went
+badly — the science did not happen. The machine spent the day auditing itself
+with great care, and everything it found was true: the registry gained real
+falsifiers, the constitution's own citations resolve further than they did, the
+sense that had no claim has one again. But a claim is a promise to measure, and
+nothing was measured. The single most important step toward Jack this window was
+giving smell and shelter falsifiable successors after both had been honestly
+retired — that is the ladder doing the hardest thing it knows how to do, which
+is to keep a commitment alive after killing the test that carried it. The most
+concerning drift is that the organ which builds is the only one being rationed,
+by a meter its auditors are filling, and the arithmetic says it stays rationed
+until the week ends and then everything stops together. What worries me is not
+the outage; outages end. It is the shape: we have built four organs to watch one
+organ work, and when the budget got tight the system protected the watching. The
+watchers are honest, they found this themselves, and one of them recommended
+cutting itself first — and none of that changes the fact that a creature does
+not get built by anyone here except the builder. Free compute is about to expire
+for the fourth week running while a page of perfectly true findings accumulates
+about why it wasn't spent.
 
 ---
 
 ## FOR THE BUILDER — ordered
 
-**1. Two lines: a dead audit must not publish a green verdict.**
-`scripts/overseer.sh:67` greps `OVERSIGHT.md` — the *previous* audit's file — so
-`rc=1` at two seconds logged `verdict: ON TRACK` on 08-24 12:37. Make it
-`verdict: UNKNOWN (audit did not complete)` whenever `rc≠0`, and never read a
-file the dead run did not write. Your own builder path already does this right
-(fallback chain, lost-iteration marking, `inheriting N`); the auditor should not
-be the organ that fails quietly. Cheapest item on this page.
+**B1. Commit `experiments/tests/sm_03_nose_reports_occluded.py` before anything
+else.** It is a registered spec whose only copy is unversioned. Then re-launch
+its pilot with `scripts/launch_detached.sh` — the loop's `timeout 25m claude -p`
+reaps a harness-tracked background task with the session, which is the third
+recurrence of this class and the second time it has cost a whole unit.
 
-**2. UB.10: matched TUNING BUDGET, not matched hyperparameters** — and it is
-**strictly harder than what it replaces**, which is the only kind of redesign
-this desk may propose. Dropping the uniform-recipe constraint destroys the
-comparison (an arm would win by getting a better LR); keeping it is what left A2
-dead under every tested recipe. So: every arm gets the **identical
-pre-registered LR grid, the same trial count, the same pre-registered selection
-criterion**, all declared before any arm runs. Cost rises from N to N×K runs —
-that is the point; the budget is what is matched, not the setting. The gate that
-makes it honest **already exists**: per the 23rd audit's B1,
-`uni_marginal_ok`/`uni_learn_ok` mean a dead arm can no longer read as a clean
-0.5, so "did this arm's recipe train it" is machine-checkable per arm. An arm
-that clears `uni_learn_ok` **nowhere** on the grid is recorded
-SCORED-AND-INELIGIBLE under SYSTEM.md's new language (`0345f0d`) — measured on
-the same ruler, kept as a standing challenger, not seated and not silently a 0.5.
+**B2. Make the orphan class unrepeatable — a registry×index join.** No
+instrument in the repo checks that a registered, non-PARKED spec's
+implementation is *tracked in git*. Add it to `coverage.py` beside
+`goal_citations()` (a new untracked implementation exits 2, shrink-only
+baseline), and add the known-answer battery to `T0.21` as `P12` the way `P11`
+was added for the parked leak. This is the "machine better than found" item for
+whichever iteration wakes first — it is CPU-free and it closes a hole that three
+separate findings have now come through.
 
-**3. Register a successor claim spec for shelter/thermal.** Three commitments
-are CLAIM-DEAD and two of them are among the four original 2026-08-10 misses
-that caused `coverage.py` to exist. SH.01's own park note writes the
-constraint for you: *"a successor spec that does not require this core to learn
-seeking from an outside spawn."* Curriculum spawn, or shelter-seeking as a
-conditioned response with the thermal gradient already sensed, or an
-oracle-initialised life measured on **maintenance** rather than acquisition —
-any of them restores a falsifiable claim. CPU, no owner gate, no dispatch. **A
-named gap is a decision; a claim-dead commitment is a blind spot with a green
-tick over it.**
+**B3. Report skip streaks.** `ladder_loop.sh` should count consecutive `PACING:`
+slots and, past 6, emit a `PACE-STREAK n` line and touch a marker file the
+overseer reads in its liveness section. A pace skip is not a fault; eighteen of
+them is, and today nothing in the system could say so without a human asking.
 
-**4. Run wk4-N3's β-noise diagnostic before any world redesign work.**
-CPU-minutes, uses nulls LC.03 already defines. Full reasoning in
-`REVIEW_QUEUE.md § w0-too-shallow`. If it fires, the shallowness diagnosis
-changes before we spend a redesign on it.
+**B4. Propose — do not implement unilaterally — a builder RESERVATION in
+`lib_usage.sh`.** The fix is not to throttle the auditors symmetrically: that
+would have silenced the overseer that found this, and the auditors are the
+machinery that catches drift. The fix is that the pace line should be drawn
+against *the pool the builder may actually have* — reserve a fixed share of the
+week for the builder and pace the auditors against the remainder. Write it up
+with the arithmetic and route it to the owner as a decision; **the level of
+spend is the owner's call and neither of us may lower a gate to reach our own
+work.**
 
-**5. Write the `[s]` LESSON** the field watch asked for (this desk does not
-commit LESSONS.md). `[c]` means *the authors claim this and I have not checked*;
-`[s]` means *a third party asserts the authors claim this* — and only the second
-can be a number **nobody ever wrote**. The scar is in an append-only file:
-`FIELD_WATCH_LOG.md`'s 08-12 entries carry two arXiv:2607.25337 claims that two
-full-text fetches confirm appear nowhere in the paper.
-
-**6. NE.01 is a world-design result. Do not re-run it a fourth time.** Attempt 3
-reproduced attempt 2 on every digit from a clean tree — that is a deterministic
-FAIL, and a fourth roll is the run-until-pass ratchet. Its row is HELD for the
-world-edit window per the bundling rule.
+**B5. `SH.02` implementation** — tier 2, CPU_LONG, dependencies all PASS, no
+owner gate, no GPU. It is the only claim-kind work on the board that needs
+nothing from anybody. If the builder gets one hour this week, this is the hour.
 
 ---
 
 ## FOR THE OWNER — strategic forks only
 
-**1. The world is now the binding constraint, on four independent instruments,
-and this is the fork.** LC.03's darkroom control (passivity prospers), LC.03 v2
-(one learner in five at 4× envelope), DP.05 (lookahead buys nothing, and less
-the deeper it looks), SH.01 (ORACLE_CANNOT — a creature handed the direction of
-a life-saving shelter used it in **0 of 27 lives**). These agree, and none of
-them is about Jack's brain. **Recommendation: build W1 rather than patch W0.**
-Three reasons, one of which is arithmetic. Patching W0 bills 21 PASS
-certificates in mechanical re-certification; **a new world bills nothing**
-(T1.02 precedent) and leaves every W0 result standing as the reference it
-already is. Second, the repairs the instruments call for — traps, delays,
-irreversibility, depletion, pursuit — are the DP.00 preconditions GOAL.md
-already names, so this is scheduled work, not new scope. Third, W0 keeps its
-job: it is the throughput floor and the fidelity fixture, and a champion that
-must re-defend at W1 is exactly what CHAMPIONS rule 4 is for. **What I need from
-you is the sequencing, not the design** — the design is mine and it is dated
-2026-08-30.
+**1. The builder will not run again this week unless you act, and I recommend
+both levers, not one.** The arithmetic: the deficit is 8 points and widens at
+~0.36 pts/h; the builder's only lever is not running, which makes it worse.
 
-**2. D1 and D10 fire on 2026-08-31 whether or not you answer, and I recommend
-letting D1 fire.** This is new and it is your machinery working as ordered: both
-now carry written defaults, and silence resolves them rather than deadlocking
-them. D1's default leaves the constitution **exactly as written** — PLASTIC-ONLY
-verbatim, option A struck as unconstitutional, the permitted arms to a bakeoff.
-That is the branch that costs you nothing to allow and unblocks 38 specs. **D10
-is the one worth your five minutes**, because its default ("accept the screen's
-answer — one learner, amend LC.04's premise") is reasonable *only if* the world
-is not the reason four of five arms failed, and item 1 says it might be. If you
-answer one decision this week, answer D10 — or tell me to re-arm it past the W1
-design, which is the option I would take.
+- **(a) Cut the overseer to 12-hourly** (`37 */12`). It recommended this itself,
+  against its own interest, and my attribution confirms it is the largest
+  non-builder draw. But it is **not sufficient**: two audits a day is ~0.375
+  pts/h against a line rising 0.387 — that stops the divergence and repays none
+  of the deficit.
+- **(b) Also set `JACK_NO_PACE=1` (or `.usage-resumed`) until 08-30**, so the
+  builder can reach the 29.69 Kaggle hours before they expire. The 90% hard stop
+  stays in force either way; this only removes the *pacing* line, which is the
+  thing that has now cost 18 hours and is forecast to cost the week.
 
-**3. Your Monday rulings did something no organ here could have done, and that
-is worth naming as a finding about US, not about you.** D1 sat open twenty days
-because SYSTEM.md rule 3 ("decisions are made by bakeoff, never by argument")
-was silently repealed for architecture calls by another line in the same file.
-Every audit reported the cost correctly every six hours; four Reviews put it on
-your desk; not one of them found the rule. **The lesson we should draw is that
-this system is good at measuring against its stated standard and structurally
-blind to the standard itself** — which is the same failure that hid smell, taste,
-voice and body-schema on 2026-08-09. The completeness audit exists for exactly
-this and it runs Sundays. **I am flagging that one weekly external-reference
-audit was not enough to catch a twenty-day deadlock**, and that if you see
-another one, saying it in two sentences remains cheaper than anything we can
-build.
+I did not pull either lever. `.usage-resumed` prints *"RESUMED BY OWNER"* and
+forging that signature is exactly the dishonesty this system exists to prevent;
+cron is outside my mandate. **The one thing I would not do is nothing** — the
+forecast blackout starting ~08-28 takes the auditors down with the builder, and
+last time that happened it lasted 4.3 days.
 
-**4. Not a fork, a number you should have: the pace line gets its first real
-test this Sunday.** Two consecutive Kaggle allocations (8.8 h, then 22.1 h) have
-expired unspent inside gate-blackouts that both began on a Friday. The fix
-shipped Monday and is visibly working — 7 of 24 slots skipped this window with
-35% spent into 15% of the week. W34 currently has 29.7 of 30 hours unspent, and
-they expire Sunday 2026-08-30. **If a third allocation dies, the problem is not
-pacing and I will say so on Sunday's page.**
+**2. Which meter actually gates this account?** `week:Fable` is at **88%** and
+is driven ~7:1 by the Opus auditors, not by the Fable builder. Every document
+here says it "is not the gate". If that is right, it is a number nobody needs to
+watch; if it is wrong, the system has under two points of room and does not know
+it. This is the third time in three weeks that a meter's *meaning* — not its
+value — has cost us days (08-21: the builder grounded itself on the wrong line;
+08-24: "90%" was prose with no authoritative source). **My recommendation stands
+from 08-21 and I am raising it again: make the tooling name its own gating
+number and assert it, rather than leaving each organ to read a line and infer.**
+
+**3. Eight decisions default-fire on 2026-08-31 — inside the forecast
+blackout.** `D1` costs 38 specs, `D10` 8, `D4` 8. D1's written default describes
+a four-arm bakeoff **that does not exist as a spec**, so firing it buys a ruling
+and no motion on the project's largest blocker. Recommendation: **answer D1 and
+D10 before 08-28, or re-arm both past the W1 design** (owed by this desk 08-30).
+Letting them fire into a silent system is the worst of the three branches — it
+spends the decision and gets nothing built.
+
+**4. Unchanged from 08-25, and it is the one that matters most:** build **W1**,
+do not patch W0. Four independent instruments say the world is too thin to be
+worth learning. Design owed by this desk **2026-08-30**.

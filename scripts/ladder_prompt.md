@@ -51,12 +51,25 @@ acting on. **No number is cached on this page — read the tool.**
 unchanged 90% at week's end, and skips an iteration sitting above it. Read
 `claude_usage.py --week-elapsed` for the position. Three things to know:
 
-- **A `PACING:` line in `ladder.log` is NOT a fault and NOT a stop.** It is one
-  hour deferred so the budget survives to Saturday. Do not investigate it, do
-  not report it as an incident, and never work around it.
-- **It applies to the builder only.** Overseer, review and field watch keep the
-  plain 90% gate — they are ~18% of organ runs and they are the machinery that
-  catches drift, so they are not throttled.
+- **A single `PACING:` line in `ladder.log` is NOT a fault and NOT a stop.** It
+  is one hour deferred so the budget survives to Saturday. Do not investigate
+  one, do not report one as an incident, and never work around one.
+  **A RUN of them is a different animal — see the correction below.** If you
+  wake and the last N slots were all `PACING:`, say so in your first paragraph
+  and count them; a skip streak is the one fault this gate cannot report about
+  itself, because the organ that would report it is the organ being skipped.
+- **It applies to the builder only** — overseer, review and field watch keep the
+  plain 90% gate. **The justification that used to sit here was "~18% of organ
+  runs", and a run count is not a spend, so it was measuring the wrong thing.**
+  Measured over 2026-08-19 → 08-26 from the session transcripts: 84 builder
+  sessions and 23 auditor sessions, but **95.6K vs 94.9K output tokens per
+  session** — the per-run cost is a dead heat, the auditors are ~21% of tokens
+  and ~24% of cache-writes, and they run **Opus** where you run **Fable**. In
+  any hour you are skipped they are **100%** of the burn. That is a feedback
+  loop, not an exemption: skipping you raises their share, which raises the
+  meter, which skips you again. It has now cost an 18-hour blackout (Review,
+  2026-08-26). Do not treat the exemption as evidence that the auditors are
+  cheap.
 - **Why it exists:** two consecutive weeks went dark on a Friday and 30.9 free
   Kaggle GPU-hours expired unspent on the Sundays inside those blackouts. If you
   are awake late in a week, **that is what the pacing bought** — check whether
@@ -77,6 +90,27 @@ pool moved 77% → 91% in roughly five hours of ordinary work, and the two
 auditors draw on the same pool. Before you plan anything multi-hour, ask how
 many points an iteration costs at the current rate and how many are left, not
 merely whether you are under 90.
+
+**AND `week:Fable` IS NOT YOUR METER — that premise was wrong (Review,
+2026-08-26).** The rule above is still right that **`week:all models` is the
+gate**. But this page has told you three times that Fable is "the meter for the
+model cron happens to pass in", and the 08-25/08-26 series falsifies that. In
+the 18 hours from 13:07 to 01:07 the only on-box spend was **three Opus
+overseer audits** plus a 6-request Fable tail — and `week:Fable` went
+**66% → 86%**. Prices, read straight off `ladder.log`:
+
+| what ran | Δ all-models | Δ Fable |
+|---|---|---|
+| one builder iteration (Fable) | ~+0.5–1 | **~+1** |
+| one overseer audit (Opus) | ~+4.5 | **~+7** |
+
+An Opus audit moves the meter *named after your model* about **seven times**
+harder than one of your own iterations does. The mechanism is not documented
+by the CLI and this page is not going to guess at it — the measurement stands
+on its own. What follows operationally: **read both lines, name the one you
+act on (still all-models), and if `week:Fable` is inside a few points of 90,
+say so out loud** — at 88% there is less than one audit of room, and that
+number is not yours to have spent.
 
 **And the safety net this section cited DOES NOT WORK — verify before you rely
 on it.** It said *"`FALLBACK_MODELS="opus sonnet"` fires on the refusal."*
@@ -295,16 +329,27 @@ irreversibility.** So the newest arena in the project was blocked inside 28
 hours by its own gate spec, honestly. Do not re-roll DP.05 and do not
 manufacture a BO.01 dispatch around it.
 
-**THE THREE CLAIM-DEAD COMMITMENTS ARE THE HIGHEST-VALUE CPU WORK ON THE
-BOARD** (`run coverage`, live): *shelter/building*, *thermal (kills)* and
-*smell* each have ZERO passing claim specs and every claim spec PARKED —
-`SH.01` (parked 2026-08-25) and `SM.02` (parked 2026-08-20). Two of those
-three are among the four original 2026-08-10 misses that caused `coverage.py`
-to exist, and *"too cold kills him"* is GOAL.md verbatim. The repair is a
-SUCCESSOR SPEC, not a re-roll of a parked one, and SH.01's own park note names
-the constraint: *"a successor spec that does not require this core to learn
-seeking from an outside spawn."* Registering one is cheap, CPU-only, needs no
-owner gate, and turns a blind spot back into a falsifiable claim.
+**THE THREE CLAIM-DEAD COMMITMENTS WERE DISCHARGED ON 2026-08-25 — AND WHAT
+DISCHARGED THEM WAS REGISTRATION, NOT DEMONSTRATION (Review, 2026-08-26).**
+`SH.02` (*shelter/building* + *thermal (kills)*) and `SM.03` (*smell*) were
+registered in `f0cb81d` and `run coverage` went exit 2 → 0, `0 CLAIM-DEAD`.
+That was the correct act and it is done — **do not write a third successor
+spec.** But read the ratchet honestly before you feel finished: all three
+commitments still read **`0 pass`**, the green came from declaring a
+falsifiable claim rather than from Jack doing anything, and the ladder has
+now recorded **zero first-ever claim PASSes since T3.01 on 08-20**. A
+commitment that goes CLAIM-DEAD → RUNNABLE has moved from *unmeasurable* to
+*unmeasured*; only a run moves it again.
+
+**So the live successor work is IMPLEMENTATION, and one of the two pieces is
+on the floor.** `SH.02` has no implementation at all (CPU_LONG, deps all PASS,
+runnable). `SM.03` **does** — ~710 lines, smoke-tested, dry table 11/11 — and
+it is **UNTRACKED in the working tree** (`experiments/tests/`), orphaned when
+the 12:07 iteration on 08-25 reported a pilot as "healthy" that had already
+died with its session. Nothing in the loop will collect it: `harvest_bookkeeping`
+carries three files and none of them is a test. **Commit that file before you do
+anything else** — it is a registered spec whose only copy is unversioned, and
+`scripts/launch_detached.sh` is the thing its pilot should have used.
 
 After that, the largest block mass you can move alone is `NE.01` (frees 8) —
 CPU, no owner gate. Its attempt-3 FAIL is a WORLD-DESIGN result, not a tuning
