@@ -5171,3 +5171,90 @@ Related: *"A dependency named only in prose is invisible to every ranking that
 reads the graph"* — same week, one layer down. That lesson says a constraint in
 `notes` will be scheduled against. This one says the constraint's *repair* was
 already written and filed, and no instrument could join to it.
+
+## A search result's paraphrase of a paper is the SEARCH ENGINE's claim — mark it as its own tier, below "unverified"
+
+2026-08-25 (PROGRESS 08-25 FOR THE BUILDER 5; the scar is the field watch's
+own self-retraction, 08-24, committed to an append-only log). The field
+watch's 08-12 entries attribute to arXiv:2607.25337 that it *"plans 48×
+faster than world models on frozen foundation encoders"* and runs
+*"end-to-end from raw pixels on a single GPU in hours."* **Two full-text
+fetches confirm neither number appears anywhere in the paper** — the only
+compute statement in it is an optimizer recipe (Appendix C), and a logged
+"+14.2 points over LeWM" corresponds to a table reading 82.2±2.9. The
+entries were marked `[c]` — *the authors claim this and I have not checked*
+— and the marking is exactly the failure: those numbers were never the
+authors' claims at ANY confidence level. They were a search engine's
+paraphrase, and **a paraphrase can invent a number that appears nowhere in
+the source.**
+
+**The rule (cost: one character).** A claim taken from a search snippet,
+an abstract-aggregator, or any third-party summary is marked `[s]` — *a
+third party asserts the authors claim this* — and `[s]` is a DISTINCT tier
+from `[c]`, never collapsed into it. `[c]` degrades gracefully: the worst
+case is the authors were wrong. `[s]` does not: the worst case is a number
+NOBODY ever wrote, wearing a citation. Promotion is mechanical: `[s]` →
+`[c]` only by opening the source; `[c]` → bare only by checking the claim.
+
+**Why this generalises past the field watch.** Every organ here that reads
+the outside world through an intermediary — a search result, a model's
+summary of a paper, a changelog aggregator — is one paraphrase away from
+laundering an invented number into an append-only file under a real
+citation. The confidence-marker system worked as designed and still failed,
+because its tiers encoded *how much checking remained*, not *who is
+speaking*. Attribution is a dimension, not a degree: record WHOSE claim a
+sentence is, separately from how verified it is. (Same family as "A
+convention the tool does not read is not a convention" — a marker whose
+tiers conflate two questions answers neither.)
+
+## A detector and the corpus it reads drift apart in VOCABULARY — and the failure is not a missed alarm, it is a permanent one nobody checks
+
+**The instance (found 2026-08-26, 32nd overseer audit).** `experiments/decisions.py`
+exists to stop an open decision deadlocking forever — the D1 scar, twenty days
+and 38 blocked specs. It reports `UNDECLARED` for any decision with no default
+and no deadline, and the overseer's standing instruction is to arm at least one
+per audit. It has printed `3 decision(s) not armed` in **every audit for 17
+days**. All three were answered by the owner on 2026-08-09/2026-08-10.
+
+The detector's settled-test is `_SETTLED = RESOLVED|off your desk|BY THE
+CALENDAR`, matched against **headers only**. The document records owner rulings
+with the word **DECIDED**, written *in the body*, under a header still reading
+`(OPEN, …)`; one entry says **ANSWERED**. The tool and the file were maintained
+by different hands and their vocabularies drifted apart. Nothing was misspelt,
+nothing was malformed, and every organ behaved exactly as written.
+
+**Why this direction is the nastier one.** The known scar in this file is the
+false NEGATIVE — *"a false positive is credit nobody audits, because nobody goes
+looking for coverage they believe they already have"* (the `ho-nest` match). This
+is its complement: **a false POSITIVE that everybody sees, every audit, in a
+category they are under standing instruction to act on.** Thirty-one audits
+relayed the count without opening the entries. An alarm that has never once been
+real teaches its readers, correctly and rationally, that the category is noise —
+and that training is the damage, because the next entry *will* be real and will
+be read the same way. Alarm fatigue is not a human weakness here; it is the
+predictable output of a detector whose precision is zero.
+
+**Rule.** When a checker tests a document for a *state* (settled, approved,
+retired, waived), the vocabulary of that test is an interface between two things
+that change independently. Pin it: either the document must declare the state in
+a syntax the tool owns (`DECIDE:`, `COVERS:` — the idiom this project already
+uses and which does not drift), or the test must be audited against the corpus
+periodically the way any other proxy is. **And measure precision, not just
+recall:** a category that has fired N times and been real zero times is not a
+working alarm, it is a disabled one that still prints.
+
+**Corollary, and it is where the real trap was.** When a detector's vocabulary is
+too narrow, the instinct is to widen the pattern. Widening a matcher over a
+corpus you did not write has unbounded blast radius: adding `ANSWER` to
+`_SETTLED` would have closed **D1 — the 38-spec decision** — because a header
+reads `## D1 — DO NOT ANSWER "DO WHAT THE MEASUREMENTS SAY"` and the test closes
+a key if *any* header matches. **Prefer editing the N documents into the
+vocabulary the tool already owns over editing the tool to accept N vocabularies.**
+The document edit's blast radius is the document; the regex edit's blast radius
+is every header ever written, including the ones that say the opposite of what
+they now match.
+
+Related: *"A convention the tool does not read is not a convention — it is
+decoration that reads as a claim"* — the same seam, one side over. That lesson
+says the document wrote something the tool never read. This one says the tool
+read for something the document never wrote.

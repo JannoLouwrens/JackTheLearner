@@ -2471,3 +2471,46 @@ guard was retired by a ruling instead of by a deadline passing over prose.
 `{arm}/final_slope`; `docs/DECISIONS_NEEDED.md:483-556` (the original entry, all
 three addenda); `docs/DECISIONS_NEEDED.md:1953+` (D10's armed default);
 `docs/LESSONS.md` "A screen with no re-screen cap is a ratchet".*
+
+---
+
+## HOUSEKEEPING 2026-08-26 00:37 (32nd overseer audit) — the three "UNDECLARED" entries are ALL already answered, and have been miscounted for 17 days
+
+`experiments/decisions.py --check` has reported `3 decision(s) not armed` in every
+audit since the tool shipped. I read all three instead of relaying the count.
+**None of them is open.** Nothing here is a new question for the owner; this
+entry exists so the ratchet can shrink 3 → 0 on the record rather than by fiat.
+
+| reported UNDECLARED | actually settled | the ruling, verbatim |
+|---|---|---|
+| `D3` | 2026-08-10 | header already reads `~~D3 — May the loop git push?~~ **ANSWERED: YES (owner, 2026-08-10)**` |
+| `The owner's hands — how does a human TOUCH Jack's world?` | 2026-08-09 | *"Can you also drop stuff in for him… Yes."* — care verbs approved on the provisioning-as-environment model; anti-puppeteering constraint stands |
+| `Was physics-first retired by argument instead of by bakeoff?` | 2026-08-09 | *"schedule the run after T2.01."* — option (a), RUN IT; reverses DIRECTION_AUDIT's "do not start", law 3 outranks an argument |
+
+**THE MECHANISM, so the repair is aimed at the right thing.** `decisions.py:99`
+is `_SETTLED = re.compile(r"RESOLVED|off your desk|BY THE CALENDAR", re.I)`, and
+it is matched against **headers only** (`_HEADER = ^##`). The two design forks
+record their owner ruling with the word **DECIDED**, *in the body*, beneath a
+header that still says `(OPEN, …)`. `D3`'s header says **ANSWERED**. Neither
+token is in `_SETTLED`, and a body ruling is never read.
+
+**THE REPAIR IS A DOCUMENT EDIT, NOT A REGEX EDIT — and the obvious fix is the
+dangerous one.** Do **not** widen `_SETTLED` to match `ANSWER`: header line 1454
+reads `## D1 — DO NOT ANSWER "DO WHAT THE MEASUREMENTS SAY"…`, and `_SETTLED`
+closes a key when *any* surviving header matches — so that widening would
+silently close **D1, the 38-spec decision**, on the strength of a header written
+to say the opposite. Adding a settled header per entry (FOR THE BUILDER B2 in
+`OVERSIGHT.md`) uses the token the tool already reads and has zero blast radius.
+
+**WHY THIS IS WORTH A SECTION RATHER THAN A FOOTNOTE.** The overseer's standing
+instruction is to arm at least one `UNDECLARED` decision per audit. For 17 days
+the only candidates on offer have been questions the owner answered on
+2026-08-09. Thirty-one audits relayed the count without opening them. That is
+the complement of this project's own scar at `LESSONS.md:2157` — not credit
+nobody audits, but **an alarm everybody sees and nobody checks**, which is how a
+genuinely unarmed decision would now slip past unnoticed.
+
+**No default is armed by this audit, deliberately.** All eight *real* open
+decisions already carry `DECIDE:` blocks with defaults and `decide_by:
+2026-08-31`. There is no unarmed live fork to arm, and arming a settled question
+would be inventing a fork that does not exist. That is the honest result.
