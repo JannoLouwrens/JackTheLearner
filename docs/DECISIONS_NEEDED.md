@@ -2514,3 +2514,87 @@ genuinely unarmed decision would now slip past unnoticed.
 decisions already carry `DECIDE:` blocks with defaults and `decide_by:
 2026-08-31`. There is no unarmed live fork to arm, and arming a settled question
 would be inventing a fork that does not exist. That is the honest result.
+
+---
+
+## D13 — The overseer runs 4x/day on the same meter that gates the builder. Should it skip slots where nothing changed? (OPEN, resourcing)
+
+**Raised by the 33rd overseer audit, 2026-08-26 06:37 UTC — and raised against
+itself.**
+
+**Why this is a decision and not a chore.** The 32nd audit (2026-08-26 00:37)
+put exactly this question to the owner in its FOR THE OWNER section —
+*"cut me to `37 */12` (two audits/day) before cutting anything that produces
+science"* — **with no default and no deadline.** That is the `D1` shape verbatim:
+a fork on the owner's desk where silence and "not yet" are indistinguishable
+forever. SYSTEM.md rule 3's escalation clause requires a default and a clock.
+This entry supplies them.
+
+**The measurement.**
+
+| time (UTC) | organ | verdict | repairs executed |
+|---|---|---|---|
+| 2026-08-25 12:23 | builder | last iteration | — |
+| 2026-08-25 12:46 | 30th audit | DRIFTING | 0 |
+| 2026-08-25 18:47 | 31st audit | DRIFTING | 0 |
+| 2026-08-26 00:48 | 32nd audit | DRIFTING | 0 |
+| 2026-08-26 06:37 | 33rd audit | DRIFTING | 0 possible |
+
+- **Eighteen consecutive pace-skipped slots.** `HEAD` unchanged at `4e763b8`
+  since 00:48; working tree unchanged; `84/187 demonstrated` unchanged.
+- **~1 point of `week:all models` per audit**, measured: spend read 51% at
+  `00:07` and 52% at `01:07`, a window spanning the 32nd audit (00:37–00:48)
+  with no builder iteration and no other jackthelearner organ running.
+- The deficit keeping the builder dark is **8 points** of that same meter.
+  Four audits/day is ~4 points/day of it.
+- **Zero repairs executed**, and zero were *possible*: `pace_gate` runs at `:07`,
+  before the iteration ever reads `OVERSIGHT.md`. The only organ that can execute
+  a `FOR THE BUILDER` item is the one the gate locked out.
+
+**The options.**
+
+- **(a) ACCEPT AS-IS.** Keep `37 */6`. Cost: the measured ~4 pts/day continues,
+  and an audit of a frozen system keeps re-measuring a frozen system.
+- **(b) BLANKET CADENCE CUT to `37 */12`.** What the 32nd audit offered. Halves
+  spend — but halves it *unconditionally*, including on the days the builder
+  ships four units and oversight is worth most. It optimises the wrong variable:
+  the waste is not frequency, it is auditing **no-change**.
+- **(c) CHANGE-GATED NO-OP.** `overseer.sh` skips a slot when **all four** hold:
+  (1) `git rev-parse HEAD` unchanged since the last audit; (2) zero iteration
+  starts in `ladder.log` since the last audit; (3) no `decide_by` date in this
+  file falls before the next slot; (4) fewer than 3 consecutive slots already
+  skipped. Logs `overseer: no-op, HEAD <sha> unchanged and 0 builder iterations
+  since <ts>`. Conditions (3) and (4) are load-bearing — without them this is a
+  blindfold rather than a saving: a firing deadline or a landing detached run
+  still gets a full audit, and the organ can never go dark for more than 24 h.
+- **(d) UNIFY WITH THE REVIEW.** Out of scope here; the Review's own cadence is
+  the owner's and D11 already covers it. But see OVERSIGHT.md RANK 2: `37 */6`
+  and `37 6 * * *` **collide at 06:37 every day**, putting two concurrent
+  long-effort Opus sessions on the shared meter 30 minutes before the builder's
+  07:07 slot. That is a scheduling bug with a free fix (`37 3,9,15,21 * * *`) and
+  it is filed as builder item B3, not as part of this decision.
+
+**The counterargument, recorded beside the recommendation as it must be.** The
+overseer is the counterweight to an optimistic builder, and every organ in this
+system is a scar. Making it skip *anything* is a small step toward an auditor
+that audits when convenient. The four conditions in (c) are precisely the price
+of that risk: it may only skip when the artefact under audit is byte-identical to
+the one already audited, no clock has moved, and never twice in a row past 24 h.
+If that guard ever proves insufficient, the reversal is one commit.
+
+DECIDE: D13
+  class:     goal
+  default:   Option (c) — the CHANGE-GATED NO-OP, exactly as specified above with
+             all four conditions, implemented in scripts/overseer.sh. This is a
+             NARROWING and only a narrowing: it reduces this organ's own spend,
+             edits nothing the owner owns, moves no threshold, weakens no gate,
+             and widens nothing that is permitted. A full audit still runs at
+             least every 24 h and always runs on any slot where HEAD moved, an
+             iteration ran, or a decision deadline is due. Option (b) is
+             explicitly NOT the default, because halving the cadence
+             unconditionally cuts oversight hardest on the days the system is
+             moving, which is when it is worth most. To reverse, revert the
+             overseer.sh commit — cadence returns to an unconditional 37 */6
+             immediately and there is no state to unwind.
+  decide_by: 2026-08-31
+  blocks:    (nothing — no spec depends on this; it costs meter, not specs)

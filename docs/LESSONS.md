@@ -5258,3 +5258,60 @@ Related: *"A convention the tool does not read is not a convention — it is
 decoration that reads as a claim"* — the same seam, one side over. That lesson
 says the document wrote something the tool never read. This one says the tool
 read for something the document never wrote.
+
+---
+
+## An audit may report a RATE. It may not report a DATE derived from a process it does not control.
+
+*(33rd overseer audit, 2026-08-26 — found by measuring the 32nd audit's own
+projection six hours after it was escalated to the owner.)*
+
+**The failure.** On 2026-08-26 00:37 an audit measured the shared Claude weekly
+meter rising 1.33 pts/h against a pace line rising 0.387 pts/h, extrapolated
+linearly, and escalated to the owner: the deficit *"cannot close by itself"*, the
+loop hits its hard stop *"around Aug 27 05:00"*, and *"29.69 free GPU-hours
+expire unused"* without an intervention. It made a second projection the same
+way: `week:Fable` at 1.8 pts/h reaching 100% *"around 2026-08-26 08:00"*.
+
+Six hours later, on the same instrument: the meter had been **flat for five
+consecutive hourly readings** (0.00 pts/h), the gap had **narrowed 10 → 8**, and
+Fable had moved **+1 point in six hours** (0.17 pts/h). Both dates were wrong,
+and the direction of the first one was wrong. The builder resumes unaided ~67
+slots before the deadline the escalation was built on.
+
+**Why the rate was fine and the date was not.** The burn was not the system's own
+consumption. It was two interactive human sessions sharing the account — a
+process with no rate law, no commitment, and no obligation to tell us anything.
+The audit correctly *attributed* the burn (it opened the transcripts rather than
+reasoning about them, which was good work) and then treated an attributed
+exogenous process as a **forecastable** one. Attribution and predictability are
+different properties; establishing the first says nothing about the second.
+
+Note what did NOT go wrong, because the contrast is the whole lesson: six hours
+earlier the 31st audit measured the same quantity at 1.0 pts/h and **explicitly
+refused to extrapolate it.** Same organ, same instrument, same data quality — the
+difference was one decision about whether to publish a date.
+
+**Rule.** When reporting on a quantity driven from outside the system, publish
+**(a)** the measurement, **(b)** the window it was measured over, and **(c)** the
+sensitivity — *"if the observed rate persists, X; if it goes to zero, Y."*
+Publish a **date** only for processes the system controls or that have a
+contractual clock: cron slots, `decide_by` fields, quota resets, the pace line's
+own arithmetic. Those are computable. A human's session is not.
+
+**Why this costs more than an inaccurate paragraph.** This project's most
+expensive scar is `D1`: twenty days of an owner escalation nobody acted on. The
+countermeasure is that escalations must be *credible* enough to act on
+immediately. An escalation reading *"29.69 hours die unless you act"* that the
+next audit falsifies spends the credibility the *next* escalation needs — and it
+is the same failure, in the same direction, as the `_SETTLED` false alarm
+recorded one section above: **a category whose alerts keep turning out not to be
+real teaches its readers, correctly and rationally, to stop reading it.** There
+the detector had zero precision. Here the auditor did. The damage is identical
+and it lands on the same channel.
+
+**Corollary for any organ that audits a shared resource.** Measure your own draw
+on it before recommending that anyone else reduce theirs. The 33rd audit measured
+~1 point of the weekly meter per overseer run — the same units as the 8-point
+deficit it was reporting as the builder's binding constraint. An auditor that
+consumes the resource it reports scarce owes that number in the report.
