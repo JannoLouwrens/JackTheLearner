@@ -2817,3 +2817,72 @@ because "nobody asked properly" and "the owner answered and we did not act" have
 opposite remedies and the tool currently prints the same word for both.
 
 No default is armed for this entry. There is no question left in it.
+
+---
+
+## D13 — EVIDENCE UPDATE 2026-08-27 13:00 UTC (38th overseer audit). The menu asks about CADENCE; the measurement says the lever is INCIDENCE.
+
+D13 asks whether the overseer should skip slots where nothing changed. That is a
+real question and its armed default (the change-gated no-op) is a real answer.
+This update does not change the question — it reports a fact found while
+auditing something else, because D13's menu was written without it.
+
+**`pace_gate` has exactly one call site.**
+
+```
+$ grep -rn "pace_gate" scripts/ | grep -v lib_usage.sh
+scripts/ladder_loop.sh:179:pace_gate say || { harvest_bookkeeping; exit 0; }
+```
+
+| organ | cron | model | `usage_gate` (90% stop) | `pace_gate` (the line) |
+|---|---|---|---|---|
+| `ladder_loop.sh` — the builder | hourly | **fable** | yes | **yes** |
+| `overseer.sh` | 4×/day | **opus** | yes | **no** |
+| `review.sh` | daily | **opus** | yes | **no** |
+| `field_watch.sh` | weekly | **opus** | yes | **no** |
+
+The gate reads `week:all models` — the pool the three ungated Opus organs draw
+from. The organ it throttles runs on Fable, which is metered separately and which
+the gate's own log line calls *"not the gate"*.
+
+**`scripts/lib_usage.sh:51–54` already diagnosed this, verbatim:** *"the loop is
+stopped by consumption it does not control, and being the only consumer with a
+gate, it is the one that starves."* The remedy shipped nine lines later was a
+second gate on that same only-gated consumer.
+
+**Measured over the 48 h since the builder's last iteration (2026-08-25
+12:23:33 → 2026-08-27 12:37):** builder **0 of 48 slots**, 0 ledger rows, 0
+commits; overseer **8 audits**, every verdict `DRIFTING`; Review **2 runs**. Since
+the gated organ never ran, ~100% of this box's contribution to `week:all models`
+in that window was spent by organs the gate does not touch — on ten Opus
+documents about the builder not running.
+
+*This does not claim on-box spend dominates the meter.* The Review of 2026-08-27
+measured that it does not, and that stands. The finding is about incidence, not
+volume: whatever fraction this box contributes, 100% of the gate's effect lands
+on the one organ that writes to the ledger.
+
+**What this changes.** Nothing about D13's default, which stays armed and due
+2026-08-31. What it adds is a fourth option to the menu that was not on it:
+
+> **(d) apply `pace_gate` to every Claude organ on the shared meter** — the same
+> `pace_gate say || exit 0` line, added to `overseer.sh:45`, `review.sh:29` and
+> `field_watch.sh:31` beside the `usage_gate` line each already has. Under (d)
+> the builder is first in the queue for the pool rather than the only one
+> excluded from it, and a quiet-slot no-op becomes unnecessary because a
+> pace-gated auditor already skips.
+
+**No default is armed for (d), deliberately.** Option (d) is an architectural
+change to the builder's own resourcing and its counterfactual is unmeasured;
+rule 4 forbids acting on an auditor's reasoning. It is instead registered as the
+**third arm of the pace-gate bakeoff** ordered as builder item B3 (37th audit,
+extended by the 38th) — arms A = gate as shipped, B = `JACK_NO_PACE=1`,
+C = gate everything — scored on builder slots run, ledger rows recorded, and
+free GPU-hours consumed before the Sunday expiry. Law 3: this gets settled by
+measurement, not by the audit series that found it.
+
+**The cost of leaving it until the bakeoff runs, stated plainly:** 29.69 of 30
+free Kaggle GPU-hours expire Sat 2026-08-29, the third consecutive week of
+expiry and the largest (W32 8.82, W33 22.11). On the measured rates the gate
+releases ~Sat 08:00 UTC, leaving ~16 hours of window; if exogenous burn
+accelerates to the pace line's own slope it does not release at all this week.

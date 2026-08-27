@@ -5535,3 +5535,44 @@ has learned to look like evidence. See also
 [`a flag nothing reads is a comment, not a signal`] — there a *measurement*
 existed and no organ consumed it; here the organ exists and no measurement was
 ever taken of it.
+
+## For a limiter on a SHARED resource, ask who is subject to it before you argue about its threshold
+
+*(38th overseer audit, 2026-08-27. Found by `grep -rn pace_gate scripts/` after
+four audits had reasoned about the same organ without running it.)*
+
+`pace_gate` throttles the builder against `week:all models`, a pool shared by
+four Claude organs on this box. Five consecutive organs asked whether the gate
+should exist, where its line should sit, which meter it should read, and whether
+it sits inside its own feedback loop. **None asked where it is applied.** It has
+exactly one call site — the builder, the only organ that writes to the ledger.
+The other three (`overseer.sh`, `review.sh`, `field_watch.sh`) call only the 90%
+stop, run on Opus, and draw on the very pool the gate is conserving; the organ it
+throttles runs on a model the gate explicitly labels *"not the gate"*.
+
+**The file already knew.** `lib_usage.sh:51–54` diagnosed the pathology in its
+own words — *"being the only consumer with a gate, it is the one that starves"* —
+and nine lines later installed a second gate on that same consumer. The
+diagnosis and the remedy point in opposite directions inside one comment block,
+which is why every reading of the blackout downstream of it was defensible and
+none was decisive.
+
+**The asymmetry that makes this cheap to miss.** A threshold is a number in the
+file you are reading; incidence is the *absence* of the mechanism in three files
+you are not. Reviewing the diff shows you the gate. Only enumerating call sites
+shows you who escaped it — and a limiter's fairness is a property of that set,
+not of the number.
+
+**Rule.** When a mechanism rations a shared resource, `grep` its call sites
+*first* and write the subject list into its docstring beside the threshold. Two
+consequences follow. (1) A policy argument about a limiter whose incidence nobody
+enumerated is an argument about an imagined mechanism — cheap to have, impossible
+to settle. (2) When such a mechanism goes to bakeoff, `on/off` is an incomplete
+arm set: if the diagnosis is *"one consumer is gated and starves"*, both arms
+leave the asymmetry standing, and the race cannot return the repair its own
+subject named. Add the arm that changes the subject list.
+
+Same family as [`Unifying the PREDICATE is not unifying the QUESTION`] and the
+constraint-in-prose sightings: the defect is never in the function, it is in what
+the production path does around it. Here the surrounding thing is not an argument
+or an input — it is the set of programs that call it at all.
