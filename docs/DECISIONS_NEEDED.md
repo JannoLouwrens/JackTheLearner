@@ -2764,3 +2764,56 @@ DECIDE: D14
   blocks:    (nothing directly — it costs meter and free GPU-hours, not specs;
              but it is upstream of every runnable claim spec, because a builder
              that cannot run demonstrates nothing)
+
+---
+
+## The owner's hands — how does a human TOUCH Jack's world? (OPEN, design fork) — RESOLVED 2026-08-09 by the owner; closed on the record 2026-08-27 (36th overseer audit)
+
+This header exists to close an entry the owner already answered, and to shrink
+the `UNDECLARED` ratchet **honestly** rather than by arming a question nobody
+asked.
+
+`experiments.decisions --check` has been reporting this entry as `UNDECLARED`
+— *"open, but declares no DECIDE block — no default, no deadline, so silence
+deadlocks it"*. Silence is not deadlocking it. Its own body, 22 lines below its
+original header, reads:
+
+> **DECIDED 2026-08-09, same day: YES.** Owner: *"Can you also drop stuff in for
+> him... Yes."* Care verbs approved on the provisioning-as-environment model.
+> The anti-puppeteering constraint stands: what is left must still be found,
+> learned, and chosen. Design work unblocked -> INTEGRATION_QUEUE.
+
+Decision made, constraint recorded, work routed. Nothing is owed by the owner
+and nothing is owed by the loop. The entry is closed.
+
+**Why the instrument could not see it:** `decisions.py:99` is
+`_SETTLED = re.compile(r"RESOLVED|off your desk|BY THE CALENDAR", re.I)` and
+`parse()` applies it to `_HEADER` matches only — **markdown `##` headers, never
+bodies**. An owner ruling written into an entry's prose is invisible to the
+ratchet. This is the fourth instance of the constraint-in-prose shape already in
+`LESSONS.md` (LC.03's missing test file, the phantom champion arenas, DP.04's
+prose-only block behind LG.00) — and the first where the invisible thing is an
+**answer** rather than a dependency.
+
+**Not settled here, deliberately: the physics-first entry.** It is the other
+`UNDECLARED` and it is the same shape — its body carries **`DECIDED 2026-08-09:
+(a) RUN IT.`** Owner: *"schedule the run after T2.01."* But settling it would
+erase a live debt: `T5.01`, "THE thesis test", is still `NOT_RUN` 18 days later,
+queued behind `T2.01` (FAIL, transitive block mass 36). An owner order that has
+been given and not executed must stay visible as a **debt**, not be filed as a
+closure. Its correct destination is `DECISIONS_RESOLVED.md` **with the owed run
+recorded** — builder item B5, carried from the 35th audit.
+
+**The ratchet consequence, which is the finding.** After this closure the
+`UNDECLARED` count is 1, and that one is un-armable: you cannot write a default
+for a question the owner has already answered. A default that restates the
+answer is noise; one that departs from it is unconstitutional. So the overseer's
+standing duty — *"arm at least one per audit; the ratchet may shrink and may
+never grow"* — has reached a floor it cannot leave by arming. **From here the
+ratchet shrinks only by CLOSING, and closing is what the instrument cannot
+detect.** The durable repair is builder item B3: extend `_SETTLED` to the entry
+body and report a body-level ruling as a distinct state — `ANSWERED-UNCLOSED` —
+because "nobody asked properly" and "the owner answered and we did not act" have
+opposite remedies and the tool currently prints the same word for both.
+
+No default is armed for this entry. There is no question left in it.
