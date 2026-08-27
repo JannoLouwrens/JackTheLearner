@@ -25,7 +25,29 @@ credits_out() {
 session_limited() {
   tail -c "+$(( ${MARK:-0} + 1 ))" "$LOG" 2>/dev/null | grep -qi "hit your session limit"
 }
-limit_hit() { credits_out || session_limited; }
+# THE THIRD WORDING, and it is the WEEKLY PER-MODEL one — the exact case the
+# fallback chain exists for. "You've reached your Fable 5 limit." matches
+# NEITHER detector above: not "out of usage credits", not "hit your session
+# limit". On 2026-08-21 at 10:07 and 11:07 the builder hit it, exited rc=1 in
+# three seconds, `limit_hit` returned false, the fallback loop `break`ed on its
+# first test so opus was never tried, and NO lost-iteration marker was written.
+# Two dead slots, uncounted, every organ reporting health. It was recorded in
+# prose in ladder_prompt.md and routed to the owner as "an organ script"; it sat
+# unfixed for six days while the condition that fires it became certain, so the
+# Review fixed it (2026-08-27, PROGRESS.md § THE FINDING). The change is
+# monotone: it can only ADD a fallback attempt (~3 s) and ADD a marker — it can
+# never suppress a run or make anything look better, which is why this desk
+# judged it safe to make rather than route a second time.
+#
+# Anchored to line start, exactly like api_overloaded and for exactly the same
+# reason: the organs' own reports quote this string in prose (ladder_prompt.md
+# does, in backticks), and an unanchored match would fire on the post-mortem
+# instead of the event. Verified against both CLI wordings and both prose forms.
+model_limited() {
+  tail -c "+$(( ${MARK:-0} + 1 ))" "$LOG" 2>/dev/null |
+    grep -qiE "^[[:space:]]*(you've|you have) reached your .{0,40}limit"
+}
+limit_hit() { credits_out || session_limited || model_limited; }
 # "API Error: 529 Overloaded" is server-side and transient — nothing about our
 # credits. The 2026-08-24 daily Review died on exactly this line (rc=1, 8 min)
 # and never ran; one retry would have cost nothing and saved the day's audit

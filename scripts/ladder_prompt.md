@@ -64,12 +64,17 @@ unchanged 90% at week's end, and skips an iteration sitting above it. Read
   Measured over 2026-08-19 → 08-26 from the session transcripts: 84 builder
   sessions and 23 auditor sessions, but **95.6K vs 94.9K output tokens per
   session** — the per-run cost is a dead heat, the auditors are ~21% of tokens
-  and ~24% of cache-writes, and they run **Opus** where you run **Fable**. In
-  any hour you are skipped they are **100%** of the burn. That is a feedback
-  loop, not an exemption: skipping you raises their share, which raises the
-  meter, which skips you again. It has now cost an 18-hour blackout (Review,
-  2026-08-26). Do not treat the exemption as evidence that the auditors are
-  cheap.
+  and ~24% of cache-writes, and they run **Opus** where you run **Fable**. So
+  the exemption is not evidence that the auditors are cheap.
+  **But the "feedback loop" this bullet claimed on 08-26 — skipping you raises
+  their share, which raises the meter, which skips you again — is WITHDRAWN by
+  the Review that wrote it (2026-08-27).** It required the auditors' spend to
+  move the gating meter, and the 42-hour join in the price-table block below
+  shows it does not: 75% of the meter's rise fell in hours with zero on-box
+  requests, and two full audits moved it zero. The blackout is real and now
+  **42 slots** long; its cause is not the organ next door. Do not carry the
+  loop story forward — it was a plausible mechanism fitted to 18 hours of
+  co-occurrence, and more data killed it.
 - **Why it exists:** two consecutive weeks went dark on a Friday and 30.9 free
   Kaggle GPU-hours expired unspent on the Sundays inside those blackouts. If you
   are awake late in a week, **that is what the pacing bought** — check whether
@@ -99,33 +104,52 @@ the 18 hours from 13:07 to 01:07 the only on-box spend was **three Opus
 overseer audits** plus a 6-request Fable tail — and `week:Fable` went
 **66% → 86%**. Prices, read straight off `ladder.log`:
 
-| what ran | Δ all-models | Δ Fable |
-|---|---|---|
-| one builder iteration (Fable) | ~+0.5–1 | **~+1** |
-| one overseer audit (Opus) | ~+4.5 | **~+7** |
+**AND THE PRICE TABLE THAT USED TO SIT HERE IS FALSIFIED — do not budget
+against per-organ prices (Review, 2026-08-27).** It read *"one overseer audit
+≈ +4.5 all-models, ≈ +7 Fable"* and it was inferred from co-occurrence over 18
+hours. Extended to 42 hours and joined hour-by-hour against the actual request
+counts in `~/.claude/projects/*/*.jsonl`, the correlation collapses:
 
-An Opus audit moves the meter *named after your model* about **seven times**
-harder than one of your own iterations does. The mechanism is not documented
-by the CLI and this page is not going to guess at it — the measurement stands
-on its own. What follows operationally: **read both lines, name the one you
-act on (still all-models), and if `week:Fable` is inside a few points of 90,
-say so out loud** — at 88% there is less than one audit of room, and that
-number is not yours to have spent.
+| window 08-25T13 → 08-27T06 | hours | on-box requests | Δ all-models |
+|---|---|---|---|
+| hours containing an organ session | 7 | 762 (≈950K out-tok) | **+6** |
+| hours with **zero** requests from this box | 35 | **0** | **+18** |
 
-**And the safety net this section cited DOES NOT WORK — verify before you rely
-on it.** It said *"`FALLBACK_MODELS="opus sonnet"` fires on the refusal."*
-At **10:07 and 11:07 on 08-21 it did not fire.** The CLI printed
-`You've reached your Fable 5 limit.` and both iterations exited `rc=1` in
-three seconds. `lib_credits.sh` greps for `out of usage credits`
-(`credits_out`) and `hit your session limit` (`session_limited`); this third
-wording matches neither, so `limit_hit` returned false, the fallback loop
-`break`ed on its first test, **and no lost-iteration marker was written** —
-`lost_iterations.log` is still 0 bytes. Two dead iterations, uncounted, with
-every organ reporting health. This is the same scar `lib_credits.sh`'s own
-header documents from 2026-08-13, recurring on a third message wording. The
-fix is routed to the owner (PROGRESS FOR THE OWNER #1) because it is an organ
-script; **until it lands, an `rc=1` three-second iteration is a silent dead
-slot, not a crash.**
+**Three quarters of the rise in the meter that gates you happened in hours when
+this box issued no requests at all** — and the meter has been pinned at 62%
+since 08-26T16:07 straight through two full Opus audits (~200K output tokens).
+`lib_usage.sh`'s own header already says it: `week:all models` is a **SHARED
+pool**, and the largest hand on it is not on this box. Two readings survive the
+data (a shared pool going quiet; a lagged/quantised CLI figure) and this page
+will not pick between them without evidence.
+
+**What follows operationally, and it is the only durable rule here: read the
+tool, act on `week:all models`, and do NOT model the meter.** Every attempt to
+price organ-hours against it — three now — has been falsified inside a week.
+Your abstinence does not lower it and your work barely raises it. If a page
+tells you what an iteration "costs", that page is guessing.
+
+**`week:Fable` is still not the gate, and right now it is at 100%.** It resets
+**2026-08-31 04:59 UTC** with all-models. Until then `JACK_LOOP_MODEL=fable`
+cannot start: your first run each slot will refuse in ~3 s and the chain will
+walk you to **opus**. That is expected, not a fault — but it means every
+iteration between now and the reset is an **Opus** iteration. Plan the unit
+accordingly: fewer, larger, better-chosen. Say which model you actually ran on
+in your first paragraph.
+
+**The safety net that used to be broken is FIXED — 2026-08-27, and verified.**
+This block used to warn you that `FALLBACK_MODELS="opus sonnet"` did *not* fire
+on the weekly per-model refusal: on 08-21 at 10:07 and 11:07 the CLI printed
+`You've reached your Fable 5 limit.`, which matched neither `credits_out` nor
+`session_limited`, so `limit_hit` returned false, opus was never tried, and no
+lost-iteration marker was written — two dead slots, uncounted, every organ
+reporting health. `lib_credits.sh` now carries `model_limited()` (start-anchored
+so your own prose quoting the string cannot trip it) and `ladder_loop.sh` has
+the matching `elif` that writes the marker. **Do not assume it works because
+this line says so** — the previous version of this line was also confident.
+`lost_iterations.log` is the receipt: if it is still 0 bytes after a slot that
+ended `rc=1` in three seconds, the detector missed a fourth wording and you
+should say so loudly rather than quietly re-running.
 
 **The posture that survives all of this: DISPATCH, THEN IDLE.** A Kaggle
 submission and a `launch_detached.sh` run compute through any blackout and
@@ -304,6 +328,26 @@ carry proof its instrument was alive"); UB.9 and T2.06 got docstring lines
 (both now honestly flagged stale, re-stamp at the next --gate sweep).
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
+
+**IF THIS IS YOUR FIRST SLOT SINCE 2026-08-25 12:23, YOU ARE WAKING INTO A
+DEADLINE — read this before the rest (Review, 2026-08-27).** You were pace-
+skipped for **42+ consecutive slots**. Count them from `ladder.log` and put the
+number in your first paragraph. Then note the two clocks: **W34's 29.69 free
+Kaggle hours expire Sunday 2026-08-30** (it would be the fourth consecutive
+week lost, ~65 h cumulative), and `week:Fable` is capped until **08-31 04:59**,
+so you are running on **Opus** and every slot is expensive. The order that
+follows from those two facts, and it inverts the usual one:
+
+1. **Commit `experiments/tests/sm_03_nose_reports_occluded.py` first** — it is
+   a registered spec whose only copy is untracked (see below). Thirty seconds.
+2. **Then DISPATCH before you build anything.** `SM.03` is the live GPU_SHORT
+   candidate; a Kaggle submission and a `launch_detached.sh` run keep computing
+   through any later blackout and write their own receipts. The posture in the
+   meter section — *dispatch, then idle* — is not advice this week, it is the
+   whole plan. Do **not** manufacture a dispatch beyond what `run next` says is
+   implemented and unsettled; if nothing honestly qualifies, say so plainly and
+   let the hours expire on the record rather than on a fabricated job.
+3. Only then take a build unit (`SH.02` is the one that needs nobody).
 
 **THE SHAPE OF THE FRONTIER CHANGED — read this before you rank anything
 (written by the BUILDER in `9449a1b`, 2026-08-24 07:15; it was signed

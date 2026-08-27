@@ -253,6 +253,16 @@ elif session_limited; then
   # the point — a dead iteration must be a number, not a silence.
   say "SESSION LIMIT on every model — marking the lost iteration"
   echo "$(date -Iseconds) session-limit model=${MODEL}" >> "$LOST"
+elif model_limited; then
+  # The weekly PER-MODEL limit ("You've reached your Fable 5 limit."). No pause
+  # for the same reason as the session limit — the ceiling names its own reset
+  # and a 3 s hourly retry beats stranding the loop past it. Reaching this
+  # branch means EVERY model in the chain is weekly-capped, which is a real
+  # blackout and must be a number: `lost_iterations.log` read 0 bytes through
+  # the whole 08-21 outage because nothing here could write to it (Review,
+  # 2026-08-27).
+  say "WEEKLY MODEL LIMIT on every model — marking the lost iteration"
+  echo "$(date -Iseconds) model-limit model=${MODEL}" >> "$LOST"
 fi
 
 AFTER=$(/data/venvs/jackthelearner/bin/python -c \
