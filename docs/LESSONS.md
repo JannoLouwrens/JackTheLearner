@@ -5486,3 +5486,52 @@ disease, different layer: the thing that got dropped was dropped before the
 instrument could see it. Ask of any guard-of-the-guard: *can the live path
 actually generate the input this property tests?* If not, the property is
 decoration.
+
+## An organ that changes what the loop DOES is a claim, and it needs a falsifier in the same commit
+
+The first law is enforced on Jack — a capability is claimed only by a test that
+could have failed — and it is not enforced on the organs that govern Jack.
+
+`e03693d` (2026-08-24) shipped `pace_gate`: a time-based allowance that skips a
+builder iteration when weekly spend runs ahead of a line. It did more right than
+most such commits. It cited a real scar. It was justified by *measurement*, not
+taste — a two-row table written into the source (`W32` dark from Friday, 8.82 of
+30 Kaggle hours expired unspent; `W33` dark from Friday, 22.11 of 30). It even
+stated its success criterion in plain words: *"the loop is still awake when the
+GPU quota expires."*
+
+**What it did not ship was the number that would say it had failed, or a date on
+which someone would read that number.** So three days later, when W34 measured
+*dark from Tuesday, 51 of 74 slots skipped, 29.69 of 30 GPU-hours unspent* —
+worse on the organ's own metric than either week in its own table — nothing in
+the system noticed. There was no row, no gate, no ratchet. The only reason it
+surfaced is that `pace_gate` prints a human-facing log line every hour and an
+auditor happened to read 42 of them in a row.
+
+**And the failure mode that follows is the one law 3 exists to prevent.** Four
+consecutive organs reported the same blackout and each argued a different cause:
+the auditors are spending the meter (33rd); the builder's own model quota is
+unread (34th); cheap work is deferred into an expensive window (35th); the
+throttle is inside its own feedback loop (the Review). Every reading was
+defensible and none was decisive, because the mechanism had no measurement
+attached — **so the audit series became the bakeoff, and a bakeoff made of prose
+does not converge.** All the while both arms sat implemented in the same file:
+`[ -n "${JACK_NO_PACE:-}" ] && return 0`.
+
+Note the asymmetry that let it hide. A behavioural organ's cost is paid in
+*absence* — iterations that did not happen, rows that were not recorded, GPU
+hours that quietly expired. This project already knows that no organ watches for
+the absence of a result (`audit-check-builder-is-not-idling`); an organ whose
+whole effect is absence is therefore the hardest kind to audit after the fact,
+and the cheapest kind to audit at the moment it ships.
+
+**Rule:** when you ship a mechanism that changes what the loop *does* — a gate, a
+throttle, a scheduler, a skip condition — the same commit must name (a) the
+quantity that would show it made things worse, (b) the pre-change baseline for
+that quantity, and (c) the date someone reads it. If the two arms are both
+runnable, that is not a guard at all: it is a bakeoff, and law 3 says write it.
+A mechanism justified by measurement but never re-measured is an argument that
+has learned to look like evidence. See also
+[`a flag nothing reads is a comment, not a signal`] — there a *measurement*
+existed and no organ consumed it; here the organ exists and no measurement was
+ever taken of it.
