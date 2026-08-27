@@ -5576,3 +5576,48 @@ Same family as [`Unifying the PREDICATE is not unifying the QUESTION`] and the
 constraint-in-prose sightings: the defect is never in the function, it is in what
 the production path does around it. Here the surrounding thing is not an argument
 or an input — it is the set of programs that call it at all.
+
+## A deadline that falls after the harm is not a guard, it is a record of an intention
+
+*(39th overseer audit, 2026-08-27. Found by putting a decision's `decide_by`
+and the expiry date of the resource it was protecting in the same table — two
+numbers that live in different files and had never been read side by side.)*
+
+`D1`'s repair was the `DECIDE:` block: every goal-class escalation carries a
+**default** and a **decide_by**, so silence resolves instead of deadlocking. It
+worked — eleven entries are armed and the undeclared ratchet is at zero. Then
+`D13` and `D14` were armed against a live, dated harm — free Kaggle GPU-hours
+expiring Sun 2026-08-30 00:00 — with `decide_by: 2026-08-31`.
+
+**Both defaults fire 29 hours after the hours they exist to save have expired,
+and on the same day the meters reset and the symptom clears itself.** So on
+2026-08-31 the builder wakes, the gate opens, the defaults fire, every organ
+reports green — and W34's 29.69 GPU-hours are gone. The mechanism will look like
+it worked. That is the dangerous part: a late default does not fail loudly, it
+succeeds irrelevantly.
+
+**Why it was invisible to eight audits.** Each half was checked, repeatedly, and
+each half was right. `decisions.py` verifies that a `decide_by` **exists** and is
+ISO-formatted, and fires the default when it passes — it has no concept of what
+the entry is protecting. The audit checklist asks §5 "note remaining budget" and
+§6 "is anything blocked on the owner", in that order, as two separate items. The
+deadline is in `DECISIONS_NEEDED.md`; the expiry is computed by `gpu.py:369` from
+a `%U` week key. **Nothing in the system ever compares them, because neither
+number is wrong.** The defect is a relation, and every instrument here measures
+properties.
+
+**Rule.** When you arm a default against a harm that has a date, write both dates
+in the entry and assert the order. If `decide_by >= harm_by`, the entry is not
+armed and must say so — the correct move is a shorter deadline (a tightening the
+ratchet always permits), never a longer one. Where no harm date exists, say that
+too; "no dated harm" is a real answer and it is what makes the check cheap.
+
+**The generalisation past deadlines.** A guard is a *relation* between a trigger
+and a consequence, and a system that validates only the well-formedness of each
+side will certify guards that cannot fire in time to matter. Same family as
+[`For a limiter on a SHARED resource, ask who is subject to it before you argue
+about its threshold`] — there the unchecked relation was *incidence* (which
+programs call it), here it is *timing* (whether it arrives before the loss). In
+both, every local property was green and the mechanism was inert. When you add a
+guard, state the relation it depends on in its own docstring, because the next
+reader will check the parts.

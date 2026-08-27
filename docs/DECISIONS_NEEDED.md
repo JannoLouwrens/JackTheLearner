@@ -2886,3 +2886,104 @@ free Kaggle GPU-hours expire Sat 2026-08-29, the third consecutive week of
 expiry and the largest (W32 8.82, W33 22.11). On the measured rates the gate
 releases ~Sat 08:00 UTC, leaving ~16 hours of window; if exogenous burn
 accelerates to the pace line's own slope it does not release at all this week.
+
+## Was physics-first retired by argument instead of by bakeoff? (OPEN, owner) — RESOLVED 2026-08-09 BY THE OWNER; the header is what was stale (39th overseer audit, 2026-08-27 19:00 UTC)
+
+**No owner action. Nothing is being decided here.** This header records a ruling
+the owner already made, in this file, eighteen days ago, and which
+`DECISIONS_RESOLVED.md:2557` has carried since:
+
+> **DECIDED 2026-08-09: (a) RUN IT.** Owner: *"schedule the run after T2.01."*
+
+The body of the original entry says exactly that, in bold. Only its `## ` header
+still said `(OPEN, owner)`, and `experiments/decisions.py` reads headers. So the
+scanner has reported an answered question as an open deadlock every audit since,
+and the 32nd audit's housekeeping (2026-08-26 00:37) said so plainly — *"the
+three 'UNDECLARED' entries are ALL already answered, and have been miscounted for
+17 days"* — then closed two of the three. This is the third. It is now 18 days.
+
+**Why it could not simply be armed instead, which is the finding worth keeping.**
+The obvious repair — give it a `DECIDE:` block like every other open entry — is
+**impossible as the tool is written**, and that is a defect in the guard, not in
+this entry. `parse()` keys a header with no `D<n>` prefix by
+`title.split("(OPEN")[0].strip()[:52]`, which for this entry yields the 52-character
+string `'Was physics-first retired by argument instead of by '` — spaces included,
+trailing space included. The declaration grammar one function above is
+`_DECIDE = ^DECIDE:\s*([A-Za-z0-9._-]+)\s*$`, which cannot match any string
+containing a space. **There is no text an auditor can write into this file that
+`parse()` will bind to this candidate.**
+
+Measured, not inferred:
+
+```
+>>> key = t.split("(OPEN")[0].strip()[:52]
+'Was physics-first retired by argument instead of by '   (52 chars)
+>>> bool(_DECIDE.match("DECIDE: " + key + "\n"))
+False
+```
+
+So for as long as this was the last `UNDECLARED` entry, the overseer's standing
+instruction — *"Arm at least one per audit; the ratchet may shrink and may never
+grow"* — named an action its own parser forbade. The ratchet could report
+`ratchet ok (1/10)` forever and never reach 0. The lawful exit is the one taken
+here (`_SETTLED` matches `RESOLVED` in a header, so recording the owner's
+existing ruling in a header removes the candidate honestly); the durable exit is
+a builder fix, filed as **B2** in `OVERSIGHT.md`.
+
+**Ratchet effect: undeclared 1/10 -> 0/10.** Nothing was widened, no threshold
+moved, no owner question answered by an agent.
+
+## D13 / D14 — THE DEADLINE FALLS AFTER THE HARM IT IS ARMED AGAINST (39th overseer audit, 2026-08-27 19:00 UTC)
+
+**This is not a new question and it needs no new option.** Both entries are
+correctly armed, with defaults that are conservative and reversible. The defect
+is in one field: `decide_by: 2026-08-31`.
+
+D13 (*should the overseer skip quiet slots on the meter that gates the builder?*)
+and D14 (*which meter should govern the builder, and what happens when its model
+runs out?*) exist because the builder is dark and free GPU-hours are expiring.
+Here is what is actually on the calendar, all four clocks measured today rather
+than assumed:
+
+| clock | resets / expires | source |
+|---|---|---|
+| **Kaggle free 30 h, week `2026-W34`** — **29.6889 h unspent** | **Sun 2026-08-30 00:00 UTC** | `gpu.py:369` keys weeks `%U` (Sunday-start); W34 = Sun 08-23 → Sat 08-29 |
+| Claude `week:all models` (the pace gate's meter, **68%**) | Mon 2026-08-31 05:00 UTC | `claude_usage.py` live read |
+| Claude `week:Fable` (the builder's primary, **100%**) | Mon 2026-08-31 05:00 UTC | same |
+| **D13 and D14 defaults fire** | **2026-08-31** | this file, `decide_by:` |
+
+The free GPU-hours die **29 hours before** either default fires. On 2026-08-31
+both Claude meters reset, the pace gate opens on its own, the builder wakes
+without anyone deciding anything — and W34's 29.69 hours are already gone.
+
+**So both defaults, exactly as armed, fire into a week where the harm has been
+taken and the symptom has cleared itself.** They will appear to have worked. A
+default dated after its own harm is not armed; it is a record of an intention.
+
+**What this costs, measured.** Third consecutive week of expiry, monotonically
+worse, and W34 is the first full week under the pace gate (shipped 2026-08-24):
+
+| week (`%U`) | Kaggle charged | expired unspent |
+|---|---|---|
+| W32 (08-09 → 08-15) | 21.18 h | **8.82 h** |
+| W33 (08-16 → 08-22) | 7.89 h | **22.11 h** |
+| W34 (08-23 → 08-29) | 0.3111 h | **29.69 h projected** |
+
+**60.6 free GPU-hours in three weeks**, on a project whose owner ruled free
+compute only.
+
+**What is asked of the owner: one date, not one decision.** Rule the two
+questions you already have on your desk — the options are unchanged, the
+evidence is attached to each entry — **before Sat 2026-08-29 12:00 UTC**, which
+is the last point at which a ruling can still buy dispatch slots inside W34.
+Or say the hours may go, and the loss becomes a choice on the record instead of
+an accident of arithmetic. Either is defensible; a deadline that arrives after
+the resource it was protecting is not.
+
+**Why the overseer did not simply move the date itself.** Shortening a deadline
+is a tightening and the ratchet permits it, but `decide_by` is the owner's clock
+and the whole point of D1's repair was that a deadline stops meaning anything
+once agents may edit it. The date stands. The finding is filed, and the durable
+repair — `decisions.py` should refuse a `decide_by` that falls after a dated
+expiry named in the same entry — is filed as builder item **B3** in
+`OVERSIGHT.md`, where a measurement can settle it.
