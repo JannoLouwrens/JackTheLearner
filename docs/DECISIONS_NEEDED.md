@@ -3109,3 +3109,83 @@ invariant is a tightening the ratchet permits, and all four are fixable before t
 date. The one place the owner may want to rule rather than be ruled for is
 **D10**: seating a learning core off a single-arm VOID is a call with a name on
 it.
+
+---
+
+## D14 — THE METER THE DEFAULT IS KEYED TO DID NOT RECORD A SINGLE REQUEST WHILE IT ROSE 34 POINTS (42nd overseer audit, 2026-08-28 12:45 UTC)
+
+**Nothing in `D14`'s `DECIDE:` block is changed by this entry** — same options,
+same default (option (b), the loud refusal), same `decide_by: 2026-08-31`. The
+overseer may not rewrite a default or move a deadline. This attaches the
+measurement that the entry was decided without.
+
+**What `D14` says the evidence is:**
+
+> *"all 12 points of Fable burned in the six hours to 12:07 came from outside
+> jackthelearner, with the builder at zero iterations."*
+
+**What the request log says.** Every Claude request on this box writes an
+assistant record carrying `model` and `usage` into `~/.claude/projects/*/*.jsonl`.
+Summed across **all** project directories, no threshold, output tokens:
+
+| date | `claude-fable-5` | `claude-opus-5` |
+|---|---|---|
+| 2026-08-24 | 1,831,575 | 805,990 |
+| 2026-08-25 | 800,639 | 583,033 |
+| 2026-08-26 | **0** | 564,334 |
+| 2026-08-27 | **0** | 593,308 |
+| 2026-08-28 → 12:44 | **0** | 471,138 |
+
+**The last `claude-fable-5` request anywhere on this box is
+`2026-08-25T12:23:27.661Z`.** `ladder.log` records the builder's final
+`iteration end rc=0` at `12:23:33`, six seconds later. There has been no Fable
+request since — not from this project, not from outside it.
+
+Across that silence the Fable percentage rose in lockstep with the shared pool:
+
+| time | `week:all models` | `week:Fable` | Fable requests in window |
+|---|---|---|---|
+| 08-25 13:07 | 38% | 66% | 0 |
+| 08-26 04:07 | 52% | 86% | 0 |
+| 08-26 16:07 | 62% | **100%** | 0 |
+
+So the 12 points `D14` attributes to an outside consumer were not burned by any
+Fable request that left a trace on this box. **At least 34 of Fable's 100 points
+were added with zero recorded requests.** Two explanations survive and this desk
+cannot separate them from inside the repo:
+
+- **(a)** `week:Fable` is not an independent spend meter — it tracks the shared
+  pool, offset by the project's real Fable spend of 08-24/08-25. The correlation
+  is exact and monotone, which favours this.
+- **(b)** a consumer with no transcript on this box uses Fable and only Fable,
+  and became invisible at the moment our builder did.
+
+**Why this bears on the DEFAULT and not merely on the prose.** The armed default
+is a pre-flight abort *"at a 95% floor on the loop model's own weekly line"*,
+described — accurately — as *"a NARROWING and only a narrowing."* That accuracy
+is the hazard:
+
+- Under **(a)**, Fable's line is pinned by consumption the builder does not make
+  and cannot reduce. The observed tracking offset puts Fable at ~95% whenever
+  all-models is near ~65%, which is a Friday. The pre-flight would abort **every**
+  iteration from roughly midweek onward, every week, and it runs *before*
+  `pace_gate` — converting a 72-hour outage into a standing one.
+- Under **(b)**, the same default hands an unnamed external party a silent,
+  permanent off-switch for this project's only productive organ.
+
+**Both branches make option (b) unsafe.** This is not an argument on the merits
+of refusing to run an exhausted model — that is sound. It is that the number the
+refusal is keyed to does not measure what the entry reads it as measuring, and
+`D14` contains no measurement that would have distinguished the cases.
+
+**The repair is already permitted and is routed as a builder item.** `D14`'s own
+**option (c) — gate on `max(all models, loop model)`** — is equally a narrowing,
+is monotone against the 90% stop, and cannot be pinned by a meter that moves
+without requests. It is a tightening, so amending the default toward it is a move
+the ratchet permits and the builder may make before 2026-08-31
+(`docs/OVERSIGHT.md`, 42nd audit, B1). **The owner is owed one line only if they
+would rather option (b) stand as written.**
+
+**The generalisable half is in `docs/LESSONS.md`:** a meter named after a thing
+is not a measurement of that thing until it has been checked against the log of
+the events it claims to count.

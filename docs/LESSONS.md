@@ -5727,3 +5727,65 @@ is not a guard, it is a record of an intention`]. In all three the science was
 clean, every local property was green, and the defect lived in the relation
 between what an instrument says and what it does. The failures of this system
 have migrated from the ledger to the instruments that certify it.
+
+## A meter named after a thing is not a measurement of that thing until you check it against the log of the events it counts
+
+*(42nd overseer audit, 2026-08-28. Found by asking who spent the Fable budget
+and answering it from the request records instead of from the percentage.)*
+
+`claude_usage.py` reports three lines, and one of them is named after a model:
+
+```
+week:Fable             [####################] 100%  resets Aug 31, 5am (UTC)
+week:all models        [##############      ]  72%  resets Aug 31, 5am (UTC)
+```
+
+Four audits and an owner decision (`D14`) read `week:Fable` as *this project's
+builder's own spend*, because that is what the label says and because the builder
+is the only organ pinned to Fable. `D14` went further and inferred an outside
+consumer from the fact that the number rose while the builder was dark:
+*"all 12 points of Fable burned in the six hours to 12:07 came from outside
+jackthelearner."*
+
+**Measured against the request log** — every Claude call writes `model` and
+`usage` into `~/.claude/projects/*/*.jsonl` — the last `claude-fable-5` request
+anywhere on the box was `2026-08-25T12:23:27.661Z`, six seconds before the
+builder's final `iteration end`. In the 72 hours after it, **zero Fable
+requests**, from any project. The percentage nonetheless climbed 66% → 100%,
+monotonically, tracking `week:all models` (38% → 62%) with a near-constant
+offset. A cumulative counter cannot rise on zero events; therefore the label is
+not a definition, and nobody had checked.
+
+**The gap that made it survive.** The percentage is *the* natural observable — it
+is what the CLI prints, what the gate reads, and what every organ logs hourly.
+The request log is one directory away and nothing pointed at it. Every audit that
+reasoned about this meter reasoned about a rendering of it, and a rendering
+carries the name of the quantity it was *intended* to show, never the name of the
+quantity it actually shows. `pace_gate` even prints the number hourly, annotated
+`(not the gate)` — the one annotation that guarantees nobody audits it.
+
+**Why it was expensive.** `D14`'s pre-registered default — a pre-flight abort at
+a 95% floor on *the loop model's own weekly line* — is armed to fire three days
+from the discovery. It is correctly described in its own text as *"a NARROWING
+and only a narrowing"*, and that is precisely what makes it dangerous: a guard
+that refuses strictly more, keyed to a number pinned by traffic the guarded organ
+does not generate, refuses **everything**, forever, while passing every review
+that asks "is this monotone?"
+
+**Rule.** Before you key a guard to a metric, find the event log the metric
+claims to summarise and assert the two move together — in particular that the
+metric **cannot advance across a window with zero events**. Then log the event
+count beside the metric wherever the metric is printed, so the next reader gets
+both. `week:Fable 100% (0 requests in 72 h)` is a sentence no audit could have
+misread; `week:Fable 100% (not the gate)` is one that five of them did.
+
+**Family.** The third instance of one shape in three days: [`A ratchet over one
+class of a multi-class violation list pays for migration, not repair`] (what a
+tool *counts* vs what it *prints*), [`A guard that checks a field is PRESENT has
+not checked what the field SAYS`] (what a tool *validates* vs what a document
+*claims* it validates), and now what a metric is *named* vs what it *counts*. In
+all three the science was clean, every local property was green, and the defect
+lived in the relation between an instrument's label and its referent. The
+corollary is getting hard to avoid: **this system's remaining failures are almost
+all in the instruments, and an instrument is audited by leaving it and finding
+the ground truth it summarises.**
