@@ -5789,3 +5789,66 @@ lived in the relation between an instrument's label and its referent. The
 corollary is getting hard to avoid: **this system's remaining failures are almost
 all in the instruments, and an instrument is audited by leaving it and finding
 the ground truth it summarises.**
+
+## A contestability check must quantify over CHALLENGERS, not over the arena list
+
+**Found by the 43rd audit, 2026-08-28, in the organ built four days earlier to
+make this exact hole impossible.** `champions.py` exists because of the
+2026-08-24 finding that *"one shared brain was a premise of the ladder, never an
+outcome of it"*, and it enforces `SYSTEM.md`'s standing rule: **no architectural
+seat may be held without a registered, EXISTING challenger.** Its whole test for
+a seat that cannot lose was
+
+    all(v == "NOT_RUN" for v in s["arena_status"].values())
+
+which enforces the *existing* half and never asks the *challenger* half. **One
+arena spec having run — any one, for any reason — discharges the debt for the
+whole seat, permanently.** For a one-arena seat the two questions coincide, so
+every single-arena seat in the file was caught correctly. Both multi-arena seats
+were not, and the multi-arena seats are the consequential ones: `Learning core`
+read `ok` on four passing arenas of which one is a declared `rule` (the admission
+criterion), one a declared `fixture`, and two are feasibility gates — while the
+three specs that could actually move it were VOID, NOT_RUN, NOT_RUN. Its own
+cell says, in bold, **"DEFAULT, never defended"**. `Vision encoder` read
+`ok`-on-contestability from a `fixture` and an **ablation of the incumbent** — a
+test that by construction cannot seat a challenger.
+
+**Three sub-rules fall out, and each is a distinct false positive for "defended":**
+
+1. **The incumbent's own arm is not a contest.** `Episodic retrieval` is held
+   **BY VERDICT** — the strongest marking available — on an arena `ME.11.A–F` in
+   which the only arm that ran is `ME.11.A`, *"lexical containment, the
+   incumbent, as the null"*. A bakeoff where 1 of 6 arms ran is not a bakeoff.
+2. **A VOID is not a verdict, in a champions check as much as in a bakeoff.**
+   `SYSTEM.md` already says *"fix the arm, do not decide"*; an arena whose only
+   completion is VOID has decided nothing and must not clear the flag.
+3. **Kinds transfer between instruments.** `coverage.py` learned on the 8th–12th
+   audits that a `fixture`/`rule`/`sensor` buys no claim credit, and encoded it.
+   `champions.py` cited `coverage.py`'s *phantom-credit* scar in its own
+   docstring and then reproduced `coverage.py`'s *kindless-credit* scar one
+   document over. **When you build an instrument by analogy to an existing one,
+   port its scars as well as its shape** — the fix is usually an import, not a
+   design.
+
+**And the part that explains why 42 audits missed it: the tool's known-positive
+fixture asserted the false negative.** `_fixture()` built a seat whose `held`
+cell reads verbatim `**DEFAULT, never defended**`, gave it two PASSing arenas,
+named it **`Healthy default seat`**, and asserted `ok not in flagged`. This was
+never a latent bug; it was a tested-in behaviour, blessed by the one battery
+whose purpose is that *"a scanner nobody has watched catch something is a scanner
+nobody has tested."*
+
+**Rule.** A guard's fixture must contain the case the guard is *for*, stated in
+the guard's own vocabulary, and a fixture row whose label contradicts its
+expected verdict — `never defended` asserted `healthy` — is a defect report, not
+a test. **Read every fixture's labels against its assertions before trusting the
+scanner**: an assertion is checked by the machine every run, and a label is
+checked by nobody.
+
+**The generalisation.** *Existence* and *sufficiency* are different questions and
+a ratchet built for one silently answers the other. `coverage.py` separates them
+(a declared spec vs a passing claim vs its kind). `decisions.py` separates them
+(an entry vs an armed default vs a permitted default). `champions.py` collapsed
+them, and printed `ratchet ok` over the two seats its own document marks
+undefended. **Ask of every green ratchet: what exactly did it count, and is the
+thing it counted the thing whose absence would hurt?**
