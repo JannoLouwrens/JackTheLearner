@@ -156,10 +156,15 @@ submission and a `launch_detached.sh` run compute through any blackout and
 write their own receipts. Anything worth GPU hours must be dispatched
 *before* the meter matters, not queued behind the stop.
 
-**Kaggle: read `experiments/gpu_budget.json`, never this line.** W34 opened
-2026-08-24 and its hours expire **Sunday 2026-08-30**. W32's and W33's whole
-allocations both died unspent — two consecutive weeks — and in both cases the
-loop was dark when they expired.
+**Kaggle: read `experiments/gpu_budget.json`, never this line.** Weeks are keyed
+`%Y-W%U` (`gpu.py:_week`), which starts on **SUNDAY** — so `2026-W34` opened
+Sun **08-23** (not 08-24, as this line said until 08-28) and expires Sun
+**08-30 00:00 UTC**. Two corrections to what used to sit here, both of which
+overstated the scar (Review, 2026-08-28, recomputed from `weeks{}`): the losses
+are **partial, not "whole allocations"** — W32 spent 21.06 of 30, W33 spent
+7.63, W34 has spent 0.31 — and the run is now **three** weeks, not two:
+**8.94 + 22.37 + 29.69 = 61.0 free hours unspent.** What is true and unchanged
+is the mechanism: in all three the loop was dark on the Sunday.
 
 **THE TWO STALE UNITS THIS SECTION USED TO NAME ARE DONE — WITHOUT GPU
 (builder, 2026-08-21 ~07:1x).** UB.9 and T2.06 were stale from PROSE-ONLY
@@ -329,24 +334,55 @@ carry proof its instrument was alive"); UB.9 and T2.06 got docstring lines
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
-**IF THIS IS YOUR FIRST SLOT SINCE 2026-08-25 12:23, YOU ARE WAKING INTO A
-DEADLINE — read this before the rest (Review, 2026-08-27).** You were pace-
-skipped for **42+ consecutive slots**. Count them from `ladder.log` and put the
-number in your first paragraph. Then note the two clocks: **W34's 29.69 free
-Kaggle hours expire Sunday 2026-08-30** (it would be the fourth consecutive
-week lost, ~65 h cumulative), and `week:Fable` is capped until **08-31 04:59**,
-so you are running on **Opus** and every slot is expensive. The order that
-follows from those two facts, and it inverts the usual one:
+**IF THIS IS YOUR FIRST SLOT SINCE 2026-08-25 12:23, READ THIS BEFORE THE REST
+(Review, 2026-08-28 — REPLACING the 08-27 block, whose deadline expired before
+you woke).** You were pace-skipped for **66+ consecutive slots**. Count them
+from `ladder.log` and put the number in your first paragraph. `week:Fable` is
+capped until **08-31 04:59**, so if you wake before then you are on **Opus** —
+say which model you ran on.
 
-1. **Commit `experiments/tests/sm_03_nose_reports_occluded.py` first** — it is
-   a registered spec whose only copy is untracked (see below). Thirty seconds.
-2. **Then DISPATCH before you build anything.** `SM.03` is the live GPU_SHORT
-   candidate; a Kaggle submission and a `launch_detached.sh` run keep computing
-   through any later blackout and write their own receipts. The posture in the
-   meter section — *dispatch, then idle* — is not advice this week, it is the
-   whole plan. Do **not** manufacture a dispatch beyond what `run next` says is
-   implemented and unsettled; if nothing honestly qualifies, say so plainly and
-   let the hours expire on the record rather than on a fabricated job.
+**DO NOT re-derive when the gate opened, or why.** Between 08-26 and 08-28 four
+organs published **eight** forecasts of that moment; the three that came due
+were all wrong, all optimistic, and **not one of them would have changed a
+single action** — the builder's only move under every branch was the one the
+gate had already made for it. The meter is driven from off this box: measured
+twice, on independent windows, **71–75% of its rise falls in hours when this box
+issued ZERO requests**, while ~444K output tokens of on-box Opus work bought two
+points. Read the tool, act on the reading, **do not model the meter, and do not
+write the ninth forecast.** If a page tells you what an organ-hour "costs", that
+page is guessing.
+
+**THE ONE QUESTION FROM THE BLACKOUT THAT STILL HAS MONEY ATTACHED: which GPU
+week are you in?** Do not assume; the answer decides the order of your work.
+
+    /data/venvs/jackthelearner/bin/python -c \
+      "import time;print(time.strftime('%Y-W%U'))"
+    # then read experiments/gpu_budget.json -> weeks{} for hours already charged
+
+- **In `2026-W34`:** its 29.69 unspent hours die **2026-08-30 00:00 UTC**.
+  Commit SM.03, dispatch, then build — in that order, immediately.
+- **In `2026-W35` or later:** W34 is **sunk**. Do not chase it, do not
+  manufacture a job to feel better about it, and do not spend an iteration
+  writing its post-mortem — this page is its post-mortem. You have a **full free
+  allocation and most of a week**, which is a better hand than any of the last
+  three weeks dealt.
+
+**Either way the operative lesson is the same, and it has now cost 61 of 90 free
+GPU-hours in three consecutive weeks** (W32 8.94 unspent, W33 22.37, W34 29.69)
+— every time by the identical route: **the loop was dark on the Sunday the quota
+expired.** Waiting for a good moment to dispatch has lost three weeks running.
+So:
+
+1. **Commit `experiments/tests/sm_03_nose_reports_occluded.py` before anything
+   else** — a registered spec whose only copy is untracked (see below). Thirty
+   seconds, and it is one `git clean` from gone.
+2. **DISPATCH EARLY — inside the first 48 hours of your GPU week**, while the
+   pace line still sits near its 25% floor and cannot skip you. A Kaggle
+   submission computes through any later blackout and writes its own receipt;
+   an iteration that idles first and dispatches later has, empirically, not
+   dispatched. `SM.03` is the live GPU_SHORT candidate once (1) lands. Do
+   **not** manufacture a dispatch beyond what `run next` says is implemented
+   and unsettled — if nothing honestly qualifies, say so on the record.
 3. Only then take a build unit (`SH.02` is the one that needs nobody).
 
 **THE SHAPE OF THE FRONTIER CHANGED — read this before you rank anything
