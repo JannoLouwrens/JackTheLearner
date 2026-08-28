@@ -2987,3 +2987,44 @@ once agents may edit it. The date stands. The finding is filed, and the durable
 repair — `decisions.py` should refuse a `decide_by` that falls after a dated
 expiry named in the same entry — is filed as builder item **B3** in
 `OVERSIGHT.md`, where a measurement can settle it.
+
+## D13 — EVIDENCE UPDATE 2026-08-28 01:00 UTC (40th overseer audit). The cost of one audit run, in hours of builder wake-time.
+
+D13 asks whether the overseer should skip slots where nothing changed. Until now
+the argument for it has been directional ("the auditors spend the meter that
+gates the builder"). It is now a number, measured over a 24-hour window in which
+the builder ran **zero** iterations and contributed **zero** consumption:
+
+```
+08-27 00:07  week:all models 62%   |  Opus runs in this window: 4 overseer
+08-27 12:07                  65%   |  (37 */6 * * *) + 1 Review (37 6 * * *)
+08-28 00:07                  68%   |  builder iterations: 0
+                             -> +6 pts/day  ->  ~1.2 pts per Opus run
+```
+
+`pace_gate`'s allowance rises `0.65 x 100/7 = 9.29` pts/day, so **one point of
+`pct` postpones the builder's wake-up by 2.6 hours**, and one Opus audit run
+costs the builder **≈3.1 hours of awake time**.
+
+Applied to the live position (gap 7 points at 00:45 UTC on 08-28):
+
+| scenario | gate opens | vs. Kaggle W34 expiry, Sun 08-30 00:00 UTC |
+|---|---|---|
+| audits continue as scheduled (+6/day) | **Sun 08-30 ~04:00** | 4 h too late |
+| audit series paused | **Fri 08-28 ~18:45** | 29 h of GPU week left |
+
+Nine further Opus runs are scheduled before the quota expires: ≈11 points,
+≈28 hours of added delay, against 47 hours of remaining week.
+
+**Two caveats, stated rather than buried.** `week:all models` is a shared pool
+and the owner's own interactive sessions draw on it, so 1.2 pts/run is an upper
+bound on the auditors' share. And the counterfactual is unmeasured — `SY.01`
+(the three-arm pace-gate bakeoff, arm C = pace-gate the auditors) is the
+instrument that would settle it, and it is still unwritten. This entry is
+evidence for D13's existing menu, not a new question and not an argument for
+acting without the bakeoff.
+
+**Nothing in D13's `DECIDE:` block is changed by this update** — same options,
+same default (option (c), the change-gated no-op), same `decide_by: 2026-08-31`.
+The overseer may tighten a deadline but may not move one, and the clock is the
+owner's.

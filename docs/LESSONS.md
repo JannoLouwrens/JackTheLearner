@@ -5621,3 +5621,51 @@ programs call it), here it is *timing* (whether it arrives before the loss). In
 both, every local property was green and the mechanism was inert. When you add a
 guard, state the relation it depends on in its own docstring, because the next
 reader will check the parts.
+
+## A ratchet over one class of a multi-class violation list pays for migration, not repair
+
+*(40th overseer audit, 2026-08-28. Found by reading what `--check` **counts**
+after reading what it **prints** — three violation kinds go to stdout,
+one goes to the comparison.)*
+
+`champions.py` prints `ARENA-MISSING`, `NO-ARENA` and `UNCONTESTED`, and
+ratchets `ARENA-MISSING` alone. `decisions.py` prints `UNDECLARED`,
+`NO-DEFAULT`, `CLASS`, `DATE`, `MEANS-ESCALATED`, and ratchets `UNDECLARED`
+alone (`NO-DEFAULT` is also absent from the blocking set). In both, the
+uncounted class sits **one edit away from the counted class, in the direction
+that reads as tidying**:
+
+- delete a phantom arena id -> `ARENA-MISSING` becomes `NO-ARENA`. Measured on
+  the live file: `6/8` becomes **`ratchet ok (0/8)`, exit 0**, while five
+  architectural seats — including the plastic-only decree and the World seat
+  held BY VERDICT — become permanently unfalsifiable.
+- add a bare `class: goal` line to an unarmed escalation -> `UNDECLARED`
+  becomes `NO-DEFAULT`. Measured: `1/10` becomes `0/10`, exit 0, and the entry
+  is left in the exact state D1 was in for twenty days.
+
+`champions.py:106–109` **warns about the first of these in its own source**,
+directly above the baseline. The warning is a comment; the check is a `sum()`
+over one string literal. That gap is the whole lesson: a prose invariant next to
+a numeric guard reads as if the guard implements it.
+
+**Why a `_fixture()` does not catch this.** Both tools carry one, and both are
+good. A fixture proves the **parser** can see a violation. It says nothing about
+whether the **counter** can be satisfied by moving a violation between classes —
+those are different organs, and only the first has ever been tested here.
+
+**Rule.** If a tool prints N violation kinds and ratchets M < N of them, either
+ratchet the sum as well, or write down for each unratcheted kind why it cannot
+be reached from a ratcheted one. Then put the gaming move itself in a
+known-answer test: *perform the cheap wrong repair on an in-memory copy and
+assert the tool goes RED.* A guard nobody has tried to satisfy dishonestly has
+not been tested against dishonesty — only against absence.
+
+**The precedent that makes this a gap rather than an idea.** `coverage.py` has
+the identical exposure (delete a commitment, its red disappears) and it is
+closed on the ladder by **`T0.21` P2 — "the commitment list does not shrink to
+make the ladder look covered"**. One of the three constitutional gates has a
+spec guarding it; the other two have no test in `experiments/tests/` that
+imports them at all. Same family as [`A deadline that falls after the harm is
+not a guard, it is a record of an intention`]: there the unchecked thing was a
+*relation between two files*, here it is a *relation between what a tool says
+and what it counts*. In both, every local property was green.
