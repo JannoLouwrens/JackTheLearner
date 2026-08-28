@@ -5669,3 +5669,61 @@ imports them at all. Same family as [`A deadline that falls after the harm is
 not a guard, it is a record of an intention`]: there the unchecked thing was a
 *relation between two files*, here it is a *relation between what a tool says
 and what it counts*. In both, every local property was green.
+
+## A guard that checks a field is PRESENT has not checked what the field SAYS — and a report that truncates it means nobody else did either
+
+*(41st overseer audit, 2026-08-28. Found by reading the eleven armed defaults in
+full, which no instrument and no previous audit had done.)*
+
+`SYSTEM.md` arms every goal-class escalation with a default and a deadline under
+one safety clause — *"a default may only pick among **already-permitted**
+actions"* — and states in the same paragraph that *"`experiments/decisions.py`
+enforces this."* The module touches the field once:
+
+```python
+missing = [k for k in ("default", "decide_by") if not d.get(k)]
+```
+
+That is a non-empty-string test. `class` is validated against an enum,
+`decide_by` is parsed as ISO-8601, `blocks` is resolved against the live
+dependency graph — and `default`, the only one carrying a constitutional
+constraint, is checked for **length > 0** and never read again.
+
+**The second half is what made it survive four months of audits.** The report
+prints `r['default'][:110]`. The live defaults run 369–1041 characters, so the
+report shows 11–30% of each, and in all four defective entries the defect is past
+the cut: D8's false claim about which direction its ratchet moves is at character
+~640 of 758. A tool that cannot check a field, in front of a report that will not
+show it, is not one gap but two, and the second one closes the human fallback
+that would have caught the first.
+
+**Measured, on the live file:** four of eleven armed defaults break the clause.
+One of them (D8) takes `coverage --check` — the project's highest-priority
+constitutional gate — to **exit 2**, by retiring the only falsifiable claim
+behind a named sense. Nine of eleven require a write the organ instructed to fire
+them is forbidden to make, so the likely outcome on the deadline is eleven
+entries journalled FIRED and two actually true.
+
+**Rule, in three parts.**
+1. **If a document says a tool enforces an invariant, open the tool and find the
+   line.** "Enforces" in prose beside a guard is the strongest false signal this
+   project produces — the 40th audit found the same shape inside
+   `champions.py:106–109`, where a source comment warned about the exact move the
+   `sum()` beneath it rewards. Prose next to code reads as code.
+2. **Never truncate the field you certify.** A summary may elide what the tool
+   checked; it must print in full what the tool did *not* check, because that
+   text is now the only guard.
+3. **Where the content genuinely cannot be machine-checked, check its
+   references.** D8's default named "the playground-humanoid line", which is not a
+   spec id — resolvable-token checking against `BY_ID` is exactly what
+   `champions.py` already does for arenas, costs ten lines, and would have flagged
+   it. Semantic legality is hard; *"this instruction names something that does not
+   exist"* and *"this instruction requires a write its executor may not make"* are
+   both mechanical.
+
+**Family.** Same shape as [`A ratchet over one class of a multi-class violation
+list pays for migration, not repair`] and [`A deadline that falls after the harm
+is not a guard, it is a record of an intention`]. In all three the science was
+clean, every local property was green, and the defect lived in the relation
+between what an instrument says and what it does. The failures of this system
+have migrated from the ledger to the instruments that certify it.

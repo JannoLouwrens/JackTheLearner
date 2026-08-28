@@ -3028,3 +3028,84 @@ acting without the bakeoff.
 same default (option (c), the change-gated no-op), same `decide_by: 2026-08-31`.
 The overseer may tighten a deadline but may not move one, and the clock is the
 owner's.
+
+## D8 / D10 / D3 / D4 — THE DEFAULTS HAVE NEVER BEEN READ BY ANY INSTRUMENT, AND FOUR OF ELEVEN BREAK THE INVARIANT THAT MAKES FIRING SAFE (41st overseer audit, 2026-08-28 06:45 UTC)
+
+`SYSTEM.md:126-133` arms every goal-class escalation with a default and a
+deadline, under one safety clause:
+
+> *"A default may only pick among **already-permitted** actions — never editing
+> `GOAL.md`, never weakening a threshold, never widening what is allowed …
+> `experiments/decisions.py` enforces this; the overseer runs it every audit."*
+
+**`decisions.py` does not enforce this.** `audit()` touches the field exactly
+once, at line 194:
+
+```python
+missing = [k for k in ("default", "decide_by") if not d.get(k)]
+```
+
+A non-empty string satisfies it. `class`, `decide_by` and `blocks` are parsed and
+used; `default` is never inspected again — except at line 277, which prints
+**`r['default'][:110]`**. The eleven live defaults are **369-1041 characters**, so
+the report shows **11-30%** of each and every constitutional clause falls past the
+cut. No audit in this project's history had read them. Reading all eleven in full:
+
+**D8 — measured: firing it takes `coverage --check` to exit 2.** `balance`
+(GOAL.md:41, your sense inventory) has exactly one un-parked claim-kind spec,
+`BA.02`. On the real `coverage.report()` rows, in memory:
+
+```
+BEFORE  _claim_dead(balance) = False
+AFTER   _claim_dead(balance) = True      # BA.02 moved kinds -> parked
+```
+
+`coverage.check()` returns 2 on any CLAIM-DEAD commitment. D8's own text says
+*"the commitment `balance` goes from 'has a runnable claim spec' to 'has none' —
+the ratchet SHRINKS"*; the CLAIM-DEAD count goes **0 -> 1**. That sentence sits at
+character ~640 of a 758-character default. D8 also names two incompatible
+mechanisms for itself — headline *"PARK BA.02"*, body *"BA.02 is **re-parented**
+in the registry"* — which differ by exactly whether the gate goes red
+(`_claim_dead`: *"Blocked claims do NOT make a commitment claim-dead"*). And the
+re-parent branch is not executable: **"the playground-humanoid line" is not a spec
+id** — absent from the registry, which has 0 dangling `depends_on`. The only
+mechanically executable reading is the one that turns the gate red.
+
+D8 was armed *2026-08-25 00:45 UTC (28th overseer audit)*. `coverage.py`'s own
+docstring records that the 28th audit is when `shelter/building` and
+`thermal (kills)` both went claim-dead in one commit because `SH.01` was parked.
+The audit that taught the tool to see this armed a default that causes it.
+
+**D10 — a VOID seated as a verdict.** `LC.03`'s ledger status is `VOID` (commit
+`0d9ad54`). `SYSTEM.md:154`: *"VOID: an arm failed the learning gate; fix the arm,
+do not decide."* D10's default seats wm-latent *"BY VERDICT"* and amends `LC.04`'s
+premise to *"the screen IS the arbitration when it returns exactly one"* — which
+removes the comparison the gate is made of (`SYSTEM.md:157`: *"two non-learners
+cannot arbitrate an architecture"*). Afterwards `champions --check` prints
+`Learning core BY VERDICT ok`, because it reads the table and cannot ask whether a
+verdict was earned.
+
+**D3 and D4 — narrowing measured against practice, not permission.** D3 fences
+*"146 logged pushes under no stated limit at all"*; D4 records a ~90 core-hour
+spend as *"TAKEN on 2026-08-13"*, fifteen days before its own deadline. Both are
+narrower than what happened and wider than what was permitted. The shape is
+general and worth naming: **an escalation ignored long enough becomes a default
+that legalises the thing that was escalated.**
+
+**And nine of the eleven cannot be fired by the organ instructed to fire them.**
+The firing instruction is in the overseer prompt; the overseer may not modify any
+spec, test, script or registry entry, and may not write `DECISIONS_RESOLVED.md`.
+D1, D3, D4, D7, D8, D10, D12, D13 and D14 each require exactly such a write. Only
+D9 and D11 ("adopt nothing" / "accept as-is") are dischargeable. On 2026-09-01
+that yields eleven defaults journalled as FIRED and at most two actually true —
+which is D1's disease wearing a green tick, because every downstream instrument
+will read the entries as settled.
+
+**Nothing in any `DECIDE:` block is changed by this entry.** Same options, same
+defaults, same `decide_by: 2026-08-31`. The overseer may tighten a deadline but
+may not move one, and may not rewrite a default. The repairs are builder items
+B1/B2 in `docs/OVERSIGHT.md` (41st audit) — amending a default *toward* the
+invariant is a tightening the ratchet permits, and all four are fixable before the
+date. The one place the owner may want to rule rather than be ruled for is
+**D10**: seating a learning core off a single-arm VOID is a call with a name on
+it.
