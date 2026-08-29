@@ -1,490 +1,389 @@
-# OVERSIGHT — 45th audit, 2026-08-29 06:40 UTC
+# OVERSIGHT — 46th audit, 2026-08-29 12:40 UTC
 
-## VERDICT: DRIFTING — **for nine consecutive audits the repair has been addressed to the one organ `pace_gate` switches off, while two ungated organs that read this page daily and have already edited these exact files were never asked.** The diagnosis has been correct since the 31st audit. The routing has been wrong every time. Separately: the 44th audit's owner escalation (`D15`) rests on an attribution that the only measurement able to test it contradicts, and on a forecast falsified by the twelve readings sitting immediately above it in its own extract.
+## VERDICT: DRIFTING — **the ledger holds a PASS certificate that its own spec text declares must be re-bought, and there is no field in a ledger row that could ever detect the next one: `run_spec` hashes the implementation and never the claim.** The live instance is benign and the builder annotated it honestly. The blind spot behind it is not bounded by anything except an overseer reading `git log -p` inside a 7-day window — and this instance leaves that window on 2026-08-31.
 
-**State.** `HEAD` is `b9f7f3a` (44th audit). Last builder-authored commit
-`04fa447`, **2026-08-25 10:14:58 — 92.4 hours ago**. Last builder iteration
-ended **2026-08-25 12:23:33 — 90.3 hours ago**. **90 consecutive `PACING: …
-skipping` slots** and no other line in `ladder.log` since `08-25 13:07`.
-**84 PASS / 187 registered (44.9%)**. Live meters, read this audit:
-`week:all models` **73%**, `--week-elapsed` **72%**, line **72%**.
-`experiments/tests/sm_03_nose_reports_occluded.py` (32 KB, `Aug 25 12:20`) is
-still the only thing in the working tree and still untracked.
+**State.** `HEAD` is `528cedc`, tree clean. **84 PASS / 187 registered
+(44.9%)**, 96 ledger rows. The 95-slot pacing blackout **ended at 12:07 today**
+on its own arithmetic (`week:all models` 74% against a line of 75%); the
+builder ran one iteration, `rc=0`, **84 → 84**. `week:Fable` is at 100% until
+08-31 and the opus fallback carried the run. GPU week `2026-W34`: **0.3111 h
+of 30 used (1.0%)**, resets Sunday 08-30.
 
 **The three constitutional gates are green and I re-ran all three.**
 `coverage` exit 0 — 0 commitments with no declared spec, 0 CLAIM-DEAD, 4
 known-dangling GOAL citations at baseline (`GEN.02/03/06/09`).
 `decisions --check` exit 0 — **0/10 undeclared**, no `MEANS-ESCALATED`, no
 `OVERDUE`; nothing to arm, so the "arm at least one" duty is vacuously
-discharged. `champions --check` exit 0 — ratchet **6/8**, 12 violations,
-byte-identical to the 43rd and 44th audits because no builder commit has landed
-since.
+discharged. `champions --check` exit 0 — ratchet **6/8**, 7 violations,
+unchanged in substance since the 43rd audit's repair landed this morning.
 
 ---
 
-## RANK 1 — the fix has been routed to the only organ that cannot make it, nine audits running, while the Review sat ungated with the file open
+## RANK 1 — `LC.01` is PASS on a spec text that no longer exists, and its own registry entry says so
 
-**The diagnosis has not been the problem.** The 31st audit (08-25 18:47) named
-`pace_gate` as the cause of the blackout. The 34th, 35th, 37th, 38th, 39th,
-44th did too, each with better numbers. Yesterday's Review put it in bold:
-*"outranking the GPU question — **suspend or delete `pace_gate`**."* That is
-seven organ-runs of correct, converging, unanimous diagnosis across four days.
+`LC.01` PASS, `ran_at 2026-08-09T22:32:57`, `commit 8876baa`. On **2026-08-24**,
+commit `0345f0d` ("Architecture is raced, not decreed") rewrote its
+`falsified_by` under the owner's ruling. The amendment is *good work* — it is
+annotated inline, it states the measured gate is byte-identical, and it
+declares itself strengthen-only. It also ends with this sentence, which is
+in the tree right now at `experiments/registry_expansion.py:1889`:
 
-**Every one of them addressed the repair to the builder.** The 44th audit's
-`B1` is explicitly *"sequenced for the first iteration after the meter reset,
-because nothing can run before it."* The builder is the organ `pace_gate`
-refuses. **The repair for a gate that stops the builder was filed as work for
-the builder, ninety times in a row.** This is `D1`'s disease exactly — a fork
-whose arms were runnable, addressed to a party who was not there — one level up
-and against the system's own machinery rather than Jack's.
+> *"Requires a re-run to re-buy the certificate under the amended text."*
 
-**Two organs could have made it and neither is gated.** `scripts/review.sh:29`
-and `scripts/overseer.sh:45` call `usage_gate` and **not** `pace_gate`. Of
-those, the Review is a real effector on this machinery and has proved it:
+**Five days later the re-run has not happened.** `LC.01`'s `ran_at` is
+untouched at 2026-08-09. The row still reads PASS. `LC.01` is not idle
+bookkeeping: `registry_expansion.py:1517` declares
+`COVERS: one brain / unison (rule)` — it is the rule-class support under the
+project's largest commitment (21 specs), and `champions --check` lists it as a
+`Learning core` arena.
 
-| Review run | files it edited |
-|---|---|
-| 08-25 06:37 | `docs/CHAMPIONS.md`, `INTEGRATION_QUEUE.md`, `REVIEW_QUEUE.md`, `scripts/ladder_prompt.md` |
-| 08-26 06:37 | `scripts/ladder_prompt.md` |
-| **08-27 06:37** | **`scripts/ladder_loop.sh` (+10), `scripts/lib_credits.sh` (+24/−)** |
-| 08-28 06:37 | `scripts/ladder_prompt.md` |
+**The general defect is the one that matters.** I took the union of every field
+across all 96 ledger rows:
 
-On **08-27** the Review edited `ladder_loop.sh` — the file that calls
-`pace_gate`, ten lines from the call site. On **08-28** it wrote *"suspend or
-delete `pace_gate`"* as an **ask to the owner**, and left the gate in place. Its
-own prompt (`scripts/review_prompt.md:45`) lists `docs/OVERSIGHT.md` in READ
-FIRST, so it read every one of those `FOR THE BUILDER` items on the morning it
-had the authority and the file open.
+```
+amended, attempt, commit, compute_s, control_metrics, duration_s, gpu_job_id,
+hardware, history, impl_sha, message, metrics, ran_at, seeds, spec_id,
+status, supersedes_fail, supersedes_void
+```
 
-**Four Review runs landed inside this blackout** (08-26, 08-27, 08-28, and
-06:37 today, in progress as I write). Each was one commit away from a bounded
-starvation release. The blackout is 90 slots old.
+`impl_sha` is present on **68/96** rows and hashes the *test file*. **There is
+no hash of the Spec.** So the question *"was this PASS bought under the
+`falsified_by`, `control`, `null_baseline` and `metric` that are in the tree
+today?"* is not answerable by any instrument this project owns. `T0.21` has
+eleven properties and none of them is this one. The string `spec_sha` does not
+occur in the codebase. The string `re-buy the certificate` occurs **exactly
+once** — inside the spec text itself, where nothing reads it.
 
-**Why nobody saw it.** `OVERSIGHT.md` has exactly one addressee section, and it
-is named `FOR THE BUILDER`. There is no channel in this document to the one
-organ that is both awake and empowered. The Review reads the overseer; the
-overseer writes only to the builder and the owner. **A repair queue with a
-single consumer is a repair queue that stops when that consumer stops** — and
-this system's binding failure mode for four days has been precisely that the
-consumer stopped.
+The only detector is section 2 of this audit: an overseer manually reading
+`git log -p --since="7 days ago"`. That window has a horizon, and `LC.01`'s
+amendment (08-24) leaves it on **2026-08-31**. After that date, nothing in this
+system — no gate, no ratchet, no property — can tell you that a PASS on the
+board was certified against different words.
 
-**I have opened a `FOR THE REVIEW` section below.** That is the whole fix and
-it is inside my powers: I write this file, and the Review reads it at 06:37
-tomorrow. It should not have taken 45 audits.
+This is why it is RANK 1 and not a footnote: the ledger is the only scoreboard,
+and a scoreboard that cannot say which question a green tick answered is
+green about something it has not checked.
+
+**Why this is not `INTEGRITY RISK`.** I considered it and decided against it,
+and the reasoning belongs on the page. The live amendment removes no gate — the
+`U1`–`U4` conjunction and its thresholds are byte-identical, verified in the
+diff — so `LC.01`'s PASS is an *unrefreshed* certificate, not a false claim.
+Nothing on the board is currently overstated. The verdict escalates the first
+time an amendment is not benign, and by construction nobody will be able to
+tell when that is.
 
 ---
 
-## RANK 2 — `D15` asks the owner to cut adversarial oversight by 75%, on an attribution the data contradicts and a forecast its own extract falsifies
+## RANK 2 — the queue-depth alarm shipped this morning is blind on the day it shipped, in the one class it was built for
 
-`D15` (44th audit, on the owner's desk, `decide_by 2026-09-05`) has a
-spend-reducing default: exempt one audit per UTC day, pace the other three. Its
-premise is that the ungated Opus organs are a material term in the 35 points the
-meter rose while the builder spent nothing. **I tested that premise against the
-only data that can test it, and it fails three ways.**
+`coverage --check` exits 2 on `new_empty` — a cost class that is empty and not
+in `QUEUE_EMPTY_BASELINE = {cpu<1min, cpu<10min, gpu<2h}`. Today's GPU shelf:
 
-**(a) Organ hours are indistinguishable from idle hours.** The overseer runs at
-`37 */6` (00:37, 06:37, 12:37, 18:37) and the Review at `37 6`; the meter is read
-at `HH:07`, so an organ run lands in the *next* reading. Over the 90 blackout
-slots, splitting the 89 hour-to-hour deltas on that boundary:
+| class | contents | actually dispatchable? |
+|---|---|---|
+| `gpu<20min` | `SM.03` | **no** — `run()` raises |
+| `gpu<2h` | — | empty (baselined) |
+| `gpu<8h` | `T2.02` | no — VOID, an arm to repair |
 
-| bucket | n | Σ delta | mean |
+`sm_03_nose_reports_occluded.py:648` is unambiguous:
+
+```python
+def run(ledger=None):
+    if not _GATES_FROZEN:
+        raise RuntimeError("SM.03 gates are provisional — pilot first, ...")
+```
+
+So the honest count of GPU work that could be dispatched today is **0**, and
+`gpu<20min` reads non-empty *only* because of a spec that refuses to run.
+`new_empty` is therefore empty, and the instrument stays green.
+
+The builder built this instrument this morning specifically to make the 61 lost
+GPU-hours visible, wrote in the journal *"`coverage --check` will go red when
+the GPU class empties"* — and it will not, today, under exactly the condition
+it was built for. To its credit the docstring says so (`coverage.py:502`,
+`KNOWN OVER-COUNT`), which is the right way to ship a known limit. A documented
+blind spot is still a blind spot, and this one sits in the only class that has
+cost this project measurable free compute.
+
+The repair is small and the idiom already exists: `_GATES_FROZEN` is a
+module-level flag in both `SM.02` and `SM.03`. It is not exported, so
+`queue_depth` cannot read it.
+
+---
+
+## RANK 3 — eight consecutive `rc=0` iterations, `84 → 84`, while the denominator grew `181 → 187`
+
+Every `iteration end` line in `ladder.log` since **2026-08-25T00:11:46** reads
+`84 -> 84 demonstrated`. Eight of them, spanning 4.5 days, all `rc=0`. Over the
+same window `iteration start` went `84/181` → `84/187`.
+
+**The ladder got six rungs longer and zero rungs were climbed.**
+
+Every ledger write in the last 7 days, in full:
+
+| when | spec | verdict |
+|---|---|---|
+| 08-23 21:11 | `LC.03` | VOID |
+| 08-24 06:27 | `NE.00` | PASS — *rule*, not a claim |
+| 08-24 07:20 | `T0.17` | PASS — harness |
+| 08-24 07:20 | `T0.27` | PASS — harness |
+| 08-24 15:45 | `NE.01` | **FAIL** |
+| 08-24 16:45 | `BA.02` | VOID |
+| 08-24 18:30 | `DP.05` | **FAIL** |
+| 08-25 04:40 | `T2.15` | **FAIL** |
+| 08-29 12:20 | `T0.21` | PASS — the coverage instrument |
+| 08-29 12:22 | `T0.22` | PASS — the champions instrument |
+
+**Zero capability PASS in seven days.** All five PASSes are harness, rule, or
+the audit instruments certifying themselves. Every write against a claim spec
+was FAIL or VOID.
+
+I want to be fair about this: `DP.05`'s FAIL is real science and a genuine
+finding about `W0`, `NE.01`'s FAIL is honest, and a red ladder that tells the
+truth is worth more than a green one that does not — SYSTEM.md says so and it
+is right. But the numerator has not moved since 08-24 and today's two PASSes
+are the system measuring itself. That is the answer to section 8, below.
+
+---
+
+## RANK 4 — `pace_gate` is still armed. The blackout ended by arithmetic, not by repair.
+
+Ninety-five distinct hourly `PACING:` skips between **2026-08-25T13:07** and
+**2026-08-29T12:07** (`grep PACING ladder.log | cut -c1-13 | sort -u | wc -l`).
+
+Nothing was fixed. `scripts/ladder_loop.sh:179` still reads
+`pace_gate say || { harvest_bookkeeping; exit 0; }`, and
+`scripts/lib_usage.sh:70-71` still reads `PACE_FLOOR=25`, `PACE_CAP=90`. The
+gate released because `week:all models` (74%) fell under a line that had risen
+to 75% with the calendar. **The week rolls Sunday 08-30, the meter resets, and
+the same arithmetic re-closes the gate later in W35.** The failure is not
+repaired; it is out of season.
+
+Two secondary notes:
+
+- **The builder's journal understates the blackout by a factor of 2.3.** Its
+  entry says *"a 42-slot `PACING:` blackout (08-25 13:07 → 08-29 12:07)"*. The
+  log has 95 distinct slots in exactly that interval, and the 45th audit
+  counted 90 at 06:40 this morning, which is consistent with 95 at 12:07 and
+  not with 42. The window is right; the count is wrong.
+- **The 45th audit's `FOR THE REVIEW` channel has not yet been read.** It was
+  committed at 06:47 today; the Review committed `73ccfb7` at 06:48. It could
+  not have seen it. The next Review is 08-30 06:37 and that is the first real
+  test of the new channel.
+
+---
+
+## RANK 5 — compute: the spend is honest, the utilisation is 1.0%
+
+**Honesty: clean.** W34's only charge is `0.3111 h` and it is fully receipted —
+commit `f5d8f1c` harvests `T2.15` and commits all three `RUNNER_OUTPUTS`,
+recording a FAIL. There are no GPU hours in `gpu_budget.json` without a ledger
+entry to show for them, and `overruns` is empty.
+
+**Utilisation: the trend is down three weeks running.**
+
+| week | kaggle used | of 30 h | lost |
 |---|---|---|---|
-| hours containing an organ run | 14 | **+6 pts** | 0.429 pts/h |
-| hours containing none | 75 | **+29 pts** | 0.387 pts/h |
+| W32 | 21.06 | 70% | ~8.9 h |
+| W33 | 7.63 | 25% | ~22.4 h |
+| **W34** | **0.31** | **1.0%** | **~29.69 h, expiring at the Sunday roll** |
 
-The excess attributable to **all seventeen** overseer and Review runs in the
-window is `14 × (0.429 − 0.387)` = **0.6 points**, against a meter quantised at
-1 point. That is noise. Of 35 points, the organs account for at most a rounding
-error — and `D15`'s default would spend 75% of the daily adversarial pass to buy
-it.
-
-**(b) The meter did not move across two full Opus audits.** It has read **73%
-for 18 consecutive hours** (08-28 13:07 → 08-29 06:07, live re-read 73 at
-06:40). Inside that flat run: the **43rd** audit (08-28 18:44) and the **44th**
-audit (08-29 00:47), each a complete Opus session with a full ledger re-check.
-Both moved it **zero points**.
-
-**(c) The forecast was falsified by the twelve readings above it.** `D15`
-fitted least squares over all 84 slots (meter 0.3753 pts/h, line 0.3876) and
-concluded the 3-point gap needs **243 hours**, so *"the builder does not run
-again this week"* and *"cannot wake for 52 hours."* At the moment that was
-written the meter's last **twelve** readings were all 73 — the fit ran a global
-slope straight through a dead-flat tail. The line rises unconditionally at
-0.387 pts/h whatever the meter does; against a flat meter the gap closes in
-hours.
-
-**The live arithmetic, and it is falsifiable within three hours of this
-report.** `claude_usage.py --week-elapsed` uses `round()` and the CLI's own
-reset instant, **Aug 31 05:00 UTC**; `pace_gate` runs when `pct < 25 +
-ceil(65·elapsed/100)`. At meter 73 that needs `elapsed ≥ 74`, i.e.
-`remaining ≤ 44.52 h`, i.e. **now ≥ 2026-08-29 08:29 UTC**:
-
-| slot | elapsed | line | meter | outcome |
-|---|---|---|---|---|
-| 07:07 | 73 | 73 | 73 | skip |
-| 08:07 | 73 | 73 | 73 | skip |
-| **09:07** | **74** | **74** | **73** | **RUNS** |
-
-**Prediction, recorded so the next audit can mark it right or wrong: the
-builder's first iteration in 4.9 days fires at 09:07 UTC today**, conditional
-only on the meter not ticking to 74 first. That is **~15 hours before** W34's
-Kaggle quota expires (`%U`, Sunday-start → Sun 08-30 00:00 GMT), not 29 hours
-after it.
-
-**And this class of estimate has now been falsified six times in nine days —
-which the overseer structurally cannot see.** Yesterday's Review measured it out
-of sample: *"5 organ-session hours and 444,251 output tokens moved the meter
-+2; 19 hours with zero on-box requests moved it +5"*, and stated plainly that
-this *"falsifies the 40th audit's per-audit price, which was the basis of its
-D13 escalation — the fourth such estimate falsified in eight days, and the 41st
-made a fifth while I was writing."* `D15` was written **18 hours after** that
-paragraph was committed and cites none of it.
-
-**The reason is mechanical, not a lapse of care.** `scripts/overseer_prompt.md`
-READ FIRST names `GOAL.md`, `SYSTEM.md`, `docs/LESSONS.md`; the audit sections
-name `ledger.json`, `registry*.py`, `ladder.log`, `gpu_budget.json`,
-`DECISIONS_NEEDED.md`, `DECISIONS_RESOLVED.md`. **`docs/PROGRESS.md` appears
-nowhere.** The Review reads the overseer's findings every morning; the overseer
-has never read the Review's. Information flows one way between the two organs
-whose job is to correct each other, and the measurable consequence is six
-successive owner-facing spend estimates of the same class, each falsified by a
-document the escalating organ was not pointed at. My own independent split in
-(a) reproduces the Review's number — which is the point: it was already known,
-and I had to re-derive it.
-
-**What is NOT in question.** The 44th audit's core finding stands and I confirm
-it: across 90 slots the maximum meter reading is **73%**, `usage_gate` returns 0
-unconditionally below 90, so **all 90 refused iterations would have run under
-the owner's rule alone.** `pace_gate` is the entirety of the refusal. The
-outage is real, the cause is correctly named, and only the attribution and the
-forecast are wrong.
+Cumulative ≈ **61 free GPU-hours lost in three weeks**. The cause is not
+availability and not the pacing gate — it is inventory, and RANK 2 is the
+reason no instrument goes red about it. `29.69 h` will expire tonight and there
+is no honest way to spend them: the entire GPU shelf is one spec that refuses
+and one VOID.
 
 ---
 
-## RANK 3 — `decisions.py` has no notion of a default being *carried out*, and eleven fire in two days
+## Sections with NO findings — stated plainly, because that is a result
 
-`experiments/decisions.py:170-215` is the instrument that exists because `D1`
-deadlocked. `audit()` checks, per entry: an entry exists → a `class` is legal →
-it is not `means` → a `default` and a `decide_by` are present → the date parses.
-Then it emits a row with `overdue = today − due`. **There is no state after
-"fired."** `main()`'s strongest word is `OVERDUE — DEFAULT IS DUE TO FIRE`.
+**§1 — ledger integrity: clean.** I checked all 84 PASS rows mechanically.
+- Missing implementations: **0**.
+- `commit` fields absent from git: **0** (`git cat-file -e` on every one).
+- PASS rows whose spec declares a `control` but whose `_check` never reads the
+  control argument: **0**. I parsed each test's AST, took the second parameter
+  of `_check`, and searched the function body for a load of that name. Every
+  one uses it. There is no PASS in this ledger whose control was recorded and
+  then ignored.
+- The only two PASS rows with no control at all are `T0.01` ("Repo imports
+  clean") and `T0.10` ("Kaggle job round-trip"). Both declare
+  `null_baseline="n/a — structural precondition"`. A control for "does the repo
+  import" is not a missing control; it is a category error. Correct as they are.
 
-So from **2026-08-31** onward, all eleven armed entries will print
-`OVERDUE — DEFAULT IS DUE TO FIRE`, every audit, forever, whether the default
-was executed on day one or ignored for a month. Nothing in this repository can
-tell the two apart.
+**§2 — no silent loosening in 7 days.** Every numeric movement I found goes the
+tightening direction:
+- `t0_21`'s `N_PROPERTIES` **9 → 10 → 11** (properties added, never removed).
+- `DP.04` **gained** a dependency (`depends_on=["DP.00","VO.01"]` →
+  `+ "LG.00"`) the moment `LG.00` was registered, closing a
+  dependency-named-only-in-prose gap. The `seeds=3` in that diff is unchanged —
+  the line was re-wrapped, not the seed count reduced.
+- `T2.15`, `T3.01` and `T2.07` each **added** a registry `control` declaration
+  after `protocol.py`'s `UndeclaredControl` guard refused their first dispatch.
+  Three controls moved from implicit to declared. Nothing was weakened.
+- `NE.01`'s `DELTA_T_NIGHT 12 → 10` is a pre-run calibration, the sweep ships in
+  the metrics table, and the 0.3–0.6 gate is unchanged.
+- `LC.01`'s `falsified_by` amendment widens what may be *raced* under the
+  owner's 2026-08-24 ruling; the measured `U1`–`U4` conjunction is
+  byte-identical. Its only defect is the un-re-bought certificate — RANK 1.
 
-**And six of the twelve cannot execute themselves.** `D12` (transcribe three
-guards into code), `D13` (a change-gated no-op in `overseer.sh`), `D14` (a
-pre-flight check in `ladder_loop.sh`), `D15` (a pace check in `overseer.sh` plus
-a usage ledger), `D8` and `D9` (re-parent `BA.02` in the registry) are all code
-changes only the builder may make. They fire on the day the builder wakes with
-92 hours of carried work, a 50-minute `timeout` and `--max-turns 120`.
+Seed counts across the registry: 132 specs at 3 seeds, 1 at 5, 54 at 1. The
+54 single-seed specs are fixtures and structural checks, not learning claims;
+no learning claim runs under 3 seeds.
 
-This is the same shape `LESSONS.md` named two days ago as the generalisation of
-the `champions.py` scar — *existence and sufficiency are different questions and
-a ratchet built for one silently answers the other.* `decisions.py` separates
-"an entry" from "an armed default" from "a permitted default", and then stops
-one step short of the only one that changes the world: **a default that fired
-and was actually carried out.** The repair is small and named in FOR THE
-BUILDER.
+**§6 — stuck decisions: nothing is stuck, and the defaults are legal.** Twelve
+armed entries; **ten fire on 2026-08-31, in two days.** I read every `default:`
+block against the invariant that a default may only pick among already-permitted
+actions. None edits `GOAL.md`, none weakens a threshold, none widens what is
+allowed. Two worth naming: `D1`'s default (38 specs) leaves the PLASTIC-ONLY
+decree *"verbatim and unnarrowed"* and strikes option A as unconstitutional;
+`D3`'s default explicitly **narrows** a currently-unbounded practice (146 logged
+pushes under no stated limit) and says so in its own text. **The 41st audit's
+finding that four of eleven defaults broke the invariant is repaired.** No
+`MEANS-ESCALATED`, so no owner decision is sitting on a question a measurement
+could settle.
 
----
+**§7 — bakeoff hygiene: clean.** Three resolved entries, ever.
+- `PS.01/J` → **VOID**, correctly: three arms under the 3.0σ learning gate, and
+  the record says so in one line. A VOID was not read as a verdict.
+- `PS.01/J2` → **WINNER** `impact_speed`, 10.32σ over null, **2.66σ over the
+  runner-up** against `bakeoff.py`'s `margin_sigma=1.5`. Outside the noise
+  margin; the verdict is legitimate. Note the gate eliminated `evt_body6`
+  (mean 0.840) despite a *higher* mean than the seated runner-up `peak_dvel`
+  (0.827) — that is the learning gate doing exactly its job on a noisy arm.
+- `D2` → resolved by ledger replay, with the losing semantics recorded.
 
-## RANK 4 — `SM.03`'s pre-registration is asserted by a committed file and lives only in an untracked one, deliberately, for 4.5 days
-
-`experiments/registry_expansion.py:2368` is in git and its notes end:
-*"Chance level, bin count and accuracy bars are pre-registered in the test file
-before any dispatch."* The test file is not in git.
-
-I re-verified rather than inheriting the 43rd and 44th audits' claims:
-`experiments/tests/sm_03_nose_reports_occluded.py` is untracked
-(`git status --untracked-files=all`); its own line 101 reads
-`PILOT: not yet run`; the only artefact on disk is
-`/data/sm03_pilot_seed90.json.log`, **0 bytes**, `Aug 25 12:21`; the promised
-result file does not exist; `pid 1552865` is gone. The iteration that logged
-`rc=0` on that pilot is 90 hours old.
-
-**New this audit: the untracking is a decision, not an oversight.** The 08-28
-Review log records *"Pushed; HEAD is clean with origin so an unpushed ref can't
-refuse the builder's first GPU dispatch. `SM.03` deliberately left untracked."*
-No reason is given anywhere. The consequences are unchanged and now
-deliberate: the versioned record asserts a pre-registration it does not
-contain, `gpu.py:274`'s push guard reads `--untracked-files=no` and cannot see
-the file at all (36th audit, still unrepaired), and the bars can be edited
-between now and dispatch with nothing able to detect it. `SM.03` is the only
-runnable claim spec for the `smell` commitment and the only registered
-`GPU_SHORT` candidate for W34's expiring hours.
-
-**This is now urgent rather than cheap.** If RANK 2's prediction holds, the
-builder wakes at 09:07 with **~15 hours** of W34 window. `SYSTEM.md`'s ordering
-— *commit the spec BEFORE running it* — makes committing the file the first
-action of that iteration, not a housekeeping item at the end.
-
----
-
-## The audit, section by section
-
-**1. Integrity of the ledger — clean, re-derived independently.** 96 rows: **84
-PASS / 9 FAIL / 3 VOID**. **0** PASS ids absent from `BY_ID` (registry 187).
-**84/84** PASS `commit` fields resolve to a live object (`git cat-file -e`).
-**82/84** declare a `control` in the registry and carry recorded
-`control_metrics`; the two that do not are `T0.01` and `T0.10`, Tier-0 harness
-specs with no capability claim. This matches the 44th audit's numbers on every
-figure, which I take as corroboration rather than as licence to skip it.
-**No findings.**
-
-**2. Thresholds and controls over 7 days — no findings, and it is a true
-result.** The last commit touching `experiments/registry.py`,
-`registry_expansion.py` or `experiments/tests/` is `ed2d969`, **2026-08-25**;
-nothing in four days. Re-scanning the eight-day window: `ed2d969` adds
-`LG.00` to `DP.04.depends_on` (tightening); `20b8660` and `c6895b2` *add*
-control declarations after `protocol.py`'s `UndeclaredControl` refused a
-dispatch; `7951f45` makes the coverage ratchet go red; `b624d78` generalises
-T0.21 P6 with semantics unchanged; `f5d8f1c`/`78699b9`/`e25d285` are FAIL
-harvests that record failures rather than removing them. **No numeric threshold
-moved in the loosening direction, no control deleted or weakened, no `_check`
-gained an `or`, no seed count reduced, no assertion removed.**
-
-**2b. Overseer scope — checked, because nobody checks the overseer.** I
-diffed the file list of all fourteen audit commits since 08-25. Every one
-touches only `docs/OVERSIGHT.md`, `docs/DECISIONS_NEEDED.md`,
-`docs/LESSONS.md`. **Zero code, spec, test or ledger changes.** The MAY-NOT
-list has been respected. (The Review's scope is wider by design and is
-audited in RANK 1 as a capability, not a violation.)
-
-**3. Drift from the goal.** The builder did no work in the last four days, so
-there is nothing to test for drift; the last seven commits are five audits and
-two Reviews. **The converse question is where the answer lives, and it is the
-same one as yesterday and getting older.** `coverage` names **14 commitments
-with live claim specs and nothing passing**, and GOAL.md's load-bearing ones are
-in that list: **`fast/slow`** (8 declared, 0 passing), **`sleep`** (4, 0),
-**`plasticity`** (2, 0), **`proprioception`** (2, 0), plus `shelter/building`,
-`thermal (kills)`, `smell`, `voice`, `balance`, `tool use`, `touch/contact`,
-`social/other agents`, `hunger/thirst`, `death & retry`. **`curiosity`** stands
-at 12 specs / 1 passing claim and **`one brain / unison`** at 21 / 1 — the two
-GOAL.md calls the north-star paragraph rests on. The last first-ever claim PASS
-at Tier ≥ 2 is `T3.01`, **2026-08-21 01:28 — 8.2 days ago.**
-
-**4. Builder alive and productive.** Iterations in the last 24 h: **0**.
-`rc=0` in 24 h: **0**. PASS delta 24 h: **0**; 7 days: **+2**, both Tier 0.
-The loop is not crashed and not paused: cron fired at every `:07` including
-06:07 today; `.loop-paused` does not exist; `lost_iterations.log` is empty (no
-credit or session limit). It is being refused by `pace_gate` and nothing else.
-See RANK 1 and RANK 2.
-
-**5. Compute honesty — no waste; the waste is unspent, and it may still be
-partly recoverable.** `gpu_budget.json`: W32 16.613 h / 17 jobs, W33 7.892 h /
-22 jobs, **W34 0.3111 h / 1 job**. Every charged job maps to a submission row;
-no GPU hour was spent without a ledger entry to show for it. The W32 opening
-balance of 6.3849 h is still honestly labelled unattributable and has not been
-lowered. **29.6889 h remain and W34 closes Sun 2026-08-30 00:00 GMT — 17.3
-hours from now.** Unlike the last two audits I do *not* record these as
-certainly lost: under RANK 2's arithmetic the builder wakes with roughly 15
-hours of window, and `SM.03` is a real `GPU_SHORT` candidate — blocked on being
-committed with frozen gates, not on compute. The cosmetic defect the 44th audit
-flagged is unchanged (`labelled_at: "2026-08-14T07:1x builder, per overseer
-B2"` — a truncated stamp with prose spliced in; nothing computes on it).
-
-**6. Stuck decisions.** 12 armed entries, **0 undeclared**, 0
-`MEANS-ESCALATED`, 0 `OVERDUE`. Nothing on the owner's desk that a bakeoff could
-settle today — `D10` and `D4` both gate on runs the builder has not been able to
-launch. **No owner decision was quietly acted on without record**; I checked the
-fourteen audit commits and both Review commits in the window against
-`DECISIONS_RESOLVED.md`. Two findings, both filed above rather than here:
-`decisions.py` cannot see whether a fired default was executed (RANK 3), and
-`D15`'s evidence is contradicted (RANK 2) — I have appended an **evidence
-update** to `D15` rather than resolving it, which is not mine to do. The 41st
-audit's finding that four of the armed defaults pick actions outside the
-already-permitted set stands unrepaired and is not mine to re-file.
-
-**7. Bakeoff hygiene — no finding in `DECISIONS_RESOLVED.md`.** Three entries,
-unchanged and re-read: `PS.01/J` recorded VOID and never read as a verdict;
-`PS.01/J2` WINNER `impact_speed` at 2.66σ over the runner-up and 10.32σ over the
-null, with the eleven gate-eliminated arms named; `D2` resolved by ledger replay
-with its property made executable as T0.08 P6. No winner inside a noise margin,
-no VOID promoted to a verdict, no decision without a learning gate. The live
-hygiene defect is one document over — `Episodic retrieval` held **BY VERDICT**
-on an arena where the only arm that ran is the incumbent's own null (43rd audit,
-carried).
-
-**8. The honest summary.** No, and the reason has changed shape again. For four
-days the answer was "the ladder has not moved." Yesterday the 44th audit said
-the machine is spending its binding resource watching itself, and escalated it.
-**Today the measurement says that is not what happened**: seventeen organ runs
-moved the shared meter by ~0.6 of 35 points, two full Opus audits moved it by
-zero, and the pool is being drained by something no instrument on this box can
-see. What actually cost four days is smaller and more embarrassing than a
-resource story. **Every organ diagnosed the gate correctly, and every one of
-them wrote the fix down for somebody who wasn't there.** Nine audits and a
-Review produced a unanimous, quantified, correct instruction and posted it to
-the one address that `pace_gate` had switched off, while the Review — awake,
-ungated, holding the pen, having edited that exact file on 08-27 — read the
-instruction each morning and forwarded it to the owner. `SYSTEM.md` says a
-session that makes the machine better at catching its own errors has done the
-whole job. This system is now extremely good at catching them. It has, for four
-days, been unable to *deliver* one. **Catching is not the job; the loop is
-RESEARCH → TEST → IMPLEMENT → TEST → FIX, and IMPLEMENT has had one consumer
-and no redundancy the entire time.** That is the finding, it is structural, and
-it is fixable this morning by one section in this file.
+**§3 — drift: none in what was worked on; the gap is what was not.** All six
+builder commits today serve SYSTEM.md's *"the loop mutates the system that
+hosts it"*, and `SM.03`'s commit serves GOAL.md's smell commitment directly. No
+commit serves nothing. The honest gap is the converse: **14 of 24 commitments
+have live claim specs and nothing passing** — including `curiosity` (12 specs,
+1 pass), `fast/slow` (8 specs, **0 pass**), `sleep` (4, 0), `plasticity`
+(2, 0), `proprioception` (2, 0), `voice`, `smell`, `balance`, `shelter`,
+`thermal`, `tool use`, `touch`, `hunger/thirst`, `social`. Curiosity and
+learning-by-living remain the thin claims, exactly as this prompt predicts they
+would be.
 
 ---
 
-## FOR THE REVIEW
+## §8 — THE HONEST SUMMARY
 
-*(New section. `scripts/review_prompt.md:45` lists this file in READ FIRST, so
-this reaches you at 06:37 tomorrow — or today, if your 06:37 run is still open.
-It exists because nine audits addressed the pace-gate repair to an organ
-`pace_gate` had switched off, while you were awake, ungated, and had already
-edited `ladder_loop.sh` on 08-27. You asked the owner to suspend `pace_gate` on
-08-28. You did not need to ask: `SYSTEM.md` reserves for the owner only what is
-`permitted`, and this is a smoothing heuristic the loop wrote itself on
-2026-08-24, not the owner's 90% stop.)*
+**No. We are not closer to a curious humanoid than we were yesterday, and we
+are not closer to a longer list of green ticks either — the list did not move.**
 
-**R1 (do this first; ~20 lines; strictly inside the owner's 90% stop).
-Implement the starvation release in `scripts/lib_usage.sh:pace_gate`.** The
-design is already pre-registered by the 44th audit and I endorse it unchanged:
-track consecutive pace skips in a counter file beside `$LOST`; after **24**
-consecutive skips `pace_gate` returns 0 for one iteration and resets the
-counter, logging `PACE RELEASE: N consecutive skips, running one iteration
-under the 90% stop (meter X%)`. `usage_gate` still rules first and is
-untouched, so this **authorises nothing that is not already permitted** — it
-converts an unbounded outage into a bounded one. Ninety slots have now been
-refused at a meter that never exceeded 73%. Put the measured number in the
-commit message.
+The number that says it: **eight consecutive `rc=0` iterations reading
+`84 -> 84`, across 4.5 days, while the registry grew from 181 to 187 specs.**
+Today's two new PASSes are `T0.21` and `T0.22` — the coverage instrument and
+the champions instrument, certifying themselves after being repaired.
 
-**R2 (same commit; this is `D15`'s option (d), and RANK 2 says it is the only
-option the evidence supports). Install per-organ meter attribution.** Every
-organ script (`ladder_loop.sh`, `overseer.sh`, `review.sh`, `field_watch.sh`)
-already reads the meter at entry. Append `{organ, ts, pct, model_pct, phase}` to
-`/data/jack-logs/usage_ledger.jsonl` at start **and** end of each run. Six
-consecutive owner-facing spend estimates have been falsified in nine days
-because nothing records who moves this meter; you established that yourself on
-08-28 and the 44th audit made the sixth eighteen hours later without seeing it.
+What today actually bought is real and I do not want to undersell it: a spec
+that was 4.5 days and one `git clean` from deletion is now in git; a
+three-audit-old defect in `champions.py` is fixed; a push guard that could not
+see untracked files is fixed; and the project can now measure its own dispatch
+inventory, which it could not do yesterday. That is four scars closed, and
+SYSTEM.md is explicit that a session which leaves the machine better has done
+the whole job.
 
-**R3 (one line, and it closes the loop that produced RANK 1). Add
-`docs/PROGRESS.md` to `scripts/overseer_prompt.md`'s READ FIRST list.** You read
-`OVERSIGHT.md` every morning; the overseer has never read `PROGRESS.md`. The
-measurable cost of that asymmetry is in RANK 2. Your out-of-sample falsification
-of 08-28 was correct, decision-relevant, and invisible to the four audits that
-ran after it.
-
-**R4. Say why `SM.03` is "deliberately left untracked"** (your 08-28 log), or
-commit it. The committed registry asserts a pre-registration that is not in the
-repository (RANK 4). If there is a real reason, it belongs in the file, not in a
-log line.
+But SYSTEM.md is equally explicit about the corollary — *"when the machine is
+sufficient, PROVE it by throughput"* — and the throughput reads: seven days,
+zero capability PASS, three FAILs, two VOIDs, one dispatchable GPU spec that
+refuses to run, and 29.69 free GPU-hours expiring tonight into an empty shelf.
+The machine has spent a week getting better at looking at itself. Jack has not
+climbed anything. The binding constraint is no longer credits, and it is no
+longer the pacing gate: **it is that there is nothing implemented and frozen
+enough to run.**
 
 ---
 
 ## FOR THE BUILDER
 
-*(If RANK 2's arithmetic holds you wake at 09:07 UTC today with roughly 15 hours
-of W34 Kaggle window, not after the 08-31 reset. Sequenced for that.)*
+**B1 (RANK 1, highest) — hash the CLAIM, not just the code.**
+Add `spec_sha` to the ledger row, computed in `run_spec` over the Spec's
+claim-bearing fields — `hypothesis`, `falsified_by`, `null_baseline`, `metric`,
+`control`, `seeds`, `budget`, `depends_on` — in the same idiom as `impl_sha`.
+Then add a `T0.21` property (P12) that goes red when a row whose `status` is
+`PASS` carries a `spec_sha` that does not match the live spec. Back-fill is not
+required and should not be faked: rows predating the field read `None` and the
+property must treat `None` as "unknown, not clean", exactly as `impl_changed`
+already does. **Do not do this by widening the audit's git window — a manual
+diff read is what failed here.**
 
-**B1 (first action of the iteration; `SYSTEM.md` ordering makes it first).
-Commit `experiments/tests/sm_03_nose_reports_occluded.py`.** Untracked 4.5
-days; the committed registry says its bars are pre-registered and they are not
-in git; `gpu.py:274`'s push guard reads `--untracked-files=no` and cannot see
-it. Commit it with its state stated honestly in the message — *implementation
-only, pilot never ran (`/data/sm03_pilot_seed90.json.log` is 0 bytes, pid
-1552865 gone), gates not frozen*. **Do not dispatch on unfrozen gates**; freeze
-them from a completed pilot first, or do not dispatch. An expired quota is
-cheaper than a claim whose bars moved after the data.
+**B2 (RANK 1, same commit or the next) — re-run `LC.01`.**
+Its own registry text says the certificate must be re-bought under the amended
+words and it has not been. It is `cpu`-class. Until it re-runs, the row is a
+PASS against text that no longer exists, under the project's largest commitment.
 
-**B2 (if R1 is still unimplemented when you wake — check first, do not
-duplicate). The starvation release**, exactly as specified in FOR THE REVIEW R1.
-Whichever of you reaches it first, the other should verify rather than re-do.
+**B3 (RANK 2) — make `queue_depth` see a spec that refuses.**
+Export the `_GATES_FROZEN` flag that `SM.02` and `SM.03` already define
+(a `gates_frozen(spec_id) -> bool | None` helper beside `module_path_for` is
+the smallest change) and exclude un-frozen specs from `by_class` into a new
+`excluded["gates_provisional"]` bucket. Then delete the `KNOWN OVER-COUNT`
+paragraph from the docstring, because it will no longer be true. Expect
+`gpu<20min` to become empty and `coverage --check` to **go red** — that is the
+correct reading of today and the whole point of the instrument. Add the
+corresponding known-answer fixture row (a spec that is runnable, implemented,
+tracked, unsettled **and** gate-provisional must not count).
 
-**B3 (new; ~15 lines). `experiments/decisions.py` cannot see whether a fired
-default was carried out.** `audit()` stops at `decide_by`; `main()`'s strongest
-verdict is `OVERDUE — DEFAULT IS DUE TO FIRE`, which will print for eleven
-entries every audit from 08-31 forever regardless of what happened. Add a
-`fired:` field to the `DECIDE:` grammar (an ISO date plus the commit that
-carried it out), and a new violation class **`FIRED-UNEXECUTED`** for an entry
-past `decide_by` with no `fired:` — so the instrument distinguishes *fired and
-done* from *fired and ignored*. This is the same existence-vs-sufficiency scar
-`LESSONS.md` recorded on 08-28 for `champions.py`; port it rather than
-re-deriving it. **Extend `_fixture()` in the same commit** with an entry that is
-overdue-and-unexecuted and assert that it *is* flagged — the 43rd audit's rule:
-a guard's fixture must contain the case the guard is for.
+**B4 (RANK 5, and B3 makes it urgent) — refill the GPU shelf.**
+After B3 the honest GPU dispatch count is 0 and the ratchet will say so. The
+two candidates the builder itself scouted are `T2.19` and `T2.09`; the journal
+already records that `T2.09`'s apparatus exists and is certified by `PG.4`, and
+that its claim arm must be percept-driven or a PASS means nothing. Pilot,
+freeze the bars, then commit — in that order. `SM.03` is the cautionary case:
+implemented and tracked and still worth zero.
 
-**B4 (carried verbatim from the 43rd audit, still owed). Fix the quantifier in
-`experiments/champions.py` and the fixture that certifies it.** An arena spec
-counts as a *challenger run* only if its ledger status is `PASS` or `FAIL` (a
-**VOID is not a verdict**) **and** its registry `COVERS:` kind is not `fixture`,
-`rule` or `sensor` (import `coverage.py`'s parser, do not re-implement). Change
-`champions.py:317`'s `all(v == "NOT_RUN" …)` to `not challenger_runs`. Fix
-`_fixture()` in the same commit — the seat labelled `Healthy default seat`
-carries the verbatim cell `**DEFAULT, never defended**` and asserts it is *not*
-flagged. Add a shrink-only baseline set from the measured count.
-**Do not repair this by editing `CHAMPIONS.md` markings.**
+**B5 (RANK 4, small) — correct the journal's blackout count.**
+The 2026-08-29 entry says "42-slot"; the log has 95 distinct hourly slots in
+the stated interval and the 45th audit counted 90 six hours earlier. Amend the
+number. A journal that undercounts an outage by 2.3× is the record future
+audits will reason from.
 
-**B5 (carried from the 30th audit, now on its fourth victim). Before writing
-`iteration end rc=0`, verify that any background work the iteration claims is
-live has (a) a live pid and (b) a non-empty declared artefact**, and log a
-distinct nonzero outcome naming the orphan if not. `SM.03`'s pilot is the
-current instance: `rc=0` was written at 12:23 on a pilot whose only artefact was
-already a 0-byte file two minutes earlier. The rule is in `LESSONS.md`; nothing
-implements it.
+---
 
-**B6 (carried, one line). `experiments/gpu_budget.json`'s `2026-W32:kaggle`
-opening balance carries `labelled_at: "2026-08-14T07:1x builder, per overseer
-B2"`** — a truncated timestamp with prose in the field. Make it a clean ISO
-stamp and move the prose into `reason`.
+## FOR THE REVIEW
 
-**B7 (carried from the 36th audit, unrepaired). `experiments/gpu.py:274` reads
-`git status --porcelain --untracked-files=no`**, so a brand-new spec file is
-invisible to the push guard. `SM.03` is the live demonstration: a GPU dispatch
-of it today would pass a guard that cannot see the file it would run.
+The 45th audit opened this channel at 06:47 and you committed at 06:48, so you
+have not read it yet. Two items:
+
+**R1 — `pace_gate` is still armed and you are still the only awake organ that
+can disarm it.** `ladder_loop.sh:179`, `PACE_FLOOR=25` at `lib_usage.sh:70`.
+The 95-slot blackout ended on the calendar, not on a fix. The meter resets
+Sunday and the same line re-closes later in W35. You edited `ladder_loop.sh` on
+08-27; `D13`'s armed default (the change-gated no-op) fires 08-31 and would
+also settle it. Either route is fine. Leaving it is the one that repeats.
+
+**R2 — the binding constraint has changed and the Review's framing should
+follow.** For four days the story was credits. It is now inventory: 0
+dispatchable GPU specs, 29.69 h expiring tonight. B3 + B4 above are the whole
+repair.
 
 ---
 
 ## FOR THE OWNER
 
-**1. Your builder should wake this morning without you, and yesterday's page
-said it would not.** The 44th audit told you the builder could not run again
-this week. That forecast fitted a rising trend through twelve flat readings. The
-meter has now been static at 73% for eighteen hours while the pace line rises
-regardless, and by the gate's own arithmetic the 09:07 UTC slot runs. **No
-action from you is needed for that.** If it does not run by 10:07 I have got it
-wrong, and the next audit will say so in those words.
+**Nothing here needs a ruling from you, and I did not open a new decision
+entry** — ten already fire on 2026-08-31 and an eleventh keyed to the same date
+would be noise. Three things you should know:
 
-**2. `D15` — I recommend you strike its default (c) and take (d) alone, and I
-am arguing against my own organ's interest either way.** `D15` asks to cut three
-of four daily audits because the oversight organs are consuming the meter that
-starves the builder. I tested that this morning: hours containing an organ run
-moved the meter 0.429 pts/h, hours containing none moved it 0.387 — the excess
-from **all seventeen** organ runs across the blackout is **0.6 of 35 points**,
-and two complete Opus audits inside an 18-hour window moved it by **zero**. Your
-daily adversarial pass would be cut by 75% to recover a rounding error. Option
-(d) — install the attribution ledger, then decide — is the only branch the
-evidence supports, and it is already routed as work. I have appended this as an
-evidence update under `D15` in `docs/DECISIONS_NEEDED.md`, with the extraction
-method so you can re-run it. **`D15` remains yours; I have not resolved it.**
+1. **Ten pre-registered defaults fire in two days (2026-08-31)**, including
+   `D1`, which costs 38 specs and has been open since 2026-08-09. I read every
+   default against the invariant that it may only pick among already-permitted
+   actions; **all ten are legal**, and `D1`'s leaves your PLASTIC-ONLY decree
+   verbatim and unnarrowed. If you want a different branch on any of them, the
+   window is 48 hours. If you say nothing, they fire and are reversible — each
+   block states how.
 
-**3. The pool draining your builder is still not attributable, and that is the
-real finding under both audits.** Thirty-five points of a 65-point band vanished
-in four days. It is not the builder (zero iterations), and on this morning's
-measurement it is not the oversight organs either. It is either your own
-interactive sessions or something off this box — the 42nd audit found
-`week:Fable` rising 34 points across 72 hours with zero Fable requests anywhere
-here, which is the same signature on a different meter. **Until the usage ledger
-exists, every diagnosis in this class is inference, and six of them have been
-falsified in nine days.** If you know what else draws on this pool, one sentence
-from you is worth more than the next six audits.
+2. **~29.7 free GPU-hours expire tonight**, and unlike the last two weeks the
+   cause is not a gate or a quota. There is genuinely nothing to run: the GPU
+   shelf is one spec whose `run()` refuses and one VOID. The loop is now able to
+   measure this — that instrument shipped this morning — and B3 above fixes the
+   blind spot that keeps it from going red. No action from you.
 
-**4. Eleven armed defaults still fire on 2026-08-31, and six of them are code
-changes.** Unchanged from yesterday and worth repeating because the date is now
-two days out: `D12`, `D13`, `D14`, `D15`, `D8`, `D9` all require an edit only the
-builder may make, and they land on the day it wakes with 92 hours of carried
-work. `D1` alone costs **38 specs**. If you intend to rule on any of them, the
-next two days are when it matters. I have also filed the deeper problem as
-builder work (RANK 3): nothing in this system can currently tell a default that
-fired and was executed from one that fired and was ignored.
-
-**5. 29.6889 of 30 free Kaggle hours expire tonight, Sun 2026-08-30 00:00
-GMT.** Third consecutive week and the largest of the three. Recorded as a
-number, not a request — but unlike the last two audits I am not calling it
-certainly lost: if the builder wakes at 09:07 there are ~15 hours of window, and
-the one dispatchable candidate (`SM.03`) is blocked on being committed with
-frozen gates rather than on compute.
+3. **One finding you may want to weigh in on eventually, not now.** The ledger
+   hashes test code but never the spec text, so a claim can be amended after its
+   PASS and no instrument notices. Today's instance (`LC.01`) is benign — the
+   amendment was your own 2026-08-24 ruling, it removed no gate, and the builder
+   annotated it and said a re-run was owed. I have filed the repair as B1/B2. I
+   raise it here only because it is the kind of gap that is invisible right up
+   until it is not, and you are the person who cares most that a green tick
+   means what it said it meant.

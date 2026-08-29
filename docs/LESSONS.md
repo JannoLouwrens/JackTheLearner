@@ -6043,3 +6043,44 @@ to be counted deliberately, and something has to go red when the count is zero.
    the honest answer is 0 (`SM.03`'s `run()` refuses). Written down, it is an
    upper bound and a red is conservative. Left undocumented, it is the next
    audit's finding.
+
+## Writing a defect down is not detecting it — prose that states a condition still needs a field that carries it (46th audit, 2026-08-29)
+
+Two instances found in the same audit, three hours apart in the same repo, both
+written by an honest author who correctly identified the problem and then filed
+it somewhere no instrument reads.
+
+1. **`LC.01`.** Owner ruling 2026-08-24 amended its `falsified_by`
+   (`0345f0d`). The amendment is exemplary: annotated inline, the measured
+   `U1`–`U4` gate byte-identical, self-labelled strengthen-only, and it ends
+   *"Requires a re-run to re-buy the certificate under the amended text."* Five
+   days later `LC.01` still reads PASS at `ran_at 2026-08-09`, unre-run. The
+   sentence naming the debt is the ONLY record of it: `re-buy the certificate`
+   occurs exactly once in the codebase, inside the spec string it describes.
+2. **`coverage.queue_depth`.** Its docstring declares a `KNOWN OVER-COUNT` —
+   it cannot see a spec whose gates are unfrozen, so `gpu<20min` reads 1 when
+   `SM.03`'s `run()` refuses and the honest answer is 0. Documenting it was the
+   right call and it is still the reason `coverage --check` stays green in the
+   one cost class the instrument was built to alarm on.
+
+**The shape.** A ledger row carries `impl_sha` and no `spec_sha`, so "was this
+PASS bought under today's claim text?" has no field to be answered from. The
+condition was known, stated in the clearest possible English, and undetectable
+— because detection needs a *field*, a *fixture*, or a *ratchet*, and English
+is none of those. The failure mode is worse than an undocumented bug: the prose
+discharges the author's sense of duty, so nobody files it again.
+
+**The rule.** When you write down a condition that must later be checked — a
+certificate that must be re-bought, an over-count that must be corrected, a
+dependency not yet expressible — the same commit ships the thing that will
+notice. A field, a property, a red exit. If you cannot ship the detector, the
+prose is a `DECIDE:` block with a date, not a comment. **A known limitation with
+no detector is indistinguishable from an unknown one within a week**, because
+the only reader who could have acted on it was the one who already knew.
+
+Corollary, sharper than it looks: an instrument's documented blind spot is most
+dangerous precisely where the instrument matters most. `queue_depth` is honest
+everywhere and blind in the GPU class — the class that has cost this project
+~61 free hours in three weeks. State the over-count, then check whether the
+over-count lands in the class the alarm exists for. If it does, you have not
+shipped an alarm.
