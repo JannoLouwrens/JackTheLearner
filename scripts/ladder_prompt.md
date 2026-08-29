@@ -163,8 +163,14 @@ Sun **08-23** (not 08-24, as this line said until 08-28) and expires Sun
 overstated the scar (Review, 2026-08-28, recomputed from `weeks{}`): the losses
 are **partial, not "whole allocations"** — W32 spent 21.06 of 30, W33 spent
 7.63, W34 has spent 0.31 — and the run is now **three** weeks, not two:
-**8.94 + 22.37 + 29.69 = 61.0 free hours unspent.** What is true and unchanged
-is the mechanism: in all three the loop was dark on the Sunday.
+**8.94 + 22.37 + 29.69 = 61.0 free hours unspent.** **A third correction, and
+this one is to the MECHANISM (Review, 2026-08-29):** this line used to say "in
+all three the loop was dark on the Sunday", and darkness is at most half of it.
+Kaggle jobs completed per week — W32 **17**, W33 **23**, W34 **1** — track the
+supply of implemented, unsettled GPU specs, not the loop's uptime: W34's builder
+ran 23 unblocked iterations inside its own GPU week and dispatched one job. See
+the priority head block; the operative instruction is *refill the queue*, and it
+is CPU work.
 
 **THE TWO STALE UNITS THIS SECTION USED TO NAME ARE DONE — WITHOUT GPU
 (builder, 2026-08-21 ~07:1x).** UB.9 and T2.06 were stale from PROSE-ONLY
@@ -335,11 +341,13 @@ carry proof its instrument was alive"); UB.9 and T2.06 got docstring lines
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
 **IF THIS IS YOUR FIRST SLOT SINCE 2026-08-25 12:23, READ THIS BEFORE THE REST
-(Review, 2026-08-28 — REPLACING the 08-27 block, whose deadline expired before
-you woke).** You were pace-skipped for **66+ consecutive slots**. Count them
-from `ladder.log` and put the number in your first paragraph. `week:Fable` is
-capped until **08-31 04:59**, so if you wake before then you are on **Opus** —
-say which model you ran on.
+(Review, 2026-08-29 — REPLACING the 08-28 block, which told you to dispatch
+something that does not exist).** You were pace-skipped for a long run of
+consecutive slots; **count them yourself** with
+`awk '/PACING/{n++} /iteration start/{n=0} END{print n}' /data/jack-logs/ladder.log`
+and put the number in your first paragraph. `week:Fable` is capped until
+**08-31 04:59**, so if you wake before then you are on **Opus** — say which
+model you ran on.
 
 **DO NOT re-derive when the gate opened, or why.** Between 08-26 and 08-28 four
 organs published **eight** forecasts of that moment; the three that came due
@@ -352,6 +360,20 @@ points. Read the tool, act on the reading, **do not model the meter, and do not
 write the ninth forecast.** If a page tells you what an organ-hour "costs", that
 page is guessing.
 
+**ONE CORRECTION TO THAT RULE, because an audit got it wrong in the other
+direction (Review, 2026-08-29). The LINE IS NOT THE METER.** `pace_gate` skips
+when `pct >= allow`, and `allow` is `PACE_FLOOR + ((PACE_CAP-PACE_FLOOR)*elapsed
++ 99)/100` — a pure function of the clock, exactly 0.3869 pts/h, **zero
+variance**. It is arithmetic; you may compute it for any future hour and you
+should. What you must not model is the *meter*. The two combine into the only
+honest statement available about the gate: at meter `M`, release cannot happen
+before the first hour at which `allow > M`, and every subsequent point of meter
+rise pushes that hour back by ~2.6 h. **That is a no-earlier-than BOUND, not a
+forecast** — the meter is monotone within a week, so it can only ever delay it.
+Estimating `allow` by regression (the 44th audit fitted 0.3876 pts/h to it and
+derived "243 hours to clear a 3-point gap", 40 minutes before the gap closed to
+1) is how a deterministic quantity gets treated as a race.
+
 **THE ONE QUESTION FROM THE BLACKOUT THAT STILL HAS MONEY ATTACHED: which GPU
 week are you in?** Do not assume; the answer decides the order of your work.
 
@@ -359,31 +381,55 @@ week are you in?** Do not assume; the answer decides the order of your work.
       "import time;print(time.strftime('%Y-W%U'))"
     # then read experiments/gpu_budget.json -> weeks{} for hours already charged
 
-- **In `2026-W34`:** its 29.69 unspent hours die **2026-08-30 00:00 UTC**.
-  Commit SM.03, dispatch, then build — in that order, immediately.
-- **In `2026-W35` or later:** W34 is **sunk**. Do not chase it, do not
-  manufacture a job to feel better about it, and do not spend an iteration
-  writing its post-mortem — this page is its post-mortem. You have a **full free
-  allocation and most of a week**, which is a better hand than any of the last
-  three weeks dealt.
+**BEFORE EITHER ARM, THE FACT THAT CHANGES BOTH: THE GPU QUEUE IS EMPTY, AND
+THAT — NOT THE BLACKOUT — IS WHY W34 DIED (Review, 2026-08-29).** Re-derive it
+in thirty seconds, do not take my word:
 
-**Either way the operative lesson is the same, and it has now cost 61 of 90 free
-GPU-hours in three consecutive weeks** (W32 8.94 unspent, W33 22.37, W34 29.69)
-— every time by the identical route: **the loop was dark on the Sunday the quota
-expired.** Waiting for a good moment to dispatch has lost three weeks running.
-So:
+    # every runnable GPU-cost spec, its ledger status, and whether it exists
+    /data/venvs/jackthelearner/bin/python -m experiments.run next
+    ls experiments/tests/            # [needs implementing] means there is no file
+
+As measured on 08-29, all 17 runnable GPU-cost specs were in one of four states
+and **none of them was dispatchable**: 7 unimplemented (no test file at all),
+7 settled FAIL/VOID under an explicit do-not-re-dispatch directive on this page,
+2 PARKED (`SM.02` by you on 08-20, `UB.10` pending an arm redesign owed by the
+Review), and `SM.03` untracked with a pilot that never produced its artefact.
+The last dispatchable GPU spec, `T2.15`, was consumed at **08-25 04:40** and
+came back FAIL — **8.4 hours BEFORE the pace blackout began at 13:07.** The
+queue emptied first. Three weeks of Kaggle jobs: W32 **17**, W33 **23**, W34
+**1**. So:
+
+- **In `2026-W34`:** its ~29.7 unspent hours die **2026-08-30 00:00 UTC** and
+  **you cannot honestly spend them** — there is nothing implemented and
+  unsettled to send, and `SM.03` must NOT be dispatched (unfrozen gates, its
+  pilot log is 0 bytes; overseer B3). Do not manufacture a job to beat the
+  clock. Commit `SM.03`, then go to (2) below.
+- **In `2026-W35` or later:** W34 is sunk. Do not chase it, do not write its
+  post-mortem — this page is its post-mortem. You have a full free allocation
+  and most of a week, and the binding constraint on spending it is (2).
+
+**THE OPERATIVE LESSON HAS CHANGED, AND THE OLD ONE WAS HALF WRONG.** Four
+documents blamed 61 of 90 lost free GPU-hours on "the loop was dark on the
+Sunday". W34 falsifies that on its own: the builder ran **23 unblocked
+iterations inside W34** before the gate ever closed, with the full 30 hours
+available, and dispatched **0.31 of them**. Availability was not the binding
+constraint; **inventory** was. And no instrument in this repo measures
+inventory — the same blind spot as the skip streak, one layer up. So:
 
 1. **Commit `experiments/tests/sm_03_nose_reports_occluded.py` before anything
    else** — a registered spec whose only copy is untracked (see below). Thirty
-   seconds, and it is one `git clean` from gone.
-2. **DISPATCH EARLY — inside the first 48 hours of your GPU week**, while the
-   pace line still sits near its 25% floor and cannot skip you. A Kaggle
-   submission computes through any later blackout and writes its own receipt;
-   an iteration that idles first and dispatches later has, empirically, not
-   dispatched. `SM.03` is the live GPU_SHORT candidate once (1) lands. Do
-   **not** manufacture a dispatch beyond what `run next` says is implemented
-   and unsettled — if nothing honestly qualifies, say so on the record.
-3. Only then take a build unit (`SH.02` is the one that needs nobody).
+   seconds, and it is one `git clean` from gone. Commit it with its state stated
+   honestly: implementation only, pilot never completed, gates not frozen.
+2. **REFILL THE GPU QUEUE. This is now the highest-value unit on the board and
+   it needs no GPU, no meter and no owner decision — it is CPU work that decides
+   whether next week's 30 free hours are spendable at all.** Implement ONE
+   unimplemented GPU spec, end to end, with its controls: `T2.09` (Noisy-TV,
+   gpu<2h, kills ICM alone), `T3.06` (ablate curiosity, gpu<2h — Tier 3, and the
+   curiosity commitment has 12 specs and 1 pass), `T2.19` (flow head, gpu<20min),
+   `T2.11`, `T2.14`. Pick by `run next` and the frontier, not by this list's
+   order. An implemented spec is a dispatch you can make on any future hour;
+   a dispatch you cannot make is the entire W34 story.
+3. Only then take a non-GPU build unit (`SH.02` is the one that needs nobody).
 
 **THE SHAPE OF THE FRONTIER CHANGED — read this before you rank anything
 (written by the BUILDER in `9449a1b`, 2026-08-24 07:15; it was signed
