@@ -8691,7 +8691,7 @@
     "T0.17": {
       "amended": [],
       "attempt": 22,
-      "commit": "be60c3d",
+      "commit": "beaa0a1",
       "compute_s": null,
       "control_metrics": {
         "claim_rule_sees_amended_claim": true,
@@ -8699,16 +8699,10 @@
         "hand_edit_took_effect": true,
         "impl_sha_rule_sees_amended_claim": false
       },
-      "duration_s": 5.01,
+      "duration_s": 4.91,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "6c0fcd1",
-          "message": "",
-          "ran_at": "2026-08-10T00:12:07",
-          "status": "PASS"
-        },
         {
           "commit": "92bade0+dirty",
           "message": "",
@@ -9327,9 +9321,56 @@
             "spec_sha": "a237619e332e8397",
             "status": "FAIL"
           }
+        },
+        {
+          "commit": "be60c3d",
+          "control_metrics": {
+            "claim_rule_sees_amended_claim": true,
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true,
+            "impl_sha_rule_sees_amended_claim": false
+          },
+          "gpu_job_id": null,
+          "impl_sha": "3656fcac07dd4f2f",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "claim_hash_covers_every_claim_field": true,
+            "claim_hash_ignores_bookkeeping": true,
+            "content_check_fires_on_postrun_edit": true,
+            "content_check_reports_unanswerable": true,
+            "content_check_spares_unedited_file": true,
+            "detector_flags_moved_dependency": true,
+            "detector_sees_amendment": true,
+            "detector_spares_unmoved_dependency": true,
+            "drift_sees_amended_claim": true,
+            "drift_spares_unamended_claim": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "pass_rows_claim_unstamped": 82,
+            "pass_rows_claim_verified": 2,
+            "pass_rows_with_drifted_claim": 0,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "run_spec_stamps_the_claim": true,
+            "unknown_attempt_is_sticky": true,
+            "unprotected_pass_certificates": 0,
+            "unstamped_answered_by_content": 28,
+            "unstamped_claim_is_not_clean": true,
+            "unstamped_records_examined": 28,
+            "unstamped_unanswerable": 0
+          },
+          "ran_at": "2026-08-29T13:16:00",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "a237619e332e8397",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "3656fcac07dd4f2f",
+      "impl_sha": "99b5115125e23ff7",
       "message": "",
       "metrics": {
         "amendment_is_attributable": true,
@@ -9346,8 +9387,8 @@
         "history_absence_preserved": true,
         "history_carries_evidence": true,
         "history_keeps_amendment": true,
-        "pass_rows_claim_unstamped": 82,
-        "pass_rows_claim_verified": 2,
+        "pass_rows_claim_unstamped": 74,
+        "pass_rows_claim_verified": 9,
         "pass_rows_with_drifted_claim": 0,
         "refuses_pass_and_fail": true,
         "refuses_unattributed": true,
@@ -9360,7 +9401,7 @@
         "unstamped_records_examined": 28,
         "unstamped_unanswerable": 0
       },
-      "ran_at": "2026-08-29T13:16:00",
+      "ran_at": "2026-08-29T15:15:30",
       "seeds": [
         0
       ],
@@ -9515,18 +9556,20 @@
     },
     "T0.20": {
       "amended": [],
-      "attempt": 9,
-      "commit": "82437d7",
+      "attempt": 10,
+      "commit": "beaa0a1",
+      "compute_s": null,
       "control_metrics": {
         "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
         "inventory_size": 10.0,
         "properties_checked": 7.0,
         "properties_failed": 2.0,
-        "registry_size": 165.0,
+        "registry_size": 187.0,
         "senses_absent_live": 0.0,
-        "senses_load_bearing_live": 0.0
+        "senses_load_bearing_live": 1.0
       },
-      "duration_s": 1.78,
+      "duration_s": 2.09,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -9576,6 +9619,34 @@
           "message": "",
           "ran_at": "2026-08-12T21:18:42",
           "status": "PASS"
+        },
+        {
+          "commit": "82437d7",
+          "control_metrics": {
+            "failed_names": "p3_deleted_family_loses_coverage,p4_mention_must_not_grant_coverage",
+            "inventory_size": 10.0,
+            "properties_checked": 7.0,
+            "properties_failed": 2.0,
+            "registry_size": 165.0,
+            "senses_absent_live": 0.0,
+            "senses_load_bearing_live": 0.0
+          },
+          "impl_sha": "d4d8cd17746bdd3b",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "inventory_size": 10.0,
+            "properties_checked": 7.0,
+            "properties_failed": 0.0,
+            "registry_size": 165.0,
+            "senses_absent_live": 0.0,
+            "senses_load_bearing_live": 0.0
+          },
+          "ran_at": "2026-08-12T21:19:26",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "d4d8cd17746bdd3b",
@@ -9585,15 +9656,16 @@
         "inventory_size": 10.0,
         "properties_checked": 7.0,
         "properties_failed": 0.0,
-        "registry_size": 165.0,
+        "registry_size": 187.0,
         "senses_absent_live": 0.0,
-        "senses_load_bearing_live": 0.0
+        "senses_load_bearing_live": 1.0
       },
-      "ran_at": "2026-08-12T21:19:26",
+      "ran_at": "2026-08-29T15:15:33",
       "seeds": [
         0
       ],
       "spec_id": "T0.20",
+      "spec_sha": "73bd31d9a47eab38",
       "status": "PASS"
     },
     "T0.21": {
