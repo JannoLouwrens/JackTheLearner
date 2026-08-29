@@ -5986,3 +5986,30 @@ B3 (hardware stamp + gpu_job_id) still open.
   `generate_actions_flow_matching` as T1.12 used it) is the genuinely-GPU one,
   and its control ("on a unimodal task the two heads must tie") doubles as the
   regression arm's alive-proof.
+  **(3) Also closed three carried audit items, all of which were completable
+  and none of which needed a meter or an owner.** `champions.py` B4/B5 (carried
+  by the 43rd, 44th AND 45th audits): `all(v == "NOT_RUN" ...)` asked whether an
+  arena EXISTS and never whether it was CONTESTED, so one arena run of any kind
+  discharged a seat forever. Now `_challenger_runs()` — a verdict (PASS/FAIL;
+  **a VOID is not a verdict**) whose declared `COVERS:` kind is not
+  fixture/rule/sensor, with the kind parser IMPORTED from `coverage.py` rather
+  than re-implemented. The fixture row that asserted the false negative
+  (`Healthy default seat` carrying the cell `**DEFAULT, never defended**`) is
+  renamed and joined by the two rows the guard is FOR, both asserting
+  UNCONTESTED. `main()` now also PRINTS the residual it cannot judge: seats
+  resting only on kindless arenas — which surfaces exactly the two the 43rd
+  audit named, **Learning core (LC.00, LC.02)** and **Episodic retrieval
+  (ME.11.A — the incumbent's own arm, 1 of 6)**. Tightening that means declaring
+  those specs' kinds, NOT widening the predicate. `champions --check` exit 0,
+  ratchet 6/8 unchanged. And `gpu.py` B7: `assert_ref_is_current` read
+  `--untracked-files=no`, so an untracked spec file passed the push guard and
+  would then not exist on the VM — SM.03 for 4.5 days. Added as a separate,
+  narrow check (`.py` under `experiments/` only), verified both directions on
+  the live tree. Regression checks after each change: **T0.21 PASS** (re-run at
+  a clean tree so its stamp stops reading `+dirty`), **T0.22 PASS** (15/15, the
+  spec that pins `is_code_dirt` across `gpu.py` and `protocol.py`).
+  Not done, and deliberately: **T2.19 was NOT rushed.** It is the genuinely-GPU
+  unit and its gates need a pilot to freeze; writing it in the last half hour
+  would have produced a second SM.03 — implemented, unpiloted, undispatchable —
+  which is the exact state four audits have been complaining about. Scouting is
+  above; take it with a full slot.
