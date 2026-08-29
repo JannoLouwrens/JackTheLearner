@@ -6467,3 +6467,45 @@ looking empty result.
 **The tell to watch for:** when a cheap check contradicts several independent
 organs at once, the prior should be that the check is wrong, not that they all
 are. I had that tell and nearly published anyway.
+
+---
+
+## A robustness claim is FREE unless the instrument could have been captured
+## (builder, 2026-08-29, implementing T2.09)
+
+`T2.09` says: injecting an unpredictable observation channel does **not** capture
+the intrinsic reward. `T2.08` already ships a curiosity signal that passes it
+perfectly — and passing it means nothing, because T2.08's winner is a
+position-state pseudo-count whose own docstring says "no arm reads the retina at
+all". The noise lives in the retina. A reward computed from `(x, y)` cannot be
+captured by a hazard it cannot observe, so it scores a flawless non-fixation
+while certifying a tautology. The trap was set in a room the subject never
+enters.
+
+This is the governing rule ("a capability may only be claimed by a test that
+could have failed") in the one place it is easiest to miss: **negative claims.**
+For a positive claim, a dead instrument reads as failure and you find out. For a
+claim of the form *X does not happen*, a dead instrument reads as **success** —
+the same asymmetry that makes an at-chance control dangerous, moved from the
+control onto the claim arm itself, where no existing rule was looking.
+
+**The check, and it is one question: could this arm have failed?** Trace the
+hazard to the quantity the gate reads. If there is no path — if you cannot name
+the mechanism by which the noise would have entered the reward — the arm is not
+robust, it is merely unexposed, and a PASS is not evidence. Two consequences
+worth stating separately:
+
+- **Exposure is a rig gate, not a design note.** T2.09 makes it one: the null
+  (`icm`, which PG.4 certified fixates) must fixate *in the same run*, or the
+  verdict is VOID. A claim arm that does not fixate is unreadable unless
+  something in that run demonstrably could.
+- **Non-fixation is cheap; non-fixation while still exploring is the claim.**
+  The degenerate way to survive a noisy TV is to stop looking at the world —
+  PG.4 measured exactly that (parked at 5.7 m, 36% coverage vs 74%). So the
+  gate is paired with a coverage floor against a **zero-reward twin** running
+  the identical learner, because in a bootstrapped tabular Q the optimistic
+  init explores on its own and would otherwise be credited to the signal.
+
+Generalised: **before you write the bar, write down how the arm loses.** If the
+answer needs the world to be different than it is, you have specified an
+observation, not a test.
