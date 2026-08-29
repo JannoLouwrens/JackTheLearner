@@ -123,13 +123,57 @@ _experiment once per seed; the T2.01/T2.03/T4.02 pattern). No mujoco, no
 downloads: torch + numpy + the cloned repo. The science lives in THIS module
 and the JOB string only imports it (T0.16 lesson).
 
-GATES ARE PROVISIONAL. `_GATES_FROZEN` is False and `run()` refuses. Five bars
-depend on what this rig can reach in its budget and MUST be frozen from the
-pilot artifact before any registered run: UNI_MIN, TIE_BAND, UNTRAINED_MAX,
-SHARED_PASS_MIN, SHUF_MULT, and the claim pair RATIO_MIN / FLOW_MIN. The
-exogenous fixture constants above (AMP, COMMIT_FRAC, SHARED_TOL) are NOT
-pilot-derived and do not move. SM.03 is the cautionary case this idiom exists
-for: implemented, tracked, gates never frozen, and worth zero for five days.
+GATES ARE FROZEN — 2026-08-29, from the pilot at `/data/t219_pilot.json`
+(kernel `jack-ladder-1788020336`, P100, 0.175 h W34, head 66848ca: one seed,
+four legs, 1200 steps, a 12-point curve). The exogenous fixture constants above
+(AMP, COMMIT_FRAC, SHARED_TOL) were never pilot-derived and did not move. What
+the pilot measured, and what each bar was set to:
+
+  leg (seed 90, step 1200)   success  |d|     conditioned  content_err
+  flow_bimodal               0.992    1.000   1.000        0.0019
+  reg_bimodal                0.000    0.059   1.000        0.0008
+  flow_unimodal              1.000    1.006   1.000        0.0011
+  reg_unimodal               1.000    1.001   1.000        0.0009
+  flow_bimodal SHUFFLED      0.000    0.983   0.000        2.0079
+
+That is the pre-registered prediction on the nose, and the two halves of the
+conjunction separate exactly as designed: the regression arm's CONTENT error is
+the best of the four legs (0.0008 — it learned the percept better than anyone)
+while its lateral sits at 0.059 against a mode at 1.0. It is not a dead arm
+losing; it is a live arm steering down the middle of the obstacle. The unimodal
+leg is what licenses that sentence — the same module, the same steps, one mode,
+and it scores 1.000.
+
+  UNTRAINED_MAX = 0.05   measured 0.0 on all four legs. One lucky draw is
+                         1/(16*8) = 0.008, so the bar tolerates six.
+  SHUF_MULT     = 10.0   measured 2.0079/0.0019 = 1057x (309x at step 500).
+                         A 10x rise in content error cannot come from noise;
+                         ~30x margin is deliberate, the gate asks "is the
+                         conditioning check alive", not "how alive".
+  SHARED_PASS_MIN = 0.90 measured 1.000 from step 200 onward.
+  UNI_MIN       = 0.90   measured 1.000 (flow from step 100, reg from step 200).
+  TIE_BAND      = 0.10   measured gap 0.000 from step 200 onward.
+  RATIO_MIN     = 10.0   measured 111 at step 500. An order of magnitude.
+  FLOW_MIN      = 0.60   measured 0.867 at step 500. THIS IS THE TIGHT ONE
+                         (1.4x margin) and it is meant to be: it is the
+                         anti-vacuity conjunct, and a generous FLOW_MIN would
+                         let a run where both arms collapse pass on a big
+                         quotient. If a seed lands under it, that is a FAIL
+                         about the head, not a rig fault.
+
+STEPS 300 -> 500, AND THE PILOT IS WHY. The flow arm's bimodal curve reads
+0.578 / 0.711 / 0.836 / 0.867 / 0.898 at steps 200-600: at the originally
+declared 300 it is still climbing steeply, and freezing a claim bar off a
+steep point of a ONE-SEED curve is the fragile choice. By 500 the curve has
+flattened. Nothing about the comparison changes — the regression arm is pinned
+at 0.000 success from step 100 through 1200 — only the flow arm's margin
+against seed noise. The pilot's own 1200 steps would price the 3-seed run at
+~28 min and burst the declared `gpu<20min`; 500 prices at ~15.5 min and stays
+inside it, so the budget class did NOT have to be re-declared (the T2.08
+precedent was ready and went unused).
+
+SM.03 remains the cautionary case this idiom exists for: implemented, tracked,
+gates never frozen, and worth zero since 08-25.
 
 COVERS: one brain / unison (claim)
 """
@@ -162,23 +206,26 @@ LATERAL_DIM = 0            # action dim carrying the left/right choice
 
 # ── training (matched across both arms and both legs) ────────────────────
 BATCH = 16
-STEPS = 300
+STEPS = 500                # pilot-chosen: flow's bimodal curve flattens by 500
+CURVE_EVERY = 250          # the registered run records its own curve, cheaply
 LR = 3e-4
 N_DRAWS = 8                # samples per scenario at eval (flow is stochastic)
 REG_QUERY_T = 1.0          # x1 parameterisation: t=1 is the clean-action end
 
 # ── gates ────────────────────────────────────────────────────────────────
-# PROVISIONAL — every one of these must be re-written from the pilot artifact
-# before _GATES_FROZEN may flip True. They are placeholders, not measurements.
-_GATES_FROZEN = False
+# FROZEN 2026-08-29 from /data/t219_pilot.json (kernel jack-ladder-1788020336).
+# The measurement behind each number and the reason for each margin are in the
+# docstring's frozen-gates table. They do not move again: a bar that moves after
+# a registered run is a threshold weakened, whatever it is called.
+_GATES_FROZEN = True
 
-UNI_MIN = None             # control: each arm's success on the unimodal leg
-TIE_BAND = None            # control: |flow_uni - reg_uni| allowed to still tie
-UNTRAINED_MAX = None       # rig: success at initialisation must be at most this
-SHARED_PASS_MIN = None     # rig: regression's conditioning half on the bimodal leg
-SHUF_MULT = None           # rig: content-error rise under shuffled conditioning
-RATIO_MIN = None           # claim: bimodal_success_ratio, worst seed
-FLOW_MIN = None            # claim: flow's own bimodal success, worst seed
+UNI_MIN = 0.90             # control: each arm's success on the unimodal leg
+TIE_BAND = 0.10            # control: |flow_uni - reg_uni| allowed to still tie
+UNTRAINED_MAX = 0.05       # rig: success at initialisation must be at most this
+SHARED_PASS_MIN = 0.90     # rig: regression's conditioning half on the bimodal leg
+SHUF_MULT = 10.0           # rig: content-error rise under shuffled conditioning
+RATIO_MIN = 10.0           # claim: bimodal_success_ratio, worst seed
+FLOW_MIN = 0.60            # claim: flow's own bimodal success, worst seed
 
 RATIO_FLOOR = 1.0 / (S_SCEN * N_DRAWS)   # one success; never divide by zero
 
@@ -414,7 +461,16 @@ def _submit(seeds: list, steps: int = STEPS, curve_every: int = 0) -> dict:
     # in rather than assumed free.
     n_legs = 4 * len(seeds)
     evals = n_legs * (2 + (steps // curve_every if curve_every else 0))
-    est_hours = round(0.05 + 0.0004 * n_legs * steps + 0.002 * evals, 2)
+    # The coefficients are CALIBRATED against the pilot, not guessed. That run
+    # was 4 legs x 1200 steps + 56 evals = 4800 steps, and took 635 s wall on a
+    # P100. The first cut of this line used 0.0004 h/step and priced it at
+    # 2.08 h — 11.8x the truth, which is how the watcher came to be sized below
+    # the run's own predicted length. Fitted WITH margin, deliberately: 3e-5
+    # h/step (0.108 s against ~0.077 s measured) and 6e-4 h/eval (2.2 s against
+    # ~1.5 s), keeping 0.05 h fixed for clone + pip + torch import. Re-priced on
+    # the pilot itself this returns 0.23 h against 0.176 h actual — 29% over,
+    # which is the direction an estimate feeding a timeout should err in.
+    est_hours = round(0.05 + 3e-5 * n_legs * steps + 6e-4 * evals, 3)
     # The timeout is DERIVED from the estimate, never sized independently.
     # First cut of this function had est_hours=2.08 against a hand-written
     # `1800 + 1200*len(seeds)` = 50 min, so the watcher was set to give up at
@@ -485,7 +541,7 @@ def _fold(rows: list) -> dict:
 
 def _experiment(seed: int) -> dict:
     if not _CACHE:
-        _CACHE.update(_submit(SEEDS))
+        _CACHE.update(_submit(SEEDS, curve_every=CURVE_EVERY))
     m = _fold(_CACHE["seeds"])
     m["gpu"] = _CACHE["gpu"]
     m["backend"] = _CACHE.get("backend", "?")
@@ -540,20 +596,34 @@ def run(ledger: Ledger | None = None):
 def _dry(bars=None):
     """Known-answer table over the gate logic, with NO brain and NO GPU.
 
-    The bars are injected rather than read from the module so this table is
-    runnable while `_GATES_FROZEN` is False — the gate LOGIC is falsifiable
-    today even though the gate VALUES wait on the pilot.
+    The bars are injectable so the table was runnable while `_GATES_FROZEN` was
+    False — the gate LOGIC was falsifiable before the gate VALUES existed. But
+    the DEFAULT is now the module's own frozen bars, and that change is the
+    point of this comment. While the bars were placeholders the base rows were
+    hand-tuned to clear the placeholders (`shuf_mult=6.0` against a placeholder
+    SHUF_MULT of 2.0), so the instant the real bars landed — SHUF_MULT 10.0 —
+    the shipped gate would have VOIDed on its own pilot numbers while
+    `python -m ... dry` went on printing eleven greens. A known-answer table
+    that reads bars its subject does not use is certifying a gate nobody runs.
+    So the pass row is now the PILOT ITSELF, at the registered budget: if the
+    frozen bars cannot pass the measurement they were frozen from, this table
+    goes red before any quota is spent.
     """
-    b = bars or dict(UNTRAINED_MAX=0.05, SHUF_MULT=2.0, SHARED_PASS_MIN=0.9,
-                     UNI_MIN=0.8, TIE_BAND=0.15, RATIO_MIN=3.0, FLOW_MIN=0.6)
+    b = bars or dict(UNTRAINED_MAX=UNTRAINED_MAX, SHUF_MULT=SHUF_MULT,
+                     SHARED_PASS_MIN=SHARED_PASS_MIN, UNI_MIN=UNI_MIN,
+                     TIE_BAND=TIE_BAND, RATIO_MIN=RATIO_MIN,
+                     FLOW_MIN=FLOW_MIN)
+    # The pilot at step 500 (seed 90), which is the registered budget:
+    # flow bimodal 0.867, reg bimodal 0.000 -> ratio 0.867/RATIO_FLOOR = 111.
     base_m = dict(finite_all=1.0, params_matched=1.0, loss_fell_all=1.0,
-                  untrained_max=0.0, bimodal_success_ratio=8.0,
-                  flow_success_bimodal=0.85, reg_success_bimodal=0.1)
-    base_c = dict(shuf_mult=6.0, reg_shared_pass_bimodal=0.99,
-                  uni_min=0.9, uni_gap=0.03, untrained_max=0.0)
+                  untrained_max=0.0, bimodal_success_ratio=111.0,
+                  flow_success_bimodal=0.867, reg_success_bimodal=0.0)
+    base_c = dict(shuf_mult=309.0, reg_shared_pass_bimodal=1.0,
+                  uni_min=1.0, uni_gap=0.0, untrained_max=0.0)
     cases = [
         # the claim path returns a bool (run_spec maps it); only rig faults VOID
-        ("planted pass",            {},                          {}, True),
+        # the pass row is the pilot's own numbers at the registered budget
+        ("the pilot, at step 500",  {},                          {}, True),
         ("nan anywhere",            {"finite_all": 0.0},         {}, Status.VOID),
         ("params not matched",      {"params_matched": 0.0},     {}, Status.VOID),
         ("an arm never learned",    {"loss_fell_all": 0.0},      {}, Status.VOID),
@@ -569,6 +639,10 @@ def _dry(bars=None):
         # a ratio won by a near-zero denominator must NOT pass
         ("both arms collapse",      {"bimodal_success_ratio": 20.0,
                                      "flow_success_bimodal": 0.04}, {}, False),
+        # FLOW_MIN is the one bar with a thin margin (0.60 vs a measured
+        # 0.867), so the table straddles it rather than assuming it bites.
+        ("flow just under FLOW_MIN", {"flow_success_bimodal": 0.59}, {}, False),
+        ("flow just over FLOW_MIN",  {"flow_success_bimodal": 0.61}, {}, True),
     ]
     ok = True
     for name, dm, dc, want in cases:
