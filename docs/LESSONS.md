@@ -6084,3 +6084,61 @@ everywhere and blind in the GPU class — the class that has cost this project
 ~61 free hours in three weeks. State the over-count, then check whether the
 over-count lands in the class the alarm exists for. If it does, you have not
 shipped an alarm.
+
+## Commit before you run, not after — a FAIL you cannot commit is a FAIL nobody can audit
+
+*(Builder, 2026-08-29, having cost the ladder a red row by not doing it.)*
+
+Three organs in this repo already knew that a run from a dirty tree is
+unauditable. `env_stamp()` writes `+dirty`. `staleness_of` reports it. `T0.27`'s
+`audit_supersedes_fail` **refuses** a PASS that supersedes a `+dirty` FAIL,
+because the failing code exists in no commit and the `git diff` showing which
+constants moved is impossible. **All three speak afterwards**, and by then the
+row is permanent: the pair sits in `history`, no re-run removes it, and the only
+remedies left are a red ladder or an owner ruling (`D16`).
+
+The sequence that produced it is the *documented* one. CLAUDE.md: *"Run it. Read
+the output. FAIL -> fix the CODE, re-run."* I edited `protocol.py`, ran `T0.17`
+to see whether a new property held, got a real FAIL from an uncommitted tree,
+fixed the code, committed, re-ran to PASS — and `T0.27` correctly refused the
+pair, because from outside it is indistinguishable from a moved threshold. That
+indistinguishability is the guard's entire point: the T2.08 scar it was built
+from looked exactly the same and was also disclosed honestly by its author.
+
+**The general shape, and it is the one this file keeps re-deriving.** A signal
+that fires *after* the irreversible step is not a guard, it is a receipt. The
+`+dirty` flag was, for a year, a fact nothing consumed — that was already a
+lesson here ("a lesson that prescribes a guard is not a guard"). Making it
+consumed by three readers did not fix it, because **all three read the ledger,
+and the ledger is written after the run.** The only place a dirty-tree cost can
+be avoided is *before* the process starts, and no organ stood there.
+
+**Rules.**
+
+1. **Commit before you run a test you intend to keep the verdict of.** The
+   ledger stamps the tree you ran from, not the tree you commit to afterwards.
+   Committing after a PASS launders nothing — the FAIL underneath it keeps the
+   dirty stamp forever.
+2. **Warn at the last moment the cost is still avoidable, and warn about the
+   consequence, not the state.** `run.py` now prints the dirty-tree warning
+   *before* the run and names what it will cost (`T0.27` flags that pair
+   FOREVER). "You have uncommitted files" is a state a builder already knows and
+   ignores; "this FAIL can never be audited" is a price.
+3. **A warning, not a refusal, when the refusal has a worse failure mode.**
+   Blocking a dirty run would push the builder to commit code it has never
+   executed. Prefer the instrument that keeps the bad path visible over the one
+   that makes it invisible by making it inconvenient.
+4. **When the only repair available to you is to relax the guard that caught
+   you, you are not the one who gets to decide.** `audit_supersedes_fail` could
+   legitimately accept a dirty FAIL whose `impl_sha` reconstructs from a
+   committed blob — `commit_with_impl_sha` already answers exactly that
+   question, and the rule's own stated reason ("the `git diff` is impossible")
+   would no longer hold. I think that change is right and I did not make it:
+   it is a CONDUCT instrument (SYSTEM.md class 3), and the party it would
+   exonerate is the party proposing it. It went to `D16` with a default that
+   keeps the ladder red.
+
+**Corollary for anyone adding a ratchet.** Ask where in the sequence your
+instrument speaks. If the answer is "after the state it judges became
+permanent", you have built a good detector and no guard, and the next author to
+trip it will face the same three bad options.

@@ -3394,3 +3394,83 @@ slots, extractable and re-buckettable); live `claude_usage.py --pct` = 73 and
 `scripts/claude_usage.py:105-112`; `docs/PROGRESS.md` (Review 2026-08-28);
 `/data/jack-logs/review.log` 2026-08-28T06:37; `docs/OVERSIGHT.md` 45th audit
 RANK 2.*
+
+## D16 — The documented loop manufactures pairs that T0.27 must refuse forever
+
+**Raised by the builder, 2026-08-29, against its own work.** `T0.27` went from
+PASS to **FAIL** in this iteration, on a pair I created, and I am escalating
+rather than repairing because **the only repair available to me is to relax the
+guard that is flagging me** — which SYSTEM.md files under CONDUCT (class 3),
+not architecture, and conduct is not mine to measure.
+
+**What happened, exactly.** Building `spec_sha` (46th audit B1) I edited
+`protocol.py`, ran `T0.17` to see whether the new property held, and got a
+genuine FAIL: the property found that `run_spec`'s BLOCKED early return did not
+stamp the new field. I fixed the **code** — no threshold moved, no control
+loosened — committed, and re-ran to PASS. The chain now reads:
+
+    FAIL 13:14:23  d84101e+dirty  impl 072ea7a4d729
+    PASS 13:15:07  d84101e+dirty  impl 3656fcac07dd
+    PASS 13:16:00  be60c3d        impl 3656fcac07dd   <- clean, current
+
+`audit_supersedes_fail` refuses the first pair for the right reason: the FAIL is
+stamped `+dirty`, so the failing implementation exists in **no commit** and the
+`git diff` that would show an auditor exactly which constants moved between the
+FAIL and the PASS is impossible. It cannot tell my code fix from a threshold
+move, and that inability **is the guard's purpose** — the T2.08 scar it was
+built from looked identical from the outside.
+
+**Why this is not a one-off.** The pair is in `history` and no re-run removes it
+(`history[-20:]` keeps it, and re-running only appends). But the general problem
+is bigger than my row: **the loop's own documented procedure produces this
+shape.** CLAUDE.md says *"Implement the spec … Run it. Read the output. FAIL ->
+read the logs, diagnose, fix the CODE, re-run."* Every iteration that follows
+that instruction literally and lands a PASS creates exactly one unauditable
+FAIL→PASS pair. It has been invisible until now only because the population is
+tiny — the live audit reads **4 checked pairs, 26 unauditable, 1 violation**;
+almost every older row predates `impl_sha` and is excluded as a historical gap.
+As the ladder re-runs and rows gain stamps, this fires more, not less.
+
+**Three ways out, and they differ in what they cost:**
+
+  (a) **Accept the red and pay it.** `T0.27` reads FAIL until the pair falls out
+      of the 20-entry history, which for a spec that runs on every `--gate`
+      sweep is soon-ish and arbitrary. Honest, and it makes the ratchet's own
+      state depend on how often an unrelated spec is re-run.
+
+  (b) **Teach the loop to commit first.** Shipped this iteration as a WARNING,
+      not a refusal (`run.py:_warn_if_dirty_before_running`): before any run
+      from a dirty tree the runner now states that a FAIL here can never be
+      audited. A refusal would push the builder to commit code it has never
+      executed — worse, and with no instrument at all. This reduces the rate;
+      it does not fix the row, and a warning is a warning.
+
+  (c) **Let `audit_supersedes_fail` accept a RECONSTRUCTIBLE dirty FAIL.** The
+      machinery already exists: `commit_with_impl_sha` / `tree_reconstructing_sha`
+      answer *"which committed tree state hashes to this `impl_sha`"*, built for
+      the 25th audit's doc-only amend lane. If the failing `impl_sha` reconstructs
+      from a committed blob, the `git diff` the rule demands **is** possible and
+      the stated reason for refusing does not apply. This is the option I believe
+      is right and the one I must not take: it converts my own violation into a
+      non-violation, it is a change to a CONDUCT instrument, and "it was only a
+      code fix, trust me" is precisely what the guard exists to disbelieve.
+
+DECIDE: D16
+  class:     conduct
+  default:   (b) ALONE — the warning stands, `T0.27` stays RED and is not
+             touched, and the red is reported in every status until the pair
+             ages out of history. This default deliberately picks the option
+             that costs the ladder a visible failure rather than the one that
+             makes it green, because the party proposing (c) is the party it
+             would exonerate. It weakens nothing and widens nothing.
+  decide_by: 2026-09-05
+  blocks:    nothing. T0.27 has no dependents; the cost is one honest red row.
+
+**What I am NOT asking.** Not to re-run T0.17 until the history scrolls, not to
+amend the row, not to edit the guard. Any of those is available to me and each
+is the ratchet being defeated by the party it caught.
+
+*Evidence: `experiments/ledger.json` T0.17 history; `audit_supersedes_fail` in
+`experiments/protocol.py`; `experiments/tests/t0_27_moved_threshold_leaves_artifact.py`
+(live: `live_checked_pairs` 4, `live_unauditable_pairs` 26, `seeded_violations` 2);
+`docs/OVERSIGHT.md` 46th audit B1; commit `be60c3d`.*

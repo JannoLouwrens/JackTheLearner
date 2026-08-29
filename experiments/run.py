@@ -23,13 +23,15 @@ import fcntl
 import hashlib
 import importlib
 import os
+import subprocess
 import sys
 import time
 from contextlib import contextmanager
 from pathlib import Path
 
 from .protocol import (Ledger, Status, impl_deps_of, impl_sha_of,
-                       module_path_for, spec_drift, staleness_of)
+                       is_code_dirt, module_path_for, porcelain_path,
+                       spec_drift, staleness_of)
 from .registry import BY_ID, LADDER, ready, tier
 
 TESTS_DIR = Path(__file__).parent / "tests"
@@ -1052,8 +1054,52 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     return res
 
 
+def _warn_if_dirty_before_running(spec_ids: list[str]) -> bool:
+    """Say — BEFORE the run — that a FAIL from this tree can never be audited.
+
+    `env_stamp()` already writes `+dirty`, `staleness_of` already reports it,
+    and `audit_supersedes_fail` (T0.27) already refuses a PASS that supersedes
+    a `+dirty` FAIL, because the failing code exists in no commit and the
+    `git diff` that shows what moved is impossible. Three organs knew. All
+    three speak AFTERWARDS, and by then the row is permanent: history keeps
+    the pair, no re-run removes it, and the only honest remedies are a red
+    ladder or an owner ruling.
+
+    Cost of learning that: 2026-08-29, this function's own commit. The builder
+    edited `protocol.py`, ran `T0.17` to see whether the new property held,
+    got a genuine FAIL from an uncommitted tree, fixed the CODE (no threshold
+    moved), committed, re-ran to PASS — and left `T0.27` permanently red on a
+    pair that is unauditable by construction. The documented loop ("Run it.
+    Read the output. FAIL -> fix the CODE, re-run") produces exactly this
+    shape, so the warning belongs where the loop is, not in a lesson file.
+
+    A WARNING AND NOT A REFUSAL, deliberately. Running a test you have just
+    edited is how the loop works and blocking it would push the builder to
+    commit code it has never executed — a worse failure with no instrument at
+    all. What the loop owes is knowing the price before it pays: commit first,
+    and a FAIL becomes an artifact instead of an anecdote.
+    """
+    try:
+        porcelain = subprocess.run(
+            ["git", "status", "--porcelain"], capture_output=True, text=True,
+            cwd=_REPO, timeout=10).stdout.splitlines()
+    except Exception:
+        return False
+    dirty = [porcelain_path(ln) for ln in porcelain if is_code_dirt(ln)]
+    if not dirty:
+        return False
+    shown = ", ".join(sorted(dirty)[:4]) + ("  …" if len(dirty) > 4 else "")
+    print(f"  ! DIRTY TREE — {len(dirty)} uncommitted code file(s): {shown}")
+    print(f"    {', '.join(spec_ids)} will stamp `+dirty`: the code that runs "
+          f"exists in no commit.\n    If this FAILs and a later run PASSes, "
+          f"T0.27 flags that pair FOREVER — history keeps it\n    and no re-run "
+          f"clears it. Commit first if you can.\n")
+    return True
+
+
 def cmd_run(ledger: Ledger, spec_ids: list[str]) -> int:
     failures = 0
+    _warn_if_dirty_before_running(spec_ids)
     for sid in spec_ids:
         spec = BY_ID.get(sid)
         if not spec:
