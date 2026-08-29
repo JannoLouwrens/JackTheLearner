@@ -6530,3 +6530,79 @@ present, attempt row in `gpu_submissions.jsonl`, and
    under the amended words, so the row is a PASS against text that no longer
    exists (`cpu`-class). Stale claims `T0.12` and `T0.27` also want a re-run.
 4. `SH.02` remains the non-GPU build unit that needs nobody.
+
+---
+
+**2026-08-29 ~18:0x–18:3x UTC (builder, OPUS — `week:Fable` is at 100% until
+08-31 04:59, so the chain walked to opus as the priority head predicted).**
+Pacing streak **0** — no blackout; the gate meter `week:all models` read **75%**
+at 79% week-elapsed (pace line ~77.3), so this slot was permitted with about two
+points of room. I did not model the meter and did not forecast the next release.
+
+**Harvested T2.19: PASS**, attempt 1, Kaggle P100, kernel
+`jack-ladder-1788023542`, 780 s (0.217 h charged to W34), head `2c90fc9`. The
+previous iteration's pilot prediction held on unseen seeds. Claim: flow success
+on the bimodal leg **[0.8047, 0.7734, 0.8594]** against the frozen `FLOW_MIN`
+0.60 (worst seed 1.29x), regression arm **0.0 on all three seeds**, worst-seed
+ratio 98.995 vs `RATIO_MIN` 10. Every control on its pre-registered side:
+`reg_unimodal` and `flow_unimodal` 1.0/1.0/1.0 vs `UNI_MIN` 0.90,
+`reg_shared_pass` 1.0, shuffle mult 466.5 vs 10, `untrained_max` 0.0, losses
+fell on 12/12 legs, params matched at 58,244,744. The interesting half is the
+null's: the regression arm lands lateral **0.1395** against modes at ±1.0 — it
+is not a dead arm losing, it is a trained arm averaging the two legal answers
+into the one illegal one, and the unimodal legs at 1.000 are what license
+saying so. 84 PASS.
+
+**Then took the priority head's item 2 — refill the GPU queue — and it is now
+the only thing standing between W35 and a fourth dead allocation.** Both
+auditors ordered exactly this (overseer B4, Review B1), and `coverage`'s new
+QUEUE DEPTH instrument made it unarguable: **0 fresh dispatches**, with
+`gpu<20min` flipping to NEWLY EMPTY *because T2.19 passed*. W34's remaining
+~29.3 h expire tonight at 00:00 UTC and **cannot be honestly spent** — there is
+nothing implemented and unsettled to send. I did not manufacture a dispatch.
+
+**Implemented `T2.09` (Noisy-TV) end to end**, `2cfb921`. Chose it over T3.06
+because T3.06 needs unprompted coverage in W0, which four instruments (DP.05
+FAIL, SH.01 ORACLE_CANNOT, LC.03's one-learner-in-five, its darkroom control)
+say is the measured bottleneck — implementing it risks a fifth world-design
+casualty, and the point of this unit is *a dispatch that can be made*.
+
+**The design is entirely downstream of one vacuity.** T2.08 already ships a
+curiosity signal that would pass T2.09 perfectly and prove nothing: its winner
+is a position-state pseudo-count and its own docstring says "no arm reads the
+retina at all". The noise is in the retina. A reward computed from (x, y) cannot
+be captured by a hazard it cannot observe. So every arm is percept-driven — icm
+(PG.4's error; the NULL *and* the control, since PG.4 certified it fixates), rnd,
+disagree (K=4 ensemble variance), and `zero` (r=0 through the identical learner)
+as the liveness instrument, because T2.08 measured that optimistic init alone
+sweeps the map and would otherwise be credited to the signal. Rig imported from
+PG.4, not copied; IMPL_DEPS on both.
+
+**The pilot changed a gate inside twenty minutes, which is the whole argument
+for piloting.** Seed 90's null came back `dwell=0.0000` — the trap never fired.
+PG.4's own ledger says why: `icm_dwell_share` 0.6667 with **std 0.4714**, which
+is exactly the seed vector **[1.0, 1.0, 0.0]**. *The trap is bimodal* — the
+naive agent either finds the panel and locks on entirely or never finds it. So
+on ~1 seed in 3, "did not fixate" means "never walked past the TV": the same
+vacuity by a different route, and it would have been invisible in a mean. Added
+rig gate **`saw_panel`** (claim arm's panel ray-exposure >= EXPOSURE_FRAC x a
+random walk's — a random walk sweeps the arena, so it is the honest yardstick
+for *had the opportunity*) and the `panel_rays` metric behind it.
+
+**NEXT ITERATION, in order.** (1) Read `/data/t2_09_pilot_seed{7,90}.json` —
+seed 7 is PG.4's own pilot seed, where the trap is known to fire; seed 90 is a
+never-found seed and can only freeze the liveness/exposure bars, never the claim
+bars. (2) Freeze the seven bars from the measurements, set `_CLAIM_ARM` from the
+pilot — **do not argmax {rnd, disagree} at scoring time** — flip `_GATES_FROZEN`,
+and re-run `_dry()`-style checks with the module globals passed explicitly
+(the T2.19 lesson: a test that injects the constant it certifies drifts green).
+(3) Set `est_hours` from the pilot's measured wall time, not from a guess.
+(4) Dispatch to Kaggle on W35's fresh 30 h via `scripts/dispatch.sh T2.09`.
+Early reads at seed 90: `rnd` coverage **0.9917**, dwell 0.052, decay 7.84 —
+alive and exploring; its in/out ratio 1.888 sits above the placeholder
+`FED_RATIO_MAX` 1.5, but with the panel barely visited at that seed the estimate
+is noise, so freeze that bar from **seed 7**.
+
+The queue is still thin behind T2.09: `T3.06`, `T2.11`, `T2.14` remain
+unimplemented. One implemented spec is one dispatch you can make on any future
+hour; a dispatch you cannot make is the entire W34 story.
