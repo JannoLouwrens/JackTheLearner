@@ -5922,3 +5922,77 @@ unmetered can consume the budget that would have fixed what it found — and it
 will report that finding accurately, four times a day, while doing so. **When
 the watchers and the worker share a budget, meter the watchers first: the worker
 is the only one whose output the ledger can see.**
+
+---
+
+## A repair queue with one consumer stops when that consumer stops — and a correct diagnosis addressed to an absent party is indistinguishable from no diagnosis (45th audit, 2026-08-29)
+
+**The scar.** `pace_gate` refused **90 consecutive** builder iterations at a
+meter that never once exceeded **73%**, under a 90% stop that would have
+permitted every one of them. The diagnosis was not the failure: the 31st, 34th,
+35th, 37th, 38th, 39th and 44th audits all named `pace_gate` as the cause, with
+converging numbers, and the 2026-08-28 Review put it in bold — *"outranking the
+GPU question — suspend or delete `pace_gate`."* Seven organ-runs, four days,
+unanimous and correct.
+
+**Every one of them filed the repair as `FOR THE BUILDER`** — the one organ
+`pace_gate` had switched off. The 44th audit said so explicitly: *"sequenced for
+the first iteration after the meter reset, because nothing can run before it."*
+
+**The organ that could act was awake, ungated, and reading the page.**
+`review.sh:29` calls `usage_gate` and **not** `pace_gate`; its prompt lists
+`docs/OVERSIGHT.md` in READ FIRST; it ran daily throughout the blackout; and on
+**08-27 it edited `scripts/ladder_loop.sh`** — ten lines from the `pace_gate`
+call site. On 08-28 it read the instruction, agreed with it, and **forwarded it
+to the owner as an ask.** `OVERSIGHT.md` had exactly one addressee section and
+it was named for the organ that was down.
+
+**This is `D1` again, one level up.** `D1` sat twenty days because a fork whose
+arms were runnable had been addressed to a party who was not going to answer.
+`SYSTEM.md` rule 3 fixed that for *forks*. It did not fix it for *repairs*: a
+correct, quantified, unanimous instruction posted to an absent addressee costs
+exactly what an escalation-to-nobody costs, and the system had no instrument
+that could tell the difference — because from inside, "the fix is written down"
+and "the fix is written down where someone can reach it" produce identical
+audit trails.
+
+**Rules.**
+
+1. **Name the executor before you name the fix, and check that the executor can
+   run.** "Whose hands does this need, and are they free?" is a cheaper question
+   than the fix itself and it is the one nobody asked for four days.
+2. **Never address the repair of a gate to the organ that gate stops.** If the
+   only party who can lift the switch is on the wrong side of it, you have
+   written a wish, not a work item.
+3. **A report with one addressee section has one point of failure.** Enumerate
+   every organ that is awake AND empowered, and route to the intersection. Add
+   the section; it costs a heading.
+4. **Asking is not acting when the thing is yours to take.** `SYSTEM.md`
+   reserves for the owner what is *permitted*, not what is *wise*. `pace_gate`
+   was a smoothing heuristic the loop wrote itself; suspending it never touched
+   the owner's 90% stop. An organ with the authority that escalates anyway has
+   converted a one-commit fix into a multi-day wait.
+
+**The second half, and it is the same shape.** The overseer's READ FIRST list
+(`GOAL.md`, `SYSTEM.md`, `LESSONS.md`) and its audit sections (ledger, registry,
+`ladder.log`, `gpu_budget.json`, `DECISIONS_NEEDED.md`, `DECISIONS_RESOLVED.md`)
+**do not include `docs/PROGRESS.md`.** The Review reads the overseer's findings
+every morning; the overseer has never read the Review's. The measured cost: six
+successive owner-facing meter-spend estimates falsified in nine days, the sixth
+(`D15`) written eighteen hours after the Review published an out-of-sample
+falsification of the previous five, citing none of it — and the 45th audit had
+to re-derive by hand a number that was already in the repository.
+
+**Rule.** **Two organs whose job is to correct each other must read each other.**
+A one-way link between them is not oversight, it is an echo with a delay: the
+downstream organ inherits every upstream error and cannot return the correction.
+When you add a watcher, add its READ FIRST entry in the watched organ's prompt in
+the same commit.
+
+**The generalisation.** The loop is `RESEARCH → TEST → IMPLEMENT → TEST → FIX`,
+and this project has become excellent at four of those steps and has exactly one
+consumer for the fifth. **Catching is not the job.** Ninety refused slots, four
+days, seventeen organ runs, zero ledger rows, and a diagnosis that was right the
+whole time — the binding constraint was never knowledge, it was delivery.
+**Audit the delivery path as adversarially as the finding: for every open item,
+who executes it, are they running, and how would you know if they were not?**

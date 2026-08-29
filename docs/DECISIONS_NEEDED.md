@@ -3299,3 +3299,98 @@ slots, extractable and re-fittable); `scripts/lib_usage.sh:34-99`;
 `field_watch.sh:31`; `experiments/gpu_budget.json` (`2026-W34: kaggle 0.3111`,
 remaining 29.6889, `%U` week closes Sun 2026-08-30 00:00 GMT);
 `docs/OVERSIGHT.md` 44th audit RANK 1.*
+
+## D15 — EVIDENCE UPDATE 2026-08-29 06:40 UTC (45th overseer audit). The premise is contradicted by the only measurement that can test it, and the forecast was falsified by the twelve readings above it.
+
+**This is an evidence update, not a resolution.** `D15` is the owner's and stays
+open with its `decide_by 2026-09-05` unchanged. What follows is the measurement
+the entry itself asked for under its own option (d), run one audit later, by the
+organ whose cadence the default would cut.
+
+**(a) Organ hours are statistically indistinguishable from idle hours on this
+meter.** The overseer runs at `37 */6` (00:37 / 06:37 / 12:37 / 18:37 UTC) and
+the Review at `37 6`; `ladder.log` reads the meter at `HH:07`, so an organ run
+lands in the *next* reading. Splitting the 89 hour-to-hour deltas across the 90
+blackout slots (`2026-08-25T13:07` → `2026-08-29T06:07`) on that boundary:
+
+| bucket | n | Σ delta | mean |
+|---|---|---|---|
+| hours containing an organ run | 14 | **+6 pts** | 0.429 pts/h |
+| hours containing none | 75 | **+29 pts** | 0.387 pts/h |
+
+Excess attributable to **all seventeen** overseer and Review runs in the window:
+`14 × (0.429 − 0.387)` = **0.6 points**, against a meter quantised at 1 point.
+That is noise. Of the 35 points, the ungated Opus organs account for at most a
+rounding error — and the default would spend 75% of the daily adversarial pass
+to recover it.
+
+*Reproduce it:* extract every `PACING:` line from `/data/jack-logs/ladder.log`
+since `2026-08-25T13:07`, take consecutive `week:all models` deltas, and bucket
+on `t.hour in {0, 6, 12, 18}`.
+
+**(b) Two full Opus audits moved the meter by zero.** `week:all models` has read
+**73%** for **18 consecutive hourly readings** (`2026-08-28T13:07` →
+`2026-08-29T06:07`; live re-read 73 at 06:40). Inside that flat run: the **43rd**
+audit (committed 08-28 18:44) and the **44th** (08-29 00:47), each a complete
+Opus session including a full 84-row ledger re-check. Net movement across both:
+**0 points**.
+
+**(c) The 243-hour forecast ran a global slope through a dead-flat tail.** At
+the moment `D15` was written the meter's last **twelve** readings were all 73.
+The pace line rises unconditionally at 0.387 pts/h whatever the meter does, so
+against a flat meter the 3-point gap closes in hours, not 243 of them.
+`claude_usage.py --week-elapsed` uses `round()` against the CLI's own reset
+instant (**Aug 31 05:00 UTC**), and `pace_gate` runs when
+`pct < 25 + ceil(65·elapsed/100)`. At meter 73 that needs `elapsed ≥ 74`, i.e.
+`remaining ≤ 44.52 h`, i.e. `now ≥ 2026-08-29 08:29 UTC`:
+
+| slot | elapsed | line | meter | outcome |
+|---|---|---|---|---|
+| 07:07 | 73 | 73 | 73 | skip |
+| 08:07 | 73 | 73 | 73 | skip |
+| **09:07** | **74** | **74** | **73** | **RUNS** |
+
+**Pre-registered prediction, recorded so the next audit marks it right or
+wrong: the builder's first iteration in 4.9 days fires at 09:07 UTC on
+2026-08-29**, conditional only on the meter not reaching 74 first. That is
+**~15 hours before** W34's Kaggle quota expires (`%U`, Sunday-start → Sun
+08-30 00:00 GMT), not 29 hours after it.
+
+**(d) This is the sixth estimate of this class falsified in nine days, and the
+overseer structurally cannot see the first five.** The 2026-08-28 Review
+measured it out of sample and published it in `docs/PROGRESS.md`: *"5
+organ-session hours and 444,251 output tokens moved the meter +2; 19 hours with
+zero on-box requests moved it +5 … This falsifies the 40th audit's per-audit
+price, which was the basis of its D13 escalation — the fourth such estimate
+falsified in eight days, and the 41st made a fifth while I was writing."*
+`D15` was written **18 hours after** that was committed and cites none of it.
+The cause is mechanical: `scripts/overseer_prompt.md`'s READ FIRST names
+`GOAL.md`, `SYSTEM.md`, `docs/LESSONS.md`, and its audit sections name the
+ledger, the registry, `ladder.log`, `gpu_budget.json`, `DECISIONS_NEEDED.md` and
+`DECISIONS_RESOLVED.md`. **`docs/PROGRESS.md` appears nowhere.** The Review reads
+the overseer every morning; the overseer has never read the Review. My split in
+(a) independently reproduces the Review's number — which is the point: it was
+already known and had to be re-derived.
+
+**WHAT IS NOT IN QUESTION.** `D15`'s core measurement stands and this audit
+confirms it independently: across 90 slots the maximum `week:all models` reading
+is **73%**, `usage_gate` returns 0 unconditionally below 90, so **every one of
+those 90 refused iterations would have run under the owner's rule alone**.
+`pace_gate` is the entirety of the refusal, the outage is real, and the cause is
+correctly named. Only the attribution and the forecast are wrong.
+
+**RECOMMENDATION TO THE OWNER, against this organ's own interest: strike (c),
+take (d) alone.** Option (d) — install the per-organ usage ledger, then decide
+with attribution instead of inference — is the only branch the evidence
+supports, and it is routed as work in this audit's FOR THE REVIEW (R2) and FOR
+THE BUILDER. Option (c) cuts three of four daily adversarial passes to recover a
+measured 0.6 points per week. The default as written is `(c) AND (d), together,
+and neither alone`; if the owner does not rule by `2026-09-05`, that default
+fires as armed — this update does not change it, and no agent here may.
+
+*Evidence: `/data/jack-logs/ladder.log` 2026-08-25T13:07 → 2026-08-29T06:07 (90
+slots, extractable and re-buckettable); live `claude_usage.py --pct` = 73 and
+`--week-elapsed` = 72 at 06:40; `scripts/lib_usage.sh:70-99`;
+`scripts/claude_usage.py:105-112`; `docs/PROGRESS.md` (Review 2026-08-28);
+`/data/jack-logs/review.log` 2026-08-28T06:37; `docs/OVERSIGHT.md` 45th audit
+RANK 2.*
