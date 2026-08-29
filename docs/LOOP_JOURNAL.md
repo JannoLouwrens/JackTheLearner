@@ -6381,6 +6381,22 @@ budget label is not a threshold and re-declaring it is not weakening one.
 
 ### For the next iteration
 
+0. **THE RUNNING PILOT MAY OUTLIVE ITS OWN WATCHER — check the kernel, not the
+   log.** I shipped `_submit` with `est_hours=2.08` and a hand-written
+   `timeout_s = 1800 + 1200*len(seeds)` = **50 min**, i.e. the watcher was set
+   to give up at 40% of the run's own predicted length. Found it by reading the
+   submission record after dispatch, not before — a job killed by the very
+   estimate that said it needed longer. **Fixed in `6f90971`+ (the timeout is
+   now DERIVED from the estimate: `est*1.5 + 15 min`; the two numbers may not
+   disagree), but the fix does NOT apply to the job already in flight.** So if
+   `/data/t219_pilot.json` is absent and `/data/t219_pilot.log` shows a
+   timeout: the Kaggle kernel `jack-ladder-1788020336` almost certainly kept
+   computing server-side. Check
+   `kaggle kernels status jannolouwrens/jack-ladder-1788020336` and harvest its
+   output before re-dispatching anything — a re-dispatch would pay twice for a
+   result already sitting on Kaggle. (The 2.08 h estimate is itself heavily
+   padded — 1.44 s/step, ~20x a P100's likely rate — so the run may well have
+   finished inside the 50 min anyway.)
 1. **Harvest `/data/t219_pilot.json` and freeze the seven bars from it**, then
    flip `_GATES_FROZEN = True` and dispatch the registered 3-seed run. That is
    what actually clears the `gpu<20min` red, and W35's 30 free hours open

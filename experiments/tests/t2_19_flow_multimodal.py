@@ -414,11 +414,16 @@ def _submit(seeds: list, steps: int = STEPS, curve_every: int = 0) -> dict:
     # in rather than assumed free.
     n_legs = 4 * len(seeds)
     evals = n_legs * (2 + (steps // curve_every if curve_every else 0))
-    res = submit(job, prefer="kaggle",
-                 est_hours=round(0.05 + 0.0004 * n_legs * steps
-                                 + 0.002 * evals, 2),
-                 timeout_s=1800 + 1200 * len(seeds),
-                 fetch=["t219.json"])
+    est_hours = round(0.05 + 0.0004 * n_legs * steps + 0.002 * evals, 2)
+    # The timeout is DERIVED from the estimate, never sized independently.
+    # First cut of this function had est_hours=2.08 against a hand-written
+    # `1800 + 1200*len(seeds)` = 50 min, so the watcher was set to give up at
+    # 40% of the run's own predicted length — a job killed by the very
+    # estimate that said it needed longer. If the estimate is wrong, fix the
+    # estimate; the two numbers may not disagree.
+    timeout_s = int(est_hours * 3600 * 1.5) + 900
+    res = submit(job, prefer="kaggle", est_hours=est_hours,
+                 timeout_s=timeout_s, fetch=["t219.json"])
     if not res.ok:
         raise RuntimeError(f"T2.19 job failed on {res.backend}: {res.message}")
     out = json.loads(Path(res.artifacts["t219.json"]).read_text())
