@@ -6737,3 +6737,36 @@ pre-registered, raise `LIVES_PER_ARM`, re-pilot, freeze, and fix the budget to
 CPU in the same commit. (3) The GPU shelf reads **0 fresh dispatches** with
 `gpu<2h` newly empty and fillable by **T2.11, T2.14, VO.02** and `gpu<20min` by
 **T3.10** — W35 opens 08-30 00:00 UTC with 30 free hours and nothing to send.
+
+**Same iteration, 20:1x-21:0x — T2.09 LANDED WHILE THIS UNIT WAS BEING
+WRITTEN: PASS, attempt 1, Kaggle P100, ran 20:11:54 at head `44f24c4`.** The
+harvest I had just told the next iteration to collect arrived inside this one,
+so: `_check` replayed offline against the recorded row, and **the
+worst-informative-seed fold committed in `44f24c4` is what saved this
+certificate.** The apparatus was bimodal exactly as predicted — of 7 seeds only
+**4 were informative** (0, 1, 3, 6); seeds 2 and 5 recorded `trap_dwell 0.0`
+and seed 4 recorded 0.0437, i.e. the noisy-TV trap simply did not fire in three
+of seven worlds. **Their unweighted mean is 0.5185, which clears the 0.40
+`TRAP_DWELL_MIN` bar** — so the pre-`_fold` version of this spec would have
+certified its own rig on evidence three sevenths of which was a dead trap. That
+is the vacuity the fold was written for, arriving on the very first run.
+
+The claim, scored on the WORST informative seed: `claim_dwell 0.078`,
+`claim_fed_ratio 1.4`, `coverage_frac_of_zero 1.0`, `dwell_margin_vs_null
+0.6633`. The prediction stated before the seeds were drawn — *"`not_fed`
+decides this run; the pilot measured 1.413 against a bar of 1.5"* — was
+correct about which gate was binding, and it cleared at 1.4. The CONTROL is
+the loud part: ICM alone scored on the same claim gates reads
+`claim_dwell 1.0` and `coverage_frac_of_zero 0.4298` — it fixates on the noise
+channel **completely** and explores at 43% of its zero-noise self. So the
+registry's `kills` field fires as written: **ICM alone is dead, and an
+ensemble-disagreement signal survives the noisy TV.** A real architecture
+measurement for the curiosity commitment, not a seed lottery.
+
+W34 charged **0.9188 h** for it (`gpu_budget.json`, kernel
+`jannolouwrens/jack-ladder-1788031002`) against the 1.189 h estimate, and the
+week expires 08-30 00:00 UTC — so W34 spent ~1.23 h of 30 in total. That is
+still three weeks of mostly-unspent free quota, and the cause named on
+2026-08-29 stands unchanged: the shelf, not the clock. `run coverage` now reads
+**0 fresh dispatches**, with `gpu<2h` newly empty and fillable by T2.11 / T2.14
+/ VO.02 and `gpu<20min` by T3.10.

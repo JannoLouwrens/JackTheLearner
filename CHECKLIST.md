@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 84 / 187 demonstrated
+## 85 / 187 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -137,7 +137,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T2.08** Curiosity drives coverage
       - _asserts:_ Intrinsic reward increases state-space coverage over random exploration.
       - _dies if:_ Coverage at or below random.
-- [ ] **T2.09** Noisy-TV control
+- [x] **T2.09** Noisy-TV control
       - _asserts:_ Injecting an unpredictable observation channel does NOT capture the intrinsic reward.
       - _dies if:_ The agent fixates on the noise channel.
       - _then delete:_ ICM alone. Forces RND or a learning-progress signal.
