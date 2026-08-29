@@ -146,6 +146,26 @@ class _MemoryLedger:
     def blocked_by(self, spec):
         return []
 
+    def unsatisfied(self, spec):
+        """What `run_spec` actually calls. `blocked_by` above is its old name.
+
+        THIS DOUBLE WAS DEAD FOR 18 DAYS AND THE ROW SAID PASS. `cb60d56`
+        (2026-08-11) renamed the real Ledger's `blocked_by` to `unsatisfied`
+        when dependency satisfaction learned to ask the freshness question;
+        this stub was not updated, so every run of T0.15 since has raised
+        `AttributeError` before reaching a single assertion. Its last real
+        verdict is `2026-08-10T00:12:49`. A duck-typed test double implements
+        an interface by coincidence, and the coincidence ends silently at the
+        rename — nothing type-checks a stub, and the ladder cannot tell "this
+        guard passed" from "this guard has not been asked in 18 days" unless
+        something re-runs it.
+
+        Found 2026-08-29 by re-running the harness after an unrelated change,
+        and confirmed pre-existing by running it at `d84101e` — the commit
+        before that change — where it errors identically. See LESSONS.md.
+        """
+        return []
+
     def record(self, res):
         self.recorded.append(res)
 

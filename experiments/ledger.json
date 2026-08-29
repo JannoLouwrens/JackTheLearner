@@ -7000,8 +7000,9 @@
     },
     "T0.08": {
       "amended": [],
-      "attempt": 8,
-      "commit": "2eaf2d0",
+      "attempt": 9,
+      "commit": "d461e36",
+      "compute_s": null,
       "control_metrics": {
         "amendment_survived": false,
         "attempt_not_inflated": false,
@@ -7011,6 +7012,7 @@
         "unseen_entry_survived": true
       },
       "duration_s": 1.31,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -7054,6 +7056,40 @@
           "message": "",
           "ran_at": "2026-08-12T23:13:29",
           "status": "PASS"
+        },
+        {
+          "commit": "2eaf2d0",
+          "control_metrics": {
+            "amendment_survived": false,
+            "attempt_not_inflated": false,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": false,
+            "own_result_recorded": true,
+            "unseen_entry_survived": true
+          },
+          "impl_sha": "989fa3d1cb6af184",
+          "message": "",
+          "metrics": {
+            "amendment_survived": true,
+            "attempt_not_inflated": true,
+            "blocked_records_no_metrics": true,
+            "default_is_not_run": true,
+            "dependency_blocks": true,
+            "entries_after_concurrency": 19,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": true,
+            "own_result_recorded": true,
+            "roundtrip_ok": true,
+            "survives_concurrent_writers": true,
+            "unseen_entry_survived": true,
+            "void_dep_blocks": true,
+            "void_why_not_a_refutation": true
+          },
+          "ran_at": "2026-08-12T23:14:54",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "989fa3d1cb6af184",
@@ -7074,11 +7110,12 @@
         "void_dep_blocks": true,
         "void_why_not_a_refutation": true
       },
-      "ran_at": "2026-08-12T23:14:54",
+      "ran_at": "2026-08-29T13:21:10",
       "seeds": [
         0
       ],
       "spec_id": "T0.08",
+      "spec_sha": "8c42327a17d13484",
       "status": "PASS"
     },
     "T0.09": {
@@ -8073,7 +8110,8 @@
     "T0.13": {
       "amended": [],
       "attempt": 22,
-      "commit": "c555f11",
+      "commit": "d461e36",
+      "compute_s": null,
       "control_metrics": {
         "disarmed_conjunct_keys": 3,
         "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
@@ -8095,15 +8133,10 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "duration_s": 1.56,
+      "duration_s": 1.6,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "b30166a",
-          "message": "pre-registered threshold not met",
-          "ran_at": "2026-08-09T13:13:43",
-          "status": "FAIL"
-        },
         {
           "commit": "b30166a",
           "message": "pre-registered threshold not met",
@@ -8217,21 +8250,73 @@
           "message": "",
           "ran_at": "2026-08-11T20:18:37",
           "status": "PASS"
+        },
+        {
+          "commit": "c555f11",
+          "control_metrics": {
+            "disarmed_conjunct_keys": 3,
+            "disarmed_detail": "T0.09_prefix: m['cuda_available'], m['matmul_finite'], m['ok']",
+            "gates_scanned": 1,
+            "hazard_detail": "T0.09_prefix",
+            "inert_gate_keys": 3,
+            "precedence_hazards": 1,
+            "redundant_detail": "",
+            "redundant_disjunct_keys": 0,
+            "self_excluded_gates": 0,
+            "specs_with_disarmed_keys": 1,
+            "specs_with_precedence_hazards": 1,
+            "stale_detail": "",
+            "stale_gates": 0,
+            "unevaluable_detail": "",
+            "unevaluable_gates": 0,
+            "unloadable_detail": "",
+            "unloadable_gates": 0,
+            "unreadable_detail": "",
+            "unreadable_gates": 0
+          },
+          "impl_sha": "3e3ae3ec2ec310e8",
+          "message": "",
+          "metrics": {
+            "disarmed_conjunct_keys": 0,
+            "disarmed_detail": "",
+            "gates_scanned": 66,
+            "hazard_detail": "",
+            "inert_gate_keys": 1,
+            "precedence_hazards": 0,
+            "redundant_detail": "T1.09: c['absurd_peak_gb']",
+            "redundant_disjunct_keys": 1,
+            "self_excluded_gates": 1,
+            "specs_with_disarmed_keys": 0,
+            "specs_with_precedence_hazards": 0,
+            "stale_detail": "",
+            "stale_gates": 0,
+            "unevaluable_detail": "",
+            "unevaluable_gates": 0,
+            "unloadable_detail": "",
+            "unloadable_gates": 0,
+            "unreadable_detail": "",
+            "unreadable_gates": 0
+          },
+          "ran_at": "2026-08-11T20:19:31",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "3e3ae3ec2ec310e8",
-      "message": "",
+      "message": "pre-registered threshold not met",
       "metrics": {
-        "disarmed_conjunct_keys": 0,
-        "disarmed_detail": "",
-        "gates_scanned": 66,
+        "disarmed_conjunct_keys": 4,
+        "disarmed_detail": "T0.24: m['control_reproduces_scar']; T1.02: m['beats_mean_baseline'], m['heldout_structure_advantage']; T2.04: m['ridge_beats_null_any']",
+        "gates_scanned": 82,
         "hazard_detail": "",
-        "inert_gate_keys": 1,
+        "inert_gate_keys": 5,
         "precedence_hazards": 0,
         "redundant_detail": "T1.09: c['absurd_peak_gb']",
         "redundant_disjunct_keys": 1,
         "self_excluded_gates": 1,
-        "specs_with_disarmed_keys": 0,
+        "specs_with_disarmed_keys": 3,
         "specs_with_precedence_hazards": 0,
         "stale_detail": "",
         "stale_gates": 0,
@@ -8242,12 +8327,13 @@
         "unreadable_detail": "",
         "unreadable_gates": 0
       },
-      "ran_at": "2026-08-11T20:19:31",
+      "ran_at": "2026-08-29T13:21:12",
       "seeds": [
         0
       ],
       "spec_id": "T0.13",
-      "status": "PASS"
+      "spec_sha": "044b792dbf379b0a",
+      "status": "FAIL"
     },
     "T0.14": {
       "amended": [],
@@ -8305,8 +8391,9 @@
     },
     "T0.15": {
       "amended": [],
-      "attempt": 2,
-      "commit": "6c0fcd1",
+      "attempt": 4,
+      "commit": "d461e36+dirty",
+      "compute_s": null,
       "control_metrics": {
         "gate_verdict_on_3e7_drift": "PASS",
         "max_relative_error": 1.7091000155524961e-06,
@@ -8315,7 +8402,8 @@
         "recorded_drift": 0.0,
         "true_drift": 3e-07
       },
-      "duration_s": 1.18,
+      "duration_s": 1.2,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -8323,9 +8411,51 @@
           "message": "",
           "ran_at": "2026-08-09T14:21:36",
           "status": "PASS"
+        },
+        {
+          "commit": "6c0fcd1",
+          "control_metrics": {
+            "gate_verdict_on_3e7_drift": "PASS",
+            "max_relative_error": 1.7091000155524961e-06,
+            "min_resolvable_magnitude": 1e-06,
+            "n_magnitudes_zeroed": 12,
+            "recorded_drift": 0.0,
+            "true_drift": 3e-07
+          },
+          "impl_sha": "76bc2d67806e7f18",
+          "message": "",
+          "metrics": {
+            "end_to_end_drift": 3e-07,
+            "end_to_end_status": "FAIL",
+            "gate_verdict_on_3e7_drift": "FAIL",
+            "max_relative_error": 1.7091000155524961e-06,
+            "min_resolvable_magnitude": 1e-18,
+            "n_magnitudes_zeroed": 0,
+            "recorded_drift": 3e-07,
+            "true_drift": 3e-07
+          },
+          "ran_at": "2026-08-10T00:12:49",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        },
+        {
+          "commit": "d461e36",
+          "control_metrics": {},
+          "gpu_job_id": null,
+          "impl_sha": "76bc2d67806e7f18",
+          "message": "AttributeError: '_MemoryLedger' object has no attribute 'unsatisfied'",
+          "metrics": {},
+          "ran_at": "2026-08-29T13:21:14",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "7b479be1016fb5ec",
+          "status": "ERROR"
         }
       ],
-      "impl_sha": "76bc2d67806e7f18",
+      "impl_sha": "f0016521b202d0c4",
       "message": "",
       "metrics": {
         "end_to_end_drift": 3e-07,
@@ -8337,23 +8467,26 @@
         "recorded_drift": 3e-07,
         "true_drift": 3e-07
       },
-      "ran_at": "2026-08-10T00:12:49",
+      "ran_at": "2026-08-29T13:23:13",
       "seeds": [
         0
       ],
       "spec_id": "T0.15",
+      "spec_sha": "7b479be1016fb5ec",
       "status": "PASS"
     },
     "T0.16": {
       "amended": [],
-      "attempt": 3,
-      "commit": "08444b2",
+      "attempt": 4,
+      "commit": "d461e36",
+      "compute_s": null,
       "control_metrics": {
         "prefix_max_drift": 1.6337,
         "prefix_trained_train_mode": true,
         "prefix_untrained_train_mode": true
       },
-      "duration_s": 33.41,
+      "duration_s": 33.43,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -8366,6 +8499,38 @@
           "commit": "44c719c",
           "message": "",
           "ran_at": "2026-08-09T19:16:34",
+          "status": "PASS"
+        },
+        {
+          "commit": "08444b2",
+          "control_metrics": {
+            "prefix_max_drift": 1.6337,
+            "prefix_trained_train_mode": true,
+            "prefix_untrained_train_mode": true
+          },
+          "impl_sha": "6a43177c1254ab0b",
+          "message": "",
+          "metrics": {
+            "kernels_scanned": 2,
+            "kernels_using_act_deterministic": 2,
+            "kernels_with_raw_forward": 0,
+            "max_shipped_eval_drift": 0.0,
+            "normaliser_mutated_by_eval": true,
+            "train_mode_after_update": true,
+            "trained_any_train_mode": false,
+            "trained_drift": 0.0,
+            "trained_forwards": 4,
+            "trained_mode_restored": true,
+            "unreadable_kernels": 0,
+            "untrained_any_train_mode": false,
+            "untrained_drift": 0.0,
+            "untrained_forwards": 4,
+            "untrained_mode_restored": true
+          },
+          "ran_at": "2026-08-12T07:27:48",
+          "seeds": [
+            0
+          ],
           "status": "PASS"
         }
       ],
@@ -8388,11 +8553,12 @@
         "untrained_forwards": 4,
         "untrained_mode_restored": true
       },
-      "ran_at": "2026-08-12T07:27:48",
+      "ran_at": "2026-08-29T13:21:48",
       "seeds": [
         0
       ],
       "spec_id": "T0.16",
+      "spec_sha": "315e60709c332103",
       "status": "PASS"
     },
     "T0.17": {
@@ -9306,7 +9472,7 @@
     "T0.21": {
       "amended": [],
       "attempt": 22,
-      "commit": "07223b9",
+      "commit": "d461e36",
       "compute_s": null,
       "control_metrics": {
         "commitments": 23.0,
@@ -9319,16 +9485,10 @@
         "properties_checked": 11.0,
         "properties_failed": 7.0
       },
-      "duration_s": 2.4,
+      "duration_s": 2.42,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "e39455b",
-          "message": "",
-          "ran_at": "2026-08-11T16:18:38",
-          "status": "PASS"
-        },
         {
           "commit": "68b95bd",
           "message": "",
@@ -9778,6 +9938,39 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "07223b9",
+          "control_metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 104.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 26.0,
+            "properties_checked": 11.0,
+            "properties_failed": 7.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "c3e12266d59ec5ad",
+          "message": "",
+          "metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 104.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 26.0,
+            "properties_checked": 11.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-08-29T12:20:47",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "c3e12266d59ec5ad",
@@ -9793,17 +9986,18 @@
         "properties_checked": 11.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-29T12:20:47",
+      "ran_at": "2026-08-29T13:21:51",
       "seeds": [
         0
       ],
       "spec_id": "T0.21",
+      "spec_sha": "f07d113ad391bfb1",
       "status": "PASS"
     },
     "T0.22": {
       "amended": [],
-      "attempt": 17,
-      "commit": "cbc64a6",
+      "attempt": 18,
+      "commit": "d461e36",
       "compute_s": null,
       "control_metrics": {
         "direct_ledger_reads": 0.0,
@@ -9813,7 +10007,7 @@
         "properties_failed": 12.0,
         "source_impl_sha": "fd34401fe44e7ea6"
       },
-      "duration_s": 1.8,
+      "duration_s": 1.84,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -9972,6 +10166,33 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "cbc64a6",
+          "control_metrics": {
+            "direct_ledger_reads": 0.0,
+            "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p11b_unstamped_changed_blocks_borrow_and_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader,p15_stamp_and_push_guard_agree_on_the_same_file",
+            "offenders": "",
+            "properties_checked": 15.0,
+            "properties_failed": 12.0,
+            "source_impl_sha": "fd34401fe44e7ea6"
+          },
+          "gpu_job_id": null,
+          "impl_sha": "fef787824c7b5be3",
+          "message": "",
+          "metrics": {
+            "direct_ledger_reads": 0.0,
+            "failed_names": "",
+            "offenders": "",
+            "properties_checked": 15.0,
+            "properties_failed": 0.0,
+            "source_impl_sha": "fd34401fe44e7ea6"
+          },
+          "ran_at": "2026-08-29T12:22:28",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "fef787824c7b5be3",
@@ -9984,11 +10205,12 @@
         "properties_failed": 0.0,
         "source_impl_sha": "fd34401fe44e7ea6"
       },
-      "ran_at": "2026-08-29T12:22:28",
+      "ran_at": "2026-08-29T13:21:54",
       "seeds": [
         0
       ],
       "spec_id": "T0.22",
+      "spec_sha": "036e68742759cafa",
       "status": "PASS"
     },
     "T0.23": {
