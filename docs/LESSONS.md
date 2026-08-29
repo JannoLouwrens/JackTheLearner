@@ -6192,3 +6192,54 @@ README said "Working" for components that had never received a gradient. A
 ledger row saying PASS for a test that has not executed in 18 days is the same
 sentence, produced by a better machine. The ratchet only ratchets while
 something re-pulls the lever.
+
+## An auditor that enumerates its subjects from the source text is blind to every subject reached at runtime — and it reports that blindness as a clean scan
+
+`T0.13` ("no gate in the ladder is decorative") found the assertions it audits
+by walking each `_check`'s AST for `m["..."]` / `c["..."]` subscripts. On
+2026-08-29 it FAILed, naming four disarmed keys in `T0.24`, `T1.02` and
+`T2.04`. All four were false positives, and the reason was one confusion:
+**reading a dict slot is not the same act as consulting the number the run
+recorded there.** `T1.02` computes `m["beats_mean_baseline"]` from two other
+metrics and then asserts on it, so perturbing the recorded slot cannot move the
+verdict — but the assertion is live, on its inputs. `T2.04` reads
+`m["ridge_beats_null_any"]` only inside `if not claim and ...`, a FAIL→VOID
+escalation that by construction cannot execute on a PASSing row.
+
+Replacing the AST enumeration with a recording dict — one that logs every read
+and write in order — resolved all four *and* surfaced **54 keys the detector
+had never scanned at all**: reached through `.get(k)` inside a comprehension,
+or through an f-string subscript like `m[f"{arm}/clears@{x}"]`. No AST walk can
+name those. The instrument had been reporting a 4-key problem while blind to a
+54-key surface, and nothing in its output distinguished "scanned and clean"
+from "never looked".
+
+**Rule:** when an auditor's subject set is derived by parsing, obtain the
+subject set a second way — by observing execution — and **report the
+difference as its own number**. The gap between what the source mentions and
+what the code touched is exactly where unaudited things live, and an auditor
+that cannot state the size of its own blind spot is asserting a coverage it
+has not measured. Corollary for the write-back idiom: if a check stores a
+derived value into `m` and asserts on it, the honest subject is the store's
+*inputs* — exempt the slot only when some assignment to it reads the record,
+because `m["ok"] = True; return m["ok"]` is a constant asserting against
+itself.
+
+## A sensitivity detector can only falsify a guard whose failure mode is in its perturbation alphabet
+
+The same repair. `XL.00` reads `indep_p`, `trend_p`, `uniform_z`,
+`c_at_death_indep_p` and `c_drift_trend_p` **only** inside
+`math.isfinite(...)` VOID guards — they exist to catch a statistic that
+detected nothing. `T0.13` perturbed numerics with `0, 1, -1, v±1, ±1e9`: all
+finite. So no perturbation could ever move those five verdicts, and the
+detector reported five live rig-guards as *disarmed assertions*. Adding
+`nan`, `inf` and `-inf` to the float alphabet made all five live in one line.
+
+**Rule:** a detector that perturbs inputs is only as sharp as the values it
+knows how to try. Before trusting a "this cannot fail" finding, ask what value
+the guard under test was actually written against, and check that value is in
+the alphabet. A guard that catches NaN cannot be exercised by an alphabet of
+finite numbers, and the detector's silence will read as the guard's fault. The
+converse trap is already recorded above under type-preserving perturbation:
+a perturbation that makes the gate *raise* is evidence the key was compared,
+not evidence it was load-bearing.

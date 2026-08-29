@@ -5942,8 +5942,13 @@ B3 (hardware stamp + gpu_job_id) still open.
 
 - 2026-08-29 ~12:5x UTC (OPUS — `week:Fable` 100%, the chain fell through to opus
   as the prompt predicted; the fallback repair WORKED and `lost_iterations.log`
-  was not needed). First live slot after a **42-slot** `PACING:` blackout
-  (08-25 13:07 → 08-29 12:07); the gate released on its own arithmetic at
+  was not needed). First live slot after a **95-slot** `PACING:` blackout
+  (08-25 13:07 → 08-29 12:07) — *corrected from "42-slot" on 2026-08-29 per the
+  46th audit's B5; recounted as
+  `grep -c PACING /data/jack-logs/ladder.log` restricted to the window, which
+  gives 95 lines at 95 distinct hours (107 in the whole log, 12 of them before
+  the window). The 42 came from a partial read and understated the outage by
+  2.3x.* The gate released on its own arithmetic at
   `all models` 74% vs a line of 75%. Meters read, acting on `week:all models`.
   GPU week `2026-W34`, ~29.69 h expiring tonight 00:00 UTC.
   **(1) Committed `experiments/tests/sm_03_nose_reports_occluded.py`** (`a9a99ff`,
@@ -6110,3 +6115,80 @@ UTC and cannot honestly be spent, so this is for W35). (3) B5, the journal's
 blackout count. **Run `--gate` before you trust any PASS you did not buy
 yourself** — Finding 2 says the sweep is the only organ that would have caught
 it, and it is not being run.
+
+- 2026-08-29 ~14:1x UTC (**OPUS** — `week:Fable` 100% until 08-31 04:59, the
+  chain fell through to opus in 3 s as expected; `lost_iterations.log` not
+  needed). **Pacing streak 0** — the gate is open (`week:all models` **74%**
+  at start and at end, against a line at 76% for 77% week-elapsed; the meter
+  did not move across the whole iteration). GPU week `2026-W34`, and per the
+  priority head its ~29.7 h expire 08-30 00:00 UTC with nothing dispatchable —
+  I did not manufacture a job. Unit taken: **`T0.13`, the previous
+  iteration's named handoff.**
+
+  **`T0.13` PASSES (attempt 23, 82 gates scanned).** Its FAIL at attempt 22
+  named four disarmed conjunct keys — `T0.24: m['control_reproduces_scar']`,
+  `T1.02: m['beats_mean_baseline'], m['heldout_structure_advantage']`,
+  `T2.04: m['ridge_beats_null_any']`. **All four were false positives, from one
+  confusion: reading a dict slot is not consulting the number the run
+  recorded there.** `T1.02` and `T0.24` COMPUTE their key from other metrics
+  and then assert on it, so the recorded slot is unperturbable while the
+  assertion is live on its inputs. `T2.04` reads its key only inside
+  `if not claim and ...` — a FAIL→VOID escalation that cannot execute on a
+  PASSing row, so demanding a PASS exercise it asks for the impossible.
+
+  The base evaluation now runs against a **recording dict** that logs every
+  read and write in order, giving three classes (CONSULTED → perturbed, inert
+  means DISARMED; COMPUTED → exempt only if a store of that key reads the
+  record; UNREACHED → counted, not gated). Every exemption forfeits inside a
+  gate carrying a precedence hazard, and the control went **1 fixture → 4**, one
+  per detector: F1 pre-fix `T0.09`, F2 `m["all_good"] = True; return m["ok"]
+  and m["all_good"]` (the COMPUTED exemption must refuse a constant), F3
+  `return True` (keyless), F4 a `.get()` key read and thrown away (dynamic).
+
+  **FINDING 1 — the repair made the instrument sharper and it immediately found
+  more than it fixed.** Recording reads sees what no AST walk can name, and the
+  scan went from 4 subjects-in-question to **54 keys the detector had never
+  scanned at all**. Five were the detector's OWN gap: `XL.00` reads `indep_p`,
+  `trend_p`, `uniform_z`, `c_at_death_indep_p`, `c_drift_trend_p` only inside
+  `math.isfinite(...)` VOID guards, and the perturbation alphabet was
+  `0, 1, -1, v±1, ±1e9` — all finite, so those five guards were unfalsifiable
+  by construction and read as dead. Adding `nan/inf/-inf` to the float alphabet
+  made all five live.
+
+  **FINDING 2 — the other 49 are one shape, and it is a shape this spec already
+  exempts in a different spelling.** `LC.00` (9, `sum(1 for kind in CORES if
+  _sigma(...) >= GATE)` then `clearing >= MIN`), `LC.02` (39,
+  `m[f"{arm}/clears@{x}"]` over 5 arms x 8 budgets, same count), `T0.08` (1,
+  `not all(c.get(k, True) for k in _STALE_PROPS)`). Each is a member of an
+  `any`/`all`/count aggregation whose margin exceeds one member — which is
+  exactly what `redundant_disjunct_keys` already forgives for `T1.09`'s
+  `absurd_oom or absurd_peak_gb > MAX_GB`. **The AST exemption recognises the
+  `or` keyword and cannot recognise the loop that means the same thing.** I did
+  not guess at the general detector under time pressure; I gated the backlog as
+  a **SET**: `DYNAMIC_ADJUDICATED = {LC.00, LC.02, T0.08}`, so their key counts
+  may move freely when they re-run but **a fourth spec appearing there turns
+  T0.13 red**, and the field being absent reads as the whole ladder unscanned.
+  Shrink-only by construction.
+
+  **NEXT ITERATION'S UNIT, first choice: write the aggregation detector.** A key
+  that is one member of an `any`/`all`/count with margin is REDUNDANT, not
+  disarmed, and it should be recognised structurally rather than by a frozen
+  list of three spec ids. Doing that lets `DYNAMIC_ADJUDICATED` be deleted
+  rather than maintained — a list of exceptions is a detector nobody has
+  written yet. Then: the 46th audit's **B3** (`queue_depth` must exclude
+  gate-provisional specs — `SM.02`/`SM.03` define `_GATES_FROZEN` and nothing
+  reads it) and **B4** (refill the GPU shelf — `T2.09`/`T3.06`/`T2.19`; this is
+  for W35, W34 is sunk and unspendable).
+
+  **Also done: the 46th audit's B5.** The 08-29 entry above said "42-slot
+  `PACING:` blackout"; the real count is **95** (95 PACING lines at 95 distinct
+  hours inside 08-25 13:07 → 08-29 12:07; 107 in the whole log, 12 outside the
+  window). Corrected in place with the recount shown, because a journal that
+  understates an outage by 2.3x is what the next audit reasons from.
+
+  **What did NOT change, stated so nobody re-derives it:** `T0.27` stayed FAIL
+  and that is correct. Its `live_checked_pairs` went 4 → 5 as my own
+  `T0.13` FAIL→PASS pair joined, and `live_violations` stayed at **1** — the
+  `T0.17` pair from `D16`, whose owner default is "the ladder stays red". My
+  pair is auditable because the failing implementation was committed at
+  `d461e36` and diffs cleanly against the passing one. **Ladder 82 → 83.**
