@@ -56,10 +56,12 @@ a reward stuck at zero would inherit the optimistic sweep and look excellent.
 signal deleted, exactly as T2.19's unimodal legs proved its regression arm was
 a trained arm losing rather than a dead arm.
 
-PRE-REGISTERED GATES. Bars marked PILOT are placeholders until a seed-90 pilot
-freezes them (_GATES_FROZEN); run() refuses until then, SM.02's idiom.
+PRE-REGISTERED GATES — FROZEN 2026-08-29 against the seed-7 and seed-90 pilots
+(`_GATES_FROZEN = True`). Every number the freeze was made against, and the ONE
+bar the pilots moved, are in PILOT RECORD at the foot of this docstring. Seeds
+7 and 90 are disjoint from the registered seeds 0-6 and are now spent.
 
-  RIG (violated -> VOID, "the apparatus did not test the claim"):
+  RIG (violated -> the seed is not informative; see THE SEED PROTOCOL):
     trap_live      icm(noisy) dwell >= TRAP_DWELL_MIN AND its panel reward
                    ratio >= TRAP_RATIO_MIN. The trap caught the naive agent in
                    THIS run. Without it a claim-arm non-fixation is unreadable:
@@ -88,7 +90,7 @@ freezes them (_GATES_FROZEN); run() refuses until then, SM.02's idiom.
                    constant signal fails this, and a dead signal is precisely
                    what would otherwise ace every claim gate below.
 
-  CLAIM (worst of 3 seeds; all four must hold):
+  CLAIM (WORST informative seed, not the mean; all four must hold):
     no_fixation    claim(noisy) dwell <= NULL_DWELL_MAX — it stares no more
                    than a random walk does.
     not_fed        claim(noisy) late reward in-zone / out-zone <= FED_RATIO_MAX
@@ -111,10 +113,53 @@ freezes them (_GATES_FROZEN); run() refuses until then, SM.02's idiom.
   it is the same agent, the same world and the same metrics, differing only in
   the reward, and PG.4 has already certified that it fires.
 
+  SAID OUT LOUD, because a control that cannot fail is decoration: on an
+  informative seed the control's failure is ENTAILED by `trap_live`. A seed
+  only counts if `icm` dwelt >= 0.40, and `no_fixation` bars dwell > 0.20, so
+  `not _claim_holds(c)` is arithmetic, not evidence. The discriminating work is
+  therefore done elsewhere and it is worth naming: (a) `not_fed`, whose bar sits
+  at the midpoint between an UNFED signal's fixed point (in/out ratio 1.0) and
+  PG.4's certified fed null (>= 2.0), so the claim arm has to land on the unfed
+  side of a line drawn by mechanism rather than by this pilot; and (b) the `rnd`
+  arm, which is equally percept-driven, was a live candidate for `_CLAIM_ARM`,
+  and FAILS `not_fed` on both pilot seeds (2.232, 1.888). `rnd` is reported and
+  NOT gated — pre-registering "rnd must fail" after watching it fail in the
+  pilot would be fitting a control to the data it was drawn from.
+
+THE SEED PROTOCOL — the bimodal trap, and why "worst of N" needs a subset.
+PG.4's own certified row is `icm_dwell 0.6667 +- 0.4714`, which is exactly the
+seed vector [1.0, 1.0, 0.0] over its registered seeds 0/1/2: the naive agent
+either finds the panel and locks on ENTIRELY, or never finds it. The seed-90
+pilot reproduced it here (`icm dwell 0.0000`, coverage 0.3967 — it never walked
+past the TV). So one seed in ~three carries NO trap, and on such a seed the
+claim arm's non-fixation is unreadable rather than good news.
+
+Two ways of handling that are wrong and both were rejected:
+  - **Gate the MEAN.** This is what the first cut of this file did by accident:
+    `run_spec._aggregate` hands `_check` the mean over seeds, so a docstring
+    saying "worst of 3" was scored on `trap_dwell = 0.667` — a bar of 0.40 met
+    by two live seeds carrying one dead one. A dead trap would have been
+    averaged into a PASS, which is this spec's own vacuity wearing a different
+    hat. Fixed: `_fold` folds per-seed rows and `_experiment` returns the fold,
+    so every gate below reads the WORST informative seed (T2.19's idiom).
+  - **Gate the worst of ALL seeds.** Honest, and it VOIDs with probability
+    ~0.96 on 7 seeds for a reason that is not about curiosity at all.
+
+What is pre-registered instead: a seed is INFORMATIVE iff its apparatus worked
+on that seed — trap fired, random-walk floor held, the claim arm had panel
+exposure, and the claim arm's signal was alive and decaying. That is the whole
+RIG block above, evaluated per seed. The claim gates are then scored on the
+WORST informative seed, and the run is VOID unless at least
+`MIN_LIVE_SEEDS` = 3 of the 7 are informative. The selection criterion is a
+fixed formula over the NULL and the RIG — never over the claim arm's dwell,
+fed-ratio, coverage or margin — so it cannot drop a seed for being unflattering
+to the hypothesis. `informative_seeds` and every per-seed vector are recorded in
+the metrics, so an auditor can recompute the subset without re-running anything.
+
 WHICH ARM IS THE CLAIM ARM IS FROZEN BY THE PILOT, NOT CHOSEN BY THE RUN.
-`_CLAIM_ARM` is set from the seed-90 pilot and the registered run then tests
-that named arm on unseen seeds 0/1/2. Taking the argmax over {rnd, disagree} at
-scoring time would be picking noise and calling it a finding (SYSTEM.md's
+`_CLAIM_ARM = "disagree"` is frozen from the pilots and the registered run then
+tests that named arm on unseen seeds 0-6. Taking the argmax over {rnd, disagree}
+at scoring time would be picking noise and calling it a finding (SYSTEM.md's
 margin rule); the loser is reported in metrics but cannot rescue the run.
 
 WHAT THIS REGIME REMOVES, said out loud (LESSONS: list what the chosen regime
@@ -124,12 +169,59 @@ cell is reachable, so coverage has a true ceiling and "did not explore" cannot
 mean "was stuck". Extrinsic reward (none anywhere): nothing but curiosity moves
 this agent. Locomotion (velocity slider): this spec is about what curiosity
 attends to, not about a body — T2.01 owns that and is settled FAIL.
+
+PILOT RECORD (2026-08-29, this box, CPU; artifacts /data/t2_09_pilot_seed7.json
+and /data/t2_09_pilot_seed90.json, 20 000 decisions, all eight lives per seed).
+Seed 7 fired the trap; seed 90 did not, and per the seed protocol above it can
+only speak to the bars that do not depend on a live trap.
+
+  arm (noisy)     dwell s7 / s90   in/out ratio s7 / s90   coverage s7 / s90
+  icm  (null)     0.8337 / 0.0000  2.279 / 0.000           0.5950 / 0.3967
+  rnd             0.0140 / 0.0520  2.232 / 1.888           1.0000 / 0.9917
+  disagree        0.0844 / 0.0404  1.413 / 0.979           1.0000 / 1.0000
+  zero            0.0068 / 0.0584  0.000 / 0.000           1.0000 / 1.0000
+  random          0.0172 / 0.0113  0.000 / 0.000           1.0000 / 0.9917
+  disagree static q1 0.000410 / 0.000332, decay 2.267 / 1.472
+  claim exposure  28 441 / 29 593 panel rays = 0.9611 of the random walk's (s7;
+                  the s90 pilot predates the `panel_rays` metric)
+
+WHAT THE PILOT DECIDED, bar by bar. Seven of the eight bars were CONFIRMED at
+the value they already held and are NOT fitted to these numbers — each is
+inherited from PG.4's registered certificate or anchored on a mechanism:
+`TRAP_DWELL_MIN` 0.40, `TRAP_RATIO_MIN` 2.0 and `NULL_DWELL_MAX` 0.20 are
+PG.4's own certified constants; `FED_RATIO_MAX` 1.5 is the midpoint of the
+unfed fixed point 1.0 and PG.4's fed null 2.0; `EXPOSURE_FRAC` 0.50 is "half
+the opportunity a random walk had"; `EXPLORE_FRAC` 0.80 and `MARGIN_MIN` 0.15
+stand as written. `_CLAIM_ARM = "disagree"` is confirmed rather than chosen:
+it clears all four claim gates on seed 7 and `rnd` fails `not_fed` on BOTH
+pilot seeds, which is the mechanism the spec predicts (an irreducibly
+stochastic channel drives an ensemble to a shared conditional mean, while a
+frozen random target stays surprising forever).
+
+ONE BAR MOVED, and downward: `DECAY_MIN` 1.5 -> 1.25. Seed 90's claim-arm
+static decay read 1.472, so the placeholder would have made a live, decaying
+signal look dead and cost a seed for nothing. 1.25 is not the observed minimum
+shaved — it is set from what the gate is FOR: a constant or dead signal has
+decay identically 1.0, so any bar above 1.0 excludes it, and 1.25 sits roughly
+midway between that fixed point and the weaker of the two pilot readings.
+Recorded as a moved threshold in the open, per SYSTEM.md: it is a placeholder
+being frozen for the first time, not a registered bar being weakened — this
+spec has never run, and `run()` refused until this commit.
+
+THE GATE THAT WILL DECIDE THIS RUN is `not_fed`. The claim arm measured 1.413
+against a bar of 1.5 on the seed where the trap fired — 6% of headroom. That is
+what a test which could have failed looks like, and it is stated here BEFORE
+the registered seeds are drawn so that a FAIL cannot later be narrated as a
+surprise.
 """
 from __future__ import annotations
 
+import json
 import math
+from pathlib import Path
 
-from ..protocol import Ledger, run_spec
+from ..gpu import build_job, submit
+from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 from .pg_4_noisy_tv import (
     _ACTIONS, _Retina, _build, _cell, _dwell,
@@ -140,7 +232,16 @@ from .pg_4_noisy_tv import (
 # PG.4 certified", which is a statement about PG.4's apparatus as much as ours.
 IMPL_DEPS = ["playground.py", "experiments/tests/pg_4_noisy_tv.py"]
 
-_GATES_FROZEN = False           # pilot (seed 90) freezes the bars below
+_GATES_FROZEN = True            # frozen 2026-08-29 — see PILOT RECORD
+
+# Registered seeds, disjoint from the spent pilots (7, 90). SEVEN, not three:
+# the trap is bimodal (see THE SEED PROTOCOL), it fires on ~2 of 3 seeds, and
+# three seeds would leave a ~26% chance of fewer than three informative ones.
+# At p = 2/3 this design is informative-enough with probability ~0.96. Raising
+# the seed count is a strengthening — more evidence, a harder run — so it moves
+# under the T1.02 precedent rather than needing a decision.
+SEEDS = list(range(7))
+MIN_LIVE_SEEDS = 3              # fewer informative seeds -> VOID, not FAIL
 
 N_DECISIONS = 20_000            # PG.4's life length. NOT tunable downward: the
                                 # trap's certified fixation (dwell >= 0.40) was
@@ -154,21 +255,26 @@ OBS_DIM = 4 + 2 * N_RAYS
 LR = 1e-3
 BATCH = 64
 
-_CLAIM_ARM = "disagree"         # PILOT freezes this; see docstring
+_CLAIM_ARM = "disagree"         # FROZEN by the pilots; see PILOT RECORD
 _ARMS = ("icm", "rnd", "disagree", "zero")
 
-# --- RIG bars (VOID if violated) ---
-TRAP_DWELL_MIN = 0.40           # PILOT — PG.4's ICM_DWELL_MIN, its certified value
-TRAP_RATIO_MIN = 2.0            # PILOT — PG.4's PANEL_REWARD_RATIO_MIN
-NULL_DWELL_MAX = 0.20           # PILOT — PG.4's NULL_DWELL_MAX
-DECAY_MIN = 1.5                 # PILOT — claim arm's static reward q1/q4
-EXPOSURE_FRAC = 0.50            # PILOT — claim arm's panel rays vs random's;
+# --- RIG bars (a seed violating any of these is not informative) ---
+TRAP_DWELL_MIN = 0.40           # PG.4's ICM_DWELL_MIN, its certified value
+TRAP_RATIO_MIN = 2.0            # PG.4's PANEL_REWARD_RATIO_MIN
+NULL_DWELL_MAX = 0.20           # PG.4's NULL_DWELL_MAX
+DECAY_MIN = 1.25                # MOVED by the pilot, 1.5 -> 1.25: a constant or
+                                # dead signal decays by exactly 1.0, so the bar
+                                # is set above that fixed point, not shaved to
+                                # the weaker pilot reading (1.472). PILOT RECORD.
+EXPOSURE_FRAC = 0.50            # claim arm's panel rays vs the random walk's;
                                 # the "it had the opportunity" gate
 
-# --- CLAIM bars (worst seed) ---
-FED_RATIO_MAX = 1.5             # PILOT — in-zone/out-zone reward, claim arm
-EXPLORE_FRAC = 0.80             # PILOT — coverage vs the zero twin
-MARGIN_MIN = 0.15               # PILOT — dwell separation from the null
+# --- CLAIM bars (worst INFORMATIVE seed) ---
+FED_RATIO_MAX = 1.5             # in-zone/out-zone reward, claim arm. Midway
+                                # between an unfed signal (1.0) and PG.4's
+                                # certified fed null (>= 2.0). Pilot: 1.413.
+EXPLORE_FRAC = 0.80             # coverage vs the zero twin
+MARGIN_MIN = 0.15               # dwell separation from the null
 
 
 # ── the four rewards ─────────────────────────────────────────────────────
@@ -369,57 +475,213 @@ def _life(seed: int, arm: str, noisy: bool,
     return out
 
 
-def _experiment(seed: int) -> dict:
-    """Claim arm + null + liveness instruments, one seed."""
-    noisy = {a: _life(seed, a, True) for a in _ARMS}
-    noisy["random"] = _life(seed, "random", True)
-    static_claim = _life(seed, _CLAIM_ARM, False)
+def remote_run(seeds: list, n_decisions: int = N_DECISIONS) -> dict:
+    """Every life this spec reads, for every seed. Runs on the GPU VM.
 
-    cl, null, zero = noisy[_CLAIM_ARM], noisy["icm"], noisy["zero"]
-    out = {
-        "claim_arm": _CLAIM_ARM,
-        # claim
-        "claim_dwell": cl["dwell_share"],
-        "claim_fed_ratio": cl["panel_reward_ratio"],
-        "claim_coverage": cl["coverage"],
-        "zero_coverage": zero["coverage"],
-        "coverage_frac_of_zero": round(
-            cl["coverage"] / max(1e-9, zero["coverage"]), 4),
-        "dwell_margin_vs_null": round(null["dwell_share"] - cl["dwell_share"], 4),
-        # rig
-        "trap_dwell": null["dwell_share"],
-        "trap_fed_ratio": null["panel_reward_ratio"],
-        "null_random_dwell": noisy["random"]["dwell_share"],
-        "claim_panel_rays": cl["panel_rays"],
-        "random_panel_rays": noisy["random"]["panel_rays"],
-        "exposure_frac_of_random": round(
-            cl["panel_rays"] / max(1, noisy["random"]["panel_rays"]), 4),
-        "trap_panel_rays": null["panel_rays"],
-        "claim_static_decay": static_claim["reward_decay"],
-        "claim_static_reward_q1": static_claim["reward_q1"],
-        "claim_static_coverage": static_claim["coverage"],
-    }
-    # the losing candidate, reported and unable to rescue the run
-    other = "rnd" if _CLAIM_ARM == "disagree" else "disagree"
-    out[f"other_{other}_dwell"] = noisy[other]["dwell_share"]
-    out[f"other_{other}_fed_ratio"] = noisy[other]["panel_reward_ratio"]
-    out[f"other_{other}_coverage"] = noisy[other]["coverage"]
+    Six lives per seed: the four arms plus the random walk in the noisy world,
+    and the claim arm in the STATIC world for `alive_decay`. `zero` is not run
+    twice — its reward is 0.0 by construction, so its trajectory cannot depend
+    on whether the panel re-randomises, and the seed-7 pilot confirmed the two
+    lives byte-identical (dwell 0.0068, coverage 1.0, final dist 0.63 in both).
+    """
+    out = {"n_decisions": n_decisions, "claim_arm": _CLAIM_ARM,
+           "gpu": "cpu", "seeds": []}
+    try:
+        import torch
+        if torch.cuda.is_available():
+            out["gpu"] = torch.cuda.get_device_name(0)
+    except Exception:
+        pass
+    for seed in seeds:
+        row = {"seed": seed}
+        for arm in list(_ARMS) + ["random"]:
+            row[f"{arm}_noisy"] = _life(seed, arm, True, n_decisions)
+        row[f"{_CLAIM_ARM}_static"] = _life(seed, _CLAIM_ARM, False, n_decisions)
+        out["seeds"].append(row)
     return out
 
 
-def _control(seed: int) -> dict:
-    """The null IS the control: naive percept-driven ICM in the noisy world,
-    scored on the CLAIM gates. It must fail them."""
-    icm = _life(seed, "icm", True)
-    zero = _life(seed, "zero", True)
-    return {
-        "claim_dwell": icm["dwell_share"],
-        "claim_fed_ratio": icm["panel_reward_ratio"],
-        "claim_coverage": icm["coverage"],
-        "zero_coverage": zero["coverage"],
+# ── GPU submission (one per spec — module cache, T2.01 pattern) ──────────
+JOB = r'''
+import subprocess as _s, sys as _y, os as _o
+_s.run([_y.executable, "-m", "pip", "install", "-q", "mujoco"], check=True)
+import json
+from experiments.tests.t2_09_noisy_tv_control import remote_run
+out = remote_run(__SEEDS__, n_decisions=__NDEC__)
+json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "t209.json"), "w"),
+          indent=1)
+print("DONE", out["gpu"], flush=True)
+'''
+
+_CACHE: dict = {}
+
+
+def _submit(seeds: list, n_decisions: int = N_DECISIONS) -> dict:
+    body = (JOB.replace("__SEEDS__", repr(list(seeds)))
+               .replace("__NDEC__", str(int(n_decisions))))
+    job = build_job(body)
+    # CALIBRATED on the pilot, not guessed (T2.19's rule). The seed-7 pilot ran
+    # eight lives in 638.4 s wall on this box's shared ARM cores; the six lives
+    # this job runs per seed are icm 79.3 + rnd 81.1 + disagree 169.0 + zero
+    # 23.8 + random 23.2 + disagree_static 157.6 = 534.0 s. Priced at 560 s/seed
+    # (5% over) plus 0.10 h fixed for clone + `pip install mujoco` + torch
+    # import. Kaggle's x86 cores should beat ARM here — MuJoCo stepping and the
+    # per-decision torch forwards are both CPU-bound at this size — so the
+    # estimate errs long, which is the direction a number feeding a timeout must
+    # err in. 7 seeds -> 1.19 h, inside the spec's registered gpu<2h class.
+    est_hours = round(0.10 + (560.0 / 3600.0) * len(seeds), 3)
+    # DERIVED from the estimate, never sized independently (T2.19's scar: a
+    # watcher set to give up at 40% of the run's own predicted length).
+    timeout_s = int(est_hours * 3600 * 1.5) + 900
+    res = submit(job, prefer="kaggle", est_hours=est_hours,
+                 timeout_s=timeout_s, fetch=["t209.json"])
+    if not res.ok:
+        raise RuntimeError(f"T2.09 job failed on {res.backend}: {res.message}")
+    out = json.loads(Path(res.artifacts["t209.json"]).read_text())
+    out["backend"] = res.backend
+    return out
+
+
+# ── the reading ──────────────────────────────────────────────────────────
+def _seed_view(row: dict) -> dict:
+    """One seed's raw lives -> the quantities every gate is stated in."""
+    cl = row[f"{_CLAIM_ARM}_noisy"]
+    null, zero, rand = row["icm_noisy"], row["zero_noisy"], row["random_noisy"]
+    st = row[f"{_CLAIM_ARM}_static"]
+    other = "rnd" if _CLAIM_ARM == "disagree" else "disagree"
+    v = {
+        "seed": row["seed"],
+        # claim
+        "claim_dwell": cl["dwell_share"],
+        "claim_fed_ratio": cl["panel_reward_ratio"],
         "coverage_frac_of_zero": round(
-            icm["coverage"] / max(1e-9, zero["coverage"]), 4),
+            cl["coverage"] / max(1e-9, zero["coverage"]), 4),
+        "dwell_margin_vs_null": round(
+            null["dwell_share"] - cl["dwell_share"], 4),
+        # rig
+        "trap_dwell": null["dwell_share"],
+        "trap_fed_ratio": null["panel_reward_ratio"],
+        "null_random_dwell": rand["dwell_share"],
+        "exposure_frac_of_random": round(
+            cl["panel_rays"] / max(1, rand["panel_rays"]), 4),
+        "claim_static_reward_q1": st["reward_q1"],
+        "claim_static_decay": st["reward_decay"],
+        # the null, scored on the CLAIM gates — this seed's control
+        "ctrl_claim_dwell": null["dwell_share"],
+        "ctrl_claim_fed_ratio": null["panel_reward_ratio"],
+        "ctrl_coverage_frac_of_zero": round(
+            null["coverage"] / max(1e-9, zero["coverage"]), 4),
+        # the losing candidate, reported and unable to rescue the run
+        f"other_{other}_dwell": row[f"{other}_noisy"]["dwell_share"],
+        f"other_{other}_fed_ratio": row[f"{other}_noisy"]["panel_reward_ratio"],
+        f"other_{other}_coverage": row[f"{other}_noisy"]["coverage"],
     }
+    # INFORMATIVE: the apparatus worked on this seed. Computed ONLY from the
+    # null, the random walk and the rig instruments — never from the claim
+    # arm's dwell, fed-ratio, coverage or margin — so no seed can be dropped
+    # for being unflattering to the hypothesis. See THE SEED PROTOCOL.
+    v["informative"] = float(
+        v["trap_dwell"] >= TRAP_DWELL_MIN
+        and v["trap_fed_ratio"] >= TRAP_RATIO_MIN
+        and v["null_random_dwell"] <= NULL_DWELL_MAX
+        and v["exposure_frac_of_random"] >= EXPOSURE_FRAC
+        and v["claim_static_reward_q1"] > 0.0
+        and v["claim_static_decay"] >= DECAY_MIN)
+    return v
+
+
+def _fold(rows: list) -> dict:
+    """Per-seed rows -> the numbers the gates read: WORST informative seed.
+
+    Never a mean. `run_spec._aggregate` means everything it is handed, so a
+    spec whose gates are worst-case must fold before it returns — otherwise
+    one dead trap is averaged into a live one and the rig gate passes on a
+    seed that tested nothing.
+    """
+    views = [_seed_view(r) for r in rows]
+    live = [v for v in views if v["informative"]]
+
+    def worst(key, hi: bool):
+        """hi=True -> the largest value is the worst (a max-bar gate).
+
+        With no informative seed the run is VOID and these numbers are never
+        read — but they are still WRITTEN to the ledger, so the sentinel is
+        chosen to fail its own gate rather than to be NaN. NaN would be
+        non-strict JSON on the way in and would read as an absent measurement
+        on the way out; a number that fails loudly cannot be mistaken for one.
+        """
+        if not live:
+            return 1e9 if hi else -1e9
+        return (max if hi else min)(v[key] for v in live)
+
+    other = "rnd" if _CLAIM_ARM == "disagree" else "disagree"
+    return {
+        "claim_arm": _CLAIM_ARM,
+        "n_seeds": float(len(views)),
+        "n_informative": float(len(live)),
+        "informative_seeds": [v["seed"] for v in live],
+        # claim, worst informative seed
+        "claim_dwell": worst("claim_dwell", True),
+        "claim_fed_ratio": worst("claim_fed_ratio", True),
+        "coverage_frac_of_zero": worst("coverage_frac_of_zero", False),
+        "dwell_margin_vs_null": worst("dwell_margin_vs_null", False),
+        # rig, worst informative seed (all hold by construction on `live`;
+        # reported so the certificate carries its own margins)
+        "trap_dwell": worst("trap_dwell", False),
+        "trap_fed_ratio": worst("trap_fed_ratio", False),
+        "null_random_dwell": worst("null_random_dwell", True),
+        "exposure_frac_of_random": worst("exposure_frac_of_random", False),
+        "claim_static_reward_q1": worst("claim_static_reward_q1", False),
+        "claim_static_decay": worst("claim_static_decay", False),
+        # the loser, reported and ungated
+        f"other_{other}_fed_ratio": worst(f"other_{other}_fed_ratio", True),
+        f"other_{other}_dwell": worst(f"other_{other}_dwell", True),
+        # every seed, informative or not — the subset must be recomputable
+        "per_seed": [[v["seed"], v["informative"], v["trap_dwell"],
+                      v["trap_fed_ratio"], v["exposure_frac_of_random"],
+                      v["claim_static_decay"], v["claim_dwell"],
+                      v["claim_fed_ratio"], v["coverage_frac_of_zero"],
+                      v["dwell_margin_vs_null"]] for v in views],
+        "per_seed_cols": ("seed informative trap_dwell trap_ratio exposure "
+                          "static_decay claim_dwell claim_fed claim_cov "
+                          "margin"),
+    }
+
+
+def _fold_control(rows: list) -> dict:
+    """The null scored on the CLAIM gates, over the SAME informative seeds."""
+    live = [v for v in (_seed_view(r) for r in rows) if v["informative"]]
+    if not live:
+        # Sentinels that make the control PASS the claim gates, i.e. that make
+        # `not _claim_holds(c)` false. Same rule as `_fold.worst`: with nothing
+        # measured, every gate must read as unsatisfied, and for the control
+        # "unsatisfied" is the direction that blocks a PASS.
+        return {"claim_dwell": 0.0, "claim_fed_ratio": 0.0,
+                "coverage_frac_of_zero": 1e9, "n_informative": 0.0}
+    return {
+        "claim_dwell": max(v["ctrl_claim_dwell"] for v in live),
+        "claim_fed_ratio": max(v["ctrl_claim_fed_ratio"] for v in live),
+        "coverage_frac_of_zero": min(v["ctrl_coverage_frac_of_zero"]
+                                     for v in live),
+        "n_informative": float(len(live)),
+        "ctrl_per_seed_dwell": [v["ctrl_claim_dwell"] for v in live],
+    }
+
+
+def _experiment(seed: int) -> dict:
+    """`seed` is ignored: one submission runs every seed, and `_fold` reduces
+    them to the worst informative one. run_spec calls this once per registered
+    seed and means identical dicts, so the recorded numbers are the fold."""
+    if not _CACHE:
+        _CACHE.update(_submit(SEEDS))
+    m = _fold(_CACHE["seeds"])
+    m["gpu"] = _CACHE["gpu"]
+    m["backend"] = _CACHE.get("backend", "?")
+    return m
+
+
+def _control(seed: int) -> dict:
+    return _fold_control(_CACHE["seeds"])
 
 
 def _claim_holds(m: dict) -> bool:
@@ -429,7 +691,13 @@ def _claim_holds(m: dict) -> bool:
             and m["coverage_frac_of_zero"] >= EXPLORE_FRAC)
 
 
-def _check(m: dict, c: dict) -> bool:
+def _check(m: dict, c: dict):
+    # Too few working seeds is an APPARATUS outcome, not a refutation: the
+    # bimodal trap failed to fire often enough for the claim to be readable.
+    # FAIL would fire this spec's `kills` field off a run that never asked the
+    # question.
+    if m["n_informative"] < MIN_LIVE_SEEDS:
+        return Status.VOID
     rig = (m["trap_dwell"] >= TRAP_DWELL_MIN
            and m["trap_fed_ratio"] >= TRAP_RATIO_MIN
            and m["null_random_dwell"] <= NULL_DWELL_MAX
@@ -438,13 +706,13 @@ def _check(m: dict, c: dict) -> bool:
            and m["claim_static_decay"] >= DECAY_MIN)
     claim = (_claim_holds(m)
              and m["dwell_margin_vs_null"] >= MARGIN_MIN)
-    return rig and claim and not _claim_holds(c)
+    return bool(rig and claim and not _claim_holds(c))
 
 
 def run(ledger: Ledger | None = None):
     if not _GATES_FROZEN:
         raise RuntimeError(
-            "T2.09 gates are provisional — pilot (seed 90) first, freeze the "
-            "bars in this file, then run (SM.02's _GATES_FROZEN idiom).")
+            "T2.09 gates are provisional — pilot first, freeze the bars in "
+            "this file, then run (SM.02's _GATES_FROZEN idiom).")
     return run_spec(BY_ID["T2.09"], _experiment, _check, control_fn=_control,
                     ledger=ledger)

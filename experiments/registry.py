@@ -582,8 +582,9 @@ LADDER: list[Spec] = [
                     "the intrinsic reward.",
          falsified_by="The agent fixates on the noise channel.",
          null_baseline="A pure ICM agent is known to fixate (Burda et al.).",
-         metric="noise_channel_dwell_frac", budget=Budget.GPU, seeds=3, depends_on=["T2.08"],
+         metric="noise_channel_dwell_frac", budget=Budget.GPU, seeds=7, depends_on=["T2.08"],
          kills="ICM alone. Forces RND or a learning-progress signal.",
+         control="The null IS the control: naive percept-driven ICM in the same noisy world, same learner, same metrics, scored on the CLAIM gates. PG.4 certified that it fixates.",
          notes="Also covers the degenerate failure the owner should fear: an agent "
                "that 'explores' by twitching in place to maximise proprioceptive novelty."
                "  COVERS: curiosity (claim)"),

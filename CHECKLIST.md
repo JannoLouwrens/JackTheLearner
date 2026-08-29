@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 83 / 187 demonstrated
+## 84 / 187 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -358,7 +358,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **T2.18** Chunking earns its keep under latency
       - _asserts:_ Some chunk length k>1 beats k=1 at matched FLOPs, and chunk-overlap beats naive swap under 100-300ms latency.
       - _dies if:_ k=1 dominates all k, or overlap gives nothing at latency.
-- [ ] **T2.19** Flow head handles multimodal actions
+- [x] **T2.19** Flow head handles multimodal actions
       - _asserts:_ On a bimodal task (pass obstacle left OR right) the flow head succeeds where MSE regression collapses to the mean.
       - _dies if:_ L1/MSE regression matches the flow head — OFT found this on some benchmarks; genuine falsification risk, and if it happens the flow head loses its justification.
 - [x] **T2.20** Episodic memory helps the next episode
