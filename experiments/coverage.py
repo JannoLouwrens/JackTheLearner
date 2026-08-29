@@ -440,6 +440,237 @@ def _claim_dead(r: dict) -> bool:
             and not any(k == "claim" for k in r["kinds"].values()))
 
 
+# ── QUEUE DEPTH — is there anything to SPEND the free quota on? ─────────
+#
+# WHY THIS EXISTS, and it is a 61-hour scar. Across three consecutive Kaggle
+# weeks 8.94 + 22.37 + 29.69 = 61.0 free GPU-hours expired unspent, and four
+# documents blamed the loop being dark on the Sunday. `2026-W34` falsified
+# that on its own: the builder ran 23 unblocked iterations INSIDE its own GPU
+# week, with the full 30 hours available, and dispatched 0.31 of them. Jobs
+# completed per week ran 17 -> 23 -> 1. Availability was not the binding
+# constraint. INVENTORY was — the shelf of dispatchable specs had been empty
+# since 08-25 04:40, 8.4 hours BEFORE the blackout even began.
+#
+# And no instrument in this repository could say so. `run next` lists specs
+# whose DEPENDENCIES pass, which is a different question: 17 of its GPU-cost
+# rows were unimplemented, settled, parked or untracked, and it printed them
+# all identically. `run blocked` measures what unsticks the ladder. `coverage`
+# (above) measures whether the ladder is the right ladder. Nobody measured
+# whether the ladder had anything RUNNABLE TODAY, which is the only question a
+# perishable weekly quota actually asks.
+#
+# Same shape as this module's founding scar, one layer up: a missing spec has
+# no id and is invisible to every instrument, and so is an empty queue.
+
+# The cost classes MEASURED empty on 2026-08-29, by running this function —
+# not inferred from any page's prose. (The first draft of this line seeded
+# {gpu<20min, gpu<2h, gpu<8h} from the Review's summary and was wrong in both
+# directions: `gpu<20min` holds SM.03 and `gpu<8h` holds T2.02, while the two
+# cheap CPU classes were empty and unmentioned. LESSONS: a quantity you can
+# read out of the source is not a quantity to estimate.)
+#
+# Like GOAL_DANGLING_BASELINE this set may ONLY SHRINK: a class that becomes
+# non-empty must be deleted from here in the same commit (`stale_baseline`
+# demands it), and a class that goes empty and is NOT listed here is a RED,
+# because it is new debt. The repair is always to implement a spec — never to
+# add a class to this set.
+#
+# What the red is FOR: `gpu<20min` currently rests on SM.03 alone. When SM.03
+# settles, this file exits 2 and says so, which is the standing duty the 45th
+# audit and the 08-29 Review both asked for — "an iteration that finds GPU
+# queue depth at zero implements a GPU spec before it does anything else" —
+# made mechanical instead of written down in one organ's prompt.
+QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min", "cpu<10min", "gpu<2h"})
+
+
+def queue_depth(ledger=None, by_id=None, tracked=None,
+                baseline: frozenset = QUEUE_EMPTY_BASELINE) -> dict:
+    """How many specs could actually be DISPATCHED today, by cost class.
+
+    A spec is in the queue when it is **runnable** (every dependency passes),
+    **implemented** (a test file exists), **tracked** (git has it — an
+    untracked implementation is one `git clean` from gone and `gpu.py:274`'s
+    push guard reads `--untracked-files=no`, so it cannot see it), **not
+    parked**, and **not settled**.
+
+    SETTLED means the ledger holds a verdict: `PASS` or `FAIL`. `VOID` is NOT
+    settled — `SYSTEM.md` is explicit that a VOID decides nothing ("fix the
+    arm, do not decide") — so VOIDs count toward depth and are ALSO reported
+    separately, because a VOID needs an arm repaired before it is a dispatch
+    and a reader who cannot see that would over-count the shelf.
+
+    KNOWN OVER-COUNT, stated here rather than discovered later: this counts a
+    spec whose `run()` REFUSES on provisional gates. `SM.03` is the live case
+    — implemented, tracked, unsettled, and undispatchable until a completed
+    pilot freezes its bars — so `gpu<20min` reads 1 when the honest answer is
+    0. Detecting that needs a per-spec "gates frozen" declaration, which does
+    not exist yet; until it does this number is an UPPER BOUND and a red here
+    is strictly conservative. Do not read a non-zero class as "there is work
+    to dispatch" without opening the spec.
+
+    Returns `{"depth", "by_class", "void", "excluded", "empty", "new_empty",
+    "known_empty", "stale_baseline"}`. `new_empty` is the fatal class.
+    """
+    from .protocol import Budget, Ledger, module_path_for
+    if ledger is None:
+        ledger = Ledger()
+    if by_id is None:
+        from .registry import BY_ID
+        by_id = BY_ID
+    if tracked is None:
+        tracked = _tracked_tests()
+    from .registry import ready
+
+    parked_ids = set(parked(by_id)[0])
+    by_class: Dict[str, list] = {b.value: [] for b in Budget}
+    excluded: Dict[str, list] = {k: [] for k in
+                                 ("unimplemented", "untracked", "parked",
+                                  "settled")}
+    void: List[str] = []
+    for spec in ready(ledger):
+        cls = spec.budget.value
+        status = getattr(ledger.status(spec.id), "name", None)
+        if spec.id in parked_ids:
+            excluded["parked"].append(spec.id)
+            continue
+        if status in ("PASS", "FAIL"):
+            excluded["settled"].append(spec.id)
+            continue
+        path = module_path_for(spec.id)
+        if not path:
+            excluded["unimplemented"].append(spec.id)
+            continue
+        # `module_path_for` answers "does a FILE exist", which is a claim about
+        # the filesystem. Git is the claim about the repository, and the GPU
+        # backends clone from GitHub: SM.03 sat implemented-but-untracked for
+        # 4.5 days while every instrument read it as present.
+        if str(Path(path).resolve()) not in tracked:
+            excluded["untracked"].append(spec.id)
+            continue
+        by_class[cls].append(spec.id)
+        if status == "VOID":
+            void.append(spec.id)
+
+    empty = {c for c, ids in by_class.items() if not ids}
+    return {
+        "depth": sum(len(v) for v in by_class.values()),
+        "by_class": {c: sorted(ids) for c, ids in by_class.items()},
+        "void": sorted(void),
+        "excluded": {k: sorted(v) for k, v in excluded.items()},
+        "empty": sorted(empty),
+        "new_empty": sorted(empty - baseline),
+        "known_empty": sorted(empty & baseline),
+        "stale_baseline": sorted(c for c in baseline if c not in empty),
+    }
+
+
+def _tracked_tests() -> set:
+    """Absolute paths of every test file git actually has.
+
+    Shelling out rather than parsing the index: `git ls-files` is the same
+    authority `gpu.py` and the push guard answer to, and re-implementing it
+    would be a second definition of "tracked" that could disagree with the
+    first (LESSONS: two functions computing the same thing is a defect even
+    while they agree). A git failure returns the empty set, which reads as
+    "nothing is tracked" — the LOUD direction.
+    """
+    import subprocess
+    root = Path(__file__).resolve().parent.parent
+    try:
+        out = subprocess.run(["git", "-C", str(root), "ls-files", "--",
+                              "experiments/tests"],
+                             capture_output=True, text=True, timeout=30)
+        if out.returncode != 0:
+            return set()
+    except (OSError, subprocess.SubprocessError):
+        return set()
+    return {str((root / line).resolve())
+            for line in out.stdout.splitlines() if line.strip()}
+
+
+def _queue_fixture() -> List[str]:
+    """Known-answer battery. A scanner nobody has watched catch something is a
+    scanner nobody has tested — and the 43rd audit's rule is sharper than
+    that: **a guard's fixture must contain the case the guard is FOR**, and a
+    fixture row whose label contradicts its assertion is a defect report, not
+    a test. So the rows below are named for what they ARE, and the row this
+    instrument exists for — an implemented, runnable, untracked spec that
+    every other instrument reads as present — asserts that it is EXCLUDED.
+    """
+    from .protocol import Budget, Status
+
+    class _Spec:
+        def __init__(self, sid, budget, notes=""):
+            self.id, self.budget, self.notes = sid, budget, notes
+            self.depends_on: List[str] = []
+
+    class _Led:
+        def __init__(self, st):
+            self._st = st
+
+        def status(self, sid):
+            return self._st.get(sid)
+
+        def blocked_by(self, spec):
+            return []
+
+    rows = [
+        ("Q.01", Budget.GPU, "", None, True),            # the healthy queue row
+        ("Q.02", Budget.GPU, "", Status.FAIL, True),     # settled: a verdict exists
+        ("Q.03", Budget.GPU, "", Status.VOID, True),     # VOID is NOT a verdict
+        ("Q.04", Budget.GPU, "PARKED: 2026-08-20 — arm redesign owed", None, True),
+        ("Q.05", Budget.GPU, "", None, False),           # implemented but UNTRACKED
+        ("Q.06", Budget.CPU, "", None, True),            # a different cost class
+        ("Q.07", Budget.GPU, "", None, True),            # no file: unimplemented
+    ]
+    by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t in rows}
+    led = _Led({sid: s for sid, _b, _n, s, _t in rows if s is not None})
+    tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t in rows if t}
+
+    from . import protocol as _proto
+    from . import registry as _reg
+    real_ready, real_mpf = _reg.ready, _proto.module_path_for
+    _reg.ready = lambda _l: list(by_id.values())
+    _proto.module_path_for = lambda sid, strict=False: (
+        None if sid == "Q.07" else f"/x/{sid}.py")
+    try:
+        q = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
+                        baseline=frozenset({"gpu<8h"}))
+    finally:
+        _reg.ready, _proto.module_path_for = real_ready, real_mpf
+
+    fails = []
+    if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03"]:
+        fails.append(f"gpu<2h queue should be [Q.01, Q.03] (VOID is not a "
+                     f"verdict), got {q['by_class']['gpu<2h']}")
+    if q["void"] != ["Q.03"]:
+        fails.append(f"VOID must be reported separately, got {q['void']}")
+    if q["excluded"]["settled"] != ["Q.02"]:
+        fails.append(f"FAIL is settled, got {q['excluded']['settled']}")
+    if q["excluded"]["parked"] != ["Q.04"]:
+        fails.append(f"parked must not count, got {q['excluded']['parked']}")
+    if q["excluded"]["unimplemented"] != ["Q.07"]:
+        fails.append(f"a spec with no file is unimplemented, got "
+                     f"{q['excluded']['unimplemented']}")
+    # THE ROW THIS INSTRUMENT EXISTS FOR.
+    if q["excluded"]["untracked"] != ["Q.05"]:
+        fails.append(f"an UNTRACKED implementation must be excluded — the "
+                     f"SM.03 case — got {q['excluded']['untracked']}")
+    if q["by_class"]["cpu<10min"] != ["Q.06"]:
+        fails.append(f"cost classes must not merge, got {q['by_class']}")
+    if q["depth"] != 3:
+        fails.append(f"depth should be 3, got {q['depth']}")
+    # gpu<20min is empty and NOT in this fixture's baseline: new debt, a red.
+    if "gpu<20min" not in q["new_empty"]:
+        fails.append(f"an unlisted empty class is new debt, got "
+                     f"{q['new_empty']}")
+    # gpu<8h is in the baseline and empty: known debt, not a red.
+    if q["known_empty"] != ["gpu<8h"]:
+        fails.append(f"baselined empty class is known debt, got "
+                     f"{q['known_empty']}")
+    return fails
+
+
 def counts() -> tuple[int, int]:
     """(n_claim_dead, n_malformed) — two different fires, separately
     assertable.
@@ -546,8 +777,51 @@ def check() -> int:
           "  related and whose author has not said so; only `COVERS:` counts.\n"
           "  A PARKED spec is NOT coverage either: a retirement is not a\n"
           "  falsifiable claim, however honest the retiring was.")
-    return (2 if (uncovered or dead or gc["new"])
-            else (1 if (bad or gc["stale_baseline"]) else 0))
+
+    qf = _queue_fixture()
+    q = queue_depth()
+    print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
+          f"tracked, unparked, unsettled): {q['depth']}"
+          + (f", of which {len(q['void'])} VOID -> only "
+             f"{q['depth'] - len(q['void'])} is a FRESH dispatch"
+             if q["void"] else ""))
+    for cls, ids in q["by_class"].items():
+        if ids or cls in q["empty"]:
+            shown = ", ".join(ids) if ids else "EMPTY"
+            print(f"      {cls:<10} {len(ids):>2}   {shown}")
+    if q["void"]:
+        print(f"  of which VOID (an arm to repair, not a dispatch): "
+              f"{', '.join(q['void'])}")
+    ex = q["excluded"]
+    print(f"  excluded: {len(ex['unimplemented'])} unimplemented, "
+          f"{len(ex['settled'])} settled, {len(ex['parked'])} parked, "
+          f"{len(ex['untracked'])} UNTRACKED"
+          + (f" ({', '.join(ex['untracked'])})" if ex["untracked"] else ""))
+    if q["new_empty"]:
+        print(f"  {len(q['new_empty'])} cost class(es) NEWLY EMPTY — nothing "
+              f"can be dispatched at this cost:\n"
+              f"      {', '.join(q['new_empty'])}\n"
+              "  Free weekly quota at an empty class is unspendable however\n"
+              "  awake the loop is: that is what cost 61 free GPU-hours over\n"
+              "  three weeks. Implement a spec; never baseline the class.")
+    if q["known_empty"]:
+        print(f"  {len(q['known_empty'])} known-empty (baselined 2026-08-29): "
+              f"{', '.join(q['known_empty'])} — implementing ONE spec in any "
+              f"of\n      these clears it, and it must then leave "
+              f"QUEUE_EMPTY_BASELINE.")
+    if q["stale_baseline"]:
+        print(f"  {len(q['stale_baseline'])} baselined class(es) are NO LONGER "
+              f"empty and must be removed from QUEUE_EMPTY_BASELINE: "
+              f"{', '.join(q['stale_baseline'])}")
+    if qf:
+        print(f"  {len(qf)} QUEUE-FIXTURE FAILURE(S) — the instrument is "
+              f"wrong, so its number above is not evidence:")
+        for f in qf:
+            print(f"      {f}")
+
+    return (2 if (uncovered or dead or gc["new"] or q["new_empty"] or qf)
+            else (1 if (bad or gc["stale_baseline"] or q["stale_baseline"])
+                  else 0))
 
 
 if __name__ == "__main__":

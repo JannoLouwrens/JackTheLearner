@@ -5939,3 +5939,50 @@ B3 (hardware stamp + gpu_job_id) still open.
   curiosity GPU specs — W34's 29.7 h expire Sunday and the LG registration
   does not consume them); the doc's §2.2-§11 research pass (LG.05,
   bakeoff arms, ordering experiment) stays owed on the queue row.
+
+- 2026-08-29 ~12:5x UTC (OPUS — `week:Fable` 100%, the chain fell through to opus
+  as the prompt predicted; the fallback repair WORKED and `lost_iterations.log`
+  was not needed). First live slot after a **42-slot** `PACING:` blackout
+  (08-25 13:07 → 08-29 12:07); the gate released on its own arithmetic at
+  `all models` 74% vs a line of 75%. Meters read, acting on `week:all models`.
+  GPU week `2026-W34`, ~29.69 h expiring tonight 00:00 UTC.
+  **(1) Committed `experiments/tests/sm_03_nose_reports_occluded.py`** (`a9a99ff`,
+  pushed) — 710 lines untracked for 4.5 days, asked by eight organ-runs.
+  Committed with its state stated honestly: implementation only, pilot never ran
+  (0-byte log), **gates provisional so `run()` still refuses** — NOT dispatched.
+  **(2) Built the instrument the 61 lost GPU-hours were invisible to:
+  `coverage.queue_depth()`.** Review B2 / overseer fork 2. Counts specs that are
+  runnable AND implemented AND tracked-in-git AND unparked AND unsettled, split
+  by cost class, wired into `coverage --check` with a shrink-only
+  `QUEUE_EMPTY_BASELINE` and a 9-row known-answer `_queue_fixture()`.
+  **Measured today: depth 4, of which 3 are VOID — exactly ONE fresh dispatch
+  exists in the whole project** (SM.03, gpu<20min), and that one refuses on
+  provisional gates, so the honest GPU queue is **0**. `gpu<2h` EMPTY;
+  18 runnable specs unimplemented, 9 settled, 3 parked. That is the whole W34
+  story as a number, and no instrument in the repo could print it before today.
+  Baseline was MEASURED, not taken from the Review's prose — the first draft
+  guessed `{gpu<20min, gpu<2h, gpu<8h}` and was wrong in both directions.
+  `coverage --check` stays **exit 0**; `T0.21` re-run **PASS**; queue fixture 9/9.
+  Known over-count recorded in the docstring: it cannot yet see unfrozen gates,
+  so it is an UPPER BOUND.
+  **NEXT ITERATION: the queue is empty and that is now measurable — implement ONE
+  unimplemented GPU spec end to end, before anything else.** `run coverage` will
+  tell you the class. My scouting for that unit, so you need not redo it: the
+  apparatus for **T2.09** (Noisy-TV control) already exists and is certified —
+  PG.4 PASSES with the rover/retina/noise-panel rig, an online-MLP ICM, and the
+  `dwell_share` metric T2.09 needs; T2.08 PASSES and its docstring says outright
+  *"T2.09 is the spec that injects the unpredictable channel"*. Two design notes
+  I did not get to spend: (a) T2.09's subject is NOT the ICM — the registry makes
+  a pure ICM the *null* ("known to fixate", already certified by PG.4) and the
+  claim is that a percept-driven signal resists the trap, so run RND **and** a
+  learning-progress arm and report both rather than arbitrating between them
+  (mechanism arbitration is LT.03/LT.04, and T2.08 says so); (b) an arm that
+  ignores percepts wins the trap test vacuously — T2.08's position pseudo-count
+  never reads the retina — so it needs an alive-proof (coverage above random,
+  plus reward-decay in the static-panel world) or the PASS means nothing.
+  Honest cost warning: MuJoCo stepping dominates, so T2.09 is likely CPU_LONG
+  like PG.4/T2.08 and would NOT refill the GPU class — **T2.19** (flow head vs
+  matched-param MSE regression, `gpu<20min`, dep T1.12 PASS, production path
+  `generate_actions_flow_matching` as T1.12 used it) is the genuinely-GPU one,
+  and its control ("on a unimodal task the two heads must tie") doubles as the
+  regression arm's alive-proof.
