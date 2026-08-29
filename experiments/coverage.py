@@ -562,6 +562,39 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
             void.append(spec.id)
 
     empty = {c for c, ids in by_class.items() if not ids}
+    # FILLABLE — can this class be stocked by implementing something TODAY?
+    #
+    # Found by trying to obey this function's own advice (builder, 2026-08-29).
+    # It reported `gpu<20min` NEWLY EMPTY and said "Implement a spec; never
+    # baseline the class" — and the class named no spec to implement, so the
+    # instruction could not be checked before an hour was spent on it.
+    #
+    # **AND THE FIRST VERSION OF THIS COMMENT WAS WRONG IN THE INTERESTING
+    # DIRECTION, which is why the field is worth having.** It asserted that all
+    # ten unimplemented `gpu<20min` specs were blocked and the class was
+    # unfillable. That came from a throwaway script whose dependency check was
+    # broken; the field, computed from `ready()`, says `gpu<20min` IS fillable
+    # today — by `T3.10` — and that the genuinely unfillable class is
+    # `cpu<1min`. The instrument caught its author inside ten minutes. That is
+    # the whole argument for computing this rather than eyeballing it, and it
+    # is LESSONS' "a quantity you can read out of the source is not a quantity
+    # to estimate" arriving a second time in the same file.
+    #
+    # `ready()` already filters to runnable, so `excluded["unimplemented"]` is
+    # exactly the set of specs an iteration COULD implement now. Counting them
+    # per class turns "implement a spec" from an instruction that may be
+    # unexecutable into one the reader can check before spending an hour.
+    #
+    # The distinction matters because the two states need opposite reactions
+    # and read identically today: an empty-and-fillable class is INVENTORY
+    # DEBT the builder can clear alone, and an empty-and-unfillable class is
+    # STRUCTURAL — the quota at that cost is unspendable until the ladder
+    # moves, and no amount of implementing will change it.
+    fillable: Dict[str, list] = {c: [] for c in by_class}
+    for sid in excluded["unimplemented"]:
+        spec = by_id.get(sid)
+        if spec is not None:
+            fillable[spec.budget.value].append(sid)
     return {
         "depth": sum(len(v) for v in by_class.values()),
         "by_class": {c: sorted(ids) for c, ids in by_class.items()},
@@ -571,6 +604,11 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         "new_empty": sorted(empty - baseline),
         "known_empty": sorted(empty & baseline),
         "stale_baseline": sorted(c for c in baseline if c not in empty),
+        "fillable": {c: sorted(ids) for c, ids in fillable.items()},
+        # Empty AND nothing runnable to implement into it: the repair is an
+        # unblock, not an implementation. Reported, never fatal on its own —
+        # it is a fact about the ladder's shape, not debt anyone incurred.
+        "empty_unfillable": sorted(c for c in empty if not fillable[c]),
     }
 
 
@@ -879,7 +917,11 @@ def check() -> int:
     for cls, ids in q["by_class"].items():
         if ids or cls in q["empty"]:
             shown = ", ".join(ids) if ids else "EMPTY"
-            print(f"      {cls:<10} {len(ids):>2}   {shown}")
+            fill = q["fillable"].get(cls, [])
+            tail = ("" if ids else
+                    (f"   <- fillable today: {', '.join(fill)}" if fill
+                     else "   <- NOT FILLABLE: no runnable spec to implement"))
+            print(f"      {cls:<10} {len(ids):>2}   {shown}{tail}")
     if q["void"]:
         print(f"  of which VOID (an arm to repair, not a dispatch): "
               f"{', '.join(q['void'])}")
@@ -902,6 +944,15 @@ def check() -> int:
               "  Free weekly quota at an empty class is unspendable however\n"
               "  awake the loop is: that is what cost 61 free GPU-hours over\n"
               "  three weeks. Implement a spec; never baseline the class.")
+    if q["empty_unfillable"]:
+        print(f"  {len(q['empty_unfillable'])} empty class(es) CANNOT be "
+              f"filled by implementing anything today — every unimplemented\n"
+              f"      spec at that cost is blocked upstream: "
+              f"{', '.join(q['empty_unfillable'])}\n"
+              "  Do not spend an iteration looking for a spec to write here.\n"
+              "  The repair is an UNBLOCK (`run blocked`), which is a\n"
+              "  different unit of work — and the quota at this cost stays\n"
+              "  unspendable until the ladder moves, however awake the loop.")
     if q["known_empty"]:
         print(f"  {len(q['known_empty'])} known-empty (baselined 2026-08-29): "
               f"{', '.join(q['known_empty'])} — implementing ONE spec in any "

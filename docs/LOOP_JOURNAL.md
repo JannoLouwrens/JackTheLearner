@@ -6690,3 +6690,50 @@ seed draw. If it is a FAIL, `not_fed` is the gate to look at first. Then take
 overseer B2/B3 (`decisions.py` — enforce the already-permitted clause, add the
 `arena:` check) or B5 (register `W.1`-`W.7`); the GPU shelf now has one spec on
 it and W35 opens 08-30 00:00, so refilling it further is still live work.
+
+**2026-08-29 ~20:0x-21:0x UTC (opus; `week:Fable` 100%, capped to 08-31, so the
+chain walked to opus as the prompt predicts. `week:all models` 76% against a
+pace line of 77 at 80% elapsed — under it, and **0 consecutive PACING skips**,
+so this slot is not a blackout tail).** Took PROGRESS/OVERSIGHT B1 (refill the
+GPU queue) and implemented **T3.06 — Ablate curiosity**, the Tier-3 ablation of
+T2.08's certified rover rig. Its dep chain, its control and its rig gates are
+in the file; `_GATES_FROZEN = False` and `run()` refuses.
+
+The pilot (seed-90 family, /data/t3_06_pilot.json, 17 s/arm-seed) **confirmed
+the design and refused the freeze**, which is the freeze step working. Three
+confirmations: the extrinsic-only arm explores *less than random*
+(`task_cov_vs_random -0.0599` — the predicted bonus-myopia camping, and the
+reason the claim is not circular); the information-free control loses badly
+(`delta_shuf -0.0977`); the dwell instrument reads chance on a non-learner
+(random 0.0018 vs analytic 1/484 = 0.0021). And one fault: **`task_dwell_worst_
+life = 0.0000` — one life in four of the ablated arm never found the goal.**
+The apparatus is bimodal across LIVES exactly as T2.09's was across SEEDS. Both
+easy repairs are forbidden (drop the bar → delete the only anti-vacuity
+instrument; gate the mean 0.1104 → certify a rig on evidence a quarter of which
+is a random walk), so the docstring **pre-registers T2.09's informative-unit
+protocol one level down** — a life counts only if the *ablated* arm found the
+goal, selection reads only the ablated arm, VOID below a minimum count — before
+the next pilot draws a number. `delta_coverage` read +0.0558 on the one seed;
+do not carry that number as a result, it is one family and the rig gate VOIDs it.
+
+Measured budget: ~3.5 min for a full registered run. **T3.06 is CPU, not the
+registered gpu<2h** — the registry correction is owed but deliberately deferred
+until the gates freeze, because moving the budget moves which queue class it
+stocks and a refusing `run()` stocks nothing.
+
+Machine left better: `coverage.py:queue_depth` now reports **`fillable`** per
+cost class and **`empty_unfillable`** — an empty class that names no spec you
+could implement into it needs an *unblock*, not an implementation, and the two
+read identically today. It caught me the moment it existed: I had asserted
+gpu<20min was unfillable; it is fillable (T3.10), and `cpu<1min` is the
+structural one. Lesson written up in LESSONS.md. Also declared T3.06's control
+in the registry (it had none — `run_spec` would have raised `UndeclaredControl`).
+
+NEXT ITERATION: (1) **harvest T2.09** — kernel `jack-ladder-1788031002`,
+dispatched 19:16 with a setsid watcher (`experiments.run T2.09`) that was still
+alive at 20:40; if the row is in the ledger, replay `_check` offline against it
+and read `per_seed`. (2) Implement T3.06's informative-life fold as
+pre-registered, raise `LIVES_PER_ARM`, re-pilot, freeze, and fix the budget to
+CPU in the same commit. (3) The GPU shelf reads **0 fresh dispatches** with
+`gpu<2h` newly empty and fillable by **T2.11, T2.14, VO.02** and `gpu<20min` by
+**T3.10** — W35 opens 08-30 00:00 UTC with 30 free hours and nothing to send.

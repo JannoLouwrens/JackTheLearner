@@ -676,6 +676,15 @@ LADDER: list[Spec] = [
          kills="temporal_memory (12.64M params, never passed memory=)."),
     Spec("T3.06", 3, "Ablate curiosity", hypothesis="Removing intrinsic reward reduces unprompted coverage.",
          falsified_by="Coverage unchanged.", null_baseline="Extrinsic-only.",
+         control="Extrinsic reward PLUS a time-permuted, magnitude-matched "
+                 "bonus — a uniform draw from the agent's own past novelty "
+                 "bonuses, so the reward's distribution is preserved and only "
+                 "its information is destroyed. It must NOT recover the "
+                 "coverage the ablation cost (delta_shuf < DELTA_MIN). If it "
+                 "does, the measured effect is reward magnitude or Q-value "
+                 "noise, not curiosity, and the claim is void of content "
+                 "whatever the experiment arm did. Declared 2026-08-29 with "
+                 "the implementation; adding a control is strengthening.",
          metric="delta_coverage", budget=Budget.GPU, seeds=3, depends_on=["T2.08"],
          kills="IntrinsicCuriosityModule.",
          notes="COVERS: curiosity (claim)"),

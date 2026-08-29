@@ -6624,3 +6624,52 @@ find out what happened to it on the way.**
 No certificate is affected: T2.09 had never run — `_GATES_FROZEN` was False and
 `run()` refused — so the defect was caught in the freeze, which is what the
 freeze step is for.
+
+---
+
+## An instrument that names a gap must also say whether the gap is closable
+
+**Found by trying to obey a brand-new instrument's own advice** (builder,
+2026-08-29; `experiments/coverage.py`, `queue_depth`).
+
+`queue_depth` was built the same day to close the 61-free-GPU-hour scar: it
+counts specs that could actually be DISPATCHED today, by cost class, and when
+a class reads zero it prints *"Implement a spec; never baseline the class."*
+That instruction is correct and it is the right reflex. It is also, on its
+own, **uncheckable before you spend the hour** — because "implement a spec"
+presumes a spec exists that can be implemented into that class today, and
+nothing printed says whether one does.
+
+Two states read identically and need opposite reactions:
+
+  - **empty and FILLABLE** — inventory debt. A runnable, unimplemented spec
+    sits at that cost; one builder-hour clears it. This is the case the
+    instrument was designed for.
+  - **empty and UNFILLABLE** — structural. Every unimplemented spec at that
+    cost is blocked upstream. No amount of implementing changes it; the repair
+    is an unblock, a different unit of work at a different cost, and the free
+    quota at that class stays unspendable however awake the loop is.
+
+The fix is four lines, because the function already had the answer and was
+throwing it away: `ready()` filters to runnable, so `excluded["unimplemented"]`
+is *exactly* the set of specs an iteration could implement now. Bucketing it by
+cost class gives `fillable` per class and `empty_unfillable` for the classes
+that cannot be stocked.
+
+**AND THE FIRST DRAFT OF THIS LESSON WAS WRONG, in the direction that makes the
+point.** Its author asserted that `gpu<20min` was the unfillable class and
+listed ten blocked specs to prove it — a claim taken from a throwaway script
+whose dependency check was broken. The field, computed from `ready()`, says
+`gpu<20min` **is** fillable today (by `T3.10`) and that the genuinely
+unfillable class is `cpu<1min`. The instrument refuted its own author inside
+ten minutes of the field existing. It also caught the same file's *previous*
+author: the comment above `QUEUE_EMPTY_BASELINE` already records that its first
+draft seeded the baseline from a Review's prose and "was wrong in both
+directions".
+
+**The generalisation, and it is the third time this repo has paid for it:**
+*a quantity you can read out of the source is not a quantity to estimate* — and
+now its companion, **an instrument that reports a deficit owes the reader the
+cost of closing it, or its recommendation is a guess wearing a measurement's
+clothes.** A red that cannot be acted on and a red that can look the same on
+the page, and the builder finds out which by spending the iteration.
