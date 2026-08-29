@@ -124,6 +124,39 @@ pilot found a design fault, not a set of bars.**
     random     0.6152   0.5888   0.0018   0.0000    0.0043
     delta_coverage +0.0558   delta_shuf -0.0977   task_vs_random -0.0599
 
+Seed-91 family, same launch (total wall 134.9 s for 32 lives):
+
+    arm        cov      cov_lo   dwell    dwell_lo  dwell_hi
+    task       0.4561   0.2975   0.2702   0.0000    0.7143
+    curious    0.6219   0.4855   0.1653   0.0000    0.5750
+    shuftask   0.4468   0.4112   0.2190   0.0000    0.4170
+    random     0.6612   0.4070   0.0010   0.0000    0.0032
+    delta_coverage +0.1658   delta_shuf -0.0093   task_vs_random -0.2051
+
+Both families agree on the three confirmations and on the fault. Two numbers
+from seed 91 that the freeze must respect and that seed 90 alone would have
+hidden:
+
+  - **`task_cov_vs_random` is -0.2051 here against -0.0599 there.** The
+    camping effect is real in both but its SIZE varies by 3.4x across seed
+    families, so `delta_coverage` (+0.0558 / +0.1658) has a seed spread wider
+    than its own provisional bar. `DELTA_MIN = 0.05` sits below the smaller of
+    the two observed values with almost no room — a pilot-bulk-anchored bar,
+    which is precisely the BA.01-v3 / T2.08-v1 lottery disease. The freeze must
+    re-derive `DELTA_MIN` from an exogenous purpose (an anti-collapse floor),
+    not from these two numbers, or it will read as a per-run coin flip.
+  - **`delta_shuf = -0.0093` here against -0.0977 there.** The control still
+    fails on both families, but on seed 91 it fails by one tenth as much. The
+    information-free bonus is not reliably harmful — it is reliably *not
+    helpful*, which is the weaker claim the control is entitled to make and
+    the one the gate already encodes (`delta_shuf < DELTA_MIN`, not
+    `delta_shuf < 0`). Do not strengthen the control gate to `< 0` on the
+    strength of seed 90.
+
+  - **And the fault reproduces: `task_dwell_worst_life = 0.0000` on BOTH
+    families.** Two for two, so the bimodality is a property of the design and
+    not of a draw. The informative-life protocol below is not optional.
+
 THREE THINGS THE PILOT CONFIRMED, and they are the reasons to keep this
 design rather than start over:
 
