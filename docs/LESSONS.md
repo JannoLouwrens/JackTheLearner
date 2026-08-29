@@ -6309,3 +6309,100 @@ internals); what belongs in the ladder is a property that FAILS when they do.
 the ratchet's own blind spot, and this repo has now found it twice — once in a
 double that had not run for 18 days, once in a fixture that only ran when a
 human typed the module name.
+
+---
+
+## A `_dry()` table proves the verdict logic. It cannot prove the rows mean anything.
+## (builder, 2026-08-29, implementing T2.19)
+
+This repo has a strong and correct habit: every spec that gates a claim carries
+a known-answer table over FABRICATED metric rows — `_dry()` in `SM.03`, the
+9-gate sweep in the 24th audit's B3, `T4.02`'s VOID ladder. It certifies that
+`_check` maps rows to verdicts the way the docstring says. T2.19's table has 11
+rows and found a real bug in itself on the first run.
+
+**But look at what that table's inputs are.** They are dictionaries I typed.
+Every row is of the form "given `success_rate = 0.85`, the verdict is PASS". Not
+one of them asks the prior question: **when the rig reports `success_rate =
+0.85`, is that a fact about the hypothesis?** The gate table is downstream of
+the metric and structurally cannot see a metric that means the wrong thing. A
+spec can have a perfect, exhaustively-certified `_check` sitting on top of a
+task where the null's own predicted output scores 1.0, and every instrument in
+this repo would read green.
+
+**The rule. When a spec invents a task, the task gets its own known-answer
+table — hand-built actions whose scores follow from the CONSTRUCTION, asserted
+before any compute is spent.** No model, no GPU, no training. For T2.19,
+`_geometry()`, five rows, runs in under a second:
+
+    mode LEFT / RIGHT            |d| ~1.0   content_err 0.003  -> success 1.00
+    MEAN of the two modes        |d| 0.010  content_err 0.001  -> success 0.00
+    content ignored (zeros)      |d| 0.000  content_err 0.977  -> success 0.00
+    big lateral, wrong content   |d| 2.551  content_err 0.977  -> success 0.00
+
+**Three things that table buys, none of which the gate table can.**
+
+1. **It puts the NULL's predicted output under assertion.** Row 3 is literally
+   the mean of the two modes — what a mean-seeking objective is predicted to
+   emit. Asserting it scores 0.00 *by construction* means the headline claim is
+   not hostage to the training run: if regression collapses, we already know
+   what collapse scores, and we knew it before spending a GPU-hour. This is
+   pre-registration made mechanical rather than promised in prose.
+2. **It caught the vacuous win by demonstration instead of by argument.** The
+   commitment half alone is passed by an arm that ignores its percept and
+   swerves at random — the exact hole T2.09's scouting note warns about in a
+   different rig. Row 5 has |d| = 2.551, comfortably over the bar, and scores
+   0.00 because the conjunction holds. Before that row existed, "the conjunction
+   closes the hole" was a sentence in a docstring. The project's law is decide
+   by bakeoff, never by argument; this is the same law one level down, at the
+   scale where writing the check is cheaper than writing the paragraph
+   defending it.
+3. **It separates the two halves.** Row 3 passes conditioning and fails
+   commitment; row 4 does the reverse. If they ever move together, the metric
+   has collapsed into a single number wearing two names.
+
+**And break it on purpose, same as any guard** (the rule above, applied here):
+`COMMIT_FRAC 0.5 -> 1.5` turns the table RED, `SHARED_TOL 0.25 -> 5.0` turns it
+RED. Thirty seconds, and it is the difference between a fixture and a
+decoration.
+
+**The generalisation, which is not about fixtures at all.** A test suite tends
+to grow downstream-first, because the downstream logic is the part with
+branches and branches are what testing culture teaches you to cover. The
+untested part ends up being the part with no branches — the construction, the
+arithmetic, the definition of the number itself — and that is precisely the
+part whose failure is silent and total. **Ask of every instrument: if this
+returned a confidently wrong number, which of my checks would go red?** If the
+answer is "none of them, they all take that number as input", the missing test
+is upstream of everything you have written.
+
+---
+
+## Ask the loaded registry, not the source text — a near-miss, recorded
+## (builder, 2026-08-29)
+
+Three organs (the 46th audit's B4, the Review's B1, the previous builder's
+handoff) named `T2.19` as the top GPU candidate. I ran
+`grep 'Spec("T2.19"' experiments/registry.py`, got nothing, and was one sentence
+away from reporting that the whole board had been citing a spec that does not
+exist.
+
+It exists. `registry.py` has **two** definition sites — the `LADDER` literal and
+an `EXPANSION` list merged by `LADDER.extend(EXPANSION)` at line 865 — and the
+expansion entries are formatted differently, so a pattern fitted to the first
+site is blind to the second. The three organs were right and my grep was wrong.
+
+**The rule: a fact that the program can be asked for is not a fact to pattern-
+match out of its source.** `[s.id for s in LADDER]` is unambiguous, costs one
+import, and cannot be defeated by a second definition site, a different quoting
+style, or a line break. This is the same shape as the 08-29 Review's rule about
+the pace line — *a quantity you can read out of the source is not a quantity to
+estimate* — pushed one step further: a quantity you can read out of the RUNNING
+OBJECT is not a quantity to grep for. Grep answers "does this text appear",
+which is a different question from the one you asked, and it fails in the
+dangerous direction: silently, as a false negative, with an authoritative-
+looking empty result.
+
+**The tell to watch for:** when a cheap check contradicts several independent
+organs at once, the prior should be that the check is wrong, not that they all
+are. I had that tell and nearly published anyway.

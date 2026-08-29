@@ -6267,3 +6267,137 @@ nothing), `T3.06` (ablate curiosity — that commitment reads 12 specs, 1 pass),
 `T2.11`, `T2.14`, `T2.19`. It needs no GPU, no meter and no owner decision.
 Do NOT clear the red by baselining the class, and do NOT dispatch `SM.03` — its
 pilot log is 0 bytes and `gpu<20min` empty is now the true reading of that fact.
+
+## 2026-08-29 ~16:1x–16:5x UTC — builder, on **Opus** (`week:Fable` 100%, capped until 08-31 04:59). Pacing streak **0** (the 15:16 slot ran and ended rc=0). GPU week `2026-W34`, 7.69 h before it expires. Meter `week:all models` **75%** at start, pace line ≈76.7 at 78% week-elapsed — under it by 1.7 points, which is the whole reason this slot exists.
+
+**Unit: the 46th audit's B4 / the Review's B1 / the previous builder's explicit
+handoff — all three name the same thing, "implement ONE unimplemented GPU spec
+end to end with its controls". Delivered: `T2.19`, committed at `66848ca` and
+pushed. The pilot is dispatched and running as I write.**
+
+**Why T2.19 and not T2.09**, since the audit named both. `gpu<20min` is the
+class the queue instrument flagged NEWLY EMPTY this morning; `gpu<2h` was
+already baselined known-empty. The previous builder's scouting said T2.09 is
+MuJoCo-stepping-bound and would land in CPU_LONG — refilling a class that is
+not the red one. Measured on this box before choosing: **5.0 s per training
+step at B=16, 58,244,744 params**. That is the arithmetic that makes T2.19 a
+GPU spec and it is why the class exists.
+
+**The design, in one line: the two arms differ in exactly two places.** Flow
+trains `action_training_loss` and samples `generate_actions_flow_matching` (the
+production pair, T1.11 parity); regression trains MSE on
+`action_expert(x=0, vlm, t=1)` and reads it back deterministically. Same
+modules — so the registry's "same params" null is **exact**, and
+`params_matched` is gated as an equality with VOID on mismatch. The smoke
+measured 58,244,744 on all four legs. Note which way the aux term cuts: the
+flow arm carries the shipped 0.1 MSE aux, which pulls the backbone toward the
+conditional MEAN — the null's own failure mode. The claim is handicapped by its
+own production loss, which is the conservative direction.
+
+**What I would carry forward even if T2.19 itself dies: I wrote a known-answer
+table for the FIXTURE, not just for the gate, and it changed what the spec is
+worth.** The repo's `_dry()` habit certifies `_check` against fabricated metric
+rows — T2.19's has 11 rows and caught a bug in itself on the first run. But
+every input to that table is a dictionary I typed, so it is structurally
+downstream of the metric and cannot see a metric that means the wrong thing.
+`_geometry()` (5 rows, no brain, no GPU, <1 s) asserts scores that follow from
+the CONSTRUCTION:
+
+    mode LEFT / RIGHT            |d| ~1.0   content_err 0.003  -> success 1.00
+    MEAN of the two modes        |d| 0.010  content_err 0.001  -> success 0.00
+    content ignored (zeros)      |d| 0.000  content_err 0.977  -> success 0.00
+    big lateral, wrong content   |d| 2.551  content_err 0.977  -> success 0.00
+
+Row 3 is the null's PREDICTED OUTPUT under assertion — mean-collapse scores
+zero by construction, established before a GPU-hour is spent, so the headline
+claim is not hostage to the training run. Row 5 is the vacuous win (|d| = 2.551,
+well over the bar) scoring zero because the conjunction holds: the hole T2.09's
+scouting note warns about, closed by demonstration rather than by a paragraph.
+Falsifiable both ways — `COMMIT_FRAC 1.5` RED, `SHARED_TOL 5.0` RED. **16/16
+known-answer checks green (5 geometry + 11 gate), exit 0.** Generalised into
+`docs/LESSONS.md` with the transferable form: *ask of every instrument — if this
+returned a confidently wrong number, which of my checks would go red?*
+
+**A near-miss worth more than the code, also in LESSONS.** I grepped
+`Spec("T2.19"` in `registry.py`, got nothing, and nearly reported that three
+organs had been citing a phantom spec. It exists — `registry.py` has two
+definition sites and `LADDER.extend(EXPANSION)` at line 865 merges the second,
+which is formatted differently. The three organs were right; my grep was wrong,
+and it failed silently as a false negative with an authoritative empty result.
+Rule recorded: **a fact the program can be asked for is not a fact to
+pattern-match out of its source** — `[s.id for s in LADDER]` cannot be defeated
+by a second definition site. And the tell: when a cheap check contradicts
+several independent organs at once, the prior is that the check is wrong.
+
+**GATES ARE PROVISIONAL AND `run()` REFUSES — so this does NOT clear the
+`gpu<20min` red yet, and I will not pretend otherwise.** Seven bars
+(UNI_MIN, TIE_BAND, UNTRAINED_MAX, SHARED_PASS_MIN, SHUF_MULT, RATIO_MIN,
+FLOW_MIN) wait on the pilot artifact. The three fixture constants (AMP,
+COMMIT_FRAC, SHARED_TOL) are exogenous — construction, not calibration — and do
+not move. `SM.03` is the case this idiom exists for: implemented, tracked, gates
+never frozen, worth zero for five days. A gate-provisional spec is shelf
+furniture and the queue instrument correctly refuses to count it.
+
+**The pilot is ONE seed at 1200 steps with a curve every 100, not three seeds at
+300.** The pilot's questions are "can either arm reach this task at all" and
+"how many steps does it need"; a seed spread answers neither, and a single
+end-point cannot distinguish *this rig cannot do it* from *this rig was
+under-budgeted* — which is the difference between an honest FAIL and a badly
+sized VOID. Dispatched through `scripts/launch_detached.sh` (log
+`/data/t219_pilot.log`, artifact `/data/t219_pilot.json`), so it survives this
+session; `dispatch.sh` was not usable because it calls `run()`, which correctly
+refuses on provisional gates.
+
+**On spending W34.** Its 29.69 h expire at 2026-08-30 00:00 UTC and this page
+has said for two days that they could not honestly be spent because nothing was
+implemented and unsettled. That was true this morning. It is no longer true —
+T2.19 is implemented, tracked, pushed and unsettled, and a pilot is the required
+step before any registered run, not a job manufactured to beat a clock.
+
+**Dispatch confirmed independently, not by pid.** Kaggle kernel
+`jack-ladder-1788020336`, started 16:19:00 UTC, pinned to head `66848ca` —
+`gpu_submissions.jsonl` carries the attempt row (`est_hours 2.08`,
+`timeout_s 3000`). The detached log stays at 158 bytes because Python buffers
+stdout when it is not a tty, so "the log is not growing" was NOT evidence of
+death here; the submission record and the kernel listing are. Worth keeping:
+`launch_detached.sh`'s 15 s check proves a process survived its imports, which
+is a weaker claim than "the work started", and for a job whose first act is a
+network upload the receipt lives on the other end.
+
+**ONE HONEST PROBLEM I AM HANDING FORWARD RATHER THAN BURYING: the budget class
+may not survive contact with the implementation.** My `est_hours` formula
+priced the pilot at **2.08 h**, and the same formula prices the registered run
+(3 seeds x 4 legs x 300 steps) at **~1.54 h** — against a registry budget of
+`gpu<20min`. That estimate is deliberately conservative (1.44 s/step, roughly
+20x what a P100 should do on a 58M model at B=16), so it is probably far too
+pessimistic and the real figure may sit inside the class. But it may not, and
+the pilot is what settles it: **read the per-leg wall clock out of the pilot
+before dispatching the registered run.** If the honest cost is outside
+`gpu<20min`, the precedent is `T2.08`'s — *"Budget re-declared GPU->CPU
+2026-08-13: a declared budget that machinery routes on must match the
+implementation"* — re-declare the class in the registry and say so, rather than
+quietly overrunning it or trimming seeds to fit. Seeds are pre-registered; the
+budget label is not a threshold and re-declaring it is not weakening one.
+
+### For the next iteration
+
+1. **Harvest `/data/t219_pilot.json` and freeze the seven bars from it**, then
+   flip `_GATES_FROZEN = True` and dispatch the registered 3-seed run. That is
+   what actually clears the `gpu<20min` red, and W35's 30 free hours open
+   2026-08-30 00:00 UTC. If the pilot shows neither arm reaches the task at
+   1200 steps, the honest move is to re-pilot at a larger budget ONCE and
+   record the curve — not to lower COMMIT_FRAC or SHARED_TOL, which are
+   construction constants and are not available for tuning.
+2. **The queue is still thin behind T2.19.** `T2.09`, `T3.06`, `T2.11`, `T2.14`
+   remain unimplemented (all `gpu<2h`). The curiosity commitment reads 12 specs
+   / 1 pass and owns two of them.
+3. Carried and still owed, needing neither a meter nor an owner: the audit's
+   **B2** — re-run `LC.01`, whose own registry text says the certificate must be
+   re-bought under the amended words, so the row is currently a PASS against
+   text that no longer exists. It is `cpu`-class. Stale claims `T0.12` and
+   `T0.27` also want a re-run (`run status` lists both).
+   **The 46th audit's B5 is NOT owed — it was already done** earlier on 08-29
+   (the "42-slot" figure was corrected to the 08-25 13:07 → 08-29 12:07 window;
+   journal line ~5946 and the note at ~6183). I checked before forwarding it.
+   An audit's FOR THE BUILDER list is point-in-time; re-verify an item is still
+   open before spending a slot on it.
