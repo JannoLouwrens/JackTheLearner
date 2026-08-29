@@ -6243,3 +6243,69 @@ finite numbers, and the detector's silence will read as the guard's fault. The
 converse trap is already recorded above under type-preserving perturbation:
 a perturbation that makes the gate *raise* is evidence the key was compared,
 not evidence it was load-bearing.
+
+## A fixture that stubs the collaborator has tested the CALLER — and its green reads as coverage of both
+
+*(Builder, 2026-08-29, repairing the 46th audit's RANK 2. Caught while writing
+the repair, not after it shipped, which is the only reason it is cheap.)*
+
+`queue_depth` over-counted the GPU shelf because it could not see a spec whose
+`run()` refuses on provisional gates. The repair is two pieces — a READER
+(`protocol.gates_frozen`, an AST scan for the `_GATES_FROZEN` idiom) and a
+CLAUSE in `queue_depth` that excludes what the reader flags — and the obvious
+move was to add the case to `_queue_fixture`, the battery that already exists
+for that function.
+
+That fixture builds a synthetic registry `Q.01…Q.07` with fake paths like
+`/x/Q.01.py` and monkeypatches `module_path_for` to return them. Adding a
+`Q.08` row means also patching `gates_frozen`, because no file exists at
+`/x/Q.08.py` to read. Do that and the fixture is a **complete, passing,
+known-answer test of the exclusion clause that never once executes the
+reader.** Ten synthetic rows, a green tick, and the AST parse — where every
+real bug in this repair could live: annotated assignment, function-local
+assignment mistaken for a declaration, `_GATES_FROZEN = 1`, a non-literal
+value, the last-binding-wins rule — covered by nothing.
+
+**The shape.** Fixtures inject a collaborator's answers so the unit under test
+can be driven into every branch. That is correct and necessary. But the
+injection means the battery's subject is the CALLER, and nothing in its name,
+its size, or its passing tells a later reader which of the two halves it
+covers. This is the founding disease at one remove: not a claim with no test,
+but a test whose subject is narrower than the thing everyone will believe it
+certifies.
+
+**The rules.**
+
+1. **Two units, two fixtures.** If you stub it, you have not tested it —
+   so the stubbed collaborator gets its own known-answer battery, driven
+   through the real code path, and both are called from the same places. A
+   fixture whose subject is ambiguous is a fixture that will be read
+   generously.
+2. **The reader's battery must contain the LIVE case.** Ten synthetic source
+   strings prove the parse; pointing it at the actual files in the tree
+   (`SM.02`, `SM.03`) proves it is pointed at the right thing. A reader that is
+   right about ten strings and wrong about the one file it is called on has
+   told the truth about nothing.
+3. **Over live data, assert the INVARIANT, never the current value.** The
+   obvious assertion was `gates_frozen("SM.03") is False`. `SM.03` is
+   *supposed* to flip to `True` the moment a pilot freezes its bars — so that
+   row would have gone red on exactly the event the whole instrument is waiting
+   for, and the next iteration would have had to weaken a fixture to make
+   progress, which is how a guard teaches people to edit guards. The durable
+   claim is `is not None`: **the reader SEES the idiom.** Generalised: a
+   known-answer row over live state must assert what may not change, or it
+   becomes a lock on the change it exists to detect.
+4. **A property that cannot fail is the disease, so break it on purpose once.**
+   Stubbing the reader to "nothing is ever provisional" must fire
+   `p12_queue_instrument_fixtures_hold`. Thirty seconds, and it is the
+   difference between a guard and a decoration.
+
+**And the placement rule that came with it.** Both batteries lived in
+`coverage.py`'s `__main__` path only — so `--gate` never re-ran them and no
+ledger row would have gone red if the instrument silently started answering a
+different question. Batteries belong next to the code they test (they need its
+internals); what belongs in the ladder is a property that FAILS when they do.
+`T0.21 P12` is that property. An instrument nothing re-pulls the lever on is
+the ratchet's own blind spot, and this repo has now found it twice — once in a
+double that had not run for 18 days, once in a fixture that only ran when a
+human typed the module name.

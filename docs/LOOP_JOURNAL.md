@@ -6192,3 +6192,78 @@ it, and it is not being run.
   `T0.17` pair from `D16`, whose owner default is "the ladder stays red". My
   pair is auditable because the failing implementation was committed at
   `d461e36` and diffs cleanly against the passing one. **Ladder 82 → 83.**
+
+## 2026-08-29 ~15:1x UTC — the shelf-depth instrument could not see a spec that refuses itself; now it can, and it goes red (46th audit B3)
+
+**Model: opus** (`week:Fable` is at 100% until 08-31 04:59, so the chain walked
+here in 3 s — expected, not a fault). **Zero consecutive `PACING:` skips**; the
+blackout ended 12:07 today and this is the third slot since. `week:all models`
+75% against the 90% gate and a pace line of 76 — the gate let this run through
+with one point to spare, which is worth saying out loud rather than modelling.
+
+**Audit inbox first, as the prompt orders.** Of the 46th audit's five builder
+items, **B1 (`spec_sha`), B2 (re-run `LC.01`) and B5 (blackout recount) were
+already discharged** by the two iterations between the audit and this one —
+`LC.01` is attempt 4 at `be60c3d`, not the 08-09 row the audit found. I checked
+rather than assumed; the audit is six hours old and three of its five items had
+moved. **B3 was the live one**, and it is done.
+
+**What was wrong.** `coverage.queue_depth` answers "how many specs could be
+DISPATCHED today" and its docstring carried a `KNOWN OVER-COUNT`: it counted a
+spec whose `run()` refuses on provisional gates. `SM.03` is that spec —
+implemented, tracked, runnable, unsettled, and undispatchable until a pilot
+freezes its bars — so `gpu<20min` read **1** and `coverage --check` exited **0**
+in the one cost class the instrument exists to alarm on, on the eve of W35.
+
+**The repair, and the number that moves.** `protocol.gates_frozen(spec_id)` reads
+the `_GATES_FROZEN` idiom by AST (not by import — importing `sm_03` costs a
+MuJoCo model build), module-level bindings only, last one wins; `True` only for
+the literal `True`, `False` for anything else *including an unparseable file*
+(it cannot be dispatched either), and `None` for "does not declare", which is
+185 of 187 specs and is not an accusation — callers test `is False`.
+
+    before   depth 4, of which 3 VOID -> 1 FRESH dispatch;  gpu<20min = 1 (SM.03)
+    after    depth 3, of which 3 VOID -> 0 FRESH dispatches; gpu<20min = EMPTY
+    exit     0 -> 2
+
+**The honest GPU dispatch count is 0 and the ratchet now says so** — which is
+what the audit predicted and asked for. Note what this does NOT say: the shelf
+did not empty today, it has been empty since `T2.15` was consumed at 08-25
+04:40. Only the instrument changed.
+
+**Two fixtures, not one, and that was the interesting part.** The obvious move
+was one more row in `_queue_fixture` — but that battery monkeypatches
+`module_path_for` and would have had to monkeypatch `gates_frozen` too, giving a
+complete green known-answer test of the exclusion CLAUSE that never executes the
+READER. So `_gates_frozen_fixture` drives the real AST path over ten source
+strings (annotated assignment, function-local assignment, `= 1`, non-literal,
+re-assignment, syntax error) plus the live `SM.02`/`SM.03` files. Those live rows
+assert `is not None` — that the reader SEES the idiom — deliberately **not** the
+current value, because both specs are supposed to flip to `True` and a pinned
+fixture would go red on exactly the event it is waiting for. Generalised into
+`docs/LESSONS.md`: *a fixture that stubs the collaborator has tested the caller,
+and its green reads as coverage of both.*
+
+**`T0.21` P12 (11 -> 12 properties) puts both batteries under the ledger.** They
+ran in one place before — `coverage.py`'s `__main__` — so `--gate` never
+re-pulled the lever and no row would have gone red if the instrument started
+answering a different question. Verified falsifiable before committing: stubbing
+the reader to "nothing is ever provisional" fires
+`p12_queue_instrument_fixtures_hold`. `T0.21` re-run at a clean tree (`5989ea7`,
+attempt 23, PASS, 2.51 s) — it declares `IMPL_DEPS = ["experiments/coverage.py"]`
+so the certificate was owed regardless. **Ladder 83, unchanged: this iteration
+bought no new capability and did not claim one.** `decisions --check` 0,
+`champions --check` 0, `coverage --check` **2, correctly**.
+
+**Next iteration: the standing duty now fires mechanically, so honour it.**
+`coverage --check` exits 2 on `gpu<20min` NEWLY EMPTY, and `QUEUE_EMPTY_BASELINE`
+already carries `cpu<1min`, `cpu<10min`, `gpu<2h`. That is four cost classes at
+zero and **0 fresh dispatches** with W35's 30 free hours opening 08-30 00:00 UTC.
+The whole board is now 46th-audit **B4** / Review **B1**: **implement ONE
+unimplemented GPU spec end to end with its controls** — `T2.09` (Noisy-TV, kills
+ICM alone; `run next` lists it `[needs implementing]`, its apparatus exists and
+is certified by `PG.4`, and its claim arm must be percept-driven or a PASS means
+nothing), `T3.06` (ablate curiosity — that commitment reads 12 specs, 1 pass),
+`T2.11`, `T2.14`, `T2.19`. It needs no GPU, no meter and no owner decision.
+Do NOT clear the red by baselining the class, and do NOT dispatch `SM.03` — its
+pilot log is 0 bytes and `gpu<20min` empty is now the true reading of that fact.
