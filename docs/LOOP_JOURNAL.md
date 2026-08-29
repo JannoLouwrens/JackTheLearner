@@ -6013,3 +6013,100 @@ B3 (hardware stamp + gpu_job_id) still open.
   would have produced a second SM.03 — implemented, unpiloted, undispatchable —
   which is the exact state four audits have been complaining about. Scouting is
   above; take it with a full slot.
+
+## 2026-08-29 ~13:1x–13:4x UTC — builder, on **Opus** (`week:Fable` 100%, capped until 08-31 04:59). Pacing streak **0**. GPU week `2026-W34`. Meter `week:all models` **74%** at start and **74%** at end — a full iteration of Opus work moved the gating meter zero points, which is the fourth independent confirmation that it is not driven from this box.
+
+**Unit: the 46th audit's B1 + B2 (both RANK 1). Both delivered. Three things
+were found on the way that were nobody's plan.**
+
+**B1 — `spec_sha`.** The ledger hashed the test file and never the claim, so a
+spec's text could be amended after its PASS and no instrument would notice.
+`LC.01` was the live instance: an owner ruling amended its `falsified_by` on
+2026-08-24, the amendment itself ended *"Requires a re-run to re-buy the
+certificate under the amended text"*, and five days later the row still read
+PASS at `ran_at 2026-08-09`. That sentence was the only record of the debt —
+`re-buy the certificate` occurred exactly once in the repository, inside the
+spec string it described.
+
+Shipped in `be60c3d`: `SPEC_CLAIM_FIELDS` (11 fields), `spec_sha_of()`,
+`spec_drift()`, `Result.spec_sha`, stamped by `run_spec` on both paths, riding
+into `history` and into `supersedes_fail/void` as a tri-state `spec_changed`;
+`drifted_claims()` and two new blocks in `run status`. **T0.17 P10** is the
+battery — seven sub-properties, the strongest being that the hashed set is
+asserted SET-EQUAL to the perturbation table, so widening `SPEC_CLAIM_FIELDS`
+without demonstrating the new field matters turns the spec red. Control is the
+pre-repair reader: the file-hash rule cannot see an amended claim (False), the
+claim-hash rule can (True).
+
+**Filed by the audit against `T0.21`; housed in `T0.17`.** The predicate lives
+in `protocol.py`, which `T0.17` declares in `IMPL_DEPS` and `T0.21` does not
+(`T0.21` hashes `coverage.py`). The alternatives were a battery whose
+certificate is blind to the code it tests — `T0.21`'s own docstring cites that
+as PG.6's defect — or a second home for one hash, which is how two
+implementations of `impl_sha` diverged silently here. Both reproduce a named
+scar; this reproduces neither. **Next audit: this is a deliberate deviation from
+B1's letter, not a miss.**
+
+**B2 — `LC.01` re-run.** PASS, attempt 3, `ran_at 2026-08-29T13:15`, clean
+commit `be60c3d`, `spec_sha bfa0fff45c25a7cc` matching the live registry.
+arms_admitted 5/5, arms_probed 5/5, deterministic_arms 5/5, std 0.0 across 3
+seeds. The certificate is re-bought under the amended words. Live drift reading:
+**0 drifted, 81 unstamped** (down from 84 as rows re-run; not back-filled).
+
+**FINDING 1 — I broke `T0.27` and did not repair it (`D16`).** Running `T0.17`
+from a dirty tree produced a genuine FAIL, I fixed the CODE, committed, re-ran
+to PASS — and `audit_supersedes_fail` now permanently refuses that pair, because
+the failing implementation exists in no commit and cannot be diffed against the
+passing one. It cannot tell my code fix from a threshold move, **which is its
+entire purpose**. The pair is in `history` and no re-run removes it. The only
+repair available to me is option (c): let the audit accept a dirty FAIL whose
+`impl_sha` reconstructs from a committed blob — `commit_with_impl_sha` already
+answers exactly that, and the rule's stated reason would no longer hold. **I
+believe (c) is right and I must not take it**: it is a conduct instrument and
+the party it exonerates is me. Escalated as `D16`, `decide_by 2026-09-05`,
+default (b) = the ladder stays red. Shipped instead:
+`_warn_if_dirty_before_running`, which states the CONSEQUENCE before the run
+("T0.27 flags that pair FOREVER"), as a warning and not a refusal — refusing
+would push the builder to commit code it has never executed.
+
+**FINDING 2 — `T0.15` had been un-runnable for 18 days while its row read
+PASS.** `cb60d56` (2026-08-11) renamed `Ledger.blocked_by` to `unsatisfied`;
+T0.15's `_MemoryLedger` stub kept the old name, so every run since raised
+`AttributeError` before the first assertion. Last real verdict
+`2026-08-10T00:12:49`. Repaired and re-run clean: PASS. **This is the founding
+disease in better clothes** — a green row for a test that has not executed. It
+was found by accident, and the reason nothing found it deliberately is that
+`--gate` appears **5 times in 337 lines** of `ladder.log`.
+
+**FINDING 3 — `T0.13` is FAIL and it is NOT mine. THIS IS THE NEXT
+ITERATION'S UNIT.** *"No gate in the ladder is decorative"* reports **4 disarmed
+conjunct keys** across three specs, 5 inert gate keys, and one redundant key:
+
+    T0.24  m['control_reproduces_scar']
+    T1.02  m['beats_mean_baseline'], m['heldout_structure_advantage']
+    T2.04  m['ridge_beats_null_any']
+    T1.09  c['absurd_peak_gb']  (redundant)
+
+Verified pre-existing: it fails identically at `d84101e` in a scratch worktree.
+A disarmed conjunct is a gate that cannot fail, i.e. three specs are holding
+certificates partly bought by assertions that assert nothing — including
+`T1.02`, which is the precedent this whole project cites for strengthening a
+spec. **Do not re-run it hoping. Read the four keys and decide, per gate,
+whether the conjunct is dead or the spec is.**
+
+**Ladder: 84 -> 82 PASS.** The arithmetic, stated because a bare count hides
+it: `T0.15` PASS -> ERROR -> PASS (net 0, but it was a FALSE green for 18 days
+and is now a real one), `-T0.27` (honest red, `D16`), `-T0.13` (honest red, and
+it was a false green too — Finding 3). **Not one of the three moves is the
+project regressing; two are the scoreboard admitting something that was already
+true, and the third is a guard correctly refusing my own work.** A ladder that
+went down by two today describes Jack more accurately than the one that read 84
+this morning.
+
+**FOR THE NEXT ITERATION, in order:** (1) `T0.13`'s four disarmed conjuncts.
+(2) The 46th audit's **B3** (`queue_depth` must see a spec that refuses) and
+**B4** (refill the GPU shelf — `T2.09`/`T2.19`; W34's ~29.7 h die 08-30 00:00
+UTC and cannot honestly be spent, so this is for W35). (3) B5, the journal's
+blackout count. **Run `--gate` before you trust any PASS you did not buy
+yourself** — Finding 2 says the sweep is the only organ that would have caught
+it, and it is not being run.

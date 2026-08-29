@@ -8391,8 +8391,8 @@
     },
     "T0.15": {
       "amended": [],
-      "attempt": 4,
-      "commit": "d461e36+dirty",
+      "attempt": 5,
+      "commit": "adce078",
       "compute_s": null,
       "control_metrics": {
         "gate_verdict_on_3e7_drift": "PASS",
@@ -8402,7 +8402,7 @@
         "recorded_drift": 0.0,
         "true_drift": 3e-07
       },
-      "duration_s": 1.2,
+      "duration_s": 1.21,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -8453,6 +8453,36 @@
           ],
           "spec_sha": "7b479be1016fb5ec",
           "status": "ERROR"
+        },
+        {
+          "commit": "d461e36+dirty",
+          "control_metrics": {
+            "gate_verdict_on_3e7_drift": "PASS",
+            "max_relative_error": 1.7091000155524961e-06,
+            "min_resolvable_magnitude": 1e-06,
+            "n_magnitudes_zeroed": 12,
+            "recorded_drift": 0.0,
+            "true_drift": 3e-07
+          },
+          "gpu_job_id": null,
+          "impl_sha": "f0016521b202d0c4",
+          "message": "",
+          "metrics": {
+            "end_to_end_drift": 3e-07,
+            "end_to_end_status": "FAIL",
+            "gate_verdict_on_3e7_drift": "FAIL",
+            "max_relative_error": 1.7091000155524961e-06,
+            "min_resolvable_magnitude": 1e-18,
+            "n_magnitudes_zeroed": 0,
+            "recorded_drift": 3e-07,
+            "true_drift": 3e-07
+          },
+          "ran_at": "2026-08-29T13:23:13",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "7b479be1016fb5ec",
+          "status": "PASS"
         }
       ],
       "impl_sha": "f0016521b202d0c4",
@@ -8467,7 +8497,7 @@
         "recorded_drift": 3e-07,
         "true_drift": 3e-07
       },
-      "ran_at": "2026-08-29T13:23:13",
+      "ran_at": "2026-08-29T13:23:33",
       "seeds": [
         0
       ],

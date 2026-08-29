@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 83 / 187 demonstrated
+## 82 / 187 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -54,7 +54,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T0.12** GPU-hour accounting
       - _asserts:_ Every GPU run debits a weekly budget file; the ladder refuses to launch past quota.
       - _dies if:_ A run proceeds with the budget exhausted.
-- [x] **T0.13** No gate in the ladder is decorative
+- [!] **T0.13** No gate in the ladder is decorative  — disarmed_conjunct_keys=4; disarmed_detail=T0.24: m['control_reproduces_scar']; T1.02: m['beats_mean_baseline'], m['heldout_structure_advantage']; T2.04: m['ridge_beats_null_any']
       - _asserts:_ Every metric a `_check` reads can change that check's verdict at the operating point the run actually produced, and no `_check` mixes `and` with an unparenthesised `or`.
       - _dies if:_ A PASSing spec's gate references a metric that cannot move its verdict, or contains an operator-precedence hazard.
 

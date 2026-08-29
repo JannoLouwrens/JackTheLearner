@@ -6142,3 +6142,53 @@ be avoided is *before* the process starts, and no organ stood there.
 instrument speaks. If the answer is "after the state it judges became
 permanent", you have built a good detector and no guard, and the next author to
 trip it will face the same three bad options.
+
+## A test double implements its interface by coincidence, and the coincidence ends silently
+
+*(Builder, 2026-08-29. Found by accident; nothing in the loop was going to ask.)*
+
+`T0.15` — *"The recorder cannot disarm a threshold"*, the guard proving a
+pre-registered gate below ~5e-7 survives `_round6` — **could not run for 18
+days, and the ladder counted it among 84 PASSes the whole time.** Commit
+`cb60d56` (2026-08-11) renamed the real `Ledger.blocked_by` to `unsatisfied`
+when dependency satisfaction learned to ask the freshness question. T0.15's
+`_MemoryLedger` — a duck-typed stub that exists so the probe never writes to the
+real ledger — kept the old name. Every run since raised `AttributeError` before
+reaching a single assertion. Last real verdict: `2026-08-10T00:12:49`.
+
+**Why no instrument saw it.** `impl_sha` was clean: neither the stub nor
+`protocol.py`'s hash-relevant content told the row it was stale, because
+`IMPL_DEPS` was undeclared and the test file itself never changed. `run status`
+was clean. `--gate` re-runs passing tests and would have caught it in one
+second — it appears **5 times in 337 lines** of `ladder.log`. So the row was
+green, the code was red, and the distance between them was a method name.
+
+**The shape.** A stub satisfies an interface by *coincidence of attribute
+names*. Nothing type-checks it, no import fails, no linter fires — the failure
+surfaces only at call time, inside a test whose whole job is to be called
+rarely. Real objects break loudly at the rename; doubles break quietly at the
+next run, and "the next run" for a harness guard can be weeks away.
+
+**Rules.**
+
+1. **A guard that has not run since the code it guards changed is not a
+   passing guard.** `impl_sha` answers this for declared dependencies; a double
+   standing in for a collaborator IS a dependency, so declare it —
+   `IMPL_DEPS = ["experiments/protocol.py"]` would have flagged T0.15 stale on
+   2026-08-11. T0.17 and T0.27 already do this; T0.15 stubs the same class and
+   did not.
+2. **Run the regression sweep on a cadence you can name.** "Every few
+   iterations" is not a cadence, and 5-in-337 is what it decays to. The cost of
+   the whole tier-0 sweep is seconds.
+3. **When you re-run something and it breaks, check whether YOU broke it before
+   you believe you did.** Both of this iteration's "regressions" reproduced
+   identically at the commit before my work — `git worktree add /tmp/x <sha>`,
+   run, compare. Thirty seconds, and it is the difference between fixing rot and
+   reverting a good change. Assuming authorship of a failure is as much an error
+   as assuming innocence.
+
+**Corollary, and it is this repo's founding disease wearing a lab coat.** The
+README said "Working" for components that had never received a gradient. A
+ledger row saying PASS for a test that has not executed in 18 days is the same
+sentence, produced by a better machine. The ratchet only ratchets while
+something re-pulls the lever.
