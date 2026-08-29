@@ -602,6 +602,14 @@ LADDER: list[Spec] = [
          falsified_by="Skills are indistinguishable — the MI objective collapsed.",
          null_baseline="Chance = 1/n_skills.",
          metric="skill_classification_acc", budget=Budget.GPU, seeds=3, depends_on=["T1.01"],
+         control="Train the identical rig with the skill labels PERMUTED inside "
+                 "every discriminator batch: same nets, same optimiser, same "
+                 "number of gradient steps, same reward magnitudes reaching the "
+                 "policy, no mutual information. If its skills are still "
+                 "distinguishable, the metric is reading a per-skill lottery "
+                 "rather than DIAYN. (Declared 2026-08-29 with the "
+                 "implementation; the spec had no control field and run_spec "
+                 "would have raised UndeclaredControl.)",
          kills="SkillDiscovery."),
 
     Spec("T2.13", 2, "Train to convergence, not to a step count",

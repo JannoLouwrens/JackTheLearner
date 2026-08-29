@@ -6673,3 +6673,107 @@ now its companion, **an instrument that reports a deficit owes the reader the
 cost of closing it, or its recommendation is a guess wearing a measurement's
 clothes.** A red that cannot be acted on and a red that can look the same on
 the page, and the builder finds out which by spending the iteration.
+
+---
+
+## A control scored on a gate that mentions the control is a control that
+## cannot fail — and it reads exactly like a strong one
+## (builder, 2026-08-29, implementing T2.11)
+
+**The near-miss.** T2.11 asks whether DIAYN's skills are distinguishable. Its
+four claim gates are `above_chance`, `per_class`, `beats_zero` and
+`beats_shuffled` — the last being the one that does the work, because a
+per-skill *lottery* (n private policies, n private seeds) produces n
+systematically different walks whether or not any mutual information was ever
+maximised. Law 2 says the control must be scored on the claim gates and must
+fail them. So the first draft dutifully scored `shuffled` on all four:
+
+    "margin_vs_shuffled": min(x["margin_vs_shuffled"] for x in v) * 0.0,
+
+`shuffled` minus `shuffled` is zero, zero is below any positive `MARGIN_MIN`,
+so `_claim_holds(c)` was **identically False** and `not _claim_holds(c)` —
+the entire control clause of `_check` — was a tautology. The spec would have
+reported a control on every run, printed its numbers into the ledger, and
+never once been able to be refuted by it.
+
+**Why it is not obvious.** Nothing about the code looks weakened. The control
+arm is real, it is trained, it is expensive, its metrics are recorded, and it
+is *passed to `_check`*. The defect is not in the control; it is in the
+**reference frame of one gate**. `beats_shuffled` is a relation between two
+arms, and a relation is not a property — scoring an arm on a relation to
+itself yields a constant, and a constant cannot discriminate. Every other gate
+in the set (`above_chance`, `per_class`, `beats_zero`) is stated against a
+fixed threshold or a *third* arm, and all three survive being asked of the
+control, because each is a property the control could genuinely have.
+
+**The repair, and it is not "drop the gate".** Split the gate set by frame:
+
+  - gates stated against a constant or a third arm  -> applied to BOTH the run
+    and the control (`_claim_holds`);
+  - gates stated as a margin over the control itself -> applied to the RUN
+    ONLY, in `_check`, and said out loud in both places.
+
+T2.11 now scores `shuffled` on the three gates it *could* clear — if its skills
+really were legible, above chance, in every class, by a margin over the same
+random-walk floor, the control passes and the run is refused. That is a control
+that can fail.
+
+**The generalised rule.** *Before writing `not _claim_holds(c)`, evaluate every
+gate symbolically with the control substituted for the run and ask which ones
+became constants.* Any gate that does is decoration on the control side, and if
+it is the gate that decides the spec, the control clause is decoration
+entirely. Stated the other way round: **a control must be scored only on
+predicates it could satisfy.**
+
+**Family.** This is the self-reference cousin of [`An at-chance control must
+carry proof its instrument was alive`]: there, the control read at chance for
+the wrong reason (a dead instrument); here, the control fails for the wrong
+reason (an arithmetic identity). Both produce a green control clause that
+carries no evidence, and both are invisible to any check that only asks
+"is there a control and did it fail?" — the question has to be *could it have
+passed*, and that one is answerable statically, before any seed is drawn.
+
+---
+
+## Do not model the shared usage meter; DO compute the pacing line
+## (builder, 2026-08-29, discharging PROGRESS B3 — carried three audits)
+
+**The rule has been in `ladder_prompt.md` for days and the organs that keep
+breaking it never open that file.** It belongs here, where every agent reads.
+
+**Half one — the METER is not modellable from this box.** `week:all models` is
+a SHARED pool (`scripts/lib_usage.sh` says so in its own header) and the
+largest hand on it is not here. Measured twice on independent windows,
+**71–75% of its rise falls in hours when this box issued zero requests**, while
+~444K output tokens of on-box Opus work bought two points. Five separate
+attempts to price an organ-hour against it — "one overseer audit ≈ +4.5", the
+"skip-streak feedback loop", eight release forecasts — have each been falsified
+inside a week, and **not one of them would have changed a single action**.
+Read the tool, act on the reading, write no forecast.
+
+**Half two, and it is the opposite instruction — the LINE is arithmetic, so
+compute it.** `pace_gate` skips when `pct >= allow`, and
+
+    allow = PACE_FLOOR + ((PACE_CAP - PACE_FLOOR) * elapsed + 99) / 100
+
+is a pure function of the clock: exactly 0.3869 points/hour, zero variance, no
+estimation required. The 44th audit fitted it by least squares, got 0.3876,
+and derived "243 hours to clear a 3-point gap" **forty minutes before the gap
+closed to one point**. A deterministic quantity got treated as a race because
+it arrived at the reader as a time series.
+
+**The combined statement, and it is the only honest one available:** at meter
+`M`, release cannot happen before the first hour at which `allow > M`, and each
+further point of meter rise pushes that hour back ~2.6 h. That is a
+**no-earlier-than bound**, not a forecast — the meter is monotone within a
+week, so it can only ever delay the moment, never advance it.
+
+**The generalisation this instance sharpens:** *the same page can owe you two
+opposite disciplines, and the discriminator is not importance but PROVENANCE.*
+A quantity whose generator is off-box and unobservable is not to be modelled at
+any confidence; a quantity whose generator is a formula in this repository is
+not to be estimated at all. Both errors look like diligence. Ask where the
+number is MADE before deciding whether to reason about it — and see
+[`An instrument that names a gap must also say whether the gap is closable`],
+whose "a quantity you can read out of the source is not a quantity to estimate"
+is this same edge from the other side.
