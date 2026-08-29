@@ -6562,3 +6562,65 @@ Corollary for the fix, not yet taken: back-filling is forbidden here (the sha of
 today's words proves nothing about a run from before them), so the 24 existing
 unauditable pairs must be frozen, dated and stated in the record. A count that
 is honestly unknowable and is left free to drift reads as decay.
+
+## "Worst of N seeds" is a property of the CODE. The runner means everything,
+## and a docstring cannot make it not
+## (builder, 2026-08-29, freezing T2.09's gates)
+
+`run_spec` does `runs = [fn(s) for s in seeds]` and then `_aggregate(runs)`,
+and `_aggregate` takes the **arithmetic mean** of every numeric metric (plus a
+`_std`). Whatever `_check` reads, it reads a mean. That is fine and often right
+— but it silently overrides prose.
+
+T2.09's docstring said `CLAIM (worst of 3 seeds; all four must hold)`. Its
+`_experiment(seed)` returned one seed's numbers, so `_check` compared means to
+bars. The gap was invisible in review — the file *said* worst-case, twice — and
+it mattered because the apparatus it gates is **bimodal**: PG.4's certified row
+is `icm_dwell 0.6667 +- 0.4714`, which is exactly the seed vector
+`[1.0, 1.0, 0.0]`. The naive agent either finds the noisy panel and locks on
+entirely or never walks past it. Mean the live traps with the dead one and you
+get 0.667, which clears a bar of 0.40 — so **the rig gate whose entire job is to
+prove the trap fired would have passed on a run where it did not fire**, and the
+claim arm's non-fixation on that seed, which measures nothing, would have been
+averaged into a PASS. That is the exact vacuity T2.09 was written to prevent,
+arriving through the aggregator instead of through the reward function.
+
+**The rule.** *If a claim is per-seed, the fold must be in the code. Prose does
+not fold.* And its converse, which is the part that costs time: **do not assume
+the defect is everywhere.** A scan of all 62 multi-seed specs found this repo
+already has **four** working idioms, and every spec spot-checked was using one:
+
+  1. **Fold to the worst seed inside `_experiment`.** Run all seeds once
+     (module cache), reduce with `min`/`max`, return the same dict for every
+     seed. T2.19's `_fold`, T3.07's `_rows()` + `min(accs)`, now T2.09.
+  2. **A per-seed boolean, meaned.** Emit `seed_gates_ok` as 0.0/1.0 per seed
+     and gate on `== 1.0` — the mean of booleans is 1.0 only if all seeds pass.
+     PG.6, VO.01.
+  3. **Mean minus k·std, plus a t-statistic.** `margin_floor = mean -
+     SEED_SPREAD_FACTOR * std` with `margin_t >= MARGIN_TSTAT_MIN`. Legitimate
+     when the claim really is distributional. T2.08.
+  4. **Per-seed vectors reported alongside a folded gate,** so an auditor can
+     recompute. Everywhere the good specs.
+
+Two false-positive sweeps were run before this list was right, and both are
+worth naming. Grepping docstrings for "worst"/"every seed" flagged 15 specs;
+almost all were *descriptive* prose ("attempt 1 failed on every seed"). Adding
+an AST check for idiom (1) still flagged T3.07, which folds under a different
+name. **An audit heuristic aimed at prose will find prose.** The cheap
+mechanical tell is in the ledger and needs no parsing: **a gated metric whose
+recorded `_std` is `0.0` while its per-seed vector is not constant has been
+folded; a gated metric with `_std > 0` compared straight to a bar was met by a
+mean.** T3.07's row reads `separability_acc_min 0.225, ..._std 0.0` next to
+`acc_per_seed [0.225, 0.275, 0.375]` — the fold, visible from the scoreboard.
+
+**The general shape.** An aggregator sitting between the measurement and the
+gate is a place where a claim can change meaning with nobody editing the claim.
+The same hazard produced the at-chance-control rule ("an at-chance control must
+carry proof its instrument was alive") and the noisy-TV vacuity itself: in all
+three, a number that should have been unreadable arrived looking like a pass.
+**When a bar is compared to a number you did not compute in the same function,
+find out what happened to it on the way.**
+
+No certificate is affected: T2.09 had never run — `_GATES_FROZEN` was False and
+`run()` refused — so the defect was caught in the freeze, which is what the
+freeze step is for.

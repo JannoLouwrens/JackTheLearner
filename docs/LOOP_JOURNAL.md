@@ -6606,3 +6606,87 @@ is noise, so freeze that bar from **seed 7**.
 The queue is still thin behind T2.09: `T3.06`, `T2.11`, `T2.14` remain
 unimplemented. One implemented spec is one dispatch you can make on any future
 hour; a dispatch you cannot make is the entire W34 story.
+
+## 2026-08-29 ~19:0x-19:3x UTC — T2.09 frozen and DISPATCHED into W34 with 4.7 h
+## left on the clock; the freeze found a mean-vs-worst defect in its own gates
+
+Model **opus** (`week:Fable` is at 100% until 08-31 04:59, so the fable start
+refused in ~3 s and the chain walked to opus — expected, not a fault; the
+`LIMITED on fable` line is in `ladder.log` at 19:07:11). **Pace-skip streak: 0**
+— `awk '/PACING/{n++} /iteration start/{n=0}'` reads zero, the loop ran an
+iteration at 18:2x. Meters at 19:07: `week:all models` **76%** (the gate),
+`week:Fable` 100%, session 5%; `--week-elapsed` 80, so `pace_gate`'s `allow` was
+77 and this slot cleared it by one point. GPU week **2026-W34**, 0.7028 h of 30
+charged, expires **2026-08-30 00:00 UTC**.
+
+**The unit: overseer 47th-audit B1, done.** Both pilots had landed (18:26,
+18:30). Seed 7 fired the trap (`icm dwell 0.8337`, ratio 2.279); seed 90 did not
+(`dwell 0.0000`, coverage 0.3967 — it never walked past the TV). Gates frozen,
+`_GATES_FROZEN = True`, pushed at `44f24c4`, dispatched via `scripts/dispatch.sh`
+at 19:16:42. **Kaggle kernel `jannolouwrens/jack-ladder-1788031002`, status
+RUNNING, head 44f24c4, est 1.189 h, timeout 7320 s, watcher pid 2772595
+detached.** This is the first dispatchable GPU spec since T2.15 was consumed on
+08-25, and the first W34 hours spent on a claim.
+
+**WHAT THE FREEZE FOUND, and it is why freezing is a step and not a formality.**
+The docstring said `CLAIM (worst of 3 seeds)`. The code could not do that:
+`run_spec._aggregate` means every numeric metric before `_check` sees it. The
+apparatus here is **bimodal** — PG.4's certified row is `icm_dwell 0.6667 +-
+0.4714`, exactly the seed vector `[1.0, 1.0, 0.0]` — so the mean of two live
+traps and one dead one is 0.667, which clears `TRAP_DWELL_MIN` 0.40. The rig
+gate whose only job is to prove the trap fired would have passed on a run where
+it did not. Fixed with `_fold` (T2.19's idiom): every gate now reads the worst
+**informative** seed. Full write-up in `docs/LESSONS.md`.
+
+**The seed protocol, pre-registered rather than discovered later.** Gating the
+worst of ALL seeds is honest and useless — it VOIDs at ~0.96 on 7 seeds for a
+reason unrelated to curiosity. So a seed is INFORMATIVE iff its apparatus worked
+(trap fired, random-walk floor held, claim arm had panel exposure, claim signal
+alive and decaying); claims score the worst informative seed; VOID below 3 of 7.
+The selection formula reads only the null and the rig — never the claim arm's
+dwell, fed-ratio, coverage or margin — so no seed can be dropped for being
+unflattering. Seeds 3 -> 7 (strengthening): at p(trap) ~ 2/3, three seeds carry
+a ~26% chance of too few informative ones; seven carries ~4%.
+
+**Bars: 7 of 8 confirmed, 1 moved downward in the open.** `TRAP_DWELL_MIN` 0.40,
+`TRAP_RATIO_MIN` 2.0, `NULL_DWELL_MAX` 0.20 are PG.4's certified constants;
+`FED_RATIO_MAX` 1.5 is the midpoint of an unfed signal (1.0) and PG.4's fed null
+(>=2.0); `EXPOSURE_FRAC` 0.50 is half a random walk's opportunity. **`DECAY_MIN`
+1.5 -> 1.25**: seed 90's claim-arm static decay read 1.472, so the placeholder
+would have discarded a live decaying signal as dead. 1.25 is set from the gate's
+purpose (a constant signal decays by exactly 1.0), not shaved to the observed
+minimum. This is a placeholder frozen for the first time, not a registered bar
+weakened — T2.09 had never run and `run()` refused until this commit.
+`_CLAIM_ARM = "disagree"` is **confirmed, not argmaxed**: it clears all four
+claim gates on seed 7, and `rnd` — equally percept-driven, an equally live
+candidate — fails `not_fed` on both pilots (2.232, 1.888). `rnd` is reported and
+deliberately ungated.
+
+**Said before the seeds were drawn: `not_fed` decides this run.** The claim arm
+measured 1.413 against a bar of 1.5 — 6% of headroom.
+
+**Machine left better.** `_check`/`_fold` replayed offline against both recorded
+pilot rows before the commit (seed 7 informative and clean; seed 90 correctly
+excluded — its `margin_vs_null` is **-0.0404** and would have poisoned a
+worst-of-all fold; 1 informative -> VOID, 3 -> PASS with the control failing).
+New lesson in `docs/LESSONS.md`. A sweep of all **62** multi-seed specs found
+**four** legitimate per-seed idioms already in use and **no other spec with this
+defect** — two heuristics over-flagged first (15, then 10 candidates) and every
+spot-check (T2.08, PG.6, VO.01, T3.07) was using one of the four. The cheap
+mechanical tell, recorded for the next sweep: a gated metric with `_std == 0.0`
+beside a non-constant per-seed vector has been folded; `_std > 0` compared
+straight to a bar was met by a mean.
+
+**Also closed: overseer B6.** `CHECKLIST.md` (`83 -> 84`, T2.19 ticked) was
+uncommitted in the tree; committed with the freeze after diffing it to confirm
+it was `run render`'s output and not another session's work (12 claude processes
+on the box; `git add -A` stays banned).
+
+**Next iteration:** harvest `jack-ladder-1788031002` — the watcher should have
+recorded it by ~20:45 UTC. If the row is a VOID for `n_informative < 3`, that is
+the bimodal trap and **not** a refutation: read `per_seed` in the metrics, which
+carries all seven rows, before deciding anything. Do NOT re-roll it for a better
+seed draw. If it is a FAIL, `not_fed` is the gate to look at first. Then take
+overseer B2/B3 (`decisions.py` — enforce the already-permitted clause, add the
+`arena:` check) or B5 (register `W.1`-`W.7`); the GPU shelf now has one spec on
+it and W35 opens 08-30 00:00, so refilling it further is still live work.
