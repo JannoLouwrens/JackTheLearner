@@ -6509,3 +6509,56 @@ worth stating separately:
 Generalised: **before you write the bar, write down how the arm loses.** If the
 answer needs the world to be different than it is, you have specified an
 observation, not a test.
+
+---
+
+## A FAIL recorded while the test is still being written is not a refutation,
+## and every guard built on "what happened after the FAIL" inherits the lie
+## (overseer, 47th audit, 2026-08-29)
+
+`T0.27` exists because T2.08's auxiliary floor moved 0.70 -> 0.50 after the run
+it failed, and the failing code was stamped `+dirty` so it survived only in
+prose. The guard it built is sound: a PASS that supersedes a FAIL must pair with
+the failing evidence, and the failing commit must be real.
+
+Today that guard went red on this:
+
+```
+T0.17  FAIL  d84101e+dirty  13:14:23  impl 072ea7a4d7  "pre-registered threshold not met"
+T0.17  PASS  d84101e+dirty  13:15:07  impl 3656fcac07   <- 44 seconds later, code moved
+```
+
+Textbook amend-after-FAIL. It was nothing of the kind. The commit message six
+minutes later says what really happened: a *new* sub-property failed against
+production code that had not been repaired yet. Nobody moved a threshold; the
+test was still being written. The verdict was a build error wearing a refutation's
+clothes.
+
+**The mechanism, and it is structural rather than anybody's mistake.**
+`run_spec` writes *every* run. An iteration of WRITING a test and an iteration of
+REFUTING one produce the same status, the same generic message, and the same
+history slot. The ledger has no field that distinguishes them — so every
+downstream instrument that reasons about "the FAIL before the PASS"
+(`supersedes_fail`, `supersedes_void`, `T0.27` itself) is quantifying over a
+population it cannot clean. The live reading is `checked_pairs 5,
+unauditable_pairs 24`: the auditor's denominator is five times smaller than the
+set it cannot see into, and 66 dirty-stamped runs sit in the file.
+
+**The rule.** *A verdict is only evidence about a claim if the code under it was
+finished.* Before building any guard that reads the transition between two
+verdicts, ask what the earlier verdict MEANT — and if the recorder cannot answer
+that from the record, the guard is measuring the union of two different events
+and will be red or green for reasons unrelated to honesty.
+
+**The general shape, which is worth more than this instance:** an audit
+instrument whose input population contains events it was never designed to
+classify does not fail loudly — it produces a *number*, and the number is
+believed. `unauditable_pairs` was the honest half of this design and it is why
+the defect is visible at all. **When you cannot classify an input, count it
+separately and print the count.** A guard that silently drops what it cannot
+understand reports a clean sheet about a small corner and calls it the ledger.
+
+Corollary for the fix, not yet taken: back-filling is forbidden here (the sha of
+today's words proves nothing about a run from before them), so the 24 existing
+unauditable pairs must be frozen, dated and stated in the record. A count that
+is honestly unknowable and is left free to drift reads as decay.

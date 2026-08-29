@@ -3487,3 +3487,59 @@ is the ratchet being defeated by the party it caught.
 `experiments/protocol.py`; `experiments/tests/t0_27_moved_threshold_leaves_artifact.py`
 (live: `live_checked_pairs` 4, `live_unauditable_pairs` 26, `seeded_violations` 2);
 `docs/OVERSIGHT.md` 46th audit B1; commit `be60c3d`.*
+
+## D13 — THE BAKEOFF IT NAMES AS ITS OWN SETTLEMENT DOES NOT EXIST (47th overseer audit, 2026-08-29 18:40 UTC)
+
+**No new question, no new option, nothing asked of the owner in this entry.**
+It records one fact that changes how `D13` should be read.
+
+`D13`'s evidence update of 2026-08-28 ends with the caveat that makes it honest:
+
+> *"the counterfactual is unmeasured — `SY.01` (the three-arm pace-gate bakeoff,
+> arm C = pace-gate the auditors) is the instrument that would settle it, and it
+> is still unwritten."*
+
+Verified today, against the registry rather than against prose:
+
+```
+'SY.01' in BY_ID            ->  False        (187 specs in the ladder)
+grep -rn 'SY\.01' .         ->  1 hit — docs/DECISIONS_NEEDED.md:3021
+```
+
+**`SY.01` occurs exactly once in this repository: inside the paragraph that says
+it would settle the question.** It has no id in the ladder, blocks nothing,
+fails no gate and appears in no `run blocked` ranking — the invisibility
+signature of a missing spec, and the same one the coverage tool was built for.
+
+This matters because of what it makes `D13` be. `SYSTEM.md` rule 3: *"A fork
+whose arms can both be run is not an escalation. It is an experiment somebody
+has not written yet."* Both of `D13`'s arms are implemented in
+`scripts/ladder_loop.sh` — the 37th audit established that on 2026-08-27, and
+nine audits have now argued the pace gate in prose while the arms sat in one
+file. `D13` is declared `class: goal`, which is what keeps `decisions --check`
+from reporting `MEANS-ESCALATED`; nothing in `audit()` inspects whether the
+declaration is true.
+
+**Two gaps, both filed as builder work in `OVERSIGHT.md` (B3), neither requiring
+an owner ruling:**
+
+1. `champions.py` resolves every seat's arena against `BY_ID` and has driven
+   that ratchet 8 -> 6 phantom arenas. **`decisions.py` resolves nothing.** A
+   decision may name a phantom instrument indefinitely and every organ in this
+   project will report it as correctly armed. The repair is an `arena:` field in
+   the `DECIDE:` block and a `NAMED-ARENA-MISSING` violation, in the idiom
+   already proven for seats.
+2. The `class` field is self-declared. `MEANS-ESCALATED` fires when an entry
+   *says* `means`; four characters files any fork on the goal side permanently.
+   `D13` is the live example and the honest reading is that it belongs in a
+   bakeoff, not on the owner's desk.
+
+**The ratchet shrinks by REGISTERING `SY.01`, never by deleting the sentence
+that names it** — deleting would leave a decision with no named instrument at
+all, which is strictly worse and is the exact mistake `champions.py`'s docstring
+warns about for seats.
+
+**Nothing in `D13`'s `DECIDE:` block is changed by this entry** — same options,
+same default (option (c), the change-gated no-op), same `decide_by: 2026-08-31`.
+The overseer may tighten a deadline but may not move one, and no threshold,
+option or permission is touched here.
