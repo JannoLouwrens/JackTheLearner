@@ -281,6 +281,33 @@ def assert_ref_is_current(ref: str = "main") -> None:
                 + "\n".join(offending) + "\nCommit and push first."
             )
 
+    # UNTRACKED experiment code is invisible to the line above, and that is a
+    # separate question rather than a wider version of the same one: that check
+    # asks "did TRACKED code move since the commit", this one asks "is there
+    # code the clone will simply NOT HAVE". `--untracked-files=no` cannot see a
+    # brand-new file at all, so a spec whose only copy is unversioned passes
+    # the guard and then does not exist on the VM. SM.03 was the live
+    # demonstration: 710 lines, registered, smoke-tested, untracked for 4.5
+    # days, and a dispatch of it any time in that window would have cloned a
+    # repo without it. (36th audit B7, carried to the 45th.)
+    #
+    # Deliberately narrow — `.py` under `experiments/` only. A guard that fires
+    # on ordinary junk in the tree trains people to bypass it, which is the
+    # failure `offending_dirt` above was written to end; scratch artifacts and
+    # untracked data are not code the job would import.
+    rc, untracked = git("ls-files", "--others", "--exclude-standard",
+                        "--", "experiments")
+    if rc == 0 and untracked:
+        new_code = [ln for ln in untracked.splitlines() if ln.endswith(".py")]
+        if new_code:
+            raise RuntimeError(
+                "Untracked experiment code -- the VM clones from GitHub, so "
+                "these files would NOT exist on it:\n"
+                + "\n".join(f"  {ln}" for ln in new_code)
+                + "\nCommit and push first (git add <path>; git commit -- "
+                  "<path>)."
+            )
+
     git("fetch", "-q", "origin")
     rc, _ = git("merge-base", "--is-ancestor", "HEAD", f"origin/{ref}")
     if rc != 0:
