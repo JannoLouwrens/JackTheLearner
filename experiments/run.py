@@ -29,7 +29,7 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from .protocol import (Ledger, Status, impl_deps_of, impl_sha_of,
-                       module_path_for, staleness_of)
+                       module_path_for, spec_drift, staleness_of)
 from .registry import BY_ID, LADDER, ready, tier
 
 TESTS_DIR = Path(__file__).parent / "tests"
@@ -319,6 +319,43 @@ def stale_claims(ledger: Ledger) -> list:
     return out
 
 
+def drifted_claims(ledger: Ledger) -> list:
+    """PASS rows whose SPEC TEXT moved after the run that recorded them.
+
+    `stale_claims`' sibling, and the half nobody had. A ledger entry is a claim
+    about a specific piece of code AND about a specific set of words; edit the
+    words afterwards and the entry keeps asserting the old verdict under the
+    new claim's name. That happened: an owner ruling amended `LC.01`'s
+    `falsified_by` on 2026-08-24, the amendment itself said *"Requires a re-run
+    to re-buy the certificate under the amended text"*, and five days later the
+    row still read PASS at `ran_at 2026-08-09` with no instrument able to ask
+    (46th audit, B1). The sentence naming the debt was the only record of it.
+
+    PASS only, and it is the whole point rather than a convenience: a PASS
+    under superseded words CLAIMS A CAPABILITY the project never bought. A FAIL
+    or VOID under superseded words refutes a claim nobody makes any more, which
+    is untidy and asserts nothing.
+
+    Returns `(spec_id, status, kind, detail)` — the same shape `stale_claims`
+    returns, so the two blocks in `cmd_status` read the same way. Kinds are
+    `spec_drift`'s: SPEC_CHANGED (positive evidence, re-run it) and
+    SPEC_UNSTAMPED (the row predates the field — unknown, never counted clean).
+    """
+    out = []
+    for s in LADDER:
+        if ledger.status(s.id) is not Status.PASS:
+            continue
+        entry = ledger.results.get(s.id)
+        if entry is None:
+            continue
+        # Called, never restated — the `staleness_of` rule, for the same
+        # reason: two implementations of "the same" hash diverged once here
+        # already and every IMPL_DEPS spec read stale forever.
+        for kind, detail in spec_drift(entry, s):
+            out.append((s.id, Status.PASS.value, kind, detail))
+    return out
+
+
 def cmd_status(ledger: Ledger) -> int:
     counts = ledger.summary()
     total = len(LADDER)
@@ -396,6 +433,26 @@ def cmd_status(ledger: Ledger) -> int:
     if unknown:
         print(f"  ? {len(unknown)} of those could not be checked even by "
               f"content — `run stale` prints why.\n")
+    # The claim-text half of the same question (46th audit B1). Printed next to
+    # the code half on purpose: an iteration reads this block and nothing else,
+    # and a defect reported somewhere the loop does not look is a defect that
+    # was written down rather than detected (LESSONS.md, 2026-08-29).
+    drift = drifted_claims(ledger)
+    spec_changed = [x for x in drift if x[2] == "SPEC_CHANGED"]
+    spec_unstamped = [x for x in drift if x[2] == "SPEC_UNSTAMPED"]
+    if spec_changed:
+        print("  ! DRIFTED CLAIMS — the SPEC TEXT changed after the PASS that "
+              "bought it:")
+        for sid, st, _, detail in spec_changed:
+            print(f"      {sid}  recorded {st}; {detail}. Re-run it — the "
+                  f"certificate is against words that no longer exist.")
+        print()
+    if spec_unstamped:
+        print(f"  ? {len(spec_unstamped)} PASS row(s) predate `spec_sha`: "
+              f"whether the claim text moved since\n    cannot be answered "
+              f"from the record. Not back-filled — the sha of today's words "
+              f"proves\n    nothing about a run from before them. A re-run "
+              f"upgrades each to a real stamp.\n")
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
 

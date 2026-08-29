@@ -56,6 +56,34 @@ Seven properties, each with a way to fail:
      of records it examined is recorded — a detector that reports a count
      must report its denominator, asserted against the real ledger and not
      only against a fixture.
+ 10. A PASS is a claim about WORDS as well as code, and the ledger had a field
+     for only one of them (46th audit B1, 2026-08-29). On 2026-08-24 an owner
+     ruling amended `LC.01`'s `falsified_by`; the amendment was exemplary and
+     ended *"Requires a re-run to re-buy the certificate under the amended
+     text."* Five days later the row still read PASS at `ran_at 2026-08-09`,
+     and that sentence was the ONLY record of the debt — `re-buy the
+     certificate` occurred exactly once in the repository, inside the spec
+     string it described. `impl_sha` could not see it: the code had not moved,
+     the claim had. `spec_sha` is the missing field and `spec_drift` reads it.
+     Seven sub-properties: the hash covers every field in `SPEC_CLAIM_FIELDS`
+     (asserted as a SET EQUALITY against the perturbation table, so widening
+     the hashed set without showing the new field matters goes red); it ignores
+     `notes`/`title`/`id`/`tier` and `depends_on` order, because an alarm that
+     fires on a `COVERS:` edit gets ignored within a fortnight; the detector
+     fires on an amended claim and spares an unamended one; `None` reads
+     UNKNOWN, NEVER CLEAN, or the 84 rows already on disk would certify
+     themselves forever; `run_spec` actually stamps it, or the alarm is fitted
+     to an empty domain exactly as property 9 describes; and the REAL ladder
+     holds zero PASS rows whose claim text has demonstrably moved.
+
+     WHY HERE AND NOT IN `T0.21`, where the 46th audit filed it: the predicate
+     lives in `protocol.py`, which THIS spec declares in `IMPL_DEPS` and
+     `T0.21` does not — `T0.21` hashes `coverage.py`. Housing it there would
+     have left the battery's certificate blind to edits of the code it tests
+     (`T0.21`'s own docstring cites exactly that as PG.6's defect), or forced
+     the predicate into a second home, which is how two implementations of "the
+     same" hash diverged silently here once already (`impl_sha_of`). Both
+     options reproduce a named scar in this repo; this one reproduces neither.
 
 CONTROL — the pre-fix path: the literal `9b92d14` edit (read the JSON, set
 `status`, write it back) replayed on a temp ledger. Under the same audit it
@@ -70,6 +98,8 @@ import json
 import tempfile
 from pathlib import Path
 
+from dataclasses import replace
+
 from ..protocol import (Ledger, Result, Status, module_path_for, run_spec,
                         staleness_of)
 from ..registry import BY_ID, LADDER, Spec, Budget
@@ -81,6 +111,154 @@ IMPL_DEPS = ["experiments/protocol.py"]
 
 _DUMMY = Spec("X.17", 0, "dummy", hypothesis="h", falsified_by="f",
               null_baseline="n", metric="m", budget=Budget.CPU_FAST)
+
+# P10's donor. EVERY claim-bearing field is populated, including the optional
+# ones, so each can be perturbed and its absence from the hash detected. A
+# donor with `control=None` would let `control` drop out of `SPEC_CLAIM_FIELDS`
+# unnoticed — the fixture must be able to see the omission it is guarding.
+_CLAIM_DONOR = Spec("X.17c", 2, "claim donor", hypothesis="h",
+                    falsified_by="f", null_baseline="n", metric="m",
+                    budget=Budget.CPU, depends_on=["B.02", "A.01"], seeds=3,
+                    control="c", kills="k", notes="COVERS: nothing",
+                    gate_mode="validity", screen_rationale=None)
+
+# One perturbation per claim-bearing field, asserted BELOW to cover
+# `SPEC_CLAIM_FIELDS` exactly. That equality is the class-closer: widen the
+# hashed set without adding its case here and this spec goes red, instead of
+# the new field being hashed-but-never-shown-to-matter. Narrow it and the
+# leftover case has nothing to name, which goes red too. The failure this
+# prevents is the one that produced the finding — a hash that covered the code
+# and not `falsified_by` looked exactly like a hash that covered everything.
+_CLAIM_PERTURBATIONS = {
+    "hypothesis":       "h2",
+    "falsified_by":     "f2",          # LC.01's own field, 2026-08-24
+    "null_baseline":    "n2",
+    "metric":           "m2",
+    "control":          "c2",
+    "kills":            "k2",
+    "budget":           Budget.GPU,
+    "seeds":            5,
+    "depends_on":       ["A.01"],      # a REMOVAL, not a reorder
+    "gate_mode":        "screen",
+    "screen_rationale": "these arms are observables",
+}
+
+# Edits that must NOT invalidate a certificate. `notes` carries the `COVERS:`
+# and `PARKED:` markers, which move for honest bookkeeping several times a
+# week; `title` is a label; `depends_on` order carries no meaning. An alarm
+# that fires on these would be ignored within a fortnight — `impl_sha_of`'s
+# "mass false alarm" reasoning, one field over.
+_CLAIM_INVARIANTS = {
+    "notes":      "COVERS: hearing (claim). PARKED: 2026-08-29 — for a reason.",
+    "title":      "a copy-edited title",
+    "id":         "X.17d",
+    "tier":       5,
+    "depends_on": ["A.01", "B.02"],    # the same two, reordered
+}
+
+
+def _claim_battery(real: Ledger) -> dict:
+    """P10 — a PASS is a claim about WORDS, and the ledger had no field for them.
+
+    Known answers first (the hash is sensitive to every claim field and to
+    nothing else; the detector fires, spares, and refuses to call `None`
+    clean), then the round trip through `run_spec`, then the REAL ladder.
+    """
+    from ..protocol import SPEC_CLAIM_FIELDS, spec_drift, spec_sha_of
+
+    base = spec_sha_of(_CLAIM_DONOR)
+
+    # 10a. the hashed set and the perturbation set are the same set.
+    covers_every_field = (set(_CLAIM_PERTURBATIONS) == set(SPEC_CLAIM_FIELDS))
+
+    # 10b. every claim-bearing field moves the hash...
+    moved = {f for f, v in _CLAIM_PERTURBATIONS.items()
+             if spec_sha_of(replace(_CLAIM_DONOR, **{f: v})) != base}
+    every_claim_field_hashed = (moved == set(_CLAIM_PERTURBATIONS))
+
+    # 10c. ...and nothing else does. Both directions, because a hash over the
+    # whole Spec would pass 10b and cry wolf every time a `COVERS:` marker moves.
+    held = {f for f, v in _CLAIM_INVARIANTS.items()
+            if spec_sha_of(replace(_CLAIM_DONOR, **{f: v})) == base}
+    bookkeeping_does_not_invalidate = (held == set(_CLAIM_INVARIANTS))
+
+    # 10d. THE LC.01 SHAPE, replayed: a row bought under the old words, the
+    # spec amended, the detector must say so — and must NOT say so when the
+    # words held still.
+    amended = replace(_CLAIM_DONOR, falsified_by="f — [AMENDED 2026-08-24]")
+    fresh_row = Result(spec_id="X.17c", status=Status.PASS, spec_sha=base,
+                       ran_at="2026-01-01T00:00:00")
+    kinds_when_amended = [k for k, _ in spec_drift(fresh_row, amended)]
+    kinds_when_held = [k for k, _ in spec_drift(fresh_row, _CLAIM_DONOR)]
+    sees_amended_claim = (kinds_when_amended == ["SPEC_CHANGED"])
+    spares_unamended_claim = (kinds_when_held == [])
+
+    # 10e. `None` is UNKNOWN, NOT CLEAN. The direction that decides whether a
+    # detector shipped with 84 pre-existing rows is honest or decorative: read
+    # as clean, every row already on disk would certify itself forever.
+    legacy_row = Result(spec_id="X.17c", status=Status.PASS,
+                        ran_at="2026-01-01T00:00:00")
+    kinds_legacy = [k for k, _ in spec_drift(legacy_row, _CLAIM_DONOR)]
+    unstamped_is_not_clean = (kinds_legacy == ["SPEC_UNSTAMPED"])
+
+    # 10f. the recorder actually writes it, on BOTH paths it can take. A field
+    # nothing stamps is a field that reports every future row as unstamped —
+    # the alarm fitted to an empty domain, which is property 9's whole lesson
+    # one field over. The BLOCKED path is here because the first version of
+    # this battery found it unstamped: `run_spec` returns early on unsatisfied
+    # dependencies through a second `Result(...)` construction, and a field
+    # with one silent exemption is one an auditor has to special-case.
+    runnable = replace(_CLAIM_DONOR, depends_on=[])
+    with tempfile.TemporaryDirectory() as td:
+        p = Path(td) / "ledger.json"
+        run_spec(runnable, lambda s: {"m": 1.0}, lambda m, c: True,
+                 ledger=Ledger(p))
+        row = json.loads(p.read_text())["results"]["X.17c"]
+        written, wrote_status = row.get("spec_sha"), row.get("status")
+    with tempfile.TemporaryDirectory() as td:
+        p = Path(td) / "ledger.json"
+        # `_CLAIM_DONOR` depends on A.01/B.02, which exist in no ledger.
+        run_spec(_CLAIM_DONOR, lambda s: {"m": 1.0}, lambda m, c: True,
+                 ledger=Ledger(p))
+        brow = json.loads(p.read_text())["results"]["X.17c"]
+    run_spec_stamps_the_claim = (written == spec_sha_of(runnable)
+                                 and wrote_status == Status.PASS.value
+                                 and brow.get("status") == Status.BLOCKED.value
+                                 and brow.get("spec_sha") == base)
+
+    # 10g. THE REAL LADDER. Planted positives prove the detector CAN fire; only
+    # this says anything about the ledger the project actually reads. Every
+    # PASS whose spec text has demonstrably moved must be zero, and the
+    # unstamped population is REPORTED with its denominator rather than filed
+    # under clean — it shrinks as rows are re-run, and a count that hides is a
+    # count that never shrinks.
+    n_changed = n_unstamped = n_stamped_clean = 0
+    for s in LADDER:
+        if real.status(s.id) is not Status.PASS:
+            continue
+        e = real.results.get(s.id)
+        if e is None:
+            continue
+        kinds = [k for k, _ in spec_drift(e, s)]
+        if "SPEC_CHANGED" in kinds:
+            n_changed += 1
+        elif "SPEC_UNSTAMPED" in kinds:
+            n_unstamped += 1
+        else:
+            n_stamped_clean += 1
+
+    return {
+        "claim_hash_covers_every_claim_field": (covers_every_field
+                                                and every_claim_field_hashed),
+        "claim_hash_ignores_bookkeeping": bookkeeping_does_not_invalidate,
+        "drift_sees_amended_claim": sees_amended_claim,
+        "drift_spares_unamended_claim": spares_unamended_claim,
+        "unstamped_claim_is_not_clean": unstamped_is_not_clean,
+        "run_spec_stamps_the_claim": run_spec_stamps_the_claim,
+        "pass_rows_with_drifted_claim": n_changed,
+        "pass_rows_claim_unstamped": n_unstamped,
+        "pass_rows_claim_verified": n_stamped_clean,
+    }
 
 
 def _audit(path: Path, spec_id: str) -> bool:
@@ -295,6 +473,7 @@ def _experiment(seed: int) -> dict:
                 n_unanswerable += 1
 
         return {
+            **_claim_battery(real),
             "content_check_fires_on_postrun_edit": content_check_fires,
             "content_check_spares_unedited_file": content_check_spares,
             "content_check_reports_unanswerable": content_check_reports_unanswerable,
@@ -335,9 +514,24 @@ def _control(seed: int) -> dict:
         path.write_text(json.dumps(raw, indent=2, sort_keys=True) + "\n")
 
         hand_set = json.loads(path.read_text())["results"]["X.17"]["status"] == "VOID"
+
+        # P10's control, and it is the SAME shape: the pre-2026-08-29 reader,
+        # which hashed the test FILE and nothing else. Replay LC.01 — a PASS
+        # recorded, the spec's `falsified_by` amended by owner ruling, the code
+        # untouched — and ask the old rule whether anything moved. It must say
+        # no. That "no" is the defect, kept executable: for five days it was the
+        # only answer the repository could give, and the amendment's own
+        # sentence saying a re-run was owed was the sole record of the debt.
+        from ..protocol import impl_sha_of, spec_sha_of
+        amended = replace(_CLAIM_DONOR, falsified_by="f — [AMENDED 2026-08-24]")
+        me = Path(__file__).resolve()
+        impl_rule_sees = impl_sha_of(me) != impl_sha_of(me)      # code held still
+        claim_rule_sees = spec_sha_of(_CLAIM_DONOR) != spec_sha_of(amended)
         return {
             "hand_edit_took_effect": hand_set,
             "detector_sees_amendment": _audit(path, "X.17"),
+            "impl_sha_rule_sees_amended_claim": impl_rule_sees,
+            "claim_rule_sees_amended_claim": claim_rule_sees,
         }
 
 
@@ -364,9 +558,29 @@ def _check(m: dict, c: dict) -> bool:
         m["history_carries_evidence"],
         m["history_absence_preserved"],
         m["detector_sees_amendment"],
+        # P10: the ledger can answer "was this PASS bought under today's
+        # claim?" — the hash covers every claim-bearing field and no
+        # bookkeeping one, the detector fires and spares on known answers,
+        # `None` never reads clean, `run_spec` writes it, and the REAL ladder
+        # holds zero PASS rows whose spec text has demonstrably moved. The
+        # unstamped population is recorded, not gated: gating it would put 84
+        # legacy rows in the way of the guard's own first commit, and the sha
+        # of today's words proves nothing about a run from before them.
+        m["claim_hash_covers_every_claim_field"],
+        m["claim_hash_ignores_bookkeeping"],
+        m["drift_sees_amended_claim"],
+        m["drift_spares_unamended_claim"],
+        m["unstamped_claim_is_not_clean"],
+        m["run_spec_stamps_the_claim"],
+        m["pass_rows_with_drifted_claim"] == 0,
         # the control must fail: the hand-edit lands and stays invisible
         c["hand_edit_took_effect"],
         not c["detector_sees_amendment"],
+        # ...and the file-hash rule cannot see an amended claim, while the
+        # claim-hash rule can. Without the second half this control would pass
+        # against a detector that sees nothing at all.
+        not c["impl_sha_rule_sees_amended_claim"],
+        c["claim_rule_sees_amended_claim"],
     ])
 
 

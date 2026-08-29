@@ -285,6 +285,21 @@ class Result:
     UNVERIFIABLE — deliberately not `""`, because a sentinel that is also a
     valid value cannot be detected (the `Arm.cost` lesson).
     """
+    spec_sha: Optional[str] = None
+    """sha256 of the CLAIM this result was recorded against, at run time.
+
+    `impl_sha`'s sibling and the answer to the other half of "is this row still
+    true": the code can hold still while the WORDS move. `LC.01`'s
+    `falsified_by` was amended by owner ruling on 2026-08-24 with the note that
+    a re-run was owed; the row kept reading PASS at `ran_at 2026-08-09` and no
+    instrument could see it, because the ledger hashed the test file and never
+    the spec. See `spec_sha_of` for what is covered and `spec_drift` for how a
+    row is read.
+
+    `None` means the entry predates this field: UNKNOWN, NOT CLEAN. Deliberately
+    not `""` and deliberately not back-filled — the sha of today's words proves
+    nothing about a run from before them (the `Arm.cost` lesson again).
+    """
 
     unknown_keys = ()
     """Row keys this version's dataclass does not define, set by `from_row`.
@@ -485,6 +500,11 @@ class Ledger:
                         row_h = {k: prev.get(k) for k in
                                  ("status", "ran_at", "commit", "message",
                                   "metrics", "control_metrics", "impl_sha",
+                                  # `spec_sha` rides along for the same reason
+                                  # `impl_sha` does: auditing a superseded
+                                  # verdict needs the WORDS it was bought
+                                  # under as much as the code (46th audit B1).
+                                  "spec_sha",
                                   "seeds", "gpu_job_id")
                                  if k in prev}
                         if prev.get("amended"):
@@ -555,6 +575,16 @@ class Ledger:
                                 "impl_sha": src.get("impl_sha"),
                                 "impl_changed": (src.get("impl_sha") != r.impl_sha
                                                  if both else None),
+                                # The other way a verdict can be superseded
+                                # without the code moving: the CLAIM moved.
+                                # Same tri-state discipline as `impl_changed`
+                                # — None when either side predates `spec_sha`,
+                                # because unknowable must never read as false.
+                                "spec_sha": src.get("spec_sha"),
+                                "spec_changed": (
+                                    src.get("spec_sha") != r.spec_sha
+                                    if (src.get("spec_sha") and r.spec_sha)
+                                    else None),
                                 "metrics": src.get("metrics"),
                                 "ran_at": src.get("ran_at"),
                             }
@@ -1026,6 +1056,128 @@ def impl_sha_of(path, file_bytes: Optional[bytes] = None,
         return h.hexdigest()[:16]
     except (OSError, TypeError):
         return None
+
+
+#: The Spec fields a PASS is a claim ABOUT. Hashed into `spec_sha`; everything
+#: not listed here may be edited without re-buying a certificate.
+#:
+#: The line is drawn at "would a reader of the row have understood the verdict
+#: differently". `hypothesis`/`falsified_by`/`null_baseline`/`metric` ARE the
+#: claim. `control` is the sabotage that must fail, `budget`/`seeds` are the
+#: envelope the claim was bought at, `depends_on` is what it rests on.
+#:
+#: THREE ADDITIONS BEYOND THE 46th AUDIT'S B1 LIST, each because this file
+#: already calls the field a pre-registration somewhere else:
+#:   `gate_mode`         — Spec's own docstring: "the mode is a pre-registration,
+#:                         and a caller that could pass it as an argument could
+#:                         change it after seeing a VOID". A pre-registration
+#:                         that can be edited after the verdict, invisibly, is
+#:                         the exact defect this field exists to close.
+#:   `screen_rationale`  — required when `gate_mode == "screen"` and recorded
+#:                         verbatim beside the verdict it permitted.
+#:   `kills`             — "forces the cost of failure to be decided before the
+#:                         result is known". Narrowing it after a FAIL retires
+#:                         nothing while reading as though it had.
+#: Widening the list is STRENGTHENING and is allowed (the T1.02 precedent), but
+#: it invalidates every stamp bought under the old list at once — a mass re-buy.
+#: Pay that deliberately, in its own commit, and say so.
+#:
+#: NOT hashed, deliberately: `id`/`tier` are identity and placement, `title` is
+#: a label, and `notes` carries the `COVERS:`/`PARKED:` markers that move for
+#: honest bookkeeping reasons several times a week. Hashing `notes` would make
+#: this alarm fire so often that the loop would learn to ignore it — the
+#: `impl_sha_of` "mass false alarm" lesson, one field over.
+SPEC_CLAIM_FIELDS = ("hypothesis", "falsified_by", "null_baseline", "metric",
+                     "control", "kills", "budget", "seeds", "depends_on",
+                     "gate_mode", "screen_rationale")
+
+
+def spec_sha_of(spec: "Spec") -> Optional[str]:
+    """sha256 of the CLAIM a spec makes — the words the verdict was bought under.
+
+    `impl_sha` answers "is this row about the code that produced it". Nothing
+    answered "is this row about the CLAIM it was recorded against", and on
+    2026-08-24 an owner ruling amended `LC.01`'s `falsified_by`; the amendment
+    was exemplary — annotated inline, strengthen-only, and it ended *"Requires
+    a re-run to re-buy the certificate under the amended text."* Five days
+    later `LC.01` still read PASS at `ran_at 2026-08-09` and that sentence was
+    the only record of the debt: `re-buy the certificate` occurred exactly once
+    in the whole repository, inside the spec string it described. A ledger row
+    carried `impl_sha` and no field for this, so the question had nowhere to be
+    answered from and no instrument could ask it. (46th audit, B1.)
+
+    Hashes `SPEC_CLAIM_FIELDS` as an ordered list of `(name, value)` pairs, so
+    the payload NAMES the fields it covers: a future reader can tell a hash
+    that covered eight fields from one that covered eleven, instead of
+    inferring it from a mismatch. `depends_on` is sorted because its order
+    carries no meaning and a reorder is not a claim change; every other value
+    goes in as written. `Budget` is a `str` Enum, so it serialises as its own
+    label (`cpu<10min`) rather than a repr that could drift with the class.
+
+    Truncated to 16 hex like `impl_sha`, for the same reason: it is an
+    equality check in a ledger a human reads, not a security boundary.
+
+    Returns None only if the spec cannot be serialised at all — treated by
+    `spec_drift` as unknown, never as clean.
+    """
+    import hashlib
+    try:
+        payload = []
+        for name in SPEC_CLAIM_FIELDS:
+            v = getattr(spec, name, None)
+            if isinstance(v, Budget):
+                v = v.value
+            elif isinstance(v, (list, tuple)):
+                v = sorted(str(x) for x in v) if name == "depends_on" \
+                    else [str(x) for x in v]
+            payload.append([name, v])
+        blob = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+        return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
+    except (TypeError, ValueError):
+        return None
+
+
+def spec_drift(entry: "Result", spec: "Spec") -> List[tuple]:
+    """Every reason this entry is not a verdict about the claim as it reads now.
+
+    `(kind, detail)` pairs, empty meaning the row was bought under today's
+    words. The shape and the honesty rule are `staleness_of`'s, deliberately:
+
+      SPEC_CHANGED     the row carries a `spec_sha` and it does not match the
+                       live spec. POSITIVE evidence that the claim moved after
+                       the verdict — the row must be re-bought.
+      SPEC_UNSTAMPED   the row predates the field. UNKNOWN, NOT CLEAN — the
+                       same rule `impl_changed` already uses for `None`, and
+                       the reason back-fill is refused rather than faked: no
+                       later run recovers what the words were at `ran_at`.
+                       (The registry is in git and a content check like
+                       `blob_sha_at_run`'s is possible in principle; it is not
+                       done here because a Spec's text is assembled by Python
+                       across two registry modules, so reconstructing the
+                       claim at an old tree state means executing that tree,
+                       not reading a blob. Stated as a known gap with the
+                       detector that carries it — the count is reported, so
+                       the population shrinks visibly as rows are re-run.)
+
+    Only PASS is worth alarming on and this function does not know the status;
+    the caller filters. A FAIL under superseded words is a refutation of a
+    claim nobody makes any more, which is untidy, not dangerous.
+    """
+    out: List[tuple] = []
+    recorded = getattr(entry, "spec_sha", None)
+    if not recorded:
+        out.append(("SPEC_UNSTAMPED",
+                    f"recorded at {(getattr(entry, 'ran_at', '') or '?')} "
+                    f"before spec_sha existed; whether the claim text has "
+                    f"moved since cannot be answered from the record"))
+        return out
+    cur = spec_sha_of(spec)
+    if cur != recorded:
+        out.append(("SPEC_CHANGED",
+                    f"bought under claim text {recorded}, the registry now "
+                    f"reads {cur}; the certificate must be re-bought under "
+                    f"the amended words"))
+    return out
 
 
 def prose_only_delta(old_bytes: bytes, new_bytes: bytes) -> str:
@@ -1750,6 +1902,15 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
         res = Result(spec_id=spec.id, status=Status.BLOCKED,
                      message="dependencies not satisfied: " + "; ".join(
                          f"{d} ({why})" for d, why in blocked),
+                     # Stamped on the BLOCKED path too, so "the runner always
+                     # records the words it was handed" holds with no
+                     # exceptions. A BLOCKED row asserts nothing about the
+                     # claim, but it does say WHEN the refusal happened, and a
+                     # field with one silent exemption is a field an auditor
+                     # has to special-case — which is how exemptions become
+                     # holes. Found by T0.17 P10's round trip, which recorded
+                     # BLOCKED and read back `spec_sha: null`.
+                     spec_sha=spec_sha_of(spec),
                      **Result.env_stamp(), ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"))
         ledger.record(res)
         return res
@@ -1850,6 +2011,11 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                  duration_s=round(time.time() - t0, 2), message=message,
                  compute_s=(round(compute_s, 2) if compute_s is not None else None),
                  impl_sha=impl_sha,
+                 # Stamped from the Spec object THIS run was handed, not from a
+                 # registry lookup by id: the two can differ (a bakeoff builds
+                 # arms with `replace`), and the row must name the words the
+                 # runner actually enforced.
+                 spec_sha=spec_sha_of(spec),
                  gpu_job_id=",".join(job_ids) if job_ids else None,
                  ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"), **stamp)
     ledger.record(res)
