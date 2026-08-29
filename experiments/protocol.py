@@ -1367,6 +1367,68 @@ def module_path_for(spec_id: str, strict: bool = False):
     return matches[0] if len(matches) == 1 else None
 
 
+#: The name of the module-level flag by which a spec declares that its
+#: pre-registered bars are FROZEN. `SM.02` invented the idiom (a pilot on
+#: disjoint seeds fixes the numbers, then the flag flips and `run()` stops
+#: refusing) and `SM.03` copied it; `gates_frozen` reads it statically so the
+#: idiom becomes a fact instruments can join against instead of a convention.
+GATES_FROZEN_FLAG = "_GATES_FROZEN"
+
+
+def gates_frozen(spec_id: str, path=None):
+    """Has this spec frozen its pre-registered gates? `True` / `False` / `None`.
+
+    `None` means THE SPEC DOES NOT DECLARE — which is the overwhelming majority
+    of them and is NOT an accusation. Only a spec that has chosen the
+    provisional-gates idiom can answer this question at all, so `None` reads
+    "not applicable", and a caller must test `is False`, never falsiness.
+
+    Read by AST rather than by import, for the same reason `module_path_for`
+    answers without importing: importing `sm_03_nose_reports_occluded` costs a
+    MuJoCo model build, and an instrument that has to run the thing it is
+    auditing is an instrument nobody will run. Only module-level assignments
+    count, and the LAST one wins — `SM.02` assigns the flag once at line 288
+    and reads it at 804, and a future file that re-assigns it after a pilot
+    block must be read the way Python would read it.
+
+    THE LOUD DIRECTION, deliberately: a declaration whose value is not the
+    literal `True` — `False`, an env lookup, an expression, a name — returns
+    `False`, and a file that cannot be read or parsed returns `False` too. A
+    spec whose freeze cannot be established by reading the source is a spec
+    whose freeze has not been established; and a file that does not parse
+    cannot be dispatched whatever its flag says. The failure mode this guards
+    is the one direction that matters: `queue_depth` counting an undispatchable
+    spec as shelf stock, which is exactly how `gpu<20min` read 1 while the
+    honest answer was 0 (46th audit, RANK 2).
+
+    WHAT IT DOES NOT COVER, stated because the deleted `KNOWN OVER-COUNT`
+    paragraph in `coverage.queue_depth` overclaimed in the other direction:
+    this detects a DECLARED refusal. A `run()` that refuses for some other
+    reason — a missing artefact, an unmet precondition, a raise — still counts
+    toward queue depth, because nothing in the repo makes that declarable yet.
+    The number is still an upper bound; it is now a tighter one.
+    """
+    import ast
+    if path is None:
+        path = module_path_for(spec_id)
+    if not path:
+        return None
+    try:
+        tree = ast.parse(Path(path).read_text())
+    except (OSError, SyntaxError, ValueError):
+        return False
+    found = None
+    for node in tree.body:
+        targets = (node.targets if isinstance(node, ast.Assign) else
+                   [node.target] if isinstance(node, ast.AnnAssign) else [])
+        for t in targets:
+            if isinstance(t, ast.Name) and t.id == GATES_FROZEN_FLAG:
+                value = getattr(node, "value", None)
+                found = (isinstance(value, ast.Constant)
+                         and value.value is True)
+    return found
+
+
 def deps_moved_since(path, ran_at, repo_root=None) -> tuple:
     """Declared `IMPL_DEPS` with commits after `ran_at` — the one staleness
     question still answerable for an entry recorded before `impl_sha` existed.

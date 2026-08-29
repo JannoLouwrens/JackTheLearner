@@ -199,7 +199,7 @@ def _fixture() -> dict:
     return reg
 
 
-N_PROPERTIES = 11
+N_PROPERTIES = 12
 
 
 def _probe(rule_is_regex: bool) -> dict:
@@ -429,6 +429,23 @@ def _probe(rule_is_regex: bool) -> dict:
                 or "ZZ.pclaim" not in leak["shelter/building"]["specs"]  # organ
                 or live_pbad):                             # live markers parse
             failed.append("p11_parked_is_not_coverage")
+
+    # P12 — the QUEUE instrument's own known-answer battery, put under the
+    # ledger. `coverage.py` grew `queue_depth` on 2026-08-29 to answer "how
+    # many specs could be dispatched today", and its fixtures ran in exactly
+    # one place: the `__main__` path of `coverage.py`. Nothing re-ran them at
+    # `--gate`, nothing recorded them, and no row would have gone red if the
+    # instrument silently started answering a different question — which is
+    # the shape of every organ failure this spec exists for. The batteries
+    # themselves live next to the code they test (they need its internals);
+    # what P12 adds is that a ladder run FAILS when they do.
+    #
+    # It is rule-independent by construction, so the regex control passes it.
+    # That is correct and not a weakness: the control's job is to break P3/P4,
+    # and `_check` requires exactly those two by name.
+    from ..coverage import _gates_frozen_fixture, _queue_fixture
+    if _queue_fixture() or _gates_frozen_fixture():
+        failed.append("p12_queue_instrument_fixtures_hold")
 
     rows = report()
     return {

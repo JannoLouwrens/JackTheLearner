@@ -499,19 +499,24 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     separately, because a VOID needs an arm repaired before it is a dispatch
     and a reader who cannot see that would over-count the shelf.
 
-    KNOWN OVER-COUNT, stated here rather than discovered later: this counts a
-    spec whose `run()` REFUSES on provisional gates. `SM.03` is the live case
-    — implemented, tracked, unsettled, and undispatchable until a completed
-    pilot freezes its bars — so `gpu<20min` reads 1 when the honest answer is
-    0. Detecting that needs a per-spec "gates frozen" declaration, which does
-    not exist yet; until it does this number is an UPPER BOUND and a red here
-    is strictly conservative. Do not read a non-zero class as "there is work
-    to dispatch" without opening the spec.
+    and **not gate-provisional** — a spec that has declared `_GATES_FROZEN =
+    False` refuses its own registered run until a pilot fixes its bars, so it
+    is implemented shelf furniture, not a dispatch. That last clause was the
+    46th audit's RANK 2: until 2026-08-29 this function counted `SM.03`, and
+    `gpu<20min` read 1 while the honest answer was 0 — the instrument built to
+    say "the shelf is empty" was itself reporting the shelf as stocked.
+
+    STILL AN UPPER BOUND, and the narrower claim is the honest one:
+    `protocol.gates_frozen` detects a DECLARED refusal. A `run()` that refuses
+    for some other reason — an unmet precondition, a missing artefact, a raise
+    — is invisible here, because nothing in the repo makes that declarable.
+    Do not read a non-zero class as "there is work to dispatch" without
+    opening the spec.
 
     Returns `{"depth", "by_class", "void", "excluded", "empty", "new_empty",
     "known_empty", "stale_baseline"}`. `new_empty` is the fatal class.
     """
-    from .protocol import Budget, Ledger, module_path_for
+    from .protocol import Budget, Ledger, gates_frozen, module_path_for
     if ledger is None:
         ledger = Ledger()
     if by_id is None:
@@ -525,7 +530,7 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     by_class: Dict[str, list] = {b.value: [] for b in Budget}
     excluded: Dict[str, list] = {k: [] for k in
                                  ("unimplemented", "untracked", "parked",
-                                  "settled")}
+                                  "settled", "gates_provisional")}
     void: List[str] = []
     for spec in ready(ledger):
         cls = spec.budget.value
@@ -546,6 +551,11 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         # 4.5 days while every instrument read it as present.
         if str(Path(path).resolve()) not in tracked:
             excluded["untracked"].append(spec.id)
+            continue
+        # `is False`, never falsiness: `None` is "does not declare", which is
+        # 185 of 187 specs and means NOT APPLICABLE, not "unfrozen".
+        if gates_frozen(spec.id, path=path) is False:
+            excluded["gates_provisional"].append(spec.id)
             continue
         by_class[cls].append(spec.id)
         if status == "VOID":
@@ -614,35 +624,47 @@ def _queue_fixture() -> List[str]:
         def blocked_by(self, spec):
             return []
 
+    # The last column is `gates_frozen`'s answer: None = does not declare
+    # (185 of 187 real specs), True = declared and frozen, False = declared
+    # provisional. Q.08 and Q.09 are the pair that distinguishes "unfrozen"
+    # from "silent" — a fixture with only the False row would pass even if the
+    # clause tested falsiness and excluded every non-declaring spec on Earth.
     rows = [
-        ("Q.01", Budget.GPU, "", None, True),            # the healthy queue row
-        ("Q.02", Budget.GPU, "", Status.FAIL, True),     # settled: a verdict exists
-        ("Q.03", Budget.GPU, "", Status.VOID, True),     # VOID is NOT a verdict
-        ("Q.04", Budget.GPU, "PARKED: 2026-08-20 — arm redesign owed", None, True),
-        ("Q.05", Budget.GPU, "", None, False),           # implemented but UNTRACKED
-        ("Q.06", Budget.CPU, "", None, True),            # a different cost class
-        ("Q.07", Budget.GPU, "", None, True),            # no file: unimplemented
+        ("Q.01", Budget.GPU, "", None, True, None),      # the healthy queue row
+        ("Q.02", Budget.GPU, "", Status.FAIL, True, None),  # settled: a verdict exists
+        ("Q.03", Budget.GPU, "", Status.VOID, True, None),  # VOID is NOT a verdict
+        ("Q.04", Budget.GPU, "PARKED: 2026-08-20 — arm redesign owed", None, True, None),
+        ("Q.05", Budget.GPU, "", None, False, None),     # implemented but UNTRACKED
+        ("Q.06", Budget.CPU, "", None, True, None),      # a different cost class
+        ("Q.07", Budget.GPU, "", None, True, None),      # no file: unimplemented
+        ("Q.08", Budget.GPU, "", None, True, False),     # gates PROVISIONAL: refuses
+        ("Q.09", Budget.GPU, "", None, True, True),      # declared AND frozen: counts
     ]
-    by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t in rows}
-    led = _Led({sid: s for sid, _b, _n, s, _t in rows if s is not None})
-    tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t in rows if t}
+    by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t, _g in rows}
+    led = _Led({sid: s for sid, _b, _n, s, _t, _g in rows if s is not None})
+    tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t, _g in rows if t}
+    frozen = {sid: g for sid, _b, _n, _s, _t, g in rows}
 
     from . import protocol as _proto
     from . import registry as _reg
     real_ready, real_mpf = _reg.ready, _proto.module_path_for
+    real_gf = _proto.gates_frozen
     _reg.ready = lambda _l: list(by_id.values())
     _proto.module_path_for = lambda sid, strict=False: (
         None if sid == "Q.07" else f"/x/{sid}.py")
+    _proto.gates_frozen = lambda sid, path=None: frozen.get(sid)
     try:
         q = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
                         baseline=frozenset({"gpu<8h"}))
     finally:
         _reg.ready, _proto.module_path_for = real_ready, real_mpf
+        _proto.gates_frozen = real_gf
 
     fails = []
-    if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03"]:
-        fails.append(f"gpu<2h queue should be [Q.01, Q.03] (VOID is not a "
-                     f"verdict), got {q['by_class']['gpu<2h']}")
+    if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03", "Q.09"]:
+        fails.append(f"gpu<2h queue should be [Q.01, Q.03, Q.09] (VOID is not "
+                     f"a verdict; a spec that declares FROZEN gates counts), "
+                     f"got {q['by_class']['gpu<2h']}")
     if q["void"] != ["Q.03"]:
         fails.append(f"VOID must be reported separately, got {q['void']}")
     if q["excluded"]["settled"] != ["Q.02"]:
@@ -656,10 +678,16 @@ def _queue_fixture() -> List[str]:
     if q["excluded"]["untracked"] != ["Q.05"]:
         fails.append(f"an UNTRACKED implementation must be excluded — the "
                      f"SM.03 case — got {q['excluded']['untracked']}")
+    # THE ROW THE 46th AUDIT'S RANK 2 EXISTS FOR: runnable, implemented,
+    # tracked, unsettled, unparked — and its own `run()` refuses.
+    if q["excluded"]["gates_provisional"] != ["Q.08"]:
+        fails.append(f"a spec with PROVISIONAL gates refuses its own "
+                     f"registered run and must be excluded — the SM.03 case — "
+                     f"got {q['excluded']['gates_provisional']}")
     if q["by_class"]["cpu<10min"] != ["Q.06"]:
         fails.append(f"cost classes must not merge, got {q['by_class']}")
-    if q["depth"] != 3:
-        fails.append(f"depth should be 3, got {q['depth']}")
+    if q["depth"] != 4:
+        fails.append(f"depth should be 4, got {q['depth']}")
     # gpu<20min is empty and NOT in this fixture's baseline: new debt, a red.
     if "gpu<20min" not in q["new_empty"]:
         fails.append(f"an unlisted empty class is new debt, got "
@@ -668,6 +696,69 @@ def _queue_fixture() -> List[str]:
     if q["known_empty"] != ["gpu<8h"]:
         fails.append(f"baselined empty class is known debt, got "
                      f"{q['known_empty']}")
+    return fails
+
+
+def _gates_frozen_fixture() -> List[str]:
+    """Known-answer battery for the READER, which `_queue_fixture` cannot test.
+
+    That fixture monkeypatches `gates_frozen` to inject its answers — correctly,
+    because it is testing the exclusion CLAUSE — which leaves the AST parse
+    itself covered by nothing. Two instruments, two fixtures: a fixture that
+    stubs the thing under test has moved the test somewhere else.
+
+    The last row is the one that pays for this function: `SM.03`'s real file on
+    disk, read the way the real caller reads it. A reader that is right about
+    nine synthetic strings and wrong about the only file it is pointed at has
+    told the truth about nothing.
+    """
+    import tempfile
+    from .protocol import gates_frozen, module_path_for
+
+    cases = [
+        ("no declaration at all", "X = 1\n", None),
+        ("declared frozen", "_GATES_FROZEN = True\n", True),
+        ("declared provisional", "_GATES_FROZEN = False\n", False),
+        # Python's own answer is the last binding; so is ours.
+        ("re-assigned, last wins (True)",
+         "_GATES_FROZEN = False\n_GATES_FROZEN = True\n", True),
+        ("re-assigned, last wins (False)",
+         "_GATES_FROZEN = True\n_GATES_FROZEN = False\n", False),
+        # The LOUD direction: cannot be established by reading the source.
+        ("non-literal value is not a freeze",
+         "import os\n_GATES_FROZEN = os.environ.get('X') == '1'\n", False),
+        ("truthy non-True is not a freeze", "_GATES_FROZEN = 1\n", False),
+        ("annotated assignment counts", "_GATES_FROZEN: bool = True\n", True),
+        ("a syntax error cannot be dispatched", "def (:\n", False),
+        # A flag set inside a function is not the module's declaration — it is
+        # a local, and reading it as one would let any helper forge a freeze.
+        ("function-local assignment is not a declaration",
+         "def f():\n    _GATES_FROZEN = True\n", None),
+    ]
+    fails = []
+    with tempfile.TemporaryDirectory() as d:
+        for i, (label, src, want) in enumerate(cases):
+            p = Path(d) / f"case_{i}.py"
+            p.write_text(src)
+            got = gates_frozen("X.00", path=p)
+            if got is not want:
+                fails.append(f"gates_frozen: {label} -> want {want}, got {got}")
+        if gates_frozen("X.00", path=Path(d) / "gone.py") is not False:
+            fails.append("gates_frozen: an unreadable file must read False "
+                         "(the loud direction)")
+    if gates_frozen("NO.SUCH.SPEC") is not None:
+        fails.append("gates_frozen: an unimplemented spec has no file and no "
+                     "declaration -> None, not an accusation")
+    # The live files this instrument was built for, read end to end. The
+    # assertion is `is not None` — that the reader SEES the idiom — and
+    # deliberately not the current value: `SM.02`/`SM.03` are SUPPOSED to flip
+    # to True when a pilot freezes their bars, and a fixture that pinned the
+    # value would go red on exactly the event it is waiting for.
+    for sid in ("SM.02", "SM.03"):
+        if module_path_for(sid) and gates_frozen(sid) is None:
+            fails.append(f"gates_frozen: {sid} uses the `_GATES_FROZEN` idiom "
+                         f"in the tree and the reader read it as 'does not "
+                         f"declare' — the 46th audit RANK 2 case, unfixed")
     return fails
 
 
@@ -778,7 +869,7 @@ def check() -> int:
           "  A PARKED spec is NOT coverage either: a retirement is not a\n"
           "  falsifiable claim, however honest the retiring was.")
 
-    qf = _queue_fixture()
+    qf = _queue_fixture() + _gates_frozen_fixture()
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -796,7 +887,14 @@ def check() -> int:
     print(f"  excluded: {len(ex['unimplemented'])} unimplemented, "
           f"{len(ex['settled'])} settled, {len(ex['parked'])} parked, "
           f"{len(ex['untracked'])} UNTRACKED"
-          + (f" ({', '.join(ex['untracked'])})" if ex["untracked"] else ""))
+          + (f" ({', '.join(ex['untracked'])})" if ex["untracked"] else "")
+          + f", {len(ex['gates_provisional'])} GATES-PROVISIONAL"
+          + (f" ({', '.join(ex['gates_provisional'])})"
+             if ex["gates_provisional"] else ""))
+    if ex["gates_provisional"]:
+        print("  a gate-provisional spec is implemented shelf furniture: its\n"
+              "  own run() refuses until a pilot freezes its bars. Run the\n"
+              "  pilot and flip `_GATES_FROZEN`, or implement another spec.")
     if q["new_empty"]:
         print(f"  {len(q['new_empty'])} cost class(es) NEWLY EMPTY — nothing "
               f"can be dispatched at this cost:\n"
