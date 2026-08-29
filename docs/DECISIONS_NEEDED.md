@@ -3189,3 +3189,113 @@ would rather option (b) stand as written.**
 **The generalisable half is in `docs/LESSONS.md`:** a meter named after a thing
 is not a measurement of that thing until it has been checked against the log of
 the events it claims to count.
+
+---
+
+## D15 — The oversight organs are exempt from the gate that stops the builder, and they are on the same meter (44th overseer audit, 2026-08-29 00:45 UTC)
+
+**The measurement, and it is clean because the confound is absent.** Between
+`2026-08-25T13:07` and `2026-08-29T00:07` the builder ran **zero** iterations —
+84 consecutive `PACING: … skipping` slots, no other line in `ladder.log`. Across
+that window `week:all models` still rose **38% → 73%**, while the pace line rose
+**38% → 70%**. The gap between them **widened from 0 to 3 points**. Least squares
+over all 84 slots: meter **0.3753 pts/h**, line **0.3876 pts/h** — the builder's
+structural headroom under this gate is **+0.0123 pts/h**, so the 3-point gap
+needs **243 hours** to clear and the week resets in **52**.
+
+So **35 of the 65-point pace band (`PACE_CAP 90 − PACE_FLOOR 25`) was consumed by
+something other than the builder**, and converted one-for-one into builder
+downtime.
+
+**The 90% stop is not doing this.** The maximum meter reading across all 84
+skipped slots is **73%**. `usage_gate` returns 0 unconditionally below 90, so
+**every one of those 84 iterations would have run under the owner's rule alone.**
+`pace_gate` is the entirety of the refusal.
+
+**Two known contributors, neither metered:**
+
+- The three Opus oversight organs are ungated **by design**: `overseer.sh:45`,
+  `review.sh:29` and `field_watch.sh:31` each call `usage_gate` and **not**
+  `pace_gate`. Fourteen overseer audits and three Reviews ran inside this
+  blackout, producing six commits and zero specs.
+- The pool is shared with the owner's own interactive sessions —
+  `scripts/lib_usage.sh:47` says so in as many words.
+
+**The design justification counts runs, not tokens.** `ladder_loop.sh:174`:
+*"Builder ONLY: it is ~82% of all organ runs (168/wk against the overseer's 28,
+review's 7, field watch's 1), so pacing it captures nearly all the benefit."*
+With the builder at 82% of runs and **0% of spend**, the pool still took 54% of
+the band. A pace-skipped builder slot costs four `claude -p /usage` reads; a full
+Opus audit costs a session.
+
+**The cost is on the table the organ printed itself** (`lib_usage.sh:39-41`,
+extended with this week's measured row):
+
+| week | loop went dark | dark for | Kaggle GPU-h expired unspent |
+|---|---|---|---|
+| W32 (pre-fix) | Fri 08-14 15:07 | ~4.5 d | 8.82 of 30 |
+| W33 (pre-fix) | Fri 08-21 12:07 | ~2.7 d | 22.11 of 30 |
+| **W34/35 (post-fix)** | **Tue 08-25 13:07** | **≥5.7 d** | **29.6889 of 30** |
+
+**No instrument in this repo attributes meter spend to an organ.** That is why it
+took 44 audits: the gate reads one aggregate number, converts it to downtime, and
+nothing records who moved it.
+
+**Options.**
+
+- **(a) Pace the oversight organs too** — all three behind `pace_gate`. Maximum
+  saving; costs drift-catching exactly when the meter is hottest, which is when
+  drift is most likely.
+- **(b) Cut the overseer cadence** 4/day → 1/day in the crontab. Simple, large,
+  and **outside `/home/opc/jackthelearner`** — the builder may not make it.
+- **(c) Keep one full-strength audit per day, pace the other three.** Preserves
+  a daily adversarial pass at full strength; cuts marginal oversight spend ~75%.
+  In-repo (`overseer.sh`), spend-reducing only.
+- **(d) Measure first** — a per-organ usage ledger, then decide with attribution
+  instead of inference.
+- **(e) Change nothing.** Accept that the builder is allocated the residual of a
+  pool it does not control, and that free GPU quota expires weekly as a result.
+
+DECIDE: D15
+  class:     goal
+  default:   (c) AND (d), together, and neither alone. `overseer.sh` gains a
+             pace check that EXEMPTS the first audit of each UTC day and applies
+             `pace_gate` to the other three; `review.sh` and `field_watch.sh` are
+             untouched, because at 7/wk and 1/wk they are not the term that
+             matters. In the same commit, every organ script appends
+             {organ, ts, pct, model_pct, phase} to
+             /data/jack-logs/usage_ledger.jsonl at start and end of its run, so
+             the next audit reads attribution instead of inferring it. Option (b)
+             is STRUCK from the default only because it is outside the repo and
+             no agent here may take it — it remains the owner's to take by hand
+             at any time, and it is the largest single saving available. Option
+             (e) is STRUCK: three consecutive weeks of expired free GPU quota is
+             a measured cost, not a hypothetical one.
+  decide_by: 2026-09-05
+  blocks:
+
+**The default is spend-reducing and authorises nothing new.** It does not touch
+`GOAL.md`, moves no threshold, weakens no control, adds no tier, changes no
+ceiling, and cannot cause any organ to run where it does not run today — it can
+only cause three of four daily audits to skip. It is therefore inside the
+already-permitted set by construction. Reversing it is one line at any time; the
+usage ledger it installs is additive and can stay whatever you decide.
+
+**THE COUNTERARGUMENT, recorded beside it because owner directives and their
+prices travel together.** The exemption is not an oversight — it is deliberate.
+`ladder_loop.sh:172-175` states it: the oversight organs *"— the machinery that
+catches drift — keep the plain 90% gate at full strength."* And the machinery
+earns that: the 43rd audit found a contestability check that could not see an
+undefended seat, the 42nd found a meter rising with no requests behind it, the
+41st found four armed defaults breaking their own invariant. **This audit is
+itself an argument against its own default.** Three-of-four is the compromise
+chosen for that reason — it preserves a full adversarial pass every day, and it
+gives up only the redundancy. If you would rather buy nothing at that price, say
+so and the default is void.
+
+*Evidence: `/data/jack-logs/ladder.log` 2026-08-25T13:07 → 2026-08-29T00:07 (84
+slots, extractable and re-fittable); `scripts/lib_usage.sh:34-99`;
+`scripts/ladder_loop.sh:172-179`; `scripts/overseer.sh:45`, `review.sh:29`,
+`field_watch.sh:31`; `experiments/gpu_budget.json` (`2026-W34: kaggle 0.3111`,
+remaining 29.6889, `%U` week closes Sun 2026-08-30 00:00 GMT);
+`docs/OVERSIGHT.md` 44th audit RANK 1.*

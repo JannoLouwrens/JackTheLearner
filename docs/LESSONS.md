@@ -5852,3 +5852,73 @@ a ratchet built for one silently answers the other. `coverage.py` separates them
 them, and printed `ratchet ok` over the two seats its own document marks
 undefended. **Ask of every green ratchet: what exactly did it count, and is the
 thing it counted the thing whose absence would hurt?**
+
+---
+
+## A rationing line drawn on a pool you do not control rations you against strangers — and it starves earlier than the ceiling it supplements (44th audit, 2026-08-29)
+
+**The scar.** `pace_gate` was added 2026-08-24 with a stated purpose in its own
+source: two consecutive weeks had gone dark on a Friday, and Kaggle's free 30 h
+expired on the Sunday inside them (W32: 8.82 h lost; W33: 22.11 h lost). Its
+own success criterion: *"the loop is still awake when the GPU quota expires."*
+Its own diagnosis was correct and is worth quoting, because the fix did not act
+on it: *"`week:all models` is a SHARED pool… the loop is stopped by consumption
+it does not control, and being the only consumer with a gate, it is the one that
+starves."*
+
+**What happened in the first full week under the fix.** The loop went dark on
+**Tuesday**, 2.5 days earlier in the week than the disease, and **29.6889 of 30**
+free GPU-hours expired — worse than both baseline weeks on every column.
+
+**The measurement that isolates it, and why it is clean.** Across 84 consecutive
+hourly slots the builder ran zero iterations, so its own spend is exactly zero
+and the confound is absent. Over that window `week:all models` rose 38% → 73%
+while the pace line rose 38% → 70%: **the meter outran the line and the gap
+widened from 0 to 3 points.** Fitted over all 84 points, the builder's structural
+headroom is **+0.0123 pts/h** — a 3-point gap needs 243 hours and the week is 168.
+Meanwhile the **maximum meter reading across all 84 refusals was 73%**, so the
+90% stop the pace line supplements would have permitted **every one of them.**
+The gate, not the ceiling, was the whole of the outage.
+
+**Why it inverts.** A ceiling at 90% only bites when the pool is nearly spent. A
+line starting at `PACE_FLOOR=25` bites from the first hour of the week — so
+moving from a ceiling to a line **increases** the fraction of foreign
+consumption that converts into your own downtime. Against a pool you fully
+control that is exactly the intended smoothing. Against a shared pool it is a
+strictly worse instrument than the thing it was added to improve.
+
+**The second half: the justification counted the wrong unit.** The exemption for
+the ungated organs was argued by **run count** — *"the builder is ~82% of all
+organ runs (168/wk against the overseer's 28, review's 7, field watch's 1), so
+pacing it captures nearly all the benefit."* Runs are not tokens. A pace-skipped
+builder slot costs four `claude -p /usage` reads; a full Opus audit costs a
+session. At **82% of runs and 0% of spend**, the builder still lost 54% of the
+weekly band to the pool.
+
+**Rules.**
+
+1. **Never draw a pace line against a meter whose other consumers you cannot
+   name.** If you must, the line's own docstring should state which consumers it
+   is rationing you against — writing that sentence is usually enough to notice
+   you cannot.
+2. **A gate that can produce an outage longer than the resource it protects is
+   not a gate, it is an outage with a policy.** Bound it: a starvation release
+   (run one iteration after N consecutive refusals, still under the real
+   ceiling) authorises nothing new and makes the failure mode finite.
+3. **Justify a rationing asymmetry in the unit being rationed.** Frequency is not
+   spend, requests are not tokens, and a share argued in the wrong unit is an
+   assumption wearing a number.
+4. **A shared meter with no attribution is not a measurement.** Thirty-five
+   points of a 65-point band vanished in one week and no instrument in this
+   repository could say whether it was the oversight organs or the owner's own
+   sessions — while the gate converted every one of those points into builder
+   downtime. Log `{organ, ts, pct, phase}` at both ends of every organ run, or
+   accept that every future diagnosis of this class is inference.
+
+**The generalisation, and it is the uncomfortable one.** The organs that watch
+this system draw on the same binding resource as the organ that builds it, and
+only the builder is gated. An oversight layer that is correct, adversarial, and
+unmetered can consume the budget that would have fixed what it found — and it
+will report that finding accurately, four times a day, while doing so. **When
+the watchers and the worker share a budget, meter the watchers first: the worker
+is the only one whose output the ledger can see.**
