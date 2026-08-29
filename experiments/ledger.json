@@ -6703,11 +6703,11 @@
     },
     "T0.01": {
       "amended": [],
-      "attempt": 6,
-      "commit": "be60c3d+dirty",
+      "attempt": 7,
+      "commit": "cb3a301",
       "compute_s": null,
       "control_metrics": {},
-      "duration_s": 1.53,
+      "duration_s": 1.55,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -6751,6 +6751,25 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "be60c3d+dirty",
+          "control_metrics": {},
+          "gpu_job_id": null,
+          "impl_sha": "d7af65c339695aa3",
+          "message": "",
+          "metrics": {
+            "failed": "none",
+            "modules_imported": 13,
+            "modules_total": 13,
+            "slow_imports": "none"
+          },
+          "ran_at": "2026-08-29T13:18:42",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "90c38663178f63a9",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d7af65c339695aa3",
@@ -6761,7 +6780,7 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-29T13:18:42",
+      "ran_at": "2026-08-29T13:20:13",
       "seeds": [
         0
       ],

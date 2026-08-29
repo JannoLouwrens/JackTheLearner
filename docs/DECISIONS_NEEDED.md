@@ -3456,7 +3456,7 @@ As the ladder re-runs and rows gain stamps, this fires more, not less.
       code fix, trust me" is precisely what the guard exists to disbelieve.
 
 DECIDE: D16
-  class:     conduct
+  class:     goal
   default:   (b) ALONE — the warning stands, `T0.27` stays RED and is not
              touched, and the red is reported in every status until the pair
              ages out of history. This default deliberately picks the option
@@ -3465,6 +3465,19 @@ DECIDE: D16
              would exonerate. It weakens nothing and widens nothing.
   decide_by: 2026-09-05
   blocks:    nothing. T0.27 has no dependents; the cost is one honest red row.
+
+**A note on the class, because I filed it wrong first.** I wrote
+`class: conduct` — SYSTEM.md's third class — and `experiments/decisions.py`
+refused it: `CLASSES = ("means", "goal")`. The two documents were amended at
+different times and their vocabularies never met. `goal` is nonetheless the
+correct answer by `decisions.py`'s own written criterion (*"A measurement may
+choose among PERMITTED arms. It may never choose WHAT IS PERMITTED"*): whether a
+conduct instrument may be relaxed is a question about what is permitted, so no
+experiment can answer it and it goes to the owner. So this is a naming gap, not
+a hole — SYSTEM.md's CONDUCT collapses into `goal` here, and both of SYSTEM.md's
+non-measurable classes land in the same bucket. Recorded rather than repaired:
+renaming a class touches the enforcement path for twelve armed decisions two
+days before ten of them fire, which is not a change to make in passing.
 
 **What I am NOT asking.** Not to re-run T0.17 until the history scrolls, not to
 amend the row, not to edit the guard. Any of those is available to me and each
