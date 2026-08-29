@@ -29,6 +29,52 @@ Three detectors, because they fail differently:
      fired on a run like the ones we really get?" is the question Law 1 asks;
      "is it reachable for some fictional input" is not.
 
+     **THE SUBJECT IS THE RECORDED METRIC, NOT THE DICT SLOT** (repair,
+     2026-08-29, after this spec's own FAIL at attempt 22 named four keys in
+     `T0.24`, `T1.02` and `T2.04`). Reading `m["k"]` in a `_check` is not the
+     same act as consulting the number the run recorded under `k`, and the
+     first version of this detector could not tell the two apart. It counted a
+     key as an assertion whenever the AST mentioned it, so it reported as
+     "disarmed" two things that are not defects at all:
+
+       - `T1.02` computes `m["beats_mean_baseline"]` from `m["mean_baseline"]`
+         and `m["structured_heldout"]` and *then* asserts on it. Perturbing the
+         recorded slot cannot move the verdict because the gate overwrites it
+         first — but the assertion is live, on its inputs, and those inputs are
+         scanned. Same shape in `T0.24` (`m["control_reproduces_scar"]` is
+         computed from two `c` keys).
+       - `T2.04` reads `m["ridge_beats_null_any"]` only inside
+         `if not claim and not m[...]`, which converts a FAIL into a VOID. On a
+         PASSing row that branch never executes, so the key is unread — not
+         unarmed. Demanding that a VOID-escalation guard be exercised by a PASS
+         asks for something impossible by construction.
+
+     So the base evaluation now runs against a RECORDING dict that logs every
+     read and write in order, and each key lands in exactly one class:
+
+       CONSULTED  read from the record before the gate wrote to it → perturbed,
+                  and if it cannot move the verdict it is DISARMED. The defect.
+       COMPUTED   the gate stored it before reading it back. Exempt — but ONLY
+                  if some store of that key derives from at least one other
+                  record read. `m["x"] = True; return m["x"]` is a constant
+                  asserting against itself and stays DISARMED.
+       UNREACHED  never read at this operating point (branch not taken, or
+                  short-circuited away). Counted and reported, not gated.
+
+     Both exemptions forfeit inside a gate that carries a precedence hazard,
+     exactly as the `or`-redundancy exemption already does, and the control
+     carries a fixture for each so an exemption can never quietly become a
+     hole. The hole the UNREACHED class *does* open — a gate that consults
+     nothing at all, `def _check(m, c): return True` — is closed by a fourth
+     detector below.
+
+  0. KEYLESS GATES (added with the repair above, and gated). A `_check` whose
+     base evaluation reads NOTHING from the record is decorative in the purest
+     sense available: no perturbation of any recorded number can move it. The
+     sensitivity detector cannot see this, because it has no keys to perturb —
+     a scan of zero keys returns zero disarmed keys and reads as clean. Fixture
+     F3 in the control is exactly this gate and must be caught on every run.
+
   2. PRECEDENCE (the narrow one). Parse every `_check` and flag an `or` whose
      operands include an unparenthesised `and`, which is the exact shape above.
      Kept separate because it fires on source that is *currently* harmless but
@@ -55,11 +101,26 @@ T0.13 excludes only itself, and says so in `self_excluded_gates`: its own entry
 is written after the scan, so it always reflects the previous version of this
 file. Its own gate is exercised by the control instead.
 
-Control: the pre-fix T0.09 check, verbatim, against T0.09's recorded metrics.
-The sensitivity and precedence detectors must BOTH flag it. Without that, a
-scan finding nothing would be indistinguishable from a scan that does not work
-— which is precisely the "silence is not success" failure this repo has paid
-for repeatedly, and precisely what happened on this spec's own second attempt.
+Control: three known-bad gates, each scanned separately, each targeting a
+different detector. Without them a scan finding nothing would be
+indistinguishable from a scan that does not work — which is precisely the
+"silence is not success" failure this repo has paid for repeatedly, and
+precisely what happened on this spec's own second attempt.
+
+  F1  the pre-fix T0.09 check, verbatim, against T0.09's recorded metrics.
+      The sensitivity AND precedence detectors must both flag it (>=3 disarmed
+      keys, >=1 hazard).
+  F2  `m["all_good"] = True; return m["ok"] and m["all_good"]` — a slot the
+      gate writes from a CONSTANT and then asserts on. The COMPUTED exemption
+      must refuse it, because nothing recorded is under assertion.
+  F3  `return True` — a gate that consults no record at all. The KEYLESS
+      detector must flag it; every other detector is blind to it.
+
+F2 and F3 were added on 2026-08-29 with the recording-dict repair, so that the
+two new exemptions and the new class are each proved live on every run rather
+than trusted. Amendment to `_check` is strengthen-only under the T1.02
+precedent: three more conjuncts, none removed, and the prior version stands in
+the ledger's history.
 """
 from __future__ import annotations
 
@@ -88,6 +149,76 @@ CONTROL_M = {"ok": True, "gpu": "Tesla T4, 15360 MiB", "cuda_available": True,
              "duration_s": 96.0, "message": ""}
 CONTROL_C = {"ok": False, "message": "no such accelerator"}
 
+# F2 — the hole the COMPUTED exemption would open if it were unconditional: a
+# slot the gate writes from a CONSTANT and then asserts on. `m["all_good"]` is
+# recorded False and the gate still passes, because nothing recorded is under
+# assertion. `_record_derived_stores` must refuse the exemption here.
+CONSTANT_SRC = '''
+def _check(m, c):
+    m["all_good"] = True
+    return m["ok"] and m["all_good"]
+'''
+CONSTANT_M = {"ok": True, "all_good": False}
+CONSTANT_C = {"ok": False}
+
+# F3 — the hole the UNREACHED class would open: a gate with no keys at all.
+# Every other detector on this page is blind to it by construction, because
+# each of them starts from a key.
+KEYLESS_SRC = '''
+def _check(m, c):
+    return True
+'''
+KEYLESS_M = {"anything": 1}
+KEYLESS_C = {"anything": 0}
+
+# F4 — a key the AST cannot name, read through `.get()` and thrown away. The
+# DYNAMIC detector must see it; every AST-driven detector on this page is blind
+# to it, which is how 49 such keys sat unscanned until 2026-08-29.
+DYNAMIC_SRC = '''
+def _check(m, c):
+    ok = m.get("real", False)
+    m.get("decorative", False)
+    return ok
+'''
+DYNAMIC_M = {"real": True, "decorative": True}
+DYNAMIC_C = {"unused": 0}
+
+_FIXTURES = (
+    ("T0.09_prefix", CONTROL_SRC, CONTROL_M, CONTROL_C),
+    ("F2_constant", CONSTANT_SRC, CONSTANT_M, CONSTANT_C),
+    ("F3_keyless", KEYLESS_SRC, KEYLESS_M, KEYLESS_C),
+    ("F4_dynamic", DYNAMIC_SRC, DYNAMIC_M, DYNAMIC_C),
+)
+
+# ── the dynamic-key backlog, adjudicated once and frozen ────────────────────
+#
+# Recording the reads (2026-08-29) made this detector see keys no AST walk can
+# name: `.get(k)` inside a comprehension, and f-string subscripts. That found
+# 54 inert keys the previous version was structurally blind to. Five were the
+# detector's own gap (XL.00's `math.isfinite` VOID guards, unfalsifiable
+# against a finite-only perturbation set — fixed above). The other 49 are all
+# one shape, and it is a shape this spec ALREADY exempts in its `or` spelling:
+#
+#   LC.00 (9)   `clearing = sum(1 for kind in CORES if _sigma(...) >= GATE)`
+#               then `clearing >= MIN_CORES_CLEARING`. One core's numbers move
+#               the count by at most 1 and the margin is wider than that.
+#   LC.02 (39)  `m[f"{arm}/clears@{x}"]` over 5 arms x 8 budgets, same count.
+#   T0.08 (1)   `not all(c.get(k, True) for k in _STALE_PROPS)` — an `any` over
+#               the control's reverted properties; one member is slack while
+#               another carries it.
+#
+# A member of an `any`/`all`/count aggregation is redundant, not disarmed —
+# the same judgement `redundant_disjunct_keys` already makes for T1.09's
+# `absurd_oom or absurd_peak_gb > MAX_GB`. The AST exemption recognises the
+# `or` keyword and cannot recognise the loop that means the same thing, and
+# writing that detector is a unit of its own (see LOOP_JOURNAL 2026-08-29).
+#
+# So the gate here is a SET, not a count: these three specs are adjudicated as
+# aggregation slack and their key counts may move freely when they re-run,
+# but a FOURTH spec appearing in this list is unadjudicated and turns T0.13
+# red. Shrink-only by construction — removing an id can only tighten it.
+DYNAMIC_ADJUDICATED = frozenset({"LC.00", "LC.02", "T0.08"})
+
 
 def _perturbations(v: Any) -> list:
     """Same-type alternatives. Type-preserving on purpose: swapping in a None
@@ -95,7 +226,18 @@ def _perturbations(v: Any) -> list:
     'the key matters' when it only means the key was compared."""
     if isinstance(v, bool):
         return [not v]
-    if isinstance(v, (int, float)):
+    if isinstance(v, float):
+        # NaN and inf are here because a whole class of gate exists only to
+        # catch them: `XL.00` reads `indep_p`, `trend_p`, `uniform_z`,
+        # `c_at_death_indep_p` and `c_drift_trend_p` ONLY inside
+        # `math.isfinite(...)` VOID guards. Against a finite-only perturbation
+        # set those five assertions were unfalsifiable by construction and this
+        # detector called them disarmed — the detector's gap, not the spec's.
+        # Floats only: an int slot is usually an index or a count, and a NaN
+        # there raises rather than measures.
+        return [0.0, 1.0, -1.0, v + 1, v - 1, 1e9, -1e9,
+                float("nan"), float("inf"), float("-inf")]
+    if isinstance(v, int):
         return [0, 1, -1, v + 1, v - 1, 1e9, -1e9]
     if isinstance(v, str):
         return ["", "ZZZ_NOT_A_REAL_VALUE"]
@@ -185,12 +327,45 @@ def _dedent(src: str) -> str:
     return "\n".join(l[pad:] for l in lines)
 
 
-def _verdict(fn: Callable, m: dict, c: dict):
+class _Recording(dict):
+    """A metrics dict that logs every read and write, in order.
+
+    This is the instrument that separates "the gate consulted the number the
+    run recorded" from "the gate mentioned a slot of that name". `__getitem__`
+    and `get` both log, so a check that reads `c.get("k", "")` is seen exactly
+    like one that writes `c["k"]` — the AST-only version of this detector saw
+    neither, and the four false positives of attempt 22 all lived in the gap.
+    """
+
+    def __init__(self, data: dict, log: list, tag: str):
+        super().__init__(data)
+        self._log = log
+        self._tag = tag
+
+    def __getitem__(self, key):
+        self._log.append((self._tag, key, "get"))
+        return dict.__getitem__(self, key)
+
+    def get(self, key, default=None):
+        self._log.append((self._tag, key, "get"))
+        return dict.get(self, key, default)
+
+    def __setitem__(self, key, value):
+        self._log.append((self._tag, key, "set"))
+        dict.__setitem__(self, key, value)
+
+
+def _verdict(fn: Callable, m: dict, c: dict, log: list | None = None):
     """Deep-copied every call: some checks WRITE to their metrics (T2.02 sets
     m["verdict"]), and a detector that let that leak would score the next
-    perturbation against a mutated baseline."""
+    perturbation against a mutated baseline.
+
+    `log`, when given, receives the (tag, key, "get"/"set") trace of the call.
+    """
+    trace = [] if log is None else log
     try:
-        out = fn(copy.deepcopy(m), copy.deepcopy(c))
+        out = fn(_Recording(copy.deepcopy(m), trace, "m"),
+                 _Recording(copy.deepcopy(c), trace, "c"))
     except Exception as e:
         return ("RAISED", type(e).__name__)
     if isinstance(out, Status):
@@ -198,33 +373,126 @@ def _verdict(fn: Callable, m: dict, c: dict):
     return ("BOOL", bool(out))
 
 
-def _inert_keys(fn: Callable, src: str | None, m: dict, c: dict) -> tuple[list, list]:
-    """Referenced keys that cannot move the verdict at this operating point.
+def _access_classes(log: list) -> tuple[set, set]:
+    """(consulted, computed) as (tag, key) pairs.
 
-    Returns (disarmed, redundant): keys read under pure conjunction, and keys
-    read only inside an `or`. Only the first class is gated.
+    A key is CONSULTED if the gate read it before writing it — the recorded
+    number reached the assertion. It is COMPUTED if the first access was a
+    write: whatever the run recorded under that name was discarded, and the
+    value asserted on is the gate's own. Read-then-write-then-read counts as
+    consulted, because the first read is the one the record answered.
     """
-    base = _verdict(fn, m, c)
+    consulted, computed, written = set(), set(), set()
+    for tag, key, op in log:
+        if op == "set":
+            written.add((tag, key))
+        elif (tag, key) in written:
+            computed.add((tag, key))
+        else:
+            consulted.add((tag, key))
+    return consulted, computed - consulted
+
+
+def _record_derived_stores(fn: Callable, src: str | None) -> dict:
+    """(tag, key) -> did any assignment to that slot read the record?
+
+    This is what keeps the COMPUTED exemption from becoming a hole. `T1.02`
+    computes `m["beats_mean_baseline"]` from two recorded numbers, so asserting
+    on it asserts on them. `m["all_good"] = True` (control fixture F2) reads
+    nothing, so asserting on it asserts on nothing — and a slot with no parsed
+    assignment at all defaults to False, i.e. stays a defect. Unparsed is not
+    exempt.
+    """
+    fdef = _fdef(src)
+    out: dict = {}
+    if fdef is None:
+        return out
+    names = [a.arg for a in fdef.args.args]
+    m_name = names[0] if names else None
+    c_name = names[1] if len(names) > 1 else None
+
+    def tag_of(nm):
+        return "m" if nm == m_name else ("c" if nm == c_name else None)
+
+    def reads_record(node) -> bool:
+        for sub in ast.walk(node):
+            if (isinstance(sub, ast.Subscript) and isinstance(sub.value, ast.Name)
+                    and tag_of(sub.value.id) and isinstance(sub.ctx, ast.Load)):
+                return True
+            if (isinstance(sub, ast.Call) and isinstance(sub.func, ast.Attribute)
+                    and isinstance(sub.func.value, ast.Name)
+                    and tag_of(sub.func.value.id)):
+                return True
+        return False
+
+    for node in ast.walk(fdef):
+        if not isinstance(node, ast.Assign):
+            continue
+        derived = reads_record(node.value)
+        for t in node.targets:
+            if (isinstance(t, ast.Subscript) and isinstance(t.value, ast.Name)
+                    and tag_of(t.value.id) and isinstance(t.slice, ast.Constant)
+                    and isinstance(t.slice.value, str)):
+                k = (tag_of(t.value.id), t.slice.value)
+                out[k] = out.get(k, False) or derived
+    return out
+
+
+def _key_classes(fn: Callable, src: str | None, m: dict, c: dict) -> dict:
+    """Sort every key this gate touches into one of four classes.
+
+    Returns {"disarmed", "redundant", "computed", "unreached", "consulted_n"}.
+    Only `disarmed` is gated; `consulted_n` == 0 is the keyless case, gated
+    separately by the caller.
+    """
+    empty = {"disarmed": [], "redundant": [], "computed": [], "unreached": [],
+             "dynamic": [], "consulted_n": None}
+    log: list = []
+    base = _verdict(fn, m, c, log)
     if base[0] == "RAISED":
-        return [], []        # cannot score a gate we cannot evaluate; reported separately
+        return empty         # cannot score a gate we cannot evaluate; reported separately
+    consulted, computed = _access_classes(log)
     m_keys, c_keys, disjunct_only = _referenced_keys(fn, src)
-    disarmed, redundant = [], []
-    for which, keys, store in (("m", m_keys, m), ("c", c_keys, c)):
-        for k in sorted(keys):
+    stores = _record_derived_stores(fn, src)
+    named = {("m", k) for k in m_keys} | {("c", k) for k in c_keys}
+
+    out = {"disarmed": [], "redundant": [], "computed": [], "unreached": [],
+           "dynamic": [], "consulted_n": len(consulted)}
+    for tag, k in sorted(named | consulted | computed):
+        # Keys the recorder saw but the AST never named — reached through
+        # `.get(k)` in a comprehension, or through an f-string subscript like
+        # `m[f"{arm}/clears@{x}"]`. They are REPORTED on their own line rather
+        # than mixed into the pre-registered count; see DYNAMIC_ADJUDICATED.
+        dynamic_only = (tag, k) not in named
+        store = m if tag == "m" else c
+        label = f"{tag}[{k!r}]"
+        if (tag, k) in consulted:
             if k not in store:
+                # Read via `.get()` with the key absent from the record. There
+                # is no recorded number to perturb, so there is nothing to say
+                # about it here; `stale_gates` is the detector that owns a gate
+                # whose record no longer answers it.
                 continue
             moved = False
             for alt in _perturbations(store[k]):
                 probe = dict(store)
                 probe[k] = alt
-                got = _verdict(fn, probe, c) if which == "m" else _verdict(fn, m, probe)
+                got = _verdict(fn, probe, c) if tag == "m" else _verdict(fn, m, probe)
                 if got != base:
                     moved = True
                     break
             if not moved:
-                label = f"{which}[{k!r}]"
-                (redundant if label in disjunct_only else disarmed).append(label)
-    return disarmed, redundant
+                bucket = ("dynamic" if dynamic_only else
+                          "redundant" if label in disjunct_only else "disarmed")
+                out[bucket].append(label)
+        elif (tag, k) in computed:
+            # Exempt only if the gate built this value out of the record. A
+            # constant written and then asserted on is the defect itself.
+            out["computed" if stores.get((tag, k)) else
+                "dynamic" if dynamic_only else "disarmed"].append(label)
+        else:
+            out["unreached"].append(label)
+    return out
 
 
 def _precedence_hazards(fn: Callable, src: str | None) -> int:
@@ -252,6 +520,7 @@ def _precedence_hazards(fn: Callable, src: str | None) -> int:
 def _scan(entries: list) -> dict:
     """entries: (spec_id, check_fn, source_or_None, metrics, control_metrics)."""
     disarmed, redundant, hazards = {}, {}, {}
+    computed, unreached, dynamic, keyless = {}, {}, {}, []
     unevaluable, unreadable, stale, scanned = [], [], [], 0
     for spec_id, fn, raw_src, m, c in entries:
         scanned += 1
@@ -275,35 +544,73 @@ def _scan(entries: list) -> dict:
         h = _precedence_hazards(fn, src)
         if h:
             hazards[spec_id] = h
-        dis, red = _inert_keys(fn, src, m, c)
-        # The redundancy exemption is forfeited by a gate that ALSO carries a
-        # precedence hazard. Structure alone cannot separate honest redundancy
-        # from a disarmed assertion — the pre-fix T0.09 keys and T1.09's
+        cls = _key_classes(fn, src, m, c)
+        dis, red = cls["disarmed"], cls["redundant"]
+        comp, unre, dyn = cls["computed"], cls["unreached"], cls["dynamic"]
+        # EVERY exemption is forfeited by a gate that ALSO carries a precedence
+        # hazard. Structure alone cannot separate honest redundancy from a
+        # disarmed assertion — the pre-fix T0.09 keys and T1.09's
         # `absurd_peak_gb` are both inert operands of an `or`, and both look
         # identical to the sensitivity detector. What distinguishes them is
         # that T0.09's `or` was never written: `and` binding tighter turned an
         # intended conjunction into one. So an `or` that swallows an `and` is
         # evidence of intent, and its dead operands are defects, not slack.
+        # The COMPUTED and UNREACHED exemptions forfeit on the same reasoning:
+        # in a gate whose control flow is already known to be an accident, a
+        # branch that did not execute is not evidence that it was not meant to.
         if h:
-            dis, red = sorted(dis + red), []
+            dis = sorted(dis + red + comp + unre + dyn)
+            red = comp = unre = dyn = []
+        # A gate that consulted NOTHING from the record cannot be moved by any
+        # number the run produced. The sensitivity detector is structurally
+        # blind to this — zero keys perturbed yields zero disarmed keys, which
+        # reads as clean — so it is counted on its own. Only reached when the
+        # gate evaluated: `consulted_n` is None for an unevaluable gate, which
+        # is already gated by `unevaluable_gates`.
+        if cls["consulted_n"] == 0:
+            keyless.append(spec_id)
         if dis:
             disarmed[spec_id] = dis
         if red:
             redundant[spec_id] = red
+        if comp:
+            computed[spec_id] = comp
+        if unre:
+            unreached[spec_id] = unre
+        if dyn:
+            dynamic[spec_id] = dyn
+
+    def _detail(d):
+        return "; ".join(f"{k}: {', '.join(v)}" for k, v in sorted(d.items()))
+
     return {
         "gates_scanned": scanned,
         "disarmed_conjunct_keys": sum(len(v) for v in disarmed.values()),
         "specs_with_disarmed_keys": len(disarmed),
         "redundant_disjunct_keys": sum(len(v) for v in redundant.values()),
+        "computed_gate_keys": sum(len(v) for v in computed.values()),
+        "unreached_gate_keys": sum(len(v) for v in unreached.values()),
+        "dynamic_inert_keys": sum(len(v) for v in dynamic.values()),
+        "dynamic_inert_specs": ",".join(sorted(dynamic)),
+        "keyless_gates": len(keyless),
+        # Every key that cannot move its gate, whichever exemption applies.
+        # Widened 2026-08-29 to include the dynamic class: reporting 0 here
+        # while 49 keys sit in `dynamic_inert_keys` would be the same kind of
+        # understatement this spec exists to catch.
         "inert_gate_keys": (sum(len(v) for v in disarmed.values())
-                            + sum(len(v) for v in redundant.values())),
+                            + sum(len(v) for v in redundant.values())
+                            + sum(len(v) for v in dynamic.values())),
         "precedence_hazards": sum(hazards.values()),
         "specs_with_precedence_hazards": len(hazards),
         "unevaluable_gates": len(unevaluable),
         "unreadable_gates": len(unreadable),
         "stale_gates": len(stale),
-        "disarmed_detail": "; ".join(f"{k}: {', '.join(v)}" for k, v in sorted(disarmed.items())),
-        "redundant_detail": "; ".join(f"{k}: {', '.join(v)}" for k, v in sorted(redundant.items())),
+        "disarmed_detail": _detail(disarmed),
+        "redundant_detail": _detail(redundant),
+        "computed_detail": _detail(computed),
+        "unreached_detail": _detail(unreached),
+        "dynamic_inert_detail": _detail(dynamic),
+        "keyless_detail": ", ".join(sorted(keyless)),
         "hazard_detail": ", ".join(sorted(hazards)),
         "unevaluable_detail": ", ".join(sorted(unevaluable)),
         "unreadable_detail": ", ".join(sorted(unreadable)),
@@ -363,16 +670,29 @@ def _passing(ledger: Ledger):
 
 
 def _control(seed: int) -> dict:
-    ns: dict = {}
-    exec(compile(CONTROL_SRC, "<pre-fix T0.09 gate>", "exec"), ns)
-    # Source passed explicitly — inspect cannot recover it for exec'd code, and
-    # a detector that reads nothing reports a clean bill of health.
-    out = _scan([("T0.09_prefix", ns["_check"], CONTROL_SRC,
-                  dict(CONTROL_M), dict(CONTROL_C))])
+    entries = []
+    for label, src, m, c in _FIXTURES:
+        ns: dict = {}
+        exec(compile(src, f"<{label}>", "exec"), ns)
+        # Source passed explicitly — inspect cannot recover it for exec'd code,
+        # and a detector that reads nothing reports a clean bill of health.
+        entries.append((label, ns["_check"], src, dict(m), dict(c)))
+    out = _scan(entries)
     out["self_excluded_gates"] = 0
     out["unloadable_gates"] = 0
     out["unloadable_detail"] = ""
     return out
+
+
+def _dynamic_specs(m: dict) -> frozenset:
+    """The spec ids carrying dynamic-key slack, as a set. A missing field reads
+    as the whole ladder rather than as nothing: a row recorded before this
+    field existed has not been scanned by this detector, and an unscanned
+    ladder must not certify itself clean."""
+    raw = m.get("dynamic_inert_specs")
+    if raw is None:
+        return frozenset({"<field absent — this row predates the detector>"})
+    return frozenset(x for x in raw.split(",") if x)
 
 
 def _check(m: dict, c: dict) -> bool:
@@ -382,14 +702,20 @@ def _check(m: dict, c: dict) -> bool:
                     and m["unevaluable_gates"] == 0
                     and m["unreadable_gates"] == 0
                     and m["stale_gates"] == 0
-                    and m["unloadable_gates"] == 0)
-    # ...and BOTH must fire on the known-bad gate, or a clean scan is
-    # indistinguishable from a scan that does not run. The pre-fix T0.09 check
-    # has exactly three unreachable assertions (ok, cuda_available,
-    # matmul_finite) and one precedence hazard.
-    control_caught = (c["disarmed_conjunct_keys"] >= 3
+                    and m["unloadable_gates"] == 0
+                    and m["keyless_gates"] == 0        # added 2026-08-29
+                    and _dynamic_specs(m) <= DYNAMIC_ADJUDICATED)
+    # ...and every detector must fire on the fixture built for it, or a clean
+    # scan is indistinguishable from a scan that does not run. F1, the pre-fix
+    # T0.09 check, has exactly three unreachable assertions (ok,
+    # cuda_available, matmul_finite) and one precedence hazard; F2 contributes
+    # the fourth disarmed key (a constant asserting against itself, which the
+    # COMPUTED exemption must refuse); F3 contributes the keyless gate.
+    control_caught = (c["disarmed_conjunct_keys"] >= 4
                       and c["precedence_hazards"] >= 1
-                      and c["gates_scanned"] == 1
+                      and c["keyless_gates"] >= 1      # added 2026-08-29 (F3)
+                      and c["dynamic_inert_keys"] >= 1  # added 2026-08-29 (F4)
+                      and c["gates_scanned"] == 4      # was 1, before F2-F4
                       and c["unreadable_gates"] == 0)
     # A scan of nothing is not a clean scan.
     scanned_enough = m["gates_scanned"] >= 30
