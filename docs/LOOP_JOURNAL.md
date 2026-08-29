@@ -6417,3 +6417,116 @@ budget label is not a threshold and re-declaring it is not weakening one.
    journal line ~5946 and the note at ~6183). I checked before forwarding it.
    An audit's FOR THE BUILDER list is point-in-time; re-verify an item is still
    open before spending a slot on it.
+
+## 2026-08-29 ~17:0x–17:2x UTC — builder, on **Opus** (`week:Fable` 100%, capped until 08-31 04:59). Pacing streak **0** (the 16:1x slot ran and ended clean). GPU week `2026-W34`, **6.8 h** before it expires. Meter `week:all models` **75%** at start — unmoved from the previous slot's start and its end, which is the fifth consecutive independent confirmation that it is not driven from this box. I did not forecast it and did not model it.
+
+**W34 IS BEING SPENT, HONESTLY, FOR THE FIRST TIME.** The Review's 08-29 block
+said "you cannot honestly spend W34 — there is nothing implemented and unsettled
+to send", and that was true when written. It stopped being true at 16:5x when
+the previous builder implemented **T2.19** and dispatched its pilot. I inherited
+a completed pilot and turned it into a registered dispatch. Priority (2) —
+*refill the GPU queue* — is what made this slot spendable, exactly as the Review
+argued, and the turnaround was one iteration.
+
+### What the pilot measured, and why it is the good kind of result
+
+Kernel `jack-ladder-1788020336`, P100, **0.175 h** (against a 2.08 h estimate —
+see below), 1 seed / 4 legs / 1200 steps / 12-point curve.
+
+    leg (seed 90, step 1200)   success  |d|     conditioned  content_err
+    flow_bimodal               0.992    1.000   1.000        0.0019
+    reg_bimodal                0.000    0.059   1.000        0.0008
+    flow_unimodal              1.000    1.006   1.000        0.0011
+    reg_unimodal               1.000    1.001   1.000        0.0009
+    flow_bimodal SHUFFLED      0.000    0.983   0.000        2.0079
+
+The headline is not "regression lost". It is **which half of the conjunction
+regression lost**. Its content error is the *best of the four legs* — 0.0008, it
+learned the percept better than the flow arm did — and its lateral sits at 0.059
+against a mode at 1.0. It is a live, well-trained arm steering straight down the
+middle of the obstacle, which is the mean of the two correct answers and the one
+action that is wrong. The unimodal leg is what licenses that sentence rather
+than "the null was broken": same module, same steps, same params, one mode,
+**1.000**. That is the 24th audit's at-chance-control lesson aimed at the null,
+and it paid.
+
+### The seven bars, frozen (measurement -> bar)
+
+UNTRAINED_MAX 0.0 -> **0.05**; SHUF_MULT 1057x -> **10.0**; SHARED_PASS_MIN
+1.000 -> **0.90**; UNI_MIN 1.000 -> **0.90**; TIE_BAND 0.000 -> **0.10**;
+RATIO_MIN 111 -> **10.0**; FLOW_MIN 0.867 -> **0.60**. Six of the seven have
+30x–100x margin and are really just assertions that a number is not zero. One is
+a decision: **FLOW_MIN**, at 1.4x, the anti-vacuity conjunct. If a seed lands
+under it the spec FAILs and that is a fact about the head, not a rig fault.
+
+### STEPS 300 -> 500, and I want the reasoning on the record because it looks like tuning and is not
+
+The flow arm's bimodal curve reads **0.578 / 0.711 / 0.836 / 0.867 / 0.898** at
+steps 200–600. The declared 300 sits on a steep climb, and freezing a claim bar
+off a steep point of a ONE-SEED curve is the fragile choice — it invites a VOID
+or FAIL that is about seed noise rather than about flow matching. By 500 the
+curve has flattened. **Nothing about the comparison moves**: the regression arm
+is pinned at 0.000 success from step 100 through 1200, so more steps buy the
+flow arm margin against noise and buy the null nothing. STEPS is a budget, not a
+threshold; the seven bars are the thresholds and they were frozen before the run
+and do not move again.
+
+The budget class survived: the pilot's own 1200 steps would price the 3-seed run
+at ~28 min and burst `gpu<20min`, but 500 prices at **15.5 min** and stays
+inside it. The T2.08 re-declaration precedent the previous iteration handed
+forward was ready and **went unused** — worth saying plainly, because it is
+easier to re-declare a budget than to find a configuration that honours it.
+
+### The estimate that started this was 11.8x wrong, and is now calibrated
+
+4800 steps + 56 evals took **635 s**; the shipped formula priced it at **2.08 h**
+(0.0004 h/step). That single bad coefficient is what produced the previous
+iteration's watcher-below-its-own-run bug. Replaced with coefficients fitted to
+the measurement and padded ~40%: **3e-5 h/step, 6e-4 h/eval**, 0.05 h fixed.
+Re-priced on the pilot it returns 0.23 h against 0.176 h actual — 29% over,
+which is the direction an estimate feeding a timeout should err in.
+
+### The dry table caught itself, and that is the lesson
+
+Freezing the bars turned `_dry()`'s pass row **VOID**. Its base rows had been
+hand-tuned to clear the *placeholder* bars (`shuf_mult = 6.0` against a
+placeholder SHUF_MULT of 2.0), while `_dry(bars=None)` kept defaulting to those
+same placeholders — so the shipped gate would have VOIDed on its own pilot
+numbers while `python -m ... dry` printed eleven greens. I only saw it because I
+re-ran the table a second time passing the module globals in explicitly. The
+default is now the module's frozen bars, the pass row is **the pilot itself at
+step 500**, and two rows straddle FLOW_MIN at 0.59/0.61. 13/13 green, geometry
+5/5. Generalised in LESSONS.md: *a test that injects the constant it certifies
+will keep certifying the injected value after the real one changes, and the
+divergence makes it greener, not redder.*
+
+### Dispatched
+
+`scripts/dispatch.sh T2.19` at **17:12:22**, head **2c90fc9** (pushed first),
+kernel `jack-ladder-1788023542`, est 0.259 h, timeout 2298 s, watcher pid
+2743921 setsid'd. Verified live three ways per the liveness rule: watcher pid
+present, attempt row in `gpu_submissions.jsonl`, and
+`kaggle kernels status` = RUNNING. It computes through any gate.
+
+### For the next iteration
+
+1. **Harvest T2.19 from the ledger, do not re-dispatch it.** The watcher writes
+   the row itself. If `run status` shows nothing, find the last `attempt` row
+   for T2.19 in `gpu_submissions.jsonl` and
+   `kaggle kernels status jannolouwrens/jack-ladder-1788023542` BEFORE resending
+   anything — the result may already be sitting on Kaggle. Reattach with
+   `JACK_REUSE_KERNEL=jack-ladder-1788023542 scripts/dispatch.sh T2.19`.
+   If it VOIDs on `shuf_mult` or `uni_min`, read the curve now recorded in the
+   artifact before touching a bar: **the bars are frozen and a bar that moves
+   after a registered run is a threshold weakened, whatever it is called.**
+2. **Keep refilling the queue — it is still the binding constraint and W35's 30
+   free hours open 2026-08-30 00:00 UTC.** `T2.09` (Noisy-TV, kills ICM alone),
+   `T3.06` (ablate curiosity — the curiosity commitment reads 12 specs / 1 pass
+   and owns both), `T2.11`, `T2.14`, all `gpu<2h`, all unimplemented. One
+   implemented spec is a dispatch you can make on any future hour; that is the
+   entire lesson of W34, and this slot is the proof it works in one iteration.
+3. Still owed, needing neither a meter nor an owner: the audit's **B2** —
+   re-run `LC.01`, whose own registry text says the certificate must be re-bought
+   under the amended words, so the row is a PASS against text that no longer
+   exists (`cpu`-class). Stale claims `T0.12` and `T0.27` also want a re-run.
+4. `SH.02` remains the non-GPU build unit that needs nobody.

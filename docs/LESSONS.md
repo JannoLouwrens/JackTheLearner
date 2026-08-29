@@ -6378,6 +6378,67 @@ is upstream of everything you have written.
 
 ---
 
+## A test that INJECTS the constant it certifies will keep certifying the
+## injected value after the real one changes — and the default is the drift
+## (builder, 2026-08-29, freezing T2.19's gates)
+
+Direct sequel to the lesson above, and it bit within one iteration of writing
+it. T2.19 shipped with `_GATES_FROZEN = False` and seven bars set to `None`,
+pending a pilot. To keep the gate LOGIC falsifiable before the gate VALUES
+existed, `_dry(bars=None)` took its bars as an argument and defaulted to a set
+of plausible placeholders. That was a good idea and I would do it again.
+
+Then the pilot landed and I froze the real bars — `SHUF_MULT` went from a
+placeholder 2.0 to a measured-and-margined **10.0**. The table's base row, hand-
+tuned months-of-thought earlier to clear the placeholder, carried
+`shuf_mult = 6.0`.
+
+**So the shipped `_check` would now VOID on the very rows the table calls a
+PASS — and `python -m ... dry` went on printing eleven greens**, because its
+default injected the placeholders it was written against. I only saw it because
+I re-ran the table a second time with the module's own globals passed in
+explicitly. Nothing would have caught it otherwise: the run would have gone to
+the GPU, come back VOID on `shuf_mult`, and the next iteration would have spent
+its slot debugging a rig that was fine.
+
+**The mechanism, stated generally.** A test that takes its subject's constants
+as a *parameter* has two copies of those constants — the shipped one and the
+test's default. They agree on the day you write them and nothing keeps them
+agreeing. Worse than an ordinary duplication, because the divergence makes the
+test **greener**, not redder: the test keeps passing against a subject that no
+longer exists. This is the same shape as the `tail -5` and `git add -A` faults
+already in this file — an instrument bounded to something other than its actual
+subject — and the same shape as a mock that drifts from its interface
+(`A test double implements its interface by coincidence`), except here the
+double is a *number*.
+
+**The rule. Injection is for the transitional period only, and the DEFAULT must
+be the live value.** Concretely:
+
+    b = bars or dict(SHUF_MULT=SHUF_MULT, ...)   # module globals, not literals
+
+and, better, **make the pass row the real measurement.** T2.19's table now
+carries the pilot's own numbers at the registered budget as its PASS case. That
+turns a tautology into a check with teeth: *if the frozen bars cannot pass the
+measurement they were frozen from, the table goes red before any quota is
+spent.* A bar frozen too aggressively — the classic way a pilot-derived gate
+manufactures a VOID — is now caught in one second on CPU rather than in twenty
+minutes on a P100.
+
+**And straddle the thin bar.** Six of T2.19's seven bars have 30x–100x margin
+and are effectively assertions that a number is not zero. One, `FLOW_MIN` (0.60
+against a measured 0.867), has 1.4x — it is the anti-vacuity conjunct and is
+*meant* to be tight. The table now carries two rows at 0.59 and 0.61. Margin
+tells you which of your gates is actually a decision; put the known-answer rows
+there, not spread evenly over bars that cannot fire.
+
+**The question to ask.** For every constant your test supplies rather than
+reads: *if someone changed the shipped value right now, would this test go red?*
+If the answer is "no, it would go green against the old value", the test has
+stopped being about your code.
+
+---
+
 ## Ask the loaded registry, not the source text — a near-miss, recorded
 ## (builder, 2026-08-29)
 
