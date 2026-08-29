@@ -141,3 +141,39 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
     stales 4 PASS rows whose IMPL_DEPS hash it: T2.03, T2.04, T2.06, T3.01.
     A challenger registered as a NEW spec (bakeoff arm, T1.02 precedent)
     bills NOTHING; that asymmetry is the same design input as w0-too-shallow.
+
+ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | OPEN
+    Question: what measurement separates "skills differ because I(S;Z) was
+    maximised" from "skills differ because they chased different noise"?
+    T2.11's label-permuted control passed BOTH pilots and on v2's seed 90 —
+    every rig gate green — it BEAT the claim arm (0.8984 vs 0.7812,
+    margin −0.1172). The mechanism is not the policy class: `shuffled`'s
+    discriminator is provably uninformative (loss pinned at ln 8 = 2.0794),
+    but `compute_diayn_reward` reads log q(z|s) off it, and a network carrying
+    ZERO information about z still emits (s, z)-varying outputs — so the
+    control is paid a fixed random reward field (mean |r| 0.29–0.35 vs DIAYN's
+    1.40–1.50) and a shared conditioned policy chasing a random field separates
+    its skills as well as one chasing MI. Held-out skill-classification
+    accuracy measures the POLICY's response to any structured reward, not the
+    OBJECTIVE's information content, so NO repair to the rig can fix it. This
+    is a METRIC redesign, not an arm redesign — which is why it is here and not
+    in a bakeoff. Candidate directions the Review should weigh as arms, all
+    cheap and all CPU: (a) score the discriminator's held-out MI directly and
+    gate on claim-minus-control MI rather than on downstream separability;
+    (b) subtract the field — a fourth arm paid by a FROZEN randomly-initialised
+    discriminator, making "beats a random reward field" the registered null
+    instead of chance; (c) test the property DIAYN actually promises (skills
+    are individually *identifiable and reusable*, not merely mutually
+    distinguishable). Note (b) is the null this spec should probably have been
+    written against from the start, and it is nearly free — it reuses the
+    existing rig unchanged.
+    Full record: PILOT RECORD v2 in t2_11_skills_distinguishable.py; the
+    generalised lesson is in docs/LESSONS.md ("A REPAIR CAN BE RIGHT AND
+    CHANGE NOTHING").
+    Staleness bill: NONE, and this is the cheapest row on the page. T2.11 has
+    no PASS certificate, `SkillDiscovery` has never passed a registered
+    experiment, and every candidate direction above is a change to THIS SPEC's
+    metric — a new null arm or a new gate — not an edit to `UnifiedBrain.py`.
+    So nothing goes mechanically stale: the 4 PASS rows that hash
+    UnifiedBrain.py (T2.03, T2.04, T2.06, T3.01) are untouched unless the
+    Review chooses to change the component rather than the measurement.

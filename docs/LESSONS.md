@@ -6840,3 +6840,68 @@ hazard, here the control could reach the outcome without the mechanism. Both
 are "the number is high for a reason that has nothing to do with the
 hypothesis", and in both cases every local check was green. The only thing that
 caught either was running the control at full scale BEFORE freezing a bar.
+
+## A REPAIR CAN BE RIGHT AND CHANGE NOTHING: a control at chance on its own
+## objective can still sit at ceiling on the downstream metric
+## (builder, 2026-08-29, T2.11 pilot v2 — and it CORRECTS the lesson above)
+
+**Read this immediately after the lesson above; it is that lesson's outcome.**
+That entry diagnosed T2.11's private-per-skill Q tables, prescribed the
+structural repair — one shared function conditioned on the skill index — and
+ended by asserting the repair *"is what turns the margin gate from an identity
+into a measurement."* **That last sentence was a prediction, it was written
+before the second pilot drew a number, and the second pilot refuted it.** The
+diagnosis was correct. The repair was correct. The outcome did not move.
+
+**What was measured.** v2 replaced 8 private tables with one shared policy over
+`get_skill_embedding(z)`, froze the embedding, zero-initialised the head, and
+added an `oracle` arm as the learner's positive control. Both new rig gates
+came back green and decisive: `oracle` 0.9766 / 1.0000 (the shared policy CAN
+make skills legible on this budget) and `zero` `q_absmax == 0.0` exactly (the
+floor is a provable uniform random walk, and it sits at chance, 0.148 / 0.133).
+The rig was now bracketed top and bottom, which v1 could not claim. And the
+label-permuted control still passed — on seed 90, where **every** rig gate is
+green, it BEAT the claim arm: 0.8984 vs 0.7812, `margin_vs_shuffled` −0.1172.
+
+**The mechanism, and it is a vacuity class the spec's own three-item list did
+not contain.** `shuffled`'s discriminator is provably uninformative — its loss
+sits at ln(8) = 2.0794 from first step to last (2.040 → 2.058, 2.119 → 2.068).
+But `compute_diayn_reward` reads `log q(z|s)` off that network, and **a network
+carrying zero information about z still emits outputs that vary with (s, z).**
+So the control is paid a fixed, state-dependent, skill-dependent RANDOM REWARD
+FIELD (mean |r| 0.29–0.35, against DIAYN's 1.40–1.50), and a shared conditioned
+policy chasing a random field separates its skills about as well as one chasing
+mutual information (centroid separation 4.18–5.42 m vs 5.43–6.69 m; `q_absmax`
+21.6–24.8, decisively off the 0.0 floor). Killing the private parameters moved
+the free lunch from the POLICY's parameters into the DISCRIMINATOR's output
+noise. It did not remove it.
+
+**The rule, and it is the transferable part.** *An at-chance control is not a
+weak control — it is a control that is at chance ON ITS OWN OBJECTIVE, which
+says nothing about where it lands on your metric. Before you accept a downstream
+metric, ask what it would read for a mechanism that is provably carrying no
+information, and check that number is at your floor rather than at your
+ceiling.* Here, held-out skill-classification accuracy measures **the policy's
+response to any structured reward**, not **the objective's information
+content** — so no repair to the policy class could ever have separated DIAYN
+from noise. When the metric cannot express the difference the claim is about,
+every mechanism repair is aimed at the wrong organ.
+
+**And the procedural rule, which is why this entry exists at all.** *Do not end
+a lesson with a prediction stated as a finding.* The entry above closed with an
+unhedged claim about what the repair WOULD do, in the same authoritative voice
+as the diagnosis it had actually measured. A later reader had no way to see the
+seam. Pre-registering a repair is right and the T3.06 protocol requires it; but
+write the prediction in `PILOT RECORD`/spec text where it is visibly awaiting a
+number, and put it in `LESSONS.md` only once a run has been through it. A
+lesson file that mixes measured lessons with confident forecasts decays into
+the README status table this project exists to kill.
+
+**The decision that followed.** Two pre-registered mechanism repairs against
+one outcome: SM.02's decision tree applies, T2.11 is **PARKED**, no third rig
+was written, and the surviving question — what measurement separates "skills
+differ because I(S;Z) was maximised" from "skills differ because they chased
+different noise" — went to the Review as a spec-design question rather than
+being argued in the file. Two specs have now reached the both-fail branch
+(SM.02, T2.11) and in both the branch stopped a plausible third repair; that
+tree is earning its keep.

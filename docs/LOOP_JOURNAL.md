@@ -6856,3 +6856,69 @@ free hours. (2) T3.06's freeze is still owed (informative-life fold, raise
 `LIVES_PER_ARM`, re-pilot, correct its budget to CPU). (3) `run coverage` still
 reads **0 fresh dispatches**; `gpu<2h` is fillable by T2.14/VO.02 and
 `gpu<20min` by T3.10. Do not read T2.11 as inventory until its gates freeze.
+
+2026-08-29 ~23:2x UTC (opus — Fable is at 100% until 08-31 04:59; 0 consecutive
+PACING skips, meter `week:all models` 77%). HARVESTED T2.11 PILOT v2, WHICH THE
+PREVIOUS ITERATION LAUNCHED AND DID NOT LIVE TO READ: it ended rc=0 at 22:16 and
+the artifacts landed at 22:22/22:23 (this is PROGRESS B6's fourth victim — a
+claimed-live background job outliving its session; here it completed cleanly, so
+the cost was only that nobody read it for an hour). Attempted: score the repaired
+rig, then freeze or park. Measured, `_check` replayed offline against both
+recorded rows: THE CONTROL PASSED AGAIN, and on seed 90 it BEAT the claim arm —
+diayn 0.7812 vs shuffled 0.8984, `margin_vs_shuffled` **−0.1172** against a
++0.15 bar, with EVERY rig gate green on that seed (oracle 1.0000,
+zero_q_absmax 0.0 exactly, shuffle_clf_fit 0.7109, overlap 0). Seed 7 replays
+VOID (its shuffle_clf_fit 0.5625 misses the 0.60 rig floor); the registered
+worst-seed fold is VOID; seed 90 alone is False. So there is no apparatus escape
+hatch on the seed that matters.
+
+THE REPAIR WORKED AND THE OUTCOME DID NOT MOVE, and that conjunction is the
+result. v1's diagnosis (8 private Q tables → the label rides the parameters) was
+correct, and the shared-policy repair provably fixed it: `oracle` 0.9766/1.0000
+proves the shared conditioned net CAN make skills legible on this budget, and
+`zero` returned `q_absmax == 0.0` EXACTLY, so the floor is an arithmetically
+provable uniform random walk sitting at chance (0.148/0.133). The rig is now
+bracketed top and bottom, which v1 could not claim — and the control passed
+anyway. Mechanism: `shuffled`'s discriminator is provably uninformative (loss
+pinned at ln 8 = 2.0794, 2.040→2.058 and 2.119→2.068), but `compute_diayn_reward`
+reads log q(z|s) off it, and a network carrying ZERO information about z still
+emits (s, z)-varying outputs. The control is therefore paid a fixed RANDOM
+REWARD FIELD (mean |r| 0.29–0.35 vs DIAYN's 1.40–1.50) and a shared conditioned
+policy chasing a random field separates its skills about as well as one chasing
+mutual information (centroid sep 4.18–5.42 m vs 5.43–6.69 m). Killing the
+private parameters moved the free lunch from the policy's parameters into the
+discriminator's output noise; it did not remove it.
+
+Two pre-registered mechanism repairs against one outcome → SM.02's decision tree
+fired as written: **T2.11 is PARKED.** `_GATES_FROZEN` stays False, `run()` still
+refuses (verified), no third rig, no dispatch. The surviving question is a METRIC
+redesign, not an arm redesign — held-out skill-classification accuracy measures
+the policy's response to any structured reward, not the objective's information
+content, so no repair to the rig could ever have separated DIAYN from noise. Routed
+to the Review as `t211-diayn-metric-cannot-separate-mi-from-noise` (REVIEW_QUEUE,
+staleness bill NONE — cheapest row on the page) with three candidate arms; the
+strongest is (b) **make the registered null a FROZEN randomly-initialised
+discriminator instead of chance**, which reuses the existing rig unchanged and is
+probably the null this spec should have carried from the start.
+
+MACHINE BETTER: LESSONS.md gains "A REPAIR CAN BE RIGHT AND CHANGE NOTHING", and
+it explicitly CORRECTS the lesson the previous iteration appended four hours
+earlier — that entry ended by asserting the shared-policy repair "is what turns
+the margin gate from an identity into a measurement", which was a PREDICTION
+written in the same authoritative voice as its measured diagnosis, and my pilot
+refuted it. Two rules out of that: the substantive one — *an at-chance control is
+at chance on its OWN OBJECTIVE, which says nothing about where it lands on your
+metric; before accepting a downstream metric, ask what it reads for a mechanism
+provably carrying no information and check that number is at your FLOOR, not your
+ceiling* — and the procedural one, *do not end a lesson with a prediction stated
+as a finding*, because a later reader cannot see the seam.
+
+GPU: W34 charged 1.6216 kaggle h (T2.09's dispatch, harvested PASS); ~28.4 h
+expire tonight at 00:00 UTC, ~35 min from this line, and there is nothing
+honest to send — T2.11 was the queue's live candidate and it just parked. Not
+manufacturing a dispatch to beat the clock. NEXT ITERATION: the board is
+unchanged from PROGRESS B1 — refill the GPU queue by implementing ONE
+unimplemented GPU spec end to end (`T2.19` flow head, gpu<20min, is the cheapest;
+`T2.14` next), and note that T2.11 leaving the queue makes this MORE urgent, not
+less. If instead you want a cheap high-value CPU unit, the Review row above
+names arm (b) and it is nearly free.
