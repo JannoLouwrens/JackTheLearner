@@ -13344,6 +13344,180 @@
       "spec_id": "T2.15",
       "status": "FAIL"
     },
+    "T2.19": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "2c90fc9",
+      "compute_s": 780.17,
+      "control_metrics": {
+        "flow_unimodal_per_seed": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "reg_shared_pass_bimodal": 1.0,
+        "reg_shared_pass_bimodal_std": 0.0,
+        "reg_unimodal_per_seed": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "shuf_mult": 466.535,
+        "shuf_mult_std": 0.0,
+        "uni_gap": 0.0,
+        "uni_gap_std": 0.0,
+        "uni_min": 1.0,
+        "uni_min_std": 0.0,
+        "untrained_max": 0.0,
+        "untrained_max_std": 0.0
+      },
+      "duration_s": 798.4,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1788023542",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "history": [],
+      "impl_sha": "c7bc3cd825811813",
+      "message": "",
+      "metrics": {
+        "backend": "kaggle",
+        "bimodal_success_ratio": 98.995,
+        "bimodal_success_ratio_std": 0.0,
+        "finite_all": 1.0,
+        "finite_all_std": 0.0,
+        "flow_abs_lateral_bimodal": 0.7321,
+        "flow_abs_lateral_bimodal_std": 0.0,
+        "flow_bimodal_per_seed": [
+          0.8047,
+          0.7734,
+          0.8594
+        ],
+        "flow_success_bimodal": 0.7734,
+        "flow_success_bimodal_std": 0.0,
+        "flow_unimodal_per_seed": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "gpu": "Tesla P100-PCIE-16GB",
+        "loss_fell_all": 1.0,
+        "loss_fell_all_std": 0.0,
+        "loss_first_last": [
+          [
+            "flow",
+            true,
+            0.42343,
+            0.0266
+          ],
+          [
+            "flow",
+            true,
+            0.43282,
+            0.02519
+          ],
+          [
+            "flow",
+            true,
+            0.40685,
+            0.03174
+          ],
+          [
+            "reg",
+            true,
+            0.53605,
+            0.03698
+          ],
+          [
+            "reg",
+            true,
+            0.51562,
+            0.03676
+          ],
+          [
+            "reg",
+            true,
+            0.35121,
+            0.03767
+          ],
+          [
+            "flow",
+            false,
+            0.39329,
+            0.00967
+          ],
+          [
+            "flow",
+            false,
+            0.40405,
+            0.00964
+          ],
+          [
+            "flow",
+            false,
+            0.35888,
+            0.0109
+          ],
+          [
+            "reg",
+            false,
+            0.53046,
+            0.00652
+          ],
+          [
+            "reg",
+            false,
+            0.50987,
+            0.00704
+          ],
+          [
+            "reg",
+            false,
+            0.42993,
+            0.00747
+          ]
+        ],
+        "n_params": 58244744.0,
+        "n_params_std": 0.0,
+        "params_matched": 1.0,
+        "params_matched_std": 0.0,
+        "ratio_per_seed": [
+          103.002,
+          98.995,
+          110.003
+        ],
+        "reg_abs_lateral_bimodal": 0.1395,
+        "reg_abs_lateral_bimodal_std": 0.0,
+        "reg_bimodal_per_seed": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "reg_shared_pass_bimodal": 1.0,
+        "reg_shared_pass_bimodal_std": 0.0,
+        "reg_success_bimodal": 0.0,
+        "reg_success_bimodal_std": 0.0,
+        "reg_unimodal_per_seed": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "shuf_mult": 466.535,
+        "shuf_mult_std": 0.0,
+        "uni_gap": 0.0,
+        "uni_gap_std": 0.0,
+        "uni_min": 1.0,
+        "uni_min_std": 0.0,
+        "untrained_max": 0.0,
+        "untrained_max_std": 0.0
+      },
+      "ran_at": "2026-08-29T17:25:27",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "T2.19",
+      "spec_sha": "75ccf4f5ea78aae6",
+      "status": "PASS"
+    },
     "T2.20": {
       "amended": [],
       "attempt": 5,
