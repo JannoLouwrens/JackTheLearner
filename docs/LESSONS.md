@@ -6777,3 +6777,66 @@ number is MADE before deciding whether to reason about it — and see
 [`An instrument that names a gap must also say whether the gap is closable`],
 whose "a quantity you can read out of the source is not a quantity to estimate"
 is this same edge from the other side.
+
+---
+
+## n private policies are not n skills: when the arms hold private parameters,
+## the label rides the parameters and the mechanism is never tested
+## (builder, 2026-08-29, T2.11's pilot — the control scored 0.977)
+
+**The measurement.** T2.11 asks whether DIAYN makes skills distinguishable. Its
+control is the strongest kind available: the identical rig with the skill
+labels PERMUTED inside every discriminator batch — same nets, same optimiser,
+same gradient-step count, same reward pathway, mutual information destroyed and
+nothing else. At full registered scale on two seeds:
+
+    diayn     held-out 0.9688 / 0.9844      chance = 0.125
+    shuffled  held-out 0.9766 / 0.9766      <- THE CONTROL
+    zero      held-out 0.1484 / 0.1328      <- a per-skill random walk
+
+**Every instrument was clean, and that is what makes this worth writing down.**
+The classifier fit 8 labels (train 1.0) and read chance under permuted labels
+(0.11–0.18); the splits did not leak (hash overlap 0); the floor was honest —
+`zero` sat AT chance, so distinguishability was not free for *any* policy. And
+the mechanism worked too: DIAYN's discriminator loss fell 2.12 → 0.56 while the
+permuted twin's sat at ln(8) = 2.079 exactly as it must. The registered
+`falsified_by` ("the MI objective collapsed") did not happen. Nothing was
+broken. The rig simply could not tell the two apart.
+
+**The defect, and it was in the file's own list of vacuities.** The rig gave
+each skill its OWN tabular Q table. So the eight "skills" were eight
+independent policies, and any reward that is non-zero and not identical across
+tables — including pure label noise, mean |r| 0.395 against DIAYN's 1.647 —
+drives each table into its own idiosyncratic attractor. Eight idiosyncratic
+attractors are trivially separable by where they sit (the CONTROL's centroid
+separation, 3.91 m, was *larger* than the claim arm's 3.43 m). `zero` escaped
+only because r = 0 with Q_INIT = 0 leaves every table exactly equal — it is not
+a policy at all. So the measured quantity was **"did each private table receive
+any signal at all"**, never "did maximising I(S;Z) make the skills
+distinguishable".
+
+**The rule, and it generalises well past DIAYN.** *When a claim has the form
+"mechanism M makes these n things distinguishable/diverse/specialised", ask
+first whether the n things hold PRIVATE PARAMETERS. If they do, the identity is
+carried by the parameters and M is never on trial — a random per-thing
+perturbation reproduces the result.* The structural repair is always the same
+shape: **one shared function, conditioned on the thing's index**, so that the
+only route from index to behaviour runs through the mechanism you are testing.
+Under a permuted-label control a shared conditioned policy receives a reward
+uninformative about z and *cannot* systematically differentiate; under true
+labels it can. That is what turns the margin gate from an identity into a
+measurement.
+
+**The near-miss this avoided.** T2.11's `kills` field is `SkillDiscovery` — a
+FAIL deletes a shipped component. Had the gates been frozen before the pilot,
+the registered run would have failed `beats_shuffled` by 0.008 and fired that
+`kills` off a rig whose own control scored 0.977. `_GATES_FROZEN = False` is the
+only thing standing between that pilot and a wrong verdict on a real component,
+and it earned its keep on the first spec that used it after T2.09.
+
+**Family.** The sibling of [`A robustness claim is FREE unless the instrument
+could have been captured`] — there the claim arm could not be reached by the
+hazard, here the control could reach the outcome without the mechanism. Both
+are "the number is high for a reason that has nothing to do with the
+hypothesis", and in both cases every local check was green. The only thing that
+caught either was running the control at full scale BEFORE freezing a bar.

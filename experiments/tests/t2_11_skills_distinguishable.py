@@ -127,6 +127,75 @@ registered seed is drawn.
   CONTROL (must fail the CLAIM gates): `shuffled`, scored on the identical
   claim gates in the same run.
 
+PILOT RECORD — 2026-08-29, this box, CPU, full registered scale, seeds 7 and 90
+(artifacts /data/t2_11_pilot_seed{7,90}.json, 355.1 s and 355.2 s wall, two
+concurrent on 4 shared ARM cores). THE CONTROL PASSED. Gates stay PROVISIONAL
+and this spec MUST NOT BE DISPATCHED.
+
+  arm       held-out acc s7 / s90   per-class min   coverage   disc loss first->last
+  diayn     0.9688 / 0.9844         0.875 / 0.9375  0.064/0.054  2.120 -> 0.562
+  shuffled  0.9766 / 0.9766         0.9375 / 0.875  0.080/0.056  2.040 -> 2.056
+  zero      0.1484 / 0.1328         0.0625 / 0.0    0.133/0.131  2.104 -> 1.900
+  margin_vs_shuffled: -0.0078 (s7), +0.0078 (s90).  chance = 0.125.
+  instruments, both seeds: shuffled-CLASSIFIER train 0.80-1.00 / held-out
+  0.109-0.180 (alive and honest), hash_overlap 0 on every arm.
+
+READ IT IN THE RIGHT ORDER, because the tempting reading is the wrong one.
+  1. Every INSTRUMENT worked. The classifier fits 8 labels (train 1.0) and
+     reads chance when its labels are permuted (0.11-0.18 against 0.125). The
+     splits do not leak (overlap 0). The floor is real: `zero`, a per-skill
+     uniform random walk, is AT CHANCE — so "distinguishable" is not free for
+     any policy, and the feature is not carrying an artefact.
+  2. THE MECHANISM ALSO WORKED. DIAYN's discriminator loss fell 2.12 -> 0.56
+     while `shuffled`'s sat at ln(8) = 2.079 exactly as a permuted-label
+     discriminator must. The registered `falsified_by` — "the MI objective
+     collapsed" — DID NOT HAPPEN. Whatever this pilot shows, it is not that.
+  3. And the control still scored 0.977. A rig in which the label-permuted
+     twin is as distinguishable as the trained one is a rig that measures
+     nothing (SYSTEM.md law 2), so the correct verdict is about the
+     APPARATUS, not about SkillDiscovery.
+
+THE DIAGNOSIS, and it is vacuity (3) arriving at full scale in the one place
+the design left the door open. This rig gives each skill its OWN tabular Q
+table, so the arms are eight independent policies sharing a discriminator. Any
+reward that is non-zero and not identical across tables — including pure label
+noise, whose mean |r| here is 0.395 against DIAYN's 1.647 — drives each table
+into its own idiosyncratic attractor, and eight idiosyncratic attractors are
+trivially separable by where they sit (centroid separation 3.91 m for
+`shuffled` against DIAYN's 3.43 m). `zero` escapes only because r = 0 with
+Q_INIT = 0 leaves every table exactly equal, i.e. no policy at all. So the
+measured quantity is "did each private table receive ANY signal", not "did
+maximising I(S;Z) make the skills distinguishable".
+
+WHAT IS PRE-REGISTERED NOW, BEFORE THE NEXT PILOT DRAWS A NUMBER (T3.06's
+protocol, one level up). The repair is determined by the diagnosis, so it is
+not a choice between arms and does not go to a bakeoff:
+
+  THE POLICY MUST BE ONE SHARED FUNCTION CONDITIONED ON THE SKILL, not n
+  private tables — a single network taking (state, SkillDiscovery.
+  skill_embedding(z)) and emitting action logits. Under permuted labels a
+  shared policy receives a reward that is uninformative about z, so it CANNOT
+  systematically differentiate and must collapse toward the `zero` floor;
+  under true labels it can. That is what makes `beats_shuffled` a measurement
+  instead of an identity. It also closes the gap this docstring already
+  admitted below — `skill_embedding` is the untested half of the component,
+  and the repair makes it the load-bearing half.
+
+  The bars are NOT moved to accommodate any of this. `MARGIN_MIN`,
+  `PER_CLASS_MIN` and the rest stand as written; what changes is the arm, and
+  the reason is the control's own score, not the claim arm's.
+
+  IF THE REDESIGNED RIG ALSO SHOWS THE CONTROL PASSING, that is two mechanism
+  repairs against one outcome and SM.02's decision tree applies: park the
+  spec, record the finding, do not write a third rig.
+
+SAID PLAINLY SO NO LATER READER HAS TO INFER IT: this pilot is NOT evidence
+against SkillDiscovery, and this file may not be dispatched as if it were. A
+FAIL from the rig above would fire `kills: SkillDiscovery` — deleting a
+shipped component — on a run whose own control scored 0.977. That is the
+outcome `_GATES_FROZEN` exists to prevent, and it is why the flag is still
+False.
+
 WHAT THIS SPEC DOES NOT TEST, so its `kills` is scoped honestly. The policy
 here is tabular, one Q table per skill over 121 cells — so
 `SkillDiscovery.skill_embedding` and `get_skill_embedding` (the neural
@@ -475,7 +544,18 @@ def _submit(seeds: list) -> dict:
     return out
 
 
-_SEC_PER_SEED = 1200.0          # PROVISIONAL — the pilot replaces this
+_SEC_PER_SEED = 355.0           # MEASURED, 2026-08-29 pilot: 355.1 s (seed 7)
+                                # and 355.2 s (seed 90), full registered scale,
+                                # two concurrent on this box's 4 shared ARM
+                                # cores — so it errs long for a solo x86 run,
+                                # which is the direction a number feeding a
+                                # watcher timeout must err in. It is NOT the
+                                # cost of the redesigned rig (see PILOT
+                                # RECORD): a shared conditioned policy replaces
+                                # 8 tabular tables with a network forward per
+                                # decision, and must be re-measured before any
+                                # submission. `_GATES_FROZEN` is False, so no
+                                # submission can be made against this number.
 
 
 # ── the reading ──────────────────────────────────────────────────────────

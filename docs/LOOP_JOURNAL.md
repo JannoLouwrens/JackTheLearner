@@ -6770,3 +6770,89 @@ still three weeks of mostly-unspent free quota, and the cause named on
 2026-08-29 stands unchanged: the shelf, not the clock. `run coverage` now reads
 **0 fresh dispatches**, with `gpu<2h` newly empty and fillable by T2.11 / T2.14
 / VO.02 and `gpu<20min` by T3.10.
+
+**2026-08-29 ~21:0x-21:3x UTC — T2.11 implemented and PILOTED; the control
+passed, so the rig is diagnosed rather than dispatched.** Model: **Opus**
+(`week:Fable` 100%, capped to 08-31 04:59, so the chain fell back as expected).
+`week:all models` **76%** against a pace line of 78 at 81% week-elapsed —
+under it, and **0 consecutive PACING skips**, so this was not a blackout tail.
+GPU week `2026-W34`, which expires 00:00 UTC tonight with ~28.4 h unspent.
+
+TOOK the top of the board (PROGRESS B1 / OVERSIGHT: refill the GPU queue —
+`gpu<2h` read EMPTY and `run coverage` said 0 fresh dispatches). Implemented
+**T2.11** end to end against `UnifiedBrain.SkillDiscovery` — DIAYN, imported not
+reimplemented, a shipped class whose docstring says "the robot learns walking,
+jumping, turning" and which had never received a gradient in a registered
+experiment. Three vacuities were named in the docstring before the design:
+scoring with DIAYN's own discriminator (circular), a deterministic eval policy
+(held-out that is not held out), and any per-skill lottery. Each forced a
+counter-measure: an independent classifier on a purely kinematic feature, eval
+epsilon on private RNG streams plus a structural `hash_overlap == 0` gate, and
+a label-PERMUTED control arm.
+
+**THE PILOT'S NUMBER, full registered scale, seeds 7 and 90 (355.1 / 355.2 s,
+/data/t2_11_pilot_seed{7,90}.json):**
+
+    diayn     held-out 0.9688 / 0.9844     chance 0.125
+    shuffled  held-out 0.9766 / 0.9766     <- THE CONTROL
+    zero      held-out 0.1484 / 0.1328     <- per-skill random walk
+
+**The control matched the claim arm** (margin -0.0078 / +0.0078 against a bar
+of 0.15). Every instrument was clean — classifier train fit 1.0, permuted-label
+classifier at chance (0.109-0.180), hash overlap 0 on all six arm-seeds, and
+`zero` AT chance, which proves distinguishability was not free for any policy.
+And the mechanism worked: DIAYN's discriminator loss fell **2.12 -> 0.56** while
+the permuted twin's sat at ln(8) = 2.079. **The registered `falsified_by` — "the
+MI objective collapsed" — did not happen.** Nothing was broken; the rig could
+not tell the two apart.
+
+DIAGNOSIS: the rig gave each skill its OWN tabular Q table, so the arms were
+eight independent policies. Any signal that is non-zero and not identical
+across tables — including pure label noise, mean |r| 0.395 vs DIAYN's 1.647 —
+locks each table into its own attractor, and eight attractors are trivially
+separable (the CONTROL's centroid separation 3.91 m EXCEEDED the claim arm's
+3.43 m). So the measured quantity was "did each private table get any signal",
+not "did maximising I(S;Z) work". By law 2 that is a verdict about the
+apparatus.
+
+**SO T2.11 IS NOT DISPATCHABLE AND `gpu<2h` IS STILL EMPTY — correcting my own
+commit message of forty minutes ago.** The unit produced a rig diagnosis, not
+inventory. Freezing these gates would have fired `kills: SkillDiscovery` —
+deleting a shipped component — off a run whose own control scored 0.977;
+`_GATES_FROZEN = False` is the only thing that stopped it, and it earned its
+keep on the first spec to use it after T2.09.
+
+PRE-REGISTERED IN THE DOCSTRING BEFORE THE NEXT PILOT DRAWS A NUMBER (T3.06's
+protocol): the repair is determined by the diagnosis, so it is not a bakeoff.
+**The policy must be ONE SHARED network conditioned on
+`SkillDiscovery.skill_embedding(z)`, not n private tables** — under permuted
+labels a shared policy gets a reward uninformative about z and cannot
+systematically differentiate, which is what turns `beats_shuffled` from an
+identity into a measurement. It also makes load-bearing the half of the
+component this file had already admitted was untested. **No bar moves.** If the
+redesigned rig ALSO shows the control passing, that is two mechanism repairs
+against one outcome and SM.02's decision tree applies: park it, record the
+finding, do not write a third rig.
+
+Machine left better: three LESSONS. (1) **"n private policies are not n
+skills"** — when a claim is "M makes these n things distinguishable", ask
+whether the n things hold private parameters; if they do, the identity rides
+the parameters and M is never on trial. The repair shape is always one shared
+function conditioned on the index. (2) **"A control scored on a gate that
+mentions the control is a control that cannot fail"** — the first draft of
+`_fold_control` scored `shuffled` on `margin_vs_shuffled`, i.e.
+shuffled-minus-shuffled = 0, making `not _claim_holds(c)` a tautology; gates
+must be split by reference frame, and "could this control have passed?" is
+answerable statically, before a seed is drawn. (3) **"Do not model the shared
+usage meter; DO compute the pacing line"** — discharges PROGRESS B3, carried
+three audits, which had lived only in `ladder_prompt.md` where no auditing
+organ opens it. Registry: T2.11 had no `control=` field and `run_spec` would
+have raised `UndeclaredControl`; declared with the implementation.
+
+NEXT ITERATION: (1) **implement the shared skill-conditioned policy in T2.11**
+as pre-registered above, re-pilot on 7/90, and only then freeze — that is the
+path to an actual `gpu<2h` dispatch, and W35 opens 08-30 00:00 UTC with 30
+free hours. (2) T3.06's freeze is still owed (informative-life fold, raise
+`LIVES_PER_ARM`, re-pilot, correct its budget to CPU). (3) `run coverage` still
+reads **0 fresh dispatches**; `gpu<2h` is fillable by T2.14/VO.02 and
+`gpu<20min` by T3.10. Do not read T2.11 as inventory until its gates freeze.
