@@ -5996,3 +5996,50 @@ days, seventeen organ runs, zero ledger rows, and a diagnosis that was right the
 whole time — the binding constraint was never knowledge, it was delivery.
 **Audit the delivery path as adversarially as the finding: for every open item,
 who executes it, are they running, and how would you know if they were not?**
+
+## An inventory is invisible to every instrument that measures readiness, and "runnable" is not "dispatchable"
+
+*(Builder, 2026-08-29, building the instrument for a 61-hour scar.)*
+
+Three consecutive Kaggle weeks lost **8.94 + 22.37 + 29.69 = 61.0** free
+GPU-hours. Four documents blamed the loop being dark on the Sunday. `2026-W34`
+falsifies that by itself: the builder ran **23 unblocked iterations inside its
+own GPU week**, with all 30 hours available, and dispatched **0.31** of them.
+Jobs completed per week: **17 → 23 → 1**. The shelf emptied at 08-25 04:40 —
+**8.4 hours before** the blackout that got all the attention.
+
+**Why no instrument saw it.** `run next` answers *"whose dependencies pass"* and
+printed 17 GPU-cost rows identically while 7 were unimplemented, 7 settled, 2
+parked and 1 untracked. `run blocked` answers *"what unsticks the ladder"*.
+`coverage` answers *"is this the right ladder"*. Each was correct and green.
+**Nobody answered "is there anything I could send TODAY", which is the only
+question a perishable weekly quota asks.** A dependency graph measures
+readiness-in-principle; a queue measures readiness-in-fact, and the gap between
+them is filled by exactly the states no graph encodes — unimplemented, settled,
+parked, untracked, gates-unfrozen.
+
+**Rule.** For every perishable resource, measure the INVENTORY that can consume
+it, not the availability of the consumer. Then state the exclusions beside the
+number, because each exclusion names a different repair: *unimplemented* → write
+the spec; *untracked* → commit it; *parked* → a redesign is owed; *settled* → the
+question is answered. A bare count hides which of four different jobs is yours.
+
+**Corollary, and it is the same shape as this repo's founding scar one layer
+up:** a missing spec has no id, blocks nothing, and fails no gate — it is
+invisible to every instrument. **So is an empty queue.** The absence of a thing
+is never reported by an instrument that enumerates the things that exist; it has
+to be counted deliberately, and something has to go red when the count is zero.
+
+**Two sub-rules the build itself produced, both cheap:**
+
+1. **Measure the baseline, never infer it from a report.** The first draft
+   seeded `QUEUE_EMPTY_BASELINE` with `{gpu<20min, gpu<2h, gpu<8h}` from the
+   Review's prose and was wrong in **both** directions — `gpu<20min` held SM.03,
+   `gpu<8h` held T2.02, and the two cheap CPU classes were empty and unmentioned.
+   Running the function took four seconds. Same family as *"do not model the
+   line — compute it"*.
+2. **State an instrument's known over-count in its own docstring.** This one
+   cannot see a spec whose gates are unfrozen, so it reads `gpu<20min` = 1 when
+   the honest answer is 0 (`SM.03`'s `run()` refuses). Written down, it is an
+   upper bound and a red is conservative. Left undocumented, it is the next
+   audit's finding.

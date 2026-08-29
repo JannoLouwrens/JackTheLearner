@@ -281,6 +281,65 @@ def parse(text: str) -> List[dict]:
     return seats
 
 
+# A ledger status that is a VERDICT. `SYSTEM.md`: a bakeoff arm that fails the
+# learning gate returns VOID rather than a confident wrong answer, and the
+# instruction is "fix the arm, do not decide" — so a VOID has decided nothing
+# and cannot discharge a seat. ERROR and SKIP are not verdicts either.
+VERDICTS = ("PASS", "FAIL")
+
+# Kinds that seat no challenger, imported from `coverage.py` rather than
+# re-listed: it learned on the 8th-12th audits that a fixture/rule/sensor buys
+# no claim credit, and this file cited that scar in its own docstring and then
+# reproduced it one document over. When you build an instrument by analogy to
+# an existing one, port its SCARS as well as its shape — the fix is an import,
+# not a design.
+NON_CHALLENGER_KINDS = ("fixture", "rule", "sensor")
+
+
+def _spec_kinds(by_id: dict) -> Dict[str, set]:
+    """`spec id -> {declared COVERS kinds}`, via `coverage.py`'s parser."""
+    from .coverage import declarations
+    out: Dict[str, set] = {}
+    for pairs in declarations(by_id)[0].values():
+        for sid, kind in pairs:
+            out.setdefault(sid, set()).add(kind)
+    return out
+
+
+def _challenger_runs(arena_status: Dict[str, str], by_id: dict) -> List[str]:
+    """Arena specs that actually CONTESTED the seat.
+
+    Three distinct false positives for "defended", each its own line below:
+    a spec that has not run; a spec whose only completion is VOID (not a
+    verdict); and a spec whose declared kind cannot seat anyone — a fixture
+    certifies apparatus, a rule states an admission criterion, a sensor
+    reports a channel. None of the three is a challenger beating an incumbent.
+
+    A SPEC WITH NO `COVERS:` MARKER AT ALL COUNTS AS A CHALLENGER, and that is
+    the ordered rule (45th audit B4: "its COVERS kind is not fixture, rule or
+    sensor"), not an oversight. It is also this filter's remaining soft spot,
+    so `main()` prints every seat that rests on kindless arenas rather than
+    leaving the reader to assume the discharge was earned: `Learning core` is
+    discharged by exactly one such spec, `LC.02` (a throughput feasibility
+    gate), which is plausibly the same false positive one layer down. Tightening
+    it means DECLARING LC.02's kind, not widening this predicate — a detector
+    tuned until it agrees with its maintainer is `coverage.py`'s scar 1.
+
+    NOT filtered here, because it needs a judgement this parser cannot make:
+    **the incumbent's own arm is not a contest.** `Episodic retrieval` is held
+    BY VERDICT on an arena `ME.11.A-F` whose only run arm is `ME.11.A`,
+    "lexical containment, the incumbent, as the null" — a bakeoff where 1 of 6
+    arms ran. Detecting that needs the arena to say which arm is the
+    incumbent's, which the table does not yet record. Recorded as owed rather
+    than silently approximated.
+    """
+    kinds = _spec_kinds(by_id)
+    return sorted(sid for sid, st in arena_status.items()
+                  if st in VERDICTS
+                  and not (kinds.get(sid, set())
+                           and kinds[sid] <= set(NON_CHALLENGER_KINDS)))
+
+
 def audit(text: str, by_id: dict,
           status: Callable[[str], str]) -> Tuple[List[Tuple[str, str, str]], List[dict]]:
     """Return (violations, seats). A violation names a seat, never a spec."""
@@ -314,12 +373,29 @@ def audit(text: str, by_id: dict,
         # states that pending-ness openly, so it is reported as a note below
         # rather than counted as a violation. Flagging what a document already
         # admits trains its readers to skip the flags.
+        # QUANTIFY OVER CHALLENGERS, NOT OVER THE ARENA LIST (43rd audit,
+        # carried unrepaired by the 44th and 45th). This read
+        # `all(v == "NOT_RUN" ...)`, so ONE arena spec having run — any one,
+        # for any reason — discharged the whole seat forever. For a one-arena
+        # seat the two questions coincide, which is why every single-arena
+        # seat was caught correctly and both multi-arena seats were not, and
+        # the multi-arena seats are the consequential ones: `Learning core`
+        # read ok on four "passing" arenas of which one is a declared `rule`,
+        # one a `fixture` and two are feasibility gates, while the three specs
+        # that could actually move it were VOID/NOT_RUN/NOT_RUN — over a cell
+        # that says, in bold, "DEFAULT, never defended".
+        s["challenger_runs"] = _challenger_runs(s["arena_status"], by_id)
         if (s["held"] in HELD_UNEARNED and s["arena_present"]
-                and all(v == "NOT_RUN" for v in s["arena_status"].values())):
+                and not s["challenger_runs"]):
+            ran = sorted(i for i, v in s["arena_status"].items()
+                         if v not in ("NOT_RUN", None))
+            why = (f"the only arena completion(s) — {', '.join(ran)} — buy no "
+                   f"contest (a VOID is not a verdict; a fixture/rule/sensor "
+                   f"seats no challenger)" if ran else "has never run")
             violations.append(("UNCONTESTED", s["seat"],
                                f"held {s['held']}; arena "
-                               f"{', '.join(s['arena_present'])} exists and has "
-                               f"never run — the invitation is real but unanswered"))
+                               f"{', '.join(s['arena_present'])} exists and "
+                               f"{why} — the invitation is real but unanswered"))
     return violations, seats
 
 
@@ -338,7 +414,9 @@ def _fixture() -> None:
 | seat | champion | held | arena | challenger status |
 |---|---|---|---|---|
 | Healthy verdict seat | thing-that-won | **BY VERDICT** (OK.01) | OK.01 (registered) | a challenger |
-| Healthy default seat | incumbent | **DEFAULT, never defended** | OK.01–OK.02 (registered) | a challenger |
+| Default seat a claim spec defended | incumbent | **DEFAULT, never defended** | OK.01–OK.02 (registered) | a challenger |
+| Default seat only a fixture answered | incumbent | **DEFAULT, never defended** | OK.04 + OK.05 (registered) | a challenger |
+| Default seat whose only run went VOID | incumbent | **DEFAULT, never defended** | OK.06 + OK.03 (registered) | a challenger |
 | Phantom arena seat | incumbent | **DEFAULT, never defended** | ZZ.00 + ZZ.01 (queued) | a challenger |
 | No arena at all | incumbent | **BY DECREE** (owner) | HR bakeoff (queued) | a challenger |
 | Uncontested decree seat | incumbent | **BY DECREE** (owner) | OK.03 (registered) | a challenger |
@@ -352,13 +430,29 @@ WHAT STILL RUNS: ZZ.02 (a floor nobody wrote). Cheap, CPU.
 
 This section names ZZ.09 and must contribute no seat and no violation.
 """
-    by_id = {"OK.01": object(), "OK.02": object(), "OK.03": object()}
-    ran = {"OK.01": "PASS", "OK.02": "PASS", "OK.03": "NOT_RUN"}
+    class _S:
+        def __init__(self, notes=""):
+            self.notes = notes
+
+    # OK.04/OK.05 are declared support kinds; OK.06 ran but only to VOID.
+    by_id = {"OK.01": _S("COVERS: smell (claim)"), "OK.02": _S(), "OK.03": _S(),
+             "OK.04": _S("COVERS: smell (fixture)"),
+             "OK.05": _S("COVERS: balance (sensor)"), "OK.06": _S()}
+    ran = {"OK.01": "PASS", "OK.02": "PASS", "OK.03": "NOT_RUN",
+           "OK.04": "PASS", "OK.05": "PASS", "OK.06": "VOID"}
     violations, seats = audit(doc, by_id, lambda sid: ran.get(sid, "NOT_RUN"))
     flagged: Dict[str, set] = {}
     for kind, seat, _why in violations:
         flagged.setdefault(seat, set()).add(kind)
 
+    # THE TWO ROWS THIS GUARD EXISTS FOR (43rd audit). Each is a distinct
+    # false positive for "defended" that the old `all(... NOT_RUN)` quantifier
+    # scored as healthy, and each row is NAMED for what it is — the previous
+    # fixture called such a row "Healthy default seat" and asserted it was not
+    # flagged, so the bug was tested-in and blessed by the one battery whose
+    # purpose is catching it.
+    assert flagged.get("Default seat only a fixture answered") == {"UNCONTESTED"}, flagged
+    assert flagged.get("Default seat whose only run went VOID") == {"UNCONTESTED"}, flagged
     assert flagged.get("Phantom arena seat") == {"ARENA-MISSING"}, flagged
     assert flagged.get("No arena at all") == {"NO-ARENA"}, flagged
     assert flagged.get("Uncontested decree seat") == {"UNCONTESTED"}, flagged
@@ -370,12 +464,13 @@ This section names ZZ.09 and must contribute no seat and no violation.
     assert flagged.get(decree[0]["seat"]) == {"ARENA-MISSING"}, flagged
     # ...and the healthy seats are untouched. A "Superseded context" heading is
     # not a decree, so ZZ.09 must not appear anywhere.
-    for ok in ("Healthy verdict seat", "Healthy default seat",
+    for ok in ("Healthy verdict seat", "Default seat a claim spec defended",
                "Vacant by default words"):
         assert ok not in flagged, (ok, flagged)
     assert not any("ZZ.09" in w for _k, _s, w in violations), violations
     # The range must expand, or `W.1–W.7` undercounts by five.
-    healthy = [s for s in seats if s["seat"] == "Healthy default seat"][0]
+    healthy = [s for s in seats
+               if s["seat"] == "Default seat a claim spec defended"][0]
     assert healthy["arena_refs"] == ["OK.01", "OK.02"], healthy["arena_refs"]
     # A VACANT seat is never UNCONTESTED — nobody is sitting in it.
     vacant = [s for s in seats if s["seat"] == "Vacant by default words"][0]
@@ -436,9 +531,24 @@ def main(argv: List[str]) -> int:
     # The BY ANALYSIS seats: not violations (see audit()), but the file's own
     # rule 1 calls them "pending its arena run", and pending is a promise with
     # a due date only if somebody prints it.
+    # Same quantifier as audit()'s, for the same reason: `all(... NOT_RUN)`
+    # would call a BY ANALYSIS seat "defended" on one VOID or one fixture.
     pending = [(s["seat"], s["arena_present"]) for s in seats
                if s["held"] == "BY ANALYSIS" and s["arena_present"]
-               and all(v == "NOT_RUN" for v in s["arena_status"].values())]
+               and not s.get("challenger_runs")]
+    # The residual soft spot in _challenger_runs, printed instead of assumed.
+    kindless = _spec_kinds(BY_ID)
+    weak = [(s["seat"], s["challenger_runs"]) for s in seats
+            if s.get("challenger_runs")
+            and not any(kindless.get(i) for i in s["challenger_runs"])]
+    if weak:
+        print("  seats discharged ONLY by arena specs that declare no COVERS "
+              "kind — the\n  contest cannot be verified from the registry; "
+              "declare the kind to settle it:")
+        for seat, runs in weak:
+            print(f"    {seat[:44]:<44} {', '.join(runs)}")
+        print()
+
     if pending:
         print("  held BY ANALYSIS with a real arena that has never run "
               "(declared pending, not a violation):")
