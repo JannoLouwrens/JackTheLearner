@@ -7460,3 +7460,18 @@ will go red on it too; that is the ratchet working as designed, and the answer i
 another GPU spec, not a baseline. (4) The eleven defaults fire **tomorrow,
 08-31** — `decisions --check` is green on the safety clause, so if one fires,
 journal it loudly per SYSTEM.md.
+
+**SMOKE OK — the parallel validation landed, and it clears the kernel I had
+already sent.** 24 min of nice-19 CPU, every rig gate green on the real code
+paths: `corpus_sha_ok` and `corpus_counts_ok` true (63,514 pairs), `clip_overlap
+0` on a 293/98 clip-disjoint split, `det_ok`/`finite`, and both halves of the
+task-triviality floor self-test doing their opposite jobs —
+`floor_ratio_nextpose 0.00026` **below** the 0.05 floor (the rejected target,
+correctly rejected) and `floor_ratio_pd 0.776` **above** it. Ordering:
+`mse_bc 0.00124 < mse_ridge 0.00620 < mse_nn 0.00799 < mse_mean 0.0219`. So the
+handoff's warning ("this is how quota burns") did not cost anything **this
+time** — which is the luck the lesson above is about, not a vindication of the
+ordering I used. Note also what limits the downside in general here: T2.14's rig
+gates TRAVEL WITH THE KERNEL, so a broken rig returns `VOID`, never a false
+`PASS` — the exposure of dispatching unvalidated was ≤1 free GPU-hour, never a
+wrong claim on the ledger.
