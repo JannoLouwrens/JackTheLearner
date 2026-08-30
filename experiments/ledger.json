@@ -6891,11 +6891,11 @@
     },
     "T0.01": {
       "amended": [],
-      "attempt": 7,
-      "commit": "cb3a301",
+      "attempt": 8,
+      "commit": "e9bd4a0",
       "compute_s": null,
       "control_metrics": {},
-      "duration_s": 1.55,
+      "duration_s": 1.58,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -6958,6 +6958,25 @@
           ],
           "spec_sha": "90c38663178f63a9",
           "status": "PASS"
+        },
+        {
+          "commit": "cb3a301",
+          "control_metrics": {},
+          "gpu_job_id": null,
+          "impl_sha": "d7af65c339695aa3",
+          "message": "",
+          "metrics": {
+            "failed": "none",
+            "modules_imported": 13,
+            "modules_total": 13,
+            "slow_imports": "none"
+          },
+          "ran_at": "2026-08-29T13:20:13",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "90c38663178f63a9",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d7af65c339695aa3",
@@ -6968,7 +6987,8 @@
         "modules_total": 13,
         "slow_imports": "none"
       },
-      "ran_at": "2026-08-29T13:20:13",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:15:00",
       "seeds": [
         0
       ],
@@ -6978,18 +6998,38 @@
     },
     "T0.02": {
       "amended": [],
-      "attempt": 2,
-      "commit": "68b95bd",
+      "attempt": 3,
+      "commit": "e9bd4a0",
+      "compute_s": null,
       "control_metrics": {
         "max_abs_trace_delta": 0.12971967458724976
       },
-      "duration_s": 2.07,
+      "duration_s": 2.13,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
           "commit": "55e5bda",
           "message": "",
           "ran_at": "2026-08-08T14:09:32",
+          "status": "PASS"
+        },
+        {
+          "commit": "68b95bd",
+          "control_metrics": {
+            "max_abs_trace_delta": 0.12971967458724976
+          },
+          "impl_sha": "d90432ff215bb23c",
+          "message": "",
+          "metrics": {
+            "final_loss": 0.7114750146865845,
+            "max_abs_trace_delta": 0.0,
+            "steps": 30
+          },
+          "ran_at": "2026-08-11T20:37:31",
+          "seeds": [
+            0
+          ],
           "status": "PASS"
         }
       ],
@@ -7000,24 +7040,49 @@
         "max_abs_trace_delta": 0.0,
         "steps": 30
       },
-      "ran_at": "2026-08-11T20:37:31",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:15:02",
       "seeds": [
         0
       ],
       "spec_id": "T0.02",
+      "spec_sha": "fa6cd45e574fbaa1",
       "status": "PASS"
     },
     "T0.03": {
       "amended": [],
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "e9bd4a0",
+      "compute_s": null,
       "control_metrics": {
         "output_delta": 6.027286052704
       },
-      "duration_s": 7.59,
+      "duration_s": 7.71,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "55e5bda",
+          "control_metrics": {
+            "output_delta": 6.027286052704
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "checkpoint_mb": 233.1,
+            "missing_keys": 0,
+            "output_delta": 0.0,
+            "tensors_compared": 7,
+            "unexpected_keys": 0
+          },
+          "ran_at": "2026-08-08T14:09:40",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "46295cb98c870815",
       "message": "",
       "metrics": {
         "checkpoint_mb": 233.1,
@@ -7026,27 +7091,55 @@
         "tensors_compared": 7,
         "unexpected_keys": 0
       },
-      "ran_at": "2026-08-08T14:09:40",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:15:11",
       "seeds": [
         0
       ],
       "spec_id": "T0.03",
+      "spec_sha": "25f446ff5b1ed6f3",
       "status": "PASS"
     },
     "T0.04": {
       "amended": [],
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "e9bd4a0",
+      "compute_s": null,
       "control_metrics": {
         "first_step_gap_pct": 0.3496,
         "max_trace_delta": 0.6644768119,
         "reference_final": 0.023413,
         "resumed_final": 0.047884
       },
-      "duration_s": 112.43,
+      "duration_s": 111.16,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "55e5bda",
+          "control_metrics": {
+            "first_step_gap_pct": 0.3496,
+            "max_trace_delta": 0.6644768119,
+            "reference_final": 0.023413,
+            "resumed_final": 0.047884
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "first_step_gap_pct": 0.3496,
+            "max_trace_delta": 0.0100440681,
+            "reference_final": 0.023413,
+            "resume_fidelity_ratio": 66.16,
+            "resumed_final": 0.028727
+          },
+          "ran_at": "2026-08-08T15:15:10",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "fea9041c2de7d40e",
       "message": "",
       "metrics": {
         "first_step_gap_pct": 0.3496,
@@ -7055,41 +7148,69 @@
         "resume_fidelity_ratio": 66.16,
         "resumed_final": 0.028727
       },
-      "ran_at": "2026-08-08T15:15:10",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:17:02",
       "seeds": [
         0
       ],
       "spec_id": "T0.04",
+      "spec_sha": "5a2672de35566b06",
       "status": "PASS"
     },
     "T0.05": {
-      "amended": [
-        {
-          "at": "2026-08-10T00:12:32",
-          "by": "overseer 2026-08-09 \u00a71.2",
-          "changes": [
-            {
-              "field": "attempt",
-              "from": 1,
-              "to": null
-            }
-          ],
-          "commit": "6c0fcd1",
-          "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
-        }
-      ],
+      "amended": [],
       "attempt": null,
-      "commit": "55e5bda",
+      "commit": "e9bd4a0",
+      "compute_s": null,
       "control_metrics": {
         "checkpoints_checked": 12,
         "corrupt": 12,
         "kills": 12,
         "max_step_recovered": 0
       },
-      "duration_s": 34.89,
+      "duration_s": 31.67,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "amended": [
+            {
+              "at": "2026-08-10T00:12:32",
+              "by": "overseer 2026-08-09 \u00a71.2",
+              "changes": [
+                {
+                  "field": "attempt",
+                  "from": 1,
+                  "to": null
+                }
+              ],
+              "commit": "6c0fcd1",
+              "reason": "attempt/history predate the history mechanism and read 'attempt: 1, history: []', which is false. The true count is not reconstructible from git, so the entry now says unknown rather than asserting 1 (the Arm.cost lesson: a default that cannot be told from a measurement). A re-run keeps it unknown by design."
+            }
+          ],
+          "commit": "55e5bda",
+          "control_metrics": {
+            "checkpoints_checked": 12,
+            "corrupt": 12,
+            "kills": 12,
+            "max_step_recovered": 0
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "checkpoints_checked": 12,
+            "corrupt": 0,
+            "kills": 12,
+            "max_step_recovered": 1
+          },
+          "ran_at": "2026-08-08T16:08:48",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "8a511439cda39a26",
       "message": "",
       "metrics": {
         "checkpoints_checked": 12,
@@ -7097,22 +7218,26 @@
         "kills": 12,
         "max_step_recovered": 1
       },
-      "ran_at": "2026-08-08T16:08:48",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:17:35",
       "seeds": [
         0
       ],
       "spec_id": "T0.05",
+      "spec_sha": "7f34b6ee7531e17d",
       "status": "PASS"
     },
     "T0.06": {
       "amended": [],
-      "attempt": 3,
-      "commit": "68b95bd",
+      "attempt": 4,
+      "commit": "e9bd4a0",
+      "compute_s": null,
       "control_metrics": {
         "raised": 5,
         "wrong_widths_tried": 5
       },
-      "duration_s": 1.58,
+      "duration_s": 1.63,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
         {
@@ -7126,6 +7251,29 @@
           "message": "",
           "ran_at": "2026-08-09T14:22:08",
           "status": "PASS"
+        },
+        {
+          "commit": "68b95bd",
+          "control_metrics": {
+            "raised": 5,
+            "wrong_widths_tried": 5
+          },
+          "impl_sha": "1dc6d04e9946976e",
+          "message": "",
+          "metrics": {
+            "action_space_dim": 17,
+            "ctrl_write_error": 0.0,
+            "expected_nu": 17,
+            "last_reward": 4.8779,
+            "nu": 17,
+            "obs_dim": 348,
+            "steps_ok": 5
+          },
+          "ran_at": "2026-08-11T20:37:34",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "1dc6d04e9946976e",
@@ -7134,62 +7282,103 @@
         "action_space_dim": 17,
         "ctrl_write_error": 0.0,
         "expected_nu": 17,
-        "last_reward": 4.8779,
+        "last_reward": 4.9081,
         "nu": 17,
         "obs_dim": 348,
         "steps_ok": 5
       },
-      "ran_at": "2026-08-11T20:37:34",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:17:37",
       "seeds": [
         0
       ],
       "spec_id": "T0.06",
+      "spec_sha": "6c385987b0deee11",
       "status": "PASS"
     },
     "T0.07": {
       "amended": [],
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "e9bd4a0",
+      "compute_s": null,
       "control_metrics": {
-        "empty_loop_hz": 13941371.2
+        "empty_loop_hz": 14138961.0
       },
-      "duration_s": 18.83,
+      "duration_s": 129.86,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "55e5bda",
+          "control_metrics": {
+            "empty_loop_hz": 13941371.2
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "bare_repeat_spread": 0.0054,
+            "bare_steps_per_s": 1795.1,
+            "calibration_error": 0.0003,
+            "calibration_hz": 983.4,
+            "hours_for_2M_steps_no_llm": 47.0,
+            "hours_for_2M_steps_policy": 48.4,
+            "llm_removal_speedup": 1.03,
+            "policy_no_llm_rel_std": 0.0071,
+            "policy_no_llm_steps_per_s": 11.81,
+            "policy_no_llm_total_params": 58244744,
+            "policy_peak_rss_mb": 6933.8,
+            "policy_rel_std": 0.0336,
+            "policy_slowdown_vs_bare": 156.3,
+            "policy_steps_per_s": 11.48,
+            "policy_total_params": 1767267976,
+            "policy_trainable_params": 55891592,
+            "vectorised_rel_std": 0.0006,
+            "vectorised_speedup": 1.17,
+            "vectorised_steps_per_s": 2108.3
+          },
+          "ran_at": "2026-08-08T15:10:21",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "a26e0b35ce9ae2d4",
       "message": "",
       "metrics": {
-        "bare_repeat_spread": 0.0054,
-        "bare_steps_per_s": 1795.1,
-        "calibration_error": 0.0003,
-        "calibration_hz": 983.4,
-        "hours_for_2M_steps_no_llm": 47.0,
-        "hours_for_2M_steps_policy": 48.4,
-        "llm_removal_speedup": 1.03,
-        "policy_no_llm_rel_std": 0.0071,
-        "policy_no_llm_steps_per_s": 11.81,
+        "bare_repeat_spread": 0.0068,
+        "bare_steps_per_s": 1671.2,
+        "calibration_error": 0.062,
+        "calibration_hz": 919.1,
+        "hours_for_2M_steps_no_llm": 46.8,
+        "hours_for_2M_steps_policy": 46.5,
+        "llm_removal_speedup": 0.99,
+        "policy_no_llm_rel_std": 0.007,
+        "policy_no_llm_steps_per_s": 11.87,
         "policy_no_llm_total_params": 58244744,
-        "policy_peak_rss_mb": 6933.8,
-        "policy_rel_std": 0.0336,
-        "policy_slowdown_vs_bare": 156.3,
-        "policy_steps_per_s": 11.48,
+        "policy_peak_rss_mb": 6941.8,
+        "policy_rel_std": 0.0085,
+        "policy_slowdown_vs_bare": 139.8,
+        "policy_steps_per_s": 11.96,
         "policy_total_params": 1767267976,
         "policy_trainable_params": 55891592,
-        "vectorised_rel_std": 0.0006,
-        "vectorised_speedup": 1.17,
-        "vectorised_steps_per_s": 2108.3
+        "vectorised_rel_std": 0.0095,
+        "vectorised_speedup": 1.28,
+        "vectorised_steps_per_s": 2138.1
       },
-      "ran_at": "2026-08-08T15:10:21",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:19:47",
       "seeds": [
         0
       ],
       "spec_id": "T0.07",
+      "spec_sha": "a6f372697a8000b7",
       "status": "PASS"
     },
     "T0.08": {
       "amended": [],
-      "attempt": 9,
-      "commit": "d461e36",
+      "attempt": 10,
+      "commit": "e9bd4a0+dirty",
       "compute_s": null,
       "control_metrics": {
         "amendment_survived": false,
@@ -7199,7 +7388,7 @@
         "own_result_recorded": true,
         "unseen_entry_survived": true
       },
-      "duration_s": 1.31,
+      "duration_s": 1.3,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -7278,6 +7467,42 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "d461e36",
+          "control_metrics": {
+            "amendment_survived": false,
+            "attempt_not_inflated": false,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": false,
+            "own_result_recorded": true,
+            "unseen_entry_survived": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "989fa3d1cb6af184",
+          "message": "",
+          "metrics": {
+            "amendment_survived": true,
+            "attempt_not_inflated": true,
+            "blocked_records_no_metrics": true,
+            "default_is_not_run": true,
+            "dependency_blocks": true,
+            "entries_after_concurrency": 19,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": true,
+            "own_result_recorded": true,
+            "roundtrip_ok": true,
+            "survives_concurrent_writers": true,
+            "unseen_entry_survived": true,
+            "void_dep_blocks": true,
+            "void_why_not_a_refutation": true
+          },
+          "ran_at": "2026-08-29T13:21:10",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "8c42327a17d13484",
+          "status": "PASS"
         }
       ],
       "impl_sha": "989fa3d1cb6af184",
@@ -7298,7 +7523,8 @@
         "void_dep_blocks": true,
         "void_why_not_a_refutation": true
       },
-      "ran_at": "2026-08-29T13:21:10",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:19:50",
       "seeds": [
         0
       ],
@@ -7307,28 +7533,16 @@
       "status": "PASS"
     },
     "T0.09": {
-      "amended": [
-        {
-          "at": "2026-08-19T07:36:18",
-          "by": "overseer-17th-audit-B2",
-          "changes": [
-            {
-              "field": "hardware",
-              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
-              "to": "remote/Tesla T4, 15360 MiB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
-            }
-          ],
-          "commit": "f47c372+dirty",
-          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
-        }
-      ],
+      "amended": [],
       "attempt": null,
-      "commit": "06eab9e",
+      "commit": "e9bd4a0+dirty",
+      "compute_s": null,
       "control_metrics": {
         "message": "exit 1",
         "ok": false
       },
-      "duration_s": 36.0,
+      "duration_s": 34.87,
+      "gpu_job_id": null,
       "hardware": "remote/Tesla T4, 15360 MiB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
@@ -7369,6 +7583,45 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "amended": [
+            {
+              "at": "2026-08-19T07:36:18",
+              "by": "overseer-17th-audit-B2",
+              "changes": [
+                {
+                  "field": "hardware",
+                  "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+                  "to": "remote/Tesla T4, 15360 MiB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+                }
+              ],
+              "commit": "f47c372+dirty",
+              "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+            }
+          ],
+          "commit": "06eab9e",
+          "control_metrics": {
+            "message": "exit 1",
+            "ok": false
+          },
+          "impl_sha": "99c5042d8fa77c5f",
+          "message": "",
+          "metrics": {
+            "artifact_bytes": 124,
+            "cuda_available": true,
+            "device": "Tesla T4",
+            "duration_s": 31.9,
+            "gpu": "Tesla T4, 15360 MiB",
+            "matmul_finite": true,
+            "message": "",
+            "ok": true
+          },
+          "ran_at": "2026-08-14T01:21:25",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
         }
       ],
       "impl_sha": "99c5042d8fa77c5f",
@@ -7377,45 +7630,74 @@
         "artifact_bytes": 124,
         "cuda_available": true,
         "device": "Tesla T4",
-        "duration_s": 31.9,
+        "duration_s": 30.5,
         "gpu": "Tesla T4, 15360 MiB",
         "matmul_finite": true,
         "message": "",
         "ok": true
       },
-      "ran_at": "2026-08-14T01:21:25",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:20:25",
       "seeds": [
         0
       ],
       "spec_id": "T0.09",
+      "spec_sha": "084098ba7056a3cf",
       "status": "PASS"
     },
     "T0.10": {
       "amended": [],
-      "attempt": 1,
-      "commit": "bb1659d",
+      "attempt": 2,
+      "commit": "19173b2",
+      "compute_s": null,
       "control_metrics": {},
-      "duration_s": 193.29,
+      "duration_s": 194.69,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "bb1659d",
+          "control_metrics": {},
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "artifact_bytes": 127,
+            "capability": "6.0",
+            "cuda_available": true,
+            "device": "Tesla P100-PCIE-16GB",
+            "duration_s": 193.3,
+            "matmul_finite": true,
+            "message": "",
+            "ok": true,
+            "torch": "2.5.1+cu121"
+          },
+          "ran_at": "2026-08-04T15:50:08",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "431b90200015d03b",
       "message": "",
       "metrics": {
         "artifact_bytes": 127,
         "capability": "6.0",
         "cuda_available": true,
         "device": "Tesla P100-PCIE-16GB",
-        "duration_s": 193.3,
+        "duration_s": 193.5,
         "matmul_finite": true,
         "message": "",
         "ok": true,
         "torch": "2.5.1+cu121"
       },
-      "ran_at": "2026-08-04T15:50:08",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:23:40",
       "seeds": [
         0
       ],
       "spec_id": "T0.10",
+      "spec_sha": "ff55830be66352fb",
       "status": "PASS"
     },
     "T0.11": {
@@ -12096,8 +12378,8 @@
     },
     "T0.29": {
       "amended": [],
-      "attempt": 1,
-      "commit": "6ffd709+dirty",
+      "attempt": 2,
+      "commit": "e9bd4a0",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p6_only_a_challenger_discharges",
@@ -12108,10 +12390,41 @@
         "properties_checked": 10.0,
         "properties_failed": 3.0
       },
-      "duration_s": 2.2,
+      "duration_s": 2.19,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "6ffd709+dirty",
+          "control_metrics": {
+            "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p6_only_a_challenger_discharges",
+            "live_arena_missing": 5.0,
+            "live_seats": 26.0,
+            "live_unfalsifiable": 7.0,
+            "live_violations": 11.0,
+            "properties_checked": 10.0,
+            "properties_failed": 3.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "d4dbb91110326656",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "live_arena_missing": 5.0,
+            "live_seats": 26.0,
+            "live_unfalsifiable": 7.0,
+            "live_violations": 11.0,
+            "properties_checked": 10.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-08-30T09:14:09",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "2f701e24af9a6b14",
+          "status": "PASS"
+        }
+      ],
       "impl_sha": "d4dbb91110326656",
       "message": "",
       "metrics": {
@@ -12124,7 +12437,7 @@
         "properties_failed": 0.0
       },
       "preserved_impl": null,
-      "ran_at": "2026-08-30T09:14:09",
+      "ran_at": "2026-08-30T09:14:53",
       "seeds": [
         0
       ],
