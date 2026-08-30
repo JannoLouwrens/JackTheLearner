@@ -107,7 +107,47 @@ DOC = Path(__file__).resolve().parent.parent / "docs" / "CHAMPIONS.md"
 # by REGISTERING the spec — never by deleting the arena reference, which would
 # convert an ARENA-MISSING into a NO-ARENA and make the seat permanently safe
 # instead of merely uncontested.
-BASELINE_ARENA_MISSING = 8
+#
+# RATCHETED DOWN 8 -> 5, 2026-08-30, against 195 specs. Three seats discharged
+# by REGISTERING, which is the only permitted way: Language model and Language
+# acquisition (`LG.00` registered `ed2d969`) and World (`W.1`-`W.5`, `W.7`,
+# `W.8` registered today, after five consecutive audits asked). A shrink-only
+# ratchet that is never re-baselined stops being a ratchet — it would have let
+# these three seats regress to phantom arenas in silence, which is the exact
+# failure this constant exists to catch. The five that remain: Control
+# architecture (D1.0, T2.21), Curiosity signal (LT.03, LT.04), Vision encoder
+# (PL.02), Audio encoder (PL.*), and the PLASTIC-ONLY decree (PL.00, PL.02).
+BASELINE_ARENA_MISSING = 5
+
+# ARENA REFS THAT CAN NEVER BE REGISTERED, and why — the honest cost of closing
+# the gap, which this file used to leave the reader to discover by spending the
+# iteration (LESSONS.md 2026-08-29: "an instrument that names a gap must also
+# say whether the gap is closable"; applied to `coverage.py` that day and not
+# to this file until 2026-08-30).
+#
+# THE SCAR. For five consecutive audits (44th–48th) this module reported the
+# World seat as ARENA-MISSING and every one of them relayed the same repair to
+# the builder: *register `W.1`–`W.7`*. Six of those seven were registerable and
+# were eventually registered. **`W.6` never was and never will be** — it was
+# withdrawn 2026-08-09 for conflating three claims and superseded by `NE.08`.
+# Because `arena_refs` expands ranges, one withdrawn id inside a cited range
+# made that seat's ratchet UNSATISFIABLE BY ANY AMOUNT OF HONEST WORK, and the
+# instruction was reissued five times without anybody noticing that a component
+# of it could not be obeyed. A ratchet nobody can clear trains its readers to
+# skip it — the exact failure `champions.py`'s own docstring warns about for
+# phantom arenas, one level up.
+#
+# ENTRIES ARE DECISIONS, NOT OPINIONS: each names the record that closed it. A
+# ref belongs here only when the project has DECIDED not to register it. Do not
+# add a ref merely because it is unwritten — that is inventory debt, and the
+# correct report for it is "REGISTER to discharge".
+UNREGISTERABLE = {
+    "W.6":   "withdrawn 2026-08-09, superseded by NE.08 — SURVIVAL_WORLD.md §5",
+    "D1.0":  "unregistered BY DECISION 2026-08-13 (`a3b12f6`, choice (b)) — the "
+             "WHERE question is D1 and is on the owner's desk",
+    "T2.21": "unregistered BY DECISION 2026-08-13 (`a3b12f6`, choice (b)) — same "
+             "ruling as D1.0",
+}
 
 # A spec id: family, then one or two components that are digits or a single
 # capital. Deliberately tight, because the arena cells are dense prose full of
@@ -361,9 +401,28 @@ def audit(text: str, by_id: dict,
                                "names no arena spec id at all — nothing that could "
                                "ever be run would unseat the holder"))
         elif s["arena_missing"]:
+            # An instrument that names a gap must also say whether the gap is
+            # CLOSABLE (LESSONS.md, 2026-08-29 — written for `coverage.py`'s
+            # queue depth and never applied here). "Register the spec" is the
+            # right repair only for a ref that MAY be registered; for one the
+            # project has decided against, it is an instruction nobody can
+            # obey, and this file issued exactly that instruction for five
+            # consecutive audits. See UNREGISTERABLE.
+            s["arena_unregisterable"] = [r for r in s["arena_missing"]
+                                         if r in UNREGISTERABLE]
+            reg = [r for r in s["arena_missing"] if r not in UNREGISTERABLE]
+            why = []
+            if reg:
+                why.append(f"names {', '.join(reg)} — not in the registry; "
+                           f"REGISTER to discharge")
+            if s["arena_unregisterable"]:
+                why.append("names " + "; ".join(
+                    f"{r} ({UNREGISTERABLE[r]})" for r in s["arena_unregisterable"]
+                ) + " — NOT registerable, so the repair is to CORRECT THE "
+                    "CITATION to the live successor, never to write the spec")
             violations.append(("ARENA-MISSING", s["seat"],
-                               f"names {', '.join(s['arena_missing'])} — not in the "
-                               f"registry, so the seat looks contestable and is not"))
+                               " AND ".join(why) +
+                               ", so the seat looks contestable and is not"))
 
         # Only DEFAULT and DECREE seats: those are the two markings the file
         # itself calls unearned ("a DEFAULT champion never won anything";
@@ -418,6 +477,7 @@ def _fixture() -> None:
 | Default seat only a fixture answered | incumbent | **DEFAULT, never defended** | OK.04 + OK.05 (registered) | a challenger |
 | Default seat whose only run went VOID | incumbent | **DEFAULT, never defended** | OK.06 + OK.03 (registered) | a challenger |
 | Phantom arena seat | incumbent | **DEFAULT, never defended** | ZZ.00 + ZZ.01 (queued) | a challenger |
+| Seat citing a withdrawn spec | incumbent | **DEFAULT, never defended** | ZZ.00 + W.6 (queued) | a challenger |
 | No arena at all | incumbent | **BY DECREE** (owner) | HR bakeoff (queued) | a challenger |
 | Uncontested decree seat | incumbent | **BY DECREE** (owner) | OK.03 (registered) | a challenger |
 | Vacant by default words | **VACANT** — the incumbent by default is nobody | — | OK.01 (registered) | a challenger |
@@ -454,6 +514,24 @@ This section names ZZ.09 and must contribute no seat and no violation.
     assert flagged.get("Default seat only a fixture answered") == {"UNCONTESTED"}, flagged
     assert flagged.get("Default seat whose only run went VOID") == {"UNCONTESTED"}, flagged
     assert flagged.get("Phantom arena seat") == {"ARENA-MISSING"}, flagged
+
+    # THE CLOSABILITY SPLIT (2026-08-30). Both seats below are ARENA-MISSING and
+    # the old code printed them identically; only one of them can be discharged
+    # by writing a spec. If this battery ever passes with the two messages
+    # equal, the guard has been removed and the five-audit unsatisfiable
+    # instruction is back.
+    assert flagged.get("Seat citing a withdrawn spec") == {"ARENA-MISSING"}, flagged
+    by_seat = {seat: why for kind, seat, why in violations if kind == "ARENA-MISSING"}
+    withdrawn_seat = [s for s in seats if s["seat"] == "Seat citing a withdrawn spec"][0]
+    phantom_seat = [s for s in seats if s["seat"] == "Phantom arena seat"][0]
+    assert withdrawn_seat["arena_unregisterable"] == ["W.6"], withdrawn_seat
+    assert phantom_seat["arena_unregisterable"] == [], phantom_seat
+    # The registerable half of a MIXED citation must still say "register" —
+    # one un-writable id may not excuse the ids that are merely unwritten.
+    assert "ZZ.00" in by_seat["Seat citing a withdrawn spec"], by_seat
+    assert "REGISTER to discharge" in by_seat["Seat citing a withdrawn spec"], by_seat
+    assert "CORRECT THE CITATION" in by_seat["Seat citing a withdrawn spec"], by_seat
+    assert "CORRECT THE CITATION" not in by_seat["Phantom arena seat"], by_seat
     assert flagged.get("No arena at all") == {"NO-ARENA"}, flagged
     assert flagged.get("Uncontested decree seat") == {"UNCONTESTED"}, flagged
     # The decree section is a seat and its dangling `WHAT STILL RUNS` id is the
@@ -554,6 +632,20 @@ def main(argv: List[str]) -> int:
               "(declared pending, not a violation):")
         for seat, arenas in pending:
             print(f"    {seat[:width]:{width}}  {', '.join(arenas)}")
+        print()
+
+    # The closability split. A seat here cannot be discharged by building
+    # anything, so reporting it beside the register-me seats — which is what
+    # this file did for five audits — costs a builder iteration each time.
+    unclosable = [(s["seat"], s["arena_unregisterable"]) for s in seats
+                  if s.get("arena_unregisterable")]
+    if unclosable:
+        print("  ARENA-MISSING that REGISTERING CANNOT FIX — the cited id was "
+              "decided against,\n  so the repair is to correct the citation to "
+              "the live successor:")
+        for seat, refs in unclosable:
+            for r in refs:
+                print(f"    {seat[:44]:<44} {r:<7} {UNREGISTERABLE[r]}")
         print()
 
     missing = sum(1 for k, _, _ in violations if k == "ARENA-MISSING")

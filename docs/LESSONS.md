@@ -7172,3 +7172,118 @@ against its null" (which the author demonstrably did not do, having just written
 it down) into arithmetic the run performs on itself. **Where a lesson can be
 made into a line of code, the line of code is the lesson; the prose is only how
 the next spec learns why the line is there.**
+
+---
+
+## A repair that makes the CLAIM measurable can destroy the CONTROL that made it
+## meaningful — when both gates read the same knob, they can move in OPPOSITE
+## directions and no setting satisfies both
+## (builder, 2026-08-30, T3.10's REPAIR 1 pilot — fork (ii), the spec is PARKED)
+
+**The measurement.** `T3.10` asks whether a frozen vision trunk's knowledge
+survives action training. Its first T4 pilot found the claim gate unsatisfiable
+by arithmetic and diagnosed the cause honestly: phase P was under-trained
+(`final_perception_loss` 2.2246 against a chance sum of 3.4655), so nobody could
+say an under-trained trunk had tested the hypothesis. `REPAIR 1(a)` was the
+obvious apparatus fix — `EPOCHS_P` 40 → 150, no bar touched — and it **worked**:
+loss 2.2246 → 1.4244, and the probe the first pilot accused training of
+degrading came back up (shape 0.3633 → 0.4492, now above the random trunk's
+0.4193). The claim became measurable, and measured **+0.0299** against a frozen
+**+0.15** bar.
+
+**And the control died in the same run.** `probe_drift_unfrozen` — the gate that
+certifies a zero drift in the frozen arm means something, because unfreezing
+must move the probes — fell **0.1875 → 0.0078** against its ≥ 0.10 floor. So
+the run VOIDs on its rig even if the claim clears.
+
+**The mechanism is not a bug, and that is the whole lesson.** A converged trunk
+is one whose features the downstream phase's gradients barely move — frozen or
+not. The control's sensitivity had been a *side-effect of the apparatus being
+broken*. Under-train phase P and the control fires but the claim is
+unmeasurable; converge phase P and the claim is measurable but the control is
+dead. **The two gates read the same knob with opposite signs, so no value of
+`EPOCHS_P` satisfies both, and there was never a third recipe to find.** The
+SM.02/UB.10 one-diagnostic cap stopped a search that could not have terminated.
+
+**Distinguish this from the neighbouring lesson.** "A repair can be right and
+change nothing" (2026-08-29, T2.11) is about a repair whose effect does not
+reach the metric. This is the more dangerous shape: the repair reaches the
+metric, *improves the number you were watching*, and silently disarms the
+instrument that made the number admissible. One of these looks like failure;
+the other looks like progress.
+
+**The general rule, and it is cheap to apply:** *before spending a diagnostic on
+an apparatus repair, ask which gates are monotone in the knob you are about to
+turn, and in which direction.* If a rig gate and a claim gate have opposite
+signs in it, the spec has a DESIGN fault and no setting will fix it — route it
+to a redesign, not to another recipe. The tell is available for free: both
+pilots printed both numbers, and the sign flip was visible the moment they were
+put in one column.
+
+**The corollary that costs the most to learn late:** a control whose sensitivity
+depends on the apparatus being under-trained is not a control. It certifies the
+brokenness, not the claim — and it will read GREEN for exactly as long as the
+experiment is not yet worth running.
+
+**And one finding was withdrawn by its own repair.** The first pilot's headline
+second finding — *"supervised training made the seated 245K trunk a WORSE linear
+feature extractor on all three targets"* — was an **under-training artefact**.
+At 150 epochs shape goes above random, not below. It had been written up as a
+real measurement corroborating T2.03 from the opposite direction, and it is now
+retracted in `t3_10_trunk_knowledge_survives.py`. *A number measured on an
+apparatus you have already diagnosed as broken is not evidence about the world,
+however interesting it is* — and the interest is precisely what makes it get
+written down as though it were.
+
+---
+
+## An instrument's "closable gap" rule must be applied to EVERY instrument that
+## names a gap, not the one whose scar produced it
+## (builder, 2026-08-30, registering W.1–W.8 after five audits asked)
+
+**The scar.** On 2026-08-29 the lesson *"an instrument that names a gap must
+also say whether the gap is closable"* was written and implemented — in
+`coverage.py`, whose `queue_depth` now prints `fillable today: …` versus
+`NOT FILLABLE: no runnable spec to implement`. It was never applied to
+`champions.py`, which names gaps of exactly the same kind.
+
+**What that cost, measured.** `champions.py` reported the World seat as
+ARENA-MISSING for **five consecutive audits** (44th–48th), and every one relayed
+the same repair to the builder: *register `W.1`–`W.7`*. Six of the seven were
+registerable. **`W.6` was not and never will be** — it was withdrawn 2026-08-09
+for conflating three claims and superseded by `NE.08`. Because `arena_refs`
+expands ranges, one withdrawn id inside a cited range made that seat's ratchet
+**unsatisfiable by any amount of honest work**, and the instruction was reissued
+five times without anyone noticing that a component of it could not be obeyed.
+The same shape was live at a second seat the whole time: Control architecture
+cites `D1.0` and `T2.21`, which the builder resolved on 2026-08-13 (`a3b12f6`,
+choice (b)) to **deliberately not register**.
+
+**Two things generalise, and the second is the sharper one.**
+
+1. *A citation written as a RANGE promises every id inside it, including the
+   ones you later withdrew.* The withdrawal is recorded where humans read
+   (`SURVIVAL_WORLD.md §5`, struck through, with its reasoning) and is invisible
+   to the tool that expands `W.1–W.7` into seven demands. Prose retires a spec;
+   a range re-summons it.
+2. *An unclosable gap and a closable one look identical on the page, so the
+   ratchet that mixes them trains its readers to skip it* — which is the exact
+   failure `champions.py`'s own docstring warns about for phantom arenas, one
+   level up. A ratchet nobody can clear is not a ratchet; it is a permanent red
+   that teaches people to stop reading reds.
+
+**The repair is mechanical, not a resolution to be more careful.**
+`champions.py` now carries `UNREGISTERABLE` — refs the project has *decided*
+against, each naming the record that decided it — and splits its ARENA-MISSING
+message into "REGISTER to discharge" versus "CORRECT THE CITATION to the live
+successor, never write the spec". A mixed citation still says *register* for its
+registerable half, so one un-writable id may not excuse ids that are merely
+unwritten. The known-answer battery plants a seat citing a withdrawn spec and
+requires the two messages to DIFFER; delete the guard and the fixture fails.
+
+**The membership rule matters more than the mechanism.** `UNREGISTERABLE` is for
+ids the project decided against — never for ids that are merely unwritten. That
+is inventory debt, and its honest report is "REGISTER to discharge". An
+instrument that lets *unwritten* be filed as *undoable* would discharge its own
+ratchet by relabelling the work, which is the forbidden repair wearing the
+permitted one's clothes.

@@ -223,3 +223,55 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
     since no existing gate's value changes; under arm (b) every spec that gates
     a renamed key fails loudly at its next run, which is the intended behaviour
     and must be paid deliberately rather than discovered.
+
+---
+
+## `t310-anticorrelated-gates` — a spec whose rig control and claim gate move in
+## OPPOSITE directions under the same knob (builder, 2026-08-30; T3.10 PARKED)
+
+**Routed here by the spec's own pre-registered fork (ii), not by an argument.**
+The one-diagnostic cap (SM.02/UB.10 precedent) is SPENT: no third recipe was
+tried and none may be. Full receipts in `t3_10_trunk_knowledge_survives.py`'s
+REPAIR 1 PILOT block and in the registry's `PARKED:` marker.
+
+**What was measured** (Colab T4, seed 90, ~9 min, head `06c65f8`). Both
+pre-registered repairs did exactly what they were specified to do:
+
+| | pilot 1 (EPOCHS_P 40) | pilot 2 (EPOCHS_P 150) | gate |
+|---|---|---|---|
+| `final_perception_loss` | 2.2246 | **1.4244** | (chance 3.4655) |
+| probe `shape` after P | 0.3633 | **0.4492** | random trunk 0.4193 |
+| `knowledge_margin_min` | unsatisfiable by arithmetic | **0.0299** | **≥ 0.15** |
+| `probe_drift_unfrozen` | **0.1875** | **0.0078** | **≥ 0.10** (rig) |
+| `reach_margin` | 0.1576 | 0.3138 | ≥ 0.10 ✓ |
+
+`null_admissible` (REPAIR 1(b)) worked: colour and near dropped as unreadable
+from a random trunk, `shape` retained, `n_null_admissible` 1.
+
+**The question for the Review, and it is a DESIGN question.** Converging phase P
+made the claim measurable and simultaneously killed the control — because a
+converged trunk is one whose features phase A's gradients no longer move,
+frozen or not. The control's sensitivity was a side-effect of the apparatus
+being under-trained. So:
+
+1. **What independent control certifies the frozen arm's zero drift** when
+   phase A no longer moves an unfrozen trunk either? Without one, this spec
+   cannot distinguish "the freeze held" from "nothing was going to move
+   anyway", at any `EPOCHS_P`.
+2. **Is +0.0299 the ceiling of the question or of the substrate?** The signal is
+   real and correctly signed — a 128-d globally-pooled bottleneck *does* learn
+   something about shape its random init cannot read — at ~1.7σ (n_test 768)
+   against a bar of 0.15 that does not move and must not. Candidate arms: a
+   larger bottleneck, a relational/compositional probe target (colour and
+   apparent size are low-order statistics that survive any random projection),
+   or a task where the margin can be large by construction.
+3. **Does this generalise to the other frozen-vs-plastic specs?** The failure is
+   about the *bottleneck's* representational headroom, and `PL.00`/`PL.02` are
+   named in `CHAMPIONS.md` as the arenas for the plastic-only decree. If the
+   answer to (2) is "the substrate", they inherit it.
+
+**One retraction to carry forward.** Pilot 1's headline second finding —
+*"supervised training made the seated 245K trunk a worse linear feature
+extractor on all three targets"*, written up as corroborating `T2.03` from the
+opposite direction — was an **under-training artefact** and is withdrawn. At 150
+epochs shape goes above random, not below. Do not cite it.

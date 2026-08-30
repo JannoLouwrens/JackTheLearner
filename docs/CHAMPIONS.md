@@ -73,7 +73,7 @@ SYSTEM.md, which outrank this file.
 | Speaker ID | CAM++ / TitaNet-small | BY ANALYSIS (research only) | HR speaker spec (queued) | needs ARM benchmark — no published numbers exist |
 | Language model | SmolLM2-360M as a TALKATIVE PARENT — in his world, speaking to him; NOT inside him | **BY DECREE** (owner 2026-08-09; supersedes the earlier 'frozen mouth' framing) | LG.00 anti-puppet applies to any role | any better frozen swap-in |
 | Consolidation | SIESTA wake/sleep, sleep-gated | BY ANALYSIS | NE.05 (queued) | — |
-| World | MuJoCo playground + needs overlays | **BY VERDICT** (measured 4–6× faster than Craftax AND goal-aligned) | W.1–W.7 fidelity gates (queued) | rematch at each fidelity stage |
+| World | MuJoCo playground + needs overlays | **BY VERDICT** (measured 4–6× faster than Craftax AND goal-aligned) | W.1–W.5, W.7, W.8 fidelity gates (REGISTERED 2026-08-30, none run) — see the note below the table | rematch at each fidelity stage |
 | Audio encoder (world-sound → brain) | undecided — mel favourite (raw costs 12–25×, measured) | — | HR audio-entry bakeoff (queued); PL.* applies here too | raw vs mel vs tokens vs no-audio null |
 | Language grounding (word → lived skill) | undecided — skills-then-language ordering unproven | — | LG bakeoff (queued; doc needs completeness check) | grounding approaches + the ordering experiment |
 
@@ -81,6 +81,30 @@ SYSTEM.md, which outrank this file.
 | Taste (gustation) | **THE CLAIM IS CLOSED — the first constitutional commitment ever closed by a claim spec, not a fixture.** `TA.01` (poison fixture) PASS; **`TA.02` PASS 2026-08-19** — pooled avoidance 0.983 in one trial, the Garcia taste↔nausea / audiovisual↔shock dissociation clean, and a DQN null eating 196–218 toxic meals at zero discrimination over 150 lives. No mechanism ARM is seated: what is demonstrated is that Jack does it, not which implementation should hold the chair | — | `TA.03` (behind UB.9) is the remaining taste spec | one-trial aversion learning; poison. Cell corrected by the Review 2026-08-21 — it still read "TA.02 is runnable today" two days after TA.02 passed |
 | Voice (vocalisation) | **VACANT — but he CAN make a sound**: `VO.01` **PASS 2026-08-12** after four honest FAILs (the emitter is certified; no arm is seated) | — | `VO.02` (voice as act, the claim) is runnable today | prerequisite for emergent language + GEN.02 |
 | Language acquisition | LLM-as-parent (speaks to him; he learns by hearing) | **BY DECREE** (owner 2026-08-09) | LG family + LG.00 anti-puppet | pure from-scratch; critical-period |
+
+**Note on the World seat's arena (builder, 2026-08-30).** This cell read
+`W.1–W.7 fidelity gates (queued)` for twenty-one days while **none of the seven
+existed** — the strongest marking in this file defended by a ring that had never
+been built, and the single most-cited missing arena in the project. The seven
+were drafted in full in `docs/research/SURVIVAL_WORLD.md §5` the whole time;
+they are now REGISTERED (`registry_expansion.py`), so the seat is contestable
+for the first time. Two honest corrections came with the registration, and
+neither shrinks the arena:
+
+- **`W.6` is deliberately absent and must never be registered.** It was
+  withdrawn 2026-08-09 for conflating three claims and superseded by `NE.08`
+  (`docs/research/NEEDS_AND_DEATH.md`), which separates them and adds the
+  C-ONELIFE control. So the old cell's range named one id that *could not* be
+  honestly supplied, and `champions.py` — which expands ranges — would have
+  kept this seat ARENA-MISSING forever no matter how much work was done. The
+  range is now an explicit list of ids that exist. That is not the forbidden
+  repair (deleting a reference to convert ARENA-MISSING into NO-ARENA): the
+  arena went from **zero** runnable challengers to **seven**.
+- **`NE.08` is NOT listed as a World arena**, though it superseded `W.6`. It
+  tests whether the *agent* profits from what it remembers across death; this
+  seat is held by a *world*, and only a world-fidelity gate can unseat it.
+  Naming it here would have discharged the ratchet with a spec that cannot
+  decide the question — the failure mode this file exists to prevent.
 
 ### DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK.
 

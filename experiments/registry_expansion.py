@@ -1589,7 +1589,28 @@ EXPANSION: list[Spec] = [
          null_baseline="Probes on a random-weight trunk.",
          metric="probe_drift", budget=Budget.GPU_SHORT, depends_on=["T2.03"],
          control="Deliberately unfreezing the trunk must reproduce the drift.",
-         notes="Cheapest direct evidence for/against decision D1 (arXiv:2505.23705)."),
+         notes="Cheapest direct evidence for/against decision D1 (arXiv:2505.23705).\n"
+               "PARKED: 2026-08-30 — REPAIR 1's pilot fired the pre-registered "
+               "both-fail branch (fork (ii)) on TWO independent grounds, and "
+               "the one-diagnostic cap (SM.02/UB.10 precedent) is SPENT. No "
+               "gate has moved and none may. Colab T4, seed 90, ~9 min. "
+               "(1) THE CLAIM MISSES BY 5x: with `null_admissible` working "
+               "exactly as specified — colour (probe_random 0.9245) and near "
+               "(0.9427) dropped as unreachable, `shape` retained, "
+               "n_null_admissible 1 — knowledge_margin_min read 0.0299 "
+               "against the frozen +0.15 bar. (2) THE RIG CONTROL STOPPED "
+               "FIRING: probe_drift_unfrozen fell 0.1875 -> 0.0078 against its "
+               ">= 0.10 floor, so the run would VOID even had the claim "
+               "cleared. Both are consequences of REPAIR 1(a) WORKING: "
+               "EPOCHS_P 40 -> 150 took final_perception_loss 2.2246 -> 1.4244 "
+               "(chance 3.4655), and a converged trunk is one that phase A's "
+               "gradients no longer move. THE REDESIGN QUESTION GOES TO THE "
+               "REVIEW, NOT TO A THIRD RECIPE: a control whose sensitivity "
+               "depends on the apparatus being under-trained is not a control, "
+               "and a 128-d globally-pooled bottleneck's learnable-and-not-"
+               "already-readable signal measured +0.0299 where the spec "
+               "demands +0.15. See the PILOT RECORD in "
+               "experiments/tests/t3_10_trunk_knowledge_survives.py."),
 
     # ── UNIFIED BRAIN (docs/research/UNIFIED_BRAIN.md; tier 4 = unison) ─
     Spec("UB.1", 4, "No modality collapse (the ablation matrix)",
@@ -4336,4 +4357,398 @@ EXPANSION: list[Spec] = [
                "report the linear-acceleration and angular-velocity "
                "contributions apart. A brace carried wholly by one channel "
                "is a finding."),
+
+    # ── THE SURVIVAL WORLD (docs/research/SURVIVAL_WORLD.md §5) ──────────
+    # Owner directive 2026-08-09: Jack gets human needs and is thrown into as
+    # real a survival world as we can build; he lives, dies, and tries again.
+    # Owner correction, same day: "we don't actually need to understand
+    # chemistry for this — just like cavemen didn't." So the world's rules are
+    # PHENOMENOLOGICAL and the falsifiable property is CONSISTENCY with a
+    # PRE-REGISTERED rule, not correspondence with nature. Where an analytic
+    # law is available (heat balance) we gate on it exactly as PG.2 gated
+    # buoyancy on Archimedes; where it is not (fire, spoilage) the rule text in
+    # the spec IS the oracle, and a deliberately-broken variant must be caught.
+    #
+    # REGISTERED 2026-08-30, twenty-one days after they were drafted and after
+    # FIVE consecutive overseer audits asked for it (44th–48th). The delay is
+    # itself a recorded finding — LESSONS.md, "Making one kind of debt legible
+    # makes the other kind invisible": an unregistered spec has no id, so it
+    # sits in no cost class, blocks nothing, satisfies no `depends_on` and
+    # appears in no ranking the builder selects from. The World seat in
+    # `docs/CHAMPIONS.md` is held **BY VERDICT** — the file's strongest
+    # marking — against arenas that did not exist, which is a title with no
+    # ring (`champions.py`'s opening line).
+    #
+    # WHAT THE CROSS-CHECK FOUND, recorded because the INTEGRATION_QUEUE
+    # protocol makes it mandatory and because two of the three findings change
+    # how an implementer must read the drafted text:
+    #   (1) NO ID COLLISION. 188 specs at registration; no `W.*`, no `SV.*`.
+    #       Every `depends_on` resolves: PG.1, PG.8, ME.10, ME.11 are live.
+    #   (2) `experiments/needs.py` NOW EXISTS (seven-need integrator,
+    #       NEEDS_AND_DEATH §2.3, self-test 21/21) and did not when this block
+    #       was drafted. It is the substrate W.1/W.2/W.7 gate — these specs
+    #       test THAT code, they do not commission a second implementation.
+    #   (3) W.2's SOURCED HUMAN DEADLINES ARE NOT THIS WORLD'S CONSTANTS, and
+    #       transcribing them unqualified would have registered a spec that
+    #       fails on arithmetic. The draft says "thirst 3 days, food 3 weeks";
+    #       `NE.01`'s notes record the implemented world killing the statue by
+    #       DEHYDRATION at 450 s tank + 120 s grace against starvation's
+    #       1,800 + 300 s. Both are right: the first is the human physiology
+    #       the constants derive FROM, the second is that physiology after
+    #       W.7's compression factor k. An implementer must gate on the
+    #       DECLARED constants divided by the DECLARED k, and report both —
+    #       which is precisely the failure mode W.7 exists to make impossible.
+    #       This is the same class of error as T0.15: the machinery BETWEEN a
+    #       measurement and its threshold is part of the gate.
+    #
+    # BOUNDARIES AGAINST SPECS REGISTERED SINCE THE DRAFT — stated here so no
+    # future reader mistakes these for duplicates or for re-litigation:
+    #   `PS.02` (thermal, fixture) asserts a temperature field EXISTS, is
+    #       SENSED before it kills, and kills. `W.1` asserts that field obeys
+    #       the closed-form law we published, on four checks it was not tuned
+    #       on, with a control that ignores convection and must be caught.
+    #       A thermometer can pass PS.02; only a heat balance passes W.1.
+    #   `NE.01` (needs are a real control problem) asserts death is REACHABLE
+    #       and spread across needs under random action — a claim about the
+    #       policy landscape. `W.2` asserts the meters INTEGRATE to closed form
+    #       and CONSERVE — a claim about the bookkeeping. NE.01 can pass over a
+    #       leaking ledger; W.2 is what rules that out.
+    #   `NE.08` (death and retry) SUPERSEDED `W.6`, which was withdrawn
+    #       2026-08-09 for conflating three claims. W.6 IS DELIBERATELY ABSENT
+    #       BELOW and must never be registered; the gap in the numbering is the
+    #       record. `CHAMPIONS.md`'s World arena cell has been corrected to
+    #       name NE.08 in its place — a phantom replaced by a live spec, which
+    #       makes the seat MORE contestable, not less.
+
+    Spec("W.1", 2, "Temperature obeys the heat balance we published",
+         hypothesis="The thermal overlay reproduces the lumped-capacitance "
+                    "solution of m*c_p*dT/dt = Q_gen - h*A*(T - T_env) on four "
+                    "independent checks it was not tuned on: (a) the "
+                    "PARAMETER-FREE thermoneutral point — a nude 70 kg / 175 cm "
+                    "body at 1 met in still air is in balance at 27.55 C, "
+                    "within 1.0 C; (b) pure decay from 37 C into 20 C still air "
+                    "reads 33.767 C at t=1 h, within 1%; (c) raising wind 0 -> "
+                    "5 m/s shrinks tau by the ratio 0.3095, within 2%; (d) "
+                    "integrated net flux equals m*c_p*dT to integrator "
+                    "tolerance.",
+         falsified_by="Any of the four checks outside tolerance, or a "
+                      "temperature that is non-finite, or a body that reaches "
+                      "equilibrium at a temperature independent of h.",
+         null_baseline="Thermal overlay disabled: T stays at its initial value "
+                       "forever and every check must fail. Also reported: a "
+                       "PURE-AMBIENT model (T := T_env instantly), which passes "
+                       "(a) trivially and must fail (b) and (c) — it is the "
+                       "cheapest thing that could be mistaken for working.",
+         metric="max_thermal_prediction_error", budget=Budget.CPU,
+         depends_on=["PG.1", "PG.8"], seeds=3,
+         control="A DELIBERATELY BROKEN variant with h_c held constant against "
+                 "wind MUST fail check (c) while still passing (a) and (b). If "
+                 "the check cannot distinguish a model that ignores convection "
+                 "from one that does not, it is certifying a thermometer, not a "
+                 "heat balance.",
+         kills="Every claim that cold teaches shelter. W.3, W.5's heat coupling "
+               "and the whole death-by-hypothermia mechanic are defined over "
+               "this model; a wrong one teaches a wrong lesson very "
+               "convincingly.",
+         notes="This is PG.2's pattern with a different Greek: Archimedes for "
+               "water, Newton's law of cooling for air. Constants are sourced, "
+               "not invented — 1 met = 58.2 W/m2, Du Bois A = 1.8481 m2 at "
+               "175 cm/70 kg, h_r = 4.7, h_c = 3.0 natural / 8.6*(v)^0.53 "
+               "forced, neutral skin 33.7 C, neutral core 36.8 C (Gagge two-"
+               "node as shipped in CBE pythermalcomfort). c_p = 3470 J/kg/K is "
+               "used for reconcilability with ASHRAE/Gagge, and the code must "
+               "carry the comment that this is BURTON'S 1935 ASSUMPTION, never "
+               "measured; the measured value is 2980 (Xu, Rioux & Castellani, "
+               "Temperature 2022, doi:10.1080/23328940.2022.2088034) and "
+               "shortens every time constant by 14%. TIME-AVERAGE the "
+               "measurement (PG.2's lesson): a body exchanging heat with a "
+               "day/night ambient oscillates, and a single sample reads noise. "
+               "Run the four checks at 1x wall-clock physics — NOT on the "
+               "compressed Jack-day clock, which W.7 governs.\n"
+               "REGISTRATION NOTE 2026-08-30: the overlay under test is the "
+               "one in `experiments/needs.py`, which did not exist when this "
+               "was drafted. Gate the SHIPPED code; do not write a second "
+               "thermal model to pass this spec, which would certify the test "
+               "rather than the world. Boundary vs `PS.02`: that spec asserts "
+               "the field exists, is felt, and kills; this one asserts it obeys "
+               "the published law. Neither subsumes the other."
+               "  COVERS: thermal (kills) (fixture)"),
+
+    Spec("W.2", 2, "Needs are a conserved ledger, and they can kill",
+         hypothesis="Hunger, thirst and sleep pressure integrate to their "
+                    "closed-form solutions within 1%; energy in equals energy "
+                    "out to 1e-6 relative over a 10-day life; each need "
+                    "independently reaches a lethal threshold at the "
+                    "pre-registered deadline (thirst 3 days, food 3 weeks, core "
+                    "temp outside 28-40 C, EACH DIVIDED BY W.7's DECLARED k and "
+                    "both forms reported) when and only when it is not met; "
+                    "and sleep pressure discharges 4.3x faster than it "
+                    "accumulates (tau_wake 18.2 h vs tau_sleep 4.2 h).",
+         falsified_by="Any integrator drifting from closed form beyond 1%, "
+                      "energy non-conservation above 1e-6, a need that never "
+                      "becomes lethal, or a need that becomes lethal while "
+                      "being met.",
+         null_baseline="A FROZEN-NEEDS agent whose meters never move: it must "
+                       "never die of any need, at any horizon. If it dies, the "
+                       "lethality is being driven by something other than the "
+                       "needs.",
+         metric="needs_ledger_error", budget=Budget.CPU,
+         depends_on=["PG.8"], seeds=3,
+         control="A SATED agent — fed, watered, rested, at 27.5 C — must "
+                 "survive an arbitrarily long life. A needs model that kills "
+                 "the sated agent is measuring a clock, not a need. Second "
+                 "control: each need ablated in turn must remove exactly its "
+                 "own death mode and no other.",
+         kills="W.3, NE.08 and the whole death-and-retry loop. A needs system "
+               "that does not conserve is a system where Jack can learn to "
+               "exploit the bookkeeping instead of the world — the survival "
+               "analogue of the noisy TV.",
+         notes="The double-counting trap is real and must be asserted against: "
+               "1 met x 1.8481 m2 = 107.6 W = 2195 kcal/day is SEATED REST, "
+               "already ~25% above BMR (1700 kcal/day = 82 W). A sim that uses "
+               "met units and then adds a separate BMR is 25% wrong and nothing "
+               "will error. Sourced deadlines: water ~3 days (faster in heat); "
+               "food 3-4 weeks (1981 hunger strike: deaths at 46-73 days); "
+               "hypothermia bands 32-35 mild / 28-32 moderate (shivering STOPS) "
+               "/ 20-28 severe / <20 profound; hyperthermia >=40 C emergency. "
+               "The 5/10/15% dehydration ladder is commonly repeated and I "
+               "could NOT source it — anchor on the 2% thirst threshold and the "
+               "2-4% performance decrement, which have position stands (ACSM, "
+               "NATA), and mark the tail as extrapolated in the code.\n"
+               "REGISTRATION NOTE 2026-08-30, and it is load-bearing: the "
+               "deadlines above are HUMAN PHYSIOLOGY, which is where the "
+               "world's constants come from — they are NOT this world's "
+               "wall-clock. `NE.01` records the shipped world killing a "
+               "do-nothing statue by DEHYDRATION at 450 s tank + 120 s grace "
+               "vs starvation's 1,800 + 300 s. Transcribing '3 days' as a "
+               "wall-clock gate would fail on arithmetic and would read as a "
+               "broken world. Gate on DECLARED constant / DECLARED k, report "
+               "both, and read W.7 first. Boundary vs `NE.01`: that spec asks "
+               "whether death is reachable and spread (the policy landscape); "
+               "this one asks whether the meters conserve (the bookkeeping). "
+               "NE.01 can pass over a leaking ledger."
+               "  COVERS: hunger/thirst (fixture), sleep (fixture)"),
+
+    Spec("W.3", 2, "Cold kills, and shelter is why it does not",
+         hypothesis="Over a scripted night with no agent policy involved — a "
+                    "kinematic jig, PG.3's pattern — a Jack inside an insulated "
+                    "shelter survives and a Jack outside it does not, and the "
+                    "difference in time-to-lethal-core-temperature matches what "
+                    "the heat balance predicts from the shelter's declared clo "
+                    "value, within 15%.",
+         falsified_by="Shelter changes survival time by an amount the heat "
+                      "balance does not predict, in either direction — too "
+                      "little means the shelter is decorative, too much means "
+                      "something other than insulation is being modelled.",
+         null_baseline="No shelter (exposed). Also reported: the analytic "
+                       "prediction itself, computed from clo and the W.1 model, "
+                       "as the ceiling — the gap between simulated and analytic "
+                       "IS the metric.",
+         metric="shelter_survival_gain_vs_predicted", budget=Budget.CPU_LONG,
+         depends_on=["W.1", "W.2"], seeds=3,
+         control="A ZERO-INSULATION shelter — geometrically identical, clo = 0 "
+                 "— MUST NOT extend survival. If a shelter helps because it is "
+                 "a box rather than because it insulates, the spec is measuring "
+                 "occlusion or a collision artefact, and every later "
+                 "shelter-building claim would inherit the error.",
+         kills="The sentence 'cold nights teach shelter-building'. If insulation "
+               "does not measurably change survival, no policy can learn to "
+               "seek it and the W1 curriculum has no gradient.",
+         notes="Deliberately scripted, not learned. This certifies that the "
+               "WORLD contains the lesson, before any spec asks whether Jack "
+               "learns it — the same separation PG.3 drew between 'the ladder "
+               "is climbable in principle' and 'Jack climbs it'. LESSONS.md's "
+               "'a world that passes physics tests may still have nobody living "
+               "in it' cuts the other way here: verify the affordance exists "
+               "before spending GPU on an agent to find it. 1 clo = 0.155 "
+               "m2K/W; a brush shelter is worth roughly 1-2 clo and the spec "
+               "must declare which before the run.\n"
+               "REGISTRATION NOTE 2026-08-30: `SH.02` is the CLAIM that Jack "
+               "builds and uses shelter; this is the FIXTURE that the shelter "
+               "affordance is real and quantitatively right. Running SH.02 over "
+               "an unverified W.3 would let a decorative shelter be learned as "
+               "if it worked."
+               "  COVERS: shelter/building (fixture), thermal (kills) (fixture)"),
+
+    Spec("W.4", 2, "The rule-set is consistent and discoverable",
+         hypothesis="Every rule in the world's published rule-set is (a) "
+                    "CONSISTENT — replaying an identical (state, action) pair "
+                    "from a serialised state produces a BIT-IDENTICAL outcome, "
+                    "over >=200 sampled rule firings; (b) DISCOVERABLE — a "
+                    "uniform-random policy fires every rule at least once "
+                    "within a pre-registered step budget; and (c) CONSEQUENTIAL "
+                    "— every rule moves at least one need meter by more than "
+                    "the meter's own noise floor.",
+         falsified_by="Any rule whose replay diverges (hidden state or unseeded "
+                      "randomness), any rule unreachable by random exploration "
+                      "inside the budget, or any rule that moves no need.",
+         null_baseline="A DELIBERATELY NONDETERMINISTIC world in which one rule "
+                       "consults an unseeded RNG: check (a) must catch exactly "
+                       "that rule and no other. This null is the spec's primary "
+                       "assertion — a consistency checker that cannot find a "
+                       "planted inconsistency is not a checker.",
+         metric="rule_consistency_x_discovery_rate", budget=Budget.CPU_LONG,
+         depends_on=["PG.8", "W.2"], seeds=3,
+         control="A DECORATIVE rule — one deliberately wired to move no need — "
+                 "must be flagged by (c). And an ADVERSARIALLY DEEP rule, gated "
+                 "behind a 6-step precondition chain, must FAIL (b) at the "
+                 "declared budget. If everything passes discoverability, the "
+                 "budget is too generous to mean anything.",
+         kills="Any rule that fails (a). A world Jack cannot learn is not a "
+               "curriculum, it is noise with a tech tree. Rules failing (b) or "
+               "(c) are demoted to scenery and must not be counted in W.8's "
+               "depth metric.",
+         notes="This spec replaces 'realism' as the world's quality criterion, "
+               "per the owner's caveman correction. Report PER RULE and gate on "
+               "the MINIMUM, never the mean — ME.11's lesson: an aggregate hides "
+               "the stratum the logic has deleted, and a rule-set of 40 rules "
+               "with one broken rule averages to 97.5% and reads as healthy. "
+               "Discoverability budget must be pre-registered BEFORE the run "
+               "and stated in env-steps, with wall-clock and control-steps also "
+               "reported (T2.02's 'matched steps has more than one meaning').\n"
+               "REGISTRATION NOTE 2026-08-30: gate on the worst rule INSIDE "
+               "`_experiment`, not in `_check`. `protocol.py:_aggregate` means "
+               "over spec-level seeds before `_check` runs, so a per-rule "
+               "minimum computed at the spec level is silently averaged away — "
+               "the exact defect found in T3.06 on 2026-08-30 and now in "
+               "LESSONS.md."),
+
+    Spec("W.5", 2, "Fire obeys its published rules",
+         hypothesis="The fire state machine pre-registered in "
+                    "docs/research/SURVIVAL_WORLD.md section 4.2 holds on every "
+                    "clause: dry fuel ignites and wet fuel (w >= W_IGNITE) does "
+                    "not; rain above R_QUENCH moves BURNING -> EMBERS; fuel is "
+                    "consumed at the declared rate and the cell reaches ASH at "
+                    "the predicted time; wind biases spread probability in the "
+                    "declared direction; and a BURNING cell raises Jack's core "
+                    "temperature by the amount W.1's model predicts for its "
+                    "declared power and distance.",
+         falsified_by="Any clause violated, OR the heat coupling disagreeing "
+                      "with W.1's independent prediction — which would mean two "
+                      "parts of the world disagree about the same physics.",
+         null_baseline="Fire disabled: no ignition, no heat, no fuel consumed. "
+                       "Also reported: a fire that ignores wetness entirely, "
+                       "the single most likely implementation shortcut, which "
+                       "must fail the wet-fuel clause.",
+         metric="fire_rule_conformance", budget=Budget.CPU,
+         depends_on=["W.1"], seeds=3,
+         control="A BROKEN variant in which rain does not quench MUST be caught "
+                 "by the rain clause while passing every other clause. A "
+                 "conformance test that only reports an aggregate cannot "
+                 "localise a broken clause, and localisation is the whole value "
+                 "(LESSONS: a control that fails alongside the experiment is a "
+                 "gift).",
+         kills="Cooking, warmth-seeking, and the entire fire branch of the tech "
+               "tree. Also kills any claim that Jack 'discovered fire' — "
+               "discovery of an inconsistent rule is memorisation of noise.",
+         notes="The rule text in section 4.2 IS the oracle. This is the point of "
+               "the caveman reframing: we are not approximating combustion, we "
+               "are asserting that the implementation obeys a rule we wrote "
+               "down first. Deliberately Minecraft-shaped rather than "
+               "Rothermel-exact; Rothermel's R = (I_R*xi)/(rho_b*eps*Q_ig) * "
+               "(1 + Phi_w + Phi_s) is the source of the 'base rate times a "
+               "dimensionless wind-and-slope multiplier' SHAPE, and nothing "
+               "more is claimed. Note that even wildfire science does not "
+               "simulate fire's chemistry.\n"
+               "REGISTRATION NOTE 2026-08-30: the rule block in section 4.2 is "
+               "the ORACLE and it is PROSE. Copy its constants into the test as "
+               "declared parameters and assert against those, never against a "
+               "re-reading of the document at run time — and if the two ever "
+               "disagree, that disagreement is the finding. Report PER CLAUSE "
+               "and gate on the minimum, for W.4's reason."),
+
+    # ~~W.6~~ WITHDRAWN 2026-08-09 in favour of NE.08 in
+    # docs/research/NEEDS_AND_DEATH.md, which separates the three claims W.6
+    # conflated and adds the C-ONELIFE control. The struck-through draft is
+    # retained in docs/research/SURVIVAL_WORLD.md §5 so the reasoning trail
+    # survives. DO NOT REGISTER IT. This gap in the numbering is deliberate and
+    # is the record; `CHAMPIONS.md`'s World arena cell names NE.08 in its place.
+
+    Spec("W.7", 2, "Time compression is a declared transformation, not a fudge",
+         hypothesis="With the day-length compression factor k declared (proposed "
+                    "k = 72, one Jack-day = 1200 s of sim time), the physics "
+                    "integrates in REAL seconds and only the need-accumulation "
+                    "clock is scaled; the dimensionless ratios the spec declares "
+                    "(thermal tau / day-length, thirst deadline / day-length, "
+                    "sleep tau_wake / day-length) equal their declared values to "
+                    "1e-9; and W.1's four analytic checks, re-run inside the "
+                    "compressed world, give BIT-IDENTICAL results to the 1x "
+                    "fixture.",
+         falsified_by="Any declared ratio off by more than 1e-9, or W.1's checks "
+                      "moving at all when k changes — which would prove the "
+                      "compression is inside the physics rather than beside it.",
+         null_baseline="k = 1 (no compression): every ratio must equal its "
+                       "k = 1 value and the whole spec must be trivially "
+                       "satisfied. A compression test that cannot tell k = 1 "
+                       "from k = 72 is measuring nothing.",
+         metric="compression_invariance_error", budget=Budget.CPU, seeds=1,
+         depends_on=["W.1", "W.2"],
+         control="A NAIVE-COMPRESSION variant that scales the physics timestep "
+                 "instead of the needs clock MUST fail W.1's decay check, "
+                 "because a 70 kg body's tau = 4.74 h is a property of m*c_p/hA "
+                 "and cannot be sped up by a clock convention. This is the "
+                 "specific mistake the spec exists to make impossible.",
+         kills="Every cost estimate in SURVIVAL_WORLD.md. Without compression a "
+               "single 24 h life is 1.70 core-hours (measured) and no 3-seed "
+               "study is affordable; with UNVERIFIED compression every thermal "
+               "number in the ladder is silently wrong.",
+         notes="Same family as T0.15: the machinery BETWEEN a measurement and "
+               "its threshold is part of the gate. Here the machinery is a unit "
+               "conversion applied to time, which is exactly the class of thing "
+               "that passes review and fails silently. Assert the ratios "
+               "against the DECLARED constants, not against each other — two "
+               "quantities derived from the same wrong k agree perfectly.\n"
+               "REGISTRATION NOTE 2026-08-30: THIS SPEC IS ALREADY OWED A "
+               "MEASUREMENT. `NE.01` records the shipped world killing a "
+               "do-nothing statue of dehydration at 450 s + 120 s grace, "
+               "against W.2's sourced human deadline of ~3 days. That ratio is "
+               "a k, whether or not anybody declared it — so k is already in "
+               "the code and this spec's job is to find out whether it was "
+               "DECLARED or merely IMPLIED. An undeclared k is the failure "
+               "mode, not a missing feature."),
+
+    Spec("W.8", 5, "Rule depth: the world contains more than we enumerated",
+         hypothesis="The count of distinct REACHED rule-interaction events — "
+                    "co-occurrences of two or more rules whose joint outcome "
+                    "differs from either rule's outcome alone — exceeds the "
+                    "number of rules enumerated in the rule-set, and keeps "
+                    "growing over lives rather than saturating.",
+         falsified_by="The reached-interaction count saturating at or below the "
+                      "enumerated rule count — the world is a list, not a "
+                      "closure, and open-endedness in it is impossible however "
+                      "good the agent is.",
+         null_baseline="An INTERACTIONS-DISABLED world in which each rule's "
+                       "outcome is computed independently and composed by "
+                       "overwrite. Its reached-interaction count must saturate "
+                       "at ~0 by construction, and measuring it anyway is what "
+                       "makes the main number interpretable.",
+         metric="reached_interaction_growth", budget=Budget.CPU_LONG,
+         depends_on=["W.4", "W.5"], seeds=3,
+         control="A SCRIPTED-EXHAUSTION agent that fires every enumerated rule "
+                 "once and stops must score at most the enumerated count. If a "
+                 "trivial rule-firing script scores as highly as a living "
+                 "agent, the metric counts rule firings rather than "
+                 "interactions and proves nothing about depth.",
+         kills="The W3 rung of SURVIVAL_WORLD.md's fidelity ladder. If depth "
+               "does not exceed the enumeration, W3 is just W2 with more table "
+               "rows, and the honest move is to say so and spend the compute on "
+               "ACCEL-style RULE mutation instead of on more hand-authored "
+               "rules.",
+         notes="NOT parented on T5.08 (open-endedness), deliberately. W.8 asks "
+               "whether the WORLD has depth, which a scripted and a random "
+               "agent can answer with no learning at all; T5.08 asks whether an "
+               "AGENT keeps finding it, which is GPU_LONG and unrun. Parenting "
+               "a world-property claim on an agent result is exactly how UB.1 — "
+               "the project's namesake claim — ended up unreachable behind a "
+               "locomotion failure. Caught 2026-08-09 by running this block's "
+               "depends_on against the live registry rather than eyeballing it. "
+               "The metric's difficulty is definitional, not computational: "
+               "'an outcome that differs from either rule alone' must be "
+               "pinned to a comparison the implementer writes down BEFORE the "
+               "run, or the count is whatever the counter felt like counting.\n"
+               "REGISTRATION NOTE 2026-08-30: registered at TIER 5 as drafted, "
+               "which means it is a CLAIM about the world's open-endedness, not "
+               "a fixture. It sits behind W.4 and W.5 and is therefore the last "
+               "of this family to become runnable — that ordering is the point, "
+               "since depth measured over inconsistent rules is noise."),
 ]

@@ -191,6 +191,61 @@ THE FORK, and whichever branch fires is recorded rather than argued:
        that survive any random projection, so the honest candidates are
        relational or compositional, and this world may not be able to pose one.
 
+────────────────────────────────────────────────────────────────────────────
+REPAIR 1 PILOT — seed 90, Colab **Tesla T4**, 2026-08-30T03:1xZ, head `06c65f8`,
+one submission (~9 min), artifact fetched. **FORK (ii) FIRED. T3.10 IS PARKED.**
+The one-diagnostic cap is SPENT: no third recipe, no re-roll, no dispatch. No
+gate moved and none may.
+
+**BOTH REPAIRS DID EXACTLY WHAT THEY WERE SPECIFIED TO DO. THE SPEC STILL LOSES,
+and that is the result rather than a setback.**
+
+  REPAIR 1(b), `null_admissible` as mechanism — WORKED.
+    probe_random  shape 0.4193 · colour 0.9245 · near 0.9427
+    → colour and near DROPPED (both > 1 − MARGIN = 0.85), `shape` RETAINED,
+      n_null_admissible 1. The conjunct that was unsatisfiable-by-arithmetic at
+      the last pilot is now simply not asked, in the open and in the metrics.
+      The gate became satisfiable; it was not satisfied.
+
+  REPAIR 1(a), EPOCHS_P 40 → 150 — WORKED, AND IT CORRECTS THE LAST PILOT'S
+  SECOND FINDING. final_perception_loss 2.2246 → **1.4244** (chance sum
+  3.4655), so phase P converged much further, and the probe it was accused of
+  degrading came back UP: shape 0.3633 → **0.4492**, now ABOVE the random-trunk
+  0.4193 where before it sat below. **So "supervised training makes the seated
+  trunk a worse feature extractor" was an UNDER-TRAINING ARTEFACT, not a fact
+  about the trunk.** That sentence is withdrawn. It was the more interesting of
+  the two findings on 08-30 and it did not survive its own repair.
+
+  THE CLAIM MISSES BY 5x, on the one admissible target:
+    knowledge_margin_min **0.0299** against the frozen bar **+0.15**
+  The signal is REAL and in the RIGHT DIRECTION — the trunk learns something
+  about shape that its random initialisation cannot read — and it is roughly
+  1.7σ at n_test = 768. It is not 0.15.
+
+  AND THE RIG CONTROL STOPPED FIRING, which is the finding worth more than the
+  spec:
+    probe_drift_unfrozen 0.1875 → **0.0078**, against its ≥ 0.10 floor
+  So this run would have returned VOID on the control even if the claim had
+  cleared. The mechanism is not mysterious and it is not a bug: **the control's
+  sensitivity was a side-effect of the apparatus being under-trained.** A
+  converged trunk is one whose features phase A's gradients barely move,
+  frozen or not — so the very repair that made the claim measurable destroyed
+  the instrument that made a zero drift in the frozen arm mean anything.
+  Receipts that still held: frozen_params_identical true, probe_drift_frozen
+  0.0, action_acc_randtrunk 0.1250 (chance to four figures),
+  action_acc_frozen 0.4388, reach_margin 0.3138 (≥ 0.10, cleared with room).
+
+**WHAT GOES TO THE REVIEW, and it is a design question, not a recipe:** a
+control that only fires while the apparatus is broken is not a control, and
+this spec cannot be repaired by choosing a better number for EPOCHS_P — the two
+gates now move in opposite directions under it, which is a property of the
+design and not of the setting. The sharpened form of the pre-registered
+question: *what probe target can a 128-d globally-pooled bottleneck learn that
+its random init cannot already read, AND what independent control certifies the
+frozen arm's zero drift when phase A no longer moves an unfrozen trunk either?*
+The +0.0299 says the first half has a real answer at this scale; the second half
+has none in this file.
+
 Binomial σ at n_test = 768 is sqrt(0.25/768) = 0.018. Read every "σ" below as
 that number.
 
@@ -905,14 +960,18 @@ def _selftest() -> int:
 def run(ledger: Ledger | None = None):
     if not _GATES_FROZEN:
         raise RuntimeError(
-            "T3.10 refuses: no gate is un-piloted — the 2026-08-30 T4 pilot "
-            "found two of three gated conjuncts UNSATISFIABLE BY ARITHMETIC "
-            "(random-weight probes read near 0.9427 and colour 0.9245 against "
-            "a +0.15 margin). REPAIR 1 (EPOCHS_P 150, null_admissible as a "
-            "rule) is in the file and UNPILOTED. Run `pilot`, then take fork "
-            "(i) _GATES_FROZEN = True, or fork (ii) PARK — both pre-registered "
-            "in the docstring. Do NOT dispatch the registered run first: its "
-            "VOID is already known.")
+            "T3.10 is PARKED (2026-08-30) — fork (ii) of the pre-registered "
+            "both-fail branch FIRED on the REPAIR 1 pilot, and the "
+            "one-diagnostic cap is SPENT. Both repairs worked; the spec still "
+            "loses, on two independent grounds: knowledge_margin_min 0.0299 vs "
+            "the frozen +0.15 bar (the one admissible target), AND "
+            "probe_drift_unfrozen 0.0078 vs its >= 0.10 floor — the rig "
+            "control stopped firing once EPOCHS_P 150 converged phase P, so "
+            "this run VOIDs even if the claim clears. Do NOT re-pilot, do NOT "
+            "dispatch, do NOT try a third recipe: the two gates move in "
+            "OPPOSITE directions under EPOCHS_P, which is a property of the "
+            "design. The redesign goes to the Review — see the REPAIR 1 PILOT "
+            "record in this file's docstring.")
     return run_spec(BY_ID["T3.10"], _experiment, _check, control_fn=_control,
                     ledger=ledger)
 

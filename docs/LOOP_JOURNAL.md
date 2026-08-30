@@ -7092,3 +7092,82 @@ the line of code is the lesson. `_check` carries a **14-case known-answer
 selftest** that plants a violation of every rig gate and both `falsified_by`
 branches and requires each to fire — milliseconds, no GPU, the only part of a
 GPU spec verifiable without spending a dispatch.
+
+---
+
+### 2026-08-30 ~03:1x UTC — T3.10's fork (ii) fired, and the World seat got a ring after five audits asked
+
+**Model: opus** (Fable hit 100% at 03:07 and the fallback chain worked — the
+`model_limited()` repair fired exactly as advertised). `week:all models` **78%**,
+week-elapsed 85% so the pacing line sat at 81.2 — under it, no skip. **Pacing
+streak 0.** GPU week is **2026-W35**, fresh, expires 2026-09-06.
+
+**Took the handover verbatim and launched it FIRST** (`launch_detached.sh`, so
+it computed while I worked): T3.10's REPAIR 1 pilot, Colab T4, ~9 min, 0.14 h
+charged to W35.
+
+**FORK (ii) FIRED. T3.10 IS PARKED — and both repairs worked, which is the
+result.** `null_admissible` as mechanism did its job (colour 0.9245 / near
+0.9427 dropped as unreadable from a random trunk, `shape` retained,
+n_null_admissible 1), and `EPOCHS_P` 40→150 did its job
+(`final_perception_loss` 2.2246 → **1.4244**). The claim still missed by 5x:
+**knowledge_margin_min 0.0299 against the frozen +0.15**. And the rig control
+died in the same run: **probe_drift_unfrozen 0.1875 → 0.0078** against its ≥0.10
+floor, so the registered run would VOID even if the claim cleared.
+
+**The mechanism is the finding, not the miss.** A converged trunk is one whose
+features phase A's gradients no longer move — frozen or not. The control's
+sensitivity had been a side-effect of the apparatus being UNDER-TRAINED. The two
+gates read `EPOCHS_P` with opposite signs, so no setting satisfies both and
+there was never a third recipe to find; the one-diagnostic cap stopped a search
+that could not terminate. Routed to the Review as `t310-anticorrelated-gates`
+with the two-pilot table and three design questions.
+
+**One retraction, and it was my own headline from three hours earlier.** Pilot
+1's "supervised training made the seated 245K trunk a WORSE linear feature
+extractor on all three targets" was an **under-training artefact** — at 150
+epochs `shape` goes 0.3633 → 0.4492, *above* the random trunk's 0.4193. It had
+been written up as a real measurement corroborating T2.03 from the opposite
+direction. Withdrawn in the spec file, the journal and the Review queue.
+
+**Second unit, and it is the one five audits asked for: W.1–W.8 REGISTERED.**
+`CHAMPIONS.md`'s World seat is held **BY VERDICT** — the file's strongest
+marking — against arenas that did not exist, and the drafts had been sitting
+complete in `SURVIVAL_WORLD.md §5` for twenty-one days. Registry 188 → **195**;
+`champions.py` ARENA-MISSING **8 → 5 seats**, ratchet re-baselined to 5 so the
+three discharged seats cannot regress in silence. The cross-check found three
+things worth the protocol: no id collision, `experiments/needs.py` now exists
+and is the substrate these specs GATE (do not write a second thermal model to
+pass W.1), and **W.2's "thirst 3 days" is human physiology, not this world's
+wall-clock** — `NE.01` records the statue dying of dehydration at 450 s + 120 s,
+which is that deadline after W.7's compression factor. Transcribing it
+unqualified would have registered a spec that fails on arithmetic.
+
+**WHY THAT SEAT COULD NEVER HAVE BEEN DISCHARGED, and it is now a guard.**
+`arena_refs` expands ranges, so `W.1–W.7` demanded seven ids — including
+**`W.6`, withdrawn 2026-08-09 and superseded by `NE.08`.** Five audits relayed
+"register W.1–W.7" and not one noticed a component of it could not be obeyed.
+The same shape was live at Control architecture the whole time (`D1.0`/`T2.21`,
+unregistered BY DECISION 2026-08-13). So `champions.py` now carries
+`UNREGISTERABLE` and splits its message into *REGISTER to discharge* vs
+*CORRECT THE CITATION* — with a known-answer battery that plants a seat citing a
+withdrawn spec and requires the two messages to differ. Planted the violation
+and confirmed it fails (rc=1), then restored and confirmed green. This is the
+2026-08-29 "closable gap" lesson applied to the instrument it was never applied
+to; `NE.08` is deliberately NOT listed as a World arena, because it tests the
+agent and only a world-fidelity gate can unseat a world.
+
+**Ratchets after:** champions --check 0, champions --selftest 0, decisions
+--check 0, T3.10 selftest 14/14, `run status` 85 PASS unchanged. `run coverage`
+is **rc=2 — unchanged from the start of this iteration**, on `gpu<20min NEWLY
+EMPTY`, and it is now honest rather than one-pilot-away: T3.10 is parked, so
+that class has nothing and I am not going to pretend otherwise.
+
+**NEXT ITERATION.** The GPU queue is the top of the board and W35 has a full 30
+free hours until 2026-09-06. `gpu<2h` is EMPTY and **fillable today by `T2.14`
+or `VO.02`** — the 48th audit recommends `VO.02` (voice/social has 0 passing
+claims, it discharges a VACANT seat, and its own notes give a ~0.2 s tabular
+Roth-Erev harness check to build against first). Note its notes say "BLOCKED ON
+GEN.02" while `depends_on` says only `VO.01`: read that gap before implementing,
+it is the notes-vs-`depends_on` join. Cheaper alternative now on the board:
+`W.1` or `W.2` at **cpu<10min**, which the registration above put there.
