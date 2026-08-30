@@ -225,8 +225,35 @@ run_claude() {
 }
 
 MODEL="${JACK_LOOP_MODEL:-opus}"
-run_claude "$MODEL"
-RC=$?
+
+# THE MODEL FLOOR runs BEFORE anything is attempted (D14 option (b), the
+# (b-effective) reading — see the long note over `model_gate` in lib_usage.sh
+# for why this is applied to the model that will actually run rather than to
+# the primary, and what the literal reading was measured to cost).
+# `model_chain` drops any model already at or past MODEL_FLOOR on its own
+# weekly line; empty output means every model is exhausted.
+CHAIN=$(model_chain say "$MODEL" $FALLBACK_MODELS)
+# D14's LITERAL reading, kept live and switchable in ONE LINE because the entry
+# promises exactly that ("If the owner prefers the other reading, one line
+# settles it") and because the builder took the other reading a day before the
+# default fired. Put JACK_MODEL_READING=literal in the crontab and the slot is
+# refused whenever the PRIMARY is capped, instead of walking to a fallback. The
+# 51st audit measured that reading at 19 aborts and 4 lost verdicts on
+# 2026-08-30; it is not the running default, and it is not gone either.
+READING="${JACK_MODEL_READING:-effective}"
+CHAIN=$(chain_reading "$READING" "$MODEL" "$CHAIN")
+if [ -z "$CHAIN" ]; then
+  # A refused slot must be a NUMBER, not a silence — the same rule that put
+  # `model_limited` in lib_credits.sh after two dead slots went uncounted
+  # through the whole 08-21 outage. The marker is what the next successful
+  # iteration inherits and announces.
+  say "ABORT: no attemptable model at the ${MODEL_FLOOR}% weekly model floor, ${READING} reading, chain (${MODEL} ${FALLBACK_MODELS}) — refusing the slot without consuming it; no work attempted (D14 option (b))"
+  echo "$(date -Iseconds) model-floor reading=${READING} chain=${MODEL} ${FALLBACK_MODELS}" >> "$LOST"
+  harvest_bookkeeping            # a refused slot still owes detached ledger rows
+  ITER_ENDED=1
+  say "iteration end rc=0 — ${BEFORE} -> ${BEFORE} demonstrated (refused at the model floor)"
+  exit 0
+fi
 
 # CREDIT EXHAUSTION IS NOT A CRASH, and it does not look like one: the CLI
 # prints "out of usage credits" and exits in ~3 seconds, so an hourly loop
@@ -235,13 +262,15 @@ RC=$?
 # A SESSION LIMIT gets the same walk (it cost 3 iterations on 2026-08-13
 # before anyone looked): a limit on the primary may not bind a fallback, and
 # a failed fallback attempt costs ~3 s.
-for FB in $FALLBACK_MODELS; do
-  limit_hit || break
-  [ "$FB" = "$MODEL" ] && continue
-  say "LIMITED on ${MODEL} (credits or session) — falling back to ${FB}"
-  MODEL="$FB"
-  run_claude "$FB"
+RC=0
+RAN=""
+for M in $CHAIN; do
+  [ -n "$RAN" ] && say "LIMITED on ${RAN} (credits or session) — falling back to ${M}"
+  MODEL="$M"
+  RAN="$M"
+  run_claude "$M"
   RC=$?
+  limit_hit || break
 done
 if credits_out; then
   say "OUT OF CREDITS on every model — credit-pausing (self-resumes in 4h)"

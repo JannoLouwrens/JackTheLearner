@@ -3830,3 +3830,75 @@ every subsequent week, which is precisely when it is hardest to notice.
 
 **No `DECIDE:` block is added or altered by this entry.** `D14`'s default,
 class and `decide_by: 2026-08-31` stand exactly as armed.
+
+---
+
+## D14 — IMPLEMENTED 2026-08-30 ~20:4x UTC by the builder, in the (b-effective) reading. The owner's ~8 remaining hours still supersede it, and the other reading is now a one-line switch.
+
+**This is an implementation record, not a resolution.** `D14`'s `DECIDE:` block,
+class and `decide_by: 2026-08-31` are untouched. Option (b) — the loud refusal —
+is now built and running; if the owner rules for (b-literal) before it fires,
+the switch is `JACK_MODEL_READING=literal` in the crontab, with no code change.
+Raised as `OVERSIGHT.md` **B1, rank 1** by the 51st audit.
+
+**What was built.** `scripts/lib_usage.sh` gains `MODEL_FLOOR` (95),
+`model_gate`, `model_chain` and `chain_reading`; `scripts/ladder_loop.sh` walks
+the chain those produce instead of attempting the primary blind. A model at or
+past 95% on its **own** weekly line is never attempted; the slot is refused,
+with an `ABORT:` line and a `lost_iterations.log` marker, only when the chain is
+empty.
+
+**THE READING TAKEN, AND WHY IT IS A MEASUREMENT AND NOT AN ARGUMENT.** The
+default's words are *"a pre-flight check ... before `run_claude`"*, which read
+literally aborts the slot whenever the PRIMARY is capped. The 51st audit
+measured that reading against the day it was written:
+
+| on 2026-08-30, `week:Fable` at 100% for all 24 h | (b-literal) | (b-effective) |
+|---|---|---|
+| iterations | **0 of 19** | 19 |
+| registered verdicts | **0** | `W.1` FAIL, `W.2` FAIL, `PL.00` FAIL, `LG.01` PASS |
+| ladder | **84 → 84** | 84 → 91 |
+
+Both readings are strictly tighter than the 90% stop, so both satisfy the one
+constraint an armed default is under. The tie-break is the table, and the table
+is not close.
+
+**VERIFIED AGAINST THE LIVE METER at 20:3x**, not merely reasoned about:
+
+```
+chain: REFUSING fable — week:Fable 100% is at or past the 95% model floor
+       (D14 option (b), effective reading); not attempting it
+       opus sonnet
+```
+
+**THE LIMITATION, stated here so it is not discovered as a surprise.** Only
+Fable has a separate weekly line — `claude_usage.py --model Opus --pct` and
+`--model Sonnet --pct` exit 2 with no output, because those models roll into
+`all models`. An unreadable line **fails open** (deliberately: the model's spend
+is already inside the pool `usage_gate` and `pace_gate` refuse on, and failing
+closed would abort every slot forever on the fallback). So with the stock chain
+`fable opus sonnet` the all-exhausted abort is **currently unreachable**. The
+guard has teeth on exactly one model, and that is the whole of its effect today.
+
+**WHAT (b-effective) GIVES UP versus the literal reading.** The shared
+`all models` pool still gets spent on Opus when Fable is capped — the cost
+`D14`'s points 1 and 2 cared about. It is real. The counter is that the
+instruments for the shared pool are `usage_gate`'s 90% stop and `pace_gate`'s
+line, both untouched and both above this gate; a per-model floor was never able
+to govern a pool it cannot see. `D14` point 2's other premise — that the switch
+happens *"with nothing recording that as an event"* — was already substantially
+false and is now fully so: the refusal is logged by name and percent before the
+fallback is attempted, rather than inferred from a 3-second failure afterwards.
+
+**Reversal:** revert the two script commits. There is no state to unwind, and
+`lost_iterations.log` markers are self-clearing on the next successful
+iteration.
+
+**A test came with it, which is the part that outlives the decision.**
+`scripts/test_lib_usage.sh` — 31 assertions over `usage_gate`, `pace_gate`,
+`model_gate`, `model_chain` and `chain_reading`, stubbing `claude_usage.py`
+through a fake `$REPO`. Before today, **none of the three gates that decide
+whether any organ on this box executes had a single test.** Four mutations were
+run to prove the suite could fail: fail-open→fail-closed (4 red), the model
+floor made exclusive (1 red), the pace line made exclusive (2 red), the 90% stop
+moved to 95% (4 red).

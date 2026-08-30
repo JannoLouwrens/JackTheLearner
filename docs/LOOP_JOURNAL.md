@@ -8439,3 +8439,43 @@ its FAIL is a measurement of this box's renderer, not a seed lottery.
   not `git commit -- <paths> -m ...`, which git parses as a pathspec and
   refuses — the Review's B4 asks every organ for this form and the ordering is
   the trap.
+
+2026-08-30 ~20:5x UTC (Opus — `week:Fable` 100%, chain fell through as expected;
+gate acted on `week:all models` 85%, pace line 87 at 95% of the week; pacing
+streak 0). **Unit: OVERSIGHT B1 (rank 1) — D14's model floor, built the day
+before its default fires.** Took the **(b-effective)** reading: the 95% check is
+applied to the model that will ACTUALLY run (inside the chain walk), not to the
+primary, because the 51st audit measured the literal reading at **19 aborts, 4
+lost verdicts (W.1, W.2, PL.00, LG.01) and 84→84 instead of 84→91** on the day
+it was written. Both readings are narrowings, so the constitutional test does
+not separate them; the table does. `lib_usage.sh` gains `MODEL_FLOOR=95`,
+`model_gate`, `model_chain`, `chain_reading`; `ladder_loop.sh` walks the chain
+they produce. Verified live at 20:3x: `REFUSING fable — week:Fable 100% ... ;
+opus sonnet`. The literal reading is not deleted — it ships as
+`JACK_MODEL_READING=literal`, one crontab line, with its own test cases, because
+a builder pre-empting an armed default by ~8 h owes the owner a switch rather
+than a paragraph. Honest limitation, recorded in the D14 entry: only Fable has a
+per-model weekly line (Opus/Sonnet exit 2), an unreadable line fails open by
+design, so the all-exhausted ABORT branch is **currently unreachable** on the
+stock chain — the guard has teeth on exactly one model.
+**Machine left better, and this is the larger half:** `scripts/test_lib_usage.sh`
+— **31 assertions**, ~2 s, no meter or network touched (stub `claude_usage.py`
+in a fake `$REPO`; the libraries shell out to one path, so that path is the
+whole seam). Before today the three gates that decide whether ANY organ on this
+box executes — `usage_gate`, `pace_gate`, and now `model_gate` — had **zero
+tests**, while 200 specs enforce the governing rule on Jack. Green on the first
+run proves nothing, so four mutations were run and each went red:
+fail-open→fail-closed (4), model floor exclusive (1), pace line exclusive (2),
+90% stop moved to 95% (4). Two lessons in `docs/LESSONS.md` (conduct code is
+exempt from the governing rule and shouldn't be; an armed default is costed in
+the world that raised it and fires in a different one).
+**NEXT ITERATION:** `week:Fable` resets 08-31 04:59 and you are in GPU week
+**2026-W35** with a full free allocation — W34 is sunk, do not chase it. The
+binding constraint is still INVENTORY, not availability: `run coverage` reads
+`gpu<20min` and `gpu<2h` **NOT FILLABLE** (every unimplemented spec at those
+costs is blocked upstream), so the priority-head instruction to "implement one
+unimplemented GPU spec" has no target today — re-check it, do not assume. The
+live openings are `cpu<10min` (fillable: LG.10, ME.11, ME.11.B, ME.11.C,
+ME.11.E) and the 5 GATES-PROVISIONAL specs needing a pilot to freeze their bars
+(BA.03, DP.04, SH.02, SM.03, T2.11). OVERSIGHT B2 (champions.py `HELD:`/`ARENA:`
+declaration syntax, 8 audits carried) is the next unserved auditor item.

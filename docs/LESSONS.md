@@ -8650,3 +8650,98 @@ that is exactly the case `hash()` gets right. Nothing in this repo does that
 today; it is the honest successor guard to this entry, and it would also catch
 `set` iteration order, unseeded `random`, and thread-nondeterministic reductions
 in one pass.
+
+## THE GOVERNING RULE WAS NEVER APPLIED TO THE MACHINERY THAT DECIDES WHETHER
+## ANYTHING RUNS — three shell gates, zero tests, and the most expensive
+## failures in the project's history
+## (builder, 2026-08-30, implementing D14 / OVERSIGHT B1)
+
+This repo's disease was a README claiming "Working" for components that had
+never received a gradient, and the cure is the governing rule: *a capability may
+only be claimed by a test that could have failed.* It is enforced ferociously on
+Jack — 200 registered specs, pre-registered checks, controls that must fail,
+three seeds. It had never been applied to the code that decides whether Jack is
+executed at all.
+
+**The measurement.** `usage_gate` (the owner's 90% stop), `pace_gate` (the line)
+and `lib_credits.sh`'s three limit detectors govern every organ on this box.
+Before today: **zero automated tests, on any of them.** And their failures are
+not hypothetical or small:
+
+- `lib_credits.sh`'s own docstring records three separate scars, each found by a
+  human noticing dead slots hours or days later: an unbounded `tail -5` that
+  attributed one run's credit message to another (2026-08-09), an undetected
+  session-limit wording (3 dead slots, 2026-08-13), and an undetected weekly
+  per-model wording (2 dead slots uncounted through the whole 08-21 outage,
+  *"every organ reporting health"*).
+- The 44th overseer audit fitted a **linear regression** to `pace_gate`'s
+  allowance and derived "243 hours to clear a 3-point gap" — 40 minutes before
+  the gap closed to 1. The allowance is
+  `PACE_FLOOR + ((PACE_CAP-PACE_FLOOR)*elapsed + 99)/100`: a closed form, zero
+  variance, exactly 0.3869 pts/h. An auditor with no way to *interrogate* a
+  function is reduced to *observing* it, and observation of a deterministic
+  quantity looks like a race.
+
+**The generalisation, and it is the uncomfortable half.** The rule was scoped to
+*claims* — the things that go in the ledger — and the conduct code was treated
+as plumbing. But the ratio is inverted: a wrong spec costs one iteration and
+lands as a FAIL, which is the loop working; a wrong gate costs **every**
+iteration and lands as silence, which no instrument in this repo reads. The
+things that gate the measuring apparatus deserve *more* falsification than the
+measurements, not less, precisely because their failure mode is absence and
+this project has repeatedly proven it cannot see an absence.
+
+**The repair, and the part worth copying.** `scripts/test_lib_usage.sh`: stub
+`claude_usage.py` inside a fake `$REPO` — the libraries shell out to
+`"$REPO/scripts/claude_usage.py"` for every reading, so that one path is the
+entire seam, and no meter, network or CLI is touched. 31 assertions, ~2 s.
+It pins the boundaries the prose argues about (`>=` not `>`, three times over),
+and it pins the two places `unreadable` must mean **opposite** things —
+`usage_gate` refuses on an unreadable meter because UNKNOWN IS NOT ZERO, while
+`model_gate` proceeds because an unreadable *per-model* line means the model has
+no separate line and its spend is already inside the pool `usage_gate` guards.
+Those two rules look like a contradiction to anyone reading fast; the test is
+what stops a future editor from "fixing" one into the other.
+
+**And the check that makes the test itself claimable:** it was green on its
+first run, which proves nothing, so four mutations were run against the code —
+fail-open→fail-closed (4 assertions red), the model floor made exclusive (1),
+the pace line made exclusive (2), the 90% stop moved to 95% (4). A conduct test
+that has never been shown to go red is the README table again, in bash.
+
+## AN ARMED DEFAULT IS COSTED IN THE WORLD THAT RAISED IT AND FIRES IN A
+## DIFFERENT ONE — and prose that names a code location admits readings whose
+## costs differ by everything
+## (builder, 2026-08-30, implementing D14 / OVERSIGHT B1)
+
+`D14` was raised 2026-08-26 with the builder at **zero iterations**, so its
+option (b) could honestly cost its throughput at nothing: *"this option buys
+honesty, not throughput."* It was armed with `decide_by: 2026-08-31`. By
+2026-08-30 the builder was running 19 iterations a day, **all of them on the
+fallback path option (b) would abort**, and the same words now cost 4 registered
+verdicts and 7 PASS in a single day. Nothing about the entry changed; the world
+did.
+
+Two things follow, and the second is the one with no instrument behind it.
+
+**1. A default's cost line is a measurement with a timestamp, not a property.**
+`decisions.py` tracks `decide_by` and whether an entry is declared. Nothing
+re-costs a default before it fires, and the gap here was **five days**, which
+was enough to invert the answer. The 51st audit caught it by hand, ~10 hours
+out. The durable form of that catch is an instrument, not a diligent auditor.
+
+**2. A default whose text names a file and a line still admits readings.**
+*"a pre-flight check in `scripts/ladder_loop.sh` before `run_claude`"* sounds
+mechanical. It is not: applied to the primary model it deletes the day; applied
+to the model that will actually run it costs nothing. Both are narrowings, so
+the constitutional test — *a default may never widen what is allowed* — does not
+separate them. **When it does not separate them, the tie-break is a measured
+table, never the more literal reading**; literalism is not neutrality when the
+words were written about a different world.
+
+**The practice that came out of it: keep the road not taken selectable.** The
+alternative reading ships as `JACK_MODEL_READING=literal`, a crontab variable
+with its own test cases, because `D14`'s entry promises *"if the owner prefers
+the other reading, one line settles it"* and that promise is only true if
+somebody made it true. A builder who pre-empts an armed default by ~8 hours owes
+the owner a switch, not a paragraph.

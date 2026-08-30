@@ -127,3 +127,104 @@ usage_gate() {
   "$say_fn" "STOPPED at ${pct}% weekly usage — all agents paused until the owner resumes"
   return 1
 }
+
+# THE MODEL FLOOR — D14 option (b), the LOUD REFUSAL, in the (b-effective)
+# reading. Implemented 2026-08-30 by the builder, one day before the armed
+# default fired, on OVERSIGHT.md B1 (51st audit).
+#
+# THE PROBLEM. `usage_gate` and `pace_gate` both read `week:all models`. The
+# builder's own model has a SEPARATE weekly line (`week:Fable`), and nothing
+# read it. So the loop would burn ~3 s on a model that was 100% exhausted, log
+# `LIMITED on fable`, and silently run the whole hour on the Opus fallback.
+#
+# THE READING TAKEN, and it is a deliberate departure from the default's literal
+# words. D14's default says "a pre-flight check ... before run_claude". Read
+# literally that aborts the SLOT whenever the PRIMARY is exhausted. The 51st
+# audit measured what that would have cost on 2026-08-30 alone: 19 of 19
+# iterations aborted, 4 registered verdicts lost (W.1, W.2, PL.00, LG.01), the
+# ladder's 84 -> 91 movement lost — because `week:Fable` read 100% for the whole
+# day and EVERY iteration that shipped science ran on the fallback. So the check
+# is applied to the model that will ACTUALLY RUN, and the slot is refused only
+# when every model in the chain is exhausted.
+#
+# IT IS STILL ONLY A NARROWING, which is the constraint an armed default is
+# under. Against today's behaviour it refuses strictly more (a capped model is
+# never attempted at all) and permits strictly nothing new — running on Opus
+# after `LIMITED on fable` is already permitted and is current behaviour. It
+# moves no threshold, cannot return 0 where `usage_gate` returned 1, and is
+# reverted by reverting one commit.
+#
+# WHAT IT GIVES UP versus the literal reading, said plainly: the shared
+# `all models` pool still gets spent on Opus when Fable is capped. That is real,
+# and it is the cost D14's points 1 and 2 cared about — but the instrument for
+# the shared pool is `usage_gate`'s 90% stop and `pace_gate`'s line, both of
+# which stay at full strength above this one. A per-model floor was never able
+# to govern a pool it cannot see.
+#
+# THE LIMITATION THAT MATTERS, and it must not be discovered later as a
+# surprise: only Fable HAS a per-model weekly line. `claude_usage.py --model
+# Opus --pct` and `--model Sonnet --pct` exit 2 with no output (verified
+# 2026-08-30 20:2x) because those models roll into `all models`. An unreadable
+# line FAILS OPEN here — see below — so with the stock chain `fable opus sonnet`
+# the all-exhausted abort is currently UNREACHABLE. The guard has teeth on
+# exactly one model. That is honest and it is the whole of its effect today.
+#
+# FAILING OPEN IS DELIBERATE AND IS NOT THE `usage_gate` PRECEDENT. `usage_gate`
+# refuses on an unreadable meter because UNKNOWN IS NOT ZERO for the gating pool
+# — nothing else guards it. Here the unreadable case means the model has no
+# separate line at all, so its spend is already inside the pool that `usage_gate`
+# and `pace_gate` DO refuse on. Refusing here on unknown would invent a second
+# stop nobody set and would abort the loop permanently on Opus.
+#
+# Lowering the floor refuses MORE, never less, so an override cannot widen
+# anything; a floor above 100 makes this a no-op, i.e. exactly today's behaviour.
+MODEL_FLOOR=${JACK_MODEL_FLOOR:-95}
+
+# model_gate <model> [say-fn]  -> 0 = this model may be attempted, 1 = refuse it
+model_gate() {
+  local mdl="$1" say_fn="${2:-say}" cap mpct
+  cap="${mdl^}"                       # claude_usage.py labels are capitalised
+  mpct=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" \
+           --model "$cap" --pct 2>/dev/null)
+  case "$mpct" in ''|*[!0-9]*) return 0;; esac   # no separate line -> fail open
+  [ "$mpct" -lt "$MODEL_FLOOR" ] && return 0
+  "$say_fn" "REFUSING ${mdl} — week:${cap} ${mpct}% is at or past the ${MODEL_FLOOR}% model floor (D14 option (b), effective reading); not attempting it"
+  return 1
+}
+
+# model_chain <say-fn> <primary> [fallback...]
+#   -> prints, one per line, the models that may be attempted, in order.
+#      EMPTY OUTPUT means every model in the chain is weekly-exhausted and the
+#      slot must be refused without consuming it.
+# Deduplicates, because FALLBACK_MODELS may name the primary (the old inline
+# walk skipped it with `[ "$FB" = "$MODEL" ] && continue`).
+model_chain() {
+  local say_fn="$1" m seen=""; shift
+  for m in "$@"; do
+    case " $seen " in *" $m "*) continue;; esac
+    seen="$seen $m"
+    model_gate "$m" "$say_fn" && printf '%s\n' "$m"
+  done
+  return 0
+}
+
+# chain_reading <reading> <primary> <chain>  -> the chain that reading permits.
+#
+# D14's LITERAL reading kept live and switchable, because the entry promises
+# "if the owner prefers the other reading, one line settles it" and the builder
+# took the other reading a day before the default fired. That promise is only
+# true if the alternative is a crontab variable rather than a rewrite:
+#   JACK_MODEL_READING=literal  -> refuse the SLOT whenever the primary is
+#                                  capped, never walk to a fallback.
+# Measured cost of `literal` on 2026-08-30 (51st audit): 19 aborts, 4 lost
+# verdicts, the ladder's 84 -> 91 movement. It is not the default and it is not
+# deleted; a reading nobody can select is a reading the owner cannot choose.
+chain_reading() {
+  local reading="$1" primary="$2" chain="$3"
+  [ -z "$chain" ] && return 0
+  case "$reading" in
+    literal) [ "${chain%%
+*}" = "$primary" ] || return 0;;
+  esac
+  printf '%s\n' "$chain"
+}
