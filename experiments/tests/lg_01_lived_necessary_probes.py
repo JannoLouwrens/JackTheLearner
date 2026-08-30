@@ -58,15 +58,41 @@ This is the 24th audit's B3 rule — an at-chance control must carry proof its
 instrument was alive — applied to a null whose at-chance reading is the
 result the author wants.
 
-POSITION BIAS IS NOT KNOWLEDGE. Small instruct models pick a letter by
-position as much as by content (measured here on 2026-08-30: for a question
-whose four options were all nonsense the letter logits ran A 17.09, B 16.74,
-C 17.24, D 17.91 — a 0.8-nat preference for D with nothing to know). So each
-question is scored under N_ORDER cyclic rotations of its options and the
-LLM's score is the FRACTION of rotations it gets right. A question answered
-from priors survives rotation; a lucky guess does not. Retention requires
-llm_frac <= CHANCE_BAND_HI = 1/N_OPTIONS, i.e. correct on at most one of four
-placements — the pre-registered chance band, per question.
+VOID RECORD — attempt 1, 2026-08-30 17:38 UTC, and the calibration gate is
+what caught it. The v1 readout listed the four options as A/B/C/D and read
+the null's answer off the letter logits, with each question scored under four
+cyclic rotations to defeat position bias. It returned:
+
+    calib_acc 0.2500 (std 0.0)   llm_mean_frac 0.2525   n_excluded 5 / 102
+    oracle 34/34 per category    stripped control at chance
+
+Chance is 0.25 on both. WITHOUT THE CALIBRATION LEG THIS WAS A CLEAN PASS —
+every category retaining ~33 of 34, an oracle at ceiling, a control at the
+floor. The probe set would have been certified against a null that cannot
+answer "what is the capital of France?", and LG.00 would have been scored on
+it. That is the whole reason the leg exists, and it paid for itself on the
+first run.
+
+THE FAULT, diagnosed rather than guessed. Asked the capital of France with
+Paris on the table, SmolLM2-360M's next-token distribution ranks
+'D' 17.71 > 'C' 17.37 > 'B' 17.20 > 'A' 16.51 — a monotone preference for the
+LAST letter — while 'Paris' itself sits fifth in the same top-5. The model
+KNOWS the answer and cannot express it as a letter. Identical behaviour under
+the tokenizer's own chat template, so the scaffold was not the fault: the
+LETTER READOUT was. And rotation does not rescue it — a purely positional
+picker scores exactly 1/N_OPTIONS across N rotations, which is precisely the
+0.2525 observed, indistinguishable from an ideal lived-necessary probe set.
+
+THE REPAIR (v2, and it is STRENGTHEN-ONLY). The null is no longer shown the
+options at all. Each candidate answer is scored as a CONTINUATION of the bare
+question, by length-normalised log-probability, and the null's answer is the
+argmax. There is no letter, no listed order, and therefore no position for
+bias to live in. This makes the null STRONGER — calibration went 0.2500 ->
+0.8333 on the identical questions — and a stronger null excludes MORE
+questions and retains fewer, so the repair moves the spec's own bar in the
+harder direction. The retention band tightened with it: v1 retained a
+question the null got right in one placement of four; v2 retains it only if
+the null is outright WRONG (CHANCE_BAND_HI = 0.0).
 
 THE LLM LEG IS OFFLINE, AND run() NEVER LOADS A MODEL. T0.07's throughput
 lesson: `UnifiedBrainConfig()` loading SmolLM2 in-process is a 6.9 GB mistake,
@@ -126,11 +152,13 @@ LLM_ARTIFACT = "/data/lg01_llm_verdicts.json"
 # RETAIN_MIN and ORACLE_MIN are the registry's own numbers, verbatim.
 N_OPTIONS = 4
 CHANCE = 1.0 / N_OPTIONS               # 0.25
-N_ORDER = 4                            # cyclic rotations per question
 N_GEN = 34                             # generated per category, per seed
 RETAIN_MIN = 20                        # registry: ">= 20 questions per category"
 ORACLE_MIN = 0.95                      # registry: ">= 0.95 on the retained set"
-CHANCE_BAND_HI = CHANCE                # retain iff llm_frac <= 0.25 (<=1 of 4)
+# v2 readout (see VOID RECORD): the null answers by ranking the OPTIONS, so a
+# question is retained only when the null is outright WRONG on it. That is
+# strictly stricter than v1's "correct on at most one of four placements".
+CHANCE_BAND_HI = 0.0
 # The stripped reader guesses among options it cannot retrieve, so it sits at
 # CHANCE by construction. With >= 3*RETAIN_MIN = 60 retained questions the
 # binomial sd at chance is sqrt(.25*.75/60) = 0.056; 0.45 is 3.6 sd above.
@@ -169,11 +197,7 @@ RESOURCES = [f"the {c} {s}" for c in COLOURS for s in STUFFS]      # 80
 # transformers upgrade cannot silently change the null's prompt underneath a
 # cached verdict.
 SCAFFOLD = (
-    "<|im_start|>user\n"
-    "Answer the multiple-choice question. Reply with a single letter and "
-    "nothing else.\n\n"
-    "Q: {q}\n"
-    "A. {o0}\nB. {o1}\nC. {o2}\nD. {o3}<|im_end|>\n"
+    "<|im_start|>user\n{q}<|im_end|>\n"
     "<|im_start|>assistant\n"
 )
 SCAFFOLD_SHA = hashlib.sha256(SCAFFOLD.encode()).hexdigest()[:16]
@@ -310,35 +334,32 @@ def _oracle_scores(mem, probes: list, stripped: bool = False) -> list:
 # ─────────────────────────────────────────────────────────────────────────────
 # Leg 2 — the frozen LLM alone, read from the offline artifact
 # ─────────────────────────────────────────────────────────────────────────────
-def _rotations(options: list) -> list:
-    """N_ORDER cyclic rotations. Position bias survives none of them."""
-    return [options[i:] + options[:i] for i in range(N_ORDER)]
+def _prompt(question: str) -> str:
+    return SCAFFOLD.format(q=question)
 
 
-def _prompt(question: str, options: list) -> str:
-    return SCAFFOLD.format(q=question, o0=options[0], o1=options[1],
-                           o2=options[2], o3=options[3])
-
-
-def _key(revision: str, prompt: str) -> str:
+def _key(revision: str, prompt: str, option: str) -> str:
+    """Identifies one (weights, scaffold, question, candidate answer) triple."""
     return hashlib.sha256(
-        f"{MODEL_ID}@{revision}\x00{SCAFFOLD_SHA}\x00{prompt}".encode()
-    ).hexdigest()
+        f"{MODEL_ID}@{revision}\x00{SCAFFOLD_SHA}\x00{prompt}\x00{option}"
+        .encode()).hexdigest()
 
 
 def _all_prompts(probes: list) -> list:
-    """Every (probe, rotation) prompt, plus the calibration set. One list so
-    the offline pass and run() can never disagree about what was asked."""
+    """Every (question, candidate-answer) pair the null must score, plus the
+    calibration set. One list, so the offline pass and run() can never
+    disagree about what was asked.
+
+    Yields (kind, question_index, prompt, option_text, is_correct).
+    """
     out = []
     for i, p in enumerate(probes):
-        for r, opts in enumerate(_rotations(p["options"])):
-            out.append(("probe", i, r, _prompt(p["question"], opts),
-                        "ABCD"[opts.index(p["correct"])]))
+        for opt in p["options"]:
+            out.append(("probe", i, _prompt(p["question"]), opt,
+                        opt == p["correct"]))
     for i, (q, correct, distr) in enumerate(CALIBRATION[:CALIB_N]):
-        base = [correct] + list(distr)
-        for r, opts in enumerate(_rotations(base)):
-            out.append(("calib", i, r, _prompt(q, opts),
-                        "ABCD"[opts.index(correct)]))
+        for opt in [correct] + list(distr):
+            out.append(("calib", i, _prompt(q), opt, opt == correct))
     return out
 
 
@@ -356,15 +377,16 @@ def llm_pass(seeds=None, out_path: str = LLM_ARTIFACT) -> dict:
 
     os.environ.setdefault("HF_HOME", "/data/caches/huggingface")
     tok = AutoTokenizer.from_pretrained(MODEL_ID)
-    # Left padding: the answer letter is read off the LAST position, and right
-    # padding would read it off a pad token for every prompt but the longest.
-    tok.padding_side = "left"
+    # RIGHT padding: the option's tokens are scored at their own absolute
+    # positions, counted forward from the prompt's length, so the real tokens
+    # must start at index 0. (v1 read the last position and needed the
+    # opposite; see the VOID RECORD for why that readout is gone.)
+    tok.padding_side = "right"
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_ID, dtype=torch.float32, low_cpu_mem_usage=True).eval()
     revision = getattr(model.config, "_commit_hash", None) or "local"
-    letters = [tok.encode(c, add_special_tokens=False)[0] for c in "ABCD"]
 
     store = {}
     if Path(out_path).exists():
@@ -372,26 +394,35 @@ def llm_pass(seeds=None, out_path: str = LLM_ARTIFACT) -> dict:
     store.setdefault("_meta", {})["model"] = f"{MODEL_ID}@{revision}"
     store["_meta"]["scaffold_sha"] = SCAFFOLD_SHA
 
-    todo = []
+    todo = {}
     for seed in (seeds or SEEDS):
         tmp = Path(tempfile.mkdtemp())
         _, probes = _build_life(seed, tmp / "life.jsonl")
-        for _kind, _i, _r, prompt, _gold in _all_prompts(probes):
-            k = _key(revision, prompt)
+        for _kind, _i, prompt, option, _gold in _all_prompts(probes):
+            k = _key(revision, prompt, option)
             if k not in store:
-                todo.append((k, prompt))
-    todo = list({k: p for k, p in todo}.items())
-    print(f"[lg01] {len(todo)} prompts to score", flush=True)
+                todo[k] = (prompt, option)
+    todo = list(todo.items())
+    print(f"[lg01] {len(todo)} (question, answer) pairs to score", flush=True)
 
     B = 8
     with torch.no_grad():
         for s in range(0, len(todo), B):
             chunk = todo[s:s + B]
-            enc = tok([p for _, p in chunk], return_tensors="pt", padding=True)
-            logits = model(**enc).logits[:, -1, :]
-            for (k, _), row in zip(chunk, logits):
-                store[k] = "ABCD"[int(row[letters].argmax())]
-            if s % (B * 10) == 0:
+            texts = [p + o for _, (p, o) in chunk]
+            n_pre = [len(tok(p).input_ids) for _, (p, _o) in chunk]
+            enc = tok(texts, return_tensors="pt", padding=True)
+            logp = torch.log_softmax(model(**enc).logits, dim=-1)
+            for j, (k, _) in enumerate(chunk):
+                ids = enc.input_ids[j]
+                n = int(enc.attention_mask[j].sum())
+                # Token t is predicted by position t-1. Score the OPTION's
+                # tokens only, length-normalised so a long correct answer is
+                # not penalised against a short wrong one.
+                span = range(n_pre[j], n)
+                tot = sum(float(logp[j, t - 1, ids[t]]) for t in span)
+                store[k] = round(tot / max(1, len(span)), 5)
+            if s % (B * 20) == 0:
                 print(f"[lg01] {s + len(chunk)}/{len(todo)}", flush=True)
     Path(out_path).write_text(json.dumps(store))
     print(f"[lg01] wrote {out_path} ({len(store) - 1} verdicts)", flush=True)
@@ -417,22 +448,31 @@ def _score(seed: int, stripped: bool) -> dict:
         store = json.loads(Path(LLM_ARTIFACT).read_text())
     revision = (store.get("_meta", {}).get("model", "@local").split("@")[-1])
 
-    llm_right = [0] * len(probes)
-    calib_right, missing = 0, 0
-    for kind, i, _r, prompt, gold in _all_prompts(probes):
-        got = store.get(_key(revision, prompt))
-        if got is None:
+    # Rank each question's options by the null's length-normalised logprob.
+    ranked: dict = {}
+    missing = 0
+    for kind, i, prompt, option, gold in _all_prompts(probes):
+        s = store.get(_key(revision, prompt, option))
+        if s is None:
             missing += 1
             continue
+        ranked.setdefault((kind, i), []).append((s, gold))
+    llm_right = [0] * len(probes)
+    calib_right = 0
+    for (kind, i), scored in ranked.items():
+        if len(scored) != N_OPTIONS:
+            missing += 1
+            continue
+        won = max(scored)[1]                    # the null's pick was correct?
         if kind == "probe":
-            llm_right[i] += int(got == gold)
+            llm_right[i] = int(won)
         else:
-            calib_right += int(got == gold)
+            calib_right += int(won)
 
     oracle_ok = _oracle_scores(mem, probes, stripped=stripped)
     retained, excluded, per_cat = [], [], {c: 0 for c in CATEGORIES}
     for i, p in enumerate(probes):
-        frac = llm_right[i] / N_ORDER
+        frac = float(llm_right[i])
         if frac <= CHANCE_BAND_HI:
             retained.append(i)
             per_cat[p["category"]] += 1
@@ -449,10 +489,10 @@ def _score(seed: int, stripped: bool) -> dict:
         "retained_his_history": per_cat["his_history"],
         "retained_min_per_category": min(per_cat.values()),
         "oracle_acc_on_retained": round(oracle_acc, 4),
-        "llm_mean_frac": round(sum(llm_right) / (N_ORDER * len(probes)), 4),
+        "llm_mean_frac": round(sum(llm_right) / len(probes), 4),
         "n_excluded": len(excluded),
         "excluded": excluded[:12],
-        "calib_acc": round(calib_right / (CALIB_N * N_ORDER), 4),
+        "calib_acc": round(calib_right / CALIB_N, 4),
         "verdicts_missing": missing,
     }
 
