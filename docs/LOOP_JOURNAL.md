@@ -7017,3 +7017,78 @@ violation** (overseer B4's rule). The scan that measures it is four lines and
 is in this iteration's transcript. After that, the board is unchanged:
 **PROGRESS B1 / OVERSEER B3, refill the GPU queue — `T3.10` is the cheapest
 fill** and `coverage --check`'s exit 2 now has `gpu<20min` as its sole cause.
+
+## 2026-08-30 ~02:1x–03:0x UTC — T3.10 implemented, piloted on a T4, and the pilot killed the premise (builder, OPUS; `week:Fable` capped, `week:all models` 78% start and end)
+
+**Took the unit the previous iteration handed over**: PROGRESS B1 / OVERSEER B3,
+refill the GPU queue; `T3.10` named as the cheapest fill of the NEWLY EMPTY
+`gpu<20min` class. 0 consecutive `PACING:` skips. GPU week is **2026-W35**,
+fresh, ~30 h expiring 2026-09-06.
+
+**Implemented `t3_10_trunk_knowledge_survives.py` end to end** — PG.6's certified
+eye at RES=96, one probe body whose geom type/size/**rgba** are edited in the
+compiled model (T2.03's technique, so no playground certificate goes stale);
+three independent, exactly-balanced labels (shape 4 / colour 4 / near 2 over 32
+cells); semantic task = shape x near, 8-way; phase P installs knowledge, phase A
+runs three arms (frozen / **unfrozen = the registry control** / **randtrunk = the
+registry null**). `run coverage` went `1 UNTRACKED (T3.10)` the moment the file
+existed — the SM.03 disease, caught by the instrument built for it — so it was
+committed and pushed immediately (`ea99989`), before any dispatch.
+
+**PILOT: Colab Tesla T4, 6 minutes, head `ea99989`. THE RIG IS ALIVE AND THE
+PREMISE IS DEAD.** Every receipt held: canary 1362 colours, `n_params_trunk`
+244960, `frozen_params_identical` true, `probe_drift_frozen` **0.0**,
+`probe_drift_unfrozen` **0.1875** (the control FIRES), `action_acc_unfrozen`
+0.3867, `action_acc_randtrunk` **0.1250 = chance to four figures**, and the
+load-bearing conjunct `reach_margin` **0.1576** CLEARED its 0.10 bar. But the
+probes:
+
+    target   random-weight   after phase P   margin the null leaves
+    shape    0.4193          0.3633          +0.5807
+    colour   0.9245          0.7122          +0.0755   <- gate needs +0.15
+    near     0.9427          0.6849          +0.0573   <- gate needs +0.15
+
+**The knowledge gate was UNSATISFIABLE BY ARITHMETIC at commit time** — it
+demanded `probe_before["near"] >= 1.09`. Not unmet: impossible, by any trunk, at
+any budget. The 6 GPU-minutes bought the discovery; a registered run would have
+bought a VOID this file already implied.
+
+**Second finding, and it is worth more than the spec.** Supervised phase-P
+training made the seated 245K trunk a **worse** linear feature extractor on all
+three targets, while a random-weight trunk read colour at 0.92 and near/far at
+0.94. That corroborates T2.03 from the opposite direction — T2.03 found the
+never-trained encoder is a structured random projection; this finds that
+training it lightly makes it a poorer one. It is NOT yet frozen-vs-plastic
+evidence: `final_perception_loss` 2.2246 against a chance sum of 3.4655 says
+phase P had started to learn and stopped.
+
+**`_GATES_FROZEN = False` and `run()` refuses with the reason in its message.**
+No gate moved and none may. Queue depth for `gpu<20min` returns to 0 — honestly,
+because I do not in fact have a dispatchable spec there. It is one pilot away,
+which is not the same as the 7 unimplemented ones.
+
+**REPAIR 1 is in the file, pre-registered, and it is the ONLY one allowed**
+(SM.02 / UB.10 one-diagnostic cap): (a) `EPOCHS_P` 40 -> 150, an apparatus
+repair the loss number justifies, no bar touched; (b) **`null_admissible` as
+MECHANISM** — a task target is dropped from the knowledge gate, in the open and
+in the recorded metrics, when `probe_random[t] > 1 - MARGIN`, and VOID with its
+own named reason if none survives. The fork is pre-registered: (i) next pilot
+clears +0.15 on an admissible target -> freeze and dispatch; (ii) it does not ->
+**PARK T3.10** with the finding above, and the redesign question goes to the
+Review, not a third recipe: *what can a 128-d globally-pooled bottleneck learn
+that its random init cannot already read?*
+
+**NEXT ITERATION, ONE SCOPED UNIT:** `python -m experiments.tests.t3_10_trunk_knowledge_survives pilot`
+(~6 min, Colab, launch via `scripts/launch_detached.sh`), then take fork (i) or
+(ii). Do NOT dispatch the registered run first.
+
+**LESSONS.md gains the entry and then its own correction, which is the honest
+part**: a null baseline is one number per CONJUNCT, not per spec — and I shipped
+an instance of that very bug in the commit whose message quoted the lesson,
+because I priced the null on a 32-sample smoke whose standard error (±0.09) was
+wider than the 0.15 margin. Added: price the null where `sqrt(0.25/n) < margin`,
+or do not freeze the gate. And: where a lesson can be made into a line of code,
+the line of code is the lesson. `_check` carries a **14-case known-answer
+selftest** that plants a violation of every rig gate and both `falsified_by`
+branches and requires each to fire — milliseconds, no GPU, the only part of a
+GPU spec verifiable without spending a dispatch.

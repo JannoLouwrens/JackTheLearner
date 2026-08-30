@@ -7079,3 +7079,96 @@ carried by two organs as a passing instrument. Its re-run cost **2.56 seconds**
 and returned a live overclaim on a constitutional commitment. A stale
 instrument is not a working instrument that needs paperwork; it is an
 instrument of unknown state, and the cheapest thing in this repo is finding out.
+
+## A null baseline is one number per CONJUNCT, not one number per spec — and
+## the cheapest instrument that can find that out is the whole pipeline run at
+## toy size (builder, 2026-08-30, found while implementing T3.10)
+
+**The shape.** `T3.10` probes a trunk for three things — object class, colour,
+spatial relation — and its registry entry states ONE null: *"Probes on a
+random-weight trunk."* The obvious gate follows in one line: `min over targets
+of (probe_before − probe_random) >= MARGIN`, i.e. phase P must have installed
+something the random trunk did not already have. Written that way the spec
+**VOIDs on every honest run, forever**, and no amount of training could rescue
+it. Colour is very nearly free: it is mean RGB, and mean RGB survives the
+`AdaptiveAvgPool2d((1,1))` at the end of the seated 245K encoder, so a
+**random-weight** trunk already reads it near ceiling. There is no margin
+available over a null that has already won, at any budget.
+
+**Why it is hard to see, and why the registry cannot warn you.** The null is
+stated once, in the singular, and it reads as a property of *the instrument* —
+"a random trunk". It is not. It is a property of each **(instrument, target)**
+pair, and a spec with three targets has three different null floors. The
+registry field has room for one sentence and the author has one null in mind
+while writing three conjuncts, so the collapse from three floors to one happens
+silently, in the gap between a prose field and a `_check` body.
+
+**The rule.** *Before freezing any gate that contains a margin over a null,
+price the null on EVERY conjunct separately.* Then say in the file which is
+which, because the two kinds have opposite jobs:
+
+  - a conjunct where the null already scores high **cannot carry a margin** and
+    must not be gated on one. Give it the job it can actually do — in `T3.10`
+    colour became the *distractor*, gated only on having headroom for the
+    control's drift to appear in;
+  - a conjunct where the null sits near its floor is **the one doing the work**,
+    and it should be named as load-bearing in the docstring so the next reader
+    does not have to re-derive which of the conjuncts is decorative.
+
+**The instrument that found it, and this is the transferable half.** A 64-sample,
+one-epoch, CPU run of the ENTIRE pipeline — build the dataset, train phase P,
+train all three phase-A arms, probe everything — took under a minute and printed
+`probe_random.colour = 0.78` beside `probe_before.colour = 0.75`. That is the
+whole finding, visible at a glance, before a single GPU-second was spent. The
+*rig* smoke this repo already had a precedent for (`T2.03`'s: render eight
+frames, check the canary, count distinct colours) would **not** have found it:
+it never builds a null and never fits a probe, so the conjunct that was broken
+is not in the code path it exercises. **A smoke that exercises the pieces cannot
+find a defect that lives in their arithmetic. Run the real thing, made small.**
+It also priced the control in the same minute (`probe_drift_unfrozen 0.0938` at
+ONE epoch — the drift instrument moves) and confirmed the freeze receipt
+(`frozen_params_identical` true, `probe_drift_frozen` 0.0).
+
+**The generalisation, and it is the third instance of this family here.** A gate
+that CANNOT FAIL and a gate that CANNOT PASS are the same defect wearing
+opposite signs: both are gates whose outcome is settled by arithmetic before the
+world is consulted, and both read as rigour on the page. This repo has now found
+one of each within a day — the worst case that `protocol.py:_aggregate` averages
+into a gate nothing can fail, and the null margin nothing can clear — plus the
+older `T2.11` case where the metric could not express the difference the claim
+was about. *Every pre-registered gate should be checked in BOTH directions
+before it is frozen: construct a world where it fires and a world where it does
+not, and confirm the gate can tell them apart.* When that check is cheap it
+belongs in the file: `T3.10` carries a 13-case `selftest` that plants a
+violation of every rig gate and of both `falsified_by` branches and requires
+each to fire — milliseconds, no GPU, and it is the only part of a GPU spec that
+can be verified without spending a dispatch.
+
+**SHARPENED THE SAME DAY, BY THE PILOT, AND THE CORRECTION IS THE USEFUL PART.**
+The entry above was written after a 64-sample smoke priced the null and I
+committed the spec on the strength of it. **The smoke was too small to price
+anything.** At n=32 per split its standard error is ±0.09 — wider than the 0.15
+margin it was being used to check — and it read the random trunk at `near`
+0.5938. The T4 pilot, at n_test=768, read the same quantity at **0.9427**. So
+the gate I shipped demanded `probe_before["near"] >= 1.09` and was unsatisfiable
+by any trunk at any budget, *in the very commit whose message quoted this
+lesson*. Writing a lesson is not the same as having applied it.
+
+**So the rule needs its missing half: price the null at a sample size whose
+standard error is SMALLER THAN THE MARGIN YOU ARE ABOUT TO GATE ON, and if you
+cannot afford that, do not freeze the gate.** Concretely, `sqrt(0.25/n) < margin`
+— at a 0.15 margin that is n > ~11, at 0.05 it is n > ~100, and the toy smoke's
+job is only to prove the pipeline runs. *A cheap check tells you a cheap thing;
+the failure is not running it, it is reading a number off it that it was never
+powerful enough to produce.*
+
+**AND THE REPAIR THAT GENERALISES BEYOND ONE SPEC: make impossibility a rule the
+gate applies to itself, not a fact its author has to remember.** `T3.10` now
+computes `null_admissible` from each run's own null before the claim is looked
+at — a conjunct is dropped, in the open and in the recorded metrics, when
+`probe_random[t] > 1 − MARGIN`, and if no conjunct survives that is VOID with
+its own named reason. That converts "the author must check every conjunct
+against its null" (which the author demonstrably did not do, having just written
+it down) into arithmetic the run performs on itself. **Where a lesson can be
+made into a line of code, the line of code is the lesson; the prose is only how
+the next spec learns why the line is there.**

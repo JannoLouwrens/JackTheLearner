@@ -115,13 +115,81 @@ of `falsified_by` no receipt can satisfy, and it is where this spec can lose.
 ────────────────────────────────────────────────────────────────────────────
 GATES — FROZEN AT THIS COMMIT, EXOGENOUS OR RELATIVE, NO PILOT NUMBERS IN THEM
 
-`_GATES_FROZEN = True` from the first commit, deliberately. Every bar below is
-either a chance level, a multiple of chance, a relative margin against an arm
-measured in the same run, or a multiple of the binomial noise of the test split
-— never a fraction of an observed effect. There is therefore nothing a pilot
-could tell me that would move one, and per T2.08 a pilot-bulk absolute is the
-thing to avoid, not the thing to seek. A pilot run at seed 90 is still worth its
-20 GPU-minutes as a RIG check, and it cannot touch these constants.
+Every bar below is either a chance level, a multiple of chance, a relative
+margin against an arm measured in the same run, or a multiple of the binomial
+noise of the test split — never a fraction of an observed effect. **Not one of
+them has moved, and none may.** `_GATES_FROZEN` is nevertheless **False**: see
+the PILOT RECORD below, which found the gates unsatisfiable-by-arithmetic rather
+than merely unmet, and the repair pre-registered under it. `run()` refuses until
+a pilot shows the repair worked, because a dispatch whose VOID is known in
+advance is not a measurement — it is 20 GPU-minutes spent to be told something
+this file already says.
+
+PILOT RECORD — seed 90, Colab **Tesla T4**, 2026-08-30T02:19Z, head `ea99989`,
+one submission, artifact fetched. It cost ~6 minutes and it stopped a registered
+run that could not have succeeded. **THE RIG IS ALIVE ON A GPU**, and every
+receipt held:
+
+  canary_ok true, canary_colors 1362, mean_tries 1.56
+  n_params_trunk 244960                     ← the 245K seat holder, unchanged
+  frozen_params_identical true, probe_drift_frozen **0.0**  ← the freeze is real
+  probe_drift_unfrozen **0.1875** (≥0.10)   ← THE CONTROL FIRES: unfreezing
+                                               moves the probes, so a zero in
+                                               the frozen arm means something
+  action_acc_unfrozen 0.3867 (≥0.25)        ← the 8-way task is learnable
+  action_acc_frozen 0.2826, action_acc_randtrunk 0.1250 (= chance exactly)
+  reach_margin **0.1576** (≥0.10)           ← the load-bearing conjunct CLEARED
+
+**AND THE ONE THING THAT DID NOT HOLD IS THE PREMISE.** Probe accuracies,
+random-weight trunk vs after phase P:
+
+    target    random    after phase P     max margin the null leaves
+    shape     0.4193    0.3633            +0.5807   gate reachable
+    colour    0.9245    0.7122            +0.0755   IMPOSSIBLE
+    near      0.9427    0.6849            +0.0573   IMPOSSIBLE
+
+Two findings, and the second is worth more than this spec:
+
+  1. **`near` and `colour` are free from a random projection.** 0.94 and 0.92
+     against chances of 0.50 and 0.25. So `min over {shape, near} of
+     (before − random) >= 0.15` demanded `probe_before["near"] >= 1.09`. The
+     gate was unsatisfiable at commit time, by any trunk, at any budget — and
+     the local toy smoke did not catch it because at n=32 its standard error is
+     ±0.09, wider than the 0.15 margin it was being used to price. Generalised
+     into `null_admissible` above so it cannot recur here, and into LESSONS.md
+     so it cannot recur elsewhere.
+  2. **Supervised training made the seated trunk a WORSE linear feature
+     extractor on all three targets** (shape 0.4193 → 0.3633, colour 0.9245 →
+     0.7122, near 0.9427 → 0.6849), while `action_acc_randtrunk` landed on
+     0.1250 — chance to four figures. That is a real measurement about the
+     vision seat and it corroborates T2.03 from the opposite direction: T2.03
+     found the never-trained encoder is a structured random projection; this
+     finds that training it lightly makes it a poorer one. It is NOT yet
+     evidence about `frozen vs plastic`, because phase P was under-trained —
+     `final_perception_loss` 2.2246 against a chance sum of 3.4655 (ln4 + ln4 +
+     ln2) is a run that had started to learn and stopped, and an under-trained
+     trunk cannot be said to have tested whether knowledge survives.
+
+REPAIR 1, PRE-REGISTERED HERE BEFORE IT RUNS, AND IT IS THE ONLY ONE ALLOWED
+(the SM.02 / UB.10 one-diagnostic cap; two specs have now reached a both-fail
+branch and in both the cap stopped a plausible third recipe):
+  (a) `EPOCHS_P` 40 → 150. An apparatus repair, not a bar: the loss above says
+      phase P had not converged, and nobody would claim an under-trained trunk
+      tested this hypothesis. No gate moves.
+  (b) `null_admissible` becomes mechanism, as specified above. No gate moves;
+      the rule states in advance how an impossible conjunct is handled instead
+      of leaving it to be discovered per-spec.
+THE FORK, and whichever branch fires is recorded rather than argued:
+  (i)  the next pilot clears +0.15 on at least one admissible task target →
+       set `_GATES_FROZEN = True`, dispatch the registered run, no further
+       repairs.
+  (ii) it does not → **T3.10 PARKS** with finding 2 above as its result, and the
+       redesign question goes to the Review, NOT to a third recipe: *what probe
+       target can a 128-d globally-pooled bottleneck learn that its random
+       initialisation cannot already read?* Note the shape of the trap before
+       answering it — colour and apparent size are low-order image statistics
+       that survive any random projection, so the honest candidates are
+       relational or compositional, and this world may not be able to pose one.
 
 Binomial σ at n_test = 768 is sqrt(0.25/768) = 0.018. Read every "σ" below as
 that number.
@@ -132,12 +200,26 @@ that number.
       like a blind sensor — PG.6's measured lesson)
     trunk parameter count in [220K, 270K] — the spec names the 245K seat holder;
       a different number means the seat holder changed under the test
-    KNOWLEDGE EXISTS: min over seeds and over {shape, near} of
-      (probe_before − probe_random) ≥ 0.15 (≈8σ). If phase P installed nothing
-      the trunk did not already have, there is no knowledge whose survival could
-      be measured, and a drift of zero is vacuous rather than reassuring. Colour
-      is excluded for the reason given above — it is not the knowledge the head
-      needs, and a random trunk already has it.
+    KNOWLEDGE EXISTS: min over seeds and over the NULL-ADMISSIBLE task targets
+      of (probe_before − probe_random) ≥ 0.15 (≈8σ). If phase P installed
+      nothing the trunk did not already have, there is no knowledge whose
+      survival could be measured, and a drift of zero is vacuous rather than
+      reassuring. Colour is excluded by role for the reason given above.
+    AT LEAST ONE TASK TARGET IS NULL-ADMISSIBLE. A target is null-admissible
+      when `probe_random[t] <= 1 − 0.15`, i.e. when the margin the gate demands
+      is arithmetically available at all. This rule is the 2026-08-30 pilot made
+      mechanical and it is the reason the constant above is a rule rather than a
+      list: at n_test=768 the random-weight trunk read `near` at **0.9427** and
+      `colour` at **0.9245**, so a gate demanding +0.15 over the null on those
+      targets could not be cleared by ANY trunk, at any training budget, ever.
+      A conjunct whose null has already won is not a conjunct — it is an
+      arithmetic impossibility wearing a threshold's clothes. It is excluded
+      BY RULE, computed from the run's own null before the claim is evaluated,
+      and the exclusion is recorded in `null_admissible` so a reader sees which
+      conjuncts actually carried the claim. If NONE of the task targets is
+      admissible, that is VOID and it is a finding about the trunk: this world
+      poses no probe target the seat holder could learn that its random
+      initialisation does not already read.
     THE DISTRACTOR HAS HEADROOM: `probe_before["colour"]` ≥ 0.50 (2× chance) on
       every seed. Below chance + the control's own 0.10 floor the control could
       not show a colour drop even if unfreezing destroyed the information, and a
@@ -205,7 +287,10 @@ IMPL_DEPS = ["playground.py", "UnifiedBrain.py",
              "experiments/tests/pg_6_playground_eyes.py",
              "experiments/tests/t2_03_pretrained_vision.py"]
 
-_GATES_FROZEN = True            # exogenous/relative bars only; see the docstring
+# False, and NOT because a bar is un-piloted: the 2026-08-30 pilot found two of
+# the three gated conjuncts unsatisfiable by arithmetic (see PILOT RECORD).
+# run() refuses until a pilot shows REPAIR 1 worked. No gate has moved or may.
+_GATES_FROZEN = False
 
 INNER_SEEDS = [0, 1, 2]         # folded to the worst case inside _experiment
 PILOT_SEED = 90                 # disjoint; a RIG check, it cannot move a gate
@@ -228,7 +313,10 @@ IN_FOV_MAX = 22.0               # deg, PG.6's certified bearing band (NUISANCE)
 L2_GRID = (1e-2, 1e-1, 1.0, 1e1, 1e2, 1e3)
 VAL_EVERY = 5                   # every 5th train row selects l2
 
-EPOCHS_P, EPOCHS_A = 40, 40
+# EPOCHS_P 40 -> 150 is REPAIR 1(a): the pilot's final_perception_loss was 2.2246
+# against a chance sum of 3.4655, i.e. phase P had started to learn and stopped.
+# An apparatus repair, pre-registered in the docstring; no gate moves with it.
+EPOCHS_P, EPOCHS_A = 150, 40
 BATCH = 64
 LR = 1e-3
 
@@ -578,6 +666,14 @@ def _one_seed(seed: int, device, n_train=N_TRAIN, n_test=N_TEST,
     def signed(after):
         return {n: round(after[n] - probe_before[n], 4) for n, _ in TARGETS}
 
+    # A task target is NULL-ADMISSIBLE when the margin the knowledge gate
+    # demands is arithmetically available over this run's own null. Computed
+    # BEFORE `probe_before` is compared to anything, so it cannot be tuned by
+    # what the claim needs; see the docstring's PILOT RECORD for the run that
+    # made this necessary (random-weight `near` = 0.9427, gate = +0.15).
+    admissible = [n for n in TASK_TARGETS
+                  if probe_random[n] <= 1.0 - KNOWLEDGE_MARGIN]
+
     return {
         "seed": seed,
         "canary_ok": bool(eye.canary() == eye._canary0),
@@ -589,9 +685,16 @@ def _one_seed(seed: int, device, n_train=N_TRAIN, n_test=N_TEST,
         "probe_before": probe_before,
         "probe_after_frozen": probe_after_frozen,
         "probe_after_unfrozen": probe_after_unfrozen,
-        # The registry's null, asked only about the knowledge the head needs.
+        # The registry's null, asked only about the knowledge the head needs AND
+        # only about the targets on which the margin it demands is arithmetically
+        # available. `admissible` is computed from THIS run's null, before the
+        # claim is looked at, and is reported so a reader can see which conjuncts
+        # carried the claim rather than having to trust that all three did.
+        "null_admissible": admissible,
+        "n_null_admissible": len(admissible),
         "knowledge_margin_min": round(
-            min(probe_before[n] - probe_random[n] for n in TASK_TARGETS), 4),
+            min([probe_before[n] - probe_random[n] for n in admissible],
+                default=-1.0), 4),
         "colour_margin_over_random": round(
             probe_before[DISTRACTOR] - probe_random[DISTRACTOR], 4),  # reported
         "probe_before_colour": probe_before[DISTRACTOR],
@@ -678,6 +781,7 @@ def _experiment(seed: int) -> dict:
         "canary_colors_min": min(r["canary_colors"] for r in rows),
         "n_params_trunk": rows[0]["n_params_trunk"],
         "knowledge_margin_min": min(r["knowledge_margin_min"] for r in rows),
+        "n_null_admissible_min": min(r["n_null_admissible"] for r in rows),
         "probe_before_colour_min": min(r["probe_before_colour"] for r in rows),
         "probe_drift_frozen_max": max(r["probe_drift_frozen"] for r in rows),
         "frozen_params_identical_all": all(r["frozen_params_identical"] for r in rows),
@@ -721,6 +825,12 @@ def _check(m: dict, c: dict):
         return Status.VOID                      # uniform frame == blind sensor
     if not (PARAMS_RANGE[0] <= m["n_params_trunk"] <= PARAMS_RANGE[1]):
         return Status.VOID                      # the seat holder changed
+    if m["n_null_admissible_min"] < 1:
+        # No task target leaves room for the margin the gate demands: this world
+        # poses nothing the seat holder could learn that its random init does not
+        # already read. A finding about the trunk, and not evidence either way
+        # about the hypothesis — so VOID, and PARK per the docstring's fork (ii).
+        return Status.VOID
     if m["knowledge_margin_min"] < KNOWLEDGE_MARGIN:
         return Status.VOID                      # nothing was installed to survive
     if m["probe_before_colour_min"] < COLOUR_HEADROOM:
@@ -747,6 +857,7 @@ def _selftest() -> int:
     clean_m = {
         "canary_ok_all": True, "canary_colors_min": 1343,
         "n_params_trunk": 244960, "knowledge_margin_min": 0.30,
+        "n_null_admissible_min": 2,
         "probe_before_colour_min": 0.97, "probe_drift_frozen_max": 0.0,
         "frozen_params_identical_all": True, "action_acc_frozen_min": 0.62,
         "action_acc_randtrunk_max": 0.34, "reach_margin_min": 0.28,
@@ -761,6 +872,11 @@ def _selftest() -> int:
         ("uniform frame == blind sensor", {"canary_colors_min": 3}, {}, Status.VOID),
         ("seat holder changed", {"n_params_trunk": 57_000_000}, {}, Status.VOID),
         ("nothing installed to survive", {"knowledge_margin_min": 0.02}, {}, Status.VOID),
+        # The 2026-08-30 pilot, replayed as a fixture: every task target's null
+        # already wins, so `knowledge_margin_min` is the sentinel -1.0 and the
+        # admissibility gate — not the margin gate — must be what fires.
+        ("no task target is null-admissible",
+         {"n_null_admissible_min": 0, "knowledge_margin_min": -1.0}, {}, Status.VOID),
         ("distractor has no headroom", {"probe_before_colour_min": 0.30}, {}, Status.VOID),
         ("drift instrument dead", {}, {"probe_drift_unfrozen_min": 0.01}, Status.VOID),
         ("task not learnable at all", {}, {"action_acc_unfrozen_min": 0.13}, Status.VOID),
@@ -789,8 +905,14 @@ def _selftest() -> int:
 def run(ledger: Ledger | None = None):
     if not _GATES_FROZEN:
         raise RuntimeError(
-            "T3.10 gates are provisional; run the pilot, record its numbers in "
-            "this file, then set _GATES_FROZEN = True (SM.02's idiom).")
+            "T3.10 refuses: no gate is un-piloted — the 2026-08-30 T4 pilot "
+            "found two of three gated conjuncts UNSATISFIABLE BY ARITHMETIC "
+            "(random-weight probes read near 0.9427 and colour 0.9245 against "
+            "a +0.15 margin). REPAIR 1 (EPOCHS_P 150, null_admissible as a "
+            "rule) is in the file and UNPILOTED. Run `pilot`, then take fork "
+            "(i) _GATES_FROZEN = True, or fork (ii) PARK — both pre-registered "
+            "in the docstring. Do NOT dispatch the registered run first: its "
+            "VOID is already known.")
     return run_spec(BY_ID["T3.10"], _experiment, _check, control_fn=_control,
                     ledger=ledger)
 
