@@ -58,6 +58,63 @@ TWO CONTROLS, and the second is the one that could have killed the leg.
      ceiling; an intervention must prove it landed) — here, **a threshold must
      prove it can reject.**
 
+RESULT — **FAIL, attempt 1, 2026-08-30, 223 s, 3 seeds. And the encoder is not
+why.** Every rig gate green (canary drift 0.0 at both resolutions, timestep
+0.005 exactly, qpos travel 0.100, 1 torch thread, nice 19, every repeat spread
+under 4%); the declared identity control clean (0.018 ms/frame, throughput
+shifted 0.72% against a 10% bar). The claim branch alone fired:
+
+    physics only, no eye          30.235 sim-s/real-s     the ceiling
+    render only, NO encoder        4.231                  <-- already under 5.0
+    identity no-op encoder         4.246
+    scratch-cnn (the seat holder)  4.145   1.045 ms/frame  0.245M
+    dreamer-cnn                    4.014   2.228 ms/frame  0.953M
+    vit-s14 @224 (reference)       0.753 219.016 ms/frame 21.620M, +87 MB RSS
+    render cost                          40.045 ms @64 · 39.173 ms @224
+
+**The binding constraint on having eyes at 5 Hz on this box is the RENDERER,
+not the encoder** — and this spec's own declared null is the ruler that says
+so: *an encoder cheaper than its own render is free.* The seat holder costs
+**2.6% of its own render**. A no-op encoder does not reach the floor either, so
+no choice of architecture can: the whole encoder budget is 0.09 sim-s/real-s of
+a 0.86 shortfall.
+
+**THE RE-OPEN TRIGGER FIRES ANYWAY, AND IT IS FILED AS FIRED.** Its text is
+literal — *"if a from-scratch encoder cannot hit the PL.00 throughput floor on
+this hardware ... the decision returns to the owner with that number attached"*
+— and the from-scratch encoder does not hit it. Deciding that the trigger
+"doesn't really apply" is the author of a test excusing his own subject, which
+is the one move this repo exists to forbid. So it is escalated as written, with
+the decomposition attached, so the owner is not handed an architecture question
+about a number that is not about architecture. `docs/DECISIONS_NEEDED.md`.
+
+**WHAT THE DISCRIMINATION CONTROL DID AND DID NOT BUY, stated against my own
+interest.** The ViT reference failed the floor (0.753 vs 5.0), so the gate
+passed. But render-only fails it too, so this run CANNOT distinguish *"the
+floor rejects expensive encoders"* from *"the floor rejects any live eye on
+this box."* The control is satisfied and weak, and a later reader must not
+count it as evidence that the floor discriminates encoders. It would have
+discriminated on a box whose renderer left headroom; it did not get to.
+
+**A SECOND, UNASKED-FOR MEASUREMENT, and it is a fact about the world contract:
+the eye's price is nearly resolution-independent.** 39.17 ms at 224x224 against
+40.04 ms at 64x64 — 12.25x the pixels for the same money. Whatever dominates
+`Renderer.render()` here under xvfb+llvmpipe, it is not rasterisation. So
+shrinking Jack's frame buys nothing, and any future spec that proposes to
+afford vision by cropping is proposing to save 2%.
+
+**THE NEAR-MISS THAT ALMOST OVERTURNED THIS FAIL, recorded because it was mine.**
+An ad-hoc pilot written twenty minutes before this file measured the same
+render at **10.3 ms** — 3.9x cheaper — and on that number the FAIL above looks
+like a rig fault worth voiding. It was not. The pilot benchmarked the `data`
+object exactly as `make_playground` returns it, and that frame carries **168
+distinct colours**; after `mj_resetData` + `mj_forward` the same camera renders
+**931**, and the cost is 39.5 ms and stays there through 200 decisions of
+physics. The pilot was timing a nearly-blind eye. `_Rig.reset()` and
+`_Rig.canary()` call `mj_forward` for exactly this reason, so the registered
+spec was right and the unregistered convenience measurement was 3.9x wrong in
+the flattering direction. Generalised in `LESSONS.md`.
+
 THE GL TRAP, inherited rather than rediscovered. A `mujoco.Renderer` that is
 garbage-collected poisons the shared X display, and the NEXT renderer returns
 frames that are corrupted but entirely plausible (`pg_6.get_eye`'s docstring,

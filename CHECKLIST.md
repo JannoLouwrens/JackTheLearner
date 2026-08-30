@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 90 / 198 demonstrated
+## 90 / 200 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -886,3 +886,17 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ `run --gate` — the one command in this runner whose only possible effect on the record is to REPLACE clean stamps — refuses to start from a code-dirty working tree, on the shipped command line, and the predicate it refuses by is exact: (1) an uncommitted code file refuses and is NAMED; (2) the runner's own outputs (`ledger.json`, `gpu_budget.json`, `gpu_submissions.jsonl`, its `.tmp`) and the loop's docs (`CHECKLIST.md`, `LOOP_JOURNAL.md`) do NOT refuse, so the gate cannot deadlock against files it writes itself; (3) a clean tree gates normally; (4) `--dirty-ok` is an explicit opt-in that gates anyway and warns; (5) the refusal reports how many PASS rows were at risk; (6) end to end, in a scratch clone, the dirty gate exits non-zero and dispatches NOTHING while the clean gate dispatches.
       - _dies if:_ Any property failing; the battery running fewer than N_PROPERTIES; or the scratch clone failing to build, which makes P6-P8 unevaluated rather than passed. Concretely: the gate starting on a tree with uncommitted code, a runner-output-only tree refusing (the `gpu_budget.json` self-deadlock, one surface over), `--dirty-ok` being the default, or the refusal firing after `_exclusive` rather than before it.
       - _then delete:_ The practice of running the regression gate before committing. After this spec that ordering costs one refusal line instead of a demoted certificate, and choosing it requires typing a flag whose help text says what it loses.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [!] **PL.00** What each perception encoder costs on THIS box  — A_dreamer-cnn_ms_per_frame=2.227733; A_dreamer-cnn_ms_per_frame_std=0.0431491
+      - _asserts:_ Every candidate perception encoder is measured on one ARM core for ms/frame at its native resolution, and THE PURE FROM-SCRATCH ENCODER — the only arm the PLASTIC-ONLY decree admits — lets the full loop clear the 5.0 simulated-seconds-per-real-second throughput floor with vision live at 5 Hz.
+      - _dies if:_ The pure encoder does not clear the floor with vision live. Then vision at 5 Hz is unaffordable on this box under the one architecture the decree permits, and the decree's OWN pre-registered RE-OPEN TRIGGER fires (`CHAMPIONS.md`: *'if a from-scratch encoder cannot hit the PL.00 throughput floor on this hardware ... the decision returns to the owner with that number attached'*). This spec is the only registered thing in the repo that can pull that trigger.
+      - _then delete:_ Any perception encoder that cannot clear the throughput floor — INADMISSIBLE, not scored (LEARNING_CORE.md ADMISSION-2). This spec can eliminate an encoder in MINUTES, before any accuracy question is asked. Under the decree its edge is turned inward: the arm it can kill is the seat holder's own.
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **PL.02** The RESHAPING test: does another sense change what an encoder computes?
+      - _asserts:_ For each modality pair (A,B), an encoder for A trained JOINTLY with B by cross-modal masked prediction outperforms an A-only encoder of matched capacity WHEN BOTH ARE EVALUATED ON A ALONE at test time. The reshaping gain R = perf(M_AB | A only) - perf(U_A) is positive, paired by seed, bootstrap CI excluding zero.
+      - _dies if:_ R indistinguishable from zero for the PLASTIC arm. Then binding does not reshape encoders at our scale, the arithmetic that the PLASTIC-ONLY decree rests on buys nothing measurable here, and that returns to the owner as evidence — LOUDLY, in the Review. The decree's ENDS are not on trial (SYSTEM.md class 1); its stated MECHANISM is (class 2).
+      - _then delete:_ The claim that cross-modal binding reshapes what an encoder computes at this project's scale. A positive R is the measured value of the plastic path; a null R does not restore freezing (the owner decreed the ENDS), but it removes the arithmetic argument that has been carried as if it were a measurement since 2026-08-09.

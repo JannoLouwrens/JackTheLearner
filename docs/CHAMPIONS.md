@@ -172,6 +172,38 @@ WHAT STILL RUNS: PL.00 (throughput — now a feasibility check on the pure
 encoder rather than a comparison) and PL.02 (reshaping gain — now measuring
 what the plastic path BUYS, not whether to take it). Both cheap, both CPU.
 
+**BOTH ARE NOW REGISTERED — 2026-08-30, twenty-one days and seven audits after
+this paragraph promised them. Until today neither existed**, so the sentence
+above and the one at the bottom of this file ("PL.02 decides it and is runnable
+today") were describing specs that could not be run, and `champions.py` counted
+this seat among 7/7 UNFALSIFIABLE. It is now 5/7.
+
+**PL.00 RAN THE SAME DAY AND RETURNED FAIL — AND THE RE-OPEN TRIGGER ABOVE
+THEREFORE FIRED.** It is escalated as written, `DECISIONS_NEEDED.md` **D17**,
+with its number attached, because an author may not excuse his own subject from
+a consequence he pre-registered. The number, and the reason it is not the
+consequence the trigger was imagining: the from-scratch encoder reached
+**4.145** simulated seconds per real second against the **5.0** floor — but
+**render-only, with no encoder at all, reaches 4.231**, and a no-op encoder
+4.246. An eye frame costs **40.0 ms** to render; the seat-holding encoder costs
+**1.045 ms**, i.e. **2.6% of its own render**. No choice of encoder
+architecture reaches the floor, including no encoder. **The measured
+bottleneck on a pixel eye at 5 Hz is the RENDERER, and the pure path is the
+cheapest thing on the table** — which is the opposite of what the trigger was
+written to catch. The decree stands; D17's default changes nothing.
+
+**AND THE FALSIFIER IS NOW BLOCKED, WHICH IS WORTH SAYING OUT LOUD.** `PL.02`
+was registered with `depends_on=["PG.1", "PL.00"]` exactly as
+`FROZEN_VS_PLASTIC.md` §7.3 wrote it, so `PL.00`'s FAIL blocks it. Whether a
+reshaping-gain measurement genuinely needs the *loop-throughput* verdict — as
+opposed to the *per-encoder cost table*, which `PL.00` delivered in full — is a
+real question, and the builder is deliberately **not** answering it: editing a
+dependency the hour after it produced an inconvenient FAIL is the shape of a
+weakening whatever the merits. It is routed to the Review as
+`pl02-dependency-on-pl00-verdict-vs-table`. Until then this seat's arena
+**exists and is unanswered**, which is honestly worse than it sounds and much
+better than a phantom.
+
 ### Superseded context: the contested phase (kept for the record)
 
 **NOT DECIDED.** docs/research/FROZEN_VS_PLASTIC.md recommends against frozen

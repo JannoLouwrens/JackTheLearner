@@ -8302,3 +8302,56 @@ is a doctrine.** The cheapest possible test of an inherited lesson is to write
 down what it predicts *before* the run and let the run mark it — which costs one
 metric and is the only thing that distinguishes methodological memory from
 methodological habit.
+
+---
+
+## A cost measured on a scene the sensor cannot see is a cost measured on nothing
+
+*(PL.00, 2026-08-30. The fourth member of the could-it-have-fired family, and
+the first one aimed at a MEASUREMENT rather than at a control.)*
+
+`PL.00` measured the price of Jack's eye and returned **FAIL**: the rendered
+frame costs **40.0 ms** and the render-only loop reaches **4.231 sim-s/real-s**
+against a 5.0 floor, so no encoder — not the 0.245M seat holder at 1.045 ms,
+not a no-op at 0.018 ms — can buy the floor back.
+
+**Twenty minutes earlier an ad-hoc pilot had measured the same render at
+10.3 ms.** On that number the FAIL above reads as a rig fault worth voiding, and
+I went looking for the fault. There was none. The pilot benchmarked the `data`
+object exactly as `make_playground` returns it; that frame carries **168
+distinct colours**. After `mj_resetData` + `mj_forward` the same camera on the
+same model renders **931**, costs 39.5 ms, and stays there through 200
+decisions of physics. The pilot was timing a nearly-blind eye and calling it the
+price of sight.
+
+**Why the registered spec was immune and the convenience measurement was not.**
+`_Rig.reset()` and `_Rig.canary()` call `mj_forward` before rendering, and the
+canary reduces a fixed frame to one number that is re-checked at the end of
+every seed. That is not extra rigour bolted on; it is the standing GL rule
+(`pg_6.get_eye`) applied to a rig that also *times* things. The pilot had no
+canary because pilots never do — which is precisely why a pilot may never
+overturn a registered run.
+
+**THE RULE.** A performance number is a claim about a workload, so the workload
+needs the same proof of life a control needs. Before believing any cost, cycle
+count or throughput figure, show that the thing being timed was **doing the work
+it is named after** — pixels that vary, gradients that flow, a buffer that
+fills. A blind sensor, an empty batch and a short-circuited branch are all fast,
+and all three look exactly like good news.
+
+**And the generalisation past this instance, which is the durable half:** an
+unregistered convenience measurement is evidence about the *harness*, never
+evidence against the *ledger*. It has no controls, no canary, no
+pre-registration and no seeds, and it is written by someone who already wants a
+particular answer — here, me, wanting a 4x discrepancy to be the spec's fault
+rather than the box's. When a pilot and a registered run disagree, the burden
+falls on the pilot, and the correct move is to make the pilot reproduce the
+spec's conditions one at a time until the gap is named. It took three
+measurements and it named it.
+
+**The corollary that cost nothing and is worth keeping:** the same run found
+`render_ms_224` = 39.17 against `render_ms_64` = 40.04 — 12.25x the pixels for
+the same money. A cost that does not scale with the quantity it is supposed to
+be a cost *of* is the same warning arriving from the other direction, and it
+should be read before, not after, someone proposes to afford a sense by
+shrinking its input.

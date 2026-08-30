@@ -8083,3 +8083,118 @@ answer is now measured to be "six different implied ks". Otherwise: overseer
 B4 (two honesty repairs in `T2.09`, neither touching a gate) is small and owed,
 B5 (register `PL.02`) is the seventh audit asking, and PROGRESS B1's real form
 is now `run blocked`, not `run next`.
+
+## 2026-08-30 ~16:0x–16:3x UTC — PL.00 + PL.02 registered, PL.00 run: FAIL, and the eye's price is the renderer (Opus; `week:all models` 83%, pacing streak 0)
+
+**Model: Opus** — `week:Fable` is at 100% until the 08-31 reset, so the chain
+walked to opus in 3 s exactly as `ladder_prompt` says it should. **Pacing streak
+0**; no skipped slots to report.
+
+**Unit: OVERSIGHT B5 — register the arenas that make an architectural seat
+falsifiable. Seventh audit asking, 22 days.** Chosen over the other unblocked
+items because it satisfies the STANDING RULE and the audit's ranking at once:
+`run coverage` read `plasticity  2 specs  0 pass  0 now` — a `GOAL.md`
+commitment whose two claim specs were both blocked behind `T2.01`, so it had no
+runnable falsifier at all — while `CHAMPIONS.md:189` asserted *"PL.02 decides it
+and is runnable today"* about a spec that had never existed, and
+`champions.py` counted the PLASTIC-ONLY decree among **7/7 UNFALSIFIABLE**
+seats. `D1` fires on that decree tomorrow.
+
+**CROSS-CHECK (INTEGRATION_QUEUE step 1) FOUND A REFUTATION AND IT CHANGED THE
+REGISTRATION.** The decree of 2026-08-09 collapsed `FROZEN_VS_PLASTIC.md`
+§7.3's four-arm frozen-vs-plastic contest to one admissible arm, so registering
+§7.3 verbatim would have entered a bakeoff nobody may run. `PL.00` and `PL.02`
+are registered **corrected per the refuting analysis** — which `CHAMPIONS.md`'s
+own "WHAT STILL RUNS" paragraph had already written, two years of prose ahead of
+anyone acting on it. **No threshold moved**: the 5.0 floor is `LC.02`'s and
+`LEARNING_CORE` §5.0b's, PL.02's bootstrap-CI-excluding-zero is §7.3's.
+`PL.01/PL.03/PL.04/PL.05` deliberately left unregistered — they arbitrate the
+contest the decree ended. Second cross-check result: `D1`'s option (ii) would
+narrow the decree to *sensory* towers, and both specs are about sensory
+encoders, so tomorrow's firing does not touch them either way.
+
+**PL.00 implemented and run the same day. FAIL, attempt 1, 3 seeds, 223 s.**
+Every rig gate green (canary drift 0.0 at both resolutions, timestep 0.005
+exactly, qpos travel 0.100, one torch thread, nice 19, repeat spreads under 4%);
+declared identity control clean (0.018 ms/frame, throughput shifted 0.72%
+against a 10% bar). The claim branch alone fired.
+
+    physics only, no eye         30.235 sim-s/real-s      the ceiling
+    render only, NO ENCODER       4.231                   already under 5.0
+    identity no-op                4.246
+    scratch-cnn (seat holder)     4.145   1.045 ms/frame   0.245M
+    dreamer-cnn                   4.014   2.228 ms/frame   0.953M
+    vit-s14 @224 (reference)      0.753 219.016 ms/frame  21.620M
+    render cost                         40.045 ms @64 · 39.173 ms @224
+
+**THE FINDING: the binding constraint on a pixel eye at 5 Hz is the RENDERER,
+not the encoder — and the spec's own declared null is the ruler that says so.**
+"An encoder cheaper than its own render is free": the seat holder costs **2.6%
+of its own render**. The whole encoder budget is 0.09 sim-s/real-s of a 0.86
+shortfall, so no architecture reaches the floor, including no encoder at all.
+
+**The decree's RE-OPEN TRIGGER fired and is escalated AS WRITTEN** (`D17`, with
+the decomposition attached so the owner is not handed an architecture question
+about a number that is not about architecture). I did not exercise judgement
+about whether it "really applies" — an author excusing his own subject from a
+consequence he pre-registered is the one move law 1 exists to forbid. Note the
+live world already routes around this: `w0.py` feeds `vision` as a 16-ray
+retina, so nothing currently running pays the 40 ms.
+
+**A SECOND MEASUREMENT, unasked for and a fact about the world contract:
+`render_ms_224` 39.17 vs `render_ms_64` 40.04 — 12.25x the pixels for the same
+money.** The eye's price is fixed per-call overhead, not rasterisation. Any
+future spec proposing to afford vision by cropping is proposing to save 2%.
+
+**I NEARLY OVERTURNED MY OWN HONEST FAIL, and the record says so.** An ad-hoc
+pilot twenty minutes earlier measured the same render at **10.3 ms** — 3.9x
+cheaper — and on that number the FAIL reads as a rig fault worth voiding. I went
+looking for the fault; there was none. The pilot benchmarked `data` exactly as
+`make_playground` returns it, and that frame carries **168 distinct colours**;
+after `mj_resetData` + `mj_forward` the same camera renders **931**, costs
+39.5 ms, and holds there through 200 decisions. **The pilot was timing a
+nearly-blind eye and calling it the price of sight.** `_Rig.reset()` and
+`_Rig.canary()` call `mj_forward` for exactly this reason, so the registered
+spec was right and the convenience measurement was 3.9x wrong in the flattering
+direction. Generalised in `LESSONS.md` as the fourth could-it-have-fired member
+— *a cost measured on a scene the sensor cannot see is a cost measured on
+nothing* — with the durable half being that an unregistered pilot is evidence
+about the harness and never evidence against the ledger.
+
+**Stated against my own interest: the discrimination control is satisfied and
+WEAK.** The ViT reference failed the floor (0.753), so the gate passed — but
+render-only fails it too, so this run cannot distinguish "the floor rejects
+expensive encoders" from "the floor rejects any live eye on this box". Recorded
+in the docstring so no later reader counts it as more than it is.
+
+**Machine better than I found it, three ways.** (1) `champions.py`:
+**UNFALSIFIABLE seats 7/7 → 5/7** — the PLASTIC-ONLY decree and the Vision
+encoder seat both now have a real, resolvable arena. (2) A new pre-registered
+control shape: **a threshold must prove it can reject** (the heavy reference,
+VOID not FAIL), the fourth member of the family LESSONS already carries.
+(3) The lesson above, which is aimed at a *measurement* rather than at a
+control — the first in that family that is.
+
+**What I deliberately did NOT do, and it is the load-bearing restraint.**
+`PL.02` is now BLOCKED behind `PL.00`'s FAIL, so the constitution's falsifier
+stopped being a phantom and immediately became unreachable. The edge is §7.3's
+verbatim `depends_on`, and §7.3's stated reason for it is the encoder **cost
+table** — which PL.00 delivered in full — not the throughput **verdict**, which
+failed for renderer reasons. Editing that dependency in the hour after it
+produced an inconvenient FAIL is the shape of a weakening whatever its merits,
+so it is routed to the Review as `pl02-dependency-on-pl00-verdict-vs-table`
+with three arms costed and my own preference stated (arm (iii): fix the
+renderer, which makes the question moot and is a bakeoff rather than a call).
+Staleness bill: **zero** — neither spec is a PASS and nothing in the 90 is
+downstream of either.
+
+**NEXT ITERATION.** The other half of B5 is `LT.03`/`LT.04` from
+`CURIOSITY_BAKEOFF.md` — the `Curiosity signal` seat, 1 of the 5 remaining
+UNFALSIFIABLE seats, and `curiosity` reads 12 specs / 2 pass. It is the next
+INTEGRATION_QUEUE entry down and the same shape of work as today's, so it is
+one iteration. Do the cross-check first: `CURIOSITY_BAKEOFF.md` already records
+that the field watch's CIG nomination does NOT fit `LT.04`, and that misfit is
+the kind of thing step 1 exists to catch. Also live and cheap: OVERSIGHT B4
+(two honesty repairs in `T2.09`, neither touching a gate) and B6 (one sentence
+each on `T0.01`/`T0.10`). **Do not re-run PL.00** — it is spent evidence, and
+its FAIL is a measurement of this box's renderer, not a seed lottery.

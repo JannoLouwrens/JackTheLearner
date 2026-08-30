@@ -494,3 +494,55 @@ ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
     W.1, W.2, SH.01, SH.02, DP.05 and LC.03's survival envelope would all be
     measuring a different world afterwards — none of them is a PASS, which is
     the cheapest this row will ever be.
+
+## ROUTED: OPEN — `pl02-dependency-on-pl00-verdict-vs-table`: PL.00's FAIL blocks
+## the constitution's only registered falsifier, and I will not edit the
+## dependency myself (builder, 2026-08-30, spec commit `4f8d99a`, PL.00 attempt 1)
+
+**The situation, in three lines.** `PL.02` is the sole registered falsifier of
+the PLASTIC-ONLY decree (`GOAL.md:76`) — the thing seven consecutive audits
+asked for and that was registered today. It carries
+`depends_on=["PG.1", "PL.00"]`, verbatim from `FROZEN_VS_PLASTIC.md` §7.3.
+`PL.00` ran two hours later and returned **FAIL**. So the decree's falsifier is
+now BLOCKED, hours after ceasing to be a phantom.
+
+**The question for the Review, and it is genuinely open.** §7.3's stated reason
+for the edge (line 1286) is that *"the reshaping gain is an encoder-pair
+question"* — i.e. PL.02 should not spend 3 CPU-hours before somebody knows what
+the encoders cost. **PL.00 delivered that cost table in full** (per-encoder
+ms/frame, params, RSS, all three seeds, every rig gate green). What it FAILED
+was a different conjunct: whether the *loop* clears 5.0 sim-s/real-s with a
+live rendered eye — and its own decomposition shows that verdict is about the
+**renderer** (40.0 ms/frame; render-only 4.231, below the floor with no encoder
+at all), not about any encoder. `PL.02` trains encoder pairs on cross-modal
+masked prediction; whether it needs a live 5 Hz rendered eye at all is not
+obvious from its text.
+
+So: **is the edge `PL.02 → PL.00` about the cost TABLE (delivered) or about the
+throughput VERDICT (failed, for renderer reasons)?**
+
+**Why I am not deciding it.** Editing a dependency in the hour after it produced
+an inconvenient FAIL is the shape of a weakening whatever its merits, and the
+author of the registration is the worst-placed person to judge it. `SYSTEM.md`
+law 4's spirit and the `T2.08` amend precedent both point the same way: if the
+edge is genuinely mis-specified, say so in the open with the reason, in a commit
+that is not also the commit that wanted the answer.
+
+**Three arms, all cheap, none of them an argument:**
+  - **(i) Leave it.** The edge is a real gate — "do not spend 3 CPU-hours on
+    reshaping until the perception loop is affordable" — and the honest state is
+    that the constitution's falsifier waits on a renderer. Costs nothing;
+    leaves one of `champions.py`'s seats answered-by-nobody.
+  - **(ii) Re-point it at what it meant:** split `PL.00`'s claim so the cost
+    table and the throughput floor are separately citable, and depend `PL.02` on
+    the former. This is a registration change, not a threshold change, and it
+    must be argued from §7.3's text rather than from today's verdict.
+  - **(iii) Fix the renderer instead**, which makes the question moot: `PL.00`
+    also measured `render_ms_224` 39.17 vs `render_ms_64` 40.04 — **12.25x the
+    pixels for the same money** — so the eye's price is fixed per-call overhead,
+    and frame-skip / context reuse / batched `update_scene` / a coarser scene
+    are runnable arms. This is the arm I would take, and it is a bakeoff, not a
+    call.
+
+**Staleness bill: ZERO.** `PL.00` and `PL.02` are the only specs affected and
+neither is a PASS. Nothing in the 90 is downstream of either.

@@ -3682,3 +3682,71 @@ absence of which cost three VOIDs at ~46 min each. **For the owner: still no
 action required.** For `D9` (the body fork) it is one data point against
 "the rover body is the binding constraint" being true *everywhere* — it is
 true on open ground, and false against a surface.
+
+## D17 — The PLASTIC-ONLY decree's own RE-OPEN TRIGGER fired. It is returned to you as written, and the number is not about encoders. (2026-08-30, builder, from PL.00's FAIL)
+
+**Nothing is asked of you unless you disagree with the reading below.** This
+entry exists because `docs/CHAMPIONS.md` pre-registered, on 2026-08-09, that
+*"if a from-scratch encoder cannot hit the PL.00 throughput floor on this
+hardware ... the decision returns to the owner with that number attached."*
+`PL.00` was registered and run today — twenty-one days later, seventh audit
+asking — and the from-scratch encoder does not hit the floor. So it returns.
+I am not exercising judgement about whether the trigger "really applies": an
+author excusing his own subject from its pre-registered consequence is the one
+move `SYSTEM.md`'s first law exists to forbid.
+
+**THE NUMBER, with its decomposition, because the decomposition is the point.**
+`PL.00` FAIL, attempt 1, 3 seeds, 223 s, every rig gate green, declared control
+clean (a no-op encoder shifts throughput by 0.72% against a 10% bar):
+
+| leg | sim-s of Jack's life per real second | vs the 5.0 floor |
+|---|---|---|
+| physics only, no eye | **30.235** | the ceiling |
+| **render only, NO ENCODER AT ALL** | **4.231** | **already under** |
+| identity no-op encoder | 4.246 | under |
+| `scratch-cnn`, the seat holder (0.245M, 1.045 ms/frame) | 4.145 | under |
+| `dreamer-cnn` (0.953M, 2.228 ms/frame) | 4.014 | under |
+| `vit-s14` @224 reference (21.6M, 219.0 ms/frame) | 0.753 | far under |
+
+An eye frame costs **40.0 ms** to render. The seat-holding encoder costs
+**1.045 ms** — **2.6% of its own render.** The entire encoder budget is 0.09
+sim-s/real-s of a 0.86 shortfall, so **no choice of encoder architecture can
+reach the floor, including no encoder at all.**
+
+**WHAT I READ THIS AS SAYING, so you can disagree with a sentence rather than a
+table.** The trigger was written to catch *the pure path being unaffordable
+relative to the frozen alternatives it displaced*. That is not what happened.
+The pure path is the cheapest thing measured and it is nearly free against its
+own null; what is unaffordable is **a pixel eye at 5 Hz on this box, under any
+architecture.** Firing the trigger as a question about frozen-vs-plastic would
+hand you an architecture decision about a number that is not about
+architecture. Note also that the live world already routes around this: `w0.py`
+feeds `vision` as a 16-ray retina, not rendered pixels, so nothing currently
+running pays the 40 ms. The rendered eye is `PG.6`'s probe instrument.
+
+**AND THE FOLLOW-UP IS NOT YOURS, on rule 3.** The same run measured
+`render_ms_224` = 39.17 against `render_ms_64` = 40.04 — **12.25x the pixels
+for the same money** — so the eye's price is dominated by fixed per-call
+overhead rather than rasterisation, and that is an engineering unit with
+runnable arms (frame-skip, context reuse, batched `update_scene`, a coarser
+scene). The loop writes that bakeoff itself; it does not belong on your desk.
+
+DECIDE: D17
+  class:     goal
+  default:   The PLASTIC-ONLY decree (GOAL.md:76) STANDS, verbatim and
+             unnarrowed. The trigger is recorded as FIRED and DISCHARGED with
+             its number: the from-scratch encoder missed the floor, and the
+             measured cause is the renderer, not the encoder — 2.6% of the
+             shortfall is attributable to any encoder choice. No decree is
+             narrowed, no threshold moves (the 5.0 floor is LC.02's and stays
+             at 5.0), GOAL.md is not touched, and PL.02 remains registered and
+             runnable as the decree's falsifier, so nothing goes claim-dead.
+             What the loop does next is builder work under rule 3: a renderer-
+             cost bakeoff over the arms named above, and a spec that states
+             plainly whether Jack's eye is rays or pixels in W1 — which is the
+             live design question this number actually bears on.
+  decide_by: 2026-09-07
+
+**Cost of leaving it: none that compounds.** The default changes nothing you
+decreed and the ledger's history makes it reversible. Filed with a deadline
+only because `SYSTEM.md` forbids an escalation without one.
