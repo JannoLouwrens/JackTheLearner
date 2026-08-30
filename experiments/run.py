@@ -65,8 +65,41 @@ def _lock_for(spec_ids) -> str:
 CPU_LOCK_B = "/tmp/jack-ladder-cpu-b.lock"   # the one overflow slot; see _exclusive
 
 
+def _proc_tree(pid: int):
+    """`pid` and every live descendant, from one /proc scan. Raises on trouble.
+
+    Built for `_cpu_fraction`, which measured the wrong process for as long as
+    it has existed — see there.
+    """
+    kids: dict = {}
+    for entry in os.listdir("/proc"):
+        if not entry.isdigit():
+            continue
+        try:
+            raw = open(f"/proc/{entry}/stat").read()
+            # fields after comm: state(0) ppid(1) ... utime(11) stime(12)
+            f = raw[raw.rindex(")") + 2:].split()
+            kids.setdefault(int(f[1]), []).append(
+                (int(entry), int(f[11]) + int(f[12])))
+        except (OSError, ValueError, IndexError):
+            continue          # a process that exited mid-scan is not a failure
+    try:
+        root_raw = open(f"/proc/{pid}/stat").read()
+        rf = root_raw[root_raw.rindex(")") + 2:].split()
+    except (OSError, ValueError, IndexError):
+        raise OSError(f"pid {pid} unreadable")
+    out = {pid: int(rf[11]) + int(rf[12])}
+    frontier = [pid]
+    while frontier:
+        for child, ticks in kids.get(frontier.pop(), []):
+            if child not in out:
+                out[child] = ticks
+                frontier.append(child)
+    return out
+
+
 def _cpu_fraction(pid: int, window_s: float = 1.0):
-    """Cores consumed by `pid` over `window_s` seconds, or None if unreadable.
+    """Cores consumed by `pid` AND ITS DESCENDANTS over `window_s`, or None.
 
     NOT `ps -o pcpu`, which is CPU averaged over the process's whole LIFETIME.
     That average is exactly wrong for the case this file cares about: a job
@@ -74,23 +107,100 @@ def _cpu_fraction(pid: int, window_s: float = 1.0):
     reads busy, and — the dangerous direction — a job that polled for three
     hours and has just begun local work still reads idle. Only a differenced
     sample says what a process is doing NOW.
+
+    AND IT MEASURED THE WRONG PROCESS (builder, 2026-08-30, found by being
+    misled by it). `run.py` does not do its work in the process that holds the
+    lock: `_module_for(...).run(...)` executes in a CHILD, so the holder's own
+    utime+stime stays near zero for the entire run. A `BA.03` registered run
+    with its worker at a full core for six hours printed `0.00 cores now` in
+    the lock message, and the reader's first conclusion was that it had hung.
+
+    That is a misleading display; the load-bearing half is worse. `_exclusive`
+    steals the overflow slot when every holder is `remote_only` AND under
+    `IDLE_CORES`, and its docstring says *"two conditions, not one, and both are
+    conservative"*. The second condition could never fail for a `run.py` holder,
+    because it read a supervisor that never computes — so a GPU-labelled run
+    genuinely burning local cores (preprocessing before submit, a CPU fallback
+    path) could have a second torch process started beside it on four shared
+    ARM cores. A decorative gate is T0.13's whole subject, and this one was
+    decorative in the permissive direction.
+
+    A DESCENDANT THAT VANISHES MID-WINDOW RETURNS None, not a smaller number.
+    Its ticks are lost, so the honest answer is "unreadable" — and None is the
+    conservative reading everywhere this is used: the display prints `?` and
+    `_exclusive`'s steal requires `cores is not None`, so it blocks. Reporting
+    the survivors' sum would under-report exactly when the tree is churning.
     """
     hz = os.sysconf("SC_CLK_TCK")
-
-    def _ticks():
-        # /proc/pid/stat field 2 (comm) may contain spaces and parentheses, so
-        # split after the last ')' — utime/stime are fields 14/15 overall.
-        raw = open(f"/proc/{pid}/stat").read()
-        fields = raw[raw.rindex(")") + 2:].split()
-        return int(fields[11]) + int(fields[12])
-
     try:
-        a = _ticks()
+        a = _proc_tree(pid)
         time.sleep(window_s)
-        b = _ticks()
+        b = _proc_tree(pid)
     except (OSError, ValueError, IndexError):
         return None
-    return (b - a) / hz / window_s
+    if set(a) - set(b):                 # a descendant exited: ticks unaccounted
+        return None
+    # Pids new in `b` started inside the window, so all their ticks are ours.
+    delta = sum(t - a.get(p, 0) for p, t in b.items())
+    return max(delta, 0) / hz / window_s
+
+
+def _cpu_fraction_fixture(hz: int | None = None) -> list:
+    """Known-answer battery for `_cpu_fraction`'s arithmetic, stubbing the
+    /proc scan so it is deterministic and costs no processes.
+
+    Written with the fix, per LESSONS' *"a test of the detector is not a test of
+    the alarm"*: this function is not the alarm, so `main` calls it and prints
+    its complaints, which is the only reason it can go red where anyone sees it.
+
+    Case 1 is the whole bug — an idle root with a busy descendant. Against the
+    single-pid version it reads 0.00, which is what `_exclusive` treats as
+    "not using the CPU this lock protects".
+    """
+    global _proc_tree
+    real, fails = _proc_tree, []
+    hz = hz or os.sysconf("SC_CLK_TCK")
+    # One core for `W` seconds is `N` ticks. `N` is chosen first and the window
+    # derived from it, so the arithmetic is exact at any SC_CLK_TCK — sizing the
+    # window first gave `int(hz * W) == 0` and a battery that read 0.0 for
+    # everything, which is the value it exists to catch.
+    N, W = 2, 2.0 / hz
+    cases = [
+        # label, sample A, sample B, expected cores (None = unreadable)
+        ("idle root, busy child — the defect",
+         {1: 10, 2: 500}, {1: 10, 2: 500 + N}, 1.0),
+        ("genuinely idle tree", {1: 10, 2: 500}, {1: 10, 2: 500}, 0.0),
+        ("busy root, no children", {1: 10}, {1: 10 + N}, 1.0),
+        ("a child born inside the window counts all its ticks",
+         {1: 10}, {1: 10, 2: N}, 1.0),
+        # A descendant that exits takes its ticks with it. Reporting the
+        # survivors would UNDER-report, and under-reporting is what lets the
+        # overflow slot be stolen from a busy tree.
+        ("a vanished descendant is unreadable, not idle",
+         {1: 10, 2: 500}, {1: 10}, None),
+        ("two busy children sum", {1: 0, 2: 0, 3: 0},
+         {1: 0, 2: N, 3: N}, 2.0),
+    ]
+    try:
+        for label, a, b, want in cases:
+            seq = iter((a, b))
+            _proc_tree = lambda _pid, _s=seq: next(_s)
+            got = _cpu_fraction(1, window_s=W)
+            ok = (got is None) if want is None else (
+                got is not None and abs(got - want) < 0.02)
+            if not ok:
+                fails.append(f"_cpu_fraction: {label} -> want {want}, "
+                             f"got {got}")
+        # The root being unreadable must stay None — the pre-existing contract.
+        def _raise(_pid):
+            raise OSError("gone")
+        _proc_tree = _raise
+        if _cpu_fraction(1, window_s=W) is not None:
+            fails.append("_cpu_fraction: an unreadable root is None, so the "
+                         "overflow steal blocks and the display prints ?")
+    finally:
+        _proc_tree = real
+    return fails
 
 
 def _holders(lock_path: str):
@@ -1227,6 +1337,14 @@ def main() -> int:
                          "identical (25th-audit B3)")
     args = ap.parse_args()
     ledger = Ledger()
+
+    # THE ALARM, not just the detector (LESSONS, 2026-08-30). `_cpu_fraction`
+    # decides whether a lock holder is idle enough to have its overflow slot
+    # taken, and it silently measured the wrong process for the whole life of
+    # the function. Its battery is wired HERE — the one path every invocation
+    # takes — because a fixture nobody calls is the same thing as no fixture.
+    for _f in _cpu_fraction_fixture():
+        print(f"  ! {_f}", file=sys.stderr)
 
     if args.spec and args.spec[0] == "amend":
         return cmd_amend(ledger, args)
