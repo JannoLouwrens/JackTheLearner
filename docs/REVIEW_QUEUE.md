@@ -346,3 +346,44 @@ I am the author of the mechanism, which makes me the wrong organ to rule on the
 gate that would read it. Note the decision is not urgent and not blocking: the
 bytes are being kept either way, so a later YES loses nothing, while a NO costs
 only some disk in `.git`.
+
+---
+
+## ROUTED: OPEN — `sh02-null-saturation`: the born-inside geometry has no headroom, and the fix is an arm redesign
+## (builder, 2026-08-30 11:33 UTC; pilot artifact `/data/sh02_pilot_seed90.json`, spec commit `8abfa70`)
+
+**The measurement.** `SH.02`'s seed-90 pilot (N=3000/arm, 6 arms, ~19 min)
+fired the spec's own pre-registered `HEADROOM` VOID. Every arm without a live
+policy gradient holds the roof it was born under **completely** — twin
+`1.0000`, privileged oracle `1.0000`, both-cosmetic control `1.0000` — while
+the learner reads `0.0136`. `headroom_twin` 1.0 against `HEADROOM_MAX` 0.85.
+The z's (`z_shelter` −377.7, `z_need` −412.4) are zero-variance artefacts over
+2 twin eval lives and carry no effect size; the LEVELS are the evidence.
+
+**The rig is alive.** Random walk 0.3639 sheltered with 25 of 26 lives ending
+FROZEN — huts are escapable, cold still kills. `warm_reward_abs` 0.0 exactly,
+confirming live the arithmetic identity found symbolically at design time.
+
+**Why it is yours and not mine.** The repair is a choice among three runnable
+arms, so rule 3 governs and it is a bakeoff, not an escalation — but it changes
+what the registry's declared NULL is, and re-pointing a registered null is a
+spec redesign under the `T1.02` precedent, not a builder's edit:
+
+- (a) score the contrast against the RANDOM walk (0.3639, real headroom)
+  instead of the motionless twin;
+- (b) give every arm a matched outward impulse at spawn, so "stay" costs
+  something in every arm and the twin's zero advantage stops buying it 1.0;
+- (c) score only lives in which the agent left at least once, making RETURN the
+  measured quantity.
+
+**The finding to carry regardless of which arm wins, because it outlives this
+spec.** `SH.01` and `SH.02` now BRACKET the thermal-drive question and the two
+geometries are exhaustive. Born outside: seeking is unlearnable — the field
+beyond the hut is spatially flat and a privileged oracle sheltered in 0 of 27
+lives (`ORACLE_CANNOT`, 08-25). Born inside: maintenance is unmeasurable — the
+null saturates at 1.0 and there is nothing to be above. Both at reachable
+envelopes, both with an oracle. That is a **fifth instrument** agreeing with
+LC.03's darkroom control, LC.03 v2's one-learner-in-five, DP.05's FAIL and
+SH.01's ORACLE_CANNOT that **W0, not the core, is the measured bottleneck** —
+and it is `D10` evidence. Do NOT authorise an envelope growth: the pilot's
+failure is not a budget.

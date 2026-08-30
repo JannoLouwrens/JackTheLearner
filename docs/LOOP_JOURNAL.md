@@ -7763,3 +7763,61 @@ upstream), `cpu<10min` IS fillable and `LG.01`/`ME.11` are the candidates.
 demonstrated, not hypothetical: build the commit-time `IMPL_DEPS` staleness
 property while the example is fresh (`4e8577d` is a known positive — it touched
 `protocol.py` and left `T0.17` stale).
+
+## 2026-08-30 ~11:07-11:40 UTC — SH.02 implemented and PILOTED; the pre-registered HEADROOM VOID fired (builder, Opus)
+
+Model **Opus** (`week:Fable` 100% until the 08-31 reset, so the chain walked
+past it). Gate `week:all models` **81%**. Pacing streak **0**. GPU week
+**2026-W35** — fresh, and W34 is sunk; per the priority head I did not chase it.
+
+**Unit chosen by the STANDING RULE, not by fan-out.** `run coverage` lists the
+zero-pass commitments; every runnable claim spec among them is `CPU_LONG`, so
+the tie broke to the commitment with the most declared specs — *thermal (kills)*,
+4 specs, 0 pass. `SH.02` is the only runnable spec covering it, it also covers
+*shelter/building* (2 specs, 0 pass), and it had **no implementation at all**
+since registration on 08-25. `run blocked` would never have surfaced it: it
+frees nothing, which is the point of the standing rule.
+
+**Implemented** (`8abfa70`, ~640 lines): six arms — learner, drive-disabled
+twin, random, warm (inert), privileged oracle reference, both-cosmetic control.
+World, spawn machinery and `shelter_index` reused verbatim from `sh_01` (the
+two-kernels lesson). Arm is **wm-latent**, LC.03 v2's only 3-sigma learner, not
+SH.01's measured-non-learner `ppo-needs`. Measured 64 ms/decision.
+
+**One conjunct was unfalsifiable by arithmetic and was caught before compute.**
+The registry's "with the cold disabled, learner and twin are indistinguishable"
+is green by construction: `r_t = d_th(t)-d_th(t+1)`, `inert=True` freezes `Tb`,
+so `r_t = 0` everywhere — and a zeroed reward is the twin's *only* difference
+from the learner. The two arms are one object. Not dropped (law 4): re-pointed
+at a pair free to differ (same learner, cold vs inert, at matched exposure) and
+the identity kept as a live assertion. Verified in the pilot: `warm_reward_abs`
+**0.0 exactly** against 0.1368 for the same code in the cold. Generalised in
+LESSONS.md (`fb88d11`) as the third instance in one week of *a comparison whose
+value is fixed before data exists* (VO.02, ME.9, this).
+
+**The pilot (seed 90, N=3000/arm, 6 arms, ~19 min, detached via
+`launch_detached.sh`) fired the spec's own HEADROOM VOID.** Every arm without a
+live policy gradient holds the roof **completely**: twin **1.0000**, oracle
+**1.0000**, ctrl **1.0000**; the learner reads **0.0136**. `headroom_twin` 1.0
+vs `HEADROOM_MAX` 0.85. The z's (−377.7, −412.4) are zero-variance artefacts
+over 2 twin eval lives — the LEVELS are the finding, not the sigmas.
+
+The rig is alive: random walk 0.3639 sheltered, **25 of 26 lives frozen**. Huts
+escapable, cold lethal. What is dead is the CONTRAST.
+
+**Gates NOT frozen. Nothing dispatched. No envelope growth, no re-roll.**
+
+**SH.01 and SH.02 now BRACKET the thermal question, and the geometries are
+exhaustive.** Born outside: seeking unlearnable (flat field, oracle sheltered
+0 of 27). Born inside: maintenance unmeasurable (null saturates at 1.0). A
+fifth instrument that **W0, not the core, is the bottleneck** — D10 evidence.
+Redesign routed to the Review as `sh02-null-saturation` with three runnable
+arms (score against the random walk; matched outward impulse at spawn; score
+only lives that left). It is a bakeoff, not an escalation — but it re-points a
+registered NULL, which is the Review's call under the T1.02 precedent.
+
+**NEXT ITERATION:** do NOT re-run this pilot as cheap work — it is spent
+evidence. Either take the Review's ruling on `sh02-null-saturation`, or take
+the next standing-rule unit. `run coverage` still shows `cpu<10min` EMPTY and
+fillable (LG.01, ME.11, W.1, W.2) and the two GPU classes NOT fillable without
+an unblock.

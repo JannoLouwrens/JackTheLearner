@@ -157,6 +157,61 @@ curriculum, because there is no curriculum: every arm gets the identical
 per-life schedule (which hut works, which hut he is born in, where the fire
 is), drawn from the same per-life RNG, and the arms differ only in the reward
 term, the world's inertness, and what rides in the placebo slot.
+
+## PILOT RECORD — seed 90, N=3000/arm, 2026-08-30 11:15 -> 11:33 UTC.
+## THE HEADROOM VOID FIRED. GATES ARE NOT FROZEN AND NOTHING IS DISPATCHED.
+## (artifact /data/sh02_pilot_seed90.json, commit 8abfa70, ~19 min, 6 arms)
+
+    frac_shelt   twin 1.0000   oracle 1.0000   ctrl 1.0000   LEARNER 0.0136
+                 random 0.3639        (headroom_twin 1.0 > HEADROOM_MAX 0.85)
+    z_shelter   -377.72   z_need -412.42   z_disc -0.94   balance 0.5625
+    warm_reward_abs 0.0 EXACTLY     rand_frozen 25 of 26 lives
+    lives: learner 32, twin 15, random 26, warm 10, oracle 15, ctrl 32
+    steps: 1469 in every trained arm
+
+**Every arm without a live policy gradient holds the roof COMPLETELY** — the
+twin, the privileged oracle and the both-cosmetic control all read exactly
+1.0000. `headroom_ok` is 0 and `void_rig` fires, which is this file's own
+pre-registered rule and not a judgement made after the fact: *if the null
+already holds the roof it was placed under, staying is what the rig does to
+anyone and no choice can show above it.*
+
+**Read the z's as artefacts, not as evidence.** The twin's sheltered fraction
+has ZERO variance over `n_eval_lives_twin` = 2, so the Welch denominator is the
+1e-9 floor and −377 is arithmetic, not effect size. The LEVELS are the finding:
+1.0000 against 0.0136.
+
+**The rig is alive; what is dead is the contrast.** Two independent checks
+inside the same run say the world works: the random walk drifts out and reads
+0.3639, and 25 of its 26 lives ended FROZEN — so the huts are escapable and the
+cold still kills. `warm_reward_abs` came back 0.0 exactly, confirming live the
+identity predicted symbolically before the run.
+
+**The hypothesis this leaves for the next iteration, stated as one and not as a
+conclusion:** holding a roof you were BORN under is free for a body that does
+not move, and the twin is the only arm whose advantage is identically zero, so
+its policy never leaves initialisation. If so, this design measures *does
+training make him move* rather than *does the drive make him stay* — which
+would also explain the sign, the learner being the one arm that leaves.
+
+**SH.01 and SH.02 now BRACKET the problem, which is the part worth keeping.**
+Born outside (SH.01), seeking is unlearnable: the thermal field beyond the hut
+is spatially flat, and a privileged oracle sheltered in 0 of 27 lives. Born
+inside (SH.02), maintenance is unmeasurable: the null saturates at 1.0 and
+there is nothing to be above. Both at reachable envelopes, both with an oracle,
+and the two geometries are exhaustive. That is a fifth instrument agreeing with
+LC.03's darkroom control, LC.03 v2's one-learner-in-five, DP.05's FAIL and
+SH.01's ORACLE_CANNOT that **W0 — not the core — is the measured bottleneck**,
+and it is D10 evidence.
+
+**Per this file's own decision rule the next step is a REDESIGN, not a re-roll,
+and it is routed to the Review rather than argued here.** The candidate arms
+are real and runnable, which is what makes it a bakeoff and not an escalation:
+(a) score the contrast against the RANDOM walk, whose 0.3639 has headroom,
+rather than against a motionless twin; (b) give every arm a matched outward
+impulse at spawn so "stay" costs something in every arm; (c) score only lives
+in which the agent left the hut at least once, making return the measured
+quantity. Do NOT grow the envelope — the pilot's failure is not a budget.
 """
 from __future__ import annotations
 
