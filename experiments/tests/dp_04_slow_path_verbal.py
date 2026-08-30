@@ -363,6 +363,19 @@ MUTE_FLOOR_MIN = 5.0      # steps the mute arm must clear its reactive floor by
 _PILOT_SEEDS = (90, 91)
 _PILOT_ARTIFACT = "/data/dp04_pilot_seed%d.json"
 
+# ── SIZING RUN — repairs (b) and (c) of PILOT RECORD v1 ──────────────────
+# Seed 94 is a SIZING seed: disjoint from the registered 0/1/2 and from the
+# pilot seeds 90/91 (spent) and 92/93 (reserved for pilot v2). It measures
+# noise, never the claim, and it is SPENT for claims once used.
+_SIZE_SEED = 94
+_SIZE_ARTIFACT = "/data/dp04_sizing_seed94.json"
+_SIZE_R = 8               # independent training restarts per (task, arm)
+_SIZE_E = 48              # eval lives per restart; prefix-scored at 12/24/48
+_SIZE_CAP = 400           # LC.00's original ceiling; repair (a)'s candidate
+_SIZE_ES = (12, 24, 48)   # eval counts reported (prefixes of the same spawns)
+_SIZE_CAPS = (200, 400)   # censoring caps reported, from the SAME raw spans
+_SIZE_RS = (1, 3, 5, 7)   # restart counts the sizing arithmetic is solved for
+
 # The attainable range each task's score is normalised by, asserted so the
 # normalisation cannot rot underneath the dose-response gate.
 assert LIFE_CAP > LIFE_FLOOR, "lifespan has no room above its own floor"
@@ -523,11 +536,20 @@ class _Survival:
                 steps = LIFE_CAP
         return torch.stack(obs), torch.stack(tgt)
 
-    def rollout(self, act_fn, tag: str) -> float:
-        """Mean lifespan, censored at LIFE_CAP. Spawns are identical per arm."""
+    def rollout_spans(self, act_fn, n: int | None = None) -> list:
+        """The raw per-life lifespans, censored at LIFE_CAP.
+
+        Split out of `rollout` for the sizing run, which needs the spans rather
+        than their mean: the spawn sequence is drawn from a fixed key, so the
+        first `N_EVAL_LIVES` entries of an `n > N_EVAL_LIVES` call are exactly
+        the lives the registered envelope would have scored. That prefix
+        property is what lets one sizing run report every eval count without
+        re-running anything, and it is why `n` extends the sequence rather than
+        re-seeding it.
+        """
         spawn = random.Random(f"dp04-spawn-{self.seed}-{self.name}")
         spans = []
-        for _ in range(N_EVAL_LIVES):
+        for _ in range(N_EVAL_LIVES if n is None else n):
             x, y = spawn.randrange(SIZE), spawn.randrange(SIZE)
             h0 = h1 = 1.0
             steps = 0
@@ -538,6 +560,11 @@ class _Survival:
                 if dead:
                     break
             spans.append(steps)
+        return spans
+
+    def rollout(self, act_fn, tag: str) -> float:
+        """Mean lifespan, censored at LIFE_CAP. Spawns are identical per arm."""
+        spans = self.rollout_spans(act_fn)
         return sum(spans) / len(spans)
 
     def reference(self) -> tuple:
@@ -746,12 +773,20 @@ class _Agent(nn.Module):
         return self.act(h), toks
 
 
-def _train(task, arm: str, seed: int, obs, tgt) -> dict:
-    torch.manual_seed(_seed_of(f"dp04-{seed}-{task.name}-{arm}"))
+def _train(task, arm: str, seed: int, obs, tgt, restart: int = 0) -> dict:
+    """One supervised fit. `restart` selects an independent initialisation.
+
+    Restart 0 keeps the ORIGINAL key, byte for byte, so adding this parameter
+    cannot move any number the pilot already recorded — the sizing run reads
+    restarts 0..R-1 and restart 0 is the run the current envelope makes.
+    """
+    tag = f"dp04-{seed}-{task.name}-{arm}" + (f"-r{restart}" if restart else "")
+    btag = f"dp04-b-{seed}-{task.name}-{arm}" + (f"-r{restart}" if restart else "")
+    torch.manual_seed(_seed_of(tag))
     net = _Agent(arm)
     opt = torch.optim.Adam(net.parameters(), lr=LR)
     n = obs.shape[0]
-    g = torch.Generator().manual_seed(_seed_of(f"dp04-b-{seed}-{task.name}-{arm}"))
+    g = torch.Generator().manual_seed(_seed_of(btag))
     first = last = None
     for ep in range(EPOCHS):
         perm = torch.randperm(n, generator=g)
@@ -1119,10 +1154,169 @@ def _pilot():
         print(txt, flush=True)
 
 
+def _median(v: list) -> float:
+    s = sorted(v)
+    n = len(s)
+    return s[n // 2] if n % 2 else 0.5 * (s[n // 2 - 1] + s[n // 2])
+
+
+def _stdev(v: list) -> float:
+    n = len(v)
+    if n < 2:
+        return 0.0
+    mu = sum(v) / n
+    return math.sqrt(sum((x - mu) ** 2 for x in v) / (n - 1))
+
+
+_SIZE_B = 2000            # bootstrap draws per candidate design
+
+
+def _size_derive(out: dict) -> dict:
+    """Turn the raw spans into the sizing arithmetic. Pure post-processing.
+
+    THE TARGET IS NOT A CHOICE. `_check` computes
+    `sigma = gain * sqrt(2) / std` and requires `gain >= MIN_GAIN` and
+    `sigma >= SIGMA_GATE`, so a MINIMALLY-sized true effect clears only if the
+    per-seed gain's standard deviation is at most
+    `MIN_GAIN * sqrt(2) / SIGMA_GATE`. That number is derived from two bars
+    that do not move; sizing chooses the counts that reach it, never the bar.
+
+    WHAT THIS MEASURES AND WHAT IT CANNOT. The world is HELD FIXED at one
+    seed, so every design's spread here is the REDUCIBLE component — training
+    initialisation, propagated through the median-of-R rule and the eval
+    count. The registered run's `std` is across three DIFFERENT worlds and
+    also carries a world-to-world component that no restart count can remove.
+    So a design that meets the target here is NECESSARY, not sufficient, and
+    the pilot on 92/93 is what tests it.
+    """
+    target = MIN_GAIN * math.sqrt(2.0) / SIGMA_GATE
+    names = list(out["tasks"])
+    d = {"target_gain_std": target, "per_arm": {}, "designs": [],
+         "target_derivation": "MIN_GAIN * sqrt(2) / SIGMA_GATE",
+         "reducible_only": True}
+
+    for n in names:
+        e = out["tasks"][n]
+        for arm in ("verbal", "filler"):
+            runs = e["arms"][arm]
+            spans = [s for r in runs for s in r["spans"]]
+            row = {"span_min": min(spans), "span_max": max(spans),
+                   "span_mean": sum(spans) / len(spans),
+                   "losses_fell_all": float(all(r["loss_last"] < r["loss_first"]
+                                                for r in runs))}
+            for cap in _SIZE_CAPS:
+                row[f"sat_frac_{cap}"] = (
+                    sum(1 for s in spans if s >= cap) / len(spans))
+                for E in _SIZE_ES:
+                    sc = [sum(min(s, cap) for s in r["spans"][:E]) / E
+                          for r in runs]
+                    row[f"score_cap{cap}_E{E}_mean"] = sum(sc) / len(sc)
+                    # THE HEADLINE OF REPAIR (b): one arm, run repeatedly,
+                    # its sigma. Everything below is arithmetic on this.
+                    row[f"score_cap{cap}_E{E}_sd_restart"] = _stdev(sc)
+            d["per_arm"][f"{n}/{arm}"] = row
+
+    for cap in _SIZE_CAPS:
+        for E in _SIZE_ES:
+            sc = {(n, a): [sum(min(s, cap) for s in r["spans"][:E]) / E
+                           for r in out["tasks"][n]["arms"][a]]
+                  for n in names for a in ("verbal", "filler")}
+            for R in _SIZE_RS:
+                # Non-parametric: resample restarts with replacement and apply
+                # repair (c)'s median-of-R exactly as the envelope would. No
+                # normality assumed — 8 restarts is too few to assume it.
+                bs = random.Random(f"dp04-size-bs-{cap}-{E}-{R}")
+                draws = []
+                for _ in range(_SIZE_B):
+                    tot = 0.0
+                    for n in names:
+                        mv = _median([bs.choice(sc[(n, "verbal")])
+                                      for _ in range(R)])
+                        mf = _median([bs.choice(sc[(n, "filler")])
+                                      for _ in range(R)])
+                        tot += mv - mf
+                    draws.append(tot / len(names))
+                sd = _stdev(draws)
+                d["designs"].append({
+                    "cap": cap, "E": E, "R": R,
+                    "gain_mean": sum(draws) / len(draws),
+                    "gain_sd_reducible": sd,
+                    "meets_target": bool(sd <= target),
+                    # trainings per seed = R * len(RES_COUNTS+flat) * n_arms
+                    "trainings_rel": R})
+    ok = [x for x in d["designs"] if x["meets_target"]]
+    d["cheapest_meeting_target"] = (
+        min(ok, key=lambda x: (x["R"], x["E"], x["cap"])) if ok else None)
+    return d
+
+
+def _size():
+    """SIZING RUN — repairs (b) and (c) of PILOT RECORD v1, pre-registered.
+
+    Seed 94, world HELD FIXED, `LIFE_CAP` raised to `_SIZE_CAP` so repair (a)
+    is MEASURED rather than assumed. Raw lifespans are recorded, never means:
+    a life censored at 400 is also a life censored at 200, so one run reports
+    both ceilings, and the spawn key is fixed so the first 12 lives are the
+    lives the registered envelope scores. Nothing here touches a claim bar and
+    no ledger row is written.
+
+    The four survival variants only. `flat` is excluded because it does not
+    enter `lookahead_gain_over_matched_compute_filler`, which is the statistic
+    being sized; its own gate (`demand_flat_steps`) passed on both pilot seeds.
+    """
+    torch.set_num_threads(THREADS)
+    old = _shrink(LIFE_CAP=_SIZE_CAP)
+    try:
+        t0 = time.time()
+        out = {"seed": _SIZE_SEED, "R": _SIZE_R, "E": _SIZE_E,
+               "cap_run": _SIZE_CAP, "N_LABEL": N_LABEL, "EPOCHS": EPOCHS,
+               "H_ORACLE": H_ORACLE, "N_EVAL_LIVES_registered": N_EVAL_LIVES,
+               "tasks": {}}
+        for n_res in RES_COUNTS:
+            task = _Survival(_SIZE_SEED, n_res)
+            rng = random.Random(f"dp04-collect-{_SIZE_SEED}-{task.name}")
+            obs, tgt = task.collect(N_LABEL, rng)
+            tr = time.time()
+            react, oracle = task.reference()
+            entry = {"ref_wall_s": time.time() - tr, "react": react,
+                     "oracle": oracle, "rand": task.random_score(),
+                     "oracle_at_cap": float(oracle >= _SIZE_CAP), "arms": {}}
+            for arm in ("verbal", "filler"):
+                runs = []
+                for r in range(_SIZE_R):
+                    fit = _train(task, arm, _SIZE_SEED, obs, tgt, restart=r)
+                    runs.append({
+                        "restart": r,
+                        "spans": task.rollout_spans(_act_fn(fit["net"]),
+                                                    _SIZE_E),
+                        "loss_first": fit["loss_first"],
+                        "loss_last": fit["loss_last"]})
+                    print("  %s/%s r%d done (%.0f s)"
+                          % (task.name, arm, r, time.time() - t0), flush=True)
+                entry["arms"][arm] = runs
+            task.memo.clear()
+            out["tasks"][task.name] = entry
+        out["sizing_wall_s"] = time.time() - t0
+        out["derived"] = _size_derive(out)
+        txt = json.dumps(out, default=float, indent=1)
+        try:
+            with open(_SIZE_ARTIFACT, "w") as fh:
+                fh.write(txt)
+        except OSError as exc:                       # pragma: no cover
+            print(f"WARN: could not write {_SIZE_ARTIFACT}: {exc}")
+        print(json.dumps(out["derived"], default=float, indent=1), flush=True)
+        print("sizing_wall_s %.1f" % out["sizing_wall_s"], flush=True)
+    finally:
+        globals().update(old)
+        _CACHE.clear()
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "smoke":
         _smoke()
     elif len(sys.argv) > 1 and sys.argv[1] == "pilot":
         _pilot()
+    elif len(sys.argv) > 1 and sys.argv[1] == "size":
+        _size()
     else:
         print(run().status)
