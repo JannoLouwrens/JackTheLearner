@@ -209,8 +209,29 @@ EPOCHS = 40
 BATCH = 64
 WEIGHT_DECAY = 1e-4
 
-# ── gates (PROVISIONAL until the seed-90 pilot lands; provenance above) ──
+# ── gates (PROVISIONAL — the seed-90 pilot LANDED and did not freeze them) ──
 _GATES_FROZEN = False
+
+# The pilot ran and its own record forbids re-running it, so this spec is
+# pilot-BLOCKED, not pilot-owed. Declared 2026-08-30 (builder) transcribing the
+# PILOT RECORD above — no new judgement is made here. Until this line existed,
+# `queue_depth` read the absence of a declaration as PILOT-OWED and advertised
+# SM.03 as `gpu<20min`'s cheapest repair, which the 21:45 handoff copied
+# forward: an instruction to spend a pilot whose result is already in this file.
+_PILOT_BLOCKED = (
+    "PILOT seed 90, 2026-08-30 08:15, full size, head 13c0440: two rig faults, "
+    "neither fixable by a re-roll. F1 — the held-out split is SATURATED, not "
+    "sampled: MIN_SEP_M 0.25 against N_TRAIN_L 480 asks up to 94.2 m2 of "
+    "exclusion discs inside an 11.06 m2 source annulus (8.5x oversubscribed), "
+    "occlusion+separation rejects 0.9958, and every retained test position sits "
+    "exactly at the 0.25 floor. F2 — the alive-proof is dead: vis_open 0.1167 "
+    "against VIS_OPEN_MIN 0.60 with chance at 0.125, so the registered run "
+    "would have been VOID by this spec's own tree and vis_occ proves nothing "
+    "about occlusion. The nose was never measured; the comparison never became "
+    "valid. The repair is a REDESIGN with at least three runnable arms (shrink "
+    "N_TRAIN_L, widen SRC_R_RANGE, or hold out by BEARING SECTOR), routed to "
+    "the Review — not another pilot."
+)
 
 CHANCE = 1.0 / N_BINS
 ODOUR_OCC_MIN = 0.25           # per seed — the claim

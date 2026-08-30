@@ -11103,29 +11103,23 @@
     "T0.21": {
       "amended": [],
       "attempt": 22,
-      "commit": "0c7e36b",
+      "commit": "8e2deae+dirty",
       "compute_s": null,
       "control_metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
-        "declared_specs_live": 110.0,
+        "declared_specs_live": 114.0,
         "docstring_covers_problems_live": 0.0,
         "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
         "malformed_declarations_live": 0.0,
-        "nominated_not_declared": 29.0,
+        "nominated_not_declared": 30.0,
         "properties_checked": 12.0,
         "properties_failed": 7.0
       },
-      "duration_s": 2.74,
+      "duration_s": 2.92,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "b15dabb",
-          "message": "",
-          "ran_at": "2026-08-13T01:18:58",
-          "status": "PASS"
-        },
         {
           "commit": "a703604",
           "control_metrics": {
@@ -11791,22 +11785,57 @@
           ],
           "spec_sha": "f07d113ad391bfb1",
           "status": "PASS"
+        },
+        {
+          "commit": "0c7e36b",
+          "control_metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 110.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 29.0,
+            "properties_checked": 12.0,
+            "properties_failed": 7.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "711ddf45bd88f6d0",
+          "message": "",
+          "metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 110.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 29.0,
+            "properties_checked": 12.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-08-30T07:18:47",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "f07d113ad391bfb1",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "711ddf45bd88f6d0",
+      "impl_sha": "de1de26a98a69cde",
       "message": "",
       "metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
-        "declared_specs_live": 110.0,
+        "declared_specs_live": 114.0,
         "docstring_covers_problems_live": 0.0,
         "failed_names": "",
         "malformed_declarations_live": 0.0,
-        "nominated_not_declared": 29.0,
+        "nominated_not_declared": 30.0,
         "properties_checked": 12.0,
         "properties_failed": 0.0
       },
-      "ran_at": "2026-08-30T07:18:47",
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T22:18:15",
       "seeds": [
         0
       ],

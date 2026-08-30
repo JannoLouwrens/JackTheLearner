@@ -255,6 +255,26 @@ ARM = "wm-latent"            # LC.03 v2's only 3-sigma learner
 _GATES_FROZEN = False
 _PILOT_ARTIFACT = "/data/sh02_pilot_seed90.json"
 
+# Pilot-BLOCKED, not pilot-owed: the seed-90 pilot RAN and fired this file's own
+# pre-registered headroom VOID. Declared 2026-08-30 (builder) transcribing the
+# PILOT RECORD above; no new judgement here, and this is NOT a park — the claim
+# stands, the spec stays coverage for shelter/thermal, and what changed is only
+# that the next unit of work is a redesign rather than a pilot.
+_PILOT_BLOCKED = (
+    "PILOT RECORD seed 90, 2026-08-30 11:15-11:33, N=3000/arm, commit 8abfa70: "
+    "the headroom VOID fired. Every arm without a live policy gradient holds "
+    "the roof COMPLETELY — twin, privileged oracle and both-cosmetic control "
+    "all exactly 1.0000 against HEADROOM_MAX 0.85, learner 0.0136 — so the null "
+    "already holds the roof it was placed under and no choice can show above "
+    "it. The rig is alive and the CONTRAST is dead: the random walk reads "
+    "0.3639 and 25 of its 26 lives ended frozen, so huts are escapable and cold "
+    "still kills. Freezing bars against this pilot would fit them to a "
+    "saturated null. With SH.01's ORACLE_CANNOT (born outside, seeking "
+    "unlearnable) the two geometries are exhaustive and this is D10 evidence "
+    "that W0 is the bottleneck. The repair is a REDESIGN (score against the "
+    "random walk, or move the birth condition), routed to the Review."
+)
+
 Z_MIN = 3.0                  # the registry's own bar; it does not move
 Z_DISC = 3.0                 # working-born vs cosmetic-born, same learner
 MIN_BORN_LIVES = 5           # per side, before a discrimination z is evidence

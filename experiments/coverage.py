@@ -525,7 +525,7 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     "known_empty", "stale_baseline"}`. `new_empty` is the fatal class.
     """
     from .protocol import (Budget, Ledger, gates_frozen, module_path_for,
-                           pilot_blocked)
+                           pilot_blocked, pilot_owed)
     if ledger is None:
         ledger = Ledger()
     if by_id is None:
@@ -636,19 +636,56 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     # VOID. `_GATES_FROZEN = False` cannot distinguish *not piloted yet* from
     # *piloting measured not to work*, and those need opposite units of work.
     # `protocol.pilot_blocked` makes the second declarable, with its reason.
-    pilot_owed: Dict[str, list] = {c: [] for c in by_class}
+    #
+    # AND THE THREE-WAY SPLIT STILL HAD A DEFAULT, WHICH IS THE WHOLE DISEASE
+    # (builder, 2026-08-30, next iteration). The loop above used to read
+    # *gate-provisional AND not declared blocked* as PILOT-OWED — so an author
+    # who never declared anything got the CHEAP, ACTIONABLE state for free. On
+    # the morning this was found, four of the five gate-provisional specs had
+    # already run a pilot that measured the pilot could not succeed — `SH.02`'s
+    # headroom VOID, `SM.03`'s two rig faults, `T2.11`'s two control-passes,
+    # `DP.04`'s sizing refutation — and three of the four said so IN PROSE in
+    # their own docstrings, where no instrument reads. Only `DP.04` had
+    # declared it, so this readout advertised BOTH empty GPU classes as one
+    # cheap pilot from stocked (`gpu<20min: SM.03`, `gpu<2h: T2.11`) and the
+    # 21:45 handoff line repeated it to the next iteration.
+    #
+    # That is 2026-08-29's lesson — *a repair-class instrument with a missing
+    # state defaults it to the expensive reading* — arriving again with the
+    # SIGN FLIPPED, and the flipped sign is the worse one: a pessimistic default
+    # wastes a reading, an optimistic default spends compute on a run whose own
+    # author already recorded it as spent.
+    #
+    # So the fourth state is UNDECLARED and it is not a synonym for either. It
+    # rescues no class, it is never a cheap repair, and `coverage` exits red on
+    # it — the same shape `decisions.py` uses for an unarmed default. A spec may
+    # sit gate-provisional for as long as its author likes; it may not sit there
+    # without saying which of the two units of work it is waiting for.
+    pilot_owed_cls: Dict[str, list] = {c: [] for c in by_class}
     pilot_blocked_cls: Dict[str, list] = {c: [] for c in by_class}
+    pilot_undeclared: List[str] = []
     blocked_why: Dict[str, str] = {}
+    owed_why: Dict[str, str] = {}
     for sid in excluded["gates_provisional"]:
         spec = by_id.get(sid)
         if spec is None:
             continue
-        why = pilot_blocked(sid, path=module_path_for(sid))
-        if why:
+        path = module_path_for(sid)
+        why = pilot_blocked(sid, path=path)
+        owed = pilot_owed(sid, path=path)
+        if why and owed:
+            # BOTH is a contradiction, not a majority vote. Reading it as either
+            # would let the author pick the answer by writing more; it reads
+            # UNDECLARED, which is the state that costs them a red exit.
+            pilot_undeclared.append(sid)
+        elif why:
             blocked_why[sid] = why
             pilot_blocked_cls[spec.budget.value].append(sid)
+        elif owed:
+            owed_why[sid] = owed
+            pilot_owed_cls[spec.budget.value].append(sid)
         else:
-            pilot_owed[spec.budget.value].append(sid)
+            pilot_undeclared.append(sid)
     return {
         "depth": sum(len(v) for v in by_class.values()),
         "by_class": {c: sorted(ids) for c, ids in by_class.items()},
@@ -659,10 +696,12 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         "known_empty": sorted(empty & baseline),
         "stale_baseline": sorted(c for c in baseline if c not in empty),
         "fillable": {c: sorted(ids) for c, ids in fillable.items()},
-        "pilot_owed": {c: sorted(ids) for c, ids in pilot_owed.items()},
+        "pilot_owed": {c: sorted(ids) for c, ids in pilot_owed_cls.items()},
         "pilot_blocked": {c: sorted(ids)
                           for c, ids in pilot_blocked_cls.items()},
         "pilot_blocked_why": dict(sorted(blocked_why.items())),
+        "pilot_owed_why": dict(sorted(owed_why.items())),
+        "pilot_undeclared": sorted(pilot_undeclared),
         # Empty AND no path in: neither a runnable spec to implement NOR a
         # gate-provisional one whose pilot can still succeed. Only then is the
         # repair an unblock. The `pilot_owed` conjunct is the correction —
@@ -674,7 +713,7 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         # Reported, never fatal on its own: it is a fact about the ladder's
         # shape, not debt anyone incurred.
         "empty_unfillable": sorted(c for c in empty
-                                   if not fillable[c] and not pilot_owed[c]),
+                                   if not fillable[c] and not pilot_owed_cls[c]),
     }
 
 
@@ -753,10 +792,27 @@ def _queue_fixture() -> List[str]:
         # pilot would spend fresh seeds on a known VOID, so this class is NOT
         # pilot-owed and its repair is a redesign.
         ("Q.11", Budget.CPU_LONG, "", None, True, False),
+        # THE FOURTH STATE, and the one that used to be silently free.
+        # Gate-provisional and the sole occupant of its class, like Q.10 and
+        # Q.11 — and it declares NEITHER. Before 2026-08-30 this row was
+        # indistinguishable from Q.10 and its class was advertised as one cheap
+        # pilot from stocked. It must now read UNDECLARED and buy nothing.
+        ("Q.12", Budget.CPU_DAYS, "", None, True, False),
+        # THE CONTRADICTION. Declares BOTH flags, and must read UNDECLARED
+        # rather than either one — otherwise an author could pick the answer by
+        # writing more, which is the "run-until-pass" shape one surface over.
+        # It shares gpu<2h with stocked specs so it exercises the branch
+        # without deciding a class.
+        ("Q.13", Budget.GPU, "", None, True, False),
     ]
-    # `pilot_blocked`'s answer per spec: a reason string, or None for "does not
-    # declare", which is Q.08/Q.10 and every real spec but one.
-    blocked = {"Q.11": "sizing refuted the pilot's precondition"}
+    # `pilot_blocked` / `pilot_owed` answers per spec: a reason string, or None
+    # for "does not declare". Q.08 and Q.12 declare neither — Q.12 deliberately,
+    # as the undeclared row; Q.08 shares a class with stocked specs, so it
+    # exercises the state without deciding a class.
+    blocked = {"Q.11": "sizing refuted the pilot's precondition",
+               "Q.13": "a run measured the precondition fails"}
+    owed = {"Q.10": "the pilot will freeze CEM_K_FIT against its artifact",
+            "Q.13": "the pilot will freeze the bars"}
     by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t, _g in rows}
     led = _Led({sid: s for sid, _b, _n, s, _t, _g in rows if s is not None})
     tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t, _g in rows if t}
@@ -766,17 +822,20 @@ def _queue_fixture() -> List[str]:
     from . import registry as _reg
     real_ready, real_mpf = _reg.ready, _proto.module_path_for
     real_gf, real_pb = _proto.gates_frozen, _proto.pilot_blocked
+    real_po = _proto.pilot_owed
     _reg.ready = lambda _l: list(by_id.values())
     _proto.module_path_for = lambda sid, strict=False: (
         None if sid == "Q.07" else f"/x/{sid}.py")
     _proto.gates_frozen = lambda sid, path=None: frozen.get(sid)
     _proto.pilot_blocked = lambda sid, path=None: blocked.get(sid)
+    _proto.pilot_owed = lambda sid, path=None: owed.get(sid)
     try:
         q = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
                         baseline=frozenset({"gpu<8h"}))
     finally:
         _reg.ready, _proto.module_path_for = real_ready, real_mpf
         _proto.gates_frozen, _proto.pilot_blocked = real_gf, real_pb
+        _proto.pilot_owed = real_po
 
     fails = []
     if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03", "Q.09"]:
@@ -798,7 +857,8 @@ def _queue_fixture() -> List[str]:
                      f"SM.03 case — got {q['excluded']['untracked']}")
     # THE ROW THE 46th AUDIT'S RANK 2 EXISTS FOR: runnable, implemented,
     # tracked, unsettled, unparked — and its own `run()` refuses.
-    if q["excluded"]["gates_provisional"] != ["Q.08", "Q.10", "Q.11"]:
+    if q["excluded"]["gates_provisional"] != ["Q.08", "Q.10", "Q.11", "Q.12",
+                                              "Q.13"]:
         fails.append(f"a spec with PROVISIONAL gates refuses its own "
                      f"registered run and must be excluded — the SM.03 case — "
                      f"got {q['excluded']['gates_provisional']}")
@@ -836,6 +896,36 @@ def _queue_fixture() -> List[str]:
         fails.append(f"the blocking REASON must survive into the readout — a "
                      f"blocked pilot without its evidence is a park with "
                      f"better manners, got {q['pilot_blocked_why']}")
+    # THE FOURTH STATE — the default this iteration removed. Q.12 is
+    # gate-provisional, sole occupant of cpu<48h, and declares NEITHER flag. It
+    # must read UNDECLARED, must NOT read pilot-owed, and must NOT rescue its
+    # class: every one of these three assertions fails against the code as it
+    # stood this morning, which advertised SM.03 and T2.11 as cheap pilots
+    # months after their own pilots were spent.
+    if q["pilot_undeclared"] != ["Q.08", "Q.12", "Q.13"]:
+        fails.append(f"a gate-provisional spec declaring neither flag — or "
+                     f"BOTH, which is a contradiction, not a vote — is "
+                     f"UNDECLARED, got {q['pilot_undeclared']}")
+    if "Q.13" in q["pilot_blocked"]["gpu<2h"] or q["pilot_owed"]["gpu<2h"]:
+        fails.append(f"a spec declaring BOTH flags must read neither: letting "
+                     f"one win lets the author choose the answer by writing "
+                     f"more, got blocked={q['pilot_blocked']['gpu<2h']} "
+                     f"owed={q['pilot_owed']['gpu<2h']}")
+    if q["pilot_owed"]["cpu<48h"]:
+        fails.append(f"an UNDECLARED spec must not default to pilot-owed — "
+                     f"that default is what sent a builder to spend a pilot "
+                     f"four specs had already spent, got "
+                     f"{q['pilot_owed']['cpu<48h']}")
+    if "cpu<48h" not in q["empty_unfillable"]:
+        fails.append("an UNDECLARED spec rescues no class: until someone says "
+                     "which unit of work it waits for, there is no known cheap "
+                     "path in")
+    # And the owed REASON must survive too, for `pilot_blocked_why`'s reason:
+    # "owed" without saying what the pilot would freeze is the claim a later
+    # reader cannot check against a pilot that has already run.
+    if q["pilot_owed_why"].get("Q.10") != owed["Q.10"]:
+        fails.append(f"the owed reason must survive into the readout, got "
+                     f"{q['pilot_owed_why']}")
     if q["by_class"]["cpu<10min"] != ["Q.06"]:
         fails.append(f"cost classes must not merge, got {q['by_class']}")
     if q["depth"] != 4:
@@ -987,6 +1077,117 @@ def _pilot_blocked_fixture() -> List[str]:
     return fails
 
 
+def _pilot_owed_fixture() -> List[str]:
+    """Known-answer battery for `protocol.pilot_owed`, the READER — written on
+    the same day as the reader, per the lesson `_pilot_blocked_fixture` records.
+
+    The two readers now share `_declared_reason`, so this battery is not
+    redundant with that one: it is what proves the SHARING did not silently
+    alias the two flags. The case that matters most is the cross-flag pair — a
+    file declaring only `_PILOT_BLOCKED` must read `None` here, and vice versa,
+    because one reader answering for the other's flag would collapse the whole
+    four-state split back into the default this iteration removed.
+    """
+    import tempfile
+    from .protocol import module_path_for, pilot_blocked, pilot_owed
+
+    R = "will freeze CEM_K_FIT/N_EVAL against the seed-90 artifact"
+    cases = [
+        ("no declaration at all", "X = 1\n", None),
+        ("a declared reason", f"_PILOT_OWED = {R!r}\n", R),
+        ("implicitly concatenated literal",
+         "_PILOT_OWED = (\n 'will freeze CEM_K_FIT/N_EVAL '\n"
+         " 'against the seed-90 artifact'\n)\n", R),
+        ("annotated assignment counts", f"_PILOT_OWED: str = {R!r}\n", R),
+        ("re-assigned, last wins",
+         f"_PILOT_OWED = 'old'\n_PILOT_OWED = {R!r}\n", R),
+        # The quiet direction: anything unreadable is NOT a claim that a pilot
+        # can still succeed. Reading one would restore the optimistic default.
+        ("None is not a declaration", "_PILOT_OWED = None\n", None),
+        ("empty string is not a declaration", "_PILOT_OWED = ''\n", None),
+        ("whitespace is not a declaration", "_PILOT_OWED = '   '\n", None),
+        ("True is not a reason", "_PILOT_OWED = True\n", None),
+        ("non-literal value is not a reason",
+         "import os\n_PILOT_OWED = os.environ.get('WHY')\n", None),
+        ("function-local assignment is not a declaration",
+         f"def f():\n    _PILOT_OWED = {R!r}\n", None),
+        ("a syntax error is not a declaration", "def (:\n", None),
+        # THE ALIASING CASE, and the reason this battery exists at all.
+        ("the other flag is not this one",
+         "_PILOT_BLOCKED = 'a run measured the precondition fails'\n", None),
+    ]
+    fails = []
+    with tempfile.TemporaryDirectory() as d:
+        for i, (label, src, want) in enumerate(cases):
+            p = Path(d) / f"po_{i}.py"
+            p.write_text(src)
+            got = pilot_owed("X.00", path=p)
+            if got != want:
+                fails.append(f"pilot_owed: {label} -> want {want!r}, "
+                             f"got {got!r}")
+        # The mirror of the aliasing case, on the other reader.
+        p = Path(d) / "po_x.py"
+        p.write_text(f"_PILOT_OWED = {R!r}\n")
+        if pilot_blocked("X.00", path=p) is not None:
+            fails.append("pilot_blocked: `_PILOT_OWED` is not a block — the "
+                         "two readers share `_declared_reason` and must not "
+                         "answer for each other's flag")
+        if pilot_owed("X.00", path=Path(d) / "gone.py") is not None:
+            fails.append("pilot_owed: a missing file is not a declaration")
+    if pilot_owed("NO.SUCH.SPEC") is not None:
+        fails.append("pilot_owed: an unimplemented spec has no file and no "
+                     "declaration -> None")
+    # THE STANDING INVARIANT, and the one that keeps the red honest: every
+    # gate-provisional spec in the live tree declares exactly one of the two.
+    # Asserted here rather than only at the exit code so the failure names the
+    # spec, and asserted as "exactly one" so the contradiction case is covered
+    # on real files too.
+    #
+    # PARKED specs are exempt, and the exemption is the point rather than a
+    # loophole. A park RETIRES the question — the spec stops being coverage and
+    # `queue_depth` drops it before the gate-provisional test is ever reached —
+    # so a pilot state is moot and demanding one would flag a fact no instrument
+    # reads. Written after this battery caught `T3.10` and `SM.02`, both of
+    # which are parked with a registry marker naming the same both-fail branch
+    # `_PILOT_BLOCKED` exists to record. The exemption is narrow BECAUSE it
+    # keys on the machine-readable marker: `T2.11` carries "PARKED" in its
+    # docstring banner and no marker, so it is not exempt — which is right, and
+    # is how its missing declaration was found in the first place.
+    from .protocol import gates_frozen
+    from .registry import BY_ID as _BY_ID
+    _parked = set(parked(_BY_ID)[0])
+    _examined = []
+    for sid in _BY_ID:
+        path = module_path_for(sid)
+        if (sid in _parked or not path
+                or gates_frozen(sid, path=path) is not False):
+            continue
+        _examined.append(sid)
+        b, o = pilot_blocked(sid, path=path), pilot_owed(sid, path=path)
+        if bool(b) == bool(o):
+            fails.append(
+                f"pilot state: {sid} is gate-provisional and declares "
+                + ("BOTH `_PILOT_OWED` and `_PILOT_BLOCKED`, which is a "
+                   "contradiction" if b else
+                   "NEITHER `_PILOT_OWED` nor `_PILOT_BLOCKED` — the absence "
+                   "used to default to the cheap repair"))
+    # AND THE LOOP MUST HAVE LOOKED AT SOMETHING. A scan whose filter widens to
+    # everything reports zero violations and reads identically to a clean tree —
+    # mutation, same hour: replacing the park test with `True` left this battery
+    # green while checking nothing at all. Five specs are gate-provisional and
+    # unparked today; the floor is 1 rather than 5 so that legitimately freezing
+    # or parking them is not a red, while deleting the scan is.
+    if not _examined:
+        fails.append("pilot state: the live scan examined ZERO specs — either "
+                     "no spec is gate-provisional (say so by removing this "
+                     "check) or its filter has widened to exempt everything, "
+                     "which reports clean by checking nothing")
+    if set(_examined) & _parked:
+        fails.append(f"pilot state: a PARKED spec must be exempt, not "
+                     f"examined: {sorted(set(_examined) & _parked)}")
+    return fails
+
+
 def counts() -> tuple[int, int]:
     """(n_claim_dead, n_malformed) — two different fires, separately
     assertable.
@@ -1094,7 +1295,9 @@ def check() -> int:
           "  A PARKED spec is NOT coverage either: a retirement is not a\n"
           "  falsifiable claim, however honest the retiring was.")
 
-    qf = _queue_fixture() + _gates_frozen_fixture() + _pilot_blocked_fixture()
+    qf = (_queue_fixture() + _gates_frozen_fixture()
+          + _pilot_blocked_fixture() + _pilot_owed_fixture()
+          + _exit_code_fixture())
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -1164,6 +1367,18 @@ def check() -> int:
               "these; the repair is a redesign:")
         for sid, why in q["pilot_blocked_why"].items():
             print(f"      {sid}: {why}")
+    if q["pilot_undeclared"]:
+        print(f"  {len(q['pilot_undeclared'])} spec(s) are PILOT-UNDECLARED — "
+              f"gate-provisional, declaring NEITHER `_PILOT_OWED`\n"
+              f"      nor `_PILOT_BLOCKED` (or both, which is a "
+              f"contradiction): {', '.join(q['pilot_undeclared'])}\n"
+              "  This is the state that used to default to PILOT-OWED, and\n"
+              "  the default sent a builder to spend a pilot that four specs\n"
+              "  had already spent. An undeclared spec rescues no cost class\n"
+              "  and is never named as a cheap repair. The repair is ONE LINE\n"
+              "  in the spec, written by whoever knows: `_PILOT_OWED = \"what\n"
+              "  the pilot will freeze\"` or `_PILOT_BLOCKED = \"what a run\n"
+              "  measured\"`.")
     if q["empty_unfillable"]:
         print(f"  {len(q['empty_unfillable'])} empty class(es) have NO path in "
               f"today — nothing runnable to implement\n"
@@ -1188,9 +1403,135 @@ def check() -> int:
         for f in qf:
             print(f"      {f}")
 
-    return (2 if (uncovered or dead or gc["new"] or q["new_empty"] or qf)
-            else (1 if (bad or gc["stale_baseline"] or q["stale_baseline"])
-                  else 0))
+    # `pilot_undeclared` is RED, not amber, and the asymmetry is deliberate.
+    # An undeclared pilot state is not a missing note: it is the instrument
+    # naming a repair it cannot support, and on 2026-08-30 it named two — one
+    # of which had already been copied into a handoff and would have been
+    # obeyed. Amber would let that stand while the exit code stayed green.
+    # It is cheap to clear (one line, by the author, at the moment they know),
+    # and it is zero right now, so it never becomes background noise.
+    return exit_code(
+        red={"uncovered": uncovered, "claim_dead": dead,
+             "new_dangling_citation": gc["new"], "new_empty_class": q["new_empty"],
+             "queue_fixture_failure": qf,
+             "pilot_undeclared": q["pilot_undeclared"]},
+        amber={"malformed_declaration": bad,
+               "stale_citation_baseline": gc["stale_baseline"],
+               "stale_queue_baseline": q["stale_baseline"]})
+
+
+# RED = the ladder is making a claim it cannot support, or an instrument that
+# checks that is itself broken. AMBER = a bookkeeping fact that misleads nobody
+# about a capability. Nothing else.
+def exit_code(red: dict, amber: dict) -> int:
+    """`2` if any red condition is non-empty, else `1` for amber, else `0`.
+
+    Extracted from `check()` on 2026-08-30 because it was untestable where it
+    sat. It was a bare conditional expression at the end of a 200-line printer,
+    so **no fixture in this repo could assert that any red condition actually
+    reaches the exit code** — verified by mutation the same hour: deleting the
+    freshly-added `pilot_undeclared` term from that expression left every
+    fixture GREEN. A ratchet whose wiring is unasserted is a ratchet that can be
+    disconnected in a one-line edit and pass its own tests, which is the disease
+    this module exists to catch, one level up.
+
+    Taking DICTS rather than booleans so `_exit_code_fixture` can name the
+    condition it is exercising, and so a future reader can enumerate what turns
+    this repo's coverage red without reading the printer. Values are truthiness
+    only — lists, counts and bools all work.
+    """
+    if any(red.values()):
+        return 2
+    return 1 if any(amber.values()) else 0
+
+
+def _exit_code_fixture() -> List[str]:
+    """Known-answer battery for `exit_code` — every red condition on its own.
+
+    The point is the PER-CONDITION loop, not the three-line function: it asserts
+    that each named red term is individually load-bearing, which is what the
+    mutation showed nothing did. Deleting any single term from `check()`'s call
+    now fails here by name.
+    """
+    RED = ["uncovered", "claim_dead", "new_dangling_citation",
+           "new_empty_class", "queue_fixture_failure", "pilot_undeclared"]
+    AMBER = ["malformed_declaration", "stale_citation_baseline",
+             "stale_queue_baseline"]
+    fails = []
+    clean_red = {k: [] for k in RED}
+    clean_amber = {k: [] for k in AMBER}
+    if exit_code(clean_red, clean_amber) != 0:
+        fails.append("exit_code: no condition set must be 0")
+    for k in RED:
+        r = dict(clean_red, **{k: ["x"]})
+        if exit_code(r, clean_amber) != 2:
+            fails.append(f"exit_code: red `{k}` alone must exit 2 — a red "
+                         f"condition that does not reach the exit code is a "
+                         f"disconnected ratchet")
+        # ...and red must dominate amber, never be averaged with it.
+        if exit_code(r, {k2: ["y"] for k2 in AMBER}) != 2:
+            fails.append(f"exit_code: red `{k}` must dominate amber")
+    for k in AMBER:
+        a = dict(clean_amber, **{k: ["x"]})
+        if exit_code(clean_red, a) != 1:
+            fails.append(f"exit_code: amber `{k}` alone must exit 1")
+    # An amber condition may NEVER be silently promoted or demoted: if a future
+    # edit moves one of these into `red`, this battery keeps its old meaning
+    # visible rather than letting the change pass unremarked.
+    if set(RED) & set(AMBER):
+        fails.append("exit_code: a condition cannot be both red and amber")
+
+    # THE WIRING, checked STATICALLY — and this half is the one that caught a
+    # live hole. The battery above proves `exit_code` behaves; it says nothing
+    # about whether `check()` still PASSES it anything real. Mutation, same
+    # hour: replacing `"pilot_undeclared": q["pilot_undeclared"]` with a literal
+    # `[]` at the call site left every fixture green, and so did doing it to
+    # `new_empty_class` — the pre-existing red that has been this file's whole
+    # point for two days. Two ratchets, both disconnectable in one line, both
+    # passing their own tests.
+    #
+    # It has to be static because `check()` CALLS this fixture: a dynamic check
+    # would recurse into itself. Reading the source is the honest alternative
+    # and it is the idiom this repo already uses for `_GATES_FROZEN`.
+    #
+    # The assertion is deliberately weak in one direction and strong in the
+    # other: it does not try to understand the expression, only that the term is
+    # present and is not a CONSTANT. A constant is exactly how a term gets
+    # disabled while looking wired, and it is the only way that has happened.
+    import ast as _ast
+    try:
+        _tree = _ast.parse(Path(__file__).read_text())
+    except (OSError, SyntaxError, ValueError) as exc:      # pragma: no cover
+        return fails + [f"exit_code: could not read own source: {exc}"]
+    _call = None
+    for _fn in _ast.walk(_tree):
+        if isinstance(_fn, _ast.FunctionDef) and _fn.name == "check":
+            for _n in _ast.walk(_fn):
+                if (isinstance(_n, _ast.Call)
+                        and getattr(_n.func, "id", None) == "exit_code"):
+                    _call = _n
+    if _call is None:
+        return fails + ["exit_code: `check()` no longer calls `exit_code` — "
+                        "the ratchet is disconnected entirely"]
+    seen = {}
+    for _kw in _call.keywords:
+        if isinstance(_kw.value, _ast.Dict):
+            for _k, _v in zip(_kw.value.keys, _kw.value.values):
+                if isinstance(_k, _ast.Constant):
+                    seen[_k.value] = _v
+    for name in RED + AMBER:
+        if name not in seen:
+            fails.append(f"exit_code wiring: `check()` no longer passes "
+                         f"`{name}` — a condition dropped from the call site "
+                         f"is a ratchet nobody will notice is gone")
+        elif isinstance(seen[name], _ast.Constant) or (
+                isinstance(seen[name], (_ast.List, _ast.Tuple, _ast.Dict))
+                and not getattr(seen[name], "elts", getattr(seen[name],
+                                                            "keys", None))):
+            fails.append(f"exit_code wiring: `{name}` is passed a CONSTANT at "
+                         f"the call site, so the condition can never fire — "
+                         f"wired in appearance only")
+    return fails
 
 
 if __name__ == "__main__":

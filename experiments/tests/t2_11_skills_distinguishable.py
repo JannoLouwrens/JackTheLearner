@@ -357,6 +357,27 @@ _GATES_FROZEN = False           # PARKED, not merely un-piloted. Two pilots ran
                                 # label-permuted twin outscored it. See the
                                 # PARKED banner and PILOT RECORD v2.
 
+# The banner above said all of this in PROSE and no instrument could read it:
+# on 2026-08-30 `queue_depth` still advertised T2.11 as `gpu<2h`'s cheapest
+# repair — "run the pilot" — against a file whose first nine lines read DO NOT
+# RE-PILOT. Declared by the builder that day, transcribing PILOT RECORD v2; no
+# new judgement. NOT a registry park: this spec still carries the `kills:
+# SkillDiscovery` claim and still counts as coverage. What it says is that the
+# next unit is a redesign someone must decide on, not a pilot anyone can run.
+_PILOT_BLOCKED = (
+    "PARKED 2026-08-29 by its own pre-registered both-fail branch. Two pilots, "
+    "two pre-registered mechanism repairs against one outcome, and THE CONTROL "
+    "PASSED BOTH: v1 (seeds 7/90, full scale) diayn 0.9688/0.9844 vs shuffled "
+    "0.9766/0.9766 — margin -0.0078/+0.0078 against chance 0.125 — and on v2's "
+    "seed 90 the label-permuted twin BEAT the claim arm with every rig gate "
+    "green. A third rig would be the third draw at one outcome. Flipping "
+    "_GATES_FROZEN off either pilot would dispatch a `kills: SkillDiscovery` "
+    "verdict from a run its own permuted control outscored — the exact outcome "
+    "that flag exists to prevent. The repair is a redesign of what "
+    "distinguishability MEANS here, routed to the Review; the pilot seeds "
+    "(7, 90) are spent either way."
+)
+
 SEEDS = [0, 1, 2]               # registered; the registry declares 3 seeds
 PILOT_SEEDS = (7, 90)           # disjoint from the registered set, and spent
                                 # once used — the same two T2.09 piloted on.

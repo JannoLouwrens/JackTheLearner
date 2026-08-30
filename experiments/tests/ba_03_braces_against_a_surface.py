@@ -200,6 +200,23 @@ CEM_SIG_FLOOR = 0.05
 _GATES_FROZEN = False
 _PILOT_ARTIFACT = "/data/ba03_pilot_seed90.json"
 
+# The positive half of the pilot state, and it is required rather than assumed
+# (builder, 2026-08-30). `_GATES_FROZEN = False` says the run refuses; it does
+# not say whether that refusal is one bounded CPU unit from lifting or waiting
+# on a redesign, and reading the absence of a `_PILOT_BLOCKED` as "owed" is how
+# three spent pilots got advertised as cheap repairs. BA.03 is the one spec of
+# the five where the cheap reading is TRUE, and it says so on its own authority.
+_PILOT_OWED = (
+    "No pilot has been run: /data/ba03_pilot_seed90.json does not exist and no "
+    "PILOT RECORD appears above. The pilot is the bounded CPU unit that freezes "
+    "CEM_K_FIT and N_EVAL against the seed-90 artifact (the sizing values below "
+    "are carried from the probe, not from a pilot) and then sizes the claim "
+    "gates NOISE_GAIN_FRAC_MAX / CEM_SIG_FLOOR against it. T_GAIN_MIN is "
+    "constitutional and is not sized by anything. Nothing measured so far says "
+    "this pilot cannot succeed; if one runs and refutes its own precondition, "
+    "replace this line with `_PILOT_BLOCKED` and its evidence."
+)
+
 # PILOT-SIZED (the registry's sizing requirement; see the docstring).
 CEM_K_FIT = 6                 # (2*sigma/S)^2 = 3.6 from the probe, 1.7x margin
 N_EVAL = 48                   # (sigma/0.25)^2 = 46; gain SE ~0.245 s

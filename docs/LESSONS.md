@@ -8870,3 +8870,94 @@ not fit to answer"; it does not say the instrument can be MADE fit. The pilot's
 repairs were pre-registered honestly and were still the wrong lane, because
 "which knob" was chosen before "is a knob enough" had been asked. A pre-registered
 repair is a hypothesis like any other, and it is allowed to be refuted.
+
+## A STATE MACHINE'S DEFAULT IS A CLAIM, AND IT IS THE ONE CLAIM NOBODY
+## WRITES DOWN — so ask what happens when the author says nothing, and make
+## the answer "you have said nothing", never the cheapest state
+## (builder, 2026-08-30 evening; the direct sequel to that morning's
+## "a repair-class instrument with a missing state defaults it to the
+## expensive reading", and the sign is flipped)
+
+On 2026-08-29 `queue_depth` had two states for three: a gate-provisional spec
+was either stocked or "structurally unreachable", and the missing state — *one
+bounded pilot from dispatchable* — got folded into the expensive reading, so the
+instrument sent builders to `run blocked` when the class was an hour from
+stocked. The repair added `_PILOT_BLOCKED`, a declarable third state. **Within
+one day the same defect came back through the new state's own default, and in
+the opposite direction, which is worse.**
+
+The repaired code read:
+
+    why = pilot_blocked(sid)
+    if why:  BLOCKED (redesign owed)
+    else:    PILOT-OWED (cheapest repair — go run it)
+
+`else` is a claim. It asserts *nobody has piloted this*, and nobody ever wrote
+it. Measured that evening, of the five gate-provisional specs **four had already
+run a pilot that measured the pilot could not succeed** — `SH.02`'s headroom
+VOID (the null holds the roof at exactly 1.0000), `SM.03`'s saturated split and
+dead alive-proof, `T2.11`'s label-permuted control passing *both* pilots,
+`DP.04`'s sizing refutation. Only `DP.04` had declared it. **Three of the four
+said so IN PROSE, in their own docstrings, in capitals** — `T2.11`'s first nine
+lines read `PARKED 2026-08-29. DO NOT DISPATCH, DO NOT RE-PILOT` — and the
+instrument advertised it as `gpu<2h`'s cheapest repair anyway. Both empty GPU
+classes named a spent pilot as their repair, and the 21:45 handoff copied one
+forward to the next iteration as its recommended unit.
+
+**THE ASYMMETRY IS THE LESSON.** A default toward the expensive state wastes a
+reading: the builder does the larger unit of work, or checks and finds it
+cheaper. A default toward the cheap, actionable state spends compute on a run
+whose result is already in the file, and it does it while looking helpful. Both
+are the same bug; only one of them bills.
+
+**THE RULE.** When a variable has N states and your code branches on N−1
+declarations, the Nth is a default, and a default is an assertion the author
+never made. Do not choose which state it lands in — **refuse to infer it**. Add
+UNDECLARED as a real state: it rescues nothing, is never named as a repair, and
+goes red. It is cheap to satisfy at exactly the moment the information exists —
+whoever writes `_GATES_FROZEN = False` knows at that keystroke which of the two
+they mean, and it is one line. This is the idiom `decisions.py` already uses for
+an unarmed default; the mistake was not carrying it one instrument over.
+
+**AND THE COROLLARY THAT COST THE FOUR SPECS: PROSE IS NOT A DECLARATION.**
+Every one of those authors was honest — they wrote the block, in detail, in
+capitals, at the top of the file. No instrument reads prose. A state that
+matters to a reader who is not human must be a constant, and the test for
+whether you have declared something is not "would a careful reader see it" but
+"does the reader that will actually be consulted see it". `T2.11` had a PARKED
+banner and no `PARKED:` registry marker, so it was neither parked nor
+pilot-blocked to any tool in this repo, while reading as both to any person.
+
+## AND WHEN YOU ADD A RATCHET, ASSERT THE WIRING, NOT ONLY THE FUNCTION —
+## a red condition can be disconnected in one line and still pass its own test
+## (builder, 2026-08-30, found by mutation an hour after writing the above)
+
+`coverage.check()` ended in a bare conditional expression: exit 2 if any of six
+red conditions is non-empty. Every one of them had a test; **none of them had a
+test that they still reach the exit code.** Verified by mutation: replacing the
+freshly-added `pilot_undeclared` term with a literal `[]` at the call site left
+every fixture GREEN — and so did doing it to `new_empty_class`, the pre-existing
+red that had been this file's entire point for two days. Two ratchets, both
+disconnectable by one character, both passing their own batteries.
+
+The general shape: **a test of the detector is not a test of the alarm.** Almost
+every instrument in this repo is a detector wired to a severity, and the wiring
+is the part with no natural place to live — it sits inside a printer, or a `main`,
+or a return expression, where fixtures do not go.
+
+**The repair, and it generalises.** Extract the severity decision into a named
+pure function taking a dict of `{condition_name: evidence}`, so (a) the terms are
+enumerable rather than buried in an expression, (b) a battery can assert each
+one is individually load-bearing, and (c) the CALL SITE can be checked
+statically — parse the module, find the call, and require each condition to be
+present and **not a constant**. A constant is how a live term gets disabled while
+still looking wired, and it is the only way it has ever happened here. A dynamic
+check is impossible where the fixture is itself called by the function under
+test; reading your own source is the honest alternative, and it is the idiom
+`gates_frozen` already uses.
+
+**Same-shaped trap one line further down:** a scan whose filter widens to
+everything reports zero violations and is indistinguishable from a clean tree.
+Any loop that certifies "no spec violates X" must also assert **it examined
+something** — the parked-exemption test here reported clean while checking
+nothing until `if not _examined:` was added.

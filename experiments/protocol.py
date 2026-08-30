@@ -1637,6 +1637,84 @@ def gates_frozen(spec_id: str, path=None):
 
 
 PILOT_BLOCKED_FLAG = "_PILOT_BLOCKED"
+PILOT_OWED_FLAG = "_PILOT_OWED"
+
+
+def _declared_reason(spec_id: str, flag: str, path=None):
+    """The module-level string constant `flag` declares, or `None`.
+
+    Shared by `pilot_blocked` and `pilot_owed` so the two states cannot drift
+    apart in how they are read — LESSONS' "two functions computing the same
+    thing is a defect even while they agree". Every rule in the two docstrings
+    is enforced here: AST never import, module level never function-local, last
+    assignment wins, and anything that is not a readable non-empty string
+    constant reads `None`.
+    """
+    import ast
+    if path is None:
+        path = module_path_for(spec_id)
+    if not path:
+        return None
+    try:
+        tree = ast.parse(Path(path).read_text())
+    except (OSError, SyntaxError, ValueError):
+        # Unreadable is NOT a declaration: `gates_frozen` already fails loud on
+        # an unparseable file by returning False, which keeps it out of the
+        # queue. Answering here would let a typo speak for the author.
+        return None
+    found = None
+    for node in tree.body:
+        targets = (node.targets if isinstance(node, ast.Assign) else
+                   [node.target] if isinstance(node, ast.AnnAssign) else [])
+        for t in targets:
+            if isinstance(t, ast.Name) and t.id == flag:
+                value = getattr(node, "value", None)
+                # `ast.literal_eval` so an implicitly-concatenated string
+                # literal — which is how a reason of any length gets written —
+                # reads as the constant it is.
+                try:
+                    lit = ast.literal_eval(value)
+                except (ValueError, SyntaxError, TypeError):
+                    lit = None
+                found = lit if isinstance(lit, str) and lit.strip() else None
+    return found
+
+
+def pilot_owed(spec_id: str, path=None):
+    """What this spec's pilot will FREEZE, and why it can still succeed — a
+    reason string, or `None` for "does not declare".
+
+    The positive counterpart to `pilot_blocked`, and the reason it exists is
+    that `pilot_blocked` alone left the tri-state with a DEFAULT (builder,
+    2026-08-30, second iteration of the day). Queue depth read *gate-provisional
+    AND not declared blocked* as PILOT-OWED — the cheap, actionable state — so
+    the absence of a declaration routed a builder to spend a pilot. On the day
+    it was written, four of the five gate-provisional specs had already run a
+    pilot that measured the pilot could not succeed (`SH.02`'s headroom VOID,
+    `SM.03`'s two rig faults, `T2.11`'s two control-passes, `DP.04`'s sizing
+    refutation) and three of them said so in PROSE in their own docstrings.
+    Only `DP.04` had declared it, so the instrument advertised **both** empty
+    GPU classes as one cheap pilot from stocked, and last night's handoff line
+    repeated that to the next iteration.
+
+    This is the 2026-08-29 lesson — *a repair-class instrument with a missing
+    state defaults it to the expensive reading* — arriving a second time with
+    the sign flipped, and the flipped sign is worse. An over-pessimistic default
+    wastes a reading; an over-optimistic one spends compute on a run its own
+    author has already recorded as spent.
+
+    So the state is no longer inferred from an absence. A gate-provisional spec
+    declares which of the two it is in, or it reads UNDECLARED and buys nothing:
+    `queue_depth` will not count it as a cheap repair and `coverage` exits red.
+    That is not bureaucracy — an author writing `_GATES_FROZEN = False` knows,
+    at that keystroke, that they intend to pilot, and one line records it for
+    the reader who arrives after the pilot has been spent.
+
+    A STRING for `pilot_blocked`'s reason: "owed" without saying what the pilot
+    would freeze is a claim nobody can check, and the checkable version is what
+    lets a later reader notice the pilot already ran.
+    """
+    return _declared_reason(spec_id, PILOT_OWED_FLAG, path=path)
 
 
 def pilot_blocked(spec_id: str, path=None):
@@ -1669,35 +1747,12 @@ def pilot_blocked(spec_id: str, path=None):
     commitment; a pilot-blocked spec still carries its claim, still appears in
     the ladder, and still refuses to run. It says the next unit is a redesign,
     not that the question was retired.
+
+    An UNREADABLE file is not "blocked" — `gates_frozen` already fails loud on
+    one by returning False, which keeps it out of the queue, and returning a
+    reason here would let a syntax error mute a spec.
     """
-    import ast
-    if path is None:
-        path = module_path_for(spec_id)
-    if not path:
-        return None
-    try:
-        tree = ast.parse(Path(path).read_text())
-    except (OSError, SyntaxError, ValueError):
-        # Unreadable is NOT "blocked": `gates_frozen` already fails loud on an
-        # unparseable file by returning False, which keeps it out of the queue.
-        # Returning a reason here would let a syntax error mute a spec.
-        return None
-    found = None
-    for node in tree.body:
-        targets = (node.targets if isinstance(node, ast.Assign) else
-                   [node.target] if isinstance(node, ast.AnnAssign) else [])
-        for t in targets:
-            if isinstance(t, ast.Name) and t.id == PILOT_BLOCKED_FLAG:
-                value = getattr(node, "value", None)
-                # `ast.literal_eval` so an implicitly-concatenated string
-                # literal — which is how a reason of any length gets written —
-                # reads as the constant it is.
-                try:
-                    lit = ast.literal_eval(value)
-                except (ValueError, SyntaxError, TypeError):
-                    lit = None
-                found = lit if isinstance(lit, str) and lit.strip() else None
-    return found
+    return _declared_reason(spec_id, PILOT_BLOCKED_FLAG, path=path)
 
 
 def deps_moved_since(path, ran_at, repo_root=None) -> tuple:
