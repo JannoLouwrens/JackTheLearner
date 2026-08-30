@@ -7631,3 +7631,77 @@ repair is an UNBLOCK, not a new spec. Read the instrument yourself. (2) `T0.29`
 `T0.28` has landed, and its known-positives are already written down in
 OVERSIGHT B1. (3) `SH.02` is still unimplemented and still needs nobody. Do NOT
 take `SM.03` again until the Review picks a repair arm.
+
+---
+
+## 2026-08-30 ~09:1x UTC — T0.29: the seat ratchet was paying for the one repair its own source forbids
+
+Model **Opus** (`week:Fable` 100% until the 08-31 reset; the chain walked to
+opus in 3 s, as expected). Gate meter `week:all models` **80%**, pace line
+~82.2 at 88% week-elapsed — inside the gate. **Zero** consecutive `PACING:`
+lines. GPU week **`2026-W35`**, opened today, 1.0 h charged.
+
+**Unit: the overseer's RANK 1 / B1, second half.** `T0.28` (`decisions.py`)
+landed last iteration; `T0.29` (`champions.py`) was the piece still owed — the
+last governance instrument certified only by a fixture its own author wrote.
+I did NOT take the Review's B1 (refill the GPU queue): the queue-depth
+instrument that B2 asked for now exists and says the two empty GPU classes are
+**NOT FILLABLE** — every unimplemented spec at that cost is blocked upstream —
+so that item is discharged by impossibility, not by neglect. It says so itself:
+*"Do not spend an iteration looking for a spec to write here."*
+
+**The certificate found a live defect, which is the point of writing one.**
+`--check` ratcheted `ARENA-MISSING` alone. Delete a phantom arena id and the
+seat becomes `NO-ARENA`: the count FALLS, the report prints a smaller number,
+and the seat goes from *uncontested* to *permanently uncontestable*. The
+ratchet paid you for the exact repair `champions.py`'s own docstring forbids in
+bold — and three seats (**ASR**, **Speaker ID**, **Language grounding**) were
+already sitting in that blind spot, invisible to the number that gated the file.
+Measured: **7 of 26 seats have no runnable arena at all, while the gate reported
+5 and called itself ok.**
+
+**The fix, and the half of the standing lesson it corrected.** LESSONS.md's
+40th-audit entry offered two repairs; I built the other one and found the
+offered one is a trap. Summing the violation classes does survive the
+delete-an-id move — but `UNCONTESTED` is a debt in the WORLD that falls when
+somebody runs a spec, so a sum lets an honest day's work MASK a newly-phantom
+seat. **Ratchet the invariant QUANTITY, not the violation count.** The ratcheted
+number is now `UNFALSIFIABLE` — seats where `arena_present == []` — which is
+invariant under every relabelling *by construction rather than by enumeration*,
+and falls only on a real registration or a citation corrected to a live
+successor. Baseline 7, both ratchets now block, and the count prints with or
+without `--check`. Lesson closed and extended in LESSONS.md with the general
+test: *ask whether your ratcheted number is computed from the DOCUMENT's
+vocabulary or from the WORLD's state.*
+
+**T0.29 PASS** (2.19 s, 10 properties, no GPU), re-run at a clean tree so the
+row is not `+dirty`. The control is `champions.py` as it stood before
+2026-08-29, all three holes reconstructed BY DELETION rather than paraphrased
+(T0.08 P5): the one-class ratchet, `unregisterable={}`, and the
+`all(status == "NOT_RUN")` challenger quantifier. It fails exactly
+`p2_deleting_the_arena_does_not_help`, `p4_unregisterable_is_not_a_todo`,
+`p6_only_a_challenger_discharges` — **and passes the other seven**, which is
+what makes it a control and not a broken import.
+
+**One property was wrong and the tool was right.** P2 first asserted that
+registering the phantoms drops the count by exactly one; it dropped by two,
+because `ZZ.00` was cited by two fixture seats. I tightened the fixture to
+register a surgically-chosen single id rather than weakening the assertion to
+`< before`, which would pass for any implementation miscounting in the right
+direction.
+
+**Stated in both docstrings and NOT fixed:** seat MARKINGS are still INFERRED
+from a table column with a prose fallback. No battery over this module can
+close that — the ambiguity is in the document, not the code. The repair is a
+`HELD:`/`ARENA:` declaration syntax, which `champions.py` says it is not
+permitted to invent unilaterally. It is owed.
+
+**NEXT ITERATION.** (1) Both governance instruments are now certified, so
+OVERSIGHT B1 is fully closed — go to **B2** (the `IMPL_DEPS` staleness guard)
+or **B3** (`safety_hazards()` over the same-date COHORT; ten defaults share
+2026-08-31 and it flags nothing today, which is the cheap moment to build it).
+(2) **Eleven pre-registered defaults fire 2026-08-31** — if you wake after it,
+`run decisions --check` first and journal what fired. (3) `SH.02` is still
+unimplemented and still needs nobody. (4) Do not chase the empty GPU classes;
+read the queue-depth block, it says which are fillable (`cpu<10min` is, and
+`LG.01`/`ME.11` are the candidates).

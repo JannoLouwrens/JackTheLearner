@@ -5670,6 +5670,47 @@ not a guard, it is a record of an intention`]: there the unchecked thing was a
 *relation between two files*, here it is a *relation between what a tool says
 and what it counts*. In both, every local property was green.
 
+**CLOSED 2026-08-30 on both tools — and half the rule above turned out to be
+the wrong repair.** `decisions.py` was fixed first (`NO-DEFAULT` added to the
+blocking set, certified by `T0.29`'s sibling `T0.28` P9); `champions.py` today,
+certified by **`T0.29` P2/P3**. The lesson's second sentence — *"put the gaming
+move itself in a known-answer test: perform the cheap wrong repair on an
+in-memory copy and assert the tool goes RED"* — is exactly right and is what
+P2 does. But its FIRST option, *"ratchet the sum as well"*, is a trap, and
+building it is how I found out:
+
+**RATCHET THE INVARIANT QUANTITY, NOT THE VIOLATION COUNT — not one class, and
+not the sum either.** Summing `ARENA-MISSING + NO-ARENA + UNCONTESTED` does
+survive the delete-the-arena-id move, so it looks like the fix. It fails on a
+different one: `UNCONTESTED` is a debt in the WORLD (an arena that exists and
+has not run) and it falls when somebody runs a spec, so a sum lets an honest
+day's work MASK a newly-phantom seat. Any ratchet over violation labels is a
+ratchet over the tool's own vocabulary, and it is only ever as safe as the
+enumeration of moves between labels somebody thought of — which is the same
+whack-a-mole one level up.
+
+The durable form is a ratchet over a quantity derived from the STATE the tool is
+supposed to protect. Here that is `UNFALSIFIABLE`: seats for which no registered
+spec resolves from the arena cell (`arena_present == []`). It is invariant under
+every relabelling **by construction rather than by enumeration** — no arena id
+exists to be deleted, no matter what class the violation is filed under — and it
+falls only when a spec is genuinely registered or a citation is corrected to a
+live successor, which are the only two repairs the file has ever endorsed. It is
+also, unlike any violation count, the number a reader actually wants: *how many
+of Jack's seats could nothing unseat?* (7 of 26 on the day it was first
+measured, while the old gate reported 5 and called itself ok.)
+
+**Test for the general case:** ask what one-line edit a lazy maintainer would
+make to turn your guard green, then ask whether your ratcheted number is
+computed from the DOCUMENT's vocabulary or from the WORLD's state. If a
+relabelling can move it, it is the first, and enumerating the relabellings is
+not the repair — recomputing from the state is. Corollary for reviewers, which
+is what made this cheap: `champions.py` already carried this warning **in prose
+directly above the constant it warns about**, for six days and three audits. A
+comment adjacent to a numeric guard reads as if the guard implements it, so when
+you find one, the useful move is not to agree with it — it is to run the edit it
+forbids and watch what the number does.
+
 ## A guard that checks a field is PRESENT has not checked what the field SAYS — and a report that truncates it means nobody else did either
 
 *(41st overseer audit, 2026-08-28. Found by reading the eleven armed defaults in
