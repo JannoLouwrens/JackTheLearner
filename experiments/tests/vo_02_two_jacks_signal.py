@@ -276,7 +276,29 @@ MI_MARGIN_BITS = 0.25           # I(referent; ear code) above its permutation fl
 CIC_MARGIN_BITS = 0.15          # interventional influence above its floor
 SEED_SPREAD_FACTOR = 1.5        # t3_06's exact all-seeds bound for n=3, ddof=0
 
+# ── the floors' own known-answer bars, measured on PLANTED structure ────
+# See `_floor_selftest`. These are properties of the ESTIMATOR, measured on
+# synthetic data with a known answer, so freezing them costs nothing and tells
+# nothing about any arm.
+MI_FLOOR_COLLAPSE_MIN = 1.50    # planted-perfect measures 1.972 of a 2.0 ceiling
+CIC_FLOOR_COLLAPSE_MIN = 0.40   # planted-perfect measures 0.617 of a 2.0 ceiling
+
 EPS = 1e-12
+
+# ── THE ARITHMETIC GUARD ────────────────────────────────────────────────
+# A gate asking for more headroom than its own floor leaves available is
+# UNSATISFIABLE BY ARITHMETIC — it cannot be cleared by a perfect result, so it
+# is not a threshold, it is a refusal wearing one. T3.10 was piloted, dispatched
+# and parked on 2026-08-30 with exactly this defect, discovered only after the
+# GPU had run. It is cheap to make it impossible instead: the margins are
+# checked against the collapse the floors actually permit, AT IMPORT, so a spec
+# with an unsatisfiable gate cannot be registered, let alone dispatched.
+assert MI_MARGIN_BITS < MI_FLOOR_COLLAPSE_MIN, (
+    f"MI_MARGIN_BITS={MI_MARGIN_BITS} exceeds the {MI_FLOOR_COLLAPSE_MIN} bits "
+    f"a perfect signalling system clears its own floor by — unsatisfiable")
+assert CIC_MARGIN_BITS < CIC_FLOOR_COLLAPSE_MIN, (
+    f"CIC_MARGIN_BITS={CIC_MARGIN_BITS} exceeds the {CIC_FLOOR_COLLAPSE_MIN} "
+    f"bits a perfect signalling system clears its own floor by — unsatisfiable")
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -695,6 +717,47 @@ def _cic_floor(rows: np.ndarray, rng, n_perm=N_PERM) -> tuple:
     return float(np.percentile(vals, 95)), float(np.mean(vals))
 
 
+def _floor_selftest() -> dict:
+    """Are the two permutation floors FLOORS, or invariances of their own
+    statistics?
+
+    A permutation null is only a null if the permutation destroys the
+    dependence the statistic is sensitive to. `_cic` is symmetric in the
+    referent index, so the obvious shuffle — permute the referent labels within
+    a pose — leaves it EXACTLY UNCHANGED: measured 2.0000, "floor" 2.0000,
+    collapse 0.0000, and `cic - floor >= CIC_MARGIN_BITS` becomes unsatisfiable
+    by arithmetic. That is why `_cic_floor` resamples ACROSS poses instead, and
+    this function is the proof that the distinction is real rather than a
+    comment.
+
+    Both floors are pointed at PLANTED PERFECT structure — referent == code;
+    every referent driving its own act at every pose — where the answer is
+    known to be log2(N_STATES) = 2 bits. Each floor must sit far below it. A
+    future edit that quietly reintroduces an invariance fails here, in the
+    ledger, on synthetic data, before any GPU-hour or any arm is run.
+
+    Measured 2026-08-30: MI collapses 1.972 of 2.0; CIC collapses 0.617 of 2.0
+    at `N_CIC` poses. The CIC floor is much the more conservative of the two —
+    resampling confident one-hot responses across poses often lands a
+    near-injective assignment, which reads as influence — and 0.617 is
+    therefore the CEILING on any CIC margin this rig can ever ask for.
+    """
+    n = N_STATES
+    refs = np.repeat(np.arange(n), 100)
+    mi = _plugin_mi(refs, refs.copy(), n, MI_CODES)
+    mi_p95, _ = _mi_floor(refs, refs.copy(), n, MI_CODES,
+                          np.random.RandomState(11))
+    rows = np.tile(np.eye(n)[None], (N_CIC, 1, 1))
+    cic = _cic(rows)
+    cic_p95, _ = _cic_floor(rows, np.random.RandomState(13))
+    # the invariance that would have been the bug, measured rather than argued
+    bad = np.stack([r[np.random.RandomState(17 + i).permutation(n)]
+                    for i, r in enumerate(rows)])
+    return {"mi_floor_collapse": float(mi - mi_p95),
+            "cic_floor_collapse": float(cic - cic_p95),
+            "cic_within_pose_collapse": float(cic - _cic(bad))}
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # THE RIG'S OWN INSTRUMENTS
 # ═══════════════════════════════════════════════════════════════════════
@@ -759,6 +822,7 @@ def _level(seed: int) -> dict:
 # ═══════════════════════════════════════════════════════════════════════
 def _experiment(seed: int) -> dict:
     m = {}
+    m.update(_floor_selftest())        # are the floors floors, or invariances?
     m.update(_urn_game(seed))          # the estimator's known-answer test, first
     m.update(_probe(seed))             # the channel is alive in this rig
     m.update(_level(seed))             # ...at a declared difficulty
@@ -828,7 +892,12 @@ def _check(m: dict, c: dict):
     # this spec's `kills` field.
     est_ok = (m["urn_success"] >= URN_SUCCESS_MIN
               and m["urn_mi"] >= URN_MI_MIN
-              and m["urn_mi_scram"] <= URN_MI_SCRAM_MAX)
+              and m["urn_mi_scram"] <= URN_MI_SCRAM_MAX
+              # ...and the floors those readings are gated against are floors,
+              # not invariances of their own statistics. Without this, an
+              # at-floor MI cannot be told apart from a floor that cannot move.
+              and m["mi_floor_collapse"] >= MI_FLOOR_COLLAPSE_MIN
+              and m["cic_floor_collapse"] >= CIC_FLOOR_COLLAPSE_MIN)
     chan_ok = (_worst_lo(m, "probe_r2_mean") >= PROBE_R2_MIN
                and _worst_hi(m, "probe_mute_r2_max") <= PROBE_MUTE_MAX)
     level_ok = abs(m["voice_to_background_db"] - V.SIR_TARGET_DB) <= V.SIR_TOL_DB
@@ -861,6 +930,7 @@ def _dry() -> list:
     """
     def base(**kw):
         d = {"urn_success": 1.0, "urn_mi": 1.0, "urn_mi_scram": 0.0,
+             "mi_floor_collapse": 1.97, "cic_floor_collapse": 0.62,
              "probe_r2_mean": 0.8, "probe_mute_r2_max": 0.0,
              "voice_to_background_db": V.SIR_TARGET_DB,
              "muted_coord": CHANCE, "coord": 0.9, "coord_std": 0.01,
@@ -880,6 +950,13 @@ def _dry() -> list:
         ("urn check dead -> VOID", base(urn_mi=0.2), ctl, Status.VOID),
         ("estimator sees a scrambled system -> VOID",
          base(urn_mi_scram=0.5), ctl, Status.VOID),
+        # the defect this file's `_floor_selftest` exists to make impossible:
+        # a "floor" that is an invariance of its own statistic reads 0.0
+        # collapse, and every gate above it is unsatisfiable by arithmetic.
+        ("CIC floor is an invariance, not a floor -> VOID",
+         base(cic_floor_collapse=0.0), ctl, Status.VOID),
+        ("MI floor cannot move -> VOID", base(mi_floor_collapse=0.2), ctl,
+         Status.VOID),
         ("channel dead in rig -> VOID", base(probe_r2_mean=0.1), ctl,
          Status.VOID),
         ("probe reads the room -> VOID", base(probe_mute_r2_max=0.4), ctl,

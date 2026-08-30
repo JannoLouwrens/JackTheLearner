@@ -7287,3 +7287,79 @@ is inventory debt, and its honest report is "REGISTER to discharge". An
 instrument that lets *unwritten* be filed as *undoable* would discharge its own
 ratchet by relabelling the work, which is the forbidden repair wearing the
 permitted one's clothes.
+
+## A permutation floor is only a floor if the permutation is in the statistic's
+## sensitivity alphabet — otherwise it is an INVARIANCE, and every gate above it
+## is unsatisfiable by arithmetic
+## (builder, 2026-08-30, implementing VO.02)
+
+**The near-miss.** VO.02 gates two information measures against permutation
+floors, because both are plug-in estimators with a positive finite-sample bias
+that is the same size as a weak real effect. The interventional one, `_cic`, is
+`I(intervened referent ; act)` averaged over poses. The obvious null for it is
+*shuffle the referent labels* — the same shuffle that is exactly right for the
+other measure, `mi_ear`, three functions up the file.
+
+It is not a null. `_cic` averages a per-pose mutual information over the
+referent axis, and mutual information is **symmetric in the labels of that
+axis**. Permuting them leaves the statistic bit-identical. Measured on planted
+perfect structure, where the answer is known to be `log2(4) = 2` bits:
+
+| floor construction | measured | "floor" | collapse |
+|---|---|---|---|
+| shuffle referents WITHIN a pose | 2.0000 | 2.0000 | **0.0000** |
+| resample responses ACROSS poses | 2.0000 | 1.3829 | 0.6171 |
+
+With the first construction the gate `cic - floor >= CIC_MARGIN_BITS` **cannot
+be cleared by a perfect signalling system**, or by anything else, for any
+positive margin. It is not a strict threshold. It is a refusal wearing one, and
+it would have read in the ledger as *the pair did not communicate*.
+
+**Why this is worth a lesson and not just a fix.** The project paid for this
+exact shape one day earlier: T3.10 was implemented, piloted on a T4, dispatched
+and PARKED on 2026-08-30 with a gate that was *unsatisfiable by arithmetic*, and
+nobody knew until the GPU had already run. The surface differed — there a
+threshold exceeded the range its own metric could occupy, here a null equals the
+statistic it is subtracted from — but the failure is identical: **a comparison
+whose two sides cannot differ, discovered downstream of the compute.**
+
+It also has a sibling already on this page. *"A sensitivity detector can only
+falsify a guard whose failure mode is in its perturbation alphabet"* is the same
+observation about detectors; this is it about **nulls**, which is the more
+dangerous surface, because this project gates almost everything on a null and a
+null that cannot move looks exactly like a null nothing beat.
+
+**The rule.** Before gating on a shuffle-, permutation- or resample-based floor,
+ask what the statistic is invariant under, and check that your permutation is
+not in that set. Symmetry in an axis is the common case and it is easy to miss
+precisely when the same shuffle is correct for a neighbouring measure in the
+same file.
+
+**The mechanical form, which is what makes it unrepeatable.** Two guards, both
+cheap, both in `vo_02_two_jacks_signal.py`:
+
+1. **A known-answer test for every floor, in the run, in the record.**
+   `_floor_selftest()` points each floor at planted perfect structure and
+   reports `mi_floor_collapse`, `cic_floor_collapse` — and, kept deliberately,
+   `cic_within_pose_collapse`, which measures the rejected construction and
+   reads `0.0` forever. The collapses are RIG GATES: below their bars the run is
+   `VOID`, because an at-floor reading from a floor that cannot move is not
+   evidence about the claim. A future edit that reintroduces an invariance fails
+   on synthetic data, before any arm runs and before any GPU-hour is spent.
+
+2. **An import-time arithmetic assertion.** A margin larger than the collapse
+   its own floor permits is unsatisfiable, so `MI_MARGIN_BITS` and
+   `CIC_MARGIN_BITS` are asserted against the measured collapse ceilings **at
+   module import**. A spec with an unsatisfiable gate now cannot be imported,
+   which means it cannot be registered, run, or dispatched. That is the T3.10
+   scar closed at the only place it is free to close: before the compute.
+
+**And the sizing fact that fell out of it, recorded because it constrains any
+future edit.** The across-pose CIC floor is far more conservative than the MI
+one — 1.383 against a 2.0 ceiling, versus 0.028 — because resampling confident
+one-hot responses across poses frequently lands a near-injective assignment,
+which reads as influence. So **0.617 bits is the CEILING on any CIC margin this
+rig can ever honestly ask for**, and it is a property of the estimator, not of
+any arm. A later iteration that raises `CIC_MARGIN_BITS` toward 2.0 on the
+reasoning that "2 bits are available" would be rebuilding the same defect, and
+the assertion now stops it.
