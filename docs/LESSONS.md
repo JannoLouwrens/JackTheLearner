@@ -7679,3 +7679,69 @@ tree — a comparison that never became valid, rather than a nose that failed.
 A test whose instrument-liveness leg is at chance measures nothing, and one
 that dispatches to a GPU before checking that leg locally spends free hours to
 learn it.
+
+## A command that can only REPLACE certificates needs a precondition the
+## commands that only ADD them do not — and ten green re-runs can still leave
+## the ladder worse than they found it
+## (builder, 2026-08-30, after clearing the dirty stamp `7966524` created)
+
+The event, in one line: at 09:19 UTC the builder edited `champions.py`, ran
+`python -m experiments.run --gate` to check for regressions, saw **ten PASSes**,
+and committed. All ten rows recorded `e9bd4a0+dirty`. For `T0.08` and `T0.09`
+the recorded `impl_sha` reconstructed from no committed blob, so both became
+DIRTY STAMPS, and `T0.09` is a dependency of **36 specs**. For the next three
+hours `run blocked` printed a phantom at the top of the project —
+
+    T0.09 = PASS but STALE — re-run it  frees 36  (blocks 37)
+
+— **above the real top blocker** (`T2.01`, frees 35), so the one ranking the
+loop uses to choose its unit was pointing at a spec that was fine. Clearing it
+cost two re-runs and a second Colab T4 round-trip. The gate was green and the
+ladder got worse.
+
+**The generalisable half is a taxonomy of commands by what they can do to the
+record, and this repo had never drawn it.** A single-spec run ADDS a row; from a
+dirty tree it merely fails to certify, which is honest and ordinary —
+`t0_23`'s own fixture note says a dirty working tree is the NORMAL state of the
+iteration that runs it, and `+dirty` exists precisely to say so. A **gate**
+re-runs rows that ALREADY hold clean stamps, so it can only REPLACE. Run it
+from a dirty tree and its expected effect on the record is negative *by
+construction*: every row it touches either stays where it was or gets demoted,
+`blocked_by` propagates the demotion downstream, and no outcome of the sweep can
+make anything better. A precondition that is optional for the adding kind is
+**mandatory** for the replacing kind, and nothing in this runner had ever asked
+which kind a command was.
+
+**Read the second half as a warning about green, because that is what made it
+invisible.** The sweep reported ten passes and no error. Nothing in the output
+of a regression gate distinguishes "I re-certified ten things" from "I demoted
+two of them and blocked thirty-six dependents", because the demotion is not a
+FAIL — it is a *stamp*, recorded in a field the summary line does not print.
+An all-green run is evidence about the code. It is not evidence about the
+record, and the two are different objects.
+
+**It had already happened twice under other names and was fixed as an incident
+both times.** `T2.00`'s `08444b2+dirty` (a 998-second re-run, 47 specs blocked,
+caused by an uncommitted `LOOP_JOURNAL.md`) bought the `DOC_OUTPUTS` exclusion;
+`T0.25`'s `1ddcd27+dirty` bought a docstring. Both repairs made the *specific*
+file safe; neither asked why the runner had volunteered for the stamp at all.
+Third occurrence is where a class gets named — which is itself the lesson this
+file exists to stop needing.
+
+**The repair, and what it deliberately does NOT do.**
+`protocol.gate_precondition` refuses `--gate` on a code-dirty tree, names the
+paths and reports how many PASS rows were at risk; `--dirty-ok` gates anyway
+and prints what it costs. **Nothing is weakened: `+dirty` fires on exactly the
+condition it fired on before.** The guard only refuses to *volunteer* for it —
+which is the shape any fix in this area must take, because the alternative
+(suppressing the stamp for gate runs) buys the same green by lying. Certified
+as `T0.30`, whose P6–P8 run the shipped command line in a scratch clone, since
+the property under test is an ORDERING inside `main()` — the refusal must land
+before the lock and before dispatch — and no pure-function battery can see an
+ordering.
+
+**Rule:** before adding or trusting a command that rewrites ledger rows, ask
+whether it can improve the record at all under the conditions it will actually
+be run in. If the answer is no, it needs a precondition, not a warning. And
+`commit -> push -> gate` is the order; `gate -> commit` was never a shortcut,
+it was a slow way of deleting evidence.

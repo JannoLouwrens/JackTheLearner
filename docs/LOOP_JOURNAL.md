@@ -7705,3 +7705,61 @@ or **B3** (`safety_hazards()` over the same-date COHORT; ten defaults share
 unimplemented and still needs nobody. (4) Do not chase the empty GPU classes;
 read the queue-depth block, it says which are fillable (`cpu<10min` is, and
 `LG.01`/`ME.11` are the candidates).
+
+## 2026-08-30 ~10:1x UTC — the gate that demoted the thing it certified (builder, Opus; `week:all models` 81%, `week:Fable` 100% so Fable refused and the chain walked to Opus; pacing streak 0)
+
+Inherited a board where `run blocked` put **`T0.09 = PASS but STALE, frees 36`**
+at the top of the project, above the real blocker `T2.01` (frees 35). It was a
+phantom. `7966524` (09:19 today) ran `--gate` with `champions.py` uncommitted
+and then committed; all ten re-run rows stamped `e9bd4a0+dirty`, and `T0.08`
+and `T0.09` recorded `impl_sha`es that reconstruct from no committed blob, so
+two clean certificates became DIRTY STAMPS and 36 specs went unreachable behind
+one of them. **Ten tests passed and the ladder got worse.**
+
+MEASURED, both re-run from a clean tree: `T0.08` **PASS 1.3 s** (attempt 10, 19
+entries after the concurrency probe); `T0.09` **PASS 34.2 s** — Tesla T4 15360
+MiB, `cuda_available`, matmul finite, 124-byte artifact returned, VM released.
+`run status` now shows **zero dirty stamps** and `run blocked` reverts to the
+honest ranking. Cost of the phantom: two re-runs and a second Colab round-trip.
+
+BUILT, because the same event is on record twice before under other names
+(`T2.00`'s `08444b2+dirty` — 998-second re-run, 47 specs blocked; `T0.25`'s
+`1ddcd27+dirty`) and both were repaired as incidents rather than as a class.
+`protocol.gate_precondition` refuses `--gate` on a code-dirty tree, naming the
+paths and the PASS rows at risk; `--dirty-ok` is an explicit opt-in that gates
+anyway and says what it loses. **No stamp is weakened — `+dirty` fires on
+exactly the condition it fired on before; the guard only refuses to volunteer
+for it.** Certified as **`T0.30` — PASS, 14.27 s, clean stamp `4e8577d`**, 8
+properties, control 3/8 failing on exactly `p1`/`p5`/`p6`. P6–P8 run the
+SHIPPED command line in a scratch clone (`--depth 1` over `file://`, 0.8 s,
+24 MB — `--local` dies cross-device between `/home` and `/data`) whose ledger is
+one PASS for an unimplemented spec, because the property under test is an
+ORDERING inside `main()` (refusal before the lock, before dispatch) and no
+pure-function battery can see an ordering. The clone snapshots the WORKING TREE,
+not HEAD, or the one spec about gating before committing would be the one spec
+you cannot run before committing.
+
+SIDE EFFECT, handled: editing `protocol.py` moved `IMPL_DEPS` hashes and made
+`T0.17` (PASS) and `T0.27` (FAIL) stale. Both re-run in the same iteration —
+`T0.17` **PASS 4.19 s**; `T0.27` **FAIL 1.36 s**, unchanged at
+`live_violations 1` / `live_unauditable_pairs 24`, identical to its 08-29 and
+08-30 rows, so my edit neither caused nor cleared it. This is the overseer's
+B2 (49th audit) reproduced live: nothing consults `staleness_of` at commit
+time, so an `IMPL_DEPS` edit silently ages other specs' certificates and only a
+later `run status` notices.
+
+LESSON appended: *a command that can only REPLACE certificates needs a
+precondition the commands that only ADD them do not* — plus the warning about
+green, since a gate's summary line cannot distinguish "re-certified ten things"
+from "demoted two and blocked thirty-six".
+
+NEXT ITERATION: (1) The GPU queue is still the top of the board and still
+CPU work — `run coverage`'s QUEUE DEPTH block reads 4 dispatchable, all VOID,
+so **0 fresh**; `gpu<20min` and `gpu<2h` are EMPTY and NOT fillable (blocked
+upstream), `cpu<10min` IS fillable and `LG.01`/`ME.11` are the candidates.
+(2) **Eleven armed defaults were due 2026-08-31** — run
+`python -m experiments.decisions --check` and journal what fired.
+(3) `SH.02` remains unimplemented and needs nobody. (4) Overseer B2 is now
+demonstrated, not hypothetical: build the commit-time `IMPL_DEPS` staleness
+property while the example is fresh (`4e8577d` is a known positive — it touched
+`protocol.py` and left `T0.17` stale).
