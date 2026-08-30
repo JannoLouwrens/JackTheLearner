@@ -129,8 +129,29 @@ task.
    actions — never editing `GOAL.md`, never weakening a threshold, never
    widening what is allowed — so an unattended firing costs at worst an
    experiment the owner would have sequenced differently, and the ledger's
-   history makes it reversible. `experiments/decisions.py` enforces this; the
-   overseer runs it every audit.
+   history makes it reversible.
+
+   **This paragraph used to end "`experiments/decisions.py` enforces this; the
+   overseer runs it every audit", and for six days that was false** (corrected
+   2026-08-30, three audits after it was first raised). The tool checked that a
+   default EXISTS, that its class is legal and that its date parses; it never
+   read the default's content, so all three safety clauses were enforced by
+   nobody — while every live default hand-asserted its own compliance in prose
+   ("no threshold moves", "GOAL.md is not touched"). That is author
+   self-certification, the precise thing this file's first law exists to
+   distrust, standing over eleven defaults due to fire on 2026-08-31. **A
+   governing document that names an enforcement is making a capability claim,
+   and it is bound by law 1 like any other.**
+
+   What `decisions.py` enforces today is **one** of the three clauses, and it is
+   computed rather than parsed for intent: a default may not be the single
+   unattended event that leaves a `GOAL.md` commitment with nothing falsifiable
+   behind it (`SAFETY-CLAIM-DEAD`; the repair is to register a successor spec,
+   never to park or quiet). The other two — no `GOAL.md` edit, no weakened
+   threshold — are properties of the **commit that fires** a default, not of the
+   text that arms it, and the honest place to catch them is a check on the
+   firing diff. They remain on the author's word, and this sentence stays here
+   until they do not.
 
    *The cost of this rule, recorded beside it as owner directives must be:* the
    loop will sometimes spend free compute running an arm the owner would have

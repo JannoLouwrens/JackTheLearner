@@ -64,6 +64,52 @@ DECLARED, at the start of a line, in the same idiom as `COVERS:`:
 never typed. A hand-written cost is stale the moment the ladder grows, and this
 ladder grew 169 -> 179 in one morning.
 
+THE SAFETY CLAUSE, AND HOW MUCH OF IT THIS FILE ACTUALLY ENFORCES (2026-08-30).
+`SYSTEM.md` says of the paragraph above: *"experiments/decisions.py enforces
+this; the overseer runs it every audit."* Until today that sentence was false.
+This file checked that a default EXISTS, that its class is legal, and that its
+date parses. It never read the default's CONTENT, so all three safety clauses -
+no GOAL.md edit, no weakened threshold, no widening of what is permitted - were
+enforced by nobody. Meanwhile every live default hand-asserts its own compliance
+in prose ("no threshold moves", "GOAL.md is not touched", "this is a NARROWING
+and only a narrowing"). Author self-certification is the exact thing the rest of
+this apparatus exists to distrust, and eleven of them fire on 2026-08-31.
+
+What is enforced now, and it is ONE of the three clauses:
+
+    SAFETY-CLAIM-DEAD - a default may not be the single unattended event that
+    leaves a GOAL.md commitment with nothing falsifiable behind it.
+
+Computed, not parsed for intent: every spec id NAMED ANYWHERE in a default's
+text is that default's BLAST RADIUS - the set of specs whose fate that one
+calendar event could reach. If some commitment's every live claim-kind spec
+lies inside a single default's blast radius, then that commitment's
+falsifiability rests entirely on one date passing unanswered, and
+`coverage.py`'s standing rule applies: *"The repair for a red here is to
+REGISTER a successor spec, never to unpark or quiet the tool."*
+
+The blast radius deliberately OVER-approximates. It does not attempt to decide
+what a default does - only what it could touch - because a scanner that tried to
+read intent out of 918 characters of constitutional English would be the regex
+that flatters its author, twice warned about above. Over-approximating is the
+safe direction: a false positive costs one registry entry, and registering a
+successor spec is never the wrong thing to have done.
+
+KNOWN-POSITIVE, historical and real. On 2026-08-29 `D8`'s default read "PARK
+BA.02" and `BA.02` was the only claim-kind spec behind `balance` (GOAL.md:41,
+constitutional). This check would have fired. It does not fire today because a
+builder registered `BA.03` on the morning of 08-30 - the successor, which is
+precisely the prescribed repair. A guard whose positive is a thing that actually
+happened, and whose green is a thing somebody actually fixed.
+
+WHAT IS STILL NOT ENFORCED, stated here so no later reader repeats SYSTEM.md's
+mistake in this file's name: **"never edits GOAL.md" and "never weakens a
+threshold" are NOT checked.** Neither is decidable from a DECIDE block - both
+are properties of the COMMIT that fires the default, not of the text that arms
+it, and the honest place to catch them is a pre-commit check on the firing diff.
+Two of three clauses remain on the author's word. Do not write a prose scanner
+for them; write the diff check.
+
     python -m experiments.decisions          # report
     python -m experiments.decisions --check  # ratchet: exit 1 if debt grew
 """
@@ -72,6 +118,7 @@ from __future__ import annotations
 import datetime as _dt
 import re
 import sys
+import textwrap as _textwrap
 from pathlib import Path
 
 DOC = Path(__file__).resolve().parent.parent / "docs" / "DECISIONS_NEEDED.md"
@@ -167,6 +214,65 @@ def cost_of(blocks: list[str]) -> tuple[int, list]:
     return len(freed), sorted(freed)
 
 
+# A spec id as it appears inside a default's prose. Same shape as
+# `coverage.GOAL_CITATION`, and resolved against `BY_ID` for the same reason
+# `champions.py` resolves its arenas: an id that names nothing is not a
+# reference, and counting it would inflate every blast radius with typos.
+_SPEC_ID = re.compile(r"\b([A-Z]{1,4}[0-9]?\.[0-9]{1,2})\b")
+
+
+def blast_radius(default_text: str, by_id=None) -> set:
+    """Spec ids a default's firing COULD reach — never what it will do.
+
+    Over-approximation is the point; see the module docstring. An id that does
+    not resolve in the registry is dropped, not counted.
+    """
+    if by_id is None:
+        try:
+            from .registry import BY_ID as by_id
+        except Exception:
+            return set()
+    return {i for i in _SPEC_ID.findall(default_text or "") if i in by_id}
+
+
+def safety_hazards(decls: dict, candidates: list, rows=None, by_id=None) -> list:
+    """`[(decision_id, commitment, [claim ids])]` — commitments whose entire
+    live falsifiable surface sits inside one armed default's blast radius.
+
+    Returns [] — not an error — if `coverage.py` or the registry cannot be
+    imported. This check is an ADDITION to the ratchet, and a guard that turns
+    an unrelated ImportError into a red gate is a guard that gets switched off.
+    """
+    try:
+        from . import coverage as _cov
+        if rows is None:
+            rows = _cov.report()
+    except Exception:
+        return []
+
+    radii = {}
+    for did in candidates:
+        d = decls.get(did) or {}
+        if (d.get("class") or "").lower() != "goal" or not d.get("default"):
+            continue
+        radii[did] = blast_radius(d["default"], by_id)
+
+    out = []
+    for r in rows:
+        # A commitment with a PASS is not at risk: `_claim_dead` needs BOTH no
+        # passing claim AND no live claim declaration, and a default cannot
+        # un-record a certificate.
+        if r.get("n_pass"):
+            continue
+        claims = {sid for sid, k in r["kinds"].items() if k == "claim"}
+        if not claims:
+            continue                      # already claim-dead; coverage owns that red
+        for did, hits in radii.items():
+            if claims <= hits:
+                out.append((did, r["commitment"], sorted(claims)))
+    return sorted(out)
+
+
 def audit(text: str, today: _dt.date) -> tuple[list, list]:
     """Return (violations, rows). A violation blocks; a row is for the report."""
     decls, candidates = parse(text)
@@ -209,6 +315,16 @@ def audit(text: str, today: _dt.date) -> tuple[list, list]:
         rows.append({"id": did, "due": due, "overdue": (today - due).days,
                      "blocks": blocks, "cost": n,
                      "default": d.get("default", "")})
+
+    # The safety clause, last because it needs the whole armed set at once.
+    for did, commitment, claims in safety_hazards(decls, candidates):
+        violations.append(("SAFETY-CLAIM-DEAD", did,
+                           f"every live claim spec behind '{commitment}' "
+                           f"({', '.join(claims)}) is named in this default — one "
+                           "unanswered date would leave a GOAL.md commitment with "
+                           "nothing falsifiable behind it. Repair: REGISTER a "
+                           "successor claim spec (coverage.py's rule), never park "
+                           "or quiet"))
     return violations, rows
 
 
@@ -258,8 +374,64 @@ DECIDE: D93
     assert [r["id"] for r in rows] == ["D93"], rows
 
 
+def _safety_fixture() -> None:
+    """The planted positive for SAFETY-CLAIM-DEAD, on the real code path.
+
+    The shape is not invented: it is `D8` as it actually stood on 2026-08-29,
+    when `BA.02` was the only claim-kind spec behind `balance` and `D8`'s
+    default read "PARK BA.02". `BA.03` was registered on the morning of
+    2026-08-30 and that is why the live check is green — so this fixture is the
+    only place the failing state still exists, and without it the guard has
+    never been seen to fire.
+
+    Rows are synthetic on purpose. Pinning the fixture to the live ledger would
+    make it go quiet the moment the repo is repaired, which is how a guard ends
+    up green because its subject vanished rather than because it was fixed.
+    """
+    decls = {
+        "D80": {"class": "goal", "default": "Option 1 - PARK BA.02 until a body "
+                                            "with directional catch authority "
+                                            "exists. BA.01 stands untouched."},
+        "D81": {"class": "goal", "default": "Bakeoff the permitted arms of T2.01 "
+                                            "at matched experience."},
+        "D82": {"class": "means", "default": "PARK SM.02 and SM.03 both."},
+    }
+    rows = [
+        # the positive: every claim behind it sits inside D80's radius
+        {"commitment": "balance", "n_pass": 0,
+         "kinds": {"BA.01": "sensor", "BA.02": "claim"}, "parked": {}},
+        # a successor exists and is named by no default — the prescribed repair
+        {"commitment": "balance-repaired", "n_pass": 0,
+         "kinds": {"BA.01": "sensor", "BA.02": "claim", "BA.03": "claim"},
+         "parked": {}},
+        # a PASS cannot be un-recorded by a calendar, so this is never at risk
+        {"commitment": "locomotion", "n_pass": 1,
+         "kinds": {"T2.01": "claim"}, "parked": {}},
+        # already claim-dead: coverage.py owns that red, not this file
+        {"commitment": "empty", "n_pass": 0, "kinds": {"XX.01": "fixture"},
+         "parked": {}},
+        # a MEANS entry is never armed, so its radius must not be consulted
+        {"commitment": "smell", "n_pass": 0,
+         "kinds": {"SM.02": "claim", "SM.03": "claim"}, "parked": {}},
+    ]
+    by_id = {"BA.01": 1, "BA.02": 1, "BA.03": 1, "T2.01": 1,
+             "SM.02": 1, "SM.03": 1}
+    got = safety_hazards(decls, list(decls), rows=rows, by_id=by_id)
+    assert got == [("D80", "balance", ["BA.02"])], got
+
+    # And it must go quiet for the RIGHT reason: register the successor and the
+    # same document stops being a hazard. This is the 08-30 repair, replayed.
+    rows2 = [dict(rows[0], kinds={"BA.01": "sensor", "BA.02": "claim",
+                                  "BA.03": "claim"})]
+    assert safety_hazards(decls, list(decls), rows=rows2, by_id=by_id) == []
+
+    # An id that resolves to nothing is a typo, not a reference.
+    assert blast_radius("PARK BA.02 and ZZ.99", by_id) == {"BA.02"}
+
+
 def main(argv: list[str]) -> int:
     _fixture()
+    _safety_fixture()
     text = DOC.read_text()
     today = _dt.date.today()
     violations, rows = audit(text, today)
@@ -271,7 +443,15 @@ def main(argv: list[str]) -> int:
             due = "OVERDUE — DEFAULT IS DUE TO FIRE" if r["overdue"] > 0 else f"due {r['due']}"
             print(f"    {r['id']:<6} costs {r['cost']:3d} specs   {due}")
             print(f"           blocks {', '.join(r['blocks']) or '(nothing declared)'}")
-            print(f"           default: {r['default'][:110]}")
+            # NOT `[:110]`. The live defaults run 369-1041 characters, so that
+            # slice had never shown 70-89% of any constitutional clause in any
+            # report an owner or auditor ever read — including, for four
+            # months of report output, the sentences saying what the default
+            # would PARK. A default nobody can read is an unreviewed default.
+            body = _textwrap.fill(r["default"], 92,
+                                  initial_indent="           default: ",
+                                  subsequent_indent="                    ")
+            print(body if r["default"] else "           default: (none)")
         print()
 
     if violations:
@@ -287,7 +467,9 @@ def main(argv: list[str]) -> int:
             print(f"  RATCHET BROKEN: {undeclared} undeclared open decisions, "
                   f"baseline {BASELINE_UNDECLARED}. It may shrink, never grow.\n")
             return 1
-        blocking = [v for v in violations if v[0] in ("MEANS-ESCALATED", "CLASS", "DATE")]
+        blocking = [v for v in violations
+                    if v[0] in ("MEANS-ESCALATED", "CLASS", "DATE",
+                                "SAFETY-CLAIM-DEAD")]
         if blocking:
             print(f"  {len(blocking)} hard violation(s) — see above.\n")
             return 1

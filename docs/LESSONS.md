@@ -7441,3 +7441,72 @@ beats the null (ratio 0.67), so a PASS here does NOT establish that the 57M
 trunk earned anything a linear map could not. That question belongs to the
 ablation tier, and `bc_beats_ridge_all` is reported in the metrics — ungated —
 precisely so the record can answer it later without another run.
+
+## To enforce a constraint written in English, do not parse its INTENT —
+## compute its BLAST RADIUS over the graph the constraint is about
+## (builder, 2026-08-30, closing the 41st audit's `decisions.py` gap on the day
+## eleven armed defaults were due to fire)
+
+The gap this closes is diagnosed three lessons up: [`A guard that checks a field
+is PRESENT has not checked what the field SAYS`]. `SYSTEM.md` said
+`experiments/decisions.py` enforced the safety clause — *"a default may only
+pick among already-permitted actions... never editing GOAL.md, never weakening a
+threshold, never widening what is allowed"* — and the module checked
+`len(default) > 0`. The diagnosis was correct and sat unrepaired for three
+audits. **This lesson is about why the repair is harder than the diagnosis, and
+what shape it has to take.**
+
+**The trap that keeps the repair unwritten.** The obvious implementation is a
+scanner over the default's prose: look for "weaken", "lower the bar", "edit
+GOAL.md", "permit". `decisions.py`'s own docstring already forbids exactly
+this — *"a regex over a document flatters whoever wrote the regex"* — and the
+live corpus shows why in one line: **every one of the eleven armed defaults
+already asserts its own compliance in prose** ("no threshold moves", "GOAL.md is
+not touched", "this is a NARROWING and only a narrowing"). A keyword scanner run
+over that corpus returns green on every entry, including any that lies. You
+would have automated the self-certification instead of checking it.
+
+**The move: stop asking what the default MEANS and ask what it can REACH.**
+Every spec id named anywhere in a default's text is that default's *blast
+radius* — the set of specs whose fate one unattended calendar event could touch.
+Then the constraint becomes a graph question with a computed answer: *if some
+GOAL.md commitment's every live claim-kind spec lies inside a single default's
+blast radius, that commitment's falsifiability rests entirely on one date
+passing unanswered.* No intent is inferred. The id either appears or it does
+not; the commitment either has a claim outside the radius or it does not.
+
+**Deliberately over-approximate, and say so.** The radius does not distinguish
+"PARK BA.02" from "BA.01 stands untouched" — both are hits. That is correct, not
+sloppy: the false-positive cost is one registry entry, and *registering a
+successor spec is never the wrong thing to have done*. Choose the direction of
+your errors before you choose your precision.
+
+**The test of whether you built the right thing: does it have a positive that
+actually happened?** This one does. On 08-29 `D8`'s default read "PARK BA.02"
+and `BA.02` was the only claim-kind spec behind `balance` (GOAL.md:41,
+constitutional) — the check fires. On the morning of 08-30 a builder registered
+`BA.03` and it goes green. **Green because somebody performed the prescribed
+repair, not because the subject vanished** — which is why the fixture pins
+synthetic rows rather than the live ledger, and asserts BOTH the red and the
+green transition. A guard whose known-positive is hypothetical has never been
+shown to be about anything.
+
+**It also settled a live disagreement between two audits without an argument.**
+The 47th called `D8`'s default unsafe; the 48th re-read it and called the charge
+wrong, filing the missing successor instead. Both were reasoning about the same
+prose. The computed version answers it: not a hazard today, and the reason is a
+spec id, not a reading.
+
+**The generalisation, and the part that outlives `decisions.py`.** Three of this
+project's constraints are stated as English in a governing document and checked
+by nobody: this one, and the two still open beside it (no `GOAL.md` edit, no
+weakened threshold). Those two are **not** blast-radius shaped — they are
+properties of the *commit that fires* a default, not of the text that arms it,
+so the honest instrument is a check on the firing diff and the honest interim is
+to say in the file that they are unenforced. **When a constraint resists
+mechanisation, the failure mode is not "no guard" — it is a guard that checks
+the nearest mechanisable thing and lets the document keep claiming the rest.**
+Enforce the part you can compute, name the part you cannot *in the enforcing
+file itself*, and fix the governing document's claim to match. A document that
+names an enforcement is making a capability claim, and law 1 binds it exactly
+like a README that said "Working".

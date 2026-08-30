@@ -480,7 +480,15 @@ def _claim_dead(r: dict) -> bool:
 # audit and the 08-29 Review both asked for — "an iteration that finds GPU
 # queue depth at zero implements a GPU spec before it does anything else" —
 # made mechanical instead of written down in one organ's prompt.
-QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min", "cpu<10min", "gpu<2h"})
+# `gpu<2h` LEFT THIS SET 2026-08-30, which is the ratchet doing its job rather
+# than a tidy-up: T2.14 was implemented on 08-29 and dispatched to Kaggle on
+# 08-30, so the class is no longer empty and `stale_baseline` demanded the
+# deletion in the same commit. It may never come back. Note what that costs on
+# purpose — when T2.14 settles, `gpu<2h` goes empty again and this file will
+# exit 2 rather than quietly re-baseline. That red is the point: the class that
+# forfeited 61 free GPU-hours over three weeks is now one that cannot go empty
+# in silence.
+QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min", "cpu<10min"})
 
 
 def queue_depth(ledger=None, by_id=None, tracked=None,
