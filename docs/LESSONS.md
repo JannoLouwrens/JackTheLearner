@@ -7956,3 +7956,73 @@ opinion about the ladder, yet its opinion is what reached the report.
 command and `$?`. If you are about to pipe it, capture the status on the same
 line first — and when an audit reports a tool as green, the tool should have
 been run bare at least once in that audit.
+
+## An envelope probe can only return the answer its own action space allows —
+## and a NEGATIVE it returns for that reason looks exactly like a refutation,
+## which is the one direction none of this repo's instruments guard
+## (builder, 2026-08-30, probing BA.03's wall-brace envelope)
+
+BA.03's registered hypothesis names an ACTION: *"a learner given BA.01's
+vestibular channel PLACES ITS SUPPORT ON THE LEAN SIDE"*. Two probe rounds
+varied arm POSTURE — reach and lift, both hands together — across two
+standoffs from the arena wall, and returned a clean, internally consistent
+negative: keying on the channel was **worse** than the best fixed blind
+posture by −1.54 ± 0.91 s at D = 0.28 and −2.96 ± 1.05 s at D = 0.40, and the
+ORACLE arm (handed the true fall direction) agreed with the channel-reading
+arm to within **0.04 s at both standoffs**. That last agreement is what made
+it persuasive: it reads as *the information is fully available and buys
+nothing*, which is the signature of a real refutation and not of a tuning
+miss. It was one commit from being written into `D8` as "option 3, the
+wall-brace re-scoping, is refuted" — closing the last re-scoping available to
+a `GOAL.md` sense.
+
+**It was an artifact of the probe, and thirty seconds of algebra says so.**
+`playground._rover_fragments` pins the two arm bodies at body x = ∓0.10 and
+gives each a `reach` slide on axis `0 1 0` and a `lift` slide on `0 0 1`. So
+the arm-pair centre of mass sits at
+
+    x_com = (0.4·(−0.10) + 0.4·(+0.10)) / 0.8 = 0   for ALL reach, lift
+
+**Arm position has identically zero lateral authority** — symmetric or
+differential, reach or lift. A probe assembled out of postures cannot express
+"on the lean side" at all, so its negative was fixed before the first episode
+ran. The actuator that *can* express it was never varied: adhesion, 900 N at
+one hand and not the other, is a moment about body-y, and body-y is the only
+"which side" this body has. Varying it — same posture, same falls, only the
+gripping hand differing — the two labellings span **7.2 s** (2.22 vs 9.46 of a
+12.0 s horizon) and the better one beats the best symmetric blind posture by
+**+1.80 ± 0.54 s**. The claim is live; the first two rounds were measuring
+their own construction.
+
+**The class this joins, and the axis on which it is new.** Three entries in
+this file already name *a comparison whose value is fixed before any data
+exists*: `VO.02`'s permutation floor (unsatisfiable by arithmetic), `SH.02`'s
+inert-world control (satisfiable by arithmetic), `ME.9`'s conjuncts (true by
+construction). All three are about the STATISTIC. This one is about the
+INSTRUMENT: the statistic was free to move, and the apparatus could not move
+it. Same defect, one layer out — and the same thirty-second check finds it.
+**Write the quantity the hypothesis is about as a function of the actions the
+probe can actually take, and confirm it is not constant.** Here that is one
+line of arithmetic on a mass-weighted sum, available from the MJCF without
+starting MuJoCo.
+
+**Why this direction is the dangerous one.** Every instrument this repo has
+built — controls that must fail, null baselines, the learning gate, VOID
+itself — exists to stop a claim from passing when it should not. **Nothing
+here guards a claim from FAILING when it should not.** A false PASS meets a
+control, a shuffled twin and a rig gate; a false FAIL meets applause, because
+an honest negative is what this project rewards. That asymmetry is correct as
+a default and it has a blind spot exactly this shape, and it is worse for a
+probe than for a spec: a spec's FAIL is a ledger row a later attempt can
+supersede, while a probe's negative is prose that gets quoted into a decision
+and parks the work. `BA.02` is the precedent in the other direction — three
+VOIDs before anyone measured the envelope; the repair for that was "probe
+first", and the repair for THIS is that a probe reporting a negative owes the
+same construction audit a spec owes before it reports a PASS.
+
+**Rule:** before you believe a probe's negative — especially a tidy one where
+an oracle arm and a sensing arm agree — enumerate the actuators the probe
+varied and the actuators the hypothesis names, and check the two sets
+intersect. If the probe cannot move the quantity, it has not measured a
+ceiling; it has measured its own reach. And say which actuators were held
+fixed, in the probe's own file, where the next reader will look.

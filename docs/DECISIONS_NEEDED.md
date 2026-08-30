@@ -3624,3 +3624,61 @@ commitment keeps a live claim and `0 CLAIM-DEAD` holds. **For the owner: still
 no action required.** And the honest caveat, stated by the registrant: this
 buys the ladder a *question*, not an answer — `balance` still reads **0 pass**,
 and only a run moves that.
+
+## D8 — OPTION 3 IS NOW MEASURED, NOT ASSUMED: the wall-brace scenario has
+## directional headroom, and it lives in the actuator D8's own probes tested
+## only symmetrically (builder, 2026-08-30, before the 08-31 default fires)
+
+**Nothing on your desk changes. `D8`'s default still fires tomorrow, `BA.02`
+is still PARKED, and this is evidence for the fork, not a request.** It is
+written before the deadline because it bears on which of D8's three options is
+still open, and because the first two rounds of it said the opposite.
+
+`D8` concluded that *"the rover has no actuation whose useful effect depends on
+fall direction"*, measured by four scratch probes **on open ground** — including
+*"adhesion grip (rig-disabled, probe re-enabled it) +0.005 ± 0.09 s"*. Option 3
+named `wall-brace` as an untested candidate; `BA.03` registered it yesterday.
+It is now probed (`experiments/tests/ba03_wall_brace_probe.py`, committed, seed
+90, arena wall `wall1`, standoff 0.28 m, hand-written ORACLE policies only —
+never a trained arm, never a ledger row).
+
+**The headroom exists.** Lateral falls (aim ±x), every policy holding the same
+extended posture so both hands are at the wall, the ONLY difference being which
+hand grips; upright seconds of a 12.0 s horizon:
+
+    hold           0.840 ± 0.058       out_gripboth   7.660 ± 0.685  <- best BLIND
+    out_nogrip     0.860 ± 0.067       one-hand grip, labelling A     2.220 ± 0.351
+                                       one-hand grip, labelling B     9.460 ± 0.538
+
+    paired, same episodes:  B − out_gripboth = **+1.800 ± 0.538 s** (3.3σ)
+                            A − out_gripboth = −5.440 ± 0.341 s
+
+A single-hand grip keyed on the lean side spans **7.2 s** between its two
+labellings, and the better labelling beats the best *symmetric* blind posture.
+`sign(grav_body[0])` separated the two lean sides on **10 of 10** episodes at
+the first decision, so BA.01's channel carries what the choice needs. The
+mechanism is not the slides: 900 N at one hand and not the other is a moment
+about body-y, and body-y is the only "which side" this body has.
+
+**And the reason this entry exists at all: two earlier rounds returned a clean
+negative, and it was an artifact of the probe.** Varying arm POSTURE only
+(reach/lift, both hands together) across two standoffs, keying on the channel
+lost to the best blind posture by −1.54 ± 0.91 s and −2.96 ± 1.05 s, with the
+oracle arm agreeing with the sensing arm to **0.04 s** — which reads exactly
+like a refutation. It could not have read otherwise: the two arm bodies are
+pinned at body x = ∓0.10 and both slides move in y and z, so the arm-pair CoM
+sits at x ≡ 0 for **all** reach and lift. Posture has identically zero lateral
+authority, by arithmetic, and a probe built out of postures cannot express "on
+the lean side". That negative was one commit from being reported here as
+"option 3 refuted". Generalised in `docs/LESSONS.md` ("An envelope probe can
+only return the answer its own action space allows").
+
+**What this does and does not say.** It does NOT say `BA.03` passes: the keyed
+arms are oracles, N is small, one seed, one standoff, and `D8`'s sizing warning
+(`k_fit ≈ 119` vs the registered 3; `N_EVAL = 48` giving SE ≈ 0.22 s) is
+unrepealed and binds the implementer. It says the contrast `BA.03` gates on has
+a measured ceiling **above** its floor — the thing `BA.02` never had, and the
+absence of which cost three VOIDs at ~46 min each. **For the owner: still no
+action required.** For `D9` (the body fork) it is one data point against
+"the rover body is the binding constraint" being true *everywhere* — it is
+true on open ground, and false against a surface.
