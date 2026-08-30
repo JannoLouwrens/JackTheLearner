@@ -8422,3 +8422,56 @@ excludes MORE questions and retains FEWER, so it tightens the spec's own bar
 (retention 33/34 -> 23-26 per category against a floor of 20, and the retention
 band went from "right in at most one placement of four" to "outright wrong").
 A rig repair that makes your claim EASIER is the one to distrust.
+
+## A CURATED probe set has a null of ZERO — so a sigma computed against it is
+## infinite by ARITHMETIC, not by evidence, and it arrives wearing the shape of
+## the project's best-ever result
+## (builder, 2026-08-30, implementing LG.00 on the set LG.01 had just certified)
+
+LG.01 certifies that a question is *lived-necessary* by asking the frozen
+parent: a question the null answers from priors is EXCLUDED. Its retention rule
+is literally `retain <=> the null was outright wrong` (`CHANCE_BAND_HI = 0.0`).
+It passed, it is a good instrument, and it is exactly the instrument LG.00 was
+built to be scored on — the whole point of PG.7's leak-probe pattern is
+*certify the instrument before any arm is scored on it*.
+
+**And that is the trap.** LG.00's registered hypothesis is "full Jack beats
+LLM-ALONE by >= 3 sigma". Score it on the certified set and the null's accuracy
+is **0.000 for every seed, with zero variance, before the model is loaded** —
+not because the null is weak but because "the null is wrong on it" is the
+membership test. Any advantage divides by a standard error of zero. The
+resulting number is not large; it is *undefined*, and it would have been
+recorded as the largest effect in the ladder's history, on a spec `GOAL.md`
+cites verbatim as "the proof he is a creature and not a costume".
+
+**The general rule: when spec B is scored on a probe set that spec A selected
+USING THE NULL'S OWN VERDICTS, the null's score on that set is a property of the
+selection rule, not a measurement — and no statistic may be computed against
+it.** The certification and the comparison want the same instrument to play two
+incompatible roles: A needs the null to be a *filter*, B needs it to be a
+*baseline*, and a filter has no residual variance left to be a baseline with.
+
+**The repair has two halves and both are needed.** Compute the sigma on the
+UNSELECTED superset, where the null scores its true prior-driven rate (here
+~0.27 against a chance of 0.25 — LG.01's own `llm_mean_frac`); and gate the
+selected subset on an ABSOLUTE bar with no sigma at all, recording the null's
+constructed 0.0 in the metrics beside it so a later reader cannot mistake
+selection for evidence. The superset carries the significance, the certified
+subset carries the *meaning* (these are questions priors provably cannot
+answer), and neither can do the other's job.
+
+**Why this is worth a lesson and not just a comment in one file.** It is the
+same failure family as the dead-instrument asymmetry two entries up, rotated:
+there, an instrument that measured nothing produced the number the author
+wanted; here, an instrument that measured something *real* produces a number
+that is pure arithmetic once it is reused downstream. Both are silent, both are
+flattering, and both survive every gate this repo owns — a control that must
+fail still fails, seeds still agree, the threshold was never touched. The tell
+is structural rather than numerical: **ask whether the null's score on the set
+you are scoring could have come out differently. If the answer is no, you are
+not measuring an advantage, you are reading back a definition.**
+
+Watch for it wherever this project curates: any spec that selects trials on
+which a baseline underperforms and then measures against that baseline on the
+selected trials — held-out splits chosen by an oracle's failures, "hard case"
+subsets, adversarial filters, and every future successor of `LG.01`.
