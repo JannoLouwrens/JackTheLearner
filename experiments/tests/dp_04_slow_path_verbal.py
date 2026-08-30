@@ -1,0 +1,1039 @@
+"""DP.04 — The slow path may be verbal, and that is a claim, not a design.
+
+*** GATES ARE PROVISIONAL. `_GATES_FROZEN = False` and `run()` REFUSES the
+*** registered run until a pilot on seeds disjoint from 0/1/2 freezes every
+*** bar below. Implementation-only, 2026-08-30. See PILOT PROTOCOL at the end
+*** of this docstring.
+
+THE QUESTION, and why it is a claim rather than a design decision. DP.03 and
+most of the fast/slow literature quietly ASSUME the slow path is verbal — that
+deliberation happens in something like inner speech. In language models the
+gain from a reasoning trace is known to be partly the extra COMPUTE rather than
+the CONTENT of the trace: filler tokens buy some of what a chain of thought
+buys. So a transcript that looks like reasoning is not evidence that reasoning
+happened in it, and this spec is built around exactly one comparison:
+
+    the SAME extra internal steps, carrying HIS OWN tokens
+    versus
+    the SAME extra internal steps, carrying a content-free constant
+
+If those two are equal, the words are decoration on extra computation and Jack
+is not thinking in language, whatever the transcript looks like. That null —
+`matched-compute filler` — is the null the registry names and it is the null
+the metric is defined against.
+
+WHAT THE CHANNEL IS, said plainly so nobody has to infer it. The emission is a
+DISCRETE TOKEN from a small learned vocabulary, sampled by the policy, embedded
+and fed back in as the input of the next internal step. It is a self-loop with
+a categorical bottleneck: he emits, and the next step re-hears what he emitted
+and nothing else about how he chose it. **The acoustic path is NOT modelled
+here.** VO.01 certified that an emission arrives at an ear as sound — quieter
+with distance, muffled through a solid — and that spec is where the sound
+lives. What this spec would otherwise be is the failure VO.01 names, "a wire
+between two brains wearing the word voice", pointed at his own ear. It is
+declared rather than hidden because the claim being tested does not need the
+acoustics: whether inner speech buys deliberation is a question about a
+bottlenecked recurrent channel, and routing it through a room would add
+attenuation, not evidence. A PASS here is a claim about the BOTTLENECK, and any
+later spec that wants the sound must re-run it through VO.01's pipeline.
+
+THE WORLD, and the reason it is DP.00's. The tasks are DP.00's certified
+survival gridworld and DP.00's certified flat beacon world, imported rather
+than re-typed. This matters twice over:
+
+  1. DP.00 already measured, with the simulator itself as the planner's model,
+     that lookahead pays in the survival world and provably cannot pay in the
+     flat one. So the DELIBERATION DEMAND of each task is not asserted here —
+     it is a number DP.00's own instrument produces, and this spec re-measures
+     it per task variant with DP.00's code.
+  2. The `base` variant (4 food, 4 water) IS `lc_00._World(seed)`, byte for
+     byte, and `_check` VOIDs if it ever stops being — `base_world_identical`.
+     A dose-response curve whose anchor point drifted from the world it claims
+     to inherit is measuring two worlds.
+
+TASKS AND THEIR DEMAND. Five task points per seed, four survival variants that
+differ ONLY in how many resource cells the layout draws (2, 3, 4, 8 of each)
+and DP.00's flat beacon world. Demand is measured, never assumed:
+
+    demand = oracle_score(H=8) - reactive_score(H=1, strengthened)
+
+in each task's own units, then normalised by that task's declared attainable
+range so the five points share an axis. Sparser resources do not automatically
+mean more demand — at 2 cells the resource is often further than an 8-step
+horizon can see, so the planner loses its advantage too. That is why the axis
+is the MEASURED gap and not the cell count, and why `demand_spread` is a rig
+gate: if the five tasks turn out to have the same demand, the dose-response
+axis does not exist and there is nothing to correlate against.
+
+TWO PROPERTIES OF THAT AXIS, MEASURED AT THE SMOKE ENVELOPE BEFORE ANY GATE WAS
+SET, said out loud because both compress it:
+
+  - The H=8 oracle CENSORS at `LIFE_CAP` on every survival variant (it reaches
+    200 and stops), so the demand differences between survival variants are
+    carried almost entirely by the REACTIVE floor moving with resource density,
+    not by the ceiling moving. DP.00 already declared this censoring and
+    declared its direction: it understates the advantage, so it can only make
+    the dose-response harder to see, never easier to manufacture.
+  - The flat world's reactive arm IS its oracle — that is exactly what DP.00
+    certified about it — so an "arm must beat the reactive baseline" liveness
+    gate would be unsatisfiable there by construction. The alive-instrument
+    floor is therefore the UNIFORM RANDOM WALKER in every task
+    (`above_random_floor`), and the reactive comparison is kept where it means
+    something: gate (e), on the survival variants only.
+
+ARMS. One architecture, one training procedure, one dataset per (task, seed).
+The only difference is what flows around the internal loop:
+
+  verbal    K=4 internal steps. At each, a token is sampled from a learned
+            head over a 12-symbol vocabulary (Gumbel-softmax straight-through
+            in training, argmax at evaluation — eval is deterministic), embedded
+            and fed to the recurrent cell.
+  filler    K=4 internal steps, token forced to symbol 0 every time. The
+            emission head is still EVALUATED and its output discarded, so the
+            FLOPs are identical to `verbal` down to the matrix multiply; only
+            the content of the channel differs. This is the null.
+  mute      K=0. One forward pass, no channel, no extra compute. Not the null —
+            a reference point, and the subject of a control gate below.
+  scrambled THE CONTROL. `verbal`'s trained weights, evaluated with a fixed
+            random permutation applied to the emitted symbol before it is
+            re-heard. Identical statistics, identical bandwidth, identical
+            compute, learned meaning destroyed. It must NOT help.
+
+Every arm is trained by BEHAVIOUR CLONING on the H=8 oracle's optimal action
+SET (a uniform soft target over ties, because an argmax over a tie is label
+noise). Learning is removed as a confound the way DP.00 removed it: the teacher
+is the simulator-as-model planner, identical for every arm, so the only thing
+an arm can differ in is how much of that teacher its forward pass can express.
+
+THE METRIC. `lookahead_gain_over_matched_compute_filler` = mean over the four
+SURVIVAL variants of (score_verbal - score_filler), in steps of lifespan. The
+flat variant is excluded from the headline number by construction — it is the
+zero-demand point, and folding a task where the gain must be zero into the mean
+would dilute the very statistic the claim is about. It appears in the
+dose-response gate and in `gain_flat`, which is where it belongs.
+
+WHY LIFESPAN. DP.00's argument, inherited: episodic return TELESCOPES in this
+world (the sum of d(h)-d(h') over a life is -d(h_T)), so an agent that dies at
+step 100 and one that dies at step 400 score the same. Lifespan is the
+consequential quantity and it does not telescope. In the flat world the
+consequential quantity is steps-to-beacon, so the score there is its NEGATION —
+higher is better in both, stated because a sign error would invert a control.
+
+GATES — VOID BEFORE FAIL. Six instrument gates run before the hypothesis is
+allowed to be judged, because each one describes a world in which the
+comparison is vacuous rather than lost:
+
+  base_world_identical  the `base` variant is `lc_00._World(seed)` exactly, and
+                        the shared-memo oracle used here agrees with DP.00's
+                        `_action_scores` to 1e-12 on 200 probes per seed. The
+                        memo is a 22x speedup and a 22x speedup is exactly the
+                        kind of optimisation that silently changes an answer.
+  arms_learned          every arm's training loss fell AND every arm's eval
+                        score beats its task's UNIFORM-RANDOM floor. An
+                        at-chance control must carry proof its instrument was
+                        alive (LESSONS.md); a `verbal` arm compared against a
+                        `filler` arm that never learned is measuring a dead arm.
+  emit_entropy          the verbal arm's emitted-symbol entropy at evaluation,
+                        averaged over internal positions, is at least
+                        ENT_MIN nats. If the emission collapsed to a constant
+                        then `verbal` IS `filler` and the comparison is between
+                        an arm and itself — VOID, and specifically NOT the FAIL
+                        that a lazy reading would record.
+  headroom              on the survival variants the filler arm must sit at
+                        least HEADROOM_MIN steps BELOW the oracle. If the null
+                        already matches the teacher there is nothing left for a
+                        channel to buy and a zero gain says nothing.
+  demand_spread         measured demand must vary across the five tasks by at
+                        least SPREAD_MIN of the normalised range, or the
+                        dose-response axis does not exist.
+  flat_demand_zero      DP.00's flat world must re-measure as zero-demand here
+                        (planner gain <= CTRL_TOL steps). This is DP.00's own
+                        certified control, re-run on this spec's code path; if
+                        it fires, the task set is not what this spec says it is.
+
+THE HYPOTHESIS, judged only after all six pass. PASS requires ALL of:
+
+  (a) gain over the matched-compute filler >= MIN_GAIN steps, and >= SIGMA_GATE
+      sigma across the three seeds. Both, because a margin without a sigma is a
+      seed lottery and a sigma without a margin is a rounding error.
+  (b) THE CONTROL FAILS: the scrambled-vocabulary arm's gain is at most
+      SCRAM_FRAC of the verbal arm's, and at most SCRAM_ABS steps outright. If
+      permuting the symbols leaves the gain intact, the channel was bandwidth
+      and compute, not meaning — and the claim is refuted, not supported.
+  (c) ZERO DEMAND, ZERO GAIN: |gain_flat| <= FLAT_TOL. The registry names this
+      as a falsifier in its own right ("equal gain on tasks with zero planning
+      demand"), because a channel that helps everywhere equally is helping with
+      something other than lookahead.
+  (d) DOSE-RESPONSE: Pearson correlation between normalised demand and
+      normalised gain across the five task points >= RHO_MIN. Five points is a
+      weak correlation instrument on its own and this file says so; it is gated
+      in conjunction with (c), which pins the intercept at the one task where
+      the answer is known in advance.
+  (e) THE MUTE ARM STILL DELIBERATES: mute must beat its tasks' reactive floor
+      by at least MUTE_FLOOR_MIN steps. The registry requires this and the
+      reason is constitutional rather than statistical — if removing the verbal
+      channel destroys lookahead entirely, then language became load-bearing
+      for thought, which contradicts one brain with all senses and a Jack who
+      could think before he could speak. Its failure is a FAIL that must be
+      read as a finding about the architecture, not as a rig fault: the arm ran,
+      the measurement stands, and what it refutes is a premise this project
+      holds. Say so in the journal if it ever fires.
+
+WHAT A FAIL WOULD MEAN. That the extra internal steps are what buy the gain and
+the symbols riding on them are decoration — the filler-token result, reproduced
+in a creature rather than in a chat model. That is a real finding and it kills
+the reading of DP.03 in which the slow path is assumed verbal. It does not kill
+the verbal channel as an EFFECTOR (VO.01, VO.02) and it says nothing about
+whether he can be talked TO (LG.00, LG.01).
+
+WHAT THIS SPEC DOES NOT CLAIM. Not that the symbols are words — they are twelve
+uninterpreted indices and this file never calls them language. Not that inner
+speech is internalised from the parent's speech, which is the Vygotskian
+prediction the registry records and which needs an LG-family successor to test
+ordering and meaning-attachment. Not that the result transfers to a world with
+traps, delays or irreversibility: DP.05 FAILED on 2026-08-24 and its
+pre-registered routing binds, so a PASS here is a claim about DP.00's gridworld
+and inherits DP.00's own scope, no wider.
+
+DETERMINISM. Evaluation takes the argmax symbol and the argmax action with ties
+broken by lowest index; no Gumbel noise, no sampling, no dropout. Training is
+seeded per (task, arm, seed) from a string key. Torch runs on CPU with a
+declared thread count; the box has 2 cores and this spec is sized to them.
+
+COST. Measured on the 2-core box before any gate was written: the shared-memo
+H=8 oracle costs 0.32 ms per decision against 7.0 ms for DP.00's per-call memo,
+which is what makes 12,000 supervised labels per (task, seed) affordable at
+all. Projected ~90 s per seed; the pilot MEASURES it and the freezing commit
+records the number. `est_hours` is not guessed here — GPU_SHORT is the
+registry's budget and `_GATES_FROZEN` refuses any submission before the pilot.
+
+PILOT PROTOCOL, pre-registered. `python -m experiments.tests.dp_04_slow_path_verbal
+pilot` runs seeds 90 and 91 — disjoint from the registered 0/1/2 and SPENT once
+used — writes /data/dp04_pilot_seed{90,91}.json, and reports every quantity the
+gates below read. The freezing commit must (1) paste the pilot table into this
+docstring, (2) set each provisional bar from it in the open, (3) set
+`_GATES_FROZEN = True`, and (4) state the measured wall time. A gate fitted to
+the run it judges is not a gate. If the pilot shows the verbal arm winning on
+the pilot seeds, that is NOT evidence for the claim and must not be reported as
+any — it is a sizing measurement, and the registered seeds decide.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+import random
+import sys
+import time
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+from ..protocol import Ledger, Status, run_spec
+from ..registry import BY_ID
+from .dp_00_lookahead_pays import (CTRL_TOL, FLAT_EPISODES, FLAT_MIN_D,
+                                   FLAT_SHAPE, FLAT_T, LIFE_CAP, _action_scores,
+                                   _flat_scores, _flat_sim, _pick, _sim)
+from .lc_00_gridworld_decidable import (ACTIONS, DEPLETE, GAMMA, N_FOOD, SIZE,
+                                        _World)
+
+IMPL_DEPS = ["experiments/tests/lc_00_gridworld_decidable.py",
+             "experiments/tests/dp_00_lookahead_pays.py"]
+
+# ── the rig ──────────────────────────────────────────────────────────────
+H_ORACLE = 8                   # DP.00's H_MAX; the teacher's planning depth
+RES_COUNTS = (2, 3, 4, 8)      # food cells == water cells, per survival variant
+N_EVAL_LIVES = 12              # lives per arm per task per seed
+LIFE_FLOOR = int(1.0 / DEPLETE[0])          # nothing dies before this step
+N_LABEL = 12000                # supervised states per task per seed
+MEMO_CAP = 300_000             # oracle memo entries before it is cleared (RAM)
+EPS_COLLECT = 0.30             # off-oracle action rate while collecting states
+N_SCORER_PROBES = 200          # shared-memo vs DP.00 `_action_scores` fidelity
+
+# ── the agent ────────────────────────────────────────────────────────────
+HID = 96
+VOCAB = 12
+EMB = 16
+K_STEPS = 4                    # internal steps for `verbal` and `filler`
+TAU = 1.0                      # Gumbel-softmax temperature (training only)
+EPOCHS = 12
+BATCH = 256
+LR = 2e-3
+THREADS = 2                    # this box has 2 cores; declared, not inherited
+
+OBS_DIM = 3 * SIZE * SIZE + 2  # food / water / self planes, plus two needs
+N_ACT = len(ACTIONS)
+
+# ── PROVISIONAL GATES — every one of these is set by the pilot ───────────
+_GATES_FROZEN = False
+
+ENT_MIN = 0.30            # nats; below this the emission collapsed to a constant
+HEADROOM_MIN = 8.0        # steps the filler arm must sit below the oracle
+SPREAD_MIN = 0.10         # normalised demand range across the five tasks
+MIN_GAIN = 5.0            # steps of lifespan, verbal over filler
+SIGMA_GATE = 3.0          # bakeoff.py:159 / LC.00 / DP.00's ruler, unpaired
+SCRAM_FRAC = 0.40         # scrambled gain as a fraction of verbal's
+SCRAM_ABS = 4.0           # ...and an absolute ceiling in steps
+FLAT_TOL = 0.04           # |normalised gain| allowed at zero demand
+RHO_MIN = 0.60            # Pearson r, normalised demand vs normalised gain
+MUTE_FLOOR_MIN = 5.0      # steps the mute arm must clear its reactive floor by
+
+_PILOT_SEEDS = (90, 91)
+_PILOT_ARTIFACT = "/data/dp04_pilot_seed%d.json"
+
+# The attainable range each task's score is normalised by, asserted so the
+# normalisation cannot rot underneath the dose-response gate.
+assert LIFE_CAP > LIFE_FLOOR, "lifespan has no room above its own floor"
+assert MIN_GAIN < (LIFE_CAP - LIFE_FLOOR), "the gain gate exceeds the range"
+assert K_STEPS >= 1, "the channel needs at least one internal step"
+assert 0 <= 0 < VOCAB, "the filler symbol must be in the vocabulary"
+
+
+# ── worlds ───────────────────────────────────────────────────────────────
+
+class _VariantWorld:
+    """LC.00's layout law with the resource count as a parameter.
+
+    At `n == N_FOOD` this reproduces `lc_00._World(seed)` EXACTLY — same rng
+    key, same `sample` call, same slicing — which `_rig` asserts per seed. The
+    base variant is therefore DP.00's world and not a look-alike.
+    """
+
+    def __init__(self, seed: int, n: int):
+        rng = random.Random(f"lc00-world-{seed}")
+        cells = [(x, y) for x in range(SIZE) for y in range(SIZE)]
+        picks = rng.sample(cells, 2 * n)
+        self.food = frozenset(picks[:n])
+        self.water = frozenset(picks[n:])
+
+
+def _scores_shared(world, x, y, h0, h1, horizon, memo) -> list:
+    """DP.00's `_action_scores` with the memo hoisted out of the call.
+
+    The memo key is state-only, so sharing it across the whole dataset for a
+    fixed world is exact, not approximate — and `_rig` proves that per seed
+    rather than asserting it. Measured 0.32 ms/decision against 7.0 ms.
+    """
+    def val(x, y, h0, h1, d):
+        if d == 0:
+            return 0.0
+        key = (x, y, round(h0, 6), round(h1, 6), d)
+        hit = memo.get(key)
+        if hit is not None:
+            return hit
+        best = -1e18
+        for a in range(N_ACT):
+            nx, ny, n0, n1, r, dead = _sim(world, x, y, h0, h1, a)
+            v = r if dead else r + GAMMA * val(nx, ny, n0, n1, d - 1)
+            if v > best:
+                best = v
+        memo[key] = best
+        return best
+
+    out = []
+    for a in range(N_ACT):
+        nx, ny, n0, n1, r, dead = _sim(world, x, y, h0, h1, a)
+        out.append(r if dead else r + GAMMA * val(nx, ny, n0, n1, horizon - 1))
+    return out
+
+
+def _flat_scores_shared(bx, by, x, y, horizon, memo) -> list:
+    """The same hoist for DP.00's flat world; key carries the beacon."""
+    def val(x, y, d):
+        if d == 0:
+            return 0.0
+        key = (bx, by, x, y, d)
+        hit = memo.get(key)
+        if hit is not None:
+            return hit
+        best = -1e18
+        for a in range(N_ACT):
+            nx, ny, r, done = _flat_sim(bx, by, x, y, a)
+            v = r if done else r + GAMMA * val(nx, ny, d - 1)
+            if v > best:
+                best = v
+        memo[key] = best
+        return best
+
+    out = []
+    for a in range(N_ACT):
+        nx, ny, r, done = _flat_sim(bx, by, x, y, a)
+        out.append(r if done else r + GAMMA * val(nx, ny, horizon - 1))
+    return out
+
+
+def _optimal_set(scores) -> list:
+    top = max(scores)
+    return [a for a, v in enumerate(scores) if v >= top - 1e-12]
+
+
+def _seed_of(key: str) -> int:
+    """A STABLE seed from a string. `hash()` is salted per process, so seeding
+    torch from it makes every run a different experiment and T0.02's
+    determinism claim silently false — found by review before the pilot, not
+    by a run that disagreed with itself."""
+    return int(hashlib.sha256(key.encode()).hexdigest()[:8], 16)
+
+
+# ── tasks ────────────────────────────────────────────────────────────────
+
+class _Survival:
+    """One survival variant: obs, teacher, rollout, floors and ceilings."""
+
+    kind = "survival"
+
+    def __init__(self, seed: int, n_res: int):
+        self.seed = seed
+        self.n_res = n_res
+        self.name = f"res{n_res}"
+        self.world = _VariantWorld(seed, n_res)
+        self.memo: dict = {}
+        self.floor = float(LIFE_FLOOR)
+        self.ceil = float(LIFE_CAP)
+        self._planes = torch.zeros(2, SIZE, SIZE)
+        for (x, y) in self.world.food:
+            self._planes[0, x, y] = 1.0
+        for (x, y) in self.world.water:
+            self._planes[1, x, y] = 1.0
+
+    def _memo_guard(self):
+        if len(self.memo) > MEMO_CAP:
+            self.memo.clear()
+
+    def obs(self, st) -> torch.Tensor:
+        x, y, h0, h1 = st
+        v = torch.zeros(3, SIZE, SIZE)
+        v[:2] = self._planes
+        v[2, x, y] = 1.0
+        return torch.cat([v.reshape(-1), torch.tensor([h0, h1])])
+
+    def teacher(self, st) -> list:
+        self._memo_guard()
+        return _optimal_set(_scores_shared(self.world, *st, H_ORACLE, self.memo))
+
+    def collect(self, n: int, rng: random.Random):
+        """States along an epsilon-greedy-on-the-oracle trajectory.
+
+        The oracle's own path plus a declared EPS_COLLECT of off-oracle actions:
+        a policy cloned only from states the teacher visits inherits the
+        teacher's distribution and falls apart one step off it.
+        """
+        obs, tgt = [], []
+        x = y = 0
+        h0 = h1 = 0.0
+        steps = LIFE_CAP
+        while len(obs) < n:
+            if steps >= LIFE_CAP:
+                x, y = rng.randrange(SIZE), rng.randrange(SIZE)
+                h0 = h1 = 1.0
+                steps = 0
+            best = self.teacher((x, y, h0, h1))
+            obs.append(self.obs((x, y, h0, h1)))
+            t = torch.zeros(N_ACT)
+            for a in best:
+                t[a] = 1.0 / len(best)
+            tgt.append(t)
+            a = (rng.randrange(N_ACT) if rng.random() < EPS_COLLECT
+                 else best[rng.randrange(len(best))])
+            x, y, h0, h1, _r, dead = _sim(self.world, x, y, h0, h1, a)
+            steps += 1
+            if dead:
+                steps = LIFE_CAP
+        return torch.stack(obs), torch.stack(tgt)
+
+    def rollout(self, act_fn, tag: str) -> float:
+        """Mean lifespan, censored at LIFE_CAP. Spawns are identical per arm."""
+        spawn = random.Random(f"dp04-spawn-{self.seed}-{self.name}")
+        spans = []
+        for _ in range(N_EVAL_LIVES):
+            x, y = spawn.randrange(SIZE), spawn.randrange(SIZE)
+            h0 = h1 = 1.0
+            steps = 0
+            while steps < LIFE_CAP:
+                a = act_fn(self.obs((x, y, h0, h1)))
+                x, y, h0, h1, _r, dead = _sim(self.world, x, y, h0, h1, a)
+                steps += 1
+                if dead:
+                    break
+            spans.append(steps)
+        return sum(spans) / len(spans)
+
+    def reference(self) -> tuple:
+        """(reactive floor, oracle ceiling) — DP.00's two arms, this variant.
+
+        The reactive arm is DP.00's STRENGTHENED null: the per-variant maximum
+        of uniform tie-break and persistence.
+        """
+        oracle = self._planner_score(H_ORACLE)
+        react = max(self._planner_score(1, persist=False),
+                    self._planner_score(1, persist=True))
+        return react, oracle
+
+    def random_score(self) -> float:
+        """The ALIVE-INSTRUMENT floor: a uniform random walker, same spawns.
+
+        Not the same thing as the reactive null. In this world DP.00 showed the
+        H=1 arm is already a serious baseline, so requiring a trained arm to
+        beat REACTIVE is a claim about quality; requiring it to beat RANDOM is
+        the check that the arm learned anything at all, which is what a VOID
+        gate is for."""
+        rng = random.Random(f"dp04-rand-{self.seed}-{self.name}")
+        spawn = random.Random(f"dp04-spawn-{self.seed}-{self.name}")
+        spans = []
+        for _ in range(N_EVAL_LIVES):
+            x, y = spawn.randrange(SIZE), spawn.randrange(SIZE)
+            h0 = h1 = 1.0
+            steps = 0
+            while steps < LIFE_CAP:
+                x, y, h0, h1, _r, dead = _sim(self.world, x, y, h0, h1,
+                                              rng.randrange(N_ACT))
+                steps += 1
+                if dead:
+                    break
+            spans.append(steps)
+        return sum(spans) / len(spans)
+
+    def _planner_score(self, horizon: int, persist: bool = False) -> float:
+        rng = random.Random(f"dp04-arm-{self.seed}-{self.name}-{horizon}-{persist}")
+        spawn = random.Random(f"dp04-spawn-{self.seed}-{self.name}")
+        spans = []
+        for _ in range(N_EVAL_LIVES):
+            x, y = spawn.randrange(SIZE), spawn.randrange(SIZE)
+            h0 = h1 = 1.0
+            prev, steps = None, 0
+            while steps < LIFE_CAP:
+                self._memo_guard()
+                a = _pick(_scores_shared(self.world, x, y, h0, h1, horizon,
+                                         self.memo), rng, prev, persist)
+                prev = a
+                x, y, h0, h1, _r, dead = _sim(self.world, x, y, h0, h1, a)
+                steps += 1
+                if dead:
+                    break
+            spans.append(steps)
+        return sum(spans) / len(spans)
+
+
+class _Flat:
+    """DP.00's flat beacon world — provably reactive-solvable, demand zero.
+
+    Score is the NEGATION of steps-to-beacon so that higher is better in every
+    task; the ceiling is the live shortest path (DP.00's own rule: derived from
+    the episode, never from a constant) and the floor is the episode cap.
+    """
+
+    kind = "flat"
+    name = "flat"
+
+    def __init__(self, seed: int):
+        self.seed = seed
+        self.memo: dict = {}
+        setup = random.Random(f"dp00-flatsetup-{seed}")
+        self.episodes = []
+        for _ in range(FLAT_EPISODES):
+            while True:
+                bx, by = setup.randrange(SIZE), setup.randrange(SIZE)
+                x, y = setup.randrange(SIZE), setup.randrange(SIZE)
+                if abs(x - bx) + abs(y - by) >= FLAT_MIN_D:
+                    break
+            self.episodes.append((bx, by, x, y))
+        self.shortest = sum(abs(x - bx) + abs(y - by)
+                            for bx, by, x, y in self.episodes) / FLAT_EPISODES
+        self.floor = -float(FLAT_T)
+        self.ceil = -self.shortest
+
+    def obs(self, st) -> torch.Tensor:
+        bx, by, x, y = st
+        v = torch.zeros(3, SIZE, SIZE)
+        v[0, bx, by] = 1.0            # the beacon rides the food plane
+        v[2, x, y] = 1.0
+        return torch.cat([v.reshape(-1), torch.tensor([1.0, 1.0])])
+
+    def teacher(self, st) -> list:
+        bx, by, x, y = st
+        if len(self.memo) > MEMO_CAP:
+            self.memo.clear()
+        return _optimal_set(_flat_scores_shared(bx, by, x, y, H_ORACLE,
+                                                self.memo))
+
+    def collect(self, n: int, rng: random.Random):
+        obs, tgt = [], []
+        while len(obs) < n:
+            bx, by, x, y = self.episodes[rng.randrange(FLAT_EPISODES)]
+            steps = 0
+            while steps < FLAT_T and len(obs) < n:
+                best = self.teacher((bx, by, x, y))
+                obs.append(self.obs((bx, by, x, y)))
+                t = torch.zeros(N_ACT)
+                for a in best:
+                    t[a] = 1.0 / len(best)
+                tgt.append(t)
+                a = (rng.randrange(N_ACT) if rng.random() < EPS_COLLECT
+                     else best[rng.randrange(len(best))])
+                x, y, _r, done = _flat_sim(bx, by, x, y, a)
+                steps += 1
+                if done:
+                    break
+        return torch.stack(obs), torch.stack(tgt)
+
+    def rollout(self, act_fn, tag: str) -> float:
+        taken = []
+        for bx, by, x, y in self.episodes:
+            steps = 0
+            while steps < FLAT_T:
+                a = act_fn(self.obs((bx, by, x, y)))
+                x, y, _r, done = _flat_sim(bx, by, x, y, a)
+                steps += 1
+                if done:
+                    break
+            taken.append(steps)
+        return -sum(taken) / len(taken)
+
+    def reference(self) -> tuple:
+        return -self._planner_steps(1), -self._planner_steps(H_ORACLE)
+
+    def random_score(self) -> float:
+        """DP.00's `broken` arm: the uniform walker, as the alive floor."""
+        rng = random.Random(f"dp04-flatrand-{self.seed}")
+        taken = []
+        for bx, by, x, y in self.episodes:
+            steps = 0
+            while steps < FLAT_T:
+                x, y, _r, done = _flat_sim(bx, by, x, y, rng.randrange(N_ACT))
+                steps += 1
+                if done:
+                    break
+            taken.append(steps)
+        return -sum(taken) / len(taken)
+
+    def _planner_steps(self, horizon: int) -> float:
+        rng = random.Random(f"dp04-flat-{self.seed}-{horizon}")
+        taken = []
+        for bx, by, x, y in self.episodes:
+            steps = 0
+            while steps < FLAT_T:
+                a = _pick(_flat_scores_shared(bx, by, x, y, horizon, self.memo),
+                          rng, None, False)
+                x, y, _r, done = _flat_sim(bx, by, x, y, a)
+                steps += 1
+                if done:
+                    break
+            taken.append(steps)
+        return sum(taken) / len(taken)
+
+
+# ── the agent ────────────────────────────────────────────────────────────
+
+class _Agent(nn.Module):
+    """One architecture; `mode` selects what rides the internal loop.
+
+    `filler` evaluates the emission head and DISCARDS it, so the arm pays the
+    same matrix multiply as `verbal` and differs only in the content of the
+    symbol it re-hears. That is what makes the null matched-compute rather than
+    matched-in-spirit.
+    """
+
+    def __init__(self, mode: str):
+        super().__init__()
+        self.mode = mode
+        self.k = 0 if mode == "mute" else K_STEPS
+        self.enc = nn.Sequential(nn.Linear(OBS_DIM, HID), nn.ReLU(),
+                                 nn.Linear(HID, HID), nn.Tanh())
+        self.cell = nn.GRUCell(EMB, HID)
+        self.emit = nn.Linear(HID, VOCAB)
+        self.sym = nn.Embedding(VOCAB, EMB)
+        self.act = nn.Linear(HID, N_ACT)
+
+    def forward(self, obs, train: bool, perm=None):
+        h = self.enc(obs)
+        toks = []
+        for _ in range(self.k):
+            logits = self.emit(h)                    # evaluated in EVERY arm
+            if self.mode == "filler":
+                one = torch.zeros_like(logits)
+                one[:, 0] = 1.0                      # content-free constant
+            elif train:
+                one = F.gumbel_softmax(logits, tau=TAU, hard=True)
+            else:
+                idx = logits.argmax(dim=-1)
+                one = F.one_hot(idx, VOCAB).float()
+            if perm is not None:
+                one = one[:, perm]                   # the scrambled control
+            toks.append(one.argmax(dim=-1))
+            h = self.cell(one @ self.sym.weight, h)
+        return self.act(h), toks
+
+
+def _train(task, arm: str, seed: int, obs, tgt) -> dict:
+    torch.manual_seed(_seed_of(f"dp04-{seed}-{task.name}-{arm}"))
+    net = _Agent(arm)
+    opt = torch.optim.Adam(net.parameters(), lr=LR)
+    n = obs.shape[0]
+    g = torch.Generator().manual_seed(_seed_of(f"dp04-b-{seed}-{task.name}-{arm}"))
+    first = last = None
+    for ep in range(EPOCHS):
+        perm = torch.randperm(n, generator=g)
+        tot = 0.0
+        for i in range(0, n, BATCH):
+            idx = perm[i:i + BATCH]
+            logits, _ = net(obs[idx], train=True)
+            loss = -(tgt[idx] * F.log_softmax(logits, dim=-1)).sum(-1).mean()
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+            tot += loss.detach().item() * len(idx)
+        if ep == 0:
+            first = tot / n
+        last = tot / n
+    net.eval()
+    return {"net": net, "loss_first": first, "loss_last": last}
+
+
+def _act_fn(net: _Agent, perm=None):
+    """Deterministic greedy action; ties break to the lowest index."""
+    def f(obs_vec):
+        with torch.no_grad():
+            logits, _ = net(obs_vec.unsqueeze(0), train=False, perm=perm)
+        return int(torch.argmax(logits, dim=-1).item())
+    return f
+
+
+def _emit_entropy(net: _Agent, task, n: int = 400) -> float:
+    """Mean marginal entropy (nats) of the emitted symbol, per internal step.
+
+    Measured on the states the arm actually visits, not on a synthetic sample:
+    a channel can look busy on random states and be constant on its own
+    trajectory, and it is the trajectory that carries the claim.
+    """
+    if net.k == 0:
+        return 0.0
+    counts = [[0] * VOCAB for _ in range(net.k)]
+    seen = 0
+    def step(st):
+        """One forward pass serves both the symbol tally and the action, so
+        the entropy is measured on the SAME decisions the arm actually made."""
+        nonlocal seen
+        with torch.no_grad():
+            logits, toks = net(task.obs(st).unsqueeze(0), train=False)
+        for k, t in enumerate(toks):
+            counts[k][int(t.item())] += 1
+        seen += 1
+        return int(torch.argmax(logits, dim=-1).item())
+
+    if task.kind == "flat":
+        for bx, by, x, y in task.episodes:
+            steps = 0
+            while steps < FLAT_T and seen < n:
+                a = step((bx, by, x, y))
+                x, y, _r, done = _flat_sim(bx, by, x, y, a)
+                steps += 1
+                if done:
+                    break
+    else:
+        spawn = random.Random(f"dp04-ent-{task.seed}-{task.name}")
+        while seen < n:
+            x, y = spawn.randrange(SIZE), spawn.randrange(SIZE)
+            h0 = h1 = 1.0
+            steps = 0
+            while steps < LIFE_CAP and seen < n:
+                a = step((x, y, h0, h1))
+                x, y, h0, h1, _r, dead = _sim(task.world, x, y, h0, h1, a)
+                steps += 1
+                if dead:
+                    break
+    ents = []
+    for row in counts:
+        tot = sum(row) or 1
+        ents.append(-sum((c / tot) * math.log(c / tot) for c in row if c > 0))
+    return sum(ents) / len(ents)
+
+
+# ── the experiment ───────────────────────────────────────────────────────
+
+_CACHE: dict = {}          # seed -> the trained arms, so _control does not retrain
+
+
+def _rig(seed: int) -> dict:
+    """The instrument, measured before the hypothesis is allowed to speak."""
+    base = _VariantWorld(seed, N_FOOD)
+    ref = _World(seed)
+    identical = float(base.food == ref.food and base.water == ref.water)
+    rng = random.Random(f"dp04-probe-{seed}")
+    memo: dict = {}
+    mism = 0
+    for _ in range(N_SCORER_PROBES):
+        x, y = rng.randrange(SIZE), rng.randrange(SIZE)
+        h0, h1 = rng.uniform(0.05, 1.0), rng.uniform(0.05, 1.0)
+        a = _scores_shared(base, x, y, h0, h1, H_ORACLE, memo)
+        b = _action_scores(base, x, y, h0, h1, H_ORACLE)
+        if max(abs(p - q) for p, q in zip(a, b)) > 1e-12:
+            mism += 1
+    return {"base_world_identical": identical,
+            "scorer_mismatch": float(mism)}
+
+
+def _fit_all(seed: int) -> dict:
+    """Train every arm on every task once; cached so `_control` is free."""
+    hit = _CACHE.get(seed)
+    if hit is not None:
+        return hit
+    _CACHE.clear()                        # one seed of nets at a time, by design
+    torch.set_num_threads(THREADS)
+    tasks = [_Survival(seed, n) for n in RES_COUNTS] + [_Flat(seed)]
+    out = {"tasks": {}, "order": [t.name for t in tasks]}
+    for task in tasks:
+        rng = random.Random(f"dp04-collect-{seed}-{task.name}")
+        obs, tgt = task.collect(N_LABEL, rng)
+        react, oracle = task.reference()
+        entry = {"react": react, "oracle": oracle, "rand": task.random_score(),
+                 "floor": task.floor, "ceil": task.ceil,
+                 "kind": task.kind, "task": task, "arms": {}}
+        for arm in ("verbal", "filler", "mute"):
+            fit = _train(task, arm, seed, obs, tgt)
+            net = fit["net"]
+            entry["arms"][arm] = {
+                "score": task.rollout(_act_fn(net), arm),
+                "loss_first": fit["loss_first"], "loss_last": fit["loss_last"],
+                "net": net}
+        # THE CONTROL: verbal's own trained weights, symbols permuted at eval.
+        # A DERANGEMENT, constructed rather than hoped for. A uniform
+        # `randperm` has a fixed point with probability 1 - 1/e ~ 0.63, so
+        # rejecting on the gate would have VOIDed most seeds and a symbol that
+        # maps to itself is a symbol the scramble did not scramble. Walking a
+        # random single cycle gives a permutation with no fixed point by
+        # construction; `ctrl_perm_is_derangement` stays as the guard.
+        g = torch.Generator().manual_seed(_seed_of(f"dp04-perm-{seed}-{task.name}"))
+        cycle = torch.randperm(VOCAB, generator=g).tolist()
+        pl = [0] * VOCAB
+        for i, s in enumerate(cycle):
+            pl[s] = cycle[(i + 1) % VOCAB]
+        perm = torch.tensor(pl)
+        vnet = entry["arms"]["verbal"]["net"]
+        entry["arms"]["scrambled"] = {
+            "score": task.rollout(_act_fn(vnet, perm=perm), "scrambled"),
+            "loss_first": entry["arms"]["verbal"]["loss_first"],
+            "loss_last": entry["arms"]["verbal"]["loss_last"],
+            "net": vnet}
+        entry["emit_entropy"] = _emit_entropy(vnet, task)
+        entry["perm_is_derangement"] = float(
+            all(int(perm[i]) != i for i in range(VOCAB)))
+        # The oracle memo has done its work (labels, reference arms); nothing
+        # downstream reads it and four of them at MEMO_CAP would be most of
+        # this box's declared 1.5 GB ceiling.
+        task.memo.clear()
+        out["tasks"][task.name] = entry
+    _CACHE[seed] = out
+    return out
+
+
+def _norm(entry, score: float) -> float:
+    rng = max(entry["ceil"] - entry["floor"], 1e-9)
+    return (score - entry["floor"]) / rng
+
+
+def _pearson(xs, ys) -> float:
+    n = len(xs)
+    mx, my = sum(xs) / n, sum(ys) / n
+    num = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    dx = math.sqrt(sum((x - mx) ** 2 for x in xs))
+    dy = math.sqrt(sum((y - my) ** 2 for y in ys))
+    return num / max(dx * dy, 1e-12)
+
+
+def _experiment(seed: int) -> dict:
+    t0 = time.time()
+    m = _rig(seed)
+    fit = _fit_all(seed)
+    surv = [n for n in fit["order"] if fit["tasks"][n]["kind"] == "survival"]
+
+    gains, demands, gains_norm = [], [], []
+    losses_fell, above_floor = 1.0, 1.0
+    headroom = 1e9
+    for name in fit["order"]:
+        e = fit["tasks"][name]
+        v = e["arms"]["verbal"]["score"]
+        f = e["arms"]["filler"]["score"]
+        gains.append(v - f)
+        demands.append(_norm(e, e["oracle"]) - _norm(e, e["react"]))
+        gains_norm.append(_norm(e, v) - _norm(e, f))
+        m[f"score_verbal_{name}"] = v
+        m[f"score_filler_{name}"] = f
+        m[f"score_mute_{name}"] = e["arms"]["mute"]["score"]
+        m[f"score_react_{name}"] = e["react"]
+        m[f"score_rand_{name}"] = e["rand"]
+        m[f"score_oracle_{name}"] = e["oracle"]
+        m[f"demand_{name}"] = demands[-1]
+        m[f"entropy_{name}"] = e["emit_entropy"]
+        for arm in ("verbal", "filler", "mute"):
+            a = e["arms"][arm]
+            if not a["loss_last"] < a["loss_first"]:
+                losses_fell = 0.0
+            if not a["score"] > e["rand"]:
+                above_floor = 0.0
+        if e["kind"] == "survival":
+            headroom = min(headroom, e["oracle"] - f)
+
+    m["lookahead_gain_over_matched_compute_filler"] = (
+        sum(gains[i] for i, n in enumerate(fit["order"]) if n in surv)
+        / max(len(surv), 1))
+    m["gain_flat"] = gains_norm[fit["order"].index("flat")]
+    m["gain_min_survival"] = min(gains[i] for i, n in enumerate(fit["order"])
+                                 if n in surv)
+    m["demand_spread"] = max(demands) - min(demands)
+    m["demand_flat"] = demands[fit["order"].index("flat")]
+    # DP.00's own control, in DP.00's own units: steps the H=8 planner saves
+    # over greedy where greedy is provably optimal. Gated against DP.00's
+    # CTRL_TOL directly rather than against a normalised approximation of it.
+    _flat = fit["tasks"]["flat"]
+    m["demand_flat_steps"] = _flat["oracle"] - _flat["react"]
+    m["above_random_floor"] = above_floor
+    m["rho_demand_gain"] = _pearson(demands, gains_norm)
+    m["emit_entropy_min"] = min(fit["tasks"][n]["emit_entropy"] for n in surv)
+    m["headroom"] = headroom
+    m["losses_fell"] = losses_fell
+    m["mute_over_floor_min"] = min(
+        fit["tasks"][n]["arms"]["mute"]["score"] - fit["tasks"][n]["react"]
+        for n in surv)
+    m["wall_s"] = time.time() - t0
+    return m
+
+
+def _control(seed: int) -> dict:
+    """The SCRAMBLED-VOCABULARY arm, and the MUTE arm's floor reading.
+
+    Both read from `_fit_all`'s cache — the same trained weights the experiment
+    scored, never a retrain, so the control is the same network with its symbols
+    permuted and nothing else moved.
+    """
+    fit = _fit_all(seed)
+    surv = [n for n in fit["order"] if fit["tasks"][n]["kind"] == "survival"]
+    sg = []
+    derange = 1.0
+    for name in surv:
+        e = fit["tasks"][name]
+        sg.append(e["arms"]["scrambled"]["score"] - e["arms"]["filler"]["score"])
+        derange = min(derange, e["perm_is_derangement"])
+    c = {"ctrl_scrambled_gain": sum(sg) / max(len(sg), 1),
+         "ctrl_scrambled_gain_max": max(sg),
+         "ctrl_perm_is_derangement": derange}
+    for name in surv:
+        e = fit["tasks"][name]
+        c[f"ctrl_score_scrambled_{name}"] = e["arms"]["scrambled"]["score"]
+    return c
+
+
+def _check(m: dict, c: dict):
+    # ── the instrument, before the hypothesis ────────────────────────────
+    if m.get("base_world_identical", 0.0) != 1.0:
+        return Status.VOID          # the base variant is not DP.00's world
+    if m.get("scorer_mismatch", 1.0) != 0.0:
+        return Status.VOID          # the shared memo changed the teacher
+    if m.get("losses_fell", 0.0) != 1.0 or m.get("above_random_floor", 0.0) != 1.0:
+        return Status.VOID          # an arm never learned; the compare is dead
+    if m.get("emit_entropy_min", 0.0) < ENT_MIN:
+        return Status.VOID          # the emission collapsed: verbal IS filler
+    if m.get("headroom", 0.0) < HEADROOM_MIN:
+        return Status.VOID          # the null already matches the teacher
+    if m.get("demand_spread", 0.0) < SPREAD_MIN:
+        return Status.VOID          # there is no dose axis to respond to
+    if m.get("demand_flat_steps", 1e9) > CTRL_TOL:
+        return Status.VOID          # DP.00's zero-demand world is not zero here
+    if c.get("ctrl_perm_is_derangement", 0.0) != 1.0:
+        return Status.VOID          # a permutation with fixed points is weaker
+
+    # ── the hypothesis ───────────────────────────────────────────────────
+    gain = m.get("lookahead_gain_over_matched_compute_filler", 0.0)
+    sigma = gain * math.sqrt(2.0) / max(
+        m.get("lookahead_gain_over_matched_compute_filler_std", 0.0), 1e-9)
+    ok = (gain >= MIN_GAIN
+          and sigma >= SIGMA_GATE
+          # (b) the control must not help
+          and c.get("ctrl_scrambled_gain", 1e9) <= max(SCRAM_FRAC * gain, 0.0)
+          and c.get("ctrl_scrambled_gain", 1e9) <= SCRAM_ABS
+          # (c) zero demand, zero gain
+          and abs(m.get("gain_flat", 1e9)) <= FLAT_TOL
+          # (d) dose-response across the five task points
+          and m.get("rho_demand_gain", -1.0) >= RHO_MIN
+          # (e) the mute arm must still deliberate
+          and m.get("mute_over_floor_min", -1e9) >= MUTE_FLOOR_MIN)
+    return Status.PASS if ok else Status.FAIL
+
+
+def run(ledger: Ledger | None = None):
+    if not _GATES_FROZEN:
+        raise RuntimeError(
+            "DP.04 gates are PROVISIONAL. Run the pilot "
+            "(`python -m experiments.tests.dp_04_slow_path_verbal pilot`), read "
+            f"{_PILOT_ARTIFACT % 90} and {_PILOT_ARTIFACT % 91}, freeze "
+            "ENT_MIN / HEADROOM_MIN / SPREAD_MIN / MIN_GAIN / SCRAM_FRAC / "
+            "SCRAM_ABS / FLAT_TOL / RHO_MIN / MUTE_FLOOR_MIN against the "
+            "measured table in a commit that pastes the table into this "
+            "docstring, then set _GATES_FROZEN = True. A gate fitted to the "
+            "run it judges is not a gate.")
+    return run_spec(BY_ID["DP.04"], _experiment, _check, control_fn=_control,
+                    ledger=ledger or Ledger())
+
+
+# ── smoke and pilot ──────────────────────────────────────────────────────
+
+def _shrink(**kw):
+    """Temporarily shrink the envelope; returns the previous values."""
+    old = {k: globals()[k] for k in kw}
+    globals().update(kw)
+    return old
+
+
+def _smoke():
+    """Tiny envelope, every entry point once — including `_check`, which is
+    where a shape error would otherwise wait for the registered run."""
+    old = _shrink(N_LABEL=300, EPOCHS=2, N_EVAL_LIVES=3, RES_COUNTS=(3, 8),
+                  N_SCORER_PROBES=20, FLAT_EPISODES=4)
+    try:
+        _CACHE.clear()
+        t0 = time.time()
+        m = _experiment(0)
+        c = _control(0)
+        print("smoke experiment:", json.dumps(m, indent=1, default=float))
+        print("smoke control:", json.dumps(c, indent=1, default=float))
+        print("smoke check path:", _check(
+            {**m, "lookahead_gain_over_matched_compute_filler_std": 1.0}, c))
+        print("smoke wall_s: %.1f" % (time.time() - t0))
+    finally:
+        globals().update(old)
+        _CACHE.clear()
+
+
+def _pilot():
+    """Seeds 90 and 91 — disjoint from the registered 0/1/2, and SPENT once
+    used. Full envelope, JSON to stdout AND to `_PILOT_ARTIFACT`. No ledger
+    row is written and none may be."""
+    for seed in _PILOT_SEEDS:
+        _CACHE.clear()
+        t0 = time.time()
+        m = _experiment(seed)
+        c = _control(seed)
+        out = {"seed": seed, "experiment": m, "control": c,
+               "constants": {"RES_COUNTS": list(RES_COUNTS), "N_LABEL": N_LABEL,
+                             "EPOCHS": EPOCHS, "BATCH": BATCH, "LR": LR,
+                             "HID": HID, "VOCAB": VOCAB, "EMB": EMB,
+                             "K_STEPS": K_STEPS, "TAU": TAU,
+                             "N_EVAL_LIVES": N_EVAL_LIVES,
+                             "H_ORACLE": H_ORACLE, "LIFE_CAP": LIFE_CAP},
+               "pilot_wall_s": time.time() - t0}
+        txt = json.dumps(out, default=float, indent=1)
+        try:
+            with open(_PILOT_ARTIFACT % seed, "w") as fh:
+                fh.write(txt)
+        except OSError as exc:                       # pragma: no cover
+            print(f"WARN: could not write {_PILOT_ARTIFACT % seed}: {exc}")
+        print(txt, flush=True)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "smoke":
+        _smoke()
+    elif len(sys.argv) > 1 and sys.argv[1] == "pilot":
+        _pilot()
+    else:
+        print(run().status)
