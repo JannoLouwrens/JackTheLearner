@@ -175,7 +175,23 @@ precedent was ready and went unused).
 SM.03 remains the cautionary case this idiom exists for: implemented, tracked,
 gates never frozen, and worth zero since 08-25.
 
-COVERS: one brain / unison (claim)
+THIS SPEC DECLARES NO COVERAGE, AND THE DELETED DECLARATION IS THE POINT
+(2026-08-30, found by re-running T0.21 under overseer B2 — it FAILED on
+`p10_docstring_covers_match_registry`, the only live mismatch in 105 declared
+specs). This docstring used to end `COVERS: one brain / unison (claim)`. That
+was an OVERCLAIM BY WORD COLLISION and it is withdrawn. "Multimodal" here
+means a bimodal ACTION DISTRIBUTION — two different actions are both correct
+and their average is wrong. `one brain / unison` is about SENSES in unison
+(GOAL.md:36, "what he hears can teach what he sees"). This file names a sense
+exactly once, in prose; both arms are trained on the same inputs and no
+modality is ablated, swapped or fused anywhere in it.
+
+Had the registry carried the matching line, a PASS measuring a flow head's
+action distribution would have been counted as the second passing CLAIM behind
+a constitutional commitment that has 21 specs and 1 pass — the exact disease
+`coverage.py` exists to prevent, arriving through a word rather than through a
+lie. The registry entry was right and the docstring was wrong, so the DOCSTRING
+is what changed. The unison question T2.19 does NOT answer is UB.1-UB.5's.
 """
 
 from __future__ import annotations
