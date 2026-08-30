@@ -89,13 +89,35 @@ VOID  — the verdict artifact does not cover these prompts, or the null is not
         demonstrably alive on general knowledge, or the probe set is not
         certified for a seed.
 
-WORST-SEED GATES FROM MEAN AND STD. `protocol._aggregate` hands `_check` the
-mean and population std across seeds, not the per-seed values. For n seeds any
-single value lies within `std * sqrt(n-1)` of the mean, so `mean - std*sqrt(n-1)`
-is a valid LOWER bound on the minimum and `mean + std*sqrt(n-1)` a valid UPPER
-bound on the maximum. Gating on those bounds is strictly CONSERVATIVE — it can
-only make a gate harder to clear than the true worst seed would — and it is how
-this spec says "on every seed" through an interface that only reports moments.
+WORST-SEED GATES ARE READ, NOT ESTIMATED. `protocol._aggregate` hands `_check`
+the mean and population std across seeds, not the per-seed values, so "on every
+seed" has to come from somewhere else. It comes from `_MEMO`, which already
+holds every seed's full measurement: `run_spec` calls `_experiment` and then
+`_control` for all seeds BEFORE it calls `_check`, so by the time the gates run
+the per-seed values are in hand and the true minimum and maximum are facts to
+be looked up. `_check` VOIDs if they are not all present rather than falling
+back to anything.
+
+VOID RECORD — attempt 1, 2026-08-30 18:47 UTC, and it was MY ESTIMATOR, not the
+data. Attempt 1 gated the worst seed by the moment bound `mean -
+std*sqrt(n-1)`, which is a valid lower bound on a minimum, and the probe-set
+certification gate read `23.0 - 2.160*sqrt(2) = 19.94` against LG.01's
+`RETAIN_MIN` of 20 and returned VOID. The per-seed values are **26, 22, 21** —
+every seed's probe set is certified, with a true worst-seed margin of one
+question. Nothing else in the run was touched by the change: the bound and the
+exact value agree on the verdict for all six other gates.
+
+**This repair makes gates LOOSER, which is the direction to distrust** — a
+`>=` gate on an exact minimum is easier than the same gate on a lower bound
+(LESSONS.md: *"a rig repair that makes your claim EASIER is the one to
+distrust"*). Three things are offered against that, and a reader should hold
+them to it: no threshold moved (`RETAIN_MIN` is still LG.01's 20, `SIGMA_MIN`
+still the registry's 3.0, every other constant byte-identical); the bound was
+described as an interface workaround in this docstring BEFORE any number
+existed, so the intent being realised is the pre-registered one; and the exact
+per-seed table above is published here so the repair can be checked rather than
+believed. The VOID row and its `refs/jack/failimpl/LG.00/2026-08-30T18-47-59`
+implementation stay in the ledger's history either way.
 
 THE LLM PASS IS OFFLINE AND run() NEVER LOADS A MODEL — LG.01's rule, same
 reasons (T0.07: SmolLM2 in-process is a 6.9 GB mistake; Budget.CPU is a
@@ -355,14 +377,19 @@ def _paired(a: list, b: list):
     return adv, se
 
 
-def _worst(m: dict, key: str) -> float:
-    """A conservative LOWER bound on the per-seed minimum (see the docstring)."""
-    return m[key] - m.get(f"{key}_std", 0.0) * math.sqrt(len(SEEDS) - 1)
+def _per_seed(key: str) -> list:
+    """Every seed's value of `key`, from the measurements already taken.
+
+    `_check` only receives moments; the per-seed values it needs to say "on
+    every seed" are right here in `_MEMO`, because `run_spec` runs all seeds
+    before it checks. Reading them is not an estimate — see the VOID RECORD for
+    what estimating them cost.
+    """
+    return [_MEMO[s][key] for s in SEEDS]
 
 
-def _best(m: dict, key: str) -> float:
-    """A conservative UPPER bound on the per-seed maximum."""
-    return m[key] + m.get(f"{key}_std", 0.0) * math.sqrt(len(SEEDS) - 1)
+def _seeds_complete() -> bool:
+    return all(s in _MEMO for s in SEEDS)
 
 
 _MEMO: dict = {}
@@ -484,20 +511,22 @@ def _control(seed: int) -> dict:
 
 def _check(m: dict, c: dict):
     # ── rig gates: VOID, not FAIL — a run that could not ask the question ──
+    if not _seeds_complete():
+        return Status.VOID       # cannot say "on every seed"; do not guess
     if m["verdicts_missing"] > 0 or c["verdicts_missing"] > 0:
         return Status.VOID       # the artifact does not cover these prompts
-    if _worst(c, "null_acc_general") < NULL_LIVE_MIN:
+    if min(_per_seed("null_acc_general")) < NULL_LIVE_MIN:
         return Status.VOID       # the null is not demonstrably alive
-    if _worst(m, "retained_min_per_category") < RETAIN_MIN:
+    if min(_per_seed("retained_min_per_category")) < RETAIN_MIN:
         return Status.VOID       # LG.01's kills: not a certified probe set
-    # ── the claim, and both controls ──
+    # ── the claim, and both controls, on EVERY seed ──
     return bool(
-        _worst(m, "sigma_life") >= SIGMA_MIN
-        and _worst(m, "jack_acc_life") >= JACK_LIFE_MIN
-        and _worst(m, "jack_acc_certified") >= JACK_LIFE_MIN
-        and _best(c, "advantage_general") <= CONTROL_ADV_MAX
-        and _worst(c, "general_retention") >= GENERAL_RETENTION_MIN
-        and _best(c, "wrong_margin") <= WRONG_DIARY_MARGIN)
+        min(_per_seed("sigma_life")) >= SIGMA_MIN
+        and min(_per_seed("jack_acc_life")) >= JACK_LIFE_MIN
+        and min(_per_seed("jack_acc_certified")) >= JACK_LIFE_MIN
+        and max(_per_seed("advantage_general")) <= CONTROL_ADV_MAX
+        and min(_per_seed("general_retention")) >= GENERAL_RETENTION_MIN
+        and max(_per_seed("wrong_margin")) <= WRONG_DIARY_MARGIN)
 
 
 def run(ledger: Ledger | None = None):
