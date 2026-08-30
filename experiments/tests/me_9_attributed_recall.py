@@ -26,6 +26,41 @@ CONTROL (must invert): a swapped-provenance store — Jack's lines relabelled
 as the speaker's and vice versa. If accuracy SURVIVES the swap, the test
 never used provenance and is broken; the spec demands swapped accuracy fall
 below half the true accuracy.
+
+STRENGTHENED 2026-08-30 (Review, Part 2) — WHY THE 1.0000 +- 0.0000 OF
+2026-08-08 WAS NOT WORTH WHAT IT LOOKED WORTH.
+
+`what_did_they_tell_me(speaker, cue)` is `recall(cue, channel="heard",
+speaker=speaker)`: the provenance is a HARD FILTER applied before scoring.
+So of the three conjuncts the scorer above counts —
+
+    got.channel == channel  and  got.speaker == speaker  and  topic in got.text
+
+— the first two are true of every candidate the filter can possibly return.
+They cannot fail. The only falsifiable conjunct was the third, and the
+recorded metric was therefore "does lexical containment find the right topic
+among ~40 pre-filtered events", reported under the name attributed_recall.
+Perfect accuracy with zero seed variance was the fingerprint: a claim about
+whether interleaving confuses provenance, measured by a quantity that is
+partly an identity.
+
+Both existing references have the same shape. The pooled NULL fails because
+it has no filter, and the swap CONTROL fails because the filter comes back
+EMPTY — each dies of the filter's absence or misdirection, and neither can
+tell a good scorer from a coin flip once the filter is in place.
+
+So the missing reference is the third corner: provenance KEPT, scoring
+STRIPPED. `trivial=True` answers every question with the most recent event
+inside the identical (channel, speaker) filter, scored by the identical
+predicate. Its accuracy is what the dict filter alone buys; the headline
+minus it (`scoring_margin`) is what retrieval earned. Three conjuncts were
+added and nothing was relaxed: the trivial reference must stay at/below
+MAX_TRIVIAL, the scoring margin must clear MIN_SCORING_MARGIN, and the
+pooled null must now lose by MIN_POOLED_MARGIN rather than merely sit under
+the pass bar. (LESSONS.md, 2026-08-30: "a null you can beat is not enough —
+check that a trivial reference does not annihilate the task first"; and
+2026-08-29: "a control scored on a gate that mentions the control is a
+control that cannot fail".)
 """
 from __future__ import annotations
 
@@ -47,6 +82,13 @@ DETAILS = ["being cracked", "needing paint", "smelling of smoke", "going missing
 N_ROUNDS = 40           # per speaker; total events ~ 3 speakers * 3 channels * rounds
 N_Q_PER_CHANNEL = 40
 MIN_ACC = 0.80
+# Added by the Review 2026-08-30, Part 2 (strengthen-only; nothing above moved).
+# `1/len(TOPICS)` is what a cue-blind pick inside the filter scores by
+# construction; the bar sits a little above it so a mildly-informative trivial
+# reference still fails, and the margin gate is what the headline must EARN.
+MAX_TRIVIAL = 0.25
+MIN_SCORING_MARGIN = 0.50
+MIN_POOLED_MARGIN = 0.40
 
 
 def _build(seed: int, mem_path, swap: bool = False):
@@ -82,7 +124,24 @@ def _build(seed: int, mem_path, swap: bool = False):
     return mem, truth, t0 + i * 30.0
 
 
-def _ask(mem, truth, seed: int, now: float, pooled: bool = False) -> dict:
+def _provenance_of(channel: str, speaker: str):
+    """The (channel, speaker) pair the query API filters on for each question
+    form. Named once so the trivial reference below cannot drift from it."""
+    return (channel, speaker if channel == "heard" else "jack")
+
+
+def _ask(mem, truth, seed: int, now: float,
+         pooled: bool = False, trivial: bool = False) -> dict:
+    """Score the three question forms.
+
+    `pooled`   — provenance STRIPPED (the spec's null): one flat recall over
+                 the whole log. It cannot answer attribution at all.
+    `trivial`  — provenance KEPT, SCORING stripped (added by the Review
+                 2026-08-30): inside the very filter the real query uses,
+                 answer with the MOST RECENT event and ignore the cue. See
+                 the module docstring — this is the reference that makes the
+                 headline number mean something.
+    """
     import random
     rng = random.Random(seed + 7)
     acc = {}
@@ -92,6 +151,11 @@ def _ask(mem, truth, seed: int, now: float, pooled: bool = False) -> dict:
         for ev, speaker, topic in qs:
             if pooled:
                 res = mem.recall(f"the {topic}", top_k=1, now=now)
+            elif trivial:
+                ch, sp = _provenance_of(channel, speaker)
+                cands = [e for e in mem.events
+                         if e.channel == ch and e.speaker.lower() == sp]
+                res = [_Triv(max(cands, key=lambda e: e.t))] if cands else []
             elif channel == "heard":
                 res = mem.what_did_they_tell_me(speaker, f"the {topic}", top_k=1, now=now)
             elif channel == "said":
@@ -107,11 +171,22 @@ def _ask(mem, truth, seed: int, now: float, pooled: bool = False) -> dict:
     return acc
 
 
+class _Triv:
+    """Minimal stand-in for a Recall so the trivial reference is scored by the
+    IDENTICAL three-conjunct predicate above — a separate scoring path is how
+    a reference quietly stops being comparable."""
+    __slots__ = ("event",)
+
+    def __init__(self, event):
+        self.event = event
+
+
 def _experiment(seed: int) -> dict:
     tmp = Path(tempfile.mkdtemp())
     mem, truth, now = _build(seed, tmp / "life.jsonl")
     acc = _ask(mem, truth, seed, now)
     pooled = _ask(mem, truth, seed, now, pooled=True)
+    triv = _ask(mem, truth, seed, now, trivial=True)
     return {
         "events": len(mem),
         "acc_heard": round(acc["heard"], 4),
@@ -119,6 +194,12 @@ def _experiment(seed: int) -> dict:
         "acc_did": round(acc["did"], 4),
         "pooled_null_worst": round(min(pooled.values()), 4),
         "pooled_null_mean": round(sum(pooled.values()) / 3, 4),
+        # Provenance kept, scoring stripped. The gap between this and the
+        # headline is everything the retrieval SCORER contributes; the
+        # headline minus this is the only part the dict filter cannot claim.
+        "filtered_recency_worst": round(max(triv.values()), 4),
+        "filtered_recency_mean": round(sum(triv.values()) / 3, 4),
+        "scoring_margin": round(sum(acc.values()) / 3 - sum(triv.values()) / 3, 4),
     }
 
 
@@ -136,7 +217,12 @@ def _check(m: dict, c: dict) -> bool:
             and m["acc_said"] >= MIN_ACC
             and m["acc_did"] >= MIN_ACC
             and m["pooled_null_mean"] < MIN_ACC
-            and c["swapped_mean_acc"] < true_mean / 2)
+            and c["swapped_mean_acc"] < true_mean / 2
+            # Added 2026-08-30 (Review, Part 2). Strengthen-only: every gate
+            # above is unchanged and these are additional conjuncts.
+            and m["filtered_recency_worst"] <= MAX_TRIVIAL
+            and m["scoring_margin"] >= MIN_SCORING_MARGIN
+            and true_mean - m["pooled_null_mean"] >= MIN_POOLED_MARGIN)
 
 
 def run(ledger: Ledger | None = None):

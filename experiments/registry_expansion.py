@@ -888,9 +888,20 @@ EXPANSION: list[Spec] = [
                     "events via recency x importance x similarity scoring.",
          falsified_by="Accuracy at 1k events <= recency-only retrieval.",
          null_baseline="Recency-only; no-memory parametric guess.",
-         metric="cued_recall_accuracy", budget=Budget.CPU,
+         metric="cued_recall_accuracy", budget=Budget.CPU, seeds=3,
          control="A query about a FABRICATED event must abstain — confabulating "
-                 "a match means the retrieval threshold is broken."),
+                 "a match means the retrieval threshold is broken.",
+         notes="seeds 1 -> 3 by the Review 2026-08-30 (Part 2), with ME.2-ME.4, "
+               "on the ME.8 precedent. All four recorded PASS at seeds=[0] on "
+               "2026-08-08 and were never reconsidered; each compares a "
+               "MECHANISM against a baseline, which GOAL.md's '>=3 seeds where "
+               "the claim is about learning' covers, and a single seed cannot "
+               "report the +-std that says whether the gap exceeds seed noise. "
+               "No threshold moved; every gate is >= 0.02 so protocol.py's "
+               "'_aggregate kills sub-5e-7 gates at 3 seeds' hazard does not "
+               "apply. Re-run: cued_recall 0.8667 (1 seed) -> 0.8500 +- 0.0136 "
+               "(3), still clear of the 0.80 bar, and the headroom is now "
+               "measured instead of assumed."),
 
     Spec("ME.2", 2, "Owner memory lives on disk",
          hypothesis="A preference stated once is honoured next session; a later "
@@ -898,8 +909,14 @@ EXPANSION: list[Spec] = [
          falsified_by="Adherence <= a fresh no-memory agent's base rate.",
          null_baseline="No-memory agent; recency window excluding the preference.",
          metric="preference_adherence", budget=Budget.CPU, depends_on=["ME.1"],
+         seeds=3,
          control="WIPE profile.json and restart: adherence must drop to base "
-                 "rate — proving memory is in the file, not weights or cache."),
+                 "rate — proving memory is in the file, not weights or cache.",
+         notes="seeds 1 -> 3 by the Review 2026-08-30 (Part 2) — see ME.1. "
+               "Re-run: recency_null_adherence 0.075 (1 seed) -> 0.1667 +- "
+               "0.0656, wiped control 0.175 -> 0.2167 +- 0.0312. Both stay "
+               "under the 0.45 null ceiling, but the single seed was reporting "
+               "the null a factor of two kinder than it is."),
 
     Spec("ME.3", 2, "Reflections beat raw events",
          hypothesis="Aggregation questions answer better from consolidated "
@@ -907,7 +924,12 @@ EXPANSION: list[Spec] = [
          falsified_by="No gain over raw top-k.",
          null_baseline="Raw-events-only retrieval.",
          metric="aggregation_qa_gain", budget=Budget.CPU, depends_on=["ME.1"],
-         control="Reflections generated from ANOTHER agent's log must hurt."),
+         seeds=3,
+         control="Reflections generated from ANOTHER agent's log must hurt.",
+         notes="seeds 1 -> 3 by the Review 2026-08-30 (Part 2) — see ME.1. "
+               "Re-run: wrong_agent control 0.1771 (1 seed) -> 0.2708 +- "
+               "0.0981, i.e. the control's own spread is the largest number in "
+               "this spec's record and only three seeds could show it."),
 
     Spec("ME.4", 2, "Forgetting keeps what matters",
          hypothesis="Ebbinghaus decay + reinforce-on-recall + supersede beats "
@@ -915,8 +937,19 @@ EXPANSION: list[Spec] = [
          falsified_by="FIFO matches it on frequently-referenced old facts.",
          null_baseline="FIFO; unbounded store as ceiling.",
          metric="retention_vs_fifo", budget=Budget.CPU, depends_on=["ME.1"],
+         seeds=3,
          control="Knowledge-update questions must FAIL in the no-supersede "
-                 "variant (stale answers) — else the questions never conflicted."),
+                 "variant (stale answers) — else the questions never conflicted.",
+         notes="seeds 1 -> 3 by the Review 2026-08-30 (Part 2) — see ME.1. "
+               "Re-run: every metric identical at 3 seeds, std 0.0 throughout "
+               "(retention 1.0 vs FIFO 0.0). That is the honest reading and it "
+               "is a WEAKNESS worth naming, not a strength: a comparison whose "
+               "seed variance is exactly zero is deterministic by construction "
+               "and its 1.0-vs-0.0 gap is arithmetic, not evidence about "
+               "forgetting. See PROGRESS.md 2026-08-30 FOR THE BUILDER — the "
+               "redesign (recall-frequency confound, graded budget pressure) "
+               "is proposed there and NOT taken here, because it is a "
+               "redesign and not a strengthening."),
 
     Spec("ME.5", 2, "Retrieval survives growth",
          hypothesis="Cued-recall precision@1 stays above the recency null as "
@@ -991,7 +1024,24 @@ EXPANSION: list[Spec] = [
          control="Swapped-provenance store (his lines relabelled as the "
                  "speaker's and vice versa) must invert attribution answers; "
                  "if accuracy survives the swap, the test never used "
-                 "provenance and is measuring text similarity."),
+                 "provenance and is measuring text similarity.",
+         notes="STRENGTHENED by the Review 2026-08-30 (Part 2), three gates "
+               "ADDED, none moved. The 2026-08-08 PASS read 1.0000 +- 0.0000 "
+               "on all three channels because two of its three scored "
+               "conjuncts were true by construction: the query API "
+               "(`recall(cue, channel=, speaker=)`) filters on provenance "
+               "BEFORE scoring, so `got.channel == channel` and `got.speaker "
+               "== speaker` cannot fail. Both existing references die of the "
+               "filter rather than of the scoring — the pooled null has no "
+               "filter, the swap control empties it — so nothing in the spec "
+               "could distinguish real retrieval from a coin flip inside the "
+               "filter. Added: provenance-KEPT/scoring-STRIPPED reference "
+               "(most recent event within the identical filter, identical "
+               "predicate) at <= 0.25, a scoring_margin >= 0.50, and a "
+               "pooled-null MARGIN of >= 0.40 in place of merely sitting under "
+               "the pass bar. Re-run 2026-08-30: filtered_recency_worst "
+               "0.1250, scoring_margin 0.9056 — the headline is unchanged and "
+               "now says what it costs."),
 
     Spec("ME.10", 2, "Keeps the memory AND learns the general skill",
          hypothesis="After episodes are distilled into weights (practice/"
