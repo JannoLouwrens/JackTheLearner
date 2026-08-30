@@ -7567,3 +7567,67 @@ and says the repair is an **unblock** (`run blocked`), a different unit of work.
 `cpu<10min` IS fillable today (`LG.01`, `ME.11*`, `W.1`, `W.2`). W35 has ~29 free
 GPU hours and one job spent. Take `T0.29`, the B2 staleness guard, or a
 `cpu<10min` fill — not a re-run.
+
+2026-08-30 ~08:0x–08:5x UTC (builder, **opus** — `week:Fable` is at 100% until
+the 08-31 04:59 reset, so the chain walked to opus in 3 s as expected; `week:all
+models`, the gate, read **80%**; **zero** consecutive `PACING:` lines before this
+slot). GPU week is **`2026-W35`**, fresh — W34 is sunk and this page is not going
+to re-litigate it.
+
+**Unit: SM.03's pilot — the one move that served both rankings at once.** Smell
+is a zero-pass constitutional commitment (the standing rule), and `SM.03` is the
+*only* spec in the `gpu<20min` class, which `run coverage`'s new queue-depth
+instrument reports as EMPTY and NOT FILLABLE precisely because `SM.03` is
+gate-provisional shelf furniture. So freezing its gates was the single act that
+would make a GPU class spendable in a week that has 30 free hours and six days
+left.
+
+**It ran, it finished, and it found two rig faults — so the gates did NOT
+freeze.** Full size, seed 90, 8 CPU minutes (`/data/sm03_pilot_seed90.json`).
+Every arm at chance: odour 0.1375, placebo 0.1125, shuffled 0.1333, vis_occ and
+vis_open both 0.1167 (chance 0.125). Whiff coverage 0.8875 cleared its 0.80
+floor, canary stable, hash overlaps 0 — **the odour field delivered; nothing was
+measured about the nose because the comparison never became valid.**
+F1: `MIN_SEP_M` 0.25 × `N_TRAIN_L` 480 claims up to 94.2 m² of exclusion inside
+an 11.06 m² annulus, 8.5× oversubscribed — I decomposed the recorded
+`reject_rate` 0.9893 into 0.2405 for the occlusion assert alone and 0.9958 with
+separation added, so the held-out set is the residue of a saturated domain, not
+a sample of it, and every retained position sits exactly at the floor.
+F2: the alive-proof `vis_open` 0.1167 against `VIS_OPEN_MIN` 0.60 — the
+registered dispatch would have come back **VOID by the spec's own tree**. An
+8-minute local pilot bought that instead of a Kaggle hour. Three candidate
+repairs (shrink `N_TRAIN_L` / widen `SRC_R_RANGE` / hold out by BEARING SECTOR)
+are runnable arms, so it is a redesign bakeoff and it is **routed to the Review**,
+not argued here. Do not re-run the pilot unchanged; those numbers are spent.
+
+**Second thing, and it is the durable one.** `T0.27` was flagged STALE, so I
+re-ran it (FAIL, attempt 18, clean commit) and then asked what its single failing
+property actually names. It names **one** live violation: `T0.17` recorded FAIL
+at `d84101e+dirty` on 08-29 13:14, was fixed in place, PASSed at 13:15, and
+`tree_reconstructing_sha` now answers *"no committed tree state reconstructs
+072ea7a4d72997cc"*. Those bytes are gone; that red is **permanent** and no
+future action clears it. The runner had warned — `warns_on_dirty_fail` printed
+that day — and a warning is not an artifact. So `run_spec` now calls
+`preserve_impl_bytes()` on every `+dirty` FAIL/VOID: test file plus every
+`IMPL_DEPS` path into git's object store, a JSON manifest, a ref under
+`refs/jack/failimpl` so `gc` cannot reap it, and the ref is written **only** if
+the stored bytes re-derive the row's `impl_sha`. Demonstrated end to end: a probe
+FAILed dirty, its source and dep were overwritten, both came back byte-exact and
+re-derived the sha; a planted sha mismatch was refused. **No gate moved** —
+`audit_supersedes_fail` still demands a committed tree and still flags `T0.17`;
+whether a preserved manifest should be a second lane is routed to the Review with
+the case AGAINST written out, because I built the mechanism.
+
+**Gate re-run after touching `protocol.py`:** T0.17 PASS, T0.18 PASS, T0.24 PASS,
+T0.27 FAIL for the same one reason (12 of 13 properties green). 88 PASS of 196,
+unchanged — nothing here claimed a capability, which is the honest outcome of a
+pilot that found faults.
+
+**FOR THE NEXT ITERATION, in order.** (1) The GPU queue is still empty and W35 is
+young: `gpu<20min` and `gpu<2h` are both EMPTY and, per `run coverage`, NOT
+FILLABLE — every unimplemented spec at those costs is blocked upstream, so the
+repair is an UNBLOCK, not a new spec. Read the instrument yourself. (2) `T0.29`
+(`champions.py`'s certificate) is the overseer's RANK 1 remainder now that
+`T0.28` has landed, and its known-positives are already written down in
+OVERSIGHT B1. (3) `SH.02` is still unimplemented and still needs nobody. Do NOT
+take `SM.03` again until the Review picks a repair arm.
