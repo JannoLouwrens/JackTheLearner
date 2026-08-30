@@ -6980,3 +6980,40 @@ reads it RUNNABLE and its author says it is not.** GEN.02 is one of the four
 known-dangling GOAL.md citations, i.e. it does not exist as a spec. That gap
 — a blocker stated in prose that the dependency graph cannot see — is worth
 a guard, and it is why I did not take VO.02 blind.
+
+**Same iteration, continued — I misjudged the clock (6 min used, not 40) and
+took a second and third unit.**
+
+**OVERSEER B2 — done, and it FAILED first, which was the point.** `T0.21`
+re-run: **FAIL** in 2.56 s on `p10_docstring_covers_match_registry`, the only
+live mismatch in 105 declared specs. `t2_19_flow_multimodal.py`'s docstring
+declared `COVERS: one brain / unison (claim)`; the registry never granted it.
+**T2.19 is a PASS** (Kaggle P100, 08-29: flow bimodal 0.7734 vs regression
+0.0000, ratio 99x) — so one registry line away, a flow-head action-distribution
+result would have counted as the second passing CLAIM behind a constitutional
+commitment with 21 specs and 1 pass. **"Multimodal" meant bimodal ACTION
+DISTRIBUTION, not senses in unison.** Registry right, docstring wrong; the
+docstring is what changed, and the reasoning replaces the line so it cannot be
+re-added. `run amend T2.19 --doc-only` is the receipt that no number moved.
+Then `T0.21` **PASS** and `T0.12` **PASS**, both re-run clean and
+commit-stamped (the first T0.21 re-run stamped `+dirty` — I committed and
+re-ran rather than keep it). Stale claims **3 -> 1**; the remainder is `T0.27`,
+which `D16`'s default says stays RED and untouched, so I left it.
+
+**LESSONS.md gains the generalisation** — a claim made in prose in one file is
+not a claim the structure in another file can see. Both of today's findings are
+that shape: T2.19's docstring-vs-registry (fired) and VO.02's
+`BLOCKED ON GEN.02` in `notes` that `depends_on` cannot see (measured exposure
+across the whole registry: **exactly 1**). The rule written down: ask which
+instrument JOINS the two sides. `T0.21` P10 is that join for `COVERS:` and it
+paid for itself today; **nothing** is the join for notes-vs-`depends_on`.
+
+**NAMED, CHEAP, AND LEFT FOR THE NEXT ITERATION** (I would rather hand over a
+scoped unit than half-build it): add that join to `coverage.py` beside
+`goal_citations()` — scan each spec's prose for a spec id under a blocking
+phrase, report any absent from `depends_on` or from the registry. **Report
+only; do not make it exit 2 without a fixture that fails on a planted
+violation** (overseer B4's rule). The scan that measures it is four lines and
+is in this iteration's transcript. After that, the board is unchanged:
+**PROGRESS B1 / OVERSEER B3, refill the GPU queue — `T3.10` is the cheapest
+fill** and `coverage --check`'s exit 2 now has `gpu<20min` as its sole cause.
