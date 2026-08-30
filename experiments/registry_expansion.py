@@ -5054,4 +5054,155 @@ EXPANSION: list[Spec] = [
                "of saying so out loud.\n"
                "Deliberately declares NO `COVERS:` commitment. It guards the "
                "harness, not a capability."),
+
+    # ── PL: the arena the PLASTIC-ONLY decree named and nobody built ──────
+    #
+    # REGISTERED 2026-08-30 from docs/research/FROZEN_VS_PLASTIC.md §7.3, under
+    # the INTEGRATION_QUEUE protocol. Seventh audit asking (OVERSIGHT B5); the
+    # `plasticity` commitment read `2 specs / 0 pass / 0 RUNNABLE` — both its
+    # claim specs blocked behind `T2.01` — while `CHAMPIONS.md:166-190` asserted
+    # "`PL.02` decides it and is runnable today" about a spec that had never
+    # existed. `GOAL.md:76`'s decree was therefore held with no registered
+    # falsifier, which `SYSTEM.md`'s standing rule forbids by name.
+    #
+    # CROSS-CHECK (protocol step 1), over docs/research/*.md, docs/LESSONS.md
+    # and docs/DECISIONS*.md for `frozen|plastic|reshaping gain|throughput
+    # floor`. ONE REFUTATION FOUND, and it is this file's own header: the
+    # PLASTIC-ONLY decree of 2026-08-09 collapsed §7.3's four-arm
+    # frozen-vs-plastic contest to a single admissible arm. So PL.00 and PL.02
+    # are NOT registered verbatim — they are corrected per the refuting
+    # analysis, exactly as `CHAMPIONS.md`'s own "WHAT STILL RUNS" paragraph
+    # already wrote the correction: PL.00 becomes a FEASIBILITY CHECK on the
+    # pure encoder, PL.02 measures what the plastic path BUYS. NO THRESHOLD IS
+    # TOUCHED by that correction (the 5.0 sim-s/real-s floor is LC.02's and
+    # LEARNING_CORE §5.0b's, unchanged; PL.02's bootstrap-CI-excluding-zero bar
+    # is unchanged). What changes is which arm carries the claim and what a
+    # result MEANS.
+    #
+    # SECOND CROSS-CHECK RESULT, recorded because it fires tomorrow: `D1`'s
+    # option (ii) would narrow the decree to SENSORY towers only
+    # (DECISIONS_NEEDED.md:791). Both specs below are about sensory encoders,
+    # so neither is affected by either fork of D1 — registering them today is
+    # safe against the 2026-08-31 firing.
+    #
+    # DELIBERATELY NOT REGISTERED: PL.01, PL.03, PL.04, PL.05. They are the
+    # arms and the arbitration of the contest the decree ENDED, and PL.01's own
+    # notes require amending `LEARNING_CORE.md`'s U2 criterion first (its
+    # arithmetic excludes every frozen tower by wording rather than evidence —
+    # the overturn recorded in `ladder_prompt.md`). Registering an arbitration
+    # whose arms are unconstitutional would be specifying work nobody may do.
+    # The ids stay free; §7.3 keeps their text.
+
+    Spec("PL.00", 2, "What each perception encoder costs on THIS box",
+         hypothesis="Every candidate perception encoder is measured on one ARM "
+                    "core for ms/frame at its native resolution, and THE PURE "
+                    "FROM-SCRATCH ENCODER — the only arm the PLASTIC-ONLY "
+                    "decree admits — lets the full loop clear the 5.0 "
+                    "simulated-seconds-per-real-second throughput floor with "
+                    "vision live at 5 Hz.",
+         falsified_by="The pure encoder does not clear the floor with vision "
+                      "live. Then vision at 5 Hz is unaffordable on this box "
+                      "under the one architecture the decree permits, and the "
+                      "decree's OWN pre-registered RE-OPEN TRIGGER fires "
+                      "(`CHAMPIONS.md`: *'if a from-scratch encoder cannot hit "
+                      "the PL.00 throughput floor on this hardware ... the "
+                      "decision returns to the owner with that number "
+                      "attached'*). This spec is the only registered thing in "
+                      "the repo that can pull that trigger.",
+         null_baseline="The measured render cost itself, measured in this same "
+                       "process rather than cited: an eye frame costs what it "
+                       "costs before any encoder sees it. An encoder cheaper "
+                       "than its own render is free; one costing 10x the "
+                       "render is the dominant cost of having eyes. "
+                       "(DIRECTION_AUDIT.md read 68 ms/frame at 128x128 and "
+                       "185 ms at 320x320 under xvfb+llvmpipe — a figure to "
+                       "re-measure, never to quote.)",
+         metric="ms_per_frame_x_sim_seconds_per_real_second",
+         budget=Budget.CPU, seeds=3, depends_on=["T0.07", "PG.6"],
+         control="TWO, and the second is the one that can kill the leg. "
+                 "(1) IDENTITY: a no-op encoder that reads every pixel and "
+                 "does nothing else must sit at ~0 ms/frame and must NOT "
+                 "change the measured loop throughput. If swapping the encoder "
+                 "for nothing at all moves the throughput, the harness is "
+                 "timing something other than the encoder and every cell is "
+                 "uninterpretable. (2) HEAVY REFERENCE, the discrimination "
+                 "check: a 21.6M-parameter ViT-S/14 at 224 must FAIL the 5.0 "
+                 "floor on this box. A floor a frozen ViT clears cannot "
+                 "exclude anything, and 'the pure encoder cleared it' would "
+                 "then be a sentence about the bar rather than about the "
+                 "encoder. It returns VOID, not FAIL — a threshold that cannot "
+                 "reject is an invalid instrument, not a refuted hypothesis.",
+         kills="Any perception encoder that cannot clear the throughput floor "
+               "— INADMISSIBLE, not scored (LEARNING_CORE.md ADMISSION-2). "
+               "This spec can eliminate an encoder in MINUTES, before any "
+               "accuracy question is asked. Under the decree its edge is "
+               "turned inward: the arm it can kill is the seat holder's own.",
+         notes="COVERS: plasticity (rule), sight (rule).\n"
+               "WHAT IT CAN AND CANNOT MEASURE, said before the run. Cost is a "
+               "function of ARCHITECTURE and input size, not of the values in "
+               "the tensors: a randomly-initialised ViT-S/14 at 224 costs "
+               "exactly what a pretrained one costs. So the frozen-tower "
+               "reference is measured from a locally-constructed architecture "
+               "and needs no download — and this spec makes NO accuracy claim "
+               "about it, which is `T2.03`'s job and is already recorded. The "
+               "frozen reference is SCORED-AND-INELIGIBLE in `SYSTEM.md`'s "
+               "sense: its number goes in the ledger, it cannot take a seat.\n"
+               "Accounting unit inherited from `w0.py`/`LC.02` so the floor "
+               "means the same thing here: one decision is 40 substeps of "
+               "0.005 s = 0.2 simulated seconds, so 'vision live at 5 Hz' is "
+               "exactly one rendered frame per decision. Report resident RAM "
+               "too — `SYSTEM.md` caps this box at ~1.5 GB.\n"
+               "Registered from docs/research/FROZEN_VS_PLASTIC.md §7.3, "
+               "corrected per the PLASTIC-ONLY decree; see the block above."),
+
+    Spec("PL.02", 4, "The RESHAPING test: does another sense change what an encoder computes?",
+         hypothesis="For each modality pair (A,B), an encoder for A trained "
+                    "JOINTLY with B by cross-modal masked prediction "
+                    "outperforms an A-only encoder of matched capacity WHEN "
+                    "BOTH ARE EVALUATED ON A ALONE at test time. The reshaping "
+                    "gain R = perf(M_AB | A only) - perf(U_A) is positive, "
+                    "paired by seed, bootstrap CI excluding zero.",
+         falsified_by="R indistinguishable from zero for the PLASTIC arm. Then "
+                      "binding does not reshape encoders at our scale, the "
+                      "arithmetic that the PLASTIC-ONLY decree rests on buys "
+                      "nothing measurable here, and that returns to the owner "
+                      "as evidence — LOUDLY, in the Review. The decree's ENDS "
+                      "are not on trial (SYSTEM.md class 1); its stated "
+                      "MECHANISM is (class 2).",
+         null_baseline="The FULLY FROZEN arm, whose R = 0 EXACTLY, by "
+                       "construction: M_AB's A-encoder IS U_A's A-encoder, the "
+                       "same frozen tensor. The analytic null — no cheaper or "
+                       "more honest null exists in this project. It is scored "
+                       "and ineligible, never excluded (SYSTEM.md, 2026-08-24).",
+         metric="reshaping_gain_R", budget=Budget.CPU_LONG, seeds=3,
+         depends_on=["PG.1", "PL.00"],
+         control="SHUFFLED-PARTNER: train M_AB with B's stream drawn from a "
+                 "DIFFERENT episode — correspondence destroyed, marginals and "
+                 "temporal statistics preserved. R must collapse to ~0. If "
+                 "shuffled-B reshapes A just as well, the gain is capacity or "
+                 "regularisation, not binding, and the whole test is VOID.",
+         kills="The claim that cross-modal binding reshapes what an encoder "
+               "computes at this project's scale. A positive R is the "
+               "measured value of the plastic path; a null R does not restore "
+               "freezing (the owner decreed the ENDS), but it removes the "
+               "arithmetic argument that has been carried as if it were a "
+               "measurement since 2026-08-09.",
+         notes="COVERS: plasticity (claim), one brain / unison (claim).\n"
+               "This is the M3L signature made into a metric (arXiv:2311.00924: "
+               "representations learned with touch 'also benefit vision-only "
+               "policies at test time'). It has a downstream meaning, which is "
+               "what stops it being a metric about metrics: perf(M_AB | A only) "
+               "IS how well Jack copes when a sense fails — night removes "
+               "vision, rain masks audio, and both happen in the survival "
+               "world. CALIBRATE FOR A SMALL EFFECT: Kepler-Encoder's closest "
+               "analogue was R^2 0.049/-0.001/0.187 across three robots with "
+               "one NEGATIVE, p<=0.012. Paired seeds, IQM, bootstrap CI on the "
+               "paired difference (arXiv:2108.13264), or the experiment cannot "
+               "see what it is looking for.\n"
+               "WHAT THE DECREE CHANGED, and it is only the meaning: this was "
+               "written to DECIDE frozen-vs-plastic. The owner decided that on "
+               "2026-08-09 by decree, so PL.02 now measures what the plastic "
+               "path BUYS — and remains the decree's sole registered "
+               "falsifier, which is why it exists at all. Threshold, control "
+               "and null are unchanged from FROZEN_VS_PLASTIC.md §7.3."),
 ]
