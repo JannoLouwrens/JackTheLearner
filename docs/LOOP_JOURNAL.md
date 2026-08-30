@@ -8240,3 +8240,21 @@ its FAIL is a measurement of this box's renderer, not a seed lottery.
   --llm-pass` via `scripts/launch_detached.sh` (~13 min, ~2.0 GB RSS at nice 19
   — above the 1.5 GB guidance, recorded rather than hidden; fp32 is forced,
   measured 0.40 s/prompt vs 6.1 s fp16).
+  **AND ONE THING THE INSTRUMENT CANNOT SEE, recorded for the Review rather
+  than patched at the end of an iteration.** `coverage`'s `QUEUE DEPTH` says of
+  its known-empty classes: *"implementing ONE spec in any of these clears it,
+  and it must then leave QUEUE_EMPTY_BASELINE."* I implemented a `cpu<10min`
+  spec this iteration and **the class still reads 0**, because queue depth
+  counts specs that are implemented AND UNSETTLED — and LG.01 was implemented
+  and RUN in the same hour, so it went straight to PASS and never spent a moment
+  on the shelf. *Implementing a spec into an empty class and making that class
+  non-empty are different events, and the faster you work the less they
+  coincide.* The instruction as written can be obeyed perfectly with no
+  movement in the number that audits it, which is the same family as the
+  existing lesson *"An instrument that names a gap must also say whether the gap
+  is closable"*. I did NOT edit `QUEUE_EMPTY_BASELINE`: `coverage` was already
+  exit 2 before this iteration (the `gpu<20min`/`gpu<2h` red), I did not make it
+  worse, and re-baselining a ratchet is not a thing to do unattended at the end
+  of a session. The candidate fix, for whoever owns it: count a spec toward the
+  class when it is implemented and tracked, whatever its verdict, or say
+  explicitly that depth measures the SHELF and not the WORK.
