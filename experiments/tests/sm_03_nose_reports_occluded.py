@@ -98,11 +98,56 @@ with no reading of the pilot's exact value into the bar. VIS_OPEN_MIN = 0.60
 is an instrument-liveness floor (pilot reads far higher; the floor is where
 "alive" stops being arguable), WHIFF_LAYOUT_MIN = 0.80 likewise.
 
-PILOT: not yet run. The seed-90 pilot (disjoint from the registered 0/1/2 —
-PG.6's precedent) must run before _GATES_FROZEN flips True; its numbers are
-recorded HERE when it lands, and the bars above do not move on its account
-(the pilot exists to catch rig faults before the registered spend — SM.02's
-lesson).
+PILOT: RUN 2026-08-30 08:0x–08:15 UTC, full size, seed 90, locally on CPU
+(8 min; artifact /data/sm03_pilot_seed90.json, log .json.log, head 13c0440).
+IT FOUND TWO RIG FAULTS AND THE GATES STAY PROVISIONAL. No bar moved on its
+account; no dispatch was made. The pilot exists to catch exactly this before
+the registered spend, and it paid for itself on its first run:
+
+    odour_occ 0.1375   placebo 0.1125   shuffled 0.1333 (train fit 0.1958)
+    vis_occ   0.1167   vis_open 0.1167  whiff_frac 0.8875  min_sep 0.2500
+    canary 165 colours, stable start→end; hash overlap 0 / 0
+    reject_rate 0.9893
+
+F1 — THE HELD-OUT SPLIT IS SATURATED, NOT SAMPLED. `MIN_SEP_M` = 0.25 against
+`N_TRAIN_L` = 480 prior positions asks for 480 exclusion discs (up to 94.2 m²
+before overlap) inside a source annulus of π(2.6²−1.8²) = 11.06 m² — 8.5×
+oversubscribed. Measured on 2026-08-30, decomposing the 0.9893: the five-ray
+occlusion assert alone rejects **0.2405** (95 rejects per 300 keeps), while
+occlusion + separation against 480 train positions rejects **0.9958** (14,170
+rejects per 60 keeps). So the test set is not a held-out sample of the source
+band; it is the residue left over after the training set nearly covers it, and
+every retained test position sits at the 0.25 floor (recorded `min_sep`
+0.2500 exactly). The generalisation the claim measures is therefore not the
+generalisation the docstring above describes. This is an arithmetic error in
+the design, not a bad draw, and re-rolling seeds cannot fix it.
+
+F2 — THE ALIVE-PROOF IS DEAD, so the registered run would have been VOID by
+this spec's own tree: `vis_open` 0.1167 against `VIS_OPEN_MIN` 0.60, with
+chance at 0.125. Remove the panels and the vision readout still cannot say
+where the source is. That is the pre-registered instrument-liveness leg, and
+it is the leg that makes the odour-vs-vision comparison mean anything: with
+it at chance, `vis_occ` 0.1167 proves nothing about occlusion. Whether the
+cause is F1's degenerate test set, or 480 rows being too few for the CNN on
+12×64×64, or the source ball being unresolvable at 64×64 from 1.8–2.6 m, is
+UNDETERMINED — and the hash gate reading 0 overlap on `vis_open` proves only
+that the open-world frames differ across layouts, not that they differ
+BY BEARING.
+
+Note what the pilot did NOT find: the odour field delivered (whiff coverage
+0.8875, above the 0.80 floor), the canary held, and both controls sat at
+chance. The nose was not the thing that failed here — nothing was measured
+about the nose at all, because the comparison never became valid.
+
+WHAT HAPPENS NEXT IS A REDESIGN, NOT A RE-ROLL, and it is routed to the
+Review (journal 2026-08-30) rather than patched here by the author: F1 has at
+least three arms (shrink `N_TRAIN_L`, widen `SRC_R_RANGE`, or hold out by
+BEARING SECTOR rather than by euclidean distance — the last is what "held-out
+phrasings" means for a direction task and it makes the exclusion budget
+independent of the training count), and picking between them by argument is
+what SM.02's three-repair park is a receipt against. Do NOT flip
+`_GATES_FROZEN`, do NOT dispatch, and do NOT re-run the pilot unchanged — its
+numbers are spent evidence, not a lottery.
 
 COVERS: smell (claim).
 """
