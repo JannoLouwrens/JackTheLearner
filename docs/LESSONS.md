@@ -8355,3 +8355,70 @@ the same money. A cost that does not scale with the quantity it is supposed to
 be a cost *of* is the same warning arriving from the other direction, and it
 should be read before, not after, someone proposes to afford a sense by
 shrinking its input.
+
+---
+
+## The dead-instrument asymmetry has a THIRD home: an instrument used as a
+## SELECTOR. And a debiasing guard makes its corpse look exactly like health
+## (builder, 2026-08-30, implementing LG.01)
+
+Two entries already own this asymmetry. [`An at-chance control must carry proof
+its instrument was alive`] puts it on the CONTROL; [`A robustness claim is FREE
+unless the instrument could have been captured`] moves it onto the CLAIM ARM
+for negative claims. LG.01 found the third place it lives, and no rule was
+looking there: **an instrument whose output REMOVES data.**
+
+LG.01 certifies LG.00's probe questions. A frozen LLM answers each question
+with no diary; a question it gets right is EXCLUDED as answerable from priors,
+and the metric is how many questions SURVIVE. So the null is a filter, and the
+arithmetic is merciless: **a dead filter removes nothing, every question is
+retained, and the metric is maximised.** Attempt 1 read `calib_acc 0.2500`,
+`llm_mean_frac 0.2525`, 5 of 102 questions excluded, oracle 34/34 per category,
+control at the floor — a clean PASS on every gate that existed to catch a bad
+probe set, produced by a null that could not answer *what is the capital of
+France?*
+
+**The generalised question, and it is one line: which way does my verdict move
+if this instrument is dead?** For a claim arm, dead reads as failure and you
+find out for free. For a control, for a negative claim, and now for a selector,
+dead reads as SUCCESS — and those are exactly the three places a liveness gate
+has to be paid for explicitly. The tell for a selector is that its cost is
+invisible: nobody notices the questions that were not thrown away.
+
+**The sharper half, which is why this cost a run rather than a review.** The
+v1 readout listed options as A/B/C/D and read the answer off the letter logits.
+Small instruct models rank letters by POSITION — asked the capital of France
+with Paris on the table, SmolLM2-360M scored `'D'` 17.71 > `'C'` 17.37 >
+`'B'` 17.20 > `'A'` 16.51 while `'Paris'` sat fifth in the same top-5. It knew
+the answer and could not express it in the channel it was read on. The design
+already anticipated position bias and carried the standard guard: score every
+question under four cyclic rotations of its options.
+
+**That guard is what hid the corpse.** A purely positional picker scores
+exactly `1/N` across `N` rotations — 0.2525 was measured, chance is 0.25 — and
+that is *the same number an ideal lived-necessary probe set produces*. The
+debiasing machinery took an instrument that was answering by position and
+converted it into a clean, plausible, at-chance reading with no residue to
+notice. **A permutation guard removes the artifact from the number without
+removing it from the instrument**, so it cannot distinguish "unbiased and
+knowledgeable" from "biased and blind"; only an item the instrument is
+independently required to get RIGHT can. The repair was to stop reading letters
+at all — score each candidate answer as a continuation of the bare question by
+length-normalised logprob, where no position exists — and calibration went
+0.2500 -> 0.8333 on the identical questions.
+
+**Two rules worth carrying separately:**
+
+- *Put the liveness item in the same scaffold, not beside it.* The calibration
+  questions run byte-identically through the null's own path; had they been
+  scored by a separate helper, the letter-readout fault would have been
+  invisible to them and the gate would have certified its own blind spot.
+- *When you add a debiasing transform, ask what it reads for an instrument that
+  is PURELY the bias.* If the answer is your healthy value, the transform is
+  laundering the defect and something else has to carry the liveness burden.
+
+The repair also shows the direction such a fix must run: a stronger null
+excludes MORE questions and retains FEWER, so it tightens the spec's own bar
+(retention 33/34 -> 23-26 per category against a floor of 20, and the retention
+band went from "right in at most one placement of four" to "outright wrong").
+A rig repair that makes your claim EASIER is the one to distrust.

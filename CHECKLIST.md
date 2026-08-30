@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 90 / 200 demonstrated
+## 91 / 200 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -805,7 +805,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **LG.01** The life-questions are real questions — certified lived-necessary
+- [x] **LG.01** The life-questions are real questions — certified lived-necessary
       - _asserts:_ Every probe question RETAINED for LG.00 is certified on two legs before any arm is scored: a deterministic extractive diary-oracle (ME.9's attributed channels, no generation) answers it correctly (>= 0.95 on the retained set), AND the frozen LLM alone — identical prompt scaffold, no diary, no learned core — sits inside its pre-registered chance band on it, PER QUESTION, never on average. A question the LLM answers from priors is EXCLUDED and the exclusion logged; >= 20 questions per category (his world / his body / his history) must survive exclusion.
       - _dies if:_ Any category retaining fewer than 20 questions — the generator cannot produce lived-necessary probes and LG.00 is unrunnable until it can. OR the diary-oracle below 0.95 on retained questions — a question unanswerable from the record certifies nothing.
       - _then delete:_ Any LG.00 run scored on an uncertified probe set. Lived-necessity is a property of the QUESTION, not the model (LANGUAGE_GROUNDING.md Finding 1, 2603.19233: libero_object scores 60-100% REGARDLESS of the prompt — a cell where the prior suffices cannot measure grounding at any scale).

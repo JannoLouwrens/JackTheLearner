@@ -8198,3 +8198,45 @@ the kind of thing step 1 exists to catch. Also live and cheap: OVERSIGHT B4
 (two honesty repairs in `T2.09`, neither touching a gate) and B6 (one sentence
 each on `T0.01`/`T0.10`). **Do not re-run PL.00** — it is spent evidence, and
 its FAIL is a measurement of this box's renderer, not a seed lottery.
+
+- **2026-08-30 ~17:1x–18:5x UTC (builder, OPUS — `week:Fable` at 100%, fell back
+  at 17:07:12; `week:all models` 83%, pace line ~85.4 at 92.9% week-elapsed, so
+  not skipped; 0 consecutive `PACING:` lines).** Took **LG.01** because the two
+  rankings converged on it and on nothing else: it is `cpu<10min`, runnable,
+  unimplemented, it fills the `cpu<10min` class `coverage` had baselined EMPTY,
+  and it was the single blocker on `DP.04` — the only reachable claim spec in
+  the 8-spec, zero-pass `fast/slow` commitment. (`run coverage`'s new
+  `QUEUE DEPTH` block settled the GPU question first: all four dispatchable
+  specs are VOID, `gpu<20min` and `gpu<2h` are NOT FILLABLE by implementing
+  anything, so PROGRESS B1 "implement one unimplemented GPU spec" has no
+  referent today. Both audits' rank-1 items were already discharged — `SM.03` is
+  committed, `W.1`/`W.2` are run and FAILed.)
+  **LG.01 PASSES** (attempt 2, clean at `519a3e3`, 3 seeds):
+  `retained_min_per_category` **23.0** vs bar 20, `oracle_acc_on_retained`
+  **1.0**, `calib_acc` **0.8333** vs bar 0.50, stripped control **0.2616** vs
+  ceiling 0.45, `verdicts_missing` 0. The result worth carrying is a CONTRAST:
+  the same frozen 360M parent is alive at **0.833** on the world's general
+  knowledge and sits at chance **0.271** on questions about Jack's world, body
+  and history. Lived-necessity is now measured, not asserted, and LG.00 has a
+  certified instrument to be scored on.
+  **Attempt 1 was VOID and the calibration leg is what caught it** — see
+  LESSONS.md, "The dead-instrument asymmetry has a THIRD home". `calib_acc`
+  0.2500 at chance 0.25, 5 of 102 excluded, oracle 34/34, control at the floor:
+  a clean PASS on every other gate, produced by a null that cannot answer *what
+  is the capital of France?* The letter readout was measuring POSITION
+  (`'D'` 17.71 > `'C'` 17.37 > `'B'` 17.20 > `'A'` 16.51, with `'Paris'` fifth
+  in the same top-5), and the four-rotation debiasing guard laundered it into
+  exactly the at-chance number a perfect probe set produces. Repaired
+  strengthen-only by scoring candidate answers as continuations of the bare
+  question; calibration 0.2500 -> 0.8333 on identical questions.
+  **NEXT ITERATION:** `LG.00` is now runnable and `cpu<10min` — it is the claim
+  this fixture exists to serve, GOAL.md cites it verbatim as *"the proof he is a
+  creature and not a costume"*, and it is the only thing standing between the
+  ladder and `DP.04`/`LG.10`. Its probe set is certified; do not re-certify it.
+  Note for whoever runs it: the null's verdicts live in
+  `/data/lg01_llm_verdicts.json`, keyed by `sha256(revision + scaffold + prompt
+  + option)`, and `run()` VOIDs rather than reuse them if anything moved. The
+  offline pass is `python -m experiments.tests.lg_01_lived_necessary_probes
+  --llm-pass` via `scripts/launch_detached.sh` (~13 min, ~2.0 GB RSS at nice 19
+  — above the 1.5 GB guidance, recorded rather than hidden; fp32 is forced,
+  measured 0.40 s/prompt vs 6.1 s fp16).

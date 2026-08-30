@@ -2846,6 +2846,309 @@
         "status": "VOID"
       }
     },
+    "LG.01": {
+      "amended": [],
+      "attempt": 3,
+      "commit": "519a3e3",
+      "compute_s": null,
+      "control_metrics": {
+        "stripped_oracle_acc": 0.2616,
+        "stripped_oracle_acc_std": 0.0215566,
+        "stripped_retained": 74.333333,
+        "stripped_retained_std": 5.436502
+      },
+      "duration_s": 1.27,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [
+        {
+          "commit": "613514f",
+          "control_metrics": {
+            "stripped_oracle_acc": 0.2578,
+            "stripped_oracle_acc_std": 0.0151499,
+            "stripped_retained": 97.0,
+            "stripped_retained_std": 1.632993
+          },
+          "gpu_job_id": null,
+          "impl_sha": "100cbb51a137e707",
+          "message": "run did not test the claim; not a refutation",
+          "metrics": {
+            "calib_acc": 0.25,
+            "calib_acc_std": 0.0,
+            "excluded": [
+              {
+                "llm_frac": 0.5,
+                "q": "Which part of Jack hurt after hauling the lantern up the leaning log?"
+              },
+              {
+                "llm_frac": 0.5,
+                "q": "Which part of Jack hurt after hauling the compass up the hollow rock?"
+              },
+              {
+                "llm_frac": 0.5,
+                "q": "What did chika tell Jack about the lantern?"
+              }
+            ],
+            "llm_mean_frac": 0.252467,
+            "llm_mean_frac_std": 0.00200056,
+            "n_excluded": 5.0,
+            "n_excluded_std": 1.632993,
+            "n_generated": 102.0,
+            "n_generated_std": 0.0,
+            "n_retained": 97.0,
+            "n_retained_std": 1.632993,
+            "oracle_acc_on_retained": 1.0,
+            "oracle_acc_on_retained_std": 0.0,
+            "retained_his_body": 31.333333,
+            "retained_his_body_std": 0.942809,
+            "retained_his_history": 31.666667,
+            "retained_his_history_std": 0.942809,
+            "retained_his_world": 34.0,
+            "retained_his_world_std": 0.0,
+            "retained_min_per_category": 31.0,
+            "retained_min_per_category_std": 0.816497,
+            "verdicts_missing": 0.0,
+            "verdicts_missing_std": 0.0
+          },
+          "ran_at": "2026-08-30T17:29:44",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "5ce5472d03c5448a",
+          "status": "VOID"
+        },
+        {
+          "commit": "613514f+dirty",
+          "control_metrics": {
+            "stripped_oracle_acc": 0.2616,
+            "stripped_oracle_acc_std": 0.0215566,
+            "stripped_retained": 74.333333,
+            "stripped_retained_std": 5.436502
+          },
+          "gpu_job_id": null,
+          "impl_sha": "ac9dbeb2b5eb419c",
+          "message": "",
+          "metrics": {
+            "calib_acc": 0.8333,
+            "calib_acc_std": 0.0,
+            "excluded": [
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the dark moss?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the amber seeds?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the red reeds?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the red seeds?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the grey flint?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the amber root?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Where did Jack find the green stones?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the ladder up the flat hedge?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the lantern up the split rock?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the basket up the hollow cairn?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the basket up the split ford?"
+              },
+              {
+                "llm_frac": 1.0,
+                "q": "Which part of Jack hurt after hauling the net up the crooked hedge?"
+              }
+            ],
+            "llm_mean_frac": 0.271233,
+            "llm_mean_frac_std": 0.0532777,
+            "n_excluded": 27.666667,
+            "n_excluded_std": 5.436502,
+            "n_generated": 102.0,
+            "n_generated_std": 0.0,
+            "n_retained": 74.333333,
+            "n_retained_std": 5.436502,
+            "oracle_acc_on_retained": 1.0,
+            "oracle_acc_on_retained_std": 0.0,
+            "retained_his_body": 24.666667,
+            "retained_his_body_std": 0.942809,
+            "retained_his_history": 26.333333,
+            "retained_his_history_std": 2.054805,
+            "retained_his_world": 23.333333,
+            "retained_his_world_std": 2.624669,
+            "retained_min_per_category": 23.0,
+            "retained_min_per_category_std": 2.160247,
+            "verdicts_missing": 0.0,
+            "verdicts_missing_std": 0.0
+          },
+          "ran_at": "2026-08-30T17:36:12",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "5ce5472d03c5448a",
+          "status": "PASS",
+          "supersedes_void": {
+            "commit": "613514f",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "100cbb51a137e707",
+            "metrics": {
+              "calib_acc": 0.25,
+              "calib_acc_std": 0.0,
+              "excluded": [
+                {
+                  "llm_frac": 0.5,
+                  "q": "Which part of Jack hurt after hauling the lantern up the leaning log?"
+                },
+                {
+                  "llm_frac": 0.5,
+                  "q": "Which part of Jack hurt after hauling the compass up the hollow rock?"
+                },
+                {
+                  "llm_frac": 0.5,
+                  "q": "What did chika tell Jack about the lantern?"
+                }
+              ],
+              "llm_mean_frac": 0.252467,
+              "llm_mean_frac_std": 0.00200056,
+              "n_excluded": 5.0,
+              "n_excluded_std": 1.632993,
+              "n_generated": 102.0,
+              "n_generated_std": 0.0,
+              "n_retained": 97.0,
+              "n_retained_std": 1.632993,
+              "oracle_acc_on_retained": 1.0,
+              "oracle_acc_on_retained_std": 0.0,
+              "retained_his_body": 31.333333,
+              "retained_his_body_std": 0.942809,
+              "retained_his_history": 31.666667,
+              "retained_his_history_std": 0.942809,
+              "retained_his_world": 34.0,
+              "retained_his_world_std": 0.0,
+              "retained_min_per_category": 31.0,
+              "retained_min_per_category_std": 0.816497,
+              "verdicts_missing": 0.0,
+              "verdicts_missing_std": 0.0
+            },
+            "ran_at": "2026-08-30T17:29:44",
+            "spec_changed": false,
+            "spec_sha": "5ce5472d03c5448a",
+            "status": "VOID"
+          }
+        }
+      ],
+      "impl_sha": "ac9dbeb2b5eb419c",
+      "message": "",
+      "metrics": {
+        "calib_acc": 0.8333,
+        "calib_acc_std": 0.0,
+        "excluded": [
+          {
+            "llm_frac": 1.0,
+            "q": "Where did Jack find the dark moss?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Where did Jack find the amber seeds?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Where did Jack find the red reeds?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Where did Jack find the red seeds?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Where did Jack find the grey flint?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Where did Jack find the amber root?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Where did Jack find the green stones?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Which part of Jack hurt after hauling the ladder up the flat hedge?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Which part of Jack hurt after hauling the lantern up the split rock?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Which part of Jack hurt after hauling the basket up the hollow cairn?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Which part of Jack hurt after hauling the basket up the split ford?"
+          },
+          {
+            "llm_frac": 1.0,
+            "q": "Which part of Jack hurt after hauling the net up the crooked hedge?"
+          }
+        ],
+        "llm_mean_frac": 0.271233,
+        "llm_mean_frac_std": 0.0532777,
+        "n_excluded": 27.666667,
+        "n_excluded_std": 5.436502,
+        "n_generated": 102.0,
+        "n_generated_std": 0.0,
+        "n_retained": 74.333333,
+        "n_retained_std": 5.436502,
+        "oracle_acc_on_retained": 1.0,
+        "oracle_acc_on_retained_std": 0.0,
+        "retained_his_body": 24.666667,
+        "retained_his_body_std": 0.942809,
+        "retained_his_history": 26.333333,
+        "retained_his_history_std": 2.054805,
+        "retained_his_world": 23.333333,
+        "retained_his_world_std": 2.624669,
+        "retained_min_per_category": 23.0,
+        "retained_min_per_category_std": 2.160247,
+        "verdicts_missing": 0.0,
+        "verdicts_missing_std": 0.0
+      },
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T17:36:47",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "LG.01",
+      "spec_sha": "5ce5472d03c5448a",
+      "status": "PASS"
+    },
     "ME.1": {
       "amended": [],
       "attempt": 2,
