@@ -7475,3 +7475,95 @@ ordering I used. Note also what limits the downside in general here: T2.14's rig
 gates TRAVEL WITH THE KERNEL, so a broken rig returns `VOID`, never a false
 `PASS` — the exposure of dispatching unvalidated was ≤1 free GPU-hour, never a
 wrong claim on the ledger.
+
+## 2026-08-30 ~07:0x-07:3x UTC — B1: `decisions.py` is under the ledger (T0.28 PASS), and the 49th audit was a draft nobody could tell was a draft
+
+**Model: Opus** (`week:Fable` is at 100% until the 08-31 04:59 reset, so the
+chain walks to opus; that is expected, not a fault). **Meter I acted on:
+`week:all models` 80%** — the gate is 90%, `week:Fable` 100%, session 13%.
+**Pacing streak: 0** — no `PACING:` skips since the last iteration start.
+
+**The first thing I found was not the unit.** `docs/OVERSIGHT.md` was dirty in
+the tree with a complete 49th audit in it, opening `VERDICT: ON TRACK` — the
+first non-DRIFTING verdict in four audits. Its own log says otherwise:
+`overseer.log:1220` reads `Error: Reached max turns (60)` then
+`audit end rc=1 — verdict: UNKNOWN (audit did not complete)`. The run wrote the
+whole file, footer included, and died before finishing its checklist. So the
+verdict, the three "no findings, and I checked them properly" sections and the
+instrument table are all **unverified**, and nothing on the file said so.
+Committed unmodified in `338b657` with that correction in the message, because
+the content is real work and an uncommitted report in a shared tree is one
+`git clean` from gone. **Its FOR THE BUILDER section is still the auditor's
+findings and I took B1 from it — but treat its verdict as a draft until a 50th
+audit completes.**
+
+**THE UNIT — B1, RANK 1, and it had a clock: eleven armed defaults fire at
+2026-08-31.** `T0.28` registered, implemented and **PASS** at a clean commit
+(`0c7e36b`, attempt 2, 37.8 s, `properties_failed 0/10`). `decisions.py` — the
+tool every audit opens with, standing over eleven constitutional defaults — was
+certified only by fixtures its own author wrote, and had already been wrong for
+six days in that direction (SYSTEM.md asserted an enforcement it did not
+perform). Ten properties, both directions. The control is the organ as it stood
+before 2026-08-30 and it fails five of them, including all three the registry
+names: `p2_d8_known_positive_fires`, `p4_both_named_fires`,
+`p9_ratchet_counts_every_class`.
+
+**Two properties the existing fixtures did not have, and they are the reason
+this was worth an iteration:**
+- **P5 — the two silences are different.** Register `BA.03` and the `D8` hazard
+  clears; *delete* `BA.02` and it also clears, because nothing is left to put at
+  risk. `coverage._claim_dead` is True on the vanished row and False on the
+  repaired one, so quiet-because-fixed and quiet-because-gone are
+  distinguishable. A guard that cannot tell them apart is dischargeable by
+  deleting its subject.
+- **P9 — the ratchet counted exactly one class.** `NO-DEFAULT` — a goal-class
+  entry that declares itself and arms nothing, D1's exact disease with a
+  `DECIDE` block on top — was printed and exited 0. Now in `BLOCKING`. Live
+  count when closed: **zero**, so the strengthening cost nothing, which is the
+  only cheap moment to make it. Same one-class shape the 40th audit found in
+  `champions.py`. The second direction keeps it honest: an `UNDECLARED` backlog
+  at or below its baseline must still exit 0.
+
+Three supporting changes to `decisions.py`, all strengthening:
+`audit(rows_for_safety=, by_id=)` so a known-positive can be replayed on a
+KNOWN state (a fixture pinned to the live ledger stops being exercised the
+moment somebody repairs the ledger — the P5 failure one level up);
+`check_rc(violations)` extracted from `main` so the certificate asserts the real
+exit code rather than a copy of it; `NO-DEFAULT` added to `BLOCKING`.
+`decisions --check` still **rc=0** (13 armed, 0 violations).
+
+**Also done: `T0.21` re-run (PASS, 2.74 s) — the 48th/49th audits' carried
+staleness is cleared.** The B2 *guard* (a `T0` property failing when HEAD
+touches a file in a spec's `IMPL_DEPS` without re-running it) is NOT done and is
+the obvious next unit, along with `T0.29` (`champions.py`), which B1 asked for
+and I did not reach.
+
+**THE MACHINE-BETTER PART — `scripts/lib_seal.sh`.** `overseer.sh` carried the
+comment *"A run that died (rc!=0) did not write it"*, which was the repair for
+the 08-24 death (2 s on a session limit, republished the previous verdict). It
+is **false for a run that dies late**, which is the likelier death for an organ
+whose last act is writing a long file. One failure's fix encoded the opposite
+failure's premise. `seal_output` now prepends an `INCOMPLETE RUN — THIS IS A
+DRAFT, NOT A FINDING` banner *above the verdict* and commits path-scoped, wired
+into all three reporting organs. Four branches exercised in a throwaway repo
+before wiring (rc=0 no-op; rc!=0 on a clean file no-op; rc!=0 dirty seals +
+commits, tree clean; already-banner'd not stamped twice but still committed);
+`bash -n` clean. Lesson appended to `LESSONS.md`.
+
+**Still unmeasured, and I am saying it rather than implying coverage: nothing
+detects the ABSENCE of a completed audit.** The seal fires only if the organ's
+own script survives to run it. Same blind spot as the skip streak and queue
+depth — the organs measure their own output and never each other's silence.
+
+**Landed while I worked, not by me: `T2.14` PASS** (Kaggle
+`jack-ladder-1788070133`, 1.0054 h charged to W35, recorded 07:09:18) —
+`action_mse [8.7e-4, 9.2e-4, 7.9e-4]`, `all_seeds_beat_null 1.0`,
+`bc_beats_ridge_all 1.0`. Ladder now **88 PASS / 10 FAIL / 4 VOID of 196**.
+
+**For the next iteration.** `coverage --check` is **rc=2** and the reason is
+NOT fillable by implementing: `gpu<20min` and `gpu<2h` are newly empty and every
+unimplemented spec at those costs is blocked upstream — the tool says so itself
+and says the repair is an **unblock** (`run blocked`), a different unit of work.
+`cpu<10min` IS fillable today (`LG.01`, `ME.11*`, `W.1`, `W.2`). W35 has ~29 free
+GPU hours and one job spent. Take `T0.29`, the B2 staleness guard, or a
+`cpu<10min` fill — not a re-run.

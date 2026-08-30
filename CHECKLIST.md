@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 85 / 195 demonstrated
+## 88 / 196 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -342,7 +342,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ make_playground(with_humanoid=True) yields a model that contains the Humanoid body with 17 actuators, settles finite at rest, emits the 348-dim observation TrainingPipeline expects, and spawns within reach of the ladder base.
       - _dies if:_ No humanoid body, nu != 17, non-finite state after settling, an observation dimension that disagrees with the pipeline, or a spawn point from which the ladder cannot be reached.
       - _then delete:_ Every curiosity claim, and the ladder-and-apple standard itself. CU.*, LT.* and PG.4's dwell metrics are all defined over an agent acting in this world; none of them can be run in an empty one.
-- [ ] **T2.14** Imitation from real motion capture
+- [x] **T2.14** Imitation from real motion capture
       - _asserts:_ BC on the CMU corpus reaches held-out action error below mean-action AND below nearest-neighbour retrieval.
       - _dies if:_ A lookup table (NN retrieval) matches the model.
 - [!] **T2.15** Free-form language routes to the right task  — backend=kaggle; construction_ok=1.0
@@ -635,7 +635,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
-- [ ] **VO.02** Do two Jacks invent a signal? (gated on a second Jack)
+- [x] **VO.02** Do two Jacks invent a signal? (gated on a second Jack)
       - _asserts:_ With two Jacks in one world and a coordination problem that pays only if they act differently, the mutual information between an emitter's acoustic output and the referent, ESTIMATED AT THE LISTENER'S EAR, rises above the shuffled-channel floor, and coordination success rises with it.
       - _dies if:_ Coordination rises while I(signal;referent) at the ear stays at the floor - the pair coordinated through something other than the signal (position, timing, turn count), which is this field's most common false positive.
       - _then delete:_ Every claim that Jack invented a language.
@@ -871,3 +871,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ The count of distinct REACHED rule-interaction events — co-occurrences of two or more rules whose joint outcome differs from either rule's outcome alone — exceeds the number of rules enumerated in the rule-set, and keeps growing over lives rather than saturating.
       - _dies if:_ The reached-interaction count saturating at or below the enumerated rule count — the world is a list, not a closure, and open-endedness in it is impossible however good the agent is.
       - _then delete:_ The W3 rung of SURVIVAL_WORLD.md's fidelity ladder. If depth does not exceed the enumeration, W3 is just W2 with more table rows, and the honest move is to say so and spend the compute on ACCEL-style RULE mutation instead of on more hand-authored rules.
+
+### Tier 0 — HARNESS — can we measure anything?
+
+- [x] **T0.28** The escalation tool can be shown catching a deadlock and a claim-death
+      - _asserts:_ `experiments/decisions.py` — the instrument that stands over eleven pre-registered constitutional defaults — detects every defect it claims to detect, on the real code path, in BOTH directions: (1) the four parse defects (UNDECLARED, MEANS-ESCALATED, NO-DEFAULT, an option-stale header that is not a resolution) are flagged and a correctly armed entry is not; (2) the SAFETY-CLAIM-DEAD clause fires on `D8` as it actually stood on 2026-08-29 and drives `check_rc` to 1; (3) it goes quiet only for the prescribed repair — a registered SUCCESSOR — and a commitment whose last claim VANISHES is distinguishable from one that was repaired; (4) a recorded PASS is never put at risk by a calendar; (5) an id that resolves to nothing is a typo and not a reference, while a real id anywhere in the default's text — including on a wrapped continuation line — is in the blast radius; (6) the gate's exit code blocks on EVERY violation class it reports as fatal, not on one.
+      - _dies if:_ Any property failing; the battery running fewer than N_PROPERTIES; or the live document failing to parse into a well-formed armed set. Concretely: the safety clause not firing on the D8 shape, going quiet when the subject vanishes rather than when a successor is registered, a blast radius that drops a spec id because it fell on the second physical line of a wrapped default, or a violation class the report prints and the exit code ignores.
+      - _then delete:_ Author self-certification of the governance instruments. Before this spec `decisions.py` was certified only by fixtures its own author wrote, which is what `SYSTEM.md`'s first law exists to distrust — and it had already been wrong once, for six days, in the direction of claiming an enforcement it did not perform.
