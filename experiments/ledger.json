@@ -12094,6 +12094,44 @@
       "spec_sha": "a6b390a53a433ea2",
       "status": "PASS"
     },
+    "T0.29": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "6ffd709+dirty",
+      "compute_s": null,
+      "control_metrics": {
+        "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p6_only_a_challenger_discharges",
+        "live_arena_missing": 5.0,
+        "live_seats": 26.0,
+        "live_unfalsifiable": 7.0,
+        "live_violations": 11.0,
+        "properties_checked": 10.0,
+        "properties_failed": 3.0
+      },
+      "duration_s": 2.2,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "d4dbb91110326656",
+      "message": "",
+      "metrics": {
+        "failed_names": "",
+        "live_arena_missing": 5.0,
+        "live_seats": 26.0,
+        "live_unfalsifiable": 7.0,
+        "live_violations": 11.0,
+        "properties_checked": 10.0,
+        "properties_failed": 0.0
+      },
+      "preserved_impl": null,
+      "ran_at": "2026-08-30T09:14:09",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.29",
+      "spec_sha": "2f701e24af9a6b14",
+      "status": "PASS"
+    },
     "T1.01": {
       "amended": [],
       "attempt": 1,

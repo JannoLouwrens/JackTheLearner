@@ -81,11 +81,23 @@ single most-cited missing arena in the project. The `## NOT SEATS` section is
 deliberately NOT parsed: it holds the DEFINITION of Jack, which by its own words
 no arena may touch, so it is correct for it to name none.
 
-RATCHET, NOT GATE. `--check` fails only if ARENA-MISSING grows past the baseline
-below. Eight seats are in violation today; a guard that fails everywhere on day
-one is one nobody keeps green, and a guard nobody keeps green is decoration
-(LESSONS.md; the `citations.py` and `decisions.py` precedent). Each registration
-lowers the number and the constant follows it down.
+RATCHET, NOT GATE — AND IT TAKES TWO NUMBERS, NOT ONE. `--check` fails if either
+baseline below grows. Eight seats are in violation today; a guard that fails
+everywhere on day one is one nobody keeps green, and a guard nobody keeps green
+is decoration (LESSONS.md; the `citations.py` and `decisions.py` precedent). Each
+registration lowers the numbers and the constants follow them down.
+
+WHY TWO. Until 2026-08-30 the ratchet counted `ARENA-MISSING` alone, and that is
+not the quantity anybody cares about. Delete a phantom id from an arena cell and
+the seat stops being `ARENA-MISSING` and becomes `NO-ARENA` — the count FALLS,
+`--check` prints a smaller number, and the seat has gone from *uncontested* to
+*permanently uncontestable*. The ratchet rewarded the one repair this file's own
+docstring forbids in bold three paragraphs up. So the ratcheted quantity is
+`UNFALSIFIABLE`: seats with no runnable arena AT ALL, which is invariant under
+that conversion and falls only when a spec is actually registered.
+(43rd/44th/45th audits found the same one-class shape in the challenger
+quantifier; `decisions.py` had it with `NO-DEFAULT`, closed by `T0.28` P9;
+`coverage.py` had it, closed by `T0.21` P2. Third instrument, same disease.)
 
     python -m experiments.champions          # report
     python -m experiments.champions --check  # ratchet: exit 1 if the debt grew
@@ -118,6 +130,23 @@ DOC = Path(__file__).resolve().parent.parent / "docs" / "CHAMPIONS.md"
 # architecture (D1.0, T2.21), Curiosity signal (LT.03, LT.04), Vision encoder
 # (PL.02), Audio encoder (PL.*), and the PLASTIC-ONLY decree (PL.00, PL.02).
 BASELINE_ARENA_MISSING = 5
+
+# THE SEATS NOTHING REGISTERED COULD EVER UNSEAT, measured 2026-08-30 against
+# 196 specs: Control architecture (`D1.0`, `T2.21` — both UNREGISTERABLE),
+# Curiosity signal (`LT.03`, `LT.04`), Audio encoder (`PL.*`, an empty family),
+# the PLASTIC-ONLY decree (`PL.*`, `PL.00`, `PL.02`), and the three that name no
+# arena at all: ASR, Speaker ID, Language grounding.
+#
+# THIS IS THE HONEST RATCHET AND `BASELINE_ARENA_MISSING` IS NOT. A seat counts
+# here when `arena_present` is empty — no registered spec resolves from its
+# arena cell — so the ARENA-MISSING -> NO-ARENA conversion that shrinks the
+# other number leaves this one untouched. It falls ONLY by registering a spec
+# (or by correcting a citation to a live successor), which is the only repair
+# this file has ever endorsed. `Vision encoder` is deliberately NOT here: it
+# cites the phantom `PL.02` but also `T2.03`/`T3.01`, which have run — a mixed
+# citation is a documentation defect, not an unfalsifiable seat, and collapsing
+# the two would hide the difference the split exists to show.
+BASELINE_UNFALSIFIABLE = 7
 
 # ARENA REFS THAT CAN NEVER BE REGISTERED, and why — the honest cost of closing
 # the gap, which this file used to leave the reader to discover by spending the
@@ -380,9 +409,31 @@ def _challenger_runs(arena_status: Dict[str, str], by_id: dict) -> List[str]:
                            and kinds[sid] <= set(NON_CHALLENGER_KINDS)))
 
 
-def audit(text: str, by_id: dict,
-          status: Callable[[str], str]) -> Tuple[List[Tuple[str, str, str]], List[dict]]:
-    """Return (violations, seats). A violation names a seat, never a spec."""
+def unfalsifiable(seats: Sequence[dict]) -> List[str]:
+    """Seats no registered spec could ever unseat — `arena_present` is empty.
+
+    The ratcheted quantity. See `BASELINE_UNFALSIFIABLE`: this is invariant
+    under the ARENA-MISSING -> NO-ARENA conversion that deleting an arena
+    reference performs, which is exactly why it, and not the violation count,
+    is what `--check` may not let grow. Seats must have been through `audit()`,
+    which is what sets `arena_present`.
+    """
+    return [s["seat"] for s in seats
+            if s["kind"] != "malformed" and not s.get("arena_present")]
+
+
+def audit(text: str, by_id: dict, status: Callable[[str], str], *,
+          unregisterable: Optional[dict] = None
+          ) -> Tuple[List[Tuple[str, str, str]], List[dict]]:
+    """Return (violations, seats). A violation names a seat, never a spec.
+
+    `unregisterable` overrides the module's decision set — the refs the project
+    has DECIDED never to register. It is a parameter so the pre-2026-08-30
+    organ, which had no closability split and told the builder to "register" a
+    withdrawn spec for five consecutive audits, stays executable as a control
+    rather than being paraphrased into one (T0.08 property 5; `T0.29`).
+    """
+    unregisterable = UNREGISTERABLE if unregisterable is None else unregisterable
     seats = parse(text)
     violations: List[Tuple[str, str, str]] = []
 
@@ -409,15 +460,15 @@ def audit(text: str, by_id: dict,
             # obey, and this file issued exactly that instruction for five
             # consecutive audits. See UNREGISTERABLE.
             s["arena_unregisterable"] = [r for r in s["arena_missing"]
-                                         if r in UNREGISTERABLE]
-            reg = [r for r in s["arena_missing"] if r not in UNREGISTERABLE]
+                                         if r in unregisterable]
+            reg = [r for r in s["arena_missing"] if r not in unregisterable]
             why = []
             if reg:
                 why.append(f"names {', '.join(reg)} — not in the registry; "
                            f"REGISTER to discharge")
             if s["arena_unregisterable"]:
                 why.append("names " + "; ".join(
-                    f"{r} ({UNREGISTERABLE[r]})" for r in s["arena_unregisterable"]
+                    f"{r} ({unregisterable[r]})" for r in s["arena_unregisterable"]
                 ) + " — NOT registerable, so the repair is to CORRECT THE "
                     "CITATION to the live successor, never to write the spec")
             violations.append(("ARENA-MISSING", s["seat"],
@@ -649,7 +700,29 @@ def main(argv: List[str]) -> int:
         print()
 
     missing = sum(1 for k, _, _ in violations if k == "ARENA-MISSING")
+    dead = unfalsifiable(seats)
+
+    # The seats nothing could unseat, printed whether or not `--check` is on: it
+    # is the number the file's whole mechanism rests on, and until 2026-08-30 no
+    # report showed it while three of these seats sat quietly under `NO-ARENA`.
+    print(f"  UNFALSIFIABLE — no registered spec resolves from the arena cell, "
+          f"so nothing\n  that could be run would unseat the holder "
+          f"({len(dead)}/{BASELINE_UNFALSIFIABLE}):")
+    for seat in dead:
+        print(f"    {seat[:70]}")
+    print()
+
     if "--check" in argv:
+        # BOTH ratchets block. Counting only ARENA-MISSING rewarded deleting the
+        # arena reference — the repair this file forbids in bold — because that
+        # converts the seat to NO-ARENA and the number falls. See
+        # BASELINE_UNFALSIFIABLE.
+        if len(dead) > BASELINE_UNFALSIFIABLE:
+            print(f"  RATCHET BROKEN: {len(dead)} seats have no runnable arena at "
+                  f"all, baseline {BASELINE_UNFALSIFIABLE}. It may shrink, never\n"
+                  f"  grow — and it shrinks ONLY by registering a spec or "
+                  f"correcting a citation to a live successor.\n")
+            return 1
         if missing > BASELINE_ARENA_MISSING:
             print(f"  RATCHET BROKEN: {missing} seats name a non-existent arena, "
                   f"baseline {BASELINE_ARENA_MISSING}. It may shrink, never grow —\n"
@@ -657,7 +730,8 @@ def main(argv: List[str]) -> int:
                   f"arena reference.\n")
             return 1
         print(f"  ratchet ok ({missing}/{BASELINE_ARENA_MISSING} seats with a "
-              f"phantom arena).\n")
+              f"phantom arena; {len(dead)}/{BASELINE_UNFALSIFIABLE} "
+              f"unfalsifiable).\n")
     return 0
 
 
