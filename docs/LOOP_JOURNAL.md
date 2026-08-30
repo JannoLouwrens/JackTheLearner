@@ -7944,3 +7944,142 @@ seed-90 sizing pilot (pid 3029636) is STILL RUNNING at 70+ min, CPU time trackin
 elapsed at 100% of one core; `/data/ba03_pilot_seed90.json` does not exist yet.**
 It is genuinely computing, not orphaned — but it is well past its 45–60 min
 estimate, so check it early and consider whether the envelope was mis-sized.
+
+---
+
+## 2026-08-30 ~15:2x UTC — W.2 FAIL recorded: W0's needs conserve perfectly and
+## are calibrated against nothing (1 of 4 checks failed, and it is the one with
+## the world in it)
+
+**Model: OPUS** (`week:Fable` is at 100% until the 08-31 04:59 reset, exactly as
+the prompt predicts). Meters at start: `session 5%`, `week:Fable 100%`,
+**`week:all models` 82%** — that last one is the gate. `--week-elapsed` 92, so
+`pace_gate`'s line is `25 + ((90-25)*92 + 99)/100 = 85` and 82 < 85, no skip.
+**Pacing streak 0** (`awk '/PACING/{n++} /iteration start/{n=0} END{print n}'`).
+No forecast of the meter written, per the standing rule.
+
+**Unit: overseer B1's second half — `W.2`, the sibling of yesterday's `W.1`.**
+`experiments/tests/w_2_needs_ledger.py`, 3 seeds, 97 s, **FAIL** at `93d9175`,
+clean tree (the first run stamped `+dirty` and was superseded by an identical
+re-run from the commit; the numbers are bit-identical). All three seeds agreed
+to `std ~1e-15` on every metric.
+
+**What passed, and it is not nothing.** (a) The three integrators match their
+closed forms to **1e-13** in meter units against a 1% bar — the sleep update is
+written as an exact exponential map so it composes without discretisation
+error. (b) **The ledger conserves exactly**: a reconstruction built only from
+what the layer PUBLISHES (`last_power_w`, `last_dt`, `kappa_act`, `ate_total`,
+`drank_total`) tracked the returned state to a maximum deviation of **0.0** over
+a 10-Jack-day sated life — 60,000 decisions, 17 real eating events, 53 real
+drinking events. The met-unit double-counting trap the registry warns about
+(worth 25%, silent) is **not present**. (d) The measured sleep clocks are
+`tau_wake 700.0 s` / `tau_sleep 160.0 s`, ratio **4.375** against the registered
+18.2/4.2 = 4.3333 — 0.96% of a 1% bar, a pass with 3.8% of the bar left, and
+`needs.py` declares that 1% deviation deliberately. Both taus were MEASURED by
+log-linear relaxation, never read off the constants (W.1's lesson).
+
+**What failed: (c), the deadlines, and by margins no tolerance rescues.**
+Against W.7's declared `k = 86400/1200 = 72`, thirst is **6.32x** short (3600 s
+predicted, 569.8 s measured) and hunger **14.82x** (25200 s predicted, 1700.4 s
+measured; 12.00x at basal drain). The pre-registered tolerance is a factor of 2,
+derived from the spec's own sources' spread; `c_widest_tol_that_would_pass` is
+14.82, so a 5x band still fails both.
+
+**THE FINDING: W0 HAS NO SINGLE TIME-COMPRESSION FACTOR, so W.7's premise
+already has a counterexample waiting.** Implied k, all from shipped constants:
+day 72.0, thermal tau 71.1, tau_wake 93.6, tau_sleep 94.5, thirst 454.7, hunger
+864.0 — spread factor **12.15**. And no choice of k repairs it, because the
+ratios BETWEEN needs are wrong too: a human starves 7.00x slower than they
+dehydrate, W0's Jack only 2.98x (3.68x at basal). k is one number; there are two
+independent ratios. Routed as **`w2-needs-have-no-single-k`** with its bill:
+three test files cite `experiments/needs.py` in IMPL_DEPS (NE.01, W.1, W.2) and
+**all three are FAIL — zero PASS re-runs.** This is the cheapest that row will
+ever be, and it must NOT be bundled behind `playground.py`.
+
+**THE GOAL-SHAPED BY-PRODUCT, and I think it is worth more than the verdict:
+SHELTER IS A TRAP BY DAY.** `sky_occlusion` cuts `k_eff` by 70% with no
+day/night awareness and shivering stops above 37 C, so a fully-roofed body at
+the 30 C day ambient parks at 53.3 C and dies of **hyperthermia at 182.4 s**
+(measured). The same roof at night is worth ~4 C. W0 already contains a
+consistent, discoverable, consequential rule — GOAL.md's three world properties,
+verbatim — and it is the OPPOSITE sign from the one the shelter specs were
+written against. `W.3` ("cold kills, and shelter is why it does not") inherits a
+measured second half: *heat kills, and shelter is why*. Keep or repair is the
+Review's call, not mine.
+
+**And cold IS reachable — only through water.** The dry statue's minimum body
+temperature across a full night is 33.99 C and it never dies of cold at any
+horizon (confirming `w1-cold-is-not-lethal-at-night` from the needs side). Soak
+it and it dies of **hypothermia at 854 s**, 54 s after nightfall, at 26.5 C. So
+arm (iii) of the W.1 row (add wind) is not the only route to a lethal night;
+`KAPPA_WET` already provides one and `PG.2`'s pool is where it lives.
+
+**I WROTE A FINDING BEFORE RUNNING IT AND THE RUN SAID NO — recorded because
+that is the interesting part.** By analogy with W.1's mislabelled 27.55 C I
+predicted W.2's registered control ("sated, at 27.5 C") was another mislabelled
+ambient whose body reading dies of hypothermia in 20 s. Measured: it does NOT
+die. Shivering supplies 316.7 W, it climbs back through 28 C after 5.0 s of
+dwell, and W0's lethal bounds need 20 s of CONTINUOUS dwell. **Both readings
+satisfy the clause; the label is undecidable from the control**, and
+`ctl_275_reading_decidable` ships as a 0 so nobody inherits my analogy as a
+fact. Second lesson in `docs/LESSONS.md` bounds the W.1 rule accordingly: the
+mislabelled-constant tie-breaker fires on UNSATISFIABILITY only, and a lesson
+allowed to win by analogy is a doctrine. Side benefit: W0's temperature deaths
+are **dwell-gated, not instantaneous**, which no spec should read as a bare
+threshold again.
+
+**THE MACHINE IS BETTER: nine rig gates, and they exist because of a false
+refutation this file produced during construction.** `PlaygroundParams.mutate`
+drops an object on seed 1, shifting the humanoid root's `qpos` address
+**43 -> 36**. A hard-coded 43 wrote into some other body's pose, Jack never
+moved, never drank, and seed 1 reported that **meeting water does not remove
+the dehydration death** — a clean, plausible, entirely false refutation of the
+registered specificity control, on one seed of three, with every existing guard
+green. Every model index is now resolved BY NAME per world, and every scripted
+intervention asserts its own precondition (mouth near the surface AND not
+submerged; food touching the mouth mask AND sky still open; roof occluding all
+nine rays; day statue at exactly 37.0 C) and VOIDs rather than FAILs. The
+generalised rule is in LESSONS.md as the third member of a family: an at-chance
+control must prove it could pass, a trained null must prove it reached its
+ceiling, and **an intervention must prove it landed** — the first two are about
+statistical liveness, this one about the harness's mechanical grip, and it is
+the only one no statistic computed from the arms can see.
+
+**Also closed: `W.1` was missing IMPL_DEPS entirely** (`309193a`). Its arm under
+test IS `needs.py` and its certificate hashed only its own bytes, so an edit to
+`C_SH`/`K_DRY`/`DELTA_T_NIGHT` — all three live arms in its own routed row —
+would have left the FAIL reading current about code that no longer existed. Now
+declared, re-run, verdict unchanged. This also means the W.1 row's "0 of 90 PASS
+certificates cite needs.py" bill was true for the wrong reason; corrected in
+REVIEW_QUEUE.
+
+**State of the board, read not remembered.** `run status` 90 PASS / 198, 12
+FAIL, 4 VOID, one pre-existing stale claim (T2.02). PROGRESS **B0 is DONE** —
+`sm_03_nose_reports_occluded.py` is tracked. PROGRESS **B2 is DONE** — `run
+coverage` now prints QUEUE DEPTH, and it says **4 dispatchable, all 4 VOID, so
+0 fresh dispatches**; `gpu<20min` and `gpu<2h` are NEWLY EMPTY and **not
+fillable** (every unimplemented spec at those costs is blocked upstream), so
+PROGRESS B1's "implement one unimplemented GPU spec" no longer has a target at
+the two cheap classes — the repair there is an UNBLOCK, which the instrument
+now says out loud. `T2.09` and `T3.06` have been implemented since that list was
+written (T2.09 PASS, T3.06 VOID).
+
+**The inherited BA.03 seed-90 sizing pilot is FINISHED and NEGATIVE.**
+`/data/ba03_pilot_seed90.json` was written 15:00 (1377 bytes); no process
+remains (the `pgrep -f ba03` hit was my own shell). `gain -0.2375`,
+`gain_positive 0.0`, `brace_side_accuracy 0.0`, `up_vest 10.40` vs
+`up_deprived 10.64` — the vest arm is WORSE than the deprived one at this
+envelope. BA.03's gates stay provisional; whoever takes it should read that as
+sizing evidence, not as a verdict, and should not freeze bars on it.
+
+**NEXT ITERATION:** `W.3` is the registered shelter instrument and is now
+specced over constants that TWO routed rows are about (`w1-cold-is-not-lethal-
+at-night`, `w2-needs-have-no-single-k`) — do not implement it ahead of the
+Review's disposition, or you will certify a world that is about to move.
+`W.7` is the honest next W: its dependencies (`W.1`, `W.2`) have both now run,
+it is `Budget.CPU`, and W.2 handed it its central number (`k_spread_factor`
+12.15) — it exists to ask whether k was DECLARED or merely IMPLIED, and the
+answer is now measured to be "six different implied ks". Otherwise: overseer
+B4 (two honesty repairs in `T2.09`, neither touching a gate) is small and owed,
+B5 (register `PL.02`) is the seventh audit asking, and PROGRESS B1's real form
+is now `run blocked`, not `run next`.

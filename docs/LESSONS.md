@@ -8196,3 +8196,109 @@ rejected readings ship as metrics (`a_ref_ambient_from_skin_c`,
 next reader re-derives the choice instead of trusting this paragraph. If a
 relabelling ever flips a verdict from FAIL to PASS, it is not a relabelling —
 route it to the Review as a threshold change and let someone else decide.
+
+## A SCRIPTED INTERVENTION MUST PROVE IT LANDED, NOT THAT IT WAS ISSUED — and
+## the failure signature is a control that splits across seeds on a quantity
+## that is provably seed-independent
+## (builder, 2026-08-30, implementing W.2)
+
+**The near-miss, and it was a false REFUTATION of a registered control.** W.2's
+control 2 is the registry's *"each need ablated in turn must remove exactly its
+own death mode and no other"*, implemented by MEETING each need through the
+world's own affordances: teleport Jack's mouth into the pool and he drinks, so
+the dehydration death must be replaced by starvation. The teleport wrote the
+root pose at `data.qpos[43:50]`, an address read off seed 0.
+
+`PlaygroundParams.mutate` drops an object on seed 1. One fewer freejoint, and
+the humanoid root's `qpos` address moves **43 -> 36**. The write still
+succeeded — it landed in some other body's pose — Jack never moved, never
+drank, and seed 1 reported that **meeting water does not remove the dehydration
+death**. Seeds 0 and 2 reported that it does. Nothing errored. The numbers were
+clean, the causes were legal death causes from the world's own enum, and the
+verdict was a specific, plausible, publishable claim about W0's need
+specificity that was entirely an artefact of the harness's hand missing.
+
+**Why it would have survived review.** Every guard this repo has was green. The
+rig had no exception, the control ran, the arms produced numbers, the seed
+conjunction did its job and correctly refused to certify — so the run would
+have landed FAIL, which is the verdict a *real* specificity failure produces.
+"One seed of three disagrees" reads as a fragile world or seed noise, and the
+instinct is to look at the world. The world was fine.
+
+**The tell that was available, and it is general.** The disagreeing quantity —
+which need kills you when the other is met — is **deterministic arithmetic in
+`needs.py`**, sharing no state with the mutated geometry. A quantity that
+*cannot* depend on the seed and *does* is not noise and is not fragility: it is
+proof that something seed-dependent has entered a path that should not contain
+it, and the harness is almost always where. **Before treating a per-seed split
+as evidence about the world, ask whether the split quantity has any legitimate
+route to the seed at all.**
+
+**The repair, and it is the third member of a family this file already has.**
+Nine rig gates in `w_2_needs_ledger.py` assert the *precondition of each
+intervention* rather than its issuance, and they VOID rather than FAIL: the
+pool placement must put the mouth near the surface AND not submerged, the food
+placement must contact the mouth mask AND leave the sky unoccluded, the roof
+must occlude all nine rays, the day statue must hold exactly 37.0 C. Every
+model index is resolved BY NAME on the world actually built.
+
+  - *"An at-chance control must carry proof its instrument was alive"* — a
+    control that must FAIL, proven capable of passing.
+  - *"A null that must be STRONG, proven to have reached its own ceiling"*
+    (BA.03) — a null that must be beaten, proven not to have under-trained.
+  - **NEW: an intervention that must TAKE EFFECT, proven to have taken it.**
+
+The first two are about an arm's *statistical* liveness. This one is about the
+harness's *mechanical* grip on the world, and it is the one that produces a
+confident wrong answer with every statistical instrument green, because no
+statistic computed from the arms can see a hand that closed on nothing.
+
+**Sharpest form: `data.qpos[43] = x` is an assertion that address 43 is what
+you think it is, and it is the only assertion in the line that nothing checks.**
+A test that writes into a world it did not resolve by name is testing the world
+it remembers.
+
+## THE PREVIOUS SPEC'S LESSON IS A HYPOTHESIS ABOUT THIS ONE, NOT A FINDING —
+## and the mislabelled-constant rule is a ONE-WAY instrument
+## (builder, 2026-08-30, implementing W.2 the day after W.1)
+
+W.1 established, at some cost, that a pre-registered constant can carry the
+wrong noun: its check (a) named 27.55 C a thermoneutral AMBIENT when the
+sourced arithmetic makes it a steady-state BODY temperature, and the tie-breaker
+was **the control's own registered clause** — under the ambient reading the
+control could not pass a check the registry required it to pass, and *a control
+that cannot satisfy its own registered clause is a mislabelled bar, not a broken
+control.* That rule is right and it stands.
+
+W.2's registered control, written the same morning by the same hand, says a
+sated agent *"at 27.5 C"* must survive an arbitrarily long life. The analogy is
+irresistible: same number to three significant figures, same ambiguity, so read
+it as an ambient and move on. **I wrote that reading into the docstring as a
+finding before running it, and the measurement said no.** A sated body starting
+at 27.5 C — 0.5 C below the world's own `T_COLD_DEATH` — does not die: shivering
+supplies 316.7 W, it climbs back through 28 C after 5.0 s of dwell, and W0's
+lethal bounds require 20 s of *continuous* dwell. Both readings satisfy the
+clause. The control is a live instrument either way and the label is
+**undecidable from it**.
+
+**The bound on the rule, and this is the durable part.** The mislabelled-constant
+tie-breaker fires on UNSATISFIABILITY and nothing else. It can tell you a
+reading is wrong; it can never tell you a reading is right, and when two
+readings are both satisfiable it says nothing at all. Reaching for it anyway —
+because it worked yesterday, on an adjacent spec, on a number that looks the
+same — converts an instrument into an analogy.
+
+**Two smaller things fell out, both worth more than the label.** First, W0's
+temperature deaths are **dwell-gated, not instantaneous**, so "outside 28-40 C"
+is not by itself a death and no spec should read it as one; W.2 now measures the
+dwell (`ctl_body275_s_below_cold`) against the window (`ctl_body275_grace_s`)
+rather than comparing a temperature to a threshold. Second, the honest artefact
+of a wrong prediction is a **recorded** wrong prediction: `ctl_275_reading_
+decidable` ships as a 0 so the next reader learns the question is open instead
+of inheriting my analogy as a fact.
+
+**Generalised: a lesson is a prior, and a prior that is never allowed to lose
+is a doctrine.** The cheapest possible test of an inherited lesson is to write
+down what it predicts *before* the run and let the run mark it — which costs one
+metric and is the only thing that distinguishes methodological memory from
+methodological habit.

@@ -433,3 +433,64 @@ ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
     DELTA_T_NIGHT and W.2/W.3 are specced over these same constants — W.3 in
     particular is the registered instrument for the shelter question and
     should be implemented against whatever this row decides, not before it.
+
+ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
+    Question: W0's needs are compressed against human physiology at SIX
+    DIFFERENT RATES, so W.7's premise — "only the need-accumulation clock is
+    scaled, by a single declared k" — already has a counterexample. Does W0
+    get one k, several declared ks, or none? Implied k per subsystem, all
+    computed from shipped constants (metric `k_from_*`, spread factor 12.15):
+
+        day length      86400 / 1200          =  72.0
+        thermal tau     17069 / 240           =  71.1   (W.1 finding 2)
+        sleep tau_wake  65520 / 700           =  93.6
+        sleep tau_sleep 15120 / 160           =  94.5
+        thirst          259200 / 570          = 454.7
+        hunger          1814400 / 2100        = 864.0
+
+    Against W.7's declared k = 72 the two deadlines are 6.32x and 14.82x
+    short (12.00x at basal drain), against a pre-registered factor-of-2
+    tolerance derived from the sources' own spread. That is what FAILed W.2
+    — checks (a), (b) and (d) all passed.
+    THE PART NO CHOICE OF k CAN FIX: the ratios BETWEEN needs are wrong too.
+    A human starves 7.00x slower than they dehydrate; W0's Jack starves only
+    2.98x slower (3.68x at basal). k is one number and there are two
+    independent ratios, so this is a re-scaling of `needs.py`'s constants,
+    not a conversion factor. In Jack-days he dies of thirst in 0.475 and
+    starves in 1.42 — a world where every single day is a survival emergency
+    on both axes at once, which is a curriculum choice worth making on
+    purpose rather than by arithmetic accident.
+    SECOND ROW ON THE SAME FILE, AND IT IS THE GOAL-SHAPED ONE — SHELTER IS A
+    TRAP BY DAY. `sky_occlusion` cuts `k_eff` by `OCC_CUT = 0.7` with no
+    day/night awareness, and shivering stops above 37 C, so a fully-roofed
+    body at the 30 C day ambient parks at `30 + M_BASAL/(K_DRY*0.3)` = 53.3 C
+    and dies of **hyperthermia at t = 182.4 s** (measured, `c_hot_route_*`).
+    The same roof at night is worth ~4 C of warmth. So W0 already contains a
+    consistent, discoverable, consequential rule — exactly GOAL.md's three
+    world properties — and it is the OPPOSITE sign from the one the shelter
+    specs were written against. `W.3` inherits a measured second half: *heat
+    kills, and shelter is why*. This may be an asset to keep, not a defect to
+    repair; that is the Review's call, not the builder's.
+    THIRD: cold is reachable ONLY through water. The dry statue's minimum
+    body temperature across a full night is 33.99 C and it never dies of cold
+    at any horizon (confirming `w1-cold-is-not-lethal-at-night` from the
+    needs side); soak the same statue and it dies of **hypothermia at
+    t = 854 s**, 54 s after nightfall, at 26.5 C. Arm (iii) of the W.1 row
+    (add a wind term) is not the only route to a lethal night — `KAPPA_WET`
+    already provides one, and `PG.2`'s pool is where it lives.
+    NOT A DEFECT, recorded so it is not re-derived: the ledger CONSERVES
+    exactly (max deviation 0.0 in meter units over 60,000 decisions, 17 eats,
+    53 drinks), the three integrators match their closed forms to ~1e-13, and
+    the sleep ratio is 4.375 against the registered 4.3333 (0.96% of a 1%
+    bar — a pass with 3.8% of the bar left, and `needs.py` declares the 1%
+    deviation deliberately). The bookkeeping is sound; the calibration is not.
+    Full record: FINDINGS 3/4/5 in w_2_needs_ledger.py; ledger W.2 attempt 1.
+    Staleness bill: **ZERO MECHANICAL PASS COST.** Three test files cite
+    `experiments/needs.py` in IMPL_DEPS — NE.01, W.1, W.2 — and all three are
+    FAIL. (W.1's citation was added in 309193a; it was missing, which is why
+    the W.1 row's "0 of 90" bill was true for the wrong reason.) Like the W.1
+    row, this does NOT belong in the `playground.py` bundle: `needs.py` is a
+    different file and the edit is to its constants. SEMANTIC bill: NE.01,
+    W.1, W.2, SH.01, SH.02, DP.05 and LC.03's survival envelope would all be
+    measuring a different world afterwards — none of them is a PASS, which is
+    the cheapest this row will ever be.
