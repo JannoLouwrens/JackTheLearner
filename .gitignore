@@ -21,6 +21,16 @@ data/
 *.npy
 *.npz
 
+# EXCEPTION — T2.14's derived CMU corpus (5.7 MB). experiments/gpu.py ships work
+# to a GPU VM by cloning this repo, and that clone is the only channel: the VM
+# cannot see /data/jack-data. So a GPU spec whose claim is about real recorded
+# motion can only run if its corpus travels in the repo, pinned to the same
+# commit as the code that reads it. Regenerate with scripts/build_t214_corpus.py;
+# the spec re-checks the sha256 before spending a GPU hour. Do not extend this
+# exception to a new blob without the same justification.
+!experiments/data/
+!experiments/data/t214_cmu_corpus.npz
+
 # IDE
 .idea/
 .vscode/

@@ -7363,3 +7363,81 @@ rig can ever honestly ask for**, and it is a property of the estimator, not of
 any arm. A later iteration that raises `CIC_MARGIN_BITS` toward 2.0 on the
 reasoning that "2 bits are available" would be rebuilding the same defect, and
 the assertion now stops it.
+
+## A null you can beat is not enough — check that a TRIVIAL reference does not
+## ANNIHILATE the task first, because the label is often an exact function of
+## the observation and nobody does the algebra
+## (builder, 2026-08-30, implementing T2.14)
+
+**The near-miss.** T2.14 clones real CMU motion capture and is gated, by its
+registry entry, against two nulls: mean-action and 1-nearest-neighbour
+retrieval. The obvious action target is the next recorded pose — predict where
+the body goes. Before freezing a single gate I ran the two nulls plus a ridge
+reference on all three targets the shipped loader documents, on the real
+corpus, clip-disjoint:
+
+| target | mse_mean | mse_nn | mse_ridge | nn/mean | ridge/nn |
+|---|---|---|---|---|---|
+| pd (shipped action) | 0.01939 | 0.01202 | 0.00807 | 0.62 | **0.67** |
+| nextpose | 0.04899 | 0.01700 | 0.000011 | 0.35 | **0.0006** |
+| delta | 0.000073 | 0.000038 | 0.000011 | 0.52 | 0.28 |
+
+On `nextpose` **a linear map beats the retrieval null by about 1600x.** Every
+gate would have passed. The claim would have read *"behaviour cloning imitates
+real human motion better than a lookup table"* and the truth would have been
+that next pose is current pose plus a smooth extrapolation, which ridge solves
+in closed form. Both registry nulls were beaten, comfortably, by arithmetic.
+
+**The algebraic tell, and it is checkable in thirty seconds.** When the label
+is derived from the same time series as the observation, write the label out in
+terms of the observation before you believe the task is hard. Here the shipped
+`ActionComputer` gives `action[t] = clip(KP*(pos[t]-pos[t-1]) - KD*vel[t-1],
+±0.4)`, and since `vel[t] = (pos[t]-pos[t-1])/dt` with KP=10, KD=1, dt=0.02
+that is `clip(0.2*vel[t] - vel[t-1], ±0.4)`. One of the two terms — the larger
+one — is **already in the observation**, and only the other requires predicting
+anything. That is why `pd` retains real headroom while `nextpose`, whose label
+is `pos[t-1] + dt*vel[t]`, has essentially none. Nothing about this is visible
+from the spec's prose, the registry entry, or a loss curve.
+
+**Why this is a lesson and not just a fix.** It is the sibling of the entry
+directly above, written one day earlier: *a permutation floor is only a floor if
+the permutation is in the statistic's sensitivity alphabet.* That one is about
+the NULL being unable to move. This one is about the **TASK** being unable to
+resist — and it is the more seductive of the two, because an invariant null
+produces a suspicious `0.0000` collapse while a trivial task produces
+*beautiful numbers on every arm.* A spec whose null is broken looks broken; a
+spec whose task is trivial looks like a triumph. The ladder's whole disease was
+components reading "Working"; this is the shape that disease takes inside a
+test that has real data, real controls, a real null, and a pre-registered
+threshold.
+
+**The rule.** Before freezing a gate of the form *learner beats null*, run a
+trivial reference (linear/ridge, or nearest-centroid for classification) and
+look at `reference / null`. If the reference already beats the null by orders of
+magnitude, the headroom your learner will occupy is arithmetic, and the
+comparison measures nothing about learning no matter how many seeds it holds.
+Report the ratio in the record either way — it is the number that tells a
+future reader whether the claim's margin was earned or free.
+
+**The mechanical form, which is what makes it unrepeatable.** Two guards in
+`t2_14_imitation_mocap.py`, both cheap, both inside the run:
+
+1. **A task-triviality floor as a RIG GATE.** `mse_ridge >= TRIVIAL_FLOOR *
+   mse_nn` (TRIVIAL_FLOOR = 0.05, i.e. a linear map may not beat the null by
+   more than 20x) returns `VOID`, not `FAIL` — a task a linear map annihilates
+   is not evidence about imitation in either direction.
+2. **A known-answer test for the floor, carrying the REJECTED target as its
+   planted violation.** `_task_floor_selftest` rebuilds `nextpose` from the same
+   corpus inside the run and reports `floor_selftest_fires` (nextpose must land
+   BELOW the floor) beside `floor_selftest_passes` (pd must land above it).
+   Both are rig gates. This is the VO.02 discipline applied one level up: the
+   floor does not merely assert it works, it demonstrates a case it rejects,
+   every time it runs. A future edit that quietly swaps the target back to a
+   trivially-linear one fails on the corpus, before any GPU-hour is spent.
+
+**And the honest limit, recorded so nobody over-reads the guard.** The floor
+catches *annihilation*, not *mild triviality*: on the chosen target ridge still
+beats the null (ratio 0.67), so a PASS here does NOT establish that the 57M
+trunk earned anything a linear map could not. That question belongs to the
+ablation tier, and `bc_beats_ridge_all` is reported in the metrics — ungated —
+precisely so the record can answer it later without another run.

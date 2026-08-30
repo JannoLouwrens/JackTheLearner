@@ -807,6 +807,11 @@ EXPANSION: list[Spec] = [
                     "mean-action AND below nearest-neighbour retrieval.",
          falsified_by="A lookup table (NN retrieval) matches the model.",
          null_baseline="Mean-action; nearest-neighbour retrieval.",
+         control="The same shipped action path trained identically on a "
+                 "SHUFFLED (obs, action) pairing must NOT beat the "
+                 "nearest-neighbour null. If information-free supervision "
+                 "beats real retrieval, the metric is not measuring imitation "
+                 "but the marginal statistics of the action set.",
          metric="heldout_vs_nn_ratio", budget=Budget.GPU, seeds=3,
          depends_on=["T1.13", "T1.08"]),
 

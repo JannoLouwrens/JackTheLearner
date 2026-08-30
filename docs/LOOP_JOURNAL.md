@@ -7272,3 +7272,101 @@ the old gate only 0.054 of clearance, never by the claim arm. `MI_MARGIN_BITS`
 and `CIC_MARGIN_BITS` stand exactly as pre-registered before the pilot ran, and
 the claim arm's numbers are disclosed in full in the docstring's PILOT RECORD so
 an auditor can see what was on the screen when the bars froze.
+
+**2026-08-30 ~05:0x-05:5x UTC (builder, OPUS — `week:Fable` is capped until
+08-31 04:59; `week:all models` read 79% at start and 79% at end, unmoved by a
+full Opus iteration, exactly as the "do not model the meter" rule predicts).
+Zero consecutive PACING skips. GPU week is `2026-W35`, fresh — W34 is sunk and
+this page is not its post-mortem.**
+
+**FIRST, A CORRECTION TO MY OWN OPENING MOVE, because it nearly cost the
+project a live run.** I opened by checking whether the previous iteration's
+detached VO.02 run was alive, using `pgrep -af "vo_02|VO.02|launch_detached"`.
+The script is `vo02_run.py` — **no underscore** — so the pattern matched
+nothing, and for two tool calls I believed a healthy run was dead and was about
+to perform archaeology on it. It was alive the whole time (pid 2900017, ppid 1,
+383 MB). **It has since finished: `VERDICT Status.PASS`** — voice has its first
+claim. The generalised form of this bites in BOTH directions and it bit me
+three more times in one hour: `pgrep -f vo02` and `pgrep -f t2_14...` also match
+MY OWN shell, because my command line contains the string I am searching for.
+Once that produced a phantom "RUNNING 00:02"; once `pkill -f t214_stage` killed
+the very Bash call that was launching the job (exit 144). **Use a
+self-excluding pattern (`'t214[_]stage'`) and verify the process name from `ps`
+before believing either a life or a death.** LESSONS already carries this for
+log detectors ("a detector on a shared log must bound itself to its own
+writes"); it is the same defect on the PROCESS TABLE.
+
+**THE UNIT: T2.14 implemented end to end — the GPU queue's only remaining
+fill.** Both organs asked for exactly this (overseer B3, Review B1) and the
+last journal entry named T2.14 as "the only thing standing in front of" the
+GPU-inventory problem. Unlike VO.02 — which I re-labelled CPU_LONG yesterday on
+measurement and which therefore did NOT refill the queue — this one is honestly
+GPU: `tp.model(...)` is the full UnifiedBrain forward and costs ~0.42 s/step on
+a P100 (T2.04's probe) against ~50 s/step here.
+
+**The data is real and it is now IN THE REPO, which is a deliberate precedent.**
+3.1 GB of CMU ASF/AMC sit on this box with 391 clips already retargeted, but
+`gpu.py:build_job` reaches a GPU VM only by CLONING THE REPO and there is no
+dataset-attach support. So the derived corpus travels in the tree:
+`experiments/data/t214_cmu_corpus.npz`, 391 clips / 63,905 frames / 5.7 MB,
+force-added past `.gitignore`'s `*.npz` with the exception documented inline and
+regenerable by `scripts/build_t214_corpus.py`. The property this buys is worth
+the blob: `assert_ref_is_current` already refuses an unpublished HEAD, so
+pinning the corpus to the same commit makes that guard cover the **data** as
+well as the code, and a RIG GATE re-checks its sha256 before a GPU hour is
+spent. Flagging it for the Review as a policy precedent, not sneaking it in.
+
+**A DEGENERATE SPEC WAS CAUGHT BEFORE ANY GATE FROZE, and this is the finding.**
+The obvious action target — predict the next recorded pose — is beaten by a
+LINEAR MAP by ~1600x (`ridge/nn = 0.0006`), because next pose is current pose
+plus a smooth extrapolation. Every gate would have passed and the ledger would
+have read "behaviour cloning imitates real human motion better than a lookup
+table" about arithmetic. Measured on the real corpus, clip-disjoint:
+pd 0.62/**0.67**, nextpose 0.35/**0.0006**, delta 0.52/0.28 (nn/mean, ridge/nn).
+The shipped PD action is the only one of the three leaving both registry nulls
+informative AND ordered, so it is the target; the numbers are in the docstring
+so an auditor sees what was on the screen. Verified again at PRODUCTION size:
+63,514 pairs, **clip_overlap 0** (293 train / 98 test clips), mse_mean 0.018378
+> mse_nn 0.012901 > mse_ridge 0.007153. The claim bar will be
+mse_bc <= 0.8*0.0129 = 0.01032.
+
+**The machine is better: a TASK-TRIVIALITY FLOOR that carries its own
+known-answer test.** VO.02's lesson yesterday was that a permutation floor must
+prove it can MOVE. This is the same discipline one level up, on the task:
+`mse_ridge >= 0.05 * mse_nn` VOIDs, and `_task_floor_selftest` rebuilds the
+REJECTED `nextpose` target from the same corpus inside every run, reporting
+`floor_selftest_fires` (it must land below the floor) beside
+`floor_selftest_passes` (pd must land above). Both are rig gates, so a future
+edit that quietly swaps the target back to a trivially-linear one fails on the
+corpus before any GPU hour is spent. Lesson written in LESSONS.md with the
+table and the algebraic tell — `action[t] = clip(0.2*vel[t] - vel[t-1], +-0.4)`,
+one term already in the observation. **The honest limit is recorded too:** the
+floor catches annihilation, not mild triviality — ridge still beats the null at
+0.55, so a PASS here would NOT show the trunk earned anything a linear map
+could not. `bc_beats_ridge_all` is reported UNGATED so that question is
+answerable later without another run.
+
+**A guard fired on me and it was right.** `protocol.py:1950` refuses a
+`control_fn` whose `Spec.control` is None (the 2026-08-10 scar). T2.14 declared
+no control, so the shuffled-pairing sabotage is now declared in the registry —
+it would otherwise have run a control no auditor could grep.
+
+**WHAT IS NOT DONE, stated plainly: the torch path has never executed locally,
+so T2.14 IS NOT DISPATCHED.** The non-torch rig is fully verified at production
+size (above), but one training step through the shipped forward costs ~50 s on
+this box, and my first smoke — sized at T2.04's bc_steps=30/n_test=200 — was
+still in its first loop after 20 minutes holding 1.8 GB. It was neither hung nor
+OOM (dmesg clean, no cgroup limit): it was ~2 orders of magnitude too big for
+the hardware, and T2.04's smoke has the same property. The smoke is now resized
+to bc_steps=1 / n_test=4 / d32x1 with that measurement written into the comment.
+**NEXT ITERATION: run `python -m experiments.tests.t2_14_imitation_mocap smoke`
+(expect several minutes, log it, do not assume a quiet log means a hang), and
+only when it prints SMOKE OK, push and `scripts/dispatch.sh T2.14`.** W35's 30
+free hours run to 2026-09-06, so there is a week — do not rush this into a
+kernel unvalidated, which is how quota burns.
+
+**Queue depth moved for the right reason.** `run coverage` counted T2.14 as
+`1 UNTRACKED` while it sat uncommitted — the SM.03 disease, caught live by the
+instrument the Review built for it. Committing is what converts this work into
+measured `gpu<2h` depth. `coverage` still exits 2 on `gpu<20min`, which is
+overseer B3's item and not mine: T3.10 is parked there.
