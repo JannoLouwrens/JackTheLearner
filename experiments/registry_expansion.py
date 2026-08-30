@@ -4253,4 +4253,87 @@ EXPANSION: list[Spec] = [
                "rule extended from memory to speech. The LLM-swap arm doubles "
                "as a live test of the swappable-LLM decree. "
                "  COVERS: language (parent) (claim)"),
+
+    # ── BALANCE, SUCCESSOR CLAIM (overseer B1, 48th audit, 2026-08-30) ───
+    # Registered BEFORE D8's default fires (2026-08-31) so that parking
+    # BA.02 costs the ratchet nothing. This is NOT an amendment of BA.02
+    # and NOT a weakening of it: BA.02's claim text, thresholds and PARKED
+    # fate are untouched, and D8 option 3 is explicit that a re-scoped
+    # scenario is "a NEW spec with new nulls, not an amendment of BA.02".
+    Spec("BA.03", 5, "He braces against a surface — balance is used where "
+                     "direction still has authority",
+         hypothesis="In a scenario where a graspable surface is within reach, "
+                    "a learner given BA.01's vestibular channel PLACES ITS "
+                    "SUPPORT ON THE LEAN SIDE and stays upright measurably "
+                    "longer than an identical learner trained with the channel "
+                    "deleted (>= 3 sigma across seeds), and the gain vanishes "
+                    "when the channel is replaced by matched-statistics noise.",
+         falsified_by="No upright-time gain from having the channel even with "
+                      "a surface in reach. Then D8's open-ground finding "
+                      "generalises — balance is decoded and never acted on in "
+                      "ANY scenario this body affords — and the honest status "
+                      "of balance-as-a-used-sense is 'sensed, unused' until "
+                      "the playground humanoid exists. A SECOND honest "
+                      "outcome: the sensing arm wins but the brace lands on "
+                      "the wrong side as often as the right one, which "
+                      "refutes the mechanism while the number passes; "
+                      "brace-side accuracy is therefore a REPORTED gate, not "
+                      "a footnote.",
+         null_baseline="The channel-deprived twin's upright time; a random "
+                       "policy in the same rig; AND — the null D8's probes "
+                       "prove is the binding one — THE BEST FIXED BLIND "
+                       "POSTURE. On open ground a constant 'both hands up' "
+                       "bought +0.275 s over random, so a sensing arm that "
+                       "only beats random has demonstrated nothing about "
+                       "sensing. The contrast is against the blind twin "
+                       "allowed to find its own best fixed posture.",
+         metric="upright_gain_vs_deprived_with_surface",
+         budget=Budget.CPU_LONG, seeds=3, depends_on=["BA.01"],
+         control="MATCHED-NOISE CHANNEL (inherited from BA.02): replace the "
+                 "vestibular input with amplitude-matched noise or a shuffled "
+                 "replay of another episode's channel; the gain must vanish. "
+                 "PLUS a second control D8's evidence makes mandatory — "
+                 "REMOVE THE SURFACE and re-run the identical sensing arm: "
+                 "the gain must COLLAPSE to D8's measured open-ground ceiling "
+                 "(~0.0-0.1 s). If the sensing arm wins with no surface to "
+                 "brace against, the rig is not measuring bracing, and D8's "
+                 "four scratch probes say it cannot be measuring catching "
+                 "either.",
+         kills="D8 option 3 — the last re-scoping of balance-as-a-used-sense "
+               "that this body affords. If BA.03 fails, no balance CLAIM is "
+               "registrable before a body with directional catch authority "
+               "exists, and that becomes a finding rather than an assumption.",
+         notes="COVERS: balance (claim)\n"
+               "WHY THIS IS HONEST AND NOT RATCHET-BUYING, said out loud "
+               "because registration is not demonstration (Review, "
+               "2026-08-26). D8's four scratch probes measured ONE scenario: "
+               "OPEN GROUND. Their finding is that no actuator's useful "
+               "effect depends on fall direction THERE — slides +0.09 ± 0.07 "
+               "s, adhesion grip +0.005 ± 0.09, the ground-gated 600 N drive "
+               "directionally potent only in the HARMFUL direction. A "
+               "surface changes the physics of exactly that clause: a hand "
+               "pressed against a wall on the lean side supplies a reaction "
+               "force the ground-gated drive cannot, and which hand is the "
+               "right hand IS the fall direction. D8's own option 3 names "
+               "'wall-brace' as a candidate. This spec is that candidate made "
+               "falsifiable.\n"
+               "WHAT IT DOES NOT CLAIM: nothing here reopens BA.02, gives "
+               "the rover catch authority (D8 option 2, a world-contract "
+               "change that is the owner's call), or asserts the gain "
+               "exists. It asserts only that the question is askable in this "
+               "body, which D8's probes did not test.\n"
+               "SIZING IS PRE-REGISTERED AS A REQUIREMENT, from D8's second "
+               "bullet, and the implementer may not skip it: the registered "
+               "CEM learner needed k_fit ~ (2*sigma/S)^2 ~ 119 vs the "
+               "registered 3 to resolve even the BLIND signal (per-episode "
+               "paired sigma 7.5 decisions vs 1.375 signal), and N_EVAL=48 "
+               "puts the margin gate's SE at ~0.22 s against a 0.20 s "
+               "threshold. Size k_fit and N_EVAL against MEASURED noise in "
+               "the pilot and amend the TIER, never the thresholds — the "
+               "LC.03 budget scar and BA.02's own note, and the reason BA.02 "
+               "VOIDed three times before D8 was written.\n"
+               "TWO CHANNELS SEPARATELY (BA.01's note, ME.11's lesson): "
+               "report the linear-acceleration and angular-velocity "
+               "contributions apart. A brace carried wholly by one channel "
+               "is a finding."),
 ]

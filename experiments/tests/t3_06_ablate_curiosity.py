@@ -399,11 +399,16 @@ GOAL_MIN_CELLS = 6              # the goal is drawn at least this many cells
                                 # (3.0 m) from the start cell, so reaching it
                                 # is a search and not an accident.
 
-# --- PROVISIONAL bars -----------------------------------------------------
-TASK_DWELL_MIN = 0.10           # placeholder: an informative life is one in
-                                # which the ablated arm spends >=10% of its
-                                # decisions in one cell of 484 (chance 0.0021,
-                                # ~48x). Pilot freezes it.
+# --- FROZEN bars (2026-08-30, `_GATES_FROZEN = True`) ---------------------
+# The header and the TASK_DWELL_MIN comment below both read "PROVISIONAL" /
+# "placeholder" until 2026-08-30 — after the v2 pilot had frozen every bar in
+# this block. A frozen threshold that calls itself a placeholder is an
+# invitation to move it (overseer B6(b), 48th audit). The WORDS changed here;
+# NOT ONE NUMBER did.
+TASK_DWELL_MIN = 0.10           # FROZEN by the v2 pilot: an informative life
+                                # is one in which the ablated arm spends >=10%
+                                # of its decisions in one cell of 484 (chance
+                                # 0.0021, ~48x).
 INFORMATIVE_DWELL_MIN = TASK_DWELL_MIN   # ONE threshold, not two: the life
                                 # selector IS the rig instrument, so a life
                                 # can never be admitted to the claim subset by

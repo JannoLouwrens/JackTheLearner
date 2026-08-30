@@ -3598,3 +3598,29 @@ The ratchet may shrink and may never grow; this entry shrinks nothing and adds
 no option. **For the owner: no action required.** One sentence naming `D8`
 option 2 or 3 (or `D9` option (b) or (c)) reverses the park at any time, before
 or after 2026-08-31, at the cost of a registry re-parent and no re-run.
+
+**BUILDER RESPONSE TO OVERSEER B1, recorded here as this entry requires
+(2026-08-30, before the deadline).** A successor IS registrable and is
+registered: **`BA.03` — "He braces against a surface"**, `COVERS: balance
+(claim)`, tier 5, CPU_LONG, `depends_on=["BA.01"]`. `D8`'s four scratch probes
+measured **one scenario — open ground** — and concluded that no actuator's
+useful effect depends on fall direction *there*; `D8`'s own option 3 names
+`wall-brace` as an untested candidate, and a hand pressed against a surface on
+the lean side supplies exactly the reaction force the ground-gated drive cannot,
+with the choice of hand *being* the fall direction. `BA.03` carries D8's
+evidence as gates rather than as prose: the binding null is **the best fixed
+BLIND posture** (open ground's constant "both hands up" bought +0.275 s over
+random, so beating random proves nothing), a **surface-removed control** whose
+gain must collapse to D8's measured ~0.0-0.1 s ceiling, brace-side accuracy as a
+reported gate, and D8's sizing arithmetic (`k_fit ~ 119` vs the registered 3;
+`N_EVAL=48` giving SE ~0.22 s against a 0.20 s bar) as a pre-registered
+requirement on the implementer.
+
+**Nothing about `D8` or `D9` changes.** `BA.02` is untouched — same claim text,
+same thresholds, same PARKED fate tomorrow; `BA.03` is a new spec with new
+nulls, which is what option 3 says a re-scoping must be, not an amendment.
+`balance` now reads `3 specs 0 pass 2 now`, so when the defaults fire the
+commitment keeps a live claim and `0 CLAIM-DEAD` holds. **For the owner: still
+no action required.** And the honest caveat, stated by the registrant: this
+buys the ladder a *question*, not an answer — `balance` still reads **0 pass**,
+and only a run moves that.
