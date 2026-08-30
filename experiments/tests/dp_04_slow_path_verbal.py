@@ -297,7 +297,95 @@ docstring, (2) set each provisional bar from it in the open, (3) set
 the run it judges is not a gate. If the pilot shows the verbal arm winning on
 the pilot seeds, that is NOT evidence for the claim and must not be reported as
 any — it is a sizing measurement, and the registered seeds decide.
+
+SIZING RECORD v1 — THE PRE-REGISTERED REPAIRS ARE REFUTED BY MEASUREMENT. THE
+FAULT IS NOT THE ENVELOPE'S SIZE, IT IS THAT THE CLAIM STATISTIC HAS NO
+RESOLUTION IN THIS WORLD. `_GATES_FROZEN` STAYS FALSE, AND **DO NOT RE-PILOT
+DP.04 UNTIL A REDESIGN LANDS** — seeds 92/93 are NOT to be spent on this
+envelope. (builder, 2026-08-30 21:0x-21:2x UTC, head 393881b, artifact
+/data/dp04_sizing_seed94.json, 1312.2 s wall on the 2-core box, seed 94 SPENT.)
+
+Protocol as pre-registered above: seed 94, 4 survival variants, 8 restarts per
+(task, arm) for verbal and filler, 48 lives each, `LIFE_CAP` raised to 400.
+
+REPAIR (a) — THE CEILING — IS REFUTED, and by the cleanest possible reading.
+Raising the cap from 200 to 400 un-censored **exactly zero lives**:
+
+    3072 lives recorded (4 tasks x 2 arms x 8 restarts x 48 lives)
+      lifespans ending strictly between 200 and 400 ....    0
+      lifespans == 400 (censored at the new cap) ....... 2356   (76.7%)
+      lifespans <= 100 ................................   550   (17.9%)
+      lifespans in (100, 200) .........................   166    (5.4%)
+      DISTINCT lifespan values in the whole run .......    21
+    sat_frac_200 == sat_frac_400 for all 8 (task, arm) pairs, to the digit.
+
+A trained clone in this world either dies in its first ~130 steps or finds a
+stable food/water cycle and survives to ANY cap you choose. Lifespan is not a
+graded quality measure here; it is a survive/die indicator wearing a continuous
+type. The cap was never the binding constraint, so moving it bought nothing —
+and the H=8 oracle is itself censored at 400 on res2/res3/res8
+(`oracle_at_cap` 1), which is why `headroom` cannot be opened by a taller
+ceiling either.
+
+REPAIR (b) — THE NOISE — IS REFUTED AS SUFFICIENT. The target is derived, not
+chosen: `MIN_GAIN * sqrt(2) / SIGMA_GATE` = **2.357 steps**. No design in the
+pre-registered grid reaches it, and raising the cap makes it worse, because
+censoring at 200 was compressing the spread rather than distorting it:
+
+    cap  E   R=1     R=3     R=5     R=7      (bootstrap sd of the gain, steps)
+    200  12  10.96    9.05    7.93    7.14
+    200  24  10.81    8.15    6.87    6.10
+    200  48   9.16    7.02    5.85    5.18   <- best in grid, still 2.2x over
+    400  12  36.40   28.26   24.11   22.65
+    400  48  31.58   22.65   18.63   16.57
+
+AND THE ARITHMETIC SAYS WHY, so this is not a "needs more seeds" result. With
+76.7% of lives at the cap the mean lifespan is ~100 + 300p for a Bernoulli p,
+so at E lives the statistic is QUANTISED at 300/E steps and its paired-gain sd
+is 300*sqrt(2p(1-p)/E):
+
+    E=12  quantum 25.00 steps   gain sd 51.8
+    E=24  quantum 12.50 steps   gain sd 36.6
+    E=48  quantum  6.25 steps   gain sd 25.9
+
+**`MIN_GAIN` is 5.0 and the finest difference the statistic can express at 48
+lives is 6.25.** The gate asks for a difference smaller than the instrument's
+smallest step. Reaching a 2.357-step sd from the Bernoulli term alone needs
+**E >= 5791 lives per arm per task** — ~120x the eval budget, before a single
+restart and before the world-to-world term the sizing run deliberately could
+not measure. `MIN_GAIN` is a claim bar and does not move; the metric must.
+
+WHAT IS NOT CONCLUDED. Every arm learned (`losses_fell_all` 1.0 on all eight
+task/arm pairs), so this is not a dead-arm result, and NO number here is
+evidence about the hypothesis — the gain means in the table above are sizing
+quantities on a spent seed and must never be reported as a claim. The verbal
+arm is neither vindicated nor refuted by this run.
+
+THE FINDING, and it is about the WORLD, not about DP.04's hypothesis: W0's
+survival task is near-binary at every cap, so a mean-lifespan statistic cannot
+resolve a 5-step effect at any affordable envelope. That is the FIFTH
+independent instrument in this project to land on the world as the bottleneck
+(LC.03's darkroom control, LC.03 v2's one-learner-in-five, DP.05's FAIL,
+SH.01's ORACLE_CANNOT, and now this). The repair is a DESIGN change — a graded
+outcome measure, or a world whose difficulty is tuned so survival is not
+almost-free — and both candidate families are runnable arms, so under law 3 it
+is a bakeoff somebody has to write, not an argument. Routed to the Review and
+to `docs/DECISIONS_NEEDED.md` as `dp04-lifespan-has-no-resolution`.
 """
+
+# WHY A PILOT IS NOT THE REPAIR HERE, declared so the QUEUE-DEPTH instrument
+# stops advertising one. `_GATES_FROZEN = False` alone reads "PILOT OWED
+# (cheapest repair)" in `run coverage` — true for most provisional specs and
+# false for this one, because SIZING RECORD v1 measured the pilot's own
+# precondition and refuted it. Spending seeds 92/93 now would buy a third VOID.
+_PILOT_BLOCKED = (
+    "SIZING RECORD v1 (seed 94, 2026-08-30): mean censored lifespan has no "
+    "resolution in W0 — 0 of 3072 lives ended between the old cap and the new "
+    "one, 21 distinct lifespans, quantum 6.25 steps at 48 lives against "
+    "MIN_GAIN 5.0, and E>=5791 lives/arm/task would be needed for the derived "
+    "2.357-step sd. The repair is a world/metric redesign (Review + "
+    "DECISIONS_NEEDED `dp04-lifespan-has-no-resolution`), not a pilot."
+)
 from __future__ import annotations
 
 import hashlib

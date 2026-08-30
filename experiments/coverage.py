@@ -524,7 +524,8 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     Returns `{"depth", "by_class", "void", "excluded", "empty", "new_empty",
     "known_empty", "stale_baseline"}`. `new_empty` is the fatal class.
     """
-    from .protocol import Budget, Ledger, gates_frozen, module_path_for
+    from .protocol import (Budget, Ledger, gates_frozen, module_path_for,
+                           pilot_blocked)
     if ledger is None:
         ledger = Ledger()
     if by_id is None:
@@ -625,10 +626,28 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     # and no number could say the shelf was empty. Mislabelling "one pilot away"
     # as "unreachable" recreates exactly that: a builder who believes it leaves
     # the class empty for the same reason, holding a correct-looking readout.
+    #
+    # AND THE THREE-WAY SPLIT NEEDED A FOURTH STATE WITHIN HOURS, from the very
+    # spec that motivated it (builder, 2026-08-30, same iteration). This field
+    # named `DP.04` as `gpu<20min`'s cheapest repair; `DP.04`'s own
+    # pre-registered sizing run then refuted the pilot's PRECONDITION — its
+    # claim statistic has no resolution in that world at any affordable
+    # envelope — so "run the pilot" would have spent two fresh seeds on a third
+    # VOID. `_GATES_FROZEN = False` cannot distinguish *not piloted yet* from
+    # *piloting measured not to work*, and those need opposite units of work.
+    # `protocol.pilot_blocked` makes the second declarable, with its reason.
     pilot_owed: Dict[str, list] = {c: [] for c in by_class}
+    pilot_blocked_cls: Dict[str, list] = {c: [] for c in by_class}
+    blocked_why: Dict[str, str] = {}
     for sid in excluded["gates_provisional"]:
         spec = by_id.get(sid)
-        if spec is not None:
+        if spec is None:
+            continue
+        why = pilot_blocked(sid, path=module_path_for(sid))
+        if why:
+            blocked_why[sid] = why
+            pilot_blocked_cls[spec.budget.value].append(sid)
+        else:
             pilot_owed[spec.budget.value].append(sid)
     return {
         "depth": sum(len(v) for v in by_class.values()),
@@ -641,10 +660,17 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         "stale_baseline": sorted(c for c in baseline if c not in empty),
         "fillable": {c: sorted(ids) for c, ids in fillable.items()},
         "pilot_owed": {c: sorted(ids) for c, ids in pilot_owed.items()},
+        "pilot_blocked": {c: sorted(ids)
+                          for c, ids in pilot_blocked_cls.items()},
+        "pilot_blocked_why": dict(sorted(blocked_why.items())),
         # Empty AND no path in: neither a runnable spec to implement NOR a
-        # gate-provisional one to pilot. Only then is the repair an unblock.
-        # The `pilot_owed` conjunct is the correction — without it this field
-        # called a class one bounded CPU unit from stocked "structural".
+        # gate-provisional one whose pilot can still succeed. Only then is the
+        # repair an unblock. The `pilot_owed` conjunct is the correction —
+        # without it this field called a class one bounded CPU unit from
+        # stocked "structural". A pilot-BLOCKED spec deliberately does NOT
+        # rescue a class from this list: its repair is a redesign, which is the
+        # same KIND of work as an unblock, and pretending otherwise would put
+        # the optimistic error where the pessimistic one used to be.
         # Reported, never fatal on its own: it is a fact about the ladder's
         # shape, not debt anyone incurred.
         "empty_unfillable": sorted(c for c in empty
@@ -722,7 +748,15 @@ def _queue_fixture() -> List[str]:
         # every empty class in the fixture is empty for the same reason and the
         # three-way split cannot be distinguished from the two-way one.
         ("Q.10", Budget.GPU_SHORT, "", None, True, False),
+        # Gate-provisional AND the sole occupant of its class, like Q.10 — but
+        # it DECLARES why its pilot cannot succeed. The DP.04 case: running the
+        # pilot would spend fresh seeds on a known VOID, so this class is NOT
+        # pilot-owed and its repair is a redesign.
+        ("Q.11", Budget.CPU_LONG, "", None, True, False),
     ]
+    # `pilot_blocked`'s answer per spec: a reason string, or None for "does not
+    # declare", which is Q.08/Q.10 and every real spec but one.
+    blocked = {"Q.11": "sizing refuted the pilot's precondition"}
     by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t, _g in rows}
     led = _Led({sid: s for sid, _b, _n, s, _t, _g in rows if s is not None})
     tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t, _g in rows if t}
@@ -731,17 +765,18 @@ def _queue_fixture() -> List[str]:
     from . import protocol as _proto
     from . import registry as _reg
     real_ready, real_mpf = _reg.ready, _proto.module_path_for
-    real_gf = _proto.gates_frozen
+    real_gf, real_pb = _proto.gates_frozen, _proto.pilot_blocked
     _reg.ready = lambda _l: list(by_id.values())
     _proto.module_path_for = lambda sid, strict=False: (
         None if sid == "Q.07" else f"/x/{sid}.py")
     _proto.gates_frozen = lambda sid, path=None: frozen.get(sid)
+    _proto.pilot_blocked = lambda sid, path=None: blocked.get(sid)
     try:
         q = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
                         baseline=frozenset({"gpu<8h"}))
     finally:
         _reg.ready, _proto.module_path_for = real_ready, real_mpf
-        _proto.gates_frozen = real_gf
+        _proto.gates_frozen, _proto.pilot_blocked = real_gf, real_pb
 
     fails = []
     if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03", "Q.09"]:
@@ -763,7 +798,7 @@ def _queue_fixture() -> List[str]:
                      f"SM.03 case — got {q['excluded']['untracked']}")
     # THE ROW THE 46th AUDIT'S RANK 2 EXISTS FOR: runnable, implemented,
     # tracked, unsettled, unparked — and its own `run()` refuses.
-    if q["excluded"]["gates_provisional"] != ["Q.08", "Q.10"]:
+    if q["excluded"]["gates_provisional"] != ["Q.08", "Q.10", "Q.11"]:
         fails.append(f"a spec with PROVISIONAL gates refuses its own "
                      f"registered run and must be excluded — the SM.03 case — "
                      f"got {q['excluded']['gates_provisional']}")
@@ -782,6 +817,25 @@ def _queue_fixture() -> List[str]:
     if "cpu<1min" not in q["empty_unfillable"]:
         fails.append(f"a class with neither an implementable nor a pilot-owed "
                      f"spec IS unfillable, got {q['empty_unfillable']}")
+    # THE FOURTH STATE. Q.11 is gate-provisional and the sole occupant of
+    # cpu<2h, exactly like Q.10 — but it DECLARES that its pilot cannot
+    # succeed, so its class must NOT be advertised as pilot-owed. The DP.04
+    # case: obeying "run the pilot" would spend fresh seeds on a known VOID.
+    if q["pilot_blocked"]["cpu<2h"] != ["Q.11"]:
+        fails.append(f"a spec declaring _PILOT_BLOCKED is pilot-BLOCKED, got "
+                     f"{q['pilot_blocked']}")
+    if q["pilot_owed"]["cpu<2h"]:
+        fails.append(f"a pilot-BLOCKED spec must not also read pilot-owed — "
+                     f"that is the misroute this state exists to stop, got "
+                     f"{q['pilot_owed']['cpu<2h']}")
+    if "cpu<2h" not in q["empty_unfillable"]:
+        fails.append("a class whose only occupant is pilot-BLOCKED has no "
+                     "cheap path in: its repair is a redesign, so it belongs "
+                     "in empty_unfillable")
+    if q["pilot_blocked_why"].get("Q.11") != blocked["Q.11"]:
+        fails.append(f"the blocking REASON must survive into the readout — a "
+                     f"blocked pilot without its evidence is a park with "
+                     f"better manners, got {q['pilot_blocked_why']}")
     if q["by_class"]["cpu<10min"] != ["Q.06"]:
         fails.append(f"cost classes must not merge, got {q['by_class']}")
     if q["depth"] != 4:
@@ -857,6 +911,79 @@ def _gates_frozen_fixture() -> List[str]:
             fails.append(f"gates_frozen: {sid} uses the `_GATES_FROZEN` idiom "
                          f"in the tree and the reader read it as 'does not "
                          f"declare' — the 46th audit RANK 2 case, unfixed")
+    return fails
+
+
+def _pilot_blocked_fixture() -> List[str]:
+    """Known-answer battery for `protocol.pilot_blocked`, the READER.
+
+    Written because two mutations of that reader — always return `None`, and
+    return a reason for every spec — left `_queue_fixture` GREEN (builder,
+    2026-08-30). That fixture stubs `pilot_blocked` to test the CLAUSE, which
+    is right, and it is exactly the hole `_gates_frozen_fixture` was created
+    for one instrument earlier. The same lesson twice in one file: a fixture
+    that stubs the thing under test has moved the test somewhere else, so a new
+    reader needs its own battery on the day it is written, not after an audit.
+
+    Both directions bite. Reading `None` when a reason is declared re-opens the
+    misroute (`DP.04` advertised as a cheap pilot after its own sizing run
+    refuted the pilot). Reading a reason when none is declared is worse: it
+    would let any spec go quiet without evidence, which is a park nobody voted
+    for.
+    """
+    import tempfile
+    from .protocol import module_path_for, pilot_blocked
+
+    R = "sizing refuted the precondition"
+    cases = [
+        ("no declaration at all", "X = 1\n", None),
+        ("a declared reason", f"_PILOT_BLOCKED = {R!r}\n", R),
+        # Implicit concatenation is how a reason of any real length is written
+        # — DP.04's spans several lines — so it must read as the constant it is.
+        ("implicitly concatenated literal",
+         "_PILOT_BLOCKED = (\n 'sizing refuted '\n 'the precondition'\n)\n", R),
+        ("annotated assignment counts",
+         f"_PILOT_BLOCKED: str = {R!r}\n", R),
+        ("re-assigned, last wins", f"_PILOT_BLOCKED = 'old'\n"
+                                   f"_PILOT_BLOCKED = {R!r}\n", R),
+        # THE QUIET DIRECTION, which is the dangerous one here: anything that
+        # is not a readable non-empty string is NOT a block. A spec may not go
+        # quiet on an expression a reader cannot evaluate.
+        ("None is not a block", "_PILOT_BLOCKED = None\n", None),
+        ("empty string is not a block", "_PILOT_BLOCKED = ''\n", None),
+        ("whitespace is not a block", "_PILOT_BLOCKED = '   '\n", None),
+        ("True is not a reason", "_PILOT_BLOCKED = True\n", None),
+        ("non-literal value is not a reason",
+         "import os\n_PILOT_BLOCKED = os.environ.get('WHY')\n", None),
+        ("function-local assignment is not a declaration",
+         f"def f():\n    _PILOT_BLOCKED = {R!r}\n", None),
+        # A syntax error must NOT mute a spec: `gates_frozen` already fails
+        # loud on it (False -> out of the queue), and returning a reason here
+        # would let a typo silence a pilot.
+        ("a syntax error is not a block", "def (:\n", None),
+    ]
+    fails = []
+    with tempfile.TemporaryDirectory() as d:
+        for i, (label, src, want) in enumerate(cases):
+            p = Path(d) / f"pb_{i}.py"
+            p.write_text(src)
+            got = pilot_blocked("X.00", path=p)
+            if got != want:
+                fails.append(f"pilot_blocked: {label} -> want {want!r}, "
+                             f"got {got!r}")
+        if pilot_blocked("X.00", path=Path(d) / "gone.py") is not None:
+            fails.append("pilot_blocked: a missing file is not a block")
+    if pilot_blocked("NO.SUCH.SPEC") is not None:
+        fails.append("pilot_blocked: an unimplemented spec has no file and no "
+                     "declaration -> None")
+    # The live file this instrument was built for, read end to end — the
+    # `_gates_frozen_fixture` precedent. Asserted as "a non-empty reason is
+    # seen", not as its text, so editing the reason does not go red; the text
+    # itself is the author's evidence and lives in the docstring.
+    if module_path_for("DP.04") and not pilot_blocked("DP.04"):
+        fails.append("pilot_blocked: DP.04 declares `_PILOT_BLOCKED` in the "
+                     "tree (SIZING RECORD v1) and the reader missed it — the "
+                     "misroute this state exists to stop")
     return fails
 
 
@@ -967,7 +1094,7 @@ def check() -> int:
           "  A PARKED spec is NOT coverage either: a retirement is not a\n"
           "  falsifiable claim, however honest the retiring was.")
 
-    qf = _queue_fixture() + _gates_frozen_fixture()
+    qf = _queue_fixture() + _gates_frozen_fixture() + _pilot_blocked_fixture()
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -979,6 +1106,7 @@ def check() -> int:
             shown = ", ".join(ids) if ids else "EMPTY"
             fill = q["fillable"].get(cls, [])
             owed = q["pilot_owed"].get(cls, [])
+            blk = q["pilot_blocked"].get(cls, [])
             # PILOT-OWED IS NAMED FIRST when it applies, because it is the
             # cheapest repair of the three and the one this readout used to
             # hide behind "NOT FILLABLE".
@@ -990,6 +1118,9 @@ def check() -> int:
                         + (f"; or implement {', '.join(fill)}" if fill else ""))
             elif fill:
                 tail = f"   <- fillable today: {', '.join(fill)}"
+            elif blk:
+                tail = (f"   <- NOT FILLABLE: pilot BLOCKED on evidence "
+                        f"({', '.join(blk)}); the repair is a REDESIGN")
             else:
                 tail = "   <- NOT FILLABLE: nothing to implement, nothing to pilot"
             print(f"      {cls:<10} {len(ids):>2}   {shown}{tail}")
@@ -1026,6 +1157,13 @@ def check() -> int:
               "  refuses until a pilot freezes its bars. That is a bounded CPU\n"
               "  unit, NOT an unblock and NOT a new implementation — and it is\n"
               "  the state this readout used to report as NOT FILLABLE.")
+    if q["pilot_blocked_why"]:
+        print(f"  {len(q['pilot_blocked_why'])} spec(s) are PILOT-BLOCKED — "
+              f"gate-provisional, but a run has MEASURED that the\n"
+              "      pilot's own precondition fails. Do NOT spend seeds on "
+              "these; the repair is a redesign:")
+        for sid, why in q["pilot_blocked_why"].items():
+            print(f"      {sid}: {why}")
     if q["empty_unfillable"]:
         print(f"  {len(q['empty_unfillable'])} empty class(es) have NO path in "
               f"today — nothing runnable to implement\n"

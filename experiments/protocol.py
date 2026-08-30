@@ -1636,6 +1636,70 @@ def gates_frozen(spec_id: str, path=None):
     return found
 
 
+PILOT_BLOCKED_FLAG = "_PILOT_BLOCKED"
+
+
+def pilot_blocked(spec_id: str, path=None):
+    """Why this spec's pilot CANNOT succeed yet — a reason string, or `None`.
+
+    The companion to `gates_frozen`, and it closes the hole that function's own
+    docstring names: *"a `run()` that refuses for some other reason still counts
+    ... because nothing in the repo makes that declarable yet."* This makes one
+    such reason declarable, the one that has actually bitten.
+
+    THE SCAR (builder, 2026-08-30, DP.04). Queue depth learned to report an
+    empty cost class as PILOT OWED rather than as structurally unreachable —
+    correct, and it named `DP.04` as `gpu<20min`'s cheapest repair. Hours later
+    `DP.04`'s own pre-registered sizing run refuted the pilot's precondition:
+    its claim statistic has no resolution in this world at any affordable
+    envelope, so the next builder to obey "run the pilot" would have spent two
+    fresh seeds to buy a third VOID. `_GATES_FROZEN = False` cannot express the
+    difference between *nobody has piloted this yet* and *piloting this has been
+    measured not to work*, and those need opposite units of work — a bounded CPU
+    run versus a redesign.
+
+    Deliberately a STRING, not a bool: a blocked pilot without its reason and
+    its evidence is a park with better manners, and this repo does not let a
+    spec go quiet on the author's say-so. `None` means "does not declare", which
+    is every spec but one; a declaration that is not a non-empty string constant
+    reads `None` too, because an expression here would be a claim nobody can
+    check by reading. AST, never import, for `gates_frozen`'s reasons.
+
+    THIS IS NOT A PARK. A parked spec stops being coverage for its GOAL.md
+    commitment; a pilot-blocked spec still carries its claim, still appears in
+    the ladder, and still refuses to run. It says the next unit is a redesign,
+    not that the question was retired.
+    """
+    import ast
+    if path is None:
+        path = module_path_for(spec_id)
+    if not path:
+        return None
+    try:
+        tree = ast.parse(Path(path).read_text())
+    except (OSError, SyntaxError, ValueError):
+        # Unreadable is NOT "blocked": `gates_frozen` already fails loud on an
+        # unparseable file by returning False, which keeps it out of the queue.
+        # Returning a reason here would let a syntax error mute a spec.
+        return None
+    found = None
+    for node in tree.body:
+        targets = (node.targets if isinstance(node, ast.Assign) else
+                   [node.target] if isinstance(node, ast.AnnAssign) else [])
+        for t in targets:
+            if isinstance(t, ast.Name) and t.id == PILOT_BLOCKED_FLAG:
+                value = getattr(node, "value", None)
+                # `ast.literal_eval` so an implicitly-concatenated string
+                # literal — which is how a reason of any length gets written —
+                # reads as the constant it is.
+                try:
+                    lit = ast.literal_eval(value)
+                except (ValueError, SyntaxError, TypeError):
+                    lit = None
+                found = lit if isinstance(lit, str) and lit.strip() else None
+    return found
+
+
 def deps_moved_since(path, ran_at, repo_root=None) -> tuple:
     """Declared `IMPL_DEPS` with commits after `ran_at` — the one staleness
     question still answerable for an entry recorded before `impl_sha` existed.
