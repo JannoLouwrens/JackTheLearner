@@ -7812,3 +7812,147 @@ what differs between them; the ablation you removed is rarely the only one.**
 free to differ between it and the treated arm *after* the ablation is applied.
 If you cannot, you have not built a control — you have built a tautology, and
 it will pass.
+
+## When a document and the tool that validates it disagree about VOCABULARY,
+## it is the document that gets edited — and the edit looks like compliance
+## (overseer, 50th audit 2026-08-30, from `d461e36`)
+
+`SYSTEM.md` was amended on 2026-08-24, at the owner's explicit insistence, from
+a two-class decision split to **three** — ENDS / ARCHITECTURE / CONDUCT — for a
+stated reason: *"a binary means/goal split silently files every architectural
+bet on the goal side, where nothing may test it."* `experiments/decisions.py`
+was not amended with it. It still reads `CLASSES = ("means", "goal")`.
+
+Six days later the two vocabularies met, and the record shows exactly which one
+yielded. Commit `d461e36` is titled **"D16: class conduct -> goal (decisions.py
+CLASSES is ("means","goal"))"**. The author filed the entry under `SYSTEM.md`'s
+correct third class, the tool refused the value, and the **entry** was changed
+to one the tool would accept. The reasoning recorded for accepting `goal` is
+sound on its own terms and I do not dispute it. That is what makes this worth
+writing down: **nothing here was careless, nothing was hidden, the change was
+announced in its own commit title — and the constitution still lost to the
+enum.**
+
+**The general shape.** A validator that accepts a closed set of values does not
+merely *check* the corpus it validates; over time it **reshapes** the corpus to
+fit its own set. The pressure is asymmetric and it is not a matter of care:
+editing one entry to a permitted value is a one-line commit that makes a red
+gate green, while extending the enum touches an enforcement path used by every
+other entry — here, twelve armed decisions two days before ten of them fired,
+which is correctly a change nobody makes in passing. So the cheap repair is
+always the document, the expensive repair is always the tool, and the corpus
+migrates toward whatever the tool already understood. The commit that does it is
+*more* honest than average, because the author explains the coercion in the
+subject line — which is precisely why nothing downstream flags it.
+
+**Why this is the ratchet running backwards.** `champions.py` already learned
+the neighbouring version of this on 2026-08-29 (`T0.29`): deleting a phantom
+arena id made the violation count **fall**, so the ratchet paid for the one
+repair its own docstring forbids. Same disease, different organ. There the
+number rewarded destroying the contest; here the enum rewards restating the
+question. In both cases the instrument's vocabulary, not the world's state, is
+what moved — which is the exact failure `docs/LESSONS.md` already names as
+*"ratchet the invariant QUANTITY, not the violation count"*. This entry is that
+lesson's second half: **also ask whether the quantity's ALPHABET came from the
+governing document or from the tool, because an alphabet drifts more quietly
+than a count.**
+
+**The corollary that makes it findable.** A tool that validates a
+**self-declared** field cannot detect this at all, and `class` is self-declared:
+`audit()` reads `d.get("class")` and takes the author's word. So the coercion
+leaves no trace in any report — `decisions --check` says `ratchet ok` before the
+edit and after it. The only surviving evidence was the commit subject line, and
+only because the author chose to put it there. **A field whose legality is
+checked but whose truth is not is not a check; it is a spelling test.**
+
+**Two cheap guards, in the idiom this repo already uses.**
+1. **Resolve, don't trust.** `champions.py` checks every arena id against
+   `BY_ID`. `decisions.py` resolves nothing — a `DECIDE:` block may name a
+   phantom instrument forever (`D13` names `SY.01`, which occurs exactly once in
+   this repository, inside the sentence claiming it would settle the question).
+   Give the block an `arena:` field, resolve it, and the self-declaration
+   acquires a cost.
+2. **Pin the alphabet to its source.** When an enum transcribes a set defined in
+   a governing document, assert the correspondence in a property, so amending
+   the document goes RED in the tool instead of quietly bending the next entry
+   that tries to use the new word. A `T0` property comparing `CLASSES` against
+   the classes `SYSTEM.md` names would have failed on 2026-08-24 and been fixed
+   in the same commit that created the divergence — which is the only moment the
+   repair is cheap.
+
+**A second, milder instance found the same day, same family — prose promising
+more than the mechanism.** `44f24c4` (`T2.09`) states that the seed-selection
+formula *"reads only the null and the rig instruments — never the claim arm's
+dwell, fed-ratio, coverage or margin."* The **enumeration** is true; the
+**summary clause** is not — three of the six conditions read claim-arm
+quantities. Live effect was zero (every exclusion fired on `trap_dwell`, and
+`per_seed` makes it auditable), so this cost nothing. But an enumerated
+exclusion list and a summarising clause are **different promises**, the summary
+is the one a reader repeats, and the reader who repeats it will be defending a
+guarantee the code never made.
+
+**Rule:** whenever a governing document defines a set — of classes, statuses,
+budgets, verdicts — and a tool encodes that set as a literal, treat the literal
+as a **claim about the document** and pin it with a property. And when a
+document is edited to satisfy a tool rather than the tool extended to satisfy
+the document, that is a finding to record even when the edit is correct on the
+merits: the direction of the yield is the signal, not the content of it.
+
+## A ratchet read through a pipe reports the PIPE's exit code, and the audit
+## that does it will call a red tool green
+## (overseer, 50th audit 2026-08-30, caught before the report was committed)
+
+The overseer's own instructions open with three commands whose **exit code is
+the finding**. I ran the first as `python -m experiments.coverage 2>&1 | tail
+-60; echo "EXIT=$?"`, to keep a long report readable. It printed `EXIT=0`. The
+tool exits **2**.
+
+`$?` after a pipeline is the exit status of the **last** command in it, so
+`EXIT=0` was `tail`'s verdict on its own success, faithfully reported. Nothing
+errored, nothing warned, and the number was in the right place on the screen
+with the right label next to it. I drafted a report saying *"the three mandatory
+ratchets are green"* and only found it because I re-ran the checks bare before
+committing, to confirm my doc edits had not broken anything.
+
+**Why this one is worth a lesson and not just a fix.** The failure is silent,
+directional, and lands on exactly the instruments designed to be
+unignorable. `coverage.py:479-488` deliberately exits 2 on a newly-empty cost
+class *"rather than quietly re-baseline"* — the red is the entire point of the
+mechanism — and a pipe erases it into a green with no diagnostic anywhere. It
+also fails **safe-looking**: `tail` and `head` and `grep` almost always succeed,
+so the masked code is almost always `0`. A masking bug that sometimes showed red
+would have been caught on its first use; this one can only ever hide a failure,
+never invent one.
+
+And the blast radius is not one audit. Every organ in this repo shells out —
+`ladder_loop.sh`, `overseer.sh`, `review.sh`, `field_watch.sh`,
+`platform_monitor.sh` — and the natural way to keep a chatty tool's output short
+is a pipe. `set -o pipefail` is not the default in `sh`, and a `$(cmd | head)`
+inside a shell script has the identical defect with no `EXIT=` line to make it
+visible.
+
+**The check, which costs nothing.** When the exit code IS the result, run the
+command **bare** and capture the status first; filter the output afterwards, or
+filter a saved copy:
+
+```sh
+out=$(python -m experiments.coverage 2>&1); rc=$?     # rc is the tool's
+printf '%s\n' "$out" | tail -60                        # then read it
+```
+
+In scripts, `set -o pipefail` (bash) or an explicit `${PIPESTATUS[0]}`. **Never
+`cmd | filter; echo $?`.**
+
+**The general shape, which outlives the shell.** Reading a result through a
+transformation reports the *transformation's* health, not the result's. This is
+the same defect as the ledger lessons about a wrapper that swallows its callee's
+status — *"an exit code is a claim by the callee about itself"* — pushed one
+level out: here the wrapper was not even code I wrote, it was punctuation. The
+tell is that the reported status has **no causal path** to the thing being
+judged: `tail` never read the commitments, never resolved a spec id, and had no
+opinion about the ladder, yet its opinion is what reached the report.
+
+**Rule:** when a command's exit code is evidence, nothing may stand between the
+command and `$?`. If you are about to pipe it, capture the status on the same
+line first — and when an audit reports a tool as green, the tool should have
+been run bare at least once in that audit.
