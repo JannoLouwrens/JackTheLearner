@@ -8080,3 +8080,119 @@ seed if the trained null falls short of it by more than a pre-registered
 margin. If you cannot name that strategy, you do not know what your null is
 measuring — and the honest place to find it is an envelope probe before the
 spec exists, not a fourth VOID after it.
+
+## A single sample cannot tell a STEADY STATE from a TRANSIENT — and at the one
+## time they cross, they agree exactly, so the check reads green
+## (builder, 2026-08-30, implementing W.1 against the shipped thermal overlay)
+
+**The near-miss.** `W.1` check (b) is pre-registered as *"pure decay from 37 C
+into 20 C still air reads 33.767 C at t = 1 h, within 1%"*. Implemented the
+obvious way — step the shipped model for an hour, read the number — it returns
+**34.000 C**, a relative error of **0.69%**, comfortably inside the 1% bar.
+**PASS.** It is a false green, and nothing in the number says so.
+
+The shipped body is not decaying toward 20 C at all. Shivering in `needs.py` is
+proportional feedback with gain `C_SH = 33.33 W/C` against `K_DRY = 14.29 W/C`,
+so `100 + 33.33*(37-T) = 14.29*(T-20)` parks it at **exactly 34.000 C**,
+reached in ~50 closed-loop tau and flat forever after. The reference at t = 1 h
+is a genuine undamped transient, still falling, momentarily passing 33.767 C on
+its way to 20 C. **A steady state and a decay, 71x apart in time constant,
+sampled at the one instant their paths cross.**
+
+**Why one sample can never catch this, and it is arithmetic rather than bad
+luck.** Any two continuous trajectories that start at the same point and end on
+opposite sides of each other cross at least once. Pick the sample time *before*
+you know either trajectory and you have a real test; pick it and then compare
+models that differ in time constant, and the sample time itself becomes a free
+parameter you did not know you had. The registered instant here was not chosen
+adversarially — it was chosen as "one hour", the roundest number available —
+and it still landed within 0.7% of a crossing.
+
+**The generalisation.** *A comparison of two dynamical systems at ONE sampled
+time constrains neither their time constant nor their steady state.* It
+constrains one point on one curve. To claim a model reproduces a law you need a
+quantity the crossing cannot fake:
+
+  - the TIME CONSTANT, measured from the arm's own relaxation about its own
+    fixed point (`_measured_tau`), never read off a declared constant — the
+    declared one is often the open-loop value and the world runs closed-loop
+    (here `TAU_T = 240 s` declared vs **72.0 s** measured, 3.33x apart);
+  - the STEADY STATE, settled to convergence and then time-averaged, never
+    sampled (`_settled_body_c`);
+  - or the SHAPE across several times, with the residual reported.
+
+**The repair that shipped, and the one that did not.** `W.1` gates on the
+homogeneous reading — the arm's measured tau put through the pure-decay
+solution — which reads 20.0 C for the shipped world and 33.7674 C for the
+reference, and it reports the literal single-sample reading beside it as
+`b_literal_*` with `b_literal_is_at_equilibrium` as the tell. The one-sample
+check was **not** deleted and **not** tightened: the verdict was already FAIL on
+two other conjuncts, so tightening it in the same commit would have been
+indistinguishable from a thumb on the scale. A check that passes for the wrong
+reason is evidence to record, not evidence to hide; strengthening it is a
+declared amendment under the T1.02 precedent, on a day when it cannot change a
+verdict.
+
+**Sharpest form: an agreement between two models is only evidence if the
+quantity they agree on is one that DIFFERS when the models differ.** 34.000 and
+33.767 agree; the systems behind them share nothing. Ask what the number would
+have read had the model been right, and if the answer is "about the same", the
+number was never a measurement.
+
+## Reconstruct a pre-registered constant from its OWN cited sources before it
+## gates anything — and when the label and the value disagree, the CONTROL's
+## registered clause is the tie-breaker
+## (builder, 2026-08-30, implementing W.1)
+
+**The scar, and it points in the dangerous direction: a false FAIL.** `W.1`
+check (a) reads *"the PARAMETER-FREE thermoneutral point — a nude 70 kg /
+175 cm body at 1 met in still air is in balance at **27.55 C**, within 1.0 C"*.
+Taken at its word, that is an AMBIENT temperature, and the shipped world's
+thermoneutral ambient is 30.0 C — a 2.45 C miss, a clean FAIL, and a plausible
+finding I would have published.
+
+It is not an ambient. Recomputed from the spec's own cited constants
+(`M = 58.2*1.8481 = 107.559 W`, `hA = 7.7*1.8481 = 14.2304 W/K`), the ambient
+reading is unreconstructable: it requires a neutral body temperature of
+**35.108 C**, which is neither the neutral skin (33.7, giving 26.14) nor the
+neutral core (36.8, giving 29.24) that the same `notes` field cites, and no
+combination of the sourced constants produces it. But `20 + M/hA = **27.5584**`
+— the steady-state BODY temperature in the 20 C still air of check (b)'s
+scenario — reproduces it to four significant figures. The number was right; the
+noun attached to it was wrong.
+
+**What settled it was not judgement — it was the control.** The registry
+requires the control to *"fail check (c) while still passing (a) and (b)"*. The
+control is the reference model itself. Under the ambient reading it reads
+29.4416 and **cannot pass its own registered clause at any tolerance**; under
+the body reading it reads 27.558445 against 27.55, an error of 0.0084 C, and
+passes. **A control that cannot satisfy the clause the registry wrote for it is
+not a broken control — it is a mislabelled bar, and it is the only instrument in
+the file that can say so**, because it is the one arm whose correct answer is
+known independently of the world under test.
+
+**Two rules, and the second is the one this repo did not have.**
+
+1. *Recompute every pre-registered constant from its cited sources before you
+   let it gate anything.* It costs one line. Two of `W.1`'s three constants
+   reconstructed exactly (33.7674 vs 33.767; 0.30947 vs 0.3095), which is
+   precisely what made the third one's failure to reconstruct informative
+   rather than ambiguous — a spec whose constants have never been re-derived
+   gives you no baseline against which one bad constant stands out.
+2. *A control exists to prove the check is alive, so a control that fails a
+   check it was registered to PASS is a fault in the CHECK, not in the world.*
+   The repo already gates the other direction hard (a control that must fail
+   and does not is a dead instrument, and the at-chance-control sweep made that
+   mechanical). The mirror had no rule, and its failure mode is worse: it
+   publishes a confident FAIL against a real system using a bar nobody can hit.
+
+**The line that must not be crossed, because this is exactly what a stealth
+weakening looks like from outside.** The bar was **not moved** — check (a) still
+reads 27.55 +/- 1.0 and the shipped world still misses it by 6.45 C. Only the
+QUANTITY the bar is compared against was corrected, the correction is
+independently verified by an arm whose answer is known in closed form, and both
+rejected readings ship as metrics (`a_ref_ambient_from_skin_c`,
+`a_ref_ambient_from_core_c`, `a_registered_as_ambient_implies_body_c`) so the
+next reader re-derives the choice instead of trusting this paragraph. If a
+relabelling ever flips a verdict from FAIL to PASS, it is not a relabelling —
+route it to the Review as a threshold change and let someone else decide.

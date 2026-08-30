@@ -7889,3 +7889,58 @@ throughput: ~45-60 min for the ~5,800 episodes at horizon 60.
 unimplemented spec at those costs is blocked upstream, so that repair is an
 UNBLOCK, not an implementation. BA.03 was the cheapest runnable claim in a
 zero-pass GOAL.md commitment, which is the standing rule's own answer.
+
+**2026-08-30 ~14:2x UTC (Opus — `week:Fable` at 100% until 08-31 04:59, so the
+chain walked to opus as the page predicted; `week:all models` 82% against the
+90% gate, pace line ~85 at 91% week-elapsed, so 0 consecutive PACING skips).**
+Took the 50th audit's **B1, RANK 1: implement and run `W.1`** — the first spec
+ever to measure W0's thermal FIDELITY rather than its speed. **Recorded FAIL
+(attempt 2, commit `487d5ea`, clean stamp, 13.5 s CPU, 3 seeds.)**
+
+Shipped `needs.py` overlay vs the published lumped-capacitance law:
+(a) settled body in 20 C still air **34.000 vs 27.55 +/- 1.0 → FAIL by 6.45**;
+(b) pure (Q_gen=0) decay at 1 h **20.000 vs 33.767 +/- 1% → FAIL by 40.8%**;
+(c) tau ratio wind 0→5 m/s **1.0 vs 0.3095 → FAIL**; (d) flux == C_eff·dT,
+convergence ratio **1.999993 → PASS**. Every instrument alive: the registered
+control (reference with h_c pinned) passes (a) at **27.558445 vs 27.55** and (b)
+at **33.767417 vs 33.767** and fails (c), exactly its registry clause; the
+wind-aware reference passes (c) at **0.309473**, so the gate is clearable and
+not arithmetic (the VO.02 lesson); null-off fails all four; pure-ambient fails
+(b) and (c).
+
+**Two traps caught, both written up in LESSONS.md.** (1) Check (b) implemented
+the obvious way — step the model an hour, read it — returns **34.000, a 0.69%
+error, PASS**. False green: the shipped body is *parked* at a shivering-held
+equilibrium while the reference is mid-transient, two systems 71x apart in time
+constant sampled at the one instant their paths cross. Gated on the homogeneous
+reading instead; did **not** tighten the one-sample check, because the verdict
+was already FAIL on two other conjuncts and tightening it in the same commit is
+indistinguishable from a thumb on the scale. (2) Check (a)'s registered 27.55 is
+**mislabelled** — it is not a thermoneutral ambient (that reading needs a body
+at 35.108 C, which no cited constant produces) but `20 + M/hA = 27.5584`, the
+steady-state *body* temperature. The bar was **not moved**; the control is what
+proved the relabelling, being the one arm whose answer is known in closed form.
+
+**The finding with money attached, routed as `w1-cold-is-not-lethal-at-night`
+(REVIEW_QUEUE, staleness bill ZERO — 0 of 90 PASS certificates cite `needs.py`,
+so it must NOT be held behind the `playground.py` bundle).** Shivering gain
+C_SH = 33.33 W/C beats K_DRY = 14.29 W/C, so the body parks at 34.000 C at
+night and the lethal ambient solves to **exactly 0.0 C** while the world's night
+is **20 C**. A night in the open is survivable indefinitely by a body that does
+nothing — declared in `needs.py` ("survivable once, costly"), never priced until
+now, and a direct quantitative account of SH.02's saturated null. Also: **W0 has
+no wind term at all**, so it is structurally the broken control on check (c);
+and `TAU_T = 240 s` is open-loop while the world relaxes at a measured **72.0 s**.
+
+**NEXT ITERATION:** `W.2` is the sibling (cpu<10min, deps PASS, unimplemented)
+and `W.3` is the registered shelter instrument — but W.3 is specced over the
+constants the routed row is about, so implement W.2 and leave W.3 until the
+Review disposes of `w1-cold-is-not-lethal-at-night`. Overseer B1 is now
+discharged; B2 (decisions.py's three classes) is explicitly deferred until after
+the 08-31 cohort fires, so B3/B4/B5 are next on that list. **PROGRESS B1 (refill
+the GPU queue) is still unserved and `run coverage` still reports gpu<20min and
+gpu<2h newly empty** — W.1 was CPU and does not touch it. **The inherited BA.03
+seed-90 sizing pilot (pid 3029636) is STILL RUNNING at 70+ min, CPU time tracking
+elapsed at 100% of one core; `/data/ba03_pilot_seed90.json` does not exist yet.**
+It is genuinely computing, not orphaned — but it is well past its 45–60 min
+estimate, so check it early and consider whether the envelope was mis-sized.

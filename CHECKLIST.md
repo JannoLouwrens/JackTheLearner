@@ -840,7 +840,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **W.1** Temperature obeys the heat balance we published
+- [!] **W.1** Temperature obeys the heat balance we published  — a_err_c=6.45; a_err_c_std=0.0
       - _asserts:_ The thermal overlay reproduces the lumped-capacitance solution of m*c_p*dT/dt = Q_gen - h*A*(T - T_env) on four independent checks it was not tuned on: (a) the PARAMETER-FREE thermoneutral point — a nude 70 kg / 175 cm body at 1 met in still air is in balance at 27.55 C, within 1.0 C; (b) pure decay from 37 C into 20 C still air reads 33.767 C at t=1 h, within 1%; (c) raising wind 0 -> 5 m/s shrinks tau by the ratio 0.3095, within 2%; (d) integrated net flux equals m*c_p*dT to integrator tolerance.
       - _dies if:_ Any of the four checks outside tolerance, or a temperature that is non-finite, or a body that reaches equilibrium at a temperature independent of h.
       - _then delete:_ Every claim that cold teaches shelter. W.3, W.5's heat coupling and the whole death-by-hypothermia mechanic are defined over this model; a wrong one teaches a wrong lesson very convincingly.

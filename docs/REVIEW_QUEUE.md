@@ -387,3 +387,49 @@ LC.03's darkroom control, LC.03 v2's one-learner-in-five, DP.05's FAIL and
 SH.01's ORACLE_CANNOT that **W0, not the core, is the measured bottleneck** —
 and it is `D10` evidence. Do NOT authorise an envelope growth: the pilot's
 failure is not a budget.
+
+ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
+    Question: at the world's OWN night ambient, cold carries no death
+    gradient — so what is the curriculum GOAL.md promises actually made of?
+    W.1 measured `needs.py`'s shivering loop
+    `M_BASAL + C_SH*(37-T) = K_DRY*(T-T_env)` with C_SH = 33.33 W/C against
+    K_DRY = 14.29 W/C. It parks the body at **34.000 C in a 20 C ambient,
+    flat, forever**, and solving it for the world's own `T_COLD_DEATH = 28.0`
+    gives a lethal ambient of **exactly 0.0 C**. The world's night is
+    `T_DAY - DELTA_T_NIGHT` = 30 - 10 = **20 C**. A night in the open is
+    therefore survivable indefinitely by a body that does nothing at all.
+    This is DECLARED, not a bug: `needs.py` says "a night in the open
+    equilibrates ~3.0 C cold ... survivable once, costly" (§2.3 pedagogy) and
+    NE.01's assigned sweep calibrated DELTA_T_NIGHT 12 -> 10 to sit mid-band.
+    W.1 does not overturn it; W.1 PRICES it, and the price lands on GOAL.md's
+    "cold nights teach shelter-building the way no scripted lesson can".
+    A quantitative account of SH.02's saturated null falls straight out: if
+    the open night never kills, shelter has nothing to buy.
+    SECOND, INDEPENDENT ROW ON THE SAME FILE — W0 HAS NO WIND AT ALL.
+    `k_eff(skin_wetness, sky_occlusion)` takes no velocity and `wind` does not
+    occur anywhere in `experiments/*.py`, so the shipped world is structurally
+    identical to W.1's own deliberately-broken control on check (c): raising
+    wind 0 -> 5 m/s changes its time constant by exactly nothing (ratio 1.0
+    vs the physiological 0.3095). No policy can ever learn to seek a
+    wind-break for being a wind-break. W0's shelter is NOT thereby decorative
+    — it works through `sky_occlusion` cutting `k_eff` — but the wind
+    affordance is absent, and W.3 is the spec that would price it.
+    THIRD, and cheapest to act on: `TAU_T = 240 s` is the OPEN-LOOP constant
+    (C_EFF/K_DRY) and the world relaxes with the CLOSED-LOOP one, measured at
+    **72.0 s**, 3.33x faster, whenever the body is below 37 C — which at night
+    is always. A published constant that is not the one the code exhibits.
+    Arms are runnable and this is a redesign BAKEOFF, not an argument:
+    (i) lower C_SH so shivering cannot outrun conduction; (ii) drop
+    DELTA_T_NIGHT below the 0.0 C lethal ambient; (iii) add the wind term and
+    let a windy night be the lethal one, which is the only arm that also buys
+    the missing affordance. Note (iii) is the sole arm that makes shelter's
+    insulation load-bearing rather than its occlusion.
+    Full record: FINDINGS 2b/3/4 in w_1_heat_balance.py; ledger W.1 attempt 2.
+    Staleness bill: **ZERO MECHANICAL — no PASS certificate cites `needs.py`
+    in IMPL_DEPS (checked, 0 of 90).** This does NOT belong in the
+    `playground.py` bundle above and must not be held behind it; the whole
+    point of the bundling rule is that a computed bill lets rows be sequenced,
+    and this row's bill is nil. SEMANTIC: NE.01 (FAIL) calibrated
+    DELTA_T_NIGHT and W.2/W.3 are specced over these same constants — W.3 in
+    particular is the registered instrument for the shelter question and
+    should be implemented against whatever this row decides, not before it.
