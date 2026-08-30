@@ -8567,3 +8567,95 @@ between two different next units:
   **94 are SPENT**.
 Either way `_GATES_FROZEN` stays False until a clean pilot exists, and
 `gpu<20min` stays PILOT-OWED (not unfillable) in `run coverage`.
+
+2026-08-30 ~21:2x-22:0x UTC (Opus, same iteration continued; `week:all models`
+held at **85%** across ~1.5 h of work and ~4 commits, which is the "do not model
+the meter" finding reproducing itself once more). **HARVEST: the DP.04 sizing
+run completed in 1312.2 s and BRANCH ONE of the two I pre-registered fired —
+the saturation branch, and harder than I framed it.**
+
+**The number that decides it: of 3072 recorded lifespans, ZERO ended strictly
+between the old cap (200) and the new one (400).** 76.7% sat at the cap, 17.9%
+died by step 100, and the whole run contains **21 distinct lifespan values**.
+`sat_frac_200 == sat_frac_400` to the digit on all 8 (task, arm) pairs. Raising
+the ceiling un-censored nothing, because the ceiling was never binding.
+
+**And it goes further than "repair (a) failed", which is why the routing is not
+the one my own harvest note anticipated.** The distribution makes mean lifespan
+`~100 + 300p` for a Bernoulli `p`, so at E lives the statistic is QUANTISED at
+`300/E` steps — **6.25 at E=48, against `MIN_GAIN` 5.0.** The gate asks for a
+difference finer than the smallest difference the statistic can express, at
+every eval count the spec has ever used. The derived target
+(`MIN_GAIN*sqrt(2)/SIGMA_GATE` = 2.357) needs **E >= 5791 lives per arm per
+task** from the Bernoulli term alone. So repair (b) is refuted too — best design
+in the grid is 5.18 at cap 200/E48/R7, 7x the training cost and still 2.2x over
+— and no sizing knob reaches it. **NOT a dead-arm result:** `losses_fell_all`
+1.0 on all eight task/arm pairs, and no number in that table is evidence about
+the hypothesis. The verbal arm is neither vindicated nor refuted.
+
+Recorded as SIZING RECORD v1 in the spec (`ed7d78c`). `_GATES_FROZEN` stays
+False. **Seeds 90/91/94 are SPENT; 92/93 are NOT to be spent on this envelope.**
+
+**MACHINE LEFT BETTER, twice — and the second correction is to code I shipped
+four hours earlier in this same iteration, which is the part worth carrying.**
+Earlier I gave `queue_depth` a third state (`pilot_owed`) because it was calling
+two GPU classes structurally unreachable when they were one bounded CPU unit
+from stocked; it then named `DP.04` as `gpu<20min`'s cheapest repair. **This run
+refuted the pilot's own precondition, so that readout would have sent the next
+builder to spend two fresh seeds on a third VOID.** `_GATES_FROZEN = False`
+cannot tell "not piloted yet" from "piloting has been measured not to work", and
+those need opposite units of work. `protocol.pilot_blocked` makes the second
+declarable as a REASON STRING (never a bool — a blocked pilot without its
+evidence is a park with better manners), and a pilot-blocked class deliberately
+does NOT get rescued from `empty_unfillable`, because a redesign is the same
+KIND of work as an unblock and moving the optimistic error where the pessimistic
+one was is not progress. **It is NOT a park: DP.04 keeps its claim and its
+`fast/slow` coverage.**
+
+Two mutations of the CLAUSE went red on `_queue_fixture`'s new `Q.11` row — but
+**two mutations of the READER left it green**, because that fixture stubs
+`pilot_blocked`, which is the exact hole `_gates_frozen_fixture` was written for
+one instrument earlier. So `_pilot_blocked_fixture` is a 12-case known-answer
+battery on the parse itself (including DP.04's real file), and all four reader
+mutations now go red: always-None, always-a-reason, empty-string-counts,
+syntax-error-mutes-a-spec. `run coverage` exits 2 — **verified by stashing my
+edits that it exited 2 before them**; that red is the pre-existing
+newly-empty-class ratchet, which this finding explains and does not clear.
+
+**ROUTED (`6f1ce1d`): `dp04-lifespan-has-no-resolution` in `docs/REVIEW_QUEUE.md`,
+not `DECISIONS_NEEDED.md`** — law 3, the arms are runnable, so it is an
+experiment nobody has written yet rather than an owner escalation. I had written
+the wrong destination into the spec docstring and corrected it in the same
+commit. Three option families, all runnable arms: a graded outcome measure; tune
+the world's difficulty; both, with the first as control on the second. It is the
+FIFTH instrument on `w0-too-shallow` (after LC.03's darkroom, LC.03 v2, DP.05,
+SH.01) and the first to state the problem as arithmetic on an outcome variable
+rather than as a failed learning result. **Staleness bill COMPUTED, and it is
+the sequencing input: TWO certificates (LC.00, DP.00), because
+`lc_00_gridworld_decidable.py` is imported by exactly `dp_00` and `dp_04` and
+DP.04 has no PASS. The gridworld is a 2-certificate world where `playground.py`
+is a 21-certificate one — a world-difficulty redesign can be TRIED there for a
+tenth of the bill before it is paid on W0.** Exempt from the bundling rule; it
+does not touch `playground.py`.
+
+Lesson (`6f1ce1d`): *a metric inherits its resolution from the world, so an
+absolute threshold can sit below its statistic's quantum* — with the one-line
+pre-registration check (`compare the threshold to range/E`) and the trap that
+makes it expensive: a sizing knob always looks like it is working, because the
+variance really does fall; it falls toward the wrong number. Corollary: a
+pre-registered repair is a hypothesis and may be refuted.
+
+**FOR THE NEXT ITERATION.** Do NOT pilot DP.04 — `run coverage` now says so with
+the reason attached, and seeds 92/93 stay unspent. GPU week is **2026-W35** with
+a full free allocation and the queue reads: `gpu<20min` PILOT-OWED by **SM.03**
+(its pilot has never completed — `/data/sm03_pilot_seed90.json.log` is 0 bytes,
+and `scripts/launch_detached.sh` is the thing it should have used), `gpu<2h`
+PILOT-OWED by **T2.11**, `gpu<8h` holds T2.02 (VOID). **`SM.03`'s pilot is the
+cheapest thing that can refill a GPU class** — but read `t211-diayn-metric-
+cannot-separate-mi-from-noise` in REVIEW_QUEUE before T2.11, and apply today's
+lesson to both: check the threshold against the statistic's quantum BEFORE
+spending the pilot, which is a one-line arithmetic check and would have saved
+this spec two pilots and a sizing run. Unserved auditor items: OVERSIGHT B2
+(`champions.py` `HELD:`/`ARENA:` syntax, 8 audits carried) and B3 (`run blocked`
+repair classes — note it now has a sibling: `run coverage` learned repair
+classes today and `run blocked` still has none).
