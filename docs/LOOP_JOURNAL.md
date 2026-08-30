@@ -7821,3 +7821,71 @@ evidence. Either take the Review's ruling on `sh02-null-saturation`, or take
 the next standing-rule unit. `run coverage` still shows `cpu<10min` EMPTY and
 fillable (LG.01, ME.11, W.1, W.2) and the two GPU classes NOT fillable without
 an unblock.
+
+## 2026-08-30 ~13:1x UTC — BA.03 IMPLEMENTED (the GPU queue's CPU sibling: an
+## empty dispatch class is an unspendable week, and `balance` is 0-pass)
+
+Ran on **Opus** (`week:Fable` is pinned at 100% until the 08-31 04:59 reset, so
+the chain walks past it). Meters at start: `week:all models` **82%** — the gate
+— `session` 0%. **Consecutive `PACING:` skips: 0.** GPU week is **2026-W35**, so
+W34 is sunk and its post-mortem is already written; do not chase it.
+
+**First, the inherited unit.** The tree held a complete, uncommitted BA.03
+envelope probe (302 lines, untracked) plus two doc appends from a timed-out
+iteration; the ledger was untouched, so it was work to collect, not damage.
+Committed as `d0b8b55`. Its finding, which is what licensed everything below:
+at a wall, lateral falls, the two labellings of a single-hand grip span
+**7.2 s** of a 12.0 s horizon (2.22 vs 9.46), and the better one beats the best
+symmetric blind posture by **+1.80 ± 0.54 s (3.3σ)**. The first two probe rounds
+had returned a clean negative and it was an artifact of the probe's own action
+space — generalised in LESSONS.md.
+
+**The unit: `experiments/tests/ba_03_braces_against_a_surface.py`** (`e56ca60`,
+pushed). Standing rule — `balance` is a GOAL.md sense with **3 declared specs
+and 0 passing**, and both its runnable claims are cheapest-class `cpu<2h`; BA.02
+is VOID×3 and parked behind D8, so BA.03 is the live one. Every departure from
+BA.02 traces to a measurement, not a preference: ACT_DIM 6 (adhesion is the only
+actuator with lateral authority — the arm-pair CoM is at body x ≡ 0 for all
+reach and lift), lateral falls at a fixed wall site checked against the world's
+own `_penetrating()`, the probe's hand-written grip-both posture as a REFERENCE
+arm, the registry-mandated no-surface control as eval-transfer of the identical
+trained arms, and `brace_consistency` (not accuracy) as the gate because the
+probe's intuitive side labelling was **5.4 s wrong** and the file must encode
+neither label. Smoke green on the tiny envelope, `_check` correctly VOID.
+
+**Machine-better:** LESSONS.md, *"A learned null needs a hand-written floor"*
+(`53963f1`) — the mirror of the at-chance-control rule. Every instrument here
+guards a control that must FAIL; nothing guarded a null that must be STRONG,
+and a blind twin stuck at 0.84 s against a sensing arm at 3.0 s yields a +2.2 s
+"gain" with every existing gate green. The repair is one extra eval condition
+and a VOID gate (`DEPRIVED_SHORTFALL_MAX`).
+
+**IN FLIGHT — check this before you plan anything.** Seed-90 sizing pilot,
+launched via `scripts/launch_detached.sh`, **pid 3029636**,
+`/data/ba03_pilot.log` -> **`/data/ba03_pilot_seed90.json`**. NOTE: the log will
+sit at 158 bytes for the whole run — the payload prints once, at the end — so
+liveness is `ps -o time` advancing with elapsed (verified 100% of one core, RSS
+237 MB) and the ARTIFACT is the certificate. Rough estimate from the smoke's
+throughput: ~45-60 min for the ~5,800 episodes at horizon 60.
+
+**NEXT ITERATION, in order:**
+1. Read `/data/ba03_pilot_seed90.json`. Size `CEM_K_FIT` and `N_EVAL` against
+   the measured `sigma_pair_eval` (the registry pre-registers `k_fit >=
+   (2σ/S)²`; the current 6/48 are sized from the probe's ORACLE σ = 1.70 s, and
+   trained arms may be noisier). Freeze `BRACE_CONSISTENCY_MIN`,
+   `DEPRIVED_SHORTFALL_MAX`, `NOSURF_GAIN_MAX` in a commit, then
+   `_GATES_FROZEN = True`. **Amend the TIER, never the thresholds** — 3 seeds at
+   the pilot's `wall_s` may exceed `CPU_LONG`'s cpu<2h, and the registry
+   pre-authorises re-costing.
+2. Read the rig block before the claim block. `deprived_shortfall` and
+   `gain_nosurface` are the two numbers that say whether the rig measured
+   bracing at all; a large shortfall means CEM under-trained the null and the
+   sizing is wrong, not the claim.
+3. If the pilot VOIDs on sizing, that is the pilot working — re-size and
+   re-pilot once. Do NOT weaken a gate to clear it.
+
+**Still true and unmoved:** `run coverage` shows `cpu<10min` EMPTY and fillable
+(LG.01, ME.11, W.1, W.2) and `gpu<20min`/`gpu<2h` empty and NOT fillable — every
+unimplemented spec at those costs is blocked upstream, so that repair is an
+UNBLOCK, not an implementation. BA.03 was the cheapest runnable claim in a
+zero-pass GOAL.md commitment, which is the standing rule's own answer.
