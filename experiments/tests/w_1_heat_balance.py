@@ -197,6 +197,13 @@ from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
 SPEC_ID = "W.1"
+# The arm under test IS `experiments/needs.py`'s thermal overlay, so this
+# certificate must go stale when that file's dynamics move — otherwise the
+# next edit to `C_SH`, `K_DRY` or `DELTA_T_NIGHT` (all three are live arms in
+# `w1-cold-is-not-lethal-at-night`) would leave this FAIL reading current
+# about code that no longer exists. Added 2026-08-30 alongside W.2, which has
+# the same exposure; the verdict is unchanged and was re-run to confirm it.
+IMPL_DEPS = ["experiments/needs.py"]
 
 # ── the reference model's sourced constants (see docstring for citations) ──
 MET_W_PER_M2 = 58.2          # 1 met
