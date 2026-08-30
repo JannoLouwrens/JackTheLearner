@@ -7030,3 +7030,52 @@ unit of work", and a spec nobody has written is a unit of work.**
 it fixed a real 61-GPU-hour loss. The lesson is the second-order one: a ranking
 is a claim about *all* the available work, and the first thing to check about
 any new ranking is which work it silently priced at zero.
+
+## A claim made in prose in one file is not a claim the structure in another file can see (2026-08-30)
+
+Two findings on the same day, in unrelated corners, with one shape.
+
+**(a) The one that fired.** `t2_19_flow_multimodal.py`'s docstring ended
+`COVERS: one brain / unison (claim)`. The registry entry for `T2.19` did not.
+T2.19 is a **PASS** — and "multimodal" in it means a **bimodal action
+distribution** (two actions both correct, their average wrong), while
+`one brain / unison` means **senses** in unison (`GOAL.md:36`). The file names
+a sense once, in prose; nothing is ablated, swapped or fused in it. One
+registry line away, a flow-head result would have become the second passing
+CLAIM behind a constitutional commitment holding 21 specs and 1 pass. **Nobody
+lied. A word meant two things.**
+
+**(b) The one that has not fired yet.** `VO.02`'s registry `notes` say
+`BLOCKED ON GEN.02 (a second Jack)`. Its `depends_on` lists only `VO.01`. So
+`run next`, `coverage` and the overseer all read `VO.02` **RUNNABLE** while its
+own author says it is not — and `GEN.02` does not exist as a spec at all
+(one of the four known-dangling `GOAL.md` citations). Measured exposure across
+the whole registry: **exactly 1**, so this is a guard to build, not a fire to
+put out.
+
+**THE GENERALISATION.** Wherever this project states a fact in ENGLISH in one
+file and depends on STRUCTURE in another to honour it, the two drift, and the
+drift is silent because each file is individually correct. The failure is never
+a false statement — it is a true statement in a place nothing reads.
+
+**THE RULE.** When you write a cross-file assertion, ask *which instrument
+joins the two sides, and does it exist?* If none does, you have written a
+comment, not a constraint. Two receipts today:
+
+  - `T0.21`'s `p10_docstring_covers_match_registry` is that join for `COVERS:`,
+    and it **worked** — it caught (a) on the first invocation after being
+    stale for five hours, as the only live mismatch in 105 declared specs. A
+    cross-file join is worth building; this one has now paid for itself.
+  - Nothing joins registry `notes` to `depends_on`, which is why (b) is still
+    open. **The next builder to touch `coverage.py` should add it** — scan each
+    spec's prose for a named spec id under a blocking phrase and report any
+    that is absent from `depends_on` (or absent from the registry entirely).
+    Report it; do not make it exit 2 without a fixture that fails on a planted
+    violation, per overseer B4's rule.
+
+**AND THE CORROLLARY THAT COST THE MOST TIME TODAY: re-run a stale gate before
+you trust the tool it audits.** `T0.21` had been stale for five hours and was
+carried by two organs as a passing instrument. Its re-run cost **2.56 seconds**
+and returned a live overclaim on a constitutional commitment. A stale
+instrument is not a working instrument that needs paperwork; it is an
+instrument of unknown state, and the cheapest thing in this repo is finding out.
