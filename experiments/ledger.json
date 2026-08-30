@@ -11184,14 +11184,14 @@
     },
     "T0.27": {
       "amended": [],
-      "attempt": 17,
-      "commit": "09008cc",
+      "attempt": 18,
+      "commit": "13c0440",
       "compute_s": null,
       "control_metrics": {
         "dirty_named": 1.0,
         "violations": 1
       },
-      "duration_s": 1.4,
+      "duration_s": 1.44,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -11701,9 +11701,75 @@
           ],
           "spec_sha": "b2adff0cf7c2872a",
           "status": "FAIL"
+        },
+        {
+          "commit": "09008cc",
+          "control_metrics": {
+            "dirty_named": 1.0,
+            "violations": 1
+          },
+          "gpu_job_id": null,
+          "impl_sha": "db4d1476a62da19c",
+          "message": "pre-registered threshold not met",
+          "metrics": {
+            "artifact_survives_history": true,
+            "artifact_written": true,
+            "audit_admits_clean_shape": true,
+            "audit_flags_missing_metrics": true,
+            "audit_flags_unreachable_commit": true,
+            "error_does_not_sever": true,
+            "live_audit_can_flag": true,
+            "live_checked_pairs": 5,
+            "live_ledger_clean": false,
+            "live_unauditable_pairs": 24,
+            "live_violations": 1,
+            "properties_failed": 1,
+            "rerun_visible_not_amendment": true,
+            "seeded_checked_pairs": 7,
+            "seeded_violations": 2,
+            "unknowable_is_none_and_unauditable": true,
+            "void_lane_guarded": true,
+            "warns_on_dirty_fail": true
+          },
+          "ran_at": "2026-08-29T14:18:28",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "b2adff0cf7c2872a",
+          "status": "FAIL",
+          "supersedes_fail": {
+            "commit": "be60c3d",
+            "dirty": false,
+            "impl_changed": false,
+            "impl_sha": "db4d1476a62da19c",
+            "metrics": {
+              "artifact_survives_history": true,
+              "artifact_written": true,
+              "audit_admits_clean_shape": true,
+              "audit_flags_missing_metrics": true,
+              "audit_flags_unreachable_commit": true,
+              "error_does_not_sever": true,
+              "live_audit_can_flag": true,
+              "live_checked_pairs": 4,
+              "live_ledger_clean": false,
+              "live_unauditable_pairs": 26,
+              "live_violations": 1,
+              "properties_failed": 1,
+              "rerun_visible_not_amendment": true,
+              "seeded_checked_pairs": 6,
+              "seeded_violations": 2,
+              "unknowable_is_none_and_unauditable": true,
+              "void_lane_guarded": true,
+              "warns_on_dirty_fail": true
+            },
+            "ran_at": "2026-08-29T13:16:02",
+            "spec_changed": false,
+            "spec_sha": "b2adff0cf7c2872a",
+            "status": "FAIL"
+          }
         }
       ],
-      "impl_sha": "db4d1476a62da19c",
+      "impl_sha": "9784447cb0427d00",
       "message": "pre-registered threshold not met",
       "metrics": {
         "artifact_survives_history": true,
@@ -11725,7 +11791,7 @@
         "void_lane_guarded": true,
         "warns_on_dirty_fail": true
       },
-      "ran_at": "2026-08-29T14:18:28",
+      "ran_at": "2026-08-30T08:13:56",
       "seeds": [
         0
       ],
@@ -11733,9 +11799,9 @@
       "spec_sha": "b2adff0cf7c2872a",
       "status": "FAIL",
       "supersedes_fail": {
-        "commit": "be60c3d",
+        "commit": "09008cc",
         "dirty": false,
-        "impl_changed": false,
+        "impl_changed": true,
         "impl_sha": "db4d1476a62da19c",
         "metrics": {
           "artifact_survives_history": true,
@@ -11745,19 +11811,19 @@
           "audit_flags_unreachable_commit": true,
           "error_does_not_sever": true,
           "live_audit_can_flag": true,
-          "live_checked_pairs": 4,
+          "live_checked_pairs": 5,
           "live_ledger_clean": false,
-          "live_unauditable_pairs": 26,
+          "live_unauditable_pairs": 24,
           "live_violations": 1,
           "properties_failed": 1,
           "rerun_visible_not_amendment": true,
-          "seeded_checked_pairs": 6,
+          "seeded_checked_pairs": 7,
           "seeded_violations": 2,
           "unknowable_is_none_and_unauditable": true,
           "void_lane_guarded": true,
           "warns_on_dirty_fail": true
         },
-        "ran_at": "2026-08-29T13:16:02",
+        "ran_at": "2026-08-29T14:18:28",
         "spec_changed": false,
         "spec_sha": "b2adff0cf7c2872a",
         "status": "FAIL"

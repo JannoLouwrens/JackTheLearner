@@ -301,6 +301,18 @@ class Result:
     nothing about a run from before them (the `Arm.cost` lesson again).
     """
 
+    preserved_impl: Optional[str] = None
+    """Git ref holding the exact bytes an adverse verdict ran, when the tree
+    was dirty. Written by `run_spec` via `preserve_impl_bytes` — see there for
+    what the ref proves and for the 2026-08-29 loss that forced it.
+
+    `None` on every clean row and on every PASS, where the commit already names
+    the code. On a `+dirty` FAIL/VOID, `None` means preservation was ATTEMPTED
+    AND FAILED and the reason is in `message`; it never means "not tried",
+    because the row is only reachable through the attempt (the `Arm.cost`
+    lesson: a sentinel that is also a valid value cannot be detected).
+    """
+
     unknown_keys = ()
     """Row keys this version's dataclass does not define, set by `from_row`.
 
@@ -590,6 +602,12 @@ class Ledger:
                             }
                     if r.status is Status.FAIL and \
                             str(row.get("commit") or "").endswith("+dirty"):
+                        # The second sentence changes with `preserved_impl`
+                        # and the first does not: a preserved ref keeps the
+                        # BYTES, it does not make the row auditable — no
+                        # pre-registered gate reads the ref, by decision
+                        # (see `preserve_impl_bytes`). Saying otherwise here
+                        # would be this warning quietly clearing itself.
                         print("  ! FAIL recorded from a MODIFIED tree. If this "
                               "FAIL is later amended (threshold moved, code "
                               "changed), the failing implementation exists "
@@ -597,6 +615,11 @@ class Ledger:
                               "construction (overseer B2, T2.08's 75a1938+dirty"
                               "). Commit the failing implementation before "
                               "re-running.")
+                        if row.get("preserved_impl"):
+                            print(f"    the bytes themselves are kept at "
+                                  f"{row['preserved_impl']} (git cat-file -p) "
+                                  "— an artifact, not an audit lane; the "
+                                  "commit is still owed.")
                     # None is sticky: a count that was never kept is not
                     # recovered by running again, and len(hist)+1 would quietly
                     # re-assert a number nobody measured.
@@ -1270,6 +1293,112 @@ def blob_reconstructing_sha(path, want_sha: str, repo_root=None) -> tuple:
         "declared IMPL_DEPS file has itself changed since the run (real "
         "staleness: a dependency edit is never prose) or the run executed "
         "uncommitted code (the DIRTY shape); both stay stale")
+
+
+#: Where `preserve_impl_bytes` anchors its manifests. A ref, not a loose
+#: object: `git gc` prunes unreachable blobs after two weeks, and an artifact
+#: that expires is not an artifact.
+FAILIMPL_REF_PREFIX = "refs/jack/failimpl"
+
+
+def preserve_impl_bytes(path, want_sha: str, spec_id: str, ran_at: str,
+                        repo_root=None) -> tuple:
+    """Archive the exact bytes an adverse verdict RAN, into git's object
+    database, when the tree was too dirty for a commit to name them.
+
+    THE HOLE THIS FILLS, and it is a measured one. `audit_supersedes_fail`
+    requires the FAIL under an amendment to be recoverable, so a reader can
+    run `git diff <fail> <pass>` and see what moved. A FAIL recorded from a
+    dirty tree satisfies nothing: the failing code exists only in the working
+    tree, and the very next edit destroys it. That is not hypothetical — on
+    2026-08-29 13:14 `T0.17` recorded FAIL at `d84101e+dirty` (impl_sha
+    `072ea7a4d72997cc`), was fixed in place, and PASSed at 13:15. Checked with
+    `tree_reconstructing_sha` on 2026-08-30: **no committed tree state
+    reconstructs that sha** — the failing implementation is gone for good, and
+    `T0.27`'s live-ledger property has been red ever since, permanently,
+    because nothing can recover bytes that were never written down.
+
+    The runner already WARNED about the dirty stamp (`warns_on_dirty_fail`),
+    and the warning did not survive contact with a builder mid-fix. So this
+    removes the discipline instead of restating it: `run_spec` calls this on
+    every FAIL/VOID stamped `+dirty`, and the bytes are kept whether or not
+    anyone remembers to commit them.
+
+    HOW, and why a manifest rather than a tree. Each file (the test plus every
+    path in its `IMPL_DEPS`) goes in with `git hash-object -w`; a JSON manifest
+    naming path -> blob sha goes in as one more blob; a ref under
+    `FAILIMPL_REF_PREFIX` points at the manifest so `git gc` cannot reap any of
+    it. `git mktree` would need the paths flattened (it takes no slashes) and
+    a flattened path is a path you cannot check out. Recovery is two commands:
+
+        git cat-file -p <ref>                  # the manifest
+        git cat-file -p <blob> > /tmp/failing.py
+
+    WHAT IT PROMISES, exactly. Before writing the ref this re-derives
+    `impl_sha_of` from the bytes it just stored and refuses unless it equals
+    `want_sha` — the same one true code path `blob_reconstructing_sha` and
+    `tree_reconstructing_sha` use. So a returned ref means "these bytes ARE the
+    implementation the row names", proven, not asserted. On any failure it
+    returns `(None, problem)` and the caller records the problem: a
+    preservation that quietly did nothing would be worse than none, because the
+    row would carry a promise the object store cannot keep.
+
+    WHAT IT DOES NOT DO. It does not clear, weaken or widen any pre-registered
+    gate. `audit_supersedes_fail` still demands a COMMITTED tree state and
+    still flags the `T0.17` pair; whether a preserved manifest should count as
+    an equal artifact is a spec question, routed to the Review (journal
+    2026-08-30) rather than settled here by the author of the mechanism.
+    Nothing in this function is reachable from a PASS.
+    """
+    import subprocess
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parent.parent
+    try:
+        rel = str(Path(path).resolve().relative_to(root.resolve()))
+    except ValueError:
+        return None, f"{path} is not under {root}"
+
+    def _git(*args, data=None):
+        return subprocess.run(["git", "-C", str(root), *args], input=data,
+                              capture_output=True, timeout=30)
+
+    deps, problem = impl_deps_of(path)
+    if problem:
+        return None, f"IMPL_DEPS unreadable: {problem}"
+    manifest, blobs = {}, {}
+    for p in (rel, *deps):
+        f = root / p
+        if not f.exists():
+            # Recorded, not skipped: `impl_sha_of` hashes a missing dep as the
+            # literal `missing:<path>`, so the manifest has to say the same
+            # thing or the verification below would be checking a different
+            # tree state than the row names.
+            manifest[p] = None
+            continue
+        raw = f.read_bytes()
+        h = _git("hash-object", "-w", "--stdin", data=raw)
+        if h.returncode != 0:
+            return None, f"git hash-object failed for {p}: {h.stderr[:120]!r}"
+        manifest[p] = h.stdout.decode().strip()
+        blobs[p] = raw
+
+    got = impl_sha_of(path, file_bytes=blobs.get(rel),
+                      dep_bytes={p: blobs.get(p) for p in deps})
+    if got != want_sha:
+        return None, (f"stored bytes hash {got}, row names {want_sha} — the "
+                      "tree moved under the run; nothing preserved")
+
+    body = json.dumps({"spec": spec_id, "ran_at": ran_at, "impl_sha": want_sha,
+                       "files": manifest}, indent=1, sort_keys=True).encode()
+    mh = _git("hash-object", "-w", "--stdin", data=body)
+    if mh.returncode != 0:
+        return None, f"git hash-object failed for the manifest: {mh.stderr[:120]!r}"
+    manifest_sha = mh.stdout.decode().strip()
+    # Ref names forbid ':' — the ISO timestamp has two of them.
+    ref = f"{FAILIMPL_REF_PREFIX}/{spec_id}/{ran_at.replace(':', '-')}"
+    u = _git("update-ref", ref, manifest_sha)
+    if u.returncode != 0:
+        return None, f"git update-ref {ref} failed: {u.stderr[:120]!r}"
+    return ref, ""
 
 
 def tree_reconstructing_sha(path, want_sha: str, repo_root=None) -> tuple:
@@ -2068,8 +2197,32 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
         stamp = {**stamp, "hardware":
                  f"remote/{_gpu_name} (dispatched from {stamp['hardware']})"}
 
+    # An adverse verdict from a dirty tree is the one row whose implementation
+    # no commit can name, and the next edit destroys it (T0.17, 2026-08-29).
+    # Preserve the bytes here, in the object database, before that can happen.
+    # Deliberately NOT gated on the spec having a later amendment: the loss
+    # happens at the FAIL, and by the time an amendment exists it is too late.
+    ran_at_s = time.strftime("%Y-%m-%dT%H:%M:%S")
+    preserved = None
+    if status in (Status.FAIL, Status.VOID) and str(
+            stamp.get("commit", "")).endswith("+dirty"):
+        try:
+            import inspect
+            _src = inspect.getsourcefile(fn)
+            preserved, _why = preserve_impl_bytes(
+                _src, impl_sha, spec.id, ran_at_s) if _src else (
+                None, "no source file for the experiment function")
+        except Exception as e:            # never turn a FAIL into an ERROR
+            preserved, _why = None, f"{type(e).__name__}: {e}"[:120]
+        _note = (f"failing implementation preserved at {preserved}"
+                 if preserved else
+                 f"FAILING IMPLEMENTATION NOT PRESERVED: {_why} — commit this "
+                 "tree before you edit it or the FAIL becomes unauditable")
+        message = f"{message} | {_note}" if message else _note
+
     res = Result(spec_id=spec.id, status=status, metrics=metrics,
                  control_metrics=control_metrics, seeds=seeds,
+                 preserved_impl=preserved,
                  duration_s=round(time.time() - t0, 2), message=message,
                  compute_s=(round(compute_s, 2) if compute_s is not None else None),
                  impl_sha=impl_sha,
@@ -2079,7 +2232,7 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                  # runner actually enforced.
                  spec_sha=spec_sha_of(spec),
                  gpu_job_id=",".join(job_ids) if job_ids else None,
-                 ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"), **stamp)
+                 ran_at=ran_at_s, **stamp)
     ledger.record(res)
     return res
 
