@@ -3543,3 +3543,58 @@ warns about for seats.
 same default (option (c), the change-gated no-op), same `decide_by: 2026-08-31`.
 The overseer may tighten a deadline but may not move one, and no threshold,
 option or permission is touched here.
+
+## D8 / D9 — 23 HOURS TO FIRE, and the successor spec the coverage rule requires is still unwritten (48th overseer audit, 2026-08-30 00:55 UTC)
+
+**No new question for the owner. This entry exists to record a correction and to
+route the actual repair to the builder, so that tomorrow's firing is not read
+later as an oversight.**
+
+**The correction, to the 47th audit and against my own predecessor's framing.**
+The 47th audit (2026-08-29, O2) called `D8`'s default *"unsafe as written"* on
+the grounds that parking `BA.02` removes the last live claim behind `balance`, a
+constitutional sense (`GOAL.md:41`), and that `SYSTEM.md`'s *"a default may only
+pick among already-permitted actions"* forbids it. **On re-reading `D8`/`D9` in
+full I do not think that charge holds, and the distinction is load-bearing.**
+The armer anticipated the exact consequence and wrote it into this file at the
+time (above, 2026-08-25): *"`balance` is a constitutional commitment … If these
+defaults fire, it joins `shelter/building`, `smell`, `thermal (kills)` and six
+others as a commitment with nothing passing and nothing runnable — 10 of 23.
+That is the honest state either way; parking makes it VISIBLE."* Both defaults
+are strictly narrowing; neither edits `GOAL.md`, weakens a threshold, or widens
+what may be claimed. They are legal.
+
+**What is actually missing.** `experiments/coverage.py`'s own docstring states
+the rule for a CLAIM-DEAD red: *"The repair is to REGISTER a successor spec —
+parking was the right call on its evidence; leaving the commitment claim-dead is
+the bug, and deleting the PARKED marker would be worse."* Parking `BA.02` **with**
+a balance successor registered costs the ratchet nothing. Parking it **without**
+one spends the ratchet — `0 CLAIM-DEAD` becomes `1` — to buy visibility the
+ladder already had, since `coverage` has been printing `balance 2 specs 0 pass`
+every audit for weeks.
+
+**Measured state at the time of writing:**
+
+```
+coverage: balance   2 specs  0 pass  1 now   claims: BA.02 RUNNABLE
+                    [support passing, not credited: BA.01 (sensor)]
+ledger:   BA.02 = VOID (attempt 3, re-certified 2026-08-24 38e2a6d)
+          BA.01 = PASS, declared kind `sensor` — support, not a claim
+decisions --check:  D8 due 2026-08-31 · D9 due 2026-08-31 · 0 UNDECLARED · 0 OVERDUE
+```
+
+**Routed to the builder as OVERSIGHT B1, with today's date as the deadline** —
+one registry entry, no implementation, no run, no GPU, no owner ruling. Scope it
+to what a body without directional catch authority *can* be asked: `D8`'s four
+scratch probes are a finding about **catching**, not about **balance sensing**,
+and `BA.01` already passes as a sensor. If the builder concludes that no honest
+balance claim is registrable before the playground-humanoid line exists, the
+requirement is that it says so **here, under this entry, in one sentence**, so
+that the CLAIM-DEAD becomes a recorded decision with a reason rather than a side
+effect of a deadline.
+
+**Nothing here changes either default, either deadline, or either option set.**
+The ratchet may shrink and may never grow; this entry shrinks nothing and adds
+no option. **For the owner: no action required.** One sentence naming `D8`
+option 2 or 3 (or `D9` option (b) or (c)) reverses the park at any time, before
+or after 2026-08-31, at the cost of a registry re-parent and no re-run.

@@ -6971,3 +6971,62 @@ recorder that sits between them. Before freezing any gate, name every
 aggregation the number passes through on its way from the instrument to
 `_check` — including the ones in `protocol.py` that you did not write — and
 say which of them is allowed to be a mean.
+
+## Making one kind of debt legible makes the other kind invisible: nothing in
+## this project ranks a spec that has not been written yet
+## (48th overseer audit, 2026-08-30 — five audits of "register W.1–W.7", and
+## the builder was never idle for a single one of them)
+
+**The observation.** On 2026-08-29 the builder ran 12 iterations, all `rc=0`,
+and cleared a remarkable amount: two false greens taken down, an 18-day-dead
+spec found, a GPU dispatch made, a spec PARKED on its own control, a pilot
+VOIDed without moving a bar, four lessons written. Every single one of those
+was work it could **run**. In the same 24 hours it touched none of `W.1`–`W.7`,
+`PL.00`, `PL.02`, `LT.03`, `LT.04`, `D1.0`, `T2.21` or `SY.01` — the falsifiers
+that six architectural seats and one open decision name as the thing that would
+unseat them. `CHAMPIONS.md` has not been edited in five days. This is the fifth
+consecutive audit to report the same seven missing World specs, and not one of
+those five audits could point at an idle builder as the cause.
+
+**The mechanism, and it is a selection effect, not a motivation one.** An
+unregistered spec has no id, so it sits in no cost class, blocks nothing, fails
+no gate, satisfies no `depends_on`, and appears nowhere in `run blocked`. When
+`coverage.queue_depth` shipped (2026-08-29) it did something genuinely good:
+it made **implementation** debt rankable — `gpu<20min EMPTY <- fillable today:
+T3.10` is a unit of work with a name, a cost and a queue position. Unit
+selection now runs off it, correctly.
+
+**And that is exactly why registration debt got worse.** Three separate
+instruments count it — `coverage.py` counts uncovered commitments and dangling
+`GOAL.md` citations, `champions.py` counts phantom arenas, `decisions.py` (does
+not yet, but should) counts phantom `arena:` ids — and **none of the three
+feeds the ranking the builder actually selects from.** A category that is
+counted by an auditor but not ranked by the queue loses every hour to a
+category that is both. The tool's own vocabulary already concedes the point:
+`coverage.py`'s baseline comment calls `GEN.02/03/06/09` *"registration debt"*
+and has carried them since 2026-08-25.
+
+**The generalisation.** *Every instrument that makes one class of work legible
+re-prioritises against the classes it cannot see, and the invisible class is
+always the one whose members have no identifier yet.* The same shape has
+appeared here three times now: a missing spec is invisible to every organ that
+reasons over specs (the 2026-08-10 miss that produced `coverage.py`); a phantom
+arena is invisible to every organ that reasons over the ledger (the 2026-08-24
+miss that produced `champions.py`); and now registration debt is invisible to
+the organ that reasons over the queue. Each fix bought visibility in one
+register and silence in the next one down.
+
+**The rule.** When you ship an instrument that ranks work, ask what it *cannot*
+enumerate, and give that category a seat in the same ranking — even a crude
+one. A phantom arena and an empty cost class are both one unit of builder time;
+only one of them currently has a row. Concretely, `queue_depth` should carry a
+`REGISTRATION DEBT` line beside its cost classes, listing the arena ids named
+in `CHAMPIONS.md`, the `decide_by`-blocking ids named in `DECISIONS_NEEDED.md`
+and the dangling `GOAL.md` citations that do not resolve in `BY_ID` — because
+the point of the queue was never "what is cheapest", it was **"what is the next
+unit of work", and a spec nobody has written is a unit of work.**
+
+**Do not read this as an argument against the queue.** The queue is right and
+it fixed a real 61-GPU-hour loss. The lesson is the second-order one: a ranking
+is a claim about *all* the available work, and the first thing to check about
+any new ranking is which work it silently priced at zero.
