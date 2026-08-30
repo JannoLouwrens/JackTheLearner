@@ -275,3 +275,74 @@ being under-trained. So:
 extractor on all three targets"*, written up as corroborating `T2.03` from the
 opposite direction — was an **under-training artefact** and is withdrawn. At 150
 epochs shape goes above random, not below. Do not cite it.
+
+---
+
+## ROUTED 2026-08-30 (builder): `SM.03`'s held-out split is saturated — pick the
+## repair arm, do not let me pick it
+
+**Status: OPEN. Gates provisional, `run()` still refuses, nothing dispatched.**
+
+The full-size seed-90 pilot ran on CPU in 8 minutes (`/data/sm03_pilot_seed90.json`,
+head `13c0440`) and found two faults; the numbers and the arithmetic are in
+`sm_03_nose_reports_occluded.py`'s PILOT section and in `LESSONS.md`. In short:
+`MIN_SEP_M` = 0.25 against `N_TRAIN_L` = 480 asks for up to 94.2 m² of exclusion
+inside an 11.06 m² annulus, so the held-out set is the residue of a saturated
+domain rather than a sample of it (occlusion assert alone rejects 0.2405;
+with separation, 0.9958). And the alive-proof leg came back at chance
+(`vis_open` 0.1167 vs a 0.60 floor), so the registered run would have been VOID.
+
+**The question for the Review: which repair, and by what evidence?** Three arms,
+all runnable on CPU, none obviously dominant — which is exactly the shape
+`SM.02`'s three-mechanism-repair park says must not be settled by argument:
+
+1. **Shrink `N_TRAIN_L`** until the exclusion budget fits. Cheapest, and it cuts
+   the training rows the vision alive-proof may already be starved of — the two
+   faults pull in opposite directions, which is the interesting part.
+2. **Widen `SRC_R_RANGE`**. Buys area, but changes the odour problem: source
+   distance is the dominant term in the field, so the arms are no longer being
+   compared on the same difficulty as the pilot measured.
+3. **Hold out by BEARING SECTOR rather than euclidean distance.** For a
+   direction task this is arguably what "held-out" should have meant all along,
+   and the exclusion budget stops scaling with the training count. It is also
+   the biggest change to the pre-registered claim, so it is the one I am least
+   entitled to make alone.
+
+Whichever wins, F2 (the dead alive-proof) needs its own answer and may not be
+downstream of F1 at all: 480 rows for a CNN on 12×64×64, and a 0.12 m ball at
+1.8–2.6 m under a 90° fovy at 64×64 (~4 px), are both live suspects and neither
+is measured.
+
+---
+
+## ROUTED 2026-08-30 (builder): should a PRESERVED failing implementation count
+## as `audit_supersedes_fail`'s artifact? I built the mechanism and deliberately
+## did not answer this
+
+**Status: OPEN. No gate was moved. `T0.27` is still FAIL for its real reason.**
+
+`run_spec` now archives the exact bytes of every `+dirty` FAIL/VOID into git's
+object database (`preserve_impl_bytes`, ref under `refs/jack/failimpl`), because
+`T0.17`'s 2026-08-29 failing implementation is provably unrecoverable and
+`T0.27`'s live-ledger property is therefore permanently red. The mechanism
+verifies what it stores: the ref is only written when the stored bytes re-derive
+the `impl_sha` the row names.
+
+**The question: `audit_supersedes_fail` currently accepts only a COMMITTED tree
+state. Should a verified preserved manifest be a second lane?**
+
+- FOR: the evidence is identical in kind and proven by the same function; a
+  committed tree state is accepted because it reconstructs the sha, and so does
+  this. `T0.27`'s title asks for an *artifact*, and `git cat-file -p <blob>`
+  produces one. Without a reader, the mechanism prevents future loss but every
+  future dirty pair still reads as a violation — the ledger accumulates
+  permanent reds for breaches whose evidence actually survives.
+- AGAINST: `T0.27`'s `kills` field names *the practice* of amending a FAIL from
+  an uncommitted tree, not merely the loss of bytes. An automatic artifact makes
+  the practice cheap, and cheap is how a discipline dies. The permanent red may
+  be the deterrent working as designed.
+
+I am the author of the mechanism, which makes me the wrong organ to rule on the
+gate that would read it. Note the decision is not urgent and not blocking: the
+bytes are being kept either way, so a later YES loses nothing, while a NO costs
+only some disk in `.git`.

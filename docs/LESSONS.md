@@ -7563,3 +7563,78 @@ run it. A run killed outright leaves nothing behind, and the system finds out
 when a builder happens to read the log. Same blind spot as the skip streak and
 as queue depth — this repository keeps discovering that its organs measure their
 own output and never each other's silence.
+
+## An adverse verdict destroys its own evidence unless something WRITES THE
+## BYTES DOWN — a warning is not an artifact, and the loss is silent and total
+## (builder, 2026-08-30, after proving T0.27's live red is permanent)
+
+`T0.27` says a threshold moved after a FAIL must leave an artifact rather than
+a paragraph, and its enforcement is that the failing implementation be
+recoverable so a reader can run `git diff <fail> <pass>`. On 2026-08-29 at
+13:14 `T0.17` recorded FAIL at `d84101e+dirty`, was fixed in place, and PASSed
+at 13:15. Asked on 2026-08-30 with this repo's own strongest tool,
+`tree_reconstructing_sha` answers: *no committed tree state reconstructs
+`072ea7a4d72997cc`*. Those bytes are gone. `T0.27` has been red ever since and
+**can never go green**, because no future action recovers something that was
+never written down.
+
+The runner had already warned — `warns_on_dirty_fail` is a passing property,
+the text prints, and it printed that day. It did not survive contact with a
+builder mid-fix, which is the ordinary case: the person who most needs the
+warning is the one moving fastest.
+
+**The generalised rule: when a process step is the last moment some evidence
+exists, that step must PERSIST the evidence, not advise someone to.** A
+warning delegates the durable act to the least reliable component in the loop.
+Ask of any guard: if the operator ignores it, is anything lost that cannot be
+recovered? If yes, it is not a guard, it is a note — and the repair is a
+mechanism at the point of loss (`preserve_impl_bytes`, called by `run_spec` on
+every `+dirty` FAIL/VOID, hashing the test and its `IMPL_DEPS` into git's
+object database under a ref so `gc` cannot reap them).
+
+Two corollaries this repo paid for separately. **(a) A preserved artifact must
+prove it is the right one**: the mechanism re-derives `impl_sha` from the bytes
+it stored and refuses unless it equals the sha the row names — a row carrying a
+promise the object store cannot keep is worse than a row carrying none (the
+`Arm.cost` lesson, one surface over). **(b) Preserving evidence is not the same
+act as accepting it**: `audit_supersedes_fail` still demands a COMMITTED tree
+state and still flags the `T0.17` pair. Whether a preserved manifest counts as
+an equal artifact is a change to a pre-registered gate, and the author of a
+mechanism is the last person who should rule on the gate that reads it.
+
+## A held-out split defined by DISTANCE from the training set stops being a
+## sample of the domain once the exclusion budget exceeds the domain — and the
+## measurement it feeds is about the residue, not the world
+## (builder, 2026-08-30, SM.03's first full-size pilot)
+
+`SM.03` holds out source positions by requiring each test position to sit
+≥ `MIN_SEP_M` = 0.25 m from **every** one of `N_TRAIN_L` = 480 training
+positions, inside a source annulus of π(2.6² − 1.8²) = 11.06 m². Those 480
+exclusion discs claim up to 94.2 m² — **8.5× the space they are drawn from.**
+The sampler does not fail; it grinds. Measured: the occlusion assert alone
+rejects 0.2405 of draws, and adding the separation constraint takes it to
+0.9958. Every surviving test position sits exactly at the 0.25 floor.
+
+So the held-out set was not a held-out sample of the source band. It was the
+sliver the training set failed to cover, selected precisely for sitting at the
+constraint boundary — a systematically different distribution, described in the
+spec's own docstring as "zero overlap, enforced at generation and recorded".
+The recording was honest and the description was wrong, and no seed, budget or
+re-roll touches it.
+
+**The rule: before trusting a rejection-sampled split, do the area arithmetic
+—** `n_train × exclusion_area` against the domain measure. Above ~1 the split
+is saturated and the sampler is silently returning the residue. And **read the
+rejection rate as a measurement, not a diagnostic**: `reject_rate` 0.9893 was
+already in the artifact; what made it legible was decomposing it against the
+same rate with the separation constraint removed. A single-number rejection
+rate cannot say WHICH constraint is doing the rejecting, so a rig that rejects
+should record the rate per constraint.
+
+The wider point, and it is why this pilot paid for itself in eight CPU minutes:
+**the alive-proof leg is the one that catches this.** `vis_open` came back at
+0.1167 against a 0.60 floor, so the run would have been VOID by the spec's own
+tree — a comparison that never became valid, rather than a nose that failed.
+A test whose instrument-liveness leg is at chance measures nothing, and one
+that dispatches to a GPU before checking that leg locally spends free hours to
+learn it.
