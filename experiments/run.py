@@ -29,9 +29,10 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-from .protocol import (Ledger, Status, impl_deps_of, impl_sha_of,
-                       is_code_dirt, module_path_for, porcelain_path,
-                       spec_drift, staleness_of)
+from .protocol import (GATE_DIRTY_FLAG, Ledger, Status, gate_precondition,
+                       impl_deps_of, impl_sha_of, is_code_dirt,
+                       module_path_for, porcelain_path, spec_drift,
+                       staleness_of, working_tree_porcelain)
 from .registry import BY_ID, LADDER, ready, tier
 
 TESTS_DIR = Path(__file__).parent / "tests"
@@ -1207,6 +1208,10 @@ def main() -> int:
                     help="spec ids, or status / next / blocked / stale / verify / render")
     ap.add_argument("--tier", type=int)
     ap.add_argument("--gate", action="store_true", help="re-run all passing tests")
+    ap.add_argument("--dirty-ok", action="store_true",
+                    help="gate a MODIFIED working tree on purpose — every "
+                         "spec re-run stamps `+dirty` and its clean stamp is "
+                         "lost (protocol.gate_precondition, 2026-08-30)")
     ap.add_argument("--by", help="amend: the spec or finding that motivates the change")
     ap.add_argument("--reason", help="amend: why, in a sentence")
     ap.add_argument("--status", help="amend: new status (VOID, SKIP or NOT_RUN only)")
@@ -1262,6 +1267,21 @@ def main() -> int:
     if args.gate:
         ids = _dependency_order([s.id for s in LADDER
                                  if ledger.status(s.id) is Status.PASS])
+        # The gate is the ONE command here that can only lose certificates: it
+        # re-runs rows that already hold clean stamps, so a dirty tree turns a
+        # green sweep into a demotion. See `protocol.gate_precondition` for the
+        # 2026-08-30 event that cost T0.09 and its 36 dependents.
+        refusal = gate_precondition(working_tree_porcelain(),
+                                    at_risk=len(ids), dirty_ok=args.dirty_ok)
+        if refusal:
+            print(refusal)
+            print("Nothing was run.")
+            return 1
+        if args.dirty_ok:
+            print(f"{GATE_DIRTY_FLAG}: gating a modified tree on purpose — "
+                  "every spec re-run below will stamp `+dirty` and its clean "
+                  "predecessor is lost. Read the results, do not commit them "
+                  "as a certificate.")
         print(f"Regression gate: {len(ids)} previously-passing tests\n")
         with _exclusive(ids):
             return cmd_run(ledger, ids)

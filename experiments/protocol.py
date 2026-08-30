@@ -119,6 +119,84 @@ def is_code_dirt(porcelain_line: str) -> bool:
     return path not in NOT_CODE
 
 
+def code_dirt(porcelain_lines) -> list:
+    """Every uncommitted CODE path in a `git status --porcelain` listing."""
+    return [porcelain_path(ln) for ln in porcelain_lines if is_code_dirt(ln)]
+
+
+def working_tree_porcelain(root=None) -> list:
+    """`git status --porcelain` for the repo, as a list of lines.
+
+    A named function rather than an inline `subprocess.run` so the question
+    "what does the tree look like right now" can be answered by a stub in a
+    test. The `+dirty` stamp in `run_spec` asks it inline and is therefore
+    only testable through `is_code_dirt`; `gate_precondition` below is the
+    first caller that needed the whole answer.
+    """
+    root = Path(root) if root is not None else Path(__file__).resolve().parents[1]
+    try:
+        return subprocess.run(["git", "status", "--porcelain"],
+                              capture_output=True, text=True,
+                              cwd=root, timeout=10).stdout.splitlines()
+    except Exception:
+        return []
+
+
+#: The flag that lets a builder gate a work-in-progress tree on purpose.
+GATE_DIRTY_FLAG = "--dirty-ok"
+
+
+def gate_precondition(porcelain_lines, at_risk: int = 0,
+                      dirty_ok: bool = False) -> str:
+    """Why a REGRESSION GATE must not start right now — or "" if it may.
+
+    THE SCAR, 2026-08-30 09:19 UTC, commit `7966524`. The builder changed
+    `experiments/champions.py`, then ran `run --gate` to check for regressions,
+    then committed. Correct instinct, fatal order: every one of the ten specs
+    the gate re-ran recorded `e9bd4a0+dirty`, and for `T0.08` and `T0.09` the
+    recorded `impl_sha` reconstructed from no committed blob, so both PASSes
+    became DIRTY STAMPS. `T0.09` is a dependency of 36 specs. `run blocked`
+    spent the next three hours reporting a phantom — *"T0.09 = PASS but STALE,
+    frees 36"* — at the top of the project, above the real blocker (`T2.01`,
+    frees 35), and clearing it cost two re-runs and a second Colab T4
+    round-trip. The gate had been GREEN. Ten tests passed and the ladder got
+    worse.
+
+    That is the shape worth naming: a single-spec run from a dirty tree only
+    fails to certify, which is honest and normal — `t0_23`'s own fixture note
+    says a dirty tree is the ordinary state of the iteration that runs it. A
+    GATE run from a dirty tree does something else. It re-runs specs that
+    already hold CLEAN stamps and overwrites them with dirty ones, and
+    `blocked_by` then propagates the demotion to every dependent. Its expected
+    information gain is negative by construction, and it is the one command in
+    this runner that can only lose certificates. The same event is already on
+    record twice under other names (`T2.00`'s `08444b2+dirty`, which cost a
+    998-second re-run and blocked 47 specs, and `T0.25`'s `1ddcd27+dirty`);
+    both were repaired as incidents, neither as a class.
+
+    So the gate refuses a code-dirty tree and says which paths and how many
+    certificates were at risk. `--dirty-ok` runs it anyway, because "does my
+    uncommitted change break anything" is a real question — it is an explicit
+    opt-in that changes nothing about what gets recorded. NOTHING here weakens
+    a stamp: `+dirty` still fires exactly as before, on exactly the same
+    condition. This guard only refuses to VOLUNTEER for it.
+
+    `at_risk` is the number of clean certificates the gate is about to re-run;
+    it is reported, never gated on, so the refusal is informative rather than
+    merely obstructive.
+    """
+    dirty = code_dirt(porcelain_lines)
+    if not dirty or dirty_ok:
+        return ""
+    shown = ", ".join(dirty[:6]) + (" …" if len(dirty) > 6 else "")
+    return (f"Refusing to gate: {len(dirty)} uncommitted code file(s) — {shown}. "
+            f"A gate run from a modified tree stamps every spec it re-runs "
+            f"`+dirty`, demoting clean certificates and blocking their "
+            f"dependents ({at_risk} PASS row(s) at risk; this cost T0.09 and "
+            f"36 dependents on 2026-08-30). Commit first, then gate — or pass "
+            f"{GATE_DIRTY_FLAG} to gate the working tree on purpose.")
+
+
 class Status(str, Enum):
     NOT_RUN = "NOT_RUN"      # default; never set by hand
     PASS = "PASS"

@@ -7377,8 +7377,8 @@
     },
     "T0.08": {
       "amended": [],
-      "attempt": 10,
-      "commit": "e9bd4a0+dirty",
+      "attempt": 11,
+      "commit": "7966524",
       "compute_s": null,
       "control_metrics": {
         "amendment_survived": false,
@@ -7503,6 +7503,42 @@
           ],
           "spec_sha": "8c42327a17d13484",
           "status": "PASS"
+        },
+        {
+          "commit": "e9bd4a0+dirty",
+          "control_metrics": {
+            "amendment_survived": false,
+            "attempt_not_inflated": false,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": false,
+            "own_result_recorded": true,
+            "unseen_entry_survived": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "989fa3d1cb6af184",
+          "message": "",
+          "metrics": {
+            "amendment_survived": true,
+            "attempt_not_inflated": true,
+            "blocked_records_no_metrics": true,
+            "default_is_not_run": true,
+            "dependency_blocks": true,
+            "entries_after_concurrency": 19,
+            "entries_after_stale_write": 4,
+            "fresh_metric_survived": true,
+            "own_result_recorded": true,
+            "roundtrip_ok": true,
+            "survives_concurrent_writers": true,
+            "unseen_entry_survived": true,
+            "void_dep_blocks": true,
+            "void_why_not_a_refutation": true
+          },
+          "ran_at": "2026-08-30T09:19:50",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "8c42327a17d13484",
+          "status": "PASS"
         }
       ],
       "impl_sha": "989fa3d1cb6af184",
@@ -7524,7 +7560,7 @@
         "void_why_not_a_refutation": true
       },
       "preserved_impl": null,
-      "ran_at": "2026-08-30T09:19:50",
+      "ran_at": "2026-08-30T10:08:48",
       "seeds": [
         0
       ],
@@ -7535,13 +7571,13 @@
     "T0.09": {
       "amended": [],
       "attempt": null,
-      "commit": "e9bd4a0+dirty",
+      "commit": "7966524",
       "compute_s": null,
       "control_metrics": {
         "message": "exit 1",
         "ok": false
       },
-      "duration_s": 34.87,
+      "duration_s": 34.16,
       "gpu_job_id": null,
       "hardware": "remote/Tesla T4, 15360 MiB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
@@ -7622,6 +7658,32 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "e9bd4a0+dirty",
+          "control_metrics": {
+            "message": "exit 1",
+            "ok": false
+          },
+          "gpu_job_id": null,
+          "impl_sha": "99c5042d8fa77c5f",
+          "message": "",
+          "metrics": {
+            "artifact_bytes": 124,
+            "cuda_available": true,
+            "device": "Tesla T4",
+            "duration_s": 30.5,
+            "gpu": "Tesla T4, 15360 MiB",
+            "matmul_finite": true,
+            "message": "",
+            "ok": true
+          },
+          "ran_at": "2026-08-30T09:20:25",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "084098ba7056a3cf",
+          "status": "PASS"
         }
       ],
       "impl_sha": "99c5042d8fa77c5f",
@@ -7630,14 +7692,14 @@
         "artifact_bytes": 124,
         "cuda_available": true,
         "device": "Tesla T4",
-        "duration_s": 30.5,
+        "duration_s": 30.1,
         "gpu": "Tesla T4, 15360 MiB",
         "matmul_finite": true,
         "message": "",
         "ok": true
       },
       "preserved_impl": null,
-      "ran_at": "2026-08-30T09:20:25",
+      "ran_at": "2026-08-30T10:09:39",
       "seeds": [
         0
       ],
