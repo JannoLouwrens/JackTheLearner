@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 85 / 188 demonstrated
+## 85 / 195 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -837,3 +837,37 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ In a scenario where a graspable surface is within reach, a learner given BA.01's vestibular channel PLACES ITS SUPPORT ON THE LEAN SIDE and stays upright measurably longer than an identical learner trained with the channel deleted (>= 3 sigma across seeds), and the gain vanishes when the channel is replaced by matched-statistics noise.
       - _dies if:_ No upright-time gain from having the channel even with a surface in reach. Then D8's open-ground finding generalises — balance is decoded and never acted on in ANY scenario this body affords — and the honest status of balance-as-a-used-sense is 'sensed, unused' until the playground humanoid exists. A SECOND honest outcome: the sensing arm wins but the brace lands on the wrong side as often as the right one, which refutes the mechanism while the number passes; brace-side accuracy is therefore a REPORTED gate, not a footnote.
       - _then delete:_ D8 option 3 — the last re-scoping of balance-as-a-used-sense that this body affords. If BA.03 fails, no balance CLAIM is registrable before a body with directional catch authority exists, and that becomes a finding rather than an assumption.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **W.1** Temperature obeys the heat balance we published
+      - _asserts:_ The thermal overlay reproduces the lumped-capacitance solution of m*c_p*dT/dt = Q_gen - h*A*(T - T_env) on four independent checks it was not tuned on: (a) the PARAMETER-FREE thermoneutral point — a nude 70 kg / 175 cm body at 1 met in still air is in balance at 27.55 C, within 1.0 C; (b) pure decay from 37 C into 20 C still air reads 33.767 C at t=1 h, within 1%; (c) raising wind 0 -> 5 m/s shrinks tau by the ratio 0.3095, within 2%; (d) integrated net flux equals m*c_p*dT to integrator tolerance.
+      - _dies if:_ Any of the four checks outside tolerance, or a temperature that is non-finite, or a body that reaches equilibrium at a temperature independent of h.
+      - _then delete:_ Every claim that cold teaches shelter. W.3, W.5's heat coupling and the whole death-by-hypothermia mechanic are defined over this model; a wrong one teaches a wrong lesson very convincingly.
+- [ ] **W.2** Needs are a conserved ledger, and they can kill
+      - _asserts:_ Hunger, thirst and sleep pressure integrate to their closed-form solutions within 1%; energy in equals energy out to 1e-6 relative over a 10-day life; each need independently reaches a lethal threshold at the pre-registered deadline (thirst 3 days, food 3 weeks, core temp outside 28-40 C, EACH DIVIDED BY W.7's DECLARED k and both forms reported) when and only when it is not met; and sleep pressure discharges 4.3x faster than it accumulates (tau_wake 18.2 h vs tau_sleep 4.2 h).
+      - _dies if:_ Any integrator drifting from closed form beyond 1%, energy non-conservation above 1e-6, a need that never becomes lethal, or a need that becomes lethal while being met.
+      - _then delete:_ W.3, NE.08 and the whole death-and-retry loop. A needs system that does not conserve is a system where Jack can learn to exploit the bookkeeping instead of the world — the survival analogue of the noisy TV.
+- [ ] **W.3** Cold kills, and shelter is why it does not
+      - _asserts:_ Over a scripted night with no agent policy involved — a kinematic jig, PG.3's pattern — a Jack inside an insulated shelter survives and a Jack outside it does not, and the difference in time-to-lethal-core-temperature matches what the heat balance predicts from the shelter's declared clo value, within 15%.
+      - _dies if:_ Shelter changes survival time by an amount the heat balance does not predict, in either direction — too little means the shelter is decorative, too much means something other than insulation is being modelled.
+      - _then delete:_ The sentence 'cold nights teach shelter-building'. If insulation does not measurably change survival, no policy can learn to seek it and the W1 curriculum has no gradient.
+- [ ] **W.4** The rule-set is consistent and discoverable
+      - _asserts:_ Every rule in the world's published rule-set is (a) CONSISTENT — replaying an identical (state, action) pair from a serialised state produces a BIT-IDENTICAL outcome, over >=200 sampled rule firings; (b) DISCOVERABLE — a uniform-random policy fires every rule at least once within a pre-registered step budget; and (c) CONSEQUENTIAL — every rule moves at least one need meter by more than the meter's own noise floor.
+      - _dies if:_ Any rule whose replay diverges (hidden state or unseeded randomness), any rule unreachable by random exploration inside the budget, or any rule that moves no need.
+      - _then delete:_ Any rule that fails (a). A world Jack cannot learn is not a curriculum, it is noise with a tech tree. Rules failing (b) or (c) are demoted to scenery and must not be counted in W.8's depth metric.
+- [ ] **W.5** Fire obeys its published rules
+      - _asserts:_ The fire state machine pre-registered in docs/research/SURVIVAL_WORLD.md section 4.2 holds on every clause: dry fuel ignites and wet fuel (w >= W_IGNITE) does not; rain above R_QUENCH moves BURNING -> EMBERS; fuel is consumed at the declared rate and the cell reaches ASH at the predicted time; wind biases spread probability in the declared direction; and a BURNING cell raises Jack's core temperature by the amount W.1's model predicts for its declared power and distance.
+      - _dies if:_ Any clause violated, OR the heat coupling disagreeing with W.1's independent prediction — which would mean two parts of the world disagree about the same physics.
+      - _then delete:_ Cooking, warmth-seeking, and the entire fire branch of the tech tree. Also kills any claim that Jack 'discovered fire' — discovery of an inconsistent rule is memorisation of noise.
+- [ ] **W.7** Time compression is a declared transformation, not a fudge
+      - _asserts:_ With the day-length compression factor k declared (proposed k = 72, one Jack-day = 1200 s of sim time), the physics integrates in REAL seconds and only the need-accumulation clock is scaled; the dimensionless ratios the spec declares (thermal tau / day-length, thirst deadline / day-length, sleep tau_wake / day-length) equal their declared values to 1e-9; and W.1's four analytic checks, re-run inside the compressed world, give BIT-IDENTICAL results to the 1x fixture.
+      - _dies if:_ Any declared ratio off by more than 1e-9, or W.1's checks moving at all when k changes — which would prove the compression is inside the physics rather than beside it.
+      - _then delete:_ Every cost estimate in SURVIVAL_WORLD.md. Without compression a single 24 h life is 1.70 core-hours (measured) and no 3-seed study is affordable; with UNVERIFIED compression every thermal number in the ladder is silently wrong.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **W.8** Rule depth: the world contains more than we enumerated
+      - _asserts:_ The count of distinct REACHED rule-interaction events — co-occurrences of two or more rules whose joint outcome differs from either rule's outcome alone — exceeds the number of rules enumerated in the rule-set, and keeps growing over lives rather than saturating.
+      - _dies if:_ The reached-interaction count saturating at or below the enumerated rule count — the world is a list, not a closure, and open-endedness in it is impossible however good the agent is.
+      - _then delete:_ The W3 rung of SURVIVAL_WORLD.md's fidelity ladder. If depth does not exceed the enumeration, W3 is just W2 with more table rows, and the honest move is to say so and spend the compute on ACCEL-style RULE mutation instead of on more hand-authored rules.
