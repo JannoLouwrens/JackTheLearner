@@ -7745,3 +7745,70 @@ whether it can improve the record at all under the conditions it will actually
 be run in. If the answer is no, it needs a precondition, not a warning. And
 `commit -> push -> gate` is the order; `gate -> commit` was never a shortcut,
 it was a slow way of deleting evidence.
+
+## An ablation that removes the quantity the reward is COMPUTED FROM does not
+## produce a control arm — it produces the same arm twice, and the gate above
+## it then reads green by arithmetic
+## (builder, 2026-08-30, implementing SH.02's need-contingency conjunct)
+
+`SH.02`'s registry hypothesis has three conjuncts, and the second reads *"the
+contrast is need-contingent (with the cold disabled, learner and twin are
+indistinguishable)"*. Implemented literally — inert world, learner against
+drive-disabled twin — it is **unfalsifiable by arithmetic**, and it would have
+gone green in every seed forever. The reward is the homeo-dr shape on the
+thermal deviation, `r_t = d_th(t) - d_th(t+1)`. `ThermalWorld(inert=True)`
+multiplies equation (1) by zero, so `Tb` never moves, so `d_th` is a constant,
+so `r_t = 0` at every step including the terminal. The twin's defining
+difference from the learner is that its reward is zeroed. Zero equals zero:
+**the two arms are one object**, `z_warm` is 0 because subtraction says so, and
+no experiment happened. Measured live at 120 decisions before anything was
+gated: `warm_reward_abs` **0.0 exactly**, against `0.1368` for the same code in
+the cold world.
+
+**The general shape, which is not specific to thermoregulation.** A control is
+supposed to remove *one term* from the treated arm. But when the ablation
+targets the state variable the reward FUNCTION reads, it removes the term the
+two arms differed in as a side effect, and the difference collapses to an
+identity. This is the mirror of the invariance trap already in this file (*"a
+permutation floor is only a floor if the permutation is in the statistic's
+sensitivity alphabet"*, VO.02, 2026-08-30): there a gate was **unsatisfiable**
+by arithmetic, here it is **satisfiable** by arithmetic. Both are the same
+defect — a comparison whose value is fixed before any data exists — and it is
+the same defect the Review found in `ME.9` the same week, where two of three
+scored conjuncts were true by construction. Three instances in one week is a
+class, not a coincidence.
+
+**The check that finds it, and it costs no compute.** Before running a control,
+write down the treated and control arms' defining difference *symbolically* and
+substitute the ablation into it. If the difference evaluates to a constant, you
+have one arm with two names. It is a thirty-second algebra exercise and it is
+the only instrument that works — a pilot cannot find this, because the pilot
+also returns the constant and it looks exactly like a clean result. **This is
+why the arithmetic must be done at DESIGN time: every downstream instrument in
+this repo is built to detect a claim that failed, and none of them can detect a
+claim that could not fail.**
+
+**What to do instead — and NOT to drop the conjunct**, because a registered
+clause is not a builder's to delete (law 4). Split the intent from the
+implementation. The conjunct's *intent* is "sheltering that is thermal must not
+survive the removal of the cold". Point that at a pair that can actually differ:
+the same LEARNER in the cold world against the same LEARNER in the inert world.
+Those two runs share an arm and differ in the world, so their behaviour is free
+to be identical or not, and `z_need >= Z_MIN` is a real gate. The identity is
+then **kept and recorded** — `warm_reward_abs` must read `0.0` — as an
+assertion rather than a conjunct: it is a live check on the reward definition
+(it stops reading 0.0 the day someone adds a term) and it is a disclosure to the
+next reader of why the obvious implementation is not the one in the file.
+
+**One trap inside the repair, which the same 30 seconds catches.** Matched
+exposure is load-bearing here, not hygiene: inert lives never freeze and always
+run to `LIFE_CAP`, cold lives end when the body does, and a longer life is more
+opportunity to wander out of the hut. Comparing untruncated fractions biases the
+gate *toward passing* — so both sides are scored over each life's first
+`MATCH_DEC` decisions. **When you re-point a conjunct at a new pair, re-derive
+what differs between them; the ablation you removed is rarely the only one.**
+
+**Rule:** a control arm earns its name only if you can state a quantity that is
+free to differ between it and the treated arm *after* the ablation is applied.
+If you cannot, you have not built a control — you have built a tautology, and
+it will pass.
