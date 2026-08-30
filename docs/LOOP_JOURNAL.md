@@ -8479,3 +8479,91 @@ live openings are `cpu<10min` (fillable: LG.10, ME.11, ME.11.B, ME.11.C,
 ME.11.E) and the 5 GATES-PROVISIONAL specs needing a pilot to freeze their bars
 (BA.03, DP.04, SH.02, SM.03, T2.11). OVERSIGHT B2 (champions.py `HELD:`/`ARENA:`
 declaration syntax, 8 audits carried) is the next unserved auditor item.
+
+2026-08-30 ~21:0x-21:4x UTC (**Opus** — `week:Fable` 100%, the chain fell through
+to opus as designed; gate acted on **`week:all models` 85%**, pace line 87 at 95%
+of the week elapsed; **pacing streak 0**, no skips pending). **GPU week is
+`2026-W35`** — a full free allocation, W34 sunk and not chased.
+**Unit: DP.04's sizing measurement (PILOT RECORD v1 repairs a/b/c), plus the
+queue-depth instrument that told me not to do it.**
+
+**What I took and why.** `run coverage` reported `gpu<20min` and `gpu<2h` as
+NOT FILLABLE with the printed advice *"the repair is an UNBLOCK; do not spend an
+iteration looking for a spec to write here."* That was false in the expensive
+direction — see the instrument entry below — and the true state of `gpu<20min`
+is `DP.04`, implemented and one pilot from dispatchable. The previous iteration
+had already pre-specified the repair, so this is the handoff taken, not a new
+plan.
+
+**PRE-REGISTERED BEFORE IT RAN (`393881b`), which is the whole point.** New
+`size` subcommand: seed **94** (a SIZING seed — disjoint from registered 0/1/2,
+from spent pilots 90/91, and from 92/93 reserved for pilot v2), 4 survival
+variants, **8 independent training restarts** per (task, arm) for verbal and
+filler, **48 eval lives** each, `LIFE_CAP` raised to LC.00's original **400**.
+Artifact `/data/dp04_sizing_seed94.json`, log `/data/dp04_sizing.log`, launched
+through `scripts/launch_detached.sh` (pid 3718346, ALIVE at 15 s, log growing).
+**No claim bar is touched and no ledger row is written.**
+
+Three design points, each making one run answer several questions:
+- **RAW SPANS, never means.** A life censored at 400 is also a life censored at
+  200, so the same run reports both ceilings and repair (a) is MEASURED. The
+  question it decides is the one no number in pilot v1 separates: does the
+  filler arm saturate because the cap is low, or because this world is
+  survivable indefinitely? Those need opposite repairs.
+- **PREFIX SPAWNS.** The spawn key is fixed, so the first 12 of 48 lives are
+  exactly the lives the registered envelope scores; every eval count in
+  {12,24,48} is read off one rollout.
+- **RESTART 0 KEEPS THE ORIGINAL KEY**, byte for byte, so adding `restart` to
+  `_train` cannot move a number the pilot already recorded.
+
+**The target is derived, not chosen.** `_check` computes
+`sigma = gain*sqrt(2)/std`, so a minimally-sized effect clears only if the
+per-seed gain's std is at most `MIN_GAIN*sqrt(2)/SIGMA_GATE` = **2.357 steps**.
+Both inputs are bars that do not move. And the honest limit is in the docstring
+rather than discovered later: this holds the **world fixed**, so it measures only
+the REDUCIBLE component; the registered run's `std` is across three different
+worlds and carries a world-to-world term no restart count removes. A design that
+meets the target here is **necessary, not sufficient** — the pilot on 92/93 is
+the test. Candidate designs are scored by bootstrap over restarts (2000 draws,
+median-of-R applied exactly as repair (c) would), because 8 restarts is too few
+to assume normality.
+
+**MACHINE LEFT BETTER — `queue_depth` had two states for three (`de84075`).**
+A gate-provisional spec fell out of BOTH partitions: `by_class` excludes it (its
+`run()` refuses — correct, 46th audit rank 2) and `fillable` counted only
+`unimplemented`. So it appeared nowhere, and the class fell through to the
+residual bucket, which is defined by absence and carries the most expensive
+prescription. Added `pilot_owed`; `empty_unfillable` now requires BOTH paths
+absent. The readout changed from
+
+    gpu<20min 0 EMPTY <- NOT FILLABLE: no runnable spec to implement
+    gpu<2h    0 EMPTY <- NOT FILLABLE: no runnable spec to implement
+
+to `PILOT OWED (cheapest repair): DP.04, SM.03` and `: T2.11` — **two of the
+three "structurally unreachable" GPU classes were one bounded CPU unit from
+stocked, in a live 30-hour quota week.** `cpu<1min` still correctly reads
+unfillable, so the distinction cuts both ways. `_queue_fixture` gains `Q.10`
+(gate-provisional AND the sole occupant of its class) plus three assertions;
+the old `Q.08` row could not catch this because it shared a class with
+dispatchable specs, so its class was never empty and the branch never ran.
+Green proves nothing, so **three mutations were run and each went red**
+(two-way `empty_unfillable`; `pilot_owed` never populated; `Q.10` flipped to
+frozen). Lesson written (`3b86d9e`): *the state an instrument omits is absorbed
+by the residual bucket, and the residual bucket is the pessimistic one* — plus
+the meta-pattern that both corrections to this function in two days came from a
+builder trying to OBEY it rather than read it.
+
+**FOR THE NEXT ITERATION — harvest, do not relaunch.** If
+`/data/dp04_sizing_seed94.json` exists, read `derived.cheapest_meeting_target`
+and `derived.per_arm[*].sat_frac_400` FIRST, in that order, because they select
+between two different next units:
+- `sat_frac_400` still high -> repair (a) FAILED and the finding is about the
+  WORLD, not the cap: a cloned policy survives indefinitely, lifespan has no
+  ceiling to discriminate on, and the repair is a harsher world (faster
+  depletion / fewer resources), which is a redesign routed to the Review, not a
+  re-roll.
+- `cheapest_meeting_target` non-null -> adopt its (cap, E, R), apply repair (c)'s
+  median-of-R, and **pilot seeds 92/93** — only then freeze. Seeds 90/91 and now
+  **94 are SPENT**.
+Either way `_GATES_FROZEN` stays False until a clean pilot exists, and
+`gpu<20min` stays PILOT-OWED (not unfillable) in `run coverage`.
