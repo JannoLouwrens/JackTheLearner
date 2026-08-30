@@ -133,6 +133,104 @@ gates are for. FAIL here means the channel buys nothing even where a surface
 gives fall direction authority, D8's open-ground finding generalises, and the
 honest status of balance-as-a-used-sense is 'sensed, unused' until a body with
 directional catch authority exists (registry `kills`).
+
+## PILOT RECORD — seed 90, ran 2026-08-30 13:15-15:00 UTC (6299.5 s wall, one
+## seed, N_EVAL 48), artifact /data/ba03_pilot_seed90.json. GATES NOW FROZEN.
+
+The pilot completed and then sat unharvested for eight hours: `_GATES_FROZEN`
+stayed False, `_PILOT_OWED` went on saying "no pilot has been run: the artifact
+does not exist" while the artifact existed on disk, and `run coverage` counted
+BA.03 as pilot-owed shelf furniture. That is its own finding and it is fixed in
+`coverage.py` (PILOT-HARVESTABLE) rather than only here.
+
+THE RIG IS ALIVE ON EVERY CONJUNCT — the first time in the balance family.
+BA.02 VOIDed three times with every arm sitting at random; this rig separates:
+
+    up_random   2.1875 s   (18% of the 12.0 s horizon; toppled_frac 0.958)
+    up_gripboth 7.4375 s   (the hand-written best fixed blind posture)
+    up_deprived 10.6375 s  <- the blind twin BEAT the reference by 3.20 s
+    up_vest     10.4000 s
+    best_trained - up_random = 8.45 s   against IMPROVE_MARGIN_MIN 0.20
+    deprived_shortfall = -3.20 s        against DEPRIVED_SHORTFALL_MAX 1.0
+
+Trap 2 is closed by measurement, not assumption: CEM did not merely reach the
+hand-written posture, it found a better one, so no "gain" here could be an
+optimiser artifact. The surface is load-bearing exactly as D8 predicted —
+removing it drops both arms to ~0.85 s and `gain_nosurface` reads 0.0042 s
+against NOSURF_GAIN_MAX 0.30, which independently re-measures D8's open-ground
+directional ceiling of ~0.0-0.1 s on this spec's own rig.
+
+CEM SELECTION WORKS HERE, and that is BA.02's diagnostic run in reverse. BA.02
+VOIDed because its matched-noise arm REPRODUCED the elite curve (order
+statistics, not learning). Here the curves are vest 37.3 -> 50.8, deprived
+27.0 -> 56.1, noise last 38.5: the blind twin ends 17.6 decisions above the
+matched-noise arm trained under identical selection. Selection is
+discriminating, so CEM_K_FIT = 6 is kept on measured evidence. The registry's
+`(2*sigma/S)^2` form is NOT evaluable from this artifact — S is the elite-vs-
+mean fitness gap and the pilot does not record it — and saying so is better
+than reporting a number the artifact cannot support.
+
+THE CLAIM READS NEGATIVE AT SEED 90, AND THE RUN IS BEING DISPATCHED ANYWAY.
+`gain` = -0.2375 s (se 0.356), `gain_positive` 0.0: the vest arm is a fifth of
+a standard error BELOW its blind twin. The matched-noise control behaves
+emphatically (`gain_noise` -5.225 s, i.e. the noise arm loses 5.2 s to the
+twin). The brace gate passes: `brace_consistency` 0.75 against 0.70, and the
+composition matters — `brace_decisive_frac` is also 0.75 and
+`brace_side_accuracy` is 0.0, so EVERY decisive brace went to the same side and
+that side was the HIGH side, never the lean side. Consistency is ceilinged by
+decisiveness (25% of episodes had |adh_L - adh_R| < ADH_SEP_MIN), not eroded by
+inconsistency: the learner is perfectly consistent whenever it commits, and it
+confirms the probe's Trap 1 — the intuitive labelling was backwards.
+
+Seed 90 is disjoint from the registered 0/1/2, so it may size and it may not
+decide. It forecasts FAIL and that forecast is recorded here BEFORE the run, so
+the outcome cannot be narrated afterwards. Dispatching a spec whose pilot
+predicts FAIL is not waste — refusing to is run-until-pass wearing thrift's
+clothes. `balance` is a GOAL.md commitment with three declared specs and zero
+passes, the rig is now demonstrably able to test the claim, and the registry
+pre-registers what FAIL means here.
+
+ANATOMY (reported, never gated) — and it is the most informative row. Pinning
+one sub-block of the vest policy's input to its mean:
+
+    touch     10.400 -> 3.0875   <- the whole policy
+    grav      10.400 -> 10.7875
+    canals    10.400 -> 10.9542
+    otoliths  10.400 -> 10.3583
+    vx/vy     10.400 -> 10.5500
+
+The winning vest policy reads PLANTAR TOUCH and nothing vestibular; deleting
+touch costs it 7.3 s, deleting any true vestibular block costs it nothing. And
+the deprived twin, which has touch pinned too, still reaches 10.64 s by another
+route. So the pilot's zero gain is not a failure to learn — it is two arms
+finding equally good solutions, one of which happens to route through touch.
+
+WHAT WAS SIZED, AND WHAT WAS NOT MOVED. No threshold moved. `N_EVAL` 48 -> 120,
+derived (not fitted) from the measured `sigma_pair_eval` 2.4674 s — the probe's
+48 was sized against an ORACLE sigma of 1.70 s and the trained arms are 45%
+noisier. One gate was ADDED and it is strengthen-only: `HEADROOM_MIN_MULT`.
+
+WHY THE NEW GATE EXISTS. Every rig gate above watches the RANDOM arm's distance
+from the roof; none watched the NULL TWIN's. The twin sits at 10.6375 s of a
+12.0 s horizon — 88.6% — so the largest gain physically available to the claim
+is 1.3625 s, and at N_EVAL 48 the signal needed to clear T_GAIN_MIN was 1.068 s.
+The claim had 1.28x the room it needed and no instrument in this file could say
+so; a seed whose twin landed at 11.5 s would have been arithmetically incapable
+of a PASS with all eight gates green. That is SH.02's saturated null (its
+headroom VOID fired this morning at exactly 1.0000) and DP.04's unresolvable
+statistic, arriving here third. `_rig` now requires
+`HORIZON_S - up_deprived >= 2.0 * T_GAIN_MIN * gain_se`, VOID otherwise, and
+reports `claim_headroom_s` / `claim_headroom_ratio` so the margin is visible
+rather than derivable. The multiplier is the principled quantity and N_EVAL is
+the consequence, in that order: sqrt(N) >= 2*3*2.4674/1.3625 = 10.87 -> N = 120,
+which puts the pilot at ratio 2.016 — barely clearing a bar it did not set.
+
+TIER RE-COST (the registry pre-authorises re-costing the TIER, never the
+thresholds). 6299 s/seed at N_EVAL 48; N_EVAL 120 adds ~870 eval episodes
+against ~5760 already run, so ~2.0 h/seed and ~6 h for three. That is outside
+`CPU_LONG` (cpu<2h) — and `run.py` KILLS a child at the declared budget's
+timeout, so leaving the label alone would have destroyed the run rather than
+mislabelled it. Budget becomes `CPU_DAYS`.
 """
 from __future__ import annotations
 
@@ -196,34 +294,24 @@ CEM_ITERS = 12
 CEM_SIG_INIT = 0.5
 CEM_SIG_FLOOR = 0.05
 
-# ── gates. PROVISIONAL: `run()` refuses until a seed-90 pilot freezes them ──
-_GATES_FROZEN = False
+# ── gates. FROZEN against the seed-90 pilot (2026-08-30; see PILOT RECORD) ──
+_GATES_FROZEN = True
 _PILOT_ARTIFACT = "/data/ba03_pilot_seed90.json"
 
-# The positive half of the pilot state, and it is required rather than assumed
-# (builder, 2026-08-30). `_GATES_FROZEN = False` says the run refuses; it does
-# not say whether that refusal is one bounded CPU unit from lifting or waiting
-# on a redesign, and reading the absence of a `_PILOT_BLOCKED` as "owed" is how
-# three spent pilots got advertised as cheap repairs. BA.03 is the one spec of
-# the five where the cheap reading is TRUE, and it says so on its own authority.
-_PILOT_OWED = (
-    "No pilot has been run: /data/ba03_pilot_seed90.json does not exist and no "
-    "PILOT RECORD appears above. The pilot is the bounded CPU unit that freezes "
-    "CEM_K_FIT and N_EVAL against the seed-90 artifact (the sizing values below "
-    "are carried from the probe, not from a pilot) and then sizes the claim "
-    "gates NOISE_GAIN_FRAC_MAX / CEM_SIG_FLOOR against it. T_GAIN_MIN is "
-    "constitutional and is not sized by anything. Nothing measured so far says "
-    "this pilot cannot succeed; if one runs and refutes its own precondition, "
-    "replace this line with `_PILOT_BLOCKED` and its evidence."
-)
-
-# PILOT-SIZED (the registry's sizing requirement; see the docstring).
-CEM_K_FIT = 6                 # (2*sigma/S)^2 = 3.6 from the probe, 1.7x margin
-N_EVAL = 48                   # (sigma/0.25)^2 = 46; gain SE ~0.245 s
+# PILOT-SIZED (the registry's sizing requirement; see the PILOT RECORD).
+CEM_K_FIT = 6                 # kept: the pilot MEASURED selection working
+N_EVAL = 120                  # was 48. Derived from the pilot's own sigma and
+# ceiling headroom: sqrt(N) >= HEADROOM_MIN_MULT * T_GAIN_MIN * sigma_pair /
+# (HORIZON_S - up_deprived) = 2*3*2.4674/1.3625 = 10.87 -> N >= 118.1 -> 120.
+# The probe's 48 was sized against an ORACLE sigma of 1.70 s; the trained arms
+# measure 2.4674 s. This is the registry's own sizing formula applied to the
+# measured statistic, and it re-costs the TIER (CPU_LONG -> CPU_DAYS), never a
+# threshold.
 
 # THE REGISTRY'S BAR (constitutional here, does not move).
 T_GAIN_MIN = 3.0
-# Claim gates (FAIL). Candidates; frozen against the pilot.
+# Claim gates (FAIL). FROZEN 2026-08-30 — every one UNCHANGED from its
+# pre-pilot candidate value; the pilot cleared each and moved none.
 NOISE_GAIN_FRAC_MAX = 0.50    # gain_noise <= this fraction of gain (BA.02's)
 VEST_OVER_NOISE_MIN = 0.20    # sim-s: gain - gain_noise floor      (BA.02's)
 BRACE_CONSISTENCY_MIN = 0.70  # the braced side is a function of the lean side
@@ -234,6 +322,12 @@ RANDOM_UP_FRAC_MAX = 0.80     # ...but not survive ~the horizon
 IMPROVE_MARGIN_MIN = 0.20     # sim-s: best trained arm over random
 DEPRIVED_SHORTFALL_MAX = 1.0  # sim-s: blind twin vs the hand-written gripboth
 NOSURF_GAIN_MAX = 0.30        # sim-s: D8's open-ground ceiling is ~0.0-0.1
+HEADROOM_MIN_MULT = 2.0       # NEW, strengthen-only: the room above the NULL
+# TWIN must be at least this multiple of the signal the claim needs to clear
+# T_GAIN_MIN. 2.0 is chosen on principle — a claim decided by the ceiling
+# rather than by the sense is not a measurement — and NOT fitted: N_EVAL was
+# then derived FROM it, which is why the pilot reads 2.02x rather than
+# something comfortable. See RESOLUTION in `_rig` and LESSONS.md.
 
 _CACHE: dict = {}
 
@@ -590,6 +684,20 @@ def _rig(c: dict) -> dict:
     # The NO-SURFACE control (registry-mandated): the same trained arms, the
     # same packs, open ground. D8's directional ceiling there is ~0.0-0.1 s.
     gain_os = float(ev["vest_os"].mean() - ev["deprived_os"].mean())
+    # RESOLUTION (added 2026-08-30 from the seed-90 pilot; strengthen-only).
+    # Every gate above watches how far the RANDOM arm sits from the roof and
+    # none watches the NULL TWIN. The claim is a DIFFERENCE, so what bounds it
+    # is the room left ABOVE the twin: the pilot put the blind twin at 10.6375 s
+    # of a 12.0 s horizon, leaving 1.3625 s for a contrast that must clear
+    # T_GAIN_MIN * gain_se. A twin near the roof makes the claim arithmetically
+    # unreachable while every other gate here still reads green — SH.02's
+    # saturated null and DP.04's unresolvable statistic, arriving on this rig.
+    # Reported as well as gated, so a reader can see the margin, not infer it.
+    delta = ev["vest"] - ev["deprived"]
+    n_d = max(len(delta), 2)
+    se_gain = float(delta.std(ddof=1)) / math.sqrt(n_d)
+    headroom = h_s - up_deprived
+    need = T_GAIN_MIN * se_gain
     ok = (c["site_legal"]
           and c["toppled_random"] >= TOPPLED_FRAC_MIN
           and up_random <= RANDOM_UP_FRAC_MAX * h_s
@@ -597,12 +705,15 @@ def _rig(c: dict) -> dict:
           # Trap 2: a blind twin that never found its own best fixed posture
           # makes any "gain" an optimiser artifact wearing a sense's name.
           and up_gripboth - up_deprived <= DEPRIVED_SHORTFALL_MAX
-          and gain_os <= NOSURF_GAIN_MAX)
+          and gain_os <= NOSURF_GAIN_MAX
+          and headroom >= HEADROOM_MIN_MULT * need)
     return {"toppled_frac_random": c["toppled_random"],
             "up_random": up_random, "up_gripboth": up_gripboth,
             "best_trained": best_trained,
             "deprived_shortfall": up_gripboth - up_deprived,
             "gain_nosurface": gain_os,
+            "claim_headroom_s": headroom,
+            "claim_headroom_ratio": headroom / need if need > 0 else float("inf"),
             "site_legal": 1.0 if c["site_legal"] else 0.0,
             "seed_rig_ok": 1.0 if ok else 0.0}
 
@@ -679,7 +790,7 @@ def _check(m: dict, c: dict):
 
 
 def run(ledger: Ledger | None = None):
-    if not _GATES_FROZEN:
+    if not _GATES_FROZEN:                                  # pragma: no cover
         raise RuntimeError(
             "BA.03 gates are PROVISIONAL. Run the seed-90 pilot "
             "(`python -m experiments.tests.ba_03_braces_against_a_surface "

@@ -4383,7 +4383,12 @@ EXPANSION: list[Spec] = [
                        "sensing. The contrast is against the blind twin "
                        "allowed to find its own best fixed posture.",
          metric="upright_gain_vs_deprived_with_surface",
-         budget=Budget.CPU_LONG, seeds=3, depends_on=["BA.01"],
+         # TIER RE-COST 2026-08-30, on the seed-90 pilot's measured wall time
+         # (6299 s/seed at N_EVAL 48; ~2.0 h/seed at the pilot-derived 120, so
+         # ~6 h for three seeds). CPU_LONG's label is a 2 h timeout that
+         # `run.py` ENFORCES by killing the child — the sizing the registry
+         # itself demands does not fit inside it. Thresholds unmoved.
+         budget=Budget.CPU_DAYS, seeds=3, depends_on=["BA.01"],
          control="MATCHED-NOISE CHANNEL (inherited from BA.02): replace the "
                  "vestibular input with amplitude-matched noise or a shuffled "
                  "replay of another episode's channel; the gain must vanish. "
