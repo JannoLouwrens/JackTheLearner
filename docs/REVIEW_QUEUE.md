@@ -177,3 +177,49 @@ ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /d
     So nothing goes mechanically stale: the 4 PASS rows that hash
     UnifiedBrain.py (T2.03, T2.04, T2.06, T3.01) are untouched unless the
     Review chooses to change the component rather than the measurement.
+
+---
+
+ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v2) | OPEN
+    Should `protocol.py:_aggregate` emit `<key>_min` / `<key>_max` across seeds
+    beside the `<key>_std` it already emits — so a spec can gate the WORST SEED
+    directly instead of reconstructing it from mean ± 1.5*std?
+    THE FINDING (mechanism, not opinion). `_aggregate` means every numeric
+    metric across the registered seeds before `_check` is called once, and
+    `_check` receives a flat dict of scalars with no marker saying which were
+    already averaged. So a metric whose NAME and PURPOSE are "the worst X"
+    — `n_informative`, `*_worst_life`, any per-seed min/max — is silently
+    gated on the mean of the per-seed worst cases. Seeds with 2, 6 and 10
+    informative lives average to a healthy 6 and clear a gate no seed clears.
+    T3.06 v2 closes it locally with an exact bound (for n=3, ddof=0, the
+    extreme deviation is <= sqrt(2)*std, so 1.5*std bounds every seed) and the
+    generalised rule is now in docs/LESSONS.md ("A worst-case instrument gated
+    on the SEED MEAN is not a worst-case instrument"). But that is a LESSON,
+    i.e. a thing the next author must remember — and the grep is not
+    reassuring: 26 spec files fold a `worst`/`_lo`/`_hi` quantity and 89 lines
+    read a `_std`, so the population that could carry this bug is large and
+    nothing mechanical distinguishes a correct gate from a wrong one.
+    WHY IT IS ROUTED AND NOT JUST DONE. The fix is four lines and strictly
+    additive, but it is an edit to the RECORDER, which is the one file whose
+    behaviour every certificate depends on, and the cheap version has a real
+    failure mode: emitting `_min`/`_max` makes the WRONG gate (raw mean) no
+    harder to write while making the right one easier, so it improves ergonomics
+    without closing the hole. The stronger arms, for the Review to weigh:
+      (a) additive `_min`/`_max` — cheapest, ergonomic only;
+      (b) `_aggregate` REFUSES to flatten a key matching a worst-case naming
+          convention (`*_worst_*`, `n_informative`, `*_min`/`*_max`) into a
+          bare mean, emitting only `_min`/`_max` for it, so a spec that gates
+          the mean gets a KeyError rather than a plausible wrong number. This
+          is the version that makes the bug unrepeatable, and it is the one
+          that will break existing specs — which is the point and the cost;
+      (c) leave the recorder alone and add a T0-family static audit that reads
+          each spec's `_check` and flags a bare `m["<key>"]` comparison on a
+          key the same file folds with min/max/len. Catches it without touching
+          the recorder; needs an AST pass and will have false positives.
+    Staleness bill, MECHANICAL: 4 spec files name `protocol.py` in IMPL_DEPS —
+    T0.17, T0.22, T0.27, XL.00. All four are cpu<1min or fixture, so the
+    re-certification cost is minutes, not GPU hours; T0.27 is already RED and
+    stale for unrelated reasons (PROGRESS B4). SEMANTIC: zero under arm (a),
+    since no existing gate's value changes; under arm (b) every spec that gates
+    a renamed key fails loudly at its next run, which is the intended behaviour
+    and must be paid deliberately rather than discovered.

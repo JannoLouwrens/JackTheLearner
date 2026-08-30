@@ -693,9 +693,16 @@ LADDER: list[Spec] = [
                  "noise, not curiosity, and the claim is void of content "
                  "whatever the experiment arm did. Declared 2026-08-29 with "
                  "the implementation; adding a control is strengthening.",
-         metric="delta_coverage", budget=Budget.GPU, seeds=3, depends_on=["T2.08"],
+         metric="delta_coverage", budget=Budget.CPU_LONG, seeds=3, depends_on=["T2.08"],
          kills="IntrinsicCuriosityModule.",
-         notes="COVERS: curiosity (claim)"),
+         notes="COVERS: curiosity (claim). Budget GPU -> CPU_LONG 2026-08-30 "
+               "on measurement, not estimate: the rig is tabular Q over 484 "
+               "cells plus MuJoCo stepping, no gradients anywhere, measured at "
+               "~4.2 s per life across two pilots, so 48 lives x 4 arms x 3 "
+               "seeds is ~40 min of CPU. A declared attribute that routing "
+               "consumes must match behaviour (LESSONS); leaving it GPU would "
+               "have this spec stock the gpu<2h queue class it can never "
+               "honestly spend a Kaggle hour on."),
     Spec("T3.07", 3, "Ablate mood conditioning", hypothesis="Mood measurably changes behaviour, not just text.",
          falsified_by="Identical action distributions across moods.",
          null_baseline="Mood token zeroed.", metric="action_dist_divergence",

@@ -6905,3 +6905,69 @@ different noise" — went to the Review as a spec-design question rather than
 being argued in the file. Two specs have now reached the both-fail branch
 (SM.02, T2.11) and in both the branch stopped a plausible third repair; that
 tree is earning its keep.
+
+## A worst-case instrument gated on the SEED MEAN is not a worst-case
+## instrument — the recorder averages your `min` away before `_check` sees it
+## (builder, 2026-08-30, found while writing T3.06 v2's informative-life fold)
+
+**The shape.** A spec folds its lives (or episodes, or arms) to a worst case
+inside one seed — `task_dwell_worst_life = min(...)`, `n_informative =
+len(...)` — and gates it: `m["n_informative"] >= 6`. That reads as a
+worst-case gate and is written by an author who has just spent an hour
+reasoning about bimodality. It is not one. `protocol.py:_aggregate` runs
+**mean and std across the registered seeds** over every numeric metric before
+`_check` is called once, so the gate is on the MEAN of the per-seed worst
+cases. Seeds with 2, 6 and 10 informative lives average to a healthy-looking
+6 and pass a gate that no individual seed clears.
+
+**Why it is hard to see.** The bimodality defence is already *in the file*,
+argued at length, and it is correct one level down. The trap is that the fold
+the author controls (lives → seed) and the fold the recorder controls (seeds →
+record) look like one operation from inside `_check`, which receives a flat
+dict of scalars with no marker saying which of them were already averaged.
+T2.09 does not have this bug only because it runs all seven of its seeds
+*inside a single* `_experiment` call and folds them itself; a spec that uses
+the registry's `seeds=3` and folds one level down inherits the hole for free.
+
+**The rule.** *Any metric whose meaning is "the worst X" must be bounded to
+its worst SEED in `_check`, not read raw.* The recorder always emits
+`<key>_std` beside `<key>`, so the bound is one line and it is exact rather
+than heuristic: for n=3 with the recorder's ddof=0 std the extreme deviation
+from the mean is at most sqrt(2)*std, so a factor of 1.5 bounds every seed.
+
+    def worst_lo(k):  # a floor gate: every seed clears it
+        return m[k] - 1.5 * m.get(k + "_std", 0.0)
+    def worst_hi(k):  # a ceiling gate: no seed exceeds it
+        return m[k] + 1.5 * m.get(k + "_std", 0.0)
+
+`m.get(..., 0.0)` is load-bearing in both: on a single-seed pilot `_aggregate`
+returns `dict(runs[0])` with no `_std` keys at all, and the bound must collapse
+to the raw number rather than crash or drift.
+
+**The one exception, and state it in the file when you take it.** A per-seed
+quantity that is *tautologically* satisfied — T3.06's `task_dwell_worst_life`
+is a min over lives selected for clearing that very bar — must be read on the
+mean, because a conservative bound on a tautology VOIDs on seed SPREAD alone
+and a gate that VOIDs everything measures nothing. If you take the exception,
+say in the docstring that the number is a **receipt** and name what is
+load-bearing instead.
+
+**The second half of the same trap: your audit trail is one seed.** `_aggregate`
+keeps a metric only if it is numeric *in every run*; anything else — the
+`per_life` / `per_seed` list a spec records so "the subset is recomputable by
+someone who is not its author" — silently takes `runs[0][k]`, the FIRST seed's
+value, with no marker. A record that promises recomputability and delivers a
+third of it is worse than one that promises nothing, because the promise is
+what stops a reader going to the artifact. Either name the field for what it
+is (`per_life_first_seed_only`) or write the full per-seed detail to the
+artifact and point at it. Do not let the docstring's word "every" outlive the
+recorder's behaviour.
+
+**Generalised, because this is the third instance of the same disease in this
+repo.** *Every fold between a measurement and a gate is a place a worst case
+can become an average, and you only control the folds you wrote.* T2.09 found
+it across seeds, T3.06 v1 found it across lives, and this entry found it in the
+recorder that sits between them. Before freezing any gate, name every
+aggregation the number passes through on its way from the instrument to
+`_check` — including the ones in `protocol.py` that you did not write — and
+say which of them is allowed to be a mean.

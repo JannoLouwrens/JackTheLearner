@@ -107,12 +107,12 @@ ablation to measure.
   that number never sits below the bar. It is no longer load-bearing; the
   load moved to `n_informative`.
 
-PRE-REGISTERED GATES. **PROVISIONAL — `_GATES_FROZEN = False` and `run()`
-refuses.** The bars below are placeholders derived from the parent specs'
-measured numbers, NOT from a pilot of this rig; a pilot freezes them and the
-values it freezes are recorded in this docstring under PILOT RECORD, in the
-open, with any bar that moved named and justified (SM.02's idiom, T2.09's
-precedent).
+PRE-REGISTERED GATES. **FROZEN 2026-08-30, `_GATES_FROZEN = True`, and NOT ONE
+BAR MOVED between the provisional text and the freeze** — the v2 pilot changed
+only `LIVES_PER_ARM`, a sample size. Every threshold below stands at the value
+committed in `bf947a1` before any v2 number was drawn; the pilot's role was to
+certify the instruments and measure the informative rate, both recorded under
+PILOT RECORD v2 (SM.02's idiom, T2.09's precedent).
 
   RIG (any violated -> VOID, not FAIL):
     n_informative - 1.5*std >= MIN_INFORMATIVE_LIVES — enough lives in which
@@ -175,14 +175,35 @@ reads as a per-run coin flip (the BA.01-v3 / T2.08-v1 lottery disease):
       informative subset cannot in principle carry the claim, whatever the
       mean says, so VOID is the correct verdict rather than FAIL.
 
-  LIVES_PER_ARM = 16, up from 4, sized so MIN_INFORMATIVE_LIVES is reachable
-      without a lottery. The v1 pilot saw one dead life in four on both
-      families; taking that at face value as p ~ 0.75 informative, 16 lives
-      put ~12 in the subset. **If p is really nearer 0.4 the seed VOIDs, and
-      that is the honest outcome** — the fix would be more lives or a longer
-      horizon, both of which are re-registrations, not bar moves. Cost is the
-      reason 16 and not 40: ~4.3 s per life measured, so 16 lives x 4 arms x
-      3 seeds ~ 14 min of CPU.
+  LIVES_PER_ARM = 48, sized so MIN_INFORMATIVE_LIVES is reachable without a
+      lottery. **This number was set TWICE and the second time by measurement;
+      the history is kept because it is the whole argument for piloting.** v2
+      guessed 16 from the v1 pilot's "one dead life in four", i.e. p ~ 0.75
+      informative — and wrote, before drawing a number, that "if p is really
+      nearer 0.4 the seed VOIDs, and that is the honest outcome; the fix would
+      be more lives, which is a re-registration, not a bar move." **The v2
+      pilot VOIDed both families on exactly that gate: 5/16 and 4/16, so
+      p_hat = 9/32 = 0.281, not 0.75.** The v1 estimate was never evidence —
+      v1 reported only `dwell_lo = 0.0000`, which says one life was dead and
+      nothing whatever about the other three, and it was read as if it did.
+      v3 therefore sets n by power analysis on the MEASURED rate: at
+      p_hat = 0.281, P(Binom(48, p) >= 6) ~ 0.99. Stated against the
+      pessimistic end, because a power analysis quoted only at its point
+      estimate is the same mistake again: at the 95% Wilson lower bound
+      p = 0.15 it is only ~0.73, so **a VOID remains a live outcome of the
+      registered run, and its answer is again more lives, not a moved bar.**
+      Cost is the reason 48 and not 96: ~4.2 s per life measured, so 48 lives
+      x 4 arms x 3 seeds ~ 40 min of CPU.
+
+  A NOTE ON WHAT A PILOT MAY SET, because this spec now does both things and
+      they must not be confused. Setting a THRESHOLD from a pilot's outcome is
+      the lottery disease — the bar bends to the draw. Setting a SAMPLE SIZE
+      from a measured nuisance rate is what a pilot is FOR, and it cannot
+      flatter the claim: more lives shrinks the noise on the delta AND on the
+      control's delta symmetrically, and every bar the verdict reads —
+      DELTA_MIN, MIN_INFORMATIVE_LIVES, TASK_DWELL_MIN, RANDOM_DWELL_MAX, the
+      random-coverage band, the spread and t-stat factors — is unchanged from
+      the text committed at bf947a1 before any v2 number existed.
 
 FALSIFICATION, restated so it cannot be quietly narrowed: if the extrinsic
 arm learns the task (rig green) and its coverage is not measurably below the
@@ -200,7 +221,54 @@ budget also moves which queue-depth class this spec stocks, and a spec whose
 `run()` still refuses stocks nothing. Do not spend Kaggle hours on it; the
 expiring free hours belong to specs that need a GPU.
 
-PILOT RECORD — seed-90 family, 2026-08-29 20:15 UTC, /data/t3_06_pilot.json,
+PILOT RECORD v2 — seed families 90 and 91, 2026-08-30 00:14-00:23 UTC,
+/data/t3_06_pilot_v2.json, LIVES_PER_ARM = 16 at the registered 4000
+decisions, 270.7 s and 270.4 s. **BOTH FAMILIES VOID, on the gate this
+version installed.** The bars below are what the freeze stands on.
+
+    seed  n_inf/16  cov_task cov_curious cov_random cov_shuf  delta   d_shuf
+    90    5         0.4570   0.6087      0.5988     0.4351   +0.1517  -0.0219
+    91    4         0.4292   0.7014      0.7474     0.4298   +0.2722  +0.0005
+
+    seed  task_dwell  worst_informative  random_worst_life  task_cov_vs_random
+    90    0.1935      0.1358             0.0073             -0.1417
+    91    0.4476      0.1383             0.0057             -0.3182
+
+**WHAT VOIDED IT, and it is the sample size, not a bar.** 5 and 4 informative
+lives against `MIN_INFORMATIVE_LIVES = 6`, so p_hat = 9/32 = 0.281 where v2
+had assumed ~0.75. The response is the one this docstring pre-registered
+before the numbers existed — more lives, `LIVES_PER_ARM` 16 -> 48 by power
+analysis — and nothing else. See WHERE THE v2 NUMBERS COME FROM.
+
+**WHY THAT LICENSES A FREEZE.** A pilot's job is to certify the instruments
+and measure the nuisance rate; this one did both, and every instrument came
+back green with headroom on both families:
+
+  - `random_dwell_worst_life` 0.0073 / 0.0057 against RANDOM_DWELL_MAX 0.02 —
+    the dwell instrument's zero reads near its analytic chance value
+    (1/484 = 0.0021) on the non-learner, on the worst life of 16. The goal
+    cell is not a physical attractor.
+  - `coverage_random` 0.5988 / 0.7474 inside [0.40, 0.95] — the world is
+    reachable and coverage is not saturated at the horizon.
+  - `task_dwell_worst_life` on the informative subset 0.1358 / 0.1383, never
+    below TASK_DWELL_MIN = 0.10 — DEVIATION 2's receipt shows the fold ran.
+  - The v1 fault is confirmed as the reason the fold is needed, and it is
+    worse than v1 could see: at 16 lives per arm, 11 and 12 of them had an
+    ablated arm that never learned the task. Gating the MEAN would have
+    certified this rig on evidence two thirds of which is a random walk.
+
+**AND THE NUMBERS THE CLAIM WILL BE JUDGED ON, RECORDED BUT NOT COUNTING.**
+`delta_coverage` +0.1517 / +0.2722 against DELTA_MIN 0.05; `delta_shuf`
+-0.0219 / +0.0005, the control failing correctly on both; `task_cov_vs_random`
+-0.1417 / -0.3182, the predicted camping mechanism firing harder than in v1;
+curious wins 4/5 and 4/4 paired lives. **These are suggestive and they are
+VOID.** They are written down because hiding a favourable number until it is
+admissible is its own dishonesty — but a VOID seed makes no claim, the
+registered run uses seed families 0/1/2 which no bar has ever seen, and the
+power analysis says at the pessimistic end of p a second VOID is a live
+outcome. Do not read this block as a result.
+
+PILOT RECORD v1 — seed-90 family, 2026-08-29 20:15 UTC, /data/t3_06_pilot.json,
 4 lives/arm at the registered 4000 decisions. **GATES STAY PROVISIONAL: the
 pilot found a design fault, not a set of bars.**
 
@@ -302,7 +370,8 @@ IMPL_DEPS = ["playground.py",
              "experiments/tests/pg_4_noisy_tv.py",
              "experiments/tests/t2_08_curiosity_coverage.py"]
 
-_GATES_FROZEN = False           # provisional — see PRE-REGISTERED GATES
+_GATES_FROZEN = True            # FROZEN 2026-08-30 — see PILOT RECORD v2.
+                                # No bar moved; only the sample size did.
 
 # --- rig constants, inherited verbatim from T2.08 so the ablation is of the
 # --- certified apparatus and not of a lookalike ---------------------------
@@ -311,7 +380,8 @@ GRID_LO, GRID_HI = -5.5, 5.5
 GRID_N = int(round((GRID_HI - GRID_LO) / CELL_M))    # 22
 N_CELLS = GRID_N * GRID_N                             # 484
 N_DECISIONS = 4000              # T2.08's discriminating horizon
-LIVES_PER_ARM = 16              # v2: was 4. See WHERE THE v2 NUMBERS COME FROM.
+LIVES_PER_ARM = 48              # 4 -> 16 (v2, guessed) -> 48 (v3, measured).
+                                # See WHERE THE v2 NUMBERS COME FROM.
 SUBSTEPS = 40
 SPEED = 1.5
 GAMMA = 0.95
