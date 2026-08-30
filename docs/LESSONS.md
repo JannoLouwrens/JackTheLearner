@@ -8745,3 +8745,68 @@ with its own test cases, because `D14`'s entry promises *"if the owner prefers
 the other reading, one line settles it"* and that promise is only true if
 somebody made it true. A builder who pre-empts an armed default by ~8 hours owes
 the owner a switch, not a paragraph.
+
+## AN INSTRUMENT THAT SORTS WORK INTO REPAIR CLASSES MUST HAVE A CLASS FOR EVERY
+## STATE — the state it omits does not go missing, it gets absorbed into a
+## neighbour, and the absorption is biased toward the EXPENSIVE reading
+## (builder, 2026-08-30, fixing `queue_depth` while running the very unit it
+## told me not to do)
+
+`coverage.py`'s queue-depth readout partitions each cost class into two states:
+STOCKED (something is dispatchable) or, if empty, FILLABLE / NOT FILLABLE
+depending on whether a runnable-but-unimplemented spec exists at that cost. It
+printed, for both empty GPU classes:
+
+    gpu<20min  0  EMPTY  <- NOT FILLABLE: no runnable spec to implement
+    gpu<2h     0  EMPTY  <- NOT FILLABLE: no runnable spec to implement
+
+and, below, *"Do not spend an iteration looking for a spec to write here. The
+repair is an UNBLOCK (`run blocked`) ... the quota at this cost stays unspendable
+until the ladder moves."*
+
+Both were false. `gpu<20min` held `DP.04` and `SM.03`, `gpu<2h` held `T2.11` —
+all implemented, tracked, runnable, unsettled, unparked, and each **one pilot**
+from dispatchable. A pilot is a bounded CPU unit. An unblock is a redesign
+somebody has not decided to make. The readout named the second and hid the first,
+in the week 30 free GPU-hours were live.
+
+**The mechanism is a partition with a hole, and it is a shape, not a typo.** A
+gate-provisional spec was excluded from `by_class` (correct: its own `run()`
+refuses) and was not counted in `fillable` (which read only the *unimplemented*
+list). It therefore appeared in NEITHER side of a supposedly exhaustive split.
+Nothing errored, no count went negative, no fixture went red — the class simply
+fell through to the residual bucket, which is defined by absence.
+
+**AND THE DIRECTION OF THE ERROR IS NOT LUCK.** A residual bucket is always the
+one defined negatively ("nothing to implement"), so a dropped state always lands
+in the *default* reading rather than being distributed at random. Here the
+default was "structurally unreachable — needs an unblock", i.e. the most
+expensive and most discouraging of the three. Generalise it: **when you collapse
+N states into N-1 buckets, the lost state inherits the residual bucket's
+prescription, and the residual bucket is usually the pessimistic one.** An
+instrument cannot be trusted to be merely *incomplete* in a harmless direction.
+
+**THE TEST THAT WOULD HAVE CAUGHT IT, and why the existing one did not.** The
+fixture already had a gate-provisional row (`Q.08`) — but `Q.08` shared its cost
+class with three dispatchable specs, so its class was never empty and the
+`fillable` / `NOT FILLABLE` branch never saw it. Every empty class in that
+fixture was empty for exactly one reason, so a two-way split and a three-way
+split produced identical output and the missing state was invisible. The repair
+is `Q.10`: gate-provisional AND the **sole** occupant of its class. *A fixture
+tests a distinction only if it contains a case where the distinction changes the
+answer — having one row of each KIND is not enough when the kinds are only
+distinguishable in combination.*
+
+**Two general rules, both cheap:**
+
+1. **Make the partition exhaustive by construction, then assert it.** Every spec
+   `ready()` returns should land in exactly one of {dispatchable, and each named
+   exclusion} and every named exclusion should map to a stated repair class. A
+   bucket with no prescription is a bucket that will be read as the residual one.
+2. **When an instrument's advice is unexecutable, that is DATA about the
+   instrument, not friction.** This is the second time in two days the same
+   function was corrected by a builder trying to obey it (`fillable` itself was
+   added on 08-29 after "implement a spec" named no spec). Both corrections came
+   from attempting the instruction rather than reading the code. An instruction
+   nobody has executed is an untested claim, and this repo's first law does not
+   exempt the tooling that ranks the work.
