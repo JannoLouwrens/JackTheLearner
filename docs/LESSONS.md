@@ -8535,3 +8535,118 @@ safety invariant cannot distinguish them and no instrument flags the ambiguity.
 Whoever implements a fired default owes the record a sentence naming which
 reading they took — because the default's author is, by construction, not
 there.
+
+## A GATE THAT SPANS HETEROGENEOUS CONDITIONS CAN BE IMPOSSIBLE IN EXACTLY ONE
+## OF THEM — and neither guard this file installed against unsatisfiable gates
+## can see that, because the impossibility is a property of one condition's
+## WORLD, not of any constant
+## (builder, 2026-08-30, implementing DP.04 the same day VO.02's lesson landed)
+
+**The near-miss.** DP.04 compares four arms across five tasks: four survival
+variants of DP.00's gridworld and DP.00's flat beacon world. Every arm has to
+prove it learned something before the claim is allowed to speak, so the
+liveness gate read *"every arm's eval score beats its task's reactive
+baseline"*. Uniform, cheap, obviously right — and in four tasks out of five it
+is.
+
+In the fifth it cannot be satisfied by anything. DP.00's flat world exists
+precisely because greedy is **provably optimal** there; that is the whole point
+of it as a control, and DP.00 gates `ctrl_react_optimal` to prove the reactive
+arm hits the exact shortest path. So in that task the reactive baseline is not a
+floor at all — it is the CEILING, equal to the H=8 oracle. "Beat the reactive
+arm" asks a trained network to beat the optimum. The gate would have VOIDed
+every seed forever, and the ledger would have read *the arms did not learn*.
+
+**Why the existing machinery would not have caught it.** This page closed the
+unsatisfiable-gate hole one day earlier, twice, and both closures are sound:
+
+  - a **known-answer self-test** that points each floor at planted perfect
+    structure and refuses if the floor cannot move (VO.02);
+  - an **import-time arithmetic assertion** that a margin never exceeds the
+    range its own metric can occupy (VO.02, closing the T3.10 scar).
+
+Neither one fires here. The assertion sees only constants, and no constant is
+wrong — the numbers are fine in four tasks and there is nothing arithmetically
+inconsistent about any of them. The self-test would ask "can this floor move?"
+and the honest answer is yes, in most tasks. **What makes the gate impossible
+is a measured relationship between two arms inside one condition** — that in
+this particular world the null equals the ceiling — and that relationship is
+inherited from an upstream spec's certified property, not written down anywhere
+in this one.
+
+**The rule. A gate applied uniformly across heterogeneous conditions is N
+gates, and satisfiability is owed for each of the N separately.** The tell is
+cheap: for every condition the gate spans, name the quantity it compares against
+and ask what the BEST POSSIBLE arm would score against it there. If the answer
+in any condition is "it ties", the gate is a refusal wearing a threshold, and
+which condition it is will be the one you added *because* it behaves
+differently — a zero-demand control, a degenerate case, the task where the
+answer is known in advance. That task is in the set exactly because it is not
+like the others, which is the same reason a uniform gate breaks on it.
+
+**The repair, and it is not to special-case the gate.** DP.04's liveness floor
+is now the **uniform random walker** in every task, which is satisfiable
+everywhere by construction and is the thing the gate actually meant: *this arm
+learned something*. The reactive comparison did not disappear — it moved to the
+gate where it means something (the mute arm must clear the reactive floor on
+the survival variants) and is reported everywhere else. A floor that means
+"alive" and a floor that means "good" are two floors, and collapsing them is
+what let one task's ceiling masquerade as its floor.
+
+**SECOND INSTANCE, SAME FAMILY, FOUND IN THE SAME FILE: a control gated on a
+property it only holds by CHANCE.** DP.04's control permutes the emitted
+vocabulary, and a symbol mapping to itself is a symbol the scramble did not
+scramble — so the run gates `ctrl_perm_is_derangement`. The permutation was
+drawn with `torch.randperm`. A uniform permutation of 12 symbols has a fixed
+point with probability `1 - 1/e ~ 0.63`, so **roughly two seeds in three would
+have VOIDed on the control's own validity check**, at random, and the pattern in
+the ledger would have looked like an unstable rig rather than a coin flip. The
+permutation is now built by walking a random single cycle: no fixed point by
+construction, and the gate stays as a guard against a future edit.
+
+**Generalised across both instances: SATISFIABILITY IS PART OF A GATE'S
+DESIGN, AND IT HAS TWO FAILURE MODES, NOT ONE.** Impossible in some condition
+(instance 1), and possible only with some probability (instance 2). This page
+is dense with the opposite defect — nulls that cannot fail, controls that were
+never alive, thresholds too weak to bite — and every instrument the repo owns
+looks in that direction. **Nothing looks for a gate that is too strong to be
+met**, and its signature in the ledger is indistinguishable from an honest
+negative result: `VOID: the arms did not learn`, `FAIL: the control did not
+behave`. If a property is something you can CONSTRUCT, construct it and keep the
+gate as a guard; if it is something you can only measure, measure what the best
+possible arm would score before you write the bar.
+
+
+## `hash()` IS SALTED PER PROCESS — so a spec seeded from it is a different
+## experiment on every run, under a determinism claim that keeps reading green
+## (builder, 2026-08-30, implementing DP.04; found by reading, not by a run)
+
+DP.04 seeds torch per (task, arm, seed) from a string key, so that fifteen
+trainings inside one iteration are independent but reproducible. The obvious
+spelling is `torch.manual_seed(abs(hash(key)) % 2**31)`.
+
+`hash()` on a `str` is randomised per interpreter process by PYTHONHASHSEED
+unless that variable is set. So the key is stable **within** a run and different
+in **every** run. The damage is specific and nasty:
+
+  - `T0.02`'s determinism claim and `T0.16`'s deterministic-eval discipline both
+    keep passing, because they check the specs they check;
+  - a re-run of the spec produces different numbers with no code change, which
+    reads as seed variance, an unstable rig, or a flaky world — every diagnosis
+    except the true one;
+  - `impl_sha` is identical across the two runs, so the ledger asserts the two
+    disagreeing rows are about the same implementation, and they are.
+
+**The rule: a seed derived from text must come from a hash with a written-down
+value.** `hashlib.sha256(key.encode()).hexdigest()[:8]` costs a microsecond and
+is the same integer on every machine, in every process, forever. `zlib.crc32`
+is fine too. `hash()`, `id()`, and dict/set iteration order are all
+process-local and none of them belongs upstream of a number that enters the
+ledger.
+
+**And the cheap check that finds it in any spec: run the experiment twice in
+two separate processes and diff the metrics.** Same process is not enough —
+that is exactly the case `hash()` gets right. Nothing in this repo does that
+today; it is the honest successor guard to this entry, and it would also catch
+`set` iteration order, unseeded `random`, and thread-nondeterministic reductions
+in one pass.
