@@ -2578,7 +2578,7 @@ EXPANSION: list[Spec] = [
                        "scrambled vs 0.171 untrained on the 2x2 game. Any "
                        "metric that cannot separate those three is measuring "
                        "the shared trunk, not communication.",
-         metric="ear_mutual_information_over_scrambled", budget=Budget.GPU,
+         metric="ear_mutual_information_over_scrambled", budget=Budget.CPU_LONG,
          seeds=3, depends_on=["VO.01"],
          control="POSITIVE LISTENING, not merely positive signalling: the "
                  "causal influence of communication must exceed its floor. In "
@@ -2602,7 +2602,26 @@ EXPANSION: list[Spec] = [
                "no extra cost. EXPECT A HOLISTIC PROTOCOL: compositionality "
                "requires a re-learning bottleneck plus an expressivity "
                "constraint (FROZEN_VS_PLASTIC.md 10.6b), not a bigger "
-               "vocabulary."
+               "vocabulary.\n"
+               "BUDGET GPU -> CPU_LONG 2026-08-30, on MEASUREMENT and not on "
+               "estimate (T3.06's correction, same day, same reason). The "
+               "implemented rig costs 1,142.9 s per seed measured at the full "
+               "600x64 envelope, so three seeds project to 0.95 h. The time is "
+               "ContactAudio's numpy DSP and MuJoCo's ray casts; the two "
+               "policies total under 15K parameters, so a GPU buys nothing. A "
+               "declared attribute that routing consumes must match behaviour "
+               "(LESSONS) - left at GPU this spec would stock a queue class it "
+               "can never honestly spend a Kaggle hour on.\n"
+               "SECOND JACK, resolved 2026-08-30: the first sentence above "
+               "says BLOCKED ON GEN.02, but GEN.02 is one of the four dangling "
+               "GOAL.md citations and has never been a registry spec, so that "
+               "sentence named a blocker no instrument could see - `run next` "
+               "and `coverage` have both reported VO.02 RUNNABLE behind VO.01 "
+               "throughout. What was built is the staging note's own answer: "
+               "two independent learners in one world sharing no parameters, "
+               "which is what 'a second Jack' has to mean for THIS claim. A "
+               "second EMBODIED Jack remains GEN.02's business and is not "
+               "needed to ask whether a signal survives the channel."
                "  COVERS: voice (claim), social/other agents (claim)"),
 
     # ── DP: fast and slow, in ONE brain ──────────────────────────────────

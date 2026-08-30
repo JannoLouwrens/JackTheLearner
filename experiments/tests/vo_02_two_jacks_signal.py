@@ -183,6 +183,57 @@ looking like it.
 Depends on VO.01, whose world, room calibration, pose distribution, ear model
 and feature extractor are imported rather than reimplemented — so this claim is
 about the same certified channel, and it goes stale the moment that one does.
+
+
+## PILOT RECORD — 2026-08-30, seed 0, full envelope, /data/vo02_pilot_seed0.json
+
+Every arm at the registered 600x64 = 38,400 episodes. Disclosed in full,
+including the claim arm, so an auditor can see exactly what was on the screen
+when the bars below were frozen.
+
+    arm         coord    mi_ear / floor      cic / floor
+    trained     0.9962   1.5284 / 0.0652     1.9997 / 1.3713
+    untrained   0.3962   0.0459 / 0.0628     0.5516 / 0.6243
+    scrambled   0.2525   0.0395 / 0.0587     0.0049 / 0.0292
+    muted       0.2737   0.0430 / 0.0606     0.0017 / 0.0679
+    chance 0.250; urn 1.0 success / 0.9998 bits; probe R2 0.704, muted -0.414;
+    voice_to_background 6.587 dB vs the declared 6.0 +/- 2.
+
+**All three nulls are dead, and — the part that matters — they are dead in
+DIFFERENT WAYS.** Scrambled and muted sit at chance with sub-floor information.
+The UNTRAINED arm does not: it coordinates at 0.396, well above chance, because
+a randomly-initialised emission head is still a FIXED RANDOM CODE, and a fixed
+random code carries information the listener can learn. Its MI at the ear stays
+at the floor (the four random calls are not separable through this room at this
+level) while its CIC reaches 0.552 — under its own floor of 0.624, but not by
+much. This is precisely the discrimination Lowe et al. report most metrics lack,
+and this rig has it: three nulls, three distinguishable failure modes.
+
+**ONE BAR WAS STRENGTHENED ON THAT BASIS, AND ONLY THAT ONE.** The provisional
+`COORD_MIN = 0.55` / `COORD_MARGIN = 0.20` put the coordination gate at 0.45,
+which is **0.054 above the untrained null**. That is too thin: a seed whose
+random init happens to be more discriminable could clear a gate the fixed-code
+null was supposed to be nowhere near. The bars are raised to 0.70 / 0.35, whose
+justification is the NULL arm's 0.396 and nothing else. Law 4 permits
+strengthening and forbids the reverse; no other bar moved, in either direction.
+`MI_MARGIN_BITS` and `CIC_MARGIN_BITS` stand exactly as pre-registered before
+the pilot ran.
+
+**The CIC ceiling predicted by `_floor_selftest` was met almost exactly.** The
+self-test said a perfect signalling system clears the across-pose CIC floor by
+0.617-0.622 bits; the trained arm cleared it by 0.628 at a CIC of 1.9997 against
+a theoretical maximum of 2.0. The estimator's ceiling is real and this arm is
+sitting on it — which is why `CIC_MARGIN_BITS` must stay far below it.
+
+**BUDGET, DECLARED FROM MEASUREMENT AND NOT FROM THE REGISTRY'S ESTIMATE.** One
+seed cost 1,142.9 s wall-clock: 217-307 s per arm plus 13 s of rig instruments.
+Three seeds project to **0.95 h**. The registry declared `Budget.GPU`; the
+measurement says `Budget.CPU_LONG`, and the entry is amended to match. The time
+is spent in `ContactAudio`'s numpy DSP and MuJoCo's ray casts, with two MLPs
+totalling under 15K parameters — **a GPU would buy nothing here**, and leaving
+the declaration at GPU would stock a queue class this spec can never honestly
+spend a Kaggle hour on. T3.06 took the same correction the same day; the routing
+lesson is that a declared attribute machinery consumes must match behaviour.
 """
 
 from __future__ import annotations
@@ -219,7 +270,7 @@ IMPL_DEPS = ["playground.py", "ContactAudio.py",
 # signalling system carries exactly 1 bit) and from the PILOT's rig arms
 # everywhere else. `run()` refuses until a pilot has been read and this flag is
 # flipped in the file. No bar here was ever fitted to the claim arm's number.
-_GATES_FROZEN = False
+_GATES_FROZEN = True            # frozen 2026-08-30 from the PILOT RECORD above
 
 # ── the game ────────────────────────────────────────────────────────────
 N_STATES = 4                    # referents; Lowe et al.'s 4x4 game
@@ -269,8 +320,12 @@ CHANCE_TOL = 0.06               # band around 1/N_STATES for an arm at chance
 # ── gates: PROVISIONAL, to be frozen from the pilot's RIG arms ──────────
 PROBE_R2_MIN = 0.50             # the channel is alive in THIS rig (VO.01: 0.50)
 PROBE_MUTE_MAX = 0.10           # ...and the probe is not reading the room
-COORD_MIN = 0.55                # coordination, absolute
-COORD_MARGIN = 0.20             # ...and above chance by this much
+# STRENGTHENED 2026-08-30 from 0.55/0.20, and the justification is the UNTRAINED
+# NULL, not the claim arm: a frozen emission head is a fixed random code and
+# coordinated at 0.396, leaving the old gate only 0.054 of clearance above a
+# null it is supposed to be nowhere near. Law 4 permits strengthening only.
+COORD_MIN = 0.70                # coordination, absolute
+COORD_MARGIN = 0.35             # ...and above chance by this much
 COORD_TSTAT_MIN = 3.0           # ...at >= 3 sigma across seeds
 MI_MARGIN_BITS = 0.25           # I(referent; ear code) above its permutation floor
 CIC_MARGIN_BITS = 0.15          # interventional influence above its floor
