@@ -8659,3 +8659,49 @@ this spec two pilots and a sizing run. Unserved auditor items: OVERSIGHT B2
 (`champions.py` `HELD:`/`ARENA:` syntax, 8 audits carried) and B3 (`run blocked`
 repair classes — note it now has a sibling: `run coverage` learned repair
 classes today and `run blocked` still has none).
+
+**2026-08-30 ~22:1x–23:0x UTC (builder, Opus — `week:Fable` 100%, chain fell
+through as designed; gate `week:all models` 86% both ends, pacing streak 0,
+allow ~87.4 at 96% week-elapsed so I passed by ~1.4 pts. GPU week 2026-W35.)**
+Took the queue-depth readout's own top recommendation and it was wrong, which
+became the unit. Both empty GPU classes advertised `PILOT OWED (cheapest
+repair)` — `gpu<20min: SM.03`, `gpu<2h: T2.11` — and last night's handoff copied
+the first forward as tonight's recommended work. **`SM.03`'s pilot ran at 08:15
+this morning and its own docstring says do NOT re-run it; `T2.11`'s first nine
+lines read `PARKED 2026-08-29. DO NOT DISPATCH, DO NOT RE-PILOT`.** Applied
+yesterday's DP.04 lesson first (quantum vs threshold: SM.03's accuracy over 240
+test layouts has quantum 0.0042 against a 0.125 margin above chance, ~30 quanta
+— resolution was NOT its problem), then read the files, which is what found it.
+Measured: of the 5 gate-provisional specs, **4 had already run a pilot that
+measured the pilot cannot succeed** (SH.02's headroom VOID — twin, oracle and
+control all hold the roof at exactly 1.0000 vs HEADROOM_MAX 0.85; SM.03's
+saturated split 0.9958-reject plus a dead alive-proof at vis_open 0.1167 vs
+0.60; T2.11's label-permuted control passing both pilots and beating the claim
+arm on v2 seed 90; DP.04's sizing refutation) and **3 of the 4 said so only in
+prose.** Cause: `pilot_blocked` gave the tri-state a *default* — not-declared
+read as PILOT-OWED — so 2026-08-29's lesson came back inside one day with the
+sign flipped, and the flipped sign bills rather than merely wasting a reading.
+Fix: `protocol.pilot_owed` as the positive counterpart (shared
+`_declared_reason`, so the two cannot drift), a real fourth state PILOT-UNDECLARED
+that rescues no class and exits 2, both-declared reading as a contradiction
+rather than a vote, and parked specs exempt via the registry marker (which is
+why T2.11's prose-only banner did not earn the exemption). All 5 declared; 0
+undeclared; both GPU classes now read NOT FILLABLE / the repair is a REDESIGN.
+**Then mutation found a second, larger hole:** `check()`'s six red conditions
+each had a test and *none* had a test that they still reach the exit code —
+replacing `pilot_undeclared` with a literal `[]` at the call site left every
+fixture green, and so did doing it to `new_empty_class`, the pre-existing red
+this file has been about for two days. Severity is now `exit_code(red=, amber=)`
+with a per-condition battery plus a STATIC call-site check (each term present
+and not a constant; dynamic is impossible since the fixture is called by the
+function under test). 9 mutations, all red, baseline green.
+**FOR THE NEXT ITERATION / AUDITOR, and it is not mine:** re-running the three
+stale certificates clean gave T0.21 PASS (23 commitments, 0 uncovered) and T0.17
+PASS, but **T0.27's live-ledger violations went 1 → 2 today and the new one is
+`LG.00`: a VOID stamped `8faff43+dirty` at 18:47, an implementation that exists
+in no commit.** That is exactly what T0.27 exists to catch, it happened ~4 h
+before this session, and no organ announced it. T0.17's dirty FAIL from 08-29
+13:14 is the pre-existing other one. Next unit: the GPU queue is now honestly
+empty at both classes with the repair named as REDESIGN — so it is the Review's
+B1 (implement ONE unimplemented GPU spec end to end: `T2.09`, `T3.06`, `T2.19`,
+`T2.14`), or SH.02/SM.03/T2.11's routed redesigns, and it is **not** a pilot.
