@@ -546,3 +546,50 @@ that is not also the commit that wanted the answer.
 
 **Staleness bill: ZERO.** `PL.00` and `PL.02` are the only specs affected and
 neither is a PASS. Nothing in the 90 is downstream of either.
+
+ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | OPEN
+    Question: DP.04's claim statistic — MEAN CENSORED LIFESPAN — has no
+    resolution in the LC.00 gridworld, and the fault is the metric's coupling
+    to a near-binary world rather than any envelope size. Measured: of 3072
+    lifespans, **0 ended strictly between the old cap (200) and the new one
+    (400)**; 76.7% sat at the cap, 17.9% died at <=100, and the entire run
+    contains **21 distinct lifespan values**. So mean lifespan is ~100 + 300p
+    for a Bernoulli p: at E lives it is QUANTISED at 300/E steps — 6.25 at
+    E=48 — while `MIN_GAIN` is **5.0**. The gate asks for a difference finer
+    than the instrument's smallest expressible step, and the derived target
+    (`MIN_GAIN*sqrt(2)/SIGMA_GATE` = 2.357) needs **E >= 5791 lives per arm per
+    task** from the Bernoulli term alone, ~120x the eval budget, before
+    restarts and before the world-to-world term.
+    Both pre-registered repairs are therefore spent: (a) raising the ceiling
+    un-censored zero lives, (b) no (cap, E, R) in the grid reaches the target
+    (best 5.18 at cap 200/E48/R7, 7x the training cost). Not a dead-arm result
+    — `losses_fell_all` 1.0 on all eight task/arm pairs.
+    Options, all runnable arms rather than an argument (law 3): **(i) a graded
+    outcome measure** — time-to-first-death-cause, need-integral over the life,
+    or steps-survived-beyond-the-reactive-policy — which changes what is
+    measured without touching the world; **(ii) tune the world's difficulty**
+    so survival is not almost-free (faster depletion, fewer/farther resources,
+    a trap), which makes lifespan graded again; **(iii) both**, with (i) as the
+    control on (ii). This is the same fork `w0-too-shallow` faces and it
+    arrives with a sharper number: the problem is not only that the world is
+    shallow, it is that the OUTCOME VARIABLE is nearly binary, so a deeper
+    world still needs a graded measure to read it.
+    COUPLED to `w0-too-shallow` (whose design was owed by this desk 2026-08-30)
+    as its FIFTH independent instrument, after LC.03's darkroom, LC.03 v2's
+    one-learner-in-five, DP.05's FAIL and SH.01's ORACLE_CANNOT.
+    **Staleness bill: TWO certificates — `LC.00` and `DP.00`, and nothing
+    else.** Computed, not estimated: `lc_00_gridworld_decidable.py` is imported
+    by exactly `dp_00_lookahead_pays.py` and `dp_04_slow_path_verbal.py`, and
+    `DP.04` has no PASS to lose. **This is design input in its own right and
+    the reason to read this row beside `w0-too-shallow` rather than after it:
+    the gridworld is a 2-certificate world where `playground.py` is a
+    21-certificate one, so a world-difficulty redesign can be TRIED here for
+    a tenth of the re-certification bill before it is paid on W0.** Under the
+    bundling rule this row does NOT need to wait for the world-edit window —
+    it does not touch `playground.py`.
+    Full record: SIZING RECORD v1 in `dp_04_slow_path_verbal.py`, and the
+    machine-readable reason in that file's `_PILOT_BLOCKED`.
+    Until this resolves, DP.04 is PILOT-BLOCKED (not parked — it keeps its
+    claim and its `fast/slow` coverage) and `run coverage` says so with the
+    reason attached. Seeds 90/91/94 are spent; 92/93 are NOT to be spent on
+    this envelope.

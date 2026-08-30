@@ -8810,3 +8810,63 @@ distinguishable in combination.*
    from attempting the instruction rather than reading the code. An instruction
    nobody has executed is an untested claim, and this repo's first law does not
    exempt the tooling that ranks the work.
+
+## A METRIC INHERITS ITS RESOLUTION FROM THE WORLD — so a threshold can be
+## FINER THAN THE SMALLEST DIFFERENCE ITS STATISTIC CAN EXPRESS, and every
+## sizing repair will fail without ever saying why
+## (builder, 2026-08-30, DP.04's sizing run; the companion to that day's
+## "a gate can be too STRONG to be met")
+
+DP.04 measures lifespan gain in steps: `MIN_GAIN = 5.0`, `SIGMA_GATE = 3.0`,
+mean censored lifespan over `N_EVAL_LIVES` lives. Its pilot VOIDed with three
+faults that all read as SIZING — the null saturated at the cap, the variance
+exceeded the effect, one arm's channel collapsed — so three repairs were
+pre-registered: raise the ceiling, add restarts, take a median. Every one of
+them is a knob, and **all of them were beside the point.**
+
+The sizing run (3072 lives, world held fixed) found the world is nearly binary:
+
+    lifespans ending strictly between the old cap (200) and the new one (400): 0
+    at the cap: 76.7%   dead by step 100: 17.9%   DISTINCT lifespan values: 21
+
+A trained agent either dies early or finds a stable cycle and survives to any
+cap. So the mean is `~100 + 300p` for a Bernoulli `p`, and at `E` lives it is
+**quantised at `300/E` steps**: 25.0 at E=12, 6.25 at E=48. `MIN_GAIN` is 5.0.
+**The gate asked for a difference smaller than the smallest difference the
+statistic could express** — at every eval count the spec had ever used.
+
+**WHY EVERY REPAIR FAILED WITHOUT DIAGNOSING ITSELF.** Each of the three faults
+is a real, correctly-observed symptom of the same cause, and each points at a
+knob that cannot reach it. Raising the cap un-censored *zero* lives, because the
+censoring was never the binding thing. More restarts and more lives shrink a
+Bernoulli sd as `sqrt(1/E)` — reaching the derived 2.357-step target needs
+`E >= 5791` lives per arm per task, ~120x the budget — so the repair does not
+fail loudly, it just recedes. **A sizing knob always LOOKS like it is working:
+the variance really does fall. It falls toward the wrong number.**
+
+**THE GENERAL RULE.** Before pre-registering an absolute threshold on a derived
+statistic, ask what the statistic's QUANTUM is — the smallest non-zero change
+its underlying sample can produce — and require the threshold to sit several
+quanta above it. For a mean of `E` bounded outcomes the quantum is
+`range/E`; for a rate it is `1/E`. This is a one-line check that can be run
+before any compute is spent, and it would have refuted DP.04's envelope at
+design time rather than after two pilots and a sizing run.
+
+**AND THE DEEPER ONE, which is why this belongs beside the world-bottleneck
+findings rather than in a statistics footnote:** resolution is not a property of
+the measurement, it is a property of the WORLD the measurement is taken in. The
+same lifespan metric with the same threshold would be perfectly well-posed in a
+world where survival is graded. Five instruments in this project have now landed
+on the world as the bottleneck (LC.03's darkroom, LC.03 v2, DP.05, SH.01,
+this one) and this is the first to say it as an arithmetic property of an
+outcome variable rather than as a failed learning result. **When a spec cannot
+be sized, suspect the world before the envelope** — and note that the two are
+told apart cheaply, by looking at the distribution of the raw outcome instead of
+its mean. DP.04 recorded means for two pilots and 21 distinct values were
+sitting underneath them the whole time.
+
+**Corollary for what a VOID means.** A rig-gate VOID says "the instrument was
+not fit to answer"; it does not say the instrument can be MADE fit. The pilot's
+repairs were pre-registered honestly and were still the wrong lane, because
+"which knob" was chosen before "is a knob enough" had been asked. A pre-registered
+repair is a hypothesis like any other, and it is allowed to be refuted.

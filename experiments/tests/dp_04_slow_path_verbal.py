@@ -369,8 +369,10 @@ independent instrument in this project to land on the world as the bottleneck
 SH.01's ORACLE_CANNOT, and now this). The repair is a DESIGN change — a graded
 outcome measure, or a world whose difficulty is tuned so survival is not
 almost-free — and both candidate families are runnable arms, so under law 3 it
-is a bakeoff somebody has to write, not an argument. Routed to the Review and
-to `docs/DECISIONS_NEEDED.md` as `dp04-lifespan-has-no-resolution`.
+is a bakeoff somebody has to write, not an argument. Routed to the Review as
+`dp04-lifespan-has-no-resolution` in `docs/REVIEW_QUEUE.md` — the redesign
+lane, NOT `DECISIONS_NEEDED.md`: law 3 says a fork whose arms can both be run
+is an experiment nobody has written yet, not an owner escalation.
 """
 
 # WHY A PILOT IS NOT THE REPAIR HERE, declared so the QUEUE-DEPTH instrument
@@ -384,7 +386,7 @@ _PILOT_BLOCKED = (
     "one, 21 distinct lifespans, quantum 6.25 steps at 48 lives against "
     "MIN_GAIN 5.0, and E>=5791 lives/arm/task would be needed for the derived "
     "2.357-step sd. The repair is a world/metric redesign (Review + "
-    "DECISIONS_NEEDED `dp04-lifespan-has-no-resolution`), not a pilot."
+    "REVIEW_QUEUE `dp04-lifespan-has-no-resolution`), not a pilot."
 )
 from __future__ import annotations
 
