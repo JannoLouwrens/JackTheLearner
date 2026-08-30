@@ -127,6 +127,7 @@ IMPL_DEPS = ["experiments/odour.py", "experiments/render.py"]
 
 SEEDS = [0, 1, 2]
 PILOT_SEED = 90
+PILOT_ARTIFACT = "/data/sm03_pilot_seed90.json"
 
 # ── the world, pre-registered ────────────────────────────────────────────
 N_BINS = 8
@@ -451,6 +452,13 @@ def _fit_arm(torch, make, seed: int, Xtr, ytr, Xte, yte, dev,
     return _acc(torch, net, Xte, yte, dev), best_lr, net
 
 
+def _say(msg: str) -> None:
+    """Stage marker for the CPU pilot. Colab/Kaggle buffer stdout anyway, so
+    this buys nothing remotely; it exists so a detached local run's log grows
+    and `launch_detached.sh`'s liveness check has something to see."""
+    print(f"[sm03] {msg}", flush=True)
+
+
 def _hashes(arr: np.ndarray) -> set:
     return {hashlib.sha256(np.ascontiguousarray(a).tobytes()).hexdigest()
             for a in arr}
@@ -480,7 +488,12 @@ def remote_run(seeds: list, n_train: int | None = None,
     out = {"gpu": torch.cuda.get_device_name(0) if dev == "cuda" else "cpu",
            "canary_colors": canary_colors, "seeds": []}
     for seed in seeds:
+        # Progress is printed per stage, flushed: a multi-hour CPU pilot whose
+        # log stays at 0 bytes is indistinguishable from one that died at
+        # import, and that ambiguity ate this spec's first pilot (2026-08-25).
+        _say(f"seed {seed}: building train split ({n_train} layouts)")
         tr = _build_split(seed, n_train, 0, avoid=[])
+        _say(f"seed {seed}: building test split ({n_test} layouts)")
         te = _build_split(seed, n_test, 500_000, avoid=tr["positions"])
         min_sep = min(
             math.hypot(tx - ax, ty - ay)
@@ -493,18 +506,23 @@ def remote_run(seeds: list, n_train: int | None = None,
 
         T = torch.from_numpy
         ytr, yte = T(tr["y"]), T(te["y"])
+        _say(f"seed {seed}: fitting odour arm")
         acc_od, lr_od, _ = _fit_arm(torch, _make_mlp, seed,
                                     T(tr["odour"]), ytr,
                                     T(te["odour"]), yte, dev)
+        _say(f"seed {seed}: odour_occ={acc_od:.4f} lr={lr_od}; placebo arm")
         acc_pl, _, _ = _fit_arm(torch, _make_mlp, seed + 1,
                                 T(tr["placebo"]), ytr,
                                 T(te["placebo"]), yte, dev)
+        _say(f"seed {seed}: placebo={acc_pl:.4f}; vision-occluded arm")
         acc_vo, _, _ = _fit_arm(torch, _make_cnn, seed + 2,
                                 T(tr["vis_occ"]), ytr,
                                 T(te["vis_occ"]), yte, dev)
+        _say(f"seed {seed}: vis_occ={acc_vo:.4f}; vision-open (alive) arm")
         acc_vn, _, _ = _fit_arm(torch, _make_cnn, seed + 3,
                                 T(tr["vis_open"]), ytr,
                                 T(te["vis_open"]), yte, dev)
+        _say(f"seed {seed}: vis_open={acc_vn:.4f}; shuffled control")
 
         # Shuffled-field control: DIFFERENT layout's window, labels kept —
         # a roll by one within each split; trained at the odour arm's LR.
@@ -704,7 +722,12 @@ if __name__ == "__main__":
     elif len(sys.argv) > 1 and sys.argv[1] == "pilot":
         # Full-size single off-run seed, LOCALLY on CPU (this spec's dataset
         # generation is CPU-bound; the pilot's job is rig faults, not speed).
+        # The JSON goes to a FILE as well as stdout: a detached run whose only
+        # record is its own stdout has no artifact for the next iteration to
+        # check, which is how the 08-25 pilot became unrecoverable.
         out = remote_run([PILOT_SEED])
+        Path(PILOT_ARTIFACT).write_text(json.dumps(out, indent=1))
         print(json.dumps(out, indent=1))
+        _say(f"pilot artifact written: {PILOT_ARTIFACT}")
     else:
         print("usage: sm_03_nose_reports_occluded.py {dry|smoke|pilot}")
