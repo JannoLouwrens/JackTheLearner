@@ -525,7 +525,7 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     "known_empty", "stale_baseline"}`. `new_empty` is the fatal class.
     """
     from .protocol import (Budget, Ledger, gates_frozen, module_path_for,
-                           pilot_blocked, pilot_owed)
+                           pilot_blocked, pilot_harvested, pilot_owed)
     if ledger is None:
         ledger = Ledger()
     if by_id is None:
@@ -661,11 +661,37 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     # it — the same shape `decisions.py` uses for an unarmed default. A spec may
     # sit gate-provisional for as long as its author likes; it may not sit there
     # without saying which of the two units of work it is waiting for.
+    #
+    # AND PILOT-OWED ITSELF DESCRIBED TWO UNITS OF WORK AN ORDER OF MAGNITUDE
+    # APART (builder, 2026-08-30, BA.03 — the fifth state, found the same day as
+    # the fourth). "Owed" reads as *spend a bounded CPU run*. But `BA.03`'s
+    # seed-90 pilot had already been spent: it ran 13:15-15:00 UTC, completed,
+    # and wrote `/data/ba03_pilot_seed90.json`. `_GATES_FROZEN` stayed False,
+    # `_PILOT_OWED` went on asserting *"no pilot has been run: the artifact does
+    # not exist"* while the artifact existed, and this readout counted BA.03 as
+    # pilot-owed shelf furniture for eight hours. The real repair was to read a
+    # JSON file and freeze five gates.
+    #
+    # That is the LOUD half of the same disease the fourth state fixed — a
+    # declaration nobody re-checks against the world — and it is worse than a
+    # missing state, because the prose was CONFIDENT and FALSE. `pilot_blocked`'s
+    # docstring even anticipated it ("the checkable version is what lets a later
+    # reader notice the pilot already ran") and then left the noticing to a
+    # reader who never came.
+    #
+    # So PILOT-HARVESTABLE is not another thing for an author to declare. It is
+    # `os.path.exists` on the path they already declared, which is why it cannot
+    # rot the way the sentence above it did. It says only that the next unit is
+    # *harvest and adjudicate* — cheap — and NOT that the pilot succeeded: a
+    # completed pilot may still refute its own precondition, and harvesting it
+    # into `_PILOT_BLOCKED` is the same act and also clears this state.
     pilot_owed_cls: Dict[str, list] = {c: [] for c in by_class}
     pilot_blocked_cls: Dict[str, list] = {c: [] for c in by_class}
+    pilot_harvest_cls: Dict[str, list] = {c: [] for c in by_class}
     pilot_undeclared: List[str] = []
     blocked_why: Dict[str, str] = {}
     owed_why: Dict[str, str] = {}
+    harvest_art: Dict[str, str] = {}
     for sid in excluded["gates_provisional"]:
         spec = by_id.get(sid)
         if spec is None:
@@ -683,7 +709,15 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
             pilot_blocked_cls[spec.budget.value].append(sid)
         elif owed:
             owed_why[sid] = owed
-            pilot_owed_cls[spec.budget.value].append(sid)
+            # A declared artifact that EXISTS refines "owed" into "harvestable".
+            # Checked against the filesystem, never against the prose, because
+            # it was the prose that was wrong.
+            art = pilot_harvested(sid, path=path)
+            if art:
+                harvest_art[sid] = art
+                pilot_harvest_cls[spec.budget.value].append(sid)
+            else:
+                pilot_owed_cls[spec.budget.value].append(sid)
         else:
             pilot_undeclared.append(sid)
     return {
@@ -701,6 +735,9 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
                           for c, ids in pilot_blocked_cls.items()},
         "pilot_blocked_why": dict(sorted(blocked_why.items())),
         "pilot_owed_why": dict(sorted(owed_why.items())),
+        "pilot_harvestable": {c: sorted(ids)
+                              for c, ids in pilot_harvest_cls.items()},
+        "pilot_harvestable_artifact": dict(sorted(harvest_art.items())),
         "pilot_undeclared": sorted(pilot_undeclared),
         # Empty AND no path in: neither a runnable spec to implement NOR a
         # gate-provisional one whose pilot can still succeed. Only then is the
@@ -712,8 +749,15 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         # the optimistic error where the pessimistic one used to be.
         # Reported, never fatal on its own: it is a fact about the ladder's
         # shape, not debt anyone incurred.
-        "empty_unfillable": sorted(c for c in empty
-                                   if not fillable[c] and not pilot_owed_cls[c]),
+        # `pilot_harvest_cls` joins the conjunct for the same reason
+        # `pilot_owed_cls` did, only more so: a class whose sole occupant has a
+        # completed pilot sitting on disk is not structurally unreachable, it is
+        # one file-read from stocked — the cheapest repair this instrument can
+        # name, and the one it silently called "unreachable" for eight hours.
+        "empty_unfillable": sorted(
+            c for c in empty
+            if not fillable[c] and not pilot_owed_cls[c]
+            and not pilot_harvest_cls[c]),
     }
 
 
@@ -804,6 +848,13 @@ def _queue_fixture() -> List[str]:
         # It shares gpu<2h with stocked specs so it exercises the branch
         # without deciding a class.
         ("Q.13", Budget.GPU, "", None, True, False),
+        # THE FIFTH STATE. Gate-provisional, sole occupant of its class, and it
+        # declares the pilot OWED exactly as Q.10 does — the two rows are
+        # identical to every reader of the SOURCE. They differ only in that the
+        # artifact Q.14 names EXISTS. The BA.03 case: the run is already spent,
+        # so this class is not pilot-owed, it is one file-read from stocked, and
+        # reading it as OWED sends a builder to buy a CPU run they already own.
+        ("Q.14", Budget.GPU_LONG, "", None, True, False),
     ]
     # `pilot_blocked` / `pilot_owed` answers per spec: a reason string, or None
     # for "does not declare". Q.08 and Q.12 declare neither — Q.12 deliberately,
@@ -812,7 +863,15 @@ def _queue_fixture() -> List[str]:
     blocked = {"Q.11": "sizing refuted the pilot's precondition",
                "Q.13": "a run measured the precondition fails"}
     owed = {"Q.10": "the pilot will freeze CEM_K_FIT against its artifact",
-            "Q.13": "the pilot will freeze the bars"}
+            "Q.13": "the pilot will freeze the bars",
+            "Q.14": "no pilot has been run: the artifact does not exist"}
+    # `pilot_harvested`'s answers: the declared artifact path IF it exists on
+    # disk. Q.14 is the BA.03 row — it declares the pilot OWED, in exactly the
+    # words BA.03 used, and the file it names is sitting there. Q.10 declares
+    # the same state with no artifact, which is the honest owed reading, so the
+    # two rows differ ONLY in the filesystem and the fixture can tell whether
+    # the split is being read from disk or from prose.
+    harvested = {"Q.14": "/data/q14_pilot_seed90.json"}
     by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t, _g in rows}
     led = _Led({sid: s for sid, _b, _n, s, _t, _g in rows if s is not None})
     tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t, _g in rows if t}
@@ -822,20 +881,21 @@ def _queue_fixture() -> List[str]:
     from . import registry as _reg
     real_ready, real_mpf = _reg.ready, _proto.module_path_for
     real_gf, real_pb = _proto.gates_frozen, _proto.pilot_blocked
-    real_po = _proto.pilot_owed
+    real_po, real_ph = _proto.pilot_owed, _proto.pilot_harvested
     _reg.ready = lambda _l: list(by_id.values())
     _proto.module_path_for = lambda sid, strict=False: (
         None if sid == "Q.07" else f"/x/{sid}.py")
     _proto.gates_frozen = lambda sid, path=None: frozen.get(sid)
     _proto.pilot_blocked = lambda sid, path=None: blocked.get(sid)
     _proto.pilot_owed = lambda sid, path=None: owed.get(sid)
+    _proto.pilot_harvested = lambda sid, path=None: harvested.get(sid)
     try:
         q = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
                         baseline=frozenset({"gpu<8h"}))
     finally:
         _reg.ready, _proto.module_path_for = real_ready, real_mpf
         _proto.gates_frozen, _proto.pilot_blocked = real_gf, real_pb
-        _proto.pilot_owed = real_po
+        _proto.pilot_owed, _proto.pilot_harvested = real_po, real_ph
 
     fails = []
     if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03", "Q.09"]:
@@ -858,7 +918,7 @@ def _queue_fixture() -> List[str]:
     # THE ROW THE 46th AUDIT'S RANK 2 EXISTS FOR: runnable, implemented,
     # tracked, unsettled, unparked — and its own `run()` refuses.
     if q["excluded"]["gates_provisional"] != ["Q.08", "Q.10", "Q.11", "Q.12",
-                                              "Q.13"]:
+                                              "Q.13", "Q.14"]:
         fails.append(f"a spec with PROVISIONAL gates refuses its own "
                      f"registered run and must be excluded — the SM.03 case — "
                      f"got {q['excluded']['gates_provisional']}")
@@ -926,6 +986,36 @@ def _queue_fixture() -> List[str]:
     if q["pilot_owed_why"].get("Q.10") != owed["Q.10"]:
         fails.append(f"the owed reason must survive into the readout, got "
                      f"{q['pilot_owed_why']}")
+    # THE FIFTH STATE — the BA.03 row. Q.14 declares OWED, like Q.10, and its
+    # artifact exists, unlike Q.10's. Every assertion below fails against the
+    # code as it stood at 23:00 on 2026-08-30, which read the prose and never
+    # the disk.
+    if q["pilot_harvestable"]["gpu<8h"] != ["Q.14"]:
+        fails.append(f"a spec whose declared pilot artifact EXISTS is "
+                     f"HARVESTABLE, not owed: the run is already spent, got "
+                     f"{q['pilot_harvestable']}")
+    if q["pilot_owed"]["gpu<8h"]:
+        fails.append(f"a harvestable pilot must leave PILOT-OWED — otherwise "
+                     f"the readout sends a builder to buy a CPU run they "
+                     f"already own, got {q['pilot_owed']['gpu<8h']}")
+    if "gpu<8h" in q["empty_unfillable"]:
+        fails.append("a class whose sole occupant has a completed pilot on "
+                     "disk is one file-read from stocked, not structurally "
+                     "unreachable")
+    if q["pilot_harvestable_artifact"].get("Q.14") != harvested["Q.14"]:
+        fails.append(f"the artifact PATH must survive into the readout — "
+                     f"'go read something somewhere' is the state this "
+                     f"replaces, got {q['pilot_harvestable_artifact']}")
+    # And the separator: Q.10 declares the identical state with NO artifact and
+    # must stay OWED. Without this row, hardcoding every owed spec to
+    # harvestable would pass the four assertions above.
+    if q["pilot_owed"]["gpu<20min"] != ["Q.10"] or q["pilot_harvestable"][
+            "gpu<20min"]:
+        fails.append(f"an owed pilot whose artifact does NOT exist stays owed "
+                     f"— that is the honest reading and the split must come "
+                     f"from the filesystem, got owed="
+                     f"{q['pilot_owed']['gpu<20min']} harvestable="
+                     f"{q['pilot_harvestable']['gpu<20min']}")
     if q["by_class"]["cpu<10min"] != ["Q.06"]:
         fails.append(f"cost classes must not merge, got {q['by_class']}")
     if q["depth"] != 4:
@@ -1074,6 +1164,86 @@ def _pilot_blocked_fixture() -> List[str]:
         fails.append("pilot_blocked: DP.04 declares `_PILOT_BLOCKED` in the "
                      "tree (SIZING RECORD v1) and the reader missed it — the "
                      "misroute this state exists to stop")
+    return fails
+
+
+def _pilot_harvested_fixture() -> List[str]:
+    """Known-answer battery for `protocol.pilot_harvested`, the READER — the
+    fifth state's, written the same day as the reader like the two before it.
+
+    The thing this reader must get right is the one thing prose cannot: the
+    split is between a declared path that EXISTS and a declared path that does
+    not, and BA.03 is the proof that those look identical in source. So every
+    case below pairs a real temp file against its absence, and the reader is
+    pointed at the filesystem, never at a stub.
+
+    The aliasing cases matter for the same reason `_pilot_owed_fixture`'s do —
+    all three readers share `_declared_reason` — with one addition specific to
+    this state: `_PILOT_ARTIFACT` is a PATH, not a reason, so a file whose only
+    declaration is `_PILOT_OWED` must read `None` here even though the spec is
+    unambiguously pilot-owed. Harvestability is a fact about the disk that a
+    spec cannot assert about itself.
+    """
+    import tempfile
+    from .protocol import pilot_blocked, pilot_harvested, pilot_owed
+
+    fails = []
+    with tempfile.TemporaryDirectory() as d:
+        art = Path(d) / "pilot_seed90.json"
+        gone = Path(d) / "never_ran.json"
+        art.write_text("{}\n")
+        cases = [
+            ("no declaration at all", "X = 1\n", None),
+            # THE PAIR. Identical source shape, opposite answers, and the only
+            # difference is on disk — the BA.03 case in two lines.
+            ("declared path that exists",
+             f"_PILOT_ARTIFACT = {str(art)!r}\n", str(art)),
+            ("declared path that does not exist",
+             f"_PILOT_ARTIFACT = {str(gone)!r}\n", None),
+            ("annotated assignment counts",
+             f"_PILOT_ARTIFACT: str = {str(art)!r}\n", str(art)),
+            ("re-assigned, last wins",
+             f"_PILOT_ARTIFACT = {str(gone)!r}\n"
+             f"_PILOT_ARTIFACT = {str(art)!r}\n", str(art)),
+            ("None is not a path", "_PILOT_ARTIFACT = None\n", None),
+            ("empty string is not a path", "_PILOT_ARTIFACT = ''\n", None),
+            ("non-literal value is not a path",
+             "import os\n_PILOT_ARTIFACT = os.environ.get('P')\n", None),
+            ("function-local assignment is not a declaration",
+             f"def f():\n    _PILOT_ARTIFACT = {str(art)!r}\n", None),
+            ("a syntax error is not a declaration", "def (:\n", None),
+            # A DIRECTORY IS NOT A PILOT. `exists` would say yes here and the
+            # next builder would be sent to read something unreadable.
+            ("a directory is not an artifact",
+             f"_PILOT_ARTIFACT = {str(d)!r}\n", None),
+            # THE ALIASING CASES. Three readers, one `_declared_reason`.
+            ("a reason is not a path",
+             "_PILOT_OWED = 'the pilot will freeze the bars'\n", None),
+            ("the blocked flag is not a path",
+             "_PILOT_BLOCKED = 'sizing refuted the precondition'\n", None),
+        ]
+        for i, (label, src, want) in enumerate(cases):
+            p = Path(d) / f"ph_{i}.py"
+            p.write_text(src)
+            got = pilot_harvested("X.00", path=p)
+            if got != want:
+                fails.append(f"pilot_harvested: {label} -> want {want!r}, "
+                             f"got {got!r}")
+        # The mirrors: an artifact declaration is neither of the other states.
+        p = Path(d) / "ph_x.py"
+        p.write_text(f"_PILOT_ARTIFACT = {str(art)!r}\n")
+        if pilot_owed("X.00", path=p) is not None:
+            fails.append("pilot_owed: `_PILOT_ARTIFACT` is not a reason — an "
+                         "artifact path says nothing about which unit of work "
+                         "is owed")
+        if pilot_blocked("X.00", path=p) is not None:
+            fails.append("pilot_blocked: `_PILOT_ARTIFACT` is not a block")
+        if pilot_harvested("X.00", path=Path(d) / "gone.py") is not None:
+            fails.append("pilot_harvested: a missing spec file declares "
+                         "nothing")
+    if pilot_harvested("NO.SUCH.SPEC") is not None:
+        fails.append("pilot_harvested: an unimplemented spec has no file and "
+                     "no declaration -> None")
     return fails
 
 
@@ -1297,7 +1467,7 @@ def check() -> int:
 
     qf = (_queue_fixture() + _gates_frozen_fixture()
           + _pilot_blocked_fixture() + _pilot_owed_fixture()
-          + _exit_code_fixture())
+          + _pilot_harvested_fixture() + _exit_code_fixture())
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -1310,11 +1480,19 @@ def check() -> int:
             fill = q["fillable"].get(cls, [])
             owed = q["pilot_owed"].get(cls, [])
             blk = q["pilot_blocked"].get(cls, [])
-            # PILOT-OWED IS NAMED FIRST when it applies, because it is the
-            # cheapest repair of the three and the one this readout used to
-            # hide behind "NOT FILLABLE".
+            harv = q["pilot_harvestable"].get(cls, [])
+            # PILOT-HARVESTABLE IS NAMED FIRST, ahead of PILOT-OWED, because it
+            # is cheaper still: the CPU run is already spent and its artifact is
+            # on disk. PILOT-OWED then, because it is the cheapest of the rest
+            # and the one this readout used to hide behind "NOT FILLABLE".
             if ids:
                 tail = ""
+            elif harv:
+                tail = ("   <- PILOT ALREADY RAN, HARVEST IT (cheapest repair "
+                        "of all): "
+                        + ", ".join(f"{s} -> "
+                                    f"{q['pilot_harvestable_artifact'][s]}"
+                                    for s in harv))
             elif owed:
                 tail = (f"   <- PILOT OWED (cheapest repair): "
                         f"{', '.join(owed)}"
@@ -1360,6 +1538,19 @@ def check() -> int:
               "  refuses until a pilot freezes its bars. That is a bounded CPU\n"
               "  unit, NOT an unblock and NOT a new implementation — and it is\n"
               "  the state this readout used to report as NOT FILLABLE.")
+    if q["pilot_harvestable_artifact"]:
+        print(f"  {len(q['pilot_harvestable_artifact'])} spec(s) are "
+              f"PILOT-HARVESTABLE — gate-provisional and still declaring the\n"
+              "      pilot OWED, but the artifact they name EXISTS ON DISK. The "
+              "run is already spent; the\n"
+              "      next unit is to read it and either freeze the gates or "
+              "declare `_PILOT_BLOCKED`:")
+        for sid, art in q["pilot_harvestable_artifact"].items():
+            print(f"      {sid}: {art}")
+        print("  A pilot that completed and was never harvested is invisible "
+              "to every other state here\n"
+              "  (BA.03, 2026-08-30: eight hours, its own prose asserting the "
+              "artifact did not exist).")
     if q["pilot_blocked_why"]:
         print(f"  {len(q['pilot_blocked_why'])} spec(s) are PILOT-BLOCKED — "
               f"gate-provisional, but a run has MEASURED that the\n"

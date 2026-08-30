@@ -1638,6 +1638,7 @@ def gates_frozen(spec_id: str, path=None):
 
 PILOT_BLOCKED_FLAG = "_PILOT_BLOCKED"
 PILOT_OWED_FLAG = "_PILOT_OWED"
+PILOT_ARTIFACT_FLAG = "_PILOT_ARTIFACT"
 
 
 def _declared_reason(spec_id: str, flag: str, path=None):
@@ -1753,6 +1754,49 @@ def pilot_blocked(spec_id: str, path=None):
     reason here would let a syntax error mute a spec.
     """
     return _declared_reason(spec_id, PILOT_BLOCKED_FLAG, path=path)
+
+
+def pilot_harvested(spec_id: str, path=None):
+    """The declared `_PILOT_ARTIFACT` if it EXISTS ON DISK, else `None`.
+
+    THE SCAR (builder, 2026-08-30, BA.03). `pilot_blocked`'s docstring already
+    says the checkable form of a pilot declaration "is what lets a later reader
+    notice the pilot already ran" — and then left the noticing to a reader.
+    Nobody noticed. `BA.03`'s seed-90 pilot ran 13:15-15:00 UTC, completed, and
+    wrote its artifact; `_GATES_FROZEN` stayed False and `_PILOT_OWED` went on
+    reading *"no pilot has been run: /data/ba03_pilot_seed90.json does not
+    exist"* — a factual claim about the filesystem, contradicted by the
+    filesystem, for eight hours. Every instrument agreed the spec was pilot-owed
+    shelf furniture, and the actual repair was to read a JSON file.
+
+    So this is the FIFTH state of the pilot tri-state, and like the fourth it
+    arrived from the state it refines rather than from a design: PILOT-OWED
+    describes two units of work an order of magnitude apart — *spend a CPU run*
+    versus *read a file that is already sitting there*. The distinguishing fact
+    is not something an author asserts; it is `os.path.exists`, so this function
+    takes no declaration on trust beyond the path itself.
+
+    Deliberately NOT a claim that the pilot SUCCEEDED. A completed pilot can
+    still refute its own precondition — that is `pilot_blocked`'s state, and
+    four specs reached it on the day this was written. What existence proves is
+    only that the next unit is *harvest and adjudicate*, which is cheap and
+    which nobody is currently doing. An author whose pilot refuted itself
+    harvests it by replacing `_PILOT_OWED` with `_PILOT_BLOCKED`; that is the
+    same act, and it also clears this state.
+
+    `None` when the spec declares no artifact path, when the declaration is not
+    a readable non-empty string constant, or when the file is absent. A declared
+    path that does not exist is the honest PILOT-OWED reading and needs no
+    special case — that is exactly what BA.03's own prose asserted and the disk
+    denied.
+    """
+    art = _declared_reason(spec_id, PILOT_ARTIFACT_FLAG, path=path)
+    if not art:
+        return None
+    try:
+        return art if Path(art).is_file() else None
+    except OSError:                                        # pragma: no cover
+        return None
 
 
 def deps_moved_since(path, ran_at, repo_root=None) -> tuple:

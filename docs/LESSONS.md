@@ -8961,3 +8961,93 @@ everything reports zero violations and is indistinguishable from a clean tree.
 Any loop that certifies "no spec violates X" must also assert **it examined
 something** — the parked-exemption test here reported clean while checking
 nothing until `if not _examined:` was added.
+
+## A CLAIM THAT GATES ON A DIFFERENCE MUST GATE ON THE ROOM THE DIFFERENCE HAS
+## — three specs hit this on one day and only one of them had the instrument
+## (builder, 2026-08-30, from BA.03's pilot harvest; SH.02 and DP.04 the same day)
+
+Almost every claim spec here is a contrast: the sensing arm minus its deprived
+twin, the sheltered arm minus the exposed one, this world-model minus
+persistence. And almost every one of them gates the *contrast* — 3 sigma, a
+minimum margin — while gating the *null* only for being too weak. `BA.03` is
+typical: it required the random policy to topple on 60% of episodes and to
+survive under 80% of the horizon, so the world could not be trivially easy. It
+had no gate at all on how close the NULL TWIN sat to the ceiling.
+
+The pilot put the blind twin at **10.6375 s of a 12.0 s horizon — 88.6%**. The
+largest gain physically available to the claim was therefore 1.3625 s, while the
+signal needed to clear its own 3-sigma bar at the sizing it carried was 1.0684 s.
+**The claim had 1.28x the room it needed, and no number in the file said so.** A
+seed whose twin landed at 11.5 s would have made a PASS arithmetically
+impossible with all eight existing gates green — and it would have recorded FAIL,
+which reads as *the sense is unused* rather than *the rig could not tell*.
+
+Three specs met this in one day, from three directions, which is what makes it a
+rule rather than a bug:
+
+- `SH.02` — the twin, a privileged oracle and both cosmetic controls all held
+  the roof at **exactly 1.0000**. Its `HEADROOM_MAX` gate fired and VOIDed the
+  pilot. It is the only one of the three that had the instrument.
+- `DP.04` — the null was not at a ceiling but the statistic had no resolution:
+  21 distinct lifespans, a 6.25-step quantum against a 5.0-step threshold.
+- `BA.03` — the twin at 88.6% of the horizon, caught only because a human read
+  a pilot artifact and did the division.
+
+**The rule.** A rig gate on the null's *weakness* is half a gate. Write the other
+half: the room above the null must be at least a stated multiple of the signal
+the claim needs, `ceiling - null >= K * threshold_signal`, VOID otherwise, and
+report the ratio so the margin is visible instead of derivable. `K` is the
+principled quantity — 2.0 says *a claim decided by the ceiling rather than by the
+sense is not a measurement* — and the envelope (sample size, horizon, episode
+count) is then DERIVED from it. Deriving in that order is what keeps it honest:
+fit `K` to the pilot and you have written a gate that can never fire; derive the
+envelope from `K` and the pilot clears a bar it did not set, or the spec learns
+it cannot be run as designed.
+
+**The generalisation past ceilings.** "Room" is whatever bounds the contrast: a
+horizon, a saturated accuracy, an exhausted arena, a quantised statistic. Ask of
+every claim — *if the effect were as large as physics allows, would my threshold
+be reachable?* If you cannot answer in one division, the spec is not sized.
+
+## A DECLARATION ABOUT THE WORLD MUST BE RE-READ FROM THE WORLD, NEVER FROM THE
+## PROSE THAT ASSERTED IT — the confident-and-false sentence is worse than the
+## missing one (builder, 2026-08-30, BA.03's pilot; the third state-machine
+## lesson in this file in two days, and the loudest)
+
+`BA.03`'s seed-90 pilot was launched at 13:15 UTC, ran 6299 s, completed
+successfully, and wrote `/data/ba03_pilot_seed90.json`. Nothing harvested it for
+**eight hours**. Its own source said, in a module constant that three
+instruments read:
+
+> `_PILOT_OWED = "No pilot has been run: /data/ba03_pilot_seed90.json does not
+> exist and no PILOT RECORD appears above..."`
+
+That is a **factual claim about the filesystem, contradicted by the filesystem.**
+It was true when written and false within two hours, and nothing re-checked it,
+because it was prose. `run coverage` read it and reported BA.03 as pilot-owed
+shelf furniture; the class it occupied looked like it needed a CPU run that had
+already been bought and paid for.
+
+The previous two lessons in this file are about a state machine with a *missing*
+state defaulting to the wrong reading. This one is the same machine with a state
+that was **present, declared, and stale** — and that is worse, because a missing
+state produces uncertainty while a stale declaration produces confidence. Nobody
+double-checks a sentence that answers the question.
+
+**The rule.** When a declaration asserts something checkable about the world —
+a file exists, a process is running, a commit is pushed, a quota is spent — the
+instrument must check the world, not the sentence. The sentence may say what the
+author intended; only the world says what is true now. `protocol.pilot_harvested`
+is the mechanical form here: it takes the path the author declared and answers
+with `os.path.is_file`, so the split between *the pilot is owed* and *the pilot
+is spent and unharvested* comes from the disk and cannot rot.
+
+**And the corollary that generalises past pilots.** The liveness rule in this
+repo already says "never end an iteration on *waiting* without a pid and a
+growing log" — that is this same lesson for a process that has not finished. Its
+mirror was missing: **nothing watches for work that HAS finished and was never
+collected.** A completed background job is invisible to every liveness check
+ever written here, because they all look for signs of life. Both halves are the
+same absence — no organ watches for the absence of a result — and both cost real
+work: `SM.03`'s pilot died unnoticed, `BA.03`'s succeeded unnoticed, and the
+second is the one nobody had thought to look for.
