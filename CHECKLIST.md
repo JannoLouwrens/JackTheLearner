@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 85 / 187 demonstrated
+## 85 / 188 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -179,7 +179,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Removing 50-step memory hurts partially-observed tasks.
       - _dies if:_ No drop.
       - _then delete:_ temporal_memory (12.64M params, never passed memory=).
-- [ ] **T3.06** Ablate curiosity
+- [~] **T3.06** Ablate curiosity  — coverage_curious=0.616167; coverage_curious_std=0.053703
       - _asserts:_ Removing intrinsic reward reduces unprompted coverage.
       - _dies if:_ Coverage unchanged.
       - _then delete:_ IntrinsicCuriosityModule.
@@ -830,3 +830,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Utterance MEANING tracks Jack's internal state and diary, not the language model. Three independent measurements: (a) same state, different LLM sampling seeds -> same meaning, different wording; (b) different state, same LLM -> different meaning; (c) SWAP THE LLM for a different frozen model -> meaning preserved, style changes.
       - _dies if:_ Meaning varies with the sampler, or survives a state change, or changes when the LLM is swapped. Any of the three means the language model is choosing the content and Jack is being ventriloquised.
       - _then delete:_ Any speech path where the LLM receives free rein over content. If the model swap changes what he means, the mind was in the mouth.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **BA.03** He braces against a surface — balance is used where direction still has authority
+      - _asserts:_ In a scenario where a graspable surface is within reach, a learner given BA.01's vestibular channel PLACES ITS SUPPORT ON THE LEAN SIDE and stays upright measurably longer than an identical learner trained with the channel deleted (>= 3 sigma across seeds), and the gain vanishes when the channel is replaced by matched-statistics noise.
+      - _dies if:_ No upright-time gain from having the channel even with a surface in reach. Then D8's open-ground finding generalises — balance is decoded and never acted on in ANY scenario this body affords — and the honest status of balance-as-a-used-sense is 'sensed, unused' until the playground humanoid exists. A SECOND honest outcome: the sensing arm wins but the brace lands on the wrong side as often as the right one, which refutes the mechanism while the number passes; brace-side accuracy is therefore a REPORTED gate, not a footnote.
+      - _then delete:_ D8 option 3 — the last re-scoping of balance-as-a-used-sense that this body affords. If BA.03 fails, no balance CLAIM is registrable before a body with directional catch authority exists, and that becomes a finding rather than an assumption.

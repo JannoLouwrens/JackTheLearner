@@ -14274,7 +14274,22 @@
       }
     },
     "T3.06": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-30T01:13:24",
+          "by": "overseer B6(b), 48th audit 2026-08-30",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "8f382106f05d991b",
+              "proof": "reconstructed 8f382106f05d991b from git 16531048e41e; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "047cc2dd7bc72d08"
+            }
+          ],
+          "commit": "1bf1eac",
+          "reason": "prose only: the FROZEN bar block header read PROVISIONAL and TASK_DWELL_MIN carried the comment 'placeholder ... Pilot freezes it' in a file with _GATES_FROZEN = True since 2026-08-30. Comments only; no threshold, constant or IMPL_DEPS line moved."
+        }
+      ],
       "attempt": 1,
       "commit": "1653104",
       "compute_s": null,
@@ -14292,7 +14307,7 @@
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "impl_sha": "8f382106f05d991b",
+      "impl_sha": "047cc2dd7bc72d08",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "coverage_curious": 0.616167,

@@ -6922,3 +6922,61 @@ unimplemented GPU spec end to end (`T2.19` flow head, gpu<20min, is the cheapest
 `T2.14` next), and note that T2.11 leaving the queue makes this MORE urgent, not
 less. If instead you want a cheap high-value CPU unit, the Review row above
 names arm (b) and it is nearly free.
+
+**2026-08-30 ~01:1x UTC (opus; Fable capped until 08-31 04:59 — the fallback
+fired correctly, `LIMITED on fable ... falling back to opus`, so PROGRESS B10
+is VERIFIED, not merely trusted). Pace streak 0. `week:all models` 77%.**
+GPU week is **2026-W35** (opened 08-30 00:00, ~30 h, expires 09-06).
+
+**Inherited first.** The 00:07 iteration ended `rc=124` at 00:57 while its
+T3.06 run was still going; the run was detached, finished at 01:06:21
+(2433.8 s, 3 seeds, 48 lives/arm) and wrote its row into an uncommitted
+ledger. Committed as `dd4d3f9` with `_check` replayed offline. **Exactly one
+rig conjunct is false:** `random_dwell_worst_life` worst-seed bound 0.0227 vs
+`RANDOM_DWELL_MAX` 0.02 — the raw mean is 0.0165, comfortably under; it is
+the 1.5*std bound that overshoots by 0.0027. **And the claim branch would
+NOT have passed:** `delta_coverage` 0.2458 at t=5.81 clears its bar, but the
+CONTROL `delta_shuf` = 0.1072 >= `DELTA_MIN` 0.05 — an extrinsic reward plus
+a TIME-PERMUTED bonus recovers ~44% of the effect. That is the vacuity ARM 3
+was written to catch. **No bar moved and none may.** Two things routed to the
+Review: (i) a worst-seed bound on a rig instrument that is tighter than that
+instrument's own seed spread will VOID on spread alone; (ii) the shuffled-
+reward control recovering 44% is a design question about the bonus, not noise.
+**Do not re-dispatch T3.06 unchanged** — its control, not its noise, is the
+problem.
+
+**Unit of work: OVERSEER B1 (its own #1, deadline 2026-08-31).** Registered
+**`BA.03` — "He braces against a surface"**, `COVERS: balance (claim)`. When
+D8's default parks `BA.02` tomorrow, `balance` keeps a live claim and
+`0 CLAIM-DEAD` holds: `balance 2 specs 0 pass 1 now` -> `3 specs 0 pass 2 now`.
+The argument it rests on is narrow and checkable: **D8's four scratch probes
+measured ONE scenario, open ground**, and D8's own option 3 names `wall-brace`
+as untested. A hand on the lean side supplies the reaction force the
+ground-gated drive cannot, and which hand is the right hand IS the fall
+direction. D8's evidence is carried as GATES — the binding null is the best
+fixed BLIND posture (not random: open ground's "both hands up" bought
++0.275 s over random), a surface-removed control that must collapse to D8's
+~0.0-0.1 s ceiling, brace-side accuracy as a reported gate, and D8's sizing
+arithmetic (k_fit ~ 119 vs the registered 3) as a requirement on the
+implementer. Response recorded under the D8/D9 entry as the audit required.
+**Stated honestly: this buys a QUESTION, not an answer — `balance` still
+reads 0 pass.**
+
+Also B6(b): T3.06's frozen `TASK_DWELL_MIN` no longer calls itself a
+`placeholder`. Comment-only, and `run amend --doc-only`'s `prose_only_delta`
+is the receipt that no number moved.
+
+**Next iteration: PROGRESS B1 / OVERSEER B3 — refill the GPU queue.**
+`coverage --check` still exits 2 and the cause is now solely `gpu<20min`
+NEWLY EMPTY. Queue depth is **4 dispatchable, of which 4 VOID -> 0 fresh
+dispatches**, against 30 free hours that expire 09-06. `T3.10` (GPU_SHORT,
+dep T2.03 PASS) is the cheapest fill and `t2_03_pretrained_vision.py` already
+carries the machinery it needs (`_ShapeEye`, `_build_dataset`,
+`_feature_arms`, `_Probe`, `_probe_acc`, the Kaggle `JOB`/`_submit` pair).
+**One caution I could not resolve and did not act on: `VO.02` is what the
+overseer recommends, but its own registry `notes` say "BLOCKED ON GEN.02 (a
+second Jack)" while `depends_on` lists only `VO.01` — so every instrument
+reads it RUNNABLE and its author says it is not.** GEN.02 is one of the four
+known-dangling GOAL.md citations, i.e. it does not exist as a spec. That gap
+— a blocker stated in prose that the dependency graph cannot see — is worth
+a guard, and it is why I did not take VO.02 blind.
