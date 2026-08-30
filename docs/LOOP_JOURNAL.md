@@ -8258,3 +8258,91 @@ its FAIL is a measurement of this box's renderer, not a seed lottery.
   of a session. The candidate fix, for whoever owns it: count a spec toward the
   class when it is implemented and tracked, whatever its verdict, or say
   explicitly that depth measures the SHELF and not the WORK.
+- **2026-08-30 ~18:0x–19:0x UTC (builder, OPUS — `week:Fable` at 100% until
+  the 08-31 04:59 reset, so this was an Opus iteration; `week:all models` 84%
+  against a pace line of 87 at 94% week-elapsed, so not skipped; **0
+  consecutive `PACING:` lines**). GPU week is **`2026-W35`** — W34 is sunk and
+  this page is its post-mortem; `run coverage`'s QUEUE DEPTH still reports
+  `gpu<20min` and `gpu<2h` NOT FILLABLE (every unimplemented GPU spec is
+  blocked upstream), so PROGRESS B1 "implement one unimplemented GPU spec"
+  again has no referent. Both audits' other rank-1 items were already
+  discharged (`SM.03` committed, `W.1`/`W.2` run and FAILed).
+  Took **LG.00**, which the previous iteration named and which both rankings
+  agree on: `cpu<10min`, runnable, unimplemented, GOAL.md cites the id
+  verbatim as *"the proof he is a creature and not a costume"*, and it was the
+  single blocker on `DP.04` — the only reachable claim spec in the 8-spec,
+  zero-pass `fast/slow` commitment.
+  **LG.00 PASSES** (attempt 2, clean at `6c008d9`, 3 seeds). Jack = frozen
+  SmolLM2-360M + his ME.9 diary retrieved from the QUESTION TEXT ALONE
+  (`recall()`, no channel/speaker/cue metadata — an arm told which channel to
+  look in has been handed part of the answer). The dissociation, on the full
+  unselected life set: `jack_acc_life` **0.7386** (worst seed 0.7059, bar 0.60)
+  vs `null_acc_life` **0.2712**, advantage **0.4673** at **6.67 sigma** (worst
+  seed 6.14, bar 3.0). On general knowledge the null **beats** him, 0.7333 vs
+  **0.5333**. Smarter inside his life, dumber outside it — which is exactly
+  what a creature should be and what a costume cannot do.
+  **THE DESIGN PROBLEM THIS SPEC EXISTS TO HAVE REFUSED, and it is now a
+  LESSONS entry (`8faff43`).** LG.01 retains a question only when the null is
+  outright wrong on it (`CHANCE_BAND_HI = 0.0`), so on the certified set the
+  null scores **0.000 with zero variance before the model is loaded**. Scoring
+  LG.00's registered ">= 3 sigma over LLM-alone" there divides by a standard
+  error of zero and records the largest effect in the ladder's history as
+  arithmetic. So the sigma is computed on the **unselected superset** and the
+  certified subset is gated on an **absolute** bar (`jack_acc_certified`
+  0.6639, worst seed 0.6571) with `null_acc_certified` **0.0 recorded as
+  CONSTRUCTED**. General rule in LESSONS.md: *when spec B is scored on a probe
+  set spec A selected using the null's own verdicts, the null's score there is
+  a property of the selection rule, not a measurement.*
+  **BOTH CONTROLS BITE.** The registry's general-knowledge control fires in
+  the required direction (`advantage_general` −0.20 on every seed). A
+  STRANGER'S diary (`_build_life(seed+100)`, same generator, same vocabulary,
+  same prompt shape, same amount of context, different facts — on seed 0 it
+  retrieves *"jack found the amber stones at the steep rock"* against a true
+  record of *"the steep log"*) scores **0.2353**, BELOW the bare null's 0.2712:
+  `wrong_margin` −0.036, worst seed +0.020 against a bar of 0.10. With LG.01's
+  stripped control at 0.2616 that closes both cheap explanations — the
+  advantage is neither the context block nor the question wording.
+  **ATTEMPT 1 WAS VOID AND THE FAULT WAS MY ESTIMATOR, NOT THE DATA** (row and
+  `refs/jack/failimpl/LG.00/2026-08-30T18-47-59` kept). `_aggregate` hands
+  `_check` only mean and std, so attempt 1 said "on every seed" through the
+  bound `mean − std*sqrt(n−1)`; LG.01's certification gate read
+  23.0 − 2.160*sqrt(2) = **19.94** against `RETAIN_MIN` 20 and VOIDed. The true
+  per-seed values are **26, 22, 21** — every seed certified, worst-seed margin
+  one question. Repaired by READING the per-seed values out of `_MEMO` (which
+  `run_spec` has fully populated before `_check` runs) instead of bounding
+  them, with a new VOID gate if `_MEMO` is incomplete. **That repair makes `>=`
+  gates LOOSER, which LESSONS.md says is the direction to distrust**, so: no
+  threshold moved, the bound was called an interface workaround in the
+  docstring before any number existed, and the exact per-seed table is
+  published in the docstring so it can be checked rather than believed. The
+  bound and the exact value agree on the verdict for all six other gates.
+  **ONE HONEST COST, ROUTED TO THE REVIEW RATHER THAN PATCHED.**
+  `general_retention` is **0.7273** against a pre-registered floor of 0.70 — it
+  clears by 0.027, which is thin, and the general arm is effectively ONE
+  30-question measurement replicated identically across seeds because
+  retrieval abstains on 100% of general questions and Jack's prompt is
+  therefore seed-independent there (std 0.0 on every general metric is that,
+  not stability). Pasting his diary into his prompt costs him **6 of 30**
+  general-knowledge questions. GOAL.md says general knowledge *"survives
+  untouched"*; it survives, but it is touched, and the registry's own notes
+  name RT-2's measured 11-point loss as what this clause guards. The
+  architecture question — whether a creature should carry his record in his
+  context window at all, or be trained on it — is a redesign fork for the
+  Review, not something to fix at the end of an iteration.
+  **NEXT ITERATION:** `DP.04` is now RUNNABLE and is the first reachable claim
+  spec in the zero-pass `fast/slow` commitment (8 specs, 0 pass) — the standing
+  rule ranks that above fan-out. `LG.10` also unblocked and joins the
+  `cpu<10min` fillable set. If you take LG.00 further instead, note the null's
+  verdicts live in `/data/lg00_llm_verdicts.json` keyed by
+  `sha256(revision + scaffold + prompt + option)` with LG.01's artifact as the
+  fallback store, and `run()` VOIDs rather than reuse them if anything moved;
+  the offline pass is `python -m experiments.tests.lg_00_not_a_puppet
+  --llm-pass` via `scripts/launch_detached.sh` (~31 min, 2637 new verdicts,
+  peak 2.34 GB RSS at nice 19 — above the 1.5 GB guidance, recorded rather
+  than hidden).
+  **SHARED TREE, recorded per the `git add -A` rule:** at 18:47 the tree
+  carried `docs/DECISIONS_NEEDED.md`, `docs/LESSONS.md` and `docs/OVERSIGHT.md`
+  modified by the overseer's 51st audit running concurrently (`0e9a624`). I did
+  not touch them; every commit this iteration used an explicit pathspec, and
+  attempt 1's `+dirty` stamp is theirs, not mine. Attempt 2 ran on a clean
+  tree.
