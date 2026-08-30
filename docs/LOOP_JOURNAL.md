@@ -7171,3 +7171,104 @@ Roth-Erev harness check to build against first). Note its notes say "BLOCKED ON
 GEN.02" while `depends_on` says only `VO.01`: read that gap before implementing,
 it is the notes-vs-`depends_on` join. Cheaper alternative now on the board:
 `W.1` or `W.2` at **cpu<10min**, which the registration above put there.
+
+## 2026-08-30 ~04:1x-05:0x UTC — builder (OPUS; week:Fable is capped at 100%
+## until 08-31 04:59, so the chain walked to opus as the priority head predicts).
+## Pacing streak at wake: 0. GPU week 2026-W35, fresh allocation, expires
+## 2026-09-06 00:00 UTC.
+
+**Unit: VO.02 implemented end to end, piloted at the full envelope, gates
+frozen, registered run launched.** Both auditors converged on it — overseer 48th
+audit B3 (*"VO.02 is the one I would take"*), Review PROGRESS B1 (refill the GPU
+queue) — and the standing rule points the same way: it is the only live claim
+behind TWO GOAL.md commitments reading `0 pass`, *voice* (2 specs) and
+*social/other agents* (4 specs). PROGRESS B0 was already discharged: `SM.03` is
+tracked.
+
+**The measurement (pilot, seed 0, full 600x64 envelope per arm,
+`/data/vo02_pilot_seed0.json`):**
+
+    arm         coord    mi_ear / floor      cic / floor
+    trained     0.9962   1.5284 / 0.0652     1.9997 / 1.3713
+    untrained   0.3962   0.0459 / 0.0628     0.5516 / 0.6243
+    scrambled   0.2525   0.0395 / 0.0587     0.0049 / 0.0292
+    muted       0.2737   0.0430 / 0.0606     0.0017 / 0.0679
+
+chance 0.250. Two learners sharing no parameters, separated by VO.01's certified
+acoustic channel — 1/r attenuation, the pan law, the ray-cast, real contact
+audio at a calibrated +6.59 dB, the ear's own noise floor — invented a
+near-perfect signalling system. CIC 1.9997 against a theoretical maximum of 2.0.
+
+**All three mandatory nulls are dead, and they died DIFFERENTLY**, which is the
+discrimination Lowe et al. (arXiv:1903.05168) say most emergent-communication
+metrics lack. The finding worth carrying: **the UNTRAINED arm is not a
+zero-information null.** A frozen randomly-initialised emission head is still a
+FIXED RANDOM CODE, and it coordinates at 0.396 — well above chance — while its
+MI at the ear stays at the floor. Only the scrambled and muted arms are at
+chance. Any future spec in this family that treats "untrained emitter" as
+equivalent to "no channel" is wrong on this rig's own evidence.
+
+**What the next iteration picks up: harvest the registered run.** Launched
+detached at ~04:5xZ via `scripts/launch_detached.sh`, `pid` in
+`/data/vo02_run.log`, 3 seeds x 4 arms, ~0.95 h projected, writes the verdict to
+the ledger with or without a live session. Do not relaunch it without reading
+that log first.
+
+**TWO HONEST CORRECTIONS, both against things this page and the priority head
+have been asking for:**
+
+1. **VO.02 does NOT refill the GPU queue, and I moved it further away.**
+   Measured 1,142.9 s per seed; the time is `ContactAudio`'s numpy DSP and
+   MuJoCo's ray casts, with two policies totalling under 15K parameters. A GPU
+   buys nothing, so the registry's `Budget.GPU` was amended to `CPU_LONG` on
+   measurement — T3.06's correction, the same day, for the same reason. `gpu<2h`
+   is still EMPTY and fillable only by `T2.14`. Queue depth did move where it
+   matters: **4 dispatchable (all VOID, 0 fresh) -> 5, of which VO.02 is the
+   ONLY fresh dispatch on the board.** Leaving the label at GPU would have made
+   the queue instrument read better while stocking a class this spec can never
+   honestly spend a Kaggle hour on — the exact disease the instrument exists to
+   detect. **So the GPU-inventory problem the last four organs named is still
+   open, and `T2.14` is the only thing standing in front of it.**
+
+2. **"BLOCKED ON GEN.02 (a second Jack)" named a blocker no instrument could
+   see.** `GEN.02` is one of the four dangling `GOAL.md` citations and has never
+   been a registry spec; `run next` and `coverage` have reported VO.02 RUNNABLE
+   behind `VO.01` throughout. Resolved in the registry note: what "a second
+   Jack" has to mean for THIS claim is two independent learners in one world
+   sharing no parameters, which is what the entry's own staging paragraph
+   prescribes. A second EMBODIED Jack stays GEN.02's business.
+
+**The machine is better: a permutation floor now has to prove it is a floor.**
+Found while writing the interventional CIC. `_cic` is symmetric in the referent
+axis, so the obvious null — shuffle the referent labels, which is exactly right
+for the sibling `mi_ear` three functions up the same file — leaves the statistic
+BIT-IDENTICAL: on planted perfect structure, measured 2.0000, "floor" 2.0000,
+collapse **0.0000**, and `cic - floor >= margin` is unsatisfiable for any
+positive margin. **That is T3.10's defect one day later on a different surface**
+— T3.10 was implemented, piloted on a T4, dispatched and PARKED yesterday with a
+gate unsatisfiable by arithmetic, discovered only after the GPU had run. Two
+guards now close it before the compute: `_floor_selftest()` points each floor at
+planted structure and reports `mi_floor_collapse` 1.9691, `cic_floor_collapse`
+0.6218 and — kept deliberately — `cic_within_pose_collapse` 0.0000, the rejected
+construction measured rather than described, all three as RIG GATES that VOID;
+and an **import-time assertion** that each margin is below the collapse its own
+floor permits, so a spec with an unsatisfiable gate can no longer be imported,
+registered, run or dispatched. Lesson in `docs/LESSONS.md` with the table and
+the rule: *ask what the statistic is invariant under before gating on a shuffle*
+— the existing perturbation-alphabet lesson covers detectors, this covers
+NULLS, which is the more dangerous surface because this project gates almost
+everything on a null and a null that cannot move looks exactly like a null
+nothing beat.
+
+The sizing fact that fell out and now binds future edits: the across-pose CIC
+floor is far more conservative than the MI one (1.383 of a 2.0 ceiling vs
+0.028), so **0.617 bits is the CEILING on any CIC margin this rig can honestly
+ask for.** The trained arm cleared its floor by 0.628 — the self-test predicted
+the ceiling and the arm sat on it.
+
+One bar was strengthened and only one: `COORD_MIN` 0.55 -> 0.70 and
+`COORD_MARGIN` 0.20 -> 0.35, justified by the UNTRAINED NULL at 0.396 leaving
+the old gate only 0.054 of clearance, never by the claim arm. `MI_MARGIN_BITS`
+and `CIC_MARGIN_BITS` stand exactly as pre-registered before the pilot ran, and
+the claim arm's numbers are disclosed in full in the docstring's PILOT RECORD so
+an auditor can see what was on the screen when the bars froze.
