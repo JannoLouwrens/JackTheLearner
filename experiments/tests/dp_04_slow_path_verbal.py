@@ -140,9 +140,13 @@ comparison is vacuous rather than lost:
                         an arm and itself — VOID, and specifically NOT the FAIL
                         that a lazy reading would record.
   headroom              on the survival variants the filler arm must sit at
-                        least HEADROOM_MIN steps BELOW the oracle. If the null
-                        already matches the teacher there is nothing left for a
-                        channel to buy and a zero gain says nothing.
+                        least HEADROOM_MIN steps BELOW the measurement CEILING
+                        (`LIFE_CAP`). If the null is already at the ceiling the
+                        statistic cannot move upward and a zero gain says
+                        nothing about the channel. `headroom_to_oracle_*` is
+                        reported beside it and is NOT the gate — the H=8 oracle
+                        is itself censored at the cap, so a null at the cap
+                        "ties the teacher" for a reason that is about the cap.
   demand_spread         measured demand must vary across the five tasks by at
                         least SPREAD_MIN of the normalised range, or the
                         dose-response axis does not exist.
@@ -206,6 +210,83 @@ which is what makes 12,000 supervised labels per (task, seed) affordable at
 all. Projected ~90 s per seed; the pilot MEASURES it and the freezing commit
 records the number. `est_hours` is not guessed here — GPU_SHORT is the
 registry's budget and `_GATES_FROZEN` refuses any submission before the pilot.
+
+PILOT RECORD v1 — BOTH SEEDS VOID ON RIG GATES. THE ENVELOPE CANNOT MEASURE A
+FIVE-STEP EFFECT AND IT SATURATES AT THE TOP. `_GATES_FROZEN` STAYS FALSE, NO
+DISPATCH, NO CLAIM. (builder, 2026-08-30 19:21-19:25 UTC, head 466a2cf,
+artifacts /data/dp04_pilot_seed{90,91}.json, 135.0 s and 130.8 s wall on the
+2-core box — the compute was never the problem.)
+
+    seed 90                 rand   react  oracle |  mute filler verbal | ent
+      res2                 133.75  112.50  200.00| 191.67 200.00 183.33 | 0.897
+      res3                 134.08  112.50  200.00| 200.00 191.67 191.67 | 1.029
+      res4                 145.08  112.50  200.00| 191.67 200.00 200.00 | 1.282
+      res8                 158.17  120.83  200.00| 200.00 191.67 191.67 | 0.743
+      flat                 -57.50   -9.30   -9.30|  -9.30  -9.30  -9.30 | 1.003
+    seed 91
+      res2                 102.08  112.50  168.75| 175.00 168.75 175.00 | 1.286
+      res3                 118.00  108.33  200.00| 200.00 128.92 132.83 | 0.876
+      res4                 119.42  108.33  200.00| 137.58 183.33 112.25 | 0.866
+      res8                 175.08  139.58  200.00| 191.67 191.67 200.00 | 0.000
+      flat                 -59.20   -9.50   -9.50|  -9.50  -9.50  -9.50 | 1.051
+
+WHAT PASSED, and it is most of the instrument. `base_world_identical` 1.0 and
+`scorer_mismatch` 0.0 on both seeds — the base variant IS `lc_00._World(seed)`
+and the 22x shared-memo oracle agrees with DP.00's scorer to 1e-12 on 200
+probes. `demand_flat_steps` 0.000 on both: DP.00's flat world re-measures as
+exactly zero-demand on this spec's code path, its reactive arm reaching -9.30
+and -9.50 against an identical oracle, which is DP.00's own certification
+reproduced here. `demand_spread` 0.875 / 0.917, `losses_fell` 1.0 on both.
+
+THREE FAULTS, each caught by a different pre-registered gate, each about the
+ENVELOPE and none about the hypothesis:
+
+  1. SATURATION AT THE CENSORING CAP (seed 90, `headroom`). The filler arm sits
+     AT `LIFE_CAP` on res2 and res4 (200.00), and 8.33 below it on the other
+     two. The statistic cannot move upward, so a zero gain measures the cap.
+     This is also what corrected the gate itself: it originally read
+     `oracle - filler`, and since the H=8 oracle is ALSO censored at 200 that
+     difference reads 0.00 for a reason that is about the cap rather than about
+     the null. It now measures the distance to the ceiling and reports the
+     oracle version beside it.
+  2. TRAINING AND EVAL VARIANCE LARGER THAN THE EFFECT (seed 91,
+     `above_random_floor`). The verbal arm scores 112.25 on res4 — BELOW that
+     task's uniform random walker at 119.42 — and 200.00 on res8, from one
+     training run per (task, arm) and 12 evaluation lives whose per-life range
+     is [100, 200]. `MIN_GAIN` is 5.0 steps. Nothing this noisy can resolve it.
+  3. EMISSION COLLAPSE (seed 91, res8, `emit_entropy` 0.000). The verbal arm's
+     symbol went constant on that task, which makes it the filler arm wearing
+     another name. The gate fired and called it VOID, which is the whole reason
+     that gate exists and is NOT a FAIL.
+
+READ THIS BEFORE QUOTING ANY NUMBER ABOVE. The verbal arm LOST to the filler on
+both pilot seeds (mean gain -4.17 and -13.15). **That is not evidence about the
+claim and must never be reported as any.** Every seed VOIDed on a rig gate, a
+VOID is not a FAIL (protocol.py:208), and an arm that fell below a random
+walker and an arm whose channel went constant are not arms that tested
+anything. The pilot seeds 90 and 91 are now SPENT.
+
+THE REPAIRS ARE SIZING, AND EACH IS A MEASUREMENT RATHER THAN A PREFERENCE —
+pre-registered here so the next iteration does not improvise them:
+
+  (a) The ceiling. `LIFE_CAP = 200` is DP.00's halved value against LC.00's
+      400, halved for a CPU budget this rig does not have a problem with (135 s
+      per seed). Raising it moves the ceiling the statistic hit; the oracle's
+      cost scales with it and must be re-measured, not assumed.
+  (b) The noise. `N_EVAL_LIVES` and the number of training restarts must be
+      SIZED AGAINST THE MEASURED per-arm spread, BA.03's precedent: run one
+      arm repeatedly, read its sigma, and set the counts so that `MIN_GAIN`
+      sits at the stated sigma. That is arithmetic. It is not a licence to move
+      `MIN_GAIN`, which is a claim bar and stays where it is.
+  (c) The collapse. One training run per (task, arm) makes a single unlucky
+      initialisation the arm. Reporting the median of R restarts is the
+      standard repair and it changes no gate.
+
+NOTHING ABOVE SIZES A CLAIM BAR, and that is deliberate: the pilot produced no
+valid measurement of the claim statistic, so there is nothing to size
+`MIN_GAIN` / `SCRAM_FRAC` / `RHO_MIN` / `FLAT_TOL` against. They are unchanged
+from the values committed before the pilot ran. Freezing them off a VOID run
+would be fitting a gate to noise.
 
 PILOT PROTOCOL, pre-registered. `python -m experiments.tests.dp_04_slow_path_verbal
 pilot` runs seeds 90 and 91 — disjoint from the registered 0/1/2 and SPENT once
@@ -872,7 +953,15 @@ def _experiment(seed: int) -> dict:
             if not a["score"] > e["rand"]:
                 above_floor = 0.0
         if e["kind"] == "survival":
-            headroom = min(headroom, e["oracle"] - f)
+            # TWO readings, and the pilot showed why they differ. `oracle - f`
+            # is what this gate measured first, and it is the wrong quantity:
+            # the H=8 oracle is CENSORED at LIFE_CAP on every survival variant,
+            # so that difference reads 0 exactly when the null reaches the cap
+            # and says nothing about the true gap. What actually decides whether
+            # the statistic CAN move is the distance from the null to the
+            # measurement CEILING. Both are recorded; the ceiling one gates.
+            headroom = min(headroom, e["ceil"] - f)
+            m[f"headroom_to_oracle_{name}"] = e["oracle"] - f
 
     m["lookahead_gain_over_matched_compute_filler"] = (
         sum(gains[i] for i, n in enumerate(fit["order"]) if n in surv)

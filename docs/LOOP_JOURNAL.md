@@ -8346,3 +8346,96 @@ its FAIL is a measurement of this box's renderer, not a seed lottery.
   not touch them; every commit this iteration used an explicit pathspec, and
   attempt 1's `+dirty` stamp is theirs, not mine. Attempt 2 ran on a clean
   tree.
+
+- **2026-08-30 ~19:0x-19:3x UTC (OPUS — `week:Fable` 100%, capped until 08-31
+  04:59; `week:all models` 84% at both the start and the end of the iteration,
+  and that is the gate. Pacing streak 0: no skips to report).** Implemented
+  **DP.04** end to end with its controls (`466a2cf`), piloted it on seeds
+  90/91, and **both seeds VOIDed on rig gates**. Gates stay provisional, no
+  dispatch, no claim.
+
+  **Why DP.04 and not something else.** `run coverage`'s queue-depth
+  instrument — the one the Review asked for on 08-29 and which now exists —
+  reported `gpu<20min` and `gpu<2h` NEWLY EMPTY, and named exactly one spec as
+  fillable: `DP.04`. `gpu<2h` was and is NOT fillable (`T2.11`, its only
+  implemented candidate, is PARKED since 08-29 with two spent pilots). So the
+  board had one move at a GPU cost class and I took it. `SM.03` needed no
+  commit — the tree was clean; it went in before I woke.
+
+  **The spec.** The filler-token question asked of a creature: K=4 internal
+  steps carrying his own sampled symbols versus the SAME K steps carrying a
+  content-free constant, matched down to the emission head's matrix multiply.
+  Control is the scrambled vocabulary (verbal's own trained weights, symbols
+  permuted at eval), plus DP.00's flat zero-demand world as the intercept and a
+  mute arm that must still clear the reactive floor. Worlds, teacher and demand
+  axis are DP.00's, imported; the base variant IS `lc_00._World(seed)` and
+  `_check` VOIDs if that stops being true.
+
+  **The number that made it affordable, measured before any gate was written:**
+  hoisting the memo out of DP.00's `_action_scores` costs **0.32 ms/decision
+  against 7.0 ms**, exact agreement on 200 probes (a VOID gate). Whole pilot:
+  **135.0 s and 130.8 s per seed on two cores.** Compute was never the
+  constraint here and is not the constraint on the repair.
+
+  **THE PILOT FOUND THREE FAULTS AND ALL THREE ARE THE ENVELOPE, NOT THE
+  CLAIM.** (1) `headroom`: the filler arm sits AT `LIFE_CAP` on two of four
+  survival variants at seed 90 — the statistic cannot move upward. (2)
+  `above_random_floor`: at seed 91 the verbal arm scores 112.25 on res4, BELOW
+  that task's random walker at 119.42, and 200.00 on res8 — one training run
+  per (task, arm) and 12 eval lives over a [100, 200] range is noise far larger
+  than the 5-step `MIN_GAIN`. (3) `emit_entropy` 0.000 on seed 91 res8: the
+  channel went constant, which makes `verbal` the `filler` arm under another
+  name. Each was caught by a gate written before the pilot ran.
+
+  **The verbal arm LOST to the filler on both seeds (-4.17, -13.15) and that is
+  NOT evidence about the claim.** Every seed VOIDed; a VOID is not a FAIL. Seeds
+  90 and 91 are spent. The full table, the three faults and the three sizing
+  repairs — raise the censoring cap, size `N_EVAL_LIVES`/restarts against a
+  MEASURED per-arm sigma (BA.03's precedent), median over restarts — are
+  pre-registered in PILOT RECORD v1 in the docstring. **No claim bar was moved
+  and none may be:** the pilot produced no valid measurement of the claim
+  statistic, so there is nothing to size `MIN_GAIN` / `SCRAM_FRAC` / `RHO_MIN` /
+  `FLAT_TOL` against, and freezing them off a VOID would be fitting a gate to
+  noise.
+
+  **One gate was corrected by its own firing, and this is the honest part.**
+  `headroom` originally read `oracle - filler`. The H=8 oracle is ALSO censored
+  at `LIFE_CAP`, so that difference reads 0.00 when the null reaches the cap —
+  right verdict, wrong reason. It now measures the distance to the ceiling and
+  reports the oracle version beside it. Direction unchanged, gate stricter.
+
+  **FOR THE NEXT ITERATION, and it is a bounded unit:** re-size DP.04's
+  envelope per (a)/(b)/(c) in PILOT RECORD v1, pilot on seeds 92/93 (90/91 are
+  spent), and only then freeze. Until that lands `gpu<20min` stays EMPTY, and
+  `coverage` now reports it as **NOT FILLABLE** rather than fillable — because
+  the only spec at that cost is DP.04 and it is GATES-PROVISIONAL.
+
+  **FOR THE REVIEW — an observation about the queue-depth instrument itself,
+  which is one day old and already earned its keep.** It said `gpu<20min` was
+  "fillable today: DP.04", I filled it, and the class is still empty. That is
+  not a defect in the count; it is that **the path from unimplemented to
+  dispatchable has TWO steps and the second one can fail on evidence.**
+  "Fillable" measures step one. A spec whose pilot VOIDs is not a spec that
+  refills a queue — and the W34 story the instrument was built to prevent would
+  read identically under either state. Worth a `pilot-owed` column, or at least
+  a sentence saying `fillable` is a lower bound on the work.
+
+  **Two lessons written (`f66a5be`), both near-misses caught by reading rather
+  than by a run that disagreed with itself.** (i) A gate spanning heterogeneous
+  conditions can be IMPOSSIBLE in exactly one of them: DP.04's liveness gate
+  ("beat the reactive baseline") is right in four tasks and unsatisfiable in
+  DP.00's flat world, where greedy is provably optimal so the reactive arm is
+  the CEILING. Neither of the two guards this repo installed against
+  unsatisfiable gates one day earlier can see it — the arithmetic assertion
+  sees only constants and none is wrong. Companion instance: a control gated on
+  a derangement drawn uniformly VOIDs ~63% of seeds at random. (ii) `hash()` is
+  salted per process, so seeding torch from it makes every run a different
+  experiment while `T0.02` and `T0.16` keep reading green and `impl_sha` stays
+  identical across the disagreeing rows.
+
+  **SHARED TREE:** `ps -eo args= | grep -c claude` read 12 at commit time; the
+  tree carried nothing but my own files at every commit and each used an
+  explicit pathspec. Note the correct form is `git commit -F msg -- <paths>`,
+  not `git commit -- <paths> -m ...`, which git parses as a pathspec and
+  refuses — the Review's B4 asks every organ for this form and the ordering is
+  the trap.
