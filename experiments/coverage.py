@@ -603,6 +603,33 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         spec = by_id.get(sid)
         if spec is not None:
             fillable[spec.budget.value].append(sid)
+    # PILOT-OWED — the THIRD state, and it was missing (builder, 2026-08-30).
+    #
+    # Found the same way `fillable` was: by obeying this function's own advice.
+    # It reported `gpu<20min` empty and UNFILLABLE, whose printed instruction is
+    # "the repair is an UNBLOCK ... do not spend an iteration looking for a spec
+    # to write here" — while the only spec at that cost, `DP.04`, was
+    # implemented, tracked, runnable, unsettled, unparked and ONE PILOT from
+    # dispatchable. The class was not structurally unreachable; it was one
+    # bounded CPU unit away, and the instrument routed the builder to `run
+    # blocked` instead, which is a different and much larger unit of work.
+    #
+    # The cause is that a gate-provisional spec falls out of BOTH partitions:
+    # `by_class` excludes it (its `run()` refuses, correctly — the 46th audit's
+    # rank 2), and `fillable` counts only `unimplemented`, so nothing counts it
+    # anywhere. Two states were being used to describe three, and the state that
+    # vanished is the CHEAPEST one to repair.
+    #
+    # This is the queue-depth blind spot one layer up. The instrument exists
+    # because W34's 30 free GPU-hours died while every document blamed uptime
+    # and no number could say the shelf was empty. Mislabelling "one pilot away"
+    # as "unreachable" recreates exactly that: a builder who believes it leaves
+    # the class empty for the same reason, holding a correct-looking readout.
+    pilot_owed: Dict[str, list] = {c: [] for c in by_class}
+    for sid in excluded["gates_provisional"]:
+        spec = by_id.get(sid)
+        if spec is not None:
+            pilot_owed[spec.budget.value].append(sid)
     return {
         "depth": sum(len(v) for v in by_class.values()),
         "by_class": {c: sorted(ids) for c, ids in by_class.items()},
@@ -613,10 +640,15 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         "known_empty": sorted(empty & baseline),
         "stale_baseline": sorted(c for c in baseline if c not in empty),
         "fillable": {c: sorted(ids) for c, ids in fillable.items()},
-        # Empty AND nothing runnable to implement into it: the repair is an
-        # unblock, not an implementation. Reported, never fatal on its own —
-        # it is a fact about the ladder's shape, not debt anyone incurred.
-        "empty_unfillable": sorted(c for c in empty if not fillable[c]),
+        "pilot_owed": {c: sorted(ids) for c, ids in pilot_owed.items()},
+        # Empty AND no path in: neither a runnable spec to implement NOR a
+        # gate-provisional one to pilot. Only then is the repair an unblock.
+        # The `pilot_owed` conjunct is the correction — without it this field
+        # called a class one bounded CPU unit from stocked "structural".
+        # Reported, never fatal on its own: it is a fact about the ladder's
+        # shape, not debt anyone incurred.
+        "empty_unfillable": sorted(c for c in empty
+                                   if not fillable[c] and not pilot_owed[c]),
     }
 
 
@@ -685,6 +717,11 @@ def _queue_fixture() -> List[str]:
         ("Q.07", Budget.GPU, "", None, True, None),      # no file: unimplemented
         ("Q.08", Budget.GPU, "", None, True, False),     # gates PROVISIONAL: refuses
         ("Q.09", Budget.GPU, "", None, True, True),      # declared AND frozen: counts
+        # The ONLY occupant of its class, and gate-provisional: that class is
+        # empty, and its repair is a PILOT, not an unblock. Without this row
+        # every empty class in the fixture is empty for the same reason and the
+        # three-way split cannot be distinguished from the two-way one.
+        ("Q.10", Budget.GPU_SHORT, "", None, True, False),
     ]
     by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t, _g in rows}
     led = _Led({sid: s for sid, _b, _n, s, _t, _g in rows if s is not None})
@@ -726,10 +763,25 @@ def _queue_fixture() -> List[str]:
                      f"SM.03 case — got {q['excluded']['untracked']}")
     # THE ROW THE 46th AUDIT'S RANK 2 EXISTS FOR: runnable, implemented,
     # tracked, unsettled, unparked — and its own `run()` refuses.
-    if q["excluded"]["gates_provisional"] != ["Q.08"]:
+    if q["excluded"]["gates_provisional"] != ["Q.08", "Q.10"]:
         fails.append(f"a spec with PROVISIONAL gates refuses its own "
                      f"registered run and must be excluded — the SM.03 case — "
                      f"got {q['excluded']['gates_provisional']}")
+    # THE THREE-WAY SPLIT. gpu<20min is EMPTY and its only occupant Q.10 is
+    # gate-provisional: the repair is a PILOT, so it is neither stocked nor
+    # structurally unreachable. Before this pair of assertions the field
+    # reported it as unfillable and told the builder to go do `run blocked` —
+    # the DP.04 case, where the class was one bounded CPU unit from stocked.
+    if q["pilot_owed"]["gpu<20min"] != ["Q.10"]:
+        fails.append(f"an empty class whose only occupant has provisional "
+                     f"gates is PILOT-OWED, got {q['pilot_owed']}")
+    if "gpu<20min" in q["empty_unfillable"]:
+        fails.append("a pilot-owed class is NOT unfillable: its repair is a "
+                     "pilot, not an unblock")
+    # ...and the distinction has to cut both ways, or it is just a rename.
+    if "cpu<1min" not in q["empty_unfillable"]:
+        fails.append(f"a class with neither an implementable nor a pilot-owed "
+                     f"spec IS unfillable, got {q['empty_unfillable']}")
     if q["by_class"]["cpu<10min"] != ["Q.06"]:
         fails.append(f"cost classes must not merge, got {q['by_class']}")
     if q["depth"] != 4:
@@ -926,9 +978,20 @@ def check() -> int:
         if ids or cls in q["empty"]:
             shown = ", ".join(ids) if ids else "EMPTY"
             fill = q["fillable"].get(cls, [])
-            tail = ("" if ids else
-                    (f"   <- fillable today: {', '.join(fill)}" if fill
-                     else "   <- NOT FILLABLE: no runnable spec to implement"))
+            owed = q["pilot_owed"].get(cls, [])
+            # PILOT-OWED IS NAMED FIRST when it applies, because it is the
+            # cheapest repair of the three and the one this readout used to
+            # hide behind "NOT FILLABLE".
+            if ids:
+                tail = ""
+            elif owed:
+                tail = (f"   <- PILOT OWED (cheapest repair): "
+                        f"{', '.join(owed)}"
+                        + (f"; or implement {', '.join(fill)}" if fill else ""))
+            elif fill:
+                tail = f"   <- fillable today: {', '.join(fill)}"
+            else:
+                tail = "   <- NOT FILLABLE: nothing to implement, nothing to pilot"
             print(f"      {cls:<10} {len(ids):>2}   {shown}{tail}")
     if q["void"]:
         print(f"  of which VOID (an arm to repair, not a dispatch): "
@@ -951,11 +1014,22 @@ def check() -> int:
               f"      {', '.join(q['new_empty'])}\n"
               "  Free weekly quota at an empty class is unspendable however\n"
               "  awake the loop is: that is what cost 61 free GPU-hours over\n"
-              "  three weeks. Implement a spec; never baseline the class.")
+              "  three weeks. Pilot or implement a spec; never baseline the\n"
+              "  class.")
+    owed_cls = sorted(c for c in q["empty"] if q["pilot_owed"].get(c))
+    if owed_cls:
+        print(f"  {len(owed_cls)} empty class(es) are PILOT-OWED, the cheapest "
+              f"of the three repairs:\n"
+              + "".join(f"      {c:<10} {', '.join(q['pilot_owed'][c])}\n"
+                        for c in owed_cls)
+              + "  The spec is written, tracked and runnable and its own run()\n"
+              "  refuses until a pilot freezes its bars. That is a bounded CPU\n"
+              "  unit, NOT an unblock and NOT a new implementation — and it is\n"
+              "  the state this readout used to report as NOT FILLABLE.")
     if q["empty_unfillable"]:
-        print(f"  {len(q['empty_unfillable'])} empty class(es) CANNOT be "
-              f"filled by implementing anything today — every unimplemented\n"
-              f"      spec at that cost is blocked upstream: "
+        print(f"  {len(q['empty_unfillable'])} empty class(es) have NO path in "
+              f"today — nothing runnable to implement\n"
+              f"      and nothing gate-provisional to pilot: "
               f"{', '.join(q['empty_unfillable'])}\n"
               "  Do not spend an iteration looking for a spec to write here.\n"
               "  The repair is an UNBLOCK (`run blocked`), which is a\n"
