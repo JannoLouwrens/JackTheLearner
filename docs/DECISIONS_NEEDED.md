@@ -3750,3 +3750,83 @@ DECIDE: D17
 **Cost of leaving it: none that compounds.** The default changes nothing you
 decreed and the ledger's history makes it reversible. Filed with a deadline
 only because `SYSTEM.md` forbids an escalation without one.
+
+---
+
+## D14 — EVIDENCE UPDATE 2026-08-30 18:45 UTC (51st overseer audit). The default was armed on a day the builder produced nothing. Today it produced everything, on exactly the path the default would abort.
+
+**No new question. No change to the default. This entry exists because the fact
+the default was costed against has reversed, ~10 hours before it fires.**
+
+`D14`'s default is *"a pre-flight check in `scripts/ladder_loop.sh` before
+`run_claude`, at a 95% floor on the loop model's own weekly line"*, and its
+stated cost is: *"the same GPU-hours still expire — this option buys honesty,
+not throughput."*
+
+**The measurement, read from `/data/jack-logs/ladder.log` and
+`scripts/claude_usage.py` at 18:39 UTC:**
+
+```
+week:Fable             [####################] 100%  resets Aug 31, 5am (UTC)
+week:all models        [################    ]  84%  resets Aug 31, 5am (UTC)
+```
+
+`week:Fable` has read 100% since before 00:07 today. **Nineteen of nineteen
+iterations logged `LIMITED on fable (credits or session) — falling back to
+opus` and ran a full unit on Opus.** Zero iterations ran on the primary model.
+The literal reading of the default — abort when the *loop model's own* line is
+≥95% — would have aborted all nineteen.
+
+**What those nineteen fallback iterations produced:**
+
+| | |
+|---|---|
+| registered verdicts | `W.1` FAIL, `W.2` FAIL, `PL.00` FAIL, `LG.01` PASS |
+| ladder | 84 → **91** PASS of 200 |
+| specs registered | `W.1`–`W.8`, `PL.00`, `PL.02`, `BA.03` |
+| first-ever falsifier of the PLASTIC-ONLY decree (GOAL.md:76) | `PL.02` |
+| first-ever measurement of the WORLD rather than of Jack | `W.1`, `W.2` |
+| implemented + pre-registered | `LG.00`, the anti-puppet claim |
+
+**Why the original costing said "throughput: none".** `D14` was raised by the
+34th audit on 2026-08-26, and its own counterargument section records the state
+it was costed in: *"all 12 points of Fable burned in the six hours to 12:07 came
+from outside jackthelearner, **with the builder at zero iterations**."* On that
+day there was no throughput to lose, so option (b) genuinely cost only
+GPU-hours. The fallback chain has since been exercised 77 times, 19 of them
+today, and it demonstrably ships science.
+
+**The entry's second premise has also weakened.** `D14` point 2 says the Opus
+switch happens *"with nothing recording that as an event."* `ladder_loop.sh:241`
+logs `LIMITED on ${MODEL} (credits or session) — falling back to ${FB}` for
+every occurrence, and every iteration journal opens by naming the model it ran
+on and the meter it acted against. The invisibility the option was buying
+against is largely already repaired.
+
+**THE FORK, which is an implementation reading and not a new option.** The
+default's words admit two implementations with very different costs, and
+whichever is taken should be taken deliberately:
+
+- **(b-literal)** — check `week:<primary>` before `run_claude "$MODEL"`
+  (`ladder_loop.sh:228`) and abort the slot. Cost, measured on today: 19 lost
+  iterations, 4 lost verdicts, 7 lost PASS.
+- **(b-effective)** — check the model that will ACTUALLY run, i.e. inside the
+  `for FB in $FALLBACK_MODELS` loop (`ladder_loop.sh:238`), and abort only when
+  every model in the chain is exhausted. Cost on today: zero. **This is not a
+  widening** — running on Opus after `LIMITED on fable` is already permitted,
+  is current behaviour, and shipped every claim recorded today — so it does not
+  breach the rule that a default may only pick among already-permitted actions.
+
+**Nothing is asked that the system could decide itself.** Both readings are
+strictly tighter than the 90% stop, both are reversible by reverting one
+commit, and the overseer has taken neither. Routed to the builder as
+`OVERSIGHT.md` **B1** with an instruction to name the reading it takes in the
+commit message. If the owner prefers the other reading, one line settles it.
+
+**Sequencing note, so nobody is surprised.** `week:Fable` resets 2026-08-31
+05:00 UTC and `D14` fires on 2026-08-31, so whichever reading lands will
+probably not bite tomorrow — Fable will be fresh. The cost recurs at the end of
+every subsequent week, which is precisely when it is hardest to notice.
+
+**No `DECIDE:` block is added or altered by this entry.** `D14`'s default,
+class and `decide_by: 2026-08-31` stand exactly as armed.

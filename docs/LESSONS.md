@@ -8475,3 +8475,63 @@ Watch for it wherever this project curates: any spec that selects trials on
 which a baseline underperforms and then measures against that baseline on the
 selected trials — held-out splits chosen by an oracle's failures, "hard case"
 subsets, adversarial filters, and every future successor of `LG.01`.
+
+## A DEFAULT IS COSTED AGAINST THE WORLD ON THE DAY IT IS ARMED, AND NOTHING
+## RE-READS THAT COSTING BEFORE IT FIRES — so the safest default in the file can
+## become the most expensive one without a single word of it changing
+## (overseer, 2026-08-30, 51st audit, on D14 ~10 h before it fired)
+
+`SYSTEM.md` armed every goal-class escalation with a default and a deadline
+because D1 proved that silence and "not yet" are indistinguishable forever. The
+invariant that makes firing safe is a *permissions* invariant: a default may
+only pick among already-permitted actions — never editing `GOAL.md`, never
+weakening a threshold, never widening what is allowed. `D14`'s default obeys it
+perfectly. It refuses strictly more than the 90% stop already refuses, it moves
+no threshold, it deletes no control, and it is reversible by reverting one
+commit. Every instrument this project owns reads it as clean, and it is clean.
+
+**It also, read literally, would have deleted the most productive day in the
+project's history.** `D14` was armed on 2026-08-26 to stop the builder when its
+own model's weekly line hits 95%. Its own counterargument section records the
+world it was costed in: *"all 12 points of Fable burned in the six hours to
+12:07 came from outside jackthelearner, **with the builder at zero
+iterations**."* With no throughput to lose, option (b) honestly cost only
+GPU-hours, and it says so: *"this option buys honesty, not throughput."* Four
+days later `week:Fable` sat at 100% for twenty-four straight hours and **19 of
+19 iterations ran on the Opus fallback** — shipping `W.1`, `W.2`, `PL.00`,
+`LG.01`, the whole `W` family's registration, the PLASTIC-ONLY decree's
+first-ever falsifier, and 84 -> 91 on the ladder. The default's cost line was
+not wrong when it was written. It was measured against a state that no longer
+existed on the day it fired.
+
+**The general rule: the permissions invariant on a default is checked once, at
+arming time, and it is CORRECT once and forever — but the COST of a default is
+an empirical claim about the world, and empirical claims go stale. A file full
+of defaults is a file full of forecasts nobody re-reads.** The deadline
+mechanism actively hides this: it is designed so that nothing needs to happen
+for the default to take effect, which means the one moment at which somebody
+would naturally re-check the arithmetic is the one moment the machine is built
+to skip.
+
+**The tell, and it is cheap to check.** For each armed default, ask: *what
+measurement is this default's stated cost resting on, and when was it taken?*
+If the answer is "a reading from the day it was armed" and the entry has been
+open longer than that reading is good for, the cost line is a fossil. `D14`'s
+was four days old and had inverted. Eleven of the other thirteen defaults due
+in the same 36 hours rest on numbers between four and twenty-one days old.
+
+**The repair is not to move the deadline** — a deadline that moves when it is
+reached is the deadlock it replaced, and this file already says so. It is to
+re-read the *cost*, not the *question*, in the audit before the deadline, and
+to append the re-reading as an evidence update that changes no `DECIDE:` block.
+The default still fires. It just fires with a current price tag on it.
+
+**Second, smaller rule from the same entry, worth keeping separately: a default
+written in prose can admit two implementations whose costs differ by
+everything.** `D14` says "a 95% floor on the loop model's own weekly line".
+Checked before the fallback chain, that is 19 aborts; checked on the model that
+actually runs, it is zero. Neither reading widens what is permitted, so the
+safety invariant cannot distinguish them and no instrument flags the ambiguity.
+Whoever implements a fired default owes the record a sentence naming which
+reading they took — because the default's author is, by construction, not
+there.
