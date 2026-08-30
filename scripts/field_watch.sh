@@ -18,6 +18,7 @@ say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
 . "$REPO/scripts/lib_pause.sh"
+. "$REPO/scripts/lib_seal.sh"
 pause_gate say "$PAUSE" || exit 0
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt 3 ] && { say "ABORT: ${FREE_GB}GB free on /"; exit 0; }
@@ -43,5 +44,8 @@ if credits_out; then
     --model sonnet --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
   RC=$?
 fi
+# Same seal as the overseer and the review: a late death leaves a written
+# report that nothing marks as a draft (scripts/lib_seal.sh).
+seal_output "$RC" docs/FIELD_WATCH.md field-watch say
 say "sweep end rc=${RC} — $(grep -c NOMINAT docs/FIELD_WATCH.md 2>/dev/null || echo 0) nomination lines"
 exit 0

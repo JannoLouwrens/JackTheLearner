@@ -16,6 +16,7 @@ say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
 . "$REPO/scripts/lib_pause.sh"
+. "$REPO/scripts/lib_seal.sh"
 pause_gate say "$PAUSE" || exit 0
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt 3 ] && { say "ABORT: ${FREE_GB}GB free on /"; exit 0; }
@@ -56,5 +57,9 @@ elif [ "$RC" -ne 0 ] && api_overloaded; then
     --model "$MODEL" --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
   RC=$?
 fi
+# A run that dies LATE has already written its report. Stamp it as a draft and
+# commit it, or the next reader gets a confident PROGRESS.md from a review that
+# never finished (49th audit, 2026-08-30 — see scripts/lib_seal.sh).
+seal_output "$RC" docs/PROGRESS.md review say
 say "sweep end rc=${RC} — $(grep -c STRENGTHEN docs/PROGRESS.md 2>/dev/null || echo 0) strengthen lines"
 exit 0

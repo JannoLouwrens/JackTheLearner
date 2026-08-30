@@ -28,6 +28,7 @@ say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
 . "$REPO/scripts/lib_pause.sh"
+. "$REPO/scripts/lib_seal.sh"
 
 pause_gate say "$PAUSE" || exit 0
 
@@ -68,7 +69,13 @@ fi
 # that died (rc!=0) did not write it, so grepping it publishes the STALE verdict
 # in the vocabulary of success — a dead audit logged "ON TRACK" on 2026-08-24
 # 12:37 after 2s on a session limit (Review 2026-08-25, FOR THE BUILDER 1).
+#
+# AND THE OTHER HALF, added 2026-08-30 because the sentence above is only true
+# of a run that dies EARLY. The 49th audit died at max turns AFTER writing the
+# whole file, so the log said UNKNOWN while docs/OVERSIGHT.md said ON TRACK and
+# nothing joined them. `seal_output` stamps the file itself and commits it.
 if [ "$RC" -ne 0 ]; then
+  seal_output "$RC" docs/OVERSIGHT.md overseer say
   say "audit end rc=${RC} — verdict: UNKNOWN (audit did not complete)"
   exit 0
 fi

@@ -7510,3 +7510,56 @@ Enforce the part you can compute, name the part you cannot *in the enforcing
 file itself*, and fix the governing document's claim to match. A document that
 names an enforcement is making a capability claim, and law 1 binds it exactly
 like a README that said "Working".
+
+## An organ's OUTPUT FILE outlives the run that wrote it, so a late death
+## publishes a confident draft — and the exit code that would say so lives in a
+## different file that nobody opens
+## (builder, 2026-08-30, recovering the 49th audit)
+
+The overseer ran at 06:37 and hit `Reached max turns (60)` at 06:50. Its script
+handled that correctly **in the log**:
+
+    audit end rc=1 — verdict: UNKNOWN (audit did not complete)
+
+and then exited without touching `docs/OVERSIGHT.md`. But the dying run had
+already written that file, all the way to its closing footer. So the file on
+disk opened `VERDICT: ON TRACK` — the first non-DRIFTING verdict in four audits,
+with three sections asserting "no findings, and I checked them properly" — while
+the organ's own log recorded that it never finished. It was also uncommitted, so
+the next builder found a confident audit sitting loose in a shared tree with
+nothing on it to say it was a draft.
+
+**The assumption that failed was itself a previous scar's repair, and it was
+half right.** `overseer.sh` carried the comment *"A run that died (rc!=0) did
+not write it"* — true of the 08-24 death, which lasted two seconds on a session
+limit and republished the PREVIOUS run's verdict. It is false for a run that
+dies **late**: max turns, a timeout, an API error after the report is on disk —
+which is the more likely death for an organ whose last act is to write a long
+file. **One failure's repair encoded the opposite failure's premise.** When you
+fix an early-death bug, ask what the late-death version looks like; the two are
+usually opposite in the one variable the fix depends on.
+
+**The generalisable shape: a status and its subject stored in different places
+with nothing joining them.** The exit code is in `/data/jack-logs/*.log`, the
+verdict is in `docs/`, and every reader — human or agent — opens `docs/`. This
+is the same disease as the background-liveness scar ("waiting on background
+work" is a claim, not evidence) one layer up, and as `SYSTEM.md` claiming an
+enforcement `decisions.py` did not perform. **A report that can be read without
+its status is a report whose status does not exist.**
+
+The repair is `scripts/lib_seal.sh`, wired into all three reporting organs
+(`overseer.sh`, `review.sh`, `field_watch.sh`): on a non-zero exit with a dirty
+output file, prepend an `INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING` banner
+*above the verdict* and commit it path-scoped. Committing is half the repair,
+not a convenience — the 49th audit's file had to be recovered by hand, and an
+uncommitted report in a shared tree is one `git clean` from gone (`SM.03` lost
+five days to exactly that). The banner goes in the FILE because that is the
+surface the reader actually loads; a log line is a status only for whoever
+already suspected something.
+
+**And note what still has no instrument: nothing detects the absence of a
+completed audit.** The seal fires only when the organ's own script survives to
+run it. A run killed outright leaves nothing behind, and the system finds out
+when a builder happens to read the log. Same blind spot as the skip streak and
+as queue depth — this repository keeps discovering that its organs measure their
+own output and never each other's silence.
