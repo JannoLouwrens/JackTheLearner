@@ -57,12 +57,55 @@ the world contract and both parents, so moving any of them makes this
 certificate go stale loudly rather than stand over a rig it no longer
 describes.
 
-ARMS (each arm's per-seed number is the mean of LIVES_PER_ARM lives, because
-a null measured by one draw is a sample, not a null):
+ARMS (each arm's per-seed number is the mean over the INFORMATIVE lives of
+that seed — see THE LIFE PROTOCOL — because a null measured by one draw is a
+sample, not a null, and a null averaged over lives in which it never met the
+task is not a null at all):
     task      extrinsic only                      — the registered null
     curious   extrinsic + boredom bonus           — the full system
     shuftask  extrinsic + time-permuted bonus     — the CONTROL, must fail
     random    random walk, no learning            — the dwell instrument's zero
+
+THE LIFE PROTOCOL (v2, written 2026-08-30 BEFORE the v2 pilot drew a number;
+it is the repair the v1 pilot pre-registered in this docstring, and the two
+deviations from that text are named and justified below).
+
+A LIFE IS INFORMATIVE IFF THE ABLATED ARM LEARNED THE TASK IN IT — i.e. the
+`task` arm of that sub-seed reached `dwell >= INFORMATIVE_DWELL_MIN`. The
+claim is scored ONLY over informative lives, paired arm-to-arm on the shared
+sub-seed (same world, same goal cell). A seed with fewer than
+`MIN_INFORMATIVE_LIVES` informative lives is VOID, never FAIL: there was no
+ablation to measure.
+
+  Why the selection is safe. The criterion reads ONE number — the ABLATED
+  arm's dwell — and never the curious arm's coverage, which is the quantity
+  under test. No life can be dropped for being unflattering to the claim,
+  because nothing about the claim is visible to the selector. Every life,
+  informative or not, is recorded in `per_life` with all four arms' numbers,
+  so the subset is recomputable from the record by someone who is not its
+  author. (T2.09's informative-seed protocol, applied one level down.)
+
+  DEVIATION 1, and it is a STRENGTHENING. The v1 text pre-registered
+  `dwell > 0` as the criterion. That is too weak to do the job it was written
+  for: a life in which the ablated arm brushed the goal once at decision 3900
+  and never returned has `dwell = 0.00025 > 0`, so it would enter the claim
+  subset while the arm demonstrably did not learn to camp — reintroducing the
+  vacuity the whole gate exists to prevent. Setting the criterion AT the rig
+  bar (`INFORMATIVE_DWELL_MIN = TASK_DWELL_MIN`) selects a STRICT SUBSET of
+  `dwell > 0`: strictly fewer lives qualify, so it is harder to reach
+  `MIN_INFORMATIVE_LIVES` and harder to record a PASS. The alternative —
+  select on `dwell > 0` and ALSO gate the worst selected life at
+  `TASK_DWELL_MIN` — is stricter still and is REJECTED for a stated reason:
+  it VOIDs an entire seed whenever any single life finds the goal late, which
+  is the same bimodality failure one level down, and a gate that VOIDs
+  everything measures nothing.
+
+  DEVIATION 2. `task_dwell_worst_life` survives as a gate but is now
+  tautologically satisfied on the informative subset (min over lives selected
+  for being >= the bar). It is KEPT anyway, and kept in the record, as a
+  recomputable receipt: a reader can check the fold was applied by verifying
+  that number never sits below the bar. It is no longer load-bearing; the
+  load moved to `n_informative`.
 
 PRE-REGISTERED GATES. **PROVISIONAL — `_GATES_FROZEN = False` and `run()`
 refuses.** The bars below are placeholders derived from the parent specs'
@@ -72,22 +115,33 @@ open, with any bar that moved named and justified (SM.02's idiom, T2.09's
 precedent).
 
   RIG (any violated -> VOID, not FAIL):
-    task_dwell_worst_life >= TASK_DWELL_MIN — every life of the ABLATED arm
-        learned to occupy the goal. The worst life, not the mean: an arm that
-        camps in three lives out of four and never finds the goal in the
-        fourth averages to a healthy-looking number while one quarter of the
-        evidence is a random walk. This is T2.09's bimodality trap arriving
-        through `LIVES_PER_ARM` instead of through the seed aggregator.
-    random_dwell <= RANDOM_DWELL_MAX — the dwell instrument reads near its
-        chance value (1/484 = 0.0021) on a non-learner. If a random walk also
-        occupies the goal cell, the cell is a physical attractor and
-        `task_dwell` is certifying geometry, not learning.
+    n_informative - 1.5*std >= MIN_INFORMATIVE_LIVES — enough lives in which
+        the ABLATED arm actually learned the task, IN EVERY SEED. THIS IS THE
+        GATE THE v1 PILOT BOUGHT: `task_dwell_worst_life = 0.0000` reproduced
+        on both seed families, so demanding every life be informative would
+        VOID nearly every seed, and gating the MEAN would certify a rig on
+        evidence a quarter of which is a random walk. Counting them is the
+        third option and the only honest one — but `_check` reads metrics
+        already meaned ACROSS SEEDS, so the raw count would let seeds of 2 and
+        10 average to a healthy 6 and rebuild the same bimodality one level
+        up. The 1.5*std bound is the file's own exact all-seeds rule, and it
+        collapses to the raw count on a single-seed pilot.
+    task_dwell_worst_life >= TASK_DWELL_MIN — retained as a receipt that the
+        fold ran (see DEVIATION 2). Not load-bearing.
+    random_dwell_worst_life + 1.5*std <= RANDOM_DWELL_MAX — the dwell
+        instrument reads, on its worst seed as well as its worst life, near
+        its chance value (1/484 = 0.0021) on a non-learner. If a random
+        walk also occupies the goal cell, the cell is a physical attractor and
+        `task_dwell` is certifying geometry, not learning. Scored over ALL
+        lives, not the informative subset: an instrument's zero must be
+        checked everywhere it is read, not only where the claim is scored.
     coverage_random in [RANDOM_COV_LO, RANDOM_COV_HI] — PG.4/T2.08's
         construction check: the world is reachable and coverage is not
         saturated at the horizon, so there is room for an arm to be worse.
 
-  CLAIM (all three):
-    delta_coverage = cov(curious) - cov(task) >= DELTA_MIN
+  CLAIM (all three), every coverage scored over the INFORMATIVE lives only:
+    delta_coverage = mean over informative lives of
+        [cov(curious, life) - cov(task, life)] >= DELTA_MIN
     delta_coverage - 1.5 * std > 0 — the all-seeds rule, exact: for n=3 and
         the recorder's ddof=0 std the extreme deviation is <= sqrt(2)*std, so
         1.5 guarantees every seed's delta is positive (T2.08's idiom).
@@ -95,7 +149,40 @@ precedent).
         the paired delta. Paired is the right ruler: both arms run on the SAME
         sub-seed worlds with the SAME goal cells.
 
-  CONTROL (must fail): delta_shuf = cov(shuftask) - cov(task) < DELTA_MIN.
+  CONTROL (must fail): delta_shuf = mean over the SAME informative lives of
+    [cov(shuftask, life) - cov(task, life)] < DELTA_MIN. The control inherits
+    the claim's life subset exactly — it is selected by the `task` arm, which
+    both share — so a control cannot be scored on an easier set of worlds.
+
+WHERE THE v2 NUMBERS COME FROM — every one of them exogenous, because the v1
+pilot's warning was precisely that a bar anchored to its own pilot's bulk
+reads as a per-run coin flip (the BA.01-v3 / T2.08-v1 lottery disease):
+
+  DELTA_MIN = 0.05, UNCHANGED, and deliberately NOT re-derived from the two
+      observed deltas (+0.0558, +0.1658) in either direction. It is T2.08's
+      registered `MARGIN_MIN` — the same quantity, on the same rig, in the
+      same units, fixed before this spec existed and with no knowledge of its
+      numbers, which is what "exogenous" means. Its anti-collapse content,
+      stated in cells: 0.05 x 484 = 24 cells, so the curious arm must reach a
+      region about five cells on a side that the ablated arm never enters.
+      Anything smaller is not a behavioural difference worth a `kills` field.
+      **A bar this close to the smaller observed delta may well FAIL. That is
+      the bar doing its job, not a reason to move it.**
+
+  MIN_INFORMATIVE_LIVES = 6, from a statistical requirement, not a count seen
+      in a pilot: six paired lives is the smallest n at which a one-sided
+      paired sign test can reach p < 0.05 (2^-6 = 0.0156). Below it the
+      informative subset cannot in principle carry the claim, whatever the
+      mean says, so VOID is the correct verdict rather than FAIL.
+
+  LIVES_PER_ARM = 16, up from 4, sized so MIN_INFORMATIVE_LIVES is reachable
+      without a lottery. The v1 pilot saw one dead life in four on both
+      families; taking that at face value as p ~ 0.75 informative, 16 lives
+      put ~12 in the subset. **If p is really nearer 0.4 the seed VOIDs, and
+      that is the honest outcome** — the fix would be more lives or a longer
+      horizon, both of which are re-registrations, not bar moves. Cost is the
+      reason 16 and not 40: ~4.3 s per life measured, so 16 lives x 4 arms x
+      3 seeds ~ 14 min of CPU.
 
 FALSIFICATION, restated so it cannot be quietly narrowed: if the extrinsic
 arm learns the task (rig green) and its coverage is not measurably below the
@@ -224,7 +311,7 @@ GRID_LO, GRID_HI = -5.5, 5.5
 GRID_N = int(round((GRID_HI - GRID_LO) / CELL_M))    # 22
 N_CELLS = GRID_N * GRID_N                             # 484
 N_DECISIONS = 4000              # T2.08's discriminating horizon
-LIVES_PER_ARM = 4
+LIVES_PER_ARM = 16              # v2: was 4. See WHERE THE v2 NUMBERS COME FROM.
 SUBSTEPS = 40
 SPEED = 1.5
 GAMMA = 0.95
@@ -243,14 +330,23 @@ GOAL_MIN_CELLS = 6              # the goal is drawn at least this many cells
                                 # is a search and not an accident.
 
 # --- PROVISIONAL bars -----------------------------------------------------
-TASK_DWELL_MIN = 0.10           # placeholder: the ablated arm's worst life
-                                # spends >=10% of its decisions in one cell of
-                                # 484 (chance 0.0021, ~48x). Pilot freezes it.
+TASK_DWELL_MIN = 0.10           # placeholder: an informative life is one in
+                                # which the ablated arm spends >=10% of its
+                                # decisions in one cell of 484 (chance 0.0021,
+                                # ~48x). Pilot freezes it.
+INFORMATIVE_DWELL_MIN = TASK_DWELL_MIN   # ONE threshold, not two: the life
+                                # selector IS the rig instrument, so a life
+                                # can never be admitted to the claim subset by
+                                # a laxer rule than the one that certifies the
+                                # arm learned. See THE LIFE PROTOCOL.
+MIN_INFORMATIVE_LIVES = 6       # fewer -> VOID, not FAIL. Sign-test floor.
 RANDOM_DWELL_MAX = 0.02         # ~10x chance; a random walk must not camp.
 RANDOM_COV_LO = 0.40            # T2.08 measured random 0.602-0.638 at this
 RANDOM_COV_HI = 0.95            # horizon; the band is wide on purpose — it is
                                 # a construction check, not a performance bar.
-DELTA_MIN = 0.05                # T2.08's MARGIN_MIN, same rig, same units.
+DELTA_MIN = 0.05                # T2.08's MARGIN_MIN, same rig, same units —
+                                # exogenous, and NOT re-derived from this
+                                # spec's pilot in either direction.
 SEED_SPREAD_FACTOR = 1.5
 DELTA_TSTAT_MIN = 3.0
 
@@ -349,56 +445,147 @@ def _sub_seeds(seed: int) -> list:
     return [seed * 307 + k * 13 + 5 for k in range(LIVES_PER_ARM)]
 
 
+_ARM_CACHE: dict = {}
+
+
 def _arm(seed: int, arm: str) -> dict:
-    covs, dwells = zip(*(_life(s, arm) for s in _sub_seeds(seed)))
-    return {"cov": sum(covs) / len(covs),
-            "cov_lo": min(covs), "cov_hi": max(covs),
-            "dwell": sum(dwells) / len(dwells),
-            "dwell_lo": min(dwells), "dwell_hi": max(dwells)}
+    """Per-LIFE rows, keyed by sub-seed: {sub_seed: (coverage, dwell)}.
+
+    Cached because `_experiment` and `_control` both need the `task` arm (it
+    is the null AND the life selector) and `run_spec` calls them separately;
+    the lives are deterministic in the sub-seed, so recomputing them would
+    cost a third of the run's wall time to produce identical numbers.
+    """
+    key = (seed, arm, LIVES_PER_ARM, N_DECISIONS)
+    if key not in _ARM_CACHE:
+        _ARM_CACHE[key] = {s: _life(s, arm) for s in _sub_seeds(seed)}
+    return _ARM_CACHE[key]
+
+
+def _informative_lives(seed: int) -> list:
+    """The sub-seeds whose ABLATED arm learned the task.
+
+    Reads exactly one number — the `task` arm's dwell — and never touches the
+    curious arm's coverage, which is the quantity under test. That is what
+    makes dropping a life safe: nothing about the claim is visible here.
+    """
+    task = _arm(seed, "task")
+    return sorted(s for s, (_cov, dwell) in task.items()
+                  if dwell >= INFORMATIVE_DWELL_MIN)
+
+
+def _mean(xs: list) -> float:
+    return sum(xs) / len(xs) if xs else 0.0
 
 
 def _experiment(seed: int) -> dict:
-    a = {name: _arm(seed, name) for name in ("task", "curious", "random")}
+    arms = {name: _arm(seed, name) for name in ("task", "curious", "random")}
+    live = _informative_lives(seed)
+
+    # Paired per-life deltas on the shared sub-seed: same world, same goal.
+    paired = [arms["curious"][s][0] - arms["task"][s][0] for s in live]
+    n_pos = sum(1 for d in paired if d > 0.0)
+
+    def cov(name):
+        return _mean([arms[name][s][0] for s in live])
+
+    def dwell(name):
+        return _mean([arms[name][s][1] for s in live])
+
+    all_seeds = _sub_seeds(seed)
     return {
-        "delta_coverage": round(a["curious"]["cov"] - a["task"]["cov"], 4),
-        "coverage_curious": round(a["curious"]["cov"], 4),
-        "coverage_task": round(a["task"]["cov"], 4),
-        "coverage_random": round(a["random"]["cov"], 4),
-        # RIG instruments. The worst life, not the mean — see the docstring's
-        # bimodality note; `LIVES_PER_ARM` is an aggregator too.
-        "task_dwell": round(a["task"]["dwell"], 4),
-        "task_dwell_worst_life": round(a["task"]["dwell_lo"], 4),
-        "curious_dwell": round(a["curious"]["dwell"], 4),
-        "random_dwell": round(a["random"]["dwell"], 4),
-        "random_dwell_worst_life": round(a["random"]["dwell_hi"], 4),
-        # Reported, not gated: the per-life spread the gates are folded from,
-        # so a reader can recompute the fold from the record.
-        "curious_cov_worst_life": round(a["curious"]["cov_lo"], 4),
-        "task_cov_best_life": round(a["task"]["cov_hi"], 4),
+        # THE RIG GATE the v1 pilot bought. Everything below is scored on the
+        # subset this number counts.
+        "n_informative": float(len(live)),
+        "lives_per_arm": float(LIVES_PER_ARM),
+        "delta_coverage": round(_mean(paired), 4),
+        "coverage_curious": round(cov("curious"), 4),
+        "coverage_task": round(cov("task"), 4),
+        "coverage_random": round(cov("random"), 4),
+        # RIG instruments.
+        "task_dwell": round(dwell("task"), 4),
+        # Tautological on the informative subset by construction — kept as a
+        # receipt that the fold ran (DEVIATION 2), not as a live gate.
+        "task_dwell_worst_life": round(
+            min([arms["task"][s][1] for s in live], default=0.0), 4),
+        "curious_dwell": round(dwell("curious"), 4),
+        "random_dwell": round(dwell("random"), 4),
+        # Over ALL lives, not the subset: an instrument's zero must be checked
+        # everywhere it is read.
+        "random_dwell_worst_life": round(
+            max(arms["random"][s][1] for s in all_seeds), 4),
+        # Reported, not gated.
+        "delta_paired_worst_life": round(min(paired, default=0.0), 4),
+        "delta_paired_best_life": round(max(paired, default=0.0), 4),
+        "n_lives_curious_wins": float(n_pos),
+        "curious_cov_worst_life": round(
+            min([arms["curious"][s][0] for s in live], default=0.0), 4),
+        "task_cov_best_life": round(
+            max([arms["task"][s][0] for s in live], default=0.0), 4),
         # Reported, not gated: is the task reward actually costing coverage?
         # Negative means the extrinsic-only arm explores less than a random
         # walk — the predicted camping mechanism, visible in the record.
-        "task_cov_vs_random": round(a["task"]["cov"] - a["random"]["cov"], 4),
+        "task_cov_vs_random": round(cov("task") - cov("random"), 4),
+        # EVERY life, informative or not, so the subset is recomputable by a
+        # reader who is not its author. Named for what survives `_aggregate`:
+        # non-numeric fields take the FIRST seed's value, so this is seed 0's
+        # rows only, and the pilot artifacts carry all of them.
+        "per_life_first_seed_only": [
+            [s,
+             1.0 if s in live else 0.0,
+             round(arms["task"][s][0], 4), round(arms["task"][s][1], 4),
+             round(arms["curious"][s][0], 4), round(arms["curious"][s][1], 4),
+             round(arms["random"][s][0], 4), round(arms["random"][s][1], 4)]
+            for s in all_seeds],
+        "per_life_cols": ("sub_seed informative task_cov task_dwell "
+                          "curious_cov curious_dwell random_cov random_dwell"),
     }
 
 
 def _control(seed: int) -> dict:
     """Extrinsic + a time-permuted, magnitude-matched bonus. Must NOT recover
     the coverage the ablation cost: if it does, the effect is reward
-    magnitude, not curiosity."""
-    s = _arm(seed, "shuftask")
-    t = _arm(seed, "task")
-    return {"coverage_shuftask": round(s["cov"], 4),
-            "shuftask_dwell": round(s["dwell"], 4),
-            "delta_shuf": round(s["cov"] - t["cov"], 4)}
+    magnitude, not curiosity.
+
+    Scored on the SAME informative lives as the claim — the subset is selected
+    by the `task` arm, which both share — so the control can never be measured
+    on an easier set of worlds than the arm it is supposed to shadow.
+    """
+    shuf, task = _arm(seed, "shuftask"), _arm(seed, "task")
+    live = _informative_lives(seed)
+    paired = [shuf[s][0] - task[s][0] for s in live]
+    return {"coverage_shuftask": round(_mean([shuf[s][0] for s in live]), 4),
+            "shuftask_dwell": round(_mean([shuf[s][1] for s in live]), 4),
+            "control_n_informative": float(len(live)),
+            "delta_shuf": round(_mean(paired), 4)}
 
 
 def _check(m: dict, c: dict):
     # An ablated arm that never learned the task is an APPARATUS outcome, not
     # a refutation: there was no ablation to measure. VOID, so that a dead rig
     # can never fire this spec's `kills` field.
-    rig = (m["task_dwell_worst_life"] >= TASK_DWELL_MIN
-           and m["random_dwell_worst_life"] <= RANDOM_DWELL_MAX
+    # `_check` sees metrics ALREADY MEANED across the registered seeds, so a
+    # gate written on the mean of a worst-case instrument re-opens, one level
+    # up, exactly the bimodality this spec's life fold closes: seeds with 2
+    # and 10 informative lives average to a healthy-looking 6. Both worst-case
+    # rig instruments are therefore bounded to their WORST SEED by the file's
+    # own exact all-seeds rule — for n=3 and the recorder's ddof=0 std the
+    # extreme deviation is <= sqrt(2)*std, so SEED_SPREAD_FACTOR = 1.5 bounds
+    # every seed. On a single-seed pilot `_aggregate` emits no `_std` and the
+    # bound collapses to the raw number, which is correct.
+    def worst_lo(key):
+        return m[key] - SEED_SPREAD_FACTOR * m.get(key + "_std", 0.0)
+
+    def worst_hi(key):
+        return m[key] + SEED_SPREAD_FACTOR * m.get(key + "_std", 0.0)
+
+    rig = (worst_lo("n_informative") >= MIN_INFORMATIVE_LIVES
+           # Tautological per seed (min over lives selected for clearing the
+           # bar), so it is read on the mean as a receipt that the fold ran —
+           # NOT bounded to the worst seed, because a conservative bound on a
+           # per-seed tautology VOIDs on spread alone. See DEVIATION 2.
+           and m["task_dwell_worst_life"] >= TASK_DWELL_MIN
+           and worst_hi("random_dwell_worst_life") <= RANDOM_DWELL_MAX
            and RANDOM_COV_LO <= m["coverage_random"] <= RANDOM_COV_HI)
     if not rig:
         return Status.VOID
