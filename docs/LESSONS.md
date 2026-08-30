@@ -8026,3 +8026,57 @@ varied and the actuators the hypothesis names, and check the two sets
 intersect. If the probe cannot move the quantity, it has not measured a
 ceiling; it has measured its own reach. And say which actuators were held
 fixed, in the probe's own file, where the next reader will look.
+
+## A LEARNED null needs a HAND-WRITTEN floor. The repo gates that a control
+## which must fail did fail; nothing gates that a null which must be STRONG
+## actually got strong — and a null that under-trains manufactures the gain
+## (builder, 2026-08-30, implementing BA.03 after BA.02's three VOIDs)
+
+Most claims here are contrasts against a twin that is itself trained: "the
+learner with the channel beats an identical learner with the channel deleted".
+The twin is the right null precisely because it is not helpless — every
+open-loop strategy is inside its policy class, so a gain over it is a gain from
+information rather than from capacity. **That argument is about the twin's
+policy CLASS and the measurement is of the twin's OPTIMISER.** The two come
+apart silently: if CEM fails to find the best blind strategy that its class
+demonstrably contains, the sensing arm's advantage is optimiser luck wearing a
+sense's name, and every gate in the file reads green.
+
+The numbers that make this concrete, from BA.03's committed envelope probe.
+Inside the blind policy class, at a wall:
+
+    hold (spawn posture)   0.84 s        extend + grip BOTH hands   7.66 s
+
+A blind twin that lands at 0.84 s and a sensing arm that lands at 3.0 s produce
+`gain = +2.2 s`, every seed positive, a fine t — and the honest reading is that
+BOTH arms failed to find a 7.66 s posture that needs no sensing at all. The
+existing instruments cannot see it: the matched-noise control also
+under-trains, so its gain also vanishes; the rig gate "best trained arm beats
+random" passes at 3.0 vs random; the seed conjunction passes. **The disease
+lives entirely in the gap between what the null could do and what the null
+did**, and no statistic computed from the arms alone can measure that gap,
+because every arm shares the optimiser.
+
+**The repair is a hand-written reference arm, evaluated on the same packs and
+gated as RIG HEALTH (VOID, not FAIL).** BA.03 evaluates the probe's measured
+best fixed blind posture alongside the four learned arms and refuses the seed
+when `up_reference - up_deprived > DEPRIVED_SHORTFALL_MAX`. It costs one extra
+condition in the eval loop — no training, no seeds, no tier — and it converts
+"the null's class contains the strong strategy" from an argument in a docstring
+into a number in the record.
+
+**The class this joins, and the axis on which it is new.** LESSONS already
+carries "An at-chance control must carry proof its instrument was alive" — a
+control that must FAIL, proven capable of passing. This is its mirror: **a null
+that must be STRONG, proven to have reached its own ceiling.** The asymmetry is
+why the mirror was missing. A weak control is a false PASS, which is the
+direction every instrument here was built to guard; a weak null is *also* a
+false PASS, but it arrives through the arm the spec is not watching, and it
+reads as the claim succeeding rather than as the control failing.
+
+**Rule:** when a null is trained, name the best strategy its class contains,
+write that strategy by hand, evaluate it on the same episodes, and VOID the
+seed if the trained null falls short of it by more than a pre-registered
+margin. If you cannot name that strategy, you do not know what your null is
+measuring — and the honest place to find it is an envelope probe before the
+spec exists, not a fourth VOID after it.
