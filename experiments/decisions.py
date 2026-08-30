@@ -110,6 +110,18 @@ it, and the honest place to catch them is a pre-commit check on the firing diff.
 Two of three clauses remain on the author's word. Do not write a prose scanner
 for them; write the diff check.
 
+AND THIS FILE IS ITSELF A CAPABILITY CLAIM, SO IT IS NOW UNDER THE LEDGER
+(2026-08-30, T0.28). For six days `SYSTEM.md` asserted an enforcement this file
+did not perform, and the only thing standing behind the code was a fixture its
+own author wrote — the exact self-certification law 1 exists to distrust,
+applied to the tool that polices eleven constitutional defaults. `T0.28` lifts
+`_fixture()` and `_safety_fixture()` into a spec the ladder can see, adds the
+directions they did not test (quiet-because-repaired vs quiet-because-vanished;
+a PASS is never at calendar risk; a wrapped default's continuation lines are in
+the blast radius), and keeps the PRE-2026-08-30 organ executable as the control
+so the guard must be shown catching something it once missed. `IMPL_DEPS` pins
+this file, so editing it stales the certificate by construction.
+
     python -m experiments.decisions          # report
     python -m experiments.decisions --check  # ratchet: exit 1 if debt grew
 """
@@ -273,8 +285,18 @@ def safety_hazards(decls: dict, candidates: list, rows=None, by_id=None) -> list
     return sorted(out)
 
 
-def audit(text: str, today: _dt.date) -> tuple[list, list]:
-    """Return (violations, rows). A violation blocks; a row is for the report."""
+def audit(text: str, today: _dt.date, rows_for_safety=None,
+          by_id=None) -> tuple[list, list]:
+    """Return (violations, rows). A violation blocks; a row is for the report.
+
+    `rows_for_safety`/`by_id` are injection points for the safety pass and
+    default to the live `coverage.report()` and registry. They exist so a
+    certificate can drive this function on a KNOWN state — `T0.28` replays
+    `D8` as it stood on 2026-08-29 — rather than on whatever the repository
+    happens to look like on the day the gate runs. A guard whose known-positive
+    can only be exercised while the repo is broken is a guard that stops being
+    tested the moment somebody fixes the repo.
+    """
     decls, candidates = parse(text)
     violations, rows = [], []
 
@@ -317,7 +339,9 @@ def audit(text: str, today: _dt.date) -> tuple[list, list]:
                      "default": d.get("default", "")})
 
     # The safety clause, last because it needs the whole armed set at once.
-    for did, commitment, claims in safety_hazards(decls, candidates):
+    for did, commitment, claims in safety_hazards(decls, candidates,
+                                                  rows=rows_for_safety,
+                                                  by_id=by_id):
         violations.append(("SAFETY-CLAIM-DEAD", did,
                            f"every live claim spec behind '{commitment}' "
                            f"({', '.join(claims)}) is named in this default — one "
@@ -326,6 +350,36 @@ def audit(text: str, today: _dt.date) -> tuple[list, list]:
                            "successor claim spec (coverage.py's rule), never park "
                            "or quiet"))
     return violations, rows
+
+
+# Violation kinds that STOP the gate rather than merely appearing in the
+# report. `UNDECLARED` is not here: it is the ratcheted backlog, allowed to
+# shrink and never grow (BASELINE_UNDECLARED).
+#
+# `NO-DEFAULT` WAS NOT HERE EITHER, AND THAT WAS THE HOLE (2026-08-30, T0.28).
+# The ratchet counted exactly one class — `UNDECLARED` — and treated four
+# others as blocking, so a goal-class entry that declared itself and then
+# armed nothing was printed and exited 0. That is D1's exact disease with a
+# DECIDE block on top: an escalation with no default and no clock, which this
+# whole file exists to make impossible. It is the same one-class-ratchet shape
+# the 40th audit found in `champions.py` (`ARENA-MISSING` only) and that
+# `T0.21 P2` closed in `coverage.py`. Live count when it was closed: zero, so
+# the strengthening cost nothing — which is the only cheap moment to do it.
+BLOCKING = ("MEANS-ESCALATED", "CLASS", "DATE", "SAFETY-CLAIM-DEAD",
+            "NO-DEFAULT")
+
+
+def check_rc(violations: list) -> int:
+    """The `--check` exit code, as a function of the violations alone.
+
+    Extracted from `main` so the certificate can assert the EXIT CODE rather
+    than a re-implementation of it. A test that reproduces the gate's logic
+    proves the copy agrees with itself.
+    """
+    undeclared = sum(1 for k, _, _ in violations if k == "UNDECLARED")
+    if undeclared > BASELINE_UNDECLARED:
+        return 1
+    return 1 if any(v[0] in BLOCKING for v in violations) else 0
 
 
 def _fixture() -> None:
@@ -463,17 +517,16 @@ def main(argv: list[str]) -> int:
 
     undeclared = sum(1 for k, _, _ in violations if k == "UNDECLARED")
     if "--check" in argv:
+        rc = check_rc(violations)          # the gate's verdict, computed once
         if undeclared > BASELINE_UNDECLARED:
             print(f"  RATCHET BROKEN: {undeclared} undeclared open decisions, "
                   f"baseline {BASELINE_UNDECLARED}. It may shrink, never grow.\n")
-            return 1
-        blocking = [v for v in violations
-                    if v[0] in ("MEANS-ESCALATED", "CLASS", "DATE",
-                                "SAFETY-CLAIM-DEAD")]
-        if blocking:
+        elif rc:
+            blocking = [v for v in violations if v[0] in BLOCKING]
             print(f"  {len(blocking)} hard violation(s) — see above.\n")
-            return 1
-        print(f"  ratchet ok ({undeclared}/{BASELINE_UNDECLARED} undeclared).\n")
+        else:
+            print(f"  ratchet ok ({undeclared}/{BASELINE_UNDECLARED} undeclared).\n")
+        return rc
     return 0
 
 
