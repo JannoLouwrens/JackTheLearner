@@ -114,8 +114,36 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for t
     BA.01, LC.02, PS.02, PS.03, XL.00 — 5 PASS certificates; MECHANICAL —
     all 21 playground.py rows above.
 
-ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Review 2026-08-30 (Sunday FULL); one cheap falsifier sequenced first, 2026-08-25
-    DUE: 2026-08-30 | the W0/W1 design, owed by the Review's Sunday FULL run.
+ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Review 2026-09-06 (RE-ARMED 2026-08-31, reason below); one cheap falsifier sequenced first, 2026-08-25
+    DUE: 2026-09-06 | the W0/W1 design, owed by the Review's Sunday FULL run.
+        RE-ARMED 2026-08-31 (DAILY) from 2026-08-30, in the open, with two
+        reasons and one of them is my own fault:
+
+        (1) THE DESIGN IS SEQUENCED BEHIND A DIAGNOSTIC THAT WAS NEVER MADE
+        RUNNABLE. On 2026-08-25 the Review accepted field-watch `wk4-N3` and
+        ordered it *"BEFORE any W1 world redesign"* — the cheap attack on a
+        shared confound across instruments that were all run by this project
+        on this world. That order was written as prose inside
+        `INTEGRATION_QUEUE.md`. It has no spec id, no cost class, no row the
+        builder's top-down read can consume, and in six days no iteration
+        has touched it. So the 08-30 promise was undeliverable by any Review,
+        alive or dead: its stated input had never been ordered into existence.
+        Fixed today — the diagnostic is now INTEGRATION_QUEUE entry `W0.DIAG`
+        and priority 1 in `scripts/ladder_prompt.md`.
+
+        (2) THE FULL RUN HAS NEVER COMPLETED, AND THE CAUSE IS MECHANICAL,
+        NOT ACCIDENTAL. Four consecutive Sundays, four deaths. The 08-30 run
+        died at `Reached max turns (60)` after 11 minutes. Today's DAILY run
+        is budgeted `20m / 60 turns` — the SAME budget — while a FULL run
+        additionally owes Part 2 (8–12 spec re-examinations, each a read plus
+        a re-run), an anatomy audit and a completeness audit. The Review is
+        not failing at its job; it is being asked to do a Sunday's work in a
+        Tuesday's budget, and no organ watches for that. Escalated to the
+        owner in `docs/PROGRESS.md` § FOR THE OWNER. **A fifth Sunday bet is
+        only honest if that is fixed** — if it is not fixed by 09-06, the
+        correct disposition on 09-06 is to split this row, not to re-arm it
+        a second time. Week 3's rule binds me too: a third deferral is a lie.
+
         MIGRATED FROM PROSE, by hand, 2026-08-31 — the date above was already
         written in this row's status on 2026-08-25 and was read by nobody. The
         run that owed it started 2026-08-30T06:37, died on `Reached max turns`
@@ -147,6 +175,36 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     Staleness bill: depends on the design — a new-world spec (W1, T1.02
     strengthen-only precedent) bills NOTHING; editing W0's playground.py
     bills the 21 rows above. That asymmetry is itself design input.
+    UPDATE 2026-08-31 (Review, DAILY): THE COUNT IS NINE, AND NOBODY WAS
+    COUNTING. This row says three, its 08-25 update says four, field watch
+    wk5 says six then seven. The true figure is NINE, and the gap exists
+    because each new instrument was routed as its OWN queue row — so the
+    aggregate was never assembled anywhere. Named, so the next reader does
+    not have to re-find them: (1) LC.03 darkroom control, passivity prospers;
+    (2) LC.03 v2, one learner in five; (3) DP.05, deeper lookahead buys LESS;
+    (4) SH.01 ORACLE_CANNOT, z_shelter 0.0 with the direction IN the
+    observation; (5) BA.03, the blind twin holds 11.868 s of a 12.0 s horizon
+    (98.9%); (6) SH.02, twin/oracle/both-cosmetic all exactly 1.0000 against
+    a 0.85 cap — the null holds the roof it was placed under; (7) T3.06's
+    recorded row, `curious − random` = +0.0124, t = 0.39, while
+    `random − task` = +0.2333, t = 10.48; (8) DP.04 SIZING RECORD; (9) the
+    T3.06 control `delta_shuf` red on every seed.
+    AND (8) IS DIFFERENT IN KIND — it is the one that should lead the design.
+    The other eight say "W0 does not REWARD capability X", each on its own
+    channel, which is the agreeing-instruments pattern this row already flags
+    as the condition under which a shared confound is invisible. DP.04 says
+    something else: **the outcome variable itself has no resolution.** 3072
+    lives produced 21 distinct lifespans; 0 of them ended between the old cap
+    and the new one; the quantum is 6.25 steps at 48 lives against a MIN_GAIN
+    of 5.0, and the derived sd needs E>=5791 lives/arm/task. A threshold finer
+    than its statistic's quantum is not a hard test, it is an unreadable one —
+    and lifespan is the channel most of the other eight are ultimately scored
+    through. That makes DP.04 a live CANDIDATE for the shared confound the
+    other instruments cannot see past, which is precisely what wk4-N3 was
+    ordered to attack from the other side. Design input, in one line: settle
+    whether W0 is too shallow or merely too COARSE before choosing between
+    editing W0 and building W1 — they have different repairs and only one of
+    them bills the 21 rows.
     DISPOSITION 2026-08-25 (Review): **STAYS OPEN, and the design is owed by
     this desk on 2026-08-30, dated so it cannot drift.** DAILY mode does not
     have the budget for a world redesign and pretending otherwise is how a

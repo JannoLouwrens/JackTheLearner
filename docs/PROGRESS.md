@@ -1,406 +1,222 @@
-> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
-> the Review has missed its schedule: newest row in docs/PROGRESS_LOG.md is 2026-08-29 (2d old; the schedule allows 1d)
-> So everything below is the PREVIOUS run of the review and is a RECORD,
-> not current state: its counts, its "current state" framing and any
-> claim about what has or has not moved describe an older world.
-> Stamped 2026-08-31T01:15:11+00:00 by scripts/lib_seal.sh. It disappears the next time the
-> review completes a run and rewrites this file.
-
 # PROGRESS.md — the Review's current-state page
 
 > Written by the Review organ. **Current state, not a log** — each run rewrites
 > this file. The running history is `docs/PROGRESS_LOG.md`.
 > Mode: DAILY (Part 2, the test re-examination, runs Sundays only).
 
-**2026-08-29 06:44 UTC — DAILY. Window: 2026-08-28 06:43 → 2026-08-29 06:44.**
+**2026-08-31 06:5x UTC — DAILY. Window: 2026-08-29 06:44 → 2026-08-31 06:5x
+(48 h — no Review ran on 08-30; see FOR THE OWNER).**
 
-*The one sentence: **for three weeks every organ has blamed 61 lost free
-GPU-hours on the loop being asleep — and the last dispatchable GPU spec was
-consumed 8.4 hours BEFORE the blackout began, leaving a queue that a fully awake
-builder could not have spent either.***
-
----
-
-## 1. The numbers
-
-**Ladder: 84/187 demonstrated (44.9%).** Fifth consecutive day on which not one
-figure in this table has moved.
-
-| | this window | previous |
-|---|---|---|
-| demonstrated | **84** | 84 |
-| registered | **187** | 187 |
-| rate | **44.9%** | 44.9% |
-| net new PASS | **+0** | +0 |
-| rework (attempt > 1) | 62.5% (60/96) | 62.5% |
-| ledger totals | 84 PASS / 9 FAIL / 3 VOID | same |
-| runnable now | 34 | 34 |
-| not reachable now | 69 of 187 | 69 |
-
-**Runs in the window: zero.** Last builder iteration **2026-08-25 12:23:33 —
-90.3 hours ago**; **90 consecutive `PACING:` slots** and no other line in
-`ladder.log`. All four commits in the window are overseer audits (41st–44th),
-all **DRIFTING**. Last first-ever claim PASS `T3.01` **08-21 01:28 — 8.2 days**.
-
-**The frontier, recomputed live and unchanged.** `T2.01` (FAIL) frees **35**,
-blocks 36. Behind it `LC.03` 8/8, `NE.01` 8/8, `UB.10` 4/5, `T2.02` 3/4,
-`LG.01` 3/3. **Is the builder working on it? It has not been asked to do
-anything for four days.**
-
-**Goodhart check: still not applicable, and this is the fifth day I have had to
-say so.** `coverage` exits 0, `0 CLAIM-DEAD`, 14 of 23 commitments carry a live
-claim spec with nothing passing, 16 GOAL citations cited / 4 dangling (at
-baseline). Champions ratchet 6/8; decisions ratchet 0/10 with **12 armed** — 11
-due 08-31, `D15` (new, 44th audit) due 09-05.
-
-**Meters at 06:44:** `week:all models` **73%** (the gate), `week:Fable` 100%,
-both resetting 08-31 04:59. Kaggle W34: **0.3111 of 30 h spent**; the remaining
-**29.6889 h expire 2026-08-30 00:00 UTC, 17.3 hours from now.**
+*The one sentence: **the builder has come back from a five-day blackout at full
+speed — 75 commits and +9 demonstrated in 24 hours — and it has spent that
+speed discovering, five separate times, that the thing blocking it is not a
+spec but the world; nine instruments now say so, nobody had added them up, and
+the design that answers them is owed by a Review run that has never once
+survived to write it.***
 
 ---
 
-## 2. THE FINDING — the GPU queue emptied before the gate closed, and every
-## document blaming the blackout for W34 is measuring the wrong thing
+## The numbers
 
-Four separate documents — two of them mine — state the cause of three
-consecutive weeks of expiring free GPU hours as *"the loop was dark on the
-Sunday the quota expired."* It is at most half true, and for W34 it is false.
-
-**W34 had 23 unblocked builder iterations inside it.** The GPU week opened Sun
-08-23 00:00 (`%U`). The builder ran until 08-25 12:23. In that window
-`ladder.log` records **23 `iteration start` lines against 10 pace skips** — the
-loop was awake, unblocked, with the full 30-hour allocation in front of it.
-It dispatched **one job, 0.3111 hours.**
-
-**Kaggle jobs completed, by GPU week:**
-
-| week | builder iterations | pace skips | jobs completed | Kaggle h spent |
-|---|---|---|---|---|
-| W32 | 101 | 0 | **17** | 21.06 |
-| W33 | 53 | 0 | **23** | 7.63 |
-| W34 | 23 | 99 | **1** | **0.31** |
-
-**And the last dispatchable spec was consumed before the gate ever closed.**
-`T2.15` was submitted 08-25 **04:21**, returned FAIL at **04:40**, and is now
-under a do-not-re-dispatch directive. The pace blackout began at **13:07** —
-**8.4 hours later.** From 04:40 onward there was nothing implemented and
-unsettled to send, and no amount of uptime would have changed that.
-
-**The state of the shelf, measured this morning.** All **17** runnable GPU-cost
-specs, and not one is dispatchable:
-
-| state | n | ids |
-|---|---|---|
-| unimplemented (no test file) | 7 | T2.09, T2.11, T2.14, T2.19, T3.06, T3.10, VO.02 |
-| settled FAIL/VOID, do-not-re-dispatch | 7 | T2.01, T2.02, T2.05, T2.07, T2.15, T3.07, T4.02 |
-| PARKED | 2 | `SM.02` (builder, 08-20), `UB.10` (pending an arm redesign **owed by this desk, 08-30**) |
-| untracked, gates unfrozen | 1 | `SM.03` — pilot log `/data/sm03_pilot_seed90.json.log` is **0 bytes**; no artefact |
-
-**So the honest reading of W34 is not "the builder was asleep when the quota
-expired." It is "the builder ran out of things to send on Tuesday morning, and
-the gate closed on an empty shelf that afternoon."** The blackout is a real
-fault and the 44th audit's case against `pace_gate` stands on its own terms.
-But it is not what cost 29.69 hours, and treating it as the cause has pointed
-four days of organ output — including yesterday's page — at the wrong lever.
-
-**Why nobody saw it: no instrument measures inventory.** `coverage` counts
-declared specs, `run next` counts runnable ones, `gpu_budget.json` counts hours
-spent. Nothing anywhere counts *how many specs could actually be dispatched
-tomorrow*. It is the same blind spot as the skip streak, one layer up — a
-quantity whose value is zero and whose absence therefore looks exactly like
-health. That is builder item **B2**, and it is the "make the bug unrepeatable"
-half of this finding.
-
-**I am withdrawing yesterday's reason and keeping yesterday's conclusion.**
-This page said W34's hours "should be treated as sunk" because the gate would
-not open in time. That derivation was built on burn rates of 6–8.5 pts/day which
-have since gone to zero (§3), so the reason was wrong. The conclusion survives
-for a better reason: the hours are unspendable because there is nothing to spend
-them on. Same answer, completely different fix.
-
----
-
-## 3. THE SECOND FINDING — the pace line is arithmetic, not an opponent, and the
-## 44th audit lost a race it was not in
-
-The 44th audit (00:45 today) concluded **"the builder therefore does not run
-again this week"** from a least-squares fit over 84 log points: meter
-**0.3753 pts/h**, line **0.3876 pts/h**, "structural headroom +0.0123 pts/h", so
-a 3-point gap needs **243 hours**.
-
-**The line has no variance to fit.** `lib_usage.sh:pace_gate` computes
-`allow = PACE_FLOOR + ((PACE_CAP - PACE_FLOOR) * elapsed + 99) / 100`, where
-`elapsed` is integer percent of the week. It is a pure function of the clock:
-65 points across 168 hours, **0.3869 pts/h, exactly, always.** Regressing it
-against log samples recovers 0.3876 — the quantisation residual — and then
-differencing two slopes, one measured and one deterministic, manufactures a race
-between the clock and the meter that does not exist.
-
-**What was actually happening while that fit was being computed.** The meter has
-been **flat at 73% for 18 consecutive readings** (08-28 13:07 → 08-29 06:07,
-17 hours). Over those hours the line rose 66 → 72 and the gap closed **7 → 1**:
-
-| | 08-28 13:07 | 08-29 00:07 | 08-29 06:07 |
+| | now | 08-29 | Δ |
 |---|---|---|---|
-| meter | 73 | 73 | 73 |
-| line | 66 | 70 | **72** |
-| gap | 7 | 3 | **1** |
+| demonstrated / registered | **93 / 201** | 84 / 187 | **+9 / +14** |
+| pass rate | **46.3%** | 44.9% | **+1.4 pts** |
+| FAIL / VOID | 13 / 5 | 13 / 5 | 0 / 0 |
+| rework (ledger entries at attempt > 1) | 74 / 111 = **66.7%** | — | — |
+| commits, last 24 h | **75** | 0 | +75 |
+| PASS-bearing commits, last 7 d | 35 | prior 7 d: 27 | +8 |
+| builder iterations, last 24 h | 24 of 24 slots | 0 of 24 | full |
 
-**The right object is a bound, not a forecast, and I will state only the bound.**
-Because the meter is monotone within a week, meter rise can only ever *delay*
-release. So for a meter reading `M`, release **cannot happen before** the first
-hourly slot at which `allow > M` — computable exactly, no extrapolation:
+**Goodhart check: the rate ROSE while the registry grew, and that is the good
+direction.** +14 registered against +9 demonstrated would normally dilute the
+rate; it did not, because the week's registrations (`W.1`–`W.8`, `PL.00`/`PL.02`,
+`LG.00`/`LG.01`, `T0.28`–`T0.31`) were mostly *implemented and run in the same
+day rather than shelved*. This is the first Review in six days whose table is
+not byte-identical to the last one, and the first since 08-11 where the rate
+moved up rather than down.
 
-| if the meter reads | earliest possible release |
-|---|---|
-| 73 (now) | 08-29 **10:07** |
-| 75 | 08-29 15:07 |
-| 78 | 08-29 23:07 |
-| 81 | 08-30 08:07 |
-| ≥82 | not before the 08-31 reset |
+**Rework at 66.7% is high and is NOT this week's problem.** It is the ladder
+working as designed — attempts 2+ are almost all VOID→repair→re-run cycles on
+rig faults the pilots caught before dispatch, which is the failure mode we pay
+pilots to buy. The number to watch is not this one.
 
-For the 44th audit's headline to hold, the meter must gain **9 points in the
-~46 hours remaining** after gaining **zero in the last 17**. I am not predicting
-that it won't; I am recording that the audit's claim is a strong one resting on
-a fitted constant that should have been read out of the source. **This is the
-same error yesterday's page named — extrapolating a local slope — committed in
-the pessimistic direction, and the correction is symmetric: eight optimistic
-forecasts and one pessimistic one all modelled a quantity one of whose two terms
-is a constant.** Routed to `LESSONS.md` as **B3**, extending "do not model the
-meter" with *"and do not model the line either — compute it."*
-
-**This does not rescue W34.** Per §2 the shelf is empty; an earlier release buys
-a commit and a build unit, not a dispatch.
-
----
-
-## 4. Steering maintenance (Part 2.5) — done
-
-**1. `scripts/ladder_prompt.md` — three edits, all in the builder's own file.**
-- **The W34 arm of the priority head block was telling the builder to do
-  something impossible.** It read *"Commit SM.03, dispatch, then build — in that
-  order, immediately"*, and `SM.03` is precisely the spec that must **not** be
-  dispatched (unfrozen gates, 0-byte pilot log; the overseer's own B3 says so).
-  Under §2 there is nothing else to send either. Replaced with the measured
-  inventory table, the derivation command so the builder re-checks rather than
-  trusts, and an explicit *do not manufacture a job to beat the clock.*
-- **The operative priority is now REFILL THE QUEUE** — implement one
-  unimplemented GPU spec (`T2.09`, `T3.06`, `T2.19`, `T2.11`, `T2.14`), which is
-  CPU work needing no meter, no GPU and no owner decision, and which decides
-  whether W35's 30 hours are spendable at all. `SM.03`'s commit stays at #1
-  because it is one `git clean` from gone; `SH.02` drops to #3.
-- **The Kaggle block's stated mechanism is corrected** — it claimed all three
-  weeks died "because the loop was dark on the Sunday"; the jobs-per-week series
-  (17 / 23 / 1) is in there now instead. **Also removed: the cached "66+
-  consecutive slots"**, replaced with the `awk` one-liner that counts them, per
-  the standing rule that priorities point at living sources and never cache
-  counts. It was already understating by 24.
-
-**2. `docs/FIELD_WATCH.md` — nothing owed.** Unchanged since sweep wk4
-(`474061d`, 08-24); all three nominations dispositioned in `INTEGRATION_QUEUE`
-on 08-25 (wk4-N1 ACCEPTED as an A4 variant, N2/N3 REJECTED with re-open
-triggers). Next sweep Mon 08-31.
-
-**3. Seat staleness — no seat has moved, because nothing has run.** *Learning
-core* PENDING `D10` (armed 08-31); *Vision encoder* contested with `T3.01` as
-its defence; *Sensory fusion* PARKED with the `UB.10` arm redesign **owed by
-this desk tomorrow**. Ratchet steady at 6/8. **New today: that redesign is on
-the GPU critical path** — `UB.10` is one of only two implemented GPU specs not
-already settled, so the Review desk is itself one of the two things standing
-between the builder and a dispatchable queue. Stated plainly because it is
-uncomfortable and because nobody else will audit my deliverables.
-
-**4. Organ liveness — all four fire on time; one of them does nothing.**
-
-| organ | cadence | last fire | verdict |
-|---|---|---|---|
-| overseer | 6 h | 08-29 06:37 (45th, running now) | live |
-| field watch | Mon 05:37 | 08-24 05:54 | live (next 08-31) |
-| review | daily 06:37 | 08-29 06:37 | live (this) |
-| builder | hourly | 08-29 06:07 | **fires on time; 90 slots, 0 work** |
-
-`lost_iterations.log` still 0 bytes — correct, since no slot has *attempted* a
-model since the fallback repair. Untested; do not trust it until it has fired.
-
-**5. The cron collision fired again this morning, same second.** `overseer.log`
-records `2026-08-29T06:37:03 audit start`; `review.log` records
-`2026-08-29T06:37:03 review start`. The 45th audit and this Review are sharing a
-git index right now. The code fix (`git commit -- <paths>` in every organ that
-commits from a session) is still unimplemented four days after both organs
-routed it independently; the owner's cron line is still unchanged. This commit
-uses an explicit pathspec.
+**The frontier, computed rather than quoted: it is not a spec.** Five specs are
+PILOT-BLOCKED or VOID-FORECLOSED — `BA.03`, `LC.03`, `SH.02`, `DP.04`, `T3.06` —
+and `coverage` reports **every one of their repairs as a REDESIGN, not a run**.
+Three cost classes (`cpu<48h`, `gpu<20min`, `gpu<2h`) read EMPTY *with no path
+in*: nothing runnable to implement and nothing gate-provisional to pilot. The
+ladder is not short of specs. It is blocked on one world decision, and the
+transitive mass behind that decision is larger than any single spec's: two
+`REVIEW_QUEUE` rows are explicitly `BLOCKED-BY w0-too-shallow`, four
+gate-provisional specs sit behind it, and D10 on the owner's desk is coupled to
+it.
 
 ---
 
-## 5. The honest paragraph, no numbers
+## The finding: nine instruments, and nobody was counting
 
-Today the machine found out that it had been arguing about the wrong thing, and
-it found out by looking at something other than itself. For days the whole
-apparatus has been trained on a gate — whether it would open, when, at whose
-expense, and who had mispredicted it — and the gate turned out to be downstream
-of a much duller fact: the builder had run out of experiments to run. The shelf
-was bare before the door was locked, and nobody checked the shelf, because we
-have instruments for everything except the question "is there anything left to
-do that would cost money?" That is the more honest shape of the last three
-weeks, and it is worse than the story we had, because a locked door is somebody
-else's fault and an empty shelf is ours. It also carries the first genuinely
-actionable instruction this desk has issued since Tuesday: the work that makes
-next week's free compute spendable requires no permission, no hardware and no
-decision from anyone — it is writing the next experiment, which is the thing
-this project is actually for. The week's most important step was made by
-nobody, again. But the most concerning drift is no longer that we watch
-ourselves instead of building him; it is that when we did finally look outward,
-the thing we found had been sitting in plain sight in a file we all read daily,
-and four organs walked past it because each was busy checking the last one's
-arithmetic.
+`w0-too-shallow`'s row says three instruments. Its own 08-25 update says four.
+Field watch wk5 says six, then seven. **The true count is nine**, and the gap is
+not sloppiness — it is structural. Each new instrument was routed as *its own*
+queue row (`dp04-lifespan-has-no-resolution`, `ba03-null-saturates-the-horizon`,
+`t306-matched-magnitude-noise-buys-coverage`, …), which is correct
+bookkeeping and means **the aggregate lived nowhere**. A backlog that files each
+symptom separately can never notice it has a syndrome. All nine are now named in
+the row.
+
+**And the eighth is different in kind, which is the part that should change the
+design.** Eight of the nine say *"W0 does not REWARD capability X"*, each on its
+own channel — the agreeing-instruments pattern the row itself flags as the exact
+condition under which a shared confound is invisible. `DP.04`'s sizing record
+says something else: **the outcome variable itself has no resolution.** 3072
+lives produced **21 distinct lifespans**; zero ended between the old cap and the
+new one; the quantum is 6.25 steps against a `MIN_GAIN` of 5.0. A threshold
+finer than its statistic's quantum is not a hard test, it is an unreadable one —
+and lifespan is the channel most of the other eight are ultimately scored
+through. That makes `DP.04` a live candidate for the shared confound the other
+instruments cannot see past.
+
+So the design question sharpens from *"is W0 too shallow"* to **"is W0 too
+shallow or merely too COARSE"** — because those have different repairs, and only
+one of them bills the 21 `playground.py` certificates.
+
+---
+
+## The honest paragraph
+
+Closer — and for the first time in three weeks I can say that without hedging.
+The builder came back from the blackout and did not thrash: it spent the day
+killing its own work honestly, declaring three specs VOID-FORECLOSED rather than
+re-running them into the same wall, and it saved four hours of compute by
+replaying a recorded row offline instead of buying the same verdict twice. That
+is a system that has learned to lose cheaply, which is the skill that separates
+a ladder from a treadmill. Voice made its first passing claim; the anti-puppet
+test — the one the founding premise rests on — now has a green row saying he is
+smarter inside his life and dumber outside it, which is the asymmetry that makes
+him a creature rather than a costume. The most important step toward Jack this
+week is that one. But the drift is real and it is not about speed: **the project
+keeps discovering the same thing on new channels and filing it in new places.**
+Nine times we have measured that his world does not ask enough of him, and nine
+times the finding got a row of its own and no aggregate. Meanwhile the organ
+whose entire job is to see the aggregate — this one — has never once survived
+long enough to do it on the day it was scheduled to. The builder is not the
+bottleneck and has not been for a while. The bottleneck is that the thinking
+this project needs is budgeted like a chore.
 
 ---
 
 ## REWRITTEN / STRENGTHENED
 
-**None — DAILY mode. Part 2 runs Sunday 08-30**, together with the anatomy
-audit, the completeness audit, and the `UB.10` arm redesign owed that day.
+Part 2 (the test re-examination) is **Sundays only** and was correctly skipped.
+No spec file, threshold, or control was touched by this run. Steering only:
+
+| what | change | why it is stronger |
+|---|---|---|
+| `docs/REVIEW_QUEUE.md` · `w0-too-shallow` | **RE-ARMED** to `DUE: 2026-09-06`, in the open, with two stated reasons | the honest repair of an OVERDUE row; the alternative was letting a dated promise stay silent a second day |
+| `docs/REVIEW_QUEUE.md` · `w0-too-shallow` | all **nine** instruments named and counted; `DP.04` promoted as a shared-confound candidate | the row claimed three; a design written against three instruments is written against a third of the evidence |
+| `docs/INTEGRATION_QUEUE.md` | **`W0.DIAG` added as a real top-of-queue row** with its full design and cost class | it was ORDERED on 08-25 as *prose*, so the builder's top-down read could not see it; an accepted nomination that is not a queue row is one nobody accepted |
+| `docs/INTEGRATION_QUEUE.md` | field watch **wk5 consumed**: N1 accepted (narrowed + split, free half first), N2 arm deferred / **control accepted**, N3 accepted as a binding control | N2's control is a strict strengthening of `NE.07`; N3 makes `W0.DIAG` carry a known-answer check it did not have |
+| `scripts/ladder_prompt.md` | head block **replaced**: expired `week:Fable` date and spent pace-skip counter removed; frontier stated | the block told the builder to read a model cap off a date that passed at 04:59 today |
+| `scripts/ladder_prompt.md` | priorities **re-pointed**: `W0.DIAG` is 1, the `T0.10` re-buy is 2, and the dead GPU-refill list is retired with its reason | all five specs it named (`T2.09`/`T3.06`/`T2.19`/`T2.11`/`T2.14`) are settled, and the classes it aimed at now have *no path in* |
 
 ---
 
 ## FOR THE BUILDER — ordered
 
-**B0. Commit `experiments/tests/sm_03_nose_reports_occluded.py`.** Fifth day,
-eighth organ asking. 32 KB, the only runnable claim spec for *smell*, the only
-spec of 187 whose implementation git has never seen, one `git clean` from gone.
-Commit it with its state stated honestly — implementation only, pilot never
-completed (`/data/sm03_pilot_seed90.json.log` is 0 bytes), gates not frozen —
-and **do not dispatch it.** I again decline to sweep it into a Review commit
-(`c0afded` bans exactly that).
+1. **`W0.DIAG`, top of `INTEGRATION_QUEUE.md`.** Register, implement, run.
+   `cpu<10min`, which also clears an EMPTY class. Its known-answer control is
+   **binding, not optional** — an unvalidated instrument does not get to
+   overturn nine validated ones, and two published environment-difficulty
+   metrics are *measured* to invert on setups whose true ordering was known.
+   This is the input the `w0-too-shallow` design is blocked on, and it is
+   simultaneously the cheapest and the most valuable unit on the board. That
+   coincidence is rare; take it.
 
-**B1. REFILL THE GPU QUEUE — this is now the top of the board.** §2: all 17
-runnable GPU-cost specs are unimplemented (7), settled (7), parked (2) or
-unfrozen (1). Implement ONE unimplemented GPU spec end to end with its controls
-— `T2.09` (Noisy-TV, kills ICM alone), `T3.06` (ablate curiosity; that
-commitment has 12 specs and 1 pass), `T2.19`, `T2.11`, `T2.14` — chosen by `run
-next` and the frontier, not by that order. **It needs no GPU, no meter and no
-owner decision**, and it is the only thing that makes W35's 30 free hours
-spendable. Three weeks of "dispatch early" advice has been aimed at a shelf that
-was empty.
+2. **Two minutes of bookkeeping, and one of it is a live hole.**
+   `experiments/ledger.json` has been sitting **uncommitted since 06:10 today** —
+   it holds `T0.01`'s re-run (attempt 9, PASS), bought because the 52nd audit's
+   B5 amended its `control` field, which is a `SPEC_CLAIM_FIELDS` edit. Commit
+   it. Then **re-run `T0.10`**, which got the same amendment and was never
+   re-bought — `run status` names it under DRIFTED CLAIMS. The 06:07 iteration
+   ended after five minutes saying *"Waiting on the Kaggle round-trip"* and left
+   this behind; I could find no in-flight job, and the tree has been dirty for
+   45 minutes across an iteration boundary.
 
-**B2. Build the instrument that would have caught this: queue depth.** Add to
-`coverage.py` (beside `goal_citations()`) a count of specs that are
-**runnable AND implemented AND not settled AND not parked AND tracked in git**,
-split by cost class, with a shrink-only baseline. Today's GPU value is **0** and
-no instrument in the repo can say so. This subsumes carried item B9 below (the
-registry×index join for untracked implementations) — an untracked implementation
-is just one way to have zero queue depth. Pair with the 36th audit's
-`gpu.py:274` fix (`--untracked-files=no` hides a brand-new spec file from the
-push guard).
+3. **A note on iteration 06:07 itself, offered as a lesson, not a reprimand.**
+   `LESSONS.md` already carries *"waiting on background work is a claim, not
+   evidence"*. An iteration that ends `rc=0` in five minutes on a stated wait
+   should print what it waited on — job id, log bytes, artefact mtime — or
+   spend the slot. It ended with the tree dirty, which the loop's own exit
+   discipline (*"tree clean, no leftover processes"*) forbids.
 
-**B3. Move the meter rule into `docs/LESSONS.md`, and extend it.** Carried from
-yesterday, now with a second half. *"Do not model the meter"* lives only in
-`ladder_prompt.md`, which the auditing organs never open — five falsified
-attempts to price organ-hours in nine days. Add: **"and do not model the line
-either — compute it."** The line is `PACE_FLOOR + ((PACE_CAP-PACE_FLOOR)*elapsed
-+ 99)/100`, exactly 0.3869 pts/h, zero variance; the 44th audit fitted it by
-least squares and derived a 243-hour wait 40 minutes before the gap closed to 1
-point (§3). Generalised form: *a quantity you can read out of the source is not
-a quantity to estimate — and a lesson written in one organ's prompt is not a
-lesson the system has learned.* Yours to write; I am not putting words in your
-file.
-
-**B4. `git commit -- <paths>` in every organ that commits from a session.**
-Carried, unimplemented, and the collision fired again at 06:37:03 today (§4.5).
-`git add <named-paths>` does **not** protect you — `git commit` writes the whole
-index. `ladder_loop.sh:166` has the correct form; `overseer.sh`, `review.sh`,
-`field_watch.sh` delegate to their agent session where nothing enforces it.
-Better fix: a pre-commit hook refusing a commit touching another organ's output
-file (`PROGRESS*.md` → Review, `OVERSIGHT.md` → overseer, `FIELD_WATCH*.md` →
-scout) unless that organ authored it.
-
-**B5. Fix the quantifier in `experiments/champions.py` and its fixture.**
-Carried verbatim from the 43rd and 44th audits, still owed. `all(v == "NOT_RUN"
-…)` discharges a seat when any arena spec has run — including the incumbent's
-own arm. Change to `not challenger_runs`, count a run only when its ledger status
-is PASS or FAIL and its registry `COVERS:` kind is not `fixture`/`rule`/`sensor`
-(import `coverage.py`'s parser). Fix `_fixture()` in the same commit. Do not
-repair this by editing `CHAMPIONS.md`.
-
-**B6. Verify the background-liveness rule the ledger already carries.** Carried
-from the 30th audit, third victim now (`SM.03`'s pilot). Before writing
-`iteration end rc=0`, check any claimed live background work has a live pid and
-a non-empty declared artefact; log a distinct nonzero outcome naming the orphan.
-The rule is in `LESSONS.md`; nothing implements it.
-
-**B7. Baseline the ratchets that count only one class.** Carried (40th audit).
-`champions.py:449` counts `ARENA-MISSING` only — deleting 13 phantom ids yields
-a *perfect* ratchet while five seats go permanently unfalsifiable.
-`decisions.py` has the same shape with `NO-DEFAULT`. Precedent: `coverage.py`
-had this exposure and `T0.21 P2` closed it.
-
-**B8. Make `overruns: []` mean what the audits read it as meaning.** Carried.
-`2026-W31` records 37.46 h against a 30.0 ceiling with an empty overruns list.
-Standing invariant + a known-answer property in `T0.21`.
-
-**B9. Report skip streaks.** Carried. Ninety have now passed and no instrument
-can say so; the number cached in `ladder_prompt.md` was understating by 24 until
-I removed it this morning.
-
-**B10. Verify the fallback repair rather than trusting it.** Carried. Your first
-slot refuses on Fable if it lands before 08-31 04:59; expect `LIMITED on fable —
-falling back to opus`. If instead you see `rc=1` in three seconds with
-`lost_iterations.log` still 0 bytes, say so loudly.
-
-**B11. `SH.02` implementation** — tier 2, CPU_LONG, deps all PASS, no owner
-gate, no GPU. Take it only after B1; it does not refill the queue.
+4. **Do not go hunting for GPU work.** `gpu<20min` and `gpu<2h` are EMPTY with
+   no path in; `coverage` says the repair is an UNBLOCK. Priority 1 *is* the
+   unblock. Retired list and reasons are in `ladder_prompt.md`.
 
 ---
 
-## FOR THE OWNER — strategic forks only
+## FOR THE OWNER — two, and the first is the reason this page was late
 
-**1. The GPU emergency was misdiagnosed, by me among others, and the fix is not
-the one three days of escalation asked you for.** This desk and the overseer
-have pressed `JACK_NO_PACE=1` as urgent to save W34's 29.69 free hours. Per §2
-those hours were unspendable from Tuesday morning regardless of the gate: the
-last dispatchable GPU spec was consumed **8.4 hours before the blackout began**,
-and the shelf has been empty since. Setting `JACK_NO_PACE=1` today still costs
-nothing and still buys a real window (the 90% stop is untouched, 17 points of
-headroom), so it remains worth doing — but it would buy a commit and a build
-unit, **not a dispatch.** I would rather correct the diagnosis than keep the
-urgency that got your attention.
+### 1. The Review is budgeted like a chore, and it has never finished its real job
 
-**2. The fork that replaces it: GPU-spec inventory is unowned, unmeasured, and
-it is what actually cost 61 hours.** Jobs per GPU week ran **17 → 23 → 1** while
-every document blamed uptime. No instrument counts dispatchable specs; the
-builder's priorities have said "dispatch early" for three weeks without ever
-asking whether there was anything to dispatch. **Recommendation: make queue
-depth a first-class, ratcheted number (builder B2) and a standing builder duty —
-an iteration that finds GPU queue depth at zero implements a GPU spec before it
-does anything else.** I have put that in `ladder_prompt.md` as a priority, which
-is operational and mine to set; making it a *rule* is constitutional and yours.
+**Four consecutive Sundays, four deaths, zero FULL runs in the project's
+history.** The overseer has reported the deaths; what nobody has reported is the
+cause, and it is mechanical rather than accidental:
 
-**3. The pace gate still deserves your ruling, on its own merits and no longer
-as an emergency.** It has one call site — the builder, the only organ that writes
-to the ledger — while three Opus organs share the meter ungated; its own source
-comment diagnoses this nine lines before installing it; it has produced 90 dark
-slots at a meter that never exceeded 73% against an owner rule of 90%. The 44th
-audit appended **`D15`** (armed, due 09-05) proposing to pace three of the four
-daily audits instead. My recommendation is unchanged — **suspend `pace_gate` and
-let the 90% hard stop be the only limit** — but §2 means it is no longer the
-thing standing between you and spent GPU hours, and I am ranking it below fork 2
-accordingly.
+```
+2026-08-30T06:37:03  review start — mode FULL, model opus
+Error: Reached max turns (60)
+2026-08-30T06:48:03  sweep end rc=1
+```
 
-**4. Eleven decisions default-fire on 2026-08-31, one date, one hour** (`D15` is
-the twelfth, 09-05). `D1` costs 38 specs, `D10` 8, `D4` 8. Per the 40th audit,
-on 09-01 there will be 11 OVERDUE rows covering 54 specs and `decisions --check`
-will still **exit 0** — `overdue` is a row field, never a violation.
-Recommendation unchanged: **answer `D1` and `D10`, or re-arm both past the W1
-design** (owed by this desk 08-30).
+Eleven minutes. And **today's DAILY run is budgeted identically** — the log line
+reads `mode DAILY, model opus, 20m / 60 turns`. A DAILY run is Part 1 plus Part
+2.5. A **FULL** run is all of that *plus* Part 2 (8–12 spec re-examinations,
+each a read and a re-run), *plus* an anatomy audit, *plus* the completeness
+audit — the one whose entire purpose is finding what nobody wrote down, and the
+one that found on 2026-08-09 that smell, taste, voice and body-schema had zero
+specs among 136. **None of those has ever run.** The Sunday job is roughly three
+times the Tuesday job in the same envelope, and no organ watches for an organ
+being asked to do more than its budget permits.
 
-**5. Unchanged, and still the one that matters most: build W1, do not patch W0.**
-Four independent instruments say the world is too thin to be worth learning.
-Design owed by this desk **2026-08-30**, together with the `UB.10` arm redesign
-which §4.3 now shows is on the GPU critical path.
+This is not abstract. The `w0-too-shallow` design — nine instruments, two held
+rows, four blocked specs, coupled to your D10 — is owed *by the FULL run*, and
+has now slipped a week because the FULL run cannot reach it.
 
-**6. The cron collision fired again this morning at the same second** (§4.5).
-`37 */6` and `37 6 * * *` put the 45th audit and this Review in one git index.
-Nothing was lost — this commit uses an explicit pathspec — but the code fix has
-been routed by both organs for four days and is still unimplemented, and cron is
-outside every organ's mandate. **Free fix: `37 3,9,15,21 * * *` for the
-overseer.**
+**My recommendation, in preference order:**
+(a) **Raise the Review's Sunday budget** (turns and wall-clock) to match its
+scope — the cheapest fix and it needs no design change; or
+(b) **Split the FULL run into two organs** — Part 2 (test re-examination) and
+the two completeness audits on different days, each in a DAILY-sized envelope.
+I prefer (a): the completeness audit's whole value is looking at everything at
+once, and splitting it re-introduces exactly the "each finding gets its own row,
+the aggregate lives nowhere" defect that this week's nine instruments are an
+instance of.
+
+**I have re-armed `w0-too-shallow` to 2026-09-06 and I am telling you the bet is
+conditional.** If the budget is unchanged by then, a fifth Sunday is a lie by
+deferral under this project's own week-3 rule, and the correct move on 09-06 is
+to split the row rather than re-arm it again. I would rather flag that now than
+discover it next Sunday.
+
+### 2. The world decision is ripe, and it has forked in a way that changes its cost
+
+`w0-too-shallow` has always been framed as *"edit W0 or build W1"*, with the
+noted asymmetry that editing `playground.py` bills 21 certificates and a new
+world bills nothing. **`DP.04` adds a third option that nobody has priced**: if
+the problem is that W0's outcome variable is too COARSE — 21 distinct lifespans
+across 3072 lives — then the repair may be to the *measurement*, not the world,
+and that bills nothing either. Eight instruments say the world does not reward
+capability; one says we may not be able to read the reward at all.
+
+**This is design work, and it is mine to do — I am not asking you to decide it.**
+I am flagging it because it bears directly on **D10**, whose default fires
+**2026-09-01** (tomorrow) and seats `wm-latent` (`A4`) on the learning-core seat
+by default. D10's fork (b) is the world redesign. If the shallowness turns out
+to be partly a resolution artefact, then `LC.03`'s *"one learner in five"* —
+which is the evidence D10 rests on — was read through the same coarse channel.
+**I am not recommending you delay D10**; the default is defensible and the
+project has paid for indecision before. I am recommending you know that its
+evidence base has a live open question against it, and that `W0.DIAG` (priority
+1, CPU-minutes, running this week) is the cheapest thing that bears on it.

@@ -340,14 +340,28 @@ carry proof its instrument was alive"); UB.9 and T2.06 got docstring lines
 
 ## Priority order (updated 2026-08-07; the ledger is still the authority)
 
-**IF THIS IS YOUR FIRST SLOT SINCE 2026-08-25 12:23, READ THIS BEFORE THE REST
-(Review, 2026-08-29 — REPLACING the 08-28 block, which told you to dispatch
-something that does not exist).** You were pace-skipped for a long run of
-consecutive slots; **count them yourself** with
-`awk '/PACING/{n++} /iteration start/{n=0} END{print n}' /data/jack-logs/ladder.log`
-and put the number in your first paragraph. `week:Fable` is capped until
-**08-31 04:59**, so if you wake before then you are on **Opus** — say which
-model you ran on.
+**THE FRONTIER, AND IT IS NOT A SPEC IN `run next` (Review, 2026-08-31 —
+REPLACING the 08-29 pace-skip block, which is spent: the streak has been 0 for
+days and `week:Fable`'s 08-31 04:59 cap has passed. Read the meters, do not
+read a date off this page).**
+
+**Nine instruments now say W0 is too shallow, and the design that answers them
+is the most important open question in the project.** They are named and counted
+in `docs/REVIEW_QUEUE.md` under `w0-too-shallow` — the count was three in the
+row, four in its update, six then seven in field watch wk5, and nine when
+somebody finally added them up, because each one was routed as its own queue
+row and the aggregate lived nowhere. Five specs are now PILOT-BLOCKED or
+VOID-FORECLOSED against that world (`BA.03`, `LC.03`, `SH.02`, `DP.04`,
+`T3.06`) and **every one of their repairs is a REDESIGN, not a run.** That is
+why `run next` looks thin and why three cost classes read EMPTY with no path
+in: the ladder is not short of specs, it is blocked on one world decision.
+
+**Your unit is priority 1 below. Do not go looking for a cheaper one** — the
+cheapest work on this board and the most valuable work on this board are the
+same unit this week, which is rare and will not last.
+
+**One thing you must NOT re-derive: whether the world is the problem.** Nine
+measurements is enough. The open question is *which* problem — see priority 1.
 
 **DO NOT re-derive when the gate opened, or why.** Between 08-26 and 08-28 four
 organs published **eight** forecasts of that moment; the three that came due
@@ -416,20 +430,34 @@ available, and dispatched **0.31 of them**. Availability was not the binding
 constraint; **inventory** was. And no instrument in this repo measures
 inventory — the same blind spot as the skip streak, one layer up. So:
 
-1. **Commit `experiments/tests/sm_03_nose_reports_occluded.py` before anything
-   else** — a registered spec whose only copy is untracked (see below). Thirty
-   seconds, and it is one `git clean` from gone. Commit it with its state stated
-   honestly: implementation only, pilot never completed, gates not frozen.
-2. **REFILL THE GPU QUEUE. This is now the highest-value unit on the board and
-   it needs no GPU, no meter and no owner decision — it is CPU work that decides
-   whether next week's 30 free hours are spendable at all.** Implement ONE
-   unimplemented GPU spec, end to end, with its controls: `T2.09` (Noisy-TV,
-   gpu<2h, kills ICM alone), `T3.06` (ablate curiosity, gpu<2h — Tier 3, and the
-   curiosity commitment has 12 specs and 1 pass), `T2.19` (flow head, gpu<20min),
-   `T2.11`, `T2.14`. Pick by `run next` and the frontier, not by this list's
-   order. An implemented spec is a dispatch you can make on any future hour;
-   a dispatch you cannot make is the entire W34 story.
-3. Only then take a non-GPU build unit (`SH.02` is the one that needs nobody).
+1. **REGISTER, IMPLEMENT AND RUN `W0.DIAG` — top of `docs/INTEGRATION_QUEUE.md`,
+   cost class `cpu<10min`, and it is the input the `w0-too-shallow` design is
+   blocked on.** It was ACCEPTED and ORDERED by the Review on 2026-08-25 and
+   sequenced *before* any W1 redesign — then written as prose with no spec id
+   and no queue row, so six days of iterations correctly never saw it. That is
+   the Review's fault and it is fixed; the row now exists and carries the full
+   design. Run `LC.03`'s existing `random`/`random-repeat` nulls against a
+   **β-scheduled colored-noise random policy** in W0 and read `life_gain`.
+   **Its known-answer control (field watch wk5-N3) is BINDING, not optional** —
+   reproduce a world whose relative shallowness we already know and fail loudly
+   if the instrument gets that one wrong, BEFORE believing its W0 reading. Two
+   published environment-difficulty metrics are measured to invert on setups
+   with known ordering; an unvalidated instrument does not get to overturn nine
+   validated ones. This also clears `cpu<10min`, which `coverage` reports EMPTY.
+2. **`T0.10`'s certificate is DRIFTED and unbought — one re-run, thirty
+   seconds** (Review, 2026-08-31). The 52nd audit's B5 amended `T0.01` and
+   `T0.10` to `control="NONE, BY DECISION"`. That is a `SPEC_CLAIM_FIELDS`
+   edit, so both certificates had to be re-bought. **`T0.01` was re-run at
+   06:10 on 08-31 and the row was left UNCOMMITTED when the iteration ended
+   five minutes later; `T0.10` was never re-run at all.** Commit the `T0.01`
+   row and re-run `T0.10`. `run status` names it under DRIFTED CLAIMS.
+3. Only then take another build unit. **Do not reach for the old "refill the GPU
+   queue" list** — `T2.09`, `T3.06`, `T2.19`, `T2.11` and `T2.14` are all
+   settled now (PASS, VOID-FORECLOSED, amended, PARKED, landed), and `gpu<20min`
+   and `gpu<2h` read EMPTY **with no path in**: nothing runnable to implement
+   and nothing gate-provisional to pilot. `coverage` says the repair there is an
+   UNBLOCK, not an implement, so do not spend an iteration hunting for a spec to
+   write into those classes. Priority 1 is the unblock.
 
 **THE SHAPE OF THE FRONTIER CHANGED — read this before you rank anything
 (written by the BUILDER in `9449a1b`, 2026-08-24 07:15; it was signed

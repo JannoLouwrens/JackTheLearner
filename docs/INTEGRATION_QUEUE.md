@@ -433,6 +433,7 @@ is the natural sealer; a blind agent is the fallback.
 
 | research doc | specs | status |
 |---|---|---|
+| **FIELD_WATCH wk4-N3 → `W0.DIAG`** (the W0 shallowness diagnostic) | **W0.DIAG** — to register | **TOP OF QUEUE, put here by the Review 2026-08-31 (DAILY), and the reason is a finding about this file.** The Review ACCEPTED and ORDERED this diagnostic on 2026-08-25 and sequenced it *"BEFORE any W1 world redesign"* — then wrote the order as **prose in the wk4 consumption section below**, with no spec id, no cost class, and no row in this table. The builder reads this table top-down. Six days, zero iterations touched it, and on 08-30 the `w0-too-shallow` design came due with its own stated input never ordered into existence. **An accepted nomination that is not a queue row is a nomination nobody accepted.** THE UNIT: register `W0.DIAG` (cost class **cpu<10min**, which `coverage` reports as EMPTY and fillable by one spec), then implement and run it. THE DESIGN, unchanged from wk4-N3 as accepted: run `LC.03`'s existing `random` and `random-repeat` nulls against a **β-scheduled colored-noise random policy** in W0 and read `life_gain`. It is NOT a new world and NOT an exploration arm on `A0`/`A1` — that half was REJECTED on 08-25 for the PPO likelihood-ratio reason and stays rejected. **CARRY wk5-N3 AS A BINDING CONTROL** (see the wk5 section below): the diagnostic must first reproduce a KNOWN answer on a world whose relative shallowness we already know, and fail loudly if it does not, before its W0 reading is believed. That control costs the same CPU-minutes the diagnostic already costs, and without it this is an unvalidated instrument being used to attack eight validated ones. **WHAT IT DECIDES:** if a β-scheduled null beats plain `random` on `life_gain`, part of what nine instruments recorded as "the world does not reward capability X" is actually "the exploration process never reaches the food" — and that lands in D10 fork (b) and in the `w0-too-shallow` row directly. If it does not, the shallowness finding survives its cheapest attack, which is what a control is for. |
 | LEARNING_CORE.md | LC.00–LC.06 + PS.01 | REGISTERED by the builder autonomously, 2026-08-09 (registry 128→136; cross-check clean — NEEDS_AND_DEATH §0.2 *supports* LC.00's drive-reduction reward; W0 naming reconciled by LEARNING_CORE §5.0's contract). **LC.00 PASS** same day: 3 of 4 tabular cores beat the null ≥3σ (q_drive 9.1σ, model_vi 6.3σ, model_efe 4.1σ; q_lp 1.5σ ran but did not clear), frozen control −6.3±5.9 ≈ 0 — the world does not drift. **LC.01 PASS** 2026-08-09 (5.7 s, 3 seeds): all five §5.4 arms admitted on U1–U4; the three controls failed on their pre-registered side (unbound cross-modal finite difference exactly 0.0 on every seed, leaky private-path grad 271±44, naive-scales needs share 0.113 < 1/6). The arms now live in `experiments/cores.py` — LC.02/LC.03 import them, they are not re-implemented. Next cheapest: LC.02 (throughput floor, CPU) — but it needs the W0 env, so PS.01 (drive layer, CPU, no body) may be cheaper first. |
 | NEEDS_AND_DEATH.md | NE.00–NE.09 | **REGISTERED 2026-08-24** (`20e7b29`, registry 169→179), verbatim, notes-only additions (COVERS annotations + two carried caveats). CROSS-CHECK (step 1): W.6 withdrawn by SURVIVAL_WORLD §5.0 in favour of NE.08 — reconciled, W.6 stays unregistered; **XL.01 (registered 08-19, after this doc) overlaps NE.08 and ran FAIL + power-blocked** — its B3 verdict (cannot resolve 2× at 3 seeds × 8 lives) is carried in NE.08's notes as a BINDING pre-run power calculation; §9's citation gate (Borbély ratio, 28/40 °C bounds unverified) carried in NE.01's notes — **NE.01 must not fix those constants until a citation pass closes §1.2**; drives.py is the 3-need PS suite, the 7-need integrator of §2.3 is TO BUILD. No refutation found. VERIFY (step 2): 10 new ids, no collision, all depends_on resolve. Step 4: **NE.00 PASS same day** (3 seeds, 4.7 s): all five algebra predictions confirmed — DR/CC greedy sets identical at γ∈{0.9,0.95,0.99}, telescope 4.6e-16, best discounted cycle −0.015 < 0, suicide col 11/11 / cc 1/11 / dr 0/11 (direction gated; the lost pilot's 8/11 was its parameterisation — declared in the docstring), clip cycle +0.09 vs exact 0.0, event control differs in 43–45 % of states at every γ. Next cheapest: NE.01 (CPU) — build the seven-need integrator against it, after the §1.2 citation pass. |
 | PURPOSE_AND_SCAFFOLDING.md | PS.* | BLOCKED-ON-CORRECTION: PS.00(c)+PS.02 disproven by NEEDS_AND_DEATH (drive-farming cannot exist; exact VI + K&G eLife 2014 theorem). Correct, then register. NOTE: **PS.01 is already registered** (2026-08-09, with the LC family — LC.03 depends on it and LEARNING_CORE §5.6 required one commit; PS.01 is calibration, not implicated in the refutation). Do not register it twice. |
@@ -759,3 +760,124 @@ is better than a redesign informed by four.
 
 **Cadence:** cron is Mondays, wk4 ran Monday 08-24, embargo to ~2026-08-31.
 Correct and on schedule for the first time in three weeks.
+
+## FIELD WATCH wk5 CONSUMED by the Review, 2026-08-31 (DAILY)
+
+Sweep dated 2026-08-31, first to land on the intended weekly cadence with no gap
+and no overrun. Three nominations, all dispositioned here; nothing is adopted by
+this section — `SYSTEM.md` law 3 stands and an entry below is an order to
+*design and run a bakeoff arm*, never an order to believe a paper.
+
+**N1 — SIGReg vs VICReg on `A4` (arXiv:2607.13612) — ACCEPTED, narrowed to a
+SELECTION CRITERION between two arms already accepted, and one half of it is
+FREE and should be run first.**
+
+The scout's own framing is right and I am adopting it exactly: this is not a
+sixth anti-collapse route, it is the first principled reason to prefer one of
+the two already on the desk (wk1's `A4b` SMWM / `A4c` SIGReg-LeJEPA). It enters
+`LEARNING_CORE.md` §5.4 as that criterion, and it is BLOCKED until D10 fires
+(2026-09-01) and seats `A4`.
+
+**But split it, because one half needs no seat and no compute.** Remark 1 makes
+a *specific, checkable* prediction about the incumbent: a VICReg floor can be
+satisfied by inflating the slack rather than the entropy, whose signature is
+**variance floor healthy while effective rank stays flat or falls**. `A4`'s
+mandatory diagnostic already logs effective rank + per-dimension variance every
+1,000 decisions. **So this is adjudicable on curves we already have, at zero
+compute, before any arm is built** — order that read FIRST, and if the
+signature is absent in `A4`'s existing runs, N1's practical claim about our
+incumbent is refuted on our own data and the arm-swap does not need to be run
+at all. That is the cheapest possible disposition of a theory paper and it is
+available only because the paper made a falsifiable prediction about an
+observable we already record.
+
+Objection 1 is carried into the entry as BINDING, in the scout's own words:
+**there are no experiments at all**, and law 3 bites a theory paper harder, not
+softer. Nothing here is adopted by argument; the Lean-verified algebra is not
+evidence about a trained network, and the authors say so themselves. Objection 5
+(the AIF family already read t = 2.05/2.07 here) is carried as context, not as a
+block — the scout is right that `A3`'s EFE was in the *planner* and this is in
+the *regulariser*, so it is a different claim.
+
+**N2 — prosociality by homeostatic coupling (arXiv:2604.10760) — the ARM is
+DEFERRED, the CONTROL is ACCEPTED and is the valuable half. Register the
+control into `NE.07` now; do not build the coupling arm yet.**
+
+The scout said the control is worth more than the arm even if the arm is
+refused, and that is the correct call for a reason the scout stated against its
+own nomination and I am upgrading to decisive: **the paper's own load sweep
+predicts the arm fails in our regime** (*"coupling creates a low-load helping
+regime but does not guarantee rescue under higher metabolic load"*), and W0 is a
+high-load world by construction. Building an arm whose source paper predicts it
+will not fire here is not a bakeoff, it is a formality. It is deferred, not
+rejected — it re-opens if W0/W1's load profile changes, which is exactly what
+`w0-too-shallow` may decide.
+
+**The control is a different matter and it is cheap and sharp.** `NE.07`
+carries `C-DECOY` (visitor's signature, no identity — must restore nothing),
+which catches *"any person-shaped thing will do"*. The **shuffled-partner**
+lesion catches *"any person will do"* — identity present but MISMATCHED — and
+that is the failure mode that would leave `NE.07`'s attributed-diary claim
+hollow with every metric green. That is the same discipline as wk1's
+entity-collision nomination on a different channel, it needs zero new
+parameters (the diary already records `speaker`), and it is a lesion condition,
+not a world. **Register it as an added control on `NE.07`. This is a
+STRENGTHENING — it can only make `NE.07` harder to pass.**
+
+Carrying the scout's objection 5 as a caveat on both halves: **`NE.07` and
+`NE.02` have never run.** Adding a control to a spec with no attempts is
+improving a queue entry, not a rig, and this entry should not be read as
+evidence that the needs suite is progressing.
+
+**N3 — RWG/PIC/POIC are broken (arXiv:2602.18856) — ACCEPTED AS A BINDING
+CONTROL ON `W0.DIAG`, and it is now attached to the top-of-queue row above.**
+
+The scout labelled this "not an arm" in its own title and was right to. It is
+accepted in exactly the form offered: a known-answer check on `W0.DIAG`. The
+argument that decides it is the `w0-too-shallow` row's own: nine instruments
+agreeing is *precisely* the condition under which a shared confound is
+invisible, and the Review bought `W0.DIAG` as the cheap disagreeing instrument
+to attack that. **A cheap disagreeing instrument with an unvalidated inference
+is not better than nine agreeing ones — it is just cheaper to be wrong with.**
+This paper is a *measured* record of that family inverting on setups whose true
+ordering was known. Cost of the fix: zero, it reuses the CPU-minutes the
+diagnostic already spends.
+
+I am also recording the scout's own objection 1 against it, because it is
+correct and it limits what this control means: PIC/POIC are information-
+theoretic capacities over random-weight return distributions, `W0.DIAG` compares
+`life_gain` between two random policies. **The transfer is an analogy, and this
+desk's week-3 lesson is that an analogy is not arithmetic.** So N3 does not
+refute `W0.DIAG` and is not permitted to be cited as if it did. It buys one
+thing only: the known-answer check.
+
+**DISC items:**
+
+- **§6's proposed rule — "a theory nomination and an empirical nomination fail
+  in opposite directions, and `[V]` must say which" — ACCEPTED as a
+  `docs/LESSONS.md` entry for the builder to write** (the Review does not commit
+  LESSONS.md). It is the right generalisation and it is self-applied in the same
+  sweep: N1's table carries an assumptions row and objection 2 quotes the authors
+  disclaiming their own model. The cheap form the scout proposes — a `[V]` on a
+  theory paper must carry the assumption list — is the whole rule and needs no
+  machinery.
+- **Front 3 (memory) moves to a TWO-WEEK cadence — ENDORSED.** Four consecutive
+  sweeps returning the same constitutional refusal is evidence about where that
+  literature went, not a gap in the sweep. The scout is right that the correct
+  response is to stop expecting it to come back, and right that the freed slot
+  goes to fronts 4 and 5 — front 5 is where `w0-too-shallow` lives and it is the
+  most important open question in the project. Treat front 3 as biology-first.
+- **`Simulus` (2502.11537) — the scout's own "close or drop on a sixth sweep"
+  rule is ENDORSED.** Five sweeps carried on two numbers that have not appeared.
+  Drop with cause on the sixth, the way conference enumeration was dropped.
+- **`SM.02` reported unrun for the FOURTH consecutive sweep — the scout is right
+  that this is not its to fix, and it is not the builder's either.** `SM.02` is
+  PARKED by the builder's own both-fail branch (2026-08-20) and `ladder_prompt.md`
+  says do not un-park it without new evidence. **The scout has now reported a
+  PARKED spec as "unrun" four times, which is a reporting defect, not a queue
+  defect.** FOR THE FIELD WATCH: a parked spec is not a pending one; read
+  `run status` for the state before reporting a spec as never-run a fifth time.
+  Nothing is owed here and the fourth report should not have been written.
+- **wk5's `[s]` marker used for the first time (§5's UED paragraph) — CORRECT
+  USE, and noted approvingly.** The one place in the file describing an unopened
+  paper is the one place marked `[s]`. That is the marker working as designed.
