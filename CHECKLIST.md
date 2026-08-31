@@ -418,7 +418,7 @@ Every line here is backed by an experiment that could have failed;
 - [!] **ME.11.C** Arm C — static embeddings (potion-base-8M), near-free semantics  — abstain_N1=0.924433; abstain_N1_std=0.0332562
       - _asserts:_ A distilled STATIC embedding table (model2vec potion-base-8M, 256d, 7.56M params, 30 MB, no attention) with corpus mean-centering and a split-conformal threshold beats Arm B on paraphrase recall@1 by >=0.30 absolute while holding certified abstention >=0.95, at <=20 ms/query at 100k events.
       - _dies if:_ Recall gain over Arm B <0.30, OR certified abstention <0.95 at the conformal threshold, OR the coverage and false-answer thresholds proving INFEASIBLE (tau_fpr > tau_cov) — semantics bought recall with credulity, which ME.11 explicitly forbids.
-- [ ] **ME.11.D** Arm D — a real sentence encoder (all-MiniLM-L6-v2, ONNX)
+- [!] **ME.11.D** Arm D — a real sentence encoder (all-MiniLM-L6-v2, ONNX)  — abstain_N1=0.8889; abstain_N1_std=0.0166237
       - _asserts:_ A 6-layer transformer bi-encoder (22.7M params, ONNX CPUExecutionProvider, mean pooling, corpus mean-centering, split-conformal threshold) beats Arm C on paraphrase recall@1, and the recall it buys is worth its ~13 ms query encode and 18-minute cold reindex at 100k.
       - _dies if:_ Recall within one seed-std of Arm C — in which case the static table wins on cost and the transformer is deleted. This is the genuine falsification risk of the whole bakeoff and the pilot says it is close (0.625 vs 0.625 at 2,030 events).
       - _then delete:_ If Arm D ties Arm C, every transformer encoder is removed from the memory path and the 90 MB of weights, the onnxruntime dependency and the 18-minute reindex go with it.
