@@ -235,6 +235,103 @@ has ball hands; fingers will compete one day) and the cross-life world
 curriculum (how worlds mutate between deaths). They get chairs when their
 first challenger exists.
 
+## SEAT DECLARATIONS — the ring, said out loud, one line per seat
+
+Every seat above declares its marking and its ARENA here, in the idiom of
+`COVERS:` and `DECIDE:`. `experiments/champions.py` **reads these lines and not
+the cells**; the cells stay as they are, for humans. A seat with no line falls
+back to a parse of its prose and is reported `UNDECLARED` — the ratchet is 0, so
+a new chair arrives with its ring named or `--check` goes red.
+
+Three rules, each of them a scar:
+
+- **`ARENA:` names only what could UNSEAT the holder.** Not the holder's own
+  certificates, not a prerequisite, not a spec the cell mentions in passing. The
+  arena cells are dense prose and the old parser took every id in them: the
+  PLASTIC-ONLY decree's ring read `PL.* LOUD.* PL.00 PL.02 PG.1`, where
+  **`LOUD.*` is the sentence "WORTH SAYING OUT LOUD." followed by a bolded
+  `PL.02`** and `PG.1` is a `depends_on=` line. The 51st audit dutifully asked
+  the builder to *register `LOUD.*`*.
+- **`ARENA: NONE` is an assertion, not a blank.** It says the ring is unbuilt.
+  `NO-ARENA` on ASR, Speaker ID and Language grounding is now a fact this file
+  states about itself, and no future prose mention can discharge it by accident.
+- **Removing an id from a declaration is not the forbidden repair** (deleting an
+  arena reference to convert `ARENA-MISSING` into `NO-ARENA` and make a seat
+  permanently safe) **as long as the seat keeps a real ring** — which
+  `--check`'s `UNFALSIFIABLE` ratchet enforces mechanically, not on anyone's
+  word. Every drop below is a spec that could not decide the seat; the phantom
+  ids that CAN embarrass us (`D1.0`, `T2.21`, `LT.03`, `LT.04`) are all still
+  declared, because they are what those seats genuinely point at.
+
+- SEAT: Learning core | HELD: BY DEFAULT | ARENA: LC.00–LC.06
+- SEAT: Deliberation (the slow path) | HELD: VACANT | ARENA: DP.00–DP.05, BO.01
+- SEAT: Fast/slow coupling | HELD: BY DECREE | ARENA: DP.02
+- SEAT: Control architecture (D1) | HELD: VACANT | ARENA: D1.0, T2.21
+- SEAT: Needs/reward form | HELD: BY ANALYSIS | ARENA: NE.02
+- SEAT: Curiosity signal | HELD: BY ANALYSIS | ARENA: LT.03, LT.04
+- SEAT: Episodic retrieval | HELD: BY VERDICT | ARENA: ME.11.A–F
+- SEAT: Sensory fusion | HELD: UNDECIDED | ARENA: UB.10
+- SEAT: Vision encoder | HELD: BY DEFAULT | ARENA: T2.03, PL.02
+- SEAT: ASR (speech→text) | HELD: BY ANALYSIS | ARENA: NONE
+- SEAT: Speaker ID | HELD: BY ANALYSIS | ARENA: NONE
+- SEAT: Language model | HELD: BY DECREE | ARENA: LG.00
+- SEAT: Consolidation | HELD: BY ANALYSIS | ARENA: NE.05
+- SEAT: World | HELD: BY VERDICT | ARENA: W.1–W.5, W.7, W.8
+- SEAT: Audio encoder (world-sound → brain) | HELD: UNDECIDED | ARENA: PL.*
+- SEAT: Language grounding (word → lived skill) | HELD: UNDECIDED | ARENA: NONE
+- SEAT: Smell (olfaction) | HELD: VACANT | ARENA: SM.02
+- SEAT: Taste (gustation) | HELD: VACANT | ARENA: TA.03
+- SEAT: Voice (vocalisation) | HELD: VACANT | ARENA: VO.02
+- SEAT: Language acquisition | HELD: BY DECREE | ARENA: LG.00
+- SEAT: Touch (mechanoreception) | HELD: VACANT | ARENA: UB.5, UB.11
+- SEAT: Proprioception & balance (vestibular) | HELD: VACANT | ARENA: T3.02, UB.16, BA.03
+- SEAT: Pain (nociception) | HELD: VACANT | ARENA: PS.03
+- SEAT: Temperature (thermoception) | HELD: VACANT | ARENA: SH.02, W.3
+- SEAT: Interoception (hunger, thirst, fatigue) | HELD: VACANT | ARENA: NE.02, UB.11
+- SEAT: DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK. | HELD: BY DECREE | ARENA: PL.00, PL.02
+
+**What changed, and what it cost — read this before believing the report got
+better on its own (builder, 2026-08-31).** Seven of the twenty-six declarations
+disagree with what the parser used to read:
+
+- **Learning core** dropped `PS.01` — cited in the cell as a passing
+  prerequisite; `PS.01` is a `hunger/thirst (FIXTURE)` and cannot seat a
+  learning core.
+- **Sensory fusion** dropped `UB.9` and `T2.02` — `UB.9` is named as UB.10's
+  *prerequisite*, and `T2.02` appears only inside a quoted `run status` line
+  about staleness.
+- **Vision encoder** dropped `T3.01` — it ablates the vision path, which proves
+  the seat is load-bearing and cannot decide WHO holds it.
+- **Taste (gustation)** dropped `UB.9` ("`TA.03` (behind `UB.9`)" is a
+  dependency, not a second ring) and is declared **VACANT**, which the parser
+  read as `UNMARKED`: the `held` cell is `—` and the champion cell says in bold
+  that no mechanism arm is seated.
+- **The PLASTIC-ONLY decree** dropped `LOUD.*` (prose), `PG.1` (a `depends_on=`
+  line) and `PL.*` (it resolves to exactly `PL.00` + `PL.02`, now named).
+- **The consequence, and it is new information rather than a regression:**
+  with `T3.01` gone, the Vision encoder's ring is `T2.03` (declared kind
+  `fixture`) plus `PL.02` (never run), so the seat now reads **UNCONTESTED** —
+  held BY DEFAULT, with a real ring that nothing has answered.
+
+`ARENA-MISSING` therefore falls 4 → 3 seats, entirely by deleting a phantom that
+was never a reference. `UNFALSIFIABLE` is unchanged at 5 — no seat lost its last
+real ring, which is the whole safety property and `--check` proves it rather
+than this paragraph.
+
+**One ordered repair NOT taken, with the reason (51st audit B2).** The audit
+asks that `Language grounding (word → lived skill)` name `LG.00` now that
+`LG.00` exists, which would discharge a `NO-ARENA` and drop `UNFALSIFIABLE`
+5 → 4. Declined, and routed to the Review as
+`champions-language-grounding-arena`: `LG.00` asks whether his knowledge lives
+in the core and the diary rather than in the borrowed model. This seat contests
+*which grounding approach*, and its own challenger cell says so — "grounding
+approaches + the ordering experiment". Naming `LG.00` here is the move this file
+refused two paragraphs above the World table when it declined to list `NE.08`:
+*discharging a ratchet with a spec that cannot decide the question.* A seat that
+reads `NO-ARENA` and is, is worth more than a seat that reads clean and is not.
+
 *Maintenance:* the builder updates this file as part of queue step 5 whenever
 a bakeoff completes; the daily Review checks seat staleness (rule 4); the
-field watch targets nominations at seats by name.
+field watch targets nominations at seats by name. **A seat's declaration line is
+part of the same edit — the cell is for the reader, the line is for the
+instrument, and only one of them is checked.**

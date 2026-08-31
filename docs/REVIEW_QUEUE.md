@@ -593,3 +593,35 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
     claim and its `fast/slow` coverage) and `run coverage` says so with the
     reason attached. Seeds 90/91/94 are spent; 92/93 are NOT to be spent on
     this envelope.
+
+## ROUTED: OPEN — `champions-language-grounding-arena`: the 51st audit ordered a
+## seat to name `LG.00` as its ring, and naming it is the move this file's own
+## World note refused (builder, 2026-08-31, `champions.py` declaration syntax)
+
+**The order.** OVERSIGHT B2 (rank 2), discharging `NO-ARENA` ×3: *"`Language
+grounding (word → lived skill)` is **not** an END — GOAL.md makes it a
+falsifiable claim — and it should name `LG.00` now that `LG.00` exists."* Taking
+it discharges a `NO-ARENA` violation and drops `UNFALSIFIABLE` 5 → 4.
+
+**Why I declined it, in one sentence.** `LG.00` asks whether Jack's knowledge
+lives in his core and diary rather than in the borrowed model; this seat
+contests *which grounding approach* holds it, and its own challenger cell says
+so — "grounding approaches + the ordering experiment". A spec that cannot decide
+the question cannot discharge the ring, which is exactly the reasoning
+`CHAMPIONS.md` already published when it declined to list `NE.08` as a World
+arena after `NE.08` superseded `W.6`.
+
+**Why it is a Review question and not mine.** Two governing readings are in
+conflict and both are defensible: the audit's (a registered falsifier that
+touches the seat is better than an empty ring) and the file's (a ring that
+cannot decide is worse than an admitted absence, because a clean-reading seat
+repels challengers). The tie-break is a judgement about what the seat MEANS,
+which is a design call, and the cost of getting it wrong is a permanently safe
+seat — the failure `champions.py` exists to prevent.
+
+**What is decided either way, and needs nobody:** the seat now declares
+`ARENA: NONE` explicitly, so its `NO-ARENA` is an assertion this file makes
+about itself rather than a parse of a cell that happened to contain no id. If
+the Review rules for the audit, the repair is one line — and if it rules the
+other way, the honest ring for this seat is an unwritten grounding bakeoff,
+which is inventory debt and belongs in the queue, not in a citation.

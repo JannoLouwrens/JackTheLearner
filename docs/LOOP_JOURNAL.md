@@ -8706,3 +8706,72 @@ empty at both classes with the repair named as REDESIGN — so it is the Review'
 B1 (implement ONE unimplemented GPU spec end to end: `T2.09`, `T3.06`, `T2.19`,
 `T2.14`), or SH.02/SM.03/T2.11's routed redesigns, and it is **not** a pilot.
 2026-08-30 ~23:1x-23:5x UTC (OPUS — `week:Fable` 100% until the 08-31 04:59 reset; `week:all models` 86% and unmoved across the whole session; 0 consecutive PACING skips, so no blackout to report). Took the STANDING RULE (a zero-pass GOAL.md commitment outranks fan-out) to `balance` — 3 declared specs, 0 pass — and found the unit already half-done and abandoned: **BA.03's seed-90 pilot ran 13:15-15:00 UTC, completed, wrote /data/ba03_pilot_seed90.json, and nothing harvested it for eight hours.** Its own `_PILOT_OWED` constant was still asserting *"no pilot has been run: the artifact does not exist"* while the file sat on disk, and `run coverage` repeated that to every reader. HARVESTED IT. The rig is ALIVE on every conjunct, a first for this family (BA.02 VOIDed three times with every arm at random): random 2.1875 s of a 12.0 s horizon, hand-written gripboth reference 7.4375, blind twin **10.6375**, vest 10.4000; best_trained - random 8.45 vs gate 0.20; deprived_shortfall **-3.20** vs max 1.0, i.e. CEM did not merely reach the best hand-written blind posture, it beat it, so Trap 2 is closed by measurement; gain_nosurface 0.0042 vs max 0.30, independently re-measuring D8's open-ground directional ceiling on this spec's own rig. CEM selection discriminates — blind twin 56.1 elite decisions vs the matched-noise arm's 38.5 under identical selection, BA.02's diagnostic exactly inverted — so CEM_K_FIT=6 kept on evidence. THE CLAIM READS NEGATIVE AT SEED 90 (gain **-0.2375 s**, se 0.356, gain_positive 0.0; control emphatic at gain_noise -5.225) and I dispatched anyway: seed 90 may size and may not decide, and refusing a pilot that forecasts FAIL is run-until-pass wearing thrift's clothes. brace_consistency 0.75 vs 0.70 with decisive_frac also 0.75 and side_accuracy 0.0 — every decisive brace to the HIGH side, none to the lean side, so consistency is ceilinged by decisiveness rather than eroded by inconsistency, and the probe's Trap 1 labelling is confirmed backwards. Anatomy: pinning **touch** costs the vest policy 7.3 s (10.400 -> 3.0875); pinning grav/canals/otoliths/vxvy costs it nothing. NO THRESHOLD MOVED. N_EVAL 48 -> **120**, derived from the measured sigma_pair_eval 2.4674 (the probe's 48 was sized against an ORACLE sigma of 1.70). One gate ADDED, strengthen-only: **HEADROOM_MIN_MULT = 2.0** — the twin sat at 88.6% of the horizon, so the largest gain physically available was 1.3625 s against a 1.0684 s signal requirement, i.e. the claim had **1.28x the room it needed and no number in the file said so**; a seed whose twin landed at 11.5 s would have recorded FAIL ("the sense is unused") when the truth was "the rig could not tell". Multiplier chosen on principle, N_EVAL then DERIVED from it (sqrt(N) >= 2*3*2.4674/1.3625 = 10.87 -> 120, ratio 2.016 — barely clearing a bar it did not set). Tier re-cost CPU_LONG -> CPU_DAYS: 6299 s/seed measured, ~2.0 h/seed at N_EVAL 120, ~6 h for three, and `run.py` KILLS a child at the declared budget's timeout, so the stale label would have destroyed the run rather than mislabelled it. **DISPATCHED DETACHED via launch_detached.sh at 23:16:59** (pid 3747290, log /data/jack-logs/ba03_registered.log, worker child at ~1.0 core, 239 MB RSS) — it computes through any blackout and the meter reset. NEXT ITERATION: harvest that row; if it VOIDs on the new headroom gate, that is the gate working, and the repair is a horizon/envelope redesign routed to the Review, NOT a threshold. THREE SYSTEM FIXES, each from something that bit me this hour: (1) **queue depth learned a FIFTH state, PILOT-HARVESTABLE** — `protocol.pilot_harvested` returns the declared `_PILOT_ARTIFACT` iff it is a file on disk, `queue_depth` refines PILOT-OWED with it and prints it first as the cheapest repair of all, and a harvestable class leaves `empty_unfillable`; deliberately NOT a claim the pilot succeeded (four specs today completed one that refuted its own precondition, and harvesting into `_PILOT_BLOCKED` is the same act). Q.14 in `_queue_fixture` is identical in SOURCE to Q.10 and differs only on disk, which is what proves the split is read from the filesystem; `_pilot_harvested_fixture` is 13 reader-level cases; 3 mutations red, baseline green. (2) **`_cpu_fraction` measured a supervisor that never computes** — run.py runs its work in a CHILD, so the lock message printed `0.00 cores now` for my own job at a full core (it now prints 1.01), and `_exclusive`'s overflow-steal conjunct "under IDLE_CORES" could never fail for a run.py holder, making it decorative in the PERMISSIVE direction. `_proc_tree` + tree-differenced ticks; a vanished descendant returns None, never the survivors' sum. Battery wired into `main`, 3 mutations red. No live hazard today (BA.03 is CPU_DAYS so `remote_only` was False). (3) **LESSONS.md** gained both halves: *"a claim that gates on a difference must gate on the room the difference has"* — SH.02 (null at exactly 1.0000), DP.04 (6.25-step quantum vs a 5.0 threshold) and BA.03 (twin at 88.6%) all hit it on ONE day and only SH.02 had the instrument; derive the envelope FROM the multiplier, never fit the multiplier to the pilot — and *"a declaration about the world must be re-read from the world"*, whose corollary is that the liveness rule has a **missing mirror**: every check here looks for signs of life, so a background job that FINISHED and was never collected is invisible to all of them. SM.03's pilot died unnoticed; BA.03's succeeded unnoticed, and only the first had a rule. NOT DONE, and owed: T0.21 could not re-run (BA.03 holds `/tmp/jack-ladder.lock`, correctly) — it declares `IMPL_DEPS = ["experiments/coverage.py"]` which I changed, so **re-run T0.21 once the lock frees**; its certificate covers the new state already, since it imports `_queue_fixture`. Also note D1 and D10 are armed with `decide_by 2026-08-31` — that is tomorrow; `run decisions --check`.
+
+**2026-08-31 ~00:1x–01:1x UTC (builder, OPUS — `week:Fable` 100% until the
+04:59 reset, so the chain walked me to opus as designed; gate `week:all models`
+86% -> 87% across the session, pace `allow` ~89.7 at ~99% week-elapsed so I
+passed with ~3 pts of headroom; **0 consecutive `PACING:` skips**, no blackout
+to report. GPU week `2026-W35`.)** Inherited a locked box: **BA.03's registered
+3-seed run is ALIVE** (pid 3747290 launched 23:16:59, child at 99.6% CPU, 1h06
+in of ~6 h, `/tmp/jack-ladder.lock` correctly held) so no spec could run and no
+ledger row could move this hour; picked the largest **lock-free** unit on the
+board, which is OVERSIGHT **B2 rank 2, carried unserved for eight audits**: give
+`docs/CHAMPIONS.md` a declaration syntax so seat contestability is resolved,
+not inferred from table prose. **Every one of the 26 seats now declares
+`- SEAT: <name> | HELD: <marking> | ARENA: <ids | NONE>`, `champions.py` reads
+the lines and not the cells, and an undeclared seat is a reported, ratcheted
+state (`BASELINE_UNDECLARED = 0`) rather than a silent fallback.** THE
+MEASUREMENT THAT JUSTIFIES THE HOUR: **6 of 26 seats (23%) disagreed with the
+inference**, and the two directions have opposite signatures. Loud — the
+PLASTIC-ONLY decree's ring contained **`LOUD.*`, which is the English sentence
+*"WORTH SAYING OUT LOUD."* followed by a bolded `PL.02`**; it was a standing
+`ARENA-MISSING` violation and the 51st audit relayed it to me as *"PLASTIC-ONLY
+(`LOUD.*`: register)"*, an instruction to write a spec named after an adverb.
+Quiet and worse — **`PG.1` entered the same ring from the prose
+`depends_on=["PG.1", "PL.00"]`, RESOLVES, has PASSED, and therefore DISCHARGED
+the seat**; same shape for `PS.01` on Learning core, `UB.9`/`T2.02` on Sensory
+fusion, `UB.9` on Taste. Dropping the padding makes **two seats read UNCONTESTED
+for the first time — Vision encoder (held BY DEFAULT since the project began;
+its ring is now `T2.03`, a declared `fixture`, plus `PL.02`, never run) and the
+PLASTIC-ONLY decree itself** — violations 7 -> 8, which is new information, not
+a regression. `ARENA-MISSING` 3 -> 2 seats (the phantom, gone) and
+**`UNFALSIFIABLE` UNCHANGED at 5, which is the safety property that made
+dropping ids permissible at all and `--check` proves it rather than my
+paragraph**; both baselines ratcheted down to today's honest numbers (5 -> 2 and
+7 -> 5) with the reasons in the constants. Verification: `_fixture` gained **8
+declaration properties** (narrowing over-read prose incl. a live `OUT LOUD.**`
+row, held-override, `ARENA: NONE` as an assertion, orphan/duplicate/incomplete/
+prose-in-arena all falling back to inference *and saying so*, and a declared
+family surviving the parse) and **10/10 mutations red with the baseline green**.
+TWO TRAPS I WALKED INTO AND WROTE UP IN `LESSONS.md`: (1) the first parser
+`_clean`-ed the whole declaration line, which strips `*` and turned the live
+`ARENA: PL.*` into `PL.` — **a syntax written to stop seats looking falsifiable
+when they are not, silently doing the reverse to the one seat whose ring is a
+family**; clean per FIELD, never per line. (2) the first mutation battery
+reported **9/9 red and every failure was `ModuleNotFoundError`** — it purged the
+`experiments` PACKAGE from `sys.modules`, so no mutant reached an assertion:
+9/9 red, 0/9 measured, and that number is exactly what a healthy battery prints.
+The battery now asserts baseline-green first and rejects any mutant whose death
+is an import rather than an assertion. **DECLINED, with the reason, and ROUTED**
+as `champions-language-grounding-arena`: the audit also asked that `Language
+grounding` name `LG.00` (worth `UNFALSIFIABLE` 5 -> 4), but `LG.00` decides
+whether his knowledge is borrowed, not *which grounding approach* holds the
+seat — discharging a ring with a spec that cannot decide the question is what
+this same file refused when it declined to list `NE.08` as a World arena.
+**OWED, and it is the first thing to check next hour: (a) `T0.29` is now STALE
+by `impl_sha` (`IMPL_DEPS = ["experiments/champions.py"]`) and could not re-run
+behind BA.03's lock — I replayed its battery offline and all 10 properties pass
+(`properties_failed 0.0`, live_seats 26, live_violations 8, live_unfalsifiable
+5, live_arena_missing 2), so the certificate is substantively sound and owes a
+`run T0.29` the moment the lock frees; (b) `T0.21` is still owed a re-run from
+last night for the same reason; (c) HARVEST BA.03 — it should land ~05:15 UTC,
+and if it VOIDs on the new `HEADROOM_MIN_MULT` gate that is the gate working.**
+Next unit after those: `run coverage` says both GPU classes are NOT FILLABLE
+with the repair named REDESIGN, and the one fillable empty class is `cpu<10min`
+— whose five candidates are **`LG.10` and `ME.11`** plus **`ME.11.B`/`.C`/`.E`,
+which need `bm25s`/`model2vec`/`Stemmer` and none of the three is installed in
+`/data/venvs/jackthelearner`** (checked, not assumed; the venv is outside the
+repo so installing is a box change, not a repo change). That is the same
+shape as yesterday's PILOT-OWED default — a queue recommendation asserted from
+the registry rather than read from the world — and it is the next instrument
+worth building if nobody would rather implement `SH.02`.

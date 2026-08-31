@@ -53,24 +53,48 @@ WHAT THIS FLAGS.
                    run. Not a defect in the document — a debt in the world. It
                    is the only one of the three a bakeoff can pay off.
 
-MARKINGS ARE INFERRED HERE, AND THAT IS A KNOWN WEAKNESS. `coverage.py` and
-`decisions.py` both retired prose-reading in favour of an explicit marker
-(`COVERS:`, `DECIDE:`) after it flattered its author twice. This file cannot do
-the same, because CHAMPIONS.md is a human-facing table with no declaration
-syntax and this module is not permitted to invent one unilaterally. So `held` is
-read from a dedicated table COLUMN — a structural field, not free prose, which
-is the strongest thing actually available — and the champion cell is consulted
-only as a fallback for rows whose `held` cell is `—`. The durable repair is a
-`HELD:`/`ARENA:` declaration per seat, proposed and not taken here; until then
-treat the marking column of this report as evidence and the ARENA column as
-fact, since arena ids resolve against the registry and cannot be flattered.
+MARKINGS AND ARENAS ARE NOW DECLARED, NOT INFERRED — the repair this docstring
+proposed for eight audits and would not take unilaterally (51st audit B2, RANK 2,
+which authorises it: *"per-seat `HELD:`/`ARENA:` markers in the same idiom as
+`COVERS:` and `DECIDE:`, so the parser resolves instead of inferring from table
+structure. Take it."*). `docs/CHAMPIONS.md` carries one line per seat:
 
-ARENA IDS, BY CONTRAST, ARE FACTS. They are extracted from the arena COLUMN only
-(never the champion or challenger cells — a challenger cell mentioning `UB.11`
-is not an arena), then resolved against the live registry. Ranges are expanded
-(`LC.00–LC.06`, `ME.11.A–F`, `W.1–W.7`) because a range is where a phantom
-hides: `W.1–W.7` names seven arenas and reads as a whole programme of fidelity
-gates; the registry contains no `W.*` spec whatsoever.
+    - SEAT: Vision encoder | HELD: BY DEFAULT | ARENA: T2.03, PL.02
+
+A declaration WINS over the inference. The inference is kept beside it
+(`held_inferred`, `arena_refs_inferred`) and every disagreement is printed,
+because the point is not to replace one guess with a quieter one — it is to make
+the places the guess was wrong visible in one column.
+
+WHAT THE INFERENCE ACTUALLY COST, measured the hour the syntax landed. The
+PLASTIC-ONLY decree's arena read `PL.* LOUD.* PL.00 PL.02 PG.1`. `LOUD.*` came
+from this English sentence in the decree's own body:
+
+    **AND THE FALSIFIER IS NOW BLOCKED, WHICH IS WORTH SAYING OUT LOUD.** `PL.02`
+
+`OUT LOUD.` + `**` is a four-letter family reference to `_FAMILY`, so the seat
+was reported ARENA-MISSING, and the 51st audit relayed the repair to the builder
+as **"PLASTIC-ONLY (`LOUD.*`: register)"** — an instruction to write a spec
+named after an adverb. That is the `W.6` scar exactly (an unsatisfiable
+instruction reissued by audits until somebody read the cell), arriving from the
+other direction: not a real id that cannot be registered, but a phantom id that
+was never a reference at all. `PG.1` was the same class, quieter — it appears in
+the decree body as `depends_on=["PG.1", "PL.00"]`, a fact about a dependency,
+and it RESOLVES, so it silently padded the seat's arena with a spec that cannot
+decide it.
+
+ARENA IDS ARE FACTS ONLY ONCE SOMEBODY SAYS WHICH IDS ARE ARENAS. Undeclared
+seats still fall back to extraction from the arena COLUMN (never the champion or
+challenger cells), with ranges expanded (`LC.00–LC.06`, `ME.11.A–F`, `W.1–W.7`)
+because a range is where a phantom hides. That fallback is now a REPORTED state
+(`UNDECLARED`, ratcheted at `BASELINE_UNDECLARED`), not a silent default: the
+2026-08-30 lesson one document over is that a state machine which defaults a
+missing state reads confident and wrong, and prose-inference is exactly a
+missing declaration wearing a value.
+
+`ARENA: NONE` is a DECLARATION, not an absence — it says the seat's ring is
+genuinely unbuilt, so `NO-ARENA` for ASR/Speaker ID/Language grounding is now an
+asserted fact that a passing prose mention can no longer discharge by accident.
 
 THE DECREE SECTIONS ARE SEATS, and a table-only parser misses the worst case.
 `### DECIDED BY DECREE 2026-08-09: PLASTIC ONLY` is not a table row, but it
@@ -129,7 +153,19 @@ DOC = Path(__file__).resolve().parent.parent / "docs" / "CHAMPIONS.md"
 # failure this constant exists to catch. The five that remain: Control
 # architecture (D1.0, T2.21), Curiosity signal (LT.03, LT.04), Vision encoder
 # (PL.02), Audio encoder (PL.*), and the PLASTIC-ONLY decree (PL.00, PL.02).
-BASELINE_ARENA_MISSING = 5
+#
+# RATCHETED DOWN 5 -> 2, 2026-08-31, and this shrink is of a THIRD kind that
+# needs its own defence: no spec was registered and no citation was corrected —
+# the INSTRUMENT stopped counting a phantom that was never a reference. The
+# PLASTIC-ONLY decree's `LOUD.*` came from the prose "WORTH SAYING OUT LOUD."
+# and vanished the moment the seat declared its ring (see the module docstring).
+# A shrink that comes from the measurement getting more honest is legitimate and
+# must be locked in, exactly like one that comes from work: leaving the baseline
+# at 5 would have banked three points of slack that no repair paid for. The two
+# that remain are real and both are cited by seats that mean them: Control
+# architecture (`D1.0`, `T2.21`, UNREGISTERABLE by decision) and Curiosity
+# signal (`LT.03`, `LT.04`, unwritten).
+BASELINE_ARENA_MISSING = 2
 
 # THE SEATS NOTHING REGISTERED COULD EVER UNSEAT, measured 2026-08-30 against
 # 196 specs: Control architecture (`D1.0`, `T2.21` — both UNREGISTERABLE),
@@ -146,7 +182,24 @@ BASELINE_ARENA_MISSING = 5
 # cites the phantom `PL.02` but also `T2.03`/`T3.01`, which have run — a mixed
 # citation is a documentation defect, not an unfalsifiable seat, and collapsing
 # the two would hide the difference the split exists to show.
-BASELINE_UNFALSIFIABLE = 7
+# RATCHETED DOWN 7 -> 5, 2026-08-31. The five listed above are what the tool
+# measures today and have been since `PL.00`/`PL.02` were registered on 08-30;
+# the constant simply had not followed. By this file's own rule one paragraph
+# up — a shrink-only ratchet that is never re-baselined stops being a ratchet —
+# banked slack is the same defect whether it comes from work or from delay.
+# UNCHANGED by the declaration syntax that landed the same hour, which is the
+# safety property that made dropping ids from arena cells permissible at all:
+# no seat lost its last real ring, and `--check` is what proves it.
+BASELINE_UNFALSIFIABLE = 5
+
+# SEATS STILL READ BY PROSE INFERENCE. Every seat in the document was declared
+# on 2026-08-31, the hour the syntax landed, so this is 0 and a new seat that
+# arrives without a declaration turns `--check` red. That is the intended
+# strictness: adding a chair is the Review's act, declaring what would unseat
+# its holder is the same act, and the gap between them is where `LOUD.*` lived.
+# It may shrink and may never grow — and unlike the two ratchets above, it is
+# discharged by writing ONE LINE, so a red here is never expensive.
+BASELINE_UNDECLARED = 0
 
 # ARENA REFS THAT CAN NEVER BE REGISTERED, and why — the honest cost of closing
 # the gap, which this file used to leave the reader to discover by spending the
@@ -221,6 +274,25 @@ _MARKINGS: Sequence[Tuple[str, str]] = (
 
 HELD_UNEARNED = ("BY DEFAULT", "BY DECREE")
 
+# The markings a DECLARATION may name. Deliberately the canonical right-hand
+# side of `_MARKINGS` and nothing else: a declaration is a promise to use the
+# file's own vocabulary, so `HELD: default` or `HELD: probably vacant` is a
+# violation rather than a near-miss quietly normalised. `UNMARKED` is absent on
+# purpose — it is what the INFERENCE returns when it cannot tell, and no author
+# may declare that they did not say.
+CANONICAL_MARKINGS = tuple(dict.fromkeys(name for _needle, name in _MARKINGS))
+
+# `ARENA: NONE` — the seat's ring is unbuilt, asserted rather than inferred from
+# a cell that happened to contain no id.
+NO_ARENA_DECLARED = ("NONE", "(NONE)", "-", "—", "–")
+
+# `- SEAT: Vision encoder | HELD: BY DEFAULT | ARENA: T2.03, PL.02`
+# Anchored at the start of a line (after list punctuation) so a sentence in this
+# file's own prose that happens to contain the word cannot declare a seat —
+# `lib_credits.sh`'s rule that a detector on a shared surface must bound itself
+# to its own writes, applied to a document that quotes its own syntax.
+_DECL_LINE = re.compile(r"^[-*\s]*SEAT:\s*(?P<body>.+)$")
+
 _SEP = re.compile(r"^:?-{2,}:?$")
 _DECREE_HEAD = re.compile(r"^###\s+.*\bDECREE\b.*$", re.M)
 _ANY_HEAD = re.compile(r"^#{2,3}\s", re.M)
@@ -279,6 +351,140 @@ def arena_refs(cell: str) -> List[str]:
     for sid in _ID.findall(cell):
         add(sid)
     return refs
+
+
+def declarations(text: str) -> Tuple[Dict[str, dict], List[Tuple[str, str, str]]]:
+    """`seat name -> {held, arena_refs, line}` from the `SEAT:` lines, plus problems.
+
+    Problems are returned rather than raised, and each is a violation triple in
+    the same shape `audit()` emits, because a malformed declaration is exactly
+    as dangerous as a missing one: it reads as *declared* to anyone skimming the
+    document. The four:
+
+      DECL-INCOMPLETE   a `SEAT:` line missing `HELD:` or `ARENA:`
+      DECL-UNKNOWN-HELD a marking outside CANONICAL_MARKINGS
+      DECL-DUPLICATE    two declarations for one seat — a contradiction, and it
+                        is NOT resolved by taking the first or the last. Both
+                        are dropped and the seat falls back to inference, which
+                        keeps it visible in the UNDECLARED list instead of
+                        letting an arbitrary tiebreak look authoritative.
+      DECL-ORPHAN       (raised in `audit()`, where the seat list exists) a
+                        declaration for a seat this file does not contain —
+                        a phantom seat, the mirror of a phantom arena.
+    """
+    decls: Dict[str, dict] = {}
+    problems: List[Tuple[str, str, str]] = []
+    seen: Dict[str, int] = {}
+
+    for lineno, line in enumerate(text.splitlines(), 1):
+        # Matched on the RAW line and cleaned per FIELD, not once over the whole
+        # line: `_clean` strips `*`, and the first draft of this parser turned
+        # the Audio encoder's declared `ARENA: PL.*` into `PL.`, which resolves
+        # to nothing — the syntax invented to stop a seat looking falsifiable
+        # when it is not, silently making a falsifiable one look dead. The seat
+        # NAME is cleaned (it must match `parse()`'s cleaned cell); the ARENA
+        # value is not (a family reference is `*`-significant).
+        m = _DECL_LINE.match(line)
+        if not m:
+            continue
+        fields: Dict[str, str] = {}
+        for part in m.group("body").split("|"):
+            key, sep, val = part.partition(":")
+            if sep:
+                fields[_clean(key).upper()] = val.strip()
+        name = _clean(m.group("body").split("|")[0])
+        if "HELD" not in fields or "ARENA" not in fields:
+            problems.append(("DECL-INCOMPLETE", name or f"(line {lineno})",
+                             "a SEAT: declaration must carry both HELD: and "
+                             "ARENA: — a half-declared seat reads as declared"))
+            continue
+        held = fields["HELD"].upper()
+        if held not in CANONICAL_MARKINGS:
+            problems.append(("DECL-UNKNOWN-HELD", name,
+                             f"HELD: {fields['HELD']!r} is not one of "
+                             f"{', '.join(CANONICAL_MARKINGS)}"))
+            continue
+        arena = fields["ARENA"]
+        if arena.strip().upper() in NO_ARENA_DECLARED:
+            refs: List[str] = []
+        else:
+            refs = arena_refs(arena)
+            if not refs:
+                # `ARENA: the HR bakeoff (queued)` — prose where ids belong. It
+                # would parse to zero refs and read exactly like a declared
+                # unbuilt ring, which is how a typo (`PL02`) becomes an
+                # assertion that nothing could ever unseat the holder. The
+                # NONE-token branch above is what makes this distinguishable at
+                # all: without it the two cases are one, and a mutation that
+                # deletes it cannot be caught (measured — it was the only
+                # survivor of this file's mutation battery until this check).
+                problems.append(("DECL-EMPTY-ARENA", name,
+                                 f"ARENA: {arena!r} names no spec id — write "
+                                 f"`ARENA: NONE` to assert the ring is unbuilt, "
+                                 f"or name the ids; prose declares nothing"))
+                continue
+        if name in seen:
+            problems.append(("DECL-DUPLICATE", name,
+                             f"declared twice (lines {seen[name]} and {lineno}); "
+                             "both dropped — a contradiction is not a vote"))
+            decls.pop(name, None)
+            continue
+        seen[name] = lineno
+        decls[name] = {"held": held, "arena_refs": refs, "line": lineno,
+                       "arena_cell": arena}
+    return decls, problems
+
+
+def apply_declarations(seats: Sequence[dict], decls: Dict[str, dict]) -> List[str]:
+    """Declaration wins; the inference is kept beside it. Returns orphan names.
+
+    Every seat gains `declared`, `held_inferred` and `arena_refs_inferred`
+    whether or not it is declared, so `main()` can print the disagreement rather
+    than the reader having to trust that the switch changed nothing.
+    """
+    names = {s["seat"] for s in seats if s["kind"] != "malformed"}
+    for s in seats:
+        s["held_inferred"] = s["held"]
+        s["arena_refs_inferred"] = list(s.get("arena_refs", []))
+        d = decls.get(s["seat"]) if s["kind"] != "malformed" else None
+        s["declared"] = bool(d)
+        if d:
+            s["held"] = d["held"]
+            s["arena_refs"] = list(d["arena_refs"])
+    return sorted(n for n in decls if n not in names)
+
+
+def undeclared(seats: Sequence[dict]) -> List[str]:
+    """Seats still read by prose inference. Ratcheted; see BASELINE_UNDECLARED."""
+    return [s["seat"] for s in seats
+            if s["kind"] != "malformed" and not s.get("declared")]
+
+
+def declaration_deltas(seats: Sequence[dict]) -> List[Tuple[str, str, str]]:
+    """`(seat, what the inference said, what the declaration says)` where they differ.
+
+    This is the payoff of the whole exercise and the reason the inference is not
+    simply deleted: a declaration that agrees with the inference everywhere would
+    mean the syntax bought nothing, and that claim is checkable only if both
+    readings are computed.
+    """
+    out: List[Tuple[str, str, str]] = []
+    for s in seats:
+        if not s.get("declared"):
+            continue
+        was, now = s.get("held_inferred"), s["held"]
+        old, new = list(s.get("arena_refs_inferred", [])), list(s["arena_refs"])
+        if was != now:
+            out.append((s["seat"], f"held {was}", f"held {now}"))
+        if old != new:
+            dropped = [r for r in old if r not in new]
+            added = [r for r in new if r not in old]
+            out.append((s["seat"],
+                        "arena " + (" ".join(old) or "(none named)"),
+                        "arena " + (" ".join(new) or "(none)") +
+                        (f"  [-{' -'.join(dropped)}]" if dropped else "") +
+                        (f"  [+{' +'.join(added)}]" if added else "")))
+    return out
 
 
 def resolve(ref: str, by_id: dict) -> List[str]:
@@ -435,7 +641,12 @@ def audit(text: str, by_id: dict, status: Callable[[str], str], *,
     """
     unregisterable = UNREGISTERABLE if unregisterable is None else unregisterable
     seats = parse(text)
-    violations: List[Tuple[str, str, str]] = []
+    decls, violations = declarations(text)
+    for orphan in apply_declarations(seats, decls):
+        violations.append(("DECL-ORPHAN", orphan,
+                           "a SEAT: declaration for a seat this file does not "
+                           "contain — the seat was renamed or removed and its "
+                           "declaration stayed, so it declares nothing"))
 
     for s in seats:
         if s["kind"] == "malformed":
@@ -532,6 +743,21 @@ def _fixture() -> None:
 | No arena at all | incumbent | **BY DECREE** (owner) | HR bakeoff (queued) | a challenger |
 | Uncontested decree seat | incumbent | **BY DECREE** (owner) | OK.03 (registered) | a challenger |
 | Vacant by default words | **VACANT** — the incumbent by default is nobody | — | OK.01 (registered) | a challenger |
+| Declared seat whose prose over-reads | incumbent | **BY VERDICT** (OK.01) | OK.01 + OK.02 named in passing, WORTH SAYING OUT LOUD.** | a challenger |
+| Declared seat whose ring is unbuilt | incumbent | **BY DECREE** (owner) | OK.03 mentioned but not an arena | a challenger |
+| Seat with a half-written declaration | incumbent | **DEFAULT, never defended** | ZZ.00 (queued) | a challenger |
+| Declared seat naming a family | incumbent | **BY VERDICT** (OK.01) | OK.04 is the only id in this cell | a challenger |
+| Seat declaring prose where ids belong | incumbent | **BY DECREE** (owner) | OK.03 (registered) | a challenger |
+
+- SEAT: Declared seat whose prose over-reads | HELD: BY DEFAULT | ARENA: OK.01
+- SEAT: Declared seat whose ring is unbuilt | HELD: BY DECREE | ARENA: NONE
+- SEAT: A seat this file does not contain | HELD: VACANT | ARENA: OK.01
+- SEAT: Healthy verdict seat | HELD: PROBABLY VACANT | ARENA: OK.01
+- SEAT: Seat with a half-written declaration | HELD: BY DEFAULT
+- SEAT: Declared seat naming a family | HELD: BY VERDICT | ARENA: OK.*
+- SEAT: Seat declaring prose where ids belong | HELD: BY DECREE | ARENA: the HR bakeoff (queued)
+- SEAT: Vacant by default words | HELD: VACANT | ARENA: OK.01
+- SEAT: Vacant by default words | HELD: BY DECREE | ARENA: ZZ.00
 
 ### DECIDED BY DECREE 2099-01-01: SOMETHING
 
@@ -591,10 +817,69 @@ This section names ZZ.09 and must contribute no seat and no violation.
     assert len(decree) == 1, [s["seat"] for s in seats]
     assert decree[0]["arena_missing"] == ["ZZ.02"], decree[0]
     assert flagged.get(decree[0]["seat"]) == {"ARENA-MISSING"}, flagged
+    # THE DECLARATION SYNTAX (2026-08-31). Six properties, each a way a
+    # declaration can be wrong, because a syntax whose malformed cases fall back
+    # SILENTLY to prose is worse than no syntax: the reader sees `decl` in the
+    # report and stops checking.
+    seat_by_name = {s["seat"]: s for s in seats}
+
+    # 1. A declaration NARROWS an over-reading cell, and the over-read is the
+    #    real one: `WORTH SAYING OUT LOUD.**` parses as the family `LOUD.*`.
+    over = seat_by_name["Declared seat whose prose over-reads"]
+    assert "LOUD.*" in over["arena_refs_inferred"], over["arena_refs_inferred"]
+    assert over["arena_refs"] == ["OK.01"], over["arena_refs"]
+    assert "ARENA-MISSING" not in flagged.get(over["seat"], set()), flagged
+    # 2. ...and it overrides the marking column, not only the arena.
+    assert over["held_inferred"] == "BY VERDICT" and over["held"] == "BY DEFAULT", over
+    # 3. `ARENA: NONE` asserts an unbuilt ring even where the cell names a spec.
+    unbuilt = seat_by_name["Declared seat whose ring is unbuilt"]
+    assert unbuilt["arena_refs_inferred"] == ["OK.03"], unbuilt
+    assert unbuilt["arena_refs"] == [], unbuilt
+    assert flagged.get(unbuilt["seat"]) == {"NO-ARENA"}, flagged
+    # 4. A declaration for a seat that does not exist is a phantom SEAT, the
+    #    mirror of a phantom arena, and is reported rather than ignored.
+    assert flagged.get("A seat this file does not contain") == {"DECL-ORPHAN"}, flagged
+    # 5. THE THREE MALFORMED CASES ALL FALL BACK TO INFERENCE *AND SAY SO* —
+    #    each would otherwise be a seat reading `decl` while declaring nothing.
+    #    An unknown marking, a missing ARENA field, and a contradiction.
+    assert flagged.get("Healthy verdict seat") == {"DECL-UNKNOWN-HELD"}, flagged
+    assert not seat_by_name["Healthy verdict seat"]["declared"], seat_by_name
+    half = seat_by_name["Seat with a half-written declaration"]
+    assert flagged.get(half["seat"]) == {"ARENA-MISSING", "DECL-INCOMPLETE"}, flagged
+    assert not half["declared"] and half["arena_refs"] == ["ZZ.00"], half
+    dup = seat_by_name["Vacant by default words"]
+    assert flagged.get(dup["seat"]) == {"DECL-DUPLICATE"}, flagged
+    # Neither half of the contradiction may be taken: the second says BY DECREE
+    # over `ZZ.00`, which would have made this seat ARENA-MISSING on a tiebreak
+    # nobody chose. It falls back to the cells and stays in the UNDECLARED list.
+    assert not dup["declared"] and dup["held"] == "VACANT", dup
+    assert dup["arena_refs"] == ["OK.01"], dup
+    # 6. A DECLARED FAMILY REFERENCE SURVIVES THE PARSE. The first draft cleaned
+    #    markdown emphasis off the whole declaration line before reading it,
+    #    which turned the live `ARENA: PL.*` into `PL.` — a syntax written to
+    #    stop seats looking falsifiable when they are not, quietly doing the
+    #    reverse to the one seat whose ring is a whole family.
+    fam = seat_by_name["Declared seat naming a family"]
+    assert fam["arena_refs"] == ["OK.*"], fam["arena_refs"]
+    assert fam["arena_present"] == ["OK.01", "OK.02", "OK.03", "OK.04",
+                                    "OK.05", "OK.06"], fam["arena_present"]
+    # 7. PROSE IN THE ARENA FIELD DECLARES NOTHING, and must not be readable as
+    #    an unbuilt ring — the difference between "no ring exists" and "the
+    #    author wrote a sentence" is the whole value of `ARENA: NONE`.
+    prose = seat_by_name["Seat declaring prose where ids belong"]
+    assert flagged.get(prose["seat"]) == {"DECL-EMPTY-ARENA", "UNCONTESTED"}, flagged
+    assert not prose["declared"] and prose["arena_refs"] == ["OK.03"], prose
+    # 8. The undeclared list is the fallback made visible.
+    still = set(undeclared(seats))
+    assert {"Healthy verdict seat", "Phantom arena seat",
+            "Vacant by default words"} <= still, still
+    assert not ({over["seat"], unbuilt["seat"]} & still), still
+    deltas = {(seat, was.split()[0]) for seat, was, _now in declaration_deltas(seats)}
+    assert (over["seat"], "arena") in deltas and (over["seat"], "held") in deltas, deltas
+
     # ...and the healthy seats are untouched. A "Superseded context" heading is
     # not a decree, so ZZ.09 must not appear anywhere.
-    for ok in ("Healthy verdict seat", "Default seat a claim spec defended",
-               "Vacant by default words"):
+    for ok in ("Default seat a claim spec defended",):
         assert ok not in flagged, (ok, flagged)
     assert not any("ZZ.09" in w for _k, _s, w in violations), violations
     # The range must expand, or `W.1–W.7` undercounts by five.
@@ -630,10 +915,26 @@ def main(argv: List[str]) -> int:
             hit = resolve(r, BY_ID)
             refs.append(r if hit else f"{r}!")
         arena = " ".join(refs) or "(none named)"
-        print(f"  {s['seat'][:width]:{width}}  {s['held']:<11}  {flags}")
+        src = "decl " if s.get("declared") else "PROSE"
+        print(f"  {s['seat'][:width]:{width}}  {src} {s['held']:<11}  {flags}")
         print(f"  {'':{width}}  arena: {arena[:96]}")
 
-    print("\n  ! = named as this seat's arena, absent from the registry.\n")
+    print("\n  ! = named as this seat's arena, absent from the registry.")
+    print("  decl = HELD/ARENA declared in the file; PROSE = inferred from the "
+          "cells.\n")
+
+    # WHERE THE DECLARATION DISAGREES WITH THE INFERENCE. Printed unconditionally
+    # because it is the only evidence that retiring the inference bought
+    # anything, and because each line is a claim about this document that a
+    # reader can check against the cell in about ten seconds.
+    deltas = declaration_deltas(seats)
+    if deltas:
+        print(f"  the declaration CHANGED the reading on {len(deltas)} "
+              f"seat/field(s) — inference on the left:")
+        for seat, was, now in deltas:
+            print(f"    {seat[:44]:<44} {was[:60]}")
+            print(f"    {'':44} -> {now[:80]}")
+        print()
 
     if violations:
         print(f"  {len(violations)} violation(s):")
@@ -712,7 +1013,24 @@ def main(argv: List[str]) -> int:
         print(f"    {seat[:70]}")
     print()
 
+    still = undeclared(seats)
+    print(f"  UNDECLARED — no SEAT:/HELD:/ARENA: line, so this report's marking "
+          f"and arena for\n  it are a parse of prose "
+          f"({len(still)}/{BASELINE_UNDECLARED}):")
+    for seat in still:
+        print(f"    {seat[:70]}")
+    if not still:
+        print("    (none — every seat says what would unseat it)")
+    print()
+
     if "--check" in argv:
+        if len(still) > BASELINE_UNDECLARED:
+            print(f"  RATCHET BROKEN: {len(still)} seat(s) have no declaration, "
+                  f"baseline {BASELINE_UNDECLARED}. Add one line per seat to\n"
+                  f"  docs/CHAMPIONS.md — `- SEAT: <name> | HELD: <marking> | "
+                  f"ARENA: <ids or NONE>`. A seat\n  whose marking is guessed "
+                  f"from prose is a seat whose contestability is guessed.\n")
+            return 1
         # BOTH ratchets block. Counting only ARENA-MISSING rewarded deleting the
         # arena reference — the repair this file forbids in bold — because that
         # converts the seat to NO-ARENA and the number falls. See

@@ -9051,3 +9051,90 @@ ever written here, because they all look for signs of life. Both halves are the
 same absence — no organ watches for the absence of a result — and both cost real
 work: `SM.03`'s pilot died unnoticed, `BA.03`'s succeeded unnoticed, and the
 second is the one nobody had thought to look for.
+
+## AN INSTRUMENT THAT INFERS A RELATION FROM PROSE FAILS IN BOTH DIRECTIONS, AND
+## ONLY ONE OF THEM IS LOUD — the phantom that got escalated hid the phantom that
+## did not (builder, 2026-08-31, from `champions.py`'s declaration syntax)
+
+`champions.py` decides whether each seat in Jack's anatomy is CONTESTABLE by
+reading the ARENA cell of `docs/CHAMPIONS.md` with a regex. For eight audits its
+own docstring said the durable repair was a `HELD:`/`ARENA:` declaration and
+that it would not invent one unilaterally. What the inference actually cost,
+measured the hour the declarations landed — **6 disagreements over 26 seats,
+23%** — splits cleanly into two kinds:
+
+- **The loud kind.** The PLASTIC-ONLY decree's ring read `PL.* LOUD.* PL.00
+  PL.02 PG.1`. `LOUD.*` is the sentence *"WORTH SAYING OUT LOUD."* followed by
+  a bolded `PL.02`: `OUT LOUD.` + `**` is a four-character family reference. The
+  seat was reported `ARENA-MISSING` for it, and the 51st audit relayed the
+  repair to the builder as **"PLASTIC-ONLY (`LOUD.*`: register)"** — an
+  instruction to write a spec named after an adverb. This is the `W.6` scar
+  arriving from the other side (there, a real id that could never be
+  registered, reissued five times).
+- **The quiet kind, and it is the dangerous one.** `PG.1` entered the same
+  seat's ring from the prose `depends_on=["PG.1", "PL.00"]`. It RESOLVES, it
+  has PASSED, and it therefore *discharged* the seat: a decree held BY DECREE
+  read as contested because a dependency line happened to sit inside its body.
+  Four more of the six were this shape — `PS.01` padding the Learning core,
+  `UB.9`/`T2.02` padding Sensory fusion, `UB.9` padding Taste. **A false
+  positive that flatters is invisible forever, because nobody audits credit
+  they believe they already have.** Removing the padding made two seats read
+  `UNCONTESTED` for the first time, including Vision encoder — held BY DEFAULT
+  since the project began.
+
+**The rule.** When an instrument asserts a RELATION — *this id is this seat's
+arena*, *this spec covers this commitment*, *this pilot is owed* — proximity in
+prose is not evidence of it. Require a delimited declaration, and make the
+absence of one a REPORTED, RATCHETED state (`UNDECLARED`), never a silent
+fallback: a fallback is a missing declaration wearing a value, which is the
+2026-08-30 state-machine lesson three documents over.
+
+**And the half that is new: keep the inference and PRINT THE DIFF.** Deleting
+the old reading destroys the only evidence that the new one bought anything.
+`declaration_deltas()` prints inference-vs-declaration side by side, so the
+claim "this syntax was worth an iteration" is a number a reader can check
+against the cells, not a conviction. The same construction is what will catch
+the next drift — an author who edits a cell and forgets its declaration.
+
+**Two traps found while building it, both worth carrying:**
+
+- **A normaliser can eat the meaning it was cleaning.** The parser stripped
+  markdown emphasis off the whole declaration line before reading it, which
+  turned the live `ARENA: PL.*` into `PL.` — a syntax invented to stop seats
+  looking falsifiable when they are not, silently doing the exact reverse to the
+  one seat whose ring is a family. Clean per FIELD, never per line: the seat
+  NAME needs emphasis stripped, the arena VALUE has `*`-significant content.
+- **A permissive branch that no input can distinguish is not a guard.**
+  `ARENA: NONE` -> `[]` survived a mutation that deleted the branch entirely,
+  because `arena_refs("NONE")` is `[]` anyway. The repair was not to delete it
+  but to make it LOAD-BEARING: any ARENA value naming no id and not an explicit
+  NONE is now `DECL-EMPTY-ARENA`, so `ARENA: the HR bakeoff (queued)` and a
+  typo'd `ARENA: PL02` can no longer read as *the ring is unbuilt*.
+
+## A MUTATION BATTERY MUST PROVE THE MUTATION IS WHAT KILLED IT
+## (builder, 2026-08-31, thirty seconds after the lesson above)
+
+The first run of the battery for the work above reported **9/9 mutations red**
+and every one of them was `ModuleNotFoundError`. The harness reloaded the module
+by deleting everything matching `experiments*` from `sys.modules`, which removed
+the PACKAGE, so each mutant failed at import and never reached an assertion.
+**9/9 red, 0/9 measured** — and the number is exactly what a healthy battery
+prints, which is why it would have been quoted in a commit message as evidence.
+
+Mutation testing is the one instrument here that certifies OTHER instruments,
+so its own failure mode is the worst-shaped one in the repo: it reports on
+guards that were never invoked. Two requirements, and they are cheap:
+
+1. **Assert the baseline is GREEN inside the battery**, before any mutation, and
+   abort if not. A battery that never sees green cannot distinguish "the guard
+   fired" from "nothing ran".
+2. **Assert the failure is the RIGHT failure.** Each mutant's error must be an
+   assertion from the fixture, not an import error, a `SyntaxError`, or a
+   `KeyError` from the patch landing in the wrong place. Run each mutant in a
+   subprocess and check the message; a red for the wrong reason is a green.
+
+Generalised: **every detector in this repo answers "did X fail?", and each one
+needs a second answer — "did X run?"** The at-chance-control rule (an at-chance
+control must carry proof its instrument was alive), the empty-scan rule (a scan
+that examined nothing reports clean), and this are the same rule at three
+altitudes.
