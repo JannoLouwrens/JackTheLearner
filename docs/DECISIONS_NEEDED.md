@@ -3902,3 +3902,80 @@ whether any organ on this box executes had a single test.** Four mutations were
 run to prove the suite could fail: fail-open→fail-closed (4 red), the model
 floor made exclusive (1 red), the pace line made exclusive (2 red), the 90% stop
 moved to 95% (4 red).
+
+---
+
+## D10 — UNREPAIRED WITH HOURS TO GO: the default still seats a learning core "BY VERDICT" off a VOID (52nd overseer audit, 2026-08-31 00:45 UTC)
+
+**No change to `D10`'s `DECIDE:` block, class, default or `decide_by`.** The
+overseer may tighten a deadline but may not move one, and may not rewrite a
+default. This entry attaches the deadline to a defect that was raised three days
+ago and has not been repaired, and states the mitigations fairly so the owner is
+ruling on the real thing.
+
+**The defect, restated from the 41st audit (2026-08-28, `DECISIONS_NEEDED.md`
+§ "THE DEFAULTS HAVE NEVER BEEN READ BY ANY INSTRUMENT").** `LC.03`'s ledger
+status is `VOID` (commit `0d9ad54`). `SYSTEM.md`: *"VOID: an arm failed the
+learning gate; fix the arm, do not decide"*, and *"two non-learners cannot
+arbitrate an architecture."* `D10`'s default seats `wm-latent` on the
+learning-core seat marked **BY VERDICT** — the strongest marking in
+`docs/CHAMPIONS.md` — and amends `LC.04`'s premise to *"the screen IS the
+arbitration when it returns exactly one"*, which removes the comparison the
+learning gate is made of.
+
+**What is verified today, by running the tools rather than by argument:**
+
+- `champions --check` currently prints `Learning core   decl  BY DEFAULT   ok`,
+  arena `LC.00 LC.01 LC.02 LC.03 LC.04 LC.05 LC.06`. After the default fires it
+  prints `BY VERDICT   ok`. The tool reads the declared marking; it has no way to
+  ask whether the verdict was earned, and no ratchet distinguishes the two.
+- `D10`'s default text in `decisions --check` is byte-identical to 2026-08-28.
+  No amendment entry exists anywhere in this file between then and now.
+- Three of the four defects that audit found **have** been repaired in the
+  interval — `D8`'s claim-death (by registering `BA.03`, `1bf1eac`, explicitly
+  before the deadline), and `SYSTEM.md`'s false enforcement claim (one clause now
+  computed, the other two named as unenforced). `D10` is the one left.
+
+**The mitigations, which are real and belong in the same entry as the
+complaint:**
+
+1. A `CHAMPIONS.md` seat is *"a CHAMPION, not a constitution"* (SYSTEM.md, class
+   2). It is unseated by any registered challenger that beats it, and
+   `LC.04`/`LC.05`/`LC.06` exist in `BY_ID` as live arena — this seat is not
+   `UNFALSIFIABLE` and does not become so.
+2. The default explicitly keeps the owner's scale-transfer guard binding
+   **before ADOPTION**, and SYSTEM.md's standing rule that no learning core is
+   adopted without unison is untouched. This seats a champion; it does not adopt
+   a core.
+3. `LC.03` stays `CONCLUDED` in the ledger with its `VOID` and its history
+   intact. No row is rewritten and no threshold moves.
+
+**So the defect is narrower than "a VOID becomes a capability claim", and it is
+still a defect: the LABEL will overstate what was measured, on a seat whose only
+automated reader cannot see the difference.** Precedent that this is not
+hypothetical — the `World` seat is already held `BY VERDICT` with a rematch
+trigger that pointed at seven specs nobody had written, and it took a dedicated
+audit to find.
+
+**The owner's options, all cheap:**
+
+- **(a) One line: "seat it, but mark it BY DEFAULT, not BY VERDICT."** Everything
+  else in the default fires unchanged. This costs nothing, blocks nothing, and
+  makes the marking match the evidence. *This is the branch the overseer would
+  take if the overseer were permitted to take one.*
+- **(b) "Fix the arm first."** `LC.03` stays CONCLUDED and 8 specs stay blocked
+  behind it. That is the price, stated so it is not discovered later.
+- **(c) Silence.** The default fires as written on 2026-09-01, which is the point
+  of arming it. Reversal is a one-line edit to the seat's `HELD:` marker in
+  `docs/CHAMPIONS.md`, which now has a declaration syntax (`901f7fc`) — so unlike
+  when this default was armed, correcting the marking after the fact is a
+  mechanical change the seat tool will verify.
+
+**A note on the firing itself, carried forward and still true.** Nine of the
+eleven defaults due 2026-09-01 require a write the overseer may not make, and
+`grep -rn decisions scripts/*.sh` returns nothing — no script reads the
+deadlines. The builder's prompt does name `run decisions --check` and does know
+`D1` and `D10` are armed for today, so this is not unowned; it is unassigned, and
+tomorrow it becomes eleven-at-once. Whoever fires them: the journal line
+SYSTEM.md requires is *"the owner did not rule by 2026-08-31, so the
+pre-registered default fired"*, once per entry, with the reversal named.

@@ -9138,3 +9138,60 @@ needs a second answer — "did X run?"** The at-chance-control rule (an at-chanc
 control must carry proof its instrument was alive), the empty-scan rule (a scan
 that examined nothing reports clean), and this are the same rule at three
 altitudes.
+
+## AN ARTIFACT-SIDE SEAL CANNOT SEE A RUN THAT PRODUCED NO ARTIFACT — and a
+## retry is not liveness monitoring
+## (overseer, 2026-08-31, 52nd audit; the mirror of the 08-30 seal, and the
+## second time the same organ died unnoticed in seven days)
+
+`review.sh` started `2026-08-30T06:37:03` in **FULL** mode — the Sunday run, the
+only one that does Part 2, and the one that owed `w0-too-shallow`'s world design.
+It hit `Error: Reached max turns (60)` at `06:48:03`, **11 minutes into a
+40-minute `TMOUT`**, and exited having written nothing: no `PROGRESS.md`, no
+`PROGRESS_LOG.md` row, no `REVIEW_QUEUE.md` disposition, no commit. Two days
+later `docs/PROGRESS.md` — a file whose own header says *"Current state, not a
+log"* — still opened with 08-29's numbers and the sentence *"fifth consecutive
+day on which not one figure in this table has moved"*, while the ladder had gone
+85 → 92. Nothing anywhere was red.
+
+**`seal_output` behaved correctly and could not help.** It fires on
+`rc != 0 && output file is DIRTY`, because its scar (2026-08-30, the 49th audit)
+was a run that died *after* writing a confident report. This run died *before*
+writing anything, so the file was clean and the seal returned 0. One scar's
+repair assumed the other scar's opposite — for the second time in that file's
+short history, and the comment block says as much about the scar before it.
+
+**And the corollary that would have caught it was already written, seven days
+earlier, and never built.** The 27th audit's lesson on routed work ends: *"an
+organ that is the destination of routed work must have liveness watched by
+something other than itself, and must retry a transient failure; a queue whose
+consumer is silently dead reads exactly like a queue that is empty."* The retry
+half shipped. The watching half did not — and the failure mode that recurred was
+the one the retry cannot reach, because 60 turns is not transient.
+
+GENERALISED, in three parts:
+
+1. **Liveness must be keyed to the SCHEDULE, never to the ARTIFACT.** Any check
+   of the form "is this file stale / dirty / stamped" is blind to the run that
+   produced nothing, which is the more likely death for an organ whose last act
+   is to write a long file. The assertion has to be *"the thing that was supposed
+   to happen on this cadence left its row"* — a positive record per scheduled
+   run, checked by a DIFFERENT organ.
+2. **A retry covers transient failures; budget exhaustion is not transient.** A
+   retry loop reads as robustness while being structurally unable to survive the
+   failure that actually recurs. Enumerate which deaths the retry cannot reach
+   before calling the organ protected.
+3. **When a budget is shared across modes, the mode that does the most work is
+   the one most likely to die.** `review.sh` gave `FULL` twice the wall clock
+   (`40m` vs `20m`) and the *same* `--max-turns 60`. The mode carrying the
+   project's single most important recurring decision was therefore the mode
+   structurally likeliest to be killed by its own limit. **Scale every budget
+   with the mode, or none of them** — a limit that is generous for the small case
+   and binding for the large one selects against exactly the work you most wanted
+   done.
+
+Corollary, and the reason this sits with the coverage and champions lessons: a
+missing spec has no id, a routed finding has no ticket, and **a run that did not
+happen has no exit code anybody reads.** All three are the same disease — the
+system's instruments measure objects that EXIST — and the third is the cheapest
+to fix, because the schedule is already written down in `crontab`.
