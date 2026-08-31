@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 92 / 200 demonstrated
+## 93 / 201 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -833,7 +833,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
-- [ ] **BA.03** He braces against a surface — balance is used where direction still has authority
+- [~] **BA.03** He braces against a surface — balance is used where direction still has authority  — best_trained=11.867778; best_trained_std=0.0734637
       - _asserts:_ In a scenario where a graspable surface is within reach, a learner given BA.01's vestibular channel PLACES ITS SUPPORT ON THE LEAN SIDE and stays upright measurably longer than an identical learner trained with the channel deleted (>= 3 sigma across seeds), and the gain vanishes when the channel is replaced by matched-statistics noise.
       - _dies if:_ No upright-time gain from having the channel even with a surface in reach. Then D8's open-ground finding generalises — balance is decoded and never acted on in ANY scenario this body affords — and the honest status of balance-as-a-used-sense is 'sensed, unused' until the playground humanoid exists. A SECOND honest outcome: the sensing arm wins but the brace lands on the wrong side as often as the right one, which refutes the mechanism while the number passes; brace-side accuracy is therefore a REPORTED gate, not a footnote.
       - _then delete:_ D8 option 3 — the last re-scoping of balance-as-a-used-sense that this body affords. If BA.03 fails, no balance CLAIM is registrable before a body with directional catch authority exists, and that becomes a finding rather than an assumption.
@@ -886,6 +886,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ `run --gate` — the one command in this runner whose only possible effect on the record is to REPLACE clean stamps — refuses to start from a code-dirty working tree, on the shipped command line, and the predicate it refuses by is exact: (1) an uncommitted code file refuses and is NAMED; (2) the runner's own outputs (`ledger.json`, `gpu_budget.json`, `gpu_submissions.jsonl`, its `.tmp`) and the loop's docs (`CHECKLIST.md`, `LOOP_JOURNAL.md`) do NOT refuse, so the gate cannot deadlock against files it writes itself; (3) a clean tree gates normally; (4) `--dirty-ok` is an explicit opt-in that gates anyway and warns; (5) the refusal reports how many PASS rows were at risk; (6) end to end, in a scratch clone, the dirty gate exits non-zero and dispatches NOTHING while the clean gate dispatches.
       - _dies if:_ Any property failing; the battery running fewer than N_PROPERTIES; or the scratch clone failing to build, which makes P6-P8 unevaluated rather than passed. Concretely: the gate starting on a tree with uncommitted code, a runner-output-only tree refusing (the `gpu_budget.json` self-deadlock, one surface over), `--dirty-ok` being the default, or the refusal firing after `_exclusive` rather than before it.
       - _then delete:_ The practice of running the regression gate before committing. After this spec that ordering costs one refusal line instead of a demoted certificate, and choosing it requires typing a flag whose help text says what it loses.
+- [x] **T0.31** The backlog reader cannot be quieted by tidying the backlog
+      - _asserts:_ `experiments/review_queue.py` — the reader `docs/REVIEW_QUEUE.md` went six days without — detects every way a routed finding can go quiet, on the real code path, and its TOTAL cannot be lowered by any of them: (1) a live row past a DUE: it declared is OVERDUE, and a future DUE: is silent; (2) an OPEN row past one whole consumer cycle is STALE, silent AT the bar, and neither age nor a re-arm touches a dispositioned row; (3) the three tidy-ups a maintainer would reach for — DELETE the row, relabel it HELD, drop the DUE: that went red — each convert one class into another and none lowers the total; (4) a hold must name a live blocker, so a resolved or phantom one is itself a violation; (5) malformation is recorded rather than raised, so one bad line cannot hide the rest; (6) prose opens no row and sets no clock; (7) an absent git baseline accuses nobody.
+      - _dies if:_ Any property failing; the battery running fewer than N_PROPERTIES; or the live `docs/REVIEW_QUEUE.md` failing to parse into rows that are all in contract. Concretely: deleting a rotting row lowering the violation count, relabelling a stale row `HELD` clearing it, an indented `ROUTED:` inside a sentence opening a row, a prose date being read as a clock, a class in `VIOLATIONS` that no document can trigger, or a finding the report does not print.
+      - _then delete:_ The last unread instrument in the governance set. `REVIEW_QUEUE.md` was built to make a backlog countable and then had no counter, which is the 27th audit's own finding recurring one layer up inside the organ it created.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

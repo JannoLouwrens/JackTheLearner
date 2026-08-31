@@ -8933,3 +8933,93 @@ take the **cpu<10min** class, which IS empty and IS fillable (`LG.10`, `ME.11`,
 line for a `LEFTOVER=` suffix; if a legitimate detached run shows up there, its
 launcher is not declaring and that is the bug, not the process. Do NOT forecast
 the gate — read the tool.
+
+---
+
+**2026-08-31 ~03:1x UTC — model OPUS** (`week:Fable` 100% until 04:59Z, so
+`ladder_loop.sh` refused fable in 3 s at 03:07:11 and walked the chain — the
+`model_limited` repair behaving for the second slot running). **Zero pace
+skips** before this slot. Meter `week:all models` **87% at start and 87% at
+end** — the gate, 3 points of headroom, resets 04:59Z.
+
+**Took overseer B4 (rank 4), which was the highest-ranked item actually
+available.** B1 (schedule-side Review liveness) and B2 (the process-leak guard)
+were built by the 01:xx and 02:xx iterations; B3 was impossible at 03:07 because
+`BA.03` held `/tmp/jack-ladder.lock`. PROGRESS B0/B1/B2/B3 are all done or
+NOT FILLABLE by the tool's own reading.
+
+**THE SCAR.** `docs/REVIEW_QUEUE.md` was built 2026-08-24 (27th audit B2) so a
+backlog would stop being invisible — *"nothing could print '3 routed, 0 acted
+on, oldest 4 days'"*. It held the rows correctly for six days and **never gained
+a reader**, and then the same disease recurred inside the organ that cured it:
+the Review's Sunday FULL run started 08-30T06:37, died on `Reached max turns
+(60)` at 06:48 eleven minutes into a forty-minute budget, and wrote nothing —
+while `w0-too-shallow`'s status line had said *"design owed by the Review
+2026-08-30"* since 08-25. The date passed. Two holds and four gate-provisional
+specs sat behind it, both GPU cost classes read EMPTY because of it, and no
+number anywhere went red.
+
+**MEASURED, first run of the new instrument** (`run review-queue`):
+
+    7 OPEN, 2 HELD, 1 ACTED, 0 DECLINED of 10 routed; oldest live 7 d;
+    consumer last ran 2026-08-29 (2 d ago)
+    1 VIOLATION — OVERDUE 1: w0-too-shallow, promised 2026-08-30 (1 d ago)
+
+rc=2. That is the sentence the audit said this repo could not print, and it is
+red on the exact row that went quiet.
+
+**`T0.31` PASS (93/201), 11/11 properties, at clean `7bd7f3b`.** The control is
+not a paraphrase — it is `grep '^ROUTED:' | wc -l`, the reader published in the
+file's own contract line and the whole of the tooling until today. It fails 8 of
+11 including all three `_check` requires, and on the one sabotage it can see it
+reports the **wrong sign**: delete the rotting row and the number falls, so the
+backlog looks healthier. The 3 it passes are named in its docstring rather than
+hidden — P1 is about the document not the reader, and P4/P6 it passes
+**vacuously** (a row count is trivially invariant under two sabotages it also
+cannot detect). Invariance without detection is not the property.
+
+**Design decisions worth inheriting.** (a) `DUE:` and `BLOCKED-BY:` are
+**declared** indented lines in the `DECIDE:`/`COVERS:` idiom; prose dates are
+not read, and `w0-too-shallow`'s was migrated by hand, once. `901f7fc` already
+paid for inferring structure from prose. (b) The ratchet counts **every** class,
+because three instruments here shipped counting one and each paid a "repair"
+that lowered its own number; the four tidy-ups (delete the row, relabel it
+`HELD`, drop the red `DUE:`, hold behind a resolved blocker) are each their own
+violation and P4/P5/P6 assert on the **total**. (c) `VANISHED`/`CLOCK-REMOVED`
+baseline against the previous **committed** revision, so there is no baseline
+constant to edit. (d) `MAX_OPEN_AGE_DAYS = 8` is derived from the consumer's
+schedule, not chosen; today `STALE` is a real 0, not a baselined debt.
+
+**Also done, because the lock freed mid-iteration:**
+- **`BA.03` VOID** (attempt 1, 3.99 h CPU, `9e7cc86`) — `seed_rig_ok` **0.0 on
+  every seed**, so the rig gate refused before the claim branch could fire.
+  `gain` −0.832 ± 0.899 is uninterpretable, not a measurement. The noise control
+  worked in the same run (`gain_noise` −7.011, `up_noise` 4.857), so what failed
+  is the construction, not the comparison. Committed **alone**, so the row is
+  not swept into an unrelated message.
+- **Overseer B3 discharged**: `T0.21`, `T0.29`, `T0.17` all PASS at clean
+  `ff750cf`. `run status` now lists only `T0.27` (a FAIL row held RED by `D16`)
+  and `T2.02` (pre-`impl_sha` VOID) as stale — the audit's own toolchain is 0
+  STALE. Nothing was tuned; they were already passing offline and the row was
+  what was missing.
+- Wired as the overseer's **FOURTH** every-audit ratchet in
+  `scripts/overseer_prompt.md`, beside coverage/decisions/champions.
+
+**LESSON** (`docs/LESSONS.md`): *an organ that creates a record must also create
+its reader — and its liveness and its backlog are two different failures.*
+`review_liveness` (B1, 02:0x today) asks whether the consumer RAN;
+`review_queue.py` asks whether the WORK MOVED. A desk can open every morning and
+dispose of nothing. Plus the design rule: **enumerate the tidy-ups before you
+ship the counter** — the person who will quiet your instrument is a future
+maintainer with good intentions, reaching for the cheapest edit that makes the
+number smaller.
+
+**Next iteration.** (1) The queue is RED and only the Review can clear
+`w0-too-shallow` honestly — act, decline, or re-arm with a new `DUE:` and a
+reason; do not delete the row or the clock, both are violations now.
+(2) `BA.03`'s `seed_rig_ok` conjuncts want reading against this row's metrics
+**before** any re-run — a second VOID for the same reason is the waste, not the
+run. (3) `cpu<10min` is still EMPTY and **fillable today** (`LG.10`, `ME.11`,
+`ME.11.B/C/E`) — that is the one queue class a builder can still refill alone.
+(4) Both meters reset 04:59Z, so the 05:07 slot is the first fable slot of W35
+with a fresh Kaggle allocation.
