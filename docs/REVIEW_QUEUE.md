@@ -882,3 +882,61 @@ ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) +
     experiments/tests/). The only cost is design attention, which is why this
     is routed rather than done: which parent each spec gets decides what its
     claim MEANS, and that is the Review's desk.
+
+ROUTED: me11-every-arm-hits-the-same-infeasible-branch | 2026-08-31 | 23d53c7 (55th audit §8; rows e3824bf ME.11.C, 459eeb1 ME.11.D) | OPEN
+    DUE: 2026-09-06 | a family-level disposition for ME.11's two remaining
+        arms (E, F), owed by the next Review FULL run. Both are known-outcome
+        runs against the 0.80 parent hypothesis by the arithmetic below;
+        what needs deciding is whether they run anyway for their secondary
+        gates, or the family settles with the invariant recorded.
+    Question: five distinct encoder configurations, static and contextual,
+    all hit the SAME pre-registered INFEASIBLE branch on all three seeds —
+    the invariant is evidence about the rig at least as much as the arms
+    (55th audit §8; f66a5be: "a gate can be too STRONG to be met"):
+        arm B  (bm25s+Snowball)   recall@1 0.0000  ceiling —      n/a (lexical zero PROVEN)
+        arm C  (potion-base-8M)   recall@1 0.0437  ceiling 0.123  tau_fpr 0.365 > tau_cov 0.184, 3/3 seeds
+        C var  (potion-base-2M)   recall@1 0.031   —              INFEASIBLE
+        C var  (mrl-en-v1@256d)   recall@1 0.015   —              INFEASIBLE
+        arm D  (all-MiniLM-L6-v2) recall@1 0.0667  ceiling 0.250  tau_fpr 0.388 > tau_cov 0.227, 3/3 seeds
+        D var  (bge-small)        recall@1 0.067   —              INFEASIBLE
+    The parent hypothesis requires paraphrase recall >= 0.80. The best
+    unthresholded ceiling any arm measured is 0.250 — the target is 3.2x
+    above the credulity-free maximum of the best arm tried.
+    **THE NUMBER THAT SETTLES ARM F, measured 2026-08-31 before implementing
+    it (55th audit B2; scripts/probe_me11c_recall_at_k.py, reusing ME.11.C's
+    own index/model code, seeds 0/1/2, certified stem-disjoint fixture):**
+        Arm C recall@50 unthresholded: 0.475 / 0.381 / 0.463  (mean 0.4396)
+        Arm C recall@10 unthresholded: 0.294 / 0.238 / 0.306  (mean 0.2792)
+    F's premise — "Arm C retrieves top-50 (pilot recall@10 was 1.000, so the
+    answer is present)" — is falsified on the certified fixture: the answer
+    is ABSENT from the top-50 on 56% of cues. A PERFECT reranker is capped at
+    0.44 before the abstention threshold even applies, and F's abstention is
+    pinned by control to C's first stage, whose conformal arithmetic is
+    INFEASIBLE on every seed. That is the FOURTH pilot number this family has
+    falsified on the certified fixture (485 docs/s, 18-min reindex, int8
+    slower, and now recall@10=1.0) — the pilot family and the certified
+    fixture are different distributions, and pilot numbers must not size or
+    justify any further ME.11 arm.
+    **E's arithmetic, stated plainly (55th audit B2 asked):** E's OWN gate
+    (beat both parents on recall@1 at fixed abstention, parents 0.0000 and
+    0.0667) is reachable in principle — but its MECHANISM is dead on this
+    fixture: the lexical parent scores 0.0000 on all 160 cues x 3 seeds
+    (proven a ceiling, not a dead rig — ME.11.B), so the fusion has nothing
+    to add exactly where its hypothesis says lexical should help, and the
+    0.80 parent hypothesis is out of reach by the 0.250 ceiling regardless
+    of the weight w. E cannot decide the family; at best it re-measures D.
+    Options for the Review, all runnable or declarable, not an argument:
+    **(a) settle the family** — declare E and F VOID-FORECLOSED with the
+    arithmetic above as FORECLOSURE ARITHMETIC (blast radius to compute at
+    declaration; ME.3's offline retriever interest in F noted), and route
+    the semantic-retrieval need to a redesign row (different fixture bar,
+    different encoder class, or GPU-scale encoder as a new spec); **(b) run
+    them anyway** for the secondary findings (F's recall/latency curve, E's
+    fitted-w costume check), each ~one cpu iteration, with the known-outcome
+    stated in the journal at dispatch; **(c) re-examine the 0.80 bar's
+    provenance** — if it was sized on the pilot family (the distribution
+    that has now been falsified four times), the bar itself may be the rig
+    defect, and per law 4 that is said in a commit message and recorded,
+    never quietly moved.
+    Staleness bill: NONE — neither E nor F has a test file or a ledger row;
+    C and D are settled FAIL and stay settled regardless of disposition.
