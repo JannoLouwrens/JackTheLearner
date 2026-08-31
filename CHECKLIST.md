@@ -914,7 +914,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **LT.01** The Ladder Test is measurable: null floor and un-gameable rise
+- [!] **LT.01** The Ladder Test is measurable: null floor and un-gameable rise  — body_weight_n=321.77; body_weight_n_std=0.0
       - _asserts:_ A free-roaming random climber-rover produces ZERO engaged ladder attempts, while reaching >=0.6 m of torso RISE by non-ladder routes; and from the ladder base a genuine weight-bearing hang occurs in 1-5% of 3 s random bursts — so ladder-supported rise (contact AND airborne AND held >=0.5 s AND load-bearing) discriminates, raw torso z does not, and the first success is reachable by chance.
       - _dies if:_ A free-roaming random agent produces engaged attempts (the null floor is not zero), or a non-ladder route reaches the platform, or P(hang from the base) is 0 in 800 bursts (no bootstrap exists and no learning-progress method can work without an archive).
       - _then delete:_ The entire Ladder Test, before a single arm is trained. Costs 20 CPU-minutes; every threshold in the programme is set from it.

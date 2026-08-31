@@ -236,6 +236,28 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     saturates — arriving on two unrelated rigs, so "deepen the world" and
     "change the claim statistic" are separable questions this desk should
     answer separately. Row: `ba03-null-saturates-the-horizon`.
+    UPDATE 2026-08-31 (builder, LT.01 attempt 1 FAIL): the "body cannot act
+    in it" reading — which PROGRESS 08-31 FOR THE OWNER §1 called untestable
+    for lack of an arena — now has its FIRST registered-spec measurement, in
+    the playground rather than W0. LT.01's C2 clause pre-registered (from the
+    08-09 pilot) that a random agent reaches >= 0.6 m of NON-LADDER torso
+    rise: the pilot's free-roam z ceiling was 1.007 m. On the as-built rover
+    body the recorded row reads `nonladder_rise_max` **0.084 +/- 0.067 m**
+    across 3 seeds x 3000 decisions — the body tips over within seconds and
+    travels by dragging, never regaining standing (W0.BAL's 0.002-0.004
+    upright fraction, reproduced on a third rig). Every aliveness guard was
+    green (force calibration +1.000 W, scripted hang ENGAGED through the full
+    h(t) conjunction, oracle rise 0.416 m), and the OTHER three clauses of
+    the measurability claim all held: null floor exactly 0 engaged attempts,
+    P(hang|3 s burst) 0.031 inside the pre-registered [0.01, 0.05] bootstrap
+    band, platform unreachable by free-roam AND the adhesion-disabled oracle.
+    So the instrument is certified alive and honest while the BODY fails the
+    gameability premise. Design input, one line: LT.02/LT.03 (the north-star
+    arena, registered 08-31, frees 7) are now blocked behind a FAIL whose
+    falsified clause is a fact about the body, not about h(t) — the same
+    repair fork as D9/W0.BAL, arriving from the curiosity ladder's side. A
+    redesign that re-scopes C2 must route through this desk (threshold rule:
+    strengthen-only, T1.02 precedent), not through a quiet re-run.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | OPEN
     Question: the shipped routing mechanism (UnifiedBrain semantic-anchor
