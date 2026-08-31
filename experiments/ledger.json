@@ -7655,11 +7655,11 @@
     },
     "T0.01": {
       "amended": [],
-      "attempt": 8,
-      "commit": "e9bd4a0",
+      "attempt": 9,
+      "commit": "469bbaf",
       "compute_s": null,
       "control_metrics": {},
-      "duration_s": 1.58,
+      "duration_s": 1.57,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -7741,6 +7741,25 @@
           ],
           "spec_sha": "90c38663178f63a9",
           "status": "PASS"
+        },
+        {
+          "commit": "e9bd4a0",
+          "control_metrics": {},
+          "gpu_job_id": null,
+          "impl_sha": "d7af65c339695aa3",
+          "message": "",
+          "metrics": {
+            "failed": "none",
+            "modules_imported": 13,
+            "modules_total": 13,
+            "slow_imports": "none"
+          },
+          "ran_at": "2026-08-30T09:15:00",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "90c38663178f63a9",
+          "status": "PASS"
         }
       ],
       "impl_sha": "d7af65c339695aa3",
@@ -7752,12 +7771,12 @@
         "slow_imports": "none"
       },
       "preserved_impl": null,
-      "ran_at": "2026-08-30T09:15:00",
+      "ran_at": "2026-08-31T06:10:17",
       "seeds": [
         0
       ],
       "spec_id": "T0.01",
-      "spec_sha": "90c38663178f63a9",
+      "spec_sha": "64f564bba0a5a202",
       "status": "PASS"
     },
     "T0.02": {
