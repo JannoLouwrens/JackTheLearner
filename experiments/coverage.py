@@ -1340,6 +1340,85 @@ def _pilot_harvested_fixture() -> List[str]:
     return fails
 
 
+def _class_advice(ids, void, harv, owed, fill, blk, artifacts) -> str:
+    """The advice tail for one cost-class row — what would put a FRESH dispatch
+    in it — or `""` when the row already holds one.
+
+    The gate is ZERO-FRESH, not EMPTY (54th audit B5, 2026-08-31). The inline
+    version gated on `if ids:`, so a class whose only occupant was VOID printed
+    as served: on the day of the audit `cpu<2h` showed one row, `BA.02` (VOID),
+    while the computed-and-discarded advice held six implementable specs —
+    `LG.02`, `LT.01`, `ME.11.D`, `ME.11.F`, `T3.09`, `UB.14` — two of them
+    *Episodic retrieval* champion-arena members. The headline line above the
+    table said "only 0 is a FRESH dispatch" honestly; the per-class lines, the
+    part actually read when choosing work, hid the repair. Six specs would have
+    become visible on 09-01 not because anything was learned but because D8's
+    default parking BA.02 emptied the row.
+
+    PILOT-HARVESTABLE IS NAMED FIRST, ahead of PILOT-OWED, because it is
+    cheaper still: the CPU run is already spent and its artifact is on disk.
+    PILOT-OWED then, because it is the cheapest of the rest and the one this
+    readout used to hide behind "NOT FILLABLE".
+    """
+    if ids and not all(i in void for i in ids):
+        return ""
+    prefix = "" if not ids else " (no FRESH dispatch here)"
+    if harv:
+        return (f"  {prefix} <- PILOT ALREADY RAN, HARVEST IT (cheapest repair "
+                "of all): "
+                + ", ".join(f"{s} -> {artifacts[s]}" for s in harv))
+    if owed:
+        return (f"  {prefix} <- PILOT OWED (cheapest repair): {', '.join(owed)}"
+                + (f"; or implement {', '.join(fill)}" if fill else ""))
+    if fill:
+        return f"  {prefix} <- fillable today: {', '.join(fill)}"
+    if blk:
+        return (f"  {prefix} <- NOT FILLABLE: pilot BLOCKED on evidence "
+                f"({', '.join(blk)}); the repair is a REDESIGN")
+    return f"  {prefix} <- NOT FILLABLE: nothing to implement, nothing to pilot"
+
+
+def _class_advice_fixture() -> List[str]:
+    """Known-answer battery for `_class_advice`, the per-class advice tail.
+
+    The known positive is the exact shape the 54th audit caught: a class whose
+    only occupant is VOID and whose fillable list is non-empty MUST advertise
+    the fill — the pre-B5 gate (`if ids:`) returns `""` there, so this battery
+    is red against it. The converse guards the other direction: a row holding a
+    fresh dispatch must stay tail-free, or every served class grows noise.
+    Discovered and run by T0.21's P12 like every `_*_fixture` here.
+    """
+    fails: List[str] = []
+    cases = [
+        # (label, ids, void, harv, owed, fill, blk, must_contain)
+        ("only-VOID occupant still advertises fill",
+         ["BA.X"], ["BA.X"], [], [], ["LT.Y", "ME.Z"], [], "fillable today: LT.Y, ME.Z"),
+        ("fresh occupant -> no tail",
+         ["OK.1", "BA.X"], ["BA.X"], [], [], ["LT.Y"], [], None),
+        ("empty class advertises fill",
+         [], [], [], [], ["LT.Y"], [], "fillable today: LT.Y"),
+        ("harvest outranks fill on an only-VOID row",
+         ["BA.X"], ["BA.X"], ["SM.P"], [], ["LT.Y"], [], "HARVEST IT"),
+        ("only-VOID, nothing anywhere -> NOT FILLABLE, honestly",
+         ["BA.X"], ["BA.X"], [], [], [], [], "NOT FILLABLE: nothing"),
+        ("empty + blocked -> REDESIGN",
+         [], [], [], [], [], ["DP.B"], "the repair is a REDESIGN"),
+    ]
+    for label, ids, void, harv, owed, fill, blk, want in cases:
+        got = _class_advice(ids, void, harv, owed, fill, blk, {"SM.P": "/a.json"})
+        if want is None:
+            if got != "":
+                fails.append(f"_class_advice: {label} -> want '', got {got!r}")
+        elif want not in got:
+            fails.append(f"_class_advice: {label} -> want {want!r} in {got!r}")
+    # An occupied-but-stale row must SAY it holds no fresh dispatch, so the
+    # reader cannot mistake the advice for a contradiction of the shown id.
+    got = _class_advice(["BA.X"], ["BA.X"], [], [], ["LT.Y"], [], {})
+    if "no FRESH dispatch here" not in got:
+        fails.append(f"_class_advice: only-VOID tail must name itself, got {got!r}")
+    return fails
+
+
 def _void_foreclosed_fixture() -> List[str]:
     """Known-answer battery for `protocol.void_foreclosed`, the READER.
 
@@ -1653,33 +1732,12 @@ def check() -> int:
     for cls, ids in q["by_class"].items():
         if ids or cls in q["empty"]:
             shown = ", ".join(ids) if ids else "EMPTY"
-            fill = q["fillable"].get(cls, [])
-            owed = q["pilot_owed"].get(cls, [])
-            blk = q["pilot_blocked"].get(cls, [])
-            harv = q["pilot_harvestable"].get(cls, [])
-            # PILOT-HARVESTABLE IS NAMED FIRST, ahead of PILOT-OWED, because it
-            # is cheaper still: the CPU run is already spent and its artifact is
-            # on disk. PILOT-OWED then, because it is the cheapest of the rest
-            # and the one this readout used to hide behind "NOT FILLABLE".
-            if ids:
-                tail = ""
-            elif harv:
-                tail = ("   <- PILOT ALREADY RAN, HARVEST IT (cheapest repair "
-                        "of all): "
-                        + ", ".join(f"{s} -> "
-                                    f"{q['pilot_harvestable_artifact'][s]}"
-                                    for s in harv))
-            elif owed:
-                tail = (f"   <- PILOT OWED (cheapest repair): "
-                        f"{', '.join(owed)}"
-                        + (f"; or implement {', '.join(fill)}" if fill else ""))
-            elif fill:
-                tail = f"   <- fillable today: {', '.join(fill)}"
-            elif blk:
-                tail = (f"   <- NOT FILLABLE: pilot BLOCKED on evidence "
-                        f"({', '.join(blk)}); the repair is a REDESIGN")
-            else:
-                tail = "   <- NOT FILLABLE: nothing to implement, nothing to pilot"
+            tail = _class_advice(ids, q["void"],
+                                 q["pilot_harvestable"].get(cls, []),
+                                 q["pilot_owed"].get(cls, []),
+                                 q["fillable"].get(cls, []),
+                                 q["pilot_blocked"].get(cls, []),
+                                 q["pilot_harvestable_artifact"])
             print(f"      {cls:<10} {len(ids):>2}   {shown}{tail}")
     if q["void"]:
         print(f"  of which VOID (an arm to repair, not a dispatch): "
