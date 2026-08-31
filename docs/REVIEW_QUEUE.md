@@ -883,7 +883,7 @@ ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) +
     is routed rather than done: which parent each spec gets decides what its
     claim MEANS, and that is the Review's desk.
 
-ROUTED: me11-every-arm-hits-the-same-infeasible-branch | 2026-08-31 | 23d53c7 (55th audit §8; rows e3824bf ME.11.C, 459eeb1 ME.11.D) | OPEN
+ROUTED: me11-every-arm-hits-the-same-infeasible-branch | 2026-08-31 | 23d53c7 (55th audit §8; rows e3824bf ME.11.C, 459eeb1 ME.11.D) | ACTED 2026-08-31 (option (a), ordered by the Review FULL 08-31 and executed in 7549b79: ME.11.E and ME.11.F recorded VOID-FORECLOSED by runs that verify the arithmetic LIVE — E re-measured lex recall@1 0.0 AND lex gold-score-max 0.0 at full retrieval depth, F re-measured recall@50 0.475/0.381/0.463 — with leaky-cue aliveness floors and parent-row replays that ERROR if any cited row ever changes; blast radius none; the semantic-retrieval redesign need is carried by the T2.10 paraphrase-venue conjunct, PROGRESS 08-31 Part 3 item 2, not a new row)
     DUE: 2026-09-06 | a family-level disposition for ME.11's two remaining
         arms (E, F), owed by the next Review FULL run. Both are known-outcome
         runs against the 0.80 parent hypothesis by the arithmetic below;

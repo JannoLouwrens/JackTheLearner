@@ -422,10 +422,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A 6-layer transformer bi-encoder (22.7M params, ONNX CPUExecutionProvider, mean pooling, corpus mean-centering, split-conformal threshold) beats Arm C on paraphrase recall@1, and the recall it buys is worth its ~13 ms query encode and 18-minute cold reindex at 100k.
       - _dies if:_ Recall within one seed-std of Arm C — in which case the static table wins on cost and the transformer is deleted. This is the genuine falsification risk of the whole bakeoff and the pilot says it is close (0.625 vs 0.625 at 2,030 events).
       - _then delete:_ If Arm D ties Arm C, every transformer encoder is removed from the memory path and the 90 MB of weights, the onnxruntime dependency and the 18-minute reindex go with it.
-- [ ] **ME.11.E** Arm E — weighted hybrid, calibrated not assumed
+- [~] **ME.11.E** Arm E — weighted hybrid, calibrated not assumed  — b_recall_row=0.0; b_recall_row_std=0.0
       - _asserts:_ Fusing Arm B's lexical scores with the best dense arm's, using theoretical-min-max normalisation and a convex weight w fit on the CALIBRATION split, beats both parents on paraphrase recall@1 AND improves certified abstention, because lexical overlap is most informative exactly where the dense score is least trustworthy.
       - _dies if:_ No gain over the better parent, OR — the specific risk — fusion DEGRADING recall, which unweighted RRF already did in the pilot (0.375 vs 0.625/0.750).
-- [ ] **ME.11.F** Arm F — cascade: cheap recall, cross-encoder rerank, cheap abstention
+- [~] **ME.11.F** Arm F — cascade: cheap recall, cross-encoder rerank, cheap abstention  — c_feasible_ok_row=0.0; c_feasible_ok_row_std=0.0
       - _asserts:_ Arm C retrieves top-50 (pilot recall@10 was 1.000, so the answer is present), a 22.7M cross-encoder (ms-marco-MiniLM-L-6-v2, ONNX int8) reranks them, and the ABSTENTION decision stays with Arm C's calibrated first-stage score. This yields the highest paraphrase recall of any arm at a latency the live agent can still pay.
       - _dies if:_ Recall gain over Arm C <0.10, OR mean latency at 100k events >250 ms, OR the reranker changing the abstention decision at all (it must not — see control).
       - _then delete:_ If Arm F wins on recall but breaks the 250 ms budget, it is recorded as the OFFLINE-only retriever (reflection generation, ME.3) and Arm C or E ships in the live loop. Two answers is an acceptable outcome; a slow live loop is not.
