@@ -52,6 +52,16 @@ WHAT THIS FLAGS.
     UNCONTESTED    held BY DEFAULT or BY DECREE, arena EXISTS, and has never
                    run. Not a defect in the document — a debt in the world. It
                    is the only one of the three a bakeoff can pay off.
+    ARENA-UNREACHABLE  the arena EXISTS — every id resolves in BY_ID — and
+                   every member that has not yet delivered a verdict is
+                   parked, VOID-FORECLOSED, or transitively behind one, so no
+                   run that could still happen can ever contest the seat. The
+                   54th audit (2026-08-31) found two seats in this state
+                   behind a green ratchet: existence and reachability are
+                   different questions, and every instrument here had only
+                   ever asked the first (LESSONS.md, "An arena that exists is
+                   not an arena that can be run"). The repair is a
+                   re-parenting or a redesign, never a re-run.
 
 MARKINGS AND ARENAS ARE NOW DECLARED, NOT INFERRED — the repair this docstring
 proposed for eight audits and would not take unilaterally (51st audit B2, RANK 2,
@@ -190,7 +200,38 @@ BASELINE_ARENA_MISSING = 2
 # UNCHANGED by the declaration syntax that landed the same hour, which is the
 # safety property that made dropping ids from arena cells permissible at all:
 # no seat lost its last real ring, and `--check` is what proves it.
-BASELINE_UNFALSIFIABLE = 5
+#
+# RATCHETED DOWN 5 -> 4, 2026-08-31: registering `LT.01`–`LT.09` (`3688b9e`,
+# 54th audit B1) discharged the Curiosity-signal seat the permitted way. The
+# morning journal recorded "UNFALSIFIABLE 5→4" and left the constant at 5 for
+# three iterations — banked slack, locked in here by the file's own rule. The
+# four that remain: Control architecture (D1.0/T2.21, UNREGISTERABLE by
+# decision) and the three declared `ARENA: NONE` (ASR, Speaker ID, Language
+# grounding).
+BASELINE_UNFALSIFIABLE = 4
+
+# THE SEATS WHOSE ARENA EXISTS AND CAN NEVER RUN, measured 2026-08-31 (54th
+# audit B4) against 211 specs: **Learning core** (BY DEFAULT; LC.03 is
+# VOID-FORECLOSED "no v3, no envelope growth, no re-roll" and LC.04–LC.06 sit
+# behind it) and **Fast/slow coupling** (BY DECREE; its whole arena is DP.02 —
+# the connectedness test GOAL.md names as the defence against the failure it
+# says can happen silently — at DP.02 ← DP.01 ← LC.04 ← LC.03). Both passed
+# every existence check this file had while being uncontestable at any budget.
+#
+# PER `T0.31`'s PRECEDENT THE NEW CLASS JOINS THE TOTAL, not a private zero:
+# this constant asserts on UNFALSIFIABLE + ARENA-UNREACHABLE together
+# (4 + 2 = 6, measured at the same commit that ratcheted the 5 -> 4 above).
+# The composition is the point — registering a spec that remains unreachable
+# (the LT.03/LT.04 shape, had they been parented under LC.03) moves a seat
+# from one class to the other and the total sees no progress, exactly as the
+# ARENA-MISSING -> NO-ARENA conversion taught one level down. The total may
+# shrink and may never grow. It shrinks by registering a runnable spec,
+# re-parenting an arena member off its foreclosed root, or correcting a
+# citation to a live successor — never by parking, foreclosing, or deleting a
+# reference. `BASELINE_UNFALSIFIABLE` keeps its own separate assertion above
+# so the union check cannot silently trade one class's headroom to the other
+# in the growing direction.
+BASELINE_UNCONTESTABLE = 6
 
 # SEATS STILL READ BY PROSE INFERENCE. Every seat in the document was declared
 # on 2026-08-31, the hour the syntax landed, so this is 0 and a new seat that
@@ -615,6 +656,61 @@ def _challenger_runs(arena_status: Dict[str, str], by_id: dict) -> List[str]:
                            and kinds[sid] <= set(NON_CHALLENGER_KINDS)))
 
 
+def _unrunnable(by_id: dict, status: Callable[[str], str],
+                parked_ids: set, foreclosed: set) -> Dict[str, str]:
+    """`spec id -> the ROOT that welds it shut`, over every registered spec.
+
+    A spec can never reach a verdict when it is itself parked or
+    VOID-FORECLOSED, or when any dependency that has not already PASSed is
+    (transitively) in that state. A dep that is merely FAIL or NOT_RUN is a
+    queue position, not a wall — T2.01's settled FAIL blocks 36 specs and not
+    one of them is *unreachable*, because a redesign could re-run it. Parked
+    and foreclosed are different in kind: both are declarations that the next
+    unit is NOT a run, so nothing on the runnable graph can ever move them.
+
+    The root id is carried, not just the bit, because the repair lives at the
+    root: `DP.02 (behind LC.03)` names the re-parenting question, `DP.02
+    (unreachable)` names nothing. A cycle in `depends_on` is a registry bug,
+    not proof of unreachability, so the walk treats it as runnable — the safe
+    failure direction for a detector whose false positives would indict
+    healthy seats.
+    """
+    memo: Dict[str, Optional[str]] = {}
+
+    def walk(sid: str, stack: tuple) -> Optional[str]:
+        if sid in memo:
+            return memo[sid]
+        if sid in stack:
+            return None
+        root = None
+        if sid in foreclosed or sid in parked_ids:
+            root = sid
+        else:
+            for dep in getattr(by_id.get(sid), "depends_on", None) or ():
+                if dep in by_id and status(dep) != "PASS":
+                    r = walk(dep, stack + (sid,))
+                    if r:
+                        root = r
+                        break
+        memo[sid] = root
+        return root
+
+    for sid in by_id:
+        walk(sid, ())
+    return {sid: r for sid, r in memo.items() if r}
+
+
+def unreachable_arena(seats: Sequence[dict]) -> List[str]:
+    """Seats whose pending arena can never run — the ratchet's second class.
+
+    Reads the flag `audit()` stores rather than recomputing the predicate, so
+    this list cannot drift from the violations the report prints — the exact
+    reader-drift `run blocked` fell into when VOID split into two states and
+    only one of its readers was told (54th audit B2).
+    """
+    return [s["seat"] for s in seats if s.get("arena_welded")]
+
+
 def unfalsifiable(seats: Sequence[dict]) -> List[str]:
     """Seats no registered spec could ever unseat — `arena_present` is empty.
 
@@ -629,7 +725,9 @@ def unfalsifiable(seats: Sequence[dict]) -> List[str]:
 
 
 def audit(text: str, by_id: dict, status: Callable[[str], str], *,
-          unregisterable: Optional[dict] = None
+          unregisterable: Optional[dict] = None,
+          parked_ids: Optional[set] = None,
+          foreclosed: Optional[set] = None
           ) -> Tuple[List[Tuple[str, str, str]], List[dict]]:
     """Return (violations, seats). A violation names a seat, never a spec.
 
@@ -638,8 +736,23 @@ def audit(text: str, by_id: dict, status: Callable[[str], str], *,
     organ, which had no closability split and told the builder to "register" a
     withdrawn spec for five consecutive audits, stays executable as a control
     rather than being paraphrased into one (T0.08 property 5; `T0.29`).
+
+    `parked_ids`/`foreclosed` override the reachability roots for the fixture;
+    `None` computes them from the real declarations. The foreclosure gate is
+    the SAME conjunction as `coverage.queue_depth` and `run blocked` (status
+    VOID *and* the module docstring declares) so the three readers cannot
+    drift — a declaration without the VOID is a spec with bad manners, and a
+    VOID without the declaration is repairable.
     """
     unregisterable = UNREGISTERABLE if unregisterable is None else unregisterable
+    if parked_ids is None:
+        from .coverage import parked as _parked
+        parked_ids = set(_parked(by_id)[0])
+    if foreclosed is None:
+        from .protocol import void_foreclosed as _vf
+        foreclosed = {sid for sid in by_id
+                      if status(sid) == "VOID" and _vf(sid)}
+    dead_roots = _unrunnable(by_id, status, parked_ids, foreclosed)
     seats = parse(text)
     decls, violations = declarations(text)
     for orphan in apply_declarations(seats, decls):
@@ -657,6 +770,24 @@ def audit(text: str, by_id: dict, status: Callable[[str], str], *,
         s["arena_missing"] = [r for r in refs if not resolve(r, by_id)]
         s["arena_present"] = sorted({i for r in refs for i in resolve(r, by_id)})
         s["arena_status"] = {i: status(i) for i in s["arena_present"]}
+        # The members still owing a verdict, and which of them can never pay.
+        # A VOID member is PENDING (a VOID decided nothing), which is exactly
+        # how a foreclosed VOID lands here: still owing, never paying.
+        s["arena_pending"] = [i for i, st in s["arena_status"].items()
+                              if st not in VERDICTS]
+        s["arena_unreachable"] = {i: dead_roots[i] for i in s["arena_pending"]
+                                  if i in dead_roots}
+        s["arena_pending_dead"] = bool(
+            s["arena_pending"]
+            and all(i in dead_roots for i in s["arena_pending"]))
+        # Ratchet scope: the unearned markings, the same two UNCONTESTED
+        # polices — those are the seats where a HOLDER sits without a verdict
+        # and the invitation is the only honesty on offer. A VACANT seat with
+        # a welded ring is a different defect (nobody can ever WIN it, rather
+        # than nobody can ever lose it) and is printed as a note by `main()`
+        # instead of counted here — recorded as scope, not overlooked.
+        s["arena_welded"] = bool(s["held"] in HELD_UNEARNED
+                                 and s["arena_pending_dead"])
 
         if not refs:
             violations.append(("NO-ARENA", s["seat"],
@@ -706,7 +837,27 @@ def audit(text: str, by_id: dict, status: Callable[[str], str], *,
         # that could actually move it were VOID/NOT_RUN/NOT_RUN — over a cell
         # that says, in bold, "DEFAULT, never defended".
         s["challenger_runs"] = _challenger_runs(s["arena_status"], by_id)
-        if (s["held"] in HELD_UNEARNED and s["arena_present"]
+        if s["arena_welded"]:
+            # Fires whether or not a challenger once ran: Learning core was
+            # nominally discharged by LC.02 (a feasibility gate that PASSed),
+            # and its four remaining doors are welded all the same. And it
+            # SUPPRESSES UNCONTESTED below — "the invitation is real but
+            # unanswered" is the cheap reading of a door that cannot open,
+            # the exact misreport `run blocked` made of LC.03 (54th audit B2).
+            def _tag(i: str) -> str:
+                root = s["arena_unreachable"][i]
+                if root == i:
+                    return (f"{i} (PARKED)" if i in parked_ids
+                            else f"{i} (VOID-FORECLOSED)")
+                return f"{i} (behind {root})"
+            violations.append(("ARENA-UNREACHABLE", s["seat"],
+                               f"held {s['held']}; every arena spec still owing "
+                               f"a verdict can never run: "
+                               + "; ".join(_tag(i) for i in s["arena_pending"])
+                               + " — the seat looks contestable and is not; the "
+                                 "repair is a re-parenting or a redesign, "
+                                 "never a re-run"))
+        elif (s["held"] in HELD_UNEARNED and s["arena_present"]
                 and not s["challenger_runs"]):
             ran = sorted(i for i, v in s["arena_status"].items()
                          if v not in ("NOT_RUN", None))
@@ -740,6 +891,12 @@ def _fixture() -> None:
 | Default seat whose only run went VOID | incumbent | **DEFAULT, never defended** | OK.06 + OK.03 (registered) | a challenger |
 | Phantom arena seat | incumbent | **DEFAULT, never defended** | ZZ.00 + ZZ.01 (queued) | a challenger |
 | Seat citing a withdrawn spec | incumbent | **DEFAULT, never defended** | ZZ.00 + W.6 (queued) | a challenger |
+| Default seat whose ring is foreclosed | incumbent | **DEFAULT, never defended** | OK.07 (registered) | a challenger |
+| Default seat behind a foreclosure | incumbent | **DEFAULT, never defended** | OK.08 (registered) | a challenger |
+| Default seat contested once, then welded | incumbent | **DEFAULT, never defended** | OK.01 + OK.07 | a challenger |
+| Default seat with one live door | incumbent | **DEFAULT, never defended** | OK.07 + OK.03 | a challenger |
+| Default seat whose ring is parked | incumbent | **DEFAULT, never defended** | OK.09 (registered) | a challenger |
+| Vacant seat behind a foreclosure | **VACANT** — nobody has ever held it | — | OK.08 (registered) | a challenger |
 | No arena at all | incumbent | **BY DECREE** (owner) | HR bakeoff (queued) | a challenger |
 | Uncontested decree seat | incumbent | **BY DECREE** (owner) | OK.03 (registered) | a challenger |
 | Vacant by default words | **VACANT** — the incumbent by default is nobody | — | OK.01 (registered) | a challenger |
@@ -768,16 +925,25 @@ WHAT STILL RUNS: ZZ.02 (a floor nobody wrote). Cheap, CPU.
 This section names ZZ.09 and must contribute no seat and no violation.
 """
     class _S:
-        def __init__(self, notes=""):
+        def __init__(self, notes="", deps=()):
             self.notes = notes
+            self.depends_on = list(deps)
 
     # OK.04/OK.05 are declared support kinds; OK.06 ran but only to VOID.
+    # OK.07 is a foreclosed VOID; OK.08 is runnable-looking but parented under
+    # it; OK.09 is parked. The roots arrive as parameters — the real
+    # declarations live in docstrings and registry notes this fixture does not
+    # have — so the default-computation path is exercised by T0.29's P10
+    # against the live documents, not here.
     by_id = {"OK.01": _S("COVERS: smell (claim)"), "OK.02": _S(), "OK.03": _S(),
              "OK.04": _S("COVERS: smell (fixture)"),
-             "OK.05": _S("COVERS: balance (sensor)"), "OK.06": _S()}
+             "OK.05": _S("COVERS: balance (sensor)"), "OK.06": _S(),
+             "OK.07": _S(), "OK.08": _S(deps=["OK.07"]), "OK.09": _S()}
     ran = {"OK.01": "PASS", "OK.02": "PASS", "OK.03": "NOT_RUN",
-           "OK.04": "PASS", "OK.05": "PASS", "OK.06": "VOID"}
-    violations, seats = audit(doc, by_id, lambda sid: ran.get(sid, "NOT_RUN"))
+           "OK.04": "PASS", "OK.05": "PASS", "OK.06": "VOID",
+           "OK.07": "VOID", "OK.08": "NOT_RUN", "OK.09": "NOT_RUN"}
+    violations, seats = audit(doc, by_id, lambda sid: ran.get(sid, "NOT_RUN"),
+                              parked_ids={"OK.09"}, foreclosed={"OK.07"})
     flagged: Dict[str, set] = {}
     for kind, seat, _why in violations:
         flagged.setdefault(seat, set()).add(kind)
@@ -811,6 +977,41 @@ This section names ZZ.09 and must contribute no seat and no violation.
     assert "CORRECT THE CITATION" not in by_seat["Phantom arena seat"], by_seat
     assert flagged.get("No arena at all") == {"NO-ARENA"}, flagged
     assert flagged.get("Uncontested decree seat") == {"UNCONTESTED"}, flagged
+    # THE REACHABILITY CLASS (54th audit B4). Four shapes that must fire, one
+    # that must not, and one out of scope — each pinned to the real seat it
+    # stands in for. A foreclosed ring, a ring parented under one (the
+    # Fast/slow shape: DP.02 behind LC.03), a ring parked (the Smell shape,
+    # were Smell unearned), and the Learning-core shape: a challenger once ran
+    # and every REMAINING door is welded — which must fire even though
+    # `challenger_runs` is non-empty, because contestability is about the
+    # future. None of the four may ALSO read UNCONTESTED: "real but
+    # unanswered" about a door that cannot open is `run blocked`'s LC.03
+    # misreport, the exact cheap reading B2 removed one instrument over.
+    assert flagged.get("Default seat whose ring is foreclosed") == {"ARENA-UNREACHABLE"}, flagged
+    assert flagged.get("Default seat behind a foreclosure") == {"ARENA-UNREACHABLE"}, flagged
+    assert flagged.get("Default seat contested once, then welded") == {"ARENA-UNREACHABLE"}, flagged
+    assert flagged.get("Default seat whose ring is parked") == {"ARENA-UNREACHABLE"}, flagged
+    # One live pending door keeps the seat merely UNCONTESTED — a mixed ring
+    # is a debt in the world, not a welded one, and collapsing the two would
+    # indict every seat that shares an arena with any foreclosure.
+    assert flagged.get("Default seat with one live door") == {"UNCONTESTED"}, flagged
+    # Marking scope: a VACANT welded ring is nobody-can-WIN, a different
+    # defect, reported as a note rather than counted — and never flagged here.
+    assert "Vacant seat behind a foreclosure" not in flagged, flagged
+    # The message carries the ROOT, because the repair lives at the root.
+    _msg = {seat: why for kind, seat, why in violations
+            if kind == "ARENA-UNREACHABLE"}
+    assert "VOID-FORECLOSED" in _msg["Default seat whose ring is foreclosed"], _msg
+    assert "OK.08 (behind OK.07)" in _msg["Default seat behind a foreclosure"], _msg
+    assert "OK.09 (PARKED)" in _msg["Default seat whose ring is parked"], _msg
+    _behind = [s for s in seats if s["seat"] == "Default seat behind a foreclosure"][0]
+    assert _behind["arena_unreachable"] == {"OK.08": "OK.07"}, _behind
+    # ...and the ratchet's second class counts exactly the seats that fired.
+    assert set(unreachable_arena(seats)) == {
+        "Default seat whose ring is foreclosed",
+        "Default seat behind a foreclosure",
+        "Default seat contested once, then welded",
+        "Default seat whose ring is parked"}, unreachable_arena(seats)
     # The decree section is a seat and its dangling `WHAT STILL RUNS` id is the
     # PL.00 case in miniature: outside the table, cited as live, unregistered.
     decree = [s for s in seats if s["kind"] == "decree"]
@@ -861,8 +1062,9 @@ This section names ZZ.09 and must contribute no seat and no violation.
     #    reverse to the one seat whose ring is a whole family.
     fam = seat_by_name["Declared seat naming a family"]
     assert fam["arena_refs"] == ["OK.*"], fam["arena_refs"]
-    assert fam["arena_present"] == ["OK.01", "OK.02", "OK.03", "OK.04",
-                                    "OK.05", "OK.06"], fam["arena_present"]
+    assert fam["arena_present"] == ["OK.01", "OK.02", "OK.03", "OK.04", "OK.05",
+                                    "OK.06", "OK.07", "OK.08",
+                                    "OK.09"], fam["arena_present"]
     # 7. PROSE IN THE ARENA FIELD DECLARES NOTHING, and must not be readable as
     #    an unbuilt ring — the difference between "no ring exists" and "the
     #    author wrote a sentence" is the whole value of `ARENA: NONE`.
@@ -1002,6 +1204,7 @@ def main(argv: List[str]) -> int:
 
     missing = sum(1 for k, _, _ in violations if k == "ARENA-MISSING")
     dead = unfalsifiable(seats)
+    welded = unreachable_arena(seats)
 
     # The seats nothing could unseat, printed whether or not `--check` is on: it
     # is the number the file's whole mechanism rests on, and until 2026-08-30 no
@@ -1012,6 +1215,33 @@ def main(argv: List[str]) -> int:
     for seat in dead:
         print(f"    {seat[:70]}")
     print()
+
+    # The seats whose arena exists and can never run — same disease through the
+    # dependency graph instead of the symbol table (54th audit B4). Ratcheted
+    # in the TOTAL below.
+    print(f"  ARENA-UNREACHABLE — the arena resolves, but every member still "
+          f"owing a verdict\n  is parked, VOID-FORECLOSED, or transitively "
+          f"behind one ({len(welded)}):")
+    for seat in welded:
+        s = next(x for x in seats if x["seat"] == seat)
+        roots = sorted(set(s["arena_unreachable"].values()))
+        print(f"    {seat[:52]:<52} rooted at {', '.join(roots)}")
+    if not welded:
+        print("    (none)")
+    print()
+
+    # Out of the ratchet's scope by marking, printed so the scope is a choice
+    # the reader can see: a VACANT/UNDECIDED/BY ANALYSIS seat with a welded
+    # ring is a seat nobody can ever WIN.
+    unwinnable = [s["seat"] for s in seats
+                  if s.get("arena_pending_dead") and not s.get("arena_welded")]
+    if unwinnable:
+        print("  ...and seats no one can ever WIN — every pending arena member "
+              "welded, but no\n  unearned holder to indict (out of the ratchet "
+              "by scope, not oversight):")
+        for seat in unwinnable:
+            print(f"    {seat[:70]}")
+        print()
 
     still = undeclared(seats)
     print(f"  UNDECLARED — no SEAT:/HELD:/ARENA: line, so this report's marking "
@@ -1041,6 +1271,19 @@ def main(argv: List[str]) -> int:
                   f"  grow — and it shrinks ONLY by registering a spec or "
                   f"correcting a citation to a live successor.\n")
             return 1
+        # The TOTAL, per T0.31's precedent — the new class does not get a
+        # private zero. Asserted as a sum so a seat converting between the two
+        # classes (a spec registered but still unreachable) is neither
+        # progress nor regression, exactly like ARENA-MISSING -> NO-ARENA.
+        if len(dead) + len(welded) > BASELINE_UNCONTESTABLE:
+            print(f"  RATCHET BROKEN: {len(dead)} unfalsifiable + {len(welded)} "
+                  f"arena-unreachable seat(s) = {len(dead) + len(welded)}, "
+                  f"baseline {BASELINE_UNCONTESTABLE}.\n  The total may shrink, "
+                  f"never grow — it shrinks by registering a runnable spec,\n"
+                  f"  re-parenting an arena member off its foreclosed root, or "
+                  f"correcting a citation —\n  never by parking, foreclosing, or "
+                  f"deleting a reference.\n")
+            return 1
         if missing > BASELINE_ARENA_MISSING:
             print(f"  RATCHET BROKEN: {missing} seats name a non-existent arena, "
                   f"baseline {BASELINE_ARENA_MISSING}. It may shrink, never grow —\n"
@@ -1049,7 +1292,9 @@ def main(argv: List[str]) -> int:
             return 1
         print(f"  ratchet ok ({missing}/{BASELINE_ARENA_MISSING} seats with a "
               f"phantom arena; {len(dead)}/{BASELINE_UNFALSIFIABLE} "
-              f"unfalsifiable).\n")
+              f"unfalsifiable;\n  {len(dead)}+{len(welded)}/"
+              f"{BASELINE_UNCONTESTABLE} uncontestable in total, arena-"
+              f"unreachable included).\n")
     return 0
 
 
