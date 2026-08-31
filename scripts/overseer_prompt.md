@@ -106,6 +106,45 @@ durable repair is a per-seat `HELD:` / `ARENA:` marker in the same idiom as
 you take it, the parser gets simpler and stops guessing.
 
 
+## FOURTH, EVERY AUDIT: did the routed work move?
+
+    /data/venvs/jackthelearner/bin/python -m experiments.run review-queue
+
+Your own B4, 2026-08-31. `docs/REVIEW_QUEUE.md` was built by the 27th audit so a
+backlog would stop being invisible, held rows for six days, and had **no
+reader** — nothing in this repo could print *"7 OPEN, oldest 7 days, consumer
+last ran 2 days ago"*. On 2026-08-30 the Review's Sunday FULL run died at eleven
+minutes owing `w0-too-shallow`'s design; that row's own dated promise passed;
+two holds and four gate-provisional specs sat behind it; no number went red.
+
+This is the *work* half. `scripts/lib_liveness.sh:review_liveness` is the
+*schedule* half — it asks whether the consumer RAN. Neither implies the other: a
+desk can open every morning and dispose of nothing. Run both.
+
+Findings, and what each means for you:
+
+- **`OVERDUE`** — a live row is past a `DUE:` **it declared itself**. The
+  strongest signal in the file: a promise made in the open and broken. The
+  honest repairs are ACT, DECLINE, or **re-arm with a new `DUE:` and a reason**
+  — exactly as `decide_by` is re-armed. Deleting the row or the clock is not one
+  of them and each is its own violation.
+- **`STALE`** — an `OPEN` row with no clock, older than one whole consumer cycle
+  (8 days, derived from DAILY + the weekly Sunday FULL + a day of grace). Normal
+  work arriving; it means the desk is behind, not that anyone lied.
+- **`HOLD-WITHOUT-A-CLOCK` / `HOLD-ON-A-RESOLVED-BLOCKER`** — `HELD` exempts a
+  row from ageing, so it must pay with a `DUE:` or a `BLOCKED-BY:`, and a hold
+  whose blocker has been dispositioned must release. Otherwise the bundling rule
+  becomes the place rows go to die.
+- **`VANISHED` / `CLOCK-REMOVED`** — computed against the previous **committed**
+  revision. Rows are dispositioned, never deleted (T1.02 precedent), and a
+  `DUE:` that went red may not simply disappear.
+
+**The ratchet counts every class on purpose.** Three instruments here shipped
+counting one — `coverage.py`, `decisions.py`'s `NO-DEFAULT`, `champions.py`'s
+`ARENA-MISSING` — and each paid a "repair" that lowered its own number. Gated as
+`T0.31`, whose P4/P5/P6 assert on the TOTAL under exactly those three tidy-ups.
+
+
 ## The audit — work through every item
 
 **1. Integrity of the ledger.** For each PASS in `experiments/ledger.json`:

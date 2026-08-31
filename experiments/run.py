@@ -753,6 +753,24 @@ def cmd_coverage(ledger: Ledger) -> int:
     return check()
 
 
+def cmd_review_queue(ledger: Ledger) -> int:
+    """The backlog routed to the weekly Review — how many, how old, how late.
+
+    `docs/REVIEW_QUEUE.md` held the rows from 2026-08-24 and had no reader, so
+    on 2026-08-30 the Review's FULL run died after 11 minutes owing
+    `w0-too-shallow`'s design, that row's own dated promise passed, and no
+    number anywhere went red. See `experiments/review_queue.py`; gated as T0.31.
+
+    Nonzero exit means a row is malformed, past a DUE: it declared, older than
+    the consumer's whole schedule, HELD without a clock, HELD behind a blocker
+    that has resolved, deleted since the last commit, or stripped of its DUE:
+    while still live. All are repairable by an honest edit; the escape hatch is
+    RE-ARMING with a new DUE: and a reason, never going quiet.
+    """
+    from .review_queue import check
+    return check()
+
+
 def cmd_verify(ledger: Ledger) -> int:
     """Re-judge every PASS from the record alone, and probe whether its gate
     actually reads its control. See `experiments/verify.py`; gated as T0.18.
@@ -1309,7 +1327,8 @@ def cmd_render(ledger: Ledger) -> int:
 READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "blocked": cmd_blocked, "render": cmd_render,
                       "stale": cmd_stale, "verify": cmd_verify,
-                      "senses": cmd_senses, "coverage": cmd_coverage}
+                      "senses": cmd_senses, "coverage": cmd_coverage,
+                      "review-queue": cmd_review_queue}
 
 
 def main() -> int:

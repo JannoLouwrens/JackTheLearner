@@ -9320,3 +9320,61 @@ meter"* lived only in `scripts/ladder_prompt.md`, which the overseer, the Review
 and the field watch never open — and all three went on modelling it. The
 builder's prompt is operational memory for one organ; this file is the
 system's.
+
+## AN ORGAN THAT CREATES A RECORD MUST ALSO CREATE ITS READER — AND ITS
+## LIVENESS AND ITS BACKLOG ARE TWO DIFFERENT FAILURES
+## (builder, 2026-08-31, from the 52nd audit's B4; generalising the 27th
+## audit's own corollary, which had been written and never built)
+
+`docs/REVIEW_QUEUE.md` exists because the 27th audit found that *"routed to
+Review"* was a phrase in commit messages with no file, so a backlog could not be
+counted. The file was built, it held rows correctly for six days, and it was
+never given a reader. Then the same disease recurred **inside the organ that
+cured it**:
+
+    2026-08-30 06:37  the Review's Sunday FULL run starts — the only mode that
+                      does Part 2, and the run that owed `w0-too-shallow`'s
+                      world design.
+    2026-08-30 06:48  it dies on `Reached max turns (60)`, eleven minutes into
+                      a forty-minute budget, having written NOTHING.
+    2026-08-31 00:45  the 52nd audit finds it. `w0-too-shallow` still reads
+                      "design owed by the Review 2026-08-30" — a date already
+                      passed — with two holds and four gate-provisional specs
+                      behind it and both GPU cost classes EMPTY because of it.
+
+**Nothing had gone red, because nothing was looking.** The promise was made in
+the open, dated, greppable, and unread.
+
+**Three rules, in the order they were learned:**
+
+1. **A record without a reader is a record nobody keeps.** The act of creating a
+   file to make something countable is only half the work; the counter is the
+   other half, and it is the half that gets deferred because the file *feels*
+   like the deliverable. Ask of any new document: what command prints its worst
+   number, and what exit code carries it?
+2. **Liveness and backlog are independent failures and need independent
+   instruments.** `review_liveness` asks *did the consumer run?*
+   `review_queue.py` asks *did the work move?* A desk can open every morning and
+   dispose of nothing, and a desk that has been shut for a week may owe nothing.
+   Neither instrument can see the other's failure, and this repo has now been
+   bitten by both — the second one on the same organ, four days apart.
+3. **A promise with a date must be DECLARED, not written in prose.** The
+   `w0-too-shallow` date sat in a status line from 08-25 and was read by nobody
+   and no thing. It is now a `DUE:` line in the `DECIDE:`/`COVERS:` idiom, and
+   the prose was migrated by hand exactly once — because `champions.py` already
+   paid for inferring structure from prose (`901f7fc`: a seat's arena turned out
+   to be the words OUT LOUD). **A migration is a human act; an inference is a
+   bug.**
+
+**And the design rule that makes the counter worth having, which is the fourth
+instrument in this repo to need it and the first to be built already knowing
+it:** a ratchet that counts ONE class pays you for converting that class into
+another. `coverage.py`, `decisions.py` (`NO-DEFAULT`) and `champions.py`
+(`ARENA-MISSING`) each shipped this way and each was found rewarding a "repair"
+that lowered its own number. So `review_queue.py` names every way its subject
+can go quiet — delete the row, relabel it `HELD`, drop the `DUE:` that went red,
+hold it behind a blocker resolved months ago — makes each its own violation
+class, and `T0.31` asserts on the **total** under all of them. **Enumerate the
+tidy-ups before you ship the counter: the person who will quiet your instrument
+is a future maintainer with good intentions, and they will reach for the
+cheapest edit that makes the number smaller.**

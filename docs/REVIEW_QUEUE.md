@@ -10,9 +10,35 @@ invisible — nothing could print "3 routed, 0 acted on, oldest 4 days".
 indented body: the one-line question and the **staleness bill** — the ledger
 rows that acting on it would invalidate. The Review dispositions a row by
 setting its status (`OPEN` → `ACTED <date> <commit>` or `DECLINED <date>
-<why>`); rows are never deleted (T1.02 precedent: history stays). The bill is
-the price of the fix, computed BEFORE deciding, so "fix the world" decisions
-are made with the re-certification cost on the table, not discovered after.
+<why>`, or `HELD <date> <why>` for the bundling rule below); rows are never
+deleted (T1.02 precedent: history stays). The bill is the price of the fix,
+computed BEFORE deciding, so "fix the world" decisions are made with the
+re-certification cost on the table, not discovered after.
+
+**THE READER — added 2026-08-31, and it is why the two declarations below
+exist.** For six days this file had rows and no reader: the 52nd audit found
+that nothing in the repo could print *"7 OPEN, oldest 7 days, consumer last ran
+2 days ago"*, after the Review's Sunday FULL run died at 11 minutes owing
+`w0-too-shallow`'s design and that row's own dated promise passed in silence.
+
+    /data/venvs/jackthelearner/bin/python -m experiments.run review-queue
+
+`experiments/review_queue.py`, gated as `T0.31`. It reads DECLARED fields only —
+never prose, because `champions.py` learned on `901f7fc` what a regex over prose
+costs. Two optional indented body lines, in the `DECIDE:`/`COVERS:` idiom:
+
+    DUE: <YYYY-MM-DD> | what is owed, and by whom
+    BLOCKED-BY: <another row id> | what releases this hold
+
+A live row past its `DUE:` is **OVERDUE**; an `OPEN` row with no `DUE:` older
+than one full consumer cycle (8 days) is **STALE**. `HELD` buys exemption from
+ageing and must pay for it with a `DUE:` or a `BLOCKED-BY:`, and a hold whose
+blocker has been dispositioned is itself a violation — otherwise the bundling
+rule below becomes a place rows go to die. Deleting a row, or dropping a `DUE:`
+that went red, are each their own violation, computed against the previous
+committed revision. **The escape hatch is re-arming in the open** — a new `DUE:`
+with a reason, exactly as `decide_by` is re-armed in `DECISIONS_NEEDED.md`. What
+a row must not be able to do is go quiet.
 
 Two bills per world-touching row, and they differ: the SEMANTIC bill (rows
 whose measured behaviour actually changes) and the MECHANICAL bill (every
@@ -64,6 +90,8 @@ ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2
     not silently a 0.5. Full reasoning in PROGRESS.md.
 
 ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
+    BLOCKED-BY: w0-too-shallow | the world-edit window that row opens; if it
+        resolves toward W1 this follows it there and the bill goes to zero.
     Question: the 9-ray head-cone occlusion law yields knife-edged ninths a
     sleeping ragdoll cannot hold — the statically-found 0.5–0.9 band realises
     occ 0.337±0.467 overnight (slides out and freezes, or seals and cooks).
@@ -75,6 +103,8 @@ ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for t
     if the fix edits playground.py.
 
 ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
+    BLOCKED-BY: w0-too-shallow | the same world-edit window; paying the
+        21-certificate mechanical bill once instead of three times.
     Question: Water.apply (playground.py:627) writes a body's xfrc row only
     while it is in the pool, so any body that exits keeps its last buoyancy/
     drag force forever — a phantom force in live dynamics, found by DP.05's
@@ -85,6 +115,16 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for t
     all 21 playground.py rows above.
 
 ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Review 2026-08-30 (Sunday FULL); one cheap falsifier sequenced first, 2026-08-25
+    DUE: 2026-08-30 | the W0/W1 design, owed by the Review's Sunday FULL run.
+        MIGRATED FROM PROSE, by hand, 2026-08-31 — the date above was already
+        written in this row's status on 2026-08-25 and was read by nobody. The
+        run that owed it started 2026-08-30T06:37, died on `Reached max turns`
+        at 06:48 having written nothing, and this row stayed silent for a day.
+        That silence is the scar `experiments/review_queue.py` exists to end:
+        the promise is not new, only the reader is. Two holds
+        (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`) and four
+        gate-provisional specs are behind it. Re-arm it with a new DUE: and a
+        reason if the next FULL run cannot carry it; do not delete this line.
     Question: three independent instruments now measure W0 as too shallow to
     reward the capabilities the ladder certifies — LC.03's darkroom control
     (passivity prospers), LC.03 v2 (one learner in five), DP.05 (lookahead
