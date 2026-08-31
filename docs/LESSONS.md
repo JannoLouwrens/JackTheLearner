@@ -9439,3 +9439,41 @@ of being fixed.** A docstring line goes through the existing `run amend
 --doc-only` lane and the certificate survives. **Where a declaration must
 attach to a file that already carries a certificate, put it where the
 amendment lane can reach.**
+
+---
+
+## An extreme-value gate frozen at pilot n is a different gate at registered n (2026-08-31, T3.06)
+
+`T3.06`'s registered run VOIDed on `random_dwell_worst_life` — a MAX over
+lives — at 0.0227 (worst-seed bound) against a cap of 0.02. The pilot had
+certified that same instrument with headroom: 0.0073 / 0.0057, "the goal cell
+is not a physical attractor." Nothing about the world changed between those
+two readings. The *n* did: the pilot took its max over 16 lives, the
+registered run over 48 lives on each of 3 seeds, and the expected maximum of
+any fixed distribution rises with the number of draws by construction. A cap
+on a worst-case statistic is therefore not one bar — it is a family of bars
+indexed by n, and freezing it at the pilot's n while reading it at the
+registered n compares two different instruments that share a name.
+
+**The rule: a gate on an order statistic must name the n it is read over, and
+its bar must either be derived FOR that n (an exogenous quantile of the
+analytic null at the read n) or the pilot must run at the registered n.** A
+pilot exists to certify instruments; it cannot certify a max-over-n
+instrument at any n but the one the registered run will use. Note the same
+error in the other direction is quieter and worse: a cap that is COMFORTABLE
+at the registered n was LOOSE at the pilot's smaller n, so the pilot's
+"headroom" systematically overstates the safety of every worst-case gate it
+froze.
+
+Second half, from the same row: the fired bound was `mean + 1.5s` over seeds
+— a conservative aggregate whose actual worst seed (<= 0.0223 by the exact
+n=3 bound) may or may not have breached the cap. That is
+`aggregate-hides-worst-seed` (routed 2026-08-30, found while writing this
+very spec's v2) biting the file that routed it, one week later. An instrument
+scar you route is not an instrument scar you are done with.
+
+And a confirmation worth one line: the eight-conjunct replay that found all
+of this is the BA.03 lesson ("a verdict that is one bit over a conjunction
+gets read as its most familiar branch") applied ON THE DAY after it was
+written — the second one-bit VOID in 24 hours whose fired conjunct was not
+the familiar one, and whose queue label ("an arm to repair") was wrong.

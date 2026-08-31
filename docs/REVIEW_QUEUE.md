@@ -728,3 +728,54 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
     constants BA.03 imports by reference) if the kick model itself moves.
     Full record: VOID RECORD in `ba_03_braces_against_a_surface.py`, and the
     machine-readable reason in that file's `VOID-FORECLOSED:` declaration.
+
+ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | OPEN
+    DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
+        the next Review FULL run. Curiosity is the commitment with the most
+        declared specs in the project after unison (12, 2 passing), and T3.06
+        was its only implemented, unsettled claim spec.
+    Question: T3.06's registered run VOIDed on one of four rig conjuncts —
+    `random_dwell_worst_life` worst-seed bound 0.0227 vs a cap of 0.02, an
+    extreme-value instrument frozen against a 16-life pilot and read at 48
+    lives — but the number that decides the spec's future is the CONTROL:
+    `delta_shuf` +0.1072 +/- 0.0311, above DELTA_MIN 0.05 on every seed by
+    the exact n=3 bound (floor 0.0632), where the pilot had read -0.0219 /
+    +0.0005. Per the spec's own pre-registration, a matched-magnitude
+    UNINFORMATIVE reward recovering coverage means the measurement is about
+    reward magnitude or Q-value noise, not curiosity. The claim conjuncts are
+    all green (delta_coverage +0.2458, 5.8 sigma) — the effect is real; the
+    contrast cannot attribute it. PASS is arithmetically unreachable at this
+    envelope, so the row is declared `VOID-FORECLOSED` and `run coverage` has
+    stopped advertising it as an arm to repair.
+    Options, all runnable arms rather than an argument (law 3): **(a) RESCORE
+    AGAINST THE NOISE ARM** — make shuftask the null and require
+    cov(curious) - cov(shuftask) >= margin; the recorded-but-not-counting
+    number is +0.138 (~3x DELTA_MIN), so this arm has measured headroom, and
+    it asks the question the red control leaves open: does the INFORMATION
+    in the bonus buy anything over matched-magnitude noise? **(b) RE-DERIVE
+    RANDOM_DWELL_MAX AS AN n-AWARE ORDER-STATISTIC BOUND** — the cap's
+    exceedance grows with the n it is read over by construction; an exogenous
+    quantile of the analytic chance dwell at the read n fixes the instrument
+    without weakening it (it may come out LOWER at n=16 and higher at n=48).
+    **(c) WORLD ARM** — if the breach is a real goal attractor rather than
+    instrument n-dependence, that is goal-placement geometry, and it belongs
+    in the world-edit window under the bundling rule.
+    **Note (b) is `aggregate-hides-worst-seed` (ROUTED 2026-08-30) arriving
+    on the row of the very file that routed it:** the gate fired on a
+    mean+1.5s bound over seeds, and whether any ACTUAL seed breached the cap
+    is unanswerable from the aggregated row (actual worst seed <= 0.0223 by
+    the same exact bound). Read the two rows together.
+    **And note the kills-field tension, which is the design question under
+    (a):** `_check` as frozen maps control-red to FAIL, which fires `kills:
+    IntrinsicCuriosityModule` off a run whose own control says the instrument
+    cannot attribute — the same shape as
+    `t211-diayn-metric-cannot-separate-mi-from-noise`, one commitment over: a
+    metric that cannot separate the informative signal from matched noise.
+    Two specs, two metrics, one disease.
+    **Staleness bill: NONE for (a) and (b)** — T3.06 has no PASS to lose, its
+    bars and scoring live in `t3_06_ablate_curiosity.py`, which no other
+    certificate imports; (c) touches world constructors and belongs in the
+    world-edit window with the rest of the bundle.
+    Full record: VOID RECORD in `t3_06_ablate_curiosity.py` (eight-conjunct
+    replay table with every comparison carried), and the machine-readable
+    reason in that file's `VOID-FORECLOSED:` declaration.

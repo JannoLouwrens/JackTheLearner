@@ -221,6 +221,74 @@ budget also moves which queue-depth class this spec stocks, and a spec whose
 `run()` still refuses stocks nothing. Do not spend Kaggle hours on it; the
 expiring free hours belong to specs that need a GPU.
 
+VOID-FORECLOSED: one rig conjunct fired and it is the extreme-value instrument
+    `random_dwell_worst_life`, read at 48 lives/arm against a cap frozen by a
+    16-life pilot — worst-seed bound 0.0227 vs RANDOM_DWELL_MAX 0.02 — while
+    the CONTROL is red on every seed by the exact n=3 bound (`delta_shuf`
+    0.1072, every-seed floor 0.0632 vs DELTA_MIN 0.05). A re-run unchanged is
+    deterministic and buys the same VOID; PASS is arithmetically unreachable
+    by any repair that leaves the task/curious/shuftask arms and the frozen
+    bars alone, because the control conjunct does not touch the random arm.
+    The repair is a REDESIGN, routed to the Review as
+    `t306-matched-magnitude-noise-buys-coverage`.
+
+VOID RECORD — attempt 1, 2026-08-30T01:06 UTC, commit `1653104`, 2434 s
+(builder, replayed offline against the recorded row, 2026-08-31; BA.03's
+idiom, one day after the lesson that demands it).
+
+The ledger's word for this run is the generic *"run did not test the claim;
+not a refutation"*, and `_check`'s rig test is ONE BIT over a FOUR-WAY
+conjunction, so the row cannot say which clause fired. Replayed with each
+comparison carried, not just the operand:
+
+    RIG (all four AND-ed into one bit; VOID if any fails):
+      1 n_informative - 1.5s          14.92    >= 6            GREEN
+      2 task_dwell_worst_life          0.1114  >= 0.10         GREEN
+      3 random_dwell_worst_life + 1.5s 0.0227  <= 0.02         **FIRED**
+      4 coverage_random                0.6037  in [0.40, 0.95] GREEN
+    CLAIM (all green — recorded, not counting on a VOID):
+      5 delta_coverage                 0.2458  >= 0.05         GREEN (5.8 sigma)
+      6 every-seed floor               0.1359  >  0            GREEN
+      7 t-stat                         5.81    >= 3.0          GREEN
+    CONTROL (must fail; did not):
+      8 delta_shuf                     0.1072  <  0.05         **RED on every
+        seed** — exact bound floor 0.1072 - sqrt(2)*0.0311 = 0.0632.
+
+Four things the one bit could not say, recorded so no narrative back-fills:
+
+1. **The fired conjunct is a mean+1.5s BOUND over seeds, and whether any
+   actual seed breached the cap is unanswerable from the aggregated row** —
+   the actual worst seed is <= 0.0223 by the same exact bound, so the gate may
+   have fired on spread alone. That is `aggregate-hides-worst-seed` (ROUTED
+   2026-08-30, found while writing THIS file's v2) biting this file's own
+   registered row.
+
+2. **The cap is an extreme-value instrument whose exceedance grows with the n
+   it is read over, and it was frozen at a different n than it was read at.**
+   The pilot certified it at 16 lives/arm (worst 0.0073 / 0.0057, "the goal
+   cell is not a physical attractor"); the registered run reads a max over 48
+   lives on each of 3 seeds (worst-seed mean 0.0165). Whether the breach is a
+   real goal attractor or the instrument's n-dependence cannot be decided from
+   this row; both readings are stated, neither is chosen.
+
+3. **The control flipped between pilot and registration.** Families 90/91
+   read `delta_shuf` -0.0219 / +0.0005 (failing correctly, with headroom);
+   seeds 0/1/2 read +0.1072 +/- 0.0311, above the bar on every seed. Per this
+   docstring's own pre-registration (item 3 at the top): a matched-magnitude
+   uninformative reward recovering coverage means "the measurement is about
+   reward magnitude or about Q-value noise, not about curiosity, and the
+   claim is void of content whatever the experiment arm did."
+
+4. **The number the redesign has headroom on, recorded but not counting:**
+   cov(curious) 0.6162 vs cov(shuftask) 0.4776 on the same informative lives
+   — the informative bonus beats matched noise by +0.138, nearly 3x
+   DELTA_MIN. A contrast scored against the noise arm rather than the task
+   arm asks exactly the question this control leaves open. That redesign is
+   the Review's to make, not this file's to backfill: `_check` as frozen maps
+   control-red to FAIL, which would fire `kills: IntrinsicCuriosityModule`
+   off a run whose own control says the instrument cannot attribute — the
+   tension is routed, not resolved here.
+
 PILOT RECORD v2 — seed families 90 and 91, 2026-08-30 00:14-00:23 UTC,
 /data/t3_06_pilot_v2.json, LIVES_PER_ARM = 16 at the registered 4000
 decisions, 270.7 s and 270.4 s. **BOTH FAMILIES VOID, on the gate this

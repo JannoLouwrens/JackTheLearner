@@ -213,6 +213,17 @@ against a bar of 1.5 on the seed where the trap fired — 6% of headroom. That i
 what a test which could have failed looks like, and it is stated here BEFORE
 the registered seeds are drawn so that a FAIL cannot later be narrated as a
 surprise.
+
+READING THE REGISTERED ROW's `trap_ratio` COLUMN (added 2026-08-31, 52nd audit
+B6 — a display contextualisation, no number moves). `panel_reward_ratio` is
+`m_in / max(1e-12, m_out)`, so when an arm collects essentially ZERO reward
+outside the panel the ratio is `m_in` divided by the 1e-12 floor and prints as
+astronomically large. Seed 1's per-seed `trap_ratio` of ~9.5e11 is exactly
+this: a VANISHED DENOMINATOR — the null starved everywhere off-panel — not a
+spectacularly strong trap. The gate reads it only as `>= TRAP_RATIO_MIN` (2.0),
+for which any denominator collapse is simply "very fed on-panel", so the
+verdict is untouched; but a reader comparing magnitudes across seeds must not:
+the column is a RATIO WITH A FLOOR, ordinal above ~1e3, not a measurement.
 """
 from __future__ import annotations
 
@@ -576,10 +587,20 @@ def _seed_view(row: dict) -> dict:
         f"other_{other}_fed_ratio": row[f"{other}_noisy"]["panel_reward_ratio"],
         f"other_{other}_coverage": row[f"{other}_noisy"]["coverage"],
     }
-    # INFORMATIVE: the apparatus worked on this seed. Computed ONLY from the
-    # null, the random walk and the rig instruments — never from the claim
-    # arm's dwell, fed-ratio, coverage or margin — so no seed can be dropped
-    # for being unflattering to the hypothesis. See THE SEED PROTOCOL.
+    # INFORMATIVE: the apparatus worked on this seed. Reads the null, the
+    # random walk, the rig instruments AND two claim-arm RIG readings taken
+    # on the STATIC panel (`claim_static_reward_q1`, `claim_static_decay` —
+    # was the ICM alive, and did it decay where decay is mandatory), plus
+    # `exposure_frac_of_random`. It never reads the JUDGED quantities — the
+    # claim arm's trap dwell, fed-ratio, coverage or margin — so a seed
+    # cannot be dropped for being unflattering to the hypothesis. The
+    # summary this comment used to carry ("computed ONLY from the null ...
+    # and the rig instruments") was FALSE as written (52nd audit B6): a
+    # claim-arm instrument is a claim-arm instrument even when it is read
+    # for rig health, and the honest statement is the one above. Live effect
+    # of the correction: zero — on the recorded run every exclusion fired on
+    # `trap_dwell` alone. `DECAY_MIN` does not move; re-fitting it after the
+    # PASS would be the real violation. See THE SEED PROTOCOL.
     v["informative"] = float(
         v["trap_dwell"] >= TRAP_DWELL_MIN
         and v["trap_fed_ratio"] >= TRAP_RATIO_MIN

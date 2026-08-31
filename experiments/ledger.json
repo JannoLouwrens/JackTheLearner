@@ -12572,45 +12572,16 @@
     "T0.27": {
       "amended": [],
       "attempt": 22,
-      "commit": "f4115f2",
+      "commit": "d18f8a2+dirty",
       "compute_s": null,
       "control_metrics": {
         "dirty_named": 1.0,
         "violations": 1
       },
-      "duration_s": 1.42,
+      "duration_s": 1.47,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "26fc2f6+dirty",
-          "control_metrics": {
-            "dirty_named": 1.0,
-            "violations": 1
-          },
-          "impl_sha": "cee77fcd92ae6bde",
-          "message": "",
-          "metrics": {
-            "artifact_survives_history": true,
-            "artifact_written": true,
-            "audit_admits_clean_shape": true,
-            "audit_flags_missing_metrics": true,
-            "audit_flags_unreachable_commit": true,
-            "live_checked_pairs": 0,
-            "live_ledger_clean": true,
-            "live_unauditable_pairs": 27,
-            "live_violations": 0,
-            "properties_failed": 0,
-            "rerun_visible_not_amendment": true,
-            "unknowable_is_none_and_unauditable": true,
-            "warns_on_dirty_fail": true
-          },
-          "ran_at": "2026-08-14T01:18:38",
-          "seeds": [
-            0
-          ],
-          "status": "PASS"
-        },
         {
           "commit": "60c94af",
           "control_metrics": {
@@ -13463,10 +13434,76 @@
             "spec_sha": "b2adff0cf7c2872a",
             "status": "FAIL"
           }
+        },
+        {
+          "commit": "f4115f2",
+          "control_metrics": {
+            "dirty_named": 1.0,
+            "violations": 1
+          },
+          "gpu_job_id": null,
+          "impl_sha": "4e6a843e3e42f779",
+          "message": "pre-registered threshold not met",
+          "metrics": {
+            "artifact_survives_history": true,
+            "artifact_written": true,
+            "audit_admits_clean_shape": true,
+            "audit_flags_missing_metrics": true,
+            "audit_flags_unreachable_commit": true,
+            "error_does_not_sever": true,
+            "live_audit_can_flag": true,
+            "live_checked_pairs": 7,
+            "live_ledger_clean": false,
+            "live_unauditable_pairs": 24,
+            "live_violations": 2,
+            "properties_failed": 1,
+            "rerun_visible_not_amendment": true,
+            "seeded_checked_pairs": 9,
+            "seeded_violations": 3,
+            "unknowable_is_none_and_unauditable": true,
+            "void_lane_guarded": true,
+            "warns_on_dirty_fail": true
+          },
+          "ran_at": "2026-08-30T22:20:27",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "b2adff0cf7c2872a",
+          "status": "FAIL",
+          "supersedes_fail": {
+            "commit": "f4115f2",
+            "dirty": false,
+            "impl_changed": false,
+            "impl_sha": "4e6a843e3e42f779",
+            "metrics": {
+              "artifact_survives_history": true,
+              "artifact_written": true,
+              "audit_admits_clean_shape": true,
+              "audit_flags_missing_metrics": true,
+              "audit_flags_unreachable_commit": true,
+              "error_does_not_sever": true,
+              "live_audit_can_flag": true,
+              "live_checked_pairs": 7,
+              "live_ledger_clean": false,
+              "live_unauditable_pairs": 24,
+              "live_violations": 2,
+              "properties_failed": 1,
+              "rerun_visible_not_amendment": true,
+              "seeded_checked_pairs": 9,
+              "seeded_violations": 3,
+              "unknowable_is_none_and_unauditable": true,
+              "void_lane_guarded": true,
+              "warns_on_dirty_fail": true
+            },
+            "ran_at": "2026-08-30T22:20:23",
+            "spec_changed": false,
+            "spec_sha": "b2adff0cf7c2872a",
+            "status": "FAIL"
+          }
         }
       ],
-      "impl_sha": "4e6a843e3e42f779",
-      "message": "pre-registered threshold not met",
+      "impl_sha": "b5b788f3f0b0aa77",
+      "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/T0.27/2026-08-31T05-17-58",
       "metrics": {
         "artifact_survives_history": true,
         "artifact_written": true,
@@ -13487,8 +13524,8 @@
         "void_lane_guarded": true,
         "warns_on_dirty_fail": true
       },
-      "preserved_impl": null,
-      "ran_at": "2026-08-30T22:20:27",
+      "preserved_impl": "refs/jack/failimpl/T0.27/2026-08-31T05-17-58",
+      "ran_at": "2026-08-31T05:17:58",
       "seeds": [
         0
       ],
@@ -13498,7 +13535,7 @@
       "supersedes_fail": {
         "commit": "f4115f2",
         "dirty": false,
-        "impl_changed": false,
+        "impl_changed": true,
         "impl_sha": "4e6a843e3e42f779",
         "metrics": {
           "artifact_survives_history": true,
@@ -13520,7 +13557,7 @@
           "void_lane_guarded": true,
           "warns_on_dirty_fail": true
         },
-        "ran_at": "2026-08-30T22:20:23",
+        "ran_at": "2026-08-30T22:20:27",
         "spec_changed": false,
         "spec_sha": "b2adff0cf7c2872a",
         "status": "FAIL"
@@ -15584,7 +15621,22 @@
       "status": "PASS"
     },
     "T2.09": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-08-31T05:21:04",
+          "by": "builder 2026-08-31",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "0592224e850721f3",
+              "proof": "reconstructed 0592224e850721f3 from git 44f24c4160fa; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "cdf2f0cd48192a0a"
+            }
+          ],
+          "commit": "d18f8a2+dirty",
+          "reason": "52nd audit B6: the seed-selection comment claimed 'only the null and the rig' while the formula reads two claim-arm static-panel rig instruments; sentence corrected (live effect zero, DECAY_MIN untouched). trap_ratio column contextualised as a floored ratio (seed 1's 9.5e11 is a vanished denominator). Prose/comment only."
+        }
+      ],
       "attempt": 1,
       "commit": "44f24c4",
       "compute_s": 3307.82,
@@ -15608,7 +15660,7 @@
       "gpu_job_id": "jannolouwrens/jack-ladder-1788031002",
       "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
-      "impl_sha": "0592224e850721f3",
+      "impl_sha": "cdf2f0cd48192a0a",
       "message": "",
       "metrics": {
         "backend": "kaggle",
@@ -16871,6 +16923,20 @@
           ],
           "commit": "1bf1eac",
           "reason": "prose only: the FROZEN bar block header read PROVISIONAL and TASK_DWELL_MIN carried the comment 'placeholder ... Pilot freezes it' in a file with _GATES_FROZEN = True since 2026-08-30. Comments only; no threshold, constant or IMPL_DEPS line moved."
+        },
+        {
+          "at": "2026-08-31T05:16:58",
+          "by": "builder 2026-08-31",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "047cc2dd7bc72d08",
+              "proof": "reconstructed 047cc2dd7bc72d08 from git 1bf1eac27b5a; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "d6fa40f26a853f8d"
+            }
+          ],
+          "commit": "d18f8a2+dirty",
+          "reason": "VOID RECORD + VOID-FORECLOSED declaration: replay names the fired conjunct (random_dwell_worst_life bound 0.0227 vs 0.02) and the every-seed-red control (delta_shuf floor 0.0632 vs 0.05); prose only"
         }
       ],
       "attempt": 1,
@@ -16890,7 +16956,7 @@
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "impl_sha": "047cc2dd7bc72d08",
+      "impl_sha": "d6fa40f26a853f8d",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "coverage_curious": 0.616167,
