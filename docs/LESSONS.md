@@ -9526,3 +9526,33 @@ is rarely in the compute record.** Here, five weeks of expiring free quota trace
 to a single unwritten world design (`w0-too-shallow`, routed 2026-08-24), via
 four PILOT-BLOCKED specs whose blocking reasons are every one of them a
 measured statement about W0 rather than about the spec.
+
+---
+
+## A pilot cannot certify a floor for a condition it never ran (2026-08-31, W0.DIAG)
+
+`W0.DIAG`'s attempt 1 VOIDed on `"under minimum lives"` — and the breaching
+condition was `repeat`, the one condition of five its pilot never executed.
+The PILOT RECORD sized the envelope against `random` (mean life 41 s, 15
+lives in the envelope, comfortable) and `up`/`down`/`ka`; `repeat` was
+assumed covered because it is "the other stationary null" and shares
+`random`'s code path. It does not share its dynamics: hold-5 behaves like
+mild temporal correlation — this spec's own subject matter — so its mean
+life runs ~56 s and it completed 11/11/12 lives against a floor of 12.
+
+This is the T3.06 extreme-value lesson's quieter sibling. There, a gate
+frozen at pilot *n* became a different gate at registered *n*; here, a floor
+frozen against the piloted CONDITIONS was never a floor for the unpiloted
+one at all. The rule: **an envelope constant is certified per condition, not
+per spec — every condition whose metrics feed a gate must appear in the
+pilot record, or the gate over it is unsized.** The check is mechanical:
+diff the pilot record's condition list against `MODES` before freezing.
+
+Second defect from the same row, one lesson old on the day it bit:
+`lives_ok` was one bit over a five-way conjunction and the row recorded four
+of the five operands — the firing one (`lives_repeat`) was the omission, so
+the diagnosis needed a fresh measurement instead of a ledger read. "The
+readout must carry the comparison, not the operand" (2026-08-30) applies to
+VOID gates too, and this spec CITED the BA.03 branch-naming lesson for its
+claim while omitting it for its instrument gates. A lesson applied to the
+verdict and not to the gates is half-applied.

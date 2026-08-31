@@ -117,6 +117,24 @@ commit).
   this: N_DECISIONS=3200, E0=0.10, E0_KA=(0.10,0.25), TAU=(0.5,32.0),
   MIN_LIVES_NULL=12 (LC.03's floor unchanged, seed-90 margin 3),
   MIN_LIVES_SCHED=8 (ka's 10 is the tightest, margin 2).
+
+VOID RECORD — attempt 1 (2026-08-31 10:15, seeds 0-2, N=3200): V3 fired,
+`void_reason "under minimum lives"`. The firing operand was the REPEAT null —
+the one condition of five the pilot never ran (the pilot sized against
+`random`'s 41 s lives; hold-5 behaves like mild correlation, mean life ~56 s,
+so it completes fewer lives in the same envelope). Measured post-hoc at the
+recorded seeds: repeat lives 11/11/12 vs the floor of 12 — a one-life
+shortfall on two seeds. Every other floor was green (random 14.7, up 11.3,
+down 11.7, ka 9.3). Two repairs, neither touching a floor (law 4): (1)
+`lives_repeat` now recorded in the claim metrics — attempt 1's row could not
+show which conjunct of `lives_ok` fired, the aggregate-hides-its-operand
+lesson (LESSONS 2026-08-30/31) biting the spec that cited it; (2) envelope
+grown N_DECISIONS 3200 -> 4800 (x1.5): at the measured ~0.19 sim-s/decision
+that is ~912 sim-s, expected repeat lives ~15 vs floor 12 (margin ~3 lives,
+~6x the 0.47 seed std), and every other condition gains proportionally.
+Floors are UNCHANGED. A pilot cannot certify a lives floor for a condition it
+never ran — the T3.06 extreme-value lesson's quieter sibling, filed in
+LESSONS.md alongside this record.
 """
 from __future__ import annotations
 
@@ -138,7 +156,7 @@ IMPL_DEPS = ["experiments/w0.py", "experiments/drives.py",
 # ── frozen envelope (pilot, seeds 90/91 — see PILOT RECORD in the docstring) ─
 E0 = 0.10                 # respawn energy, all conditions except ka's ramp
 E0_KA = (0.10, 0.25)      # known-answer ramp endpoints
-N_DECISIONS = 3200        # ~96 s wall per run at the measured throughput
+N_DECISIONS = 4800        # v2 envelope — see VOID RECORD; ~144 s wall per run
 TAU = (0.5, 32.0)         # correlation-time schedule, decisions, geometric
 N_ACT = 8                 # rover actuators; W0.__init__ asserts ROVER_NU
 MIN_LIVES_NULL = 12       # LC.03's floor, unchanged
@@ -279,6 +297,7 @@ def _claim_metrics(b: Dict[str, dict]) -> dict:
         "jit_first_up": b["up"]["jit_first"],
         "jit_final_up": b["up"]["jit_final"],
         "lives_random": b["random"]["n_lives"],
+        "lives_repeat": b["repeat"]["n_lives"],
         "lives_up": b["up"]["n_lives"],
         "mean_life_random": b["random"]["mean_life_s"],
         "mean_life_up": b["up"]["mean_life_s"],

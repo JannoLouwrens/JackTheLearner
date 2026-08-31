@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 93 / 201 demonstrated
+## 94 / 202 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -871,6 +871,13 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ The count of distinct REACHED rule-interaction events — co-occurrences of two or more rules whose joint outcome differs from either rule's outcome alone — exceeds the number of rules enumerated in the rule-set, and keeps growing over lives rather than saturating.
       - _dies if:_ The reached-interaction count saturating at or below the enumerated rule count — the world is a list, not a closure, and open-endedness in it is impossible however good the agent is.
       - _then delete:_ The W3 rung of SURVIVAL_WORLD.md's fidelity ladder. If depth does not exceed the enumeration, W3 is just W2 with more table rows, and the honest move is to say so and spend the compute on ACCEL-style RULE mutation instead of on more hand-authored rules.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [x] **W0.DIAG** The exploration process, not the world: does correlated random action buy life in W0?
+      - _asserts:_ Part of W0's nine-instrument shallowness reading is exploration-process-limited, not world-limited: a random policy whose actions are TEMPORALLY CORRELATED colored noise — per-decision marginal action distribution identical to LC.03's `random` null, correlation time scheduled near-white -> red across the run — records a positive within-run `life_gain` that the stationary nulls cannot, because sustained action moves the body far enough to reach food that per-decision white noise never does.
+      - _dies if:_ Either failure branch, each named in the recorded metrics (`claim_branch` — the BA.03 one-bit-verdict lesson): (a) the paired margin (life_gain of the correlation-ramp-UP run minus the plain random null, per seed) under 3 sigma with every instrument gate green — correlation buys no measurable life; or (b) the margin fires but the up-run shows NO food advantage over the null (mean eats), so the gain is the PASSIVITY channel — correlated noise does less work and drifts toward statuehood, which is LC.03's already-measured gradient, not exploration reaching reward. On either branch the shallowness finding survives its cheapest attack.
+      - _then delete:_ On FAIL: nothing — a FAIL is itself the finding (the shallowness survives the cheap attack) and feeds the `w0-too-shallow` design due 2026-09-06. On PASS: the UNQUALIFIED reading of the nine instruments dies — 'W0 does not reward capability' must be re-read as partly 'no tested policy's exploration process ever reaches what W0 does reward', which lands in D10 fork (b) and reprices the edit-W0-vs-build-W1 fork before a redesign is spent on it.
 
 ### Tier 0 — HARNESS — can we measure anything?
 
