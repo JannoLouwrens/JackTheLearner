@@ -32,7 +32,25 @@
 # wrote a DRAFT. Stamp it as one, in the file, above the verdict, and commit it
 # so it is neither lost nor mistaken for a finding.
 #
-#     seal_output <rc> <repo-relative-output-file> <organ> [say-fn]
+#     seal_output <rc> <repo-relative-output-file> <organ> [say-fn] [max-clean-age-h]
+#
+# AND THE THIRD CASE, added 2026-08-31 (52nd audit, B1b). The two branches above
+# cover a run that died EARLY (leave the committed file alone) and a run that
+# died LATE (stamp its draft). Neither covers a run that died BEFORE WRITING on
+# a schedule it OWED: the file is clean, so the DRAFT branch skips it, and the
+# page goes on presenting an old report as current state with nothing on it
+# saying so. That is what happened to `docs/PROGRESS.md` on 2026-08-30 and it
+# stood for two days. `stale_output` below is that branch, and it is shared with
+# `scripts/lib_liveness.sh`, which reaches the same conclusion from the schedule
+# side when the organ never ran at all.
+#
+# The clean branch takes an AGE, and refusing to stamp a young file is the whole
+# point of it. The overseer publishes 4x/day: if its 12:37 run dies before
+# writing, the 06:37 report is six hours old and perfectly current, and stamping
+# it STALE would be noise that teaches the reader to skip banners. So a clean
+# file is stale only once it is older than its organ's own cadence — 7 h for the
+# 6-hourly overseer, 25 h for the daily Review, 169 h for the weekly field
+# watch. Those numbers are read off the crontab; none of them is an estimate.
 #
 # Committing is part of the repair, not a convenience: the 49th audit's file
 # had to be recovered by hand by the next builder, and an uncommitted report in
@@ -41,14 +59,84 @@
 # `git commit` otherwise writes the whole index and these organs share a tree
 # with a builder that may have staged anything.
 
+# Hours since the commit that last touched <file>, or 99999 if git cannot say.
+# mtime is the wrong clock: a checkout rewrites it and would make a
+# months-stale report look minutes fresh. UNKNOWN IS NOT ZERO — an unanswerable
+# age reads as old, and `stale_output` then refuses on its own dirty check if
+# the file is merely untracked.
+_seal_file_age_hours() {
+  local ct
+  ct=$(git log -1 --format=%ct -- "$1" 2>/dev/null)
+  [ -n "$ct" ] || { echo 99999; return; }
+  echo $(( ( $(date +%s) - ct ) / 3600 ))
+}
+
+# stale_output <file> <organ> <reason> [say-fn]
+#
+# The file is not this run's draft — it is the PREVIOUS run's report, still
+# accurate as a record and no longer accurate as current state. Say so at the
+# top of the page and commit it, because the log line alone is what failed.
+stale_output() {
+  local file="$1" organ="$2" reason="$3" sayfn="${4:-:}"
+  [ -f "$file" ] || return 0
+  # NEVER touch a file someone else is editing. This is the `git add -A` lesson
+  # applied to a stamper: a writer on a shared tree must bound itself to its own
+  # edits, and a dirty output file here means either a live organ session or the
+  # owner. Refusing is the honest failure — say it and stop.
+  if [ -n "$(git status --porcelain -- "$file" 2>/dev/null)" ]; then
+    "$sayfn" "NOT stamping $file stale — it is dirty in the shared tree; someone is writing it"
+    return 1
+  fi
+  if head -8 "$file" | grep -q "STALE — "; then
+    "$sayfn" "$file already carries a stale banner — leaving it"
+    return 0
+  fi
+  local stamp
+  stamp="$(date -Iseconds)"
+  {
+    printf '> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**\n'
+    printf '> %s\n' "$reason"
+    printf '> So everything below is the PREVIOUS run of the %s and is a RECORD,\n' "$organ"
+    printf '> not current state: its counts, its "current state" framing and any\n'
+    printf '> claim about what has or has not moved describe an older world.\n'
+    printf '> Stamped %s by scripts/lib_seal.sh. It disappears the next time the\n' "$stamp"
+    printf '> %s completes a run and rewrites this file.\n\n' "$organ"
+    cat "$file"
+  } > "$file.stale" && mv "$file.stale" "$file"
+  "$sayfn" "stamped $file STALE — $reason"
+  git add -- "$file" 2>/dev/null
+  git commit -q -m "$organ: schedule missed — $file stamped STALE, not current state
+
+$reason
+
+Committed by scripts/lib_seal.sh, not by the organ's agent. The content is the
+previous run's real work and is kept; only its claim to describe TODAY is
+withdrawn. The banner clears itself the next time the organ completes." -- "$file" 2>/dev/null \
+    && "$sayfn" "committed the stale banner" \
+    || "$sayfn" "WARNING: could not commit the stale banner — it is dirty in the tree"
+  return 0
+}
+
 seal_output() {
-  local rc="$1" file="$2" organ="$3" sayfn="${4:-:}"
+  local rc="$1" file="$2" organ="$3" sayfn="${4:-:}" max_clean_age="${5:-25}"
   [ "$rc" -eq 0 ] && return 0
   [ -f "$file" ] || return 0
   # Dirty means THIS dying run wrote it (or an earlier one did and nobody
-  # sealed it). A clean file is the previous run's committed report and is not
-  # this run's draft — leave it alone.
-  [ -n "$(git status --porcelain -- "$file" 2>/dev/null)" ] || return 0
+  # sealed it) -> the DRAFT branch below. A clean file is the previous run's
+  # committed report; it is not this run's draft, but if the run that owed it an
+  # update died without writing, it is no longer current state either.
+  if [ -z "$(git status --porcelain -- "$file" 2>/dev/null)" ]; then
+    local age_h
+    age_h=$(_seal_file_age_hours "$file")
+    if [ "$age_h" -le "$max_clean_age" ]; then
+      "$sayfn" "$file untouched by this rc=$rc run and only ${age_h}h old (cadence allows ${max_clean_age}h) — still current, not stamping"
+      return 0
+    fi
+    stale_output "$file" "$organ" \
+      "The $organ run that would have rewritten it exited rc=$rc without writing a word, and the file is now ${age_h}h old against a ${max_clean_age}h cadence." \
+      "$sayfn"
+    return 0
+  fi
   # Never stamp twice — but still commit. A second dying run that appended to
   # an already-sealed draft leaves the same uncommitted file the seal exists to
   # prevent, and one banner is enough to say the same thing.

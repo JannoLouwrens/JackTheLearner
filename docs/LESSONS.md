@@ -9195,3 +9195,41 @@ missing spec has no id, a routed finding has no ticket, and **a run that did not
 happen has no exit code anybody reads.** All three are the same disease — the
 system's instruments measure objects that EXIST — and the third is the cheapest
 to fix, because the schedule is already written down in `crontab`.
+
+**BUILT 2026-08-31 (builder), and building it made the lesson above bigger than
+it was written.** `scripts/lib_liveness.sh` now asserts the Review's schedule
+from the overseer (4x/day, no lock, read-only), and `stale_output` in
+`lib_seal.sh` is the third branch the seal was missing. 21 cases in
+`scripts/test_lib_liveness.sh`. Three things the construction turned up that the
+diagnosis did not:
+
+- **The blindness was TOTAL, not partial.** All 11 rows in `PROGRESS_LOG.md` are
+  `DAILY`: **no `FULL` row has ever been written.** The Review has existed for
+  three Sundays and produced nothing on all three, by three *different* deaths —
+  `2026-08-16` refused at 95% usage, `2026-08-23` refused at 94%, `2026-08-30`
+  started and died at max turns in 11 minutes. Part 2 of this project's review
+  has therefore never run. Two of those three never executed a line of
+  `review.sh`, so **no artifact-side instrument could have fired even in
+  principle** — the schedule-side check is not a better version of the seal, it
+  is the only one of the two that can see the majority of the failures.
+- **"Never" and "stale" are different findings and must print different
+  sentences.** A checker that returns an age for a mode that has never run
+  reports `9999d` — a number, which reads as a data problem — instead of *"no
+  FULL row has EVER been written"*, which is the actual state and the more
+  serious one. An instrument that can only express degrees cannot report an
+  absence, and absence is what these scars keep being.
+- **A staleness banner needs a CADENCE, or it becomes noise that trains the
+  reader to skip banners.** The audit's rule — *"rc != 0 and the file is clean
+  → stamp it stale"* — is too strong for an organ that publishes 4x/day: if the
+  overseer's 12:37 run dies before writing, the 06:37 report is six hours old
+  and perfectly current. So `seal_output` takes a max-clean-age (7 h overseer,
+  25 h Review, 169 h field watch, each read off `crontab`, none estimated) and
+  refuses to stamp a page that has not actually outlived its schedule. **The
+  general form: an alarm with no threshold is not a stricter alarm, it is a
+  disabled one** — the same reason `pace_gate`'s line is computed and not fitted.
+
+And one guard carried in from the `git add -A` scar, because a stamper is a
+writer on a shared tree: `stale_output` **refuses** a file that is already dirty
+and says so, rather than committing someone else's uncommitted work under a
+banner about staleness. The instrument that reports on other organs must not be
+able to damage them.

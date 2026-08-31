@@ -31,21 +31,27 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenant
 # open is not a limit.
 usage_gate say || exit 0
 cd "$REPO" || exit 0
+# Turn budget derived from the clock at the Review's rate (3 turns/min over a
+# 30m timeout), not hard-coded. Seven max-turns deaths across the three organs,
+# every one with time left on the clock — see scripts/review.sh.
+MAXTURNS=90
 MODEL="${JACK_FIELDWATCH_MODEL:-opus}"
 say "sweep start — model ${MODEL}"
 mark_log
 nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
-  --model "$MODEL" --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
+  --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
 if credits_out; then
   say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
   mark_log
   nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
-    --model sonnet --dangerously-skip-permissions --max-turns 60 >> "$LOG" 2>&1
+    --model sonnet --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 fi
-# Same seal as the overseer and the review: a late death leaves a written
-# report that nothing marks as a draft (scripts/lib_seal.sh).
-seal_output "$RC" docs/FIELD_WATCH.md field-watch say
+# Same seal as the overseer and the review: a late death leaves a written report
+# that nothing marks as a draft, and a death before writing leaves a page that
+# still claims to be current (scripts/lib_seal.sh). 169 h = this organ's weekly
+# cadence plus an hour; below that the last report is still the current one.
+seal_output "$RC" docs/FIELD_WATCH.md field-watch say 169
 say "sweep end rc=${RC} — $(grep -c NOMINAT docs/FIELD_WATCH.md 2>/dev/null || echo 0) nomination lines"
 exit 0

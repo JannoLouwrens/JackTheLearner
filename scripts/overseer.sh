@@ -29,6 +29,7 @@ say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_usage.sh"
 . "$REPO/scripts/lib_pause.sh"
 . "$REPO/scripts/lib_seal.sh"
+. "$REPO/scripts/lib_liveness.sh"
 
 pause_gate say "$PAUSE" || exit 0
 
@@ -46,7 +47,25 @@ FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 usage_gate say || exit 0
 cd "$REPO" || exit 0
 MODEL="${JACK_OVERSEER_MODEL:-opus}"
+# Turn budget derived from the clock, at the Review's own rate of 3 turns/min
+# (60 turns / 20 min), instead of the hard-coded 60 that killed this organ twice
+# with time still on it. `timeout` remains the spend ceiling; this only stops an
+# early death by a number nothing derived. See scripts/review.sh.
+MAXTURNS=75
 say "audit start — model ${MODEL}, $(git rev-parse --short HEAD)"
+
+# WATCH THE ORGAN NEXT DOOR, BEFORE AUDITING ANYTHING. The Review's own
+# instruments cannot see it fail to run — two of its three Sunday FULL slots
+# were refused by the usage gate before `review.sh` executed a line, and the
+# third died before writing. This runs 4x/day, takes no lock and only reads, so
+# it is the right place: an organ that is the destination of routed work must
+# have its liveness watched by something other than itself (27th audit's
+# corollary; scripts/lib_liveness.sh is where the scar is written up).
+#
+# It runs BEFORE the agent so the audit sees the banner in its own working tree,
+# and it is deliberately not gated on RC: a dead Review is a finding whether or
+# not this audit completes.
+review_liveness say || true
 
 mark_log
 
@@ -54,7 +73,7 @@ nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
   timeout 25m claude -p "$(cat "$REPO/scripts/overseer_prompt.md")" \
     --model "$MODEL" \
     --dangerously-skip-permissions \
-    --max-turns 60 \
+    --max-turns "$MAXTURNS" \
     >> "$LOG" 2>&1
 RC=$?
 
@@ -74,8 +93,13 @@ fi
 # of a run that dies EARLY. The 49th audit died at max turns AFTER writing the
 # whole file, so the log said UNKNOWN while docs/OVERSIGHT.md said ON TRACK and
 # nothing joined them. `seal_output` stamps the file itself and commits it.
+#
+# AND THE THIRD CASE, 2026-08-31: a run that dies before writing leaves a CLEAN
+# file, which the seal skipped. 7 h = this organ's 6-hourly cadence plus an
+# hour, so a 06:37 report is not stamped stale when the 12:37 run dies — only a
+# page that has actually outlived the schedule is.
 if [ "$RC" -ne 0 ]; then
-  seal_output "$RC" docs/OVERSIGHT.md overseer say
+  seal_output "$RC" docs/OVERSIGHT.md overseer say 7
   say "audit end rc=${RC} — verdict: UNKNOWN (audit did not complete)"
   exit 0
 fi
