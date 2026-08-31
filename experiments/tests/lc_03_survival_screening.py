@@ -264,6 +264,32 @@ sb3-ppo, LC.04's ineligible reference arm, is NOT run here: it is not
 LC.01-admitted and the registry scopes LC.03 to admissible arms. LC.04's
 implementer must either push it through this same harness at this same
 envelope (one extra run per seed) or record why not.
+
+VOID-FORECLOSED: the v2 re-screen's own pre-registered fork (ii) fired —
+    `fewer than two learners (1 cleared)` — after 400k decisions/arm-seed and
+    ~190 core-hours at the 4x envelope. Every control landed on its
+    pre-registered side, so the CLAIM loop fired and the rig measured. The
+    fork priced growth explicitly ("the requirement scales with added lives
+    just as the projected gain does"), so a v3 is the ratchet the fork exists
+    to prevent. The repair is a REDESIGN of the screen or of W0, on the
+    owner's desk since 2026-08-24 (`docs/DECISIONS_NEEDED.md`, D10).
+
+CONCLUDED — v2, attempt 3, 2026-08-23T21:11 UTC, commit `0d9ad54`; harvested
+and replayed offline 2026-08-24. Per-arm t_null / t_twin: wm-latent 4.65 / 4.00
+(the sole clean learner, every conjunct green), wm-efe 2.05 / 2.07, ppo-needs
+1.06 / 0.99, ppo-lp 1.20 / 1.10 with `needs_rise` NEGATIVE, dreamer-xs -0.94 /
+-0.99. Controls: statue 599.92 s on the 600 s basal ceiling, randrew t 0.21,
+darkroom t -1.08, zero twin/wiped trips. Three `data_starved` flags do not
+reopen it, for the reason the fork gives above.
+
+THE FINDING, which is about the world and not about the arms: W0 does not
+discriminate these five learning cores at a reachable envelope — one learns to
+survive in it, four do not. Recorded here because this file is where the next
+reader arrives; the decision it feeds (LC.04's premise that arbitration needs
+>= 2 learners) is the owner's, not a dispatch. Curves for all arms are in
+`experiments/artifacts/lc03_curves_seed{0,1,2}.json` (gitignored, on this box)
+— LC.04/LC.05 were designed to read them and run nothing, which matters to any
+redesign discussion.
 """
 from __future__ import annotations
 

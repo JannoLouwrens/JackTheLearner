@@ -231,6 +231,73 @@ against ~5760 already run, so ~2.0 h/seed and ~6 h for three. That is outside
 `CPU_LONG` (cpu<2h) — and `run.py` KILLS a child at the declared budget's
 timeout, so leaving the label alone would have destroyed the run rather than
 mislabelled it. Budget becomes `CPU_DAYS`.
+
+VOID-FORECLOSED: the blind twin holds 11.868 s of the 12.0 s horizon (98.9%),
+    leaving 0.132 s of room for a claim that needs 1.336 s — headroom ratio
+    0.236 +/- 0.184 against HEADROOM_MIN_MULT 2.0, no seed within 3x. Six of
+    the seven rig conjuncts were GREEN on every seed. The ceiling does not
+    move by re-running; the repair is a REDESIGN, routed to the Review as
+    `ba03-null-saturates-the-horizon`.
+
+VOID RECORD — attempt 1, 2026-08-31T03:16 UTC, commit `9e7cc86`, 3.99 CPU-hours
+(builder, replayed offline against the recorded row the same morning).
+
+The ledger's word for this run is the generic *"run did not test the claim; not
+a refutation"*, and `seed_rig_ok` is ONE BIT over a SEVEN-WAY conjunction, so
+the row cannot say which clause fired. It fired on exactly one, and it is the
+gate added the day before, in the paragraph directly above this one:
+
+    1 site_legal                 1.0000   >= 1.0    GREEN
+    2 toppled_frac_random        0.9472   >= 0.60   GREEN
+    3 up_random                  2.3044   <= 9.60   GREEN
+    4 best_trained - up_random   9.5633   >= 0.20   GREEN
+    5 deprived_shortfall        -4.2928   <= 1.00   GREEN
+    6 gain_nosurface             0.0094   <= 0.30   GREEN
+    7 claim_headroom_ratio       0.2360   >= 2.00   **FIRED**
+
+THE CONSTRUCTION CAME UP. Random topples on 94.7% of episodes and survives
+2.30 s of 12.0; the best trained arm beats it by 9.56 s; the no-surface control
+reads 0.0094 s against a 0.30 cap, so the wall is load-bearing; the hand-written
+`gripboth` posture is 4.29 s BEHIND the blind twin, so the twin found its own
+best fixed solution; the noise control worked in the same run (`gain_noise`
+-7.011, `up_noise` 4.857). Nothing here is a rig fault.
+
+WHAT FIRED IS THE CEILING. `up_deprived` 11.8678 +/- 0.0735 s of a 12.0 s
+horizon. The paragraph above wrote, one day earlier, *"a seed whose twin landed
+at 11.5 s would have been arithmetically incapable of a PASS with all eight
+gates green"* — the twin landed at 11.87 s on all three seeds, and the gate
+written for that sentence caught it on its first registered run. `gain` -0.832
++/- 0.899 is not a measurement of anything; it is noise inside 0.13 s of room.
+
+WHY NOT A RE-RUN, stated because the first reader of this row (the 03:2x journal
+line) read the one bit as *"the rig did not come up ... what failed is the
+construction, not the comparison"* — the most familiar branch of the
+conjunction, and not the one that fired. The headroom bar is
+`2 * T_GAIN_MIN * gain_se` and the room above the twin is a property of the
+WORLD at this horizon, not of the seeds: worst case over the three (mean + 2sd)
+is 0.604 against 2.0. Every legal repair inside this file — more seeds, more
+eval episodes, a longer CEM budget — makes `gain_se` SMALLER, which lowers the
+bar, but no amount of it raises 0.132 s to 1.336 s while the twin sits at 98.9%.
+Growing `N_EVAL` again is the shape LC.03's fork already priced and refused.
+
+THE THREE CANDIDATE ARMS, all runnable, none of them an argument (routed, not
+decided here): (a) RAISE THE HORIZON so 12 s stops being the ceiling — but the
+twin survives to it, so this measures whether the blind route is *durable* or
+merely *sufficient*; (b) HARDEN THE PERTURBATION — one kick per episode is
+survivable by the plantar-touch route the ANATOMY table found, and a repeated
+or larger disturbance is where a graviceptive channel should earn its keep;
+(c) CHANGE THE METRIC off time-to-topple, which saturates by construction, onto
+something unbounded (recovery count, integrated tilt). Note (b) is the arm the
+ANATOMY table above already points at: the winning vest policy reads plantar
+touch and NOTHING vestibular.
+
+AND THIS IS THE FOURTH INSTRUMENT ON THE SAME FINDING. SH.02's pilot
+(saturated null, every arm holding the roof at exactly 1.0000), SH.01's
+ORACLE_CANNOT, DP.04's lifespan with no resolution, and now BA.03's twin at
+98.9% of its horizon. Four specs, four different senses, one shape: **W0 does
+not ask enough of a body for the claim to have room.** That is evidence for
+`w0-too-shallow`, which is OPEN and OVERDUE in `docs/REVIEW_QUEUE.md`, and it
+is the reason this row is not a defeat for the balance commitment.
 """
 from __future__ import annotations
 

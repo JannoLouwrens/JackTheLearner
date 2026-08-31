@@ -525,7 +525,8 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     "known_empty", "stale_baseline"}`. `new_empty` is the fatal class.
     """
     from .protocol import (Budget, Ledger, gates_frozen, module_path_for,
-                           pilot_blocked, pilot_harvested, pilot_owed)
+                           pilot_blocked, pilot_harvested, pilot_owed,
+                           void_foreclosed)
     if ledger is None:
         ledger = Ledger()
     if by_id is None:
@@ -539,8 +540,10 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     by_class: Dict[str, list] = {b.value: [] for b in Budget}
     excluded: Dict[str, list] = {k: [] for k in
                                  ("unimplemented", "untracked", "parked",
-                                  "settled", "gates_provisional")}
+                                  "settled", "gates_provisional",
+                                  "void_foreclosed")}
     void: List[str] = []
+    foreclosed_why: Dict[str, str] = {}
     for spec in ready(ledger):
         cls = spec.budget.value
         status = getattr(ledger.status(spec.id), "name", None)
@@ -565,6 +568,38 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         # 185 of 187 specs and means NOT APPLICABLE, not "unfrozen".
         if gates_frozen(spec.id, path=path) is False:
             excluded["gates_provisional"].append(spec.id)
+            continue
+        # VOID-FORECLOSED — the sixth state, and the first one outside the
+        # pilot bucket (builder, 2026-08-31, BA.03).
+        #
+        # Everything above this line is about specs that have never run. The
+        # `void` list below is about specs that HAVE, and it carried the same
+        # missing state the pilot tri-state kept re-discovering: it is printed
+        # as "an arm to repair, not a dispatch", which is the CHEAP reading —
+        # fix the arm, re-run, get a verdict — and on the morning this was
+        # written that reading was wrong for two of its five members.
+        #
+        # `BA.03` VOIDed on `seed_rig_ok 0.0` after 3.99 CPU-hours. Six of its
+        # seven rig conjuncts were green on every seed; the one that fired was
+        # the ceiling gate — the BLIND twin holds 98.9% of the horizon, so the
+        # claim has 0.132 s of room and needs 1.336 s. The horizon does not move
+        # by re-running. `LC.03` has been concluded since 2026-08-24 by its own
+        # pre-registered fork, and this readout has advertised it as a
+        # repairable arm every day since.
+        #
+        # So a VOID is not one state. *The arm failed and a better arm may win*
+        # and *the world forecloses the measurement at any envelope* need
+        # opposite units of work — a bounded re-run versus a redesign — and read
+        # identically in the ledger, whose word for both is the generic "run did
+        # not test the claim; not a refutation". The absence of a declaration
+        # still defaults to the cheap reading, exactly as `pilot_owed`'s
+        # docstring says it must not; the difference is that here the cheap
+        # reading is the common one and the author who knows better now has a
+        # line to write. Like `pilot_blocked`, it does NOT rescue a class.
+        why = void_foreclosed(spec.id, path=path)
+        if status == "VOID" and why:
+            excluded["void_foreclosed"].append(spec.id)
+            foreclosed_why[spec.id] = why
             continue
         by_class[cls].append(spec.id)
         if status == "VOID":
@@ -758,6 +793,7 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
             c for c in empty
             if not fillable[c] and not pilot_owed_cls[c]
             and not pilot_harvest_cls[c]),
+        "void_foreclosed_why": dict(sorted(foreclosed_why.items())),
     }
 
 
@@ -855,6 +891,19 @@ def _queue_fixture() -> List[str]:
         # so this class is not pilot-owed, it is one file-read from stocked, and
         # reading it as OWED sends a builder to buy a CPU run they already own.
         ("Q.14", Budget.GPU_LONG, "", None, True, False),
+        # THE SIXTH STATE, and the first outside the pilot bucket. VOID, gates
+        # frozen, sole occupant of its class, and it DECLARES that re-running
+        # cannot change the verdict. The BA.03 case: its class must go EMPTY —
+        # a foreclosed VOID rescues nothing — and it must NOT appear in `void`,
+        # which is printed as "an arm to repair".
+        ("Q.15", Budget.CPU_FAST, "", Status.VOID, True, True),
+        # THE QUIET DIRECTION, and the one that would be a park with better
+        # manners: a spec that declares foreclosure but has NOT VOIDed. Q.03 is
+        # its VOID twin. It must keep counting — the declaration describes a
+        # recorded verdict, so without one it may not mute anything. Shares
+        # gpu<2h with stocked specs so it exercises the branch without
+        # deciding a class.
+        ("Q.16", Budget.GPU, "", None, True, True),
     ]
     # `pilot_blocked` / `pilot_owed` answers per spec: a reason string, or None
     # for "does not declare". Q.08 and Q.12 declare neither — Q.12 deliberately,
@@ -872,6 +921,11 @@ def _queue_fixture() -> List[str]:
     # two rows differ ONLY in the filesystem and the fixture can tell whether
     # the split is being read from disk or from prose.
     harvested = {"Q.14": "/data/q14_pilot_seed90.json"}
+    # `void_foreclosed`'s answers. Q.15 is VOID and declares; Q.16 declares in
+    # identical words and has no verdict, so the CLAUSE — not the reader — is
+    # what must keep it in the queue.
+    foreclosed = {"Q.15": "the blind twin holds 98.9% of the horizon",
+                  "Q.16": "the blind twin holds 98.9% of the horizon"}
     by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t, _g in rows}
     led = _Led({sid: s for sid, _b, _n, s, _t, _g in rows if s is not None})
     tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t, _g in rows if t}
@@ -882,6 +936,8 @@ def _queue_fixture() -> List[str]:
     real_ready, real_mpf = _reg.ready, _proto.module_path_for
     real_gf, real_pb = _proto.gates_frozen, _proto.pilot_blocked
     real_po, real_ph = _proto.pilot_owed, _proto.pilot_harvested
+    real_vf = _proto.void_foreclosed
+    _proto.void_foreclosed = lambda sid, path=None: foreclosed.get(sid)
     _reg.ready = lambda _l: list(by_id.values())
     _proto.module_path_for = lambda sid, strict=False: (
         None if sid == "Q.07" else f"/x/{sid}.py")
@@ -896,12 +952,14 @@ def _queue_fixture() -> List[str]:
         _reg.ready, _proto.module_path_for = real_ready, real_mpf
         _proto.gates_frozen, _proto.pilot_blocked = real_gf, real_pb
         _proto.pilot_owed, _proto.pilot_harvested = real_po, real_ph
+        _proto.void_foreclosed = real_vf
 
     fails = []
-    if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03", "Q.09"]:
-        fails.append(f"gpu<2h queue should be [Q.01, Q.03, Q.09] (VOID is not "
-                     f"a verdict; a spec that declares FROZEN gates counts), "
-                     f"got {q['by_class']['gpu<2h']}")
+    if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03", "Q.09", "Q.16"]:
+        fails.append(f"gpu<2h queue should be [Q.01, Q.03, Q.09, Q.16] (VOID "
+                     f"is not a verdict; a spec that declares FROZEN gates "
+                     f"counts; a foreclosure declaration without a VOID mutes "
+                     f"nothing), got {q['by_class']['gpu<2h']}")
     if q["void"] != ["Q.03"]:
         fails.append(f"VOID must be reported separately, got {q['void']}")
     if q["excluded"]["settled"] != ["Q.02"]:
@@ -1016,10 +1074,45 @@ def _queue_fixture() -> List[str]:
                      f"from the filesystem, got owed="
                      f"{q['pilot_owed']['gpu<20min']} harvestable="
                      f"{q['pilot_harvestable']['gpu<20min']}")
+    # THE SIXTH STATE — the BA.03 row, one bucket over from the pilot states.
+    # Q.15 is VOID, gates frozen, tracked, runnable, sole occupant of cpu<1min,
+    # and it declares that re-running cannot change the verdict. Against the
+    # code as it stood this morning it counted as queue depth AND appeared in
+    # `void`, which prints as "an arm to repair, not a dispatch" — the cheap
+    # reading, and the wrong one for two of the five live members.
+    if q["excluded"]["void_foreclosed"] != ["Q.15"]:
+        fails.append(f"a VOID spec declaring VOID-FORECLOSED must be excluded "
+                     f"— re-running it cannot change the verdict — got "
+                     f"{q['excluded']['void_foreclosed']}")
+    if "Q.15" in q["void"] or "Q.15" in q["by_class"]["cpu<1min"]:
+        fails.append(f"a foreclosed VOID is not 'an arm to repair' and not "
+                     f"queue depth, got void={q['void']} "
+                     f"cpu<1min={q['by_class']['cpu<1min']}")
+    if q["void_foreclosed_why"].get("Q.15") != foreclosed["Q.15"]:
+        fails.append(f"the foreclosure REASON must survive into the readout — "
+                     f"without it this is a park on the author's say-so, got "
+                     f"{q['void_foreclosed_why']}")
+    # ...and it rescues nothing, for `pilot_blocked`'s reason: a redesign is
+    # the same KIND of work as an unblock. cpu<1min is empty and unfillable
+    # BOTH because nothing is implementable there and because its one occupant
+    # is foreclosed; the assertion above already covers the first.
+    if "cpu<1min" not in q["empty_unfillable"]:
+        fails.append("a class whose only occupant is a foreclosed VOID has no "
+                     "cheap path in: the repair is a redesign")
+    # THE QUIET DIRECTION, and the one that would make this a park with better
+    # manners. Q.16 declares foreclosure in Q.15's exact words and has NO
+    # verdict. The declaration describes a recorded VOID, so without one it may
+    # mute nothing — hardcoding "declares -> excluded" passes every assertion
+    # above and fails this one.
+    if "Q.16" in q["excluded"]["void_foreclosed"]:
+        fails.append(f"a foreclosure declaration on a spec that has not VOIDed "
+                     f"must not exclude it: a spec may not go quiet ahead of "
+                     f"its own evidence, got "
+                     f"{q['excluded']['void_foreclosed']}")
     if q["by_class"]["cpu<10min"] != ["Q.06"]:
         fails.append(f"cost classes must not merge, got {q['by_class']}")
-    if q["depth"] != 4:
-        fails.append(f"depth should be 4, got {q['depth']}")
+    if q["depth"] != 5:
+        fails.append(f"depth should be 5, got {q['depth']}")
     # gpu<20min is empty and NOT in this fixture's baseline: new debt, a red.
     if "gpu<20min" not in q["new_empty"]:
         fails.append(f"an unlisted empty class is new debt, got "
@@ -1247,6 +1340,88 @@ def _pilot_harvested_fixture() -> List[str]:
     return fails
 
 
+def _void_foreclosed_fixture() -> List[str]:
+    """Known-answer battery for `protocol.void_foreclosed`, the READER.
+
+    Written the same day as the reader, per the lesson `_pilot_blocked_fixture`
+    records: `_queue_fixture` stubs this function to test the CLAUSE, so it is
+    green against a reader that always answers `None` and against one that
+    answers for everything. Both mutations are live risks here — the first
+    re-opens the misroute (a foreclosed VOID advertised as an arm to repair,
+    which is what sent 3.99 CPU-hours of BA.03 into the queue as repairable),
+    and the second is worse, because it would let any VOID go quiet without
+    evidence. That is a park nobody voted for.
+
+    The declaration is a DOCSTRING line, not a module constant, and the battery
+    is where that choice gets its teeth: the whole point is that a VOID spec's
+    file carries a certificate, so the declaration must live somewhere
+    `run amend --doc-only` can re-stamp. A row below asserts the code idiom does
+    NOT work, so a future author who reaches for `_VOID_FORECLOSED = "..."` out
+    of habit gets `None` rather than a silently staled ledger row.
+    """
+    import tempfile
+    from .protocol import void_foreclosed
+
+    R = "the blind twin holds 98.9% of the horizon"
+    cases = [
+        ("no docstring at all", "X = 1\n", None),
+        ("a docstring with no declaration", '"""Just prose."""\n', None),
+        ("a declared reason", f'"""Title.\n\nVOID-FORECLOSED: {R}\n"""\n', R),
+        ("the declaration alone", f'"""VOID-FORECLOSED: {R}"""\n', R),
+        # Continuation by indent — how a reason with its evidence is actually
+        # written. `T0.31`'s idiom, so `review_queue.parse` and this agree.
+        ("indented continuation lines",
+         '"""Title.\n\nVOID-FORECLOSED: the blind twin holds\n'
+         '    98.9% of the horizon\n"""\n',
+         "the blind twin holds 98.9% of the horizon"),
+        ("a blank line ends the declaration",
+         f'"""VOID-FORECLOSED: {R}\n\n    not part of it\n"""\n', R),
+        ("a line at the margin ends the declaration",
+         f'"""VOID-FORECLOSED: {R}\nnot part of it\n"""\n', R),
+        ("re-declared, last wins",
+         f'"""VOID-FORECLOSED: old\n\nVOID-FORECLOSED: {R}\n"""\n', R),
+        # THE QUIET DIRECTION. Anything that is not a real reason is not a
+        # foreclosure: a spec may not go silent on a keyword.
+        ("the bare keyword is not a reason", '"""VOID-FORECLOSED:"""\n', None),
+        ("whitespace is not a reason", '"""VOID-FORECLOSED:    """\n', None),
+        ("an indented declaration is prose, not a declaration",
+         f'"""Title.\n\n    VOID-FORECLOSED: {R}\n"""\n', None),
+        ("a mention inside prose is not a declaration",
+         f'"""We should mark it VOID-FORECLOSED: {R}"""\n', None),
+        # THE IDIOM ASSERTION. The code form is deliberately NOT read: it would
+        # stale the very ledger row the declaration is about.
+        ("the module-constant idiom does not declare",
+         f'"""Title."""\n_VOID_FORECLOSED = {R!r}\n', None),
+        ("a docstring on a function is not the module's",
+         f'def f():\n    """VOID-FORECLOSED: {R}"""\n', None),
+        ("a syntax error is not a declaration", "def (:\n", None),
+    ]
+    fails = []
+    with tempfile.TemporaryDirectory() as d:
+        for i, (label, src, want) in enumerate(cases):
+            p = Path(d) / f"vf_{i}.py"
+            p.write_text(src)
+            got = void_foreclosed("X.00", path=p)
+            if got != want:
+                fails.append(f"void_foreclosed: {label} -> want {want!r}, "
+                             f"got {got!r}")
+        if void_foreclosed("X.00", path=Path(d) / "gone.py") is not None:
+            fails.append("void_foreclosed: a missing file declares nothing")
+    if void_foreclosed("NO.SUCH.SPEC") is not None:
+        fails.append("void_foreclosed: an unimplemented spec has no file and "
+                     "no declaration -> None")
+    # THE LIVE FILE this instrument was built for, read end to end — the
+    # `_gates_frozen_fixture` precedent. `BA.03` VOIDed on 2026-08-31 with six
+    # of seven rig conjuncts green; if its declaration ever stops parsing, the
+    # readout goes back to calling a four-hour foreclosed run a cheap repair.
+    from .protocol import module_path_for
+    if module_path_for("BA.03") and not void_foreclosed("BA.03"):
+        fails.append("void_foreclosed: BA.03 uses the VOID-FORECLOSED idiom "
+                     "in the tree and the reader read it as 'does not "
+                     "declare' — the state this reader exists for, unread")
+    return fails
+
+
 def _pilot_owed_fixture() -> List[str]:
     """Known-answer battery for `protocol.pilot_owed`, the READER — written on
     the same day as the reader, per the lesson `_pilot_blocked_fixture` records.
@@ -1467,7 +1642,8 @@ def check() -> int:
 
     qf = (_queue_fixture() + _gates_frozen_fixture()
           + _pilot_blocked_fixture() + _pilot_owed_fixture()
-          + _pilot_harvested_fixture() + _exit_code_fixture())
+          + _pilot_harvested_fixture() + _void_foreclosed_fixture()
+          + _exit_code_fixture())
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -1515,7 +1691,25 @@ def check() -> int:
           + (f" ({', '.join(ex['untracked'])})" if ex["untracked"] else "")
           + f", {len(ex['gates_provisional'])} GATES-PROVISIONAL"
           + (f" ({', '.join(ex['gates_provisional'])})"
-             if ex["gates_provisional"] else ""))
+             if ex["gates_provisional"] else "")
+          + f", {len(ex['void_foreclosed'])} VOID-FORECLOSED"
+          + (f" ({', '.join(ex['void_foreclosed'])})"
+             if ex["void_foreclosed"] else ""))
+    if q["void_foreclosed_why"]:
+        print(f"  {len(q['void_foreclosed_why'])} spec(s) are VOID-FORECLOSED "
+              f"— they RAN, they VOIDed, and the recorded row says\n"
+              "      the verdict cannot change at this envelope. Do NOT "
+              "re-run; the repair is a redesign:")
+        for sid, why in q["void_foreclosed_why"].items():
+            print(f"      {sid}: {why}")
+        print("  A VOID is two states wearing one word. The ledger says 'run "
+              "did not test the claim'\n"
+              "  for both the arm that can be fixed and the world that "
+              "forecloses the measurement,\n"
+              "  and this line used to call both an arm to repair (BA.03, "
+              "2026-08-31: 3.99 CPU-hours,\n"
+              "  six of seven rig conjuncts green, the blind twin at 98.9% of "
+              "the horizon).")
     if ex["gates_provisional"]:
         print("  a gate-provisional spec is implemented shelf furniture: its\n"
               "  own run() refuses until a pilot freezes its bars. Run the\n"

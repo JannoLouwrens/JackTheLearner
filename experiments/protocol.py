@@ -1799,6 +1799,95 @@ def pilot_harvested(spec_id: str, path=None):
         return None
 
 
+VOID_FORECLOSED_DECL = "VOID-FORECLOSED:"
+
+
+def void_foreclosed(spec_id: str, path=None):
+    """Why re-running this VOID spec cannot change its verdict — a reason
+    string, or `None` for "does not declare".
+
+    THE SCAR (builder, 2026-08-31, `BA.03`). The pilot tri-state grew four more
+    states in two days because a repair-class instrument with a missing state
+    defaults it — and the whole apparatus watches only GATE-PROVISIONAL specs.
+    One bucket over, `queue_depth`'s `void` list had the same hole and nobody
+    had looked: it is printed as *"an arm to repair, not a dispatch"*, which is
+    the CHEAP reading, and it was wrong for two of its five members.
+
+    `BA.03` VOIDed at 03:16 UTC after 3.99 CPU-hours with `seed_rig_ok 0.0`, and
+    the ledger's only word for that is the generic *"run did not test the claim;
+    not a refutation"*. Replayed offline against the recorded row, six of the
+    seven rig conjuncts were GREEN on every seed and the one that fired was
+    `HEADROOM_MIN_MULT`: the BLIND twin holds 11.868 s of a 12.0 s horizon
+    (98.9% of the ceiling), leaving 0.132 s of room for a difference that needs
+    1.336 s. No seed comes within 3x of the bar. The next reader — the 03:2x
+    journal entry, written an hour later — read the one bit as *"the rig did not
+    come up ... what failed is the construction"*, which is the most familiar
+    branch of that conjunction and not the one that fired. A re-run at this
+    horizon is arithmetically foreclosed; it would have cost another four hours
+    to buy the same VOID. `LC.03` is the second member, concluded 2026-08-24 by
+    its own pre-registered fork, and `queue_depth` has advertised it as a
+    repairable arm ever since.
+
+    DECLARED IN THE MODULE DOCSTRING, not as a module constant, and the
+    divergence from `_PILOT_BLOCKED` is deliberate rather than sloppy. A
+    gate-provisional spec has never run, so its file carries no certificate and
+    a code edit costs nothing. A VOID spec HAS run: its ledger row is bound to
+    an `impl_sha`, so a `_VOID_FORECLOSED = "..."` assignment would make the row
+    stale and `run status` would print *"Re-run it — the entry is about older
+    code"* about a spec whose declaration says re-running is foreclosed. The
+    instrument would contradict itself in the act of being fixed. A docstring
+    line goes through the existing `run amend <SPEC> --doc-only` lane —
+    `prose_only_delta` re-stamps because the docstring-stripped AST is identical
+    — so the certificate survives the declaration. The idiom is `T0.31`'s:
+    a declared line at the docstring's left margin, continued by indented lines,
+    never inferred from prose.
+
+    THIS IS NOT A PARK and it is not a settlement. A parked spec stops being
+    coverage for its `GOAL.md` commitment and a settled one has a verdict; a
+    foreclosed VOID still carries its claim, still counts as coverage, and still
+    has no answer. It says only that the next unit is a REDESIGN — so, like
+    `pilot_blocked`, it deliberately does NOT rescue a cost class from empty.
+    An empty class is the honest reading when every occupant is foreclosed.
+
+    `None` when the spec declares nothing, when the reason is empty, and when
+    the file is missing or unparseable — a syntax error may not mute a spec, for
+    `pilot_blocked`'s reason.
+    """
+    import ast
+    if path is None:
+        path = module_path_for(spec_id)
+    if not path:
+        return None
+    try:
+        tree = ast.parse(Path(path).read_text())
+        # `clean=False` deliberately: `inspect.cleandoc` strips the COMMON
+        # indent of the body, so in a docstring whose only body line happens to
+        # be indented it would promote that line to the margin — and the margin
+        # is the whole distinction between a declaration and a mention inside an
+        # indented block. Module docstrings start at column 0, which is the only
+        # place this reader looks.
+        doc = ast.get_docstring(tree, clean=False) or ""
+    except (OSError, SyntaxError, ValueError):
+        return None
+    found = None
+    lines = doc.splitlines()
+    for i, raw in enumerate(lines):
+        if raw.startswith(VOID_FORECLOSED_DECL):
+            parts = [raw[len(VOID_FORECLOSED_DECL):].strip()]
+            for cont in lines[i + 1:]:
+                # An indented non-empty line continues the declaration; a blank
+                # line or anything at the margin ends it. Same shape as
+                # `review_queue.parse`, so the two cannot drift.
+                if cont.strip() and cont[:1].isspace():
+                    parts.append(cont.strip())
+                else:
+                    break
+            reason = " ".join(p for p in parts if p).strip()
+            # Last declaration wins, matching `_declared_reason`.
+            found = reason or None
+    return found
+
+
 def deps_moved_since(path, ran_at, repo_root=None) -> tuple:
     """Declared `IMPL_DEPS` with commits after `ran_at` — the one staleness
     question still answerable for an entry recorded before `impl_sha` existed.

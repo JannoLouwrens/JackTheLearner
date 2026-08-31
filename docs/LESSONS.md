@@ -9378,3 +9378,64 @@ class, and `T0.31` asserts on the **total** under all of them. **Enumerate the
 tidy-ups before you ship the counter: the person who will quiet your instrument
 is a future maintainer with good intentions, and they will reach for the
 cheapest edit that makes the number smaller.**
+
+---
+
+## A verdict that is one bit over a conjunction gets read as its most familiar branch (2026-08-31, BA.03)
+
+`BA.03` ran 3.99 CPU-hours and recorded `VOID` with `seed_rig_ok 0.0`. That
+field is a SEVEN-WAY conjunction — site legality, the random arm's fall rate,
+the random arm's ceiling distance, the trained-vs-random margin, the blind
+twin's own-best check, the no-surface control, and a headroom gate — collapsed
+to one boolean, and the ledger's message for the whole class is the generic
+*"run did not test the claim; not a refutation"*. So the row could not say
+which clause fired.
+
+Replayed offline against the recorded row, **six of the seven were GREEN on
+every seed.** The one that fired was the ceiling: the blind twin holds 11.868 s
+of a 12.0 s horizon, leaving 0.132 s of room for a claim needing 1.336 s. The
+first reader — the journal line written an hour later, by the same builder —
+recorded it as *"the rig did not come up ... what failed is the construction"*.
+That is the branch that fires most often in this repo's history, and it was not
+this one. It also implies the opposite unit of work: fix the construction and
+re-run (four hours), versus redesign the world or the metric.
+
+**The rule: a gate that ANDs N conditions must report which conjunct failed, in
+the row, at the moment it fails.** `LC.03` v2 already does it right and its
+record says why — *"this time the verdict names its own branch, so no narrative
+back-fill is possible."* Reporting the inputs is not enough: `BA.03` recorded
+`claim_headroom_ratio 0.236` in the same row, and a reader still cannot use it
+without opening the file to learn that the bar is `2.0`. **A conjunction's
+readout must carry the comparison, not the operand.**
+
+**The corollary that cost the four hours, and it generalises past conjunctions:
+a summary shared by many causes will be read as the most common one.** This is
+the same shape as *a repair-class instrument with a missing state defaults it*
+(2026-08-29/30), one layer down — there the missing state was in the
+instrument, here it is in the verdict — and the default lands on whichever
+branch the reader has seen most. Where you cannot make the verdict
+discriminating, make the record discriminating: the diagnosis went into the
+spec's docstring as a **VOID RECORD** with the seven-clause table, and into
+`coverage.py` as a declared machine-readable state.
+
+**And the state that was missing one bucket over.** `queue_depth` printed its
+VOID list as *"an arm to repair, not a dispatch"* — the cheap reading, fix the
+arm and re-run — and that was wrong for two of its five members: `BA.03`
+(foreclosed by a ceiling) and `LC.03` (concluded 2026-08-24 by its own
+pre-registered fork, advertised as repairable every day since). **A VOID is two
+states wearing one word:** *the arm failed and a better arm may win* and *the
+world forecloses the measurement at any envelope* need opposite units of work.
+`protocol.void_foreclosed` makes the second declarable, and like `pilot_blocked`
+it rescues no cost class — `cpu<48h` correctly went EMPTY the moment both its
+occupants declared.
+
+**One design note worth carrying, because it is a general tension.** That
+declaration lives in the module DOCSTRING, not in a `_VOID_FORECLOSED = "..."`
+constant like its four siblings. The reason is that a VOID spec has already
+RUN: its ledger row is bound to an `impl_sha`, so the code form would stale the
+row and `run status` would print *"Re-run it"* about a spec whose declaration
+says re-running is foreclosed — **the instrument contradicting itself in the act
+of being fixed.** A docstring line goes through the existing `run amend
+--doc-only` lane and the certificate survives. **Where a declaration must
+attach to a file that already carries a certificate, put it where the
+amendment lane can reach.**

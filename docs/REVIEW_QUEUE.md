@@ -164,6 +164,20 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     finding survives an attack that cost almost nothing. **A redesign informed
     by four expensive agreeing instruments plus one cheap disagreeing one beats
     a redesign informed by four.** Queue entry: INTEGRATION_QUEUE, wk4-N3.
+    UPDATE 2026-08-31: a SIXTH instrument, and the first one on the humanoid
+    body rather than the gridworld — `BA.03`'s registered VOID. Its BLIND twin
+    (no vestibular channel, plantar touch pinned) holds **98.9% of the 12 s
+    horizon**, leaving 0.132 s of room for a claim needing 1.336 s, with the
+    other six rig conjuncts green on every seed. This weighs differently from
+    the five above and sharpens the fork: those measure the world as too easy
+    to REWARD a capability; this one measures it as too easy to *require* one —
+    the sense being tested is not merely unhelpful, it is unnecessary, and the
+    spec's ANATOMY table names the substitute (the winning policy reads plantar
+    touch and nothing vestibular). Note also that `BA.03`'s option (c) and
+    `DP.04`'s option (i) are the same repair — a bounded outcome variable that
+    saturates — arriving on two unrelated rigs, so "deepen the world" and
+    "change the claim statistic" are separable questions this desk should
+    answer separately. Row: `ba03-null-saturates-the-horizon`.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | OPEN
     Question: the shipped routing mechanism (UnifiedBrain semantic-anchor
@@ -665,3 +679,52 @@ about itself rather than a parse of a cell that happened to contain no id. If
 the Review rules for the audit, the repair is one line — and if it rules the
 other way, the honest ring for this seat is an unwritten grounding bakeoff,
 which is inventory debt and belongs in the queue, not in a citation.
+
+ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1, 3.99 CPU-h, ledger row VOID) | OPEN
+    DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
+        the next Review FULL run. Balance is a zero-pass GOAL.md commitment
+        with three declared specs; nothing in it can move until this resolves.
+    Question: BA.03's blind twin holds **11.868 +/- 0.073 s of a 12.0 s
+    horizon (98.9%)**, so the claim has 0.132 s of room and needs 1.336 s —
+    `claim_headroom_ratio` 0.236 +/- 0.184 against `HEADROOM_MIN_MULT` 2.0,
+    with no seed inside a third of the bar. **Six of the seven rig conjuncts
+    were GREEN on every seed** (random topples on 94.7% and survives 2.30 s of
+    12.0; the best trained arm beats it by 9.56 s; the no-surface control reads
+    0.0094 s against a 0.30 cap; the hand-written `gripboth` posture is 4.29 s
+    BEHIND the twin; the noise control fired correctly at `gain_noise` -7.011).
+    The construction came up. What fired is the CEILING, and a ceiling is a
+    property of the world at this horizon, not of the seeds: every legal repair
+    inside the file — more seeds, more eval episodes, more CEM budget — only
+    SHRINKS `gain_se` and lowers the bar, and none of them raises 0.132 s to
+    1.336 s. So a re-run is arithmetically foreclosed, and the row is declared
+    `VOID-FORECLOSED` so `run coverage` stops advertising it as an arm to
+    repair.
+    Options, all runnable arms rather than an argument (law 3): **(a) RAISE THE
+    HORIZON** so 12 s stops being the ceiling — the twin survives to it, so
+    this asks whether the blind route is *durable* or merely *sufficient*;
+    **(b) HARDEN THE PERTURBATION** — one kick per episode is survivable by the
+    plantar-touch route, and a repeated or larger disturbance is where a
+    graviceptive channel should earn its keep; **(c) CHANGE THE METRIC** off
+    time-to-topple, which saturates by construction, onto something unbounded
+    (recovery count, integrated tilt). (b) is the arm the spec's own ANATOMY
+    table already points at: the winning vest policy reads PLANTAR TOUCH and
+    nothing vestibular — deleting touch costs it 7.3 s, deleting any true
+    vestibular block costs it nothing.
+    **Note (c) is `dp04-lifespan-has-no-resolution`'s option (i) arriving on a
+    second, unrelated rig.** Two specs, two senses, two worlds, one shape: a
+    bounded outcome variable that saturates. Read the two rows together — the
+    generalisable question is whether time-to-failure is the wrong claim
+    statistic anywhere the null can reach the cap.
+    COUPLED to `w0-too-shallow` as its SIXTH independent instrument, after
+    LC.03's darkroom, LC.03 v2's one-learner-in-five, DP.05's FAIL, SH.01's
+    ORACLE_CANNOT and DP.04's quantised lifespan. Under the bundling rule
+    option (b) touches `playground.py` and belongs in the world-edit window;
+    options (a) and (c) do not touch the world at all and can be tried first
+    for a zero mechanical bill, which is the sequencing this row recommends.
+    **Staleness bill: NONE for (a) and (c)** — BA.03 has no PASS to lose, and
+    `HORIZON`, `N_EVAL` and the metric live in `ba_03_braces_against_a_surface.py`,
+    which no other certificate imports. **(b) bills the 21 `playground.py`
+    certificates** listed at the head of this file, plus `BA.01` (whose rig
+    constants BA.03 imports by reference) if the kick model itself moves.
+    Full record: VOID RECORD in `ba_03_braces_against_a_surface.py`, and the
+    machine-readable reason in that file's `VOID-FORECLOSED:` declaration.

@@ -443,9 +443,28 @@ def _probe(rule_is_regex: bool) -> dict:
     # It is rule-independent by construction, so the regex control passes it.
     # That is correct and not a weakness: the control's job is to break P3/P4,
     # and `_check` requires exactly those two by name.
-    from ..coverage import _gates_frozen_fixture, _queue_fixture
-    if _queue_fixture() or _gates_frozen_fixture():
+    #
+    # AND P12 HAD THE HOLE IT WAS WRITTEN TO CLOSE, WITHIN A DAY (builder,
+    # 2026-08-31). It imported the two batteries that existed when it was
+    # written, BY NAME. `coverage.py` then grew four more — `_pilot_blocked`,
+    # `_pilot_owed`, `_pilot_harvested`, `_exit_code` — on 2026-08-30, and every
+    # one of them ran only in `__main__` again. A hardcoded list of the guards
+    # you have is a guard against the guards you had. So P12 now DISCOVERS
+    # them: every module-level `_*_fixture` in `coverage.py` runs here, which
+    # covers the next one on the day it is written and needs nobody to remember.
+    # The floor assertion is the other half — a battery renamed out of the
+    # pattern would otherwise shrink this property to nothing, silently, and
+    # `properties_checked` would still read 12.
+    from .. import coverage as _cov
+    batteries = sorted(n for n in dir(_cov)
+                       if n.startswith("_") and n.endswith("_fixture")
+                       and callable(getattr(_cov, n)))
+    if len(batteries) < 7:
         failed.append("p12_queue_instrument_fixtures_hold")
+    for _name in batteries:
+        if getattr(_cov, _name)():
+            failed.append("p12_queue_instrument_fixtures_hold")
+            break
 
     rows = report()
     return {
