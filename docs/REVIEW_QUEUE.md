@@ -837,3 +837,13 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
     Full record: VOID RECORD in `t3_06_ablate_curiosity.py` (eight-conjunct
     replay table with every comparison carried), and the machine-readable
     reason in that file's `VOID-FORECLOSED:` declaration.
+    **BINDING ON (a) — the stronger comparator is `random`, not `shuftask`,
+    and this row must carry both numbers (53rd audit B2):** field watch wk5
+    measured `curious − random` (random-ACTION null) at **+0.0124 ± 0.0317,
+    t = 0.39** — no clearance — while `curious − shuftask` reads +0.1385,
+    t = 3.94. `CURIOSITY_BAKEOFF.md` §O1 (C-RANDREW) already requires BOTH:
+    "≥ 2.0 vs NULL and ≥ 1.5 vs the RANDOM-REWARD arm." A rescore under (a)
+    that beats only the matched-magnitude noise arm while a plain random
+    policy covers W0 as well as curiosity (the wk5 reading) re-buys the same
+    unattributable contrast; any (a) redesign must gate on the random-action
+    comparator too, or state why the wk5 number no longer applies.
