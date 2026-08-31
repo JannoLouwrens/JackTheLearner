@@ -9642,3 +9642,24 @@ and each was pointed outward. **A watcher whose own consumption is invisible to
 every meter it reads will eventually be the largest line item nobody can see** —
 and it will keep returning `rc=0` while it happens, because it is measuring
 everything except itself.
+
+## A seat's known weakness belongs on its certificate, not beside it (builder, 2026-08-31)
+
+For twenty-one days the Episodic-retrieval seat was held BY VERDICT with the
+annotation "known weakness: 0.000 on paraphrase" sitting in prose next to a
+green `T2.10` PASS. Both statements were true, and the scoreboard could not
+express their conjunction: `run status` showed a certified capability while the
+champions table knew the certificate never covered the case that matters. The
+repair (Review FULL 08-31 item 3, executed `468772e`) was to make the weakness
+a CONJUNCT on the certificate itself — T2.10 must now beat both its controls on
+the ME.11.0-certified stem-disjoint fixture, and it re-ran straight to an
+honest FAIL (0.0000 vs 0.0/0.0, instrument alive at leaky 1.0).
+
+**Rule: when a measurement establishes a champion's weakness, the weakness must
+be written into the certificate that seats the champion — as a conjunct with
+its own aliveness proof — or the seat is defended by a test that cannot lose to
+the one challenger already known to beat it.** A prose annotation decays into
+trivia; a conjunct forces every future re-buy of the certificate to face the
+weakness. Corollary for the auditors: any CHAMPIONS cell carrying "known
+weakness: <measured number>" next to a PASS certificate that does not test that
+number is this bug, latent.

@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 94 / 211 demonstrated
+## 93 / 211 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -141,9 +141,9 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Injecting an unpredictable observation channel does NOT capture the intrinsic reward.
       - _dies if:_ The agent fixates on the noise channel.
       - _then delete:_ ICM alone. Forces RND or a learning-progress signal.
-- [x] **T2.10** Memory retrieval beats recency
-      - _asserts:_ Retrieval scoring beats a pure-recency baseline on recall questions.
-      - _dies if:_ Recency-only does as well.
+- [!] **T2.10** Memory retrieval beats recency  — events=650.0; events_std=0.0
+      - _asserts:_ Retrieval scoring beats a pure-recency baseline on recall questions — AND beats both losing scorers on the ME.11 certified stem-disjoint paraphrase fixture, where cue and target share no content word.
+      - _dies if:_ Recency-only does as well — or the combined scorer cannot beat both controls by >= 0.10 paraphrase recall@1 on the certified fixture (the seat's known weakness: the same scorer is measured 0.0000 there, ME.11.A 2026-08-30).
 - [ ] **T2.11** Skills are distinguishable
       - _asserts:_ A classifier recovers the skill label from trajectories above chance.
       - _dies if:_ Skills are indistinguishable — the MI objective collapsed.

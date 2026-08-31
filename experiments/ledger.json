@@ -16541,9 +16541,18 @@
     },
     "T2.10": {
       "amended": [],
-      "attempt": 1,
-      "commit": "55e5bda",
+      "attempt": 2,
+      "commit": "468772e",
+      "compute_s": null,
       "control_metrics": {
+        "instrument_alive": 1.0,
+        "instrument_alive_std": 0.0,
+        "leaky_recall": 1.0,
+        "leaky_recall_std": 0.0,
+        "para_recency_recall": 0.0,
+        "para_recency_recall_std": 0.0,
+        "para_simonly_recall": 0.0,
+        "para_simonly_recall_std": 0.0,
         "recency_latest_at_1": 0.0,
         "recency_latest_at_1_std": 0.0,
         "recency_recall_at_5": 0.177767,
@@ -16551,29 +16560,68 @@
         "simonly_latest_at_1": 0.0,
         "simonly_latest_at_1_std": 0.0
       },
-      "duration_s": 0.33,
+      "duration_s": 8.16,
+      "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
-      "message": "",
+      "history": [
+        {
+          "commit": "55e5bda",
+          "control_metrics": {
+            "recency_latest_at_1": 0.0,
+            "recency_latest_at_1_std": 0.0,
+            "recency_recall_at_5": 0.177767,
+            "recency_recall_at_5_std": 0.020784,
+            "simonly_latest_at_1": 0.0,
+            "simonly_latest_at_1_std": 0.0
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "events": 650.0,
+            "events_std": 0.0,
+            "latest_at_1": 1.0,
+            "latest_at_1_std": 0.0,
+            "recall_at_1": 1.0,
+            "recall_at_1_std": 0.0,
+            "recall_at_5": 1.0,
+            "recall_at_5_std": 0.0
+          },
+          "ran_at": "2026-08-08T15:09:07",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "2df185c27920dcf8",
+      "message": "pre-registered threshold not met",
       "metrics": {
         "events": 650.0,
         "events_std": 0.0,
+        "fixture_hash": "9c915329f4755c3e",
         "latest_at_1": 1.0,
         "latest_at_1_std": 0.0,
+        "para_cues": 160.0,
+        "para_cues_std": 0.0,
+        "para_recall_at_1": 0.0,
+        "para_recall_at_1_std": 0.0,
         "recall_at_1": 1.0,
         "recall_at_1_std": 0.0,
         "recall_at_5": 1.0,
         "recall_at_5_std": 0.0
       },
-      "ran_at": "2026-08-08T15:09:07",
+      "preserved_impl": null,
+      "ran_at": "2026-08-31T23:13:09",
       "seeds": [
         0,
         1,
         2
       ],
       "spec_id": "T2.10",
-      "status": "PASS"
+      "spec_sha": "a2ff5468c06890bd",
+      "status": "FAIL"
     },
     "T2.12": {
       "amended": [],
