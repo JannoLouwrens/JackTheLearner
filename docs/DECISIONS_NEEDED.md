@@ -75,6 +75,8 @@ DECIDE: D1
   decide_by: 2026-08-31
   blocks:    T2.01, T2.02
 
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER fires this — the overseer is forbidden these writes. One commit: option A struck on the record in `DECISIONS_RESOLVED.md`, the four-arm control-path bakeoff (A-prime / B / C / D) registered as a spec, and `CHAMPIONS.md`'s challenger list corrected in the same commit. The bakeoff itself then runs as ordinary ladder work.
+
 Raised by the 2026-08-04 multi-agent review ("freeze a pretrained trunk, learn
 a small adapter; never train a bespoke 105M brain from scratch"). Never
 actioned: every run since has trained the whole trunk through PPO. It gates
@@ -403,6 +405,8 @@ DECIDE: D3
   blocks:    (nothing directly — it costs free GPU-hours, not specs: every GPU
              dispatch in the project passes through assert_ref_is_current)
 
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER. Artifact: a `DECISIONS_RESOLVED.md` entry recording the fence verbatim (own commits, `main` only, no force-push, no tags, no new remotes). No code changes on firing day — the recorded bound IS the artifact.
+
 ## D11 — Claude credits are the binding resource and are unmetered (OPEN, owner)
 
 > **RENUMBERED 2026-08-25 by the 30th overseer audit, and why the renumber was
@@ -473,6 +477,8 @@ DECIDE: D11
              lib_usage.sh and the schedule is one line in cron.
   decide_by: 2026-08-31
   blocks:
+
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER. Artifact: a `DECISIONS_RESOLVED.md` entry recording option (a) — accept as-is, the shipped cadence meter governing. No code change.
 
 ## The owner's hands — how does a human TOUCH Jack's world? (OPEN, design fork)
 
@@ -2042,6 +2048,8 @@ DECIDE: D10
   decide_by: 2026-08-31
   blocks:    LC.03
 
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER, and it fires BEFORE D12's. Artifact, one commit: `CHAMPIONS.md`'s learning-core seat seated `wm-latent` BY VERDICT with the single-arm caveat on its face, LC.04's premise amendment recorded in its registry notes, the owner's scale-transfer guard written as a binding pre-condition of ADOPTION, and the `DECISIONS_RESOLVED.md` entry.
+
 **The measurement.** The LC.03 v2 re-screen (4x envelope: 400,000 decisions /
 17,280 core-s per arm-seed, ~190 core-h on this box, ran 08-21 04:22 → 08-23
 21:11 UTC) recorded VOID with `void_reason: "fewer than two learners
@@ -2177,6 +2185,8 @@ DECIDE: D7
              threshold moves, and GOAL.md is not touched.
   decide_by: 2026-08-31
 
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER. Artifact, one commit: the registry note on T3.07 / MovementMoodCoupling (cosmetics; no spec may cite mood as a behavioural channel), the `CHAMPIONS.md` update, and the `DECISIONS_RESOLVED.md` entry.
+
 **Why this default and not the other two.** A default may only pick among
 already-permitted actions, and it must shrink the ratchet, never grow it.
 
@@ -2304,6 +2314,8 @@ DECIDE: D8
   decide_by: 2026-08-31
   blocks:    BA.02
 
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER. Artifact: the registry edit re-parenting BA.02 behind the playground-humanoid line (claim text, gates and thresholds untouched) plus the `DECISIONS_RESOLVED.md` entry.
+
 DECIDE: D9
   class:     goal
   default:   Option (a) — PARK the rover-body question until the
@@ -2316,6 +2328,8 @@ DECIDE: D9
              nothing, and leaves every recorded certificate valid.
   decide_by: 2026-08-31
   blocks:    BA.02
+
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER. Artifact: the `DECISIONS_RESOLVED.md` entry recording the PARK; W0.BAL stays pre-registered with its numbers attached; no registry adoption, no certificate moves.
 
 **Both defaults are strictly narrowing, and that is the test they were
 chosen against.** Neither edits GOAL.md, neither weakens a threshold,
@@ -2429,6 +2443,8 @@ DECIDE: D4
   decide_by: 2026-08-31
   blocks:    LC.03
 
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER. Artifact: the `DECISIONS_RESOLVED.md` entry recording option 1 TAKEN on 2026-08-13 with the re-costed ~90 core-hour figure, the two runs it paid for named, and the `CPU_DAYS` cap frozen at LC.03 v2's envelope.
+
 **The default is strictly narrowing, which is the test it was chosen against.**
 It authorises nothing that has not already happened, adds no tier, re-runs
 nothing, invalidates no certificate, touches no threshold and does not edit
@@ -2520,6 +2536,8 @@ DECIDE: D12
              as SUPERSEDED-BY-D10 for its live question.
   decide_by: 2026-08-31
   blocks:    LC.04
+
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER — the overseer is forbidden these writes — and it fires AFTER D10's, in the same pass. Artifact: registry `notes` on LC.04 and LC.05 carrying the convergence and data-starved guards verbatim, the scale-transfer pre-condition written onto the `CHAMPIONS.md` learning-core seat, and this entry closed SUPERSEDED-BY-D10 for its live question.
 
 **Ordering, stated so the two defaults cannot collide.** D12's default is a
 tightening that is valid under *every* branch of D10 — accept-one-learner,
@@ -2668,6 +2686,8 @@ DECIDE: D13
   decide_by: 2026-08-31
   blocks:    (nothing — no spec depends on this; it costs meter, not specs)
 
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER — the overseer may not edit its own script. Artifact: the change-gated no-op with ALL FOUR conditions implemented in `scripts/overseer.sh`, plus the `DECISIONS_RESOLVED.md` entry.
+
 ---
 
 ## D14 — The builder's own model is exhausted while the gate meters a different pool. Which meter should govern, and what should happen when the builder's model runs out? (OPEN, resourcing)
@@ -2764,6 +2784,8 @@ DECIDE: D14
   blocks:    (nothing directly — it costs meter and free GPU-hours, not specs;
              but it is upstream of every runnable claim spec, because a builder
              that cannot run demonstrates nothing)
+
+**EXECUTOR & ARTIFACT (builder, 2026-08-31, per the 53rd audit's B3):** the BUILDER — and the code artifact ALREADY LANDED 2026-08-30 ~20:4x (the (b-effective) pre-flight in `scripts/ladder_loop.sh`; see the IMPLEMENTED note below). Firing produces only the `DECISIONS_RESOLVED.md` entry recording (b) as the standing answer; the owner's remaining hours still supersede it.
 
 ---
 
