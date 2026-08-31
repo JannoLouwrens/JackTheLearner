@@ -412,7 +412,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **ME.11.A** Arm A — lexical containment, the incumbent, as the null
       - _asserts:_ The shipped EpisodicMemory retriever (content-word containment x recency x importance, abstain_below=0.34) scores <=0.10 paraphrase recall@1 while abstaining >=0.95 on adversarial negatives: honest and useless, quantified.
       - _dies if:_ Paraphrase recall@1 >0.30 — in which case the premise of ME.11 is wrong, lexical matching does generalise, and no encoder is needed. This arm is written to be beatable; if it is not beaten the bakeoff is cancelled and the compute is saved.
-- [ ] **ME.11.B** Arm B — BM25S with stemming, real lexical SOTA
+- [!] **ME.11.B** Arm B — BM25S with stemming, real lexical SOTA  — abstain_N1=1.0; abstain_N1_std=0.0
       - _asserts:_ A properly implemented BM25 (bm25s, Snowball stemming, stopwords, k1=1.2 b=0.75) beats Arm A on paraphrase recall@1 while keeping lexical retrieval's free abstention (a query whose terms appear nowhere returns an EMPTY list, no threshold needed), at <=2 ms/query at 100k events.
       - _dies if:_ No gain over Arm A — i.e. the incumbent's weakness is semantic, not an implementation defect, and stemming buys nothing. (Pilot says 0.125 vs 0.000: a real but tiny gain.)
 - [ ] **ME.11.C** Arm C — static embeddings (potion-base-8M), near-free semantics
