@@ -239,6 +239,19 @@ VOID-FORECLOSED: the blind twin holds 11.868 s of the 12.0 s horizon (98.9%),
     move by re-running; the repair is a REDESIGN, routed to the Review as
     `ba03-null-saturates-the-horizon`.
 
+FORECLOSURE ARITHMETIC: no multiplier on N clears the bar, and the direction
+    of every legal repair is WRONG: the bar is `2 * T_GAIN_MIN * gain_se`, so
+    more seeds, more eval episodes or a longer CEM budget all shrink `gain_se`
+    and LOWER the bar — but the binding quantity is the 0.132 s of room above
+    the twin against the 1.336 s the claim needs (a factor of 10.1), and that
+    room is a property of the world at this horizon, not of N. Clearing it
+    requires the twin's ceiling share to fall from 98.9% to <= 88.9% — a
+    redesign of the world or the horizon, not a sample size.
+
+BLAST RADIUS: none — no registered spec depends on BA.03 (computed
+    transitively over `depends_on`, 2026-08-31, registry at 211). This
+    declaration welds no downstream door.
+
 VOID RECORD — attempt 1, 2026-08-31T03:16 UTC, commit `9e7cc86`, 3.99 CPU-hours
 (builder, replayed offline against the recorded row the same morning).
 

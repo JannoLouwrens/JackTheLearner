@@ -526,7 +526,7 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     """
     from .protocol import (Budget, Ledger, gates_frozen, module_path_for,
                            pilot_blocked, pilot_harvested, pilot_owed,
-                           void_foreclosed)
+                           void_foreclosed, void_foreclosed_refusal)
     if ledger is None:
         ledger = Ledger()
     if by_id is None:
@@ -544,6 +544,7 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
                                   "void_foreclosed")}
     void: List[str] = []
     foreclosed_why: Dict[str, str] = {}
+    foreclosed_refused: Dict[str, str] = {}
     for spec in ready(ledger):
         cls = spec.budget.value
         status = getattr(ledger.status(spec.id), "name", None)
@@ -604,6 +605,15 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         by_class[cls].append(spec.id)
         if status == "VOID":
             void.append(spec.id)
+            # A REFUSED declaration (54th audit B3: no `FORECLOSURE
+            # ARITHMETIC:` / `BLAST RADIUS:` price attached) falls back to
+            # the repairable ranking — an unpriced weld closes no door — but
+            # the fallback must be LOUD: somebody tried to weld this one, and
+            # printing it bare as "an arm to repair" re-opens the exact
+            # misroute the state was invented to close.
+            refusal = void_foreclosed_refusal(spec.id, path=path)
+            if refusal:
+                foreclosed_refused[spec.id] = refusal
 
     empty = {c for c, ids in by_class.items() if not ids}
     # FILLABLE — can this class be stocked by implementing something TODAY?
@@ -794,6 +804,7 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
             if not fillable[c] and not pilot_owed_cls[c]
             and not pilot_harvest_cls[c]),
         "void_foreclosed_why": dict(sorted(foreclosed_why.items())),
+        "void_foreclosed_refused": dict(sorted(foreclosed_refused.items())),
     }
 
 
@@ -904,6 +915,14 @@ def _queue_fixture() -> List[str]:
         # gpu<2h with stocked specs so it exercises the branch without
         # deciding a class.
         ("Q.16", Budget.GPU, "", None, True, True),
+        # THE REFUSED WELD (54th audit B3). VOID, and it WROTE a foreclosure
+        # declaration that validation refused — no `FORECLOSURE ARITHMETIC:` /
+        # `BLAST RADIUS:` price attached. It must stay in the queue AND in
+        # `void` (an unpriced weld closes no door), and the refusal must
+        # survive into the readout — a bare "arm to repair" line about a spec
+        # somebody tried to weld is the B2 misroute wearing a new state.
+        # Shares gpu<2h with stocked specs so it decides no class.
+        ("Q.17", Budget.GPU, "", Status.VOID, True, True),
     ]
     # `pilot_blocked` / `pilot_owed` answers per spec: a reason string, or None
     # for "does not declare". Q.08 and Q.12 declare neither — Q.12 deliberately,
@@ -926,6 +945,11 @@ def _queue_fixture() -> List[str]:
     # what must keep it in the queue.
     foreclosed = {"Q.15": "the blind twin holds 98.9% of the horizon",
                   "Q.16": "the blind twin holds 98.9% of the horizon"}
+    # `void_foreclosed_refusal`'s answers. Q.17 wrote a declaration that was
+    # refused; Q.16 gets one too, and must NOT surface it — no verdict, so
+    # there is nothing to weld and nothing to refuse.
+    refusals = {"Q.17": "declaration REFUSED — missing `BLAST RADIUS:`",
+                "Q.16": "must never surface: Q.16 has no verdict"}
     by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t, _g in rows}
     led = _Led({sid: s for sid, _b, _n, s, _t, _g in rows if s is not None})
     tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t, _g in rows if t}
@@ -937,7 +961,9 @@ def _queue_fixture() -> List[str]:
     real_gf, real_pb = _proto.gates_frozen, _proto.pilot_blocked
     real_po, real_ph = _proto.pilot_owed, _proto.pilot_harvested
     real_vf = _proto.void_foreclosed
+    real_vfr = _proto.void_foreclosed_refusal
     _proto.void_foreclosed = lambda sid, path=None: foreclosed.get(sid)
+    _proto.void_foreclosed_refusal = lambda sid, path=None: refusals.get(sid)
     _reg.ready = lambda _l: list(by_id.values())
     _proto.module_path_for = lambda sid, strict=False: (
         None if sid == "Q.07" else f"/x/{sid}.py")
@@ -953,14 +979,16 @@ def _queue_fixture() -> List[str]:
         _proto.gates_frozen, _proto.pilot_blocked = real_gf, real_pb
         _proto.pilot_owed, _proto.pilot_harvested = real_po, real_ph
         _proto.void_foreclosed = real_vf
+        _proto.void_foreclosed_refusal = real_vfr
 
     fails = []
-    if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03", "Q.09", "Q.16"]:
-        fails.append(f"gpu<2h queue should be [Q.01, Q.03, Q.09, Q.16] (VOID "
-                     f"is not a verdict; a spec that declares FROZEN gates "
-                     f"counts; a foreclosure declaration without a VOID mutes "
-                     f"nothing), got {q['by_class']['gpu<2h']}")
-    if q["void"] != ["Q.03"]:
+    if q["by_class"]["gpu<2h"] != ["Q.01", "Q.03", "Q.09", "Q.16", "Q.17"]:
+        fails.append(f"gpu<2h queue should be [Q.01, Q.03, Q.09, Q.16, Q.17] "
+                     f"(VOID is not a verdict; a spec that declares FROZEN "
+                     f"gates counts; a foreclosure declaration without a VOID "
+                     f"mutes nothing; a REFUSED one closes no door), got "
+                     f"{q['by_class']['gpu<2h']}")
+    if q["void"] != ["Q.03", "Q.17"]:
         fails.append(f"VOID must be reported separately, got {q['void']}")
     if q["excluded"]["settled"] != ["Q.02"]:
         fails.append(f"FAIL is settled, got {q['excluded']['settled']}")
@@ -1109,10 +1137,27 @@ def _queue_fixture() -> List[str]:
                      f"must not exclude it: a spec may not go quiet ahead of "
                      f"its own evidence, got "
                      f"{q['excluded']['void_foreclosed']}")
+    # THE REFUSED WELD (54th audit B3). Q.17 is VOID and wrote a declaration
+    # that validation refused. Three answers are known at once: it stays in the
+    # queue and in `void` (an unpriced weld closes no door), its refusal
+    # survives into the readout (the loud half — without it the fallback IS the
+    # B2 misroute), and Q.16's stubbed refusal does NOT surface (no verdict,
+    # nothing welded; the clause, not the reader, must keep that straight).
+    if "Q.17" not in q["void"] or "Q.17" not in q["by_class"]["gpu<2h"]:
+        fails.append(f"a refused foreclosure stays repairable — got "
+                     f"void={q['void']} gpu<2h={q['by_class']['gpu<2h']}")
+    if q["void_foreclosed_refused"] != {"Q.17": refusals["Q.17"]}:
+        fails.append(f"the REFUSAL must survive into the readout for exactly "
+                     f"the VOID specs that wrote an unpriced declaration — "
+                     f"got {q['void_foreclosed_refused']}")
+    if "Q.17" in q["excluded"]["void_foreclosed"]:
+        fails.append(f"a refused declaration must not exclude — got "
+                     f"{q['excluded']['void_foreclosed']}")
     if q["by_class"]["cpu<10min"] != ["Q.06"]:
         fails.append(f"cost classes must not merge, got {q['by_class']}")
-    if q["depth"] != 5:
-        fails.append(f"depth should be 5, got {q['depth']}")
+    if q["depth"] != 6:
+        fails.append(f"depth should be 6 (Q.17, the refused weld, still "
+                     f"counts), got {q['depth']}")
     # gpu<20min is empty and NOT in this fixture's baseline: new debt, a red.
     if "gpu<20min" not in q["new_empty"]:
         fails.append(f"an unlisted empty class is new debt, got "
@@ -1439,32 +1484,39 @@ def _void_foreclosed_fixture() -> List[str]:
     of habit gets `None` rather than a silently staled ledger row.
     """
     import tempfile
-    from .protocol import void_foreclosed
+    from .protocol import void_foreclosed, void_foreclosed_refusal
 
     R = "the blind twin holds 98.9% of the horizon"
+    # Every ACCEPTED declaration carries its price (54th audit B3): the
+    # multiplier arithmetic and the welded downstream set. `PRICE` is the
+    # minimal complete form, appended to every case that must still parse.
+    PRICE = ("\n\nFORECLOSURE ARITHMETIC: no multiplier converges\n"
+             "\nBLAST RADIUS: none\n")
     cases = [
         ("no docstring at all", "X = 1\n", None),
         ("a docstring with no declaration", '"""Just prose."""\n', None),
-        ("a declared reason", f'"""Title.\n\nVOID-FORECLOSED: {R}\n"""\n', R),
-        ("the declaration alone", f'"""VOID-FORECLOSED: {R}"""\n', R),
+        ("a declared, priced reason",
+         f'"""Title.\n\nVOID-FORECLOSED: {R}{PRICE}"""\n', R),
+        ("the declaration alone, priced",
+         f'"""VOID-FORECLOSED: {R}{PRICE}"""\n', R),
         # Continuation by indent — how a reason with its evidence is actually
         # written. `T0.31`'s idiom, so `review_queue.parse` and this agree.
         ("indented continuation lines",
          '"""Title.\n\nVOID-FORECLOSED: the blind twin holds\n'
-         '    98.9% of the horizon\n"""\n',
+         f'    98.9% of the horizon{PRICE}"""\n',
          "the blind twin holds 98.9% of the horizon"),
         ("a blank line ends the declaration",
-         f'"""VOID-FORECLOSED: {R}\n\n    not part of it\n"""\n', R),
+         f'"""VOID-FORECLOSED: {R}\n\n    not part of it{PRICE}"""\n', R),
         ("a line at the margin ends the declaration",
-         f'"""VOID-FORECLOSED: {R}\nnot part of it\n"""\n', R),
+         f'"""VOID-FORECLOSED: {R}\nnot part of it{PRICE}"""\n', R),
         ("re-declared, last wins",
-         f'"""VOID-FORECLOSED: old\n\nVOID-FORECLOSED: {R}\n"""\n', R),
+         f'"""VOID-FORECLOSED: old\n\nVOID-FORECLOSED: {R}{PRICE}"""\n', R),
         # THE QUIET DIRECTION. Anything that is not a real reason is not a
         # foreclosure: a spec may not go silent on a keyword.
         ("the bare keyword is not a reason", '"""VOID-FORECLOSED:"""\n', None),
         ("whitespace is not a reason", '"""VOID-FORECLOSED:    """\n', None),
         ("an indented declaration is prose, not a declaration",
-         f'"""Title.\n\n    VOID-FORECLOSED: {R}\n"""\n', None),
+         f'"""Title.\n\n    VOID-FORECLOSED: {R}{PRICE}"""\n', None),
         ("a mention inside prose is not a declaration",
          f'"""We should mark it VOID-FORECLOSED: {R}"""\n', None),
         # THE IDIOM ASSERTION. The code form is deliberately NOT read: it would
@@ -1472,8 +1524,42 @@ def _void_foreclosed_fixture() -> List[str]:
         ("the module-constant idiom does not declare",
          f'"""Title."""\n_VOID_FORECLOSED = {R!r}\n', None),
         ("a docstring on a function is not the module's",
-         f'def f():\n    """VOID-FORECLOSED: {R}"""\n', None),
+         f'def f():\n    """VOID-FORECLOSED: {R}{PRICE}"""\n', None),
         ("a syntax error is not a declaration", "def (:\n", None),
+        # THE PRICE IS MANDATORY (54th audit B3). Three unpriced declarations
+        # in three days welded 10 downstream specs and journalled it as a
+        # saving; an unpriced weld is REFUSED and closes no door.
+        ("an unpriced declaration is REFUSED",
+         f'"""VOID-FORECLOSED: {R}"""\n', None),
+        ("missing BLAST RADIUS alone refuses",
+         f'"""VOID-FORECLOSED: {R}\n\nFORECLOSURE ARITHMETIC: none '
+         'converges\n"""\n', None),
+        ("missing FORECLOSURE ARITHMETIC alone refuses",
+         f'"""VOID-FORECLOSED: {R}\n\nBLAST RADIUS: none\n"""\n', None),
+        ("a bare companion keyword is not a price",
+         f'"""VOID-FORECLOSED: {R}\n\nFORECLOSURE ARITHMETIC:\n'
+         '\nBLAST RADIUS: none\n"""\n', None),
+        ("an INDENTED companion is prose and does not price",
+         f'"""VOID-FORECLOSED: {R}\n\n    FORECLOSURE ARITHMETIC: x\n'
+         '\nBLAST RADIUS: none\n"""\n', None),
+    ]
+    # `void_foreclosed_refusal`, the LOUD half: (label, src, must-name,
+    # must-NOT-name). `None` for must-name means "no refusal at all" — a spec
+    # that never declared, or declared completely, has nothing to be loud
+    # about, and a stray companion block welds nothing.
+    refusal_cases = [
+        ("no declaration -> no refusal", '"""Just prose."""\n', None, ()),
+        ("a stray companion alone is not a refusal",
+         '"""BLAST RADIUS: none\n"""\n', None, ()),
+        ("a priced declaration -> no refusal",
+         f'"""VOID-FORECLOSED: {R}{PRICE}"""\n', None, ()),
+        ("unpriced -> refusal names BOTH blocks",
+         f'"""VOID-FORECLOSED: {R}"""\n',
+         ("FORECLOSURE ARITHMETIC:", "BLAST RADIUS:"), ()),
+        ("missing blast alone -> refusal names IT and not the other",
+         f'"""VOID-FORECLOSED: {R}\n\nFORECLOSURE ARITHMETIC: none '
+         'converges\n"""\n',
+         ("BLAST RADIUS:",), ("FORECLOSURE ARITHMETIC:",)),
     ]
     fails = []
     with tempfile.TemporaryDirectory() as d:
@@ -1484,8 +1570,31 @@ def _void_foreclosed_fixture() -> List[str]:
             if got != want:
                 fails.append(f"void_foreclosed: {label} -> want {want!r}, "
                              f"got {got!r}")
+        for i, (label, src, name, not_name) in enumerate(refusal_cases):
+            p = Path(d) / f"vfr_{i}.py"
+            p.write_text(src)
+            got = void_foreclosed_refusal("X.00", path=p)
+            if name is None:
+                if got is not None:
+                    fails.append(f"void_foreclosed_refusal: {label} -> want "
+                                 f"None, got {got!r}")
+            elif got is None:
+                fails.append(f"void_foreclosed_refusal: {label} -> want a "
+                             f"refusal, got None")
+            else:
+                for kw in name:
+                    if f"`{kw}`" not in got:
+                        fails.append(f"void_foreclosed_refusal: {label} must "
+                                     f"name `{kw}`, got {got!r}")
+                for kw in not_name:
+                    if f"`{kw}`" in got:
+                        fails.append(f"void_foreclosed_refusal: {label} must "
+                                     f"NOT name `{kw}`, got {got!r}")
         if void_foreclosed("X.00", path=Path(d) / "gone.py") is not None:
             fails.append("void_foreclosed: a missing file declares nothing")
+        if void_foreclosed_refusal("X.00", path=Path(d) / "gone.py") is not None:
+            fails.append("void_foreclosed_refusal: a missing file refuses "
+                         "nothing")
     if void_foreclosed("NO.SUCH.SPEC") is not None:
         fails.append("void_foreclosed: an unimplemented spec has no file and "
                      "no declaration -> None")
@@ -1768,6 +1877,14 @@ def check() -> int:
               "2026-08-31: 3.99 CPU-hours,\n"
               "  six of seven rig conjuncts green, the blind twin at 98.9% of "
               "the horizon).")
+    if q["void_foreclosed_refused"]:
+        print(f"  !! {len(q['void_foreclosed_refused'])} VOID spec(s) wrote a "
+              f"VOID-FORECLOSED declaration that was REFUSED (54th audit B3:\n"
+              "      unpriced — no FORECLOSURE ARITHMETIC / BLAST RADIUS). "
+              "They rank as repairable above,\n      but the next unit on each "
+              "is to PRICE THE DECLARATION, not to dispatch a re-run:")
+        for sid, msg in q["void_foreclosed_refused"].items():
+            print(f"      {sid}: {msg}")
     if ex["gates_provisional"]:
         print("  a gate-provisional spec is implemented shelf furniture: its\n"
               "  own run() refuses until a pilot freezes its bars. Run the\n"

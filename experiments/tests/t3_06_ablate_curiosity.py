@@ -232,6 +232,23 @@ VOID-FORECLOSED: one rig conjunct fired and it is the extreme-value instrument
     The repair is a REDESIGN, routed to the Review as
     `t306-matched-magnitude-noise-buys-coverage`.
 
+FORECLOSURE ARITHMETIC: no multiplier on N clears both fired gates at the
+    frozen bars, and they fail in opposite directions. The rig conjunct is a
+    MAX over lives whose expected value RISES with draws — raising lives/arm
+    re-fires it harder against a cap frozen at the pilot's n=16, and lowering
+    back to 16 un-certifies the envelope. And the red CONTROL (`delta_shuf`
+    0.1072 vs < 0.05, floor 0.0632 by the exact bound) involves only the
+    task/curious/shuftask arms, so no repair expressible as a sample size on
+    the random arm touches it at all. A re-run unchanged is deterministic.
+
+BLAST RADIUS: 2 specs rendered unreachable while T3.06 is their parent
+    (computed transitively over `depends_on`, 2026-08-31, registry at 211):
+    T5.06 "Unprompted exploration is real" and T5.08 "Open-endedness:
+    learning does not saturate" — two Tier-5 claims, the project's thesis.
+    The declaring commit (`1653104`-era) recorded a saving and no cost; this
+    block is that cost, recorded late (54th audit B3). The repair for the
+    two is RE-PARENTING (54th audit B6), not a re-run of this ablation.
+
 VOID RECORD — attempt 1, 2026-08-30T01:06 UTC, commit `1653104`, 2434 s
 (builder, replayed offline against the recorded row, 2026-08-31; BA.03's
 idiom, one day after the lesson that demands it).

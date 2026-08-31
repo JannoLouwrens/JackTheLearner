@@ -923,9 +923,14 @@ def _rank_blockers(terminal: dict, ledger: Ledger, ladder=None) -> tuple:
     return mentions, frees, groups
 
 
-def _split_foreclosed(ranked, ledger: Ledger, vf=None) -> tuple:
-    """Partition ranked roots into (live, closed): the repairable list and the
-    `VOID-FORECLOSED` doors, `{root: declared reason}`.
+def _split_foreclosed(ranked, ledger: Ledger, vf=None, vfr=None) -> tuple:
+    """Partition ranked roots into (live, closed, refused): the repairable
+    list, the `VOID-FORECLOSED` doors `{root: declared reason}`, and the
+    MALFORMED declarations `{root: refusal message}` (54th audit B3): a
+    foreclosure that does not price its `FORECLOSURE ARITHMETIC:` and
+    `BLAST RADIUS:` is refused, and the refused root stays in the repairable
+    ranking — an unpriced weld does not close a door — but must be printed
+    WITH its refusal, or the fallback silently re-opens the B2 misroute.
 
     Written for the 54th audit's B2 (2026-08-31): this module had ZERO
     references to `protocol.void_foreclosed` while `coverage.py` read it, so
@@ -940,16 +945,22 @@ def _split_foreclosed(ranked, ledger: Ledger, vf=None) -> tuple:
     declaration on a non-VOID spec is a mention, not a foreclosure, and a VOID
     without a declaration (T2.02's shape) stays in the repairable ranking.
     """
-    from .protocol import void_foreclosed
+    from .protocol import void_foreclosed, void_foreclosed_refusal
     vf = void_foreclosed if vf is None else vf
-    live, closed = [], {}
+    vfr = void_foreclosed_refusal if vfr is None else vfr
+    live, closed, refused = [], {}, {}
     for root, ids in ranked:
-        why = vf(root) if ledger.status(root) is Status.VOID else None
+        is_void = ledger.status(root) is Status.VOID
+        why = vf(root) if is_void else None
         if why:
             closed[root] = why
         else:
             live.append((root, ids))
-    return live, closed
+            if is_void:
+                refusal = vfr(root)
+                if refusal:
+                    refused[root] = refusal
+    return live, closed, refused
 
 
 # A graph whose answer is known, checked on every `blocked` run. X is a root that
@@ -974,11 +985,13 @@ def _ranker_fixture() -> tuple:
     def stub(sid, deps):
         return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST, depends_on=deps)
 
-    # F and R are VOID roots for the foreclosure split: F declares
-    # VOID-FORECLOSED (via the stubbed reader), R is a plain repairable VOID.
+    # F, R and M are VOID roots for the foreclosure split: F declares
+    # VOID-FORECLOSED (via the stubbed reader), R is a plain repairable VOID,
+    # M declares but its declaration is REFUSED (unpriced — 54th audit B3).
     ladder = [stub("X", []), stub("W", []), stub("Y", ["X"]), stub("Z", ["X", "W"]),
               stub(_STALE_ID, []), stub("V", [_STALE_ID]),
-              stub("F", []), stub("G", ["F"]), stub("R", []), stub("Q", ["R"])]
+              stub("F", []), stub("G", ["F"]), stub("R", []), stub("Q", ["R"]),
+              stub("M", []), stub("N", ["M"])]
     return ladder, {s.id: s for s in ladder}
 
 
@@ -993,7 +1006,7 @@ def _fixture_ledger() -> Ledger:
     led.results = {_STALE_ID: Result(
         spec_id=_STALE_ID, status=Status.PASS, metrics={}, seeds=[0],
         commit="1234567", ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)}
-    for vid in ("F", "R"):
+    for vid in ("F", "R", "M"):
         led.results[vid] = Result(
             spec_id=vid, status=Status.VOID, metrics={}, seeds=[0],
             commit="1234567", ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)
@@ -1017,22 +1030,29 @@ def _check_ranker(ledger: Ledger) -> None:
         sorted(mentions.get(_STALE_ID, [])) == ["V"],
         sorted(frees.get(_STALE_ID, [])) == ["V"],
     )
-    # KNOWN ANSWER for the foreclosure split (54th audit B2). The stubbed
-    # reader declares for F (VOID → closed) and for X (declared but NOT VOID →
-    # stays live); R is VOID with no declaration (T2.02's shape → stays live).
-    # A split that fails any of the three would either hide a repairable VOID
-    # or keep ranking a closed door — both are the defect this exists to catch.
+    # KNOWN ANSWER for the foreclosure split (54th audit B2, refusals B3). The
+    # stubbed reader declares for F (VOID → closed) and for X (declared but
+    # NOT VOID → stays live); R is VOID with no declaration (T2.02's shape →
+    # stays live); M is VOID with a REFUSED declaration (unpriced) → stays
+    # live AND carries its refusal, and non-VOID X must NOT be asked for one.
+    # A split that fails any of these would hide a repairable VOID, keep
+    # ranking a closed door, or let an unpriced weld go quiet — the three
+    # defects this exists to catch.
     ranked = sorted(mentions.items(),
                     key=lambda kv: (-len(frees.get(kv[0], [])), -len(kv[1])))
-    live, closed = _split_foreclosed(
+    live, closed, refused = _split_foreclosed(
         ranked, fixt,
         vf=lambda sid, path=None: {"F": "declared closed",
-                                   "X": "declared but not VOID"}.get(sid))
+                                   "X": "declared but not VOID"}.get(sid),
+        vfr=lambda sid, path=None: {"M": "missing `BLAST RADIUS:`",
+                                    "X": "must never be read"}.get(sid))
     expect += (
         closed == {"F": "declared closed"},
         "F" not in dict(live),
         "X" in dict(live),
         "R" in dict(live),
+        "M" in dict(live),
+        refused == {"M": "missing `BLAST RADIUS:`"},
     )
     if not all(expect):
         # `tuple(sorted(k))`, not `set(k)`: a set is unhashable as a dict key,
@@ -1043,7 +1063,7 @@ def _check_ranker(ledger: Ledger) -> None:
         raise RuntimeError(
             "the blocked-ranker failed its own fixture "
             f"(mentions={mentions}, frees={frees}, groups={groups_repr}, "
-            f"live={sorted(dict(live))}, closed={closed}); "
+            f"live={sorted(dict(live))}, closed={closed}, refused={refused}); "
             "refusing to print a ranking that cannot be trusted")
 
 
@@ -1107,7 +1127,7 @@ def cmd_blocked(ledger: Ledger) -> int:
 
     ranked = sorted(mentions.items(),
                     key=lambda kv: (-len(frees.get(kv[0], [])), -len(kv[1])))
-    live, closed = _split_foreclosed(ranked, ledger)
+    live, closed, refused = _split_foreclosed(ranked, ledger)
 
     def _st(root):
         """The status, and — if it is a PASS that no longer describes the code,
@@ -1135,6 +1155,12 @@ def cmd_blocked(ledger: Ledger) -> int:
         title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
         f = sorted(frees.get(root, []))
         print(f"  {root} = {_st(root)}  frees {len(f)}  (blocks {len(ids)})  — {title}")
+        if root in refused:
+            # An unpriced foreclosure ranks as repairable, but silently ranking
+            # it re-opens the B2 misroute in the other direction: somebody
+            # tried to weld this door and the weld was refused. Say so.
+            print(f"        !! VOID-FORECLOSED {refused[root]}")
+            print(f"        !! repair the DECLARATION before dispatching a re-run")
         print(f"        frees:  {', '.join(f) if f else 'NOTHING on its own'}")
         rest = sorted(set(ids) - set(f))
         if rest:

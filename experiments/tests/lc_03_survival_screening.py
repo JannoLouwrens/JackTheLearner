@@ -274,6 +274,27 @@ VOID-FORECLOSED: the v2 re-screen's own pre-registered fork (ii) fired —
     to prevent. The repair is a REDESIGN of the screen or of W0, on the
     owner's desk since 2026-08-24 (`docs/DECISIONS_NEEDED.md`, D10).
 
+FORECLOSURE ARITHMETIC: no envelope multiplier converges — the fork priced
+    exactly this before the run: the 3-sigma requirement scales with added
+    lives just as the projected gain does, so growth buys no crossing. The
+    v1 -> v2 step was itself the 4x empirical test of that arithmetic:
+    dreamer-xs, the arm the 4x envelope was sized FOR by its own measured
+    curve, went from +46 s to -48.5 s, and the second-best arm (wm-efe)
+    sits at t 2.05 where 3.0 is needed — a gap growth does not close when
+    requirement and gain scale together.
+
+BLAST RADIUS: 8 specs rendered unreachable while LC.03 is their (transitive)
+    parent (computed over `depends_on`, 2026-08-31, registry at 211): LC.04
+    "The learning core, arbitrated at matched EXPERIENCE", LC.05 "The same
+    arms, arbitrated at matched COMPUTE", LC.06 "The simplicity budget is
+    enforced, not promised", DP.01 "Practice moves a behaviour off the
+    deliberative path", DP.02 "Connected, not two brains: the substrate is
+    shared", DP.03 "Deliberation is spent where it pays", OP.01 "A thing
+    behind the rail still exists", PS.04 "He eats because he is hungry -
+    feeding is need-contingent". The repair for these is RE-PARENTING (54th
+    audit B6 — DP.02 in particular does not need a five-way screen to probe
+    a trained core), not a v3 of this screen.
+
 CONCLUDED — v2, attempt 3, 2026-08-23T21:11 UTC, commit `0d9ad54`; harvested
 and replayed offline 2026-08-24. Per-arm t_null / t_twin: wm-latent 4.65 / 4.00
 (the sole clean learner, every conjunct green), wm-efe 2.05 / 2.07, ppo-needs

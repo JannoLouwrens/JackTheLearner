@@ -1800,6 +1800,89 @@ def pilot_harvested(spec_id: str, path=None):
 
 
 VOID_FORECLOSED_DECL = "VOID-FORECLOSED:"
+FORECLOSURE_ARITH_DECL = "FORECLOSURE ARITHMETIC:"
+BLAST_RADIUS_DECL = "BLAST RADIUS:"
+
+
+def _module_doc(spec_id: str, path=None):
+    """The module docstring `void_foreclosed` and its companions read, or
+    `None` when the file is missing or unparseable — a syntax error may not
+    mute a spec, for `pilot_blocked`'s reason."""
+    import ast
+    if path is None:
+        path = module_path_for(spec_id)
+    if not path:
+        return None
+    try:
+        tree = ast.parse(Path(path).read_text())
+        # `clean=False` deliberately: `inspect.cleandoc` strips the COMMON
+        # indent of the body, so in a docstring whose only body line happens to
+        # be indented it would promote that line to the margin — and the margin
+        # is the whole distinction between a declaration and a mention inside an
+        # indented block. Module docstrings start at column 0, which is the only
+        # place this reader looks.
+        return ast.get_docstring(tree, clean=False) or ""
+    except (OSError, SyntaxError, ValueError):
+        return None
+
+
+def _margin_declaration(doc: str, keyword: str):
+    """Last margin-anchored `keyword` block in `doc`, continuation by indent
+    (T0.31's idiom) — factored out of `void_foreclosed` when the 54th audit's
+    B3 gave that declaration two required companion blocks."""
+    found = None
+    lines = doc.splitlines()
+    for i, raw in enumerate(lines):
+        if raw.startswith(keyword):
+            parts = [raw[len(keyword):].strip()]
+            for cont in lines[i + 1:]:
+                # An indented non-empty line continues the declaration; a blank
+                # line or anything at the margin ends it. Same shape as
+                # `review_queue.parse`, so the two cannot drift.
+                if cont.strip() and cont[:1].isspace():
+                    parts.append(cont.strip())
+                else:
+                    break
+            reason = " ".join(p for p in parts if p).strip()
+            # Last declaration wins, matching `_declared_reason`.
+            found = reason or None
+    return found
+
+
+def _foreclosure_missing(doc: str) -> list:
+    """The required companion blocks a `VOID-FORECLOSED:` declaration lacks."""
+    return [kw for kw in (FORECLOSURE_ARITH_DECL, BLAST_RADIUS_DECL)
+            if not _margin_declaration(doc, kw)]
+
+
+def void_foreclosed_refusal(spec_id: str, path=None):
+    """Why a WRITTEN `VOID-FORECLOSED:` declaration is being refused — a
+    message naming the missing companion blocks — or `None` when the spec
+    declares nothing or declares completely.
+
+    This exists so the refusal is LOUD. `void_foreclosed` answers `None` for
+    both "never declared" and "declared but unpriced", and the readers'
+    fallback for `None` is the repairable-VOID ranking — the exact misroute
+    the 54th audit's B2 just closed. A declaration that fails validation must
+    not silently re-open it: the readers print this message beside the spec so
+    the next iteration repairs the declaration instead of dispatching a
+    re-run at a door somebody already tried to weld.
+
+    A companion block WITHOUT a `VOID-FORECLOSED:` line is not a refusal —
+    a stray `BLAST RADIUS:` in prose declares nothing and mutes nothing.
+    """
+    doc = _module_doc(spec_id, path=path)
+    if doc is None:
+        return None
+    if not _margin_declaration(doc, VOID_FORECLOSED_DECL):
+        return None
+    missing = _foreclosure_missing(doc)
+    if not missing:
+        return None
+    return ("declaration REFUSED — missing required block(s): "
+            + ", ".join(f"`{kw}`" for kw in missing)
+            + " (54th audit B3: a foreclosure must price the multiplier that "
+              "would clear the bar and the downstream specs it welds shut)")
 
 
 def void_foreclosed(spec_id: str, path=None):
@@ -1849,42 +1932,43 @@ def void_foreclosed(spec_id: str, path=None):
     `pilot_blocked`, it deliberately does NOT rescue a cost class from empty.
     An empty class is the honest reading when every occupant is foreclosed.
 
-    `None` when the spec declares nothing, when the reason is empty, and when
-    the file is missing or unparseable — a syntax error may not mute a spec, for
+    THE DECLARATION MUST PRICE ITSELF OR IT IS REFUSED (54th audit B3,
+    2026-08-31, discharging the 53rd audit's B5 in the same edit). Three
+    declarations in three days made 10 downstream specs permanently
+    unreachable, and each was journalled purely as a gain — *"four hours
+    saved"*, *"queue depth 3→2"*. `T3.06`'s foreclosure cost `T5.06`
+    *"Unprompted exploration is real"* and `T5.08` *"Open-endedness"* — two
+    Tier-5 claims, the project's thesis — and the commit that did it recorded
+    a saving and no cost. A declaration that removes a node from the runnable
+    graph is a graph edit, and a one-sided ledger entry is not an honest one.
+    So a `VOID-FORECLOSED:` block only counts if the same docstring ALSO
+    carries, as margin-anchored blocks in the same idiom:
+
+      `FORECLOSURE ARITHMETIC:` — the multiplier on N that would clear the
+          bar, or why no multiplier converges. The declaring party is the
+          party the declaration exonerates; this block is where its
+          arithmetic stands in the open for the next reader to check.
+      `BLAST RADIUS:` — the transitive set of specs the declaration renders
+          unreachable, by id and title (derivable from `depends_on`; "none"
+          must be said, not implied).
+
+    Validation is PRESENCE, not truth — the declaring commit prices it, and a
+    wrong price is visible in that commit's diff, which is where the other
+    two safety clauses of this repo's defaults are checked too. A refused
+    declaration reads as `None` here, and `void_foreclosed_refusal` carries
+    the loud message the readers must print beside it.
+
+    `None` when the spec declares nothing, when the reason is empty, when a
+    required companion block is missing (REFUSED — see above), and when the
+    file is missing or unparseable — a syntax error may not mute a spec, for
     `pilot_blocked`'s reason.
     """
-    import ast
-    if path is None:
-        path = module_path_for(spec_id)
-    if not path:
+    doc = _module_doc(spec_id, path=path)
+    if doc is None:
         return None
-    try:
-        tree = ast.parse(Path(path).read_text())
-        # `clean=False` deliberately: `inspect.cleandoc` strips the COMMON
-        # indent of the body, so in a docstring whose only body line happens to
-        # be indented it would promote that line to the margin — and the margin
-        # is the whole distinction between a declaration and a mention inside an
-        # indented block. Module docstrings start at column 0, which is the only
-        # place this reader looks.
-        doc = ast.get_docstring(tree, clean=False) or ""
-    except (OSError, SyntaxError, ValueError):
+    found = _margin_declaration(doc, VOID_FORECLOSED_DECL)
+    if found and _foreclosure_missing(doc):
         return None
-    found = None
-    lines = doc.splitlines()
-    for i, raw in enumerate(lines):
-        if raw.startswith(VOID_FORECLOSED_DECL):
-            parts = [raw[len(VOID_FORECLOSED_DECL):].strip()]
-            for cont in lines[i + 1:]:
-                # An indented non-empty line continues the declaration; a blank
-                # line or anything at the margin ends it. Same shape as
-                # `review_queue.parse`, so the two cannot drift.
-                if cont.strip() and cont[:1].isspace():
-                    parts.append(cont.strip())
-                else:
-                    break
-            reason = " ".join(p for p in parts if p).strip()
-            # Last declaration wins, matching `_declared_reason`.
-            found = reason or None
     return found
 
 
