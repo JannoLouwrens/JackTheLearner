@@ -9023,3 +9023,86 @@ run. (3) `cpu<10min` is still EMPTY and **fillable today** (`LG.10`, `ME.11`,
 `ME.11.B/C/E`) — that is the one queue class a builder can still refill alone.
 (4) Both meters reset 04:59Z, so the 05:07 slot is the first fable slot of W35
 with a fresh Kaggle allocation.
+
+---
+
+## 2026-08-31 ~04:1x-05:2x UTC — the four-hour VOID that was one bit over seven conjuncts, six of them green
+
+Ran on **Opus** (`week:Fable` 100%, capped until the reset; `week:all models`
+**88%** at the start of the slot and 88% at the end, `--week-elapsed` 99, so
+`pace_gate`'s line was 90.34 and this slot was not skipped). **Consecutive
+`PACING:` skips: 0.** GPU week is **`2026-W35`** — W34 is sunk, do not chase it.
+The meter's own reset stamp still read "Aug 31, 5am" at 05:25; I am not modelling
+it and neither should you.
+
+**The handoff I took was item (2) of last night's line** — *"BA.03's
+`seed_rig_ok` conjuncts want reading against this row's metrics BEFORE any
+re-run"* — and it was the right instruction, because the answer inverts what the
+03:2x entry (mine, an hour earlier) recorded. That entry said *"the rig did not
+come up ... what failed is the construction, not the comparison."* Replayed
+offline against the recorded row, **six of the seven rig conjuncts were GREEN on
+every seed** and the seventh is the ceiling:
+
+    1 site_legal                 1.0000   >= 1.0    GREEN
+    2 toppled_frac_random        0.9472   >= 0.60   GREEN
+    3 up_random                  2.3044   <= 9.60   GREEN
+    4 best_trained - up_random   9.5633   >= 0.20   GREEN
+    5 deprived_shortfall        -4.2928   <= 1.00   GREEN
+    6 gain_nosurface             0.0094   <= 0.30   GREEN
+    7 claim_headroom_ratio       0.2360   >= 2.00   **FIRED**
+
+The BLIND twin holds **11.868 +/- 0.073 s of a 12.0 s horizon — 98.9%** — so the
+claim has 0.132 s of room and needs 1.336 s; worst seed (mean + 2sd) is 0.604
+against a bar of 2.0. The construction came up: random topples on 94.7% of
+episodes, the best trained arm beats it by 9.56 s, the no-surface control reads
+0.0094 s against a 0.30 cap, the hand-written `gripboth` posture is 4.29 s
+*behind* the twin, and the noise control fired correctly in the same run. And
+`HEADROOM_MIN_MULT` — added the day before, strengthen-only — predicted this run
+in its own paragraph: *"a seed whose twin landed at 11.5 s would have been
+arithmetically incapable of a PASS with all eight gates green."* It landed at
+11.87 on all three.
+
+**So the re-run is FORECLOSED, not merely expensive, and that is the four hours
+this iteration bought.** Every legal repair inside the file — more seeds, more
+eval episodes, more CEM budget — makes `gain_se` smaller, which LOWERS the bar;
+none of them raises 0.132 s to 1.336 s while the twin sits at 98.9%. Growing the
+envelope is the shape LC.03's fork already priced and refused.
+
+**THE MISSING STATE, one bucket over from the pilot tri-state.** `queue_depth`
+prints its VOID list as *"an arm to repair, not a dispatch"* — the cheap reading
+— and it was wrong for **two of five**: `BA.03`, and `LC.03`, concluded
+2026-08-24 by its own pre-registered fork and advertised as a repairable arm
+every day since. A VOID is two states wearing one word, and they need opposite
+units of work. `protocol.void_foreclosed` makes the second declarable;
+`coverage` excludes it, prints the reason, and rescues no class. Depth **5 -> 3**
+and `cpu<48h` correctly reads EMPTY. `_void_foreclosed_fixture` is 15
+known-answer rows written the same day as the reader, including the quiet
+direction (Q.16: a foreclosure declared on a spec that has NOT VOIDed mutes
+nothing).
+
+**Design decision worth inheriting.** The declaration is a `VOID-FORECLOSED:`
+line in the module **DOCSTRING**, not a `_VOID_FORECLOSED` constant like its four
+siblings — deliberately, and the fixture asserts the code idiom does NOT declare.
+A VOID spec has already RUN: the constant would stale its ledger row and
+`run status` would print *"Re-run it"* about a spec whose declaration says
+re-running is foreclosed. The docstring form goes through `run amend --doc-only`,
+which is exactly what I did — **zero staleness added; `run status` is back to the
+pre-existing `T0.27` and `T2.02` and nothing else.**
+
+**Also done:** `T0.21`'s P12 had the hole it was written to close. It imported
+the two batteries that existed when it was written, BY NAME, and `coverage.py`
+grew four more on 08-30 that ran only in `__main__` again. P12 now DISCOVERS
+every `_*_fixture`, with a floor of 7 so a rename cannot silently empty the
+property. `T0.21` and `T0.17` both re-run PASS at clean `5ce24d6`.
+
+**Next iteration.** (1) `cpu<10min` is still EMPTY and **fillable today** —
+`LG.10`, `ME.11`, `ME.11.B/C/E`; that is the one queue class a builder can refill
+alone and both empty GPU classes are pilot-BLOCKED on evidence. (2) The queue is
+still RED on `w0-too-shallow` (OVERDUE 1 d); only the Review can clear it, and it
+now has a **sixth** instrument attached — BA.03 is the first that says the world
+does not *require* the sense rather than that it does not *reward* it. (3) Do NOT
+re-run BA.03 or LC.03; `run coverage` will now tell you so with the reason.
+(4) `BA.02` is the balance commitment's other VOID and it is a genuinely
+different failure — its own docstring already names the branch (*"all arms AT
+random"*, `best_trained - up_random` under `IMPROVE_MARGIN_MIN`), so it is an arm
+to repair, not a ceiling, and it is correctly still in the queue at cpu<2h.
