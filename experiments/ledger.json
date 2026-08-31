@@ -12572,45 +12572,16 @@
     "T0.27": {
       "amended": [],
       "attempt": 22,
-      "commit": "d18f8a2+dirty",
+      "commit": "c4e10f0",
       "compute_s": null,
       "control_metrics": {
         "dirty_named": 1.0,
         "violations": 1
       },
-      "duration_s": 1.47,
+      "duration_s": 1.43,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "60c94af",
-          "control_metrics": {
-            "dirty_named": 1.0,
-            "violations": 1
-          },
-          "impl_sha": "cee77fcd92ae6bde",
-          "message": "",
-          "metrics": {
-            "artifact_survives_history": true,
-            "artifact_written": true,
-            "audit_admits_clean_shape": true,
-            "audit_flags_missing_metrics": true,
-            "audit_flags_unreachable_commit": true,
-            "live_checked_pairs": 0,
-            "live_ledger_clean": true,
-            "live_unauditable_pairs": 27,
-            "live_violations": 0,
-            "properties_failed": 0,
-            "rerun_visible_not_amendment": true,
-            "unknowable_is_none_and_unauditable": true,
-            "warns_on_dirty_fail": true
-          },
-          "ran_at": "2026-08-14T01:19:41",
-          "seeds": [
-            0
-          ],
-          "status": "PASS"
-        },
         {
           "commit": "f90a533",
           "control_metrics": {
@@ -13500,10 +13471,76 @@
             "spec_sha": "b2adff0cf7c2872a",
             "status": "FAIL"
           }
+        },
+        {
+          "commit": "d18f8a2+dirty",
+          "control_metrics": {
+            "dirty_named": 1.0,
+            "violations": 1
+          },
+          "gpu_job_id": null,
+          "impl_sha": "b5b788f3f0b0aa77",
+          "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/T0.27/2026-08-31T05-17-58",
+          "metrics": {
+            "artifact_survives_history": true,
+            "artifact_written": true,
+            "audit_admits_clean_shape": true,
+            "audit_flags_missing_metrics": true,
+            "audit_flags_unreachable_commit": true,
+            "error_does_not_sever": true,
+            "live_audit_can_flag": true,
+            "live_checked_pairs": 7,
+            "live_ledger_clean": false,
+            "live_unauditable_pairs": 24,
+            "live_violations": 2,
+            "properties_failed": 1,
+            "rerun_visible_not_amendment": true,
+            "seeded_checked_pairs": 9,
+            "seeded_violations": 3,
+            "unknowable_is_none_and_unauditable": true,
+            "void_lane_guarded": true,
+            "warns_on_dirty_fail": true
+          },
+          "ran_at": "2026-08-31T05:17:58",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "b2adff0cf7c2872a",
+          "status": "FAIL",
+          "supersedes_fail": {
+            "commit": "f4115f2",
+            "dirty": false,
+            "impl_changed": true,
+            "impl_sha": "4e6a843e3e42f779",
+            "metrics": {
+              "artifact_survives_history": true,
+              "artifact_written": true,
+              "audit_admits_clean_shape": true,
+              "audit_flags_missing_metrics": true,
+              "audit_flags_unreachable_commit": true,
+              "error_does_not_sever": true,
+              "live_audit_can_flag": true,
+              "live_checked_pairs": 7,
+              "live_ledger_clean": false,
+              "live_unauditable_pairs": 24,
+              "live_violations": 2,
+              "properties_failed": 1,
+              "rerun_visible_not_amendment": true,
+              "seeded_checked_pairs": 9,
+              "seeded_violations": 3,
+              "unknowable_is_none_and_unauditable": true,
+              "void_lane_guarded": true,
+              "warns_on_dirty_fail": true
+            },
+            "ran_at": "2026-08-30T22:20:27",
+            "spec_changed": false,
+            "spec_sha": "b2adff0cf7c2872a",
+            "status": "FAIL"
+          }
         }
       ],
       "impl_sha": "b5b788f3f0b0aa77",
-      "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/T0.27/2026-08-31T05-17-58",
+      "message": "pre-registered threshold not met",
       "metrics": {
         "artifact_survives_history": true,
         "artifact_written": true,
@@ -13524,8 +13561,8 @@
         "void_lane_guarded": true,
         "warns_on_dirty_fail": true
       },
-      "preserved_impl": "refs/jack/failimpl/T0.27/2026-08-31T05-17-58",
-      "ran_at": "2026-08-31T05:17:58",
+      "preserved_impl": null,
+      "ran_at": "2026-08-31T05:21:46",
       "seeds": [
         0
       ],
@@ -13533,10 +13570,10 @@
       "spec_sha": "b2adff0cf7c2872a",
       "status": "FAIL",
       "supersedes_fail": {
-        "commit": "f4115f2",
-        "dirty": false,
-        "impl_changed": true,
-        "impl_sha": "4e6a843e3e42f779",
+        "commit": "d18f8a2+dirty",
+        "dirty": true,
+        "impl_changed": false,
+        "impl_sha": "b5b788f3f0b0aa77",
         "metrics": {
           "artifact_survives_history": true,
           "artifact_written": true,
@@ -13557,7 +13594,7 @@
           "void_lane_guarded": true,
           "warns_on_dirty_fail": true
         },
-        "ran_at": "2026-08-30T22:20:27",
+        "ran_at": "2026-08-31T05:17:58",
         "spec_changed": false,
         "spec_sha": "b2adff0cf7c2872a",
         "status": "FAIL"

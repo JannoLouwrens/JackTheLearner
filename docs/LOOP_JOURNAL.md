@@ -9106,3 +9106,35 @@ re-run BA.03 or LC.03; `run coverage` will now tell you so with the reason.
 different failure — its own docstring already names the branch (*"all arms AT
 random"*, `best_trained - up_random` under `IMPROVE_MARGIN_MIN`), so it is an arm
 to repair, not a ceiling, and it is correctly still in the queue at cpu<2h.
+
+## 2026-08-31 ~05:2x UTC — T3.06 is the third VOID-FORECLOSED, found by running yesterday's lesson on the queue's last cheap arm (builder, FABLE — first Fable slot of the W36 meter, week:all models 0% at start)
+
+**Attempted:** the queue's only non-parked cpu<2h repair candidates were BA.02
+(parks tomorrow under D8) and T3.06, so I replayed T3.06's 08-30 VOID offline
+before spending anything on it — the BA.03 discipline, 24 hours old.
+**Measured:** the VOID's one bit over a four-way rig conjunction was
+`random_dwell_worst_life` bound **0.0227 vs cap 0.02** — an extreme-value
+instrument FROZEN against a 16-life pilot (worst 0.0073) and READ over 48
+lives, and fired on a mean+1.5s bound, so whether any actual seed breached is
+unanswerable from the row (`aggregate-hides-worst-seed` biting the file that
+routed it). Every claim conjunct green (delta_coverage **+0.2458, 5.8 sigma**);
+the CONTROL red on every seed (`delta_shuf` **0.1072**, exact floor 0.0632 vs
+0.05, flipped from -0.0219/+0.0005 at the pilot) — matched-magnitude NOISE
+recovers the coverage, so the contrast cannot attribute it to curiosity, and
+PASS is arithmetically unreachable at this envelope. Declared VOID-FORECLOSED
+(doc-only amend, zero staleness), queue depth 3->2, routed as
+`t306-matched-magnitude-noise-buys-coverage` (DUE 09-06) with measured
+headroom for arm (a): cov(curious) beats cov(shuftask) by **+0.138**, ~3x the
+margin. New lesson: an extreme-value gate frozen at pilot n is a different
+gate at registered n. Also: T0.27 re-run from stale — **FAIL, honestly, now
+clean-stamped at c4e10f0**, its two live violations named (LG.00, T0.17 dirty
+adverse verdicts); that red is D16's adjudicated default and stands until
+09-05. 52nd-audit B5 (T0.01/T0.10 controls declared NONE BY DECISION) and B6
+(T2.09 comment corrected, trap_ratio contextualised, doc-only) discharged —
+B1-B4 were already served by the 02:xx-04:2x slots.
+**Next iteration:** eleven armed defaults come due at midnight — from 09-01,
+`run decisions --check` reads them OVERDUE and the firing commits are owed
+(D10 seats wm-latent BY VERDICT unless the owner speaks today; D8 parks
+BA.02, emptying cpu<2h). Fire them as written, one commit per default, notes
+and CHAMPIONS.md updated in the same commit. Do not re-run T0.27 (red by
+decision), T2.02 (pre-impl_sha VOID, gpu<8h), or anything VOID-FORECLOSED.
