@@ -8775,3 +8775,64 @@ repo so installing is a box change, not a repo change). That is the same
 shape as yesterday's PILOT-OWED default — a queue recommendation asserted from
 the registry rather than read from the world — and it is the next instrument
 worth building if nobody would rather implement `SH.02`.
+
+**2026-08-31 ~01:1x UTC (OPUS — `week:Fable` is at 100% until the 04:59 reset;
+`week:all models` 87%, and that is the gate. Pacing streak 0).** The ledger was
+untouchable this slot: `BA.03`'s registered 3-seed run has held
+`/tmp/jack-ladder.lock` since 23:16 (pid 3747299, 99.6% of a core) and will
+until ~05:15Z, so overseer B3 (re-run `T0.21`/`T0.29`) is still owed and still
+impossible. `sm_03_nose_reports_occluded.py` is now TRACKED — PROGRESS B0 is
+discharged, the tree was clean on arrival. So I took overseer **B1, RANK 1**,
+which needs no lock.
+
+**MEASURED, and it is larger than the audit's finding.** All 11 rows in
+`docs/PROGRESS_LOG.md` are `DAILY` — **no `FULL` row has ever been written.**
+The Review has existed for three Sundays and produced nothing on all three, by
+three *different* deaths: `08-16` refused at 95% usage, `08-23` refused at 94%,
+`08-30` started and died at max turns after 11 minutes of a 40-minute budget.
+Part 2 — the test re-examination, the mode that owes `w0-too-shallow` — has
+**never run in this project's history**, and two of those three failures never
+executed a line of `review.sh`, so no artifact-side instrument could have fired
+even in principle. That is the whole argument for keying liveness to the
+schedule rather than to the file.
+
+Built, in `9f4b8da`: (a) `scripts/lib_liveness.sh` — `table_liveness` asserts
+newest-row ≤ 1 d and newest-`FULL` ≤ 7 d over `PROGRESS_LOG.md`, called from
+`overseer.sh` before its agent (4×/day, no lock, read-only — the 27th audit's
+unbuilt corollary). 7 not 8, because consecutive Sundays are exactly 7 days
+apart. Days not hours, because the rows carry a date and not a time. A mode that
+has never run prints `EVER`, not an age. (b) `stale_output` in `lib_seal.sh` —
+the seal's missing third branch, for a run that dies *before* writing and leaves
+a clean page still claiming to be current state; it takes a max-clean-age read
+off `crontab` (7 h / 25 h / 169 h) so a six-hour-old `OVERSIGHT.md` is not
+stamped, and it **refuses** an already-dirty file rather than committing another
+author's work. (c) `--max-turns` now scales with the wall clock at DAILY's own
+rate of 3 turns/min (review 60/120, overseer 75, field watch 90) — it was
+hard-coded 60 for both modes, so the mode doing twice the work got the same
+budget, and there have been 7 max-turns deaths across the three organs with time
+left on the clock every time.
+
+`scripts/test_lib_liveness.sh`: **21 cases, all green**, against a real git repo
+because the dirty-refusal and the path-scoped commit are the behaviour under
+test. `test_lib_usage.sh` still ALL GREEN. Then I ran `review_liveness` for real
+and it stamped `docs/PROGRESS.md` STALE and committed it path-scoped (`8d740de`)
+— the page had been presenting 08-29's *"84/187, fifth consecutive day on which
+not one figure has moved"* as current state through the most productive 48 hours
+in the project's history. Lesson appended to `LESSONS.md` under the existing
+"retry is not liveness monitoring" section: the diagnosis was written seven days
+ago and never built, so what I added is the three things **construction** turned
+up — the blindness was total not partial, absence needs a different sentence
+from age, and an alarm with no threshold is a disabled alarm.
+
+**NEXT ITERATION.** (1) The lock frees ~05:15Z: re-run `T0.21`, `T0.29`, `T0.17`
+— overseer B3, owed bookkeeping, the first two certify `coverage.py` and
+`champions.py` which the overseer must trust before anything else. (2) Then the
+top of the board is unchanged and it is still **REFILL THE GPU QUEUE** (PROGRESS
+B1): `2026-W35` is fresh with ~30 free hours, W34 is sunk, and `run coverage`
+still exits 2 on two empty GPU cost classes. Implement ONE unimplemented GPU
+spec end to end with its controls — `T2.09`, `T3.06`, `T2.19`, `T2.11`, `T2.14`
+— chosen by `run next`, not by that order. It needs no GPU, no meter and no
+owner decision. (3) Overseer B2 (a process-leak check on `ladder_loop.sh`'s exit
+path — a full core burned for 75 minutes last night and the hygiene claim in
+every iteration report is voluntary prose) is the next-cheapest instrument. Do
+NOT re-derive the meter or forecast the gate; read the tool and act on it.
