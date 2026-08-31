@@ -598,12 +598,32 @@ LADDER: list[Spec] = [
                "  COVERS: curiosity (claim)"),
 
     Spec("T2.10", 2, "Memory retrieval beats recency",
-         hypothesis="Retrieval scoring beats a pure-recency baseline on recall questions.",
-         falsified_by="Recency-only does as well.",
+         hypothesis="Retrieval scoring beats a pure-recency baseline on recall "
+                    "questions — AND beats both losing scorers on the ME.11 "
+                    "certified stem-disjoint paraphrase fixture, where cue and "
+                    "target share no content word.",
+         falsified_by="Recency-only does as well — or the combined scorer "
+                      "cannot beat both controls by >= 0.10 paraphrase "
+                      "recall@1 on the certified fixture (the seat's known "
+                      "weakness: the same scorer is measured 0.0000 there, "
+                      "ME.11.A 2026-08-30).",
          null_baseline="Return the k most recent events.",
          metric="recall_at_k", budget=Budget.CPU, seeds=3, depends_on=["T0.08"],
-         control="TWO scorers that must LOSE, on the same seeded queries: pure recency, and similarity-only. Two because either one alone can be beaten by a scorer that is merely the other one.",
-         notes="Generative Agents scoring: recency*0.5 + relevance*3 + importance*2."),
+         control="TWO scorers that must LOSE, on the same seeded queries: pure "
+                 "recency, and similarity-only. Two because either one alone "
+                 "can be beaten by a scorer that is merely the other one. Both "
+                 "are ALSO scored on the paraphrase venue; a leaky-cue "
+                 "aliveness floor (>= 0.80 with the full scorer) certifies the "
+                 "venue's instrument is live, else the run is VOID rather than "
+                 "a FAIL bought from a dead rig.",
+         notes="Generative Agents scoring: recency*0.5 + relevance*3 + importance*2. "
+               "Paraphrase conjunct ADDED 2026-08-31 (Review FULL 08-31 FOR THE "
+               "BUILDER item 3; T1.02 strengthen-only precedent, old version in "
+               "ledger history): the 2026-08-10 PASS certified the templated "
+               "venue only, and ME.11 measured this exact scorer at 0.0000 on "
+               "the paraphrase fixture — the conjunct cannot be satisfied by "
+               "the machinery that satisfied the original, and a FAIL here is "
+               "the correct outcome, not a defect."),
 
     Spec("T2.11", 2, "Skills are distinguishable",
          hypothesis="A classifier recovers the skill label from trajectories above chance.",

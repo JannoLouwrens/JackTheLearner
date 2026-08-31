@@ -36,6 +36,30 @@ carry unique 4-tuples (a 4-word cue identifies exactly one event — oracle 1.0
 by construction); recurring occurrences sit in the first 600 slots so the
 life's tail, where recency-biased questions concentrate, is distinct events.
 Seeded RNG; 3 seeds by spec.
+
+Arm C — the PARAPHRASE VENUE (conjunct added 2026-08-31, Review FULL 08-31
+item 3, T1.02 strengthen-only precedent). Every cue above shares its content
+words with its target, so the 2026-08-10 PASS never touched the seat's known
+weakness: a cue that means the target without quoting it. The ME.11 family
+built and certified (ME.11.0) a stem-disjoint fixture for exactly that case,
+and measured THIS scorer at 0.0000 recall@1 on it (ME.11.A, 3 seeds). The new
+conjunct: the combined scorer must beat BOTH losing scorers by
+MIN_PARA_MARGIN = 0.10 paraphrase recall@1 on that fixture. 0.10 because the
+ME.11 family's own floor (MAX_PARAPHRASE_RECALL, ME.11.A) treats anything at
+or under 0.10 as the useless region — a "win" inside it would be noise scored
+as capability. Scoring and the recency null are IMPORTED from ME.11.A, not
+re-transcribed; the leaky-cue aliveness floor (>= 0.80, ME.11.0's bar)
+certifies the venue's instrument is live, else VOID — a 0.0-vs-0.0 comparison
+from a dead rig refutes nothing (LESSONS: an at-chance control must carry
+proof its instrument was alive).
+
+PRE-REGISTERED EXPECTATION, stated before the run: ME.11.A's 0.0000 means the
+expected outcome is FAIL with all three paraphrase numbers ~0 and leaky
+recall ~1.0. That FAIL is the finding — the Episodic-retrieval seat has been
+held BY VERDICT on a certificate that does not cover the case CHAMPIONS.md
+already calls its known weakness. The repair is a better scorer winning the
+ME.11 bakeoff (whose 2026-08-31 finding is that no bi-encoder certifies
+paraphrase recall at this scale), never a weakening of this conjunct.
 """
 from __future__ import annotations
 
@@ -43,10 +67,15 @@ import sys
 import tempfile
 from pathlib import Path
 
+from ..fixtures import paraphrase_eval as F
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
+from .me_11_a_lexical_incumbent import _recall_at_1, _recency_null
 
 REPO = Path(__file__).resolve().parents[2]
+
+IMPL_DEPS = ["experiments/fixtures/paraphrase_eval.py",
+             "experiments/tests/me_11_a_lexical_incumbent.py"]
 
 N_DISTINCT = 500
 N_RECUR_TUPLES = 30
@@ -62,6 +91,8 @@ MIN_LATEST_AT_1 = 0.90
 MAX_NULL_RECALL = 0.50
 MIN_MARGIN = 0.30
 MAX_SIMONLY_LATEST = 0.50
+MIN_PARA_MARGIN = 0.10       # beat both controls by more than ME.11's useless region
+MIN_LEAKY_RECALL = 0.80      # aliveness floor, ME.11.0's bar — below it, VOID
 
 OBJECTS = ["kettle", "ladder", "apple", "lantern", "hammer", "compass", "bucket",
            "rope", "mirror", "whistle", "anchor", "basket", "drum", "kite",
@@ -173,11 +204,20 @@ def _experiment(seed: int) -> dict:
                        and r[0].event.eid == ev.eid)
                   for ev, cue in arm_b)
 
+    # Arm C: the same combined scorer on the certified paraphrase fixture.
+    fx = F.build(seed)
+    fmem = F.load_into_memory(fx, path=Path(tempfile.mkdtemp()) / "fixture.jsonl")
+    headline = [q for q in fx["cues"] if not q["ambiguous"]]
+    para = _recall_at_1(fmem, headline, fx["now"])["paraphrase_recall_at_1"]
+
     return {
         "events": len(mem),
         "recall_at_5": round(hits5 / len(arm_a), 4),
         "recall_at_1": round(hits1 / len(arm_a), 4),
         "latest_at_1": round(latest1 / len(arm_b), 4),
+        "para_recall_at_1": para,
+        "para_cues": len(headline),
+        "fixture_hash": fx["hash"],
     }
 
 
@@ -200,19 +240,45 @@ def _control(seed: int) -> dict:
                           and r[0].event.eid == ev.eid)
                      for ev, cue in arm_b)
 
+    # Both losers on the paraphrase venue, plus the aliveness floor scored
+    # with the FULL scorer — a dead rig must read VOID, not FAIL.
+    fx = F.build(seed)
+    fpath = Path(tempfile.mkdtemp()) / "fixture.jsonl"
+    fmem = F.load_into_memory(fx, path=fpath)
+    fnow = fx["now"]
+    headline = [q for q in fx["cues"] if not q["ambiguous"]]
+    para_recency = _recency_null(fx, headline)
+    fsim = EpisodicMemory(path=fpath, w_recency=0.0, w_importance=0.0)
+    para_sim = _recall_at_1(fsim, headline, fnow)["paraphrase_recall_at_1"]
+    leaky_hits = sum(bool((r := fmem.recall(q["text"], top_k=1, now=fnow,
+                                            channel=q.get("channel"),
+                                            speaker=q.get("speaker")))
+                          and r[0].event.eid in q["gold"])
+                     for q in fx["leaky_cues"])
+    leaky = leaky_hits / max(1, len(fx["leaky_cues"]))
+
     return {
         "recency_recall_at_5": round(rec5 / len(arm_a), 4),
         "recency_latest_at_1": round(rec_latest / len(arm_b), 4),
         "simonly_latest_at_1": round(sim_latest / len(arm_b), 4),
+        "para_recency_recall": round(para_recency, 4),
+        "para_simonly_recall": para_sim,
+        "leaky_recall": round(leaky, 4),
+        "instrument_alive": 1.0 if leaky >= MIN_LEAKY_RECALL else 0.0,
     }
 
 
-def _check(m: dict, c: dict) -> bool:
+def _check(m: dict, c: dict):
+    from ..protocol import Status
+    if c["instrument_alive"] < 1.0:
+        return Status.VOID    # a dead rig refutes nothing — not a measurement
     return (m["recall_at_5"] >= MIN_RECALL_AT_5
             and m["latest_at_1"] >= MIN_LATEST_AT_1
             and c["recency_recall_at_5"] < MAX_NULL_RECALL
             and m["recall_at_5"] - c["recency_recall_at_5"] >= MIN_MARGIN
-            and c["simonly_latest_at_1"] < MAX_SIMONLY_LATEST)
+            and c["simonly_latest_at_1"] < MAX_SIMONLY_LATEST
+            and m["para_recall_at_1"] - c["para_recency_recall"] >= MIN_PARA_MARGIN
+            and m["para_recall_at_1"] - c["para_simonly_recall"] >= MIN_PARA_MARGIN)
 
 
 def run(ledger: Ledger | None = None):
