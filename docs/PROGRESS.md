@@ -1,3 +1,11 @@
+> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
+> the Review has missed its schedule: newest row in docs/PROGRESS_LOG.md is 2026-08-29 (2d old; the schedule allows 1d)
+> So everything below is the PREVIOUS run of the review and is a RECORD,
+> not current state: its counts, its "current state" framing and any
+> claim about what has or has not moved describe an older world.
+> Stamped 2026-08-31T01:15:11+00:00 by scripts/lib_seal.sh. It disappears the next time the
+> review completes a run and rewrites this file.
+
 # PROGRESS.md — the Review's current-state page
 
 > Written by the Review organ. **Current state, not a log** — each run rewrites
