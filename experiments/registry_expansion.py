@@ -5390,4 +5390,237 @@ EXPANSION: list[Spec] = [
                "path BUYS — and remains the decree's sole registered "
                "falsifier, which is why it exists at all. Threshold, control "
                "and null are unchanged from FROZEN_VS_PLASTIC.md §7.3."),
+
+    # ── THE LADDER TEST (docs/research/CURIOSITY_BAKEOFF.md) ────────────
+    # Two-digit ids on purpose. `run.py::_module_for` globs `lt_1_*.py`, which
+    # would also match `lt_10_*.py`, and its hierarchical-id escape hatch does
+    # NOT cover that case (it tests startswith("lt_1_"), and "lt_10" fails it).
+    # The same latent collision exists today between UB.1 and UB.16. LT.01-LT.99
+    # is structurally immune. See LESSONS.md, "A spec id that is a prefix of
+    # another spec id disables one of them".
+
+    Spec("LT.01", 2, "The Ladder Test is measurable: null floor and un-gameable rise",
+         hypothesis="A free-roaming random climber-rover produces ZERO engaged "
+                    "ladder attempts, while reaching >=0.6 m of torso RISE by "
+                    "non-ladder routes; and from the ladder base a genuine "
+                    "weight-bearing hang occurs in 1-5% of 3 s random bursts — "
+                    "so ladder-supported rise (contact AND airborne AND held "
+                    ">=0.5 s AND load-bearing) discriminates, raw torso z does "
+                    "not, and the first success is reachable by chance.",
+         falsified_by="A free-roaming random agent produces engaged attempts "
+                      "(the null floor is not zero), or a non-ladder route "
+                      "reaches the platform, or P(hang from the base) is 0 in "
+                      "800 bursts (no bootstrap exists and no learning-progress "
+                      "method can work without an archive).",
+         null_baseline="n/a — this spec IS the null floor measurement.",
+         metric="null_engaged_attempts", budget=Budget.CPU_LONG,
+         depends_on=["PG.1", "PG.3", "PG.4"], seeds=3,
+         control="A greedy height-maximising oracle with adhesion DISABLED must "
+                 "still be unable to reach the platform — else an alternate "
+                 "route exists and SUCCESS is not evidence of climbing.",
+         kills="The entire Ladder Test, before a single arm is trained. Costs "
+               "20 CPU-minutes; every threshold in the programme is set from it.",
+         notes="Pilot 2026-08-09 (aarch64, mujoco 3.2.3). Free-roaming: 0 "
+               "engaged attempts in 9,000 random decisions; max NON-ladder "
+               "torso z 1.007 m against z_rest 0.360 m. From the base, 800 x "
+               "3 s bursts: P(hang) = 0.55 under an ABSOLUTE-z definition "
+               "(broken - z_rest already clears the bar), 0.063 instantaneous, "
+               "0.026 persistent, 0.021 +- 0.009 persistent AND load-bearing; "
+               "random rise ceiling 0.83 m. Those four numbers ARE the "
+               "definition of h(t) and every threshold in LT.03."),
+
+    Spec("LT.02", 2, "The self-generated-chaos detector works (PG.4's blind spot)",
+         hypothesis="A curiosity agent can farm irreducible surprise from its "
+                    "OWN body with zero noise-panel dwell, and the chaos "
+                    "detector sees it: ragdoll-ICM (panel deleted, adhesion 0) "
+                    "scores chaos_occupancy >= 3.0 and chaos_reward_ratio >= "
+                    "2.0 while PG.4's dwell metric reads 0.000, and the "
+                    "scripted climber — which moves hard and falls repeatedly — "
+                    "scores chaos_occupancy <= 1.0.",
+         falsified_by="Ragdoll-ICM is NOT flagged (the detector is blind and no "
+                      "arm's immunity may be reported), or the scripted climber "
+                      "IS flagged (the detector penalises coordinated motion and "
+                      "falling, i.e. the behaviour GOAL.md asks for).",
+         null_baseline="The random policy, which DEFINES the ruler: theta is its "
+                       "90th-percentile irreducible error, so it reads "
+                       "chaos_occupancy = 1.0 by construction.",
+         metric="chaos_detector_separation", budget=Budget.CPU_LONG,
+         depends_on=["LT.01", "PG.4"], seeds=3,
+         control="Cross-check: the ICM agent WITH the panel present must be "
+                 "flagged by BOTH detectors (panel_dwell > 0.4 AND "
+                 "chaos_occupancy >= 3.0). Two independent detectors must agree "
+                 "on a known positive, or one of them is reading noise.",
+         kills="Every 'his curiosity is not trapped' claim that rests on panel "
+               "dwell alone — which is all of them, including CU.3 as currently "
+               "written.",
+         notes="separation = chaos_occupancy(ragdoll-icm) - "
+               "chaos_occupancy(scripted-climber), with panel_dwell(ragdoll-icm) "
+               "asserted == 0.0. That number pair IS the gap: a total curiosity "
+               "failure that PG.4 scores as perfectly clean. Detector = "
+               "pooled-fit forward model, out-of-fold, high error AND no "
+               "reducibility when the training data doubles (LPM criterion, "
+               "arXiv:2509.25438, used as a diagnostic not a reward). "
+               "thrash_ratio is reported as the model-free second signal."),
+
+    Spec("LT.03", 5, "THE LADDER TEST: curiosity alone climbs the ladder",
+         hypothesis="With the environment returning reward identically zero, at "
+                    "least one candidate arm produces >=20 engaged ladder "
+                    "attempts, a distance-matched post-fall return lift >= 2.0, "
+                    "an ascent gain >= 0.35 m with Spearman rho >= 0.35 (p<0.01) "
+                    "and a final-quintile mean rise >= 0.85 m (above the "
+                    "measured random ceiling of 0.83 m), and at least one "
+                    "topping-out, in >=2 of 3 seeds — while dwelling <= 0.15 at "
+                    "the noise panel in every seed and never tripping the "
+                    "self-generated-chaos check.",
+         falsified_by="No arm produces a single engaged attempt (exploration "
+                      "never reaches the ladder), or attempts occur with no "
+                      "ascent trend (credit assignment, not curiosity, is the "
+                      "bottleneck), or every arm that climbs also fixates on the "
+                      "panel or farms its own body noise.",
+         null_baseline="Random and random-repeat action: measured at 0 engaged "
+                       "attempts in 9,000 decisions (LT.01). Plus randrew, a "
+                       "random-stationary-reward learner at matched compute, "
+                       "which controls for 'any optimisation pressure explores'.",
+         metric="unforced_ascent_gain", budget=Budget.CPU_LONG,
+         depends_on=["LT.01", "LT.02", "PG.4"], seeds=3,
+         control="Three, each must land on its declared side: (1) the ICM "
+                 "control MUST fixate on the panel in THIS rig (dwell > 0.4) — "
+                 "proving the trap is live here and not only in PG.4's rover; "
+                 "(2) randrew must not match the winner's visitation lift; "
+                 "(3) a goal-shuffled variant of the winning arm must show no "
+                 "ascent trend.",
+         kills="The 'intrinsic motivation is enough' thesis for structured "
+               "vertical behaviour. If it fails, GOAL.md's ladder image needs a "
+               "goal/skill layer (PEG 2303.13002, or a Go-Explore archive over "
+               "h(t)-bearing states — PG.3 already certified the state restore "
+               "it needs at resume_max_dev 0.0), and that pivot is decided by "
+               "this result, not by preference.",
+         notes="SCREENING ONLY — each candidate against the null, no winner "
+               "declared; arbitration is LT.04, because run_bakeoff VOIDs on a "
+               "sub-gate arm and icm/rnd are REQUIRED to fail. An arm whose "
+               "chaos_occupancy >= 3.0 AND chaos_reward_ratio >= 2.0 returns "
+               "Status.VOID for that arm: its curiosity signal degenerated, so "
+               "the run did not test the claim. Every arm's reward code passes "
+               "a static audit for ladder-referencing symbols; a match is ERROR. "
+               "No published system has done this — LadderMan (2606.05873) "
+               "climbs from a human reference motion, METRA on a 69-DoF humanoid "
+               "flails (RGSD 2510.06203), and the one time LP curricula were "
+               "pointed at a 2D climbing morphology they reached ~1% mastery "
+               "(TeachMyAgent 2103.09815)."),
+
+    Spec("LT.04", 5, "Bakeoff: which curiosity mechanism climbs best",
+         hypothesis="Among the arms that cleared LT.03, one beats the runner-up "
+                    "by >=1.5 sigma of the pooled seed spread on "
+                    "unforced_ascent_gain.",
+         falsified_by="n/a for a bakeoff — the outcomes are WINNER, TIE (take "
+                      "the cheaper arm) or VOID (an arm is below the 3-sigma "
+                      "learning gate, so the decision is blocked, not made).",
+         null_baseline="Random-repeat action, shared across arms.",
+         metric="unforced_ascent_gain", budget=Budget.CPU_LONG,
+         depends_on=["LT.03"], seeds=3,
+         control="Inherited from LT.03; no arm may enter this bakeoff whose "
+                 "LT.03 result was VOID for self-generated chaos.",
+         notes="run_bakeoff(arms=[disagree, lp, metra], null_run=random_repeat, "
+               "learning_gate_sigma=3.0, margin_sigma=1.5). Arm.cost is declared "
+               "in CPU-CORE-SECONDS OF LEARNER TIME PER 1,000 DECISIONS, measured "
+               "in-run with time.process_time() around the intrinsic-reward and "
+               "policy-update calls and EXCLUDING MuJoCo (identical across arms, "
+               "so including it would compress the differences the tie-break "
+               "needs). Pre-run estimates: lp 2.0, disagree 9.0, metra 14.0 — a "
+               "TIE therefore resolves to lp, which is why the measurement must "
+               "replace the estimate before this runs. Fewer than two arms "
+               "clearing LT.03 records VOID: 'fewer than two learners'."),
+
+    Spec("LT.05", 5, "The climb survives the curiosity that produced it",
+         hypothesis="With the intrinsic module removed and reward identically "
+                    "zero, the winning arm's deterministic policy still reaches "
+                    ">= 0.8x its best training ladder-supported rise and tops "
+                    "out at least once in 10 episodes.",
+         falsified_by="Ladder-supported rise collapses without the bonus — then "
+                      "the behaviour was bonus-chasing, not a skill.",
+         null_baseline="The same policy at initialisation, bonus off.",
+         metric="retention_ratio", budget=Budget.CPU_LONG,
+         depends_on=["LT.04"], seeds=3,
+         control="A policy trained with the random-stationary reward (randrew) "
+                 "must show no retained climbing — else retention measures "
+                 "architecture, not learning.",
+         notes="Spontaneous attempt FREQUENCY with the bonus off is reported but "
+               "explicitly NOT gated: a learning-progress agent is supposed to "
+               "lose interest once the ladder is mastered, exactly as a child "
+               "does. Gating on frequency would systematically penalise the "
+               "mechanism most likely to be right."),
+
+    Spec("LT.06", 5, "It is the ladder he is curious about, not the coordinates",
+         hypothesis="The identical unmodified arm, in a world where the ladder "
+                    "is moved, re-yawed and re-spaced, scores >= 0.5x its "
+                    "home-world ascent gain.",
+         falsified_by="Performance collapses when the ladder moves — the arm "
+                      "learned a location, or the reward was hard-coded.",
+         null_baseline="Home-world score for the same arm and seed.",
+         metric="moved_ladder_ratio", budget=Budget.CPU_LONG,
+         depends_on=["LT.04"], seeds=3,
+         control="A deliberately hard-coded climb reward, written for this "
+                 "control only and keyed to the home ladder's xy, MUST fail "
+                 "here — that is what makes the spec an instruction detector "
+                 "rather than a generalisation test.",
+         notes="Together with LT.03's static symbol audit this is the "
+               "anti-instruction provision. Eureka-style LLM reward writing "
+               "(2310.12931) is caught by exactly this pair."),
+
+    Spec("LT.07", 5, "The winner survives fresh seeds",
+         hypothesis="Re-run at 3 seeds never used during screening or "
+                     "arbitration, the winning arm clears every one of LT.03's "
+                     "seven observables at the same pre-registered thresholds.",
+         falsified_by="Any observable falls below its LT.03 threshold on fresh "
+                      "seeds — the win was selection over arms and seeds.",
+         null_baseline="LT.01's null floor, re-measured on the fresh seeds.",
+         metric="unforced_ascent_gain", budget=Budget.CPU_LONG,
+         depends_on=["LT.04"], seeds=3,
+         control="The same three controls as LT.03, re-run: the ICM control "
+                 "must still fixate on these worlds.",
+         kills="Nothing is written to the README before this passes.",
+         notes="Seeds 10/11/12. Costs ~40 CPU-minutes and removes the "
+               "multiple-comparison argument entirely (G8)."),
+
+    Spec("LT.08", 5, "The humanoid climbs — same test, real body",
+         hypothesis="With locomotion in hand, the winning arm reproduces LT.03's "
+                    "seven observables on the full humanoid in the same playground.",
+         falsified_by="Any of LT.03's six clauses fails on the humanoid at the "
+                      "budgeted step count with the curve flat.",
+         null_baseline="LT.01's nulls, re-measured on the humanoid body.",
+         metric="unforced_ascent_gain", budget=Budget.GPU_LONG,
+         depends_on=["LT.07", "T2.01", "T2.02"], seeds=3,
+         control="Same as LT.03, re-run on this body: the ICM control must "
+                 "fixate, and the chaos check matters MORE here — RGSD "
+                 "(2510.06203) reports exactly this failure at 69 DoF.",
+         kills="Nothing on its own — a FAIL here with LT.03 passing scopes the "
+               "claim honestly to the reduced body and points at throughput.",
+         notes="BLOCKED until T2.01/T2.02 pass. Also blocked on throughput: at "
+               "T2.01's measured ~128 env-steps/s a 20M-step arm-seed costs "
+               "43 h, so 3 seeds exceed a whole week of Kaggle quota for ONE "
+               "arm. Getting the 45.5M trunk out of the inner loop makes it "
+               "MuJoCo-bound at ~2,000 steps/s (~2.8 h/arm-seed). The "
+               "prerequisite is a throughput spec, not more quota."),
+
+    Spec("LT.09", 5, "The VLM proposes ladder-shaped goals; learning progress disposes",
+         hypothesis="Frozen-VLM-proposed goals, expressed ONLY as predicates in "
+                    "the existing outcome space and filtered by LP, reach the "
+                    "first engaged ladder attempt in fewer decisions than "
+                    "LP-only at matched goal count.",
+         falsified_by="No speedup, or VLM goals flood the buffer while their "
+                      "achievement stays ~0 (a hallucinated curriculum).",
+         null_baseline="LP-only (the lp arm) at matched goal count.",
+         metric="time_to_first_engaged_attempt", budget=Budget.CPU_LONG,
+         depends_on=["LT.04"], seeds=3,
+         control="A scrambled-caption VLM fed a DIFFERENT scene must not beat "
+                 "LP-only — else the benefit was 'more goals', not grounded "
+                 "interestingness. Additionally the VLM may never emit reward "
+                 "code: a proposal that is not a predicate over existing outcome "
+                 "dimensions is rejected before it reaches the buffer.",
+         notes="Only run if lp wins LT.04. LLM-proposed goals have never driven "
+               "low-level continuous control (ELLM 2302.06692 limitations; "
+               "OMNI-EPIC 2405.15568 uses 6 discrete actions), so this is the "
+               "genuinely unoccupied combination — and the reason it is "
+               "unoccupied is a grounding gap, which the predicate restriction "
+               "is designed to sidestep."),
 ]

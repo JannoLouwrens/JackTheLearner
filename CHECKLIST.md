@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 94 / 202 demonstrated
+## 94 / 211 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -911,3 +911,41 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ For each modality pair (A,B), an encoder for A trained JOINTLY with B by cross-modal masked prediction outperforms an A-only encoder of matched capacity WHEN BOTH ARE EVALUATED ON A ALONE at test time. The reshaping gain R = perf(M_AB | A only) - perf(U_A) is positive, paired by seed, bootstrap CI excluding zero.
       - _dies if:_ R indistinguishable from zero for the PLASTIC arm. Then binding does not reshape encoders at our scale, the arithmetic that the PLASTIC-ONLY decree rests on buys nothing measurable here, and that returns to the owner as evidence — LOUDLY, in the Review. The decree's ENDS are not on trial (SYSTEM.md class 1); its stated MECHANISM is (class 2).
       - _then delete:_ The claim that cross-modal binding reshapes what an encoder computes at this project's scale. A positive R is the measured value of the plastic path; a null R does not restore freezing (the owner decreed the ENDS), but it removes the arithmetic argument that has been carried as if it were a measurement since 2026-08-09.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **LT.01** The Ladder Test is measurable: null floor and un-gameable rise
+      - _asserts:_ A free-roaming random climber-rover produces ZERO engaged ladder attempts, while reaching >=0.6 m of torso RISE by non-ladder routes; and from the ladder base a genuine weight-bearing hang occurs in 1-5% of 3 s random bursts — so ladder-supported rise (contact AND airborne AND held >=0.5 s AND load-bearing) discriminates, raw torso z does not, and the first success is reachable by chance.
+      - _dies if:_ A free-roaming random agent produces engaged attempts (the null floor is not zero), or a non-ladder route reaches the platform, or P(hang from the base) is 0 in 800 bursts (no bootstrap exists and no learning-progress method can work without an archive).
+      - _then delete:_ The entire Ladder Test, before a single arm is trained. Costs 20 CPU-minutes; every threshold in the programme is set from it.
+- [ ] **LT.02** The self-generated-chaos detector works (PG.4's blind spot)
+      - _asserts:_ A curiosity agent can farm irreducible surprise from its OWN body with zero noise-panel dwell, and the chaos detector sees it: ragdoll-ICM (panel deleted, adhesion 0) scores chaos_occupancy >= 3.0 and chaos_reward_ratio >= 2.0 while PG.4's dwell metric reads 0.000, and the scripted climber — which moves hard and falls repeatedly — scores chaos_occupancy <= 1.0.
+      - _dies if:_ Ragdoll-ICM is NOT flagged (the detector is blind and no arm's immunity may be reported), or the scripted climber IS flagged (the detector penalises coordinated motion and falling, i.e. the behaviour GOAL.md asks for).
+      - _then delete:_ Every 'his curiosity is not trapped' claim that rests on panel dwell alone — which is all of them, including CU.3 as currently written.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **LT.03** THE LADDER TEST: curiosity alone climbs the ladder
+      - _asserts:_ With the environment returning reward identically zero, at least one candidate arm produces >=20 engaged ladder attempts, a distance-matched post-fall return lift >= 2.0, an ascent gain >= 0.35 m with Spearman rho >= 0.35 (p<0.01) and a final-quintile mean rise >= 0.85 m (above the measured random ceiling of 0.83 m), and at least one topping-out, in >=2 of 3 seeds — while dwelling <= 0.15 at the noise panel in every seed and never tripping the self-generated-chaos check.
+      - _dies if:_ No arm produces a single engaged attempt (exploration never reaches the ladder), or attempts occur with no ascent trend (credit assignment, not curiosity, is the bottleneck), or every arm that climbs also fixates on the panel or farms its own body noise.
+      - _then delete:_ The 'intrinsic motivation is enough' thesis for structured vertical behaviour. If it fails, GOAL.md's ladder image needs a goal/skill layer (PEG 2303.13002, or a Go-Explore archive over h(t)-bearing states — PG.3 already certified the state restore it needs at resume_max_dev 0.0), and that pivot is decided by this result, not by preference.
+- [ ] **LT.04** Bakeoff: which curiosity mechanism climbs best
+      - _asserts:_ Among the arms that cleared LT.03, one beats the runner-up by >=1.5 sigma of the pooled seed spread on unforced_ascent_gain.
+      - _dies if:_ n/a for a bakeoff — the outcomes are WINNER, TIE (take the cheaper arm) or VOID (an arm is below the 3-sigma learning gate, so the decision is blocked, not made).
+- [ ] **LT.05** The climb survives the curiosity that produced it
+      - _asserts:_ With the intrinsic module removed and reward identically zero, the winning arm's deterministic policy still reaches >= 0.8x its best training ladder-supported rise and tops out at least once in 10 episodes.
+      - _dies if:_ Ladder-supported rise collapses without the bonus — then the behaviour was bonus-chasing, not a skill.
+- [ ] **LT.06** It is the ladder he is curious about, not the coordinates
+      - _asserts:_ The identical unmodified arm, in a world where the ladder is moved, re-yawed and re-spaced, scores >= 0.5x its home-world ascent gain.
+      - _dies if:_ Performance collapses when the ladder moves — the arm learned a location, or the reward was hard-coded.
+- [ ] **LT.07** The winner survives fresh seeds
+      - _asserts:_ Re-run at 3 seeds never used during screening or arbitration, the winning arm clears every one of LT.03's seven observables at the same pre-registered thresholds.
+      - _dies if:_ Any observable falls below its LT.03 threshold on fresh seeds — the win was selection over arms and seeds.
+      - _then delete:_ Nothing is written to the README before this passes.
+- [ ] **LT.08** The humanoid climbs — same test, real body
+      - _asserts:_ With locomotion in hand, the winning arm reproduces LT.03's seven observables on the full humanoid in the same playground.
+      - _dies if:_ Any of LT.03's six clauses fails on the humanoid at the budgeted step count with the curve flat.
+      - _then delete:_ Nothing on its own — a FAIL here with LT.03 passing scopes the claim honestly to the reduced body and points at throughput.
+- [ ] **LT.09** The VLM proposes ladder-shaped goals; learning progress disposes
+      - _asserts:_ Frozen-VLM-proposed goals, expressed ONLY as predicates in the existing outcome space and filtered by LP, reach the first engaged ladder attempt in fewer decisions than LP-only at matched goal count.
+      - _dies if:_ No speedup, or VLM goals flood the buffer while their achievement stays ~0 (a hallucinated curriculum).
