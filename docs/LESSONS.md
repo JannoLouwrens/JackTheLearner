@@ -9613,3 +9613,32 @@ contains zero references to it.
 subdivides.** `VOID` became two states — repairable and foreclosed — and only one
 of its two readers was updated. An instrument that reports a closed door as an
 open one is not merely silent; it actively spends attention on it.
+
+## An instrument that generates work must count the work it generates (55th audit, 2026-08-31)
+
+Every ratchet this project owns counts a debt the *system* owes itself:
+`coverage` counts uncovered commitments, `decisions` counts undeclared forks,
+`champions` counts uncontestable seats, `review-queue` counts unmoved rows. All
+four returned green or honestly-red on 2026-08-31. On the same day, **11 of the
+builder's 25 iterations — 44% of a full day — went to overseer-generated B-items
+and to the certificate re-buys those edits mechanically caused.** Three went to
+specs about Jack, and all three settled FAIL.
+
+The mechanism is arithmetic, not misconduct. An edit to `coverage.py`,
+`champions.py`, `protocol.py` or `run.py` decays the `IMPL_DEPS` of every T0.*
+certificate gating that file, and each decayed certificate must be re-bought in
+a later iteration. So one audit issuing six B-items bills the ladder roughly
+twice over: once to make the edit, once to re-buy what the edit invalidated.
+
+**Rule: an organ that creates work for another organ must publish its own cost
+in the same units the other organ is measured in.** The audit's output is
+counted in findings; its cost is paid in iterations, and no instrument converts
+between the two. Until one does, the honest control is self-imposed and blunt —
+**cap the B-items, and prefer items that do not touch an instrument.**
+
+The general shape, which is why this belongs here rather than in one report: every
+measuring instrument in this repo was built to catch the system deceiving itself,
+and each was pointed outward. **A watcher whose own consumption is invisible to
+every meter it reads will eventually be the largest line item nobody can see** —
+and it will keep returning `rc=0` while it happens, because it is measuring
+everything except itself.
