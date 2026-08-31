@@ -847,3 +847,38 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
     policy covers W0 as well as curiosity (the wk5 reading) re-buys the same
     unattributable contrast; any (a) redesign must gate on the random-action
     comparator too, or state why the wk5 number no longer applies.
+
+ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) + 78aad78 (ARENA-UNREACHABLE) | OPEN
+    DUE: 2026-09-06 | the re-parenting design, owed by the Review's Sunday
+        FULL run alongside `w0-too-shallow` — same window, coupled evidence
+        (54th audit B6: "route this to REVIEW_QUEUE.md as its own row").
+    Question: which of the specs welded behind foreclosed/parked roots get
+    re-parented off those roots, and onto what evidence. The set, computed
+    over `depends_on` at registry 211 (2026-08-31): **15 specs**, from three
+    contributing roots — LC.03's 8 (LC.04, LC.05, LC.06, DP.01, DP.02, DP.03,
+    OP.01, PS.04), T3.06's 2 (T5.06, T5.08), UB.10's 5 (UB.11, UB.12, UB.13,
+    and second-order TA.03, UB.16). The 54th audit's "13" counted only
+    first-order behind UB.10; the transitive walk adds the last two. BA.03's
+    declared radius is none and nothing depends on SM.02, so those two roots
+    weld nobody — their cost is champion-ring reachability, already counted
+    by ARENA-UNREACHABLE.
+    **DP.02 is the audit's named case and the cheapest call:** "lesion the
+    shared trunk, both modes degrade together" is a probe on a trained core,
+    not a claim that needs the five-way screen to have returned two learners
+    — yet it sits at DP.02 <- DP.01 <- LC.04 <- LC.03. Candidate re-parent:
+    the post-D10 seated core plus its scale-transfer challenger spec
+    (registered in D10's firing commit, depends_on LC.00-LC.02), which is
+    also the natural new parent for the LC.04-LC.06 chain once D10's default
+    amends LC.04's premise ("the screen IS the arbitration when it returns
+    exactly one").
+    Precedent, both directions: re-parenting UB.1-UB.8 off T2.01 made eight
+    specs immediately runnable (LESSONS.md), and a challenger registered as
+    a NEW spec bills nothing (T1.02 precedent).
+    Staleness bill: **NONE, verified not assumed (2026-08-31).** SEMANTIC:
+    `depends_on` is a SPEC_CLAIM_FIELDS member, so re-parenting moves each
+    spec's spec_sha — but all 15 have zero ledger rows (checked directly), so
+    no bought verdict drifts. MECHANICAL: zero certificates cite
+    `registry.py`/`registry_expansion.py` in IMPL_DEPS (grepped
+    experiments/tests/). The only cost is design attention, which is why this
+    is routed rather than done: which parent each spec gets decides what its
+    claim MEANS, and that is the Review's desk.
