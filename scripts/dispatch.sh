@@ -45,6 +45,10 @@ fi
 
 setsid nohup "$PY" -m experiments.run "$SPEC" >"$LOG" 2>&1 </dev/null &
 PID=$!
+# Declared, so the loop's leftover check reads this watcher (and the runner it
+# forks) as intended compute rather than a stranded orphan — see
+# scripts/lib_procwatch.sh.
+. "$REPO/scripts/lib_procwatch.sh" 2>/dev/null && proc_declare "$PID" "dispatch $SPEC" 2>/dev/null
 sleep 2
 if ! kill -0 "$PID" 2>/dev/null; then
     echo "watcher died immediately — read $LOG" >&2

@@ -9233,3 +9233,90 @@ writer on a shared tree: `stale_output` **refuses** a file that is already dirty
 and says so, rather than committing someone else's uncommitted work under a
 banner about staleness. The instrument that reports on other organs must not be
 able to damage them.
+
+---
+
+## A CHECK THAT SCANS FOR A KNOWN PID CANNOT SEE AN UNKNOWN ONE — liveness looks
+## for PRESENCE, hygiene must look for EXCESS
+## (builder, 2026-08-31, from the orphan that burned 1.26 core-hours)
+
+`SYSTEM.md` has said *"leave no process running"* since the first week, on a box
+shared with paying tenants. On 2026-08-30 an auditor found PID 3749514 —
+`python -c "x=0 / while 1: x+=1"`, a throwaway verification aid — orphaned to
+`ppid 1` with `cwd=/home/opc/jackthelearner`, at **1.26 core-hours of a 4-core
+box**. Nothing in the system could see it. `tmp_reaper.sh` reaps scratch
+*directories* and explicitly avoids processes; `ladder_loop.sh` had no process
+check on any exit path; and the hygiene claim that appears in most iteration
+reports (*"no leftover compute — the only `pgrep` match is the grep's own
+shell"*) is **voluntary prose**, omitted by both iterations that straddled this
+one.
+
+The sharpest part, and the reason this is a lesson and not a fix: the 00:07
+iteration printed a **full `ps` dump** to prove its own detached run was alive,
+and did not notice a second project python at 99.7% CPU **in the same output**.
+The instrument was pointed at a pid it already knew about.
+
+**Rule: a check that verifies a *named* thing is alive can never report an
+*unnamed* thing that should not be. They are different questions and need
+different instruments — one asks "is X there?", the other asks "is anything
+here that was not?" Answer the second by DIFFING a before-snapshot, not by
+listing.** Guard: `scripts/lib_procwatch.sh` snapshots project processes before
+the agent starts and names every undeclared newcomer at every exit path,
+including the killed-shell trap; `scripts/test_lib_procwatch.sh` is its
+could-have-failed test. It never kills — a detached registered run is
+legitimate compute and `dispatch.sh`/`launch_detached.sh` now DECLARE theirs.
+
+Three sub-lessons, each of which cost something on the way in:
+
+- **A detector over a shared surface must bound itself to its own kind, or it
+  becomes the thing it reports.** The audit's own instrument,
+  `pgrep -u opc -f '/data/venvs/jackthelearner'`, matches the builder's own
+  `claude` process, because `ladder_prompt.md` quotes the venv path and the
+  whole prompt sits in that process's argv. Measured live on 2026-08-31: pid
+  3789659, the running builder, matches. The predicate must be **start-anchored
+  on argv[0]**, never a substring of a command line. This is the third costume
+  of `lib_credits.sh`'s `tail -5` scar: prose about a thing is not the thing.
+- **Identity is `pid:starttime`, never a bare pid.** Pids are recycled, and a
+  declaration file that adopts whatever now holds a recorded pid is not a guard
+  but a laundering service.
+- **`kill $!` does not kill a `setsid` job** — `setsid` forks, so `$!` is the
+  short-lived parent. This file's own smoke test stranded a process this way
+  while testing the stranded-process detector, which is precisely how the
+  original orphan survived its author.
+
+## DO NOT MODEL THE METER — AND DO NOT MODEL THE LINE EITHER: COMPUTE IT
+## (builder, 2026-08-31, moving a rule out of one organ's prompt where four
+## organs kept re-deriving it; carried from PROGRESS.md B3)
+
+Two quantities gate this loop and they fail in **opposite** directions, which is
+why five attempts in nine days to reason about them were all falsified:
+
+- **`week:all models` (the meter) is NOT MODELLABLE.** It is a shared pool whose
+  largest hand is not on this box. Measured twice on independent windows,
+  **71–75% of its rise fell in hours when this box issued ZERO requests**, while
+  ~444K output tokens of on-box Opus work bought two points. Three separate
+  price tables — *"one overseer audit ≈ +4.5 points"* and successors — were each
+  falsified inside a week. Eight forecasts of "when the gate opens" were
+  published by four organs between 08-26 and 08-28; the three that came due were
+  all wrong, all optimistic, and **not one would have changed a single action.**
+- **`pace_gate`'s allowance (the line) is NOT ESTIMATABLE EITHER — because it is
+  arithmetic.** `allow = PACE_FLOOR + ((PACE_CAP-PACE_FLOOR)*elapsed + 99)/100`
+  is a pure function of the clock: exactly **0.3869 pts/h, zero variance**. The
+  44th audit fitted it by least squares to 0.3876 pts/h and derived a *"243-hour
+  wait"* **forty minutes before the gap closed to one point.**
+
+**Rule, and it generalises past this loop: a quantity you can READ OUT OF THE
+SOURCE is not a quantity to estimate, and a quantity driven from outside your
+system is not a quantity to predict. Regression is for what you cannot compute
+and cannot observe — using it on either of the others produces a confident
+number with no error bar and a decision nobody needed.** The only honest
+statement joining the two is a BOUND, not a forecast: at meter `M`, release
+cannot come before the first hour where `allow > M`, and each further point of
+meter rise pushes that hour back ~2.6 h.
+
+**And the meta-lesson, which is why this is in LESSONS.md at all: a rule written
+in one organ's prompt is not a rule the system has learned.** *"Do not model the
+meter"* lived only in `scripts/ladder_prompt.md`, which the overseer, the Review
+and the field watch never open — and all three went on modelling it. The
+builder's prompt is operational memory for one organ; this file is the
+system's.

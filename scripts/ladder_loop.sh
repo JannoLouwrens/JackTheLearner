@@ -57,6 +57,7 @@ say() { echo "$(date -Iseconds) $*" >> "$LOG"; }
 . "$REPO/scripts/lib_credits.sh"
 . "$REPO/scripts/lib_usage.sh"
 . "$REPO/scripts/lib_pause.sh"
+. "$REPO/scripts/lib_procwatch.sh"
 
 pause_gate say || exit 0
 
@@ -201,9 +202,29 @@ fi
 ITER_ENDED=0
 on_exit() {
   [ "$ITER_ENDED" = 1 ] && return 0
-  say "iteration end rc=KILLED — the shell died before recording an end (timeout, signal or OOM). Work may still have been committed; the log body is the only record."
+  # A killed shell is the MOST likely way to strand compute — the agent's
+  # children outlive it. Check here too, before the KILLED line.
+  leftover_report
+  say "iteration end rc=KILLED — the shell died before recording an end (timeout, signal or OOM). Work may still have been committed; the log body is the only record.${LEFTOVER_NOTE}"
 }
 trap on_exit EXIT
+
+# SYSTEM.md: "leave no process running" and "stay under ~1.5 GB RAM" on a box
+# with paying tenants. Until 2026-08-31 that rule was enforced by nothing, and
+# an orphaned `python -c "while 1: x+=1"` burned 1.26 core-hours before a human
+# found it (52nd audit B2). The snapshot is taken BEFORE the agent starts so a
+# leak is defined as EXCESS — what is running now and was not then — because a
+# check that scans for one known pid provably cannot see an unknown one.
+# scripts/lib_procwatch.sh holds the scar; scripts/test_lib_procwatch.sh proves
+# the detector still works.
+proc_prune_declarations
+PROC_BEFORE=$(proc_snapshot)
+LEFTOVER_NOTE=""
+leftover_report() {
+  proc_leaks "$PROC_BEFORE" say && return 0
+  LEFTOVER_NOTE=" | LEFTOVER=${PROC_LEAK_N} undeclared process(es) — see the LEFTOVER lines above"
+  return 1
+}
 
 PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")
 
@@ -298,7 +319,10 @@ AFTER=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
 
 ITER_ENDED=1
-say "iteration end rc=${RC} — ${BEFORE} -> ${AFTER} demonstrated"
+# The end line may not be silent about stranded compute: `rc=0` next to a
+# 99.7%-CPU orphan is the "Working" README in one line.
+leftover_report
+say "iteration end rc=${RC} — ${BEFORE} -> ${AFTER} demonstrated${LEFTOVER_NOTE}"
 
 if [ "$RC" = 0 ] && [ -s "$LOST" ] && ! limit_hit; then
   say "recovered — clearing $(wc -l < "$LOST") lost-iteration marker(s)"

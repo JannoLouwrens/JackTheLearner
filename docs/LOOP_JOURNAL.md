@@ -8836,3 +8836,100 @@ owner decision. (3) Overseer B2 (a process-leak check on `ladder_loop.sh`'s exit
 path — a full core burned for 75 minutes last night and the hygiene claim in
 every iteration report is voluntary prose) is the next-cheapest instrument. Do
 NOT re-derive the meter or forecast the gate; read the tool and act on it.
+
+---
+
+## 2026-08-31 ~02:1x UTC — the "leave no process running" rule had no enforcer;
+## it does now, and the detector the audit proposed would have flagged the
+## builder itself (overseer B2, RANK 2)
+
+**Model: Opus** — `week:Fable` is at 100% until 04:59Z, so `ladder_loop.sh`
+refused it in 3 s at 02:07:11 and walked the chain, exactly as designed (the
+`model_limited` repair is working; `lost_iterations.log` is being written by the
+model-floor branch, not the silent one). **Zero pace skips** — the last slot
+before mine was a full iteration, not a `PACING:` line. Meter read at start and
+again at the end of the work: `week:all models` **87%**, session 8% → 10%. That
+is 3 points under the hard stop and it resets at 04:59Z; I sized this unit to
+fit rather than forecasting when the gap closes.
+
+**Why not the top of the board.** Overseer **B3** (re-run `T0.21`/`T0.29`/`T0.17`)
+is impossible: `BA.03`'s registered 3-seed run has held `/tmp/jack-ladder.lock`
+since 23:16 and will until ~05:15Z, so nothing may write the ledger. PROGRESS
+**B1** (refill the GPU queue) is **not what it says any more** — I re-derived it
+rather than taking the page's word, and `run coverage` now reports both empty GPU
+classes as **NOT FILLABLE**: `gpu<20min` and `gpu<2h` have no unimplemented
+runnable spec left to write, only pilots BLOCKED on measured evidence (`DP.04`,
+`SM.03`, `T2.11`) whose repair is a redesign routed to the Review. `T2.09` and
+`T3.06`, two of the five names that list recommends, are implemented already.
+The tool says in as many words: *"Do not spend an iteration looking for a spec to
+write here."* So I took overseer **B2**, which needs no lock, no GPU and no
+owner.
+
+**THE SCAR.** PID 3749514 — `python -c "x=0 / while 1: x+=1"` — was orphaned to
+`ppid 1` with `cwd=/home/opc/jackthelearner` and burned **1.26 core-hours** of a
+4-core box shared with paying tenants. `SYSTEM.md` forbids exactly this and
+**nothing enforced it**: `tmp_reaper.sh` reaps directories and explicitly avoids
+processes, `ladder_loop.sh` had no process check on any exit path, and the
+hygiene sentence in most iteration reports is voluntary prose that both
+straddling iterations omitted.
+
+**THE FINDING, and it is why this is not a one-line `pgrep`.** The instrument the
+audit proposed — `pgrep -u opc -f '/data/venvs/jackthelearner'` — **matches the
+builder's own `claude` process**, because `ladder_prompt.md` quotes the venv path
+and the whole prompt sits in that process's argv. I measured it live: pid
+3789659 (me) matches. A guard that reports the organ it protects gets muted in a
+week. That is `lib_credits.sh`'s `tail -5` scar in a third costume, and the
+predicate had to be **start-anchored on argv[0]** to survive it.
+
+**Built** — `scripts/lib_procwatch.sh`, wired into `ladder_loop.sh`:
+- `proc_snapshot` before the agent starts; leaks are defined as **EXCESS** (what
+  runs now and did not then), because the 00:07 iteration printed a full `ps`
+  dump to prove its own detached run alive and did not see the 99.7%-CPU orphan
+  **in the same output**. A check that scans for a known pid cannot see an
+  unknown one.
+- predicate: argv[0] under the venv, **or** a python whose cwd is the repo (the
+  3749514 shape — the venv's `bin/python` is a symlink to `/usr/bin/python3.9`,
+  so `exe` alone provably cannot tell them apart).
+- identity is `pid:starttime`, never a bare pid — a declaration file that adopts
+  whatever now holds a recorded pid is a laundering service, not a guard.
+- it **never kills**. `dispatch.sh` and `launch_detached.sh` now `proc_declare`
+  what they detach (children attributed through the ppid chain, since `run.py`
+  forks the work); anything undeclared is NAMED with its cpu-seconds, cwd and
+  command line, and the next reader decides. An undeclared process may be the
+  owner's session, and the audit asked for exactly this restraint.
+- every exit path is covered, including the **killed-shell trap** — the most
+  likely way to strand compute, since the agent's children outlive the shell —
+  and `iteration end rc=0` now carries `| LEFTOVER=n` rather than being silent.
+
+**Verified:** `scripts/test_lib_procwatch.sh` **28 cases, ALL GREEN**, against
+real processes in `/proc` (a mocked `/proc` would test the mock — every defect
+in this class lives in how `/proc` is read). Two of them could have failed and
+did, in the first draft: the prose case, and `proc_leaks` called inside `$( )`
+where a subshell swallowed the count. Live smoke test on the running box: the
+snapshot sees `BA.03`'s two pythons and correctly does **not** see my own
+`claude`; an injected orphan was reported with its pid, cwd and command in one
+line. `bash -n` clean on all five touched scripts.
+
+**And the detector caught its own author.** The smoke test's cleanup used
+`kill -9 $!` on a `setsid` job — `setsid` forks, so `$!` is the short-lived
+parent and the python survived. I found it with `pgrep` after the fact and
+killed it. That is the exact mechanism by which the original orphan outlived the
+session that made it, reproduced by accident while testing the guard against it.
+
+**Lessons appended** (two): *"A check that scans for a known pid cannot see an
+unknown one — liveness looks for presence, hygiene must look for excess"*, with
+the three sub-lessons construction turned up; and PROGRESS **B3**, *"do not model
+the meter — and do not model the line either: compute it"*, moved out of
+`ladder_prompt.md` (which the auditing organs never open, which is why four of
+them kept re-deriving it) with the generalisation that a quantity you can read
+out of the source is not a quantity to estimate.
+
+**NEXT ITERATION.** (1) The lock frees ~05:15Z — overseer **B3**: re-run
+`T0.21`, `T0.29`, `T0.17`; owed bookkeeping and the overseer must trust
+`coverage.py`/`champions.py` before anything else. (2) The GPU queue cannot be
+refilled by writing a GPU spec — read `run coverage`'s NOT-FILLABLE lines, then
+take the **cpu<10min** class, which IS empty and IS fillable (`LG.10`, `ME.11`,
+`ME.11.B/C/E`) and clears a baselined class. (3) Watch the first `iteration end`
+line for a `LEFTOVER=` suffix; if a legitimate detached run shows up there, its
+launcher is not declaring and that is the bug, not the process. Do NOT forecast
+the gate — read the tool.

@@ -26,6 +26,12 @@ cd "$REPO" || { echo "REFUSED: cannot cd $REPO" >&2; exit 2; }
 echo "LAUNCH $(date -u +%FT%TZ) cwd=$REPO cmd: $*" >> "$LOG"
 setsid nice -n 19 "$@" >> "$LOG" 2>&1 < /dev/null &
 pid=$!
+# DECLARE IT. A detached run is compute this system MEANT to leave behind, and
+# the loop's leftover check (scripts/lib_procwatch.sh, 52nd audit B2) must be
+# able to tell it from the orphan that cost 1.26 core-hours. Undeclared is not
+# fatal — it prints a LEFTOVER line naming this command, which is the correct
+# failure direction for a guard that never kills.
+. "$REPO/scripts/lib_procwatch.sh" 2>/dev/null && proc_declare "$pid" "launch_detached $LOG: $*" 2>/dev/null
 sleep 15
 alive=$(ps -o args= -p "$pid" 2>/dev/null || true)
 bytes=$(wc -c < "$LOG")
