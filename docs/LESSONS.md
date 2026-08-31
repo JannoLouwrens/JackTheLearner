@@ -9556,3 +9556,60 @@ readout must carry the comparison, not the operand" (2026-08-30) applies to
 VOID gates too, and this spec CITED the BA.03 branch-naming lesson for its
 claim while omitting it for its instrument gates. A lesson applied to the
 verdict and not to the gates is half-applied.
+
+---
+
+## An arena that exists is not an arena that can be run (2026-08-31, 54th audit)
+
+`SYSTEM.md`'s standing rule closed a real hole: *"No architectural seat may be
+held without a REGISTERED, EXISTING challenger spec. Not a named one — an
+existing one, resolvable in `BY_ID`."* `champions.py` enforces it exactly, and
+it works — the `LT` family was registered this morning because of it.
+
+Today two seats passed that check and are nonetheless uncontestable. The
+**Fast/slow coupling** seat is held BY DECREE against a one-spec arena, `DP.02`
+— *"Connected, not two brains: the substrate is shared"*, the test GOAL.md names
+as its defence against the failure it says can happen silently. `DP.02` resolves
+in `BY_ID`. It also sits at `DP.02 ← DP.01 ← LC.04 ← LC.03`, and `LC.03` is
+declared `VOID-FORECLOSED` with *"no v3, no envelope growth, no re-roll"*. There
+is no envelope, no seed count and no budget at which that challenger can run.
+`champions --check` prints `UNCONTESTED — schedule it`. It cannot be scheduled.
+
+**Rule: a contestability check must resolve the arena through the dependency
+graph, not through the symbol table.** Existence and reachability are different
+questions, and every instrument in this repo had only ever asked the first.
+
+### The mechanism that opened the gap: a foreclosure is a graph edit priced as a queue saving
+
+`VOID-FORECLOSED` is a good invention — it stops the loop re-buying a verdict
+arithmetic says cannot change, and it saved four real CPU-hours on `BA.03`. But
+its declaration states only why *re-running this spec* is futile. It says nothing
+about what re-running it was holding up. Three declarations in three days made
+**10 downstream specs permanently unreachable**, and each was journalled purely
+as a gain: *"four hours saved"*, *"queue depth 3→2"*. `T3.06`'s foreclosure cost
+`T5.06` *"Unprompted exploration is real"* and `T5.08` *"Open-endedness: learning
+does not saturate"* — two Tier-5 claims, the project's thesis — and the commit
+that did it recorded a saving and no cost.
+
+**Rule: any declaration that removes a node from the runnable graph must compute
+and record its BLAST RADIUS — the transitive set it renders unreachable, by id
+and by title — in the declaration itself.** A one-sided ledger entry is not an
+honest one. The list is derivable in ten lines from `depends_on`; the reason it
+was never printed is that nobody asked the tool a question whose answer could be
+bad news.
+
+### And the half-catch is worse than the miss
+
+`run blocked` exists *because* of the older lesson two sections up ("A dependency
+graph can quietly make your most important claim unreachable"), which failed
+twice as human advice before it became a command. It sees these roots — and
+prints them as `= VOID`, identically to a repairable VOID like `T2.02`. So its
+ranked *"what one fix would be worth the most"* list puts `LC.03 = VOID frees 8`
+in second place: a door recorded as welded shut, advertised as the project's
+second-best lead. `coverage.py` reads `protocol.void_foreclosed`; `run.py`
+contains zero references to it.
+
+**Rule: when a new state is invented, grep for every reader of the old state it
+subdivides.** `VOID` became two states — repairable and foreclosed — and only one
+of its two readers was updated. An instrument that reports a closed door as an
+open one is not merely silent; it actively spends attention on it.
