@@ -415,7 +415,7 @@ Every line here is backed by an experiment that could have failed;
 - [!] **ME.11.B** Arm B — BM25S with stemming, real lexical SOTA  — abstain_N1=1.0; abstain_N1_std=0.0
       - _asserts:_ A properly implemented BM25 (bm25s, Snowball stemming, stopwords, k1=1.2 b=0.75) beats Arm A on paraphrase recall@1 while keeping lexical retrieval's free abstention (a query whose terms appear nowhere returns an EMPTY list, no threshold needed), at <=2 ms/query at 100k events.
       - _dies if:_ No gain over Arm A — i.e. the incumbent's weakness is semantic, not an implementation defect, and stemming buys nothing. (Pilot says 0.125 vs 0.000: a real but tiny gain.)
-- [ ] **ME.11.C** Arm C — static embeddings (potion-base-8M), near-free semantics
+- [!] **ME.11.C** Arm C — static embeddings (potion-base-8M), near-free semantics  — abstain_N1=0.924433; abstain_N1_std=0.0332562
       - _asserts:_ A distilled STATIC embedding table (model2vec potion-base-8M, 256d, 7.56M params, 30 MB, no attention) with corpus mean-centering and a split-conformal threshold beats Arm B on paraphrase recall@1 by >=0.30 absolute while holding certified abstention >=0.95, at <=20 ms/query at 100k events.
       - _dies if:_ Recall gain over Arm B <0.30, OR certified abstention <0.95 at the conformal threshold, OR the coverage and false-answer thresholds proving INFEASIBLE (tau_fpr > tau_cov) — semantics bought recall with credulity, which ME.11 explicitly forbids.
 - [ ] **ME.11.D** Arm D — a real sentence encoder (all-MiniLM-L6-v2, ONNX)
