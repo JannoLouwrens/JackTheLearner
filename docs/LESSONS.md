@@ -9477,3 +9477,52 @@ of this is the BA.03 lesson ("a verdict that is one bit over a conjunction
 gets read as its most familiar branch") applied ON THE DAY after it was
 written — the second one-bit VOID in 24 hours whose fired conjunct was not
 the familiar one, and whose queue label ("an arm to repair") was wrong.
+
+---
+
+## A burn-rate meter reads PERFECT at the exact moment the waste is worst
+
+Every compute-honesty instrument in this repo measures hours **spent badly**:
+`gpu_budget.json` records `ok: false` jobs, `overruns`, per-week charged totals.
+None measures hours **not spent at all**, and the two failure modes have opposite
+signatures on the same gauge.
+
+The numbers, read on 2026-08-31 (53rd audit):
+
+    week      kaggle h   of 30 free    failed h
+    2026-W31    37.46    over quota      —
+    2026-W32    21.06    70%           1.18
+    2026-W33     7.63    25%           0.26
+    2026-W34     1.62    5%            0.00
+    2026-W35     1.28    4%            0.00
+
+**Failed-job burn went to exactly `0.00` in the same two weeks utilisation
+collapsed to 4%.** Anything reading the waste column saw the cleanest fortnight
+in the project's history. ~28 free GPU-hours per week were expiring untouched,
+~110 h cumulative, and the meter built to catch compute dishonesty was showing
+its best-ever reading — *correctly*, because it was answering a different
+question.
+
+The prior lesson on this box ("an organ that changes what the loop DOES is a
+claim") diagnosed the same symptom with a different cause: **the loop went
+dark.** That cause is now excluded — on 2026-08-31 the builder ran 24 iterations
+in 24 h, 23 at `rc=0`. The loop was fully awake and the quota still expired,
+because `coverage` reported **`dispatchable TODAY: 2, of which 2 VOID → 0 fresh
+dispatches`** and four cost classes with *no path in*. `coverage.py` already
+knows this and says it in words — *"free weekly quota at an empty class is
+unspendable however awake the loop is"* — but it says it in the **coverage**
+tool, while the budget lives in a different file that nothing joins to it.
+
+**The generalisation, which is not about GPUs.** A meter over a *rate* cannot
+see a *denominator going to zero*. Utilisation is `spent / available`, and every
+instrument here measures only the numerator's quality. Whenever a resource is
+free-but-expiring, the honest gauge is **unspent-and-expired**, not
+**spent-and-wasted** — and the second one goes quiet, reassuringly, precisely as
+the first one goes bad.
+
+And note where the real finding was: not in the budget file at all, but in
+`coverage`'s queue-depth line, one hop upstream. **The cause of a compute number
+is rarely in the compute record.** Here, five weeks of expiring free quota trace
+to a single unwritten world design (`w0-too-shallow`, routed 2026-08-24), via
+four PILOT-BLOCKED specs whose blocking reasons are every one of them a
+measured statement about W0 rather than about the spec.
