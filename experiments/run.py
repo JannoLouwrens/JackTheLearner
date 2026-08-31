@@ -923,6 +923,35 @@ def _rank_blockers(terminal: dict, ledger: Ledger, ladder=None) -> tuple:
     return mentions, frees, groups
 
 
+def _split_foreclosed(ranked, ledger: Ledger, vf=None) -> tuple:
+    """Partition ranked roots into (live, closed): the repairable list and the
+    `VOID-FORECLOSED` doors, `{root: declared reason}`.
+
+    Written for the 54th audit's B2 (2026-08-31): this module had ZERO
+    references to `protocol.void_foreclosed` while `coverage.py` read it, so
+    the two instruments disagreed about the same three specs — and this is the
+    one the builder consults to pick high-leverage work. On the day of the
+    audit it ranked `LC.03 = VOID  frees 8` SECOND on the what-one-fix list,
+    a door the project had declared un-re-runnable a week earlier. A closed
+    door presented as a repair target sends an iteration at spent evidence.
+
+    The gate is `status is VOID and declares` — the same conjunction as
+    `coverage.queue_depth`, deliberately, so the two readers cannot drift: a
+    declaration on a non-VOID spec is a mention, not a foreclosure, and a VOID
+    without a declaration (T2.02's shape) stays in the repairable ranking.
+    """
+    from .protocol import void_foreclosed
+    vf = void_foreclosed if vf is None else vf
+    live, closed = [], {}
+    for root, ids in ranked:
+        why = vf(root) if ledger.status(root) is Status.VOID else None
+        if why:
+            closed[root] = why
+        else:
+            live.append((root, ids))
+    return live, closed
+
+
 # A graph whose answer is known, checked on every `blocked` run. X is a root that
 # blocks two specs and frees one; W blocks one and frees NOTHING alone, because
 # Z needs both. That second case is the defect this fixture exists to catch, and
@@ -945,8 +974,11 @@ def _ranker_fixture() -> tuple:
     def stub(sid, deps):
         return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST, depends_on=deps)
 
+    # F and R are VOID roots for the foreclosure split: F declares
+    # VOID-FORECLOSED (via the stubbed reader), R is a plain repairable VOID.
     ladder = [stub("X", []), stub("W", []), stub("Y", ["X"]), stub("Z", ["X", "W"]),
-              stub(_STALE_ID, []), stub("V", [_STALE_ID])]
+              stub(_STALE_ID, []), stub("V", [_STALE_ID]),
+              stub("F", []), stub("G", ["F"]), stub("R", []), stub("Q", ["R"])]
     return ladder, {s.id: s for s in ladder}
 
 
@@ -961,6 +993,10 @@ def _fixture_ledger() -> Ledger:
     led.results = {_STALE_ID: Result(
         spec_id=_STALE_ID, status=Status.PASS, metrics={}, seeds=[0],
         commit="1234567", ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)}
+    for vid in ("F", "R"):
+        led.results[vid] = Result(
+            spec_id=vid, status=Status.VOID, metrics={}, seeds=[0],
+            commit="1234567", ran_at="2026-08-11T00:00:00", impl_sha="0" * 16)
     return led
 
 
@@ -981,10 +1017,33 @@ def _check_ranker(ledger: Ledger) -> None:
         sorted(mentions.get(_STALE_ID, [])) == ["V"],
         sorted(frees.get(_STALE_ID, [])) == ["V"],
     )
+    # KNOWN ANSWER for the foreclosure split (54th audit B2). The stubbed
+    # reader declares for F (VOID → closed) and for X (declared but NOT VOID →
+    # stays live); R is VOID with no declaration (T2.02's shape → stays live).
+    # A split that fails any of the three would either hide a repairable VOID
+    # or keep ranking a closed door — both are the defect this exists to catch.
+    ranked = sorted(mentions.items(),
+                    key=lambda kv: (-len(frees.get(kv[0], [])), -len(kv[1])))
+    live, closed = _split_foreclosed(
+        ranked, fixt,
+        vf=lambda sid, path=None: {"F": "declared closed",
+                                   "X": "declared but not VOID"}.get(sid))
+    expect += (
+        closed == {"F": "declared closed"},
+        "F" not in dict(live),
+        "X" in dict(live),
+        "R" in dict(live),
+    )
     if not all(expect):
+        # `tuple(sorted(k))`, not `set(k)`: a set is unhashable as a dict key,
+        # so the previous rendering raised TypeError INSIDE the refusal — the
+        # ranking was still refused, but the diagnostic never printed. Found
+        # 2026-08-31 by the foreclosure-split teeth check, latent since birth.
+        groups_repr = {tuple(sorted(k)): v for k, v in groups.items()}
         raise RuntimeError(
             "the blocked-ranker failed its own fixture "
-            f"(mentions={mentions}, frees={frees}, groups={ {set(k): v for k, v in groups.items()} }); "
+            f"(mentions={mentions}, frees={frees}, groups={groups_repr}, "
+            f"live={sorted(dict(live))}, closed={closed}); "
             "refusing to print a ranking that cannot be trusted")
 
 
@@ -1031,6 +1090,12 @@ def cmd_blocked(ledger: Ledger) -> int:
     unison specs, all of Tiers 3, 4 and 5. `next` answers "what can I do"; until
     now nothing answered "what is unreachable, and what one fix would free it".
     LESSONS.md carried that as advice to humans. This makes it a command.
+
+    Foreclosed roots rank in their own section (54th audit B2, 2026-08-31):
+    this command printed `LC.03 = VOID  frees 8` second on the what-one-fix
+    list for a week after the project declared it un-re-runnable, because only
+    `coverage.py` read `protocol.void_foreclosed`. The two readers now share
+    the same gate via `_split_foreclosed`.
     """
     _check_ranker(ledger)
     terminal = _terminal_blockers(ledger)
@@ -1040,10 +1105,17 @@ def cmd_blocked(ledger: Ledger) -> int:
         print("Nothing is blocked — every unrun spec has its dependencies passing.")
         return 0
 
+    ranked = sorted(mentions.items(),
+                    key=lambda kv: (-len(frees.get(kv[0], [])), -len(kv[1])))
+    live, closed = _split_foreclosed(ranked, ledger)
+
     def _st(root):
-        """The status, and — if it is a PASS that no longer describes the code —
-        SAY SO. A root printed bare as `PASS` is unreadable: the reader's next
-        question is why a passing spec is blocking anything."""
+        """The status, and — if it is a PASS that no longer describes the code,
+        or a VOID whose declaration says re-running is foreclosed — SAY SO. A
+        root printed bare as `PASS` is unreadable, and a foreclosed root
+        printed bare as `VOID` reads as a repair target (54th audit B2)."""
+        if root in closed:
+            return "VOID-FORECLOSED"
         if root not in BY_ID:
             return "UNKNOWN-SPEC"
         st = ledger.status(root)
@@ -1056,12 +1128,10 @@ def cmd_blocked(ledger: Ledger) -> int:
                 return "PASS but STALE — re-run it"
         return st.value
 
-    ranked = sorted(mentions.items(),
-                    key=lambda kv: (-len(frees.get(kv[0], [])), -len(kv[1])))
     total = len({sid for ids in mentions.values() for sid in ids})
     print(f"\n{total} of {len(LADDER)} specs are unreachable. Terminal blockers, "
           f"ranked by what fixing ONE of them alone would free:\n")
-    for root, ids in ranked:
+    for root, ids in live:
         title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
         f = sorted(frees.get(root, []))
         print(f"  {root} = {_st(root)}  frees {len(f)}  (blocks {len(ids)})  — {title}")
@@ -1070,6 +1140,23 @@ def cmd_blocked(ledger: Ledger) -> int:
         if rest:
             print(f"        also blocks (needs a co-requisite too): {', '.join(rest)}")
         print()
+
+    if closed:
+        print("  VOID-FORECLOSED — these do not free anything by being re-run; "
+              "the declaration says PASS\n  is unreachable at any envelope. The "
+              "repair is a re-parenting or a redesign, routed\n  through the "
+              "Review — not a dispatch:\n")
+        for root, ids in ranked:
+            if root not in closed:
+                continue
+            title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
+            f = sorted(frees.get(root, []))
+            print(f"    {root} = VOID-FORECLOSED  re-parenting would recover "
+                  f"{len(f)}  (blocks {len(ids)})  — {title}")
+            print(f"        declared: {closed[root]}")
+            print(f"        unreachable until re-parented: "
+                  f"{', '.join(f) if f else '(co-requisites only)'}")
+            print()
 
     if groups:
         print("  CO-REQUISITE SETS — no single fix frees these; the whole set must go:\n")
