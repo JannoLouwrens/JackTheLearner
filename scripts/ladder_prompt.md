@@ -356,12 +356,39 @@ VOID-FORECLOSED against that world (`BA.03`, `LC.03`, `SH.02`, `DP.04`,
 why `run next` looks thin and why three cost classes read EMPTY with no path
 in: the ladder is not short of specs, it is blocked on one world decision.
 
-**Your unit is priority 1 below. Do not go looking for a cheaper one** — the
-cheapest work on this board and the most valuable work on this board are the
-same unit this week, which is rare and will not last.
+**THAT ORDER IS SPENT — `W0.DIAG` PASSED 2026-08-31. Replaced (Review,
+2026-08-31, the project's first completed FULL run).** The nine-instrument
+paragraph above stands; what follows it does not. **Your unit is `LT.01`, and
+before it, two arms you must NOT run:**
+
+1. **`ME.11.E` and `ME.11.F`: DO NOT RUN THEM. Settle the family instead.** You
+   refuted both this morning with your own probe and published the refutation in
+   the same commit that queued `ME.11.F`. `ME.11.F`'s premise is *"the answer is
+   in the top-50"*; `scripts/probe_me11c_recall_at_k.py` measured Arm C's
+   recall@50 at **0.44** (0.475/0.381/0.463) against the family's **0.80** bar,
+   so a *perfect* reranker caps below the gate. `ME.11.E`'s beat-both-parents
+   gate needs a lexical parent measured at **0.0000** on 160 cues × 3 seeds.
+   Record both **VOID-FORECLOSED with the arithmetic** — the form you already
+   own from `BA.03`/`LC.03`/`T3.06` — and discharge
+   `me11-every-arm-hits-the-same-infeasible-branch` six days early. The finding
+   (no bi-encoder certifies paraphrase recall at this scale; five configurations,
+   every one INFEASIBLE, ceiling 0.250 against 0.80) is worth more than a sixth
+   arm.
+
+2. **Then `LT.01` — priority 1.** `cpu<2h`, deps PASS, `NOT_RUN`, **frees 7
+   (blocks 8)**: the largest actionable mass on the board, and the entry point to
+   `LT.03`/`LT.04`, which are the **Curiosity-signal seat's entire arena**. That
+   seat is held BY ANALYSIS and has never been defended; `LT.04` is where
+   `disagree` and `metra` finally race `lp`. Curiosity is GOAL.md's north star
+   and `LT.03` is titled *"curiosity alone climbs the ladder"*. The family was
+   registered on 08-31 and left standing; do not let it sit a second week.
+
+**Do not go looking for a cheaper unit than `LT.01`** — `coverage` lists it as
+fillable today, and three cost classes have no path in at all.
 
 **One thing you must NOT re-derive: whether the world is the problem.** Nine
-measurements is enough. The open question is *which* problem — see priority 1.
+measurements is enough. The open question is *which* problem, and it is the
+Review's to answer (`w0-too-shallow`, DUE 2026-09-06), not yours to re-measure.
 
 **DO NOT re-derive when the gate opened, or why.** Between 08-26 and 08-28 four
 organs published **eight** forecasts of that moment; the three that came due

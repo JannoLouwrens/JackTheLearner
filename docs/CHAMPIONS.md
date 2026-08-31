@@ -105,6 +105,12 @@ ratchet does not move.
 | Temperature (thermoception) | **VACANT — cold is FELT before it kills**: `PS.02` **PASS 2026-08-11** (fixture). `SH.01` PARKED 2026-08-25 (ORACLE_CANNOT: the thermal field outside is spatially flat, so no gradient reaches the policy) | — | `SH.02` (*born sheltered, he stays while it is cold*, `COVERS: thermal (kills) (claim)`) over `W.3` (*cold kills, and shelter is why it does not*, the fixture, registered 2026-08-30) | GOAL.md: *"cold nights are the only pressure that teaches shelter-building."* `SH.02` is CPU_LONG, deps all PASS, **no owner gate, no GPU — and unimplemented.** Added by the Review 2026-08-30 |
 | Interoception (hunger, thirst, fatigue) | **VACANT — the drive layer is a real control problem**: `PS.01` **PASS 2026-08-10**, but its own `COVERS` says `hunger/thirst (FIXTURE)`. No claim spec has ever passed for this sense | — | `NE.02` (the need × ablation matrix) + `UB.11` (the standing modality ablation matrix) | Distinct from the **Needs/reward form** seat above, and the distinction is the point: that seat contests the reward EQUATION, this one contests whether he FEELS the needs at all. `NE.02` is blocked behind `NE.01` (FAIL, frees 8). Added by the Review 2026-08-30 |
 
+### THE SEAT ADDED BY THE ANATOMY AUDIT, 2026-08-31
+
+| seat | champion | held | arena | challenger status |
+|---|---|---|---|---|
+| Emotion (affect) | PAD state machine (`EmotionalState.py`) | **DEFAULT, never defended — and HALF ITS RING HAS ALREADY RETURNED A VERDICT AGAINST IT** | `T2.12` (*Emotion model produces distinguishable states*, PASS 2026-08-08) + `T3.07` (*mood changes behaviour*, **FAIL**) | **1,149 lines — one of the largest components in the repository — with two specs and, until today, no chair**, so no instrument that reads this file could say who held it or what would unseat it. The evidence is split and the split is the point: `T2.12` certifies that PAD trajectories are separable from a variance-matched random walk and from shuffled labels; `T3.07` then measured that none of it changes what Jack does, and `D7`'s default (fires 2026-08-31) accepts `MovementMoodCoupling` as **cosmetics on the record**. So the holder is seated on a separability result that, for a deterministic generator, is close to tautological, while the only spec that asked whether the component *does* anything failed. The Review's Part 2 re-examination routes a strengthening of `T2.12` to the builder (add a load-bearing conjunct at the fusion boundary via `UB.11`) — GOAL.md's own standard for every sense is *"ablate it, something measurable must degrade"*, and this seat has never been asked to meet it. Added by the Review 2026-08-31; arena resolves in `BY_ID`, so no ratchet moves |
+
 **Note on the World seat's arena (builder, 2026-08-30).** This cell read
 `W.1–W.7 fidelity gates (queued)` for twenty-one days while **none of the seven
 existed** — the strongest marking in this file defended by a ring that had never
@@ -288,6 +294,7 @@ Three rules, each of them a scar:
 - SEAT: Pain (nociception) | HELD: VACANT | ARENA: PS.03
 - SEAT: Temperature (thermoception) | HELD: VACANT | ARENA: SH.02, W.3
 - SEAT: Interoception (hunger, thirst, fatigue) | HELD: VACANT | ARENA: NE.02, UB.11
+- SEAT: Emotion (affect) | HELD: BY DEFAULT | ARENA: T2.12, T3.07
 - SEAT: DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK. | HELD: BY DECREE | ARENA: PL.00, PL.02
 
 **What changed, and what it cost — read this before believing the report got

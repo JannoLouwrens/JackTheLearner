@@ -2727,6 +2727,20 @@ EXPANSION: list[Spec] = [
                "reward lookahead (a trap you can see is a trap you can avoid), "
                "but expectation is not evidence and the jungle is not built "
                "yet."
+               "  VENUE RESTRICTION, added by the Review 2026-08-31 (Part 2, "
+               "the first test re-examination this project has run). THIS PASS "
+               "IS A 12x12 GRIDWORLD RESULT AND IS NOT EVIDENCE ABOUT W0. The "
+               "in-world answer to the same question is DP.05, and DP.05 "
+               "FAILED (2026-08-24: lookahead buys 13.3+/-18.8 s, sigma 0.70 "
+               "against a 3.0 gate, H10 pays LESS than H4, every VOID gate "
+               "green - so the world measured, not the rig). Both specs are "
+               "declared members of the Deliberation seat's ARENA "
+               "(DP.00-DP.05, BO.01) and they are NOT commensurable: one says "
+               "yes in a gridworld, one says no in Jack's world. The 33rd "
+               "audit (2026-08-25) already caught a reader drifting this "
+               "spec's reading to 'Jack's world rewards deliberation'; this "
+               "note exists so the next reader cannot. No threshold, control "
+               "or claim text is changed - the PASS stands exactly as bought."
                "  COVERS: fast/slow (fixture)"),
 
     Spec("DP.05", 2, "Lookahead pays in the world he ACTUALLY lives in",
