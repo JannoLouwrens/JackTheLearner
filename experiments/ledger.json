@@ -13714,19 +13714,19 @@
     },
     "T0.29": {
       "amended": [],
-      "attempt": 3,
-      "commit": "ff750cf",
+      "attempt": 4,
+      "commit": "78aad78",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p6_only_a_challenger_discharges",
-        "live_arena_missing": 2.0,
+        "live_arena_missing": 1.0,
         "live_seats": 26.0,
-        "live_unfalsifiable": 5.0,
+        "live_unfalsifiable": 4.0,
         "live_violations": 8.0,
         "properties_checked": 10.0,
         "properties_failed": 3.0
       },
-      "duration_s": 2.29,
+      "duration_s": 9.31,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -13789,21 +13789,51 @@
           ],
           "spec_sha": "2f701e24af9a6b14",
           "status": "PASS"
+        },
+        {
+          "commit": "ff750cf",
+          "control_metrics": {
+            "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p6_only_a_challenger_discharges",
+            "live_arena_missing": 2.0,
+            "live_seats": 26.0,
+            "live_unfalsifiable": 5.0,
+            "live_violations": 8.0,
+            "properties_checked": 10.0,
+            "properties_failed": 3.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "af35d0de5e502c00",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "live_arena_missing": 2.0,
+            "live_seats": 26.0,
+            "live_unfalsifiable": 5.0,
+            "live_violations": 8.0,
+            "properties_checked": 10.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-08-31T03:18:45",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "2f701e24af9a6b14",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "af35d0de5e502c00",
+      "impl_sha": "15a5330cd41ccdf9",
       "message": "",
       "metrics": {
         "failed_names": "",
-        "live_arena_missing": 2.0,
+        "live_arena_missing": 1.0,
         "live_seats": 26.0,
-        "live_unfalsifiable": 5.0,
+        "live_unfalsifiable": 4.0,
         "live_violations": 8.0,
         "properties_checked": 10.0,
         "properties_failed": 0.0
       },
       "preserved_impl": null,
-      "ran_at": "2026-08-31T03:18:45",
+      "ran_at": "2026-08-31T14:18:05",
       "seeds": [
         0
       ],
