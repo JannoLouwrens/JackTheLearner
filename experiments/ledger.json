@@ -13614,6 +13614,46 @@
       "spec_sha": "c3089d4d126ca184",
       "status": "PASS"
     },
+    "T0.31": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "7bd7f3b",
+      "compute_s": null,
+      "control_metrics": {
+        "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported",
+        "fixture_violations": 3.0,
+        "live_oldest_days": 8.0,
+        "live_open": 7.0,
+        "live_rows": 10.0,
+        "live_violations": 1.0,
+        "properties_checked": 11.0,
+        "properties_failed": 8.0
+      },
+      "duration_s": 1.18,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "7658557873bbbc71",
+      "message": "",
+      "metrics": {
+        "failed_names": "",
+        "fixture_violations": 3.0,
+        "live_oldest_days": 8.0,
+        "live_open": 7.0,
+        "live_rows": 10.0,
+        "live_violations": 1.0,
+        "properties_checked": 11.0,
+        "properties_failed": 0.0
+      },
+      "preserved_impl": null,
+      "ran_at": "2026-08-31T03:18:19",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.31",
+      "spec_sha": "f6b4e4f0bf8c1b63",
+      "status": "PASS"
+    },
     "T1.01": {
       "amended": [],
       "attempt": 1,
