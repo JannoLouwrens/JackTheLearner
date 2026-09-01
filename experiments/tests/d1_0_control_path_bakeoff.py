@@ -84,28 +84,38 @@ recipe, so a D gate-miss here is evidence about the shared recipe, not about
 MLPs — the VOID verdict must say so and the repair is a recipe question for
 the Review, not a silent re-roll.
 
-GATES PROVISIONAL — `_GATES_FROZEN = False`, `run()` REFUSES until the pilot
-freezes the envelope. What the pilot must do (and the per-condition rule of
-2026-08-31 binds: an envelope constant is certified PER ARM — all four arms
-appear in the pilot record, no arm assumed covered by a sibling):
-  1. measure steps/s for EVERY arm on the real Kaggle GPU (the only prior
-     measurement is arm C's shape: T2.01 v4/v5 at ~106–128 env-steps/s);
-  2. assert each arm's gradient-isolation WIRING (the 2026-08-30 lesson —
-     assert the wiring, not only the function): A' trunk UNCHANGED by a PPO
-     update and CHANGED by its aux update; B critic and trunk both updated;
-     C trunk updated; D both MLPs updated; all losses finite;
-  3. freeze STEP_TARGET (>= 704,513 — never at or below T2.01 v5's count),
-     the per-arm-seed MINUTES_CAP, and `_KERNEL_SPLIT` (arms per submission)
-     so every kernel's projected wall sits under the gpu<8h child timeout with
-     margin. If no split of <= 2 submissions fits at any legal STEP_TARGET,
-     that is an ESCALATION with the arithmetic attached (the registry's
-     "one Kaggle submission per arm-pair at most" line moves loudly or not
-     at all), not a quiet third kernel.
+GATES FROZEN 2026-09-01 — PILOT RECORD (kernel jack-ladder-1788225926,
+Kaggle P100, wall 27.1 min, 0.50 h charged to 2026-W35, artifact
+/data/d10_pilot.json, dispatched at eda570d). The per-condition rule of
+2026-08-31 is satisfied: all four arms appear in the record, no arm assumed
+covered by a sibling.
 
-Envelope arithmetic to beat, from the one measured point: at 107 env-steps/s
-a 750k-step trunk seed costs ~1.95 h, so three trunk arms x 3 seeds is ~17.6 h
-of the ~17.8 h two kernels can hold — which is exactly why the split is frozen
-from measurement, not from this paragraph.
+  arm       steps/s   h/seed@750k  wiring (asserted live on the P100)
+  aprime     176.55      1.18      trunk UNCHANGED by PPO, CHANGED by aux;
+                                   head updated (ppo 281,763 / aux 57.5M)
+  b_split    105.09      1.98      trunk AND critic updated (ppo 57.8M)
+  c_e2e      104.94      1.99      trunk updated (ppo 57.4M)
+  d_mlp     1390.37      0.15      pol AND val updated (ppo 530,339)
+  All losses finite on every arm.
+
+STEP_TARGET stays 750,000 (legal floor 704,513). MINUTES_CAP frozen at
+1.26x-1.67x measured raw: aprime 90, b_split 150, c_e2e 150, d_mlp 15
+minutes per arm-seed.
+
+THE PRE-REGISTERED ESCALATION BRANCH FIRED — no <=2-submission split fits
+at ANY legal STEP_TARGET. The arithmetic, from measured throughput: total
+compute 15.9 h across 4 arms x 3 seeds; the best possible 2-way split by
+max side is {aprime,b_split}/{c_e2e,d_mlp} = 9.49 h / 6.41 h at 750k, and
+8.91 h even at the 704,513 floor — both ABOVE the 8.89 h child timeout
+(timeout_s=32000), with zero margin, before caps or kernel overhead. Per
+the clause this section pre-registered, the registry's "one Kaggle
+submission per arm-pair at most" line MOVES LOUDLY, here and in the
+registry note: `_KERNEL_SPLIT` is THREE kernels — ("aprime","d_mlp") at
+5.25 h, ("b_split",) at 7.5 h, ("c_e2e",) at 7.5 h by caps — every kernel
+>= 1.39 h under the child timeout, worst-case charge 20.25 h against ~28 h
+free in the live GPU week. This widens a logistics budget in the open; no
+gate moved: STEP_TARGET, both sigma bars, MIN_STEP_MATCH and every control
+are exactly as registered.
 """
 from __future__ import annotations
 
@@ -135,17 +145,22 @@ WIN_MARGIN_SIGMA = 1.5      # winner over runner-up, pooled seed spread
 MIN_STEP_MATCH = 0.9        # any arm below this fraction of STEP_TARGET -> VOID
 CROSSOVER_MULT = 3.0        # convergence check horizon, x STEP_TARGET
 
-# PROVISIONAL until the pilot freezes them. STEP_TARGET must stay strictly
-# above T2.01 v5's 704,512 env-steps/seed (arm C's "more steps" clause).
+# FROZEN 2026-09-01 from the PILOT RECORD in the docstring (kernel
+# jack-ladder-1788225926, measured per-arm steps/s on the real P100).
+# STEP_TARGET must stay strictly above T2.01 v5's 704,512 env-steps/seed
+# (arm C's "more steps" clause).
 STEP_TARGET = 750_000
-MINUTES_CAP = {"aprime": 110, "b_split": 150, "c_e2e": 130, "d_mlp": 40}
-_KERNEL_SPLIT = None        # e.g. (("c_e2e", "d_mlp"), ("aprime", "b_split"));
-                            # frozen from the pilot's measured steps/s, never
-                            # from an estimate.
+MINUTES_CAP = {"aprime": 90, "b_split": 150, "c_e2e": 150, "d_mlp": 15}
+_KERNEL_SPLIT = (("aprime", "d_mlp"), ("b_split",), ("c_e2e",))
+                            # THREE kernels — the pre-registered escalation
+                            # branch fired (no <=2-submission split fits at
+                            # any legal STEP_TARGET; arithmetic in the
+                            # docstring). Caps per kernel: 5.25/7.5/7.5 h,
+                            # all >=1.39 h under timeout_s=32000.
 
 PILOT_MINUTES_PER_ARM = 6   # timed throughput window, after the wiring checks
 
-_GATES_FROZEN = False
+_GATES_FROZEN = True        # frozen 2026-09-01; PILOT RECORD in docstring
 _PILOT_OWED = (
     "The pilot freezes STEP_TARGET, MINUTES_CAP and _KERNEL_SPLIT from "
     "measured per-arm env-steps/s on the real Kaggle GPU, and asserts each "

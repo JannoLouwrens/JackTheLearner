@@ -2401,9 +2401,16 @@ EXPANSION: list[Spec] = [
                "sigma (below its own gate => VOID). T2.01 v5's live number "
                "is 2.67 sigma vs the unmoved 5-sigma bar. This spec answers "
                "WHERE control lives; T2.01/T2.02 then re-run UNDER the "
-               "winner as ordinary ladder work. GPU_LONG: one Kaggle "
-               "submission per arm-pair at most, module-cache the kernel "
-               "(one-submission-per-spec rule).",),
+               "winner as ordinary ladder work. GPU_LONG: THREE Kaggle "
+               "submissions — moved LOUDLY from 'one per arm-pair at most' "
+               "on 2026-09-01 by the pilot's measured arithmetic (kernel "
+               "jack-ladder-1788225926; full record in the test docstring): "
+               "best possible 2-split is 9.49 h vs the 8.89 h child timeout "
+               "at STEP_TARGET 750k, and 8.91 h even at the legal 704,513 "
+               "floor, so no <=2-submission split fits and the test's own "
+               "pre-registered escalation branch fired. Split "
+               "(aprime,d_mlp)/(b_split)/(c_e2e), caps 5.25/7.5/7.5 h. "
+               "Module-cache the kernel (one-submission-per-spec rule).",),
 
     # -- PS.01, registered AHEAD of the rest of the PS family on purpose --
     # LC.03 declares depends_on PS.01, and LEARNING_CORE.md 5.6 requires the
