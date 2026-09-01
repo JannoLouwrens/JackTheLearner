@@ -74,6 +74,8 @@ exactly ONE touches other minds, and it is mocap imitation.**
 other, never having been taught? Control: watching a random-action agent must
 not help. **Cheapest high-value item on this list — a second process, not a
 second GPU.**
+**Status.** Registered 2026-09-01 (`GEN.02`, depends on `VO.02`+`LC.07`;
+Review 08-31 item 6).
 
 ## GEN.03 — He has no model of other minds
 **Barrier.** Theory of mind: knowing that another agent knows something you
@@ -83,6 +85,7 @@ cooperation, and most of language's real work.
 A; the food is moved to B while that agent is absent. Does Jack predict the
 agent searches at A? Control: if the other agent WAS present for the move,
 the prediction must flip. **Passing this is a landmark; failing it is normal.**
+**Status.** Registered 2026-09-01 (`GEN.03`, depends on `GEN.02`).
 
 ## GEN.04 — Abstraction and composition are unproven
 **Barrier.** Concepts about concepts; hierarchies deep enough for reasoning to
@@ -108,6 +111,8 @@ general — he is fitted. Generality IS transfer.
 resources, SAME underlying rules. Prior experience must beat a fresh agent.
 Control: a world with SHUFFLED rules must NOT transfer — otherwise the gain is
 general fitness, not learned structure.
+**Status.** Registered 2026-09-01 (`GEN.06`, depends on `LC.07`+`W0.DIAG` —
+the validated difficulty instrument certifies A and B comparable first).
 
 ## GEN.07 — He does not know what he does not know
 **Barrier.** Metacognition. Calibrated uncertainty is what makes an agent seek
@@ -135,6 +140,9 @@ generation starts where the last stopped.
 never knew, transmitted ONLY through diaries and teaching — never through
 weights. Control: with transmission severed, generation 3 must fall back to
 generation 1's level.
+**Status.** Registered 2026-09-01 (`GEN.09`, depends on `ME.9`+`ME.10`+
+`GEN.02`; the severed-transmission branch is the null, a shuffled-content
+diary is the control).
 
 ## GEN.10 — Long-horizon credit assignment
 **Barrier.** A human plants a tree for shade in twenty years. Learning that an

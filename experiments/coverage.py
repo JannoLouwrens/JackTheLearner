@@ -243,8 +243,10 @@ GOAL_CITATION = re.compile(r"\b([A-Z]{1,4}[0-9]?\.[0-9]{1,2})\b")
 # This set may ONLY shrink: registering one of these makes `goal_citations()`
 # demand its removal here, and a NEW dangler is never added — it is a red
 # exit. LG.00 registered 2026-08-25 (B1(a)) and removed in the same commit.
-GOAL_DANGLING_BASELINE = frozenset(
-    {"GEN.02", "GEN.03", "GEN.06", "GEN.09"})
+# GEN.02/GEN.03/GEN.06/GEN.09 registered 2026-09-01 (Review 08-31 item 6)
+# and removed in the same commit — the set is now EMPTY and stays empty:
+# any future dangler is `new`, which is a red exit, never a re-seed.
+GOAL_DANGLING_BASELINE: frozenset = frozenset()
 
 
 def goal_citations(text: Optional[str] = None,

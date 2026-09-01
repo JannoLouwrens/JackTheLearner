@@ -5848,4 +5848,172 @@ EXPANSION: list[Spec] = [
                "genuinely unoccupied combination — and the reason it is "
                "unoccupied is a grounding gap, which the predicate restriction "
                "is designed to sidestep."),
+
+    # ── GEN: the generality barriers GOAL.md cites (docs/GENERALITY.md) ──
+    # Registered 2026-09-01 (Review 08-31 item 6; registration debt seeded by
+    # the 29th audit on 2026-08-25 and carried through 273 commits). GOAL.md's
+    # expansion path cites these four ids verbatim — "OTHER MINDS ...
+    # (GEN.02, GEN.03, GEN.09)" and "MORE WORLDS ... (GENERALITY.md GEN.06)"
+    # — so for 23 days the constitution promised falsifiers nobody had
+    # written. GENERALITY.md's honesty clause carries over verbatim: nothing
+    # here is scheduled, several may be years out, and naming them is not
+    # promising them. What registration buys is legibility, the exact thing
+    # the 2026-08-31 lesson says an unregistered spec can never have: each id
+    # now sits in a cost class, blocks and is blocked, resolves in BY_ID, and
+    # the dangling-citation debt in `coverage.goal_citations` goes to zero.
+    # Every depends_on below is a REAL prerequisite chosen so `run next`
+    # never reads these as runnable before their substrate exists — the
+    # VO.02 scar (a blocker stated in notes that no instrument could see) is
+    # the defect this ordering exists to avoid.
+
+    Spec("GEN.02", 6, "He learns by watching — a second Jack is a teacher",
+         hypothesis="Two embodied Jacks, one world. An observer that WATCHES "
+                    "a skilled demonstrator perform a skill it does not have "
+                    "acquires that skill in measurably fewer of its own "
+                    "practice decisions than the matched-experience solo "
+                    "null, by >=3 sigma across seeds.",
+         falsified_by="Watching a skilled Jack buys no acquisition advantage "
+                      "over solo practice — or the advantage SURVIVES the "
+                      "random-demonstrator control, in which case the gain "
+                      "was co-presence or extra visual traffic, not social "
+                      "learning, and the claim is dead either way.",
+         null_baseline="SOLO: the identical observer, demonstrator absent, "
+                       "matched practice decisions and matched wall-clock in "
+                       "the same world.",
+         metric="observational_acquisition_advantage",
+         budget=Budget.CPU_LONG,
+         depends_on=["VO.02", "LC.07"], seeds=3,
+         control="RANDOM DEMONSTRATOR (GENERALITY.md, verbatim): the same "
+                 "rig with the skilled Jack replaced by a random-action "
+                 "agent must NOT help. If it does, the observer is not "
+                 "extracting skill from what it watches — it is reacting to "
+                 "the presence of motion, and the test measures arousal.",
+         kills="GOAL.md's second expansion (OTHER MINDS) as currently "
+               "designed: if watching cannot teach, adding Jacks adds "
+               "pressure but no channel, and VO.02's invented signal stays "
+               "the ceiling of the social programme until the observer is "
+               "redesigned.",
+         notes="Measured 2026-08-09: of 136 specs exactly ONE touched other "
+               "minds, and it was mocap imitation. GENERALITY.md rates this "
+               "the cheapest high-value barrier on the list — a second "
+               "PROCESS, not a second GPU (INTEGRATION_QUEUE.md, THE "
+               "GENERALITY MAP). depends_on is structural, not thematic: "
+               "VO.02 (PASS 2026-08-30) built the two-independent-learners-"
+               "one-world substrate this rig extends to embodiment, and "
+               "LC.07 is the adoption gate for a learning core that can "
+               "acquire a skill at all — an observer that cannot learn solo "
+               "cannot show a watching advantage. Stage it cheaply like "
+               "VO.02 staged signalling: the floor is one demonstrator "
+               "trajectory replayed into the observer's eye, before any "
+               "live second process. "
+               "  COVERS: social/other agents (claim)"),
+
+    Spec("GEN.03", 6, "False belief: he models what another saw, not what is true",
+         hypothesis="Jack watches agent B see food hidden at location A; the "
+                    "food is moved to B' while B is ABSENT. Jack's "
+                    "anticipatory prediction of B's search (orientation/"
+                    "approach toward where B will look, read before B moves) "
+                    "selects the false-belief location A above chance at >=3 "
+                    "sigma across seeds.",
+         falsified_by="His prediction tracks the food's TRUE location "
+                      "regardless of what B witnessed — he models the world, "
+                      "not the mind in it. GENERALITY.md's own framing "
+                      "binds: passing this is a landmark; failing it is "
+                      "NORMAL, and a FAIL here is a result, not a defect.",
+         null_baseline="A TRUE-LOCATION predictor (always answers where the "
+                       "food actually is). It must score chance on "
+                       "false-belief trials by construction; Jack must beat "
+                       "it there specifically.",
+         metric="false_belief_prediction_flip", budget=Budget.CPU_LONG,
+         depends_on=["GEN.02"], seeds=3,
+         control="PRESENT-FOR-THE-MOVE (GENERALITY.md, verbatim): when B "
+                 "witnessed the relocation, Jack's prediction must FLIP to "
+                 "the true location. An agent that has merely learned "
+                 "'predict A' passes the experiment and fails this flip, so "
+                 "belief-tracking and location-habit are separable.",
+         kills="Nothing structural — but every future teaching, deception "
+               "or cooperation design must stop assuming a mind-model and "
+               "carry its own workaround until this passes.",
+         notes="Theory of mind is the prerequisite for teaching, deception, "
+               "coalition and most of language's real work (GENERALITY.md "
+               "GEN.03). Depends on GEN.02 because an embodied false-belief "
+               "rig IS a two-agent rig plus occlusion — and because an "
+               "observer that cannot even extract skill from watching has "
+               "no measured basis for extracting knowledge states. "
+               "  COVERS: social/other agents (claim)"),
+
+    Spec("GEN.06", 5, "Transfer across worlds: mastery is structure, not fit",
+         hypothesis="Trained in world A and dropped into world B — different "
+                    "layout, different resource placement, SAME underlying "
+                    "rules — his prior experience beats a fresh agent of "
+                    "identical architecture on time-to-competence in B by "
+                    ">=3 sigma across seeds.",
+         falsified_by="No advantage over the fresh agent: the jungle made a "
+                      "forager fitted to one jungle, and generality-as-"
+                      "transfer is refuted for this design. 'A Jack who "
+                      "masters the jungle and is helpless in a desert is "
+                      "not general — he is fitted.'",
+         null_baseline="FRESH AGENT: identical architecture, zero world-A "
+                       "experience, identical world-B budget.",
+         metric="transfer_advantage_over_fresh", budget=Budget.CPU_DAYS,
+         depends_on=["LC.07", "W0.DIAG"], seeds=3,
+         control="SHUFFLED-RULES WORLD B (GENERALITY.md, verbatim): a world "
+                 "B whose underlying rules are scrambled must show NO "
+                 "transfer advantage. If it does, the gain was general "
+                 "fitness — better motor tone, better exploration habits — "
+                 "not learned structure, and the claim collapses to 'more "
+                 "practice helps'.",
+         kills="The premise of GOAL.md's first expansion (MORE WORLDS): if "
+               "learned structure does not move between matched-rule "
+               "worlds, 'abstraction IS generality' has no mechanism and "
+               "world-building buys breadth, not depth.",
+         notes="W0.DIAG is in depends_on for a measured reason, not a "
+               "thematic one: its validated difficulty instrument (PASS "
+               "2026-08-31, known-answer control BINDING) is what certifies "
+               "world A and world B comparable BEFORE the transfer claim "
+               "runs — without it, 'transfer' confounds with world B simply "
+               "being easier, the exact inversion its wk5-N3 control "
+               "exists to catch. LC.07 because a transfer claim needs an "
+               "adopted core that demonstrably learns world A at all. "
+               "  COVERS: generality (claim)"),
+
+    Spec("GEN.09", 6, "Culture: generation 3 knows what generation 1 never knew",
+         hypothesis="Across three generations coupled ONLY by diaries and "
+                    "in-world teaching — never weights — generation 3 "
+                    "demonstrates a competence generation 1 never had, and "
+                    "reaches generation-2 competence in fewer decisions than "
+                    "generation 2 originally spent, by >=3 sigma across "
+                    "seeds. Accumulation, not just persistence.",
+         falsified_by="Generation 3 is statistically indistinguishable from "
+                      "generation 1: the diary crosses deaths but knowledge "
+                      "does not ACCUMULATE across individuals, and one "
+                      "diary is a memory, not a culture.",
+         null_baseline="TRANSMISSION SEVERED (GENERALITY.md, verbatim): "
+                       "generation 3 with no inherited diary and no "
+                       "teaching must fall back to generation 1's level. "
+                       "If it does not, the 'culture' was in the world or "
+                       "the weights all along.",
+         metric="generational_knowledge_gain", budget=Budget.CPU_DAYS,
+         depends_on=["ME.9", "ME.10", "GEN.02"], seeds=3,
+         control="CORRUPTED INHERITANCE: generation 3 receives a diary of "
+                 "matched size whose entries are shuffled across episodes "
+                 "and attributions. It must NOT confer the gain — the "
+                 "culture must live in the CONTENT of what was recorded and "
+                 "taught, not in the mere possession of an inherited "
+                 "artifact.",
+         kills="GOAL.md's Lamarckian-inheritance claim — 'the caveman's "
+               "fireside story made structural'. If diaries cannot "
+               "accumulate across individuals, death is still a page turn "
+               "for HIM, but the project's one deliberate improvement on "
+               "biology is decoration.",
+         notes="ME.9 (attributed recall, PASS) and ME.10 (diary/weights "
+               "double dissociation, PASS) are the substrate: transmission "
+               "'only through diaries and teaching, never weights' is only "
+               "enforceable because ME.10 proved the two stores separable. "
+               "GEN.02 because teaching is a social act — a generation that "
+               "cannot learn from watching a live demonstrator is limited "
+               "to the written channel, and the spec must know which "
+               "channel carried the culture. "
+               "  COVERS: social/other agents (claim), memory across lives "
+               "(claim)"),
 ]
