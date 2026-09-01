@@ -9929,8 +9929,17 @@ D1 deadlock: not a broken instrument, but a fact that falls between correct ones
 When three green instruments describe adjacent facets of one object, ask what
 sentence about the whole object none of them is able to form.
 
-Guard: proposed as B1/B2 of the 59th audit (a `welded<-ROOTS` state distinct
-from `blocked<-ROOTS`, a `CITED-BUT-UNRUNNABLE` citation class, and a
-known-answer battery planting `DP.02<-LC.03` as dead and `BO.01<-DP.05 FAIL` as
-alive). Not yet shipped — and per the lesson above, until it is a B-item that
-lands, only this prose exists.
+Guard: **shipped 2026-09-01, same day** — `coverage.root_dead()` is the one
+shared predicate (parked ∪ `foreclosure()`, fails ALIVE on FAIL/plain-VOID/
+NOT_RUN roots so blocked-is-alive survives); `welded<-ROOTS` is emitted by
+`claim_reachability` AND mirrored in `run blocked` (dead-flavour roots leave
+the repairable ranking, a WELDED section names the specs no dispatch can
+free); `goal_citations` gained the `unrunnable` liveness class with
+`CITED-BUT-UNRUNNABLE` printed, `new_unrunnable_citation` red,
+`GOAL_UNRUNNABLE_BASELINE` shrink-only seeded {DP.02, DP.03, LC.04};
+`_welded_fixture` plants both audit shapes (`DP.02<-LC.03` welded,
+`BO.01<-DP.05 FAIL` still blocked, mixed set blocked, PARKED-root flavour,
+citation known/new/stale directions) and was verified RED against the pre-fix
+code (2 failures) before the repair. Measured live: welded reads exactly the
+audit's 10, fast/slow reads 3 welded + 1 FORECLOSED + 1 blocked, CLAIM-DEAD
+stays 4, UNREACHABLE_BASELINE stays 85/217, coverage rc=2 unchanged.

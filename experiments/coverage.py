@@ -248,11 +248,52 @@ GOAL_CITATION = re.compile(r"\b([A-Z]{1,4}[0-9]?\.[0-9]{1,2})\b")
 # any future dangler is `new`, which is a red exit, never a re-seed.
 GOAL_DANGLING_BASELINE: frozenset = frozenset()
 
+# The citations measured CITED-BUT-UNRUNNABLE on 2026-09-01 (59th audit B2):
+# all three welded behind LC.03 = VOID-FORECLOSED, while GOAL.md:242 describes
+# LC.04 as "already testing". Shrink-only, same contract as the dangling
+# baseline above: an entry leaves when the citation is revived (upstream
+# redesign) or GOAL.md's text stops citing a corpse in the present tense; a
+# NEW one is a red exit, never a re-seed. The repair these three await is D10.
+GOAL_UNRUNNABLE_BASELINE: frozenset = frozenset({"DP.02", "DP.03", "LC.04"})
+
+
+def _liveness_state(sids, by_id) -> Dict[str, str]:
+    """`{cited id -> 'PARKED' | 'VOID-FORECLOSED' | 'PILOT-BLOCKED' |
+    'welded<-ROOTS'}` for every id that RESOLVES but cannot run — the states a
+    resolution checker cannot see (59th audit B2). Alive ids are absent."""
+    from .protocol import Ledger
+    from .run import _terminal_blockers
+    ledger = Ledger()
+    parked_map, _bad = parked()
+    term = _terminal_blockers(ledger)
+
+    def st_name(s):
+        res = ledger.results.get(s)
+        return getattr(getattr(res, "status", None), "name", None)
+
+    out: Dict[str, str] = {}
+    for sid in sids:
+        if sid in parked_map:
+            out[sid] = "PARKED"
+            continue
+        fc, _why = foreclosure(sid, status=st_name(sid))
+        if fc:
+            out[sid] = fc
+            continue
+        roots = term.get(sid, set()) - {sid}
+        if roots and all(root_dead(r, status=st_name(r),
+                                   parked_map=parked_map) for r in roots):
+            out[sid] = "welded<-" + ",".join(sorted(roots))
+    return out
+
 
 def goal_citations(text: Optional[str] = None,
                    by_id: Optional[dict] = None,
-                   baseline: frozenset = GOAL_DANGLING_BASELINE) -> dict:
-    """Resolve every spec-shaped id `GOAL.md` cites against the registry.
+                   baseline: frozenset = GOAL_DANGLING_BASELINE,
+                   unrunnable_baseline: frozenset = GOAL_UNRUNNABLE_BASELINE,
+                   state_of=None) -> dict:
+    """Resolve every spec-shaped id `GOAL.md` cites against the registry —
+    for EXISTENCE and for LIVENESS.
 
     Returns `{"cited", "dangling", "new", "known", "stale_baseline"}` —
     `new` (dangling and NOT in the baseline) is the fatal class: the
@@ -262,6 +303,21 @@ def goal_citations(text: Optional[str] = None,
     `GOAL_DANGLING_BASELINE` in the same commit that registered them, so the
     baseline only shrinks; leaving one would let the id dangle AGAIN later
     without a red.
+
+    Plus the class resolution cannot see (59th audit B2): `"unrunnable"`
+    (`{cited id -> state}` for ids that resolve to a parked, foreclosed or
+    welded spec), with `"unrunnable_new"` (red — the constitution cites a
+    corpse in the present tense and nobody has said so),
+    `"unrunnable_known"` (seeded on `GOAL_UNRUNNABLE_BASELINE`) and
+    `"unrunnable_stale_baseline"` (revived — remove from the baseline in the
+    same commit). This exists because the checker printed `0 dangling` for
+    nine days while GOAL.md:242 said `LC.04` *"is already testing"* of a spec
+    welded behind `LC.03` = VOID-FORECLOSED: an id that resolves to a corpse
+    is a worse dangling reference than one that resolves to nothing, because
+    the nothing-case is the one every checker is built to catch. `state_of`
+    is injectable for `_welded_fixture`; the default reads the shared
+    predicates (`foreclosure`, `root_dead`, `parked`) so this reader cannot
+    drift from `claim_reachability` and `run blocked`.
     """
     if by_id is None:
         from .registry import BY_ID
@@ -270,12 +326,24 @@ def goal_citations(text: Optional[str] = None,
         text = GOAL_MD.read_text()
     cited = sorted(set(GOAL_CITATION.findall(text)))
     dangling = {i for i in cited if i not in by_id}
+    resolved = [i for i in cited if i in by_id]
+    if state_of is None:
+        unrunnable = _liveness_state(resolved, by_id)
+    else:
+        unrunnable = {i: s for i in resolved
+                      if (s := state_of(i)) is not None}
     return {
         "cited": cited,
         "dangling": sorted(dangling),
         "new": sorted(dangling - baseline),
         "known": sorted(dangling & baseline),
         "stale_baseline": sorted(i for i in baseline if i in by_id),
+        "unrunnable": unrunnable,
+        "unrunnable_new": sorted(set(unrunnable) - unrunnable_baseline),
+        "unrunnable_known": sorted(set(unrunnable) & unrunnable_baseline),
+        "unrunnable_stale_baseline": sorted(
+            i for i in unrunnable_baseline
+            if i in by_id and i not in unrunnable),
     }
 
 
@@ -436,7 +504,39 @@ def foreclosure(sid: str, status: Optional[str] = None,
     return (None, None)
 
 
-def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
+def root_dead(root: str, status: Optional[str] = None,
+              parked_map: Optional[Dict[str, str]] = None) -> Optional[str]:
+    """`'PARKED' | 'VOID-FORECLOSED' | 'PILOT-BLOCKED' | None` — can this
+    BLOCKER ever resolve? THE shared predicate for the `welded<-ROOTS` state
+    (59th audit B1), factored here so `claim_reachability` and `run blocked`
+    read the same answer and cannot drift.
+
+    `foreclosure()` above is only ever asked about a spec ITSELF; a retirement
+    predicate that is not applied transitively launders itself across exactly
+    one dependency edge — `blocked<-LC.03` read as a live queue position for
+    nine days while LC.03 was VOID-FORECLOSED and ten specs behind it could
+    never run. Blocked resolves when the blocker does; parked and foreclosed
+    resolve never, and a root in either state is a closed door whatever the
+    dependent's own status says.
+
+    Fails ALIVE: an unknown spec, a missing file, a FAIL, a plain VOID or a
+    NOT_RUN all return None — flooding dead through FAIL roots would kill
+    every commitment behind T2.01 (the founding blocked-is-alive distinction,
+    28th audit). `parked_map` is injectable for callers that already paid for
+    `parked()`; `status` is the ledger status name of `root`, if any.
+    """
+    if parked_map is None:
+        parked_map = parked()[0]
+    if root in parked_map:
+        return "PARKED"
+    state, _why = foreclosure(root, status=status)
+    return state
+
+
+def claim_reachability(rows: Optional[List[dict]] = None,
+                       terminal: Optional[dict] = None,
+                       root_status: Optional[Dict[str, str]] = None
+                       ) -> Dict[str, list]:
     """`commitment -> [(claim spec id, state)]` — the join the 28th audit had
     to compute by hand: `declarations()` × the ledger × the blocker graph.
 
@@ -445,8 +545,11 @@ def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
     `FORECLOSED` (declared `VOID-FORECLOSED`, or gate-provisional with a
     measured pilot-block — `foreclosure()`, the same conjunction
     `queue_depth` excludes on, so the two readers cannot drift; 58th audit
-    B1), or `blocked<-ROOTS` (a queue position: the terminal blockers its
-    unreachability actually rests on). The distinction the states encode is
+    B1), `blocked<-ROOTS` (a queue position: the terminal blockers its
+    unreachability actually rests on, at least one of which is LIVE), or
+    `welded<-ROOTS` (59th audit B1: every terminal blocker is itself parked
+    or foreclosed — `root_dead()` — so no dispatch anywhere can free it; the
+    repair is an upstream redesign). The distinction the states encode is
     the 28th audit's finding: blocked resolves when the blocker does; parked
     resolves never. `run blocked` cannot see the difference and `coverage`
     could not either, so nine of twenty-three commitments sat at zero-passing
@@ -454,14 +557,26 @@ def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
     finding one invention later: before it existed, a foreclosed spec fell
     through to `RUNNABLE` — the strongest state short of `PASS` — and the
     commitment table contradicted the queue-depth section forty lines below
-    it in the same report.
+    it in the same report. WELDED is the same finding once more, transitively:
+    a foreclosed ROOT laundered ten dependents back into `blocked<-`, the
+    live-queue reading, for nine days. `terminal`/`root_status` are
+    injectable for `_welded_fixture`.
     """
     from .protocol import Ledger
     from .run import _terminal_blockers
     if rows is None:
         rows = report()
     ledger = Ledger()
-    terminal = _terminal_blockers(ledger)
+    if terminal is None:
+        terminal = _terminal_blockers(ledger)
+    parked_map, _bad = parked()
+
+    def _status_of(root: str) -> Optional[str]:
+        if root_status is not None and root in root_status:
+            return root_status[root]
+        res = ledger.results.get(root)
+        return getattr(getattr(res, "status", None), "name", None)
+
     out: Dict[str, list] = {}
     for r in rows:
         entries = []
@@ -476,8 +591,15 @@ def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
                 entries.append((sid, "FORECLOSED"))
             else:
                 roots = terminal.get(sid, set()) - {sid}
-                entries.append((sid, "RUNNABLE") if not roots else
-                               (sid, "blocked<-" + ",".join(sorted(roots))))
+                if not roots:
+                    entries.append((sid, "RUNNABLE"))
+                elif all(root_dead(rt, status=_status_of(rt),
+                                   parked_map=parked_map) for rt in roots):
+                    entries.append(
+                        (sid, "welded<-" + ",".join(sorted(roots))))
+                else:
+                    entries.append(
+                        (sid, "blocked<-" + ",".join(sorted(roots))))
         entries += [(sid, "PARKED") for sid, kind in r["parked"].items()
                     if kind == "claim"]
         out[r["commitment"]] = entries
@@ -2044,6 +2166,131 @@ def _claim_dead_fixture() -> List[str]:
     return fails
 
 
+def _welded_fixture() -> List[str]:
+    """Known-answer battery for the `welded<-ROOTS` reachability state (59th
+    audit B1) — the retirement predicate must be asked about a spec's
+    BLOCKERS, not only about the spec itself.
+
+    THE SCAR: `LC.03` is VOID-FORECLOSED — it resolves never — and for nine
+    days `claim_reachability` emitted `blocked<-LC.03` for `DP.02`, the same
+    string it emits for a spec waiting on a job that finishes tonight, while
+    its own docstring stated the distinction it was failing to draw. Ten specs
+    sat in that state and no instrument could utter it: a retirement predicate
+    that is not applied transitively launders itself across exactly one
+    dependency edge.
+
+    Stubbing idiom of `_claim_dead_fixture`: protocol readers monkeypatched,
+    graph and root statuses injected, so the CLAUSE is under test. Planted
+    shapes: the audit's exact case (a claim behind a foreclosed root —
+    `DP.02<-LC.03`), the direction that must stay ALIVE (a claim behind a
+    FAIL root — `BO.01<-DP.05`), a mixed root set (one live root keeps
+    `blocked<-`), and the PARKED-root flavour through the shared predicate.
+    Per B1.3 a welded claim must NOT tip its commitment CLAIM-DEAD — that
+    question is the Review's (09-06), and this battery pins the predicate to
+    supplying its input, not its answer.
+    """
+    from dataclasses import replace
+
+    from .registry import BY_ID
+    donor = BY_ID["T0.01"]
+    reg = {
+        # The audit's exact case: a claim whose ONLY root is foreclosed.
+        "Q.30": replace(donor, id="Q.30", title="Habit vs deliberation",
+                        notes="COVERS: fast/slow (claim)"),
+        # The direction that must stay alive: a FAIL root is a queue
+        # position — blocked resolves when the blocker does.
+        "Q.31": replace(donor, id="Q.31", title="Brain organisation race",
+                        notes="COVERS: fast/slow (claim)"),
+        # One live root in the set keeps the whole set blocked<-.
+        "Q.32": replace(donor, id="Q.32", title="Trunk lesion dissociates",
+                        notes="COVERS: fast/slow (claim)"),
+    }
+    terminal = {"Q.30": {"Q.90"}, "Q.31": {"Q.91"},
+                "Q.32": {"Q.90", "Q.91"}}
+    root_status = {"Q.90": "VOID", "Q.91": "FAIL"}
+    foreclosed = {"Q.90": "fork (ii) fired; repair is upstream redesign"}
+
+    from . import protocol as _proto
+    real_vf, real_gf = _proto.void_foreclosed, _proto.gates_frozen
+    real_pb, real_po = _proto.pilot_blocked, _proto.pilot_owed
+    real_mpf = _proto.module_path_for
+    _proto.void_foreclosed = lambda sid, path=None: foreclosed.get(sid)
+    _proto.gates_frozen = lambda sid, path=None: None
+    _proto.pilot_blocked = lambda sid, path=None: None
+    _proto.pilot_owed = lambda sid, path=None: None
+    _proto.module_path_for = lambda sid, strict=False: f"/x/{sid}.py"
+    try:
+        rows = report(reg, {})
+        reach = claim_reachability(rows, terminal=terminal,
+                                   root_status=root_status)
+        rd = globals().get("root_dead")
+        parked_flavour = (rd("Q.92", status=None,
+                             parked_map={"Q.92": "2026-08-01 — spent fork"})
+                          if rd else None)
+        live_flavour = (rd("Q.91", status="FAIL", parked_map={})
+                        if rd else "MISSING")
+    finally:
+        _proto.void_foreclosed, _proto.gates_frozen = real_vf, real_gf
+        _proto.pilot_blocked, _proto.pilot_owed = real_pb, real_po
+        _proto.module_path_for = real_mpf
+
+    fs = {r["commitment"]: r for r in rows}["fast/slow"]
+    states = dict(reach["fast/slow"])
+
+    fails = []
+    if states.get("Q.30") != "welded<-Q.90":
+        fails.append(f"welded: a claim whose every terminal blocker is "
+                     f"foreclosed must read welded<-, never blocked<- "
+                     f"(DP.02<-LC.03, the 59th audit's case) — got "
+                     f"{states.get('Q.30')!r}")
+    if states.get("Q.31") != "blocked<-Q.91":
+        fails.append(f"welded: a FAIL root is a LIVE root — blocked<- must "
+                     f"survive for it (BO.01<-DP.05) or every commitment "
+                     f"behind T2.01 reads dead — got {states.get('Q.31')!r}")
+    if states.get("Q.32") != "blocked<-Q.90,Q.91":
+        fails.append(f"welded: one live root in the set keeps blocked<- — "
+                     f"got {states.get('Q.32')!r}")
+    if rd is None:
+        fails.append("welded: shared predicate coverage.root_dead is missing "
+                     "— the two readers (claim_reachability, run blocked) "
+                     "have nothing to share and will drift")
+    elif parked_flavour != "PARKED":
+        fails.append(f"welded: a PARKED root is a dead root (ME.6<-T2.11's "
+                     f"flavour) — root_dead returned {parked_flavour!r}")
+    elif live_flavour is not None:
+        fails.append(f"welded: root_dead must fail ALIVE (None) on a FAIL "
+                     f"root — got {live_flavour!r}")
+    if _claim_dead(fs):
+        fails.append("welded: a welded claim must NOT tip its commitment "
+                     "CLAIM-DEAD — B1 supplies the 09-06 question's input, "
+                     "not its answer")
+
+    # 59th audit B2 — the citation flavour. `coverage` printed "0 dangling"
+    # while GOAL.md:242 said LC.04 "is already testing" of a spec welded
+    # behind a VOID-FORECLOSED root: an id that resolves to a corpse is a
+    # worse dangling reference than one that resolves to nothing, because the
+    # nothing-case is the one every checker is built to catch.
+    cite_by_id = {"LC.94": donor, "Q.30": donor, "Q.31": donor}
+    gc = goal_citations(
+        text="LC.94 is already testing; Q.30 and Q.31 run beside it.",
+        by_id=cite_by_id, baseline=frozenset(),
+        unrunnable_baseline=frozenset({"LC.94", "Q.31"}),
+        state_of={"LC.94": "welded<-Q.90", "Q.30": "PARKED"}.get)
+    if gc.get("unrunnable_known") != ["LC.94"]:
+        fails.append(f"cited-but-unrunnable: a baselined unrunnable citation "
+                     f"must read KNOWN, not red — got "
+                     f"{gc.get('unrunnable_known')!r}")
+    if gc.get("unrunnable_new") != ["Q.30"]:
+        fails.append(f"cited-but-unrunnable: a NEW citation of a parked/"
+                     f"foreclosed/welded spec is the red class — got "
+                     f"{gc.get('unrunnable_new')!r}")
+    if gc.get("unrunnable_stale_baseline") != ["Q.31"]:
+        fails.append(f"cited-but-unrunnable: a baseline entry that is live "
+                     f"again must demand its own removal (shrink-only) — got "
+                     f"{gc.get('unrunnable_stale_baseline')!r}")
+    return fails
+
+
 def counts() -> tuple[int, int]:
     """(n_claim_dead, n_malformed) — two different fires, separately
     assertable.
@@ -2153,6 +2400,25 @@ def check() -> int:
         print(f"  {len(gc['stale_baseline'])} baseline entr(y/ies) now RESOLVE "
               f"and must be removed from GOAL_DANGLING_BASELINE: "
               f"{', '.join(gc['stale_baseline'])}")
+    if gc["unrunnable"]:
+        print(f"  CITED-BUT-UNRUNNABLE: "
+              + ", ".join(f"{i} ({s})"
+                          for i, s in sorted(gc["unrunnable"].items()))
+              + "\n  — each id RESOLVES, so the dangling count above cannot "
+              "see it, and each is\n  parked, foreclosed or welded, so the "
+              "citation's present tense is false. An id\n  that resolves to "
+              "a corpse is a worse dangling reference than one that\n  "
+              "resolves to nothing (59th audit B2).")
+    if gc["unrunnable_new"]:
+        print(f"  {len(gc['unrunnable_new'])} NEW unrunnable citation(s) — "
+              f"fix GOAL.md's text or route the revival;\n  never add to "
+              f"GOAL_UNRUNNABLE_BASELINE (shrink-only): "
+              f"{', '.join(gc['unrunnable_new'])}")
+    if gc["unrunnable_stale_baseline"]:
+        print(f"  {len(gc['unrunnable_stale_baseline'])} unrunnable-baseline "
+              f"entr(y/ies) are LIVE again and must be removed "
+              f"from GOAL_UNRUNNABLE_BASELINE: "
+              f"{', '.join(gc['unrunnable_stale_baseline'])}")
     print("\n  A nomination is NOT coverage. It is a spec whose title looks\n"
           "  related and whose author has not said so; only `COVERS:` counts.\n"
           "  A PARKED spec is NOT coverage either: a retirement is not a\n"
@@ -2162,7 +2428,7 @@ def check() -> int:
     qf = (_queue_fixture() + _gates_frozen_fixture()
           + _pilot_blocked_fixture() + _pilot_owed_fixture()
           + _pilot_harvested_fixture() + _void_foreclosed_fixture()
-          + _claim_dead_fixture() + _exit_code_fixture()
+          + _claim_dead_fixture() + _welded_fixture() + _exit_code_fixture()
           + _unreachable_fixture() + u["refused"])
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
@@ -2317,11 +2583,13 @@ def check() -> int:
     return exit_code(
         red={"uncovered": uncovered, "claim_dead": dead,
              "new_dangling_citation": gc["new"], "new_empty_class": q["new_empty"],
+             "new_unrunnable_citation": gc["unrunnable_new"],
              "queue_fixture_failure": qf,
              "unreachable_grew": u["grown"],
              "pilot_undeclared": q["pilot_undeclared"]},
         amber={"malformed_declaration": bad,
                "stale_citation_baseline": gc["stale_baseline"],
+               "stale_unrunnable_baseline": gc["unrunnable_stale_baseline"],
                "stale_queue_baseline": q["stale_baseline"],
                "stale_unreachable_baseline": u["stale_baseline"]})
 
@@ -2360,9 +2628,11 @@ def _exit_code_fixture() -> List[str]:
     now fails here by name.
     """
     RED = ["uncovered", "claim_dead", "new_dangling_citation",
-           "new_empty_class", "queue_fixture_failure", "unreachable_grew",
+           "new_empty_class", "new_unrunnable_citation",
+           "queue_fixture_failure", "unreachable_grew",
            "pilot_undeclared"]
     AMBER = ["malformed_declaration", "stale_citation_baseline",
+             "stale_unrunnable_baseline",
              "stale_queue_baseline", "stale_unreachable_baseline"]
     fails = []
     clean_red = {k: [] for k in RED}

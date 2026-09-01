@@ -1147,6 +1147,29 @@ def cmd_blocked(ledger: Ledger) -> int:
                     key=lambda kv: (-len(frees.get(kv[0], [])), -len(kv[1])))
     live, closed, refused = _split_foreclosed(ranked, ledger)
 
+    # 59th audit B1 mirror: `_split_foreclosed` pulls VOID-FORECLOSED roots
+    # out of the repairable ranking, but a PARKED or PILOT-BLOCKED root is
+    # the same closed door in a different flavour, and T2.11 ranked live
+    # ("frees 1: ME.6") for days after its park. One shared predicate
+    # (`coverage.root_dead`) for both readers, so they cannot drift.
+    from .coverage import parked as _parked_fn
+    from .coverage import root_dead
+    _parked_map, _ = _parked_fn()
+    _dead_flavour: dict = {}
+    _still_live = []
+    for root, ids in live:
+        why = root_dead(root, status=getattr(ledger.status(root), "name",
+                                             None), parked_map=_parked_map)
+        if why:
+            _dead_flavour[root] = why
+        else:
+            _still_live.append((root, ids))
+    live = _still_live
+    dead_roots = set(closed) | set(_dead_flavour)
+    welded = sorted({s for ids in mentions.values() for s in ids
+                     if (terminal.get(s, set()) - {s})
+                     and (terminal.get(s, set()) - {s}) <= dead_roots})
+
     def _st(root):
         """The status, and — if it is a PASS that no longer describes the code,
         or a VOID whose declaration says re-running is foreclosed — SAY SO. A
@@ -1154,6 +1177,8 @@ def cmd_blocked(ledger: Ledger) -> int:
         printed bare as `VOID` reads as a repair target (54th audit B2)."""
         if root in closed:
             return "VOID-FORECLOSED"
+        if root in _dead_flavour:
+            return _dead_flavour[root]
         if root not in BY_ID:
             return "UNKNOWN-SPEC"
         st = ledger.status(root)
@@ -1201,6 +1226,30 @@ def cmd_blocked(ledger: Ledger) -> int:
             print(f"        unreachable until re-parented: "
                   f"{', '.join(f) if f else '(co-requisites only)'}")
             print()
+
+    if _dead_flavour:
+        print("  PARKED / PILOT-BLOCKED roots — the same closed door in a "
+              "different flavour\n  (59th audit B1): re-running or waiting "
+              "frees NOTHING; the repair is the redesign\n  each one's own "
+              "record routes to the Review:\n")
+        for root, ids in ranked:
+            if root not in _dead_flavour:
+                continue
+            title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
+            f = sorted(frees.get(root, []))
+            print(f"    {root} = {_dead_flavour[root]}  redesign would recover "
+                  f"{len(f)}  (blocks {len(ids)})  — {title}")
+            print(f"        unreachable until redesigned: "
+                  f"{', '.join(f) if f else '(co-requisites only)'}")
+            print()
+
+    if welded:
+        print(f"  WELDED — every terminal blocker is a closed door "
+              f"(VOID-FORECLOSED, PARKED or\n  PILOT-BLOCKED). No dispatch "
+              f"anywhere can free these {len(welded)}; nothing on this\n"
+              f"  board unblocks them and no ranking above should be read as "
+              f"saying otherwise:\n")
+        print(f"    {', '.join(welded)}\n")
 
     if groups:
         print("  CO-REQUISITE SETS — no single fix frees these; the whole set must go:\n")
