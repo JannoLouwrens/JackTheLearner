@@ -4051,3 +4051,13 @@ and thresholds untouched, VOID and history intact, `PARKED:` marker in notes
 with the measured ~0.0–0.1 s ceiling vs the 0.20 s floor. BA.01 stands; the
 balance commitment's live claim in this body is BA.03. LT.08 PASS un-parks it
 mechanically. Full record in `DECISIONS_RESOLVED.md`.
+
+## D9 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+Option (a), PARK, exactly as armed: the rover-body question waits for the
+playground-humanoid line; W0.BAL stays pre-registered with its numbers
+attached; arms B and C are NOT adopted; PG.3 geometry and the
+BA.01/PS.02/PS.03 certificates are untouched. The PROGRESS 08-31 FOR THE
+OWNER recommendation (create a body SEAT while the adoption parks) is a
+separate, still-open ask that this firing does not pre-empt. Full record in
+`DECISIONS_RESOLVED.md`.

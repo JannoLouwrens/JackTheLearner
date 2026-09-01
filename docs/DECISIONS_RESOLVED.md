@@ -302,3 +302,39 @@ adhesion +0.005±0.09, ground drive toward-lean −0.685±0.16, blind headroom
 +0.275±0.137); D8's forensic entry of 2026-08-14; BA.03's registration
 comment ("registered BEFORE D8's default fires so that parking BA.02 costs
 the ratchet nothing").
+
+## D9 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): the rover-body question is PARKED until the playground-humanoid line; W0.BAL stays pre-registered with its numbers attached; nothing adopted
+
+**The question** (raised 2026-08-21 when three independent measurements said
+the rover body is the binding constraint; armed 2026-08-25 together with D8
+because they are one question): adopt W0.BAL's arm B or C as the body, or
+park the fork?
+
+**The default that fired — option (a), PARK:** the W0.BAL bakeoff stays
+pre-registered with its numbers attached (arm C upright 1.000 on all three
+seeds vs the as-built body's 0.002–0.004; artifact
+`experiments/artifacts/w0bal_bakeoff.json`) and runs for adoption the day a
+ladder-branch spec becomes unblocked on it. Arms B and C are NOT adopted, so
+PG.3's inherited geometry and the BA.01 / PS.02 / PS.03 certificates
+downstream of the body are untouched. This is the only branch that adopts
+nothing, re-runs nothing, and leaves every recorded certificate valid.
+
+**Recorded beside it, because the Review of 08-31 put it on the owner's desk
+and a firing default may not pre-empt an open owner fork:** PROGRESS 08-31
+FOR THE OWNER §1 recommends REGISTERING W0.BAL as a spec id and creating a
+body seat in CHAMPIONS.md even while this park stands — parking an *adoption*
+and having no *chair* are different things. That recommendation is untouched
+by this firing (it asks for a seat, not an adoption) and remains open. So
+does the evidence attached to the `w0-too-shallow` queue row that some
+fraction of "the world is too shallow" may be "the body cannot act in it"
+(LT.01's C2 FAIL, 2026-08-31, is the first registered-spec number for that
+reading).
+
+**Re-open triggers:** the playground-humanoid line landing (the park's own
+terminus); the owner speaking to the PROGRESS fork; or the 09-06 Review's
+w0-too-shallow design naming the body as the binding repair — any of these
+reopens adoption through the world-contract change process.
+
+Evidence: `experiments/w0bal_probe.py` + artifact; D9's entry of 2026-08-21
+(three independent measurements); DECIDE block armed 2026-08-25; W0.BAL table
+attached to D9 (commit `e9cc914`, 24th-audit B4, NOTHING adopted).
