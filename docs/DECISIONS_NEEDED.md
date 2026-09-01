@@ -4091,3 +4091,12 @@ was already live at `ladder_loop.sh:271` (landed 2026-08-30) and cites D14 by
 name; a refused slot writes its marker and consumes nothing. Options (a)/(c)
 recorded as losers; (d) stays owner-only. Full record in
 `DECISIONS_RESOLVED.md`.
+
+## D13 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+Option (c), the CHANGE-GATED NO-OP, implemented in `scripts/overseer.sh` with
+all four conditions binding (HEAD unchanged, zero iterations, no open
+decide_by before the next slot via `experiments.decisions`, never more than 3
+consecutive skips). A completed audit is the only thing that resets the
+state, so a dead audit forces the next slot to run — fails toward more
+oversight. Full record and reversal path in `DECISIONS_RESOLVED.md`.

@@ -455,3 +455,45 @@ time.
 Evidence: `scripts/ladder_loop.sh:261-275`; `scripts/lib_credits.sh`
 `model_limited()`; `lost_iterations.log` as the receipt channel; the
 08-21 10:07/11:07 dead-slot scar that motivated the whole family.
+
+## D13 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder — the overseer may not edit its own script): option (c), the CHANGE-GATED NO-OP, implemented in scripts/overseer.sh with all four conditions
+
+**The question** (from the 30th–33rd audits: four consecutive DRIFTING
+verdicts over a frozen tree, ~1 point of the shared meter per audit, zero
+repairs possible because the only organ that can execute a FOR-THE-BUILDER
+item was the one the pace gate had locked out): should the overseer keep
+auditing no-change at full cadence?
+
+**The default that fired — option (c):** `overseer.sh` now skips a slot ONLY
+when all four conditions hold: (1) HEAD unchanged since the last COMPLETED
+audit; (2) zero builder iteration starts in `ladder.log` since it; (3) no
+OPEN decision's `decide_by` falls before the next slot; (4) fewer than 3
+consecutive slots already skipped — the organ can never go dark past 24 h on
+its own decision. It logs `overseer: no-op, HEAD <sha> unchanged and 0
+builder iterations since <ts>` with the skip count.
+
+**Implementation notes that are part of the record:** condition (3) reads
+`experiments.decisions` (OPEN decisions only), NOT a grep of `decide_by:` —
+resolved entries keep their past dates in the file forever, so a raw grep
+would have tripped on history and silently disabled the no-op for good, the
+inverse failure. The state file records the last COMPLETED audit and only a
+completed audit resets it, so a dead audit forces the next slot to run in
+full — the guard fails toward MORE oversight. The Review liveness watch runs
+even on skipped slots. Five-case harness test at firing time: no-state,
+iteration-since, 3-skips, stale-HEAD, and open-deadline all force a full
+audit (the last verified live against D13's own OVERDUE row before this entry
+closed it).
+
+**Losers recorded:** (a) accept as-is — keeps re-measuring a frozen system at
+~4 pts/day; (b) blanket cadence halving — cuts oversight hardest on the days
+the system moves, when it is worth most; (d) unify with the Review — out of
+scope, D11's territory (the 06:37 cron collision stays filed as builder item
+B3, a scheduling bug not a decision).
+
+**To reverse:** revert the overseer.sh commit — cadence returns to an
+unconditional `37 */6` immediately; delete `/data/jack-logs/overseer_noop.state`;
+there is no other state to unwind.
+
+Evidence: the 30th–33rd audit table in the D13 entry; `scripts/overseer.sh`
+(noop_eligible + the completed-audit state stamp); the measured ~1 pt/audit
+spend attribution the entry carries.

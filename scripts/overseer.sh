@@ -46,6 +46,49 @@ FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 # open is not a limit.
 usage_gate say || exit 0
 cd "$REPO" || exit 0
+
+# D13's CHANGE-GATED NO-OP (default fired 2026-09-01; DECIDE block in
+# docs/DECISIONS_NEEDED.md). Skip this slot ONLY when ALL FOUR hold:
+#   (1) HEAD unchanged since the last COMPLETED audit;
+#   (2) zero builder iteration starts in ladder.log since it;
+#   (3) no OPEN decision's decide_by falls before the next slot — read from
+#       `experiments.decisions`, NOT by grepping decide_by: resolved entries
+#       keep their past dates in the file forever, so a raw grep would trip
+#       on history and quietly turn this no-op off for good;
+#   (4) fewer than 3 consecutive slots already skipped (the organ can never
+#       go dark past 24 h on its own decision).
+# The state file records the last completed audit; a run that dies does not
+# update it, so a dead audit forces the next slot to run in full — the guard
+# fails toward MORE oversight, never less.
+NOOP_STATE="$LOGDIR/overseer_noop.state"    # "<head> <iso-ts> <skips>"
+noop_eligible() {
+  [ -f "$NOOP_STATE" ] || return 1
+  read -r LAST_HEAD LAST_TS SKIPS < "$NOOP_STATE" || return 1
+  [ -n "$LAST_HEAD" ] && [ -n "$LAST_TS" ] || return 1
+  [ "${SKIPS:-3}" -lt 3 ] || return 1                              # (4)
+  [ "$(git rev-parse HEAD)" = "$LAST_HEAD" ] || return 1           # (1)
+  ITER=$(awk -v ts="$LAST_TS" '$1 > ts && /iteration start/' \
+         "$LOGDIR/ladder.log" 2>/dev/null | wc -l)
+  [ "${ITER:-1}" -eq 0 ] || return 1                               # (2)
+  NEXT_SLOT=$(( $(date +%s) + 6*3600 ))                            # (3)
+  DUES=$(/data/venvs/jackthelearner/bin/python -m experiments.decisions \
+         2>/dev/null | grep -oE 'OVERDUE — DEFAULT IS DUE TO FIRE|due [0-9]{4}-[0-9]{2}-[0-9]{2}')
+  [ -n "$DUES" ] || return 1     # unreadable is not quiet — audit runs
+  echo "$DUES" | grep -q OVERDUE && return 1
+  while read -r line; do
+    d="${line#due }"
+    [ -n "$d" ] || continue
+    [ "$(date -d "$d" +%s 2>/dev/null || echo 0)" -lt "$NEXT_SLOT" ] && return 1
+  done <<< "$(echo "$DUES" | grep '^due' )"
+  return 0
+}
+if noop_eligible; then
+  review_liveness say || true    # the Review watch never lapses with the audit
+  echo "$LAST_HEAD $LAST_TS $((SKIPS + 1))" > "$NOOP_STATE"
+  say "overseer: no-op, HEAD $(git rev-parse --short HEAD) unchanged and 0 builder iterations since ${LAST_TS} (skip $((SKIPS + 1))/3, D13 change-gated)"
+  exit 0
+fi
+
 MODEL="${JACK_OVERSEER_MODEL:-opus}"
 # Turn budget derived from the clock, at the Review's own rate of 3 turns/min
 # (60 turns / 20 min), instead of the hard-coded 60 that killed this organ twice
@@ -105,4 +148,7 @@ if [ "$RC" -ne 0 ]; then
 fi
 VERDICT=$(grep -m1 -oE "ON TRACK|DRIFTING|INTEGRITY RISK" docs/OVERSIGHT.md 2>/dev/null || echo "no-verdict")
 say "audit end rc=${RC} — verdict: ${VERDICT}"
+# A COMPLETED audit is the only thing that resets D13's no-op state: skips
+# back to 0, HEAD and timestamp stamped. Dead runs leave it stale on purpose.
+echo "$(git rev-parse HEAD) $(date -Iseconds) 0" > "$NOOP_STATE"
 exit 0
