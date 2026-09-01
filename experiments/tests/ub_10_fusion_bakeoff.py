@@ -245,6 +245,28 @@ experiment that answer ordered.
   second job beside it; the gpu lock serialises them anyway, but a launch
   that immediately queues behind a ~20 h lock is a watcher wasted).
 
+SELECTION RECORD, seed 90, kernel jack-ladder-1788289788 (P100, 0.403 h,
+2026-09-01 19:09-19:34 UTC; artifact /data/ub10_grid_pilot.json; selection
+recomputed locally by `_select_recipes` from the artifact and it matches the
+detached run's print). Per-recipe row-clean status across all six arms:
+  base       NOT CLEAN: A2:marginal, A3:marginal   (the probe's fault, again)
+  warmup     NOT CLEAN: A2:marginal, A3:marginal, A4:uni_marginal
+  lolr       NOT CLEAN: A2:marginal, A4:marginal   (A3 fixed, A4 broken —
+             the probe's recipe-sensitivity finding, reproduced)
+  lolr_warm  CLEAN — all six arms: every marginal >= 0.975, every loss fell
+             (A2 1.64->0.99, A3 1.89->1.13, A4 3.42->1.58), unimodal
+             instruments alive, every max_swap_drop >= 0.95
+  xlolr      NOT CLEAN: A4:marginal (slot 0.5125)
+SELECTED (first eligible in GRID order per arm; slot played no role):
+  A0 base, A1 base, A2 lolr_warm, A3 lolr, A4 base, A5 base — every arm
+  eligible somewhere, so NO arm is SCORED-AND-INELIGIBLE and all six enter
+  the verdict conjuncts. Note for the record, not for selection: lolr_warm
+  is the single recipe clean for ALL six arms simultaneously, and A2 — the
+  arm the probe said "learned its marginals under NO tested recipe" — learns
+  under both untested grid cells (lolr_warm 0.975, xlolr 1.0). The probe's
+  finding was about its two-cell grid, not about the arm. Verdict gates did
+  not move on the pilot's account; seed 90 stays disjoint from {0,1,2}.
+
 COVERS: one brain / unison (claim)
 """
 from __future__ import annotations
@@ -307,7 +329,8 @@ GRID = (("base",      1e-3, 0.00),
 # name, or None = SCORED-AND-INELIGIBLE (runs at "base", excluded from the
 # verdict conjuncts)}. None as a whole means the grid pilot has not run yet,
 # and run() refuses.
-SELECTED: dict | None = None
+SELECTED: dict | None = {"A0": "base", "A1": "base", "A2": "lolr_warm",
+                         "A3": "lolr", "A4": "base", "A5": "base"}
 
 MARGINAL_FLOOR = 0.80        # learning gate on the unimodally-decodable tasks
 NULL_GATE = 0.60             # UB.9's chance + ~3.5 sigma at n_test = 320
