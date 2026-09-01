@@ -401,3 +401,26 @@ W34 under exactly that friction).
 Evidence: owner's YES of 2026-08-10 (D3 original); `assert_ref_is_current` in
 `experiments/gpu.py` (the mechanism that makes an unpushed HEAD invisible to
 every GPU job); the 146-push log cited in the armed entry.
+
+## D11 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): the credits posture is ACCEPTED AS-IS, on the record that the cadence meter now governs
+
+**The question** (raised 2026-08-10 when Claude credits were the binding
+resource and unmetered): change the loop's cadence, budget, or metering?
+
+**The default that fired — option (a), ACCEPT AS-IS:** the machinery that has
+shipped since the entry was raised is the answer. The pace gate
+(`lib_usage.sh`, shipped 2026-08-24) reads `week:all models`, names itself as
+the gate in every log line, and holds budget across the week; the fallback
+chain plus lost-iteration inheritance keep a limited hour from costing a unit
+of work. No cadence change, no new budget, nothing widened. If the owner
+later wants option (b) or (c), the constants are one line in `lib_usage.sh`
+and the schedule is one line in cron.
+
+**Recorded beside it (the standing rule this entry's history bought):** the
+meter is driven from off this box — 71–75% of its rise measured in hours with
+zero on-box requests, twice, on independent windows. Read the tool, act on
+`week:all models`, do not model the meter. Every attempt to price organ-hours
+against it (three) was falsified inside a week.
+
+Evidence: `scripts/lib_usage.sh` (pace_gate + 90% stop); the 42-hour join in
+CLAUDE.md's meter section; D11's price-history corrections of 08-26/08-27.

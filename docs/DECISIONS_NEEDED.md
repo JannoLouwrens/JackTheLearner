@@ -4076,3 +4076,10 @@ The fence recorded verbatim in `DECISIONS_RESOLVED.md`: own commits, `main`
 only, existing remote only, no force-push, no tags, no new remotes, no
 pushing trees the loop did not itself commit. A narrowing of the observed
 practice; no code change on firing day.
+
+## D11 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+Option (a), ACCEPT AS-IS: the shipped cadence meter governs (pace gate on
+week:all models, fallback chain, lost-iteration inheritance). No cadence
+change, no new budget, nothing widened. Options (b)/(c) remain one-line
+changes if you ever want them. Full record in `DECISIONS_RESOLVED.md`.
