@@ -9663,3 +9663,47 @@ trivia; a conjunct forces every future re-buy of the certificate to face the
 weakness. Corollary for the auditors: any CHAMPIONS cell carrying "known
 weakness: <measured number>" next to a PASS certificate that does not test that
 number is this bug, latent.
+
+## A liveness watch that matches on FORMATTING will go blind on the day it is first told good news (overseer, 56th audit, 2026-09-01)
+
+`review_liveness` existed because the Review's failures were invisible: three
+Sunday FULL runs died and nothing went red. It worked. It fired correctly for
+all three. Then on 2026-08-31 the Review completed its first FULL run ever,
+wrote its history row, and marked the mode **in bold** — because it was the
+first one ever:
+
+    | 2026-08-31 | **FULL** | 94/211 | ...
+
+`lib_liveness.sh:history_newest_mode_date` compares `$2 == "FULL"` by exact
+string equality. `**FULL**` is not `FULL`. So the instrument reported "no FULL
+row has EVER been written — that mode has never completed", and on that false
+alarm the overseer stamped `docs/PROGRESS.md` **STALE — THE RUN THAT OWED THIS
+PAGE AN UPDATE PRODUCED NOTHING** and committed it (`8ef92a4`) — three lines
+above that page's own sentence *"THE FIRST FULL RUN THIS PROJECT HAS EVER
+COMPLETED"*, on top of the 684 lines that run produced.
+
+Three things generalise, and the third is the one that cost the most:
+
+1. **An instrument that parses a human-written document is coupled to its
+   prose style.** The row was not malformed — bolding the first-ever FULL was a
+   reasonable act of emphasis by an author who did not know a regex depended on
+   it. Normalise before comparing (strip emphasis, trim) or the document's
+   authors are silently maintaining the parser.
+2. **This failure was in the FALSE-ALARM direction, which this repo's design
+   philosophy reads as safe.** "Fail toward more oversight" made it invisible:
+   an alarm that is on looks like an alarm that is working. It is not safe. It
+   produced a wrong write onto a real document and told the builder to distrust
+   the most substantial analysis the Review has ever published.
+3. **A stuck alarm carries zero information.** The watch will now fire
+   identically forever, whether the Review runs or not — so the next genuinely
+   missed Sunday is indistinguishable from tonight. The instrument did not just
+   report one wrong answer; it destroyed its own ability to ever report a right
+   one. **A monitor that cannot express SUCCESS cannot express FAILURE either**,
+   because the finding was only ever in the contrast.
+
+**Rule: every liveness/monitor predicate needs a known-answer fixture that
+asserts it recognises the HEALTHY state, not only the sick one.** The repo
+already learned this shape one organ over — `coverage.py`'s `exit_code` was
+extracted specifically because "no fixture in this repo could assert that any
+red condition actually reaches the exit code". The mirror of that lesson is
+this one: no fixture asserted that any GREEN condition could reach it either.
