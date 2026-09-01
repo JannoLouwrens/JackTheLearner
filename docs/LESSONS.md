@@ -9809,3 +9809,60 @@ Guard: `experiments/review_queue.py` (`DISPOSITIONED` in `LIVE`,
 `ACTED-WITHOUT-A-COMMIT` in `VIOLATIONS`), gated by `T0.31` P12 with the lazy
 relabel as sabotage 7 and the scar row (`bad-disp-stale`, routed 08-20,
 dispositioned 08-25, no clock) as a known-answer fixture.
+
+---
+
+## An instrument that grades a spec's DECLARATION cannot see its REACHABILITY — and a foreclosure launders a park (58th audit, 2026-09-01)
+
+`coverage.py` exists to answer one constitutional question: does every GOAL.md
+commitment have something falsifiable behind it? Its `CLAIM-DEAD` ratchet
+implements that as *"no PASS, and no un-PARKED claim-kind declaration"* — because
+the 28th audit's scar was a **parked** spec being counted as coverage.
+
+Then the project invented two NEW ways for a spec to be permanently unrunnable:
+`VOID-FORECLOSED` (it ran, it VOIDed, the declaration says the verdict cannot
+change at any envelope) and `PILOT-BLOCKED` (a run measured that the pilot's own
+precondition fails). **Neither spells `PARKED:`.** So each one launders a park:
+the spec keeps a live claim-kind declaration, `_claim_dead` stays false, and —
+worse — `claim_reachability` has no state for it, so it falls through to
+`RUNNABLE`, the strongest state short of `PASS`.
+
+The result was a report that contradicted itself forty lines apart: the
+commitment table printed `shelter/building … claims: SH.02 RUNNABLE` while the
+queue-depth section printed `SH.02 … Do NOT spend seeds on these; the repair is
+a redesign`. Five commitments — **balance, smell, shelter/building, thermal
+(kills), fast/slow**, four of them the owner's own 2026-08-09 survival
+directives — had zero passing claims and nothing anybody was allowed to run,
+and the instrument reported `0 CLAIM-DEAD`, rc=0.
+
+Three things generalise:
+
+1. **When you invent a new terminal state for a spec, every instrument that
+   enumerates spec states inherits a hole the same day.** `VOID-FORECLOSED` was
+   a good invention and it silently changed the meaning of "declared" in a tool
+   that was written before it existed. The state's author must go find the
+   enumerations, because the enumerations cannot go find the state.
+2. **"Has a declaration" and "can produce evidence" are different predicates,
+   and only the second is what a coverage ratchet actually means.** This is the
+   2026-08-10 miss moved one step downstream: then the spec did not exist; now
+   it exists, has an id, appears in `run next`, and can never return a number.
+   The first kind is invisible because it has no id; the second is invisible
+   because it has one.
+3. **A finding that lives only in a paragraph is a finding the system cannot
+   act on.** The 54th audit found this exact hole (§3.d: *"CLAIM-DEAD counts
+   parked, not unreachable"*) and, in the same document, turned the identical
+   insight into a builder item **for the other tool** — B4, "champions.py must
+   count REACHABILITY, not just existence", which shipped as `ARENA-UNREACHABLE`
+   and works today. The coverage half stayed prose. Two days and three audits
+   later the number had gone from 1 commitment to 5. **If an audit states a
+   defect in prose and a repair in a B-item, only the B-item exists.**
+
+Corollary on the repair, inherited from the one-class-ratchet lesson: fixing
+this must make CLAIM-DEAD go **0 → 5**, never sideways. A reachability class
+added by *converting* rather than *adding* is the same tidy-up-lowers-its-own-
+number move that `T0.31` P4/P5/P6 were built to catch.
+
+Guard: **owed** — `FORECLOSED` as a fifth `claim_reachability` state and a third
+`_claim_dead` disjunct, sharing `queue_depth`'s conjunction via one helper so the
+two readers cannot drift (the `_split_foreclosed`/`404e25a` pattern), with a
+known-answer fixture the current code is red against. 58th audit B1.
