@@ -131,6 +131,55 @@ matches fused — vision adds nothing to touch prediction in this venue at this
 capacity. That deletes the justification for UB.10's vision->touch masked
 objective arm (the spec's kills clause) and is DESIGN INPUT for the fusion
 bakeoff, exactly as T4.02's FAIL was. Report it; do not re-roll it.
+
+PROBE RECORD (2026-09-01, seed 90, pre-first-recorded-run window; gates and
+code untouched by any of it). The full-envelope shakedown read CHECK -> VOID:
+vision_sees_body 0.3738 < 0.5, fused_r2 0.0053 < 0.05 (proprio-only 0.1164),
+control_alive_ok 0 (control_r2 -0.0239 < proprio - 0.10). Three repair probes
+followed, and EVERY candidate lever was measured spent:
+
+  1. RESOLUTION (probe 1, 16 eps): raw-pixel ridge -> root xy reads 0.205 at
+     96x96 full, 0.260 at 48x48, 0.264 at 24x24 — flat in resolution. Episode
+     scaling 16 -> 48 eps moves 0.26 -> 0.37, rising but saturating.
+  2. INSTRUMENT CLASS (probe 2, 48 eps): body-blob centroid features
+     (|frame - median-frame| centroid + mass + second moments, the nonlinear
+     extraction ridge cannot express) read 0.2747-0.2950 — WORSE than raw
+     pixels. l2 in {1e-4..1} flat.
+  3. NONLINEAR READOUT (probe 3, 48 eps): the rig's OWN MLP trainer,
+     frame -> root xy, best-val epoch, held-out episodes: R^2 0.159. The
+     information itself is insufficient — no readout class closes a 0.16-0.37
+     reading to 0.5.
+  4. FUSED-ARM DROWNING (probes 2-3): pool4 input (576 dims) moves fused_r2
+     0.0053 -> 0.0153; weight decay 1e-3 -> 0.0177, 1e-2 -> 0.0391 — still
+     under the 0.05 floor, and the WD lever is CAPPED by the loss_fell
+     conjunct: at wd 1e-2 the proprio arm's fell-ratio is 0.786 vs the 0.8
+     gate, so one more notch trades the floor VOID for the loss_fell VOID.
+     pool2 at wd 1e-2: 0.0148. Control aliveness fails identically (pool4:
+     -0.0161 vs needed >= 0.0037). vision_only_r2 0.0093 everywhere: vision
+     carries ~no touch-relevant signal under this policy in this venue.
+
+DIAGNOSIS, and it is a VENUE fault, not an instrument fault: the eye is world
+contract (EYE_POS may not move; 30 deg half-FOV), the spawn is at its measured
+in-view optimum, and the in-view region is only the +-0.4 m jitter box — so
+var(root xy) is bounded at ~0.05 m^2/axis while the tumbling body's
+blob-centroid-vs-root offset varies by a comparable amount. Explainable
+variance caps near the measured 0.37 for ANY decoder; the 0.5 aliveness gate
+is unreachable in the only region the world contract allows the body to be
+seen in. The fused/control failures follow: 576-2304 dims carrying ~zero
+touch signal drown a 44-dim proprio fit at matched capacity, and no symmetric
+regularisation clears the floor before tripping loss_fell. Probes preserved
+at /data/ub14_probes/ub14_probe{,2,3}.py (numbers recorded here).
+
+THE SETTLEMENT (this slot): the recorded 3-seed run is launched to land the
+honest VOID on the ledger — the aliveness gates firing IS the rig doing its
+job; the row makes it scoreboard-visible. On harvest, the VOID-FORECLOSED
+declaration (FORECLOSURE ARITHMETIC + BLAST RADIUS: none — nothing
+depends_on UB.14) is owed via the doc-only amend lane, quoting the row's
+fired conjuncts. The repair is a venue/world redesign (an eye that can track
+the body, or a body that stays in view — the same fork as D9/W0.BAL and
+LT.01's C2), routed to the Review on the `w0-too-shallow` row. Do NOT re-run
+UB.14 unchanged and do NOT move VISION_BODY_GATE — a fixture gate lowered to
+what a blind venue can pass certifies blindness as sight.
 """
 from __future__ import annotations
 
