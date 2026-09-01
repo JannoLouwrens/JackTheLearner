@@ -1180,3 +1180,53 @@ at the seed level. Any change is spec redesign under the T1.02 precedent —
 the recorded VOID stands, nothing re-runs on this row's account, and UB.11
 (which Review 08-31 item 4 needs for T2.12's conjunct) stays blocked behind
 an UB.10 verdict this row's redesign must first make reachable.
+
+## ROUTED 2026-09-01 (builder, LC.07 pilot harvest): `lc07-checkpoint-branch` — the seat's own scale-transfer arena cannot physically run inside a Kaggle kernel
+
+ROUTED: lc07-checkpoint-branch | 2026-09-01 | LC.07-pilot-branch-B | OPEN
+    DUE: 2026-09-06 | a checkpoint-vs-venue decision owed by the Review's
+    Sunday FULL run; bundle judgment beside `w0-too-shallow` and D10's
+    lineage — this arena is the one D10's firing commit registered so the
+    wm-latent seat would not be held with a dead arena
+
+**What was measured (throughput pilot, seed 90, kernel
+jack-ladder-1788297232, 0.44 h, 2026-09-01 21:40; artifact
+/data/lc07_pilot.json; full PILOT RECORD in the spec docstring).** The rig
+is healthy — all 7 run classes measured, wiring exact, physics finite,
+RSS ~550 MB, borrowed LC.02 ratio calibrated — and the pre-registered
+branch B fired: rule A requires every full-scale run <= 8.5 h wall, and the
+CHEAPEST class (statue, 2.0M decisions) projects **14.49 h** while the arm
+(4.0M decisions at 27.19 dec/s) projects **40.86 h** — 4.8x the kernel
+ceiling. Parallelism cannot help a single run; the total plan is ~526
+wall-hours (21 runs, ~132 kernel-hours at ideal 4-way packing) against a
+30 h/week free allocation. Per the freeze step, nothing froze: `run()`
+keeps refusing, the envelope did not shrink, no constant moved.
+
+**Why this is a Review decision, not a builder unit.** The docstring
+pre-registered it: `run_survival` has no mid-run checkpoint, and building
+one is surgery on `experiments/survival.py` — an IMPL_DEPS of every LC/XL
+certificate, so the change stales certificates and must be its own
+reviewed unit, not a freeze-step side effect.
+
+**Options to weigh (not decided here):**
+1. **Checkpoint/resume in `run_survival`** (GPU_LONG's own requirement:
+   checkpoint, not trim). Determinism across a checkpoint boundary is the
+   hard part — the RNG stream, the world state, and the episodic store all
+   have to survive a kernel death bit-exactly, or a resumed run is a
+   different run wearing the same seed. Cost: stales every LC/XL
+   certificate's impl stamp; the amend lane (prose_only_delta) will NOT
+   cover it because it is a code change.
+2. **A different venue for CPU-bound survival runs** — the runs are
+   single-thread CPU (27–38 dec/s, no GPU use); Kaggle CPU-only sessions
+   have longer caps (docstring notes a CPU lane needs gpu.py surgery), or
+   the box itself at nice 19 (40.86 h wall is ~2 days of a core; the
+   tenant/RAM constraints allow one worker at ~550 MB) — slow but legal,
+   and `launch_detached.sh` already owns the liveness discipline.
+3. **Re-examine whether 10x decisions is the right reading of the owner's
+   "~10x" guard** — ONLY as a Review/owner question: the envelope is
+   registered and may not move by builder hand; this option exists so the
+   Review can weigh it against D10's intent rather than have it decided
+   by a docstring's silence.
+
+Whatever is chosen, the pilot's numbers are spent evidence: no re-roll, no
+second pilot, and LC.07 stays refusing until a decision writes the freeze.

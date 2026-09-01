@@ -134,6 +134,39 @@ Kaggle P100 kernels are the backend (gpu.py submits GPU kernels only; a
 CPU-only-kernel lane would need gpu.py surgery and is a decision for the
 branch that needs it, not this file). One dispatch per kernel, module-cached
 so run_spec's per-seed calls cannot pay twice (the 5.5-GPU-hour scar).
+
+================= PILOT RECORD (BRANCH B FIRED — NOTHING FROZE) ============
+
+Pilot ran 2026-09-01 21:13→21:40 UTC, kernel jack-ladder-1788297232 (Kaggle,
+0.44 h charged, W35), seed 90, head 40f66b3; artifact /data/lc07_pilot.json
+(sha of record: committed via the receipts in gpu_submissions.jsonl). Every
+_PILOT_OWED item was measured — all 7 classes, wiring exactly as owed (arm
+743 / wiped 727 / randrew 1485 optimiser steps, twin/statue/null/ctl_null 0,
+wiped-wiring segment 282 at e0=0.3), physics_finite 1.0 on every condition,
+peak RSS 537–549 MB, borrowed LC.02 train_ratio calibrated (borrowed_ok 1.0).
+
+Measured dec/s (wall) and projected hours per FULL-SCALE run:
+
+    arm      27.19 dec/s   4.0M decisions   40.86 h
+    wiped    27.69         4.0M             40.12 h
+    null     38.48         4.0M             28.87 h
+    randrew  27.82         2.0M             19.97 h
+    twin     34.24         2.0M             16.22 h
+    ctl_null 37.22         2.0M             14.92 h
+    statue   38.34         2.0M             14.49 h
+
+BRANCH B FIRES: rule A requires EVERY run <= 8.5 h wall; the CHEAPEST class
+(statue) projects 14.49 h and the arm projects 40.86 h — 4.8x the kernel
+ceiling. No packing arithmetic helps (a single run cannot be parallelised
+across workers), and the total plan is ~526 wall-hours across 21 runs
+(~132 kernel-hours at ideal 4-way packing), which also dwarfs a 30 h Kaggle
+week — but the wall ceiling fires first and alone. Per the freeze step:
+_GATES_FROZEN stays False, run() keeps refusing, the envelope does NOT
+shrink, and the checkpoint question (surgery on experiments/survival.py, an
+IMPL_DEPS of every LC/XL certificate) is routed to REVIEW_QUEUE as
+`lc07-checkpoint-branch` (DUE 09-06). Do NOT dispatch LC.07, do NOT re-run
+the pilot (its numbers are spent evidence, not a lottery), and do NOT write
+a _KERNEL_SPLIT until the Review decides the checkpoint unit.
 """
 from __future__ import annotations
 
