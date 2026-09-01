@@ -191,6 +191,60 @@ through PROGRESS.
   and it is worth more than a third LR would have been. Verdict gates did
   not move on the probe's account in any branch.
 
+UNPARKED 2026-09-01 UNDER THE 2026-08-25 DISPOSITION (Review, queue row
+`recipe-sensitivity`): matched TUNING BUDGET, not matched hyperparameters.
+The probe's finding stands — no uniform recipe trains all six arms — and
+dropping the uniform-recipe constraint with no declared budget would let an
+arm win by drawing a luckier LR. The replacement is strictly harder and the
+BUDGET is what is matched. This is not a third diagnostic (the SM.02/B5 cap
+stays spent): the probe answered "is it the recipe?", this is the redesigned
+experiment that answer ordered.
+
+  THE GRID — identical for every arm, K=5, declared here before any grid
+  trial runs. Order is minimal-deviation-from-base first, and order is the
+  ONLY tie-break, so selection never reads a score:
+      base       LR 1e-3, warmup 0.00   (the original recipe)
+      warmup     LR 1e-3, warmup 0.10   (probe arm 1)
+      lolr       LR 3e-4, warmup 0.00   (probe arm 2)
+      lolr_warm  LR 3e-4, warmup 0.10   (untested; the dropout-arm candidate)
+      xlolr      LR 1e-4, warmup 0.00   (untested; the small-step fallback)
+
+  SELECTION — same pre-registered criterion for every arm, computed by
+  `_select_recipes` from the grid-pilot artifact (deterministic;
+  known-answer + sabotage fixtures run in smoke). Per arm, a recipe is
+  ELIGIBLE iff the arm's seed-90 row under it is clean on the ARM-LOCAL
+  conjuncts (`_arm_reasons`: both marginals >= MARGINAL_FLOOR; loss fell;
+  unimodal variants alive — own-sense marginal >= floor, losses fell, slot
+  within 0.5 +/- (NULL_GATE-0.5); swap fires >= SWAP_HURT somewhere). The
+  selected recipe is the FIRST eligible in grid order. The claim metric
+  (the arm's own slot accuracy) plays NO role in selection — the smoke
+  fixture perturbs slot readings and asserts selection is unmoved.
+
+  SCORED-AND-INELIGIBLE (SYSTEM.md, 0345f0d): an arm eligible NOWHERE on
+  the grid still runs in the registered dispatch (at `base`), is measured
+  on the same ruler and recorded — but it is excluded from the winner
+  argmax, the ranking-stability clause and the arm-local VOID conjuncts,
+  because its instruments are dead and a dead instrument's 0.5 certifies
+  nothing (23rd audit B1). Its ineligibility is itself a recorded per-arm
+  finding, never a silent 0.5. Two hard floors keep the comparison real:
+  A0 ineligible -> VOID (no null, no claim); zero eligible trunk arms ->
+  VOID (non-learners cannot arbitrate, T2.02).
+
+  COST: N -> N x K on the pilot side — one kernel, K x _run_seed(90), each
+  ~0.12-0.15 h on P100 by the probe's own record, ~0.7 h total — plus the
+  registered 3-seed run under the selected per-arm recipes. Verdict gates
+  DO NOT MOVE on the grid's account; every threshold above predates it.
+
+  SEQUENCING: `run()` REFUSES (loudly, before run_spec, no ledger row)
+  until the grid pilot is harvested and SELECTED is committed with its
+  SELECTION RECORD. The grid pilot goes out DETACHED —
+      scripts/launch_detached.sh /data/tmp/ub10_grid.log \
+        /data/venvs/jackthelearner/bin/python -m \
+        experiments.tests.ub_10_fusion_bakeoff grid_pilot
+  — and ONLY after D1.0 clears the GPU queue (Review 2026-09-01 item 3: no
+  second job beside it; the gpu lock serialises them anyway, but a launch
+  that immediately queues behind a ~20 h lock is a watcher wasted).
+
 COVERS: one brain / unison (claim)
 """
 from __future__ import annotations
@@ -240,6 +294,20 @@ P_DROP = 0.25                # A2+ modality dropout
 LAMBDA_AUX = 0.5             # A3 mse / A4 nce weight
 T_NCE = 0.2
 PROJ_DIM = 64
+
+# Matched TUNING BUDGET (unpark disposition 2026-08-25; docstring). GRID is
+# identical for every arm; its order is the only selection tie-break.
+GRID = (("base",      1e-3, 0.00),
+        ("warmup",    1e-3, 0.10),
+        ("lolr",      3e-4, 0.00),
+        ("lolr_warm", 3e-4, 0.10),
+        ("xlolr",     1e-4, 0.00))
+# Written by hand ONLY from a harvested grid-pilot artifact, with the
+# SELECTION RECORD added to the docstring in the same commit: {arm: recipe
+# name, or None = SCORED-AND-INELIGIBLE (runs at "base", excluded from the
+# verdict conjuncts)}. None as a whole means the grid pilot has not run yet,
+# and run() refuses.
+SELECTED: dict | None = None
 
 MARGINAL_FLOOR = 0.80        # learning gate on the unimodally-decodable tasks
 NULL_GATE = 0.60             # UB.9's chance + ~3.5 sigma at n_test = 320
@@ -457,11 +525,18 @@ def _matched_width(arm: str) -> tuple:
 # ── training: matched steps, matched data order ──────────────────────────
 
 def _train_arm(arm: str, seed: int, data: dict, perms: list,
-               device: str, unimodal: str | None = None) -> dict:
+               device: str, unimodal: str | None = None,
+               lr: float | None = None,
+               warmup_frac: float | None = None) -> dict:
     """Train one arm (or its unimodal variant) and evaluate the battery.
     `unimodal='vision'|'audio'` clamps the OTHER modality's raw input to its
-    train mean everywhere (train and eval) — the ensemble construction."""
+    train mean everywhere (train and eval) — the ensemble construction.
+    `lr`/`warmup_frac` are the arm's recipe (matched-budget grid); None
+    falls back to the module defaults (the `base` recipe)."""
     import torch
+
+    lr = LR if lr is None else lr
+    warmup_frac = WARMUP_FRAC if warmup_frac is None else warmup_frac
 
     torch.set_num_threads(2)
     d, n_params = _matched_width(arm)
@@ -489,17 +564,17 @@ def _train_arm(arm: str, seed: int, data: dict, perms: list,
     ytr = {t: torch.tensor(data["y"][t][tr], device=device) for t in TASKS}
     quad_tr = torch.tensor(data["quad"][tr], device=device)
 
-    opt = torch.optim.Adam(net.parameters(), lr=LR,
+    opt = torch.optim.Adam(net.parameters(), lr=lr,
                            weight_decay=WEIGHT_DECAY)
     ce = torch.nn.CrossEntropyLoss()
     total_steps = len(perms) * int(np.ceil(len(perms[0]) / BATCH))
-    warm_steps = int(round(WARMUP_FRAC * total_steps))
+    warm_steps = int(round(warmup_frac * total_steps))
     step_i = 0
     losses = []
     for perm in perms:
         for i in range(0, len(perm), BATCH):
             if warm_steps:
-                lr_now = LR * min(1.0, (step_i + 1) / warm_steps)
+                lr_now = lr * min(1.0, (step_i + 1) / warm_steps)
                 for g in opt.param_groups:
                     g["lr"] = lr_now
             step_i += 1
@@ -567,8 +642,13 @@ def _train_arm(arm: str, seed: int, data: dict, perms: list,
     return row
 
 
-def _run_seed(seed: int, device: str) -> dict:
-    """Everything for one seed: data, 6 arms, 12 unimodal variants, swaps."""
+def _run_seed(seed: int, device: str,
+              recipes: dict | None = None) -> dict:
+    """Everything for one seed: data, 6 arms, 12 unimodal variants, swaps.
+    `recipes` maps arm -> (lr, warmup_frac); an arm's unimodal variants train
+    under the SAME recipe as the arm — they are that arm's instruments.
+    None means the module defaults for every arm (the pre-grid behaviour,
+    kept so remote_recipe_probe's globals()-override path still works)."""
     from . import ub_9_heard_not_seen as ub9
 
     data = _episode_tensors(seed)
@@ -579,9 +659,13 @@ def _run_seed(seed: int, device: str) -> dict:
 
     arms_out = {}
     for arm in ARMS:
-        full = _train_arm(arm, seed, data, perms, device)
-        uni_v = _train_arm(arm, seed, data, perms, device, unimodal="vision")
-        uni_a = _train_arm(arm, seed, data, perms, device, unimodal="audio")
+        lr, wf = (recipes[arm] if recipes else (None, None))
+        full = _train_arm(arm, seed, data, perms, device,
+                          lr=lr, warmup_frac=wf)
+        uni_v = _train_arm(arm, seed, data, perms, device, unimodal="vision",
+                           lr=lr, warmup_frac=wf)
+        uni_a = _train_arm(arm, seed, data, perms, device, unimodal="audio",
+                           lr=lr, warmup_frac=wf)
         pv = np.asarray(full.pop("probs_slot"))
         pv_v = np.asarray(uni_v.pop("probs_slot"))
         pv_a = np.asarray(uni_a.pop("probs_slot"))
@@ -611,17 +695,38 @@ def _run_seed(seed: int, device: str) -> dict:
     }
 
 
-def remote_run(seeds: list) -> dict:
+def remote_run(seeds: list, recipes: dict | None = None) -> dict:
     import torch
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    rec = ({a: tuple(recipes[a]) for a in ARMS} if recipes else None)
     out = {"gpu": (torch.cuda.get_device_name(0) if device == "cuda"
                    else "cpu"),
            "widths": {a: list(_matched_width(a)) for a in ARMS},
            "seeds": []}
     for seed in seeds:
-        row = _run_seed(seed, device)
+        row = _run_seed(seed, device, recipes=rec)
         out["seeds"].append(row)
         print("SEED_DONE", seed, flush=True)
+    return out
+
+
+def remote_grid_pilot() -> dict:
+    """Runs REMOTELY. The matched-tuning-budget grid at seed 90: every GRID
+    recipe applied uniformly to all six arms through the full _run_seed (18
+    trainings each), so eligibility is read from the same instruments the
+    registered run gates on. Selection happens on the LOCAL side, from the
+    artifact, by `_select_recipes` — this function measures, it does not
+    choose."""
+    import torch
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    out = {"gpu": (torch.cuda.get_device_name(0) if device == "cuda"
+                   else "cpu"),
+           "widths": {a: list(_matched_width(a)) for a in ARMS},
+           "recipes": {}}
+    for name, lr, wf in GRID:
+        uniform = {a: (lr, wf) for a in ARMS}
+        out["recipes"][name] = _run_seed(PILOT_SEED, device, recipes=uniform)
+        print("RECIPE_DONE", name, flush=True)
     return out
 
 
@@ -634,7 +739,7 @@ _sp.run([_sys.executable, "-m", "pip", "install", "mujoco==3.11.0"],
         check=True)
 import json
 from experiments.tests.ub_10_fusion_bakeoff import remote_run
-out = remote_run(__SEEDS__)
+out = remote_run(__SEEDS__, recipes=__RECIPES__)
 json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "ub10.json"), "w"))
 print("DONE", out["gpu"], flush=True)
 '''
@@ -643,7 +748,9 @@ _CACHE: dict = {}
 
 
 def _submit(seeds: list) -> dict:
-    body = JOB.replace("__SEEDS__", repr(list(seeds)))
+    rec = {a: list(_recipe_params(SELECTED)[a]) for a in ARMS}
+    body = (JOB.replace("__SEEDS__", repr(list(seeds)))
+               .replace("__RECIPES__", repr(rec)))
     job = build_job(body)
     res = submit(job, prefer="kaggle",
                  est_hours=round(0.20 + 0.35 * len(seeds), 2),
@@ -656,33 +763,66 @@ def _submit(seeds: list) -> dict:
     return out
 
 
-def _seed_row_clean(s: dict) -> tuple:
-    """The registered run's VOID checklist applied to one seed row. Returns
-    (clean, reasons) so a pilot/probe read is one look, not a spelunk."""
+def _arm_reasons(r: dict) -> list:
+    """The ARM-LOCAL conjuncts of the VOID checklist, for one arm's row.
+    This list is also the grid-selection eligibility criterion (docstring,
+    UNPARKED section) — it deliberately never reads the arm's own slot
+    accuracy, so recipe selection cannot tune the claim metric."""
+    reasons = []
+    if any(r["acc"][t] < MARGINAL_FLOOR for t in ("vslot", "afell")):
+        reasons.append("marginal")
+    if not r["loss_last"] < r["loss_first"]:
+        reasons.append("loss")
+    if max(abs(r["uni_vision_slot"] - 0.5),
+           abs(r["uni_audio_slot"] - 0.5)) > NULL_GATE - 0.5:
+        reasons.append("uni_leak")
+    if (r["uni_vision_vslot"] < MARGINAL_FLOOR
+            or r["uni_audio_afell"] < MARGINAL_FLOOR):
+        reasons.append("uni_marginal")
+    if not (r["uni_vision_loss"][1] < r["uni_vision_loss"][0]
+            and r["uni_audio_loss"][1] < r["uni_audio_loss"][0]):
+        reasons.append("uni_loss")
+    if max(r["swap_drop"][sn][t]
+           for sn in ("vision", "audio") for t in TASKS) < SWAP_HURT:
+        reasons.append("swap")
+    return reasons
+
+
+def _seed_row_clean(s: dict, arms=ARMS) -> tuple:
+    """The registered run's VOID checklist applied to one seed row (over
+    `arms` — the eligible set for a registered read, all six for a pilot).
+    Returns (clean, reasons) so a pilot/probe read is one look."""
     reasons = []
     if not s["canary_ok"]:
         reasons.append("canary")
     if s["dropped_frac"] > DROP_MAX:
         reasons.append("dropped_frac")
-    for a in ARMS:
-        r = s["arms"][a]
-        if any(r["acc"][t] < MARGINAL_FLOOR for t in ("vslot", "afell")):
-            reasons.append(f"{a}:marginal")
-        if not r["loss_last"] < r["loss_first"]:
-            reasons.append(f"{a}:loss")
-        if max(abs(r["uni_vision_slot"] - 0.5),
-               abs(r["uni_audio_slot"] - 0.5)) > NULL_GATE - 0.5:
-            reasons.append(f"{a}:uni_leak")
-        if (r["uni_vision_vslot"] < MARGINAL_FLOOR
-                or r["uni_audio_afell"] < MARGINAL_FLOOR):
-            reasons.append(f"{a}:uni_marginal")
-        if not (r["uni_vision_loss"][1] < r["uni_vision_loss"][0]
-                and r["uni_audio_loss"][1] < r["uni_audio_loss"][0]):
-            reasons.append(f"{a}:uni_loss")
-        if max(r["swap_drop"][sn][t]
-               for sn in ("vision", "audio") for t in TASKS) < SWAP_HURT:
-            reasons.append(f"{a}:swap")
+    for a in arms:
+        reasons.extend(f"{a}:{why}" for why in _arm_reasons(s["arms"][a]))
     return (not reasons, reasons)
+
+
+def _select_recipes(grid_out: dict) -> dict:
+    """The pre-registered selection, computed from the grid-pilot artifact:
+    per arm, the FIRST recipe in GRID order whose seed-90 row is clean on
+    the arm-local conjuncts (`_arm_reasons`); None = SCORED-AND-INELIGIBLE.
+    Deterministic; order is the only tie-break; slot plays no role (the
+    smoke fixture perturbs slot and asserts this)."""
+    sel = {}
+    for a in ARMS:
+        sel[a] = None
+        for name, _, _ in GRID:
+            if not _arm_reasons(grid_out["recipes"][name]["arms"][a]):
+                sel[a] = name
+                break
+    return sel
+
+
+def _recipe_params(sel: dict) -> dict:
+    """arm -> (lr, warmup_frac) from a selection; ineligible arms run at
+    `base` (recorded, excluded from the verdict conjuncts)."""
+    by_name = {name: (lr, wf) for name, lr, wf in GRID}
+    return {a: by_name[sel[a] or "base"] for a in ARMS}
 
 
 def _print_seed_row(s: dict):
@@ -793,6 +933,47 @@ def recipe_probe():
     return out
 
 
+JOB_GRID = r'''
+import os as _o
+_o.environ["MUJOCO_GL"] = "egl"   # preamble sets "disabled"; this job renders
+import subprocess as _sp, sys as _sys
+_sp.run([_sys.executable, "-m", "pip", "install", "mujoco==3.11.0"],
+        check=True)
+import json
+from experiments.tests.ub_10_fusion_bakeoff import remote_grid_pilot
+out = remote_grid_pilot()
+json.dump(out, open(_o.path.join(_o.environ["JACK_OUT"], "ub10_grid.json"),
+                    "w"))
+print("DONE", out["gpu"], flush=True)
+'''
+
+
+def grid_pilot():
+    """Local side of the matched-tuning-budget grid pilot (UNPARKED section
+    of the docstring): one kernel, K x _run_seed(90), artifact saved to
+    /data/ub10_grid_pilot.json, then the pre-registered selection printed.
+    The follow-up commit writes SELECTED = that selection plus a SELECTION
+    RECORD in the docstring; only then does run() stop refusing. Seed 90 is
+    disjoint from the registered seeds; gates do not move on its account."""
+    job = build_job(JOB_GRID)
+    res = submit(job, prefer="kaggle",
+                 est_hours=round(0.15 + 0.20 * len(GRID), 2),
+                 timeout_s=3600 + 1200 * len(GRID),
+                 fetch=["ub10_grid.json"])
+    if not res.ok:
+        raise RuntimeError(f"UB.10 grid pilot failed on {res.backend}: "
+                           f"{res.message}")
+    out = json.loads(Path(res.artifacts["ub10_grid.json"]).read_text())
+    Path("/data/ub10_grid_pilot.json").write_text(json.dumps(out))
+    for name, _, _ in GRID:
+        print(f"RECIPE {name}:")
+        _print_seed_row(out["recipes"][name])
+    sel = _select_recipes(out)
+    print("SELECTION (first eligible in grid order; None = "
+          "SCORED-AND-INELIGIBLE):", json.dumps(sel))
+    return out
+
+
 # ── aggregation + verdict ────────────────────────────────────────────────
 
 def _paired_boot_lo(rows: list, winner: str) -> float:
@@ -824,55 +1005,70 @@ def _aggregate() -> dict:
     params_ok = all(abs(params[a] - target) / target <= PARAM_TOL
                     for a in ARMS)
 
+    # Matched-tuning-budget eligibility (unpark disposition, 2026-08-25):
+    # every arm is scored, but only grid-eligible arms carry the verdict
+    # conjuncts or may win — a dead instrument's 0.5 certifies nothing.
+    elig = tuple(a for a in ARMS if SELECTED.get(a))
+    elig_trunk = tuple(a for a in TRUNK_ARMS if SELECTED.get(a))
+
     slot = {a: [s["arms"][a]["acc"]["slot"] for s in rows] for a in ARMS}
     med = {a: float(np.median(slot[a])) for a in ARMS}
-    winner = max(TRUNK_ARMS, key=lambda a: med[a])
-    top1 = [max(TRUNK_ARMS, key=lambda a: s["arms"][a]["acc"]["slot"])
-            for s in rows]
+    winner = (max(elig_trunk, key=lambda a: med[a]) if elig_trunk else None)
+    top1 = ([max(elig_trunk, key=lambda a: s["arms"][a]["acc"]["slot"])
+             for s in rows] if elig_trunk else [])
 
     marginal_ok = all(
         s["arms"][a]["acc"][t] >= MARGINAL_FLOOR
-        for s in rows for a in ARMS for t in ("vslot", "afell"))
+        for s in rows for a in elig for t in ("vslot", "afell"))
     learn_ok = all(s["arms"][a]["loss_last"] < s["arms"][a]["loss_first"]
-                   for s in rows for a in ARMS)
+                   for s in rows for a in elig)
     ens_max = max(s["arms"][a]["ens_slot"] for s in rows for a in ARMS)
     uni_dev_max = max(
-        abs(s["arms"][a][k] - 0.5)
-        for s in rows for a in ARMS
-        for k in ("uni_vision_slot", "uni_audio_slot"))
+        (abs(s["arms"][a][k] - 0.5)
+         for s in rows for a in elig
+         for k in ("uni_vision_slot", "uni_audio_slot")), default=0.0)
     uni_marginal_ok = all(
         s["arms"][a]["uni_vision_vslot"] >= MARGINAL_FLOOR
         and s["arms"][a]["uni_audio_afell"] >= MARGINAL_FLOOR
-        for s in rows for a in ARMS)
+        for s in rows for a in elig)
     uni_learn_ok = all(
         s["arms"][a][k][1] < s["arms"][a][k][0]
-        for s in rows for a in ARMS
+        for s in rows for a in elig
         for k in ("uni_vision_loss", "uni_audio_loss"))
     swap_ok = all(
         max(s["arms"][a]["swap_drop"][sense][t]
             for sense in ("vision", "audio") for t in TASKS) >= SWAP_HURT
-        for s in rows for a in ARMS)
+        for s in rows for a in elig)
 
-    beats_a0_all = all(s["arms"][winner]["acc"]["slot"]
-                       > s["arms"]["A0"]["acc"]["slot"] for s in rows)
-    beats_own_ens = all(s["arms"][winner]["acc"]["slot"]
-                        > s["arms"][winner]["ens_slot"] for s in rows)
-    boot_lo = _paired_boot_lo(rows, winner)
+    if winner is not None:
+        beats_a0_all = all(s["arms"][winner]["acc"]["slot"]
+                           > s["arms"]["A0"]["acc"]["slot"] for s in rows)
+        beats_own_ens = all(s["arms"][winner]["acc"]["slot"]
+                            > s["arms"][winner]["ens_slot"] for s in rows)
+        boot_lo = _paired_boot_lo(rows, winner)
+    else:
+        beats_a0_all, beats_own_ens, boot_lo = False, False, -1.0
 
     return {
         "gpu": _CACHE["gpu"], "backend": _CACHE["backend"],
         "widths": {a: _CACHE["widths"][a][0] for a in ARMS},
         "n_params": params,
         "params_ok": float(params_ok),
+        "selected_recipes": {a: (SELECTED[a] or "INELIGIBLE(base)")
+                             for a in ARMS},
+        "a0_eligible": float("A0" in elig),
+        "n_eligible_trunk": float(len(elig_trunk)),
         "slot_per_arm_per_seed": slot,
         "slot_median": {a: round(med[a], 4) for a in ARMS},
-        "arm_ranking_x_synergy_gap": round(med[winner] - med["A0"], 4),
-        "winner": float(ARMS.index(winner)),
-        "top1_stable": float(len(set(top1)) == 1),
+        "arm_ranking_x_synergy_gap": round(
+            (med[winner] - med["A0"]) if winner is not None else -1.0, 4),
+        "winner": float(ARMS.index(winner) if winner is not None else -1),
+        "top1_stable": float(bool(top1) and len(set(top1)) == 1),
         "winner_beats_a0_all_seeds": float(beats_a0_all),
         "winner_beats_own_ensemble": float(beats_own_ens),
         "paired_boot_lo": round(boot_lo, 4),
-        "winner_slot_median": round(med[winner], 4),
+        "winner_slot_median": round(
+            med[winner] if winner is not None else -1.0, 4),
         "a0_slot_median": round(med["A0"], 4),
         "ens_slot_max": round(ens_max, 4),
         "uni_slot_dev_max": round(uni_dev_max, 4),
@@ -898,10 +1094,11 @@ def _experiment(seed: int) -> dict:
 
 def _control(seed: int) -> dict:
     rows = _CACHE["seeds"]
+    elig = tuple(a for a in ARMS if SELECTED.get(a))
     worst = min(
-        max(s["arms"][a]["swap_drop"][sense][t]
-            for sense in ("vision", "audio") for t in TASKS)
-        for s in rows for a in ARMS)
+        (max(s["arms"][a]["swap_drop"][sense][t]
+             for sense in ("vision", "audio") for t in TASKS)
+         for s in rows for a in elig), default=-1.0)
     return {
         "ctrl_min_over_arms_of_max_swap_drop": round(worst, 4),
         "ctrl_swap_ok": float(worst >= SWAP_HURT),
@@ -920,6 +1117,13 @@ def _check(m: dict, c: dict):
         return Status.VOID          # class balance no longer by construction
     if m["params_ok"] != 1.0:
         return Status.VOID          # the match failed; ranking measures size
+    # Matched-budget floors (unpark disposition, 2026-08-25). Below here,
+    # every arm-local conjunct is computed over ELIGIBLE arms only; an
+    # ineligible arm's rows are recorded, never certifying.
+    if m["a0_eligible"] != 1.0:
+        return Status.VOID          # no null, no claim
+    if m["n_eligible_trunk"] < 1.0:
+        return Status.VOID          # non-learners cannot arbitrate (T2.02)
     if m["marginal_ok"] != 1.0 or m["learn_ok"] != 1.0:
         return Status.VOID          # a non-learner cannot arbitrate (T2.02)
     if m["uni_marginal_ok"] != 1.0 or m["uni_learn_ok"] != 1.0:
@@ -944,8 +1148,70 @@ def _check(m: dict, c: dict):
 
 
 def run(ledger: Ledger | None = None):
+    if SELECTED is None:
+        raise SystemExit(
+            "UB.10 REFUSES: the matched-tuning-budget grid pilot has not "
+            "been harvested (SELECTED is None). Order of operations "
+            "(docstring, UNPARKED section): (1) after D1.0 clears the GPU "
+            "queue, launch the grid pilot detached — "
+            "scripts/launch_detached.sh /data/tmp/ub10_grid.log "
+            "/data/venvs/jackthelearner/bin/python -m "
+            "experiments.tests.ub_10_fusion_bakeoff grid_pilot — "
+            "(2) commit SELECTED = the printed selection with its SELECTION "
+            "RECORD, (3) dispatch via scripts/dispatch.sh UB.10. No ledger "
+            "row is written by this refusal.")
     return run_spec(BY_ID["UB.10"], _experiment, _check, control_fn=_control,
                     ledger=ledger)
+
+
+def _selection_fixture():
+    """Known-answer + sabotage battery for `_select_recipes`, run in smoke.
+    Rows are synthetic; only the fields `_arm_reasons` reads exist."""
+    def row(clean=True, slot=1.0):
+        r = {"acc": {"slot": slot, "vslot": 1.0, "afell": 1.0},
+             "loss_first": 1.0, "loss_last": 0.1,
+             "uni_vision_slot": 0.5, "uni_audio_slot": 0.5,
+             "uni_vision_vslot": 1.0, "uni_audio_afell": 1.0,
+             "uni_vision_loss": [1.0, 0.1], "uni_audio_loss": [1.0, 0.1],
+             "swap_drop": {"vision": {t: 0.5 for t in TASKS},
+                           "audio": {t: 0.0 for t in TASKS}}}
+        if not clean:
+            r["loss_last"] = 2.0          # flat loss: the probe's fingerprint
+        return r
+
+    def grid_out(spec):
+        # spec: arm -> set of recipe names under which the arm is clean
+        return {"recipes": {name: {"arms": {a: row(clean=(name in spec[a]))
+                                            for a in ARMS}}
+                            for name, _, _ in GRID}}
+
+    names = [g[0] for g in GRID]
+    every = set(names)
+    # Known answer: A2 clean only under lolr_warm; A3 clean nowhere
+    # (SCORED-AND-INELIGIBLE); everyone else everywhere -> first in order.
+    spec = {a: every for a in ARMS}
+    spec["A2"] = {"lolr_warm"}
+    spec["A3"] = set()
+    sel = _select_recipes(grid_out(spec))
+    assert sel["A2"] == "lolr_warm", sel
+    assert sel["A3"] is None, sel
+    assert all(sel[a] == "base" for a in ("A0", "A1", "A4", "A5")), sel
+    # Order is the tie-break: clean under {warmup, lolr} only -> warmup.
+    spec["A1"] = {"warmup", "lolr"}
+    assert _select_recipes(grid_out(spec))["A1"] == "warmup"
+    # Sabotage: selection must be blind to the claim metric. Make base's
+    # slot terrible and lolr's perfect for A1 (clean under both) — the
+    # selection must not move off first-in-order.
+    spec["A1"] = every
+    g = grid_out(spec)
+    g["recipes"]["base"]["arms"]["A1"]["acc"]["slot"] = 0.0
+    g["recipes"]["lolr"]["arms"]["A1"]["acc"]["slot"] = 1.0
+    assert _select_recipes(g)["A1"] == "base", \
+        "selection read the claim metric"
+    # _recipe_params: ineligible arms fall back to base.
+    p = _recipe_params({a: None for a in ARMS})
+    assert all(p[a] == (1e-3, 0.0) for a in ARMS), p
+    print("SELECTION FIXTURE OK")
 
 
 if __name__ == "__main__":
@@ -954,13 +1220,18 @@ if __name__ == "__main__":
         # Local, CPU, minutes: every arm, every code path, at toy scale.
         # Patches the UB.9 rig's quad count DOWN (never the gates) so data
         # generation fits one free core; production shapes are preserved.
+        _selection_fixture()
         from . import ub_9_heard_not_seen as ub9
         ub9.N_QUADS, ub9.N_TEST_QUADS = 24, 6
         globals()["EPOCHS"] = 2
         globals()["D_BASE"] = 48
         globals()["D_SCAN"] = (32, 40, 48, 56, 64)
         globals()["BATCH"] = 32
-        out = remote_run([PILOT_SEED])
+        # Exercise the per-arm recipe path exactly as a registered run
+        # would: two distinct recipes across the arms.
+        smoke_rec = {a: ((1e-3, 0.0) if i % 2 else (3e-4, 0.10))
+                     for i, a in enumerate(ARMS)}
+        out = remote_run([PILOT_SEED], recipes=smoke_rec)
         s = out["seeds"][0]
         assert s["canary_ok"], "eye canary moved in smoke"
         for a in ARMS:
@@ -979,5 +1250,7 @@ if __name__ == "__main__":
         pilot()
     elif len(sys.argv) > 1 and sys.argv[1] == "recipe_probe":
         recipe_probe()
+    elif len(sys.argv) > 1 and sys.argv[1] == "grid_pilot":
+        grid_pilot()
     else:
         run()

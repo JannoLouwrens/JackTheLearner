@@ -66,11 +66,12 @@ which is the asymmetry the `w0-too-shallow` row already flagged as design input.
 a computed bill can be SEQUENCED. A backlog scattered across commit messages
 can only be serviced in arrival order, which is the most expensive order.
 
-ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2026-08-25 (design in docs/PROGRESS.md § FOR THE BUILDER item 2)
+ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2026-09-01 (builder EXECUTED the 08-25 disposition — grid, selection, SCORED-AND-INELIGIBLE verdict all in ub_10_fusion_bakeoff.py; UB.10 unparked. The 08-25 'ACTED' meant only 'design written' and parked this row's spec for 7 days — the two-meaning token is Review 09-01 FOR THE BUILDER item 4)
     Question: no single uniform training recipe trains all six matched-param
     UB.10 arms (warmup@1e-3 leaves A2/A3 dead; 3e-4 fixes A3 but breaks A4);
     A2 learned its marginals under NO tested recipe. Per-arm recipes, arm
-    redesign, or drop the uniform-recipe constraint? UB.10 is PARKED on this.
+    redesign, or drop the uniform-recipe constraint? UB.10 was PARKED on
+    this; UNPARKED 2026-09-01.
     Full record: PROBE RECORD in ub_10_fusion_bakeoff.py; 23rd audit B3.
     Staleness bill: NONE — UB.10 has no PASS and no certificate cites its
     arms. This is the cheapest row to act on.
@@ -88,6 +89,16 @@ ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2
     grid is recorded SCORED-AND-INELIGIBLE (SYSTEM.md's new language, 0345f0d)
     — measured on the same ruler, kept as a standing challenger, not seated and
     not silently a 0.5. Full reasoning in PROGRESS.md.
+    EXECUTED 2026-09-01 (builder): the grid is K=5 (base 1e-3 / warmup
+    1e-3+10% / lolr 3e-4 / lolr_warm 3e-4+10% / xlolr 1e-4), declared in the
+    test file before any grid trial; selection is `_select_recipes` — first
+    eligible in grid order on the arm-local conjuncts, provably blind to the
+    claim metric (sabotage fixture in smoke); ineligible arms run at base,
+    recorded, excluded from winner/conjuncts; A0-ineligible and
+    zero-eligible-trunk are VOID floors in _check. run() REFUSES until the
+    grid pilot (seed 90, one kernel, ~0.7 h P100) is harvested and SELECTED
+    committed. Pilot dispatch deliberately queued behind D1.0 (Review 09-01
+    item 3). Smoke green incl. selection fixtures.
 
 ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
     BLOCKED-BY: w0-too-shallow | the world-edit window that row opens; if it

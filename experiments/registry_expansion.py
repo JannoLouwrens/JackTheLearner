@@ -1480,11 +1480,19 @@ EXPANSION: list[Spec] = [
                "PAIRED bootstrap CIs and IQM per arXiv:2108.13264 - unpaired "
                "3-seed architecture comparisons resolve nothing at this budget."
                "  COVERS: one brain / unison (claim). "
-               "PARKED: 2026-08-20 — recipe probe both-fail: no single "
-               "uniform recipe trains all six matched-param arms (warmup@1e-3 "
-               "leaves A2/A3 flat; 3e-4 fixes A3 but breaks A4), A2 learned "
-               "its marginals under NO tested recipe, the one-diagnostic cap "
-               "is spent; arm redesign routed to the weekly Review."),
+               "PARKED 2026-08-20 (recipe probe both-fail: no single uniform "
+               "recipe trains all six matched-param arms; A2 learned its "
+               "marginals under NO tested recipe), UNPARKED 2026-09-01 under "
+               "the Review's 2026-08-25 disposition: matched TUNING BUDGET, "
+               "not matched hyperparameters — every arm gets the IDENTICAL "
+               "pre-registered recipe grid (K=5, declared in the test file "
+               "before any grid trial), the same trial count, selection by "
+               "the same pre-registered arm-local criterion that never reads "
+               "the claim metric; an arm eligible NOWHERE on the grid is "
+               "SCORED-AND-INELIGIBLE (runs, is recorded, cannot win, "
+               "carries no verdict conjunct), never a silent 0.5. A0 "
+               "ineligible or zero eligible trunk arms -> VOID. Strictly "
+               "harder than the uniform recipe it replaces; cost N -> NxK."),
 
     # ── THE STANDING AUDIT ──────────────────────────────────────────────
 
