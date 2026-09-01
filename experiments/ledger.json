@@ -19913,6 +19913,224 @@
       "spec_id": "TA.02",
       "status": "PASS"
     },
+    "UB.10": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "7768a6d",
+      "compute_s": 1093.16,
+      "control_metrics": {
+        "ctrl_min_over_arms_of_max_swap_drop": 0.5,
+        "ctrl_min_over_arms_of_max_swap_drop_std": 0.0,
+        "ctrl_swap_drops": {
+          "A0": {
+            "audio": {
+              "afell": 0.5,
+              "slot": 0.5,
+              "vslot": 0.0
+            },
+            "vision": {
+              "afell": 0.0,
+              "slot": 1.0,
+              "vslot": 1.0
+            }
+          },
+          "A1": {
+            "audio": {
+              "afell": 0.5,
+              "slot": 0.5,
+              "vslot": 0.0
+            },
+            "vision": {
+              "afell": 0.0,
+              "slot": 1.0,
+              "vslot": 1.0
+            }
+          },
+          "A2": {
+            "audio": {
+              "afell": 0.5,
+              "slot": -0.4281,
+              "vslot": 0.0
+            },
+            "vision": {
+              "afell": 0.0,
+              "slot": 0.0062,
+              "vslot": 0.0
+            }
+          },
+          "A3": {
+            "audio": {
+              "afell": 0.5,
+              "slot": 0.4813,
+              "vslot": 0.0031
+            },
+            "vision": {
+              "afell": 0.0,
+              "slot": 0.9844,
+              "vslot": 0.9875
+            }
+          },
+          "A4": {
+            "audio": {
+              "afell": 0.5,
+              "slot": 0.4375,
+              "vslot": 0.0
+            },
+            "vision": {
+              "afell": 0.0,
+              "slot": 0.9406,
+              "vslot": 0.9406
+            }
+          },
+          "A5": {
+            "audio": {
+              "afell": 0.5,
+              "slot": 0.5,
+              "vslot": 0.0
+            },
+            "vision": {
+              "afell": 0.0,
+              "slot": 1.0,
+              "vslot": 1.0
+            }
+          }
+        },
+        "ctrl_swap_ok": 1.0,
+        "ctrl_swap_ok_std": 0.0
+      },
+      "duration_s": 1102.47,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1788293396",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
+      "history": [],
+      "impl_sha": "890f99a0d7844095",
+      "message": "run did not test the claim; not a refutation",
+      "metrics": {
+        "a0_eligible": 1.0,
+        "a0_eligible_std": 0.0,
+        "a0_slot_median": 1.0,
+        "a0_slot_median_std": 0.0,
+        "arm_ranking_x_synergy_gap": 0.0,
+        "arm_ranking_x_synergy_gap_std": 0.0,
+        "backend": "kaggle",
+        "canary_ok_all": 1.0,
+        "canary_ok_all_std": 0.0,
+        "dropped_frac_max": 0.0,
+        "dropped_frac_max_std": 0.0,
+        "ens_slot_max": 0.75,
+        "ens_slot_max_std": 0.0,
+        "gpu": "Tesla P100-PCIE-16GB",
+        "learn_ok": 1.0,
+        "learn_ok_std": 0.0,
+        "marginal_ok": 0.0,
+        "marginal_ok_std": 0.0,
+        "n_eligible_trunk": 5.0,
+        "n_eligible_trunk_std": 0.0,
+        "n_params": {
+          "A0": 306846,
+          "A1": 314886,
+          "A2": 315142,
+          "A3": 323783,
+          "A4": 312366,
+          "A5": 315272
+        },
+        "paired_boot_lo": -0.0104,
+        "paired_boot_lo_std": 0.0,
+        "params_ok": 1.0,
+        "params_ok_std": 0.0,
+        "selected_recipes": {
+          "A0": "base",
+          "A1": "base",
+          "A2": "lolr_warm",
+          "A3": "lolr",
+          "A4": "base",
+          "A5": "base"
+        },
+        "slot_median": {
+          "A0": 1.0,
+          "A1": 1.0,
+          "A2": 0.9406,
+          "A3": 0.9688,
+          "A4": 1.0,
+          "A5": 1.0
+        },
+        "slot_per_arm_per_seed": {
+          "A0": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "A1": [
+            1.0,
+            0.9875,
+            1.0
+          ],
+          "A2": [
+            0.5,
+            1.0,
+            0.9406
+          ],
+          "A3": [
+            0.9938,
+            0.5094,
+            0.9688
+          ],
+          "A4": [
+            0.9688,
+            1.0,
+            1.0
+          ],
+          "A5": [
+            1.0,
+            1.0,
+            0.9688
+          ]
+        },
+        "swap_ok_all_arms": 1.0,
+        "swap_ok_all_arms_std": 0.0,
+        "synergy_gap_per_arm": {
+          "A0": 0.2656,
+          "A1": 0.4844,
+          "A2": 0.3406,
+          "A3": 0.4938,
+          "A4": 0.4688,
+          "A5": 0.5
+        },
+        "top1_stable": 0.0,
+        "top1_stable_std": 0.0,
+        "uni_learn_ok": 1.0,
+        "uni_learn_ok_std": 0.0,
+        "uni_marginal_ok": 1.0,
+        "uni_marginal_ok_std": 0.0,
+        "uni_slot_dev_max": 0.0,
+        "uni_slot_dev_max_std": 0.0,
+        "widths": {
+          "A0": 120,
+          "A1": 128,
+          "A2": 128,
+          "A3": 128,
+          "A4": 124,
+          "A5": 128
+        },
+        "winner": 1.0,
+        "winner_beats_a0_all_seeds": 0.0,
+        "winner_beats_a0_all_seeds_std": 0.0,
+        "winner_beats_own_ensemble": 1.0,
+        "winner_beats_own_ensemble_std": 0.0,
+        "winner_slot_median": 1.0,
+        "winner_slot_median_std": 0.0,
+        "winner_std": 0.0
+      },
+      "preserved_impl": null,
+      "ran_at": "2026-09-01T20:28:15",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "UB.10",
+      "spec_sha": "934670fb41739d17",
+      "status": "VOID"
+    },
     "UB.14": {
       "amended": [
         {
