@@ -300,10 +300,33 @@ def _exclusive(spec_ids=()):
     """
     lock_path = _lock_for(spec_ids)
     for path, overflow in ((lock_path, False), (CPU_LOCK_B, True)):
-        fh = open(path, "w")
-        try:
-            fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
+        # Acquire, with a ghost guard (59th audit B6): the holder now
+        # unlinks its lock file on clean exit — so a stale pid can no
+        # longer be quoted as a receipt, and a lock file that EXISTS while
+        # nothing flocks it now means an unclean exit worth reading. The
+        # race the unlink opens: a contender that opened the OLD inode just
+        # before the unlink can acquire a flock nobody else contends while
+        # a fresh process creates and locks the new inode — two holders,
+        # which on 4 shared cores is the exact scar this lock exists for.
+        # So after acquiring, verify the path still names our inode; if
+        # not, reopen and try again. `contended = None` means we hold it.
+        contended = None
+        for _ghost_try in range(3):
+            contended = None
+            fh = open(path, "w")
+            try:
+                fcntl.flock(fh.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError as e:
+                contended = e
+                break
+            try:
+                if os.fstat(fh.fileno()).st_ino == os.stat(path).st_ino:
+                    break
+            except OSError:
+                pass
+            fh.close()
+            contended = BlockingIOError("lock file kept moving underfoot")
+        if contended is not None:
             fh.close()
             if overflow:
                 print(f"  overflow slot {CPU_LOCK_B} is also held — waiting is correct.")
@@ -325,6 +348,15 @@ def _exclusive(spec_ids=()):
         try:
             yield
         finally:
+            # Unlink BEFORE unlocking, while nobody else can hold it, and
+            # only if the path still names our inode (59th audit B6): a
+            # clean exit leaves no file, so the pid inside a file that
+            # exists belongs to a holder that crashed — a receipt, finally.
+            try:
+                if os.stat(path).st_ino == os.fstat(fh.fileno()).st_ino:
+                    os.unlink(path)
+            except OSError:
+                pass
             fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
             fh.close()
         return

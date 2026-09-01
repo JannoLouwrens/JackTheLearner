@@ -563,7 +563,34 @@
       "status": "VOID"
     },
     "D1.0": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-01T20:16:01",
+          "by": "59th-audit-B3",
+          "changes": [
+            {
+              "field": "status",
+              "from": "VOID",
+              "to": "VOID"
+            }
+          ],
+          "commit": "7768a6d+dirty",
+          "reason": "Status unchanged (VOID re-asserted to carry this note): the recorded verdict prose misdescribed its own measurement \u2014 it said 'Two non-learners' when exactly one arm (c_e2e, 2.56 sigma vs bar 3.0) missed the learning gate, and asserted the 'If d_mlp is among the missed' clause while d_mlp learned at 15.47 sigma. Metrics correct and untouched; the VOID stands per T2.02 precedent (one non-learner voids the arbitration). _check now computes len(missed)/sorted(missed) and conditions the d_mlp clause \u2014 a readout repair for the next run."
+        },
+        {
+          "at": "2026-09-01T20:21:17",
+          "by": "59th-audit-B7",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "7768a6d+dirty",
+          "reason": "Multi-kernel provenance: hardware stamped the harvesting box (aarch64 dispatcher) while all three kernels record Tesla P100-PCIE-16GB in metrics.kernels[].gpu; derived per the fix_hardware lane, now extended to read a kernels block when metrics.gpu is absent. commit field names kernel 1's head only \u2014 verified harmless for this run (impl byte-identical at all three heads, 59th audit B7); future kernels entries now carry their own head at submit time."
+        }
+      ],
       "attempt": 1,
       "commit": "9494cd1",
       "compute_s": 58212.02,
@@ -587,7 +614,7 @@
       },
       "duration_s": 58236.9,
       "gpu_job_id": "jannolouwrens/jack-ladder-1788228751,jannolouwrens/jack-ladder-1788243434,jannolouwrens/jack-ladder-1788265166",
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
       "impl_sha": "870b3c776c87f140",
       "message": "run did not test the claim; not a refutation",

@@ -1101,3 +1101,41 @@ ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca7
     ordinary coverage.py re-buy). Any repair that instead edits W0 inherits
     the 21-certificate playground.py bill already computed on
     `w0-too-shallow`.
+
+---
+
+## ROUTED 2026-09-01 (builder, 59th audit B4): `d10-learning-gate-uses-two-different-denominators` — "noisy" and "did not learn" share one verdict
+
+ROUTED: d10-learning-gate-uses-two-different-denominators | 2026-09-01 | 59th-audit-B4 | OPEN
+    DUE: 2026-09-06 | gate-design decision owed by the Review; bundle with `w0-too-shallow`'s window if the venue is judged the common cause
+
+**What was measured (D1.0 attempt 1, VOID 2026-09-01, metrics on the ledger
+row — correct and untouched).** The learning gate scores
+`(arm_mean - random_mean) / max(arm_std, rnd_std)` at n=3 seeds / 5 eval
+episodes. Three arms happened to be scored against random's spread; `c_e2e`
+was scored against its OWN spread, because its seed means (319 / 536 / 358)
+spread wider than random's. `c_e2e` returned 404.3 against random's 108.7 —
+a 3.7× gain — and is recorded as not having learned (2.56σ vs the 3.0 bar).
+It failed a CONSISTENCY test, and the ledger calls it a LEARNING failure;
+the owner's copy of this audit flags that "the end-to-end arm did not learn"
+is the sentence that would otherwise enter the record, and it is not what
+was measured.
+
+**Options to weigh (the audit's, not decided here):** a paired t-statistic;
+a fixed random-spread denominator; more eval episodes; or an explicit
+separate consistency gate so the two failure modes stop sharing one verdict.
+Any change is a gate redesign for FUTURE D1.0-family runs — the recorded
+VOID stands per T2.02 precedent and nothing re-runs on this row's account.
+
+## ROUTED 2026-09-01 (builder, 59th audit B4): `d10-learning-gate-sits-at-the-untrained-twin-level` — the control passed by 0.04σ
+
+ROUTED: d10-learning-gate-sits-at-the-untrained-twin-level | 2026-09-01 | 59th-audit-B4 | OPEN
+    DUE: 2026-09-06 | gate-design decision owed by the Review; same bundle judgment as the denominators row
+
+**What was measured (same run).** The untrained twins read 2.96σ and 2.94σ
+against the 3.0σ learning bar — the control cleared by 0.04σ. A gate whose
+untrained twin sits at the bar's edge is measuring architectural bias plus
+noise, not learning headroom. **Option to weigh:** score each arm against
+its OWN untrained twin rather than against random, which also dissolves the
+denominators question above for the twin comparison. Same scope note: gate
+redesign for future runs only; the recorded VOID stands.

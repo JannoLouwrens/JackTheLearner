@@ -613,6 +613,10 @@ remote_run("full", arms=__ARMS__)
 def pilot(out_path=_PILOT_ARTIFACT):
     """Dispatch the throughput/wiring pilot to Kaggle and write its artifact.
     ~40 min GPU: 4 arms x (construct + 1 update + 6 timed minutes)."""
+    # A pilot runs outside run_spec, so JACK_SPEC_ID is unset and its receipt
+    # would read spec:"" (58th audit B4; SM.02's pattern). Name the spend.
+    os.environ["JACK_SPEC_ID"] = "D1.0"
+    os.environ["JACK_SPEC_PHASE"] = "pilot"
     job = build_job(_PILOT_JOB)
     res = submit(job, prefer="kaggle", est_hours=1.2, timeout_s=7000,
                  fetch=["d10_pilot.json"])
@@ -658,9 +662,14 @@ def _submit_full() -> dict:
                                f"{res.message!r}")
         d = json.loads(Path(path).read_text())
         merged["runs"].extend(d["runs"])
+        # `head` per kernel (59th audit B7): the row's top-level `commit` is
+        # stamped once at run start, but a multi-kernel dispatch can span
+        # pushes — each kernel names the HEAD it was actually built from.
+        from ..gpu import _head_sha
         merged["kernels"].append({"arms": list(arms), "gpu": d["gpu"],
                                   "wall_minutes": d["wall_minutes"],
-                                  "backend": res.backend})
+                                  "backend": res.backend,
+                                  "head": _head_sha()})
         if "random_returns" not in merged:
             merged["random_returns"] = d["random_returns"]
     return merged
@@ -763,12 +772,16 @@ def _check(m: dict, c: dict):
             "VOID — learning gate: "
             + ", ".join(f"{a} at {v} sigma vs random (bar {MIN_LEARN_SIGMA})"
                         for a, v in missed.items())
-            + f"; arms that DID learn: {learned or 'none'}. Two non-learners "
-              "cannot arbitrate an architecture (T2.02's precedent). If d_mlp "
-              "is among the missed while T2.02's SB3 MLP holds 530/7.11 sigma, "
-              "this is the shared trunk-tuned recipe failing the MLP — a "
-              "recipe question for the Review (UB.10's finding), not an "
-              "architecture verdict and not a re-roll.")
+            + f"; arms that DID learn: {learned or 'none'}. "
+            + f"{len(missed)} non-learner(s) ({sorted(missed)}) void the "
+              "arbitration (T2.02's precedent: an arm that has not "
+              "demonstrably learned cannot arbitrate an architecture).")
+        if "d_mlp" in missed:
+            m["verdict"] += (
+                " d_mlp is among the missed while T2.02's SB3 MLP holds "
+                "530/7.11 sigma — this is the shared trunk-tuned recipe "
+                "failing the MLP, a recipe question for the Review (UB.10's "
+                "finding), not an architecture verdict and not a re-roll.")
         return Status.VOID
     hot_twins = {a: c[f"untrained_{a}_sigma"] for a in ARMS
                  if c[f"untrained_{a}_sigma"] >= MIN_LEARN_SIGMA}

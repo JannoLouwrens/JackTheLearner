@@ -832,10 +832,23 @@ class Ledger:
                 if fix_hardware:
                     gpu = (row.get("metrics") or {}).get("gpu")
                     if not (isinstance(gpu, str) and gpu.strip()):
+                        # Multi-kernel rows (59th audit B7): the compute host
+                        # lives per-kernel in metrics['kernels'][].gpu, not in
+                        # a top-level metrics['gpu']. Still derived, never
+                        # supplied: every kernel must name its gpu, and the
+                        # distinct set is recorded (joined) when they differ.
+                        kernels = (row.get("metrics") or {}).get("kernels")
+                        if kernels and all(isinstance(k.get("gpu"), str)
+                                           and k.get("gpu").strip()
+                                           for k in kernels):
+                            gpu = " + ".join(sorted({k["gpu"]
+                                                     for k in kernels}))
+                    if not (isinstance(gpu, str) and gpu.strip()):
                         raise ValueError(
-                            f"{spec_id}: fix_hardware needs metrics['gpu'] in the "
-                            "row itself — the correction must be derived, never "
-                            "supplied")
+                            f"{spec_id}: fix_hardware needs metrics['gpu'] (or "
+                            "a metrics['kernels'] block where every kernel "
+                            "names its gpu) in the row itself — the correction "
+                            "must be derived, never supplied")
                     old_hw = row.get("hardware", "")
                     if old_hw.startswith("remote/"):
                         raise ValueError(
