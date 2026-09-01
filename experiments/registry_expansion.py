@@ -3638,7 +3638,16 @@ EXPANSION: list[Spec] = [
          null_baseline="The channel-deprived twin's upright time; and a "
                        "random policy in the same rig.",
          metric="upright_gain_vs_deprived",
-         budget=Budget.CPU_LONG, seeds=3, depends_on=["BA.01"],
+         budget=Budget.CPU_LONG, seeds=3,
+         # RE-PARENTED BY D8's DEFAULT (fired 2026-09-01): parked behind the
+         # playground-humanoid line. LT.08 ("The humanoid climbs — same test,
+         # real body") is the registered spec on which a body with
+         # directional catch authority arrives; until it PASSES, BA.02 is
+         # BLOCKED, not runnable — the D8 probes measured this body's
+         # claim-contrast ceiling at ~0.0-0.1 s against the spec's own 0.20 s
+         # floor, so running it here is buying a VOID. Claim text, gates and
+         # thresholds UNTOUCHED; the 08-14 VOID and history stand.
+         depends_on=["BA.01", "LT.08"],
          control="MATCHED-NOISE CHANNEL: replace the vestibular input with "
                  "amplitude-matched noise (or a shuffled replay of another "
                  "episode's channel). The gain must vanish - this separates "
@@ -3651,6 +3660,15 @@ EXPANSION: list[Spec] = [
                "balance stays a dashboard light he never reads, and the "
                "honest status of W0.BAL is 'sensed, unused'.",
          notes="COVERS: balance (claim)\n"
+               "PARKED: 2026-09-01 — D8 default fired (armed 2026-08-25, "
+               "decide_by 2026-08-31 passed unanswered): parked until a body "
+               "with directional catch authority exists; re-parented behind "
+               "LT.08 (the playground-humanoid line). The four scratch "
+               "probes measured the sensing-over-blind contrast ceiling at "
+               "~0.0-0.1 s in this body vs the pre-registered 0.20 s floor "
+               "(slides +0.09+/-0.07, adhesion +0.005+/-0.09, ground drive "
+               "potent only toward-lean -0.685+/-0.16). BA.01 stands; the "
+               "successor claim in THIS body is BA.03.\n"
                "Registered under overseer B5 (2026-08-13): balance had no "
                "claim-kind spec, so its n_pass could not move no matter what "
                "ran. BA.01's two-channel note applies here as ablation "

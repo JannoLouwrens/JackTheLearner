@@ -4042,3 +4042,12 @@ CPU_DAYS frozen at LC.03 v2's envelope: 400,000 decisions / 17,280
 core-seconds per arm-seed. Anything larger re-escalates with arithmetic
 BEFORE the run. Options 2 and 3 struck. Full record in
 `DECISIONS_RESOLVED.md`.
+
+## D8 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+Option 1, PARK, exactly as armed: BA.02 re-parented behind the
+playground-humanoid line (depends_on now includes LT.08), claim text, gates
+and thresholds untouched, VOID and history intact, `PARKED:` marker in notes
+with the measured ~0.0–0.1 s ceiling vs the 0.20 s floor. BA.01 stands; the
+balance commitment's live claim in this body is BA.03. LT.08 PASS un-parks it
+mechanically. Full record in `DECISIONS_RESOLVED.md`.

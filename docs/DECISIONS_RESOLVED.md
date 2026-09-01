@@ -267,3 +267,38 @@ Evidence: LC.03 budget amendment comment in registry_expansion.py (CPU_LONG →
 CPU_DAYS, 2026-08-13); ledger LC.03 history (VOID 08-14, VOID 08-23);
 `5074440` (4× re-registration); the D4 forensic timeline in
 DECISIONS_NEEDED.md.
+
+## D8 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): BA.02 PARKED until a body with directional catch authority exists — re-parented behind LT.08, nothing weakened
+
+**The question** (open since 2026-08-14, armed 2026-08-25 with D9): BA.02 ("he
+catches himself") is unmeasurable in the rover body — four scratch probes put
+the sensing-over-blind contrast ceiling at ~0.0–0.1 s against the spec's own
+pre-registered 0.20 s floor, because no actuator's useful effect depends on
+fall direction. Park it, give the rover catch authority, or re-scope?
+
+**The default that fired — option 1, PARK:** BA.02 is re-parented in the
+registry behind the playground-humanoid line (`depends_on` now includes
+LT.08, "The humanoid climbs — same test, real body" — the registered spec on
+which a capable body arrives). Claim text, gates and thresholds are UNCHANGED;
+the 08-14 VOID and its history stay exactly as recorded; `notes` carries the
+`PARKED: 2026-09-01` marker with the measured ceiling. BA.01 stands untouched
+— the sense exists and is decoded; only "he ACTS on it" waits for a body that
+can act. The commitment `balance` keeps a claim-kind path through BA.03 (the
+48th audit's successor, registered 2026-08-30 precisely so this park costs
+the ratchet nothing).
+
+**Losers recorded:** option 2 (give the rover catch authority — a
+world-contract change that re-runs PG.3/PS/BA certificates and re-opens the
+"arms are slides" convenience PG.3 certified) and option 3 (re-scope to a
+scenario where direction matters in this body — the probes found none on open
+ground; BA.03 is that option done properly, as a NEW spec with new nulls).
+
+**Re-open trigger:** LT.08 PASS un-parks BA.02 mechanically (its deps
+satisfy); any new body with directional catch authority before then routes
+through the world-contract change process, not through this park.
+
+Evidence: the four probes in BA.02's DIAGNOSIS section (slides +0.09±0.07 s,
+adhesion +0.005±0.09, ground drive toward-lean −0.685±0.16, blind headroom
++0.275±0.137); D8's forensic entry of 2026-08-14; BA.03's registration
+comment ("registered BEFORE D8's default fires so that parking BA.02 costs
+the ratchet nothing").
