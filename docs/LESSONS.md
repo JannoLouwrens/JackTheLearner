@@ -9707,3 +9707,46 @@ already learned this shape one organ over — `coverage.py`'s `exit_code` was
 extracted specifically because "no fixture in this repo could assert that any
 red condition actually reaches the exit code". The mirror of that lesson is
 this one: no fixture asserted that any GREEN condition could reach it either.
+
+## A declaration syntax that lives inside prose will eventually be written by prose (overseer, 57th audit, 2026-09-01)
+
+`protocol._margin_declaration` reads a spec's declarations — `VOID-FORECLOSED:`,
+`FORECLOSURE ARITHMETIC:`, `BLAST RADIUS:` — by matching `raw.startswith(kw)`
+against the lines of a module docstring. On 2026-09-01, `LC.07`'s docstring
+contained this, and it is ordinary English:
+
+    SINGLE-ARM ON PURPOSE. This is not a re-run of the five-arm screen (LC.03 is
+    VOID-FORECLOSED: no v3, no envelope growth, no re-roll) and it does not route
+
+A sentence *about another spec* wrapped so its parenthetical landed at column 0.
+`LC.07` — a spec that has never run — thereby declared itself foreclosed. It was
+refused for missing its two companion blocks, so nothing broke; had the same
+docstring also quoted `LC.03`'s `BLAST RADIUS:` at the margin, which a spec
+discussing another's foreclosure plausibly would, the declaration would have
+been ACCEPTED and a live spec welded out of the queue by a line wrap.
+
+Three things generalise:
+
+1. **A keyword at the margin of free text is not a delimiter, because prose
+   produces margins.** The three organs that have now paid for this are
+   `champions.py` (`901f7fc`, a regex over prose), `review_queue.py` (built
+   reading DECLARED fields only, *because* of that), and now `protocol.py` —
+   which was three days old. Knowing the lesson did not prevent it; the idiom
+   was copied from `T0.31`, where it was safe, into a place where the same text
+   is also *discussed*. **A syntax is only unambiguous relative to what else can
+   appear in its container.** Docstrings that reason about other specs' states
+   are containers where every state word appears as content.
+2. **The forbidden thing is cheap to detect and nobody was looking**: a
+   candidate whose preceding line leaves an unclosed `(` is a wrap, not a
+   declaration, and every genuine declaration in the repo is preceded by a blank
+   line. Requiring what the real ones already do costs nothing and closes the
+   class.
+3. **The guard's loud half was unreachable exactly where the false positive
+   landed.** `void_foreclosed_refusal` exists, in its own words, "so the refusal
+   is LOUD" — and `coverage.py` collects it only inside `if status == "VOID"`,
+   after un-run specs have already `continue`d out. The only refused declaration
+   in the repo printed nowhere. **When a guard is scoped to the case that
+   motivated it, the first case it did NOT anticipate is silent by
+   construction** — and a false positive on a spec that has not run is the
+   likeliest such case, because that is the spec whose docstring is still being
+   written.
