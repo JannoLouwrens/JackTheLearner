@@ -437,6 +437,10 @@ def pilot(out_path: str = _PILOT_ARTIFACT):
     """Dispatch the throughput/wiring pilot to Kaggle; write its artifact.
     Every one of the 7 run classes is timed (per-condition rule). DO NOT
     dispatch while another spec's watcher holds the GPU lock."""
+    # A pilot runs outside run_spec, so JACK_SPEC_ID is unset and its receipt
+    # would read spec:"" (58th audit B4; SM.02's pattern). Name the spend.
+    os.environ["JACK_SPEC_ID"] = "LC.07"
+    os.environ["JACK_SPEC_PHASE"] = "pilot"
     job = build_job(_PILOT_JOB)
     res = submit(job, prefer="kaggle", est_hours=1.0, timeout_s=5400,
                  fetch=["lc07_pilot.json"])

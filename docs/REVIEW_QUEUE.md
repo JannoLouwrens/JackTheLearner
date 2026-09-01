@@ -1139,3 +1139,44 @@ noise, not learning headroom. **Option to weigh:** score each arm against
 its OWN untrained twin rather than against random, which also dissolves the
 denominators question above for the twin comparison. Same scope note: gate
 redesign for future runs only; the recorded VOID stands.
+
+## ROUTED 2026-09-01 (builder, UB.10 attempt-1 harvest): `ub10-seed-fragility-and-saturated-battery` — the unparked design ran honestly and measured two defects in itself
+
+ROUTED: ub10-seed-fragility-and-saturated-battery | 2026-09-01 | UB.10-attempt-1-VOID | OPEN
+    DUE: 2026-09-06 | an arm/task redesign decision owed by the Review's
+    Sunday FULL run; bundle beside `recipe-sensitivity`'s lineage (this row
+    is what its 08-25 disposition, fully executed, measured next)
+
+**What was measured (UB.10 attempt 1, VOID 2026-09-01, kernel
+jack-ladder-1788293396, ledger row committed 75aafd5; _check replayed
+offline, VOID reproduces; full record in the spec docstring's REGISTERED
+RUN RECORD).** The matched-tuning-budget disposition was executed exactly:
+K=5 grid, blind first-eligible selection at seed 90, no arm ineligible,
+registered dispatch under the selected recipes. Two defects, one run:
+
+1. **Seed fragility.** A2 (lolr_warm) collapsed on seed 0 (vslot 0.5) and
+   A3 (lolr) on seed 1 (vslot 0.7 vs floor 0.8) — each clean at seed 90 and
+   on the other two registered seeds. Third independent demonstration that
+   the dropout arms' training is basin-fragile (pilot 08-20, probe 08-20,
+   now the registered seeds). The two legal-looking repairs are both
+   illegal: per-registered-seed re-selection tunes on registered seeds;
+   a seed re-roll is run-until-pass.
+
+2. **Saturated anchor.** A0 reads slot 1.0 on ALL three seeds; the winner
+   ties it (paired_boot_lo -0.0104, ranking gap 0.0). The PASS conjunct
+   'winner > A0 on every seed' cannot fire against an anchor at ceiling —
+   at this budget the fused battery discriminates nothing among healthy
+   arms. Had the marginals held this would have been the pre-registered
+   A0-tie FAIL, but the deeper fact is the task, not the tie: kin to
+   `sh02-null-saturation` (a null with no headroom) and a fusion-scale
+   echo of `w0-too-shallow`.
+
+**Options to weigh (not decided here):** harden the battery (more slots /
+composite XOR variants / lower training budget so accuracy leaves ceiling);
+per-arm stability conjunct (an arm must train on all registered seeds to
+hold a seat — turns fragility into a scored finding instead of a rig
+VOID); retire the marginal floor VOID in favour of SCORED-AND-INELIGIBLE
+at the seed level. Any change is spec redesign under the T1.02 precedent —
+the recorded VOID stands, nothing re-runs on this row's account, and UB.11
+(which Review 08-31 item 4 needs for T2.12's conjunct) stays blocked behind
+an UB.10 verdict this row's redesign must first make reachable.

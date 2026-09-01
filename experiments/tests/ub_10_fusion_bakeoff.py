@@ -267,11 +267,43 @@ SELECTED (first eligible in GRID order per arm; slot played no role):
   finding was about its two-cell grid, not about the arm. Verdict gates did
   not move on the pilot's account; seed 90 stays disjoint from {0,1,2}.
 
+REGISTERED RUN RECORD, attempt 1, seeds {0,1,2}, kernel
+jack-ladder-1788293396 (P100, 0.304 h, 2026-09-01 20:09-20:28 UTC; head
+7768a6d; ledger row committed 75aafd5; _check replayed offline against the
+recorded row and Status.VOID reproduces). VOID on the pre-registered
+marginal floor — 'any arm below MARGINAL_FLOOR on a marginal task on any
+seed' — with the rig otherwise fully green (canary, params within tol of
+anchor 314886, dropped_frac 0, unimodal instruments alive everywhere,
+uni_slot_dev_max 0.0, every ctrl swap fires). Two findings, both routed to
+the Review (queue row ub10-seed-fragility-and-saturated-battery, 09-06):
+  1. THE RECIPE SENSITIVITY IS ALSO SEED SENSITIVITY. The two grid-selected
+     arms each collapsed on exactly one registered seed: A2 (lolr_warm)
+     seed 0 vslot 0.5 / slot 0.5 (loss still fell — learn_ok held), A3
+     (lolr) seed 1 vslot 0.7 / slot 0.5094. Both were clean at seed 90,
+     the only seed the selection criterion may read. Third independent
+     demonstration (pilot, probe, now registered seeds) that the dropout
+     arms' training is basin-fragile; a per-seed re-selection would tune on
+     registered seeds and a seed re-roll is run-until-pass — neither is a
+     legal repair, so the repair is an ARM/TASK REDESIGN, the Review's.
+  2. THE BATTERY SATURATES — FAIL-shaped had the marginals held. A0 sits
+     at slot 1.0 on ALL three seeds; winner A1 median 1.0 ties it
+     (top1_stable 0, paired_boot_lo -0.0104, ranking gap 0.0). The claim
+     conjunct 'winner > A0 on EVERY seed' is unfalsifiable against an
+     anchor at ceiling: at this budget the fused task is too easy for
+     every healthy arm, so the run cannot discriminate trunk designs even
+     when nothing collapses. (The docstring already pre-registered A0
+     tying as FAIL; what is new is that A0 is at 1.0, not merely tied.)
+Artifact re-fetched post-hoc: /data/tmp/ub10_out/ub10.json (the watcher's
+tmpdir copy is ephemeral; kaggle kernels output re-fetches it). Do NOT
+re-dispatch UB.10 unchanged — the marginal VOID will re-fire at the seeds'
+pleasure and a clean draw would land on the saturated-anchor FAIL.
+
 COVERS: one brain / unison (claim)
 """
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -866,6 +898,10 @@ def pilot():
     """Seed-90 pilot at production scale, disjoint from the registered seeds.
     Prints, records nothing; numbers go to the docstring/journal by hand. The
     gates are exogenous and do NOT move on its account (SM.02 lesson)."""
+    # A pilot runs outside run_spec, so JACK_SPEC_ID is unset and its receipt
+    # would read spec:"" (58th audit B4; SM.02's pattern). Name the spend.
+    os.environ["JACK_SPEC_ID"] = "UB.10"
+    os.environ["JACK_SPEC_PHASE"] = "pilot"
     out = _submit([PILOT_SEED])
     print(json.dumps({"widths": out["widths"]}, indent=1))
     for s in out["seeds"]:
@@ -942,6 +978,8 @@ print("DONE", out["gpu"], flush=True)
 def recipe_probe():
     """Local side of the probe: submit, save the artifact where the next
     iteration expects it, print the decision-rule read per recipe."""
+    os.environ["JACK_SPEC_ID"] = "UB.10"
+    os.environ["JACK_SPEC_PHASE"] = "recipe_probe"
     job = build_job(JOB_PROBE)
     res = submit(job, prefer="kaggle", est_hours=0.5, timeout_s=4500,
                  fetch=["ub10_probe.json"])
@@ -978,6 +1016,8 @@ def grid_pilot():
     The follow-up commit writes SELECTED = that selection plus a SELECTION
     RECORD in the docstring; only then does run() stop refusing. Seed 90 is
     disjoint from the registered seeds; gates do not move on its account."""
+    os.environ["JACK_SPEC_ID"] = "UB.10"
+    os.environ["JACK_SPEC_PHASE"] = "grid_pilot"
     job = build_job(JOB_GRID)
     res = submit(job, prefer="kaggle",
                  est_hours=round(0.15 + 0.20 * len(GRID), 2),
