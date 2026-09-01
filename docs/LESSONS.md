@@ -9881,3 +9881,56 @@ review-queue row instead, where the redesign that would revive it already
 lives. A predicted number is evidence about the prediction, not a bar the
 patch must hit; when the spec of a repair and its expected count disagree,
 implement the spec and report the difference loudly.
+
+---
+
+## A retirement laundered one edge out: apply the predicate to the BLOCKERS, not only to the node
+
+**2026-09-01, 59th audit — the sequel to the lesson directly above, found the
+same day the repair above shipped.**
+
+`coverage.foreclosure()` is now the one shared conjunction for "this spec can
+never produce evidence", and it is correct. It is also only ever asked about a
+spec **itself**. Nothing asks it about that spec's **blockers**. So
+`claim_reachability` emits `blocked<-LC.03` for `DP.02` — the same string it
+emits for a spec waiting on a job that finishes tonight — while its own
+docstring states the distinction it is failing to draw: *"blocked resolves when
+the blocker does; parked resolves never."* `LC.03` is VOID-FORECLOSED. It
+resolves never. The label is exactly backwards, and **10 specs are in this
+state** (`DP.01/02/03`, `LC.04/05/06`, `OP.01`, `PS.04` behind `LC.03`; `ME.6`
+behind `T2.11`; `T5.06` behind `T3.06`).
+
+**The generalisation: a retirement predicate that is not applied transitively
+launders itself across exactly one dependency edge.** Inventing the state was
+the hard half and it was done well; the cheap half — asking the same question of
+the parents — was not done, and it hides more specs than the original bug did
+(10 vs 5 commitments). Whenever a new "this can never resolve" class is added to
+a graph-walking tool, the same commit must decide what it means for a node whose
+*roots* are all in that class. **Not deciding is deciding it is alive.**
+
+**And the corollary that made it invisible for nine days: a reference checker
+that tests RESOLUTION reports zero dangling while citing retired work.**
+`coverage` prints *"16 spec ids cited, 0 dangling"* because every id resolves in
+`BY_ID`. Three of the sixteen (`LC.04`, `DP.02`, `DP.03`) cannot be run.
+GOAL.md:242 says `LC.04` *"is already testing"*; it has never run and
+`CHAMPIONS.md` records its premise as retired by D10. **An id that resolves to a
+corpse is a worse dangling reference than one that resolves to nothing**, because
+the nothing-case is the one every checker is built to catch. Any checker over
+named references must ask "does the target still do what the citation says it
+does", not merely "does the target exist".
+
+**Why no instrument said it.** Each organ saw one facet and each was individually
+right: `champions` reported `ARENA-UNREACHABLE (1)` for the one seat whose arena
+is `DP.02`; `coverage` reported 0 dangling citations; `run blocked` ranked all
+ten as ordinary queue positions. None was built to utter the true sentence —
+*"the constitution's own named guard against the failure mode the owner cares
+most about cannot be run."* Same shape as the 2026-08-10 coverage miss and the
+D1 deadlock: not a broken instrument, but a fact that falls between correct ones.
+When three green instruments describe adjacent facets of one object, ask what
+sentence about the whole object none of them is able to form.
+
+Guard: proposed as B1/B2 of the 59th audit (a `welded<-ROOTS` state distinct
+from `blocked<-ROOTS`, a `CITED-BUT-UNRUNNABLE` citation class, and a
+known-answer battery planting `DP.02<-LC.03` as dead and `BO.01<-DP.05 FAIL` as
+alive). Not yet shipped — and per the lesson above, until it is a B-item that
+lands, only this prose exists.
