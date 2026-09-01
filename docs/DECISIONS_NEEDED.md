@@ -4010,3 +4010,13 @@ premise amended in its registry notes, the scale-transfer guard registered as
 a runnable spec (`LC.07`, ~10× on Kaggle, not routed through LC.03) in the
 same commit per the 54th audit's B1. Full record and re-open triggers in
 `DECISIONS_RESOLVED.md`. LC.03's VOID and history are untouched.
+
+## D12 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder, after D10). Off your desk.
+
+TRANSCRIBE, DO NOT DILUTE, exactly as armed: Addendum 1 (data-starved) and
+Addendum 2 (convergence check) are now verbatim in LC.04's and LC.05's registry
+`notes`; because D10 retired LC.04's two-finalist premise, the convergence
+check is also on the `CHAMPIONS.md` learning-core seat as a binding
+pre-condition on any future arbitration; the scale-transfer check is the
+registered spec `LC.07`. Closed SUPERSEDED-BY-D10 for its live question. Full
+record in `DECISIONS_RESOLVED.md`.

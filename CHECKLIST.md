@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 93 / 211 demonstrated
+## 93 / 212 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -582,6 +582,13 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ The adopted learning core satisfies all four pre-registered ceilings: B1 trainable parameters <= 5,000,000; B2 free hyperparameters <= 25, of which ZERO are undocumented in the spec that used them; B3 <= 1,500 raw lines in the learning rule and learned model; B4 >= 5.0 simulated seconds per real second on 3 ARM cores.
       - _dies if:_ Any ceiling exceeded. The core is not adopted at that size; it is reduced, or the ceiling is raised by the procedure in LEARNING_CORE.md 6.4 — a bakeoff in which the larger core beats the smaller by >=1.5 sigma at matched env-steps AND matched wall-clock — never by argument.
       - _then delete:_ Complexity that has not earned itself. The owner, 2026-08-09: 'it won't be the most complex model that Jack is. It will be just a system that can learn and get input from every single sense.' This spec is that sentence with numbers on it, and it is the guard that makes the 57M-vs-124K lesson unrepeatable rather than merely remembered.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **LC.07** The wm-latent verdict survives ~10x scale (the owner's scale-transfer guard)
+      - _asserts:_ At ~10x LC.03 v2's per-arm-seed envelope (4,000,000 decisions, vs the 400,000 the verdict was bought at), run on Kaggle, wm-latent's life_gain still beats the paired random null by >=3 sigma AND its own untrained twin by >=3 sigma on 3 seeds with n_lives >= 12 per seed — the same two gates it cleared at 1x, at the scale the owner's adoption guard names (DECISIONS_NEEDED D10/D12: 're-test at ~10x on Kaggle, which is free').
+      - _dies if:_ Either gate missed at 10x. The BY VERDICT seating of wm-latent (D10 default, fired 2026-09-01) does not survive scale: the seat reverts to contested-VACANT in CHAMPIONS.md and adoption is off the table — the 1x verdict was a small-envelope artifact.
+      - _then delete:_ The BY VERDICT hold on the learning-core seat. This is the seat's REGISTERED challenger (SYSTEM.md: no seat held without an existing challenger spec resolvable in BY_ID) — if wm-latent cannot re-clear its own gates at deployment scale, it loses the chair it was given by a one-learner screen.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 

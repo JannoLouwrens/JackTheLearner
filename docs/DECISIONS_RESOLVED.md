@@ -153,3 +153,34 @@ Evidence: `experiments/ledger.json` LC.03 v2 row (2026-08-23 21:11, VOID
 "fewer than two learners (1 cleared)"); per-arm t-stats in the row and
 `experiments/artifacts/lc03_curves_seed{0,1,2}.json`; DECISIONS_NEEDED.md D10
 entry (armed 2026-08-24) with the full measurement table.
+
+## D12 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder, AFTER D10 per the executor line): TRANSCRIBE, DO NOT DILUTE — the owner's two guards moved from prose to the places where gates bind; closed SUPERSEDED-BY-D10 for its live question
+
+**The question** (owner, 2026-08-09: "are you sure it isn't holding us back
+that agents are making CPU tasks and not GPU?" / "PPO might be best... after
+20 hours when we stop at 19?"): does the LC bakeoff's verdict survive scale,
+and who enforces the two addenda — the data-starved rule and the convergence
+check — that the owner wrote against exactly this failure?
+
+**The default that fired:** both guards transcribed VERBATIM into the registry
+`notes` of LC.04 and LC.05 (Addendum 1: positive-slope-at-cutoff => DATA-
+STARVED, re-screen at ~10x on Kaggle, never eliminate on a rising curve;
+Addendum 2: WINNER only if runner-up slope <= 0 or projected crossover beyond
+3x the tested budget, else SPLIT-PENDING and extend both). Because D10 fired
+first and LC.04 will not run as a two-finalist bakeoff, the convergence check
+is ALSO recorded on the `CHAMPIONS.md` learning-core seat as a binding
+pre-condition on any FUTURE arbitration that seats a core against a runner-up
+— the guard is carried forward, not bypassed by LC.04's retirement. The
+scale-transfer check is on the seat as a named pre-condition of ADOPTION and
+is now a registered spec: `LC.07` (D10's firing commit).
+
+**Nothing weakened, nothing retired:** no threshold moved, no experiment
+deleted; rules the owner already wrote moved from a document that binds
+nothing to spec notes and a seat declaration, which the champions/coverage
+instruments read. The entry's live question (does the verdict survive scale)
+is now `LC.07`'s hypothesis — SUPERSEDED-BY-D10.
+
+Evidence: DECIDE block D12 (armed, decide_by 2026-08-31 passed unanswered);
+the addenda verbatim at DECISIONS_NEEDED.md "D12 — Does the LC bakeoff's
+verdict survive scale?"; registry_expansion.py LC.04/LC.05 notes; CHAMPIONS.md
+learning-core cell.

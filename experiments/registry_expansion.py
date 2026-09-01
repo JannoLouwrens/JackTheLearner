@@ -2177,7 +2177,24 @@ EXPANSION: list[Spec] = [
                "caveat (CHAMPIONS.md), and the scale-transfer guard binds "
                "BEFORE adoption via LC.07, which does not route through "
                "LC.03. LC.04 runs only if the seat's premise is ever "
-               "repaired (>=2 screened learners from a redesigned screen)."),
+               "repaired (>=2 screened learners from a redesigned screen). "
+               "TWO OWNER GUARDS, TRANSCRIBED VERBATIM BY D12's DEFAULT "
+               "(fired 2026-09-01; they bound nothing while they lived only "
+               "in DECISIONS_NEEDED prose). DATA-STARVED RULE (Addendum 1, "
+               "owner 2026-08-09): an arm that fails the screen while its "
+               "learning curve still has a POSITIVE SLOPE at cutoff is NOT "
+               "eliminated — it is recorded DATA-STARVED and re-screened at "
+               "~10x experience on Kaggle before any elimination stands; "
+               "only a FLAT curve at cutoff justifies 'this core cannot "
+               "learn'; same rule, symmetric, every arm. CONVERGENCE CHECK "
+               "(Addendum 2, owner 2026-08-09): fit the last third of each "
+               "finalist's learning curve; declare WINNER only if EITHER "
+               "(a) the runner-up's slope is <= 0, OR (b) the projected "
+               "crossover lies beyond 3x the tested budget; otherwise the "
+               "verdict is SPLIT-PENDING — extend BOTH finalists to the "
+               "projected crossover (or 3x, whichever is smaller) and "
+               "re-decide. A cutoff picked for convenience and treated as a "
+               "verdict is a resource limit masquerading as a result."),
 
     Spec("LC.05", 5, "The same arms, arbitrated at matched COMPUTE",
          hypothesis="Scored off the SAME stored curves at exactly W_CLOCK "
@@ -2209,7 +2226,18 @@ EXPANSION: list[Spec] = [
                "gradient-FLOP estimate — plus a decimated curve of <=200 points "
                "spanning all lives. T2.01 stored curve_seed0[:8], iterations "
                "1-21 of 172, which is why its 'the curve PLATEAUED' claim was "
-               "not in the ledger."),
+               "not in the ledger. "
+               "TWO OWNER GUARDS, TRANSCRIBED VERBATIM BY D12's DEFAULT "
+               "(fired 2026-09-01) — they bind this spec's winner decision "
+               "exactly as LC.04's. DATA-STARVED RULE (Addendum 1, owner "
+               "2026-08-09): a failing arm whose curve has POSITIVE SLOPE at "
+               "cutoff is recorded DATA-STARVED and re-screened at ~10x on "
+               "Kaggle before any elimination stands; only a flat curve "
+               "justifies elimination. CONVERGENCE CHECK (Addendum 2, owner "
+               "2026-08-09): WINNER only if the runner-up's last-third slope "
+               "is <= 0 OR the projected crossover lies beyond 3x the tested "
+               "budget; otherwise SPLIT-PENDING — extend both finalists to "
+               "the crossover (or 3x, whichever is smaller) and re-decide."),
 
     Spec("LC.06", 3, "The simplicity budget is enforced, not promised",
          hypothesis="The adopted learning core satisfies all four "
