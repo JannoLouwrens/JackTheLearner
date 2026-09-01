@@ -462,7 +462,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Given a contact-audio window, the matching visual clip is retrieved above chance (R@1 and R@10 vs a candidate set of known size), including against HARD negatives: the same episode at +-0.5 s, and a different object at the same instant.
       - _dies if:_ At-chance retrieval against hard negatives while easy retrieval succeeds — then the model matched onset synchrony, not content.
       - _then delete:_ Nothing on its own. This spec exists so that a NULL result on the contrastive arm (A4) is interpretable: without it, 'A4 did not help control' cannot be distinguished from 'A4's loss never trained'. Retrieval is necessary, never sufficient (arXiv:2603.19233: encoded is not used).
-- [ ] **UB.14** Cross-modal prediction, against the null that usually wins
+- [~] **UB.14** Cross-modal prediction, against the null that usually wins  — alive_channels=13.0; alive_channels_std=0.0
       - _asserts:_ Masked touch is predicted from vision+proprioception better than from proprioception ALONE, and better than the unconditional mean, at matched capacity.
       - _dies if:_ Proprio-only matches vision+proprio: foot contact is inferable from joint torques, so vision adds nothing here. An HONEST and likely outcome that must be reported, not retried.
       - _then delete:_ The vision->touch masked objective in arm A3, if vision adds nothing over proprio. Run this BEFORE the bakeoff: it costs CPU minutes and can delete an arm's justification.
