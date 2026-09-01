@@ -562,6 +562,206 @@
       "spec_sha": "ce37e52e8f43c68e",
       "status": "VOID"
     },
+    "D1.0": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "9494cd1",
+      "compute_s": 58212.02,
+      "control_metrics": {
+        "untrained_aprime_mean": 198.4,
+        "untrained_aprime_mean_std": 0.0,
+        "untrained_aprime_sigma": 2.96,
+        "untrained_aprime_sigma_std": 4.44089e-16,
+        "untrained_b_split_mean": 142.7,
+        "untrained_b_split_mean_std": 0.0,
+        "untrained_b_split_sigma": 0.56,
+        "untrained_b_split_sigma_std": 0.0,
+        "untrained_c_e2e_mean": 156.8,
+        "untrained_c_e2e_mean_std": 0.0,
+        "untrained_c_e2e_sigma": 1.58,
+        "untrained_c_e2e_sigma_std": 0.0,
+        "untrained_d_mlp_mean": 197.6,
+        "untrained_d_mlp_mean_std": 0.0,
+        "untrained_d_mlp_sigma": 2.94,
+        "untrained_d_mlp_sigma_std": 0.0
+      },
+      "duration_s": 58236.9,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1788228751,jannolouwrens/jack-ladder-1788243434,jannolouwrens/jack-ladder-1788265166",
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "870b3c776c87f140",
+      "message": "run did not test the claim; not a refutation",
+      "metrics": {
+        "arms": {
+          "aprime": {
+            "aux_optimiser_steps": [
+              1472,
+              1472,
+              1472
+            ],
+            "env_steps": [
+              753664,
+              753664,
+              753664
+            ],
+            "final_third_reward": 5.378,
+            "final_third_slope": 2.1e-07,
+            "mean": 410.8,
+            "optimiser_steps": [
+              7360,
+              7360,
+              7360
+            ],
+            "ppo_trainable_params": 281763,
+            "sigma_vs_random": 9.98,
+            "std": 26.5,
+            "step_match": 1.005,
+            "trained_means": [
+              430.4,
+              380.7,
+              421.3
+            ],
+            "updates_per_env_step": 0.009766
+          },
+          "b_split": {
+            "aux_optimiser_steps": [
+              0,
+              0,
+              0
+            ],
+            "env_steps": [
+              753664,
+              753664,
+              753664
+            ],
+            "final_third_reward": 5.102,
+            "final_third_slope": -8.4e-08,
+            "mean": 383.5,
+            "optimiser_steps": [
+              7360,
+              7360,
+              7360
+            ],
+            "ppo_trainable_params": 57830650,
+            "sigma_vs_random": 8.91,
+            "std": 30.83,
+            "step_match": 1.005,
+            "trained_means": [
+              411.9,
+              350.7,
+              387.8
+            ],
+            "updates_per_env_step": 0.009766
+          },
+          "c_e2e": {
+            "aux_optimiser_steps": [
+              0,
+              0,
+              0
+            ],
+            "env_steps": [
+              753664,
+              753664,
+              753664
+            ],
+            "final_third_reward": 5.167,
+            "final_third_slope": -4.1e-08,
+            "mean": 404.3,
+            "optimiser_steps": [
+              7360,
+              7360,
+              7360
+            ],
+            "ppo_trainable_params": 57363705,
+            "sigma_vs_random": 2.56,
+            "std": 115.31,
+            "step_match": 1.005,
+            "trained_means": [
+              319.4,
+              535.6,
+              357.9
+            ],
+            "updates_per_env_step": 0.009766
+          },
+          "d_mlp": {
+            "aux_optimiser_steps": [
+              0,
+              0,
+              0
+            ],
+            "env_steps": [
+              753664,
+              753664,
+              753664
+            ],
+            "final_third_reward": 5.375,
+            "final_third_slope": 2.74e-07,
+            "mean": 577.0,
+            "optimiser_steps": [
+              7360,
+              7360,
+              7360
+            ],
+            "ppo_trainable_params": 530339,
+            "sigma_vs_random": 15.47,
+            "std": 28.94,
+            "step_match": 1.005,
+            "trained_means": [
+              545.6,
+              582.8,
+              602.6
+            ],
+            "updates_per_env_step": 0.009766
+          }
+        },
+        "kernels": [
+          {
+            "arms": [
+              "aprime",
+              "d_mlp"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla P100-PCIE-16GB",
+            "wall_minutes": 241.2
+          },
+          {
+            "arms": [
+              "b_split"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla P100-PCIE-16GB",
+            "wall_minutes": 359.0
+          },
+          {
+            "arms": [
+              "c_e2e"
+            ],
+            "backend": "kaggle",
+            "gpu": "Tesla P100-PCIE-16GB",
+            "wall_minutes": 360.5
+          }
+        ],
+        "margin_sigma": 5.99,
+        "margin_sigma_std": 8.88178e-16,
+        "random_mean": 108.7,
+        "random_mean_std": 0.0,
+        "random_std": 30.27,
+        "random_std_std": 0.0,
+        "runner_up": "aprime",
+        "verdict": "VOID \u2014 learning gate: c_e2e at 2.56 sigma vs random (bar 3.0); arms that DID learn: {'aprime': 9.98, 'b_split': 8.91, 'd_mlp': 15.47}. Two non-learners cannot arbitrate an architecture (T2.02's precedent). If d_mlp is among the missed while T2.02's SB3 MLP holds 530/7.11 sigma, this is the shared trunk-tuned recipe failing the MLP \u2014 a recipe question for the Review (UB.10's finding), not an architecture verdict and not a re-roll.",
+        "winner": "d_mlp"
+      },
+      "preserved_impl": null,
+      "ran_at": "2026-09-01T18:23:04",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "spec_id": "D1.0",
+      "spec_sha": "ddf3b45a31e95048",
+      "status": "VOID"
+    },
     "DP.00": {
       "amended": [],
       "attempt": 2,
