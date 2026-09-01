@@ -11,7 +11,15 @@ indented body: the one-line question and the **staleness bill** — the ledger
 rows that acting on it would invalidate. The Review dispositions a row by
 setting its status (`OPEN` → `ACTED <date> <commit>` or `DECLINED <date>
 <why>`, or `HELD <date> <why>` for the bundling rule below); rows are never
-deleted (T1.02 precedent: history stays). The bill is the price of the fix,
+deleted (T1.02 precedent: history stays). **`ACTED` means EXECUTED and must
+name the executing commit** (≥7 hex chars) in its status text; a design that
+exists but has not been executed is **`DISPOSITIONED <date> <where the design
+lives>`**, which stays LIVE — it ages and can go STALE/OVERDUE like `OPEN` —
+until somebody executes it and stamps `ACTED` with the commit. Added by Review
+09-01 item 4 after `ACTED` on `recipe-sensitivity` (meaning only "design
+written") read as closed for seven days and parked `UB.10`; enforced by
+`experiments/review_queue.py` (`ACTED-WITHOUT-A-COMMIT`), gated as `T0.31`
+P12. The bill is the price of the fix,
 computed BEFORE deciding, so "fix the world" decisions are made with the
 re-certification cost on the table, not discovered after.
 
@@ -30,8 +38,8 @@ costs. Two optional indented body lines, in the `DECIDE:`/`COVERS:` idiom:
     DUE: <YYYY-MM-DD> | what is owed, and by whom
     BLOCKED-BY: <another row id> | what releases this hold
 
-A live row past its `DUE:` is **OVERDUE**; an `OPEN` row with no `DUE:` older
-than one full consumer cycle (8 days) is **STALE**. `HELD` buys exemption from
+A live row past its `DUE:` is **OVERDUE**; an `OPEN` or `DISPOSITIONED` row
+with no `DUE:` older than one full consumer cycle (8 days) is **STALE**. `HELD` buys exemption from
 ageing and must pay for it with a `DUE:` or a `BLOCKED-BY:`, and a hold whose
 blocker has been dispositioned is itself a violation — otherwise the bundling
 rule below becomes a place rows go to die. Deleting a row, or dropping a `DUE:`
@@ -66,7 +74,7 @@ which is the asymmetry the `w0-too-shallow` row already flagged as design input.
 a computed bill can be SEQUENCED. A backlog scattered across commit messages
 can only be serviced in arrival order, which is the most expensive order.
 
-ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2026-09-01 (builder EXECUTED the 08-25 disposition — grid, selection, SCORED-AND-INELIGIBLE verdict all in ub_10_fusion_bakeoff.py; UB.10 unparked. The 08-25 'ACTED' meant only 'design written' and parked this row's spec for 7 days — the two-meaning token is Review 09-01 FOR THE BUILDER item 4)
+ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2026-09-01 in 15eb02e (builder EXECUTED the 08-25 disposition — grid, selection, SCORED-AND-INELIGIBLE verdict all in ub_10_fusion_bakeoff.py; UB.10 unparked. The 08-25 'ACTED' meant only 'design written' and parked this row's spec for 7 days — the two-meaning token was Review 09-01 FOR THE BUILDER item 4, repaired the same day: that state is now DISPOSITIONED, which ages)
     Question: no single uniform training recipe trains all six matched-param
     UB.10 arms (warmup@1e-3 leaves A2/A3 dead; 3e-4 fixes A3 but breaks A4);
     A2 learned its marginals under NO tested recipe. Per-arm recipes, arm

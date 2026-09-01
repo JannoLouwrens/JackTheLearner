@@ -16,6 +16,17 @@ Each one is a CONVERSION, and each is its own violation class:
     relabel it HELD (holds do not age)     -> HOLD-WITHOUT-A-CLOCK
     drop the DUE: line that went red       -> CLOCK-REMOVED
     hold it behind a blocker long resolved -> HOLD-ON-A-RESOLVED-BLOCKER
+    stamp it ACTED naming no commit        -> ACTED-WITHOUT-A-COMMIT
+
+The fifth conversion is the newest scar (Review 09-01, item 4): on
+`recipe-sensitivity`, `ACTED 2026-08-25` meant *a design exists* — the same
+token that means *executed, commit named* on `me11-…` — and because ACTED is
+terminal the row read closed for seven days while its spec stayed parked. The
+repair is a distinguished LIVE status, `DISPOSITIONED` (design written,
+execution owed), which ages and goes OVERDUE like OPEN, plus the rule that
+`ACTED` must name its executing commit. P12 is that repair, executable in both
+directions: the lazy relabel is flagged and does not lower the total; the
+honest one — ACTED with the commit — clears the row and trips nothing.
 
 This is the fourth instrument in this repo to be checked for the one-class
 ratchet disease, and the first to be built with it already in mind: `coverage.py`
@@ -41,10 +52,10 @@ NO ledger writes, no training, no world: documents are strings built in-process
 and `audit()` takes its clock and its git baseline as arguments. Same shape as
 T0.19, T0.20, T0.21, T0.28 and T0.29.
 
-WHAT THIS DOES NOT CERTIFY. Whether a DISPOSITION was any good. `ACTED
-2026-08-25` is the Review's word about its own work and this module takes it —
-the audit of dispositions is the overseer's job and is done by reading, not by
-grepping. And `MAX_OPEN_AGE_DAYS` is derived from the consumer's schedule (one
+WHAT THIS DOES NOT CERTIFY. Whether a disposition was any good. An `ACTED`
+that names a commit is taken at its word — whether that commit did the work is
+the overseer's job and is done by reading, not by grepping. What the reader can
+no longer do is accept a status token that means two things. And `MAX_OPEN_AGE_DAYS` is derived from the consumer's schedule (one
 DAILY cycle plus the weekly Sunday FULL, plus a day of grace); if the Review's
 cadence changes, that constant is stale and no property here can tell.
 
@@ -70,7 +81,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 11
+N_PROPERTIES = 12
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -86,6 +97,10 @@ _ROWS = [
     ("ok-rearmed", "2026-01-01", "OPEN", ["DUE: 2026-12-01 | re-armed past the W1 design"]),
     # healthy: HELD behind a blocker that is still live
     ("ok-held", "2026-01-01", "HELD 2026-08-25 for the window", ["BLOCKED-BY: ok-young | the window it opens"]),
+    # healthy: a young disposition — a design exists, execution owed, and the
+    # status alone is no violation
+    ("ok-dispositioned", "2026-08-30",
+     "DISPOSITIONED 2026-08-31 (design in PROGRESS.md; execution owed)", []),
     # exactly ON the bar: not stale. A boundary that is wrong by one is a
     # boundary nobody can reason about.
     ("edge-at-bar", (TODAY - _dt.timedelta(days=MAX_OPEN_AGE_DAYS)).isoformat(), "OPEN", []),
@@ -95,6 +110,14 @@ _ROWS = [
     ("bad-stale", (TODAY - _dt.timedelta(days=MAX_OPEN_AGE_DAYS + 1)).isoformat(), "OPEN", []),
     # HOLD-ON-A-RESOLVED-BLOCKER: the window opened and the hold did not release
     ("bad-heldresolved", "2026-02-01", "HELD 2026-02-02 waiting", ["BLOCKED-BY: ok-acted | released when it acts"]),
+    # STALE via DISPOSITIONED: the recipe-sensitivity scar, executable — routed
+    # 08-20, design stamped 08-25, no clock, execution never started
+    ("bad-disp-stale", (TODAY - _dt.timedelta(days=12)).isoformat(),
+     "DISPOSITIONED 2026-08-25 (design written; execution owed)", []),
+    # ACTED-WITHOUT-A-COMMIT: the two-meaning token itself — the word says
+    # executed and the text names no executing commit
+    ("bad-acted-nocommit", "2026-08-20",
+     "ACTED 2026-08-25 (a design now sits in PROGRESS.md and work will follow)", []),
 ]
 
 
@@ -155,6 +178,11 @@ def _sabotages() -> list[tuple[str, str, str]]:
              f"| {(TODAY - _dt.timedelta(days=MAX_OPEN_AGE_DAYS + 1)).isoformat()} | src | OPEN",
              f"| {(TODAY - _dt.timedelta(days=MAX_OPEN_AGE_DAYS + 1)).isoformat()} | src | PARKED"),
          base),
+        # 7. stamp the owed design ACTED without naming the executing commit —
+        #    the two-meaning token, executable (Review 09-01 item 4)
+        ("acted-no-commit",
+         _doc([(r[0], r[1], "ACTED 2026-09-01 (executed, honestly)", []) if r[0] == "bad-disp-stale"
+               else r for r in _ROWS]), base),
     ]
 
 
@@ -174,7 +202,7 @@ def _probe(blind: bool) -> dict:
     live_ids = {r["id"] for r in live["rows"]}
     if (live["n_rows"] < 8
             or any(r["fields"] != 4 or r["routed"] is None or r["status"] not in
-                   ("OPEN", "HELD", "ACTED", "DECLINED") for r in live["rows"])
+                   ("OPEN", "HELD", "DISPOSITIONED", "ACTED", "DECLINED") for r in live["rows"])
             or live["counts"]["MALFORMED"]
             or any(rid not in live_ids for _c, rid, _w in live["findings"])
             or not consumer_last_run(LOG_PATH.read_text())):
@@ -190,9 +218,11 @@ def _probe(blind: bool) -> dict:
         failed.append("p2_overdue_fires_on_a_passed_date_only")
 
     # P3 — STALE is about age and nothing else: it fires one day past the bar,
-    # is silent AT the bar, and never touches a dispositioned or re-armed row.
+    # is silent AT the bar, and never touches a terminal or re-armed row. A
+    # DISPOSITIONED row ages exactly like an OPEN one — a design is not an
+    # execution — so the aged one fires and the young one is silent.
     stale = {rid for c, rid, _ in base["findings"] if c == "STALE"}
-    if blind or stale != {"bad-stale"}:
+    if blind or stale != {"bad-stale", "bad-disp-stale"}:
         failed.append("p3_stale_is_age_and_only_age")
 
     # P4 — THE RATCHET, conversion 1. Relabelling a stale row HELD must not
@@ -265,6 +295,31 @@ def _probe(blind: bool) -> dict:
             or "consumer last ran 2026-08-29" not in text):
         failed.append("p11_every_class_is_reachable_and_reported")
 
+    # P12 — a disposition is not an execution (the 2026-09-01 scar: `ACTED` on
+    # `recipe-sensitivity` meant "a design exists", the row read closed, and
+    # the spec it parked stayed parked for seven days). Three conjuncts, both
+    # directions: (i) the aged DISPOSITIONED row is red and the commitless
+    # ACTED row is flagged as its own class; (ii) the LAZY relabel —
+    # DISPOSITIONED -> ACTED with no commit named — converts STALE into
+    # ACTED-WITHOUT-A-COMMIT and must not lower the total; (iii) the HONEST
+    # repair — the same relabel WITH the executing commit — clears exactly the
+    # one repaired finding and trips nothing, because an escape hatch that is
+    # also red is not a hatch.
+    nocommit = {rid for c, rid, _ in base["findings"] if c == "ACTED-WITHOUT-A-COMMIT"}
+    lazy = audit(_sabotages()[6][1], None, TODAY)
+    honest_doc = _doc([(r[0], r[1], "ACTED 2026-09-01 (executed in deadbee1)", [])
+                       if r[0] == "bad-disp-stale" else r for r in _ROWS])
+    honest = audit(honest_doc, None, TODAY)
+    if (blind
+            or "bad-disp-stale" not in stale
+            or nocommit != {"bad-acted-nocommit"}
+            or total(_sabotages()[6][1], _sabotages()[6][2]) < base_n
+            or not any(c == "ACTED-WITHOUT-A-COMMIT" and rid == "bad-disp-stale"
+                       for c, rid, _ in lazy["findings"])
+            or honest["total"] != base["total"] - 1
+            or any(rid == "bad-disp-stale" for _c, rid, _w in honest["findings"])):
+        failed.append("p12_a_disposition_is_not_an_execution")
+
     return {
         "properties_checked": float(N_PROPERTIES),
         "properties_failed": float(len(failed)),
@@ -291,7 +346,7 @@ def _control(seed: int) -> dict:
     and on the one sabotage it CAN see it reports the wrong sign: delete the
     rotting row and the number falls, so the backlog looks healthier.
 
-    Measured: it fails 8 of 11, and the 3 it passes are worth naming so nobody
+    Measured: it fails 9 of 12, and the 3 it passes are worth naming so nobody
     reads this as a straw man. P1 is a statement about the live DOCUMENT rather
     than about the reader, and is not asked of it. P4 and P6 it passes
     VACUOUSLY — relabelling a row `HELD` and deleting its `DUE:` both leave the
@@ -300,8 +355,10 @@ def _control(seed: int) -> dict:
     property; that is why P4 and P6 are not what `_check` requires of it.
 
     It must fail P2 (the dated promise), P5 (the deletion, where its number
-    moves the wrong way) and P11 (the classes it cannot name). If it ever
-    passes those, this spec is guarding a distinction that did not need making.
+    moves the wrong way), P11 (the classes it cannot name) and P12 (a row count
+    cannot tell a design from an execution — the exact blindness that parked
+    UB.10 for a week). If it ever passes those, this spec is guarding a
+    distinction that did not need making.
     """
     return _probe(blind=True)
 
@@ -320,7 +377,8 @@ def _check(m: dict, c: dict) -> Status | bool:
     control_broken = (c["properties_failed"] > 0.0
                       and {"p2_overdue_fires_on_a_passed_date_only",
                            "p5_deleting_the_row_does_not_help",
-                           "p11_every_class_is_reachable_and_reported"} <= control_names)
+                           "p11_every_class_is_reachable_and_reported",
+                           "p12_a_disposition_is_not_an_execution"} <= control_names)
     return bool(experiment_clean and control_broken)
 
 

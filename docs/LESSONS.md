@@ -9772,3 +9772,40 @@ the same audit: a refusal collected only on the status branch that motivated
 it (VOID) is invisible on every other branch — collect validity checks for
 EVERY spec that has a file, and let the status branches decide routing, not
 visibility.
+
+## A status token that can mean two things will be read in the convenient one (Review 09-01 item 4, repaired 2026-09-01)
+
+In `docs/REVIEW_QUEUE.md`, `ACTED` on `recipe-sensitivity` meant *the Review
+wrote a design* (2026-08-25); on `me11-…` it meant *the builder executed one,
+commit named*. The reader (`review_queue.py`) treats ACTED as terminal, so the
+first sense closed a row whose work had not started: `run review-queue`
+printed `ACTED 12 d` and zero violations for seven days while `UB.10` — the
+board's largest non-in-flight mass, frees 4 — stayed parked behind a design
+nobody executed. Every organ that read the row top-down saw a settled backlog.
+
+Three things generalise:
+
+1. **A shared token is read by each writer in the sense that costs them
+   least.** The Review honestly meant "I acted" (produced a design); the
+   builder's convention honestly meant "it was executed". Neither lied — the
+   VOCABULARY lied, because one word covered two different completion events
+   and the machine could not tell which had happened.
+2. **The repair is a distinguished state plus an evidence requirement, not
+   better prose.** The intermediate state got its own word (`DISPOSITIONED`,
+   design exists / execution owed) and — the teeth — it stays LIVE: it ages
+   and goes STALE/OVERDUE exactly like OPEN. The terminal word (`ACTED`) now
+   must carry its evidence (the executing commit, ≥7 hex chars) or it is its
+   own violation class, `ACTED-WITHOUT-A-COMMIT`. An escape hatch survives in
+   both directions: the honest stamp with a commit clears the row and trips
+   nothing (T0.31 P12 asserts that too — a hatch that is also red is not a
+   hatch).
+3. **The disease is the one-class-ratchet's sibling.** The ratchet lesson was
+   "count every class or a tidy-up converts violations into the uncounted
+   one"; this is "distinguish every completion event or a writer stamps the
+   cheaper one". Same instrument family, same fix shape: name the state,
+   make the cheap conversion its own violation, fixture both directions.
+
+Guard: `experiments/review_queue.py` (`DISPOSITIONED` in `LIVE`,
+`ACTED-WITHOUT-A-COMMIT` in `VIOLATIONS`), gated by `T0.31` P12 with the lazy
+relabel as sabotage 7 and the scar row (`bad-disp-stale`, routed 08-20,
+dispositioned 08-25, no clock) as a known-answer fixture.

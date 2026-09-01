@@ -39,10 +39,25 @@ that greps `^ROUTED:` keeps working. Prose dates are NOT read. `w0-too-shallow`'
 prose date was migrated into a `DUE:` line by hand, once, in the commit that
 added this module — a migration is a human act, an inference is a bug.
 
-THE FOUR STATUSES, from the file's own contract plus the one the Review added in
-practice: `OPEN`, `HELD` (the bundling rule, 2026-08-25), `ACTED`, `DECLINED`.
-`ACTED`/`DECLINED` are DISPOSITIONED and exempt from everything below; `OPEN` and
-`HELD` are LIVE.
+THE FIVE STATUSES, from the file's own contract plus the two the consumer's
+practice forced: `OPEN`, `HELD` (the bundling rule, 2026-08-25),
+`DISPOSITIONED`, `ACTED`, `DECLINED`. `ACTED`/`DECLINED` are TERMINAL and
+exempt from everything below; `OPEN`, `HELD` and `DISPOSITIONED` are LIVE.
+
+`DISPOSITIONED` exists because one token carried two meanings and the cheap
+reading won (Review 09-01, FOR THE BUILDER item 4). On `recipe-sensitivity`
+the Review stamped `ACTED 2026-08-25` meaning *a design now exists*; on
+`me11-…` the same word meant *the builder executed one, commit named*. ACTED
+is terminal here, so the first sense closed a row whose work had not started —
+`run review-queue` printed `ACTED 12 d` and no violation while the design sat
+unexecuted and a frees-4 spec (`UB.10`) stayed parked for seven days. So the
+intermediate state gets its own word: a design without an executing commit is
+`DISPOSITIONED`, and it KEEPS AGEING — it can go STALE and OVERDUE exactly
+like `OPEN`, because owed execution is live work whatever the design's
+quality. `ACTED` now means executed, and must NAME the executing commit in
+its status text (>=7 hex chars containing a letter, so a bare date-stamp
+cannot pass as one); an `ACTED` naming no commit is the two-meaning token
+reborn and is its own violation, `ACTED-WITHOUT-A-COMMIT`.
 
 THE RATCHET COUNTS EVERY CLASS, because counting one is how the other three
 instruments in this repo were gamed by accident (`coverage.py`, closed by
@@ -65,14 +80,17 @@ VANISHED and CLOCK-REMOVED are computed against the PREVIOUS COMMITTED revision
 of the file, so the baseline is git and there is no baseline constant to edit.
 
 THE ESCAPE HATCH IS RE-ARMING, IN THE OPEN. A red `STALE` or `OVERDUE` row has
-three honest repairs and no dishonest one: do the work (`ACTED`), refuse it
-(`DECLINED`), or move the date by writing a new `DUE:` with a reason — exactly
+three honest repairs and no dishonest one: do the work (`ACTED`, naming the
+executing commit), refuse it (`DECLINED`), or move the date by writing a new
+`DUE:` with a reason — exactly
 what `SYSTEM.md` already blesses for `decide_by` ("answer `D1` and `D10`, or
 re-arm both past the W1 design"). What it must not be able to do is go quiet.
 
 WHAT THIS DOES NOT WATCH, stated so no reader mistakes the scope. It does not
-know whether a disposition was any GOOD — `ACTED 2026-08-25` is the Review's word
-and this module takes it. It does not read `PROGRESS.md`. It reports the
+know whether a disposition was any GOOD — an `ACTED` that names a commit is
+taken at its word; whether that commit did the work is the overseer's to read.
+What it can no longer do is mean two things: the commitless form is a violation
+and the design-only form has its own live status. It does not read `PROGRESS.md`. It reports the
 consumer's last-run date off `docs/PROGRESS_LOG.md` for context and deliberately
 does not gate on it: `review_liveness` owns that alarm, and two organs owning one
 fact is how a number ends up watched by nobody in particular.
@@ -97,19 +115,25 @@ LOG_PATH = Path(__file__).resolve().parent.parent / "docs" / "PROGRESS_LOG.md"
 #: schedule, which is the condition `w0-too-shallow` was in when nothing noticed.
 MAX_OPEN_AGE_DAYS = 8
 
-LIVE = ("OPEN", "HELD")
-DISPOSITIONED = ("ACTED", "DECLINED")
-STATUSES = LIVE + DISPOSITIONED
+LIVE = ("OPEN", "HELD", "DISPOSITIONED")
+TERMINAL = ("ACTED", "DECLINED")
+STATUSES = LIVE + TERMINAL
 
 #: Every violation class, named once. `--check` is red on any of them; a class
 #: absent from this tuple is a class the exit code cannot see.
 VIOLATIONS = ("MALFORMED", "OVERDUE", "STALE", "HOLD-WITHOUT-A-CLOCK",
-              "HOLD-ON-A-RESOLVED-BLOCKER", "VANISHED", "CLOCK-REMOVED")
+              "HOLD-ON-A-RESOLVED-BLOCKER", "VANISHED", "CLOCK-REMOVED",
+              "ACTED-WITHOUT-A-COMMIT")
 
 _ROUTED = re.compile(r"^ROUTED:\s*(.*)$")
 _DECL = re.compile(r"^(DUE|BLOCKED-BY):\s*(.*)$")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _LOG_ROW = re.compile(r"^\|\s*(\d{4}-\d{2}-\d{2})\s*\|")
+#: An executing commit: >=7 hex chars WITH at least one letter. The letter is
+#: required so a compact date-stamp (`20260901`) cannot quietly satisfy the
+#: ACTED contract; the rare all-digit abbreviated sha loses to that trade and
+#: the repair is to paste one more character of it.
+_COMMIT = re.compile(r"\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\b")
 
 
 def _date(s: str):
@@ -195,6 +219,10 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) 
         rid = r["id"] or "(unnamed)"
         for why in r["bad"]:
             findings.append(("MALFORMED", rid, why))
+        if r["status"] == "ACTED" and not _COMMIT.search(r["status_text"]):
+            findings.append(("ACTED-WITHOUT-A-COMMIT", rid,
+                             "ACTED names no executing commit; a design without "
+                             "one is DISPOSITIONED, which keeps ageing"))
         if r["status"] not in LIVE:
             continue
         if r["blocked_by"]:
@@ -202,7 +230,7 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) 
             if tgt is None:
                 findings.append(("MALFORMED", rid,
                                  f"BLOCKED-BY names {r['blocked_by']!r}, which is not a row here"))
-            elif tgt["status"] in DISPOSITIONED:
+            elif tgt["status"] in TERMINAL:
                 findings.append(("HOLD-ON-A-RESOLVED-BLOCKER", rid,
                                  f"held behind {tgt['id']}, which is {tgt['status']} — "
                                  "the window it was waiting for has opened"))
@@ -214,10 +242,13 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) 
             findings.append(("HOLD-WITHOUT-A-CLOCK", rid,
                              "HELD exempts a row from ageing; it must declare a DUE: "
                              "or a BLOCKED-BY: to earn that"))
-        if (r["status"] == "OPEN" and r["due"] is None and r["routed"]
+        if (r["status"] in ("OPEN", "DISPOSITIONED") and r["due"] is None
+                and r["routed"]
                 and (today - r["routed"]).days > MAX_OPEN_AGE_DAYS):
+            what = ("OPEN" if r["status"] == "OPEN"
+                    else "DISPOSITIONED (design written, execution owed)")
             findings.append(("STALE", rid,
-                             f"OPEN for {(today - r['routed']).days} d, past the "
+                             f"{what} for {(today - r['routed']).days} d, past the "
                              f"{MAX_OPEN_AGE_DAYS}-day consumer cycle, with no DUE: to re-arm it"))
 
     if prev_doc is not None:
@@ -242,6 +273,7 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) 
             "n_rows": len(rows),
             "n_open": sum(1 for r in rows if r["status"] == "OPEN"),
             "n_held": sum(1 for r in rows if r["status"] == "HELD"),
+            "n_dispositioned": sum(1 for r in rows if r["status"] == "DISPOSITIONED"),
             "n_acted": sum(1 for r in rows if r["status"] == "ACTED"),
             "n_declined": sum(1 for r in rows if r["status"] == "DECLINED"),
             "oldest_live_days": max(ages) if ages else 0}
@@ -257,7 +289,8 @@ def render(a: dict, last_run: str = "") -> str:
     """The one line the 52nd audit said nothing in this repo could print."""
     out: list[str] = []
     oldest = a["oldest_live_days"]
-    head = (f"{a['n_open']} OPEN, {a['n_held']} HELD, {a['n_acted']} ACTED, "
+    head = (f"{a['n_open']} OPEN, {a['n_held']} HELD, "
+            f"{a['n_dispositioned']} DISPOSITIONED, {a['n_acted']} ACTED, "
             f"{a['n_declined']} DECLINED of {a['n_rows']} routed; "
             f"oldest live {oldest} d")
     if last_run:
@@ -275,7 +308,7 @@ def render(a: dict, last_run: str = "") -> str:
             clock = f"  DUE {r['due'].isoformat()}" + (f" (+{late} d)" if late > 0 else "")
         elif r["blocked_by"]:
             clock = f"  BLOCKED-BY {r['blocked_by']}"
-        out.append(f"    {r['status']:<9} {age}  {r['id']}{clock}")
+        out.append(f"    {r['status']:<13} {age}  {r['id']}{clock}")
     if a["total"]:
         out.append("")
         out.append(f"  {a['total']} VIOLATION(S) — "
@@ -285,10 +318,12 @@ def render(a: dict, last_run: str = "") -> str:
             out.append(f"        {why}")
         out.append("")
         out.append("  Three honest repairs and no dishonest one: do the work")
-        out.append("  (ACTED), refuse it (DECLINED), or move the date by writing")
-        out.append("  a new DUE: with a reason. Deleting the row, relabelling it")
-        out.append("  HELD, or dropping its DUE: are each their own violation —")
-        out.append("  see VIOLATIONS in experiments/review_queue.py.")
+        out.append("  (ACTED, naming the executing commit), refuse it (DECLINED),")
+        out.append("  or move the date by writing a new DUE: with a reason. A")
+        out.append("  design alone is DISPOSITIONED and keeps ageing. Deleting")
+        out.append("  the row, relabelling it HELD, dropping its DUE:, or")
+        out.append("  stamping ACTED with no commit are each their own violation")
+        out.append("  — see VIOLATIONS in experiments/review_queue.py.")
     else:
         out.append("")
         out.append("  0 violations. A row going STALE is normal work arriving;")
