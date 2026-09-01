@@ -62,7 +62,12 @@ _md_table_rows() {
   awk -F'|' '
     /^\| *[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] *\|/ {
       d = $2; m = $3
-      gsub(/[ \t]/, "", d); gsub(/[ \t]/, "", m)
+      # The mode field is HUMAN PROSE, not a token: the first-ever FULL row was
+      # written "**FULL**" as reasonable emphasis, and an exact compare read it
+      # as "FULL has never completed" — a stuck alarm that stamped a truthful
+      # 684-line report STALE (56th audit). Strip emphasis before comparing, or
+      # the authors of the document are silently maintaining this parser.
+      gsub(/[ \t]/, "", d); gsub(/[ \t*_]/, "", m)
       print d, m
     }' "$1"
 }

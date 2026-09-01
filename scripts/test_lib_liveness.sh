@@ -79,6 +79,20 @@ chk "a mode that has NEVER run is a fault" "$RC" "1"
 case "$OUT" in *EVER*) ok "and it says EVER, not an age" ;;
   *) bad "and it says EVER, not an age" "got [$OUT]" ;; esac
 
+printf '\n--- history_newest_mode_date: the matcher must see the HEALTHY state ---\n'
+
+# THE 56th-AUDIT SCAR: the first-ever FULL row was written "**FULL**" and the
+# exact-string compare went blind on the night it was first told good news — a
+# stuck alarm that stamped a truthful report STALE. The mode field is prose;
+# the matcher must recognise every reasonable emphasis of the same word. A
+# liveness watch with no test for its own matcher is a ratchet whose wiring a
+# formatting choice can disconnect.
+for v in 'FULL' '**FULL**' ' FULL ' '_FULL_'; do
+  mklog "$TMP/hm.md" 3 DAILY 5 "$v"
+  chk "mode written as [$v] is still FULL" \
+    "$(history_newest_mode_date "$TMP/hm.md" FULL)" "$(date -u -d '5 days ago' +%F)"
+done
+
 printf '\n--- table_liveness: unknown is not zero ---\n'
 
 table_liveness "$TMP/does-not-exist.md" 1 FULL 7 >/dev/null 2>&1
