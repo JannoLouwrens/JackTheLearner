@@ -424,3 +424,34 @@ against it (three) was falsified inside a week.
 
 Evidence: `scripts/lib_usage.sh` (pace_gate + 90% stop); the 42-hour join in
 CLAUDE.md's meter section; D11's price-history corrections of 08-26/08-27.
+
+## D14 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): option (b), the LOUD REFUSAL, is the standing answer — and the code was already live before the firing
+
+**The question** (from the 08-25/08-26 blackout series: the builder's model
+line capped while the chain silently considered a switch to the most
+expensive model on the shared meter): what does the loop do when its own
+model's weekly line is exhausted?
+
+**The default that fired — option (b):** a pre-flight check in
+`scripts/ladder_loop.sh` before `run_claude`, at a 95% floor on the loop
+model's own weekly line, that refuses the slot LOUDLY (`ABORT: no attemptable
+model at the ${MODEL_FLOOR}% weekly model floor...`), writes the
+lost-iteration marker, exits 0 without consuming the slot. Strictly tighter
+than the 90% stop; moves no threshold; deletes no control. **Verified live at
+firing time:** `ladder_loop.sh:271` carries the refusal and cites this
+decision by name; a refused slot is a NUMBER (marker + bookkeeping), not a
+silence. The code artifact landed 2026-08-30 ~20:4x — this firing records
+(b) as the standing answer; it changes no behaviour.
+
+**Losers recorded:** (a) silent walk to the most expensive model — the kind
+of thing this project registers guards against; (c) gate on max(all-models,
+loop-model) — tighter still, available later if (b)'s floor ever proves
+gameable; (d) bounded unpaced window — owner-only forever, a default may not
+suspend a throttle. The owner's remaining hours still supersede (b) at any
+time.
+
+**To reverse:** revert the ladder_loop.sh commit; there is no state to unwind.
+
+Evidence: `scripts/ladder_loop.sh:261-275`; `scripts/lib_credits.sh`
+`model_limited()`; `lost_iterations.log` as the receipt channel; the
+08-21 10:07/11:07 dead-slot scar that motivated the whole family.

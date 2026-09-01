@@ -4083,3 +4083,11 @@ Option (a), ACCEPT AS-IS: the shipped cadence meter governs (pace gate on
 week:all models, fallback chain, lost-iteration inheritance). No cadence
 change, no new budget, nothing widened. Options (b)/(c) remain one-line
 changes if you ever want them. Full record in `DECISIONS_RESOLVED.md`.
+
+## D14 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+Option (b), the LOUD REFUSAL, recorded as the standing answer — the pre-flight
+was already live at `ladder_loop.sh:271` (landed 2026-08-30) and cites D14 by
+name; a refused slot writes its marker and consumes nothing. Options (a)/(c)
+recorded as losers; (d) stays owner-only. Full record in
+`DECISIONS_RESOLVED.md`.
