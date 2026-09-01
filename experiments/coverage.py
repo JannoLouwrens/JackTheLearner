@@ -391,8 +391,49 @@ def report(by_id: Optional[dict] = None,
                     "n_specs": len(specs), "n_pass": len(passing),
                     "support_pass": support,
                     "nominations": nominated, "n_nominated": len(nominated),
+                    "foreclosed": {
+                        i: fk for i, k in pairs if k == "claim"
+                        for fk, _w in [foreclosure(
+                            i, status=results.get(i, {}).get("status"))]
+                        if fk},
                     "bad_declarations": [d for d in bad]})
     return out
+
+
+def foreclosure(sid: str, status: Optional[str] = None,
+                path=None) -> Tuple[Optional[str], Optional[str]]:
+    """`("VOID-FORECLOSED", why)` | `("PILOT-BLOCKED", why)` | `(None, None)` —
+    THE conjunction for "this spec can never produce evidence", factored into
+    one place so `queue_depth` and the CLAIM-DEAD ratchet cannot drift (58th
+    audit B1; the `_split_foreclosed` pattern from `404e25a`, taken one step
+    further — that helper re-stated the conjunction in `run.py` and documented
+    sameness, this one is shared code).
+
+    The two arms are exactly what `queue_depth` computes for its two exclusion
+    blocks: a spec is foreclosed when it RAN, VOIDed, and carries an ACCEPTED
+    `VOID-FORECLOSED:` declaration (a refused one closes no door), or when it
+    is gate-provisional and a run has MEASURED that the pilot's own
+    precondition fails (`_PILOT_BLOCKED`, with no contradicting `_PILOT_OWED`
+    — the both-case is UNDECLARED, which is queue_depth's routing to decide,
+    never a foreclosure). Both repairs are redesigns: neither state can be
+    cleared by dispatching anything, which is why each one launders a park if
+    an instrument enumerates only `PARKED:`.
+    """
+    from .protocol import (gates_frozen, module_path_for, pilot_blocked,
+                           pilot_owed, void_foreclosed)
+    if path is None:
+        path = module_path_for(sid)
+    if not path:
+        return (None, None)
+    if status == "VOID":
+        why = void_foreclosed(sid, path=path)
+        if why:
+            return ("VOID-FORECLOSED", why)
+    if gates_frozen(sid, path=path) is False:
+        why = pilot_blocked(sid, path=path)
+        if why and not pilot_owed(sid, path=path):
+            return ("PILOT-BLOCKED", why)
+    return (None, None)
 
 
 def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
@@ -400,13 +441,20 @@ def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
     to compute by hand: `declarations()` × the ledger × the blocker graph.
 
     States: `PASS`, `RUNNABLE` (every dependency satisfied today), `PARKED`
-    (retired by its own decision tree — no path back without a new spec), or
-    `blocked<-ROOTS` (a queue position: the terminal blockers its
+    (retired by its own decision tree — no path back without a new spec),
+    `FORECLOSED` (declared `VOID-FORECLOSED`, or gate-provisional with a
+    measured pilot-block — `foreclosure()`, the same conjunction
+    `queue_depth` excludes on, so the two readers cannot drift; 58th audit
+    B1), or `blocked<-ROOTS` (a queue position: the terminal blockers its
     unreachability actually rests on). The distinction the states encode is
     the 28th audit's finding: blocked resolves when the blocker does; parked
     resolves never. `run blocked` cannot see the difference and `coverage`
     could not either, so nine of twenty-three commitments sat at zero-passing
-    AND zero-runnable with every instrument green.
+    AND zero-runnable with every instrument green. FORECLOSED is the same
+    finding one invention later: before it existed, a foreclosed spec fell
+    through to `RUNNABLE` — the strongest state short of `PASS` — and the
+    commitment table contradicted the queue-depth section forty lines below
+    it in the same report.
     """
     from .protocol import Ledger
     from .run import _terminal_blockers
@@ -424,6 +472,8 @@ def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
             status = getattr(getattr(res, "status", None), "name", None)
             if status == "PASS":
                 entries.append((sid, "PASS"))
+            elif sid in r.get("foreclosed", {}):
+                entries.append((sid, "FORECLOSED"))
             else:
                 roots = terminal.get(sid, set()) - {sid}
                 entries.append((sid, "RUNNABLE") if not roots else
@@ -435,11 +485,22 @@ def claim_reachability(rows: Optional[List[dict]] = None) -> Dict[str, list]:
 
 
 def _claim_dead(r: dict) -> bool:
-    """No passing claim AND no un-parked claim-kind declaration: nothing this
-    commitment promises can currently be falsified by any run. Blocked claims
-    do NOT make a commitment claim-dead — blocked is a queue position."""
+    """No passing claim AND every claim-kind declaration is PARKED or
+    FORECLOSED: nothing this commitment promises can currently be falsified by
+    any run. Blocked claims do NOT make a commitment claim-dead — blocked is a
+    queue position that resolves when the blocker does; parked and foreclosed
+    resolve never (58th audit B1: `VOID-FORECLOSED` and `PILOT-BLOCKED` are
+    retirements that do not spell `PARKED:`, and for two days each one
+    laundered a park past the 28th audit's repair — five commitments
+    claim-dead in fact, `0 CLAIM-DEAD` reported, rc=0).
+
+    `kinds` has already had PARKED specs removed, so the conjunction here is:
+    no PASS, and every surviving claim is in the row's `foreclosed` map —
+    which `all()` over an empty list makes subsume the original two cases
+    (zero declared claims; every claim parked)."""
     return (not r["n_pass"]
-            and not any(k == "claim" for k in r["kinds"].values()))
+            and all(sid in r.get("foreclosed", {})
+                    for sid, k in r["kinds"].items() if k == "claim"))
 
 
 # ── QUEUE DEPTH — is there anything to SPEND the free quota on? ─────────
@@ -610,8 +671,10 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         # docstring says it must not; the difference is that here the cheap
         # reading is the common one and the author who knows better now has a
         # line to write. Like `pilot_blocked`, it does NOT rescue a class.
-        why = void_foreclosed(spec.id, path=path)
-        if status == "VOID" and why:
+        # The conjunction (status VOID and an ACCEPTED declaration) lives in
+        # `foreclosure()`, shared with the CLAIM-DEAD ratchet (58th audit B1).
+        fkind, why = foreclosure(spec.id, status=status, path=path)
+        if fkind == "VOID-FORECLOSED":
             excluded["void_foreclosed"].append(spec.id)
             foreclosed_why[spec.id] = why
             continue
@@ -752,13 +815,18 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         path = module_path_for(sid)
         why = pilot_blocked(sid, path=path)
         owed = pilot_owed(sid, path=path)
+        # The blocked-and-not-owed conjunction lives in `foreclosure()`,
+        # shared with the CLAIM-DEAD ratchet (58th audit B1); the contradiction
+        # routing below stays here because UNDECLARED is queue bookkeeping,
+        # not a foreclosure.
+        fkind, fwhy = foreclosure(sid, path=path)
         if why and owed:
             # BOTH is a contradiction, not a majority vote. Reading it as either
             # would let the author pick the answer by writing more; it reads
             # UNDECLARED, which is the state that costs them a red exit.
             pilot_undeclared.append(sid)
-        elif why:
-            blocked_why[sid] = why
+        elif fkind == "PILOT-BLOCKED":
+            blocked_why[sid] = fwhy
             pilot_blocked_cls[spec.budget.value].append(sid)
         elif owed:
             owed_why[sid] = owed
@@ -1757,15 +1825,121 @@ def _pilot_owed_fixture() -> List[str]:
     return fails
 
 
+def _claim_dead_fixture() -> List[str]:
+    """Known-answer battery for the FORECLOSED reachability state (58th audit
+    B1) — the CLAIM-DEAD ratchet must see a foreclosure as the retirement it
+    is, not as the strongest state short of PASS.
+
+    THE SCAR: on 2026-09-01 `check()` printed `shelter/building … claims:
+    SH.02 RUNNABLE` in its commitment table while its own queue-depth section,
+    forty lines down, said of the same spec "Do NOT spend seeds on these; the
+    repair is a redesign". Five commitments — balance, smell,
+    shelter/building, thermal (kills), fast/slow, four of them the owner's own
+    2026-08-09 survival directives — had zero passing claims and nothing
+    anybody was allowed to run, and this file reported `0 CLAIM-DEAD`, rc=0.
+    `VOID-FORECLOSED` and `PILOT-BLOCKED` are retirements that do not spell
+    `PARKED:`, so each one laundered a park past the 28th audit's repair.
+
+    Stubbing idiom of `_queue_depth_fixture`: the protocol readers are
+    monkeypatched so the CLAUSE is under test, not the parsers (those have
+    their own batteries). Both flavours of foreclosure are planted — BA.03's
+    shape (VOID + accepted declaration) and SH.02's shape (gate-provisional +
+    measured pilot-block) — plus the two directions that must stay ALIVE, per
+    the liveness-watch lesson (a monitor that cannot express success cannot
+    express failure either).
+    """
+    from dataclasses import replace
+
+    from .registry import BY_ID
+    donor = BY_ID["T0.01"]
+    reg = {
+        # BA.03's shape: ran, VOIDed, priced declaration accepted.
+        "Q.20": replace(donor, id="Q.20", title="Balance is load-bearing",
+                        notes="COVERS: balance (claim)"),
+        # SH.02's shape: gate-provisional, pilot measured its own
+        # precondition failing. Never ran, so no ledger row at all.
+        "Q.21": replace(donor, id="Q.21", title="Shelter beats the null",
+                        notes="COVERS: shelter/building (claim)"),
+        # The audit's exact case: one FORECLOSED claim PLUS one PARKED claim
+        # on the same commitment must read CLAIM-DEAD.
+        "Q.22": replace(donor, id="Q.22", title="Shelter, first attempt",
+                        notes="COVERS: shelter/building (claim). "
+                              "PARKED: 2026-08-01 — concluded by its own "
+                              "fork."),
+        # A live, un-foreclosed claim keeps its commitment alive.
+        "Q.23": replace(donor, id="Q.23", title="Hearing binds",
+                        notes="COVERS: hearing (claim)"),
+        # A PASS is a demonstration; a later foreclosure cannot un-record it.
+        "Q.24": replace(donor, id="Q.24", title="Touch grips",
+                        notes="COVERS: touch/contact (claim)"),
+    }
+    results = {"Q.20": {"status": "VOID"}, "Q.24": {"status": "PASS"}}
+    foreclosed = {"Q.20": "the blind twin holds 98.9% of the horizon",
+                  "Q.24": "stale declaration on a demonstrated spec"}
+    blocked = {"Q.21": "the null already holds the roof it was placed under"}
+    frozen = {"Q.21": False}
+
+    from . import protocol as _proto
+    real_vf, real_gf = _proto.void_foreclosed, _proto.gates_frozen
+    real_pb, real_po = _proto.pilot_blocked, _proto.pilot_owed
+    real_mpf = _proto.module_path_for
+    _proto.void_foreclosed = lambda sid, path=None: foreclosed.get(sid)
+    _proto.gates_frozen = lambda sid, path=None: frozen.get(sid)
+    _proto.pilot_blocked = lambda sid, path=None: blocked.get(sid)
+    _proto.pilot_owed = lambda sid, path=None: None
+    _proto.module_path_for = lambda sid, strict=False: f"/x/{sid}.py"
+    try:
+        rows = report(reg, results)
+    finally:
+        _proto.void_foreclosed, _proto.gates_frozen = real_vf, real_gf
+        _proto.pilot_blocked, _proto.pilot_owed = real_pb, real_po
+        _proto.module_path_for = real_mpf
+
+    by_name = {r["commitment"]: r for r in rows}
+    bal, shel = by_name["balance"], by_name["shelter/building"]
+    hear, touch = by_name["hearing"], by_name["touch/contact"]
+    reach = claim_reachability(rows)
+
+    fails = []
+    if not _claim_dead(bal):
+        fails.append("claim-dead: a commitment whose only claim is "
+                     "VOID-FORECLOSED must read CLAIM-DEAD (BA.03's shape) — "
+                     "a foreclosure is a retirement that does not spell "
+                     "PARKED:")
+    if not _claim_dead(shel):
+        fails.append("claim-dead: one PILOT-BLOCKED claim plus one PARKED "
+                     "claim must read CLAIM-DEAD (SH.02's shape, the 58th "
+                     "audit's exact case)")
+    if _claim_dead(hear):
+        fails.append("claim-dead: a live, un-foreclosed claim keeps its "
+                     "commitment ALIVE — the healthy state must be "
+                     "recognisable or the sick one means nothing")
+    if _claim_dead(touch):
+        fails.append("claim-dead: a PASS is a demonstration; a foreclosure "
+                     "cannot un-record it")
+    if ("Q.20", "FORECLOSED") not in reach["balance"]:
+        fails.append(f"reachability: a VOID-FORECLOSED claim must read "
+                     f"FORECLOSED, never RUNNABLE — got {reach['balance']}")
+    if ("Q.21", "FORECLOSED") not in reach["shelter/building"]:
+        fails.append(f"reachability: a PILOT-BLOCKED claim must read "
+                     f"FORECLOSED, never RUNNABLE — got "
+                     f"{reach['shelter/building']}")
+    if ("Q.23", "RUNNABLE") not in reach["hearing"]:
+        fails.append(f"reachability: a live claim with no blockers must stay "
+                     f"RUNNABLE — got {reach['hearing']}")
+    return fails
+
+
 def counts() -> tuple[int, int]:
     """(n_claim_dead, n_malformed) — two different fires, separately
     assertable.
 
-    Claim-dead means no passing claim and zero un-parked claim-kind
-    declarations for a constitutional commitment — which includes the original
-    zero-declared-specs case, and since the 28th audit also the case where
-    every claim spec is PARKED: both are invisible to every other instrument,
-    and the reason this module exists. Malformed means a `COVERS:` naming a
+    Claim-dead means no passing claim and no claim-kind declaration that could
+    still produce evidence — the original zero-declared-specs case, since the
+    28th audit the case where every claim spec is PARKED, and since the 58th
+    the case where every survivor is FORECLOSED (`VOID-FORECLOSED` /
+    `PILOT-BLOCKED`): all invisible to every other instrument, and the reason
+    this module exists. Malformed means a `COVERS:` naming a
     commitment that does not exist, missing its kind, or a `PARKED:` without
     its date — a marker that buys/retires nothing while reading like it does.
     Summing the two fires (the pre-2026-08-14 behaviour) gave them one bell;
@@ -1804,7 +1978,8 @@ def check() -> int:
     for r in sorted(rows, key=lambda z: (not _claim_dead(z),
                                          z["n_specs"], z["n_pass"])):
         mark = ("NO SPECS" if not r["n_specs"] and not r["parked"] else
-                "CLAIM-DEAD (all claim specs parked)" if _claim_dead(r) else
+                "CLAIM-DEAD (every claim spec parked or foreclosed)"
+                if _claim_dead(r) else
                 "none passing" if not r["n_pass"] else "")
         if r["support_pass"]:
             kinds = ", ".join(f"{i} ({k})" for i, k in r["support_pass"].items())
@@ -1818,6 +1993,11 @@ def check() -> int:
                     (s, parked_notes.get(s, "")) for s, st in
                     reach[r["commitment"]] if st == "PARKED"):
                 print(f"  {'':{width}}    {sid} PARKED {note}")
+            for sid, st in sorted(reach[r["commitment"]]):
+                if st == "FORECLOSED":
+                    print(f"  {'':{width}}    {sid} FORECLOSED "
+                          f"({r.get('foreclosed', {}).get(sid, '')} — the "
+                          f"repair is a redesign, never a dispatch)")
             if r["nominations"]:
                 print(f"  {'':{width}}    nominations (declare or ignore): "
                       f"{', '.join(r['nominations'][:8])}")
@@ -1830,8 +2010,8 @@ def check() -> int:
             print(f"  {'':{width}}    claims: {claims}")
     print(f"\n  {len(uncovered)} commitment(s) with NO declared spec, "
           f"{len(dead)} CLAIM-DEAD (no passing claim, every claim spec "
-          f"parked),\n  {len(unproven)} with live claim specs but nothing "
-          f"passing.")
+          f"parked or foreclosed),\n  {len(unproven)} with live claim specs "
+          f"but nothing passing.")
     if uncovered or dead:
         print("  A commitment with no runnable falsifiable claim is invisible\n"
               "  to `run blocked`, to the overseer, and to every gate. The\n"
@@ -1867,7 +2047,7 @@ def check() -> int:
     qf = (_queue_fixture() + _gates_frozen_fixture()
           + _pilot_blocked_fixture() + _pilot_owed_fixture()
           + _pilot_harvested_fixture() + _void_foreclosed_fixture()
-          + _exit_code_fixture())
+          + _claim_dead_fixture() + _exit_code_fixture())
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"

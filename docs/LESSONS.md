@@ -9862,7 +9862,22 @@ this must make CLAIM-DEAD go **0 → 5**, never sideways. A reachability class
 added by *converting* rather than *adding* is the same tidy-up-lowers-its-own-
 number move that `T0.31` P4/P5/P6 were built to catch.
 
-Guard: **owed** — `FORECLOSED` as a fifth `claim_reachability` state and a third
-`_claim_dead` disjunct, sharing `queue_depth`'s conjunction via one helper so the
-two readers cannot drift (the `_split_foreclosed`/`404e25a` pattern), with a
-known-answer fixture the current code is red against. 58th audit B1.
+Guard: **shipped 2026-09-01** — `coverage.foreclosure()` is the one shared
+conjunction (queue_depth's two exclusion blocks AND the ratchet both call it,
+strictly stronger than the `_split_foreclosed`/`404e25a` re-statement pattern);
+`FORECLOSED` is the fifth `claim_reachability` state; `_claim_dead` counts a
+commitment dead when every surviving claim is foreclosed;
+`_claim_dead_fixture` carries both flavours plus both alive directions and was
+verified RED against the pre-fix code (4 failures) before the repair. The
+count went **0 → 4, not 5**: `fast/slow` is NOT dead by the ratchet's own
+definition, because four of its five claims are BLOCKED (`DP.01/02/03 <-
+LC.03`, `BO.01 <- DP.05 FAIL`), not parked or foreclosed — and blocked is a
+queue position, the founding distinction the same B-item preserves verbatim.
+The audit's five-table counted those by discount ("nothing anybody may run"),
+which is true in fact and not what the predicate may say: making
+blocked-behind-a-FAIL read dead would flood the count with every commitment
+behind `T2.01`. The fifth commitment's dead-in-fact status is carried on the
+review-queue row instead, where the redesign that would revive it already
+lives. A predicted number is evidence about the prediction, not a bar the
+patch must hit; when the spec of a repair and its expected count disagree,
+implement the spec and report the difference loudly.

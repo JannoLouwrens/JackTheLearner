@@ -1059,3 +1059,45 @@ ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 
     Staleness bill: NONE for (a) — LT.01 has one FAIL row and no certificate
     cites it. (b) and (c) bill nothing either; (c) defers to whatever bill
     `w0-too-shallow` chooses.
+
+ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca793 (58th audit F1) + the B1 repair commit | OPEN
+    DUE: 2026-09-06 | successor specs or re-parenting for the dead
+        commitments, owed by the Review's Sunday FULL run in the SAME window
+        as `w0-too-shallow`, `ba03-null-saturates-the-horizon`,
+        `t306-matched-magnitude-noise-buys-coverage`,
+        `lt01-c2-body-cannot-rise` and `reparenting-the-welded-fifteen` —
+        four of the five commitments are downstream of the same W0 venue
+        findings, so they sequence into ONE design window (the bundling
+        rule).
+    Question: `balance`, `smell`, `shelter/building` and `thermal (kills)` —
+    four of the owner's own 2026-08-09 survival directives — have zero
+    passing claims and every claim-kind spec PARKED or FORECLOSED
+    (BA.03 VOID-FORECLOSED + BA.02 parked; SM.03 PILOT-BLOCKED + SM.02
+    parked; SH.02 PILOT-BLOCKED + SH.01 parked, carrying shelter AND thermal
+    together). The CLAIM-DEAD ratchet now sees this: `coverage.foreclosure()`
+    is the shared conjunction, `FORECLOSED` the fifth reachability state, and
+    the count went 0 -> 4 with coverage rc=2 — the red is the tool working,
+    and it stays red until this row is acted on. The repair is REGISTRATION
+    or RE-PARENTING, never unparking, quieting, or a successor spec written
+    against the same venue the pilots already measured as unable to grade the
+    claim (SH.02's pilot: "the null already holds the roof it was placed
+    under"; SM.03's: the held-out split saturated at the 0.25 floor before
+    the nose was ever measured).
+    THE FIFTH COMMITMENT, carried here because the ratchet honestly cannot
+    count it: `fast/slow` is claim-dead IN FACT (the 58th audit's five-table
+    stands — nothing anybody may run) but not by the predicate, because
+    DP.01/DP.02/DP.03 are BLOCKED behind LC.03 (itself VOID-FORECLOSED, so
+    that blocker resolves never) and BO.01 is BLOCKED behind DP.05's FAIL
+    (which a W0 redesign could re-open). Blocked-is-alive is the ratchet's
+    founding distinction, and widening it to blocked-behind-FAIL would flood
+    the count with every commitment behind T2.01. If the Review wants the
+    transitive case counted, the honest instrument is a SIXTH state
+    (transitively-foreclosed: every terminal blocker parked or foreclosed),
+    which would catch DP.01-03 and still honestly leave BO.01 — and
+    `fast/slow` — alive on one thread. That is a design choice with its own
+    flood risk, routed here rather than decided by the builder.
+    Staleness bill: NONE mechanical for acting (registering successor specs
+    edits the registry, which no PASS certificate hashes beyond T0.21's
+    ordinary coverage.py re-buy). Any repair that instead edits W0 inherits
+    the 21-certificate playground.py bill already computed on
+    `w0-too-shallow`.
