@@ -9750,3 +9750,25 @@ Three things generalise:
    construction** — and a false positive on a spec that has not run is the
    likeliest such case, because that is the spec whose docstring is still being
    written.
+
+## A declaration parser must require its keyword to stand as a paragraph, not merely at a column
+
+A sentence in LC.07's docstring — *"...the five-arm screen (LC.03 is /
+VOID-FORECLOSED: no v3, no envelope growth...)"* — wrapped at exactly the
+wrong word, landed the keyword at column 0, and `protocol._margin_declaration`
+read a spec that had never run as declaring itself foreclosed (57th audit B1,
+2026-09-01). This is the THIRD organ the same defect has cost: `champions.py`
+mis-parsed prose on `901f7fc`, and `review_queue.py` was designed around the
+hazard rather than fixing it. Free text reflows; column position is one
+line-break away from being an accident.
+
+**Rule:** a machine-read declaration embedded in prose must be anchored by
+something reflow cannot manufacture — in this repo, the keyword line must be
+the docstring's FIRST line or be preceded by a blank line (every genuine
+declaration already stood as its own paragraph). The guard lives in
+`_margin_declaration` (rule stated in its docstring) with a known-positive
+wrapped-sentence case in `coverage._void_foreclosed_fixture`. Corollary from
+the same audit: a refusal collected only on the status branch that motivated
+it (VOID) is invisible on every other branch — collect validity checks for
+EVERY spec that has a file, and let the status branches decide routing, not
+visibility.

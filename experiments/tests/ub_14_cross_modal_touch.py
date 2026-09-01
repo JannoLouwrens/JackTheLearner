@@ -170,16 +170,59 @@ touch signal drown a 44-dim proprio fit at matched capacity, and no symmetric
 regularisation clears the floor before tripping loss_fell. Probes preserved
 at /data/ub14_probes/ub14_probe{,2,3}.py (numbers recorded here).
 
-THE SETTLEMENT (this slot): the recorded 3-seed run is launched to land the
-honest VOID on the ledger — the aliveness gates firing IS the rig doing its
-job; the row makes it scoreboard-visible. On harvest, the VOID-FORECLOSED
-declaration (FORECLOSURE ARITHMETIC + BLAST RADIUS: none — nothing
-depends_on UB.14) is owed via the doc-only amend lane, quoting the row's
-fired conjuncts. The repair is a venue/world redesign (an eye that can track
-the body, or a body that stays in view — the same fork as D9/W0.BAL and
-LT.01's C2), routed to the Review on the `w0-too-shallow` row. Do NOT re-run
-UB.14 unchanged and do NOT move VISION_BODY_GATE — a fixture gate lowered to
-what a blind venue can pass certifies blindness as sight.
+THE SETTLEMENT (executed at harvest, 2026-09-01): the recorded 3-seed run
+landed the honest VOID at 06:41:04 UTC (attempt 1, commit `cf0ff46`,
+impl d8b83740531c071e) — the aliveness gates firing IS the rig doing its
+job; the row makes it scoreboard-visible. The declaration below quotes the
+row's fired conjuncts, per the plan this paragraph pre-registered before the
+run settled. One correction to that plan, from the 57th audit's B4: the
+blast radius is NOT "none" — `depends_on` is empty but the kills clause and
+three same-venue vision specs are in the weld's shadow, and the block below
+prices that honestly. The repair is a venue/world redesign (an eye that can
+track the body, or a body that stays in view — the same fork as D9/W0.BAL
+and LT.01's C2), routed to the Review on the `w0-too-shallow` row. Do NOT
+re-run UB.14 unchanged and do NOT move VISION_BODY_GATE — a fixture gate
+lowered to what a blind venue can pass certifies blindness as sight.
+
+VOID-FORECLOSED: the recorded row's fired conjuncts are the two the probes
+    predicted, on every seed, with every other rig conjunct green:
+    `vision_sees_body` 0.4036 +- 0.0256 vs the 0.5 gate and `fused_r2`
+    0.0013 +- 0.0098 vs the 0.05 floor (`seed_alive_ok` 0.0 on all three
+    seeds; `control_alive_ok` failed on 2 of 3 besides). Green and
+    irrelevant to the verdict: canary_ok 1.0, alive_channels 13/13,
+    dropped_frac 0.0, loss_fell fused 0.024 / proprio 0.284 vs the 0.8 cap.
+    The binding fault is the VENUE, measured, not the instrument: the eye is
+    world contract (EYE_POS fixed, 30 deg half-FOV), the spawn is at its
+    measured in-view optimum, and in the only region the body may be seen
+    the information to place it does not reach the gate (probe record
+    above). Re-running unchanged buys the same VOID.
+
+FORECLOSURE ARITHMETIC: no multiplier on N converges, and the two fired
+    gates pinch from opposite sides. Episode scaling is measured saturating
+    (16 -> 48 eps moved the raw-pixel ridge 0.26 -> 0.37) and the rig's own
+    MLP — the strongest readout tried — reads 0.159 held-out at the full
+    envelope vs the 0.5 gate; explainable variance caps near ~0.37 for ANY
+    decoder because the in-view box bounds var(root xy) at ~0.05 m^2/axis
+    against comparable blob-pose noise, so no episode count reaches 0.5.
+    The fused_r2 floor cannot be bought either: vision carries ~zero touch
+    signal here (vision_only_r2 -0.013 recorded, 0.009 in probes), and the
+    strongest symmetric regulariser measured (wd 1e-2) reads 0.039 vs the
+    0.05 floor while pushing the proprio arm's loss_fell to 0.786 vs the
+    0.8 cap — one more notch trades the floor VOID for the loss_fell VOID.
+
+BLAST RADIUS: no spec is rendered unreachable via depends_on — nothing
+    depends_on UB.14 (registry at 2026-09-01) — but the weld is not free
+    (57th audit B4). Undelivered: the kills clause aimed at UB.10's A3 arm
+    (the vision->touch masked objective) — its justification is now neither
+    confirmed nor deleted, and UB.10's arm redesign must carry that question
+    itself. In the weld's shadow, runnable but pre-explained: UB.5 "Touch is
+    load-bearing (or honestly redundant)", UB.11 "The modality ablation
+    matrix", and UB.16 "Sensory information reaches the controller" all
+    measure vision's contribution through the same eye in the same venue
+    this declaration says cannot place the body — until the w0-too-shallow
+    redesign lands, a "vision is decorative" reading from any of them is a
+    statement about the venue, not the architecture, and may not fire a
+    deletion.
 """
 from __future__ import annotations
 

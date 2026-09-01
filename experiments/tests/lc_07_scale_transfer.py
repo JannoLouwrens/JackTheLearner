@@ -10,9 +10,9 @@ owner's adoption guard names (D10/D12: "re-test at ~10x on Kaggle, which is
 free"). If either sigma gate misses at 10x, the 1x verdict was a
 small-envelope artifact and the seat reverts to contested-VACANT.
 
-SINGLE-ARM ON PURPOSE. This is not a re-run of the five-arm screen (LC.03 is
-VOID-FORECLOSED: no v3, no envelope growth, no re-roll) and it does not route
-through LC.03 in depends_on. It races nobody; it asks whether the one seated
+SINGLE-ARM ON PURPOSE. This is not a re-run of the five-arm screen (LC.03
+is VOID-FORECLOSED: no v3, no envelope growth, no re-roll) and it does not
+route through LC.03 in depends_on. It races nobody; it asks whether the one seated
 core's own gates survive deployment scale. Racing new arms is LC.04's job if
 the seat's premise is ever repaired.
 

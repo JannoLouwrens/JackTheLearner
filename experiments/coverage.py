@@ -548,13 +548,24 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     for spec in ready(ledger):
         cls = spec.budget.value
         status = getattr(ledger.status(spec.id), "name", None)
+        path = module_path_for(spec.id)
+        # A REFUSED declaration is collected for EVERY spec with a file,
+        # BEFORE any status-based exit (57th audit B1b). The old site sat
+        # inside `if status == "VOID"`, after `gates_frozen is False` had
+        # already dropped every never-run spec — so when a wrapped sentence
+        # declared gate-provisional LC.07 foreclosed, the refusal that exists
+        # "so it is LOUD" was printed by nobody. A bogus declaration on a spec
+        # that has not run is exactly the case that occurred.
+        if path:
+            refusal = void_foreclosed_refusal(spec.id, path=path)
+            if refusal:
+                foreclosed_refused[spec.id] = refusal
         if spec.id in parked_ids:
             excluded["parked"].append(spec.id)
             continue
         if status in ("PASS", "FAIL"):
             excluded["settled"].append(spec.id)
             continue
-        path = module_path_for(spec.id)
         if not path:
             excluded["unimplemented"].append(spec.id)
             continue
@@ -605,15 +616,10 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         by_class[cls].append(spec.id)
         if status == "VOID":
             void.append(spec.id)
-            # A REFUSED declaration (54th audit B3: no `FORECLOSURE
-            # ARITHMETIC:` / `BLAST RADIUS:` price attached) falls back to
-            # the repairable ranking — an unpriced weld closes no door — but
-            # the fallback must be LOUD: somebody tried to weld this one, and
-            # printing it bare as "an arm to repair" re-opens the exact
-            # misroute the state was invented to close.
-            refusal = void_foreclosed_refusal(spec.id, path=path)
-            if refusal:
-                foreclosed_refused[spec.id] = refusal
+            # A refused declaration (54th audit B3: no price attached) falls
+            # back to the repairable ranking — an unpriced weld closes no
+            # door — and its refusal was already collected at the loop head,
+            # for every status (57th audit B1b).
 
     empty = {c for c, ids in by_class.items() if not ids}
     # FILLABLE — can this class be stocked by implementing something TODAY?
@@ -923,6 +929,13 @@ def _queue_fixture() -> List[str]:
         # somebody tried to weld is the B2 misroute wearing a new state.
         # Shares gpu<2h with stocked specs so it decides no class.
         ("Q.17", Budget.GPU, "", Status.VOID, True, True),
+        # THE PHANTOM ON A SPEC THAT NEVER RAN (57th audit B1). Gates
+        # provisional, no verdict, and a refused declaration at its margin —
+        # LC.07's exact shape, which the pre-B1 code could not see because
+        # refusals were collected only for VOID specs, three exits after
+        # `gates_frozen is False` had dropped this one. The refusal must
+        # surface even though every status-based branch excludes the spec.
+        ("Q.18", Budget.GPU, "", None, True, False),
     ]
     # `pilot_blocked` / `pilot_owed` answers per spec: a reason string, or None
     # for "does not declare". Q.08 and Q.12 declare neither — Q.12 deliberately,
@@ -945,11 +958,15 @@ def _queue_fixture() -> List[str]:
     # what must keep it in the queue.
     foreclosed = {"Q.15": "the blind twin holds 98.9% of the horizon",
                   "Q.16": "the blind twin holds 98.9% of the horizon"}
-    # `void_foreclosed_refusal`'s answers. Q.17 wrote a declaration that was
-    # refused; Q.16 gets one too, and must NOT surface it — no verdict, so
-    # there is nothing to weld and nothing to refuse.
+    # `void_foreclosed_refusal`'s answers. Q.17 (VOID) and Q.18 (never ran,
+    # gates provisional) both wrote refused declarations and BOTH must
+    # surface — the 57th audit's B1 withdrew the 54th's "no verdict, nothing
+    # to refuse" rule after LC.07's phantom sat invisible on exactly that
+    # branch. Q.16 has a COMPLETE declaration, so in reality the refusal
+    # reader answers None for it; the stub models that.
     refusals = {"Q.17": "declaration REFUSED — missing `BLAST RADIUS:`",
-                "Q.16": "must never surface: Q.16 has no verdict"}
+                "Q.18": "declaration REFUSED — missing `FORECLOSURE "
+                        "ARITHMETIC:`, `BLAST RADIUS:`"}
     by_id = {sid: _Spec(sid, b, n) for sid, b, n, _s, _t, _g in rows}
     led = _Led({sid: s for sid, _b, _n, s, _t, _g in rows if s is not None})
     tracked = {f"/x/{sid}.py" for sid, _b, _n, _s, t, _g in rows if t}
@@ -1004,7 +1021,7 @@ def _queue_fixture() -> List[str]:
     # THE ROW THE 46th AUDIT'S RANK 2 EXISTS FOR: runnable, implemented,
     # tracked, unsettled, unparked — and its own `run()` refuses.
     if q["excluded"]["gates_provisional"] != ["Q.08", "Q.10", "Q.11", "Q.12",
-                                              "Q.13", "Q.14"]:
+                                              "Q.13", "Q.14", "Q.18"]:
         fails.append(f"a spec with PROVISIONAL gates refuses its own "
                      f"registered run and must be excluded — the SM.03 case — "
                      f"got {q['excluded']['gates_provisional']}")
@@ -1048,7 +1065,7 @@ def _queue_fixture() -> List[str]:
     # class: every one of these three assertions fails against the code as it
     # stood this morning, which advertised SM.03 and T2.11 as cheap pilots
     # months after their own pilots were spent.
-    if q["pilot_undeclared"] != ["Q.08", "Q.12", "Q.13"]:
+    if q["pilot_undeclared"] != ["Q.08", "Q.12", "Q.13", "Q.18"]:
         fails.append(f"a gate-provisional spec declaring neither flag — or "
                      f"BOTH, which is a contradiction, not a vote — is "
                      f"UNDECLARED, got {q['pilot_undeclared']}")
@@ -1137,19 +1154,22 @@ def _queue_fixture() -> List[str]:
                      f"must not exclude it: a spec may not go quiet ahead of "
                      f"its own evidence, got "
                      f"{q['excluded']['void_foreclosed']}")
-    # THE REFUSED WELD (54th audit B3). Q.17 is VOID and wrote a declaration
-    # that validation refused. Three answers are known at once: it stays in the
-    # queue and in `void` (an unpriced weld closes no door), its refusal
-    # survives into the readout (the loud half — without it the fallback IS the
-    # B2 misroute), and Q.16's stubbed refusal does NOT surface (no verdict,
-    # nothing welded; the clause, not the reader, must keep that straight).
+    # THE REFUSED WELD (54th audit B3; scope widened by the 57th's B1). Q.17
+    # is VOID and wrote a declaration that validation refused. It stays in the
+    # queue and in `void` (an unpriced weld closes no door), and its refusal
+    # survives into the readout (the loud half — without it the fallback IS
+    # the B2 misroute). Q.18 never ran at all — gates provisional, dropped by
+    # the earliest status exit — and its refusal must surface anyway: LC.07's
+    # phantom lived on exactly the branch the old VOID-only collection could
+    # not see.
     if "Q.17" not in q["void"] or "Q.17" not in q["by_class"]["gpu<2h"]:
         fails.append(f"a refused foreclosure stays repairable — got "
                      f"void={q['void']} gpu<2h={q['by_class']['gpu<2h']}")
-    if q["void_foreclosed_refused"] != {"Q.17": refusals["Q.17"]}:
-        fails.append(f"the REFUSAL must survive into the readout for exactly "
-                     f"the VOID specs that wrote an unpriced declaration — "
-                     f"got {q['void_foreclosed_refused']}")
+    if q["void_foreclosed_refused"] != {"Q.17": refusals["Q.17"],
+                                        "Q.18": refusals["Q.18"]}:
+        fails.append(f"the REFUSAL must survive into the readout for every "
+                     f"spec that wrote an unpriced declaration, whatever its "
+                     f"status — got {q['void_foreclosed_refused']}")
     if "Q.17" in q["excluded"]["void_foreclosed"]:
         fails.append(f"a refused declaration must not exclude — got "
                      f"{q['excluded']['void_foreclosed']}")
@@ -1519,6 +1539,14 @@ def _void_foreclosed_fixture() -> List[str]:
          f'"""Title.\n\n    VOID-FORECLOSED: {R}{PRICE}"""\n', None),
         ("a mention inside prose is not a declaration",
          f'"""We should mark it VOID-FORECLOSED: {R}"""\n', None),
+        # THE LC.07 PHANTOM (57th audit B1c). A sentence about ANOTHER spec
+        # wraps so the keyword lands at this docstring's margin. The anchor
+        # rule — first line, or preceded by a blank line — is what rejects it;
+        # every genuine declaration stands as its own paragraph.
+        ("a wrapped sentence is not a declaration",
+         f'"""Title.\n\nThis is not a re-run of the screen (LC.03 is\n'
+         f'VOID-FORECLOSED: {R}) and it does not route through it.'
+         f'{PRICE}"""\n', None),
         # THE IDIOM ASSERTION. The code form is deliberately NOT read: it would
         # stale the very ledger row the declaration is about.
         ("the module-constant idiom does not declare",
@@ -1556,6 +1584,12 @@ def _void_foreclosed_fixture() -> List[str]:
         ("unpriced -> refusal names BOTH blocks",
          f'"""VOID-FORECLOSED: {R}"""\n',
          ("FORECLOSURE ARITHMETIC:", "BLAST RADIUS:"), ()),
+        # LC.07's literal shape: wrapped mid-sentence AND unpriced. The anchor
+        # rule says it never declared, so there is nothing to refuse — the
+        # repair for a phantom is a reflow, not a price.
+        ("a wrapped unpriced sentence is not a refusal either",
+         f'"""Title.\n\nprose about another spec (LC.03 is\n'
+         f'VOID-FORECLOSED: {R}) continuing the thought."""\n', None, ()),
         ("missing blast alone -> refusal names IT and not the other",
          f'"""VOID-FORECLOSED: {R}\n\nFORECLOSURE ARITHMETIC: none '
          'converges\n"""\n',
@@ -1878,11 +1912,13 @@ def check() -> int:
               "  six of seven rig conjuncts green, the blind twin at 98.9% of "
               "the horizon).")
     if q["void_foreclosed_refused"]:
-        print(f"  !! {len(q['void_foreclosed_refused'])} VOID spec(s) wrote a "
+        print(f"  !! {len(q['void_foreclosed_refused'])} spec(s) carry a "
               f"VOID-FORECLOSED declaration that was REFUSED (54th audit B3:\n"
-              "      unpriced — no FORECLOSURE ARITHMETIC / BLAST RADIUS). "
-              "They rank as repairable above,\n      but the next unit on each "
-              "is to PRICE THE DECLARATION, not to dispatch a re-run:")
+              "      unpriced — no FORECLOSURE ARITHMETIC / BLAST RADIUS), "
+              "collected for EVERY status\n      (57th audit B1: the LC.07 "
+              "phantom sat on a spec that had never run). A VOID one\n"
+              "      ranks as repairable above; the next unit on each is to "
+              "REPAIR THE DECLARATION,\n      not to dispatch a re-run:")
         for sid, msg in q["void_foreclosed_refused"].items():
             print(f"      {sid}: {msg}")
     if ex["gates_provisional"]:

@@ -1829,11 +1829,21 @@ def _module_doc(spec_id: str, path=None):
 def _margin_declaration(doc: str, keyword: str):
     """Last margin-anchored `keyword` block in `doc`, continuation by indent
     (T0.31's idiom) — factored out of `void_foreclosed` when the 54th audit's
-    B3 gave that declaration two required companion blocks."""
+    B3 gave that declaration two required companion blocks.
+
+    THE ANCHOR RULE (57th audit B1c): a candidate line declares ONLY if it is
+    the docstring's first line or the line above it is blank. Margin-matching
+    a keyword against free text has now cost three organs (`champions.py` on
+    `901f7fc`, `review_queue.py`'s design, and this function), most recently
+    when a WRAPPED SENTENCE about LC.03 — "...(LC.03 is\\nVOID-FORECLOSED: no
+    v3...)" — put the keyword at LC.07's margin and declared a spec foreclosed
+    that had never run. Every genuine declaration in this repo stands as its
+    own paragraph; a line continuing the sentence above it is prose, whatever
+    column it starts in. Do not re-derive the loose rule."""
     found = None
     lines = doc.splitlines()
     for i, raw in enumerate(lines):
-        if raw.startswith(keyword):
+        if raw.startswith(keyword) and (i == 0 or not lines[i - 1].strip()):
             parts = [raw[len(keyword):].strip()]
             for cont in lines[i + 1:]:
                 # An indented non-empty line continues the declaration; a blank
