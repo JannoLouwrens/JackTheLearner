@@ -2166,7 +2166,18 @@ EXPANSION: list[Spec] = [
                "whole bakeoff is VOID because W0 is not a learnable survival "
                "problem. Cost is parameters and NOT core-seconds on purpose: "
                "compute is already LC.05's axis, and counting it twice would "
-               "let the tie-break re-decide the thing LC.05 decides."),
+               "let the tie-break re-decide the thing LC.05 decides. "
+               "PREMISE AMENDED BY D10's DEFAULT (fired 2026-09-01, armed "
+               "2026-08-24, decide_by 2026-08-31 passed unanswered): "
+               "'arbitrate among screened learners' becomes 'the screen IS "
+               "the arbitration when it returns exactly one'. LC.03 v2 "
+               "returned exactly one (wm-latent; VOID 'fewer than two "
+               "learners'), so this spec's hypothesis is unsatisfiable as "
+               "written — wm-latent is seated BY VERDICT with the single-arm "
+               "caveat (CHAMPIONS.md), and the scale-transfer guard binds "
+               "BEFORE adoption via LC.07, which does not route through "
+               "LC.03. LC.04 runs only if the seat's premise is ever "
+               "repaired (>=2 screened learners from a redesigned screen)."),
 
     Spec("LC.05", 5, "The same arms, arbitrated at matched COMPUTE",
          hypothesis="Scored off the SAME stored curves at exactly W_CLOCK "
@@ -2244,6 +2255,68 @@ EXPANSION: list[Spec] = [
                "number must be ZERO. Frozen perception is excluded from B1 — "
                "it is an input, not a learned parameter — which is what makes "
                "the frozen-swappable-tower principle affordable."),
+
+    # -- LC.07, registered 2026-09-01 IN THE SAME COMMIT that fired D10's
+    # default (54th-audit B1's condition): the commit that marks the
+    # learning-core seat BY VERDICT must not leave it with a dead arena.
+    # depends_on deliberately does NOT route through LC.03 — the screen is
+    # VOID-FORECLOSED ("no v3, no envelope growth, no re-roll") and a
+    # challenger parked behind a welded door is not a challenger. This spec
+    # depends on the recorded wm-latent RESULT (curves in
+    # experiments/artifacts/lc03_curves_seed{0,1,2}.json, ledger row LC.03
+    # 2026-08-23 21:11), not on re-running the screen.
+    Spec("LC.07", 5, "The wm-latent verdict survives ~10x scale (the owner's "
+         "scale-transfer guard)",
+         hypothesis="At ~10x LC.03 v2's per-arm-seed envelope (4,000,000 "
+                    "decisions, vs the 400,000 the verdict was bought at), run "
+                    "on Kaggle, wm-latent's life_gain still beats the paired "
+                    "random null by >=3 sigma AND its own untrained twin by "
+                    ">=3 sigma on 3 seeds with n_lives >= 12 per seed — the "
+                    "same two gates it cleared at 1x, at the scale the owner's "
+                    "adoption guard names (DECISIONS_NEEDED D10/D12: 're-test "
+                    "at ~10x on Kaggle, which is free').",
+         falsified_by="Either gate missed at 10x. The BY VERDICT seating of "
+                      "wm-latent (D10 default, fired 2026-09-01) does not "
+                      "survive scale: the seat reverts to contested-VACANT in "
+                      "CHAMPIONS.md and adoption is off the table — the 1x "
+                      "verdict was a small-envelope artifact.",
+         null_baseline="LC.03's paired nulls, unchanged: uniform-random action "
+                       "on the same world seeds and evaluation lives, plus "
+                       "wm-latent's own untrained twin (T2.02's scar: an "
+                       "untrained net nearly clears a random-only gate).",
+         metric="life_gain_at_10x", budget=Budget.GPU_LONG, seeds=3,
+         depends_on=["LC.00", "LC.01", "LC.02", "PS.01", "XL.00"],
+         control="Inherited from LC.03 on their pre-registered sides, run in "
+                 "the same kernel: (a) statue must ride the basal ceiling "
+                 "(|mean_life - e0/BASAL_B| <= 10% — the passive path stays "
+                 "clean at 10x or the rig VOIDs, PS.03's phantom-servo scar); "
+                 "(b) the wiped-store twin must not trip (zero cross-life "
+                 "carryover when memory is wiped); (c) randrew must miss the "
+                 "gate. A control on the wrong side => Status.VOID, never a "
+                 "verdict.",
+         kills="The BY VERDICT hold on the learning-core seat. This is the "
+               "seat's REGISTERED challenger (SYSTEM.md: no seat held without "
+               "an existing challenger spec resolvable in BY_ID) — if "
+               "wm-latent cannot re-clear its own gates at deployment scale, "
+               "it loses the chair it was given by a one-learner screen.",
+         notes="Registered by D10's firing commit per 54th-audit B1; converts "
+               "the seat from unfalsifiable (every other arena member welded "
+               "behind LC.03's foreclosure) to contested. SINGLE-ARM ON "
+               "PURPOSE: this is the owner's scale-transfer guard on the "
+               "seated core, not a re-run of the five-arm screen — racing new "
+               "arms is LC.04's job if the seat's premise is ever repaired. "
+               "Envelope arithmetic: LC.03 v2 spent 17,280 core-s per "
+               "arm-seed at 400k decisions on this box's ARM cores; 10x is "
+               "~48 core-h per seed on CPU and Kaggle sessions cap at 12 h, "
+               "so the implementation must either hit >=4x LC.02's measured "
+               "throughput on the Kaggle CPU/GPU mix or checkpoint across "
+               "sessions (GPU_LONG's own requirement). Scoring replays "
+               "LC.03's exact life_gain definition (final-third minus "
+               "first-third mean survival) — a moved definition is a moved "
+               "threshold. The 1x reference curves this must be read against "
+               "are experiments/artifacts/lc03_curves_seed{0,1,2}.json (on "
+               "this box, gitignored) — ship them into the kernel with the "
+               "job, do not re-derive them.",),
 
     # -- PS.01, registered AHEAD of the rest of the PS family on purpose --
     # LC.03 declares depends_on PS.01, and LEARNING_CORE.md 5.6 requires the

@@ -105,3 +105,51 @@ Evidence: `experiments/ledger.json` T2.01/T2.02 `history`; replay over today's
 147+ spec registry with historical statuses (method + numbers reproduced in
 T0.08's docstring); `protocol.py` Status.VOID docstring + `unsatisfied` fixed
 in the same commit. D2's full price history stays in `DECISIONS_NEEDED.md`.
+
+## D10 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): the screen IS the arbitration when it returns exactly one; wm-latent seated BY VERDICT, single-arm caveat on its face
+
+**The question** (armed 2026-08-24, decide_by 2026-08-31, passed unanswered —
+the default fired as written, per the executor line of `03f31cf`): LC.03 v2
+concluded with exactly ONE 3σ learner (`wm-latent`) out of five arms, in a
+clean rig, at a 4× envelope the fork pre-registered as final. Does the
+learning-core arbitration premise ("arbitrate among screened learners")
+survive a screen that returns one?
+
+**The default that fired, verbatim in effect:** LC.04's premise is amended
+from "arbitrate among screened learners" to "the screen IS the arbitration
+when it returns exactly one" (recorded in LC.04's registry notes), and
+`wm-latent` takes the learning-core seat as measured winner-by-default —
+`CHAMPIONS.md` seat marked **BY VERDICT (single-arm)** with the caveat on its
+face. The owner's scale-transfer guard binds BEFORE adoption: re-test at ~10×
+on Kaggle, which is free. LC.03 stays CONCLUDED in the ledger with its VOID
+and history intact — no v3, no envelope growth, no re-roll.
+
+**What the firing commit contains** (one commit, per the 53rd audit's B3
+executor line and the 54th audit's B1 condition):
+- `CHAMPIONS.md` learning-core cell + seat declaration: `wm-latent` BY
+  VERDICT, arena `LC.00–LC.07`.
+- LC.04 registry `notes`: the premise amendment, with the caveat that
+  LC.04–LC.06 run only if the premise is ever repaired.
+- **`LC.07` registered in the SAME commit** — the ~10× Kaggle scale-transfer
+  re-test, `depends_on` LC.00–LC.02/PS.01/XL.00 (all PASS), deliberately NOT
+  routed through the foreclosed LC.03 — so the seat is seated and contestable
+  in the same breath. The ARENA-UNREACHABLE finding on this seat (54th audit)
+  is discharged by construction, not by prose.
+
+**Losers recorded:** option (b) (redesign W0 first — alive independently as
+the `w0-too-shallow` Review question, DUE 2026-09-06, and W0.DIAG's PASS is
+design input to it; nothing here pre-empts it) and option (c) (redesign the
+arms — routed to the Review with UB.10's arm-redesign question). Both remain
+available ON TOP of this default; neither could fire as a default because
+each spends design work the owner may sequence differently.
+
+**Re-open triggers, pre-registered:** LC.07 FAIL (the seat reverts to
+contested-VACANT); any repaired screen returning ≥2 learners (LC.04's
+original premise revives and the BY VERDICT hold is re-arbitrated); the
+unison gates failing under wm-latent (adoption VOID per SYSTEM.md, seat
+unchanged but adoption barred).
+
+Evidence: `experiments/ledger.json` LC.03 v2 row (2026-08-23 21:11, VOID
+"fewer than two learners (1 cleared)"); per-arm t-stats in the row and
+`experiments/artifacts/lc03_curves_seed{0,1,2}.json`; DECISIONS_NEEDED.md D10
+entry (armed 2026-08-24) with the full measurement table.

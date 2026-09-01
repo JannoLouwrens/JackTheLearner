@@ -4001,3 +4001,12 @@ deadlines. The builder's prompt does name `run decisions --check` and does know
 tomorrow it becomes eleven-at-once. Whoever fires them: the journal line
 SYSTEM.md requires is *"the owner did not rule by 2026-08-31, so the
 pre-registered default fired"*, once per entry, with the reversal named.
+
+## D10 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+The decide_by of 2026-08-31 passed unanswered and the default fired exactly as
+armed: `wm-latent` seated BY VERDICT with the single-arm caveat, LC.04's
+premise amended in its registry notes, the scale-transfer guard registered as
+a runnable spec (`LC.07`, ~10× on Kaggle, not routed through LC.03) in the
+same commit per the 54th audit's B1. Full record and re-open triggers in
+`DECISIONS_RESOLVED.md`. LC.03's VOID and history are untouched.
