@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 93 / 213 demonstrated
+## 93 / 217 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -960,3 +960,28 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **LT.09** The VLM proposes ladder-shaped goals; learning progress disposes
       - _asserts:_ Frozen-VLM-proposed goals, expressed ONLY as predicates in the existing outcome space and filtered by LP, reach the first engaged ladder attempt in fewer decisions than LP-only at matched goal count.
       - _dies if:_ No speedup, or VLM goals flood the buffer while their achievement stays ~0 (a hallucinated curriculum).
+
+### Tier 6 — INTEGRATION
+
+- [ ] **GEN.02** He learns by watching — a second Jack is a teacher
+      - _asserts:_ Two embodied Jacks, one world. An observer that WATCHES a skilled demonstrator perform a skill it does not have acquires that skill in measurably fewer of its own practice decisions than the matched-experience solo null, by >=3 sigma across seeds.
+      - _dies if:_ Watching a skilled Jack buys no acquisition advantage over solo practice — or the advantage SURVIVES the random-demonstrator control, in which case the gain was co-presence or extra visual traffic, not social learning, and the claim is dead either way.
+      - _then delete:_ GOAL.md's second expansion (OTHER MINDS) as currently designed: if watching cannot teach, adding Jacks adds pressure but no channel, and VO.02's invented signal stays the ceiling of the social programme until the observer is redesigned.
+- [ ] **GEN.03** False belief: he models what another saw, not what is true
+      - _asserts:_ Jack watches agent B see food hidden at location A; the food is moved to B' while B is ABSENT. Jack's anticipatory prediction of B's search (orientation/approach toward where B will look, read before B moves) selects the false-belief location A above chance at >=3 sigma across seeds.
+      - _dies if:_ His prediction tracks the food's TRUE location regardless of what B witnessed — he models the world, not the mind in it. GENERALITY.md's own framing binds: passing this is a landmark; failing it is NORMAL, and a FAIL here is a result, not a defect.
+      - _then delete:_ Nothing structural — but every future teaching, deception or cooperation design must stop assuming a mind-model and carry its own workaround until this passes.
+
+### Tier 5 — THE CLAIMS — the thesis stands or falls
+
+- [ ] **GEN.06** Transfer across worlds: mastery is structure, not fit
+      - _asserts:_ Trained in world A and dropped into world B — different layout, different resource placement, SAME underlying rules — his prior experience beats a fresh agent of identical architecture on time-to-competence in B by >=3 sigma across seeds.
+      - _dies if:_ No advantage over the fresh agent: the jungle made a forager fitted to one jungle, and generality-as-transfer is refuted for this design. 'A Jack who masters the jungle and is helpless in a desert is not general — he is fitted.'
+      - _then delete:_ The premise of GOAL.md's first expansion (MORE WORLDS): if learned structure does not move between matched-rule worlds, 'abstraction IS generality' has no mechanism and world-building buys breadth, not depth.
+
+### Tier 6 — INTEGRATION
+
+- [ ] **GEN.09** Culture: generation 3 knows what generation 1 never knew
+      - _asserts:_ Across three generations coupled ONLY by diaries and in-world teaching — never weights — generation 3 demonstrates a competence generation 1 never had, and reaches generation-2 competence in fewer decisions than generation 2 originally spent, by >=3 sigma across seeds. Accumulation, not just persistence.
+      - _dies if:_ Generation 3 is statistically indistinguishable from generation 1: the diary crosses deaths but knowledge does not ACCUMULATE across individuals, and one diary is a memory, not a culture.
+      - _then delete:_ GOAL.md's Lamarckian-inheritance claim — 'the caveman's fireside story made structural'. If diaries cannot accumulate across individuals, death is still a page turn for HIM, but the project's one deliberate improvement on biology is decoration.
