@@ -923,6 +923,24 @@ def _rank_blockers(terminal: dict, ledger: Ledger, ladder=None) -> tuple:
     return mentions, frees, groups
 
 
+def unreachable_count(ledger: Ledger, ladder=None, by_id=None,
+                      mentions=None) -> tuple:
+    """`(unreachable specs, ladder size)` — the number `blocked` prints.
+
+    Factored out for the 58th audit's B3 so `coverage.unreachable_ratchet`
+    and `cmd_blocked` read the SAME union of the SAME walk — the
+    `_split_foreclosed` rule: two readers of one quantity share code or they
+    drift. `mentions` is injectable for a caller that has already run the
+    walk (`cmd_blocked`); everyone else gets a fresh one from the same two
+    functions.
+    """
+    ladder = LADDER if ladder is None else ladder
+    if mentions is None:
+        terminal = _terminal_blockers(ledger, ladder=ladder, by_id=by_id)
+        mentions, _, _ = _rank_blockers(terminal, ledger, ladder=ladder)
+    return len({sid for ids in mentions.values() for sid in ids}), len(ladder)
+
+
 def _split_foreclosed(ranked, ledger: Ledger, vf=None, vfr=None) -> tuple:
     """Partition ranked roots into (live, closed, refused): the repairable
     list, the `VOID-FORECLOSED` doors `{root: declared reason}`, and the
@@ -1148,7 +1166,7 @@ def cmd_blocked(ledger: Ledger) -> int:
                 return "PASS but STALE — re-run it"
         return st.value
 
-    total = len({sid for ids in mentions.values() for sid in ids})
+    total, _ = unreachable_count(ledger, mentions=mentions)
     print(f"\n{total} of {len(LADDER)} specs are unreachable. Terminal blockers, "
           f"ranked by what fixing ONE of them alone would free:\n")
     for root, ids in live:

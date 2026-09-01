@@ -553,6 +553,120 @@ def _claim_dead(r: dict) -> bool:
 # in silence.
 QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min", "cpu<10min"})
 
+# The unreachable-fraction ratchet (58th audit B3). `run blocked` has printed
+# "N of M specs are unreachable" since 08-09 and NO GATE READ IT: the number
+# drifted 80/211 (38%, 55th audit, 2026-08-31) -> 85/217 (39%, 58th audit,
+# 2026-09-01) and the only reason anyone knew is that two overseers happened
+# to print it. A foreclosure that welds a new subtree lands silently.
+#
+# Same contract as QUEUE_EMPTY_BASELINE, pointed at a count instead of a set:
+# SHRINK-ONLY. When the live count falls below this number, the baseline must
+# be lowered in the SAME commit (`stale_unreachable_baseline`, amber). When it
+# rises above, `check()` goes RED (`unreachable_grew`) and stays red until the
+# commit that grew it raises this constant WITH ITS JUSTIFICATION NAMED in the
+# comment below and in the commit message — registering a deliberately-blocked
+# spec (the GEN.02-09 shape, structural depends_on) is a legitimate reason; a
+# reason nobody wrote down is not. The repair for growth without a story is an
+# UNBLOCK, never a quiet re-baseline.
+#
+# Growth log (append a line per raise, newest first):
+#   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
+UNREACHABLE_BASELINE = 85
+
+
+def unreachable_ratchet(ledger=None,
+                        baseline: int = UNREACHABLE_BASELINE,
+                        count_fn=None) -> dict:
+    """Compare the live unreachable count against the shrink-only baseline.
+
+    The count comes from `run.unreachable_count` — the SAME union of the SAME
+    dependency walk `run blocked` prints, factored so the two readers cannot
+    drift (the `_split_foreclosed` pattern). The ranker's own known-answer
+    fixture runs first; a ranker that fails it produces a `refused` entry
+    instead of a number, because a count from an instrument that flunks its
+    fixture is not evidence (LESSONS.md, the at-chance-control rule one level
+    up).
+
+    Returns `{"count", "ladder", "baseline", "grown", "stale_baseline",
+    "refused"}` — the last three are lists of message strings, empty when
+    healthy, truthy for `exit_code` when not.
+    """
+    out = {"count": None, "ladder": None, "baseline": baseline,
+           "grown": [], "stale_baseline": [], "refused": []}
+    if count_fn is None:
+        def count_fn():
+            from .protocol import Ledger
+            from .run import _check_ranker, unreachable_count
+            led = Ledger() if ledger is None else ledger
+            _check_ranker(led)
+            return unreachable_count(led)
+    try:
+        count, ladder = count_fn()
+    except RuntimeError as exc:
+        out["refused"].append(f"unreachable ratchet: the blocked-ranker "
+                              f"failed its own fixture, no count is evidence "
+                              f"({exc})")
+        return out
+    out["count"], out["ladder"] = count, ladder
+    if count > baseline:
+        out["grown"].append(
+            f"unreachable specs GREW: {count} of {ladder} vs baseline "
+            f"{baseline}. Growth is permitted only with a named justification "
+            f"in the commit that grows it — raise UNREACHABLE_BASELINE there, "
+            f"append to its growth log, and say WHY (a deliberately-blocked "
+            f"registration is a reason; silence is not). Otherwise the repair "
+            f"is an UNBLOCK (`run blocked`).")
+    elif count < baseline:
+        out["stale_baseline"].append(
+            f"unreachable count fell to {count} of {ladder}; "
+            f"UNREACHABLE_BASELINE still reads {baseline} and must be "
+            f"lowered in the same commit — the ratchet only ratchets if the "
+            f"floor follows the number down.")
+    return out
+
+
+def _unreachable_fixture() -> List[str]:
+    """Known-answer battery for `unreachable_ratchet` (58th audit B3).
+
+    Four classifications on injected counts — grown, stale, clean, refused —
+    each through the REAL function, plus the real counting path run against
+    the blocked-ranker's own fixture graph, whose answer is known by hand:
+    Y, Z (behind X/W), V (behind the stale PASS), G, Q, N (behind the three
+    VOIDs) = 6 unreachable of 12. That half exercises `run.unreachable_count`
+    itself, so a drift between the walk and the union fails here by name.
+    """
+    fails = []
+    r = unreachable_ratchet(count_fn=lambda: (100, 217), baseline=85)
+    if not r["grown"] or r["stale_baseline"] or r["refused"]:
+        fails.append("unreachable: count above baseline must read GROWN, "
+                     "alone — a silent weld is the class this exists for")
+    r = unreachable_ratchet(count_fn=lambda: (80, 217), baseline=85)
+    if not r["stale_baseline"] or r["grown"] or r["refused"]:
+        fails.append("unreachable: count below baseline must demand the "
+                     "shrink — a floor that does not follow the number down "
+                     "is not a ratchet")
+    r = unreachable_ratchet(count_fn=lambda: (85, 217), baseline=85)
+    if r["grown"] or r["stale_baseline"] or r["refused"]:
+        fails.append("unreachable: count at baseline is the healthy state — "
+                     "it must be recognisable or the sick ones mean nothing")
+
+    def _broken():
+        raise RuntimeError("planted ranker failure")
+    r = unreachable_ratchet(count_fn=_broken, baseline=85)
+    if not r["refused"] or r["grown"] or r["stale_baseline"] or \
+            r["count"] is not None:
+        fails.append("unreachable: a ranker that fails its fixture must "
+                     "REFUSE the count, not classify it")
+
+    from .run import _fixture_ledger, _ranker_fixture, unreachable_count
+    ladder, by_id = _ranker_fixture()
+    got = unreachable_count(_fixture_ledger(), ladder=ladder, by_id=by_id)
+    if got != (6, 12):
+        fails.append(f"unreachable: the real counting path read {got} on the "
+                     f"ranker fixture graph; the known answer is (6, 12) — "
+                     f"the walk and the union have drifted")
+    return fails
+
 
 def queue_depth(ledger=None, by_id=None, tracked=None,
                 baseline: frozenset = QUEUE_EMPTY_BASELINE) -> dict:
@@ -2044,10 +2158,12 @@ def check() -> int:
           "  A PARKED spec is NOT coverage either: a retirement is not a\n"
           "  falsifiable claim, however honest the retiring was.")
 
+    u = unreachable_ratchet()
     qf = (_queue_fixture() + _gates_frozen_fixture()
           + _pilot_blocked_fixture() + _pilot_owed_fixture()
           + _pilot_harvested_fixture() + _void_foreclosed_fixture()
-          + _claim_dead_fixture() + _exit_code_fixture())
+          + _claim_dead_fixture() + _exit_code_fixture()
+          + _unreachable_fixture() + u["refused"])
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -2175,6 +2291,16 @@ def check() -> int:
         print(f"  {len(q['stale_baseline'])} baselined class(es) are NO LONGER "
               f"empty and must be removed from QUEUE_EMPTY_BASELINE: "
               f"{', '.join(q['stale_baseline'])}")
+    if u["count"] is not None:
+        print(f"\n  UNREACHABLE (`run blocked`'s number, ratcheted — 58th "
+              f"audit B3): {u['count']} of {u['ladder']} specs "
+              f"({100.0 * u['count'] / u['ladder']:.0f}%), baseline "
+              f"{u['baseline']}, shrink-only.")
+    for m in u["grown"]:
+        print(f"  !! {m}")
+    for m in u["stale_baseline"]:
+        print(f"  {m}")
+
     if qf:
         print(f"  {len(qf)} QUEUE-FIXTURE FAILURE(S) — the instrument is "
               f"wrong, so its number above is not evidence:")
@@ -2192,10 +2318,12 @@ def check() -> int:
         red={"uncovered": uncovered, "claim_dead": dead,
              "new_dangling_citation": gc["new"], "new_empty_class": q["new_empty"],
              "queue_fixture_failure": qf,
+             "unreachable_grew": u["grown"],
              "pilot_undeclared": q["pilot_undeclared"]},
         amber={"malformed_declaration": bad,
                "stale_citation_baseline": gc["stale_baseline"],
-               "stale_queue_baseline": q["stale_baseline"]})
+               "stale_queue_baseline": q["stale_baseline"],
+               "stale_unreachable_baseline": u["stale_baseline"]})
 
 
 # RED = the ladder is making a claim it cannot support, or an instrument that
@@ -2232,9 +2360,10 @@ def _exit_code_fixture() -> List[str]:
     now fails here by name.
     """
     RED = ["uncovered", "claim_dead", "new_dangling_citation",
-           "new_empty_class", "queue_fixture_failure", "pilot_undeclared"]
+           "new_empty_class", "queue_fixture_failure", "unreachable_grew",
+           "pilot_undeclared"]
     AMBER = ["malformed_declaration", "stale_citation_baseline",
-             "stale_queue_baseline"]
+             "stale_queue_baseline", "stale_unreachable_baseline"]
     fails = []
     clean_red = {k: [] for k in RED}
     clean_amber = {k: [] for k in AMBER}
