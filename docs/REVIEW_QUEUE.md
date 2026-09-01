@@ -258,6 +258,28 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     repair fork as D9/W0.BAL, arriving from the curiosity ladder's side. A
     redesign that re-scopes C2 must route through this desk (threshold rule:
     strengthen-only, T1.02 precedent), not through a quiet re-run.
+    UPDATE 2026-09-01 (builder, UB.14 probe record `cf0ff46`): the SENSORY
+    mirror of LT.01's motor finding, on the same playground venue. UB.14's
+    fixture aliveness gate (`vision_sees_body` >= 0.5, pooled frame -> root
+    xy) is measured unreachable by ANY decoder in the only region the world
+    contract allows the body to be seen: linear ridge 0.374 at the full
+    envelope (flat in resolution 96/48/24 px), body-blob centroid features
+    0.275-0.295, the rig's own MLP trainer 0.159 held-out. The binding
+    constraint is geometric, not statistical — the contract eye's 30 deg
+    half-FOV admits a +-0.4 m in-view spawn box, so var(root xy) is small
+    against the tumbling body's blob-centroid-vs-root offset; episodes
+    16 -> 48 move the reading 0.26 -> 0.37, saturating. Downstream, vision
+    carries ~zero touch-relevant signal under a random policy
+    (vision_only_r2 0.009), so the fused arm at matched capacity is drowned
+    by its own vision dims (best 0.039 vs the 0.05 floor across pool4 and a
+    100x WD sweep, the WD lever capped by the loss_fell conjunct). Design
+    input, one line: the playground cannot currently test ANY claim of the
+    form "vision helps X" — the eye cannot place the body and the policy
+    never makes vision matter — which is the same eye/body/venue fork as
+    D9/W0.BAL and LT.01's C2, arriving from the unison ladder's side. The
+    recorded 3-seed VOID lands 2026-09-01 (launched this slot);
+    VOID-FORECLOSED declaration owed at harvest. Do not re-run unchanged;
+    do not lower VISION_BODY_GATE.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | OPEN
     Question: the shipped routing mechanism (UnifiedBrain semantic-anchor
