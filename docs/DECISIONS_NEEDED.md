@@ -4069,3 +4069,10 @@ record — kept unchanged for companion UI; no spec may cite mood as a
 behavioural channel; GOAL.md's interoception claims route elsewhere; T3.07's
 FAIL is the registered finding. Narrowing recorded in T3.07's registry notes
 and the CHAMPIONS Emotion cell. Full record in `DECISIONS_RESOLVED.md`.
+
+## D3 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+The fence recorded verbatim in `DECISIONS_RESOLVED.md`: own commits, `main`
+only, existing remote only, no force-push, no tags, no new remotes, no
+pushing trees the loop did not itself commit. A narrowing of the observed
+practice; no code change on firing day.

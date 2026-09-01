@@ -376,3 +376,28 @@ controls held).
 Evidence: T3.07 FAIL row (2026-08-13, all controls on their sides);
 CHAMPIONS.md Emotion (affect) cell (added by the Review 2026-08-31); D7 entry
 + 23rd-audit ready-to-decide note.
+
+## D3 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): the git-push practice is FENCED — recorded, and bounded, exactly as it already happens
+
+**The question** (answered YES by the owner 2026-08-10 for the practice; the
+armed remainder was the BOUND — 146 logged pushes were operating under no
+stated limit at all): what exactly may the loop push?
+
+**The fence, now standing, verbatim:** the loop may `git push` commits it
+authored to `origin/main` on the existing remote, and NOTHING ELSE — no
+force-push, no `--force-with-lease`, no push to any branch other than `main`,
+no new remote, no tag push, no push of a tree it did not itself commit. This
+is a NARROWING of an unbounded observed practice; it widens nothing, edits no
+threshold, touches nothing the owner owns, and changes no observable loop
+behaviour on the day it fires — the recorded bound IS the artifact, no code
+changes.
+
+**Loser recorded:** option 1 (unbounded standing authorisation) — the ratchet
+may shrink and may never grow. **To reverse:** the owner states option 3 in
+the D3 entry; the loop returns to escalating before each GPU submission, at
+the known cost of the weekly Kaggle quota (~8.8 h lost W32, 22.1 h W33, 29.7 h
+W34 under exactly that friction).
+
+Evidence: owner's YES of 2026-08-10 (D3 original); `assert_ref_is_current` in
+`experiments/gpu.py` (the mechanism that makes an unpushed HEAD invisible to
+every GPU job); the 146-push log cited in the armed entry.
