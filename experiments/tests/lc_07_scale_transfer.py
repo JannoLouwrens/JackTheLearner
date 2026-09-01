@@ -198,11 +198,11 @@ _KERNEL_SPLIT: Optional[tuple] = None   # tuple of kernels; each kernel is a
 _KERNEL_EST_HOURS: Optional[tuple] = None  # per kernel, from measured dec/s
 _PILOT_ARTIFACT = "/data/lc07_pilot.json"
 _PILOT_OWED = (
-    "per-condition decisions/s (process+wall) for all 7 run classes",
-    "wiring: arm/wiped/randrew optimiser_steps > 0, twin == 0, statue == 0",
-    "physics_finite == 1 on every condition",
-    "peak RSS per condition and projected full-scale RSS",
-    "projected hours per full-scale run and the A/B/C branch decision",
+    "per-condition decisions/s (process+wall) for all 7 run classes; "
+    "wiring: arm/wiped/randrew optimiser_steps > 0, twin == 0, statue == 0; "
+    "physics_finite == 1 on every condition; "
+    "peak RSS per condition and projected full-scale RSS; "
+    "projected hours per full-scale run and the A/B/C branch decision"
 )
 
 PILOT_SEED = 90                 # disjoint from registered seeds
