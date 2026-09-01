@@ -4032,3 +4032,13 @@ phantom. CHAMPIONS.md's challenger list corrected in the same commit. The
 bakeoff runs as ordinary ladder work; you may narrow the decree at any time,
 which reinstates option A as a fifth arm. Full record in
 `DECISIONS_RESOLVED.md`.
+
+## D4 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+RATIFY AND CAP, exactly as armed: option 1 recorded as TAKEN on 2026-08-13 at
+the re-costed ~90 core-hours (4.5× the escalated figure), the two runs named
+(LC.03 v1 VOID 08-14, LC.03 v2 VOID 08-23 — D10's evidentiary basis), and
+CPU_DAYS frozen at LC.03 v2's envelope: 400,000 decisions / 17,280
+core-seconds per arm-seed. Anything larger re-escalates with arithmetic
+BEFORE the run. Options 2 and 3 struck. Full record in
+`DECISIONS_RESOLVED.md`.

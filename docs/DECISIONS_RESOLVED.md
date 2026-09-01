@@ -227,3 +227,43 @@ Evidence: the three matched-env-step runs in the D1 entry (T2.01 v4 261/4.06σ
 plateaued; MLP probe 531/~6.5σ; T2.02 530/7.11σ vs 318/2.46σ VOID); T2.01 v5
 2.67σ vs the unmoved 5σ bar; GOAL.md:76; SYSTEM.md rule 3 as amended
 2026-08-24.
+
+## D4 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): RATIFY AND CAP — option 1 recorded as TAKEN on 2026-08-13, CPU_DAYS frozen at the envelope already spent
+
+**The question** (escalated 2026-08-09 at ~20-33 core-hours; the spend was
+then made without the record ever closing): may the LC screening bakeoff run
+on this box's CPU, spread across iterations?
+
+**The default that fired:** option 1 ("run it here, spread across
+iterations") is recorded as **TAKEN on 2026-08-13** — retroactively honest,
+not retroactively authorised: the decision this entry ratifies was made by the
+commit (`7112515`-era) that amended LC.03's budget CPU_LONG → CPU_DAYS, and
+the record now says so. The re-costed figure is **~90 core-hours**, 4.5× the
+~20-33 the owner was shown. The two runs it paid for, named: **LC.03 v1**
+(registered 2026-08-13, ran ~15.8 h, VOID 2026-08-14 07:36, `8ec4be8` — "run
+did not test the claim") and **LC.03 v2** (4× envelope, ran 08-21 04:22 →
+08-23 21:11, ~190 core-h wall across arms/twins/nulls, VOID "fewer than two
+learners (1 cleared)" — the entire evidentiary basis of D10). Both VOIDs are
+honest and load-bearing; nothing unsafe happened (nice 19 throughout, load ≤
+0.20 sampled, no tenant disturbed, no money, no GPU quota).
+
+**The cap, now standing:** the `CPU_DAYS` tier stays, **frozen at LC.03 v2's
+envelope — 400,000 decisions / 17,280 core-seconds per arm-seed.** Any spec
+that would exceed it, and any further growth of LC.03's envelope, requires a
+fresh escalation with its arithmetic attached BEFORE the run. **Losers
+recorded:** option 2 (spend Kaggle quota on CPU arms — trades the one resource
+the GPU ladder is scarce for) and option 3 (cut the envelope — buys hours by
+weakening a gate, which law 4 forbids outright). Strictly narrowing: nothing
+new authorised, no tier added, no certificate touched.
+
+**The lesson this entry carries** (it is the inverse of D1's): D1 was a
+decision that blocked work for twenty days; D4 was a decision the work walked
+past — the escalated spend was made, grew 4.5× in the making, and the
+question sat on the owner's desk looking untouched for nineteen days. An
+escalation queue whose entries can be overtaken by action without a record
+means nothing in either direction.
+
+Evidence: LC.03 budget amendment comment in registry_expansion.py (CPU_LONG →
+CPU_DAYS, 2026-08-13); ledger LC.03 history (VOID 08-14, VOID 08-23);
+`5074440` (4× re-registration); the D4 forensic timeline in
+DECISIONS_NEEDED.md.
