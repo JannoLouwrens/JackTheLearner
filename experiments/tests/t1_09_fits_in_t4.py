@@ -1,9 +1,17 @@
-"""T1.09 — the training step must fit a 16 GB T4 at the intended batch size.
+"""T1.09 — the training step must fit a 16 GB P100 at the intended batch size.
 
 Every GPU backend we can reach for free tops out at a T4 (Colab) or P100
 (Kaggle), both 16 GB. If a training step OOMs there, every Tier 2 plan is
 fiction regardless of how good the specs are — so this is measured before any
 long run is scheduled, not discovered eleven hours into one.
+
+RE-AIMED AT THE P100 (Review 2026-08-31 item 5, executed 2026-09-01): the spec
+and this docstring named a Colab T4 the project has not certified on since
+08-12, while the attempt-1 PASS itself already recorded a Kaggle P100 — submit
+fell back. Every long run in this project now lands on the P100, so the aim
+(`prefer="kaggle"`) and the claim text now name the device the certificate is
+actually about. The ceilings are IDENTICAL (bar 12 GB of 16, absurd batch
+1024): correct device, not a weakening.
 
 Measured, not asserted: torch.cuda.max_memory_allocated() across a full
 forward+backward+step at the batch size Tier 2 intends (64, the same the T1.07/
@@ -77,7 +85,7 @@ print("DONE", json.dumps(out), flush=True)
 def _submit() -> dict:
     job = build_job(JOB.replace("__BATCH__", repr(INTENDED_BATCH))
                        .replace("__ABSURD__", repr(ABSURD_BATCH)))
-    res = submit(job, prefer="colab", est_hours=0.2, timeout_s=1800,
+    res = submit(job, prefer="kaggle", est_hours=0.2, timeout_s=1800,
                  fetch=["t109.json"])
     if not res.ok:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")

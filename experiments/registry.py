@@ -387,15 +387,15 @@ LADDER: list[Spec] = [
                "off THIS field. Measured: it blocked the builder's T0.22 run at "
                "08:36 with the box idle. T1.07 carried the same lie."),
 
-    Spec("T1.09", 1, "Fits in T4 memory",
+    Spec("T1.09", 1, "Fits in P100 memory",
          hypothesis="Peak VRAM < 14 GB at the intended batch size.",
-         falsified_by="OOM on a 16 GB T4.",
+         falsified_by="OOM on a 16 GB P100.",
          null_baseline="n/a", metric="peak_vram_gb", budget=Budget.GPU_SHORT,
          depends_on=["T0.09"],
          control="An ABSURD batch size must either OOM or exceed the ceiling. The two branches are read as a disjunction because a run that OOMs has no peak to report — a necessary dead operand, and T0.13 exempts it explicitly (LESSONS.md, \"structure cannot separate honest redundancy from a disarmed assertion\")."),
 
     Spec("T1.10", 1, "CPU and GPU agree",
-         hypothesis="Same seed, same data: CPU and T4 losses agree within tolerance.",
+         hypothesis="Same seed, same data: CPU and P100 losses agree within tolerance.",
          falsified_by="Divergence beyond float32 accumulation error.",
          null_baseline="n/a", metric="cpu_gpu_delta", budget=Budget.GPU_SHORT,
          depends_on=["T1.09", "T0.02"],

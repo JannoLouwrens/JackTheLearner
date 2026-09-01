@@ -97,7 +97,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Across 3 seeds the metric's std is small relative to the effect.
       - _dies if:_ std >= the effect size being claimed.
       - _then delete:_ Any single-seed claim in this repo.
-- [x] **T1.09** Fits in T4 memory
+- [x] **T1.09** Fits in P100 memory
       - _asserts:_ Peak VRAM < 14 GB at the intended batch size.
       - _dies if:_ OOM on a 16 GB T4.
 - [x] **T1.10** CPU and GPU agree

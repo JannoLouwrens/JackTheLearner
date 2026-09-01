@@ -11,6 +11,13 @@ produced WRONG results, not crashes, until pinned.
 So: construct the identical model (same seed) here and on the GPU, feed the
 IDENTICAL input tensor, compare forward outputs elementwise.
 
+RE-AIMED AT THE P100 (Review 2026-08-31 item 5, executed 2026-09-01): the
+spec's hypothesis named a Colab T4 while the attempt-1 PASS itself recorded a
+Kaggle P100 (submit fell back), and the P100 is where every long run in this
+project now lands. `prefer="kaggle"` makes the aim match the claim. Tolerance
+(2e-3) and the 10x control margin are IDENTICAL: correct device, not a
+weakening.
+
 Two traps this design dodges, learned the hard way:
   - torch.randn on CUDA and CPU produce DIFFERENT sequences from the same seed,
     so all tensors are generated on CPU and shipped/re-generated identically;
@@ -91,7 +98,7 @@ def _experiment(seed: int) -> dict:
                .replace("__INPUT_SEED__", repr(INPUT_SEED))
                .replace("__BATCH__", repr(BATCH)))
     job = build_job(body)
-    res = submit(job, prefer="colab", est_hours=0.15, timeout_s=1500,
+    res = submit(job, prefer="kaggle", est_hours=0.15, timeout_s=1500,
                  fetch=["t110.json"])
     if not res.ok:
         raise RuntimeError(f"GPU job failed on {res.backend}: {res.message}")
