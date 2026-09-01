@@ -447,7 +447,7 @@ Every line here is backed by an experiment that could have failed;
 - [ ] **UB.15** Heard, not seen — embodied
       - _asserts:_ Jack turns toward and reaches the object he heard fall but did not see, above the 0.5 bearing-sign chance rate.
       - _dies if:_ Reach target at chance, or unchanged when audio is muted.
-- [ ] **UB.10** Fusion bakeoff: six arms, matched params, matched steps
+- [~] **UB.10** Fusion bakeoff: six arms, matched params, matched steps  — a0_eligible=1.0; a0_eligible_std=0.0
       - _asserts:_ At matched trainable parameters (+-5%), matched tokens per modality, matched optimisation steps and matched data order, at least one shared-computation arm beats the late-concat null on the binding battery, and the ranking is stable across 3 paired seeds.
       - _dies if:_ A0 (late concat) ties the best arm everywhere — then at this scale 'one brain' buys nothing over bolt-on encoders and GOAL.md's architecture claim must be restated. Report it; do not re-run until it looks better.
       - _then delete:_ Five of six architectures. The survivor is the trunk Jack ships; the rest are deleted, not kept 'for later'.
