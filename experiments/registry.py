@@ -751,7 +751,16 @@ LADDER: list[Spec] = [
                  "of the system under test: too weak to separate moods is "
                  "the hypothesis FAILING, never a VOID.",
          budget=Budget.GPU_SHORT, seeds=3, depends_on=["T2.12"],
-         kills="MovementMoodCoupling as anything but cosmetics."),
+         kills="MovementMoodCoupling as anything but cosmetics.",
+         notes="D7 DEFAULT FIRED 2026-09-01 (armed, decide_by 2026-08-31 "
+               "passed unanswered): MovementMoodCoupling is ACCEPTED AS "
+               "COSMETICS, ON THE RECORD. It is KEPT, unchanged, for "
+               "companion UI (idle posture, style text). The record is "
+               "narrowed in exchange: NO SPEC MAY CITE MOOD AS A BEHAVIOURAL "
+               "CHANNEL, GOAL.md's interoception claims must route through "
+               "some other component, and this spec's FAIL stands as the "
+               "registered finding rather than as an open question. Re-open "
+               "requires new evidence through the Review, not a re-run."),
     Spec("T3.08", 3, "Ablate the LLM", hypothesis="The frozen LLM improves command following over a bag-of-words encoder.",
          falsified_by="Bag-of-words matches it.", null_baseline="TF-IDF command encoder.",
          metric="command_success_rate", budget=Budget.GPU, seeds=3, depends_on=["T2.07"],

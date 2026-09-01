@@ -338,3 +338,41 @@ reopens adoption through the world-contract change process.
 Evidence: `experiments/w0bal_probe.py` + artifact; D9's entry of 2026-08-21
 (three independent measurements); DECIDE block armed 2026-08-25; W0.BAL table
 attached to D9 (commit `e9cc914`, 24th-audit B4, NOTHING adopted).
+
+## D7 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): MovementMoodCoupling ACCEPTED AS COSMETICS, ON THE RECORD
+
+**The question** (T3.07 FAIL, 2026-08-13; ready-to-decide since the 23rd
+audit, 2026-08-20; armed with the eleven): MovementMoodCoupling failed its
+ablation — mood measurably changes nothing Jack does. Delete it, redesign it,
+or accept it as cosmetics?
+
+**The default that fired — option 3:** MovementMoodCoupling is KEPT,
+unchanged, for companion UI (idle posture, style text). In exchange the
+record is narrowed: **no spec may cite mood as a BEHAVIOURAL channel**,
+GOAL.md's interoception claims must route through some other component, and
+T3.07's FAIL stands as the registered finding rather than as an open
+question. The narrowing lives in T3.07's registry notes (where spec authors
+read) and on the CHAMPIONS.md Emotion (affect) cell. No model code written,
+no module deleted, no threshold moved, GOAL.md untouched.
+
+**Losers recorded:** option 1 (delete — the component is 1,149 lines of
+working UI the companion app uses; deletion is the owner's call and buys
+nothing the narrowing does not) and option 2 (redesign until mood moves
+behaviour — manufacturing a capability to satisfy a component, backwards by
+this project's own laws).
+
+**Context that arrived after arming, recorded not acted on:** the Review of
+08-31 (item 4, FOR THE BUILDER) proposes re-aiming T2.12 with a load-bearing
+conjunct at the fusion boundary (PAD channel carries gradient in a live UB.11
+ablation) — strictly harder, GOAL.md's own ablate-a-sense standard. That
+redesign is compatible with this default (it strengthens the seat's OTHER
+spec) and remains open builder work.
+
+**Re-open trigger:** new evidence through the Review that some mood-conditioned
+pathway moves behaviour — never a bare re-run of T3.07 (its rig was
+adjudicated live: reference arm reached speed span 0.30+, both at-chance
+controls held).
+
+Evidence: T3.07 FAIL row (2026-08-13, all controls on their sides);
+CHAMPIONS.md Emotion (affect) cell (added by the Review 2026-08-31); D7 entry
++ 23rd-audit ready-to-decide note.

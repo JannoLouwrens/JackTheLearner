@@ -4061,3 +4061,11 @@ BA.01/PS.02/PS.03 certificates are untouched. The PROGRESS 08-31 FOR THE
 OWNER recommendation (create a body SEAT while the adoption parks) is a
 separate, still-open ask that this firing does not pre-empt. Full record in
 `DECISIONS_RESOLVED.md`.
+
+## D7 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+Option 3, exactly as armed: MovementMoodCoupling accepted as COSMETICS on the
+record — kept unchanged for companion UI; no spec may cite mood as a
+behavioural channel; GOAL.md's interoception claims route elsewhere; T3.07's
+FAIL is the registered finding. Narrowing recorded in T3.07's registry notes
+and the CHAMPIONS Emotion cell. Full record in `DECISIONS_RESOLVED.md`.
