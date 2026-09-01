@@ -2346,6 +2346,65 @@ EXPANSION: list[Spec] = [
                "this box, gitignored) — ship them into the kernel with the "
                "job, do not re-derive them.",),
 
+    # -- D1.0, registered 2026-09-01 BY D1's FIRING COMMIT (the armed default
+    # of 2026-08-24, decide_by 2026-08-31 passed unanswered). This is the id
+    # CHAMPIONS.md has named as the Control-architecture seat's arena since
+    # 2026-08-10 — a phantom until this line. Option A (freeze the trunk) is
+    # STRUCK as unconstitutional under the PLASTIC-ONLY decree (GOAL.md:76)
+    # and is NOT an arm; the four permitted arms below are the default's, and
+    # the choice among them is rule 3's (bakeoff, never argument).
+    Spec("D1.0", 2, "Control-path bakeoff: who does motor control (D1's four "
+         "permitted arms)",
+         hypothesis="Among the four permitted control-path architectures — "
+                    "A-prime (a small dedicated control head that LEARNS, "
+                    "reading trunk features, trunk plastic under its other "
+                    "objectives), B (split value/policy trunks), C "
+                    "(end-to-end at more steps than T2.01 v5's 704k/seed — "
+                    "reclassified UNTESTED, not refuted), D (transformer out "
+                    "of the control path, MLP controls) — every arm clears "
+                    "the 3-sigma learning gate vs the random null, and one "
+                    "arm beats the runner-up on Humanoid return at matched "
+                    "env-steps AND matched optimiser steps by >=1.5 sigma of "
+                    "the pooled seed spread, surviving the owner's "
+                    "convergence check (runner-up slope <= 0 or crossover "
+                    "beyond 3x budget, else SPLIT-PENDING).",
+         falsified_by="Any arm misses the learning gate => VOID for the "
+                      "comparison (two non-learners cannot arbitrate, T2.02's "
+                      "own precedent — record which arms learned). No margin "
+                      "=> TIE, resolved to the cheapest arm by trainable "
+                      "parameters, which is a real result: the control-path "
+                      "choice does not matter at this scale.",
+         null_baseline="Random-action return on the same Humanoid seeds "
+                       "(~60-80), PLUS each arm's own untrained twin at the "
+                       "same architecture — T2.02's scar: the untrained MLP "
+                       "cleared random alone by 2.74 sigma.",
+         metric="control_path_margin_at_matched_steps",
+         budget=Budget.GPU_LONG, seeds=3,
+         depends_on=["T2.00", "T1.08", "T0.09", "T0.10"],
+         control="Untrained twins of ALL FOUR arms must miss the learning "
+                 "gate (designed-to-fail, passed as controls= not arms=). "
+                 "Report BOTH env-steps and optimiser-steps per arm "
+                 "(LESSONS.md: 'matched steps' has more than one meaning — "
+                 "T2.02 matched env-steps and hid a 16x optimiser-step gap).",
+         kills="Three of the four control-path architectures, and D1's "
+               "twenty-day deadlock. Arm D's WIN would additionally "
+               "foreclose DP.02 (control gets private representations — the "
+               "'two brains wearing one wrapper' signature the owner's "
+               "connected directive forbids): that cost is RECORDED with any "
+               "D verdict, not a thumb on the scale, and a D win goes to the "
+               "Review before adoption.",
+         notes="Registered by D1's firing commit 2026-09-01 per the executor "
+               "line of 03f31cf. The evidence that armed it, three runs at "
+               "matched env-steps: T2.01 v4 57M trunk 261 return / 4.06 "
+               "sigma, curve plateaued; MLP probe 54k params 531 / ~6.5 "
+               "sigma; T2.02 124k MLP 530 / 7.11 sigma vs trunk 318 / 2.46 "
+               "sigma (below its own gate => VOID). T2.01 v5's live number "
+               "is 2.67 sigma vs the unmoved 5-sigma bar. This spec answers "
+               "WHERE control lives; T2.01/T2.02 then re-run UNDER the "
+               "winner as ordinary ladder work. GPU_LONG: one Kaggle "
+               "submission per arm-pair at most, module-cache the kernel "
+               "(one-submission-per-spec rule).",),
+
     # -- PS.01, registered AHEAD of the rest of the PS family on purpose --
     # LC.03 declares depends_on PS.01, and LEARNING_CORE.md 5.6 requires the
     # two to land in one commit or LC.03 is permanently BLOCKED (the UB.1

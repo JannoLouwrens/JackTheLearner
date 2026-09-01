@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 93 / 212 demonstrated
+## 93 / 213 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -592,6 +592,10 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
+- [ ] **D1.0** Control-path bakeoff: who does motor control (D1's four permitted arms)
+      - _asserts:_ Among the four permitted control-path architectures — A-prime (a small dedicated control head that LEARNS, reading trunk features, trunk plastic under its other objectives), B (split value/policy trunks), C (end-to-end at more steps than T2.01 v5's 704k/seed — reclassified UNTESTED, not refuted), D (transformer out of the control path, MLP controls) — every arm clears the 3-sigma learning gate vs the random null, and one arm beats the runner-up on Humanoid return at matched env-steps AND matched optimiser steps by >=1.5 sigma of the pooled seed spread, surviving the owner's convergence check (runner-up slope <= 0 or crossover beyond 3x budget, else SPLIT-PENDING).
+      - _dies if:_ Any arm misses the learning gate => VOID for the comparison (two non-learners cannot arbitrate, T2.02's own precedent — record which arms learned). No margin => TIE, resolved to the cheapest arm by trainable parameters, which is a real result: the control-path choice does not matter at this scale.
+      - _then delete:_ Three of the four control-path architectures, and D1's twenty-day deadlock. Arm D's WIN would additionally foreclose DP.02 (control gets private representations — the 'two brains wearing one wrapper' signature the owner's connected directive forbids): that cost is RECORDED with any D verdict, not a thumb on the scale, and a D win goes to the Review before adoption.
 - [x] **PS.01** The drive layer is a real control problem, and a statue loses
       - _asserts:_ With PG.8's humanoid, energy and integrity both traverse a usable range (10th-90th percentile spread >= 0.3, neither pinned at 0 nor at 1) over a 4,500-decision (900 s) MIXED FIXTURE probe — random action, scripted platform drops, scripted rest — which is itself gated to have exercised them (>= 5 damaging impacts and >= 100 resting decisions, or the range is unmeasured rather than small); a fall from the ladder platform costs 0.10-0.20 integrity on held-out runs; floor food alone subsists a body acting at the derived duty cycle and does NOT fund constant activity, priced against the FULL-STRENGTH drain; and the DO-NOTHING policy is strictly dominated: its energy reaches the weakness floor strictly inside the observation window (< 0.8 x horizon) while a scripted FORAGER fixture's, run through the same shipped DriveLayer, never does.
       - _dies if:_ A probe that exercised both channels never depletes (the drive is inert and cannot pressure anything), or flatlines at zero within a minute (no policy can learn under it), or the statue is NOT dominated — either because no behaviour this world admits stays fed (the world is a countdown, not a control problem) or because the statue itself survives the window (the dark room is a stable optimum and homeostasis will produce a corpse).

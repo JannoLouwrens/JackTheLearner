@@ -184,3 +184,46 @@ Evidence: DECIDE block D12 (armed, decide_by 2026-08-31 passed unanswered);
 the addenda verbatim at DECISIONS_NEEDED.md "D12 — Does the LC bakeoff's
 verdict survive scale?"; registry_expansion.py LC.04/LC.05 notes; CHAMPIONS.md
 learning-core cell.
+
+## D1 — RESOLVED BY ARMED DEFAULT (fired 2026-09-01, builder): the PLASTIC-ONLY decree stands verbatim; option A STRUCK as unconstitutional; the four permitted arms go to a registered bakeoff (D1.0)
+
+**The question** (open since 2026-08-04, armed 2026-08-24 under SYSTEM.md rule
+3 as amended, decide_by 2026-08-31 passed unanswered): does the 57M trunk stay
+in the control path? Only the constitutional half was ever the owner's — does
+PLASTIC-ONLY admit a frozen control trunk? — and the default answers it the
+only way a default may: by leaving the constitution exactly as written.
+
+**The default that fired:** the PLASTIC-ONLY decree (GOAL.md:76, 2026-08-09)
+stands verbatim and unnarrowed. **Option A (freeze the trunk, learn a small
+adapter — the 2026-08-04 review's recommendation and this entry's own
+"RECOMMENDED" for twenty days) is STRUCK as unconstitutional**: it postdates
+nothing and the decree postdates it. The remaining permitted arms go to a
+bakeoff at matched experience, multi-seed, one pre-registered metric, learning
+gate and margin — registered in this same commit as **`D1.0`**, the exact id
+`CHAMPIONS.md` has cited as the Control-architecture seat's arena since
+2026-08-10: A-prime (learned control head reading plastic-trunk features), B
+(split value/policy trunks), C (end-to-end at more steps — UNTESTED, not
+refuted), D (transformer out of the control path). Winner seated by the
+recorded margin when it runs.
+
+**Loser recorded:** option A, struck on constitutional grounds, not on
+evidence — its empirical content survives inside A-prime (a dedicated control
+head reading trunk features), which differs only in that the trunk stays
+plastic. The cost note travels with arm D: a D win forecloses DP.02 (private
+control representations — the "two brains wearing one wrapper" signature),
+recorded with any verdict, not a thumb on the scale.
+
+**What this unblocks:** T2.01/T2.02 stop waiting on an open decision — they
+re-run UNDER the D1.0 winner as ordinary ladder work. The 08-13 builder
+resolution (T2.01 measures WHETHER the trunk learns; D1 answers WHERE control
+belongs) stands and is now discharged by a registered arena rather than a
+deadlock. T2.21 remains unregistered by that same decision.
+
+**Re-open trigger:** the owner may narrow the decree at any time (that was
+always the branch that needed them); a narrowing reinstates option A as an
+arm, and the bakeoff re-runs with five.
+
+Evidence: the three matched-env-step runs in the D1 entry (T2.01 v4 261/4.06σ
+plateaued; MLP probe 531/~6.5σ; T2.02 530/7.11σ vs 318/2.46σ VOID); T2.01 v5
+2.67σ vs the unmoved 5σ bar; GOAL.md:76; SYSTEM.md rule 3 as amended
+2026-08-24.

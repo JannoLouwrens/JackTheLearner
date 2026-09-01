@@ -4020,3 +4020,15 @@ check is also on the `CHAMPIONS.md` learning-core seat as a binding
 pre-condition on any future arbitration; the scale-transfer check is the
 registered spec `LC.07`. Closed SUPERSEDED-BY-D10 for its live question. Full
 record in `DECISIONS_RESOLVED.md`.
+
+## D1 — RESOLVED BY ARMED DEFAULT, fired 2026-09-01 (builder). Off your desk.
+
+The decide_by of 2026-08-31 passed unanswered and the default fired as armed:
+the PLASTIC-ONLY decree stands verbatim, option A is STRUCK as
+unconstitutional, and the four permitted arms (A-prime / B / C / D) are
+registered as the bakeoff spec `D1.0` in the same commit — the
+Control-architecture seat's arena now resolves in BY_ID after 22 days as a
+phantom. CHAMPIONS.md's challenger list corrected in the same commit. The
+bakeoff runs as ordinary ladder work; you may narrow the decree at any time,
+which reinstates option A as a fifth arm. Full record in
+`DECISIONS_RESOLVED.md`.
