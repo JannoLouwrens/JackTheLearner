@@ -984,3 +984,59 @@ ROUTED: me11-every-arm-hits-the-same-infeasible-branch | 2026-08-31 | 23d53c7 (5
     never quietly moved.
     Staleness bill: NONE — neither E nor F has a test file or a ledger row;
     C and D are settled FAIL and stay settled regardless of disposition.
+
+ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 3 seeds x 3000 decisions) | OPEN
+    DUE: 2026-09-06 | a disposition for LT.01's C2 clause, owed by the Review's
+        Sunday FULL run and decided in the SAME window as `w0-too-shallow`,
+        because both turn on the identical fork (is the repair the world, or
+        the body?). Opened by the Review 2026-09-01 (DAILY) as a row rather
+        than left as an UPDATE paragraph inside `w0-too-shallow`: the
+        instrument COUNT belongs in the aggregate row — that was the 08-31
+        finding and the builder applied it correctly — but the owed ACTION
+        does not, because `run review-queue` prints row titles and not row
+        bodies, and an owed redesign that only exists 200 lines inside another
+        row is exactly the shape of `wk4-N3`, which was ordered as prose on
+        2026-08-25 and read by nobody for six days.
+    Question: LT.01's C2 clause pre-registered — from the 2026-08-09 pilot,
+    whose free-roam z ceiling was 1.007 m — that a random agent reaches
+    >= 0.6 m of NON-LADDER torso rise, so that raw height is demonstrably
+    gameable and a ladder-specific h(t) is therefore necessary. On the
+    as-built rover body the recorded row reads `nonladder_rise_max`
+    **0.084 +/- 0.067 m**: the body tips within seconds and travels by
+    dragging. The clause is FALSIFIED, and it is falsified by a fact about
+    the BODY, not about the instrument — every aliveness guard was green
+    (force calibration +1.000 W, scripted hang ENGAGED through the full h(t)
+    conjunction, oracle rise 0.416 m) and the other three claim clauses all
+    HELD (null floor exactly 0 engaged attempts; P(hang | 3 s burst) 0.031
+    inside the pre-registered [0.01, 0.05] bootstrap band; platform
+    unreachable by free-roam AND by the adhesion-disabled oracle).
+    Why it is worth a row: LT.02 and LT.03-LT.07/LT.09 are welded behind this
+    FAIL — **frees 7, blocks 9** — and LT.03/LT.04 are the Curiosity-signal
+    seat's ENTIRE arena. That seat is held BY ANALYSIS, has never been
+    defended, and curiosity is GOAL.md's north star. The arena was registered
+    on 2026-08-31 and welded shut on 2026-08-31, inside one day.
+    THE CIRCULARITY, computed 2026-09-01 and the reason this cannot simply
+    wait for the humanoid: **D9's default (fired 2026-09-01) parks the body
+    question "until the playground-humanoid line", and the playground-humanoid
+    line is `LT.08`** — `depends_on = [LT.07, T2.01, T2.02]`, and LT.07 sits
+    at the end of the LT.01 -> LT.03 -> LT.05 -> LT.07 chain. So the body
+    question is parked behind a spec chain whose FIRST link failed because of
+    the body. `BA.02` is re-parented behind the same LT.08 by D8. Neither
+    default is wrong on its own terms; the deadlock is a joint property that
+    only appears when the two are read together, and no organ reads them
+    together.
+    Options, all declarable rather than arguable: **(a)** re-scope C2 to a
+    non-rise gameability check that the as-built body CAN exercise (strictly
+    a different measurement, and it must be shown at least as hard to game);
+    **(b)** hold LT.01 and route the body itself — register `W0.BAL` as a
+    spec id so the body gets a seat and arm C's upright 1.000 vs 0.002-0.004
+    becomes a defended verdict rather than a parked bakeoff (PROGRESS 08-31
+    FOR THE OWNER 1, still on the owner's desk); **(c)** decide that the LT
+    family's venue is wrong and re-parent the whole arena onto whatever body
+    `w0-too-shallow` produces. THE THRESHOLD RULE BINDS: 0.6 m may not be
+    lowered to make C2 green. A re-scope is legitimate only if the EXPERIMENT
+    is wrong (T1.02 precedent), and the old spec version stays in the ledger's
+    history.
+    Staleness bill: NONE for (a) — LT.01 has one FAIL row and no certificate
+    cites it. (b) and (c) bill nothing either; (c) defers to whatever bill
+    `w0-too-shallow` chooses.

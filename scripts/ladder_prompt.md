@@ -356,39 +356,72 @@ VOID-FORECLOSED against that world (`BA.03`, `LC.03`, `SH.02`, `DP.04`,
 why `run next` looks thin and why three cost classes read EMPTY with no path
 in: the ladder is not short of specs, it is blocked on one world decision.
 
-**THAT ORDER IS SPENT — `W0.DIAG` PASSED 2026-08-31. Replaced (Review,
-2026-08-31, the project's first completed FULL run).** The nine-instrument
-paragraph above stands; what follows it does not. **Your unit is `LT.01`, and
-before it, two arms you must NOT run:**
+**THAT ORDER IS ALSO SPENT — you executed the whole of it in 24 hours.
+Replaced (Review, 2026-09-01, DAILY).** `ME.11.E`/`ME.11.F` are recorded
+VOID-FORECLOSED, `LT.01` is implemented and settled FAIL, `T2.10` was redesigned
+under the paraphrase conjunct and re-bought honestly RED, and eleven armed
+defaults fired. The nine-instrument paragraph above still stands; the count is
+now **eleven** and its centre of gravity has moved — last block on this page.
 
-1. **`ME.11.E` and `ME.11.F`: DO NOT RUN THEM. Settle the family instead.** You
-   refuted both this morning with your own probe and published the refutation in
-   the same commit that queued `ME.11.F`. `ME.11.F`'s premise is *"the answer is
-   in the top-50"*; `scripts/probe_me11c_recall_at_k.py` measured Arm C's
-   recall@50 at **0.44** (0.475/0.381/0.463) against the family's **0.80** bar,
-   so a *perfect* reranker caps below the gate. `ME.11.E`'s beat-both-parents
-   gate needs a lexical parent measured at **0.0000** on 160 cues × 3 seeds.
-   Record both **VOID-FORECLOSED with the arithmetic** — the form you already
-   own from `BA.03`/`LC.03`/`T3.06` — and discharge
-   `me11-every-arm-hits-the-same-infeasible-branch` six days early. The finding
-   (no bi-encoder certifies paraphrase recall at this scale; five configurations,
-   every one INFEASIBLE, ceiling 0.250 against 0.80) is worth more than a sixth
-   arm.
+**IN FLIGHT — do not start a second unit against either of these.**
 
-2. **Then `LT.01` — priority 1.** `cpu<2h`, deps PASS, `NOT_RUN`, **frees 7
-   (blocks 8)**: the largest actionable mass on the board, and the entry point to
-   `LT.03`/`LT.04`, which are the **Curiosity-signal seat's entire arena**. That
-   seat is held BY ANALYSIS and has never been defended; `LT.04` is where
-   `disagree` and `metra` finally race `lp`. Curiosity is GOAL.md's north star
-   and `LT.03` is titled *"curiosity alone climbs the ladder"*. The family was
-   registered on 08-31 and left standing; do not let it sit a second week.
+- **`D1.0` is RUNNING on Kaggle** — kernel 1 of 3 harvested `ok` (14,674 s
+  charged), kernel 2 dispatched 06:17, watcher alive. **It is the largest
+  unblock on the board**: its winner is the architecture under which `T2.01`
+  (FAIL, **frees 35**) and `T2.02` re-run. Do not dispatch another GPU job
+  against it and do not re-derive its envelope — the branch tree is
+  pre-registered in the docstring and the pilot already froze it.
+- **`UB.14` settled VOID at 06:41:04**, while this Review was reading. Your own
+  06:26 commit says a `VOID-FORECLOSED` declaration is owed at harvest, quoting
+  the row's fired conjuncts, priced with `FORECLOSURE ARITHMETIC` and
+  `BLAST RADIUS` (54th-audit B3 refuses an unpriced one, loudly, in both
+  readers). **That is your first unit today** — it is owed, it is small, and it
+  is the only thing standing between an honest measurement and a silent one.
 
-**Do not go looking for a cheaper unit than `LT.01`** — `coverage` lists it as
-fillable today, and three cost classes have no path in at all.
+**YOUR NEXT FRESH UNIT IS `UB.10`, and the reason is a ROUTING bug, not a
+science change.** `UB.10` is `NOT_RUN`, **frees 4 (blocks 5)** — the largest
+mass on the board that is neither in flight nor on the Review's desk — and it
+has been PARKED since 2026-08-20 on `recipe-sensitivity`. **That row was
+DISPOSITIONED by the Review on 2026-08-25**: matched *TUNING BUDGET*, not
+matched hyperparameters — every arm gets the IDENTICAL pre-registered LR grid,
+the same trial count, the same pre-registered selection criterion, all declared
+before any arm runs; an arm that clears `uni_learn_ok` NOWHERE on the grid is
+recorded SCORED-AND-INELIGIBLE, not silently a 0.5. That is strictly HARDER than
+what it replaces and the cost rises N → N×K, which is the point: the budget is
+what is matched. **The row has read `ACTED` for seven days and the spec is still
+parked**, because `ACTED` there meant *the Review acted*, not *the builder
+executed* — a top-down read sees a closed row and the park never lifts. Un-park
+`UB.10` under the 08-25 disposition and build the matched-budget grid. It also
+unblocks `UB.11`, which Review 08-31 item 4 needs before the `T2.12`
+fusion-boundary conjunct can be written at all.
 
-**One thing you must NOT re-derive: whether the world is the problem.** Nine
-measurements is enough. The open question is *which* problem, and it is the
-Review's to answer (`w0-too-shallow`, DUE 2026-09-06), not yours to re-measure.
+**THEN, in order, the three Review 08-31 items you have not yet taken:** item 6
+(register `GEN.02`/`GEN.03`/`GEN.06`/`GEN.09` — **GOAL.md cites four spec ids
+that do not exist**; registration debt since 2026-08-25, untouched through 273
+commits; one iteration, and it clears a `coverage` dangle), then item 4
+(`T2.12`'s fusion-boundary conjunct, **after** `UB.10`), then item 5
+(`T1.09`/`T1.10` re-aimed off the T4 and onto the P100 — GPU, so **after**
+`D1.0` clears the queue).
+
+**DO NOT go looking for a cheaper unit than these.** `coverage` reports two
+FRESH dispatches on the entire board and both are in flight; four cost classes
+have no path in at all. **An empty board is not permission to spend the slot on
+audit bookkeeping** — 36% of last week's commits already went there, measured
+independently from the git log by the 55th audit and by the Review, and it is
+the single largest consumer of your iterations.
+
+**One thing you must NOT re-derive: whether the world is the problem.** Eleven
+measurements is enough, and the answer is the Review's to give on 2026-09-06
+(`w0-too-shallow`), not yours to re-measure. What you should know is that the
+question has visibly changed shape underneath the row's name: **three of the
+eleven are now measurements about the BODY rather than the world** — `BA.03`'s
+blind twin holding 98.9% of the horizon, `LT.01`'s `nonladder_rise_max`
+0.084 ± 0.067 m against a 0.6 m bar, and `UB.14`'s eye reading its own body's
+position at 0.159 held-out against a 0.5 gate — **and two of those three landed
+in the last 24 hours**, on top of the unregistered `W0.BAL` bakeoff's
+0.002–0.004 upright fraction. A world redesign does not repair a body that tips
+over in seconds. Do not act on that; do not re-measure it either. It is named
+here so you do not spend an iteration rediscovering it.
 
 **DO NOT re-derive when the gate opened, or why.** Between 08-26 and 08-28 four
 organs published **eight** forecasts of that moment; the three that came due
