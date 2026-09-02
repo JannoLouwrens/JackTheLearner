@@ -15199,8 +15199,8 @@
     },
     "T0.29": {
       "amended": [],
-      "attempt": 6,
-      "commit": "81e3b97+dirty",
+      "attempt": 7,
+      "commit": "4966862",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p6_only_a_challenger_discharges",
@@ -15211,7 +15211,7 @@
         "properties_checked": 10.0,
         "properties_failed": 3.0
       },
-      "duration_s": 10.86,
+      "duration_s": 10.8,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -15364,6 +15364,55 @@
           ],
           "spec_sha": "2f701e24af9a6b14",
           "status": "FAIL"
+        },
+        {
+          "commit": "81e3b97+dirty",
+          "control_metrics": {
+            "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p6_only_a_challenger_discharges",
+            "live_arena_missing": 0.0,
+            "live_seats": 27.0,
+            "live_unfalsifiable": 3.0,
+            "live_violations": 8.0,
+            "properties_checked": 10.0,
+            "properties_failed": 3.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "62eea1c40e87f1ca",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "live_arena_missing": 0.0,
+            "live_seats": 27.0,
+            "live_unfalsifiable": 3.0,
+            "live_violations": 8.0,
+            "properties_checked": 10.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-02T09:20:16",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "2f701e24af9a6b14",
+          "status": "PASS",
+          "supersedes_fail": {
+            "commit": "661a48f+dirty",
+            "dirty": true,
+            "impl_changed": true,
+            "impl_sha": "c17f94be13e1fb8c",
+            "metrics": {
+              "failed_names": "p5_every_decision_names_its_record",
+              "live_arena_missing": 0.0,
+              "live_seats": 27.0,
+              "live_unfalsifiable": 3.0,
+              "live_violations": 8.0,
+              "properties_checked": 10.0,
+              "properties_failed": 1.0
+            },
+            "ran_at": "2026-09-02T09:18:06",
+            "spec_changed": false,
+            "spec_sha": "2f701e24af9a6b14",
+            "status": "FAIL"
+          }
         }
       ],
       "impl_sha": "62eea1c40e87f1ca",
@@ -15378,32 +15427,13 @@
         "properties_failed": 0.0
       },
       "preserved_impl": null,
-      "ran_at": "2026-09-02T09:20:16",
+      "ran_at": "2026-09-02T12:08:48",
       "seeds": [
         0
       ],
       "spec_id": "T0.29",
       "spec_sha": "2f701e24af9a6b14",
-      "status": "PASS",
-      "supersedes_fail": {
-        "commit": "661a48f+dirty",
-        "dirty": true,
-        "impl_changed": true,
-        "impl_sha": "c17f94be13e1fb8c",
-        "metrics": {
-          "failed_names": "p5_every_decision_names_its_record",
-          "live_arena_missing": 0.0,
-          "live_seats": 27.0,
-          "live_unfalsifiable": 3.0,
-          "live_violations": 8.0,
-          "properties_checked": 10.0,
-          "properties_failed": 1.0
-        },
-        "ran_at": "2026-09-02T09:18:06",
-        "spec_changed": false,
-        "spec_sha": "2f701e24af9a6b14",
-        "status": "FAIL"
-      }
+      "status": "PASS"
     },
     "T0.30": {
       "amended": [],
