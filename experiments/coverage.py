@@ -673,7 +673,16 @@ def _claim_dead(r: dict) -> bool:
 # exit 2 rather than quietly re-baseline. That red is the point: the class that
 # forfeited 61 free GPU-hours over three weeks is now one that cannot go empty
 # in silence.
-QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min", "cpu<10min"})
+# `cpu<10min` LEFT THIS SET 2026-09-02, by the same precedent applied
+# honestly against a 81-second window: ME.11 was implemented (2e12d1f),
+# making the class non-empty and this entry stale, and settled FAIL the same
+# hour, emptying it again. `stale_baseline` never fired only because nobody
+# ran coverage inside those 81 seconds; leaving the entry would be exactly
+# the quiet re-baseline the gpu<2h note forbids. From now on cpu<10min going
+# empty reads amber/red like any other class — its refill is the ME.11
+# family redesign on the Review's 09-06 desk, not a spec hunt (see
+# empty_unfillable's own instruction above).
+QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 
 # The unreachable-fraction ratchet (58th audit B3). `run blocked` has printed
 # "N of M specs are unreachable" since 08-09 and NO GATE READ IT: the number

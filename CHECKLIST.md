@@ -401,7 +401,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ After episodes are distilled into weights (practice/replay), the verbatim episodic record still answers cued recall at its pre-distillation rate, AND the distilled skill outperforms no-distillation; then the double dissociation: wiping the episodic store leaves the skill intact, wiping the weight update leaves recall intact.
       - _dies if:_ Distillation degrades recall (learning ate the memory) or recall requires the store at skill-time (nothing was ever in the weights).
       - _then delete:_ Any design where conversation memory lives only in weights or skills live only in retrieved episodes.
-- [ ] **ME.11** Finds the memory from a paraphrase, still never invents one
+- [!] **ME.11** Finds the memory from a paraphrase, still never invents one  — abstention_certify=0.943333; abstention_certify_std=0.0124722
       - _asserts:_ Cued recall stays >=80% when cues are PARAPHRASES sharing no content words with the stored event (synonyms, circumlocutions, indirect questions), while fabricated-event abstention stays >=95% and every returned answer is byte-identical to a stored record.
       - _dies if:_ Paraphrase recall at the lexical baseline (i.e. the index did not help), OR abstention degrading as recall improves (the retriever bought recall with credulity), OR any returned string not present verbatim in the log.
       - _then delete:_ Any retriever that generates its answer instead of quoting one, however good its numbers.
@@ -472,7 +472,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 
-- [ ] **T3.09** The creative loop earns its existence
+- [!] **T3.09** The creative loop earns its existence  — borrowed_commit=761121a; borrowed_from=PS.01
       - _asserts:_ Wiring AlphaGeometryLoop into a decision path measurably improves something against the same path without it.
       - _dies if:_ No measurable difference — currently GUARANTEED, since the loop has ZERO call sites: it constructs, prints 'ENABLED', and is never invoked.
       - _then delete:_ AlphaGeometryLoop.py (559 lines) — wire it or delete it.

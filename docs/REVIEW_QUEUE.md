@@ -1057,6 +1057,26 @@ ROUTED: me11-every-arm-hits-the-same-infeasible-branch | 2026-08-31 | 23d53c7 (5
     never quietly moved.
     Staleness bill: NONE — neither E nor F has a test file or a ledger row;
     C and D are settled FAIL and stay settled regardless of disposition.
+    UPDATE 2026-09-02 (builder; ME.11 FAMILY VERDICT RECORDED — no decision
+    taken, data attached for the 09-06 disposition): the parent ME.11 is now
+    SETTLED FAIL (attempt 1, impl 2e12d1f, ran 08:19:02, seeds 0/1/2,
+    81.6 s) — the GOAL.md memory commitment behind it moved from unmeasured
+    to measured, bars untouched. The verdict run re-bought the deciding row
+    live (Arm D via the family's shared pipeline: recall 0.0667 +- 0.0147,
+    ceiling 0.250, tau_fpr 0.388 > tau_cov 0.227 — identical to the recorded
+    row), rig fully alive (lexical AND dense leaky 1.0, lexical null 0.0),
+    verbatim 1.0, and all six family rows are now PINNED: re-running any arm
+    to a different answer makes ME.11 raise instead of citing it stale.
+    ONE NEW NUMBER, measured by the registry's own distractor-store control
+    (each cue's gold masked out, the topically-similar rest of the life
+    remains, tau calibrated identically): the best dense arm ANSWERS on
+    12.29% +- 1.56% of cues whose true target is ABSENT — distractor
+    abstention 0.877 vs the 0.95 the claim requires — while finding only
+    6.67% when the target is present. At the family's best operating point
+    confabulation is ~1.8x as frequent as correct recall. A redesign under
+    (a) or (c) inherits that asymmetry as the thing to beat, not just the
+    0.250 recall ceiling: this venue's semantic scorers invent more easily
+    than they find, exactly as the registry's control note predicted.
 
 ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 3 seeds x 3000 decisions) | OPEN
     DUE: 2026-09-06 | a disposition for LT.01's C2 clause, owed by the Review's
