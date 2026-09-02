@@ -213,11 +213,43 @@ _FIXTURES = (
 # `or` keyword and cannot recognise the loop that means the same thing, and
 # writing that detector is a unit of its own (see LOOP_JOURNAL 2026-08-29).
 #
-# So the gate here is a SET, not a count: these three specs are adjudicated as
+# So the gate here is a SET, not a count: these specs are adjudicated as
 # aggregation slack and their key counts may move freely when they re-run,
-# but a FOURTH spec appearing in this list is unadjudicated and turns T0.13
+# but a NEW spec appearing in this list is unadjudicated and turns T0.13
 # red. Shrink-only by construction — removing an id can only tighten it.
-DYNAMIC_ADJUDICATED = frozenset({"LC.00", "LC.02", "T0.08"})
+#
+# Three more adjudicated 2026-09-02 (one by one, per the do-not-batch order;
+# full records in LOOP_JOURNAL ~17:1x), after landing post-08-29 and firing
+# T0.13 attempt 22:
+#
+#   T2.09 (1)   `c["claim_dwell"]` — AGGREGATION SLACK, T0.08's exact class.
+#               The gate `not _claim_holds(c)` is a De Morgan OR over three
+#               conjuncts; the recorded PASS row's control fails ALL three
+#               (claim_dwell 1.0 vs NULL_DWELL_MAX 0.20, claim_fed_ratio
+#               9.5e11 vs FED_RATIO_MAX 1.5, coverage 0.4298 vs EXPLORE_FRAC
+#               0.80), so any one member is carried slack by the other two.
+#               No correct rewrite avoids `not (a and b and c)`, and the AST
+#               or-exemption cannot see through a helper call.
+#   VO.02 (3)   `c["coord"]`, `c["coord_std"]`, `m["untrained_coord_std"]` —
+#               same De Morgan class through `if _claim(c): return False` and
+#               the untrained-null merge. The scrambled control fails the
+#               information conjunct outright (mi_ear 0.0400 < perm_p95
+#               0.0577; cic 0.0160 < perm_p95 0.0448) and the untrained null
+#               fails both conjuncts (coord 0.392 vs COORD_MIN 0.70; mi
+#               0.0996) — the coordination keys are carried slack by MI, and
+#               a null failing several gates at once is the design.
+#   W0.DIAG (1) `c["margin_down_std"]` — NOT aggregation; a distinct
+#               sub-shape: SIGN-CARRIED SCALE SLACK. V6 is a one-sided house
+#               t-gate (`mean*sqrt(3)/max(std,1e-9) >= SIGMA_GATE -> VOID`)
+#               and the recorded mean sits on the safe side (margin_down
+#               -11.054): a scale factor cannot flip a sign, so no std
+#               perturbation (0, ±1, ±1e9, nan, ±inf) moves the verdict —
+#               while the paired MEAN key is fully live (perturb margin_down
+#               positive and V6 fires). Every correct t-stat spelling has
+#               this property; the record names the new sub-shape rather
+#               than shoehorning it into "aggregation".
+DYNAMIC_ADJUDICATED = frozenset({"LC.00", "LC.02", "T0.08",
+                                 "T2.09", "VO.02", "W0.DIAG"})
 
 
 def _perturbations(v: Any) -> list:
