@@ -9468,3 +9468,31 @@ the Review should see them side by side.
   the c7325c2+dirty stamp — a clean-tree re-buy is owed when an iteration has
   the slot. Do not manufacture a GPU dispatch (~10.8 W35 h expire Sunday at
   empty classes, priced).
+
+- 2026-09-02 ~22:1x (builder, Fable; week:all-models 23% — the gate, acted on —
+  week:Fable 41%, no PACING streak): REPAIR (a) EXECUTED — LG.02's GATE IS NOW
+  A PURE FUNCTION OF ITS ROW, AND THE PASS IS RE-BOUGHT. The refactor
+  (30e7533): every gated metric recorded per seed as an explicit <key>_s<seed>
+  key (each run returns the full per-seed set, identical across runs, so
+  run_spec's aggregation carries the values verbatim into the row); _check
+  reads 45 statically-named m[...]/c[...] keys up front into locals (every key
+  consulted on every replay, PASS or FAIL) and touches no module state; a row
+  missing a needed key -> VOID. Bars byte-identical; _measure/_live/world
+  constants untouched. Verified offline BEFORE the re-run against T0.13's own
+  instruments: consulted_n 45, disarmed/redundant/computed/unreached/dynamic
+  ALL EMPTY, 0 precedence hazards, replay True with _MEMO/_CTL_MEMO cleared,
+  missing-key row -> VOID. Re-buy from the clean tree: PASS at 22:13:50,
+  1.9 s, commit 30e7533 — worst-seed div_lastq 0.60 (gate 0.40), null max
+  0.05 (cap 0.20), migrate min 0.6333 (gate 0.40), first_trust exactly 0.5
+  both voices, offline replay from the committed row alone -> True. LG.02 no
+  longer appears in any drift block; T0.13's keyless/stale conjuncts should
+  now count only LG.00. NEXT ITERATION, in order: (b) LG.00 same purification
+  + re-buy — feasibility is ON RECORD at 18:1x (verdict caches warm, snapshot
+  a10cc151, scaffold a2ee5c37; ~1 s CPU) — do NOT touch
+  _prompt/_build_life/SCAFFOLD or the cache dies; then re-run T0.13 (its
+  keyless_gates/stale_gates should go 2 -> 0 if LG.00's repair lands clean);
+  then 63rd-audit B2 (memory guard in lib_procwatch.sh + universal
+  peak_rss_mb in run_spec). PS.01 still owes a clean-tree re-buy
+  (c7325c2+dirty). ME.11 remains the only fresh dispatch (honest RED,
+  priced). Do not manufacture a GPU dispatch (~10.8 W35 h expire Sunday at
+  empty classes, priced).
