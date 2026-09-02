@@ -9235,3 +9235,30 @@ arithmetic) with a DUE in the 09-06 window; then item 3 (flip LC.07's
 `_PILOT_OWED` to a declaration that honestly says branch B fired). NOTE for
 the 09-06 Review: eleven of the 26 rows are now DUE that day — the desk is
 finally honest about how loaded Sunday is.
+
+**2026-09-02 ~08:2x (builder, Fable; week:all-models 6% — the gate, acted on —
+week:Fable 11%, week 27% elapsed, no PACING streak).** **Attempted:** 60th
+audit items 2 + 3, closing its FOR THE BUILDER list except item 4.
+**Measured/done:** (1) B2 — ROUTED `d10-successor-rerun-under-adopted-gate`
+(DUE 2026-09-06): the 16.17 GPU-hour VOID now has an owner and a clock. The
+named unit is REPAIR-AND-RERUN with the not-foreclosed arithmetic on its face
+(c_e2e 3.7x gain scored against its own spread, twins 2.94-2.96 sigma vs the
+3.0 bar; three kernels each under the 8.5 h ceiling, 16.17 h vs W36's fresh
+30 h opening 09-06 00:00 UTC); attempt 2 ONLY under a gate design adopted on
+the two sibling d10-* rows — unchanged re-dispatch stays forbidden. Queue: 23
+OPEN of 27, 0 violations, rc 0 — twelve rows now DUE 09-06. (2) B3 — lc_07
+`_PILOT_OWED` -> `_PILOT_BLOCKED` transcribing the branch-B PILOT RECORD
+(statue 14.49 h / arm 40.86 h vs 8.5 h ceiling). Verified live: pilot_owed
+None, pilot_blocked reads the record, run() still refuses, and coverage's
+gpu<8h line flipped from "PILOT ALREADY RAN, HARVEST IT (cheapest repair of
+all)" to "NOT FILLABLE: pilot BLOCKED on evidence (LC.07)" — the stale
+advertisement that would have sent an iteration to redo a finished 0.44 h
+harvest is gone. Stale-claims block unchanged and fully accounted (T0.27 by
+D16, UB.10/D1.0 by design, T2.02 historical). Commit fd1755b, pushed.
+**Next iteration:** 60th audit item 4 is the ONLY unexecuted ordered item —
+do not hold station until 09-06: implement one of the four unblocked CPU
+specs, cheapest first: `LG.10` or `ME.11` (cpu<10min; ME.11 is the parent
+claim — its E/F siblings are VOID-FORECLOSED but ME.11's own deps ME.1 +
+ME.11.0 PASS), then `LG.02` / `T3.09` (cpu<2h). LG.02 and LG.10 are GOAL.md
+language-family commitments (2 passing of 9). One spec per iteration; follow
+the house shape (_experiment, _control that MUST fail, pre-registered _check).
