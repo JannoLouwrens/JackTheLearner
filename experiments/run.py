@@ -1295,6 +1295,31 @@ def cmd_amend(ledger: Ledger, args) -> int:
     return 0
 
 
+def _impl_age_line(root: str) -> str:
+    """`unchanged for N days`, from the last commit touching the impl file.
+
+    62nd audit B5 (2026-09-02): `blocked` ranks by `frees N`, and nothing
+    ranked by how long a blocker had been the top blocker — T2.01 sat rank 1
+    for 24 days with its implementation untouched since 2026-08-09, and the
+    ranking looked equally fresh every day. Age printed beside the rank makes
+    a stall a number instead of an archaeology job. Empty string when git or
+    the path cannot answer: a missing age must never break the ranking that
+    carries it.
+    """
+    path = module_path_for(root)
+    if not path:
+        return ""
+    try:
+        out = subprocess.run(
+            ["git", "log", "-1", "--format=%ct", "--", str(path)],
+            capture_output=True, text=True, timeout=10, cwd=str(_REPO))
+        ts = int(out.stdout.strip())
+    except (ValueError, OSError, subprocess.SubprocessError):
+        return ""
+    days = max(0, int((time.time() - ts) // 86400))
+    return f"  [impl unchanged {days} d]"
+
+
 def cmd_blocked(ledger: Ledger) -> int:
     """What can this ladder NEVER do, and why — the converse of `next`.
 
@@ -1373,7 +1398,8 @@ def cmd_blocked(ledger: Ledger) -> int:
     for root, ids in live:
         title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
         f = sorted(frees.get(root, []))
-        print(f"  {root} = {_st(root)}  frees {len(f)}  (blocks {len(ids)})  — {title}")
+        print(f"  {root} = {_st(root)}  frees {len(f)}  (blocks {len(ids)})"
+              f"{_impl_age_line(root)}  — {title}")
         if root in refused:
             # An unpriced foreclosure ranks as repairable, but silently ranking
             # it re-opens the B2 misroute in the other direction: somebody
@@ -1397,7 +1423,7 @@ def cmd_blocked(ledger: Ledger) -> int:
             title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
             f = sorted(frees.get(root, []))
             print(f"    {root} = VOID-FORECLOSED  re-parenting would recover "
-                  f"{len(f)}  (blocks {len(ids)})  — {title}")
+                  f"{len(f)}  (blocks {len(ids)}){_impl_age_line(root)}  — {title}")
             print(f"        declared: {closed[root]}")
             print(f"        unreachable until re-parented: "
                   f"{', '.join(f) if f else '(co-requisites only)'}")
@@ -1414,7 +1440,7 @@ def cmd_blocked(ledger: Ledger) -> int:
             title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
             f = sorted(frees.get(root, []))
             print(f"    {root} = {_dead_flavour[root]}  redesign would recover "
-                  f"{len(f)}  (blocks {len(ids)})  — {title}")
+                  f"{len(f)}  (blocks {len(ids)}){_impl_age_line(root)}  — {title}")
             print(f"        unreachable until redesigned: "
                   f"{', '.join(f) if f else '(co-requisites only)'}")
             print()

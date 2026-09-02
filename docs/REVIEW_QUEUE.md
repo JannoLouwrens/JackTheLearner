@@ -355,6 +355,67 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     recorded 3-seed VOID lands 2026-09-01 (launched this slot);
     VOID-FORECLOSED declaration owed at harvest. Do not re-run unchanged;
     do not lower VISION_BODY_GATE.
+    CONSOLIDATED NOTE 2026-09-02 (builder, executing the 62nd audit's B4 —
+    a bundling of EVIDENCE, not of decisions; nothing below pre-empts any of
+    the nine repair rows, per the 09-06 stagger's own distinction). Six specs
+    have now INDEPENDENTLY RECORDED, in their own registered words, that the
+    venue — not the instrument — is what failed. Quoted verbatim with their
+    numbers so Sunday's desk sees one convergence instead of six unrelated
+    arm choices:
+    (1) DP.04 (SIZING RECORD, dp_04_slow_path_verbal.py, seed 94, 08-30):
+        "mean censored lifespan has no resolution in W0 — 0 of 3072 lives
+        ended between the old cap and the new one, 21 distinct lifespans,
+        quantum 6.25 steps at 48 lives against MIN_GAIN 5.0, and E>=5791
+        lives/arm/task would be needed for the derived 2.357-step sd." And
+        its FINDING paragraph: "W0's survival task is near-binary at every
+        cap, so a mean-lifespan statistic cannot resolve a 5-step effect at
+        any affordable envelope."
+    (2) SH.02 (PILOT RECORD, sh_02_born_sheltered.py, seed 90, 08-30,
+        N=3000/arm): "Every arm without a live policy gradient holds the
+        roof COMPLETELY — twin, privileged oracle and both-cosmetic control
+        all exactly 1.0000 against HEADROOM_MAX 0.85, learner 0.0136 — so
+        the null already holds the roof it was placed under and no choice
+        can show above it. [...] this is D10 evidence that W0 is the
+        bottleneck."
+    (3) UB.14 (VOID-FORECLOSED declaration, ub_14_cross_modal_touch.py,
+        recorded row 09-01): "The binding fault is the VENUE, measured, not
+        the instrument: the eye is world contract (EYE_POS fixed, 30 deg
+        half-FOV), the spawn is at its measured in-view optimum, and in the
+        only region the body may be seen the information to place it does
+        not reach the gate" — vision_sees_body 0.4036 +- 0.0256 vs the 0.5
+        gate, fused_r2 0.0013 +- 0.0098 vs the 0.05 floor, the rig's own
+        MLP (strongest readout tried) 0.159 held-out at the full envelope.
+    (4) BA.03 (VOID-FORECLOSED declaration,
+        ba_03_braces_against_a_surface.py, recorded row 08-31): "the blind
+        twin holds 11.868 s of the 12.0 s horizon (98.9%), leaving 0.132 s
+        of room for a claim that needs 1.336 s — headroom ratio 0.236 +/-
+        0.184 against HEADROOM_MIN_MULT 2.0 [...] Clearing it requires the
+        twin's ceiling share to fall from 98.9% to <= 88.9% — a redesign of
+        the world or the horizon, not a sample size."
+    (5) T3.09 (attempt-3 row 09-02 + the vacuity lane's amended docstring,
+        t3_09_creative_loop.py): "the shuf control cleared the margin (the
+        site rewards any detour perturbation and the test measures
+        nothing)" — creative_contribution -9.96 vs MARGIN_AFF 11.0 while
+        the wrong-goal control gained +12.47 and CLEARED the claim's own
+        margin, loop_creative 0 on every life.
+    (6) LC.03 (VOID-FORECLOSED declaration, lc_03_survival_screening.py,
+        v2 recorded 08-23): "fewer than two learners (1 cleared)" after
+        400k decisions/arm-seed and ~190 core-hours at the 4x envelope,
+        every control on its pre-registered side; "The repair is a REDESIGN
+        of the screen or of W0, on the owner's desk since 2026-08-24."
+    Shape of the convergence, for the design: (1) says the OUTCOME VARIABLE
+    has no resolution; (2), (4) and (6) say the NULL already holds the
+    ceiling the claim was placed under; (3) says the SENSORY contract cannot
+    deliver the signal its own gate demands; (5) says the venue rewards
+    perturbation AS SUCH. Three different failure channels (statistic /
+    ceiling / channel), five different families (fast-slow, shelter, unison,
+    balance, curiosity, learning-core), all landing on the venue. The nine
+    instruments enumerated in the 08-31 update above remain the full count;
+    these six are the subset that recorded the diagnosis IN THE SPEC ITSELF
+    rather than in a routing row. Sources: _PILOT_BLOCKED in
+    dp_04_slow_path_verbal.py and sh_02_born_sheltered.py; VOID-FORECLOSED
+    blocks in ub_14_cross_modal_touch.py, ba_03_braces_against_a_surface.py,
+    lc_03_survival_screening.py; the vacuity lane in t3_09_creative_loop.py.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | OPEN
     Question: the shipped routing mechanism (UnifiedBrain semantic-anchor
