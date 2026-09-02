@@ -518,6 +518,25 @@ def cmd_status(ledger: Ledger) -> int:
         impl = "" if module_path_for(s.id, strict=True) else "  (not implemented)"
         print(f"    [{MARK[st]}] {s.id}  {s.title}{impl}")
     print(f"\n  {counts}\n")
+    _check_orphan_detector()
+    orphans = gpu_orphans()
+    if orphans:
+        # Above the staleness blocks deliberately: this is paid-for compute
+        # sitting unharvested RIGHT NOW, and the recovery lane decays (Kaggle
+        # kernels expire, colab has no reattach at all).
+        print("  ! ORPHANED DISPATCHES — an attempt row with no result row and "
+              "a dead watcher pid.\n    The kernel may have completed; the "
+              "record did not. Recover, do not re-dispatch:")
+        for o in orphans:
+            phase = f" ({o['spec_phase']})" if o.get("spec_phase") else ""
+            cmd = (f"JACK_REUSE_KERNEL={o['slug']} scripts/dispatch.sh "
+                   f"{o['spec']}"
+                   if o.get("backend") == "kaggle" and o.get("slug")
+                   and not o.get("spec_phase")
+                   else "no reattach lane — harvest post-hoc (see CLAUDE.md)")
+            print(f"      {o['spec']}{phase}  {o['backend']} attempt "
+                  f"{o['iso']}, watcher pid {o['pid']} dead.  {cmd}")
+        print()
     _check_stale_detector(ledger)
     rows = stale_claims(ledger)
     changed = [x for x in rows if x[2] == "CHANGED"]
@@ -600,6 +619,46 @@ def cmd_status(ledger: Ledger) -> int:
               f"upgrades each to a real stamp.\n")
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
+
+
+def gpu_orphans() -> list:
+    """`gpu.orphaned_dispatches()` behind a local import, so `status` does not
+    pay gpu.py's import unless it is about to print the block anyway."""
+    from .gpu import orphaned_dispatches
+    return orphaned_dispatches()
+
+
+def _check_orphan_detector() -> None:
+    """Plant a known orphan and require the detector to find it — and plant the
+    three shapes that must NOT fire (live watcher, matched result, recovered
+    orphan), because a detector that alarms on a healthy mid-run watcher would
+    teach iterations to ignore the block (`_check_stale_detector`'s rule, one
+    receipt log over)."""
+    from .gpu import orphaned_dispatches
+    rows = [
+        # recovered orphan: dead attempt, then a later reattach pair — quiet
+        {"phase": "attempt", "spec": "ZZ.RECOVERED", "pid": 1, "ts": 1.0,
+         "backend": "kaggle", "iso": "t0"},
+        {"phase": "attempt", "spec": "ZZ.RECOVERED", "pid": 2, "ts": 2.0,
+         "backend": "kaggle", "iso": "t1", "attempt_id": "a2"},
+        {"phase": "result", "spec": "ZZ.RECOVERED", "attempt_id": "a2"},
+        # live watcher mid-run — quiet
+        {"phase": "attempt", "spec": "ZZ.LIVE", "pid": 7, "ts": 3.0,
+         "backend": "kaggle", "iso": "t2"},
+        # the scar: dead watcher, no result, last word for its spec — fires
+        {"phase": "attempt", "spec": "ZZ.ORPHAN", "pid": 8, "ts": 1788304286.8,
+         "backend": "kaggle", "iso": "t3"},
+    ]
+    hits = orphaned_dispatches(rows, pid_alive=lambda p: p == 7)
+    got = [h["spec"] for h in hits]
+    if got != ["ZZ.ORPHAN"]:
+        raise RuntimeError(
+            f"the orphan detector returned {got}, expected ['ZZ.ORPHAN'] — "
+            "refusing to report a scan it may not have performed")
+    if hits[0]["slug"] != "jack-ladder-1788304286":
+        raise RuntimeError(
+            "the orphan detector's reattach slug does not reconstruct from "
+            "the attempt ts; the printed recovery command would be wrong")
 
 
 def _check_stale_detector(ledger: Ledger) -> None:

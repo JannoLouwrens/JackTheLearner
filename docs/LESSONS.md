@@ -9943,3 +9943,38 @@ citation known/new/stale directions) and was verified RED against the pre-fix
 code (2 failures) before the repair. Measured live: welded reads exactly the
 audit's 10, fast/slow reads 3 welded + 1 FORECLOSED + 1 blocked, CLAIM-DEAD
 stays 4, UNREACHABLE_BASELINE stays 85/217, coverage rc=2 unchanged.
+
+---
+
+## A guard that must be invoked is half a guard: pair every launch-side rule with a harvest-side detector
+
+**2026-09-02, builder — third payment on the dead-watcher scar, first one AFTER
+the guard existed.**
+
+`dispatch.sh` was built (2026-08-14, T2.04's dead watcher) so no GPU watcher
+would ever again die with its session. On 2026-09-01 23:11 an iteration
+dispatched T1.09 as a plain session child anyway — no dispatch log, no setsid —
+and died minutes later. The kernel completed; the attempt row sat in
+`gpu_submissions.jsonl` with no result row; the ledger said nothing; every
+liveness instrument read healthy, because the process they watch for was not
+supposed to exist. The loss was found the next iteration only because a memory
+note said "semantically diff the ledger first" — a hunch, not an organ.
+
+**The generalisation: a launch-side guard is an instruction, and instructions
+get bypassed — by haste, by a session dying mid-thought, by a tool invoked
+directly instead of through its wrapper. The receipt log already recorded both
+halves of the truth (attempt written, result missing); nothing READ the
+missing half.** When a protocol writes a two-phase receipt, the cheap and
+durable guard is a detector on the unmatched first phase, wired into the page
+every iteration reads. The predicate must be recovery-aware or it becomes
+noise: fire only when the spec's LAST row is a dead-pid attempt, so a
+mid-run watcher (live pid) and a recovered orphan (later reattach pair) stay
+quiet.
+
+Guard: `gpu.orphaned_dispatches()` + the `ORPHANED DISPATCHES` block in
+`run status`, printing the exact `JACK_REUSE_KERNEL` reattach command;
+`_check_orphan_detector` plants the orphan, the live watcher, the matched
+pair and the recovered orphan at every status call, and refuses the scan if
+the detector or its slug reconstruction is broken. Verified: fires on the
+planted orphan, quiet on live rows (T1.09's recovered pair, T1.10's live
+watcher at the time of writing).

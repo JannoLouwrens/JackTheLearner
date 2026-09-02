@@ -1003,6 +1003,55 @@ def last_submission(log: Optional[Path] = None) -> Optional[dict]:
     return recs[-1] if recs else None
 
 
+def orphaned_dispatches(rows: Optional[list[dict]] = None,
+                        pid_alive=None) -> list[dict]:
+    """Dispatches whose watcher died before any result row landed — lost work
+    the log records half of and nothing used to read.
+
+    Three scars, one per organ that paid: T2.01 v3's waiter (SIGPIPEd ~80 min),
+    T2.04's watcher (2026-08-14, dead 53 min into a 1 h kernel — begat
+    `dispatch.sh`), and T1.09 (2026-09-01 23:11 — dispatched AROUND
+    `dispatch.sh` as a session child, dead at session end, kernel COMPLETE and
+    unharvested until the next iteration went digging on a hunch). The guard
+    that exists is launch-side and must be invoked; this is the harvest-side
+    detector for when it is bypassed or fails, wired into `run status` so the
+    loss self-reports on the one page every iteration reads.
+
+    The predicate that survives noise: a spec's LAST row in the log is an
+    attempt, and that attempt's pid is dead. A live pid is a watcher mid-run
+    (not a fault); a later row for the same spec — result or fresh attempt —
+    means some lane already picked the loss up (the JACK_REUSE_KERNEL reattach
+    writes its own attempt+result pair, so a recovered orphan goes quiet
+    instead of alarming forever). Rows with no `spec` field predate the
+    receipt fix and are skipped: nothing joinable, nothing actionable.
+    """
+    if rows is None:
+        rows = submissions()
+    if pid_alive is None:
+        def pid_alive(pid):
+            try:
+                os.kill(int(pid), 0)
+                return True
+            except (OSError, ValueError, TypeError):
+                return False
+    last_by_spec: dict[str, dict] = {}
+    for r in rows:
+        spec = r.get("spec")
+        if spec:
+            last_by_spec[spec] = r
+    out = []
+    for spec, r in sorted(last_by_spec.items()):
+        if r.get("phase") != "attempt" or pid_alive(r.get("pid")):
+            continue
+        ts = r.get("ts")
+        slug = (f"jack-ladder-{int(ts)}"
+                if isinstance(ts, (int, float)) else None)
+        out.append({"spec": spec, "spec_phase": r.get("spec_phase", ""),
+                    "backend": r.get("backend"), "iso": r.get("iso"),
+                    "pid": r.get("pid"), "slug": slug})
+    return out
+
+
 def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
            gpu: str = "T4", timeout_s: int = 900,
            fetch: Optional[list[str]] = None,
