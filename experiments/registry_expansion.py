@@ -1690,7 +1690,10 @@ EXPANSION: list[Spec] = [
                "and a 128-d globally-pooled bottleneck's learnable-and-not-"
                "already-readable signal measured +0.0299 where the spec "
                "demands +0.15. See the PILOT RECORD in "
-               "experiments/tests/t3_10_trunk_knowledge_survives.py."),
+               "experiments/tests/t3_10_trunk_knowledge_survives.py. "
+               "RELEASE: NONE (the redesign question is the Review's; no "
+               "successor spec is registered yet — the SM.02/UB.10 ids above "
+               "are precedent citations, not release conditions)."),
 
     # ── UNIFIED BRAIN (docs/research/UNIFIED_BRAIN.md; tier 4 = unison) ─
     Spec("UB.1", 4, "No modality collapse (the ablation matrix)",
@@ -2631,7 +2634,7 @@ EXPANSION: list[Spec] = [
                "fault and none moved the learnability ratios (nosmell/vis "
                "0.92 vs bar 0.60, nosmell/occ 0.98 vs bar 0.85); gates stay "
                "provisional, run() refuses, no fourth repair, no dispatch. "
-               "Successor: SM.03."),
+               "Successor: SM.03. RELEASE: SM.03"),
 
     Spec("SM.03", 2, "The nose reports what the eye cannot: occluded-source localisation",
          hypothesis="A small supervised readout on the certified odour channel "
@@ -3446,7 +3449,8 @@ EXPANSION: list[Spec] = [
                "lives); per the pre-registered rule: no ledger row, no "
                "envelope growth, no re-roll. Thermal/shelter coverage needs a "
                "successor spec that does not require this core to learn "
-               "seeking from an outside spawn. Successor: SH.02."),
+               "seeking from an outside spawn. Successor: SH.02. "
+               "RELEASE: SH.02"),
 
     Spec("SH.02", 2, "Born sheltered, he stays while it is cold - and only while it is cold",
          hypothesis="Spawned INSIDE a hut under lethal cold, the certified "
@@ -3700,7 +3704,7 @@ EXPANSION: list[Spec] = [
                "~0.0-0.1 s in this body vs the pre-registered 0.20 s floor "
                "(slides +0.09+/-0.07, adhesion +0.005+/-0.09, ground drive "
                "potent only toward-lean -0.685+/-0.16). BA.01 stands; the "
-               "successor claim in THIS body is BA.03.\n"
+               "successor claim in THIS body is BA.03. RELEASE: LT.08\n"
                "Registered under overseer B5 (2026-08-13): balance had no "
                "claim-kind spec, so its n_pass could not move no matter what "
                "ran. BA.01's two-channel note applies here as ablation "

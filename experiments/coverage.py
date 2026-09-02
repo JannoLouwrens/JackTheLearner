@@ -533,6 +533,211 @@ def root_dead(root: str, status: Optional[str] = None,
     return state
 
 
+# A park's stated release condition, as a DECLARATION inside the PARKED marker
+# line: `RELEASE: <spec id>` (repeatable) or `RELEASE: NONE` (this park has no
+# release spec — a terminal retirement). Same anti-prose guard as PARKED_MARK.
+# The syntax exists because BA.02's marker names five spec ids and only one is
+# its release; champions.py already paid for inferring that kind of thing by
+# regex (one seat's arena parsed to the words OUT LOUD). Per the 60th-audit
+# lesson a declaration syntax converts "badly formatted" into "absent", so the
+# parser must count the residue: a parked spec with no RELEASE: at all is
+# UNDECLARED-RELEASE, and its prose-named ids are still evaluated (a fallback,
+# loudly labelled as one) so an un-migrated row cannot go invisible.
+RELEASE_MARK = re.compile(r"(?<!`)RELEASE:\s*([A-Za-z0-9.]+)")
+
+# The park->release pairs measured unreachable when the class first ran
+# (62nd audit B3, FINDING 3). Shrink-only, same contract as the other
+# baselines: a pair leaves when the release becomes walkable (or the park is
+# lifted by a successor/redesign) and must then be removed here; a NEW pair is
+# a red exit, never a re-seed. Seeded 2026-09-02 after the class was verified
+# RED on the live registry: pre-migration it read 5 pairs (the audit's
+# BA.02->LT.08 among them) + 4 UNDECLARED-RELEASE; declaring the four markers'
+# own stated releases removed one prose false-positive (T3.10->SM.02, a
+# precedent citation) and one successor-of-a-successor (BA.02->BA.03, carried
+# by the VOID-FORECLOSED list), leaving these three, all true: a
+# constitutional sense parked behind a chain of FAILs priced over free quota,
+# and two commitments whose designated successors are themselves
+# PILOT-BLOCKED. All three await the w0/redesign desks (09-06, 09-11).
+PARK_RELEASE_BASELINE: frozenset = frozenset({
+    "BA.02->LT.08", "SH.01->SH.02", "SM.02->SM.03"})
+
+
+def park_release(by_id: Optional[dict] = None,
+                 parked_map: Optional[Dict[str, str]] = None,
+                 terminal: Optional[dict] = None,
+                 root_status: Optional[Dict[str, str]] = None) -> dict:
+    """`{"violations": [(parked sid, release id, state)], "undeclared": [...],
+    "none": [...], "declared": {sid: [ids]}}` — is each park's stated release
+    condition itself walkable? (62nd audit B3, FINDING 3.)
+
+    THE SCAR: two defaults fired on 2026-09-01 and parked `BA.02` — a
+    constitutional sense's only claim — "until the playground-humanoid line",
+    which is `LT.08`: blocked by `T2.01`/`T2.02`/the LT chain and priced by
+    its own registry note at 43 h per arm-seed against free-compute-only.
+    `run blocked` models reachability, `coverage` models claim-liveness, and
+    neither joined them to a park's release condition, so a commitment whose
+    revival was foreclosed by arithmetic read green on every gate.
+
+    A release is a VIOLATION when it is DANGLING (declared but resolving to
+    no registered spec), PARKED, foreclosed (`foreclosure()` — the shared
+    conjunction), `welded<-` (every terminal blocker dead — `root_dead()`),
+    or `blocked<-` (live roots). Blocked firing here is DELIBERATE and
+    different from `claim_reachability`, where blocked-is-alive is founding:
+    a claim behind a live FAIL is a queue position, but a PARK behind one is
+    a revival path that cannot be walked today, and that composition — legal
+    park, unreachable release — is exactly the fact no instrument could
+    utter. A `PASS` or runnable-today release is quiet.
+
+    All inputs injectable for `_park_release_fixture`, same idiom as
+    `claim_reachability`.
+    """
+    from .protocol import Ledger
+    from .run import _terminal_blockers
+    if by_id is None:
+        from .registry import BY_ID
+        by_id = BY_ID
+    if parked_map is None:
+        parked_map = parked(by_id)[0]
+    ledger = Ledger()
+    if terminal is None:
+        terminal = _terminal_blockers(ledger)
+
+    def _status_of(sid: str) -> Optional[str]:
+        if root_status is not None and sid in root_status:
+            return root_status[sid]
+        res = ledger.results.get(sid)
+        return getattr(getattr(res, "status", None), "name", None)
+
+    out: dict = {"violations": [], "undeclared": [], "none": [],
+                 "declared": {}}
+    for sid, reason in sorted(parked_map.items()):
+        declared = [t.rstrip(".") for t in RELEASE_MARK.findall(reason)]
+        if declared:
+            out["declared"][sid] = declared
+            targets = []
+            for t in declared:
+                if t == "NONE":
+                    continue
+                if t not in by_id:
+                    # A declaration is an assertion; an unresolvable one is
+                    # the loud failure direction, never silently dropped.
+                    out["violations"].append((sid, t, "DANGLING"))
+                else:
+                    targets.append(t)
+            if declared == ["NONE"]:
+                out["none"].append(sid)
+        else:
+            # Un-migrated row: no declaration. Counted as residue AND its
+            # prose-named ids still evaluated, so the class cannot be quieted
+            # by simply never migrating (60th-audit lesson). Only resolvable
+            # ids enter — the residue count is the loud half for the rest.
+            out["undeclared"].append(sid)
+            targets = [t for t in dict.fromkeys(GOAL_CITATION.findall(reason))
+                       if t != sid and t in by_id]
+        for rid in targets:
+            st = _status_of(rid)
+            if st == "PASS":
+                continue
+            state: Optional[str] = ("PARKED" if rid in parked_map
+                                    else foreclosure(rid, status=st)[0])
+            if state is None:
+                roots = terminal.get(rid, set()) - {rid}
+                if roots:
+                    if all(root_dead(r, status=_status_of(r),
+                                     parked_map=parked_map) for r in roots):
+                        state = "welded<-" + ",".join(sorted(roots))
+                    else:
+                        state = "blocked<-" + ",".join(sorted(roots))
+            if state:
+                out["violations"].append((sid, rid, state))
+    return out
+
+
+def _park_release_fixture() -> List[str]:
+    """Known-answer battery for `park_release` (62nd audit B3).
+
+    Planted shapes: the audit's exact case (a declared release behind a LIVE
+    FAIL root must fire `blocked<-` — the direction that stays ALIVE in
+    `claim_reachability` and deliberately fires HERE), `RELEASE: NONE` quiet,
+    a PASS release quiet, a runnable release quiet, a PARKED release firing,
+    a PILOT-BLOCKED release firing through the shared `foreclosure()`, a
+    DANGLING declaration firing, a welded release (all roots dead), and the
+    residue class: an undeclared marker is counted AND its prose ids still
+    evaluated, while an undeclared marker naming nothing yields residue only.
+    Stubbing idiom of `_welded_fixture`: protocol readers monkeypatched,
+    graph and statuses injected, so the CLAUSE is under test.
+    """
+    by_id = {q: object() for q in
+             ("Q.60", "Q.61", "Q.62", "Q.63", "Q.64", "Q.65")}
+    parked_map = {
+        # The audit's case: declared release blocked by a live FAIL root.
+        "Q.50": "2026-09-01 — parked until the body line. RELEASE: Q.60",
+        "Q.51": "2026-09-01 — terminal retirement. RELEASE: NONE",
+        "Q.52": "2026-09-01 — parked behind a done thing. RELEASE: Q.61",
+        "Q.53": "2026-09-01 — parked behind a park. RELEASE: Q.62",
+        "Q.62": "2026-08-01 — spent fork, names no release",
+        "Q.54": "2026-09-01 — parked. RELEASE: Q.99",
+        # Un-migrated prose row: names Q.63 with no declaration.
+        "Q.55": "2026-09-01 — re-parented behind Q.63 (the humanoid line)",
+        "Q.56": "2026-09-01 — parked. RELEASE: Q.64",
+        "Q.57": "2026-09-01 — parked. RELEASE: Q.65",
+    }
+    terminal = {"Q.60": {"Q.70"}, "Q.64": {"Q.62"}}
+    root_status = {"Q.60": "FAIL", "Q.61": "PASS", "Q.62": None,
+                   "Q.63": None, "Q.64": None, "Q.65": None, "Q.70": "FAIL"}
+
+    from . import protocol as _proto
+    real_vf, real_gf = _proto.void_foreclosed, _proto.gates_frozen
+    real_pb, real_po = _proto.pilot_blocked, _proto.pilot_owed
+    real_mpf = _proto.module_path_for
+    _proto.void_foreclosed = lambda sid, path=None: None
+    _proto.gates_frozen = lambda sid, path=None: False
+    _proto.pilot_blocked = (lambda sid, path=None:
+                            "measured: precondition fails"
+                            if sid == "Q.63" else None)
+    _proto.pilot_owed = lambda sid, path=None: None
+    _proto.module_path_for = lambda sid, strict=False: f"/x/{sid}.py"
+    try:
+        pr = park_release(by_id=by_id, parked_map=parked_map,
+                          terminal=terminal, root_status=root_status)
+    finally:
+        _proto.void_foreclosed, _proto.gates_frozen = real_vf, real_gf
+        _proto.pilot_blocked, _proto.pilot_owed = real_pb, real_po
+        _proto.module_path_for = real_mpf
+
+    got = {(s, r): st for s, r, st in pr["violations"]}
+    fails = []
+    if got.get(("Q.50", "Q.60")) != "blocked<-Q.70":
+        fails.append(f"park_release: a park behind a live-blocked release "
+                     f"must fire blocked<- (BA.02<-LT.08, the audit's case) — "
+                     f"got {got.get(('Q.50', 'Q.60'))!r}")
+    if got.get(("Q.53", "Q.62")) != "PARKED":
+        fails.append("park_release: a park released by a park must fire")
+    if got.get(("Q.54", "Q.99")) != "DANGLING":
+        fails.append("park_release: a declared release resolving to no spec "
+                     "must fire DANGLING, never be silently dropped")
+    if got.get(("Q.55", "Q.63")) != "PILOT-BLOCKED":
+        fails.append("park_release: an UNDECLARED row's prose-named release "
+                     "must still be evaluated (60th-audit lesson) and reach "
+                     "the shared foreclosure() — got "
+                     f"{got.get(('Q.55', 'Q.63'))!r}")
+    if got.get(("Q.56", "Q.64")) != "welded<-Q.62":
+        fails.append("park_release: a release whose every root is dead must "
+                     f"fire welded<- — got {got.get(('Q.56', 'Q.64'))!r}")
+    for quiet in ("Q.51", "Q.52", "Q.57"):
+        if any(s == quiet for s, _r, _st in pr["violations"]):
+            fails.append(f"park_release: {quiet} (NONE / PASS-release / "
+                         f"runnable-release) must be quiet")
+    if sorted(pr["undeclared"]) != ["Q.55", "Q.62"]:
+        fails.append(f"park_release: the UNDECLARED-RELEASE residue must "
+                     f"count exactly the markers with no RELEASE: — got "
+                     f"{sorted(pr['undeclared'])}")
+    if pr["none"] != ["Q.51"]:
+        fails.append("park_release: RELEASE: NONE must be recorded, not "
+                     "counted as undeclared")
+    return fails
+
+
 def claim_reachability(rows: Optional[List[dict]] = None,
                        terminal: Optional[dict] = None,
                        root_status: Optional[Dict[str, str]] = None
@@ -2438,7 +2643,7 @@ def check() -> int:
           + _pilot_blocked_fixture() + _pilot_owed_fixture()
           + _pilot_harvested_fixture() + _void_foreclosed_fixture()
           + _claim_dead_fixture() + _welded_fixture() + _exit_code_fixture()
-          + _unreachable_fixture() + u["refused"])
+          + _unreachable_fixture() + _park_release_fixture() + u["refused"])
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -2576,6 +2781,35 @@ def check() -> int:
     for m in u["stale_baseline"]:
         print(f"  {m}")
 
+    pr = park_release()
+    pr_pairs = {f"{s}->{r}" for s, r, _st in pr["violations"]}
+    pr_new = sorted(pr_pairs - PARK_RELEASE_BASELINE)
+    pr_stale = sorted(PARK_RELEASE_BASELINE - pr_pairs)
+    if pr["violations"]:
+        print(f"\n  PARK-ON-AN-UNREACHABLE-RELEASE (62nd audit B3): "
+              f"{len(pr['violations'])} park->release pair(s) whose stated "
+              f"revival path cannot be walked today:")
+        for s, r, st in pr["violations"]:
+            print(f"      {s} -> {r} ({st})")
+        print("  Each park was legal and evidence-backed; the defect is "
+              "COMPOSITIONAL — no dispatch\n  anywhere revives the commitment "
+              "behind these parks. The repair is an upstream\n  redesign or a "
+              "Review re-parent, never deleting the PARKED marker.")
+    if pr["undeclared"]:
+        print(f"  {len(pr['undeclared'])} UNDECLARED-RELEASE park(s) — the "
+              f"PARKED marker declares no `RELEASE:`, so any\n      reading "
+              f"above for these is a parse of prose. The repair is one line "
+              f"by whoever\n      parked it — `RELEASE: <spec id>` or "
+              f"`RELEASE: NONE`: {', '.join(pr['undeclared'])}")
+    if pr_new:
+        print(f"  {len(pr_new)} NEW unreachable-release pair(s) — route the "
+              f"redesign or re-parent the park;\n      never add to "
+              f"PARK_RELEASE_BASELINE (shrink-only): {', '.join(pr_new)}")
+    if pr_stale:
+        print(f"  {len(pr_stale)} baseline pair(s) are WALKABLE again and "
+              f"must be removed from PARK_RELEASE_BASELINE: "
+              f"{', '.join(pr_stale)}")
+
     if qf:
         print(f"  {len(qf)} QUEUE-FIXTURE FAILURE(S) — the instrument is "
               f"wrong, so its number above is not evidence:")
@@ -2595,12 +2829,15 @@ def check() -> int:
              "new_unrunnable_citation": gc["unrunnable_new"],
              "queue_fixture_failure": qf,
              "unreachable_grew": u["grown"],
-             "pilot_undeclared": q["pilot_undeclared"]},
+             "pilot_undeclared": q["pilot_undeclared"],
+             "new_park_release": pr_new,
+             "park_release_undeclared": pr["undeclared"]},
         amber={"malformed_declaration": bad,
                "stale_citation_baseline": gc["stale_baseline"],
                "stale_unrunnable_baseline": gc["unrunnable_stale_baseline"],
                "stale_queue_baseline": q["stale_baseline"],
-               "stale_unreachable_baseline": u["stale_baseline"]})
+               "stale_unreachable_baseline": u["stale_baseline"],
+               "stale_park_release_baseline": pr_stale})
 
 
 # RED = the ladder is making a claim it cannot support, or an instrument that
@@ -2639,10 +2876,12 @@ def _exit_code_fixture() -> List[str]:
     RED = ["uncovered", "claim_dead", "new_dangling_citation",
            "new_empty_class", "new_unrunnable_citation",
            "queue_fixture_failure", "unreachable_grew",
-           "pilot_undeclared"]
+           "pilot_undeclared", "new_park_release",
+           "park_release_undeclared"]
     AMBER = ["malformed_declaration", "stale_citation_baseline",
              "stale_unrunnable_baseline",
-             "stale_queue_baseline", "stale_unreachable_baseline"]
+             "stale_queue_baseline", "stale_unreachable_baseline",
+             "stale_park_release_baseline"]
     fails = []
     clean_red = {k: [] for k in RED}
     clean_amber = {k: [] for k in AMBER}
