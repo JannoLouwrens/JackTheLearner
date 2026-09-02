@@ -74,6 +74,62 @@ which is the asymmetry the `w0-too-shallow` row already flagged as design input.
 a computed bill can be SEQUENCED. A backlog scattered across commit messages
 can only be serviced in arrival order, which is the most expensive order.
 
+## THE 09-06 DOCKET — staggered 2026-09-02 (builder, 61st audit B2), in the
+## open, while it was still a forecast
+
+Eighteen OPEN rows carried `DUE: 2026-09-06` — one Sunday holding eighteen
+dated promises, against a FULL run budgeted 40 m / 120 turns that also owes
+Part 2, an anatomy audit and a completeness audit, and that has died four
+consecutive Sundays. The audit's B2 ordered the clocks staggered with a stated
+reason per row, or rows declined, BEFORE the dates went red — a mass re-arm on
+09-07 being the deadline-that-moves failure the `DUE:` mechanism replaced.
+
+Executed as follows. NOTHING is declined — every row will be taken; what moved
+is WHEN, and the reasons are on each row (second `DUE:` line, last one wins;
+the 09-06 lines stay in place as history). The organising distinction: the
+bundling rule binds world EDITS to one edit window, not DECISIONS to one
+sitting — a row that must be decided *in light of* Sunday's design belongs
+AFTER Sunday, not beside it.
+
+    09-06 (FULL)  w0-too-shallow, lt01-c2-body-cannot-rise,
+                  d10-learning-gate-uses-two-different-denominators,
+                  d10-learning-gate-sits-at-the-untrained-twin-level,
+                  lc07-checkpoint-branch
+                  — the coupled design bundle: the W0/W1 design, the
+                  world-vs-body fork, the gate venue judgment, and the
+                  checkpoint-vs-venue call. Plus the ACTED me11 row's owed
+                  family disposition (not re-armed; ACTED rows are not mine
+                  to touch).
+    09-07 (DAILY) sm03-heldout-split-saturated, t310-anticorrelated-gates,
+                  pl02-dependency-on-pl00-verdict-vs-table,
+                  champions-language-grounding-arena
+                  — four self-contained decisions with no coupling to the
+                  W0/W1 design.
+    09-08 (DAILY) ub10-seed-fragility-and-saturated-battery,
+                  d10-successor-rerun-under-adopted-gate,
+                  lg10-mouth-fidelity-vs-freedom
+                  (t309-control-clears-the-claims-own-margin was already
+                  here, deliberately off the pile)
+                  — consequence-stamps of Sunday's decisions plus the
+                  unison redesign, which has its own lineage.
+    09-09 (DAILY) ba03-null-saturates-the-horizon, sh02-null-saturation,
+                  t306-matched-magnitude-noise-buys-coverage
+                  — the three venue repair-arm picks, decided in light of
+                  the 09-06 design (if it resolves toward W1, the arm
+                  choices change).
+    09-10 (DAILY) reparenting-the-welded-fifteen,
+                  goal-cites-four-specs-that-resolve-to-corpses
+                  — registry surgery, downstream of the design and of
+                  lc07-checkpoint-branch respectively.
+    09-11 (DAILY) five-commitments-are-claim-dead-behind-foreclosures
+                  — the most downstream row on the board: successor specs
+                  need the design (09-06), the arm picks (09-09) and the
+                  re-parenting (09-10) as inputs.
+
+If a daily run cannot carry its day's rows, re-arm the slipped rows
+individually, in the open, with the slip as the reason — do not re-pile them
+onto a Sunday.
+
 ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2026-09-01 in 15eb02e (builder EXECUTED the 08-25 disposition — grid, selection, SCORED-AND-INELIGIBLE verdict all in ub_10_fusion_bakeoff.py; UB.10 unparked. The 08-25 'ACTED' meant only 'design written' and parked this row's spec for 7 days — the two-meaning token was Review 09-01 FOR THE BUILDER item 4, repaired the same day: that state is now DISPOSITIONED, which ages)
     Question: no single uniform training recipe trains all six matched-param
     UB.10 arms (warmup@1e-3 leaves A2/A3 dead; 3e-4 fixes A3 but breaks A4);
@@ -408,6 +464,11 @@ ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-
     DUE: 2026-09-06 | a design answer from the Review FULL run: what independent
         control certifies zero drift when phase A moves nothing, and whether
         +0.0299 is the ceiling of the question or of the substrate.
+    DUE: 2026-09-07 | the same design answer, moved to the Monday DAILY —
+        RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2, builder): the
+        zero-drift-control and bottleneck-headroom questions are about the
+        frozen-vs-plastic substrate, with no coupling to the W0/W1 venue
+        design the Sunday sitting owes; a daily run can carry it.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated.)
 
@@ -466,6 +527,12 @@ epochs shape goes above random, not below. Do not cite it.
 ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pilot_seed90.json) | OPEN
     DUE: 2026-09-06 | the Review picks the repair arm — the author must not; and
         F2 (the dead alive-proof) needs its own answer whichever arm wins.
+    DUE: 2026-09-07 | the same owed pick, moved to the Monday DAILY — RE-ARMED
+        2026-09-02 from 2026-09-06 (61st audit B2, builder): the fault is
+        split-geometry arithmetic (94.2 m² of exclusion asked of an 11.06 m²
+        annulus) plus a dead alive-proof, not venue shallowness — all three
+        arms are runnable whatever the W0/W1 design says, so this decision
+        does not need the Sunday FULL sitting and should not compete with it.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated.)
 
@@ -559,6 +626,12 @@ ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed
     DUE: 2026-09-06 | the Review picks among arms (a)/(b)/(c) — re-pointing a
         registered null is a spec redesign under the T1.02 precedent, not a
         builder's edit.
+    DUE: 2026-09-09 | the same pick, moved to the Wednesday DAILY — RE-ARMED
+        2026-09-02 from 2026-09-06 (61st audit B2, builder): the saturation
+        (every no-gradient arm holds its roof at 1.0000) is a venue property
+        and one of the nine w0-too-shallow instruments — the null should be
+        re-pointed IN LIGHT OF Sunday's W0/W1 design, three days later, not
+        in the same sitting.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated;
     its heading carried the declaration one `## ` away from being read.)
@@ -714,6 +787,11 @@ ROUTED: pl02-dependency-on-pl00-verdict-vs-table | 2026-08-30 | 4f8d99a (PL.02 r
     DUE: 2026-09-06 | the Review rules whether the PL.02 -> PL.00 edge means the
         cost TABLE (delivered) or the throughput VERDICT (failed, for renderer
         reasons); arm (iii), the renderer bakeoff, is runnable either way.
+    DUE: 2026-09-07 | the same ruling, moved to the Monday DAILY — RE-ARMED
+        2026-09-02 from 2026-09-06 (61st audit B2, builder): a dependency-edge
+        semantics ruling on the plastic-only lineage, independent of the W0/W1
+        design; arm (iii) is runnable under either answer, so nothing Sunday
+        decides changes this row.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated;
     its heading carried the declaration one `## ` away from being read.)
@@ -823,6 +901,10 @@ ROUTED: champions-language-grounding-arena | 2026-08-31 | 901f7fc (champions.py 
         bakeoff as inventory debt (this file's reading). A builder declining
         an overseer order is supposed to REACH the Review; until this line
         existed, it could not.
+    DUE: 2026-09-07 | the same tie-break, moved to the Monday DAILY — RE-ARMED
+        2026-09-02 from 2026-09-06 (61st audit B2, builder): a champions.py
+        declaration decision with no coupling to the W0/W1 design bundle;
+        small, self-contained, a daily can carry it.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated;
     its heading carried the declaration one `## ` away from being read.)
@@ -859,6 +941,12 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
         the next Review FULL run. Balance is a zero-pass GOAL.md commitment
         with three declared specs; nothing in it can move until this resolves.
+    DUE: 2026-09-09 | the same arm choice, moved to the Wednesday DAILY —
+        RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2, builder): the
+        ceiling that fired is a property of the world at this horizon, which
+        makes this a VENUE repair — it should be picked IN LIGHT OF the
+        w0-too-shallow design (09-06), not beside it in the same sitting; if
+        the design resolves toward W1, the arm choice changes.
     Question: BA.03's blind twin holds **11.868 +/- 0.073 s of a 12.0 s
     horizon (98.9%)**, so the claim has 0.132 s of room and needs 1.336 s —
     `claim_headroom_ratio` 0.236 +/- 0.184 against `HEADROOM_MIN_MULT` 2.0,
@@ -909,6 +997,12 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
         the next Review FULL run. Curiosity is the commitment with the most
         declared specs in the project after unison (12, 2 passing), and T3.06
         was its only implemented, unsettled claim spec.
+    DUE: 2026-09-09 | the same arm choice, moved to the Wednesday DAILY —
+        RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2, builder): the
+        matched-magnitude confound is about what THIS venue rewards (an
+        uninformative reward buying coverage), so the redesign should read
+        Sunday's W0/W1 design first — decided in its light on Wednesday, not
+        beside it in the same sitting.
     Question: T3.06's registered run VOIDed on one of four rig conjuncts —
     `random_dwell_worst_life` worst-seed bound 0.0227 vs a cap of 0.02, an
     extreme-value instrument frozen against a 16-life pilot and read at 48
@@ -969,6 +1063,12 @@ ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) +
     DUE: 2026-09-06 | the re-parenting design, owed by the Review's Sunday
         FULL run alongside `w0-too-shallow` — same window, coupled evidence
         (54th audit B6: "route this to REVIEW_QUEUE.md as its own row").
+    DUE: 2026-09-10 | the same re-parenting design, moved to the Thursday
+        DAILY — RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2, builder):
+        which roots stay foreclosed DEPENDS on the W0/W1 answer, so this is
+        downstream of Sunday's design, not beside it; the bundling rule binds
+        world EDITS to one edit window, and re-parenting edits the registry,
+        not playground.py. Paired with the GEN-corpses row, same surgery.
     Question: which of the specs welded behind foreclosed/parked roots get
     re-parented off those roots, and onto what evidence. The set, computed
     over `depends_on` at registry 211 (2026-08-31): **15 specs**, from three
@@ -1143,6 +1243,13 @@ ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca7
         four of the five commitments are downstream of the same W0 venue
         findings, so they sequence into ONE design window (the bundling
         rule).
+    DUE: 2026-09-11 | the same successor/re-parenting decision, moved to the
+        Friday DAILY — RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2,
+        builder): the most downstream row on the board — successor specs need
+        the W0/W1 design (09-06), the venue arm picks (09-09) and the
+        re-parenting outcome (09-10) as INPUTS, so it goes last in the
+        staggered docket; "one design window" here means one week decided in
+        dependency order, not one sitting.
     Question: `balance`, `smell`, `shelter/building` and `thermal (kills)` —
     four of the owner's own 2026-08-09 survival directives — have zero
     passing claims and every claim-kind spec PARKED or FORECLOSED
@@ -1220,6 +1327,11 @@ ROUTED: ub10-seed-fragility-and-saturated-battery | 2026-09-01 | UB.10-attempt-1
     DUE: 2026-09-06 | an arm/task redesign decision owed by the Review's
     Sunday FULL run; bundle beside `recipe-sensitivity`'s lineage (this row
     is what its 08-25 disposition, fully executed, measured next)
+    DUE: 2026-09-08 | the same redesign decision, moved to the Tuesday DAILY —
+    RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2, builder): the unison
+    bakeoff has its own lineage (recipe-sensitivity → the executed 08-25
+    disposition → this measurement) and no dependence on the W0/W1 design;
+    the bundle it names is a reading order, not a sitting.
 
 **What was measured (UB.10 attempt 1, VOID 2026-09-01, kernel
 jack-ladder-1788293396, ledger row committed 75aafd5; _check replayed
@@ -1313,6 +1425,12 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | OP
     accordingly and dispatches attempt 2 in W36) or direct a VOID-FORECLOSED
     declaration carrying the arithmetic below; past this date the row goes
     OVERDUE — the point is that the repair has an owner and a clock
+    DUE: 2026-09-08 | the same either/or, moved to the Tuesday DAILY —
+    RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2, builder): this row is
+    a pure consequence of the two `d10-*` gate rows, which STAY 09-06; the
+    gate is adopted Sunday, this consequence is stamped Tuesday, and W36 runs
+    to 09-13 so the attempt-2 dispatch loses nothing. The clock and owner
+    this row exists for are intact.
 
 **Why this row exists (60th audit FINDING 2, quoted arithmetic).** `D1.0`
 fired as D1's armed default, ran 16.17 GPU-hours — 54% of a weekly quota —
@@ -1350,6 +1468,12 @@ ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | OPE
     where a language-side hypothesis was measured against a bar the
     incumbent machinery cannot reach, and the repair is a redesign, not a
     re-roll.
+    DUE: 2026-09-08 | the same mouth-design decision, moved to the Tuesday
+    DAILY — RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2, builder):
+    the ME.11 family disposition it bundles beside lands Sunday, so a
+    Tuesday decision reads that disposition as a fresh INPUT instead of
+    competing with it for the same 120-turn sitting; language-side, no
+    coupling to the W0/W1 design.
 
 **What was measured (LG.10, attempts 1+2, 2026-09-02, both from clean trees;
 verdict artifact /data/lg10_llm_verdicts.json, 1588 verdicts, both frozen
@@ -1392,6 +1516,13 @@ ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-3
     a DOWNSTREAM row — the four citations go live the instant
     `lc07-checkpoint-branch` is decided, so read them together on Sunday and
     do not decide this one alone.
+    DUE: 2026-09-10 | the same disposition, moved to the Thursday DAILY —
+    RE-ARMED 2026-09-02 from 2026-09-06 (61st audit B2, builder): its own
+    text makes it downstream of `lc07-checkpoint-branch`, which STAYS 09-06;
+    a Thursday decision reads lc07's Sunday answer as input, honouring "do
+    not decide this one alone" while thinning the Sunday sitting. Paired
+    with `reparenting-the-welded-fifteen` — the four GEN ids' fate is the
+    same registry-surgery question.
 
 **What happened.** Review 2026-08-31 item 6 ordered the builder to register
 `GEN.02`/`GEN.03`/`GEN.06`/`GEN.09`, because GOAL.md cited four spec ids that
