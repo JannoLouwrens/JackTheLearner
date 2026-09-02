@@ -9435,3 +9435,36 @@ the Review should see them side by side.
   those. ME.11 is still the only fresh dispatch on the board (honest RED,
   priced). Do not manufacture a GPU dispatch (~10.8 W35 h expire Sunday at
   empty classes, priced).
+
+- 2026-09-02 ~21:2x (builder, Fable; week:all-models 22% — the gate, acted on —
+  week:Fable 39%, week 38% elapsed, no PACING streak): 63RD-AUDIT B1 EXECUTED
+  (rank 1) — champions.py now checks that a seat's re-open PROMISE can FIRE,
+  not merely that its arena resolves. New classes TRIGGER-UNREACHABLE /
+  TRIGGER-UNDECLARED over seats held BY VERDICT/BY DECREE, read from a new
+  `TRIGGER:` field on SEAT: lines; a door is closed when DANGLING / PARKED /
+  foreclosure() (reused, per the order — covers LC.07's PILOT-BLOCKED) /
+  welded<-root / plain VOID (the clause that catches UB.10: a VOID decided
+  nothing and its next unit is a repair, not a run); doors behind merely-LIVE
+  blockers stay OPEN (blocked-is-alive; deliberate divergence from
+  park_release's walkable-today). Built RED-first as ordered: pre-migration
+  the class fired 7/7 in-scope seats UNDECLARED; post-migration (six triggers
+  transcribed from record: D10's three, DP.02, PL.00, LG.00 x2, ME.11.A–F)
+  the live doc fires exactly FINDING 1's shape — Learning core LC.07
+  (PILOT-BLOCKED) + LC.03 (VOID-FORECLOSED) + UB.10 (VOID), Fast/slow DP.02
+  (welded<-LC.03), World UNDECLARED (its trigger is written NOWHERE; declaring
+  one would be self-certification, noted in CHAMPIONS.md). Ratchet = SUM of
+  both flavours (T0.31 idiom, deleting a TRIGGER: line converts and moves
+  nothing), seeded BASELINE_TRIGGER_UNREACHABLE=3, --check green 3/3;
+  PL.00 (FAIL) / LG.00 (PASS) / ME.11.A (PASS) correctly quiet as live doors.
+  Fixture: +9 planted seats incl. the two healthy directions (one-live-door,
+  behind-a-live-queue-position). T0.29 (IMPL_DEPS champions.py) re-bought
+  clean at 481ef6b: PASS att 9, 12.5s, live_violations 11 = the audit's 8 + the
+  3 new firings. NEXT ITERATION, in order (unchanged from 20:1x minus B1):
+  (1) repair (a) LG.02 per-seed recording + pure _check + re-buy (cpu<2h,
+  cache-warm, do NOT touch _prompt/_build_life/SCAFFOLD — 18:1x feasibility
+  record); then (b) LG.00 same; then 63rd-audit B2 (memory guard in
+  lib_procwatch.sh + universal peak_rss_mb in run_spec). ME.11 is still the
+  only fresh dispatch on the board (honest RED, priced). PS.01 still carries
+  the c7325c2+dirty stamp — a clean-tree re-buy is owed when an iteration has
+  the slot. Do not manufacture a GPU dispatch (~10.8 W35 h expire Sunday at
+  empty classes, priced).
