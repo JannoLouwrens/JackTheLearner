@@ -89,14 +89,19 @@ VOID  — the verdict artifact does not cover these prompts, or the null is not
         demonstrably alive on general knowledge, or the probe set is not
         certified for a seed.
 
-WORST-SEED GATES ARE READ, NOT ESTIMATED. `protocol._aggregate` hands `_check`
-the mean and population std across seeds, not the per-seed values, so "on every
-seed" has to come from somewhere else. It comes from `_MEMO`, which already
-holds every seed's full measurement: `run_spec` calls `_experiment` and then
-`_control` for all seeds BEFORE it calls `_check`, so by the time the gates run
-the per-seed values are in hand and the true minimum and maximum are facts to
-be looked up. `_check` VOIDs if they are not all present rather than falling
-back to anything.
+WORST-SEED GATES ARE READ FROM THE RECORDED ROW. `protocol._aggregate` hands
+`_check` the mean and population std across seeds, not the per-seed values, so
+"on every seed" has to come from somewhere else. Every gated metric is
+therefore recorded per seed as an explicit `<key>_s<seed>` key (each seed's
+run returns the full per-seed set, identical across runs, so run_spec's
+mean/std aggregation carries the values into the row verbatim), and `_check`
+is a pure function of (m, c) — no module state. The attempt-3 version read
+module-level `_MEMO` instead, so its PASS could not be replayed from its row;
+T0.13 attempt 22 flagged the gate keyless AND stale (2026-09-02 16:15), and
+this is that repair — the sibling of LG.02's, one commit later. Bars are
+byte-identical to the pre-registered ones; only recording and the gate's
+input source changed. A row missing a per-seed key the gates need returns
+VOID rather than falling back to anything.
 
 VOID RECORD — attempt 1, 2026-08-30 18:47 UTC, and it was MY ESTIMATOR, not the
 data. Attempt 1 gated the worst seed by the moment bound `mean -
@@ -377,22 +382,31 @@ def _paired(a: list, b: list):
     return adv, se
 
 
-def _per_seed(key: str) -> list:
-    """Every seed's value of `key`, from the measurements already taken.
-
-    `_check` only receives moments; the per-seed values it needs to say "on
-    every seed" are right here in `_MEMO`, because `run_spec` runs all seeds
-    before it checks. Reading them is not an estimate — see the VOID RECORD for
-    what estimating them cost.
-    """
-    return [_MEMO[s][key] for s in SEEDS]
-
-
-def _seeds_complete() -> bool:
-    return all(s in _MEMO for s in SEEDS)
-
-
 _MEMO: dict = {}
+
+# The keys each arm returns. _measure computes both sides in one pass; these
+# tuples are what partitions its output between experiment and control.
+_EXP_KEYS = ("n_life", "n_general", "n_certified", "retained_min_per_category",
+             "jack_acc_life", "null_acc_life", "grounded_knowledge_advantage",
+             "sigma_life", "jack_acc_certified", "null_acc_certified",
+             "retrieval_hit_rate_life", "retrieval_hit_rate_general",
+             "verdicts_missing")
+_CTL_KEYS = ("null_acc_general", "jack_acc_general", "advantage_general",
+             "general_retention", "wrong_acc_life", "wrong_margin",
+             "verdicts_missing")
+
+
+def _flat(seed: int, keys: tuple) -> dict:
+    """The seed's own metrics under their plain names (aggregated to mean/std
+    across runs, as before) PLUS every seed's value as an explicit
+    `<key>_s<seed>` key. The per-seed keys are identical in every run, so
+    run_spec's aggregation records them verbatim — that is what makes the
+    worst-seed gates in `_check` answerable from the row alone."""
+    out = {k: _MEMO[seed][k] for k in keys}
+    for s in SEEDS:
+        for k in keys:
+            out[f"{k}_s{s}"] = _MEMO[s][k]
+    return out
 
 
 def _measure(seed: int) -> dict:
@@ -489,10 +503,11 @@ def _measure(seed: int) -> dict:
 
 
 def _experiment(seed: int) -> dict:
-    m = _measure(seed)
-    return {k: v for k, v in m.items() if not k.startswith(
-        ("null_acc_general", "jack_acc_general", "advantage_general",
-         "general_retention", "wrong_"))}
+    # All seeds are computed (memoized — total work is unchanged) so every
+    # run can return the full per-seed key set; see _flat.
+    for s in SEEDS:
+        _measure(s)
+    return _flat(seed, _EXP_KEYS)
 
 
 def _control(seed: int) -> dict:
@@ -502,31 +517,60 @@ def _control(seed: int) -> dict:
     must not have LOST his general knowledge either.
     A STRANGER'S DIARY: same pipeline, same context shape, another life's facts.
     """
-    m = _measure(seed)
-    return {k: m[k] for k in ("null_acc_general", "jack_acc_general",
-                              "advantage_general", "general_retention",
-                              "wrong_acc_life", "wrong_margin",
-                              "verdicts_missing")}
+    for s in SEEDS:
+        _measure(s)
+    return _flat(seed, _CTL_KEYS)
+
+
+# Every per-seed key the gates consult; a row missing one cannot answer them.
+_NEED_M = tuple(f"{k}_s{s}" for k in (
+    "verdicts_missing", "retained_min_per_category", "sigma_life",
+    "jack_acc_life", "jack_acc_certified") for s in SEEDS)
+_NEED_C = tuple(f"{k}_s{s}" for k in (
+    "verdicts_missing", "null_acc_general", "advantage_general",
+    "general_retention", "wrong_margin") for s in SEEDS)
 
 
 def _check(m: dict, c: dict):
+    """Pure function of the recorded row — no module state, every key a
+    static m[...]/c[...] read, all read up front so each is consulted on
+    every replay regardless of which gate fires."""
+    if any(k not in m for k in _NEED_M) or any(k not in c for k in _NEED_C):
+        return Status.VOID          # the record cannot answer the gates
+    vm_m = (m["verdicts_missing_s0"], m["verdicts_missing_s1"],
+            m["verdicts_missing_s2"])
+    vm_c = (c["verdicts_missing_s0"], c["verdicts_missing_s1"],
+            c["verdicts_missing_s2"])
+    rmc = (m["retained_min_per_category_s0"],
+           m["retained_min_per_category_s1"],
+           m["retained_min_per_category_s2"])
+    sig = (m["sigma_life_s0"], m["sigma_life_s1"], m["sigma_life_s2"])
+    jal = (m["jack_acc_life_s0"], m["jack_acc_life_s1"],
+           m["jack_acc_life_s2"])
+    jac = (m["jack_acc_certified_s0"], m["jack_acc_certified_s1"],
+           m["jack_acc_certified_s2"])
+    nag = (c["null_acc_general_s0"], c["null_acc_general_s1"],
+           c["null_acc_general_s2"])
+    adv = (c["advantage_general_s0"], c["advantage_general_s1"],
+           c["advantage_general_s2"])
+    ret = (c["general_retention_s0"], c["general_retention_s1"],
+           c["general_retention_s2"])
+    wrm = (c["wrong_margin_s0"], c["wrong_margin_s1"], c["wrong_margin_s2"])
     # ── rig gates: VOID, not FAIL — a run that could not ask the question ──
-    if not _seeds_complete():
-        return Status.VOID       # cannot say "on every seed"; do not guess
-    if m["verdicts_missing"] > 0 or c["verdicts_missing"] > 0:
+    if max(vm_m) > 0 or max(vm_c) > 0:
         return Status.VOID       # the artifact does not cover these prompts
-    if min(_per_seed("null_acc_general")) < NULL_LIVE_MIN:
+    if min(nag) < NULL_LIVE_MIN:
         return Status.VOID       # the null is not demonstrably alive
-    if min(_per_seed("retained_min_per_category")) < RETAIN_MIN:
+    if min(rmc) < RETAIN_MIN:
         return Status.VOID       # LG.01's kills: not a certified probe set
     # ── the claim, and both controls, on EVERY seed ──
     return bool(
-        min(_per_seed("sigma_life")) >= SIGMA_MIN
-        and min(_per_seed("jack_acc_life")) >= JACK_LIFE_MIN
-        and min(_per_seed("jack_acc_certified")) >= JACK_LIFE_MIN
-        and max(_per_seed("advantage_general")) <= CONTROL_ADV_MAX
-        and min(_per_seed("general_retention")) >= GENERAL_RETENTION_MIN
-        and max(_per_seed("wrong_margin")) <= WRONG_DIARY_MARGIN)
+        min(sig) >= SIGMA_MIN
+        and min(jal) >= JACK_LIFE_MIN
+        and min(jac) >= JACK_LIFE_MIN
+        and max(adv) <= CONTROL_ADV_MAX
+        and min(ret) >= GENERAL_RETENTION_MIN
+        and max(wrm) <= WRONG_DIARY_MARGIN)
 
 
 def run(ledger: Ledger | None = None):
