@@ -1640,6 +1640,14 @@ EXPANSION: list[Spec] = [
                       "'ENABLED', and is never invoked.",
          null_baseline="Identical system, loop disabled.",
          metric="creative_contribution", budget=Budget.CPU_LONG,
+         control="WRONG-GOAL CONSULT. The identical trained loop, wired at "
+                 "the identical stuck-recovery call site, is handed a goal "
+                 "reflected through the rover (2*xy - goal): exactly as much "
+                 "information, exactly wrong. It must NOT buy the improvement "
+                 "the claim needs (off - shuf must stay under the same "
+                 "margin); if wrong-goal advice helps as much, the site "
+                 "rewards any detour perturbation and the test measures "
+                 "nothing.",
          kills="AlphaGeometryLoop.py (559 lines) — wire it or delete it."),
 
     Spec("T3.10", 3, "Trunk knowledge survives action training",
