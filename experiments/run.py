@@ -617,8 +617,93 @@ def cmd_status(ledger: Ledger) -> int:
               f"from the record. Not back-filled — the sha of today's words "
               f"proves\n    nothing about a run from before them. A re-run "
               f"upgrades each to a real stamp.\n")
+    _check_red_delta_detector()
+    red = deliberate_red_deltas(ledger)
+    if red:
+        print("  ! DELIBERATELY-RED GATES — held FAIL by a pending decision. "
+              "The number inside\n    still moves; read it as a measurement, "
+              "not a token:")
+        for sid, metric, cur, prev, prev_at in red:
+            if cur is None:
+                print(f"      {sid}  {metric} MISSING from the latest row "
+                      f"(was {prev} at {prev_at}) — the\n      instrument "
+                      f"lost its number; that is a fault, not a quiet day.")
+            elif prev is None:
+                print(f"      {sid}  {metric} = {cur}  (no prior observation "
+                      f"in history)")
+            elif cur != prev:
+                delta = (f"{cur - prev:+}"
+                         if isinstance(cur, (int, float))
+                         and isinstance(prev, (int, float)) else f"was {prev}")
+                print(f"      {sid}  {metric} = {cur}  (MOVED {delta} since "
+                      f"{prev_at}; was {prev}). Say so in\n      your report — "
+                      f"a re-run does not remove what moved it.")
+            else:
+                print(f"      {sid}  {metric} = {cur}  (unchanged since "
+                      f"{prev_at})")
+        print()
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
+
+
+# Gates deliberately held RED by a pending decision, and the measurement each
+# still carries: spec id -> the metric that moves. A RED held by a decision
+# stops being read as a number and starts being read as a known token —
+# T0.27's `live_violations` moved 1 -> 2 -> 3 over five days while two reports
+# called the row "unchanged" and a third called the incident "clear", three
+# days before D16 fires on the stale count (62nd audit, FINDING 1). Add an
+# entry whenever a gate is parked RED with a moving metric inside; remove it
+# when its decision lands.
+DELIBERATE_RED_METRICS = {"T0.27": "live_violations"}
+
+
+def deliberate_red_deltas(ledger: Ledger, watch=None) -> list:
+    """(spec_id, metric, current, previous, prev_ran_at) for each watched
+    deliberately-RED gate with a ledger entry. `previous` comes from the
+    newest history row carrying the metric (None when never observed before);
+    `current` is None when the latest row LOST the metric — reported, not
+    skipped, because an instrument going quiet is the failure mode this
+    reader exists for."""
+    watch = DELIBERATE_RED_METRICS if watch is None else watch
+    out = []
+    for sid, metric in sorted(watch.items()):
+        r = ledger.results.get(sid)
+        if r is None:
+            continue
+        cur = (r.metrics or {}).get(metric)
+        prev = prev_at = None
+        for row in reversed(r.history or []):
+            m = row.get("metrics") or {}
+            if metric in m:
+                prev, prev_at = m[metric], row.get("ran_at", "?")
+                break
+        out.append((sid, metric, cur, prev, prev_at))
+    return out
+
+
+def _check_red_delta_detector() -> None:
+    """Plant a moved metric inside a RED entry and require the reader to
+    report the move — plus the two shapes that must stay quiet or degrade
+    loudly (no entry at all; entry that lost the metric). The scar: a metric
+    inside a permanently-RED gate is unwatched by construction, so the delta
+    must come from the reader, not from a reporter remembering to look
+    (62nd audit B2)."""
+    from types import SimpleNamespace as NS
+    planted = NS(results={
+        "ZZ.RED": NS(metrics={"violations": 3},
+                     history=[{"metrics": {"violations": 1}, "ran_at": "t0"},
+                              {"metrics": {"violations": 2}, "ran_at": "t1"}]),
+        "ZZ.LOST": NS(metrics={}, history=[{"metrics": {"violations": 2},
+                                            "ran_at": "t2"}])})
+    got = deliberate_red_deltas(planted, watch={"ZZ.RED": "violations",
+                                                "ZZ.LOST": "violations",
+                                                "ZZ.ABSENT": "violations"})
+    want = [("ZZ.LOST", "violations", None, 2, "t2"),
+            ("ZZ.RED", "violations", 3, 2, "t1")]
+    if got != want:
+        raise RuntimeError(
+            f"the red-delta reader returned {got}, expected {want} — "
+            "refusing to report a scan it may not have performed")
 
 
 def gpu_orphans() -> list:
