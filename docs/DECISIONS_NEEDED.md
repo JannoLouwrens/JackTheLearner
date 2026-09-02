@@ -4100,3 +4100,66 @@ decide_by before the next slot via `experiments.decisions`, never more than 3
 consecutive skips). A completed audit is the only thing that resets the
 state, so a dead audit forces the next slot to run — fails toward more
 oversight. Full record and reversal path in `DECISIONS_RESOLVED.md`.
+
+## D16 — EVIDENCE UPDATE 2026-09-02 00:45 UTC (60th overseer audit). The premise moved: a second violation appeared the day AFTER (b) shipped, and one of the two is recoverable.
+
+`D16` fires 2026-09-05 on the armed default *(b) ALONE — the warning stands,
+`T0.27` stays RED and is not touched*. Two facts have changed since the entry
+was written on 2026-08-29, and both are measurements rather than arguments.
+
+**1. The warning did not stop the recurrence.** The entry reads *"the live
+audit reads 4 checked pairs, 26 unauditable, 1 violation"*. Live now, from
+`protocol.audit_supersedes_fail` against the real ledger:
+
+    2 violations, 7 checked pairs, 24 unauditable
+      LG.00   VOID   8faff43+dirty   2026-08-30T18:47:59
+      T0.17   FAIL   d84101e+dirty   2026-08-29T13:14:23
+
+`T0.17` is the pair the entry was filed on. **`LG.00` is new, and it was
+recorded on 2026-08-30 — after `_warn_if_dirty_before_running` was live.** The
+entry's own forecast was that the shape "fires more, not less" as rows gain
+stamps, and it has: checked pairs 4 -> 7, violations 1 -> 2. One counter-example
+is not a refutation of option (b), and (b) remains the option that costs the
+ladder a visible failure rather than the one that makes it green. But the
+premise "this reduces the rate" now has a measurement against it, and the
+default should fire (or not) on that number rather than on the 08-29 snapshot.
+
+**2. The two violations are not the same kind, and the instrument says they
+are.** `T0.17`'s failing implementation is provably unrecoverable — checked
+with `tree_reconstructing_sha` on 2026-08-30, no committed tree state
+reconstructs `072ea7a4d72997cc`. `LG.00`'s is **not** lost:
+
+    refs/jack/failimpl/LG.00/2026-08-30T18-47-59  ->  blob d39a0ef
+
+written by `preserve_impl_bytes`, which re-derives `impl_sha_of` from the bytes
+it stored and refuses to write the ref unless it equals the sha the row names —
+so the ref existing is proof, not assertion. The firing commit `6c008d9`
+additionally publishes the exact per-seed table (26, 22, 21), states that
+`RETAIN_MIN` stayed at `LG.01`'s 20 and `SIGMA_MIN` at the registry's 3.0, and
+ADDS a VOID gate. For that pair the `git diff` the rule demands is possible and
+the disclosure the rule distrusts is unusually complete.
+
+`audit_supersedes_fail` nevertheless reports both with the same sentence:
+*"that implementation was never committed"*, which is true of one and false of
+the other.
+
+**What this does NOT propose.** Nothing here asks for the gate to be relaxed.
+That question — *should a verified preserved manifest be a second lane?* — is
+already routed, by the builder, in `docs/REVIEW_QUEUE.md` at line 493, with the
+FOR and AGAINST both written out and the author declining to rule on his own
+mechanism. The overseer's addition is only that **that row is currently
+invisible to `run review-queue`** (60th audit FINDING 1: it is one of six routed
+rows carrying no `^ROUTED:` declaration line, so the reader counts 20 of 26).
+So the question is on a desk that cannot see it, which is worth knowing when
+the desk is asked to have answered it.
+
+**The honest reading for 09-05:** (b) is still defensible and still weakens
+nothing. If it fires, the ledger keeps a red row that is correct about one pair
+and over-stated about the other, and the mechanism keeps preserving bytes either
+way. If the owner would rather rule on (c), the evidence for it is stronger than
+it was on 08-29 — and the argument against it is unchanged and still good: the
+red is a deterrent against amending a FAIL from an uncommitted tree, and an
+automatic artifact makes that practice cheap.
+
+*Recorded by the overseer; no gate touched, no default edited, `decide_by`
+2026-09-05 unchanged.*

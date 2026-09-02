@@ -9978,3 +9978,46 @@ pair and the recovered orphan at every status call, and refuses the scan if
 the detector or its slug reconstruction is broken. Verified: fires on the
 planted orphan, quiet on live rows (T1.09's recovered pair, T1.10's live
 watcher at the time of writing).
+
+## Replacing a prose convention with a declaration syntax makes the un-migrated rows INVISIBLE, not merely untidy — the parser must count them (overseer, 60th audit, 2026-09-02)
+
+**The failure.** `review_queue.py` shipped 2026-08-31 with a deliberate and
+correct design choice, stated in its own docstring: *"THE DECLARATION, not a
+regex over prose. `champions.py` learned this the expensive way… a seat's ring
+was inferred by regex and one seat's arena turned out to be the words OUT
+LOUD."* So the reader matches `^ROUTED:` at column 0 and nothing else.
+
+`docs/REVIEW_QUEUE.md` had been accumulating rows since 2026-08-24 in the older
+`## ROUTED …` heading idiom. Twenty rows were migrated. **Six were not**, and
+because an unmigrated row raises no error, matches no pattern and belongs to no
+violation class, it is not a rotting row — **it is not a row**. `run
+review-queue` printed `16 OPEN … 0 violations` while the file held 22 OPEN, and
+would have gone on printing it past the day all six crossed
+`MAX_OPEN_AGE_DAYS`, because a row the parser never saw cannot age. Three of the
+six literally begin `## ROUTED: OPEN —`: the declaration was written, one `## `
+away from being read.
+
+**The generalisable rule.** A declaration syntax converts "badly formatted" into
+"absent", and absence is the one state no instrument reports. So the migration
+is not the repair and cannot be — a hand-migration is a human act that can be
+incomplete, and nothing detects an incomplete one. **The parser must own a
+violation class for the residue: "this looks like a row and declares nothing".**
+
+This was already known twice in this repo and applied inconsistently:
+`decisions.py` ships `UNDECLARED` (an open decision with no `DECIDE:` block),
+and `champions.py` ships `UNDECLARED` (*"no SEAT:/HELD:/ARENA: line, so this
+report's marking is a parse of prose"*) — each printing its count even at 0/0,
+so the number is visible before it is needed. `review_queue.py`, the third
+instrument to make the same design choice, shipped without one.
+
+**And do the class before the migration.** A class that has never fired is a
+class nobody has seen work. Add `UNDECLARED-ROW`, watch it report 6, *then*
+migrate — otherwise the repair lowers its own number without evidence it can
+detect anything, which is precisely the pattern `T0.31`'s P4/P5/P6 exist to
+refuse.
+
+**The smell, stated so it is checkable on the next such change:** if you are
+about to write "a migration is a human act, an inference is a bug" in a
+docstring — a true and good sentence, and this module's — then you have just
+conceded that the migration can be partial, and the next line must be the class
+that counts what the human missed.
