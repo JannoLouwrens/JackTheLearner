@@ -1284,3 +1284,42 @@ reviewed unit, not a freeze-step side effect.
 
 Whatever is chosen, the pilot's numbers are spent evidence: no re-roll, no
 second pilot, and LC.07 stays refusing until a decision writes the freeze.
+
+## ROUTED 2026-09-02 (builder, 60th audit B2): `d10-successor-rerun-under-adopted-gate` — the project's largest unblock returned an honest VOID and became nobody's work in the same motion
+
+ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | OPEN
+    DUE: 2026-09-06 | the Review must either adopt a gate option on the two
+    `d10-*` gate rows (then the builder repairs the D1.0 learning gate
+    accordingly and dispatches attempt 2 in W36) or direct a VOID-FORECLOSED
+    declaration carrying the arithmetic below; past this date the row goes
+    OVERDUE — the point is that the repair has an owner and a clock
+
+**Why this row exists (60th audit FINDING 2, quoted arithmetic).** `D1.0`
+fired as D1's armed default, ran 16.17 GPU-hours — 54% of a weekly quota —
+and returned VOID (`c_e2e` 2.56σ against the 3.0σ learning gate). The two
+sibling rows (`d10-learning-gate-uses-two-different-denominators`,
+`d10-learning-gate-sits-at-the-untrained-twin-level`, both DUE 2026-09-06)
+correctly scope themselves to FUTURE gate design and disclaim the re-run,
+so no row, no `DUE:` and no priority line owned fixing the arm — while
+`T2.01` (frees 35, blocks 38) waits on D1.0's winner and the
+Control-architecture seat reads VACANT with `champions --check` ok.
+
+**The named unit is REPAIR-AND-RERUN, and the arithmetic says it is NOT
+foreclosed.** A `VOID-FORECLOSED` declaration must show the verdict cannot
+change at this envelope. It can: (a) the fired conjunct is a gate-scoring
+artifact, not an envelope wall — `c_e2e` returned 404.3 vs random's 108.7,
+a 3.7× gain, scored against its OWN wider spread, with the untrained twins
+at 2.94–2.96σ against the 3.0 bar; (b) the venue fits — attempt 1's three
+kernels each ran under the 8.5 h ceiling (largest ~4.1 h) and W36 opens
+2026-09-06 00:00 UTC with a full 30 h against attempt 1's measured 16.17 h.
+Sequencing: an UNCHANGED re-dispatch is a seed-lottery redraw and stays
+forbidden; attempt 2 exists only under a gate design adopted on the sibling
+rows first (committed before dispatch, σ bar unmoved — strengthen-only per
+SYSTEM.md law 4). That is the T2.02 path: fix the rig, then re-run; the
+recorded VOID stands either way.
+
+**The honest alternative, on its face.** If the Review judges the venue the
+common cause (`w0-too-shallow` bundle) and declines a gate repair, the
+terminal state is a `VOID-FORECLOSED` declaration quoting this arithmetic —
+this row then converts rather than vanishes. What may NOT happen is what the
+last seven days did: 16.17 hours buying a VOID that no instrument owns.

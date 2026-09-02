@@ -230,12 +230,25 @@ _KERNEL_SPLIT: Optional[tuple] = None   # tuple of kernels; each kernel is a
                                         # seed's arm+null must share a kernel
 _KERNEL_EST_HOURS: Optional[tuple] = None  # per kernel, from measured dec/s
 _PILOT_ARTIFACT = "/data/lc07_pilot.json"
-_PILOT_OWED = (
-    "per-condition decisions/s (process+wall) for all 7 run classes; "
-    "wiring: arm/wiped/randrew optimiser_steps > 0, twin == 0, statue == 0; "
-    "physics_finite == 1 on every condition; "
-    "peak RSS per condition and projected full-scale RSS; "
-    "projected hours per full-scale run and the A/B/C branch decision"
+# Pilot-BLOCKED, not pilot-owed: the seed-90 pilot RAN and its pre-registered
+# branch B fired. Declared 2026-09-02 (builder, 60th audit B3) transcribing the
+# PILOT RECORD above; no new judgement here, and this is NOT a park — every
+# _PILOT_OWED item was measured and the rig is green; what the pilot measured
+# is that no full-scale run fits the only free venue.
+_PILOT_BLOCKED = (
+    "PILOT RECORD seed 90, 2026-09-01 21:13-21:40, kernel "
+    "jack-ladder-1788297232, 0.44 h, head 40f66b3, artifact "
+    "/data/lc07_pilot.json: branch B (CHECKPOINT) fired. Rule A requires "
+    "EVERY full-scale run <= 8.5 h wall; the CHEAPEST class (statue) "
+    "projects 14.49 h (1.7x over) and the arm 40.86 h (4.8x over) from "
+    "measured dec/s; the whole plan is ~526 wall-hours against 30 h/week. "
+    "All 7 run classes measured, wiring exact, physics_finite 1.0, RSS "
+    "537-549 MB — the rig is green and the venue is what failed. "
+    "_GATES_FROZEN stays False, run() keeps refusing, the envelope does not "
+    "shrink and no constant moved. The repair is a REDESIGN routed to the "
+    "Review as `lc07-checkpoint-branch` (DUE 2026-09-06): checkpoint/resume "
+    "surgery on survival.py, a CPU venue, or a Review/owner re-read of "
+    "'~10x'. Do not re-run the pilot; it is spent evidence."
 )
 
 PILOT_SEED = 90                 # disjoint from registered seeds
