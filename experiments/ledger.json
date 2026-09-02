@@ -15390,32 +15390,60 @@
       "status": "PASS"
     },
     "T1.09": {
-      "amended": [
-        {
-          "at": "2026-08-19T07:36:23",
-          "by": "overseer-17th-audit-B2",
-          "changes": [
-            {
-              "field": "hardware",
-              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
-              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
-            }
-          ],
-          "commit": "f47c372+dirty",
-          "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
-        }
-      ],
-      "attempt": 1,
-      "commit": "a0b9569",
+      "amended": [],
+      "attempt": 2,
+      "commit": "d96042b",
+      "compute_s": 190.32,
       "control_metrics": {
         "absurd_batch": 1024,
         "absurd_oom": true,
         "absurd_peak_gb": -1
       },
-      "duration_s": 221.29,
+      "duration_s": 27.8,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1788304286",
       "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "amended": [
+            {
+              "at": "2026-08-19T07:36:23",
+              "by": "overseer-17th-audit-B2",
+              "changes": [
+                {
+                  "field": "hardware",
+                  "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+                  "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+                }
+              ],
+              "commit": "f47c372+dirty",
+              "reason": "provenance amendment: hardware stamped the dispatcher while metrics[gpu] names the machine that ran the work; reconciled via --fix-hardware, status/metrics/seeds untouched"
+            }
+          ],
+          "commit": "a0b9569",
+          "control_metrics": {
+            "absurd_batch": 1024,
+            "absurd_oom": true,
+            "absurd_peak_gb": -1
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "backend": "kaggle",
+            "gpu": "Tesla P100-PCIE-16GB",
+            "headroom_gb": 8.437,
+            "oom_at_batch_64": false,
+            "peak_gb_at_batch_128": 6.322,
+            "peak_gb_at_batch_64": 3.563,
+            "vram_total_gb": 15.89
+          },
+          "ran_at": "2026-08-06T07:52:19",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "25d9a01da5659231",
       "message": "",
       "metrics": {
         "backend": "kaggle",
@@ -15426,11 +15454,13 @@
         "peak_gb_at_batch_64": 3.563,
         "vram_total_gb": 15.89
       },
-      "ran_at": "2026-08-06T07:52:19",
+      "preserved_impl": null,
+      "ran_at": "2026-09-02T00:09:43",
       "seeds": [
         0
       ],
       "spec_id": "T1.09",
+      "spec_sha": "86253793776a9934",
       "status": "PASS"
     },
     "T1.10": {

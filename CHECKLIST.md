@@ -99,9 +99,9 @@ Every line here is backed by an experiment that could have failed;
       - _then delete:_ Any single-seed claim in this repo.
 - [x] **T1.09** Fits in P100 memory
       - _asserts:_ Peak VRAM < 14 GB at the intended batch size.
-      - _dies if:_ OOM on a 16 GB T4.
+      - _dies if:_ OOM on a 16 GB P100.
 - [x] **T1.10** CPU and GPU agree
-      - _asserts:_ Same seed, same data: CPU and T4 losses agree within tolerance.
+      - _asserts:_ Same seed, same data: CPU and P100 losses agree within tolerance.
       - _dies if:_ Divergence beyond float32 accumulation error.
 - [x] **T1.13** The grounding pairs are real
       - _asserts:_ Every language-action pair fed to training is a genuine observation, and the language is correlated with the motion it is attached to.
