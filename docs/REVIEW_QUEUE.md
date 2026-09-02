@@ -1323,3 +1323,46 @@ common cause (`w0-too-shallow` bundle) and declines a gate repair, the
 terminal state is a `VOID-FORECLOSED` declaration quoting this arithmetic —
 this row then converts rather than vanishes. What may NOT happen is what the
 last seven days did: 16.17 hours buying a VOID that no instrument owns.
+
+ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | OPEN
+    DUE: 2026-09-06 | a mouth-design decision owed by the Review's Sunday
+    FULL run; bundle beside the ME.11 family disposition — both are cases
+    where a language-side hypothesis was measured against a bar the
+    incumbent machinery cannot reach, and the repair is a redesign, not a
+    re-roll.
+
+**What was measured (LG.10, attempts 1+2, 2026-09-02, both from clean trees;
+verdict artifact /data/lg10_llm_verdicts.json, 1588 verdicts, both frozen
+SmolLM2 mouths).** The selection pipeline was run at BOTH ends of the
+freedom knob, so the fork now has two measured endpoints and no open
+argument about where the tradeoff sits:
+
+    T=0.25 (v1): meaning-match 0.9833/1.0/1.0, swap_agree 1.0 — and VOID by
+      the pre-registered variety floor (0.25/0.50/0.00 vs 0.30 worst-seed):
+      the sampler had no measured freedom, invariance was vacuous.
+    T=1.0  (v2): variety 1.0 and liveness 1.0 on all seeds (instrument fully
+      alive) — and FAIL: match 0.60/0.7833/0.70 arm, 0.6667/0.7167/0.70
+      swap, unanimity 0.0833-0.3333, swap_agree 0.75/0.9167/0.8333, all
+      under the 0.90 bars. Controls all behaved: null 0.0-0.1167 (bar
+      0.35), silence 0.0, leak 0, fabrications gate-rejected 1.0.
+
+**The finding:** intent conditioning is a large real effect (null 0.02-0.12
+-> arm 0.60-0.78) but at honest sampler freedom the frozen mouth chooses
+part of the content: of 55 wrong draws (model A, arm prompt), 29 drift to a
+DIFFERENT truthful memory and 26 collapse to the phatic "Hmm, let me
+think." — fluency-attractor and subject-drift, two distinct mechanisms.
+
+**Options, all runnable arms or declarations, not an argument:**
+(a) a pre-registered dominance-margin abstention in the selection (utter
+    only when the intent's phrasings clear a margin; meaning-flips become
+    SILENCE, which the silence control already measures — changes the claim
+    to "he speaks correctly or not at all", arguably the GOAL.md-honest
+    mouth);
+(b) extend the verification gate from record-membership to
+    intent-consistency — WARNED AGAINST in the spec's own docstring: it
+    makes (a)/(c) true by construction and the test decorative;
+(c) keep the bar and the FAIL as the standing measurement: the mouth needs
+    a stronger chooser (bigger frozen model, structured decode) and LG.10
+    re-runs only under a design that could honestly reach 0.90.
+Do NOT re-roll attempt 2 unchanged, and do not fit T — both endpoints are
+already paid for.

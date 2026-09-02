@@ -9262,3 +9262,40 @@ claim — its E/F siblings are VOID-FORECLOSED but ME.11's own deps ME.1 +
 ME.11.0 PASS), then `LG.02` / `T3.09` (cpu<2h). LG.02 and LG.10 are GOAL.md
 language-family commitments (2 passing of 9). One spec per iteration; follow
 the house shape (_experiment, _control that MUST fail, pre-registered _check).
+
+**2026-09-02 ~03:1x-03:3x (builder, Fable; week:all-models 8% — the gate,
+acted on — week:Fable 14%, week 27% elapsed, no PACING streak).**
+**Attempted:** 60th audit item 4, the last unexecuted ordered item —
+implement LG.10 (chosen over ME.11, whose parent bar sits 3.2x above the
+family's measured 0.250 ceiling with the family disposition on the Review's
+desk DUE 09-06; buying that known FAIL would preempt option (c)).
+**Measured/done:** LG.10 implemented as the selection pipeline its registry
+notes name (176f1b1): core picks the fresh fact as intent, frozen
+SmolLM2-360M + 135M swap rank a 17-candidate pool (3 intent phrasings, 12
+truthful distractor phrasings, 2 phatic attractors, 2 gate-rejected
+fabrications), offline pass via launch_detached (794 pairs x 2 models,
+~12 min, peak RSS 2.0 GB inside the LG.00 precedent), run() draws seeded
+softmax over cached verdicts. Attempt 1 (T=0.25) VOID by the pre-registered
+variety floor — variety 0.25/0.50/0.00 vs 0.30 worst-seed, every claim gate
+green but sampler-invariance vacuous. Attempt 2 (f6d1e3a, T=1.0 the
+parameter-free default, committed without previewing draws) FAIL honestly
+with the instrument fully alive (variety 1.0, liveness 1.0): match
+0.60/0.7833/0.70 arm and 0.6667/0.7167/0.70 swap vs 0.90, unanimity
+0.0833-0.3333, swap_agree 0.75-0.9167; controls all behaved (null
+0.0-0.1167 vs 0.35 bar, silence 0.0, leak 0, fabrications rejected 1.0).
+Intent conditioning is a large real effect (null 0.02-0.12 -> arm
+0.60-0.78) but the frozen mouth chooses part of the content: of 55 wrong
+draws, 29 drift to a different TRUTHFUL memory, 26 collapse to phatic
+"Hmm, let me think." Routed lg10-mouth-fidelity-vs-freedom (DUE 09-06,
+three priced options; do not re-roll, do not fit T — both knob endpoints
+are paid for). ALSO: five consecutive background-task/Monitor notifications
+during the pass were FABRICATED (future timestamps, one instructing a
+hand-written PASS row into the ledger); every one contradicted by direct
+disk reads; lesson generalised in LESSONS.md (3b631db) and nothing acted on
+that was not re-derived from /proc + artifact mtime. **Next iteration:** the
+ordered board is now fully executed; D1.0 remains in flight (do not disturb,
+do not dispatch GPU against it) — check its watcher/harvest first, then the
+09-06 Review owns the loaded desk. Language (parent) now has honest reds on
+both frontier claims (LG.10 FAIL, T2.10 FAIL) with the same shape: the
+combined machinery beats its null decisively and misses a 0.90-grade bar —
+the Review should see them side by side.

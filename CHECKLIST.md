@@ -837,7 +837,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 4 — COMPOSITION — does adding B break A?
 
-- [ ] **LG.10** Jack chooses what to say; the LLM only chooses how
+- [!] **LG.10** Jack chooses what to say; the LLM only chooses how  — gate_rejected_fab_frac=1.0; gate_rejected_fab_frac_std=0.0
       - _asserts:_ Utterance MEANING tracks Jack's internal state and diary, not the language model. Three independent measurements: (a) same state, different LLM sampling seeds -> same meaning, different wording; (b) different state, same LLM -> different meaning; (c) SWAP THE LLM for a different frozen model -> meaning preserved, style changes.
       - _dies if:_ Meaning varies with the sampler, or survives a state change, or changes when the LLM is swapped. Any of the three means the language model is choosing the content and Jack is being ventriloquised.
       - _then delete:_ Any speech path where the LLM receives free rein over content. If the model swap changes what he means, the mind was in the mouth.
