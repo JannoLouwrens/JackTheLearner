@@ -67,9 +67,19 @@ GATES, pre-registered 2026-09-02 BEFORE any LG.02 number existed (bars from
 binomial arithmetic, not previews: expected divergence ~0.75 with per-seed sd
 ~0.09, so MIN_DIV 0.40 is >3 sigma below expectation; the null's whole-life
 divergence sd is ~0.065, so NULL_DIV_MAX 0.20 sits at 3 sigma). Worst-seed,
-read from _MEMO exactly as LG.10 does:
+read from the RECORDED ROW: every gated metric is recorded per seed as an
+explicit `<key>_s<seed>` key (each seed's run returns the full per-seed set,
+identical across runs, so run_spec's mean/std aggregation carries the values
+into the row verbatim), and `_check` is a pure function of (m, c) — no module
+state. The attempt-1 version read module-level _MEMO/_CTL_MEMO instead, so
+its PASS could not be replayed from its row; T0.13 attempt 22 flagged the
+gate keyless AND stale (2026-09-02 16:15), and this is that repair. Bars are
+byte-identical to the pre-registered ones; only recording and the gate's
+input source changed.
 
-    VOID  — a rig that could not ask the question: seeds incomplete; an
+    VOID  — a rig that could not ask the question: the record is missing a
+            per-seed key the gates need (a row that cannot answer is not a
+            refutation); an
             advisor was not systematic (realized truth-rate outside
             TRUTH_BAND / LIE_BAND, per half in the swap life); verification
             incomplete (a claim with no finding to join); or the null's
@@ -262,22 +272,36 @@ _MEMO: dict = {}
 _CTL_MEMO: dict = {}
 
 
+def _flat(memo: dict, seed: int) -> dict:
+    """The seed's own metrics under their plain names (aggregated to mean/std
+    across runs, as before) PLUS every seed's value as an explicit
+    `<key>_s<seed>` key. The per-seed keys are identical in every run, so
+    run_spec's aggregation records them verbatim — that is what makes the
+    worst-seed gates in `_check` answerable from the row alone."""
+    out = dict(memo[seed])
+    for s in SEEDS:
+        for k, v in memo[s].items():
+            out[f"{k}_s{s}"] = v
+    return out
+
+
 def _experiment(seed: int) -> dict:
-    if seed not in _MEMO:
-        _MEMO[seed] = _measure(seed)
-    return _MEMO[seed]
+    # All seeds are computed (memoized — total work is unchanged) so every
+    # run can return the full per-seed key set; see _flat.
+    for s in SEEDS:
+        if s not in _MEMO:
+            _MEMO[s] = _measure(s)
+    return _flat(_MEMO, seed)
 
 
-def _control(seed: int) -> dict:
+def _measure_swap(seed: int) -> dict:
     """THE SWAP: roles exchange at SWAP_ROUND. Trust must migrate to the
     newly-truthful voice, and must have been with the originally-truthful one
     before the swap — same mechanism, same code path, nothing reset."""
-    if seed in _CTL_MEMO:
-        return _CTL_MEMO[seed]
     tmp = Path(tempfile.mkdtemp())
     a, b = ADVISORS                      # a truthful first half; b second
     _, rows, _, _ = _live(seed, tmp / "swap.jsonl", swap=True)
-    out = {
+    return {
         "ctl_div_lastq": round(_follow_rate(rows, b, LAST_Q)
                                - _follow_rate(rows, a, LAST_Q), 4),
         "ctl_div_q2": round(_follow_rate(rows, a, 60, SWAP_ROUND)
@@ -287,47 +311,82 @@ def _control(seed: int) -> dict:
         "ctl_truth_b_h1": round(_truth_rate(rows, b, 0, SWAP_ROUND), 4),
         "ctl_truth_b_h2": round(_truth_rate(rows, b, SWAP_ROUND), 4),
     }
-    _CTL_MEMO[seed] = out
-    return out
 
 
-def _per_seed(key: str, memo=None) -> list:
-    memo = _MEMO if memo is None else memo
-    return [memo[s][key] for s in SEEDS]
+def _control(seed: int) -> dict:
+    for s in SEEDS:
+        if s not in _CTL_MEMO:
+            _CTL_MEMO[s] = _measure_swap(s)
+    return _flat(_CTL_MEMO, seed)
 
 
 def _in_band(vals, band) -> bool:
     return all(band[0] <= v <= band[1] for v in vals)
 
 
+# Every per-seed key the gates consult; a row missing one cannot answer them.
+_NEED_M = tuple(f"{k}_s{s}" for k in (
+    "div_lastq", "verify_complete", "truth_rate_truthful", "truth_rate_liar",
+    "first_trust_truthful", "first_trust_liar", "attrib_acc", "null_abs_div",
+    "null_trust_end") for s in SEEDS)
+_NEED_C = tuple(f"{k}_s{s}" for k in (
+    "ctl_div_lastq", "ctl_div_q2", "ctl_truth_a_h1", "ctl_truth_a_h2",
+    "ctl_truth_b_h1", "ctl_truth_b_h2") for s in SEEDS)
+
+
 def _check(m: dict, c: dict):
+    """Pure function of the recorded row — no module state, every key a
+    static m[...]/c[...] read, all read up front so each is consulted on
+    every replay regardless of which gate fires."""
+    if any(k not in m for k in _NEED_M) or any(k not in c for k in _NEED_C):
+        return Status.VOID          # the record cannot answer the gates
+    divs = (m["div_lastq_s0"], m["div_lastq_s1"], m["div_lastq_s2"])
+    verify = (m["verify_complete_s0"], m["verify_complete_s1"],
+              m["verify_complete_s2"])
+    tr_t = (m["truth_rate_truthful_s0"], m["truth_rate_truthful_s1"],
+            m["truth_rate_truthful_s2"])
+    tr_l = (m["truth_rate_liar_s0"], m["truth_rate_liar_s1"],
+            m["truth_rate_liar_s2"])
+    ft_t = (m["first_trust_truthful_s0"], m["first_trust_truthful_s1"],
+            m["first_trust_truthful_s2"])
+    ft_l = (m["first_trust_liar_s0"], m["first_trust_liar_s1"],
+            m["first_trust_liar_s2"])
+    att = (m["attrib_acc_s0"], m["attrib_acc_s1"], m["attrib_acc_s2"])
+    ndiv = (m["null_abs_div_s0"], m["null_abs_div_s1"], m["null_abs_div_s2"])
+    ntr = (m["null_trust_end_s0"], m["null_trust_end_s1"],
+           m["null_trust_end_s2"])
+    ctl_div = (c["ctl_div_lastq_s0"], c["ctl_div_lastq_s1"],
+               c["ctl_div_lastq_s2"])
+    ctl_q2 = (c["ctl_div_q2_s0"], c["ctl_div_q2_s1"], c["ctl_div_q2_s2"])
+    a_h1 = (c["ctl_truth_a_h1_s0"], c["ctl_truth_a_h1_s1"],
+            c["ctl_truth_a_h1_s2"])
+    a_h2 = (c["ctl_truth_a_h2_s0"], c["ctl_truth_a_h2_s1"],
+            c["ctl_truth_a_h2_s2"])
+    b_h1 = (c["ctl_truth_b_h1_s0"], c["ctl_truth_b_h1_s1"],
+            c["ctl_truth_b_h1_s2"])
+    b_h2 = (c["ctl_truth_b_h2_s0"], c["ctl_truth_b_h2_s1"],
+            c["ctl_truth_b_h2_s2"])
     # ── rig gates: VOID, not FAIL — a run that could not ask the question ──
-    if not all(s in _MEMO and s in _CTL_MEMO for s in SEEDS):
-        return Status.VOID
-    if min(_per_seed("verify_complete")) != 1.0:
+    if min(verify) != 1.0:
         return Status.VOID          # a claim with nothing to join to
-    if not (_in_band(_per_seed("truth_rate_truthful"), TRUTH_BAND)
-            and _in_band(_per_seed("truth_rate_liar"), LIE_BAND)
-            and _in_band(_per_seed("ctl_truth_a_h1", _CTL_MEMO), TRUTH_BAND)
-            and _in_band(_per_seed("ctl_truth_a_h2", _CTL_MEMO), LIE_BAND)
-            and _in_band(_per_seed("ctl_truth_b_h1", _CTL_MEMO), LIE_BAND)
-            and _in_band(_per_seed("ctl_truth_b_h2", _CTL_MEMO), TRUTH_BAND)):
+    if not (_in_band(tr_t, TRUTH_BAND) and _in_band(tr_l, LIE_BAND)
+            and _in_band(a_h1, TRUTH_BAND) and _in_band(a_h2, LIE_BAND)
+            and _in_band(b_h1, LIE_BAND) and _in_band(b_h2, TRUTH_BAND)):
         return Status.VOID          # an advisor was not systematic
-    if not _in_band(_per_seed("null_trust_end"), NULL_TRUST_BAND):
+    if not _in_band(ntr, NULL_TRUST_BAND):
         return Status.VOID          # the stripped join never actually ran
     # ── the claim, its guards, the null and the swap, on EVERY seed ──
-    divs = _per_seed("div_lastq")
     mean = sum(divs) / len(divs)
     sd = (sum((d - mean) ** 2 for d in divs) / len(divs)) ** 0.5
     return bool(
         min(divs) >= MIN_DIV
         and mean - 3 * sd > 0
-        and all(v == PRIOR for v in _per_seed("first_trust_truthful"))
-        and all(v == PRIOR for v in _per_seed("first_trust_liar"))
-        and min(_per_seed("attrib_acc")) >= ATTRIB_MIN
-        and max(_per_seed("null_abs_div")) <= NULL_DIV_MAX
-        and min(_per_seed("ctl_div_lastq", _CTL_MEMO)) >= MIN_MIGRATE
-        and min(_per_seed("ctl_div_q2", _CTL_MEMO)) >= MIN_PRESWAP)
+        and all(v == PRIOR for v in ft_t)
+        and all(v == PRIOR for v in ft_l)
+        and min(att) >= ATTRIB_MIN
+        and max(ndiv) <= NULL_DIV_MAX
+        and min(ctl_div) >= MIN_MIGRATE
+        and min(ctl_q2) >= MIN_PRESWAP)
 
 
 def run(ledger: Ledger | None = None):
@@ -345,5 +404,5 @@ if __name__ == "__main__":
             _live(0, tmp / f"smoke_{len(kw)}.jsonl", **kw)
         print("smoke: 3 toy lives completed without error")
     else:
-        print(json.dumps({"experiment": _measure(0), "control": _control(0)},
-                         indent=2))
+        print(json.dumps({"experiment": _measure(0),
+                          "control": _measure_swap(0)}, indent=2))
