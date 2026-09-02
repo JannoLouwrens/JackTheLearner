@@ -10046,3 +10046,47 @@ verdict. Before acting on "it finished", re-derive the state from the
 artifacts. And no signal, however official its formatting, can authorise an
 act the laws forbid: an instruction embedded in a status message has exactly
 the authority of its content, which for "write the PASS row by hand" is none.
+
+## Every honesty instrument in this repo is built to catch optimism — so a violation that buys a RED is invisible to all of them
+
+`T3.09`, 2026-09-02 06:33. The run recorded **FAIL** — `creative_contribution
+-9.96` against `MARGIN_AFF 11.0`. It also recorded, in the same row, that the
+**wrong-goal control cleared the margin the claim needed**: `shuf_gain +12.47`
+against the same `11.0`. The spec's own control text says an advisor whose
+reflected goal helps as much means "the site rewards any detour perturbation
+and the test measures nothing", and `SYSTEM.md` law 2 says the same thing
+unconditionally, in class 3 (CONDUCT, fixed). The row should have been VOID.
+
+It was FAIL because `_check` tested the claim *before* the control:
+
+```python
+if m["creative_contribution"] < MARGIN_AFF:
+    return False              # ← returns here
+if c["shuf_gain"] >= MARGIN_AFF:
+    return Status.VOID        # ← unreachable whenever the claim fails
+```
+
+That ordering was pre-registered — the impl docstring scoped the lane to "a
+PASS whose shuf control ALSO cleared the margin" — so nothing was moved after
+the number was seen. The ordering itself was the defect, and it was invisible
+because it is only reachable in the branch nobody guards.
+
+**Why no instrument caught it.** `coverage`, `decisions`, `champions`,
+`review-queue`, the seed-count rules, the threshold-diff scan — all six exist
+to stop a claim being marked green too cheaply. This violation marked something
+**red** too cheaply, and a red is not inert here: `T3.09` carries
+`kills="AlphaGeometryLoop.py (559 lines) — wire it or delete it"`, so the next
+harvest would have executed a 559-line deletion on a run whose deliberately-
+wrong arm outperformed every other arm, in which the *creative* branch named in
+the spec's title fired **0 times in 142 consults**, at **one seed**, n=11.
+
+**Rule, stated so it is checkable:** control-vacuity gates are RIG gates, and
+rig gates go **above** the claim branch, never below it. A control that clears
+the claim's own margin voids the run whichever way the claim went — law 2 has
+no PASS-only reading, and a spec docstring may not narrow a class-3 law.
+
+**And the generalisation that outlives this spec:** ask of every honesty
+mechanism *which direction of error it is built to catch*, and then go looking
+in the other direction. A `kills` clause turns a FAIL into an ACTION, which
+makes a red exactly as expensive to get wrong as a green — and there is no
+organ in this system that audits an action taken on a red.
