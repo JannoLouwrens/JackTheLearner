@@ -98,6 +98,15 @@ from the root. `archive/AlphaGeometryLoop.py` is byte-identical (verified
 and self-disable. DIRECTION_AUDIT (line 1126) predicted delete; the ledger,
 not the audit, decides.
 
+ATTEMPT RECORD (2026-09-02). Attempts 1 (dirty tree) and 2 (clean db4e0e7)
+both VOID on the site-under-exercise lane: n_affected 6 < 8 at N_LIVES 16,
+rig otherwise fully alive (calibrated 1.0, off fed 0.8125, 48 consults, 32
+train pairs, shuf alive). The eval-world affected rate (0.375) undershot the
+train-world fixture (0.625). Repair: N_LIVES 16 -> 32 (see the constant's
+comment — a prefix-preserving extension, chosen for being the only repair
+that is independent of the previewed n=6 metrics; those numbers are quoted
+in the VOID row and decide nothing). No gate, margin, or predicate moved.
+
 Honesty notes, pre-registered:
   - Whether `solve` answers from its direct branch or its creative branch is
     the module's own behavior under real state (its height/force/velocity
@@ -137,7 +146,20 @@ IMPL_DEPS = ["AlphaGeometryLoop.py", "SymbolicCalculator.py",
 # ── pre-registered constants ───────────────────────────────────────────────
 WORLD_EVAL = 7            # fresh world: XL.01 designed on 0-2, recorded 3-5
 WORLD_TRAIN = 6           # proposer training + harvest world, never evaluated
-N_LIVES = 16              # per arm; every arm sees the identical spawn list
+N_LIVES = 32              # per arm; every arm sees the identical spawn list.
+                          # 16 -> 32 after the 2026-09-02 attempt-2 VOID
+                          # (n_affected 6 < MIN_AFFECTED 8: eval world 7
+                          # wedged 6/16 vs the train fixture's 10/16, with
+                          # obstructed_frac 1.0 — the predicate held, the
+                          # world under-wedged). The unique preview-
+                          # independent repair for that lane: sample size.
+                          # _plan_spawns draws sequentially from one RNG, so
+                          # the first 16 spawns are an exact prefix — this
+                          # EXTENDS the life list, it does not redraw it.
+                          # Bin(32, 6/16) leaves ~5% residual VOID risk on
+                          # the same lane; every gate constant below is
+                          # untouched and MIN_AFFECTED stays the absolute
+                          # floor it always was.
 N_PILOT = 8               # harvest lives on WORLD_TRAIN (off-mode)
 CAP_LIFE = xl.CAP_LIFE    # 1500 decisions = 300 s measurement window
 DETOUR_DIST = 1.5         # m; advised waypoint distance at a consult
