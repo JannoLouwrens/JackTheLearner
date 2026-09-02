@@ -5383,7 +5383,12 @@ EXPANSION: list[Spec] = [
                     "ACTED must name its executing commit, a commitless ACTED "
                     "is its own violation that no relabelling lowers, and the "
                     "honest repair (ACTED with the commit) clears the row "
-                    "without tripping anything.",
+                    "without tripping anything; (9) a row written as prose "
+                    "under a `## ` heading is COUNTED (UNDECLARED-ROW), never "
+                    "parsed — the six pre-declaration shapes the 60th audit "
+                    "found invisible fire exactly six, an attached ROUTED: "
+                    "declaration clears one, and the file's legitimate prose "
+                    "headings stay exempt.",
          falsified_by="Any property failing; the battery running fewer than "
                       "N_PROPERTIES; or the live `docs/REVIEW_QUEUE.md` "
                       "failing to parse into rows that are all in contract. "
@@ -5393,8 +5398,10 @@ EXPANSION: list[Spec] = [
                       "opening a row, a prose date being read as a clock, a "
                       "class in `VIOLATIONS` that no document can trigger, "
                       "a finding the report does not print, a DISPOSITIONED "
-                      "row that goes quiet instead of ageing, or a commitless "
-                      "ACTED stamp clearing a red row.",
+                      "row that goes quiet instead of ageing, a commitless "
+                      "ACTED stamp clearing a red row, or a routed section "
+                      "written under a `## ` heading being invisible to the "
+                      "count.",
          null_baseline="THE READER THAT ACTUALLY EXISTED — `grep '^ROUTED:' "
                        "docs/REVIEW_QUEUE.md | wc -l`, published in the file's "
                        "own contract line and, until 2026-08-31, the whole of "

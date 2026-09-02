@@ -59,6 +59,27 @@ its status text (>=7 hex chars containing a letter, so a bare date-stamp
 cannot pass as one); an `ACTED` naming no commit is the two-meaning token
 reborn and is its own violation, `ACTED-WITHOUT-A-COMMIT`.
 
+THE PRE-DECLARATION RESIDUE IS COUNTED, NEVER PARSED (60th audit, 2026-09-02).
+Replacing the prose convention with a declaration syntax made the un-migrated
+rows INVISIBLE rather than untidy: six sections written in the pre-declaration
+idiom — each under its own `## ` heading, each saying "Status: OPEN" or
+"ROUTED: OPEN" in its own words, three carrying the declaration INSIDE the
+heading (`## ROUTED: OPEN — ...`, one `## ` away from being read) — were not
+rows at all to this parser. `run review-queue` printed 20 of the file's 26,
+and all six would have crossed MAX_OPEN_AGE_DAYS with no number moving,
+because a row the parser never saw cannot age. `decisions.py` and
+`champions.py` both ship an UNDECLARED class for exactly this residue; this
+module alone had none. So: a `## ` heading that ANNOUNCES a row — it opens
+with the word ROUTED or with a backticked row id — is a CANDIDATE, and a
+candidate whose heading block is not immediately followed (blank lines aside)
+by a real column-0 `ROUTED:` declaration is `UNDECLARED-ROW`. The heading is
+never parsed into a row: a declaration inside a heading will keep being
+written, and counting it is the guard — reading it would be the champions.py
+regex mistake (`901f7fc`) again. Known limit, stated so nobody discovers it
+as a scar: a routed section whose heading carries neither marker is still
+invisible; the two marker shapes are the two that have actually been written,
+and the T0.31 fixture pins both at the audit's count of six.
+
 THE RATCHET COUNTS EVERY CLASS, because counting one is how the other three
 instruments in this repo were gamed by accident (`coverage.py`, closed by
 `T0.21` P2; `decisions.py`'s `NO-DEFAULT`, closed by `T0.28` P9;
@@ -66,6 +87,9 @@ instruments in this repo were gamed by accident (`coverage.py`, closed by
 disease, found three separate times). Here the conversions a tidy-up would
 reach for are named and each is its own violation:
 
+    write the new row as prose under
+      a heading, declaring nothing       -> UNDECLARED-ROW  (an invisible row
+                                                             cannot age)
     delete a rotting row                 -> VANISHED        (rows are never
                                                              deleted: the file's
                                                              contract, T1.02)
@@ -123,9 +147,16 @@ STATUSES = LIVE + TERMINAL
 #: absent from this tuple is a class the exit code cannot see.
 VIOLATIONS = ("MALFORMED", "OVERDUE", "STALE", "HOLD-WITHOUT-A-CLOCK",
               "HOLD-ON-A-RESOLVED-BLOCKER", "VANISHED", "CLOCK-REMOVED",
-              "ACTED-WITHOUT-A-COMMIT")
+              "ACTED-WITHOUT-A-COMMIT", "UNDECLARED-ROW")
 
 _ROUTED = re.compile(r"^ROUTED:\s*(.*)$")
+#: A `## ` heading that ANNOUNCES a routed row. Two shapes have actually been
+#: written (60th audit): the prose idiom `## ROUTED 2026-08-30 (builder): ...`
+#: / `## ROUTED: OPEN — ...`, and the backticked-id lead `## \`t310-...\` — `.
+#: A prose-rule heading (THE BUNDLING RULE) matches neither and is exempt —
+#: this file legitimately holds prose that is not a row.
+_CANDIDATE = re.compile(r"^##\s*(?:ROUTED\b|`)")
+_HEADING = re.compile(r"^#{1,6}\s")
 _DECL = re.compile(r"^(DUE|BLOCKED-BY):\s*(.*)$")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _LOG_ROW = re.compile(r"^\|\s*(\d{4}-\d{2}-\d{2})\s*\|")
@@ -205,6 +236,30 @@ def parse(doc: str) -> list[dict]:
     return rows
 
 
+def undeclared_rows(doc: str) -> list[tuple[int, str]]:
+    """(line number, heading text) for every candidate heading with no
+    declaration attached — attached meaning the first line after the heading
+    block that is neither blank nor a further heading line is a column-0
+    `ROUTED:` line. The heading is COUNTED, never parsed: no id, no date and
+    no status are read out of it, however loudly it states them.
+    """
+    lines = doc.splitlines()
+    out: list[tuple[int, str]] = []
+    i = 0
+    while i < len(lines):
+        if not _CANDIDATE.match(lines[i]):
+            i += 1
+            continue
+        lineno, head = i + 1, lines[i].lstrip("#").strip()
+        j = i + 1
+        while j < len(lines) and (_HEADING.match(lines[j]) or not lines[j].strip()):
+            j += 1
+        if j >= len(lines) or not _ROUTED.match(lines[j]):
+            out.append((lineno, head))
+        i = j
+    return out
+
+
 def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) -> dict:
     """Every violation in `doc`, with `prev_doc` (the previous committed
     revision) as the only baseline. Pure: no clock, no git, no filesystem —
@@ -214,6 +269,14 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) 
     rows = parse(doc)
     by_id = {r["id"]: r for r in rows if r["id"]}
     findings: list[tuple[str, str, str]] = []      # (class, row id, why)
+
+    for lineno, head in undeclared_rows(doc):
+        findings.append(("UNDECLARED-ROW", f"line {lineno}",
+                         f"a `## ` heading announces a row ({head[:72]!r}) and no "
+                         "ROUTED: declaration follows it — to this parser it is "
+                         "not a row at all, so it cannot age, go OVERDUE, or be "
+                         "counted; migrate it by writing the ROUTED: line under "
+                         "the heading"))
 
     for r in rows:
         rid = r["id"] or "(unnamed)"
@@ -321,8 +384,9 @@ def render(a: dict, last_run: str = "") -> str:
         out.append("  (ACTED, naming the executing commit), refuse it (DECLINED),")
         out.append("  or move the date by writing a new DUE: with a reason. A")
         out.append("  design alone is DISPOSITIONED and keeps ageing. Deleting")
-        out.append("  the row, relabelling it HELD, dropping its DUE:, or")
-        out.append("  stamping ACTED with no commit are each their own violation")
+        out.append("  the row, relabelling it HELD, dropping its DUE:, stamping")
+        out.append("  ACTED with no commit, or writing the row as prose under a")
+        out.append("  heading with no ROUTED: line are each their own violation")
         out.append("  — see VIOLATIONS in experiments/review_queue.py.")
     else:
         out.append("")

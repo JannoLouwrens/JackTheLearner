@@ -404,6 +404,13 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
 ## `t310-anticorrelated-gates` — a spec whose rig control and claim gate move in
 ## OPPOSITE directions under the same knob (builder, 2026-08-30; T3.10 PARKED)
 
+ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-2, seed 90, Colab T4) | OPEN
+    DUE: 2026-09-06 | a design answer from the Review FULL run: what independent
+        control certifies zero drift when phase A moves nothing, and whether
+        +0.0299 is the ceiling of the question or of the substrate.
+    (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
+    ROUTED: syntax and was invisible to `run review-queue` until migrated.)
+
 **Routed here by the spec's own pre-registered fork (ii), not by an argument.**
 The one-diagnostic cap (SM.02/UB.10 precedent) is SPENT: no third recipe was
 tried and none may be. Full receipts in `t3_10_trunk_knowledge_survives.py`'s
@@ -456,6 +463,12 @@ epochs shape goes above random, not below. Do not cite it.
 ## ROUTED 2026-08-30 (builder): `SM.03`'s held-out split is saturated — pick the
 ## repair arm, do not let me pick it
 
+ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pilot_seed90.json) | OPEN
+    DUE: 2026-09-06 | the Review picks the repair arm — the author must not; and
+        F2 (the dead alive-proof) needs its own answer whichever arm wins.
+    (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
+    ROUTED: syntax and was invisible to `run review-queue` until migrated.)
+
 **Status: OPEN. Gates provisional, `run()` still refuses, nothing dispatched.**
 
 The full-size seed-90 pilot ran on CPU in 8 minutes (`/data/sm03_pilot_seed90.json`,
@@ -494,6 +507,21 @@ is measured.
 ## as `audit_supersedes_fail`'s artifact? I built the mechanism and deliberately
 ## did not answer this
 
+ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_impl_bytes mechanism) | OPEN
+    DUE: 2026-09-05 | `D16` (armed default, docs/DECISIONS_NEEDED.md) fires and
+        the owner's answer disposes this row; the gate is the owner's, not the
+        Review's and not mine.
+    Second data point (2026-09-02, added at migration per 60th audit B5): the
+    question now has one counter-example in each direction. `LG.00`'s failing
+    bytes ARE preserved and cryptographically verified at
+    `refs/jack/failimpl/LG.00/2026-08-30T18-47-59`, so of the two live `T0.27`
+    violations one is recoverable and one (`T0.17`) is not — and
+    `audit_supersedes_fail` reports both with the same sentence, "that
+    implementation was never committed", which is true of only one of them.
+    The gate itself is not changed here — that is `D16`.
+    (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
+    ROUTED: syntax and was invisible to `run review-queue` until migrated.)
+
 **Status: OPEN. No gate was moved. `T0.27` is still FAIL for its real reason.**
 
 `run_spec` now archives the exact bytes of every `+dirty` FAIL/VOID into git's
@@ -526,6 +554,14 @@ only some disk in `.git`.
 
 ## ROUTED: OPEN — `sh02-null-saturation`: the born-inside geometry has no headroom, and the fix is an arm redesign
 ## (builder, 2026-08-30 11:33 UTC; pilot artifact `/data/sh02_pilot_seed90.json`, spec commit `8abfa70`)
+
+ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed90.json) | OPEN
+    DUE: 2026-09-06 | the Review picks among arms (a)/(b)/(c) — re-pointing a
+        registered null is a spec redesign under the T1.02 precedent, not a
+        builder's edit.
+    (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
+    ROUTED: syntax and was invisible to `run review-queue` until migrated;
+    its heading carried the declaration one `## ` away from being read.)
 
 **The measurement.** `SH.02`'s seed-90 pilot (N=3000/arm, 6 arms, ~19 min)
 fired the spec's own pre-registered `HEADROOM` VOID. Every arm without a live
@@ -674,6 +710,14 @@ ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
 ## the constitution's only registered falsifier, and I will not edit the
 ## dependency myself (builder, 2026-08-30, spec commit `4f8d99a`, PL.00 attempt 1)
 
+ROUTED: pl02-dependency-on-pl00-verdict-vs-table | 2026-08-30 | 4f8d99a (PL.02 registration; PL.00 attempt 1 FAIL) | OPEN
+    DUE: 2026-09-06 | the Review rules whether the PL.02 -> PL.00 edge means the
+        cost TABLE (delivered) or the throughput VERDICT (failed, for renderer
+        reasons); arm (iii), the renderer bakeoff, is runnable either way.
+    (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
+    ROUTED: syntax and was invisible to `run review-queue` until migrated;
+    its heading carried the declaration one `## ` away from being read.)
+
 **The situation, in three lines.** `PL.02` is the sole registered falsifier of
 the PLASTIC-ONLY decree (`GOAL.md:76`) — the thing seven consecutive audits
 asked for and that was registered today. It carries
@@ -772,6 +816,16 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
 ## ROUTED: OPEN — `champions-language-grounding-arena`: the 51st audit ordered a
 ## seat to name `LG.00` as its ring, and naming it is the move this file's own
 ## World note refused (builder, 2026-08-31, `champions.py` declaration syntax)
+
+ROUTED: champions-language-grounding-arena | 2026-08-31 | 901f7fc (champions.py declaration syntax; 51st audit B2 order) | OPEN
+    DUE: 2026-09-06 | the Review breaks the tie: name LG.00 as the ring (the
+        audit's reading) or keep ARENA: NONE with an unwritten grounding
+        bakeoff as inventory debt (this file's reading). A builder declining
+        an overseer order is supposed to REACH the Review; until this line
+        existed, it could not.
+    (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
+    ROUTED: syntax and was invisible to `run review-queue` until migrated;
+    its heading carried the declaration one `## ` away from being read.)
 
 **The order.** OVERSIGHT B2 (rank 2), discharging `NO-ARENA` ×3: *"`Language
 grounding (word → lived skill)` is **not** an END — GOAL.md makes it a

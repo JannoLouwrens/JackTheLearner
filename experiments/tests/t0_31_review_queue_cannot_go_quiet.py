@@ -17,8 +17,20 @@ Each one is a CONVERSION, and each is its own violation class:
     drop the DUE: line that went red       -> CLOCK-REMOVED
     hold it behind a blocker long resolved -> HOLD-ON-A-RESOLVED-BLOCKER
     stamp it ACTED naming no commit        -> ACTED-WITHOUT-A-COMMIT
+    write the row as prose under a heading -> UNDECLARED-ROW
 
-The fifth conversion is the newest scar (Review 09-01, item 4): on
+The sixth conversion is the newest scar (60th audit, 2026-09-02): six sections
+written in the pre-declaration prose idiom — three with the declaration INSIDE
+the heading, `## ROUTED: OPEN — ...`, one `## ` away from being read — were not
+rows at all to the parser, so `run review-queue` printed 20 of the file's 26
+and all six would have crossed the age bar with no number moving, because a
+row the parser never saw cannot age. P13 pins that class at the audit's exact
+count: the six historical shapes fire six, the heading is COUNTED and never
+parsed, the honest repair (a real `ROUTED:` line under the heading) clears
+exactly one, and the file's one legitimate prose heading (THE BUNDLING RULE
+shape) stays exempt throughout.
+
+The fifth conversion is the older scar (Review 09-01, item 4): on
 `recipe-sensitivity`, `ACTED 2026-08-25` meant *a design exists* — the same
 token that means *executed, commit named* on `me11-…` — and because ACTED is
 terminal the row read closed for seven days while its spec stayed parked. The
@@ -81,7 +93,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 12
+N_PROPERTIES = 13
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -137,6 +149,50 @@ def _doc(rows) -> str:
 
 DOC_FIXTURE = _doc(_ROWS)
 
+# ── THE SIX, as shapes: the pre-declaration residue the 60th audit (2026-09-02)
+#    found invisible. Three headers carry the declaration INSIDE the heading
+#    (`## ROUTED: OPEN — ...`); two open with the prose idiom
+#    `## ROUTED <date> (builder):`; one leads with a backticked id. Interleaved
+#    with the shapes that must stay SILENT: the prose-rule heading (THE
+#    BUNDLING RULE — a rule, not a row), a headingless declared row, a declared
+#    row sitting directly under an undeclared section with nothing between
+#    them, and the compliant new-style heading with its ROUTED: attached.
+#    THE RATCHET IS 6 AND STAYS 6: a parser edit that reads 5 has gone blind
+#    to a shape that was really written in the live file, and one that reads 7
+#    has started flagging the file's legitimate prose. ──
+
+_UNDECLARED_SIX = "\n".join([
+    "# a fixture queue holding the pre-declaration residue", "",
+    "## THE BUNDLING RULE — added by the Review on first use of this file", "",
+    "Prose about sequencing. Not a row; it must never fire.", "",
+    "ROUTED: ok-oldstyle | 2026-08-30 | src | OPEN",
+    "    Question: a headingless declared row, the file's oldest shape.", "",
+    "---", "",
+    "## `six-backtick-slug` — a spec whose gates move in OPPOSITE directions",
+    "## (builder, 2026-08-30; PARKED)", "",
+    "Routed here by the spec's own pre-registered fork, in prose only.", "",
+    "---", "",
+    "## ROUTED 2026-08-30 (builder): six-prose-a's held-out split is saturated", "",
+    "**Status: OPEN.** Gates provisional — a status only a human can read.", "",
+    "---", "",
+    "## ROUTED 2026-08-30 (builder): should six-prose-b count as an artifact", "",
+    "**Status: OPEN.** No gate was moved.", "",
+    "## ROUTED: OPEN — `six-heading-a`: the declaration is inside the heading",
+    "## (builder, 2026-08-30)", "",
+    "**The measurement.** One `## ` away from being read.", "",
+    "ROUTED: ok-following | 2026-08-30 | src | OPEN",
+    "    Question: a declared row directly below an undeclared section with no",
+    "    hr between them — it must not be read as six-heading-a's declaration.", "",
+    "## ROUTED: OPEN — `six-heading-b`: same shape, mid-file", "",
+    "prose", "",
+    "## ROUTED: OPEN — `six-heading-c`: same shape, last section in the file",
+    "## (builder, 2026-08-31)", "",
+    "prose", "",
+    "## ROUTED 2026-09-01 (builder): `ok-newstyle` — candidate, declared, silent", "",
+    "ROUTED: ok-newstyle | 2026-09-01 | src | OPEN",
+    "    Question: the compliant shape every migrated row now uses.",
+])
+
 
 def _classes(a: dict) -> set:
     return {c for c, n in a["counts"].items() if n}
@@ -183,6 +239,12 @@ def _sabotages() -> list[tuple[str, str, str]]:
         ("acted-no-commit",
          _doc([(r[0], r[1], "ACTED 2026-09-01 (executed, honestly)", []) if r[0] == "bad-disp-stale"
                else r for r in _ROWS]), base),
+        # 8. write the new row as prose under a `## ` heading, declaring
+        #    nothing — the pre-declaration idiom (60th audit): to the parser
+        #    it is not a row at all, so it can never age or go red
+        ("prose-row",
+         base + "\n## ROUTED: OPEN — `bad-prose-row`: written the old way\n\n"
+                "**Status: OPEN.** A status only a human can read.\n", base),
     ]
 
 
@@ -320,6 +382,33 @@ def _probe(blind: bool) -> dict:
             or any(rid == "bad-disp-stale" for _c, rid, _w in honest["findings"])):
         failed.append("p12_a_disposition_is_not_an_execution")
 
+    # P13 — a row written as prose under a heading is COUNTED, never parsed
+    # (60th audit: 6 of the file's 26 rows were invisible, three with the
+    # declaration inside the heading, and an invisible row cannot age). Four
+    # conjuncts: (i) THE RATCHET — the six historical shapes fire exactly 6
+    # UNDECLARED-ROW, pinned at the audit's count; (ii) counting is not
+    # parsing — none of the six opens a row (only the three declared ok-* rows
+    # parse) and nothing in the findings quotes the heading's OPEN as a
+    # status; (iii) the honest repair — a real ROUTED: line under the heading
+    # — clears exactly one and the migrated row then parses like any other;
+    # (iv) the exempt shapes (the prose-rule heading, the attached new-style
+    # heading) are silent in both documents, so the class cannot be quieted by
+    # deleting legitimate prose nor inflated by flagging it.
+    six = audit(_UNDECLARED_SIX, None, TODAY)
+    migrated = _UNDECLARED_SIX.replace(
+        "## (builder, 2026-08-30)\n\n**The measurement.**",
+        "## (builder, 2026-08-30)\n\n"
+        "ROUTED: six-heading-a | 2026-08-30 | src | OPEN\n\n**The measurement.**")
+    mig = audit(migrated, None, TODAY)
+    if (blind
+            or six["counts"]["UNDECLARED-ROW"] != 6
+            or six["n_rows"] != 3
+            or any("OPEN" in r["status"] for r in six["rows"] if r["id"].startswith("six"))
+            or mig["counts"]["UNDECLARED-ROW"] != 5
+            or "six-heading-a" not in {r["id"] for r in mig["rows"]}
+            or mig["n_rows"] != 4):
+        failed.append("p13_a_prose_row_is_counted_never_parsed")
+
     return {
         "properties_checked": float(N_PROPERTIES),
         "properties_failed": float(len(failed)),
@@ -346,7 +435,7 @@ def _control(seed: int) -> dict:
     and on the one sabotage it CAN see it reports the wrong sign: delete the
     rotting row and the number falls, so the backlog looks healthier.
 
-    Measured: it fails 9 of 12, and the 3 it passes are worth naming so nobody
+    Measured: it fails 10 of 13, and the 3 it passes are worth naming so nobody
     reads this as a straw man. P1 is a statement about the live DOCUMENT rather
     than about the reader, and is not asked of it. P4 and P6 it passes
     VACUOUSLY — relabelling a row `HELD` and deleting its `DUE:` both leave the
@@ -357,8 +446,10 @@ def _control(seed: int) -> dict:
     It must fail P2 (the dated promise), P5 (the deletion, where its number
     moves the wrong way), P11 (the classes it cannot name) and P12 (a row count
     cannot tell a design from an execution — the exact blindness that parked
-    UB.10 for a week). If it ever passes those, this spec is guarding a
-    distinction that did not need making.
+    UB.10 for a week). P13 it also fails, definitionally: a `grep '^ROUTED:'`
+    IS the parser the 60th audit caught reading 20 of 26 — the prose rows are
+    precisely the ones it cannot count. If it ever passes those, this spec is
+    guarding a distinction that did not need making.
     """
     return _probe(blind=True)
 
