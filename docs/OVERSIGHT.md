@@ -1,33 +1,14 @@
-# OVERSIGHT — 61st audit, 2026-09-02 06:40 UTC (HEAD `d36f3f9`, 0 unpushed, tree DIRTY: one runner-written `experiments/ledger.json` row awaiting harvest)
+# OVERSIGHT — 62nd audit, 2026-09-02 12:44 UTC (HEAD `315ede4`, 0 unpushed, tree CLEAN)
 
-## VERDICT: INTEGRITY RISK — `T3.09` recorded a **FAIL** at 06:33 whose own wrong-goal control cleared the exact margin the claim needed (`shuf_gain 12.47 ≥ MARGIN_AFF 11.0`), and that row arms a `kills` clause that deletes 559 lines of code
+## VERDICT: DRIFTING — `T0.27`'s live violation count moved **2 → 3** at 09:18 today and nobody said so, three days before `D16` fires on the two-violation premise; and **two of the three violations are recoverable** while the instrument reports all three with the sentence *"that implementation was never committed"*
 
-The counterweight first, because it is large and it is real.
-
-**Section 1 is mechanically clean.** All **94 PASS rows** have an importable
-implementation on disk, a `commit` that still resolves in git, and — for every
-row whose spec declares a control — a `control_fn` actually wired into
-`run_spec`. The only two PASS rows without `control_metrics` (`T0.01`, `T0.10`)
-declare `control="NONE, BY DECISION"` on their face with the 52nd audit's
-reasoning attached. Zero findings.
-
-**Section 2 is completely clean.** Across `experiments/` and `scripts/` since
-the 60th audit closed at 00:45, exactly **three** already-existing named
-constants changed value, and **all three moved in the tightening direction**:
-`N_PROPERTIES 12 → 13` (T0.31), `TEMP 0.25 → 1.0` (LG.10 v2 — more sampler
-entropy makes match/unanimity/swap_agree/null all strictly harder), and
-`N_LIVES 16 → 32` (T3.09 v2 — sample size, with every gate constant
-`MARGIN_AFF 11.0 / MIN_AFFECTED 8 / OFF_MIN_FED 0.5 / CORE_SHRINK 0.5`
-untouched and the commit made *before* the run). No control was deleted or
-weakened, no `_check` gained an `or`, no seed count was reduced, no assertion
-was removed. The builder also committed both repairs before running them, and
-in both cases the repaired run bought a **RED**, not a green — LG.10 FAIL and
-T3.09 FAIL. That is the discipline working.
-
-**And the 60th audit's own FINDING 1 was executed.** The backlog reader was
-blind to 6 of 26 rows; it now reads **28 of 28**. `D1.0`'s 16.17 VOID GPU-hours
-now have an owner and a clock (`d10-successor-rerun-under-adopted-gate`,
-DUE 09-06). Both repairs verified live, not taken on the commit message's word.
+No integrity breach. The ledger is the most trustworthy it has been: 94/94 PASS
+rows are mechanically sound, and I could not find a single loosened threshold in
+seven days of diffs. The drift is elsewhere — the ladder gained **one** spec in
+24 hours across **12** iterations while its number-one blocker went untouched
+for a **24th** day, ~10.8 free GPU-hours expire Sunday for the **fourth**
+consecutive week, and the guard that exists specifically to catch
+threshold-moving is quietly accumulating violations faster than they age out.
 
 Findings are ranked by damage to the trustworthiness of the ledger.
 
@@ -37,344 +18,504 @@ Findings are ranked by damage to the trustworthiness of the ledger.
 
 | instrument | rc | reading |
 |---|---|---|
-| `coverage` | **2** | 0 commitments with NO spec. **4 CLAIM-DEAD** (smell, balance, shelter/building, thermal). **12 of 23 commitments have ZERO passing claim spec.** Standing red by design until the 09-06 Review window. |
-| `decisions --check` | 0 | 3 armed (`D15` 09-05, `D16` 09-05, `D17` 09-07). 0 MEANS-ESCALATED, 0 UNDECLARED, 0 OVERDUE. Ratchet **0/10 undeclared**. |
-| `champions --check` | 0 | 27 seats. 1 ARENA-UNREACHABLE (Fast/slow coupling, rooted at `LC.03`), 3 NO-ARENA (ASR, Speaker ID, Language grounding), 1 UNCONTESTED (Vision encoder). Ratchet ok — **but see FINDING 5**. |
-| `run review-queue` | 0 | **24 OPEN, 2 HELD, 2 ACTED of 28 routed**; oldest live 9 d; consumer ran 1 d ago. 0 violations — **but see FINDING 3**. |
-| `review_liveness` (schedule half) | 0 | Silent. The desk kept its schedule. |
+| `coverage` | **2** | **0** commitments with NO spec. 4 CLAIM-DEAD (smell, balance, shelter/building, thermal); 8 more with live claims and nothing passing. 4 NEW unrunnable GOAL.md citations (GEN.02/03/06/09, all welded behind LC.07). Standing red by design. |
+| `decisions --check` | 0 | **0 MEANS-ESCALATED, 0 UNDECLARED, 0 OVERDUE.** D15/D16 due 09-05, D17 due 09-07. Ratchet 0/10. |
+| `champions --check` | 0 | 27 seats, **8 declared violations**, `arena_missing 0`, unfalsifiable 3/3, unverified verdicts 2/2. Every ratchet at or below baseline. |
+| `run review-queue` | 0 | **0 violations.** 26 OPEN / 2 HELD / 2 ACTED of 30 routed; oldest live 9 d; consumer ran today. |
 
-**On "arm at least one decision per audit":** vacuous today, and stated rather
-than faked. `decisions.py` reports 0 of 10 undeclared — every open entry
-already carries a class, a default and a `decide_by`. There is nothing to arm.
+**All four ratchets are green and I verified each reading rather than taking the
+journal's word for it.** `decisions --check` printing only D15–D17 is correct,
+not a blind spot: the eleven defaults armed for 2026-08-31 all fired on 09-01,
+each with the SYSTEM.md-required journal line, each naming a concrete artifact I
+spot-checked (D1 → `D1.0` registered and run; D10 → `LC.07` registered; D8 →
+`BA.02` re-parented behind `LT.08`). The 41st audit's warning that *"nine of the
+eleven cannot be fired by the organ instructed to fire them"* was heeded — the
+**builder** fired them, not the overseer.
 
 ---
 
-## FINDING 1 — A recorded verdict whose own control impeached the rig, and it is armed to delete 559 lines (RANK 1)
+## FINDING 1 (RANK 1) — the anti-threshold-moving guard gained a third violation today, unreported, and the instrument mis-describes two of the three
 
-`experiments/ledger.json`, `T3.09` attempt 3, `commit d36f3f9`, ran
-`2026-09-02T06:33:18`, **uncommitted in the working tree at audit time**:
+`T0.27` — *"A threshold moved after a FAIL leaves an artifact, not a paragraph"*
+— is the spec that stands between this project and its worst possible failure.
+It is RED by the owner's pending decision `D16`, which **fires in three days**
+on option (b): *"the warning stands, `T0.27` stays RED and is not touched, and
+the red is reported in every status until **the pair** ages out of history."*
+Singular. Both `D16` and my own 60th-audit evidence update say **two**.
 
-```
-status                   FAIL      ("pre-registered threshold not met")
-creative_contribution    -9.96     vs MARGIN_AFF 11.0        → the claim lost
-shuf_gain                +12.47    vs MARGIN_AFF 11.0        → THE CONTROL WON
-seeds                    [0]       n_affected 11
-```
+**Live now, read from `protocol.audit_supersedes_fail` against the real
+ledger — 3 violations, 8 checked pairs, 24 unauditable:**
 
-`shuf_gain = off_ttf_aff 146.65 − shuf_ttf_aff 134.18 = 12.47`. The
-**wrong-goal control** — the identical trained loop handed a goal reflected
-through the rover, "exactly as much information, exactly wrong" — **cleared the
-margin the claim itself had to clear, and the claim did not.**
+| spec | status | stamp | recorded |
+|---|---|---|---|
+| `T0.17` | FAIL | `d84101e+dirty` | 2026-08-29T13:14:23 |
+| `LG.00` | VOID | `8faff43+dirty` | 2026-08-30T18:47:59 |
+| **`T0.29`** | **FAIL** | **`661a48f+dirty`** | **2026-09-02T09:18:06** |
 
-The spec's own control text in `registry_expansion.py:1645` is unconditional:
+The count's history, from `T0.27`'s own ledger rows: **1** (08-29, `4e8577d`) →
+**2** (08-30, `f4115f2`, held for ten consecutive runs) → **3** (today,
+`5c8d18b`). Checked pairs 5 → 7 → 8.
 
-> *"if wrong-goal advice helps as much, the site rewards any detour
-> perturbation and **the test measures nothing**."*
+**Two things went unreported, and they are different failures.**
 
-So is `SYSTEM.md` law 2 — *"A control that also passes means the test measures
-nothing"* — which sits in **class 3, CONDUCT: fixed, and not up for
-measurement.**
+**(a) The number moved and the commit said it hadn't.** `T0.29`'s dirty FAIL was
+created at 09:18 by the 61st audit's own B4 work (`661a48f`, the `champions.py`
+VERDICT conjunct). The T0.27 re-buy two hours later recorded `live_violations:
+3`; its commit `965f54a` describes it as *"the deliberate FAIL"* and the journal
+as *"honestly re-recording its deliberate D16 FAIL"* — as though the row were
+unchanged. It was not. This is not dishonesty; it is the row being read as a
+known-red token rather than as a number. **A gate that is deliberately RED stops
+being read as a measurement** — which is precisely the newest lesson in
+`LESSONS.md` (*"a violation that buys a RED is invisible to all of them"*)
+recurring two days after it was written.
 
-**Why it recorded FAIL anyway.** `experiments/tests/t3_09_creative_loop.py:489`:
+**(b) The 12:07 slot repaired the wrong instrument and reported success.** It
+re-ran `T0.29` from a clean tree, correctly, and reported *"dirty-stamp block
+now empty."* That is true of `run status`'s dirty-stamp check. It is **not** true
+of `T0.27`: the +dirty FAIL row sits in `history` and no re-run removes it —
+exactly as `D16` already explains for `T0.17`. The incident was repaired in one
+instrument and remains permanent in the other, and only the first was reported.
 
-```python
-    if m["creative_contribution"] < MARGIN_AFF:
-        return False                # ← returns here
-    # ── a PASS must survive its control (law 2) ──
-    if c["shuf_gain"] >= MARGIN_AFF:
-        return Status.VOID          # ← unreachable whenever the claim fails
-```
+**And the instrument's own sentence is now false for two of three.** All three
+violations are reported as *"that implementation was never committed."* The
+failing bytes are preserved for two of them, and the ref existing is proof
+rather than assertion (`preserve_impl_bytes` refuses to write unless the
+re-derived sha matches the row):
 
-The control-vacuity lane is scoped **PASS-only**, matching the impl docstring
-(line 92: *"a PASS whose shuf control ALSO cleared the margin"*). It was
-pre-registered that way and the builder did not touch it after seeing the
-number — that matters and I record it. But a spec's docstring may not narrow a
-class-3 law, and the narrowing is load-bearing here: the one run in which the
-lane would have fired is the one in which it cannot be reached.
+    refs/jack/failimpl/LG.00/2026-08-30T18-47-59  -> blob d39a0ef
+    refs/jack/failimpl/T0.29/2026-09-02T09-18-06  -> blob facfff9
 
-**Independent corroboration that this rig carries no signal.** The four arms
-rank *anti-correlated with advice quality*:
+Only `T0.17` is genuinely unrecoverable (checked with `tree_reconstructing_sha`
+on 08-30). So the `git diff` the rule demands is **possible** for two of three
+violations, and the instrument cannot say so.
 
-| arm | advice | mean ttf on affected lives |
+**Why this ranks first.** `D16` fires 09-05 and `t027-preserved-failimpl-as-artifact`
+is DUE 09-05 — well sequenced by the builder. But both currently state a
+two-violation, one-recoverable premise that is 24 hours out of date, and the
+rate now has three points across three distinct specs (08-29, 08-30, 09-02).
+`D16`'s own forecast was *"this fires more, not less"*; option (a) assumed the
+pair would *"age out ... soon-ish."* At ~1 new violation per 1.5 days against a
+20-entry history, **they are arriving faster than they age out.** The owner
+should rule on today's number, not on the 08-29 snapshot.
+
+*Nothing here asks for the gate to be relaxed, and I have touched no gate, no
+default and no `decide_by`.*
+
+---
+
+## FINDING 2 (RANK 2) — the 38-spec blocker has not been touched in 24 days
+
+`run blocked` is unambiguous and has been for weeks:
+
+    T2.01 = FAIL   frees 35  (blocks 38)  — Locomotion beats a random policy
+    NE.01 = FAIL   frees  8  (blocks  8)
+    LT.01 = FAIL   frees  7  (blocks  9)  — The Ladder Test
+
+`T2.01` blocks more than the next four blockers combined. Behind it sit **the
+entire curiosity family** (CU.1–CU.7), **the entire unison family** (UB.1–UB.8),
+and **seven of the Tier-5 claims** — that is, GOAL.md's thesis. Its
+implementation was last modified **2026-08-09** (`49529e6`); its last run was
+5.6 h across 3 seeds, FAIL, and its own registry note says the first healthy run
+*"failed only effect size, 2.21 sigma at 192K steps/seed"* with the curve still
+climbing at cutoff.
+
+`LT.01` — *the Ladder Test*, GOAL.md's own image of success, the ladder and the
+apple — is also FAIL, blocking 9.
+
+**This is now owned, and only since yesterday.** The 60th audit found that
+`D1.0` burned 16.17 GPU-hours (54% of a weekly quota) to a VOID and that *"no
+row, no `DUE:` and no priority line owned fixing the arm"* while `T2.01` waited
+on its winner. The builder routed `d10-successor-rerun-under-adopted-gate`
+(DUE 09-08) in response, and the queue row's arithmetic that the VOID is **not**
+foreclosed is sound: `c_e2e` returned 404.3 vs random's 108.7 (a 3.7× gain)
+scored against its own wider spread, with untrained twins at 2.94–2.96σ against
+a 3.0 bar. That is a gate-scoring artifact, not an envelope wall.
+
+**The finding is the latency, not the ownership.** The chain is: gate design
+adopted 09-06 → consequence stamped 09-08 → `D1.0` attempt 2 dispatches in W36 →
+`T2.01` re-runs after that. Thirty-eight specs — including every falsifiable
+claim behind curiosity and unison — stay blocked for at least four more days on
+top of twenty-four. No instrument on this board ranks by *how long the top
+blocker has been the top blocker*, so the 24-day figure appears nowhere.
+
+---
+
+## FINDING 3 (RANK 3) — a constitutional sense was parked behind a node that is unreachable by its own registry's arithmetic
+
+`coverage` correctly reports **balance** as CLAIM-DEAD. What no instrument says
+is that its designated revival path cannot be walked.
+
+`D8`'s armed default fired 2026-09-01 and parked `BA.02` *"until a body with
+directional catch authority exists"*, re-parenting it behind `LT.08`. `D9` fired
+the same day and parked the body question *"until the playground-humanoid line"*
+— which is the same `LT.08`. Then:
+
+    LT.08  depends_on = [LT.07, T2.01, T2.02]      T2.01 = FAIL, T2.02 = VOID
+    LT.07  <- LT.04 <- LT.03 <- LT.01 = FAIL
+
+and `LT.08`'s own registry note prices it:
+
+> *"at T2.01's measured ~128 env-steps/s a 20M-step arm-seed costs 43 h, so
+> 3 seeds exceed a whole week of Kaggle quota for ONE arm. The prerequisite is
+> a throughput spec, not more quota."*
+
+So a constitutional sense is parked behind a node that is (i) blocked by the
+two specs the park was meant to route around, (ii) additionally blocked by the
+FAIL of the Ladder Test, and (iii) priced by its own note at more than a week of
+free quota for a single arm — against a hard `SYSTEM.md` free-compute-only
+constraint.
+
+**I want to be fair about what this is and is not.** Parking is an
+already-permitted action, so the defaults were legal; both were correctly
+armed, correctly journalled, and each is individually defensible on its
+evidence. `BA.03` was registered as the live in-body successor and ran honestly
+to a VOID. Nothing here was concealed. **The defect is compositional**: two
+defaults fired the same day, both pointing at one node, and no instrument asks
+whether a park's stated release condition is itself reachable. `run blocked`
+models reachability; `coverage` models claim-liveness; neither joins them to a
+park's release condition. The result is a commitment whose revival is
+foreclosed by arithmetic while every gate reads green.
+
+`five-commitments-are-claim-dead-behind-foreclosures` (DUE 09-11) is the right
+desk for this, but its framing is foreclosures, not unreachable release
+conditions.
+
+---
+
+## FINDING 4 (RANK 4) — a fourth consecutive week of expiring free GPU quota, and W35's spend bought no ledger movement
+
+`gpu_budget.json`, charged hours by week against the 30 h/week Kaggle reset:
+
+| week | charged | lost |
 |---|---|---|
-| `shuf` | goal reflected — **deliberately wrong** | **134.2 s** (fastest) |
-| `off` | none (shipped random detour) | 146.7 s |
-| `loop` | the claim | 156.6 s |
-| `twin` | 3-line goal subtraction — **correct** | **191.2 s** (slowest, −44.5 s vs no advice) |
+| 2026-W33 | 7.89 | ~22 |
+| 2026-W34 | 1.62 | ~28 |
+| 2026-W35 | **19.20** | **~10.8 projected** (expires Sunday 09-06) |
 
-Wrong advice helps by 12.5 s; correct directional advice hurts by 44.5 s. At
-**one seed and n = 11 affected lives, with no variance reported.** `T3.09`
-declares no `seeds=`, so it inherits `seeds=1` — against GOAL.md's *"at ≥3
-seeds where the claim is about learning"*, for a spec that trains a proposer
-(`train_pairs 32`, `train_accept_rate 0.06`).
+W35 is the best week since W31 — that is real. But of its 19.2 hours, **~17.9
+bought no ledger advancement**: `D1.0` 16.17 h → VOID, `UB.10` ~1.25 h → VOID,
+`LC.07` pilot 0.44 h → PILOT-BLOCKED. The remainder re-bought `T1.09`/`T1.10`
+PASSes that were already PASS.
 
-**Why this is RANK 1 and why no instrument caught it.** Every honesty
-instrument in this repo is built to catch a violation that buys a **green**.
-This one buys a **red** — and the red is not inert. `T3.09`'s spec carries
-`kills="AlphaGeometryLoop.py (559 lines) — wire it or delete it"`, and the impl
-docstring at line 95 says in its own words: *"WHAT A FAIL EXECUTES … delete
-`AlphaGeometryLoop.py` from the root."* The next iteration harvests this row.
-A 559-line deletion is about to be executed on a run whose control cleared the
-claim's margin.
+**The builder is right not to manufacture a dispatch**, and I want that on the
+record: every GPU cost class is VOID-arm or pilot-blocked, `coverage` says so
+explicitly, and inventing a run to spend quota would be exactly the behaviour
+this system exists to prevent. It refused, and said why, in four separate
+iterations. That is correct conduct.
 
-I am not asking for the number to be re-bought or the verdict softened. The
-honest repair is in **FOR THE BUILDER B1** and it makes this row *weaker*
-(FAIL → VOID under the corrected ordering), which costs the ladder a
-demonstrated point. That is the direction a real repair goes.
+The finding is the standing consequence: **free compute is being lost at ~20
+h/week to a design backlog**, and 09-06 — the day the gate decision lands — is
+also the day W35's quota resets, so the remaining 10.8 hours cannot be spent on
+the thing they would unblock even in principle.
 
 ---
 
-## FINDING 2 — The spec that decides whether the *creative* loop earns its existence measured **zero** creative-branch invocations (RANK 2)
+## FINDING 5 (RANK 5, section 7) — a VOID was seated as a verdict; it was foreseen, it fired unopposed, and the instrument gap is now closed
 
-Across all three T3.09 attempts, on every arm:
+Section 7 asks directly whether any decision was made on a VOID. **Yes, one.**
 
-| attempt | `loop_consults` | `loop_direct` | `loop_creative` | `loop_none` | `shuf_creative` |
-|---|---|---|---|---|---|
-| 2 (`db4e0e7`) | 48 | 6 | **0** | 42 | 0 |
-| 3 (`d36f3f9`) | 77 | 33 | **0** | 44 | 0 |
+`D10`'s armed default fired 2026-09-01 and seated `wm-latent` **BY VERDICT** off
+`LC.03`, whose ledger status is VOID. `SYSTEM.md`: *"VOID: an arm failed the
+learning gate; fix the arm, do not decide"* and *"two non-learners cannot
+arbitrate an architecture."* The 41st audit wrote the prediction down in
+`DECISIONS_NEEDED.md:3100` before it happened, including the second half:
+*"afterwards `champions --check` prints Learning core BY VERDICT ok, because it
+reads the table and cannot ask whether a verdict was earned."*
 
-**142 consults across two recorded runs and the creative branch fired not
-once.** `solve` answered from its direct branch or returned `None`, always.
+Both halves occurred exactly as forecast. The seat printed `ok` for five audits.
 
-The impl pre-registers this as reportable and untuned (line 111), so it is
-honestly disclosed, not hidden. But it is material to the action the row
-arms: a FAIL here cannot distinguish *"the creative machinery does not help"*
-from *"the creative machinery never ran"*. Deleting 559 lines named
-`AlphaGeometryLoop` on evidence in which the AlphaGeometry loop never took its
-creative path is a deletion whose evidence does not name the thing deleted.
+**The system has since repaired itself, and this is the healthiest thing in the
+audit.** The 61st audit's B4 (executed today, `661a48f` → `81e3b97`) added the
+`VERDICT-IS-A-VOID` and `VERDICT-UNDECLARED` classes, built class-before-migration
+with the class firing 3/3 live first. `champions --check` now prints:
 
-Combined with FINDING 1, the row supports exactly one honest sentence: *at this
-call site, at n=11 on one seed, detour advice of any kind is noise.* That is a
-finding about **the site**, not about the module — the same shape as `DP.00`'s
-"the finding is about the world, not about him".
+    [VERDICT-IS-A-VOID] Learning core — held BY VERDICT off LC.03 (VOID)
 
----
+and the repair is clocked on the `d10-*` rows. The same work surfaced a second,
+independent find the builder held open rather than hiding: **the World seat holds
+`BY VERDICT` — the file's strongest marking — off the 4–6× Craftax comparison,
+which has no spec id and no ledger row at all.** `CHAMPIONS.md:290` declares that
+debt in the open rather than papering it with a false `VERDICT:` line. That is
+law 1 applied to the project's own governance document, and it is the right call.
 
-## FINDING 3 — **18 of 28** review-queue rows now carry `DUE: 2026-09-06`. One Sunday holds eighteen dated promises (RANK 3)
-
-```
-DUE: 2026-09-05   1 row
-DUE: 2026-09-06  18 rows
-```
-
-The builder's own 01:19 journal flagged this at **eleven**. Four hours of
-honest routing took it to **eighteen** — every new row landing on the same
-Sunday because 09-06 is the next FULL run.
-
-Today this is **not a violation** (`review-queue` rc=0) and I am not calling it
-one. It is a forecast, and it is the one the tool's own doctrine says is worst:
-if the FULL run cannot clear eighteen designs in one sitting, **seventeen-plus
-rows go OVERDUE simultaneously on 09-07** — the queue's strongest signal, a
-dated promise broken in the open, fired en masse. And the tempting response
-(re-arm all eighteen with a new date) is precisely the deadline-that-moves-when-
-it-is-reached failure the `DUE:` mechanism replaced.
-
-Two of the eighteen (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`)
-are HELD behind `w0-too-shallow`, which is itself DUE 09-06 — so a slip on one
-row cascades to three.
-
-The honest repairs are available **now, before the clock runs**: stagger the
-clocks with stated reasons, or DECLINE the rows that will not be taken. Both
-are ratchet-legal; a mass re-arm on 09-07 is not.
+**What is worth recording is the mechanism, not the outcome.** A violation
+foreseen in writing by one organ fired unopposed because the only organ watching
+(the overseer) may not write the file, and the arming audit could tighten a
+default but not rewrite it. The prediction was correct, on the record, and
+structurally unable to stop anything.
 
 ---
 
-## FINDING 4 — Detached spec runs are still undeclared to procwatch (third occurrence) (RANK 4)
+## SECTIONS WITH NO FINDINGS — stated plainly, because they are true
 
-```
-2026-08-31T19:12:41  LEFTOVER PROCESS  — experiments.decisions --check
-2026-09-01T04:27:26  LEFTOVER PROCESS  — python -            (146s CPU)
-2026-09-02T05:39:54  LEFTOVER PROCESS  — python -c … _module_for … (178s CPU)
-```
+**Section 1 — ledger integrity: CLEAN.** All **94 PASS rows** checked
+mechanically: every `commit` still resolves in git (0 failures), every spec
+declares a `control`, and every declared control has populated
+`control_metrics`. The only two PASS rows with empty `control_metrics` —
+`T0.01` (repo imports) and `T0.10` (Kaggle round-trip) — carry
+`control="NONE, BY DECISION (52nd audit B5)"` on their face with the reasoning
+attached. `T0.18` gates the re-derivability property. **Zero findings.**
 
-The 05:39 leftover was **T3.09's own attempt-2 run**, launched as an inline
-`python -c` rather than through `dispatch.sh` / `launch_detached.sh`, the two
-paths that declare what they detach. The watcher does the right thing — names
-it, does not kill it — but the loop closes each of these slots with
-`LEFTOVER=1` and the process is legitimate. Low damage, but it is the third
-time, and a watcher that cries wolf on its own runner is a watcher that will be
-ignored on the day the process is not legitimate.
+**Section 2 — thresholds and controls: CLEAN, and better than clean.** Seven
+days of `git log -p` over `registry.py`, `registry_expansion.py` and
+`experiments/tests/`. Every constant that moved, moved in the tightening
+direction:
 
----
+- `N_LIVES 16 → 32` (T3.09 v2) — sample size, drawn sequentially so the old 16
+  spawns are an exact prefix; every gate constant untouched; committed before
+  the run.
+- `TEMP 0.25 → 1.0` (LG.10 v2) — the parameter-free softmax default, chosen
+  without previewing the T=1.0 draws; more entropy makes every gate strictly
+  harder.
+- `seeds 1 → 3` on T3.09 and the ME family — strengthening.
+- Budget label `CPU_LONG → CPU_DAYS` (BA.03) — a timeout label, not a gate.
 
-## FINDING 5 — `champions.py` reports the Learning core seat "ok" while it is held **BY VERDICT** off a run that VOIDed (RANK 5, corroborating, already routed)
+**No threshold moved in the loosening direction, no control was deleted or
+weakened, no `_check` gained an `or`, no seed count was reduced, no assertion
+was removed.**
 
-```
-Learning core    decl  BY VERDICT   ok
-                 arena: LC.00 LC.01 LC.02 LC.03 LC.04 LC.05 LC.06 LC.07
-```
+I scrutinised the one edit that had the right shape to be gate-fitting — a
+`_check` modified *after* a recorded run (`19461c4`, T3.09). It moves the
+`shuf_gain` control-vacuity lane **above** the claim branch, so the lane fires
+whichever way the claim went. Verified against the recorded numbers: attempt 3's
+metrics now return **VOID** where they returned FAIL. **The repair costs the
+ladder a demonstrated point and the commit message says so in capitals.** That
+is the opposite of gate-fitting, and the builder did it against its own work.
 
-`LC.03` is VOID-FORECLOSED. `D10`'s armed default fired on 09-01 and seated the
-core BY VERDICT — the file's strongest marking — off a VOID row. `champions.py`
-prints `ok` because its ratchet asks only whether the arena **resolves**, never
-whether the verdict behind the marking was a verdict at all.
+**Section 4 — the builder is alive and honest.** 12 iterations in the last 24 h,
+**12 of 12 ended `rc=0`**, no paused loop, no credit exhaustion (usage gate read
+8% → 16% `week:all models` across the day, correctly reading the all-models line
+per the standing rule). One `LEFTOVER=1` at 05:39 — the third in three days —
+and the builder's response was the right one: it fixed the **cause**, putting
+self-declaration into `run_spec` at the single choke point every spec run passes
+through (`5c8d18b`, B3), rather than into a launch script a session could forget.
+Round-trip tested against the real shell reader, 29/29, red-verified first.
 
-This is audit item 7's canonical failure (*"a VOID treated as a verdict"*) and
-it is **already routed** — three queue rows carry it
-(`d10-learning-gate-uses-two-different-denominators`,
-`d10-learning-gate-sits-at-the-untrained-twin-level`,
-`d10-successor-rerun-under-adopted-gate`, all DUE 09-06). I restate it only to
-record the *instrument* gap: no tool in this repo can read the strength of the
-evidence behind a `HELD:` marking, so the strongest marking in `CHAMPIONS.md`
-is the one with the least verification behind it.
+**Today's honesty record is the strongest evidence in this audit.** The builder
+bought **three REDs and one PASS**: `LG.10` FAIL (two attempts, both temperature
+endpoints paid, no re-roll), `T3.09` FAIL→VOID (and refused to execute a 559-line
+`kills` deletion on a run its own control impeached), `ME.11` SETTLED FAIL (the
+honest RED the Review priced, bars untouched). It also declined to execute a
+deletion clause it was entitled to execute, and it caught and killed its own
+dirty-tree launch at ~1 minute.
 
----
+**Section 6 — stuck decisions: nothing blocked that could be self-resolved.**
+Zero MEANS-ESCALATED. Every open decision (D15, D16, D17) is armed with a
+default and a date, and all three are goal-class — pace policy, an honesty-gate
+disposition, and the PLASTIC-ONLY decree's own re-open trigger. None is a fork a
+measurement could settle. **The D1 disease is not present.**
 
-## SECTIONS WITH NO FINDINGS (stated plainly, because that is a result)
-
-**3 — Drift from the goal: none.** Every unit in the last 24 h traces to a
-GOAL.md sentence:
-
-| unit | GOAL.md sentence |
-|---|---|
-| `LG.02` PASS (3 seeds) | *"his diary records whose advice proved true, so trust in a person can be earned and checked"* (line 144) |
-| `LG.10` FAIL ×2 | *"The LLM is his mouth, never his mind"* (line 159) |
-| `T3.09` VOID×2 + FAIL | Tier 3, *"every component ablated; dead weight deleted"* (line 268) |
-| `UB.10` VOID harvest | *"Unison — senses fused"* (line 269) |
-| `D1.0` / `LC.07` pilot | ARCHITECTURE, always contested (`SYSTEM.md` class 2) |
-| `T0.12/17/21/27/31` re-buys, audit items | *"protects the honesty of watching what happens when the three meet"* (line 8) |
-
-**4 — Builder alive and productive.** 28 iteration starts, 29 ends in the 24 h
-to now; **every one rc=0**. PASS delta **93 → 94** (`LG.02`). Two additional
-honest REDs bought (`LG.10` FAIL, `T3.09` FAIL). No paused loop, no repeated
-identical failure, no load abort, no credit exhaustion.
-
-**5 — Compute honesty: clean.** Week 2026-W35: **19.20 GPU-hours** across 12
-jobs (18.93 Kaggle + 0.27 Colab), **0.0 failed hours** — the cleanest week in
-the file (W32 carried 1.18 failed hours). ~10.8 h of the 30 h Kaggle quota
-remains with 4.5 days to Sunday's reset. Every W35 job traces to a ledger row
-or a recorded pilot; the one previously-orphaned spend (`D1.0`, 16.17 h → VOID)
-was given an owner and a clock by the 60th audit's B2 and is now
-`d10-successor-rerun-under-adopted-gate`.
-
-**6 — Stuck decisions: nothing actionable.** 3 armed, 0 MEANS-ESCALATED, 0
-UNDECLARED, 0 OVERDUE. No owner decision was quietly acted on: the eleven
-defaults that fired on 09-01 are each recorded in `DECISIONS_RESOLVED.md` with
-losers, evidence and a reversal path.
-
-**7 — Bakeoff hygiene:** one live issue, and it is FINDING 5 above (already
-routed). No winner chosen inside a noise margin in the window; no decision made
-without a learning gate.
+**Section 3 — no drift in what was worked on.** Every unit today traces to a
+GOAL.md sentence: `LG.02` → *"his diary records whose advice proved true, so
+trust in a person can be earned and checked"*; `LG.10` → *"the LLM is his mouth,
+never his mind"*; `ME.11` → *"memory makes it him"*; `T3.09` → *"components must
+EARN their parameters or be deleted"*; B1–B4 → *"the system is the product."*
+Nothing served no sentence.
 
 ---
 
-## 8 — THE HONEST SUMMARY: are we closer to a curious humanoid that climbs the ladder?
+## SECTION 8 — THE HONEST SUMMARY
 
-**Yes, by one real rung — and it is a rung, not a tick.**
+**Closer to a creature, by exactly one step — and it was a good one.**
 
-`LG.02` is the owner's own liar test, queued since 2026-08-09, and it passed at
-**three seeds** with a live null (0.028 divergence with attribution stripped,
-join alive), a swap control that migrated (0.711 / 0.733), a prior measured at
-exactly 0.5 for both voices, and 0.95 attribution recall. Worst-seed
-last-quarter divergence 0.689 ± 0.103 against a 0.40 gate. That is *"one
-sentence can spare him a thousand falls, and his diary records whose advice
-proved true"* turned into something that could have failed and did not. It is
-the single most GOAL-shaped result in weeks.
+`LG.02` is a genuine advance and it is not a green tick. Given two advisors whose
+claims his own foraging verifies, Jack's advice-following diverged by track
+record: **82% follow for the truthful voice, 13% for the liar** (divergence
+0.689 ± 0.103 against a pre-registered 0.40 worst-seed gate, 3 seeds). The three
+things that make it a trust claim rather than a rigged demo all held —
+stripping attribution collapses divergence to 0.028 while the verification
+machinery stays provably alive; the owner's swap control shows trust **migrating**
+to the newly-truthful voice mid-life (0.711); first-encounter trust was exactly
+the 0.5 prior for both voices on every seed. **The creature learned who lies to
+him, from living with them.** That is the ladder-and-apple standard, in the
+social domain.
 
-**And the honest counterweight, which is heavier.** Of the owner's 23
-constitutional commitments, **12 have zero passing claim spec** — touch, tool
-use, proprioception, sleep, hunger/thirst, fast/slow, plasticity, death &
-retry, plus the four now formally **CLAIM-DEAD**: smell, balance,
-shelter/building, and *too cold kills him*. `one brain / unison` carries 23
-specs and **one** pass. 85 of 217 specs (39%) are unreachable. The board reads
-94/217 and four of the owner's own sentences have nothing runnable behind them
-at all.
+**And the rest of the picture is the reason this reads DRIFTING.**
 
-What today's audit adds to that picture is narrower and sharper. The system is
-now good enough at buying honest REDs that it has produced a new failure mode
-its instruments were never built for: **a violation that costs the ladder a
-point instead of buying one.** `T3.09` is about to delete 559 lines on a run
-whose deliberately-wrong control beat every other arm, in which the branch
-named in the spec's title never once executed, at one seed. Nothing in
-`coverage`, `decisions`, `champions` or `review-queue` can see that, because
-all four were built to catch optimism.
+The board's green is concentrated where it is cheapest. Against GOAL.md's
+constitutional core:
 
-So: closer, honestly, by one rung — and one action away from recording a
-deletion the evidence does not support.
+| commitment | specs | passing claims |
+|---|---|---|
+| **one brain / unison** | 23 | **1** |
+| **curiosity** | 12 | **2** |
+| fast/slow | 8 | **0** |
+| sleep | 5 | **0** |
+| plasticity | 4 | **0** |
+| **shelter/building** — *the owner's own image of success* | 2 | **0, CLAIM-DEAD** |
+| **thermal — *"too cold kills him"*** | 4 | **0, CLAIM-DEAD** |
+| smell, balance | 4 | **0, CLAIM-DEAD** |
+
+Twelve of twenty-three commitments have zero passing claim spec. The three
+capabilities GOAL.md warns are *"most likely to be quietly neglected in favour of
+easy wins"* — curiosity, all-senses fusion, learning-by-living — are 1/23, 2/12,
+and blocked behind `T2.01` respectively.
+
+**What today actually consisted of:** 12 iterations, 1 new PASS, 2 honest REDs,
+and roughly seven units of machine maintenance — certificate re-buys (`T0.17`,
+`T0.21`, `T0.27`, `T0.29` **twice**, `T0.31`), the `champions.py` conjunct, the
+procwatch hook, the queue stagger. `SYSTEM.md` says plainly that a session which
+makes the machine better at catching its own errors has done the whole job, and
+by that standard the day was excellent — B1–B4 all closed, one real class of bug
+made impossible. **I am not calling maintenance drift.** The finding is that
+there was nothing else available: `coverage` reports **0 fresh dispatches** at
+every cost class, and the journal's own handoff for the next iteration is *"a
+`--gate` sweep or the `cpu<1min` class."*
+
+**So the honest answer to "closer to a curious humanoid, or only to a longer list
+of green ticks?" is: neither, today.** The list of green ticks grew by one, and
+it was earned. But the machine is now polishing itself because the ladder has
+nothing to hand it, and the reason the ladder has nothing is that **every road
+runs through `T2.01`, `LC.03` and `W0`** — a body that cannot beat random, a
+learning-core screen that found one learner, and a world whose own instruments
+keep reporting that it is too shallow to measure what we ask of it. Six
+independent specs now say this in their own recorded words: `DP.04` (*"no
+resolution in W0"*), `SH.02` (*"D10 evidence that W0 is the bottleneck"*),
+`UB.14` (*"the binding fault is the VENUE, measured"*), `BA.03` (*"the blind twin
+holds 98.9% of the horizon"*), `T3.09` (*"the site rewards any perturbation"*),
+`LC.03` (*"a REDESIGN of the screen or of W0"*).
+
+**That convergence is the most important number in this audit and it has no
+instrument.** Nine separate queue rows carry nine separate repairs for what may
+be one cause. The 09-06 docket bundles four of them, which is the right instinct.
+The system has correctly diagnosed itself one spec at a time; what it has not yet
+done is add up the diagnoses.
 
 ---
 
 ## FOR THE BUILDER
 
-**B1 (do this first, before harvesting `T3.09`). Do NOT execute the `kills`
-clause on the 06:33 row. `AlphaGeometryLoop.py` stays for now.**
-The row itself is honestly recorded and must be committed as the runner wrote
-it — do not edit it, do not re-run for a better number. What must not happen is
-the *action* it arms.
-Then do all three of:
-  1. **Route it.** Add a `REVIEW_QUEUE.md` row `t309-control-clears-the-claims-
-     own-margin` with a `DUE:` that is **not** 2026-09-06 (see B2), carrying the
-     four numbers: `creative_contribution -9.96`, `shuf_gain +12.47`,
-     `MARGIN_AFF 11.0`, `loop_creative 0` on 142 consults, `seeds [0]`,
-     `n_affected 11`.
-  2. **Fix the lane ordering, pre-registered, before any further T3.09 run.**
-     In `_check`, the control-vacuity test belongs with the other rig gates —
-     *above* the claim branch, not below it:
-     ```python
-     if c["shuf_gain"] >= MARGIN_AFF:
-         return Status.VOID   # site rewards any perturbation — law 2, unconditional
-     if m["creative_contribution"] < MARGIN_AFF:
-         return False
-     ```
-     Amend the impl docstring's VOID list to drop the words *"a PASS whose"* —
-     `SYSTEM.md` law 2 is class-3 CONDUCT and is unconditional; a spec docstring
-     may not narrow it. **Be explicit in the commit message that this repair
-     converts the recorded row from FAIL to VOID and therefore costs the ladder
-     a point** — that is why it is not gate-fitting.
-  3. **Raise the seed count before the next attempt.** `T3.09` inherits
-     `seeds=1`. A verdict that executes a 559-line deletion, on a metric whose
-     four arms rank anti-correlated with advice quality, needs `seeds=3` at
-     minimum. Declare it in the registry in the same commit as (2), before any
-     run.
+**B1 — RANK 1, before 2026-09-05. Update `D16`'s evidence with today's number
+and today's recoverability, then re-point the `t027` row at it.** The owner's
+default fires 09-05 on a premise that is 24 hours stale.
 
-**B2. Break up the 09-06 pile-up now, while it is still a forecast.**
-18 of 28 rows are DUE 2026-09-06. Before Sunday, either stagger the clocks with
-a stated reason per row, or DECLINE the rows that will not be taken. Do not
-wait for 09-07 and re-arm eighteen at once — the queue's own doctrine names
-that as the failure the mechanism replaced. If the Review genuinely can clear
-eighteen designs in one sitting, say so in the file and leave them; the point
-is that this be a decision recorded in advance, not a discovery made after the
-dates go red.
+- Append a dated evidence update to `D16` in `docs/DECISIONS_NEEDED.md`
+  recording: **3 violations, 8 checked pairs, 24 unauditable**; the third is
+  `T0.29 FAIL 661a48f+dirty 2026-09-02T09:18:06`, created by the 61st audit's
+  own B4 work; and the progression **1 (08-29) → 2 (08-30) → 3 (09-02)** across
+  three distinct specs.
+- State plainly that **two of three are recoverable** —
+  `refs/jack/failimpl/LG.00/2026-08-30T18-47-59` (blob `d39a0ef`) and
+  `refs/jack/failimpl/T0.29/2026-09-02T09-18-06` (blob `facfff9`) — so
+  `audit_supersedes_fail`'s single sentence *"that implementation was never
+  committed"* is now false for the majority of the rows it prints. Only `T0.17`
+  is genuinely lost.
+- Note the rate against option (a)'s assumption: at ~1 new violation per 1.5
+  days against a 20-entry history, **they arrive faster than they age out.**
+- Add the same three facts to the `t027-preserved-failimpl-as-artifact` row
+  (already DUE 09-05, correctly sequenced) so the desk and the default see the
+  same number on the same day.
+- **Change no gate, no default, no `decide_by`, and do not relax
+  `audit_supersedes_fail`.** The question of whether a verified preserved
+  manifest earns a second lane is the Review's, already routed, and the party
+  proposing it is the party it would exonerate.
 
-**B3. Declare T3.09's runner launch to procwatch.**
-Third `LEFTOVER=1` in three days, and the 05:39 one was T3.09's own detached
-run. Route inline `python -c` spec runs through `launch_detached.sh` (or add
-the declaration hook the other two paths already use) so the watcher stops
-flagging the loop's own legitimate work.
+**B2 — the reporting defect that let B1 happen, and it is the generalisable
+half.** Two separate reports today described `T0.27` as unchanged while its
+`live_violations` metric had moved (`965f54a`; the 11:07 journal entry). And the
+12:07 slot reported *"dirty-stamp block now empty"* — true of `run status`,
+false of `T0.27`, where the same incident is permanent. Make one of these
+mechanical rather than remembered:
 
-**B4. Give `champions.py` a way to see a VOID behind a `HELD:` marking.**
-The Learning core seat prints `ok` while held **BY VERDICT** off `LC.03`, which
-is VOID-FORECLOSED. The tool's docstring already proposes per-seat `HELD:` /
-`ARENA:` markers; the addition this audit asks for is one conjunct on top of
-that: when a seat is marked BY VERDICT, resolve the deciding spec's ledger row
-and report `VERDICT-IS-A-VOID` if its status is not PASS or FAIL. Count it in
-the ratchet. This is the instrument gap FINDING 5 names; the `D10` rows already
-handle the specific case.
+- (a) have `run status` print `T0.27`'s `live_violations` **as a number with its
+  delta since the previous row**, so a deliberately-RED gate still reports a
+  moving measurement; **or**
+- (b) have the dirty-stamp block in `run status` state, when it clears, that
+  clearing it does **not** clear the `T0.27` pair the incident created, and name
+  the pair.
+
+(a) is the stronger repair: it generalises to every gate held RED by a pending
+decision, which is the class `LESSONS.md`'s newest entry already names.
+
+**B3 — join reachability to park release-conditions (FINDING 3).** No instrument
+asks whether a PARKED spec's stated revival condition is itself reachable.
+`BA.02` is parked behind `LT.08`, which is blocked by `T2.01`/`T2.02`/the LT
+chain **and** priced by its own registry note at 43 h per arm-seed — more than a
+week of free quota for one arm. Add a conjunct to `coverage.py` (it already owns
+`root_dead()` and the CLAIM-DEAD predicate): when a spec's `PARKED:` marker
+names a release spec, resolve that spec and report `PARK-ON-AN-UNREACHABLE-RELEASE`
+if it is unreachable, welded, or foreclosed. Ratchet it as a total with the
+existing classes per the `T0.31` precedent. Build the class RED-first and verify
+it fires on `BA.02` before migrating anything.
+
+**B4 — add up the diagnoses (section 8).** Six specs have independently recorded
+that the venue, not the instrument, is what failed; nine queue rows carry nine
+separate repairs. Before the 09-06 docket, write **one** consolidated note into
+the `w0-too-shallow` row quoting all six recorded diagnoses verbatim with their
+numbers, so Sunday's desk sees the convergence rather than six unrelated arm
+choices. This is a bundling of *evidence*, not of decisions — the 09-06 stagger's
+own distinction — and it does not pre-empt any of the nine.
+
+**B5 — put the top blocker's age on the board (FINDING 2).** `run blocked` ranks
+by `frees N`; nothing ranks by how long a blocker has been the top blocker.
+`T2.01` has been rank 1 with an implementation untouched since **2026-08-09**.
+Print `unchanged for N days` beside each terminal blocker, derived from the last
+commit touching its implementation. Cheap, and it makes a 24-day stall
+impossible to read as routine.
 
 ---
 
 ## FOR THE OWNER
 
-**Nothing new is escalated to you.** All three open decisions (`D15`, `D16`
-09-05; `D17` 09-07) are armed with defaults and need no action to remain safe.
+**1. `D16` fires in three days and its premise moved today. You may want to look
+before it does.** The guard is `T0.27` — the spec that stands between this
+project and a silently-moved threshold. It is deliberately RED pending your
+decision. Since the entry was written, its violation count has gone **1 → 2 → 3**,
+the newest arriving **today**, and each was created by ordinary, honest work
+following the loop's own documented procedure — implement, run, fix the code,
+re-run.
 
-Two things are worth your eye, neither blocking:
+The default (b) — *keep the red, touch nothing* — **still weakens nothing and is
+still defensible**, and I am not asking you to change it. Two things are worth
+knowing before it fires:
 
-1. **A 559-line deletion was one iteration away from executing on evidence its
-   own control impeached** (FINDING 1). The system caught it here rather than
-   in a post-mortem, and B1 stops it — but note the shape: every honesty
-   instrument you have was built to catch a violation that buys a *green*. This
-   one bought a *red*, and none of the four saw it. If you want that gap closed
-   structurally rather than by an overseer reading a diff, that is a decision
-   for you, and I have not opened one on your behalf.
+- Option (a)'s assumption that the pair will *"age out soon-ish"* now has a
+  measurement against it. Violations are arriving at roughly one per 1.5 days
+  against a 20-entry history. **The red will not clear itself.**
+- The instrument tells all three violations with one sentence — *"that
+  implementation was never committed"* — and it is **false for two of the
+  three**. The failing bytes are preserved and cryptographically verified for
+  `LG.00` and `T0.29`; the `git diff` the rule demands is possible for both.
+  Only `T0.17` is truly lost.
 
-2. **Four of your own sentences are now formally CLAIM-DEAD** — smell, balance,
-   shelter-building, and *too cold kills him* — meaning every claim spec behind
-   them is parked or foreclosed, with a redesign routed and nothing runnable.
-   Twelve of twenty-three commitments have no passing claim at all. The 09-06
-   Review is where those redesigns are scheduled to be written, which is
-   exactly why FINDING 3's eighteen-row pile-up on that one Sunday matters more
-   than its rc=0 suggests.
+Whether a verified preserved manifest should be a second lane is already routed
+to the Review (`t027-preserved-failimpl-as-artifact`, DUE 09-05, the same day).
+**No agent here has relaxed anything, and none should** — the builder correctly
+escalated rather than repairing the guard that flags it, on the grounds that
+conduct is class 3 and not its to measure. That was the right instinct and it
+still is.
 
-The good news is real and is yours: **your liar test passed.** `LG.02`, queued
-2026-08-09, three seeds, live null, migrating swap control — the liar loses him.
+**2. Your two most GOAL-central specs are both FAIL and have been for weeks.**
+`T2.01` (*locomotion beats a random policy*) blocks **38 specs** — the whole
+curiosity family, the whole unison family, seven Tier-5 claims — and its
+implementation has not been touched since **2026-08-09**. `LT.01` (*the Ladder
+Test* — the ladder and the apple, your own image of the goal) is FAIL and blocks
+9. The unblock path for `T2.01` now runs through a gate-design decision due
+09-06 and a re-run in W36. **It is owned and clocked, which it was not two days
+ago.** But if you want one thing to go faster than the calendar, this is it, and
+it is worth more than every other row on the board combined.
+
+**3. Four commitments you named as constitutional currently have nothing
+falsifiable behind them** — smell, balance, shelter/building, and thermal
+(*"too cold kills him, too hot kills him"*). Every park was individually honest
+and evidence-backed; none was concealed. But *"he builds a shelter"* — your own
+image of success — has no live claim, and balance's designated revival path is
+blocked by arithmetic (FINDING 3). `five-commitments-are-claim-dead-behind-foreclosures`
+is DUE 09-11.
+
+**4. What the evidence is starting to say, offered as a reading and not a
+decision.** Six specs, run independently, at different times, in different
+families, have now each recorded that **the world — not the instrument — is what
+failed**: `DP.04`, `SH.02`, `UB.14`, `BA.03`, `T3.09`, `LC.03`. The system has
+routed nine separate repairs for what may be one cause. That question is
+`w0-too-shallow`, DUE 09-06, and the builder correctly bundled the coupled
+design rows onto that day. **If W0 is the common cause, then nine arm choices
+and roughly 20 free GPU-hours a week are being spent on the wrong layer**, and
+the cheaper answer is the world, not the arms. I am not ruling on it — that is
+Sunday's desk, and the arms can be run, so rule 3 governs. But it is the single
+judgment most likely to change how the next month goes.
+
+**5. Nothing is waiting on you that shouldn't be.** Zero MEANS-ESCALATED, zero
+UNDECLARED, zero OVERDUE. The eleven defaults armed for 08-31 all fired on 09-01,
+by the builder, each naming a concrete artifact — I spot-checked four. The D1
+disease is not present anywhere on this board.

@@ -4163,3 +4163,81 @@ automatic artifact makes that practice cheap.
 
 *Recorded by the overseer; no gate touched, no default edited, `decide_by`
 2026-09-05 unchanged.*
+
+---
+
+## D16 — EVIDENCE UPDATE 2026-09-02 12:44 UTC (62nd overseer audit). A THIRD violation appeared today, and two of the three are recoverable.
+
+`D16` fires **2026-09-05** on the armed default *(b) ALONE — the warning stands,
+`T0.27` stays RED and is not touched, and the red is reported in every status
+until **the pair** ages out of history*. Singular. My own 60th-audit update
+above says **two**. Both are now out of date.
+
+**Live, from `protocol.audit_supersedes_fail` against the real ledger —
+3 violations, 8 checked pairs, 24 unauditable:**
+
+    T0.17   FAIL   d84101e+dirty   2026-08-29T13:14:23
+    LG.00   VOID   8faff43+dirty   2026-08-30T18:47:59
+    T0.29   FAIL   661a48f+dirty   2026-09-02T09:18:06   <- NEW
+
+`T0.29` was recorded **today at 09:18**, by the 61st audit's own B4 work
+(`661a48f`, the `champions.py` VERDICT conjunct). The 12:07 slot re-ran `T0.29`
+from a clean tree and correctly reported *"dirty-stamp block now empty"* — true
+of `run status`'s dirty-stamp check, and **not** true here: the +dirty FAIL row
+sits in `history` and no re-run removes it, exactly as this entry already
+explains for `T0.17`. The incident was repaired in one instrument and is
+permanent in the other.
+
+**1. The rate now has three points, across three distinct specs.** From
+`T0.27`'s own ledger rows: **1** (08-29, `4e8577d`) → **2** (08-30, `f4115f2`,
+held for ten consecutive runs) → **3** (today, `5c8d18b`). Checked pairs
+5 → 7 → 8. The entry's forecast — *"this fires more, not less"* — now has three
+observations and no counter-example. **Option (a)'s premise that the pair will
+"fall out of the 20-entry history, which for a spec that runs on every `--gate`
+sweep is soon-ish" has a measurement against it: at roughly one new violation
+per 1.5 days, they arrive faster than they age out.** The red will not clear
+itself.
+
+**2. Two of the three are recoverable, and the instrument says all three are
+not.** My 60th-audit update established this for `LG.00`. It is now true of the
+new violation as well — `preserve_impl_bytes` re-derives `impl_sha_of` from the
+bytes it stored and refuses to write the ref unless it equals the sha the row
+names, so the ref existing is proof rather than assertion:
+
+    refs/jack/failimpl/LG.00/2026-08-30T18-47-59  ->  blob d39a0ef
+    refs/jack/failimpl/T0.29/2026-09-02T09-18-06  ->  blob facfff9
+
+Only `T0.17` is genuinely unrecoverable (checked with `tree_reconstructing_sha`
+on 2026-08-30; no committed tree state reconstructs `072ea7a4d72997cc`).
+`audit_supersedes_fail` nevertheless reports all three with the same sentence —
+*"that implementation was never committed"* — which is now false for the
+**majority** of the rows it prints. For two of three, the `git diff` the rule
+demands is possible.
+
+**3. One reporting defect worth naming, because it is why nobody caught this.**
+The T0.27 re-buy at 11:xx recorded `live_violations: 3`; its commit `965f54a`
+describes it as *"the deliberate FAIL"* and the journal as *"honestly
+re-recording its deliberate D16 FAIL"* — as though the row were unchanged. It
+was not. No dishonesty: a gate held deliberately RED by a pending decision stops
+being read as a **measurement** and starts being read as a known token. That is
+`LESSONS.md`'s newest entry (*"a violation that buys a RED is invisible to all
+of them"*) recurring two days after it was written. The mechanical repair is
+`FOR THE BUILDER B2` in the 62nd `OVERSIGHT.md`.
+
+**What this does NOT propose.** Nothing here asks for the gate to be relaxed,
+and the argument against relaxing it is unchanged and still good: the red is a
+deterrent against amending a FAIL from an uncommitted tree. The question of
+whether a **verified preserved manifest** earns a second lane is already routed
+by the builder as `t027-preserved-failimpl-as-artifact` (DUE **2026-09-05**, the
+same day this fires — correctly sequenced), with FOR and AGAINST both written
+out and the author declining to rule on his own mechanism.
+
+**The honest reading for 09-05:** (b) is still defensible and still weakens
+nothing. If it fires, the ledger keeps a red row that is correct about one pair
+and over-stated about two. The only thing that has changed is that the number
+the default is being ruled on is **3, not 2**, and that two of the three are
+recoverable rather than one — so the desk and the default should see the same
+figure on the same day.
+
+*Recorded by the overseer; no gate touched, no default edited, no threshold
+moved, `decide_by` 2026-09-05 unchanged.*

@@ -10090,3 +10090,52 @@ mechanism *which direction of error it is built to catch*, and then go looking
 in the other direction. A `kills` clause turns a FAIL into an ACTION, which
 makes a red exactly as expensive to get wrong as a green — and there is no
 organ in this system that audits an action taken on a red.
+
+## One incident, two instruments: the loud one gets repaired and reported, the quiet one keeps the violation forever (overseer, 62nd audit, 2026-09-02)
+
+At **09:18** on 2026-09-02 the builder ran `T0.29` from a modified tree while
+executing the 61st audit's B4. One event, recorded in two places:
+
+- `run status`'s **dirty-stamp block** — loud, first-person, actionable, and it
+  says the certificate's code exists in no commit.
+- `T0.27`'s **`audit_supersedes_fail`** — the anti-threshold-moving guard, which
+  pairs the `+dirty` FAIL with the clean PASS that superseded it and counts it as
+  a permanent live violation.
+
+The 12:07 slot did the right repair for the first one: re-ran `T0.29` from a
+clean tree, same verdict, and reported *"dirty-stamp block now empty."* **True,
+and it closed the incident in the reporter's mind.** But a re-run does not remove
+the `+dirty` row from `history`, so the second instrument kept it — `T0.27`'s
+`live_violations` went **2 → 3** and stayed there. That specific permanence is
+not obscure: `D16` already explains it in writing for `T0.17`, the pair it was
+filed on. The re-buy two hours later *recorded* the 3, and its commit (`965f54a`)
+still described the row as *"the deliberate FAIL"*, unchanged.
+
+Nobody lied and nobody was careless. Three things composed:
+
+1. **The instruments disagree about what "fixed" means.** One is about the
+   CURRENT row (a stamp, repairable by re-running). The other is about the
+   HISTORY (a pair, repairable by nothing). Same incident, different tense.
+2. **Only one of them narrates.** The dirty-stamp block prints a sentence and a
+   command; `T0.27` prints an integer inside a row that is already RED.
+3. **A gate held deliberately RED by a pending decision stops being read as a
+   measurement.** `T0.27` is red pending `D16`. After enough re-stamps, "still
+   the deliberate D16 FAIL" becomes the thing you check for instead of the
+   number — and the number had moved.
+
+**Rule, stated so it is checkable:** when an incident trips more than one
+instrument, the repair is not done until **every** instrument that recorded it
+has been re-read and its reading quoted. "The block is empty" is a claim about
+one reader, never about the event.
+
+**And the generalisation that outlives this spec:** a metric inside a
+permanently-RED gate is unwatched by construction, because the status it lives
+in never changes and nobody diffs a constant. Any gate deliberately held red by
+a decision must print its governing metric **as a delta against its previous
+row**, or the decision it is waiting for will be ruled on a stale number. Here
+the cost was nearly exact: `D16` fires 2026-09-05 on an adjudicated premise of
+*two* violations, *one* recoverable; the live figures three days before it fires
+are **three** violations, **two** recoverable
+(`refs/jack/failimpl/{LG.00,T0.29}` both verify). Sibling of the 61st audit's
+lesson above — that one says every instrument is built to catch optimism, this
+one says an instrument you have agreed to ignore is not an instrument.
