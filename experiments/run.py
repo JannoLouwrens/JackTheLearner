@@ -11,6 +11,10 @@
     python -m experiments.run T0.02           # run one experiment
     python -m experiments.run --tier 0        # run a whole tier, in order
     python -m experiments.run --gate          # re-run every PASSing test (regression)
+    python -m experiments.run --gate --max-budget cpu<10min
+                                              # bounded regression sweep: only PASSes at
+                                              # or below the cost class; the excluded
+                                              # stamps are printed, never silently skipped
 
 Dependencies are enforced: a spec whose prerequisites are not PASSing is recorded
 BLOCKED rather than run, because a number computed on a broken foundation is worse
@@ -29,7 +33,7 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-from .protocol import (GATE_DIRTY_FLAG, Ledger, Status, gate_precondition,
+from .protocol import (GATE_DIRTY_FLAG, Budget, Ledger, Status, gate_precondition,
                        impl_deps_of, impl_sha_of, is_code_dirt,
                        module_path_for, porcelain_path, spec_drift,
                        staleness_of, working_tree_porcelain)
@@ -1719,6 +1723,15 @@ def main() -> int:
                     help="spec ids, or status / next / blocked / stale / verify / render")
     ap.add_argument("--tier", type=int)
     ap.add_argument("--gate", action="store_true", help="re-run all passing tests")
+    ap.add_argument("--max-budget", choices=[b.value for b in Budget],
+                    help="gate only: re-run only PASSes at or below this cost "
+                         "class (Budget declaration order). The sweep PRINTS "
+                         "every spec it excludes — a bounded gate that names "
+                         "its residue, so GPU quota is never spent on a stamp "
+                         "refresh and 'gate green' cannot be read as a full "
+                         "sweep. Scar: the full gate covers 16 GPU-cost "
+                         "PASSes, so it was priced out of ever running "
+                         "(46th audit, Finding 2).")
     ap.add_argument("--dirty-ok", action="store_true",
                     help="gate a MODIFIED working tree on purpose — every "
                          "spec re-run stamps `+dirty` and its clean stamp is "
@@ -1784,8 +1797,25 @@ def main() -> int:
                 return 1
 
     if args.gate:
-        ids = _dependency_order([s.id for s in LADDER
-                                 if ledger.status(s.id) is Status.PASS])
+        passing = [s for s in LADDER if ledger.status(s.id) is Status.PASS]
+        excluded = []
+        if args.max_budget:
+            cost_order = [b.value for b in Budget]
+            ceiling = cost_order.index(args.max_budget)
+            excluded = [s for s in passing
+                        if cost_order.index(s.budget.value) > ceiling]
+            passing = [s for s in passing
+                       if cost_order.index(s.budget.value) <= ceiling]
+        ids = _dependency_order([s.id for s in passing])
+        if excluded:
+            # A filter converts "not swept" into silence unless the residue is
+            # counted (60th-audit lesson). Name every stamp this sweep does NOT
+            # re-verify, so a bounded green is never read as a full one.
+            print(f"BOUNDED GATE (--max-budget {args.max_budget}): "
+                  f"{len(excluded)} PASS stamp(s) above the ceiling are NOT "
+                  "re-verified by this sweep:")
+            for s in excluded:
+                print(f"    {s.id:8s} {s.budget.value}")
         # The gate is the ONE command here that can only lose certificates: it
         # re-runs rows that already hold clean stamps, so a dirty tree turns a
         # green sweep into a demotion. See `protocol.gate_precondition` for the
