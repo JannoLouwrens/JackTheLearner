@@ -129,6 +129,28 @@ LOGLINE=""
 chk "a declaration with a stale starttime does NOT attribute the pid" \
     "$(proc_leaks "$BEFORE" say && echo clean || echo leak)" leak
 
+echo "== the Python writer: run_spec's self-declaration must read back =="
+
+# 61st audit B3: experiments/protocol.py now declares the runner's own pid so
+# an inline spec run (the third LEFTOVER=1, T3.09's runner) stops reading as a
+# leak. Two independent implementations of "pid:starttime" — Python's rsplit
+# and the shell's ${s##*") "} — must agree or the declaration silently fails
+# open, so the case runs the REAL writer and the REAL reader against each
+# other, not either one against a fixture.
+RS_PID=$( cd "$REAL_REPO" && spawn "$VENV_PY" -c '
+import sys; sys.path.insert(0, "/home/opc/jackthelearner")
+from experiments.protocol import _declare_to_procwatch
+_declare_to_procwatch("test-run-spec-self-declaration")
+import time; time.sleep(45)' )
+i=0
+while [ $i -lt 100 ] && ! grep -q "^$RS_PID:" "$JACK_PROC_DECL" 2>/dev/null; do
+  sleep 0.1; i=$((i + 1))
+done
+chk "the python-written line is pid:starttime, tab-separated" \
+    "$(grep -cE "^$RS_PID:[0-9]+	" "$JACK_PROC_DECL")" 1
+chk "the shell reader attributes the self-declared runner" \
+    "$(_proc_attributed "$RS_PID" && echo yes || echo no)" yes
+
 echo "== ancestry: the work is a fork of the declared watcher =="
 
 : > "$JACK_PROC_DECL"

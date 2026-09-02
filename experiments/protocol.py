@@ -2499,6 +2499,52 @@ def _drain_gpu_charge_s() -> Optional[float]:
         return None
 
 
+_PROCWATCH_DECLARED = None
+
+
+def _declare_to_procwatch(label: str) -> None:
+    """Attribute this process (and its forks) to the loop's leftover check.
+
+    `scripts/lib_procwatch.sh` names every project python still alive at
+    iteration end that nobody declared. `launch_detached.sh` and `dispatch.sh`
+    declare the pids they leave behind, but a spec run launched inline — a
+    detached `python -c ...; run(ledger)` straight from a session — had no
+    declaration path, and the watcher flagged the loop's own legitimate work
+    three days running (61st audit B3; the third LEFTOVER=1 was T3.09's own
+    runner, pid 363738, 178 s CPU). `run_spec` is the one gate every spec run
+    passes through whatever idiom launched it, so the declaration lives here
+    rather than in any launch script a session might not use.
+
+    The declaration is `pid:starttime`, never a bare pid — starttime is unique
+    per pid *incarnation*, which is what stops a recycled pid from adopting a
+    stale line — and the watcher attributes children through the ppid chain,
+    so declaring the runner covers the work it forks. What this deliberately
+    does NOT cover: an ad-hoc verification python that never calls run_spec
+    (the 1.26-core-hour `while 1` scar) still carries no declaration and is
+    still named. Best-effort by construction: a GPU clone has no /data and no
+    watcher, and a spec run must never die on its own bookkeeping.
+    """
+    global _PROCWATCH_DECLARED
+    try:
+        with open("/proc/self/stat", "rb") as f:
+            stat = f.read().decode("ascii", "replace")
+        # Everything before the last ") " is pid+comm (comm may contain both
+        # spaces and parens); starttime is field 22 overall, 20th after them —
+        # the same parse lib_procwatch.sh's _proc_stat_field does.
+        starttime = stat.rsplit(") ", 1)[1].split()[19]
+        key = f"{os.getpid()}:{starttime}"
+        if _PROCWATCH_DECLARED == key:
+            return          # one line per process, not one per --gate spec
+        decl = Path(os.environ.get("JACK_PROC_DECL",
+                                   "/data/jack-logs/declared_pids"))
+        decl.parent.mkdir(parents=True, exist_ok=True)
+        with open(decl, "a") as f:
+            f.write(f"{key}\t{time.strftime('%Y-%m-%dT%H:%M:%S%z')}\t{label}\n")
+        _PROCWATCH_DECLARED = key
+    except (OSError, IndexError, ValueError):
+        pass                # no /proc or no /data: nothing watches here
+
+
 def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
              check: Callable[[Dict[str, Any], Dict[str, Any]], bool],
              control_fn: Optional[Callable[[int], Dict[str, Any]]] = None,
@@ -2542,6 +2588,10 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                      **Result.env_stamp(), ran_at=time.strftime("%Y-%m-%dT%H:%M:%S"))
         ledger.record(res)
         return res
+
+    # Declared only once real work is about to be spent: a BLOCKED refusal
+    # records and exits in milliseconds and needs no attribution.
+    _declare_to_procwatch(f"run_spec {spec.id}")
 
     t0 = time.time()
     # STAMPED BEFORE THE RUN, NOT AFTER IT. `env_stamp()` reads `HEAD`, and
