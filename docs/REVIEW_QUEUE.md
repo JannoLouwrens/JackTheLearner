@@ -586,6 +586,23 @@ ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_imp
     `audit_supersedes_fail` reports both with the same sentence, "that
     implementation was never committed", which is true of only one of them.
     The gate itself is not changed here — that is `D16`.
+    Third data point (2026-09-02, per 62nd audit B1; every number below
+    re-verified by the builder against the live ledger and refs before this
+    line was written): the live count is now **3 violations, 8 checked pairs,
+    24 unauditable** — the third is `T0.29 FAIL 661a48f+dirty
+    2026-09-02T09:18:06`, created by the 61st audit's own B4 work, and its
+    failing bytes are preserved and verified at
+    `refs/jack/failimpl/T0.29/2026-09-02T09-18-06` (blob `facfff9`). So
+    recoverable is now the MAJORITY: two of three (`LG.00`, `T0.29`) admit the
+    `git diff` the rule demands; only `T0.17` is genuinely lost — and
+    `audit_supersedes_fail`'s one sentence, "that implementation was never
+    committed", is now false for most of the rows it prints. Progression from
+    `T0.27`'s own rows: **1 (08-29) → 2 (08-30) → 3 (09-02)**, three distinct
+    specs, ~1 new violation per 1.5 days against a 20-entry history — they
+    arrive FASTER than they age out, which is a measurement against option
+    (a)'s "ages out soon-ish" premise. Full arithmetic: `D16`'s 62nd-audit
+    evidence update in `docs/DECISIONS_NEEDED.md` (2026-09-02 12:44 UTC).
+    No gate, default, or `decide_by` changed here.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated.)
 
