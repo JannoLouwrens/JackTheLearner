@@ -81,13 +81,27 @@ is why):
             run() refuses stale verdicts), a model failing LIVENESS, or
             wording variety below VARIETY_MIN (invariance never tested).
 
-TEMPERATURE, declared with its rationale because it is the one knob that
-could have been fitted: TEMP = 0.25 over length-normalised log-probs. Content
-mismatch costs whole nats under a prompt that names the content words, so
-cross-meaning gaps should dwarf T; same-meaning rewordings differ by tenths
-of a nat, so wording stays live. Chosen from that reasoning on 2026-09-02,
-before the artifact existed, and it does not move — a T fitted after seeing
-draws would be the seed-lottery in different clothes.
+TEMPERATURE — v2, and the VOID RECORD that forced it. v1 pre-registered
+TEMP = 0.25 on the reasoning that cross-meaning gaps dwarf T while
+same-meaning rewordings stay within it. Attempt 1 (2026-09-02 03:33 UTC, the
+committed artifact, all 1588 verdicts present) returned VOID on the
+pre-registered variety gate, exactly as designed: per-seed variety
+0.25 / 0.50 / 0.00 against the 0.30 worst-seed floor, with every other gate
+green (match 0.9833/1.0/1.0, swap 1.0 on all seeds, swap_agree 1.0, null
+0.0, liveness 1.0, silence and leak clean). At T=0.25 the intent
+conditioning makes draws nearly deterministic — on seed 2 not one report
+trial produced a second wording in five draws, so "meaning invariant across
+sampling seeds" was vacuously true there and the run could not test (a).
+
+THE REPAIR IS STRENGTHEN-ONLY AND PARAMETER-FREE: TEMP = 1.0, the plain
+softmax over length-normalised log-probs, chosen for being the no-knob
+default rather than from any preview of the draws (none was taken — the
+claim gates at T=1.0 were unknown when this line was committed). Raising T
+is the claim-HARDER direction on every gate this spec has: more entropy in
+the sampler means more chances for meaning to flip across draws, across
+states and across models, and a livelier null. The VOID row and v1's exact
+numbers stay in the ledger's history; the variety floor, and every other
+threshold, is byte-identical to v1.
 
 THE SWAP MODEL, and the limitation recorded the way LG.01 recorded the 360M.
 MODEL_B is SmolLM2-135M-Instruct: genuinely different frozen weights, same
@@ -155,7 +169,7 @@ NOW = 1e9             # fixed clock, LG.00's rule: retrieval must not depend
                       # on when the test ran
 
 # ── gates, pre-registered 2026-09-02 BEFORE any number existed ───────────────
-TEMP = 0.25
+TEMP = 1.0            # v2 — see TEMPERATURE block; v1's 0.25 VOIDed variety
 S_DRAWS = 5
 MATCH_MIN = 0.90
 UNANIMITY_MIN = 0.90
