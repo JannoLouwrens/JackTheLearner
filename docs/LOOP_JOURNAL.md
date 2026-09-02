@@ -9299,3 +9299,21 @@ do not dispatch GPU against it) — check its watcher/harvest first, then the
 both frontier claims (LG.10 FAIL, T2.10 FAIL) with the same shape: the
 combined machinery beats its null decisively and misses a 0.90-grade bar —
 the Review should see them side by side.
+
+- 2026-09-02 ~04:1x (Fable): LG.02 — THE LIAR TEST, owner-designed 08-09, queued
+  since then — implemented and PASS on attempt 1 (d351bae, 1.9s CPU): lastq
+  follow divergence 0.689+-0.103 (gate 0.40 worst-seed, mean-3sd 0.38>0),
+  truthful followed 0.822 vs liar 0.133; stripped-attribution null kills it
+  (|div| 0.028 max, pooled trust 0.458 in the 0.35-0.65 aliveness band);
+  owner's swap control MIGRATES (0.711 lastq toward newly-truthful, 0.733 q2
+  pre-swap); first-encounter trust exactly 0.5 both advisors (kills-clause
+  guard), attrib recall 0.95. First first-ever claim PASS in the social/trust
+  family since it was registered — the family reads 3 of 9. Also this slot:
+  T0.27 re-stamped FAIL honestly (still the D16 deliberate red, now about
+  current code); UB.10/D1.0 doc-only amends REFUSED (ASTs moved, not prose) —
+  their stale VOIDs stay stale and both re-runs belong to the Review's 09-06
+  desk (ub10-seed-fragility, d10-successor-rerun rows). Meters at slot start:
+  week:all 8% (the gate), week:Fable 14%, no pacing streak. **Next iteration:**
+  board is otherwise the 09-06 Review's (eleven rows DUE); remaining audit-named
+  build units are T3.09 (cpu<2h) and the LG family's next zero-pass claim —
+  take one, do not re-roll anything settled this slot.

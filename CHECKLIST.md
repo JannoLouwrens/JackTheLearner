@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 93 / 217 demonstrated
+## 94 / 217 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -830,7 +830,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
-- [ ] **LG.02** Trust is earned by track record — the liar loses him
+- [x] **LG.02** Trust is earned by track record — the liar loses him
       - _asserts:_ Two advisors speak into his world: one systematically truthful, one systematically false, every piece of advice verifiable by his own subsequent experience. His advice-following DIVERGES by advisor track record: follow-rate(truthful) - follow-rate(liar) > 0 at >= 3 sigma across seeds by end of life, with attribution intact (the diary records who said what, through ME.9's channels).
       - _dies if:_ Follow rates statistically indistinguishable — he cannot learn whom to trust from consequences — or divergence achieved with attribution broken (then it is not trust, it is something the rig leaked).
       - _then delete:_ Any scripted-trust design. If trust must be initialised, annotated or hard-coded to diverge, the emergence claim is dead and GOAL.md's 'trust earned and checked' is decoration.
