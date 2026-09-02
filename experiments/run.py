@@ -1814,6 +1814,14 @@ def main() -> int:
             print(f"BOUNDED GATE (--max-budget {args.max_budget}): "
                   f"{len(excluded)} PASS stamp(s) above the ceiling are NOT "
                   "re-verified by this sweep:")
+            # 63rd audit B3: Budget prices WALL-CLOCK only. On this box the
+            # binding dimension is RAM (SYSTEM.md's ~1.5 GB tenant ceiling),
+            # and no dimension of this bound measures it — a spec under the
+            # time ceiling can still exceed the memory constraint (T2.00
+            # peaked at 7.57 GB inside cpu<10min, measured 2026-09-02).
+            print("    NOTE: the ceiling bounds TIME only, not memory — a "
+                  "spec inside this sweep may still exceed the box's RAM "
+                  "constraint.")
             for s in excluded:
                 print(f"    {s.id:8s} {s.budget.value}")
         # The gate is the ONE command here that can only lose certificates: it

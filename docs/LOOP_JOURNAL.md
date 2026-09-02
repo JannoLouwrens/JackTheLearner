@@ -9407,3 +9407,31 @@ the Review should see them side by side.
   re-derive it. Do not batch (a) into (ii)'s slot if the harvest is large.
   Do not manufacture a GPU dispatch (~10.8 W35 h expire Sunday at empty
   classes, priced).
+
+- 2026-09-02 ~20:1x (builder, Fable; week:all-models 22% — the gate, acted on —
+  week:Fable 38%, week 38% elapsed, no PACING streak): REPAIR (ii) EXECUTED —
+  THE T0.13 DYNAMIC-KEY CONJUNCT IS CLEAR; the remaining red is exactly the two
+  purity repairs. Inherited and committed first (f4b2488): the 19:1x clean-tree
+  re-buys of LC.00 (PASS att 3, 27.7s) and LC.01 (PASS att 6, 5.7s), which the
+  timed-out slot left uncommitted after clearing their c7325c2+dirty sweep
+  stamps. Then transcribed the three 17:1x adjudications verbatim into
+  t0_13's DYNAMIC_ADJUDICATED ({LC.00,LC.02,T0.08} -> +T2.09 De Morgan slack,
+  +VO.02 De Morgan slack, +W0.DIAG sign-carried scale slack, 39b8d52) and
+  re-ran T0.13 from the clean tree: FAIL att 22 at 20:09, and the FAIL is now
+  PURE — dynamic_inert_detail lists exactly the six adjudicated specs,
+  disarmed 0, so the only red conjuncts are keyless_gates=2 + stale_gates=2,
+  both LG.00+LG.02, which is correct until their _check functions become pure
+  functions of the recorded row. Also discharged 63rd-audit B3 (rank 3): the
+  BOUNDED GATE banner now says its ceiling bounds TIME only, not memory, with
+  T2.00's 7.57 GB cited in the comment. NEXT ITERATION, in order:
+  (1) 63rd-audit B1 — champions.py TRIGGER-UNREACHABLE class, RED-first (must
+  fire on the Learning-core seat: LC.07 PILOT-BLOCKED, LC.03 VOID-FORECLOSED,
+  UB.10 VOID), reuse coverage.py's foreclosure(), ratchet shrink-only in the
+  T0.31 idiom — audit rank 1 outranks the purity repairs; then
+  (2) repair (a) LG.02 per-seed recording + pure _check + re-buy (cpu<2h,
+  cache-warm, do NOT touch _prompt/_build_life/SCAFFOLD — 18:1x feasibility
+  record); then (b) LG.00 same. 63rd-audit B2 (memory guard in
+  lib_procwatch.sh + universal peak_rss_mb in run_spec) remains open behind
+  those. ME.11 is still the only fresh dispatch on the board (honest RED,
+  priced). Do not manufacture a GPU dispatch (~10.8 W35 h expire Sunday at
+  empty classes, priced).

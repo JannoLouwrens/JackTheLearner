@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 94 / 217 demonstrated
+## 90 / 217 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -54,7 +54,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T0.12** GPU-hour accounting
       - _asserts:_ Every GPU run debits a weekly budget file; the ladder refuses to launch past quota.
       - _dies if:_ A run proceeds with the budget exhausted.
-- [x] **T0.13** No gate in the ladder is decorative
+- [!] **T0.13** No gate in the ladder is decorative  — computed_detail=T0.24: m['control_reproduces_scar']; T1.02: m['beats_mean_baseline'], m['heldout_structure_advantage']; computed_gate_keys=3
       - _asserts:_ Every metric a `_check` reads can change that check's verdict at the operating point the run actually produced, and no `_check` mixes `and` with an unparenthesised `or`.
       - _dies if:_ A PASSing spec's gate references a metric that cannot move its verdict, or contains an operator-precedence hazard.
 
@@ -707,11 +707,11 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Any camera the ladder certifies has less than 5% of its frame occupied by geometry nearer than 1 m, and shows at least 35% workspace (floor). A certified eye looks AT the world, not INTO a nearby object.
       - _dies if:_ Near-field occlusion at or above 5%, or workspace below 35%. Then every visual certificate taken through that camera is measuring what fits between obstructions.
       - _then delete:_ Nothing directly. It is a GUARD on PG.6, UB.9-UB.13 and every later visual spec: those measure acuity and binding through a camera whose framing they all assume and none of them check.
-- [x] **PS.02** The world can freeze him, and the cold is FELT before it kills
+- [~] **PS.02** The world can freeze him, and the cold is FELT before it kills  — borrow_ok=0.0; borrow_ok_std=0.0
       - _asserts:_ The world carries a temperature field with pre-registered dynamics - body temperature falls at a measured rate in cold, rises near heat, death below a threshold within a bounded time - AND the approach of that death is legible from Jack's senses beforehand: a probe on his sensory vector predicts time-to-freezing well above chance while he is still alive.
       - _dies if:_ Time-to-death unpredictable from the senses. Then cold is an unlearnable instakill, not a need: no agent and no architecture could ever adapt to it, and every shelter result built on top would be measuring luck.
       - _then delete:_ Every survival claim involving cold, and the jungle's entire motive for shelter.
-- [x] **PS.03** Damage is a signal, not just an ending
+- [~] **PS.03** Damage is a signal, not just an ending  — borrow_ok=0.0; borrow_ok_std=0.0
       - _asserts:_ Harm produces a GRADED, sensed damage signal that precedes death, and a single exposure is enough to shift behaviour away from its cause.
       - _dies if:_ Damage is binary and instant, or avoidance needs many exposures. Either way the only way to learn about a danger is to die of it, repeatedly, which no animal does and no agent in a survival world can afford.
       - _then delete:_ Any claim that Jack learns danger. Also weakens TA.02: taste aversion would be the ONLY one-shot learner in the system, which would make it a special case rather than a principle.
@@ -747,7 +747,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [x] **BA.01** He feels himself falling before he falls
+- [~] **BA.01** He feels himself falling before he falls  — auc=nan; auc_std=nan
       - _asserts:_ Jack carries a sensed orientation signal - gravity's direction in his own body frame - from which a linear probe recovers tilt, and from which time-to-topple is predictable while he is still upright.
       - _dies if:_ Tilt unrecoverable, or a topple unpredictable until it has happened. Then balance is not a sense he has, it is an outcome he suffers, and no amount of training produces a creature that catches itself.
       - _then delete:_ Every locomotion and climbing claim that assumes he can tell up from down. W0.BAL - 'the rover topples' - has been an open queue entry rather than a spec; this is the falsifiable form of it.
