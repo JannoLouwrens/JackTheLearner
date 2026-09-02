@@ -62,6 +62,28 @@ WHAT THIS FLAGS.
                    ever asked the first (LESSONS.md, "An arena that exists is
                    not an arena that can be run"). The repair is a
                    re-parenting or a redesign, never a re-run.
+    VERDICT-IS-A-VOID  held BY VERDICT — the file's STRONGEST marking — and
+                   the declared deciding run's ledger row is not a verdict.
+                   A VOID decided nothing (SYSTEM.md: "fix the arm, do not
+                   decide") and NOT_RUN/ERROR never decided. The 61st audit
+                   (2026-09-02, FINDING 5) found the Learning core seat
+                   printed `ok` while held BY VERDICT off `LC.03`, which is
+                   VOID-FORECLOSED: D10's armed default fired and seated the
+                   core off a VOID row, and this tool's ratchet asked only
+                   whether the arena RESOLVES, never whether the verdict
+                   behind the marking was a verdict at all — so the strongest
+                   marking in the file was the one with the least
+                   verification behind it.
+    VERDICT-UNDECLARED the seat is marked BY VERDICT and does not say which
+                   ledger row bought it (`VERDICT:` absent from its SEAT:
+                   line, or naming an id the registry has never heard of).
+                   The marking cannot be checked at all, which is one step
+                   worse than checking it and finding a VOID. The World seat
+                   is the standing example: held BY VERDICT off a
+                   Craftax-comparison measurement that has no spec id and no
+                   ledger row — an unregistered run holding the strongest
+                   marking. The repair is naming the run, registering it, or
+                   honestly re-marking the seat.
 
 MARKINGS AND ARENAS ARE NOW DECLARED, NOT INFERRED — the repair this docstring
 proposed for eight audits and would not take unilaterally (51st audit B2, RANK 2,
@@ -242,6 +264,27 @@ BASELINE_UNCONTESTABLE = 6
 # discharged by writing ONE LINE, so a red here is never expensive.
 BASELINE_UNDECLARED = 0
 
+# SEATS HELD **BY VERDICT** WHOSE DECIDING RUN CANNOT BE VERIFIED — either no
+# resolvable `VERDICT:` declaration (VERDICT-UNDECLARED) or a declared run whose
+# ledger row is not PASS/FAIL (VERDICT-IS-A-VOID). Ratcheted as the SUM of the
+# two classes, per `T0.31`'s precedent already applied to
+# `BASELINE_UNCONTESTABLE` above: declaring a verdict id that turns out to be a
+# VOID converts a seat from one class to the other, and that conversion is
+# honesty arriving, not progress and not regression — the total must not move.
+#
+# MEASURED 2026-09-02 (61st audit B4) against 217 specs, THE CLASS BEFORE THE
+# MIGRATION (LESSONS.md, 60th audit: "add the class, watch it report 6, THEN
+# migrate — otherwise the repair lowers its own number without evidence it can
+# detect anything"): all three BY VERDICT seats fired VERDICT-UNDECLARED on day
+# one, because no declaration carried a `VERDICT:` field yet — Learning core
+# (deciding run `LC.03`, which is VOID — FINDING 5's case, repairs routed on
+# the three `d10-*` queue rows), Episodic retrieval (`ME.1`/`ME.9`, both PASS —
+# discharged by declaring), and World (the Craftax comparison, which has NO
+# spec id and NO ledger row: the strongest marking in the file backed by an
+# unregistered measurement; the repair is registering/attributing the run or
+# re-marking the seat, and it is the Review's call, not a declaration edit).
+BASELINE_VERDICT_UNVERIFIED = 3
+
 # ARENA REFS THAT CAN NEVER BE REGISTERED, and why — the honest cost of closing
 # the gap, which this file used to leave the reader to discover by spending the
 # iteration (LESSONS.md 2026-08-29: "an instrument that names a gap must also
@@ -412,6 +455,20 @@ def declarations(text: str) -> Tuple[Dict[str, dict], List[Tuple[str, str, str]]
       DECL-ORPHAN       (raised in `audit()`, where the seat list exists) a
                         declaration for a seat this file does not contain —
                         a phantom seat, the mirror of a phantom arena.
+
+    A BY VERDICT declaration may (and should) also carry `VERDICT: <spec ids>`
+    naming the ledger row(s) that bought the marking — the 61st audit's B4
+    conjunct reads it. Two more ways THAT field can be wrong:
+
+      DECL-VERDICT-MISPLACED  `VERDICT:` on a marking that is not BY VERDICT —
+                        a verdict citation on a seat nothing decided is stale
+                        or wrong, and silently ignoring it is how it stays
+                        that way. The declaration is dropped.
+      DECL-EMPTY-VERDICT      `VERDICT:` present but naming no spec id. There
+                        is deliberately NO `VERDICT: NONE` escape: a BY
+                        VERDICT seat asserting "no deciding run exists" is
+                        exactly the debt VERDICT-UNDECLARED exists to show,
+                        and an author may not declare their way out of it.
     """
     decls: Dict[str, dict] = {}
     problems: List[Tuple[str, str, str]] = []
@@ -445,6 +502,23 @@ def declarations(text: str) -> Tuple[Dict[str, dict], List[Tuple[str, str, str]]
                              f"HELD: {fields['HELD']!r} is not one of "
                              f"{', '.join(CANONICAL_MARKINGS)}"))
             continue
+        vrefs: Optional[List[str]] = None
+        if "VERDICT" in fields:
+            if held != "BY VERDICT":
+                problems.append(("DECL-VERDICT-MISPLACED", name,
+                                 f"VERDICT: {fields['VERDICT']!r} on a seat "
+                                 f"held {held} — a verdict citation on a "
+                                 f"marking nothing decided is stale or wrong"))
+                continue
+            vrefs = arena_refs(fields["VERDICT"])
+            if not vrefs:
+                problems.append(("DECL-EMPTY-VERDICT", name,
+                                 f"VERDICT: {fields['VERDICT']!r} names no "
+                                 f"spec id — name the deciding run(s); there "
+                                 f"is no NONE escape, because a BY VERDICT "
+                                 f"seat with no deciding run is the debt "
+                                 f"itself"))
+                continue
         arena = fields["ARENA"]
         if arena.strip().upper() in NO_ARENA_DECLARED:
             refs: List[str] = []
@@ -472,7 +546,7 @@ def declarations(text: str) -> Tuple[Dict[str, dict], List[Tuple[str, str, str]]
             continue
         seen[name] = lineno
         decls[name] = {"held": held, "arena_refs": refs, "line": lineno,
-                       "arena_cell": arena}
+                       "arena_cell": arena, "verdict_refs": vrefs}
     return decls, problems
 
 
@@ -492,6 +566,9 @@ def apply_declarations(seats: Sequence[dict], decls: Dict[str, dict]) -> List[st
         if d:
             s["held"] = d["held"]
             s["arena_refs"] = list(d["arena_refs"])
+            # None when the declaration has no VERDICT: field — distinct from
+            # an empty list, which `declarations()` already refused.
+            s["verdict_decl"] = d.get("verdict_refs")
     return sorted(n for n in decls if n not in names)
 
 
@@ -571,6 +648,10 @@ def parse(text: str) -> List[dict]:
             "line": lineno,
             "champion": _clean(get("champion")),
             "held": _marking(get("held"), get("champion")),
+            # Kept raw: the held cell is where the file's own idiom names the
+            # deciding run — `BY VERDICT (ME.1/ME.9)` — and for a seat with no
+            # declaration it is the only place the verdict conjunct can look.
+            "held_cell": get("held"),
             "arena_cell": get("arena"),
             "challenger": _clean(get("challenger status") or get("challenger")),
             "kind": "seat",
@@ -709,6 +790,18 @@ def unreachable_arena(seats: Sequence[dict]) -> List[str]:
     only one of its readers was told (54th audit B2).
     """
     return [s["seat"] for s in seats if s.get("arena_welded")]
+
+
+def unverified_verdicts(seats: Sequence[dict]) -> List[str]:
+    """BY VERDICT seats whose deciding run cannot be verified — the sum of
+    VERDICT-UNDECLARED and VERDICT-IS-A-VOID, ratcheted at
+    `BASELINE_VERDICT_UNVERIFIED`. The SUM, so a seat converting between the
+    two classes (a verdict declared, and found to be a VOID) is neither
+    progress nor regression — honesty arriving must not move the number.
+    Reads the flag `audit()` stores, for the same no-reader-drift reason as
+    `unreachable_arena`.
+    """
+    return [s["seat"] for s in seats if s.get("verdict_unverified")]
 
 
 def unfalsifiable(seats: Sequence[dict]) -> List[str]:
@@ -868,6 +961,52 @@ def audit(text: str, by_id: dict, status: Callable[[str], str], *,
                                f"held {s['held']}; arena "
                                f"{', '.join(s['arena_present'])} exists and "
                                f"{why} — the invitation is real but unanswered"))
+
+        # THE VERDICT CONJUNCT (61st audit B4, FINDING 5). BY VERDICT is the
+        # file's strongest marking, and until 2026-09-02 it was the one with
+        # the least verification behind it: the ratchet asked whether the
+        # arena RESOLVES, never whether the run behind the marking was a
+        # verdict at all — so D10's armed default seated the Learning core BY
+        # VERDICT off `LC.03`, a VOID-FORECLOSED row, and this tool printed
+        # `ok`. A declared seat is read from its `VERDICT:` field only; an
+        # undeclared seat falls back to ids in its held CELL (`BY VERDICT
+        # (ME.1/ME.9)` is the file's own idiom), which keeps the fallback in
+        # the same place the seat's other prose readings already live — the
+        # UNDECLARED list.
+        s["verdict_unverified"] = False
+        if s["held"] == "BY VERDICT":
+            vrefs = (s.get("verdict_decl") if s.get("declared")
+                     else arena_refs(s.get("held_cell", ""))) or []
+            s["verdict_refs"] = vrefs
+            v_missing = [r for r in vrefs if not resolve(r, by_id)]
+            v_present = sorted({i for r in vrefs for i in resolve(r, by_id)})
+            s["verdict_status"] = {i: status(i) for i in v_present}
+            nonverdict = {i: st for i, st in s["verdict_status"].items()
+                          if st not in VERDICTS}
+            if not vrefs or v_missing:
+                s["verdict_unverified"] = True
+                why = (f"declares {', '.join(v_missing)}, which the registry "
+                       f"has never heard of — a phantom deciding run verifies "
+                       f"nothing" if v_missing else
+                       "does not say which ledger row bought the marking — "
+                       "add `VERDICT: <spec id>` to the SEAT: line; if no "
+                       "ledger row exists, the marking itself is the debt")
+                violations.append(("VERDICT-UNDECLARED", s["seat"],
+                                   "held BY VERDICT — the file's strongest "
+                                   "marking — and " + why))
+            elif nonverdict:
+                s["verdict_unverified"] = True
+                violations.append((
+                    "VERDICT-IS-A-VOID", s["seat"],
+                    "held BY VERDICT off "
+                    + "; ".join(f"{i} ({st})"
+                                for i, st in sorted(nonverdict.items()))
+                    + " — a VOID decided nothing (SYSTEM.md: 'fix the arm, do "
+                      "not decide') and NOT_RUN/ERROR never decided, so the "
+                      "strongest marking in the file is backed by a "
+                      "non-verdict; the repair is a completed re-run, an "
+                      "honest re-marking, or the routed redesign — never "
+                      "trusting the marking"))
     return violations, seats
 
 
@@ -905,7 +1044,15 @@ def _fixture() -> None:
 | Seat with a half-written declaration | incumbent | **DEFAULT, never defended** | ZZ.00 (queued) | a challenger |
 | Declared seat naming a family | incumbent | **BY VERDICT** (OK.01) | OK.04 is the only id in this cell | a challenger |
 | Seat declaring prose where ids belong | incumbent | **BY DECREE** (owner) | OK.03 (registered) | a challenger |
+| Verdict seat whose run VOIDed | incumbent | **BY VERDICT** (OK.06) | OK.01 (registered) | a challenger |
+| Verdict seat with no named run | incumbent | **BY VERDICT** | OK.01 (registered) | a challenger |
+| Verdict seat citing a phantom run | incumbent | **BY VERDICT** (ZZ.00) | OK.01 (registered) | a challenger |
+| Decree seat citing a verdict | incumbent | **BY DECREE** (owner) | OK.03 (registered) | a challenger |
 
+- SEAT: Verdict seat whose run VOIDed | HELD: BY VERDICT | VERDICT: OK.06 | ARENA: OK.01
+- SEAT: Verdict seat with no named run | HELD: BY VERDICT | ARENA: OK.01
+- SEAT: Verdict seat citing a phantom run | HELD: BY VERDICT | VERDICT: ZZ.00 | ARENA: OK.01
+- SEAT: Decree seat citing a verdict | HELD: BY DECREE | VERDICT: OK.01 | ARENA: OK.03
 - SEAT: Declared seat whose prose over-reads | HELD: BY DEFAULT | ARENA: OK.01
 - SEAT: Declared seat whose ring is unbuilt | HELD: BY DECREE | ARENA: NONE
 - SEAT: A seat this file does not contain | HELD: VACANT | ARENA: OK.01
@@ -1079,6 +1226,47 @@ This section names ZZ.09 and must contribute no seat and no violation.
     deltas = {(seat, was.split()[0]) for seat, was, _now in declaration_deltas(seats)}
     assert (over["seat"], "arena") in deltas and (over["seat"], "held") in deltas, deltas
 
+    # THE VERDICT CONJUNCT (61st audit B4). Four planted shapes and two healthy
+    # directions, because the failure that would hurt most is indicting a seat
+    # whose verdict is real. A declared deciding run that VOIDed fires
+    # VERDICT-IS-A-VOID — the FINDING 5 shape (Learning core off LC.03) — and
+    # BY VERDICT is not an unearned marking, so nothing else fires beside it.
+    assert flagged.get("Verdict seat whose run VOIDed") == {"VERDICT-IS-A-VOID"}, flagged
+    # A declaration without VERDICT: cannot be checked at all; so can a
+    # declared id the registry has never heard of — both are the UNDECLARED
+    # flavour, and converting between the flavours is invisible to the ratchet.
+    assert flagged.get("Verdict seat with no named run") == {"VERDICT-UNDECLARED"}, flagged
+    assert flagged.get("Verdict seat citing a phantom run") == {"VERDICT-UNDECLARED"}, flagged
+    # ...and the messages differ: a phantom id is a stale citation, not a gap.
+    _vwhy = {seat: why for kind, seat, why in violations
+             if kind == "VERDICT-UNDECLARED"}
+    assert "ZZ.00" in _vwhy["Verdict seat citing a phantom run"], _vwhy
+    assert "VERDICT: <spec id>" in _vwhy["Verdict seat with no named run"], _vwhy
+    # A VERDICT: field on a marking nothing decided drops the declaration and
+    # says so; the seat falls back to inference (BY DECREE over an unrun
+    # arena, hence also UNCONTESTED) and stays visible in the UNDECLARED list.
+    assert flagged.get("Decree seat citing a verdict") == {
+        "DECL-VERDICT-MISPLACED", "UNCONTESTED"}, flagged
+    # A seat that declares HELD: BY VERDICT and never says which run is the
+    # live Learning-core shape on day one — it must fire even though its held
+    # CELL names an id, because a declaration is the authoritative reading.
+    assert "VERDICT-UNDECLARED" in flagged.get("Declared seat naming a family",
+                                               set()), flagged
+    # Healthy direction 1: an UNDECLARED seat discharges through the held-cell
+    # idiom — "Healthy verdict seat" carries `(OK.01)`, which PASSed, and its
+    # exact-set assertion above (DECL-UNKNOWN-HELD only) already proves no
+    # verdict class fired on it. Healthy direction 2 is every non-BY-VERDICT
+    # seat in this document: none may carry either class.
+    _vseats = {seat for kind, seat, _w in violations
+               if kind in ("VERDICT-IS-A-VOID", "VERDICT-UNDECLARED")}
+    assert _vseats == {"Verdict seat whose run VOIDed",
+                       "Verdict seat with no named run",
+                       "Verdict seat citing a phantom run",
+                       "Declared seat naming a family"}, _vseats
+    # ...and the ratchet counts the SUM of both flavours, exactly the seats
+    # that fired — a conversion between flavours cannot move it.
+    assert set(unverified_verdicts(seats)) == _vseats, unverified_verdicts(seats)
+
     # ...and the healthy seats are untouched. A "Superseded context" heading is
     # not a decree, so ZZ.09 must not appear anywhere.
     for ok in ("Default seat a claim spec defended",):
@@ -1243,6 +1431,21 @@ def main(argv: List[str]) -> int:
             print(f"    {seat[:70]}")
         print()
 
+    unv = unverified_verdicts(seats)
+    print(f"  UNVERIFIED VERDICTS — held BY VERDICT, the file's strongest "
+          f"marking, with no\n  resolvable deciding run or one whose ledger "
+          f"row is not a verdict "
+          f"({len(unv)}/{BASELINE_VERDICT_UNVERIFIED}):")
+    for seat in unv:
+        s = next(x for x in seats if x["seat"] == seat)
+        vs = s.get("verdict_status", {})
+        detail = (", ".join(f"{i}={st}" for i, st in sorted(vs.items()))
+                  or "no deciding run named")
+        print(f"    {seat[:52]:<52} {detail}")
+    if not unv:
+        print("    (none — every verdict marking names a run that decided)")
+    print()
+
     still = undeclared(seats)
     print(f"  UNDECLARED — no SEAT:/HELD:/ARENA: line, so this report's marking "
           f"and arena for\n  it are a parse of prose "
@@ -1290,11 +1493,20 @@ def main(argv: List[str]) -> int:
                   f"  and it shrinks by REGISTERING the spec, not by deleting the "
                   f"arena reference.\n")
             return 1
+        if len(unv) > BASELINE_VERDICT_UNVERIFIED:
+            print(f"  RATCHET BROKEN: {len(unv)} BY VERDICT seat(s) have no "
+                  f"verifiable deciding run, baseline "
+                  f"{BASELINE_VERDICT_UNVERIFIED}. The sum may shrink, never\n"
+                  f"  grow — it shrinks when a deciding run completes to a "
+                  f"verdict, is declared and\n  verified, or the seat is "
+                  f"honestly re-marked — never by deleting the VERDICT: line.\n")
+            return 1
         print(f"  ratchet ok ({missing}/{BASELINE_ARENA_MISSING} seats with a "
               f"phantom arena; {len(dead)}/{BASELINE_UNFALSIFIABLE} "
               f"unfalsifiable;\n  {len(dead)}+{len(welded)}/"
               f"{BASELINE_UNCONTESTABLE} uncontestable in total, arena-"
-              f"unreachable included).\n")
+              f"unreachable included;\n  {len(unv)}/"
+              f"{BASELINE_VERDICT_UNVERIFIED} unverified verdicts).\n")
     return 0
 
 
