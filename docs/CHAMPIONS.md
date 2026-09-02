@@ -273,13 +273,13 @@ Three rules, each of them a scar:
   never repair that citation — it is not what the seat points at, and the
   seat keeps its real ring in `D1.0`.
 
-- SEAT: Learning core | HELD: BY VERDICT | ARENA: LC.00–LC.07
+- SEAT: Learning core | HELD: BY VERDICT | VERDICT: LC.03 | ARENA: LC.00–LC.07
 - SEAT: Deliberation (the slow path) | HELD: VACANT | ARENA: DP.00–DP.05, BO.01
 - SEAT: Fast/slow coupling | HELD: BY DECREE | ARENA: DP.02
 - SEAT: Control architecture (D1) | HELD: VACANT | ARENA: D1.0
 - SEAT: Needs/reward form | HELD: BY ANALYSIS | ARENA: NE.02
 - SEAT: Curiosity signal | HELD: BY ANALYSIS | ARENA: LT.03, LT.04
-- SEAT: Episodic retrieval | HELD: BY VERDICT | ARENA: ME.11.A–F
+- SEAT: Episodic retrieval | HELD: BY VERDICT | VERDICT: ME.1, ME.9 | ARENA: ME.11.A–F
 - SEAT: Sensory fusion | HELD: UNDECIDED | ARENA: UB.10
 - SEAT: Vision encoder | HELD: BY DEFAULT | ARENA: T2.03, PL.02
 - SEAT: ASR (speech→text) | HELD: BY ANALYSIS | ARENA: NONE
@@ -287,6 +287,13 @@ Three rules, each of them a scar:
 - SEAT: Language model | HELD: BY DECREE | ARENA: LG.00
 - SEAT: Consolidation | HELD: BY ANALYSIS | ARENA: NE.05
 - SEAT: World | HELD: BY VERDICT | ARENA: W.1–W.5, W.7, W.8
+  (World carries NO `VERDICT:` line, deliberately: its deciding run — the
+  4–6× Craftax comparison — has no spec id and no ledger row, so there is
+  nothing true to declare, and `VERDICT: NONE` does not exist by
+  construction. The standing `VERDICT-UNDECLARED` on this seat is the debt
+  itself, held at `BASELINE_VERDICT_UNVERIFIED`; the repair is
+  registering/attributing the run or honestly re-marking the seat — the
+  Review's call, not a declaration edit.)
 - SEAT: Audio encoder (world-sound → brain) | HELD: UNDECIDED | ARENA: PL.*
 - SEAT: Language grounding (word → lived skill) | HELD: UNDECIDED | ARENA: NONE
 - SEAT: Smell (olfaction) | HELD: VACANT | ARENA: SM.02

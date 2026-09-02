@@ -276,14 +276,26 @@ BASELINE_UNDECLARED = 0
 # MIGRATION (LESSONS.md, 60th audit: "add the class, watch it report 6, THEN
 # migrate — otherwise the repair lowers its own number without evidence it can
 # detect anything"): all three BY VERDICT seats fired VERDICT-UNDECLARED on day
-# one, because no declaration carried a `VERDICT:` field yet — Learning core
-# (deciding run `LC.03`, which is VOID — FINDING 5's case, repairs routed on
-# the three `d10-*` queue rows), Episodic retrieval (`ME.1`/`ME.9`, both PASS —
-# discharged by declaring), and World (the Craftax comparison, which has NO
-# spec id and NO ledger row: the strongest marking in the file backed by an
-# unregistered measurement; the repair is registering/attributing the run or
-# re-marking the seat, and it is the Review's call, not a declaration edit).
-BASELINE_VERDICT_UNVERIFIED = 3
+# one (`661a48f`, 3/3), because no declaration carried a `VERDICT:` field yet.
+#
+# RATCHETED DOWN 3 -> 2 the same hour, by the migration: Episodic retrieval
+# declared `VERDICT: ME.1, ME.9` (both PASS) and DISCHARGED — the only seat of
+# the three whose marking survives verification. The two that remain, each
+# with its repair named:
+#   Learning core   VERDICT-IS-A-VOID — declared `VERDICT: LC.03` honestly,
+#                   and LC.03 is VOID-FORECLOSED: D10's armed default seated
+#                   the core off a row that decided nothing (61st audit
+#                   FINDING 5). Converting UNDECLARED -> IS-A-VOID did not
+#                   move this sum, by design. Repairs are routed on the three
+#                   `d10-*` review-queue rows (DUE 2026-09-06).
+#   World           VERDICT-UNDECLARED — its deciding run (the 4-6x Craftax
+#                   comparison) has NO spec id and NO ledger row, so there is
+#                   nothing true to declare and no NONE escape exists by
+#                   construction. The strongest marking in the file backed by
+#                   an unregistered measurement; the repair is registering/
+#                   attributing the run or honestly re-marking the seat — the
+#                   Review's call, surfaced by this class for the first time.
+BASELINE_VERDICT_UNVERIFIED = 2
 
 # ARENA REFS THAT CAN NEVER BE REGISTERED, and why — the honest cost of closing
 # the gap, which this file used to leave the reader to discover by spending the
