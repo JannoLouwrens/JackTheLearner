@@ -258,10 +258,14 @@ def _probe(legacy: bool) -> dict:
     # P5 — the live decision set, and it is the half a fixture cannot do. Every
     # UNREGISTERABLE entry must cite the record that closed it — an entry is a
     # DECISION, not an opinion, and a ref parked here without a record is how
-    # inventory debt gets laundered into "we decided not to". `W.6`, `D1.0` and
-    # `T2.21` are the three, and none of them may resolve in the live registry:
-    # if one ever does, the entry is stale and the seat is contestable after all.
-    if (set(UNREGISTERABLE) != {"W.6", "D1.0", "T2.21"}
+    # inventory debt gets laundered into "we decided not to". `W.6` and `T2.21`
+    # are the two, and neither may resolve in the live registry: if one ever
+    # does, the entry is stale and the seat is contestable after all. THAT
+    # CLAUSE FIRED FOR REAL on 2026-09-02 (FAIL attempt 1, `81e3b97`): `D1.0`
+    # sat in the set from 2026-08-30, was registered and run to VOID while the
+    # entry stayed, and the first certificate re-buy caught the contradiction —
+    # the pinned set here tracks the decision record, and shrank with it.
+    if (set(UNREGISTERABLE) != {"W.6", "T2.21"}
             or any(len(r) < 30 or not any(ch.isdigit() for ch in r)
                    for r in UNREGISTERABLE.values())
             or any(resolve(ref, BY_ID) for ref in UNREGISTERABLE)):

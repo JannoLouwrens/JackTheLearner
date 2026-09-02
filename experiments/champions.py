@@ -197,7 +197,14 @@ DOC = Path(__file__).resolve().parent.parent / "docs" / "CHAMPIONS.md"
 # that remain are real and both are cited by seats that mean them: Control
 # architecture (`D1.0`, `T2.21`, UNREGISTERABLE by decision) and Curiosity
 # signal (`LT.03`, `LT.04`, unwritten).
-BASELINE_ARENA_MISSING = 2
+#
+# RATCHETED DOWN 2 -> 0, 2026-09-02: `D1.0` was REGISTERED (2026-08-30; ran
+# 2026-09-01 to VOID) and `LT.03`/`LT.04` were registered 2026-08-31 (`3688b9e`,
+# 54th audit B1), so no seat cites a phantom arena today. Banked slack of two
+# points, locked in by this file's own rule the hour it was noticed — `T0.29`'s
+# P5 fired on the stale `D1.0` UNREGISTERABLE entry, which is what brought the
+# eyes here.
+BASELINE_ARENA_MISSING = 0
 
 # THE SEATS NOTHING REGISTERED COULD EVER UNSEAT, measured 2026-08-30 against
 # 196 specs: Control architecture (`D1.0`, `T2.21` — both UNREGISTERABLE),
@@ -230,7 +237,12 @@ BASELINE_ARENA_MISSING = 2
 # four that remain: Control architecture (D1.0/T2.21, UNREGISTERABLE by
 # decision) and the three declared `ARENA: NONE` (ASR, Speaker ID, Language
 # grounding).
-BASELINE_UNFALSIFIABLE = 4
+#
+# RATCHETED DOWN 4 -> 3, 2026-09-02: Control architecture regained a real ring
+# when `D1.0` was registered (2026-08-30), and the constant had not followed —
+# banked slack, locked in the hour it was measured. The three that remain are
+# the `ARENA: NONE` seats: ASR, Speaker ID, Language grounding.
+BASELINE_UNFALSIFIABLE = 3
 
 # THE SEATS WHOSE ARENA EXISTS AND CAN NEVER RUN, measured 2026-08-31 (54th
 # audit B4) against 211 specs: **Learning core** (BY DEFAULT; LC.03 is
@@ -253,7 +265,14 @@ BASELINE_UNFALSIFIABLE = 4
 # reference. `BASELINE_UNFALSIFIABLE` keeps its own separate assertion above
 # so the union check cannot silently trade one class's headroom to the other
 # in the growing direction.
-BASELINE_UNCONTESTABLE = 6
+#
+# RATCHETED DOWN 6 -> 4, 2026-09-02, following the unfalsifiable shrink above:
+# 3 unfalsifiable (ASR, Speaker ID, Language grounding) + 1 arena-unreachable
+# (Fast/slow coupling, rooted at LC.03). The Learning core left the welded
+# class when `LC.07` (registered 2026-09-01) gave the seat a live door, and
+# Control architecture left the unfalsifiable class when `D1.0` registered —
+# banked slack of two points, locked in the hour it was measured.
+BASELINE_UNCONTESTABLE = 4
 
 # SEATS STILL READ BY PROSE INFERENCE. Every seat in the document was declared
 # on 2026-08-31, the hour the syntax landed, so this is 0 and a new seat that
@@ -319,12 +338,21 @@ BASELINE_VERDICT_UNVERIFIED = 2
 # ref belongs here only when the project has DECIDED not to register it. Do not
 # add a ref merely because it is unwritten — that is inventory debt, and the
 # correct report for it is "REGISTER to discharge".
+# AN ENTRY IS RETIRED WHEN THE DECISION IS REVERSED, and the retirement is a
+# ledger event, not a tidy-up: `D1.0` sat here from 2026-08-30 ("unregistered
+# BY DECISION 2026-08-13, a3b12f6 choice (b)") and was then REGISTERED — the
+# owner's 2026-08-24 ruling moved architecture forks from escalation to
+# bakeoff, D1.0 ran on 2026-09-01 (16.17 GPU-h, VOID) — while the entry stayed.
+# `T0.29`'s P5 fired on the contradiction at the first certificate re-buy
+# (2026-09-02, FAIL attempt 1, committed 81e3b97): a decision entry that
+# resolves in the live registry is stale by P5's own words, and the repair is
+# retiring the entry, never suppressing the check.
 UNREGISTERABLE = {
     "W.6":   "withdrawn 2026-08-09, superseded by NE.08 — SURVIVAL_WORLD.md §5",
-    "D1.0":  "unregistered BY DECISION 2026-08-13 (`a3b12f6`, choice (b)) — the "
-             "WHERE question is D1 and is on the owner's desk",
-    "T2.21": "unregistered BY DECISION 2026-08-13 (`a3b12f6`, choice (b)) — same "
-             "ruling as D1.0",
+    "T2.21": "unregistered BY DECISION 2026-08-13 (`a3b12f6`, choice (b)); the "
+             "ruling was later reversed for D1.0 (registered 2026-08-30, ran "
+             "2026-09-01) but never for T2.21, whose WHERE question D1.0's "
+             "bakeoff subsumed",
 }
 
 # A spec id: family, then one or two components that are digits or a single

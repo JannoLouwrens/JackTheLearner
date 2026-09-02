@@ -15154,19 +15154,19 @@
     },
     "T0.29": {
       "amended": [],
-      "attempt": 5,
-      "commit": "661a48f+dirty",
+      "attempt": 6,
+      "commit": "81e3b97+dirty",
       "compute_s": null,
       "control_metrics": {
-        "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p5_every_decision_names_its_record,p6_only_a_challenger_discharges",
+        "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p6_only_a_challenger_discharges",
         "live_arena_missing": 0.0,
         "live_seats": 27.0,
         "live_unfalsifiable": 3.0,
         "live_violations": 8.0,
         "properties_checked": 10.0,
-        "properties_failed": 4.0
+        "properties_failed": 3.0
       },
-      "duration_s": 10.98,
+      "duration_s": 10.86,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -15289,27 +15289,76 @@
           ],
           "spec_sha": "2f701e24af9a6b14",
           "status": "PASS"
+        },
+        {
+          "commit": "661a48f+dirty",
+          "control_metrics": {
+            "failed_names": "p2_deleting_the_arena_does_not_help,p4_unregisterable_is_not_a_todo,p5_every_decision_names_its_record,p6_only_a_challenger_discharges",
+            "live_arena_missing": 0.0,
+            "live_seats": 27.0,
+            "live_unfalsifiable": 3.0,
+            "live_violations": 8.0,
+            "properties_checked": 10.0,
+            "properties_failed": 4.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "c17f94be13e1fb8c",
+          "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/T0.29/2026-09-02T09-18-06",
+          "metrics": {
+            "failed_names": "p5_every_decision_names_its_record",
+            "live_arena_missing": 0.0,
+            "live_seats": 27.0,
+            "live_unfalsifiable": 3.0,
+            "live_violations": 8.0,
+            "properties_checked": 10.0,
+            "properties_failed": 1.0
+          },
+          "ran_at": "2026-09-02T09:18:06",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "2f701e24af9a6b14",
+          "status": "FAIL"
         }
       ],
-      "impl_sha": "c17f94be13e1fb8c",
-      "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/T0.29/2026-09-02T09-18-06",
+      "impl_sha": "62eea1c40e87f1ca",
+      "message": "",
       "metrics": {
-        "failed_names": "p5_every_decision_names_its_record",
+        "failed_names": "",
         "live_arena_missing": 0.0,
         "live_seats": 27.0,
         "live_unfalsifiable": 3.0,
         "live_violations": 8.0,
         "properties_checked": 10.0,
-        "properties_failed": 1.0
+        "properties_failed": 0.0
       },
-      "preserved_impl": "refs/jack/failimpl/T0.29/2026-09-02T09-18-06",
-      "ran_at": "2026-09-02T09:18:06",
+      "preserved_impl": null,
+      "ran_at": "2026-09-02T09:20:16",
       "seeds": [
         0
       ],
       "spec_id": "T0.29",
       "spec_sha": "2f701e24af9a6b14",
-      "status": "FAIL"
+      "status": "PASS",
+      "supersedes_fail": {
+        "commit": "661a48f+dirty",
+        "dirty": true,
+        "impl_changed": true,
+        "impl_sha": "c17f94be13e1fb8c",
+        "metrics": {
+          "failed_names": "p5_every_decision_names_its_record",
+          "live_arena_missing": 0.0,
+          "live_seats": 27.0,
+          "live_unfalsifiable": 3.0,
+          "live_violations": 8.0,
+          "properties_checked": 10.0,
+          "properties_failed": 1.0
+        },
+        "ran_at": "2026-09-02T09:18:06",
+        "spec_changed": false,
+        "spec_sha": "2f701e24af9a6b14",
+        "status": "FAIL"
+      }
     },
     "T0.30": {
       "amended": [],
