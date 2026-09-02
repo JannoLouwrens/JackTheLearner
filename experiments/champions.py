@@ -84,6 +84,31 @@ WHAT THIS FLAGS.
                    ledger row — an unregistered run holding the strongest
                    marking. The repair is naming the run, registering it, or
                    honestly re-marking the seat.
+    TRIGGER-UNREACHABLE  the seat is held BY VERDICT or BY DECREE — the two
+                   markings that hold on a pre-registered re-open PROMISE —
+                   and every spec its declared `TRIGGER:` names is a closed
+                   door: DANGLING, PARKED, VOID-FORECLOSED, PILOT-BLOCKED,
+                   welded behind one, or sitting on a plain VOID (a VOID
+                   decided nothing, and SYSTEM.md's next unit on one is a
+                   repair, never a run — so it cannot fire a trigger today).
+                   The 63rd audit (2026-09-02, FINDING 1) found the scar: D10
+                   seated the Learning core off a VOID on the promise that
+                   `LC.07` kept the seat contestable, and 22 hours later the
+                   pilot's BRANCH B closed that door while `champions
+                   --check` printed ok — an existence check cannot see a
+                   promise decay. A trigger behind a merely-LIVE blocker
+                   (deps not yet PASS) stays OPEN: that is a queue position,
+                   not a wall — the founding blocked-is-alive distinction,
+                   and the deliberate divergence from `park_release`, which
+                   demands walkable-TODAY because a park is a stopped state.
+    TRIGGER-UNDECLARED  the seat is declared, held BY VERDICT or BY DECREE,
+                   and carries no `TRIGGER:` field — the promise it holds on
+                   is not written where it can be checked, so its
+                   reachability cannot decay VISIBLY. Ratcheted as the SUM
+                   with TRIGGER-UNREACHABLE (`T0.31` idiom), so deleting a
+                   trigger declaration converts a seat between flavours and
+                   the number does not fall — the ARENA-MISSING -> NO-ARENA
+                   inversion cannot be replayed here.
 
 MARKINGS AND ARENAS ARE NOW DECLARED, NOT INFERRED — the repair this docstring
 proposed for eight audits and would not take unilaterally (51st audit B2, RANK 2,
@@ -316,6 +341,58 @@ BASELINE_UNDECLARED = 0
 #                   Review's call, surfaced by this class for the first time.
 BASELINE_VERDICT_UNVERIFIED = 2
 
+# SEATS WHOSE PRE-REGISTERED RE-OPEN PROMISE CANNOT FIRE — held BY VERDICT or
+# BY DECREE (the two markings that hold on a promise rather than on a standing
+# contest) with every declared `TRIGGER:` spec a closed door, or with no
+# `TRIGGER:` declared at all. Ratcheted as the SUM of TRIGGER-UNREACHABLE and
+# TRIGGER-UNDECLARED, per `T0.31`'s precedent already applied twice above:
+# deleting a trigger declaration converts a seat from one flavour to the other
+# and the number must not fall — that is the ARENA-MISSING -> NO-ARENA
+# inversion, which the 63rd audit's B1 names in advance as the forbidden
+# repair ("do not repair this by deleting a trigger").
+#
+# THE SCAR (63rd audit, 2026-09-02, FINDING 1 — rank 1). D10's armed default
+# seated `wm-latent` BY VERDICT off `LC.03`, a VOID, and paid for overriding
+# SYSTEM.md's "fix the arm, do not decide" with a promise: `LC.07`, registered
+# in the same commit, kept the seat "contestable in the same breath ...
+# discharged by construction, not by prose." Twenty-two hours later `LC.07`'s
+# pilot returned BRANCH B (~526 projected wall-hours against 30 h/week) and
+# `run()` now refuses permanently. All three of D10's pre-registered re-open
+# triggers were then closed doors — `LC.07` PILOT-BLOCKED, `LC.03`
+# VOID-FORECLOSED ("no v3, no envelope growth, no re-roll"), the unison route
+# through `UB.10` a plain VOID awaiting an arm redesign — and this tool
+# printed `ok` throughout, correctly by its own lights: it asked whether the
+# arena RESOLVES, never whether a trigger can FIRE. `coverage.py` shipped
+# exactly this check for parks the same day (`PARK-ON-AN-UNREACHABLE-RELEASE`,
+# 62nd audit B3); this constant is that shipped idea pointed at seats.
+#
+# MEASURED 2026-09-02, THE CLASS BEFORE THE MIGRATION (LESSONS.md, 60th
+# audit: add the class, watch it fire, THEN migrate): with no `TRIGGER:`
+# declared anywhere, all 7 in-scope seats fired TRIGGER-UNDECLARED. The
+# migration then transcribed the triggers already on record — D10's three for
+# Learning core; DP.02 from Fast/slow coupling's own cell; PL.00 from the
+# PLASTIC-ONLY decree's §4; LG.00 for the two language decrees (GOAL.md:
+# "falsifiable as LG.00"); ME.11.A–F for Episodic retrieval ("only a scorer
+# that wins the ME.11 arena can re-buy the seat's certificate") — and World
+# stays UNDECLARED deliberately: its re-open trigger is written NOWHERE, and
+# inventing one to quiet a checker would be author self-certification. Seeded
+# at what the migrated document fires on: **Learning core**
+# (TRIGGER-UNREACHABLE — LC.07 PILOT-BLOCKED, LC.03 VOID-FORECLOSED, UB.10
+# VOID: the FINDING 1 shape, now permanent), **Fast/slow coupling**
+# (TRIGGER-UNREACHABLE — DP.02 welded<-LC.03, the same root), and **World**
+# (TRIGGER-UNDECLARED). It may shrink and may never grow. It shrinks when a
+# routed redesign gives a trigger a live door (the three `d10-*` rows, DUE
+# 2026-09-06), when a re-parenting frees one, when the Review declares World's
+# trigger, or when a seat is honestly re-marked — never by deleting a
+# TRIGGER: declaration, and never by quieting the VOID clause.
+BASELINE_TRIGGER_UNREACHABLE = 3
+
+# The markings whose holding rests on a pre-registered promise — the scope of
+# the TRIGGER classes. BY DEFAULT/BY ANALYSIS seats are watched by the
+# UNCONTESTED/ARENA-UNREACHABLE machinery instead: their contestability is
+# their arena, not a promise.
+TRIGGER_SCOPE = ("BY VERDICT", "BY DECREE")
+
 # ARENA REFS THAT CAN NEVER BE REGISTERED, and why — the honest cost of closing
 # the gap, which this file used to leave the reader to discover by spending the
 # iteration (LESSONS.md 2026-08-29: "an instrument that names a gap must also
@@ -509,6 +586,20 @@ def declarations(text: str) -> Tuple[Dict[str, dict], List[Tuple[str, str, str]]
                         VERDICT seat asserting "no deciding run exists" is
                         exactly the debt VERDICT-UNDECLARED exists to show,
                         and an author may not declare their way out of it.
+
+    A BY VERDICT or BY DECREE declaration may also carry `TRIGGER: <spec ids>`
+    naming the pre-registered re-open trigger(s) — the 63rd audit's B1
+    conjunct reads it. The same two failure shapes, same reasoning:
+
+      DECL-TRIGGER-MISPLACED  `TRIGGER:` on a marking outside TRIGGER_SCOPE —
+                        only the promise-holding markings have re-open
+                        triggers; elsewhere the field is stale or wrong, and
+                        silently ignoring it is how it stays that way.
+      DECL-EMPTY-TRIGGER      `TRIGGER:` present but naming no spec id. NO
+                        `TRIGGER: NONE` escape, deliberately: a seat
+                        asserting "nothing could ever re-open me" is the
+                        unfalsifiable debt itself, not a fact an author may
+                        declare their way into.
     """
     decls: Dict[str, dict] = {}
     problems: List[Tuple[str, str, str]] = []
@@ -559,6 +650,25 @@ def declarations(text: str) -> Tuple[Dict[str, dict], List[Tuple[str, str, str]]
                                  f"seat with no deciding run is the debt "
                                  f"itself"))
                 continue
+        trefs: Optional[List[str]] = None
+        if "TRIGGER" in fields:
+            if held not in TRIGGER_SCOPE:
+                problems.append(("DECL-TRIGGER-MISPLACED", name,
+                                 f"TRIGGER: {fields['TRIGGER']!r} on a seat "
+                                 f"held {held} — a re-open trigger belongs to "
+                                 f"the promise-holding markings "
+                                 f"({', '.join(TRIGGER_SCOPE)}); elsewhere it "
+                                 f"is stale or wrong"))
+                continue
+            trefs = arena_refs(fields["TRIGGER"])
+            if not trefs:
+                problems.append(("DECL-EMPTY-TRIGGER", name,
+                                 f"TRIGGER: {fields['TRIGGER']!r} names no "
+                                 f"spec id — name the spec(s) whose run could "
+                                 f"re-open the seat; there is no NONE escape, "
+                                 f"because a seat nothing could ever re-open "
+                                 f"is the unfalsifiable debt itself"))
+                continue
         arena = fields["ARENA"]
         if arena.strip().upper() in NO_ARENA_DECLARED:
             refs: List[str] = []
@@ -586,7 +696,8 @@ def declarations(text: str) -> Tuple[Dict[str, dict], List[Tuple[str, str, str]]
             continue
         seen[name] = lineno
         decls[name] = {"held": held, "arena_refs": refs, "line": lineno,
-                       "arena_cell": arena, "verdict_refs": vrefs}
+                       "arena_cell": arena, "verdict_refs": vrefs,
+                       "trigger_refs": trefs}
     return decls, problems
 
 
@@ -609,6 +720,8 @@ def apply_declarations(seats: Sequence[dict], decls: Dict[str, dict]) -> List[st
             # None when the declaration has no VERDICT: field — distinct from
             # an empty list, which `declarations()` already refused.
             s["verdict_decl"] = d.get("verdict_refs")
+            # Same None-vs-empty distinction for the trigger field.
+            s["trigger_decl"] = d.get("trigger_refs")
     return sorted(n for n in decls if n not in names)
 
 
@@ -844,6 +957,82 @@ def unverified_verdicts(seats: Sequence[dict]) -> List[str]:
     return [s["seat"] for s in seats if s.get("verdict_unverified")]
 
 
+def unreachable_triggers(seats: Sequence[dict]) -> List[str]:
+    """Seats whose re-open promise cannot fire or is not written — the sum of
+    TRIGGER-UNREACHABLE and TRIGGER-UNDECLARED, ratcheted at
+    `BASELINE_TRIGGER_UNREACHABLE`. The SUM, so deleting a `TRIGGER:`
+    declaration converts a seat between the flavours and moves nothing.
+    Reads the flag `audit()` stores, for the same no-reader-drift reason as
+    `unreachable_arena` and `unverified_verdicts`.
+    """
+    return [s["seat"] for s in seats if s.get("trigger_debt")]
+
+
+def _trigger_doors(refs: Sequence[str], by_id: dict,
+                   status: Callable[[str], str], parked_ids: set,
+                   foreclosed: set, dead_roots: Dict[str, str]
+                   ) -> Dict[str, Optional[str]]:
+    """`door -> why it cannot open (None = open)` for a seat's trigger refs.
+
+    A door is a resolved spec id (or the ref itself, when DANGLING). Closed
+    states, in the order checked:
+
+      DANGLING          the ref resolves to no registered spec — nothing to run
+      PARKED            declared: the next unit is not a run
+      VOID-FORECLOSED / PILOT-BLOCKED   `coverage.foreclosure()` — the shared
+                        conjunction, reused per the 63rd audit's B1 ("do not
+                        write a second one"); the fixture path supplies its
+                        `foreclosed` set instead, since synthetic ids have no
+                        module docstrings to read
+      VOID              a plain VOID row. This clause is the one this class
+                        adds to the vocabulary and it is load-bearing: UB.10
+                        — the last of D10's three doors — is a plain VOID,
+                        deps all PASS, parked nowhere, declared nothing. But
+                        a VOID decided nothing and SYSTEM.md's next unit on
+                        one is "fix the arm", a repair, not a run — so no run
+                        that could fire the trigger can happen until a
+                        redesign lands, and a promise waiting on a redesign
+                        is a closed door today.
+      welded<-ROOT      transitively behind a parked/foreclosed root
+
+    A door behind merely-LIVE blockers stays OPEN (returns None): deps not
+    yet PASS are a queue position, not a wall — the founding blocked-is-alive
+    distinction (28th audit), and the deliberate divergence from
+    `park_release`, which counts `blocked<-` because a PARK must be walkable
+    TODAY. A seat is an active holding; its promise need only be fireable
+    without a redesign. FAIL and NOT_RUN doors are open for the same
+    fails-alive reason: both can still run.
+    """
+    from .coverage import foreclosure
+    doors: Dict[str, Optional[str]] = {}
+    for r in refs:
+        ids = resolve(r, by_id)
+        if not ids:
+            doors.setdefault(r, "DANGLING")
+            continue
+        for i in ids:
+            if i in doors:
+                continue
+            st = status(i)
+            if i in parked_ids:
+                doors[i] = "PARKED"
+                continue
+            if i in foreclosed:
+                doors[i] = "VOID-FORECLOSED"
+                continue
+            state, _why = foreclosure(i, status=st)
+            if state:
+                doors[i] = state
+            elif st == "VOID":
+                doors[i] = ("VOID — decided nothing; the next unit on it is "
+                            "a repair, not a run")
+            elif i in dead_roots:
+                doors[i] = f"welded<-{dead_roots[i]}"
+            else:
+                doors[i] = None
+    return doors
+
+
 def unfalsifiable(seats: Sequence[dict]) -> List[str]:
     """Seats no registered spec could ever unseat — `arena_present` is empty.
 
@@ -1047,6 +1236,42 @@ def audit(text: str, by_id: dict, status: Callable[[str], str], *,
                       "non-verdict; the repair is a completed re-run, an "
                       "honest re-marking, or the routed redesign — never "
                       "trusting the marking"))
+
+        # THE TRIGGER CONJUNCT (63rd audit B1, FINDING 1). A seat held BY
+        # VERDICT or BY DECREE holds on a pre-registered re-open PROMISE, and
+        # a promise is two claims: it is written, and it is walkable today.
+        # Only declared seats are in scope — an undeclared seat's whole
+        # reading is already counted at BASELINE_UNDECLARED, and firing a
+        # second class on the same absence would double-bill one edit.
+        s["trigger_debt"] = False
+        if s.get("declared") and s["held"] in TRIGGER_SCOPE:
+            trefs = s.get("trigger_decl")
+            if trefs is None:
+                s["trigger_debt"] = True
+                violations.append((
+                    "TRIGGER-UNDECLARED", s["seat"],
+                    f"held {s['held']} — a marking that holds on a "
+                    f"pre-registered re-open promise — and does not say which "
+                    f"spec(s) could fire it; add `TRIGGER: <spec ids>` to the "
+                    f"SEAT: line. If the trigger is written nowhere, the "
+                    f"marking itself is the debt: an unwritten promise cannot "
+                    f"decay visibly, which is how D10's seat lost all three "
+                    f"doors in 22 hours behind a green check"))
+            else:
+                doors = _trigger_doors(trefs, by_id, status, parked_ids,
+                                       foreclosed, dead_roots)
+                s["trigger_doors"] = doors
+                if all(state for state in doors.values()):
+                    s["trigger_debt"] = True
+                    violations.append((
+                        "TRIGGER-UNREACHABLE", s["seat"],
+                        f"held {s['held']}; every pre-registered re-open "
+                        f"trigger is a closed door: "
+                        + "; ".join(f"{d} ({state})"
+                                    for d, state in doors.items())
+                        + " — the promise of contestability has decayed to "
+                          "zero; the repair is a redesign, a re-parenting, or "
+                          "an honest re-marking — never deleting a trigger"))
     return violations, seats
 
 
@@ -1088,20 +1313,38 @@ def _fixture() -> None:
 | Verdict seat with no named run | incumbent | **BY VERDICT** | OK.01 (registered) | a challenger |
 | Verdict seat citing a phantom run | incumbent | **BY VERDICT** (ZZ.00) | OK.01 (registered) | a challenger |
 | Decree seat citing a verdict | incumbent | **BY DECREE** (owner) | OK.03 (registered) | a challenger |
+| Verdict seat whose triggers all died | incumbent | **BY VERDICT** (OK.01) | OK.01 (registered) | a challenger |
+| Verdict seat whose trigger VOIDed | incumbent | **BY VERDICT** (OK.01) | OK.01 (registered) | a challenger |
+| Verdict seat citing a phantom trigger | incumbent | **BY VERDICT** (OK.01) | OK.01 (registered) | a challenger |
+| Verdict seat whose trigger waits in a queue | incumbent | **BY VERDICT** (OK.01) | OK.01 (registered) | a challenger |
+| Verdict seat with one live trigger | incumbent | **BY VERDICT** (OK.01) | OK.01 (registered) | a challenger |
+| Decree seat whose trigger is welded | incumbent | **BY DECREE** (owner) | OK.01 (registered) | a challenger |
+| Decree seat with no trigger line | incumbent | **BY DECREE** (owner) | OK.01 (registered) | a challenger |
+| Default seat citing a trigger | incumbent | **DEFAULT, never defended** | OK.01 (registered) | a challenger |
+| Decree seat with an empty trigger | incumbent | **BY DECREE** (owner) | OK.01 (registered) | a challenger |
 
-- SEAT: Verdict seat whose run VOIDed | HELD: BY VERDICT | VERDICT: OK.06 | ARENA: OK.01
-- SEAT: Verdict seat with no named run | HELD: BY VERDICT | ARENA: OK.01
-- SEAT: Verdict seat citing a phantom run | HELD: BY VERDICT | VERDICT: ZZ.00 | ARENA: OK.01
+- SEAT: Verdict seat whose run VOIDed | HELD: BY VERDICT | VERDICT: OK.06 | TRIGGER: OK.03 | ARENA: OK.01
+- SEAT: Verdict seat with no named run | HELD: BY VERDICT | TRIGGER: OK.03 | ARENA: OK.01
+- SEAT: Verdict seat citing a phantom run | HELD: BY VERDICT | VERDICT: ZZ.00 | TRIGGER: OK.03 | ARENA: OK.01
 - SEAT: Decree seat citing a verdict | HELD: BY DECREE | VERDICT: OK.01 | ARENA: OK.03
 - SEAT: Declared seat whose prose over-reads | HELD: BY DEFAULT | ARENA: OK.01
-- SEAT: Declared seat whose ring is unbuilt | HELD: BY DECREE | ARENA: NONE
+- SEAT: Declared seat whose ring is unbuilt | HELD: BY DECREE | TRIGGER: OK.03 | ARENA: NONE
 - SEAT: A seat this file does not contain | HELD: VACANT | ARENA: OK.01
 - SEAT: Healthy verdict seat | HELD: PROBABLY VACANT | ARENA: OK.01
 - SEAT: Seat with a half-written declaration | HELD: BY DEFAULT
-- SEAT: Declared seat naming a family | HELD: BY VERDICT | ARENA: OK.*
+- SEAT: Declared seat naming a family | HELD: BY VERDICT | TRIGGER: OK.03 | ARENA: OK.*
 - SEAT: Seat declaring prose where ids belong | HELD: BY DECREE | ARENA: the HR bakeoff (queued)
 - SEAT: Vacant by default words | HELD: VACANT | ARENA: OK.01
 - SEAT: Vacant by default words | HELD: BY DECREE | ARENA: ZZ.00
+- SEAT: Verdict seat whose triggers all died | HELD: BY VERDICT | VERDICT: OK.01 | TRIGGER: OK.09, OK.07 | ARENA: OK.01
+- SEAT: Verdict seat whose trigger VOIDed | HELD: BY VERDICT | VERDICT: OK.01 | TRIGGER: OK.06 | ARENA: OK.01
+- SEAT: Verdict seat citing a phantom trigger | HELD: BY VERDICT | VERDICT: OK.01 | TRIGGER: ZZ.00 | ARENA: OK.01
+- SEAT: Verdict seat whose trigger waits in a queue | HELD: BY VERDICT | VERDICT: OK.01 | TRIGGER: OK.10 | ARENA: OK.01
+- SEAT: Verdict seat with one live trigger | HELD: BY VERDICT | VERDICT: OK.01 | TRIGGER: OK.09, OK.03 | ARENA: OK.01
+- SEAT: Decree seat whose trigger is welded | HELD: BY DECREE | TRIGGER: OK.08 | ARENA: OK.01
+- SEAT: Decree seat with no trigger line | HELD: BY DECREE | ARENA: OK.01
+- SEAT: Default seat citing a trigger | HELD: BY DEFAULT | TRIGGER: OK.03 | ARENA: OK.01
+- SEAT: Decree seat with an empty trigger | HELD: BY DECREE | TRIGGER: a sentence about a trigger | ARENA: OK.01
 
 ### DECIDED BY DECREE 2099-01-01: SOMETHING
 
@@ -1125,7 +1368,10 @@ This section names ZZ.09 and must contribute no seat and no violation.
     by_id = {"OK.01": _S("COVERS: smell (claim)"), "OK.02": _S(), "OK.03": _S(),
              "OK.04": _S("COVERS: smell (fixture)"),
              "OK.05": _S("COVERS: balance (sensor)"), "OK.06": _S(),
-             "OK.07": _S(), "OK.08": _S(deps=["OK.07"]), "OK.09": _S()}
+             "OK.07": _S(), "OK.08": _S(deps=["OK.07"]), "OK.09": _S(),
+             # OK.10 waits behind a LIVE dep (OK.03, NOT_RUN): a queue
+             # position, which the trigger class must read as an OPEN door.
+             "OK.10": _S(deps=["OK.03"])}
     ran = {"OK.01": "PASS", "OK.02": "PASS", "OK.03": "NOT_RUN",
            "OK.04": "PASS", "OK.05": "PASS", "OK.06": "VOID",
            "OK.07": "VOID", "OK.08": "NOT_RUN", "OK.09": "NOT_RUN"}
@@ -1250,8 +1496,8 @@ This section names ZZ.09 and must contribute no seat and no violation.
     fam = seat_by_name["Declared seat naming a family"]
     assert fam["arena_refs"] == ["OK.*"], fam["arena_refs"]
     assert fam["arena_present"] == ["OK.01", "OK.02", "OK.03", "OK.04", "OK.05",
-                                    "OK.06", "OK.07", "OK.08",
-                                    "OK.09"], fam["arena_present"]
+                                    "OK.06", "OK.07", "OK.08", "OK.09",
+                                    "OK.10"], fam["arena_present"]
     # 7. PROSE IN THE ARENA FIELD DECLARES NOTHING, and must not be readable as
     #    an unbuilt ring — the difference between "no ring exists" and "the
     #    author wrote a sentence" is the whole value of `ARENA: NONE`.
@@ -1306,6 +1552,55 @@ This section names ZZ.09 and must contribute no seat and no violation.
     # ...and the ratchet counts the SUM of both flavours, exactly the seats
     # that fired — a conversion between flavours cannot move it.
     assert set(unverified_verdicts(seats)) == _vseats, unverified_verdicts(seats)
+
+    # THE TRIGGER CONJUNCT (63rd audit B1, FINDING 1). Five planted shapes
+    # that must fire, two open-door directions that must not, and two ways a
+    # declaration can be wrong. Each closed-door flavour is pinned to the real
+    # door it stands in for: PARKED+foreclosed is the belt-and-braces seat,
+    # the plain-VOID door is UB.10 — the clause this class adds, and the one
+    # a predicate built from existing vocabulary alone would miss — the
+    # welded door is DP.02-behind-LC.03, and the phantom is a trigger written
+    # against a spec nobody registered.
+    assert flagged.get("Verdict seat whose triggers all died") == {
+        "TRIGGER-UNREACHABLE"}, flagged
+    assert flagged.get("Verdict seat whose trigger VOIDed") == {
+        "TRIGGER-UNREACHABLE"}, flagged
+    assert flagged.get("Verdict seat citing a phantom trigger") == {
+        "TRIGGER-UNREACHABLE"}, flagged
+    assert flagged.get("Decree seat whose trigger is welded") == {
+        "TRIGGER-UNREACHABLE"}, flagged
+    assert flagged.get("Decree seat with no trigger line") == {
+        "TRIGGER-UNDECLARED"}, flagged
+    # The two healthy directions this guard must never indict: one live door
+    # among dead ones keeps the promise open, and a door behind a merely-LIVE
+    # blocker is a queue position, not a wall (blocked-is-alive; the
+    # deliberate divergence from park_release).
+    assert "Verdict seat with one live trigger" not in flagged, flagged
+    assert "Verdict seat whose trigger waits in a queue" not in flagged, flagged
+    # A malformed trigger declaration is reported, dropped, and the seat falls
+    # back to inference — never silently honoured.
+    assert flagged.get("Default seat citing a trigger") == {
+        "DECL-TRIGGER-MISPLACED"}, flagged
+    assert flagged.get("Decree seat with an empty trigger") == {
+        "DECL-EMPTY-TRIGGER"}, flagged
+    # The message carries every door with its closed-state tag, because the
+    # repair lives at the door: a PARKED door needs a lift, a welded door a
+    # re-parenting, a VOID door the routed redesign.
+    _twhy = {seat: why for kind, seat, why in violations
+             if kind == "TRIGGER-UNREACHABLE"}
+    assert "OK.09 (PARKED)" in _twhy["Verdict seat whose triggers all died"], _twhy
+    assert "OK.07 (VOID-FORECLOSED)" in _twhy["Verdict seat whose triggers all died"], _twhy
+    assert "OK.06 (VOID" in _twhy["Verdict seat whose trigger VOIDed"], _twhy
+    assert "OK.08 (welded<-OK.07)" in _twhy["Decree seat whose trigger is welded"], _twhy
+    assert "ZZ.00 (DANGLING)" in _twhy["Verdict seat citing a phantom trigger"], _twhy
+    # ...and the ratchet counts the SUM of both flavours, exactly the seats
+    # that fired — deleting a TRIGGER: line converts, never shrinks.
+    assert set(unreachable_triggers(seats)) == {
+        "Verdict seat whose triggers all died",
+        "Verdict seat whose trigger VOIDed",
+        "Verdict seat citing a phantom trigger",
+        "Decree seat whose trigger is welded",
+        "Decree seat with no trigger line"}, unreachable_triggers(seats)
 
     # ...and the healthy seats are untouched. A "Superseded context" heading is
     # not a decree, so ZZ.09 must not appear anywhere.
@@ -1486,6 +1781,23 @@ def main(argv: List[str]) -> int:
         print("    (none — every verdict marking names a run that decided)")
     print()
 
+    trig = unreachable_triggers(seats)
+    print(f"  TRIGGER DEBT — held BY VERDICT/BY DECREE (the promise-holding "
+          f"markings) with every\n  declared re-open trigger a closed door, "
+          f"or none declared "
+          f"({len(trig)}/{BASELINE_TRIGGER_UNREACHABLE}):")
+    for seat in trig:
+        s = next(x for x in seats if x["seat"] == seat)
+        doors = s.get("trigger_doors")
+        detail = (", ".join(f"{d}={(st or 'open').split(' ')[0]}"
+                            for d, st in doors.items())
+                  if doors is not None else "no TRIGGER: declared")
+        print(f"    {seat[:52]:<52} {detail[:70]}")
+    if not trig:
+        print("    (none — every promise-holding seat has a door that can "
+              "still open)")
+    print()
+
     still = undeclared(seats)
     print(f"  UNDECLARED — no SEAT:/HELD:/ARENA: line, so this report's marking "
           f"and arena for\n  it are a parse of prose "
@@ -1541,12 +1853,24 @@ def main(argv: List[str]) -> int:
                   f"verdict, is declared and\n  verified, or the seat is "
                   f"honestly re-marked — never by deleting the VERDICT: line.\n")
             return 1
+        if len(trig) > BASELINE_TRIGGER_UNREACHABLE:
+            print(f"  RATCHET BROKEN: {len(trig)} promise-holding seat(s) "
+                  f"whose re-open triggers are all closed\n  doors or "
+                  f"undeclared, baseline {BASELINE_TRIGGER_UNREACHABLE}. The "
+                  f"sum may shrink, never grow — it shrinks\n  when a routed "
+                  f"redesign gives a trigger a live door, a re-parenting "
+                  f"frees one, a\n  trigger is declared, or the seat is "
+                  f"honestly re-marked — never by deleting a\n  TRIGGER: "
+                  f"line, which converts between the flavours and moves "
+                  f"nothing.\n")
+            return 1
         print(f"  ratchet ok ({missing}/{BASELINE_ARENA_MISSING} seats with a "
               f"phantom arena; {len(dead)}/{BASELINE_UNFALSIFIABLE} "
               f"unfalsifiable;\n  {len(dead)}+{len(welded)}/"
               f"{BASELINE_UNCONTESTABLE} uncontestable in total, arena-"
               f"unreachable included;\n  {len(unv)}/"
-              f"{BASELINE_VERDICT_UNVERIFIED} unverified verdicts).\n")
+              f"{BASELINE_VERDICT_UNVERIFIED} unverified verdicts; "
+              f"{len(trig)}/{BASELINE_TRIGGER_UNREACHABLE} trigger debt).\n")
     return 0
 
 

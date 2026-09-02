@@ -273,18 +273,18 @@ Three rules, each of them a scar:
   never repair that citation — it is not what the seat points at, and the
   seat keeps its real ring in `D1.0`.
 
-- SEAT: Learning core | HELD: BY VERDICT | VERDICT: LC.03 | ARENA: LC.00–LC.07
+- SEAT: Learning core | HELD: BY VERDICT | VERDICT: LC.03 | TRIGGER: LC.07, LC.03, UB.10 | ARENA: LC.00–LC.07
 - SEAT: Deliberation (the slow path) | HELD: VACANT | ARENA: DP.00–DP.05, BO.01
-- SEAT: Fast/slow coupling | HELD: BY DECREE | ARENA: DP.02
+- SEAT: Fast/slow coupling | HELD: BY DECREE | TRIGGER: DP.02 | ARENA: DP.02
 - SEAT: Control architecture (D1) | HELD: VACANT | ARENA: D1.0
 - SEAT: Needs/reward form | HELD: BY ANALYSIS | ARENA: NE.02
 - SEAT: Curiosity signal | HELD: BY ANALYSIS | ARENA: LT.03, LT.04
-- SEAT: Episodic retrieval | HELD: BY VERDICT | VERDICT: ME.1, ME.9 | ARENA: ME.11.A–F
+- SEAT: Episodic retrieval | HELD: BY VERDICT | VERDICT: ME.1, ME.9 | TRIGGER: ME.11.A–F | ARENA: ME.11.A–F
 - SEAT: Sensory fusion | HELD: UNDECIDED | ARENA: UB.10
 - SEAT: Vision encoder | HELD: BY DEFAULT | ARENA: T2.03, PL.02
 - SEAT: ASR (speech→text) | HELD: BY ANALYSIS | ARENA: NONE
 - SEAT: Speaker ID | HELD: BY ANALYSIS | ARENA: NONE
-- SEAT: Language model | HELD: BY DECREE | ARENA: LG.00
+- SEAT: Language model | HELD: BY DECREE | TRIGGER: LG.00 | ARENA: LG.00
 - SEAT: Consolidation | HELD: BY ANALYSIS | ARENA: NE.05
 - SEAT: World | HELD: BY VERDICT | ARENA: W.1–W.5, W.7, W.8
   (World carries NO `VERDICT:` line, deliberately: its deciding run — the
@@ -293,20 +293,24 @@ Three rules, each of them a scar:
   construction. The standing `VERDICT-UNDECLARED` on this seat is the debt
   itself, held at `BASELINE_VERDICT_UNVERIFIED`; the repair is
   registering/attributing the run or honestly re-marking the seat — the
-  Review's call, not a declaration edit.)
+  Review's call, not a declaration edit. It carries no `TRIGGER:` line for
+  the same reason: no re-open trigger for this seat is written anywhere, so
+  there is nothing true to transcribe, and inventing one to quiet the
+  TRIGGER-UNDECLARED it now fires would be author self-certification. That
+  standing red is counted at `BASELINE_TRIGGER_UNREACHABLE`.)
 - SEAT: Audio encoder (world-sound → brain) | HELD: UNDECIDED | ARENA: PL.*
 - SEAT: Language grounding (word → lived skill) | HELD: UNDECIDED | ARENA: NONE
 - SEAT: Smell (olfaction) | HELD: VACANT | ARENA: SM.02
 - SEAT: Taste (gustation) | HELD: VACANT | ARENA: TA.03
 - SEAT: Voice (vocalisation) | HELD: VACANT | ARENA: VO.02
-- SEAT: Language acquisition | HELD: BY DECREE | ARENA: LG.00
+- SEAT: Language acquisition | HELD: BY DECREE | TRIGGER: LG.00 | ARENA: LG.00
 - SEAT: Touch (mechanoreception) | HELD: VACANT | ARENA: UB.5, UB.11
 - SEAT: Proprioception & balance (vestibular) | HELD: VACANT | ARENA: T3.02, UB.16, BA.03
 - SEAT: Pain (nociception) | HELD: VACANT | ARENA: PS.03
 - SEAT: Temperature (thermoception) | HELD: VACANT | ARENA: SH.02, W.3
 - SEAT: Interoception (hunger, thirst, fatigue) | HELD: VACANT | ARENA: NE.02, UB.11
 - SEAT: Emotion (affect) | HELD: BY DEFAULT | ARENA: T2.12, T3.07
-- SEAT: DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK. | HELD: BY DECREE | ARENA: PL.00, PL.02
+- SEAT: DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK. | HELD: BY DECREE | TRIGGER: PL.00 | ARENA: PL.00, PL.02
 
 **What changed, and what it cost — read this before believing the report got
 better on its own (builder, 2026-08-31).** Seven of the twenty-six declarations
