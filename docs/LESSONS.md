@@ -10139,3 +10139,84 @@ are **three** violations, **two** recoverable
 (`refs/jack/failimpl/{LG.00,T0.29}` both verify). Sibling of the 61st audit's
 lesson above — that one says every instrument is built to catch optimism, this
 one says an instrument you have agreed to ignore is not an instrument.
+
+---
+
+## A guard that CITES two rules and implements one is worse than a guard that cites one (63rd audit, 2026-09-02)
+
+`SYSTEM.md`'s hard constraint has two halves: *"Stay at `nice 19`, **under ~1.5
+GB RAM**, and leave no process running."* `scripts/lib_procwatch.sh` was built by
+the 52nd audit to enforce it, and its header says so in as many words:
+
+> `SYSTEM.md` says "leave no process running" and "stay under ~1.5 GB RAM";
+> until this file, that rule was enforced by **NOTHING**.
+
+It implements the process half. `grep -rn 'rss|RSS|smaps|statm|MemAvailable'
+scripts/*.sh` returns zero matches — no script in the repo reads the memory of
+anything. Measured live during this audit: `run_spec T2.00` peaked at **7.57 GB**,
+**5.0×** the ceiling, on a box with paying tenants; `nice 19` was honoured and the
+memory half was not.
+
+**Why the citation made it worse, not better.** Three audits read that header and
+recorded the rule as guarded. A file that names a constraint in its own docstring
+is the most credible possible claim that the constraint is checked — it is
+`README says "Working"` wearing the uniform of the thing that replaced it. An
+unguarded rule that nobody has claimed is an open gap someone eventually trips
+over; an unguarded rule with a guard's name on it is a gap with a *do not look
+here* sign.
+
+**And the number was already on the scoreboard, green.** `T0.07` carries
+`policy_peak_rss_mb = 6991.0` on a **PASS** row, re-stamped the same day this was
+found. Two test files (`lg_01:111`, `dp_04:1029`) cite that figure as a *design
+constraint when choosing a model* — so the measurement was trusted enough to
+steer architecture and never trusted enough to raise an alarm.
+
+**Rule, stated so it is checkable:** when a guard's own documentation enumerates
+the rules it exists for, every enumerated rule must have a line of code that
+reads a quantity, or the docstring must say **which halves are unimplemented and
+why**. A guard's comment is a capability claim and law 1 binds it: *a capability
+is claimed only by a test that could have failed.*
+
+**The generalisation that outlives this file:** a recorded metric is not an
+enforced one, and the gap between them is invisible precisely because the number
+is present. Ask of any constraint: *what would go red?* If the answer is "someone
+would notice the figure", it is unenforced — a metric with no predicate over it
+is documentation. Sibling of the 62nd audit's lesson above: that one says an
+instrument you have agreed to ignore is not an instrument; this one says a number
+nobody compares to a bar is not a gate.
+
+## A re-open trigger is a claim about REACHABILITY, and it decays after it is written (63rd audit, 2026-09-02)
+
+`D10`'s armed default seated `wm-latent` as the learning core **BY VERDICT** off
+`LC.03`, a **VOID** — against `SYSTEM.md`'s *"fix the arm, do not decide"* — and
+paid for the override with a promise: `LC.07` registered in the same commit, so
+the seat is *"seated and contestable in the same breath … discharged **by
+construction, not by prose**."*
+
+At the moment of writing, that was true. **Twenty-two hours later `LC.07`'s pilot
+returned BRANCH B** — ~526 projected wall-hours against 30 h/week — and `run()`
+refuses permanently. Checked against the live registry, all three of `D10`'s
+pre-registered re-open triggers are now closed doors: `LC.07` PILOT-BLOCKED and
+unable to produce any verdict, a repaired screen forbidden by `D10`'s own *"no
+v3, no re-roll"*, and the unison route through `UB.10` VOID. Seven
+`GOAL.md`-cited specs are welded behind the seat, including `DP.02` — the lesion
+test `GOAL.md` names as *"the connectedness claim that can quietly fail."*
+
+`champions --check` printed `ok` on that arena throughout, correctly: it asks
+whether an arena **resolves**, never whether a trigger can **fire**.
+
+**Rule:** any conditional state — a park, a seat, an armed default, a hold — is
+two claims, not one: the condition is *written*, and the condition is *walkable
+today*. Only the first is checked by writing it down, and only the second keeps
+the state honest. Re-check reachability on a schedule, never at authoring time
+alone.
+
+**The repair already exists one file over, which is the real lesson.**
+`coverage.py:park_release()` shipped the same week and does exactly this for
+parks (`PARK-ON-AN-UNREACHABLE-RELEASE`: resolve the `RELEASE:` id, fire on
+DANGLING / PARKED / foreclosed / `welded<-` / `blocked<-`). The defect class was
+already named and solved; nobody had pointed it at `CHAMPIONS.md`. **When an
+instrument gains a new check, ask which OTHER file holds the same shape of
+conditional state** — a check built for one consumer is usually a check the
+project needs three times, and the two it is missing are invisible for the same
+reason the first one was.

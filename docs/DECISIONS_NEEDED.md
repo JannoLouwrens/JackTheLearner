@@ -4241,3 +4241,85 @@ figure on the same day.
 
 *Recorded by the overseer; no gate touched, no default edited, no threshold
 moved, `decide_by` 2026-09-05 unchanged.*
+
+## D18 — The ~1.5 GB memory ceiling is exceeded 5x in normal operation and enforced by nothing. Is the ceiling wrong, or are the specs in breach? (2026-09-02, overseer, from a live measurement)
+
+**Why this is yours and not the loop's.** Both available answers change what is
+*permitted* on a box you have paying tenants on, which is `SYSTEM.md` class 3
+(CONDUCT — *"fixed, and not up for measurement either"*). Rule 3 does not reach
+it: no bakeoff can tell you how much of a shared machine this project may take.
+The loop may measure; it may not set the bar.
+
+**THE MEASUREMENT, taken read-only during the 63rd audit.** `run_spec T2.00`
+(pid 531762, child of the declared gate sweep 505077), sampled live:
+
+| time (UTC) | RSS | host free | note |
+|---|---:|---:|---|
+| 18:36 | 7.23 GB | 808 MB | mid-run |
+| 18:38:15 | **7.57 GB** | 9.2 GB avail | peak observed |
+| 18:38:2x | — | ~15 GB avail | process exits, memory returns |
+
+**7.57 GB against the ~1.5 GB ceiling — 5.0x.** `nice 19` was honoured
+throughout; only the memory half was breached. This is not an outlier: `T0.07`
+carries `policy_peak_rss_mb = 6991.0` (6.99 GB, 4.6x) on a **PASS** row that
+this same sweep **re-stamped at 16:15 the same day**. Both specs are inside the
+`cpu<10min` budget class, so both are routine.
+
+**WHAT DID NOT HAPPEN, stated so this is not inflated.** No OOM kill in `dmesg`,
+ever. Swap flat at 1,559 MB across all samples. WorldTwin's `mem_watchdog.sh`
+reads `docker stats ... MemPerc` for the aggregator against *its own 3 GiB
+container limit*, so host pressure from this repo does not trip it. **No tenant
+was harmed and no service restarted.** What is true is that free memory reached
+808 MB on a 22.9 GB box, and the margin is luck rather than design.
+
+**THE ENFORCEMENT GAP, which is the part that makes this a decision and not a
+bug.** `scripts/lib_procwatch.sh` was built by the 52nd audit and its header
+quotes *both* halves of the rule as previously *"enforced by NOTHING"*. It
+implements the process half. `grep -rn 'rss|RSS|smaps|statm|MemAvailable'
+scripts/*.sh` returns **zero matches**. `Budget` prices wall-clock only
+(`run.py:1532`), so the bounded gate shipped 2026-09-02 bounds the sweep on the
+axis that is not binding here. Two test files (`lg_01:111`, `dp_04:1029`)
+already cite the 6.9 GB figure as a *design constraint when choosing a model* —
+so the number steers architecture and has never raised an alarm.
+
+**THE TWO READINGS, both legitimate, pointing opposite ways.**
+
+  (a) **The ceiling is right and the specs are in breach.** Then the overseer's
+      B2 guard should eventually *gate*, and some specs shrink or move to
+      Kaggle. Cost: real work, and possibly some `cpu<10min` specs become
+      undispatchable on this box.
+  (b) **The ceiling was set for a smaller box and is stale.** 22.9 GB total, no
+      OOM ever logged, tenant watchdogs container-scoped. Cost: none today, but
+      it widens what this project may take from a machine you sell.
+
+**I have deliberately NOT proposed a number**, and the default below does not
+pick either reading. A default that raised a safety ceiling would be exactly the
+*"widening what is allowed"* that `SYSTEM.md` forbids a default from doing, and
+the party proposing it would be the party it exonerates.
+
+**Nothing is blocked on your answer.** The loop runs either way; only the
+posture changes.
+
+DECIDE: D18
+  class:     goal
+  default:   MEASURE AND REPORT, GATE NOTHING, RELAX NOTHING. The ~1.5 GB
+             figure in SYSTEM.md STANDS verbatim and is not raised, not
+             narrowed, and not annotated with an exception. What fires is the
+             overseer's B2 instrumentation half ONLY: lib_procwatch.sh reads
+             /proc/PID/status:VmHWM while walking pids it already resolves and
+             NAMES any project python over the ceiling (name, never kill — the
+             file's own standing discipline), and run_spec records peak_rss_mb
+             from resource.getrusage(RUSAGE_CHILDREN) into every row. No run is
+             refused, no spec is failed, no threshold moves, GOAL.md is not
+             touched, and no commitment goes claim-dead — every currently
+             dispatchable spec stays dispatchable. This picks only
+             already-permitted actions: recording a metric the ledger already
+             records for T0.07, and printing a line in a guard that already
+             prints lines. It deliberately leaves the ceiling BREACHED AND
+             VISIBLE rather than choosing between (a) and (b), because both
+             choices are yours. Reversal: revert the two commits; the ceiling
+             is unchanged either way.
+  decide_by: 2026-09-09
+  blocks:    (nothing — no spec depends on this; the cost is an unenforced
+             constitutional constraint staying unenforced, now with a number
+             printed beside it)
