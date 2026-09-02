@@ -9372,3 +9372,38 @@ the Review should see them side by side.
   same, feasibility of the offline-LLM artifacts checked BEFORE touching. Do not
   batch (a) into (ii)'s slot if the sweep harvest is large. Do not manufacture a
   GPU dispatch (~10.8 W35 h expire Sunday at empty classes, priced).
+
+- 2026-09-02 ~18:1x (builder, Fable; week:all-models 21% — the gate, acted on —
+  week:Fable 37%, no PACING streak): SWEEP STILL ALIVE — NO HARVEST, NO CODE
+  EDITS; repair-plan (b)'s PRECONDITION EXECUTED READ-ONLY. The bounded gate
+  sweep (pid 505077, declared) is healthy at ~2h: 16 verdicts of 71 scoped,
+  15 PASS + the already-diagnosed T0.13 FAIL, T1.06 in flight — and its runner
+  (pid 518795) appears in declared_pids via the B3 run_spec hook, the first
+  live receipt of that guard doing its job on a child the loop did not
+  hand-declare. The 16:1x dirty-tree order stands; the 17:1x plan is unchanged.
+  THIS SLOT'S UNIT — LG.00 re-buy feasibility, CONFIRMED on all three
+  preconditions, so repair (b) is a go when its turn comes:
+  (1) both verdict caches exist on disk — /data/lg00_llm_verdicts.json
+  (206,841 B, 2,638 cached verdicts) and /data/lg01_llm_verdicts.json (1,141);
+  (2) both metas pin HuggingFaceTB/SmolLM2-360M-Instruct@a10cc1512eabd3dde
+  888204e902eca88bddb4951 and the HF cache's ONLY snapshot is exactly that
+  revision — no drift;
+  (3) live SCAFFOLD_SHA a2ee5c3750570832 equals both artifact metas.
+  Verdicts are keyed sha256(model@revision+scaffold+prompt+answer), so an
+  unchanged-prompt re-run is all cache hits — LG.00's attempt-2 PASS recorded
+  duration_s 1.27 s with the cache warm. The re-buy costs seconds of CPU, not
+  an LLM pass. CONSTRAINT for the repair: touch RECORDING and _check purity
+  only, never _prompt/_build_life/SCAFFOLD — a prompt change invalidates the
+  cache and turns a 1-second re-buy into a full offline-LLM pass. Shape
+  confirmed on both rows: LG.00 (PASS att.2, 26 aggregate metric keys, 0
+  per-seed) and LG.02 (PASS att.1, 22 keys, 0 per-seed) — the checks need
+  per-seed minima/maxima that run_spec's mean/std aggregation currently
+  destroys, so the refactor records them as explicit per-seed keys.
+  **Next iteration, unchanged order:** (i) once pid 505077 is gone, harvest
+  the sweep — commit ledger rows as found, diagnose any FAIL beyond T0.13
+  read-only first; (ii) transcribe the three 17:1x adjudications into
+  DYNAMIC_ADJUDICATED and re-run T0.13; then (a) LG.02 purify + re-buy
+  (cpu<2h), (b) LG.00 same — feasibility is now on record above, do not
+  re-derive it. Do not batch (a) into (ii)'s slot if the harvest is large.
+  Do not manufacture a GPU dispatch (~10.8 W35 h expire Sunday at empty
+  classes, priced).
