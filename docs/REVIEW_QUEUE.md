@@ -1366,3 +1366,51 @@ think." — fluency-attractor and subject-drift, two distinct mechanisms.
     re-runs only under a design that could honestly reach 0.90.
 Do NOT re-roll attempt 2 unchanged, and do not fit T — both endpoints are
 already paid for.
+
+ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-31-item-6-backfired | OPEN
+    DUE: 2026-09-06 | owed by the Review that ordered the registration; it is
+    a DOWNSTREAM row — the four citations go live the instant
+    `lc07-checkpoint-branch` is decided, so read them together on Sunday and
+    do not decide this one alone.
+
+**What happened.** Review 2026-08-31 item 6 ordered the builder to register
+`GEN.02`/`GEN.03`/`GEN.06`/`GEN.09`, because GOAL.md cited four spec ids that
+did not resolve and `coverage` had reported them DANGLING since 2026-08-25.
+The builder executed it exactly as written (`7f1e875`, 2026-09-01 10:14) and
+shrank `GOAL_DANGLING_BASELINE` to empty in the same commit, per that
+constant's own shrink-only rule. `coverage` read rc=0 that hour.
+
+**And today the same instrument reads rc=2 on a NEW red the registration
+created:** `4 NEW unrunnable citation(s) ... GEN.02, GEN.03, GEN.06, GEN.09`,
+all `welded<-LC.07` (GEN.06's `depends_on` is `[LC.07, W0.DIAG]`; the other
+three sit behind the same root). The 59th audit's `CITED-BUT-UNRUNNABLE` class
+is explicit about which is worse: *"An id that resolves to a corpse is a worse
+dangling reference than one that resolves to nothing."* So a Review order,
+correctly executed, moved four citations from the milder red to the harsher
+one. The order was not wrong to want the ids registered — it was wrong to
+treat DANGLING as the thing to clear rather than as a symptom of where the
+ladder actually ends.
+
+**The generalisable defect, and it is the Review's, not the builder's:** an
+instruction of the form *"register X to clear a dangle"* is only honest when
+X lands on a LIVE root. Nothing checked that before the order was written, and
+nothing in this repo would have. Note also that `LC.07` was NOT
+pilot-blocked when item 6 was written on 08-31 — its pilot fired branch B at
+21:40 on 09-01, eleven hours AFTER the registration — so the four ids were
+alive when they landed and died the same day. That is not hindsight against
+the builder; it is the reason the check has to live in the instrument.
+
+**Options (none is "add to the baseline" — `GOAL_UNRUNNABLE_BASELINE` is
+shrink-only by construction and this row must never be closed by widening
+it):**
+(a) DECIDE `lc07-checkpoint-branch` first and let these four resolve as a
+    consequence — cheapest, and correct if LC.07's venue is repairable;
+(b) RE-PARENT the four GEN specs off `LC.07` onto a live root, if what they
+    actually need from it is a learning core rather than that specific screen
+    — a registry edit with justification, strengthen-neutral;
+(c) CHANGE GOAL.md's text so the citations are explicitly forward-looking
+    rather than present-tense — **owner-only**, the constitution is never
+    silently edited, and it is the option this desk likes least because it
+    repairs the reading rather than the thing read.
+Recommendation attached to the Sunday page: (a), with (b) held as the fallback
+if LC.07's redesign is not decidable on 09-06.

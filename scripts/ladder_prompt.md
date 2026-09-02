@@ -356,69 +356,92 @@ VOID-FORECLOSED against that world (`BA.03`, `LC.03`, `SH.02`, `DP.04`,
 why `run next` looks thin and why three cost classes read EMPTY with no path
 in: the ladder is not short of specs, it is blocked on one world decision.
 
-**THAT ORDER IS ALSO SPENT — you executed the whole of it in 24 hours.
-Replaced (Review, 2026-09-01, DAILY).** `ME.11.E`/`ME.11.F` are recorded
-VOID-FORECLOSED, `LT.01` is implemented and settled FAIL, `T2.10` was redesigned
-under the paraphrase conjunct and re-bought honestly RED, and eleven armed
-defaults fired. The nine-instrument paragraph above still stands; the count is
-now **eleven** and its centre of gravity has moved — last block on this page.
+**THAT ORDER IS SPENT TOO — the fourth consecutive day a priority block was
+executed in full inside 24 hours. Replaced (Review, 2026-09-02, DAILY).**
+`UB.14`'s `VOID-FORECLOSED` declaration landed; `UB.10` was un-parked under the
+08-25 disposition, its grid pilot harvested, `SELECTED` committed and the
+registered run settled **VOID** on the marginal floor; item 5 landed both
+`T1.09` and `T1.10` **PASS** on the P100; item 6 registered the four `GEN` ids —
+**and item 6 backfired, which is this desk's fault and is item 4 below.**
+`D1.0` harvested **VOID** at 18:23. Beyond the list you also implemented three
+specs from the 60th audit's "implementable today" set: `LG.10` (honest FAIL at
+both ends of its knob), `LG.02` (**PASS, attempt 1**), `T3.09` (FAIL).
 
-**IN FLIGHT — do not start a second unit against either of these.**
+**`LG.02` is the only new capability in the window, and it is the first
+first-ever claim PASS since `T3.01` on 2026-08-20.** The owner's liar test,
+queued since 08-09: two advisors at 0.9/0.1 accuracy, trust as a Laplace
+posterior over verified claims, joined to Jack's own search ONLY through the
+attributed diary — worst-seed divergence 0.689 ± 0.103 against a 0.40 gate,
+stripped-attribution null 0.028 with the join alive, the owner's swap control
+migrating 0.711/0.733, prior exactly 0.5 for both voices. That is GOAL.md's
+*"his diary records whose advice proved true, so trust in a person can be
+earned and checked"* — measured, not asserted. Do not re-run it as cheap work.
 
-- **`D1.0` is RUNNING on Kaggle** — kernel 1 of 3 harvested `ok` (14,674 s
-  charged), kernel 2 dispatched 06:17, watcher alive. **It is the largest
-  unblock on the board**: its winner is the architecture under which `T2.01`
-  (FAIL, **frees 35**) and `T2.02` re-run. Do not dispatch another GPU job
-  against it and do not re-derive its envelope — the branch tree is
-  pre-registered in the docstring and the pilot already froze it.
-- **`UB.14` settled VOID at 06:41:04**, while this Review was reading. Your own
-  06:26 commit says a `VOID-FORECLOSED` declaration is owed at harvest, quoting
-  the row's fired conjuncts, priced with `FORECLOSURE ARITHMETIC` and
-  `BLAST RADIUS` (54th-audit B3 refuses an unpriced one, loudly, in both
-  readers). **That is your first unit today** — it is owed, it is small, and it
-  is the only thing standing between an honest measurement and a silent one.
+**FIRST UNIT TODAY: harvest `T3.09`.** Its attempt-3 row is ON DISK and
+UNCOMMITTED (`ran_at` 2026-09-02T06:33:18, **FAIL**, `n_affected` 11 so the
+site-under-exercise VOID lane cleared and the spec finally measured). Commit the
+runner's row as found. **Then read what it measured, because it is not a plain
+red:** `creative_contribution` **−9.96** against the 11.0 margin — the loop arm
+is *worse* than the shipped random detour (`loop_ttf_aff` 156.6 vs `off` 146.7)
+— while the **shuffled control gained +12.47, clearing the claim's own margin**,
+and `loop_creative` is **0** on every life (the loop never once took its
+creative branch; all 33 hits were the direct branch). A control carrying
+deliberately-wrong information beating the bar the claim missed is an
+INSTRUMENT statement, not just a verdict: this venue may reward perturbation as
+such. Route it as its own queue row with that arithmetic quoted. Do not repair
+the arm and re-run; `AlphaGeometryLoop` earning its parameters is exactly what
+this spec was built to decide, and it did.
 
-**YOUR NEXT FRESH UNIT IS `UB.10`, and the reason is a ROUTING bug, not a
-science change.** `UB.10` is `NOT_RUN`, **frees 4 (blocks 5)** — the largest
-mass on the board that is neither in flight nor on the Review's desk — and it
-has been PARKED since 2026-08-20 on `recipe-sensitivity`. **That row was
-DISPOSITIONED by the Review on 2026-08-25**: matched *TUNING BUDGET*, not
-matched hyperparameters — every arm gets the IDENTICAL pre-registered LR grid,
-the same trial count, the same pre-registered selection criterion, all declared
-before any arm runs; an arm that clears `uni_learn_ok` NOWHERE on the grid is
-recorded SCORED-AND-INELIGIBLE, not silently a 0.5. That is strictly HARDER than
-what it replaces and the cost rises N → N×K, which is the point: the budget is
-what is matched. **The row has read `ACTED` for seven days and the spec is still
-parked**, because `ACTED` there meant *the Review acted*, not *the builder
-executed* — a top-down read sees a closed row and the park never lifts. Un-park
-`UB.10` under the 08-25 disposition and build the matched-budget grid. It also
-unblocks `UB.11`, which Review 08-31 item 4 needs before the `T2.12`
-fusion-boundary conjunct can be written at all.
+**THE ONLY FRESH DISPATCH LEFT ON THE BOARD IS `ME.11`** — `coverage` names it
+as the single fillable cost class (`cpu<10min`), deps `ME.1` and `ME.11.0` both
+PASS, no implementation. Take it, and take it with your eyes open: **`ME.11` is
+an honest RED you are buying, not a hopeful run.** Every arm is settled — `A`
+measured 0.0000 paraphrase recall, `B`/`C`/`D` FAIL, `E`/`F` VOID-FORECLOSED by
+arithmetic — and the best dense ceiling the family ever measured is **0.250
+against the registry's 0.80 bar**. Implement the family verdict against the rows
+already on the ledger; the bars are the registry's and **do not move**; the
+family's redesign disposition is owed by this desk on 09-06 (`me11-every-arm-
+hits-the-same-infeasible-branch`), so do not pre-empt it with a new arm. What
+this buys is real: a commitment moves from *unmeasured* to *measured*, which is
+the one thing a registration can never do.
 
-**THEN, in order, the three Review 08-31 items you have not yet taken:** item 6
-(register `GEN.02`/`GEN.03`/`GEN.06`/`GEN.09` — **GOAL.md cites four spec ids
-that do not exist**; registration debt since 2026-08-25, untouched through 273
-commits; one iteration, and it clears a `coverage` dangle), then item 4
-(`T2.12`'s fusion-boundary conjunct, **after** `UB.10`), then item 5
-(`T1.09`/`T1.10` re-aimed off the T4 and onto the P100 — GPU, so **after**
-`D1.0` clears the queue).
+**ITEM 4 — `coverage` is now rc=2 for TWO reasons, and the second one is mine.**
+Registering `GEN.02/03/06/09` cleared `GOAL_DANGLING_BASELINE` to empty and
+immediately lit `4 NEW unrunnable citation(s)`, all `welded<-LC.07` — whose
+pilot fired branch B eleven hours AFTER the registration. Per the 59th audit's
+own words, an id that resolves to a corpse is a *worse* dangling reference than
+one that resolves to nothing. **Do NOT close this by widening
+`GOAL_UNRUNNABLE_BASELINE` — it is shrink-only by construction and widening it
+would be the exact move the constant exists to forbid.** Routed as
+`goal-cites-four-specs-that-resolve-to-corpses`, DUE 2026-09-06, downstream of
+`lc07-checkpoint-branch`. Nothing for you to decide; named so you do not
+"fix" it.
 
-**DO NOT go looking for a cheaper unit than these.** `coverage` reports two
-FRESH dispatches on the entire board and both are in flight; four cost classes
-have no path in at all. **An empty board is not permission to spend the slot on
-audit bookkeeping** — 36% of last week's commits already went there, measured
-independently from the git log by the 55th audit and by the Review, and it is
-the single largest consumer of your iterations.
+**GPU: `2026-W35` has 19.2 h of 30 charged and ~10.8 h that expire Sunday —
+and 16.17 h of that spend bought `D1.0`'s VOID.** There is no dispatchable GPU
+spec today (`coverage`'s gpu classes are all VOID-arms or pilot-blocked). **Do
+not manufacture a dispatch to use the quota up** — that is the failure mode this
+page has warned about since 08-29, and the quota is unspendable at an empty
+class however awake you are. `D1.0`'s successor has a row with a clock
+(`d10-successor-rerun-under-adopted-gate`, DUE 09-06); it is the Review's, not
+yours.
 
-**One thing you must NOT re-derive: whether the world is the problem.** Eleven
-measurements is enough, and the answer is the Review's to give on 2026-09-06
-(`w0-too-shallow`), not yours to re-measure. What you should know is that the
-question has visibly changed shape underneath the row's name: **three of the
-eleven are now measurements about the BODY rather than the world** — `BA.03`'s
-blind twin holding 98.9% of the horizon, `LT.01`'s `nonladder_rise_max`
-0.084 ± 0.067 m against a 0.6 m bar, and `UB.14`'s eye reading its own body's
-position at 0.159 held-out against a 0.5 gate — **and two of those three landed
-in the last 24 hours**, on top of the unregistered `W0.BAL` bakeoff's
+**HOUSEKEEPING, small and owed:** the 05:07 slot ended with
+`LEFTOVER=1 undeclared process` — pid 363738, 178 s CPU, your own `T3.09`
+detached run. A legitimately-detached run that nobody declared is
+indistinguishable from an abandoned one to the only instrument that looks.
+Declare detached runs in `declared_pids`; it costs one line and it is the
+difference between a receipt and a smell.
+
+**One thing you must NOT re-derive: whether the world is the problem.** The
+count is on `w0-too-shallow` in `docs/REVIEW_QUEUE.md` — read it there, never
+from this page — and the answer is the Review's to give on 2026-09-06, not
+yours to re-measure. What you should know is that the question has visibly
+changed shape underneath the row's name: **several of its instruments are now
+measurements about the BODY rather than the world** — `BA.03`'s blind twin
+holding 98.9% of the horizon, `LT.01`'s `nonladder_rise_max` 0.084 ± 0.067 m
+against a 0.6 m bar, and `UB.14`'s eye reading its own body's position at 0.159
+held-out against a 0.5 gate — on top of the unregistered `W0.BAL` bakeoff's
 0.002–0.004 upright fraction. A world redesign does not repair a body that tips
 over in seconds. Do not act on that; do not re-measure it either. It is named
 here so you do not spend an iteration rediscovering it.
