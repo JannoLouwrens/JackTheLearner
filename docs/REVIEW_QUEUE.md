@@ -1414,3 +1414,49 @@ it):**
     repairs the reading rather than the thing read.
 Recommendation attached to the Sunday page: (a), with (b) held as the fallback
 if LC.07's redesign is not decidable on 09-06.
+
+ROUTED: t309-control-clears-the-claims-own-margin | 2026-09-02 | 06f6a01 | OPEN
+    DUE: 2026-09-08 | an instrument/venue disposition owed by the Review — dated
+    off the 09-06 pile deliberately (61st audit B2/FINDING 3: eighteen rows
+    already land on that one Sunday, and this row is readable standalone after
+    the `w0-too-shallow` window is decided, since it is the same question one
+    call-site down: does this venue reward perturbation as such?).
+
+**The numbers, from the attempt-3 row (`06f6a01`, ran 06:33, seed [0],
+n_affected 11):** `creative_contribution` **−9.96** vs `MARGIN_AFF` **11.0**
+— the claim lost — while the wrong-goal control gained **+12.47** and cleared
+the claim's own margin. The four arms rank anti-correlated with advice
+quality: shuf (deliberately wrong) 134.2 s, off (no advice) 146.7 s, loop
+(the claim) 156.6 s, twin (correct 3-line goal subtraction) 191.2 s — correct
+directional advice HURTS by 44.5 s. And `loop_creative` is **0 on 142
+consults across both recorded runs**: the branch named in the spec's title
+never executed once.
+
+**What the row supports (61st audit FINDING 1+2, adopted):** one sentence —
+*at this call site, at n=11 on one seed, detour advice of any kind is noise.*
+That is a statement about the SITE, not the module, the same shape as DP.00's
+"the finding is about the world". The recorded FAIL is honest arithmetic but
+under law 2 (class-3, unconditional) a control clearing the claim's margin
+voids the run whichever way the claim went; the lane ordering that let it
+record FAIL is fixed in the same commit as this row, and `seeds=3` is now
+declared in the registry before any further attempt.
+
+**What the Review owes:** a disposition on the kills clause, which was NOT
+executed. Options: (a) declare the attempt-3 row insufficient to execute
+`kills` and require any future execution to rest on a run whose controls
+behave — i.e. T3.09 re-runs only if a redesigned venue can make advice
+distinguishable from perturbation (likely downstream of `w0-too-shallow`);
+(b) judge the site unrepairable and execute the deletion on the accumulated
+record (three attempts, zero creative-branch firings, wrong advice beats
+right advice) as a design judgment made in the open rather than a ledger
+verdict — the module's archive copy is byte-identical and stays either way;
+(c) re-site the consult (a different stuck-recovery venue) as a registry
+edit. Do NOT re-roll attempt 3 unchanged at this site.
+
+**Staleness bill:** SEMANTIC — none: no PASS row cites `AlphaGeometryLoop.py`
+or `t3_09` in IMPL_DEPS; T3.09's own live row is a FAIL already stale against
+the reordered `_check` (that staleness owes NO re-run — the row's numbers
+under the corrected lane are a VOID, recorded as such in the registry note).
+MECHANICAL, if the kills clause is later executed — `T0.01` (imports) names
+`AlphaGeometryLoop` in its roster and TaskManager/UnifiedBrain import it
+inside try/except; the docstring's deletion protocol covers both.

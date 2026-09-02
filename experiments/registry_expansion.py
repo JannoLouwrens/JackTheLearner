@@ -1639,7 +1639,7 @@ EXPANSION: list[Spec] = [
                       "the loop has ZERO call sites: it constructs, prints "
                       "'ENABLED', and is never invoked.",
          null_baseline="Identical system, loop disabled.",
-         metric="creative_contribution", budget=Budget.CPU_LONG,
+         metric="creative_contribution", budget=Budget.CPU_LONG, seeds=3,
          control="WRONG-GOAL CONSULT. The identical trained loop, wired at "
                  "the identical stuck-recovery call site, is handed a goal "
                  "reflected through the rover (2*xy - goal): exactly as much "
@@ -1648,7 +1648,16 @@ EXPANSION: list[Spec] = [
                  "margin); if wrong-goal advice helps as much, the site "
                  "rewards any detour perturbation and the test measures "
                  "nothing.",
-         kills="AlphaGeometryLoop.py (559 lines) — wire it or delete it."),
+         kills="AlphaGeometryLoop.py (559 lines) — wire it or delete it.",
+         notes="seeds 1 -> 3 declared 2026-09-02 (61st audit B1.3), before "
+               "any further run: a verdict that arms a 559-line deletion, on "
+               "a metric whose four arms ranked anti-correlated with advice "
+               "quality, is not decided at one seed. The attempt-3 FAIL "
+               "(seed [0], 06:33) predates this and its own wrong-goal "
+               "control cleared the claim's margin (shuf_gain +12.47 vs "
+               "MARGIN_AFF 11.0) — under the corrected lane ordering that "
+               "row is a VOID, the kills clause was NOT executed, and the "
+               "row is routed as t309-control-clears-the-claims-own-margin."),
 
     Spec("T3.10", 3, "Trunk knowledge survives action training",
          hypothesis="Linear probes on frozen-trunk features (object class, "

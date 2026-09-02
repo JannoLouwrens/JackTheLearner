@@ -89,8 +89,14 @@ performance metric previewed):
         - zero training pairs harvested (the module's declared recipe could
           not execute);
         - shuf consults < MIN_AFFECTED (its non-improvement would be vacuous);
-        - a PASS whose shuf control ALSO cleared the margin (attribution
-          impossible; law 2).
+        - the shuf control cleared the margin (the site rewards any detour
+          perturbation and the test measures nothing; law 2 is class-3
+          CONDUCT and unconditional — this lane fires whichever way the
+          claim went. Until the 61st audit this line read "a PASS whose
+          shuf control ALSO cleared the margin", and that PASS-only scoping
+          made the lane unreachable in the one recorded run where it should
+          have fired: attempt 3, shuf_gain +12.47 vs MARGIN_AFF 11.0,
+          recorded FAIL. A spec docstring may not narrow a class-3 law).
 
 WHAT A FAIL EXECUTES. The spec's kills clause: delete `AlphaGeometryLoop.py`
 from the root. `archive/AlphaGeometryLoop.py` is byte-identical (verified
@@ -485,12 +491,12 @@ def _check(m: dict, c: dict):
         return Status.VOID          # the module's own recipe could not run
     if c.get("shuf_ran", 0.0) != 1.0 or c["shuf_consults"] < MIN_AFFECTED:
         return Status.VOID          # control vacuous
+    if c["shuf_gain"] >= MARGIN_AFF:
+        return Status.VOID          # site rewards any perturbation — law 2 is
+                                    # unconditional; a rig gate, above the claim
     # ── the claim ──
     if m["creative_contribution"] < MARGIN_AFF:
         return False
-    # ── a PASS must survive its control (law 2) ──
-    if c["shuf_gain"] >= MARGIN_AFF:
-        return Status.VOID          # site rewards any perturbation
     return True
 
 
