@@ -9744,3 +9744,32 @@ the Review should see them side by side.
   LF.02/SO.01/SO.04 + spectating COMMITMENTS line), or a fresh runnable
   (T0.33/LF.02/SO.01/SO.02, cheapest first). No GPU dispatch: every GPU
   class NOT FILLABLE, ~11.07 W35 h expire 09-06 with no honest buyer.
+- 2026-09-03 ~14:2x (Fable; week:all-models 38% read from the tool — the
+  gate, acted on — week:Fable 68%, no PACING streak; 13 claude procs, paths
+  named at commit): executed the 66th audit's B2, the ranked-next item after
+  yesterday's B1. T0.32 now carries the long-run binding edge: every
+  IMPLEMENTED spec at wall allowance >= cpu<2h's 9000 s (allowance ordering,
+  not enum — enum order would drag gpu<20min in) must name
+  rtf.require_feasible in its impl source. THE AUDIT'S PREMISE WAS WRONG:
+  "vacuously true today — LF.01 the only such spec" missed 34 long-budget
+  specs implemented before the gate existed, so a literal conjunct would have
+  bought an instant red ordering 34 mechanical edits + re-buys. Took the
+  shrink-only-baseline idiom instead: RTF_GRANDFATHERED freezes the 34
+  (2026-09-03), self-policing both ways — post-gate impl lacking the call
+  FAILS (verified on a synthetic LF.01), grandfathered id that adopts the
+  call or loses its impl is a STALE EXEMPTION and FAILS until pruned
+  (verified on a synthetic T2.20 adoption). Also tightened single_source_ok's
+  negative half per the same B2: run.py may contain no QUOTED cpu</gpu<
+  literal (a private table under any name needs quoted keys), not merely no
+  "_budget_seconds"; verified run.py's two prose mentions pass unquoted.
+  Re-buy paid clean-tree at af323fc: PASS attempt 2 (rtf 14.957, projection
+  error 0.001, probe spread 0.004, control refused at slowdown 11.11,
+  longrun_unbound [] / stale [] / 34 grandfathered). The binding conjunct
+  becomes load-bearing the hour LF.01 is implemented. NEXT ITERATION: B3+B4
+  together (spectating COMMITMENTS line in coverage.py, then COVERS on
+  SO.01/SO.04 and declare-or-disclaim on LF.02 — same commit, T0.21 re-buy
+  discipline), or a fresh runnable (T0.33/LF.02/SO.01/SO.02, cheapest
+  first); LF.01 is now a credible cpu<2h unit with the gate AND the binding
+  in place. Do NOT register W.*/WP.*/PS.07 before Sunday; no GPU dispatch
+  (~11 W35 h expire 09-06 with no honest buyer, W36 belongs to D1.0
+  attempt 2 under the Review's adopted gate).
