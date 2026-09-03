@@ -908,6 +908,16 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 # Growth log (append a line per raise, newest first; SHRINKS are logged too,
 # because a floor that follows the number down silently is a floor nobody can
 # audit — see the 2026-09-03 entry, which exists because it did NOT follow):
+#   90 @ 2026-09-03 (65th audit B1) — HR.5 added to HR.6.depends_on. HR.5's
+#     registry notes call it "PREREQUISITE FOR HR.6 BEING INFORMATIVE" and it
+#     FAILed at 05:25 the same morning (classes_present 1.0 of 4, no kind
+#     label, no self flag); the edge was written for HR.8 in the registering
+#     commit and forgotten for HR.6 (LESSONS.md, "A prerequisite that lost is
+#     worse than a producer that is missing"). HR.6 leaves the runnable set
+#     until the fixture repair lands — a truthful red, deliberately bought:
+#     the staging valve fires on A2-vs-A0b, but HR.5 predicts A5-ties-
+#     everything, which passes that valve and green-lights 3-6 GPU-hours on
+#     a question HR.6's own notes call not well-posed.
 #   89 @ 2026-09-03 (SHRINK, Review DAILY) — HR.7's PASS (e7badf4) reopened its
 #     downstream and the live count fell 90 -> 89. The harvest commit b8f69f4
 #     wrote the new reading into ratchet_readings.json and its message says
@@ -923,7 +933,7 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 89
+UNREACHABLE_BASELINE = 90
 
 
 def unreachable_ratchet(ledger=None,

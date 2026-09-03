@@ -522,14 +522,26 @@ implementation** — the "no implementation at all" sentence below is stale, bot
 are now PILOT-BLOCKED with redesigns routed to the Review. Do not do any of it
 again. **The live items are 1', 2' and 3' immediately below.**
 
-1'. **`HR.6`'s CPU staging arms are the cheapest fresh unit on the board**
-   (A0/A0b/A2/A5, minutes each, no download). `HR.7` PASSED 2026-09-03T06:35
-   and built `experiments/hearing.py` as the A2 stem contract `HR.6` imports —
-   that certificate is tied to it by IMPL_DEPS, so do not edit `hearing.py`
-   without re-buying `HR.7`. The registry's STAGING note is the whole point:
-   **if A2 cannot beat A0b on CPU, the GPU arms are cancelled for free.**
-   `HR.1`–`HR.4` wait on **D19** (NO-FETCH default, decide_by 09-14) — do not
-   fetch a corpus to unblock them.
+1'. **CORRECTED (65th audit B1, executed 2026-09-03): `HR.6` is NOT the
+   cheapest fresh unit — it is BLOCKED behind `HR.5`'s FAIL, and this item
+   used to point you at it without naming that.** `HR.5` — whose registry
+   notes read "PREREQUISITE FOR HR.6 BEING INFORMATIVE" — FAILed at 05:25 on
+   2026-09-03: `classes_present` 1.0 of 4, no kind label, no self flag; with
+   only impacts, a representation bakeoff measures how well each encoder
+   recovers four numbers. The edge is now declared (`HR.6.depends_on` carries
+   `HR.5`; `UNREACHABLE_BASELINE` raised 89→90 in the same commit) so `run
+   next`/`coverage` no longer offer it. **Why the staging valve did not cover
+   this:** it fires on **A2 vs A0b**, but the branch `HR.5`'s refutation
+   predicts is **A5 (hand-crafted event vector) ties everything**, which
+   passes that valve and green-lights 3–6 GPU-hours on a question `HR.6`'s
+   own notes call not well-posed. If you want the CPU staging arms as a
+   *confirmation* of `HR.5`'s fixture verdict, pre-register them as exactly
+   that before running — not as arbitrating representations. The repair is
+   the fixture (`hr5-fixture-refuted` in `docs/REVIEW_QUEUE.md`, same W1 fork
+   as `w0-too-shallow`). `HR.7`'s PASS stands; `experiments/hearing.py` is
+   tied to that certificate by IMPL_DEPS — do not edit it without re-buying
+   `HR.7`. `HR.1`–`HR.4` wait on **D19** (NO-FETCH default, decide_by 09-14)
+   — do not fetch a corpus to unblock them.
 
 2'. **DO NOT RE-DISPATCH `D1.0`. Its attempt 2 is not yours to start yet.**
    `D1.0` fired as D1's armed default, burned **16.17 GPU-hours — 54% of a

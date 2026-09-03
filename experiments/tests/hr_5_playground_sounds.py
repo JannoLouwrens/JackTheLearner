@@ -69,6 +69,17 @@ names BEFORE the repair is written):
   - The four classes separate on band energies at >= 0.45 while the
     position-only probe stays at chance (which additionally requires the
     world to stop making sound-kind a pure function of place).
+
+VERDICT ANNOTATION (65th audit B4, 2026-09-03 — attempt 1, FAIL, ran 05:25):
+the registered metric four_class_audio_separability read 0.583 and that
+number is NOT INTERPRETABLE — do not quote it. The position-only control
+read 0.708 in the same run: the control OUTSCORED the instrument (the T2.11
+control-outscored rule), so the separability figure is a map reading, not an
+audio measurement. The FAIL is carried entirely by the structural conjuncts:
+classes_present 1.0 of 4, has_kind_label False, has_self_flag False — three
+of the four sounds GOAL.md names do not exist in the fixture. The repair is
+routed as `hr5-fixture-refuted` in docs/REVIEW_QUEUE.md (same W1 fork as
+w0-too-shallow); do NOT re-run this spec to get a cleaner number.
 """
 from __future__ import annotations
 

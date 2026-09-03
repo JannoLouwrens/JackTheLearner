@@ -6455,7 +6455,13 @@ EXPANSION: list[Spec] = [
                        "'decorative', re-estimated every run rather than "
                        "assumed to be zero.",
          metric="audio_margin_over_placebo", budget=Budget.GPU, seeds=3,
-         depends_on=["HR.7", "PG.5", "PG.7"],
+         # HR.5 added 2026-09-03 (65th audit B1): HR.5's own notes call it
+         # "PREREQUISITE FOR HR.6 BEING INFORMATIVE" and it FAILed 05:25
+         # 2026-09-03 (classes_present 1.0/4, no kind label, no self flag) —
+         # a fixture of impacts-only reduces this bakeoff to recovering four
+         # numbers, the branch the staging valve (A2 vs A0b) cannot catch
+         # because HR.5's predicted failure is A5 TIES EVERYTHING.
+         depends_on=["HR.7", "PG.5", "PG.7", "HR.5"],
          control="Every surviving arm must FAIL the cross-episode SWAP "
                  "ablation: swapping the audio stream between episodes, "
                  "preserving both marginals and the temporal statistics, must "

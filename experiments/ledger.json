@@ -1140,7 +1140,22 @@
       "status": "FAIL"
     },
     "HR.5": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-03T07:10:45",
+          "by": "65th-audit-B4",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "54295f2bb5f787ec",
+              "proof": "reconstructed 54295f2bb5f787ec from git 173328067903; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "1b085e9ca82ac8a6"
+            }
+          ],
+          "commit": "89f060f+dirty",
+          "reason": "Docstring-only annotation: four_class_audio_separability=0.583 marked uninterpretable (position_only control 0.708 outscored it, T2.11 rule); FAIL carried by classes_present/has_kind_label/has_self_flag. No code change."
+        }
+      ],
       "attempt": 1,
       "commit": "1733280",
       "compute_s": null,
@@ -1152,7 +1167,7 @@
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "impl_sha": "54295f2bb5f787ec",
+      "impl_sha": "1b085e9ca82ac8a6",
       "message": "pre-registered threshold not met",
       "metrics": {
         "alive_f0_ratio": 2.75,
@@ -16257,57 +16272,23 @@
     "T0.21": {
       "amended": [],
       "attempt": 22,
-      "commit": "c7325c2",
+      "commit": "89f060f+dirty",
       "compute_s": null,
       "control_metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
-        "declared_specs_live": 119.0,
+        "declared_specs_live": 130.0,
         "docstring_covers_problems_live": 0.0,
         "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
         "malformed_declarations_live": 0.0,
-        "nominated_not_declared": 38.0,
+        "nominated_not_declared": 42.0,
         "properties_checked": 12.0,
         "properties_failed": 7.0
       },
-      "duration_s": 7.87,
+      "duration_s": 7.63,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "5e05b19",
-          "control_metrics": {
-            "commitments": 23.0,
-            "commitments_uncovered": 0.0,
-            "declared_specs_live": 105.0,
-            "docstring_covers_problems_live": 0.0,
-            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
-            "malformed_declarations_live": 0.0,
-            "nominated_not_declared": 26.0,
-            "properties_checked": 12.0,
-            "properties_failed": 7.0
-          },
-          "gpu_job_id": null,
-          "impl_sha": "d34089e1422019b3",
-          "message": "",
-          "metrics": {
-            "commitments": 23.0,
-            "commitments_uncovered": 0.0,
-            "declared_specs_live": 105.0,
-            "docstring_covers_problems_live": 0.0,
-            "failed_names": "",
-            "malformed_declarations_live": 0.0,
-            "nominated_not_declared": 26.0,
-            "properties_checked": 12.0,
-            "properties_failed": 0.0
-          },
-          "ran_at": "2026-08-30T01:16:13",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "f07d113ad391bfb1",
-          "status": "PASS"
-        },
         {
           "commit": "ea99989",
           "control_metrics": {
@@ -16953,23 +16934,59 @@
           ],
           "spec_sha": "f07d113ad391bfb1",
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 119.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 38.0,
+            "properties_checked": 12.0,
+            "properties_failed": 7.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "45291bacf5ce851b",
+          "message": "",
+          "metrics": {
+            "commitments": 23.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 119.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 38.0,
+            "properties_checked": 12.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-02T18:39:28",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "f07d113ad391bfb1",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "45291bacf5ce851b",
+      "impl_sha": "54bab0b2761f0d03",
       "message": "",
       "metrics": {
         "commitments": 23.0,
         "commitments_uncovered": 0.0,
-        "declared_specs_live": 119.0,
+        "declared_specs_live": 130.0,
         "docstring_covers_problems_live": 0.0,
         "failed_names": "",
         "malformed_declarations_live": 0.0,
-        "nominated_not_declared": 38.0,
+        "nominated_not_declared": 42.0,
         "properties_checked": 12.0,
         "properties_failed": 0.0
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 227.1,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T18:39:28",
+      "ran_at": "2026-09-03T07:11:35",
       "seeds": [
         0
       ],

@@ -1724,3 +1724,36 @@ ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | O
     "prose dirt" from "instrument dirt" as two stamps with different
     consequences. Until one lands the trap stays armed: the next audit that
     commits during a sweep VOIDs certificates again.
+
+ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, classes_present 1.0/4) | OPEN
+    DUE: 2026-09-06 | rides the w0-too-shallow design window (the bundling
+    rule above): the repair edits `playground.py` and `ContactAudio.py`, the
+    same world files, and this row belongs to the SAME W1 fork — it must not
+    be designed twice. If w0-too-shallow resolves toward a new world (W1),
+    this row follows it there and the W0 bill goes to zero.
+    Question: three of the four sounds GOAL.md names do not exist in the
+    fixture, and the graph now says so (HR.5 -> HR.6 edge declared, 65th
+    audit B1). What does the fixture need before HR.6's bakeoff is
+    well-posed? The repair contract, from HR.5's registry notes and
+    docstring — recorded here so it survives the docstring:
+    (1) a sustained NOISE voice driven by persisting contact (tangential
+    velocity x normal force), versus the impulsive MODAL voice that exists;
+    (2) a surface-crossing detector inside `Water.apply` emitting a
+    broadband burst scaled by entry velocity — Water is a FORCE FIELD
+    (`playground.py:246`) generating no MuJoCo contact, which is WHY entry
+    is silent today; (3) a self/other flag: `geom_bodyid` in Jack's body
+    set; (4) the humanoid is absent from `build_mjcf(with_humanoid=False)`,
+    so the thud of his own fall cannot occur at all.
+    SEMANTIC bill: HR.7's PASS (attempt 1, 2026-09-03, worst-seed 0.9453)
+    was measured on the impulsive-voice fixture; new voices change the audio
+    distribution the stem was certified on, so HR.7 re-buys. HR.5 re-runs by
+    design — it is the acceptance test for this repair.
+    MECHANICAL bill: the 21 PASS certificates citing `playground.py` in
+    IMPL_DEPS (header list) plus HR.7 (cites `playground.py`,
+    `ContactAudio.py`, `experiments/hearing.py`) — the bundling rule exists
+    for exactly this; do not pay it outside the w0-too-shallow window.
+    Metric note (65th audit B4): HR.5's registered
+    four_class_audio_separability = 0.583 is NOT interpretable — its
+    position_only_acc control read 0.708 (control outscored the instrument,
+    the T2.11 rule). The FAIL is carried by classes_present /
+    has_kind_label / has_self_flag alone; do not quote 0.583.
