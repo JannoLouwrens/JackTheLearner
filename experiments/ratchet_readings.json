@@ -1,0 +1,22 @@
+{
+  "champions_trigger_debt": {
+    "at": "2026-09-03",
+    "value": 3
+  },
+  "claim_dead": {
+    "at": "2026-09-03",
+    "value": 4
+  },
+  "park_release_pairs": {
+    "at": "2026-09-03",
+    "value": 3
+  },
+  "review_queue_violations": {
+    "at": "2026-09-03",
+    "value": 1
+  },
+  "unreachable": {
+    "at": "2026-09-01",
+    "value": 85
+  }
+}

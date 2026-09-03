@@ -5,6 +5,9 @@
     python -m experiments.run next            # what is legitimately runnable now
     python -m experiments.run blocked         # what is unreachable, and what frees it
     python -m experiments.run stale           # claims whose test changed since the run
+    python -m experiments.run ratchets        # standing-red ratchet counters vs their
+                                              # committed readings; `ratchets record`
+                                              # refreshes experiments/ratchet_readings.json
     python -m experiments.run amend T2.01 --by T0.14 --reason "..." --status VOID
                                               # a change that did NOT come from a run,
                                               # recorded as one. Cannot write PASS/FAIL.
@@ -646,6 +649,7 @@ def cmd_status(ledger: Ledger) -> int:
                 print(f"      {sid}  {metric} = {cur}  (unchanged since "
                       f"{prev_at})")
         print()
+    print_ratchet_block(ledger)
     print("  A capability is claimed ONLY by a PASS here. Nothing else counts.\n")
     return 0
 
@@ -708,6 +712,203 @@ def _check_red_delta_detector() -> None:
         raise RuntimeError(
             f"the red-delta reader returned {got}, expected {want} — "
             "refusing to report a scan it may not have performed")
+
+
+# ── Ratchet counters, read independently of every verdict (64th audit B2) ──
+#
+# The scar: on 2026-09-02 the unreachable ratchet printed `GREW: 89 vs 85`
+# inside `coverage`, whose exit code had been red since 09-01 for a blessed,
+# Review-owned reason — and five consecutive iterations read rc=2, recalled
+# the blessed red, and skipped the body. The number that moved was read by
+# nobody for 5½ hours. A shared exit code is a disjunction: the moment one
+# clause is blessed and standing, every other clause it ORs over goes silent.
+# So every ratchet counter a standing-red tool carries is ALSO printed here,
+# in `run status`, with its delta since the last COMMITTED reading — a
+# channel no tool's verdict can silence. Same idiom as
+# DELIBERATE_RED_METRICS one block up, generalised from one metric in one
+# red gate to the class.
+#
+# `experiments/ratchet_readings.json` holds the committed readings. The delta
+# is computed against the HEAD revision of that file, so an uncommitted
+# rewrite cannot quiet the block. `run ratchets record` refreshes it — run it
+# in the SAME commit as the change that legitimately moved a counter.
+
+RATCHET_READINGS = _REPO / "experiments" / "ratchet_readings.json"
+
+
+def ratchet_live(ledger: Ledger) -> dict:
+    """name -> (value | None, note). A counter whose computation raises
+    reports (None, why) rather than vanishing — LOST is a finding, not a
+    skip, because an instrument going quiet is the failure mode this reader
+    exists for. Every import is local so `status` pays only when printing."""
+    out = {}
+
+    def take(name, fn):
+        try:
+            out[name] = (fn(), "")
+        except Exception as exc:
+            out[name] = (None, f"{type(exc).__name__}: {exc}")
+
+    def _unreachable():
+        from .coverage import unreachable_ratchet
+        u = unreachable_ratchet(ledger=ledger)
+        if u["count"] is None:
+            raise RuntimeError("; ".join(u["refused"]))
+        return u["count"]
+
+    def _claim_dead_count():
+        from .coverage import _claim_dead, report
+        return sum(1 for r in report() if _claim_dead(r))
+
+    def _park_release_pairs():
+        from .coverage import park_release
+        return len(park_release()["violations"])
+
+    def _champions_trigger_debt():
+        from . import champions
+        _v, seats = champions.audit(champions.DOC.read_text(), BY_ID,
+                                    lambda sid: ledger.status(sid).value)
+        return len(champions.unreachable_triggers(seats))
+
+    def _review_queue_total():
+        from . import review_queue as rq
+        return rq.audit(rq.DOC_PATH.read_text(),
+                        rq._prev_revision(rq.DOC_PATH))["total"]
+
+    take("unreachable", _unreachable)
+    take("claim_dead", _claim_dead_count)
+    take("park_release_pairs", _park_release_pairs)
+    take("champions_trigger_debt", _champions_trigger_debt)
+    take("review_queue_violations", _review_queue_total)
+    return out
+
+
+def committed_ratchet_readings() -> tuple:
+    """`(readings, provenance)` as of HEAD. Read from git deliberately: an
+    uncommitted rewrite of the readings file must not quiet the delta. The
+    working-tree file answers only when git cannot, and the provenance
+    string names which one did."""
+    import json
+    rel = RATCHET_READINGS.relative_to(_REPO).as_posix()
+    try:
+        blob = subprocess.run(["git", "show", f"HEAD:{rel}"], cwd=_REPO,
+                              capture_output=True, text=True, timeout=10)
+        if blob.returncode == 0:
+            return json.loads(blob.stdout), "HEAD"
+    except Exception:
+        pass
+    if RATCHET_READINGS.exists():
+        return (json.loads(RATCHET_READINGS.read_text()),
+                "WORKING TREE — the readings file is not in HEAD; commit it")
+    return {}, "MISSING"
+
+
+def ratchet_deltas(live: dict, recorded: dict) -> list:
+    """(name, kind, cur, prev, prev_at, note) for every counter either side
+    knows. Kinds: MOVED / UNCHANGED / LOST (the live computation refused) /
+    UNRECORDED (a live counter with no committed reading) / VANISHED (a
+    committed reading whose counter is no longer computed at all)."""
+    out = []
+    for name in sorted(set(live) | set(recorded)):
+        rec = recorded.get(name)
+        prev = rec.get("value") if isinstance(rec, dict) else None
+        prev_at = rec.get("at", "?") if isinstance(rec, dict) else None
+        if name not in live:
+            out.append((name, "VANISHED", None, prev, prev_at, ""))
+            continue
+        cur, note = live[name]
+        if cur is None:
+            out.append((name, "LOST", None, prev, prev_at, note))
+        elif rec is None:
+            out.append((name, "UNRECORDED", cur, None, None, note))
+        elif cur != prev:
+            out.append((name, "MOVED", cur, prev, prev_at, note))
+        else:
+            out.append((name, "UNCHANGED", cur, prev, prev_at, note))
+    return out
+
+
+def _check_ratchet_reader() -> None:
+    """Plant one counter per class and require the classifier to name each.
+    The moved number is the scar (89-vs-85, read by nobody across five
+    iterations — 64th audit); the quiet shapes must classify correctly too,
+    or the block teaches iterations to ignore it."""
+    live = {"a_moved": (89, ""), "b_same": (3, ""),
+            "c_lost": (None, "boom"), "d_new": (2, "")}
+    rec = {"a_moved": {"value": 85, "at": "t0"},
+           "b_same": {"value": 3, "at": "t1"},
+           "c_lost": {"value": 1, "at": "t2"},
+           "e_gone": {"value": 9, "at": "t3"}}
+    got = ratchet_deltas(live, rec)
+    want = [("a_moved", "MOVED", 89, 85, "t0", ""),
+            ("b_same", "UNCHANGED", 3, 3, "t1", ""),
+            ("c_lost", "LOST", None, 1, "t2", "boom"),
+            ("d_new", "UNRECORDED", 2, None, None, ""),
+            ("e_gone", "VANISHED", None, 9, "t3", "")]
+    if got != want:
+        raise RuntimeError(
+            f"the ratchet reader returned {got}, expected {want} — "
+            "refusing to report a scan it may not have performed")
+
+
+def print_ratchet_block(ledger: Ledger) -> None:
+    _check_ratchet_reader()
+    recorded, prov = committed_ratchet_readings()
+    rows = ratchet_deltas(ratchet_live(ledger), recorded)
+    print("  RATCHET COUNTERS — standing-red tools' numbers, printed here so "
+          "a blessed red\n    can never silence them (64th audit B2). "
+          f"Committed readings from {prov}:")
+    for name, kind, cur, prev, prev_at, note in rows:
+        if kind == "MOVED":
+            d = (f"{cur - prev:+d}" if isinstance(cur, int)
+                 and isinstance(prev, int) else f"was {prev}")
+            print(f"      {name} = {cur}  !! MOVED {d} since {prev_at} "
+                  f"(was {prev}). Say so in your report;\n      if a "
+                  f"committed change justifies it, `run ratchets record` in "
+                  f"that commit.")
+        elif kind == "UNCHANGED":
+            print(f"      {name} = {cur}  (unchanged since {prev_at})")
+        elif kind == "LOST":
+            print(f"      {name}  !! computation refused ({note}); last "
+                  f"committed reading {prev} at {prev_at}.\n      An "
+                  f"instrument going quiet is a fault, not a quiet day.")
+        elif kind == "UNRECORDED":
+            print(f"      {name} = {cur}  (no committed reading — "
+                  f"`run ratchets record`, then commit it)")
+        else:  # VANISHED
+            print(f"      {name}  !! recorded {prev} at {prev_at} and no "
+                  f"longer computed at all — a counter\n      does not "
+                  f"retire by disappearing.")
+    print()
+
+
+def cmd_ratchets(ledger: Ledger, record: bool = False) -> int:
+    print()
+    print_ratchet_block(ledger)
+    if record:
+        import datetime
+        import json
+        live = ratchet_live(ledger)
+        lost = sorted(n for n, (v, _n) in live.items() if v is None)
+        if lost:
+            print(f"  refusing to record: {', '.join(lost)} refused to "
+                  f"compute — a recording that\n  papers over a lost "
+                  f"instrument is the silence this file exists to prevent.")
+            return 2
+        recorded, _prov = committed_ratchet_readings()
+        today = datetime.date.today().isoformat()
+        payload = {}
+        for name, (val, _n) in sorted(live.items()):
+            old = recorded.get(name)
+            at = (old.get("at", today) if isinstance(old, dict)
+                  and old.get("value") == val else today)
+            payload[name] = {"value": val, "at": at}
+        RATCHET_READINGS.write_text(
+            json.dumps(payload, indent=2, sort_keys=True) + "\n")
+        print(f"  recorded {len(payload)} reading(s) to "
+              f"{RATCHET_READINGS.relative_to(_REPO)} — commit it in the "
+              f"same motion as the\n  change that moved the counter.")
+    return 0
 
 
 def gpu_orphans() -> list:
@@ -1714,7 +1915,8 @@ READ_ONLY_COMMANDS = {"status": cmd_status, "next": cmd_next,
                       "blocked": cmd_blocked, "render": cmd_render,
                       "stale": cmd_stale, "verify": cmd_verify,
                       "senses": cmd_senses, "coverage": cmd_coverage,
-                      "review-queue": cmd_review_queue}
+                      "review-queue": cmd_review_queue,
+                      "ratchets": cmd_ratchets}
 
 
 def main() -> int:
@@ -1762,6 +1964,16 @@ def main() -> int:
 
     if args.spec and args.spec[0] == "amend":
         return cmd_amend(ledger, args)
+
+    # `ratchets record` carries an argument the READ_ONLY dispatch below would
+    # silently drop — and a dropped argument is the argv-is-a-spend trap in
+    # miniature (the caller believes a recording happened). Handle the argued
+    # form here; the bare `ratchets` flows through READ_ONLY_COMMANDS.
+    if args.spec and args.spec[0] == "ratchets" and args.spec[1:]:
+        if args.spec[1:] != ["record"]:
+            print("ratchets: the only argument is `record`. Nothing was run.")
+            return 2
+        return cmd_ratchets(ledger, record=True)
 
     # status/next/render are read-only and must not block on a running experiment.
     if args.spec and args.spec[0] in READ_ONLY_COMMANDS:
