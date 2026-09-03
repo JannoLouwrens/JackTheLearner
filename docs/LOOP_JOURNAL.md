@@ -9718,3 +9718,29 @@ the Review should see them side by side.
   LF.02/SO.01/SO.02 from the fresh runnables; LF.01 itself is now a credible
   cpu<2h unit with the gate in place. Do NOT register W.*/WP.*/PS.07 before
   Sunday; no GPU dispatch (~10.8 W35 h expire 09-06 with no honest buyer).
+- 2026-09-03 ~13:2x (Fable; week:all-models 37% read from the tool — the
+  gate, acted on — week:Fable 66%, no PACING streak; 13 claude procs, paths
+  named at commit): executed the 66th audit's B1, its ranked-first order.
+  LG.11 (THE TOLD WORLD) registered + "told world" COMMITMENTS line in
+  coverage.py in the SAME commit (cb523a7): GOAL.md:206-212 said of itself
+  "FALSIFIABLE, and it must be tested rather than assumed" for 25 days with
+  0 of 232 specs making the claim, invisible because it fell in
+  language(parent) reading 3 pass. Design verbatim from GOAL.md: matched
+  anchored/unanchored fact sets, unanchored set as within-subject null,
+  strip-the-living control reusing LG.00's machinery (gap must VANISH
+  stripped), >=3 sigma. Deliberately unreachable behind LG.00+LF.01 —
+  truthful red is the deliverable; LF.01 dep re-parents to the W1 line at
+  Sunday's design (BA.02->LT.08 precedent, declared in the spec comment).
+  UNREACHABLE_BASELINE 91->92 with growth-log entry; ratchet reading 92
+  recorded same commit. Coverage diff verified before/after: told world
+  1 spec 0 pass appears, ZERO existing specs moved bucket (sole nomination
+  hit HR.4, honest). Re-buys paid clean-tree: T0.21 PASS (24 commitments,
+  0 uncovered — the new bucket is inside the guard), T0.28 PASS (10/10).
+  Queue row told-world-has-no-rung routed DUE 09-10 (off the 7-row 09-06
+  pile per B5's own warning) carrying (a) fact sets before W1? (b) LG.00
+  apparatus reusable as the strip? NEXT ITERATION: B2 (T0.32 edge — every
+  implemented cpu>=2h spec must call rtf.require_feasible, vacuous today,
+  binds when LF.01 lands; re-buy T0.32 with it), or B3/B4 (COVERS on
+  LF.02/SO.01/SO.04 + spectating COMMITMENTS line), or a fresh runnable
+  (T0.33/LF.02/SO.01/SO.02, cheapest first). No GPU dispatch: every GPU
+  class NOT FILLABLE, ~11.07 W35 h expire 09-06 with no honest buyer.

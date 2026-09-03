@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 96 / 232 demonstrated
+## 96 / 233 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -841,6 +841,13 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Utterance MEANING tracks Jack's internal state and diary, not the language model. Three independent measurements: (a) same state, different LLM sampling seeds -> same meaning, different wording; (b) different state, same LLM -> different meaning; (c) SWAP THE LLM for a different frozen model -> meaning preserved, style changes.
       - _dies if:_ Meaning varies with the sampler, or survives a state change, or changes when the LLM is swapped. Any of the three means the language model is choosing the content and Jack is being ventriloquised.
       - _then delete:_ Any speech path where the LLM receives free rein over content. If the model swap changes what he means, the mind was in the mouth.
+
+### Tier 6 — INTEGRATION
+
+- [ ] **LG.11** The told world: a fact he has lived the ground of is usable, a fact he has not is parroting
+      - _asserts:_ Two fact sets, matched for length and syntactic form, are told to him through the parent channel: one anchored to primitives he has lived (hot, heavy, far, tiring, dangerous — GOAL.md:187's list), one with no referent in anything he has lived ('bonds have coupon rates'). Integration DIFFERS: anchored facts are usable (he can act on them / bind them to his own experience in probes) while unanchored facts are recitation — and he can say which is which — by >=3 sigma across seeds.
+      - _dies if:_ Both fact sets integrate identically — he is reciting, and the jungle bought nothing (GOAL.md's own words). OR the anchored>unanchored gap SURVIVES the stripped control, in which case the gap was a property of the corpus or the frozen mouth, never of his life, and the claim is dead either way.
+      - _then delete:_ The stated justification of the entire survival programme. GOAL.md justifies W0/W1, the needs, the cold that kills and the mortality by saying lived primitives are what make told knowledge MEAN something. If this fails, the jungle is still a world but it is not buying what the constitution says it buys, and the third expansion is a library bolted to a language model.
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 
