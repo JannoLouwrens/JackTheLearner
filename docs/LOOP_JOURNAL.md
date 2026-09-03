@@ -9802,3 +9802,27 @@ the Review should see them side by side.
   binding in place. Do NOT register W.*/WP.*/PS.07 before Sunday; no GPU
   dispatch (~11 W35 h expire 09-06 with no honest buyer, W36 belongs to
   D1.0 attempt 2 under the Review's adopted gate).
+- 2026-09-03 ~16:1x (Fable; week:all-models 39% read from the tool — the
+  gate, acted on — week:Fable 70%, week 49% elapsed, pace allows ~57%, no
+  PACING streak; 13 claude procs, paths named at commit): SO.01 PASSED —
+  the STANDING RULE unit (spectating / being watched was a zero-pass
+  commitment and SO.01 its cheapest runnable declared spec at cpu<10min;
+  XL.01, coverage's other "RUNNABLE" zero-pass entry, is settled FAIL x2
+  with NE.08 the successor — RUNNABLE there means deps-satisfied, not
+  fresh). Implemented experiments/tests/so_01_third_person_stream.py (962c3b9),
+  ran +dirty PASS then re-bought clean-tree (attempt 2, 6e5eb4e): delivered
+  11.0 fps at 320x240 vs the 5.0 gate, render 12.6 fps (79.6 ms/frame),
+  rtf WITH stream 2.2 vs 1.0, cost_share 0.88 of a cheap 10-sim-s life,
+  11.5 MB artifact on disk with no listening service; control (humanoid
+  removed) moved 4.5% of pixels vs the 0.5% gate sized into the measured
+  gap; canary byte-stable, every frame alive (VOID lanes, never FAIL).
+  First frame ever produced for a spectator in 233 specs. SO.04 ("Being
+  watched does not change him") UNBLOCKED exactly as the 91-baseline entry
+  predicted: unreachable 92->91, floor lowered shrink-only + ratchets
+  recorded in the same commit; T0.21 re-buy paid clean-tree (PASS, 25
+  commitments 0 uncovered). NEXT ITERATION: SO.04 is the spectating CLAIM
+  and is now runnable (cpu<10min class) — it or the other fresh cpu<10min
+  units (T0.33, LF.02, SO.02); LF.01 remains the credible cpu<2h unit and
+  unblocks LG.11 (told world). Do NOT register W.*/WP.*/PS.07 before
+  Sunday; no GPU dispatch (~11 W35 h expire 09-06 with no honest buyer,
+  W36 belongs to D1.0 attempt 2 under the Review's adopted gate).

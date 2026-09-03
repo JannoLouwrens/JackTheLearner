@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 96 / 233 demonstrated
+## 97 / 233 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1047,7 +1047,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Killing a process mid-life and resuming restores the world state, the need variables, the episodic store and the recurrent state such that the continuation is indistinguishable from the uninterrupted run over the next 1000 steps.
       - _dies if:_ Any of the four stores lost or silently defaulted; a resumed trajectory that diverges beyond float tolerance.
       - _then delete:_ Multi-session lives, hence every life longer than one Kaggle session or one 50-minute loop iteration.
-- [ ] **SO.01** Jack can be watched: a third-person stream exists and costs what we say it costs
+- [x] **SO.01** Jack can be watched: a third-person stream exists and costs what we say it costs
       - _asserts:_ A third-person view of a running life renders at >=5 fps at 320x240 on this box and is deliverable to the owner without a persistent listening service; the measured render cost is reported as a fraction of the life's compute budget.
       - _dies if:_ Rendering unavailable, OR the render cost pushing the real-time factor below 1.0 (watching would then be slower than living).
       - _then delete:_ 'I want to watch him figure out the world himself.'
