@@ -13,10 +13,10 @@
   },
   "review_queue_violations": {
     "at": "2026-09-03",
-    "value": 1
+    "value": 0
   },
   "unreachable": {
-    "at": "2026-09-01",
-    "value": 85
+    "at": "2026-09-03",
+    "value": 90
   }
 }
