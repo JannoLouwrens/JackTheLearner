@@ -1786,16 +1786,15 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     # produced a real result, and the artifact was only recovered by hand. A
     # harness that discards finished science is worse than a slow one.
     from .registry import BY_ID as _BY_ID
-    _budget_seconds = {
-        "cpu<1min": 300, "cpu<10min": 1800, "cpu<2h": 9000, "cpu<48h": 172800,
-        "gpu<20min": 3600, "gpu<2h": 10800, "gpu<8h": 36000,
-    }
+    # The table and the seeds-x2 arithmetic live in rtf.py so that the process
+    # that KILLS an overlong run (here) and the gate that REFUSES one before it
+    # starts (rtf.gate_long_run, T0.32) compute from one source and cannot
+    # drift apart. The seeds multiplier: the budget names one EXPERIMENT; a
+    # spec runs seeds x (experiment + control) — the 3-seed re-verification
+    # killed T1.01/02/06 mid-science at the single-seed timeout.
+    from .rtf import spec_child_timeout_seconds
     _spec = _BY_ID.get(spec_id)
-    _timeout = _budget_seconds.get(_spec.budget.value if _spec else "", 3600)
-    # The budget names one EXPERIMENT; a spec runs seeds x (experiment +
-    # control). The 3-seed re-verification killed T1.01/02/06 mid-science at
-    # the single-seed timeout — six times the work, one budget of time.
-    _timeout *= max(1, getattr(_spec, "seeds", 1)) * 2
+    _timeout = spec_child_timeout_seconds(_spec)
     # The ran_at of any PRE-EXISTING entry, so a crashed child cannot pass the
     # old result off as its own. T2.01 v3's child died (SIGPIPE from a killed
     # session pipe) after v2 had recorded a FAIL: the old check — "is there an
