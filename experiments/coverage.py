@@ -956,7 +956,12 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 #     GEN.02-09 shape); the LF.01 dep re-parents to the W1 line when the
 #     Sunday 09-06 design registers it.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 92
+#   91 @ 2026-09-03 (builder) — SO.01 PASSED (attempt 2, clean-tree 962c3b9:
+#     11.0 fps delivered / rtf 2.2 with the stream), so SO.04's deliberate
+#     block behind it cleared exactly as the 91-entry above predicted — "the
+#     block clears the first time SO.01 passes". The spectating claim is now
+#     RUNNABLE; the floor follows the number down, shrink-only.
+UNREACHABLE_BASELINE = 91
 
 
 def unreachable_ratchet(ledger=None,
