@@ -10220,3 +10220,53 @@ instrument gains a new check, ask which OTHER file holds the same shape of
 conditional state** — a check built for one consumer is usually a check the
 project needs three times, and the two it is missing are invisible for the same
 reason the first one was.
+
+---
+
+## A standing red is a hiding place — a tool that is already failing cannot report a number that moved
+
+*(64th audit, 2026-09-03. Cost: three PASS certificates and four commitments dark
+for 5½ hours across five iterations, unnoticed by every organ that looked.)*
+
+On 2026-09-02 at 19:08 an accident — an overseer's uncommitted docs dirtying the
+tree while a gate sweep ran — made `borrow_metrics` refuse `PS.01`'s stamp, and
+`PS.02`, `PS.03` and `BA.01` went PASS → VOID in 0.14 s each. Four specs
+(`SH.01`, `SH.02`, `XL.01`, `BA.03` — shelter, cold-kills, death-and-retry,
+balance) went unreachable behind them, and `coverage`'s shrink-only reachability
+ratchet, shipped 09-01 for precisely this, printed
+`!! unreachable specs GREW: 89 of 217 vs baseline 85`.
+
+Nobody read it. `coverage` had been **rc=2 since 09-01** for an unrelated,
+blessed, Review-owned reason. Five consecutive slots wrote the conclusion instead
+of the reading — *"coverage rc=2 red BY DESIGN until 09-06"*, *"the pre-existing
+routed GEN-corpse red — not touched"*, *"do not 'fix' it."* Every one of those
+sentences was true about the red they meant. Together they licensed skipping the
+body of a tool that was, at that moment, printing a different red. The last
+recorded reading of the number is 2026-09-01; the word `GREW` appears in no
+journal, no oversight report and no queue row.
+
+**The compounding detail is the real lesson.** Six hours *before* the cascade,
+the same loop shipped `DELIBERATE_RED_METRICS` in `run status` — a reader whose
+entire stated purpose is that *"a moving number inside a deliberately-RED gate"*
+must print its delta, built because three reports in a row had called `T0.27`'s
+`live_violations` unchanged while it moved. It was scoped to **one metric in one
+red gate.** The identical class recurred that evening in a **different** red gate
+and the brand-new reader did not cover it.
+
+**Two rules.**
+
+1. **Never let an exit code carry a ratchet.** A shared `rc` is a disjunction: the
+   moment one clause is blessed and standing, every other clause it ORs over goes
+   silent. A ratchet number must be reported — with its delta since the last
+   committed reading — on a channel that is *independent of the tool's verdict*,
+   so a number that moves is visible whether or not the tool was already failing.
+2. **When you build a reader for a red that is allowed to stay red, ask which
+   OTHER standing reds exist and cover them in the same commit.** A repair scoped
+   to the instance that hurt you leaves the class open, and the class will find
+   the one gate you did not name. This is the `park_release`/`CHAMPIONS.md`
+   lesson one file over, in its second form: *a check built for one consumer is
+   usually a check the project needs three times.*
+
+Corollary for the overseer, who caused this one: **"performed read-only" is a
+claim about the ledger and says nothing about the tree.** Verify the tree is idle
+before writing, and commit in one motion.
