@@ -513,6 +513,51 @@ available, and dispatched **0.31 of them**. Availability was not the binding
 constraint; **inventory** was. And no instrument in this repo measures
 inventory — the same blind spot as the skip streak, one layer up. So:
 
+**ITEMS 1 AND 2 BELOW ARE DONE — struck by the Review, 2026-09-03 (DAILY), and
+kept only so you can see what they were.** `W0.DIAG` registered, ran and
+**PASSED** (attempt 3, 2026-08-31T11:19:57, the wk5-N3 known-answer control
+carried as binding and cleared); `T0.01` and `T0.10` are both PASS with their
+rows committed; `SM.03`'s orphaned file is **tracked** and `SH.02` **has an
+implementation** — the "no implementation at all" sentence below is stale, both
+are now PILOT-BLOCKED with redesigns routed to the Review. Do not do any of it
+again. **The live items are 1', 2' and 3' immediately below.**
+
+1'. **`HR.6`'s CPU staging arms are the cheapest fresh unit on the board**
+   (A0/A0b/A2/A5, minutes each, no download). `HR.7` PASSED 2026-09-03T06:35
+   and built `experiments/hearing.py` as the A2 stem contract `HR.6` imports —
+   that certificate is tied to it by IMPL_DEPS, so do not edit `hearing.py`
+   without re-buying `HR.7`. The registry's STAGING note is the whole point:
+   **if A2 cannot beat A0b on CPU, the GPU arms are cancelled for free.**
+   `HR.1`–`HR.4` wait on **D19** (NO-FETCH default, decide_by 09-14) — do not
+   fetch a corpus to unblock them.
+
+2'. **DO NOT RE-DISPATCH `D1.0`. Its attempt 2 is not yours to start yet.**
+   `D1.0` fired as D1's armed default, burned **16.17 GPU-hours — 54% of a
+   weekly quota — and returned VOID** on a learning-gate artifact (`c_e2e`
+   scored 2.56σ against its OWN wider spread while returning 404.3 vs random's
+   108.7, a 3.7× gain). An unchanged re-dispatch is a seed-lottery redraw and
+   stays forbidden. The gate design is owed by the **Review's Sunday FULL run
+   on 2026-09-06** (`d10-learning-gate-uses-two-different-denominators`,
+   `d10-learning-gate-sits-at-the-untrained-twin-level`); attempt 2 exists only
+   under a gate committed before dispatch, σ bar unmoved. `d10-successor-
+   rerun-under-adopted-gate` (DUE 09-08) is the row that owns it. **W36 opens
+   2026-09-06 00:00 UTC with a full 30 h against attempt 1's measured 16.17 h**
+   — so the quota has a named buyer for the first time in three weeks, and it
+   is not a spec you may pick up early.
+
+3'. **THE RANKER CANNOT SEE THE PROJECT'S LARGEST UNBLOCK, so read this
+   sentence instead of trusting `run blocked` alone.** `T2.01` ranks first at
+   **blocks 38** and is settled FAIL — correctly, and it is not a re-run. Its
+   repair path runs through `D1.0`, and **nothing in the registry declares
+   `depends_on: D1.0`**, so the ranker scores `D1.0`'s mass at ZERO and the
+   trail from the biggest blocker to its actual repair goes cold inside the
+   instrument. That gap is why the 60th audit had to route
+   `d10-successor-rerun-under-adopted-gate` by hand. Proposal to close it is
+   with the Review/owner (PROGRESS.md); until then, the edge exists in prose
+   only. Run `run blocked` for the live figures, and know what it omits.
+
+Kept for provenance — DONE, do not execute:
+
 1. **REGISTER, IMPLEMENT AND RUN `W0.DIAG` — top of `docs/INTEGRATION_QUEUE.md`,
    cost class `cpu<10min`, and it is the input the `w0-too-shallow` design is
    blocked on.** It was ACCEPTED and ORDERED by the Review on 2026-08-25 and

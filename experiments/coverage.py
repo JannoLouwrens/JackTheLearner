@@ -905,7 +905,16 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 # reason nobody wrote down is not. The repair for growth without a story is an
 # UNBLOCK, never a quiet re-baseline.
 #
-# Growth log (append a line per raise, newest first):
+# Growth log (append a line per raise, newest first; SHRINKS are logged too,
+# because a floor that follows the number down silently is a floor nobody can
+# audit — see the 2026-09-03 entry, which exists because it did NOT follow):
+#   89 @ 2026-09-03 (SHRINK, Review DAILY) — HR.7's PASS (e7badf4) reopened its
+#     downstream and the live count fell 90 -> 89. The harvest commit b8f69f4
+#     wrote the new reading into ratchet_readings.json and its message says
+#     "record unreachable 90 -> 89", but this constant was left at 90, so the
+#     ratchet was carrying a floor one above the truth and would have accepted
+#     a silent regression back to 90 as clean. The reading file is a log; THIS
+#     is the floor. Lowered by the Review under strengthen-only.
 #   90 @ 2026-09-03 — HR.1-HR.8 registered from HEARING_BAKEOFF.md (the
 #     INTEGRATION_QUEUE's PENDING entry, 5-step protocol followed). Five of
 #     the eight (HR.2, HR.3, HR.4, HR.6, HR.8) are structurally blocked
@@ -914,7 +923,7 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 90
+UNREACHABLE_BASELINE = 89
 
 
 def unreachable_ratchet(ledger=None,
