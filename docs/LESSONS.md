@@ -10420,3 +10420,38 @@ each member against `BY_ID` by hand; the tool cannot do this for you and reports
 while you do. When GOAL.md states a test design inline — a claim, a null, a
 consequence — that paragraph is a spec that has not been written yet, and the honest
 response is to register it as unreachable rather than to wait for its world.
+
+## A guard ordered as "vacuously true today" quantifies over history — verify the quantifier's domain before shipping it (66th audit B2, 2026-09-03)
+
+The 66th audit ordered a conjunct into `T0.32`: every implemented spec at
+budget >= cpu<2h must call `rtf.require_feasible`. It called the edge
+*"vacuously true today — LF.01 is the only such spec and is unimplemented."*
+The domain was never enumerated: **34 long-budget specs were already
+implemented**, none calling a gate that did not exist when they were written.
+Shipped as ordered, the conjunct would have turned a PASSing tier-0
+certificate RED overnight — a red that orders 34 mechanical edits, each an
+IMPL_DEPS drift obliging a certificate re-buy, none of them a measurement.
+
+The shape to recognise: a NEW rule whose subject is "every existing X" is a
+retroactive law. Its cost is proportional to |X|, and the audit that orders it
+has usually priced |X| from memory, not from the tool (`module_path_for` over
+the registry took one loop to enumerate). The same organ family has been
+caught pricing from memory before — the withdrawn organ-cost table, the
+"frees 26" cached count — and this is that failure landing in an ORDER rather
+than a status line.
+
+The repair that keeps both the intent and the history honest is the
+shrink-only baseline, already this repo's idiom (`UNREACHABLE_BASELINE`):
+freeze the pre-rule population by name, bind everything after, and make the
+exemption self-policing in BOTH directions — an exempt id whose impl adopts
+the rule (or disappears) is a STALE EXEMPTION that fails the check until
+pruned, so the set can only shrink and every shrink re-buys the certificate.
+Verify the guard fires on a synthetic post-rule violation AND on a synthetic
+stale exemption before committing; a guard proven only on the clean tree is a
+guard proven vacuous.
+
+**Rule: before implementing an ordered conjunct of the form "every X satisfies
+P", enumerate X with the tool and print the count. If the order said the
+conjunct is vacuous and the count is not zero, implement the intent
+(bind-from-now via a frozen shrink-only baseline), and record the premise
+error in the commit — the discrepancy is itself audit feedback.**
