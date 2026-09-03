@@ -47,6 +47,16 @@ FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 usage_gate say || exit 0
 cd "$REPO" || exit 0
 
+# Declare this audit to procwatch (65th audit B5): the overseer's read-only
+# instrument calls are project pythons, and undeclared they are
+# indistinguishable from an abandoned builder leftover — the 2026-09-03
+# LEFTOVER=1 was this organ's own `python -m experiments.coverage` at 0 s CPU.
+# Children of a declared pid are attributed through the ppid chain
+# (lib_procwatch.sh), and dead declarations are pruned, so one line here
+# covers every call this run makes and outlives none of them.
+. "$REPO/scripts/lib_procwatch.sh"
+proc_declare $$ "overseer.sh audit slot"
+
 # D13's CHANGE-GATED NO-OP (default fired 2026-09-01; DECIDE block in
 # docs/DECISIONS_NEEDED.md). Skip this slot ONLY when ALL FOUR hold:
 #   (1) HEAD unchanged since the last COMPLETED audit;

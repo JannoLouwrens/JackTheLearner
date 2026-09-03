@@ -783,6 +783,33 @@ def ratchet_live(ledger: Ledger) -> dict:
     return out
 
 
+def ratchet_floors() -> dict:
+    """name -> the declared shrink-only floor, for counters that carry one.
+
+    A floor lives as a CONSTANT in the tool's own module and moves only in a
+    commit that edits it against its growth log. That is a different channel
+    from `ratchet_readings.json`, which `run ratchets record` refreshes: on
+    2026-09-03 (65th audit B3) `record` + commit turned the unreachable
+    counter's MOVED line into UNCHANGED, so a reader that compares only
+    against the recording can be made quiet by writing a file. The floor
+    cannot — so it is compared here too, in the channel no verdict silences.
+    """
+    from .coverage import UNREACHABLE_BASELINE
+    return {"unreachable": UNREACHABLE_BASELINE}
+
+
+def floor_status(cur, floor):
+    """ABOVE / BELOW / AT, or None when there is no live value — pure, so
+    the self-check can pin all four shapes."""
+    if cur is None:
+        return None
+    if cur > floor:
+        return "ABOVE"
+    if cur < floor:
+        return "BELOW"
+    return "AT"
+
+
 def committed_ratchet_readings() -> tuple:
     """`(readings, provenance)` as of HEAD. Read from git deliberately: an
     uncommitted rewrite of the readings file must not quiet the delta. The
@@ -849,12 +876,19 @@ def _check_ratchet_reader() -> None:
         raise RuntimeError(
             f"the ratchet reader returned {got}, expected {want} — "
             "refusing to report a scan it may not have performed")
+    fgot = [floor_status(91, 90), floor_status(89, 90),
+            floor_status(90, 90), floor_status(None, 90)]
+    if fgot != ["ABOVE", "BELOW", "AT", None]:
+        raise RuntimeError(
+            f"the floor classifier returned {fgot} — refusing to report a "
+            "floor comparison it may not have performed")
 
 
 def print_ratchet_block(ledger: Ledger) -> None:
     _check_ratchet_reader()
     recorded, prov = committed_ratchet_readings()
     rows = ratchet_deltas(ratchet_live(ledger), recorded)
+    floors = ratchet_floors()
     print("  RATCHET COUNTERS — standing-red tools' numbers, printed here so "
           "a blessed red\n    can never silence them (64th audit B2). "
           f"Committed readings from {prov}:")
@@ -879,6 +913,29 @@ def print_ratchet_block(ledger: Ledger) -> None:
             print(f"      {name}  !! recorded {prev} at {prev_at} and no "
                   f"longer computed at all — a counter\n      does not "
                   f"retire by disappearing.")
+        # The floor is the comparison a recording cannot quiet (65th audit
+        # B3): `ratchets record` refreshes the readings file, but the floor
+        # is a constant that only moves against its own growth log.
+        if name in floors:
+            fl = floors[name]
+            fs = floor_status(cur, fl)
+            if fs == "AT":
+                print(f"        vs declared floor {fl}: AT floor — ok")
+            elif fs == "ABOVE":
+                print(f"        !! ABOVE its declared floor {fl} — growth "
+                      f"nobody raised the constant for. `ratchets record` "
+                      f"cannot\n        bless this; the floor moves only in "
+                      f"the commit that grew the number, with\n        the "
+                      f"reason in its growth log.")
+            elif fs == "BELOW":
+                print(f"        !! BELOW its declared floor {fl} — the "
+                      f"number fell and the floor did not follow.\n        "
+                      f"Lower the constant in the same commit, or the "
+                      f"ratchet will accept a silent\n        regression "
+                      f"back up as clean.")
+            else:  # no live value — the floor cannot be verified
+                print(f"        declared floor {fl}: live value unavailable, "
+                      f"floor UNVERIFIED this scan.")
     print()
 
 

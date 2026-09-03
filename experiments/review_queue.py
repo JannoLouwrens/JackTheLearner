@@ -143,6 +143,15 @@ LIVE = ("OPEN", "HELD", "DISPOSITIONED")
 TERMINAL = ("ACTED", "DECLINED")
 STATUSES = LIVE + TERMINAL
 
+#: The consumer's only MEASURED discharge capacity, in rows per cycle: the
+#: 2026-08-30 FULL run died at eleven minutes owing exactly ONE dated row
+#: (`w0-too-shallow`), and no cycle since has demonstrably discharged more.
+#: A due date carrying more live rows than this is a pile of promises
+#: scheduled to break together — worth predicting before Sunday rather than
+#: reporting on Monday (65th audit B6, written the week seven rows shared
+#: 2026-09-06). Raise it only by citing a cycle that actually discharged N.
+MEASURED_DISCHARGE_CAPACITY = 1
+
 #: Every violation class, named once. `--check` is red on any of them; a class
 #: absent from this tuple is a class the exit code cannot see.
 VIOLATIONS = ("MALFORMED", "OVERDUE", "STALE", "HOLD-WITHOUT-A-CLOCK",
@@ -331,7 +340,13 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) 
     counts = {c: sum(1 for f in findings if f[0] == c) for c in VIOLATIONS}
     live = [r for r in rows if r["status"] in LIVE]
     ages = [(today - r["routed"]).days for r in live if r["routed"]]
+    due_pile: dict = {}
+    for r in live:
+        if r["due"] is not None:
+            k = r["due"].isoformat()
+            due_pile[k] = due_pile.get(k, 0) + 1
     return {"rows": rows, "findings": findings, "counts": counts,
+            "due_pile": due_pile,
             "total": len(findings), "today": today,
             "n_rows": len(rows),
             "n_open": sum(1 for r in rows if r["status"] == "OPEN"),
@@ -372,6 +387,27 @@ def render(a: dict, last_run: str = "") -> str:
         elif r["blocked_by"]:
             clock = f"  BLOCKED-BY {r['blocked_by']}"
         out.append(f"    {r['status']:<13} {age}  {r['id']}{clock}")
+    if a["due_pile"]:
+        out.append("")
+        out.append("  DUE-DATE PILE — live rows per promised date (65th audit "
+                   "B6). The consumer's one")
+        out.append("  measured cycle discharged "
+                   f"{MEASURED_DISCHARGE_CAPACITY} dated row; a date carrying "
+                   "more is amber:")
+        for d in sorted(a["due_pile"]):
+            n = a["due_pile"][d]
+            flag = ("  !! AMBER: pile" if n > MEASURED_DISCHARGE_CAPACITY
+                    else "")
+            out.append(f"    {d}  {n:>2}  {'#' * n}{flag}")
+        worst_d = max(a["due_pile"], key=lambda k: a["due_pile"][k])
+        worst_n = a["due_pile"][worst_d]
+        if worst_n > MEASURED_DISCHARGE_CAPACITY:
+            out.append(f"  {worst_n} rows share {worst_d} against a measured "
+                       f"capacity of {MEASURED_DISCHARGE_CAPACITY}/cycle —")
+            out.append("  that many promises are scheduled to break together. "
+                       "Re-date the ones that can")
+            out.append("  wait (a new DUE: with a reason is honest; a broken "
+                       "date is a violation).")
     if a["total"]:
         out.append("")
         out.append(f"  {a['total']} VIOLATION(S) — "

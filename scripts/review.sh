@@ -29,6 +29,11 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "ABORT: load ${LOAD} — tenant
 # open is not a limit.
 usage_gate say || exit 0
 cd "$REPO" || exit 0
+# Declare this run to procwatch (65th audit B5) — same reason as overseer.sh:
+# an auditor's instrument call must not read as a builder leftover. Children
+# of a declared pid are attributed; dead declarations are pruned.
+. "$REPO/scripts/lib_procwatch.sh"
+proc_declare $$ "review.sh consumer slot"
 MODEL="${JACK_REVIEW_MODEL:-opus}"
 # Two gears, one organ (owner, 2026-08-09: "every 24 hours the loop must be
 # reviewed... to fix itself... the senior engineer"). Steering rots in hours
