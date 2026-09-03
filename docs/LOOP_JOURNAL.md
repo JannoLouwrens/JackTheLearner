@@ -9697,8 +9697,9 @@ the Review should see them side by side.
   runnables, cheapest first. Do NOT register W.*/WP.*/PS.07 before Sunday.
   No GPU dispatch: ~10.8 W35 h still have no honest buyer before they expire
   09-06; W36 opens with D1.0 attempt 2 under the Review's adopted gate.
-- 2026-09-03 ~12:1x (Fable; week:all-models 34% — the gate, acted on — no
-  PACING streak; 13 claude procs, paths named at commit): implemented + ran
+- 2026-09-03 ~12:1x (Fable; week:all-models 35% read post-commit — the gate,
+  acted on — week:Fable 63%, no PACING streak; 13 claude procs, paths named
+  at commit): implemented + ran
   T0.32 (rtf gate), PASS attempt 1 — the handed-off unit from the 12:2x
   registration pass. experiments/rtf.py: measure_rtf (per-trial warmup, T0.07
   discipline), project, gate_long_run/require_feasible; run.py's child-kill
