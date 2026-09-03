@@ -10606,3 +10606,27 @@ fixture parameter deliberately moved and require the READING to move before
 tuning further; identical-to-the-decimals output across a parameter change is
 a wiring fault, never bad luck, and tuning a disconnected knob converts one
 fixture bug into a family of plausible dead ends.**
+
+## A refusal gate must be sized against its largest legal admittee, and gate that arithmetic (T0.33 design, 2026-09-03)
+
+T0.33's day ceiling was nearly frozen at 12 wall-hours — a number that reads
+prudent and would have refused every 3-seed cpu<2h child forever (worst legal
+child = 9000 s x 3 seeds x 2 = 54000 s > 43200), silently foreclosing LF.01's
+whole cost class by arithmetic. That is ME.11.E's disease arriving from the
+opposite direction: there a claim's own bar was unreachable by construction;
+here a PROTECTION would have made a legal class unreachable, and nothing would
+have said so — a refusal reads as scheduling, not as foreclosure, so no
+instrument distinguishes "refused today" from "refusable never". The repair
+that shipped: compute the largest unit the gate must legally admit BEFORE
+freezing the ceiling, size the ceiling above it, and add the closed-form check
+to the spec's own battery (`cpu_foreclosed == []` over the registry) so any
+future registration that outgrows the ceiling turns the certificate red
+instead of quietly never running.
+
+**Rule: when adding any refusal gate (budget, quota, ceiling), derive the
+worst-case legal admittee from the same canonical arithmetic the killer uses,
+require fresh-state admission of exactly that unit as a gated property, and
+gate an emptiness check over everything the registry can offer the gate —
+a protection whose refusals can be permanent-by-arithmetic needs its own
+foreclosure detector, because the refused work never runs and so never
+reports.**
