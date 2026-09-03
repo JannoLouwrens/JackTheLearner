@@ -1791,3 +1791,34 @@ ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | OPEN
     MECHANICAL bill: re-parenting LF.01 -> W1-line in depends_on is a
     registry edit to an unrun spec (no certificate cites it); the
     UNREACHABLE_BASELINE moves only if the re-parent changes reachability.
+
+ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | OPEN
+    DUE: 2026-09-06 | direct evidence owed INTO the W1 design the Review
+    already owns (w0-too-shallow, DUE the same day) — this row asks for no
+    separate design, only that the design consume these numbers. The 09-06
+    pile is 7+ rows against a measured capacity of ~1/cycle: if the Review
+    cannot take it, re-date it here in the open with the slip as the reason
+    rather than letting it go red.
+    Question: the first long-exposure life W0 has ever hosted (LF.01 attempt
+    1, 240x the certified 15 sim-s) ended at sim_s 1476.9 +/- 382.0 (~25
+    min), cause=INTEGRITY — the body wrecked mid-forage — not starvation
+    (min_energy 0.128, eats 23.3, drive_gate_frac 0.99), while a privileged
+    servo shuttled between floor foods on the world's own calibrated
+    arithmetic (S_f 2.39e-3/s vs basal 1.667e-3/s). No learner can buy an
+    hour of experience in a world that breaks a scripted body in 25 minutes.
+    Is the W1 design's damage model (or W0's integrity dynamics, if the fix
+    is an edit) compatible with lives measured in hours? This is the first
+    long-exposure data any instrument has produced and it is a BODY/WORLD
+    coupling measurement, the same family as lt01-c2-body-cannot-rise.
+    Attempt 2 exists only after the design answers: LF.01 now carries
+    FIXTURE_VOID_CAP=3 (attempt 1 is 1 of 3) and per-seed localisation
+    (cause/sim_s/hour_mark/min_energy/death_at per seed), so the next VOID,
+    if it comes, names its seed and its route.
+    SEMANTIC bill: none yet — no committed row claims anything about
+    long-exposure survival; LF.01's VOID is the only long-run row and it is
+    the evidence, not a casualty.
+    MECHANICAL bill (if the fix edits experiments/w0.py or
+    experiments/drives.py): 8 PASS certificates cite them via IMPL_DEPS —
+    LC.02, PS.02, PS.03, BA.01, TA.01, TA.02, XL.00, W0.DIAG — all go
+    stale loudly at the next `run status`. A W1-line fix (new world file)
+    bills zero of them.
