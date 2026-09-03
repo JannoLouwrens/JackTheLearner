@@ -6634,4 +6634,210 @@ EXPANSION: list[Spec] = [
                "other senses. Both are needed and they can fail "
                "independently. "
                "  COVERS: hearing (claim), one brain / unison (claim)"),
+
+    # ── DIRECTION_AUDIT.md §5 (INTEGRATION_QUEUE row, processed 2026-09-03) ──
+    # 17 stubs; SEVEN registered below, TEN dispositioned by the step-1
+    # cross-check — recorded here because the registry is where a future
+    # reader will look for the missing ids:
+    #   WP.01-04  HELD — world-physics gates whose content (lumped-capacitance
+    #       thermal, metabolism, diurnal cycle, resource depletion) IS the W1
+    #       world design the Review owes on 2026-09-06 (w0-too-shallow), and
+    #       temperature is SURVIVAL_WORLD W.1/W.3 territory. The
+    #       FROZEN_VS_PLASTIC queue row deliberately withheld thermal/pain for
+    #       exactly this reason. Register with or after the reconciled W.*
+    #       family, never before it.
+    #   PS.07     HELD — same W1 clock (a lethal world with a needs-off
+    #       transfer battery), and PURPOSE_AND_SCAFFOLDING.md owns the
+    #       needs-vs-no-needs family (PS.00-PS.06, its own queue row).
+    #   LF.03     REFUSED — NE.08 owns the cross-life-diary claim: its C-WIPE
+    #       majority clause is LF.03's wipe arm, and C-FOREIGN +
+    #       C-SHUFFLE-TIME subsume (and strengthen) LF.03's shuffled-diary
+    #       control; XL.01's B3 power calculation binds any successor. The
+    #       W.6/NE.08 two-specs-one-claim class.
+    #   LF.04     HELD — in-world sleep pressure and an unsafe-sleep cost are
+    #       W1 content; ME.7/T5.05 keep the consolidation framing meanwhile.
+    #   LF.05     REFUSED — T5.08 owns the claim, including the identical
+    #       mutation-without-learnability-filter control; the stub's own note
+    #       says register one of the two, and T5.08 got there first.
+    #   SO.03     HELD — needs an owner avatar in the world; queue row
+    #       "OWNER DECISION: the owner's hands" owes the SO-family research
+    #       pass and must extend ids from SO.06 up (prefix now occupied).
+    #   SO.05     HELD — tier-6 interruption composition needs a running life
+    #       harness first; register after LF.01/LF.02 pass.
+    #   T0.17, T0.18  RENAMED T0.32, T0.33 — both ids taken by harness specs
+    #       registered after the doc was written (it says "id suggestions
+    #       only"). Text otherwise verbatim.
+    # Spectating has NO line in coverage.py's hand-maintained COMMITMENTS
+    # despite GOAL.md's "I want to watch him figure out the world himself" —
+    # named on the queue row for the Review; adding it is a coverage.py edit
+    # that obliges T0.21/T0.28 re-buys and is not smuggled in here.
+
+    Spec("LF.01", 2, "A life runs to its natural end, and the harness survives it",
+         hypothesis="A single life of >=1 simulated hour (>=240,000 control "
+                    "steps) completes at a stated real-time factor with bounded "
+                    "memory, bounded diary growth, and no non-finite state; and "
+                    "the run's DEATH is recorded distinctly from a CRASH.",
+         falsified_by="Unbounded memory or diary growth, non-finite state, OR a "
+                      "death indistinguishable from a crash in the record.",
+         null_baseline="The current 1000-step episode = 15 simulated seconds. The "
+                       "claim is a 240x extension, and what breaks at 240x is the "
+                       "finding.",
+         metric="life_completion_and_rtf", budget=Budget.CPU_LONG, seeds=3,
+         depends_on=["T1.06", "PS.02"],
+         control="Inject a NaN mid-life: it must be reported as a crash, never as "
+                 "a death. A harness that cannot tell them apart will score every "
+                 "bug as mortality.",
+         kills="Every hours-long claim, and the survival world's schedule.",
+         notes="Measured 2026-08-09: 160K MLP gives 23.0 sim-s per real s (1 "
+               "sim-hour in 2.6 min); the 57M trunk gives 0.17 (5.8 h). At 3 "
+               "seeds the latter exceeds run.py's own 15-hour ceiling for "
+               "cpu<2h. The real-time factor is therefore a GATE, not a note. "
+               "T1.06's 1000 steps is 15 s of life; this is 240x the exposure "
+               "to a slow divergence, which is why T1.06 is the dependency. "
+               "PS.02 supplies the lethality a 'natural end' requires. "
+               "  COVERS: death & retry (fixture)"),
+
+    Spec("LF.02", 2, "A life can be saved and resumed — world, needs, diary, working memory",
+         hypothesis="Killing a process mid-life and resuming restores the world "
+                    "state, the need variables, the episodic store and the "
+                    "recurrent state such that the continuation is "
+                    "indistinguishable from the uninterrupted run over the next "
+                    "1000 steps.",
+         falsified_by="Any of the four stores lost or silently defaulted; a "
+                      "resumed trajectory that diverges beyond float tolerance.",
+         null_baseline="Weights-only resume — T0.04's null, one level up.",
+         metric="life_resume_fidelity", budget=Budget.CPU, seeds=3,
+         depends_on=["T0.03", "T0.04", "T6.03", "ME.1"],
+         control="Corrupt (truncate) each store in turn: load must FAIL LOUDLY, "
+                 "never silently default. T6.03's byteflip control is the model.",
+         kills="Multi-session lives, hence every life longer than one Kaggle "
+               "session or one 50-minute loop iteration.",
+         notes="T0.03/T0.04 prove the weights round-trip; T6.03 proves stores "
+               "survive a session boundary; ME.1 is the episodic store itself. "
+               "This spec is their composition at the life level: ALL FOUR "
+               "stores or the resume is a different life wearing the same "
+               "weights."),
+
+    Spec("SO.01", 2, "Jack can be watched: a third-person stream exists and costs what we say it costs",
+         hypothesis="A third-person view of a running life renders at >=5 fps at "
+                    "320x240 on this box and is deliverable to the owner without "
+                    "a persistent listening service; the measured render cost is "
+                    "reported as a fraction of the life's compute budget.",
+         falsified_by="Rendering unavailable, OR the render cost pushing the "
+                      "real-time factor below 1.0 (watching would then be slower "
+                      "than living).",
+         null_baseline="No rendering — the current state, in which no spec has "
+                       "ever produced a frame for a spectator.",
+         metric="stream_fps_and_cost_share", budget=Budget.CPU, seeds=3,
+         depends_on=["PG.6"],
+         control="Render a scene with the humanoid removed: the frame must "
+                 "measurably change. A renderer that produces identical frames is "
+                 "producing a background.",
+         kills="'I want to watch him figure out the world himself.'",
+         notes="MEASURED 2026-08-09 on this box: MUJOCO_GL=osmesa and =egl both "
+               "FAIL (no libOSMesa, no libEGL); xvfb-run glfw/swrast gave 14.6 "
+               "fps at 128x128. CORRECTION AT REGISTRATION (2026-09-03): the "
+               "box NOW renders offscreen via GLX under Xvfb — call "
+               "experiments.render.ensure_gl() BEFORE importing mujoco, ~12 ms "
+               "per 64x64 frame, self-test `python -m experiments.render` — so "
+               "the 2026-08-09 numbers are a floor from a path no longer used, "
+               "not a constraint. Two traps render.py already handles BIND this "
+               "implementation: a garbage-collected mujoco.Renderer poisons the "
+               "shared X display so the NEXT renderer returns "
+               "corrupted-but-realistic frames (hold renderers for the process "
+               "lifetime, see get_eye in PG.6), and a GL context can come up "
+               "rendering a uniform frame, which looks exactly like a blind "
+               "sensor — carry a canary frame and return VOID, not FAIL, when "
+               "it moves. STANDS UNCHANGED: a persistent stream is a background "
+               "service on a tenant-serving box and is an OWNER decision, not "
+               "an engineering one — this spec measures cost and feasibility "
+               "without installing one."),
+
+    Spec("SO.02", 2, "'I'm cold' is true when he is cold",
+         hypothesis="Jack's utterances about his own internal state are "
+                    "predictive of that state: a listener with only the "
+                    "utterances recovers the need variable above a "
+                    "base-rate-matched null, and utterances do not fire when the "
+                    "variable is nominal.",
+         falsified_by="Utterances uncorrelated with the variable, OR correlated "
+                      "but always firing (a thermostat that is always on is not "
+                      "communicating).",
+         null_baseline="Utterances sampled from the marginal distribution at the "
+                       "same rate — the fluency null.",
+         metric="utterance_state_mutual_information", budget=Budget.CPU, seeds=3,
+         depends_on=["PS.01", "VO.01"],
+         control="Freeze the need variable and let him talk: the recovered signal "
+                 "must collapse. Also swap the labels between two need channels "
+                 "('cold' emitted for hunger): a listener must be misled, "
+                 "proving the channel is read and not merely present.",
+         kills="Language grounded in state, as distinct from language that "
+               "pattern-matches a situation.",
+         notes="This is the ONE place a generative channel is legitimate under "
+               "ME.11's extractive-never-generative law, because the claim is "
+               "checkable against a live variable. Speech about the PAST must "
+               "still quote the diary. PS.01 supplies real drive variables; "
+               "VO.01 supplies the voice. "
+               "  COVERS: voice (claim)"),
+
+    Spec("SO.04", 6, "Being watched does not change him",
+         hypothesis="Behaviour statistics over a life are indistinguishable "
+                    "between a rendered/streamed run and an unrendered one at the "
+                    "same seed, and the rendered run's trajectory matches the "
+                    "unrendered one bit-for-bit until the first stochastic draw.",
+         falsified_by="Any behavioural divergence attributable to the observer "
+                      "path — a spectator that perturbs the physics, the RNG "
+                      "stream, or the timing.",
+         null_baseline="n/a — an invariant of the composition.",
+         metric="observer_divergence", budget=Budget.CPU, seeds=3,
+         depends_on=["SO.01"],
+         control="Deliberately draw one RNG value in the render path: the "
+                 "detector MUST catch it. Otherwise it cannot see its own "
+                 "positive control.",
+         kills="Any claim measured while the owner was watching, which under this "
+               "direction will eventually be most of them.",
+         notes="LESSONS: 'a detector that cannot see its own positive control has "
+               "measured nothing.' The render path consuming RNG is the exact "
+               "failure mode and it is easy to introduce by accident."),
+
+    Spec("T0.32", 0, "The real-time factor is measured, recorded, and gates long runs",
+         # DIRECTION_AUDIT.md §5.5 drafted this as "T0.17"; that id was taken
+         # after the doc was written. Text verbatim apart from this rename.
+         hypothesis="For any declared control path, the harness measures "
+                    "sim-seconds per real second before a long run starts, and "
+                    "REFUSES a run whose projected duration exceeds the spec's "
+                    "timeout or the box's tenant-safety budget.",
+         falsified_by="A long run launching with a projected duration past its "
+                      "own timeout, OR a projection that differs from the "
+                      "achieved duration by >25%.",
+         null_baseline="Today: nothing measures this and run.py's timeout is "
+                       "budget x seeds x 2 regardless of what the run will cost.",
+         metric="rtf_projection_error", budget=Budget.CPU, seeds=1,
+         control="A deliberately slow policy must be REFUSED. A gate that never "
+                 "refuses is decorative (T0.13's own rule).",
+         kills="Nothing directly; it prevents burning a Sunday quota on a run "
+               "that could never have finished.",
+         notes="The numbers this spec would have surfaced, measured 2026-08-09: "
+               "57M trunk 0.17 sim-s/real-s; 160K MLP 23.0. A 3-seed 1-sim-hour "
+               "spec costs 52 h with the former against a 15 h ceiling. "
+               "LC.07's pilot (2026-09-01) fired exactly this branch by hand: "
+               "cheapest class projected 14.49 h against an 8.5 h rule — this "
+               "spec is that arithmetic made a standing gate."),
+
+    Spec("T0.33", 0, "CPU-hours on a shared box are accounted like GPU-hours",
+         # DIRECTION_AUDIT.md §5.5 drafted this as "T0.18"; that id was taken
+         # after the doc was written. Text verbatim apart from this rename.
+         hypothesis="Every CPU_LONG run debits a wall-clock budget, and the "
+                    "ladder refuses to start when the box's load or the day's "
+                    "accumulated share would harm the tenants.",
+         falsified_by="A run proceeding past the budget, or a budget that reads "
+                      "the same whether or not runs happened.",
+         null_baseline="Today: only GPU hours are tracked (T0.12); the loop "
+                       "checks instantaneous load once, at start.",
+         metric="cpu_quota_enforced", budget=Budget.CPU, seeds=1,
+         depends_on=["T0.12"],
+         control="A leaky accountant must FAIL isolation, and the assertion must "
+                 "be made at a MID-RANGE value, not at an exhausted one "
+                 "(T0.12's rewritten form is the template).",
+         kills="Nothing on the ladder; it protects the tenants, which SYSTEM.md "
+               "ranks above the ladder."),
 ]

@@ -932,8 +932,18 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 #     deliberate depends_on, named here as the ratchet requires. The other
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
+#   91 @ 2026-09-03 (builder) — DIRECTION_AUDIT.md's queue row processed:
+#     seven specs registered (LF.01/LF.02, SO.01/SO.02/SO.04, T0.32/T0.33),
+#     of which SIX are runnable today — LF.02, SO.01, SO.02, T0.32, T0.33
+#     refill the empty cpu<10min class and LF.01 refills cpu<2h — and ONE,
+#     SO.04 ("Being watched does not change him"), is deliberately blocked
+#     behind SO.01 because an observer-invariance test without a stream to
+#     invert is unfalsifiable. Its dep is a fresh RUNNABLE spec, so the block
+#     clears the first time SO.01 passes; registering the falsifier beside
+#     the capability is the GEN.02-09 shape, named here as the ratchet
+#     requires.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 90
+UNREACHABLE_BASELINE = 91
 
 
 def unreachable_ratchet(ledger=None,

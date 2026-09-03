@@ -9668,3 +9668,32 @@ the Review should see them side by side.
   Review's on 09-06 and registering a world family two days early would
   pre-empt it). Otherwise `run next`/`run blocked` as always; no GPU
   dispatch — ~10.8 W35 h expire Sunday at classes with no honest buyer.
+- 2026-09-03 ~12:2x (Fable; week:all-models 34% — the gate, acted on — week:
+  Fable 60%, session 5%, no PACING streak; 13 claude procs, paths named at
+  commit): STAGE 0.1 — processed the DIRECTION_AUDIT.md queue row (17 stubs,
+  the row the last iteration named). The cross-check earned its keep three
+  times: T0.17/T0.18 are TAKEN in the live registry (the doc predates ~90
+  specs) → registered as T0.32/T0.33; LF.03 collides with NE.08+XL.01 (NE.08's
+  C-FOREIGN/C-SHUFFLE-TIME subsume its shuffled-diary control) → REFUSED;
+  LF.05 collides with T5.08 (identical filter control, the stub's own "not
+  both" note) → REFUSED. Registered 7 (registry 225→232): LF.01, LF.02, SO.01
+  (notes corrected — the box renders via GLX/ensure_gl now, the stub's
+  osmesa-FAIL measurements predate render.py), SO.02, SO.04, T0.32, T0.33.
+  HELD 8: WP.01–04 + PS.07 + LF.04 (W1 world content — the Review's design,
+  DUE 09-06, same clock as the SURVIVAL_WORLD row; the FROZEN_VS_PLASTIC
+  precedent withheld thermal for exactly this reason), SO.03 + SO.05 (owner
+  avatar / life harness first; SO-family research pass extends SO.06+). Six
+  of seven registrations are RUNNABLE today: cpu<10min refills with LF.02/
+  SO.01/SO.02/T0.32/T0.33 and cpu<2h with LF.01 — two of yesterday's four
+  no-path-in classes now have a path. SO.04 is deliberately blocked behind
+  SO.01 (an observer-invariance test without a stream to invert is
+  unfalsifiable): unreachable 90→91, UNREACHABLE_BASELINE raised 90→91 with
+  the growth-log justification, T0.21+T0.28 re-buys owed and run this
+  iteration after the clean-tree commit. Named for the Review on the queue
+  row: spectating has no COMMITMENTS line in coverage.py despite GOAL.md's
+  "I want to watch him". Step 4 deferred per the LG-row precedent. NEXT
+  ITERATION: implement T0.32 (rtf gate — LC.07's pilot fired that branch by
+  hand on 09-01; this makes it a standing refusal) or any of the six fresh
+  runnables, cheapest first. Do NOT register W.*/WP.*/PS.07 before Sunday.
+  No GPU dispatch: ~10.8 W35 h still have no honest buyer before they expire
+  09-06; W36 opens with D1.0 attempt 2 under the Review's adopted gate.
