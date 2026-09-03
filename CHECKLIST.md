@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 95 / 225 demonstrated
+## 95 / 232 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1029,3 +1029,40 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ With vision occluded and every event out of contact with Jack, the model classifies audio events 4-way (impact / water entry / creak / rolling) and reports bearing to within 15 degrees, well above chance (>= 0.70 class accuracy, lower bootstrap CI > 0.25).
       - _dies if:_ Class accuracy at chance, OR indistinguishable from the no-audio arm — hearing carries no content in Jack's world.
       - _then delete:_ 'Hearing is load-bearing' (UB.4) as a claim. BPA is the cheapest experiment that could establish it and it needs no controller and no GPU.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **LF.01** A life runs to its natural end, and the harness survives it
+      - _asserts:_ A single life of >=1 simulated hour (>=240,000 control steps) completes at a stated real-time factor with bounded memory, bounded diary growth, and no non-finite state; and the run's DEATH is recorded distinctly from a CRASH.
+      - _dies if:_ Unbounded memory or diary growth, non-finite state, OR a death indistinguishable from a crash in the record.
+      - _then delete:_ Every hours-long claim, and the survival world's schedule.
+- [ ] **LF.02** A life can be saved and resumed — world, needs, diary, working memory
+      - _asserts:_ Killing a process mid-life and resuming restores the world state, the need variables, the episodic store and the recurrent state such that the continuation is indistinguishable from the uninterrupted run over the next 1000 steps.
+      - _dies if:_ Any of the four stores lost or silently defaulted; a resumed trajectory that diverges beyond float tolerance.
+      - _then delete:_ Multi-session lives, hence every life longer than one Kaggle session or one 50-minute loop iteration.
+- [ ] **SO.01** Jack can be watched: a third-person stream exists and costs what we say it costs
+      - _asserts:_ A third-person view of a running life renders at >=5 fps at 320x240 on this box and is deliverable to the owner without a persistent listening service; the measured render cost is reported as a fraction of the life's compute budget.
+      - _dies if:_ Rendering unavailable, OR the render cost pushing the real-time factor below 1.0 (watching would then be slower than living).
+      - _then delete:_ 'I want to watch him figure out the world himself.'
+- [ ] **SO.02** 'I'm cold' is true when he is cold
+      - _asserts:_ Jack's utterances about his own internal state are predictive of that state: a listener with only the utterances recovers the need variable above a base-rate-matched null, and utterances do not fire when the variable is nominal.
+      - _dies if:_ Utterances uncorrelated with the variable, OR correlated but always firing (a thermostat that is always on is not communicating).
+      - _then delete:_ Language grounded in state, as distinct from language that pattern-matches a situation.
+
+### Tier 6 — INTEGRATION
+
+- [ ] **SO.04** Being watched does not change him
+      - _asserts:_ Behaviour statistics over a life are indistinguishable between a rendered/streamed run and an unrendered one at the same seed, and the rendered run's trajectory matches the unrendered one bit-for-bit until the first stochastic draw.
+      - _dies if:_ Any behavioural divergence attributable to the observer path — a spectator that perturbs the physics, the RNG stream, or the timing.
+      - _then delete:_ Any claim measured while the owner was watching, which under this direction will eventually be most of them.
+
+### Tier 0 — HARNESS — can we measure anything?
+
+- [ ] **T0.32** The real-time factor is measured, recorded, and gates long runs
+      - _asserts:_ For any declared control path, the harness measures sim-seconds per real second before a long run starts, and REFUSES a run whose projected duration exceeds the spec's timeout or the box's tenant-safety budget.
+      - _dies if:_ A long run launching with a projected duration past its own timeout, OR a projection that differs from the achieved duration by >25%.
+      - _then delete:_ Nothing directly; it prevents burning a Sunday quota on a run that could never have finished.
+- [ ] **T0.33** CPU-hours on a shared box are accounted like GPU-hours
+      - _asserts:_ Every CPU_LONG run debits a wall-clock budget, and the ladder refuses to start when the box's load or the day's accumulated share would harm the tenants.
+      - _dies if:_ A run proceeding past the budget, or a budget that reads the same whether or not runs happened.
+      - _then delete:_ Nothing on the ladder; it protects the tenants, which SYSTEM.md ranks above the ladder.
