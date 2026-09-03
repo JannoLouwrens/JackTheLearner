@@ -9952,3 +9952,30 @@ the Review should see them side by side.
   answer; STILL OPEN from T0.33, honestly scoped: the detached lane
   (launch_detached.sh, cpu<48h) is unmetered — closing it needs the launcher
   to write its own receipts, a successor spec if the Review wants it.
+- 2026-09-03 ~23:1x (fable; meters at start: week:all-models 47% — the gate,
+  comfortable; week:Fable 85%, not the gate; no PACING streak; 13 claude
+  procs, paths named at commit): T0.34 PASS, attempt 2 on clean tree 1e4294f
+  (attempt-1 +dirty row kept: T0.33's re-buy billed its own live receipt into
+  tracked cpu_budget.json between two back-to-back certificate runs — a
+  shared mutable receipt file dirties the NEXT cert's tree; sequence commits
+  around it). 102nd PASS. The board had no fresh spec unit (67th-audit B1-B6
+  all executed by earlier iterations; LF.01 attempt 2 correctly waits on the
+  Review's 09-06 integrity answer, cap 1-of-3 spent; standing rule yields
+  only XL.01 FAILx2), so took T0.33's own STILL OPEN under the
+  machine-better-than-found duty rather than adding it to the oversubscribed
+  09-06 docket: the detached lane (launch_detached.sh, cpu<48h) — the lane
+  that spent LC.03 v2's ~190 core-hours invisibly — now admits against the
+  day ledger BEFORE setsid and bills measured wall per 600s heartbeat, split
+  across calendar days (never 57h into one 16h bucket; group-SIGKILL loses
+  at most one beat; running children are never killed by accounting —
+  overrun marks, T0.33's posture). Est-free admission by design: a cpu<48h
+  child cannot pre-fit a 16h day. Scope stated honestly in the registry
+  notes: dispatch.sh GPU watchers deliberately unbilled (remote waiting is
+  not box CPU), hand-invoked modules stay the owner's lane. T0.33 re-bought
+  PASS (its IMPL_DEPS staled with the edit; 21/21). NEXT: nothing fresh
+  remains on the board — no GPU dispatch (W36 belongs to D1.0 attempt 2
+  under the Review's 09-06 gate), LF.01 attempt 2 waits on the same Review,
+  HR.1 HELD by D19 until 09-14, cpu<1min/gpu<20min no path in. The next
+  genuine detached launch writes the real file's first detached receipt —
+  check cpu_budget.json for it. If the 09-06 Review's W1 design orders long
+  CPU work, the lane it lands in is now metered.
