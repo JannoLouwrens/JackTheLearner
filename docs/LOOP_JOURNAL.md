@@ -9849,3 +9849,16 @@ the Review should see them side by side.
   LG.11 (told world). Do NOT register W.*/WP.*/PS.07 before Sunday; no GPU
   dispatch (~11 W35 h expire 09-06 with no honest buyer, W36 belongs to
   D1.0 attempt 2 under the Review's adopted gate).
+- 2026-09-03 ~19:0x (fable): 67th-audit B1 — harvested the LF.01 VOID off the
+  floor (attempt 1, ran_at 18:32:41, commit 86dd6ea, adopted as found, NOT
+  re-run). What it measured: the first 240x-exposure life W0 has ever hosted
+  ended at sim_s 1476.9 +/- 382.0 (~25 min), cause=integrity, min_energy
+  0.128, eats 23.3 — the forager died of body damage mid-forage, NOT
+  starvation, so survived_hour=0 fired the fixture VOID lane whose text only
+  named starving. Harness gates all green where measured (finite_ok 1,
+  one_death_one_row 1, rss drift 0.019 MB, rtf 9.19); control clean
+  (crash_at 751, 0 deaths, nan_scored_as_death 0). LESSONS entry on MuJoCo
+  auto-reset blindness written (promised by the 18:07 report). NEXT: B3/B4/B5
+  spec edits (per-seed instrumentation, both-route lane text, re-roll cap),
+  B6 queue row w0-kills-a-forager-by-integrity-at-25-minutes, B2 AWAITING
+  handoff guard.

@@ -1039,7 +1039,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **LF.01** A life runs to its natural end, and the harness survives it
+- [~] **LF.01** A life runs to its natural end, and the harness survives it  — borrowed_commit=6c57954; borrowed_from=PS.01
       - _asserts:_ A single life of >=1 simulated hour (>=240,000 control steps) completes at a stated real-time factor with bounded memory, bounded diary growth, and no non-finite state; and the run's DEATH is recorded distinctly from a CRASH.
       - _dies if:_ Unbounded memory or diary growth, non-finite state, OR a death indistinguishable from a crash in the record.
       - _then delete:_ Every hours-long claim, and the survival world's schedule.

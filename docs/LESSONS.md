@@ -10492,3 +10492,32 @@ record beside the process declaration — and the next cycle must refuse to
 select new work while an `AWAITING` record has neither a result nor a live pid.
 If you write "X will happen after I exit", either point at the code that does X
 or write the record that makes X's absence fail a check.**
+
+## An engine that heals its own corruption blinds a finiteness watchdog (LF.01 control, 2026-09-03)
+
+LF.01's control poisons `qvel` with NaN mid-life and requires the harness to
+classify it as a CRASH, never a death. The first watchdog checked exactly what
+every watchdog here had always checked — `np.isfinite` over (qpos, qvel,
+drives) at each decision boundary — and the smoke run classified the poison as
+NOTHING. Not death, not crash: the life simply continued. MuJoCo's `mj_step`
+detects the bad state itself, increments `mjWARN_BADQVEL`, and **auto-resets
+the state**, so by the first boundary after the poison every number is finite
+again and a corrupted life keeps running from a silently teleported pose.
+
+The general shape: a substrate that repairs its own invariants converts a
+loud fault into a quiet discontinuity. Any detector that samples STATE at
+boundaries sees only the repaired state; the evidence of corruption lives in
+the engine's own counters (`BADQPOS/BADQVEL/BADQACC/BADCTRL` in
+`data.warning`), which are cumulative and cannot be healed away. LF.01's
+watchdog now reads both, and the control catches at decision 751 — one
+boundary after the poison — with the death counter unmoved.
+
+Two lessons, both earned pre-registration (Law 2 doing its job — the control
+localised the bug before the run spent anything):
+
+**Rule: a crash detector for a simulated life must read the engine's own
+fault counters, not only the finiteness of the state the engine hands back —
+an engine that auto-resets makes state-finiteness a measurement of the
+repair, not of the fault.** And when writing a control for a watchdog, run
+the control BEFORE registering: a watchdog that has never seen its poison
+classified is a watchdog whose blindness is still a hypothesis.
