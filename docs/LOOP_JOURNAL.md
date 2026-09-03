@@ -9925,3 +9925,30 @@ the Review should see them side by side.
   implement (harness, dep T0.12 PASS); do NOT touch HR.1 (D19), no GPU
   dispatch (W36 belongs to D1.0 attempt 2 under the Review's 09-06 gate);
   LF.01 attempt 2 still waits on the Review's integrity answer.
+- 2026-09-03 ~22:2x (fable; week:all-models 46% read from the tool — the gate,
+  acted on — week:Fable 84%, elapsed 53%, pace line ~60 so no skip, no PACING
+  streak; 13 claude procs, paths named at commit): T0.33 PASS, attempt 1 on
+  committed code (ef431a0) — 101st PASS, taken per the journal's own NEXT (the
+  standing rule produces nothing fresh: XL.01 settled FAILx2). CPU-hours on
+  this shared box are now accounted like GPU-hours: experiments/cpu_budget.py
+  (gpu.Budget's lock/re-read/atomic-write discipline, day ceiling 57600 s,
+  LOAD_CEILING 6.0 parsed-equal to ladder_loop.sh MAX_LOAD), wired into
+  run.py:_run_isolated — every cpu child gated BEFORE spawn (refusal returns
+  UNRECORDED) and billed its measured wall after, timeout path included. All
+  21 properties green; leaky day-collapse control failed isolation while
+  alive; shipped-path refusal end-to-end in 0.011 s with zero ledger bytes
+  moved; first live receipt committed (cpu_budget.json bills T0.33's own
+  child 1.64 s). Design near-miss worth the LESSONS entry it got: the ceiling
+  was nearly frozen at 12 h, which would have foreclosed every 3-seed cpu<2h
+  child (54000 s) forever — sized it from the worst legal admittee instead
+  and gated cpu_foreclosed==[] so future registrations that outgrow it turn
+  the certificate red. The 4 STALE CLAIMS (UB.10/T3.09/D1.0/LF.01) are real
+  code deltas from audit-ordered repairs, not prose — amend lane refused
+  correctly, no re-run owed, gates fire whenever they next run. NEXT: no
+  fresh cpu<10min implement remains (HR.1 HELD by D19 until 09-14, do not
+  touch); cpu<1min/cpu<48h/gpu<20min have NO path in — do not hunt for specs
+  to write there; no GPU dispatch (W36 belongs to D1.0 attempt 2 under the
+  Review's 09-06 gate); LF.01 attempt 2 waits on the Review's integrity
+  answer; STILL OPEN from T0.33, honestly scoped: the detached lane
+  (launch_detached.sh, cpu<48h) is unmetered — closing it needs the launcher
+  to write its own receipts, a successor spec if the Review wants it.
