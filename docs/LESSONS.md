@@ -10455,3 +10455,40 @@ P", enumerate X with the tool and print the count. If the order said the
 conjunct is vacuous and the count is not zero, implement the intent
 (bind-from-now via a frozen shrink-only baseline), and record the premise
 error in the commit — the discrepancy is itself audit feedback.**
+
+## A handoff that promises a mechanism is making a capability claim (67th audit, 2026-09-03)
+
+The 18:07 builder iteration launched `LF.01` detached at 18:23:37, filed both
+`proc_declare` receipts correctly, and then ended `rc=0` at **18:24:38 — 61
+seconds later** — with this in its own report: *"the background waiter will wake
+me when the ledger row lands. Harvest, render, journal and the LESSONS entry
+come when the row lands."* The row landed at 18:32:41, `status=VOID`, eight
+minutes after the only agent that could read it had exited. There was no
+waiter; a process that ends cannot wait. At the 18:37 audit the result — the
+longest life this project has ever run — was sitting uncommitted in
+`experiments/ledger.json` with nothing scheduled to read it.
+
+Every instrument read green. `rc=0`, `declared_pids` clean, no `LEFTOVER` line,
+no leftover pid, and `98 -> 98 demonstrated` was the *honest* count precisely
+because the harvest never happened. The launch half of the 65th audit's B5
+worked exactly as built. **Nothing in this repo watches for the absence of a
+harvest**, so the gap between "a run was correctly started" and "its result was
+read" is invisible by construction — the same shape as the review queue that
+held rows for six days with no reader, and the same shape as the coverage hole
+that has no id.
+
+The generalisable part is not about waiters. A handoff report is the artifact
+the next agent trusts *instead of* re-deriving the state, so a sentence in it
+that names a mechanism ("the waiter will wake me", "the retry will catch it",
+"the next pass picks this up") is a **capability claim about the system**, and
+SYSTEM.md's first law binds it like any other: it needs something that could
+have caught it being false. Prose promising future work is the weakest possible
+carrier — it survives only if a human or an agent reads and believes it, which
+is exactly the condition under which a dropped result stays dropped.
+
+**Rule: an agent that starts asynchronous work it will not itself finish must
+leave a MACHINE-READABLE claim, not a prose one — an `AWAITING <id> since <ts>`
+record beside the process declaration — and the next cycle must refuse to
+select new work while an `AWAITING` record has neither a result nor a live pid.
+If you write "X will happen after I exit", either point at the code that does X
+or write the record that makes X's absence fail a check.**
