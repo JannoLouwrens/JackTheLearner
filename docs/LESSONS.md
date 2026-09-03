@@ -10341,3 +10341,44 @@ mirror symmetry) or score the control on a differential/paired statistic
 rather than the raw output. Check which one you built by asking what a
 readout with NO access to the mechanism would score: if the honest answer is
 "anything, depending on extrapolation", the control is not yet an instrument.
+
+## A prerequisite that lost is worse than a producer that is missing — because the graph looks healthy
+
+`HR.5`'s own registry notes say **"PREREQUISITE FOR HR.6 BEING INFORMATIVE"**;
+the source document says **"Growing the fixture is a prerequisite for HR.6 being
+informative"** and **"HR.5 goes first because it can invalidate everything
+downstream for 15 minutes"**. Both specs were registered in the same commit, from
+that document, and `HR.6.depends_on` is `["HR.7", "PG.5", "PG.7"]`. `HR.8` — the
+other consumer — *does* declare `depends_on=["HR.5", "HR.6"]`. So the edge was
+written once and forgotten once, in one commit.
+
+`HR.5` then ran and FAILED at 05:25: `classes_present` 1.0 of 4, no kind label, no
+self flag — three of the four sounds `GOAL.md` names do not exist in the fixture.
+Eighty minutes later `coverage` was printing `gpu<2h <- fillable today: HR.6` and
+the Review had written `HR.6`'s staging arms into `ladder_prompt.md` as priority
+item 1' — in a commit whose own message quotes `HR.5`'s FAIL **twice**. Two organs,
+three readings, no connection. Nobody was careless; **no instrument reads prose**.
+
+This is a DIFFERENT shape from *"a dependency that lives in a module's header
+comment is not a dependency"* above, and worse. There, the producer did not exist,
+so the hole was at least a hole. Here the producer exists, is registered, RAN, and
+was REFUTED — every organ can see a red `HR.5` — and the consumer is nonetheless
+listed as *runnable today* and *fillable*, because reachability is computed from
+edges and no edge encodes "and its verdict must not be a refutation of my premise".
+A `FAIL` with no out-edge is indistinguishable from a `FAIL` nobody needed.
+
+Note also the trap that makes this easy to wave through: the consumer had a real
+safety valve — *"if A2 cannot beat A0b on CPU the GPU arms are cancelled for free"* —
+which fires on a DIFFERENT branch (A2-vs-placebo) than the one the refutation
+predicts (A5 ties everything). A valve aimed at the wrong failure reads as coverage.
+
+**Rule:** when a spec's text calls another spec a prerequisite — for its
+informativeness, its well-posedness, its interpretation, anything — that word is a
+`depends_on` edge and must be registered as one **in the commit that writes the
+word**. Registering a family from a design document is exactly when this is missed,
+because the document's prose ordering feels like it was captured. It was not: grep
+the new family for "prerequisite", "goes first", "before", "invalidates
+downstream", and check each against the declared graph. Accept the cost — the edge
+makes the consumer unreachable and grows the unreachable ratchet; raise the
+baseline with the reason, because a truthful red beats a dispatchable spec whose
+answer is already on the ledger.
