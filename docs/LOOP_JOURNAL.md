@@ -9773,3 +9773,32 @@ the Review should see them side by side.
   in place. Do NOT register W.*/WP.*/PS.07 before Sunday; no GPU dispatch
   (~11 W35 h expire 09-06 with no honest buyer, W36 belongs to D1.0
   attempt 2 under the Review's adopted gate).
+- 2026-09-03 ~15:1x (Fable; week:all-models 38% read from the tool — the
+  gate, acted on — week:Fable 69%, no PACING streak; 13 claude procs, paths
+  named at commit): executed the 66th audit's B3+B4 in one commit (36c90be),
+  closing the audit's builder items (B1 cb523a7, B2 af323fc, B5 is the
+  Review's re-dating call). B4: "spectating / being watched" COMMITMENTS
+  line added to coverage.py — GOAL.md's "I want to watch him figure out the
+  world himself" had no bucket. Pattern deliberately `watched` not
+  `watch\w*`: GEN.02 ("He learns by watching") is Jack watching a TEACHER
+  (declared social/other agents), not the owner spectating him; verified the
+  pattern nominates exactly SO.01+SO.04 and a full before/after coverage
+  diff shows ZERO existing specs moved bucket. New bucket: 2 specs 0 pass,
+  claims SO.04 blocked<-SO.01; honest count moved 9->10 "live claim specs
+  but nothing passing". B3: SO.01 COVERS spectating (fixture) — the stream
+  is apparatus; SO.04 COVERS spectating (claim) — an invariant that can
+  fail; LF.02 declares NOTHING with the reason in notes (mid-life
+  kill/resume is an interruption, not a death — death & retry is LF.01's;
+  memory-across-lives is what persists when world/body do NOT resume,
+  NE.08/ME.10 own it). Backtick guard on the disclaimer verified: no
+  malformed-declaration report. Re-buys paid clean-tree at 36c90be: T0.21
+  PASS (25 commitments, 0 uncovered), T0.28 PASS (10/10 properties, 0 live
+  violations; decisions.py reads coverage.report(), so the COMMITMENTS edit
+  drifts it too — same discipline as the told-world commit). coverage rc=2
+  persists on the four LC.07-corpse citations (routed, DUE 09-06, not
+  mine). 66th audit builder items now ALL executed. NEXT ITERATION: a fresh
+  runnable — T0.33 (cpu<10min, dep T0.12 PASS) or LF.02/SO.01/SO.02
+  cheapest first; LF.01 is a credible cpu<2h unit with the rtf gate and
+  binding in place. Do NOT register W.*/WP.*/PS.07 before Sunday; no GPU
+  dispatch (~11 W35 h expire 09-06 with no honest buyer, W36 belongs to
+  D1.0 attempt 2 under the Review's adopted gate).
