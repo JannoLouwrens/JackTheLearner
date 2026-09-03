@@ -10382,3 +10382,41 @@ downstream", and check each against the declared graph. Accept the cost — the 
 makes the consumer unreachable and grows the unreachable ratchet; raise the
 baseline with the reason, because a truthful red beats a dispatchable spec whose
 answer is already on the ledger.
+
+## A coverage bucket names a TOPIC; the constitution makes CLAIMS — and a green bucket hides the claim it does not contain
+
+`coverage.py`'s `COMMITMENTS` maps a regex to a commitment name. `language (parent)`
+matches `language|word|words|grounding|lexic*`, holds 9 specs and **3 passing claims**,
+and is one of the healthiest lines in the table. GOAL.md:206-212 has, since
+2026-08-09, carried a paragraph that says of itself *"FALSIFIABLE, and it must be
+tested rather than assumed"* — told-knowledge should integrate better when it anchors
+to something he has lived, *"if both integrate identically, he is reciting, and the
+jungle bought nothing"* — with a hypothesis, an operationalisation, a control arm and a
+stated cost of failure. **No spec of 232 makes that claim**, and a spec that did would
+land in `language (parent)`. Its absence is therefore not merely uncounted: it is
+**masked by its neighbours' passes**. Twenty-five days, sixty-five audits, every
+instrument green.
+
+This is one level up from the miss the `KINDS` mechanism was built for. That repair
+(8th–10th audits) stopped *apparatus* being credited as a *claim* — `PG.4` and `LC.01`
+made `curiosity` and `one brain / unison` read as demonstrated when nothing was.
+`KINDS` distinguishes claim from fixture. It cannot distinguish **claim A from claim B
+inside the same topic**, because `COMMITMENTS` names topics and the join from
+constitution to topic is many-to-one and lossy in exactly the direction that hides
+work. `n_pass >= 1` answers *"has anything in this topic been demonstrated"*, never
+*"has THIS sentence been demonstrated"*.
+
+The tell that makes it findable: GOAL.md names **three** expansions past the jungle
+(more worlds, other minds, the told world). Two have registered ladders — `GEN.06`,
+and `GEN.02/03/09` — deliberately registered as unreachable-but-named, paying the
+`UNREACHABLE_BASELINE` for the privilege. The third has nothing. **An enumeration in
+the constitution whose members are unevenly covered is the cheapest place to find this
+class**, because the parallel structure supplies its own control.
+
+**Rule:** a commitment line is covered when every *falsifiable sentence* GOAL.md files
+under it has a spec — not when the bucket has a pass. When auditing coverage, read the
+constitution's enumerations (`1. … 2. … 3. …`, `sight · hearing · touch · …`) and check
+each member against `BY_ID` by hand; the tool cannot do this for you and reports green
+while you do. When GOAL.md states a test design inline — a claim, a null, a
+consequence — that paragraph is a spec that has not been written yet, and the honest
+response is to register it as unreachable rather than to wait for its world.
