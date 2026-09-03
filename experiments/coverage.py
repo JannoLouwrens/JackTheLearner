@@ -141,6 +141,11 @@ COMMITMENTS: Dict[str, Tuple[str, str]] = {
     "language (parent)":  (r"\b(language|word|words|grounding|lexic\w*)\b", "LLM as talkative parent"),
     "told world":         (r"\b(told|second.hand|hearsay|anchored|grounded fact|parrot\w*|recit\w*)\b", "owner: the jungle buys MEANING for what he is told"),
     "social/other agents":(r"\b(social|companion|two jacks|second jack)\b", "owner: socialising makes him kind"),
+    # `watched`, not `watch\w*`: GEN.02 ("He learns by watching") is Jack
+    # watching a TEACHER — a social/other-agents claim, already declared —
+    # not the owner spectating him. Verified 2026-09-03: this pattern
+    # nominates exactly SO.01 and SO.04, both declared.
+    "spectating / being watched": (r"\b(watched|spectat\w*|third.person|stream\w*|observer\w*)\b", "owner: 'I want to watch him figure out the world himself'"),
     "curiosity":          (r"\b(curiosity|novelty|exploration|learning progress)\b", "the world is the teacher"),
     "one brain / unison": (r"\b(unison|fused|fusion|binding|cross-modal|shared|one brain)\b", "the constitution itself"),
     "plasticity":         (r"\b(plastic\w*|frozen|does not die|forgetting)\b", "PLASTIC ONLY decree"),

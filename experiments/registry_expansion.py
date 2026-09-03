@@ -6728,10 +6728,10 @@ EXPANSION: list[Spec] = [
     #   T0.17, T0.18  RENAMED T0.32, T0.33 — both ids taken by harness specs
     #       registered after the doc was written (it says "id suggestions
     #       only"). Text otherwise verbatim.
-    # Spectating has NO line in coverage.py's hand-maintained COMMITMENTS
-    # despite GOAL.md's "I want to watch him figure out the world himself" —
-    # named on the queue row for the Review; adding it is a coverage.py edit
-    # that obliges T0.21/T0.28 re-buys and is not smuggled in here.
+    # Spectating GOT its COMMITMENTS line 2026-09-03 (66th audit B4):
+    # "spectating / being watched" in coverage.py, T0.21/T0.28 re-buys paid
+    # in the same iteration. SO.01/SO.04 declare against it below; SO.03,
+    # when registered, owes a declaration too.
 
     Spec("LF.01", 2, "A life runs to its natural end, and the harness survives it",
          hypothesis="A single life of >=1 simulated hour (>=240,000 control "
@@ -6777,7 +6777,14 @@ EXPANSION: list[Spec] = [
                "survive a session boundary; ME.1 is the episodic store itself. "
                "This spec is their composition at the life level: ALL FOUR "
                "stores or the resume is a different life wearing the same "
-               "weights."),
+               "weights. Declares NO `COVERS:` commitment, deliberately (66th "
+               "audit B3): a mid-life kill/resume is an INTERRUPTION, not a "
+               "death — nothing dies, the SAME life continues with world state "
+               "intact — so 'death & retry' is LF.01's to cover; and 'memory "
+               "across lives' is precisely what persists when world and body "
+               "do NOT resume (NE.08 owns that claim, ME.10 the substrate). "
+               "Session persistence is harness composition, not a "
+               "constitutional sense."),
 
     Spec("SO.01", 2, "Jack can be watched: a third-person stream exists and costs what we say it costs",
          hypothesis="A third-person view of a running life renders at >=5 fps at "
@@ -6812,7 +6819,8 @@ EXPANSION: list[Spec] = [
                "it moves. STANDS UNCHANGED: a persistent stream is a background "
                "service on a tenant-serving box and is an OWNER decision, not "
                "an engineering one — this spec measures cost and feasibility "
-               "without installing one."),
+               "without installing one. "
+               "  COVERS: spectating / being watched (fixture)"),
 
     Spec("SO.02", 2, "'I'm cold' is true when he is cold",
          hypothesis="Jack's utterances about his own internal state are "
@@ -6858,7 +6866,8 @@ EXPANSION: list[Spec] = [
                "direction will eventually be most of them.",
          notes="LESSONS: 'a detector that cannot see its own positive control has "
                "measured nothing.' The render path consuming RNG is the exact "
-               "failure mode and it is easy to introduce by accident."),
+               "failure mode and it is easy to introduce by accident. "
+               "  COVERS: spectating / being watched (claim)"),
 
     Spec("T0.32", 0, "The real-time factor is measured, recorded, and gates long runs",
          # DIRECTION_AUDIT.md §5.5 drafted this as "T0.17"; that id was taken
