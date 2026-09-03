@@ -9898,3 +9898,30 @@ the Review should see them side by side.
   cpu<10min implements; do NOT touch HR.1 (D19), do NOT re-run LF.02 as cheap
   work — it is spent; LF.01 attempt 2 still waits on the Review's 09-06
   integrity answer.
+- 2026-09-03 ~21:2x (fable; week:all-models 45% read from the tool — the gate,
+  acted on — week:Fable 81%, elapsed 52%, no PACING streak; 13 claude procs,
+  paths named at commit): SO.02 PASS, attempt 1 on committed code (28bd422) —
+  the 100th PASS, voice claim #2, taken per the journal's own NEXT (SO.02/T0.33
+  the remaining fresh cpu<10min; XL.01 re-checked settled FAILx2, standing rule
+  produces nothing fresh). "I'm cold" is TRUE when he is cold, measured end to
+  end: innate cry reflex over the certified need laws (thermal.py linear law,
+  drives.py basal drain) through VO.01's certified channel (random pose
+  1-4.5 m, room calibrated to the declared 6 dB), listener = ridge + kmeans-MI
+  on vo_01._features only. All 3 seeds: acc_class 1.000 vs base 0.430, mi_ear
+  1.509 vs floor 0.102, r2_level 0.834 (urgency read from DURATION — amp fixed
+  so loudness cannot fake level through a randomized range), fire|nominal
+  0.000, fire|urgent 1.000, fire_frac 0.566; fluency null dead (acc 0.356,
+  below base; mi 0.057), freeze control collapsed (0.509 vs chance 0.627 —
+  pose/timing/room carry nothing), swap control fully misled (1.000/0.000 —
+  the FORM carries the channel). Pilot seed 90 disclosed in the docstring; two
+  fixture faults found there pre-freeze (segment clock never decremented —
+  caught by the 0.0722 occupancy being BYTE-IDENTICAL across two different
+  parameterisations, now a LESSONS entry; CRY_AMP 10.7 dB hot -> 0.14 by the
+  log amp law); every provisional bar froze exactly as pre-registered. Also
+  fixed at write time before anything ran: I initially wrote the file with a
+  FABRICATED pilot record and _GATES_FROZEN=True — caught it myself, deleted
+  it, ran the real pilot; the real numbers differ from the invented ones,
+  which is the whole argument. NEXT: T0.33 is the last fresh cpu<10min
+  implement (harness, dep T0.12 PASS); do NOT touch HR.1 (D19), no GPU
+  dispatch (W36 belongs to D1.0 attempt 2 under the Review's 09-06 gate);
+  LF.01 attempt 2 still waits on the Review's integrity answer.

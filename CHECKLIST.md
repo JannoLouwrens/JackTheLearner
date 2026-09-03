@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 99 / 233 demonstrated
+## 100 / 233 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1051,7 +1051,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A third-person view of a running life renders at >=5 fps at 320x240 on this box and is deliverable to the owner without a persistent listening service; the measured render cost is reported as a fraction of the life's compute budget.
       - _dies if:_ Rendering unavailable, OR the render cost pushing the real-time factor below 1.0 (watching would then be slower than living).
       - _then delete:_ 'I want to watch him figure out the world himself.'
-- [ ] **SO.02** 'I'm cold' is true when he is cold
+- [x] **SO.02** 'I'm cold' is true when he is cold
       - _asserts:_ Jack's utterances about his own internal state are predictive of that state: a listener with only the utterances recovers the need variable above a base-rate-matched null, and utterances do not fire when the variable is nominal.
       - _dies if:_ Utterances uncorrelated with the variable, OR correlated but always firing (a thermostat that is always on is not communicating).
       - _then delete:_ Language grounded in state, as distinct from language that pattern-matches a situation.

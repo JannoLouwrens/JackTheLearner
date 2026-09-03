@@ -10584,3 +10584,25 @@ ONLY path is commit-then-re-run on top of the existing row, letting the
 runner supersede; any workflow that moves `ledger.json` aside around a run —
 stash, checkout, copy — deletes an attempt from the record by construction,
 whatever the intention.**
+
+## A reading that is byte-identical across a parameter change says the parameter is disconnected (SO.02 pilot, 2026-09-04)
+
+SO.02's first pilot read cold-class occupancy 0.0722 against a 0.10 floor.
+The schedule's cold segments were made longer and colder — and the second
+pilot read 0.0722 again, to four decimals. That constancy, not the low value,
+was the diagnostic: the segment clock was never decremented, so the first
+cold snap ran until the lethal guard fired and the life stayed warm forever.
+Every knob downstream of the dead variable (segment length, segment depth)
+was disconnected from the reading, and tuning them harder would have produced
+an unbounded sequence of identical failures each looking like "not enough
+yet". The sibling failure is already on this page as "a gate that never
+refuses is decorative"; this is the FIXTURE-side twin, and it has a cheap
+standing test: after any retune, diff the reading against the pre-tune value
+— a measurement invariant under its own knob is measuring something else,
+and the invariance is louder evidence than the number.
+
+**Rule: when a pilot reading fails its floor, re-run once with the relevant
+fixture parameter deliberately moved and require the READING to move before
+tuning further; identical-to-the-decimals output across a parameter change is
+a wiring fault, never bad luck, and tuning a disconnected knob converts one
+fixture bug into a family of plausible dead ends.**
