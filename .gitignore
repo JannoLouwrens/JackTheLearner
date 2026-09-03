@@ -57,3 +57,7 @@ experiments/**/__pycache__/
 # a scratch file committed by ANOTHER process reads as a deliverable later.
 scratch_*.py
 MUJOCO_LOG.TXT
+# CPU budget accountant's lock/tmp debris (the record itself IS tracked,
+# like gpu_budget.json).
+experiments/cpu_budget.json.lock
+experiments/cpu_budget.json.tmp

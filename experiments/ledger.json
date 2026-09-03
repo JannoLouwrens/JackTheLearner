@@ -20322,6 +20322,55 @@
       "spec_sha": "786df375524344ce",
       "status": "PASS"
     },
+    "T0.33": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "ef431a0",
+      "compute_s": null,
+      "control_metrics": {
+        "alive": true,
+        "leak_visible": true
+      },
+      "duration_s": 1.19,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "b9f385dc38f6e831",
+      "message": "",
+      "metrics": {
+        "affords_small": true,
+        "charged_moves": true,
+        "cpu_foreclosed": [],
+        "cpu_quota_enforced": 1.0,
+        "detached_routed": true,
+        "exhausted_refused": true,
+        "fresh_admits_worst": true,
+        "gpu_unbound": true,
+        "isolation_ok": true,
+        "live_load": 0.21,
+        "load_refused": true,
+        "loop_load_agrees": true,
+        "overrun_marked": true,
+        "persists": true,
+        "refuses_oversized": true,
+        "remaining_mid_s": 57000.0,
+        "shipped_refusal": true,
+        "shipped_refusal_s": 0.012,
+        "stale_writer_safe": true,
+        "starts_full": true,
+        "wiring_ok": true
+      },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 213.4,
+      "preserved_impl": null,
+      "ran_at": "2026-09-03T22:18:17",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.33",
+      "spec_sha": "fac47af5bb0e9d36",
+      "status": "PASS"
+    },
     "T1.01": {
       "amended": [],
       "attempt": 2,

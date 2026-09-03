@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 100 / 233 demonstrated
+## 101 / 233 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1069,7 +1069,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ For any declared control path, the harness measures sim-seconds per real second before a long run starts, and REFUSES a run whose projected duration exceeds the spec's timeout or the box's tenant-safety budget.
       - _dies if:_ A long run launching with a projected duration past its own timeout, OR a projection that differs from the achieved duration by >25%.
       - _then delete:_ Nothing directly; it prevents burning a Sunday quota on a run that could never have finished.
-- [ ] **T0.33** CPU-hours on a shared box are accounted like GPU-hours
+- [x] **T0.33** CPU-hours on a shared box are accounted like GPU-hours
       - _asserts:_ Every CPU_LONG run debits a wall-clock budget, and the ladder refuses to start when the box's load or the day's accumulated share would harm the tenants.
       - _dies if:_ A run proceeding past the budget, or a budget that reads the same whether or not runs happened.
       - _then delete:_ Nothing on the ladder; it protects the tenants, which SYSTEM.md ranks above the ladder.
