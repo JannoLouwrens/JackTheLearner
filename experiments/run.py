@@ -1871,6 +1871,26 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     from .rtf import spec_child_timeout_seconds
     _spec = _BY_ID.get(spec_id)
     _timeout = spec_child_timeout_seconds(_spec)
+    # T0.33: a CPU child is gated by the day's tenant budget BEFORE it spawns
+    # and debits its measured wall clock after. A refusal is tenant
+    # protection, not a measurement of the spec, so it returns UNRECORDED —
+    # an ERROR row here would supersede a real result with scheduling noise.
+    from .cpu_budget import charge_cpu_child, gate_cpu_child
+    _is_cpu = _spec is not None and _spec.budget.value.startswith("cpu")
+    if _is_cpu:
+        _cpu_gate = gate_cpu_child(_spec)
+        if not _cpu_gate.admitted:
+            return Result(spec_id=spec_id, status=Status.ERROR,
+                          message=f"REFUSED before start: {_cpu_gate.reason}")
+
+    def _bill_cpu(t_start: float) -> None:
+        # A charge failure must not destroy the result the child already
+        # recorded, but it may not pass silently either.
+        try:
+            charge_cpu_child(spec_id, time.monotonic() - t_start)
+        except Exception as e:  # pragma: no cover - defensive
+            print(f"!! CPU BUDGET CHARGE FAILED for {spec_id}: {e} — wall "
+                  f"clock spent but unbilled", file=sys.stderr, flush=True)
     # The ran_at of any PRE-EXISTING entry, so a crashed child cannot pass the
     # old result off as its own. T2.01 v3's child died (SIGPIPE from a killed
     # session pipe) after v2 had recorded a FAIL: the old check — "is there an
@@ -1878,18 +1898,26 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     # A rerun that changes nothing must be an ERROR, not an echo.
     _prev = ledger.results.get(spec_id)
     _prev_ran_at = getattr(_prev, "ran_at", None)
+    _t0 = time.monotonic()
     try:
         proc = sp.run([sys.executable, "-c", code], capture_output=True, text=True,
                       cwd=str(Path(__file__).parent.parent), timeout=_timeout)
     except sp.TimeoutExpired:
         # An uncaught timeout used to crash the whole runner invocation and
         # leave the spec's STALE entry standing. A timeout is a result.
+        # The killed child still occupied the box for the full window; a
+        # timeout that goes unbilled would make waste invisible (T0.12's
+        # failed-hours rule, one resource over).
+        if _is_cpu:
+            _bill_cpu(_t0)
         res = Result(spec_id=spec_id, status=Status.ERROR,
                      message=f"timed out after {_timeout}s "
                              f"(budget {_spec.budget.value if _spec else '?'} "
                              f"x {getattr(_spec, 'seeds', 1)} seeds x2)")
         ledger.record(res)
         return res
+    if _is_cpu:
+        _bill_cpu(_t0)
     # The child wrote the ledger itself; re-read to see what it recorded.
     fresh = Ledger()
     ledger.results.update(fresh.results)
