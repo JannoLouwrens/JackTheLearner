@@ -221,9 +221,20 @@ proc_prune_declarations
 PROC_BEFORE=$(proc_snapshot)
 LEFTOVER_NOTE=""
 leftover_report() {
-  proc_leaks "$PROC_BEFORE" say && return 0
-  LEFTOVER_NOTE=" | LEFTOVER=${PROC_LEAK_N} undeclared process(es) — see the LEFTOVER lines above"
-  return 1
+  local rc=0
+  LEFTOVER_NOTE=""
+  if ! proc_leaks "$PROC_BEFORE" say; then
+    LEFTOVER_NOTE=" | LEFTOVER=${PROC_LEAK_N} undeclared process(es) — see the LEFTOVER lines above"
+    rc=1
+  fi
+  # The memory half of the same SYSTEM.md rule (63rd audit B2): peak rss over
+  # the ceiling is NAMED here, never killed and never gated — the ceiling's
+  # own validity is an open owner question.
+  if ! proc_memory_report say; then
+    LEFTOVER_NOTE="${LEFTOVER_NOTE} | MEMORY=${PROC_MEM_N} process(es) over ${JACK_MEM_CEILING_MB} MB peak — see the MEMORY lines above"
+    rc=1
+  fi
+  return $rc
 }
 
 PROMPT=$(cat "$REPO/scripts/ladder_prompt.md")

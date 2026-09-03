@@ -41,13 +41,22 @@ trap cleanup EXIT
 export JACK_PROC_DECL="$TMP/declared_pids"
 . "$REAL_REPO/scripts/lib_procwatch.sh"
 
-# spawn CMD... -> echoes the pid, records it for cleanup, waits for /proc.
+# spawn CMD... -> echoes the pid, records it for cleanup, waits for the EXEC
+# CHAIN, not just for /proc: the pid's directory exists while argv[0] still
+# reads `setsid` or `nice`, and a predicate case that samples it in that
+# window measures the trampoline, not the target (flaked live 2026-09-03 —
+# "a venv python is ours" read `no` once in four runs). argv[0] of the final
+# image is exactly $1 at every call site in this file, including the sh -c
+# prose case, whose trailing `:` keeps sh from exec-replacing itself.
 spawn() {
   setsid nice -n 19 "$@" >/dev/null 2>&1 &
   local p=$!
   KIDS="$KIDS $p"
   local i=0
-  while [ $i -lt 50 ] && [ ! -d "/proc/$p" ]; do sleep 0.05; i=$((i + 1)); done
+  while [ $i -lt 50 ] && \
+        [ "$(tr '\0' '\n' < "/proc/$p/cmdline" 2>/dev/null | head -1)" != "$1" ]; do
+    sleep 0.05; i=$((i + 1))
+  done
   echo "$p"
 }
 
@@ -167,6 +176,47 @@ chk "a child of a declared process is attributed" \
     "$(_proc_attributed "$CHILD_PID" && echo yes || echo no)" yes
 chk "an unrelated process is not attributed by that declaration" \
     "$(_proc_attributed "$NEW_PID" && echo yes || echo no)" no
+
+echo "== memory: a peak over the ceiling is NAMED, never killed (63rd B2) =="
+
+# `b"j" * n`, not `bytearray(n)`: multiplication WRITES every page, so the
+# rss actually rises — a zero-filled allocation the kernel never commits
+# would test the mock, not the high-water mark. VmHWM is the point: the test
+# would still see this peak even after the memory were freed.
+FAT_PID=$( cd "$REAL_REPO" && spawn "$VENV_PY" -c \
+  'x = b"j" * (300 * 1024 * 1024); import time; time.sleep(45)' )
+i=0
+while [ $i -lt 100 ] && [ "$(proc_peak_rss_mb "$FAT_PID" 2>/dev/null || echo 0)" -lt 250 ]; do
+  sleep 0.1; i=$((i + 1))
+done
+chk "proc_peak_rss_mb sees the 300 MB peak" \
+    "$([ "$(proc_peak_rss_mb "$FAT_PID")" -ge 250 ] && echo yes || echo no)" yes
+
+JACK_MEM_CEILING_MB=200
+LOGLINE=""; PROC_MEM_N=-1
+proc_memory_report say && R=clean || R=over
+chk "a project python peaking over the ceiling is reported" "$R" over
+chk "  ...named with its pid" "$(printf '%s' "$LOGLINE" | grep -c "MEMORY $FAT_PID:")" 1
+chk "  ...with the peak as a number in MB" \
+    "$(printf '%s' "$LOGLINE" | grep -cE "MEMORY $FAT_PID:[0-9]+ — peak rss [0-9]+ MB")" 1
+chk "  ...while a lean project python is NOT named" \
+    "$(printf '%s' "$LOGLINE" | grep -c "MEMORY $VENV_PID:")" 0
+
+# A declaration attributes a pid to a purpose; it does not waive the RAM
+# constraint. The T2.00 shape — a legitimate, declared spec run at 5x the
+# ceiling — must still be named or the guard has a laundering path.
+proc_declare "$FAT_PID" "test-declared-but-fat"
+LOGLINE=""
+proc_memory_report say || true
+chk "a DECLARED process over the ceiling is still named" \
+    "$(printf '%s' "$LOGLINE" | grep -c "MEMORY $FAT_PID:")" 1
+
+JACK_MEM_CEILING_MB=100000
+LOGLINE=""; PROC_MEM_N=-1
+proc_memory_report say && R=clean || R=over
+chk "under the ceiling the report is clean" "$R" clean
+chk "  ...and PROC_MEM_N is 0" "$PROC_MEM_N" 0
+JACK_MEM_CEILING_MB=1536
 
 echo "== housekeeping =="
 

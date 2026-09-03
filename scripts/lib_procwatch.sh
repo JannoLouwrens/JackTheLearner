@@ -52,6 +52,13 @@
 JACK_REPO="${JACK_REPO:-/home/opc/jackthelearner}"
 JACK_VENV="${JACK_VENV:-/data/venvs/jackthelearner/}"
 JACK_PROC_DECL="${JACK_PROC_DECL:-/data/jack-logs/declared_pids}"
+# SYSTEM.md's "~1.5 GB RAM" ceiling, as a number a predicate can read. Do NOT
+# raise it to match observed behaviour — T2.00 peaked at 7.57 GB and T0.07
+# records 6.99 GB on a green row, and whether that means the specs are in
+# breach or the ceiling is stale is an OWNER question (63rd audit, FOR THE
+# OWNER §1), not a default's. Until it is answered this file measures and
+# names; it does not gate and it does not relax.
+JACK_MEM_CEILING_MB="${JACK_MEM_CEILING_MB:-1536}"
 
 # ------------------------------------------------------------------ /proc ---
 # Field 22 of /proc/PID/stat is start time in clock ticks since boot: unique
@@ -91,6 +98,17 @@ proc_key() {
 
 proc_cmdline() {
   tr '\0' ' ' < "/proc/$1/cmdline" 2>/dev/null | cut -c1-160
+}
+
+# Peak RSS in MB — VmHWM (the high-water mark), never VmRSS: a watcher that
+# samples CURRENT usage misses any spike that rose and fell between samples,
+# which is exactly how a 7.57 GB peak coexisted with every report reading
+# healthy (63rd audit B2). Empty or unreadable -> rc 1, never 0 MB.
+proc_peak_rss_mb() {
+  local kb
+  kb=$(awk '/^VmHWM:/{print $2; exit}' "/proc/$1/status" 2>/dev/null)
+  [ -n "$kb" ] || return 1
+  echo $(( kb / 1024 ))
 }
 
 # ------------------------------------------------------------- predicate ---
@@ -192,6 +210,41 @@ $key"*) continue ;; esac
   PROC_LEAK_N=$n
   if [ "$n" -gt 0 ]; then
     "$sayfn" "LEFTOVER: ${n} project process(es) started during this iteration and still running, declared by nobody. NOT killed — a declared detached run is legitimate and an undeclared one may be the owner's session. Attribute it or kill it: SYSTEM.md forbids leaving compute on a box with paying tenants (52nd audit B2; the scar cost 1.26 core-hours)."
+    return 1
+  fi
+  return 0
+}
+
+# proc_memory_report [sayfn]
+#
+# The OTHER half of the rule this file's header cites. SYSTEM.md says "leave
+# no process running" AND "stay under ~1.5 GB RAM"; until 2026-09-03 only the
+# first half had a line of code reading a quantity, and the header claimed
+# both — a guard's comment is a capability claim and law 1 binds it (63rd
+# audit B2; the miss was found with T2.00 at 7.57 GB, 5x the ceiling, live).
+#
+# Names every project python whose PEAK rss (VmHWM) exceeds the ceiling. Same
+# discipline as proc_leaks: NAME, NEVER KILL. Deliberately checked against
+# ALL current project pythons, not just this iteration's — a leak is defined
+# by when a process started; a memory breach is defined by what it did, and a
+# pre-existing or DECLARED process over the ceiling is exactly the case that
+# went unseen (a declaration attributes a pid, it does not waive the RAM
+# constraint). Sets PROC_MEM_N. Returns 0 when nothing is over, 1 otherwise.
+PROC_MEM_N=0
+proc_memory_report() {
+  local sayfn="${1:-:}" d pid mb key n=0
+  for d in /proc/[0-9]*; do
+    pid=${d#/proc/}
+    _proc_is_ours "$pid" || continue
+    mb=$(proc_peak_rss_mb "$pid") || continue
+    [ "$mb" -gt "$JACK_MEM_CEILING_MB" ] || continue
+    key=$(proc_key "$pid") || continue
+    n=$((n + 1))
+    "$sayfn" "MEMORY $key — peak rss ${mb} MB (VmHWM) over the ${JACK_MEM_CEILING_MB} MB ceiling, $(proc_cpu_seconds "$pid")s CPU, cmd: $(proc_cmdline "$pid")"
+  done
+  PROC_MEM_N=$n
+  if [ "$n" -gt 0 ]; then
+    "$sayfn" "MEMORY: ${n} project process(es) whose peak rss exceeds the ${JACK_MEM_CEILING_MB} MB ceiling (SYSTEM.md ~1.5 GB, on a box with paying tenants). NOT killed, and a declaration is not a waiver — named so the excess is a number instead of an anecdote; whether the ceiling itself is right is on the owner's desk (63rd audit B2)."
     return 1
   fi
   return 0

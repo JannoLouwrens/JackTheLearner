@@ -391,6 +391,30 @@ class Result:
     lesson: a sentinel that is also a valid value cannot be detected).
     """
 
+    peak_rss_mb: Optional[float] = None
+    """Peak RSS of the recording process tree, in MB, when the row was written
+    — max of `getrusage(RUSAGE_SELF)` and `getrusage(RUSAGE_CHILDREN)`
+    `ru_maxrss` (63rd audit B2). SELF because `run_spec` calls the experiment
+    inline, so that is where nearly every spec's peak actually lives (a
+    children-only reading would record ~0 for the exact 7.57 GB T2.00 scar
+    this exists for); CHILDREN so forked work is not invisible. Once universal,
+    a spec that violates the box's ~1.5 GB constraint is a number instead of
+    an anecdote, and a future ratchet can gate on it. `None` means the row
+    predates the field or the platform has no `getrusage` — unmeasured, never
+    zero (the `Arm.cost` lesson).
+
+    READ IT WITH `peak_rss_inherited`. The kernel's high-water mark is
+    monotone over a process's life and cannot be reset, so in a multi-spec
+    process (a `--gate` sweep) every row after the hungriest spec inherits its
+    peak. The number alone cannot say whose it is; the flag can."""
+    peak_rss_inherited: Optional[bool] = None
+    """False: the high-water mark ROSE during this spec's runs, so
+    `peak_rss_mb` is this spec's own peak, exactly. True: the mark was already
+    there when this spec started — an earlier spec in the same process set it,
+    and the number is only an upper bound on this spec. A ratchet must gate on
+    `inherited == False` rows only, or one hungry spec in a sweep indicts
+    every spec recorded after it. `None` iff `peak_rss_mb` is `None`."""
+
     unknown_keys = ()
     """Row keys this version's dataclass does not define, set by `from_row`.
 
@@ -2499,6 +2523,23 @@ def _drain_gpu_charge_s() -> Optional[float]:
         return None
 
 
+def _peak_rss_mb() -> Optional[float]:
+    """Process-tree peak RSS in MB: max of SELF and CHILDREN `ru_maxrss`.
+
+    On Linux `ru_maxrss` is kilobytes (on macOS it is bytes — this project
+    runs nowhere getrusage speaks bytes, and a 1024x error would be caught by
+    the first row read against a known peak). `None` when the platform has no
+    `resource` module — unmeasured, never 0.0 (the `Arm.cost` lesson).
+    """
+    try:
+        import resource
+        kb = max(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+                 resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
+        return round(kb / 1024.0, 1)
+    except Exception:
+        return None
+
+
 _PROCWATCH_DECLARED = None
 
 
@@ -2608,6 +2649,11 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
     # is exposed, the error is silent and plausible, and it grows with
     # duration. One line moved fixes the whole class.
     stamp = Result.env_stamp()
+    # Read BEFORE the runs so ownership of the peak is decidable: the kernel's
+    # high-water mark is monotone and unresettable, so "did it move during
+    # THIS spec" is the only attribution question the number can ever answer
+    # (63rd audit B2; see the field docstrings on Result).
+    rss_before = _peak_rss_mb()
     seeds = list(range(spec.seeds))
     # GPU dispatch provenance (overseer B3). Drained BEFORE the runs so another
     # spec's leftover job ids in this process cannot be attributed to this one;
@@ -2707,9 +2753,19 @@ def run_spec(spec: Spec, fn: Callable[[int], Dict[str, Any]],
                  "tree before you edit it or the FAIL becomes unauditable")
         message = f"{message} | {_note}" if message else _note
 
+    # Stamped on every path through the try — PASS, FAIL, VOID and ERROR all
+    # spent memory. The ERROR case especially: an OOM-adjacent crash is the
+    # row whose peak the next reader most needs.
+    rss_after = _peak_rss_mb()
+    # Undecidable ownership (no before-reading) records as inherited=True: an
+    # upper bound a ratchet must not gate on, never a false claim of exactness.
+    rss_inherited = (None if rss_after is None else
+                     rss_before is None or rss_after <= rss_before)
+
     res = Result(spec_id=spec.id, status=status, metrics=metrics,
                  control_metrics=control_metrics, seeds=seeds,
                  preserved_impl=preserved,
+                 peak_rss_mb=rss_after, peak_rss_inherited=rss_inherited,
                  duration_s=round(time.time() - t0, 2), message=message,
                  compute_s=(round(compute_s, 2) if compute_s is not None else None),
                  impl_sha=impl_sha,
