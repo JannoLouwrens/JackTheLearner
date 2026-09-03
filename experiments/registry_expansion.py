@@ -4577,6 +4577,67 @@ EXPANSION: list[Spec] = [
                "as a live test of the swappable-LLM decree. "
                "  COVERS: language (parent) (claim)"),
 
+    # ── THE TOLD WORLD (66th audit B1, registered 2026-09-03) ─────────────
+    # GOAL.md:206-212 has said of itself "FALSIFIABLE, and it must be tested
+    # rather than assumed" since 1859c8f (2026-08-09) — 25 days, 0 of 232
+    # specs making the claim, invisible to coverage because the claim lands
+    # in `language (parent)`, which reads 3 pass. The design below is
+    # GOAL.md's own, taken verbatim per the audit's instruction, not
+    # improved. Registered UNREACHABLE on purpose (the GEN.02-09 shape): a
+    # truthful red is the deliverable, not a dispatchable spec. depends_on
+    # is today's best stand-in for "something he has lived" — LF.01 is the
+    # only registered spec in which a whole life happens; when Sunday's W1
+    # design registers the survival world this re-parents to the surviving
+    # W1 line (the BA.02 -> LT.08 precedent, declared here so the later
+    # edit is a re-parent, not a drift).
+    Spec("LG.11", 6, "The told world: a fact he has lived the ground of is "
+                     "usable, a fact he has not is parroting",
+         hypothesis="Two fact sets, matched for length and syntactic form, "
+                    "are told to him through the parent channel: one anchored "
+                    "to primitives he has lived (hot, heavy, far, tiring, "
+                    "dangerous — GOAL.md:187's list), one with no referent in "
+                    "anything he has lived ('bonds have coupon rates'). "
+                    "Integration DIFFERS: anchored facts are usable (he can "
+                    "act on them / bind them to his own experience in probes) "
+                    "while unanchored facts are recitation — and he can say "
+                    "which is which — by >=3 sigma across seeds.",
+         falsified_by="Both fact sets integrate identically — he is reciting, "
+                      "and the jungle bought nothing (GOAL.md's own words). "
+                      "OR the anchored>unanchored gap SURVIVES the stripped "
+                      "control, in which case the gap was a property of the "
+                      "corpus or the frozen mouth, never of his life, and the "
+                      "claim is dead either way.",
+         null_baseline="THE UNANCHORED SET is the within-subject null: its "
+                       "integration score is the parroting floor the anchored "
+                       "set must beat. Matched length and syntactic form is "
+                       "what makes the floor fair.",
+         metric="anchored_vs_unanchored_integration_gap",
+         budget=Budget.CPU_LONG, depends_on=["LG.00", "LF.01"], seeds=3,
+         control="STRIP THE LIVING (LG.00's machinery reused): ablate the "
+                 "learned core and diary and re-tell both sets to what "
+                 "remains. The gap must VANISH — for the stripped agent both "
+                 "sets must integrate identically, the reciting profile. A "
+                 "gap that needs nothing lived is not grounding.",
+         kills="The stated justification of the entire survival programme. "
+               "GOAL.md justifies W0/W1, the needs, the cold that kills and "
+               "the mortality by saying lived primitives are what make told "
+               "knowledge MEAN something. If this fails, the jungle is still "
+               "a world but it is not buying what the constitution says it "
+               "buys, and the third expansion is a library bolted to a "
+               "language model.",
+         notes="Registered per the 66th audit's B1 — the constitution's "
+               "third expansion (THE TOLD WORLD) was the only one of three "
+               "with no rung: MORE WORLDS has GEN.06, OTHER MINDS has "
+               "GEN.02/03/09, this had nothing. GOAL.md stops to give this "
+               "claim a test design, a null and a consequence in its own "
+               "text; hypothesis/falsified_by/control above quote it rather "
+               "than improving it. 'He should be able to say which is which' "
+               "is the discriminability clause and it is part of the claim, "
+               "not decoration. Queue row told-world-has-no-rung carries the "
+               "two open build questions (fact sets before W1? LG.00 "
+               "apparatus reusable?). "
+               "  COVERS: told world (claim)"),
+
     # ── BALANCE, SUCCESSOR CLAIM (overseer B1, 48th audit, 2026-08-30) ───
     # Registered BEFORE D8's default fires (2026-08-31) so that parking
     # BA.02 costs the ratchet nothing. This is NOT an amendment of BA.02

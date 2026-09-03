@@ -1766,3 +1766,28 @@ ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, class
     position_only_acc control read 0.708 (control outscored the instrument,
     the T2.11 rule). The FAIL is carried by classes_present /
     has_kind_label / has_self_flag alone; do not quote 0.583.
+
+ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | OPEN
+    DUE: 2026-09-10 | two build questions owed by the Review — dated OFF the
+    09-06 pile deliberately (the 65th/66th audits both flag that docket at 7
+    rows vs measured capacity 1/cycle); only the re-parent sub-question rides
+    the W1 window, and it is mechanical once W1 exists.
+    Question: LG.11 (THE TOLD WORLD, registered this commit per 66th-audit
+    B1) is deliberately unreachable behind LG.00 + LF.01. Two things decide
+    when it stops being a truthful red and becomes a runnable claim:
+    (a) can the two matched fact sets be BUILT before W1 exists? The anchored
+    set needs primitives he has LIVED (hot, heavy, far, tiring, dangerous —
+    GOAL.md:187), and today nothing on the ledger certifies any of them as
+    lived rather than sensed; if a W0 life (LF.01) suffices for a first
+    honest run, the dep chain is already right — if the primitives only
+    exist in W1, say so and the row waits there.
+    (b) is LG.00's frozen-mouth apparatus (strip the learned core + diary,
+    re-probe) reusable as LG.11's control, or does the telling channel need
+    its own strip? LG.11's control clause assumes reuse; if LG.00's
+    implementation lands in a shape that cannot be re-told a corpus, the
+    assumption should be caught here, not discovered at run time.
+    SEMANTIC bill: none today — LG.11 has no rows, LG.00 has no rows; the
+    only committed artifact is the registration itself.
+    MECHANICAL bill: re-parenting LF.01 -> W1-line in depends_on is a
+    registry edit to an unrun spec (no certificate cites it); the
+    UNREACHABLE_BASELINE moves only if the re-parent changes reachability.

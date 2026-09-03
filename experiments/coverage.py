@@ -139,6 +139,7 @@ COMMITMENTS: Dict[str, Tuple[str, str]] = {
     "shelter/building":   (r"\b(shelter|build\w*|construct\w*|nest\w*)\b", "owner's own image of success"),
     "tool use":           (r"\b(tool|tools|affordance\w*)\b", "caveman realism"),
     "language (parent)":  (r"\b(language|word|words|grounding|lexic\w*)\b", "LLM as talkative parent"),
+    "told world":         (r"\b(told|second.hand|hearsay|anchored|grounded fact|parrot\w*|recit\w*)\b", "owner: the jungle buys MEANING for what he is told"),
     "social/other agents":(r"\b(social|companion|two jacks|second jack)\b", "owner: socialising makes him kind"),
     "curiosity":          (r"\b(curiosity|novelty|exploration|learning progress)\b", "the world is the teacher"),
     "one brain / unison": (r"\b(unison|fused|fusion|binding|cross-modal|shared|one brain)\b", "the constitution itself"),
@@ -942,8 +943,15 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 #     clears the first time SO.01 passes; registering the falsifier beside
 #     the capability is the GEN.02-09 shape, named here as the ratchet
 #     requires.
+#   92 @ 2026-09-03 (builder, 66th audit B1) — LG.11 (THE TOLD WORLD)
+#     registered deliberately UNREACHABLE behind LG.00 + LF.01: GOAL.md's
+#     third expansion declared itself falsifiable on 2026-08-09 and had no
+#     spec for 25 days, invisible because its claim fell in `language
+#     (parent)` which reads 3 pass. A truthful red is the deliverable (the
+#     GEN.02-09 shape); the LF.01 dep re-parents to the W1 line when the
+#     Sunday 09-06 design registers it.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 91
+UNREACHABLE_BASELINE = 92
 
 
 def unreachable_ratchet(ledger=None,
