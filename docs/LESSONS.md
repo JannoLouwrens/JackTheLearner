@@ -10521,3 +10521,12 @@ an engine that auto-resets makes state-finiteness a measurement of the
 repair, not of the fault.** And when writing a control for a watchdog, run
 the control BEFORE registering: a watchdog that has never seen its poison
 classified is a watchdog whose blindness is still a hypothesis.
+
+*Postscript, same day (67th audit B2, executed 633b5bb→): the record now
+exists. `launch_detached.sh` under `JACK_AWAITING_SPEC=<id>` writes an
+`AWAITING <spec> <since> <pid:starttime>` row beside the pid declaration
+(`proc_await`, lib_procwatch.sh), and `run next` refuses (rc 3) while any
+row has neither a ledger entry with `ran_at >= since` nor a live pid —
+verified firing on a synthetic dead launch and standing down on
+pending/resolved ones. A registered detached launch made WITHOUT the env
+var is once again a prose-only handoff; set it.*

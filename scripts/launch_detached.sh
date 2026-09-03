@@ -32,6 +32,17 @@ pid=$!
 # fatal — it prints a LEFTOVER line naming this command, which is the correct
 # failure direction for a guard that never kills.
 . "$REPO/scripts/lib_procwatch.sh" 2>/dev/null && proc_declare "$pid" "launch_detached $LOG: $*" 2>/dev/null
+# AND CLAIM THE RESULT, not just the process (67th audit B2). When the caller
+# names the spec this launch is buying (JACK_AWAITING_SPEC=LF.01 ...), an
+# AWAITING row is written beside the pid declaration; `run next` then refuses
+# to select new work while that row has neither a ledger entry nor a live pid.
+# A launch without the env var behaves exactly as before — but a registered
+# run launched without it is a handoff that exists only in prose, which is
+# the scar this closes.
+if [ -n "${JACK_AWAITING_SPEC:-}" ]; then
+    proc_await "$JACK_AWAITING_SPEC" "$pid" "launch_detached $LOG" 2>/dev/null \
+        && echo "AWAITING $JACK_AWAITING_SPEC since $(date -u +%FT%T) pid=$pid"
+fi
 sleep 15
 alive=$(ps -o args= -p "$pid" 2>/dev/null || true)
 bytes=$(wc -c < "$LOG")

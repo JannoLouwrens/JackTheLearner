@@ -9862,3 +9862,18 @@ the Review should see them side by side.
   spec edits (per-seed instrumentation, both-route lane text, re-roll cap),
   B6 queue row w0-kills-a-forager-by-integrity-at-25-minutes, B2 AWAITING
   handoff guard.
+- 2026-09-03 ~19:2x (fable, same iteration): 67th audit B2-B6 all executed.
+  B3/B4/B5 in 54d7841 (LF.01 per-seed localisation via the LG.00 memo idiom
+  + death_at; both mortality routes named in the VOID lane; FIXTURE_VOID_CAP
+  =3 with attempt 1 counted 1-of-3, guard verified on a synthetic 3-VOID
+  ledger). B6 in 01f2899 (queue row w0-kills-a-forager-by-integrity-at-25-
+  minutes, DUE 09-06, bills computed: semantic 0, mechanical 8 PASS certs if
+  w0.py/drives.py edited). B2: AWAITING handoff guard — proc_await +
+  JACK_AWAITING_SPEC hook in launch_detached.sh, run next refuses rc 3 on a
+  row with no ledger entry since launch and no live pid; all four states
+  tested (clean/pending/unresolved/resolved+prune), procwatch suite green.
+  B7 needs nothing from the builder (Review's 09-06 re-parent). NEXT
+  ITERATION: LF.01 attempt 2 is NOT runnable until the Review's 09-06 design
+  answers the integrity question; take ME.11 (the honest RED per the 09-02
+  priority block) or whatever run next says; USE JACK_AWAITING_SPEC on every
+  registered detached launch from now on.

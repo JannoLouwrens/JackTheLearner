@@ -1261,7 +1261,83 @@ def cmd_verify(ledger: Ledger) -> int:
     return 0
 
 
+# ── AWAITING: results owed by a detached launch (67th audit B2) ─────────────
+# `scripts/launch_detached.sh` (under JACK_AWAITING_SPEC=<id>) writes one row
+# per registered detached launch: `<spec>\t<since>\t<pid:starttime>\t<label>`.
+# The scar: an iteration launched LF.01 detached, promised in PROSE that "the
+# waiter will wake me", and exited; the row landed 8 minutes later with
+# nothing scheduled to read it, and every instrument stayed green because no
+# organ watches for the ABSENCE of a harvest. This is the reader that prose
+# never was. Three states per row:
+#   RESOLVED — the ledger has an entry for the spec with ran_at >= since:
+#              the result landed; the row is pruned here.
+#   PENDING  — the pid (verified by starttime, so a recycled pid cannot
+#              satisfy it) is still alive: informational, never blocking.
+#   UNRESOLVED — no ledger entry, no live pid. The run died or vanished with
+#              its result unread; `next` REFUSES to select new work until
+#              someone reads the log and harvests or records the loss.
+AWAITING_PATH = os.environ.get("JACK_AWAITING", "/data/jack-logs/awaiting")
+
+
+def _awaiting_key_alive(key: str) -> bool:
+    pid, _, start = key.partition(":")
+    try:
+        with open(f"/proc/{pid}/stat") as f:
+            rest = f.read().rsplit(") ", 1)[-1].split()
+    except OSError:
+        return False
+    return len(rest) >= 20 and rest[19] == start
+
+
+def _awaiting_check(ledger: Ledger):
+    """(unresolved, pending) AWAITING rows; prunes resolved ones from disk."""
+    try:
+        with open(AWAITING_PATH) as f:
+            lines = [ln.rstrip("\n") for ln in f if ln.strip()]
+    except OSError:
+        return [], []
+    keep, unresolved, pending = [], [], []
+    for ln in lines:
+        parts = ln.split("\t")
+        if len(parts) < 3:              # unparseable row: surface, never drop
+            unresolved.append((ln, "", "", "unparseable AWAITING row"))
+            keep.append(ln)
+            continue
+        spec, since, key = parts[0], parts[1], parts[2]
+        row = ledger.results.get(spec)
+        if row is not None and (row.ran_at or "") >= since:
+            continue                    # resolved: the result landed — prune
+        keep.append(ln)
+        if _awaiting_key_alive(key):
+            pending.append((spec, since, key))
+        else:
+            unresolved.append((spec, since, key,
+                               "no ledger row since launch, pid gone"))
+    if len(keep) != len(lines):
+        tmp = AWAITING_PATH + ".tmp"
+        with open(tmp, "w") as f:
+            f.write("".join(k + "\n" for k in keep))
+        os.replace(tmp, AWAITING_PATH)
+    return unresolved, pending
+
+
 def cmd_next(ledger: Ledger) -> int:
+    unresolved, pending = _awaiting_check(ledger)
+    for spec, since, key in pending:
+        print(f"AWAITING {spec} since {since} — pid {key} still running; "
+              f"not blocking, but do not relaunch it.")
+    if unresolved:
+        print("\nREFUSED: a detached registered run owes a result nobody has "
+              "read (67th audit B2 — the organ that would notice a dropped "
+              "result is the one that exited):\n")
+        for spec, since, key, why in unresolved:
+            print(f"  AWAITING {spec} since {since} ({why})")
+        print("\nHarvest it before selecting new work: read its launch log, "
+              "commit the ledger row if one exists on disk, or record the "
+              "loss (amend / lost_iterations.log) — then delete the row from "
+              f"{AWAITING_PATH} in the same breath, and say so in the "
+              "journal. This check refuses; it never harvests for you.")
+        return 3
     avail = ready(ledger)
     if not avail:
         print("Nothing runnable — every unblocked spec already passes.")

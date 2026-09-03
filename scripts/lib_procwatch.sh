@@ -52,6 +52,7 @@
 JACK_REPO="${JACK_REPO:-/home/opc/jackthelearner}"
 JACK_VENV="${JACK_VENV:-/data/venvs/jackthelearner/}"
 JACK_PROC_DECL="${JACK_PROC_DECL:-/data/jack-logs/declared_pids}"
+JACK_AWAITING="${JACK_AWAITING:-/data/jack-logs/awaiting}"
 # SYSTEM.md's "~1.5 GB RAM" ceiling, as a number a predicate can read. Do NOT
 # raise it to match observed behaviour — T2.00 peaked at 7.57 GB and T0.07
 # records 6.99 GB on a green row, and whether that means the specs are in
@@ -129,6 +130,39 @@ _proc_is_ours() {
   cwd=$(readlink "/proc/$pid/cwd" 2>/dev/null)
   case "$cwd" in "$JACK_REPO"|"$JACK_REPO"/*) return 0 ;; esac
   return 1
+}
+
+# ------------------------------------------------------------- awaiting ----
+# proc_await SPEC_ID PID [LABEL] — record that a REGISTERED RUN was launched
+# detached and its result is OWED: an `AWAITING` row that outlives the
+# iteration which wrote it.
+#
+# THE SCAR, 2026-09-03 (67th audit B2, LESSONS "a handoff that promises a
+# mechanism is making a capability claim"). The 18:07 iteration launched
+# LF.01 detached, declared the pid correctly, wrote "the background waiter
+# will wake me when the row lands" in its report, and exited 61 seconds
+# later. There was no waiter — a process that ends cannot wait. The row (the
+# longest life this project has ever run) landed at 18:32 with NOTHING
+# scheduled to read it, and every instrument read green, because nothing in
+# this repo watched for the ABSENCE of a harvest. `proc_declare` attributes
+# the process; this row attributes the RESULT. They answer different
+# questions — "is this pid legitimate?" vs "did anyone read what it wrote?"
+#
+# Format (tab-separated, one row per launch, beside declared_pids):
+#   <spec_id> \t <since ISO-8601> \t <pid:starttime> \t <label>
+# The consumer is `run next` (experiments/run.py:_awaiting_unresolved): a row
+# whose spec has a ledger entry with ran_at >= since is RESOLVED and pruned;
+# a row whose pid is still alive is PENDING (informational); a row with no
+# ledger entry and no live pid REFUSES unit selection until a human or an
+# iteration harvests the log or records the loss. Refusing `next` — not
+# killing, not auto-harvesting — is the correct failure direction: the next
+# reader decides, but it cannot NOT decide.
+proc_await() {
+  local spec="$1" pid="$2" label="${3:-launch_detached}" key
+  key=$(proc_key "$pid") || { echo "proc_await: pid $pid is already gone" >&2; return 1; }
+  mkdir -p "$(dirname "$JACK_AWAITING")" 2>/dev/null
+  printf '%s\t%s\t%s\t%s\n' "$spec" "$(date -u +%FT%T)" "$key" "$label" \
+    >> "$JACK_AWAITING"
 }
 
 # ----------------------------------------------------------- declaration ---
