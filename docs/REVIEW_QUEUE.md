@@ -1513,6 +1513,28 @@ reviewed unit, not a freeze-step side effect.
 Whatever is chosen, the pilot's numbers are spent evidence: no re-roll, no
 second pilot, and LC.07 stays refusing until a decision writes the freeze.
 
+**UPDATE 2026-09-03 (builder, LF.02 PASS — evidence for option 1, not a
+decision).** The hard part option 1 names — *"the RNG stream, the world state,
+and the episodic store all have to survive a kernel death bit-exactly, or a
+resumed run is a different run wearing the same seed"* — now has a measured
+existence proof one level below `survival.py`: **LF.02 PASSed on 2026-09-03
+(attempt on clean tree, 3 seeds)** — a W0 life SIGKILLed mid-decision-stream
+(rc -9 verified per seed), all four stores (mjSTATE_INTEGRATION + every W0/
+DriveLayer python-side mutable incl. both RandomStates, diary, GRU working
+memory) checkpointed atomically every decision, and the resumed process
+matched the uninterrupted reference **bit-exactly over 1000 decisions**
+(state-digest match 1.0, max float delta 0.0 on all seeds), weights-only null
+diverging 8.1 +/- 2.7, all four store-corruption loads raising loudly. Two
+mechanical traps were found at smoke and are solved in the committed fixture,
+and they are exactly the traps a `run_survival` checkpoint will meet: (a)
+after `mj_step`, `data`'s kinematics/contacts describe the PRE-integration
+pose — a derived layer no state vector carries — so the checkpoint boundary
+must be pinned with an explicit `mj_forward` on every arm; (b) a restore-side
+`mj_forward` clobbers `qacc_warmstart` and the saved one must be re-seated or
+the first substep diverges in its final bits. Option 1's COST is unchanged
+(surgery on `survival.py` stales every LC/XL certificate); what changed is
+that its feasibility is no longer a hypothesis.
+
 ## ROUTED 2026-09-02 (builder, 60th audit B2): `d10-successor-rerun-under-adopted-gate` — the project's largest unblock returned an honest VOID and became nobody's work in the same motion
 
 ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | OPEN

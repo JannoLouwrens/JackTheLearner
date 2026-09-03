@@ -10530,3 +10530,57 @@ row has neither a ledger entry with `ran_at >= since` nor a live pid —
 verified firing on a synthetic dead launch and standing down on
 pending/resolved ones. A registered detached launch made WITHOUT the env
 var is once again a prose-only handoff; set it.*
+
+## A state vector is not the state the next computation reads (LF.02, 2026-09-03)
+
+LF.02's first restore attempt serialized MuJoCo's own documented
+exact-continuation vector (`mj_getState(mjSTATE_INTEGRATION)`), restored it,
+and read back torso positions wrong in the 6th decimal with qpos/qvel
+bit-identical. Two derived layers were the gap, and neither lives in any
+state vector: (a) after `mj_step`, `data`'s kinematics and contacts describe
+the PRE-integration pose of the last substep — every consumer at the decision
+boundary (servo, observation, contact forces) was reading state one substep
+older than the vector being saved; (b) calling `mj_forward` at restore to
+rebuild that derived layer OVERWRITES `qacc_warmstart` with a fresh solve, so
+the resumed solver starts its next step from a different guess than the
+uninterrupted run and the divergence compounds from the last bit upward.
+
+The fix generalises past MuJoCo. A checkpoint is only as complete as the
+boundary is NORMALISED: make every value the next computation reads a pure
+function of the serialized vector — LF.02 pins each decision boundary with an
+explicit `mj_forward` on EVERY arm (reference, victim, resume, null run the
+same line, so cross-arm bit-parity survives the change) and re-seats the
+saved warmstart after the restore-side forward. And the proof standard that
+found both traps in one smoke run is the standard to keep: a BITWISE
+roundtrip-and-continue gate (capture -> apply -> does the feature row match;
+step both 30 decisions -> still byte-equal). A tolerance would have absorbed
+both bugs as "float noise" and shipped a resume that was a different life.
+
+**Rule: a fixture that checkpoints at a boundary must first make the boundary
+derived-state-free — recompute every derived field from the serialized state,
+identically on the save and load sides and identically on every arm — and its
+fidelity gate must be bit-exact, because any nonzero tolerance is exactly the
+budget a missed store hides inside.** (Sibling of the same day's auto-reset
+lesson: the engine's data surface is not the state, in both directions.)
+
+## Never displace the ledger to dodge a supersede; the runner's history IS the record (LF.02 handling, 2026-09-03)
+
+LF.02's attempt 1 ran before its test file was committed and correctly
+stamped `+dirty`. The right repair was: commit the bytes, re-run, and let
+`Ledger.record` push attempt 1 into the row's `history` (that mechanism
+exists precisely so every attempt survives). Instead this iteration stashed
+`ledger.json` first, "to keep the tree clean" — so the re-run recorded onto a
+ledger with no LF.02 row, wrote an empty history, and left attempt 1 existing
+only inside a git stash. Every instrument would have read green while a
+recorded run sat outside the record. The repair executed and disclosed in the
+same commit: the runner-written attempt-1 bytes were restored VERBATIM into
+`history` in `record()`'s own row format (no field invented, no verdict
+touched). That is the narrow legitimate form of a hand-touch — restoring
+runner-authored content the handler displaced — and it is disclosed here
+because undisclosed it would be indistinguishable from editing the ledger.
+
+**Rule: when a run must be re-bought (dirty stamp, provenance upgrade), the
+ONLY path is commit-then-re-run on top of the existing row, letting the
+runner supersede; any workflow that moves `ledger.json` aside around a run —
+stash, checkout, copy — deletes an attempt from the record by construction,
+whatever the intention.**

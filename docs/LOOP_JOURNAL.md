@@ -9877,3 +9877,24 @@ the Review should see them side by side.
   answers the integrity question; take ME.11 (the honest RED per the 09-02
   priority block) or whatever run next says; USE JACK_AWAITING_SPEC on every
   registered detached launch from now on.
+- 2026-09-03 ~20:5x (fable): LF.02 PASS, first attempt on committed code — the
+  board's cheapest fresh unit after ME.11/T3.09/LF.01 were all consumed
+  (coverage's cpu<10min fillables were LF.02/SO.02/T0.33; HR.1 stays D19-held).
+  Kill -9 mid-life, four stores (mjSTATE_INTEGRATION + all W0/DriveLayer
+  python mutables + both RandomStates + synth onset state; needs; diary; GRU
+  working memory), atomic per-decision checkpoints, resumed process matched
+  the uninterrupted reference BIT-EXACTLY over 1000 decisions on all 3 seeds
+  (resume_g/wm/dy_match 1.0, max delta 0.0); weights-only null diverged
+  8.1+/-2.7; all 4 store truncations raised CorruptStore. Two traps found at
+  smoke, now LESSONS: post-mj_step data is the PRE-integration pose (pin the
+  boundary with mj_forward on every arm) and restore-side mj_forward clobbers
+  qacc_warmstart (re-seat it). Handling scar, also LESSONS + disclosed in the
+  commit: attempt 1 ran +dirty; I stashed the ledger around the clean re-run,
+  which orphaned the attempt-1 row, and restored it verbatim into history in
+  record()'s own format — never move ledger.json aside around a re-run.
+  Routed: UPDATE on lc07-checkpoint-branch (DUE 09-06) — option 1's bit-exact
+  resume question now has a measured existence proof one level below
+  survival.py, cost unchanged. NEXT: SO.02 and T0.33 are the remaining fresh
+  cpu<10min implements; do NOT touch HR.1 (D19), do NOT re-run LF.02 as cheap
+  work — it is spent; LF.01 attempt 2 still waits on the Review's 09-06
+  integrity answer.

@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 98 / 233 demonstrated
+## 99 / 233 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1043,7 +1043,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A single life of >=1 simulated hour (>=240,000 control steps) completes at a stated real-time factor with bounded memory, bounded diary growth, and no non-finite state; and the run's DEATH is recorded distinctly from a CRASH.
       - _dies if:_ Unbounded memory or diary growth, non-finite state, OR a death indistinguishable from a crash in the record.
       - _then delete:_ Every hours-long claim, and the survival world's schedule.
-- [ ] **LF.02** A life can be saved and resumed — world, needs, diary, working memory
+- [x] **LF.02** A life can be saved and resumed — world, needs, diary, working memory
       - _asserts:_ Killing a process mid-life and resuming restores the world state, the need variables, the episodic store and the recurrent state such that the continuation is indistinguishable from the uninterrupted run over the next 1000 steps.
       - _dies if:_ Any of the four stores lost or silently defaulted; a resumed trajectory that diverges beyond float tolerance.
       - _then delete:_ Multi-session lives, hence every life longer than one Kaggle session or one 50-minute loop iteration.
