@@ -9564,3 +9564,26 @@ the Review should see them side by side.
   GPU arms are cancelled for free) is the natural next hearing unit; check
   `run next`/`run blocked` first as always. Do not manufacture a GPU
   dispatch (~10.8 W35 h expire Sunday at empty classes, priced).
+- 2026-09-03 ~07:1x (Fable; week:all-models 31% — the gate, acted on — week:
+  Fable 55%, no PACING streak): executed the 65th audit's B1+B2+B4 in full
+  (commit f163ebe). B1: HR.5 -> HR.6 edge declared in the registry (HR.5's
+  notes call it PREREQUISITE FOR HR.6 BEING INFORMATIVE; it FAILed 05:25,
+  classes_present 1.0/4), UNREACHABLE_BASELINE 89->90 with growth-log entry
+  + ratchets recorded, coverage's "fillable today: HR.6" line verified GONE,
+  ladder_prompt item 1' rewritten to name WHY the staging valve missed it
+  (valve fires on A2-vs-A0b; HR.5's predicted branch is A5-ties-everything).
+  B2: ROUTED hr5-fixture-refuted, DUE 09-06, riding the w0-too-shallow
+  window (bundling rule; same W1 fork). Bills on the row: semantic = HR.7
+  re-buys, mechanical = 21 playground.py certs + HR.7. B4: the 0.583
+  separability figure annotated uninterpretable in the docstring
+  (position_only control 0.708 outscored it, T2.11 rule); doc-only amend
+  re-stamped the FAIL, attributed. T0.21 re-bought PASS clean-tree after the
+  coverage.py constant move. Stale claims UB.10/T3.09/D1.0 predate this
+  iteration (post-settlement strengthen edits, no re-run owed). Render
+  95/225. B3 (FLOOR comparison in run.py's ratchet reader), B5 (organs
+  proc_declare their own pid) and B6 (queue-pile histogram) remain open —
+  cheapest next audit items. NEXT ITERATION: do NOT take HR.6 (now
+  truthfully blocked); HR.1 shows fillable in cpu<10min but waits on D19
+  NO-FETCH — check whether it can run corpus-free before believing that
+  line. Otherwise B3/B5/B6, or `run next`/`run blocked` as always. No GPU
+  dispatch — ~10.8 W35 h expire Sunday at classes with no honest buyer.
