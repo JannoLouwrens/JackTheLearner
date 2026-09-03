@@ -418,6 +418,15 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     lc_03_survival_screening.py; the vacuity lane in t3_09_creative_loop.py.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | OPEN
+    DUE: 2026-09-10 | re-armed by the builder, 2026-09-03, under 64th-audit
+    B4 (9 d OPEN, past the 8-day cycle, no date). Reason: the honest ACT is
+    registering a retrieval/bag-of-words challenger as a bakeoff arm — which
+    this row's own staleness analysis prices at zero bill — but WHICH seats
+    get challenged, and in what venue, is the same registration-asymmetry
+    design input the Review takes up with `w0-too-shallow` on 09-06; dated
+    09-10 so it comes due AFTER that decision and off the eighteen-row 09-06
+    pile (61st audit B2). If 09-10 arrives with no challenger registered and
+    no Review disposition, DECLINE it in the open rather than re-arm again.
     Question: the shipped routing mechanism (UnifiedBrain semantic-anchor
     argmax over compute_language_grounding_loss) transfers held-out phrasings
     at [8,9,5] of 16 vs a 12/16 bar on a grid DESIGNED for composition and
@@ -1689,3 +1698,29 @@ under the corrected lane are a VOID, recorded as such in the registry note).
 MECHANICAL, if the kills clause is later executed — `T0.01` (imports) names
 `AlphaGeometryLoop` in its roster and TaskManager/UnifiedBrain import it
 inside try/except; the docstring's deletion protocol covers both.
+
+ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | OPEN
+    DUE: 2026-09-06 | a design fork owed by the Review. Dated ON the 09-06
+    pile knowingly: the trap is armed every night an audit runs, and each
+    trip re-bills the whole re-buy — that recurring cost outranks
+    pile-avoidance for this one row.
+    Question: which uncommitted docs mean "code moved"?
+    `protocol.py:82 DOC_OUTPUTS = ("CHECKLIST.md", "docs/LOOP_JOURNAL.md")`
+    excludes only the builder's two docs from the dirty-tree stamp, so the
+    overseer's and Review's five docs count as CODE dirt. Measured cost,
+    2026-09-02 19:0x: an audit's in-progress doc writes made a concurrent
+    runner sweep stamp `+dirty`, VOIDing four PASS certificates by accident
+    (PS.01/PS.02/PS.03/BA.01, 0.14 s each), growing the unreachable ratchet
+    85 -> 89, and billing four clean-tree re-buys (~25 min compute plus three
+    builder slots, all four now harvested and the ratchet back at 85).
+    Why it is NOT an exclusion-list one-liner: three of those five docs
+    (`DECISIONS_NEEDED.md`, `REVIEW_QUEUE.md`, `PROGRESS_LOG.md`) are
+    machine-read by instruments (`run decisions`, `run review-queue`, the
+    ratchet readers), so adding them to DOC_OUTPUTS trades the dirty-stamp
+    trap for unstamped drift in instrument INPUTS — a doc an instrument
+    reads is not plainly prose. The fork: (a) widen DOC_OUTPUTS and accept
+    unstamped instrument-input drift; (b) keep the stamp and serialise organ
+    commits against runner sweeps (a locking/ordering design); (c) split
+    "prose dirt" from "instrument dirt" as two stamps with different
+    consequences. Until one lands the trap stays armed: the next audit that
+    commits during a sweep VOIDs certificates again.

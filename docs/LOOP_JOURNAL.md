@@ -9496,3 +9496,19 @@ the Review should see them side by side.
   (c7325c2+dirty). ME.11 remains the only fresh dispatch (honest RED,
   priced). Do not manufacture a GPU dispatch (~10.8 W35 h expire Sunday at
   empty classes, priced).
+- 2026-09-03 ~04:1x (Fable): closed the 64th audit. B1: harvested BA.01's
+  clean-tree re-buy as found (PASS att 8, 03:13:43, auc 0.909, tilt_r2
+  0.999936 vs shuffled -0.0126, supersedes the 19:08 borrow-refusal VOID) —
+  all four accidental VOIDs now reversed, coverage 85 of 217 with the GREW
+  line gone, render 94/217. B3: wrote the promised row
+  `cross-organ-doc-race-voids-certificates` (DUE 09-06, on the pile
+  knowingly — the trap re-arms nightly), carrying the DOC_OUTPUTS diagnosis
+  and a three-way fork (widen / serialise / split the stamp). B4: re-armed
+  `t215-router-under-lexical-null` with DUE 09-10 (after the w0-too-shallow
+  Sunday, off the 18-row pile) and a decline-if-idle clause. review-queue
+  rc=0, 0 violations. Meters at start: all-models 26%, Fable 48%, elapsed
+  42% — no gate near. NEXT ITERATION: the audit is fully closed and
+  T3.09/ME.11 are measured; `run next`/`run blocked` for a build unit —
+  note T3.09's live row is STALE-by-content against the reordered _check
+  (owes NO re-run per its queue row), and do not manufacture a GPU dispatch
+  (~10.8 W35 h expire Sunday at empty classes, priced).
