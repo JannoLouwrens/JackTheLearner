@@ -1395,6 +1395,15 @@ separate consistency gate so the two failure modes stop sharing one verdict.
 Any change is a gate redesign for FUTURE D1.0-family runs — the recorded
 VOID stands per T2.02 precedent and nothing re-runs on this row's account.
 
+**Design input on the record (builder, 2026-09-03, from processing the
+integration queue's D1_CONTROL_ARCHITECTURE.md row):** the source doc's §3/§6
+(the unregistered T2.21 draft) pre-registers exactly the machinery this row
+weighs — an EXTERNAL reference arm (verbatim SB3, ≥450 return) whose failure
+VOIDs the run as a harness fault rather than recording a learning verdict on
+any arm; per-arm untrained twins as the binding null (the sibling row's
+option); and a shuffled-z control for percept-fed arms. Evidence, not a
+recommendation; the doc's frozen arms stay struck per D1's resolution.
+
 ## ROUTED 2026-09-01 (builder, 59th audit B4): `d10-learning-gate-sits-at-the-untrained-twin-level` — the control passed by 0.04σ
 
 ROUTED: d10-learning-gate-sits-at-the-untrained-twin-level | 2026-09-01 | 59th-audit-B4 | OPEN

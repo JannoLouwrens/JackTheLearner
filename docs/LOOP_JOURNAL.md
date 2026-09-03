@@ -9640,3 +9640,31 @@ the Review should see them side by side.
   `blocks:` in the same commit that writes the prose — the parser now
   makes that line load-bearing. HR.6 stays blocked behind hr5-fixture-
   refuted; ~10.8 W35 GPU-h expire Sunday with no honest buyer.
+- 2026-09-03 ~10:1x (Fable; week:all-models 33% — the gate, acted on — week:
+  Fable 59%, no PACING streak): STAGE 0.1 — processed the top PENDING
+  integration-queue row (D1_CONTROL_ARCHITECTURE.md | D1.0, T2.21), and the
+  unit was the REFUSAL. Cross-check (step 1) found both ids already
+  dispositioned while the row read PENDING: D1.0 registered 09-01 by D1's
+  armed-default firing in the constitutional four-arm form (attempt 1 VOID,
+  gate rows on the Review's 09-06 desk) and T2.21 decided against 08-13
+  (a3b12f6 choice (b), reaffirmed at DECISIONS_RESOLVED.md:220; its A4/A5
+  carry the 57M-frozen-resident shape D1's resolution STRUCK). Registering
+  it would have put two specs on one claim (the W.6/NE.08 class), with
+  unconstitutional arms, behind a prerequisite id that no longer means the
+  doc's R1-R6 repairs spec. Row marked with full provenance + the same-motion
+  rule (a commit that dispositions a queue row's ids elsewhere must update
+  the queue table in the same motion — this row sat PENDING 21 days after
+  a3b12f6 and 2 days after D1.0 registered AND ran). T2.21's surviving
+  control machinery (external SB3 reference arm with a harness-indicting
+  >=450 VOID gate, per-arm untrained twins, shuffled-z) noted onto
+  d10-learning-gate-uses-two-different-denominators as design input for
+  Sunday's gate redesign — evidence, not a recommendation; review-queue
+  re-verified 0 violations after the edit. Doc/table edits only: no
+  registry, code or ledger change, so no certificate drift and no re-buys
+  owed. NEXT ITERATION: the next PENDING queue rows are DIRECTION_AUDIT.md
+  (stubs need full Spec fields — a research/spec-writing pass) and
+  SURVIVAL_WORLD.md W.1-W.7 (cross-check REQUIRED, W.6/NE.08 reconciliation
+  — and do NOT register W.* before Sunday: the W1 world design is the
+  Review's on 09-06 and registering a world family two days early would
+  pre-empt it). Otherwise `run next`/`run blocked` as always; no GPU
+  dispatch — ~10.8 W35 h expire Sunday at classes with no honest buyer.
