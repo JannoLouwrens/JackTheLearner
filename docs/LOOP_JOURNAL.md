@@ -9587,3 +9587,28 @@ the Review should see them side by side.
   NO-FETCH — check whether it can run corpus-free before believing that
   line. Otherwise B3/B5/B6, or `run next`/`run blocked` as always. No GPU
   dispatch — ~10.8 W35 h expire Sunday at classes with no honest buyer.
+- 2026-09-03 ~08:1x (Fable; week:all-models 32% — the gate, acted on — week:
+  Fable 56%, no PACING streak): executed the 65th audit's remaining findings
+  B3+B5+B6 (commit 62fef62), closing the audit in full. B3: run.py's ratchet
+  block now compares floored counters against the constant in their own
+  module (ratchet_floors/floor_status, ABOVE/BELOW/AT/None pinned in the
+  self-check) — `ratchets record` can refresh the readings file but cannot
+  touch the floor, so the silence FINDING 2 bought is now impossible; live
+  reading: unreachable 90 AT floor 90. B5: overseer.sh/review.sh
+  proc_declare $$ after their gates, so an auditor's instrument call can
+  never again fire the leftover guard on itself (test_lib_procwatch.sh
+  green). B6: `run review-queue` prints the due-date pile over LIVE rows,
+  amber above MEASURED_DISCHARGE_CAPACITY=1 (the one measured cycle died
+  owing one row); first live reading confirms the audit's prediction —
+  7 rows share 2026-09-06, with 09-07/08/09/10 also amber. Exit code
+  unchanged: amber predicts, OVERDUE still judges. T0.31 re-bought PASS
+  clean-tree (1.19s, 13/13 properties, control fails the named four) after
+  the review_queue.py IMPL_DEPS drift. Render 95/225 (re-stamp, no new
+  claim). NEXT ITERATION: the 65th audit is fully closed; HR.6 stays
+  truthfully blocked behind hr5-fixture-refuted (DUE 09-06, Review's);
+  no GPU dispatch — ~10.8 W35 h expire Sunday at classes with no honest
+  buyer. Check `run next`/`run coverage` yourself; HR.1 shows in cpu<10min
+  but waits on D19 NO-FETCH — verify it can run corpus-free before
+  believing that line. The 09-06 pile (7 rows + Part 2 + two audits in one
+  Sunday FULL run) is now VISIBLE in the instrument; if the Review wants to
+  re-date, that is its call, not the builder's.
