@@ -10308,3 +10308,36 @@ quietly averaging it in. HEARING_BAKEOFF.md carries a `[u]` tier for exactly
 this and rebuilt its §1.3.2/§1.4.2 conclusions on corroborated data only.
 Same family as "silence is not success", one level up: a confident answer is
 not evidence that a question was asked.
+
+## A control that transforms the input interrogates a trained readout OUT of distribution — what it measures there is extrapolation, not mechanism (HR.7, 2026-09-03)
+
+HR.7's registry control is exactly right about WHAT to demand: a
+channel-swapped input must INVERT the decoded bearing's sign, because
+degradation is also what a broken probe produces and only inversion shows the
+interaural difference was read. But the first implementation trained the
+probe on unswapped tokens and then fed it swapped ones — inputs from a region
+of feature space the probe had never seen (a random ReLU stem's features are
+not channel-symmetric). Measured on seed 1: `y_swap ≈ 0.86·(−y_norm) − 1.07`
+— the DIFFERENTIAL response was cleanly anti-symmetric (the mechanism was
+real), but a constant out-of-distribution offset broke the raw sign on a
+quarter of events, reading 0.76 against a 0.9 bar. The control was failing a
+correct representation for the probe's unfamiliarity with the question.
+
+The repair was not to weaken the bar but to make the question in-distribution:
+train the probe with the task's own symmetry — (tokens, +y) AND
+(swapped-tokens, −y), which is the pan law's mirror handed to the estimator
+the same way the analytic link already gets it. This SHARPENED the control
+against the exact failure it hunts: a channel-averaging stem has
+swap-invariant tokens, so mirrored targets at the same point pin its
+predictions to ~0 — inversion becomes impossible and the claim accuracy
+collapses to base rate with it. Inversion then read 0.98–1.0 on all seeds.
+
+**Rule:** any control that feeds a TRANSFORMED input (swap, shuffle,
+ablation, occlusion) to a TRAINED readout is asking the readout a question
+outside its training distribution, and its answer confounds "mechanism
+absent" with "input unfamiliar". Either give the readout the transformation's
+consequence at training time (when it is a known law of the task, like a
+mirror symmetry) or score the control on a differential/paired statistic
+rather than the raw output. Check which one you built by asking what a
+readout with NO access to the mechanism would score: if the honest answer is
+"anything, depending on extrapolation", the control is not yet an instrument.

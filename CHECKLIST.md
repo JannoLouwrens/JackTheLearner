@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 94 / 225 demonstrated
+## 95 / 225 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1018,7 +1018,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **HR.7** The audio stem does not deafen him to direction
+- [x] **HR.7** The audio stem does not deafen him to direction
       - _asserts:_ A probe on the audio STEM's output tokens recovers the source lateral angle to within 10 degrees on >= 0.9 of PG.5's drop events — the same gate PG.5 applies to the raw stereo signal. THE PROBE MUST NOT BE LINEAR IN THE LOG-MEL: the constant-power pan law makes the log-domain interaural level difference exactly atanh(p), so a linear readout saturates at the lateral extremes. MEASURED HERE 2026-08-09 on 108 PG.5-style drops: linear probe 0.40, analytic tanh link 1.00, mono control 0.10. A linear-probe version of this spec would report a FALSE NEGATIVE on the correct representation and kill the winning arm.
       - _dies if:_ Any candidate stem whose tokens lose bearing. Directional hearing is the ONLY thing PG.5 certifies, and it is what makes audio useful for ACTION (turn toward the sound); a stem that discards it reduces audio to an event detector.
       - _then delete:_ Any stem in HR.6 that fails, before it is ever trained. Named prediction, pre-registered: the DISCRETE-TOKEN arm fails this. ContactAudio encodes bearing purely as interaural LEVEL difference (ContactAudio.py:188-195 applies gains gL/gR to the IDENTICAL signal — there is no interaural TIME difference at all), and RVQ codecs quantise a few-dB level offset inside a single codebook cell. If it passes, that prediction was wrong and this document is wrong with it.

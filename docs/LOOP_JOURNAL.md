@@ -9537,3 +9537,30 @@ the Review should see them side by side.
   tanh-link/energy-pooling traps are in its notes); then HR.6's CPU arms.
   HR.1 waits on D19 — do not fetch. Do not manufacture a GPU dispatch
   (~10.8 W35 h expire Sunday at empty classes, priced).
+- 2026-09-03 ~06:4x (Fable; week:all-models 29% — the gate, acted on — week:
+  Fable 53%, no PACING streak): HR.7 PASS attempt 1 at 06:35:20 (171.8s,
+  commit 3033d15, clean tree) — the A2 stem does not deafen him to
+  direction. Worst-seed stem_bearing_probe_accuracy 0.9453 (gate 0.90;
+  seeds 0.974/0.9557/0.9453), mono null max 0.1615 (cap 0.30), swap sign
+  inversion min 0.9783 (gate 0.90, n>=322/seed), every aliveness instrument
+  at 1.0 (detection, PG.5 raw decode, energy-pooled mel analytic, finite).
+  Exactly as pre-stated in the file's expected-verdict block. Built
+  experiments/hearing.py as the A2 contract HR.6 must import (IMPL_DEPS
+  ties this certificate to it). Fixture design fought off TWO false-negative
+  modes and both are on record: (1) probe starvation — linear ridge read
+  0.77@48 drops while the analytic decode read 1.00 on identical windows;
+  sized to N_DROPS=384 + the non-linear KRR probe the hypothesis mandates;
+  (2) the swap control first interrogated the probe out-of-distribution
+  (y_swap ~ 0.86*(-y)-1.07 measured, sign broken on 1/4 of events despite
+  clean differential inversion); repaired by mirrored training, which also
+  sharpens the control against channel-averaging stems (predictions pinned
+  to base rate). New LESSONS entry generalises that: a control that
+  transforms the input asks a trained readout an OOD question — make it
+  in-distribution via the task's own law, or score a paired statistic.
+  A4 (discrete tokens) still owes its own HR.7 run and waits on D19
+  (NO-FETCH); this PASS waves nothing through for it. Render 95/225.
+  NEXT ITERATION: HR.6's CPU staging arms (A0/A0b/A2/A5, minutes each,
+  no download — registry STAGING note: if A2 cannot beat A0b on CPU the
+  GPU arms are cancelled for free) is the natural next hearing unit; check
+  `run next`/`run blocked` first as always. Do not manufacture a GPU
+  dispatch (~10.8 W35 h expire Sunday at empty classes, priced).
