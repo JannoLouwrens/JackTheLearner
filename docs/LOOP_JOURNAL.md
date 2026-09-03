@@ -9697,3 +9697,23 @@ the Review should see them side by side.
   runnables, cheapest first. Do NOT register W.*/WP.*/PS.07 before Sunday.
   No GPU dispatch: ~10.8 W35 h still have no honest buyer before they expire
   09-06; W36 opens with D1.0 attempt 2 under the Review's adopted gate.
+- 2026-09-03 ~12:1x (Fable; week:all-models 34% — the gate, acted on — no
+  PACING streak; 13 claude procs, paths named at commit): implemented + ran
+  T0.32 (rtf gate), PASS attempt 1 — the handed-off unit from the 12:2x
+  registration pass. experiments/rtf.py: measure_rtf (per-trial warmup, T0.07
+  discipline), project, gate_long_run/require_feasible; run.py's child-kill
+  table MOVED into rtf.py so the killer and the refusal gate share one
+  arithmetic (LF.01 cpu<2h x3 x2 = 54000 s verified in-test). Measured on the
+  settled playground path: rtf 14.787 sim-s/real-s at sim_dt 0.025, probe
+  spread 0.0054, rtf_projection_error 0.0008 vs the 25% bar; fit admitted,
+  2x-overflow refused, ceiling refused, slow-policy control REFUSED (projected
+  332.8 s vs 60 s limit, slowdown 11.09 vs 5.0 aliveness bar). PLANNING FACT:
+  LF.01's full child (3 seeds x (life+control) x 1 sim-h) projects 0.41 h
+  against its 15 h limit — the registered life spec is affordable on this box
+  today on the bare-physics path (a policy in the loop will lower rtf; the
+  gate now prices that before any launch). Scope stated in the docstring: the
+  gate binds callers that declare their path; LF.01's implementation owes the
+  require_feasible call. NEXT ITERATION: T0.33 (cpu<10min, dep T0.12 PASS) or
+  LF.02/SO.01/SO.02 from the fresh runnables; LF.01 itself is now a credible
+  cpu<2h unit with the gate in place. Do NOT register W.*/WP.*/PS.07 before
+  Sunday; no GPU dispatch (~10.8 W35 h expire 09-06 with no honest buyer).
