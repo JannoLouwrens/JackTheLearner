@@ -9612,3 +9612,31 @@ the Review should see them side by side.
   believing that line. The 09-06 pile (7 rows + Part 2 + two audits in one
   Sunday FULL run) is now VISIBLE in the instrument; if the Review wants to
   re-date, that is its call, not the builder's.
+- 2026-09-03 ~09:2x (Fable; week:all-models 32% — the gate, acted on — week:
+  Fable 57%, no PACING streak): the unit was the instrument, because the
+  ladder offered no fresh dispatch (queue depth 3, all VOID, every empty
+  class routed) and the one line that claimed otherwise was lying by
+  omission: `coverage` printed `cpu<10min <- fillable today: HR.1` while
+  D19's NO-FETCH default holds HR.1 blocked-on-disk and the Review's own
+  page says "do not fetch a corpus to unblock a family" — two journal
+  entries in a row had to hand-warn the next iteration off it. Same class
+  as HR.5->HR.6 (65th audit B1): a blocker in prose is invisible to every
+  ranker until it is an edge. Shipped (fba9ecf): decisions.holds() — OPEN
+  decisions' `blocks:` tokens, BY_ID-validated, comma-split so prose like
+  "nothing. T0.27 has no dependents" declares no hold — joined into
+  queue_depth() as a new FILL-HELD state: not fillable (the misroute), not
+  unfillable (`run blocked` is the wrong routing for a calendar), printed
+  with decision id + decide_by. D19 now declares blocks: HR.1-HR.4, the
+  enumeration its own prose already made. Fixture batteries 0 fails incl.
+  the no-hold control (hold stripped -> Q.19 returns to fillable); live
+  line reads "HELD by an open decision (implement NOTHING here): HR.1 <-
+  D19 (decide_by 2026-09-14)". T0.21 re-bought PASS clean-tree (7.72s,
+  0 uncovered commitments) and T0.28 PASS (28.19s, 10/10 properties,
+  5 armed) per IMPL_DEPS. Ratchets untouched: unreachable 90 AT floor 90,
+  coverage rc=2 is the standing routed red (4 CLAIM-DEAD + GEN corpses,
+  DUE 09-06/09-11), decisions --check rc=0 with D19 costing 3 specs.
+  NEXT ITERATION: no fresh dispatch exists — do not manufacture one; the
+  09-06 pile is the Review's. If a NEW decision ever holds a spec, write
+  `blocks:` in the same commit that writes the prose — the parser now
+  makes that line load-bearing. HR.6 stays blocked behind hr5-fixture-
+  refuted; ~10.8 W35 GPU-h expire Sunday with no honest buyer.
