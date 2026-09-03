@@ -1031,7 +1031,8 @@ def _unreachable_fixture() -> List[str]:
 
 
 def queue_depth(ledger=None, by_id=None, tracked=None,
-                baseline: frozenset = QUEUE_EMPTY_BASELINE) -> dict:
+                baseline: frozenset = QUEUE_EMPTY_BASELINE,
+                held=None) -> dict:
     """How many specs could actually be DISPATCHED today, by cost class.
 
     A spec is in the queue when it is **runnable** (every dependency passes),
@@ -1073,6 +1074,13 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         by_id = BY_ID
     if tracked is None:
         tracked = _tracked_tests()
+    if held is None:
+        # {spec_id: "Dxx (decide_by ...)"} from OPEN decisions' `blocks:`
+        # lists. No try/except: if the decisions doc is unreadable the honest
+        # move is to fail loudly, because a silent {} re-advertises every held
+        # spec — the optimistic default, the expensive direction here.
+        from .decisions import holds
+        held = holds(by_id=by_id)
     from .registry import ready
 
     parked_ids = set(parked(by_id)[0])
@@ -1191,10 +1199,32 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
     # DEBT the builder can clear alone, and an empty-and-unfillable class is
     # STRUCTURAL — the quota at that cost is unspendable until the ladder
     # moves, and no amount of implementing will change it.
+    # FILL-HELD — the state `fillable` mislabelled for a day (2026-09-03).
+    # An implementable spec named in an OPEN decision's `blocks:` list is not
+    # fillable TODAY: the unit it needs is on the decision desk, dated, and
+    # "implement a spec" would either waste the hour or walk around the
+    # decision (D19/HR.1: the run IS a 338 MB fetch the NO-FETCH default
+    # forbids). The hold lived in prose — the Review's "do not fetch a corpus
+    # to unblock a family" — and this readout kept printing `fillable today:
+    # HR.1` against it, so two journal entries in a row had to hand-warn the
+    # next iteration off one line of this instrument. Same disease as the
+    # HR.5→HR.6 missing edge (65th audit B1): no instrument reads prose, so
+    # the block must be an edge. `blocks:` already existed and was already
+    # joined to the graph for cost; `decisions.holds()` joins it here for
+    # fillability. Held is NOT unfillable either — the class has a path in,
+    # it is just not the builder's — so these classes get their own state
+    # below rather than the UNBLOCK misroute.
     fillable: Dict[str, list] = {c: [] for c in by_class}
+    fill_held: Dict[str, list] = {c: [] for c in by_class}
+    fill_held_why: Dict[str, str] = {}
     for sid in excluded["unimplemented"]:
         spec = by_id.get(sid)
-        if spec is not None:
+        if spec is None:
+            continue
+        if sid in held:
+            fill_held[spec.budget.value].append(sid)
+            fill_held_why[sid] = held[sid]
+        else:
             fillable[spec.budget.value].append(sid)
     # PILOT-OWED — the THIRD state, and it was missing (builder, 2026-08-30).
     #
@@ -1327,6 +1357,8 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         "known_empty": sorted(empty & baseline),
         "stale_baseline": sorted(c for c in baseline if c not in empty),
         "fillable": {c: sorted(ids) for c, ids in fillable.items()},
+        "fill_held": {c: sorted(ids) for c, ids in fill_held.items()},
+        "fill_held_why": dict(sorted(fill_held_why.items())),
         "pilot_owed": {c: sorted(ids) for c, ids in pilot_owed_cls.items()},
         "pilot_blocked": {c: sorted(ids)
                           for c, ids in pilot_blocked_cls.items()},
@@ -1351,10 +1383,15 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
         # completed pilot sitting on disk is not structurally unreachable, it is
         # one file-read from stocked — the cheapest repair this instrument can
         # name, and the one it silently called "unreachable" for eight hours.
+        # A FILL-HELD spec rescues its class from "NO path in" the same way a
+        # pilot-owed one does — there IS a path, it is just not an implement
+        # and not an unblock: it is a dated decision. Leaving held classes in
+        # this list would route the builder to `run blocked` for a class whose
+        # actual repair fires by calendar (or by the owner) on decide_by.
         "empty_unfillable": sorted(
             c for c in empty
             if not fillable[c] and not pilot_owed_cls[c]
-            and not pilot_harvest_cls[c]),
+            and not pilot_harvest_cls[c] and not fill_held[c]),
         "void_foreclosed_why": dict(sorted(foreclosed_why.items())),
         "void_foreclosed_refused": dict(sorted(foreclosed_refused.items())),
     }
@@ -1482,6 +1519,14 @@ def _queue_fixture() -> List[str]:
         # `gates_frozen is False` had dropped this one. The refusal must
         # surface even though every status-based branch excludes the spec.
         ("Q.18", Budget.GPU, "", None, True, False),
+        # THE HELD ROW (D19/HR.1, 2026-09-03). Unimplemented like Q.07 — so
+        # `fillable` is the only reader that could advertise it — and named in
+        # an OPEN decision's `blocks:`. It shares cpu<1min with Q.15
+        # (foreclosed VOID), a class the pre-held code pinned as
+        # empty_unfillable: with the hold it must read FILL-HELD instead,
+        # because the class HAS a path in — a dated one, on the decision desk —
+        # and "go do `run blocked`" is the wrong routing for a calendar.
+        ("Q.19", Budget.CPU_FAST, "", None, True, None),
     ]
     # `pilot_blocked` / `pilot_owed` answers per spec: a reason string, or None
     # for "does not declare". Q.08 and Q.12 declare neither — Q.12 deliberately,
@@ -1529,14 +1574,21 @@ def _queue_fixture() -> List[str]:
     _proto.void_foreclosed_refusal = lambda sid, path=None: refusals.get(sid)
     _reg.ready = lambda _l: list(by_id.values())
     _proto.module_path_for = lambda sid, strict=False: (
-        None if sid == "Q.07" else f"/x/{sid}.py")
+        None if sid in ("Q.07", "Q.19") else f"/x/{sid}.py")
     _proto.gates_frozen = lambda sid, path=None: frozen.get(sid)
     _proto.pilot_blocked = lambda sid, path=None: blocked.get(sid)
     _proto.pilot_owed = lambda sid, path=None: owed.get(sid)
     _proto.pilot_harvested = lambda sid, path=None: harvested.get(sid)
     try:
         q = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
-                        baseline=frozenset({"gpu<8h"}))
+                        baseline=frozenset({"gpu<8h"}),
+                        held={"Q.19": "D99 (decide_by 2026-09-14)"})
+        # THE CONTROL: the identical fixture with no hold declared must
+        # advertise Q.19 as fillable — otherwise the held state is not being
+        # read from the decisions join and the assertion above it proves
+        # nothing about the edge.
+        q_nohold = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
+                               baseline=frozenset({"gpu<8h"}), held={})
     finally:
         _reg.ready, _proto.module_path_for = real_ready, real_mpf
         _proto.gates_frozen, _proto.pilot_blocked = real_gf, real_pb
@@ -1557,7 +1609,7 @@ def _queue_fixture() -> List[str]:
         fails.append(f"FAIL is settled, got {q['excluded']['settled']}")
     if q["excluded"]["parked"] != ["Q.04"]:
         fails.append(f"parked must not count, got {q['excluded']['parked']}")
-    if q["excluded"]["unimplemented"] != ["Q.07"]:
+    if q["excluded"]["unimplemented"] != ["Q.07", "Q.19"]:
         fails.append(f"a spec with no file is unimplemented, got "
                      f"{q['excluded']['unimplemented']}")
     # THE ROW THIS INSTRUMENT EXISTS FOR.
@@ -1582,10 +1634,30 @@ def _queue_fixture() -> List[str]:
     if "gpu<20min" in q["empty_unfillable"]:
         fails.append("a pilot-owed class is NOT unfillable: its repair is a "
                      "pilot, not an unblock")
-    # ...and the distinction has to cut both ways, or it is just a rename.
-    if "cpu<1min" not in q["empty_unfillable"]:
-        fails.append(f"a class with neither an implementable nor a pilot-owed "
-                     f"spec IS unfillable, got {q['empty_unfillable']}")
+    # THE HELD STATE (D19/HR.1). Q.19 is implementable and named in an open
+    # decision's `blocks:` — its class must read FILL-HELD: not advertised as
+    # fillable (that exact line earned two journal hand-warnings in one day),
+    # not condemned as unfillable (the class has a dated path in), and the
+    # decision string must survive to the readout so the reader gets the
+    # calendar instead of a bare id.
+    if q["fill_held"]["cpu<1min"] != ["Q.19"]:
+        fails.append(f"a held spec's class is FILL-HELD, got {q['fill_held']}")
+    if "Q.19" in q["fillable"]["cpu<1min"]:
+        fails.append("a held spec must NOT be advertised as fillable — that "
+                     "is the D19/HR.1 misroute this state exists to stop")
+    if "cpu<1min" in q["empty_unfillable"]:
+        fails.append("a FILL-HELD class is not unfillable: its path in is the "
+                     "decision desk, not `run blocked`")
+    if q["fill_held_why"].get("Q.19") != "D99 (decide_by 2026-09-14)":
+        fails.append(f"the holding decision must survive into the readout, "
+                     f"got {q['fill_held_why']}")
+    # ...and the control: strip the hold and the same spec MUST come back as
+    # fillable, or the assertion above is not about the decisions edge at all.
+    if q_nohold["fillable"]["cpu<1min"] != ["Q.19"]:
+        fails.append(f"without a hold Q.19 is plainly fillable, got "
+                     f"{q_nohold['fillable']}")
+    # (The pre-held pin "a class with nothing at all IS unfillable" lives on
+    # at cpu<48h/Q.12; cpu<1min now exercises the held three-way instead.)
     # THE FOURTH STATE. Q.11 is gate-provisional and the sole occupant of
     # cpu<2h, exactly like Q.10 — but it DECLARES that its pilot cannot
     # succeed, so its class must NOT be advertised as pilot-owed. The DP.04
@@ -1684,12 +1756,19 @@ def _queue_fixture() -> List[str]:
                      f"without it this is a park on the author's say-so, got "
                      f"{q['void_foreclosed_why']}")
     # ...and it rescues nothing, for `pilot_blocked`'s reason: a redesign is
-    # the same KIND of work as an unblock. cpu<1min is empty and unfillable
-    # BOTH because nothing is implementable there and because its one occupant
-    # is foreclosed; the assertion above already covers the first.
-    if "cpu<1min" not in q["empty_unfillable"]:
-        fails.append("a class whose only occupant is a foreclosed VOID has no "
-                     "cheap path in: the repair is a redesign")
+    # the same KIND of work as an unblock. Since Q.19 joined this class
+    # (2026-09-03) the composite reads FILL-HELD — the foreclosed VOID still
+    # rescues nothing, but the held implementable spec is a real dated path
+    # in, so membership in empty_unfillable is now pinned at cpu<2h (Q.11)
+    # and cpu<48h (Q.12) instead. The no-hold control below keeps Q.15's own
+    # contribution honest: even with a hold declared nowhere, a foreclosed
+    # VOID never puts its class back in the queue.
+    if "cpu<1min" in q["empty_unfillable"]:
+        fails.append("a FILL-HELD class is not unfillable, whatever else "
+                     "shares it: the path in is the decision desk")
+    if "Q.15" in q_nohold["by_class"]["cpu<1min"] or "Q.15" in q_nohold["void"]:
+        fails.append("a foreclosed VOID must stay excluded with or without "
+                     "holds in play")
     # THE QUIET DIRECTION, and the one that would make this a park with better
     # manners. Q.16 declares foreclosure in Q.15's exact words and has NO
     # verdict. The declaration describes a recorded VOID, so without one it may
@@ -1951,7 +2030,8 @@ def _pilot_harvested_fixture() -> List[str]:
     return fails
 
 
-def _class_advice(ids, void, harv, owed, fill, blk, artifacts) -> str:
+def _class_advice(ids, void, harv, owed, fill, heldc, blk, artifacts,
+                  held_why=None) -> str:
     """The advice tail for one cost-class row — what would put a FRESH dispatch
     in it — or `""` when the row already holds one.
 
@@ -1981,8 +2061,19 @@ def _class_advice(ids, void, harv, owed, fill, blk, artifacts) -> str:
     if owed:
         return (f"  {prefix} <- PILOT OWED (cheapest repair): {', '.join(owed)}"
                 + (f"; or implement {', '.join(fill)}" if fill else ""))
-    if fill:
-        return f"  {prefix} <- fillable today: {', '.join(fill)}"
+    if fill or heldc:
+        parts = []
+        if fill:
+            parts.append(f"fillable today: {', '.join(fill)}")
+        if heldc:
+            # A held spec is named WITH its decision and date, never as work:
+            # printing the bare id is how "fillable today: HR.1" earned two
+            # journal hand-warnings in one day.
+            hw = held_why or {}
+            parts.append("HELD by an open decision (implement NOTHING here): "
+                         + ", ".join(f"{s} <- {hw.get(s, 'UNKNOWN DECISION')}"
+                                     for s in heldc))
+        return f"  {prefix} <- " + "; ".join(parts)
     if blk:
         return (f"  {prefix} <- NOT FILLABLE: pilot BLOCKED on evidence "
                 f"({', '.join(blk)}); the repair is a REDESIGN")
@@ -2001,30 +2092,49 @@ def _class_advice_fixture() -> List[str]:
     """
     fails: List[str] = []
     cases = [
-        # (label, ids, void, harv, owed, fill, blk, must_contain)
+        # (label, ids, void, harv, owed, fill, held, blk, must_contain)
         ("only-VOID occupant still advertises fill",
-         ["BA.X"], ["BA.X"], [], [], ["LT.Y", "ME.Z"], [], "fillable today: LT.Y, ME.Z"),
+         ["BA.X"], ["BA.X"], [], [], ["LT.Y", "ME.Z"], [], [], "fillable today: LT.Y, ME.Z"),
         ("fresh occupant -> no tail",
-         ["OK.1", "BA.X"], ["BA.X"], [], [], ["LT.Y"], [], None),
+         ["OK.1", "BA.X"], ["BA.X"], [], [], ["LT.Y"], [], [], None),
         ("empty class advertises fill",
-         [], [], [], [], ["LT.Y"], [], "fillable today: LT.Y"),
+         [], [], [], [], ["LT.Y"], [], [], "fillable today: LT.Y"),
         ("harvest outranks fill on an only-VOID row",
-         ["BA.X"], ["BA.X"], ["SM.P"], [], ["LT.Y"], [], "HARVEST IT"),
+         ["BA.X"], ["BA.X"], ["SM.P"], [], ["LT.Y"], [], [], "HARVEST IT"),
         ("only-VOID, nothing anywhere -> NOT FILLABLE, honestly",
-         ["BA.X"], ["BA.X"], [], [], [], [], "NOT FILLABLE: nothing"),
+         ["BA.X"], ["BA.X"], [], [], [], [], [], "NOT FILLABLE: nothing"),
         ("empty + blocked -> REDESIGN",
-         [], [], [], [], [], ["DP.B"], "the repair is a REDESIGN"),
+         [], [], [], [], [], [], ["DP.B"], "the repair is a REDESIGN"),
+        # THE HELD STATE — the D19/HR.1 row. The exact pre-repair output was
+        # "fillable today: HR.1", printed against a standing Review order, so
+        # the known positive is that a held spec appears WITH its decision and
+        # never inside "fillable today".
+        ("held-only class names the decision, not work",
+         [], [], [], [], [], ["HR.A"], [],
+         "HELD by an open decision (implement NOTHING here): HR.A <- D99 (decide_by 2026-09-14)"),
+        ("held must not read as fillable",
+         [], [], [], [], ["LT.Y"], ["HR.A"], [], "fillable today: LT.Y; HELD"),
+        ("held outranks blocked: the date is the cheaper fact",
+         [], [], [], [], [], ["HR.A"], ["DP.B"], "HELD by an open decision"),
     ]
-    for label, ids, void, harv, owed, fill, blk, want in cases:
-        got = _class_advice(ids, void, harv, owed, fill, blk, {"SM.P": "/a.json"})
+    for label, ids, void, harv, owed, fill, heldc, blk, want in cases:
+        got = _class_advice(ids, void, harv, owed, fill, heldc, blk,
+                            {"SM.P": "/a.json"},
+                            held_why={"HR.A": "D99 (decide_by 2026-09-14)"})
         if want is None:
             if got != "":
                 fails.append(f"_class_advice: {label} -> want '', got {got!r}")
         elif want not in got:
             fails.append(f"_class_advice: {label} -> want {want!r} in {got!r}")
+    # A held spec must never leak into the "fillable today:" clause itself.
+    got = _class_advice([], [], [], [], [], ["HR.A"], [], {},
+                        held_why={"HR.A": "D99 (decide_by 2026-09-14)"})
+    if "fillable today" in got:
+        fails.append(f"_class_advice: a held-only class must not say "
+                     f"'fillable today', got {got!r}")
     # An occupied-but-stale row must SAY it holds no fresh dispatch, so the
     # reader cannot mistake the advice for a contradiction of the shown id.
-    got = _class_advice(["BA.X"], ["BA.X"], [], [], ["LT.Y"], [], {})
+    got = _class_advice(["BA.X"], ["BA.X"], [], [], ["LT.Y"], [], [], {})
     if "no FRESH dispatch here" not in got:
         fails.append(f"_class_advice: only-VOID tail must name itself, got {got!r}")
     return fails
@@ -2683,8 +2793,10 @@ def check() -> int:
                                  q["pilot_harvestable"].get(cls, []),
                                  q["pilot_owed"].get(cls, []),
                                  q["fillable"].get(cls, []),
+                                 q["fill_held"].get(cls, []),
                                  q["pilot_blocked"].get(cls, []),
-                                 q["pilot_harvestable_artifact"])
+                                 q["pilot_harvestable_artifact"],
+                                 held_why=q["fill_held_why"])
             print(f"      {cls:<10} {len(ids):>2}   {shown}{tail}")
     if q["void"]:
         print(f"  of which VOID (an arm to repair, not a dispatch): "
@@ -2779,6 +2891,24 @@ def check() -> int:
               "  in the spec, written by whoever knows: `_PILOT_OWED = \"what\n"
               "  the pilot will freeze\"` or `_PILOT_BLOCKED = \"what a run\n"
               "  measured\"`.")
+    held_cls = sorted(c for c in q["empty"] if q["fill_held"].get(c))
+    if held_cls:
+        print(f"  {len(held_cls)} empty class(es) are FILL-HELD by an open "
+              f"decision — an implementable spec exists\n"
+              "      and an armed DECIDE block declares it blocked, so "
+              "implementing it would waste the hour\n"
+              "      or walk around the decision (D19/HR.1: the run IS the "
+              "fetch the default forbids):\n"
+              + "".join(f"      {c:<10} "
+                        + ", ".join(f"{s} <- {q['fill_held_why'][s]}"
+                                    for s in q["fill_held"][c]) + "\n"
+                        for c in held_cls)
+              + "  Not the builder's unit: the repair fires on the decision "
+              "desk by decide_by, or the\n"
+              "  owner answers early. Until then this class is honestly "
+              "closed, and this line — not\n"
+              "  a journal hand-warning — is what keeps an iteration from "
+              "being routed at it.")
     if q["empty_unfillable"]:
         print(f"  {len(q['empty_unfillable'])} empty class(es) have NO path in "
               f"today — nothing runnable to implement\n"

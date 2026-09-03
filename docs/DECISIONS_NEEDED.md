@@ -4351,6 +4351,7 @@ in the memory pillar stays open, named.
 
 DECIDE: D19
   class:     goal
+  blocks:    HR.1, HR.2, HR.3, HR.4
   default:   NO FETCH. The builder does not download corpora or models to
              /data (or anywhere outside the repo); HR.1/HR.2/HR.3/HR.4 stay
              runnable-on-paper and blocked-on-disk in practice, and coverage

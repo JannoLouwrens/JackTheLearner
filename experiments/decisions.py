@@ -226,6 +226,42 @@ def cost_of(blocks: list[str]) -> tuple[int, list]:
     return len(freed), sorted(freed)
 
 
+def holds(by_id=None, path: Path = DOC) -> dict:
+    """{spec_id: "Dxx (decide_by ...)"} — specs an OPEN decision declares in
+    `blocks:`, so an instrument can refuse to advertise them as work.
+
+    Scar (2026-09-03): D19's NO-FETCH default held HR.1 blocked-on-disk, the
+    Review wrote "do not fetch a corpus to unblock a family" — and `coverage`
+    went on printing `cpu<10min <- fillable today: HR.1`, because the block
+    lived in prose and no instrument reads prose. Two consecutive journal
+    entries had to hand-warn the next iteration off that one line. Same class
+    as HR.5→HR.6 (65th audit B1): a blocker written as a sentence is invisible
+    to every ranker until it becomes an edge. `blocks:` was already parsed and
+    joined to the graph for COST; this is the same field joined for FILLABILITY.
+
+    Tokens are comma-split and validated against the registry — exactly
+    `check()`'s idiom — so a prose value like "nothing. T0.27 has no
+    dependents" declares no hold (an inline mention must never look like a
+    declaration; the _DECIDE regex learned that the expensive way). Only
+    decisions still OPEN in the doc hold anything: a resolved decision's
+    `blocks:` is history, not a live refusal.
+
+    Fails loud on an unreadable doc: a silent {} would silently re-advertise
+    every held spec, which is the optimistic default this repo keeps paying for.
+    """
+    if by_id is None:
+        from .registry import BY_ID as by_id
+    decls, open_ids = parse(Path(path).read_text())
+    out: dict = {}
+    for did in open_ids:
+        d = decls.get(did) or {}
+        for tok in (d.get("blocks") or "").split(","):
+            sid = tok.strip()
+            if sid in by_id:
+                out[sid] = f"{did} (decide_by {d.get('decide_by') or 'UNDATED'})"
+    return out
+
+
 # A spec id as it appears inside a default's prose. Same shape as
 # `coverage.GOAL_CITATION`, and resolved against `BY_ID` for the same reason
 # `champions.py` resolves its arenas: an id that names nothing is not a
