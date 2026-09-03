@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 97 / 233 demonstrated
+## 98 / 233 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1058,7 +1058,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 6 — INTEGRATION
 
-- [ ] **SO.04** Being watched does not change him
+- [x] **SO.04** Being watched does not change him
       - _asserts:_ Behaviour statistics over a life are indistinguishable between a rendered/streamed run and an unrendered one at the same seed, and the rendered run's trajectory matches the unrendered one bit-for-bit until the first stochastic draw.
       - _dies if:_ Any behavioural divergence attributable to the observer path — a spectator that perturbs the physics, the RNG stream, or the timing.
       - _then delete:_ Any claim measured while the owner was watching, which under this direction will eventually be most of them.

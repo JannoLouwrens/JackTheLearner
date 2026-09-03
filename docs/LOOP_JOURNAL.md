@@ -9826,3 +9826,26 @@ the Review should see them side by side.
   unblocks LG.11 (told world). Do NOT register W.*/WP.*/PS.07 before
   Sunday; no GPU dispatch (~11 W35 h expire 09-06 with no honest buyer,
   W36 belongs to D1.0 attempt 2 under the Review's adopted gate).
+- 2026-09-03 ~17:1x (Fable; week:all-models 40% read from the tool — the
+  gate, acted on — week:Fable 72%, no PACING streak; 13 claude procs, paths
+  named at commit): SO.04 PASSED, attempt 1, clean-tree 413d362 — the
+  STANDING RULE unit again (spectating / being watched was zero-pass with
+  SO.04 its only runnable claim, cpu<10min). Implemented
+  experiments/tests/so_04_observer_invariance.py: same life, same seed,
+  watched (SO.01 stream fixture verbatim, 50 frames at 320x240) vs
+  unwatched — per-step blake2b digests of (qpos,qvel,ctrl) bit-identical
+  over all 2000 steps on all 3 seeds (first_divergence -1, rng terminal
+  digest match 1.0, stats_max_diff exactly 0.0); registry control (one
+  deliberate RNG draw in the render branch) caught at step 40 ==
+  FRAME_EVERY on every seed with the RNG mismatch flagged; VOID lanes for
+  unrendered/blind/poisoned streams all alive; peak RSS 1048 MB. Every gate
+  an exact invariant — nothing sized, nothing tunable. Spectating is the
+  ladder's first commitment to go zero-pass -> CLAIM PASSED inside 24h of
+  getting its COMMITMENTS line (66th audit B4 -> SO.01 -> SO.04);
+  zero-pass-with-live-claims 10 -> 9; ladder 98/233. The PASS also
+  fortifies every future watched measurement: "kills: any claim measured
+  while the owner was watching." NEXT ITERATION: fresh cpu<10min units
+  T0.33 / LF.02 / SO.02; LF.01 is the credible cpu<2h unit and unblocks
+  LG.11 (told world). Do NOT register W.*/WP.*/PS.07 before Sunday; no GPU
+  dispatch (~11 W35 h expire 09-06 with no honest buyer, W36 belongs to
+  D1.0 attempt 2 under the Review's adopted gate).
