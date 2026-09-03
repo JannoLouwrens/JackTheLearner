@@ -20413,17 +20413,58 @@
     },
     "T0.34": {
       "amended": [],
-      "attempt": 1,
-      "commit": "1e4294f+dirty",
+      "attempt": 2,
+      "commit": "dd8a2dd",
       "compute_s": null,
       "control_metrics": {
         "alive": true,
         "lump_misbills": true
       },
-      "duration_s": 21.48,
+      "duration_s": 21.45,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
+      "history": [
+        {
+          "commit": "1e4294f+dirty",
+          "control_metrics": {
+            "alive": true,
+            "lump_misbills": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "d21ae2d8bae7bc51",
+          "message": "",
+          "metrics": {
+            "alive_billing": true,
+            "billed_at_kill_s": 1.0,
+            "conservation_ok": true,
+            "default_hb_ok": true,
+            "detached_receipts_ok": 1.0,
+            "e2e_total_s": 15.4,
+            "elapsed_at_kill_s": 1.206,
+            "exhausted_refused": true,
+            "fresh_admits": true,
+            "hb_covers_life": true,
+            "hb_total_s": 3.0,
+            "launcher_ok": true,
+            "live_load": 0.14,
+            "live_receipt": true,
+            "load_refused": true,
+            "multi_day_ok": true,
+            "payload_died": true,
+            "rc_propagates": true,
+            "sigkill_bounded": true,
+            "straddle_ok": true,
+            "wiring_ok": true,
+            "zero_len_ok": true
+          },
+          "ran_at": "2026-09-03T23:21:27",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "264208da469df397",
+          "status": "PASS"
+        }
+      ],
       "impl_sha": "d21ae2d8bae7bc51",
       "message": "",
       "metrics": {
@@ -20453,7 +20494,7 @@
       "peak_rss_inherited": false,
       "peak_rss_mb": 208.8,
       "preserved_impl": null,
-      "ran_at": "2026-09-03T23:21:27",
+      "ran_at": "2026-09-03T23:22:10",
       "seeds": [
         0
       ],

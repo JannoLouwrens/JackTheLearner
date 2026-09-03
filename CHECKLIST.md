@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 101 / 233 demonstrated
+## 102 / 234 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1072,4 +1072,8 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T0.33** CPU-hours on a shared box are accounted like GPU-hours
       - _asserts:_ Every CPU_LONG run debits a wall-clock budget, and the ladder refuses to start when the box's load or the day's accumulated share would harm the tenants.
       - _dies if:_ A run proceeding past the budget, or a budget that reads the same whether or not runs happened.
+      - _then delete:_ Nothing on the ladder; it protects the tenants, which SYSTEM.md ranks above the ladder.
+- [x] **T0.34** The detached lane writes its own receipts
+      - _asserts:_ Every launch through scripts/launch_detached.sh is admitted against the same day ledger as the runner's children BEFORE it detaches, and bills its measured wall clock incrementally as it runs — split across the calendar days it spans — so a multi-day child appears in every day it occupied and a group-killed child undercharges by at most one heartbeat.
+      - _dies if:_ A detached child that runs without moving the budget, a midnight-straddling interval billed to a single day, or an undercharge after SIGKILL of the process group exceeding one heartbeat plus slack.
       - _then delete:_ Nothing on the ladder; it protects the tenants, which SYSTEM.md ranks above the ladder.
