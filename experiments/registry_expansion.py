@@ -6910,4 +6910,44 @@ EXPANSION: list[Spec] = [
                  "(T0.12's rewritten form is the template).",
          kills="Nothing on the ladder; it protects the tenants, which SYSTEM.md "
                "ranks above the ladder."),
+
+    Spec("T0.34", 0, "The detached lane writes its own receipts",
+         # T0.33's own STILL OPEN paragraph, made a claim. The scar is on the
+         # ledger: LC.03 v2 spent ~190 core-hours over 2.6 days through the
+         # detached lane on this 4-core tenant box and no meter saw a second
+         # of it while it ran; T0.33 closed the runner lane and refused
+         # cpu<48h with a routing reason naming this gap.
+         hypothesis="Every launch through scripts/launch_detached.sh is "
+                    "admitted against the same day ledger as the runner's "
+                    "children BEFORE it detaches, and bills its measured wall "
+                    "clock incrementally as it runs — split across the "
+                    "calendar days it spans — so a multi-day child appears in "
+                    "every day it occupied and a group-killed child "
+                    "undercharges by at most one heartbeat.",
+         falsified_by="A detached child that runs without moving the budget, "
+                      "a midnight-straddling interval billed to a single day, "
+                      "or an undercharge after SIGKILL of the process group "
+                      "exceeding one heartbeat plus slack.",
+         null_baseline="T0.33: the runner refuses cpu<48h with a routing "
+                       "reason and the routed-to lane keeps no accounts.",
+         metric="detached_receipts_ok", budget=Budget.CPU, seeds=1,
+         depends_on=["T0.33"],
+         control="A lump-sum accountant (bill the whole interval at exit, to "
+                 "the exit day) must FAIL the day-split property while its "
+                 "total stays exact — T0.33's day-collapse disease, one lane "
+                 "over.",
+         kills="Nothing on the ladder; it protects the tenants, which "
+               "SYSTEM.md ranks above the ladder.",
+         notes="Scope, stated honestly: dispatch.sh's GPU watchers do not "
+               "route through launch_detached.sh and are deliberately not "
+               "wall-billed (remote waiting is not box CPU — T0.33's GPU "
+               "exemption, same reasoning); modules invoked by hand at a "
+               "shell are the owner's lane and stay unmetered. Admission is "
+               "est-free (a 48h child cannot pre-fit a 16h day): an "
+               "exhausted or overloaded day refuses NEW launches, a running "
+               "child is never killed by accounting, and the ceiling is "
+               "observed via T0.33's overrun marks. A wrapper killed "
+               "independently of its payload stops the meter while the "
+               "payload runs on — kill the GROUP; the leftover check "
+               "(lib_procwatch) still sees the orphan either way."),
 ]

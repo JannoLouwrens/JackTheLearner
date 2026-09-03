@@ -24,7 +24,20 @@ LOG=$1; shift
 cd "$REPO" || { echo "REFUSED: cannot cd $REPO" >&2; exit 2; }
 : > "$LOG" || { echo "REFUSED: cannot write $LOG" >&2; exit 2; }
 echo "LAUNCH $(date -u +%FT%TZ) cwd=$REPO cmd: $*" >> "$LOG"
-setsid nice -n 19 "$@" >> "$LOG" 2>&1 < /dev/null &
+# ADMIT, THEN METER (T0.34). The day's CPU ledger (experiments/cpu_budget.py,
+# T0.33's file) refuses a NEW detached launch from an exhausted or overloaded
+# day — loudly, before anything detaches — and once admitted the wrapper
+# bills measured wall clock per heartbeat, split across the calendar days it
+# spans. Accounting never kills a running child; overruns are marked. An
+# unreachable venv python refuses too: a meter that fails open is not a
+# limit (T0.12's rule).
+PYBIN=/data/venvs/jackthelearner/bin/python
+LABEL="${JACK_AWAITING_SPEC:-detached:$(basename "$LOG")}"
+admit_msg=$("$PYBIN" -m experiments.cpu_budget admit "$LABEL" 2>&1) || {
+    echo "REFUSED by the CPU day budget (T0.34): $admit_msg" >&2
+    exit 3
+}
+setsid nice -n 19 "$PYBIN" -m experiments.cpu_budget wrap "$LABEL" "$@" >> "$LOG" 2>&1 < /dev/null &
 pid=$!
 # DECLARE IT. A detached run is compute this system MEANT to leave behind, and
 # the loop's leftover check (scripts/lib_procwatch.sh, 52nd audit B2) must be
@@ -59,4 +72,5 @@ if [ "$bytes" -le 80 ]; then
 fi
 echo "ALIVE pid=$pid log=$LOG bytes=$bytes"
 echo "  cmd: $alive"
+echo "  meter: $admit_msg (label $LABEL)"
 exit 0

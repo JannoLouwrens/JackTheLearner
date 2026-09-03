@@ -10,10 +10,11 @@ and a refusal BEFORE a child spawns.
 
 Scope, stated honestly:
   - The metered unit is `run.py:_run_isolated`'s child — the only lane
-    `cmd_run` (and therefore `--gate`) uses. Detached runs (`cpu<48h` /
-    `launch_detached.sh`) and a module invoked by hand are NOT metered here;
-    the gate refuses `cpu<48h` with a ROUTING reason rather than pretending to
-    account a lane it never sees.
+    `cmd_run` (and therefore `--gate`) uses. The gate still refuses `cpu<48h`
+    with a ROUTING reason: that class belongs to the detached lane, which
+    since T0.34 keeps its own accounts (`admit_detached` + the heartbeat
+    wrapper below, called by `scripts/launch_detached.sh`). A module invoked
+    BY HAND remains unmetered — a human at a shell is the owner's lane.
   - GPU-budget children are not charged: their wall clock is mostly waiting on
     a remote kernel, and billing waiting as box CPU would make the meter read
     harm where there is none. Their remote cost is T0.12's.
@@ -169,3 +170,110 @@ def gate_cpu_child(spec, *, path: Path | None = None,
 def charge_cpu_child(spec_id: str, seconds: float,
                      path: Path | None = None) -> None:
     CpuBudget(path).charge(spec_id, seconds)
+
+
+# ── The detached lane (T0.34) ────────────────────────────────────────────────
+# `scripts/launch_detached.sh` calls `admit` before setsid and runs the
+# payload under `wrap`, which bills measured wall clock every heartbeat.
+# Billing incrementally (not lump-sum at exit) is load-bearing twice: a
+# multi-day child is charged to every day it occupied instead of dumping
+# 57 h into one 16 h bucket, and a SIGKILL of the process group loses at
+# most one heartbeat of charge instead of the whole life.
+
+HEARTBEAT_S = 600.0
+ENV_HEARTBEAT = "JACK_CPU_HEARTBEAT_S"   # tests shorten it; default stands
+
+
+def _heartbeat_s() -> float:
+    try:
+        return float(os.environ.get(ENV_HEARTBEAT, HEARTBEAT_S))
+    except ValueError:
+        return HEARTBEAT_S
+
+
+def bill_interval(label: str, t0: float, t1: float,
+                  path: Path | None = None) -> None:
+    """Charge the wall interval [t0, t1], split across the calendar days it
+    spans — each day is billed exactly the seconds the interval spent inside
+    it, so the day ledger stays meaningful for children that outlive the day
+    that admitted them."""
+    b = CpuBudget(path)
+    while t0 < t1:
+        lt = time.localtime(t0)
+        day = time.strftime("%Y-%m-%d", lt)
+        midnight = time.mktime((lt.tm_year, lt.tm_mon, lt.tm_mday,
+                                0, 0, 0, 0, 0, -1))
+        day_end = midnight + 86400.0
+        seg = min(t1, day_end)
+        if seg > t0:
+            b.charge(label, seg - t0, day=day)
+        t0 = seg
+
+
+def admit_detached(label: str, *, path: Path | None = None,
+                   loadavg: float | None = None) -> CpuDecision:
+    """Admit or refuse a detached launch BEFORE setsid. Est-free by design —
+    a cpu<48h child cannot pre-fit a 16 h day, so the gate asks only whether
+    TODAY has headroom and the box is calm; the ceiling binds the running
+    child through `charge`'s overrun marks, never through a kill."""
+    load = _loadavg() if loadavg is None else loadavg
+    if load > LOAD_CEILING:
+        return CpuDecision(False, 0.0, CpuBudget(path).remaining_s(), load,
+                           f"load {load:.2f} above {LOAD_CEILING} — leaving "
+                           f"the box to the tenants")
+    remaining = CpuBudget(path).remaining_s()
+    if remaining <= 0.0:
+        return CpuDecision(False, 0.0, 0.0, load,
+                           f"day budget: {CPU_DAY_CEILING_S:.0f}s already "
+                           f"used — no new detached launch today "
+                           f"(label {label})")
+    return CpuDecision(True, 0.0, remaining, load,
+                       f"admitted (label {label}); wall billed per "
+                       f"{_heartbeat_s():.0f}s heartbeat")
+
+
+def _wrap(label: str, argv: list) -> int:
+    """Run argv as a child, bill its wall clock every heartbeat, propagate
+    its exit code. SIGTERM is forwarded so a polite kill of the wrapper
+    takes the payload with it; a SIGKILL must target the process group."""
+    import signal
+    import subprocess
+    import sys
+    try:
+        proc = subprocess.Popen(argv)
+    except OSError as e:
+        print(f"cpu_budget wrap: cannot spawn {argv[0]!r}: {e}",
+              file=sys.stderr)
+        return 127
+    signal.signal(signal.SIGTERM, lambda s, f: proc.terminate())
+    last = time.time()
+    while True:
+        try:
+            proc.wait(timeout=_heartbeat_s())
+            done = True
+        except subprocess.TimeoutExpired:
+            done = False
+        now = time.time()
+        if now > last:
+            bill_interval(label, last, now)
+            last = now
+        if done:
+            return int(proc.returncode)
+
+
+def _main(argv: list) -> int:
+    import sys
+    if len(argv) >= 2 and argv[0] == "admit":
+        d = admit_detached(argv[1])
+        print(("ADMITTED: " if d.admitted else "REFUSED: ") + d.reason)
+        return 0 if d.admitted else 1
+    if len(argv) >= 3 and argv[0] == "wrap":
+        return _wrap(argv[1], argv[2:])
+    print("usage: python -m experiments.cpu_budget "
+          "{admit LABEL | wrap LABEL CMD [ARG...]}", file=sys.stderr)
+    return 2
+
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(_main(sys.argv[1:]))

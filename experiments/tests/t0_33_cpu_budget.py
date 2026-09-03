@@ -61,10 +61,12 @@ the shipped-path refusal would fire for load rather than budget and the
 admission properties cannot be honestly asserted. Instrument fault, not
 refutation.
 
-STILL OPEN, deliberately not claimed here: the detached lane
-(`launch_detached.sh`, cpu<48h) and modules invoked by hand are unmetered —
-the gate names the routing instead of pretending; closing that needs the
-detached launcher to write its own receipts, which is its own spec.
+The STILL OPEN paragraph that stood here is CLOSED by T0.34 (2026-09-04):
+the detached lane (`launch_detached.sh`, cpu<48h) now admits against the
+same day ledger and bills per heartbeat — this spec's cpu<48h property
+still checks only the ROUTING (the runner must not pretend to meter a lane
+it never sees); the routed-to lane's receipts are T0.34's claim. Modules
+invoked BY HAND remain unmetered: a human at a shell is the owner's lane.
 
 Uses temp budget files; must never touch the real accounting.
 """
