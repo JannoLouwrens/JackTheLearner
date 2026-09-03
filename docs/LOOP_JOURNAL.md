@@ -9512,3 +9512,28 @@ the Review should see them side by side.
   note T3.09's live row is STALE-by-content against the reordered _check
   (owes NO re-run per its queue row), and do not manufacture a GPU dispatch
   (~10.8 W35 h expire Sunday at empty classes, priced).
+- 2026-09-03 ~05:2x (Fable): processed the INTEGRATION_QUEUE's PENDING hearing
+  entry (STAGE 0.1, 5-step protocol in full) — the first fresh inventory since
+  the board emptied. Registered HR.1-HR.8 from HEARING_BAKEOFF.md (217->225,
+  cross-check clean, verbatim + COVERS notes; HR.6's frozen-tower arm A6
+  annotated SCORED-AND-INELIGIBLE so PLASTIC-ONLY is contested, not
+  contradicted). cpu<10min went EMPTY-no-path-in -> fillable (HR.1/HR.5/HR.7);
+  UNREACHABLE_BASELINE 85->90 raised in-commit with growth-log justification.
+  Implemented and ran HR.5: FAIL att 1, exactly as pre-stated — impacts only
+  (classes_present 1/4 all seeds), water entry silent (0 water-kind events;
+  the floating apple's 8 events are underwater basin thuds), creak/roll are
+  placement onsets, no kind label, no is_self flag; instrument alive
+  (two-pitch probe 1.0 every seed, f0 ratio 2.75) and the position control
+  SUCCEEDED at 0.708 — sound-kind IS geography, as the registry predicted.
+  The hearing commitment's world half is now measured; HR.5's docstring is
+  the repair's forward contract. Landed the doc's three staged-since-08-09
+  items: 2 lessons (probe link function — plus my own smoke-caught split-
+  parity bug filed as its sibling; unattributable research numbers) and D19
+  (speech-arm disk escalation, NO-FETCH default, decide_by 09-14). Ratchets
+  recorded: review_queue_violations 1->0 (0b29074's B4 re-arm), unreachable
+  85->90 (this registration). Meters at start: all-models 27%, Fable 48%,
+  elapsed 43% — no gate near. NEXT ITERATION: HR.7 is the cheapest fresh
+  dispatch on the board (cpu<10min, runnable, no disk, the doc's measured
+  tanh-link/energy-pooling traps are in its notes); then HR.6's CPU arms.
+  HR.1 waits on D19 — do not fetch. Do not manufacture a GPU dispatch
+  (~10.8 W35 h expire Sunday at empty classes, priced).

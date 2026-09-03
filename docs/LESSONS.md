@@ -10270,3 +10270,41 @@ and the brand-new reader did not cover it.
 Corollary for the overseer, who caused this one: **"performed read-only" is a
 claim about the ledger and says nothing about the tree.** Verify the tree is idle
 before writing, and commit in one motion.
+
+## A probe's link function is part of the test, not an implementation detail (HR.7's pilot, filed 2026-09-03; measured 2026-08-09)
+
+HR.7 asks whether an audio stem preserves bearing. Written the obvious way —
+a LINEAR probe on log-mel — it scores **0.40** on a representation the correct
+analytic link scores **1.00** on, because the constant-power pan law makes the
+log-domain interaural level difference exactly `atanh(p)`, which saturates
+precisely at the lateral extremes that matter most. A linear-probe HR.7 would
+have reported a false negative on the WINNING arm and deleted it. The trap has
+a second head: pooling per-bin log ILD by its MEAN scores 0.69 against 1.00
+for energy-weighted pooling, because the `+1e-6` keeping the log finite pins
+silent bins to zero ILD and drags the estimate toward centre.
+
+**Rule:** before writing a probe, ask what FUNCTION relates the quantity you
+read to the quantity you claim. A probe under-parameterised for that
+relationship measures its own inadequacy — and it fails in the direction that
+looks like a negative result. This generalises "measure the quantity you are
+claiming, not a proxy that correlates with it" from the metric to the
+ESTIMATOR. Sibling instance the same week it was filed: HR.5's aliveness
+probe scored 0.0 on a cleanly separable pair because the label sequence was
+parity-correlated with the train/eval split — the split is part of the
+estimator too, and a smoke run on a known-separable pair is what caught it.
+
+## A research pass that contradicts itself about what it retrieved is a data integrity event (HEARING_BAKEOFF.md §8.1, filed 2026-09-03)
+
+One survey pass returned a rich, internally consistent set of numbers
+(per-class AudioSet AP with a label-quality audit, a HEAR leaderboard, a
+stereo-vs-FOA table); three later passes of the SAME research reported having
+been unable to obtain any of them. Both accounts cannot be true, and nothing
+distinguished them by READING them — only the disagreement did.
+
+**Rule:** corroboration is a citation tier, not a nicety. A number reported
+once by a pass that later disclaims it is not weak evidence, it is
+**unattributable** — mark it and exclude it from conclusions rather than
+quietly averaging it in. HEARING_BAKEOFF.md carries a `[u]` tier for exactly
+this and rebuilt its §1.3.2/§1.4.2 conclusions on corroborated data only.
+Same family as "silence is not success", one level up: a confident answer is
+not evidence that a question was asked.

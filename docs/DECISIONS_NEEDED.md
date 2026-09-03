@@ -4323,3 +4323,42 @@ DECIDE: D18
   blocks:    (nothing — no spec depends on this; the cost is an unenforced
              constitutional constraint staying unenforced, now with a number
              printed beside it)
+
+## D19 — The hearing programme's speech half needs disk that is not this project's to take (2026-09-03, builder, from HEARING_BAKEOFF.md §8.2 — staged there since 08-09, never filed)
+
+**What is blocked:** `HR.1` (the voice corpus fixture) and therefore `HR.2`
+(ASR bakeoff), `HR.3` (speaker-ID bakeoff) and `HR.4` — the end-to-end "he
+knows who told him, from the voice alone" claim, which HEARING_BAKEOFF.md
+identifies as the biggest hole in the memory pillar (ME.9 passes at 1.0 on a
+speaker field that NOTHING in the live system produces). The world-sound arm
+(`HR.5` → `HR.7` → `HR.6` CPU arms) needs no disk and proceeds regardless —
+`HR.5` ran and recorded its FAIL today without touching this decision.
+
+**The resource problem, measured 2026-08-09 and structural, not transient:**
+`/data` free space was observed swinging **725 MB ↔ 4.8 GB within one hour**;
+`HF_HOME` lives there and `/data/history` holds ~73 GB of other tenants' data.
+`HR.1`'s corpus is a 338 MB download (LibriSpeech dev-clean, verified
+reachable), the ASR/speaker models are 25–630 MB each, and an ENOSPC
+mid-download corrupts a cache shared with tenants rather than failing cleanly.
+Downloads land outside `/home/opc/jackthelearner`, which is why this is your
+call and not the loop's.
+
+**Options (HEARING_BAKEOFF.md §8.2):** (i) cap a dedicated hearing cache on
+`/data` (say 1.5 GB, fetch refused when free space < 2x the fetch size);
+(ii) relocate `HF_HOME` to `/` (6.2 GB, ~3 GB usable under ladder_loop.sh's
+own floor); (iii) decline — the speech half stays unrunnable and HR.4's hole
+in the memory pillar stays open, named.
+
+DECIDE: D19
+  class:     goal
+  default:   NO FETCH. The builder does not download corpora or models to
+             /data (or anywhere outside the repo); HR.1/HR.2/HR.3/HR.4 stay
+             runnable-on-paper and blocked-on-disk in practice, and coverage
+             keeps showing hearing's claim specs unbought. This picks only
+             already-permitted actions (refusing to act outside the repo is
+             the standing rule, not a new one), moves no threshold, edits no
+             GOAL.md text, and leaves a visible red rather than a quiet
+             workaround. If a cheaper corpus design appears (e.g. synthesised
+             speakers within the repo), that is a spec amendment through the
+             strengthen-only lane, not a default firing.
+  decide_by: 2026-09-14

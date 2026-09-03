@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 94 / 217 demonstrated
+## 94 / 225 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -985,3 +985,47 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Across three generations coupled ONLY by diaries and in-world teaching — never weights — generation 3 demonstrates a competence generation 1 never had, and reaches generation-2 competence in fewer decisions than generation 2 originally spent, by >=3 sigma across seeds. Accumulation, not just persistence.
       - _dies if:_ Generation 3 is statistically indistinguishable from generation 1: the diary crosses deaths but knowledge does not ACCUMULATE across individuals, and one diary is a memory, not a culture.
       - _then delete:_ GOAL.md's Lamarckian-inheritance claim — 'the caveman's fireside story made structural'. If diaries cannot accumulate across individuals, death is still a page turn for HIM, but the project's one deliberate improvement on biology is decoration.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **HR.1** The voice corpus is honest before anyone is scored
+      - _asserts:_ A speaker corpus exists on this box with >=8 enrolled and >=8 held-out UNKNOWN speakers, disjoint enrolment/test utterances, CROSS-SESSION test material, and a NOISE/REVERB stratum, such that no non-vocal channel cue can identify a speaker in either stratum.
+      - _dies if:_ A probe on non-vocal features alone (silence-segment spectrum, DC offset, noise floor, clip loudness) identifies the speaker above chance+5% — then every speaker-ID number downstream is a microphone measurement, not a voice measurement.
+      - _then delete:_ HR.2, HR.3, HR.4. A speaker experiment on a leaky corpus measures the leak.
+- [ ] **HR.2** ASR bakeoff: the cheapest transcriber that gets Jack's words right
+      - _asserts:_ At least one open-weight, locally-runnable ASR arm transcribes Jack's command register with word accuracy >= 0.90 at RTF <= 0.30 on this box, and beats the no-ASR null by >= 3 sigma.
+      - _dies if:_ Every arm that clears 0.90 accuracy has RTF > 0.30 (no live transcription on this box — escalate: batch transcription only, or a smaller command grammar), OR no arm clears 0.90 (Jack's vocabulary is the problem, not the model).
+      - _then delete:_ The transformers .generate() path in AudioListener._transcribe_local (lines 360-366) — MEASURED here as the slowest possible way to run this model — and the entire _transcribe_api path (line 372) unconditionally, because it calls a PAID OpenAI endpoint and SYSTEM.md forbids paid compute. Deleting the API path is not contingent on this bakeoff.
+- [ ] **HR.3** Speaker-ID bakeoff: which of the enrolled few, or nobody
+      - _asserts:_ At least one open-weight speaker embedder gives >= 0.85 balanced open-set identification accuracy over (N enrolled + unknown) on CROSS-SESSION audio, from <= 30 s of enrolment per speaker, with the decision threshold calibrated on a held-out split — AND holds >= 0.70 on the NOISE/REVERB stratum. Gated on the MINIMUM of the two strata, never the average.
+      - _dies if:_ No arm reaches 0.85 clean / 0.70 noisy at <= 30 s enrolment — then HR.4's 0.80 end-to-end bar is unreachable and the honest options are (i) more enrolment audio, (ii) fewer enrolled people, (iii) longer minimum utterances, or (iv) Jack ASKS who is speaking. Record which; do not quietly lower the bar.
+      - _then delete:_ Five of six embedders. The survivor is what writes EpisodicMemory.speaker; the rest are deleted, not kept.
+- [ ] **HR.4** He knows who told him, from the voice alone
+      - _asserts:_ With the speaker field produced by a voice embedder instead of handed to the test, ME.9's attributed-recall battery still clears 0.80 on ALL THREE channels (heard/said/did), with misattribution <=0.02 and unknown-speaker rejection >=0.90.
+      - _dies if:_ Any channel below 0.80, OR misattribution above 0.02, OR unknown-rejection below 0.90, OR abstention on enrolled speakers above 0.15 (calling everyone 'unknown' is not a pass). Also falsified if the TEXT-ONLY null matches the voice pipeline — then the voice channel is decorative and Jack should just read the words.
+      - _then delete:_ The sentence 'Jack remembers who told him what' as an end-to-end claim. ME.9 keeps its PASS — it tests the retrieval contract, and that contract is real — but until HR.4 passes, the speaker field is supplied by the test harness and by nothing in the live system (AudioListener.py produces text only; EpisodicMemory.record takes `speaker` on trust).
+- [!] **HR.5** The playground makes the sounds GOAL.md names  — alive_f0_ratio=2.75; alive_f0_ratio_std=0.187083
+      - _asserts:_ ContactAudio emits distinguishable, correctly-labelled events for water entry, creak-under-load and rolling/sliding, in addition to impacts; and events caused by Jack's own body carry a SELF flag.
+      - _dies if:_ Any of the four is absent, or a linear probe on band energies cannot separate the four classes above chance+20% — a sound Jack cannot distinguish is not a sound he can learn from.
+      - _then delete:_ The GOAL.md sentence 'he must hear the ladder creak, the splash, the thud of his own fall' as anything but aspiration. Two of those three sounds do not exist in the fixture today and the third cannot occur, because the humanoid is not in the playground (playground.build_mjcf(with_humanoid=False); bodies are world/apple/obj0-2/seesaw).
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **HR.6** How contact audio enters the brain: mel vs raw vs tokens vs nothing
+      - _asserts:_ At matched tokens-per-modality, matched trainable parameters (+-5%), matched steps and matched data order, at least one audio representation beats BOTH the NO-AUDIO ablation and the PLACEBO-AUDIO channel by >= 3 sigma on the audio-dependent battery, and the ranking is stable across 3 paired seeds.
+      - _dies if:_ Every audio arm ties the PLACEBO channel — hearing is decorative at this scale and does not earn its parameters (the Tier-3 rule; report it, do not re-run until it looks better). OR: the hand-crafted EVENT-VECTOR arm ties every learned encoder — which indicts the FIXTURE, not the brain, and sends the work to section 5 of docs/research/HEARING_BAKEOFF.md rather than to a bigger model.
+      - _then delete:_ Four of six audio front-ends, and possibly the audio modality itself. Also kills UnifiedBrain.AudioEncoder's wav2vec2 path if A4 loses: wav2vec2 is trained on 960 h of read English speech and Jack's audio is four-partial exponential rings.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **HR.7** The audio stem does not deafen him to direction
+      - _asserts:_ A probe on the audio STEM's output tokens recovers the source lateral angle to within 10 degrees on >= 0.9 of PG.5's drop events — the same gate PG.5 applies to the raw stereo signal. THE PROBE MUST NOT BE LINEAR IN THE LOG-MEL: the constant-power pan law makes the log-domain interaural level difference exactly atanh(p), so a linear readout saturates at the lateral extremes. MEASURED HERE 2026-08-09 on 108 PG.5-style drops: linear probe 0.40, analytic tanh link 1.00, mono control 0.10. A linear-probe version of this spec would report a FALSE NEGATIVE on the correct representation and kill the winning arm.
+      - _dies if:_ Any candidate stem whose tokens lose bearing. Directional hearing is the ONLY thing PG.5 certifies, and it is what makes audio useful for ACTION (turn toward the sound); a stem that discards it reduces audio to an event detector.
+      - _then delete:_ Any stem in HR.6 that fails, before it is ever trained. Named prediction, pre-registered: the DISCRETE-TOKEN arm fails this. ContactAudio encodes bearing purely as interaural LEVEL difference (ContactAudio.py:188-195 applies gains gL/gR to the IDENTICAL signal — there is no interaural TIME difference at all), and RVQ codecs quantise a few-dB level offset inside a single codebook cell. If it passes, that prediction was wrong and this document is wrong with it.
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **HR.8** Blind playground audit: hearing carries content, not just parameters
+      - _asserts:_ With vision occluded and every event out of contact with Jack, the model classifies audio events 4-way (impact / water entry / creak / rolling) and reports bearing to within 15 degrees, well above chance (>= 0.70 class accuracy, lower bootstrap CI > 0.25).
+      - _dies if:_ Class accuracy at chance, OR indistinguishable from the no-audio arm — hearing carries no content in Jack's world.
+      - _then delete:_ 'Hearing is load-bearing' (UB.4) as a claim. BPA is the cheapest experiment that could establish it and it needs no controller and no GPU.
