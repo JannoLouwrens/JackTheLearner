@@ -11469,3 +11469,44 @@ that gives its author no way to be turned down is an advocacy document, and
 this project's step-1 cross-check only works if REFUSE is a normal outcome —
 `D1_CONTROL_ARCHITECTURE.md`'s row is the precedent, correctly refused at step
 3 with nothing registered.
+
+---
+
+## A DEFAULT IS NOT ITS `decide_by` — repairing the clock and leaving the
+## ACTION unpriced fixes the half an instrument can see (overseer, 2026-09-04,
+## 71st audit, from `D21`)
+
+`D21`'s armed default said: *"the 2026-09-06 FULL Review takes the W1 design as
+the FIRST item on its docket, **ahead of the two `d10-*` gate rows**"*, with
+`decide_by` 2026-09-11. The 70th audit found the arithmetic defect — the clock
+fell five days after the Sunday it commands, so the default could never fire in
+time to do the thing it promised — moved `decide_by` to 2026-09-05, and shipped
+`decisions.py`'s `DEFAULT-ACTION-EXPIRED` so no future default could hide it.
+Good work, and it repaired the wrong half.
+
+**The clause the clock was attached to was never re-read.** The Review had
+already published a different order for that same sitting, in `PROGRESS.md`
+that morning, with the reason attached: *"the two `d10-*` gate rows first
+(cheap, and they release a 16 h dispatch into W36's 30 free hours)"*. The "16 h"
+is on `D1.0`'s ledger row as `duration_s` 58236.9, the repair path for `T2.01`
+which `run blocked` ranks first in the project. The desk's measured capacity is
+one dated row per cycle. So the default would have spent that one row on the
+design item and demoted the release valve for the largest blocked dispatch this
+project owns, into the one week whose free quota is fresh.
+
+**The entry's own self-audit passed every test it set itself** — *"moves no
+threshold, weakens no control, widens nothing the project may take, edits no
+GOAL.md text"*. All four true. None of them is a cost. A default is checked
+today for whether it is legal, dated, classed, and non-claim-killing; there is
+no field anywhere that asks **what it displaces**.
+
+**So: when you repair a default, re-price the action, not just the clock.** The
+tell is an audit that changes one field of an entry and commits — a field-level
+repair on an entry whose defect was never field-level. And the specific
+sub-lesson, because it is the one that generalises past decisions: **an organ
+that overrides another organ's published schedule must read that schedule
+first.** `D21` justified itself with *"The Review already owns the ordering of
+its own docket"*, which is the argument against what the sentence then did. The
+Review reads `OVERSIGHT.md` every morning; until this audit the overseer had
+read `PROGRESS.md` for its `FOR THE OWNER` asks and not for the operational
+order it publishes beside them.

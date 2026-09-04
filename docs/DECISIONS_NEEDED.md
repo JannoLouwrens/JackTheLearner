@@ -4546,6 +4546,66 @@ its class is legal, that its date parses, and that firing it cannot leave a
 GOAL.md commitment claim-dead. It does not check that the default's own action
 is still AVAILABLE at `decide_by`. Routed to the builder as 70th-audit B1.
 
+---
+
+### AMENDMENT, 2026-09-04 18:5x UTC (71st audit, overseer): the default is NARROWED — it no longer displaces the two `d10-*` gate rows, because it never priced what displacing them costs
+
+**The 70th audit repaired this default's CLOCK and left its ACTION unexamined.**
+It moved `decide_by` 2026-09-11 → 2026-09-05 so the default could fire before
+the Sunday it commands. It did not re-read the sentence the clock was attached
+to. That sentence is:
+
+> the 2026-09-06 FULL Review takes the W1 design as the FIRST item on its
+> docket, **ahead of the two `d10-*` gate rows** and ahead of Part 2
+
+**The Review had already published a different order for that same sitting,
+with a reason, and this organ did not read it back.** `docs/PROGRESS.md`
+`FOR THE OWNER` item 3 (Review, 2026-09-04 06:4x) — quoted here in full, which
+also routes it, since `decisions.py` reports it as `UNROUTED-OWNER-ASK`:
+
+> **Sunday 2026-09-06, order unchanged from yesterday's page and now six rows
+> rather than eight** (the builder re-staggered `hr5-fixture-refuted` and
+> `w0-kills-a-forager` to 09-09, both with reasons I endorse; it correctly left
+> `cross-organ-doc-race-voids-certificates` on the full day because that row's
+> stated reason outranks pile-avoidance). Order: the two `d10-*` gate rows
+> first (**cheap, and they release a 16 h dispatch into W36's 30 free hours**),
+> then `w0-too-shallow` — now at eleven days and ten instruments, `LF.01`'s
+> 25-minute body-wreck being the tenth — then the rest, Part 2 at its minimum
+> of 8. If item 1 above is granted, this docket is the first thing that changes
+> shape.
+
+**THE PRICE, measured rather than argued.** The "16 h dispatch" is `D1.0`, and
+the number is on its own ledger row: `duration_s` **58236.9** = **16.18 h**,
+spent across three Kaggle jobs on 2026-09-01, returning **VOID**. `D1.0` is the
+repair path for `T2.01`, which `run blocked` ranks first in the project —
+**frees 35 / blocks 38**. The two `d10-*` rows are the gate redesign that
+`D1.0`'s re-dispatch waits on; the Review's standing prohibition to the builder
+is *"do not re-dispatch `D1.0` (gate design owed here 09-06; an unchanged
+re-dispatch is a seed-lottery redraw)"*. `W36` opens 2026-09-06 00:00 with 30
+free Kaggle hours; `W35` closes the same instant with **10.80 h unspent and
+expiring**, which the Review has already told the builder to let go.
+
+So the default as written spends the desk's **measured capacity of 1 dated row
+per cycle** on the design item and demotes the two rows the Review named as the
+cheap ones and as the release for the largest blocked dispatch this project
+owns, into a week whose free quota is fresh. The original text asserts it
+*"moves no threshold, weakens no control, widens nothing the project may take"*
+— all three are true, and none of them is this cost. It also justifies itself
+with *"The Review already owns the ordering of its own docket"*, which is the
+argument AGAINST overriding the order the Review published.
+
+**THE NARROWING.** Under the standing rule that a default may shrink and may
+never grow, the clause `ahead of the two d10-* gate rows` is **STRUCK**. What
+remains is strictly less: W1 goes first among the design items and ahead of
+Part 2, the two `d10-*` gate rows keep the head of the docket, and Sunday's
+sitting is unchanged in every other respect. Nothing is added; one displacement
+is removed. `decide_by` is unmoved at 2026-09-05 — a deadline may tighten and
+may never lengthen, and there is no cause to tighten it.
+
+**Reversal, and it is the owner's on any date:** ruling (i), (ii) or (iii) is
+untouched by this. If you want W1 ahead of the gate rows, say so and it is so;
+this amendment only refuses to take that by silence.
+
 DECIDE: D21
   class:     goal
   blocks:    4 CLAIM-DEAD commitments (smell, balance, shelter/building,
@@ -4558,9 +4618,13 @@ DECIDE: D21
              TOUCHED, because a default may not edit the constitution. What
              fires instead is the narrowest already-permitted action that
              stops the recommendation from ageing in a file nobody reads: the
-             2026-09-06 FULL Review takes the W1 design as the FIRST item on
-             its docket, ahead of the two `d10-*` gate rows and ahead of
-             Part 2, and publishes a W1 spec-family design as a routed
+             2026-09-06 FULL Review takes the W1 design as the FIRST DESIGN
+             item on its docket and ahead of Part 2 — but NOT ahead of the two
+             `d10-*` gate rows, which keep the head of the docket (NARROWED by
+             the 71st audit's amendment above; the struck clause read "ahead of
+             the two `d10-*` gate rows", and it never priced the 16.18 h `D1.0`
+             dispatch those rows release into W36's 30 free hours) — and
+             publishes a W1 spec-family design as a routed
              disposition. The Review already owns the ordering of its own
              docket and `w0-too-shallow` is already dated 09-06, so this
              re-orders a scheduled item and creates no new permission. It
