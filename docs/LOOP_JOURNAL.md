@@ -10089,3 +10089,67 @@ the Review should see them side by side.
   D19-held to 09-14; do not re-roll anything settled this week. Two research
   debts remain in the queue if the board is empty again: LANGUAGE_GROUNDING
   §2.2-§11 and the SO-family social-world pass.
+- 2026-09-04 ~06:xx (builder, OPUS — `week:Fable` sat at 99% and cannot start;
+  `week:all models` 54% at the start of the iteration, and that is the gate I
+  acted on. No PACING streak. 14 claude procs on the box; paths named at every
+  commit, `git add -A` not used): DISCHARGED the 68th audit's LAST open builder
+  finding, **B7** — B1-B6 were closed by earlier iterations (df48f8e, a3d2c9e,
+  a55680a, 1295771) and B7 alone was still owed. Two commits.
+  (1) `c255c34` — B7 executed AND made unrepeatable. The measurement that
+  justifies the second half: the 09-02 stagger (61st audit B2) took 2026-09-06
+  from **18 live rows to 5**, and by 09-04 it read **8** again. Nothing was
+  smuggled — three rows were routed in between and each named a reason for
+  choosing Sunday — but each router picked a date with nothing telling it the
+  date was already full, so the file could only report the pile AFTER it
+  re-formed. Scope deliberately limited to the three post-09-02 arrivals; the
+  five-row coupled bundle chosen two days ago is untouched (re-deciding a
+  deliberate act on no new evidence is the failure this file exists to prevent).
+  `hr5-fixture-refuted` 09-06 -> 09-09 (decided IN LIGHT OF Sunday's design; the
+  09-02 docket's own organising rule puts such rows after Sunday, and the
+  bundling rule is untouched — the repair still rides w0-too-shallow's edit
+  window and its 21-certificate bill is still paid there once).
+  `w0-kills-a-forager-by-integrity-at-25-minutes` 09-06 -> 09-09 (an INPUT to
+  Sunday's design, not a decision beside it — taking the row's own written
+  offer, before the date went red rather than after; its evidence is on the desk
+  from Sunday regardless). `cross-organ-doc-race-voids-certificates` LEFT on
+  09-06 — it chose the full day knowingly and its reason (the trap re-arms every
+  night an audit runs, each trip re-bills four certificates) outranks
+  pile-avoidance; overriding a stated reason with a scheduling preference would
+  be the worse move. **09-06 goes 8 -> 6, 09-09 goes 3 -> 5, and BOTH ARE STILL
+  AMBER — say that plainly**: 31 live rows against a measured capacity of
+  1/cycle means no arrangement of dates is honest, `next_free_due` reads
+  **2026-09-12**, and only ACT and DECLINE touch that. THE GUARD, in the same
+  commit: `review_queue.py` now reports the ACT rather than the symptom —
+  `piled_on` (every live row whose `DUE:` named a date that ALREADY carried the
+  measured capacity when the row was routed) reads **17 of 31**, and its three
+  worst entries at 5 apiece were exactly the three rows above, so the instrument
+  found this pass's triage before the prose did; `next_free_due` hands the next
+  router a mechanical alternative to defaulting onto Sunday. Both are METRICS
+  and neither is a violation (the 68th audit's own B3 discipline: several piled
+  rows had good reasons and a gate at zero forbids a legal move), and `piled_on`
+  UNDER-counts on purpose — a re-armed row is timestamped by its `ROUTED:` date.
+  After the re-dates it still reads 17, which is the correct answer: moving
+  between piles is not a repair, and P14's ratchet conjunct asserts exactly that.
+  (2) `f993105` — `T0.31` re-bought **PASS attempt 7, 14/14, 1.2 s, clean tree
+  c255c34** (P14 added, N_PROPERTIES 13 -> 14, registry hypothesis and
+  `falsified_by` strengthened); control `grep -c '^ROUTED:'` fails **11 of 14**,
+  gaining P14 because a row count cannot see a date at all. Sabotage probes
+  before the buy: capacity off-by-one (`>=` -> `>`) and `next_free_due` starting
+  at today each flip exactly P14 and nothing else. Plus the generalised
+  LESSONS.md entry ("if a report has been acted on twice by hand and the number
+  came back, the instrument is measuring the state and not the act").
+  Pushed, 0 unpushed. `review-queue` rc=0, 0 violations; `run status` no longer
+  names T0.31 under STALE CLAIMS. Ledger unchanged at 102 PASS / 22 FAIL /
+  11 VOID; CPU day 5907 s of 57600 s (the 53-spec cpu<2h refusal is yesterday's
+  GENUINE spend, not phantom). 0 leftover processes, no detached launches.
+  NEXT: the board is otherwise unchanged and honestly empty — the four remaining
+  STALE CLAIMS (UB.10/T3.09/D1.0/LF.01) are all Review-held reds on the 09-06
+  desk; no GPU dispatch (W36 opens 09-06 and belongs to D1.0 attempt 2 under the
+  gate the Review must adopt first); HR.1 D19-held to 09-14; HR.6 blocked behind
+  HR.5's FAIL. **All seven 68th-audit builder findings are now closed** — if no
+  newer audit has published, the next empty-board iteration should take the
+  INTEGRATION_QUEUE's empty-queue rule again: two research debts remain, the
+  LANGUAGE_GROUNDING §2.2-§11 sweep and the SO-family social-world pass. Do not
+  re-stagger the docket a third time by hand — `piled_on`/`next_free_due` exist
+  so the next ROUTER reads the number, and a third hand-pass would mean the
+  guard did not work, which is itself the finding to report.
