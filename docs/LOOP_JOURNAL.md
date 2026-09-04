@@ -10153,3 +10153,48 @@ the Review should see them side by side.
   re-stagger the docket a third time by hand — `piled_on`/`next_free_due` exist
   so the next ROUTER reads the number, and a third hand-pass would mean the
   guard did not work, which is itself the finding to report.
+
+- 2026-09-04 07:xx UTC (builder, OPUS — `week:Fable` 99%, `week:all models` 55%,
+  the gate; no PACING: line, 0 skips). Unit: the **69th audit's B1**, the
+  highest-priority item on the page. `experiments/review_queue.py` owned five
+  violation classes and every one of them fired on a promise BREAKING, while the
+  file also — correctly — offers an honest way never to break one (re-arm the
+  `DUE:` with a reason). So a desk that re-arms honestly forever was
+  byte-indistinguishable, to every per-row class, from a desk keeping up: 35
+  routed rows, 2 lifetime dispositions, 30 arrivals in seven days, `0
+  violations`. **MEASURED at `5b08b94`, trailing 7 d, read from git rather than
+  from the rows' writable declared dates: arrived 30 (4.29/cycle), disposed 1
+  (0.14/cycle), designed 0, drain UNBOUNDED — 33 live rows, arrivals exceed
+  disposals by 29.** `review_queue_net_arrivals = 29` joins
+  `ratchet_readings.json` and the `run status` ratchet block. T0.31 gained P15
+  (N_PROPERTIES 14 -> 15, eight conjuncts: the three ratchets B1 named —
+  back-date, re-arm, split — plus a POSITIVE control so UNBOUNDED is not true by
+  construction, plus metric-not-violation and UNMEASURED-not-zero); blind
+  control now fails 12 of 15 and P15 is in the required set. Re-bought PASS on a
+  clean tree at `5b08b94` (a first `+dirty` PASS is in history, kept).
+  ONE DELIBERATE DEPARTURE from B1's wording, on B1's own evidence: a
+  `DISPOSITIONED` transition is counted as `designed` and NEVER as drain,
+  because that row is still LIVE and still ageing and crediting it would make
+  throughput reportable by writing prose — the two-meaning token as a rate.
+  FOUND WHILE BUILDING, verified not asserted: `piled_on`'s COUNT is invariant
+  under back-dating a row's `routed` field (N rows on a day => N-1 piled under
+  every permutation, measured 2 -> 2) but its NAMES are not — the offender
+  disappears from the report and the row that got there first is blamed in its
+  place. Generalised into LESSONS.md ("a count can be provably ungameable while
+  the NAME beside it is laundered by one field edit"); the repair is builder
+  means-work (first appearance in git as the moment of choice) and was
+  deliberately NOT routed to a desk this same commit measured as UNBOUNDED.
+  Ledger 103 PASS. `review-queue` rc=0. 0 leftover processes, no detached runs.
+  NEXT: 69th audit B2/B3/B4 are still open and are the ranked work —
+  **B3 first** (`repaired_by` in `run blocked`, `T2.01.repaired_by = ["D1.0"]`;
+  the audit already ruled it builder work and eliminated the dangerous arm),
+  then B2 (`UNROUTED-OWNER-ASK` in `decisions.py` + `PROGRESS.md` into the
+  overseer prompt's READ FIRST), then B4 (`gate_cpu_child` on the `rtf`
+  projection; the audit itself says today's realised cost is zero, so it is due
+  before the 09-06 Review orders CPU work, not before B2/B3). B5 is CONDITIONAL
+  on the owner granting the draft-then-ratify route — do not build it
+  speculatively. Standing prohibitions all unchanged (no `D1.0` re-dispatch, let
+  W35's ~11 h expire 09-06, `HR.1`-`HR.4` D19-held to 09-14, `HR.6` behind
+  `HR.5`, `LF.01` attempt 2 waits for 09-09, no third CPU-accountant increment,
+  no third hand-stagger of the 09-06 docket). `next_free_due` is **2026-09-12**
+  for any row you route.

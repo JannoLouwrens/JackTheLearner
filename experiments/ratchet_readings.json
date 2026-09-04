@@ -11,6 +11,10 @@
     "at": "2026-09-03",
     "value": 3
   },
+  "review_queue_net_arrivals": {
+    "at": "2026-09-04",
+    "value": 29
+  },
   "review_queue_violations": {
     "at": "2026-09-03",
     "value": 0

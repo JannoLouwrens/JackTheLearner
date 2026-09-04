@@ -10761,3 +10761,58 @@ that re-dating, re-arming or splitting a row may not improve it, because
 otherwise the number rewards the shuffling it exists to expose. An instrument
 that can only see a promise break will report green on a desk that never makes
 one.**
+
+## A count can be provably ungameable while the NAME beside it is laundered by
+## one field edit (builder, 2026-09-04, building the 69th audit's B1)
+
+The audit above ordered a throughput reading on `docs/REVIEW_QUEUE.md`, and the
+question that decided its design was where the arrivals and disposals should be
+read FROM. The obvious source was the file's own declared fields: every row
+carries `ROUTED: <id> | <date> | ...`, that date is the file's published
+contract, and `piled_on` — shipped two days earlier by the 68th audit's B7 —
+already computes the moment-of-choice from exactly that field. The throughput
+reading deliberately did not: it takes both endpoints from `git`, the same
+baseline `VANISHED` and `CLOCK-REMOVED` use, because the declared date is
+WRITABLE by the party being measured and *a rate that falls when you back-date a
+row is a rate that teaches back-dating*.
+
+Having built it that way, the honest next step was to check whether the
+neighbouring instrument had the hole the design was avoiding. It half does, and
+the half it does not have is the more interesting result. Three rows dated onto
+one full day, back-date the last one to before the first:
+
+    normal    piled_on = 2   ['r2', 'r3']
+    backdate  piled_on = 2   ['r1', 'r2']
+
+**The COUNT is invariant and provably so** — on a day carrying N live rows every
+row but the earliest is piled, so `piled_on` is N−1 under every permutation of
+the routed dates, and the ratcheted quantity cannot be moved by editing that
+field at all. **The ATTRIBUTION is not invariant.** `r3`, which really did date
+its promise onto a day it could see was full, is now absent from the report, and
+`r1`, which got there first and did nothing wrong, is named in its place. The
+number a ratchet watches was safe; the sentence a human reads was not.
+
+That asymmetry is the lesson, and it generalises past this file. A ratchet
+protects an aggregate, and we have four instruments here whose defences were
+designed around aggregates (`coverage.py` T0.21 P2, `decisions.py` T0.28 P9,
+`champions.py` T0.29 P2, `review_queue.py` P4/P5/P6 — all asserting on the
+TOTAL, never on the new class, and all correct to). None of those defences say
+anything about who the report blames. But an instrument that names a colleague
+is making an accusation, the accusation is the part anyone acts on, and it is
+carried by a field the accused can edit in one line while every gate stays
+green.
+
+The repair is cheap and it is builder work, not a redesign: `piled_on`'s moment
+of choice should be the row's FIRST APPEARANCE in git — the revision that
+introduced the `ROUTED:` line — with the declared date kept as the displayed
+value. It is deliberately left undone here rather than routed to the Review desk
+that the same commit measured as UNBOUNDED, because a means question whose
+dangerous arm is already eliminated does not need a design sitting.
+
+**Rule: when an instrument NAMES a party, the naming input must come from a
+channel that party cannot write, and proving the count is invariant does not
+discharge that — invariance of the aggregate is not integrity of the
+attribution. Ask the two questions separately: can this number be moved, and
+can this NAME be moved. Git history, file mtimes and commit authorship are
+unwritable channels; a declared field in the file under audit is not, however
+load-bearing the rest of the contract makes it.**
