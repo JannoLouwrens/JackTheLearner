@@ -119,6 +119,23 @@ must be reachable too (ACH_FRAC of its starts) — a cell nobody can perform is
 not a task, and LG.04 would train an arm on it. That adds a requirement; it
 removes none.
 
+ATTEMPT 1 (2026-09-04T17:20:27, 724.6 s, 3 seeds) RETURNED **VOID** ON THIS
+FILE'S OWN LIVENESS GATE, and the reading is `blind_calib_rate` 0.583 +- 0.312
+against `CALIB_MIN` 0.75. Read the whole row before assuming a repair: every
+other rig gate came back green — `obs_finite` 1.0, `verb_alive_min` 1.0,
+`planner_reach_mean` 0.754 — and the stripped-planner control FAILED as it must
+at `stripped_both_rate` 0.0542 against `CTRL_MAX` 0.10 on all 80 candidates. The
+claim numbers, which the VOID correctly refuses to publish, all sat far under
+their bars anyway: `retained_cells` 6.33 +- 0.47 against `MIN_CELLS` 12,
+`cellset_ok` 0.0 on every seed, a cross-seed intersection of three cells
+(`approach@block`, `round@stairs`, `touch@block`), `min_per_verb` 1,
+`min_per_object` 1. So the venue verdict this fixture exists to deliver is
+UNBOUGHT, not delivered: nothing may be said about whether W0 admits
+language-necessary commands until an instrument certifies itself alive. See
+`_Blind` for what was then measured about the repair, and
+`docs/REVIEW_QUEUE.md`'s `lg03-blind-twin-cannot-prove-itself-alive` for where
+the gate design went.
+
 WHERE THE CROSS-SEED INTERSECTION IS COMPUTED, and why it is in the control.
 `run_spec` runs every experiment seed before it runs the control, and
 `_aggregate` cannot see across seeds. `_control` is therefore the only hook
@@ -369,6 +386,33 @@ class _Blind:
     proves is that the identity of the strongest cheap null is an empirical
     question in this observation space, so the null is the MAX over both and
     a third learner may be added later only in that direction.
+
+    THE THIRD LEARNER WAS TRIED AND IT BUYS EXACTLY ZERO (recorded 2026-09-04,
+    AFTER attempt 1's VOID; `lg03_blind_twin_probe.py` is the receipt and
+    reproduces on demand). Attempt 1 returned VOID at `blind_calib_rate`
+    0.583 +- 0.312 — readings 1.00 / 0.50 / 0.25 across seeds 0/1/2 — and the
+    repair pre-registered in the open the day before was "a third learner in
+    the `max`, never a lower `CALIB_MIN`". Five cheap deterministic learners
+    were then raced on the identical demos of the identical calibration cell:
+
+        seed  planner_own  knn   ridge  knn1  wknn  ridge_lo | max2  max5
+        0        1.00      0.25  0.75   0.75  0.50  0.75     | 0.75  0.75
+        1        0.75      0.00  0.50   0.50  0.00  0.50     | 0.50  0.50
+        2        0.75      0.50  0.75   0.50  0.50  0.50     | 0.75  0.75
+
+    `max5 == max2` on EVERY seed, including a metric reweighted by ridge
+    coefficient magnitude — the candidate aimed squarely at the defect the
+    shipped pair was chosen for. The cause is the `planner_own` column: on two
+    of three seeds the PRIVILEGED planner reaches the calibration cell on only
+    3 of its own 4 starts, so the demonstrations are capped by the teacher
+    while `CALIB_MIN` is absolute, and the gate demands the student reproduce
+    every one of the teacher's successes perfectly. Even relativising the bar
+    to the teacher (0.75 x 0.75 = 0.5625) still voids seed 1 at 0.50, so the
+    repair is NOT one line and it is NOT this desk's to make: the gate design
+    is routed to `docs/REVIEW_QUEUE.md`, row
+    `lg03-blind-twin-cannot-prove-itself-alive`. Nothing here has moved —
+    `CALIB_MIN` is unchanged, `KINDS` is unchanged, and the correct reading of
+    attempt 1 is still VOID.
     """
 
     def __init__(self, X: np.ndarray, Y: np.ndarray):
