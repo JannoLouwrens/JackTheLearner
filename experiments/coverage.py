@@ -919,6 +919,15 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 # were moved and nothing was renumbered, reworded or re-justified — so where
 # an entry says "the N-entry above" it was written under the old order and
 # means the EARLIER entry, which now sits BELOW it.
+#   94 @ 2026-09-04 (SHRINK, builder) — SO.06 PASSED (attempt 2, clean tree
+#     3ad646e) and released SO.07, SO.08 and SO.09 in one step, so the live
+#     count fell 97 -> 94 within the hour the 97 was written. The floor follows
+#     the number down in the SAME commit, shrink-only: the 09-03 entry below
+#     exists precisely because a floor once did NOT follow, and carried a
+#     ceiling one above the truth that would have accepted a silent regression
+#     as clean. This is the entry above predicting itself — "it clears the
+#     first time SO.06 passes" — and it is logged rather than left implicit,
+#     because a floor that moves without a line is a floor nobody can audit.
 #   97 @ 2026-09-04 (builder) — the owner's-hands family registered from
 #     docs/research/OWNERS_HANDS.md §6 under the INTEGRATION_QUEUE protocol:
 #     SO.06 (the provisioning-channel FIXTURE) is RUNNABLE and is the only
@@ -993,7 +1002,7 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 97
+UNREACHABLE_BASELINE = 94
 
 
 def unreachable_ratchet(ledger=None,
