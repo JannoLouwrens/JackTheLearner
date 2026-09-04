@@ -914,6 +914,60 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 # Growth log (append a line per raise, newest first; SHRINKS are logged too,
 # because a floor that follows the number down silently is a floor nobody can
 # audit — see the 2026-09-03 entry, which exists because it did NOT follow):
+# NOTE (71st audit B1, 2026-09-04): entries were appended oldest-LAST until
+# this commit and are now stored newest-first as the header instructs. Lines
+# were moved and nothing was renumbered, reworded or re-justified — so where
+# an entry says "the N-entry above" it was written under the old order and
+# means the EARLIER entry, which now sits BELOW it.
+#   97 @ 2026-09-04 (builder) — the owner's-hands family registered from
+#     docs/research/OWNERS_HANDS.md §6 under the INTEGRATION_QUEUE protocol:
+#     SO.06 (the provisioning-channel FIXTURE) is RUNNABLE and is the only
+#     FRESH dispatch on a board coverage reported empty at every cost class;
+#     the other three — SO.07, SO.08, SO.09 — are deliberately blocked behind
+#     it, because scoring a provisioning arm against a channel never certified
+#     to reach ONLY through the world is the exact defect SO.06 exists to
+#     prevent (SO.06's own bit-identity leg: hand present and dropping nothing
+#     must be indistinguishable from no hand). The block is `depends_on`, so
+#     protocol.blocked_by() enforces it rather than a docstring; it clears the
+#     first time SO.06 passes. +3, the GEN.02-09 / SO.04 / LG.03 shape, named
+#     here as the ratchet requires. Note what this does NOT buy: SO.09 is
+#     `cpu<1min` and blocked, so that class stays no-path-in and stays in
+#     QUEUE_EMPTY_BASELINE — registering did not clear it and this entry does
+#     not claim it did.
+#   94 @ 2026-09-04 (builder) — the LG grounding bakeoff registered from
+#     docs/research/LANGUAGE_GROUNDING.md §7 under the INTEGRATION_QUEUE
+#     protocol: LG.03 (the cell-certification FIXTURE) is RUNNABLE and refills
+#     the cpu<10min class, which coverage reported NEWLY EMPTY and FILL-HELD
+#     behind D19; the other three — LG.04, LG.05, LG.06 — are deliberately
+#     blocked behind LG.03 because scoring a grounding arm on cells that were
+#     never certified language-necessary is the exact defect this family
+#     exists to prevent (CAST 2508.13446: the action distribution collapses
+#     given the observation alone, so the arm need never read the command).
+#     The block is `depends_on`, so protocol.blocked_by() enforces it rather
+#     than a docstring; it clears the first time LG.03 passes. +3, the
+#     GEN.02-09 / SO.04 shape, named here as the ratchet requires.
+#   91 @ 2026-09-03 (builder) — SO.01 PASSED (attempt 2, clean-tree 962c3b9:
+#     11.0 fps delivered / rtf 2.2 with the stream), so SO.04's deliberate
+#     block behind it cleared exactly as the 91-entry above predicted — "the
+#     block clears the first time SO.01 passes". The spectating claim is now
+#     RUNNABLE; the floor follows the number down, shrink-only.
+#   92 @ 2026-09-03 (builder, 66th audit B1) — LG.11 (THE TOLD WORLD)
+#     registered deliberately UNREACHABLE behind LG.00 + LF.01: GOAL.md's
+#     third expansion declared itself falsifiable on 2026-08-09 and had no
+#     spec for 25 days, invisible because its claim fell in `language
+#     (parent)` which reads 3 pass. A truthful red is the deliverable (the
+#     GEN.02-09 shape); the LF.01 dep re-parents to the W1 line when the
+#     Sunday 09-06 design registers it.
+#   91 @ 2026-09-03 (builder) — DIRECTION_AUDIT.md's queue row processed:
+#     seven specs registered (LF.01/LF.02, SO.01/SO.02/SO.04, T0.32/T0.33),
+#     of which SIX are runnable today — LF.02, SO.01, SO.02, T0.32, T0.33
+#     refill the empty cpu<10min class and LF.01 refills cpu<2h — and ONE,
+#     SO.04 ("Being watched does not change him"), is deliberately blocked
+#     behind SO.01 because an observer-invariance test without a stream to
+#     invert is unfalsifiable. Its dep is a fresh RUNNABLE spec, so the block
+#     clears the first time SO.01 passes; registering the falsifier beside
+#     the capability is the GEN.02-09 shape, named here as the ratchet
+#     requires.
 #   90 @ 2026-09-03 (65th audit B1) — HR.5 added to HR.6.depends_on. HR.5's
 #     registry notes call it "PREREQUISITE FOR HR.6 BEING INFORMATIVE" and it
 #     FAILed at 05:25 the same morning (classes_present 1.0 of 4, no kind
@@ -938,42 +992,8 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 #     deliberate depends_on, named here as the ratchet requires. The other
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
-#   91 @ 2026-09-03 (builder) — DIRECTION_AUDIT.md's queue row processed:
-#     seven specs registered (LF.01/LF.02, SO.01/SO.02/SO.04, T0.32/T0.33),
-#     of which SIX are runnable today — LF.02, SO.01, SO.02, T0.32, T0.33
-#     refill the empty cpu<10min class and LF.01 refills cpu<2h — and ONE,
-#     SO.04 ("Being watched does not change him"), is deliberately blocked
-#     behind SO.01 because an observer-invariance test without a stream to
-#     invert is unfalsifiable. Its dep is a fresh RUNNABLE spec, so the block
-#     clears the first time SO.01 passes; registering the falsifier beside
-#     the capability is the GEN.02-09 shape, named here as the ratchet
-#     requires.
-#   92 @ 2026-09-03 (builder, 66th audit B1) — LG.11 (THE TOLD WORLD)
-#     registered deliberately UNREACHABLE behind LG.00 + LF.01: GOAL.md's
-#     third expansion declared itself falsifiable on 2026-08-09 and had no
-#     spec for 25 days, invisible because its claim fell in `language
-#     (parent)` which reads 3 pass. A truthful red is the deliverable (the
-#     GEN.02-09 shape); the LF.01 dep re-parents to the W1 line when the
-#     Sunday 09-06 design registers it.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-#   91 @ 2026-09-03 (builder) — SO.01 PASSED (attempt 2, clean-tree 962c3b9:
-#     11.0 fps delivered / rtf 2.2 with the stream), so SO.04's deliberate
-#     block behind it cleared exactly as the 91-entry above predicted — "the
-#     block clears the first time SO.01 passes". The spectating claim is now
-#     RUNNABLE; the floor follows the number down, shrink-only.
-#   94 @ 2026-09-04 (builder) — the LG grounding bakeoff registered from
-#     docs/research/LANGUAGE_GROUNDING.md §7 under the INTEGRATION_QUEUE
-#     protocol: LG.03 (the cell-certification FIXTURE) is RUNNABLE and refills
-#     the cpu<10min class, which coverage reported NEWLY EMPTY and FILL-HELD
-#     behind D19; the other three — LG.04, LG.05, LG.06 — are deliberately
-#     blocked behind LG.03 because scoring a grounding arm on cells that were
-#     never certified language-necessary is the exact defect this family
-#     exists to prevent (CAST 2508.13446: the action distribution collapses
-#     given the observation alone, so the arm need never read the command).
-#     The block is `depends_on`, so protocol.blocked_by() enforces it rather
-#     than a docstring; it clears the first time LG.03 passes. +3, the
-#     GEN.02-09 / SO.04 shape, named here as the ratchet requires.
-UNREACHABLE_BASELINE = 94
+UNREACHABLE_BASELINE = 97
 
 
 def unreachable_ratchet(ledger=None,

@@ -7330,4 +7330,279 @@ EXPANSION: list[Spec] = [
                "independently of its payload stops the meter while the "
                "payload runs on — kill the GROUP; the leftover check "
                "(lib_procwatch) still sees the orphan either way."),
+
+    # ── OWNERS_HANDS.md §6 (INTEGRATION_QUEUE row, registered 2026-09-04) ────
+    # GOAL.md: "their hands may leave things in his world for him to find —
+    # food where he might look, a tool he has not made yet. Never
+    # puppeteering: what is left must still be found, learned, and chosen by
+    # him. His diary records who left it."
+    #
+    # Four drafts, four registered. Ids start at SO.06 because the
+    # DIRECTION_AUDIT row above dispositioned SO.03/SO.05 as HELD and said the
+    # prefix is occupied. Step 2 re-verified at registration: no id collision,
+    # no prefix shadowing, and all five distinct dependencies (XL.00, TA.01,
+    # PS.01, ME.9, LG.02) read PASS in the ledger this hour.
+    #
+    # STEP 1 RE-RUN IN FULL AT REGISTRATION — and it found one refutation the
+    # drafting pass missed, which is exactly why this protocol re-runs it.
+    #
+    #   THE REFUTATION. `NE.03`'s notes carry, inherited from PS §4.3 and from
+    #   PURPOSE_AND_SCAFFOLDING.md §5 G-A, the pre-registered rule
+    #   "energy/water_accounting_residual != 0 (ERROR, not VOID — the
+    #   instrument is wrong)", over the identity
+    #       Sum_t max(0, delta e_t)  ==  Sum_f nu_f * n_consumed_f .
+    #   `SO.07`'s C-GIVE was drafted as "places the item IN CONTACT with Jack's
+    #   body, OR RESTORES e DIRECTLY". The second half is forbidden by that
+    #   rule: a direct write to `e` is a positive delta-e with no logged
+    #   consumption event, so the residual is non-zero by construction and any
+    #   run carrying the arm is an ERROR — which also destroys C-GIVE's ONLY
+    #   job, since a control that errors can never land in the low-R cell it
+    #   exists to calibrate. STRUCK at registration, reason recorded on the
+    #   spec. The contact-placement half survives untouched and is strictly
+    #   sufficient: consumption still goes through drives.DriveLayer's contact
+    #   rule, so the identity holds and the arm is scoreable.
+    #
+    #   THE CONSEQUENCE, which is a strengthening and costs nothing. A
+    #   hand-placed gift is a food source the identity does not know about, so
+    #   the FIRST honest drop breaks it unless the accounting gains a hand
+    #   term. `drives.DriveLayer.ate_total` is keyed by FOOD_GEOMS name and
+    #   already counts per source, so `SO.09` — which must log nu per placement
+    #   for `hand_share` anyway — is given the extended identity to own:
+    #       Sum_t max(0, delta e_t) == Sum_f nu_f n_f + Sum_hands nu_g n_g .
+    #   An unlogged placement now breaks an arithmetic identity rather than
+    #   merely going unreported.
+    #
+    #   SO.08 WAS JUDGED, because OWNERS_HANDS.md §3.4 pre-authorised its own
+    #   refusal if this pass found the advice-vs-object gap too thin against
+    #   LG.02. REGISTERED, and the reasons are recorded rather than assumed:
+    #   (a) they discharge two DIFFERENT GOAL.md sentences — "his diary records
+    #   whose advice proved TRUE" (LG.02) and "his diary records who LEFT it"
+    #   (SO.08); (b) the credit assignment is materially different, LG.02's
+    #   evidence being an uttered claim and SO.08's an object whose value is
+    #   only discovered by eating it, on plants.py's declared dose-response and
+    #   DELAY, so a cautious policy gathers no evidence at all; (c) SO.08
+    #   carries an EQUAL-DONORS leg that LG.02 does not have. The shared part —
+    #   one Laplace posterior over verified outcomes — is IMPORTED, never
+    #   re-derived, which is the T2.16/LG.04-A4 rule and the reason this is one
+    #   mechanism measured in two venues rather than two mechanisms.
+    #
+    #   Otherwise no refutation: `donor`, `hand_share` and `puppeteering` are
+    #   unclaimed terms across docs/research/ and LESSONS.md, and the four
+    #   constraints the drafting pass found (P&S §3.6 owns R and B; §2.6(ii)
+    #   makes policy invariance vacuous here; FROZEN_VS_PLASTIC §10.2 mandates
+    #   C-MISPLACE; LG.02 owns the posterior) are carried into the specs below.
+    #
+    # UNREACHABLE: +3. SO.07, SO.08 and SO.09 each depend on SO.06 and are
+    # deliberately blocked behind it — the GEN.02-09 / SO.04 shape. Scoring a
+    # provisioning arm against a channel that was never certified to reach only
+    # through the world is the exact defect SO.06 exists to prevent. The block
+    # is `depends_on`, so protocol.blocked_by() enforces it; it clears the
+    # first time SO.06 passes. UNREACHABLE_BASELINE 94 -> 97 in this commit.
+
+    Spec("SO.06", 2, "A hand can reach into a running life, and it reaches ONLY through the world",
+         hypothesis="A declared external agent can place an object into a live "
+                    "W0 at a legal, unoccupied, currently-unseen position "
+                    "mid-life; the placement is visible in Jack's own senses "
+                    "within a declared time once he looks, is logged with "
+                    "(t, agent, object, position, need-state), and changes "
+                    "NOTHING else — with the hand present but dropping "
+                    "nothing, the trajectory is bit-identical to no-hand at "
+                    "the same seed.",
+         falsified_by="No placement exists that is simultaneously legal, "
+                      "reachable and initially unseen (the venue cannot host "
+                      "provisioning), OR the hand path perturbing the RNG "
+                      "stream, the body state, the need variables or the "
+                      "timing, OR a placement that never becomes perceptible.",
+         null_baseline="No hand — the current state, in which no spec has ever "
+                       "placed an object into a running life.",
+         metric="provision_channel_ok", budget=Budget.CPU, seeds=3,
+         depends_on=["XL.00", "TA.01"],
+         control="TWO, both of which must fire. (1) A hand that deliberately "
+                 "draws one RNG value and nudges the body: the invariance "
+                 "detector MUST catch it — SO.04's rule, a detector that "
+                 "cannot see its own positive control has measured nothing. "
+                 "(2) Place the object OUTSIDE every ray's reach and behind "
+                 "occlusion: the observation must NOT change. An observation "
+                 "that moves for an object he cannot see is a side-channel, "
+                 "not a sense.",
+         kills="'Their hands may leave things in his world' as a sentence "
+               "rather than a channel.",
+         notes="THE FIXTURE. Every SO.07-SO.09 number is scored against this, "
+               "so it is certified first and separately (TA.01/plants.py "
+               "precedent). VENUE, measured 2026-09-04: the object is a STATIC "
+               "body moved by `model.body_pos` — plants.py's idiom, and a "
+               "freejoint is forbidden because it would add dofs to a world "
+               "whose observation width nine specs depend on; playground.py's "
+               "`shelters`/`probe_objects` default-empty contract is the shape "
+               "to copy, and note probe_objects itself uses a freejoint and so "
+               "is NOT that shape. Food geoms already drift under traffic and "
+               "the world never re-places them (w0.py:_place omits "
+               "mj_resetData deliberately), so positions MUST be logged at "
+               "every drop and at each life's end or this spec cannot separate "
+               "the hand from the drift lc03_food_probe.py was written to "
+               "chase. THE BIT-IDENTITY LEG IS THE HARD ONE and it is the "
+               "point: 'hand present, drops nothing' must be indistinguishable "
+               "from no-hand, so the PARKED gift must be provably inert — "
+               "outside every ray, in no contact, contributing no dof. NO "
+               "OSTENSIVE CUE, in this or any successor: Csibra & Gergely 2009 "
+               "predicts a perceptible 'this is for you' marker would make "
+               "every downstream claim a claim about the marker. "
+               "  COVERS: social/other agents (fixture)"),
+
+    Spec("SO.07", 3, "What the hands leave is FOUND, and what he learns outlives them",
+         hypothesis="A learner provisioned by a need-contingent hand reaches a "
+                    "higher competence than an unprovisioned twin at matched "
+                    "compute, AND retains it when the hand is withdrawn: "
+                    "retention_ratio R = C_off/C_on above its floor with "
+                    "scaffolding_benefit B = C_off/C0 above 1 "
+                    "(PURPOSE_AND_SCAFFOLDING.md §3.6's metrics, reused "
+                    "verbatim).",
+         falsified_by="B ~ 1 (the hand bought nothing), OR R below its floor "
+                      "while B > 1 — competence that exists only while a hand "
+                      "is feeding him. THE SECOND IS THE PUPPETEERING RESULT "
+                      "and is reported as a violation of a GOAL.md "
+                      "commitment, not as a design finding; the response is to "
+                      "stop provisioning.",
+         null_baseline="A0, no hand, matched architecture, matched optimiser "
+                       "steps, matched wall-clock.",
+         metric="hand_retention_ratio", budget=Budget.CPU_LONG, seeds=3,
+         depends_on=["SO.06", "PS.01"],
+         control="C-MISPLACE (MANDATORY, FROZEN_VS_PLASTIC.md §10.2's "
+                 "shuffled-parent analogue): identical drop rate, item mix and "
+                 "optimiser steps, positions and times drawn independently of "
+                 "Jack's position and needs. MUST FAIL. It is not redundant "
+                 "with A0 — A0 has no channel, C-MISPLACE has a channel "
+                 "carrying noise, so an arm whose advantage is merely that the "
+                 "world contains more objects beats A0 and ties C-MISPLACE. "
+                 "C-GIVE: the hand places the item IN CONTACT with his body. "
+                 "MUST show high C_on and near-zero R — it calibrates what a "
+                 "failed retention looks like (the C-BEELINE role). If C-GIVE "
+                 "does not land low, the instrument cannot see puppeteering "
+                 "and no other number here means anything.",
+         kills="'Never puppeteering: what is left must still be found, "
+               "learned, and chosen by him' as an unfalsifiable promise.",
+         notes="ARMS: A1 contingent (drop when e < floor, within radius, "
+               "unseen), A2 GRADED by lives survived — the meerkat arm "
+               "(Thornton & McAuliffe 2006: helpers grade prey by pup age and "
+               "pups learn faster), listed as an ARM because grading is the "
+               "field's most-replicated finding and this repo decides by "
+               "bakeoff. R and B are PURPOSE_AND_SCAFFOLDING.md §3.6's, "
+               "deliberately not re-derived; its (R,B) outcome table transfers "
+               "but its INTERPRETATION does not — a load-bearing drive is a "
+               "component we keep, a load-bearing hand is a puppeteer we must "
+               "stop. "
+               "C-GIVE WAS NARROWED AT REGISTRATION (step-1 re-run, "
+               "2026-09-04). It was drafted as 'places the item IN CONTACT, or "
+               "RESTORES ENERGY DIRECTLY'; the second half is struck because "
+               "NE.03's pre-registered rule (from PURPOSE_AND_SCAFFOLDING.md "
+               "§5 G-A) makes a positive delta-e with no logged consumption "
+               "event an ERROR rather than a result — so that variant could "
+               "never produce the low-R number it exists to produce. Contact "
+               "placement keeps consumption inside drives.DriveLayer's contact "
+               "rule and the identity holds. The struck clause is recorded "
+               "here, not deleted, because the ledger's history is where a "
+               "weakened-looking edit has to be checkable: this one narrows "
+               "the arm and moves no threshold. "
+               "SIZING: cpu<2h has ~1 h of daily slack against a 54,000 s "
+               "admission cost per never-run spec, so this spec is the one "
+               "most likely to be foreclosed by our own CPU bookkeeping — a "
+               "scheduling fact for the Review (D20), never a reason to shrink "
+               "the design. "
+               "  COVERS: social/other agents (claim)"),
+
+    Spec("SO.08", 3, "The diary records WHOSE hands, and he acts on it",
+         hypothesis="With two donors of different reliability leaving visually "
+                    "indistinguishable gifts, Jack's approach rate to a newly "
+                    "dropped object diverges by donor above a base-rate null, "
+                    "and the divergence runs THROUGH the attributed diary: "
+                    "strip or shuffle the donor field and it collapses.",
+         falsified_by="No divergence (the donor field is written and never "
+                      "read — decoration), OR divergence surviving "
+                      "donor-shuffling (it was carried by something other than "
+                      "the attribution).",
+         null_baseline="Donor-stripped diary, same events, same counts — "
+                       "LG.02's null, reused.",
+         metric="donor_trust_divergence", budget=Budget.CPU_LONG, seeds=3,
+         depends_on=["SO.06", "ME.9", "LG.02"],
+         control="Donor-shuffled diary (content intact, source permuted): MUST "
+                 "collapse — Johnson, Hashtroudi & Lindsay 1993's dissociation "
+                 "made a control. Plus an EQUAL-DONORS run: two donors of "
+                 "identical reliability must produce NO divergence. A detector "
+                 "that reports a difference where none exists is broken, and "
+                 "without this leg a divergence is unattributable.",
+         kills="'His diary records who left it — so gratitude, like trust, has "
+               "somewhere real to grow' as decoration.",
+         notes="THE UNRELIABLE GIFT IS ALREADY BUILT: plants.py's two visually "
+               "identical types, one toxic, with a declared dose-response and "
+               "delay, certified by TA.01. SHARES LG.02's MECHANISM AND MUST "
+               "SHARE ITS IMPLEMENTATION — one Laplace posterior over verified "
+               "outcomes, imported by both, never re-derived (the T2.16/LG.04-A4 "
+               "rule). REGISTERED AFTER AN EXPLICIT JUDGEMENT, because "
+               "OWNERS_HANDS.md §3.4 pre-authorised this spec's own refusal if "
+               "the gap to LG.02 was judged too thin: it discharges a DIFFERENT "
+               "GOAL.md sentence ('who LEFT it' vs 'whose advice proved TRUE'), "
+               "its evidence is an OBJECT whose value is discovered only by "
+               "eating it — delayed and self-administered on plants.py's dose "
+               "response, so a cautious policy gathers no evidence at all, "
+               "where LG.02's is an uttered claim — and it carries an "
+               "EQUAL-DONORS leg LG.02 does not have. One mechanism, two "
+               "venues; if a later pass shows the venues do not discriminate, "
+               "the repair is to retire this spec, never to re-derive the "
+               "posterior. "
+               "  COVERS: social/other agents (claim)"),
+
+    Spec("SO.09", 0, "A life the hands bought is not evidence, and the harness says so",
+         hypothesis="Every provisioning event is logged, and any run that "
+                    "claims learning reports hand_share (the fraction of "
+                    "need-restoration events causally downstream of a hand "
+                    "inside a declared window) and hand_contact_frac (the "
+                    "fraction of placements made within body-contact distance) "
+                    "against a ceiling the spec declared BEFORE the run; a run "
+                    "over its ceiling is REFUSED by the runner, not reported "
+                    "with a caveat.",
+         falsified_by="The accountant passing a deliberately puppeteered run "
+                      "(C-GIVE), OR refusing a clean one, OR a provisioning "
+                      "event reaching the world without a log line.",
+         null_baseline="Today: nothing measures this, and 'never puppeteering' "
+                       "is enforced by the intention of whoever wrote the "
+                       "hand.",
+         metric="hand_share_audited", budget=Budget.CPU_FAST, seeds=1,
+         depends_on=["SO.06"],
+         control="A deliberately puppeteered log built to SO.07's C-GIVE "
+                 "policy (every placement in body contact): the accountant "
+                 "MUST refuse it. A guard that has never rejected anything has "
+                 "not been shown to work (LESSONS: a check whose failure mode "
+                 "is going quiet needs an alarm on the silence). SO.07 has not "
+                 "run and cannot be waited for — it is one PASS downstream of "
+                 "the same fixture — so the log is SYNTHESISED to the declared "
+                 "policy, and when SO.07's real C-GIVE arm exists its log is "
+                 "replayed through this accountant as a re-buy. A synthesised "
+                 "positive control is weaker evidence than a measured one and "
+                 "this spec says so rather than hiding it.",
+         kills="The practice of reading a provisioned run as a learning result "
+               "because the hand 'only helped a little'.",
+         notes="THE GUARD, and the reason it is empirical rather than "
+               "theoretical: PURPOSE_AND_SCAFFOLDING.md §2.6(ii) proves "
+               "potential-based shaping is VACUOUS on W0's zero-reward world "
+               "(V^pi_shaped = -Phi for every pi), so Ng, Harada & Russell "
+               "1999's policy-invariance guarantee is unavailable here and "
+               "safety must be measured. de Haan et al. 2019 is the reason the "
+               "ceiling is on the HAND'S CONTRIBUTION rather than on the "
+               "outcome: a helper in the observation is correlated with "
+               "success by construction, and only withdrawal plus a log can "
+               "separate them. Ceilings are per-spec and declared in the spec; "
+               "this one owns the accounting, never the number. "
+               "THIS SPEC ALSO OWNS THE EXTENDED ENERGY IDENTITY, added at "
+               "registration by the step-1 re-run. NE.03 carries "
+               "'energy_accounting_residual != 0 (ERROR, not VOID)' over "
+               "Sum_t max(0, delta e_t) == Sum_f nu_f n_f. A hand-placed gift "
+               "is a food source that identity does not know about, so the "
+               "first honest drop breaks it. The identity becomes "
+               "Sum_t max(0, delta e_t) == Sum_f nu_f n_f + Sum_hands nu_g n_g, "
+               "reconciled against drives.DriveLayer.ate_total, which is "
+               "already keyed per source. This costs nothing — nu per "
+               "placement is logged for hand_share anyway — and it upgrades an "
+               "unlogged placement from unreported to arithmetically "
+               "impossible. "
+               "  COVERS: social/other agents (rule)"),
 ]
