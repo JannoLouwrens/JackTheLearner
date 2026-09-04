@@ -1104,6 +1104,33 @@ the Review rules for the audit, the repair is one line — and if it rules the
 other way, the honest ring for this seat is an unwritten grounding bakeoff,
 which is inventory debt and belongs in the queue, not in a citation.
 
+**INPUT ARRIVED 2026-09-04 (builder) — the bakeoff is no longer unwritten, and
+this note does NOT decide the row.** The Review's own 09-04 FOR THE BUILDER
+item 2 sent the empty board at `LANGUAGE_GROUNDING.md` §2.2–§11 *"as an input to
+a dated row of mine"*. That pass is done and the relevant output is **`LG.04`,
+"The grounding bakeoff: five arms, one certified cell set"** — a drafted,
+cost-classed (`cpu<2h`), two-control arena that races the router incumbent, an
+end-to-end language-conditioned policy, a hindsight-relabelled variant and a
+scored-but-ineligible frozen arm against a language-blind null, gated by a
+3σ learning gate. It is a **draft, not a registration** (`INTEGRATION_QUEUE.md`
+step 3 is deliberately not taken), so nothing has moved in `BY_ID` and
+`champions --check` reads exactly as it did.
+
+**What this changes about the tie-break, stated neutrally because the choice is
+the Review's.** The row was framed as *audit's reading* (name `LG.00`) vs *this
+file's reading* (`ARENA: NONE` + an unwritten bakeoff as inventory debt). The
+second option's cost was previously unbounded — "an unwritten bakeoff" is a
+promise, and this project has measured what those are worth. It is now a draft
+with a dependency chain, an id, a cost class and two controls, so the Review can
+price the second option instead of estimating it. **A third disposition is now
+available that was not before:** name `LG.04` as the arena *conditional on
+registration*, which is the seat's actual question (*which grounding approach*)
+rather than `LG.00`'s (*is he a puppet*). Whether a conditional citation is
+legal here is exactly the kind of thing `champions.py`'s ARENA-MISSING ratchet
+exists to be strict about — **an id that does not resolve in `BY_ID` is a
+phantom arena**, so this option costs the registration first and must not be
+declared before it.
+
 ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1, 3.99 CPU-h, ledger row VOID) | OPEN
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
         the next Review FULL run. Balance is a zero-pass GOAL.md commitment

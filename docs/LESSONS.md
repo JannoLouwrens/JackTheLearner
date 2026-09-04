@@ -10990,3 +10990,57 @@ the instrument exists for untouched — and the metric moving (53 -> 36) will
 read as progress to every reader who does not break it down. Publish the
 breakdown in the certificate, not the headline: `n_foreclosed_now` alone would
 have been a true number telling a false story.
+
+## A VENUE VERDICT THAT LANDS IN A DOCSTRING IS INVISIBLE TO EVERY INSTRUMENT
+## THAT RANKS WORK — five specs did it that way, one did not, and only the one
+## is quotable (builder, 2026-09-04, designing LG.03 for the LG bakeoff)
+
+Five specs are `PILOT-BLOCKED` today — `SH.02`, `SM.03`, `DP.04`, `LC.07`,
+`T2.11`. In every one of the five the pilot **did its job**: it found a real
+fault, before a registered run, at a fraction of the cost. And in every one of
+the five the finding lives in a **docstring** — a `PILOT RECORD` paragraph,
+`_GATES_FROZEN = False`, `run()` refusing, and **no row on the ledger.**
+
+One spec in this repo did the same job the other way. `ME.11.0` — "the
+paraphrase eval set is honest before anyone is scored" — is a **registered
+fixture spec**. It ran, it PASSED, and its numbers (`lexical_null_recall
+0.000`, `oracle_ceiling 1.000`) are quoted by downstream arms *because they are
+on the scoreboard*. Nobody has to open a file to find out whether the eval set
+was certified.
+
+**The asymmetry is the whole lesson, and it is about what a FAILING pilot
+produces.** When a pilot fails, what it has produced is knowledge about the
+**venue** — this world does not resolve lifespan; this null already holds the
+roof; this plan does not fit in 8.5 hours. That is frequently worth *more* than
+the claim it was piloting, because it constrains every future spec in the same
+world. And a docstring is the one place in this system where such knowledge
+cannot be counted by `run coverage`, ranked by `run blocked`, ratcheted in
+`ratchet_readings.json`, or cited in another spec's `depends_on`.
+
+**The consequences are already on the page, and neither was recognised as this
+same cause.** `run coverage` carries a hand-written paragraph per pilot-blocked
+spec explaining why its class is empty — those paragraphs exist precisely
+because the finding is not a row. And the `w0-too-shallow` instrument count had
+to be **added up by hand** after living at three, four, six, seven and finally
+nine in different documents, because each venue verdict was routed as its own
+queue row instead of recorded as a measurement.
+
+**The rule.** *If a pilot's failure would be a finding about the VENUE rather
+than about the ARM, it is not a pilot — it is a fixture spec, and it belongs in
+the registry with its own `falsified_by`.* The CPU cost is identical. The entire
+difference is where the answer lands.
+
+**The tell, in one question, asked before you write the file:** *what do I do if
+this comes back red?* If the answer is "repair the arm and re-roll", it is a
+pilot and a docstring is fine. If the answer is "conclude something about the
+world and route it", it is a measurement, and a measurement that is not in the
+ledger did not happen — this project's first law, applied to its own
+instruments instead of to Jack.
+
+**Not a call to rewrite the five.** Their evidence is spent, re-running them is
+forbidden for good reasons already recorded, and converting a spent pilot into a
+spec would be a re-run wearing a costume. The repair is that the **next** one is
+a spec: `LG.03` is deliberately built this way, because if W0 turns out to admit
+no situation where more than one act is plausible from the same observation,
+that is an eleventh instrument for `w0-too-shallow` and it must be citable, not
+narrated.

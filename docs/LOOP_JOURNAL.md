@@ -10449,3 +10449,100 @@ the Review should see them side by side.
   binding on this very unit's neighbourhood: today's edit REMOVED a throttle,
   it did not add a meter, and the next person tempted to extend the accountant
   should re-read `2''`. `next_free_due` is **2026-09-12** for any row you route.
+- 2026-09-04 ~11:xx UTC (builder, OPUS — `week:Fable` 99%, `week:all models`
+  **56%**, the gate, acted on; no `PACING:` line, 0 skips). Unit: the
+  **empty-board rule's research pass** — `LANGUAGE_GROUNDING.md` §2.2–§11 —
+  ranked first by both the 09-04 Review's `2''` and PROGRESS FOR THE BUILDER
+  item 2, and owed to the dated `champions-language-grounding-arena` row (09-07).
+  Board re-verified empty before starting: `ME.11` already has its FAIL row
+  (09-02), `run next`'s remaining entries are the known parked/held set, and
+  `coverage` names the repair as a REDESIGN in every non-fillable class.
+  **THE DOC WAS A STUB FROM §2.2 DOWN — ten section headers with no body — and
+  is now written.** Ten citations FETCHED AND VERIFIED this pass under the
+  file's own `[V]` convention (HIGhER 1910.09451, LangLfP 2005.07648, CLIPort
+  2109.12098, CALVIN 2112.03227, SCAN 1711.00350, gSCAN 2003.05161, CAST
+  2508.13446, Li et al. 2202.01771, Bender & Koller ACL 2020, Smith & Yu
+  *Cognition* 2008, Smith & Gasser *Artificial Life* 2005, Needham et al. *IBD*
+  2002); one carried `[c]` unverified (2603.19233), as the convention requires.
+  **FOUR `Spec(...)` DRAFTS, NOT REGISTERED**: `LG.03` (cells are
+  language-necessary — fixture, `cpu<10min`), `LG.04` (the grounding bakeoff,
+  five arms, `cpu<2h`), `LG.05` (the Understanding Test, `cpu<2h`), `LG.06`
+  (the ordering experiment, `cpu<2h`). Step 2 executed and reported as done
+  because it was done, not asserted: all four AST-parse, construct against the
+  live `protocol.py`, collide with nothing in `BY_ID`, shadow no prefix, every
+  `depends_on` resolves. **Step 3 deliberately NOT taken** — registration is
+  its own unit and owes a full step-1 cross-check.
+  **THE PARTIAL CROSS-CHECK ALREADY CHANGED TWO OF MY OWN DRAFTS, which is the
+  argument for doing it before registering rather than after.** (a)
+  `CAPABILITIES.md` §C L2 carries *"Control: untrained verb must fail"* and
+  `LG.05` did not have it — without it a held-out verb×object cell can be
+  solved by the OBJECT alone and no composition is measured; added. (b)
+  `CURIOSITY_BAKEOFF.md`'s F2 branch (*"the fix is hindsight relabeling
+  density, not curiosity"*) names arm `A4`'s confound before `A4` existed —
+  relabelling MULTIPLIES training pairs, so an `A4`-over-`A3` gap is otherwise
+  indistinguishable from more data; `C-DENSITY` added (A3 at A4's pair count,
+  resampled not relabelled). No refutation found. `T2.16` shares `A4`'s
+  mechanism and has never run — one implementation, not two.
+  **TWO CONSTITUTIONAL READINGS, one of them a correction to this doc's own
+  §2.1.** §2.1 entered the frozen-LLM-embedding router as a *candidate* arm;
+  that is a frozen tower inside Jack and PLASTIC-ONLY forecloses the seat — but
+  SYSTEM.md's 08-24 owner ruling replaced *excluded* with
+  **SCORED-AND-INELIGIBLE**, so `A1` runs, is measured on the same ruler and is
+  recorded as a standing challenger (the HR.6/A6 precedent). `LG.06`'s
+  language-first arm initialises a **plastic** policy from pretrained weights,
+  which the decree permits.
+  **THE SHARPEST THING THE LITERATURE GAVE, and it is a control rather than an
+  opinion.** 2202.01771 [V] is the strongest counter-evidence to skills-first
+  (+43.6% task completion from LM initialisation) — and the same paper reports
+  that *"the format of the policy inputs encoding (natural language string vs
+  an arbitrary sequential encoding) has little influence"*. If an arbitrary
+  encoding does as well as English, what transferred is a SEQUENCE PRIOR, not
+  word meaning. So `LG.06` carries `O2s`, a scrambled-vocabulary twin, and the
+  ordering question is answered by `O2 - O1` while the MEANING question is
+  answered by `O2 - O2s`. O2 ≈ O2s is a live outcome and must be reported as
+  loudly as a win. Second gift: CAST 2508.13446 [V] names Finding 1's mechanism
+  — *"the future action distribution typically collapses given any single
+  observation... even powerful models have little incentive to pay attention to
+  the language command"* — which makes the certification checkable WITHOUT
+  learning (is more than one act plausible from this observation?) and is why
+  `LG.03` is ten minutes and can foreclose the family before an arm is trained.
+  **PRICED A RED COMPONENT BEFORE ANYONE BUILT AGAINST IT:** `ME.11` is FAIL at
+  0.250 paraphrase recall against a 0.80 bar, so every arm trains on the diary
+  OFFLINE AND IN BULK and an arm that RETRIEVES by paraphrase must declare
+  `ME.11` in `depends_on` — which makes it structurally unrunnable until that
+  number moves. That would otherwise have surfaced inside `LG.04` as a
+  mysteriously weak arm.
+  Input note appended to the `champions-language-grounding-arena` row WITHOUT
+  deciding it: the row's second option was *"an unwritten grounding bakeoff"*
+  and its cost was unbounded; it is now a draft with an id, a cost class and two
+  controls, and a third disposition exists (name `LG.04` conditional on
+  registration) which must NOT be declared before registration because an id
+  that does not resolve in `BY_ID` is a phantom arena. `review-queue` rc=0
+  (0 violations), `champions --check` rc=0, ratchets unmoved.
+  LESSONS: **a venue verdict that lands in a DOCSTRING is invisible to every
+  instrument that ranks work.** Five specs are PILOT-BLOCKED and all five put a
+  real venue finding in a `PILOT RECORD` docstring with no ledger row;
+  `ME.11.0` did the same job as a registered fixture spec and its numbers are
+  quotable by downstream arms. The rule: if a pilot's failure would be a finding
+  about the VENUE rather than the ARM, it is a fixture spec, not a pilot. The
+  tell is one question asked before writing the file — *what do I do if this
+  comes back red?* `LG.03` is deliberately built that way.
+  Ledger **102 PASS / 22 FAIL / 11 VOID** — unchanged; this iteration bought no
+  new capability and registered no spec. STALE CLAIMS still the four pre-existing
+  Review-held reds (UB.10/T3.09/D1.0/LF.01), no new DRIFTED, `coverage` rc=2
+  unchanged, 0 leftover processes, no detached runs, no `declared_pids` owed.
+  NEXT: **register `LG.03`–`LG.06` under the full 5-step protocol, then
+  implement and run `LG.03` ALONE** — `cpu<10min`, deps `ME.9` PASS, and it is
+  the only spec in the family whose cost is not a guess. Do NOT implement
+  `LG.04`/`LG.05`/`LG.06` in the same iteration: `LG.03` is designed to be able
+  to foreclose all three, and if it does, that reading is an ELEVENTH instrument
+  for `w0-too-shallow` bought for ten CPU-minutes. Note `cpu<2h` first-run specs
+  are still refused past ~6.25% of a CPU day (`cpu48h-class-self-forecloses-
+  the-day-meter`, DUE 09-08), so the three `cpu<2h` members want an early slot
+  or that row's resolution. Standing prohibitions ALL unchanged: no `D1.0`
+  re-dispatch; **W35's ~11 h expire 09-06 00:00 and must be let go** (inventory,
+  not uptime); `HR.1`–`HR.4` D19-held to 09-14; `HR.6` behind `HR.5`; `LF.01`
+  attempt 2 waits for 09-09; no third CPU-accountant increment; no third
+  hand-stagger of the 09-06 docket; `LG.05` must not be dispatched before an arm
+  clears the PHRASING split (`T2.07` is FAIL there already). `next_free_due` is
+  **2026-09-12** for any row you route.
