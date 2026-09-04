@@ -19,6 +19,20 @@ Each one is a CONVERSION, and each is its own violation class:
     stamp it ACTED naming no commit        -> ACTED-WITHOUT-A-COMMIT
     write the row as prose under a heading -> UNDECLARED-ROW
 
+P14 is not a conversion — it is the pile, and it is the newest scar of all
+(68th audit B7, 2026-09-04). The instrument already PRINTED the pile: on
+2026-09-02 the builder read it, staggered `2026-09-06` from eighteen live rows
+to five, in the open, with a stated reason per row. Two days later three
+newly-routed rows had put it back to eight. Nothing was dishonest — each of the
+three named a reason — but each router chose the date with no instrument
+telling it the date was already full, so the file could only report the pile
+AFTER it re-formed. P14 names the ACT instead of the symptom (`piled_on`) and
+hands the next router the mechanical alternative (`next_free_due`), and it is
+deliberately a METRIC rather than a violation: some of those rows chose a full
+Sunday for good reasons, and a gate at zero would forbid a legal move — the
+68th audit's own B3 discipline, applied to the instrument that audit wrote B7
+about.
+
 The sixth conversion is the newest scar (60th audit, 2026-09-02): six sections
 written in the pre-declaration prose idiom — three with the declaration INSIDE
 the heading, `## ROUTED: OPEN — ...`, one `## ` away from being read — were not
@@ -93,7 +107,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 13
+N_PROPERTIES = 14
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -409,6 +423,58 @@ def _probe(blind: bool) -> dict:
             or mig["n_rows"] != 4):
         failed.append("p13_a_prose_row_is_counted_never_parsed")
 
+    # P14 — the pile is reported as an ACT, not only as a symptom, and the
+    # report cannot be tidied by moving a promise between piles. The scar is
+    # two days old: on 2026-09-02 the builder staggered 2026-09-06 from
+    # eighteen live rows to five, in the open, with a reason per row — and by
+    # 09-04 three newly-routed rows had put it back to eight, because each
+    # router chose the date with nothing telling it the date was full. Five
+    # conjuncts: (i) a row dated onto a day that already carried CAPACITY live
+    # rows when it was ROUTED is named in `piled_on`, and the row that got
+    # there first is NOT — an instrument that blames the whole day blames the
+    # innocent; (ii) it is a METRIC and never a violation, so adding a
+    # perfectly healthy row onto a full day moves `piled_on` and leaves
+    # `total` and every violation class exactly where they were (68th audit
+    # B3: report a number, do not gate at zero); (iii) THE RATCHET — re-dating
+    # a piled row onto ANOTHER full day does not lower the count, because
+    # moving a promise between piles is not a repair; (iv) moving it to a day
+    # under capacity DOES clear it, so the honest escape hatch works;
+    # (v) `next_free_due` names a future date that really carries no live
+    # promise, which is the mechanical alternative to defaulting onto Sunday.
+    # `other-day` is routed BEFORE `second` on purpose: the sideways re-date in
+    # (iii) must land on a day whose occupant got there first, or the metric's
+    # documented conservatism (a re-arm is timestamped by the row's ROUTED
+    # date, which can only under-count) would clear the row for the wrong
+    # reason and the ratchet would be testing the wrong thing.
+    pile_rows = [
+        ("first", "2026-08-20", "OPEN", ["DUE: 2026-09-06 | got there first"]),
+        ("second", "2026-08-25", "OPEN", ["DUE: 2026-09-06 | dated onto a full day"]),
+        ("other-day", "2026-08-21", "OPEN", ["DUE: 2026-09-20 | its own day, occupied early"]),
+    ]
+    pile = audit(_doc(pile_rows), None, TODAY)
+    piled_ids = {p["id"] for p in pile["piled_on"]}
+    # (ii) a healthy row added onto the full day: metric moves, violations do not
+    plus = audit(_doc(pile_rows + [("third", "2026-08-27", "OPEN",
+                                    ["DUE: 2026-09-06 | also onto the full day"])]),
+                 None, TODAY)
+    # (iii) re-date `second` onto the OTHER occupied day — still piled
+    sideways = audit(_doc([(r[0], r[1], r[2], ["DUE: 2026-09-20 | moved to another pile"])
+                           if r[0] == "second" else r for r in pile_rows]), None, TODAY)
+    # (iv) re-date `second` onto an empty day — cleared
+    honest_move = audit(_doc([(r[0], r[1], r[2], ["DUE: 2026-10-15 | moved to a free day"])
+                              if r[0] == "second" else r for r in pile_rows]), None, TODAY)
+    free = pile["next_free_due"]
+    if (blind
+            or piled_ids != {"second"}
+            or plus["total"] != pile["total"] or plus["counts"] != pile["counts"]
+            or len(plus["piled_on"]) != 2
+            or {p["id"] for p in sideways["piled_on"]} != {"second"}
+            or honest_move["piled_on"]
+            or not free
+            or _dt.date.fromisoformat(free) <= TODAY
+            or pile["due_pile"].get(free, 0) != 0):
+        failed.append("p14_a_promise_dated_onto_a_full_day_is_named")
+
     return {
         "properties_checked": float(N_PROPERTIES),
         "properties_failed": float(len(failed)),
@@ -469,7 +535,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                       and {"p2_overdue_fires_on_a_passed_date_only",
                            "p5_deleting_the_row_does_not_help",
                            "p11_every_class_is_reachable_and_reported",
-                           "p12_a_disposition_is_not_an_execution"} <= control_names)
+                           "p12_a_disposition_is_not_an_execution",
+                           "p14_a_promise_dated_onto_a_full_day_is_named"} <= control_names)
     return bool(experiment_clean and control_broken)
 
 

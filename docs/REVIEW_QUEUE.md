@@ -132,6 +132,66 @@ If a daily run cannot carry its day's rows, re-arm the slipped rows
 individually, in the open, with the slip as the reason — do not re-pile them
 onto a Sunday.
 
+### THE STAGGER DID NOT HOLD — second pass 2026-09-04 (builder, 68th audit B7),
+### and the instrument that would have prevented it now exists
+
+**The measurement.** The 09-02 stagger above took `2026-09-06` from **18 live
+rows to 5**. By 09-04 it read **8** again. Nothing was smuggled: three rows
+were routed in between (`cross-organ-doc-race-voids-certificates`,
+`hr5-fixture-refuted`, `w0-kills-a-forager-by-integrity-at-25-minutes`) and
+each named its reason for choosing Sunday. The defect is not in any of the
+three — it is that **each router picked a date with nothing telling it the date
+was already full**, so the file could only report the pile after it re-formed.
+A stagger that has to be re-done every two days by hand is not a repair.
+
+**Scope of this pass, stated so it is not read as re-litigation.** Only the
+three rows routed AFTER 09-02 were considered. The five-row coupled bundle the
+09-02 pass deliberately chose is left exactly as it is: `w0-too-shallow` is the
+decision, `lt01-c2-body-cannot-rise` is the world-vs-body fork the design
+cannot be made without, the two `d10-*` gate rows have money and a date
+attached (W36 opens 09-06 with 30 free GPU-hours, and
+`d10-successor-rerun-under-adopted-gate` is DUE 09-08 behind them), and
+`lc07-checkpoint-branch` was placed in the bundle two days ago on evidence that
+has not changed. Re-deciding a two-day-old deliberate act with no new evidence
+is the failure this file exists to prevent.
+
+    RE-ARMED to 09-09  hr5-fixture-refuted
+                       — decided IN LIGHT OF Sunday's design; the 09-02 rule
+                         puts such rows after Sunday, and the edit window (and
+                         its 21-certificate bill) is unchanged.
+    RE-ARMED to 09-09  w0-kills-a-forager-by-integrity-at-25-minutes
+                       — an INPUT to Sunday's design, not a decision beside
+                         it; taking the row's own written offer. Its evidence
+                         is on the desk from Sunday regardless.
+    LEFT ON 09-06      cross-organ-doc-race-voids-certificates
+                       — it chose the full day knowingly and its reason is
+                         stronger than pile-avoidance: the trap re-arms every
+                         night an audit runs and each trip re-bills four
+                         certificates. Overriding a stated reason with a
+                         scheduling preference would be the worse move.
+
+**09-06 goes 8 -> 6; 09-09 goes 3 -> 5. BOTH ARE STILL AMBER, and saying so is
+the point.** With 31 live rows against a measured capacity of 1/cycle, no
+arrangement of dates is honest — re-dating moves promises between piles, it
+does not create capacity. `next_free_due` reads **2026-09-12**: every day
+between now and then already carries a promise. That is a fact about the desk,
+not about the calendar, and the only repairs that touch it are ACT and DECLINE.
+
+**What changed so this does not need a third pass.** `review_queue.py` now
+reports the ACT rather than only the symptom, gated as `T0.31` P14:
+
+- `piled_on` — every live row whose `DUE:` named a date that ALREADY carried
+  the measured capacity when the row was routed. It reads **17 of 31** today,
+  and its three worst entries are exactly the three rows above, at 5 apiece —
+  the instrument found this pass's triage before the prose did.
+- `next_free_due` — the first future date carrying no promise yet, so the next
+  router has a mechanical answer instead of defaulting onto Sunday.
+
+Both are METRICS and neither is a violation, deliberately: several piled rows
+had good reasons, and a gate at zero would forbid a legal move. Under-counting
+is also deliberate — a re-armed row is timestamped by its `ROUTED:` date, which
+can only make `piled_on` too small, never too large.
+
 ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2026-09-01 in 15eb02e (builder EXECUTED the 08-25 disposition — grid, selection, SCORED-AND-INELIGIBLE verdict all in ub_10_fusion_bakeoff.py; UB.10 unparked. The 08-25 'ACTED' meant only 'design written' and parked this row's spec for 7 days — the two-meaning token was Review 09-01 FOR THE BUILDER item 4, repaired the same day: that state is now DISPOSITIONED, which ages)
     Question: no single uniform training recipe trains all six matched-param
     UB.10 arms (warmup@1e-3 leaves A2/A3 dead; 3e-4 fixes A3 but breaks A4);
@@ -1798,6 +1858,18 @@ ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, class
     same world files, and this row belongs to the SAME W1 fork — it must not
     be designed twice. If w0-too-shallow resolves toward a new world (W1),
     this row follows it there and the W0 bill goes to zero.
+    DUE: 2026-09-09 | the same fixture-repair contract, moved to the Wednesday
+        DAILY — RE-ARMED 2026-09-04 from 2026-09-06 (68th audit B7, builder).
+        The reason is the 09-02 docket's own organising rule, which this row
+        was routed without reference to: *the bundling rule binds world EDITS
+        to one edit window, not DECISIONS to one sitting — a row that must be
+        decided IN LIGHT OF Sunday's design belongs AFTER Sunday.* Nothing
+        about the bundle changes: the repair still rides w0-too-shallow's edit
+        window and the 21-certificate mechanical bill is still paid there once.
+        What moves is only WHEN the fixture contract is chosen, and it cannot
+        honestly be chosen before the design says whether the world is W0 or
+        W1. It joins the three venue repair-arm picks already on 09-09
+        (ba03/sh02/t306), which are the same shape for the same reason.
     Question: three of the four sounds GOAL.md names do not exist in the
     fixture, and the graph now says so (HR.5 -> HR.6 edge declared, 65th
     audit B1). What does the fixture need before HR.6's bakeoff is
@@ -1857,6 +1929,18 @@ ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-
     pile is 7+ rows against a measured capacity of ~1/cycle: if the Review
     cannot take it, re-date it here in the open with the slip as the reason
     rather than letting it go red.
+    DUE: 2026-09-09 | RE-ARMED 2026-09-04 from 2026-09-06 (68th audit B7,
+        builder) — taking this row's own written offer, one line up, before
+        the date went red rather than after. The slip is not the reason; the
+        SHAPE is. This row asks for no decision on Sunday: it asks that the
+        Sunday design CONSUME its numbers, and a promise to consume an input
+        is only checkable once the design exists. Re-dated to the Wednesday
+        DAILY, the promise becomes a thing that can be verified — *did the W1
+        design account for a body the world wrecks in 25 minutes?* — instead
+        of a second item competing with the design for the same sitting. The
+        numbers are unchanged and are on the desk from Sunday regardless;
+        NOTHING about the evidence is deferred, only the confirmation that it
+        was used. If the 09-06 design does not land, re-arm again in the open.
     Question: the first long-exposure life W0 has ever hosted (LF.01 attempt
     1, 240x the certified 15 sim-s) ended at sim_s 1476.9 +/- 382.0 (~25
     min), cause=INTEGRITY — the body wrecked mid-forage — not starvation

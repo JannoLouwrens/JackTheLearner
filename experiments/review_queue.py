@@ -152,6 +152,16 @@ STATUSES = LIVE + TERMINAL
 #: 2026-09-06). Raise it only by citing a cycle that actually discharged N.
 MEASURED_DISCHARGE_CAPACITY = 1
 
+#: How far ahead `next_free_due` will look for a date carrying no promise yet.
+#: A board booked solid past a full quarter should print "" and say so rather
+#: than scan forever; the empty string is a reading, not a failure.
+FREE_DATE_HORIZON_DAYS = 120
+
+#: How many `piled_on` rows the report prints, worst-crowded first. The rest
+#: are counted out loud in the elision line — a cap that hides its own size
+#: reads as coverage.
+PILED_ON_SHOWN = 8
+
 #: Every violation class, named once. `--check` is red on any of them; a class
 #: absent from this tuple is a class the exit code cannot see.
 VIOLATIONS = ("MALFORMED", "OVERDUE", "STALE", "HOLD-WITHOUT-A-CLOCK",
@@ -345,8 +355,49 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) 
         if r["due"] is not None:
             k = r["due"].isoformat()
             due_pile[k] = due_pile.get(k, 0) + 1
+
+    # THE ACT THE PILE IS MADE OF, named. The pile line reports a symptom after
+    # the fact; on 2026-09-02 the builder staggered 2026-09-06 from eighteen
+    # rows to five, and by 09-04 three newly-routed rows had put it back to
+    # eight — because each router picked the date without being told it was
+    # already full. A row is `piled_on` when at least CAPACITY other live rows
+    # were ALREADY promised on its date at the moment it was routed.
+    #
+    # METRIC, NEVER A VIOLATION (68th audit B3's discipline: report a number
+    # rather than gate at zero). Every row that did this named a reason, and
+    # some reasons are good — `cross-organ-doc-race-voids-certificates` chose a
+    # full Sunday knowingly because its trap re-arms nightly. A gate here would
+    # forbid a legal move; a number makes the move visible.
+    #
+    # CONSERVATIVE BY CONSTRUCTION: a re-armed row's `DUE:` was chosen later
+    # than its `routed` date, so using `routed` as the moment of choice can
+    # only UNDER-count. An instrument on a shared file errs toward silence.
+    piled_on: list[dict] = []
+    for r in live:
+        if r["due"] is None or r["routed"] is None:
+            continue
+        prior = sum(1 for o in live
+                    if o is not r and o["due"] == r["due"]
+                    and o["routed"] is not None and o["routed"] < r["routed"])
+        if prior >= MEASURED_DISCHARGE_CAPACITY:
+            piled_on.append({"id": r["id"], "due": r["due"].isoformat(),
+                             "prior": prior})
+
+    # The mechanical alternative to defaulting onto Sunday: the first FUTURE
+    # date that could take a new promise without becoming a pile — i.e. the
+    # first date carrying fewer than CAPACITY live rows. "" when the board is
+    # booked past the horizon, which is itself the answer.
+    next_free_due = ""
+    d = today + _dt.timedelta(days=1)
+    for _ in range(FREE_DATE_HORIZON_DAYS):
+        if due_pile.get(d.isoformat(), 0) < MEASURED_DISCHARGE_CAPACITY:
+            next_free_due = d.isoformat()
+            break
+        d += _dt.timedelta(days=1)
+
     return {"rows": rows, "findings": findings, "counts": counts,
-            "due_pile": due_pile,
+            "due_pile": due_pile, "piled_on": piled_on,
+            "next_free_due": next_free_due,
             "total": len(findings), "today": today,
             "n_rows": len(rows),
             "n_open": sum(1 for r in rows if r["status"] == "OPEN"),
@@ -408,6 +459,34 @@ def render(a: dict, last_run: str = "") -> str:
                        "Re-date the ones that can")
             out.append("  wait (a new DUE: with a reason is honest; a broken "
                        "date is a violation).")
+        if a["piled_on"]:
+            out.append("")
+            out.append(f"  DATED ONTO A FULL DAY — {len(a['piled_on'])} live "
+                       "row(s) named a date that already")
+            out.append("  carried its measured capacity when the row was "
+                       "routed. This is the ACT the")
+            out.append("  pile above is made of, and it is a METRIC, not a "
+                       "violation: each of these")
+            out.append("  may have had a good reason, and a gate here would "
+                       "forbid a legal move.")
+            worst = sorted(a["piled_on"], key=lambda p: (-p["prior"], p["due"]))
+            for p in worst[:PILED_ON_SHOWN]:
+                out.append(f"    {p['id']:<52} -> {p['due']}  "
+                           f"({p['prior']} already promised there)")
+            if len(worst) > PILED_ON_SHOWN:
+                # A cap that does not say what it dropped reads as coverage.
+                out.append(f"    ... and {len(worst) - PILED_ON_SHOWN} more, "
+                           "least-crowded first, elided from this print only "
+                           "(all are in `piled_on`).")
+        if a["next_free_due"]:
+            out.append(f"  Next date carrying no promise yet: "
+                       f"{a['next_free_due']} — the mechanical answer for the")
+            out.append("  next router, instead of defaulting onto Sunday.")
+        else:
+            out.append(f"  NO date in the next {FREE_DATE_HORIZON_DAYS} days is "
+                       "free of promises. There is no")
+            out.append("  honest re-date left: the repair is to ACT or to "
+                       "DECLINE.")
     if a["total"]:
         out.append("")
         out.append(f"  {a['total']} VIOLATION(S) — "

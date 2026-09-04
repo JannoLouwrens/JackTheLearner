@@ -5470,7 +5470,15 @@ EXPANSION: list[Spec] = [
                     "parsed — the six pre-declaration shapes the 60th audit "
                     "found invisible fire exactly six, an attached ROUTED: "
                     "declaration clears one, and the file's legitimate prose "
-                    "headings stay exempt.",
+                    "headings stay exempt; and (10) the due-date pile is "
+                    "reported as an ACT and not only as a symptom — a row "
+                    "dated onto a day that already carried the consumer's "
+                    "measured capacity when it was routed is NAMED, the row "
+                    "that got there first is not, the count is a metric that "
+                    "never moves a violation total, re-dating a piled row "
+                    "onto another full day does not lower it, moving it to a "
+                    "free day does, and `next_free_due` names a future date "
+                    "that really carries no promise.",
          falsified_by="Any property failing; the battery running fewer than "
                       "N_PROPERTIES; or the live `docs/REVIEW_QUEUE.md` "
                       "failing to parse into rows that are all in contract. "
@@ -5481,9 +5489,10 @@ EXPANSION: list[Spec] = [
                       "class in `VIOLATIONS` that no document can trigger, "
                       "a finding the report does not print, a DISPOSITIONED "
                       "row that goes quiet instead of ageing, a commitless "
-                      "ACTED stamp clearing a red row, or a routed section "
+                      "ACTED stamp clearing a red row, a routed section "
                       "written under a `## ` heading being invisible to the "
-                      "count.",
+                      "count, or a promise shifted from one over-capacity day "
+                      "to another reading as a repair.",
          null_baseline="THE READER THAT ACTUALLY EXISTED — `grep '^ROUTED:' "
                        "docs/REVIEW_QUEUE.md | wc -l`, published in the file's "
                        "own contract line and, until 2026-08-31, the whole of "
