@@ -5530,7 +5530,22 @@
       "status": "PASS"
     },
     "LG.03": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-04T17:26:59",
+          "by": "lg03_blind_twin_probe.py (2026-09-04)",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "f682410d0e2e3d65",
+              "proof": "reconstructed f682410d0e2e3d65 from git a2ff63cd5b8e; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "e432088c44fb5656"
+            }
+          ],
+          "commit": "e8c7922",
+          "reason": "docstring only: attempt 1's VOID reading and the falsification of its pre-registered third-learner repair recorded in the file; CALIB_MIN, KINDS and the run path unchanged"
+        }
+      ],
       "attempt": 1,
       "commit": "a2ff63c",
       "compute_s": null,
@@ -5549,7 +5564,7 @@
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [],
-      "impl_sha": "f682410d0e2e3d65",
+      "impl_sha": "e432088c44fb5656",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "blind_calib_rate": 0.583333,

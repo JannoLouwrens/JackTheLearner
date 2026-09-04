@@ -2083,3 +2083,108 @@ ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 
     raise** — the loop runs first-run `cpu<2h` specs before its own
     housekeeping, which costs nothing and loosens nothing, and is the runner-
     lane twin of option (i)'s answer for the detached lane.
+
+## ROUTED 2026-09-04 (builder, LG.03 attempt-1 harvest): `lg03-blind-twin-cannot-prove-itself-alive` — the certifier VOIDs on its own liveness gate, and the repair it pre-registered is falsified
+
+ROUTED: lg03-blind-twin-cannot-prove-itself-alive | 2026-09-04 | LG.03-attempt-1 | OPEN
+    DUE: 2026-09-12 | a liveness-gate redesign owed by the Review. Deliberately NOT 09-06/09-07: `review-queue` names 09-12 as the next date carrying no promise, and this row has no money and no clock on it — nothing expires and no quota dies while it waits. Coupled to `champions-language-grounding-arena` (DUE 09-07) as an INPUT, not a decision beside it: that row asks whether the language-grounding seat has an arena at all, and the answer is now "it has one, registered, and its certifier cannot yet certify itself".
+
+**What was measured (LG.03 attempt 1, VOID 2026-09-04T17:20:27, 724.6 s,
+3 seeds; metrics on the ledger row, correct and untouched).**
+`blind_calib_rate` **0.583 +- 0.312** — readings 1.00 / 0.50 / 0.25 across
+seeds 0/1/2 — against a pre-registered `CALIB_MIN` of 0.75. The blind twin
+could not demonstrably reproduce, from the identical starts, demonstrations it
+was trained on. Its at-chance readings elsewhere therefore prove nothing, and
+`_check` correctly returned VOID before reading a single claim number.
+
+**Everything else in the rig was green, which is what makes this a gate
+question and not a bug hunt.** `obs_finite` 1.0; `verb_alive_min` 1.0 (the
+privileged planner can perform every verb on some object); `planner_reach_mean`
+0.754; and the declared control — the stripped planner, target identity
+withheld — FAILED as it must, `stripped_both_rate` 0.0542 against `CTRL_MAX`
+0.10, measured on all 80 candidate cells rather than only the survivors.
+
+**The claim numbers the VOID refuses to publish, quoted here so the Review can
+see what is at stake:** `retained_cells` 6.33 +- 0.47 against `MIN_CELLS` 12,
+`cellset_ok` 0.0 on **every** seed, a cross-seed intersection of three cells
+(`approach@block`, `round@stairs`, `touch@block`), `min_per_verb` 1,
+`min_per_object` 1. Seed 0's 13 exclusions split 3 blind-above-chance / 5
+unachievable / 5 no-plurality. If the instrument is repaired, this fixture
+looks likely to deliver a **FAIL** — which per its own registry text is a
+VENUE verdict ("this world does not admit language-necessary commands at this
+horizon") routing to `w0-too-shallow` as a further instrument, and would make
+`LG.04`/`LG.05`/`LG.06` VENUE-blocked rather than model-blocked. **That verdict
+is currently UNBOUGHT, not delivered.** Note the direction of the coupling
+before weighing any repair: a STRONGER blind twin excludes MORE cells, so every
+repair that helps the instrument prove itself alive also pushes the claim
+further from PASS. There is no run-until-pass move available on this row.
+
+**The repair this file pre-registered is FALSIFIED, and that is the finding
+this row is worth.** The journal committed in the open, the day before the run:
+*"if it fires, the repair is a third learner in the `max`, never a lower
+`CALIB_MIN`."* It fired. `experiments/tests/lg03_blind_twin_probe.py` (kept,
+reproduces on demand) then raced five cheap deterministic learners on the
+identical demos of the identical calibration cell (`approach@block`, 96 rows):
+
+    seed  planner_own  knn   ridge  knn1  wknn  ridge_lo | max2  max5
+    0        1.00      0.25  0.75   0.75  0.50  0.75     | 0.75  0.75
+    1        0.75      0.00  0.50   0.50  0.00  0.50     | 0.50  0.50
+    2        0.75      0.50  0.75   0.50  0.50  0.50     | 0.75  0.75
+
+`max5 == max2` on **every seed** — including `wknn`, a Euclidean metric
+reweighted by ridge-coefficient magnitude, aimed squarely at the placebo and
+near-silent columns that were the diagnosed reason for the shipped pair. A
+third seat in the `max` buys exactly zero.
+
+**The cause is the `planner_own` column, and it is a design defect in the gate
+rather than in the learner family.** On seeds 1 and 2 the PRIVILEGED planner —
+told the target, reading the object's world coordinates — reaches the
+calibration cell on only **3 of its own 4 starts**. The demonstrations are
+capped by the teacher while `CALIB_MIN` is absolute, so on those seeds the gate
+demands the student reproduce *every one* of the teacher's successes perfectly
+or the run is void. The parent file's own `avoid` predicate already knows this
+shape — it is start-relative *"because an absolute one is satisfied by standing
+still far away"* — and the liveness bar is the same mistake one surface over.
+
+**Why this is not a one-line fix, and why the builder did not make it.**
+Relativising the bar to the teacher (0.75 x 0.75 = 0.5625) still VOIDs seed 1,
+whose best clone reads 0.50. So both halves are live, and `CALIB_MIN` is a
+pre-registered constant on a spec that now carries a ledger row — moving it, or
+its semantics, after seeing the failure is precisely the act that needs an eye
+that is not the author's (`D22` is on the owner's desk asking whether that
+changes; until it resolves, the default is that it does not). **Nothing has
+moved:** `CALIB_MIN` unchanged, `_Blind.KINDS` unchanged, both file edits are
+docstring prose re-stamped through the `--doc-only` amend lane, and the
+recorded VOID stands per the T2.02 precedent.
+
+**Options to weigh, none decided here.**
+  (i)   **Teacher-relative liveness** — the clone must reach `CALIB_MIN` x the
+        privileged planner's own rate on the identical starts. Repairs the
+        measured defect; does not clear seed 1 alone. Loosens the absolute
+        floor, which is the reason it needs ratification.
+  (ii)  **Calibrate where the teacher is perfect** — choose the calibration
+        cell by the planner's own reach rather than fixing it at
+        `approach@<first object alphabetically>`. Keeps `CALIB_MIN` absolute
+        and untouched; costs nothing; but "select the venue for a liveness
+        proof" is one short step from "search cells until the gate passes", so
+        the selection rule must be declared before the run and be blind to the
+        twin's reading.
+  (iii) **A twin with an optimiser** — the file deliberately excluded one so
+        that "nothing about the verdict depends on a training schedule". That
+        purchase is now measurably expensive: no member of the cheap
+        deterministic family demonstrates itself alive in W0's 80-number
+        observation at this horizon on all three seeds. Buying a schedule buys
+        a stronger null, which is the strengthening direction for the claim.
+  (iv)  **Read the VOID as a venue instrument in its own right.** A policy
+        trained on the world's own observation, from a privileged servo's
+        demonstrations, reproducing the demonstrated act on half the starts is
+        a statement about what W0's observation supports — arguably a further
+        `w0-too-shallow` reading, pointed at the OBSERVATION rather than at the
+        world's depth. If the Review takes this branch, the gate redesign
+        follows the W1 decision rather than preceding it.
+
+**Cost of waiting, stated plainly:** `LG.04`/`LG.05`/`LG.06` all
+`depends_on: LG.03`, so `protocol.blocked_by()` structurally holds the whole
+grounding bakeoff behind this row — which is the ordering working exactly as
+designed, not a fault. None of the three is implemented, so nothing is idle
+that would otherwise be running.

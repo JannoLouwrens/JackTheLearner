@@ -11348,3 +11348,76 @@ is cheap enough to run before the run.** If a spec has one, exercise it on one
 seed of one cell first — it is the only leg whose failure tells you about your
 own instrument rather than about the world, and it is the only leg that is
 worth knowing about before you spend the budget.
+
+## A LIVENESS BAR ON A STUDENT IS A BAR ON THE TEACHER TOO — and a repair
+## pre-registered in the open is a HYPOTHESIS, not a plan (builder,
+## 2026-09-04, harvesting LG.03 attempt 1)
+
+Two rules, one measurement. Yesterday's entry ends *"a liveness gate is cheap
+enough to run before the run"*. Today's extension is the sentence after it:
+**the REPAIR is cheap enough to test before you buy it**, and this one was
+wrong.
+
+`LG.03` retains a command cell only if a language-blind twin cannot perform it,
+so the certificate rests on the twin being demonstrably alive: it is re-fit on
+one cell's demonstrations and must reproduce that cell from its own starts at
+`CALIB_MIN` 0.75. Attempt 1 returned **VOID** at `blind_calib_rate` 0.583 +-
+0.312 (readings 1.00 / 0.50 / 0.25). The journal had committed the repair in
+the open the day before: *"if it fires, the repair is a third learner in the
+`max`, never a lower `CALIB_MIN`"* — reasoning straight out of the previous
+lesson, which had just proved that the strongest cheap null is an empirical
+question and that `max` over a family is monotone.
+
+**A 90-second probe falsified it.** Five cheap deterministic learners on the
+identical demos of the identical cell — k-NN, ridge, k=1, a Euclidean metric
+reweighted by ridge-coefficient magnitude (aimed squarely at the placebo and
+near-silent columns that motivated the shipped pair), and a second penalty:
+
+    seed  planner_own  knn   ridge  knn1  wknn  ridge_lo | max2  max5
+    0        1.00      0.25  0.75   0.75  0.50  0.75     | 0.75  0.75
+    1        0.75      0.00  0.50   0.50  0.00  0.50     | 0.50  0.50
+    2        0.75      0.50  0.75   0.50  0.50  0.50     | 0.75  0.75
+
+`max5 == max2` on **every seed**. The third learner buys exactly zero, and no
+amount of learner-shopping would have reached the cause — which is in a column
+nobody was looking at.
+
+**THE FIRST RULE. `planner_own`: on two of three seeds the PRIVILEGED teacher —
+told the target, reading the object's world coordinates — reaches the
+calibration cell on 3 of its own 4 starts.** The demonstrations are capped by
+the teacher while the bar is absolute, so the gate silently demands that the
+student reproduce *every one* of the teacher's successes perfectly. That is not
+a liveness proof of the learner. It is a joint test of the learner and of
+whether the arbitrarily-chosen calibration venue happened to be one the teacher
+aced — and when it fires, it reports the second as if it were the first.
+
+**Generalised: any bar on an imitator must be denominated in what was
+demonstrated, or it is measuring the demonstrator.** This file already knew the
+shape one surface over — its `avoid` predicate is start-relative *"because an
+absolute one is satisfied by standing still far away"* — which is the tell that
+makes this class findable: **when a spec contains one relativised predicate and
+one absolute one, ask what the absolute one is silently holding constant.** The
+family is wider than imitation: a recall bar against a fixture whose answers are
+not all retrievable, a coverage bar against a world with unreachable states, an
+accuracy bar against labels with irreducible noise. In each, the ceiling belongs
+in the denominator and it is usually free to measure — here it was already being
+computed and thrown away.
+
+**THE SECOND RULE, and it is the one that generalises furthest. Writing a
+repair down before the failure protects you from motivated reasoning; it does
+not make the repair true.** Pre-registering *"the repair is X, never Y"* is
+worth a great deal — it kept `CALIB_MIN` from moving the moment the number came
+in red, which is the whole point of saying it first. But it arrives at the
+failure with the authority of a decision and none of the evidence, and the
+temptation is to spend the next iteration executing it. Here that would have
+been a second 12-minute run, a second VOID, and a diagnosis no closer.
+
+So: **a pre-registered repair earns the same treatment as a pre-registered
+claim — the cheapest experiment that could refute it, first.** Both rules
+reduce to the same discipline the four laws already state, applied one level up
+from Jack: the thing you are about to spend the budget on is a hypothesis, and
+it does not stop being one because you were honest enough to write it down in
+advance. Receipt kept as `experiments/tests/lg03_blind_twin_probe.py`; the gate
+redesign is routed as `lg03-blind-twin-cannot-prove-itself-alive` (DUE 09-12),
+because the repair turned out not to be one line and `CALIB_MIN` is not this
+desk's to move.
