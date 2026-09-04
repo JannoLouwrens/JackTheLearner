@@ -5516,7 +5516,15 @@ EXPANSION: list[Spec] = [
                     "deadline may move on its own), treats the equality case "
                     "as the same defect because the earliest firing is "
                     "`decide_by + 1`, resolves a bare `MM-DD` to the NEAREST "
-                    "year, and ratchets rather than blocks.",
+                    "year, and ratchets rather than blocks; (10) an ask the "
+                    "pass DECLINES to report names who silenced it — the "
+                    "entry it cites, or the entry the quoted span fell "
+                    "inside — where an unnumbered but complete "
+                    "DECISIONS_RESOLVED entry is a desk like any other and a "
+                    "span in NO entry reaches nothing, because on 2026-09-04 "
+                    "a quotation made as EVIDENCE inside `D21`'s amendment "
+                    "silenced a live ask and the only symptom was the count "
+                    "going 3 -> 2 with the ratchet green.",
          falsified_by="Any property failing; the battery running fewer than "
                       "N_PROPERTIES; or the live document failing to parse "
                       "into a well-formed armed set. Concretely: the safety "
@@ -5533,7 +5541,11 @@ EXPANSION: list[Spec] = [
                       "`D21`'s expired clock passing unreported, a shortened "
                       "clock still reading as expired, an action dated ON "
                       "`decide_by` reading as available, or a bare `MM-DD` "
-                      "taking `decide_by`'s year across a year boundary.",
+                      "taking `decide_by`'s year across a year boundary. "
+                      "Also: an ask going quiet with no attribution printed, "
+                      "an attribution naming an entry the span did not fall "
+                      "in, an unnumbered decision entry failing to count as a "
+                      "desk, or a span outside every entry silencing an ask.",
          null_baseline="THE ORGAN AS IT STOOD BEFORE 2026-08-30, kept "
                        "executable as the control: `audit()` with no safety "
                        "pass at all, and a `--check` whose blocking set omits "
@@ -5555,8 +5567,9 @@ EXPANSION: list[Spec] = [
                  "p2_d8_known_positive_fires, p4_both_named_fires and "
                  "p9_ratchet_counts_every_class, "
                  "p11_unrouted_owner_ask_is_reported, "
-                 "p12_vanished_owner_ask_is_the_known_positive and "
-                 "p13_expired_default_action_is_the_known_positive must be "
+                 "p12_vanished_owner_ask_is_the_known_positive, "
+                 "p13_expired_default_action_is_the_known_positive and "
+                 "p14_a_silenced_owner_ask_names_who_silenced_it must be "
                  "among the control's failures or the control no longer "
                  "reproduces the disease and this spec guards nothing.",
          kills="Author self-certification of the governance instruments. "

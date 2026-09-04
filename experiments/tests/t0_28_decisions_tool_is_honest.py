@@ -64,7 +64,7 @@ import re
 from ..coverage import _claim_dead
 from ..decisions import (BASELINE_ACTION_EXPIRED, BASELINE_UNDECLARED, DOC,
                          audit, blast_radius, check_rc, default_dates,
-                         expired_actions, main, parse)
+                         expired_actions, main, owner_ask_silences, parse)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
@@ -75,7 +75,7 @@ SPEC_ID = "T0.28"
 # hashing playground.py; T0.21 hashing coverage.py).
 IMPL_DEPS = ["experiments/decisions.py"]
 
-N_PROPERTIES = 13
+N_PROPERTIES = 14
 
 # The pre-2026-08-30 blocking set, verbatim. `NO-DEFAULT` is absent — that is
 # the hole, not an abbreviation.
@@ -313,6 +313,21 @@ def _asks(progress: str, prev, needed: str = NEEDED_ASKS, resolved: str = "",
     return {(k, key) for k, key, _ in v if k.endswith("-OWNER-ASK")}
 
 
+def _silenced(progress: str, needed: str = NEEDED_ASKS, resolved: str = "",
+              *, safety_enforced: bool) -> set:
+    """`{(key, how, matched-by)}` for every ask the pass did NOT report.
+
+    The control arm is `decisions.py` before 2026-09-04, when the owner's other
+    desk had no reader at all — so it silenced nothing, attributed nothing, and
+    the empty set IS the old behaviour rather than a paraphrase of it.
+    """
+    if not safety_enforced:
+        return set()
+    return {(key, how, did)
+            for key, _lead, how, did in owner_ask_silences(progress, needed,
+                                                           resolved)}
+
+
 def _hazards(text: str, rows, *, safety_enforced: bool) -> list:
     """`(id, commitment, claims)` triples this organ reports for `text`."""
     return [(did, why.split("'")[1], why)
@@ -517,9 +532,16 @@ def _probe(safety_enforced: bool) -> dict:
     #   - no baseline must manufacture nothing (`review_queue`'s rule).
     van = {k[1] for k in _asks(PAGE_0904, PAGE_0903, safety_enforced=S)
            if k[0] == "VANISHED-OWNER-ASK"}
+    # The disposition carries its HEADING, because the real one does
+    # (`DECISIONS_RESOLVED.md:501`) and because since 2026-09-04 the quotation
+    # must land inside an entry rather than anywhere in the file. This fixture
+    # used to be a bare blockquote with no heading; that is not a record, it is
+    # a sentence lying in a document, and it stopped counting on purpose.
     repaired = {k[1] for k in _asks(
         PAGE_0904, PAGE_0903,
-        resolved="> *\"`run blocked` cannot see the project's largest "
+        resolved="## `run blocked` / `repaired_by` — RESOLVED AS "
+                 "NOT-THE-OWNER'S (69th audit B3)\n\n"
+                 "> *\"`run blocked` cannot see the project's largest "
                  "unblock.\"* Ruled builder work; implemented at 9e847cf.",
         safety_enforced=S) if k[0] == "VANISHED-OWNER-ASK"}
     if (van != {"PROGRESS(prev) #3"} or repaired
@@ -556,6 +578,54 @@ def _probe(safety_enforced: bool) -> dict:
             or _rc(at_base + [("DEFAULT-ACTION-EXPIRED", "Dx", "")],
                    safety_enforced=S) != 1):
         failed.append("p13_expired_default_action_is_the_known_positive")
+
+    # P14 — KNOWN POSITIVE, and it is the one the check itself committed. On
+    # 2026-09-04 at 12:5x the overseer quoted the Review's docket sentence into
+    # `D21`'s amendment AS EVIDENCE of a defect, routing nothing — and
+    # `PROGRESS #3` dropped off the `UNROUTED` list, the count went 3 -> 2, and
+    # the ratchet printed green. The only symptom was a number going DOWN, which
+    # every ratchet in this repo reads as good news. It was caught because the
+    # author happened to re-run the tool and miss an item.
+    #
+    # The claim this property buys: **a silencing is never anonymous.** Five
+    # directions, and the last two are the boundary the audit did not own:
+    #   - a cite-silenced ask names the entry it cites;
+    #   - a quote-silenced ask names the entry the span fell in — the fact that
+    #     was unavailable when the scar was made;
+    #   - an UNNUMBERED entry is still a desk. `DECISIONS_RESOLVED.md:501` rules
+    #     the 09-03 `run blocked` ask NOT-THE-OWNER'S, with losers and a
+    #     reversal line, under a heading with no `D` number; B2 ordered the
+    #     confinement to `## D…` entries, and on the live corpus that reports
+    #     THAT as unrouted and stops the gate (VANISHED 0 -> 1, baseline 0). The
+    #     repairs available for that false positive are lowering a shrink-only
+    #     baseline or back-numbering a historical entry to please a tool;
+    #   - a span in NO entry reaches nothing — the whole of what the confinement
+    #     buys, which is 17 lines of the live 5,261;
+    #   - and an exempt item is not "silenced": a `NO-DECISION:` line is a
+    #     declaration the Review wrote on purpose, already visible where it
+    #     wrote it. Reporting it here would bury the two matches that matter.
+    quote = ("> *\"Sunday 2026-09-06, order unchanged from yesterday's page.\"*"
+             " — quoted as EVIDENCE, routing nothing.\n")
+    numbered = NEEDED_ASKS + quote
+    unnumbered = "## `run blocked` — RESOLVED AS NOT-THE-OWNER'S\n" + quote
+    nowhere = quote + NEEDED_ASKS
+    exempt = PAGE_0904.replace(
+        "   full day billed 5,906.8 s and every line item is a re-buy.",
+        "   NO-DECISION: a report, nothing here to rule on")
+    if (_silenced(PAGE_0904, safety_enforced=S)
+            != {("PROGRESS #2", "cites", "D20")}
+            or ("PROGRESS #3", "quoted", "D21")
+            not in _silenced(PAGE_0904, numbered, safety_enforced=S)
+            or ("PROGRESS #3", "quoted",
+                "`run blocked` — RESOLVED AS NOT-THE-OWNER'S")
+            not in _silenced(PAGE_0904, unnumbered, safety_enforced=S)
+            or ("UNROUTED-OWNER-ASK", "PROGRESS #3")
+            in _asks(PAGE_0904, None, unnumbered, safety_enforced=S)
+            or ("UNROUTED-OWNER-ASK", "PROGRESS #3")
+            not in _asks(PAGE_0904, None, nowhere, safety_enforced=S)
+            or any(k == "PROGRESS #2"
+                   for k, _h, _d in _silenced(exempt, safety_enforced=S))):
+        failed.append("p14_a_silenced_owner_ask_names_who_silenced_it")
 
     live_asks = _live_asks()
     return {
@@ -621,7 +691,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p9_ratchet_counts_every_class",
                            "p11_unrouted_owner_ask_is_reported",
                            "p12_vanished_owner_ask_is_the_known_positive",
-                           "p13_expired_default_action_is_the_known_positive"}
+                           "p13_expired_default_action_is_the_known_positive",
+                           "p14_a_silenced_owner_ask_names_who_silenced_it"}
                       <= control_names)
     return bool(experiment_clean and control_broken)
 

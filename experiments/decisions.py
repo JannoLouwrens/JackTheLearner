@@ -155,6 +155,33 @@ when it lifted this exact scar onto the owner's desk as `D21`, blockquote and
 commit citation included. The check therefore rewards the repair the system
 already performs, and there is no similarity threshold to tune.
 
+AND THE QUOTATION MATCH MUST BE ATTRIBUTABLE, BECAUSE IT SILENCED A LIVE ASK
+FOR NO REASON (2026-09-04, 70th audit finding 2, B2). The first version matched
+a span anywhere in either document and printed nothing when it hit. Writing
+`D21`'s amendment the overseer quoted the Review's docket sentence **as evidence
+of a defect**, routing nothing — and `PROGRESS #3` dropped off the `UNROUTED`
+list, the count went 3 -> 2, and the ratchet stayed green. It was caught only
+because the author re-ran the tool and missed an item it expected. **The only
+symptom was a number going down, which every ratchet in this repo is built to
+read as good news.** Two changes:
+
+  - the match is ATTRIBUTED, and this is the half that does the work. `main()`
+    prints `matched-by: D21 (quoted)` beside every ask it silenced, so a
+    spurious match is a line an auditor reads rather than an absence they must
+    notice.
+  - the match is CONFINED to an ENTRY of those documents rather than to the
+    corpus at large, so the two halves of the same test stop disagreeing: the
+    cite half already demanded a heading, the quote half took all 400 KB.
+    `_entries()` is now the single definition both read.
+
+B2 ordered the confinement to `## D…` entries and called it the load-bearing
+half. It is neither — see `_entries`, which records the measurement: that
+boundary would not have caught the scar (the offending quotation was inside
+`D21`'s own amendment) and it reports the 69th audit's `run blocked`
+disposition, an unnumbered but complete `DECISIONS_RESOLVED.md` entry, as
+unrouted. Confinement to an entry is worth 17 lines of 5,261. The attribution
+is worth the finding.
+
 THE THIRD GUARD, AND IT IS THE SAME HOLE ONE FIELD OVER (2026-09-04, 70th audit
 B1). Everything above checks that a declaration has the right SHAPE — a default
 exists, a class is legal, a date parses, a blast radius is survivable. None of
@@ -537,25 +564,117 @@ def owner_asks(progress_text: str) -> list:
     return out
 
 
+def _entries(*texts: str) -> dict:
+    """`{key: entry text}` — the decision documents cut into entries.
+
+    A top-level `##` heading opens an entry and the next one closes it; `###`
+    sub-headings do not (the live document uses them inside entries). The key is
+    the decision id when the heading carries one and the heading text otherwise,
+    because **a desk does not need a number** — see the boundary note below.
+    Repeated ids accumulate: `D1`, `D2` and `D3` each carry several dated
+    correction blocks and every one of them is that decision's desk.
+
+    This is the SINGLE definition both halves of `_reaches_a_desk` read. Before
+    2026-09-04 the citation half demanded a heading here while the quotation
+    half accepted a span anywhere in either file — one test, two boundaries, and
+    the loose one silenced a live ask.
+
+    THE BOUNDARY IS NOT THE ONE THE AUDIT ORDERED, AND THE AUDIT'S OWN EVIDENCE
+    IS WHY (builder, 2026-09-04, building 70th audit B2). B2 says *"require the
+    matching span to fall inside a `## D…` entry"* and calls it the load-bearing
+    half. Both halves of that are checkable and both come out the other way:
+
+      - **It would not have caught the scar.** The quotation that silenced
+        `PROGRESS #3` was written INSIDE `D21`'s own `AMENDED` block — a `## D…`
+        entry by any reading. Confinement cannot see a misuse that happens
+        inside a legitimate desk; only the attribution can, which is why the
+        report half is the one that matters.
+      - **It reports a real disposition as unrouted.** Measured on the live
+        corpus at implementation time: `## D…` confinement moves
+        `VANISHED-OWNER-ASK` 0 -> 1 against a baseline of 0 and STOPS the gate,
+        and the single positive is `docs/DECISIONS_RESOLVED.md:501` — the 09-03
+        `run blocked` ask, ruled NOT-THE-OWNER'S by the 69th audit and recorded
+        with its losers and a reversal line. It has no `D` number because it was
+        never numbered, and 20 of the 104 entries in these two files are like
+        it. The only repairs available for that false positive are to lower a
+        shrink-only baseline or to back-number a historical entry to satisfy an
+        instrument — the tool editing the record to agree with itself.
+
+    So the confinement is to an ENTRY, not to a NUMBERED entry, and it is worth
+    stating what that buys rather than implying more: **17 lines of 5,261.**
+    Almost the whole corpus is inside some entry already. The quotation match
+    was never mostly loose; it was mostly UNATTRIBUTED, and `owner_ask_silences`
+    is the repair.
+    """
+    out: dict = {}
+    for t in texts:
+        cur = None
+        for line in (t or "").splitlines():
+            if line.startswith("##") and not line.startswith("###"):
+                mm = _CITE.search(line[:24])
+                cur = f"D{mm.group(1)}" if mm else line.lstrip("# ").strip()[:60]
+            if cur:
+                out[cur] = out.get(cur, "") + line + "\n"
+    return out
+
+
+def _entry_key(key: str) -> tuple:
+    """Sort order for attribution: numbered desks first and in numeric order,
+    then the unnumbered ones alphabetically. Determinism only — an ask that
+    reaches two desks has reached a desk."""
+    if re.fullmatch(r"D\d{1,3}", key):
+        return (0, int(key[1:]), "")
+    return (1, 0, key)
+
+
 def _decision_ids(*texts: str) -> set:
-    """`D` ids that actually have an entry — a header, at the start of a line.
+    """`D` ids that actually have an entry — a heading, at the start of a line.
     An id cited in prose that resolves to no entry is a typo, exactly as an
     unresolvable spec id is in `blast_radius`."""
-    ids: set = set()
-    for t in texts:
-        for line in (t or "").splitlines():
-            if line.startswith("##"):
-                mm = _CITE.search(line[:24])
-                if mm:
-                    ids.add(f"D{mm.group(1)}")
-    return ids
+    return {k for k in _entries(*texts) if re.fullmatch(r"D\d{1,3}", k)}
 
 
-def _reaches_a_desk(ask: dict, ids: set, corpus: set) -> bool:
-    """True when this ask has a durable home: it cites a decision that exists,
-    or a verbatim span of it is quoted into one of the decision documents. The
-    second half is the repair the overseer performed by hand for `D21`."""
-    return bool(ask["cites"] & ids) or bool(ask["shingles"] & corpus)
+def _reaches_a_desk(ask: dict, entries: dict) -> tuple | None:
+    """`(how, D-id)` when this ask has a durable home, else `None`.
+
+    It cites a decision that exists, or a verbatim span of it is quoted INSIDE
+    one — the repair the overseer performed by hand for `D21`. The return value
+    names the entry rather than reporting a bare boolean, because the silencing
+    is the dangerous direction: an ask that goes quiet for the wrong reason is
+    invisible unless the report can say who quieted it.
+
+    Ties are broken by decision number so the attribution is deterministic; an
+    ask that reaches two desks has reached a desk, and which one it names first
+    is not a fact worth making order-dependent.
+    """
+    cited = sorted(ask["cites"] & set(entries), key=_entry_key)
+    if cited:
+        return ("cites", cited[0])
+    for did in sorted(entries, key=_entry_key):
+        if ask["shingles"] & _shingles(entries[did]):
+            return ("quoted", did)
+    return None
+
+
+def owner_ask_silences(progress_text: str, needed_text: str,
+                       resolved_text: str = "") -> list:
+    """`[(key, lead, how, D-id)]` — every ask this pass did NOT report, and why.
+
+    The report half of the 70th audit's finding 2. `main()` prints these so that
+    a quotation made for some unrelated purpose shows up as `matched-by: D21`
+    instead of as an item quietly missing from a list. Exempt items are not
+    here: a `NO-DECISION:` line is a declaration the Review wrote on purpose and
+    is already visible in the page it wrote it on.
+    """
+    entries = _entries(needed_text, resolved_text)
+    out = []
+    for a in owner_asks(progress_text):
+        if a["exempt"]:
+            continue
+        hit = _reaches_a_desk(a, entries)
+        if hit:
+            out.append((f"PROGRESS #{a['n']}", a["lead"], hit[0], hit[1]))
+    return out
 
 
 def owner_ask_findings(progress_text: str, prev_progress_text: str | None,
@@ -566,12 +685,11 @@ def owner_ask_findings(progress_text: str, prev_progress_text: str | None,
     absent baseline must never manufacture a violation — `review_queue.py`'s
     rule for `VANISHED`, for the same reason.
     """
-    ids = _decision_ids(needed_text, resolved_text)
-    corpus = _shingles(needed_text) | _shingles(resolved_text)
+    entries = _entries(needed_text, resolved_text)
     out = []
 
     for a in owner_asks(progress_text):
-        if a["exempt"] or _reaches_a_desk(a, ids, corpus):
+        if a["exempt"] or _reaches_a_desk(a, entries):
             continue
         out.append(("UNROUTED-OWNER-ASK", f"PROGRESS #{a['n']}",
                     f"{a['lead']} — on the owner's page, in no decision file: "
@@ -585,7 +703,7 @@ def owner_ask_findings(progress_text: str, prev_progress_text: str | None,
     for a in owner_asks(prev_progress_text):
         if a["exempt"] or a["shingles"] & here:
             continue                       # answered-shape, or still on the page
-        if _reaches_a_desk(a, ids, corpus):
+        if _reaches_a_desk(a, entries):
             continue
         out.append(("VANISHED-OWNER-ASK", f"PROGRESS(prev) #{a['n']}",
                     f"{a['lead']} — was on the previous committed page, is not "
@@ -1020,6 +1138,37 @@ def _ask_fixture() -> None:
                 if k == "VANISHED-OWNER-ASK"]
     assert owner_asks("## SOMETHING ELSE\n\n1. **x**\n") == []
 
+    # THE SILENCING IS ATTRIBUTED (70th audit B2, and this half is the finding).
+    # Item 2 above is quiet because it cites `D20`; the report must be able to
+    # SAY so, because the scar's only symptom was a number going down.
+    assert [(key, how, did) for key, _lead, how, did in
+            owner_ask_silences(today, needed)] == [("PROGRESS #2", "cites",
+                                                    "D20")]
+    quote = ("> *\"A brand-new ask with nowhere to live. Nothing points at "
+             "this one.\"*\n")
+    _sil = lambda n: [(k, h, d) for k, _l, h, d in owner_ask_silences(today, n)]
+    _unrouted = lambda n: {key.split("#")[1] for k, key, _ in
+                           owner_ask_findings(today, None, n)
+                           if k == "UNROUTED-OWNER-ASK"}
+    assert ("PROGRESS #3", "quoted", "D20") in _sil(needed + quote)
+    assert "3" not in _unrouted(needed + quote)
+
+    # AN UNNUMBERED ENTRY IS STILL A DESK, and this is a live positive, not an
+    # invention: `DECISIONS_RESOLVED.md:501` rules the 09-03 `run blocked` ask
+    # NOT-THE-OWNER'S with its losers and a reversal line, under a heading that
+    # carries no `D` number because the ask was never numbered. Confining to
+    # `## D…` — which is what B2 ordered — reports that as unrouted, and 20 of
+    # the 104 live entries are shaped like it. It is attributed by heading.
+    unnumbered = "## `run blocked` — RESOLVED AS NOT-THE-OWNER'S\n" + quote
+    assert ("PROGRESS #3", "quoted",
+            "`run blocked` — RESOLVED AS NOT-THE-OWNER'S") in _sil(unnumbered)
+    assert "3" not in _unrouted(unnumbered)
+
+    # ...but a span in no entry at all reaches nothing. This is the whole of
+    # what the confinement buys — 17 lines of the live 5,261 — and it is stated
+    # here at its real size rather than at the size B2 assumed.
+    assert "3" in _unrouted(quote + needed), "outside every entry is no desk"
+
 
 def main(argv: list[str]) -> int:
     _fixture()
@@ -1027,11 +1176,13 @@ def main(argv: list[str]) -> int:
     _ask_fixture()
     text = DOC.read_text()
     today = _dt.date.today()
+    progress_text = PROGRESS.read_text() if PROGRESS.exists() else None
+    resolved_text = RESOLVED.read_text() if RESOLVED.exists() else ""
     violations, rows = audit(
         text, today,
-        progress_text=PROGRESS.read_text() if PROGRESS.exists() else None,
+        progress_text=progress_text,
         prev_progress_text=_previous_page(PROGRESS),
-        resolved_text=RESOLVED.read_text() if RESOLVED.exists() else "")
+        resolved_text=resolved_text)
 
     print(f"\nOpen decisions — {DOC.relative_to(DOC.parent.parent)}\n")
     if rows:
@@ -1062,6 +1213,21 @@ def main(argv: list[str]) -> int:
             print(f"    [{kind:<15}] {did}")
             print(f"       {why}")
         print()
+
+    # THE SILENCED HALF, printed because its only symptom was a number going
+    # down (70th audit finding 2). Every ask this pass declined to report, and
+    # the entry that quieted it. A quotation made as EVIDENCE looks exactly like
+    # a quotation made as ROUTING to a shingle set, so the tool cannot tell them
+    # apart — but a reader can, in one line, and could not before.
+    if progress_text is not None:
+        silenced = owner_ask_silences(progress_text, text, resolved_text)
+        if silenced:
+            print(f"  {len(silenced)} owner-ask(s) reached a desk and are NOT "
+                  "reported above — check the attribution:")
+            for key, lead, how, did in silenced:
+                print(f"    {key:<13} matched-by: {did} ({how})")
+                print(f"       {lead}")
+            print()
 
     debt = ratchet_debt(violations)
     if "--check" in argv:
