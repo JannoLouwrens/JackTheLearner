@@ -1051,9 +1051,18 @@ def _unreachable_fixture() -> List[str]:
     from .run import _fixture_ledger, _ranker_fixture, unreachable_count
     ladder, by_id = _ranker_fixture()
     got = unreachable_count(_fixture_ledger(), ladder=ladder, by_id=by_id)
-    if got != (6, 12):
+    # `(6, 15)`: SIX unreachable (Y, Z, V, G, Q, N) of FIFTEEN in the fixture
+    # graph. The 6 is the invariant this check exists for and it has NEVER
+    # moved; the 15 was 12 until 2026-09-04, when the 69th audit's B3 added
+    # three stubs (P, B, C) to `_ranker_fixture` for the repair-edge layer.
+    # That edit is exactly the drift this line is built to catch — it fired
+    # the same minute, correctly — and the honest response to a known-answer
+    # check firing on a KNOWN cause is to re-derive the answer from the new
+    # graph and say why here, never to relax the equality to a `>=` or drop
+    # the ladder-size half. If the 6 ever moves, the walk really has drifted.
+    if got != (6, 15):
         fails.append(f"unreachable: the real counting path read {got} on the "
-                     f"ranker fixture graph; the known answer is (6, 12) — "
+                     f"ranker fixture graph; the known answer is (6, 15) — "
                      f"the walk and the union have drifted")
     return fails
 

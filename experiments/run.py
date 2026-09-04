@@ -1471,6 +1471,92 @@ def _rank_blockers(terminal: dict, ledger: Ledger, ladder=None) -> tuple:
     return mentions, frees, groups
 
 
+def _check_repair_edges(by_id=None) -> dict:
+    """Validate every `repaired_by` declaration, and refuse the malformed ones.
+
+    `{spec_id: [repair ids]}` for the declarations that survive, having dropped
+    (loudly, via the returned refusals in `_repair_carry`) the two shapes that
+    would make the reporting layer lie:
+
+    - **an id that resolves to nothing.** The 59th audit's rule, in its own
+      words: an id that resolves to a corpse is a WORSE dangling reference than
+      one that resolves to nothing, because a reader stops checking. A repair
+      edge is a pointer at work somebody is meant to go do; a pointer at a
+      spec that does not exist sends them nowhere with confidence.
+    - **a self-loop.** `X.repaired_by = ["X"]` substitutes a root for itself
+      and would print "X carries its own mass", which is the ranker's founding
+      double-count wearing a new hat.
+
+    A repair id that is ALSO a `depends_on` of the same spec is legal and is
+    NOT dropped: it is redundant rather than wrong (the ranker already sees
+    that edge, so substitution changes nothing), and refusing a legal
+    declaration is the failure mode `piled_on` was deliberately built to
+    avoid — this is a metric layer, not a gate.
+    """
+    by_id = BY_ID if by_id is None else by_id
+    good, bad = {}, {}
+    for sid, spec in by_id.items():
+        declared = list(getattr(spec, "repaired_by", []) or [])
+        if not declared:
+            continue
+        keep = []
+        for rid in declared:
+            if rid == sid:
+                bad.setdefault(sid, []).append(f"{rid} (self-loop)")
+            elif rid not in by_id:
+                bad.setdefault(sid, []).append(f"{rid} (not in the registry)")
+            else:
+                keep.append(rid)
+        if keep:
+            good[sid] = keep
+    return {"edges": good, "refused": bad}
+
+
+def _repair_carry(terminal: dict, ledger: Ledger, ladder=None, by_id=None,
+                  edges=None) -> tuple:
+    """`(mentions, frees, groups, refused)` for the ranking with every declared
+    root SUBSTITUTED by its repair path — the 69th audit's B3.
+
+    The arithmetic is `_rank_blockers`, unchanged and re-used rather than
+    restated: substitute each terminal root `R` by `R.repaired_by` where one is
+    declared, then ask the same two questions of the same code. That matters
+    more than it looks. The ranker's own history is a double-count bug (`ranked
+    by MENTIONS, and mentions double-count`) fixed by separating marginal
+    `frees` from total `blocks`; a repair layer that computed its own carried
+    mass would have to re-learn that lesson, and would drift the first time the
+    ranker was touched. Two readers of one quantity share code or they drift.
+
+    What comes back is REPORTING ONLY. `terminal` is copied before
+    substitution, `_terminal_blockers` never sees a repair edge, and the
+    `unreachable` count `coverage` ratchets against is computed from the
+    unsubstituted walk exactly as before.
+    """
+    ladder = LADDER if ladder is None else ladder
+    checked = _check_repair_edges(by_id)
+    edges = checked["edges"] if edges is None else edges
+    if not edges:
+        return {}, {}, {}, checked["refused"]
+    substituted = {}
+    for sid, roots in terminal.items():
+        out = set()
+        for r in roots:
+            # A self-root (dependency cycle) is dropped BEFORE substitution,
+            # not after: `_rank_blockers` filters `r != s.id`, and a
+            # substitution would smuggle a cycle past that filter as a repair.
+            if r != sid:
+                out |= set(edges.get(r, [r]))
+        substituted[sid] = out
+    mentions, frees, groups = _rank_blockers(substituted, ledger, ladder=ladder)
+    # Only the repair specs themselves are this layer's business. Every other
+    # root is already ranked, correctly, one section up — reprinting it here
+    # under a heading about repair paths would double the board.
+    repair_ids = {rid for ids in edges.values() for rid in ids}
+    return ({k: v for k, v in mentions.items() if k in repair_ids},
+            {k: v for k, v in frees.items() if k in repair_ids},
+            {k: v for k, v in groups.items() if set(k) & repair_ids},
+            checked["refused"])
+
+
 def unreachable_count(ledger: Ledger, ladder=None, by_id=None,
                       mentions=None) -> tuple:
     """`(unreachable specs, ladder size)` — the number `blocked` prints.
@@ -1548,16 +1634,28 @@ _STALE_ID = "PG.1"
 def _ranker_fixture() -> tuple:
     from .protocol import Spec, Budget
 
-    def stub(sid, deps):
-        return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST, depends_on=deps)
+    def stub(sid, deps, repaired_by=()):
+        return Spec(sid, 0, sid, "h", "f", "n", "m", Budget.CPU_FAST,
+                    depends_on=deps, repaired_by=list(repaired_by))
 
     # F, R and M are VOID roots for the foreclosure split: F declares
     # VOID-FORECLOSED (via the stubbed reader), R is a plain repairable VOID,
     # M declares but its declaration is REFUSED (unpriced — 54th audit B3).
-    ladder = [stub("X", []), stub("W", []), stub("Y", ["X"]), stub("Z", ["X", "W"]),
+    # X carries the REPAIR EDGE (69th audit B3) — `X.repaired_by = [P]`, where
+    # P is a spec nothing depends on, so the unsubstituted ranker scores it at
+    # exactly zero. That is T2.01 -> D1.0 in miniature, and it is the whole
+    # defect: a POSITIVE control (P must carry X's mass after substitution)
+    # paired with a NEGATIVE one (W declares nothing and must gain nothing, so
+    # the layer cannot be passing by crediting every root).
+    # B and C are the two malformed shapes `_check_repair_edges` must refuse:
+    # a self-loop and an id that is not in the registry.
+    ladder = [stub("X", [], repaired_by=["P"]), stub("W", []),
+              stub("Y", ["X"]), stub("Z", ["X", "W"]),
               stub(_STALE_ID, []), stub("V", [_STALE_ID]),
               stub("F", []), stub("G", ["F"]), stub("R", []), stub("Q", ["R"]),
-              stub("M", []), stub("N", ["M"])]
+              stub("M", []), stub("N", ["M"]), stub("P", []),
+              stub("B", [], repaired_by=["B"]),
+              stub("C", [], repaired_by=["NOT.A.SPEC"])]
     return ladder, {s.id: s for s in ladder}
 
 
@@ -1620,6 +1718,31 @@ def _check_ranker(ledger: Ledger) -> None:
         "M" in dict(live),
         refused == {"M": "missing `BLAST RADIUS:`"},
     )
+    # KNOWN ANSWER for the repair layer (69th audit B3). `X.repaired_by = [P]`,
+    # and P is a root nothing depends on — the unsubstituted ranker scores it
+    # zero, which IS the defect. Four conjuncts, and the last two are the ones
+    # that keep the layer honest rather than merely present.
+    r_ment, r_frees, r_groups, r_bad = _repair_carry(
+        terminal, fixt, ladder=ladder, by_id=by_id)
+    expect += (
+        # POSITIVE: the mass moves. P now carries what X carried.
+        sorted(r_ment.get("P", [])) == ["Y", "Z"],
+        sorted(r_frees.get("P", [])) == ["Y"],
+        r_groups.get(frozenset({"P", "W"})) == ["Z"],
+        # NEGATIVE: a root with no declaration gains NOTHING. Without this the
+        # layer would pass by crediting every root it saw, which is the
+        # "measuring nothing" failure one section up, in a new section.
+        "W" not in r_ment and "X" not in r_ment,
+        # REPORTING-ONLY: the base ranking is untouched by the declaration —
+        # X is still the terminal blocker, P is still absent from it. A repair
+        # edge that reached `_terminal_blockers` would be `depends_on` under
+        # another name, and would drift X's certificate.
+        "P" not in mentions and sorted(mentions.get("X", [])) == ["Y", "Z"],
+        # MALFORMED declarations are refused, by shape and by name.
+        sorted(r_bad) == ["B", "C"],
+        r_bad.get("B") == ["B (self-loop)"],
+        r_bad.get("C") == ["NOT.A.SPEC (not in the registry)"],
+    )
     if not all(expect):
         # `tuple(sorted(k))`, not `set(k)`: a set is unhashable as a dict key,
         # so the previous rendering raised TypeError INSIDE the refusal — the
@@ -1629,7 +1752,10 @@ def _check_ranker(ledger: Ledger) -> None:
         raise RuntimeError(
             "the blocked-ranker failed its own fixture "
             f"(mentions={mentions}, frees={frees}, groups={groups_repr}, "
-            f"live={sorted(dict(live))}, closed={closed}, refused={refused}); "
+            f"live={sorted(dict(live))}, closed={closed}, refused={refused}, "
+            f"repair_mentions={r_ment}, repair_frees={r_frees}, "
+            f"repair_groups={ {tuple(sorted(k)): v for k, v in r_groups.items()} }, "
+            f"repair_refused={r_bad}); "
             "refusing to print a ranking that cannot be trusted")
 
 
@@ -1739,6 +1865,25 @@ def cmd_blocked(ledger: Ledger) -> int:
             _still_live.append((root, ids))
     live = _still_live
     dead_roots = set(closed) | set(_dead_flavour)
+
+    # A REPAIR path is asked the same question, and it has to be asked
+    # separately: a repair spec is not a terminal blocker, so it never enters
+    # `live` and the loop above cannot reach it. A `repaired_by` pointing at a
+    # PARKED or VOID-FORECLOSED spec is the 59th audit's corpse citation with
+    # the arrow reversed — the instrument would print "carries 35" beside a
+    # door welded shut, which is worse than printing nothing.
+    #
+    # Its own dict, deliberately, and NOT folded into `dead_roots`: `welded` is
+    # computed from the unsubstituted walk, and a repair edge must not be able
+    # to move a spec into or out of the welded set. Reporting-only means
+    # reporting-only in both directions.
+    r_ment, r_frees, r_groups, r_bad = _repair_carry(terminal, ledger)
+    _repair_flavour: dict = {}
+    for root in r_ment:
+        why = root_dead(root, status=getattr(ledger.status(root), "name", None),
+                        parked_map=_parked_map)
+        if why:
+            _repair_flavour[root] = why
     welded = sorted({s for ids in mentions.values() for s in ids
                      if (terminal.get(s, set()) - {s})
                      and (terminal.get(s, set()) - {s}) <= dead_roots})
@@ -1752,6 +1897,8 @@ def cmd_blocked(ledger: Ledger) -> int:
             return "VOID-FORECLOSED"
         if root in _dead_flavour:
             return _dead_flavour[root]
+        if root in _repair_flavour:
+            return _repair_flavour[root]
         if root not in BY_ID:
             return "UNKNOWN-SPEC"
         st = ledger.status(root)
@@ -1824,6 +1971,33 @@ def cmd_blocked(ledger: Ledger) -> int:
               f"  board unblocks them and no ranking above should be read as "
               f"saying otherwise:\n")
         print(f"    {', '.join(welded)}\n")
+
+    if r_ment or r_bad:
+        print("  REPAIR PATHS — REPORTING ONLY, not dependencies (69th audit "
+              "B3). A blocker that is\n  a settled FAIL is not repaired by "
+              "re-running it; `repaired_by` names the spec whose\n  RESULT "
+              "would say how. The ranking above scores these at zero because "
+              "nothing\n  declares `depends_on` on them, and that is why the "
+              "60th audit had to route T2.01's\n  repair by hand. Read the "
+              "carried mass as leverage, and the STATUS beside it as\n"
+              "  whether the door is even open:\n")
+        for root, ids in sorted(r_ment.items(),
+                                key=lambda kv: (-len(r_frees.get(kv[0], [])),
+                                                -len(kv[1]))):
+            title = BY_ID[root].title if root in BY_ID else "(not in the registry)"
+            f = sorted(r_frees.get(root, []))
+            via = sorted(s for s in BY_ID
+                         if root in (getattr(BY_ID[s], "repaired_by", []) or []))
+            print(f"    {root} = {_st(root)}  carries frees {len(f)}  "
+                  f"(blocks {len(ids)}){_impl_age_line(root)}  — {title}")
+            print(f"        declared the repair path for: {', '.join(via)}")
+            print(f"        would carry: "
+                  f"{', '.join(f) if f else 'NOTHING on its own'}")
+        for sid, why in sorted(r_bad.items()):
+            print(f"    !! {sid}.repaired_by REFUSED: {', '.join(why)}")
+            print(f"    !! an id that resolves to nothing is a pointer at work "
+                  f"nobody can go do")
+        print()
 
     if groups:
         print("  CO-REQUISITE SETS — no single fix frees these; the whole set must go:\n")

@@ -440,9 +440,21 @@ LADDER: list[Spec] = [
          metric="episode_return", budget=Budget.GPU_LONG, seeds=3,
          depends_on=["T2.00", "T1.08", "T0.09"],
          control="Untrained network with the same architecture.",
+         repaired_by=["D1.0"],
          notes="Budget GPU->GPU_LONG after v3: first healthy run (all seeds "
                "beat random, curve climbing at cutoff) failed only effect "
-               "size, 2.21 sigma at 192K steps/seed. Threshold unchanged."),
+               "size, 2.21 sigma at 192K steps/seed. Threshold unchanged. "
+               "REPAIRED_BY D1.0 (69th audit B3, 2026-09-04): this is the "
+               "project's largest blocker at frees 35 / blocks 38, it is a "
+               "settled FAIL at 2.67 sigma against a bar of 5 that does not "
+               "move, and a re-run is a seed-lottery redraw. What would "
+               "change the answer is D1.0 — where the control path belongs. "
+               "The edge is REPORTING ONLY and deliberately not a "
+               "depends_on: T2.01 ran twice without D1.0, so a dependency "
+               "would assert something false, would make T2.01 unreachable, "
+               "and would drift its certificate. It changes no verdict and "
+               "no gate; it exists so `run blocked` stops scoring the trail "
+               "from the biggest blocker to its actual repair at zero."),
 
     Spec("T2.02", 2, "Locomotion beats the honest MLP baseline",
          hypothesis="The chosen architecture beats a ~140K-param MLP actor-critic "

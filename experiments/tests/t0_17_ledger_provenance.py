@@ -154,6 +154,15 @@ _CLAIM_INVARIANTS = {
     "id":         "X.17d",
     "tier":       5,
     "depends_on": ["A.01", "B.02"],    # the same two, reordered
+    # `repaired_by` (69th audit B3, added 2026-09-04): the REPORTING edge from
+    # a blocker to the spec whose result would say how to repair it. The audit
+    # authorised it as builder work on the strength of one property — that it
+    # "changes no `depends_on`, no verdict, no gate and no CERTIFICATE" — and
+    # until this line that property was asserted in a docstring and by nobody
+    # else. Law 1 applies to a claim about the machine exactly as it applies to
+    # a claim about Jack: declaring a repair edge must be provably free, or the
+    # next declaration silently bills a re-run.
+    "repaired_by": ["Z.99"],
 }
 
 

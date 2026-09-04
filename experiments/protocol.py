@@ -307,6 +307,32 @@ class Spec:
     """REQUIRED when `gate_mode == "screen"`: why these arms are observables and
     not learners. Recorded verbatim in `docs/DECISIONS_RESOLVED.md`, so the
     justification is re-readable next to the verdict it permitted."""
+    repaired_by: List[str] = field(default_factory=list)
+    """Specs whose result would tell us how to repair THIS one. A REPORTING
+    edge, never a dependency — read only by `run blocked` (69th audit B3).
+
+    The scar: `T2.01` has ranked first on `run blocked` for weeks at
+    *frees 35 / blocks 38*, and it is a settled FAIL whose repair path runs
+    through `D1.0` — the control-path bakeoff that decides where the trunk
+    belongs. Nothing in the registry could say so. `depends_on: D1.0` would
+    have been the wrong instrument twice over: it makes `T2.01` UNREACHABLE
+    (its certificate drifts, `unreachable` ratchets up, 38 specs move behind a
+    second door) and it asserts something false — `T2.01` ran, twice, without
+    `D1.0`. So the ranker scored the edge from the project's largest blocker to
+    its actual repair at exactly ZERO, and the 60th audit had to route
+    `d10-successor-rerun-under-adopted-gate` by hand.
+
+    Deliberately NOT in `SPEC_CLAIM_FIELDS`: this is bookkeeping about where a
+    repair might come from, not part of the claim a verdict was bought under.
+    Declaring one must never oblige a re-run. It is equally NOT read by
+    `Ledger.unsatisfied`, `run._terminal_blockers`, `coverage` or any gate — a
+    reporting edge that leaked into satisfaction would be `depends_on` with a
+    different name, which is the arm the audit eliminated.
+
+    A declaration is validated (`run._check_repair_edges`) and the repair
+    spec's OWN health is printed beside the mass it carries: `D1.0` is VOID and
+    forbidden to re-dispatch, and a section that said "D1.0 carries 38" without
+    saying that would be an instrument aiming an iteration at a closed door."""
 
 
 @dataclass
