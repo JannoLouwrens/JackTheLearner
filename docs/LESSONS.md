@@ -11114,3 +11114,58 @@ constraint worse to fix a problem a two-line procedure already fixes. The
 procedure above is the repair. If the same class of miss recurs **with the
 procedure followed**, that is the scar the scanner would need and it does not
 exist yet.
+
+## A DEADLINE IS NOT A CLOCK UNTIL THE THING IT PROMISES IS STILL AVAILABLE WHEN
+## IT FIRES — an armed default dated after the event it commands is the deadlock
+## it replaced, wearing a clock (overseer, 2026-09-04, 70th audit, on its own
+## `D21` from the 69th)
+
+`D21` was armed on 2026-09-04 to stop the Review's largest recommendation from
+ageing out of a page that is rewritten every morning. Its `default:` says *"the
+**2026-09-06** FULL Review takes the W1 design as the FIRST item on its
+docket"*. Its `decide_by:` says **2026-09-11**.
+
+A default fires when its date passes unanswered. So this one became due **five
+days after the sitting it instructs**, and the next FULL Review after 09-11 is
+09-13. On the day it fired it would have ordered a past Sunday to re-order its
+docket. Every clause of it was legal: the class was right, the option set was
+honest, the default picked only already-permitted actions, the date parsed, and
+`decisions --check` printed `ratchet ok`. It was armed, dated, compliant, and
+incapable of doing the one thing it promised.
+
+**THE RULE. When you arm a default, ask what it would DO on the day it fires,
+not what it says.** If its action names a date, an event, a sitting, a window or
+a quota, that date must fall on or after `decide_by` — otherwise the entry is
+decoration with a deadline on it, which is strictly worse than an undeclared
+one, because `UNDECLARED` at least prints. The honest repairs, in order of
+preference: **shorten `decide_by`** so the action is still reachable (tightening
+a deadline widens nothing and needs no permission); or rewrite the action to be
+date-free (*"the next FULL Review after this fires"*). Never lengthen the
+action's date to meet the clock — that is moving the promise to fit the excuse.
+
+And check the **hour**, not only the day, when the action and the actor share a
+morning. `decisions.py` marks overdue at `(today - decide_by).days > 0`, so a
+`decide_by` of 09-05 first prints OVERDUE on 09-06 — the same day as the sitting
+it must set. That is in time only if the firing lands before the Review's ~06:37
+run, which is why the repair pinned an hour on a `FOR THE BUILDER` item instead
+of leaving it to be inferred. Inference is what produced the defect.
+
+**THE GENERAL SHAPE, and it is now three for three. Every guard this project has
+put on its decision desk checks the FORM of a declaration and not its CONTENT,
+and each one shipped believing otherwise.** `decisions.py`'s own docstring
+records the first two: for six days `SYSTEM.md` claimed the tool enforced the
+three safety clauses when it only checked that a default EXISTED, that its class
+was legal and that its date PARSED; the fix enforced one clause of three, and
+the other two *"remain on the author's word, and this sentence stays here until
+they do not."* This is the third, one field over — the date parses, and nobody
+reads what the sentence beside it promises to do.
+
+The reason this keeps happening is worth naming, because it predicts the next
+one: **governance is prose, and prose is what this entire repository is built to
+distrust.** We will not accept a spec's docstring as evidence about Jack, and we
+are right not to. We have accepted a default's paragraph as evidence about
+ourselves every time. The cheap general repair is not another prose scanner — it
+is to mine the declaration for the same machine-readable things the tools
+already mine it for and cross-check them against the entry's own fields. Spec
+ids are already mined out of `default:` text by `blast_radius`; **dates are the
+same one-line extraction, and they are the field that makes a clock a clock.**

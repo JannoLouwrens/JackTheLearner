@@ -4502,6 +4502,50 @@ the builder's units. This is the option that most needs your hand, because
 neither the Review nor the builder may allocate its own effort against a
 stated stage without you saying so.
 
+**AMENDED 2026-09-04, 70th audit (overseer, correcting its own entry from
+yesterday). THE CLOCK WAS UNFIREABLE AND THE DEFECT IS ARITHMETIC,
+not a matter of judgement.** This entry was armed on 2026-09-04 with a default
+whose action is *"the **2026-09-06** FULL Review takes the W1 design as the
+FIRST item on its docket"* and a `decide_by` of **2026-09-11**. A default fires
+only when the date passes unanswered — so this one becomes due five days
+**after** the sitting it instructs, and the next FULL Review after 09-11 is
+09-13. On the day it fired it would have ordered a past Sunday to re-order its
+docket. **A default that cannot perform its own action on the day it fires is
+the deadlock `decide_by` was invented to end, wearing a clock.** It is also not
+hypothetical drift: `docs/PROGRESS.md` 2026-09-04 `FOR THE OWNER` item 3 puts
+the pair of `d10-*` gate rows ahead of the world row on Sunday's docket —
+which is precisely the ordering this default exists to override — so today the
+desk is scheduled to do the opposite of the default, and the clock will not
+fire in time to say so. (That sentence deliberately paraphrases the Review's docket
+item instead of quoting it — see 70th-audit B2: a verbatim span is what marks
+an owner-ask as routed, so quoting one for an unrelated purpose silences it.)
+
+**The repair is to SHORTEN the deadline, never to widen the default:**
+`decide_by` **2026-09-11 → 2026-09-05**. `decisions.py` marks an entry overdue
+when `(today - decide_by).days > 0`, so if you are silent this default becomes
+due to fire on the morning of **2026-09-06** — the day of the sitting it names,
+and that is deliberately as late as it can be while still being in time. **It
+must therefore be fired in a 00:xx–05:xx iteration on 09-06, before the
+Review's ~06:37 run**, or it will again miss the docket it exists to set. That
+requirement is stated on the 70th audit's `FOR THE BUILDER` B3 rather than left
+to be inferred, because inference is what produced the original defect. The
+option set is
+untouched, the default text is untouched, and the action it takes is the same
+narrow already-permitted one (re-order a docket the Review already owns).
+This shortens YOUR window from seven days to one, which is a real cost and is
+stated rather than buried: it is taken because the alternative is that the
+project's largest open fork misses the only sitting its own default was
+written for, and because the default costs you nothing irreversible — its
+own reversal line still reads *"the Review re-orders its docket back; nothing
+is written that would need unwinding."* Options (i), (ii) and (iii) remain
+entirely yours on any date, before or after the default fires; firing it
+forecloses none of them.
+
+No instrument caught this. `decisions.py` checks that a default EXISTS, that
+its class is legal, that its date parses, and that firing it cannot leave a
+GOAL.md commitment claim-dead. It does not check that the default's own action
+is still AVAILABLE at `decide_by`. Routed to the builder as 70th-audit B1.
+
 DECIDE: D21
   class:     goal
   blocks:    4 CLAIM-DEAD commitments (smell, balance, shelter/building,
@@ -4528,4 +4572,134 @@ DECIDE: D21
              three are option (ii)/(iii) territory and remain yours alone.
              Reversal: the Review re-orders its docket back; nothing is
              written that would need unwinding.
-  decide_by: 2026-09-11
+  decide_by: 2026-09-05
+
+
+## D22 — The Review says design throughput is now the binding constraint on the whole project, and asks to hand drafting to the builder. It wrote it in a file that is rewritten every morning. (2026-09-04, overseer, lifting the Review's 2026-09-04 `FOR THE OWNER` item 1 onto this desk)
+
+**Why this entry exists at all — and it is the second day running.** `D21` was
+created yesterday because the Review published its largest strategic
+recommendation into `docs/PROGRESS.md`, which is current-state by design, and
+the next Review rewrote the page. `experiments/decisions.py` gained
+`UNROUTED-OWNER-ASK` the same morning so that would be a printed number rather
+than a hindsight. It printed one within twenty-four hours, on the same page,
+for a *different* recommendation. This entry is that number being paid.
+
+**THE ASK, verbatim** — `docs/PROGRESS.md`, Review 2026-09-04 (`e20c75e`),
+`FOR THE OWNER` item 1:
+
+> **THE FORK, and it is new: design throughput is now the binding constraint
+> on the whole project, and it is structural rather than a matter of anyone
+> working harder.** The Review is a ~40-minute-a-week design desk (FULL,
+> Sundays) fronting a queue that receives **≈5.6 rows/day** and has closed
+> **2 rows in 15 days**. Every one of the nine startable specs sits behind it.
+> Meanwhile the builder has an empty board, 24 slots a day, and spent eight of
+> yesterday's hours accounting for its own accounting because there was
+> nothing else it was permitted to touch.
+> **My recommendation: let the builder DRAFT redesigns; keep ratification
+> here.** A queue row currently means *"only the Review may answer this"*.
+> Change it to *"the builder may write the answer; the Review and the overseer
+> must ratify it before any run"*. That converts my 5.6-per-day design deficit
+> into a review-of-drafts load, which is perhaps a tenth the cost per row, and
+> it puts the work where the capacity actually is.
+> **The risk, named because it is the whole reason the rule exists:** the
+> builder drafting the redesign of a spec that just failed is precisely the
+> conflict of interest the T1.02 precedent guards against. **The safeguard is
+> already built and already running** — the strengthen-only law, and an
+> overseer whose §2 duty is to audit every spec diff independently of its
+> author. So the proposal is narrow: the builder may draft, must state the new
+> threshold and why it is HARDER, may not run the spec until ratified, and the
+> old version stays in the ledger's history. If you would rather not, the
+> alternative is a second Review sitting per week for design only; I prefer
+> the draft route because it scales and a second sitting does not.
+
+**THE EVIDENCE, read live at `a4f5b8f`, 2026-09-04 12:3x UTC. It is not in
+dispute and it is worse than the page states**, because the page quoted the
+queue's lifetime average and the instrument now measures the trailing week:
+
+| instrument | reading |
+|---|---|
+| `run review-queue` | **35 routed, 33 still live** — 31 `OPEN`, 2 `HELD`, 2 `ACTED`, 0 `DECLINED`, 0 `DISPOSITIONED`. Oldest live row **11 days**. |
+| `run review-queue` (trailing 7 d, 7 consumer cycles) | **arrived 30 (4.29/cycle) · disposed 1 (0.14/cycle) · designed 0** · **drain UNBOUNDED**, net **+29** over the window |
+| `run review-queue` | **6 rows share 2026-09-06** against a measured capacity of **1 dated row per cycle** — six promises scheduled to break together |
+| `coverage` | **0 FRESH dispatches at any of the seven cost classes.** Every non-fillable class names the same reason in the tool's own words: *"the repair is a REDESIGN"* |
+| `docs/PROGRESS.md` | of the **9** specs whose dependencies all PASS, **8** are parked or pilot-blocked behind this desk and **1** (`HR.1`) is held by `D19`. **None waits on the builder. None waits on compute.** |
+| `/data/jack-logs/ladder.log` | 2026-09-04 00:00–12:19 UTC: **13 iterations, 13 × rc=0, PASS delta 0.** The ledger has not moved since 2026-09-03T23:23. The builder is not idle and it is not stuck — it is doing research and registry work because design is the only thing left and it may not do it. |
+
+The queue's own reader prints **0 violations** while all of this is true, and
+that is correct rather than broken: every violation class it owns fires on a
+promise being *broken*, and a desk that cannot keep up has not yet broken any
+promise. The divergence is legal. It is also the whole ballgame.
+
+**WHY THIS IS YOURS AND NOT THE LOOP'S — checked against rule 3 rather than
+assumed.** `SYSTEM.md`'s third law says a fork whose arms can both be run is an
+experiment nobody has written yet, and that law beats escalation. It does not
+reach this one. No bakeoff can settle **who is permitted to draft a redesign**:
+that is CONDUCT, class 3 of the three-class invariant — *"Pre-registration,
+controls that must fail, never weakening a threshold… The method is not an
+arm."* `SYSTEM.md` says exactly when to escalate anyway: *"Escalate an
+architecture call only when the fork turns on what is permitted rather than on
+what works."* This fork turns on what is permitted. It is yours, and it arrives
+with a default and a clock so it cannot deadlock the way `D1` did.
+
+**Options.**
+
+**(i) THE RULE STANDS.** Design authority stays with the Review. A queue row
+continues to mean *"only the Review may answer this"*. The honest consequence
+is arithmetic and is printed above: at 4.29 arrivals and 0.14 disposals per
+cycle the live queue grows by ~4 rows a day with no projected end, every
+startable spec stays behind it, and the builder keeps spending its slots on
+research and on the machine because that is what it is permitted to touch.
+
+**(ii) A SECOND REVIEW SITTING PER WEEK, design only.** Doubles the desk
+without moving any authority. The Review named this itself and argued against
+it: it multiplies capacity by two against a deficit of ~30 rows/week, so the
+drain stays unbounded — and it spends roughly another 40 minutes of model time
+a week, which lands on the same meter `D15` (decide_by 2026-09-05) is about.
+
+**(iii) DRAFT-THEN-RATIFY, as the Review proposes.** The builder may WRITE a
+redesign for a queue row; it may not RUN the spec until the Review and the
+overseer have ratified it; it must state the new threshold and why it is
+harder; the old version stays in the ledger's history. The conflict of interest
+is real and named — the builder drafting the redesign of a spec that just
+failed is the `T1.02` shape — and the two guards that would carry it (the
+strengthen-only law, and this organ's §2 duty to audit every spec diff
+independently of its author) are already built and already running.
+
+**The overseer's own reading, since one of the two ratifying organs is me and
+you should have my view on the record:** the safeguard the proposal leans on is
+mine, it runs every six hours, and §2 of my brief is exactly *"a numeric
+threshold moved in the loosening direction, a control deleted or made weaker,
+`_check` gaining an `or`, a seed count reduced, an assertion removed."* This
+audit ran it over 126 commits and 7 days of spec and test diffs and found **one
+changed constant, in the strengthening direction** (`T0.21 N_PROPERTIES`
+11 → 12), with every removed `control=`/`seeds=` line replaced by a stronger
+one. So the guard the proposal depends on is not theoretical. What I cannot
+tell you is whether it holds under a load it has never seen: today it audits
+drift the builder produces incidentally, and under (iii) it would audit
+redesigns the builder authored *on purpose*, which is a different adversary.
+That is the real question in this fork, and it is not one I can settle by
+running a tool.
+
+DECIDE: D22
+  class:     goal
+  blocks:    no single spec id — and that is the point. The cost is the drain:
+             33 live queue rows, +29 net over the trailing 7 days, all 9
+             startable specs behind the desk, and 0 FRESH dispatches at any
+             cost class. Every dated promise in `docs/REVIEW_QUEUE.md` is
+             downstream of this entry.
+  default:   (i) THE RULE STANDS — design authority stays with the Review,
+             unchanged and unnarrowed. Nothing is written, nothing is
+             re-parented, no threshold moves, no control weakens, GOAL.md is
+             not touched, and no commitment goes claim-dead. This is the
+             status quo and it is the ONLY legal default here: (iii) widens
+             what the builder is permitted to do, and a default may not widen
+             what this project may take; (ii) spends model time against a
+             pacing decision (`D15`) that fires on 2026-09-05, so making it
+             fire by silence would pre-empt your own answer to that entry.
+             The price of this default is stated rather than buried: silence
+             through 2026-09-08 costs approximately 17 further net queue rows
+             at the measured rate, and the divergence continues.
+             Reversal: none needed — the default writes nothing. Ruling (ii)
+             or (iii) at any later date is unaffected by it having fired.
+  decide_by: 2026-09-08
