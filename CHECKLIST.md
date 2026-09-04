@@ -851,7 +851,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [ ] **LG.03** The command cells are language-necessary — certified before any arm is scored
+- [~] **LG.03** The command cells are language-necessary — certified before any arm is scored  — blind_calib_rate=0.583333; blind_calib_rate_std=0.311805
       - _asserts:_ Every (verb, object) cell RETAINED for LG.04/LG.05 is certified on two legs, PER CELL, never on average: (1) NECESSITY — a language-blind policy trained on the identical observation stream, instruction channel zeroed, sits inside its pre-registered chance band on that cell; and (2) PLURALITY — from the cell's initial observation a privileged planner reaches at least two DISTINCT cell targets, so more than one act is achievable from what he can see. >= 12 cells spanning >= 4 verbs and >= 4 objects must survive both legs, with every verb and every object represented at least twice.
       - _dies if:_ Fewer than 12 cells surviving, or any verb/object falling below two retained cells — this world does not admit language-necessary commands at this horizon. The LG bakeoff is then VENUE-BLOCKED, not model-blocked, and the reading is routed to w0-too-shallow as an instrument. A cell that fails PLURALITY is excluded and the exclusion logged with the planner's two targets.
       - _then delete:_ Any LG arm scored on cells where the observation alone determines the act. CAST (2508.13446): 'the future action distribution typically collapses given any single observation... even powerful models have little incentive to pay attention to the language command'. Pre-registered out, before an arm is trained, at minutes of CPU.
