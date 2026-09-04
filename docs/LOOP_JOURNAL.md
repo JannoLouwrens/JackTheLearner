@@ -10766,3 +10766,69 @@ the Review should see them side by side.
   `HR.6` behind `HR.5`; `LF.01` attempt 2 waits for the 09-09 design; no third
   CPU-accountant increment; no third hand-stagger of the 09-06 docket; do not
   route `D22`. 0 leftover processes, no detached runs, no `declared_pids` owed.
+
+- **2026-09-04 ~15:1x UTC (Opus; `week:Fable` 100%, so the chain walked to opus
+  as expected — `week:all models` **60%** against a pace line of ~66.9 at
+  week-elapsed 63, so no skip). 70th audit B4 EXECUTED — the last open item on
+  that audit, and it stayed a print statement.** `run status`'s CPU block used
+  to end at `39 cpu spec(s) currently unaffordable until midnight`, a count with
+  no floor and no denominator that GROWS with the registry (three specs
+  registered on 09-04 moved it 36 -> 39 and nothing went amber). It now prints,
+  per cost class, `slack_s = CPU_DAY_CEILING_S - max(child_estimate_s over the
+  class's LIVE population)` — the day's spend at which the class starts
+  foreclosing — beside today's `used_s`:
+  **`cpu<2h` slack 3600 s (1.00 h) vs spent 6280 s (1.74 h), over, 39/58
+  unaffordable, 39 never run; `cpu<10min` slack 46800 s, ok, 0/77; `cpu<1min`
+  slack 56546 s, ok, 0/21.** So the 39 is one class that closed at 6.25% of a
+  day and stayed closed, not a registry that grew. **`CPU_DAY_CEILING_S` is
+  untouched** — the ceiling is `D20`'s and the owner's.
+  `class_slack()` sits in `cpu_budget.py` beside the gate and reads the estimate
+  through `child_estimate_s`, so a printed row cannot drift from the refusal it
+  predicts; `foreclosed_now`'s population became a shared `runner_cpu_specs()`
+  rather than a second copy of the filter (T0.14 pasted-constant scar).
+  **`T0.33` property 16 makes the line binding rather than decorative:**
+  `used_s > slack_s` <=> `n_foreclosed >= 1`, asserted at a MID-RANGE value (one
+  second either side of the tightest class's own slack, on a temp day, where the
+  wrong side of the comparison flips the answer), plus on the live day that the
+  two readers add up — `sum(n_foreclosed) == n_foreclosed_now` and `sum(n) ==`
+  this file's INDEPENDENT count of the gated population. **PASS, attempt 9, 33
+  metrics, re-bought CLEAN at `40f6a32`** (attempt 8 was `5f9e7e7+dirty`).
+  **CORRECTION TO MY OWN COMMIT MESSAGE, and it is the lesson.** `40f6a32` says
+  the class "closed since ~01:30". I copied that figure out of B4's example line
+  without deriving it, and **it is not derivable from this meter at all** —
+  `cpu_budget.json` stores per-day totals with no charge timestamps, so a meter
+  of totals can say a class IS closed and never WHEN. Reconstructed afterwards
+  from a different organ's receipt (`/data/tmp/gate_sweep_cpu2h.log`,
+  `LAUNCH 2026-09-04T00:17:05Z`, 4560.65 s heartbeat-billed; cross-checked
+  against `T0.33`'s own 02:09:12 row, `live_remaining_s` 53032.35) the crossing
+  is **≈01:17**, thirteen minutes earlier. The commit is not amendable — the
+  clean re-buy's stamp names its sha — so the correction lives here and in
+  LESSONS: *an order's example output is an illustration, not data; take the
+  defect from the report, the boundary from the code, and the numbers from the
+  receipt.* The shipped print claims no closing time on purpose.
+  **Live after:** ledger **102 PASS**, `render` 102/238; ratchets all unchanged
+  (`cpu_foreclosed_now` still 39, `unreachable` 94 AT floor);
+  `decisions --check` rc=0, `ratchet ok (0/10 undeclared, 2/3
+  unrouted-owner-ask, 0/0 vanished-owner-ask, 1/1 default-action-expired)`;
+  coverage rc=2 (known red, both reasons already routed).
+  **NEXT ITERATION. The 70th audit is now fully closed except B3, which is
+  DATED and is not today.** `D21`, `D15`, `D16` come due 09-05; **`D21` must be
+  FIRED in a 00:xx-05:xx slot on 09-06, before the Review's ~06:37 run**, by
+  recording the firing in `DECISIONS_RESOLVED.md` AND writing the mandated order
+  onto the `w0-too-shallow` row in `docs/REVIEW_QUEUE.md` (prose in a journal is
+  not a docket). With the board empty (`PROGRESS` #1: nine startable specs, all
+  parked/pilot-blocked/decision-held), the empty-queue unit is the SO-family
+  social-world research pass — `LANGUAGE_GROUNDING.md` §2.2-§11 is DONE and
+  `LG.03`-`LG.06` are REGISTERED, so step 4 (**implement and run `LG.03` ALONE**,
+  `cpu<10min`, designed to foreclose the family cheaply) is the cheaper and more
+  valuable unit and should be taken first — but note `LG.03`'s open venue
+  questions in `INTEGRATION_QUEUE.md` must be designed in the docstring BEFORE
+  the fit, because it is a FIXTURE. **`cpu<10min` has 46800 s of slack today, so
+  `LG.03` is affordable; `cpu<2h` is closed until midnight and no amount of
+  waiting inside today reopens it.** Standing prohibitions ALL unchanged: no
+  `D1.0` re-dispatch; **`W35`'s ~11 free Kaggle hours expire 09-06 00:00 and
+  must be let go**; `HR.1`-`HR.4` D19-held to 09-14; `HR.6` behind `HR.5`;
+  `LF.01` attempt 2 waits for the 09-09 design; **no third CPU-accountant
+  increment — the "when did it close" gap above is deliberate, not a TODO**; no
+  third hand-stagger of the 09-06 docket; do not route `D22`.
+  0 leftover processes, no detached runs, no `declared_pids` owed.

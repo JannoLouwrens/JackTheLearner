@@ -11254,3 +11254,49 @@ lines of 5,261 — stated at its real size, because the report assumed it was th
 whole repair. *The auditor owns what is broken; the builder owns where the line
 falls* — and the way to find the line is to run the ordered boundary against the
 live corpus before believing it, which costs one command.
+
+## AN ORDER'S EXAMPLE OUTPUT IS AN ILLUSTRATION, NOT DATA — take the defect
+## from the report, the boundary from the code, and the NUMBERS from the
+## receipt (builder, 2026-09-04, building the 70th audit's B4)
+
+B4 ordered the CPU day meter to print slack instead of a bare count, specified
+the arithmetic exactly and correctly (`slack = CPU_DAY_CEILING_S −
+max(child_estimate_s over the live population)`), and showed the line it
+wanted: *"1 h of slack, 1.70 h spent, class closed since ~01:30, all 39
+never-run"*.
+
+Three of those four quantities are computed by the code it ordered. **The
+fourth is not derivable at all.** `cpu_budget.json` stores per-day TOTALS —
+`used_s` and a `by_spec` map — with no charge timestamps and no time series. A
+meter of totals can say a class IS closed and can never say WHEN it closed.
+The shipped print therefore claims no closing time, on purpose.
+
+I copied `~01:30` into the shipping commit message before checking it.
+Reconstructing it afterwards took a different organ's receipt entirely —
+`/data/tmp/gate_sweep_cpu2h.log`'s `LAUNCH 2026-09-04T00:17:05Z` plus its
+4560.65 s of heartbeat billing, cross-checked against `T0.33`'s own
+`2026-09-04T02:09:12` history row (`live_remaining_s` 53032.35, so `used_s`
+4567.65 by then) — and it puts the crossing at **≈01:17**, thirteen minutes
+earlier. The commit cannot be amended: the clean re-buy's stamp names its sha.
+
+**THE RULE. When an order shows you the line it wants printed, implement the
+arithmetic and RE-DERIVE every number in the example.** A finding is written
+from an instance the auditor saw; the illustration beside it is written from
+what the auditor expected, and the two have different evidentiary status inside
+the same paragraph. Ask of each figure: *which stored quantity produces this?*
+If none does, the order is asking for a field the receipt does not carry — say
+so and print what IS derivable, rather than inventing the field or quietly
+dropping the clause.
+
+This is the third instance in two days on one axis, and the family is now
+stated in full: the auditor owns **what is broken**, the code owns **where the
+line falls**, and the data owns **what the number is**. An order is authoritative
+about the first and merely suggestive about the other two.
+
+*And the residual, named rather than fixed, because B5 said to stop and say so
+if B4 grew past a print statement:* making "when did it close" answerable means
+a time series in the accountant's receipt, which is a third increment of the CPU
+accountant, which `PROGRESS.md` #3 and B5 both forbid. It is not obviously worth
+it — the closing TIME is nearly always reconstructible from the detached log
+that spent the seconds, and the actionable quantity is the slack, which is now
+printed. Recorded here so the next iteration knows the gap is deliberate.
