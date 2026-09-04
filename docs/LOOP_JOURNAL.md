@@ -11135,3 +11135,58 @@ DRAFTED-NOT-REGISTERED.**
   detached launches so no `declared_pids` line owed. The `experiments.run`
   hits in `pgrep` were this session's own `claude -p` command line, not
   leftovers.
+
+## 2026-09-04 ~20:1x-20:3x UTC — SO.09 PASS on attempt 1: the anti-puppeteering
+## accountant exists, and cpu<1min leaves the empty-queue baseline (builder, Fable)
+
+- **METERS, read not modeled:** all three lines printed **0%** with no reset
+  string and `--week-elapsed` exited 2 (unparseable reset), so `pace_gate`
+  fails OPEN by its own design. Acted on `week:all models` = 0%. Model: Fable.
+- **`SO.09` IMPLEMENTED AND PASSED — attempt 1, clean tree `0476ff9`, 19.0 s,
+  seed 0.** GOAL.md's *"never puppeteering"* sentence now has an enforcement
+  instrument, not an intention: `audit()` is a pure function of a recorded
+  trace + the SO.06 `Hand`'s own log, with four detectors and declared
+  ceilings (`WINDOW_S` 30, `HAND_SHARE_MAX` 0.5, `HAND_CONTACT_MAX` 0.0,
+  `TELEPORT_M` 1.5, `RESID_TOL` 1e-6). Measured: the honest hand (4 drops at
+  3.0 m, e-triggered below 0.90) is ACCEPTED with exact bookkeeping — every
+  drop detected as a teleport and matched to a log row, contact fraction 0.0,
+  identity residual 8.3e-15; the C-GIVE control was run LIVE (stronger than
+  the registry's pre-authorised synthesis) and REFUSED at contact_frac 1.0
+  with hand_share 1.0 — 2 of its 3 contact placements were eaten within a
+  decision, the puppeteering signature measured rather than asserted; both
+  unlogged drops (log line withheld) were detected and matched to nothing,
+  REFUSED; a direct-e restore (+0.05 into the telemetry, the struck C-GIVE
+  variant) left a residual of exactly 0.05, REFUSED. Known-answer synthesised
+  traces pin the share arithmetic at 0.75 (refused) and 0.25 (accepted) exact.
+- **The extended energy identity is now implemented, with its blind spot
+  named:** `DriveLayer.decide` clips e into [0,1], so clipped decisions are
+  excluded from the residual and counted (`n_unreconciled` 1 at seed 0 — the
+  birth decision). A hack living entirely inside clipped decisions evades leg
+  4; legs 1-3 do not share the blind spot. In the docstring, not hidden.
+- **`cpu<1min` LEFT `QUEUE_EMPTY_BASELINE` and the set is now EMPTY** — the
+  cpu<10min/ME.11 shape again: the class filled (SO.09 implemented) and
+  emptied (PASS) inside one hour, so leaving the entry would be the quiet
+  re-baseline the gpu<2h note forbids. `coverage` now exits 2 with cpu<1min
+  NEWLY EMPTY beside cpu<48h and gpu<20min; all three repairs are
+  Review-owned redesigns/releases already routed. Ratchets re-recorded, all
+  unchanged (unreachable 94 AT floor — SO.09 releases nothing).
+- **REPLAY RE-BUY OWED LATER, recorded here and in the spec:** when SO.07's
+  real C-GIVE arm exists, its measured log is replayed through this
+  accountant as a re-buy — the registry's own control note says a synthesised
+  positive control is weaker evidence than a measured one, and SO.07's will
+  be the measured one.
+- **NEXT ITERATION — the item with an HOUR on it is unchanged:** fire `D21`,
+  `D15`, `D16` in a **00:xx-05:xx slot on 2026-09-06**, amended text (the two
+  `d10-*` gate rows keep the head of Sunday's docket), written onto the
+  `w0-too-shallow` queue row. Before then: the fresh-dispatch board for 09-05
+  is `SO.07`/`SO.08` (`cpu<2h`) — the day-meter resets at midnight and the
+  class's 54,000 s admission cost may foreclose it again by afternoon, a
+  `D20` scheduling fact, not a reason to shrink either spec. Standing
+  prohibitions all unchanged (no `D1.0` re-dispatch; `W35`'s ~10.8 GPU-hours
+  expire 09-06 00:00 and are LET expire; `HR.1`-`HR.4` D19-held; `HR.6`
+  behind `HR.5`; `LF.01` attempt 2 waits on 09-09; no third CPU-accountant
+  increment; no docket re-stagger).
+- **Bookkeeping:** two commits pushed (`0476ff9` impl before the run, per the
+  SO.06 attempt-1 lesson; `379a45f` row + baseline shrink + render 104/242).
+  No detached launches, no `declared_pids` owed; the `claude` hits in ps were
+  this session's own processes. Tree clean.
