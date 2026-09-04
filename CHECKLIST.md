@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 102 / 234 demonstrated
+## 102 / 238 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -848,6 +848,34 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Two fact sets, matched for length and syntactic form, are told to him through the parent channel: one anchored to primitives he has lived (hot, heavy, far, tiring, dangerous — GOAL.md:187's list), one with no referent in anything he has lived ('bonds have coupon rates'). Integration DIFFERS: anchored facts are usable (he can act on them / bind them to his own experience in probes) while unanchored facts are recitation — and he can say which is which — by >=3 sigma across seeds.
       - _dies if:_ Both fact sets integrate identically — he is reciting, and the jungle bought nothing (GOAL.md's own words). OR the anchored>unanchored gap SURVIVES the stripped control, in which case the gap was a property of the corpus or the frozen mouth, never of his life, and the claim is dead either way.
       - _then delete:_ The stated justification of the entire survival programme. GOAL.md justifies W0/W1, the needs, the cold that kills and the mortality by saying lived primitives are what make told knowledge MEAN something. If this fails, the jungle is still a world but it is not buying what the constitution says it buys, and the third expansion is a library bolted to a language model.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [ ] **LG.03** The command cells are language-necessary — certified before any arm is scored
+      - _asserts:_ Every (verb, object) cell RETAINED for LG.04/LG.05 is certified on two legs, PER CELL, never on average: (1) NECESSITY — a language-blind policy trained on the identical observation stream, instruction channel zeroed, sits inside its pre-registered chance band on that cell; and (2) PLURALITY — from the cell's initial observation a privileged planner reaches at least two DISTINCT cell targets, so more than one act is achievable from what he can see. >= 12 cells spanning >= 4 verbs and >= 4 objects must survive both legs, with every verb and every object represented at least twice.
+      - _dies if:_ Fewer than 12 cells surviving, or any verb/object falling below two retained cells — this world does not admit language-necessary commands at this horizon. The LG bakeoff is then VENUE-BLOCKED, not model-blocked, and the reading is routed to w0-too-shallow as an instrument. A cell that fails PLURALITY is excluded and the exclusion logged with the planner's two targets.
+      - _then delete:_ Any LG arm scored on cells where the observation alone determines the act. CAST (2508.13446): 'the future action distribution typically collapses given any single observation... even powerful models have little incentive to pay attention to the language command'. Pre-registered out, before an arm is trained, at minutes of CPU.
+
+### Tier 3 — ABLATION — does it earn its parameters?
+
+- [ ] **LG.04** The grounding bakeoff: five arms, one certified cell set
+      - _asserts:_ Among arms that map an utterance to behaviour on the LG.03-certified cells at matched optimiser steps AND matched environment steps, at least one beats the language-blind null by >= 3 sigma on held-out PHRASINGS, and the winner beats the runner-up by the pre-registered margin. Arms: A0 language-blind (the null); A1 frozen-LLM embedding router (SCORED BUT INELIGIBLE — a frozen tower inside Jack, foreclosed by the PLASTIC-ONLY decree, run and recorded because an assumption that cannot lose is not a finding); A2 the shipped plastic text tower router (T2.06's incumbent); A3 a language-conditioned policy trained end-to-end; A4 = A3 plus hindsight relabelling from the diary's did channel (HIGhER, 1910.09451).
+      - _dies if:_ No arm clears the 3-sigma learning gate: VOID, not a verdict — two non-learners cannot arbitrate an architecture (T2.02's law). The seat stays UNDECIDED and the repair is the arm, not the ranking.
+      - _then delete:_ The router family as an ANSWER to the owner's end goal, if A3 or A4 wins: a device that maps strings to a fixed menu cannot compose over verb x object, whatever it scores. And if A2 wins, it kills the assumption that end-to-end conditioning is worth its compute at Jack's scale.
+
+### Tier 4 — COMPOSITION — does adding B break A?
+
+- [ ] **LG.05** The Understanding Test: three destructions, three different destinations
+      - _asserts:_ On HELD-OUT (verb, object) cells never trained together, the LG.04 winner beats the language-blind baseline PER CELL on >= 8 of 12 cells at >= 3 seeds; AND the three destruction interventions land in three pre-registered and DIFFERENT places: scrambling word order moves behaviour to the language-blind baseline, deleting the instruction moves it to the same place, and SWAPPING in a different valid instruction moves it to THAT instruction's behaviour.
+      - _dies if:_ Fewer than 8 of 12 held-out cells clearing their own band — composition is not there, whatever the average says (gSCAN 2003.05161: strong baselines 'fail dramatically' exactly here). OR swap and scramble landing in the SAME place: a model that treats a scrambled instruction as a different one is doing lookup on a token bag, and a model that treats a swapped one as deleted has a channel wired to nothing.
+      - _then delete:_ The claim that Jack understands an instruction rather than recognising one. Conditions 1-3 of LANGUAGE_GROUNDING.md's section 1 stand or fall here.
+
+### Tier 3 — ABLATION — does it earn its parameters?
+
+- [ ] **LG.06** The ordering experiment: does skills-first buy anything, and is it the WORDS that transfer?
+      - _asserts:_ At matched optimiser steps and matched environment steps, three orderings are raced on the LG.03-certified cells: O1 skills-first (childhood, then language), O2 language-first (a pretrained-sequence-initialised policy, then control), O3 joint. The winner is separated by the pre-registered margin — AND O2 is accompanied by O2s, an identical arm whose vocabulary is permuted by a fixed seed. The ORDERING question is answered by O2 - O1; the MEANING question is answered by O2 - O2s.
+      - _dies if:_ O2 and O2s tie. Then whatever language-first transfers is a sequential-structure prior and not word meaning — 2202.01771's own finding that 'the format of the policy inputs encoding (natural language string vs an arbitrary sequential encoding) has little influence' — and this project's childhood-then-grounding ordering was never the thing being tested.
+      - _then delete:_ The developmental ordering this project assumes without testing (LANGUAGE_GROUNDING.md Finding 3). A tie between O1 and O2 says the ordering does not matter at Jack's budget and the cheaper one wins by law 3's TIE rule; an O2 win with O2s tied says the whole framing was wrong.
 
 ### Tier 5 — THE CLAIMS — the thesis stands or falls
 

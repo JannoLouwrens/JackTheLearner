@@ -10546,3 +10546,87 @@ the Review should see them side by side.
   hand-stagger of the 09-06 docket; `LG.05` must not be dispatched before an arm
   clears the PHRASING split (`T2.07` is FAIL there already). `next_free_due` is
   **2026-09-12** for any row you route.
+
+- 2026-09-04 ~11:4x UTC (builder, **opus** — `week:Fable` reads 99% and cannot
+  start; `week:all models` **57%** against a pace allowance of ~64.6 at 61%
+  week-elapsed, so no `PACING:` skip and the last skip is still 08-29).
+  UNIT: the `INTEGRATION_QUEUE` empty-board rule's **step 3** — `LG.03`-`LG.06`
+  REGISTERED from `LANGUAGE_GROUNDING.md` §7 (`a4d9c92`, pushed; registry
+  **234 → 238**), steps 1, 2, 3 and 5 complete. **Step 4 deliberately NOT
+  taken** and the reason is a venue fact, not the clock — see NEXT.
+  **STEP 1 IS THE FINDING.** The drafting pass (yesterday, `bf32216`) declared
+  its own sweep PARTIAL and refused to register on it; that refusal bought a
+  **MANDATORY** control. `FROZEN_VS_PLASTIC.md` §10.2 declares **two** controls
+  *"mandatory in every spec that runs with a parent"*. `A0` already was one (the
+  MUTE-PARENT twin); the **SHUFFLED-PARENT** twin — *"same words, same rate,
+  wrong events... if Jack's grounding survives shuffling, he learned the words'
+  distributional statistics and not their referents, and the whole claim
+  collapses"* — existed **nowhere in the family**. It is now **`C-SHUFFLE` in
+  `LG.04`**: `A3` trained on mis-paired instructions and trajectories, same
+  count, same optimiser steps, must collapse to `A0`. Not redundant with `A0`:
+  `A0` has no channel, `C-SHUFFLE` has a channel carrying noise, and an arm
+  whose advantage is the mere PRESENCE of a wider input — capacity,
+  regularisation, gradient noise — beats `A0` while tying `C-SHUFFLE`. Second
+  conflict, same doc, §10.6b: Chaabouni et al. (ACL 2020, 2004.09124) [V] —
+  4 of 141 settings correlate test accuracy with ANY compositionality metric
+  while generalisation correlates with **input space size at rho = 0.86** — so
+  `LG.05`'s notes now REQUIRE retained-cell count and vocabulary size in its
+  metrics (a reporting requirement; no bar moved, and `LG.05` was already on the
+  right side of that finding by scoring behaviour rather than a topsim).
+  No refutation anywhere. Mapped: `LG.01` certifies the **Q&A** venue, `LG.03`
+  the **BEHAVIOUR** venue — the certificate `DIRECTION_AUDIT.md`'s *"do not run
+  T2.06/T2.07 before LG.00"* asks for on the behavioural side.
+  NUMBERS THAT MOVED, all named in the registration commit: `cpu<10min` went
+  EMPTY-and-FILL-HELD-behind-D19 → **fillable today (`LG.03`)**; `unreachable`
+  **91 → 94** with `UNREACHABLE_BASELINE` raised in the same commit and its
+  growth-log entry written (`LG.04`/`LG.05`/`LG.06` blocked behind `LG.03` by
+  `depends_on`, not by a docstring — the block clears the first time `LG.03`
+  passes); `cpu_foreclosed_now` **36 → 39**, the same three at `cpu<2h` against
+  today's day meter, a consequence of the registration rather than a new fault.
+  `champions --check` rc=0 and **unmoved by design** — whether `LG.04` becomes
+  the language seat's arena is the Review's tie-break DUE 09-07, and the row now
+  records that the third disposition's stated precondition (*"costs the
+  registration first and must not be declared before it"*) is **discharged**.
+  `review-queue` rc=0 / 0 violations; **no new queue row was routed** — the desk
+  is closing 2 rows in 15 days against ~5.6/day arriving, so the input went onto
+  an existing dated row instead of a new one. `coverage` rc=2 unchanged (the
+  four `GEN.*` corpse citations, not mine). No DRIFTED and no new STALE claims;
+  ledger **102 PASS / 22 FAIL / 11 VOID**, unchanged — this iteration bought no
+  capability, it bought a family a control and a class a filler.
+  LESSONS: **a cross-check run by the author of the drafts searches the
+  neighbourhood it already knows, and the number is 7 to 0.** The drafts cite
+  `CAPABILITIES.md`/`CURIOSITY_BAKEOFF.md` seven times and `FROZEN_VS_PLASTIC.md`
+  **zero** times; every conflict the author's own sweep caught was in a document
+  it had just been reading, and **both it missed were in the one document the
+  drafts never mention.** The rule: draft in one iteration, register in the
+  next, sweep the corpus cold — this project separates authorship from
+  certification everywhere it costs something (`D13`, the ledger, the Review)
+  and step 1 was the one seam where it did not. The scanner-for-MANDATORY-
+  clauses repair was considered and **deliberately not built or routed**, with
+  the reasons on the record.
+  NEXT: **implement and run `LG.03`, alone** — `cpu<10min`, deps `ME.9` PASS,
+  and it is the only spec in the family whose cost is not a guess. Start from
+  the venue facts measured this iteration rather than from the draft, because
+  the draft specifies the two legs and NOT the W0 verbs, targets or planner, and
+  **W0 has no language channel at all** (`w0.py`: *"language 32 ABSENT, and
+  absent as an INPUT CONDITION... W0 has no talker in it yet"*). The object
+  inventory IS there — seed 0, 39 geoms: `apple`, `obj0`-`obj4`, the ladder
+  (`ladder_railL/R`, `rung0`-`rung5`), `platform`, `ramp`, `stair0`-`stair3`,
+  `pool_water`/`pool_floor`, `seesaw_plank`, `welded_block`, `noise_panel` — so
+  the >=4-object axis is not obviously foreclosed. The open questions are all
+  venue questions: which verbs the 8-dim rover can enact (`climb` exists only
+  for the ladder, which breaks "every verb represented at least twice" unless
+  platform and stairs count), the per-cell target predicate, what the privileged
+  planner is and what *"target identity withheld"* means to it operationally,
+  and the per-cell chance band. **Design those in the docstring BEFORE writing
+  the fit**: this is a FIXTURE, every downstream arm is scored against it, and a
+  curated cell set is undetectable afterwards. Do NOT implement `LG.04`/`LG.05`/
+  `LG.06` in the same iteration — `LG.03` is built to be able to foreclose all
+  three, and if it does, that reading is an eleventh instrument for
+  `w0-too-shallow` bought for ten CPU-minutes.
+  Standing prohibitions ALL unchanged: no `D1.0` re-dispatch; **`W35`'s ~11 free
+  Kaggle hours expire 09-06 00:00 and must be let go** (inventory, not uptime);
+  `HR.1`-`HR.4` D19-held to 09-14; `HR.6` behind `HR.5`; `LF.01` attempt 2 waits
+  for the 09-09 design; no third CPU-accountant increment; no third hand-stagger
+  of the 09-06 docket. `next_free_due` is **2026-09-12**. 0 leftover processes,
+  no detached runs, no `declared_pids` owed.

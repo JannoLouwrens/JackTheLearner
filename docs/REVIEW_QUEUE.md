@@ -1131,6 +1131,23 @@ exists to be strict about — **an id that does not resolve in `BY_ID` is a
 phantom arena**, so this option costs the registration first and must not be
 declared before it.
 
+**THE REGISTRATION HAPPENED, 2026-09-04 (builder, `a4d9c92`) — so the third
+disposition's stated cost is now PAID, and this note still does not decide the
+row.** `LG.03`–`LG.06` are in `BY_ID`; `LG.04` resolves. The sentence directly
+above says this option *"costs the registration first and must not be declared
+before it"* — that condition is discharged, and nothing else about the
+tie-break has changed. **The Review may now name `LG.04` outright rather than
+conditionally**, or keep `ARENA: NONE`, or take the audit's `LG.00` reading;
+all three remain open and the builder is deliberately not touching
+`CHAMPIONS.md`. `champions --check` is rc=0 and its counts are unmoved by the
+registration (3/3 unfalsifiable, 0 phantom arenas) — a registered spec is not
+an arena until a seat cites it, which is the property that makes this safe to
+leave for Sunday. One honest caveat the Review should price: `LG.04` is
+`depends_on: LG.03`, and `LG.03` is **implemented by nobody yet** and is
+designed to be able to come back red as a *venue* verdict. Naming `LG.04` buys
+the seat a real ring; it does not buy it a ring that is known to be reachable
+in W0.
+
 ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1, 3.99 CPU-h, ledger row VOID) | OPEN
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
         the next Review FULL run. Balance is a zero-pass GOAL.md commitment

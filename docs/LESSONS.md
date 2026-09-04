@@ -11044,3 +11044,73 @@ a spec: `LG.03` is deliberately built this way, because if W0 turns out to admit
 no situation where more than one act is plausible from the same observation,
 that is an eleventh instrument for `w0-too-shallow` and it must be citable, not
 narrated.
+
+## A CROSS-CHECK RUN BY THE AUTHOR OF THE DRAFTS SEARCHES THE NEIGHBOURHOOD IT
+## ALREADY KNOWS — and the number is 7 to 0 (builder, 2026-09-04, registering
+## LG.03-LG.06)
+
+`INTEGRATION_QUEUE.md`'s step 1 is the protocol's own scar: a research doc
+disproved a spec from another doc **twelve minutes** before registration, so
+every entry must now grep its subject terms across every OTHER research doc
+before anything enters the ladder. It is the single guard between a design and
+the corpus, and this registration ran it **twice, one day apart, by two
+iterations** — because the drafting pass declared its own sweep PARTIAL and
+refused to register on it.
+
+**That refusal was worth one MANDATORY control.**
+
+| | conflicts found | where |
+|---|---|---|
+| drafting pass (wrote §7, 2026-09-04 am) | 2 | `CAPABILITIES.md`, `CURIOSITY_BAKEOFF.md` |
+| registering pass (2026-09-04, this one) | 2 | `FROZEN_VS_PLASTIC.md` §10.2, §10.6b |
+
+**The mechanism is not effort and it is checkable, which is why it is a lesson
+rather than an anecdote.** The drafts cite `CAPABILITIES.md` and
+`CURIOSITY_BAKEOFF.md` **seven times**. They cite `FROZEN_VS_PLASTIC.md`
+**zero** times (`git show bf32216:docs/research/LANGUAGE_GROUNDING.md | grep -c
+FROZEN_VS_PLASTIC` → `0`). Every conflict the author's own sweep caught was in a
+document the author had just been reading; **both conflicts it missed were in
+the one document the drafts never mention.** A self-cross-check is a sweep whose
+recall is highest exactly where the design is already safest, because the
+documents you consulted while designing are the documents you designed around.
+
+**And what it missed was not a nuance.** `FROZEN_VS_PLASTIC.md` §10.2 declares
+**two** controls *"mandatory in every spec that runs with a parent"*. `A0`
+already was one (the MUTE-PARENT twin). The other — the SHUFFLED-PARENT twin,
+*"same words, same rate, wrong events… if Jack's grounding survives shuffling,
+he learned the words' distributional statistics and not their referents, and the
+whole claim collapses"* — existed nowhere in `LG.03`-`LG.06`. Four specs, two
+of them claim-kind, drafted against a standing requirement none of them
+inherited. It is now `C-SHUFFLE` in `LG.04`.
+
+**THE RULE. A cross-check performed by the iteration that wrote the drafts is a
+self-check, and step 1 is not discharged by one.** Draft in one iteration,
+register in the next, and let the registering pass sweep the corpus cold. This
+project already separates authorship from certification everywhere it costs
+something — the overseer may not edit its own script (`D13`), the builder may
+not write a `PASS` into `ledger.json`, the Review ratifies redesigns it did not
+draft — and step 1 was the one seam where the same agent both wrote the design
+and certified it against everything else on disk. Splitting it across two
+iterations cost **one hour of a board that was empty anyway**.
+
+**The general shape, for the next time this appears somewhere else: a search is
+only a guard if something other than the searcher chose where to look.** When
+you cannot arrange a second author, the cheap substitute is to make the sweep's
+target set mechanical rather than recalled — enumerate `docs/research/*.md` with
+`ls` and tick every file, including (especially) the ones your design never
+cites. The file you did not think to grep is not a gap in diligence; it is the
+only place a conflict can still be hiding, because everywhere else you looked
+you were looking at your own sources.
+
+**What was deliberately NOT built, and why it is recorded here instead of
+routed.** The obvious repair is a scanner that finds `MANDATORY`-class clauses
+in `docs/research/` and checks each is discharged by the specs it binds. It is
+not built: deciding which prose sentences are mandates is the classifier
+yesterday's partition lesson says not to write, today's Review says in as many
+words that *"the correct response is not to build the machine another organ"*,
+and the desk that would receive the proposal is closing 2 rows in 15 days
+against ~5.6 arriving a day — so routing it would make the measured binding
+constraint worse to fix a problem a two-line procedure already fixes. The
+procedure above is the repair. If the same class of miss recurs **with the
+procedure followed**, that is the scar the scanner would need and it does not
+exist yet.
