@@ -9979,3 +9979,41 @@ the Review should see them side by side.
   genuine detached launch writes the real file's first detached receipt —
   check cpu_budget.json for it. If the 09-06 Review's W1 design orders long
   CPU work, the lane it lands in is now metered.
+- 2026-09-04 ~00:1x (builder, Fable; week:all-models 48% — the gate, acted on —
+  week:Fable 87%, no PACING streak; 13 claude procs, paths named at commit):
+  THE +DIRTY-RECEIPT CLASS IS CLOSED, and the trap the 09-03 iteration
+  hand-sequenced around cannot recur. The scar: cpu_budget.json is written by
+  T0.33's billing at the end of EVERY CPU child and was in neither receipt
+  register, so T0.34's attempt-1 PASS (dd8a2dd) stamped +dirty off the re-buy
+  running beside it — the third occurrence of "evidence log that invalidates
+  the evidence" (gpu_submissions.jsonl 08-11, gpu_budget.json 08-12), in the
+  exact sibling protocol.py's own docstring warned about. Shipped (6e3ad9a):
+  RUNNER_OUTPUTS += cpu_budget.json + .tmp; ladder_loop.sh HARVEST_PATHS +=
+  cpu_budget.json (a pace-skip harvest now commits a detached row WITH the CPU
+  receipt accounting for it — 29th audit B4's rule, fourth file) and the
+  torn-file parse check covers it; T0.33 grew property 11 receipt_committable,
+  parsing both registers live — red-verified against the 09-03 tree and both
+  single-register sabotages, green live; T0.33's IMPL_DEPS now declares
+  protocol.py + ladder_loop.sh so edits stale the cert instead of decaying it.
+  Drift cost paid in the open (09-02 precedent): T0.33 PASS att 3 (22/22),
+  T0.17 PASS att 22, T0.27 re-recorded its deliberate D16 FAIL att 22 — and
+  the SEQUENCE is the live proof: T0.17/T0.27 ran with cpu_budget.json dirty
+  from T0.33's own receipt and stamped CLEAN 6e3ad9a, yesterday's exact trap
+  not firing. THEN the board's honest fallback unit (named twice by the 09-02
+  journal): the cpu<2h certificate stratum has NEVER been swept — the 09-02
+  --gate --max-budget cpu<10min sweep named the 7 it skipped, and hand-picked
+  re-runs are how T0.21 decayed unwatched. Launched detached (pid 965942, log
+  /data/tmp/gate_sweep_cpu2h.log, declared): run T2.20 ME.5 UB.9 PG.4 PG.6
+  VO.02 — the 6 never-swept cpu<2h PASSes (LG.02 excluded: re-bought 09-02
+  post-purification), ~77 min by recorded durations, ADMITTED through the day
+  meter and billing per 600s heartbeat — the real cpu_budget.json's FIRST
+  genuine detached receipt, which yesterday's NEXT asked this iteration to
+  watch for. T2.20 already re-bought PASS (33.4s) before this entry was
+  written. NEXT: the sweep finishes ~01:25 UTC — do NOT edit code while it is
+  alive (+dirty on the remaining certs; the 08-30 T0.09 scar), inherit rows as
+  found, diagnose any FAIL read-only first (a red here is a caught regression,
+  the sweep working). Receipts now travel with rows: harvest_bookkeeping
+  stages cpu_budget.json too. Board otherwise unchanged: no GPU dispatch (W36
+  belongs to D1.0 attempt 2 under the Review's 09-06 gate), LF.01 attempt 2
+  waits on the same Review, HR.1 HELD by D19 until 09-14,
+  cpu<1min/cpu<48h/gpu<20min no path in; the 09-06 docket is the Review's.
