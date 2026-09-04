@@ -10662,3 +10662,50 @@ conservation. A gate that compares against a fresh-state ceiling reports on a
 world the system is never in after its first run of the day — report the live
 number as a metric, because the work a protection refuses never runs and so
 never reports itself.**
+
+## When a report names a symptom and a human has to fix it twice, the missing
+## instrument measures the ACT, not the symptom (68th audit B7, 2026-09-04)
+
+`review_queue.py` shipped the DUE-DATE PILE line on 2026-09-02 and it worked
+immediately: the builder read *"18 rows share 2026-09-06 against a measured
+capacity of 1/cycle"*, staggered the docket in the open with a stated reason per
+row, and left five. **Two days later it read eight again.** No dishonesty
+anywhere — three rows had been routed in between and every one of them named a
+reason for choosing that Sunday. The instrument reported the pile correctly both
+times; what it could not do was reach the moment the pile is MADE, which is a
+single router choosing a single date. So the report described a condition that
+regenerated itself, and the only repair available was a human re-doing the
+stagger by hand, on a cadence set by how fast rows arrive.
+
+The generalisation is about where a measurement sits relative to the decision
+that produces it. A symptom metric can only be read AFTER the damage; an act
+metric can be read BY THE PERSON ABOUT TO CAUSE IT. `piled_on` — every live row
+whose declared date already carried the consumer's capacity **at the moment that
+row was routed** — is computed from the same fields the pile line already used,
+costs nothing new, and named the three offending rows before the prose triage
+did. `next_free_due` is the other half: an instrument that says *don't do that*
+without saying *do this instead* leaves the default in place, and the default
+was Sunday.
+
+Two properties of the fix are load-bearing and both are counter-instinctive.
+**It is a metric and not a violation**, because some of those rows chose a full
+day for a good reason and a gate at zero would have forbidden a legal move — the
+same discipline the 68th audit's B3 ordered for a foreclosure count one commit
+earlier. **And it under-counts on purpose**: a re-armed row is timestamped by
+its original routing date, so the number can only ever be too small. An
+instrument on a file four organs write to should err toward silence, because a
+false accusation costs more than a missed one when the accused is a colleague.
+
+The ratchet that keeps it honest is the one worth stealing: **moving a promise
+from one over-capacity day to another must not lower the count.** Without that
+conjunct the metric would have rewarded exactly the shuffling it exists to
+expose — and it duly reported 17 both before and after this pass's re-dates,
+which is the correct answer, because re-dating moves promises between piles and
+does not create capacity.
+
+**Rule: if a report has been acted on twice by hand and the number came back,
+the instrument is measuring the state and not the act. Find the moment of
+choice, compute the same arithmetic AT that moment, and name it — as a metric,
+under-counting rather than over-counting, with a ratchet conjunct asserting that
+rearranging cannot lower it, and paired with the mechanical alternative the
+actor should have reached for instead.**

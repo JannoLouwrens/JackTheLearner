@@ -12,12 +12,13 @@
         "LC.02": 140.29,
         "T0.17": 3.44,
         "T0.27": 1.92,
+        "T0.31": 1.66,
         "T0.33": 3.3,
         "T0.34": 24.28,
         "detached:gate_sweep_cpu2h.log": 4560.65,
         "detached:rebuy_xl00.log": 1171.28
       },
-      "used_s": 5905.16
+      "used_s": 5906.82
     }
   },
   "overruns": []
