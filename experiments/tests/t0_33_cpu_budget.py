@@ -64,6 +64,37 @@ implementation including a broken one):
      one file over; T0.34's attempt-1 cert (`dd8a2dd`) was the scar. Without
      the second, a pace-skip harvest commits a detached row while orphaning
      the CPU receipt accounting for it (29th audit B4's class).
+ 12. THE PROJECTION ONLY TIGHTENS (added 2026-09-04, 69th audit B4). The
+     admission estimate is now `child_estimate_s` — the spec's own MEASURED
+     last child duration where the ledger has one — and over EVERY registered
+     runner-lane cpu spec it must sit at or below `spec_child_timeout_seconds`,
+     the enum worst case it replaced. That is the safety argument stated as a
+     checkable property rather than asserted in a docstring: admission after
+     B4 is never stricter than before it, and the hard child-kill timeout is
+     untouched, so an admitted child's true worst case is unchanged.
+ 13. THE PROJECTION BINDS, asserted at a MID-RANGE value (the T0.12 template).
+     For a witness whose measurement is well under its enum, on a day drained
+     to exactly halfway between the two, the ENUM would refuse and the
+     projection ADMITS. Without this, property 12 is satisfied by an estimator
+     that changed nothing.
+ 14. THE FALLBACK IS THE ENUM, ASSERTED BY DELETION. Pointed at an EMPTY
+     ledger, every runner-lane spec's estimate equals its enum and says so in
+     its provenance — the "no projection exists" branch exercised by removing
+     the evidence, not by trusting that the code path is reachable.
+ 15. A CORRUPT LEDGER FAILS CLOSED. Pointed at unparseable bytes the estimate
+     is the enum, not zero and not an exception. A projection that failed OPEN
+     would admit everything on the day its input broke — the failure mode
+     T0.12's "+inf load" rule exists for, pointed the other way because here
+     the conservative side is the LARGER number.
+
+What B4 did NOT fix, recorded here because the metric below is the only place
+it shows: the residual foreclosure is entirely specs with NO recorded duration
+— `CPU_DAY_CEILING_S` (57600 s) is only 1.067x the largest legal child
+(54000 s), so any never-run `cpu<2h` spec is refused past 6.25% of a day
+whatever this projection does. Measured at the certificate: 53 foreclosed on
+the enum, 36 on the projection, and all 36 are unmeasured specs. That is a
+CEILING question (raising it loosens a tenant protection), routed to
+`cpu48h-class-self-forecloses-the-day-meter` rather than fixed here.
 
 Control (registry: "A leaky accountant must FAIL isolation, and the assertion
 must be made at a MID-RANGE value"): `_LeakyBudget` collapses every day into
@@ -72,6 +103,13 @@ charged Sunday's runs to the exhausted week. Its isolation property must FAIL
 (yesterday's charge visibly moves today's reading) while its arithmetic stays
 alive (the charge itself lands), so the control cannot pass vacuously by
 being broken everywhere.
+
+Properties 12-15 carry their control INLINE rather than in `_control`, because
+the estimator B4 replaced is still callable: property 13 refuses through the
+pre-B4 path (`ledger_path` pointed at an empty ledger — the enum branch) on the
+exact day the new path admits, and property 14 reconstructs the pre-B4 gate for
+the WHOLE registry by deleting the evidence. A control that only failed
+isolation would say nothing about any of them.
 
 VOID lane: a live 1-minute load above LOAD_CEILING is a co-tenant condition —
 the shipped-path refusal would fire for load rather than budget and the
@@ -98,7 +136,9 @@ import time
 from pathlib import Path
 
 from ..cpu_budget import (BUDGET_FILE, CPU_DAY_CEILING_S, ENV_OVERRIDE,
-                          LOAD_CEILING, CpuBudget, _loadavg, gate_cpu_child)
+                          LOAD_CEILING, CpuBudget, _loadavg, child_estimate_s,
+                          foreclosed_now, gate_cpu_child,
+                          measured_child_seconds)
 from ..protocol import RUNNER_OUTPUTS, Ledger, Status, run_spec
 from ..registry import BY_ID
 from ..rtf import spec_child_timeout_seconds
@@ -120,6 +160,15 @@ GPU_WITNESS = "T2.01"          # gpu<8h — must be unbound by this meter
 DETACHED_WITNESS = "PS.04"     # cpu<48h — must be refused with a routing reason
 SHIPPED_WITNESS = "T0.01"      # cheap real spec offered to the shipped path
 WORST_WITNESS = "XL.01"        # cpu<2h, 3 seeds: the largest legal child
+PROBE_DURATION_S = 100.0       # synthetic measurement for property 13
+
+
+def _runner_cpu_specs() -> list:
+    """The lane this meter gates: cpu specs the runner spawns as children.
+    cpu<48h is the detached lane (property 4's routing reason)."""
+    return [s for s in BY_ID.values()
+            if s.budget.value.startswith("cpu")
+            and s.budget.value != "cpu<48h"]
 
 
 def _yesterday() -> str:
@@ -164,7 +213,14 @@ def _experiment(seed: int) -> dict:
         # Gates, load injected so a busy co-tenant cannot decide them.
         worst = BY_ID[WORST_WITNESS]
         fresh_path = Path(td) / "fresh.json"
-        d = gate_cpu_child(worst, path=fresh_path, loadavg=0.0)
+        # NO FORECLOSURE is a property of the WORST CASE, so it is asserted
+        # against the empty ledger — the enum branch — not against whatever
+        # XL.01 happens to have measured. B4's projection may only make this
+        # easier; it must not be what makes it true.
+        empty_ledger = Path(td) / "empty_ledger.json"
+        empty_ledger.write_text(json.dumps({"results": {}}))
+        d = gate_cpu_child(worst, path=fresh_path, loadavg=0.0,
+                           ledger_path=empty_ledger)
         fresh_admits_worst = d.admitted and d.est_s == WORST_LEGAL_CHILD_S
 
         CpuBudget(fresh_path).charge("T0.33-drain", CPU_DAY_CEILING_S)
@@ -191,9 +247,8 @@ def _experiment(seed: int) -> dict:
 
         # No registered cpu spec is foreclosed by the ceiling's arithmetic.
         foreclosed = sorted(
-            s.id for s in BY_ID.values()
-            if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"
-            and spec_child_timeout_seconds(s) > CPU_DAY_CEILING_S)
+            s.id for s in _runner_cpu_specs()
+            if spec_child_timeout_seconds(s) > CPU_DAY_CEILING_S)
 
         # METRIC, not gate (68th audit B3): how many runner-lane cpu specs
         # the LIVE day would refuse right now. Reads the real accounting
@@ -201,10 +256,65 @@ def _experiment(seed: int) -> dict:
         # refusing work is the protection working, but it must be a number
         # somewhere, because the refused work never runs and never reports.
         live_remaining = CpuBudget().remaining_s()
-        n_foreclosed_now = sum(
-            1 for s in BY_ID.values()
-            if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"
-            and spec_child_timeout_seconds(s) > live_remaining)
+        n_foreclosed_now = len(foreclosed_now())
+        # The same count on the estimator B4 replaced, so the certificate
+        # carries what the change actually bought on the day it landed
+        # rather than a claim about it.
+        n_foreclosed_enum = sum(
+            1 for s in _runner_cpu_specs()
+            if spec_child_timeout_seconds(s) > live_remaining)
+        # …and the residual, named: how many of the still-foreclosed have no
+        # measurement to project from. B4 cannot help those, and if this ever
+        # falls below n_foreclosed_now the projection is failing on specs it
+        # DOES have evidence for.
+        fore_ids = set(foreclosed_now())
+        n_foreclosed_unmeasured = sum(
+            1 for s in _runner_cpu_specs()
+            if s.id in fore_ids and measured_child_seconds(s.id) is None)
+
+        # ── 12/13/14/15: the admission estimate ──────────────────────────
+        # 12. ONLY TIGHTENS, over the live registry against the real ledger.
+        est_above_enum = sorted(
+            s.id for s in _runner_cpu_specs()
+            if child_estimate_s(s)[0] > float(spec_child_timeout_seconds(s)))
+        projection_only_tightens = est_above_enum == []
+
+        # 14/15. The two fallback branches, exercised by DELETION and by
+        # CORRUPTION — never by trusting that the branch is reachable.
+        corrupt_ledger = Path(td) / "corrupt_ledger.json"
+        corrupt_ledger.write_bytes(b"{not json at all")
+        enum_only, enum_prov, corrupt_ok = True, True, True
+        for s in _runner_cpu_specs():
+            enum_s = float(spec_child_timeout_seconds(s))
+            e_est, e_prov = child_estimate_s(s, empty_ledger)
+            c_est, _c_prov = child_estimate_s(s, corrupt_ledger)
+            enum_only &= (e_est == enum_s)
+            enum_prov &= e_prov.startswith("ENUM")
+            corrupt_ok &= (c_est == enum_s)
+        empty_ledger_falls_back = bool(enum_only and enum_prov)
+        corrupt_ledger_fails_closed = bool(corrupt_ok)
+
+        # 13. THE PROJECTION BINDS, at a MID-RANGE value. A synthetic
+        # measurement, so the assertion is about the estimator and cannot
+        # flap on whatever XL.01 last happened to cost.
+        proj_ledger = Path(td) / "proj_ledger.json"
+        proj_ledger.write_text(json.dumps(
+            {"results": {WORST_WITNESS: {"duration_s": PROBE_DURATION_S}}}))
+        enum_worst = float(spec_child_timeout_seconds(worst))
+        proj_worst, prov_worst = child_estimate_s(worst, proj_ledger)
+        mid_path = Path(td) / "mid.json"
+        mid_remaining = (proj_worst + enum_worst) / 2.0
+        CpuBudget(mid_path).charge("T0.33-mid",
+                                   CPU_DAY_CEILING_S - mid_remaining)
+        d_proj = gate_cpu_child(worst, path=mid_path, loadavg=0.0,
+                                ledger_path=proj_ledger)
+        d_enum = gate_cpu_child(worst, path=mid_path, loadavg=0.0,
+                                ledger_path=empty_ledger)
+        projection_binds = (proj_worst < enum_worst
+                            and prov_worst.startswith("MEASURED")
+                            and d_proj.admitted
+                            and not d_enum.admitted
+                            and "day budget" in d_enum.reason)
 
         # One threshold, two languages.
         loop_src = (REPO / "scripts" / "ladder_loop.sh").read_text()
@@ -281,6 +391,13 @@ def _experiment(seed: int) -> dict:
         "cpu_foreclosed": foreclosed,
         "live_remaining_s": round(live_remaining, 2),
         "n_foreclosed_now": n_foreclosed_now,
+        "n_foreclosed_enum": n_foreclosed_enum,
+        "n_foreclosed_unmeasured": n_foreclosed_unmeasured,
+        "projection_only_tightens": projection_only_tightens,
+        "est_above_enum": est_above_enum,
+        "projection_binds": projection_binds,
+        "empty_ledger_falls_back": empty_ledger_falls_back,
+        "corrupt_ledger_fails_closed": corrupt_ledger_fails_closed,
         "loop_load_agrees": loop_load_agrees,
         "receipt_committable": receipt_committable,
         "wiring_ok": wiring_ok,
@@ -325,6 +442,11 @@ def _check(m: dict, c: dict):
             and m["detached_routed"] is True
             and m["overrun_marked"] is True
             and m["cpu_foreclosed"] == []
+            and m["projection_only_tightens"] is True
+            and m["est_above_enum"] == []
+            and m["projection_binds"] is True
+            and m["empty_ledger_falls_back"] is True
+            and m["corrupt_ledger_fails_closed"] is True
             and m["loop_load_agrees"] is True
             and m["receipt_committable"] is True
             and m["wiring_ok"] is True

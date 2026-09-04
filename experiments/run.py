@@ -530,13 +530,9 @@ def cmd_status(ledger: Ledger) -> int:
     # spec), so a foreclosed day produces no FAIL, no VOID and no number —
     # unless it is derived here. Live arithmetic, no persistence: the same
     # numbers gate_cpu_child computes at the moment it refuses.
-    from .cpu_budget import CPU_DAY_CEILING_S, CpuBudget
-    from .rtf import spec_child_timeout_seconds as _cpu_est
+    from .cpu_budget import CPU_DAY_CEILING_S, CpuBudget, foreclosed_now
     _cpu_rem = CpuBudget().remaining_s()
-    _cpu_fore = sorted(
-        s.id for s in BY_ID.values()
-        if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"
-        and _cpu_est(s) > _cpu_rem)
+    _cpu_fore = foreclosed_now()
     if _cpu_fore:
         _ids = " ".join(_cpu_fore[:8]) + (" …" if len(_cpu_fore) > 8 else "")
         print(f"  ! CPU DAY BUDGET: {CPU_DAY_CEILING_S - _cpu_rem:.0f}s of "
@@ -808,7 +804,19 @@ def ratchet_live(ledger: Ledger) -> dict:
                 "UNMEASURED, which is a fault and not a clean week")
         return t["net_arrivals"]
 
+    def _cpu_foreclosed_now():
+        # 69th audit B4, second half. A CPU refusal returns UNRECORDED by
+        # design (tenant protection is not a measurement of the spec), so
+        # until now a day that closed 35% of the CPU lane existed only as a
+        # line in a transient print — B3 of the 68th audit made it visible;
+        # this makes it REMEMBERED. A METRIC with no floor: a legitimately
+        # spent day SHOULD refuse things, and gating it at zero would forbid
+        # the protection working.
+        from .cpu_budget import foreclosed_now
+        return len(foreclosed_now())
+
     take("unreachable", _unreachable)
+    take("cpu_foreclosed_now", _cpu_foreclosed_now)
     take("claim_dead", _claim_dead_count)
     take("park_release_pairs", _park_release_pairs)
     take("champions_trigger_debt", _champions_trigger_debt)

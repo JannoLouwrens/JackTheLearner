@@ -6979,9 +6979,16 @@ EXPANSION: list[Spec] = [
          # after the doc was written. Text verbatim apart from this rename.
          hypothesis="Every CPU_LONG run debits a wall-clock budget, and the "
                     "ladder refuses to start when the box's load or the day's "
-                    "accumulated share would harm the tenants.",
-         falsified_by="A run proceeding past the budget, or a budget that reads "
-                      "the same whether or not runs happened.",
+                    "accumulated share would harm the tenants — estimating "
+                    "the child from the spec's own MEASURED last duration "
+                    "where the ledger has one and from the enum worst case "
+                    "where it does not, and never above that worst case, so "
+                    "the projection can only ever admit MORE than the "
+                    "estimator it replaced.",
+         falsified_by="A run proceeding past the budget, a budget that reads "
+                      "the same whether or not runs happened, or an "
+                      "admission estimate exceeding the child-kill allowance "
+                      "for any registered runner-lane cpu spec.",
          null_baseline="Today: only GPU hours are tracked (T0.12); the loop "
                        "checks instantaneous load once, at start.",
          metric="cpu_quota_enforced", budget=Budget.CPU, seeds=1,

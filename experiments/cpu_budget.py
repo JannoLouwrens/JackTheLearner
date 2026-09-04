@@ -18,10 +18,31 @@ Scope, stated honestly:
   - GPU-budget children are not charged: their wall clock is mostly waiting on
     a remote kernel, and billing waiting as box CPU would make the meter read
     harm where there is none. Their remote cost is T0.12's.
-  - `afford()` gates on the canonical worst case (`spec_child_timeout_seconds`
-    — the same arithmetic that kills the child), and `charge()` bills the wall
-    clock actually spent; like the GPU meter, an overrun past the ceiling is
-    OBSERVED with a mark, while the refusal stops new work from starting.
+  - `afford()` gates on `child_estimate_s` — the spec's own MEASURED last
+    child duration where the ledger has one, the enum worst case where it does
+    not — and `charge()` bills the wall clock actually spent; like the GPU
+    meter, an overrun past the ceiling is OBSERVED with a mark, while the
+    refusal stops new work from starting.
+
+Estimating on the enum instead of the measurement (69th audit B4): until
+2026-09-04 this gate refused on `spec_child_timeout_seconds` alone — the
+child-KILL allowance, which is deliberately the worst case a budget class may
+legally reach. Across the 108 runner-lane cpu specs that carry a recorded
+duration the median ratio of that allowance to the spec's actual cost is
+**257x** (`W0.DIAG` 0.02 s against 10800 s; `LG.02` 1.9 s against 54000 s),
+and the consequence was measured live: **3600 s of routine housekeeping —
+6.25% of the ceiling — foreclosed 53 of 152 CPU specs**, because any `cpu<2h`
+spec estimates at 54000 s and the day only ever holds 57600 s.
+
+The projection is bounded on the side that matters: `child_estimate_s` returns
+`min(enum, SAFETY x measured + overhead)`, so it can only ever LOWER an
+estimate. Admission is therefore never tighter than it was before this change,
+and the hard ceiling is untouched — `run.py` still kills the child at
+`spec_child_timeout_seconds`, so an admitted child's true worst case is exactly
+what it always was, and a projection that undershoots costs a MARKED overrun
+(the posture `admit_detached` already takes) rather than an unbounded run.
+`SAFETY` and the overhead are engineering choices, not measurements, and are
+declared as such at their definitions.
 
 Accounting ownership (68th audit B1): when two billers meter one resource,
 their charges must be DISJOINT, and the owner here is the OUTERMOST wrapper.
@@ -63,6 +84,29 @@ CPU_DAY_CEILING_S = 57600.0
 # Must equal `ladder_loop.sh`'s MAX_LOAD — one threshold, two languages;
 # T0.33 parses the shell file and fails if they drift apart.
 LOAD_CEILING = 6.0
+
+# ── The admission estimate (69th audit B4) ──────────────────────────────────
+# The ledger is the only per-spec record of what a child ACTUALLY cost:
+# `Result.duration_s`, the wall clock of `run_spec` inside the child.
+LEDGER_FILE = Path(__file__).parent / "ledger.json"
+
+# Two engineering constants, and they are NOT measurements — say so plainly,
+# because this file's own first law is that a number is claimed only by
+# something that could have failed:
+#   - CHILD_OVERHEAD_S is the one piece with data behind it. The gate meters
+#     the CHILD's wall (interpreter start + imports + run_spec) while the
+#     ledger records only run_spec's interior; the difference measured across
+#     the eight runner children billed on 2026-09-03/04 was 0.55 s (T0.34) to
+#     5.38 s (T0.33). 10 s is ~2x the largest observed.
+#   - PROJECTION_SAFETY covers run-to-run variance and implementation drift
+#     since the recorded run, and there is NO data for it here: the ledger
+#     keeps one duration per spec and its `history[]` entries carry none, so
+#     per-spec variance is unmeasured. 4x is a choice whose cost of being
+#     wrong is bounded by the enum clamp below and by the child-kill timeout,
+#     which this projection does not touch. If `history[]` ever carries
+#     durations, derive it instead of declaring it.
+PROJECTION_SAFETY = 4.0
+CHILD_OVERHEAD_S = 10.0
 
 
 def _budget_path() -> Path:
@@ -150,8 +194,76 @@ class CpuBudget:
             os.replace(tmp, self.path)
 
 
+_DURATION_CACHE: dict = {}    # (path, mtime, size) -> {spec_id: duration_s}
+
+
+def _durations(ledger_path: Path | None = None) -> dict:
+    """`{spec_id: duration_s}` from a ledger, cached on (path, mtime, size).
+
+    `foreclosed_now` estimates every registered cpu spec, so an uncached read
+    parses the 1 MB ledger 152 times per call — 1.5 s inside `run status`, and
+    quadratic the first time T0.33 asked for the foreclosed SET per spec.
+    Keyed on mtime+size rather than path alone so a ledger written mid-process
+    (the runner does exactly that) is re-read.
+    """
+    path = Path(ledger_path) if ledger_path else LEDGER_FILE
+    try:
+        st = path.stat()
+        key = (str(path), st.st_mtime_ns, st.st_size)
+    except OSError:
+        return {}
+    hit = _DURATION_CACHE.get(key)
+    if hit is None:
+        try:
+            rows = json.loads(path.read_text())["results"]
+            hit = {sid: float(r["duration_s"]) for sid, r in rows.items()
+                   if isinstance(r, dict) and r.get("duration_s")}
+        except Exception:
+            hit = {}
+        if len(_DURATION_CACHE) > 8:   # bounded; superseded revisions age out
+            _DURATION_CACHE.clear()
+        _DURATION_CACHE[key] = hit
+    return hit
+
+
+def measured_child_seconds(spec_id: str,
+                           ledger_path: Path | None = None) -> float | None:
+    """The spec's last recorded child duration, or None if there is no
+    measurement to project from.
+
+    Fails to None on ANY read problem — a missing, truncated or unparseable
+    ledger falls back to the enum, which is the RESTRICTIVE side. (T0.12's
+    "a meter that fails open is not a limit" points the other way for a
+    reading; here the projection's failure mode is to keep today's behaviour,
+    so failing closed is the same instinct pointed correctly.)
+    """
+    d = _durations(ledger_path).get(spec_id)
+    return d if d and d > 0.0 else None
+
+
+def child_estimate_s(spec, ledger_path: Path | None = None) -> tuple:
+    """`(seconds, provenance)` — the admission estimate for one runner child.
+
+    MEASURED when the ledger carries a duration for this spec; ENUM otherwise.
+    Clamped at the enum by construction, so the projection may only TIGHTEN an
+    estimate and this gate can never refuse something it would have admitted
+    before B4 (T0.33 property 12 asserts that over the whole registry).
+    """
+    enum_s = float(spec_child_timeout_seconds(spec))
+    measured = measured_child_seconds(spec.id, ledger_path)
+    if measured is None:
+        return enum_s, "ENUM (no recorded duration to project from)"
+    proj = PROJECTION_SAFETY * measured + CHILD_OVERHEAD_S
+    if proj >= enum_s:
+        return enum_s, (f"ENUM (projection from {measured:.2f}s reaches the "
+                        f"worst case)")
+    return round(proj, 2), (f"MEASURED {measured:.2f}s x{PROJECTION_SAFETY:g} "
+                            f"+ {CHILD_OVERHEAD_S:g}s")
+
+
 def gate_cpu_child(spec, *, path: Path | None = None,
-                   loadavg: float | None = None) -> CpuDecision:
+                   loadavg: float | None = None,
+                   ledger_path: Path | None = None) -> CpuDecision:
     """Admit or refuse one runner child BEFORE it spawns.
 
     Refusal writes no ledger row — tenant protection is not a measurement of
@@ -167,7 +279,7 @@ def gate_cpu_child(spec, *, path: Path | None = None,
         return CpuDecision(False, 0.0, 0.0, load,
                            "cpu<48h is the detached lane "
                            "(scripts/launch_detached.sh), not a runner child")
-    est = float(spec_child_timeout_seconds(spec))
+    est, prov = child_estimate_s(spec, ledger_path)
     if load > LOAD_CEILING:
         return CpuDecision(False, est, CpuBudget(path).remaining_s(), load,
                            f"load {load:.2f} above {LOAD_CEILING} — leaving "
@@ -175,10 +287,32 @@ def gate_cpu_child(spec, *, path: Path | None = None,
     remaining = CpuBudget(path).remaining_s()
     if est > remaining:
         return CpuDecision(False, est, remaining, load,
-                           f"day budget: worst-case child {est:.0f}s exceeds "
-                           f"remaining {remaining:.0f}s of "
+                           f"day budget: projected child {est:.0f}s "
+                           f"[{prov}] exceeds remaining {remaining:.0f}s of "
                            f"{CPU_DAY_CEILING_S:.0f}s")
-    return CpuDecision(True, est, remaining, load, "within the day budget")
+    return CpuDecision(True, est, remaining, load,
+                       f"within the day budget [{prov}]")
+
+
+def foreclosed_now(path: Path | None = None,
+                   ledger_path: Path | None = None) -> list:
+    """The registered runner-lane cpu specs the LIVE day would refuse right
+    now, sorted. One source for three readers — `run status`'s visibility
+    block, `run status`'s ratchet counter, and T0.33's `n_foreclosed_now`
+    metric — because a refusal returns UNRECORDED by design and three
+    independent copies of this arithmetic is the T0.14 pasted-constant scar.
+
+    Monotone within a calendar day: `used_s` only grows and `child_estimate_s`
+    does not depend on the clock, so the live reading IS the day's peak so
+    far. It falls to 0 at midnight, and that MOVED line is the day rolling
+    over, not an instrument fault.
+    """
+    from .registry import BY_ID
+    remaining = CpuBudget(path).remaining_s()
+    return sorted(
+        s.id for s in BY_ID.values()
+        if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"
+        and child_estimate_s(s, ledger_path)[0] > remaining)
 
 
 def charge_cpu_child(spec_id: str, seconds: float,
