@@ -497,3 +497,60 @@ there is no other state to unwind.
 Evidence: the 30th–33rd audit table in the D13 entry; `scripts/overseer.sh`
 (noop_eligible + the completed-audit state stamp); the measured ~1 pt/audit
 spend attribution the entry carries.
+
+## `run blocked` / `repaired_by` — RESOLVED AS NOT-THE-OWNER'S (ruled 2026-09-04, overseer 69th audit B3; implemented the same morning, builder `9e847cf`)
+
+**Why this entry exists at all, and it is not the same reason as the entries
+above it.** Nothing was deadlocked and no default fired. This is a disposition
+that had **nowhere to live**: the Review addressed the question to the owner on
+a page that is rewritten daily, the overseer answered it on a page that is
+rewritten every six hours, and the builder implemented it — so an ask reached
+the owner's desk, was disposed correctly, and left no durable record on any
+document either of them reads. `experiments/decisions.py` grew
+`VANISHED-OWNER-ASK` on 2026-09-04 and this was its single live positive; this
+entry is the prescribed repair, not paperwork about paperwork.
+
+**The question**, verbatim from `docs/PROGRESS.md`, Review 2026-09-03
+(`f529ab1`), `FOR THE OWNER` item 3:
+
+> ***"`run blocked` cannot see the project's largest unblock."*** `T2.01`
+> blocks 38 specs; its repair runs through `D1.0`; no spec declares
+> `depends_on: D1.0`, so the ranker scores that edge at zero and the 60th audit
+> had to route the work by hand. **My recommendation: do NOT add the edge to
+> the registry** — it would make `T2.01` unreachable until `D1.0` passes and
+> would drift its certificate. Instead the ranker should read a declared
+> `repaired_by` field that carries mass without carrying blocking semantics.
+> *"That is a real design change to `run blocked`, so it is yours to authorise,
+> not mine to make."*
+
+**The ruling — it is a MEANS question, so it was never the owner's.** The
+overseer's 69th audit, `FOR THE BUILDER` B3: the surviving option *"adds a
+**reporting** edge that carries transitive-block mass without blocking
+semantics, changes no `depends_on`, no verdict, no gate and no certificate, and
+the Review itself already ruled out the variant that would change semantics"*.
+`SYSTEM.md`'s third law governs a fork whose dangerous arm is already
+eliminated: the loop writes it, it does not ask.
+
+**Implemented and verified at `9e847cf`**, and the authorisation rests entirely
+on the field staying reporting-only: `Spec.repaired_by` is read by `cmd_blocked`
+alone — never by `Ledger.unsatisfied`, `_terminal_blockers`, `coverage` or any
+gate. `run next`, `run status` and `coverage` are byte-identical to HEAD-before
+and `unreachable` stays 91, at floor. First declaration `T2.01.repaired_by =
+["D1.0"]`, which prints **`D1.0 = VOID  carries frees 35  (blocks 38)`** — a
+number that existed nowhere before, with the repair spec's own VOID health
+printed beside it so leverage cannot read as permission.
+
+**Losers recorded:** (a) `T2.01.depends_on += ["D1.0"]` — the Review eliminated
+it itself; it makes `T2.01` unreachable and drifts its certificate; (b) leave
+the edge in prose — the status quo the 60th audit had to work around by hand,
+and the shape `HR.5`→`HR.6` and `D19`→`HR.1` both cost an iteration each;
+(c) escalate to the owner and wait — the D1 disease, twenty days for a question
+no owner input could improve.
+
+**To reverse:** revert `9e847cf`; `repaired_by` defaults to empty and every
+ranking returns to its previous output, because nothing else reads the field.
+
+Evidence: `docs/OVERSIGHT.md` 69th audit B3; `experiments/run.py`
+`cmd_blocked`/`_check_ranker`/`_check_repair_edges`; `docs/LOOP_JOURNAL.md`
+2026-09-04 08:xx; `experiments/decisions.py` `VANISHED-OWNER-ASK`, whose live
+reading this entry moves 1 → 0.

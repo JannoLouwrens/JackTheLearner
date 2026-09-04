@@ -110,6 +110,51 @@ it, and the honest place to catch them is a pre-commit check on the firing diff.
 Two of three clauses remain on the author's word. Do not write a prose scanner
 for them; write the diff check.
 
+THE SECOND DOCUMENT, AND WHY THIS FILE NOW READS TWO (2026-09-04, 69th audit
+B2). Everything above polices `DECISIONS_NEEDED.md` — the file where an
+owner-ask has a `class`, a `default` and a `decide_by`. It says nothing about
+asks that never reach that file. On 2026-09-03 the Review published its largest
+strategic recommendation ("W1 stops being a queue row and becomes the project's
+stated stage") into `docs/PROGRESS.md`, which is CURRENT-STATE BY DESIGN: the
+next Review rewrote the page and the recommendation was gone, unanswered, at 24
+hours old. `decisions --check` printed `ratchet ok (0/10 undeclared)` — true of
+the file it read, false of the system. An unrouted owner-ask is strictly worse
+than an `UNDECLARED` one: the deadlock is invisible as well as unarmed.
+
+    UNROUTED-OWNER-ASK  - an item under `## FOR THE OWNER` in PROGRESS.md that
+                          reaches no entry in DECISIONS_NEEDED/RESOLVED.
+    VANISHED-OWNER-ASK  - an item that was on the PREVIOUS committed page, is
+                          not on this one, and never reached one either.
+
+TWO THINGS ABOUT THE CLASSIFIER, both of which are the reason it looks blunt.
+
+**It does not try to decide which items are asks.** The audit that ordered this
+check hand-classified the same page twice, one paragraph apart, and disagreed
+with itself: a "here is the order I will take Sunday in" item counted as an ask
+on 2026-09-03 and the same item counted as scheduling — not an ask — on 09-04.
+If the author of the rule cannot apply it consistently to four paragraphs, a
+regex will not either, and this file has already recorded twice what happens
+when a scanner infers a document's intent. So EVERY numbered item is an ask
+until something says otherwise, and the something is a DECLARATION:
+
+    NO-DECISION: liveness report, there is nothing here to rule on
+
+Silence is reported; exemption is written down with a reason. That direction is
+deliberate and it is the 2026-09-04 lesson one layer up — a two-set
+classification asserted on one side is not a partition, and the SILENT side is
+the dangerous one. The cost of the blunt rule is that the Review annotates its
+own status paragraphs once each; the cost of the clever one is a recommendation
+worth a project stage evaporating in 24 hours, which already happened.
+
+**It matches by QUOTATION, not by similarity.** An ask is routed when a
+6-token verbatim span of it appears in `DECISIONS_NEEDED.md` or
+`DECISIONS_RESOLVED.md`, and it is still on the page when such a span appears in
+today's `PROGRESS.md`. That is not a heuristic chosen for convenience: quoting
+the recommendation into the decision entry is what the overseer actually DID
+when it lifted this exact scar onto the owner's desk as `D21`, blockquote and
+commit citation included. The check therefore rewards the repair the system
+already performs, and there is no similarity threshold to tune.
+
 AND THIS FILE IS ITSELF A CAPABILITY CLAIM, SO IT IS NOW UNDER THE LEDGER
 (2026-08-30, T0.28). For six days `SYSTEM.md` asserted an enforcement this file
 did not perform, and the only thing standing behind the code was a fixture its
@@ -129,11 +174,15 @@ from __future__ import annotations
 
 import datetime as _dt
 import re
+import subprocess
 import sys
 import textwrap as _textwrap
 from pathlib import Path
 
-DOC = Path(__file__).resolve().parent.parent / "docs" / "DECISIONS_NEEDED.md"
+_REPO = Path(__file__).resolve().parent.parent
+DOC = _REPO / "docs" / "DECISIONS_NEEDED.md"
+PROGRESS = _REPO / "docs" / "PROGRESS.md"
+RESOLVED = _REPO / "docs" / "DECISIONS_RESOLVED.md"
 
 # Start-of-line only. `coverage.py` learned this the expensive way: "nest" inside
 # "ho-nest" credited a shelter commitment, so an inline mention must never be
@@ -283,6 +332,163 @@ def blast_radius(default_text: str, by_id=None) -> set:
     return {i for i in _SPEC_ID.findall(default_text or "") if i in by_id}
 
 
+# ── the owner's OTHER desk: `## FOR THE OWNER` in docs/PROGRESS.md ──────────
+#
+# Start-of-line only, like every declaration in this repo. An item is a numbered
+# markdown entry; it runs until the next numbered entry or the end of the
+# section. `---` and the next `## ` both close the section, because the Review
+# writes both.
+_OWNER_HEADING = re.compile(r"^##\s+FOR THE OWNER\s*$", re.M)
+_ITEM = re.compile(r"^(\d{1,2})\.\s+(.*)$")
+_SECTION_END = re.compile(r"^(##\s|---\s*$)")
+
+# The exemption, and it must carry a reason: an escape hatch nobody has to
+# justify is a checkbox, and a checkbox is how `RUNNER_OUTPUTS` and the P10
+# partition both went one-sided.
+_NO_DECISION = re.compile(r"^\s*NO-DECISION:\s*(\S.*?)\s*$", re.M)
+
+# A decision id as it is cited in prose. `D1`..`D999`; deliberately narrower
+# than `_SPEC_ID` so "D" alone or a word starting with D cannot look like a cite.
+#
+# THE LOOKAHEAD IS LOAD-BEARING AND IT WAS FOUND BY THE FIXTURE'S LIVE HALF.
+# `D1.0` is a SPEC — the control-path bakeoff — and `\bD1\b` matches inside it,
+# because the `.` is a word boundary. Without `(?!\.\d)` the 2026-09-03 ask
+# "`run blocked` cannot see the project's largest unblock" read as ROUTED TO
+# `D1`, purely because its prose mentioned `D1.0` twice, and the one true
+# positive this check was built for went silently quiet. That is this file's own
+# `_DECIDE` scar with the numbers swapped: an inline mention must never be able
+# to look like a declaration.
+_CITE = re.compile(r"\bD(\d{1,3})\b(?!\.\d)")
+
+# Verbatim span length for the quotation match. Six tokens is long enough that
+# ordinary English does not collide (the live corpus is ~400 KB and produces no
+# accidental match between any pair of the four live items) and short enough
+# that a re-worded paragraph keeping one clause still reads as the same item.
+SHINGLE_N = 6
+
+# Ratchets, one per class, in the BASELINE_UNDECLARED idiom: set to the LIVE
+# reading on the day the check shipped, may shrink, may never grow. A guard that
+# fails everywhere on day one is one nobody keeps green.
+#
+# UNROUTED was 3 of 4 items on the 2026-09-04 page. Two of the three are the
+# Review's standing status paragraphs (Sunday order; organ liveness) and shrink
+# the moment it writes `NO-DECISION:` on them; the third is the draft-then-
+# ratify recommendation, which is a real unrouted ask — the SAME defect `D21`
+# was created for, recurring the next day on the same page.
+BASELINE_UNROUTED_ASKS = 3
+# VANISHED was 1 (the 09-03 `run blocked` recommendation, which the overseer
+# ruled builder-work and the builder implemented, with no durable record on any
+# owner-readable page) and is 0 once that disposition is recorded.
+BASELINE_VANISHED_ASKS = 0
+
+
+def _tokens(text: str) -> list:
+    """Markdown-blind lowercase word tokens. Backticks, bold, punctuation and
+    hyphens all vanish, so `**\\`d10-*\\` gate rows**` and "d10 gate rows" are the
+    same six words — the Review reformats constantly and formatting is not
+    content."""
+    return re.sub(r"[^a-z0-9]+", " ", (text or "").lower()).split()
+
+
+def _shingles(text: str, n: int = SHINGLE_N) -> set:
+    t = _tokens(text)
+    return {" ".join(t[i:i + n]) for i in range(len(t) - n + 1)}
+
+
+def owner_asks(progress_text: str) -> list:
+    """The numbered items under `## FOR THE OWNER`, in order.
+
+    `{n, text, lead, exempt, reason, cites, shingles}`. No attempt is made to
+    judge which items are questions — see the module docstring; the tool that
+    ordered this check could not do it consistently either.
+    """
+    m = _OWNER_HEADING.search(progress_text or "")
+    if not m:
+        return []
+    lines = progress_text[m.end():].splitlines()
+    items: list = []
+    cur: dict | None = None
+    for ln in lines:
+        if _SECTION_END.match(ln):
+            break
+        head = _ITEM.match(ln)
+        if head:
+            cur = {"n": int(head.group(1)), "lines": [head.group(2)]}
+            items.append(cur)
+        elif cur is not None:
+            cur["lines"].append(ln)
+    out = []
+    for it in items:
+        text = "\n".join(it["lines"])
+        ex = _NO_DECISION.search(text)
+        bold = re.search(r"\*\*(.+?)\*\*", text, re.S)
+        lead = re.sub(r"\s+", " ", (bold.group(1) if bold else text)).strip()
+        out.append({"n": it["n"], "text": text, "lead": lead[:96],
+                    "exempt": bool(ex), "reason": ex.group(1) if ex else "",
+                    "cites": {f"D{d}" for d in _CITE.findall(text)},
+                    "shingles": _shingles(text)})
+    return out
+
+
+def _decision_ids(*texts: str) -> set:
+    """`D` ids that actually have an entry — a header, at the start of a line.
+    An id cited in prose that resolves to no entry is a typo, exactly as an
+    unresolvable spec id is in `blast_radius`."""
+    ids: set = set()
+    for t in texts:
+        for line in (t or "").splitlines():
+            if line.startswith("##"):
+                mm = _CITE.search(line[:24])
+                if mm:
+                    ids.add(f"D{mm.group(1)}")
+    return ids
+
+
+def _reaches_a_desk(ask: dict, ids: set, corpus: set) -> bool:
+    """True when this ask has a durable home: it cites a decision that exists,
+    or a verbatim span of it is quoted into one of the decision documents. The
+    second half is the repair the overseer performed by hand for `D21`."""
+    return bool(ask["cites"] & ids) or bool(ask["shingles"] & corpus)
+
+
+def owner_ask_findings(progress_text: str, prev_progress_text: str | None,
+                       needed_text: str, resolved_text: str = "") -> list:
+    """`[(kind, key, why)]` for the two owner-ask classes.
+
+    `prev_progress_text is None` means git could not supply a baseline, and an
+    absent baseline must never manufacture a violation — `review_queue.py`'s
+    rule for `VANISHED`, for the same reason.
+    """
+    ids = _decision_ids(needed_text, resolved_text)
+    corpus = _shingles(needed_text) | _shingles(resolved_text)
+    out = []
+
+    for a in owner_asks(progress_text):
+        if a["exempt"] or _reaches_a_desk(a, ids, corpus):
+            continue
+        out.append(("UNROUTED-OWNER-ASK", f"PROGRESS #{a['n']}",
+                    f"{a['lead']} — on the owner's page, in no decision file: "
+                    "no class, no default, no decide_by, and the page is "
+                    "rewritten daily. Repair: route it (quoting it, as D21 "
+                    "does) or declare `NO-DECISION: <reason>`"))
+
+    if prev_progress_text is None:
+        return out
+    here = _shingles(progress_text)
+    for a in owner_asks(prev_progress_text):
+        if a["exempt"] or a["shingles"] & here:
+            continue                       # answered-shape, or still on the page
+        if _reaches_a_desk(a, ids, corpus):
+            continue
+        out.append(("VANISHED-OWNER-ASK", f"PROGRESS(prev) #{a['n']}",
+                    f"{a['lead']} — was on the previous committed page, is not "
+                    "on this one, and reached no decision file. An ask that "
+                    "rolls off a current-state page is not an ask that was "
+                    "answered. Repair: record its disposition in "
+                    "DECISIONS_NEEDED.md or DECISIONS_RESOLVED.md"))
+    return out
+
+
 def safety_hazards(decls: dict, candidates: list, rows=None, by_id=None) -> list:
     """`[(decision_id, commitment, [claim ids])]` — commitments whose entire
     live falsifiable surface sits inside one armed default's blast radius.
@@ -322,7 +528,8 @@ def safety_hazards(decls: dict, candidates: list, rows=None, by_id=None) -> list
 
 
 def audit(text: str, today: _dt.date, rows_for_safety=None,
-          by_id=None) -> tuple[list, list]:
+          by_id=None, progress_text=None, prev_progress_text=None,
+          resolved_text: str = "") -> tuple[list, list]:
     """Return (violations, rows). A violation blocks; a row is for the report.
 
     `rows_for_safety`/`by_id` are injection points for the safety pass and
@@ -385,6 +592,14 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
                            "nothing falsifiable behind it. Repair: REGISTER a "
                            "successor claim spec (coverage.py's rule), never park "
                            "or quiet"))
+
+    # The owner's other desk. `progress_text is None` means the caller is
+    # driving this function on a document pair it built itself (every T0.28
+    # fixture, and the pre-2026-09-04 organ), so the pass simply does not run —
+    # an absent input must never manufacture a violation.
+    if progress_text is not None:
+        violations.extend(owner_ask_findings(progress_text, prev_progress_text,
+                                             text, resolved_text))
     return violations, rows
 
 
@@ -405,6 +620,26 @@ BLOCKING = ("MEANS-ESCALATED", "CLASS", "DATE", "SAFETY-CLAIM-DEAD",
             "NO-DEFAULT")
 
 
+# The ratcheted classes: `{kind: baseline}`. Each may shrink and may never grow.
+# They are counted rather than blocked because each is a BACKLOG — a queue, not
+# a wall — and because a wall here would forbid a legal move (the Review is
+# allowed to write a status paragraph; the owner is allowed to be slow).
+RATCHETED = {
+    "UNDECLARED": BASELINE_UNDECLARED,
+    "UNROUTED-OWNER-ASK": BASELINE_UNROUTED_ASKS,
+    "VANISHED-OWNER-ASK": BASELINE_VANISHED_ASKS,
+}
+
+
+def ratchet_debt(violations: list) -> dict:
+    """`{kind: (count, baseline)}` for every ratcheted class, always all of
+    them — including the zeroes. A counter that only appears when it is nonzero
+    cannot be seen to be at floor, and this repo has twice paid for a number
+    that was invisible while it was fine."""
+    return {k: (sum(1 for kind, _, _ in violations if kind == k), base)
+            for k, base in RATCHETED.items()}
+
+
 def check_rc(violations: list) -> int:
     """The `--check` exit code, as a function of the violations alone.
 
@@ -412,8 +647,7 @@ def check_rc(violations: list) -> int:
     than a re-implementation of it. A test that reproduces the gate's logic
     proves the copy agrees with itself.
     """
-    undeclared = sum(1 for k, _, _ in violations if k == "UNDECLARED")
-    if undeclared > BASELINE_UNDECLARED:
+    if any(n > base for n, base in ratchet_debt(violations).values()):
         return 1
     return 1 if any(v[0] in BLOCKING for v in violations) else 0
 
@@ -519,12 +753,136 @@ def _safety_fixture() -> None:
     assert blast_radius("PARK BA.02 and ZZ.99", by_id) == {"BA.02"}
 
 
+def _previous_page(path: Path) -> str | None:
+    """The last committed version of `path` that is not the one on disk now.
+
+    Same channel as `review_queue._prev_revision` and for the same reason: git
+    is the one baseline a working-tree edit cannot reach. `None` when git cannot
+    say — a brand-new file, no repo, a detached environment — and `None` makes
+    the git-baselined class simply not fire.
+
+    "Not the one on disk now" matters: `PROGRESS.md` is rewritten wholesale by
+    the Review, so the interesting comparison is against the PREVIOUS Review's
+    page, which is HEAD's version when the tree is dirty and HEAD~ when it is
+    clean. Taking `HEAD:` unconditionally would compare the page to itself on
+    every committed run — a baseline that is always identical is not a baseline.
+    """
+    try:
+        rel = path.relative_to(_REPO).as_posix()
+        log = subprocess.run(["git", "log", "-3", "--format=%H", "--", rel],
+                             cwd=_REPO, capture_output=True, text=True, timeout=20)
+        if log.returncode != 0:
+            return None
+        here = path.read_text() if path.exists() else ""
+        for sha in log.stdout.split():
+            r = subprocess.run(["git", "show", f"{sha}:{rel}"], cwd=_REPO,
+                               capture_output=True, text=True, timeout=20)
+            if r.returncode == 0 and r.stdout != here:
+                return r.stdout
+    except Exception:
+        return None
+    return None
+
+
+def _ask_fixture() -> None:
+    """The planted positives for the two owner-ask classes, on the real path.
+
+    Not invented: item 2 IS the 2026-09-03 Review's W1 recommendation, which
+    left the page unanswered at 24 hours old and had to be lifted onto the
+    owner's desk by hand as `D21`. Both directions are asserted — the loud one
+    and the quiet one — because a scanner that has only been seen firing is half
+    tested, and this repo's own `RUNNER_OUTPUTS` and `T0.17 P10` scars are both
+    one-sided partitions that stayed green while saying nothing.
+    """
+    yesterday = """
+## FOR THE OWNER
+
+1. **Sunday is oversubscribed and here is the order I will take it in.** Six
+   rows come due on the same run that owes Part 2.
+
+2. **My recommendation: W1 stops being a queue row and becomes the project's
+   stated stage.** This is the strategic fork.
+
+3. **Organ liveness, all green.** builder 06:07, overseer 06:37, no organ is
+   silent.
+   NO-DECISION: liveness report, nothing here to rule on
+
+---
+"""
+    today = """
+## FOR THE OWNER
+
+1. **Sunday is oversubscribed and here is the order I will take it in.** The
+   two gate rows first, then the rest.
+
+2. **The meter's input, measured rather than argued.** See `D20`.
+
+3. **A brand-new ask with nowhere to live.** Nothing points at this one.
+
+## NEXT SECTION
+4. **Not an owner ask at all — outside the section.** Must be invisible.
+"""
+    needed = "## D20 — what should the ceiling count?\n"
+    got = owner_ask_findings(today, yesterday, needed)
+    kinds = {(k, key.split("#")[1]) for k, key, _ in got}
+
+    # UNROUTED: item 3 only. Item 1 is quoted nowhere but is still on the page —
+    # that is not what UNROUTED means, and it fires anyway, so assert it does:
+    # a status paragraph the Review has not annotated IS the reported state.
+    assert ("UNROUTED-OWNER-ASK", "1") in kinds, got     # unannotated: reported
+    assert ("UNROUTED-OWNER-ASK", "3") in kinds, got     # the new one
+    assert ("UNROUTED-OWNER-ASK", "2") not in kinds, got  # cites a live D20
+    assert ("UNROUTED-OWNER-ASK", "4") not in kinds, got  # outside the section
+
+    # VANISHED: yesterday's item 2 and only it. Item 1 survives by quotation
+    # ("oversubscribed and here is the order i will take it in") though the
+    # paragraph was rewritten; item 3 declared itself exempt.
+    assert ("VANISHED-OWNER-ASK", "2") in kinds, got
+    assert not [k for k in kinds if k[0] == "VANISHED-OWNER-ASK" and k[1] != "2"], got
+
+    # And it must go quiet for the RIGHT reason: quoting the vanished ask into a
+    # decision document silences it — the repair `D21` actually performed —
+    # while deleting the ask from the record does NOT, because the previous page
+    # is git and nothing a later edit does can reach it.
+    routed = needed + ("> *\"My recommendation: W1 stops being a queue row and "
+                       "becomes the project's stated stage.\"*\n")
+    assert not [k for k in owner_ask_findings(today, yesterday, routed)
+                if k[0] == "VANISHED-OWNER-ASK"], "quoting must silence it"
+
+    # An id cited in prose that resolves to no entry is a typo, not a route —
+    # the `blast_radius` rule, applied to decisions instead of specs.
+    assert [k for k, _, _ in owner_ask_findings(
+        "## FOR THE OWNER\n\n1. **See `D99`.** It does not exist.\n",
+        None, needed)] == ["UNROUTED-OWNER-ASK"]
+
+    # AND A SPEC ID IS NOT A DECISION CITE. `D1.0` contains `D1`, `D20` does
+    # not contain `D2`. The first of those silenced the live true positive; the
+    # second would silence one tomorrow. Both directions, on the real path.
+    spec_cite = ("## FOR THE OWNER\n\n1. **`run blocked` cannot see it.** The "
+                 "repair runs through `D1.0`; nothing declares that edge.\n")
+    assert [k for k, _, _ in owner_ask_findings(
+        spec_cite, None, "## D1 — the control path\n")] == ["UNROUTED-OWNER-ASK"]
+    assert not owner_ask_findings(
+        "## FOR THE OWNER\n\n1. **See `D20`.**\n", None, needed)
+
+    # No baseline must never manufacture a violation (review_queue's rule), and
+    # a page with no FOR THE OWNER section is not a page full of hidden asks.
+    assert not [k for k, _, _ in owner_ask_findings(today, None, needed)
+                if k == "VANISHED-OWNER-ASK"]
+    assert owner_asks("## SOMETHING ELSE\n\n1. **x**\n") == []
+
+
 def main(argv: list[str]) -> int:
     _fixture()
     _safety_fixture()
+    _ask_fixture()
     text = DOC.read_text()
     today = _dt.date.today()
-    violations, rows = audit(text, today)
+    violations, rows = audit(
+        text, today,
+        progress_text=PROGRESS.read_text() if PROGRESS.exists() else None,
+        prev_progress_text=_previous_page(PROGRESS),
+        resolved_text=RESOLVED.read_text() if RESOLVED.exists() else "")
 
     print(f"\nOpen decisions — {DOC.relative_to(DOC.parent.parent)}\n")
     if rows:
@@ -551,17 +909,21 @@ def main(argv: list[str]) -> int:
             print(f"       {why}")
         print()
 
-    undeclared = sum(1 for k, _, _ in violations if k == "UNDECLARED")
+    debt = ratchet_debt(violations)
     if "--check" in argv:
         rc = check_rc(violations)          # the gate's verdict, computed once
-        if undeclared > BASELINE_UNDECLARED:
-            print(f"  RATCHET BROKEN: {undeclared} undeclared open decisions, "
-                  f"baseline {BASELINE_UNDECLARED}. It may shrink, never grow.\n")
+        broken = {k: v for k, v in debt.items() if v[0] > v[1]}
+        if broken:
+            for k, (n, base) in sorted(broken.items()):
+                print(f"  RATCHET BROKEN: {n} {k}, baseline {base}. "
+                      "It may shrink, never grow.")
+            print()
         elif rc:
             blocking = [v for v in violations if v[0] in BLOCKING]
             print(f"  {len(blocking)} hard violation(s) — see above.\n")
         else:
-            print(f"  ratchet ok ({undeclared}/{BASELINE_UNDECLARED} undeclared).\n")
+            print("  ratchet ok (" + ", ".join(
+                f"{n}/{base} {k.lower()}" for k, (n, base) in debt.items()) + ").\n")
         return rc
     return 0
 

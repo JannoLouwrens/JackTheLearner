@@ -64,7 +64,7 @@ SPEC_ID = "T0.28"
 # hashing playground.py; T0.21 hashing coverage.py).
 IMPL_DEPS = ["experiments/decisions.py"]
 
-N_PROPERTIES = 10
+N_PROPERTIES = 12
 
 # The pre-2026-08-30 blocking set, verbatim. `NO-DEFAULT` is absent — that is
 # the hole, not an abbreviation.
@@ -153,6 +153,66 @@ FIXTURE_BY_ID = {i: 1 for i in ("BA.01", "BA.02", "BA.03", "T2.01",
                                 "SM.02", "SM.03")}
 
 
+# ── the owner's OTHER desk (2026-09-04). Real pages, reduced to the items. ──
+#
+# `docs/PROGRESS.md` is CURRENT-STATE BY DESIGN: the Review rewrites it whole,
+# every run. These two are the 09-03 and 09-04 `FOR THE OWNER` sections with
+# each item cut to the clause that carries it. Item 2 of the 09-03 page is the
+# known-positive and it is an event, not an invention — that recommendation
+# vanished unanswered at 24 hours old and the overseer lifted it onto the
+# owner's desk by hand as `D21` the next morning.
+PAGE_0903 = """
+## FOR THE OWNER
+
+1. **Sunday 2026-09-06 is oversubscribed, and I am telling you the order I will
+   take it in rather than discovering it at turn 100.** Six OPEN queue rows come
+   due that day, on the same run that owes Part 2.
+
+2. **The world is now the measured bottleneck on six independent instruments.**
+   **My recommendation: W1 stops being a queue row and becomes the project's
+   stated stage.** This is the strategic fork; the `D1.0` gate is a detail
+   beside it.
+
+3. **`run blocked` cannot see the project's largest unblock.** `T2.01` blocks 38
+   specs; its repair runs through `D1.0`; no spec declares `depends_on: D1.0`.
+   That is a real design change to `run blocked`, so it is yours to authorise.
+
+4. **Organ liveness, all green.** builder 06:07, overseer 06:37, field watch
+   08-31 05:53 (Mondays — next fire 09-07, inside cadence). No organ is silent.
+"""
+
+PAGE_0904 = """
+## FOR THE OWNER
+
+1. **THE FORK, and it is new: design throughput is now the binding constraint.**
+   My recommendation: let the builder DRAFT redesigns; keep ratification here.
+
+2. **`D20`'s input, measured rather than argued.** The CPU day-meter's first
+   full day billed 5,906.8 s and every line item is a re-buy.
+
+3. **Sunday 2026-09-06, order unchanged from yesterday's page.** Six OPEN queue
+   rows come due that day, on the same run that owes Part 2.
+
+4. **Organ liveness, all green.** builder 06:17, overseer 06:37, field watch
+   08-31 05:53 (Mondays — next fire 09-07, inside cadence). No organ is silent.
+
+---
+"""
+
+# The decision file the fixture resolves cites and quotations against. `D20`
+# exists; `D21` exists and QUOTES the 09-03 recommendation, which is exactly the
+# repair the overseer performed — quoting is the match, so the check rewards the
+# thing the system already does.
+NEEDED_ASKS = """
+## D20 — what should the CPU day-ceiling count? (2026-09-04, overseer)
+
+## D21 — the Review has recommended that W1 stop being a queue row (2026-09-04)
+
+> *"My recommendation: W1 stops being a queue row and becomes the project's
+> stated stage."* — docs/PROGRESS.md, Review 2026-09-03 (`f529ab1`)
+"""
+
+
 def _row(commitment: str, kinds: dict, n_pass: int = 0) -> dict:
     """One `coverage.report()` row, reduced to the keys the safety pass reads."""
     return {"commitment": commitment, "n_pass": n_pass, "kinds": kinds,
@@ -191,12 +251,48 @@ def _rc(violations: list, *, safety_enforced: bool) -> int:
     return 1 if any(v[0] in LEGACY_BLOCKING for v in violations) else 0
 
 
+def _asks(progress: str, prev, needed: str = NEEDED_ASKS, resolved: str = "",
+          *, safety_enforced: bool) -> set:
+    """`{(kind, key)}` for the two owner-ask classes, through the real `audit`.
+
+    The control arm is `decisions.py` as it stood before 2026-09-04, when the
+    owner's other desk had no reader at all — reconstructed by DELETION, like
+    the safety pass above it, because the ask pass only ever APPENDS.
+    """
+    v, _rows = audit(needed, TODAY, rows_for_safety=[], by_id=FIXTURE_BY_ID,
+                     progress_text=progress, prev_progress_text=prev,
+                     resolved_text=resolved)
+    if not safety_enforced:
+        return set()
+    return {(k, key) for k, key, _ in v if k.endswith("-OWNER-ASK")}
+
+
 def _hazards(text: str, rows, *, safety_enforced: bool) -> list:
     """`(id, commitment, claims)` triples this organ reports for `text`."""
     return [(did, why.split("'")[1], why)
             for kind, did, why in _violations(text, rows,
                                               safety_enforced=safety_enforced)
             if kind == "SAFETY-CLAIM-DEAD"]
+
+
+def _live_asks() -> tuple:
+    """`(unrouted, vanished)` on the real pages, for the record only.
+
+    Never gated — see the metric's comment. Returns `(0, 0)` if the live
+    documents cannot be read, because a certificate about a scanner must not
+    turn a missing file into a science result.
+    """
+    try:
+        from ..decisions import PROGRESS, RESOLVED, _previous_page
+        v, _ = audit(DOC.read_text(), _dt.date.today(),
+                     rows_for_safety=[], by_id=BY_ID,
+                     progress_text=PROGRESS.read_text(),
+                     prev_progress_text=_previous_page(PROGRESS),
+                     resolved_text=RESOLVED.read_text())
+    except Exception:
+        return (0, 0)
+    return (sum(1 for k, _, _ in v if k == "UNROUTED-OWNER-ASK"),
+            sum(1 for k, _, _ in v if k == "VANISHED-OWNER-ASK"))
 
 
 def _probe(safety_enforced: bool) -> dict:
@@ -342,6 +438,50 @@ def _probe(safety_enforced: bool) -> dict:
             or len(longest) < 200 or tail not in printed):
         failed.append("p10_live_document_is_armed_and_readable")
 
+    # P11 — THE SECOND DESK. An item under `## FOR THE OWNER` that reaches no
+    # decision entry is reported, and the burden runs the blunt way ON PURPOSE:
+    # every numbered item is an ask until it cites a live `D`, is quoted into a
+    # decision file, or DECLARES `NO-DECISION:` with a reason. Both directions,
+    # because a scanner that flags everything is as useless as one that flags
+    # nothing — item 2 cites `D20` and must stay quiet, and an item outside the
+    # section must be invisible.
+    a04 = _asks(PAGE_0904, None, safety_enforced=S)
+    exempted = PAGE_0904.replace(
+        "   My recommendation: let the builder DRAFT redesigns; keep ratification here.",
+        "   NO-DECISION: a report, nothing here to rule on")
+    outside = "## FOR THE BUILDER\n\n1. **Not an owner ask.** Invisible.\n"
+    if ({k for k in a04 if k[0] == "UNROUTED-OWNER-ASK"}
+            != {("UNROUTED-OWNER-ASK", "PROGRESS #1"),
+                ("UNROUTED-OWNER-ASK", "PROGRESS #3"),
+                ("UNROUTED-OWNER-ASK", "PROGRESS #4")}
+            or ("UNROUTED-OWNER-ASK", "PROGRESS #1")
+            in _asks(exempted, None, safety_enforced=S)
+            or _asks(outside, None, safety_enforced=S)):
+        failed.append("p11_unrouted_owner_ask_is_reported")
+
+    # P12 — KNOWN POSITIVE, and it is a thing that happened. The 09-03 page's
+    # item 3 left the owner's desk when the 09-04 page replaced it and reached
+    # no decision file; item 2 vanished too and is QUIET because `D21` quotes
+    # it, which is the repair the overseer actually performed. Three further
+    # directions, each a real trap:
+    #   - a rewritten-but-surviving item (1 and 4, reworded, still on the page)
+    #     must NOT read as vanished, or the class fires on every edit;
+    #   - `D1.0` is a SPEC and must not route an ask to decision `D1` — that
+    #     lookahead bug silenced this exact positive during development;
+    #   - no baseline must manufacture nothing (`review_queue`'s rule).
+    van = {k[1] for k in _asks(PAGE_0904, PAGE_0903, safety_enforced=S)
+           if k[0] == "VANISHED-OWNER-ASK"}
+    repaired = {k[1] for k in _asks(
+        PAGE_0904, PAGE_0903,
+        resolved="> *\"`run blocked` cannot see the project's largest "
+                 "unblock.\"* Ruled builder work; implemented at 9e847cf.",
+        safety_enforced=S) if k[0] == "VANISHED-OWNER-ASK"}
+    if (van != {"PROGRESS(prev) #3"} or repaired
+            or any(k[0] == "VANISHED-OWNER-ASK"
+                   for k in _asks(PAGE_0904, None, safety_enforced=S))):
+        failed.append("p12_vanished_owner_ask_is_the_known_positive")
+
+    live_asks = _live_asks()
     return {
         "properties_checked": float(N_PROPERTIES),
         "properties_failed": float(len(failed)),
@@ -351,6 +491,13 @@ def _probe(safety_enforced: bool) -> dict:
         "live_longest_default_chars": float(len(longest)),
         "live_specs_in_radius": float(len(
             {s for r in live_rows for s in blast_radius(r["default"])})),
+        # Recorded, NOT gated. The live reading moves whenever the Review
+        # rewrites its page, and a certificate that flapped daily on somebody
+        # else's prose would be re-bought for no scientific reason. The ratchet
+        # in `decisions.py` owns the threshold; the ledger owns the number, so
+        # a day the owner's desk grows is visible in the record either way.
+        "live_unrouted_asks": float(live_asks[0]),
+        "live_vanished_asks": float(live_asks[1]),
     }
 
 
@@ -384,7 +531,10 @@ def _check(m: dict, c: dict) -> Status | bool:
     control_broken = (c["properties_failed"] > 0.0
                       and {"p2_d8_known_positive_fires",
                            "p4_both_named_fires",
-                           "p9_ratchet_counts_every_class"} <= control_names)
+                           "p9_ratchet_counts_every_class",
+                           "p11_unrouted_owner_ask_is_reported",
+                           "p12_vanished_owner_ask_is_the_known_positive"}
+                      <= control_names)
     return bool(experiment_clean and control_broken)
 
 

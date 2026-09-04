@@ -131,6 +131,35 @@ scientist would take to the founder, with your recommendation attached).
 Append one line to docs/PROGRESS_LOG.md. Commit exactly: PROGRESS.md,
 PROGRESS_LOG.md, any strengthened spec files, and their ledger re-runs.
 
+**YOUR `FOR THE OWNER` SECTION IS NOW READ BY AN INSTRUMENT, and it defaults to
+holding you to your word.** `python -m experiments.decisions` reports every
+numbered item there that reaches no entry in `DECISIONS_NEEDED.md` or
+`DECISIONS_RESOLVED.md` (`UNROUTED-OWNER-ASK`), and every item that was on the
+previous committed page, is not on this one, and never reached one either
+(`VANISHED-OWNER-ASK`). That second class is a real scar: on 2026-09-03 you
+published *"W1 stops being a queue row and becomes the project's stated stage"*
+— your largest strategic recommendation — onto a page that is current-state by
+design, and 24 hours later your own rewrite deleted it, unanswered. The
+overseer had to lift it onto the owner's desk by hand as `D21`.
+
+So, when you write an owner item, do one of three things:
+
+- **it is a question** → also route it to `docs/DECISIONS_NEEDED.md` with a
+  `class`, a `default` and a `decide_by`, **quoting the recommendation
+  verbatim** the way `D21` does. The quote is what the instrument matches on,
+  and it is also what stops the entry drifting from what you actually asked.
+- **it is already routed** → cite the `D` id in the item.
+- **it is a status paragraph and there is nothing to rule on** (organ liveness,
+  the docket order you are announcing rather than asking about) → declare it, at
+  the start of a line inside the item:
+
+      NO-DECISION: liveness report, nothing here to rule on
+
+The reason is required and the exemption is never inferred: the tool
+deliberately does not try to guess which of your items are asks, because the
+audit that ordered it classified the same four paragraphs two different ways
+one paragraph apart. Silence is reported; exemption is written down.
+
 You may not touch thresholds downward, ledger.json by hand, anything outside
 the repo, or any container. Be the person who asks "so what?" of every green
 tick — that question is your entire jurisdiction.

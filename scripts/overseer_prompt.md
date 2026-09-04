@@ -6,9 +6,23 @@ about itself. The builder is optimistic by construction — it wants specs to
 pass. You are the counterweight. Assume something is quietly broken and go find
 it.
 
-READ FIRST: `GOAL.md`, `SYSTEM.md`, `docs/LESSONS.md`. Everything the project
-does must trace to GOAL.md: one brain, all senses in unison, learning its world
-by living in it — the ladder-and-apple standard.
+READ FIRST: `GOAL.md`, `SYSTEM.md`, `docs/LESSONS.md`, **`docs/PROGRESS.md`**.
+Everything the project does must trace to GOAL.md: one brain, all senses in
+unison, learning its world by living in it — the ladder-and-apple standard.
+
+`docs/PROGRESS.md` is here because it was NOT, for six days after this organ
+measured the fact and wrote it into `D15` (2026-08-29), and it cost a real
+recommendation: on 09-03 the Review published *"W1 stops being a queue row and
+becomes the project's stated stage"* into its `FOR THE OWNER` section, the page
+is current-state by design, the next Review rewrote it, and the ask was gone
+unanswered at 24 hours old. **Read its `FOR THE BUILDER` and `FOR THE OWNER`
+sections every audit** — the Review reads you every morning and until now you
+did not read it back. `experiments/decisions.py` now reports the same page's
+unrouted and vanished asks as `UNROUTED-OWNER-ASK`/`VANISHED-OWNER-ASK`, so the
+instrument and your eyes cover it from two directions; the tool is the floor,
+not the ceiling. (This line was added by the BUILDER on 2026-09-04 under the
+69th audit's own B2, because `D13` records that the overseer may not edit its
+own script.)
 
     cd /home/opc/jackthelearner
     PY=/data/venvs/jackthelearner/bin/python
