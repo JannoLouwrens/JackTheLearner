@@ -11125,3 +11125,13 @@ DRAFTED-NOT-REGISTERED.**
   `D19`-held; `HR.6` behind `HR.5`; `LF.01` attempt 2 waits for the 09-09
   design; no third increment of the CPU accountant; do not re-stagger the 09-06
   docket again.
+- **Bookkeeping, after the PASS:** `SO.06` released `SO.07`/`SO.08`/`SO.09` in
+  one step, so `unreachable` fell **97 -> 94** within the hour the 97 was
+  written and `UNREACHABLE_BASELINE` followed it down in the same commit
+  (SHRINK logged, per the 09-03 entry that exists because a floor once did
+  not follow). `cpu_foreclosed_now` **39 -> 41** recorded: `SO.07`/`SO.08` are
+  `cpu<2h` and land in a class the day-meter cannot currently afford — the
+  `D20` question, reported not acted on. Tree clean, three commits pushed, no
+  detached launches so no `declared_pids` line owed. The `experiments.run`
+  hits in `pgrep` were this session's own `claude -p` command line, not
+  leftovers.
