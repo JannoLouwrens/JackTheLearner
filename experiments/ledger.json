@@ -20496,20 +20496,23 @@
     },
     "T0.31": {
       "amended": [],
-      "attempt": 7,
-      "commit": "c255c34",
+      "attempt": 8,
+      "commit": "87cc603+dirty",
       "compute_s": null,
       "control_metrics": {
-        "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named",
+        "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking",
         "fixture_violations": 5.0,
+        "live_arrived": 30.0,
+        "live_disposed": 1.0,
+        "live_net_arrivals": 29.0,
         "live_oldest_days": 8.0,
         "live_open": 31.0,
         "live_rows": 35.0,
         "live_violations": 0.0,
-        "properties_checked": 14.0,
-        "properties_failed": 11.0
+        "properties_checked": 15.0,
+        "properties_failed": 12.0
       },
-      "duration_s": 1.2,
+      "duration_s": 1.37,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -20704,29 +20707,64 @@
           ],
           "spec_sha": "b0af18661a9176f2",
           "status": "PASS"
+        },
+        {
+          "commit": "c255c34",
+          "control_metrics": {
+            "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named",
+            "fixture_violations": 5.0,
+            "live_oldest_days": 8.0,
+            "live_open": 31.0,
+            "live_rows": 35.0,
+            "live_violations": 0.0,
+            "properties_checked": 14.0,
+            "properties_failed": 11.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "b8323b39a4014134",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "fixture_violations": 5.0,
+            "live_oldest_days": 8.0,
+            "live_open": 31.0,
+            "live_rows": 35.0,
+            "live_violations": 0.0,
+            "properties_checked": 14.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-04T06:15:44",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "c064dd78b36ba5ec",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "b8323b39a4014134",
+      "impl_sha": "579d90a7f0383dbc",
       "message": "",
       "metrics": {
         "failed_names": "",
         "fixture_violations": 5.0,
+        "live_arrived": 30.0,
+        "live_disposed": 1.0,
+        "live_net_arrivals": 29.0,
         "live_oldest_days": 8.0,
         "live_open": 31.0,
         "live_rows": 35.0,
         "live_violations": 0.0,
-        "properties_checked": 14.0,
+        "properties_checked": 15.0,
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 209.9,
+      "peak_rss_mb": 210.9,
       "preserved_impl": null,
-      "ran_at": "2026-09-04T06:15:44",
+      "ran_at": "2026-09-04T07:13:52",
       "seeds": [
         0
       ],
       "spec_id": "T0.31",
-      "spec_sha": "c064dd78b36ba5ec",
+      "spec_sha": "adba85e6f8c5d773",
       "status": "PASS"
     },
     "T0.32": {

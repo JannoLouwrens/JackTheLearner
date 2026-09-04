@@ -33,6 +33,24 @@ Sunday for good reasons, and a gate at zero would forbid a legal move — the
 68th audit's own B3 discipline, applied to the instrument that audit wrote B7
 about.
 
+P15 is not a conversion either, and it is the newest scar of all (69th audit,
+2026-09-04, B1). Every class above fires on a promise BREAKING — and the file
+deliberately offers an honest way never to break one: re-arm the `DUE:` with a
+reason, exactly as `decide_by` is re-armed. That hatch is right. Its unpriced
+consequence is that **a desk which re-arms honestly forever is
+byte-indistinguishable, to every per-row instrument here, from a desk that is
+keeping up.** On the morning the audit ran, this file held 35 routed rows with
+2 lifetime dispositions, 30 of them arrived in the previous seven days, and
+`run review-queue` printed `0 violations` — correctly, because every class it
+owned was local to one row while the divergence was a property of the SET.
+P15 is the other half of the transaction: arrivals, disposals and the drain
+projection, read from GIT rather than from the rows' own declared dates (a rate
+that falls when you back-date a row is a rate that teaches back-dating), with
+`DISPOSITIONED` counted separately and never credited as drain, because a design
+that is still live and still ageing is not a row the desk has finished with.
+Like P14 it is a METRIC and never a violation, and like P14 it is RATCHETED:
+re-dating, re-arming and splitting a row must each leave it unimproved.
+
 The sixth conversion is the newest scar (60th audit, 2026-09-02): six sections
 written in the pre-declaration prose idiom — three with the declaration INSIDE
 the heading, `## ROUTED: OPEN — ...`, one `## ` away from being read — were not
@@ -96,8 +114,10 @@ import io
 
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
-from ..review_queue import (DOC_PATH, LOG_PATH, MAX_OPEN_AGE_DAYS, VIOLATIONS,
-                            audit, check, consumer_last_run, parse, render)
+from ..review_queue import (DOC_PATH, LOG_PATH, MAX_OPEN_AGE_DAYS,
+                            THROUGHPUT_WINDOW_DAYS, VIOLATIONS, audit, check,
+                            consumer_last_run, live_audit, parse, render,
+                            throughput)
 
 SPEC_ID = "T0.31"
 
@@ -107,7 +127,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 14
+N_PROPERTIES = 15
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -475,6 +495,122 @@ def _probe(blind: bool) -> dict:
             or pile["due_pile"].get(free, 0) != 0):
         failed.append("p14_a_promise_dated_onto_a_full_day_is_named")
 
+    # P15 — the OTHER HALF OF THE TRANSACTION. Every class above fires on a
+    # promise breaking; the honest escape hatch (re-arm the DUE: with a reason)
+    # means a desk can be indistinguishable from one that is keeping up while
+    # disposing of nothing, which is what 2026-09-04 measured: 35 rows, 2
+    # lifetime dispositions, 30 arrivals in seven days, `0 violations`. Eight
+    # conjuncts.
+    #
+    # `then` is the window's git baseline; `now` is the working tree. Row `f`
+    # is ACTED in BOTH, so a disposal already banked before the window cannot
+    # be credited a second time. Row `b` is the only real disposal.
+    then_rows = [
+        ("a", "2026-08-01", "OPEN", []),
+        ("b", "2026-08-02", "OPEN", []),
+        ("c", "2026-08-03", "OPEN", []),
+        ("f", "2026-07-01", "ACTED 2026-07-02 (cafe123)", []),
+    ]
+    now_rows = [
+        ("a", "2026-08-01", "OPEN", []),
+        ("b", "2026-08-02", "ACTED 2026-08-30 (beadfed)", []),
+        ("c", "2026-08-03", "OPEN", []),
+        ("f", "2026-07-01", "ACTED 2026-07-02 (cafe123)", []),
+        ("d", "2026-08-29", "OPEN", []),
+        ("e", "2026-08-30", "OPEN", []),
+    ]
+    then_doc, now_doc = _doc(then_rows), _doc(now_rows)
+    W = THROUGHPUT_WINDOW_DAYS
+    t = throughput(now_doc, then_doc)
+
+    # (i) the arithmetic itself, and the UNBOUNDED verdict when arrivals win
+    base_ok = (t is not None and t["arrived"] == 2 and t["disposed"] == 1
+               and t["designed"] == 0 and t["live_now"] == 4
+               and t["net_arrivals"] == 1 and t["unbounded"]
+               and t["drain_cycles"] is None
+               and abs(t["arrived_per_cycle"] - 2 / W) < 1e-9)
+
+    # (ii) UNBOUNDED IS NOT BY CONSTRUCTION. A desk that really disposes must
+    # get a FINITE drain, or the metric is a slogan: here `a` and `b` both
+    # close and nothing arrives, leaving one live row draining at 2/W per
+    # cycle. A number that can only ever read one way measures nothing —
+    # law 2, applied to a metric instead of to an experiment.
+    keeping_up = throughput(
+        _doc([(r[0], r[1], "ACTED 2026-08-30 (beadfed)", r[3])
+              if r[0] in ("a", "b") else r for r in then_rows]), then_doc)
+    positive_ok = (keeping_up is not None and keeping_up["arrived"] == 0
+                   and keeping_up["disposed"] == 2
+                   and not keeping_up["unbounded"]
+                   and keeping_up["drain_cycles"] is not None
+                   and abs(keeping_up["drain_cycles"] - 1 / (2 / W)) < 1e-9)
+
+    # (iii) A DESIGN IS NOT A DISPOSAL — the two-meaning token (Review 09-01
+    # item 4) reborn as a rate. `b` becomes DISPOSITIONED: it is still LIVE and
+    # still ageing, so `disposed` stays 0, drain stays UNBOUNDED, and the row
+    # shows up in `designed` where a reader can see it without it being credited.
+    design_only = throughput(
+        _doc([(r[0], r[1], "DISPOSITIONED 2026-08-30 (design written)", r[3])
+              if r[0] == "b" else r for r in then_rows]), then_doc)
+    design_ok = (design_only is not None and design_only["disposed"] == 0
+                 and design_only["designed"] == 1
+                 and design_only["live_now"] == 3
+                 and design_only["unbounded"])
+
+    # (iv) THE RATCHET, back-dating: `d`'s declared `routed` date is rewritten
+    # to long before the window opened. Arrivals are read from git, so the
+    # number cannot move — a rate that falls when you back-date a row is a rate
+    # that teaches back-dating.
+    backdated = throughput(
+        _doc([("d", "2020-01-01", r[2], r[3]) if r[0] == "d" else r
+              for r in now_rows]), then_doc)
+    backdate_ok = (backdated is not None
+                   and backdated["arrived"] == t["arrived"]
+                   and backdated["net_arrivals"] == t["net_arrivals"])
+
+    # (v) THE RATCHET, re-arming: every honest hatch in this file — a new DUE:,
+    # a re-armed date — leaves throughput identical, because none of them
+    # disposes of anything.
+    rearmed = throughput(
+        _doc([(r[0], r[1], r[2], ["DUE: 2026-12-01 | re-armed, with a reason"])
+              for r in now_rows]), then_doc)
+    rearm_ok = rearmed == t
+
+    # (vi) THE RATCHET, splitting: one live row written as two must never
+    # improve the reading. It adds an arrival and a live row, so the net can
+    # only get worse.
+    split = throughput(_doc(now_rows + [("c-b", "2026-09-01", "OPEN", [])]),
+                       then_doc)
+    split_ok = (split is not None
+                and split["net_arrivals"] > t["net_arrivals"]
+                and split["live_now"] > t["live_now"]
+                and split["unbounded"])
+
+    # (vii) A METRIC, NEVER A VIOLATION (P14's discipline, 68th audit B3):
+    # supplying the baseline must not move `total` or any violation class.
+    with_base = audit(now_doc, None, TODAY, base_doc=then_doc)
+    without = audit(now_doc, None, TODAY)
+    metric_ok = (with_base["total"] == without["total"]
+                 and with_base["counts"] == without["counts"]
+                 and with_base["throughput"] is not None)
+
+    # (viii) AN ABSENT BASELINE REPORTS NOTHING, not something good. The
+    # git-baselined violation classes refuse to ACCUSE without a baseline; this
+    # one must refuse to EXONERATE without one, and `None` must survive into
+    # the rendered report as a stated fault rather than as a clean week.
+    no_base_ok = (without["throughput"] is None
+                  and "UNMEASURED" in render(without))
+
+    if (blind or not base_ok or not positive_ok or not design_ok
+            or not backdate_ok or not rearm_ok or not split_ok
+            or not metric_ok or not no_base_ok):
+        failed.append("p15_the_desk_is_measured_disposing_not_only_breaking")
+
+    # The live desk's own numbers, recorded in the ledger row so the reading
+    # that motivated P15 is dated and attributable rather than quoted from an
+    # audit page. `-1` is the honest value for "no git baseline in this
+    # checkout" — a sentinel, said out loud, rather than a zero that would read
+    # as a clean week.
+    live_t = live_audit()["throughput"]
     return {
         "properties_checked": float(N_PROPERTIES),
         "properties_failed": float(len(failed)),
@@ -484,6 +620,9 @@ def _probe(blind: bool) -> dict:
         "live_open": float(live["n_open"]),
         "live_violations": float(live["total"]),
         "live_oldest_days": float(live["oldest_live_days"]),
+        "live_arrived": float(live_t["arrived"]) if live_t else -1.0,
+        "live_disposed": float(live_t["disposed"]) if live_t else -1.0,
+        "live_net_arrivals": float(live_t["net_arrivals"]) if live_t else -1.0,
     }
 
 
@@ -501,7 +640,7 @@ def _control(seed: int) -> dict:
     and on the one sabotage it CAN see it reports the wrong sign: delete the
     rotting row and the number falls, so the backlog looks healthier.
 
-    Measured: it fails 10 of 13, and the 3 it passes are worth naming so nobody
+    Measured: it fails 12 of 15, and the 3 it passes are worth naming so nobody
     reads this as a straw man. P1 is a statement about the live DOCUMENT rather
     than about the reader, and is not asked of it. P4 and P6 it passes
     VACUOUSLY — relabelling a row `HELD` and deleting its `DUE:` both leave the
@@ -516,6 +655,11 @@ def _control(seed: int) -> dict:
     IS the parser the 60th audit caught reading 20 of 26 — the prose rows are
     precisely the ones it cannot count. If it ever passes those, this spec is
     guarding a distinction that did not need making.
+
+    P15 it fails for the reason the 69th audit exists: a count of rows has no
+    notion of a row's STATUS, so it cannot tell an arrival from a disposal, and
+    the one signal it does carry moves the wrong way again — a desk that closes
+    a row and a desk that deletes it are the same falling number to it.
     """
     return _probe(blind=True)
 
@@ -536,7 +680,9 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p5_deleting_the_row_does_not_help",
                            "p11_every_class_is_reachable_and_reported",
                            "p12_a_disposition_is_not_an_execution",
-                           "p14_a_promise_dated_onto_a_full_day_is_named"} <= control_names)
+                           "p14_a_promise_dated_onto_a_full_day_is_named",
+                           "p15_the_desk_is_measured_disposing_not_only_breaking"
+                           } <= control_names)
     return bool(experiment_clean and control_broken)
 
 

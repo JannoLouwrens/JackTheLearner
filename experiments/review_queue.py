@@ -118,6 +118,53 @@ and the design-only form has its own live status. It does not read `PROGRESS.md`
 consumer's last-run date off `docs/PROGRESS_LOG.md` for context and deliberately
 does not gate on it: `review_liveness` owns that alarm, and two organs owning one
 fact is how a number ends up watched by nobody in particular.
+
+THROUGHPUT: THE HALF OF THE TRANSACTION THIS MODULE COULD NOT SEE (69th audit,
+2026-09-04, B1). Every violation class above fires on a promise BREAKING, and
+the file deliberately provides an honest way never to break one — re-arm with a
+new `DUE:` and a reason, exactly as `decide_by` is re-armed. That hatch is
+right; a deadline that cannot move when the work genuinely changes is a deadline
+that gets deleted instead. But it has a consequence nobody priced: **a desk that
+re-arms honestly forever is byte-indistinguishable, to every per-row instrument,
+from a desk that is keeping up.** On 2026-09-04 this file held 35 routed rows
+with 2 lifetime dispositions, 30 of them arrived in the previous seven days —
+and this module printed `0 violations`, correctly, because every class it owns
+is local to one row and the divergence is a property of the SET.
+
+So the reader now also counts the other direction, over a trailing window, from
+the file's own git history:
+
+    arrived   ids present now and absent at the window's baseline revision
+    disposed  ids TERMINAL now that were not TERMINAL at the baseline
+    designed  ids DISPOSITIONED now that were not DISPOSITIONED then
+    drain     live rows / (disposed - arrived) per cycle, or UNBOUNDED
+
+Four properties of that design are load-bearing and each is a scar somewhere
+else in this repo:
+
+**It is a METRIC and never a violation** — the same discipline `piled_on` was
+given one layer down (68th audit B3). A slow week is legal, the consumer is a
+colleague, and a gate here would forbid a legal move.
+
+**Arrivals and disposals are read from GIT, not from the declared `routed`
+date.** The declared date is the file's contract and is trusted everywhere else
+here — but it is writable, and a metric that improves when you back-date a row
+is a metric that teaches back-dating. Git is the baseline `VANISHED` and
+`CLOCK-REMOVED` already use, and nothing a working-tree edit can do reaches it.
+
+**A DISPOSITIONED transition is NOT credited as a disposal**, which departs from
+the letter of the audit's request (it named `ACTED`/`DECLINED`/`DISPOSITIONED`
+together) for the reason that audit's own file records: `DISPOSITIONED` is LIVE
+and keeps ageing, so counting it as drain would let a desk report throughput by
+writing designs it never executes — the two-meaning token (Review 09-01 item 4)
+reborn as a rate. It is counted and printed separately, as `designed`, so a
+design-only desk is visible without being credited.
+
+**An absent baseline reports nothing rather than something good.** The
+git-baselined violation classes above refuse to ACCUSE without a baseline; this
+one refuses to EXONERATE without one. `throughput` is `None`, the ratchet
+counter `review_queue_net_arrivals` goes LOST in `run status`, and LOST is a
+fault there, not a quiet day.
 """
 from __future__ import annotations
 
@@ -151,6 +198,24 @@ STATUSES = LIVE + TERMINAL
 #: reporting on Monday (65th audit B6, written the week seven rows shared
 #: 2026-09-06). Raise it only by citing a cycle that actually discharged N.
 MEASURED_DISCHARGE_CAPACITY = 1
+
+#: One consumer cycle, in days. DERIVED: `review.sh` runs DAILY, so a day is
+#: the finest cadence at which this desk can dispose of anything, and it is the
+#: unit `MEASURED_DISCHARGE_CAPACITY` is already denominated in (a due DATE
+#: carrying more than one live row is the pile).
+CONSUMER_CYCLE_DAYS = 1
+
+#: The trailing window the throughput reading is computed over, in days.
+#: DERIVED, and deliberately NOT the audit's suggested three cycles: the
+#: consumer's schedule is one DAILY run plus exactly one FULL run per week, and
+#: the FULL run is the only mode that does Part 2 — so a window shorter than
+#: seven days cannot contain the mode that discharges a redesign row, and would
+#: read UNBOUNDED for a desk that is in fact on schedule. Seven days is the
+#: shortest window in which every row in this file could honestly have been
+#: disposed of. It is also the window the Review and the 69th audit both
+#: computed by hand ("30 arrived in the last 7"), so the number is comparable
+#: to the one two organs already published.
+THROUGHPUT_WINDOW_DAYS = 7
 
 #: How far ahead `next_free_due` will look for a date carrying no promise yet.
 #: A board booked solid past a full quarter should print "" and say so rather
@@ -279,10 +344,64 @@ def undeclared_rows(doc: str) -> list[tuple[int, str]]:
     return out
 
 
-def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) -> dict:
+def throughput(doc: str, base_doc: str | None,
+               window_days: int = THROUGHPUT_WINDOW_DAYS,
+               cycle_days: int = CONSUMER_CYCLE_DAYS) -> dict | None:
+    """The desk's disposal rate against its arrival rate over a trailing
+    window, or None when there is no baseline to measure against.
+
+    `base_doc` is the file as of the last commit before the window opened —
+    git, deliberately, not the rows' declared `routed` dates. The declared date
+    is the file's contract and is trusted by every other reading here, but it
+    is writable, and a rate that falls when you back-date a row is a rate that
+    teaches back-dating.
+
+    Pure. `check()` supplies the revision; the properties can hold git still.
+    """
+    if base_doc is None:
+        return None
+    now = {r["id"]: r for r in parse(doc) if r["id"]}
+    then = {r["id"]: r for r in parse(base_doc) if r["id"]}
+    cycles = window_days / cycle_days
+
+    arrived = sum(1 for rid in now if rid not in then)
+    # Terminal NOW and not terminal THEN — so a row that both arrived and
+    # closed inside the window is credited, and a row that was already ACTED
+    # before the window is not credited twice.
+    disposed = sum(1 for rid, r in now.items()
+                   if r["status"] in TERMINAL
+                   and (rid not in then or then[rid]["status"] not in TERMINAL))
+    # Counted, NEVER added to `disposed`: a design is not an execution, the row
+    # stays LIVE and keeps ageing, and crediting it would make drain reportable
+    # by writing prose (Review 09-01 item 4, the two-meaning token).
+    designed = sum(1 for rid, r in now.items()
+                   if r["status"] == "DISPOSITIONED"
+                   and (rid not in then or then[rid]["status"] != "DISPOSITIONED"))
+    live_now = sum(1 for r in now.values() if r["status"] in LIVE)
+
+    net = arrived - disposed
+    drain = None if net >= 0 or live_now == 0 else live_now / (-net / cycles)
+    return {"window_days": window_days, "cycle_days": cycle_days,
+            "cycles": cycles,
+            "arrived": arrived, "disposed": disposed, "designed": designed,
+            "live_now": live_now, "net_arrivals": net,
+            "arrived_per_cycle": arrived / cycles,
+            "disposed_per_cycle": disposed / cycles,
+            "designed_per_cycle": designed / cycles,
+            "drain_cycles": drain,
+            "unbounded": drain is None and live_now > 0}
+
+
+def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
+          base_doc: str | None = None) -> dict:
     """Every violation in `doc`, with `prev_doc` (the previous committed
     revision) as the only baseline. Pure: no clock, no git, no filesystem —
     `main()` supplies all three, so the properties can hold the world still.
+
+    `base_doc` — the file as of the last commit before the throughput window
+    opened — is a SECOND, older baseline and is optional. Absent, the
+    throughput reading is `None`: no violation moves either way, because a
+    missing baseline must no more exonerate this desk than it may accuse it.
     """
     today = today or _dt.date.today()
     rows = parse(doc)
@@ -398,6 +517,7 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None) 
     return {"rows": rows, "findings": findings, "counts": counts,
             "due_pile": due_pile, "piled_on": piled_on,
             "next_free_due": next_free_due,
+            "throughput": throughput(doc, base_doc),
             "total": len(findings), "today": today,
             "n_rows": len(rows),
             "n_open": sum(1 for r in rows if r["status"] == "OPEN"),
@@ -427,6 +547,48 @@ def render(a: dict, last_run: str = "") -> str:
         head += f"; consumer last ran {last_run} ({age} d ago)"
     out.append("\n  REVIEW QUEUE — " + head)
     out.append("")
+    t = a.get("throughput")
+    if t is None:
+        out.append("  THROUGHPUT — no baseline revision for the trailing "
+                   f"{THROUGHPUT_WINDOW_DAYS} days, so the")
+        out.append("  disposal rate is UNMEASURED. That is a fault, not a "
+                   "clean week: an absent")
+        out.append("  baseline may not exonerate this desk any more than it "
+                   "may accuse it.")
+        out.append("")
+    else:
+        out.append(f"  THROUGHPUT — trailing {t['window_days']} d "
+                   f"({t['cycles']:.0f} consumer cycles), measured against "
+                   "the file's git")
+        out.append("  history rather than its declared dates (69th audit B1). "
+                   "A METRIC, never a")
+        out.append("  violation: a slow week is legal and a gate here would "
+                   "forbid a legal move.")
+        out.append(f"    arrived   {t['arrived']:>3}  "
+                   f"({t['arrived_per_cycle']:.2f}/cycle)")
+        out.append(f"    disposed  {t['disposed']:>3}  "
+                   f"({t['disposed_per_cycle']:.2f}/cycle)  "
+                   "ACTED or DECLINED — the row left the live set")
+        out.append(f"    designed  {t['designed']:>3}  "
+                   f"({t['designed_per_cycle']:.2f}/cycle)  "
+                   "DISPOSITIONED — NOT counted as disposal;")
+        out.append("                            the row is still live and "
+                   "still ageing")
+        if t["unbounded"]:
+            out.append(f"    drain     UNBOUNDED — the desk is not keeping "
+                       f"up. {t['live_now']} live rows, arrivals")
+            out.append(f"              exceed disposals by "
+                       f"{t['net_arrivals']} over the window; the backlog has "
+                       "no")
+            out.append("              projected end. Every dated promise in "
+                       "it is downstream of this.")
+        elif t["drain_cycles"] is None:
+            out.append("    drain     0 live rows — the desk is clear.")
+        else:
+            out.append(f"    drain     {t['drain_cycles']:.0f} cycles to "
+                       f"clear {t['live_now']} live rows at the measured net "
+                       "rate.")
+        out.append("")
     for r in a["rows"]:
         if not r["id"]:
             continue
@@ -525,13 +687,45 @@ def _prev_revision(path: Path) -> str | None:
     return r.stdout if r.returncode == 0 else None
 
 
+def _revision_before(path: Path, when: _dt.date) -> str | None:
+    """The file's content at the last commit strictly before UTC midnight on
+    `when`, or None when git cannot say. Same channel as `_prev_revision` and
+    for the same reason: it is the one baseline a working-tree edit cannot
+    reach.
+    """
+    try:
+        repo = Path(__file__).resolve().parent.parent
+        rel = path.relative_to(repo).as_posix()
+        sha = subprocess.run(
+            ["git", "log", "-1", "--format=%H",
+             f"--before={when.isoformat()}T00:00:00Z", "--", rel],
+            cwd=repo, capture_output=True, text=True, timeout=20)
+        if sha.returncode != 0 or not sha.stdout.strip():
+            return None
+        r = subprocess.run(["git", "show", f"{sha.stdout.strip()}:{rel}"],
+                           cwd=repo, capture_output=True, text=True, timeout=20)
+    except Exception:
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
+def live_audit(doc_path: Path | None = None, today: _dt.date | None = None) -> dict:
+    """`audit` on the real file with both git baselines supplied. The single
+    entry point for every caller that wants the live reading — `check()` here
+    and the ratchet block in `run status` — so the two can never disagree
+    about which baselines were used."""
+    p = doc_path or DOC_PATH
+    today = today or _dt.date.today()
+    base = _revision_before(p, today - _dt.timedelta(days=THROUGHPUT_WINDOW_DAYS))
+    return audit(p.read_text(), _prev_revision(p), today, base_doc=base)
+
+
 def check(doc_path: Path | None = None) -> int:
     p = doc_path or DOC_PATH
     if not p.exists():
         print(f"  REVIEW QUEUE — {p} does not exist; the backlog file is the instrument.")
         return 2
-    doc = p.read_text()
-    a = audit(doc, _prev_revision(p))
+    a = live_audit(p)
     last = consumer_last_run(LOG_PATH.read_text()) if LOG_PATH.exists() else ""
     print(render(a, last))
     return 2 if a["total"] else 0

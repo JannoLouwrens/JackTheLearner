@@ -790,14 +790,30 @@ def ratchet_live(ledger: Ledger) -> dict:
 
     def _review_queue_total():
         from . import review_queue as rq
-        return rq.audit(rq.DOC_PATH.read_text(),
-                        rq._prev_revision(rq.DOC_PATH))["total"]
+        return rq.live_audit()["total"]
+
+    def _review_queue_net_arrivals():
+        # The 69th audit's finding, as an integer that cannot drift quietly:
+        # rows ARRIVED minus rows DISPOSED over the trailing window. Positive
+        # means the desk fell that far behind. It is deliberately joined here
+        # rather than gated anywhere: a slow week is legal (the metric
+        # discipline `piled_on` was given), but a queue tripling while every
+        # ratchet sat at its floor is what happened on 2026-09-04.
+        from . import review_queue as rq
+        t = rq.live_audit()["throughput"]
+        if t is None:
+            raise RuntimeError(
+                "no git baseline for the trailing "
+                f"{rq.THROUGHPUT_WINDOW_DAYS} days — the disposal rate is "
+                "UNMEASURED, which is a fault and not a clean week")
+        return t["net_arrivals"]
 
     take("unreachable", _unreachable)
     take("claim_dead", _claim_dead_count)
     take("park_release_pairs", _park_release_pairs)
     take("champions_trigger_debt", _champions_trigger_debt)
     take("review_queue_violations", _review_queue_total)
+    take("review_queue_net_arrivals", _review_queue_net_arrivals)
     return out
 
 
