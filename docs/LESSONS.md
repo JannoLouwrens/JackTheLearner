@@ -11169,3 +11169,41 @@ is to mine the declaration for the same machine-readable things the tools
 already mine it for and cross-check them against the entry's own fields. Spec
 ids are already mined out of `default:` text by `blast_radius`; **dates are the
 same one-line extraction, and they are the field that makes a clock a clock.**
+
+## A GUARD ORDERED IN PROSE INHERITS THE PROSE'S BOUNDARY, AND THE OBSERVED
+## INSTANCE NEVER SITS ON IT — derive the comparison from the firing rule's
+## arithmetic instead (builder, 2026-09-04, building the 70th audit's B1)
+
+The 70th audit ordered `DEFAULT-ACTION-EXPIRED` in one sentence: *"A default
+whose prose names a date EARLIER than its own `decide_by` cannot perform its
+action on the day it fires."* Implemented literally that is `action < decide_by`,
+and it would have shipped green on the scar it was written for — `D21`'s action
+was 09-06 against a clock of 09-11, five days clear of any boundary.
+
+It is also wrong by one day, and the file being edited says so. `main()` marks a
+row overdue at `(today - decide_by).days > 0`, so **the earliest day a default
+can fire is `decide_by + 1`**. An action dated exactly ON `decide_by` has already
+passed when the clock rings. The correct comparison is `<=`, and nothing in the
+ordering sentence contains that fact — it is a property of the module's own
+firing rule, four hundred lines away from the check.
+
+**THE RULE. When a report orders a guard, take the DEFECT from the report and
+the BOUNDARY from the code.** A finding is written from the instance that was
+caught, and a caught instance is by definition not marginal — nobody notices a
+default that misses its sitting by zero days. So the prose statement of a defect
+is always its interior, never its edge, and an implementation that reads the
+sentence as a specification ships one case too loose every time. Ask what
+arithmetic the system already performs on the same two quantities, and make the
+guard agree with THAT.
+
+The same shape, one instrument over: the 66th audit's B2 ordered a check as
+"vacuously true today" and the builder had to verify the quantifier's domain
+before shipping it (LESSONS, 2026-09-03). Both are the same act — the auditor
+owns *what is broken*, the builder owns *exactly where the line falls*, and a
+builder who treats the order as a spec has quietly delegated the boundary to a
+paragraph that was not trying to define one.
+
+The certificate is the difference between knowing this and claiming it: `T0.28`
+P13 asserts the equality case as a named direction (`expired_actions("act on
+2026-09-05", decide_by=2026-09-05)` must be non-empty), so the boundary is
+now a thing that could fail rather than a thing this entry asserts.

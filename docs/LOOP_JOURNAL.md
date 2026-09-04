@@ -10630,3 +10630,74 @@ the Review should see them side by side.
   for the 09-09 design; no third CPU-accountant increment; no third hand-stagger
   of the 09-06 docket. `next_free_due` is **2026-09-12**. 0 leftover processes,
   no detached runs, no `declared_pids` owed.
+
+- 2026-09-04 13:0x-13:2x UTC (builder, **OPUS** — `week:Fable` 99% so `fable`
+  refuses at start and the chain walks to opus; `week:all models` **58%**, which
+  is the gate, well under 90; session 10%; zero `PACING:` skips). **Took the
+  70th audit's B1 and nothing else — the board is genuinely empty and PROGRESS
+  item 1 says so.** `run next`/`coverage` offer 0 FRESH dispatches at all seven
+  cost classes; of the nine specs whose deps all PASS, eight are parked or
+  pilot-blocked behind the Review and one (`HR.1`) is `D19`-held. So the useful
+  unit was the one the audit paid for.
+  **`decisions.py` gains `DEFAULT-ACTION-EXPIRED`** (`400a9ed`). The scar is the
+  decision desk's own: `D21`, armed by the 69th audit with an action on
+  **2026-09-06** and a clock on **2026-09-11**, was legal in every field and
+  incapable of doing the thing it promised, and no instrument said a word.
+  `default_dates()` mines dates out of the joined `default:` text the way
+  `blast_radius` mines spec ids — ISO `2026-09-06` and the bare `09-06` this
+  document writes constantly (D21 wrote **both**; an ISO-only reader would have
+  caught it by luck), with a bare month-day resolved to the year that lands it
+  NEAREST `decide_by`. `expired_actions()` returns those at or before it.
+  **THE COMPARISON IS `<=`, NOT THE `<` THE AUDIT ORDERED, and that is the one
+  thing in this unit I did not take on trust.** `main()` marks a row overdue at
+  `(today - decide_by).days > 0`, so the earliest firing is `decide_by + 1` and
+  an action dated exactly ON `decide_by` has already passed when the clock rings.
+  The ordering sentence contains no such fact — it is the module's own
+  arithmetic, four hundred lines from the check. LESSONS entry appended: *a
+  guard ordered in prose inherits the prose's boundary, and the observed
+  instance never sits on it* — the auditor owns what is broken, the builder owns
+  where the line falls.
+  **RATCHETED at the live reading of 1, not blocking.** The one is **`D22`**,
+  whose default cites `D15`'s 2026-09-05 clock as a REASON rather than acting on
+  it — named in `BASELINE_ACTION_EXPIRED`'s comment rather than exempted (an
+  escape hatch nobody has to justify is a checkbox). The exact narrowing is
+  ATTRIBUTION — *whose* clock is this date — and I deliberately did not write it:
+  tuning the regex until today's corpus reads zero is fitting the instrument to
+  the sample. Same over-approximating contract as `blast_radius`, same
+  containment. **Note for the desk, not acted on (B5 forbids routing `D22`):**
+  the flag is not pure noise — `D22`'s reason for excluding option (ii) is that
+  it would pre-empt `D15`, and by 09-08 `D15` has already fired, so that
+  justification is stale at the moment `D22` fires. That is the owner's and the
+  overseer's, not mine.
+  **CERTIFIED, NOT SELF-CERTIFIED.** `T0.28` **N_PROPERTIES 12 -> 13**, spec
+  hypothesis/falsified_by/null_baseline/control amended to declare clause (9),
+  certificate re-bought: **PASS, attempt 12, 13:16:10, commit `400a9ed`, clean
+  (the first run stamped `+dirty`, so I committed the code and re-ran — a
+  `+dirty` PASS row is a finding for the next audit and it costs 55 s to avoid).**
+  P13 asserts five directions on the real path: `D21`'s real entry fires; the
+  **SHORTENED** clock silences it (quiet-because-fixed, never
+  quiet-because-the-subject-left — P5's rule one class over); the equality case
+  fires; a bare `MM-DD` takes the nearest year across a year boundary; and the
+  class ratchets rather than blocks. The control is the organ before this commit,
+  reconstructed by DELETION because the pass only ever APPENDS, and `p13` is now
+  in `_check`'s required control failures — it MUST miss `D21`.
+  Live after: `decisions --check` **rc=0**, `ratchet ok (0/10 undeclared, 2/3
+  unrouted-owner-ask, 0/0 vanished-owner-ask, 1/1 default-action-expired)`;
+  `D21` reads CLEAN because the 70th audit's shortening to 09-05 puts the firing
+  on the morning of 09-06, the day of the action. `coverage` rc=2 (known red,
+  unchanged). Ledger **102 PASS**, `render` 102/238.
+  **NEXT ITERATION.** B1 is done; **B3 is the dated one and it is not today** —
+  `D21`, `D15` and `D16` come due 09-05, and `D21` must be FIRED in a
+  **00:xx-05:xx slot on 09-06, before the Review's ~06:37 run**, by recording the
+  firing in `DECISIONS_RESOLVED.md` AND writing the mandated order onto the
+  `w0-too-shallow` row in `docs/REVIEW_QUEUE.md` (prose in a journal is not a
+  docket). B2 (make the owner-ask quotation match ATTRIBUTABLE — print
+  `matched-by:`, require the span to fall inside a `## D…` entry, regression into
+  `T0.28`) and B4 (print the `cpu<2h` slack arithmetic in `run status`; **do NOT
+  move `CPU_DAY_CEILING_S`**) are both live and both fit an hour. Standing
+  prohibitions ALL unchanged: no `D1.0` re-dispatch; **`W35`'s ~11 free Kaggle
+  hours expire 09-06 00:00 and must be let go** (inventory, not uptime);
+  `HR.1`-`HR.4` D19-held to 09-14; `HR.6` behind `HR.5`; `LF.01` attempt 2 waits
+  for the 09-09 design; no third CPU-accountant increment; no third hand-stagger
+  of the 09-06 docket; do not route `D22`. 0 leftover processes, no detached
+  runs, no `declared_pids` owed.
