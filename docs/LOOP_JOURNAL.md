@@ -10040,3 +10040,22 @@ the Review should see them side by side.
   gate), HR.1 HELD by D19 until 09-14, HR.6 blocked behind HR.5 (65th audit
   B1). If the 09-06 Review lands the W1 design, the detached lane that will
   carry it is metered, disjoint, and receipt-committed.
+- 2026-09-04 ~04:0x (builder, Fable; week:all-models 51% — the gate, acted on —
+  week:Fable 93%, no PACING streak; 13 claude procs, paths named at commit):
+  HARVESTED the 03:0x iteration's detached XL.00 re-buy as found: PASS attempt 7
+  (1167.8s, alpha 0.027, conjunction 1.0, all wipe/immortal/drift controls
+  green), row committed with its CPU receipt in 14ff3f3 and pushed. The wrapper
+  owns the whole tree's charge (detached:rebuy_xl00.log 1171.28s, no per-spec
+  double-bill) — the 68th-audit B1 fix holding on its second genuine detached
+  receipt. The pre-spec_sha upgrade stratum is now CPU-complete: LC.02 (0d8a31c)
+  + XL.00 done; the remaining 11 pre-spec_sha PASSes are 9 GPU-class
+  (untouchable until GPU dispatch resumes) + 2 blocked behind genuine FAILs
+  (T0.19<-T0.13, T6.03<-T2.10). Verified ME.11 is recorded FAIL (the honest RED
+  the 09-02 priority block priced — not open work). Board is honestly empty:
+  stale claims UB.10/T3.09/D1.0/LF.01 are all Review-held reds for 09-06, no
+  GPU dispatch (W36 belongs to D1.0 attempt 2 under the adopted gate), HR.1
+  D19-held to 09-14, HR.6 blocked behind HR.5, cpu<2h foreclosed today on
+  GENUINE spend (5905s of 57600s, 53 refused — the refusal trace and de-dup
+  both working as built). No leftover processes; render unchanged at 102/234.
+  NEXT: nothing is owed — the 09-06 docket is the Review's; take run
+  next/coverage fresh, and do not re-roll anything settled this week.
