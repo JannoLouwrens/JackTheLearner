@@ -10630,3 +10630,35 @@ gate an emptiness check over everything the registry can offer the gate —
 a protection whose refusals can be permanent-by-arithmetic needs its own
 foreclosure detector, because the refused work never runs and so never
 reports.**
+
+## An honest exclusion becomes a blind spot the moment a successor gives the instrument sight (68th audit, 2026-09-04)
+
+`T0.33` certified a CPU day-meter with property 4 declaring `cpu<48h` merely
+ROUTED — *"the detached lane, which this meter honestly does not see"* — and
+property 5 checking foreclosure over every cpu class **except** that one. Both
+exclusions were correct and both were written down. Sixty-five minutes later
+`T0.34` extended the same meter into that lane, and neither property was
+revisited: the successor's own battery tested day-splitting, conservation
+within one interval, billing-while-alive, SIGKILL bounds, exit codes, wiring
+and an end-to-end `sleep 17` — and never that the wrapper's charge and its
+`run_spec` grandchildren's charges are **disjoint**. They are not. The live
+file showed a wrapper billed 1200 s alongside five of its own descendants
+billed 1360 s for ~1600 s of real work, and the resulting 1.7x overcharge was
+~35 minutes from refusing 53 of 152 registered CPU specs for the rest of the
+day — on 2.4% of the ceiling genuinely spent. Nothing could see it: `T0.33`'s
+foreclosure gate compares each spec's allowance to the **full** ceiling, so it
+is false by construction for every spec and can never fire on a used day, and
+a refusal returns UNRECORDED by design, so a foreclosed day produces no FAIL,
+no VOID and no number. Two green certificates, each honest about its own
+scope, with the defect living in the seam between them.
+
+**Rule: when a spec extends an instrument into a lane an earlier spec's
+properties declare it cannot see, re-open those properties in the SAME commit —
+list the earlier spec's exclusions in the successor's docstring and either
+widen them or restate why they still hold. And when two specs each meter part
+of one resource, one property must assert their charges are DISJOINT, measured
+end-to-end through the composed path; per-component conservation is not
+conservation. A gate that compares against a fresh-state ceiling reports on a
+world the system is never in after its first run of the day — report the live
+number as a metric, because the work a protection refuses never runs and so
+never reports itself.**

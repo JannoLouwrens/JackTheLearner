@@ -4363,3 +4363,68 @@ DECIDE: D19
              speakers within the repo), that is a spec amendment through the
              strengthen-only lane, not a default firing.
   decide_by: 2026-09-14
+
+## D20 — The CPU day-ceiling counts WALL seconds, so one legal `cpu<48h` run overruns it by arithmetic and closes the whole CPU lane. Wall or core-seconds? (2026-09-04, overseer, from a live reading of the meter shipped three hours earlier)
+
+**Why this is yours and not the loop's.** Every answer except *"wall clock
+stands"* increases how much of a shared machine this project may take, which is
+`SYSTEM.md` class 3 (CONDUCT — *"fixed, and not up for measurement either"*),
+and D18 already fixed the precedent one resource over. No bakeoff can tell you
+how many of four cores this project may hold for two days; the loop may
+measure, it may not set the bar. The loop built this meter itself, unprompted,
+to protect your tenants — the defect is in composition, not intent.
+
+**THE ARITHMETIC, read live at 00:43 UTC 2026-09-04 (`8d623b3`).**
+`cpu_budget.CPU_DAY_CEILING_S = 57600.0` (16 h) is charged in **wall clock**.
+`rtf.BUDGET_SECONDS["cpu<48h"] = 172800` (48 h) is a registered, legal cost
+class served by `scripts/launch_detached.sh`.
+
+| what | seconds | against the 57600 s day |
+|---|---:|---|
+| one `cpu<48h` run occupying a full calendar day | 86400 | **1.50x — overruns** |
+| the same run with today's double-billing defect (68th audit §1) | 172800 | **3.00x** |
+| largest legal runner-lane child (`cpu<2h` x 3 seeds x 2) | 54000 | 0.94x — the number the ceiling was sized on |
+
+Once a day overruns, `admit_detached` refuses every new detached launch **and**
+`gate_cpu_child` refuses every runner CPU child — 53 of the 152 runner-lane cpu
+specs carry `est = 54000 s` and die as soon as `used_s` passes 3600. A refusal
+returns `UNRECORDED` by design, so a foreclosed day writes no FAIL, no VOID and
+no number anywhere. **This is not hypothetical for the lane in question:**
+`LC.03` v2 spent ~190 core-hours down `launch_detached.sh` on 2026-08-24, which
+is the run that motivated metering it at all.
+
+**Options.** (i) **WALL STANDS** — the ceiling means "this project may hold the
+box for 16 h of any day, whoever is running", so `cpu<48h` is simply not a
+class this box can serve; the honest consequence is retiring or re-scoping the
+class rather than leaving a lane that forecloses the ladder on first use.
+(ii) **CORE-SECONDS against 4 cores** — bill measured CPU time rather than wall
+time; a single-core 48 h detached run then costs 172800 of a 230400 s
+four-core day and the class becomes servable. This is the change that raises
+what the project may take. (iii) **A SEPARATE DETACHED SUB-CEILING** — keep the
+16 h wall ceiling for runner children, give the detached lane its own smaller
+wall allowance that cannot drain the runner lane's headroom.
+
+Note that the double-billing itself (wrapper and its `run_spec` grandchildren
+both charging the same seconds) is a plain bug, is **not** part of this
+decision, and is routed to the builder as 68th-audit B1/B2 to fix regardless of
+how you rule.
+
+DECIDE: D20
+  class:     goal
+  blocks:    the `cpu<48h` class in practice (no spec is registered in it
+             today, so the cost is a legal cost class that forecloses the
+             runner lane the first time anything uses it, not a blocked spec)
+  default:   (i) WALL STANDS, and the detached lane is declared CLOSED to
+             registered spec work until you rule. The 57600 s wall ceiling is
+             not raised, not narrowed and not re-based; `launch_detached.sh`
+             keeps admitting and billing exactly as it does today; and the
+             builder registers no spec in `cpu<48h` while this is open. This
+             picks only already-permitted actions — declining to launch is the
+             standing posture, and the ceiling is left exactly where it was
+             frozen — moves no threshold in the loosening direction, edits no
+             GOAL.md text, and leaves the foreclosure VISIBLE (68th-audit B3
+             makes it a printed number) rather than working around it. No
+             commitment goes claim-dead: nothing registered today lives in
+             this class. Option (ii) is deliberately NOT the default because a
+             default may not widen what this project is permitted to take.
+  decide_by: 2026-09-18
