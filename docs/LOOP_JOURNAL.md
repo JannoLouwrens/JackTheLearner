@@ -10018,3 +10018,25 @@ the Review should see them side by side.
   waits on the same Review, HR.1 HELD by D19 until 09-14,
   cpu<1min/cpu<48h/gpu<20min no path in; the 09-06 docket is the Review's.
 2026-09-04 ~01:2x (builder, Fable; week:all-models 50% — the gate, acted on — week:Fable 91%, no PACING streak): 68th-audit B1-B6 ALL DISCHARGED in one sitting (B7 honoured by dating B6 off the Sunday pile; re-dating Sunday's own rows is the Review's per PROGRESS item 4). B1+B2+B3 in df48f8e: the detached lane now has ONE accounting owner — _wrap exports JACK_CPU_WRAPPED, charge_cpu_child is a no-op under it, nested wraps defer to the outer owner. The defect was live while I fixed it: day 2026-09-04 showed the sweep wrapper billed 3000s (then 3600s) alongside 1360s of its own five grandchildren for one ~51-min tree — 1.7x overcharge that had ALREADY crossed the cpu<2h foreclosure line (remaining 53232s < worst legal child 54000s) on ~2.4% of the ceiling genuinely spent. T0.34 property 8 (DISJOINT CHARGES) measures the seam end-to-end through the composed path (dry: wall 1.121s, day total 1.06s, stub billed 0.0) with a marker-stripped second control that double-bills through the REAL path and fails the bound (dj_alive + dj_double_bills both True). T0.33 reports n_foreclosed_now as a METRIC never a gate — read 53 of 152 live, the audit's exact number. B4 in a3d2c9e: refusals leave a trace (cpu-refused line to stderr -> ladder.log; run status derives today's unaffordable set live — printed 53 ids at 4968s used). B5 in a55680a: corpse-citation row widened to all SEVEN (DP.02/DP.03/LC.04 welded<-LC.03 join the GEN four; the 09-01 repair grew the class 3->7, recorded). B6 in 1295771: cpu48h-class-self-forecloses-the-day-meter routed DUE 09-08 (one legal 172800s run vs the 57600s wall-clock day = every spanned day foreclosed in both lanes; unit-of-count is the OWNER's, no default may fire it). Both meter certificates DRIFTED BY DESIGN (cpu_budget.py + both test files edited) and are NOT yet re-bought — the cpu<2h sweep (pid 965942/965951) still holds the runner lock, VO.02 mid-run at 100% CPU, every prior sweep spec PASS (T2.20 33.4s, ME.5 60.6s, UB.9 207s, PG.4 504s, PG.6 552s), no ledger write landed in any dirty window (ledger mtime 00:39:45 vs edits ~01:0x, all committed within minutes). **NEXT, in order, after the sweep exits:** (1) harvest VO.02's row as found; (2) de-dup day 2026-09-04 in cpu_budget.json — remove the SIX sweep-descendant by_spec entries (T2.20/ME.5/UB.9/PG.4/PG.6/VO.02; NOT T0.17/T0.27/T0.33, which ran in the runner lane) and subtract their sum from used_s, in the same commit as the harvest, disclosed — the wrapper label owns the whole tree post-df48f8e and the phantom ~1.4ks+ is what forecloses cpu<2h today; (3) re-buy T0.33 (~2s) then T0.34 (~60s) — run status names both under STALE CLAIMS. Do not re-roll anything settled today; no GPU dispatch (W36 belongs to D1.0 attempt 2 under the Review's 09-06 gate).
+- 2026-09-04 ~02:0x (builder, Fable; week:all-models 50% — the gate, acted on —
+  week:Fable 91%, no PACING streak; 13 claude procs, paths named at commit):
+  THE 01:2x NEXT LIST IS FULLY DISCHARGED, all three items, two commits, pushed.
+  (1) The cpu<2h gate sweep finished clean at 01:33 and its rows were inherited
+  as found: SIX PASS, zero regressions — T2.20 33.4s, ME.5 60.6s, UB.9 207.1s,
+  PG.4 504.1s, PG.6 552.4s, VO.02 3195.8s (cic 2.00 vs perm p95 1.37, scrambled
+  control dead at 0.016) — the never-swept cpu<2h stratum is now swept and the
+  real cpu_budget.json carries its first genuine detached receipt (wrapper
+  4560.65s ≈ the tree's true wall). (2) Day 2026-09-04 de-duped in the same
+  commit (7264bbf), disclosed: the six pre-fix descendant double-bills
+  (sum 4558.53s) removed, used_s 9126.18 -> 4567.65, residual check exact;
+  the wrapper label owns the tree post-df48f8e. (3) T0.33 re-bought PASS
+  (1.19s) then T0.34 PASS (23.7s, dbba12b) — property 8 DISJOINT CHARGES green
+  on the live composed path (disjoint_ok=True), run status STALE CLAIMS no
+  longer names either meter. Today's cpu<2h refusal (53 ids at ~4.6ks used)
+  is now GENUINE spend, not phantom — the de-dup is what made that sentence
+  true. NEXT: board unchanged and honestly empty — remaining stale claims
+  (UB.10/T3.09/D1.0/LF.01) are all deliberately-held reds on the Review's
+  09-06 desk; no GPU dispatch (W36 belongs to D1.0 attempt 2 under the adopted
+  gate), HR.1 HELD by D19 until 09-14, HR.6 blocked behind HR.5 (65th audit
+  B1). If the 09-06 Review lands the W1 design, the detached lane that will
+  carry it is metered, disjoint, and receipt-committed.
