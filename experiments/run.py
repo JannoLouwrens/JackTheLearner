@@ -525,6 +525,24 @@ def cmd_status(ledger: Ledger) -> int:
         impl = "" if module_path_for(s.id, strict=True) else "  (not implemented)"
         print(f"    [{MARK[st]}] {s.id}  {s.title}{impl}")
     print(f"\n  {counts}\n")
+    # CPU day-meter visibility (68th audit B4): a budget refusal returns
+    # UNRECORDED by design (tenant protection is not a measurement of the
+    # spec), so a foreclosed day produces no FAIL, no VOID and no number —
+    # unless it is derived here. Live arithmetic, no persistence: the same
+    # numbers gate_cpu_child computes at the moment it refuses.
+    from .cpu_budget import CPU_DAY_CEILING_S, CpuBudget
+    from .rtf import spec_child_timeout_seconds as _cpu_est
+    _cpu_rem = CpuBudget().remaining_s()
+    _cpu_fore = sorted(
+        s.id for s in BY_ID.values()
+        if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"
+        and _cpu_est(s) > _cpu_rem)
+    if _cpu_fore:
+        _ids = " ".join(_cpu_fore[:8]) + (" …" if len(_cpu_fore) > 8 else "")
+        print(f"  ! CPU DAY BUDGET: {CPU_DAY_CEILING_S - _cpu_rem:.0f}s of "
+              f"{CPU_DAY_CEILING_S:.0f}s used today; {len(_cpu_fore)} cpu "
+              f"spec(s) currently unaffordable until midnight:\n"
+              f"      {_ids}\n")
     _check_orphan_detector()
     orphans = gpu_orphans()
     if orphans:
@@ -1880,6 +1898,12 @@ def _run_isolated(spec_id: str, ledger: Ledger):
     if _is_cpu:
         _cpu_gate = gate_cpu_child(_spec)
         if not _cpu_gate.admitted:
+            # 68th audit B4: the refusal is UNRECORDED by design, so this
+            # line is its only trace — it lands in ladder.log via the loop's
+            # capture. A day that refuses 53 specs must say so somewhere.
+            print(f"cpu-refused {spec_id} est={_cpu_gate.est_s:.0f} "
+                  f"remaining={_cpu_gate.remaining_s:.0f} "
+                  f"load={_cpu_gate.load:.2f}", file=sys.stderr, flush=True)
             return Result(spec_id=spec_id, status=Status.ERROR,
                           message=f"REFUSED before start: {_cpu_gate.reason}")
 
