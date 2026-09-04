@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 103 / 242 demonstrated
+## 104 / 242 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1126,7 +1126,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 0 — HARNESS — can we measure anything?
 
-- [ ] **SO.09** A life the hands bought is not evidence, and the harness says so
+- [x] **SO.09** A life the hands bought is not evidence, and the harness says so
       - _asserts:_ Every provisioning event is logged, and any run that claims learning reports hand_share (the fraction of need-restoration events causally downstream of a hand inside a declared window) and hand_contact_frac (the fraction of placements made within body-contact distance) against a ceiling the spec declared BEFORE the run; a run over its ceiling is REFUSED by the runner, not reported with a caveat.
       - _dies if:_ The accountant passing a deliberately puppeteered run (C-GIVE), OR refusing a clean one, OR a provisioning event reaching the world without a log line.
       - _then delete:_ The practice of reading a provisioned run as a learning result because the hand 'only helped a little'.

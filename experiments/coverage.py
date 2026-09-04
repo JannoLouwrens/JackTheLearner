@@ -893,7 +893,15 @@ def _claim_dead(r: dict) -> bool:
 # empty reads amber/red like any other class — its refill is the ME.11
 # family redesign on the Review's 09-06 desk, not a spec hunt (see
 # empty_unfillable's own instruction above).
-QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
+# `cpu<1min` LEFT THIS SET 2026-09-04 — the cpu<10min shape again, and the
+# set is now EMPTY. SO.06's PASS released SO.09 (CPU_FAST) into the class,
+# SO.09 was implemented (0476ff9) and PASSED the same hour (attempt 1, 19 s:
+# the provisioning accountant refuses C-GIVE, unlogged drops and direct-e
+# restores, accepts the clean hand), and the class emptied again. Leaving the
+# entry would be the quiet re-baseline the gpu<2h note forbids. From now on
+# cpu<1min going empty reads amber/red like any other class — its refills are
+# releases (the SO/LG families both feed it), never a spec hunt.
+QUEUE_EMPTY_BASELINE = frozenset()
 
 # The unreachable-fraction ratchet (58th audit B3). `run blocked` has printed
 # "N of M specs are unreachable" since 08-09 and NO GATE READ IT: the number
