@@ -1642,6 +1642,22 @@ ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-3
     with `reparenting-the-welded-fifteen` — the four GEN ids' fate is the
     same registry-surgery question.
 
+**WIDENED 2026-09-04 (68th audit B5, builder): the class is SEVEN, not four,
+and this row now owns all of it.** `coverage` reads `CITED-BUT-UNRUNNABLE:
+DP.02 (welded<-LC.03), DP.03 (welded<-LC.03), LC.04 (welded<-LC.03), GEN.02,
+GEN.03, GEN.06, GEN.09 (all welded<-LC.07)`. The three LC.03-welded ids are
+older and sit in `GOAL_UNRUNNABLE_BASELINE`, which is why only the GEN four
+read as NEW — but the disposition question is identical for all seven (a
+GOAL.md citation whose spec resolves to a corpse), the two weld roots are
+both learning-core screens, and deciding four while leaving three in a
+baseline would repair the symptom class by half. The causal note worth
+keeping: **the 09-01 repair GREW the class it was closing** — registering
+the GEN ids moved four citations from DANGLING (the milder red) to
+CITED-BUT-UNRUNNABLE (the harsher one), 3 -> 7 in one correctly-executed
+order. Do NOT close any part of this by adding to
+`GOAL_UNRUNNABLE_BASELINE`; it is shrink-only by construction and widening
+it is the exact move the constant exists to forbid.
+
 **What happened.** Review 2026-08-31 item 6 ordered the builder to register
 `GEN.02`/`GEN.03`/`GEN.06`/`GEN.09`, because GOAL.md cited four spec ids that
 did not resolve and `coverage` had reported them DANGLING since 2026-08-25.
