@@ -107,7 +107,9 @@ AFTER Sunday, not beside it.
                   W0/W1 design.
     09-08 (DAILY) ub10-seed-fragility-and-saturated-battery,
                   d10-successor-rerun-under-adopted-gate,
-                  lg10-mouth-fidelity-vs-freedom
+                  lg10-mouth-fidelity-vs-freedom,
+                  cpu48h-class-self-forecloses-the-day-meter (added 09-04,
+                  68th audit B6 — deliberately NOT 09-06 per its B7)
                   (t309-control-clears-the-claims-own-margin was already
                   here, deliberately off the pile)
                   — consequence-stamps of Sunday's decisions plus the
@@ -1860,3 +1862,52 @@ ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-
     LC.02, PS.02, PS.03, BA.01, TA.01, TA.02, XL.00, W0.DIAG — all go
     stale loudly at the next `run status`. A W1-line fix (new world file)
     bills zero of them.
+
+ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 (finding 5) | OPEN
+    DUE: 2026-09-08 | deliberately NOT 09-06 (the audit's own B7: the Sunday
+    pile is 8 rows against a measured capacity of ~1/cycle) and independent
+    of the W0/W1 design. It is coupled instead to the OWNER question the
+    same audit put on their desk (OVERSIGHT.md FOR THE OWNER item 2: what
+    should the CPU day-ceiling count?) — if the owner answers before 09-08,
+    this row consumes the answer; if not, decide the routing consequence
+    only and leave the unit question armed.
+    Question: `rtf.BUDGET_SECONDS["cpu<48h"] = 172800 s` against
+    `CPU_DAY_CEILING_S = 57600 s/day`, charged in WALL CLOCK, means one
+    LEGAL detached run (a single-process child occupying one core of four)
+    bills up to 86400 s into a 57600 s bucket: it overruns every day it
+    fully spans by arithmetic, and — because `gate_cpu_child` and
+    `admit_detached` read the same exhausted bucket — closes the runner
+    lane AND new detached launches for every one of those days. The class
+    forecloses the box's whole CPU schedule as a side effect of being used
+    once, legally. Worked example: LC.03 v2 spent ~190 core-hours over 2.6
+    days through this lane; under today's meter (T0.34) that life would
+    have blacked out three consecutive days of runner-lane CPU work.
+    Why this is a desk row and not a builder fix: the repair touches what
+    the ceiling COUNTS (wall-seconds vs core-seconds on a 4-core box),
+    which changes what the tenant protection protects. Any answer other
+    than "wall clock stands" RELAXES a protection on a box with paying
+    tenants — that is a threshold question, owner-gated, and no default
+    here may fire it (SYSTEM.md law 4; the T0.33 ceiling comment already
+    binds `cpu_foreclosed == []` to the current arithmetic).
+    Options, priced: (i) wall clock stands — then a cpu<48h dispatch is
+    accepted as buying N foreclosed days, and the honest repair is
+    SCHEDULING (the queue plans around it; `run status`'s new CPU DAY
+    BUDGET block makes the foreclosure visible while it happens); (ii)
+    core-seconds against 4 cores (owner-only) — a single-core child then
+    bills ~21600 core-s into a 230400 core-s day and coexists with the
+    runner lane; needs per-process CPU-time sampling, not wall clock, or a
+    declared cores-occupied factor; (iii) a separate detached-lane
+    sub-ceiling so one lane cannot exhaust the other's allowance — still a
+    threshold edit, still owner-gated.
+    Instruments already in place feeding this row: T0.33's
+    `n_foreclosed_now` metric and `run status`'s live unaffordable-set
+    print (68th audit B3/B4, landed 2026-09-04) — a foreclosed day now
+    reports itself, so the decision can be made against observed
+    foreclosure counts rather than the worst-case arithmetic alone.
+    SEMANTIC bill: none — no committed row claims anything about cpu<48h
+    scheduling; T0.33/T0.34's certificates gate ADMISSION and DISJOINTNESS,
+    not the unit the ceiling counts.
+    MECHANICAL bill: whichever option lands edits `experiments/cpu_budget.py`
+    (and (ii) also `experiments/rtf.py`) — T0.33 and T0.34 both cite
+    cpu_budget.py via IMPL_DEPS and re-buy at ~2 s and ~60 s respectively;
+    option (ii) additionally stales every certificate citing rtf.py.
