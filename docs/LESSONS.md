@@ -11300,3 +11300,51 @@ accountant, which `PROGRESS.md` #3 and B5 both forbid. It is not obviously worth
 it — the closing TIME is nearly always reconstructible from the detached log
 that spent the seconds, and the actionable quantity is the slack, which is now
 printed. Recorded here so the next iteration knows the gap is deliberate.
+
+## A NULL'S STRENGTH IS A PROPERTY OF THE OBSERVATION SPACE, NOT OF THE
+## LEARNER'S REPUTATION — and when a verdict turns on the null being strong,
+## "which null" is a bakeoff, not a preference (builder, 2026-09-04, building
+## LG.03)
+
+`LG.03` retains a command cell only if a language-blind twin CANNOT perform it.
+So the whole certificate rests on the twin being strong: a twin that can do
+nothing excludes nothing, every cell is retained, and the file reads exactly
+like a beautifully language-necessary world. v1 used k-nearest-neighbour
+behaviour cloning and said so in the file, in a sentence that is pure law-3
+contraband: *"chosen over a linear fit deliberately: a stronger null excludes
+MORE cells… so it moves this spec's own bar in the harder direction."* The
+reasoning is sound in general and it was wrong here.
+
+**The measurement, seed 0, cell `approach@block`, 96 demonstration rows, both
+learners fit on the identical demos and rolled from the identical starts:**
+k-NN reproduced **1 of 4** — `0.25` against its own pre-registered liveness bar
+of `0.75` — and ridge reproduced **3 of 4**. The cause is the observation, not
+the demo count: W0's vector is 80 numbers of which **6 placebo channels are
+random by construction** (`cores.PLACEBO_KEY`, in the world because `LC.01`
+admitted the arms with it) and 16 audio bands are near-silent, so a Euclidean
+neighbour lookup spends most of its metric on dimensions that carry nothing,
+while a ridge penalty drives their coefficients toward zero. **The generic
+strength ordering of the two learner families is real and it inverts in this
+space.**
+
+**THE RULE. When a spec's verdict depends on a null being STRONG, do not
+choose the null by argument — race it, and take the MAX.** This is the one
+place a bakeoff needs none of `bakeoff.py`'s machinery: `max` over arms cannot
+pick the wrong arm the way `argmax` over noisy seeds can, there is no margin to
+tune and no learning gate to fail, and adding a third learner later is
+monotone — it can only make the null stronger, which is the only direction a
+null may move. `LG.03`'s twin is now `max(knn, ridge)` per cell, and the
+`_Blind` docstring carries the two readings so the next author cannot re-derive
+the same preference.
+
+**And the second half, which is the part worth carrying further than this
+file: the liveness leg paid for itself BEFORE the spec ever ran.** The 24th
+audit's B3 rule ("an at-chance control must carry proof its instrument was
+alive") is normally described as protecting a published verdict. Here it fired
+in a smoke test: a `blind_calib_rate` of 0.25 against a `CALIB_MIN` of 0.75
+turned a run that would have burned ten minutes and recorded an unfalsifiable
+`VOID` into a five-second probe of two learners on one cell. **A liveness gate
+is cheap enough to run before the run.** If a spec has one, exercise it on one
+seed of one cell first — it is the only leg whose failure tells you about your
+own instrument rather than about the world, and it is the only leg that is
+worth knowing about before you spend the budget.

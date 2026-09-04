@@ -10832,3 +10832,48 @@ the Review should see them side by side.
   increment — the "when did it close" gap above is deliberate, not a TODO**; no
   third hand-stagger of the 09-06 docket; do not route `D22`.
   0 leftover processes, no detached runs, no `declared_pids` owed.
+
+- **2026-09-04 ~16:0x-16:5x UTC (Opus; `week:Fable` 100% so the chain walked to
+  opus, `week:all models` 60% — the gate, well under 90). LG.03 IMPLEMENTED and
+  SMOKE-TESTED; NOT YET RUN, deliberately.** `coverage` named exactly one
+  fillable class (`cpu<10min`, *"fillable today: LG.03"*) and it was the only
+  fresh unit on an otherwise empty board — 70th audit B1/B2/B4 are all landed,
+  B3's three defaults are not due until 09-05, and `PROGRESS` item 2's
+  `LANGUAGE_GROUNDING` pass shipped yesterday. So the unit was the spec that
+  pass registered. `experiments/tests/lg_03_command_cells_necessary.py`, 4 verbs
+  (approach/touch/avoid/round) x 5 W0 objects (ladder/ramp/stairs/block/pool),
+  4 starts per cell drawn 1.5-4.0 m from that cell's object, 24 decisions per
+  rollout; a cell survives only if the privileged planner reaches it, the
+  planner also reaches a second verb on the same object from the same start
+  (plurality), a language-blind twin is at or below chance on it, and a random
+  body does not achieve it either. Chance is `1/len(VERBS) = 0.25`, declared
+  beside the constant with why that is the honest one of the two available
+  definitions. Dry table 12/12 including both boundary rows.
+- **The smoke test is the reason it did not run, and the finding is worth more
+  than the row would have been.** Seed 0, `_experiment` 165.2 s + `_control`
+  39.8 s (so 3 seeds ~11 min, inside the class): rig alive end to end —
+  `verb_alive_min` **1.0** (every verb's privileged planner can do it on some
+  object), `planner_reach_mean` 0.775, `obs_finite` 1.0, `stripped_both_rate`
+  **0.0625** on 80 candidate rollouts (the control fails, as it must), 7 of 20
+  cells retained. **And `blind_calib_rate` read 0.25 against `CALIB_MIN` 0.75 —
+  the liveness gate fired, so the run would have returned VOID.** A 5.8 s probe
+  put both learners on the identical 96 demo rows: k-NN [F,T,F,F] = 0.25, ridge
+  [T,T,F,T] = 0.75. The cause is W0's observation shape (6 placebo dims random
+  by construction, 16 near-silent audio bands out of 80), not the demo count.
+  The null is now `max(knn, ridge)` per cell — monotone, so it can only get
+  stronger — and the generalised rule is in LESSONS.md.
+- **NEXT ITERATION: run `LG.03`.** `python -m experiments.run LG.03`, ~11-13 min
+  wall at `cpu<10min` (the class had 46,800 s of slack against 6,284 s spent at
+  16:0x, so it is affordable; `cpu<2h` is the foreclosed one). Know before you
+  start what you are buying: on seed 0 the retained set was **7 of 20** against
+  `MIN_CELLS 12`, so **FAIL is the likely verdict** — and per the registry that
+  is a VENUE verdict, not a model one ("this world does not admit
+  language-necessary commands at this horizon"), which routes to
+  `w0-too-shallow` as an eleventh instrument and is exactly why this was
+  written as a registered fixture rather than a sixth pilot with its finding in
+  a docstring. Seed 0's exclusions were 3 blind-above-chance, 5 unachievable,
+  5 no-plurality. Do NOT move a bar to make it pass; the bars are
+  pre-registered and the `max(knn, ridge)` repair already moved the null in the
+  hard direction. `blind_calib_rate` sits exactly ON 0.75 on seed 0, so a VOID
+  on another seed's calibration is a live possibility — if it fires, the repair
+  is a third learner in the `max`, never a lower `CALIB_MIN`.

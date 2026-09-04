@@ -180,6 +180,7 @@ MIN_PER_VERB, MIN_PER_OBJECT = 2, 2
 
 # ── the blind twin ──────────────────────────────────────────────────────────
 KNN_K = 5                      # neighbours averaged; deterministic, no fitting
+RIDGE_LAMBDA = 1.0             # the linear twin's penalty; see `_Blind`
 KP, KD = 2.0, 0.6              # the servo gains, LF.01's forager's
 
 #: per-seed retained cell sets, filled by `_experiment`, read by `_control`
@@ -342,12 +343,32 @@ def _random_policy(rng: np.random.RandomState):
 
 # ── the language-blind twin ─────────────────────────────────────────────────
 class _Blind:
-    """k-nearest-neighbour behaviour cloning over W0's observation.
+    """Behaviour cloning over W0's observation, by TWO learners, and the null
+    is whichever of them does better on the cell.
 
-    Chosen over a linear fit deliberately: a stronger null excludes MORE cells
-    and retains fewer, so it moves this spec's own bar in the harder direction
-    (LG.01's v2 repair, same reasoning). It is deterministic and needs no
-    optimiser, so nothing about the verdict depends on a training schedule.
+    Both are deterministic and need no optimiser, so nothing about the verdict
+    depends on a training schedule. Both see the identical 80 numbers.
+
+    WHY TWO, AND IT IS A MEASUREMENT, NOT A PREFERENCE (recorded 2026-09-04,
+    before this spec was ever run). v1 carried k-NN alone, on the reasoning
+    that a non-parametric learner is the stronger null. Its own calibration
+    leg — the liveness proof this file exists to carry — read **0.25 against
+    CALIB_MIN 0.75 on seed 0**: the twin could not reproduce a demonstration
+    it was trained on, from the identical start. The diagnosis is the
+    observation's shape, not the demo count: 80 dimensions of which the 6
+    placebo channels are random by construction (`cores.PLACEBO_KEY`, carried
+    into W0 because LC.01 admitted the arms with it) and 16 audio bands are
+    near-silent, so a Euclidean neighbour lookup spends most of its metric on
+    dimensions that carry nothing. A ridge fit penalises those coefficients
+    toward zero and reproduced **0.75 on the identical demos** (probe
+    2026-09-04, seed 0, cell `approach@block`, 96 demo rows: k-NN
+    [F,T,F,F], ridge [T,T,F,T]).
+
+    Had v1 shipped, the run would have returned VOID on its own liveness gate
+    — the correct verdict, and a wasted 10 minutes. The gate worked; what it
+    proves is that the identity of the strongest cheap null is an empirical
+    question in this observation space, so the null is the MAX over both and
+    a third learner may be added later only in that direction.
     """
 
     def __init__(self, X: np.ndarray, Y: np.ndarray):
@@ -357,14 +378,27 @@ class _Blind:
         self.Xn = (X - self.mu) / self.sd
         self.Y = Y
         self.k = min(KNN_K, len(Y))
+        Z = np.hstack([self.Xn, np.ones((len(self.Xn), 1))])
+        self.W = np.linalg.solve(Z.T @ Z + RIDGE_LAMBDA * np.eye(Z.shape[1]),
+                                 Z.T @ Y)
 
-    def policy(self):
+    def _knn(self, q):
+        d = np.linalg.norm(self.Xn - q, axis=1)
+        idx = np.argpartition(d, self.k - 1)[:self.k]
+        return self.Y[idx].mean(axis=0)
+
+    def _ridge(self, q):
+        return np.clip(np.concatenate([q, [1.0]]) @ self.W, -1.0, 1.0)
+
+    def policy(self, kind: str):
+        f = self._knn if kind == "knn" else self._ridge
+
         def policy(v, xy, vel, t):
-            q = (v - self.mu) / self.sd
-            d = np.linalg.norm(self.Xn - q, axis=1)
-            idx = np.argpartition(d, self.k - 1)[:self.k]
-            return self.Y[idx].mean(axis=0)
+            return f((v - self.mu) / self.sd)
         return policy
+
+    #: the learners raced, named so a reader can see there are exactly two
+    KINDS = ("knn", "ridge")
 
 
 # ── the experiment ──────────────────────────────────────────────────────────
@@ -435,10 +469,12 @@ def _experiment(seed: int) -> dict:
     blind = _Blind(np.array(demo_X), np.array(demo_Y))
     calib = _Blind(np.array(calib_X), np.array(calib_Y))
     oxy_c, ogids_c = objs[calib_cell.split("@")[1]]
-    calib_hits = [
-        _satisfies("approach", _rollout(w, st, calib.policy(), oxy_c, ogids_c))
-        for st in starts[calib_cell]]
-    calib_rate = float(np.mean(calib_hits)) if calib_hits else 0.0
+    calib_rate = 0.0
+    for kind in _Blind.KINDS:
+        hits = [_satisfies("approach",
+                           _rollout(w, st, calib.policy(kind), oxy_c, ogids_c))
+                for st in starts[calib_cell]]
+        calib_rate = max(calib_rate, float(np.mean(hits)) if hits else 0.0)
 
     # ── necessity: the blind twin, and the free-target check ───────────────
     blind_rate: Dict[str, float] = {}
@@ -446,14 +482,21 @@ def _experiment(seed: int) -> dict:
     for v, o in cells:
         c = _cell(v, o)
         oxy, ogids = objs[o]
-        bh, rh = [], []
+        bh = {k: [] for k in _Blind.KINDS}
+        rh = []
         for j, st in enumerate(starts[c]):
-            bh.append(_satisfies(v, _rollout(w, st, blind.policy(), oxy, ogids)))
+            for kind in _Blind.KINDS:
+                bh[kind].append(_satisfies(
+                    v, _rollout(w, st, blind.policy(kind), oxy, ogids)))
             rrng = np.random.RandomState(seed * 611953
                                          + zlib.crc32(c.encode()) % 9973 + j)
             rh.append(_satisfies(v, _rollout(w, st, _random_policy(rrng),
                                              oxy, ogids)))
-        blind_rate[c] = float(np.mean(bh)) if bh else 1.0
+        # The NULL IS THE BEST OF THE TWO. A cell only survives if neither
+        # blind learner can do it; taking the max is the direction that
+        # excludes more cells.
+        blind_rate[c] = max([float(np.mean(bh[k])) if bh[k] else 1.0
+                             for k in _Blind.KINDS])
         rand_rate[c] = float(np.mean(rh)) if rh else 1.0
 
     # ── retention ──────────────────────────────────────────────────────────
