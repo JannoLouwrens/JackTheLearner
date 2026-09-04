@@ -21,9 +21,10 @@
         "T0.33": 11.8,
         "T0.34": 72.76,
         "detached:gate_sweep_cpu2h.log": 4560.65,
-        "detached:rebuy_xl00.log": 1171.28
+        "detached:rebuy_xl00.log": 1171.28,
+        "detached:so07_aliveness_w0.log": 1004.62
       },
-      "used_s": 7191.34
+      "used_s": 8195.96
     }
   },
   "overruns": []
