@@ -10279,3 +10279,72 @@ the Review should see them side by side.
   attempt 2 waits for 09-09, no third CPU-accountant increment, no third
   hand-stagger of the 09-06 docket). `next_free_due` is **2026-09-12** for any
   row you route.
+- 2026-09-04 09:xx UTC (builder, OPUS — `week:Fable` 99%, `week:all models`
+  **56%**, the gate; no `PACING:` line, 0 skips). Unit: the **69th audit's B2**,
+  ranked first by the previous iteration's hand-off. `decisions.py` policed one
+  document; the Review's `## FOR THE OWNER` section is a **second owner desk**
+  with no class, no default, no `decide_by` and no reader, and it is
+  current-state by design — so on 09-03 the Review's largest strategic
+  recommendation was published there and its own successor's rewrite deleted it,
+  unanswered, at 24 hours old, while `decisions --check` printed
+  `ratchet ok (0/10 undeclared)`: true of the file it read, false of the system.
+  **MEASURED at `dd3d907`: UNROUTED-OWNER-ASK 3 of 4 live items** (item 2 cites
+  `D20` and is correctly quiet) **and VANISHED-OWNER-ASK 1** — the 09-03
+  `run blocked` ask, which the overseer ruled builder work and this desk
+  implemented at `9e847cf` **with no durable record on any document either organ
+  reads**. That disposition is now in `DECISIONS_RESOLVED.md` with its three
+  losers and the reading is **0**; it went quiet for the prescribed reason, not
+  because its subject vanished (the distinction `T0.28` P5 exists to make).
+  THE CLASSIFIER IS BLUNT TWICE, ON PURPOSE. (1) It does not decide which items
+  are asks: **the audit that ordered it classified the same page two ways one
+  paragraph apart** — the Sunday-order item counted as an ask on 09-03 and as
+  scheduling on 09-04 — so every numbered item is an ask until it cites a live
+  `D`, is quoted into a decision file, or DECLARES `NO-DECISION: <reason>`.
+  Silence reported, exemption written down: yesterday's partition lesson applied
+  to a document. (2) It matches by **QUOTATION** (6-token verbatim span), not
+  similarity, because quoting the ask into the entry is what the overseer
+  actually did for `D21` — the green is the repair the system already performs,
+  and there is no threshold to tune.
+  **FOUND BY POINTING IT AT THE LIVE PAGE, and it had already silenced the only
+  true positive:** `\bD(\d{1,3})\b` matches `D1` inside `D1.0` — a SPEC. The
+  09-03 ask read as ROUTED TO `D1` because its prose said `D1.0` twice, and the
+  new check reported a clean board on its first live run. Fixed with `(?!\.\d)`
+  and pinned in both directions. This file's own `_DECIDE` scar ("nest" inside
+  "ho-nest"), numbers swapped.
+  `T0.28` gains **P11/P12 (12 properties, was 10)** with the real 09-03/09-04
+  pages as fixtures; the control is `decisions.py` before 2026-09-04 — no reader
+  for the second desk — reconstructed by DELETION, and it misses both. Claim
+  text strengthened to eight clauses (`fff166e`, a `SPEC_CLAIM_FIELDS` edit) and
+  **re-bought clean at `c417fec`: PASS, 12/12, `live_unrouted_asks` 3.0,
+  `live_vanished_asks` 0.0** — recorded as METRICS, never gated, so the
+  certificate cannot flap on the Review's prose while the ledger still remembers
+  the state of the owner's desk that day.
+  The prompt half: `overseer_prompt.md`'s READ FIRST gains `docs/PROGRESS.md`
+  (unread by that organ since it measured that fact itself into `D15` on 08-29 —
+  `D13` says the overseer may not edit its own script, so the builder did it),
+  and `review_prompt.md` documents the three honest moves for an owner item.
+  **THE ONE LIVE ASK I DELIBERATELY DID NOT ROUTE, and the refusal is the
+  finding:** live item 1 is *"let the builder DRAFT redesigns"*. Routing it means
+  arming a default about the **builder's own authority**, and a default may not
+  widen what is permitted — so the builder is the one organ that must not write
+  that entry. It stays red at 3/3 for the Review or the overseer to route. The
+  ratchet may shrink and may never grow; the other two reds are the Review's
+  standing status paragraphs and shrink the moment it writes `NO-DECISION:`.
+  Ledger **102 PASS / 22 FAIL / 11 VOID** — unchanged; this iteration bought no
+  new capability. STALE CLAIMS still the four pre-existing Review-held reds
+  (UB.10/T3.09/D1.0/LF.01), no new DRIFTED, `coverage` rc=2 unchanged,
+  `decisions`/`review-queue`/`champions` rc=0. 0 leftover processes, no detached
+  runs, no `declared_pids` owed.
+  NEXT: **69th audit B4 is the ranked unit** — `gate_cpu_child` should gate on
+  the `rtf` projection with the enum worst case as the fallback, and join
+  `n_foreclosed_now` to `ratchet_readings.json`; the audit prices today's
+  realised cost at zero but wants it **before the 09-06 Review orders CPU work**,
+  and `run status` currently reads *53 cpu specs unaffordable until midnight* off
+  5949 s of housekeeping. B5 stays CONDITIONAL on the owner granting the
+  draft-then-ratify route — do not build it speculatively; note that the live
+  `UNROUTED-OWNER-ASK` #1 IS that route's ask, so if it is ever routed, B5 is
+  priced into that decision and not before. Standing prohibitions all unchanged
+  (no `D1.0` re-dispatch, **let W35's ~11 h expire at 09-06 00:00**, `HR.1`–`HR.4`
+  D19-held to 09-14, `HR.6` behind `HR.5`, `LF.01` attempt 2 waits for 09-09, no
+  third CPU-accountant increment, no third hand-stagger of the 09-06 docket).
+  `next_free_due` is **2026-09-12** for any row you route.
