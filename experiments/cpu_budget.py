@@ -22,6 +22,19 @@ Scope, stated honestly:
     — the same arithmetic that kills the child), and `charge()` bills the wall
     clock actually spent; like the GPU meter, an overrun past the ceiling is
     OBSERVED with a mark, while the refusal stops new work from starting.
+
+Accounting ownership (68th audit B1): when two billers meter one resource,
+their charges must be DISJOINT, and the owner here is the OUTERMOST wrapper.
+`_wrap` bills the whole tree's wall clock under its label and exports
+JACK_CPU_WRAPPED into the payload's environment; `charge_cpu_child` — the
+runner lane's only debit path — skips under that marker, because every second
+a wrapped descendant spends is already inside the interval the wrapper's
+heartbeat bills. A nested `wrap` likewise defers to the outer one. Before
+this, a detached sweep was billed once by the wrapper and again by each
+`run_spec` grandchild: 1.7x overcharge, measured live on 2026-09-04, ~35
+minutes from foreclosing 53 of 152 CPU specs on 2.4% of the ceiling genuinely
+spent. The wrapper owns the charge because it is the only process whose wall
+clock covers the tree end to end, including the seams no child bills.
 """
 from __future__ import annotations
 
@@ -36,6 +49,7 @@ from .rtf import spec_child_timeout_seconds
 
 BUDGET_FILE = Path(__file__).parent / "cpu_budget.json"
 ENV_OVERRIDE = "JACK_CPU_BUDGET"   # tests point this at a temp file
+ENV_WRAPPED = "JACK_CPU_WRAPPED"   # set by _wrap: the tree's charge has an owner
 
 # The ladder's children may occupy at most this much wall clock per calendar
 # day. 16 h: (a) it ADMITS the largest legal child from a fresh day — cpu<2h
@@ -169,6 +183,13 @@ def gate_cpu_child(spec, *, path: Path | None = None,
 
 def charge_cpu_child(spec_id: str, seconds: float,
                      path: Path | None = None) -> None:
+    """The runner lane's debit. Under a detached wrapper this is a NO-OP:
+    the wrapper's heartbeat already bills the wall interval this child ran
+    inside, and a second debit here is the 1.7x double-charge the 68th audit
+    caught foreclosing the day (charges must be disjoint; the outermost
+    wrapper owns the tree's charge)."""
+    if os.environ.get(ENV_WRAPPED):
+        return
     CpuBudget(path).charge(spec_id, seconds)
 
 
@@ -235,12 +256,20 @@ def admit_detached(label: str, *, path: Path | None = None,
 def _wrap(label: str, argv: list) -> int:
     """Run argv as a child, bill its wall clock every heartbeat, propagate
     its exit code. SIGTERM is forwarded so a polite kill of the wrapper
-    takes the payload with it; a SIGKILL must target the process group."""
+    takes the payload with it; a SIGKILL must target the process group.
+
+    The OUTERMOST wrapper owns the whole tree's charge: it exports
+    ENV_WRAPPED so every `charge_cpu_child` beneath it skips (their wall
+    clock is inside this heartbeat's interval), and a nested wrap finds the
+    marker already set and bills nothing itself."""
     import signal
     import subprocess
     import sys
+    owner = not os.environ.get(ENV_WRAPPED)
+    env = dict(os.environ)
+    env.setdefault(ENV_WRAPPED, label)
     try:
-        proc = subprocess.Popen(argv)
+        proc = subprocess.Popen(argv, env=env)
     except OSError as e:
         print(f"cpu_budget wrap: cannot spawn {argv[0]!r}: {e}",
               file=sys.stderr)
@@ -254,7 +283,7 @@ def _wrap(label: str, argv: list) -> int:
         except subprocess.TimeoutExpired:
             done = False
         now = time.time()
-        if now > last:
+        if owner and now > last:
             bill_interval(label, last, now)
             last = now
         if done:

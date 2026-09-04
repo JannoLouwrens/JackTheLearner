@@ -46,11 +46,30 @@ Properties, each independently checkable:
      a temp ledger via JACK_CPU_BUDGET) produces a receipt whose total
      covers the payload's life. This exercises the shipped path — admit,
      setsid, wrap, heartbeat, final bill — not a reimplementation of it.
+  8. DISJOINT CHARGES (68th audit B1/B2). This spec extended the day meter
+     into the lane T0.33's property 4 declares merely ROUTED ("the detached
+     lane, which this meter honestly does not see") — and per the 2026-09-04
+     lesson, extending an instrument into an excluded lane re-opens the
+     exclusion: T0.33's property 5 (foreclosure) also compares against the
+     fresh ceiling only, so neither certificate could see the seam between
+     the two meters. The seam was real: the wrapper billed the whole tree's
+     wall clock AND every `run_spec` grandchild billed itself — 1.7x
+     overcharge, measured live, ~35 minutes from foreclosing 53 of 152 CPU
+     specs on 2.4% genuinely spent. The property: a `charge_cpu_child`-shaped
+     descendant run under `wrap` against a temp budget bills NOTHING itself
+     (the wrapper owns the tree), and the day's total equals the tree's true
+     wall clock within one heartbeat plus slack — disjointness measured end
+     to end through the composed path, not per component.
 
 Control (registry): a lump-sum accountant billing the whole interval to the
 EXIT day must FAIL the day-split property (yesterday's bucket empty, the
 exit day holding everything) while its TOTAL stays exact — alive while
-failing, so a broken-everywhere control cannot pass vacuously.
+failing, so a broken-everywhere control cannot pass vacuously. A second
+control carries property 8's burden: the same composed run with the
+ownership marker deliberately stripped inside the descendant must land the
+descendant's charge (alive) and push the day total past the wall-clock bound
+(double-bills) — the pre-fix accountant, reproduced through the real path,
+must fail the disjointness bound.
 
 VOID lane (T0.33's, verbatim): a live 1-minute load above LOAD_CEILING is a
 co-tenant condition — the heartbeat timing asserts and the admission
@@ -78,8 +97,8 @@ import time
 from pathlib import Path
 
 from ..cpu_budget import (CPU_DAY_CEILING_S, ENV_HEARTBEAT, ENV_OVERRIDE,
-                          HEARTBEAT_S, LOAD_CEILING, CpuBudget, _loadavg,
-                          admit_detached, bill_interval)
+                          ENV_WRAPPED, HEARTBEAT_S, LOAD_CEILING, CpuBudget,
+                          _loadavg, admit_detached, bill_interval)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
@@ -162,6 +181,11 @@ def _experiment(seed: int) -> dict:
             env[ENV_OVERRIDE] = str(budget_file)
             env[ENV_HEARTBEAT] = str(TEST_HB_S)
             env.pop("JACK_AWAITING_SPEC", None)  # a probe owes no result
+            # If THIS test runs under a real detached wrapper, the ownership
+            # marker must not leak into the temp-budget universes below — an
+            # inner wrapper that defers to the outer owner would bill nothing
+            # and break every heartbeat property for the wrong reason.
+            env.pop(ENV_WRAPPED, None)
             return env
 
         # ── 5. exit codes propagate ───────────────────────────────────────
@@ -231,6 +255,31 @@ def _experiment(seed: int) -> dict:
             time.sleep(0.5)
         live_receipt = launcher_ok and e2e_total >= 15.0
 
+        # ── 8. disjoint charges through the composed path ─────────────────
+        # A run_spec-shaped descendant: sleeps, then debits the runner lane
+        # the way run.py:_bill_cpu does (charge_cpu_child, big fake seconds
+        # so a double-charge is unmistakable), then sleeps again so the
+        # charge sits strictly inside the wrapped life.
+        dj_file = td / "disjoint.json"
+        stub = ("import sys, time; sys.path.insert(0, %r); time.sleep(0.7); "
+                "from experiments.cpu_budget import charge_cpu_child; "
+                "charge_cpu_child('t0_34_stubspec', 5.0); time.sleep(0.3)"
+                % str(REPO))
+        w0 = time.time()
+        dj_rc = subprocess.run(
+            _wrap_cmd("t0_34_dj", sys.executable, "-c", stub),
+            cwd=REPO, env=env_for(dj_file),
+            capture_output=True, timeout=60).returncode
+        dj_wall = time.time() - w0
+        dj_day_total = sum(b8["used_s"] for b8 in
+                           CpuBudget(dj_file).data["days"].values()) \
+            if dj_file.exists() else 0.0
+        dj_stub_billed = _label_total(dj_file, "t0_34_stubspec")
+        disjoint_ok = (dj_rc == 0
+                       and dj_stub_billed == 0.0
+                       and dj_day_total >= 0.9              # billing alive
+                       and dj_day_total <= dj_wall + TEST_HB_S + SLACK_S)
+
         # default heartbeat is what the docstring promises
         default_hb_ok = HEARTBEAT_S == 600.0
 
@@ -256,15 +305,27 @@ def _experiment(seed: int) -> dict:
         "launcher_ok": launcher_ok,
         "e2e_total_s": round(e2e_total, 3),
         "live_receipt": live_receipt,
+        "dj_wall_s": round(dj_wall, 3),
+        "dj_day_total_s": round(dj_day_total, 3),
+        "dj_stub_billed_s": round(dj_stub_billed, 3),
+        "disjoint_ok": disjoint_ok,
         "default_hb_ok": default_hb_ok,
     }
 
 
 def _control(seed: int) -> dict:
-    """The lump-sum accountant: the whole interval billed at exit, to the
-    exit day. It must FAIL day-split specifically — yesterday's bucket empty,
-    the exit day holding everything — while the TOTAL stays exact, so it is
-    demonstrably alive while failing."""
+    """Two accountants that must FAIL, each alive while failing.
+
+    The lump-sum accountant bills the whole interval at exit, to the exit
+    day: it must FAIL day-split specifically — yesterday's bucket empty, the
+    exit day holding everything — while the TOTAL stays exact.
+
+    The double-billing accountant is the pre-fix composition, reproduced
+    through the real path: the same wrap-a-descendant run as property 8, but
+    the descendant strips the ownership marker before debiting — so its
+    charge LANDS (alive) alongside the wrapper's heartbeat, and the day
+    total overshoots the tree's true wall clock past the disjointness bound
+    (fails property 8's arithmetic)."""
     base = time.mktime((2026, 9, 1, 0, 0, 0, 0, 0, -1))
     t0, t1 = base - 60.0, base + 120.0
     with tempfile.TemporaryDirectory() as td:
@@ -273,9 +334,31 @@ def _control(seed: int) -> dict:
         CpuBudget(path).charge("t0_34_lump", t1 - t0, day=exit_day)
         lb = CpuBudget(path)
         yesterday, today = lb.used_s("2026-08-31"), lb.used_s("2026-09-01")
+
+        dbl_file = Path(td) / "double.json"
+        env = dict(os.environ)
+        env[ENV_OVERRIDE] = str(dbl_file)
+        env[ENV_HEARTBEAT] = str(TEST_HB_S)
+        env.pop("JACK_AWAITING_SPEC", None)
+        env.pop(ENV_WRAPPED, None)
+        stub = ("import os, sys, time; sys.path.insert(0, %r); "
+                "time.sleep(0.7); os.environ.pop(%r, None); "
+                "from experiments.cpu_budget import charge_cpu_child; "
+                "charge_cpu_child('t0_34_ctl_stub', 5.0); time.sleep(0.3)"
+                % (str(REPO), ENV_WRAPPED))
+        w0 = time.time()
+        subprocess.run(_wrap_cmd("t0_34_ctl", sys.executable, "-c", stub),
+                       cwd=REPO, env=env, capture_output=True, timeout=60)
+        wall = time.time() - w0
+        total = sum(bk["used_s"] for bk in
+                    CpuBudget(dbl_file).data["days"].values()) \
+            if dbl_file.exists() else 0.0
+        stub_billed = _label_total(dbl_file, "t0_34_ctl_stub")
     return {
         "alive": today == 180.0,                      # the total landed…
         "lump_misbills": yesterday == 0.0 and today == 180.0,  # …in ONE day
+        "dj_alive": stub_billed == 5.0,   # the stripped descendant's debit landed
+        "dj_double_bills": total > wall + TEST_HB_S + SLACK_S,
     }
 
 
@@ -297,9 +380,12 @@ def _check(m: dict, c: dict):
             and m["wiring_ok"] is True
             and m["launcher_ok"] is True
             and m["live_receipt"] is True
+            and m["disjoint_ok"] is True
             and m["default_hb_ok"] is True
             and c["alive"] is True
-            and c["lump_misbills"] is True)
+            and c["lump_misbills"] is True
+            and c["dj_alive"] is True
+            and c["dj_double_bills"] is True)
 
 
 def run(ledger: Ledger | None = None):

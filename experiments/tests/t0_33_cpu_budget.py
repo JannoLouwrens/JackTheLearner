@@ -28,7 +28,16 @@ implementation including a broken one):
   5. NO FORECLOSURE: the largest legal child (cpu<2h x 3 seeds x 2 = 54000 s)
      is admitted from a fresh day, and no registered cpu spec's canonical
      estimate exceeds the full ceiling — a tenant gate must not silently
-     foreclose a cost class by arithmetic (the ME.11.E disease).
+     foreclose a cost class by arithmetic (the ME.11.E disease). Honest
+     limit (68th audit B3): this gate compares against the FRESH ceiling, so
+     it is vacuously green on any used day and can never fire while the day
+     fills — and a refusal returns UNRECORDED by design, so a foreclosed day
+     produces no number anywhere. The repair is a METRIC, not a gate:
+     `n_foreclosed_now` counts the registered runner-lane cpu specs whose
+     canonical estimate exceeds the LIVE day's remaining seconds at
+     certificate time. It is reported so a foreclosed day stops being
+     invisible; it is NOT gated at zero, because a legitimately-spent day
+     SHOULD refuse things.
   6. Load refuses independently of the budget, and the threshold equals
      `ladder_loop.sh`'s MAX_LOAD — one number, two languages, parsed not
      assumed.
@@ -186,6 +195,17 @@ def _experiment(seed: int) -> dict:
             if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"
             and spec_child_timeout_seconds(s) > CPU_DAY_CEILING_S)
 
+        # METRIC, not gate (68th audit B3): how many runner-lane cpu specs
+        # the LIVE day would refuse right now. Reads the real accounting
+        # (read-only — "never touch" bans writes, not sight); a used day
+        # refusing work is the protection working, but it must be a number
+        # somewhere, because the refused work never runs and never reports.
+        live_remaining = CpuBudget().remaining_s()
+        n_foreclosed_now = sum(
+            1 for s in BY_ID.values()
+            if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"
+            and spec_child_timeout_seconds(s) > live_remaining)
+
         # One threshold, two languages.
         loop_src = (REPO / "scripts" / "ladder_loop.sh").read_text()
         m = re.search(r"^MAX_LOAD=([0-9.]+)", loop_src, re.M)
@@ -259,6 +279,8 @@ def _experiment(seed: int) -> dict:
         "detached_routed": detached_routed,
         "overrun_marked": overrun_marked,
         "cpu_foreclosed": foreclosed,
+        "live_remaining_s": round(live_remaining, 2),
+        "n_foreclosed_now": n_foreclosed_now,
         "loop_load_agrees": loop_load_agrees,
         "receipt_committable": receipt_committable,
         "wiring_ok": wiring_ok,
