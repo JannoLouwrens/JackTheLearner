@@ -10951,3 +10951,92 @@ REPAIR IS FALSIFIED, measured, not argued.**
   D19-held, `LF.01` attempt 2 waits for the 09-09 design, no third increment of
   the CPU accountant. If nothing else lands, `PROGRESS.md` #2's remaining
   half — the SO-family social-world research pass — is the honest unit.
+
+2026-09-04 ~18:0x-18:5x (builder, **OPUS** — `week:Fable` 100% and the chain
+walked past it at 18:07:13 exactly as the log says it should; **`week:all
+models` 61%**, which is the gate and the number I acted on, against a pace line
+of ~67.3 at week-elapsed 65, so no skip; session 8%; **zero `PACING:` lines in
+the slot, streak 0**): **the board was empty and stayed empty, so I took the
+`INTEGRATION_QUEUE` empty-queue rule — `docs/research/OWNERS_HANDS.md` is
+written and `SO.06`–`SO.09` are drafted. `PROGRESS.md` #2's remaining half is
+discharged; the queue row that had been PENDING since 2026-08-09 now reads
+DRAFTED-NOT-REGISTERED.**
+
+- **The board really is empty and I did not go looking for a spec to write into
+  it.** `coverage`: queue depth 5, **all five VOID, 0 FRESH dispatch**; four
+  cost classes NOT FILLABLE with the repair named as a REDESIGN in every one;
+  the single unimplemented runnable spec is `HR.1`, `D19`-held to 09-14. That is
+  `1''`/`PROGRESS #1` verbatim and it was true when I checked it myself.
+- **WHY THIS CLAUSE AND NOT THE OTHER HALF OF #2.** Of `GOAL.md`'s social
+  paragraph, *"trust can be earned and checked"* is `LG.02` (PASS 09-02) and
+  *"attributed heard/said/did"* is `ME.9`. ***"Never puppeteering: what is left
+  must still be found, learned, and chosen by him"* has no spec, no metric and
+  no control — it is the one clause in that paragraph that cannot fail.** The
+  `SO.03`/`SO.05` half of the SO family is W1-held behind Sunday; the hands are
+  not, and §4 shows they need no avatar, no voice and no language channel.
+- **Ten citations fetched and verified in this pass `[V]`, one carried `[c]`.**
+  The two that changed the design rather than decorating it: **Thornton &
+  McAuliffe (*Science* 313(5784):227–229, 2006)** — wild meerkat helpers
+  provision pups with prey **graded by pup age** and the pups learn to handle
+  live prey faster, which is the owner's sentence with a measurement attached
+  and is now the `A2` arm; and **Heyes (*Biol. Rev.* 69(2):207–231, 1994)**,
+  whose stimulus-enhancement / emulation / imitation partition names the design
+  target exactly — the hands must be enhancement and must be **shown** not to be
+  imitation. **Lyons/Young/Keil (PNAS 2007)**'s over-imitation numbers (86% vs a
+  16% baseline on first attempt) are why no drop may ever carry an ostensive
+  cue.
+- **STEP 2 IS DONE, STEP 3 DELIBERATELY NOT.** All four drafts AST-parse as one
+  expression, construct against the live `protocol.py`, collide with nothing in
+  `BY_ID`, shadow no prefix, every `depends_on` resolves, and **all five
+  distinct deps (`XL.00`, `TA.01`, `PS.01`, `ME.9`, `LG.02`) are PASS** — so
+  **`SO.06` would be runnable the moment it is registered and is the only FRESH
+  dispatch anywhere on the board.** Registry 238 → 242. `SO.09`/`SO.07`/`SO.08`
+  are one `SO.06` PASS away, so **`cpu<1min` stays no-path-in on registration
+  and the doc says so** rather than claiming a class it does not clear.
+- **THE CROSS-CHECK FOUND NO REFUTATION AND FOUR BINDING CONSTRAINTS, and all
+  four changed a draft before it was written** — which is the whole difference
+  from the `LANGUAGE_GROUNDING` pass, where the mandatory control arrived one
+  iteration late: (a) `PURPOSE_AND_SCAFFOLDING` §3.6 already owns the removal
+  metric (`R = C_off/C_on`, `B = C_off/C₀`), so `SO.07` **reuses it verbatim**;
+  (b) its §2.6(ii) proves policy invariance is **vacuous** on W0's zero-reward
+  world, which **deleted** the potential-based-hand arm I would otherwise have
+  proposed and forces `SO.09` to be an empirical accountant — *there is no
+  theorem available that makes the hands safe*; (c) `FROZEN_VS_PLASTIC` §10.2's
+  shuffled-parent twin applies because the hands ARE a parent acting through
+  objects, so **`C-MISPLACE`** was in the drafts from the start; (d) `LG.02`
+  owns attributed trust, so `SO.08` must import its posterior and **§3.4
+  pre-authorises `SO.08`'s own REFUSAL** if the registering iteration judges the
+  advice-vs-object gap too thin.
+- **TWO VENUE FACTS, measured so no run has to discover them** (the `LG.03`
+  lesson is one day old): provisioning needs only a `model.body_pos` write on a
+  **static** body — `plants.py`'s idiom, and a freejoint is forbidden because it
+  would add dofs to a world whose observation width nine specs depend on — and
+  **W0 already has an UNDECLARED provisioning channel**: food geoms drift and
+  the world never re-places them (`w0.py:_place` omits `mj_resetData`
+  deliberately), which is exactly the "food ratchet" `lc03_food_probe.py` was
+  written to chase. The hands do not add a new class of risk here; they make an
+  existing one legible.
+- **LESSONS gained "A metric can be inherited; its verdict cannot".** `R` low /
+  `B > 1` reads *"drives LOAD-BEARING — the result that changes the product"* in
+  `PURPOSE_AND_SCAFFOLDING`'s table; the identical numbers measured on a **hand**
+  mean we are puppeteering him. One is `SYSTEM.md` class 2 (architecture, always
+  contested), the other class 1 (ENDS, never measured). Copy the formula,
+  re-derive the outcome table, and write the new reading down **before** the run.
+- **Bookkeeping:** `review_queue_net_arrivals` 29 → 30 **recorded**, with the
+  justifying commit named (`d9abc7a`, yesterday's `LG.03` routing, which added
+  the row and did not record the reading); nothing in today's commit touches the
+  review queue. All ratchets now read *unchanged*. No PASS certificate is stale.
+  Nothing detached was launched, so no `declared_pids` line and no `LEFTOVER`
+  is owed. Docs-only commit, three named paths plus `ratchet_readings.json`, no
+  `git add -A`; tree clean, pushed.
+- **NEXT ITERATION — the live item has an HOUR on it and it is not this.** The
+  70th audit's **B3**: fire `D21`, `D15` and `D16` in a **00:xx–05:xx slot on
+  2026-09-06, before the Review's ~06:37 run**, and write `D21`'s mandated order
+  onto the **`w0-too-shallow` row in `docs/REVIEW_QUEUE.md`** — a docket, not
+  prose. Before then, the honest unit is **step 3 of this row: run the step-1
+  cross-check IN FULL and register `SO.06`–`SO.09`**, then step 4 (implement and
+  run `SO.06`, alone) — which would put the first FRESH dispatch back on a board
+  that has had none for two days. Standing prohibitions unchanged: no `D1.0`
+  re-dispatch; **`W35`'s ~11 free GPU-hours expire 09-06 00:00 and are to be LET
+  expire**; `HR.1`–`HR.4` `D19`-held; `HR.6` behind `HR.5`; `LF.01` attempt 2
+  waits for the 09-09 design; no third increment of the CPU accountant.
