@@ -155,6 +155,53 @@ when it lifted this exact scar onto the owner's desk as `D21`, blockquote and
 commit citation included. The check therefore rewards the repair the system
 already performs, and there is no similarity threshold to tune.
 
+THE THIRD GUARD, AND IT IS THE SAME HOLE ONE FIELD OVER (2026-09-04, 70th audit
+B1). Everything above checks that a declaration has the right SHAPE — a default
+exists, a class is legal, a date parses, a blast radius is survivable. None of
+it asks whether the default's own action is still AVAILABLE on the day the
+default fires. On 2026-09-04 the overseer armed `D21` with
+
+    default:   … the 2026-09-06 FULL Review takes the W1 design as the FIRST
+               item on its docket …
+    decide_by: 2026-09-11
+
+and nothing printed. The clock fell five days after the event it commanded: on
+the morning it became due it would have ordered a Sunday that had already
+happened to re-order its docket. That is `D1`'s deadlock with a clock painted on
+it — armed, dated, legal in every field, and incapable of doing the thing it
+promises. It was caught by hand the next morning, by the organ that wrote it.
+
+    DEFAULT-ACTION-EXPIRED - the default's prose names a date at or before its
+                             own `decide_by`, so the action is in the past on
+                             every day the default could fire.
+
+THE ARITHMETIC IS THIS FILE'S OWN, not an inference about English. `main()`
+marks a row overdue at `(today - decide_by).days > 0`, so **the earliest day a
+default can fire is `decide_by + 1`**. A date at or before `decide_by` is
+therefore behind the firing on every branch — including the equality case, which
+is why the comparison is `<=` and not `<`. Nothing here reads intent; it reads
+one date against another under a rule the module already implements.
+
+Dates are mined out of the joined `default:` text the way `blast_radius` mines
+spec ids out of it, and the same over-approximation applies for the same reason:
+this reports what a default REFERS to, never what it will do. A default may name
+a past date as provenance rather than as an action ("(`D15`) fires on
+2026-09-05"), and that reads as a finding here. So the class is RATCHETED, not
+blocking — baselined at the live reading, allowed to shrink and never to grow —
+because the alternative is a scanner that decides which sentences are commands,
+and this file has recorded twice what that costs. The narrowing that would make
+it exact is ATTRIBUTION (whose clock is this date?), and it is not written yet
+on purpose: tuning the regex until today's corpus reads zero is fitting the
+instrument to the sample.
+
+The bare `MM-DD` form is matched as well as the ISO one, and that is
+load-bearing rather than thorough: `D21`'s default wrote its date BOTH ways, and
+the defaults in this document routinely write only the short form. A bare
+month-day carries no year, so it resolves to whichever of `decide_by`'s year,
+the one before or the one after puts it NEAREST `decide_by` — a rule that reads
+"12-28" against a `decide_by` of 2027-01-03 as the December just gone rather
+than the one eleven months out.
+
 AND THIS FILE IS ITSELF A CAPABILITY CLAIM, SO IT IS NOW UNDER THE LEDGER
 (2026-08-30, T0.28). For six days `SYSTEM.md` asserted an enforcement this file
 did not perform, and the only thing standing behind the code was a fixture its
@@ -330,6 +377,66 @@ def blast_radius(default_text: str, by_id=None) -> set:
         except Exception:
             return set()
     return {i for i in _SPEC_ID.findall(default_text or "") if i in by_id}
+
+
+# A date as a default's prose writes one. Two accepted forms and no others:
+# the ISO `2026-09-06` and the bare `09-06` this document uses constantly.
+#
+# BOTH HALVES ARE TWO-DIGIT ON PURPOSE. `\d{2}-\d{2}` with month 01-12 and day
+# 01-31 will not match a range written the way ranges are written here ("8-12
+# sigma", "1-3 seeds"), and will not match `d10-*`, `2026-W35` or a thousands
+# separator. It WILL match a genuine two-digit range like "11-12", and that is
+# the over-approximation the ratchet exists to hold — see the module docstring.
+_PROSE_DATE = re.compile(
+    r"\b(?:(20\d\d)-)?(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b")
+
+
+def default_dates(default_text: str, decide_by: _dt.date) -> list:
+    """Dates a default's prose names, resolved against its own `decide_by`.
+
+    Sorted, deduplicated, never raising. A bare `MM-DD` has no year, so it takes
+    whichever of `decide_by.year - 1 / +0 / +1` lands NEAREST `decide_by`; an
+    impossible combination (02-30) is not a date and is dropped. Same
+    over-approximating contract as `blast_radius`: this says what the text
+    REFERS to, never what the default will do.
+    """
+    out: set = set()
+    for yr, mo, da in _PROSE_DATE.findall(default_text or ""):
+        if yr:
+            try:
+                out.add(_dt.date(int(yr), int(mo), int(da)))
+            except ValueError:
+                continue
+            continue
+        cands = []
+        for y in (decide_by.year - 1, decide_by.year, decide_by.year + 1):
+            try:
+                cands.append(_dt.date(y, int(mo), int(da)))
+            except ValueError:
+                continue
+        if cands:
+            out.add(min(cands, key=lambda d: abs((d - decide_by).days)))
+    return sorted(out)
+
+
+def expired_actions(default_text: str, decide_by: _dt.date) -> list:
+    """Dates in a default that are behind its EARLIEST possible firing.
+
+    `main()` marks a row overdue at `(today - decide_by).days > 0`, so the
+    earliest fire is `decide_by + 1` and a date at or before `decide_by` cannot
+    be acted on by any firing of this default. The `<=` is that arithmetic, not
+    a margin.
+    """
+    return [d for d in default_dates(default_text, decide_by) if d <= decide_by]
+
+
+# The live reading in the commit that shipped this check, in the
+# `BASELINE_UNDECLARED` idiom: it may SHRINK and may never GROW. It is 1, and
+# the one is `D22`, whose default cites `D15`'s 2026-09-05 clock as a REASON
+# rather than performing anything on it. That is named here rather than
+# exempted, because an escape hatch nobody has to justify is a checkbox — and
+# because the honest repair for it is attribution, which is not built yet.
+BASELINE_ACTION_EXPIRED = 1
 
 
 # ── the owner's OTHER desk: `## FOR THE OWNER` in docs/PROGRESS.md ──────────
@@ -575,11 +682,25 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
             violations.append(("DATE", did, f"decide_by not ISO: {d['decide_by']!r}"))
             continue
 
+        # The action must still exist on the day the default fires. Reported,
+        # never fatal, and the row survives it: the decision is still armed and
+        # its cost is still real — what is broken is the clock, not the arming.
+        stale = expired_actions(d["default"], due)
+        if stale:
+            violations.append((
+                "DEFAULT-ACTION-EXPIRED", did,
+                f"the default names {', '.join(d.isoformat() for d in stale)} "
+                f"but decide_by is {due} and the earliest firing is "
+                f"{due + _dt.timedelta(days=1)} — on the day this fires, that "
+                "action is in the past. Repair: SHORTEN decide_by (a deadline "
+                "may tighten on its own; it may never be lengthened), or state "
+                "whose clock the date is if it is not this default's"))
+
         blocks = [b.strip() for b in (d.get("blocks") or "").split(",") if b.strip()]
         n, _which = cost_of(blocks)
         rows.append({"id": did, "due": due, "overdue": (today - due).days,
                      "blocks": blocks, "cost": n,
-                     "default": d.get("default", "")})
+                     "default": d.get("default", ""), "expired": stale})
 
     # The safety clause, last because it needs the whole armed set at once.
     for did, commitment, claims in safety_hazards(decls, candidates,
@@ -628,6 +749,7 @@ RATCHETED = {
     "UNDECLARED": BASELINE_UNDECLARED,
     "UNROUTED-OWNER-ASK": BASELINE_UNROUTED_ASKS,
     "VANISHED-OWNER-ASK": BASELINE_VANISHED_ASKS,
+    "DEFAULT-ACTION-EXPIRED": BASELINE_ACTION_EXPIRED,
 }
 
 
@@ -696,6 +818,33 @@ DECIDE: D93
     # must not read as the DECISION being settled. D95 is D1's real shape.
     assert kinds.get("D95") == "UNDECLARED", kinds
     assert [r["id"] for r in rows] == ["D93"], rows
+
+    # `D21` as the 69th audit actually armed it: an action on 09-06 behind a
+    # clock on 09-11. Both spellings of the date are present because the real
+    # entry wrote both, and the ISO-only reader would have caught it by luck.
+    d21 = """
+## D21 — the W1 recommendation, lifted onto the owner's desk (OPEN, owner)
+
+DECIDE: D21
+  class:     goal
+  default:   the 2026-09-06 FULL Review takes the W1 design as the FIRST item
+             on its docket, and `w0-too-shallow` is already dated 09-06 so this
+             re-orders a scheduled item and creates no new permission.
+  decide_by: 2026-09-11
+"""
+    kinds21 = {did: kind for kind, did, _ in audit(d21, _dt.date(2026, 9, 4))[0]}
+    assert kinds21.get("D21") == "DEFAULT-ACTION-EXPIRED", kinds21
+    # ...and the repair the 70th audit performed — SHORTEN the clock so the
+    # firing lands the morning before the action — must make it quiet. A guard
+    # whose green comes from the fix rather than from the subject vanishing.
+    assert not audit(d21.replace("2026-09-11", "2026-09-05"),
+                     _dt.date(2026, 9, 4))[0], "the shortening must silence it"
+    # The equality case is the same defect: the earliest fire is decide_by + 1,
+    # so an action dated ON decide_by has already passed when the clock rings.
+    assert expired_actions("act on 2026-09-05", _dt.date(2026, 9, 5))
+    assert not expired_actions("act on 2026-09-06", _dt.date(2026, 9, 5))
+    # A bare month-day takes the NEAREST year, not decide_by's blindly.
+    assert default_dates("by 12-28", _dt.date(2027, 1, 3)) == [_dt.date(2026, 12, 28)]
 
 
 def _safety_fixture() -> None:
@@ -889,6 +1038,11 @@ def main(argv: list[str]) -> int:
         print("  armed (default fires if unanswered):")
         for r in sorted(rows, key=lambda r: -r["cost"]):
             due = "OVERDUE — DEFAULT IS DUE TO FIRE" if r["overdue"] > 0 else f"due {r['due']}"
+            # A clock defect belongs beside the clock, not only in the
+            # violation list — the row is what an owner's eye lands on.
+            if r.get("expired"):
+                due += "   [ACTION EXPIRED: names " + ", ".join(
+                    d.isoformat() for d in r["expired"]) + "]"
             print(f"    {r['id']:<6} costs {r['cost']:3d} specs   {due}")
             print(f"           blocks {', '.join(r['blocks']) or '(nothing declared)'}")
             # NOT `[:110]`. The live defaults run 369-1041 characters, so that

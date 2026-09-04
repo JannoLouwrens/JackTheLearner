@@ -37,6 +37,16 @@ NO ledger writes, no training, no world: the documents are strings built
 in-process and the rows are dicts, so the numbers hold still while the RULE
 varies. Same shape as T0.19, T0.20 and T0.21.
 
+THE NEWEST KNOWN-POSITIVE IS THE ORGAN'S OWN (2026-09-04, 70th audit B1). `D21`
+was armed by the overseer with `default: … the 2026-09-06 FULL Review takes the
+W1 design as the FIRST item on its docket …` and `decide_by: 2026-09-11`. The
+clock fell five days after the event it commanded: on the morning it became due
+it would have ordered a Sunday that had already happened to re-order its docket.
+Every field was legal and nothing printed. It was caught by hand, the next
+morning, by the organ that wrote it — which is the whole reason this pass
+exists, and it is the third time a guard on this desk shipped checking the FORM
+of a declaration rather than what it says.
+
 WHAT THIS SPEC DOES NOT CERTIFY, stated so no later reader repeats SYSTEM.md's
 mistake in this file's name: two of the three safety clauses — *never edits
 GOAL.md*, *never weakens a threshold* — are still enforced by nobody. They are
@@ -52,8 +62,9 @@ import io
 import re
 
 from ..coverage import _claim_dead
-from ..decisions import (BASELINE_UNDECLARED, DOC, audit, blast_radius,
-                         check_rc, main, parse)
+from ..decisions import (BASELINE_ACTION_EXPIRED, BASELINE_UNDECLARED, DOC,
+                         audit, blast_radius, check_rc, default_dates,
+                         expired_actions, main, parse)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
@@ -64,7 +75,7 @@ SPEC_ID = "T0.28"
 # hashing playground.py; T0.21 hashing coverage.py).
 IMPL_DEPS = ["experiments/decisions.py"]
 
-N_PROPERTIES = 12
+N_PROPERTIES = 13
 
 # The pre-2026-08-30 blocking set, verbatim. `NO-DEFAULT` is absent — that is
 # the hole, not an abbreviation.
@@ -213,6 +224,33 @@ NEEDED_ASKS = """
 """
 
 
+# ── the clock defect (2026-09-04, 70th audit B1). Also a real entry. ────────
+#
+# `D21` as the 69th audit ARMED it, cut to the two lines that carry the defect:
+# an action on 2026-09-06, a clock on 2026-09-11. On the morning it became due
+# it would have ordered a Sunday that had already happened to re-order its
+# docket. Both spellings of the date are here because the real entry wrote both
+# — an ISO-only reader would have caught this one by luck, and the defaults in
+# the live document routinely write only the short form.
+DOC_D21 = """
+## D21 — the W1 recommendation, lifted onto the owner's desk (OPEN, owner)
+
+DECIDE: D21
+  class:     goal
+  default:   NEITHER (ii) NOR (iii). What fires instead is the narrowest
+             already-permitted action: the 2026-09-06 FULL Review takes the W1
+             design as the FIRST item on its docket, and `w0-too-shallow` is
+             already dated 09-06, so this re-orders a scheduled item and
+             creates no new permission.
+  decide_by: 2026-09-11
+"""
+
+# The 70th audit's repair, verbatim in kind: SHORTEN the clock so the firing
+# lands the morning before the action. A deadline may tighten on its own — it
+# widens nothing — and this is the only direction available to a default.
+DOC_D21_SHORTENED = DOC_D21.replace("2026-09-11", "2026-09-05")
+
+
 def _row(commitment: str, kinds: dict, n_pass: int = 0) -> dict:
     """One `coverage.report()` row, reduced to the keys the safety pass reads."""
     return {"commitment": commitment, "n_pass": n_pass, "kinds": kinds,
@@ -238,7 +276,8 @@ def _violations(text: str, rows, *, safety_enforced: bool) -> list:
     v, _rows = audit(text, TODAY, rows_for_safety=rows, by_id=FIXTURE_BY_ID)
     if safety_enforced:
         return v
-    return [x for x in v if x[0] != "SAFETY-CLAIM-DEAD"]
+    return [x for x in v
+            if x[0] not in ("SAFETY-CLAIM-DEAD", "DEFAULT-ACTION-EXPIRED")]
 
 
 def _rc(violations: list, *, safety_enforced: bool) -> int:
@@ -249,6 +288,13 @@ def _rc(violations: list, *, safety_enforced: bool) -> int:
     if undeclared > BASELINE_UNDECLARED:
         return 1
     return 1 if any(v[0] in LEGACY_BLOCKING for v in violations) else 0
+
+
+def _expired(text: str, *, safety_enforced: bool) -> set:
+    """`{decision_id}` this organ reports as naming an out-of-date action."""
+    return {did for kind, did, _ in _violations(text, [],
+                                                safety_enforced=safety_enforced)
+            if kind == "DEFAULT-ACTION-EXPIRED"}
 
 
 def _asks(progress: str, prev, needed: str = NEEDED_ASKS, resolved: str = "",
@@ -481,6 +527,36 @@ def _probe(safety_enforced: bool) -> dict:
                    for k in _asks(PAGE_0904, None, safety_enforced=S))):
         failed.append("p12_vanished_owner_ask_is_the_known_positive")
 
+    # P13 — KNOWN POSITIVE, and it is the newest thing that happened: `D21`,
+    # armed 2026-09-04 by the overseer with an action on 09-06 and a clock on
+    # 09-11, caught by hand the next morning because no instrument in the system
+    # would say a word. Five directions, and the first two are the property:
+    #   - the defect fires, on the real path, on the real entry;
+    #   - the REPAIR silences it — shortening the clock, which is the only
+    #     direction a deadline may move on its own. Quiet-because-fixed, not
+    #     quiet-because-the-subject-left (P5's rule, one class over);
+    #   - the equality case is the same defect, because `main()` marks overdue
+    #     at `(today - decide_by).days > 0` and so the earliest fire is
+    #     `decide_by + 1`. An action dated ON decide_by has already passed;
+    #   - a bare `MM-DD` takes the NEAREST year, not decide_by's blindly, so a
+    #     December action behind a January clock reads as the December just
+    #     gone rather than the one eleven months out;
+    #   - it is a RATCHET and not a wall: at baseline the gate passes, one over
+    #     and it stops. A class that blocked would have to be switched off the
+    #     day a default legitimately cites another decision's clock.
+    at_base = [("DEFAULT-ACTION-EXPIRED", f"D{i}", "")
+               for i in range(BASELINE_ACTION_EXPIRED)]
+    if (_expired(DOC_D21, safety_enforced=S) != {"D21"}
+            or _expired(DOC_D21_SHORTENED, safety_enforced=S)
+            or not expired_actions("act on 2026-09-05", _dt.date(2026, 9, 5))
+            or expired_actions("act on 2026-09-06", _dt.date(2026, 9, 5))
+            or default_dates("by 12-28", _dt.date(2027, 1, 3))
+            != [_dt.date(2026, 12, 28)]
+            or _rc(at_base, safety_enforced=S) != 0
+            or _rc(at_base + [("DEFAULT-ACTION-EXPIRED", "Dx", "")],
+                   safety_enforced=S) != 1):
+        failed.append("p13_expired_default_action_is_the_known_positive")
+
     live_asks = _live_asks()
     return {
         "properties_checked": float(N_PROPERTIES),
@@ -498,6 +574,11 @@ def _probe(safety_enforced: bool) -> dict:
         # a day the owner's desk grows is visible in the record either way.
         "live_unrouted_asks": float(live_asks[0]),
         "live_vanished_asks": float(live_asks[1]),
+        # Also recorded and not gated, for the same reason: the live count moves
+        # when the owner's desk does. `decisions.py`'s ratchet owns the
+        # threshold; the ledger owns the number.
+        "live_expired_actions": float(
+            sum(1 for v in live_v if v[0] == "DEFAULT-ACTION-EXPIRED")),
     }
 
 
@@ -506,13 +587,19 @@ def _experiment(seed: int) -> dict:
 
 
 def _control(seed: int) -> dict:
-    """`decisions.py` as it stood before 2026-08-30, kept executable.
+    """`decisions.py` as it stood before each pass this file added, kept
+    executable.
 
-    Two holes, both real: `audit()` carried no safety pass, so no default's
-    content was ever read; and `--check`'s blocking set omitted `NO-DEFAULT`,
-    so a goal-class entry that armed nothing was printed and exited 0. It must
-    miss the `D8` known-positive (P2), miss the both-named case (P4) and pass a
-    document containing an unarmed escalation (P9).
+    Four holes, all real and all reconstructed by DELETION rather than by
+    paraphrase (T0.08 property 5), because every pass only ever APPENDS:
+    `audit()` carried no safety pass, so no default's content was ever read;
+    `--check`'s blocking set omitted `NO-DEFAULT`, so a goal-class entry that
+    armed nothing was printed and exited 0; the owner's other desk had no
+    reader at all; and no pass asked whether a default's action still existed
+    on the day the default fires. It must miss the `D8` known-positive (P2),
+    miss the both-named case (P4), pass a document containing an unarmed
+    escalation (P9), miss both owner-ask classes (P11, P12) and miss `D21`'s
+    expired clock (P13).
     """
     return _probe(safety_enforced=False)
 
@@ -533,7 +620,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p4_both_named_fires",
                            "p9_ratchet_counts_every_class",
                            "p11_unrouted_owner_ask_is_reported",
-                           "p12_vanished_owner_ask_is_the_known_positive"}
+                           "p12_vanished_owner_ask_is_the_known_positive",
+                           "p13_expired_default_action_is_the_known_positive"}
                       <= control_names)
     return bool(experiment_clean and control_broken)
 

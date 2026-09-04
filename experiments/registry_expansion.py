@@ -5508,7 +5508,15 @@ EXPANSION: list[Spec] = [
                     "`run blocked` item, as it actually happened — while a "
                     "REWORDED-but-surviving item does not, a spec id (`D1.0`) "
                     "never routes an ask to a decision (`D1`), and an absent "
-                    "git baseline manufactures nothing.",
+                    "git baseline manufactures nothing; (9) a default whose "
+                    "prose names a date at or before its own `decide_by` — "
+                    "`D21` as the 69th audit armed it, action 2026-09-06, "
+                    "clock 2026-09-11 — fires DEFAULT-ACTION-EXPIRED, goes "
+                    "quiet when the clock is SHORTENED (the only direction a "
+                    "deadline may move on its own), treats the equality case "
+                    "as the same defect because the earliest firing is "
+                    "`decide_by + 1`, resolves a bare `MM-DD` to the NEAREST "
+                    "year, and ratchets rather than blocks.",
          falsified_by="Any property failing; the battery running fewer than "
                       "N_PROPERTIES; or the live document failing to parse "
                       "into a well-formed armed set. Concretely: the safety "
@@ -5521,7 +5529,11 @@ EXPANSION: list[Spec] = [
                       "that reaches no decision file passing unreported, an "
                       "ask going quiet because its text was merely deleted "
                       "rather than because a decision file quotes it, or a "
-                      "reworded surviving item reading as VANISHED.",
+                      "reworded surviving item reading as VANISHED. Also: "
+                      "`D21`'s expired clock passing unreported, a shortened "
+                      "clock still reading as expired, an action dated ON "
+                      "`decide_by` reading as available, or a bare `MM-DD` "
+                      "taking `decide_by`'s year across a year boundary.",
          null_baseline="THE ORGAN AS IT STOOD BEFORE 2026-08-30, kept "
                        "executable as the control: `audit()` with no safety "
                        "pass at all, and a `--check` whose blocking set omits "
@@ -5532,17 +5544,21 @@ EXPANSION: list[Spec] = [
                        "entry that arms nothing. It is ALSO the organ as it "
                        "stood before 2026-09-04, when the owner's other desk "
                        "had no reader at all: it must miss both owner-ask "
-                       "classes. Both holes are reconstructed by DELETION — "
+                       "classes. And the organ as it stood before the 70th "
+                       "audit's B1, when no pass asked whether a default's "
+                       "action still existed on the day it fires: it must "
+                       "miss `D21`. Every hole is reconstructed by DELETION — "
                        "each pass only ever APPENDS — never by paraphrase.",
          metric="properties_failed", budget=Budget.CPU, seeds=1,
          depends_on=[],
          control="See null_baseline. Named properties "
                  "p2_d8_known_positive_fires, p4_both_named_fires and "
                  "p9_ratchet_counts_every_class, "
-                 "p11_unrouted_owner_ask_is_reported and "
-                 "p12_vanished_owner_ask_is_the_known_positive must be among "
-                 "the control's failures or the control no longer reproduces "
-                 "the disease and this spec guards nothing.",
+                 "p11_unrouted_owner_ask_is_reported, "
+                 "p12_vanished_owner_ask_is_the_known_positive and "
+                 "p13_expired_default_action_is_the_known_positive must be "
+                 "among the control's failures or the control no longer "
+                 "reproduces the disease and this spec guards nothing.",
          kills="Author self-certification of the governance instruments. "
                "Before this spec `decisions.py` was certified only by "
                "fixtures its own author wrote, which is what `SYSTEM.md`'s "
