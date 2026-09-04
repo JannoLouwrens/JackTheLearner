@@ -1070,8 +1070,8 @@ Every line here is backed by an experiment that could have failed;
       - _dies if:_ A long run launching with a projected duration past its own timeout, OR a projection that differs from the achieved duration by >25%.
       - _then delete:_ Nothing directly; it prevents burning a Sunday quota on a run that could never have finished.
 - [x] **T0.33** CPU-hours on a shared box are accounted like GPU-hours
-      - _asserts:_ Every CPU_LONG run debits a wall-clock budget, and the ladder refuses to start when the box's load or the day's accumulated share would harm the tenants.
-      - _dies if:_ A run proceeding past the budget, or a budget that reads the same whether or not runs happened.
+      - _asserts:_ Every CPU_LONG run debits a wall-clock budget, and the ladder refuses to start when the box's load or the day's accumulated share would harm the tenants — estimating the child from the spec's own MEASURED last duration where the ledger has one and from the enum worst case where it does not, and never above that worst case, so the projection can only ever admit MORE than the estimator it replaced.
+      - _dies if:_ A run proceeding past the budget, a budget that reads the same whether or not runs happened, or an admission estimate exceeding the child-kill allowance for any registered runner-lane cpu spec.
       - _then delete:_ Nothing on the ladder; it protects the tenants, which SYSTEM.md ranks above the ladder.
 - [x] **T0.34** The detached lane writes its own receipts
       - _asserts:_ Every launch through scripts/launch_detached.sh is admitted against the same day ledger as the runner's children BEFORE it detaches, and bills its measured wall clock incrementally as it runs — split across the calendar days it spans — so a multi-day child appears in every day it occupied and a group-killed child undercharges by at most one heartbeat.

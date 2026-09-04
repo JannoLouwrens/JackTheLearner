@@ -2013,3 +2013,29 @@ ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 
     (and (ii) also `experiments/rtf.py`) — T0.33 and T0.34 both cite
     cpu_budget.py via IMPL_DEPS and re-buy at ~2 s and ~60 s respectively;
     option (ii) additionally stales every certificate citing rtf.py.
+
+    AMENDED 2026-09-04 (builder, 69th audit B4) — the RUNNER lane forecloses
+    by the same arithmetic, and after B4 it is the ONLY foreclosure left.
+    Added as evidence to this row rather than routed as a new one: it is the
+    same constant and the same owner question ("what should the CPU
+    day-ceiling be, and count?"), and the 09-06/09-08 docket does not need a
+    fourth pass. B4 replaced the admission estimate with the spec's own
+    measured cost and the live foreclosure count fell **53 -> 36** — but the
+    certificate's new `n_foreclosed_unmeasured` reads **36**, i.e. ALL of the
+    residual are specs that have never run and so have nothing to project
+    from. The arithmetic, and it is a pure inequality with no measurement in
+    it: `CPU_DAY_CEILING_S` (57600 s) is **1.067x** the largest legal child
+    (`cpu<2h` x 3 seeds x 2 = 54000 s), so a never-run `cpu<2h` spec is
+    refused once the day passes **3600 s — 6.25% of the ceiling**, which one
+    routine gate sweep spends. Why it matters to the DATE rather than
+    someday: a never-run spec is exactly what the 09-06 Review orders when it
+    resolves a redesign, so this fires on the first morning of the work the
+    Review is about to commission, not on maintenance. Why it is not a
+    builder fix: every repair raises or splits a tenant-protection ceiling
+    (SYSTEM.md law 4), and the honest cheap alternative — projecting a
+    never-run spec from a CLASS prior over its budget-mates — is a genuine
+    estimator design with its own bakeoff, not a constant edit. Option (iv)
+    for the menu above, priced with the others: **schedule rather than
+    raise** — the loop runs first-run `cpu<2h` specs before its own
+    housekeeping, which costs nothing and loosens nothing, and is the runner-
+    lane twin of option (i)'s answer for the detached lane.
