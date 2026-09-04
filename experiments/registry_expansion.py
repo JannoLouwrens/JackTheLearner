@@ -5233,7 +5233,19 @@ EXPANSION: list[Spec] = [
                     "reference, while a real id anywhere in the default's "
                     "text — including on a wrapped continuation line — is in "
                     "the blast radius; (6) the gate's exit code blocks on "
-                    "EVERY violation class it reports as fatal, not on one.",
+                    "EVERY violation class it reports as fatal, not on one; "
+                    "(7) an item on the owner's OTHER desk — `## FOR THE "
+                    "OWNER` in docs/PROGRESS.md — that reaches no decision "
+                    "entry is reported (UNROUTED-OWNER-ASK), while one that "
+                    "cites a live D, is quoted into a decision file, or "
+                    "declares `NO-DECISION:` is not, and an item outside the "
+                    "section is invisible; (8) an ask that was on the PREVIOUS "
+                    "committed page and is on neither this one nor any "
+                    "decision file fires VANISHED-OWNER-ASK — the 2026-09-03 "
+                    "`run blocked` item, as it actually happened — while a "
+                    "REWORDED-but-surviving item does not, a spec id (`D1.0`) "
+                    "never routes an ask to a decision (`D1`), and an absent "
+                    "git baseline manufactures nothing.",
          falsified_by="Any property failing; the battery running fewer than "
                       "N_PROPERTIES; or the live document failing to parse "
                       "into a well-formed armed set. Concretely: the safety "
@@ -5242,7 +5254,11 @@ EXPANSION: list[Spec] = [
                       "registered, a blast radius that drops a spec id "
                       "because it fell on the second physical line of a "
                       "wrapped default, or a violation class the report "
-                      "prints and the exit code ignores.",
+                      "prints and the exit code ignores. Also: an owner-ask "
+                      "that reaches no decision file passing unreported, an "
+                      "ask going quiet because its text was merely deleted "
+                      "rather than because a decision file quotes it, or a "
+                      "reworded surviving item reading as VANISHED.",
          null_baseline="THE ORGAN AS IT STOOD BEFORE 2026-08-30, kept "
                        "executable as the control: `audit()` with no safety "
                        "pass at all, and a `--check` whose blocking set omits "
@@ -5250,14 +5266,20 @@ EXPANSION: list[Spec] = [
                        "the exact pair of holes this file closed, replayed. "
                        "It MUST miss the D8 known-positive, MUST miss the "
                        "both-named case, and MUST exit 0 on a goal-class "
-                       "entry that arms nothing.",
+                       "entry that arms nothing. It is ALSO the organ as it "
+                       "stood before 2026-09-04, when the owner's other desk "
+                       "had no reader at all: it must miss both owner-ask "
+                       "classes. Both holes are reconstructed by DELETION — "
+                       "each pass only ever APPENDS — never by paraphrase.",
          metric="properties_failed", budget=Budget.CPU, seeds=1,
          depends_on=[],
          control="See null_baseline. Named properties "
                  "p2_d8_known_positive_fires, p4_both_named_fires and "
-                 "p9_ratchet_counts_every_class must be among the control's "
-                 "failures or the control no longer reproduces the disease "
-                 "and this spec guards nothing.",
+                 "p9_ratchet_counts_every_class, "
+                 "p11_unrouted_owner_ask_is_reported and "
+                 "p12_vanished_owner_ask_is_the_known_positive must be among "
+                 "the control's failures or the control no longer reproduces "
+                 "the disease and this spec guards nothing.",
          kills="Author self-certification of the governance instruments. "
                "Before this spec `decisions.py` was certified only by "
                "fixtures its own author wrote, which is what `SYSTEM.md`'s "
