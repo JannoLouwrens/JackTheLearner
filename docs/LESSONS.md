@@ -11207,3 +11207,50 @@ The certificate is the difference between knowing this and claiming it: `T0.28`
 P13 asserts the equality case as a named direction (`expired_actions("act on
 2026-09-05", decide_by=2026-09-05)` must be non-empty), so the boundary is
 now a thing that could fail rather than a thing this entry asserts.
+
+## A CHECK WHOSE FAILURE MODE IS GOING QUIET NEEDS AN ALARM ON THE SILENCE, NOT
+## ONLY ON THE FINDING — every ratchet here reads a falling number as good news
+## (builder, 2026-09-04, building the 70th audit's B2)
+
+`decisions.py`'s `UNROUTED-OWNER-ASK` marks a Review recommendation as routed
+when a 6-token verbatim span of it appears in a decision document. Writing an
+amendment, the overseer quoted the Review's docket sentence **as evidence of a
+defect**, intending to route nothing. `PROGRESS #3` left the `UNROUTED` list,
+the count went **3 -> 2**, and `--check` printed `ratchet ok`. The ask had
+reached no desk at all. It was caught because the author happened to re-run the
+tool and notice an item missing.
+
+**The asymmetry is structural and it is everywhere in this repo.** A check that
+FIRES wrongly is loud: it prints a line, it breaks a gate, somebody argues with
+it. A check that is SILENCED wrongly emits nothing — its only trace is a
+counter one lower than yesterday, and every ratchet in this project is built to
+read exactly that as the repair landing. The two states *fixed* and *fooled* are
+byte-identical in the report. This is `P5`'s quiet-because-fixed vs
+quiet-because-the-subject-left, one step further out: there the subject left, here
+a third party wrote something that looked like the repair.
+
+**THE RULE. When a check can be silenced by text somebody else writes for their
+own reasons, print the silencing WITH ITS ATTRIBUTION.** Not the count — the
+row: *which* ask, silenced by *which* entry, by *cites* or by *quoted*.
+`owner_ask_silences()` is four lines and it turns an absence a reader must
+notice into a line a reader can read. The general test for whether you owe this:
+**can the input that silences this check be authored by someone who is not
+trying to answer it?** A quotation, a cross-reference, a passing mention, an id
+reused as a spec number — all yes. If yes, the quiet path is a reporting path.
+
+**And a second instance of yesterday's boundary lesson, inside 24 hours.** B2
+also ordered the match confined to `## D…` entries and called that the
+load-bearing half. Both claims are checkable and both fail on the audit's own
+evidence: the offending quotation was *inside* `## D21`, so confinement could
+never have caught the scar; and on the live corpus that boundary reports
+`DECISIONS_RESOLVED.md:501` — the 69th audit's `run blocked` ruling, complete
+with losers and a reversal line, unnumbered only because the ask was never
+numbered — as unrouted, moving `VANISHED-OWNER-ASK` 0 -> 1 against a baseline of
+0 and stopping the gate. **20 of the 104 live entries in those two files carry
+no number.** The only repairs available for that false positive were to lower a
+shrink-only baseline or to back-number a historical entry to please an
+instrument. The line falls at ENTRY, not NUMBERED ENTRY, and it is worth 17
+lines of 5,261 — stated at its real size, because the report assumed it was the
+whole repair. *The auditor owns what is broken; the builder owns where the line
+falls* — and the way to find the line is to run the ordered boundary against the
+live corpus before believing it, which costs one command.

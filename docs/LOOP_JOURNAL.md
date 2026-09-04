@@ -10701,3 +10701,68 @@ the Review should see them side by side.
   for the 09-09 design; no third CPU-accountant increment; no third hand-stagger
   of the 09-06 docket; do not route `D22`. 0 leftover processes, no detached
   runs, no `declared_pids` owed.
+
+- **2026-09-04 ~14:0x-14:4x UTC (Opus; `week:Fable` 100% so fable refused, gate
+  `week:all models` **59%**) — 70th audit **B2 DONE**: an owner-ask that goes
+  quiet now names who silenced it, and the boundary B2 ordered is falsified by
+  B2's own evidence.** Board empty exactly as the Review and the 70th audit both
+  say (9 startable specs, all parked/pilot-blocked/decision-held), so the unit
+  was the auditor's, which is the highest-priority work when present.
+  **THE REPAIR THAT MATTERS IS THE REPORT.** `owner_ask_silences()` returns
+  every ask the pass DECLINED to report with `(key, lead, how, matched-by)`, and
+  `main()` prints it: live now **2 silenced, both attributed** — `PROGRESS #1`
+  *quoted-by* `D22` (correct routing) and `PROGRESS #2` *cites* `D20`. The scar
+  it closes is the 70th audit's finding 2, made by the audit itself at 12:5x:
+  quoting the Review's docket sentence into `D21`'s amendment AS EVIDENCE
+  dropped `PROGRESS #3` off `UNROUTED`, moved the count 3 -> 2, and left the
+  ratchet green. **The only symptom of a wrongly-silenced check is a number
+  going down, which every ratchet in this repo is built to read as good news.**
+  **THE BOUNDARY IS NOT THE ONE ORDERED, AND I MEASURED BEFORE BELIEVING.** B2
+  said confine the match to `## D…` entries and called that the load-bearing
+  half. Both halves are checkable and both fail: (i) the offending quotation was
+  INSIDE `## D21`, so confinement could not have caught the scar it was ordered
+  for; (ii) run live, `## D…` confinement moves `VANISHED-OWNER-ASK` **0 -> 1**
+  against a baseline of 0 and **stops the gate**, and the single positive is
+  `DECISIONS_RESOLVED.md:501` — the 69th audit's `run blocked` ruling with its
+  losers and a reversal line, unnumbered because the ask was never numbered.
+  **20 of the 104 live entries carry no number.** The repairs available for that
+  false positive were lowering a shrink-only baseline or back-numbering history
+  to please a tool. So the line falls at ENTRY (`_entries()`, now the single
+  definition both halves of `_reaches_a_desk` read — before this the cite half
+  demanded a heading and the quote half took all 400 KB), and it is stated at
+  its real size: **17 lines of 5,261**. The match was never mostly loose; it was
+  mostly unattributed.
+  **CERTIFIED, NOT SELF-CERTIFIED.** `T0.28` **N_PROPERTIES 13 -> 14**,
+  hypothesis clause (10) + `falsified_by` + `control` amended, certificate
+  re-bought **PASS, attempt 13, commit `3bc9b09`, clean (not `+dirty` — code
+  committed first, as yesterday's 55 s lesson says)**. P14 asserts five
+  directions: cite-silence names its entry; quote-silence names the entry the
+  span fell in; an UNNUMBERED entry is a desk; a span in NO entry reaches
+  nothing; an exempt `NO-DECISION:` item is not "silenced". P12's fixture gained
+  the heading the real record has — a bare blockquote lying in a file is not an
+  entry and it stopped counting on purpose. Control fails **9/14** including
+  `p14`, reconstructed by DELETION (the pre-09-04 organ read this desk not at
+  all, so it attributed nothing).
+  **Live after:** `decisions --check` **rc=0**, `ratchet ok (0/10 undeclared,
+  2/3 unrouted-owner-ask, 0/0 vanished-owner-ask, 1/1 default-action-expired)`;
+  champions rc=0, review-queue rc=0, coverage rc=2 (known red). Ledger **102
+  PASS**, `render` 102/238. LESSONS: *a check whose failure mode is going quiet
+  needs an alarm on the silence* — the general test is **can the input that
+  silences this check be authored by someone who is not trying to answer it?**
+  **NEXT ITERATION.** **B4 is the remaining open audit item** and it is a PRINT
+  STATEMENT, not a fourth organ (B5 says stop and say so if it grows past that):
+  in `run status`, print `slack = CPU_DAY_CEILING_S - max(child_estimate_s over
+  the live cpu<2h population)` and today's `used_s` against it, so the line reads
+  *"1 h of slack, 1.70 h spent, class closed since ~01:30, all 39 never-run"*
+  instead of a bare `cpu_foreclosed_now = 39`. **Do NOT move
+  `CPU_DAY_CEILING_S`** — the ceiling is `D20`'s and the owner's.
+  **B3 IS DATED AND IT IS NOT TODAY:** `D21`, `D15`, `D16` come due 09-05, and
+  `D21` must be FIRED in a **00:xx-05:xx slot on 09-06, before the Review's
+  ~06:37 run**, by recording the firing in `DECISIONS_RESOLVED.md` AND writing
+  the mandated order onto the `w0-too-shallow` row in `docs/REVIEW_QUEUE.md`
+  (prose in a journal is not a docket). Standing prohibitions ALL unchanged: no
+  `D1.0` re-dispatch; **`W35`'s ~11 free Kaggle hours expire 09-06 00:00 and
+  must be let go** (inventory, not uptime); `HR.1`-`HR.4` D19-held to 09-14;
+  `HR.6` behind `HR.5`; `LF.01` attempt 2 waits for the 09-09 design; no third
+  CPU-accountant increment; no third hand-stagger of the 09-06 docket; do not
+  route `D22`. 0 leftover processes, no detached runs, no `declared_pids` owed.
