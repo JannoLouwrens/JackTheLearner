@@ -530,7 +530,8 @@ def cmd_status(ledger: Ledger) -> int:
     # spec), so a foreclosed day produces no FAIL, no VOID and no number —
     # unless it is derived here. Live arithmetic, no persistence: the same
     # numbers gate_cpu_child computes at the moment it refuses.
-    from .cpu_budget import CPU_DAY_CEILING_S, CpuBudget, foreclosed_now
+    from .cpu_budget import (CPU_DAY_CEILING_S, CpuBudget, class_slack,
+                             foreclosed_now)
     _cpu_rem = CpuBudget().remaining_s()
     _cpu_fore = foreclosed_now()
     if _cpu_fore:
@@ -538,7 +539,25 @@ def cmd_status(ledger: Ledger) -> int:
         print(f"  ! CPU DAY BUDGET: {CPU_DAY_CEILING_S - _cpu_rem:.0f}s of "
               f"{CPU_DAY_CEILING_S:.0f}s used today; {len(_cpu_fore)} cpu "
               f"spec(s) currently unaffordable until midnight:\n"
-              f"      {_ids}\n")
+              f"      {_ids}")
+        # 70th audit B4: the count above GROWS with the registry and has no
+        # floor and no denominator, so it cannot say whether a class is one
+        # spec short or shut. Slack is what makes it actionable — the day's
+        # spend at which a class starts losing members. Instrumentation only:
+        # CPU_DAY_CEILING_S is D20's and the owner's, and nothing here moves it.
+        print("    SLACK PER CLASS — slack = ceiling − the class's largest "
+              "live child estimate,\n    i.e. the spend at which the class "
+              "starts foreclosing (D20 owns the ceiling):")
+        for _r in class_slack():
+            _state = ("CLOSING" if _r["used_s"] > _r["full_slack_s"]
+                      else "over" if _r["used_s"] > _r["slack_s"] else "ok")
+            print(f"      {_r['budget']:<10s} slack {_r['slack_s']:8.0f}s "
+                  f"({_r['slack_s'] / 3600.0:5.2f}h)  spent "
+                  f"{_r['used_s']:8.0f}s ({_r['used_s'] / 3600.0:5.2f}h)  "
+                  f"{_state:<7s} {_r['n_foreclosed']}/{_r['n']} unaffordable"
+                  + (f", {_r['n_unmeasured']} never run"
+                     if _r["n_foreclosed"] else ""))
+        print()
     _check_orphan_detector()
     orphans = gpu_orphans()
     if orphans:

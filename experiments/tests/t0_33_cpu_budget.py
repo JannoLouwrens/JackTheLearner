@@ -86,6 +86,22 @@ implementation including a broken one):
      would admit everything on the day its input broke — the failure mode
      T0.12's "+inf load" rule exists for, pointed the other way because here
      the conservative side is the LARGER number.
+ 16. THE SLACK LINE PREDICTS THE REFUSAL (added 2026-09-04, 70th audit B4).
+     `run status` prints, per cost class, `slack_s = CPU_DAY_CEILING_S −
+     max(child_estimate_s over the class's live population)` — the day's
+     spend at which the class starts foreclosing — because the bare count it
+     used to print has no floor and no denominator and GROWS with the
+     registry (three specs registered on 09-04 moved it 36 → 39 and nothing
+     went amber). A printed number that does not bind is decoration, so the
+     equivalence `used_s > slack_s` <=> `n_foreclosed >= 1` is asserted, at a
+     MID-RANGE value: one second either side of the tightest class's own
+     slack on a temp day, where the wrong side of the comparison flips the
+     answer. Plus, on the LIVE day, that the two readers of the same
+     arithmetic add up — `sum(n_foreclosed)` equals `n_foreclosed_now` and
+     `sum(n)` equals this file's INDEPENDENT count of the gated population,
+     so a class row can never disagree with the refusal it predicts.
+     Instrumentation only: the ceiling is D20's and the owner's and nothing
+     here moves it.
 
 What B4 did NOT fix, recorded here because the metric below is the only place
 it shows: the residual foreclosure is entirely specs with NO recorded duration
@@ -137,7 +153,7 @@ from pathlib import Path
 
 from ..cpu_budget import (BUDGET_FILE, CPU_DAY_CEILING_S, ENV_OVERRIDE,
                           LOAD_CEILING, CpuBudget, _loadavg, child_estimate_s,
-                          foreclosed_now, gate_cpu_child,
+                          class_slack, foreclosed_now, gate_cpu_child,
                           measured_child_seconds)
 from ..protocol import RUNNER_OUTPUTS, Ledger, Status, run_spec
 from ..registry import BY_ID
@@ -316,6 +332,44 @@ def _experiment(seed: int) -> dict:
                             and not d_enum.admitted
                             and "day budget" in d_enum.reason)
 
+        # ── 16: THE SLACK LINE PREDICTS THE REFUSAL ──────────────────────
+        # `run status` now prints, per cost class, the spend at which the
+        # class starts foreclosing. A printed number that does not bind is
+        # decoration, so the equivalence is asserted rather than argued —
+        # and at a MID-RANGE value (the T0.12 template): one second either
+        # side of the tightest class's own slack, on a temp day, where a
+        # wrong side of the comparison flips the answer.
+        # `fresh_path` was drained by property 3 — a never-written path is the
+        # only honest zero here.
+        zero_path = Path(td) / "slack_zero.json"
+        tight = class_slack(zero_path, empty_ledger)[0]
+        under = Path(td) / "slack_under.json"
+        CpuBudget(under).charge("T0.33-slack", tight["slack_s"] - 1.0)
+        over = Path(td) / "slack_over.json"
+        CpuBudget(over).charge("T0.33-slack", tight["slack_s"] + 1.0)
+
+        def _row(p, b):
+            return next(r for r in class_slack(p, empty_ledger)
+                        if r["budget"] == b)
+
+        r_under, r_over = _row(under, tight["budget"]), _row(over, tight["budget"])
+        # ...and the live day, every class at once: the printed state and the
+        # gate's own answer are one comparison, so they may never disagree.
+        live_rows = class_slack()
+        live_agrees = all(
+            (r["used_s"] > r["slack_s"]) == (r["n_foreclosed"] >= 1)
+            for r in live_rows)
+        slack_predicts_refusal = (
+            tight["slack_s"] > 0.0                    # not foreclosed fresh
+            and r_under["n_foreclosed"] == 0          # one second under: open
+            and r_over["n_foreclosed"] >= 1           # one second over: closing
+            and len(foreclosed_now(under, empty_ledger)) == 0
+            and len(foreclosed_now(over, empty_ledger)) == r_over["n_foreclosed"]
+            and live_agrees
+            # the two readers of the same arithmetic add up
+            and sum(r["n_foreclosed"] for r in live_rows) == n_foreclosed_now
+            and sum(r["n"] for r in live_rows) == len(_runner_cpu_specs()))
+
         # One threshold, two languages.
         loop_src = (REPO / "scripts" / "ladder_loop.sh").read_text()
         m = re.search(r"^MAX_LOAD=([0-9.]+)", loop_src, re.M)
@@ -393,6 +447,10 @@ def _experiment(seed: int) -> dict:
         "n_foreclosed_now": n_foreclosed_now,
         "n_foreclosed_enum": n_foreclosed_enum,
         "n_foreclosed_unmeasured": n_foreclosed_unmeasured,
+        "slack_predicts_refusal": slack_predicts_refusal,
+        "class_slack": [{k: r[k] for k in ("budget", "n", "slack_s",
+                                           "used_s", "n_foreclosed")}
+                        for r in live_rows],
         "projection_only_tightens": projection_only_tightens,
         "est_above_enum": est_above_enum,
         "projection_binds": projection_binds,
@@ -447,6 +505,7 @@ def _check(m: dict, c: dict):
             and m["projection_binds"] is True
             and m["empty_ledger_falls_back"] is True
             and m["corrupt_ledger_fails_closed"] is True
+            and m["slack_predicts_refusal"] is True
             and m["loop_load_agrees"] is True
             and m["receipt_committable"] is True
             and m["wiring_ok"] is True

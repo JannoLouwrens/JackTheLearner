@@ -294,6 +294,13 @@ def gate_cpu_child(spec, *, path: Path | None = None,
                        f"within the day budget [{prov}]")
 
 
+def runner_cpu_specs() -> list:
+    """The registered specs this meter gates: cpu, minus the detached lane."""
+    from .registry import BY_ID
+    return [s for s in BY_ID.values()
+            if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"]
+
+
 def foreclosed_now(path: Path | None = None,
                    ledger_path: Path | None = None) -> list:
     """The registered runner-lane cpu specs the LIVE day would refuse right
@@ -307,12 +314,56 @@ def foreclosed_now(path: Path | None = None,
     far. It falls to 0 at midnight, and that MOVED line is the day rolling
     over, not an instrument fault.
     """
-    from .registry import BY_ID
     remaining = CpuBudget(path).remaining_s()
-    return sorted(
-        s.id for s in BY_ID.values()
-        if s.budget.value.startswith("cpu") and s.budget.value != "cpu<48h"
-        and child_estimate_s(s, ledger_path)[0] > remaining)
+    return sorted(s.id for s in runner_cpu_specs()
+                  if child_estimate_s(s, ledger_path)[0] > remaining)
+
+
+def class_slack(path: Path | None = None,
+                ledger_path: Path | None = None) -> list:
+    """Per cost class, the arithmetic that turns `foreclosed_now`'s bare count
+    into something an iteration can act on (70th audit B4).
+
+    `slack_s = CPU_DAY_CEILING_S - max(child_estimate_s over the class's LIVE
+    population)` — the day's spend at which the class starts losing members.
+    Compare it against `used_s` and the count stops being a mystery: on
+    2026-09-04 `cpu<2h` had 3600 s of slack against 6280 s spent, so all 39 of
+    its foreclosed specs were foreclosed by ~01:30 and nothing that happened
+    afterwards could have changed that.
+
+    Why max and not min: the class begins foreclosing at its LARGEST member and
+    finishes at its smallest, so `slack_s` is the first threshold crossed and
+    `full_slack_s` the last. The equivalence `used_s > slack_s` <=>
+    `n_foreclosed >= 1` is exact (T0.33 property 16 asserts it at a mid-range
+    value), because both sides are the same comparison rearranged — which is
+    the point of deriving it here, next to the gate, rather than in the printer.
+
+    Reads the estimate through `child_estimate_s`, so a class row can never
+    disagree with the refusal it predicts. Sorted tightest-slack first: the
+    class nearest to closing is the one worth reading.
+    """
+    remaining = CpuBudget(path).remaining_s()
+    used = CpuBudget(path).used_s()
+    rows: dict = {}
+    for s in runner_cpu_specs():
+        est = child_estimate_s(s, ledger_path)[0]
+        r = rows.setdefault(s.budget.value, {"budget": s.budget.value, "n": 0,
+                                             "max_est_s": 0.0,
+                                             "min_est_s": float("inf"),
+                                             "n_foreclosed": 0,
+                                             "n_unmeasured": 0})
+        r["n"] += 1
+        r["max_est_s"] = max(r["max_est_s"], est)
+        r["min_est_s"] = min(r["min_est_s"], est)
+        if est > remaining:                       # the gate's own comparison
+            r["n_foreclosed"] += 1
+            if measured_child_seconds(s.id, ledger_path) is None:
+                r["n_unmeasured"] += 1
+    for r in rows.values():
+        r["used_s"] = round(used, 2)
+        r["slack_s"] = round(CPU_DAY_CEILING_S - r["max_est_s"], 2)
+        r["full_slack_s"] = round(CPU_DAY_CEILING_S - r["min_est_s"], 2)
+    return sorted(rows.values(), key=lambda r: (r["slack_s"], r["budget"]))
 
 
 def charge_cpu_child(spec_id: str, seconds: float,
