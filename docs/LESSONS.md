@@ -10709,3 +10709,55 @@ choice, compute the same arithmetic AT that moment, and name it — as a metric,
 under-counting rather than over-counting, with a ratchet conjunct asserting that
 rearranging cannot lower it, and paired with the mechanical alternative the
 actor should have reached for instead.**
+
+## An honest per-item escape hatch becomes the steady state unless something counts it in aggregate (69th audit, 2026-09-04)
+
+`docs/REVIEW_QUEUE.md` was built on 2026-08-24 because "routed to Review" was a
+phrase with no file behind it, and nothing could print *"3 routed, 0 acted on,
+oldest 4 days"*. On 2026-08-31 it got a reader, `experiments/review_queue.py`,
+gated as `T0.31`, with five violation classes: `OVERDUE`, `STALE`,
+`HOLD-WITHOUT-A-CLOCK`, `HOLD-ON-A-RESOLVED-BLOCKER`, `VANISHED`,
+`CLOCK-REMOVED`. It works. Every one of them is correct.
+
+On 2026-09-04 the file held **35 routed rows with 2 lifetime dispositions**, 30
+of them arrived in the previous seven days, 26 dated promises falling due in the
+next seven against a measured capacity of one per consumer cycle — and the
+reader printed **`0 violations`**.
+
+Nothing was hidden and nobody lied. Every class fires on a promise *breaking*,
+and the file deliberately provides an honest way never to break one: **re-arm
+with a new `DUE:` and a reason**, exactly as `decide_by` is re-armed. That hatch
+is right. A deadline that cannot move when the work genuinely changes is a
+deadline that gets deleted instead, which is the failure it replaced. But it has
+a consequence nobody priced: **a desk that re-arms honestly forever is
+byte-indistinguishable, to every per-row instrument, from a desk that is keeping
+up.** The violation classes are all local to one row; the divergence is a
+property of the *set*.
+
+The same shape had already appeared one layer down and been fixed one layer
+down. The 68th audit's `piled_on` measures the ACT of dating a row onto a full
+day, because the pile metric could only be read after the damage. That was the
+right repair and it did not reach this: `piled_on` asks *was this promise made
+recklessly*, and the question left over is *is any promise ever kept*. Both are
+about the same file. Only one of them was being asked.
+
+What makes this the expensive kind of blind spot is where the queue sat in the
+system. It was not a backlog beside the ladder; it was the ladder's forward
+edge. Sixteen of its open rows were the sole declared repair for something an
+instrument printed red — every GPU cost class, all four claim-dead
+constitutional commitments, both VOID-FORECLOSED redesigns, three champion
+seats. The builder ran 24 of 24 iterations green while producing zero ladder
+movement for seven hours, correctly, because `coverage` agreed with it that the
+board was empty. Every ratchet in the repo sat at its floor. The one number that
+would have explained the whole day did not exist.
+
+**Rule: when a rule offers an honest per-item escape hatch — re-arm the date,
+extend the deadline, mark it HELD with a reason — build the aggregate counter in
+the same commit. Count arrivals and dispositions per cycle, print the drain
+projection, and say `UNBOUNDED` out loud when arrivals meet or exceed
+dispositions. Make it a METRIC and not a violation, because using the hatch is
+legal and a gate would forbid a legal move; make it RATCHETED, with the conjunct
+that re-dating, re-arming or splitting a row may not improve it, because
+otherwise the number rewards the shuffling it exists to expose. An instrument
+that can only see a promise break will report green on a desk that never makes
+one.**

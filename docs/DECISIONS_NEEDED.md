@@ -4428,3 +4428,104 @@ DECIDE: D20
              this class. Option (ii) is deliberately NOT the default because a
              default may not widen what this project is permitted to take.
   decide_by: 2026-09-18
+
+## D21 — The Review has recommended that W1 stop being a queue row and become the project's stated stage. It wrote it in a file nothing reads. (2026-09-04, overseer, lifting the Review's 2026-09-03 `FOR THE OWNER` item 2 onto this desk)
+
+**Why this entry exists at all.** On 2026-09-03 the Review — this project's
+chief-scientist organ — published its single largest strategic recommendation:
+
+> *"The world is now the measured bottleneck on six independent instruments,
+> and four constitutional commitments are formally claim-dead behind it —
+> smell, balance, shelter/building and thermal, every claim spec parked or
+> foreclosed, none of them because Jack failed to learn… **My recommendation:
+> W1 stops being a queue row and becomes the project's stated stage.** We are
+> at step 2 of GOAL.md's path building senses for a step-6 world… This is the
+> strategic fork; the `D1.0` gate is a detail beside it."*
+> — `docs/PROGRESS.md`, Review 2026-09-03 (`f529ab1`)
+
+It wrote it into `docs/PROGRESS.md`, which has **no `class`, no `default`, no
+`decide_by`, and no reader in this repository**. `experiments/decisions.py`
+reads this file only; `scripts/overseer_prompt.md`'s READ FIRST does not name
+`PROGRESS.md`; `grep` finds the recommendation nowhere in
+`DECISIONS_NEEDED.md` or `REVIEW_QUEUE.md`. So `decisions --check` printed
+`ratchet ok (0/10 undeclared)` — true of the file it reads, false of the
+system. **That mechanism was already diagnosed in this very file**: `D15`'s
+2026-08-29 update states *"`docs/PROGRESS.md` appears nowhere \[in
+`overseer_prompt.md`]. The Review reads the overseer every morning; the
+overseer has never read the Review."* Six days later it had cost the project
+its biggest open fork. The instrument repair is routed as 69th-audit B2; this
+entry is the instance, arriving with a clock so it cannot go quiet again.
+
+**THE EVIDENCE, which is complete and is not in dispute.** Read live at
+`3b2c095`, 2026-09-04 06:40 UTC:
+
+| instrument | reading |
+|---|---|
+| `coverage` | **4 CLAIM-DEAD commitments** — smell, balance, shelter/building, thermal. Every claim spec parked or foreclosed. **Not one died because Jack failed to learn.** |
+| `coverage` | **3 PARK-ON-AN-UNREACHABLE-RELEASE** pairs (`BA.02→LT.08`, `SH.01→SH.02`, `SM.02→SM.03`) — no dispatch anywhere revives the commitment behind these parks |
+| `coverage` | **0 FRESH dispatches at all seven cost classes**; 3 classes with no path in at all |
+| `coverage` | **5 PILOT-BLOCKED** specs, each with a measured *venue* failure — `SH.02` (every policy-free arm holds the roof at exactly 1.0000), `SM.03` (held-out split 8.5× oversubscribed), `DP.04` (0 of 3072 lives resolve the metric), `LC.07` (the cheapest run class projects 1.7× over its ceiling), `T2.11` (the permuted control beat the claim arm) |
+| `champions --check` | the **`World`** seat is held **BY VERDICT** — the file's strongest marking — **with no deciding run named and no re-open trigger declared** |
+| ledger | `LF.01`'s first 240× life ended at ~25 min by *integrity*, not starvation; `HR.5` FAILed because the playground cannot make the sounds GOAL.md names (water entry is silent, no `kind` label, no `is_self` flag) |
+
+Six instruments, six directions, one verdict. GOAL.md's path has W1-class work
+at **step 6** ("A living Jack") and the ladder is at **step 2**.
+
+**WHY THIS IS YOURS AND NOT THE LOOP'S.** It is not a `means` question and no
+bakeoff can settle it: the evidence is already complete and unanimous, and what
+remains is a choice about **what this project is doing next**, which
+`SYSTEM.md` files under ENDS. Concretely, adopting the recommendation would
+edit GOAL.md's own staging sentence — *"The staging is unchanged and
+deliberate. First prove he can see, talk, walk, and learn in every way (the
+ladder as it stands). Only then does he go into the survival world"* — and no
+agent here may touch that text, by any route, including a default.
+
+**Options.**
+
+**(i) STAGING STANDS.** GOAL.md's order is deliberate and holds: finish the
+sense ladder in W0, accept that smell, balance, shelter and thermal stay
+claim-dead until the sense work is done, and treat W1 as one queue row among
+33. The honest consequence is that four of your own constitutional commitments
+have no runnable falsifiable claim for as long as this holds, and that the
+instruments will keep documenting that in ever finer detail.
+
+**(ii) W1 BECOMES THE STATED STAGE.** GOAL.md's path gains an explicit stage
+between 2 and 6 — *build the world the senses are pointed at* — and the ladder
+re-parents behind it. This is the Review's recommendation. It costs the
+re-certification bill already computed on the `w0-too-shallow` row (21 PASS
+certificates cite `playground.py` in `IMPL_DEPS`), and it means several
+sense-family specs sit idle while the world is built.
+
+**(iii) BOTH, EXPLICITLY SEQUENCED.** W1 becomes a stated stage that runs
+*alongside* the sense ladder rather than replacing it, with a declared split of
+the builder's units. This is the option that most needs your hand, because
+neither the Review nor the builder may allocate its own effort against a
+stated stage without you saying so.
+
+DECIDE: D21
+  class:     goal
+  blocks:    4 CLAIM-DEAD commitments (smell, balance, shelter/building,
+             thermal), the 3 PARK-ON-AN-UNREACHABLE-RELEASE pairs, and the
+             World seat's undeclared verdict. No single spec id is blocked by
+             this entry — the cost is that four of your own constitutional
+             commitments have no runnable falsifiable claim while it is open,
+             which is the state `coverage` calls CLAIM-DEAD and prints red on.
+  default:   NEITHER (ii) NOR (iii) — the STAGING TEXT IN GOAL.md IS NOT
+             TOUCHED, because a default may not edit the constitution. What
+             fires instead is the narrowest already-permitted action that
+             stops the recommendation from ageing in a file nobody reads: the
+             2026-09-06 FULL Review takes the W1 design as the FIRST item on
+             its docket, ahead of the two `d10-*` gate rows and ahead of
+             Part 2, and publishes a W1 spec-family design as a routed
+             disposition. The Review already owns the ordering of its own
+             docket and `w0-too-shallow` is already dated 09-06, so this
+             re-orders a scheduled item and creates no new permission. It
+             moves no threshold, weakens no control, widens nothing the
+             project may take, and leaves the four CLAIM-DEAD commitments
+             visibly red rather than resolving them by fiat. Explicitly NOT
+             in the default: any edit to GOAL.md, any change to the ladder's
+             stated stage, and any re-parenting of registered specs — all
+             three are option (ii)/(iii) territory and remain yours alone.
+             Reversal: the Review re-orders its docket back; nothing is
+             written that would need unwinding.
+  decide_by: 2026-09-11
