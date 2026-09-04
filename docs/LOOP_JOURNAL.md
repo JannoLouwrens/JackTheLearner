@@ -10348,3 +10348,104 @@ the Review should see them side by side.
   D19-held to 09-14, `HR.6` behind `HR.5`, `LF.01` attempt 2 waits for 09-09, no
   third CPU-accountant increment, no third hand-stagger of the 09-06 docket).
   `next_free_due` is **2026-09-12** for any row you route.
+- 2026-09-04 10:xx UTC (builder, OPUS — `week:Fable` 99%, `week:all models`
+  **56%**, the gate, acted on; `--week-elapsed` 60 so `pace_gate`'s line sits at
+  64, no `PACING:` line, 0 skips). Unit: the **69th audit's B4**, ranked first
+  by the previous iteration's hand-off, both halves.
+  **THE AUDIT'S NAMED MECHANISM DOES NOT EXIST AT THE GATE POINT, and saying so
+  is half the unit.** B4 reads *"`gate_cpu_child` should gate on the `rtf`
+  projection"*. `rtf.project_real_seconds` needs an `RTFReading` — a live probe
+  of the spec's declared control path — and `require_feasible` is called by
+  exactly ONE spec (`LF.01`), from inside its own child, after the gate has
+  already admitted it; 34 more long-run specs sit in `RTF_GRANDFATHERED` with no
+  projection at all. There is no parent-side rtf number to gate on and rtf.py's
+  own docstring says why (*"it cannot project a run whose sim-cost nobody
+  states"*). So I implemented the audit's INTENT — admit on a measurement, not
+  on the enum — with the projection that does exist: the ledger's own
+  `duration_s`, which is what a child of that spec last actually cost.
+  **THE REAL DEFECT, once it is named properly: a KILL bound and an ADMISSION
+  estimate are two quantities sharing a unit.** `spec_child_timeout_seconds` is
+  `run.py`'s child-kill arithmetic and must be the WORST case (T2.01's 66.7-min
+  kernel died at a flat 60-min cap). Admission must be the EXPECTED case. Point
+  both at one constant and the worst case wins both jobs: **median allowance/
+  actual ratio 257x** over the 108 runner-lane cpu specs carrying a duration
+  (`W0.DIAG` 0.02 s against 10800 s; `LG.02` 1.9 s against 54000 s). Measured
+  consequence, live: **6086 s of housekeeping — 10.6% of the ceiling —
+  foreclosed 53 of 152 CPU specs.** Single-sourcing was the right instinct
+  (T0.14's pasted-constant scar) applied to the wrong pair; the tell is that
+  moving one has the opposite failure mode from moving the other.
+  `child_estimate_s` returns `min(enum, 4x measured + 10 s)` with provenance.
+  Both constants are declared as engineering choices, not measurements, at their
+  definitions: the 10 s overhead HAS data (0.55–5.38 s across the eight children
+  billed 09-03/04 — the gap between the child's wall and `run_spec`'s interior);
+  the **4x has NONE**, because `history[]` carries no durations, so per-spec
+  variance is unmeasured and the file says so rather than dressing a choice as a
+  finding. The clamp is what makes it unarguable: it can only ever LOWER an
+  estimate, `run.py` still kills at the enum, so admission is never tighter than
+  before and an undershoot costs a MARKED overrun (`admit_detached`'s posture),
+  never an unbounded run. **`T0.33` gains P12–P15 (15, was 11)**, claim and
+  `falsified_by` strengthened to match (a `SPEC_CLAIM_FIELDS` edit, re-bought):
+  P12 `est <= enum` over the whole live registry (`est_above_enum` []); P13 the
+  projection BINDS at a MID-RANGE value — a day drained to exactly halfway
+  between projection and enum, where the pre-B4 path refuses and the new one
+  admits, without which P12 is satisfied by an estimator that changed nothing;
+  P14/P15 the two fallback branches by DELETION (empty ledger) and CORRUPTION
+  (unparseable bytes), both giving the enum for every spec, because a projection
+  that failed OPEN would admit everything on the day its input broke. P12–P15
+  carry their control INLINE — the estimator B4 replaced is still callable, so
+  the control is the old gate itself rather than a reconstruction.
+  **T0.33 PASS 15/15 on a clean tree (`9c5e74a`, 1.2 s); T0.34 PASS (23.69 s)**
+  — it cites `cpu_budget.py` via IMPL_DEPS and drifted on the same edit;
+  `disjoint_ok`/`conservation_ok` both hold, so the estimator did not disturb
+  the 68th audit's charge-ownership seam. Second half done: **one source, three
+  readers** — `foreclosed_now()` now serves `run status`'s visibility block,
+  T0.33's metric and the new ratchet counter, and **`cpu_foreclosed_now = 36` is
+  recorded in `ratchet_readings.json`**, a METRIC with no floor (a
+  legitimately-spent day SHOULD refuse things). It is the day's peak so far by
+  construction — `used_s` only grows and the estimator does not read the clock —
+  and it will read MOVED down to 0 at midnight; that is the day rolling over,
+  not an instrument going quiet.
+  **THE FINDING THAT OUTRANKS THE FIX, and it is why the audit's own framing was
+  off by one lane:** the count fell 53 -> 36 and the certificate's new
+  `n_foreclosed_unmeasured` reads **36** — *every* residual foreclosure is a
+  spec that has never run, so B4's projection could not reach a single one of
+  them. The residual has a different cause and a different owner:
+  `CPU_DAY_CEILING_S` 57600 s is **1.067x** the largest legal child 54000 s, so
+  a never-run `cpu<2h` spec is refused past **6.25% of a day** — one gate sweep
+  — whatever the estimator does. The audit armed B4 *"for the first morning
+  after the 09-06 Review orders CPU work"*, and the specs a resolved redesign
+  orders are NEW ones: precisely the population the fix cannot help. Amended
+  onto the OPEN `cpu48h-class-self-forecloses-the-day-meter` row (same constant,
+  same owner question, DUE 09-08) rather than routed as a new one — the docket
+  has been hand-staggered twice and `next_free_due` exists so the next router
+  reads a number instead of adding one. The amendment prices a fourth option
+  beside the row's three: **schedule rather than raise** — run first-run
+  `cpu<2h` specs before the loop's own housekeeping, which costs nothing and
+  loosens no tenant protection. Every other repair edits a ceiling; law 4 puts
+  that on the owner, so none of it is mine.
+  Also fixed while writing the test, disclosed because it nearly shipped:
+  `foreclosed_now()` parsed the 1 MB ledger once per spec (152x per call), and
+  asking for the foreclosed SET per spec was quadratic — the first dry run ran
+  past 120 s and was killed. `_durations` now caches on (path, mtime, size);
+  15 properties in 0.11 s. Ledger **102 PASS / 22 FAIL / 11 VOID** — unchanged;
+  this iteration bought no new capability. STALE CLAIMS still the four
+  pre-existing Review-held reds (UB.10/T3.09/D1.0/LF.01), no new DRIFTED,
+  `coverage` rc=2 unchanged, `review-queue` rc=0 (0 violations), 0 leftover
+  processes, no detached runs, no `declared_pids` owed.
+  NEXT: **the 69th audit is fully discharged bar B5** — B1 (`5b08b94`), B2
+  (`dd3d907`), B3 (`9e847cf`), B4 (`9c5e74a`/`97650b8`). **B5 stays CONDITIONAL
+  on the owner granting the draft-then-ratify route** and must not be built
+  speculatively; note that live `UNROUTED-OWNER-ASK` #1 IS that route's ask, and
+  the builder is the one organ that must not route it (a default may not widen
+  its own author's authority). So the board is back to the 09-04 Review's
+  `1''`/`2''`/`3''`: the spec board is empty for reasons that are the Review's
+  to fix, and the empty-board rule sends you to `LANGUAGE_GROUNDING.md`
+  §2.2–§11 as an INPUT to the dated `champions-language-grounding-arena` row
+  (09-07) — citations, arms, costs, `Spec(...)` drafts, a research doc AND a
+  queue entry. Standing prohibitions ALL unchanged: no `D1.0` re-dispatch;
+  **W35's ~11 h expire 09-06 00:00 and must be let go** (inventory, not uptime);
+  `HR.1`–`HR.4` D19-held to 09-14; `HR.6` behind `HR.5`; `LF.01` attempt 2 waits
+  for 09-09; **no third CPU-accountant increment** — and read that one as
+  binding on this very unit's neighbourhood: today's edit REMOVED a throttle,
+  it did not add a meter, and the next person tempted to extend the accountant
+  should re-read `2''`. `next_free_due` is **2026-09-12** for any row you route.
