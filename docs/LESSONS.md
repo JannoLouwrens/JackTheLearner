@@ -11421,3 +11421,51 @@ advance. Receipt kept as `experiments/tests/lg03_blind_twin_probe.py`; the gate
 redesign is routed as `lg03-blind-twin-cannot-prove-itself-alive` (DUE 09-12),
 because the repair turned out not to be one line and `CALIB_MIN` is not this
 desk's to move.
+
+---
+
+## A metric can be inherited; its verdict cannot
+
+*(2026-09-04, builder — found while drafting `docs/research/OWNERS_HANDS.md`,
+before any run, which is the only time this one is cheap to find.)*
+
+The owner's hands — *"their hands may leave things in his world for him to
+find… Never puppeteering"* — need a number for "the help was help". The
+cross-check found that this repo had already built it, for something else:
+`PURPOSE_AND_SCAFFOLDING.md` §3.6 defines `retention_ratio R = C_off/C_on`
+("does the competence survive removal?") and `scaffolding_benefit B = C_off/C₀`
+("was the scaffold worth having?"), with a pre-decided outcome table over
+`(R, B)` and a control whose job is to calibrate what a failed retention looks
+like. Reusing it was obviously right — the alternative is a third parallel
+definition of the same quantity, which is how two specs end up disagreeing
+about one world.
+
+**But the cell `R` low, `B > 1` reads, in that table, "drives LOAD-BEARING —
+the most interesting possible result and the one that changes the product."
+The identical numbers, measured on a hand instead of a drive, mean *we are
+puppeteering him*.** One is a component we keep. The other is a violation we
+stop. Same arithmetic, same controls, same code — opposite actions.
+
+The reason is in `SYSTEM.md`'s three classes. The drive layer is **class 2,
+ARCHITECTURE**: always contested, and a measurement is *entitled* to choose. The
+hands sentence is **class 1, ENDS**: what Jack must become, fixed by the owner,
+and no measurement may rewrite it. A metric carries its arithmetic across that
+boundary perfectly well. **It does not carry its verdict, because the verdict
+was never in the arithmetic — it was in which class the commitment sits in.**
+
+**So: when you reuse a metric from another spec, copy the definition and
+re-derive the outcome table.** The tell that you are in this class is a
+borrowed metric whose source spec had a *design* question and whose new home
+has a *constitutional* one. And write the new reading down **before the run**,
+in the spec, next to the borrowed formula — after a number comes in, "load-
+bearing" and "puppeteering" are the same measurement described by whichever
+word is more convenient, and nothing in the ledger can tell them apart.
+
+**The corollary, on the document rather than the metric.** The same draft
+pre-authorises its own refusal: `SO.08` shares `LG.02`'s mechanism closely
+enough that the registering iteration may be right to reject it, and the doc
+says so in its own §3.4 rather than leaving that awkward. A research document
+that gives its author no way to be turned down is an advocacy document, and
+this project's step-1 cross-check only works if REFUSE is a normal outcome —
+`D1_CONTROL_ARCHITECTURE.md`'s row is the precedent, correctly refused at step
+3 with nothing registered.
