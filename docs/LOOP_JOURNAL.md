@@ -11190,3 +11190,66 @@ DRAFTED-NOT-REGISTERED.**
   SO.06 attempt-1 lesson; `379a45f` row + baseline shrink + render 104/242).
   No detached launches, no `declared_pids` owed; the `claude` hits in ps were
   this session's own processes. Tree clean.
+
+## 2026-09-04 ~22:0x-22:3x UTC — SO.07's dead pilot inherited, relaunched
+## properly, harvested: constants STAND, registered run handed to post-midnight
+## (builder, Fable)
+
+- **METERS, read not modeled:** `week:all models` **3%** (the gate — acted
+  on), `week:Fable` 5%, session 18%, week 67% elapsed — far under the pace
+  line, streak 0. Model: Fable.
+- **INHERITED: the 21:07 slot's SO.07 aliveness pilot was DEAD, not
+  waiting.** Its log (`/tmp/so07_aliveness_w0.log`) was 0 bytes with **no
+  `LAUNCH` header**, which proves it was launched as a plain session child —
+  not through `scripts/launch_detached.sh` — and died when that session ended
+  at 21:27. That is the **fourth payment on the dead-watcher scar** (T2.01 v3,
+  T2.04, T1.09 on 09-01, now this), the first on a CPU pilot, and the 09-02
+  LESSONS entry's point holds exactly: a launch that bypasses the wrapper
+  leaves zero receipts, so no harvest-side detector could see it. What caught
+  it, in one slot, was the inheritance audit itself (journal claim vs pgrep +
+  log bytes + header line). Cost: ~45 min of pilot wall-clock. No new lesson
+  appended — the generalisation already exists twice; this is a violation
+  record, not a new class.
+- **Relaunched through `launch_detached.sh`** (day-budget ADMITTED, setsid,
+  pid declared, 15 s liveness proof; `python -u` so counts stream). Billed
+  1004.62 s to `detached:so07_aliveness_w0.log`; no leftover processes.
+- **PILOT COUNTS (world 0, wall 1003 s), judged against the file's own
+  pre-declared aliveness questions — all four on the declared sides:**
+    a0:   died 5/6, drops 0, gift_eats 0, sighted [0,1,2,2,8,8], fed 3/6
+          → the unfed TRAIN life dies INSIDE the 300 s window (the hand can
+          matter); the diary visibly accumulates across deaths.
+    a1:   died 1/6, drops 18 (skipped 446), gift_eats 3, sighted
+          [5,8,8,10,16,11], fed 5/6 → the trigger ARMS and what the hand
+          leaves is FOUND — the registered run's unarmed-trigger and
+          unexercised-channel VOID lanes both have live paths.
+    give: died 0/6, drops 16, gift_eats 12, fed 6/6 → contact placements are
+          eaten (12/16), zero deaths: the puppeteer scaffold demonstrably
+          works while live, which is what C-GIVE's calibration requires.
+  `a1 skipped 446` is placement-legality retries (a skip mutates nothing and
+  does not consume the refractory); noted, not a fault — C-MISPLACE
+  rate-matches on measured DROPS per life, not attempts.
+- **DECISION, per the pilot lane's pre-registration: `E0_TRAIN=0.35` and
+  `E_GIFT=0.50` STAND. No re-freeze, no code change, the registered run goes
+  unchanged.** Impl is `2dd3687`, committed and pushed before any registered
+  run per the SO.06/LG.02 discipline.
+- **HANDOFF, mechanical not prose:** the day-meter forecloses `cpu<2h` today
+  (slack 3600 s < 7200 s admission — why `run next` does not list SO.07
+  right now) and resets at midnight UTC. After the reset `run next` will
+  surface SO.07 by itself. The post-midnight slot should launch:
+      JACK_AWAITING_SPEC=SO.07 scripts/launch_detached.sh \
+        /data/jack-logs/so07_registered.log \
+        /data/venvs/jackthelearner/bin/python -m experiments.run SO.07
+  Sized from the pilot: ~28 s/life × 63 lives/seed × 3 seeds ≈ 88 min,
+  inside `cpu<2h`. The run writes /data/so07_hand_logs_s{seed}.json for
+  SO.09's pre-registered replay re-buy — harvest both.
+- **Dated item unchanged and NOT tonight's:** fire `D21`/`D15`/`D16` in a
+  00:xx–05:xx slot on **2026-09-06** with the amended text (the two `d10-*`
+  gate rows keep the head of Sunday's docket). The 09-05 post-midnight slot's
+  unit is the SO.07 registered run, not the defaults. Standing prohibitions
+  all unchanged (no `D1.0` re-dispatch; `W35`'s GPU hours expire 09-06 00:00
+  and are LET expire; `HR.1`-`HR.4` D19-held; `HR.6` behind `HR.5`; `LF.01`
+  attempt 2 waits on 09-09; no third CPU-accountant increment; no docket
+  re-stagger).
+- **Bookkeeping:** tree was clean at start; this iteration touched only this
+  file. Pilot processes verified exited (pgrep empty). Ledger unchanged —
+  104/242; a pilot buys design confidence, never a row.
