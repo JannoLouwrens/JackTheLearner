@@ -450,13 +450,61 @@ channel.
 
 ## 7. The grounding bakeoff — registry entries
 
-> **STATUS, 2026-09-04. These four blocks are DRAFTS. They are NOT in the
-> registry.** They were AST-parsed against the live `experiments/protocol.py`,
-> checked for id collisions against `registry.BY_ID` (`LG.03`–`LG.06` are free;
-> `LG.00`/`LG.01`/`LG.02`/`LG.10`/`LG.11` are taken) and every `depends_on`
-> resolves. Registration is a separate unit under `INTEGRATION_QUEUE.md`'s
-> 5-step protocol — step 1's cross-check belongs to *that* iteration, and this
-> document does not get to skip it by having done a partial one.
+> **STATUS, 2026-09-04 (SECOND PASS): REGISTERED.** All four are in
+> `experiments/registry_expansion.py` as of the commit that carries this line.
+> The full `INTEGRATION_QUEUE.md` cross-check ran first and **changed one of
+> these blocks** — `LG.04` gained a third control, `C-SHUFFLE` — so the text
+> below is no longer identical to what the registry holds; **the registry is
+> the authority, this section is the provenance.** `unreachable` 91 → 94
+> (`LG.04`/`LG.05`/`LG.06` are deliberately blocked behind `LG.03`),
+> `cpu_foreclosed_now` 36 → 39 (the same three at `cpu<2h` against today's
+> day meter), both recorded. `LG.03` is RUNNABLE and refills `cpu<10min`.
+>
+> *Kept verbatim below, because a draft's own account of why it was safe to
+> register is worth more than a summary of it:*
+>
+> **STATUS, 2026-09-04 (first pass). These four blocks are DRAFTS. They are NOT
+> in the registry.** They were AST-parsed against the live
+> `experiments/protocol.py`, checked for id collisions against `registry.BY_ID`
+> (`LG.03`–`LG.06` are free; `LG.00`/`LG.01`/`LG.02`/`LG.10`/`LG.11` are taken)
+> and every `depends_on` resolves. Registration is a separate unit under
+> `INTEGRATION_QUEUE.md`'s 5-step protocol — step 1's cross-check belongs to
+> *that* iteration, and this document does not get to skip it by having done a
+> partial one.
+>
+> **WHAT THE FULL CROSS-CHECK ADDED (the registering pass, recorded here
+> because a correction applied silently is indistinguishable from a draft
+> nobody checked).** Every other document in `docs/research/` plus
+> `docs/LESSONS.md` was swept for the family's subject terms. **No refutation
+> was found; two further conflicts were, both in `FROZEN_VS_PLASTIC.md`:**
+>
+> - **§10.2 declares TWO controls MANDATORY for "every spec that runs with a
+>   parent", and this family carried only one of them.** `A0` already *is* the
+>   MUTE-PARENT twin. The **SHUFFLED-PARENT** twin — *"same words, same rate,
+>   wrong events… if Jack's grounding survives shuffling, he learned the words'
+>   distributional statistics and not their referents, and the whole claim
+>   collapses"* — had no analogue anywhere in `LG.03`–`LG.06`. **`C-SHUFFLE` is
+>   added to `LG.04`** (`A3` trained on mis-paired instructions and
+>   trajectories, same count, same optimiser steps; must collapse to `A0`). It
+>   is not redundant with `A0`: `A0` has no channel, `C-SHUFFLE` has a channel
+>   carrying noise, and an arm whose advantage comes from the mere *presence*
+>   of a wider input — capacity, regularisation, gradient noise — beats `A0`
+>   while tying `C-SHUFFLE`.
+> - **§10.6b, Chaabouni et al. (ACL 2020, arXiv:2004.09124) [V]:** across 141
+>   settings only 4 showed a significant correlation between test accuracy and
+>   *any* compositionality metric, while generalisation correlates with **input
+>   space size at ρ = 0.86**. `LG.05` is on the right side of that (it scores
+>   held-out behaviour, never a topsim) — but ρ = 0.86 makes *8 of 12* mean
+>   nothing across runs unless the space is on the row, so `LG.05`'s notes now
+>   **require** the retained-cell count and vocabulary size in its metrics. A
+>   reporting requirement, not a threshold.
+>
+> Also mapped and not conflicting: `LG.01` certifies the **Q&A** venue and
+> `LG.03` the **BEHAVIOUR** venue, which is the certificate
+> `DIRECTION_AUDIT.md`'s *"do not run T2.06/T2.07 before LG.00"* asks for on
+> the behavioural side; `ME.10`'s *"held-out compositional pairs"* is skill
+> distillation, a different mechanism sharing a phrase; `CURIOSITY.md`'s
+> HER/GCSL section is `A4`'s mechanism and agrees with it.
 >
 > **What the PARTIAL cross-check already found, recorded so the registering
 > iteration starts from it rather than repeating it — and both findings changed

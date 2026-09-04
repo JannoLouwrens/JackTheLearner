@@ -9,7 +9,7 @@
   },
   "cpu_foreclosed_now": {
     "at": "2026-09-04",
-    "value": 36
+    "value": 39
   },
   "park_release_pairs": {
     "at": "2026-09-03",
@@ -24,7 +24,7 @@
     "value": 0
   },
   "unreachable": {
-    "at": "2026-09-03",
-    "value": 91
+    "at": "2026-09-04",
+    "value": 94
   }
 }

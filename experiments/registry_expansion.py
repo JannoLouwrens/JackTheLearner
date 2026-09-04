@@ -4638,6 +4638,269 @@ EXPANSION: list[Spec] = [
                "apparatus reusable?). "
                "  COVERS: told world (claim)"),
 
+    # ── THE LG GROUNDING BAKEOFF (registered 2026-09-04 from
+    # docs/research/LANGUAGE_GROUNDING.md §7, under INTEGRATION_QUEUE.md's
+    # 5-step protocol; the queue entry carries the provenance) ───────────
+    #
+    # One shared fixture generates, per seed: the (verb x object) cell grid,
+    # a language-blind twin trained on identical observations, and the
+    # privileged-planner reachability certificate. The fixture hash goes into
+    # every arm's metrics so two arms cannot be scored on different cells.
+    # LG.03 must PASS before any arm runs and every arm declares it in
+    # depends_on, so protocol.blocked_by() structurally prevents scoring an
+    # arm against an uncertified cell set (ME.11.0's pattern).
+    #
+    # WHAT STEP 1's CROSS-CHECK CHANGED, recorded here because a correction
+    # applied silently is indistinguishable from a draft nobody checked. No
+    # refutation was found in any other research doc; four conflicts were,
+    # two before this iteration and two in it:
+    #   (partial pass, in the doc)  CAPABILITIES.md §C L2's "untrained verb
+    #     must fail" was absent from LG.05 and has been added; CURIOSITY_
+    #     BAKEOFF.md's F2 branch names A4's confound ("the fix is hindsight
+    #     relabeling density, not curiosity") and C-DENSITY was added to LG.04.
+    #   (this pass)  FROZEN_VS_PLASTIC.md §10.2 declares TWO controls
+    #     MANDATORY for "every spec that runs with a parent". A0 already IS
+    #     the mute-parent twin. The SHUFFLED-PARENT twin — "same words, same
+    #     rate, wrong events... if Jack's grounding survives shuffling, he
+    #     learned the words' distributional statistics and not their
+    #     referents" — had no analogue anywhere in the family, so C-SHUFFLE
+    #     is added to LG.04 below. It is a strengthening and it is not
+    #     redundant with A0: A0 has no channel, C-SHUFFLE has a channel
+    #     carrying noise, and the gap between them is the only thing that
+    #     separates reading an instruction from merely having a wider input.
+    #   (this pass)  FROZEN_VS_PLASTIC.md §10.6b, Chaabouni et al. (ACL 2020,
+    #     arXiv:2004.09124) [V]: across 141 settings only 4 show a significant
+    #     correlation between test accuracy and ANY compositionality metric,
+    #     while generalisation correlates with INPUT SPACE SIZE at rho = 0.86.
+    #     LG.05 already measures held-out accuracy directly rather than a
+    #     compositionality score, which is the right side of that finding —
+    #     but the rho = 0.86 makes its bar uninterpretable across runs unless
+    #     the input space is reported beside it, so LG.05's notes now require
+    #     the retained-cell count and vocabulary size in its metrics.
+    # Also mapped, not conflicting: LG.01 certifies the Q&A venue (words in,
+    # words out) and LG.03 certifies the BEHAVIOUR venue (words in, acts out)
+    # — DIRECTION_AUDIT.md's "do not run T2.06/T2.07 before LG.00" asks for
+    # exactly this certificate on the behavioural side; ME.10's "held-out
+    # compositional pairs" is skill distillation, a different mechanism with
+    # a similar phrase; T2.16 owns A4's hindsight mechanism in another family
+    # and has no ledger row, so whichever of the two runs first should be
+    # written to be imported by the other.
+
+    Spec("LG.03", 2, "The command cells are language-necessary — certified "
+                     "before any arm is scored",
+         hypothesis="Every (verb, object) cell RETAINED for LG.04/LG.05 is "
+                    "certified on two legs, PER CELL, never on average: "
+                    "(1) NECESSITY — a language-blind policy trained on the "
+                    "identical observation stream, instruction channel zeroed, "
+                    "sits inside its pre-registered chance band on that cell; "
+                    "and (2) PLURALITY — from the cell's initial observation a "
+                    "privileged planner reaches at least two DISTINCT cell "
+                    "targets, so more than one act is achievable from what he "
+                    "can see. >= 12 cells spanning >= 4 verbs and >= 4 objects "
+                    "must survive both legs, with every verb and every object "
+                    "represented at least twice.",
+         falsified_by="Fewer than 12 cells surviving, or any verb/object "
+                      "falling below two retained cells — this world does not "
+                      "admit language-necessary commands at this horizon. The "
+                      "LG bakeoff is then VENUE-BLOCKED, not model-blocked, and "
+                      "the reading is routed to w0-too-shallow as an "
+                      "instrument. A cell that fails PLURALITY is excluded and "
+                      "the exclusion logged with the planner's two targets.",
+         null_baseline="The language-blind policy, identical observations, "
+                       "instruction channel zeroed. Its per-cell accuracy "
+                       "DEFINES the exclusion; it is the leg that makes "
+                       "retention falsifiable rather than curated.",
+         metric="retained_cells", budget=Budget.CPU,
+         depends_on=["ME.9"], seeds=3,
+         control="THE PLANNER, STRIPPED: re-run the plurality leg with the "
+                 "target identity withheld from the planner. It must FAIL to "
+                 "reach both targets. If it still reaches them, 'achievable' "
+                 "was being read out of the world state rather than chosen, "
+                 "and the plurality certificate is void.",
+         kills="Any LG arm scored on cells where the observation alone "
+               "determines the act. CAST (2508.13446): 'the future action "
+               "distribution typically collapses given any single "
+               "observation... even powerful models have little incentive to "
+               "pay attention to the language command'. Pre-registered out, "
+               "before an arm is trained, at minutes of CPU.",
+         notes="LG.01's shape moved from Q&A to BEHAVIOUR; PG.7's leak probe "
+               "one layer further out. The plurality leg is the half that is "
+               "new: necessity alone certifies that the blind twin fails, "
+               "which a merely IMPOSSIBLE cell also satisfies. THIS IS A "
+               "FIXTURE SPEC AND NOT A PILOT, deliberately: if this world "
+               "admits no language-necessary command that is a finding about "
+               "the VENUE, and a venue verdict in a docstring is invisible to "
+               "coverage, blocked, the ratchet and every depends_on "
+               "(LESSONS.md, 2026-09-04; the 1-vs-5 comparison is ME.11.0 "
+               "against the five pilot-blocked specs). "
+               "  COVERS: language (parent) (fixture)"),
+
+    Spec("LG.04", 3, "The grounding bakeoff: five arms, one certified cell set",
+         hypothesis="Among arms that map an utterance to behaviour on the "
+                    "LG.03-certified cells at matched optimiser steps AND "
+                    "matched environment steps, at least one beats the "
+                    "language-blind null by >= 3 sigma on held-out PHRASINGS, "
+                    "and the winner beats the runner-up by the pre-registered "
+                    "margin. Arms: A0 language-blind (the null); A1 frozen-LLM "
+                    "embedding router (SCORED BUT INELIGIBLE — a frozen tower "
+                    "inside Jack, foreclosed by the PLASTIC-ONLY decree, run "
+                    "and recorded because an assumption that cannot lose is "
+                    "not a finding); A2 the shipped plastic text tower router "
+                    "(T2.06's incumbent); A3 a language-conditioned policy "
+                    "trained end-to-end; A4 = A3 plus hindsight relabelling "
+                    "from the diary's did channel (HIGhER, 1910.09451).",
+         falsified_by="No arm clears the 3-sigma learning gate: VOID, not a "
+                      "verdict — two non-learners cannot arbitrate an "
+                      "architecture (T2.02's law). The seat stays UNDECIDED "
+                      "and the repair is the arm, not the ranking.",
+         null_baseline="A0, the language-blind policy: identical observations "
+                       "and identical budget, instruction channel zeroed.",
+         metric="best_arm_advantage_sigma", budget=Budget.CPU_LONG,
+         depends_on=["LG.03", "ME.9"], seeds=3,
+         control="THREE, and all three must fail. (1) C-TFIDF, a bag-of-words "
+                 "nearest-name router with no training at all, MUST FAIL on "
+                 "the held-out phrasings — if it passes, the cells are "
+                 "resolvable by token overlap and every arm's score is lexical "
+                 "(T2.07's naive-Bayes reference scored 5/5 where the model "
+                 "scored 2/5; this control is that finding made mandatory). "
+                 "(2) C-DENSITY, A3 trained on the SAME NUMBER of "
+                 "(instruction, trajectory) pairs A4 receives — resampled, not "
+                 "relabelled — must fail to reach A4. Hindsight relabelling "
+                 "MULTIPLIES training pairs, so an A4-over-A3 gap is otherwise "
+                 "indistinguishable from more data (CURIOSITY_BAKEOFF.md's F2 "
+                 "branch names this exact confound: 'the fix is hindsight "
+                 "relabeling density, not curiosity'). (3) C-SHUFFLE, THE "
+                 "SHUFFLED-PARENT TWIN: A3 trained on MIS-PAIRED data — the "
+                 "same instructions and the same trajectories, paired at "
+                 "random under a committed seed, same count, same optimiser "
+                 "steps — must collapse to A0 on held-out phrasings. "
+                 "FROZEN_VS_PLASTIC.md §10.2 declares this control MANDATORY "
+                 "for every spec that runs with a parent ('same words, same "
+                 "rate, wrong events... if Jack's grounding survives "
+                 "shuffling, he learned the words' distributional statistics "
+                 "and not their referents, and the whole claim collapses'). "
+                 "A0 supplies that section's other mandatory control, the "
+                 "MUTE-PARENT twin, and C-SHUFFLE is not redundant with it: "
+                 "A0 has no channel at all, C-SHUFFLE has a channel carrying "
+                 "noise, and an arm whose advantage comes from the mere "
+                 "PRESENCE of a wider input — capacity, regularisation, "
+                 "gradient noise — beats A0 while tying C-SHUFFLE.",
+         kills="The router family as an ANSWER to the owner's end goal, if A3 "
+               "or A4 wins: a device that maps strings to a fixed menu cannot "
+               "compose over verb x object, whatever it scores. And if A2 "
+               "wins, it kills the assumption that end-to-end conditioning is "
+               "worth its compute at Jack's scale.",
+         notes="This is the ring CHAMPIONS.md's 'Language grounding (word -> "
+               "lived skill)' seat has never had (ARENA: NONE, one of three "
+               "UNFALSIFIABLE seats). Whether this id becomes that seat's "
+               "declared arena is the Review's tie-break, DUE 2026-09-07 "
+               "(champions-language-grounding-arena) — registration supplies "
+               "the input and deliberately does not pre-empt the answer. A1's "
+               "ineligibility is recorded per SYSTEM.md's "
+               "scored-and-ineligible rule, the way LC.04 already treats "
+               "sb3-ppo. Arms train on the diary OFFLINE AND IN BULK, never "
+               "by query: ME.11 is FAIL at 0.250 paraphrase recall against a "
+               "0.80 bar, so an arm that RETRIEVES by paraphrase must declare "
+               "ME.11 in depends_on instead. "
+               "  COVERS: language (parent) (claim)"),
+
+    Spec("LG.05", 4, "The Understanding Test: three destructions, three "
+                     "different destinations",
+         hypothesis="On HELD-OUT (verb, object) cells never trained together, "
+                    "the LG.04 winner beats the language-blind baseline PER "
+                    "CELL on >= 8 of 12 cells at >= 3 seeds; AND the three "
+                    "destruction interventions land in three pre-registered "
+                    "and DIFFERENT places: scrambling word order moves "
+                    "behaviour to the language-blind baseline, deleting the "
+                    "instruction moves it to the same place, and SWAPPING in a "
+                    "different valid instruction moves it to THAT "
+                    "instruction's behaviour.",
+         falsified_by="Fewer than 8 of 12 held-out cells clearing their own "
+                      "band — composition is not there, whatever the average "
+                      "says (gSCAN 2003.05161: strong baselines 'fail "
+                      "dramatically' exactly here). OR swap and scramble "
+                      "landing in the SAME place: a model that treats a "
+                      "scrambled instruction as a different one is doing "
+                      "lookup on a token bag, and a model that treats a "
+                      "swapped one as deleted has a channel wired to nothing.",
+         null_baseline="The language-blind baseline, per cell. The claim is a "
+                       "per-cell difference between two interventions on the "
+                       "same initial state, never a success rate.",
+         metric="cells_clearing_band", budget=Budget.CPU_LONG,
+         depends_on=["LG.03", "LG.04"], seeds=3,
+         control="TWO. (1) THE LOOKUP TABLE: an arm given the full training "
+                 "cell set as an explicit (phrase -> behaviour) table must "
+                 "score ZERO on held-out cells by construction — if the real "
+                 "arm scores like the table, nothing was learned that a table "
+                 "does not already contain. (2) THE UNTRAINED VERB "
+                 "(CAPABILITIES.md section C, L2, verbatim: 'Control: "
+                 "untrained verb must fail'): a verb held out of training "
+                 "ENTIRELY, not merely out of a cell, must fail — otherwise "
+                 "the held-out cells are being solved by the object alone and "
+                 "no composition was measured.",
+         kills="The claim that Jack understands an instruction rather than "
+               "recognising one. Conditions 1-3 of LANGUAGE_GROUNDING.md's "
+               "section 1 stand or fall here.",
+         notes="Deliberately downstream of LG.04: T2.07 already FAILED the "
+               "easier held-out-PHRASING split ([2,2,2] vs a 4/5 bar) while a "
+               "naive-Bayes lexical reference scored 5/5, so dispatching the "
+               "harder CELL split against the same tower would be paying for a "
+               "predictable red. REPORTING REQUIREMENT, added by the "
+               "registering cross-check and part of the claim's "
+               "interpretability rather than its bar: metrics must carry the "
+               "retained-cell count and the instruction vocabulary size. "
+               "Chaabouni et al. (ACL 2020, 2004.09124) [V] measured "
+               "generalisation correlating with INPUT SPACE SIZE at rho = "
+               "0.86 while only 4 of 141 settings showed any significant "
+               "correlation with a compositionality metric — so 8-of-12 means "
+               "nothing across runs unless the space it was measured in is on "
+               "the row, and the same finding is why this spec scores held-out "
+               "behaviour directly instead of scoring a topsim. "
+               "  COVERS: language (parent) (claim)"),
+
+    Spec("LG.06", 3, "The ordering experiment: does skills-first buy anything, "
+                     "and is it the WORDS that transfer?",
+         hypothesis="At matched optimiser steps and matched environment steps, "
+                    "three orderings are raced on the LG.03-certified cells: "
+                    "O1 skills-first (childhood, then language), O2 "
+                    "language-first (a pretrained-sequence-initialised policy, "
+                    "then control), O3 joint. The winner is separated by the "
+                    "pre-registered margin — AND O2 is accompanied by O2s, an "
+                    "identical arm whose vocabulary is permuted by a fixed "
+                    "seed. The ORDERING question is answered by O2 - O1; the "
+                    "MEANING question is answered by O2 - O2s.",
+         falsified_by="O2 and O2s tie. Then whatever language-first transfers "
+                      "is a sequential-structure prior and not word meaning — "
+                      "2202.01771's own finding that 'the format of the policy "
+                      "inputs encoding (natural language string vs an "
+                      "arbitrary sequential encoding) has little influence' — "
+                      "and this project's childhood-then-grounding ordering "
+                      "was never the thing being tested.",
+         null_baseline="The language-blind policy at the same budget, carried "
+                       "from LG.03, so all three orderings are scored against "
+                       "one floor.",
+         metric="ordering_gap_sigma", budget=Budget.CPU_LONG,
+         depends_on=["LG.03"], seeds=3,
+         control="O2s, the SCRAMBLED-VOCABULARY twin. It is a control in the "
+                 "strict sense: if it matches O2, the language arm's advantage "
+                 "was not about language, and any conclusion drawn from O2 - "
+                 "O1 alone would have been drawn from the wrong half of the "
+                 "effect.",
+         kills="The developmental ordering this project assumes without "
+               "testing (LANGUAGE_GROUNDING.md Finding 3). A tie between O1 "
+               "and O2 says the ordering does not matter at Jack's budget and "
+               "the cheaper one wins by law 3's TIE rule; an O2 win with O2s "
+               "tied says the whole framing was wrong.",
+         notes="Matched optimiser steps AND env steps, both reported "
+               "(D1_CONTROL_ARCHITECTURE's lesson). O2 does NOT put a frozen "
+               "model inside Jack: it initialises a PLASTIC policy from "
+               "pretrained weights and continues to train them, which the "
+               "PLASTIC-ONLY decree permits. An arm that froze them would be "
+               "A1's situation and would be scored-but-ineligible. O2 ~ O2s "
+               "is named in advance as a live and arguably likely outcome and "
+               "must be reported as loudly as a win. "
+               "  COVERS: language (parent) (claim)"),
+
     # ── BALANCE, SUCCESSOR CLAIM (overseer B1, 48th audit, 2026-08-30) ───
     # Registered BEFORE D8's default fires (2026-08-31) so that parking
     # BA.02 costs the ratchet nothing. This is NOT an amendment of BA.02

@@ -961,7 +961,19 @@ QUEUE_EMPTY_BASELINE = frozenset({"cpu<1min"})
 #     block behind it cleared exactly as the 91-entry above predicted — "the
 #     block clears the first time SO.01 passes". The spectating claim is now
 #     RUNNABLE; the floor follows the number down, shrink-only.
-UNREACHABLE_BASELINE = 91
+#   94 @ 2026-09-04 (builder) — the LG grounding bakeoff registered from
+#     docs/research/LANGUAGE_GROUNDING.md §7 under the INTEGRATION_QUEUE
+#     protocol: LG.03 (the cell-certification FIXTURE) is RUNNABLE and refills
+#     the cpu<10min class, which coverage reported NEWLY EMPTY and FILL-HELD
+#     behind D19; the other three — LG.04, LG.05, LG.06 — are deliberately
+#     blocked behind LG.03 because scoring a grounding arm on cells that were
+#     never certified language-necessary is the exact defect this family
+#     exists to prevent (CAST 2508.13446: the action distribution collapses
+#     given the observation alone, so the arm need never read the command).
+#     The block is `depends_on`, so protocol.blocked_by() enforces it rather
+#     than a docstring; it clears the first time LG.03 passes. +3, the
+#     GEN.02-09 / SO.04 shape, named here as the ratchet requires.
+UNREACHABLE_BASELINE = 94
 
 
 def unreachable_ratchet(ledger=None,
