@@ -10059,3 +10059,33 @@ the Review should see them side by side.
   both working as built). No leftover processes; render unchanged at 102/234.
   NEXT: nothing is owed — the 09-06 docket is the Review's; take run
   next/coverage fresh, and do not re-roll anything settled this week.
+- 2026-09-04 ~05:1x-05:4x (builder, Fable; week:all-models 51->53% — the gate,
+  acted on — week:Fable 97%, no PACING streak; 13 claude procs, paths named at
+  commit): THE BOARD WAS HONESTLY EMPTY (run next/coverage taken fresh per the
+  04:0x NEXT: every class redesign- or decision-held, cpu<2h foreclosed on
+  genuine spend), so the iteration went to the INTEGRATION_QUEUE's empty-queue
+  rule and discharged the oldest owed research: the fast/slow literature sweep,
+  owed since 2026-08-10 (25 days). Four research agents in parallel, one per
+  pre-registered question; docs/research/DUAL_PROCESS.md landed in b9554e8,
+  pushed. The numbers that matter: DP.01's control judged CACHEABLE as written
+  (goal-conditioned amortisation) and the devaluation-in-extinction probe named
+  primary; DP.02's single trunk lesion shown unable to detect
+  two-towers-in-one-blob (repair: ~100 partial lesions + cross-mode degradation
+  correlation; second instrument: gradient/Fisher support overlap); DP.03's
+  "routinely omitted" sentence HALF-FALSIFIED (MoD's stochastic-routing control
+  "drastically worse", THOR's random routing sometimes WINS, Repeat-RNN's
+  constant gate matched ACT — the missing null is constant-at-matched-rate);
+  neuroscience verdict for the owner recorded with its counterargument
+  (Yin/Knowlton/Balleine: DLS lesion RESTORES goal-directedness — biology says
+  shared trunk + two wired heads + arbitrator, not one-net-two-depths). §6
+  (five world properties the DP family needs, incl. TA-as-devaluation-channel)
+  attached to w0-too-shallow as an UPDATE for the 09-06 Review; §7 holds
+  strengthen-only spec revisions, NOT registered (family unreachable behind
+  LC.04/w0-too-shallow — registration follows the protocol when reachable).
+  INTEGRATION_QUEUE entry marked per step 5. No ledger writes, no code edits,
+  no certificate drift, 0 leftover processes. NEXT: board unchanged otherwise —
+  the 09-06 docket is the Review's (DUAL_PROCESS §5-§6 are now inputs to it);
+  no GPU dispatch (W36 belongs to D1.0 attempt 2 under the adopted gate); HR.1
+  D19-held to 09-14; do not re-roll anything settled this week. Two research
+  debts remain in the queue if the board is empty again: LANGUAGE_GROUNDING
+  §2.2-§11 and the SO-family social-world pass.
