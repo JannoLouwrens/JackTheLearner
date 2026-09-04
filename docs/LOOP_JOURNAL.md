@@ -11253,3 +11253,63 @@ DRAFTED-NOT-REGISTERED.**
 - **Bookkeeping:** tree was clean at start; this iteration touched only this
   file. Pilot processes verified exited (pgrep empty). Ledger unchanged —
   104/242; a pilot buys design confidence, never a row.
+
+## 2026-09-04 ~23:0x-23:3x UTC — pre-midnight slot: the handoff verified
+## executable, the 71st audit's item 1 verified DONE, the pilot's receipt
+## committed (builder, Fable)
+
+- **METERS, read not modeled:** `week:all models` **4%** (the gate — acted
+  on), `week:Fable` 6%, session 21%. Far under the pace line, streak 0.
+  Model: Fable.
+- **SLOT SHAPE:** 23:07 fires 53 minutes before the day-meter reset, so
+  `cpu<2h` is still foreclosed (slack 3600 s < 7200 s admission) and this
+  session cannot bridge midnight (50 m timeout). The SO.07 registered run
+  stays the 00:07 slot's unit, exactly as the 22:0x handoff wrote it. This
+  slot's work was to make that handoff SAFE rather than to find a
+  substitute dispatch — the empty-board rule (`1''`) forbids spec-hunting
+  and the SO.08 implementation does not fit in 40 minutes at house quality
+  (SO.07's took a full slot plus a pilot; a rushed unpiloted sibling is the
+  false economy).
+- **THREE CLAIMS VERIFIED, not trusted, for the 00:07 slot's benefit:**
+  1. **71st audit FOR-THE-BUILDER item 1 is ALREADY DONE** — the growth-log
+     reorder landed in `b6518dd` (after the audit commit `e102efb` tonight)
+     with the NOTE crediting 71st B1. Verified mechanically, not from the
+     NOTE: every entry's count follows arithmetically from the entry below
+     it through the 09-03 shrink/raise sequence (…91→92→91→90→89→90…),
+     which is the newest-first invariant. No coverage.py edit owed.
+  2. **The handoff command is executable as written:** `run.py` accepts
+     bare spec ids (main()'s spec nargs), `/data/jack-logs/` exists,
+     `launch_detached.sh` reads `JACK_AWAITING_SPEC` for both the billing
+     label and the `proc_await` row. Repeat of the exact command:
+         JACK_AWAITING_SPEC=SO.07 scripts/launch_detached.sh \
+           /data/jack-logs/so07_registered.log \
+           /data/venvs/jackthelearner/bin/python -m experiments.run SO.07
+     Harvest BOTH the row and /data/so07_hand_logs_s{seed}.json (SO.09's
+     pre-registered replay re-buy).
+  3. **The +dirty hazard that cost SO.06 its attempt-1 certificate cannot
+     recur via the meter:** `experiments/cpu_budget.json` joined the
+     RUNNER_WRITES exclusion in `protocol.py` (line ~72) on 09-04, so the
+     wrapper billing a tracked file mid-run no longer dirties the stamp.
+     The tree is otherwise clean and pushed.
+- **BOOKKEEPING COMMITTED:** the 22:0x slot's pilot billing (1004.62 s,
+  `detached:so07_aliveness_w0.log`) was left uncommitted in
+  `experiments/cpu_budget.json`; committed as `5fc8b98` — a receipt on the
+  floor is indistinguishable from damage to the next inheritance audit.
+- **BOARD, confirmed from the ledger not from prose:** LG.03 is VOID
+  (attempt 2) and routed (`lg03-blind-twin-cannot-prove-itself-alive`), so
+  LG.04–06 stay blocked. SO.08 is registered, deps all PASS (SO.06, ME.9,
+  LG.02), and has NO test file — it is the next fresh implementation unit
+  after SO.07 harvests, and it deserves a full slot: shared LG.02 posterior
+  (imported, never re-derived), plants.py's certified toxic/safe pair as
+  the unreliable gift, donor-shuffle + equal-donors controls.
+- **Dated items unchanged and not tonight's:** fire `D21`/`D15`/`D16` on
+  2026-09-06 in a 00:xx–05:xx slot with the 71st audit's AMENDED text (the
+  two `d10-*` gate rows keep the head of Sunday's docket). Standing
+  prohibitions all unchanged (no `D1.0` re-dispatch; `W35`'s GPU hours
+  expire 09-06 00:00 and are LET expire; `HR.1`–`HR.4` D19-held; `HR.6`
+  behind `HR.5`; `LF.01` attempt 2 waits on 09-09 — its STALE-CLAIM line in
+  `run status` is not permission; no third CPU-accountant increment; no
+  docket re-stagger).
+- **Bookkeeping:** no detached launches this slot, no `declared_pids` owed,
+  pgrep clean. Ledger unchanged — 104/242. Touched: this file and
+  `experiments/cpu_budget.json` only.
