@@ -10877,3 +10877,77 @@ the Review should see them side by side.
   hard direction. `blind_calib_rate` sits exactly ON 0.75 on seed 0, so a VOID
   on another seed's calibration is a live possibility — if it fires, the repair
   is a third learner in the `max`, never a lower `CALIB_MIN`.
+
+2026-09-04 ~17:0x-17:4x (builder, **OPUS** — `week:Fable` is 100% and cannot
+start until the 09-07 05:00 reset; **`week:all models` 60%**, which is the gate
+and the number I acted on; session 4%; no `PACING:` line in the slot, streak 0):
+**took the journal's own next-unit — ran `LG.03` — and it came back VOID on its
+own liveness gate. The iteration's real product is that its PRE-REGISTERED
+REPAIR IS FALSIFIED, measured, not argued.**
+
+- **`LG.03` attempt 1 recorded (VOID, 724.6 s, 3 seeds, `a2ff63c`), row
+  committed as found.** `blind_calib_rate` **0.583 ± 0.312** — readings
+  1.00 / 0.50 / 0.25 across seeds 0/1/2 — against `CALIB_MIN` 0.75. Launched
+  through `launch_detached.sh` with `JACK_AWAITING_SPEC=LG.03`, so the pid was
+  declared and the AWAITING row written; no `LEFTOVER` owed.
+- **Every other rig gate was green, which is what makes it a gate question and
+  not a bug hunt:** `obs_finite` 1.0, `verb_alive_min` 1.0, `planner_reach_mean`
+  0.754, and the declared control failed as it must — `stripped_both_rate`
+  0.0542 vs `CTRL_MAX` 0.10 on all 80 candidates. The claim numbers the VOID
+  correctly refuses to publish: `retained_cells` **6.33 ± 0.47** vs `MIN_CELLS`
+  12, `cellset_ok` **0.0 on every seed**, cross-seed intersection 3 cells
+  (`approach@block`, `round@stairs`, `touch@block`), `min_per_verb` 1,
+  `min_per_object` 1. So the FAIL the last journal entry forecast is **UNBOUGHT,
+  not delivered** — the venue verdict does not exist until an instrument
+  certifies itself alive.
+- **The repair I pre-registered in the open yesterday — "a third learner in the
+  `max`, never a lower `CALIB_MIN`" — buys EXACTLY ZERO, and I tested it before
+  spending on it.** `experiments/tests/lg03_blind_twin_probe.py` (kept,
+  reproduces in ~90 s) raced five cheap deterministic learners on the identical
+  demos of the identical calibration cell: `max5 == max2` on **every seed**,
+  including `wknn`, a metric reweighted by ridge-coefficient magnitude aimed
+  squarely at the placebo/silent columns the shipped pair was chosen for.
+- **THE CAUSE IS THE `planner_own` COLUMN.** On seeds 1 and 2 the PRIVILEGED
+  planner reaches the calibration cell on **3 of its own 4 starts** — the demos
+  are capped by the teacher while `CALIB_MIN` is absolute, so the gate demands
+  the student reproduce every one of the teacher's successes perfectly. And
+  relativising alone does not fix it: at 0.75 × 0.75 = 0.5625, seed 1 still
+  voids at 0.50. Both halves are live.
+- **NOTHING MOVED, deliberately.** `CALIB_MIN` unchanged, `_Blind.KINDS`
+  unchanged, both file edits docstring prose re-stamped through the
+  `--doc-only` amend lane (`impl_sha` f682410d → e432088c; `LG.03` is not in the
+  stale block). Moving a pre-registered constant after seeing it go red is
+  exactly the act that needs a non-author's eye, and `D22` — which asks whether
+  that changes — is on the owner's desk to 09-08.
+- **Routed `lg03-blind-twin-cannot-prove-itself-alive`, DUE 2026-09-12,** with
+  four options priced and none decided (teacher-relative bar / choose the calib
+  cell by the teacher's reach / a twin with an optimiser / read the VOID as a
+  `w0-too-shallow` instrument pointed at the OBSERVATION). **I took the date
+  from `review-queue`'s `next_free_due` rather than defaulting onto Sunday** —
+  it read 09-12 before and 09-13 after, 0 violations, which is the 68th audit
+  B7 guard working as designed instead of a third hand-stagger.
+- **LESSONS gained two rules:** (1) a bar on an imitator must be denominated in
+  what was demonstrated or it measures the demonstrator — and the *tell* is a
+  spec carrying one relativised predicate beside one absolute one, which
+  `LG.03` does; (2) **a repair pre-registered in the open is a HYPOTHESIS, not a
+  plan** — it protects against motivated reasoning, it does not make the repair
+  true, and it earns the same cheapest-refuting-experiment treatment as a claim.
+  Executing this one unexamined was a second 12-minute run and a second VOID.
+- **Housekeeping, and it was inherited rather than caused:** `T0.21` and `T0.34`
+  were both in `run status`'s STALE CLAIMS block at 17:07 — two PASS
+  certificates decayed in silence, the Review 08-21 #4 scar class. Re-bought
+  clean (`T0.21` PASS 8.16 s, 25 commitments / 0 uncovered; `T0.34` PASS
+  23.72 s, `detached_receipts_ok` 1.0). **No PASS certificate is now stale;** the
+  residual is exactly the four rows parked on Review rows (`UB.10`, `T3.09`,
+  `D1.0`, `LF.01`) plus `T2.02`'s pre-`impl_sha` drift. CPU day 7012 s of
+  57600 s; `cpu<10min` and `cpu<1min` ok, `cpu<2h` still foreclosed at 39.
+- **NEXT ITERATION: the board is empty again and `LG.03` is now behind a queue
+  row, so do NOT re-run it and do NOT touch `CALIB_MIN`.** The 70th audit's B1,
+  B2 and B4 are executed; **B3 is the live one and it has an HOUR on it — fire
+  `D21`, `D15` and `D16` in a 00:xx–05:xx slot on 09-06, before the Review's
+  ~06:37 run**, and write `D21`'s mandated order onto the `w0-too-shallow` row,
+  not into prose. Standing prohibitions unchanged: no `D1.0` re-dispatch, `W35`'s
+  ~11 free GPU-hours expire 09-06 00:00 and should be LET expire, `HR.1`–`HR.4`
+  D19-held, `LF.01` attempt 2 waits for the 09-09 design, no third increment of
+  the CPU accountant. If nothing else lands, `PROGRESS.md` #2's remaining
+  half — the SO-family social-world research pass — is the honest unit.
