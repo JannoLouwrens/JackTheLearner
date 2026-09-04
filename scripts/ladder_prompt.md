@@ -520,7 +520,96 @@ carried as binding and cleared); `T0.01` and `T0.10` are both PASS with their
 rows committed; `SM.03`'s orphaned file is **tracked** and `SH.02` **has an
 implementation** — the "no implementation at all" sentence below is stale, both
 are now PILOT-BLOCKED with redesigns routed to the Review. Do not do any of it
-again. **The live items are 1', 2' and 3' immediately below.**
+again.
+
+**AND `1'`/`2'`/`3'` ARE SUPERSEDED TOO — replaced by `1''`/`2''`/`3''`
+immediately below (Review, 2026-09-04, DAILY).** `1'` was spent: it existed to
+redirect you away from `HR.6`, the 65th audit executed that on 09-03 by
+declaring the `HR.6 <- HR.5` edge in the registry, and `run next`/`coverage`
+have not offered `HR.6` since. A correction that has been mechanically enforced
+for a day is history, not a priority. `2'` and `3'` survive verbatim as
+prohibitions and are carried into `3''`. **The live items are `1''`, `2''` and
+`3''`.**
+
+1''. **THE BOARD IS EMPTY, YOU ARE NOT THE REASON, AND THE FIX IS ON THE
+   REVIEW'S DESK — so do not go looking for a spec to write.** Verified by the
+   Review 2026-09-04 rather than taken from the journal: of 234 registered
+   specs, 135 carry a ledger row; of the 99 that do not, exactly **nine have
+   all dependencies PASS**, and every one of the nine is PARKED (`SH.01`,
+   `SM.02`, `T2.11`, `T3.10`), PILOT-BLOCKED (`SH.02`, `SM.03`, `DP.04`,
+   `LC.07`) or decision-HELD (`HR.1` <- D19). Eight of the nine wait on a
+   redesign owed by the Review; the ninth waits on the owner. `coverage` says
+   the same from the other end without being asked — all four non-fillable cost
+   classes name the identical reason, *"the repair is a REDESIGN"*. **Run
+   `run blocked` and `run coverage` for the live figures; the counts here are
+   this morning's and will go stale.** The standing rule from the 08-31 block
+   is unchanged and now binds harder: **do not spend an iteration hunting for a
+   spec to write into an empty class.** The repair is an UNBLOCK, and the
+   unblock is not yours today.
+
+2''. **WHEN THE BOARD IS EMPTY, TAKE THE `INTEGRATION_QUEUE` EMPTY-QUEUE
+   RULE — AND TAKE `LANGUAGE_GROUNDING.md` §2.2–§11 FIRST**, before the
+   SO-family social-world pass. Both are live research debts and you named both
+   yourself; this is only the ordering, and the reason is given so you can
+   overrule it if you find a better one. `LG.00`, `LG.01`, `LG.02` and `LG.10`
+   are already registered, the doc's §7 ("registry entries") is empty, the
+   *Language grounding (word -> lived skill)* seat is one of **three marked
+   UNFALSIFIABLE** by `champions --check`, and the Review owes
+   `champions-language-grounding-arena` on **2026-09-07**. Your research pass
+   is therefore an INPUT to a dated Review row; the SO-family pass is not, and
+   half of what it would design (`WP.01-04`, `PS.07`, `LF.04`, `SO.03`,
+   `SO.05`) is W1 content already HELD behind the Sunday design. Same protocol
+   as always: citations, arms, costs, `Spec(...)` drafts in house format, a new
+   research doc AND a new queue entry.
+
+   **AND A NEW PROHIBITION, EARNED BY THE MEASUREMENT: no third increment of
+   the CPU accountant.** `T0.33`/`T0.34` were owed and they are good work — the
+   detached lane really did spend `LC.03` v2's ~190 core-hours invisibly. But
+   its first full day billed **5906.8 s across eight line items and every one is
+   a certificate re-buy or a re-stamp sweep** (`gate_sweep_cpu2h` 4560.65,
+   `rebuy_xl00` 1171.28, `LC.02` 140.29, then `T0.34`/`T0.17`/`T0.33`/`T0.27`/
+   `T0.31` at 34.6 s between them) — zero seconds of new science, and on that
+   basis it currently refuses 53 CPU specs until midnight. Read the shape:
+   **this is `pace_gate` again** — a throttle regulating you against a quantity
+   our own audit-and-re-buy churn generates, which cost 66 dark hours in August
+   before anyone saw it. Its open questions are already routed and neither is
+   yours: `cpu48h-class-self-forecloses-the-day-meter` (DUE 09-08) and **D20**
+   (decide_by 09-18, the owner's). Extending the meter further is the mirror,
+   not the creature.
+
+3''. **THE STANDING PROHIBITIONS, ALL CARRIED FORWARD UNCHANGED. Nothing here
+   is new; it is here so an empty-board iteration cannot reach for one of them
+   as "cheap work".**
+   - **Do not re-dispatch `D1.0`.** Full reasoning in `2'` below, still
+     correct: 16.17 GPU-h burned, VOID on a learning-gate artifact, and attempt
+     2 exists only under a gate the Review must commit before dispatch
+     (`d10-*` rows, 09-06; `d10-successor-rerun-under-adopted-gate`, 09-08).
+   - **`W35` has ~11 free Kaggle hours and they expire 2026-09-06 00:00. LET
+     THEM EXPIRE.** Every runnable GPU spec is a settled FAIL whose re-run is a
+     seed-lottery redraw, or parked. This is **inventory, not uptime** (the
+     08-29 diagnosis) and manufacturing a dispatch to spend a dying quota is
+     the failure mode, not the fix. `W36` opens the same instant with 30 h and
+     a named buyer.
+   - **`HR.1`–`HR.4` stay D19-held to 09-14** — do not fetch a corpus to
+     unblock a family. **`HR.6` stays blocked behind `HR.5`'s FAIL**;
+     `experiments/hearing.py` is tied to `HR.7`'s certificate by IMPL_DEPS.
+   - **`LF.01` attempt 2 waits for the 09-09 design.** Its own row
+     (`w0-kills-a-forager-by-integrity-at-25-minutes`) says attempt 2 exists
+     only after the design answers, and `FIXTURE_VOID_CAP=3` is a cap, not
+     permission.
+   - **Do not re-stagger the 09-06 docket a third time by hand.** Your own 68th
+     audit B7 note is right and the Review endorses it: `piled_on` and
+     `next_free_due` exist so the next ROUTER reads the number. A third
+     hand-pass would mean the guard did not work, which is the finding to
+     report instead.
+   - **The ranker still cannot see the project's largest unblock** — `3'`
+     below, unchanged and still unfixed. `T2.01` ranks first at blocks 38; its
+     repair runs through `D1.0`; nothing declares `depends_on: D1.0`, so the
+     ranker scores that edge at ZERO. Run `run blocked` for the live figures
+     and know what it omits.
+
+Kept for provenance — SUPERSEDED 2026-09-04, do not execute as priorities; the
+prohibitions in `2'` and `3'` are live and are restated in `3''` above:
 
 1'. **CORRECTED (65th audit B1, executed 2026-09-03): `HR.6` is NOT the
    cheapest fresh unit — it is BLOCKED behind `HR.5`'s FAIL, and this item

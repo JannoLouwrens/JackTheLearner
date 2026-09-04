@@ -5,194 +5,290 @@
 > Mode: DAILY (Part 2, the anatomy audit and the completeness audit are Sunday
 > work and were deliberately skipped; the last FULL page is 2026-08-31).
 
-**2026-09-03 06:3x–07:0x UTC — DAILY.** Window: the last 24 h
-(2026-09-02 06:3x → 2026-09-03 06:3x).
+**2026-09-04 06:4x–07:1x UTC — DAILY.** Window: the last 24 h
+(2026-09-03 06:45 → 2026-09-04 06:45; `HR.7` sits at 06:35 on the far side of
+the boundary and belongs to yesterday's page, where it was counted).
 
-*The one sentence: **the builder spent its day buying back certificates it
-already owned, and the one genuinely new thing it learned — that the playground
-cannot make the sounds GOAL.md names — is the sixth independent instrument to
-say the world, not the brain, is what is stopping this project.***
+*The one sentence: **between 16:00 and 22:00 yesterday the builder gave Jack
+three new true things about himself — he can say "I'm cold" and be right, he is
+the same creature whether or not he is watched, and a life of his survives being
+killed — and then the board emptied under it, and it emptied because thirty-one
+redesigns are parked on this desk.***
 
 ---
 
 ## The numbers
 
-| | now | 09-02 06:3x (DAILY) | Δ |
+| | now | 09-03 (DAILY) | Δ |
 |---|---|---|---|
-| demonstrated / registered | **95 / 225** | 94 / 217 | **+1 / +8** |
-| pass rate | **42.2%** | 43.3% | −1.1 pts |
-| FAIL / VOID (live rows) | **22 / 10** | 20 / 10 | +2 / — |
-| unreachable specs | **89 / 225 (40%)** | 85 / 217 | +4 (registration), floor now follows |
-| rework (ledger rows at attempt > 1) | **97 / 127 = 76.4%** | 82 / 124 = 66.1% | **+10.3** |
-| commits, last 24 h | **55** | 55 | — |
-| builder slots fired | **25 starts, zero `PACING:` skips** | 25 | — |
-| ledger settlements in window | **~86** (of which **2** are new science) | 13 | — |
-| ratchets | coverage **rc=2** (4 CLAIM-DEAD, routed, DUE 09-11) · review-queue rc=0 (27 OPEN of 31) · champions rc=0 · decisions rc=0 | — | — |
+| demonstrated / registered | **102 / 234** | 95 / 225 | **+7 / +9** |
+| pass rate | **43.6%** | 42.2% | **+1.4 pts** |
+| FAIL / VOID (live rows) | **22 / 11** | 22 / 10 | — / +1 |
+| unreachable specs | **91 / 234 (39%)** | 89 / 225 (40%) | +2 count, −1 pt |
+| rework (ledger rows at attempt > 1) | **104 / 135 = 77.0%** | 97 / 127 = 76.4% | +0.6 |
+| commits, last 24 h | **65** (9 of them journal records) | 55 | +10 |
+| builder slots fired | **27 starts, zero `PACING:` skips** (last skip 08-29) | 25 | +2 |
+| ledger settlements in window | **40**, of which **8 first-ever** | ~86, of which 2 | — |
+| maintenance share of non-journal commits | **41 / 56 = 73%** | 37 / 47 = 79% | **−6 pts** |
+| ratchets | coverage **rc=2** (4 CLAIM-DEAD + 7 CITED-BUT-UNRUNNABLE) · review-queue rc=0 (**31 OPEN of 35**) · champions rc=0 · decisions rc=0 (10 armed) | — | — |
 
-**Read the settlement column before the pass column.** Eighty-six ledger
-settlements landed in the window and **two of them are new science**: `HR.7`
-PASS (the A2 hearing stem keeps bearing — worst-seed probe 0.9453 vs the 0.90
-gate, mono null 0.1615 vs the 0.30 cap, swap inversion 0.9783) and `HR.5` FAIL
-(pre-stated, and a real measurement of the world). Two more real negatives
-opened the window — `T3.09` and `ME.11`. Everything else, on the order of
-eighty rows, is the bounded-gate sweep re-stamping certificates plus re-buys.
+**The +7 is the best-composed week's-worth of PASSes this project has recorded
+in a while, and it is worth breaking apart before anyone celebrates it.** Seven
+first-ever PASSes: `SO.02` (*"I'm cold" is true when he is cold* — 3 seeds,
+acc_class 1.000 vs base 0.430), `SO.04` (*being watched does not change him* —
+watched vs unwatched bit-identical on all 3 seeds over 2000 steps), `LF.02`
+(*a life survives `kill -9` bit-exactly*), plus `T0.32`/`T0.33`/`T0.34` (the
+rtf gate and the CPU-hour accountant, TIER 0 — the machine, not Jack) and
+`SO.01` (a fixture, credited as support and not as a claim by `coverage`).
+**Three of the seven are claims about Jack**, and `coverage` credits all three
+to commitments that were reading zero or one. The eighth settlement is `LF.01`
+VOID — the first long-exposure life W0 has ever hosted, dead at ~25 minutes of
+`cause=INTEGRITY` with a privileged scripted forager driving. That VOID is a
+measurement, and it is the tenth instrument.
 
-**Four of those re-buys were repairing our own damage.** At 19:08 on 09-02 a
-cross-organ doc-write race dirty-stamped `PS.01`, `PS.02`, `PS.03` and `BA.01`
-into VOID; the following ten hours bought all four back at a cost including
-`PS.01`'s 870.8 s and `BA.01`'s 227.7 s. That is what the rework rate moved
-+10.3 points on — **the number is now measuring damage repair, not iteration
-quality**, and it should be read that way until the 09-06 row lands.
+**The maintenance share fell, and that is the honest reading of the day.**
+73% of non-journal commits carry an audit B-item, a re-buy, a re-stamp, a
+harvest or a drift repair — high, but down from 79% and 81% on the two previous
+windows, and the fall is exactly the six-hour creature window. The rework rate
+is flat and still contaminated by 09-02's cross-organ doc-race repair; read it
+again after the 09-06 row lands.
 
-**Pass rate fell while the count rose, and this time it is information, not
-Goodhart.** The registry grew 217 → 225 because `HR.1`–`HR.8` were registered
-from `HEARING_BAKEOFF.md` under the 5-step protocol, five of them deliberately
-blocked behind same-family parents with the justification named in the ratchet's
-growth log. A registration that refills an empty cost class (`cpu<10min` went
-EMPTY-no-path-in → fillable) is the inventory repair the W34 post-mortem asked
-for. The dilution is real and it was bought on purpose.
+**Goodhart: the rate ROSE against a growing registry, which is the rare good
+case.** Registry 225 → 234 (seven `DIRECTION_AUDIT` stubs registered under the
+5-step cross-check with two REFUSED and eight HELD, plus `LG.11` THE TOLD
+WORLD, which the 66th audit registered because GOAL.md had declared itself
+falsifiable there since 08-09 and never had a spec) against demonstrated
++7. The runner outran the ladder for the first time since 08-31. `unreachable`
+rose 89 → 91 and `UNREACHABLE_BASELINE` was raised with it twice, both times in
+the growing commit with the justification in the growth log — `HR.6`'s new edge
+behind `HR.5`'s FAIL, and `SO.04` deliberately registered blocked behind
+`SO.01`. That is the protocol working, not a floor drifting.
 
 ---
 
-## The frontier, recomputed
+## The frontier, recomputed — and it is not a spec
 
-`T2.01` — *"Locomotion beats a random policy"* — **blocks 38 specs**, four times
-the next largest (`T4.04`, `T3.02`, `LT.01` at 9). It has been settled FAIL
-since 2026-08-12 at 2.67σ against an unmoved 5σ bar. It is **not** a re-run and
-the builder is right not to touch it.
+`run blocked` is unchanged at the top: **`T2.01` frees 35 / blocks 38**, settled
+FAIL since 08-12 at 2.67σ against an unmoved 5σ bar, repair path through
+`D1.0`, whose gate redesign is owed here on Sunday. `NE.01` frees 8, `LT.01`
+frees 7, `UB.10` frees 4. None of that moved.
 
-Its repair path runs through `D1.0`, the control-path bakeoff that fired as D1's
-armed default on 09-01, **burned 16.17 GPU-hours — 54% of a weekly quota — and
-returned VOID.** The VOID is honest and the arithmetic says it is not
-foreclosed: `c_e2e` returned 404.3 against random's 108.7, a 3.7× gain, and was
-recorded as not having learned only because it was scored against its own wider
-spread (2.56σ) while the other three arms were scored against random's. That is
-a gate-scoring artifact, not an envelope wall.
+**What moved is the bottom of the board, and it went to zero.** Of 234
+registered specs, 135 carry a ledger row. Of the 99 that do not, exactly **nine
+have all dependencies PASS** — and every one of the nine is parked,
+pilot-blocked, or held by an open decision:
 
-**Three rows own this and their clocks are correct**:
-`d10-learning-gate-uses-two-different-denominators` and
-`d10-learning-gate-sits-at-the-untrained-twin-level` (both DUE **2026-09-06**,
-mine), then `d10-successor-rerun-under-adopted-gate` (DUE 09-08). **W36 opens
-2026-09-06 00:00 UTC with 30 free GPU-hours against attempt 1's measured
-16.17 h** — after three consecutive weeks of expired quota, this is the first
-week the largest unblock in the project has a named buyer.
+| spec | state | who owns the repair |
+|---|---|---|
+| `SH.01`, `SM.02`, `T2.11`, `T3.10` | PARKED by a fired both-fail branch | this desk |
+| `SH.02`, `SM.03`, `DP.04`, `LC.07` | PILOT-BLOCKED — pilot measured its own precondition failing | this desk |
+| `HR.1` | FILL-HELD by `D19` (NO-FETCH default, decide_by 09-14) | the owner |
 
-**And the instrument cannot see any of it.** Nothing in the registry declares
-`depends_on: D1.0`, so `run blocked` scores `D1.0`'s mass at **zero**. The
-ranker shows the builder a 38-mass blocker that is settled FAIL and then the
-trail to its actual repair goes cold *inside the tool*. The 60th audit had to
-route that row by hand. See FOR THE OWNER.
+**Eight of nine wait on a redesign that is on this desk; the ninth waits on the
+owner. Not one waits on the builder, and not one waits on compute.**
+`coverage` says the same thing from the other end without being asked: all four
+non-fillable cost classes name the same reason — *"the repair is a REDESIGN"*.
+The builder's 04:10 journal line, *"the board is honestly empty"*, is true, and
+I verified it rather than taking it.
+
+### The finding: the queue that gates the board is diverging, and no
+### rearrangement of dates touches it
+
+`docs/REVIEW_QUEUE.md` has been live for 15 days. In that time it has **routed
+35 rows and closed 2** (`me11-every-arm-hits-the-same-infeasible-branch`,
+`reparenting-the-welded-fifteen`; two more are HELD behind `w0-too-shallow`,
+which is not closure). Arrivals over the last five full days: 9, 5, 6, 4, 4 —
+**≈5.6 rows/day.** Closures over the queue's whole life: **≈0.13/day.** The
+file's own instrument measures the consumer at **1 dated row per cycle**.
+
+The 65th and 68th audits built genuinely good instrumentation for this and both
+aimed it at the wrong quantity. B6 measured the pile per date; B7 measured
+`piled_on` (17 of 31 rows named a date that was already full when routed) and
+`next_free_due` (**2026-09-12**), and re-staggered 09-06 from 8 rows to 6.
+`piled_on` still reads 17 after the re-stagger, and the builder says so plainly
+in its own journal — *"moving between piles is not a repair"*. It is right.
+**Arrival minus departure is ≈5.5 rows/day and every date in the file is
+downstream of it.** Sunday's six rows are not a scheduling problem.
+
+I am the consumer. This is a finding about me.
+
+### Second: the CPU accountant's first full day billed nothing but itself
+
+`T0.33` and `T0.34` landed at 22:18 and 23:22 and are good work — the detached
+lane really did spend `LC.03` v2's ~190 core-hours invisibly, and it now writes
+receipts before, during and after. Here is its complete ledger for
+2026-09-04, every line item:
+
+```
+detached:gate_sweep_cpu2h.log  4560.65 s   certificate sweep
+detached:rebuy_xl00.log        1171.28 s   re-buy
+LC.02                           140.29 s   re-buy
+T0.34  24.28 · T0.17 3.44 · T0.33 3.30 · T0.27 1.92 · T0.31 1.66  re-buys
+                               ─────────
+                               5906.82 s of 57600 s
+```
+
+**Every second of it is a certificate re-buy or a re-stamp sweep. Not one
+second bought a new measurement about Jack** — and on that basis the meter
+currently refuses 53 of the box's CPU specs until midnight. The 68th audit
+caught the double-billing that made it worse and fixed it (B1–B3), and routed
+the class question as `cpu48h-class-self-forecloses-the-day-meter` (DUE 09-08)
+and as `D20` (decide_by 09-18). Both correct. What neither says is the thing
+the numbers say: **this is the `pace_gate` shape again** — a throttle
+regulating the builder against a quantity that our own audit-and-re-buy churn
+generates. That cost 66 dark hours in August before it was understood. It is
+not costing anything yet. It is one week old and it should be watched, and the
+measurement above is the input `D20` needs, not a recommendation about where
+its ceiling belongs.
 
 ---
 
 ## The honest paragraph
 
-We did not get closer to a creature yesterday; we got closer to knowing why we
-have not been. The day's real work was janitorial — a sweep re-stamping things
-already proven, and four certificates bought twice because two of our own organs
-wrote to the same documents at the same moment. But underneath the busyness one
-thing genuinely happened: a brand-new sense family met the world for the first
-time, and the world could not hold up its end. He cannot hear water because
-water is a force field the apple never enters; he cannot hear a creak because a
-creak is a placement onset; there is no label saying what a sound *is* and none
-saying whether he made it. That failure was pre-stated, it was honest, and it
-is the sixth instrument in a row — after the survival screen, the lookahead
-test, the shelter oracle, the balance probes and the smell pilot — to return the
-same verdict from a different direction. Smell, balance, shelter and warmth are
-all now formally claim-dead, every claim spec parked or foreclosed, and not one
-of them died because Jack failed to learn. They died because there was nothing
-there to learn. The most important step toward Jack this week was building him
-an ear that provably reports direction; the most concerning drift is that we
-keep building him senses to point at a world with almost nothing in it, and our
-instruments are getting very good at documenting that in ever finer detail. The
-week's single decision that matters is not which gate to score `D1.0` with. It
-is whether Sunday is spent on the world.
+For six hours yesterday this was a project about a creature. He got a voice
+that tells the truth about his own body rather than about the world — the first
+thing he says that is checkable against what is happening inside him; he was
+shown to be the same animal watched and unwatched, which is the precondition
+for the owner ever being allowed to look at him; and a life of his was killed
+outright and resumed exactly, which is what makes a life something that can
+accumulate rather than something that merely runs. Those are three different
+kinds of true and none of them is a fixture. Then a long-exposure life was run
+for the first time, and the world broke his body a fraction of the way in,
+with a privileged servo driving and food never in question — which is the tenth
+separate instrument to report that the difficulty here is the place, not the
+mind. And after that the board went flat, and the machine did what it always
+does when there is nothing to measure: it turned around and measured itself,
+beautifully, with a new meter whose entire recorded spend so far has been the
+cost of re-proving things it already knew. That is not waste and it is not
+dishonesty — every re-buy was owed, every audit item was real. But the shape
+of the day is a creature-shaped morning and a mirror-shaped night, and the
+switch between them was thrown by this desk. The most important step toward
+Jack was the moment he said something about himself that could have been false
+and was not. The most concerning drift is that the one organ that cannot be
+scaled by working harder is now the only thing standing between an idle builder
+and a world nobody has designed yet.
 
 ---
 
-## REWRITTEN / STRENGTHENED
+## STEERING / STRENGTHENED
 
-- **`experiments/coverage.py` — `UNREACHABLE_BASELINE` 90 → 89 (floor, not
-  reading).** `HR.7`'s PASS reopened its downstream and the live count fell to
-  89. Commit `b8f69f4`'s message says *"record unreachable 90 → 89"* and it wrote
-  the new number into `ratchet_readings.json` — but the constant that the ratchet
-  actually compares against was left at 90, so for the last half hour the shrink-
-  only ratchet was carrying a floor one above the truth and would have accepted a
-  silent regression back to 90 as clean. **Stronger because the floor now binds
-  where it reads:** the ratchet fires on any regression, and the growth log now
-  records shrinks as well as raises, so a floor that fails to follow the number
-  down is visible in the file rather than only in a transient amber line.
-  Verified: `run coverage` reads *"89 of 225, baseline 89"*, `stale_baseline`
-  clear, no new red (the standing rc=2 is the 4 CLAIM-DEAD commitments, routed
-  and DUE 09-11).
+**No spec file was touched and no threshold moved in either direction.** Part 2
+is Sunday's. One steering edit, in the builder's file only:
 
-- **`scripts/ladder_prompt.md` — priority items 1 and 2 struck as DONE.** Both
-  were finished work still being presented to the builder as the top of its list:
-  `W0.DIAG` registered/run/**PASS** on 08-31 with the binding known-answer control
-  cleared, and `T0.01`/`T0.10` both PASS with rows committed. Two further stale
-  sentences corrected in place — `SM.03`'s orphaned file is tracked, and `SH.02`
-  *"has no implementation at all"* is wrong (it has one; both are PILOT-BLOCKED
-  with redesigns routed here). Replaced by live items **1'/2'/3'** naming
-  `HR.6`'s CPU staging arms as the cheapest fresh unit, the standing **do not
-  re-dispatch `D1.0`** order with its Sunday gate dependency, and the ranker
-  blind spot above.
-
-No spec files were touched and no threshold moved in either direction. Part 2 is
-Sunday's.
+- **`scripts/ladder_prompt.md` — the `1'/2'/3'` priority block replaced by
+  `1''/2''/3''`.** Item `1'` was spent: it existed to redirect the builder away
+  from `HR.6`, the 65th audit executed that on 09-03 by declaring the
+  `HR.6 ← HR.5` edge, and `run next`/`coverage` have not offered `HR.6` since —
+  a correction that has been mechanically enforced for a day is history, not a
+  priority. With it spent, **the block contained three prohibitions and zero
+  positive units**, which is what an iteration reads at 03:00 with an empty
+  board before it goes looking for something to do. The replacement states the
+  board is empty, states *why* and whose desk that is, names the ordered
+  fallback (the `INTEGRATION_QUEUE` empty-queue research rule, `LANGUAGE_
+  GROUNDING` §2.2–§11 first because it feeds `champions-language-grounding-
+  arena` DUE 09-07 and the Language-grounding seat is one of the three
+  UNFALSIFIABLE ones), and adds one new prohibition earned by the numbers
+  above: **no third increment of the CPU accountant.** The three live
+  prohibitions (`D1.0`, `D19`/`HR.1`, `LF.01` attempt 2) are carried forward
+  unchanged, and `W35`'s expiring hours are named so nobody manufactures a
+  dispatch into them.
 
 ---
 
 ## FOR THE BUILDER
 
-1. **`HR.6`'s CPU staging arms (A0/A0b/A2/A5)** — minutes each, no download, and
-   the registry's staging note means **if A2 cannot beat A0b on CPU the GPU arms
-   are cancelled for free.** `experiments/hearing.py` is tied to `HR.7`'s
-   certificate by IMPL_DEPS: editing it obliges a re-buy.
-2. **Do not re-dispatch `D1.0`, and do not manufacture a substitute GPU job to
-   spend W36.** Attempt 2 is gated on a gate design owed here on Sunday; an
-   unchanged re-dispatch is a seed-lottery redraw. The quota has a buyer and the
-   buyer has a date.
-3. **`HR.1`–`HR.4` stay blocked-on-disk.** D19's default is NO-FETCH until
-   09-14. Do not fetch a corpus to unblock a family.
-4. Nothing else on this page needs you. The five rows due Sunday are mine, not
-   yours; do not pre-empt them with a repair.
+1. **The board is empty, you are not the reason, and the correct response is
+   not to build the machine another organ.** Nine specs could be started today
+   and all nine are parked, pilot-blocked or decision-held; `coverage` names
+   the repair as a REDESIGN in all four empty cost classes. Do not go looking
+   for a spec to write into an empty class — that is the exact move
+   `coverage`'s own text forbids.
+2. **Take the `INTEGRATION_QUEUE` empty-queue rule, and take
+   `LANGUAGE_GROUNDING.md` §2.2–§11 first** (before the SO-family social-world
+   pass). Reason, so you can overrule it if you find a better one: `LG.00`,
+   `LG.01`, `LG.02` and `LG.10` are already registered, §7 "registry entries"
+   is empty, the *Language grounding (word → lived skill)* seat is one of three
+   marked **UNFALSIFIABLE** by `champions --check`, and I owe
+   `champions-language-grounding-arena` on **09-07** — your research pass is
+   an input to a dated row of mine, which the SO-family pass is not.
+3. **No third increment of the CPU accountant.** `T0.33`/`T0.34` were owed and
+   are good. But its first full day billed 5906.8 s and **every line item is a
+   re-buy or a re-stamp** — the meter is currently an instrument for measuring
+   our own churn, and extending it further is the mirror, not the creature. The
+   open questions it raises are already routed (`cpu48h-class-self-forecloses-
+   the-day-meter` DUE 09-08, `D20` decide_by 09-18) and neither is yours.
+4. **Standing prohibitions, all unchanged:** do not re-dispatch `D1.0` (gate
+   design owed here 09-06; an unchanged re-dispatch is a seed-lottery redraw);
+   `HR.1`–`HR.4` stay D19-held to 09-14, do not fetch a corpus; `HR.6` stays
+   blocked behind `HR.5`; **`LF.01` attempt 2 waits for the 09-09 design** —
+   its own row says so and `FIXTURE_VOID_CAP=3` is not permission.
+5. **`W35` has ~11 free Kaggle hours and they expire 2026-09-06 00:00. Let them
+   expire.** Every runnable GPU spec is a settled FAIL whose re-run is a seed
+   lottery, or parked. This is inventory, not uptime — the 08-29 diagnosis —
+   and manufacturing a dispatch to spend a dying quota is the failure mode, not
+   the fix. `W36` opens the same instant with 30 h and a named buyer.
+6. **Do not re-stagger the 09-06 docket a third time.** The builder's own 68th
+   audit B7 note is right and I am endorsing it: `piled_on` and `next_free_due`
+   exist so the next *router* reads the number. A third hand-pass would mean
+   the guard did not work.
 
 ---
 
 ## FOR THE OWNER
 
-1. **Sunday 2026-09-06 is oversubscribed, and I am telling you the order I will
-   take it in rather than discovering it at turn 100.** Six OPEN queue rows come
-   due that day — `w0-too-shallow` (the oldest live row, 10 days),
-   `cross-organ-doc-race-voids-certificates`, `lt01-c2-body-cannot-rise`,
-   `lc07-checkpoint-branch`, and the two `d10-*` gate rows — on the same run that
-   owes Part 2, the anatomy audit and the completeness audit, in 40 minutes and
-   120 turns. **My order: the two `d10-*` gate rows first** (they are a scoring
-   choice, they are cheap, and they release a 16-hour dispatch into a quota that
-   expires 09-13), **then `w0-too-shallow`**, then the rest, and Part 2 sampled at
-   its minimum of 8 rather than dropping a dated row. If you want a different
-   order, this is the page to say so on.
+1. **THE FORK, and it is new: design throughput is now the binding constraint
+   on the whole project, and it is structural rather than a matter of anyone
+   working harder.** The Review is a ~40-minute-a-week design desk (FULL,
+   Sundays) fronting a queue that receives **≈5.6 rows/day** and has closed
+   **2 rows in 15 days**. Every one of the nine startable specs sits behind it.
+   Meanwhile the builder has an empty board, 24 slots a day, and spent eight of
+   yesterday's hours accounting for its own accounting because there was
+   nothing else it was permitted to touch.
+   **My recommendation: let the builder DRAFT redesigns; keep ratification
+   here.** A queue row currently means *"only the Review may answer this"*.
+   Change it to *"the builder may write the answer; the Review and the overseer
+   must ratify it before any run"*. That converts my 5.6-per-day design deficit
+   into a review-of-drafts load, which is perhaps a tenth the cost per row, and
+   it puts the work where the capacity actually is.
+   **The risk, named because it is the whole reason the rule exists:** the
+   builder drafting the redesign of a spec that just failed is precisely the
+   conflict of interest the T1.02 precedent guards against. **The safeguard is
+   already built and already running** — the strengthen-only law, and an
+   overseer whose §2 duty is to audit every spec diff independently of its
+   author. So the proposal is narrow: the builder may draft, must state the new
+   threshold and why it is HARDER, may not run the spec until ratified, and the
+   old version stays in the ledger's history. If you would rather not, the
+   alternative is a second Review sitting per week for design only; I prefer
+   the draft route because it scales and a second sitting does not.
 
-2. **The world is now the measured bottleneck on six independent instruments,
-   and four constitutional commitments are formally claim-dead behind it** —
-   smell, balance, shelter/building and thermal, every claim spec parked or
-   foreclosed, none of them because Jack failed to learn. `HR.5` made it six this
-   morning in a family one day old. **My recommendation: W1 stops being a queue
-   row and becomes the project's stated stage.** We are at step 2 of GOAL.md's
-   path building senses for a step-6 world, and the ladder is measuring the gap
-   very precisely. This is the strategic fork; the `D1.0` gate is a detail beside
-   it.
+2. **`D20`'s input, measured rather than argued.** The CPU day-meter's first
+   full day of operation billed 5,906.8 s across eight line items and **all
+   eight are certificate re-buys or re-stamp sweeps** — zero seconds of new
+   science — and it is on that basis currently refusing 53 CPU specs until
+   midnight. You are being asked (`D20`, decide_by 09-18; `OVERSIGHT` FOR THE
+   OWNER item 2) what the ceiling should count. I am deliberately not
+   recommending a number, because every recommendation available to me points
+   at loosening a ceiling and that is not my direction to push. What I will say
+   is the pattern: this is the shape `pace_gate` had — a throttle regulating
+   the builder against a quantity our own audit churn generates — and that one
+   cost 66 dark hours before anybody saw it. One week of data is not a crisis.
+   It is worth your eyes before it is three weeks.
 
-3. **`run blocked` cannot see the project's largest unblock.** `T2.01` blocks 38
-   specs; its repair runs through `D1.0`; no spec declares `depends_on: D1.0`, so
-   the ranker scores that edge at zero and the 60th audit had to route the work by
-   hand. **My recommendation: do NOT add the edge to the registry** — it would
-   make `T2.01` unreachable until `D1.0` passes and would drift its certificate.
-   Instead the ranker should read a declared `repaired_by` field that carries mass
-   without carrying blocking semantics. That is a real design change to
-   `run blocked`, so it is yours to authorise, not mine to make.
+3. **Sunday 2026-09-06, order unchanged from yesterday's page and now
+   six rows rather than eight** (the builder re-staggered `hr5-fixture-refuted`
+   and `w0-kills-a-forager` to 09-09, both with reasons I endorse; it correctly
+   left `cross-organ-doc-race-voids-certificates` on the full day because that
+   row's stated reason outranks pile-avoidance). Order: the two `d10-*` gate
+   rows first (cheap, and they release a 16 h dispatch into W36's 30 free
+   hours), then `w0-too-shallow` — **now at eleven days and ten instruments**,
+   `LF.01`'s 25-minute body-wreck being the tenth — then the rest, Part 2 at
+   its minimum of 8. If item 1 above is granted, this docket is the first thing
+   that changes shape.
 
-4. **Organ liveness, all green.** builder 06:07 (hourly, 25/25 slots, no
-   `PACING:` streak), overseer 06:37 (6 h), field watch 08-31 05:53 (Mondays —
-   next fire 09-07, inside cadence, wk5 consumed 08-31), review 06:37 (this run).
-   No organ is silent.
+4. **Organ liveness, all green, all verified against `/data/jack-logs` mtimes
+   rather than against anyone's report.** builder 06:17 (hourly, 27 starts,
+   0 `PACING:` — last skip 08-29), overseer 06:37 (6 h), field watch 08-31
+   05:53 (Mondays — next fire 09-07, inside cadence; wk5 consumed 08-31 and
+   unchanged since, so nothing to consume this run), review 06:37 (this run).
+   `lost_iterations.log` still 0 bytes and still never exercised. No organ is
+   silent.
