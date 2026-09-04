@@ -98,7 +98,7 @@ import json
 import tempfile
 from pathlib import Path
 
-from dataclasses import replace
+from dataclasses import fields as dc_fields, replace
 
 from ..protocol import (Ledger, Result, Status, module_path_for, run_spec,
                         staleness_of)
@@ -191,6 +191,25 @@ def _claim_battery(real: Ledger) -> dict:
             if spec_sha_of(replace(_CLAIM_DONOR, **{f: v})) == base}
     bookkeeping_does_not_invalidate = (held == set(_CLAIM_INVARIANTS))
 
+    # 10c'. EVERY field of `Spec` is in exactly one of the two sets — the
+    # partition is exhaustive (69th audit B3, 2026-09-04).
+    #
+    # Found by adding a field. 10a closes the CLAIM half against widening:
+    # hash a new field without a perturbation case and this spec goes red. The
+    # bookkeeping half had no such closer, so `Spec.repaired_by` landed in
+    # NEITHER set and every conjunct above stayed green while saying nothing
+    # about it whatsoever. That is the more dangerous direction of the two: a
+    # field wrongly hashed cries wolf on the next honest edit and gets found in
+    # a day, while a field wrongly UNhashed is silent by construction — a claim
+    # could move under a certificate and no instrument would ever ask.
+    #
+    # A partition asserted on one side is not a partition. This is the same
+    # defect `_split_foreclosed` had (two readers of one quantity) in the shape
+    # of two sets nobody made cover their union.
+    every_spec_field = {f.name for f in dc_fields(Spec)}
+    classified = set(_CLAIM_PERTURBATIONS) | set(_CLAIM_INVARIANTS)
+    spec_fields_all_classified = (every_spec_field == classified)
+
     # 10d. THE LC.01 SHAPE, replayed: a row bought under the old words, the
     # spec amended, the detector must say so — and must NOT say so when the
     # words held still.
@@ -260,6 +279,7 @@ def _claim_battery(real: Ledger) -> dict:
         "claim_hash_covers_every_claim_field": (covers_every_field
                                                 and every_claim_field_hashed),
         "claim_hash_ignores_bookkeeping": bookkeeping_does_not_invalidate,
+        "spec_fields_all_classified": spec_fields_all_classified,
         "drift_sees_amended_claim": sees_amended_claim,
         "drift_spares_unamended_claim": spares_unamended_claim,
         "unstamped_claim_is_not_clean": unstamped_is_not_clean,
@@ -577,6 +597,9 @@ def _check(m: dict, c: dict) -> bool:
         # of today's words proves nothing about a run from before them.
         m["claim_hash_covers_every_claim_field"],
         m["claim_hash_ignores_bookkeeping"],
+        # ...and the two sets PARTITION `Spec`, so a field added tomorrow
+        # cannot land in neither and be silently unclassified (69th audit B3).
+        m["spec_fields_all_classified"],
         m["drift_sees_amended_claim"],
         m["drift_spares_unamended_claim"],
         m["unstamped_claim_is_not_clean"],
