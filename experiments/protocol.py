@@ -57,7 +57,20 @@ RUNNER_OUTPUTS = ("experiments/ledger.json",
                   # SIGKILLed in that window orphans it, and an orphan that is
                   # not in this set reads as uncommitted code — the exact
                   # T2.00 `+dirty` failure, from a file the meter itself wrote.
-                  "experiments/gpu_budget.json.tmp")
+                  "experiments/gpu_budget.json.tmp",
+                  # `cpu_budget.json` joined on 2026-09-04, and its absence
+                  # re-paid the 2026-08-12 debt in the exact sibling the
+                  # paragraph above warned about: T0.33's billing writes it at
+                  # the end of EVERY CPU child, so from the first child of an
+                  # iteration until the next commit every later run stamped
+                  # `+dirty` — T0.34's attempt-1 certificate (`dd8a2dd`) was
+                  # dirtied by the receipt of the re-buy that ran beside it,
+                  # and the 09-03 iteration hand-sequenced commits around the
+                  # trap instead of closing it. Third occurrence of "evidence
+                  # log that invalidates the evidence"; the guard is T0.33's
+                  # receipt_committable property, which parses this tuple.
+                  "experiments/cpu_budget.json",
+                  "experiments/cpu_budget.json.tmp")
 
 #: Files the LOOP writes around a run — rendered status and the journal. Also
 #: not code, and the evidence is a stamp this project already paid for: T2.00's

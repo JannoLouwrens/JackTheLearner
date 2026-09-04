@@ -47,6 +47,14 @@ implementation including a broken one):
      before spawning — no child, no ledger byte moves. (If the refusal is
      broken this deliberately runs T0.01 for real, a few seconds and an
      honest re-run recorded by the runner — disclosed, not hidden.)
+ 11. THE RECEIPT IS COMMITTABLE (added 2026-09-04): the file this accountant
+     writes is in `protocol.RUNNER_OUTPUTS` (with its `.tmp` staging sibling)
+     and in `ladder_loop.sh`'s HARVEST_PATHS, both parsed live. Without the
+     first, every child's receipt `+dirty`-stamps the NEXT certificate run in
+     the same uncommitted window — the 2026-08-12 gpu_budget defect re-paid
+     one file over; T0.34's attempt-1 cert (`dd8a2dd`) was the scar. Without
+     the second, a pace-skip harvest commits a detached row while orphaning
+     the CPU receipt accounting for it (29th audit B4's class).
 
 Control (registry: "A leaky accountant must FAIL isolation, and the assertion
 must be made at a MID-RANGE value"): `_LeakyBudget` collapses every day into
@@ -80,18 +88,22 @@ import tempfile
 import time
 from pathlib import Path
 
-from ..cpu_budget import (CPU_DAY_CEILING_S, ENV_OVERRIDE, LOAD_CEILING,
-                          CpuBudget, _loadavg, gate_cpu_child)
-from ..protocol import Ledger, Status, run_spec
+from ..cpu_budget import (BUDGET_FILE, CPU_DAY_CEILING_S, ENV_OVERRIDE,
+                          LOAD_CEILING, CpuBudget, _loadavg, gate_cpu_child)
+from ..protocol import RUNNER_OUTPUTS, Ledger, Status, run_spec
 from ..registry import BY_ID
 from ..rtf import spec_child_timeout_seconds
 
 REPO = Path(__file__).resolve().parents[2]
 
-# Every property here is a property of experiments/cpu_budget.py; run.py's
-# wiring is scanned LIVE at run time (property 9), so a drift there is caught
-# by the next run rather than by a stale flag.
-IMPL_DEPS = ["experiments/cpu_budget.py"]
+# Every property here is a property of experiments/cpu_budget.py or of the
+# two files property 6/11 parse it against; run.py's wiring is scanned LIVE at
+# run time (property 9), so a drift there is caught by the next run rather
+# than by a stale flag. protocol.py and ladder_loop.sh joined 2026-09-04 with
+# property 11: this test asserts parsed equality with both, so an edit to
+# either must stale this certificate rather than decay it silently.
+IMPL_DEPS = ["experiments/cpu_budget.py", "experiments/protocol.py",
+             "scripts/ladder_loop.sh"]
 
 MID_CHARGE_S = 600.0          # the mid-range value the isolation assert uses
 WORST_LEGAL_CHILD_S = 54000.0  # cpu<2h x 3 seeds x 2 — must fit a fresh day
@@ -179,6 +191,20 @@ def _experiment(seed: int) -> dict:
         m = re.search(r"^MAX_LOAD=([0-9.]+)", loop_src, re.M)
         loop_load_agrees = m is not None and float(m.group(1)) == LOAD_CEILING
 
+        # One receipt, three registers: the file this accountant writes must
+        # be in RUNNER_OUTPUTS (else every child's receipt `+dirty`-stamps the
+        # NEXT certificate — T0.34 attempt 1, `dd8a2dd`) and in the loop's
+        # harvest pathspec (else a pace-skip harvest commits a ledger row
+        # while orphaning the receipt that accounts for it — 29th audit B4,
+        # one lane over). Parsed from the live constant and the live script,
+        # never assumed; red on the tree of 2026-09-03.
+        rel = BUDGET_FILE.relative_to(REPO).as_posix()
+        in_outputs = (rel in RUNNER_OUTPUTS
+                      and rel + ".tmp" in RUNNER_OUTPUTS)
+        hp = re.search(r'^HARVEST_PATHS="([^"]*)"', loop_src, re.M)
+        receipt_committable = (in_outputs and hp is not None
+                               and rel in hp.group(1).split())
+
         # Wiring, scanned on the live function.
         from .. import run as run_mod
         src = inspect.getsource(run_mod._run_isolated)
@@ -234,6 +260,7 @@ def _experiment(seed: int) -> dict:
         "overrun_marked": overrun_marked,
         "cpu_foreclosed": foreclosed,
         "loop_load_agrees": loop_load_agrees,
+        "receipt_committable": receipt_committable,
         "wiring_ok": wiring_ok,
         "shipped_refusal": shipped_refusal,
         "shipped_refusal_s": round(shipped_s, 3),
@@ -277,6 +304,7 @@ def _check(m: dict, c: dict):
             and m["overrun_marked"] is True
             and m["cpu_foreclosed"] == []
             and m["loop_load_agrees"] is True
+            and m["receipt_committable"] is True
             and m["wiring_ok"] is True
             and m["shipped_refusal"] is True
             and c["alive"] is True
