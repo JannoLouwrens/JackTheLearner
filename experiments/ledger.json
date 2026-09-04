@@ -20544,14 +20544,14 @@
     },
     "T0.33": {
       "amended": [],
-      "attempt": 3,
-      "commit": "6e3ad9a",
+      "attempt": 4,
+      "commit": "7264bbf",
       "compute_s": null,
       "control_metrics": {
         "alive": true,
         "leak_visible": true
       },
-      "duration_s": 1.18,
+      "duration_s": 1.19,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -20632,9 +20632,49 @@
           ],
           "spec_sha": "fac47af5bb0e9d36",
           "status": "PASS"
+        },
+        {
+          "commit": "6e3ad9a",
+          "control_metrics": {
+            "alive": true,
+            "leak_visible": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "9a889f51063196c2",
+          "message": "",
+          "metrics": {
+            "affords_small": true,
+            "charged_moves": true,
+            "cpu_foreclosed": [],
+            "cpu_quota_enforced": 1.0,
+            "detached_routed": true,
+            "exhausted_refused": true,
+            "fresh_admits_worst": true,
+            "gpu_unbound": true,
+            "isolation_ok": true,
+            "live_load": 0.14,
+            "load_refused": true,
+            "loop_load_agrees": true,
+            "overrun_marked": true,
+            "persists": true,
+            "receipt_committable": true,
+            "refuses_oversized": true,
+            "remaining_mid_s": 57000.0,
+            "shipped_refusal": true,
+            "shipped_refusal_s": 0.011,
+            "stale_writer_safe": true,
+            "starts_full": true,
+            "wiring_ok": true
+          },
+          "ran_at": "2026-09-04T00:16:27",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "fac47af5bb0e9d36",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "9a889f51063196c2",
+      "impl_sha": "89f3e22a299206f1",
       "message": "",
       "metrics": {
         "affords_small": true,
@@ -20646,9 +20686,11 @@
         "fresh_admits_worst": true,
         "gpu_unbound": true,
         "isolation_ok": true,
-        "live_load": 0.14,
+        "live_load": 0.25,
+        "live_remaining_s": 53032.35,
         "load_refused": true,
         "loop_load_agrees": true,
+        "n_foreclosed_now": 53,
         "overrun_marked": true,
         "persists": true,
         "receipt_committable": true,
@@ -20661,9 +20703,9 @@
         "wiring_ok": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 213.5,
+      "peak_rss_mb": 213.7,
       "preserved_impl": null,
-      "ran_at": "2026-09-04T00:16:27",
+      "ran_at": "2026-09-04T02:09:12",
       "seeds": [
         0
       ],
@@ -20673,14 +20715,16 @@
     },
     "T0.34": {
       "amended": [],
-      "attempt": 2,
-      "commit": "dd8a2dd",
+      "attempt": 3,
+      "commit": "7264bbf",
       "compute_s": null,
       "control_metrics": {
         "alive": true,
+        "dj_alive": true,
+        "dj_double_bills": true,
         "lump_misbills": true
       },
-      "duration_s": 21.45,
+      "duration_s": 23.73,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -20723,9 +20767,49 @@
           ],
           "spec_sha": "264208da469df397",
           "status": "PASS"
+        },
+        {
+          "commit": "dd8a2dd",
+          "control_metrics": {
+            "alive": true,
+            "lump_misbills": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "d21ae2d8bae7bc51",
+          "message": "",
+          "metrics": {
+            "alive_billing": true,
+            "billed_at_kill_s": 1.0,
+            "conservation_ok": true,
+            "default_hb_ok": true,
+            "detached_receipts_ok": 1.0,
+            "e2e_total_s": 15.4,
+            "elapsed_at_kill_s": 1.206,
+            "exhausted_refused": true,
+            "fresh_admits": true,
+            "hb_covers_life": true,
+            "hb_total_s": 3.0,
+            "launcher_ok": true,
+            "live_load": 0.14,
+            "live_receipt": true,
+            "load_refused": true,
+            "multi_day_ok": true,
+            "payload_died": true,
+            "rc_propagates": true,
+            "sigkill_bounded": true,
+            "straddle_ok": true,
+            "wiring_ok": true,
+            "zero_len_ok": true
+          },
+          "ran_at": "2026-09-03T23:22:10",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "264208da469df397",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "d21ae2d8bae7bc51",
+      "impl_sha": "e00477047a3f561f",
       "message": "",
       "metrics": {
         "alive_billing": true,
@@ -20733,6 +20817,10 @@
         "conservation_ok": true,
         "default_hb_ok": true,
         "detached_receipts_ok": 1.0,
+        "disjoint_ok": true,
+        "dj_day_total_s": 1.06,
+        "dj_stub_billed_s": 0.0,
+        "dj_wall_s": 1.129,
         "e2e_total_s": 15.4,
         "elapsed_at_kill_s": 1.206,
         "exhausted_refused": true,
@@ -20740,7 +20828,7 @@
         "hb_covers_life": true,
         "hb_total_s": 3.0,
         "launcher_ok": true,
-        "live_load": 0.14,
+        "live_load": 0.31,
         "live_receipt": true,
         "load_refused": true,
         "multi_day_ok": true,
@@ -20752,9 +20840,9 @@
         "zero_len_ok": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 208.8,
+      "peak_rss_mb": 209.1,
       "preserved_impl": null,
-      "ran_at": "2026-09-03T23:22:10",
+      "ran_at": "2026-09-04T02:09:40",
       "seeds": [
         0
       ],
