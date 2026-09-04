@@ -11510,3 +11510,97 @@ its own docket"*, which is the argument against what the sentence then did. The
 Review reads `OVERSIGHT.md` every morning; until this audit the overseer had
 read `PROGRESS.md` for its `FOR THE OWNER` asks and not for the operational
 order it publishes beside them.
+
+---
+
+## A sabotage control that trips an ERROR lane is not a control — it produces
+## no number, so it calibrates nothing
+
+*(2026-09-04, builder — found by re-running the `INTEGRATION_QUEUE` step-1
+cross-check at registration, on a draft whose author had already run step 1
+once and found four other things.)*
+
+`SO.07` needs a control that shows what PUPPETEERING looks like: a hand so
+helpful that competence collapses the moment it withdraws. `OWNERS_HANDS.md`
+drafted it as *"`C-GIVE`: the hand places the item IN CONTACT with Jack's body,
+**or restores `e` directly**"*. The second half is the more direct way to say
+the same thing, and it is forbidden — not by taste, but by a rule this repo
+pre-registered months earlier and three documents away.
+
+`NE.03` carries, inherited from `PURPOSE_AND_SCAFFOLDING.md` §5 G-A, the
+identity
+
+    Sum_t max(0, delta e_t)  ==  Sum_f nu_f * n_consumed_f
+
+with the disposition **`energy_accounting_residual != 0` → ERROR, not VOID —
+the instrument is wrong**. A direct write to `e` is a positive `delta e` with
+no logged consumption event. So the arm does not score badly; **it does not
+score at all** — every run carrying it raises an instrument fault. And
+`C-GIVE`'s only job was to land in the low-retention cell so the rest of the
+spec's numbers mean something. A control that cannot produce a number cannot
+calibrate a claim, so the whole spec would have gone with it.
+
+**The generalisation, and it is about a class of control rather than about
+energy.** Sabotage controls are usually written as *"do the bad thing
+directly"*, because that is the clearest statement of what is being
+calibrated. But a harness that is any good has integrity identities over
+exactly the quantities a sabotage would want to write — that is what makes it
+a harness. **So the most direct expression of a control is the one most likely
+to be foreclosed by the harness's own accounting, and the foreclosure shows up
+as an ERROR the author reads as a bug in their run.** Before you write a
+control that writes to a state variable, ask which identity audits that
+variable and whether your control breaks it. The repair here was one clause:
+`C-GIVE` places the item *in contact*, consumption still goes through the
+contact rule, the identity holds, and the arm scores. **Route the sabotage
+through the mechanism rather than around it** — which, note, is the same
+discipline the *claim* is held to.
+
+**The corollary the same finding forces, on the other side of the identity.**
+A hand-placed gift is a food source the identity does not know about, so the
+first honest drop breaks it just as surely as the dishonest one. That is not a
+reason to exempt hands; it is the identity asking to be extended:
+
+    Sum_t max(0, delta e_t)  ==  Sum_f nu_f n_f  +  Sum_hands nu_g n_g
+
+`SO.09` owns it, at zero cost, because it must log `nu` per placement for
+`hand_share` anyway. **An unlogged placement is now arithmetically impossible
+rather than merely unreported** — which is a strictly better guard than the one
+that was drafted, and it was bought by the same thirty seconds of grep.
+
+---
+
+## Price the DEPENDENCY FOOTPRINT before you accept a research document's venue
+## — `IMPL_DEPS` makes it computable, and it changed the design here
+
+*(2026-09-04, builder, same iteration; recorded separately because it is about
+documents and files rather than about controls.)*
+
+`OWNERS_HANDS.md` §4 measured its venue carefully and proposed the right shape
+on its own terms: a static gift body, added through a `gifts=` contract in
+`playground.py` mirroring the existing `shelters` one. What a research pass
+cannot see — because it is a fact about the ledger, not about the design — is
+what that file COSTS to touch:
+
+    grep -rl IMPL_DEPS experiments/tests/ | xargs grep -l playground.py | wc -l   # 54
+    grep -rl IMPL_DEPS experiments/tests/ | xargs grep -l experiments/w0.py       # 19
+
+**73 certificates would have gone stale to certify one channel, and every one
+of them would have needed re-buying.** `impl_sha` hashes the declared
+dependency's BYTES, so a default-empty kwarg that provably changes no
+behaviour costs exactly as much as a rewrite; the doc-only amendment lane
+(`run amend --doc-only`) refuses it, correctly, because the AST moved.
+
+The cheaper venue was already in the world and nobody had looked:
+`drives.FOOD_GEOMS` is `{apple, obj0, obj1}`, all three free bodies. A hand
+that RELOCATES one of them is doing exactly what the owner's sentence asks —
+*food where he might look* — creates no matter, and touches no file outside
+`experiments/tests/`. **And it made the claim stronger rather than cheaper:**
+with no model edit, the hand-present arm and the no-hand arm are the SAME
+MODEL, so the bit-identity leg tests the hand's code path instead of testing
+MJCF compilation.
+
+**The rule: when a research document proposes editing a shared substrate, run
+the `IMPL_DEPS` grep before step 3, and put the number in the queue row.** A
+doc is entitled to propose the clean design; the registering iteration owns the
+bill. And the tell that you should look for a second venue is a large number
+there — not a small one, which is permission.

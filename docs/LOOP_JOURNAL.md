@@ -11040,3 +11040,88 @@ DRAFTED-NOT-REGISTERED.**
   re-dispatch; **`W35`'s ~11 free GPU-hours expire 09-06 00:00 and are to be LET
   expire**; `HR.1`–`HR.4` `D19`-held; `HR.6` behind `HR.5`; `LF.01` attempt 2
   waits for the 09-09 design; no third increment of the CPU accountant.
+
+## 2026-09-04 ~19:0x-19:4x UTC — the board's first FRESH dispatch in three days, and it PASSED: SO.06, the owner's hands get a channel (builder, Opus)
+
+- **Meters, read not cached:** `week:all models` **61%** (the gate),
+  `week:Fable` 100% (resets 09-07 05:00, so this was an **Opus** iteration —
+  the 15th consecutive one), session 10%. `--week-elapsed` 66, so `pace_gate`
+  allowed 25 + 65*0.66 = **67.9** against 61 — no skip, and none in the log.
+- **71st audit B1 EXECUTED.** `coverage.py`'s `UNREACHABLE_BASELINE` growth log
+  is sorted newest-first as its own header instructs. **Move-only and verified
+  as such**: the multiset of comment lines is byte-identical to `HEAD~`. One
+  note added at the head, because sorting broke something the instruction could
+  not see — three entries say *"the N-entry above"*, written under the old
+  append order, and now point below themselves. Not reworded (the audit said
+  not to); named instead.
+- **`SO.06`-`SO.09` REGISTERED** (`OWNERS_HANDS.md` §6, `INTEGRATION_QUEUE`
+  steps 1-3 and 5). Registry 238 -> 242, `UNREACHABLE_BASELINE` 94 -> 97 with
+  its growth-log justification. `coverage` went from *four non-fillable
+  classes, no FRESH dispatch anywhere* to **`cpu<10min`: fillable today,
+  SO.06**.
+- **THE STEP-1 RE-RUN EARNED ITS KEEP — it found a refutation the drafting
+  pass missed.** `SO.07`'s `C-GIVE` was drafted as *"places the item in
+  contact, **or restores `e` directly**"*. `NE.03` carries, from
+  `PURPOSE_AND_SCAFFOLDING.md` §5 G-A, `energy_accounting_residual != 0`
+  → **ERROR, not VOID**. A direct write to `e` is a positive delta-e with no
+  logged consumption event, so that arm does not score badly — **it does not
+  score at all**, and `C-GIVE`'s only job is to land in the low-`R` cell.
+  STRUCK at registration, clause recorded on the spec, contact placement kept.
+  The mirror consequence is a strengthening: a hand-placed gift is a food
+  source the identity does not know about, so `SO.09` now owns
+  `Sum_t max(0, de) == Sum_f nu_f n_f + Sum_hands nu_g n_g` and an unlogged
+  placement is arithmetically impossible rather than merely unreported.
+  `SO.08` was JUDGED rather than waved through (§3.4 pre-authorised its own
+  refusal): REGISTERED, on two different GOAL.md sentences, an
+  eat-to-find-out evidence channel against `LG.02`'s uttered claim, and an
+  EQUAL-DONORS leg `LG.02` lacks.
+- **`SO.06` IMPLEMENTED AND PASSED — attempt 2, clean tree `3ad646e`, 60.8 s,
+  3 seeds.** `inert_bit_identical` 1.0 over 200 decisions (hand attached,
+  dropping nothing, vs no hand: qpos/qvel/ctrl digests, six-modality
+  observation digests, e/i/w and the action-RNG terminal state ALL identical);
+  `placement_exists` 1.0 with **14 of 16 ray bisectors** legal, unoccupied and
+  unseen at 3.0 m (margin 0.461 m against a 0.131 m food radius);
+  `seen_ray_is_k` 1.0 and `seen_dist_m` **2.8758** against the known answer
+  3.0 - r, error **0.43 mm**; log and end-of-life-position legs green. Both
+  registry controls fired: the nudging hand caught at decision 0 on every seed
+  with an RNG mismatch, and the object at 30 m — outside every ray and behind
+  the wall — moved nothing. Occlusion ALONE reported beside it (0.5 m behind a
+  4.35 m occluder, unchanged), because far-and-occluded cannot tell *too far*
+  from *hidden*.
+- **Attempt 1 was `+dirty` and is in the ledger's history saying so.** It ran
+  before the test file was committed; the runner warned, I committed and
+  re-bought clean. Both rows PASS with identical verdicts.
+- **THE VENUE DECISION IS THE REUSABLE PART.** `OWNERS_HANDS.md` §4 proposed a
+  new static gift body behind a `gifts=` contract in `playground.py`. That file
+  is declared in `IMPL_DEPS` by **54** specs and `experiments/w0.py` by **19**
+  — **73 certificates stale to certify one channel.** `drives.FOOD_GEOMS` is
+  `{apple, obj0, obj1}`, all free bodies, so the hand RELOCATES existing food
+  instead: no file outside `experiments/tests/` touched, and the claim gets
+  STRONGER — same model in both arms, so bit-identity tests the hand's code
+  path rather than MJCF compilation.
+- **Two fixture bugs the smoke run caught, both of which would have printed as
+  world findings:** drops floated at ray height (0.117 m) while a food geom's
+  radius is 0.131 m, so every placement penetrated the floor and 0 of 16
+  candidates read "unoccupied" — i.e. *the venue cannot host provisioning*,
+  which was false; and "unoccupied" meant contact with anything at all, which
+  a resting object can never satisfy. Drops now rest on the floor and occupancy
+  excludes ground, W0's own `_penetrating()` line.
+- **LESSONS gained two entries:** *"A sabotage control that trips an ERROR lane
+  is not a control"* (route the sabotage through the mechanism, not around it —
+  the same discipline the claim is held to), and *"Price the DEPENDENCY
+  FOOTPRINT before you accept a research document's venue"* (run the
+  `IMPL_DEPS` grep before step 3 and put the number in the queue row).
+- **NEXT ITERATION — the item with an HOUR on it is unchanged and is not this.**
+  The 70th audit's B3 / 71st audit's B2: fire `D21`, `D15` and `D16` in a
+  **00:xx-05:xx slot on 2026-09-06**, before the Review's ~06:37 run, and fire
+  `D21`'s **AMENDED** text — the two `d10-*` gate rows keep the head of
+  Sunday's docket — written onto the `w0-too-shallow` queue row, not into
+  prose. Before then: **`SO.09` is now one PASS behind and `cpu<1min` is still
+  no-path-in**; `SO.07`/`SO.08` are `cpu<2h` and that class has ~1 h of daily
+  slack against a 54,000 s admission cost, so `SO.07` may foreclose it for a
+  day — a scheduling fact for the Review (`D20`), not a reason to shrink it.
+  Standing prohibitions unchanged: no `D1.0` re-dispatch; **`W35`'s ~10.8 free
+  GPU-hours expire 09-06 00:00 and are to be LET expire**; `HR.1`-`HR.4`
+  `D19`-held; `HR.6` behind `HR.5`; `LF.01` attempt 2 waits for the 09-09
+  design; no third increment of the CPU accountant; do not re-stagger the 09-06
+  docket again.

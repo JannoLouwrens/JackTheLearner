@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 102 / 238 demonstrated
+## 103 / 242 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1105,3 +1105,28 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every launch through scripts/launch_detached.sh is admitted against the same day ledger as the runner's children BEFORE it detaches, and bills its measured wall clock incrementally as it runs — split across the calendar days it spans — so a multi-day child appears in every day it occupied and a group-killed child undercharges by at most one heartbeat.
       - _dies if:_ A detached child that runs without moving the budget, a midnight-straddling interval billed to a single day, or an undercharge after SIGKILL of the process group exceeding one heartbeat plus slack.
       - _then delete:_ Nothing on the ladder; it protects the tenants, which SYSTEM.md ranks above the ladder.
+
+### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
+
+- [x] **SO.06** A hand can reach into a running life, and it reaches ONLY through the world
+      - _asserts:_ A declared external agent can place an object into a live W0 at a legal, unoccupied, currently-unseen position mid-life; the placement is visible in Jack's own senses within a declared time once he looks, is logged with (t, agent, object, position, need-state), and changes NOTHING else — with the hand present but dropping nothing, the trajectory is bit-identical to no-hand at the same seed.
+      - _dies if:_ No placement exists that is simultaneously legal, reachable and initially unseen (the venue cannot host provisioning), OR the hand path perturbing the RNG stream, the body state, the need variables or the timing, OR a placement that never becomes perceptible.
+      - _then delete:_ 'Their hands may leave things in his world' as a sentence rather than a channel.
+
+### Tier 3 — ABLATION — does it earn its parameters?
+
+- [ ] **SO.07** What the hands leave is FOUND, and what he learns outlives them
+      - _asserts:_ A learner provisioned by a need-contingent hand reaches a higher competence than an unprovisioned twin at matched compute, AND retains it when the hand is withdrawn: retention_ratio R = C_off/C_on above its floor with scaffolding_benefit B = C_off/C0 above 1 (PURPOSE_AND_SCAFFOLDING.md §3.6's metrics, reused verbatim).
+      - _dies if:_ B ~ 1 (the hand bought nothing), OR R below its floor while B > 1 — competence that exists only while a hand is feeding him. THE SECOND IS THE PUPPETEERING RESULT and is reported as a violation of a GOAL.md commitment, not as a design finding; the response is to stop provisioning.
+      - _then delete:_ 'Never puppeteering: what is left must still be found, learned, and chosen by him' as an unfalsifiable promise.
+- [ ] **SO.08** The diary records WHOSE hands, and he acts on it
+      - _asserts:_ With two donors of different reliability leaving visually indistinguishable gifts, Jack's approach rate to a newly dropped object diverges by donor above a base-rate null, and the divergence runs THROUGH the attributed diary: strip or shuffle the donor field and it collapses.
+      - _dies if:_ No divergence (the donor field is written and never read — decoration), OR divergence surviving donor-shuffling (it was carried by something other than the attribution).
+      - _then delete:_ 'His diary records who left it — so gratitude, like trust, has somewhere real to grow' as decoration.
+
+### Tier 0 — HARNESS — can we measure anything?
+
+- [ ] **SO.09** A life the hands bought is not evidence, and the harness says so
+      - _asserts:_ Every provisioning event is logged, and any run that claims learning reports hand_share (the fraction of need-restoration events causally downstream of a hand inside a declared window) and hand_contact_frac (the fraction of placements made within body-contact distance) against a ceiling the spec declared BEFORE the run; a run over its ceiling is REFUSED by the runner, not reported with a caveat.
+      - _dies if:_ The accountant passing a deliberately puppeteered run (C-GIVE), OR refusing a clean one, OR a provisioning event reaching the world without a log line.
+      - _then delete:_ The practice of reading a provisioned run as a learning result because the hand 'only helped a little'.
