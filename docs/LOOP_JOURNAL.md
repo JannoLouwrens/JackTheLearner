@@ -10198,3 +10198,84 @@ the Review should see them side by side.
   `HR.5`, `LF.01` attempt 2 waits for 09-09, no third CPU-accountant increment,
   no third hand-stagger of the 09-06 docket). `next_free_due` is **2026-09-12**
   for any row you route.
+
+- 2026-09-04 08:xx UTC (builder, OPUS — `week:Fable` 99%, `week:all models`
+  55%, the gate; no PACING: line, 0 skips). Unit: the **69th audit's B3**,
+  ranked first by the previous iteration's hand-off. `run blocked` has ranked
+  `T2.01` first for weeks at **frees 35 / blocks 38**; it is a settled FAIL at
+  2.67σ against a bar of 5 that does not move, its repair runs through `D1.0`,
+  and nothing in the registry declared that edge — so the ranker scored the
+  trail from the project's largest blocker to the work that would actually
+  repair it at **zero**, and the 60th audit had to route
+  `d10-successor-rerun-under-adopted-gate` by hand. **MEASURED at `9e847cf`:
+  `D1.0 = VOID  carries frees 35  (blocks 38)  — declared the repair path for
+  T2.01`.** That number existed nowhere before this commit.
+  `Spec.repaired_by` is REPORTING ONLY and the audit's whole authorisation
+  rests on it staying one — read by `cmd_blocked` alone, never by
+  `Ledger.unsatisfied`, `_terminal_blockers`, `coverage` or any gate.
+  **Verified, not asserted:** `run next`, `run status` and `coverage` are
+  byte-identical to HEAD-before, and `unreachable` stays **91, at floor**. The
+  carried mass is computed by SUBSTITUTING each declared root by its repair
+  path and re-running `_rank_blockers` — the ranker's own arithmetic re-used
+  rather than restated, because its founding bug was ranking by mentions
+  (double-counted) and a second implementation would have to re-learn it. The
+  repair spec's own health is printed beside the mass through the same
+  `coverage.root_dead` predicate, asked separately because a repair spec is
+  never a terminal blocker: `repaired_by` pointing at a parked or foreclosed
+  spec is the 59th audit's corpse citation with the arrow reversed, and
+  "carries 35" beside a welded door is worse than printing nothing. D1.0 reads
+  **VOID** in the section, out loud, so leverage cannot read as permission —
+  its re-dispatch stays forbidden until the Review adopts a gate on 09-06.
+  GUARDS, each with a planted defect confirmed to raise: `_check_ranker`'s
+  fixture gains a repair edge with a POSITIVE control (P must carry X's mass),
+  a NEGATIVE one (W declares nothing, must gain nothing — without it the layer
+  passes by crediting every root), and a REPORTING-ONLY conjunct (P must stay
+  absent from the unsubstituted ranking); `_check_repair_edges` refuses a
+  self-loop and an id not in the registry, while KEEPING a repair id that
+  duplicates a `depends_on` — refusing a legal move is the failure `piled_on`
+  was built to avoid.
+  **`coverage.py`'s known-answer for the shared fixture graph fired the same
+  minute, correctly** (B3 added three stubs, so 12 → 15). The SIX unreachable
+  — the invariant it exists for — did not move, and the equality was NOT
+  relaxed to a `>=`.
+  **FOUND WHILE BUILDING, and it is the better finding:** `T0.17`'s P10 holds
+  two sets, and only ONE had a completeness closer. `_CLAIM_PERTURBATIONS`
+  must equal `SPEC_CLAIM_FIELDS`; `_CLAIM_INVARIANTS` had no such equality —
+  so `repaired_by` landed in NEITHER, and every conjunct stayed green while
+  saying nothing about it. The asymmetry runs opposite to intuition: a field
+  wrongly hashed cries wolf on the next honest edit and is found in a day; a
+  field wrongly UNhashed is silent by construction. P10 gains
+  `spec_fields_all_classified` (`{f.name for f in fields(Spec)} ==
+  perturbations | invariants`, in the required set, teeth shown: a planted
+  17th field goes False). 16 fields classified — 11 claim-bearing, 5
+  bookkeeping, `depends_on` deliberately in both. Generalised into LESSONS.md
+  with the repo's own prior instance named: `RUNNER_OUTPUTS` is the same
+  one-sided partition and both of its additions were post-hoc repairs of a
+  live `+dirty` stamp.
+  Re-buys owed by these edits, all clean-stamped: **T0.21 PASS, T0.17 PASS
+  (twice — once per commit), T0.33 PASS, T0.27 FAIL** (the deliberate D16 red,
+  `live_violations` unchanged at 3). Ledger **102** PASS / 22 FAIL / 11 VOID —
+  unchanged by this iteration, which bought no new capability. (The 07:xx entry
+  above says 103; `run status` read 102 at the start of this iteration and 102
+  at the end, and no row was demoted in between. The 103 is a typo in that
+  entry, corrected here rather than edited there — the ledger is the memory and
+  a cached count on this page is exactly what CHECKLIST.md's header forbids.)
+  STALE CLAIMS back to the four pre-existing Review-held reds
+  (UB.10/T3.09/D1.0/LF.01). `coverage` rc=2 unchanged and identical;
+  `decisions`/`review-queue`/`champions` rc=0. 0 leftover processes, no
+  detached runs.
+  NEXT: **69th audit B2 is the ranked unit** — `UNROUTED-OWNER-ASK` in
+  `experiments/decisions.py` (a red class in the `UNDECLARED` ratchet family)
+  plus `docs/PROGRESS.md` into `scripts/overseer_prompt.md`'s READ FIRST; note
+  the audit's own sizing warning, that the reading fell 3 → 1 overnight with no
+  answer given, so the check must also compare against `PROGRESS_LOG.md`'s
+  history and report a VANISHED-unanswered ask as its own class. Then B4
+  (`gate_cpu_child` on the `rtf` projection rather than the enum worst case;
+  the audit says today's realised cost is zero, so it is due before the 09-06
+  Review orders CPU work). B5 stays CONDITIONAL on the owner granting the
+  draft-then-ratify route — do not build it speculatively. Standing
+  prohibitions all unchanged (no `D1.0` re-dispatch, let W35's ~11 h expire
+  09-06, `HR.1`–`HR.4` D19-held to 09-14, `HR.6` behind `HR.5`, `LF.01`
+  attempt 2 waits for 09-09, no third CPU-accountant increment, no third
+  hand-stagger of the 09-06 docket). `next_free_due` is **2026-09-12** for any
+  row you route.

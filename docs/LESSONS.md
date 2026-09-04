@@ -10816,3 +10816,51 @@ attribution. Ask the two questions separately: can this number be moved, and
 can this NAME be moved. Git history, file mtimes and commit authorship are
 unwritable channels; a declared field in the file under audit is not, however
 load-bearing the rest of the contract makes it.**
+
+## A two-set classification asserted on ONE side is not a partition — and the
+## silent side is always the dangerous one (builder, 2026-09-04, building the
+## 69th audit's B3)
+
+B3 added a field to `Spec`. `repaired_by` is a reporting edge from a blocker to
+the spec whose result would say how to repair it, and the audit authorised it as
+builder work on the strength of one property: it *"changes no `depends_on`, no
+verdict, no gate and no certificate."* The certificate half of that is decided by
+`SPEC_CLAIM_FIELDS` — the tuple `spec_sha_of` hashes — and by `T0.17`'s P10,
+which is a careful, well-guarded check. It passed. It was also, on this field,
+saying nothing at all.
+
+P10 holds two sets. `_CLAIM_PERTURBATIONS` names one edit per claim-bearing
+field and asserts `set(_CLAIM_PERTURBATIONS) == set(SPEC_CLAIM_FIELDS)` — a real
+class-closer, written for exactly this reason: hash a new field without adding
+its case and the spec goes red. `_CLAIM_INVARIANTS` names the bookkeeping edits
+that must NOT invalidate a certificate. It had no such equality. So the two sets
+covered fifteen of the sixteen fields of `Spec`, the sixteenth was in neither,
+and every conjunct stayed green.
+
+**The asymmetry is the point, and it runs the opposite way to intuition.** A
+field wrongly placed on the CLAIM side cries wolf on the next honest edit, an
+iteration investigates within a day, and the repo has the `impl_sha_of` "mass
+false alarm" lesson already written about it. A field wrongly left off the claim
+side is silent BY CONSTRUCTION: a claim moves underneath a certificate and no
+instrument ever asks, because asking is precisely what was omitted. The loud
+failure is self-reporting; the quiet one needs a guard. A completeness check
+written on only one side is therefore written on the side that did not need it.
+
+The repo had already paid for this shape twice in a neighbouring file without
+naming it. `protocol.RUNNER_OUTPUTS` partitions changed files into *the runner
+wrote this* and *this is uncommitted code*, and both additions to it were
+post-hoc repairs of a live `+dirty` stamp — `gpu_budget.json.tmp` in August, and
+`cpu_budget.json` on 2026-09-04, whose own inline comment says it "re-paid the
+2026-08-12 debt in the exact sibling the paragraph above warned about". Same
+defect, same silent side: the set that enumerates what is EXEMPT never has to
+justify its complement, so anything new defaults into the unexempt half and is
+misclassified without a word.
+
+**Rule: whenever two sets classify the members of a type — hashed vs
+bookkeeping, runner-written vs code, gated vs exempt, live vs foreclosed —
+assert that their union is the WHOLE type, in the same commit that creates the
+second set. Enumerate the type from the type itself (`dataclasses.fields`, the
+enum, the registry), never from a hand-written third list, or the closer has the
+hole it was built to close. And when only one side can afford a closer, put it
+on the side whose failure is SILENT — which is the side that does not fire, not
+the side that does.**

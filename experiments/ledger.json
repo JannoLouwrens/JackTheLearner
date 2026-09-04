@@ -15846,7 +15846,7 @@
     "T0.17": {
       "amended": [],
       "attempt": 22,
-      "commit": "9e847cf+dirty",
+      "commit": "df94566",
       "compute_s": null,
       "control_metrics": {
         "claim_rule_sees_amended_claim": true,
@@ -15854,45 +15854,10 @@
         "hand_edit_took_effect": true,
         "impl_sha_rule_sees_amended_claim": false
       },
-      "duration_s": 2.86,
+      "duration_s": 2.82,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "c640dfd",
-          "control_metrics": {
-            "detector_sees_amendment": false,
-            "hand_edit_took_effect": true
-          },
-          "gpu_job_id": null,
-          "impl_sha": "97e1aba4cbad017d",
-          "message": "",
-          "metrics": {
-            "amendment_is_attributable": true,
-            "content_check_fires_on_postrun_edit": true,
-            "content_check_reports_unanswerable": true,
-            "content_check_spares_unedited_file": true,
-            "detector_flags_moved_dependency": true,
-            "detector_sees_amendment": true,
-            "detector_spares_unmoved_dependency": true,
-            "history_absence_preserved": true,
-            "history_carries_evidence": true,
-            "history_keeps_amendment": true,
-            "refuses_pass_and_fail": true,
-            "refuses_unattributed": true,
-            "run_spec_leaves_amended_empty": true,
-            "unknown_attempt_is_sticky": true,
-            "unprotected_pass_certificates": 0,
-            "unstamped_answered_by_content": 28,
-            "unstamped_records_examined": 28,
-            "unstamped_unanswerable": 0
-          },
-          "ran_at": "2026-08-24T07:20:06",
-          "seeds": [
-            0
-          ],
-          "status": "PASS"
-        },
         {
           "commit": "d84101e+dirty",
           "control_metrics": {
@@ -16824,6 +16789,54 @@
           ],
           "spec_sha": "a237619e332e8397",
           "status": "PASS"
+        },
+        {
+          "commit": "9e847cf+dirty",
+          "control_metrics": {
+            "claim_rule_sees_amended_claim": true,
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true,
+            "impl_sha_rule_sees_amended_claim": false
+          },
+          "gpu_job_id": null,
+          "impl_sha": "21133beb0baac4f4",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "claim_hash_covers_every_claim_field": true,
+            "claim_hash_ignores_bookkeeping": true,
+            "content_check_fires_on_postrun_edit": true,
+            "content_check_reports_unanswerable": true,
+            "content_check_spares_unedited_file": true,
+            "detector_flags_moved_dependency": true,
+            "detector_sees_amendment": true,
+            "detector_spares_unmoved_dependency": true,
+            "drift_sees_amended_claim": true,
+            "drift_spares_unamended_claim": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "pass_rows_claim_unstamped": 11,
+            "pass_rows_claim_verified": 91,
+            "pass_rows_with_drifted_claim": 0,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "run_spec_stamps_the_claim": true,
+            "spec_fields_all_classified": true,
+            "unknown_attempt_is_sticky": true,
+            "unprotected_pass_certificates": 0,
+            "unstamped_answered_by_content": 3,
+            "unstamped_claim_is_not_clean": true,
+            "unstamped_records_examined": 3,
+            "unstamped_unanswerable": 0
+          },
+          "ran_at": "2026-09-04T08:16:38",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "a237619e332e8397",
+          "status": "PASS"
         }
       ],
       "impl_sha": "21133beb0baac4f4",
@@ -16859,9 +16872,9 @@
         "unstamped_unanswerable": 0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 214.4,
+      "peak_rss_mb": 214.6,
       "preserved_impl": null,
-      "ran_at": "2026-09-04T08:16:38",
+      "ran_at": "2026-09-04T08:16:54",
       "seeds": [
         0
       ],
