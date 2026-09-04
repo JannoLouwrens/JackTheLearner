@@ -96,8 +96,28 @@ ACTING; GOAL.md now names all three axes precisely to prevent that),
 has been burned by), and `FROZEN_VS_PLASTIC.md` (a separate deliberative tower
 is a frozen-tower-shaped proposal and the plastic-only decree constrains it).
 
-**Status:** REGISTERED, RESEARCH OWED. Registered 2026-08-10. Do not treat the
-four specs as settled; a revision that strengthens them is the point.
+**Status:** RESEARCH DELIVERED 2026-09-04 (builder) — `docs/research/DUAL_PROCESS.md`,
+written from four parallel research agents with live-verified citations, 25 days
+after it was owed. All four pre-registered questions answered: (1) devaluation
+IS the stronger habitisation probe and is missing from DP.01, whose
+cannot-be-cached control is additionally judged cacheable as written; (2)
+DP.02's single trunk lesion cannot detect two-towers-in-one-blob — the repair
+is many small partial lesions + cross-mode degradation correlation, with
+gradient/Fisher support overlap as the corroborating second instrument; (3) the
+"routinely omitted" claim is HALF-FALSIFIED (SkipNet, Mixture-of-Depths, MoE
+hash-routing and 2026 planning-budget RL all run matched-rate random controls;
+the historically lethal null is the matched-rate CONSTANT gate, which DP.03
+lacks) — the sentence must be rewritten per the doc's §4; (4) biology supports
+a shared trunk with two differently-wired heads and an external arbitrator, not
+one-network-two-depths — counterargument (Yin/Knowlton/Balleine double
+dissociation) recorded in §5 for the owner per SYSTEM.md. Spec revisions are
+DRAFTED in the doc's §7, strengthen-only, NOT registered — DP.01–DP.03 are
+unreachable behind LC.04's unsatisfiable premise and the `w0-too-shallow`
+design, so registration waits for the family to become reachable and routes
+through the standard protocol then. §6 (what the DP family needs from W1) is
+attached to the `w0-too-shallow` row as design input for the 09-06 Review.
+The four specs remain not-settled; the strengthening revisions are the point,
+and they now exist.
 
 ## DONE — PS.01 v2: the probe policy, not the constants (from PS.01 attempt 2, 2026-08-10)
 

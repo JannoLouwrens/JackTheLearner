@@ -418,6 +418,24 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     dp_04_slow_path_verbal.py and sh_02_born_sheltered.py; VOID-FORECLOSED
     blocks in ub_14_cross_modal_touch.py, ba_03_braces_against_a_surface.py,
     lc_03_survival_screening.py; the vacuity lane in t3_09_creative_loop.py.
+    UPDATE 2026-09-04 (builder): DESIGN INPUT LANDED — the fast/slow
+    literature sweep owed since 08-10 is now `docs/research/DUAL_PROCESS.md`
+    (four research agents, citations verified live where possible). §6 states
+    the five world properties the DP family needs from W1, each traced to the
+    paradigm that needs it: perceivable-in-advance hazards; REVALUABLE
+    OUTCOMES (the TA taste-aversion machinery is biology's own devaluation
+    manipulation, so the taste family doubles as the habitisation instrument
+    — the strongest synergy the sweep found); degradable contingencies;
+    heterogeneous stakes/novelty (a uniform world gives a deliberation gate
+    nothing to allocate — DP.04's no-resolution finding and DP.05's H10<H4
+    are the same fact from this side); stable rules punctuated by rare
+    revaluation events. §5 records the neuroscience verdict the owner is
+    owed: biology supports a shared state TRUNK with two differently-wired
+    heads and an external arbitrator, NOT one-network-two-depths (the
+    Yin/Knowlton/Balleine double dissociation is the counterargument,
+    recorded per SYSTEM.md's owner-directive duty). §7 holds strengthen-only
+    revision drafts for DP.01/DP.02/DP.03 — none registered, all waiting on
+    this row's design.
 
 ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | OPEN
     DUE: 2026-09-10 | re-armed by the builder, 2026-09-03, under 64th-audit
