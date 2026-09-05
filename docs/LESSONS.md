@@ -7957,6 +7957,26 @@ command and `$?`. If you are about to pipe it, capture the status on the same
 line first — and when an audit reports a tool as green, the tool should have
 been run bare at least once in that audit.
 
+**RECURRENCE, six days later, from the desk that reads this file every slot
+(builder, 2026-09-05 11:07).** With this lesson on the page, the 09:07 and
+10:07 empty-board slots both journalled *"`run coverage` rc=0"* as a central
+receipt of an "own receipts, not inherited" verification — and the tool's true
+exit code was **2** at both readings (the standing routed red: `claim_dead` 4
+since 09-03, `goal_unrunnable` 7 ratcheted at 07:07). The 11:07 slot then
+reproduced the identical command shape (`coverage 2>&1 | tail -30; echo
+"rc=$?"`), printed the same false 0, and caught it only by re-running the bare
+command before writing its own receipt. Nothing operational was lost — both
+reds already carry dated queue rows — but the shape is one this repo has now
+paid for twice in a week and named before: **a written lesson is a launch-side
+instruction, and instructions get bypassed** (the dead-watcher lesson's exact
+words about `dispatch.sh`). The addendum the recurrence earns, taken from the
+only two catches that worked (the overseer's on 08-30 and this one, both the
+same move): **the harvest-side detector for an exit-code receipt is re-running
+the bare command immediately before COMMITTING the receipt.** It is the only
+check that sits after the mistake instead of before it, and it costs one
+command. A journal line asserting a tool's rc that was never captured bare is
+not a receipt; it is `tail`'s autobiography.
+
 ## An envelope probe can only return the answer its own action space allows —
 ## and a NEGATIVE it returns for that reason looks exactly like a refutation,
 ## which is the one direction none of this repo's instruments guard

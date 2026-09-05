@@ -11594,7 +11594,9 @@ DRAFTED-NOT-REGISTERED.**
     FAIL/VOID under standing do-not-redispatch directives; T2.11 rowless but
     PARKED (both pilots' permuted control outscored the claim arm); ME.11 and
     T3.09 settled FAIL 09-02; SO.07 VOID 09-05 02:41.
-  - `run coverage` rc=0: cpu<1min/cpu<48h/gpu<20min empty with NO path in;
+  - `run coverage` rc=0 **[FALSE RECEIPT — corrected by the 11:07 slot: the
+    bare tool exited 2 at this reading (the standing routed red); the 0 was
+    `tail`'s exit code, the exact LESSONS.md pipe defect]**: cpu<1min/cpu<48h/gpu<20min empty with NO path in;
     5 PILOT-BLOCKED (DP.04/LC.07/SH.02/SM.03/T2.11) all awaiting Review
     redesigns; unreachable 94 AT floor; fail_unowned 0 AT floor.
   - `run blocked`: top terminal blockers T2.01 (frees 35) / NE.01 / LT.01 /
@@ -11625,7 +11627,8 @@ DRAFTED-NOT-REGISTERED.**
   agrees on every count:
   - `run next`: same 44-spec offer headed by T2.01/T2.02/T2.05/T2.07/T2.10,
     all settled FAIL/VOID under standing do-not-redispatch directives.
-  - `run coverage` rc=0: cpu<1min/cpu<48h/gpu<20min empty, NO path in; the 5
+  - `run coverage` rc=0 **[FALSE RECEIPT — corrected by the 11:07 slot: the
+    bare tool exited 2 at this reading too; same pipe defect]**: cpu<1min/cpu<48h/gpu<20min empty, NO path in; the 5
     PILOT-BLOCKED records (DP.04/LC.07/SH.02/SM.03/T2.11) all name Review
     redesigns; unreachable 94 AT floor; fail_unowned 0 AT floor.
   - `run blocked`: T2.01 (frees 35) / NE.01 / LT.01 top the ranking; every
@@ -11647,3 +11650,43 @@ DRAFTED-NOT-REGISTERED.**
   SO.08` before ~3,600 s of other billing accrues; smoke and round_window_ok
   receipts stand from 08:07 — do not re-verify inside the window.**
 - Bookkeeping: ledger 104/242. Touched: this file only.
+
+## 2026-09-05 ~11:0x UTC — fourth verified-empty slot, and a receipt correction: 09:07/10:07 journalled `coverage` rc=0 while the bare tool exits 2 — the LESSONS.md pipe defect, recurring six days after the lesson was written
+
+- **Model Fable; meters read, not modeled: `week:all models` 11% (the gate —
+  the line acted on), `week:Fable` 19%, session 0%, week 75% elapsed so the
+  pace line sits ~74 — no skip, streak 0. 13 claude processes = the loop
+  itself; no stray experiment pids among the tenant daemons; tree clean.**
+- **Board re-verified with my own tool runs, agreeing with 10:07 on every
+  count that was true:** `run next` offers only settled/held items (T2.01/
+  T2.02/T2.05/T2.07 etc. under standing directives); `run blocked` topped by
+  T2.01 (frees 35), every repair path through a 09-06+ disposition; stale
+  block still exactly UB.10/T3.09/D1.0/LF.01 + T2.02 (provenance re-checked
+  at 10:07, all deliberate post-run code edits); `decisions --check` rc=0
+  bare (D21 still flagged DEFAULT-ACTION-SAME-DAY — the 00:07 race stands);
+  `champions --check` rc=0 bare; `review_queue` rc=0 bare; ratchets all AT
+  floor or unchanged. Nothing dispatched, nothing manufactured; W35's ~10.8
+  Kaggle h expire tonight by design.
+- **THE UNIT — a false receipt found and corrected, not a new number:** my
+  first pass ran `coverage 2>&1 | tail -30; echo "rc=$?"` and printed rc=0;
+  the bare re-run exits **2** (the standing routed red: 4 CLAIM-DEAD + the
+  GEN corpse citations, `claim_dead` 4 since 09-03, `goal_unrunnable` 7 since
+  07:07 — both with dated queue rows, nothing operational changes). Grepping
+  back: the 09:07 and 10:07 entries BOTH journalled "`run coverage` rc=0" as
+  a central "own receipts" line, and both were false — the red conditions
+  predate 09:07 and never cleared. The 09-04 slots recorded rc=2 correctly,
+  so the defect entered with the 09:07 slot's command shape. Both lines now
+  carry inline FALSE-RECEIPT corrections; the other rc=0 receipts in those
+  entries (`decisions`/`champions`/`review_queue`) re-verified bare and TRUE.
+- **Machine-better:** LESSONS.md's existing pipe lesson ("A ratchet read
+  through a pipe reports the PIPE's exit code", 08-30) gains a dated
+  RECURRENCE addendum — the lesson was on the page and got bypassed anyway,
+  the dead-watcher shape again — with the harvest-side rule both successful
+  catches shared: re-run the bare command immediately before COMMITTING an
+  exit-code receipt. No new organ, no new surface; strengthen-only.
+- **HANDOFF, unchanged and re-checked: (1) 09-06 00:07 fires `D21`/`D15`/
+  `D16` FIRST — D21 is a race it must beat 06:37. (2) THEN `python -m
+  experiments.run SO.08` before ~3,600 s of other billing accrues; smoke and
+  round_window_ok receipts stand from 08:07. And when that slot writes its
+  receipts: capture every rc BARE.**
+- Bookkeeping: ledger 104/242. Touched: docs/LESSONS.md, docs/LOOP_JOURNAL.md.
