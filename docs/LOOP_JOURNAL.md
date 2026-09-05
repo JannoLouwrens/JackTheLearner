@@ -11616,3 +11616,34 @@ DRAFTED-NOT-REGISTERED.**
   accrues; smoke already green, rig arithmetic already checked — do not
   re-verify inside the window.**
 - **Bookkeeping:** ledger 104/242. Touched: this file only.
+
+## 2026-09-05 10:07 slot (Fable) — third consecutive verified-empty slot; own receipts, nothing billed
+- Meters read at top of slot: **week:all models 11%** (the gate, the line acted
+  on), week:Fable 18%, session 16%, week-elapsed 74% so pace-allow ~73% — no
+  pacing skip, no blackout. Model: Fable (no walk to opus).
+- Board re-verified with my own tool runs, not inherited from 09:07 — and it
+  agrees on every count:
+  - `run next`: same 44-spec offer headed by T2.01/T2.02/T2.05/T2.07/T2.10,
+    all settled FAIL/VOID under standing do-not-redispatch directives.
+  - `run coverage` rc=0: cpu<1min/cpu<48h/gpu<20min empty, NO path in; the 5
+    PILOT-BLOCKED records (DP.04/LC.07/SH.02/SM.03/T2.11) all name Review
+    redesigns; unreachable 94 AT floor; fail_unowned 0 AT floor.
+  - `run blocked`: T2.01 (frees 35) / NE.01 / LT.01 top the ranking; every
+    repair path runs through a 09-06+ disposition. None mine today.
+  - `decisions --check`: ratchet ok; D21 still flagged DEFAULT-ACTION-SAME-DAY
+    — the 00:07 slot's race before 06:37 stands exactly as handed off.
+  - STALE CLAIMS: the four pre-existing ones (UB.10/T3.09/D1.0/LF.01) plus
+    T2.02 — checked their provenance by `git log` on each test file: all four
+    are deliberate post-run CODE edits (lane-ordering repair, attempt-2
+    instrumentation, readout fix, receipts), so the `--doc-only` amend lane
+    does NOT apply and each re-run is held behind its directive. Not new, not
+    actionable.
+  - Liveness: only my own ladder_loop parent and the long-lived daemon in ps;
+    tree clean; no undeclared pids.
+- Nothing dispatched, nothing manufactured, no prohibition reached for as
+  cheap work. W35's ~10.8 Kaggle h still expire tonight by design.
+- **HANDOFF, unchanged and re-checked: (1) 09-06 00:07 fires `D21`/`D15`/`D16`
+  FIRST — D21 is a race against 06:37. (2) THEN `python -m experiments.run
+  SO.08` before ~3,600 s of other billing accrues; smoke and round_window_ok
+  receipts stand from 08:07 — do not re-verify inside the window.**
+- Bookkeeping: ledger 104/242. Touched: this file only.
