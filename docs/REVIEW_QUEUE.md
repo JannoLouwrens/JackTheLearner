@@ -755,6 +755,25 @@ ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_imp
     No gate, default, or `decide_by` changed here.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated.)
+    DUE: 2026-09-07 | RE-DATED 2026-09-05 (Review, DAILY) — **this row was dated
+        one day BEFORE the event that disposes it, and that is the defect, not
+        the slip.** The row's own gate line says the disposal is `D16`'s: *"the
+        gate is the owner's, not the Review's and not mine."* `D16`'s
+        `decide_by` is 2026-09-05, so its default cannot fire until the first
+        slot of 2026-09-06 — after this date. No amount of Review work today
+        could have closed it, and letting it break at midnight would record a
+        violation against a promise that was unkeepable when it was written.
+        Not re-dated onto 2026-09-06: that day already carries six live rows
+        against a measured consumer capacity of ~1/cycle, plus `D21`'s default
+        and the Sunday FULL's own Part 2 and two completeness audits. 09-07 is
+        the first day on which the disposing event has already happened, and
+        the disposal itself is a bookkeeping close (record what `D16`'s default
+        did), not design work — so it does not compete with 09-07's own load.
+        This is the same class the 70th audit's B1 shipped as
+        `DEFAULT-ACTION-EXPIRED` — a default dated after the event it commands —
+        arriving from the other side: a QUEUE ROW dated before the default that
+        disposes it. `review_queue.py` has no reader for that direction; named
+        here rather than routed as a new row, because the drain is the finding.
 
 **Status: OPEN. No gate was moved. `T0.27` is still FAIL for its real reason.**
 
@@ -1062,7 +1081,7 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
 ## seat to name `LG.00` as its ring, and naming it is the move this file's own
 ## World note refused (builder, 2026-08-31, `champions.py` declaration syntax)
 
-ROUTED: champions-language-grounding-arena | 2026-08-31 | 901f7fc (champions.py declaration syntax; 51st audit B2 order) | OPEN
+ROUTED: champions-language-grounding-arena | 2026-08-31 | 901f7fc (champions.py declaration syntax; 51st audit B2 order) | ACTED
     DUE: 2026-09-06 | the Review breaks the tie: name LG.00 as the ring (the
         audit's reading) or keep ARENA: NONE with an unwritten grounding
         bakeoff as inventory debt (this file's reading). A builder declining
@@ -1072,6 +1091,29 @@ ROUTED: champions-language-grounding-arena | 2026-08-31 | 901f7fc (champions.py 
         2026-09-02 from 2026-09-06 (61st audit B2, builder): a champions.py
         declaration decision with no coupling to the W0/W1 design bundle;
         small, self-contained, a daily can carry it.
+    ACTED: 2026-09-05 (Review, DAILY) — TWO DAYS EARLY, AND NEITHER HORN OF THE
+        TIE WAS THE ANSWER. The tie-break assumed the grounding bakeoff was
+        unwritten; it was written on 2026-09-04. `LG.04` ("the grounding
+        bakeoff: five arms, one certified cell set"), `LG.05` ("the
+        Understanding Test") and `LG.06` ("the ordering experiment: does
+        skills-first buy anything") were registered from
+        `LANGUAGE_GROUNDING.md` §7 at `a4d9c92` — and `LG.04` and `LG.06` are,
+        by title, the two things this seat's own challenger cell has named
+        since it was written: *"grounding approaches + the ordering
+        experiment"*. So the declination's reasoning is not overturned, it is
+        DISCHARGED: `LG.00` still cannot decide this seat and is still not
+        named here. `ARENA: NONE` -> `ARENA: LG.04, LG.05, LG.06`.
+        Verified rather than asserted: `champions --check` rc=0 before and
+        after, `UNFALSIFIABLE` **3 -> 2** and uncontestable-in-total **4 -> 3**,
+        no ratchet raised, no seat added or removed, no holder unseated (the
+        seat stays UNDECIDED — naming a ring does not fill a chair).
+        The honest caveat, recorded because it is the whole risk of acting
+        early: all three arena members are blocked behind `LG.03`, which VOIDed
+        on its own liveness gate on 2026-09-04 and has its own row
+        (`lg03-blind-twin-cannot-prove-itself-alive`, DUE 09-12). This ring is
+        REAL but it cannot be entered today. It is still strictly better than
+        `NONE`: `UNFALSIFIABLE` asserts that nothing runnable could ever unseat
+        the holder, and as of 2026-09-04 that assertion is false.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated;
     its heading carried the declaration one `## ` away from being read.)

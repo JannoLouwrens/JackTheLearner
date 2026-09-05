@@ -129,13 +129,18 @@ price organ-hours against it — three now — has been falsified inside a week.
 Your abstinence does not lower it and your work barely raises it. If a page
 tells you what an iteration "costs", that page is guessing.
 
-**`week:Fable` is still not the gate, and right now it is at 100%.** It resets
-**2026-08-31 04:59 UTC** with all-models. Until then `JACK_LOOP_MODEL=fable`
-cannot start: your first run each slot will refuse in ~3 s and the chain will
-walk you to **opus**. That is expected, not a fault — but it means every
-iteration between now and the reset is an **Opus** iteration. Plan the unit
-accordingly: fewer, larger, better-chosen. Say which model you actually ran on
-in your first paragraph.
+**`week:Fable` is still not the gate, and it periodically pins at 100% while
+all-models has plenty of room.** THE DATE THAT USED TO SIT HERE — *"it resets
+2026-08-31 04:59 UTC"* — **went five days stale before anyone noticed (Review,
+2026-09-05), on the one page that opens by telling you no number is cached on
+it.** So the rule replaces the date: when `JACK_LOOP_MODEL=fable` is pinned,
+your first run each slot refuses in ~3 s and the chain walks you to **opus**.
+That is expected, not a fault, and it is *self-announcing* — you do not need a
+date from this page to know it happened, you need to read
+`claude_usage.py` (no flags) at the top of the slot and say which line you are
+acting on. When you are walked to Opus, plan the unit accordingly: fewer,
+larger, better-chosen. Say which model you actually ran on in your first
+paragraph.
 
 **The safety net that used to be broken is FIXED — 2026-08-27, and verified.**
 This block used to warn you that `FALLBACK_MODELS="opus sonnet"` did *not* fire
@@ -528,8 +533,67 @@ redirect you away from `HR.6`, the 65th audit executed that on 09-03 by
 declaring the `HR.6 <- HR.5` edge in the registry, and `run next`/`coverage`
 have not offered `HR.6` since. A correction that has been mechanically enforced
 for a day is history, not a priority. `2'` and `3'` survive verbatim as
-prohibitions and are carried into `3''`. **The live items are `1''`, `2''` and
-`3''`.**
+prohibitions and are carried into `3''`. **(Superseded in turn on 2026-09-05 —
+the live items are now `1'''`, `2'''` and `3''`; see the block immediately
+below.)**
+
+**`1''`/`2''` ARE SUPERSEDED — replaced by `1'''`/`2'''` immediately below
+(Review, 2026-09-05, DAILY). `3''` IS UNCHANGED AND STILL LIVE.** `2''` was
+executed in full inside 24 hours — the fifth consecutive day a priority block
+was spent in one day. Both research debts it ordered are discharged:
+`LANGUAGE_GROUNDING.md` §2.2–§11 written (`bf32216`) with `LG.03`–`LG.06`
+registered under the 5-step cross-check (`a4d9c92`), and the SO-family pass
+taken too (`OWNERS_HANDS.md`, `2843820`, with `SO.06`–`SO.09` registered).
+**Its one prohibition — no third increment of the CPU accountant — is carried
+into `3''` and is still live.** `1''`'s arithmetic is superseded by `1'''`.
+
+1'''. **THE BOARD IS NO LONGER EMPTY — THERE IS EXACTLY ONE LIVE UNIT AND ITS
+   WINDOW IS SIXTY MINUTES WIDE.** Re-derived by the Review 2026-09-05 rather
+   than inherited: of 242 registered specs, 139 carry a ledger row; of the 103
+   that do not, **ten have all dependencies PASS** (the same sweep the 06:07
+   builder slot ran, reproduced independently and agreeing). Nine are the held
+   set you already know — PARKED (`SH.01`, `SM.02`, `T2.11`, `T3.10`),
+   PILOT-BLOCKED (`SH.02`, `SM.03`, `DP.04`, `LC.07`), decision-HELD (`HR.1`
+   <- `D19`). **The tenth is `SO.08`, and it is different in kind: it is
+   implemented, its gates are pre-registered, and nothing holds it but a
+   clock.** Its cost class enumerates at 54,000 s against a 57,600 s day, so a
+   FULL, UNTOUCHED day leaves **3,600 s of slack** — your own measurement, and
+   09-05 lost it to `SO.07`'s honest 2.5-hour VOID before `SO.08` existed.
+   **So: at 2026-09-06 00:0x, fire the `D15`/`D16`/`D21` defaults first
+   (they are seconds of paperwork and `D21`'s is a race it must win before
+   06:37 — 72nd audit finding 2), then start `SO.08` before anything else
+   bills a second.** A certificate re-buy, a gate sweep, an audit B-item that
+   runs a spec — any of them takes the 3,600 s and the day is gone. This is
+   the first claim about Jack that has been runnable since `SO.07` launched,
+   and it is the fourth `SO` unit in a family that has so far bought two
+   fixtures and a VOID. **Run `run blocked` and `run coverage` for the live
+   figures; the counts here are this morning's and will go stale.**
+
+2'''. **AFTER `SO.08`, THE EMPTY-BOARD RULE IS UNCHANGED AND THE RESEARCH
+   FALLBACK IS SPENT — so if the board is empty again, say so and stop early
+   rather than inventing a unit.** Both research debts `2''` named were
+   discharged on 09-04 and there is no third queued. The `INTEGRATION_QUEUE`
+   empty-queue rule still stands as the *procedure*, but you have now run it
+   twice in two days and both passes converted into registered specs that
+   immediately produced their own blockers (`LG.03` VOID within five hours of
+   registration and now a `frees 3` terminal blocker in `run blocked`;
+   `SO.07` VOID at its reference lane). **That is not an argument against
+   research — it is the reason the next one needs a reason.** A slot that
+   reads the board, finds it genuinely empty, verifies it against
+   `run blocked`/`run coverage`, writes what it checked, and ends is a
+   CORRECT slot and this page will not call it a wasted one. What is NOT
+   correct is reaching for a prohibition in `3''` as "cheap work", or writing
+   a fourth research doc because the previous two were accepted.
+
+   **Where the actual repair sits, so you do not go looking for it:** eight of
+   the ten startable specs wait on a redesign owed by the Review, whose queue
+   arrived at 5.14 rows/cycle and disposed 0.29/cycle over the trailing week,
+   and whose design authority is `D22` on the owner's desk (decide_by 09-08).
+   None of that is yours and none of it is fixable by an extra iteration.
+
+**SUPERSEDED 2026-09-05 — THIS BANNER COVERS `1''` AND `2''` ONLY. `3''`, WHICH
+FOLLOWS THEM BELOW, IS LIVE AND IS ONE OF THE THREE STANDING ITEMS.** Kept for
+provenance; do not execute `1''` or `2''` as priorities.
 
 1''. **THE BOARD IS EMPTY, YOU ARE NOT THE REASON, AND THE FIX IS ON THE
    REVIEW'S DESK — so do not go looking for a spec to write.** Verified by the
@@ -577,6 +641,9 @@ prohibitions and are carried into `3''`. **The live items are `1''`, `2''` and
    (decide_by 09-18, the owner's). Extending the meter further is the mirror,
    not the creature.
 
+**END OF THE SUPERSEDED PAIR. `3''` BELOW IS LIVE (re-asserted by the Review,
+2026-09-05, with one bullet added and one rewritten).**
+
 3''. **THE STANDING PROHIBITIONS, ALL CARRIED FORWARD UNCHANGED. Nothing here
    is new; it is here so an empty-board iteration cannot reach for one of them
    as "cheap work".**
@@ -584,12 +651,37 @@ prohibitions and are carried into `3''`. **The live items are `1''`, `2''` and
      correct: 16.17 GPU-h burned, VOID on a learning-gate artifact, and attempt
      2 exists only under a gate the Review must commit before dispatch
      (`d10-*` rows, 09-06; `d10-successor-rerun-under-adopted-gate`, 09-08).
-   - **`W35` has ~11 free Kaggle hours and they expire 2026-09-06 00:00. LET
-     THEM EXPIRE.** Every runnable GPU spec is a settled FAIL whose re-run is a
-     seed-lottery redraw, or parked. This is **inventory, not uptime** (the
-     08-29 diagnosis) and manufacturing a dispatch to spend a dying quota is
-     the failure mode, not the fix. `W36` opens the same instant with 30 h and
-     a named buyer.
+   - **NO NEW *FEATURES* ON THE CPU ACCOUNTANT — and this is DELIBERATELY
+     NARROWER than the version written yesterday, because the wider one was
+     wrong (Review, 2026-09-05, correcting itself).** Yesterday's `2''` said
+     *"no third increment of the CPU accountant"* full stop. Within nine hours
+     the overseer shipped two edits to that instrument — 69th B4 (`9c5e74a`:
+     the day gate admits on a spec's MEASURED cost, self-inflicted
+     foreclosures **53 -> 36**) and 70th B4 (`40f6a32`: the meter prints
+     *slack* rather than a bare count) — and **both are repairs of the meter's
+     own over-refusal, i.e. exactly the harm the prohibition existed to
+     prevent.** Read literally it would have forbidden them. It did no damage
+     only because the overseer never reads this file, which is not a safeguard.
+     So the live rule is: **a change that makes the meter refuse FEWER runs, or
+     tell the truth more plainly, is always allowed and needs no permission
+     here. What is prohibited is BUILDING MORE METER** — new accounting
+     surface, new billing classes, another T0.3x spec — while its measured
+     output is our own churn (first full day: 5,906.8 s, every line item a
+     certificate re-buy or a re-stamp sweep). Its two open questions are routed
+     and neither is yours: `cpu48h-class-self-forecloses-the-day-meter`
+     (DUE 09-08) and **`D20`** (decide_by 09-18, the owner's).
+   - **GPU: `W35`'s free hours expire 2026-09-06 00:00 and `W36` opens the same
+     instant with 30 h. DO NOT READ A WEEK NUMBER OFF THIS PAGE** — derive it
+     (`%Y-W%U`) against `gpu_budget.json`, the 08-28 rule, because this bullet
+     is written on 09-05 and is history by tomorrow. **The standing rule does
+     not expire and applies to `W36` exactly as it did to `W35`: every
+     runnable GPU spec is a settled FAIL whose re-run is a seed-lottery
+     redraw, or parked, so there is nothing to dispatch and a dying quota is
+     not a reason to manufacture one.** This is **inventory, not uptime** (the
+     08-29 diagnosis). `W36` has a named buyer — `D1.0`'s successor at ~16 h —
+     and it is gated on the two `d10-*` rows the Review owes on 09-06. Until
+     those land, `W36`'s hours are as unspendable as `W35`'s were, and that is
+     not a fault to fix by dispatching something else.
    - **`HR.1`–`HR.4` stay D19-held to 09-14** — do not fetch a corpus to
      unblock a family. **`HR.6` stays blocked behind `HR.5`'s FAIL**;
      `experiments/hearing.py` is tied to `HR.7`'s certificate by IMPL_DEPS.

@@ -75,7 +75,7 @@ SYSTEM.md, which outrank this file.
 | Consolidation | SIESTA wake/sleep, sleep-gated | BY ANALYSIS | NE.05 (queued) | — |
 | World | MuJoCo playground + needs overlays | **BY VERDICT** (measured 4–6× faster than Craftax AND goal-aligned) | W.1–W.5, W.7, W.8 fidelity gates (REGISTERED 2026-08-30, none run) — see the note below the table | rematch at each fidelity stage |
 | Audio encoder (world-sound → brain) | undecided — mel favourite (raw costs 12–25×, measured) | — | HR audio-entry bakeoff (queued); PL.* applies here too | raw vs mel vs tokens vs no-audio null |
-| Language grounding (word → lived skill) | undecided — skills-then-language ordering unproven | — | LG bakeoff (queued; doc needs completeness check) | grounding approaches + the ordering experiment |
+| Language grounding (word → lived skill) | undecided — skills-then-language ordering unproven | — | **`LG.04` (the grounding bakeoff: five arms, one certified cell set), `LG.05` (the Understanding Test), `LG.06` (the ordering experiment) — REGISTERED 2026-09-04, all three blocked behind `LG.03`, which VOIDed on its own liveness gate the same day.** Cell corrected by the Review 2026-09-05: the ring this cell called "queued" was written and the seat did not know | grounding approaches + the ordering experiment |
 
 | Smell (olfaction) | **VACANT — sense fixture certified, seat unclaimed**: `SM.01` (field fidelity) **PASS 2026-08-11** | — | `SM.02` (occluded food, the claim) **implemented 2026-08-20 `eb42dd3`, then PARKED the same day by its own decision tree — pilot 1 returned NON-LEARNING (all six DQN arms 83–100% timeout on all three seeds, 1.56 Kaggle-h) and the one-diagnostic cap is SPENT. Do NOT relaunch it; gates stay provisional and `run()` hard-refuses until `_GATES_FROZEN=True`.** The repair is committed, not "in progress" — cell corrected by the Review 2026-08-21 | finds food/fire/decay through occlusion |
 | Taste (gustation) | **THE CLAIM IS CLOSED — the first constitutional commitment ever closed by a claim spec, not a fixture.** `TA.01` (poison fixture) PASS; **`TA.02` PASS 2026-08-19** — pooled avoidance 0.983 in one trial, the Garcia taste↔nausea / audiovisual↔shock dissociation clean, and a DQN null eating 196–218 toxic meals at zero discrimination over 150 lives. No mechanism ARM is seated: what is demonstrated is that Jack does it, not which implementation should hold the chair | — | `TA.03` (behind UB.9) is the remaining taste spec | one-trial aversion learning; poison. Cell corrected by the Review 2026-08-21 — it still read "TA.02 is runnable today" two days after TA.02 passed |
@@ -299,7 +299,7 @@ Three rules, each of them a scar:
   TRIGGER-UNDECLARED it now fires would be author self-certification. That
   standing red is counted at `BASELINE_TRIGGER_UNREACHABLE`.)
 - SEAT: Audio encoder (world-sound → brain) | HELD: UNDECIDED | ARENA: PL.*
-- SEAT: Language grounding (word → lived skill) | HELD: UNDECIDED | ARENA: NONE
+- SEAT: Language grounding (word → lived skill) | HELD: UNDECIDED | ARENA: LG.04, LG.05, LG.06
 - SEAT: Smell (olfaction) | HELD: VACANT | ARENA: SM.02
 - SEAT: Taste (gustation) | HELD: VACANT | ARENA: TA.03
 - SEAT: Voice (vocalisation) | HELD: VACANT | ARENA: VO.02

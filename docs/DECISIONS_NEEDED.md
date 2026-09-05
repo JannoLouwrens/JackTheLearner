@@ -4769,3 +4769,139 @@ DECIDE: D22
              Reversal: none needed — the default writes nothing. Ruling (ii)
              or (iii) at any later date is unaffected by it having fired.
   decide_by: 2026-09-08
+
+---
+
+## D23 — A red ratchet about Jack's oldest failures went green in three minutes by routing them into the one queue that measures itself as unable to pay. Is routing the same as owning? (2026-09-05, Review, DAILY)
+
+**What happened, with the clock, because the clock is the finding.** At
+2026-09-05 **01:16** the 72nd audit shipped `FAIL-UNOWNED` (`6fbac74`) — a new,
+counted, ratcheted class for *a settled FAIL with no repair owner* — and set its
+honest baseline at **4**, correcting its own prose, which had said 3. The class
+is good work and it found something five other instruments had missed for a
+fortnight: `XL.01`, *"death does not erase what he learned"*, had read **FAIL for
+17 days** with no owner, no clock and no queue row, and `run blocked`,
+`coverage`, `review_queue`, `champions` and `decisions` each reported it as fine,
+because every one of them is keyed to a spec's REACHABILITY and none to its
+DISPOSITION.
+
+At **01:19** — three minutes later — the same audit's B4 (`52dcf9e`) routed the
+four orphans (`XL.01`, `T2.05`, `T4.02`, `T2.15`) into `docs/REVIEW_QUEUE.md`
+with `DUE 2026-09-13`, and the baseline went **4 -> 0**. The class now reads
+*AT floor — ok*.
+
+**Nothing there is misconduct and I want that stated first.** Routing is the
+correct response to an orphaned FAIL; it is what the class was built to provoke;
+the rows are real, dated and reasoned; and the audit used `next_free_due` rather
+than piling. Every step was right.
+
+**The question is what the discharge measured.** `coverage`'s own definition
+(printed in its output) is that a FAIL has an owner if it has *"no `repaired_by`,
+no `REVIEW_QUEUE` mention, no `FAIL-DISPOSED` marker"* — so **a mention in the
+queue file is sufficient**. And on the same morning, from the desk that now owns
+all four, `review_queue` reports its own capacity:
+
+| `review_queue`, trailing 7 days, measured from git history | reading |
+|---|---|
+| arrived | **36** (5.14 / cycle) |
+| disposed (`ACTED` or `DECLINED`) | **1** (0.14 / cycle) |
+| drain | **UNBOUNDED — the desk is not keeping up… the backlog has no projected end** |
+| live rows | **39** |
+| violations | **0** |
+
+So four of Jack's oldest settled failures moved from an instrument that was RED
+about them to an instrument that reports `0 violations` by construction —
+because the queue's violation classes fire on a promise BREAKING, not on a
+promise being unpayable. **The debt did not shrink. It changed instruments, and
+the instrument it moved to cannot go red about it.**
+
+This is the third appearance of one shape in this project's records, and the
+first two are already on the ledger: 2026-08-26, *"three ratchets went green in
+the window and every one was discharged by declaring a claim, not by passing
+one"*; 2026-09-04, the queue divergence itself. What is new today is that the
+discharge now flows BETWEEN instruments rather than out of one, which is
+strictly harder to see — no single tool is wrong, and the composition is.
+
+**THE ASK, verbatim** — `docs/PROGRESS.md`, Review 2026-09-05, `FOR THE OWNER`
+item 1:
+
+> **My recommendation: (iii) — keep counting the row, and print the drain
+> beside it.** `FAIL-UNOWNED` should go on accepting a `REVIEW_QUEUE` mention
+> as an owner, because the tighter reading punishes the one correct act
+> available to the organ that finds an orphan, and it would paint the ratchet
+> red for a reason the builder cannot fix and I can. What is missing is not a
+> stricter gate but a second number: **`FAIL-OWNED-BUT-UNDRAINED` — of the
+> settled FAILs this project calls owned, how many are owned by a desk whose
+> own instrument reads `drain UNBOUNDED`.** It moves no threshold, refuses no
+> run, weakens no control and fails no spec; it makes the difference between
+> *owned* and *being repaired* a printed integer instead of an inference a
+> reader has to make across two tools. I am recommending the weakest of the
+> three options on purpose, because the two stronger ones both end in a red
+> light pointed at somebody else, and the desk that would be exonerated by
+> that is mine.
+
+**The three options, stated so the default is not the only thing on the page.**
+
+  (i) **STATUS QUO.** A `REVIEW_QUEUE` mention is an owner; `FAIL-UNOWNED`
+      stays at floor 0. Cost: the composition above stays invisible, and every
+      future orphaned FAIL can be discharged in three minutes at no cost to any
+      number this project prints.
+  (ii) **TIGHTEN.** A queue row counts as an owner only while the queue's drain
+      is bounded. Today that returns `FAIL-UNOWNED` to **4** and puts `XL.01`,
+      `T2.05`, `T4.02` and `T2.15` back on the board as red. Honest, and it
+      indicts the Review rather than the builder — which is why I am not the
+      organ that should choose it unopposed.
+  (iii) **MEASURE THE COMPOSITION, GATE NOTHING** — the recommendation above.
+
+**A NOTE ON THIS ENTRY'S OWN DATING, because the instrument caught its author
+and that belongs on the page rather than in a commit message.** The first draft
+carried `decide_by: 2026-09-12`, which put its default's firing day on the same
+date its text commands the new counter to report on. `decisions --check`
+refused it with **`DEFAULT-ACTION-SAME-DAY`** — a class the 72nd audit shipped
+at 2026-09-05 02:16, roughly five hours before this entry was written, for
+exactly this fault in `D21`. The second draft explained the correction *inside
+the `default:` field*, which named 09-12 there and tripped
+**`DEFAULT-ACTION-EXPIRED`**, breaking a shrink-only ratchet — because the
+checker reads dates out of the default text and cannot tell a commanded date
+from a narrated one. Both readings were right and the entry was wrong twice.
+`decide_by` is now **2026-09-11**, so the default fires on 09-12, a clear day
+before the 09-13 it speaks about, and the field names only that one date.
+Recorded because the useful part is not that a Review entry had a date bug: it
+is that a class less than a day old, written by another organ about a third
+organ's mistake, immediately caught a fourth instance in a fresh document by an
+author who had read the finding that morning.
+
+DECIDE: D23
+  class:     goal
+  blocks:    no spec id — `XL.01`, `T2.05`, `T4.02` and `T2.15` are each
+             already dated 2026-09-13 and none is blocked BY this entry. What
+             is at stake is whether this project can tell, from its own
+             printed numbers, the difference between a negative that has been
+             OWNED and a negative that is being REPAIRED. `XL.01` is the
+             `death & retry` commitment's claim spec and has read FAIL for 17
+             days; `coverage` lists that commitment at `0 pass`.
+  default:   (iii) MEASURE THE COMPOSITION, GATE NOTHING, TIGHTEN NOTHING.
+             `FAIL-UNOWNED` keeps its present definition and its floor of 0 —
+             not one threshold moves, no control is weakened, no spec is
+             failed, no run is refused, and no commitment goes claim-dead.
+             What is added is a single printed counter beside it,
+             `FAIL-OWNED-BUT-UNDRAINED`, computed from data both tools already
+             hold: the count of settled FAILs whose only repair owner is a
+             `REVIEW_QUEUE` row, printed together with that file's own
+             `drain` reading. It is monotone — a number can only appear where
+             there was none — and it is the same shape `D18`'s default already
+             took on the memory ceiling (*measure and report, gate nothing,
+             relax nothing*).
+             This is the only legal default of the three: (ii) is a
+             TIGHTENING, and a tightening that fires by silence would let this
+             desk red-light four of the builder's specs without anyone ruling
+             on it; (i) is the status quo but it writes the composition off
+             rather than leaving it visible, which is the one outcome the
+             entry exists to prevent.
+             The price, stated rather than buried: under (iii) the four
+             orphans stay owned-on-paper and dated 2026-09-13 (CLOCK:
+             consequence), and if the drain is still UNBOUNDED then, the new
+             counter is what will say so. This default fires a clear day
+             before that date, on purpose — see the dating note above.
+             Reversal: delete one printed line; nothing downstream reads it.
+  decide_by: 2026-09-11
