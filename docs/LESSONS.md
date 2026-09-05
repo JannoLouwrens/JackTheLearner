@@ -11774,3 +11774,59 @@ it path-scoped with the rc and organ named, and **list those paths inside the
 sealed report** — and the falsifier must construct a dirty tree of N>1 files and
 assert on the files that are *not* the report. Assert on the class, not the tidy
 example.
+
+## A declaration made before the thing exists is a guess, and no instrument re-reads it (75th audit, 2026-09-05)
+
+`SO.08` — the project's only fresh dispatch and its only startable claim about
+Jack — was refused by the CPU day meter for fourteen hours, from the moment it
+was implemented at 04:20 until midnight, while the box sat at load **0.05** with
+**48,260 s** of the day's 57,600 unspent and **40 specs foreclosed, every one of
+them the same budget class**.
+
+Nothing was broken. `gate_cpu_child` refused it correctly: `child_estimate_s`
+returns `min(enum, 4 x measured + 10)`, a never-run spec has no `measured`, so
+the gate used the class enum whole — `cpu<2h x 3 seeds x 2 = 54,000 s` against
+48,260 s remaining. Every step is right. The input was a guess.
+
+`SO.08`'s `budget=cpu<2h` was written at `b6518dd`, **nine hours before the
+implementation existed**, and never revised. The implementation imports no
+world, steps no physics: 240 rounds x 12 lives of a Laplace posterior update.
+Its three dependencies measure **1.4 s** (`ME.9`), **1.9 s** (`LG.02` — the
+mechanism the registry orders it to share) and **60.8 s** (`SO.06`, registered
+in the same commit and classed `cpu<10min`). The gate holding it off the board
+was ~28,000x the measured cost of the code it borrows.
+
+**The generalisable shape: a registration field is an unmeasured claim that
+every downstream instrument consumes as a fact.** A threshold gets a falsifier,
+a pilot, a re-buy and three organs reading it. A *cost class* gets typed once,
+before there is anything to measure, and is then read by the day meter, the
+child-kill timeout, `coverage`'s queue depth and the ranker — none of which can
+tell a measurement from a guess, because the field has the same type either way.
+Everything downstream was healthy; fourteen builder slots reported an empty
+board and all fourteen were telling the truth as their instruments gave it.
+
+**Two tells.**
+
+1. **When two instruments disagree about one row, the disagreement is the
+   finding — do not reconcile it by hand and move on.** `coverage` printed
+   `SO.08` under *"dispatchable TODAY"*; the meter refused it. The builder
+   re-derived the contradiction correctly in fourteen consecutive journal
+   entries. Fourteen correct manual reconciliations of the same conflict is a
+   defect report nobody filed.
+
+2. **Idle capacity beside a refusal is the cheapest alarm this project has.**
+   Load 0.05 with 40 specs foreclosed is not a scarcity fact; it is a
+   declaration artifact. When a meter refuses work on a machine doing nothing,
+   check the *input* to the meter before you argue about its ceiling.
+
+**And the door that got closed on the repair.** The generic shape was already
+routed — `cpu48h-class-self-forecloses-the-day-meter` states the arithmetic
+exactly — but its amendment concluded *"why it is not a builder fix: every
+repair raises or splits a tenant-protection ceiling... the honest cheap
+alternative is a genuine estimator design with its own bakeoff."* That ruled out
+a class of repair on a plausibility argument rather than a measurement, and the
+actual repair — *this particular declaration is wrong; measure it and re-declare*
+— walked through the gap. **A routed row may name what it did not test; it may
+not rule out what it did not test.** The correct classing is also strictly safer
+on the science side: the same edit that loosens admission *tightens* the
+child-kill window a runaway would get.
