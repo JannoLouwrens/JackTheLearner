@@ -15,6 +15,16 @@
     "at": "2026-09-05",
     "value": 0
   },
+  "fail_unowned_owned_forms": {
+    "at": "2026-09-05",
+    "value": {
+      "disposed": 1,
+      "held-on-blocker": 1,
+      "mention-only": 2,
+      "queue-row": 17,
+      "repaired_by": 1
+    }
+  },
   "goal_unrunnable": {
     "at": "2026-09-05",
     "value": 7

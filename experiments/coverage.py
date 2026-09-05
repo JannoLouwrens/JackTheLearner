@@ -1154,44 +1154,72 @@ FAIL_DISPOSED_RX = re.compile(
     r"(?P<date>\d{4}-\d{2}-\d{2})")
 
 
-def _owned_by_dued_row(sid: str, queue_doc: str) -> bool:
-    """True when `sid` appears inside a `ROUTED:` block that carries a `DUE:`.
+def _owned_by_dued_row(sid: str, queue_doc: str) -> Optional[str]:
+    """The strongest clocked-row ownership FORM for `sid`, or None.
 
-    Block boundaries are `review_queue.parse`'s own published contract — a
-    column-0 `ROUTED:` opens a row, a non-indented line ends its body — and
-    the declaration test is its `_DECL` regex, not a fresh one, so the two
-    readers cannot drift apart on what a declared clock looks like. A match
-    outside every such block (or inside a block with no `DUE:`) is a bare
-    mention, which is a weaker owner and printed as one.
+    Returns `"queue-row"` when a row about `sid` carries a `DUE:` (a dated
+    promise), `"held-on-blocker"` when its only clock is a `BLOCKED-BY:` (a
+    named release condition — legal payment per `REVIEW_QUEUE.md`'s own
+    contract and `review_queue.py`'s HOLD-WITHOUT-A-CLOCK, but weaker than a
+    date: it promises order, not time), and None when `sid` appears in no
+    clocked row at all — a bare mention, printed as one.
+
+    A row is "about" `sid` two ways, and both count (74th audit B2):
+      - the id appears in the row's `ROUTED:` line or indented body — the
+        declaration test is `review_queue._DECL`, not a fresh regex, so the
+        two readers cannot drift apart on what a declared clock looks like;
+      - the row's own SLUG names it (`t205-…` ↔ `T2.05`): the leading token
+        of the row id, matched whole against the spec id lowercased with
+        dots dropped. This is how a row actually declares its subject, and
+        it is exact — an id cited in another row's flush-left evidence
+        paragraph does NOT inherit that row's clock (the `xl01` body names
+        `NE.01` and `NE.08`; neither is thereby owned). The whole-token rule
+        is the boundary conversion at slug level: `z1` must not be laundered
+        by `z10-held`.
+
+    Block boundaries are `review_queue.parse`'s published contract — a
+    column-0 `ROUTED:` opens a row, a non-indented line ends its body.
     """
     from . import review_queue as rq
     rx = re.compile(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)")
+    slug = sid.lower().replace(".", "")
 
-    def _hit(block: List[str]) -> bool:
-        if not any(rx.search(l) for l in block):
-            return False
+    def _forms(block: List[str]) -> set:
+        head = rq._ROUTED.match(block[0])
+        row_id = head.group(1).split("|")[0].strip() if head else ""
+        subject = row_id == slug or row_id.startswith(slug + "-")
+        if not subject and not any(rx.search(l) for l in block):
+            return set()
+        found = set()
         for l in block[1:]:
             d = rq._DECL.match(l.strip())
-            if d and d.group(1) == "DUE":
-                return True
-        return False
+            if d:
+                found.add("queue-row" if d.group(1) == "DUE"
+                          else "held-on-blocker")
+        return found
 
+    forms: set = set()
     block: List[str] = []
     for raw in queue_doc.splitlines():
         if rq._ROUTED.match(raw):
-            if block and _hit(block):
-                return True
+            if block:
+                forms |= _forms(block)
             block = [raw]
             continue
         if not block:
             continue
         if raw.strip() and not raw[:1].isspace():
-            if _hit(block):
-                return True
+            forms |= _forms(block)
             block = []
         else:
             block.append(raw)
-    return bool(block) and _hit(block)
+    if block:
+        forms |= _forms(block)
+    if "queue-row" in forms:
+        return "queue-row"
+    if "held-on-blocker" in forms:
+        return "held-on-blocker"
+    return None
 
 
 def fail_unowned(by_id: Optional[dict] = None,
@@ -1232,10 +1260,14 @@ def fail_unowned(by_id: Optional[dict] = None,
     2026-09-05 the count went 4 -> 0 in three minutes by routing into a queue
     whose own instrument reads `drain UNBOUNDED` — `AT floor — ok` was true
     and misleading at once. The forms, strongest first: `repaired_by`,
-    `disposed`, `queue-row` (the id sits inside a `ROUTED:` block carrying a
-    `DUE:` — a dated promise), `mention-only` (a bare prose appearance — the
-    weakest owner, and the map should say so). The count itself is untouched:
-    the number stays at floor; the map stops implying repair.
+    `disposed`, `queue-row` (a row about the spec — by slug or by in-block
+    id — carries a `DUE:`, a dated promise), `held-on-blocker` (74th audit
+    B2: the row's only clock is a `BLOCKED-BY:` — a named release condition,
+    legal payment per the queue's own contract, weaker than a date because
+    it promises order rather than time), `mention-only` (a bare prose
+    appearance — the weakest owner, and the map should say so). The count
+    itself is untouched: the number stays at floor; the map stops implying
+    repair.
     """
     if by_id is None:
         from .registry import BY_ID
@@ -1266,13 +1298,17 @@ def fail_unowned(by_id: Optional[dict] = None,
         if "FAIL-DISPOSED" in notes:
             out["malformed"].append(sid)  # a broken disposition disposes
             # nothing — it falls through to the unowned test below.
-        # id-boundary match: `Z.1` must not be satisfied by `Z.11` or
-        # `Z.1.B`, but a sentence-final `Z.1.` must count.
+        # the clocked-row reader first — it also honours a row's SLUG, which
+        # the literal search below cannot see; then the id-boundary mention
+        # fallback: `Z.1` must not be satisfied by `Z.11` or `Z.1.B`, but a
+        # sentence-final `Z.1.` must count.
+        form = _owned_by_dued_row(sid, queue_doc)
+        if form:
+            out["owned"][sid] = form
+            continue
         if re.search(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)",
                      queue_doc):
-            out["owned"][sid] = ("queue-row"
-                                 if _owned_by_dued_row(sid, queue_doc)
-                                 else "mention-only")
+            out["owned"][sid] = "mention-only"
             continue
         out["unowned"].append(sid)
     out["count"] = len(out["unowned"])
@@ -1339,6 +1375,10 @@ def _fail_unowned_fixture() -> List[str]:
         "Z.6": NS(repaired_by=[], notes=""),            # PASS — out of scope
         "Z.7": NS(repaired_by=[], notes=""),            # dued queue ROW — quiet
         "Z.8": NS(repaired_by=[], notes=""),            # undated row — mention
+        "Z.9": NS(repaired_by=[], notes=""),            # slug row + DUE, id
+                                                        # only flush-left
+        "Z.10": NS(repaired_by=[], notes=""),           # slug row, clock is
+                                                        # BLOCKED-BY only
     }
     results = {sid: {"status": "FAIL"} for sid in by_id}
     results["Z.6"] = {"status": "PASS"}
@@ -1348,11 +1388,26 @@ def _fail_unowned_fixture() -> List[str]:
     # DUE: (the strong queue form); Z.8 sits inside a ROUTED: block WITHOUT
     # one, which must read as the weak form — a row that made no dated
     # promise owns nothing more than a sentence does (73rd audit B2).
+    # Z.9 and Z.10 are the 74th audit B2 class: Z.9's id appears ONLY in a
+    # flush-left evidence paragraph under a DUE:-carrying header whose row
+    # SLUG (`z9-...`) declares the subject — the file's real record boundary
+    # is the next ROUTED:, not the first flush-left line; Z.10's only clock
+    # is a BLOCKED-BY:, which REVIEW_QUEUE.md:43 and review_queue.py's
+    # HOLD-WITHOUT-A-CLOCK both accept as legal payment. At slug level the
+    # boundary conversion recurs: Z.1 (`z1`) must not be laundered by
+    # `z10-held`.
     doc = ("instrumented by Z.11 and Z.1.B; the row's spec is Z.3.\n"
            "ROUTED: z7-row | 2026-09-01 | fixture | OPEN\n"
            "    DUE: 2026-09-13 | repairs Z.7\n"
            "ROUTED: z8-row | 2026-09-01 | fixture | OPEN\n"
-           "    mentions Z.8 with no clock attached\n")
+           "    mentions Z.8 with no clock attached\n"
+           "ROUTED: z9-flushleft-body | 2026-09-01 | fixture | OPEN\n"
+           "    DUE: 2026-09-13 | the clock; the subject is named only below\n"
+           "The evidence paragraph is flush-left and names Z.9 as the spec\n"
+           "this row repairs.\n"
+           "ROUTED: z10-held | 2026-09-01 | fixture | HELD for the fixture\n"
+           "    BLOCKED-BY: z9-flushleft-body | mentions Z.10; a blocked\n"
+           "        hold is legal payment for HOLD-WITHOUT-A-CLOCK\n")
     f = fail_unowned(by_id=by_id, results=results, queue_doc=doc)
     if f["unowned"] != ["Z.1", "Z.5"]:
         fails.append(f"fail-unowned: read {f['unowned']}, expected "
@@ -1360,7 +1415,8 @@ def _fail_unowned_fixture() -> List[str]:
                      f"or firing on an owned one")
     if f["owned"] != {"Z.2": "repaired_by", "Z.3": "mention-only",
                       "Z.4": "disposed", "Z.7": "queue-row",
-                      "Z.8": "mention-only"}:
+                      "Z.8": "mention-only", "Z.9": "queue-row",
+                      "Z.10": "held-on-blocker"}:
         fails.append(f"fail-unowned: ownership FORMS misread {f['owned']!r} — "
                      f"the breakdown exists so `AT floor` cannot imply "
                      f"repair, and a wrong form is that implication reborn")

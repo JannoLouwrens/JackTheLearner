@@ -865,8 +865,23 @@ def ratchet_live(ledger: Ledger) -> dict:
         from .coverage import goal_citations
         return len(goal_citations()["unrunnable"])
 
+    def _fail_unowned_owned_forms():
+        # 74th audit B2: the ownership map misread 3 of its 5 mention-only
+        # rows (a flush-left evidence body ended the block before the id was
+        # seen; a BLOCKED-BY: clock — legal payment — was rejected). The
+        # corrected breakdown is committed here so a form drifting is a
+        # MOVED line, not an inference across two tools. Counts by form,
+        # sorted; the count ratchet above is the floor, this is the map.
+        from .coverage import fail_unowned
+        owned = fail_unowned()["owned"]
+        forms = {}
+        for v in owned.values():
+            forms[v] = forms.get(v, 0) + 1
+        return dict(sorted(forms.items()))
+
     take("unreachable", _unreachable)
     take("fail_unowned", _fail_unowned)
+    take("fail_unowned_owned_forms", _fail_unowned_owned_forms)
     take("goal_unrunnable", _goal_unrunnable)
     take("cpu_foreclosed_now", _cpu_foreclosed_now)
     take("claim_dead", _claim_dead_count)
@@ -1018,7 +1033,7 @@ def print_ratchet_block(ledger: Ledger) -> None:
                 from .coverage import fail_unowned as _fu
                 owned = _fu()["owned"]
                 forms = ["repaired_by", "disposed", "queue-row",
-                         "mention-only"]
+                         "held-on-blocker", "mention-only"]
                 c = {k: sum(1 for v in owned.values() if v == k)
                      for k in forms}
                 print("        owned: " + ", ".join(f"{c[k]} {k}"
