@@ -1154,6 +1154,46 @@ FAIL_DISPOSED_RX = re.compile(
     r"(?P<date>\d{4}-\d{2}-\d{2})")
 
 
+def _owned_by_dued_row(sid: str, queue_doc: str) -> bool:
+    """True when `sid` appears inside a `ROUTED:` block that carries a `DUE:`.
+
+    Block boundaries are `review_queue.parse`'s own published contract — a
+    column-0 `ROUTED:` opens a row, a non-indented line ends its body — and
+    the declaration test is its `_DECL` regex, not a fresh one, so the two
+    readers cannot drift apart on what a declared clock looks like. A match
+    outside every such block (or inside a block with no `DUE:`) is a bare
+    mention, which is a weaker owner and printed as one.
+    """
+    from . import review_queue as rq
+    rx = re.compile(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)")
+
+    def _hit(block: List[str]) -> bool:
+        if not any(rx.search(l) for l in block):
+            return False
+        for l in block[1:]:
+            d = rq._DECL.match(l.strip())
+            if d and d.group(1) == "DUE":
+                return True
+        return False
+
+    block: List[str] = []
+    for raw in queue_doc.splitlines():
+        if rq._ROUTED.match(raw):
+            if block and _hit(block):
+                return True
+            block = [raw]
+            continue
+        if not block:
+            continue
+        if raw.strip() and not raw[:1].isspace():
+            if _hit(block):
+                return True
+            block = []
+        else:
+            block.append(raw)
+    return bool(block) and _hit(block)
+
+
 def fail_unowned(by_id: Optional[dict] = None,
                  results: Optional[dict] = None,
                  queue_doc: Optional[str] = None) -> dict:
@@ -1185,7 +1225,17 @@ def fail_unowned(by_id: Optional[dict] = None,
     question for the Review, not a hole this counter can see.
 
     Returns `{"unowned": [ids], "disposed": {id: (authority, date)},
-    "malformed": [ids], "count": int}`. A malformed marker COUNTS as unowned.
+    "malformed": [ids], "owned": {id: form}, "count": int}`. A malformed
+    marker COUNTS as unowned.
+
+    `owned` names the FORM of each ownership (73rd audit B2), because on
+    2026-09-05 the count went 4 -> 0 in three minutes by routing into a queue
+    whose own instrument reads `drain UNBOUNDED` — `AT floor — ok` was true
+    and misleading at once. The forms, strongest first: `repaired_by`,
+    `disposed`, `queue-row` (the id sits inside a `ROUTED:` block carrying a
+    `DUE:` — a dated promise), `mention-only` (a bare prose appearance — the
+    weakest owner, and the map should say so). The count itself is untouched:
+    the number stays at floor; the map stops implying repair.
     """
     if by_id is None:
         from .registry import BY_ID
@@ -1198,17 +1248,20 @@ def fail_unowned(by_id: Optional[dict] = None,
     if queue_doc is None:
         qp = Path(__file__).resolve().parent.parent / "docs" / "REVIEW_QUEUE.md"
         queue_doc = qp.read_text() if qp.is_file() else ""
-    out = {"unowned": [], "disposed": {}, "malformed": [], "count": 0}
+    out = {"unowned": [], "disposed": {}, "malformed": [], "owned": {},
+           "count": 0}
     for sid in sorted(results):
         if results[sid].get("status") != "FAIL" or sid not in by_id:
             continue
         spec = by_id[sid]
         if getattr(spec, "repaired_by", None):
+            out["owned"][sid] = "repaired_by"
             continue
         notes = getattr(spec, "notes", "") or ""
         m = FAIL_DISPOSED_RX.search(notes)
         if m:
             out["disposed"][sid] = (m.group("authority"), m.group("date"))
+            out["owned"][sid] = "disposed"
             continue
         if "FAIL-DISPOSED" in notes:
             out["malformed"].append(sid)  # a broken disposition disposes
@@ -1217,6 +1270,9 @@ def fail_unowned(by_id: Optional[dict] = None,
         # `Z.1.B`, but a sentence-final `Z.1.` must count.
         if re.search(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)",
                      queue_doc):
+            out["owned"][sid] = ("queue-row"
+                                 if _owned_by_dued_row(sid, queue_doc)
+                                 else "mention-only")
             continue
         out["unowned"].append(sid)
     out["count"] = len(out["unowned"])
@@ -1281,18 +1337,33 @@ def _fail_unowned_fixture() -> List[str]:
                                         "accepted as cosmetics"),  # disposed
         "Z.5": NS(repaired_by=[], notes="FAIL-DISPOSED: someday"),  # malformed
         "Z.6": NS(repaired_by=[], notes=""),            # PASS — out of scope
+        "Z.7": NS(repaired_by=[], notes=""),            # dued queue ROW — quiet
+        "Z.8": NS(repaired_by=[], notes=""),            # undated row — mention
     }
     results = {sid: {"status": "FAIL"} for sid in by_id}
     results["Z.6"] = {"status": "PASS"}
     # Z.3 owned by a body mention; Z.1 must NOT be laundered by `Z.11` or
     # `Z.1.B` appearing (the boundary conversion); sentence-final `Z.3.` is
-    # the legitimate mention shape.
-    doc = "instrumented by Z.11 and Z.1.B; the row's spec is Z.3.\n"
+    # the legitimate mention shape. Z.7 sits inside a ROUTED: block with a
+    # DUE: (the strong queue form); Z.8 sits inside a ROUTED: block WITHOUT
+    # one, which must read as the weak form — a row that made no dated
+    # promise owns nothing more than a sentence does (73rd audit B2).
+    doc = ("instrumented by Z.11 and Z.1.B; the row's spec is Z.3.\n"
+           "ROUTED: z7-row | 2026-09-01 | fixture | OPEN\n"
+           "    DUE: 2026-09-13 | repairs Z.7\n"
+           "ROUTED: z8-row | 2026-09-01 | fixture | OPEN\n"
+           "    mentions Z.8 with no clock attached\n")
     f = fail_unowned(by_id=by_id, results=results, queue_doc=doc)
     if f["unowned"] != ["Z.1", "Z.5"]:
         fails.append(f"fail-unowned: read {f['unowned']}, expected "
                      f"['Z.1', 'Z.5'] — an exclusion arm is hiding a state "
                      f"or firing on an owned one")
+    if f["owned"] != {"Z.2": "repaired_by", "Z.3": "mention-only",
+                      "Z.4": "disposed", "Z.7": "queue-row",
+                      "Z.8": "mention-only"}:
+        fails.append(f"fail-unowned: ownership FORMS misread {f['owned']!r} — "
+                     f"the breakdown exists so `AT floor` cannot imply "
+                     f"repair, and a wrong form is that implication reborn")
     if f["disposed"] != {"Z.4": ("D7", "2026-09-01")}:
         fails.append("fail-unowned: a well-formed FAIL-DISPOSED marker must "
                      "exclude, visibly, with its authority and date")

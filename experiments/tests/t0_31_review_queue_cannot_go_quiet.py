@@ -495,6 +495,28 @@ def _probe(blind: bool) -> dict:
             or pile["due_pile"].get(free, 0) != 0):
         failed.append("p14_a_promise_dated_onto_a_full_day_is_named")
 
+    # P14b — THE BATCH (73rd audit B1, 2026-09-05). Four rows routed in ONE
+    # commit onto one date each read `prior = 0`, because `routed` is parsed
+    # at DAY granularity and a batch by definition shares the tick — the
+    # instrument reported its best case (nothing was already promised) as if
+    # it were the measurement, and the live board read 17 where the truth was
+    # 22. The file is append-ordered, so a row's INDEX in the parsed list is
+    # the total order the date cannot supply. Assert on the CLASS, not the
+    # tidy example: same routed day, one due date — the first row in the
+    # motion is innocent, EVERY later row is named, the TOTAL matches, and
+    # the batch stays a metric (no violation fires). A comparison that orders
+    # by the clock alone reads an empty pile here.
+    batch = audit(_doc([
+        ("batch-first", "2026-08-28", "OPEN", ["DUE: 2026-09-25 | first in the motion"]),
+        ("batch-second", "2026-08-28", "OPEN", ["DUE: 2026-09-25 | same commit, same day"]),
+        ("batch-third", "2026-08-28", "OPEN", ["DUE: 2026-09-25 | same commit, same day"]),
+    ]), None, TODAY)
+    if ({p["id"] for p in batch["piled_on"]} != {"batch-second", "batch-third"}
+            or len(batch["piled_on"]) != 2
+            or [p["prior"] for p in sorted(batch["piled_on"], key=lambda p: p["id"])] != [1, 2]
+            or batch["total"] != 0):
+        failed.append("p14b_a_same_day_batch_is_still_a_pile")
+
     # P15 — the OTHER HALF OF THE TRANSACTION. Every class above fires on a
     # promise breaking; the honest escape hatch (re-arm the DUE: with a reason)
     # means a desk can be indistinguishable from one that is keeping up while

@@ -488,16 +488,26 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
     # full Sunday knowingly because its trap re-arms nightly. A gate here would
     # forbid a legal move; a number makes the move visible.
     #
-    # CONSERVATIVE BY CONSTRUCTION: a re-armed row's `DUE:` was chosen later
+    # CONSERVATIVE BY CONSTRUCTION — for exactly ONE case, stated so the bound
+    # is not a licence (73rd audit): a re-armed row's `DUE:` was chosen later
     # than its `routed` date, so using `routed` as the moment of choice can
-    # only UNDER-count. An instrument on a shared file errs toward silence.
+    # only UNDER-count re-arms. That declared bound covered nothing else, and
+    # on 2026-09-05 it absorbed an unknown under-count: four rows routed onto
+    # one Sunday in ONE commit each read `prior = 0`, because `routed` is
+    # parsed at DAY granularity and a batch by definition shares the tick.
+    # The live board read 17 where the truth was 22. The ordering key must
+    # have higher resolution than the events it orders; the file is
+    # append-ordered, so a row's INDEX in the parsed list is the total order
+    # the date cannot supply — `(routed, index)` decides who got there first.
     piled_on: list[dict] = []
+    order = {id(r): i for i, r in enumerate(rows)}
     for r in live:
         if r["due"] is None or r["routed"] is None:
             continue
         prior = sum(1 for o in live
                     if o is not r and o["due"] == r["due"]
-                    and o["routed"] is not None and o["routed"] < r["routed"])
+                    and o["routed"] is not None
+                    and (o["routed"], order[id(o)]) < (r["routed"], order[id(r)]))
         if prior >= MEASURED_DISCHARGE_CAPACITY:
             piled_on.append({"id": r["id"], "due": r["due"].isoformat(),
                              "prior": prior})

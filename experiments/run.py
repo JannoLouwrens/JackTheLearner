@@ -844,14 +844,37 @@ def ratchet_live(ledger: Ledger) -> dict:
             raise RuntimeError("; ".join(f["refused"]))
         return f["count"]
 
+    def _review_queue_piled_on():
+        # 73rd audit B1: the batch blindness. `piled_on` ordered rows by a
+        # day-granularity `routed` date, so N rows routed in one commit onto
+        # one date all read `prior = 0` — reported 17 where the truth was 22,
+        # and six live due-dates were fed by same-day batches the number
+        # could not see. Counted here so the corrected number is COMMITTED:
+        # a mover must `run ratchets record` in the commit that moves it.
+        # 22 is the honest baseline; 17 was never a real reading. A METRIC
+        # with no floor — piling can be legal — same discipline as
+        # cpu_foreclosed_now.
+        from . import review_queue as rq
+        return len(rq.live_audit()["piled_on"])
+
+    def _goal_unrunnable():
+        # 73rd audit B3: `new_unrunnable_citation` is RED in coverage's exit
+        # code, but the class grew 3 -> 7 under an exit code ALREADY held red
+        # by claim_dead — a blessed red silenced the number. This block was
+        # built so that cannot happen; the class had no line in it.
+        from .coverage import goal_citations
+        return len(goal_citations()["unrunnable"])
+
     take("unreachable", _unreachable)
     take("fail_unowned", _fail_unowned)
+    take("goal_unrunnable", _goal_unrunnable)
     take("cpu_foreclosed_now", _cpu_foreclosed_now)
     take("claim_dead", _claim_dead_count)
     take("park_release_pairs", _park_release_pairs)
     take("champions_trigger_debt", _champions_trigger_debt)
     take("review_queue_violations", _review_queue_total)
     take("review_queue_net_arrivals", _review_queue_net_arrivals)
+    take("review_queue_piled_on", _review_queue_piled_on)
     return out
 
 
@@ -986,6 +1009,26 @@ def print_ratchet_block(ledger: Ledger) -> None:
             print(f"      {name}  !! recorded {prev} at {prev_at} and no "
                   f"longer computed at all — a counter\n      does not "
                   f"retire by disappearing.")
+        if name == "fail_unowned" and cur is not None:
+            # 73rd audit B2: the count went 4 -> 0 in three minutes by
+            # routing into a queue whose own drain reads UNBOUNDED, and
+            # `AT floor — ok` was the only thing this block printed. The
+            # number stays; the map stops implying repair.
+            try:
+                from .coverage import fail_unowned as _fu
+                owned = _fu()["owned"]
+                forms = ["repaired_by", "disposed", "queue-row",
+                         "mention-only"]
+                c = {k: sum(1 for v in owned.values() if v == k)
+                     for k in forms}
+                print("        owned: " + ", ".join(f"{c[k]} {k}"
+                                                    for k in forms)
+                      + " — a queue-row owner is a dated promise,\n"
+                        "        not a repair; read the queue's own drain "
+                        "before calling it handled (D23).")
+            except Exception as exc:
+                print(f"        (ownership breakdown refused: "
+                      f"{type(exc).__name__}: {exc} — no map is evidence)")
         # The floor is the comparison a recording cannot quiet (65th audit
         # B3): `ratchets record` refreshes the readings file, but the floor
         # is a constant that only moves against its own growth log.
