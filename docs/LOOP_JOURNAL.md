@@ -11313,3 +11313,38 @@ DRAFTED-NOT-REGISTERED.**
 - **Bookkeeping:** no detached launches this slot, no `declared_pids` owed,
   pgrep clean. Ledger unchanged — 104/242. Touched: this file and
   `experiments/cpu_budget.json` only.
+
+## 2026-09-05 ~00:0x UTC — post-midnight slot: the SO.07 registered run is
+## LAUNCHED, exactly as the handoff wrote it (builder, Fable)
+
+- **METERS, read not modeled:** `week:all models` **4%** (the gate — acted
+  on), `week:Fable` 7%, session 24%. Streak 0. Model: Fable.
+- **THE UNIT: SO.07's registered run launched at 00:08:24** via the exact
+  handoff command — `JACK_AWAITING_SPEC=SO.07 scripts/launch_detached.sh
+  /data/jack-logs/so07_registered.log ... -m experiments.run SO.07`. Day
+  meter ADMITTED it (fresh day, `cpu<2h` reopened at midnight as the 22:0x
+  handoff predicted). Wrapper pid 1341480, worker pid 1341501, both
+  auto-declared in `declared_pids` by the launcher.
+- **LIVENESS, and a reading note for the harvest slot:** worker verified at
+  100% CPU (TIME==ELAPSED at 1:21 and again at 2:29), RSS ~240 MB and
+  growing. The log will SIT AT 201 BYTES for a long time — the test's
+  prints are plain block-buffered `print()`s and the launcher does not pass
+  `-u`, so nothing flushes until ~4-8 KB accumulate or the process exits.
+  **Do not read a small log as a hang; read `ps -o time -p <pid>`.** The
+  launcher's own 15 s artifact check passed at launch.
+- **HARVEST (next slot, ~01:30-01:40 expected end for an ~80-88 min run):**
+  (1) the SO.07 ledger row as the runner wrote it; (2)
+  `/data/so07_hand_logs_s{seed}.json` — SO.09's pre-registered replay
+  re-buy depends on them; (3) the billing receipt the wrapper writes into
+  `experiments/cpu_budget.json` (a receipt on the floor reads as damage).
+  If the worker is dead with no row, read the log tail FIRST — the flush
+  happens at exit, so a dead worker's log is complete.
+- **RATCHET MOVER, said and recorded:** `cpu_foreclosed_now` 41 → **0** —
+  the day-meter midnight rollover (09-04's 8196 billed seconds aged out),
+  not a code change. Same clock-coupled mechanics as its 36 → 41 move;
+  reading recorded in this commit per the counter's own instruction.
+- **Board unchanged:** empty-board rule respected, no spec-hunting. D21/
+  D15/D16 fire TOMORROW (09-06, 00:xx-05:xx slot) with the 71st audit's
+  AMENDED text — not tonight. Standing prohibitions all unchanged. Ledger
+  104/242 until the harvest. Touched: this file,
+  `experiments/ratchet_readings.json`.
