@@ -11815,3 +11815,41 @@ DRAFTED-NOT-REGISTERED.**
 - Bookkeeping: ledger 104/242 (T0.21 re-buy only — no new claim). Touched:
   experiments/{coverage.py,run.py,ratchet_readings.json,ledger.json,
   cpu_budget.json}, docs/LOOP_JOURNAL.md.
+
+## 2026-09-05 ~15:0x UTC — verified-empty board + one loop repair: the documented `run decisions --check` now exists
+
+- **Model Fable; meters read, not modeled: `week:all models` 13% (the gate —
+  the line acted on), `week:Fable` 22%, session 15%, week 77% elapsed. No
+  pacing skip, streak 0.** 13 claude processes = the loop; tree was clean at
+  start.
+- **Board verified empty for THIS slot, receipts bare:** `run blocked` rc=0
+  (T2.01 frees 35 unchanged), `run coverage` rc=2 — the two routed standing
+  reds only (4 CLAIM-DEAD; 4 unrunnable GEN citations, both named, unchanged).
+  QUEUE DEPTH: 7 dispatchable, 6 VOID arms — **the only FRESH dispatch is
+  `SO.08`, held by the day meter**: 09-05 has 9,321 s billed (`SO.07`'s
+  9,205 s VOID), so 54,000 s only fits tomorrow's fresh day. Window arithmetic
+  re-confirmed from `cpu_budget.json`, not inherited. `so_08_whose_hands.py`
+  exists, tracked, HEAD pushed (0 unpushed). `experiments.decisions --check`:
+  ratchet ok, D21 correctly flagged DEFAULT-ACTION-SAME-DAY (tomorrow's race).
+- **The slot's one unit, a loop repair earned by a trap that fired in-slot:**
+  I invoked `run decisions --check` because `ladder_prompt.md:814`,
+  `DECISIONS_NEEDED.md:3999` and `REVIEW_QUEUE.md:1931` all document that
+  form — and got argparse rc=2, the EXACT false-RED the 12:07 slot recorded
+  three hours ago. A lesson taught recognition; only the working invocation is
+  prevention. Fix (`f874cb8`): `run.py` forwards `decisions [--check]` /
+  `champions [--check]` to the owning tools; a stray `--check` beside anything
+  else refuses WHOLE (argv-is-a-spend); the unknown-token refusal now names
+  the forwarders. **Falsifier first, per the house rule:** T0.23 gained
+  P6 (forwarders reach their tools' own headers, never argparse usage, never
+  a spec) and P7 (stray --check refused whole) — both FAILED against the old
+  code (rc=2 on all three forms), 8/8 green after. T0.23 re-bought clean:
+  PASS attempt 9, 17.59 s. `run stale`: unchanged (T2.02 pre-impl_sha only).
+- **HANDOFF, unchanged and re-verified against the tools: (1) 09-06 00:07
+  fires the CORRECTED ordering — `D21` (race, before 06:37) -> `D16` ->
+  START `SO.08` -> then `D15` + re-buy `T0.33` (~12 s) while it runs.
+  `SO.08`'s window is 3,600 s of BILLING SLACK on 09-06's day meter, not a
+  wall clock — paperwork does not miss it; one long CPU spec run first does.
+  (2) rc receipts bare + the naming line.**
+- Bookkeeping: ledger 104/242 (T0.23 re-buy only — no new claim). Touched:
+  experiments/{run.py,tests/t0_23_argv_is_not_a_spend.py,ledger.json,
+  cpu_budget.json}, docs/LOOP_JOURNAL.md.

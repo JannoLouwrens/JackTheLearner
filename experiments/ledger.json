@@ -19062,15 +19062,15 @@
     },
     "T0.23": {
       "amended": [],
-      "attempt": 8,
-      "commit": "c7325c2",
+      "attempt": 9,
+      "commit": "f874cb8",
       "compute_s": null,
       "control_metrics": {
         "prefix_rc": 1,
         "prefix_reached_spec": true,
         "prefix_saw_unknown_token": true
       },
-      "duration_s": 6.73,
+      "duration_s": 17.59,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -19142,9 +19142,44 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "prefix_rc": 1,
+            "prefix_reached_spec": true,
+            "prefix_saw_unknown_token": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "cadd0d9f1ba388a0",
+          "message": "",
+          "metrics": {
+            "bad_argv_never_dispatched": true,
+            "bad_argv_refused": true,
+            "control_reached_spec": true,
+            "failed_properties": [],
+            "fixture_spec": "T6.02",
+            "fixture_unimplemented": true,
+            "good_argv_dispatched": false,
+            "good_argv_lock_skipped": true,
+            "good_argv_not_refused": true,
+            "mixed_argv_refused": true,
+            "properties_failed": 0,
+            "rc_bad": 2,
+            "rc_good": 0,
+            "rc_mixed": 2,
+            "rc_readonly": 0,
+            "readonly_still_works": true
+          },
+          "ran_at": "2026-09-02T18:39:38",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "b2210a23bad562bc",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "cadd0d9f1ba388a0",
+      "impl_sha": "1b2c71591104a25b",
       "message": "",
       "metrics": {
         "bad_argv_never_dispatched": true,
@@ -19153,19 +19188,26 @@
         "failed_properties": [],
         "fixture_spec": "T6.02",
         "fixture_unimplemented": true,
+        "forwarders_reach_their_tools": true,
         "good_argv_dispatched": false,
         "good_argv_lock_skipped": true,
         "good_argv_not_refused": true,
         "mixed_argv_refused": true,
         "properties_failed": 0,
         "rc_bad": 2,
+        "rc_champions": 0,
+        "rc_decisions": 0,
         "rc_good": 0,
         "rc_mixed": 2,
         "rc_readonly": 0,
-        "readonly_still_works": true
+        "rc_stray": 2,
+        "readonly_still_works": true,
+        "stray_check_refused": true
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 209.5,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T18:39:38",
+      "ran_at": "2026-09-05T15:15:06",
       "seeds": [
         0
       ],
