@@ -1116,6 +1116,211 @@ def _unreachable_fixture() -> List[str]:
     return fails
 
 
+# ── FAIL-UNOWNED: a settled negative with nobody assigned (72nd audit B1) ──
+#
+# The scar: `XL.01` — "death does not erase what he learned" — sat FAIL for 17
+# days while every instrument printed health, because every reader here is
+# keyed to a spec's REACHABILITY (can it be dispatched?) and none to its
+# DISPOSITION (who repairs it?). `T2.05` and `T4.02` sat 16 and 15 days on the
+# same silence. A settled FAIL leaves the dispatch queue, is not parked, blocks
+# little, and was never routed — five readers, five correct behaviours, one
+# hole (docs/LESSONS.md, "A negative with no owner is invisible").
+#
+# GROWTH LOG (shrink-only; every raise needs an entry here and a reason in the
+# commit that makes it):
+#   2026-09-05  baseline 4: T2.05, T2.15, T4.02, XL.01 (builder, executing
+#               72nd audit B1). The audit's own live reading was 3 — it missed
+#               T2.15, whose FAIL (2026-08-25, the language memorisation-route
+#               measurement) is cited only in SM.03's registry notes; by the
+#               same audit's own lesson, a successor's notes are not routing
+#               when the successor is PILOT-BLOCKED. T3.07 is excluded by its
+#               FAIL-DISPOSED marker (D7's fired default), not by id.
+FAIL_UNOWNED_BASELINE = 4
+
+# The readable disposition marker (72nd audit B1: the T3.07 exclusion "must be
+# by a readable marker, not by a hardcoded id"). Lives in `Spec.notes` —
+# deliberately un-hashed, so writing one costs no certificate re-buys — and
+# must name its AUTHORITY (the decision or organ that killed the question) and
+# a DATE, or it is reported MALFORMED and excludes nothing: an unparseable
+# disposition silently excluding a FAIL is the dateless-PARKED leak, one
+# marker over.
+FAIL_DISPOSED_RX = re.compile(
+    r"FAIL-DISPOSED:\s*(?P<authority>[A-Za-z0-9._-]+)\s+"
+    r"(?P<date>\d{4}-\d{2}-\d{2})")
+
+
+def fail_unowned(by_id: Optional[dict] = None,
+                 results: Optional[dict] = None,
+                 queue_doc: Optional[str] = None) -> dict:
+    """Settled FAILs with NO repair owner — the state no other reader names.
+
+    A spec is FAIL-UNOWNED when ALL of: its ledger row is `FAIL`; its
+    `Spec.repaired_by` is empty; its id appears nowhere in
+    `docs/REVIEW_QUEUE.md`; and its notes carry no well-formed
+    `FAIL-DISPOSED:` marker.
+
+    The ONLY legal repairs, stated here because the tempting ones are the
+    banned ones:
+      (a) route a `docs/REVIEW_QUEUE.md` row with a `DUE:`,
+      (b) declare `repaired_by` on the failed spec,
+      (c) an explicit `FAIL-DISPOSED: <authority> <YYYY-MM-DD>` registry
+          disposition naming the decision that killed the question (T3.07/D7
+          is the model — answered, not orphaned).
+    NEVER by deleting the FAIL row, NEVER by re-running for a better number,
+    and NEVER by adding to `FAIL_UNOWNED_BASELINE` — that constant only
+    shrinks.
+
+    Ownership-by-mention is deliberately generous: any appearance of the id in
+    the queue doc counts, header or body, because row bodies cite their
+    instrument specs by id (DP.05's repair genuinely rides the
+    `w0-too-shallow` row). The generosity is bounded by what the class is for:
+    a FAIL about which nobody has written a single queue line still fires,
+    which is exactly the XL.01 hole. A prose mention is a weak owner — the
+    strong forms are (a)-(c) above — but weak ownership is a routing-quality
+    question for the Review, not a hole this counter can see.
+
+    Returns `{"unowned": [ids], "disposed": {id: (authority, date)},
+    "malformed": [ids], "count": int}`. A malformed marker COUNTS as unowned.
+    """
+    if by_id is None:
+        from .registry import BY_ID
+        by_id = BY_ID
+    if results is None:
+        results = {}
+        p = Path(__file__).resolve().parent / "ledger.json"
+        if p.is_file():
+            results = json.load(open(p)).get("results", {})
+    if queue_doc is None:
+        qp = Path(__file__).resolve().parent.parent / "docs" / "REVIEW_QUEUE.md"
+        queue_doc = qp.read_text() if qp.is_file() else ""
+    out = {"unowned": [], "disposed": {}, "malformed": [], "count": 0}
+    for sid in sorted(results):
+        if results[sid].get("status") != "FAIL" or sid not in by_id:
+            continue
+        spec = by_id[sid]
+        if getattr(spec, "repaired_by", None):
+            continue
+        notes = getattr(spec, "notes", "") or ""
+        m = FAIL_DISPOSED_RX.search(notes)
+        if m:
+            out["disposed"][sid] = (m.group("authority"), m.group("date"))
+            continue
+        if "FAIL-DISPOSED" in notes:
+            out["malformed"].append(sid)  # a broken disposition disposes
+            # nothing — it falls through to the unowned test below.
+        # id-boundary match: `Z.1` must not be satisfied by `Z.11` or
+        # `Z.1.B`, but a sentence-final `Z.1.` must count.
+        if re.search(r"(?<![A-Za-z0-9.])" + re.escape(sid) + r"(?!\.?\w)",
+                     queue_doc):
+            continue
+        out["unowned"].append(sid)
+    out["count"] = len(out["unowned"])
+    return out
+
+
+def fail_unowned_ratchet(baseline: int = FAIL_UNOWNED_BASELINE,
+                         count_fn=None) -> dict:
+    """Compare the live FAIL-UNOWNED count against the shrink-only baseline.
+
+    Same contract as `unreachable_ratchet`: `{"count", "unowned", "disposed",
+    "malformed", "baseline", "grown", "stale_baseline", "refused"}` — the last
+    three are message lists, empty when healthy. A detector that raises
+    REFUSES the count rather than classifying it.
+    """
+    out = {"count": None, "unowned": None, "disposed": None, "malformed": None,
+           "baseline": baseline, "grown": [], "stale_baseline": [],
+           "refused": []}
+    if count_fn is None:
+        count_fn = fail_unowned
+    try:
+        f = count_fn()
+    except Exception as exc:
+        out["refused"].append(f"fail-unowned ratchet: the detector refused "
+                              f"({type(exc).__name__}: {exc}) — no count is "
+                              f"evidence")
+        return out
+    out.update(count=f["count"], unowned=f["unowned"], disposed=f["disposed"],
+               malformed=f["malformed"])
+    if f["count"] > baseline:
+        out["grown"].append(
+            f"FAIL-UNOWNED GREW: {f['count']} vs baseline {baseline} "
+            f"({', '.join(f['unowned'])}). A new settled FAIL has no repair "
+            f"owner. The repair is to ROUTE it — a REVIEW_QUEUE row with a "
+            f"DUE:, a declared repaired_by, or an explicit FAIL-DISPOSED "
+            f"registry disposition — never to delete the row, re-run for a "
+            f"better number, or raise FAIL_UNOWNED_BASELINE.")
+    elif f["count"] < baseline:
+        out["stale_baseline"].append(
+            f"FAIL-UNOWNED fell to {f['count']}; FAIL_UNOWNED_BASELINE still "
+            f"reads {baseline} and must be lowered in the same commit — the "
+            f"ratchet only ratchets if the floor follows the number down.")
+    return out
+
+
+def _fail_unowned_fixture() -> List[str]:
+    """Known-answer battery for `fail_unowned` + its ratchet (72nd audit B1).
+
+    Every exclusion arm is planted alongside the state it must NOT hide, so a
+    reader that starts honouring the wrong thing fails here by name. The
+    conversion arms are the T0.31 P4/P5/P6 shape: each illegitimate repair —
+    a disposition without its date, a queue mention of a LONGER id — must not
+    lower the count.
+    """
+    from types import SimpleNamespace as NS
+    fails = []
+    by_id = {
+        "Z.1": NS(repaired_by=[], notes=""),            # naked FAIL — fires
+        "Z.2": NS(repaired_by=["Z.9"], notes=""),       # repaired_by — quiet
+        "Z.3": NS(repaired_by=[], notes=""),            # in queue doc — quiet
+        "Z.4": NS(repaired_by=[], notes="FAIL-DISPOSED: D7 2026-09-01 — "
+                                        "accepted as cosmetics"),  # disposed
+        "Z.5": NS(repaired_by=[], notes="FAIL-DISPOSED: someday"),  # malformed
+        "Z.6": NS(repaired_by=[], notes=""),            # PASS — out of scope
+    }
+    results = {sid: {"status": "FAIL"} for sid in by_id}
+    results["Z.6"] = {"status": "PASS"}
+    # Z.3 owned by a body mention; Z.1 must NOT be laundered by `Z.11` or
+    # `Z.1.B` appearing (the boundary conversion); sentence-final `Z.3.` is
+    # the legitimate mention shape.
+    doc = "instrumented by Z.11 and Z.1.B; the row's spec is Z.3.\n"
+    f = fail_unowned(by_id=by_id, results=results, queue_doc=doc)
+    if f["unowned"] != ["Z.1", "Z.5"]:
+        fails.append(f"fail-unowned: read {f['unowned']}, expected "
+                     f"['Z.1', 'Z.5'] — an exclusion arm is hiding a state "
+                     f"or firing on an owned one")
+    if f["disposed"] != {"Z.4": ("D7", "2026-09-01")}:
+        fails.append("fail-unowned: a well-formed FAIL-DISPOSED marker must "
+                     "exclude, visibly, with its authority and date")
+    if f["malformed"] != ["Z.5"]:
+        fails.append("fail-unowned: a disposition without authority+date "
+                     "must be REPORTED malformed, and dispose of nothing")
+    r = fail_unowned_ratchet(baseline=1,
+                             count_fn=lambda: dict(f, count=2,
+                                                   unowned=["A", "B"]))
+    if not r["grown"] or r["stale_baseline"] or r["refused"]:
+        fails.append("fail-unowned: count above baseline must read GROWN, "
+                     "alone — a new orphaned negative is the class this "
+                     "exists for")
+    r = fail_unowned_ratchet(baseline=3,
+                             count_fn=lambda: dict(f, count=2))
+    if not r["stale_baseline"] or r["grown"] or r["refused"]:
+        fails.append("fail-unowned: count below baseline must demand the "
+                     "shrink, or the floor stops following the number down")
+    r = fail_unowned_ratchet(baseline=2, count_fn=lambda: dict(f, count=2))
+    if r["grown"] or r["stale_baseline"] or r["refused"]:
+        fails.append("fail-unowned: count at baseline is the healthy state — "
+                     "it must be recognisable or the sick ones mean nothing")
+
+    def _broken():
+        raise RuntimeError("planted detector failure")
+    r = fail_unowned_ratchet(baseline=2, count_fn=_broken)
+    if not r["refused"] or r["grown"] or r["stale_baseline"] or \
+            r["count"] is not None:
+        fails.append("fail-unowned: a detector that raises must REFUSE the "
+                     "count, not classify it")
+    return fails
+
+
 def queue_depth(ledger=None, by_id=None, tracked=None,
                 baseline: frozenset = QUEUE_EMPTY_BASELINE,
                 held=None) -> dict:
@@ -2861,11 +3066,13 @@ def check() -> int:
           "  falsifiable claim, however honest the retiring was.")
 
     u = unreachable_ratchet()
+    fu = fail_unowned_ratchet()
     qf = (_queue_fixture() + _gates_frozen_fixture()
           + _pilot_blocked_fixture() + _pilot_owed_fixture()
           + _pilot_harvested_fixture() + _void_foreclosed_fixture()
           + _claim_dead_fixture() + _welded_fixture() + _exit_code_fixture()
-          + _unreachable_fixture() + _park_release_fixture() + u["refused"])
+          + _unreachable_fixture() + _park_release_fixture()
+          + _fail_unowned_fixture() + u["refused"] + fu["refused"])
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
@@ -3023,6 +3230,33 @@ def check() -> int:
     for m in u["stale_baseline"]:
         print(f"  {m}")
 
+    if fu["count"] is not None:
+        print(f"\n  FAIL-UNOWNED (72nd audit B1): {fu['count']} settled "
+              f"FAIL(s) with NO repair owner — no repaired_by, no "
+              f"REVIEW_QUEUE mention,\n      no FAIL-DISPOSED marker — "
+              f"baseline {fu['baseline']}, shrink-only"
+              + (f": {', '.join(fu['unowned'])}" if fu["unowned"] else "."))
+        if fu["disposed"]:
+            print(f"      excluded by FAIL-DISPOSED disposition: "
+                  + ", ".join(f"{s} <- {a} {d}"
+                              for s, (a, d) in sorted(fu["disposed"].items())))
+        if fu["unowned"]:
+            print("  A FAIL is not disposed by being understood; it is "
+                  "disposed by being ROUTED. The legal\n  repairs are a "
+                  "REVIEW_QUEUE row with a DUE:, a declared repaired_by, or "
+                  "an explicit\n  FAIL-DISPOSED registry disposition — never "
+                  "deleting the row, never a re-run for a\n  better number, "
+                  "never a baseline raise.")
+        if fu["malformed"]:
+            print(f"  !! {len(fu['malformed'])} MALFORMED FAIL-DISPOSED "
+                  f"marker(s) — no authority+date, so each disposes of\n"
+                  f"      nothing and its spec ranks unowned above: "
+                  f"{', '.join(fu['malformed'])}")
+    for m in fu["grown"]:
+        print(f"  !! {m}")
+    for m in fu["stale_baseline"]:
+        print(f"  {m}")
+
     pr = park_release()
     pr_pairs = {f"{s}->{r}" for s, r, _st in pr["violations"]}
     pr_new = sorted(pr_pairs - PARK_RELEASE_BASELINE)
@@ -3071,6 +3305,8 @@ def check() -> int:
              "new_unrunnable_citation": gc["unrunnable_new"],
              "queue_fixture_failure": qf,
              "unreachable_grew": u["grown"],
+             "fail_unowned_grew": fu["grown"],
+             "malformed_fail_disposed": fu["malformed"] or [],
              "pilot_undeclared": q["pilot_undeclared"],
              "new_park_release": pr_new,
              "park_release_undeclared": pr["undeclared"]},
@@ -3079,6 +3315,7 @@ def check() -> int:
                "stale_unrunnable_baseline": gc["unrunnable_stale_baseline"],
                "stale_queue_baseline": q["stale_baseline"],
                "stale_unreachable_baseline": u["stale_baseline"],
+               "stale_fail_unowned_baseline": fu["stale_baseline"],
                "stale_park_release_baseline": pr_stale})
 
 
@@ -3118,11 +3355,13 @@ def _exit_code_fixture() -> List[str]:
     RED = ["uncovered", "claim_dead", "new_dangling_citation",
            "new_empty_class", "new_unrunnable_citation",
            "queue_fixture_failure", "unreachable_grew",
+           "fail_unowned_grew", "malformed_fail_disposed",
            "pilot_undeclared", "new_park_release",
            "park_release_undeclared"]
     AMBER = ["malformed_declaration", "stale_citation_baseline",
              "stale_unrunnable_baseline",
              "stale_queue_baseline", "stale_unreachable_baseline",
+             "stale_fail_unowned_baseline",
              "stale_park_release_baseline"]
     fails = []
     clean_red = {k: [] for k in RED}

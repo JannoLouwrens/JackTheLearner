@@ -11,6 +11,10 @@
     "at": "2026-09-05",
     "value": 0
   },
+  "fail_unowned": {
+    "at": "2026-09-05",
+    "value": 4
+  },
   "park_release_pairs": {
     "at": "2026-09-03",
     "value": 3

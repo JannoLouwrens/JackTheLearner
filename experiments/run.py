@@ -834,7 +834,18 @@ def ratchet_live(ledger: Ledger) -> dict:
         from .cpu_budget import foreclosed_now
         return len(foreclosed_now())
 
+    def _fail_unowned():
+        # 72nd audit B1: a settled FAIL with no repaired_by, no REVIEW_QUEUE
+        # mention and no FAIL-DISPOSED disposition — the state every
+        # dispatch-keyed reader treats as out of scope (XL.01, 17 silent days).
+        from .coverage import fail_unowned_ratchet
+        f = fail_unowned_ratchet()
+        if f["count"] is None:
+            raise RuntimeError("; ".join(f["refused"]))
+        return f["count"]
+
     take("unreachable", _unreachable)
+    take("fail_unowned", _fail_unowned)
     take("cpu_foreclosed_now", _cpu_foreclosed_now)
     take("claim_dead", _claim_dead_count)
     take("park_release_pairs", _park_release_pairs)
@@ -855,8 +866,9 @@ def ratchet_floors() -> dict:
     against the recording can be made quiet by writing a file. The floor
     cannot — so it is compared here too, in the channel no verdict silences.
     """
-    from .coverage import UNREACHABLE_BASELINE
-    return {"unreachable": UNREACHABLE_BASELINE}
+    from .coverage import FAIL_UNOWNED_BASELINE, UNREACHABLE_BASELINE
+    return {"unreachable": UNREACHABLE_BASELINE,
+            "fail_unowned": FAIL_UNOWNED_BASELINE}
 
 
 def floor_status(cur, floor):

@@ -772,7 +772,11 @@ LADDER: list[Spec] = [
                "CHANNEL, GOAL.md's interoception claims must route through "
                "some other component, and this spec's FAIL stands as the "
                "registered finding rather than as an open question. Re-open "
-               "requires new evidence through the Review, not a re-run."),
+               "requires new evidence through the Review, not a re-run.  "
+               "FAIL-DISPOSED: D7 2026-09-01 — the fired default above is "
+               "the disposition; this marker is what excludes T3.07 from "
+               "FAIL-UNOWNED by declaration rather than by hardcoded id "
+               "(72nd audit B1)."),
     Spec("T3.08", 3, "Ablate the LLM", hypothesis="The frozen LLM improves command following over a bag-of-words encoder.",
          falsified_by="Bag-of-words matches it.", null_baseline="TF-IDF command encoder.",
          metric="command_success_rate", budget=Budget.GPU, seeds=3, depends_on=["T2.07"],
