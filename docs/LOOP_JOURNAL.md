@@ -12044,3 +12044,41 @@ DRAFTED-NOT-REGISTERED.**
   Touched: experiments/coverage.py, experiments/ledger.json,
   experiments/cpu_budget.json, experiments/ratchet_readings.json,
   docs/LOOP_JOURNAL.md.
+
+## 2026-09-05 21:07 UTC slot — verified empty-board stop (PROGRESS FTB 2); the four stale claims re-verified as deliberate holds, nothing amended, no default fired early
+
+- Ran on **Fable**. Meters read at slot top: `week:all models` **16%** (the
+  gate, acted on), `week:Fable` 28%. Zero `PACING:` skips in the recent log;
+  lost_iterations.log 0 bytes; load 0.08; no undeclared processes.
+- **The unit: verify the board is empty rather than assert it.** `coverage`
+  queue depth: 6 dispatchable, **all 6 VOID -> 0 FRESH** (D1.0, LF.01, LG.03,
+  SO.07, T2.02, UB.10 — every one an arm-to-repair behind a routed
+  disposition); 3 classes EMPTY with NOT FILLABLE annotations; cpu<10min's
+  sole row HELD by D19. `run blocked`: top terminal blockers (T2.01 frees 35,
+  NE.01, LT.01, UB.10, T2.02, LG.03) all repair through 09-06+ Review
+  dispositions or owner decisions. `ME.11` is settled (FAIL 09-02, family
+  E/F VOID-FORECLOSED); `SO.08` PASSed tonight at 19:11 — nothing startable
+  remains. `decisions --check` ratchet ok (0 undeclared/unrouted/expired).
+- **Stale-claims block re-derived before trusting the "known deliberate"
+  label:** UB.10/T3.09/D1.0/LF.01 each checked against `git log` on their
+  test files. T3.09's delta is the 61st-audit `_check` lane-ordering repair
+  (`19461c4`, substantive by design — the corrected check returns VOID on
+  attempt 3's own metrics when it next runs); LF.01's is pre-attempt-2
+  instrumentation (`54d7841`, waiting on the 09-09 design); UB.10's and
+  D1.0's sit behind `ub10-seed-fragility` and the two `d10-*` rows owed by
+  tomorrow's FULL. Considered `run amend --doc-only` and correctly did NOT
+  use it — these are substantive holds, not prose-only drift. T2.02
+  pre-impl_sha stale unchanged.
+- **No default fired this slot, on purpose.** `D21` is flagged
+  DEFAULT-ACTION-SAME-DAY: its default names 2026-09-06 as its own earliest
+  firing day, so firing it at 21:07 on 09-05 would violate the rule the
+  flag exists to enforce; `D16`/`D15` are ordered behind it by the verified
+  00:07 handoff (and `D15` stales `T0.33`, so it goes last with the re-buy).
+- **HANDOFF (unchanged from 20:07, re-verified): 00:07 fires `D21` (race,
+  must beat 06:37) -> `D16` -> `D15` + re-buy `T0.33` (~12 s). SO.08 is
+  already run; nothing races for compute. W35's ~10.8 Kaggle hours expire at
+  00:00 by instruction (74th B5); W36's 30 h buyer is D1.0's successor,
+  gated on the two `d10-*` rows the 09-06 FULL owes.**
+- Bookkeeping: ledger 105/242 (nothing settled — a verified empty-board stop
+  is the correct slot per PROGRESS FTB 2). Touched: docs/LOOP_JOURNAL.md
+  only.
