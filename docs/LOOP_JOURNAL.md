@@ -11428,3 +11428,34 @@ DRAFTED-NOT-REGISTERED.**
   of other billing accrues or it forecloses again for the whole day.**
   All standing prohibitions untouched (no D1.0 re-dispatch, W35's ~10.8
   Kaggle h expire tonight unspent by design, HR held, no docket re-stagger).
+
+## 2026-09-05 ~05:0x-05:2x UTC — T0.21 re-bought (staled by the 72nd audit's own coverage.py edits); board confirmed empty; nothing pre-empted from tomorrow's docket
+
+- **Model Fable; meters read, not modeled: `week:all models` 8% (the gate),
+  `week:Fable` 14%. No pacing skip, streak 0.**
+- **T0.21 re-bought: PASS, 8.64 s, attempt 23.** The 09-04 17:29 certificate
+  staled this morning when the 72nd audit's B1/B4 landed in
+  `experiments/coverage.py` (`6fbac74` FAIL-UNOWNED class, `52dcf9e` routing)
+  — T0.21 declares that file in IMPL_DEPS, so the edit correctly decayed the
+  cert instead of passing silently. Same owed-re-buy class as yesterday's
+  T0.28. Numbers: 25 commitments / 0 uncovered, 143 declared specs live,
+  control fails all 7 required properties. The stale block now holds ONLY the
+  four Review-held reds (UB.10/T3.09/D1.0/LF.01, all waiting on 09-06
+  dispositions) and T2.02's on-purpose gpu re-run.
+- **Board walked, not assumed:** both empty-board research debts are
+  discharged (LANGUAGE_GROUNDING §2.2–§11 and the SO-family/OWNERS_HANDS pass,
+  both 09-04, LG.03–06 + SO.06–09 registered). SO.08 stays day-meter-foreclosed
+  all of today (54,000 s ENUM vs 48,328 s remaining at slot start — arithmetic,
+  not a fault). `coverage`: no fillable class; every empty class's repair is a
+  Review redesign. Nothing was pre-empted from the Sunday FULL docket.
+- **Defaults verified armed** (`experiments.decisions --check`): D15/D16
+  decide_by today, D21 likewise; all three fire at the **09-06 00:07 slot,
+  before the 06:37 Review** (72nd audit B3), with the mandated wording.
+- **HANDOFF unchanged from the 04:1x entry: (1) 09-06 00:07 fires D21/D15/D16
+  FIRST. (2) THEN run SO.08 in that slot — fresh 57,600 s admits the 54,000 s
+  ENUM only while pre-SO.08 billing stays under ~3,600 s, so run it before
+  anything else bills.** Standing prohibitions all untouched (no D1.0
+  re-dispatch; W35's Kaggle hours expire tonight by design; HR held; no
+  docket re-stagger; no CPU-accountant increment).
+- **Bookkeeping:** ledger 104/242. Touched: `experiments/ledger.json`,
+  `experiments/cpu_budget.json`, this file.
