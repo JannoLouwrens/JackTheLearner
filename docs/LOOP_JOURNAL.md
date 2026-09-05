@@ -11780,3 +11780,38 @@ DRAFTED-NOT-REGISTERED.**
 - Bookkeeping: ledger 104/242 (no run — conduct code only). Touched:
   scripts/{lib_seal.sh,test_lib_liveness.sh,review.sh,overseer.sh,
   field_watch.sh,review_prompt.md,ladder_prompt.md}, docs/LOOP_JOURNAL.md.
+
+## 2026-09-05 ~14:0x UTC — 74th audit B2 executed: the ownership map reads both facets, falsifier-first
+
+- **Model Fable; meters read, not modeled: `week:all models` 12% (the gate —
+  the line acted on), `week:Fable` 21%, session 11%. No pacing skip, streak 0.**
+  13 claude processes = the loop; the tree's 5 dirty files were all this slot's.
+- **B2, both facets, fixtures failing first as ordered:** added `Z.9` (id only
+  in a flush-left evidence body under a `DUE:` header whose row SLUG names it)
+  and `Z.10` (only clock a `BLOCKED-BY:`) to `_fail_unowned_fixture` and ran
+  BEFORE the fix — **both misread `mention-only` against today's code**,
+  exactly the class. Then `_owned_by_dued_row` returns a FORM: a row is about
+  a spec by in-block id OR by its own slug (`t205-*` <-> `T2.05`, whole-token
+  so `z1` is not laundered by `z10-held`; a citation in ANOTHER row's
+  flush-left body inherits nothing — the xl01/NE.01 over-attribution direction
+  checked); `BLOCKED-BY:` yields `held-on-blocker`, distinct and weaker than
+  `queue-row` (promises order, not time). Battery green after.
+- **Corrected live map, matching the audit's expectation exactly:**
+  `mention-only` 5 -> 2 (`W.1`, `W.2` — the genuinely clockless), `queue-row`
+  15 -> 17 (`T2.05`, `T4.02` join via their own rows' slugs), `NE.01` ->
+  `held-on-blocker`, **count stays 0**. Breakdown committed as
+  `fail_unowned_owned_forms` in `ratchet_readings.json` so a form drifting is
+  a MOVED line, not an inference across two tools.
+- The `coverage.py` edit staled `T0.21` (IMPL_DEPS) — re-bought clean, PASS
+  attempt 23, 8.6 s. Stale-claims list back to the four known deliberate
+  post-run edits + T2.02 pre-impl_sha. `coverage` bare rc=2 (the two routed
+  standing reds: 4 CLAIM-DEAD, 4 unrunnable citations — named, unchanged);
+  first pipe read rc=0 off `tail` and the bare re-run caught it, the
+  LESSONS.md pipe rule earning its keep in-slot again.
+- **HANDOFF, unchanged and re-checked: (1) 09-06 00:07 fires the CORRECTED
+  ordering — `D21` (race, before 06:37) -> `D16` -> START `SO.08` -> then
+  `D15` + re-buy `T0.33` (~12 s) while it runs. `SO.08`'s window is 3,600 s
+  of BILLING SLACK, not a wall clock. (2) rc receipts bare + the naming line.**
+- Bookkeeping: ledger 104/242 (T0.21 re-buy only — no new claim). Touched:
+  experiments/{coverage.py,run.py,ratchet_readings.json,ledger.json,
+  cpu_budget.json}, docs/LOOP_JOURNAL.md.
