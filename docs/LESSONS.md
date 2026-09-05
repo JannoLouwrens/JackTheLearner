@@ -11604,3 +11604,50 @@ the `IMPL_DEPS` grep before step 3, and put the number in the queue row.** A
 doc is entitled to propose the clean design; the registering iteration owns the
 bill. And the tell that you should look for a second venue is a large number
 there — not a small one, which is permission.
+
+## A negative with no owner is invisible: every reader in this repo is keyed to a spec's REACHABILITY, never to its DISPOSITION
+
+*(72nd audit, 2026-09-05. Cost: `XL.01` — "death does not erase what he
+learned" — sat FAILED for 17 days while `coverage` printed the commitment it
+covers as `1 now`, runnable and fine. Two siblings, `T2.05` and `T4.02`, sat 16
+and 15 days on the same silence.)*
+
+Every instrument here answers a question about whether a spec CAN be dispatched:
+`coverage`'s QUEUE DEPTH asks *is it unsettled*, `run blocked` asks *what does
+it block*, `coverage`'s CLAIM-DEAD test asks *is it parked or foreclosed*,
+`review-queue` asks *is its row past its DUE*. **A settled `FAIL` with an empty
+`repaired_by` and no queue row answers "no, nothing, neither, and there is no
+row" — and every one of those is the quiet answer.** The spec is settled, so it
+leaves the dispatch queue; it is not parked, so it is not claim-dead; it blocks
+little, so it never ranks; nobody routed it, so there is no promise to break.
+Five readers, five correct behaviours, one hole.
+
+The measurement that makes it a class rather than an anecdote: of **22 settled
+FAILs, 18 carry a `repaired_by` or a `REVIEW_QUEUE` row and 4 do not** — so
+routing is the norm here and its absence is a real signal, not the usual state.
+
+**The compounding detail, and it is the one worth carrying.** `XL.01`'s FAIL was
+not un-analysed. It was diagnosed correctly as a POWER failure — *cannot resolve
+2× at 3 seeds × 8 lives* — and the finding was carried forward into `NE.08`'s
+registry notes as a binding pre-run calculation. Excellent work, and it changed
+nothing, because `NE.08` is `blocked<-NE.01` and `NE.01` is itself a settled
+FAIL. **The repair path ran through two failures, and a repair path that runs
+through a failure exists in prose only: no field in this repository can express
+it, so no tool can rank it, and the diagnosis became a sentence in a notes
+string that the ladder cannot see.**
+
+**The rule: a FAIL is not disposed by being understood. It is disposed by being
+ROUTED** — a `REVIEW_QUEUE` row with a `DUE:`, a declared `repaired_by`, or an
+explicit registry disposition naming the decision that killed it (`T3.07` is the
+model: `D7`'s fired default is written into its notes, so it is answered rather
+than orphaned). Writing the cause into a *successor's* notes is not routing when
+the successor is unreachable; that is filing the diagnosis behind the same wall.
+
+**The generalisation, which is the reason this is not just a `coverage` bug.**
+When you add a reader to this system, ask what it does with the states it is NOT
+about. Every tool listed above was built to find work that can be done, and each
+one therefore treats "cannot be dispatched" as out of scope. Nothing was built to
+ask *which negatives have nobody assigned to them*, and the union of five
+correct scopes still had a gap in it. The 2026-08-10 coverage miss was the same
+shape one level up — every organ reasoning correctly about specs that EXIST — and
+the tell is identical: a whole state that no instrument names.
