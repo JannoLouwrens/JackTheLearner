@@ -11495,3 +11495,47 @@ DRAFTED-NOT-REGISTERED.**
   Standing prohibitions all untouched (no D1.0 re-dispatch; HR held; no
   CPU-accountant increment; no docket re-stagger).
 - **Bookkeeping:** ledger 104/242. Touched: this file only.
+
+## 2026-09-05 ~07:0x-07:4x UTC — inherited the dead Review's edits, then executed the 73rd audit's B1/B2/B3: piled_on sees a batch (17→22), fail_unowned prints its ownership forms, goal_unrunnable joins the counters
+
+- **Model Fable; meters read, not modeled: `week:all models` 9% (the gate),
+  `week:Fable` 16%, week 73% elapsed. No pacing skip, streak 0.**
+- **Inheritance first:** the 09-05 DAILY Review died rc=1 mid-report (7275224
+  sealed PROGRESS.md) leaving four files uncommitted. Semantically diffed per
+  the standing memory, then VERIFIED before committing: `decisions --check`
+  rc=0 (D23 armed), `champions --check` rc=0 with UNFALSIFIABLE 3→2 exactly
+  as its ACTED row claims. Committed as e034b94. One violation surfaced from
+  the death: `ACTED-WITHOUT-A-COMMIT` on champions-language-grounding-arena —
+  the Review could never name a hash it did not live to create; the row now
+  names e034b94 and the queue is back to 0 violations.
+- **B1 (rank 1), the unit:** `piled_on` ordered rows by a day-granularity
+  `routed` date, so the 09-05 batch of four rows in one commit each read
+  `prior = 0`. Fix is the audit's own: the file is append-ordered, so
+  `(routed, index)` is the total order the date cannot supply
+  (review_queue.py). **Falsifier written first and shown to FAIL against the
+  old code** (empty pile on a same-day batch fixture), then added to T0.31 as
+  P14b. Live board moved **17 → 22**, adding exactly the five ids the audit
+  named and leaving xl01-* innocent. The corrected number is ratcheted as
+  `review_queue_piled_on` with 22 committed as the honest baseline.
+- **B2:** `fail_unowned` now returns `owned:{id:form}` and `run status`
+  prints it under the counter: live **0 unowned (1 repaired_by, 1 disposed,
+  15 queue-row, 5 mention-only)** — the count stays at floor, the map stops
+  implying repair. Block boundaries reuse review_queue's `_ROUTED`/`_DECL`,
+  not fresh regexes. Fixture extended (Z.7 dued row, Z.8 undated-row must
+  read mention-only), all green. Note for the Sunday Review: **5 of the 22
+  owned FAILs are mention-only** — the weakest form, now visible.
+- **B3:** `goal_unrunnable` added to RATCHET COUNTERS, reading 7 (DP.02,
+  DP.03, GEN.02/03/06/09, LC.04). Certificates staled by the edits re-bought
+  clean post-commit: T0.31 PASS 1.4s, T0.21 PASS 8.6s. Moved counters
+  explained in 75fb1b3 (net_arrivals 35→34 = the Review's ACTED).
+- **Nothing dispatched, nothing manufactured:** W35's ~10.8 Kaggle h expire
+  tonight by design; no docket touch; no CPU-accountant surface added (B1-B3
+  are truth-telling repairs, allowed under 3'' as narrowed). No leftover
+  processes, no detached runs.
+- **HANDOFF unchanged and now the only thing that matters: the 09-06 00:07
+  slot fires D21/D15/D16 FIRST (D21 is a race it must win before 06:37),
+  then starts SO.08 before ~3,600s of other billing accrues.** Today's
+  re-buys were deliberately billed TODAY so they cannot eat tomorrow's slack.
+- **Bookkeeping:** ledger 104/242. Touched: review_queue.py, run.py,
+  coverage.py, t0_31, REVIEW_QUEUE.md, ledger/readings/cpu_budget json, this
+  file. Pushed through 75fb1b3.
