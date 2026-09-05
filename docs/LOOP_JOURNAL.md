@@ -12118,3 +12118,39 @@ DRAFTED-NOT-REGISTERED.**
 - Bookkeeping: ledger 105/242 (nothing settled — a verified empty-board stop
   is the correct slot per PROGRESS FTB 2). Touched: docs/LOOP_JOURNAL.md
   only.
+
+## 2026-09-05 23:07 UTC slot — verified empty-board stop, fourth independent re-derivation (PROGRESS FTB 2); final pre-midnight handoff check, no default fired
+
+- Ran on **Fable**. Meters read at slot top: `week:all models` **16%** (the
+  gate, acted on), `week:Fable` 29%, session 4%. Zero `PACING:` lines in the
+  log tail (streak 0; last real skip 08-29).
+- **The unit: re-derive the emptiness rather than inherit it, fourth time.**
+  `coverage` queue depth run fresh: 6 dispatchable, **all 6 VOID -> 0 FRESH**
+  (D1.0, LF.01, LG.03, SO.07, T2.02, UB.10), 3 classes EMPTY with NOT
+  FILLABLE annotations, cpu<10min HELD by D19, 6 VOID-FORECLOSED excluded.
+  Ratchets unchanged: fail_unowned 0 AT floor, unreachable 94 AT floor,
+  cpu_foreclosed_now 39, review_queue_violations 0. `decisions --check`
+  ratchet ok (0 undeclared / 0 unrouted-owner-ask / 0 expired); `D21` is the
+  one un-armed entry and for the right reason — DEFAULT-ACTION-SAME-DAY,
+  nothing date-granular can enforce an hour, the firing slot must know it is
+  in a race. Both PROGRESS owner-asks attributed (#1 -> D23, #3 -> D21).
+- **Liveness, both instruments:** no detached `/data/venvs` python processes
+  (pgrep empty), `declared_pids` empty, lost_iterations.log 0 bytes, load
+  0.71 (own session only), tree clean, 0 unpushed. Ledger checked, not just
+  processes: 105/242 includes SO.08's PASS (19:11), committed and pushed —
+  no uncommitted row waits for a successor the way T0.01's once did.
+- **No default fired, on purpose (re-checked, not copied):** `D21`'s default
+  names 2026-09-06 as its own earliest firing day; 23:07 on 09-05 is 53
+  minutes on the wrong side of midnight. `D16`/`D15` stay ordered behind it
+  because `D15` stales `T0.33` and must go last with the ~12 s re-buy.
+- **HANDOFF (final pre-midnight statement, verified fourth time, unchanged):
+  the NEXT slot is the 00:07 slot. Fire `D21` first (race — must beat the
+  Review's 06:37 start), then `D16`, then `D15` + re-buy `T0.33` (~12 s).
+  `SO.08` is already RUN (PASS); the slot is paperwork only and races
+  nothing for compute. W35's ~10.8 Kaggle hours expire at 00:00 and are
+  honestly unspendable (all dispatchables are VOID-arms) — no dispatch was
+  manufactured. W36's 30 h buyer is D1.0's successor, gated on the two
+  `d10-*` rows the 09-06 FULL owes.**
+- Bookkeeping: ledger 105/242 (nothing settled — a verified empty-board stop
+  is the correct slot per PROGRESS FTB 2). Touched: docs/LOOP_JOURNAL.md
+  only.
