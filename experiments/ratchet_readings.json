@@ -15,13 +15,21 @@
     "at": "2026-09-05",
     "value": 0
   },
+  "goal_unrunnable": {
+    "at": "2026-09-05",
+    "value": 7
+  },
   "park_release_pairs": {
     "at": "2026-09-03",
     "value": 3
   },
   "review_queue_net_arrivals": {
     "at": "2026-09-05",
-    "value": 35
+    "value": 34
+  },
+  "review_queue_piled_on": {
+    "at": "2026-09-05",
+    "value": 22
   },
   "review_queue_violations": {
     "at": "2026-09-03",

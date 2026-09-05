@@ -1081,7 +1081,7 @@ ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, 
 ## seat to name `LG.00` as its ring, and naming it is the move this file's own
 ## World note refused (builder, 2026-08-31, `champions.py` declaration syntax)
 
-ROUTED: champions-language-grounding-arena | 2026-08-31 | 901f7fc (champions.py declaration syntax; 51st audit B2 order) | ACTED
+ROUTED: champions-language-grounding-arena | 2026-08-31 | 901f7fc (champions.py declaration syntax; 51st audit B2 order) | ACTED 2026-09-05 in e034b94 (the Review's run died rc=1 before it could commit; its finished CHAMPIONS.md edit — ARENA: NONE -> LG.04, LG.05, LG.06 — was inherited and committed by the 07:07 builder slot, which is why the executing commit postdates the ACTED: body below)
     DUE: 2026-09-06 | the Review breaks the tie: name LG.00 as the ring (the
         audit's reading) or keep ARENA: NONE with an unwritten grounding
         bakeoff as inventory debt (this file's reading). A builder declining
