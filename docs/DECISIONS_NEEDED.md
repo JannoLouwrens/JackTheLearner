@@ -4759,11 +4759,13 @@ DECIDE: D22
              status quo and it is the ONLY legal default here: (iii) widens
              what the builder is permitted to do, and a default may not widen
              what this project may take; (ii) spends model time against a
-             pacing decision (`D15`) that fires on 2026-09-05, so making it
-             fire by silence would pre-empt your own answer to that entry.
+             pacing decision (`D15`) that fires on 2026-09-05 (CLOCK: D15),
+             so making it fire by silence would pre-empt your own answer to
+             that entry.
              The price of this default is stated rather than buried: silence
-             through 2026-09-08 costs approximately 17 further net queue rows
-             at the measured rate, and the divergence continues.
+             through 2026-09-08 (CLOCK: consequence) costs approximately 17
+             further net queue rows at the measured rate, and the divergence
+             continues.
              Reversal: none needed — the default writes nothing. Ruling (ii)
              or (iii) at any later date is unaffected by it having fired.
   decide_by: 2026-09-08

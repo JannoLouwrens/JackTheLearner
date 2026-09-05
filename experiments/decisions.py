@@ -216,10 +216,40 @@ a past date as provenance rather than as an action ("(`D15`) fires on
 2026-09-05"), and that reads as a finding here. So the class is RATCHETED, not
 blocking — baselined at the live reading, allowed to shrink and never to grow —
 because the alternative is a scanner that decides which sentences are commands,
-and this file has recorded twice what that costs. The narrowing that would make
-it exact is ATTRIBUTION (whose clock is this date?), and it is not written yet
-on purpose: tuning the regex until today's corpus reads zero is fitting the
-instrument to the sample.
+and this file has recorded twice what that costs.
+
+THE ATTRIBUTION THAT NARROWING ASKED FOR NOW EXISTS, BY DECLARATION AND NEVER
+BY REGEX (2026-09-05, 72nd audit B2). A provenance date can say whose clock it
+is, in the same idiom as `COVERS:` and `DECIDE:`:
+
+    ... a pacing decision (`D15`) that fires on 2026-09-05 (CLOCK: D15) ...
+    ... silence through 2026-09-08 (CLOCK: consequence) costs ...
+
+A `CLOCK:` marker claims the NEAREST DATE BEFORE IT and that single occurrence
+stops counting in the two calendar checks. Per-occurrence on purpose: a blanket
+per-entry exemption would be a checkbox nobody has to justify, and a date named
+twice with one attribution is still loud at its unattributed mention. This is
+the docstring's own refused-regex resolved the honest way — the corpus reads
+zero because its author DECLARED which dates are provenance, not because the
+instrument was tuned until it agreed.
+
+AND THE FOURTH CLOCK DEFECT IS THE REPAIR'S OWN RESIDUE (same audit, same
+commit). `D21`'s `EXPIRED` repair shortened its clock to 2026-09-05 — the only
+direction a deadline may move — and thereby created a default whose commanded
+event shares its EARLIEST FIRING DAY: `decide_by + 1` is 09-06 and the Review
+it commands sits at 06:37 that morning. A six-hour window, and `main()`'s
+date-granular arithmetic cannot express an hour, so no instrument would say a
+word if the window were missed. So:
+
+    DEFAULT-ACTION-SAME-DAY - the default names its own earliest firing day,
+                              so the firing is a RACE against the event it
+                              commands, not a certainty before it.
+
+Reported, never blocking and never ratcheted — deliberately weaker than
+`EXPIRED`, because landing here is what the prescribed `EXPIRED` repair DOES:
+a wall or a ratchet on this class would punish the legal fix for the class
+above it. The report line is the whole product: it tells the firing slot to
+treat the deadline as having an HOUR.
 
 The bare `MM-DD` form is matched as well as the ISO one, and that is
 load-bearing rather than thorough: `D21`'s default wrote its date BOTH ways, and
@@ -418,20 +448,27 @@ _PROSE_DATE = re.compile(
     r"\b(?:(20\d\d)-)?(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b")
 
 
-def default_dates(default_text: str, decide_by: _dt.date) -> list:
-    """Dates a default's prose names, resolved against its own `decide_by`.
+# The attribution marker (72nd audit B2). Same idiom as `COVERS:`/`DECIDE:`:
+# a declaration, uppercase, with a label — `(CLOCK: D15)`, `(CLOCK:
+# consequence)`. The label is free-form on purpose: this file must not decide
+# which clocks are legitimate, only that the author named one.
+_CLOCK = re.compile(r"CLOCK:\s*([A-Za-z0-9._-]+)")
 
-    Sorted, deduplicated, never raising. A bare `MM-DD` has no year, so it takes
-    whichever of `decide_by.year - 1 / +0 / +1` lands NEAREST `decide_by`; an
-    impossible combination (02-30) is not a date and is dropped. Same
-    over-approximating contract as `blast_radius`: this says what the text
-    REFERS to, never what the default will do.
+
+def _resolved_dates(default_text: str, decide_by: _dt.date) -> list:
+    """`[(end_pos, date)]` — every date OCCURRENCE in text order.
+
+    A bare `MM-DD` has no year, so it takes whichever of `decide_by.year - 1 /
+    +0 / +1` lands NEAREST `decide_by`; an impossible combination (02-30) is
+    not a date and is dropped. Positions are kept because `CLOCK:` attribution
+    is per-occurrence — see `unattributed_dates`.
     """
-    out: set = set()
-    for yr, mo, da in _PROSE_DATE.findall(default_text or ""):
+    out: list = []
+    for m in _PROSE_DATE.finditer(default_text or ""):
+        yr, mo, da = m.groups()
         if yr:
             try:
-                out.add(_dt.date(int(yr), int(mo), int(da)))
+                out.append((m.end(), _dt.date(int(yr), int(mo), int(da))))
             except ValueError:
                 continue
             continue
@@ -442,28 +479,77 @@ def default_dates(default_text: str, decide_by: _dt.date) -> list:
             except ValueError:
                 continue
         if cands:
-            out.add(min(cands, key=lambda d: abs((d - decide_by).days)))
-    return sorted(out)
+            out.append((m.end(),
+                        min(cands, key=lambda d: abs((d - decide_by).days))))
+    return out
+
+
+def default_dates(default_text: str, decide_by: _dt.date) -> list:
+    """Dates a default's prose names, resolved against its own `decide_by`.
+
+    Sorted, deduplicated, never raising. Same over-approximating contract as
+    `blast_radius`: this says what the text REFERS to, never what the default
+    will do — attribution does not subtract here, because "what the text
+    refers to" includes the dates it disclaims.
+    """
+    return sorted({d for _, d in _resolved_dates(default_text, decide_by)})
+
+
+def unattributed_dates(default_text: str, decide_by: _dt.date) -> list:
+    """Dates with no `CLOCK:` declaration claiming them — the COMMAND candidates.
+
+    A `CLOCK:` marker claims the nearest date occurrence BEFORE it and only
+    that occurrence; a marker with no preceding date claims nothing. The
+    over-approximation still runs the safe way: a date named twice with one
+    attribution counts, because its unattributed mention is still a command
+    candidate, and a marker can never silence more than the one occurrence its
+    author put it beside.
+    """
+    recs = [[pos, d, False] for pos, d in
+            _resolved_dates(default_text, decide_by)]
+    for cm in _CLOCK.finditer(default_text or ""):
+        prior = [r for r in recs if r[0] <= cm.start()]
+        if prior:
+            prior[-1][2] = True
+    return sorted({d for _, d, claimed in recs if not claimed})
 
 
 def expired_actions(default_text: str, decide_by: _dt.date) -> list:
-    """Dates in a default that are behind its EARLIEST possible firing.
+    """Unattributed dates in a default that are behind its EARLIEST firing.
 
     `main()` marks a row overdue at `(today - decide_by).days > 0`, so the
     earliest fire is `decide_by + 1` and a date at or before `decide_by` cannot
     be acted on by any firing of this default. The `<=` is that arithmetic, not
-    a margin.
+    a margin. A date carrying a `CLOCK:` declaration is somebody else's and is
+    not consulted — that is the attribution the ratchet's comment promised.
     """
-    return [d for d in default_dates(default_text, decide_by) if d <= decide_by]
+    return [d for d in unattributed_dates(default_text, decide_by)
+            if d <= decide_by]
+
+
+def same_day_actions(default_text: str, decide_by: _dt.date) -> list:
+    """Unattributed dates that EQUAL the default's earliest firing day.
+
+    On that day the action is a race, not a certainty: the default fires some
+    time after 00:00 and the event it commands happens at some hour of the same
+    date, and nothing in this date-granular file can order the two. `D21` is
+    the live positive — its commanded Review sits at 06:37 on `decide_by + 1`,
+    a six-hour window no instrument could see until this class.
+    """
+    fire = decide_by + _dt.timedelta(days=1)
+    return [d for d in unattributed_dates(default_text, decide_by)
+            if d == fire]
 
 
 # The live reading in the commit that shipped this check, in the
-# `BASELINE_UNDECLARED` idiom: it may SHRINK and may never GROW. It is 1, and
-# the one is `D22`, whose default cites `D15`'s 2026-09-05 clock as a REASON
-# rather than performing anything on it. That is named here rather than
-# exempted, because an escape hatch nobody has to justify is a checkbox — and
-# because the honest repair for it is attribution, which is not built yet.
-BASELINE_ACTION_EXPIRED = 1
+# `BASELINE_UNDECLARED` idiom: it may SHRINK and may never GROW. It shipped at
+# 1 — `D22`, whose default cites `D15`'s 2026-09-05 clock as a REASON rather
+# than performing anything on it — and shrank to 0 on 2026-09-05 (72nd audit
+# B2) when the attribution the old comment called "not built yet" was built
+# and `D22` DECLARED both of its dates provenance with `(CLOCK: D15)` and
+# `(CLOCK: consequence)`. Shrink by declaration, exactly as prescribed: the
+# entry says whose clocks those are, and the instrument was not tuned.
+BASELINE_ACTION_EXPIRED = 0
 
 
 # ── the owner's OTHER desk: `## FOR THE OWNER` in docs/PROGRESS.md ──────────
@@ -811,14 +897,30 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
                 f"but decide_by is {due} and the earliest firing is "
                 f"{due + _dt.timedelta(days=1)} — on the day this fires, that "
                 "action is in the past. Repair: SHORTEN decide_by (a deadline "
-                "may tighten on its own; it may never be lengthened), or state "
-                "whose clock the date is if it is not this default's"))
+                "may tighten on its own; it may never be lengthened), or, if "
+                "the date is not this default's to act on, declare whose it "
+                "is with `(CLOCK: <whose>)` beside that date — a provenance "
+                "date that says so stops reading as a command"))
+
+        # The race the EXPIRED repair leaves behind: shortening a clock to the
+        # day before its action puts the action ON the earliest firing day.
+        # Reported, never blocking, never ratcheted — see the class docstring.
+        race = same_day_actions(d["default"], due)
+        if race:
+            violations.append((
+                "DEFAULT-ACTION-SAME-DAY", did,
+                f"the default names {', '.join(x.isoformat() for x in race)}, "
+                f"which is its own earliest firing day ({due} + 1 day) — this "
+                "default must fire BEFORE the event it commands, on the same "
+                "day. The deadline has an HOUR; nothing date-granular can "
+                "enforce it, so the firing slot must know it is in a race"))
 
         blocks = [b.strip() for b in (d.get("blocks") or "").split(",") if b.strip()]
         n, _which = cost_of(blocks)
         rows.append({"id": did, "due": due, "overdue": (today - due).days,
                      "blocks": blocks, "cost": n,
-                     "default": d.get("default", ""), "expired": stale})
+                     "default": d.get("default", ""), "expired": stale,
+                     "same_day": race})
 
     # The safety clause, last because it needs the whole armed set at once.
     for did, commitment, claims in safety_hazards(decls, candidates,
@@ -953,16 +1055,40 @@ DECIDE: D21
     kinds21 = {did: kind for kind, did, _ in audit(d21, _dt.date(2026, 9, 4))[0]}
     assert kinds21.get("D21") == "DEFAULT-ACTION-EXPIRED", kinds21
     # ...and the repair the 70th audit performed — SHORTEN the clock so the
-    # firing lands the morning before the action — must make it quiet. A guard
-    # whose green comes from the fix rather than from the subject vanishing.
-    assert not audit(d21.replace("2026-09-11", "2026-09-05"),
-                     _dt.date(2026, 9, 4))[0], "the shortening must silence it"
+    # firing lands the morning before the action — silences EXPIRED and leaves
+    # exactly the SAME-DAY race behind, because the shortened clock puts the
+    # commanded 09-06 event ON the earliest firing day. That residue is the
+    # 72nd audit's finding, and it must be the ONLY thing left.
+    short = audit(d21.replace("2026-09-11", "2026-09-05"),
+                  _dt.date(2026, 9, 4))[0]
+    assert {k for k, _, _ in short} == {"DEFAULT-ACTION-SAME-DAY"}, short
     # The equality case is the same defect: the earliest fire is decide_by + 1,
     # so an action dated ON decide_by has already passed when the clock rings.
     assert expired_actions("act on 2026-09-05", _dt.date(2026, 9, 5))
     assert not expired_actions("act on 2026-09-06", _dt.date(2026, 9, 5))
     # A bare month-day takes the NEAREST year, not decide_by's blindly.
     assert default_dates("by 12-28", _dt.date(2027, 1, 3)) == [_dt.date(2026, 12, 28)]
+    # CLOCK attribution (72nd audit B2): a declared provenance date is not a
+    # command — and the declaration is per-occurrence, never blanket.
+    assert expired_actions("(`D15`) fires on 2026-09-05",
+                           _dt.date(2026, 9, 8))
+    assert not expired_actions("(`D15`) fires on 2026-09-05 (CLOCK: D15)",
+                               _dt.date(2026, 9, 8))
+    assert expired_actions("2026-09-05 (CLOCK: D15) and also 2026-09-04",
+                           _dt.date(2026, 9, 8)) == [_dt.date(2026, 9, 4)]
+    # ...and default_dates still reports the disclaimed date: what the text
+    # REFERS to is not narrowed by whose clock it is.
+    assert default_dates("2026-09-05 (CLOCK: D15)",
+                         _dt.date(2026, 9, 8)) == [_dt.date(2026, 9, 5)]
+    # SAME-DAY: equality with the earliest firing day, silenced the same way.
+    assert same_day_actions("act on 2026-09-06",
+                            _dt.date(2026, 9, 5)) == [_dt.date(2026, 9, 6)]
+    assert not same_day_actions("on 2026-09-06 (CLOCK: elsewhere)",
+                                _dt.date(2026, 9, 5))
+    # A marker with no preceding date claims nothing — it must not eat the
+    # date that comes AFTER it.
+    assert expired_actions("(CLOCK: D15) then 2026-09-04",
+                           _dt.date(2026, 9, 8)) == [_dt.date(2026, 9, 4)]
 
 
 def _safety_fixture() -> None:
@@ -1194,6 +1320,9 @@ def main(argv: list[str]) -> int:
             if r.get("expired"):
                 due += "   [ACTION EXPIRED: names " + ", ".join(
                     d.isoformat() for d in r["expired"]) + "]"
+            if r.get("same_day"):
+                due += "   [SAME-DAY RACE: must fire before its own " + ", ".join(
+                    d.isoformat() for d in r["same_day"]) + " event]"
             print(f"    {r['id']:<6} costs {r['cost']:3d} specs   {due}")
             print(f"           blocks {', '.join(r['blocks']) or '(nothing declared)'}")
             # NOT `[:110]`. The live defaults run 369-1041 characters, so that

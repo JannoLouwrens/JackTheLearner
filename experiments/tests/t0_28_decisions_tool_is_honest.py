@@ -47,6 +47,16 @@ morning, by the organ that wrote it — which is the whole reason this pass
 exists, and it is the third time a guard on this desk shipped checking the FORM
 of a declaration rather than what it says.
 
+AND THE REPAIR OF THAT POSITIVE LEFT A RESIDUE THE SAME SHAPE (2026-09-05,
+72nd audit B2). Shortening `D21`'s clock — the only legal repair for the
+expired action — put the commanded event ON the default's earliest firing day:
+a six-hour race (00:00 to the 06:37 Review) that date-granular arithmetic
+cannot express. `DEFAULT-ACTION-SAME-DAY` names it, non-blocking and
+unratcheted because landing there is what the prescribed repair DOES; and the
+`CLOCK:` declaration lets a provenance date say whose clock it is, which is
+how `DEFAULT-ACTION-EXPIRED` shrank 1 -> 0 by declaration on `D22` rather
+than by regex-tuning. P15 carries both, in both directions.
+
 WHAT THIS SPEC DOES NOT CERTIFY, stated so no later reader repeats SYSTEM.md's
 mistake in this file's name: two of the three safety clauses — *never edits
 GOAL.md*, *never weakens a threshold* — are still enforced by nobody. They are
@@ -64,7 +74,8 @@ import re
 from ..coverage import _claim_dead
 from ..decisions import (BASELINE_ACTION_EXPIRED, BASELINE_UNDECLARED, DOC,
                          audit, blast_radius, check_rc, default_dates,
-                         expired_actions, main, owner_ask_silences, parse)
+                         expired_actions, main, owner_ask_silences, parse,
+                         same_day_actions)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
@@ -75,7 +86,7 @@ SPEC_ID = "T0.28"
 # hashing playground.py; T0.21 hashing coverage.py).
 IMPL_DEPS = ["experiments/decisions.py"]
 
-N_PROPERTIES = 14
+N_PROPERTIES = 15
 
 # The pre-2026-08-30 blocking set, verbatim. `NO-DEFAULT` is absent — that is
 # the hole, not an abbreviation.
@@ -277,7 +288,8 @@ def _violations(text: str, rows, *, safety_enforced: bool) -> list:
     if safety_enforced:
         return v
     return [x for x in v
-            if x[0] not in ("SAFETY-CLAIM-DEAD", "DEFAULT-ACTION-EXPIRED")]
+            if x[0] not in ("SAFETY-CLAIM-DEAD", "DEFAULT-ACTION-EXPIRED",
+                            "DEFAULT-ACTION-SAME-DAY")]
 
 
 def _rc(violations: list, *, safety_enforced: bool) -> int:
@@ -295,6 +307,13 @@ def _expired(text: str, *, safety_enforced: bool) -> set:
     return {did for kind, did, _ in _violations(text, [],
                                                 safety_enforced=safety_enforced)
             if kind == "DEFAULT-ACTION-EXPIRED"}
+
+
+def _same_day(text: str, *, safety_enforced: bool) -> set:
+    """`{decision_id}` this organ reports as racing its own commanded event."""
+    return {did for kind, did, _ in _violations(text, [],
+                                                safety_enforced=safety_enforced)
+            if kind == "DEFAULT-ACTION-SAME-DAY"}
 
 
 def _asks(progress: str, prev, needed: str = NEEDED_ASKS, resolved: str = "",
@@ -627,6 +646,53 @@ def _probe(safety_enforced: bool) -> dict:
                    for k, _h, _d in _silenced(exempt, safety_enforced=S))):
         failed.append("p14_a_silenced_owner_ask_names_who_silenced_it")
 
+    # P15 — KNOWN POSITIVE (72nd audit B2), and it is the P13 repair's own
+    # residue: shortening `D21`'s clock to 09-05 — the prescribed EXPIRED
+    # repair, asserted quiet by P13 — put the commanded 09-06 Review ON the
+    # default's earliest firing day, a six-hour race (00:00–06:37) that
+    # date-granular arithmetic cannot express and no instrument could see.
+    # Five directions:
+    #   - the shortened D21 fires SAME-DAY, and the original (clock 09-11)
+    #     does NOT — 09-06 is not 09-12, so the class needs the equality;
+    #   - SAME-DAY neither blocks nor ratchets: rc 0 on a document whose only
+    #     violation is the race, because landing here is what the LEGAL repair
+    #     for EXPIRED does, and a wall would forbid the fix for the class
+    #     above it;
+    #   - `CLOCK:` attribution silences EXPIRED by DECLARATION — the narrowing
+    #     `decisions.py`'s docstring refused to do by regex — on `D22`'s real
+    #     shape: another desk's clock cited as a reason;
+    #   - attribution is PER-OCCURRENCE, never blanket: one marker cannot
+    #     quiet a second, unattributed date in the same default;
+    #   - a marker with no preceding date claims nothing, so `CLOCK:` written
+    #     first cannot eat the date that follows it.
+    d22ish = """
+## D84 — cites another desk's clock (OPEN, owner)
+
+DECIDE: D84
+  class:     goal
+  default:   the rule stands; a pacing decision (`D15`) fires on 2026-09-05,
+             and silence through 2026-09-07 costs seventeen rows.
+  decide_by: 2026-09-08
+"""
+    d22_marked = d22ish.replace("2026-09-05", "2026-09-05 (CLOCK: D15)") \
+                       .replace("2026-09-07 costs",
+                                "2026-09-07 (CLOCK: consequence) costs")
+    d22_half = d22ish.replace("2026-09-05", "2026-09-05 (CLOCK: D15)")
+    v_short = _violations(DOC_D21_SHORTENED, [], safety_enforced=S)
+    if (_same_day(DOC_D21_SHORTENED, safety_enforced=S) != {"D21"}
+            or _same_day(DOC_D21, safety_enforced=S)
+            or _expired(DOC_D21_SHORTENED, safety_enforced=S)
+            or _rc(v_short, safety_enforced=S) != 0
+            or _expired(d22ish, safety_enforced=S) != {"D84"}
+            or _expired(d22_marked, safety_enforced=S)
+            or _expired(d22_half, safety_enforced=S) != {"D84"}
+            or same_day_actions("on 2026-09-06 (CLOCK: elsewhere)",
+                                _dt.date(2026, 9, 5))
+            or expired_actions("(CLOCK: D15) then 2026-09-04",
+                               _dt.date(2026, 9, 8))
+            != [_dt.date(2026, 9, 4)]):
+        failed.append("p15_same_day_race_and_clock_attribution")
+
     live_asks = _live_asks()
     return {
         "properties_checked": float(N_PROPERTIES),
@@ -660,16 +726,18 @@ def _control(seed: int) -> dict:
     """`decisions.py` as it stood before each pass this file added, kept
     executable.
 
-    Four holes, all real and all reconstructed by DELETION rather than by
+    Five holes, all real and all reconstructed by DELETION rather than by
     paraphrase (T0.08 property 5), because every pass only ever APPENDS:
     `audit()` carried no safety pass, so no default's content was ever read;
     `--check`'s blocking set omitted `NO-DEFAULT`, so a goal-class entry that
     armed nothing was printed and exited 0; the owner's other desk had no
-    reader at all; and no pass asked whether a default's action still existed
-    on the day the default fires. It must miss the `D8` known-positive (P2),
-    miss the both-named case (P4), pass a document containing an unarmed
-    escalation (P9), miss both owner-ask classes (P11, P12) and miss `D21`'s
-    expired clock (P13).
+    reader at all; no pass asked whether a default's action still existed
+    on the day the default fires; and no pass asked whether the action shared
+    that day with the firing itself. It must miss the `D8` known-positive
+    (P2), miss the both-named case (P4), pass a document containing an
+    unarmed escalation (P9), miss both owner-ask classes (P11, P12), miss
+    `D21`'s expired clock (P13) and miss the same-day race its repair left
+    behind (P15).
     """
     return _probe(safety_enforced=False)
 
@@ -692,7 +760,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p11_unrouted_owner_ask_is_reported",
                            "p12_vanished_owner_ask_is_the_known_positive",
                            "p13_expired_default_action_is_the_known_positive",
-                           "p14_a_silenced_owner_ask_names_who_silenced_it"}
+                           "p14_a_silenced_owner_ask_names_who_silenced_it",
+                           "p15_same_day_race_and_clock_attribution"}
                       <= control_names)
     return bool(experiment_clean and control_broken)
 
