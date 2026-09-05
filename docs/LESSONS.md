@@ -11731,3 +11731,46 @@ sentence becomes a licence for every under-count that follows.**
 The guard, not just the note: the corrected count is ratcheted and `T0.31` gains
 a falsifier that fires on a same-day batch — the P4/P5/P6 rule again, assert on
 the CLASS and not on the tidy example.
+
+---
+
+## 2026-09-05 (74th audit) — A SAFETY NET SCOPED TO ONE FILE PROTECTS THE REPORT AND NOT THE ACTS
+
+`scripts/lib_seal.sh` exists because a dying run's confident verdict outlived
+it: the 49th audit hit max turns, and `docs/OVERSIGHT.md` sat on disk reading
+`VERDICT: ON TRACK` with nothing joining it to the `rc=1` in the log. The repair
+is exactly right and it works — on 2026-09-05 the daily Review died at
+`Reached max turns (60)`, and `seal_output` stamped `docs/PROGRESS.md`
+`INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING` and committed it.
+
+**The dying run had five files dirty.** One got the banner. The other four —
+a new owner decision with a live `decide_by`, a champion-seat edit that lowered
+a *shrink-only* ratchet 3→2, the week's only queue disposal, and a 122-line
+rewrite of the builder's priority block — were committed six hours later as
+ordinary work, and five consecutive builder slots executed the last of them.
+
+**The signature is the whole story:** `seal_output <rc> <file> <organ>` takes
+one path, because the scar it was built from was about one page. But an organ's
+*product* is rarely its page. A Review's product is the rows it disposes, the
+decisions it arms, the seats it re-marks and the steering it writes; the page is
+the receipt. **The seal protected the receipt and let the transactions through.**
+
+**The tell, and it generalises past this file:** when you write a guard that
+marks work as untrustworthy, ask *what did this run actually produce?* — not
+*what file does it own?* If the answer to the first is a set and the guard takes
+a scalar, the guard covers the part you thought of and leaves the part that
+matters. The mechanical version of the question is cheap: at the moment of the
+failure, run `git status --porcelain` and compare its length to the number of
+paths your guard will touch.
+
+**Worse than nothing, on its own terms.** A banner that says "this run's
+conclusions are unverified" while four files carrying this run's conclusions sit
+unmarked in the same tree teaches a reader that the absence of a banner means
+something. It did not. The reader has to hand-check, which is the state the
+banner was built to end.
+
+The guard, not just the note: the seal must enumerate the run's dirty set, commit
+it path-scoped with the rc and organ named, and **list those paths inside the
+sealed report** — and the falsifier must construct a dirty tree of N>1 files and
+assert on the files that are *not* the report. Assert on the class, not the tidy
+example.
