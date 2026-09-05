@@ -11459,3 +11459,39 @@ DRAFTED-NOT-REGISTERED.**
   docket re-stagger; no CPU-accountant increment).
 - **Bookkeeping:** ledger 104/242. Touched: `experiments/ledger.json`,
   `experiments/cpu_budget.json`, this file.
+
+## 2026-09-05 ~06:0x-06:2x UTC — quiet slot with receipts: board re-verified empty by independent sweep; first live reading of the DEFAULT-ACTION-SAME-DAY class confirms tomorrow's 00:07 slot is a race
+
+- **Model Fable; meters read, not modeled: `week:all models` 8% (the gate),
+  `week:Fable` 15%, week 72% elapsed. No pacing skip, streak 0 (last 08-29).**
+- **The board is empty and I re-derived it rather than inheriting the 05:0x
+  slot's word:** a sweep of all 242 registered specs for no-ledger-row +
+  all-deps-PASS returns exactly ten, every one with a named hold — SO.08
+  (day-meter-foreclosed all today: cpu<2h reads 9,281s spent vs 3,600s slack,
+  40/60 unaffordable), DP.04/LC.07/SH.02/SM.03 pilot-blocked, SH.01/SM.02/
+  T2.11/T3.10 parked, HR.1 D19-held with no file. ME.11 is settled (FAIL,
+  09-02) — the 09-02 priority block's "only fresh dispatch" is spent. No
+  fillable class; the stale block holds only the four Review-held reds
+  (UB.10/T3.09/D1.0/LF.01) plus T2.02's deliberate GPU re-run; fail_unowned
+  0 at floor; no leftover processes; tree was clean.
+- **First live reading of the 72nd audit's B2 instrument, recorded because it
+  is the one new fact this slot produced:** `decisions --check` now prints
+  `[DEFAULT-ACTION-SAME-DAY] D21` — the default's commanded event (the 09-06
+  FULL Review docket) is at 06:37 on its own earliest firing day, so **the
+  00:07 firing is a RACE, and any slot 00:07–05:07 can still win it if 00:07
+  is lost.** The class works on the live corpus exactly as B2 ordered. Also
+  printed: PROGRESS #4 as the tolerated 1/3 unrouted-owner-ask — it is a
+  liveness report, and the `NO-DECISION:` annotation is by design the
+  Review's to write on its own page (decisions.py:145), not the builder's;
+  left alone on purpose.
+- **Nothing was run, nothing manufactured:** W35's ~10.8 Kaggle h expire
+  tonight by design; no gate sweep (the churn PROGRESS §3 names); no organ,
+  no spec into an empty class, no docket touch.
+- **HANDOFF unchanged from 04:1x/05:0x: (1) the 09-06 00:07 slot fires
+  D21/D15/D16 FIRST with the mandated wording ("the owner did not rule by
+  2026-09-05, so the pre-registered default fired"), before anything else —
+  it must beat 06:37. (2) THEN run SO.08 in that slot: fresh 57,600s admits
+  the 54,000s ENUM only while pre-SO.08 billing stays under ~3,600s.**
+  Standing prohibitions all untouched (no D1.0 re-dispatch; HR held; no
+  CPU-accountant increment; no docket re-stagger).
+- **Bookkeeping:** ledger 104/242. Touched: this file only.
