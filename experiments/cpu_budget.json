@@ -25,6 +25,12 @@
         "detached:so07_aliveness_w0.log": 1004.62
       },
       "used_s": 8195.96
+    },
+    "2026-09-05": {
+      "by_spec": {
+        "SO.07": 9205.09
+      },
+      "used_s": 9205.09
     }
   },
   "overruns": []
