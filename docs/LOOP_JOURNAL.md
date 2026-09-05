@@ -11539,3 +11539,43 @@ DRAFTED-NOT-REGISTERED.**
 - **Bookkeeping:** ledger 104/242. Touched: review_queue.py, run.py,
   coverage.py, t0_31, REVIEW_QUEUE.md, ledger/readings/cpu_budget json, this
   file. Pushed through 75fb1b3.
+
+## 2026-09-05 ~08:0x-08:2x UTC — SO.08's launch path dry-verified for tomorrow's 60-minute window: smoke green (its FIRST-EVER execution), round_window_ok holds 60>50; board still empty
+
+- **Model Fable; meters read, not modeled: `week:all models` 10% (the gate —
+  acted on), `week:Fable` 17%, week 73% elapsed so the pace line sits ~72 —
+  no skip, streak 0 (last 08-29). 13 claude processes = the loop itself; no
+  strays, tree clean at start.**
+- **THE UNIT, and why: tomorrow's 00:07 slot has a ~3,600 s window to start
+  SO.08, and SO.08's runner had NEVER EXECUTED A LINE** — the 04:1x slot
+  committed it before the run (correct discipline) and the day meter refused
+  the run pre-execution, so crash-freedom was an assumption, not a receipt.
+  A latent crash discovered at 00:07 costs the whole day (the exact failure
+  1''' prices). So this slot bought the receipt TODAY, where it cannot eat
+  tomorrow's slack:
+  - `--smoke` run green: **4 toy lives (claim/null/shuffle/equal), no
+    error, 0.12 s** — via `python -m experiments.tests.so_08_whose_hands
+    --smoke` (NOT by path: relative imports; the run-py-is-a-module rule
+    covers tests too, learned here by hitting the ImportError first).
+    Bypasses run_spec, so nothing billed, no ledger row, no metric values
+    printed (the smoke's own contract — gates stay preview-free).
+  - **`round_window_ok` arithmetic verified against plants.py's LIVE
+    constants: ROUND_S 60.0 > DELAY_S 30.0 + ILL_WINDOW_S 20.0 — holds with
+    10 s margin.** The SO.07-lesson rig gate will not VOID at launch unless
+    plants.py is recalibrated overnight.
+  - LG.02's imported `_trust` loads cleanly (exercised by the smoke import).
+- **Board re-verified, not inherited: `run next` offers only Review-held /
+  settled / foreclosed items; `status` stale block unchanged (UB.10/T3.09/
+  D1.0/LF.01 all waiting on 09-06+ dispositions, T2.02 deliberate); day
+  meter 9,303 s spent, cpu<2h 40/60 foreclosed until midnight — expected,
+  not a fault. No fillable class. Nothing dispatched, nothing manufactured;
+  W35's ~10.8 Kaggle h expire tonight by design; no docket touch.**
+- **HANDOFF, unchanged in order and now with one fewer unknown: (1) the
+  09-06 00:07 slot fires `D21`/`D15`/`D16` FIRST with the mandated wording —
+  D21 is a race it must beat 06:37. (2) THEN start SO.08 before ~3,600 s of
+  other billing accrues: `python -m experiments.run SO.08`. Its smoke is
+  ALREADY GREEN and its rig-gate arithmetic ALREADY CHECKED (this slot) —
+  do not re-verify either inside the window; the actual run is minutes.**
+  Standing prohibitions all untouched (no D1.0 re-dispatch; HR held; LF.01
+  waits on 09-09; no CPU-accountant surface; no docket re-stagger).
+- **Bookkeeping:** ledger 104/242. Touched: this file only.
