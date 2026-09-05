@@ -11961,3 +11961,42 @@ DRAFTED-NOT-REGISTERED.**
   line.**
 - Bookkeeping: ledger 104/242 (no runs this slot). Touched:
   docs/LOOP_JOURNAL.md only.
+
+## 2026-09-05 ~19:0x UTC — 75th audit B1 executed: SO.08 sized (0.74 s/seed), re-declared cpu<1min, and RUN — PASS attempt 1, the midnight race is off
+
+- Meters first: `week:all models` 15% (the gate), `week:Fable` 25%, no pacing
+  skip (allow ~77 at 80% elapsed); ran on Fable.
+- **The unit was the 75th audit's B1 and it dissolved the 00:07 plan.**
+  Hand-timed per `cpu_budget.py`'s own scope note (by-hand is unmetered), full
+  `N_ROUNDS=240`: `_measure(0)` 0.36 s, `_measure_controls(0)` 0.38 s —
+  0.74 s/seed, ~2.2 s for the whole 3-seed run, against a declared class
+  enumerating 54,000 s (~28,000x, typed at `b6518dd` nine hours before the
+  implementation existed). Re-declared `budget=Budget.CPU_FAST` (`7aa9619`,
+  sizing record in the spec's notes; ~80x headroom under the 60 s label).
+  Guards in the same unit: child-kill window TIGHTENED 54,000 -> 1,800 s;
+  `T0.33` re-bought clean post-edit (PASS 1.24 s, `projection_only_tightens`
+  True, `est_above_enum` []). `gate_cpu_child` then admitted SO.08 on TODAY's
+  day meter (est 1,800 s vs 48,260 s remaining) — the audit's "admissible now"
+  branch, taken.
+- **SO.08 PASS, attempt 1, 3.36 s (`1a8d4a0`) — the first-ever row for the
+  spec and the ladder's second first-ever claim PASS this week (after LG.02).**
+  Worst-seed last-quarter divergence 0.6667 (0.8/0.6667/0.8) vs MIN_DIV 0.40;
+  attributed recall 0.95 all seeds vs 0.90; first-encounter trust exactly
+  PRIOR 0.5 both donors all seeds. The divergence runs THROUGH the attributed
+  diary: stripped null max |div| 0.0333, shuffled max 0.0083 (both joins alive
+  in their bands), EQUAL-DONORS max 0.1167 with posteriors >= 0.875. Donors
+  systematic (0.9167/0.0917). GOAL.md's "his diary records who left it — so
+  gratitude, like trust, has somewhere real to grow" is now measured. 105/242.
+  `coverage` (bare, rc=2 — the two routed standing reds, unchanged): social/
+  other agents reads 3 pass with SO.08 CREDITED as a claim (SO.06/SO.09 stay
+  support). The count of passing claims about Jack moved +1 today.
+- **HANDOFF: (1) 00:07 no longer races for SO.08 — it is RUN. Fire the
+  defaults in the verified order anyway: `D21` (race, must beat 06:37) ->
+  `D16` -> `D15` + re-buy `T0.33` (~12 s), since `D15` stales T0.33 via
+  `ladder_loop.sh` in IMPL_DEPS. (2) 75th audit B3 (coverage's UNAFFORDABLE
+  TODAY annotation in the queue-depth print) is still open and is the natural
+  next instrument unit. (3) W35's ~10.8 Kaggle hours expire at 00:00 by
+  instruction (74th B5) — inventory, not uptime.**
+- Bookkeeping: ledger 105/242. Touched: experiments/registry_expansion.py,
+  experiments/ledger.json, experiments/cpu_budget.json, CHECKLIST.md,
+  docs/LOOP_JOURNAL.md.
