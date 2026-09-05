@@ -12082,3 +12082,39 @@ DRAFTED-NOT-REGISTERED.**
 - Bookkeeping: ledger 105/242 (nothing settled — a verified empty-board stop
   is the correct slot per PROGRESS FTB 2). Touched: docs/LOOP_JOURNAL.md
   only.
+
+## 2026-09-05 22:07 UTC slot — verified empty-board stop, re-derived independently (PROGRESS FTB 2); no default fired, 00:07 handoff carried unchanged
+
+- Ran on **Fable**. Meters read at slot top: `week:all models` **16%** (the
+  gate, acted on), `week:Fable` 28%, session 3%. Zero `PACING:` lines this
+  slot (streak 0; last real skip 08-29 — the two PACING grep hits in the log
+  tail are week-old quoted lines from the Fable-pinned window, not skips).
+- **The unit: re-derive the 21:07 emptiness claim rather than inherit it.**
+  `coverage` queue depth run fresh: 6 dispatchable, **all 6 VOID -> 0 FRESH**
+  (D1.0, LF.01, LG.03, SO.07, T2.02, UB.10), 3 classes EMPTY with NOT
+  FILLABLE annotations, cpu<10min HELD by D19, 6 VOID-FORECLOSED excluded,
+  rc=0 on the queue-depth block. `run blocked` top unchanged: T2.01 frees 35
+  (repair through the d10-* rows the 09-06 FULL owes), NE.01, LT.01, UB.10 —
+  every repair a Review disposition or owner decision, none mine tonight.
+  Ratchet counters all "unchanged since" their committed readings;
+  fail_unowned 0 AT floor; unreachable 94 AT floor.
+- **Liveness pass, both instruments:** no `experiments` processes running
+  (pgrep empty — nothing detached, nothing undeclared), lost_iterations.log
+  0 bytes, load 0.36, tree clean, 0 unpushed commits. Processes AND ledger
+  checked (Review 08-21 #4): the stale/dirty block shows only the four known
+  deliberate substantive holds re-verified at 21:07 (UB.10, T3.09, D1.0,
+  LF.01) plus T2.02 pre-impl_sha; nothing new decayed.
+- **No default fired, on purpose (same reasoning as 21:07, re-checked not
+  copied):** `D21` is DEFAULT-ACTION-SAME-DAY with 2026-09-06 its earliest
+  firing day — 22:07 on 09-05 is still the wrong side of midnight. `D16`/
+  `D15` are ordered behind it. SO.08 is already RUN (PASS 19:11), so the
+  00:07 slot fires paperwork only, racing nothing for compute.
+- **HANDOFF (verified third time, unchanged): 00:07 fires `D21` (race, must
+  beat 06:37) -> `D16` -> `D15` + re-buy `T0.33` (~12 s). W35's ~10.8 Kaggle
+  hours expire at 00:00 by instruction (74th B5) — all 6 dispatchable are
+  VOID-arms, so the quota is honestly unspendable; do not manufacture a
+  dispatch in the last two hours. W36's 30 h buyer is D1.0's successor,
+  gated on the two `d10-*` rows the 09-06 FULL owes.**
+- Bookkeeping: ledger 105/242 (nothing settled — a verified empty-board stop
+  is the correct slot per PROGRESS FTB 2). Touched: docs/LOOP_JOURNAL.md
+  only.
