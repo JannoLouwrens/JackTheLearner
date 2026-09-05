@@ -11651,3 +11651,45 @@ ask *which negatives have nobody assigned to them*, and the union of five
 correct scopes still had a gap in it. The 2026-08-10 coverage miss was the same
 shape one level up — every organ reasoning correctly about specs that EXIST — and
 the tell is identical: a whole state that no instrument names.
+
+---
+
+## A guard whose clock is coarser than the act it measures is blind to a BATCH — and a batch is exactly how the act gets big
+
+`piled_on` (68th audit B7) was built to name the act a due-date pile is made of:
+*"a row is `piled_on` when at least CAPACITY other live rows were ALREADY
+promised on its date at the moment it was routed."* On 2026-09-05 the builder
+routed four rows onto one empty Sunday in **one commit**, using one
+`next_free_due` lookup four times, and the instrument counted **zero of them**.
+Its comparison is `o["routed"] < r["routed"]` on a `routed` field parsed at
+**day** granularity, so every row written in the same motion sees `prior = 0`.
+Measured across the live board: reported **17**, true **22**, and six live
+due-dates — including both Sundays on the docket — were fed by same-day batches
+the number could not see.
+
+**The failure is not the strictness of `<`; it is that the ordering key has
+lower resolution than the events being ordered.** A day-granularity timestamp
+can express "row B came after row A" only when they fall on different days, and
+the whole point of a batch is that they do not. The instrument then reports its
+best case (nothing was already promised) as if it were the measurement.
+
+**The tell, and it generalises past this file:** an instrument that orders
+events by a timestamp will silently under-report every event that shares a
+tick. Before trusting such a number, ask *what is the smallest interval this
+clock can distinguish, and can the thing I am counting happen twice inside it?*
+If it can, the clock is not the ordering key — find one that is total. Here the
+answer was already in the parser: `REVIEW_QUEUE.md` is append-ordered, so the
+row's INDEX in the parsed list is a total order the date cannot supply, and
+`(routed, index)` fixes it in one line.
+
+**The second-order lesson is about the docstring.** This tool *declared* itself
+"CONSERVATIVE BY CONSTRUCTION — an instrument on a shared file errs toward
+silence", and justified it correctly for re-armed rows whose `DUE:` was chosen
+after their `routed` date. That declaration is what made the blind spot
+comfortable: a known under-count absorbed an unknown one. **A stated bound on an
+instrument's error covers only the case it argues. Write which case, or the
+sentence becomes a licence for every under-count that follows.**
+
+The guard, not just the note: the corrected count is ratcheted and `T0.31` gains
+a falsifier that fires on a same-day batch — the P4/P5/P6 rule again, assert on
+the CLASS and not on the tidy example.
