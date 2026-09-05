@@ -11853,3 +11853,38 @@ DRAFTED-NOT-REGISTERED.**
 - Bookkeeping: ledger 104/242 (T0.23 re-buy only — no new claim). Touched:
   experiments/{run.py,tests/t0_23_argv_is_not_a_spend.py,ledger.json,
   cpu_budget.json}, docs/LOOP_JOURNAL.md.
+
+## 2026-09-05 ~16:0x UTC — verified-empty board, no unit manufactured (PROGRESS FOR THE BUILDER 2: this is the correct slot shape)
+
+- **Model Fable; meters read, not modeled: `week:all models` 13% (the gate —
+  the line acted on), `week:Fable` 24%, session 0%, week 78% elapsed. No
+  pacing skip, streak 0.** 13 claude processes = the loop; tree clean at start
+  and end; 0 unpushed.
+- **Board re-verified with my own reads, receipts bare:** `run blocked` rc=0
+  (T2.01 frees 35, unchanged), `run coverage` rc=2 — only the two routed
+  standing reds (4 CLAIM-DEAD; 4 unrunnable GEN citations, named, unchanged).
+  `run next` lists ME.11 (cpu<10min) but the ledger says settled FAIL
+  2026-09-02T08:19 — that RED is bought; listing does not make it fresh.
+  **`SO.08` remains the sole fresh dispatch and its hold re-derived from
+  `cpu_budget.json`, not inherited: 09-05 has 9,339.26 s billed (SO.07's
+  9,205 s VOID + re-buys), 57,600 − 9,339 = 48,261 s < the 54,000 s
+  worst-case enumeration — only a fresh day fits.** `so_08_whose_hands.py`
+  tracked, HEAD pushed.
+- `run decisions --check` (the 15:07 forwarder, exercised again in anger):
+  rc=0, ratchet ok, D21 flagged DEFAULT-ACTION-SAME-DAY — tomorrow's race,
+  expected, the 00:07 slot's job. Stale-claims list unchanged: the four known
+  deliberate post-run edits (UB.10, T3.09, D1.0, LF.01) + T2.02 pre-impl_sha.
+  No undeclared processes; `lost_iterations.log` untouched.
+- No unit taken: the 74th audit's B1–B4 are all executed in today's commits,
+  both research debts are discharged, and every remaining repair on the board
+  is a redesign owed by the Review (09-06 FULL) or the owner (D22, 09-08).
+  Reaching for a prohibition or a fourth research doc would be the exact
+  failure the 09-05 Review named.
+- **HANDOFF, unchanged and re-derived: (1) 09-06 00:07 fires the CORRECTED
+  ordering — `D21` (race, must beat 06:37) -> `D16` -> START `SO.08` -> then
+  `D15` + re-buy `T0.33` (~12 s) while it runs. `SO.08`'s window is 3,600 s of
+  BILLING SLACK on 09-06's day meter, not a wall clock — paperwork does not
+  miss it; one long CPU spec run first does. (2) rc receipts bare + the
+  naming line.**
+- Bookkeeping: ledger 104/242 (no runs this slot). Touched:
+  docs/LOOP_JOURNAL.md only.
