@@ -11923,3 +11923,41 @@ DRAFTED-NOT-REGISTERED.**
   own lesson being read an hour earlier.**
 - Bookkeeping: ledger 104/242 (no runs this slot). Touched:
   docs/LOOP_JOURNAL.md only.
+
+## 2026-09-05 ~18:0x UTC — verified-empty board, no unit manufactured; W35's Kaggle hours expire tonight BY INSTRUCTION, not by neglect
+
+- **Model Fable; meters read, not modeled: `week:all models` 14% (the gate —
+  the line acted on), `week:Fable` 25%, session 4%, week 79% elapsed. No
+  pacing skip, streak 0.** 13 claude processes = the loop; tree clean, 0
+  unpushed, no detached/undeclared pids, `lost_iterations.log` 0 bytes.
+- **Receipts bare, rc read directly (never through a pipe), condition named:**
+  `status` rc=0 (104/242, ratchet counters all at committed readings, fail_unowned
+  0 AT floor); `next` rc=0 (offers only settled/held rows — ME.11 FAIL settled
+  09-02, T2.10 FAIL routed; listing does not make them fresh); `blocked` rc=0
+  (T2.01 frees 35, unchanged); `coverage` rc=2 (the two routed standing reds —
+  4 CLAIM-DEAD, 4 unrunnable GEN citations — both with queue rows, unchanged);
+  `decisions --check` rc=0 (ratchet ok, D21 flagged DEFAULT-ACTION-SAME-DAY —
+  tomorrow's race, expected, the 00:07 slot's job).
+- **`SO.08` hold re-derived from `cpu_budget.json`, not inherited:** 09-05
+  billed 9,339.26 s (SO.07 9,205.09 + T0.21/T0.23/T0.28/T0.31 re-buys);
+  57,600 − 9,339 = 48,261 s < `WORST_LEGAL_CHILD_S` 54,000. Only a fresh day
+  admits it. It remains the sole FRESH dispatch on the board (coverage QUEUE
+  DEPTH: 7 dispatchable, 6 VOID).
+- **W35 note so the 00:07 slot reads this as conduct, not fault:** ~10.80
+  unspent Kaggle hours expire at 2026-09-06 00:00 UTC per the 74th audit B5
+  ("let them expire") — inventory, not uptime; nothing implemented-and-unsettled
+  exists at any GPU class and W36's named buyer (`D1.0`'s successor, ~16 h) is
+  gated on the two `d10-*` rows the FULL Review owes tomorrow.
+- No unit taken: 74th audit B1–B4 all verified executed in today's commits
+  (`2302b52` B1+B3+B4 seal dirty-set sweep + FULL commits-per-disposition +
+  TURNS_PER_MIN 3->6; `1c4b273` B2 ownership-map facets), both research debts
+  discharged, every remaining repair a redesign owed by the 09-06 FULL Review
+  or the owner (D22, 09-08). PROGRESS FTB 2 calls this slot shape correct.
+- **HANDOFF, unchanged and re-derived: (1) 09-06 00:07 fires the CORRECTED
+  ordering — `D21` (race, must beat 06:37) -> `D16` -> START `SO.08` -> then
+  `D15` + re-buy `T0.33` (~12 s) while it runs. `SO.08`'s window is 3,600 s of
+  BILLING SLACK on 09-06's day meter, not a wall clock — paperwork does not
+  miss it; one long CPU spec run first does. (2) rc receipts BARE + the naming
+  line.**
+- Bookkeeping: ledger 104/242 (no runs this slot). Touched:
+  docs/LOOP_JOURNAL.md only.
