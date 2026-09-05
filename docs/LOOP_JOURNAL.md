@@ -12000,3 +12000,47 @@ DRAFTED-NOT-REGISTERED.**
 - Bookkeeping: ledger 105/242. Touched: experiments/registry_expansion.py,
   experiments/ledger.json, experiments/cpu_budget.json, CHECKLIST.md,
   docs/LOOP_JOURNAL.md.
+
+## 2026-09-05 ~20:1x UTC — 75th audit B3 executed: coverage's queue-depth print now carries the day meter's own refusal
+
+- Meters first: `week:all models` 15% (the gate), `week:Fable` 26%, week 80%
+  elapsed so the pace line is ~77 — no skip; ran on Fable.
+- **The unit was the 75th audit's B3, named as the natural next instrument
+  unit by the 19:07 handoff.** `queue_depth()` now joins the meter's INPUTS —
+  `child_estimate_s` + `remaining_s`, the same `est > remaining` comparison
+  `gate_cpu_child` makes, never its `CpuDecision` (so a transient load spike
+  cannot flap the readout) — and marks each runner-lane cpu queue row the day
+  meter would refuse: `!UNAFFORDABLE TODAY (est Ns [provenance] vs Ms
+  remaining)`, provenance included because an `[ENUM ...]` estimate is a
+  guess and the reader deserves to see that (that guess cost 09-05 its only
+  claim). The header's FRESH count subtracts the UNION of VOID and
+  unaffordable. Print-only: `exit_code()` terms untouched, no new gate, no
+  new ratchet — and no new accounting surface, so the CPU-accountant
+  prohibition is not grazed (this is the "tell the truth more plainly" lane
+  the Review carved out on 09-05).
+- Fixture: Q.20/Q.21 join Q.06 in cpu<10min — unaffordable row, affordable
+  control, VOID+unaffordable union row — plus a rich-day control call; the
+  stub answers 999999s for any unlisted query so a scope leak to gpu/cpu<48h
+  fails the exact-equality assertion by name. **Mutation-verified**: a
+  never-marks implementation trips 2 assertions, a double-subtract trips 1,
+  clean battery green. Live print reads `6, of which 6 VOID -> only 0 is a
+  FRESH dispatch` (nothing unaffordable tonight — the board's 6 are all
+  VOIDs). Coverage rc=2 unchanged (the standing routed reds).
+- `T0.21` re-bought clean post-edit (PASS 8.6 s at `f73ff65`; a first re-run
+  pre-commit stamped +dirty and was superseded by the committed-blob run).
+  `cpu_foreclosed_now` 40 -> 39 recorded via `run ratchets record` — the move
+  is justified by `7aa9619` (SO.08 re-declared cpu<2h -> cpu<1min), which the
+  19:07 slot committed without recording.
+- **HANDOFF: (1) 00:07 fires the defaults in the verified order — `D21`
+  (race, must beat 06:37) -> `D16` -> `D15` + re-buy `T0.33` (~12 s); SO.08
+  is already RUN so nothing races for compute. (2) The 75th audit's builder
+  items are now all executed (B1 19:07, B2 dissolved by B1, B3 this slot; B4
+  is a conduct rule on future routing, already generalised in LESSONS). After
+  the defaults, if the board is empty, PROGRESS FTB 2 calls a verified
+  empty-board stop CORRECT. (3) W35's ~10.8 Kaggle hours expire at 00:00 by
+  instruction (74th B5) — inventory, not uptime; W36's buyer is D1.0's
+  successor, gated on the two `d10-*` rows the 09-06 FULL owes.**
+- Bookkeeping: ledger 105/242 (no spec settled this slot; T0.21 is a re-buy).
+  Touched: experiments/coverage.py, experiments/ledger.json,
+  experiments/cpu_budget.json, experiments/ratchet_readings.json,
+  docs/LOOP_JOURNAL.md.
