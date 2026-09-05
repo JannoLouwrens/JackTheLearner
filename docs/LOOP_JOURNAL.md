@@ -11348,3 +11348,47 @@ DRAFTED-NOT-REGISTERED.**
   AMENDED text — not tonight. Standing prohibitions all unchanged. Ledger
   104/242 until the harvest. Touched: this file,
   `experiments/ratchet_readings.json`.
+
+## 2026-09-05 ~04:0x UTC — SO.07 harvested (VOID, reference lane) and routed
+## (builder, Fable)
+
+- **METERS, read not modeled:** `week:all models` **6%** (the gate — acted
+  on), `week:Fable` 11%, session 12%. Week 70% elapsed so the pace line sits
+  ~70 — no skip, streak 0. Model: Fable. 13 claude processes = the loop
+  itself; pgrep for SO.07 workers empty, no leftover, no `declared_pids`
+  owed.
+- **THE UNIT: harvested SO.07 attempt 1 as the 00:0x handoff ordered.**
+  Runner's row committed as found in `9bd3114` (with the 9205.09 s billing
+  receipt): **VOID at the first pre-registered lane** — REF arm
+  `ref_fed_frac` **0.333/0.667/0.667** on recording worlds 3/4/5 vs
+  `REF_MIN_FED` 0.8 (XL.01's bar). The rig could not produce the behaviour
+  with privileged positions; per the spec's own gates table no other number
+  means anything. Hand logs for SO.09's replay re-buy are on disk
+  (/data/so07_hand_logs_s{0,1,2}.json) and named in the routing row.
+- **ROUTED, not just understood** (72nd audit's lesson):
+  `so07-recording-worlds-fail-the-reference-bar`, DUE **2026-09-14**
+  (`next_free_due` per the router's own print — every earlier date is at or
+  over capacity; no third re-stagger, no Sunday pile-on). Reader re-run:
+  37 OPEN, 0 violations, row parses.
+- **TWO READINGS WORTH THE NEXT ITERATION'S EYE, both in the row:** (1) the
+  cross-seed mean `a1_r` 0.954 hides worst-seed 0.332 — the live
+  `aggregate-hides-worst-seed` row in action on a fresh run; (2) even with
+  the REF arm revived the claim was failing (puppeteering_seeds 1 at s0,
+  `a1_b` 0.58–10.5 across seeds), so a fixture-only repair buys a
+  measurement, not a PASS. Diagnosis in one line: fixture frozen from a
+  world-0 aliveness pilot did not transfer to worlds 3–5; the design/data
+  split (correct, kept) means the fixture was never validated where the
+  claim runs.
+- **NEXT ITERATION:** if it is the 00:xx–05:xx slot of **2026-09-06**, fire
+  `D21`/`D15`/`D16` FIRST with the 71st audit's amended text (OVERSIGHT B3;
+  D21 must beat the 06:37 Review). Otherwise the next fresh unit is the
+  **SO.08 implementation** (registered, deps SO.06/ME.9/LG.02 all PASS, no
+  test file, deserves a full slot) — and carry SO.07's lesson into its
+  design: validate any reference/fixture behaviour per recording world, or
+  pre-register the transfer assumption explicitly. Standing prohibitions all
+  unchanged (no `D1.0` re-dispatch; `W35` GPU hours expire 09-06 00:00, LET
+  them; `HR.1`–`HR.4` D19-held; `HR.6` behind `HR.5`; `LF.01` waits on
+  09-09; no CPU-accountant increment; no docket re-stagger).
+- **Bookkeeping:** ledger 104/242 (VOID does not demonstrate). Touched:
+  `experiments/ledger.json` + `experiments/cpu_budget.json` (harvest,
+  `9bd3114`), `docs/REVIEW_QUEUE.md`, `CHECKLIST.md` (render), this file.

@@ -2272,3 +2272,47 @@ language-grounding design already owed (`champions-language-grounding-arena`,
 DUE 09-07 — the LG family is the successor venue for language claims), in
 which case write the coupling and a `FAIL-DISPOSED:` marker on T2.15 naming
 that decision, or it needs its own successor spec. Nothing here re-runs.
+
+ROUTED: so07-recording-worlds-fail-the-reference-bar | 2026-09-05 | builder (SO.07 attempt-1 harvest, 9bd3114) | OPEN
+    DUE: 2026-09-14 | a disposition for SO.07's VOID: what re-validates the reference arm on the recording worlds — re-frozen fixture, a wider design-world set, or a world/body redesign. Date is `next_free_due` per the router's own print (every earlier day is at or over measured capacity).
+
+**The verdict:** SO.07 attempt 1 (2026-09-05T02:41:48, 9201.5 s, worlds 3/4/5)
+recorded **VOID at the first pre-registered VOID lane**: the REF arm —
+privileged food positions, `REF_MIN_FED = 0.8` reused verbatim from XL.01 —
+fed **0.333 / 0.667 / 0.667** of lives on the three recording worlds. The rig
+could not demonstrate, with every advantage, the behaviour the spec measures,
+so per its own gates table no other number means anything. This is the lane
+doing its job (SH.01's lesson, cited in the docstring), not a harness fault.
+
+**The diagnosis, one sentence:** fixture constants were frozen from an
+aliveness pilot on design world 0, and privileged-position feeding did not
+transfer to recording worlds 3–5 — the design/data world split (correct, and
+kept) means the fixture was never validated where the claim runs. The repair
+choices are exactly the ones the split forbids the builder from taking
+unilaterally: (a) re-freeze from counts on a wider design-world set and state
+why worlds 3–5 should now transfer, (b) redesign the REF arm so its bar is
+world-relative rather than XL.01's absolute 0.8, stated as HARDER not weaker,
+or (c) file this as a further `w0-too-shallow` instrument (adjacent to
+`ba03-null-saturates-the-horizon` and SH.01's ORACLE_CANNOT — a body that
+cannot reach privileged food on 2 of 3 worlds is the same family) and let the
+W1 decision own it. Option (c) costs nothing now: the row deliberately does
+NOT declare `BLOCKED-BY: w0-too-shallow` because that design is due 09-06 and
+this row's date is after it — the Review can couple them with the decision in
+hand.
+
+**Reported alongside, because it scopes the redesign:** even had the REF bar
+held, the claim was failing — worst-seed `a1_r` **0.332** vs the 0.8 gate
+(the cross-seed mean reads 0.954; `aggregate-hides-worst-seed`, this queue,
+in action), `puppeteering_seeds` **1** (s0: R 0.332 with B 1.91 — the §3.7
+falsification cell, one seed short of the 2-of-3 FAIL shape), and `a1_b`
+spread 0.58–10.5 across seeds. A repair that only revives the REF arm buys a
+measurement, not a PASS.
+
+**Staleness bill:** zero ledger rows — SO.07 has no PASS to invalidate and
+nothing depends on it yet. One pre-registration touched: SO.09's registered
+note says a *measured* C-GIVE log replayed through the accountant supersedes
+its synthesised one, and the C-GIVE legs of this run were healthy on every
+seed (r 0.0039 < R_FLOOR, con_ratio 353 ≥ 2; logs on disk at
+/data/so07_hand_logs_s{0,1,2}.json). Whether a clean control log from a
+REF-lane-VOID run counts as "measured" for that supersession is part of this
+disposition — one sentence either way.

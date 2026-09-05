@@ -1115,7 +1115,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 3 — ABLATION — does it earn its parameters?
 
-- [ ] **SO.07** What the hands leave is FOUND, and what he learns outlives them
+- [~] **SO.07** What the hands leave is FOUND, and what he learns outlives them  — a0_c_off=0.00940483; a0_c_off_s0=0.0122549
       - _asserts:_ A learner provisioned by a need-contingent hand reaches a higher competence than an unprovisioned twin at matched compute, AND retains it when the hand is withdrawn: retention_ratio R = C_off/C_on above its floor with scaffolding_benefit B = C_off/C0 above 1 (PURPOSE_AND_SCAFFOLDING.md §3.6's metrics, reused verbatim).
       - _dies if:_ B ~ 1 (the hand bought nothing), OR R below its floor while B > 1 — competence that exists only while a hand is feeding him. THE SECOND IS THE PUPPETEERING RESULT and is reported as a violation of a GOAL.md commitment, not as a design finding; the response is to stop provisioning.
       - _then delete:_ 'Never puppeteering: what is left must still be found, learned, and chosen by him' as an unfalsifiable promise.
