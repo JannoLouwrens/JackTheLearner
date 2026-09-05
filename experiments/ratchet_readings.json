@@ -9,19 +9,19 @@
   },
   "cpu_foreclosed_now": {
     "at": "2026-09-05",
-    "value": 0
+    "value": 41
   },
   "fail_unowned": {
     "at": "2026-09-05",
-    "value": 4
+    "value": 0
   },
   "park_release_pairs": {
     "at": "2026-09-03",
     "value": 3
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-04",
-    "value": 30
+    "at": "2026-09-05",
+    "value": 34
   },
   "review_queue_violations": {
     "at": "2026-09-03",

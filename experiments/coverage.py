@@ -1135,7 +1135,12 @@ def _unreachable_fixture() -> List[str]:
 #               same audit's own lesson, a successor's notes are not routing
 #               when the successor is PILOT-BLOCKED. T3.07 is excluded by its
 #               FAIL-DISPOSED marker (D7's fired default), not by id.
-FAIL_UNOWNED_BASELINE = 4
+#   2026-09-05  4 -> 0, same slot: all four ROUTED per B4 (REVIEW_QUEUE rows
+#               xl01-*, t205-*, t402-*, t215-*, each with DUE 2026-09-13 =
+#               next_free_due). Zero is the working state now: every future
+#               settled FAIL must be routed or disposed in the same motion
+#               that records it, or coverage goes red.
+FAIL_UNOWNED_BASELINE = 0
 
 # The readable disposition marker (72nd audit B1: the T3.07 exclusion "must be
 # by a readable marker, not by a hardcoded id"). Lives in `Spec.notes` —

@@ -2188,3 +2188,87 @@ recorded VOID stands per the T2.02 precedent.
 grounding bakeoff behind this row — which is the ordering working exactly as
 designed, not a fault. None of the three is implemented, so nothing is idle
 that would otherwise be running.
+
+ROUTED: xl01-death-and-retry-has-no-reachable-repair-path | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
+    DUE: 2026-09-13 | a reachable repair path for the death-and-retry commitment — the question is "what buys it one", NOT "re-run XL.01". Date is `next_free_due` per B4, not Sunday.
+
+**The claim and the silence:** `XL.01` — *"Death does not erase what he
+learned"*, filed by its own `COVERS:` under both **death & retry** and
+**memory across lives** — has read FAIL since **2026-08-19**, with no
+`repaired_by`, no queue row and no disposition, for 17 days. `coverage`
+printed the commitment as `1 now` throughout; the 72nd audit's lesson ("a
+negative with no owner is invisible") is this row's provenance.
+
+**The diagnosis, which was CORRECT and changed nothing:** a POWER failure —
+XL.01 cannot resolve a 2× effect at 3 seeds × 8 lives (its B3 verdict). It
+was carried into `NE.08`'s registry notes as a BINDING pre-run power
+calculation (INTEGRATION_QUEUE.md, NEEDS_AND_DEATH row) — excellent filing,
+zero routing: `NE.08` is `blocked<-NE.01`, and `NE.01` is itself a settled
+FAIL (`ne01-occlusion-knife-edge`, this queue). A repair path that runs
+through two failures exists in prose only; no field in this repository can
+express it, so no tool can rank it.
+
+**What the Review owns here:** either `NE.01`'s occlusion redesign (already
+on this desk) is the single upstream unblock and this row is decided WITH it
+— in which case say so and couple them — or death-and-retry needs a claim
+that is powerable at free-tier seat counts (more lives per seed is CPU-cheap;
+XL.01's own row shows lives, not seeds, carry the variance). Strengthen-only
+binds any successor; XL.01's FAIL stands as history either way.
+
+ROUTED: t205-world-model-loses-to-the-ridge-reference | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
+    DUE: 2026-09-13 | a disposition for the fast/slow world-model fixture: what does the DP family require of a world model that beats every null but loses to a linear probe? Date is `next_free_due` per B4.
+
+**Measured, twice, consistently.** `T2.05` v1 (2026-08-14) VOIDed itself
+honestly — the persistence ruler leaked marginal statistics (shuffled
+control beat it) — and its redesign facts pre-registered the reference arm.
+v2 ran under the strengthened rig and **FAILed 2026-08-20**: `wm_ratio_max` 0.2529 (the WM
+beats the informed null on every seed, 4× margin) but `wm_beats_ridge_all`
+**0.0** — the learned world model loses to ridge regression on the same
+prediction task. 16 days, no owner, no row, until now.
+
+**Why it needs a desk and not a re-run:** the fixture measures exactly what
+it was strengthened to measure, and what it says is that our world model is
+worse than a linear map at 5-step prediction in this venue. The DP family's
+imagination arms and `w0-too-shallow`'s venue question both lean on world
+models; whether the repair is a better WM, a harder venue, or accepting the
+linear reference as the champion (SCORED-AND-INELIGIBLE idiom) is a design
+call. The bar does not move; T1.02 precedent binds.
+
+ROUTED: t402-touch-drowns-audio-at-the-fusion-boundary | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
+    DUE: 2026-09-13 | the fusion-balancing redesign the priority head has pointed at "the Review, not an argument" since 08-21 — now with a row and a clock instead of a standing sentence. Date is `next_free_due` per B4.
+
+**Measured, twice (`T4.02` attempts 3 and 4, 2026-08-21).** Worst-seed
+`max_modality_grad_ratio` **30.12** against the exogenous 10× gate, zero
+variance across seeds; touch (~2.9e-3) dominates audio (~1e-4) at the fusion
+boundary; every rig gate green (`finite_all`, `fired_ok_all`,
+`loss_decreased_all` 1.0). This is GOAL.md's stage 4 verbatim — *"no
+modality collapse"* — settled FAIL for 15 days with no owner while CLAUDE.md
+carried a prose prohibition on re-dispatching it as cheap work.
+
+**What the Review owns here:** the architecture measurement is real (a
+gradient-scale imbalance of 30× is not a seed lottery at std 3.6e-15). The
+candidate repairs are runnable arms — per-modality gradient normalisation,
+loss reweighting, modality dropout schedules — so this is a bakeoff to
+design, not an argument to have. `UB.10`'s recipe-sensitivity finding
+(`recipe-sensitivity`, this queue) is adjacent: both say uniform training
+treats unequal senses unequally. Couple them if one design answers both.
+
+ROUTED: t215-heldout-language-routing-diagnosis-is-filed-behind-a-pilot-blocked-wall | 2026-09-05 | 72nd-audit-B4 + builder (the FAIL-UNOWNED detector's 4th member — the audit's own count missed it) | OPEN
+    DUE: 2026-09-13 | a disposition for T2.15's FAIL: route the memorisation-route finding somewhere an instrument can see it, or dispose it explicitly. Date is `next_free_due` per B4.
+
+**Why this row exists at all:** the 72nd audit measured FAIL-UNOWNED at 3;
+the detector built to its own B1 conjunction finds **4**. `T2.15`
+(*free-form language routes to the right task*) FAILed **2026-08-25** —
+`heldout_correct` [8, 9, 5], min 5, under its pre-registered bar, with every
+rig gate green (`construction_ok`, `det_ok_all`, `loss_fell_all` 1.0) — and
+its diagnosis lives ONLY in `SM.03`'s registry notes (*"held-out layouts
+close the memorisation route T2.15 just measured on language"*). `SM.03` is
+PILOT-BLOCKED. By the audit's own lesson, a successor's notes are not
+routing when the successor is unreachable: same shape as XL.01→NE.08, one
+family over, and invisible to the audit's own scan for the same reason.
+
+**What the Review owns here:** small. Either T2.15's finding folds into the
+language-grounding design already owed (`champions-language-grounding-arena`,
+DUE 09-07 — the LG family is the successor venue for language claims), in
+which case write the coupling and a `FAIL-DISPOSED:` marker on T2.15 naming
+that decision, or it needs its own successor spec. Nothing here re-runs.
