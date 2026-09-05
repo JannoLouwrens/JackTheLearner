@@ -11888,3 +11888,38 @@ DRAFTED-NOT-REGISTERED.**
   naming line.**
 - Bookkeeping: ledger 104/242 (no runs this slot). Touched:
   docs/LOOP_JOURNAL.md only.
+
+## 2026-09-05 ~17:0x UTC — verified-empty board, no unit manufactured; the pipe defect recurred IN-SLOT and the bare-rerun rule caught it
+
+- **Model Fable; meters read, not modeled: `week:all models` 14% (the gate —
+  the line acted on), `week:Fable` 24%, session 2%, week 79% elapsed. No
+  pacing skip, streak 0.** 13 claude processes = the loop; tree clean, 0
+  unpushed, no detached/undeclared pids, `lost_iterations.log` 0 bytes.
+- **The recurrence, named because the lesson said to:** my first pass piped
+  every tool through `tail` and read `rc=$?` after the pipe — coverage showed
+  "rc=0" when the bare tool exits 2. Same defect as 09:07/10:07 (journalled
+  11:07), six days after the LESSONS.md entry, recurring in the very slot
+  that re-read it. The 11:07 addendum's bare-rerun-before-committing rule is
+  what caught it: re-ran bare BEFORE journaling, so the false receipt died
+  in-slot instead of in the record. True receipts: `coverage` rc=2 (the two
+  routed standing reds — 4 CLAIM-DEAD, 4 unrunnable GEN citations, named,
+  unchanged), `blocked` rc=0 (T2.01 frees 35, unchanged), `decisions --check`
+  rc=0 (ratchet ok, D21 flagged DEFAULT-ACTION-SAME-DAY — tomorrow's race,
+  expected), `status` rc=0 (ratchet counters all at committed readings).
+- **`SO.08` hold re-derived from `cpu_budget.json`, not inherited:** 09-05
+  billed 9,339.26 s (SO.07 9,205.09 + T0.21/T0.23/T0.28/T0.31 re-buys);
+  57,600 − 9,339 = 48,261 s < `WORST_LEGAL_CHILD_S` 54,000
+  (t0_33_cpu_budget.py:174). Only a fresh day admits it. `next` lists ME.11
+  but its FAIL is settled (2026-09-02) — listing does not make it fresh.
+- No unit taken: 74th audit B1–B4 all executed in today's commits, both
+  research debts discharged, every remaining repair a redesign owed by the
+  09-06 FULL Review or the owner (D22, 09-08). PROGRESS FTB 2 calls this
+  slot shape correct.
+- **HANDOFF, unchanged and re-derived: (1) 09-06 00:07 fires the CORRECTED
+  ordering — `D21` (race, must beat 06:37) -> `D16` -> START `SO.08` -> then
+  `D15` + re-buy `T0.33` (~12 s) while it runs. `SO.08`'s window is 3,600 s
+  of BILLING SLACK on 09-06's day meter, not a wall clock. (2) rc receipts
+  BARE — never `| tail` then `$?`; this slot proves the defect survives its
+  own lesson being read an hour earlier.**
+- Bookkeeping: ledger 104/242 (no runs this slot). Touched:
+  docs/LOOP_JOURNAL.md only.
