@@ -7522,7 +7522,7 @@ EXPANSION: list[Spec] = [
                       "the attribution).",
          null_baseline="Donor-stripped diary, same events, same counts — "
                        "LG.02's null, reused.",
-         metric="donor_trust_divergence", budget=Budget.CPU_LONG, seeds=3,
+         metric="donor_trust_divergence", budget=Budget.CPU_FAST, seeds=3,
          depends_on=["SO.06", "ME.9", "LG.02"],
          control="Donor-shuffled diary (content intact, source permuted): MUST "
                  "collapse — Johnson, Hashtroudi & Lindsay 1993's dissociation "
@@ -7549,6 +7549,18 @@ EXPANSION: list[Spec] = [
                "venues; if a later pass shows the venues do not discriminate, "
                "the repair is to retire this spec, never to re-derive the "
                "posterior. "
+               "SIZING RECORD (75th audit B1, measured by hand 2026-09-05 "
+               "19:1x UTC, full N_ROUNDS=240): _measure(0) 0.36 s, "
+               "_measure_controls(0) 0.38 s — 0.74 s/seed, ~2.2 s for the "
+               "whole 3-seed run, on this box at load ~0.05. Declared "
+               "cpu<1min on that measurement (~80x headroom under the 60 s "
+               "label). The struck class, cpu<2h, was typed at b6518dd nine "
+               "hours BEFORE the implementation existed and enumerated at "
+               "54,000 s admission — ~28,000x the measured cost — which "
+               "refused this spec off the board for fourteen hours on "
+               "2026-09-05. This edit loosens admission and TIGHTENS the "
+               "child-kill window (54,000 s -> 1,800 s); it moves no "
+               "threshold. "
                "  COVERS: social/other agents (claim)"),
 
     Spec("SO.09", 0, "A life the hands bought is not evidence, and the harness says so",
