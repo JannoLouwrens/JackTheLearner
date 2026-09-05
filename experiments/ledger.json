@@ -20854,22 +20854,22 @@
     },
     "T0.28": {
       "amended": [],
-      "attempt": 13,
-      "commit": "3bc9b09",
+      "attempt": 14,
+      "commit": "08d5578",
       "compute_s": null,
       "control_metrics": {
-        "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it",
+        "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it,p15_same_day_race_and_clock_attribution",
         "live_armed": 8.0,
-        "live_expired_actions": 1.0,
-        "live_longest_default_chars": 1076.0,
-        "live_specs_in_radius": 8.0,
-        "live_unrouted_asks": 2.0,
+        "live_expired_actions": 0.0,
+        "live_longest_default_chars": 1329.0,
+        "live_specs_in_radius": 9.0,
+        "live_unrouted_asks": 1.0,
         "live_vanished_asks": 0.0,
         "live_violations": 1.0,
-        "properties_checked": 14.0,
-        "properties_failed": 9.0
+        "properties_checked": 15.0,
+        "properties_failed": 10.0
       },
-      "duration_s": 55.71,
+      "duration_s": 66.09,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -21256,26 +21256,62 @@
           ],
           "spec_sha": "f2705ea2ed8d4cb6",
           "status": "PASS"
+        },
+        {
+          "commit": "3bc9b09",
+          "control_metrics": {
+            "failed_names": "p2_d8_known_positive_fires,p3_successor_is_the_repair,p4_both_named_fires,p6_a_pass_is_not_at_calendar_risk,p9_ratchet_counts_every_class,p11_unrouted_owner_ask_is_reported,p12_vanished_owner_ask_is_the_known_positive,p13_expired_default_action_is_the_known_positive,p14_a_silenced_owner_ask_names_who_silenced_it",
+            "live_armed": 8.0,
+            "live_expired_actions": 1.0,
+            "live_longest_default_chars": 1076.0,
+            "live_specs_in_radius": 8.0,
+            "live_unrouted_asks": 2.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 1.0,
+            "properties_checked": 14.0,
+            "properties_failed": 9.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "cef170bb88d79518",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "live_armed": 8.0,
+            "live_expired_actions": 1.0,
+            "live_longest_default_chars": 1076.0,
+            "live_specs_in_radius": 8.0,
+            "live_unrouted_asks": 2.0,
+            "live_vanished_asks": 0.0,
+            "live_violations": 1.0,
+            "properties_checked": 14.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-04T14:18:19",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "e06f010fa6d919c2",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "cef170bb88d79518",
+      "impl_sha": "8250e5d264bb4cdf",
       "message": "",
       "metrics": {
         "failed_names": "",
         "live_armed": 8.0,
-        "live_expired_actions": 1.0,
-        "live_longest_default_chars": 1076.0,
-        "live_specs_in_radius": 8.0,
-        "live_unrouted_asks": 2.0,
+        "live_expired_actions": 0.0,
+        "live_longest_default_chars": 1329.0,
+        "live_specs_in_radius": 9.0,
+        "live_unrouted_asks": 1.0,
         "live_vanished_asks": 0.0,
         "live_violations": 1.0,
-        "properties_checked": 14.0,
+        "properties_checked": 15.0,
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 225.7,
+      "peak_rss_mb": 226.2,
       "preserved_impl": null,
-      "ran_at": "2026-09-04T14:18:19",
+      "ran_at": "2026-09-05T04:10:50",
       "seeds": [
         0
       ],
