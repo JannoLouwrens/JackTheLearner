@@ -120,6 +120,9 @@ say "audit start — model ${MODEL}, $(git rev-parse --short HEAD)"
 # not this audit completes.
 review_liveness say || true
 
+# The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
+# after this moment are this run's own acts. Captured before the agent starts.
+RUN_START=$(date +%s)
 mark_log
 
 nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
@@ -152,7 +155,7 @@ fi
 # hour, so a 06:37 report is not stamped stale when the 12:37 run dies — only a
 # page that has actually outlived the schedule is.
 if [ "$RC" -ne 0 ]; then
-  seal_output "$RC" docs/OVERSIGHT.md overseer say 7
+  seal_output "$RC" docs/OVERSIGHT.md overseer say 7 "$RUN_START"
   say "audit end rc=${RC} — verdict: UNKNOWN (audit did not complete)"
   exit 0
 fi

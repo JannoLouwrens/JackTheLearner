@@ -117,8 +117,32 @@ withdrawn. The banner clears itself the next time the organ completes." -- "$fil
   return 0
 }
 
+# seal_output <rc> <repo-relative-output-file> <organ> [say-fn] [max-clean-age-h] [run-start-epoch]
+#
+# THE SIXTH ARGUMENT, added 2026-09-05 (74th audit B1). The signature above
+# takes ONE path because the 49th-audit scar was about one page — and a run's
+# product is rarely its page. On 2026-09-05 the daily Review died at max turns
+# with FIVE files dirty: the report got the banner, and the other four (a live
+# owner decision, a shrink-only ratchet move, the week's only queue disposal,
+# the builder's 122-line priority block) went out six hours later as ordinary
+# work. The seal protected the receipt and let the transactions through.
+#
+# So on rc!=0 the seal now also sweeps the run's OTHER dirty paths: commits
+# them in one path-scoped commit naming the rc and the organ, and lists them
+# inside the sealed report, so neither a reader of the page nor a reader of
+# `git log` needs a hand-check to learn their provenance.
+#
+# THE BOUND, and it is the `git add -A` lesson applied to the sweeper: this is
+# a SHARED tree, and a writer on it must bound itself to its own edits. The
+# wrapper passes the epoch at which its run started; only dirty paths whose
+# mtime is at or after that moment are swept. Anything older (the owner's
+# uncommitted draft, another organ's staged work) is LEFT dirty for its author
+# — but still NAMED in the report, so it is visible without being seized.
+# Deleted paths have no mtime and are never swept, only named. With no epoch
+# given, nothing is swept and everything dirty is named: an unbounded sweep
+# would be the ddbe6b7 scar with a banner on it.
 seal_output() {
-  local rc="$1" file="$2" organ="$3" sayfn="${4:-:}" max_clean_age="${5:-25}"
+  local rc="$1" file="$2" organ="$3" sayfn="${4:-:}" max_clean_age="${5:-25}" run_start="${6:-}"
   [ "$rc" -eq 0 ] && return 0
   [ -f "$file" ] || return 0
   # Dirty means THIS dying run wrote it (or an earlier one did and nobody
@@ -137,11 +161,35 @@ seal_output() {
       "$sayfn"
     return 0
   fi
+  # The run's whole dirty set, partitioned BEFORE the banner is written so the
+  # banner can name both halves (74th audit B1). `swept` = this run's own acts
+  # (mtime >= run start); `left` = everything else dirty, named but untouched.
+  local -a swept=()
+  local swept_names="" left_names="" _line _p
+  while IFS= read -r _line; do
+    [ -n "$_line" ] || continue
+    _p="${_line:3}"; _p="${_p##* -> }"
+    [ "$_p" = "$file" ] && continue
+    if [ -n "$run_start" ] && [ -e "$_p" ] \
+       && [ "$(stat -c %Y "$_p" 2>/dev/null || echo 0)" -ge "$run_start" ]; then
+      swept+=("$_p"); swept_names="${swept_names:+$swept_names, }$_p"
+    else
+      left_names="${left_names:+$left_names, }$_p"
+    fi
+  done < <(git status --porcelain 2>/dev/null)
   # Never stamp twice — but still commit. A second dying run that appended to
   # an already-sealed draft leaves the same uncommitted file the seal exists to
   # prevent, and one banner is enough to say the same thing.
   if head -3 "$file" | grep -q "INCOMPLETE RUN"; then
     "$sayfn" "$file already carries a draft banner — committing as it stands"
+    if [ -n "$swept_names$left_names" ] && ! grep -q "also left dirty" "$file"; then
+      {
+        printf '\n> Files this run also left dirty'
+        [ -n "$swept_names" ] && printf ', committed unbannered by the seal: %s' "$swept_names"
+        [ -n "$left_names" ] && printf '; left dirty and NOT committed (predate this run, or no run-start known): %s' "$left_names"
+        printf '.\n'
+      } >> "$file"
+    fi
   else
     local stamp
     stamp="$(date -Iseconds)"
@@ -152,7 +200,12 @@ seal_output() {
       printf '> written before the run stopped: any verdict, any section claiming\n'
       printf '> "no findings", and any instrument table in it are UNVERIFIED.\n'
       printf '> Sealed automatically by scripts/lib_seal.sh; the exit code is in\n'
-      printf '> the log, and this banner is what joins the two.\n\n'
+      printf '> the log, and this banner is what joins the two.\n'
+      [ -n "$swept_names" ] && \
+        printf '> Files this run also left dirty, committed unbannered by the seal: %s.\n' "$swept_names"
+      [ -n "$left_names" ] && \
+        printf '> Left dirty and NOT committed (predate this run, or no run-start known): %s.\n' "$left_names"
+      printf '\n'
       cat "$file"
     } > "$file.sealed" && mv "$file.sealed" "$file"
     "$sayfn" "sealed $file as an INCOMPLETE RUN draft (rc=$rc)"
@@ -166,5 +219,23 @@ Preserved rather than discarded: the content is real work; only its status is
 in doubt." -- "$file" 2>/dev/null \
     && "$sayfn" "committed the sealed draft" \
     || "$sayfn" "WARNING: could not commit the sealed draft — it is dirty in the tree"
+  # The run's ACTS — dispositions, decisions, steering — committed in one
+  # path-scoped commit that names the rc, the organ and the sealed report, so
+  # `git log` joins them the way the banner joins the report to the log.
+  if [ "${#swept[@]}" -gt 0 ]; then
+    git add -- "${swept[@]}" 2>/dev/null
+    git commit -q -m "$organ: rc=$rc run's other dirty files, committed unbannered — see the sealed $file
+
+These paths were left dirty by the same $organ run whose report was sealed as
+an INCOMPLETE RUN draft (rc=$rc). They are that run's acts, kept rather than
+discarded — an uncommitted disposition in a shared tree is one git clean from
+gone — but their author never finished its own checklist, and the sealed
+report names them (74th audit B1). Swept only because their mtime postdates
+the run's start; committed by scripts/lib_seal.sh, not by the organ's agent." \
+      -- "${swept[@]}" 2>/dev/null \
+      && "$sayfn" "committed ${#swept[@]} other dirty file(s) from the dying run: $swept_names" \
+      || "$sayfn" "WARNING: could not commit the run's other dirty files: $swept_names"
+  fi
+  [ -n "$left_names" ] && "$sayfn" "left dirty for their author (predate run start or no run-start known): $left_names"
   return 0
 }

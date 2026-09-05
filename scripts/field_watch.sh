@@ -37,6 +37,9 @@ cd "$REPO" || exit 0
 MAXTURNS=90
 MODEL="${JACK_FIELDWATCH_MODEL:-opus}"
 say "sweep start — model ${MODEL}"
+# The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
+# after this moment are this run's own acts. Captured before the agent starts.
+RUN_START=$(date +%s)
 mark_log
 nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
@@ -52,6 +55,6 @@ fi
 # that nothing marks as a draft, and a death before writing leaves a page that
 # still claims to be current (scripts/lib_seal.sh). 169 h = this organ's weekly
 # cadence plus an hour; below that the last report is still the current one.
-seal_output "$RC" docs/FIELD_WATCH.md field-watch say 169
+seal_output "$RC" docs/FIELD_WATCH.md field-watch say 169 "$RUN_START"
 say "sweep end rc=${RC} — $(grep -c NOMINAT docs/FIELD_WATCH.md 2>/dev/null || echo 0) nomination lines"
 exit 0

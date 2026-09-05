@@ -123,7 +123,17 @@ owner asked "who fixes the to-do lists?" (2026-08-09):
 
 ## Part 3 — Output
 
-Rewrite docs/PROGRESS.md (current-state, not a log) with: the date, the
+**COMMIT EACH DISPOSITION AS YOU MAKE IT — never hold your acts dirty until
+the page is written.** One path-scoped commit per act: per queue row disposed,
+per seat re-marked, per decision armed, per priority block rewritten. The scar
+(74th audit, 2026-09-05): the daily Review died at max turns holding five dirty
+files; the seal bannered the report, and the four files carrying its ACTS — a
+live owner decision, a shrink-only ratchet move, the week's only disposal, the
+builder's steering — went out unmarked and steered five builder slots. Four of
+the four Sunday FULL runs ever fired on cron died at max turns, and a late
+death is the likely one for an organ whose last act is writing a long page. If
+you commit as you go, a max-turns death costs the PAGE, not the WORK. Write
+PROGRESS.md last, as the receipt for commits that already exist.
 numbers, the honest paragraph, a REWRITTEN/STRENGTHENED list (spec id, what
 changed, why it is stronger), a FOR THE BUILDER section (proposed redesigns,
 ordered), and a FOR THE OWNER section (strategic forks only — things a chief

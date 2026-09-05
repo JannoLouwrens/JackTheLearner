@@ -173,6 +173,46 @@ printf 'VERDICT: ON TRACK\nhalf-written\n' > "$WORK/docs/D.md"
 chk "a DIRTY file on rc!=0 is still sealed as a DRAFT" \
   "$(head -3 "$WORK/docs/D.md" | grep -c 'INCOMPLETE RUN')" "1"
 
+printf '\n--- seal_output: the run'"'"'s OTHER dirty files (74th audit B1) ---\n'
+
+# THE 74th-AUDIT SCAR: the 09-05 Review died at max turns with FIVE files
+# dirty. One (the report) got the banner; the other four — a live owner
+# decision, a shrink-only ratchet move, the week's only queue disposal, the
+# builder's priority block — went out six hours later as ordinary work with
+# nothing marking their provenance. The seal must commit the dying run's
+# whole dirty set, marked, and NAME those paths inside the sealed report.
+# Assert on the class (N>1 files, including an untracked one), not the tidy
+# example.
+W2="$TMP/repo2"; mkdir -p "$W2/docs"
+git -C "$W2" init -q
+git -C "$W2" config user.email t@t; git -C "$W2" config user.name t
+printf 'report v1\n' > "$W2/docs/R.md"
+printf 'decision v1\n' > "$W2/docs/DEC.md"
+printf 'queue v1\n' > "$W2/docs/Q.md"
+printf 'owner draft\n' > "$W2/docs/OWNER.md"
+git -C "$W2" add -A; git -C "$W2" commit -q -m init
+# The owner's edit PREDATES the run start; the dying run's own edits follow it.
+printf 'owner edited this before the run began\n' >> "$W2/docs/OWNER.md"
+touch -d '2 hours ago' "$W2/docs/OWNER.md"
+RUN_START=$(( $(date +%s) - 60 ))
+printf 'report half-written\n' >> "$W2/docs/R.md"
+printf 'a new owner decision with a live clock\n' >> "$W2/docs/DEC.md"
+printf 'the week'"'"'s only disposal\n' >> "$W2/docs/Q.md"
+printf 'brand new file from the dying run\n' > "$W2/docs/NEW.md"
+( cd "$W2" && seal_output 1 docs/R.md review say 25 "$RUN_START" ) >/dev/null 2>&1
+chk "the report itself is still sealed as a draft" \
+  "$(head -3 "$W2/docs/R.md" | grep -c 'INCOMPLETE RUN')" "1"
+chk "the run's OTHER dirty files are committed, not abandoned" \
+  "$(git -C "$W2" status --porcelain -- docs/DEC.md docs/Q.md docs/NEW.md | wc -l)" "0"
+chk "their commit message names the rc, so git log joins them to the death" \
+  "$(git -C "$W2" log -1 --format=%s -- docs/DEC.md | grep -c 'rc=1')" "1"
+chk "the sealed report NAMES the unbannered files" \
+  "$(head -12 "$W2/docs/R.md" | grep -c 'docs/DEC.md')" "1"
+chk "a dirty file that PREDATES the run is refused (the git add -A lesson)" \
+  "$(git -C "$W2" status --porcelain -- docs/OWNER.md | wc -l)" "1"
+chk "and the report says it was LEFT, so a reader still knows it exists" \
+  "$(head -12 "$W2/docs/R.md" | grep -c 'docs/OWNER.md')" "1"
+
 printf '\n--- review_liveness: the paused organ ---\n'
 
 # A paused organ is a DECISION, not a fault. Shouting about it would train the

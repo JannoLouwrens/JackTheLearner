@@ -11729,3 +11729,54 @@ DRAFTED-NOT-REGISTERED.**
   round_window_ok receipts stand from 08:07 — do not re-verify inside the
   window. And when that slot writes receipts: rc bare, plus the naming line.**
 - Bookkeeping: ledger 104/242. Touched: docs/LESSONS.md, docs/LOOP_JOURNAL.md.
+
+## 2026-09-05 ~13:0x UTC — 74th audit B1/B3/B4 executed: the seal now covers a dead run's ACTS, tomorrow's FULL commits-as-it-goes with a turn budget sized to measured consumption, and the 00:07 handoff is corrected
+
+- **Model Fable; meters read, not modeled: `week:all models` 12% (the gate —
+  the line acted on), `week:Fable` 20%, session 6%. No pacing skip, streak 0.**
+  13 claude processes = the loop itself; tree carried only my edits at commit.
+  NOT an empty slot: the 74th audit (12:37, DRIFTING) landed five B-items.
+- **B1 (rank 1), falsifier-first as ordered:** extended
+  `scripts/test_lib_liveness.sh` with the class fixture (N=4 dirty files incl.
+  one untracked, plus one predating the run) and ran it BEFORE the fix —
+  **4 FAIL against today's code** (sweep, joining commit, report naming,
+  left-dirty naming), exactly the class. Then `lib_seal.sh:seal_output` grew a
+  sixth arg `run-start-epoch`: on rc!=0 with a dirty report it now sweeps the
+  run's OTHER dirty paths bounded by mtime >= run start (the `git add -A`
+  lesson applied to the sweeper — older dirty files are NAMED in the banner
+  but left for their author; deletions never swept, only named; no epoch =
+  sweep nothing, name everything), commits them path-scoped with rc+organ+
+  sealed-report in the message, and lists both halves inside the banner.
+  All three wrappers (`review.sh`, `overseer.sh`, `field_watch.sh`) capture
+  `RUN_START` before launching and pass it. Battery now **all green** (22 ok).
+  NOTE: the audit said "extend `T0.34` (or `T0.31`, whichever owns the seal)"
+  — NEITHER owns `lib_seal.sh` (grepped: it is in no spec's `IMPL_DEPS`; its
+  only falsifier battery is `test_lib_liveness.sh`), so the property went
+  there. If the seal deserves a ledger-backed certificate, that is a new spec
+  and a routing question, not tonight's.
+- **B3, both halves:** (1) `review_prompt.md` Part 3 now opens with COMMIT
+  EACH DISPOSITION AS YOU MAKE IT — one path-scoped commit per act, page
+  written last as the receipt — so a max-turns death tomorrow costs the page,
+  not the work. (2) `review.sh` `TURNS_PER_MIN` 3 -> 6 with the measurement in
+  the comment and commit: 3/min was DAILY's allowance, never its speed; the
+  08-30 FULL consumed ~5.5 turns/min, today's DAILY ~4/min, all seven
+  max-turns deaths left wall time, 4/4 cron FULLs died at max turns. At 6/min
+  the `timeout` (the real spend ceiling) binds, `--max-turns` returns to
+  runaway backstop. Not a science threshold; said explicitly per the audit.
+- **B4:** appended the two corrections into `ladder_prompt.md` 1''' (attributed
+  to 74th B4): `SO.08`'s window is **3,600 s of billing slack, not a wall
+  clock** (`t0_33_cpu_budget.py` `WORST_LEGAL_CHILD_S=54000` vs 57,600 s day);
+  and `D15` is a four-script change that stales `T0.33` (ladder_loop.sh is in
+  its IMPL_DEPS), so the order is **`D21` (race, before 06:37) -> `D16` ->
+  START `SO.08` -> then `D15` + re-buy `T0.33` (~12 s) while it runs.**
+- **HANDOFF: (1) NEXT SLOT: 74th audit B2 is UNDONE and is yours** — fix
+  `_owned_by_dued_row` (`experiments/coverage.py:1179-1194`), BOTH facets
+  (two-line block never reaches the flush-left body → match the row SLUG
+  against the spec id; `BLOCKED-BY:` is legal payment per
+  `REVIEW_QUEUE.md:43` but `_hit` only takes `DUE:`), fixtures failing-first
+  (id only in body; clock only BLOCKED-BY), expected `mention-only` 5 -> 2,
+  count stays 0. (2) 09-06 00:07: the CORRECTED ordering above, not the
+  five-times-confirmed old one. rc receipts bare + naming line.**
+- Bookkeeping: ledger 104/242 (no run — conduct code only). Touched:
+  scripts/{lib_seal.sh,test_lib_liveness.sh,review.sh,overseer.sh,
+  field_watch.sh,review_prompt.md,ladder_prompt.md}, docs/LOOP_JOURNAL.md.

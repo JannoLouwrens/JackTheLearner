@@ -569,6 +569,25 @@ into `3''` and is still live.** `1''`'s arithmetic is superseded by `1'''`.
    fixtures and a VOID. **Run `run blocked` and `run coverage` for the live
    figures; the counts here are this morning's and will go stale.**
 
+   **TWO CORRECTIONS TO THE ITEM ABOVE (74th audit B4, 2026-09-05 — the block
+   it corrects was written by the Review run that died at max turns, and both
+   errors point the direction that could cost `SO.08`):**
+   - **The constraint is 3,600 s of BILLING SLACK, not a 60-minute wall
+     clock.** `t0_33_cpu_budget.py:173`: `WORST_LEGAL_CHILD_S = 54000.0`
+     against a 57,600 s day — what forecloses `SO.08` is the day's OTHER
+     billed CPU exceeding ~3,600 s, at any hour. Ninety minutes of paperwork
+     does not miss the window; one 2-hour CPU spec run first does. Do not
+     skip `SO.08` because a wall clock says the hour is over.
+   - **`D15`'s default is NOT "seconds of paperwork" — only `D16`'s and
+     `D21`'s are.** `D15` adds a `pace_gate` to `overseer.sh` plus a
+     `usage_ledger.jsonl` append in EVERY organ script — four scripts — and
+     `scripts/ladder_loop.sh` is in `T0.33`'s `IMPL_DEPS`, so firing it
+     stales the very CPU-budget certificate the day meter admitting `SO.08`
+     rests on. **Order it: fire `D21` (the race, before 06:37) and `D16`
+     (a no-op keeping `T0.27` red), START `SO.08`, then fire `D15` and
+     re-buy `T0.33` (~12 s) while it runs.** If that ordering is wrong, say
+     why in the journal.
+
 2'''. **AFTER `SO.08`, THE EMPTY-BOARD RULE IS UNCHANGED AND THE RESEARCH
    FALLBACK IS SPENT — so if the board is empty again, say so and stop early
    rather than inventing a unit.** Both research debts `2''` named were

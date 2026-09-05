@@ -53,10 +53,26 @@ MODEL="${JACK_REVIEW_MODEL:-opus}"
 # the same rate over its own clock. This does not raise the spend ceiling —
 # `timeout` still does that — it stops an organ being killed early by a budget
 # that was never derived from anything.
-TURNS_PER_MIN=3
+#
+# RATE CORRECTED 3 -> 6, 2026-09-05 (74th audit B3, the day before the 09-06
+# FULL). The 3/min figure was DAILY's ALLOWANCE, not its measured speed, and
+# the measurement says turns bind before the clock ever does: the 08-30 FULL
+# died at 60 turns in 11 of 40 minutes (~5.5 turns/min consumed), the 09-05
+# DAILY died at 60 turns in 15 of 20 (~4/min), and all seven max-turns deaths
+# across the organs left time on the clock — 4 of 4 cron-fired Sunday FULLs
+# among them. At 6/min the `timeout` becomes the binding ceiling, which is the
+# one that actually caps spend; --max-turns returns to being the runaway
+# backstop it was meant to be. This raises no science threshold and weakens no
+# control — it is an organ's own turn budget, sized to its measured consumption
+# so the most consequential scheduled run is not killed by an allowance derived
+# from nothing (said here explicitly so no audit reads it as a silent loosening).
+TURNS_PER_MIN=6
 if [ "$(date +%u)" = "7" ]; then MODE=FULL; TMOUT=40m; MINUTES=40; else MODE=DAILY; TMOUT=20m; MINUTES=20; fi
 MAXTURNS=$(( MINUTES * TURNS_PER_MIN ))
 say "review start — mode ${MODE}, model ${MODEL}, ${TMOUT} / ${MAXTURNS} turns"
+# The seal's sweep bound (74th audit B1): only dirty files whose mtime is at or
+# after this moment are this run's own acts. Captured before the agent starts.
+RUN_START=$(date +%s)
 mark_log
 nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
@@ -82,6 +98,6 @@ fi
 # current state -> stamp it STALE, but only once it is older than this organ's
 # 24 h cadence (both branches in scripts/lib_seal.sh; the 08-30 FULL death is
 # the scar for the second one).
-seal_output "$RC" docs/PROGRESS.md review say 25
+seal_output "$RC" docs/PROGRESS.md review say 25 "$RUN_START"
 say "sweep end rc=${RC} — $(grep -c STRENGTHEN docs/PROGRESS.md 2>/dev/null || echo 0) strengthen lines"
 exit 0
