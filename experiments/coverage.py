@@ -1455,7 +1455,7 @@ def _fail_unowned_fixture() -> List[str]:
 
 def queue_depth(ledger=None, by_id=None, tracked=None,
                 baseline: frozenset = QUEUE_EMPTY_BASELINE,
-                held=None) -> dict:
+                held=None, cpu_estimate=None, cpu_remaining_s=None) -> dict:
     """How many specs could actually be DISPATCHED today, by cost class.
 
     A spec is in the queue when it is **runnable** (every dependency passes),
@@ -1486,6 +1486,21 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
 
     Returns `{"depth", "by_class", "void", "excluded", "empty", "new_empty",
     "known_empty", "stale_baseline"}`. `new_empty` is the fatal class.
+
+    AND THE AFFORDABILITY JOIN (75th audit Finding 2 / B3). On 2026-09-05 this
+    function printed `SO.08` under "dispatchable TODAY" for the fourteen hours
+    `gate_cpu_child` was refusing it — both instruments correct, keyed to
+    different facts, reconciled by hand in fourteen consecutive journal
+    entries. A row the day meter would refuse right now is marked
+    `unaffordable[sid] = "est Ns [provenance] vs Ms remaining"` and `fresh`
+    subtracts the UNION of VOID and unaffordable from `depth`. Two scope rules,
+    both deliberate: this reads only the meter's INPUTS (`child_estimate_s`
+    and `remaining_s` — the same comparison `gate_cpu_child` makes), never its
+    `CpuDecision`, so a transient load spike cannot flap the readout; and it
+    is an ANNOTATION, not a gate — an unmarked row is still refused loudly at
+    dispatch, so the failure direction of a missing budget file (full-day
+    remaining, nothing marked) costs a refused attempt, not a false claim.
+    `cpu_estimate`/`cpu_remaining_s` are injectable for the fixture only.
     """
     from .protocol import (Budget, Ledger, gates_frozen, module_path_for,
                            pilot_blocked, pilot_harvested, pilot_owed,
@@ -1770,8 +1785,35 @@ def queue_depth(ledger=None, by_id=None, tracked=None,
                 pilot_owed_cls[spec.budget.value].append(sid)
         else:
             pilot_undeclared.append(sid)
+    # UNAFFORDABLE TODAY — the day meter's own comparison (est > remaining),
+    # made here on the meter's INPUTS so this readout can never again disagree
+    # in silence with the refusal it predicts. Scope matches
+    # `cpu_budget.runner_cpu_specs`: gpu classes are metered by T0.12 and
+    # `cpu<48h` is the detached lane (`admit_detached`), so neither is this
+    # gate's to mark.
+    if cpu_estimate is None or cpu_remaining_s is None:
+        from .cpu_budget import CpuBudget, child_estimate_s
+        if cpu_estimate is None:
+            cpu_estimate = child_estimate_s
+        if cpu_remaining_s is None:
+            cpu_remaining_s = CpuBudget().remaining_s()
+    unaffordable: Dict[str, str] = {}
+    for cls, ids in by_class.items():
+        if not cls.startswith("cpu") or cls == "cpu<48h":
+            continue
+        for sid in ids:
+            est, prov = cpu_estimate(by_id[sid])
+            if est > cpu_remaining_s:
+                unaffordable[sid] = (f"est {est:.0f}s [{prov}] vs "
+                                     f"{cpu_remaining_s:.0f}s remaining")
+    depth = sum(len(v) for v in by_class.values())
     return {
-        "depth": sum(len(v) for v in by_class.values()),
+        "depth": depth,
+        # FRESH subtracts the UNION — a VOID that is also unaffordable is one
+        # undispatchable row, not two.
+        "fresh": depth - len(set(void) | set(unaffordable)),
+        "unaffordable": dict(sorted(unaffordable.items())),
+        "cpu_remaining_s": round(float(cpu_remaining_s), 2),
         "by_class": {c: sorted(ids) for c, ids in by_class.items()},
         "void": sorted(void),
         "excluded": {k: sorted(v) for k, v in excluded.items()},
@@ -1950,6 +1992,16 @@ def _queue_fixture() -> List[str]:
         # because the class HAS a path in — a dated one, on the decision desk —
         # and "go do `run blocked`" is the wrong routing for a calendar.
         ("Q.19", Budget.CPU_FAST, "", None, True, None),
+        # THE AFFORDABILITY TRIPLE (75th audit F2/B3). All three share Q.06's
+        # cpu<10min so they decide no class. Q.06 becomes the row the guard is
+        # FOR: healthy queue member the day meter would refuse right now —
+        # the SO.08 case, where "dispatchable TODAY" was wrong about the one
+        # row that mattered for fourteen hours. Q.20 is the affordable
+        # control: an estimate under the remaining seconds must NOT be marked,
+        # or the annotation is a list, not a comparison. Q.21 is the UNION
+        # row: VOID and unaffordable at once — `fresh` must subtract it once.
+        ("Q.20", Budget.CPU, "", None, True, None),
+        ("Q.21", Budget.CPU, "", Status.VOID, True, None),
     ]
     # `pilot_blocked` / `pilot_owed` answers per spec: a reason string, or None
     # for "does not declare". Q.08 and Q.12 declare neither — Q.12 deliberately,
@@ -1967,6 +2019,16 @@ def _queue_fixture() -> List[str]:
     # two rows differ ONLY in the filesystem and the fixture can tell whether
     # the split is being read from disk or from prose.
     harvested = {"Q.14": "/data/q14_pilot_seed90.json"}
+    # `child_estimate_s`'s answers plus the day's remaining seconds, injected.
+    # The DEFAULT is the trap: any spec the clause queries that is not listed
+    # here reads 999999s — instantly unaffordable at 100s remaining — so if
+    # the scope ever leaks to a gpu row or the detached lane, the
+    # exact-equality assertion below names the leak. Q.20's estimate is the
+    # only one under the remaining, which is what makes it the control.
+    est_stub = {"Q.06": (5000.0, "ENUM (no recorded duration to project from)"),
+                "Q.20": (12.0, "MEASURED 0.50s x4 + 10s"),
+                "Q.21": (7200.0, "ENUM (no recorded duration to project from)")}
+    cpu_est = lambda spec: est_stub.get(spec.id, (999999.0, "LEAKED-QUERY"))
     # `void_foreclosed`'s answers. Q.15 is VOID and declares; Q.16 declares in
     # identical words and has no verdict, so the CLAUSE — not the reader — is
     # what must keep it in the queue.
@@ -2005,13 +2067,22 @@ def _queue_fixture() -> List[str]:
     try:
         q = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
                         baseline=frozenset({"gpu<8h"}),
-                        held={"Q.19": "D99 (decide_by 2026-09-14)"})
+                        held={"Q.19": "D99 (decide_by 2026-09-14)"},
+                        cpu_estimate=cpu_est, cpu_remaining_s=100.0)
         # THE CONTROL: the identical fixture with no hold declared must
         # advertise Q.19 as fillable — otherwise the held state is not being
         # read from the decisions join and the assertion above it proves
         # nothing about the edge.
         q_nohold = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
-                               baseline=frozenset({"gpu<8h"}), held={})
+                               baseline=frozenset({"gpu<8h"}), held={},
+                               cpu_estimate=cpu_est, cpu_remaining_s=100.0)
+        # THE RICH-DAY CONTROL: same estimates against a fresh day's worth of
+        # remaining seconds. Everything must read affordable — otherwise the
+        # marks above come from a list, not from the meter's comparison.
+        q_rich = queue_depth(ledger=led, by_id=by_id, tracked=tracked,
+                             baseline=frozenset({"gpu<8h"}),
+                             held={"Q.19": "D99 (decide_by 2026-09-14)"},
+                             cpu_estimate=cpu_est, cpu_remaining_s=1e9)
     finally:
         _reg.ready, _proto.module_path_for = real_ready, real_mpf
         _proto.gates_frozen, _proto.pilot_blocked = real_gf, real_pb
@@ -2026,7 +2097,7 @@ def _queue_fixture() -> List[str]:
                      f"gates counts; a foreclosure declaration without a VOID "
                      f"mutes nothing; a REFUSED one closes no door), got "
                      f"{q['by_class']['gpu<2h']}")
-    if q["void"] != ["Q.03", "Q.17"]:
+    if q["void"] != ["Q.03", "Q.17", "Q.21"]:
         fails.append(f"VOID must be reported separately, got {q['void']}")
     if q["excluded"]["settled"] != ["Q.02"]:
         fails.append(f"FAIL is settled, got {q['excluded']['settled']}")
@@ -2221,11 +2292,41 @@ def _queue_fixture() -> List[str]:
     if "Q.17" in q["excluded"]["void_foreclosed"]:
         fails.append(f"a refused declaration must not exclude — got "
                      f"{q['excluded']['void_foreclosed']}")
-    if q["by_class"]["cpu<10min"] != ["Q.06"]:
+    if q["by_class"]["cpu<10min"] != ["Q.06", "Q.20", "Q.21"]:
         fails.append(f"cost classes must not merge, got {q['by_class']}")
-    if q["depth"] != 6:
-        fails.append(f"depth should be 6 (Q.17, the refused weld, still "
-                     f"counts), got {q['depth']}")
+    if q["depth"] != 8:
+        fails.append(f"depth should be 8 (Q.17, the refused weld, still "
+                     f"counts; an UNAFFORDABLE row is still queue depth — "
+                     f"the mark is about today, not about the spec), got "
+                     f"{q['depth']}")
+    # THE AFFORDABILITY TRIPLE (75th audit F2/B3). Exact equality is the
+    # leak-catcher: the stub answers 999999s for any spec it was not told
+    # about, so a clause that queries a gpu row or the detached lane marks it
+    # and fails here BY NAME.
+    want_unaff = {
+        "Q.06": "est 5000s [ENUM (no recorded duration to project from)] "
+                "vs 100s remaining",
+        "Q.21": "est 7200s [ENUM (no recorded duration to project from)] "
+                "vs 100s remaining"}
+    if q["unaffordable"] != want_unaff:
+        fails.append(f"the day meter's refusal must reach this readout with "
+                     f"its arithmetic AND its provenance — an [ENUM] estimate "
+                     f"is a guess and the reader deserves to see that — and "
+                     f"ONLY runner-lane cpu rows may be marked (SO.08 sat "
+                     f"under 'dispatchable TODAY' for fourteen refused "
+                     f"hours), got {q['unaffordable']}")
+    if q["fresh"] != 4:
+        fails.append(f"fresh must subtract the UNION of VOID and "
+                     f"UNAFFORDABLE from depth (8 - |{{Q.03,Q.17,Q.21}} u "
+                     f"{{Q.06,Q.21}}| = 4): Q.21 is both and may not be "
+                     f"subtracted twice, got {q['fresh']}")
+    # ...and the rich-day control: same estimates, fresh day's remaining.
+    # If anything stays marked, the mark came from a list, not a comparison.
+    if q_rich["unaffordable"] or q_rich["fresh"] != 5:
+        fails.append(f"with a full day remaining nothing is unaffordable and "
+                     f"fresh is depth minus VOID alone (8 - 3 = 5), got "
+                     f"unaffordable={q_rich['unaffordable']} "
+                     f"fresh={q_rich['fresh']}")
     # gpu<20min is empty and NOT in this fixture's baseline: new debt, a red.
     if "gpu<20min" not in q["new_empty"]:
         fails.append(f"an unlisted empty class is new debt, got "
@@ -3208,12 +3309,17 @@ def check() -> int:
     q = queue_depth()
     print(f"\n  QUEUE DEPTH — dispatchable TODAY (runnable, implemented, "
           f"tracked, unparked, unsettled): {q['depth']}"
-          + (f", of which {len(q['void'])} VOID -> only "
-             f"{q['depth'] - len(q['void'])} is a FRESH dispatch"
-             if q["void"] else ""))
+          + (f", of which {len(q['void'])} VOID" if q["void"] else "")
+          + (f", {len(q['unaffordable'])} UNAFFORDABLE TODAY"
+             if q["unaffordable"] else "")
+          + (f" -> only {q['fresh']} is a FRESH dispatch"
+             if q["void"] or q["unaffordable"] else ""))
     for cls, ids in q["by_class"].items():
         if ids or cls in q["empty"]:
-            shown = ", ".join(ids) if ids else "EMPTY"
+            shown = (", ".join(
+                sid + (f" !UNAFFORDABLE TODAY ({q['unaffordable'][sid]})"
+                       if sid in q["unaffordable"] else "")
+                for sid in ids) if ids else "EMPTY")
             tail = _class_advice(ids, q["void"],
                                  q["pilot_harvestable"].get(cls, []),
                                  q["pilot_owed"].get(cls, []),
@@ -3226,6 +3332,18 @@ def check() -> int:
     if q["void"]:
         print(f"  of which VOID (an arm to repair, not a dispatch): "
               f"{', '.join(q['void'])}")
+    if q["unaffordable"]:
+        print(f"  of which UNAFFORDABLE TODAY — the day meter would refuse "
+              f"the dispatch right now (its own\n      comparison, est > "
+              f"remaining, against {q['cpu_remaining_s']:.0f}s left of the "
+              f"day; NOT a verdict on the spec):")
+        for sid, why in q["unaffordable"].items():
+            print(f"      {sid}: {why}")
+        print("  An [ENUM ...] estimate is a class enum typed at "
+              "registration, not a measurement — SO.08 sat\n  foreclosed a "
+              "full day at ~28,000x its measured cost (75th audit F1). "
+              "Before waiting for\n  midnight, ask whether the row's repair "
+              "is a SIZING RECORD and an honest re-declaration.")
     ex = q["excluded"]
     print(f"  excluded: {len(ex['unimplemented'])} unimplemented, "
           f"{len(ex['settled'])} settled, {len(ex['parked'])} parked, "
