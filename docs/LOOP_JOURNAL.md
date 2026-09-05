@@ -11392,3 +11392,39 @@ DRAFTED-NOT-REGISTERED.**
 - **Bookkeeping:** ledger 104/242 (VOID does not demonstrate). Touched:
   `experiments/ledger.json` + `experiments/cpu_budget.json` (harvest,
   `9bd3114`), `docs/REVIEW_QUEUE.md`, `CHECKLIST.md` (render), this file.
+
+## 2026-09-05 ~04:1x-04:4x UTC — T0.28 re-bought; SO.08 implemented and committed; its registered run REFUSED by the day meter (as its own registry notes predicted)
+
+- **Model Fable; meters read, not modeled: `week:all models` 7% (the gate),
+  `week:Fable` 12%. No pacing skip, streak 0.**
+- **T0.28 re-bought** after the 72nd-audit B2 strengthening left it stale:
+  PASS, 66.6 s, 15-property set live (control fails all 10 required
+  properties). The "runs as soon as the lock frees" promise from the 02:16
+  slot is discharged.
+- **SO.08 implemented** (`experiments/tests/so_08_whose_hands.py`, `7af006e`,
+  committed BEFORE the run — the SO.06/LG.02 discipline). Design decisions
+  worth inheriting: LG.02's `_trust` is IMPORTED byte-identically per the
+  T2.16/LG.04-A4 rule, through `_AsClaims`, a read-only diary view that maps
+  each EATEN gift into the claim/finding grammar the mechanism joins — so
+  strip/shuffle at record time propagates and nothing re-derives the
+  posterior. plants.py's real `Toxin` schedule carries the delayed outcome
+  (Q_FIRST first bite, felt at DT=0.2 cadence). SO.07's VOID lesson became a
+  rig gate: `round_window_ok` computes ROUND_S > DELAY_S + ILL_WINDOW_S at
+  run time and VOIDs if plants.py is ever recalibrated past it. Gates from
+  binomial arithmetic, registered in the docstring before any number existed:
+  MIN_DIV 0.40 (expected ~0.72, sd ~0.09), COLLAPSE_MAX 0.20 whole-life for
+  null/shuffle/equal, aliveness bands sized per feed (alternating vs iid).
+- **The registered run was REFUSED by the CPU day meter**: never-run cpu<2h
+  spec projects at the 54,000 s class ENUM vs 48,328 s remaining (SO.07's
+  9,205 s harvest spent today's slack). This is the foreclosure SO.08's own
+  registry notes named "a scheduling fact for the Review (D20), never a
+  reason to shrink the design". Not worked around.
+- **Ratchets recorded** (`review_queue_net_arrivals` 34->35 justified by
+  `08d5578`; `cpu_foreclosed_now` 41->40, a no-floor metric).
+- **HANDOFF, in order: (1) the 00:07 slot on 09-06 fires `D21`/`D15`/`D16`
+  FIRST — D21 must beat the 06:37 Review (72nd audit B3). (2) THEN run SO.08
+  in the same or next slot: the midnight rollover gives 57,600 s fresh, the
+  54,000 s ENUM admits, and the actual run is minutes — run it before ~3,600 s
+  of other billing accrues or it forecloses again for the whole day.**
+  All standing prohibitions untouched (no D1.0 re-dispatch, W35's ~10.8
+  Kaggle h expire tonight unspent by design, HR held, no docket re-stagger).
