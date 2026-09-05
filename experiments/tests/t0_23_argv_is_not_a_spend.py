@@ -35,6 +35,17 @@ properties, each able to fail on its own:
       Without P4 a guard that refuses everything would pass this spec.
   P5  a good spec id BESIDE a bad token is refused too, by the same line. This
       is the "no partial run" property, and it is the one the bug violated.
+  P6  the DOCUMENTED forwarders reach their tools: `decisions --check` and
+      `champions --check` print the owning tool's own header, never argparse's
+      usage error, and never dispatch a spec. Scar (2026-09-05, twice in three
+      hours): three governing pages document `run decisions --check`, argparse
+      rejected `--check` before dispatch ever saw the word, and the bare rc=2
+      usage error was read as a checker going red by two builder slots — the
+      12:07 false-RED incident, then again at 15:07 with the lesson on file.
+      A lesson taught recognition; only the working invocation is prevention.
+  P7  `--check` beside anything that is not its owner is refused WHOLE — a
+      flag the dispatch would silently drop is the argv-is-a-spend trap in
+      miniature (the caller believes a check happened).
 
 WHY P4 CANNOT ASSERT DISPATCH, stated plainly rather than quietly weakened.
 `_exclusive` is process-wide: this spec runs while holding the runner lock, so
@@ -107,6 +118,10 @@ def _experiment(seed: int) -> dict:
     rc_ro, _ = _cli(["status"])
     rc_good, out_good = _cli([FIXTURE_SPEC])
     rc_mixed, out_mixed = _cli([FIXTURE_SPEC, "T1.O2"])   # letter O, a real typo
+    rc_dec, out_dec = _cli(["decisions", "--check"])
+    rc_champ, out_champ = _cli(["champions", "--check"])
+    rc_stray, out_stray = _cli([FIXTURE_SPEC, "--check"])
+    usage_err = "unrecognized arguments"
 
     m.update({
         "bad_argv_refused": rc_bad != 0 and REFUSAL in out_bad,
@@ -119,8 +134,19 @@ def _experiment(seed: int) -> dict:
         # got. `True` here means the runner lock was held by this very spec.
         "good_argv_lock_skipped": LOCK_SKIP in out_good,
         "good_argv_dispatched": _reached_spec(out_good),
+        # P6: assert on the tools' own headers, not on exit codes — each
+        # tool's rc is its ratchet's verdict and may legitimately be non-zero.
+        "forwarders_reach_their_tools": (
+            "Open decisions" in out_dec and "Champion seats" in out_champ
+            and usage_err not in out_dec and usage_err not in out_champ
+            and not _reached_spec(out_dec) and not _reached_spec(out_champ)),
+        "stray_check_refused": (rc_stray != 0
+                                and "Nothing was run" in out_stray
+                                and not _reached_spec(out_stray)),
         "rc_bad": rc_bad, "rc_readonly": rc_ro,
         "rc_good": rc_good, "rc_mixed": rc_mixed,
+        "rc_decisions": rc_dec, "rc_champions": rc_champ,
+        "rc_stray": rc_stray,
     })
     return m
 
@@ -150,7 +176,8 @@ def _control(seed: int) -> dict:
 
 _PROPS = ("fixture_unimplemented", "bad_argv_refused",
           "bad_argv_never_dispatched", "readonly_still_works",
-          "good_argv_not_refused", "mixed_argv_refused")
+          "good_argv_not_refused", "mixed_argv_refused",
+          "forwarders_reach_their_tools", "stray_check_refused")
 
 
 def _check(m: dict, c: dict) -> bool:

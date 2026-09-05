@@ -2422,6 +2422,12 @@ def main() -> int:
                          "edit — refuses unless the recorded sha reconstructs "
                          "from git and the docstring-stripped ASTs are "
                          "identical (25th-audit B3)")
+    ap.add_argument("--check", action="store_true",
+                    help="decisions/champions only: run the owning tool's "
+                         "ratchet check (exit code is the tool's). Refused "
+                         "beside anything else — a flag the dispatch would "
+                         "silently drop is the argv-is-a-spend trap in "
+                         "miniature (T0.23 P6/P7)")
     args = ap.parse_args()
     ledger = Ledger()
 
@@ -2446,6 +2452,28 @@ def main() -> int:
             return 2
         return cmd_ratchets(ledger, record=True)
 
+    # `run decisions [--check]` / `run champions [--check]` — the forms the
+    # governing pages actually document (`ladder_prompt.md:814`,
+    # `DECISIONS_NEEDED.md`, `REVIEW_QUEUE.md` all name `run decisions`; none
+    # names the module path). Until 2026-09-05 the word never reached this
+    # dispatch: argparse rejected `--check` first, and the bare usage error
+    # (rc=2) was read by two builder slots as a checker going red. Forward to
+    # the tool that owns the flag; extra tokens refuse WHOLE per T0.23's rule.
+    if args.spec and args.spec[0] in ("decisions", "champions"):
+        if args.spec[1:]:
+            print(f"Refusing to run: `{args.spec[0]}` takes no further "
+                  "arguments (only --check). Nothing was run.")
+            return 2
+        if args.spec[0] == "decisions":
+            from . import decisions as _tool
+        else:
+            from . import champions as _tool
+        return _tool.main(["--check"] if args.check else [])
+    if args.check:
+        print("Refusing to run: --check belongs to `decisions` or "
+              "`champions` alone. Nothing was run.")
+        return 2
+
     # status/next/render are read-only and must not block on a running experiment.
     if args.spec and args.spec[0] in READ_ONLY_COMMANDS:
         return READ_ONLY_COMMANDS[args.spec[0]](ledger)
@@ -2459,7 +2487,8 @@ def main() -> int:
     unknown = [x for x in (args.spec or []) if x not in BY_ID]
     if unknown:
         print("Refusing to run: unrecognised argument(s): " + ", ".join(unknown))
-        print("Commands: " + ", ".join(sorted(READ_ONLY_COMMANDS)) + ", amend.")
+        print("Commands: " + ", ".join(sorted(READ_ONLY_COMMANDS))
+              + ", amend, decisions [--check], champions [--check].")
         print("Everything else must be a spec id. Nothing was run.")
         return 2
 
