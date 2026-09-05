@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 104 / 242 demonstrated
+## 105 / 242 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1119,7 +1119,7 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ A learner provisioned by a need-contingent hand reaches a higher competence than an unprovisioned twin at matched compute, AND retains it when the hand is withdrawn: retention_ratio R = C_off/C_on above its floor with scaffolding_benefit B = C_off/C0 above 1 (PURPOSE_AND_SCAFFOLDING.md §3.6's metrics, reused verbatim).
       - _dies if:_ B ~ 1 (the hand bought nothing), OR R below its floor while B > 1 — competence that exists only while a hand is feeding him. THE SECOND IS THE PUPPETEERING RESULT and is reported as a violation of a GOAL.md commitment, not as a design finding; the response is to stop provisioning.
       - _then delete:_ 'Never puppeteering: what is left must still be found, learned, and chosen by him' as an unfalsifiable promise.
-- [ ] **SO.08** The diary records WHOSE hands, and he acts on it
+- [x] **SO.08** The diary records WHOSE hands, and he acts on it
       - _asserts:_ With two donors of different reliability leaving visually indistinguishable gifts, Jack's approach rate to a newly dropped object diverges by donor above a base-rate null, and the divergence runs THROUGH the attributed diary: strip or shuffle the donor field and it collapses.
       - _dies if:_ No divergence (the donor field is written and never read — decoration), OR divergence surviving donor-shuffling (it was carried by something other than the attribution).
       - _then delete:_ 'His diary records who left it — so gratitude, like trust, has somewhere real to grow' as decoration.
