@@ -11690,3 +11690,42 @@ DRAFTED-NOT-REGISTERED.**
   round_window_ok receipts stand from 08:07. And when that slot writes its
   receipts: capture every rc BARE.**
 - Bookkeeping: ledger 104/242. Touched: docs/LESSONS.md, docs/LOOP_JOURNAL.md.
+
+## 2026-09-05 ~12:0x UTC — fifth verified-empty slot; one false RED caught in-slot (wrong invocation, argparse rc=2) and the pipe lesson gains its second facet
+
+- **Model Fable; meters read, not modeled: `week:all models` 11% (the gate —
+  the line acted on), `week:Fable` 19%, session 3%, week 76% elapsed so the
+  pace line sits ~75 — no skip, streak 0.** 13 claude processes = the loop
+  itself; no stray experiment pids among the tenant daemons; tree clean;
+  nothing unpushed.
+- **Board re-verified with my own tool runs, every rc captured bare AND paired
+  with its naming line:** `run next` rc=0 (offers only settled/held items —
+  T2.01/T2.02/T2.05/T2.07/T2.11/T3.06 etc. under standing directives);
+  `run coverage` rc=2 (the standing routed red: `claim_dead` 4 since 09-03,
+  `goal_unrunnable` 7 since 09-05 07:07, both with dated queue rows);
+  `run blocked` rc=0 (T2.01 frees 35 / NE.01 / LT.01 top, unchanged);
+  `decisions --check` rc=0 (D21 still flagged DEFAULT-ACTION-SAME-DAY — the
+  00:07 race before 06:37 stands); `champions --check` rc=0; `review_queue`
+  rc=0 (0 violations); `run status` rc=0, ratchets all AT floor or unchanged.
+  Stale block still exactly UB.10/T3.09/D1.0/LF.01 + T2.02 (provenance
+  settled at 10:07: deliberate post-run code edits, re-runs held behind
+  their directives). Nothing dispatched, nothing manufactured, no
+  prohibition reached for as cheap work. W35's ~10.8 Kaggle h expire
+  tonight by design — the gpu classes are empty, not the loop asleep.
+- **THE UNIT — a false RED caught before it was believed:** my first receipt
+  pass invoked `run.py decisions --check` / `run.py champions --check` (wrong
+  entry point) and read rc=2 from BOTH — argparse's unrecognized-arguments
+  usage error, numerically identical to a ratchet red, momentarily reading as
+  "both checkers flipped 0→2 since 11:07". The output line (`usage: run.py …`)
+  had no causal path to any decision or seat; the correct modules re-ran
+  rc=0 bare. LESSONS.md's pipe lesson gains a dated SECOND FACET: a bare rc
+  distinguishes the tool from the pipe, only the OUTPUT distinguishes the
+  tool from a wrapper that refused to run it — an exit-code receipt is rc
+  PLUS the line naming the condition, never rc alone. Strengthen-only, no
+  new surface.
+- **HANDOFF, unchanged and re-checked: (1) 09-06 00:07 fires `D21`/`D15`/
+  `D16` FIRST — D21 is a race it must beat 06:37. (2) THEN `python -m
+  experiments.run SO.08` before ~3,600 s of other billing accrues; smoke and
+  round_window_ok receipts stand from 08:07 — do not re-verify inside the
+  window. And when that slot writes receipts: rc bare, plus the naming line.**
+- Bookkeeping: ledger 104/242. Touched: docs/LESSONS.md, docs/LOOP_JOURNAL.md.

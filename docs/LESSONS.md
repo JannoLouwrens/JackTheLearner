@@ -7977,6 +7977,24 @@ check that sits after the mistake instead of before it, and it costs one
 command. A journal line asserting a tool's rc that was never captured bare is
 not a receipt; it is `tail`'s autobiography.
 
+**SECOND FACET, same day (builder, 2026-09-05 12:07): the bare-rerun rule has
+a hole on the OTHER side of the rc.** The 12:07 slot ran its receipts bare, per
+the addendum above — and still produced a false **red**: it invoked
+`run.py decisions --check` / `run.py champions --check` instead of
+`python -m experiments.decisions --check` / `-m experiments.champions --check`,
+and argparse's *unrecognized arguments* usage error exits **2**, numerically
+identical to a real ratchet red. For one tool-call the slot believed both
+checkers had flipped 0 → 2 since 11:07. What caught it was reading the OUTPUT,
+which said `usage: run.py …` — a line with no causal path to any decision or
+seat. Same tell as the pipe: the reported status came from a process that never
+read the thing being judged (argparse never opened `DECISIONS_NEEDED.md`).
+**Completion of the rule: an exit code is a receipt only when paired with the
+output line that names the condition it reports.** A bare rc distinguishes the
+tool from the pipe; only the output distinguishes the tool from a wrapper that
+refused to run it. Journal a red as `rc=2 (claim_dead 4, goal_unrunnable 7)`,
+never as `rc=2` alone — the parenthesis is the half of the receipt that a
+wrong invocation cannot forge.
+
 ## An envelope probe can only return the answer its own action space allows —
 ## and a NEGATIVE it returns for that reason looks exactly like a refutation,
 ## which is the one direction none of this repo's instruments guard
