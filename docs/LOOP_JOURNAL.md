@@ -11579,3 +11579,40 @@ DRAFTED-NOT-REGISTERED.**
   Standing prohibitions all untouched (no D1.0 re-dispatch; HR held; LF.01
   waits on 09-09; no CPU-accountant surface; no docket re-stagger).
 - **Bookkeeping:** ledger 104/242. Touched: this file only.
+
+## 2026-09-05 ~09:0x UTC — board re-verified empty with fresh receipts; nothing billed, nothing manufactured; SO.08 handoff untouched
+
+- **Model Fable; meters read, not modeled: `week:all models` 10% (the gate —
+  acted on), `week:Fable` 18%, week 74% elapsed so the pace line sits ~73 —
+  no skip, streak 0 (last 08-29). 13 claude processes = the loop itself; no
+  stray experiment pids; tree clean at start.**
+- **This is the empty-board slot PROGRESS FOR-THE-BUILDER item 2 defines as
+  CORRECT: read the board, verify emptiness against the tools, write what was
+  checked, end early.** Verified independently, not inherited from 08:07:
+  - `run next`: every offered spec checked against the ledger by hand —
+    T2.01/T2.02/T2.05/T2.07/T2.10/T2.15/T3.06/T4.02/T0.27 all settled
+    FAIL/VOID under standing do-not-redispatch directives; T2.11 rowless but
+    PARKED (both pilots' permuted control outscored the claim arm); ME.11 and
+    T3.09 settled FAIL 09-02; SO.07 VOID 09-05 02:41.
+  - `run coverage` rc=0: cpu<1min/cpu<48h/gpu<20min empty with NO path in;
+    5 PILOT-BLOCKED (DP.04/LC.07/SH.02/SM.03/T2.11) all awaiting Review
+    redesigns; unreachable 94 AT floor; fail_unowned 0 AT floor.
+  - `run blocked`: top terminal blockers T2.01 (frees 35) / NE.01 / LT.01 /
+    UB.10 / LG.03 — every repair path runs through a 09-06+ disposition
+    (d10-* rows, w0-too-shallow, lg03 venue VOID), none mine today.
+  - `decisions --check`: nothing overdue today; D15/D16 decide_by 09-05 so
+    they fire at the 09-06 00:0x slot; D21 flagged DEFAULT-ACTION-SAME-DAY —
+    the 00:07 slot is in a race it must win before 06:37, exactly as the
+    handoff already says.
+  - Day meter: 9,303 s spent, cpu<2h 40/60 foreclosed until midnight —
+    expected, not a fault. SO.08 has NO ledger row; its smoke and
+    round_window_ok receipts are from the 08:07 slot and stand.
+- **Nothing dispatched, nothing manufactured; W35's ~10.8 Kaggle h expire
+  tonight by design (W36's buyer is D1.0's successor, gated on tomorrow's
+  d10-* rows). No docket touch, no prohibition reached for as cheap work.**
+- **HANDOFF, verbatim from 08:07 and re-checked here: (1) 09-06 00:07 fires
+  `D21`/`D15`/`D16` FIRST — D21 is a race against 06:37. (2) THEN
+  `python -m experiments.run SO.08` before ~3,600 s of other billing
+  accrues; smoke already green, rig arithmetic already checked — do not
+  re-verify inside the window.**
+- **Bookkeeping:** ledger 104/242. Touched: this file only.
