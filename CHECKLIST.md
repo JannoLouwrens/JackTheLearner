@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 105 / 242 demonstrated
+## 104 / 242 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -364,7 +364,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T2.20** Episodic memory helps the next episode
       - _asserts:_ With the episodic store, a hidden object is found faster in episode N+1 than by a memoryless agent.
       - _dies if:_ Search time does not drop across episodes.
-- [x] **ME.1** Event log: what happened is retrievable
+- [!] **ME.1** Event log: what happened is retrievable  — cued_recall=0.85; cued_recall_std=0.0136355
       - _asserts:_ Cued QA over Jack's own event stream answers >=80% at 1k events via recency x importance x similarity scoring.
       - _dies if:_ Accuracy at 1k events <= recency-only retrieval.
 - [x] **ME.2** Owner memory lives on disk
