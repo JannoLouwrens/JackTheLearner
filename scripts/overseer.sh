@@ -47,6 +47,23 @@ FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 usage_gate say || exit 0
 cd "$REPO" || exit 0
 
+# D15's clause (c), default fired 2026-09-06 (builder; DECIDE block in
+# docs/DECISIONS_NEEDED.md): the FIRST audit of each UTC day is EXEMPT from
+# pacing — a full adversarial pass survives every day whatever the meter says
+# — and the other three slots take the SAME pace_gate as the builder. The 90%
+# usage_gate above is untouched and still runs first. review.sh and
+# field_watch.sh are deliberately not paced: at 7/wk and 1/wk they are not the
+# term that matters (the DECIDE block's own arithmetic).
+#
+# The date stamp is written ONLY at the completion point at the bottom of this
+# script, beside NOOP_STATE — so a first-of-day audit that dies does NOT
+# consume the exemption, and the next slot runs exempt again. The guard fails
+# toward MORE oversight, never less (same design as D13's no-op state).
+PACE_DATE_F="$LOGDIR/overseer_pace.date"
+if [ "$(cat "$PACE_DATE_F" 2>/dev/null)" = "$(date -u +%F)" ]; then
+  pace_gate say || { say "audit slot paced (D15 clause c) — a completed audit already ran this UTC day; budget held"; exit 0; }
+fi
+
 # Declare this audit to procwatch (65th audit B5): the overseer's read-only
 # instrument calls are project pythons, and undeclared they are
 # indistinguishable from an abandoned builder leftover — the 2026-09-03
@@ -124,6 +141,7 @@ review_liveness say || true
 # after this moment are this run's own acts. Captured before the agent starts.
 RUN_START=$(date +%s)
 mark_log
+usage_ledger overseer start    # D15 (d): attribution, both meters, never blocks
 
 nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
   timeout 25m claude -p "$(cat "$REPO/scripts/overseer_prompt.md")" \
@@ -132,6 +150,7 @@ nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
     --max-turns "$MAXTURNS" \
     >> "$LOG" 2>&1
 RC=$?
+usage_ledger overseer end      # D15 (d): one line whatever RC says
 
 # Same credit-exhaustion trap the builder fell into: the CLI prints a message
 # and exits in ~3s, which looks identical to a clean fast run.
@@ -163,5 +182,8 @@ VERDICT=$(grep -m1 -oE "ON TRACK|DRIFTING|INTEGRITY RISK" docs/OVERSIGHT.md 2>/d
 say "audit end rc=${RC} — verdict: ${VERDICT}"
 # A COMPLETED audit is the only thing that resets D13's no-op state: skips
 # back to 0, HEAD and timestamp stamped. Dead runs leave it stale on purpose.
+# D15 (c): the same completion point consumes the day's pacing exemption —
+# only a COMPLETED audit counts as "the first audit of the UTC day".
 echo "$(git rev-parse HEAD) $(date -Iseconds) 0" > "$NOOP_STATE"
+date -u +%F > "$PACE_DATE_F"
 exit 0

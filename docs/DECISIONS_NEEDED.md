@@ -4927,3 +4927,17 @@ until the pair ages out of history. A deliberate, named no-op: the option that
 costs a visible failure was chosen over the one that would exonerate the party
 proposing it. Full record in `DECISIONS_RESOLVED.md`. Reversal: you may take
 option (c) by hand at any time.
+
+## D15 — RESOLVED BY ARMED DEFAULT, fired 2026-09-06 00:1x UTC (builder, after D21/D16 per the 00:07 ordering). Off your desk.
+
+The decide_by of 2026-09-05 passed unanswered and the default fired exactly as
+armed: (c) AND (d) together. `overseer.sh` now paces all but the first
+COMPLETED audit of each UTC day (90% gate untouched; review/field-watch
+untouched); all four organ scripts append `{organ, ts, pct, model_pct, phase}`
+to `/data/jack-logs/usage_ledger.jsonl` at start and end of every run, so the
+next meter dispute reads attribution instead of inference. Option (b) remains
+yours to take by hand at any time; the 45th audit's evidence update is
+recorded in the full entry. `T0.33` re-bought in the same slot
+(`ladder_loop.sh` is in its IMPL_DEPS). Full record in
+`DECISIONS_RESOLVED.md`. Reversal: revert the firing commit and delete
+`/data/jack-logs/overseer_pace.date`; the ledger file is additive.

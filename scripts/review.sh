@@ -74,6 +74,7 @@ say "review start — mode ${MODE}, model ${MODEL}, ${TMOUT} / ${MAXTURNS} turns
 # after this moment are this run's own acts. Captured before the agent starts.
 RUN_START=$(date +%s)
 mark_log
+usage_ledger review start    # D15 (d): attribution, both meters, never blocks
 nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
@@ -93,6 +94,7 @@ elif [ "$RC" -ne 0 ] && api_overloaded; then
     --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 fi
+usage_ledger review end      # D15 (d): after any retry, one line whatever RC says
 # A run that dies LATE has already written its report -> stamp it a DRAFT. A run
 # that dies BEFORE writing leaves a clean file that is nonetheless no longer
 # current state -> stamp it STALE, but only once it is older than this organ's

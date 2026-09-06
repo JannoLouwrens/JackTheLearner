@@ -628,3 +628,61 @@ records it and the guard's docstring says how.
 Evidence: `docs/DECISIONS_NEEDED.md` D16 entry + 60th/62nd audit evidence
 updates; `experiments/tests/t0_27_moved_threshold_leaves_artifact.py`;
 commit `be60c3d`.
+
+## D15 — RESOLVED BY ARMED DEFAULT (fired 2026-09-06 00:1x UTC, builder, AFTER D21/D16 per the verified 00:07 ordering): (c) AND (d) together — the overseer takes pace_gate on all but the first completed audit of each UTC day, and every organ script now writes usage attribution to /data/jack-logs/usage_ledger.jsonl at start and end of its run.
+
+**The question** (44th overseer audit, 2026-08-29): the oversight organs are
+exempt from the pace gate that stops the builder, and they draw on the same
+meter. Should they be paced too, and should the meter's spend be attributed
+instead of inferred?
+
+**The default that fired — (c) AND (d), together, and neither alone.**
+
+- **(c)** `scripts/overseer.sh` gains a pace check that EXEMPTS the first
+  audit of each UTC day and applies the builder's own `pace_gate` to the
+  other three slots. The 90% `usage_gate` is untouched and still runs first.
+  `review.sh` and `field_watch.sh` are untouched — at 7/wk and 1/wk they are
+  not the term that matters. Implementation detail that is part of the
+  record: the exemption stamp is written only at the COMPLETED-audit point
+  (beside D13's `NOOP_STATE`), so a first-of-day audit that dies does not
+  consume the exemption and the next slot runs exempt again — the guard
+  fails toward MORE oversight, the same design D13's no-op state uses.
+- **(d)** all four organ scripts (`ladder_loop.sh`, `overseer.sh`,
+  `review.sh`, `field_watch.sh`) append
+  `{"organ","ts","pct","model_pct","phase"}` to
+  `/data/jack-logs/usage_ledger.jsonl` at start and end of each run
+  (`usage_ledger()` in `scripts/lib_usage.sh`; one CLI read per append, both
+  meters parsed from one invocation, null on unreadable, never blocks). The
+  next audit reads attribution instead of inferring it — the inference that
+  produced three falsified price models in one week.
+
+Option (b) was STRUCK from the default at arming (outside the repo — it
+remains the owner's to take by hand); option (e) was STRUCK (three
+consecutive weeks of expired free GPU quota is a measured cost).
+
+**Spend-reducing, authorises nothing new:** no GOAL.md edit, no threshold
+moved, no control loosened, no new tier or ceiling; the only behavioural
+change is that up to three of four daily audits may skip when the meter is
+above the builder's own pace line. The 45th audit's evidence update — that
+the meter's rise is mostly off-box — is recorded and does not un-arm the
+default: attribution (d) is exactly the instrument that dispute lacked.
+
+**Certificate consequence, paid in the same slot:** `scripts/ladder_loop.sh`
+is in `T0.33`'s IMPL_DEPS, so this edit stales that certificate; `T0.33` was
+re-bought immediately after the firing commit (row in the ledger, same slot).
+
+**The counterargument, carried from the arming:** the exemption for oversight
+was deliberate — the machinery that catches drift kept the plain 90% gate at
+full strength, and the 41st–43rd audits each earned it. Three-of-four is the
+compromise: a full adversarial pass survives every day, only the redundancy
+is paced.
+
+**To reverse:** revert the firing commit — the pace check and the appends are
+self-contained; delete `/data/jack-logs/overseer_pace.date`. The usage ledger
+is additive and can stay whatever the owner decides.
+
+Evidence: `docs/DECISIONS_NEEDED.md` D15 entry + 45th-audit evidence update;
+`scripts/lib_usage.sh` `usage_ledger()`; the firing commit's diff across the
+four organ scripts; the self-test line
+`{"organ":"selftest","ts":"2026-09-06T00:15:49+00:00","pct":17,"model_pct":31,"phase":"d15-firing-check"}`
+in `/data/jack-logs/usage_ledger.jsonl`.
