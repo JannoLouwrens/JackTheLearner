@@ -8052,8 +8052,8 @@
     },
     "ME.2": {
       "amended": [],
-      "attempt": 4,
-      "commit": "d730363+dirty",
+      "attempt": 5,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "adherence_wiped": 0.216667,
@@ -8147,6 +8147,38 @@
           ],
           "spec_sha": "5899e20883f7520a",
           "status": "PASS"
+        },
+        {
+          "commit": "d730363+dirty",
+          "control_metrics": {
+            "adherence_wiped": 0.216667,
+            "adherence_wiped_std": 0.0311805
+          },
+          "gpu_job_id": null,
+          "impl_sha": "98d00106f5f568e3",
+          "message": "",
+          "metrics": {
+            "adherence_after_restart": 1.0,
+            "adherence_after_restart_std": 0.0,
+            "adherence_after_supersede": 1.0,
+            "adherence_after_supersede_std": 0.0,
+            "base_rate": 0.25,
+            "base_rate_std": 0.0,
+            "extracted_topics": 40.0,
+            "extracted_topics_std": 0.0,
+            "recency_null_adherence": 0.166667,
+            "recency_null_adherence_std": 0.0656167,
+            "stale_choice_rate": 0.0,
+            "stale_choice_rate_std": 0.0
+          },
+          "ran_at": "2026-09-06T17:13:50",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "5899e20883f7520a",
+          "status": "PASS"
         }
       ],
       "impl_sha": "98d00106f5f568e3",
@@ -8168,7 +8200,7 @@
       "peak_rss_inherited": false,
       "peak_rss_mb": 209.7,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T17:13:50",
+      "ran_at": "2026-09-06T17:20:59",
       "seeds": [
         0,
         1,
@@ -8733,8 +8765,8 @@
     },
     "ME.8": {
       "amended": [],
-      "attempt": 3,
-      "commit": "c7325c2",
+      "attempt": 4,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "acc_true_cue": 0.0,
@@ -8742,7 +8774,7 @@
         "match_restored": 1.0,
         "match_restored_std": 0.0
       },
-      "duration_s": 108.02,
+      "duration_s": 107.55,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -8783,9 +8815,43 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "acc_true_cue": 0.0,
+            "acc_true_cue_std": 0.0,
+            "match_restored": 1.0,
+            "match_restored_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "f1ba8ecfc4fd5170",
+          "message": "",
+          "metrics": {
+            "holdout_acc": 1.0,
+            "holdout_acc_std": 0.0,
+            "killed_frac": 1.0,
+            "killed_frac_std": 0.0,
+            "mean_ckpt_step": 15.373333,
+            "mean_ckpt_step_std": 0.89164,
+            "resume_acc": 1.0,
+            "resume_acc_std": 0.0,
+            "resume_vs_zeroed": 0.895833,
+            "resume_vs_zeroed_std": 0.0589256,
+            "zeroed_acc": 0.104167,
+            "zeroed_acc_std": 0.0589256
+          },
+          "ran_at": "2026-09-02T18:44:06",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "21b2fbad6a26bc70",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "f1ba8ecfc4fd5170",
+      "impl_sha": "f8158d0551bfb841",
       "message": "",
       "metrics": {
         "holdout_acc": 1.0,
@@ -8801,8 +8867,10 @@
         "zeroed_acc": 0.104167,
         "zeroed_acc_std": 0.0589256
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 284.6,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T18:44:06",
+      "ran_at": "2026-09-06T17:22:48",
       "seeds": [
         0,
         1,
@@ -11058,8 +11126,8 @@
     },
     "PG.7": {
       "amended": [],
-      "attempt": 2,
-      "commit": "c7325c2",
+      "attempt": 3,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "control_seed_gates_ok": 1.0,
@@ -11073,7 +11141,7 @@
         "mass_leak_nonspectral_acc": 1.0,
         "mass_leak_nonspectral_acc_std": 0.0
       },
-      "duration_s": 101.8,
+      "duration_s": 101.89,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -11128,9 +11196,63 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "control_seed_gates_ok": 1.0,
+            "control_seed_gates_ok_std": 0.0,
+            "geometry_leak_pan_gap": 1.529867,
+            "geometry_leak_pan_gap_std": 0.000598711,
+            "geometry_leak_slot_acc": 1.0,
+            "geometry_leak_slot_acc_std": 0.0,
+            "mass_leak_amp_rel_gap": 0.61161,
+            "mass_leak_amp_rel_gap_std": 0.0,
+            "mass_leak_nonspectral_acc": 1.0,
+            "mass_leak_nonspectral_acc_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "81ebbed76eb2d9de",
+          "message": "",
+          "metrics": {
+            "audio_only_leak_margin": 0.0,
+            "audio_only_leak_margin_std": 0.0,
+            "both_spheres": 1.0,
+            "both_spheres_std": 0.0,
+            "episodes": 3200.0,
+            "episodes_std": 0.0,
+            "max_amp_rel_gap": 0.0,
+            "max_amp_rel_gap_std": 0.0,
+            "max_distance_gap": 9.34759e-10,
+            "max_distance_gap_std": 3.64762e-11,
+            "max_pan_gap": 4.43687e-10,
+            "max_pan_gap_std": 1.9463e-11,
+            "nonspectral_identity_acc": 0.5,
+            "nonspectral_identity_acc_std": 0.0,
+            "seed_gates_ok": 1.0,
+            "seed_gates_ok_std": 0.0,
+            "single_event": 1.0,
+            "single_event_std": 0.0,
+            "slot_leak_acc": 0.5,
+            "slot_leak_acc_std": 0.0,
+            "spectral_identity_acc": 1.0,
+            "spectral_identity_acc_std": 0.0,
+            "usable": 3200.0,
+            "usable_std": 0.0,
+            "voiced_correct": 1.0,
+            "voiced_correct_std": 0.0
+          },
+          "ran_at": "2026-09-02T18:46:43",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "f1fdb925bec71120",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "81ebbed76eb2d9de",
+      "impl_sha": "04f5374559f58499",
       "message": "",
       "metrics": {
         "audio_only_leak_margin": 0.0,
@@ -11160,8 +11282,10 @@
         "voiced_correct": 1.0,
         "voiced_correct_std": 0.0
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 237.7,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T18:46:43",
+      "ran_at": "2026-09-06T17:20:49",
       "seeds": [
         0,
         1,
@@ -11173,8 +11297,8 @@
     },
     "PG.8": {
       "amended": [],
-      "attempt": 7,
-      "commit": "c7325c2",
+      "attempt": 8,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "contact_cfrc_norm_ref": 243.0831,
@@ -11238,7 +11362,7 @@
         "world_mutated": 0.666667,
         "world_mutated_std": 0.471405
       },
-      "duration_s": 7.14,
+      "duration_s": 7.06,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -11566,9 +11690,161 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "contact_cfrc_norm_ref": 243.0831,
+            "contact_cfrc_norm_ref_std": 6.221094,
+            "contact_ncon_pg": 9.333333,
+            "contact_ncon_pg_std": 0.471405,
+            "contact_ncon_ref": 8.333333,
+            "contact_ncon_ref_std": 0.471405,
+            "contact_non_floor_pg": 0.0,
+            "contact_non_floor_pg_std": 0.0,
+            "contact_obs_dev": 0.004066,
+            "contact_obs_dev_no_rne": 135.399133,
+            "contact_obs_dev_no_rne_std": 2.152137,
+            "contact_obs_dev_std": 0.00202521,
+            "contact_spot_xy": [
+              0.0,
+              0.0
+            ],
+            "dist_to_ladder_m": 12.990833,
+            "dist_to_ladder_m_std": 0.052645,
+            "drive_divergence_rad": 2.626887,
+            "drive_divergence_rad_std": 0.106819,
+            "drive_qfrc_max": 120.0,
+            "drive_qfrc_max_std": 0.0,
+            "has_humanoid": 1.0,
+            "has_humanoid_std": 0.0,
+            "idle_qfrc_max": 0.0,
+            "idle_qfrc_max_std": 0.0,
+            "model_max_dev_vs_v5": 4.48308e-13,
+            "model_max_dev_vs_v5_std": 0.0,
+            "motors_on_humanoid": 17.0,
+            "motors_on_humanoid_std": 0.0,
+            "mujoco_warnings": 0.0,
+            "mujoco_warnings_std": 0.0,
+            "n_humanoid_bodies": 13.0,
+            "n_humanoid_bodies_std": 0.0,
+            "nu": 17.0,
+            "nu_std": 0.0,
+            "obs_dim": 348.0,
+            "obs_dim_std": 0.0,
+            "obs_max_dev_vs_v5": 2.67841e-15,
+            "obs_max_dev_vs_v5_std": 1.02113e-15,
+            "pipeline_obs_dim": 348.0,
+            "pipeline_obs_dim_std": 0.0,
+            "ray_first_hit": "wall2",
+            "ray_hits_ladder": 0.0,
+            "ray_hits_ladder_std": 0.0,
+            "settle_finite": 1.0,
+            "settle_finite_std": 0.0,
+            "settle_obs_finite": 1.0,
+            "settle_obs_finite_std": 0.0,
+            "settle_qvel_max": 0.0193567,
+            "settle_qvel_max_std": 0.00694283,
+            "spawn_contacts": 0.0,
+            "spawn_contacts_std": 0.0,
+            "spawn_xyz": [
+              8.0,
+              8.0,
+              1.4
+            ],
+            "world_mutated": 0.666667,
+            "world_mutated_std": 0.471405
+          },
+          "gpu_job_id": null,
+          "impl_sha": "43abc089ba722d7a",
+          "message": "",
+          "metrics": {
+            "contact_cfrc_norm_ref": 243.0831,
+            "contact_cfrc_norm_ref_std": 6.221094,
+            "contact_ncon_pg": 9.333333,
+            "contact_ncon_pg_std": 0.471405,
+            "contact_ncon_ref": 8.333333,
+            "contact_ncon_ref_std": 0.471405,
+            "contact_non_floor_pg": 0.0,
+            "contact_non_floor_pg_std": 0.0,
+            "contact_obs_dev": 0.004066,
+            "contact_obs_dev_no_rne": 135.399133,
+            "contact_obs_dev_no_rne_std": 2.152137,
+            "contact_obs_dev_std": 0.00202521,
+            "contact_spot_xy": [
+              0.0,
+              0.0
+            ],
+            "dist_to_ladder_m": 1.118133,
+            "dist_to_ladder_m_std": 0.0609914,
+            "drive_divergence_rad": 2.626887,
+            "drive_divergence_rad_std": 0.106819,
+            "drive_qfrc_max": 120.0,
+            "drive_qfrc_max_std": 0.0,
+            "has_humanoid": 1.0,
+            "has_humanoid_std": 0.0,
+            "idle_qfrc_max": 0.0,
+            "idle_qfrc_max_std": 0.0,
+            "model_max_dev_vs_v5": 4.48308e-13,
+            "model_max_dev_vs_v5_std": 0.0,
+            "motors_on_humanoid": 17.0,
+            "motors_on_humanoid_std": 0.0,
+            "mujoco_warnings": 0.0,
+            "mujoco_warnings_std": 0.0,
+            "n_humanoid_bodies": 13.0,
+            "n_humanoid_bodies_std": 0.0,
+            "nu": 17.0,
+            "nu_std": 0.0,
+            "null_bodies": [
+              "apple",
+              "obj0",
+              "obj1",
+              "obj2",
+              "obj3",
+              "obj4",
+              "seesaw",
+              "world"
+            ],
+            "null_has_humanoid": 0.0,
+            "null_has_humanoid_std": 0.0,
+            "null_nu": 0.0,
+            "null_nu_std": 0.0,
+            "obs_dim": 348.0,
+            "obs_dim_std": 0.0,
+            "obs_max_dev_vs_v5": 2.67841e-15,
+            "obs_max_dev_vs_v5_std": 1.02113e-15,
+            "pipeline_obs_dim": 348.0,
+            "pipeline_obs_dim_std": 0.0,
+            "ray_first_hit": "rung0",
+            "ray_hits_ladder": 1.0,
+            "ray_hits_ladder_std": 0.0,
+            "settle_finite": 1.0,
+            "settle_finite_std": 0.0,
+            "settle_obs_finite": 1.0,
+            "settle_obs_finite_std": 0.0,
+            "settle_qvel_max": 0.0193567,
+            "settle_qvel_max_std": 0.00694283,
+            "spawn_contacts": 0.0,
+            "spawn_contacts_std": 0.0,
+            "spawn_xyz": [
+              0.0,
+              -1.6,
+              1.4
+            ],
+            "world_mutated": 0.666667,
+            "world_mutated_std": 0.471405
+          },
+          "ran_at": "2026-09-02T18:42:07",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "d0095cc77b0a1f64",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "43abc089ba722d7a",
+      "impl_sha": "b386e2e211f8ba94",
       "message": "",
       "metrics": {
         "contact_cfrc_norm_ref": 243.0831,
@@ -11646,8 +11922,10 @@
         "world_mutated": 0.666667,
         "world_mutated_std": 0.471405
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 271.5,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T18:42:07",
+      "ran_at": "2026-09-06T17:20:57",
       "seeds": [
         0,
         1,
@@ -15566,13 +15844,13 @@
     },
     "T0.03": {
       "amended": [],
-      "attempt": 4,
-      "commit": "d730363+dirty",
+      "attempt": 5,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "output_delta": 6.027286052704
       },
-      "duration_s": 8.04,
+      "duration_s": 7.52,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -15639,6 +15917,28 @@
           ],
           "spec_sha": "25f446ff5b1ed6f3",
           "status": "PASS"
+        },
+        {
+          "commit": "d730363+dirty",
+          "control_metrics": {
+            "output_delta": 6.027286052704
+          },
+          "gpu_job_id": null,
+          "impl_sha": "e14107a2ae852d0a",
+          "message": "",
+          "metrics": {
+            "checkpoint_mb": 233.1,
+            "missing_keys": 0,
+            "output_delta": 0.0,
+            "tensors_compared": 7,
+            "unexpected_keys": 0
+          },
+          "ran_at": "2026-09-06T17:14:07",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "25f446ff5b1ed6f3",
+          "status": "PASS"
         }
       ],
       "impl_sha": "e14107a2ae852d0a",
@@ -15651,9 +15951,9 @@
         "unexpected_keys": 0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 976.2,
+      "peak_rss_mb": 975.9,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T17:14:07",
+      "ran_at": "2026-09-06T17:15:36",
       "seeds": [
         0
       ],
@@ -15663,8 +15963,8 @@
     },
     "T0.04": {
       "amended": [],
-      "attempt": 3,
-      "commit": "4abd917",
+      "attempt": 4,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "first_step_gap_pct": 0.3496,
@@ -15672,7 +15972,7 @@
         "reference_final": 0.023413,
         "resumed_final": 0.047884
       },
-      "duration_s": 111.23,
+      "duration_s": 110.68,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -15723,9 +16023,34 @@
           ],
           "spec_sha": "5a2672de35566b06",
           "status": "PASS"
+        },
+        {
+          "commit": "4abd917",
+          "control_metrics": {
+            "first_step_gap_pct": 0.3496,
+            "max_trace_delta": 0.6644768119,
+            "reference_final": 0.023413,
+            "resumed_final": 0.047884
+          },
+          "gpu_job_id": null,
+          "impl_sha": "fea9041c2de7d40e",
+          "message": "",
+          "metrics": {
+            "first_step_gap_pct": 0.3496,
+            "max_trace_delta": 0.0100440681,
+            "reference_final": 0.023413,
+            "resume_fidelity_ratio": 66.16,
+            "resumed_final": 0.028727
+          },
+          "ran_at": "2026-09-02T16:14:18",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "5a2672de35566b06",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "fea9041c2de7d40e",
+      "impl_sha": "817a60bdef78724c",
       "message": "",
       "metrics": {
         "first_step_gap_pct": 0.3496,
@@ -15734,8 +16059,10 @@
         "resume_fidelity_ratio": 66.16,
         "resumed_final": 0.028727
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 3539.0,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T16:14:18",
+      "ran_at": "2026-09-06T17:17:45",
       "seeds": [
         0
       ],
@@ -15839,14 +16166,14 @@
     },
     "T0.06": {
       "amended": [],
-      "attempt": 6,
-      "commit": "d730363+dirty",
+      "attempt": 7,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "raised": 5,
         "wrong_widths_tried": 5
       },
-      "duration_s": 1.6,
+      "duration_s": 1.59,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -15934,6 +16261,31 @@
           ],
           "spec_sha": "6c385987b0deee11",
           "status": "PASS"
+        },
+        {
+          "commit": "d730363+dirty",
+          "control_metrics": {
+            "raised": 5,
+            "wrong_widths_tried": 5
+          },
+          "gpu_job_id": null,
+          "impl_sha": "ea9d54600ef13868",
+          "message": "",
+          "metrics": {
+            "action_space_dim": 17,
+            "ctrl_write_error": 0.0,
+            "expected_nu": 17,
+            "last_reward": 4.9055,
+            "nu": 17,
+            "obs_dim": 348,
+            "steps_ok": 5
+          },
+          "ran_at": "2026-09-06T17:13:53",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "6c385987b0deee11",
+          "status": "PASS"
         }
       ],
       "impl_sha": "ea9d54600ef13868",
@@ -15942,15 +16294,15 @@
         "action_space_dim": 17,
         "ctrl_write_error": 0.0,
         "expected_nu": 17,
-        "last_reward": 4.9055,
+        "last_reward": 4.8827,
         "nu": 17,
         "obs_dim": 348,
         "steps_ok": 5
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 262.4,
+      "peak_rss_mb": 262.3,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T17:13:53",
+      "ran_at": "2026-09-06T17:15:28",
       "seeds": [
         0
       ],
@@ -15960,13 +16312,13 @@
     },
     "T0.07": {
       "amended": [],
-      "attempt": 3,
-      "commit": "4abd917",
+      "attempt": 4,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
-        "empty_loop_hz": 14248597.5
+        "empty_loop_hz": 14456268.8
       },
-      "duration_s": 19.09,
+      "duration_s": 18.95,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -16039,33 +16391,71 @@
           ],
           "spec_sha": "a6f372697a8000b7",
           "status": "PASS"
+        },
+        {
+          "commit": "4abd917",
+          "control_metrics": {
+            "empty_loop_hz": 14248597.5
+          },
+          "gpu_job_id": null,
+          "impl_sha": "a26e0b35ce9ae2d4",
+          "message": "",
+          "metrics": {
+            "bare_repeat_spread": 0.002,
+            "bare_steps_per_s": 1861.1,
+            "calibration_error": 0.0406,
+            "calibration_hz": 927.4,
+            "hours_for_2M_steps_no_llm": 47.4,
+            "hours_for_2M_steps_policy": 47.8,
+            "llm_removal_speedup": 1.01,
+            "policy_no_llm_rel_std": 0.0126,
+            "policy_no_llm_steps_per_s": 11.72,
+            "policy_no_llm_total_params": 58244744,
+            "policy_peak_rss_mb": 6991.0,
+            "policy_rel_std": 0.019,
+            "policy_slowdown_vs_bare": 160.1,
+            "policy_steps_per_s": 11.62,
+            "policy_total_params": 1767267976,
+            "policy_trainable_params": 55891592,
+            "vectorised_rel_std": 0.0022,
+            "vectorised_speedup": 1.18,
+            "vectorised_steps_per_s": 2200.7
+          },
+          "ran_at": "2026-09-02T16:15:12",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "a6f372697a8000b7",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "a26e0b35ce9ae2d4",
+      "impl_sha": "ddc7f2fbc9bd98c7",
       "message": "",
       "metrics": {
-        "bare_repeat_spread": 0.002,
-        "bare_steps_per_s": 1861.1,
-        "calibration_error": 0.0406,
-        "calibration_hz": 927.4,
-        "hours_for_2M_steps_no_llm": 47.4,
-        "hours_for_2M_steps_policy": 47.8,
-        "llm_removal_speedup": 1.01,
-        "policy_no_llm_rel_std": 0.0126,
-        "policy_no_llm_steps_per_s": 11.72,
+        "bare_repeat_spread": 0.0066,
+        "bare_steps_per_s": 2377.7,
+        "calibration_error": 0.0457,
+        "calibration_hz": 933.7,
+        "hours_for_2M_steps_no_llm": 48.4,
+        "hours_for_2M_steps_policy": 47.2,
+        "llm_removal_speedup": 0.98,
+        "policy_no_llm_rel_std": 0.0096,
+        "policy_no_llm_steps_per_s": 11.49,
         "policy_no_llm_total_params": 58244744,
-        "policy_peak_rss_mb": 6991.0,
-        "policy_rel_std": 0.019,
-        "policy_slowdown_vs_bare": 160.1,
-        "policy_steps_per_s": 11.62,
+        "policy_peak_rss_mb": 6943.4,
+        "policy_rel_std": 0.0036,
+        "policy_slowdown_vs_bare": 202.1,
+        "policy_steps_per_s": 11.76,
         "policy_total_params": 1767267976,
         "policy_trainable_params": 55891592,
-        "vectorised_rel_std": 0.0022,
-        "vectorised_speedup": 1.18,
-        "vectorised_steps_per_s": 2200.7
+        "vectorised_rel_std": 0.0034,
+        "vectorised_speedup": 0.85,
+        "vectorised_steps_per_s": 2032.1
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 6943.4,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T16:15:12",
+      "ran_at": "2026-09-06T17:18:05",
       "seeds": [
         0
       ],
@@ -18256,13 +18646,13 @@
     },
     "T0.14": {
       "amended": [],
-      "attempt": 6,
-      "commit": "c7325c2",
+      "attempt": 7,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "train_mode_action_drift": 0.634769
       },
-      "duration_s": 19.34,
+      "duration_s": 19.01,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -18312,9 +18702,34 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "train_mode_action_drift": 0.634769
+          },
+          "gpu_job_id": null,
+          "impl_sha": "e6aca0cb6811e9dc",
+          "message": "",
+          "metrics": {
+            "config_obs_dim": 348,
+            "env_obs_dim": 348,
+            "eval_action_drift": 0.0,
+            "eval_mode_after_rollout": true,
+            "eval_value_drift": 0.0,
+            "n_dropout_modules": 36,
+            "obs_dim_matches": true,
+            "train_mode_after_update": true
+          },
+          "ran_at": "2026-09-02T18:38:36",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "07f57563b8009584",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "e6aca0cb6811e9dc",
+      "impl_sha": "bf4aedf22e0cb75f",
       "message": "",
       "metrics": {
         "config_obs_dim": 348,
@@ -18326,8 +18741,10 @@
         "obs_dim_matches": true,
         "train_mode_after_update": true
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 1783.0,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T18:38:36",
+      "ran_at": "2026-09-06T17:18:25",
       "seeds": [
         0
       ],
@@ -18484,15 +18901,15 @@
     },
     "T0.16": {
       "amended": [],
-      "attempt": 5,
-      "commit": "c7325c2",
+      "attempt": 6,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "prefix_max_drift": 1.6337,
         "prefix_trained_train_mode": true,
         "prefix_untrained_train_mode": true
       },
-      "duration_s": 33.76,
+      "duration_s": 33.51,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -18573,9 +18990,43 @@
           ],
           "spec_sha": "315e60709c332103",
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "prefix_max_drift": 1.6337,
+            "prefix_trained_train_mode": true,
+            "prefix_untrained_train_mode": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "6a43177c1254ab0b",
+          "message": "",
+          "metrics": {
+            "kernels_scanned": 2,
+            "kernels_using_act_deterministic": 2,
+            "kernels_with_raw_forward": 0,
+            "max_shipped_eval_drift": 0.0,
+            "normaliser_mutated_by_eval": true,
+            "train_mode_after_update": true,
+            "trained_any_train_mode": false,
+            "trained_drift": 0.0,
+            "trained_forwards": 4,
+            "trained_mode_restored": true,
+            "unreadable_kernels": 0,
+            "untrained_any_train_mode": false,
+            "untrained_drift": 0.0,
+            "untrained_forwards": 4,
+            "untrained_mode_restored": true
+          },
+          "ran_at": "2026-09-02T18:39:13",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "315e60709c332103",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "6a43177c1254ab0b",
+      "impl_sha": "5d8064e13ec06f9e",
       "message": "",
       "metrics": {
         "kernels_scanned": 2,
@@ -18594,8 +19045,10 @@
         "untrained_forwards": 4,
         "untrained_mode_restored": true
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 2632.3,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T18:39:13",
+      "ran_at": "2026-09-06T17:19:00",
       "seeds": [
         0
       ],
@@ -21482,8 +21935,8 @@
     },
     "T0.25": {
       "amended": [],
-      "attempt": 4,
-      "commit": "c7325c2",
+      "attempt": 5,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "fresh_null_adv_std": 1.0,
@@ -21494,7 +21947,7 @@
         "warmed_residual_ratio": 0.76207,
         "warmed_scale": 7.9038
       },
-      "duration_s": 3.09,
+      "duration_s": 3.02,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -21537,9 +21990,39 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "fresh_null_adv_std": 1.0,
+            "fresh_residual_ratio": 0.0,
+            "fresh_scale": 1.0,
+            "max_residual_ratio": 0.76207,
+            "warmed_null_adv_std": 1.0,
+            "warmed_residual_ratio": 0.76207,
+            "warmed_scale": 7.9038
+          },
+          "gpu_job_id": null,
+          "impl_sha": "4ee1474acc3efee2",
+          "message": "",
+          "metrics": {
+            "fresh_null_adv_std": 1.0,
+            "fresh_residual_ratio": 0.0,
+            "fresh_scale": 1.0,
+            "max_residual_ratio": 0.0,
+            "warmed_null_adv_std": 1.0,
+            "warmed_residual_ratio": 0.0,
+            "warmed_scale": 7.9038
+          },
+          "ran_at": "2026-09-02T18:39:47",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "77dccf07f3fd8b4a",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "4ee1474acc3efee2",
+      "impl_sha": "ffa147acdd4b5e49",
       "message": "",
       "metrics": {
         "fresh_null_adv_std": 1.0,
@@ -21550,8 +22033,10 @@
         "warmed_residual_ratio": 0.0,
         "warmed_scale": 7.9038
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 489.1,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T18:39:47",
+      "ran_at": "2026-09-06T17:19:06",
       "seeds": [
         0
       ],
@@ -25662,15 +26147,15 @@
     },
     "T0.35": {
       "amended": [],
-      "attempt": 5,
-      "commit": "d730363+dirty",
+      "attempt": 6,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "full_instrument_sees_violator": true,
         "optin_examined": 1,
         "optin_violations": 0
       },
-      "duration_s": 3.57,
+      "duration_s": 3.47,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -25805,6 +26290,39 @@
           ],
           "spec_sha": "e5497a3a40b0bcc2",
           "status": "PASS"
+        },
+        {
+          "commit": "d730363+dirty",
+          "control_metrics": {
+            "full_instrument_sees_violator": true,
+            "optin_examined": 1,
+            "optin_violations": 0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "32d56d806d000993",
+          "message": "",
+          "metrics": {
+            "compile_failures": 0,
+            "compile_failures_named": [],
+            "control_optin_reads_clean": true,
+            "detector_fires_on_lazy_undeclared": true,
+            "detector_silent_on_declarer": true,
+            "failed_properties": [],
+            "grandfather_stale": 0,
+            "grandfather_stale_named": {},
+            "grandfathered": 9,
+            "late_future_import_parse_compile_split": true,
+            "new_undeclared": 0,
+            "new_undeclared_named": {},
+            "properties_failed": 0,
+            "undeclared_importers": 9
+          },
+          "ran_at": "2026-09-06T17:13:48",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "e5497a3a40b0bcc2",
+          "status": "PASS"
         }
       ],
       "impl_sha": "32d56d806d000993",
@@ -25826,9 +26344,9 @@
         "undeclared_importers": 9
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 215.4,
+      "peak_rss_mb": 214.9,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T17:13:48",
+      "ran_at": "2026-09-06T17:29:17",
       "seeds": [
         0
       ],
@@ -26025,8 +26543,8 @@
     },
     "T1.03": {
       "amended": [],
-      "attempt": 3,
-      "commit": "62ab9f1",
+      "attempt": 4,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "orphan_fraction_with_plants": 0.0483,
@@ -26037,7 +26555,7 @@
         "planted_zero_grad_detected_std": 0.0,
         "worst_offenders_with_plants": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539; orphan_never_called=72"
       },
-      "duration_s": 42.66,
+      "duration_s": 42.31,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -26079,9 +26597,44 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "62ab9f1",
+          "control_metrics": {
+            "orphan_fraction_with_plants": 0.0483,
+            "orphan_fraction_with_plants_std": 0.0,
+            "planted_none_detected": 1.0,
+            "planted_none_detected_std": 0.0,
+            "planted_zero_grad_detected": 1.0,
+            "planted_zero_grad_detected_std": 0.0,
+            "worst_offenders_with_plants": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539; orphan_never_called=72"
+          },
+          "gpu_job_id": null,
+          "impl_sha": "975b83d3df4c2f3a",
+          "message": "",
+          "metrics": {
+            "modalities_fed": "vision,touch,audio,goal,task",
+            "orphan_fraction": 0.0483,
+            "orphan_fraction_std": 0.0,
+            "params_without_grad": 2698619.0,
+            "params_without_grad_std": 0.0,
+            "total_params": 1767267976.0,
+            "total_params_std": 0.0,
+            "trainable_params": 55891592.0,
+            "trainable_params_std": 0.0,
+            "worst_offenders": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539"
+          },
+          "ran_at": "2026-09-02T16:50:46",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "63c867cfa8bab71a",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "975b83d3df4c2f3a",
+      "impl_sha": "56a62d4062c99167",
       "message": "",
       "metrics": {
         "modalities_fed": "vision,touch,audio,goal,task",
@@ -26095,8 +26648,10 @@
         "trainable_params_std": 0.0,
         "worst_offenders": "language_encoder=2,624,000; action_head=49,761; emotional_state=14,103; tokenizer=9,216; movement_mood=1,539"
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 7370.0,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T16:50:46",
+      "ran_at": "2026-09-06T17:23:31",
       "seeds": [
         0,
         1,
@@ -26108,8 +26663,8 @@
     },
     "T1.04": {
       "amended": [],
-      "attempt": 2,
-      "commit": "62ab9f1",
+      "attempt": 3,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_encoder=264,704; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.action_tokens=8,192; tokenizer.body_embed=61,952; tokenizer.cls_token=512; tokenizer.goal_token=512; tokenizer.joint_embed=4,608; tokenizer.token_type_embed=3,072; value_head.predictor=132,097",
@@ -26123,7 +26678,7 @@
         "undeclared_stuck_params": 57493761.0,
         "undeclared_stuck_params_std": 0.0
       },
-      "duration_s": 261.11,
+      "duration_s": 260.61,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -26162,9 +26717,47 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "62ab9f1",
+          "control_metrics": {
+            "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_encoder=264,704; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.action_tokens=8,192; tokenizer.body_embed=61,952; tokenizer.cls_token=512; tokenizer.goal_token=512; tokenizer.joint_embed=4,608; tokenizer.token_type_embed=3,072; value_head.predictor=132,097",
+            "moved_frac": 0.0,
+            "moved_frac_std": 0.0,
+            "params_moved": 0.0,
+            "params_moved_std": 0.0,
+            "params_stuck": 58244744.0,
+            "params_stuck_std": 0.0,
+            "undeclared_stuck": "action_expert=4,615,696; action_head=271,889; audio_encoder=160,192; audio_proj=262,656; cls_token=512; cross_modal_fusion=9,457,152; final_norm=512; language_encoder=4,714,496; language_proj=262,656; layers=36,710,400; proprio_encoder=198,912; rule_bank=25,600; touch_encoder=10,048; touch_proj=33,280; vision_encoder=244,960; vision_proj=524,800",
+            "undeclared_stuck_params": 57493761.0,
+            "undeclared_stuck_params_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "3fcef0e37bddcb3f",
+          "message": "",
+          "metrics": {
+            "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.goal_token=512; value_head.predictor=132,097",
+            "moved_frac": 0.993,
+            "moved_frac_std": 0.0,
+            "params_moved": 57836801.0,
+            "params_moved_std": 0.0,
+            "params_stuck": 407943.0,
+            "params_stuck_std": 0.0,
+            "undeclared_stuck": "none",
+            "undeclared_stuck_params": 0.0,
+            "undeclared_stuck_params_std": 0.0
+          },
+          "ran_at": "2026-09-02T16:55:08",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "8ce4b431f90c89c0",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "3fcef0e37bddcb3f",
+      "impl_sha": "ba7272d9ff961933",
       "message": "",
       "metrics": {
         "declared_untrained": "action_head.locomotion_velocity=8,721; action_head.manipulation_head=20,520; action_head.manipulation_velocity=20,520; emotional_state.event_deltas=30; emotional_state.gru_output_projector=195; emotional_state.input_projector=42; emotional_state.interaction_to_pad=6; emotional_state.mood_updater=13,824; emotional_state.reward_to_pad=6; movement_mood.posture_net=689; movement_mood.speed_net=161; movement_mood.style_net=689; physics_head.predictor=134,410; task_completion_head.predictor=66,305; tokenizer.action_embed=9,216; tokenizer.goal_token=512; value_head.predictor=132,097",
@@ -26178,8 +26771,10 @@
         "undeclared_stuck_params": 0.0,
         "undeclared_stuck_params_std": 0.0
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 2073.9,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T16:55:08",
+      "ran_at": "2026-09-06T17:27:53",
       "seeds": [
         0,
         1,
@@ -26191,8 +26786,8 @@
     },
     "T1.05": {
       "amended": [],
-      "attempt": 3,
-      "commit": "62ab9f1",
+      "attempt": 4,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "unprotected_construct_delta": 1.652565,
@@ -26202,7 +26797,7 @@
         "unprotected_train_delta": 1.655311,
         "unprotected_train_delta_std": 0.294653
       },
-      "duration_s": 23.99,
+      "duration_s": 25.14,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -26241,9 +26836,41 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "62ab9f1",
+          "control_metrics": {
+            "unprotected_construct_delta": 1.652565,
+            "unprotected_construct_delta_std": 0.294977,
+            "unprotected_std": 0.0176333,
+            "unprotected_std_std": 0.00020548,
+            "unprotected_train_delta": 1.655311,
+            "unprotected_train_delta_std": 0.294653
+          },
+          "gpu_job_id": null,
+          "impl_sha": "c3d56421b748282d",
+          "message": "",
+          "metrics": {
+            "construct_delta": 0.0,
+            "construct_delta_std": 0.0,
+            "expected_std": 0.5,
+            "expected_std_std": 0.0,
+            "sentinel_std": 0.505167,
+            "sentinel_std_std": 0.0157019,
+            "train_delta": 0.0,
+            "train_delta_std": 0.0
+          },
+          "ran_at": "2026-09-02T16:55:33",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "6fc0f15cba5cc1e6",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "c3d56421b748282d",
+      "impl_sha": "53f37ca7e94a5963",
       "message": "",
       "metrics": {
         "construct_delta": 0.0,
@@ -26255,8 +26882,10 @@
         "train_delta": 0.0,
         "train_delta_std": 0.0
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 1328.6,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T16:55:33",
+      "ran_at": "2026-09-06T17:28:19",
       "seeds": [
         0,
         1,
@@ -26635,8 +27264,8 @@
     },
     "T1.11": {
       "amended": [],
-      "attempt": 2,
-      "commit": "62ab9f1",
+      "attempt": 3,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "inference_params_total": 41525008,
@@ -26644,7 +27273,7 @@
         "inference_params_trained_frac": 0.8888,
         "per_module": "action_expert=0; layers=36,710,400; proprio_encoder=198,912"
       },
-      "duration_s": 6.28,
+      "duration_s": 6.35,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -26669,9 +27298,33 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "62ab9f1",
+          "control_metrics": {
+            "inference_params_total": 41525008,
+            "inference_params_trained": 36909312,
+            "inference_params_trained_frac": 0.8888,
+            "per_module": "action_expert=0; layers=36,710,400; proprio_encoder=198,912"
+          },
+          "gpu_job_id": null,
+          "impl_sha": "d2a29f94e09c0e43",
+          "message": "",
+          "metrics": {
+            "inference_params_total": 41525008,
+            "inference_params_trained": 41525008,
+            "inference_params_trained_frac": 1.0,
+            "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912"
+          },
+          "ran_at": "2026-09-02T16:55:40",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "24a67270652473b7",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "d2a29f94e09c0e43",
+      "impl_sha": "6aa5842f7d8c65c7",
       "message": "",
       "metrics": {
         "inference_params_total": 41525008,
@@ -26679,8 +27332,10 @@
         "inference_params_trained_frac": 1.0,
         "per_module": "action_expert=4,615,696; layers=36,710,400; proprio_encoder=198,912"
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 943.4,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T16:55:40",
+      "ran_at": "2026-09-06T17:28:29",
       "seeds": [
         0
       ],
@@ -26761,13 +27416,13 @@
     },
     "T1.13": {
       "amended": [],
-      "attempt": 3,
-      "commit": "d730363+dirty",
+      "attempt": 4,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "shuffled_f_ratio": 1.0443
       },
-      "duration_s": 1.98,
+      "duration_s": 1.94,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -26816,6 +27471,30 @@
           ],
           "spec_sha": "63104c155869a1ac",
           "status": "PASS"
+        },
+        {
+          "commit": "d730363+dirty",
+          "control_metrics": {
+            "shuffled_f_ratio": 1.0443
+          },
+          "gpu_job_id": null,
+          "impl_sha": "42df15ed8f22650b",
+          "message": "",
+          "metrics": {
+            "dataset_len": 5590,
+            "distinct_labels": 18,
+            "label_signal_advantage": 7.956,
+            "mean_spectral_purity": 0.3808,
+            "real_f_ratio": 8.3086,
+            "samples_checked": 240,
+            "synthetic_share": 0.0042
+          },
+          "ran_at": "2026-09-06T17:13:56",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "63104c155869a1ac",
+          "status": "PASS"
         }
       ],
       "impl_sha": "42df15ed8f22650b",
@@ -26830,9 +27509,9 @@
         "synthetic_share": 0.0042
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 231.9,
+      "peak_rss_mb": 231.3,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T17:13:56",
+      "ran_at": "2026-09-06T17:28:32",
       "seeds": [
         0
       ],
@@ -28405,8 +29084,8 @@
     },
     "T2.12": {
       "amended": [],
-      "attempt": 3,
-      "commit": "d730363+dirty",
+      "attempt": 4,
+      "commit": "ab9d3e8",
       "compute_s": null,
       "control_metrics": {
         "randomwalk_acc": 0.2375,
@@ -28414,7 +29093,7 @@
         "shuffled_label_acc": 0.145833,
         "shuffled_label_acc_std": 0.164042
       },
-      "duration_s": 40.12,
+      "duration_s": 40.36,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -28475,6 +29154,36 @@
           ],
           "spec_sha": "7a366c370991ac3d",
           "status": "PASS"
+        },
+        {
+          "commit": "d730363+dirty",
+          "control_metrics": {
+            "randomwalk_acc": 0.2375,
+            "randomwalk_acc_std": 0.0270031,
+            "shuffled_label_acc": 0.145833,
+            "shuffled_label_acc_std": 0.164042
+          },
+          "gpu_job_id": null,
+          "impl_sha": "acb44e8c2b7c22a6",
+          "message": "",
+          "metrics": {
+            "chance": 0.25,
+            "chance_std": 0.0,
+            "mean_pleasure_struggling": 0.333533,
+            "mean_pleasure_struggling_std": 0.775904,
+            "mean_pleasure_thriving": 0.106767,
+            "mean_pleasure_thriving_std": 0.516128,
+            "separability_acc": 0.904167,
+            "separability_acc_std": 0.0724089
+          },
+          "ran_at": "2026-09-06T17:14:48",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "7a366c370991ac3d",
+          "status": "PASS"
         }
       ],
       "impl_sha": "acb44e8c2b7c22a6",
@@ -28490,9 +29199,9 @@
         "separability_acc_std": 0.0724089
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 228.0,
+      "peak_rss_mb": 227.5,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T17:14:48",
+      "ran_at": "2026-09-06T17:29:13",
       "seeds": [
         0,
         1,
