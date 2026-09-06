@@ -113,7 +113,15 @@ MIN_POOLED_MARGIN = 0.40
 # Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only). ME.1's own
 # abstention bar, applied to censored attribution questions on this harness.
 N_CENSOR_TOPICS = 5          # per askable speaker -> 15 censored pairs
-MIN_DISTRACTOR_EVAL = 9      # aliveness: below this the control has gone quiet
+# STRENGTHENED 9 -> 12, 2026-09-06 (79th audit 2.3 / FTB 6). The family floor
+# of 30 (ME.1/ME.3/ME.10) is UNSATISFIABLE here — the censored pool is 15 BY
+# CONSTRUCTION (N_CENSOR_TOPICS * 3 askable speakers) — so this floor must be
+# a fraction of 15, and 9 (60%) was the loosest aliveness floor in a family
+# set in one commit, tolerating a control gone two-thirds quiet for no stated
+# reason. 12 is 80% of the pool, the same tolerance ME.10 runs at (30 of 36
+# held pairs), and the recorded a4 measurement (15/15 evaluated, 0 excluded,
+# zero variance across seeds) clears it with margin. Strengthen-only.
+MIN_DISTRACTOR_EVAL = 12     # aliveness: below this the control has gone quiet
 MIN_DISTRACTOR_ABST = 0.95
 
 
