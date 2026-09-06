@@ -11,6 +11,30 @@ NOT improve. If the frozen model's loss also falls, the metric is measuring
 something other than learning and no result built on it can be trusted.
 
 This runs on CPU in minutes. GPU quota is spent only once this passes.
+
+STRENGTHENED 2026-09-06 (Review, FULL Part 2), two additions, no threshold
+moved:
+
+  1. THE CHECK NOW ASSERTS WHAT THE PARAGRAPH ABOVE PROMISES. It said the
+     frozen control "must NOT improve"; `_check` only asserted
+     `final_loss >= TARGET_LOSS`. A frozen model whose loss fell a
+     hundredfold and stopped just above 1e-2 would have passed that control
+     while loudly demonstrating the exact thing the control exists to catch.
+     Added: `frozen improvement_ratio < 1.5`. Measured on seed 0 the frozen
+     ratio is **1.00** with a flat curve (0.95071 -> 0.95464), so this
+     conjunct has ~50% of headroom and fails only if the control genuinely
+     starts learning.
+
+  2. THE TRAIN/EVAL MODE IS NOW RECORDED, per LESSONS' most expensive bug —
+     *"Call .eval(). The most expensive bug in this project was three
+     characters"*, `TrainingPipeline` running 36 `nn.Dropout` layers in the
+     wrong mode and costing ~13 GPU-hours of re-runs. That lesson was written
+     AFTER this spec, and this spec never says which mode it is in; it
+     inherits `nn.Module`'s default (train, dropout ACTIVE — visible in the
+     frozen curve's fluctuation). Train mode is the HARDER setting here, so
+     it is kept, not changed — what was missing is that a future edit could
+     flip it silently and nothing would notice. `mode_training` is now a
+     recorded metric and an asserted conjunct.
 """
 from __future__ import annotations
 
@@ -76,6 +100,11 @@ def _train(seed: int, frozen: bool) -> dict:
         "improvement_ratio": round(curve[0] / max(curve[-1], 1e-9), 2),
         "curve": ";".join(str(c) for c in curve),
         "trainable_tensors": len(params),
+        # Strengthened 2026-09-06 — the dropout lesson postdates this spec and
+        # it never declared its mode. Train mode (dropout ACTIVE) is the
+        # harder setting and is what has always run; recording it means a
+        # future edit cannot flip it in silence.
+        "mode_training": float(brain.training),
     }
 
 
@@ -87,10 +116,19 @@ def _control(seed: int) -> dict:
     return _train(seed, frozen=True)
 
 
+FROZEN_MAX_IMPROVEMENT = 1.5   # the frozen control may not fall by even 1.5x
+
+
 def _check(m: dict, c: dict) -> bool:
     learned = m["final_loss"] < TARGET_LOSS
-    control_did_not_learn = c["final_loss"] >= TARGET_LOSS
-    return learned and control_did_not_learn
+    # Strengthened 2026-09-06: "did not reach the target" is not "did not
+    # improve", and the docstring always promised the latter.
+    control_did_not_learn = (c["final_loss"] >= TARGET_LOSS
+                             and c["improvement_ratio"] < FROZEN_MAX_IMPROVEMENT)
+    # Strengthened 2026-09-06: the mode this spec runs in is asserted, not
+    # inherited in silence, on BOTH arms.
+    mode_declared = m["mode_training"] == 1.0 and c["mode_training"] == 1.0
+    return learned and control_did_not_learn and mode_declared
 
 
 def run(ledger: Ledger | None = None):
