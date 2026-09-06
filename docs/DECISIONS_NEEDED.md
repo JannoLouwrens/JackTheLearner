@@ -4954,12 +4954,16 @@ a 10× scale-transfer claim is strictly stronger than a 3× one, and shrinking i
 to fit the budget is buying a PASS with a smaller question. If that ratio moves,
 it moves on your signature with the cost on the table.
 
+**On the class, because I got it wrong twice before it armed.** I first wrote
+`class: resource` and `decisions --check` refused it — the field admits only
+`means` or `goal`. It is classed **`goal`** and not `means` deliberately: the
+DEFAULT is only a label, but option (ii) shrinks a claim about what Jack must
+demonstrate, and an entry is classed by its strongest option, not its softest.
+(I then tried to write that reasoning inside the `class:` field itself and the
+checker refused again, correctly — a declared field is not a place for prose.)
+
 DECIDE: D24
   class:     goal
-             (Classed `goal` and not `means` deliberately, and the tool was
-             right to refuse `resource`: the DEFAULT is only a label, but
-             option (ii) shrinks a claim about what Jack must demonstrate, and
-             an entry is classed by its strongest option, not its softest.)
   blocks:    `LC.07` (PILOT-BLOCKED, `_GATES_FROZEN` stays False and `run()`
              keeps refusing either way) and, through it, the Learning-core
              seat's only live arena. Nothing is blocked BY this entry in the
