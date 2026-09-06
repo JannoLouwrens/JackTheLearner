@@ -213,6 +213,45 @@ chk "a dirty file that PREDATES the run is refused (the git add -A lesson)" \
 chk "and the report says it was LEFT, so a reader still knows it exists" \
   "$(head -12 "$W2/docs/R.md" | grep -c 'docs/OWNER.md')" "1"
 
+printf '\n--- seal_output: swept ledger rows carry provenance (79th audit 1.1) ---\n'
+
+# THE 79th-AUDIT SCAR: the Sunday FULL hit its 40-minute wall and the sweep
+# committed `experiments/ledger.json` carrying ME.1's FAIL row. The row was a
+# true measurement, but only `review.log` said a dying organ committed it —
+# the ledger itself carried nothing, and every reader reads the FILE. The
+# sweep must stamp exactly the rows that differ from HEAD with an additive
+# `seal_provenance` key, and leave untouched rows byte-identical.
+W3="$TMP/repo3"; mkdir -p "$W3/docs" "$W3/experiments"
+git -C "$W3" init -q
+git -C "$W3" config user.email t@t; git -C "$W3" config user.name t
+printf 'report v1\n' > "$W3/docs/R.md"
+printf '%s\n' '{"_comment":"c","results":{"A.1":{"attempt":1,"status":"PASS","commit":"aaa"},"B.2":{"attempt":2,"status":"FAIL","commit":"bbb"}}}' \
+  > "$W3/experiments/ledger.json"
+git -C "$W3" add -A; git -C "$W3" commit -q -m init
+RUN_START=$(( $(date +%s) - 60 ))
+printf 'report half-written\n' >> "$W3/docs/R.md"
+/data/venvs/jackthelearner/bin/python - "$W3/experiments/ledger.json" <<'PYEOF'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p))
+d["results"]["B.2"]["status"] = "PASS"; d["results"]["B.2"]["attempt"] = 3
+d["results"]["C.3"] = {"attempt": 1, "status": "VOID", "commit": "ccc"}
+json.dump(d, open(p, "w"), indent=2, sort_keys=True)
+PYEOF
+( cd "$W3" && seal_output 124 docs/R.md review say 25 "$RUN_START" ) >/dev/null 2>&1
+chk "the swept ledger is committed" \
+  "$(git -C "$W3" status --porcelain -- experiments/ledger.json | wc -l)" "0"
+chk "the MODIFIED row is stamped with seal_provenance" \
+  "$(/data/venvs/jackthelearner/bin/python -c "import json;d=json.load(open('$W3/experiments/ledger.json'));print('seal_provenance' in d['results']['B.2'])")" "True"
+chk "the ADDED row is stamped too" \
+  "$(/data/venvs/jackthelearner/bin/python -c "import json;d=json.load(open('$W3/experiments/ledger.json'));print('seal_provenance' in d['results']['C.3'])")" "True"
+chk "the UNTOUCHED row is left clean" \
+  "$(/data/venvs/jackthelearner/bin/python -c "import json;d=json.load(open('$W3/experiments/ledger.json'));print('seal_provenance' in d['results']['A.1'])")" "False"
+chk "the stamp names the organ, the rc and the seal" \
+  "$(/data/venvs/jackthelearner/bin/python -c "import json;d=json.load(open('$W3/experiments/ledger.json'));n=d['results']['B.2']['seal_provenance'];print(all(s in n for s in ('review','rc=124','lib_seal.sh')))")" "True"
+chk "nothing but the key changed: status and attempt are the runner's" \
+  "$(/data/venvs/jackthelearner/bin/python -c "import json;d=json.load(open('$W3/experiments/ledger.json'));r=d['results']['B.2'];print(r['status'],r['attempt'])")" "PASS 3"
+
 printf '\n--- review_liveness: the paused organ ---\n'
 
 # A paused organ is a DECISION, not a fault. Shouting about it would train the

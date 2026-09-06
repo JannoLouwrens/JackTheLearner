@@ -74,8 +74,9 @@
 # directly under its header — a disclosure, never a reversal: nothing is
 # re-dated, weakened or un-armed. Scoped to the three files where an entry can
 # sit on a clock or hold a seat; other swept files keep commit-message
-# provenance only. Idempotent: a header already followed by a PROVENANCE line
-# is left alone.
+# provenance only, EXCEPT `experiments/ledger.json`, which gets row-level
+# provenance via `_seal_stamp_ledger` below (79th audit 1.1). Idempotent: a
+# header already followed by a PROVENANCE line is left alone.
 _seal_stamp_emissions() {
   local p="$1" organ="$2" rc="$3" stamp="$4" hdr note
   case "$p" in
@@ -98,6 +99,73 @@ _seal_stamp_emissions() {
       }' "$p" > "$p.provstamp" && mv "$p.provstamp" "$p"
   done < <(git diff -- "$p" 2>/dev/null | grep -E '^\+#{2,3} ' | sed 's/^\+//')
   return 0
+}
+
+# _seal_stamp_ledger <path> <organ> <rc> <stamp>
+#
+# THE SCAR (79th audit 1.1, 2026-09-06): the Sunday FULL hit its 40-minute
+# wall and the sweep committed `experiments/ledger.json` carrying `ME.1`'s
+# FAIL row — correctly, the row was a true measurement and a clean-tree re-run
+# superseded it — but the only place saying a dying organ committed it was
+# `review.log`. `PROGRESS.md` got a banner; the ledger got nothing, and every
+# reader of the ledger reads the FILE, not the organ's log. A row committed by
+# a timed-out organ should be as visible in the ledger as `+dirty` makes a
+# dirty tree.
+#
+# So: before the sweep commits the ledger, every spec row whose content
+# differs from HEAD gets an additive `seal_provenance` string — a DISCLOSURE,
+# never a change. Status, metrics, commit, history are untouched; the runner's
+# own lock (`ledger.json.lock`) and tmp+fsync+replace discipline are reused so
+# a live run cannot be raced; and the key vanishes the next time a real run
+# records that spec, exactly as a clean re-run supersedes a `+dirty` stamp.
+# NOT routed through `amended`: an amendment records a CHANGE (field/from/to)
+# and feeds the staleness lane; this key records an unchanged row's chain of
+# custody. Any failure inside returns 0 — the seal must never make the
+# dying-run path worse than an unstamped commit.
+_seal_stamp_ledger() {
+  local p="$1" organ="$2" rc="$3" stamp="$4"
+  [ "$p" = "experiments/ledger.json" ] || return 0
+  SEAL_ORGAN="$organ" SEAL_RC="$rc" SEAL_STAMP="$stamp" \
+  /data/venvs/jackthelearner/bin/python - "$p" <<'PYEOF' || return 0
+import fcntl, json, os, subprocess, sys, tempfile
+path = sys.argv[1]
+organ = os.environ["SEAL_ORGAN"]; rc = os.environ["SEAL_RC"]
+stamp = os.environ["SEAL_STAMP"]
+note = (f"committed by scripts/lib_seal.sh at {stamp}, swept from a {organ} "
+        f"run that exited rc={rc} without completing its own checklist. The "
+        "row is as the runner wrote it, unmodified apart from this key — "
+        "provenance, not an amendment. The next real run of this spec "
+        "supersedes it.")
+try:
+    head = json.loads(subprocess.run(
+        ["git", "show", f"HEAD:{path}"], capture_output=True, text=True,
+        check=True).stdout).get("results", {})
+except Exception:
+    head = {}
+lock = open(path + ".lock", "a+")
+fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+try:
+    with open(path) as f:
+        payload = json.load(f)
+    stamped = []
+    for sid, row in payload.get("results", {}).items():
+        cur = dict(row); cur.pop("seal_provenance", None)
+        prev = dict(head.get(sid) or {}); prev.pop("seal_provenance", None)
+        if cur != prev:
+            row["seal_provenance"] = note
+            stamped.append(sid)
+    if stamped:
+        fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path) or ".",
+                                   suffix=".tmp")
+        with os.fdopen(fd, "w") as f:
+            f.write(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+            f.flush(); os.fsync(f.fileno())
+        os.replace(tmp, path)
+        print("seal_provenance stamped on ledger row(s): "
+              + ", ".join(sorted(stamped)))
+finally:
+    fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+PYEOF
 }
 
 # Hours since the commit that last touched <file>, or 99999 if git cannot say.
@@ -272,6 +340,7 @@ in doubt." -- "$file" 2>/dev/null \
     _stamp="$(date -Iseconds)"
     for _sp in "${swept[@]}"; do
       _seal_stamp_emissions "$_sp" "$organ" "$rc" "$_stamp"
+      _seal_stamp_ledger "$_sp" "$organ" "$rc" "$_stamp"
     done
     git add -- "${swept[@]}" 2>/dev/null
     git commit -q -m "$organ: rc=$rc run's other dirty files, committed unbannered — see the sealed $file
