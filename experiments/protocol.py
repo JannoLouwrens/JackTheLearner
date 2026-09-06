@@ -1168,6 +1168,60 @@ def impl_deps_of(path, source: Optional[bytes] = None) -> tuple:
     return (), ""
 
 
+def undeclared_impl_imports(path, source: Optional[bytes] = None) -> tuple:
+    """Repo-root modules a test module IMPORTS but does not DECLARE.
+
+    The 78th audit's B1 (2026-09-06). `impl_sha` is only as strong as its
+    declared inputs, and declaring was optional: on 2026-09-06, 54 of 105 PASS
+    specs declared no `IMPL_DEPS` at all, 35 implemented specs imported a
+    repo-root module by name without declaring it, and when
+    `EpisodicMemory.py`'s scorer was replaced that morning the staleness lane
+    printed a clean board over seven certificates that had just stopped
+    describing the code they certify. An opt-in integrity check reports the
+    health of the population that opted in.
+
+    This function makes the declaration checkable without importing anything:
+    parse the module (same static rule as `impl_deps_of`, same source-override
+    lane), walk EVERY `import X` / `from X import …` node — top-level AND
+    nested, because in this codebase the imports are overwhelmingly lazy,
+    inside `_experiment`: a top-level-only walk found 2 of the 35 — and return
+    the sorted names X where `<repo root>/X.py` exists but `"X.py"` is absent
+    from the module's `IMPL_DEPS`.
+
+    Returns `(missing, problem)`. `problem` carries `impl_deps_of`'s complaint
+    (unparseable declaration) or `unreadable:…`; a module whose declaration
+    cannot be read reports ALL its repo-root imports as missing rather than
+    none, because falling back to "declared everything" is the silent
+    narrowing this file already refuses in `impl_deps_of`.
+
+    KNOWN EVASIONS, named rather than hidden: a string-based
+    `importlib.import_module("X")` and a `sys.path`-manipulated exec are
+    invisible to an AST walk. Neither appears in the tree today; if one ever
+    does, extend this walker in the same commit.
+    """
+    import ast
+    try:
+        tree = ast.parse(source if source is not None
+                         else Path(path).read_bytes())
+    except (OSError, SyntaxError) as e:
+        return (), f"unreadable:{type(e).__name__}"
+    deps, problem = impl_deps_of(path, source=source)
+    declared = set(deps)
+    root = Path(__file__).resolve().parents[1]
+    imported = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                imported.add(alias.name.split(".")[0])
+        elif isinstance(node, ast.ImportFrom):
+            if node.level == 0 and node.module:
+                imported.add(node.module.split(".")[0])
+    missing = sorted(m for m in imported
+                     if (root / f"{m}.py").is_file()
+                     and f"{m}.py" not in declared)
+    return tuple(missing), problem
+
+
 def impl_sha_of(path, file_bytes: Optional[bytes] = None,
                 dep_bytes: Optional[dict] = None) -> Optional[str]:
     """sha256 of a test file — the test as it was when it ran.

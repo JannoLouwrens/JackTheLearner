@@ -7491,6 +7491,55 @@ EXPANSION: list[Spec] = [
                "payload runs on — kill the GROUP; the leftover check "
                "(lib_procwatch) still sees the orphan either way."),
 
+    # ── 78th audit B1 (registered 2026-09-06): the staleness stamp's inputs
+    # were voluntary. impl_sha hashes test file + DECLARED IMPL_DEPS; on
+    # 2026-09-06 EpisodicMemory.py's scorer was replaced and seven PASS
+    # certificates that import it undeclared stayed green while the
+    # staleness lane printed a clean board. An opt-in integrity check
+    # reports the health of the population that opted in (LESSONS.md).
+    Spec("T0.35", 0, "An implementation dependency cannot go undeclared",
+         hypothesis="Every registered spec's implementation module, parsed "
+                    "statically (never imported), declares in IMPL_DEPS every "
+                    "repo-root module it imports at ANY nesting depth — "
+                    "except a named, shrink-only grandfather set of today's "
+                    "35 measured violators, which may only lose entries — "
+                    "and every registered module compile()s (dp_04 carried a "
+                    "statement above its future-import for seven days; "
+                    "ast.parse accepts that, compile() refuses it).",
+         falsified_by="A repo-root import absent from both IMPL_DEPS and the "
+                      "grandfather set (a NEW undeclared dependency, on any "
+                      "spec), a grandfather entry that no longer matches a "
+                      "live violation (stale allowlist = licence for silent "
+                      "regression), a registered module that does not "
+                      "compile, or the detector missing the lazy known-"
+                      "positive fixture / firing on the declarer fixture.",
+         null_baseline="The OPT-IN instrument (the control): examine only "
+                       "modules that declare IMPL_DEPS — the pre-audit "
+                       "staleness lane's shape. Over a population with one "
+                       "undeclared importer it MUST read zero violations; "
+                       "that wrong answer is the measured defect.",
+         metric="new_undeclared", budget=Budget.CPU, seeds=1,
+         control="The opt-in sweep over {violator, declarer} fixtures reads "
+                 "clean while the full instrument sees the violator. A "
+                 "control that sees it would mean opt-in was never the "
+                 "defect and this spec measures nothing.",
+         kills="The assumption that a green STALE-CLAIMS lane means the "
+               "board is fresh. It means the DECLARING third of the board "
+               "is fresh; this spec makes the other two thirds unable to "
+               "hide.",
+         notes="78th audit B1, the audit's highest-priority item. The "
+               "predicate is protocol.undeclared_impl_imports, beside "
+               "impl_deps_of/impl_sha_of (one code path, T0.17's precedent); "
+               "verified red-first against me_9_attributed_recall.py as it "
+               "stood (fires: EpisodicMemory undeclared) and against the "
+               "real ladder with an empty grandfather set (35 named reds). "
+               "KNOWN EVASIONS named in the predicate's docstring: "
+               "importlib.import_module strings and exec are invisible to "
+               "an AST walk; neither appears in the tree today. "
+               "Deleting a grandfather entry is the ONLY legal edit to the "
+               "set; additions are the widening move UNREACHABLE_BASELINE's "
+               "header forbids. COVERS: harness integrity (rule)"),
+
     # ── OWNERS_HANDS.md §6 (INTEGRATION_QUEUE row, registered 2026-09-04) ────
     # GOAL.md: "their hands may leave things in his world for him to find —
     # food where he might look, a tool he has not made yet. Never
