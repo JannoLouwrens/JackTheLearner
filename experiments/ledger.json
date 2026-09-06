@@ -23836,8 +23836,8 @@
     },
     "T1.01": {
       "amended": [],
-      "attempt": 2,
-      "commit": "4abd917",
+      "attempt": 3,
+      "commit": "707f5fa",
       "compute_s": null,
       "control_metrics": {
         "curve": "0.95071;0.9518;0.95146;0.95448;0.95116;0.95433;0.95249;0.9496;0.95068;0.95015;0.95464",
@@ -23847,10 +23847,12 @@
         "improvement_ratio_std": 0.0,
         "initial_loss": 0.981147,
         "initial_loss_std": 0.022526,
+        "mode_training": 1.0,
+        "mode_training_std": 0.0,
         "trainable_tensors": 0.0,
         "trainable_tensors_std": 0.0
       },
-      "duration_s": 2083.64,
+      "duration_s": 2082.56,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -23887,9 +23889,45 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "4abd917",
+          "control_metrics": {
+            "curve": "0.95071;0.9518;0.95146;0.95448;0.95116;0.95433;0.95249;0.9496;0.95068;0.95015;0.95464",
+            "final_loss": 0.981293,
+            "final_loss_std": 0.0203558,
+            "improvement_ratio": 1.0,
+            "improvement_ratio_std": 0.0,
+            "initial_loss": 0.981147,
+            "initial_loss_std": 0.022526,
+            "trainable_tensors": 0.0,
+            "trainable_tensors_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "8c60ff20fea725a0",
+          "message": "",
+          "metrics": {
+            "curve": "0.95071;0.11232;0.00895;0.00494;0.00331;0.00304;0.00272;0.00239;0.00212;0.00201;0.00184",
+            "final_loss": 0.00196333,
+            "final_loss_std": 0.000140554,
+            "improvement_ratio": 501.536667,
+            "improvement_ratio_std": 25.923037,
+            "initial_loss": 0.981147,
+            "initial_loss_std": 0.022526,
+            "trainable_tensors": 316.0,
+            "trainable_tensors_std": 0.0
+          },
+          "ran_at": "2026-09-02T16:50:03",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "761fc6ac457c878c",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "8c60ff20fea725a0",
+      "impl_sha": "e1ffa50090f7da4e",
       "message": "",
       "metrics": {
         "curve": "0.95071;0.11232;0.00895;0.00494;0.00331;0.00304;0.00272;0.00239;0.00212;0.00201;0.00184",
@@ -23899,11 +23937,15 @@
         "improvement_ratio_std": 25.923037,
         "initial_loss": 0.981147,
         "initial_loss_std": 0.022526,
+        "mode_training": 1.0,
+        "mode_training_std": 0.0,
         "trainable_tensors": 316.0,
         "trainable_tensors_std": 0.0
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 1532.2,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T16:50:03",
+      "ran_at": "2026-09-06T08:43:59",
       "seeds": [
         0,
         1,
