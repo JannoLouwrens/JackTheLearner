@@ -5858,14 +5858,14 @@
     },
     "ME.1": {
       "amended": [],
-      "attempt": 4,
-      "commit": "24e4680+dirty",
+      "attempt": 5,
+      "commit": "35b9d51",
       "compute_s": null,
       "control_metrics": {
         "recency_only_recall": 0.0,
         "recency_only_recall_std": 0.0
       },
-      "duration_s": 2.06,
+      "duration_s": 2.04,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -5943,10 +5943,44 @@
           ],
           "spec_sha": "0bef0b2f1432595f",
           "status": "PASS"
+        },
+        {
+          "commit": "24e4680+dirty",
+          "control_metrics": {
+            "recency_only_recall": 0.0,
+            "recency_only_recall_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "9908307cc8025299",
+          "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/ME.1/2026-09-06T06-51-46",
+          "metrics": {
+            "cued_recall": 0.85,
+            "cued_recall_std": 0.0136355,
+            "distractor_abstention": 0.0,
+            "distractor_abstention_std": 0.0,
+            "distractor_evaluated": 40.0,
+            "distractor_evaluated_std": 4.546061,
+            "distractor_excluded": 20.0,
+            "distractor_excluded_std": 4.546061,
+            "events": 1000.0,
+            "events_std": 0.0,
+            "fabricated_abstention": 1.0,
+            "fabricated_abstention_std": 0.0,
+            "recall_after_reload": 0.85,
+            "recall_after_reload_std": 0.0136355
+          },
+          "ran_at": "2026-09-06T06:51:46",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "0bef0b2f1432595f",
+          "status": "FAIL"
         }
       ],
       "impl_sha": "9908307cc8025299",
-      "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/ME.1/2026-09-06T06-51-46",
+      "message": "pre-registered threshold not met",
       "metrics": {
         "cued_recall": 0.85,
         "cued_recall_std": 0.0136355,
@@ -5964,9 +5998,9 @@
         "recall_after_reload_std": 0.0136355
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 215.3,
-      "preserved_impl": "refs/jack/failimpl/ME.1/2026-09-06T06-51-46",
-      "ran_at": "2026-09-06T06:51:46",
+      "peak_rss_mb": 215.1,
+      "preserved_impl": null,
+      "ran_at": "2026-09-06T06:52:06",
       "seeds": [
         0,
         1,
@@ -5974,7 +6008,33 @@
       ],
       "spec_id": "ME.1",
       "spec_sha": "0bef0b2f1432595f",
-      "status": "FAIL"
+      "status": "FAIL",
+      "supersedes_fail": {
+        "commit": "24e4680+dirty",
+        "dirty": true,
+        "impl_changed": false,
+        "impl_sha": "9908307cc8025299",
+        "metrics": {
+          "cued_recall": 0.85,
+          "cued_recall_std": 0.0136355,
+          "distractor_abstention": 0.0,
+          "distractor_abstention_std": 0.0,
+          "distractor_evaluated": 40.0,
+          "distractor_evaluated_std": 4.546061,
+          "distractor_excluded": 20.0,
+          "distractor_excluded_std": 4.546061,
+          "events": 1000.0,
+          "events_std": 0.0,
+          "fabricated_abstention": 1.0,
+          "fabricated_abstention_std": 0.0,
+          "recall_after_reload": 0.85,
+          "recall_after_reload_std": 0.0136355
+        },
+        "ran_at": "2026-09-06T06:51:46",
+        "spec_changed": false,
+        "spec_sha": "0bef0b2f1432595f",
+        "status": "FAIL"
+      }
     },
     "ME.10": {
       "amended": [],
