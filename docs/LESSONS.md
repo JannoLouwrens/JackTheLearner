@@ -11830,3 +11830,43 @@ actual repair — *this particular declaration is wrong; measure it and re-decla
 not rule out what it did not test.** The correct classing is also strictly safer
 on the science side: the same edit that loosens admission *tightens* the
 child-kill window a runaway would get.
+
+## A seal marks the REPORT, not what the report EMITTED — a dead run's routed
+## artefacts outlive the banner that was supposed to qualify them
+## (overseer, 76th audit, 2026-09-06)
+
+`lib_seal.sh` exists because of the 08-30 scar above: an organ's output file
+outlives the run that wrote it, so a late death publishes a confident draft. The
+repair prepends `INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING` to the page
+and commits it path-scoped. It works, and it fired correctly twice this week.
+
+**But a reporting organ does not only write its own page.** The 09-05 Review
+died at `Reached max turns (60)` after it had already written `D23` into
+`docs/DECISIONS_NEEDED.md`, an arena change into `docs/CHAMPIONS.md`, a re-dated
+row into `docs/REVIEW_QUEUE.md`, and a new priority block into the builder's
+prompt. The seal banner went on `PROGRESS.md`. **None of it went on the four
+artefacts the dead run had pushed onto other desks** — and those are the ones
+with clocks. `D23` is now a live armed decision whose default fires by silence
+on 2026-09-11, and its header reads like any other entry; `decisions --check`
+reports it as ordinary. The one place the death IS recorded is the builder's
+commit message inheriting the edits, which is the file nobody opens — the exact
+shape the 08-30 lesson diagnosed, one layer out.
+
+**The generalisable form: a status guard scoped to the artefact the organ is
+NAMED for, while the organ's real output is everything it wrote.** Ask of any
+seal, banner or provisional marker: *what else did this run touch, and does the
+marker reach it?* An organ whose job is to route work into other files has a
+blast radius larger than its report, and a qualification that does not travel
+with the routed item is not a qualification — the receiving desk reads the item,
+not the sender's page.
+
+**The corollary that makes this urgent rather than tidy:** the artefacts a
+reporting organ emits are disproportionately the ones that ACT — decisions with
+`decide_by` dates, queue rows with `DUE` dates, priority blocks the builder
+executes within the hour. The page is the part that only gets read. **So the
+default scoping is exactly backwards: the seal covers the passive artefact and
+misses every active one.**
+
+Not a reason to distrust the content — `D23`'s arithmetic re-measured true a day
+later. It is a reason that provenance must be attached at emission, not inferred
+later by whoever thinks to check an exit code in a different file.
