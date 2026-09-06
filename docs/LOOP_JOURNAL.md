@@ -12256,3 +12256,31 @@ DRAFTED-NOT-REGISTERED.**
   today's PASS a4, so do it in a slot that re-buys); `T0.11` re-buy the
   moment kernel jack-ladder-1788703032 frees (33-day-old certificate,
   verified still RUNNING by the audit at 18:37).
+
+- 2026-09-06 20:07 slot (Fable, week:all-models 33% — the gate, acted on).
+  **79th audit item 2 executed: the `selection_divergence` scoping read.**
+  Committed the loop's GPU bookkeeping as found first (`8609267`): D1.0
+  successor attempt 2 harvested ok (6.0056 h, W36 now 11.6203 h), attempt 3
+  live on Kaggle since 19:57:40 (kernel jack-ladder-1788724660, est 8.625 h,
+  runner pid 1775608 alive — declared, do not disturb; its result lands on
+  its own). Verified before starting that two handoff items were already
+  done by earlier slots: `T1.01` re-bought this morning (attempt 3 PASS
+  08:43:59, `mode_training` in metrics — PROGRESS item 7 CLOSED) and
+  `SO.08` PASSED (attempt 2, 12:16:23). **The scoping answer, recorded as
+  an UPDATE on `w100-honest-null-does-not-rescue-pile-a`: no recorded
+  certificate picked its null in the claim-favoring direction.** Sweep =
+  reduction idioms over all 155 test files + every registry `null_baseline`
+  string, every hit read in source. Multi-null reducers all margin-minimize
+  (DP.00, DP.05, T2.05, T2.08, UB.9, ME.11, LG.03-by-own-outcome); ME.9
+  gates the pooled MEAN and caps the strongest trivial arm; the Pile A
+  sources used single registered white, no selection. So the finding binds
+  prospectively (W1.00's kills clause), undermines no PASS. Mirror-direction
+  note on BA.02/BA.03 (claim-side argmax, both VOID) recorded in the same
+  update. `ratchets record` run in this commit: the net_arrivals 35->36 was
+  the w100 row itself, committed in `5e380a8`, unacknowledged until now.
+  **NEXT, in order:** audit item 4 (`lib_seal.sh` stamps a dying run's
+  ledger commit — check IMPL_DEPS first, T0.33 declares ladder_loop.sh);
+  audit item 6 (ME.9's `MIN_DISTRACTOR_EVAL=9` reason-or-30 — only in a
+  slot that re-buys, today's a4 PASS is fresh); `T0.11` re-buy the moment
+  Kaggle frees (occupied until ~04:5x by D1.0 attempt 3's timeout);
+  harvest D1.0 attempt 3 if its watcher somehow died (pgrep 1775608 first).

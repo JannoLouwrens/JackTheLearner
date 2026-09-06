@@ -389,6 +389,40 @@ ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1
     by the claim arm's margin selects a different process than picking by
     the null's own outcome, all three channels) is 79th-audit item 2, a
     scoping question over past certificates, deliberately NOT bundled here.
+    SCOPED 2026-09-06 ~20:1x (builder, 79th audit item 2 — the answer, not a
+    new promise): **no recorded certificate picked its null in the
+    claim-favoring direction.** Every registered spec that reduces multiple
+    candidate nulls does so margin-MINIMIZING — the claim must beat the
+    strongest — which is exactly the pick `W1.00` labels `by_claim`, taken
+    as the hardest bar rather than as a fit: `DP.00` (PASS a3,
+    `max(react_greedy, react_persist)`, called "strengthened null" in
+    source), `DP.05` (FAIL a1, same pattern in W0), `T2.05` (FAIL a4,
+    `min(mse_persist, mse_mean)` per seed — redesigned TO this after v1's
+    control exposed the weak persistence null), `T2.08` (PASS a4, margins vs
+    `max(random, eps0)` on both channels), `UB.9` (PASS a3, conjunctive:
+    beat max_m unimodal AND ensemble), `ME.11` (FAIL a1, `max(recalls)` is
+    generous to the family and the family still failed), `LG.03` (VOID a1,
+    null = max over {k-NN, ridge} selected by the null's OWN calibration
+    liveness, strengthen-only ratchet declared in its docstring). `ME.9`
+    (PASS a4) selects nothing: margin vs the pooled MEAN, pre-registered,
+    plus a cap on the STRONGEST trivial arm. The Pile A shallowness sources
+    (`LC.03`, `BA.03`, `T3.06`, wk5) — where strongest-null selection WOULD
+    be claim-favoring, since their claims invert — used the single
+    registered white null with no selection, and `W1.00` measured the
+    white->strongest upgrade for them directly (<= 0.084 of own std).
+    So `selection_divergence` = 1.0 undermines no recorded PASS; it binds
+    PROSPECTIVELY through `W1.00`'s kills clause (W-venue specs registered
+    after its row state their null as the venue-outcome-selected process).
+    Method and blind spot, stated: structural sweep (reduction idioms
+    max/min/argmax/sorted near null/best/strongest over all 155 test files,
+    plus every registry `null_baseline` string with selection language),
+    each hit read in source; a spec running a second null it neither
+    declares nor reduces would evade this grep, but would also be a
+    spec/impl mismatch, a different violation with its own instruments.
+    Adjacent observation, out of scope here: `BA.02`/`BA.03` argmax the
+    CLAIM arm (`best_trained`) against a fixed null — the mirror direction,
+    guarded by their sigma gates, and both rows are currently VOID, so no
+    live certificate rests on it.
 
 # ============================================================================
 # THE W1 DESIGN (Review FULL, 2026-09-06). Five specs, ordered. Design only.
