@@ -1911,6 +1911,17 @@ the same commit that changes the newly-declared file, budgeting the re-run: a
 certificate whose scope grows retroactively invalidates every entry recorded
 under the narrow scope, which is a cost, not a formality.
 
+**The rule cuts the other way too, and that direction cost an unreachable-ratchet
+red (2026-09-06).** A test file can itself sit in ANOTHER spec's `IMPL_DEPS`
+(`ub_9_heard_not_seen.py` declares `experiments/tests/pg_7_hns_leakage.py` — it
+imports PG.7's certified fixture). The 78th-audit declaration sweep priced its
+re-buys as "the 18 specs I edited" and missed that editing `pg_7`'s file staled
+**UB.9**, whose blocked dependents pushed `unreachable` above its floor for an
+hour. Before calling an edit's footprint priced, ask the reverse question the
+same sweep already learned for imports: *which certificates declare the files I
+am touching?* — `grep -l <edited-file> experiments/tests/*.py` is the whole
+check, and `run status`'s stale block is the receipt that you got it right.
+
 ## A gate must be checked against the statistic's ATTAINABLE RANGE, not just against intuition
 
 XL.00 pre-registered its two permutation gates as z-scores at 3.0 and FAILED —

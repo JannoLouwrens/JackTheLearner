@@ -32726,8 +32726,8 @@
     },
     "UB.9": {
       "amended": [],
-      "attempt": 2,
-      "commit": "8d623b3",
+      "attempt": 3,
+      "commit": "c13b41f",
       "compute_s": null,
       "control_metrics": {
         "control_seed_gates_ok": 1.0,
@@ -32735,7 +32735,7 @@
         "control_swap_pairing_acc": 0.503133,
         "control_swap_pairing_acc_std": 0.0245788
       },
-      "duration_s": 207.05,
+      "duration_s": 206.62,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -32804,9 +32804,61 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "8d623b3",
+          "control_metrics": {
+            "control_seed_gates_ok": 1.0,
+            "control_seed_gates_ok_std": 0.0,
+            "control_swap_pairing_acc": 0.503133,
+            "control_swap_pairing_acc_std": 0.0245788
+          },
+          "gpu_job_id": null,
+          "impl_sha": "5ac2b07086c22937",
+          "message": "",
+          "metrics": {
+            "audio_carries_bit": 1.0,
+            "audio_carries_bit_std": 0.0,
+            "audio_only_acc": 0.5,
+            "audio_only_acc_std": 0.0,
+            "boot_lo": 0.979133,
+            "boot_lo_std": 0.00292271,
+            "canary_ok": 1.0,
+            "canary_ok_std": 0.0,
+            "dropped_quads_frac": 0.0,
+            "dropped_quads_frac_std": 0.0,
+            "ensemble_acc": 0.506233,
+            "ensemble_acc_std": 0.0044312,
+            "flat_audio_acc": 0.498967,
+            "flat_audio_acc_std": 0.00146135,
+            "fused_acc": 0.992733,
+            "fused_acc_std": 0.00150849,
+            "hns_accuracy_over_ensemble": 0.486433,
+            "hns_accuracy_over_ensemble_std": 0.00589256,
+            "n_test": 320.0,
+            "n_test_std": 0.0,
+            "pan_shuffle_delta": 0.0,
+            "pan_shuffle_delta_std": 0.0,
+            "seed_gates_ok": 1.0,
+            "seed_gates_ok_std": 0.0,
+            "swap_flip_rate": 0.992633,
+            "swap_flip_rate_std": 0.00150849,
+            "vision_carries_bit": 1.0,
+            "vision_carries_bit_std": 0.0,
+            "vision_only_acc": 0.5,
+            "vision_only_acc_std": 0.0
+          },
+          "ran_at": "2026-09-04T00:22:07",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "eee66170f35cc8be",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "5ac2b07086c22937",
+      "impl_sha": "0835b11b888692e6",
       "message": "",
       "metrics": {
         "audio_carries_bit": 1.0,
@@ -32841,9 +32893,9 @@
         "vision_only_acc_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 1128.7,
+      "peak_rss_mb": 1117.8,
       "preserved_impl": null,
-      "ran_at": "2026-09-04T00:22:07",
+      "ran_at": "2026-09-06T18:19:01",
       "seeds": [
         0,
         1,
