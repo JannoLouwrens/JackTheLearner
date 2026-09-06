@@ -8896,14 +8896,14 @@
     },
     "ME.9": {
       "amended": [],
-      "attempt": 4,
-      "commit": "80f8c80",
+      "attempt": 6,
+      "commit": "4f62755",
       "compute_s": null,
       "control_metrics": {
         "swapped_mean_acc": 0.0,
         "swapped_mean_acc_std": 0.0
       },
-      "duration_s": 1.47,
+      "duration_s": 1.48,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -9012,9 +9012,97 @@
           ],
           "spec_sha": "a654518433c65fd6",
           "status": "PASS"
+        },
+        {
+          "commit": "80f8c80",
+          "control_metrics": {
+            "swapped_mean_acc": 0.0,
+            "swapped_mean_acc_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "d7ec4d89a1238686",
+          "message": "",
+          "metrics": {
+            "acc_did": 1.0,
+            "acc_did_std": 0.0,
+            "acc_heard": 1.0,
+            "acc_heard_std": 0.0,
+            "acc_said": 1.0,
+            "acc_said_std": 0.0,
+            "distractor_abstention": 1.0,
+            "distractor_abstention_std": 0.0,
+            "distractor_evaluated": 15.0,
+            "distractor_evaluated_std": 0.0,
+            "distractor_excluded": 0.0,
+            "distractor_excluded_std": 0.0,
+            "events": 360.0,
+            "events_std": 0.0,
+            "filtered_recency_mean": 0.0944333,
+            "filtered_recency_mean_std": 0.0218779,
+            "filtered_recency_worst": 0.125,
+            "filtered_recency_worst_std": 0.0353553,
+            "pooled_null_mean": 0.3,
+            "pooled_null_mean_std": 0.055686,
+            "pooled_null_worst": 0.141667,
+            "pooled_null_worst_std": 0.0589256,
+            "scoring_margin": 0.905567,
+            "scoring_margin_std": 0.0218779
+          },
+          "ran_at": "2026-09-06T14:19:50",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "a654518433c65fd6",
+          "status": "PASS"
+        },
+        {
+          "commit": "85c4012+dirty",
+          "control_metrics": {
+            "swapped_mean_acc": 0.0,
+            "swapped_mean_acc_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "6187f2605e68a987",
+          "message": "",
+          "metrics": {
+            "acc_did": 1.0,
+            "acc_did_std": 0.0,
+            "acc_heard": 1.0,
+            "acc_heard_std": 0.0,
+            "acc_said": 1.0,
+            "acc_said_std": 0.0,
+            "distractor_abstention": 1.0,
+            "distractor_abstention_std": 0.0,
+            "distractor_evaluated": 15.0,
+            "distractor_evaluated_std": 0.0,
+            "distractor_excluded": 0.0,
+            "distractor_excluded_std": 0.0,
+            "events": 360.0,
+            "events_std": 0.0,
+            "filtered_recency_mean": 0.0944333,
+            "filtered_recency_mean_std": 0.0218779,
+            "filtered_recency_worst": 0.125,
+            "filtered_recency_worst_std": 0.0353553,
+            "pooled_null_mean": 0.3,
+            "pooled_null_mean_std": 0.055686,
+            "pooled_null_worst": 0.141667,
+            "pooled_null_worst_std": 0.0589256,
+            "scoring_margin": 0.905567,
+            "scoring_margin_std": 0.0218779
+          },
+          "ran_at": "2026-09-06T21:14:00",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "a654518433c65fd6",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "d7ec4d89a1238686",
+      "impl_sha": "6187f2605e68a987",
       "message": "",
       "metrics": {
         "acc_did": 1.0,
@@ -9043,9 +9131,9 @@
         "scoring_margin_std": 0.0218779
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 210.4,
+      "peak_rss_mb": 210.0,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T14:19:50",
+      "ran_at": "2026-09-06T21:14:13",
       "seeds": [
         0,
         1,

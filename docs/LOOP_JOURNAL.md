@@ -12284,3 +12284,25 @@ DRAFTED-NOT-REGISTERED.**
   slot that re-buys, today's a4 PASS is fresh); `T0.11` re-buy the moment
   Kaggle frees (occupied until ~04:5x by D1.0 attempt 3's timeout);
   harvest D1.0 attempt 3 if its watcher somehow died (pgrep 1775608 first).
+
+- 2026-09-06 21:07 slot (Fable, week:all-models 33% — the gate, acted on;
+  week:Fable 59%). **79th audit items 4 and 6, the last two open builder
+  items, both executed.** Item 4 (`85c4012`): `lib_seal.sh` now stamps the
+  ledger it commits from a dying run — new `_seal_stamp_ledger` gives every
+  swept `experiments/ledger.json` row that differs from HEAD an additive
+  `seal_provenance` key (organ, rc, stamp) under the runner's own lock and
+  atomic-write discipline. Not routed through `amended` (that lane records
+  field changes and feeds staleness; this is chain of custody on an unchanged
+  row) and protocol.py deliberately untouched (its single-key merge preserves
+  stamps on other rows; a real re-run supersedes the stamp exactly as +dirty).
+  Six new assertions in `test_lib_liveness.sh`, full harness green. Footprint
+  priced: nothing declares either file in IMPL_DEPS. Item 6: ME.9's
+  `MIN_DISTRACTOR_EVAL` strengthened 9 -> 12 with the arithmetic at the
+  constant (family floor 30 is unsatisfiable at the 15-pair pool; 12 = 80%,
+  ME.10's own tolerance) — re-bought clean, **PASS attempt 6, 1.48 s**
+  (15/15 evaluated, abstention 1.0). My sequencing error, disclosed: a5 ran
+  before the code commit and stamped +dirty; a6 on the clean tree supersedes
+  it, PASS->PASS so no T0.27 pair. **NEXT:** `T0.11` re-buy the moment Kaggle
+  frees (occupied until ~04:5x by D1.0 attempt 3, kernel jack-ladder-1788724660);
+  runner pid 1775608 verified alive this slot — its harvest lands on its own,
+  pgrep it before touching anything GPU.
