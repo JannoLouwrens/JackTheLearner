@@ -4917,6 +4917,82 @@ DECIDE: D23
              Reversal: delete one printed line; nothing downstream reads it.
   decide_by: 2026-09-11
 
+## D24 — The Learning-core seat's scale-transfer arena costs 17.5 weeks of the project's entire GPU allocation. Is it bought, shrunk, or declared unaffordable? (2026-09-06, Review, FULL)
+
+**The measurement, from the pilot's own record.** `LC.07`'s throughput pilot
+(seed 90, kernel `jack-ladder-1788297232`, 0.44 h, 2026-09-01, artifact
+`/data/lc07_pilot.json`) is a HEALTHY rig — all 7 run classes measured, wiring
+exact, physics finite, RSS ~550 MB, borrowed `LC.02` ratio calibrated. Its
+pre-registered branch B fired: rule A requires every full-scale run ≤ 8.5 h
+wall; the CHEAPEST class (statue, 2.0M decisions) projects **14.49 h** and the
+arm (4.0M decisions at 27.19 dec/s) projects **40.86 h** — 4.8× the kernel
+ceiling. The whole plan is **~526 wall-hours** (21 runs, ~132 kernel-hours at
+ideal 4-way packing) against a **30 h/week** free allocation: **≈17.5 weeks of
+every GPU hour this project has**, for one seat's arena.
+
+**Why the obvious repair is the wrong one, and this is the part I decided
+myself.** The row offered checkpoint/resume surgery on `survival.py` as option
+1, and `LF.02`'s PASS on 2026-09-03 — a W0 life SIGKILLed mid-decision-stream
+and resumed **bit-exactly** over 1000 decisions, all four stores, weights-only
+null diverging 8.1 ± 2.7 — proves that surgery is feasible. But checkpointing
+repairs the **per-run 8.5 h ceiling**; it does not touch the **526-hour total**.
+It converts *impossible* into *17.5 weeks*, and bills a surgery that stales
+every `LC` and `XL` certificate for the conversion. I refused it on the queue
+row (`lc07-checkpoint-branch`, DISPOSITIONED 2026-09-06). That refusal is mine
+and is not what this entry asks about.
+
+**What is on your desk is the money, and one threshold I will not touch.**
+`champions --check` already reads the **Learning core** seat as TRIGGER DEBT —
+*every declared re-open trigger a closed door*: `LC.07`=PILOT-BLOCKED,
+`LC.03`=VOID-FORECLOSED, `UB.10`=VOID. `LC.07` is the arena `D10`'s firing
+commit registered **specifically so the wm-latent seat would not be held with a
+dead arena**, and it is now measured as an arena nobody can enter for four
+months. That is the same shape as `D23`: a seat that reads contested and is
+uncontested in fact. The cheap-looking exit — re-read the *"~10x"* scale ratio
+down to something affordable — is the one my own law forbids me to take alone:
+a 10× scale-transfer claim is strictly stronger than a 3× one, and shrinking it
+to fit the budget is buying a PASS with a smaller question. If that ratio moves,
+it moves on your signature with the cost on the table.
+
+DECIDE: D24
+  class:     goal
+             (Classed `goal` and not `means` deliberately, and the tool was
+             right to refuse `resource`: the DEFAULT is only a label, but
+             option (ii) shrinks a claim about what Jack must demonstrate, and
+             an entry is classed by its strongest option, not its softest.)
+  blocks:    `LC.07` (PILOT-BLOCKED, `_GATES_FROZEN` stays False and `run()`
+             keeps refusing either way) and, through it, the Learning-core
+             seat's only live arena. Nothing is blocked BY this entry in the
+             sense of waiting to run — `LC.07` cannot run under any of the
+             three answers without further work. What is at stake is whether
+             the seat's arena is honestly labelled.
+  options:   (i)  BUY IT. Commit ~17.5 weeks of the entire free GPU allocation
+                  (plus the `survival.py` checkpoint surgery, which stales
+                  every `LC`/`XL` certificate) to enter this arena.
+             (ii) SHRINK THE CLAIM. Re-read the "~10x" scale ratio downward
+                  until the plan fits the budget. This is a THRESHOLD MOVE and
+                  it may not fire by silence.
+             (iii) DECLARE IT UNAFFORDABLE. Leave the 10x intact, record
+                  `VENUE-UNAFFORDABLE` with this arithmetic on the seat, and
+                  stop counting a four-month arena as a live one.
+  default:   (iii) DECLARE, DO NOT DECIDE. No threshold moves in either
+             direction, no spec is failed, no run is refused, no certificate
+             is staled, and the 10x survives untouched. What changes is one
+             label: the Learning-core seat's arena is marked
+             `VENUE-UNAFFORDABLE` with the 526 h / 30 h-per-week arithmetic
+             beside it, so `champions` prints the uncontestedness it currently
+             implies. This is the only legal default of the three — (i)
+             commits four months of the project's whole GPU budget by silence,
+             and (ii) is a threshold move by silence, which is the act
+             `SYSTEM.md` law 4 exists to forbid.
+             The price, stated rather than buried: under (iii) the wm-latent
+             seat stays UNDECIDED with no reachable arena, and the honest
+             reading of that is that this project cannot currently contest its
+             own learning-core choice. Making that visible is the point;
+             it is not a fix and I am not calling it one.
+             Reversal: change one label; nothing downstream reads it.
+  decide_by: 2026-09-11
+
 ## D21 — RESOLVED BY ARMED DEFAULT, fired 2026-09-06 00:1x UTC (builder, before the 06:37 FULL — the same-day race). Off your desk.
 
 The decide_by of 2026-09-05 passed unanswered and the default fired exactly as
