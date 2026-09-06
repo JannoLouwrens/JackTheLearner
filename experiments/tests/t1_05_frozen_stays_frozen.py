@@ -37,6 +37,10 @@ from pathlib import Path
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# The implementation under test. Undeclared until 2026-09-06 (78th audit
+# finding 1.1; grandfather set shrunk here).
+IMPL_DEPS = ['UnifiedBrain.py']
+
 REPO = Path(__file__).resolve().parents[2]
 SENTINEL_STD = 0.5  # deliberately unlike the 0.02 the initialiser would impose
 #: Attachment point for the control's sentinel. Must NOT be a prefix of

@@ -25,6 +25,10 @@ from pathlib import Path
 from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
+# The implementation under test. Undeclared until 2026-09-06 (78th audit
+# finding 1.1; grandfather set shrunk here).
+IMPL_DEPS = ['UnifiedBrain.py']
+
 REPO = Path(__file__).resolve().parents[2]
 WARMUP, RESUME_STEPS = 25, 20
 TOL = 1e-6

@@ -93,33 +93,25 @@ REPO = Path(__file__).resolve().parents[2]
 # 2026-09-06, 78th audit B2: ME.1/ME.3/ME.4/ME.5/ME.9/ME.10/T2.20/XL.00
 # declared their imports and their entries are deleted here, same commit —
 # the set follows the repairs down, 35 -> 27.
+# 2026-09-06 17:xx: the 18 cheap PASS certificates declared (ME.2, ME.8,
+# PG.7, PG.8, T0.03, T0.04, T0.06, T0.07, T0.14, T0.16, T0.25, T1.03,
+# T1.04, T1.05, T1.10, T1.11, T1.13, T2.12) and re-bought in the same slot,
+# 27 -> 9. What remains, and why each stays: D1.0's attempt 2 is IN FLIGHT
+# (editing its module under a live watcher risks a sha mismatch on the row
+# the watcher writes); T1.01/T1.06/T1.12/T2.00 are PASS certs whose re-buys
+# cost 17-63 min each — declare each ONLY in a slot that re-runs it, or the
+# declaration itself manufactures a DRIFTED claim; LF.01/PL.00/T2.10/T3.09
+# hold FAIL/VOID rows whose re-runs are routed or held, so a declaration
+# would push them into the stale lane with no sanctioned way out.
 GRANDFATHERED = {
     "D1.0": ("TrainingPipeline", "UnifiedBrain"),
     "LF.01": ("EpisodicMemory",),
-    "ME.2": ("OwnerProfile",),
-    "ME.8": ("WorkingMemory",),
-    "PG.7": ("ContactAudio",),
-    "PG.8": ("TrainingPipeline",),
     "PL.00": ("UnifiedBrain", "playground"),
-    "T0.03": ("UnifiedBrain",),
-    "T0.04": ("UnifiedBrain",),
-    "T0.06": ("VirtualWorld",),
-    "T0.07": ("UnifiedBrain", "VirtualWorld"),
-    "T0.14": ("TrainingPipeline",),
-    "T0.16": ("TrainingPipeline",),
-    "T0.25": ("TrainingPipeline",),
     "T1.01": ("UnifiedBrain",),
-    "T1.03": ("UnifiedBrain",),
-    "T1.04": ("UnifiedBrain",),
-    "T1.05": ("UnifiedBrain",),
     "T1.06": ("UnifiedBrain",),
-    "T1.10": ("UnifiedBrain",),
-    "T1.11": ("UnifiedBrain",),
     "T1.12": ("UnifiedBrain",),
-    "T1.13": ("MoCapLoader",),
     "T2.00": ("TrainingPipeline",),
     "T2.10": ("EpisodicMemory",),
-    "T2.12": ("EmotionalState",),
     "T3.09": ("EpisodicMemory",),
 }
 

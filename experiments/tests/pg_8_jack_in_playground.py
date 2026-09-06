@@ -86,7 +86,7 @@ from ..registry import BY_ID
 # This spec certifies a property of the WORLD, so the world hashes into
 # impl_sha. Change playground.py and this certificate goes stale loudly
 # instead of standing over a world it no longer describes.
-IMPL_DEPS = ["playground.py"]
+IMPL_DEPS = ["playground.py", "TrainingPipeline.py"]  # TrainingPipeline undeclared until 2026-09-06 (78th audit finding 1.1)
 
 REPO = Path(__file__).resolve().parents[2]
 
