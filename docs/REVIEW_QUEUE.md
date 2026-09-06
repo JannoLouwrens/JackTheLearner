@@ -1549,8 +1549,15 @@ ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca7
 
 ## ROUTED 2026-09-01 (builder, 59th audit B4): `d10-learning-gate-uses-two-different-denominators` — "noisy" and "did not learn" share one verdict
 
-ROUTED: d10-learning-gate-uses-two-different-denominators | 2026-09-01 | 59th-audit-B4 | OPEN
+ROUTED: d10-learning-gate-uses-two-different-denominators | 2026-09-01 | 59th-audit-B4 | DISPOSITIONED 2026-09-06 (Review FULL — the adopted gate is written below, in the ADOPTED GATE block on the sibling row `d10-learning-gate-sits-at-the-untrained-twin-level`; it governs both rows and the builder executes it in the D1.0 family's gate code before any attempt 2)
     DUE: 2026-09-06 | gate-design decision owed by the Review; bundle with `w0-too-shallow`'s window if the venue is judged the common cause
+    DUE: 2026-09-09 | EXECUTION of the adopted gate in the D1.0 family's
+        scoring code, owed by the BUILDER, not by me — the design exists as
+        of 2026-09-06 and this row stays LIVE until a commit implements it.
+        Dated 09-09 rather than 09-08 so it lands AFTER
+        `d10-successor-rerun-under-adopted-gate` (DUE 09-08) has stamped the
+        either/or it owes, and so the gate is committed before W36's
+        16-hour dispatch is spent rather than during it.
 
 **What was measured (D1.0 attempt 1, VOID 2026-09-01, metrics on the ledger
 row — correct and untouched).** The learning gate scores
@@ -1581,8 +1588,72 @@ recommendation; the doc's frozen arms stay struck per D1's resolution.
 
 ## ROUTED 2026-09-01 (builder, 59th audit B4): `d10-learning-gate-sits-at-the-untrained-twin-level` — the control passed by 0.04σ
 
-ROUTED: d10-learning-gate-sits-at-the-untrained-twin-level | 2026-09-01 | 59th-audit-B4 | OPEN
+ROUTED: d10-learning-gate-sits-at-the-untrained-twin-level | 2026-09-01 | 59th-audit-B4 | DISPOSITIONED 2026-09-06 (Review FULL — ADOPTED GATE below; design only, builder executes)
     DUE: 2026-09-06 | gate-design decision owed by the Review; same bundle judgment as the denominators row
+    DUE: 2026-09-09 | EXECUTION of the adopted gate, owed by the BUILDER; same
+        dating reason as the denominators row, which this block also governs.
+
+**THE ADOPTED GATE (Review FULL 2026-09-06). It governs BOTH `d10-*` rows, and
+it is STRICTLY HARDER than the gate that produced the VOID.** I am not bundling
+these into `w0-too-shallow`: the venue may well be a common cause of much else,
+but neither of these two defects is a venue defect. Both are scoring defects,
+both are visible in the recorded row's own arithmetic, and holding a scoring
+repair behind a world redesign would leave the project's largest unblock
+(`T2.01`, frees 35) waiting on a decision it does not depend on.
+
+Three conjuncts, ALL required — a run passes the learning gate only if all
+three hold. The conjunction is the reason this is a strengthening and not a
+re-slicing: nothing that failed the old single statistic can pass by being
+re-described.
+
+  **G1 — LEARNING, scored against the arm's OWN untrained twin, paired by
+  seed.** Replace `(arm_mean - random_mean) / max(arm_std, rnd_std)` with a
+  PAIRED per-seed statistic against that arm's own untrained twin:
+  `d_i = arm_i - twin_i` over the shared seeds, and the bar is met when
+  `mean(d) / (sd(d)/sqrt(n)) >= 3.0`. The 3.0σ bar does not move (SYSTEM.md
+  law 4). Why this is harder, in the recorded numbers: the untrained twins
+  read **2.96σ and 2.94σ against random**, i.e. the null this gate used was
+  one twentieth of a sigma away from clearing the bar by architecture alone.
+  Any arm scored against that random baseline is being credited for its
+  architecture's bias. Scoring against its own twin removes exactly that
+  credit, and it removes it from every arm including the one that came
+  closest. It also DISSOLVES the denominators row: a paired statistic has one
+  denominator by construction, so "scored against its own spread" cannot
+  recur, and the choice of which spread to use is no longer a choice.
+
+  **G2 — CONSISTENCY, as its own named conjunct.** The audit is right that
+  "noisy" and "did not learn" shared a verdict, and it is right that they are
+  different findings. They are separated by ADDING a conjunct, never by
+  relaxing one: an arm must ALSO hold `sd(arm seed means) / |mean| <= 0.50`
+  (c_e2e's recorded seed means 319/536/358 give 0.29 — it PASSES this and
+  always would have; the conjunct exists so that when an arm fails it, the
+  ledger says `INCONSISTENT` and not `did not learn`). The verdict token is
+  what changes. The pass set does not widen: G2 can only ever remove an arm
+  from the pass set, never add one.
+
+  **G3 — EXTERNAL REFERENCE ARM, and it VOIDs the run rather than scoring
+  anyone.** Adopt the `D1_CONTROL_ARCHITECTURE.md` §3/§6 machinery the builder
+  attached as design input on 09-03: a verbatim external reference (SB3 PPO,
+  >= 450 return on the venue's own task). If the reference does not clear its
+  floor, the run is VOID as a HARNESS fault and NO learning verdict is
+  recorded on any arm. This is the conjunct that would have stopped
+  "the end-to-end arm did not learn" from entering the record on a run whose
+  own harness was never shown to be able to produce learning at all. It can
+  only ever turn a recorded verdict into a VOID; it can never turn a FAIL
+  into a PASS.
+
+**What this does NOT do.** It does not move the 3.0σ bar in either direction.
+It does not re-run anything on its own account: `D1.0`'s recorded VOID stands
+per the T2.02 precedent, and attempt 2 is `d10-successor-rerun-under-adopted-
+gate`'s business, not this row's. It does not touch W0. It does not re-score
+the recorded run — the numbers above are read FROM that row, they are not a
+re-derivation of it.
+
+**The one thing I want on the record against myself.** G1 makes the gate
+harder, and the arm it makes hardest is `c_e2e`, the arm this project would
+most like to see pass. If attempt 2 under this gate returns a FAIL where the
+old gate would have given a PASS, that is the gate working, and I am writing
+that sentence now, before the run, so it cannot be re-litigated after it.
 
 **What was measured (same run).** The untrained twins read 2.96σ and 2.94σ
 against the 3.0σ learning bar — the control cleared by 0.04σ. A gate whose
