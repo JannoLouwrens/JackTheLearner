@@ -50,6 +50,38 @@ another.
                    small), value 348->256->256->1 (tanh), per Andrychowicz
                    2006.05990. No trunk anywhere in the motor path.
 
+THE ADOPTED GATE (Review FULL 2026-09-06; queue rows `d10-learning-gate-uses-
+two-different-denominators` and `d10-learning-gate-sits-at-the-untrained-twin-
+level`, both DISPOSITIONED that day; executed by the builder the same day,
+BEFORE any attempt-2 dispatch). Attempt 1's recorded VOID stands untouched —
+this governs future runs only (T2.02 precedent). Three conjuncts, all
+required, strictly harder than the gate that produced the VOID:
+
+  G1 — LEARNING vs the arm's OWN untrained twin, PAIRED by seed:
+       d_i = trained_i - untrained_i over the shared seeds, gated on
+       mean(d)/(sd(d)/sqrt(n)) >= MIN_LEARN_SIGMA (3.0, unmoved). Attempt 1's
+       twins read 2.94-2.96 sigma against random — the old vs-random
+       statistic credited every arm with its architecture's bias, and a
+       paired statistic has ONE denominator by construction, which dissolves
+       the denominators row. `sigma_vs_random` stays recorded for continuity
+       but no longer gates.
+  G2 — CONSISTENCY as its own named conjunct: sd(seed means)/|mean| <=
+       CONSISTENCY_MAX (0.50). An arm failing it reads INCONSISTENT, never
+       "did not learn". Can only ever shrink the pass set (attempt 1's c_e2e
+       read 0.29 and would have held).
+  G3 — EXTERNAL REFERENCE: T2.02's verbatim SB3 PPO MLP recipe (measured
+       530.7 on this venue) trains to STEP_TARGET in its OWN kernel, FIRST.
+       Below SB3_REFERENCE_FLOOR (450) the run is VOID as a HARNESS fault, no
+       learning verdict on any arm, and the three arm kernels are never
+       submitted (D1_CONTROL_ARCHITECTURE.md section 7's sequencing — a
+       harness that cannot produce learning under standard practice does not
+       get to spend 15 h judging arms).
+
+The Review's own sentence, carried so it cannot be re-litigated after the
+run: G1 makes the gate hardest for `c_e2e`, the arm the project would most
+like to see pass; if attempt 2 returns FAIL where the old gate would have
+given PASS, that is the gate working.
+
 PRE-REGISTERED DECISION RULE (the registry's, spelled out; verdicts name
 their branch WITH the comparison — the BA.03 lesson):
   VOID   — any arm's step count < MIN_STEP_MATCH x STEP_TARGET (comparison
@@ -140,10 +172,28 @@ RANDOM_EPISODES = 10
 EVAL_SEED_BASE = 9000       # repair R6: identical eval env seeds across arms,
                             # twins and the random null — paired evaluation.
 
-MIN_LEARN_SIGMA = 3.0       # learning gate, every arm, vs random
+MIN_LEARN_SIGMA = 3.0       # learning gate bar — UNMOVED by the 2026-09-06
+                            # adopted gate; what changed is the statistic it
+                            # gates (G1: paired vs the arm's OWN untrained
+                            # twin, no longer vs random).
 WIN_MARGIN_SIGMA = 1.5      # winner over runner-up, pooled seed spread
 MIN_STEP_MATCH = 0.9        # any arm below this fraction of STEP_TARGET -> VOID
 CROSSOVER_MULT = 3.0        # convergence check horizon, x STEP_TARGET
+
+# THE ADOPTED GATE (Review FULL 2026-09-06, `d10-learning-gate-sits-at-the-
+# untrained-twin-level` + `d10-learning-gate-uses-two-different-denominators`,
+# executed by the builder 2026-09-06). Three conjuncts, all required; the
+# recorded attempt-1 VOID stands untouched (T2.02 precedent).
+CONSISTENCY_MAX = 0.50      # G2: sd(arm seed means)/|mean| above this reads
+                            # INCONSISTENT, a distinct verdict from "did not
+                            # learn". Can only ever shrink the pass set.
+SB3_REFERENCE_FLOOR = 450.0  # G3: the verbatim external reference (T2.02's
+                            # SB3 PPO MLP, measured 530.2 +- 59.0 on this
+                            # venue; 450 is ~1.4 sigma below) must clear this
+                            # or the run is VOID as a HARNESS fault and no
+                            # learning verdict is recorded on any arm.
+SB3_REF_MINUTES_CAP = 45    # per seed, T2.02's own cap (probe needed ~27 min
+                            # per seed for 704k steps on the kernel CPU).
 
 # FROZEN 2026-09-01 from the PILOT RECORD in the docstring (kernel
 # jack-ladder-1788225926, measured per-arm steps/s on the real P100).
@@ -589,6 +639,105 @@ def remote_run(mode, arms=None, seeds=None):
     return out
 
 
+def remote_reference(seeds=None, step_target=None):
+    """G3's kernel entry point: the verbatim external reference. T2.02's SB3
+    PPO MlpPolicy recipe, copied to the hyperparameter (that run measured
+    530.7 mean return on this exact venue and VM class), trained to the same
+    STEP_TARGET the arms get. It runs FIRST, alone, so a harness that cannot
+    produce learning under standard practice VOIDs the run before the three
+    arm kernels spend their ~15 h (D1_CONTROL_ARCHITECTURE.md section 7: 'If
+    A0 misses 450, the GPU stage never runs')."""
+    np, torch, _ = _lazy_torch()
+    import gymnasium as gym
+    from stable_baselines3 import PPO
+    from stable_baselines3.common.callbacks import BaseCallback
+    from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+    from TrainingPipeline import TrainingPipeline, PipelineConfig
+
+    seeds = seeds or SEEDS
+    step_target = step_target or STEP_TARGET
+    t0 = time.time()
+
+    class RawRewardWrapper(gym.Wrapper):
+        """VecNormalize rescales rewards for training; eval must not see it."""
+        def step(self, a):
+            o, r, te, tr, i = self.env.step(a)
+            i["raw_reward"] = float(r)
+            return o, r, te, tr, i
+
+    class TimeCap(BaseCallback):
+        def __init__(self, deadline):
+            super().__init__()
+            self.deadline = deadline
+        def _on_step(self):
+            return time.time() < self.deadline
+
+    def eval_mlp(model, vec, episodes):
+        was_training, was_norm = vec.training, vec.norm_reward
+        vec.training = False; vec.norm_reward = False
+        returns = []
+        for _ in range(episodes):
+            obs = vec.reset()
+            done, total = False, 0.0
+            while not done:
+                act, _ = model.predict(obs, deterministic=True)
+                obs, _, dones, infos = vec.step(act)
+                total += float(infos[0].get("raw_reward", 0.0))
+                done = bool(dones[0])
+            returns.append(total)
+        vec.training = was_training; vec.norm_reward = was_norm
+        return returns
+
+    # The random null is measured in this kernel too, so a reference-fails
+    # run still carries the numbers its VOID row needs.
+    tp0 = TrainingPipeline(PipelineConfig())
+    out = {"mode": "reference",
+           "gpu": (torch.cuda.get_device_name(0)
+                   if torch.cuda.is_available() else "cpu"),
+           "random_returns": _eval_policy(tp0, RANDOM_EPISODES,
+                                          random_actions=True),
+           "reference_runs": []}
+    del tp0
+
+    def _dump():
+        out["wall_minutes"] = round((time.time() - t0) / 60, 1)
+        p = os.environ.get("JACK_OUT")
+        if p:
+            json.dump(out, open(os.path.join(p, "d10_ref.json"), "w"),
+                      indent=1)
+
+    for s in seeds:
+        vec = VecNormalize(
+            DummyVecEnv([lambda: RawRewardWrapper(gym.make("Humanoid-v5"))]),
+            norm_obs=True, norm_reward=True)
+        model = PPO("MlpPolicy", vec, seed=s, verbose=0, device="cpu",
+                    policy_kwargs={"net_arch": [128, 128]},
+                    n_steps=2048, batch_size=64, n_epochs=10,
+                    learning_rate=3e-4, gamma=0.95, gae_lambda=0.9,
+                    clip_range=0.3, ent_coef=0.002)
+        n_params = sum(p.numel() for p in model.policy.parameters())
+        untrained = eval_mlp(model, vec, EVAL_EPISODES)
+        model.learn(total_timesteps=int(step_target),
+                    callback=TimeCap(time.time() + SB3_REF_MINUTES_CAP * 60),
+                    progress_bar=False)
+        trained = eval_mlp(model, vec, EVAL_EPISODES)
+        rec = {"seed": s, "params": int(n_params),
+               "env_steps": int(model.num_timesteps),
+               "untrained_returns": untrained,
+               "untrained_mean": float(np.mean(untrained)),
+               "trained_returns": trained,
+               "trained_mean": float(np.mean(trained))}
+        vec.close()
+        out["reference_runs"].append(rec)
+        _dump()   # partial dump per seed
+        print("REF seed", s, round(rec["trained_mean"], 1), "@",
+              rec["env_steps"], "steps", flush=True)
+    out["ref_mean"] = float(np.mean(
+        [r["trained_mean"] for r in out["reference_runs"]]))
+    _dump()
+    return out
+
+
 # =============================================================================
 # HOST SIDE — submission, experiment, check.
 # =============================================================================
@@ -607,6 +756,14 @@ _sp.run([_sys.executable, "-m", "pip", "install", "-q", "gymnasium[mujoco]"],
         check=True)
 from experiments.tests.d1_0_control_path_bakeoff import remote_run
 remote_run("full", arms=__ARMS__)
+'''
+
+_REF_JOB = r'''
+import subprocess as _sp, sys as _sys, os as _os
+_sp.run([_sys.executable, "-m", "pip", "install", "-q",
+         "gymnasium[mujoco]", "stable-baselines3>=2.3"], check=True)
+from experiments.tests.d1_0_control_path_bakeoff import remote_reference
+remote_reference()
 '''
 
 
@@ -647,6 +804,34 @@ def _submit_full() -> dict:
             "split from its measured steps/s, then submit. Submitting on an "
             "estimate is how a 9h kernel dies at hour 8 with two arms done.")
     merged = {"runs": [], "kernels": []}
+    # G3 FIRST (adopted gate 2026-09-06): the verbatim SB3 reference runs in
+    # its own kernel before any arm trains. If it misses its floor, the run
+    # is VOID as a HARNESS fault and the three arm kernels (~15 h) are never
+    # submitted — D1_CONTROL_ARCHITECTURE.md section 7's sequencing.
+    from ..gpu import _head_sha
+    ref_job = build_job(_REF_JOB)
+    ref_res = submit(ref_job, prefer="kaggle", est_hours=1.8, timeout_s=10800,
+                     fetch=["d10_ref.json"])
+    if not ref_res.ok:
+        raise RuntimeError(f"reference kernel failed on {ref_res.backend}: "
+                           f"{ref_res.message}")
+    ref_path = ref_res.artifacts.get("d10_ref.json")
+    if not ref_path:
+        raise RuntimeError(f"no artifact from reference kernel: "
+                           f"{ref_res.message!r}")
+    ref = json.loads(Path(ref_path).read_text())
+    merged["sb3_reference"] = {
+        "ref_mean": ref.get("ref_mean"),
+        "reference_runs": ref["reference_runs"],
+        "gpu": ref["gpu"], "wall_minutes": ref["wall_minutes"],
+        "backend": ref_res.backend, "head": _head_sha()}
+    merged["random_returns"] = ref["random_returns"]
+    ref_mean = ref.get("ref_mean")
+    if ref_mean is None or ref_mean < SB3_REFERENCE_FLOOR:
+        # No learning verdict may be recorded on any arm; _check turns this
+        # into the G3 VOID. Returning here is what saves the 15 arm-hours.
+        merged["reference_failed"] = True
+        return merged
     for arms in _KERNEL_SPLIT:
         body = _FULL_JOB.replace("__ARMS__", repr(list(arms)))
         job = build_job(body)
@@ -700,14 +885,35 @@ def _experiment(seed: int) -> dict:
     rnd_mean, rnd_std = _stats(_CACHE["random_returns"])
     m = {"kernels": _CACHE["kernels"],
          "random_mean": round(rnd_mean, 1), "random_std": round(rnd_std, 2),
+         "sb3_reference": _CACHE.get("sb3_reference"),
          "arms": {}}
+    if _CACHE.get("reference_failed"):
+        # G3 fired at dispatch time: no arm kernels ran, no learning verdict
+        # exists to compute. _check reads reference_failed and VOIDs.
+        m["reference_failed"] = True
+        return m
     for a in ARMS:
         runs = [r for r in _CACHE["runs"] if r["arm"] == a]
         means = [r["trained_mean"] for r in runs]
         am, astd = _stats(means)
+        # G1 (adopted gate 2026-09-06): paired per-seed statistic against the
+        # arm's OWN untrained twin — d_i = trained_i - untrained_i on shared
+        # seeds, gated on mean(d)/(sd(d)/sqrt(n)). One denominator by
+        # construction; architecture bias subtracts out per seed.
+        u_means = [r["untrained_mean"] for r in runs]
+        d = [t - u for t, u in zip(means, u_means)]
+        d_mean, d_sd = _stats(d)
+        paired_t = d_mean / max(d_sd / max(len(d), 1) ** 0.5, 1e-6)
         m["arms"][a] = {
             "trained_means": [round(x, 1) for x in means],
+            "untrained_means": [round(x, 1) for x in u_means],
             "mean": round(am, 1), "std": round(astd, 2),
+            "paired_t": round(paired_t, 2),
+            # G2: seed-to-seed consistency, its own named quantity so an
+            # inconsistent arm is never reported as "did not learn".
+            "consistency": round(astd / max(abs(am), 1e-6), 3),
+            # recorded for continuity with attempt 1's row; NOT a gate since
+            # the adopted gate replaced it with paired_t.
             "sigma_vs_random": round((am - rnd_mean)
                                      / max(astd, rnd_std, 1e-6), 2),
             "env_steps": [r["env_steps"] for r in runs],
@@ -739,6 +945,8 @@ def _experiment(seed: int) -> dict:
 def _control(seed: int) -> dict:
     """Untrained twins of ALL FOUR arms must miss the learning gate."""
     rnd_mean, rnd_std = _stats(_CACHE["random_returns"])
+    if _CACHE.get("reference_failed"):
+        return {"reference_failed": 1.0}
     c = {}
     for a in ARMS:
         runs = [r for r in _CACHE["runs"] if r["arm"] == a]
@@ -753,6 +961,21 @@ def _check(m: dict, c: dict):
     # Every verdict names its branch WITH the comparison (the BA.03 lesson: a
     # one-bit verdict over a conjunction gets read as its most familiar
     # branch, and the readout must carry the comparison, not the operand).
+    #
+    # G3 FIRST (adopted gate 2026-09-06): the external reference gates the
+    # HARNESS before any arm is judged. It can only ever turn a recorded
+    # verdict into a VOID, never a FAIL into a PASS.
+    ref = m.get("sb3_reference") or {}
+    ref_mean = ref.get("ref_mean")
+    if m.get("reference_failed") or ref_mean is None \
+            or ref_mean < SB3_REFERENCE_FLOOR:
+        m["verdict"] = (
+            "VOID — HARNESS fault (G3): the verbatim SB3 reference read "
+            f"{ref_mean} mean return vs its {SB3_REFERENCE_FLOOR} floor "
+            "(T2.02 measured 530.2 +- 59.0 on this venue). A harness that "
+            "cannot produce learning under standard practice records NO "
+            "learning verdict on any arm; fix the harness, not the arms.")
+        return Status.VOID
     low = {a: m["arms"][a]["step_match"] for a in ARMS
            if m["arms"][a]["step_match"] < MIN_STEP_MATCH}
     if low:
@@ -763,14 +986,18 @@ def _check(m: dict, c: dict):
                         for a, v in low.items())
             + ". Raise that arm's MINUTES_CAP; do not compare.")
         return Status.VOID
-    missed = {a: m["arms"][a]["sigma_vs_random"] for a in ARMS
-              if m["arms"][a]["sigma_vs_random"] < MIN_LEARN_SIGMA}
+    # G1 (adopted gate 2026-09-06): learning is scored against the arm's OWN
+    # untrained twin, paired by seed. The 3.0 bar is MIN_LEARN_SIGMA, unmoved;
+    # attempt 1's twins read 2.94-2.96 sigma vs random, so the old vs-random
+    # statistic credited every arm with its architecture's bias.
+    missed = {a: m["arms"][a]["paired_t"] for a in ARMS
+              if m["arms"][a]["paired_t"] < MIN_LEARN_SIGMA}
     if missed:
-        learned = {a: m["arms"][a]["sigma_vs_random"] for a in ARMS
+        learned = {a: m["arms"][a]["paired_t"] for a in ARMS
                    if a not in missed}
         m["verdict"] = (
-            "VOID — learning gate: "
-            + ", ".join(f"{a} at {v} sigma vs random (bar {MIN_LEARN_SIGMA})"
+            "VOID — learning gate (G1, paired vs own untrained twin): "
+            + ", ".join(f"{a} at paired-t {v} (bar {MIN_LEARN_SIGMA})"
                         for a, v in missed.items())
             + f"; arms that DID learn: {learned or 'none'}. "
             + f"{len(missed)} non-learner(s) ({sorted(missed)}) void the "
@@ -778,10 +1005,11 @@ def _check(m: dict, c: dict):
               "demonstrably learned cannot arbitrate an architecture).")
         if "d_mlp" in missed:
             m["verdict"] += (
-                " d_mlp is among the missed while T2.02's SB3 MLP holds "
-                "530/7.11 sigma — this is the shared trunk-tuned recipe "
-                "failing the MLP, a recipe question for the Review (UB.10's "
-                "finding), not an architecture verdict and not a re-roll.")
+                " d_mlp is among the missed while the G3 reference cleared "
+                f"its floor ({ref_mean} vs {SB3_REFERENCE_FLOOR}) — this is "
+                "the shared trunk-tuned recipe failing the MLP, a recipe "
+                "question for the Review (UB.10's finding), not an "
+                "architecture verdict and not a re-roll.")
         return Status.VOID
     hot_twins = {a: c[f"untrained_{a}_sigma"] for a in ARMS
                  if c[f"untrained_{a}_sigma"] >= MIN_LEARN_SIGMA}
@@ -791,6 +1019,21 @@ def _check(m: dict, c: dict):
             + ", ".join(f"{a} at {v} sigma (bar {MIN_LEARN_SIGMA})"
                         for a, v in hot_twins.items())
             + ". The gate is measuring architectural bias, not learning.")
+        return Status.VOID
+    # G2 (adopted gate 2026-09-06): consistency is its own named conjunct so
+    # "noisy" and "did not learn" never share a verdict again. It can only
+    # ever remove an arm from the pass set (attempt 1's c_e2e read 0.29 and
+    # would have held).
+    wobbly = {a: m["arms"][a]["consistency"] for a in ARMS
+              if m["arms"][a]["consistency"] > CONSISTENCY_MAX}
+    if wobbly:
+        m["verdict"] = (
+            "VOID (INCONSISTENT) — G2: "
+            + ", ".join(f"{a} at sd/|mean| {v} (cap {CONSISTENCY_MAX})"
+                        for a, v in wobbly.items())
+            + ". These arms learned (G1 held) but their seed-to-seed spread "
+              "disqualifies them from arbitrating; this is INCONSISTENT, "
+              "not 'did not learn'.")
         return Status.VOID
     w, r_up = m["winner"], m["runner_up"]
     if m["margin_sigma"] < WIN_MARGIN_SIGMA:

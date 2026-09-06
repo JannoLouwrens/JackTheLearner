@@ -2390,7 +2390,12 @@ EXPANSION: list[Spec] = [
                     "(end-to-end at more steps than T2.01 v5's 704k/seed — "
                     "reclassified UNTESTED, not refuted), D (transformer out "
                     "of the control path, MLP controls) — every arm clears "
-                    "the 3-sigma learning gate vs the random null, and one "
+                    "the 3-sigma learning gate scored PAIRED against its own "
+                    "untrained twin (ADOPTED GATE 2026-09-06, replacing 'vs "
+                    "the random null': mean(d)/(sd(d)/sqrt(n)) >= 3.0 with "
+                    "d_i = trained_i - untrained_i per shared seed, bar "
+                    "unmoved) AND holds seed consistency sd/|mean| <= 0.50 "
+                    "(else INCONSISTENT, a distinct verdict), and one "
                     "arm beats the runner-up on Humanoid return at matched "
                     "env-steps AND matched optimiser steps by >=1.5 sigma of "
                     "the pooled seed spread, surviving the owner's "
@@ -2413,7 +2418,12 @@ EXPANSION: list[Spec] = [
                  "gate (designed-to-fail, passed as controls= not arms=). "
                  "Report BOTH env-steps and optimiser-steps per arm "
                  "(LESSONS.md: 'matched steps' has more than one meaning — "
-                 "T2.02 matched env-steps and hid a 16x optimiser-step gap).",
+                 "T2.02 matched env-steps and hid a 16x optimiser-step gap). "
+                 "PLUS the G3 external reference (adopted gate 2026-09-06): "
+                 "T2.02's verbatim SB3 PPO MLP recipe trains to STEP_TARGET "
+                 "in its own kernel FIRST; below 450 mean return the run is "
+                 "VOID as a HARNESS fault, no learning verdict on any arm, "
+                 "and the arm kernels are never submitted.",
          kills="Three of the four control-path architectures, and D1's "
                "twenty-day deadlock. Arm D's WIN would additionally "
                "foreclose DP.02 (control gets private representations — the "
@@ -2437,8 +2447,15 @@ EXPANSION: list[Spec] = [
                "at STEP_TARGET 750k, and 8.91 h even at the legal 704,513 "
                "floor, so no <=2-submission split fits and the test's own "
                "pre-registered escalation branch fired. Split "
-               "(aprime,d_mlp)/(b_split)/(c_e2e), caps 5.25/7.5/7.5 h. "
-               "Module-cache the kernel (one-submission-per-spec rule).",),
+               "(aprime,d_mlp)/(b_split)/(c_e2e), caps 5.25/7.5/7.5 h, "
+               "PLUS a ~1.5 h reference kernel dispatched first (G3). "
+               "Module-cache the kernel (one-submission-per-spec rule). "
+               "ADOPTED GATE 2026-09-06 (Review FULL, both d10-* queue "
+               "rows): G1 paired-own-twin learning statistic, G2 "
+               "consistency conjunct, G3 SB3 reference floor — all "
+               "strengthen-only, sigma bar unmoved; attempt 1's VOID "
+               "stands (T2.02 precedent); full record in the test "
+               "docstring's ADOPTED GATE block.",),
 
     # -- PS.01, registered AHEAD of the rest of the PS family on purpose --
     # LC.03 declares depends_on PS.01, and LEARNING_CORE.md 5.6 requires the
