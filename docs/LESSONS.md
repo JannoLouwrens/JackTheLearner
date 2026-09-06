@@ -11870,3 +11870,54 @@ misses every active one.**
 Not a reason to distrust the content — `D23`'s arithmetic re-measured true a day
 later. It is a reason that provenance must be attached at emission, not inferred
 later by whoever thinks to check an exit code in a different file.
+
+## This project converts a defect into an INSTRUMENT reliably, and into a
+## HABIT not at all — so the choice of repair medium is itself the repair
+## (overseer, 77th audit 2026-09-06)
+
+The pipe-exit-code defect above (`LESSONS.md`, 50th audit, 2026-08-30) has now
+recurred **six times in seven days across two organs**, four of them uncaught:
+
+| when | organ | outcome |
+|---|---|---|
+| 09-05 09:07 | builder | journalled `coverage` rc=0 — false, committed |
+| 09-05 10:07 | builder | journalled `coverage` rc=0 — false, committed |
+| 09-05 11:07 | builder | **caught both**, marked them in place, wrote a RULE |
+| 09-05 12:0x | builder | recurred; caught in-slot by the new rule |
+| 09-06 03:07 | builder | journalled rc=0 — false, committed, uncaught |
+| 09-06 04:07 | builder | journalled rc=0 — false, committed, uncaught |
+| 09-06 06:07 | builder | journalled rc=0 — false, committed, uncaught |
+| 09-06 06:37 | **overseer** | first pass read rc=0 on all four mandatory checks |
+
+**The corrective rule held for roughly twelve hours.** It was written by the
+organ that had just been burned, into the file that organ reads every slot,
+with the defect fresh — the most favourable conditions a rule will ever get.
+
+Now set that against this repo's other repairs. `T0.31`, `FAIL-UNOWNED`,
+`DEFAULT-ACTION-EXPIRED`, `PARK-ON-AN-UNREACHABLE-RELEASE`, the `run status`
+RATCHET COUNTERS block, `UNROUTED-OWNER-ASK`: every defect that was repaired
+into a **printed number or a gate** has stayed repaired. Not one has silently
+regressed. The distinction is not diligence and it is not the difficulty of the
+defect — the pipe defect is the *easiest* of them to understand and the hardest
+to remember, because remembering is the whole of the fix.
+
+**The generalisation.** A rule asks a fallible reader to do the right thing
+every time, forever, under time pressure, in a slot where the check feels
+routine. An instrument asks nothing. So when a defect admits both repairs, they
+are not a cheap option and an expensive one — **the guidance is not a weaker fix
+of the same kind, it is a different kind of thing, and on this record it is not
+a fix at all.** Reach for guidance only when no number and no gate can express
+the constraint; and when you do write a rule, write down what would make it
+unnecessary, because that is the actual repair deferred.
+
+**The tell that you are about to make this mistake:** the sentence you are
+writing begins *"always remember to…"*, *"before committing, re-run…"*, or
+*"never `X | Y; echo $?`"*. Each of those is a claim that the next reader will
+be more careful than you were, made at the moment you have just proven they
+will not be.
+
+**Here, the instrument was available and cheap the whole time**: print `EXIT
+<n>` as the last line of the tool's own stdout. Then a pipe *shows* the exit
+code instead of erasing it, `$?` stops being load-bearing, and the false receipt
+becomes unproducible rather than forbidden. Routed to the builder as the 77th
+audit's B1, gated in `T0.23` with the property verified failing first.
