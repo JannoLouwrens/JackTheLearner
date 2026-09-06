@@ -22393,14 +22393,14 @@
     },
     "T0.33": {
       "amended": [],
-      "attempt": 12,
-      "commit": "7ec983e",
+      "attempt": 14,
+      "commit": "8b9dd86",
       "compute_s": null,
       "control_metrics": {
         "alive": true,
         "leak_visible": true
       },
-      "duration_s": 1.24,
+      "duration_s": 1.23,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -22988,9 +22988,155 @@
           ],
           "spec_sha": "5fa065bb96101742",
           "status": "PASS"
+        },
+        {
+          "commit": "7ec983e",
+          "control_metrics": {
+            "alive": true,
+            "leak_visible": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "2394482fdc30af63",
+          "message": "",
+          "metrics": {
+            "affords_small": true,
+            "charged_moves": true,
+            "class_slack": [
+              {
+                "budget": "cpu<2h",
+                "n": 59,
+                "n_foreclosed": 0,
+                "slack_s": 3600.0,
+                "used_s": 0.0
+              },
+              {
+                "budget": "cpu<10min",
+                "n": 78,
+                "n_foreclosed": 0,
+                "slack_s": 46800.0,
+                "used_s": 0.0
+              },
+              {
+                "budget": "cpu<1min",
+                "n": 23,
+                "n_foreclosed": 0,
+                "slack_s": 56545.56,
+                "used_s": 0.0
+              }
+            ],
+            "corrupt_ledger_fails_closed": true,
+            "cpu_foreclosed": [],
+            "cpu_quota_enforced": 1.0,
+            "detached_routed": true,
+            "empty_ledger_falls_back": true,
+            "est_above_enum": [],
+            "exhausted_refused": true,
+            "fresh_admits_worst": true,
+            "gpu_unbound": true,
+            "isolation_ok": true,
+            "live_load": 0.22,
+            "live_remaining_s": 57600.0,
+            "load_refused": true,
+            "loop_load_agrees": true,
+            "n_foreclosed_enum": 0,
+            "n_foreclosed_now": 0,
+            "n_foreclosed_unmeasured": 0,
+            "overrun_marked": true,
+            "persists": true,
+            "projection_binds": true,
+            "projection_only_tightens": true,
+            "receipt_committable": true,
+            "refuses_oversized": true,
+            "remaining_mid_s": 57000.0,
+            "shipped_refusal": true,
+            "shipped_refusal_s": 0.012,
+            "slack_predicts_refusal": true,
+            "stale_writer_safe": true,
+            "starts_full": true,
+            "wiring_ok": true
+          },
+          "ran_at": "2026-09-06T00:17:05",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "5fa065bb96101742",
+          "status": "PASS"
+        },
+        {
+          "commit": "49ba5b8+dirty",
+          "control_metrics": {
+            "alive": true,
+            "leak_visible": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "8c5ea327a6f65bd8",
+          "message": "",
+          "metrics": {
+            "affords_small": true,
+            "charged_moves": true,
+            "class_slack": [
+              {
+                "budget": "cpu<2h",
+                "n": 59,
+                "n_foreclosed": 0,
+                "slack_s": 3600.0,
+                "used_s": 1.75
+              },
+              {
+                "budget": "cpu<10min",
+                "n": 78,
+                "n_foreclosed": 0,
+                "slack_s": 46800.0,
+                "used_s": 1.75
+              },
+              {
+                "budget": "cpu<1min",
+                "n": 23,
+                "n_foreclosed": 0,
+                "slack_s": 56545.56,
+                "used_s": 1.75
+              }
+            ],
+            "corrupt_ledger_fails_closed": true,
+            "cpu_foreclosed": [],
+            "cpu_quota_enforced": 1.0,
+            "detached_routed": true,
+            "empty_ledger_falls_back": true,
+            "est_above_enum": [],
+            "exhausted_refused": true,
+            "fresh_admits_worst": true,
+            "gpu_unbound": true,
+            "isolation_ok": true,
+            "live_load": 0.3,
+            "live_remaining_s": 57598.25,
+            "load_refused": true,
+            "loop_load_agrees": true,
+            "n_foreclosed_enum": 0,
+            "n_foreclosed_now": 0,
+            "n_foreclosed_unmeasured": 0,
+            "overrun_marked": true,
+            "persists": true,
+            "projection_binds": true,
+            "projection_only_tightens": true,
+            "receipt_committable": true,
+            "refuses_oversized": true,
+            "remaining_mid_s": 57000.0,
+            "shipped_refusal": true,
+            "shipped_refusal_s": 0.012,
+            "slack_predicts_refusal": true,
+            "stale_writer_safe": true,
+            "starts_full": true,
+            "wiring_ok": true
+          },
+          "ran_at": "2026-09-06T01:15:40",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "5fa065bb96101742",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "2394482fdc30af63",
+      "impl_sha": "8c5ea327a6f65bd8",
       "message": "",
       "metrics": {
         "affords_small": true,
@@ -23001,21 +23147,21 @@
             "n": 59,
             "n_foreclosed": 0,
             "slack_s": 3600.0,
-            "used_s": 0.0
+            "used_s": 3.5
           },
           {
             "budget": "cpu<10min",
             "n": 78,
             "n_foreclosed": 0,
             "slack_s": 46800.0,
-            "used_s": 0.0
+            "used_s": 3.5
           },
           {
             "budget": "cpu<1min",
             "n": 23,
             "n_foreclosed": 0,
             "slack_s": 56545.56,
-            "used_s": 0.0
+            "used_s": 3.5
           }
         ],
         "corrupt_ledger_fails_closed": true,
@@ -23028,8 +23174,8 @@
         "fresh_admits_worst": true,
         "gpu_unbound": true,
         "isolation_ok": true,
-        "live_load": 0.22,
-        "live_remaining_s": 57600.0,
+        "live_load": 0.2,
+        "live_remaining_s": 57596.5,
         "load_refused": true,
         "loop_load_agrees": true,
         "n_foreclosed_enum": 0,
@@ -23050,9 +23196,9 @@
         "wiring_ok": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 215.2,
+      "peak_rss_mb": 215.3,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T00:17:05",
+      "ran_at": "2026-09-06T01:16:05",
       "seeds": [
         0
       ],
