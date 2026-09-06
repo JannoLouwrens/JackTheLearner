@@ -227,8 +227,13 @@ ROUTED: recipe-sensitivity | 2026-08-20 | probe jack-ladder-1787249890 | ACTED 2
     item 3). Smoke green incl. selection fixtures.
 
 ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
-    BLOCKED-BY: w0-too-shallow | the world-edit window that row opens; if it
-        resolves toward W1 this follows it there and the bill goes to zero.
+    BLOCKED-BY: w1-world-edit-window | RE-POINTED 2026-09-06 (Review FULL)
+        from `w0-too-shallow`, which was DISPOSITIONED this morning — a hold
+        whose blocker has been dispositioned is itself a violation, and this
+        hold's substance is unchanged: it is waiting for the world-edit
+        sitting, which is now its own row with its own DUE 2026-09-13. If W1
+        is built this follows it there and the bill goes to zero, exactly as
+        the original line said.
     Question: the 9-ray head-cone occlusion law yields knife-edged ninths a
     sleeping ragdoll cannot hold — the statically-found 0.5–0.9 band realises
     occ 0.337±0.467 overnight (slides out and freezes, or seals and cooks).
@@ -240,8 +245,10 @@ ROUTED: ne01-occlusion-knife-edge | 2026-08-24 | 5063144 | HELD 2026-08-25 for t
     if the fix edits playground.py.
 
 ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for the world-edit window (see THE BUNDLING RULE)
-    BLOCKED-BY: w0-too-shallow | the same world-edit window; paying the
-        21-certificate mechanical bill once instead of three times.
+    BLOCKED-BY: w1-world-edit-window | RE-POINTED 2026-09-06 (Review FULL)
+        from `w0-too-shallow` for the same reason as the row above; the same
+        world-edit window, still paying the 21-certificate mechanical bill
+        once instead of three times.
     Question: Water.apply (playground.py:627) writes a body's xfrc row only
     while it is in the pool, so any body that exits keeps its last buoyancy/
     drag force forever — a phantom force in live dynamics, found by DP.05's
@@ -251,7 +258,7 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for t
     BA.01, LC.02, PS.02, PS.03, XL.00 — 5 PASS certificates; MECHANICAL —
     all 21 playground.py rows above.
 
-ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Review 2026-09-06 (RE-ARMED 2026-08-31, reason below); one cheap falsifier sequenced first, 2026-08-25
+ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review FULL — the W1 SPEC-FAMILY DESIGN is published below, five specs W1.00–W1.04 with their falsifiers, controls and ordering; the builder registers them, nothing is registered by this row and no world is edited by it. GOAL.md untouched, no spec re-parented — those stay the owner's, per D21)
     D21 DEFAULT FIRED 2026-09-06 00:1x UTC (builder; record in
         DECISIONS_RESOLVED.md, committed before the 06:37 FULL on purpose —
         the same-day race the 72nd audit named): today's FULL takes the W1
@@ -299,6 +306,16 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
         (`ne01-occlusion-knife-edge`, `water-apply-phantom-force`) and four
         gate-provisional specs are behind it. Re-arm it with a new DUE: and a
         reason if the next FULL run cannot carry it; do not delete this line.
+    DUE: 2026-09-13 | DELIVERED AND SUPERSEDED. The design owed on 2026-09-06
+        was written and committed by the Review's FULL run that morning (the
+        W1 DESIGN block below, five specs with falsifiers, controls and an
+        ordering) — the fifth Sunday bet, and the first one that paid. What
+        this row now owes is REGISTRATION of `W1.00`–`W1.04` from that design,
+        and it is owed by the BUILDER, not by me. Dated a week out on purpose:
+        `W1.00` and `W1.02` are measurable on W0 AS BUILT and carry no
+        staleness bill, so they register first; `W1.01`/`W1.03`/`W1.04` wait on
+        `w1-world-edit-window`. This is not a third hand-stagger of the design
+        promise — that promise is discharged and its artifact is below.
     Question: three independent instruments now measure W0 as too shallow to
     reward the capabilities the ladder certifies — LC.03's darkroom control
     (passivity prospers), LC.03 v2 (one learner in five), DP.05 (lookahead
@@ -308,6 +325,169 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Revi
     names — before any dual-process claim; BO.01 does not run. COUPLED to
     D10 branch (b) in DECISIONS_NEEDED.md (owner) — the Review designs, the
     owner sequences.
+
+# ============================================================================
+# THE W1 DESIGN (Review FULL, 2026-09-06). Five specs, ordered. Design only.
+# ============================================================================
+
+**FIRST, THE DIAGNOSIS CHANGED ON 2026-08-31 AND NOBODY RE-READ THIS ROW.**
+`W0.DIAG` — the cheap falsifier this row itself sequenced ahead of the design
+on 2026-08-25, and which took six days to become a spec because it was written
+as prose — **PASSED on 2026-08-31** (attempt 3, 3 seeds). Its claim branch is
+recorded as *"correlation buys life through food"*, and the numbers are not
+marginal: a random policy whose per-decision marginal action distribution is
+**identical** to the `random` null every shallowness instrument used, differing
+only in being temporally CORRELATED, records `gain_up` **12.12 ± 1.20** against
+the stationary null's `gain_random` **0.0095 ± 0.39`, and mean life **52.53**
+against **41.23**. `eats_up` 1.0 against `eats_random` 0.33.
+
+So W0 is **not** a world in which nothing is available to be gained. It is a
+world in which *sustained directed movement is worth twelve units of life and
+our standard null cannot produce sustained directed movement.* That single
+result splits this row's eleven instruments into two piles that need opposite
+repairs, and lumping them was the error I am correcting:
+
+  **Pile A — UNDER-NULLED, and the repair is in OUR instruments, not the
+  world.** Every reading of the form *"the null does as well as the learner"*
+  was taken against a stationary white-noise process that `W0.DIAG` now shows
+  is strictly weaker than a same-marginal correlated one. That does not make
+  those findings wrong — it makes them **too kind to the learners**, because
+  the honest null is harder. Members: `LC.03`'s darkroom control, `LC.03` v2's
+  one-learner-in-five, field watch wk5 (*"a random policy covers W0 as well as
+  the curious arm"*), `T3.06`'s `random_dwell_worst_life`.
+
+  **Pile B — GENUINELY SHALLOW, and the repair is the world.** Readings where
+  the null **saturates the outcome** or the outcome **cannot resolve a
+  difference at all** — no stronger null rescues these, because there is
+  nothing above the ceiling to reach. Members: `SH.02` (twin, privileged
+  oracle and both-cosmetic control all exactly **1.0000** against
+  `HEADROOM_MAX` 0.85 — the null holds the roof completely), `SH.01`'s
+  `ORACLE_CANNOT`, `DP.04` (**0 of 3072** lives ended between the two caps; 21
+  distinct lifespans; quantum 6.25 steps against `MIN_GAIN` 5.0 — the
+  measurement quantum is LARGER than the effect it must detect), `DP.05`
+  (deeper lookahead buys LESS; best reactive policy is *starve at the resting
+  ceiling*), `BA.03` (blind twin holds 98.9% of the 12.0 s horizon),
+  `LF.01` (the forager dies of **integrity** at ~25 min, not starvation),
+  `LG.03` (*"this world does not admit language-necessary commands at this
+  horizon"*), `SO.07` (the recording worlds cannot produce the behaviour).
+
+**THE FIVE SPECS.** W1.00 and W1.02 are Pile A / measurement and run on **W0 as
+built — no world edit, no staleness bill.** W1.01, W1.03 and W1.04 are Pile B
+and need the world-edit window, which is now its own row
+(`w1-world-edit-window`) so the two holds behind this one have a live blocker.
+
+  **`W1.00` — The null is the strongest process that has not learned.**
+  *Claim:* for any W-venue spec, the registered null is the best-scoring member
+  of {stationary white, temporally-correlated colored noise at the `W0.DIAG`
+  schedule, repeat-action} **selected on the NULL's own outcome, never on the
+  claim arm's** — and re-scoring the Pile A findings against it changes at
+  least one recorded margin by more than its own std. *Falsifier:* if the
+  correlated null does NOT outscore the white null on the venue's own outcome,
+  `W0.DIAG`'s result does not generalise past food-seeking and Pile A
+  dissolves. *Control:* the selection rule must be run against a claim arm too
+  — if picking the best null by the null's own score ever selects a DIFFERENT
+  process than picking it by the claim arm's margin, the old practice was
+  fitting the null to the claim, and that must be printed. *Why this is a
+  strengthening and not a re-litigation:* it can only ever RAISE a null.
+  Nothing that passed can pass more easily. Cost: cpu, re-scores existing
+  artifacts. **This one is cheap and it is first.**
+
+  **`W1.01` — Passivity dies.** *Claim:* in the venue, a do-nothing agent does
+  NOT hold the outcome roof: there is measurable headroom between a passive
+  arm and a hand-coded competent oracle, `passive <= FLOOR < ROOF <= oracle`,
+  with the gap wider than 3× the W1.02 quantum, on every seed. *This is the
+  precondition `SH.02`'s pilot falsified* — it measured twin, oracle AND both
+  cosmetic controls at exactly 1.0000, i.e. the world admits no such gap at
+  all today, which is why freezing SH.02's bars against that pilot would have
+  fitted them to a saturated null. *Control:* the same measurement on a
+  deliberately-benign twin world must show NO gap — a headroom test that
+  cannot detect a world without headroom is measuring nothing. *This spec
+  gates every W1 capability claim*: no claim about learning is admissible in a
+  venue where doing nothing already wins.
+
+  **`W1.02` — Outcomes have resolution.** *Claim:* the venue's outcome metric
+  resolves differences smaller than the effect any claim built on it wants to
+  make: ≥ K distinct outcome values over N lives, measurement quantum ≤
+  `MIN_GAIN`/3, and censoring below a declared cap. *This is `DP.04`'s defect
+  promoted from a pilot's refusal to a world-fidelity gate* — 21 distinct
+  lifespans over 3072 lives with a quantum of 6.25 against a `MIN_GAIN` of 5.0
+  is a metric that cannot see the thing it exists to see, and the derived
+  requirement of ≥ 5791 lives/arm/task is the arithmetic saying so. *Repair
+  the metric, not the bar:* censored lifespan is replaced by a graded outcome
+  (integrated need-satisfaction, or per-need time-to-first-failure), and the
+  spec's job is to prove the replacement resolves. *Control:* a synthetic arm
+  with a KNOWN injected advantage of exactly `MIN_GAIN` must be detected; if
+  it is not, the metric is still blind and the spec FAILs. Runs on W0 as
+  built.
+
+  **`W1.03` — Traps, delays and irreversibility exist, and they are
+  discoverable.** *Claim:* the venue contains at least one of each of GOAL.md's
+  three named `DP.00` preconditions, and each is (i) DISCOVERABLE — the W1.00
+  null encounters it at a rate > 0, so curiosity has something to grip; (ii)
+  CONSEQUENTIAL — entering it moves the W1.02 outcome by more than the W1.02
+  quantum; and (iii) actually what it says: for irreversibility, no action
+  sequence returns the need-vector to its prior value; for delay, the need-cost
+  arrives ≥ D decisions after the act; for a trap, the locally-improving action
+  is the globally-worse one. *Control — and this is the one that matters:* a
+  twin world with the three features REMOVED must fail all three conjuncts
+  under the identical measurement. Without that twin this spec would certify
+  a world by describing it. *This is the spec that opens the world-edit window*
+  and inherits the 21-certificate mechanical bill.
+
+  **`W1.04` — The horizon is longer than the consequence.** *Claim:* for every
+  registered W1 claim, the episode horizon is ≥ 3× the MEASURED time-to-
+  consequence of the mechanism being claimed, and the run reports both numbers
+  on its ledger row. *This is `BA.03` and `LF.01` seen as one defect from two
+  ends* — a blind twin holding 98.9% of a 12.0 s horizon and a forager dying of
+  integrity at 25 minutes are both "the window closed before the thing we are
+  claiming had time to happen". *Falsifier:* if the measured time-to-consequence
+  for the venue's mechanisms is already under a third of the horizon
+  everywhere, this spec PASSes trivially and should be retired rather than
+  kept as decoration — and it must say so on its own row.
+
+**ORDERING, and it is not the order the pile is written in.** `W1.00` first
+(cheap, no world edit, and it is the one that could show a third of this row's
+evidence was under-nulled). `W1.02` second (no world edit, and `W1.01`/`W1.03`
+both quote its quantum, so it must exist before they can state their bars).
+Then the world-edit sitting: `W1.03`, then `W1.01` measured in the edited
+world, then `W1.04` sizing the windows.
+
+**WHAT I DID NOT DO, deliberately.** I did not touch `GOAL.md`. I did not
+re-parent any spec. I did not declare W0 dead — `W0.DIAG` is the reason, and a
+world where sustained movement is worth twelve units of life is not a world
+with nothing in it. I did not bundle the `d10-*` gate rows in here (they are
+scoring defects, dispositioned separately this morning). And I did not put a
+number on "how deep is deep enough": `W1.01` and `W1.02` make that an empirical
+bar rather than a taste, which is the whole reason they are specs and not a
+paragraph.
+
+**FOR THE OWNER, and it is why `D10` is coupled to this row.** This design
+answers *"what would W1 have to prove"*. It does not answer *"is a new world
+the right spend"* — that is `D10` branch (b) and it is the owner's, unchanged.
+If the answer is no new world, `W1.00`, `W1.02` and `W1.04` still stand: they
+are measurement repairs and they are owed regardless of which world we run in.
+
+ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
+    DUE: 2026-09-13 | the single world-edit sitting that `W1.03` opens, which
+        pays the 21-certificate `playground.py` mechanical bill ONCE for every
+        world edit that is owed. This row exists so that the two holds that
+        were `BLOCKED-BY: w0-too-shallow` have a LIVE blocker after that row
+        was dispositioned this morning — a hold whose blocker is dispositioned
+        is itself a violation, and re-pointing them is the honest repair, not
+        quietly leaving them pointed at a closed row.
+    BLOCKED-BY: w0-too-shallow | the W1 design above must be REGISTERED
+        (W1.03 in particular) before a world edit has a spec to serve; editing
+        the world first would be the 21-certificate bill paid for a change
+        nothing yet measures.
+    Question: which world edits ride this single sitting, and in what order?
+    Known passengers as of routing: `W1.03`'s traps/delays/irreversibility;
+    `ne01-occlusion-knife-edge`; `water-apply-phantom-force` (Water.apply
+    writes a body's xfrc row only while it is in the pool, so a body that
+    exits keeps its last buoyancy force forever); and whatever the `W1.01`
+    headroom repair turns out to need once `W1.02` has fixed the metric.
+    Staleness bill: MECHANICAL — all 21 `playground.py` rows; SEMANTIC —
+    BA.01, LC.02, PS.02, PS.03, XL.00 (worlds with a pool, per the 27th
+    audit). Paying it once instead of three times is the entire point.
     Full record: D10 + its 08-24 evidence update; FAIL RECORD in
     dp_05_lookahead_pays_in_w0.py.
     UPDATE 2026-08-25: a FOURTH instrument, weighing differently — SH.01's
