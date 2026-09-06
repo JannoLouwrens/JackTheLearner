@@ -30,6 +30,17 @@ CONTROL (must hurt): answer the same questions from reflections consolidated
 from ANOTHER agent's log (same machinery, different life). Habit beliefs that
 transfer between different lives were never about THIS life — accuracy must
 fall below the raw-events null.
+
+STRENGTHENED 2026-09-06 (78th audit B2 / Review FTB 3) — ME.11's distractor
+question on THIS spec's store: cue the episodic log for 3-word combinations
+that never co-occur in any event, built only from words the habit-skewed life
+actually used. The habit concentration makes the near-miss mass heavier than
+ME.1's uniform life — a favourite value appears in ~18% of a speaker's events,
+so a distractor cue carrying it has many 2-of-3 neighbours. The store must
+abstain on >= MIN_ABSTENTION of evaluated cues; a cue is excluded from the
+denominator when some stored event carries all three words (a hit would be
+retrieval, not confabulation), and the excluded count is recorded with a floor
+on the denominator. Nothing above moved.
 """
 from __future__ import annotations
 
@@ -43,6 +54,9 @@ from ..registry import BY_ID
 
 REPO = Path(__file__).resolve().parents[2]
 
+# The two stores under test. Undeclared until 2026-09-06 (78th audit B2).
+IMPL_DEPS = ["EpisodicMemory.py", "Reflections.py"]
+
 N_EVENTS = 1200
 P_FAV = 0.18                  # habit strength: mild on purpose (see docstring)
 N_CANDIDATES = 4              # forced-choice width -> base rate 0.25
@@ -51,6 +65,10 @@ TOKEN_BUDGET = 40             # ~5 raw events or ~4 reflection lines
 MIN_REFLECT = 0.90
 MIN_GAIN = 0.15               # aggregation_qa_gain = reflect - raw
 MIN_CONTROL_DROP = 0.30       # reflect minus wrong-agent accuracy
+# Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only).
+N_DISTRACTOR = 60             # candidate absent combinations, fixed up front
+MIN_DISTRACTOR_EVAL = 30      # aliveness: below this the control has gone quiet
+MIN_ABSTENTION = 0.95
 
 OBJECTS = ["kettle", "ladder", "apple", "lantern", "hammer", "compass",
            "bucket", "rope", "mirror", "whistle", "anchor", "basket", "drum",
@@ -172,6 +190,38 @@ def _answer_all(questions, reflect_store, mem, now, rng):
     return (r_hits / n, e_hits / n, r_tok / n, e_tok / n)
 
 
+def _distractor_abstention(mem, now, seed: int) -> dict:
+    """ME.11's control on this store: 3-word combinations that never co-occur
+    in any stored event, every word drawn from the life's own vocabulary."""
+    import random
+    from EpisodicMemory import _tokens
+
+    stored = [_tokens(e.text) for e in mem.events]
+    vocab = set().union(*stored)
+    rng = random.Random(seed + 11)
+
+    abstained = evaluated = 0
+    for _ in range(N_DISTRACTOR):
+        combo = (rng.choice(OBJECTS), rng.choice(PLACES),
+                 rng.choice(COLOURS), rng.choice(ACTIONS))
+        picks = rng.sample(combo, 3)
+        pick_set = set(picks)
+        # Excluded, visibly: a word the life never used (the easy all-unknown
+        # case, not this control) or a stored event carrying all three words
+        # (a hit would be retrieval, not confabulation).
+        if not pick_set <= vocab or any(pick_set <= s for s in stored):
+            continue
+        cue = f"the thing about the {picks[0]} and the {picks[1]} {picks[2]}"
+        evaluated += 1
+        abstained += not mem.recall(cue, top_k=1, now=now)
+    return {
+        "distractor_abstention": round(abstained / evaluated, 4) if evaluated
+                                 else 0.0,
+        "distractor_evaluated": evaluated,
+        "distractor_excluded": N_DISTRACTOR - evaluated,
+    }
+
+
 def _experiment(seed: int) -> dict:
     import random
     sys.path.insert(0, str(REPO))
@@ -188,6 +238,7 @@ def _experiment(seed: int) -> dict:
     rng = random.Random(seed + 2)
     r_acc, e_acc, r_tok, e_tok = _answer_all(questions, reloaded, mem, now, rng)
     return {
+        **_distractor_abstention(mem, now, seed),
         "n_questions": len(questions),
         "reflect_acc": round(r_acc, 4),
         "raw_acc": round(e_acc, 4),
@@ -224,7 +275,12 @@ def _check(m: dict, c: dict) -> bool:
             and m["raw_tokens_mean"] >= m["reflect_tokens_mean"]  # equal-tokens honesty
             and m["reflect_tokens_mean"] <= TOKEN_BUDGET
             and c["wrong_agent_acc"] < m["raw_acc"]
-            and (m["reflect_acc"] - c["wrong_agent_acc"]) >= MIN_CONTROL_DROP)
+            and (m["reflect_acc"] - c["wrong_agent_acc"]) >= MIN_CONTROL_DROP
+            # Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only):
+            # abstention on absent combinations, denominator floored so the
+            # control cannot pass by going quiet.
+            and m["distractor_evaluated"] >= MIN_DISTRACTOR_EVAL
+            and m["distractor_abstention"] >= MIN_ABSTENTION)
 
 
 def run(ledger: Ledger | None = None):

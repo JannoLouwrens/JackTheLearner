@@ -65,8 +65,11 @@ from ..registry import BY_ID
 
 # This spec certifies a property of the WORLD, so the world hashes into
 # impl_sha. Change playground.py and this certificate goes stale loudly
-# instead of standing over a world it no longer describes.
-IMPL_DEPS = ["playground.py"]
+# instead of standing over a world it no longer describes. EpisodicMemory.py
+# added 2026-09-06 (78th audit B2) — the diary this spec searches was an
+# undeclared import, so the 12:16 scorer recalibration staled this
+# certificate invisibly.
+IMPL_DEPS = ["playground.py", "EpisodicMemory.py"]
 
 REPO = Path(__file__).resolve().parents[2]
 

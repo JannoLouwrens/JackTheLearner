@@ -51,6 +51,11 @@ from ..registry import BY_ID
 
 REPO = Path(__file__).resolve().parents[2]
 
+# The tokeniser this spec scores with and the store under test. Undeclared
+# until 2026-09-06 (78th audit B2): the 12:16 scorer recalibration staled
+# certificates the staleness lane could not see.
+IMPL_DEPS = ["EpisodicMemory.py", "Forgetting.py"]
+
 T_EVENTS = 1200
 BUDGET = 150
 DT = 60.0                     # one event a minute; a 20-hour life

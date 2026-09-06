@@ -33,6 +33,18 @@ CONTROL (each ablation kills exactly its own capability):
   revert the weights -> held-out skill back to chance, cued recall
                       unchanged (the diary was on disk).
 Either ablation killing BOTH means one store was masquerading as two.
+
+STRENGTHENED 2026-09-06 (78th audit B2 / Review FTB 3) — ME.11's distractor
+question on the diary: `store_on_heldout` already demanded the diary not do
+the skill's JOB (outcome readout pinned to chance by XOR), but it never asked
+whether the diary ANSWERS at all. A held-out cue names a colour the diary saw
+~8 times and an object it saw ~7 times, in a pairing it never lived —
+returning the nearest lived episode as the answer is the confabulation ME.11
+measured, whatever outcome it happens to name. The diary must ABSTAIN on
+>= MIN_DISTRACTOR_ABST of the 36 held-out pairs. Every pair is evaluable by
+construction (each lived episode names exactly one pair, so no seen event
+carries both cue words), which the code checks and records rather than
+assumes. Nothing above moved.
 """
 from __future__ import annotations
 
@@ -45,6 +57,9 @@ from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
 REPO = Path(__file__).resolve().parents[2]
+
+# The diary under test. Undeclared until 2026-09-06 (78th audit B2).
+IMPL_DEPS = ["EpisodicMemory.py"]
 
 N_FILLER = 240
 HIDDEN = 32
@@ -59,6 +74,9 @@ MAX_CHANCE_SKILL = 0.65      # untrained init / diary-on-held-out / reverted net
 MIN_SKILL_GAIN = 0.25        # trained minus untrained on held-out
 MAX_WIPE_RECALL = 0.05       # empty diary must abstain, not confabulate
 MAX_ABLATION_DRIFT = 0.02    # the capability an ablation should NOT touch
+# Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only).
+MIN_DISTRACTOR_ABST = 0.95   # abstention on never-lived pair cues
+MIN_DISTRACTOR_EVAL = 30     # aliveness floor (36 held pairs by construction)
 
 COLOURS = ["copper", "crimson", "olive", "violet", "amber", "teal", "ivory",
            "slate", "coral", "bronze"]
@@ -200,7 +218,21 @@ def _experiment(seed: int) -> dict:
     # read out whatever outcome comes back. XOR pins this to chance.
     store_held = _recall_acc(mem, held, cbits, obits, now)
 
+    # Distractor conjunct (2026-09-06): the diary must return NOTHING for a
+    # never-lived pair, not its nearest lived episode. Evaluability is checked
+    # per pair rather than assumed: no seen event may carry both cue words.
+    d_abst = d_eval = 0
+    for c_, o_ in held:
+        if any(c_ in ev.text.split() and o_ in ev.text.split()
+               for ev in mem.events):
+            continue
+        d_eval += 1
+        d_abst += not mem.recall(f"jack dropped the {c_} {o_}", top_k=1, now=now)
+
     return {
+        "distractor_abstention": round(d_abst / d_eval, 4) if d_eval else 0.0,
+        "distractor_evaluated": d_eval,
+        "distractor_excluded": len(held) - d_eval,
         "recall_pre": round(recall_pre, 4),
         "recall_post": round(recall_post, 4),
         "skill_heldout": round(skill, 4),
@@ -258,6 +290,10 @@ def _check(m: dict, c: dict) -> bool:
         and m["skill_gain"] >= MIN_SKILL_GAIN
         # the diary cannot do the skill's job on never-lived pairs
         and m["store_on_heldout"] <= MAX_CHANCE_SKILL
+        # Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only):
+        # and it must ABSTAIN on them, not answer with the nearest episode.
+        and m["distractor_evaluated"] >= MIN_DISTRACTOR_EVAL
+        and m["distractor_abstention"] >= MIN_DISTRACTOR_ABST
         # wipe kills recall, and ONLY recall
         and c["wipe_recall"] <= MAX_WIPE_RECALL
         and c["wipe_skill"] >= m["skill_heldout"] - MAX_ABLATION_DRIFT

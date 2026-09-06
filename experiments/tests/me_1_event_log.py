@@ -63,6 +63,11 @@ from ..registry import BY_ID
 
 REPO = Path(__file__).resolve().parents[2]
 
+# The store under test. Undeclared until 2026-09-06 (78th audit B2): the 12:16
+# scorer recalibration staled this certificate and the staleness lane could not
+# see it, because impl_sha only covers declared inputs.
+IMPL_DEPS = ["EpisodicMemory.py"]
+
 N_EVENTS = 1000
 N_QUERIES = 120
 N_FABRICATED = 60

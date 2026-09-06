@@ -37,6 +37,19 @@ log so old events carry ~zero recency:
 NULL (must lose at every decade): recency-only retrieval — answer every cue
 with the newest event. Its precision is ~1/N and collapses with growth; the
 experiment's whole claim is that scored retrieval does not.
+
+STRENGTHENED 2026-09-06 (78th audit B2 / Review FTB 3) — ME.11's distractor
+question at scale, which the existing abstention gate cannot ask: gate 3's
+fabricated cues use vocabulary the store has NEVER heard, so the coverage
+floor drops them as noise before scoring. The hard question is a cue whose
+every word the store knows intimately — the life uses each object in ~2,500
+events at 100k — combined in a 4-tuple that never occurred. The tuple stream
+draws 100k of 480,000 possible 4-tuples, so absent tuples are constructible
+by rejection against the stored set; at each decade the store must abstain on
+>= MIN_ABSTENTION of them, with false-memory pressure growing 1000x down the
+log. A candidate is excluded (and counted) at decades where one of its words
+has not yet been stored — then it is the easy unknown-word case, not this
+control; the denominator carries an aliveness floor. Nothing above moved.
 """
 from __future__ import annotations
 
@@ -52,6 +65,9 @@ from ..registry import BY_ID
 
 REPO = Path(__file__).resolve().parents[2]
 
+# The store under test. Undeclared until 2026-09-06 (78th audit B2).
+IMPL_DEPS = ["EpisodicMemory.py"]
+
 DECADES = [100, 1_000, 10_000, 100_000]
 N_QUERIES = 100          # per query class, per decade
 N_FABRICATED = 30        # per decade
@@ -59,6 +75,9 @@ MIN_PRECISION = 0.95     # unique cues, and reload at 100k
 MIN_MATCH = 0.95         # ambiguous top-1 must still match all 3 cue words
 MIN_ABSTENTION = 0.95
 MAX_LATENCY_MS = 1000.0  # mean per query at 100k events
+# Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only).
+N_DISTRACTOR = 60        # absent 4-tuples, fixed before the decades run
+MIN_DISTRACTOR_EVAL = 30 # aliveness floor on the per-decade denominator
 
 # Pairwise-disjoint pools; 40*30*20*20 = 480,000 distinct 4-tuples, so 100k
 # events can each carry a unique tuple. No word appears in _STOP, in another
@@ -129,6 +148,22 @@ def _ambiguous_cue(words, drop) -> str:
     return f"the thing about the {kept[0]} and the {kept[1]} {kept[2]}"
 
 
+def _distractor_tuples(seed: int, stored: set):
+    """N_DISTRACTOR 4-tuples ABSENT from the whole life, by seeded rejection
+    against the stored set, each with a fixed cue word order. Absent from the
+    full 100k means absent at every decade."""
+    rng = random.Random(seed * 104729 + 3)
+    cands = []
+    tries = 0
+    while len(cands) < N_DISTRACTOR and tries < 2000:
+        tries += 1
+        t = (rng.choice(OBJECTS), rng.choice(PLACES),
+             rng.choice(COLOURS), rng.choice(ACTIONS))
+        if t not in stored:
+            cands.append((t, rng.sample(range(4), 4)))
+    return cands
+
+
 def _experiment(seed: int) -> dict:
     sys.path.insert(0, str(REPO))
     from EpisodicMemory import EpisodicMemory
@@ -137,6 +172,9 @@ def _experiment(seed: int) -> dict:
     rng, tuples = _tuple_stream(seed)
     mem = EpisodicMemory(path=tmp)
     out: dict = {}
+
+    distractors = _distractor_tuples(seed, set(tuples))
+    seen_words: set = set()
 
     n_done = 0
     for decade in DECADES:
@@ -149,6 +187,7 @@ def _experiment(seed: int) -> dict:
             mem.record(channel, speaker,
                        f"{speaker} {act} the {colour} {obj} near the {place}",
                        importance=rng.uniform(0.5, 5.0), t=T0 + i * DT)
+            seen_words.update(tuples[i])
         n_done = decade
         now = T0 + n_done * DT
 
@@ -170,11 +209,22 @@ def _experiment(seed: int) -> dict:
                            top_k=1, now=now)
             for fo, fp in fabs)
 
+        # Distractor conjunct (2026-09-06): known words, absent combination.
+        d_abst = d_eval = 0
+        for words, order in distractors:
+            if not set(words) <= seen_words:
+                continue          # excluded: an unknown word makes this easy
+            d_eval += 1
+            d_abst += not mem.recall(_unique_cue(words, order), top_k=1, now=now)
+
         tag = str(decade)
         out[f"u_p1_{tag}"] = round(u_hits / N_QUERIES, 4)
         out[f"a_p1_{tag}"] = round(a_hits / N_QUERIES, 4)
         out[f"a_match_{tag}"] = round(a_matches / N_QUERIES, 4)
         out[f"abstain_{tag}"] = round(abstained / N_FABRICATED, 4)
+        out[f"distractor_abstain_{tag}"] = (round(d_abst / d_eval, 4)
+                                            if d_eval else 0.0)
+        out[f"distractor_eval_{tag}"] = d_eval
         out[f"lat_ms_{tag}"] = round(lat_ms, 2)
 
     # Disk roundtrip at full scale: a fresh process would see this file.
@@ -210,6 +260,11 @@ def _check(m: dict, c: dict) -> bool:
         if not (m[f"u_p1_{tag}"] >= MIN_PRECISION
                 and m[f"a_match_{tag}"] >= MIN_MATCH
                 and m[f"abstain_{tag}"] >= MIN_ABSTENTION
+                # Added 2026-09-06 (78th audit B2 / Review FTB 3;
+                # strengthen-only): known words, absent combination, with an
+                # aliveness floor on the denominator at every decade.
+                and m[f"distractor_eval_{tag}"] >= MIN_DISTRACTOR_EVAL
+                and m[f"distractor_abstain_{tag}"] >= MIN_ABSTENTION
                 and m[f"u_p1_{tag}"] > c[f"rec_p1_{tag}"]
                 and m[f"a_p1_{tag}"] > c[f"rec_p1_{tag}"]):
             return False

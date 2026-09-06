@@ -65,7 +65,10 @@ from EpisodicMemory import EpisodicMemory   # noqa: E402
 # LC.02 too, in the same commit that changes `w0.py`, because a certificate
 # whose scope grows retroactively invalidates every entry recorded under the
 # narrow one.
-IMPL_DEPS = ["playground.py", "experiments/w0.py", "experiments/drives.py"]
+# EpisodicMemory.py added 2026-09-06 (78th audit B2): the diary that must
+# survive death is this spec's central instrument and was an undeclared import.
+IMPL_DEPS = ["playground.py", "experiments/w0.py", "experiments/drives.py",
+             "EpisodicMemory.py"]
 
 # ── the pre-registered numbers, all of them, before the run ────────────────
 N_DECISIONS = 3000            # 600 simulated seconds per condition. A life at

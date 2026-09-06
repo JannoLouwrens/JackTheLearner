@@ -90,17 +90,14 @@ REPO = Path(__file__).resolve().parents[2]
 # (adding one here is the widening move UNREACHABLE_BASELINE's header
 # forbids for floors). DELETE an entry in the same commit that declares its
 # imports; P4 fails until you do.
+# 2026-09-06, 78th audit B2: ME.1/ME.3/ME.4/ME.5/ME.9/ME.10/T2.20/XL.00
+# declared their imports and their entries are deleted here, same commit —
+# the set follows the repairs down, 35 -> 27.
 GRANDFATHERED = {
     "D1.0": ("TrainingPipeline", "UnifiedBrain"),
     "LF.01": ("EpisodicMemory",),
-    "ME.1": ("EpisodicMemory",),
-    "ME.10": ("EpisodicMemory",),
     "ME.2": ("OwnerProfile",),
-    "ME.3": ("EpisodicMemory", "Reflections"),
-    "ME.4": ("EpisodicMemory", "Forgetting"),
-    "ME.5": ("EpisodicMemory",),
     "ME.8": ("WorkingMemory",),
-    "ME.9": ("EpisodicMemory",),
     "PG.7": ("ContactAudio",),
     "PG.8": ("TrainingPipeline",),
     "PL.00": ("UnifiedBrain", "playground"),
@@ -123,9 +120,7 @@ GRANDFATHERED = {
     "T2.00": ("TrainingPipeline",),
     "T2.10": ("EpisodicMemory",),
     "T2.12": ("EmotionalState",),
-    "T2.20": ("EpisodicMemory",),
     "T3.09": ("EpisodicMemory",),
-    "XL.00": ("EpisodicMemory",),
 }
 
 # ── fixtures: source bytes, never files on disk ─────────────────────────────

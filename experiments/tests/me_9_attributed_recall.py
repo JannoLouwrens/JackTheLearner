@@ -61,6 +61,24 @@ the pass bar. (LESSONS.md, 2026-08-30: "a null you can beat is not enough —
 check that a trivial reference does not annihilate the task first"; and
 2026-08-29: "a control scored on a gate that mentions the control is a
 control that cannot fail".)
+
+STRENGTHENED 2026-09-06 (78th audit B2 / Review FTB 3) — ME.11's distractor
+question, asked on THIS spec's harness: what does the store answer when the
+attribution question has no answer? A censored twin of the life is built with
+the identical RNG stream, except that for each askable speaker a seeded set of
+topics is withheld from their HEARD channel (the draws still happen, so every
+other event is byte-identical). The censored topics remain in the corpus —
+other speakers mention them, jack says and does them — so the cue's content
+word is KNOWN to the store; only the (speaker, topic, heard) combination is
+absent. `what_did_they_tell_me(speaker, topic_cue)` must return NOTHING for
+>= MIN_DISTRACTOR_ABST of the censored pairs: answering with that speaker's
+nearest other remark is confabulated attribution, the exact failure ME.11
+measured at 12.29% on this stack. Aliveness: a censored pair is excluded from
+the denominator if the speaker's retained heard events still carry the topic
+(impossible by construction, checked anyway) or if the topic word fell out of
+the retained corpus entirely (then the cue is ME.1's easy all-unknown case,
+not this control); both counts are recorded and the denominator has a floor.
+Nothing above moved.
 """
 from __future__ import annotations
 
@@ -72,6 +90,9 @@ from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 
 REPO = Path(__file__).resolve().parents[2]
+
+# The store under test. Undeclared until 2026-09-06 (78th audit B2).
+IMPL_DEPS = ["EpisodicMemory.py"]
 
 SPEAKERS = ["ada", "bruno", "chika"]
 TOPICS = ["ladder", "kettle", "pond", "compass", "orchard", "lantern",
@@ -89,13 +110,22 @@ MIN_ACC = 0.80
 MAX_TRIVIAL = 0.25
 MIN_SCORING_MARGIN = 0.50
 MIN_POOLED_MARGIN = 0.40
+# Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only). ME.1's own
+# abstention bar, applied to censored attribution questions on this harness.
+N_CENSOR_TOPICS = 5          # per askable speaker -> 15 censored pairs
+MIN_DISTRACTOR_EVAL = 9      # aliveness: below this the control has gone quiet
+MIN_DISTRACTOR_ABST = 0.95
 
 
-def _build(seed: int, mem_path, swap: bool = False):
+def _build(seed: int, mem_path, swap: bool = False, censor: dict | None = None):
+    """`censor` maps speaker -> topics whose HEARD events are withheld from the
+    store. Every draw still happens, so the retained events are byte-identical
+    (same text, same t) to the uncensored life — ME.1's held-out discipline."""
     sys.path.insert(0, str(REPO))
     import random
     from EpisodicMemory import EpisodicMemory
 
+    censor = censor or {}
     rng = random.Random(seed)
     mem = EpisodicMemory(path=mem_path)
     t0 = 2_000_000.0
@@ -105,10 +135,12 @@ def _build(seed: int, mem_path, swap: bool = False):
         for sp in SPEAKERS:
             topic, detail = rng.choice(TOPICS), rng.choice(DETAILS)
             heard_sp, said_sp = (("jack", sp) if swap else (sp, "jack"))
-            ev = mem.record("heard", heard_sp,
-                            f"{sp} mentioned the {topic} {detail}",
-                            t=t0 + i * 30.0); i += 1
-            truth["heard"].append((ev, sp, topic))
+            if topic not in censor.get(sp, ()):
+                ev = mem.record("heard", heard_sp,
+                                f"{sp} mentioned the {topic} {detail}",
+                                t=t0 + i * 30.0)
+                truth["heard"].append((ev, sp, topic))
+            i += 1
 
             topic2, detail2 = rng.choice(TOPICS), rng.choice(DETAILS)
             ev = mem.record("said", said_sp,
@@ -181,13 +213,58 @@ class _Triv:
         self.event = event
 
 
+def _distractor_abstention(seed: int) -> dict:
+    """ME.11's control on this harness: censor a seeded set of topics out of
+    each askable speaker's heard channel, then ask that speaker about exactly
+    those topics. The topic words stay in the corpus (other speakers mention
+    them; jack says and does them), so the floor sees KNOWN evidence the
+    filtered events lack — answering is confabulated attribution."""
+    import random
+    from EpisodicMemory import _tokens
+
+    tmp = Path(tempfile.mkdtemp())
+    rng = random.Random(seed + 13)
+    censor = {s: set(rng.sample(TOPICS, N_CENSOR_TOPICS)) for s in SPEAKERS}
+    mem, _, now = _build(seed, tmp / "censored.jsonl", censor=censor)
+
+    vocab: set = set()
+    heard_topics = {s: set() for s in SPEAKERS}
+    for e in mem.events:
+        tok = _tokens(e.text)
+        vocab |= tok
+        if e.channel == "heard" and e.speaker.lower() in heard_topics:
+            heard_topics[e.speaker.lower()] |= tok & set(TOPICS)
+
+    abstained = evaluated = excluded = 0
+    for s in SPEAKERS:
+        for topic in sorted(censor[s]):
+            # A retained heard event carrying the topic makes a hit correct
+            # retrieval (impossible by construction, checked anyway); a topic
+            # gone from the corpus is ME.1's easy all-unknown cue, not this
+            # control. Both leave the denominator, visibly.
+            if topic in heard_topics[s] or topic not in vocab:
+                excluded += 1
+                continue
+            evaluated += 1
+            abstained += not mem.what_did_they_tell_me(
+                s, f"the {topic}", top_k=1, now=now)
+    return {
+        "distractor_abstention": round(abstained / evaluated, 4) if evaluated
+                                 else 0.0,
+        "distractor_evaluated": evaluated,
+        "distractor_excluded": excluded,
+    }
+
+
 def _experiment(seed: int) -> dict:
     tmp = Path(tempfile.mkdtemp())
     mem, truth, now = _build(seed, tmp / "life.jsonl")
     acc = _ask(mem, truth, seed, now)
     pooled = _ask(mem, truth, seed, now, pooled=True)
     triv = _ask(mem, truth, seed, now, trivial=True)
+    dis = _distractor_abstention(seed)
     return {
+        **dis,
         "events": len(mem),
         "acc_heard": round(acc["heard"], 4),
         "acc_said": round(acc["said"], 4),
@@ -222,7 +299,12 @@ def _check(m: dict, c: dict) -> bool:
             # above is unchanged and these are additional conjuncts.
             and m["filtered_recency_worst"] <= MAX_TRIVIAL
             and m["scoring_margin"] >= MIN_SCORING_MARGIN
-            and true_mean - m["pooled_null_mean"] >= MIN_POOLED_MARGIN)
+            and true_mean - m["pooled_null_mean"] >= MIN_POOLED_MARGIN
+            # Added 2026-09-06 (78th audit B2 / Review FTB 3; strengthen-only):
+            # the censored-attribution abstention question, with an aliveness
+            # floor so a control that stops evaluating cannot pass by silence.
+            and m["distractor_evaluated"] >= MIN_DISTRACTOR_EVAL
+            and m["distractor_abstention"] >= MIN_DISTRACTOR_ABST)
 
 
 def run(ledger: Ledger | None = None):
