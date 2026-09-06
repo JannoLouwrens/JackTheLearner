@@ -534,6 +534,27 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
     alternative is an unrouted orphan — and it is exactly why `D23`'s default
     is a second printed number rather than a stricter gate. Recorded here so
     that when `FAIL-OWNED-BUT-UNDRAINED` first prints, this row is in it.
+    [UPDATE 2026-09-06 ~14:5x (builder, 78th audit B2): the adopted
+    coverage-over-known-words calibration has a THIRD measured scar, and this
+    time it is the shipped repair that carries it, not a rejected arm.
+    `ME.3` attempt 4 FAILed on its equal-tokens honesty gate: its raw-arm cue
+    is a bag of 4 mutually-exclusive candidates plus a speaker
+    (`" ".join([s] + cands)` — by design, so neither arm gets the answer
+    handed to it), every cue word is KNOWN to the store, and no event can
+    contain them all, so the floor abstains on EVERY question — raw_tokens
+    40.0 -> 0.0, raw_acc 0.625 -> 0.2917 vs base rate 0.25 (attempts 2-3 vs
+    4, same seeds). The reflect arm (`Reflections.recall`, no coverage floor)
+    was untouched at 1.0, so the "gain" inflated to 0.708 and the
+    equal-tokens gate refused to certify a starved null — the harness worked.
+    The repair choice this adds to the row's question: the probe measured the
+    verbose-recall scar and the terse-answer scar, but never a DISJUNCTIVE
+    cue (many known words, at most one per event). Any recalibration should
+    add ME.3's cue shape to the probe's arms before adoption. The four
+    distractor conjuncts landed by B2 all read 1.0 on the shipped floor
+    (ME.1 40±4.5, ME.3 39.3±2.9, ME.9 15/15, ME.10 36/36 evaluated), so the
+    abstention half of the trade is measured and healthy; the cost half now
+    has a named, committed FAIL row (ME.3 a4, commit 42ad5c9) instead of a
+    forecast.]
 
 ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
     DUE: 2026-09-13 | the single world-edit sitting that `W1.03` opens, which
