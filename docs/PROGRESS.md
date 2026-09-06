@@ -1,3 +1,11 @@
+> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
+> the Review has missed its schedule: newest row in docs/PROGRESS_LOG.md is 2026-09-04 (2d old; the schedule allows 1d)
+> So everything below is the PREVIOUS run of the review and is a RECORD,
+> not current state: its counts, its "current state" framing and any
+> claim about what has or has not moved describe an older world.
+> Stamped 2026-09-06T00:37:04+00:00 by scripts/lib_seal.sh. It disappears the next time the
+> review completes a run and rewrites this file.
+
 > **INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING.**
 > The review run that wrote this file exited rc=1 and did not
 > complete its own checklist (2026-09-05T06:52:20+00:00). Everything below was
