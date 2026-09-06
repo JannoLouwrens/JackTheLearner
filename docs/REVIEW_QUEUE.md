@@ -316,6 +316,21 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
         staleness bill, so they register first; `W1.01`/`W1.03`/`W1.04` wait on
         `w1-world-edit-window`. This is not a third hand-stagger of the design
         promise — that promise is discharged and its artifact is below.
+        REGISTRATION, FIRST HALF DONE 2026-09-06 ~09:3x (builder): `W1.00`
+        and `W1.02` registered from the design as published (registry
+        242→244, both RUNNABLE at registration — deps W0.DIAG/PS.01 both
+        PASS — so `unreachable` unmoved at its 95 floor; `coverage` prints
+        both as *fillable today*, the first fresh dispatches since SO.08).
+        The step-1 cross-check found NO refutation and four binding
+        constraints, all designed into the specs: the colored null imports
+        W0.DIAG's erf-AR(1) construction; W1.00 reads LC.03's recorded
+        artifacts and runs zero lives at its envelope; W1.02's synthetic
+        MIN_GAIN injection is a declared arithmetic transform at the outcome
+        level, never a Δe write (PURPOSE_AND_SCAFFOLDING §5/G-A would ERROR
+        a physics-level injection); censoring conventions imported from
+        NE.08 (cause tags, censoring rate, no uncensored-only means).
+        `W1.01`/`W1.03`/`W1.04` deliberately NOT registered — they stay on
+        `w1-world-edit-window` per the ordering above.
     Question: three independent instruments now measure W0 as too shallow to
     reward the capabilities the ladder certifies — LC.03's darkroom control
     (passivity prospers), LC.03 v2 (one learner in five), DP.05 (lookahead
