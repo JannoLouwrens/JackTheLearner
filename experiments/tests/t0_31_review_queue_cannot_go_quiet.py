@@ -72,6 +72,23 @@ execution owed), which ages and goes OVERDUE like OPEN, plus the rule that
 directions: the lazy relabel is flagged and does not lower the total; the
 honest one — ACTED with the commit — clears the row and trips nothing.
 
+P16 is the newest scar and it travels BACKWARDS (79th audit, 2026-09-06): the
+Sunday FULL dispositioned `w0-too-shallow` at ~07:1x on a two-pile reading of
+eleven findings, and the spec that same disposition ordered to test the reading
+— `W1.00` — recorded FAIL at 10:30, refuting Pile A on its own pre-registered
+branch. Three and a half hours from a published conclusion to its measured
+refutation, and nothing anywhere printed the pair: `fail_unowned` 0 (attempt 1
+is normal work), queue violations 0 (dispositioned rows are not overdue). Every
+instrument here points forward — arrival, drain, staleness, ownership — and a
+refutation is the one event that travels the other way. The repair is the
+lesson's own cheap version: a row may declare `ORDERED: <spec ids>`; when one
+of those specs records a verdict, the pair is PRINTED — a reading, never a
+violation, because whether the result agrees with the disposition is a
+judgement no tool may make, while whether anyone can SEE the pair is exactly a
+tool's job. Scoped to LIVE rows (a terminal row's commission is closed with
+it), malformed when it names nothing, and invisible by construction to the
+row-counting control.
+
 This is the fourth instrument in this repo to be checked for the one-class
 ratchet disease, and the first to be built with it already in mind: `coverage.py`
 (closed by T0.21 P2), `decisions.py`'s `NO-DEFAULT` (T0.28 P9) and
@@ -127,7 +144,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 15
+N_PROPERTIES = 16
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -627,6 +644,50 @@ def _probe(blind: bool) -> dict:
             or not metric_ok or not no_base_ok):
         failed.append("p15_the_desk_is_measured_disposing_not_only_breaking")
 
+    # P16 — AN ORDERED SPEC'S RETURN IS PRINTED (79th audit: `w0-too-shallow`'s
+    # disposition was refuted by the `W1.00` FAIL it had itself ordered, 3.5 h
+    # later, and no instrument printed the pair). Six conjuncts: (i) a row's
+    # `ORDERED:` declaration parses, and a second ORDERED line EXTENDS the
+    # first — a commission is a list, not a slot; (ii) an ordered id with a
+    # ledger verdict prints the pair — row, spec, verdict, date; (iii) an
+    # ordered id with NO ledger row prints NO ROW YET — "has it come back?"
+    # must be answerable in the negative, or the guard reproduces the opt-in
+    # blindness (78th audit) one layer up; (iv) a TERMINAL row's commission is
+    # closed with it — only LIVE rows are watched; (v) a METRIC, never a
+    # violation: supplying the ledger moves no total and no class, and the one
+    # red thing here is `ORDERED:` naming nothing, which is MALFORMED like any
+    # empty declaration; (vi) the blind reader fails by construction — a row
+    # count contains no pairs.
+    odoc = _doc([
+        ("od-live", "2026-08-30",
+         "DISPOSITIONED 2026-08-31 (design; measurements commissioned)",
+         ["ORDERED: `W9.98` W9.97", "ORDERED: W9.96"]),
+        ("od-acted", "2026-01-01", "ACTED 2026-01-02 (deadbeef)",
+         ["ORDERED: W9.95"]),
+        ("od-empty", "2026-08-30", "OPEN", ["ORDERED:"]),
+    ])
+    fake_ledger = {"W9.98": {"status": "FAIL", "ran_at": "2026-08-31T10:30:00"},
+                   "W9.95": {"status": "PASS", "ran_at": "2026-02-01T00:00:00"}}
+    oa = audit(odoc, None, TODAY, ledger=fake_ledger)
+    oa_dry = audit(odoc, None, TODAY)
+    orets = {(e["row"], e["spec"]): e for e in oa.get("ordered_returns", [])}
+    otext = render(oa)
+    ordered_ok = (
+        ("od-live", "W9.98") in orets
+        and orets[("od-live", "W9.98")]["verdict"] == "FAIL"
+        and orets[("od-live", "W9.98")]["ran_at"] == "2026-08-31"
+        and ("od-live", "W9.97") in orets
+        and orets[("od-live", "W9.97")]["verdict"] == ""
+        and ("od-live", "W9.96") in orets
+        and not any(e["row"] == "od-acted" for e in oa.get("ordered_returns", []))
+        and "W9.98 -> FAIL 2026-08-31" in otext
+        and "NO ROW YET" in otext
+        and oa["total"] == oa_dry["total"] == 1
+        and oa["counts"] == oa_dry["counts"]
+        and oa["counts"]["MALFORMED"] == 1)
+    if blind or not ordered_ok:
+        failed.append("p16_an_ordered_specs_return_is_printed")
+
     # The live desk's own numbers, recorded in the ledger row so the reading
     # that motivated P15 is dated and attributable rather than quoted from an
     # audit page. `-1` is the honest value for "no git baseline in this
@@ -662,7 +723,7 @@ def _control(seed: int) -> dict:
     and on the one sabotage it CAN see it reports the wrong sign: delete the
     rotting row and the number falls, so the backlog looks healthier.
 
-    Measured: it fails 12 of 15, and the 3 it passes are worth naming so nobody
+    Measured: it fails 13 of 16, and the 3 it passes are worth naming so nobody
     reads this as a straw man. P1 is a statement about the live DOCUMENT rather
     than about the reader, and is not asked of it. P4 and P6 it passes
     VACUOUSLY — relabelling a row `HELD` and deleting its `DUE:` both leave the
@@ -682,6 +743,10 @@ def _control(seed: int) -> dict:
     notion of a row's STATUS, so it cannot tell an arrival from a disposal, and
     the one signal it does carry moves the wrong way again — a desk that closes
     a row and a desk that deletes it are the same falling number to it.
+
+    P16 it fails by construction: a row count contains no commissioned spec ids
+    and no verdicts, so the pair a refutation travels back along is invisible
+    to it — which is the 79th audit's finding, executable.
     """
     return _probe(blind=True)
 
@@ -703,7 +768,8 @@ def _check(m: dict, c: dict) -> Status | bool:
                            "p11_every_class_is_reachable_and_reported",
                            "p12_a_disposition_is_not_an_execution",
                            "p14_a_promise_dated_onto_a_full_day_is_named",
-                           "p15_the_desk_is_measured_disposing_not_only_breaking"
+                           "p15_the_desk_is_measured_disposing_not_only_breaking",
+                           "p16_an_ordered_specs_return_is_printed"
                            } <= control_names)
     return bool(experiment_clean and control_broken)
 

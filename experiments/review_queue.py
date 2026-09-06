@@ -59,6 +59,22 @@ its status text (>=7 hex chars containing a letter, so a bare date-stamp
 cannot pass as one); an `ACTED` naming no commit is the two-meaning token
 reborn and is its own violation, `ACTED-WITHOUT-A-COMMIT`.
 
+AN ORDERED SPEC'S RETURN IS PRINTED (79th audit, 2026-09-06). A disposition is
+a claim about the world, and when it commissions a measurement the result can
+refute the claim that ordered it — and on 09-06 one did: the Sunday FULL
+dispositioned `w0-too-shallow` on the two-pile reading at ~07:1x, and `W1.00`,
+the spec that disposition itself ordered to test Pile A, recorded FAIL at
+10:30 on its pre-registered branch. Three and a half hours from conclusion to
+refutation and nothing printed the pair, because every instrument here points
+FORWARD — arrival, drain, staleness, ownership — and a refutation travels
+backwards. So a row may declare `ORDERED: <spec ids>`; for every LIVE row the
+report joins those ids against the ledger and prints what came back — verdict
+and date, or NO ROW YET, so "has it come back?" is answerable in the negative
+too. A READING, never a violation: whether the result agrees with the
+disposition is a judgement no tool may make; whether anyone can SEE the pair
+is exactly a tool's job. Terminal rows are exempt (their commission closed
+with them); `ORDERED:` naming nothing is MALFORMED like any empty declaration.
+
 THE PRE-DECLARATION RESIDUE IS COUNTED, NEVER PARSED (60th audit, 2026-09-02).
 Replacing the prose convention with a declaration syntax made the un-migrated
 rows INVISIBLE rather than untidy: six sections written in the pre-declaration
@@ -170,6 +186,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import json
 import re
 import subprocess
 import sys
@@ -177,6 +194,8 @@ from pathlib import Path
 
 DOC_PATH = Path(__file__).resolve().parent.parent / "docs" / "REVIEW_QUEUE.md"
 LOG_PATH = Path(__file__).resolve().parent.parent / "docs" / "PROGRESS_LOG.md"
+#: The only scoreboard. Read for the ORDERED join only — never written here.
+LEDGER_PATH = Path(__file__).resolve().parent / "ledger.json"
 
 #: An OPEN row survives at most one full consumer cycle before it is rotting.
 #: DERIVED, not chosen: the Review runs DAILY with exactly one FULL run per week
@@ -241,7 +260,7 @@ _ROUTED = re.compile(r"^ROUTED:\s*(.*)$")
 #: this file legitimately holds prose that is not a row.
 _CANDIDATE = re.compile(r"^##\s*(?:ROUTED\b|`)")
 _HEADING = re.compile(r"^#{1,6}\s")
-_DECL = re.compile(r"^(DUE|BLOCKED-BY):\s*(.*)$")
+_DECL = re.compile(r"^(DUE|BLOCKED-BY|ORDERED):\s*(.*)$")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _LOG_ROW = re.compile(r"^\|\s*(\d{4}-\d{2}-\d{2})\s*\|")
 #: An executing commit: >=7 hex chars WITH at least one letter. The letter is
@@ -276,7 +295,8 @@ def parse(doc: str) -> list[dict]:
             cur = {"fields": len(fields), "raw": raw, "bad": [],
                    "id": fields[0] if fields else "",
                    "routed": None, "source": "", "status": "", "status_text": "",
-                   "due": None, "due_text": "", "blocked_by": "", "blocked_text": ""}
+                   "due": None, "due_text": "", "blocked_by": "", "blocked_text": "",
+                   "ordered": []}
             if len(fields) != 4:
                 cur["bad"].append(f"{len(fields)} pipe-separated fields, expected 4")
             else:
@@ -313,6 +333,16 @@ def parse(doc: str) -> list[dict]:
                 # in the finding reads as two different facts
                 cur["due"] = got
                 cur["due_text"] = rest.split("|", 1)[1].strip() if "|" in rest else ""
+        elif key == "ORDERED":
+            # A commission is a LIST, not a slot: a second ORDERED line
+            # extends the first. Ids are read verbatim (backticks shed) —
+            # this parser knows nothing of the registry, and an id that
+            # never comes back prints NO ROW YET forever, which is a
+            # reading, not an error.
+            ids = [t.strip("`") for t in head.replace(",", " ").split() if t.strip("`")]
+            if not ids:
+                cur["bad"].append("ORDERED: names no spec ids")
+            cur["ordered"].extend(ids)
         else:
             if not head:
                 cur["bad"].append("BLOCKED-BY: names no row")
@@ -393,7 +423,7 @@ def throughput(doc: str, base_doc: str | None,
 
 
 def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
-          base_doc: str | None = None) -> dict:
+          base_doc: str | None = None, ledger: dict | None = None) -> dict:
     """Every violation in `doc`, with `prev_doc` (the previous committed
     revision) as the only baseline. Pure: no clock, no git, no filesystem —
     `main()` supplies all three, so the properties can hold the world still.
@@ -402,6 +432,10 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
     opened — is a SECOND, older baseline and is optional. Absent, the
     throughput reading is `None`: no violation moves either way, because a
     missing baseline must no more exonerate this desk than it may accuse it.
+
+    `ledger` — the ledger's `results` dict (spec id -> row), supplied by
+    `live_audit()`, for the ORDERED join only. A METRIC input: supplying or
+    withholding it moves no violation either way.
     """
     today = today or _dt.date.today()
     rows = parse(doc)
@@ -524,8 +558,24 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
             break
         d += _dt.timedelta(days=1)
 
+    # THE ORDERED JOIN (79th audit): every LIVE row's commissioned spec ids,
+    # each against the ledger's verdict for it — or against its absence, which
+    # is the half the 78th audit's opt-in lesson says must also be visible.
+    # A terminal row's commission closed with it. A reading, never a finding.
+    ordered_returns: list[dict] = []
+    for r in rows:
+        if r["status"] not in LIVE or not r["ordered"]:
+            continue
+        for sid in r["ordered"]:
+            lrow = (ledger or {}).get(sid) or {}
+            ordered_returns.append({
+                "row": r["id"], "row_status": r["status"], "spec": sid,
+                "verdict": str(lrow.get("status", "") or ""),
+                "ran_at": str(lrow.get("ran_at", "") or "")[:10]})
+
     return {"rows": rows, "findings": findings, "counts": counts,
             "due_pile": due_pile, "piled_on": piled_on,
+            "ordered_returns": ordered_returns,
             "next_free_due": next_free_due,
             "throughput": throughput(doc, base_doc),
             "total": len(findings), "today": today,
@@ -610,6 +660,21 @@ def render(a: dict, last_run: str = "") -> str:
         elif r["blocked_by"]:
             clock = f"  BLOCKED-BY {r['blocked_by']}"
         out.append(f"    {r['status']:<13} {age}  {r['id']}{clock}")
+    if a.get("ordered_returns"):
+        out.append("")
+        out.append("  ORDERED MEASUREMENTS — what live rows commissioned, and what "
+                   "came back (79th")
+        out.append("  audit: a disposition's own ordered spec refuted it in 3.5 h "
+                   "and nothing")
+        out.append("  printed the pair). A READING, never a violation: whether the "
+                   "result agrees")
+        out.append("  with the disposition is no tool's judgement; whether anyone "
+                   "can see the pair is:")
+        for e in a["ordered_returns"]:
+            came = (f"{e['verdict']} {e['ran_at']}" if e["verdict"]
+                    else "NO ROW YET")
+            out.append(f"    {e['row']} ({e['row_status']})  ordered "
+                       f"{e['spec']} -> {came}")
     if a["due_pile"]:
         out.append("")
         out.append("  DUE-DATE PILE — live rows per promised date (65th audit "
@@ -727,7 +792,13 @@ def live_audit(doc_path: Path | None = None, today: _dt.date | None = None) -> d
     p = doc_path or DOC_PATH
     today = today or _dt.date.today()
     base = _revision_before(p, today - _dt.timedelta(days=THROUGHPUT_WINDOW_DAYS))
-    return audit(p.read_text(), _prev_revision(p), today, base_doc=base)
+    # A missing ledger is an empty scoreboard (a fresh checkout, honestly NO
+    # ROW YET everywhere); a CORRUPT one raises, because converting "the
+    # instrument is broken" into "no row yet" is the opt-in blindness again.
+    ledger = (json.loads(LEDGER_PATH.read_text()).get("results", {})
+              if LEDGER_PATH.exists() else {})
+    return audit(p.read_text(), _prev_revision(p), today, base_doc=base,
+                 ledger=ledger)
 
 
 def check(doc_path: Path | None = None) -> int:

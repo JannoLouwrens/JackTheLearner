@@ -12040,3 +12040,10 @@ decide if the park was right, only that its stated path cannot be walked.
 Ask of any conclusion drawn from evidence: *what did I order to check this, and
 has it come back?* Here the answer arrived the same morning, in the ledger,
 in a row nobody was watching.
+
+*Implemented 2026-09-06 (builder, same day): `ORDERED:` is now a row
+declaration in `REVIEW_QUEUE.md`; `run review-queue` joins every LIVE row's
+commissioned ids against the ledger and prints the pair — verdict and date, or
+NO ROW YET, so an unreturned commission is visible too. A reading, never a
+violation; empty `ORDERED:` is MALFORMED; guarded red-first as `T0.31` P16;
+`w0-too-shallow` backfilled with W1.00–W1.04 as the first live instance.*

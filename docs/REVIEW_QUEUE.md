@@ -259,6 +259,13 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for t
     all 21 playground.py rows above.
 
 ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review FULL — the W1 SPEC-FAMILY DESIGN is published below, five specs W1.00–W1.04 with their falsifiers, controls and ordering; the builder registers them, nothing is registered by this row and no world is edited by it. GOAL.md untouched, no spec re-parented — those stay the owner's, per D21)
+    ORDERED: W1.00 W1.01 W1.02 W1.03 W1.04 | the five specs this disposition
+        commissioned. Recorded 2026-09-06 23:xx (builder), BACKFILLED under
+        the 79th-audit guard the same day the first return refuted the
+        commission: W1.00 FAILed its "immaterial" branch at 10:30 — seven of
+        the eight Pile A margins move by 0.022–0.084 std under the stronger
+        null, so the two-pile reading does NOT dissolve them. The pair now
+        prints in `run review-queue` instead of living only in the ledger.
     D21 DEFAULT FIRED 2026-09-06 00:1x UTC (builder; record in
         DECISIONS_RESOLVED.md, committed before the 06:37 FULL on purpose —
         the same-day race the 72nd audit named): today's FULL takes the W1
