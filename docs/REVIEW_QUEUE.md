@@ -340,6 +340,55 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
     names — before any dual-process claim; BO.01 does not run. COUPLED to
     D10 branch (b) in DECISIONS_NEEDED.md (owner) — the Review designs, the
     owner sequences.
+    UPDATE 2026-09-06 ~19:2x (builder, 79th audit item 1): THE PILE A HALF OF
+        THIS DISPOSITION IS FALSIFIED BY ITS OWN ORDERED INSTRUMENT. `W1.00`
+        — registered from this row's design at ~09:3x, run at 10:30:12 —
+        recorded FAIL on its pre-registered immaterial branch: the honest
+        null exists but rescues nothing. Full arithmetic and consequence on
+        `w100-honest-null-does-not-rescue-pile-a` immediately below (DUE
+        2026-09-15). Pile B — the world is genuinely shallow — is where the
+        evidence now points. The disposition's W1 design and registrations
+        stand; it is the Pile A *diagnosis* ("the repair is in our
+        instruments") that did not survive four hours.
+
+ROUTED: w100-honest-null-does-not-rescue-pile-a | 2026-09-06 | 79th-audit-item-1 (builder; finding §3.1) | OPEN
+    DUE: 2026-09-15 | first future date carrying no promise yet per
+        `review-queue`'s own `next_free_due` (09-13 already carries 10 rows
+        against a measured capacity of 1/cycle). Owed by the Review: carry
+        `W1.00`'s result back into the `w0-too-shallow` disposition it
+        contradicts, and say what the W1 ordering means now that Pile A does
+        not dissolve.
+    EVIDENCE, from the committed attempt-1 FAIL row (ran 2026-09-06T10:30:12,
+    commit 902ee21, 3 seeds, branch "immaterial: repeat outscores white but
+    no recorded margin moves by more than its own std"):
+    - A stronger null DOES exist: `gain_repeat` 3.13 (±3.97) vs `gain_white`
+      −0.019 (±0.69). The first conjunct held; the Pile A prediction was that
+      re-scoring under it would dissolve the shallowness findings.
+    - It dissolves nothing. Shift-over-own-std across the eight recorded
+      Pile A margins: wk5_coverage 0.022, ppo_needs 0.029, ppo_lp 0.036,
+      darkroom 0.037, dreamer_xs 0.038, wm_efe 0.038, wm_latent 0.084 —
+      seven of eight, none within a factor of ten of the 1.0 gate.
+    - The eighth is "CANNOT TELL", never "did not move": `dwell` (T3.06)
+      reads shift_ratio 16.2 but `fired_dwell` 0.0 because the spec's own
+      guard excludes it — the dw channel's noise floor `f_dw` 0.0082 exceeds
+      that margin's own std 0.0062, so the shift is unreadable. Guard
+      verified in source (`w1_00_null_is_strongest_nonlearner.py:452-456`)
+      by the 79th audit, not trusted from the branch string.
+    CONSEQUENCE: the Pile A / Pile B split published in the 09-06 disposition
+    above is falsified for Pile A on its own pre-registered test. Seven
+    shallowness findings stand under the honest null; the world question tips
+    toward Pile B — W0 is genuinely shallow. `W1.01` (passivity dies), the
+    spec that would settle W0's headroom directly, remains UNREGISTERED
+    behind `w1-world-edit-window` (DUE 09-13); this row is evidence INPUT to
+    that sequencing, not a request to jump it.
+    NOT A SPEC REPAIR: `W1.00` fired a pre-registered branch and that is a
+    result — do not re-run it for a different branch. It is attempt 1 and
+    unsettled, so `fail_unowned` will never surface it; this row is the
+    owner it would otherwise never get. The separate methodological finding
+    from the same run (`selection_divergence` 1.0 — historical null-picking
+    by the claim arm's margin selects a different process than picking by
+    the null's own outcome, all three channels) is 79th-audit item 2, a
+    scoping question over past certificates, deliberately NOT bundled here.
 
 # ============================================================================
 # THE W1 DESIGN (Review FULL, 2026-09-06). Five specs, ordered. Design only.
@@ -782,6 +831,12 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
         400k decisions/arm-seed and ~190 core-hours at the 4x envelope,
         every control on its pre-registered side; "The repair is a REDESIGN
         of the screen or of W0, on the owner's desk since 2026-08-24."
+        [POINTER STALE, corrected 2026-09-06 (79th audit §3.3b): D10 fired
+        its armed default 2026-09-01 and that desk is closed. Live homes:
+        D24 (screen/seat, decide_by 09-11) and the W1 family (W0). The
+        quoted sentence is kept as the historical declaration; the source
+        docstring in lc_03_survival_screening.py now carries the same
+        correction, which is what `coverage` prints.]
     Shape of the convergence, for the design: (1) says the OUTCOME VARIABLE
     has no resolution; (2), (4) and (6) say the NULL already holds the
     ceiling the claim was placed under; (3) says the SENSORY contract cannot
@@ -2388,6 +2443,19 @@ it):**
     repairs the reading rather than the thing read.
 Recommendation attached to the Sunday page: (a), with (b) held as the fallback
 if LC.07's redesign is not decidable on 09-06.
+
+    UPDATE 2026-09-06 ~19:2x (builder, 79th audit item 3 / finding §3.4):
+        CORRECTION FOR THE NEXT FULL, placed here because the page it
+        corrects is the Review's to rewrite. `PROGRESS.md`'s completeness
+        audit states the four GEN ids "are on `coverage`'s
+        `GOAL_UNRUNNABLE_BASELINE`". They are NOT: `coverage.py:263` holds
+        exactly `{DP.02, DP.03, LC.04}`. The four GEN ids are the LIVE
+        `new_unrunnable_citation` red (rc=2), exactly as this row's own text
+        predicted when `lc07-checkpoint-branch` was dispositioned on the
+        morning of 09-06. A reader trusting `PROGRESS.md` would believe an
+        accounted red where there is a live one. The repair is `PROGRESS.md`'s
+        sentence (or the revival per options a/b above) — NEVER an addition
+        to the baseline, which is shrink-only by construction.
 
 ROUTED: t309-control-clears-the-claims-own-margin | 2026-09-02 | 06f6a01 | OPEN
     DUE: 2026-09-08 | an instrument/venue disposition owed by the Review — dated

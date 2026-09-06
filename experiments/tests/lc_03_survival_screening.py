@@ -271,8 +271,17 @@ VOID-FORECLOSED: the v2 re-screen's own pre-registered fork (ii) fired —
     pre-registered side, so the CLAIM loop fired and the rig measured. The
     fork priced growth explicitly ("the requirement scales with added lives
     just as the projected gain does"), so a v3 is the ratchet the fork exists
-    to prevent. The repair is a REDESIGN of the screen or of W0, on the
-    owner's desk since 2026-08-24 (`docs/DECISIONS_NEEDED.md`, D10).
+    to prevent. The repair is a REDESIGN of the screen or of W0. It is NOT
+    on the owner's desk any more: D10 RESOLVED BY ARMED DEFAULT 2026-09-01
+    (wm-latent seated BY VERDICT off this VOID, single-arm caveat on its
+    face; no v3 — `docs/DECISIONS_RESOLVED.md`). The live homes are D24
+    (owner, decide_by 2026-09-11 — whether the seat's LC.07 scale-transfer
+    arena is bought, shrunk or declared unaffordable) for the screen, and
+    the W1 family (`w0-too-shallow` disposition 2026-09-06 +
+    `w1-world-edit-window`, `docs/REVIEW_QUEUE.md`) for W0.
+    (Pointer corrected 2026-09-06, 79th audit §3.3b — for five days this
+    line told every `coverage` reader the repair waited on a desk that had
+    closed on it.)
 
 FORECLOSURE ARITHMETIC: no envelope multiplier converges — the fork priced
     exactly this before the run: the 3-sigma requirement scales with added
