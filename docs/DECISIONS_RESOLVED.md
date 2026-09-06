@@ -554,3 +554,77 @@ Evidence: `docs/OVERSIGHT.md` 69th audit B3; `experiments/run.py`
 `cmd_blocked`/`_check_ranker`/`_check_repair_edges`; `docs/LOOP_JOURNAL.md`
 2026-09-04 08:xx; `experiments/decisions.py` `VANISHED-OWNER-ASK`, whose live
 reading this entry moves 1 → 0.
+
+## D21 — RESOLVED BY ARMED DEFAULT (fired 2026-09-06 00:1x UTC, builder, deliberately BEFORE the 06:37 FULL it commands — DEFAULT-ACTION-SAME-DAY, the race the 72nd audit named): today's FULL Review takes the W1 design as its FIRST DESIGN item, ahead of Part 2, behind the two d10-* gate rows; a W1 spec-family design is published as a routed disposition. GOAL.md IS NOT TOUCHED.
+
+**The question** (2026-09-04, overseer, lifting the Review's 2026-09-03
+recommendation off a page that is rewritten every morning): the Review
+recommended that W1 stop being a queue row and become the project's stated
+stage — a constitutional staging change — and wrote it in `docs/PROGRESS.md`,
+where the next Review's rewrite would have erased it. Should the staging text
+in GOAL.md change (options ii/iii), or something narrower?
+
+**The default that fired — NEITHER (ii) NOR (iii).** A default may not edit
+the constitution. What fires is the narrowest already-permitted action that
+stops the recommendation from ageing in a file nobody reads: the 2026-09-06
+FULL Review takes the W1 design as the FIRST DESIGN item on its docket and
+ahead of Part 2 — but NOT ahead of the two `d10-*` gate rows, which keep the
+head of the docket (narrowed by the 71st audit's amendment: the struck clause
+never priced the ~16 h `D1.0` dispatch those rows release into W36's 30 free
+hours) — and publishes a W1 spec-family design as a routed disposition. The
+Review already owns the ordering of its own docket and `w0-too-shallow` is
+already dated 09-06, so this re-orders a scheduled item and creates no new
+permission. Explicitly NOT fired: any edit to GOAL.md, any change to the
+ladder's stated stage, any re-parenting of registered specs — all three remain
+the owner's alone (option ii/iii territory).
+
+**Execution:** the ordering is stamped on the `w0-too-shallow` row in
+`docs/REVIEW_QUEUE.md` (the docket the FULL reads), committed and pushed
+before 06:37. The 09-02 stagger's published order already had the two `d10-*`
+rows at the head and the design bundle before Part 2 — the firing makes that
+ordering the DEFAULT'S act rather than a stagger the next router may undo.
+
+**Invariants checked at firing:** no GOAL.md edit, no threshold moved, no
+control loosened, no new permission created. The four CLAIM-DEAD commitments
+(smell, balance, shelter/building, thermal) stay visibly red rather than
+being resolved by fiat — resolving them is what the design this firing
+sequences is FOR.
+
+**To reverse:** the Review re-orders its own docket back; nothing else is
+written that would need unwinding.
+
+Evidence: `docs/DECISIONS_NEEDED.md` D21 entry + 71st-audit amendment;
+`docs/REVIEW_QUEUE.md` 09-02 stagger + the firing stamp this entry names;
+`experiments/decisions.py` DEFAULT-ACTION-SAME-DAY note (the one un-armed
+entry, for exactly this reason); `docs/OVERSIGHT.md` 72nd audit finding 2.
+
+## D16 — RESOLVED BY ARMED DEFAULT (fired 2026-09-06 00:1x UTC, builder): option (b) ALONE — the warning stands, T0.27 stays RED and is not touched, and the red is reported in every status until the pair ages out of history. A deliberate no-op, chosen because it costs a visible failure rather than manufacturing a green.
+
+**The question** (46th overseer audit, 2026-08-29): the documented
+audit-supersedes-FAIL loop manufactures threshold-move pairs that
+`T0.27` must refuse forever (live: `live_checked_pairs` 4,
+`live_unauditable_pairs` 26, `seeded_violations` 2). Should the guard be
+relaxed (c), the row amended, or the red simply stand?
+
+**The default that fired — (b) ALONE.** `T0.27` is NOT touched, not re-run,
+not amended. The red row stands in every `run status` until the pair ages out
+of history. This default deliberately picks the option that costs the ladder a
+visible failure rather than the one that makes it green, because the party
+proposing (c) was the party it would exonerate. It weakens nothing and widens
+nothing. Nothing blocks on it: `T0.27` has no dependents; the cost is one
+honest red row.
+
+**Execution:** nothing. That is the option. This entry is the record that the
+no-op was chosen by an armed default rather than by neglect, so the standing
+red is a decision with a name on it and not an orphan.
+
+**Losers recorded:** (c) relax the guard — the ratchet being defeated by the
+party it caught; amending the row or re-running `T0.17` until the history
+scrolls — each available, each the same defeat wearing procedure.
+
+**To reverse:** the owner may take (c) by hand at any time; one entry here
+records it and the guard's docstring says how.
+
+Evidence: `docs/DECISIONS_NEEDED.md` D16 entry + 60th/62nd audit evidence
+updates; `experiments/tests/t0_27_moved_threshold_leaves_artifact.py`;
+commit `be60c3d`.

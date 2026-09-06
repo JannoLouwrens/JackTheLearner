@@ -252,6 +252,15 @@ ROUTED: water-apply-phantom-force | 2026-08-24 | a210b34 | HELD 2026-08-25 for t
     all 21 playground.py rows above.
 
 ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | OPEN — design owed by the Review 2026-09-06 (RE-ARMED 2026-08-31, reason below); one cheap falsifier sequenced first, 2026-08-25
+    D21 DEFAULT FIRED 2026-09-06 00:1x UTC (builder; record in
+        DECISIONS_RESOLVED.md, committed before the 06:37 FULL on purpose —
+        the same-day race the 72nd audit named): today's FULL takes the W1
+        design as its FIRST DESIGN item, ahead of Part 2, BEHIND the two
+        d10-* gate rows, which keep the head of the docket, and publishes a
+        W1 spec-family design as a routed disposition. GOAL.md is not
+        touched and no spec is re-parented — those stay the owner's. This
+        is the armed default re-ordering an already-dated item, NOT a third
+        hand-stagger; the 09-02 bundle's dates all stand.
     DUE: 2026-09-06 | the W0/W1 design, owed by the Review's Sunday FULL run.
         RE-ARMED 2026-08-31 (DAILY) from 2026-08-30, in the open, with two
         reasons and one of them is my own fault:

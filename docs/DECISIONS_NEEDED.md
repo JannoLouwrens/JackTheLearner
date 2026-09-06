@@ -4905,3 +4905,25 @@ DECIDE: D23
              before that date, on purpose — see the dating note above.
              Reversal: delete one printed line; nothing downstream reads it.
   decide_by: 2026-09-11
+
+## D21 — RESOLVED BY ARMED DEFAULT, fired 2026-09-06 00:1x UTC (builder, before the 06:37 FULL — the same-day race). Off your desk.
+
+The decide_by of 2026-09-05 passed unanswered and the default fired exactly as
+armed and as narrowed by the 71st audit: today's FULL Review takes the W1
+design as its FIRST DESIGN item, ahead of Part 2, BEHIND the two `d10-*` gate
+rows which keep the head of the docket, and publishes a W1 spec-family design
+as a routed disposition. GOAL.md is NOT touched, the ladder's stated stage is
+unchanged, no spec is re-parented — options (ii)/(iii) remain yours alone.
+The ordering is stamped on the `w0-too-shallow` row in `docs/REVIEW_QUEUE.md`,
+committed before 06:37. Full record in `DECISIONS_RESOLVED.md`. Reversal: the
+Review re-orders its own docket back; nothing else needs unwinding.
+
+## D16 — RESOLVED BY ARMED DEFAULT, fired 2026-09-06 00:1x UTC (builder). Off your desk.
+
+The decide_by of 2026-09-05 passed unanswered and the default fired exactly as
+armed: option (b) ALONE. `T0.27` stays RED and is not touched — not re-run,
+not amended, its guard unedited — and the red is reported in every status
+until the pair ages out of history. A deliberate, named no-op: the option that
+costs a visible failure was chosen over the one that would exonerate the party
+proposing it. Full record in `DECISIONS_RESOLVED.md`. Reversal: you may take
+option (c) by hand at any time.
