@@ -12154,3 +12154,50 @@ DRAFTED-NOT-REGISTERED.**
 - Bookkeeping: ledger 105/242 (nothing settled — a verified empty-board stop
   is the correct slot per PROGRESS FTB 2). Touched: docs/LOOP_JOURNAL.md
   only.
+
+## 2026-09-06 00:07 UTC slot — the three armed defaults FIRED in the verified order (D21 race won at 00:15, six hours before the 06:37 FULL), T0.33 re-bought; the staged midnight handoff executed exactly as written
+
+- Ran on **Fable**. Meters at slot top: `week:all models` **17%** (the gate,
+  acted on), `week:Fable` 29%, session 6%. Zero `PACING:` lines in the tail.
+- **D21 FIRED first (commit `0e60ac1`, pushed 00:15 — the same-day race the
+  72nd audit named, won with six hours to spare):** today's FULL takes the W1
+  design as its FIRST DESIGN item, ahead of Part 2, BEHIND the two `d10-*`
+  gate rows which keep the head of the docket. Stamped on the
+  `w0-too-shallow` row in REVIEW_QUEUE.md where the FULL reads its orders.
+  GOAL.md untouched, nothing re-parented — options (ii)/(iii) stay the
+  owner's. The owner did not rule by 2026-09-05, so the pre-registered
+  default fired; reversal: the Review re-orders its own docket back.
+- **D16 FIRED (same commit): option (b) ALONE, a named no-op.** T0.27 stays
+  RED, guard unedited, the visible failure kept over the exonerating green.
+  The standing red is now a decision with a name on it, not an orphan.
+- **D15 FIRED (commit `7ec983e`): (c) AND (d) together.** `overseer.sh` paces
+  all but the first COMPLETED audit of each UTC day — the exemption stamp is
+  written only at the completion point beside D13's NOOP_STATE, so a dead
+  first audit does not consume it (fails toward MORE oversight); 90% gate
+  untouched; review/field-watch untouched per the armed text. All four organ
+  scripts now append `{organ,ts,pct,model_pct,phase}` to
+  `/data/jack-logs/usage_ledger.jsonl` at start and end (`usage_ledger()` in
+  lib_usage.sh, one CLI read per append, null on unreadable, never blocks) —
+  the next meter dispute reads ATTRIBUTION instead of the co-occurrence
+  inference that produced three falsified price models. Self-test line
+  written and JSON-validated (pct 17, model_pct 31). At 17% vs a ~80% pace
+  line, today's overseer slots are unaffected; the 00:37 run is the exempt
+  first-of-day and will exercise the stamp path.
+- **T0.33 re-bought PASS 1.24s (`428d9b9`)** — the D15 edit to ladder_loop.sh
+  staled it via IMPL_DEPS, exactly as the 74th audit priced. Its print is the
+  fresh day's receipt: 0 cpu-foreclosed, `cpu<2h` slack 3600.0s.
+- **decisions --check after: zero OVERDUE, zero un-armed, ratchet ok**
+  (0/10, 0/3, 0/0, 0/0). The board is otherwise as the four re-derivations
+  left it — SO.08 already PASS (19:11 yesterday), nothing new dispatchable,
+  stale block still only the four deliberate holds + T2.02.
+- **Liveness:** no project processes (pgrep hits are system daemons),
+  lost_iterations.log 0 bytes, load 0.29, tree clean, 0 unpushed. Nothing
+  detached, `declared_pids` empty.
+- **HANDOFF:** the 06:37 FULL owes the two `d10-*` gate rows first (they
+  release D1.0's ~16h successor into W36's fresh 30h), then the W1 design as
+  first design item (D21's fired ordering), then Part 2. Nothing GPU is
+  dispatchable until those rows land — do not manufacture one. Next builder
+  slots: watch the 00:37 overseer exercises the D15 stamp path cleanly, and
+  expect `usage_ledger.jsonl` pairs to start accumulating; if a start line
+  appears with no end and no KILLED marker, that is the new instrument
+  catching a dying organ — report it, don't patch it.
