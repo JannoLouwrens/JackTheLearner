@@ -2566,5 +2566,20 @@ def main() -> int:
         return cmd_run(ledger, args.spec)
 
 
+def _exit_with_receipt(rc) -> None:
+    """The exit code is ALSO the last line of stdout, so a pipe cannot erase
+    it: `$?` after `tool | tail` reports the pipe's health, not the tool's,
+    and that shape produced six false receipts in seven days across two
+    organs (77th audit B1, gated by T0.23 P8). Argparse usage errors arrive
+    as SystemExit and get the same receipt."""
+    rc = 0 if rc is None else rc if isinstance(rc, int) else 1
+    print(f"EXIT {rc}", flush=True)
+    sys.exit(rc)
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        _rc = main()
+    except SystemExit as _e:
+        _rc = _e.code
+    _exit_with_receipt(_rc)

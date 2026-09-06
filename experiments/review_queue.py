@@ -753,4 +753,9 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # The receipt a pipe cannot erase (77th audit B1, gated by T0.23 P8):
+    # print the exit code as the last stdout line before exiting with it.
+    _rc = main()
+    _rc = 0 if _rc is None else int(_rc)
+    print(f"EXIT {_rc}", flush=True)
+    sys.exit(_rc)

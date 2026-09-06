@@ -46,6 +46,16 @@ properties, each able to fail on its own:
   P7  `--check` beside anything that is not its owner is refused WHOLE — a
       flag the dispatch would silently drop is the argv-is-a-spend trap in
       miniature (the caller believes a check happened).
+  P8  every checker prints `EXIT <n>` as the LAST LINE of stdout, where n is
+      the integer the process actually exits with — captured separately from
+      stderr and compared against the REAL returncode, including a nonzero
+      case. Scar (77th audit, 2026-09-06): `tool | tail; echo rc=$?` reports
+      the PIPE's exit code, and the rule against it failed six times in seven
+      days across two organs — three of them uncaught, in committed journal
+      entries calling an rc=2 tool green. A receipt printed ON stdout survives
+      the pipe; a rule about `$?` does not. Covers `experiments.run` (zero and
+      nonzero), `coverage`, `decisions --check`, `champions --check`, and
+      `review_queue`.
 
 WHY P4 CANNOT ASSERT DISPATCH, stated plainly rather than quietly weakened.
 `_exclusive` is process-wide: this spec runs while holding the runner lock, so
@@ -94,6 +104,33 @@ def _cli(argv: list[str]) -> tuple[int, str]:
     p = subprocess.run([sys.executable, "-m", "experiments.run", *argv],
                        cwd=REPO, capture_output=True, text=True, timeout=300)
     return p.returncode, (p.stdout or "") + (p.stderr or "")
+
+
+#: P8's battery: (module, argv) for every checker whose exit code is a
+#: finding. `run` appears twice on purpose — the bad argv is the one
+#: DETERMINISTIC nonzero exit in the set (rc=2 by P1), so the nonzero half of
+#: the property cannot silently become vacuous when the ratchets happen to be
+#: green.
+EXIT_RECEIPT_TOOLS = (
+    ("experiments.run", ("status",)),
+    ("experiments.run", (BAD_TOKEN, FIXTURE_SPEC)),
+    ("experiments.coverage", ()),
+    ("experiments.decisions", ("--check",)),
+    ("experiments.champions", ("--check",)),
+    ("experiments.review_queue", ()),
+)
+
+
+def _exit_receipt(mod: str, argv: tuple[str, ...]) -> dict:
+    """stdout captured SEPARATELY from stderr: the receipt must live on the
+    stream a pipe reads, and comparing against a merged stream would let a
+    stderr line satisfy a stdout promise."""
+    p = subprocess.run([sys.executable, "-m", mod, *argv], cwd=REPO,
+                       capture_output=True, text=True, timeout=600)
+    lines = (p.stdout or "").rstrip("\n").splitlines()
+    last = lines[-1] if lines else ""
+    return {"rc": p.returncode, "last_line": last,
+            "ok": last == f"EXIT {p.returncode}"}
 
 
 def _reached_spec(out: str) -> bool:
@@ -148,6 +185,14 @@ def _experiment(seed: int) -> dict:
         "rc_decisions": rc_dec, "rc_champions": rc_champ,
         "rc_stray": rc_stray,
     })
+
+    # P8 — the printed receipt. Per tool so a red names its culprit.
+    receipts = {f"{mod}::{' '.join(argv) or 'bare'}": _exit_receipt(mod, argv)
+                for mod, argv in EXIT_RECEIPT_TOOLS}
+    m["exit_receipts"] = receipts
+    m["exit_receipt_all_tools"] = all(r["ok"] for r in receipts.values())
+    m["exit_receipt_nonzero_seen"] = any(
+        r["ok"] and r["rc"] != 0 for r in receipts.values())
     return m
 
 
@@ -177,7 +222,8 @@ def _control(seed: int) -> dict:
 _PROPS = ("fixture_unimplemented", "bad_argv_refused",
           "bad_argv_never_dispatched", "readonly_still_works",
           "good_argv_not_refused", "mixed_argv_refused",
-          "forwarders_reach_their_tools", "stray_check_refused")
+          "forwarders_reach_their_tools", "stray_check_refused",
+          "exit_receipt_all_tools", "exit_receipt_nonzero_seen")
 
 
 def _check(m: dict, c: dict) -> bool:
