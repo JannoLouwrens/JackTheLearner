@@ -1964,11 +1964,19 @@ an UB.10 verdict this row's redesign must first make reachable.
 
 ## ROUTED 2026-09-01 (builder, LC.07 pilot harvest): `lc07-checkpoint-branch` — the seat's own scale-transfer arena cannot physically run inside a Kaggle kernel
 
-ROUTED: lc07-checkpoint-branch | 2026-09-01 | LC.07-pilot-branch-B | OPEN
+ROUTED: lc07-checkpoint-branch | 2026-09-01 | LC.07-pilot-branch-B | DISPOSITIONED 2026-09-06 (Review FULL — checkpointing is REFUSED because it repairs the wrong constraint; the arena is declared VENUE-UNAFFORDABLE with the arithmetic below, and the affordability question goes to the owner, not to the builder. Design below)
     DUE: 2026-09-06 | a checkpoint-vs-venue decision owed by the Review's
     Sunday FULL run; bundle judgment beside `w0-too-shallow` and D10's
     lineage — this arena is the one D10's firing commit registered so the
     wm-latent seat would not be held with a dead arena
+    DUE: 2026-09-13 | DECISION DELIVERED 2026-09-06 (checkpointing REFUSED,
+        arena declared VENUE-UNAFFORDABLE, ratio question routed as `D24`).
+        What remains owed on this row is the ONE cheap thing: the BUILDER
+        prices the CPU venue — 526 GPU-wall-hours through the pilot's own
+        borrowed `LC.02` GPU:CPU ratio against the measured 57,600 s/day CPU
+        budget — and writes the number here. A calculation, not a run: no
+        dispatch, no seeds. The row closes when the number exists, whichever
+        way it falls.
 
 **What was measured (throughput pilot, seed 90, kernel
 jack-ladder-1788297232, 0.44 h, 2026-09-01 21:40; artifact
@@ -1982,6 +1990,53 @@ ceiling. Parallelism cannot help a single run; the total plan is ~526
 wall-hours (21 runs, ~132 kernel-hours at ideal 4-way packing) against a
 30 h/week free allocation. Per the freeze step, nothing froze: `run()`
 keeps refusing, the envelope did not shrink, no constant moved.
+
+**DISPOSITION (Review FULL, 2026-09-06). Option 1 — checkpoint/resume surgery
+on `survival.py` — is REFUSED, and the reason is that it repairs the wrong
+constraint.**
+
+**The arithmetic that decides it.** Checkpointing addresses the **8.5 h
+per-run kernel ceiling**. It does not touch the **~526 wall-hour total**. At
+the free allocation of 30 h/week, this arena costs **≈17.5 weeks of the
+project's ENTIRE GPU budget** — every other GPU spec, every bakeoff, every
+re-buy, for four months — and it costs that whether or not each run fits
+under 8.5 hours. So option 1 converts *impossible* into *17.5 weeks*, and
+bills the full `survival.py` surgery — which stales every `LC` and `XL`
+certificate — for the conversion. `LF.02`'s PASS on 2026-09-03 (bit-exact
+resume over 1000 decisions, all four stores, weights-only null diverging
+8.1 ± 2.7) is a genuine and valuable existence proof that the surgery is
+FEASIBLE; feasible is not the question this row asks.
+
+**What I am declaring instead: the arena is VENUE-UNAFFORDABLE, and that is a
+finding about the seat, not about the spec.** `LC.07` is the arena that `D10`'s
+firing commit registered so the wm-latent Learning-core seat would not be held
+with a dead arena. It is now measured as an arena nobody can enter for four
+months. `champions --check` already reads the Learning core seat as TRIGGER
+DEBT — *every declared re-open trigger a closed door* (`LC.07`=PILOT-BLOCKED,
+`LC.03`=VOID-FORECLOSED, `UB.10`=VOID) — and this row is the third door
+measured shut. **A seat whose arena costs 17.5 weeks of the whole allocation is
+contested on paper and uncontested in fact, and that is precisely the shape
+`D23` names**: an instrument reading green because a debt moved to a desk that
+cannot pay it.
+
+**The 10x is a THRESHOLD and I will not lower it.** The row's third option —
+*"a Review/owner re-read of ~10x"* — is the one that looks cheapest and is the
+one my own law forbids me to take on my own authority: a 10x scale-transfer
+claim is strictly stronger than a 3x one, and shrinking it to fit the budget
+is buying a PASS with a smaller question. If the ratio moves, it moves on the
+owner's signature with the cost on the table, not on mine.
+
+**The one thing owed to the builder, and it is cheap.** *Price the CPU venue
+rather than arguing about it.* We now have a CPU accountant (`T0.33`/`T0.34`,
+a measured 57,600 s/day) and `LC.07`'s pilot already calibrated a borrowed
+`LC.02` GPU:CPU ratio. Convert 526 GPU-wall-hours through that measured ratio
+and put the number on this row. My expectation is that it is far worse and the
+option dies on arithmetic — but *"CPU venue"* has been an unpriced option on
+this row for five days, and an unpriced option is how a decision gets deferred
+forever. This is a calculation, not a run: no dispatch, no seeds, no budget.
+
+**To the owner, as `D24` (see `docs/DECISIONS_NEEDED.md`).** The affordability
+of this arena is a resource decision and it is not mine.
 
 **Why this is a Review decision, not a builder unit.** The docstring
 pre-registered it: `run_survival` has no mid-run checkpoint, and building
@@ -2245,7 +2300,7 @@ MECHANICAL, if the kills clause is later executed — `T0.01` (imports) names
 `AlphaGeometryLoop` in its roster and TaskManager/UnifiedBrain import it
 inside try/except; the docstring's deletion protocol covers both.
 
-ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | OPEN
+ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | DISPOSITIONED 2026-09-06 (Review FULL — fork (c), PER-SPEC instrument-input dirt; design below, builder implements with the mutation falsifier that makes it safe)
     DUE: 2026-09-06 | a design fork owed by the Review. Dated ON the 09-06
     pile knowingly: the trap is armed every night an audit runs, and each
     trip re-bills the whole re-buy — that recurring cost outranks
@@ -2270,6 +2325,71 @@ ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | O
     "prose dirt" from "instrument dirt" as two stamps with different
     consequences. Until one lands the trap stays armed: the next audit that
     commits during a sweep VOIDs certificates again.
+    DUE: 2026-09-13 | DESIGN DELIVERED 2026-09-06 (fork (c), below); what is
+        now owed is IMPLEMENTATION in `protocol.py` by the BUILDER, and it
+        does NOT land without the mutation falsifier described below. A bare
+        `DOC_OUTPUTS` widening committed against this row is fork (a) wearing
+        fork (c)'s name and must be refused. The trap stays armed until then,
+        which is a cost I am accepting knowingly and pricing at ~25 minutes
+        of re-buys per trip.
+
+**DISPOSITION (Review FULL, 2026-09-06): fork (c), and the row's own reasoning
+already ruled out (a).** The dirty-tree stamp exists to answer exactly one
+question — *could the code that produced this verdict have differed from what
+is committed?* Against that question the five docs are not one class:
+
+  **(a) is refused for the reason the row itself states.** Widening
+  `DOC_OUTPUTS` to cover `DECISIONS_NEEDED.md`, `REVIEW_QUEUE.md` and
+  `PROGRESS_LOG.md` trades an accidental-VOID trap for **unstamped drift in
+  instrument INPUTS** — `run decisions`, `run review-queue` and the ratchet
+  readers consume those files, so for the specs that gate them (`T0.31`,
+  `T0.29`, `T0.21`) an uncommitted line in them genuinely CAN change a
+  verdict. (a) buys quiet by blinding the one place the stamp is load-bearing.
+
+  **(b) is refused on cost and on residue.** Serialising commits across four
+  cron-driven organs against runner sweeps is a distributed-locking design on
+  a free-tier box, and it does not remove the race — it narrows the window.
+  We would be building more mechanism to protect a stamp that is
+  over-refusing, which is the shape the CPU-accountant prohibition exists to
+  stop.
+
+  **(c), stated precisely.** Dirt becomes PER-SPEC rather than global. A doc
+  dirties a run **iff that run's spec actually consults it**:
+    - `PROSE` — consulted by no instrument (`CHECKLIST.md`,
+      `docs/LOOP_JOURNAL.md`, `docs/PROGRESS.md`, `docs/LESSONS.md`): never
+      dirty, for anyone. This is today's `DOC_OUTPUTS`, extended to the two
+      docs that are equally prose and were only excluded by accident of who
+      writes them.
+    - `INSTRUMENT-INPUT` — consulted by at least one spec
+      (`docs/DECISIONS_NEEDED.md`, `docs/DECISIONS_RESOLVED.md`,
+      `docs/REVIEW_QUEUE.md`, `docs/CHAMPIONS.md`, `docs/PROGRESS_LOG.md`):
+      dirty **only** for specs that declare them, joined to the existing
+      `IMPL_DEPS` machinery so there is one mechanism and not two.
+
+**Why this is a strengthening where it counts, and an over-refusal repair
+where it does not.** For `T0.31`, `T0.29` and `T0.21`, the instrument docs
+become DECLARED dependencies — today they dirty those specs only as a side
+effect of dirtying everything, which is the right answer for the wrong reason
+and would evaporate the moment anyone widened `DOC_OUTPUTS`. For `PS.01`,
+`BA.01`, `PS.02`, `PS.03` — the four certificates the 09-02 race actually
+VOIDed at 0.14 s each — an uncommitted line in `REVIEW_QUEUE.md` cannot change
+a physics verdict, and the stamp saying otherwise was the meter refusing runs
+it had no business refusing. That is the narrowed rule the last Review wrote
+into the builder's file: *a change that makes the meter refuse fewer runs, or
+tell the truth more plainly, is always allowed.*
+
+**THE FALSIFIER THAT MAKES IT SAFE, and it is not optional.** The whole risk
+of (c) is that the doc→spec map is ASSERTED rather than measured — a spec that
+reads an instrument doc without declaring it would silently stop being
+stamped. So the implementation must carry a **mutation test**, gated under
+`T0.17`'s provenance properties: plant a semantic change in each
+`INSTRUMENT-INPUT` doc, run every spec that the map says consults it, and
+assert **every one goes dirty**; then run a sample the map says does NOT
+consult it and assert they stay clean. A map that cannot be falsified by
+mutation is prose, and prose is what `champions.py` learned the price of on
+`901f7fc`. **If the mutation test cannot be made to pass, fork (c) is refused
+and this row re-opens** — I would rather keep an armed trap that costs
+25 minutes of re-buys than ship a stamp that has quietly stopped stamping.
 
 ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, classes_present 1.0/4) | OPEN
     DUE: 2026-09-06 | rides the w0-too-shallow design window (the bundling
