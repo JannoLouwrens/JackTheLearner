@@ -555,6 +555,45 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
     abstention half of the trade is measured and healthy; the cost half now
     has a named, committed FAIL row (ME.3 a4, commit 42ad5c9) instead of a
     forecast.]
+    [UPDATE 2026-09-06 ~15:4x (builder): THE ROW IS ANSWERED BY MEASUREMENT,
+    both halves, and the builder's owed repair is discharged. The
+    precondition was honoured first: the probe now carries ME.3's exact cue
+    construction (its `_build_life`, `_questions`, `_pack`, `_read`) plus a
+    separability measurement of bestcov(q) — the one statistic every floor
+    in this family thresholds on. (1) THE DEMONSTRATION: on the same store,
+    all three seeds, the two populations separate in the WRONG ORDER —
+    distractor cues (must abstain) bestcov 0.667 exactly, disjunctive cues
+    (must answer) bestcov 0.400 exactly, gap −0.267, overlap 1.000. Any
+    floor ≤ 0.40 admits every distractor (ME.1's measured confabulation);
+    any floor > 0.667 starves ME.3 to chance (the a4 FAIL). A0–A4 confirm
+    empirically: no floor arm passes all four scar shapes, and by the gap
+    none in this scorer family can — the two specs make contradictory
+    demands on the same call signature, and the difference (AND-intent vs
+    OR-intent) is not in the token bag. (2) THE ROUTING CORRECTION, recorded
+    honestly: I first wrote this to the owner's desk as `D25`, per this
+    row's own "belongs on the owner's desk" — and `decisions.py` REFUSED it
+    (MEANS-ESCALATED: a means fork is settled by bakeoff, not by the owner).
+    The checker was right and the row's prose was wrong: the fork's arms are
+    runnable, so law 3 governs. D25 is deleted; the bakeoff ran instead.
+    (3) THE BAKEOFF VERDICT: arm A5 (alternatives DECLARED at the call site;
+    each candidate its own conjunctive sub-cue under the SAME unchanged 0.95
+    coverage floor, results union-ranked) is the SOLE SURVIVOR — all ME.1
+    conjuncts green (distractor 1.0, fabricated 1.0, cued 0.833–0.867,
+    35–46 evaluated), disjunctive 1.000 answered / acc 0.552–0.688 (A0's
+    evidence, exactly), verbose 0.833, terse 1.0, on every seed. The
+    mechanism is the CONTRACT SPLIT: single-cue recall keeps ME.1's
+    abstention contract; OR-intent moves to the call signature, where the
+    asker actually holds it. (4) WHAT REMAINS, and whose it is: adoption is
+    NOT a module calibration — `EpisodicMemory.py` is untouched today, zero
+    certificates staled, the shipped floor stays, and ME.3's FAIL stands as
+    a true measurement until a redesign lands. The redesign — ME.3's raw arm
+    declaring its four alternatives instead of joining them into one string
+    (its reflect arm gets the same declared shape, so the arms stay matched)
+    — is a SPEC redesign and is the ROUTER/Review's to order on this row,
+    with the probe's A5 numbers as its design input. The builder's owed half
+    is done: the row asked for a calibration or a demonstration, and it got
+    the demonstration that no calibration of this scorer exists PLUS the
+    measured mechanism that does.]
 
 ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
     DUE: 2026-09-13 | the single world-edit sitting that `W1.03` opens, which

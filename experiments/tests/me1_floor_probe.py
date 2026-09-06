@@ -46,6 +46,69 @@ rate then higher verbose recall then simpler implementation. The winner is
 adopted in EpisodicMemory.py and VERIFIED by re-running ME.1 through the
 runner — this probe decides, the ledger certifies.
 
+THIRD SCAR, added 2026-09-06 per the queue row's own precondition ("any
+recalibration must add ME.3's cue shape to the probe's arms before
+adoption"). The adopted A2 was chosen by a probe that never measured a
+DISJUNCTIVE cue, and ME.3 attempt 4 (commit 42ad5c9) paid for it: its raw
+arm's cue is `" ".join([speaker] + candidates)` — 5 tokens, ALL known to the
+store, mutually exclusive by construction (an event carries the speaker plus
+at most ONE candidate, so best-event coverage is capped at 2/5 = 0.4) — and
+the 0.95 coverage floor abstains on EVERY question (raw_tokens 40 -> 0.0,
+raw_acc 0.625 -> 0.2917 vs base 0.25; the equal-tokens gate refused the
+starved null). This section adds two measurements:
+
+  disjunctive   ME.3's exact construction (its `_build_life`, `_questions`,
+                `_pack`, `_read`, its token budget) scored per arm. Bars,
+                pre-stated before the run: disj_answer >= 0.95 (the store
+                must surface evidence on essentially every question) and
+                disj_acc >= 0.45 on all seeds (A0 measured 0.625 on this
+                harness at attempts 2-3; base rate 0.25; the band allows
+                seed noise without admitting chance).
+  separability  the statistic every floor in this family thresholds on is
+                bestcov(q) = max over events of |q_known ∩ tok|/|q_known|.
+                A floor answers a disjunctive cue only if it sits AT OR
+                BELOW that cue's bestcov, and abstains on a distractor cue
+                only if it sits ABOVE that cue's bestcov. So a floor serving
+                both exists iff max(bestcov over distractor cues) <
+                min(bestcov over disjunctive cues) — ON THE SAME STORE. The
+                probe prints both distributions and the gap. A negative gap
+                is a MEASURED impossibility for every monotone floor on this
+                statistic, not an argument: the abstain-required cues score
+                HIGHER than the answer-required cues on the only number the
+                scorer sees. MEASURED 2026-09-06: gap −0.267 on all three
+                seeds (distractor bestcov 0.667 exactly, disjunctive 0.400
+                exactly), overlap 1.000. No single-cue floor arm can pass
+                both; A0–A4 confirm it empirically below.
+
+A5, added after that measurement and REFUSED BY `decisions.py` as an owner
+escalation first (MEANS-ESCALATED: a means fork is settled by bakeoff, not by
+the owner — law 3, enforced): the fork the gap leaves open is not a floor
+value, it is WHERE THE ASKER'S INTENT LIVES. The two cue populations are
+identical to the scorer (bags of known words that never co-occur in one
+event); what differs is that "the thing about X and Y" asserts a conjunction
+and "was it A or B or C?" lists alternatives — and intent is not recoverable
+from a token bag. A5 moves it to the call site:
+
+  A5 alt-declared   single cues score exactly as A2 (coverage 0.95 — nothing
+                    is declared, nothing changes). A cue that ARRIVES as
+                    alternatives is scored per alternative: each candidate
+                    becomes its own sub-cue (speaker + candidate), each
+                    sub-cue is a CONJUNCTION under the same 0.95 coverage
+                    floor, results union-ranked. Abstention is preserved
+                    per sub-cue by construction — a never-lived pairing
+                    still clears nothing.
+
+Decision rule for the third scar, pre-stated: an adoptable mechanism must
+clear ME.1's four conjunct analogues AND disj_answer >= 0.95 AND disj_acc
+>= 0.45 on all seeds. If only A5 survives, the bakeoff's verdict is that the
+CONTRACT SPLIT is the mechanism — single-cue recall keeps ME.1's abstention
+contract, OR-intent must be declared at the call site — and what remains is
+NOT a module calibration: adopting it means ME.3's harness declares its
+alternatives instead of packing them into one string, which is a spec
+redesign and routes through the Review on the queue row. No EpisodicMemory.py
+edit happens from this probe; the module and its 16 declared certificates do
+not move.
+
 Run: /data/venvs/jackthelearner/bin/python -m experiments.tests.me1_floor_probe
 """
 from __future__ import annotations
@@ -68,9 +131,13 @@ JUNK = ["please", "kindly", "sometime", "earlier"]   # all off-vocabulary, none 
 
 
 def variant_recall(mem, query, now, arm, top_k=1):
-    """The five scoring variants through one code path, mirroring
-    EpisodicMemory.recall's loop so the only difference IS the floor rule."""
+    """The scoring variants through one code path, mirroring
+    EpisodicMemory.recall's loop so the only difference IS the floor rule.
+    A5 without declared alternatives IS A2 — the contract split only changes
+    behaviour at a call site that declares them (see recall_alternatives)."""
     from EpisodicMemory import _tokens
+    if arm == "A5":
+        arm = "A2"
     q = _tokens(query)
     if not q:
         return []
@@ -155,8 +222,100 @@ def measure(seed: int, arm: str) -> dict:
             "terse_answer": terse / 60}
 
 
+def recall_alternatives(mem, speaker, cands, now, top_k=32):
+    """A5's declared-alternatives path: each candidate is its own
+    conjunctive sub-cue under the SAME A2 floor, results union-ranked.
+    A never-lived (speaker, candidate) pairing still clears nothing —
+    abstention survives per sub-cue by construction."""
+    by_eid = {}
+    for cand in cands:
+        for c in variant_recall(mem, f"{speaker} {cand}", now, "A2",
+                                top_k=top_k):
+            eid = c[2].eid
+            if eid not in by_eid or c[0] > by_eid[eid][0]:
+                by_eid[eid] = c
+    out = sorted(by_eid.values(), key=lambda c: c[0], reverse=True)
+    return out[:top_k]
+
+
+def measure_disjunctive(seed: int, arm: str) -> dict:
+    """ME.3's cue shape through each arm: speaker + 4 mutually-exclusive
+    candidates, all words known, scored by ME.3's own packer and reader."""
+    import random
+    from experiments.tests.me_3_reflections import (
+        _build_life as _build_me3, _questions, _pack, _read,
+    )
+    tmp = Path(tempfile.mkdtemp()) / "life3.jsonl"
+    mem, tally, now = _build_me3(seed, tmp)
+    questions = _questions(seed, tally)
+    rng = random.Random(seed + 3)
+    answered = hits = tok_sum = 0
+    for s, cands, truth in questions:
+        if arm == "A5":
+            res = recall_alternatives(mem, s, cands, now, top_k=32)
+        else:
+            cue = " ".join([s] + cands)
+            res = variant_recall(mem, cue, now, arm, top_k=32)
+        lines, used = _pack([c[2].text for c in res])
+        answered += bool(lines)
+        tok_sum += used
+        hits += _read(lines, cands, rng) == truth
+    n = len(questions)
+    return {"disj_answer": answered / n, "disj_acc": hits / n,
+            "disj_tokens": tok_sum / n, "n_questions": n}
+
+
+def separability(seed: int) -> dict:
+    """bestcov(q) distributions for the two cue populations, SAME store:
+    ME.3's disjunctive questions (must answer) vs ME.3's own distractor
+    construction (must abstain). A monotone floor serving both exists iff
+    max(distractor bestcov) < min(disjunctive bestcov)."""
+    import random
+    from EpisodicMemory import _tokens
+    from experiments.tests.me_3_reflections import (
+        _build_life as _build_me3, _questions,
+        OBJECTS, PLACES, COLOURS, ACTIONS, N_DISTRACTOR,
+    )
+    tmp = Path(tempfile.mkdtemp()) / "life3s.jsonl"
+    mem, tally, now = _build_me3(seed, tmp)
+    vocab = set().union(*mem._tok)
+
+    def bestcov(cue: str) -> float:
+        q_known = _tokens(cue) & vocab
+        if not q_known:
+            return 0.0
+        return max((len(q_known & tok) / len(q_known) for tok in mem._tok),
+                   default=0.0)
+
+    disj = [bestcov(" ".join([s] + cands))
+            for s, cands, _ in _questions(seed, tally)]
+
+    stored = mem._tok
+    rng = random.Random(seed + 11)          # ME.3's own distractor seeding
+    distr = []
+    for _ in range(N_DISTRACTOR):
+        combo = (rng.choice(OBJECTS), rng.choice(PLACES),
+                 rng.choice(COLOURS), rng.choice(ACTIONS))
+        picks = rng.sample(combo, 3)
+        pick_set = set(picks)
+        if not pick_set <= vocab or any(pick_set <= s for s in stored):
+            continue
+        distr.append(bestcov(
+            f"the thing about the {picks[0]} and the {picks[1]} {picks[2]}"))
+
+    gap = min(disj) - max(distr) if disj and distr else float("nan")
+    overlap = (sum(d >= min(disj) for d in distr) / len(distr)
+               if disj and distr else float("nan"))
+    return {"disj_min": min(disj), "disj_max": max(disj),
+            "disj_mean": sum(disj) / len(disj),
+            "distr_min": min(distr), "distr_max": max(distr),
+            "distr_mean": sum(distr) / len(distr),
+            "n_disj": len(disj), "n_distr": len(distr),
+            "gap": gap, "distr_at_or_above_disj_min": overlap}
+
+
 def main():
-    arms = ("A0", "A1", "A2", "A3", "A4")
+    arms = ("A0", "A1", "A2", "A3", "A4", "A5")
     print(f"{'arm':4} {'seed':4} {'cued':>6} {'verb':>6} {'fab':>6} "
           f"{'distr':>6} {'d_ev':>4} {'terse':>6}")
     table = {}
@@ -168,14 +327,37 @@ def main():
                   f"{r['fabricated_abst']:6.3f} {r['distractor_abst']:6.3f} "
                   f"{r['distractor_eval']:4d} {r['terse_answer']:6.3f}")
     print()
+    print(f"{'arm':4} {'seed':4} {'d_ans':>6} {'d_acc':>6} {'d_tok':>6} {'n_q':>4}")
+    dtable = {}
     for arm in arms:
-        rows = table[arm]
+        drows = [measure_disjunctive(s, arm) for s in SEEDS]
+        dtable[arm] = drows
+        for s, r in zip(SEEDS, drows):
+            print(f"{arm:4} {s:4} {r['disj_answer']:6.3f} {r['disj_acc']:6.3f} "
+                  f"{r['disj_tokens']:6.1f} {r['n_questions']:4d}")
+    print()
+    print("separability (same store: distractor cues must abstain, "
+          "disjunctive cues must answer; a floor serving both needs gap > 0)")
+    for s in SEEDS:
+        sep = separability(s)
+        print(f"seed {s}: disj bestcov [{sep['disj_min']:.3f}, "
+              f"{sep['disj_mean']:.3f}, {sep['disj_max']:.3f}] n={sep['n_disj']}  "
+              f"distr bestcov [{sep['distr_min']:.3f}, {sep['distr_mean']:.3f}, "
+              f"{sep['distr_max']:.3f}] n={sep['n_distr']}  "
+              f"gap {sep['gap']:+.3f}  "
+              f"distr>=disj_min {sep['distr_at_or_above_disj_min']:.3f}")
+    print()
+    for arm in arms:
+        rows, drows = table[arm], dtable[arm]
         ok = all(r["cued_recall"] >= 0.80 and r["fabricated_abst"] >= 0.95
                  and r["distractor_abst"] >= 0.95 and r["distractor_eval"] >= 30
                  for r in rows)
+        d_ok = all(r["disj_answer"] >= 0.95 and r["disj_acc"] >= 0.45
+                   for r in drows)
         worst_v = min(r["verbose_recall"] for r in rows)
         worst_t = min(r["terse_answer"] for r in rows)
         print(f"{arm}: conjuncts {'PASS' if ok else 'fail'}  "
+              f"disjunctive {'PASS' if d_ok else 'fail'}  "
               f"worst verbose {worst_v:.3f}  worst terse {worst_t:.3f}")
     print("EXIT 0", flush=True)
 
