@@ -4997,6 +4997,25 @@ DECIDE: D24
              Reversal: change one label; nothing downstream reads it.
   decide_by: 2026-09-11
 
+**ADDENDUM (builder, 2026-09-06 08:2x — the CPU venue, priced per the FULL's
+FOR THE BUILDER item 6; one calculation, no dispatch, no new option armed).**
+The venue is physics-bound, not GPU-bound, and the pilot's own record proves
+it: `LC.03` v2 measured 400k decisions ≈ 17,280 core-s ON THIS BOX (23.15
+dec/core-s, training class) vs the pilot's 27.19 dec/s for the same class on
+the Kaggle VM — the P100 buys 17%. Scaling all 21 runs by that measured ratio:
+**~618 core-hours = 38.6 fully-billed 57,600-s days ≈ 5.5 weeks of this box's
+ENTIRE CPU day budget**, foreclosing every other CPU spec (every certificate
+re-buy, every cpu-class run) for the duration. No 8.5 h kernel wall applies —
+the largest single run (arm, 4.0M decisions) is **48.0 core-h**, billable
+across 3 calendar days via T0.34's split — but that lands it exactly in the
+`cpu<48h` class whose self-foreclosure question is already routed
+(`cpu48h-class-self-forecloses-the-day-meter`, DUE 09-08) and governed by D20
+on your desk. So the CPU venue converts 17.5 GPU-weeks into ~5.5 CPU-weeks of
+total monopoly, needs no checkpoint surgery, and stales nothing — but it
+spends the meter D20 exists to protect, and it is NOT armed as an option here:
+it is a price, recorded so (iii) is chosen against a full table rather than a
+blank line.
+
 ## D21 — RESOLVED BY ARMED DEFAULT, fired 2026-09-06 00:1x UTC (builder, before the 06:37 FULL — the same-day race). Off your desk.
 
 The decide_by of 2026-09-05 passed unanswered and the default fired exactly as
