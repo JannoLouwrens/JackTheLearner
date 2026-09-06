@@ -18213,7 +18213,7 @@
     "T0.17": {
       "amended": [],
       "attempt": 22,
-      "commit": "df94566",
+      "commit": "e800964",
       "compute_s": null,
       "control_metrics": {
         "claim_rule_sees_amended_claim": true,
@@ -18221,57 +18221,10 @@
         "hand_edit_took_effect": true,
         "impl_sha_rule_sees_amended_claim": false
       },
-      "duration_s": 2.82,
+      "duration_s": 2.39,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "d84101e+dirty",
-          "control_metrics": {
-            "claim_rule_sees_amended_claim": true,
-            "detector_sees_amendment": false,
-            "hand_edit_took_effect": true,
-            "impl_sha_rule_sees_amended_claim": false
-          },
-          "gpu_job_id": null,
-          "impl_sha": "072ea7a4d72997cc",
-          "message": "pre-registered threshold not met",
-          "metrics": {
-            "amendment_is_attributable": true,
-            "claim_hash_covers_every_claim_field": true,
-            "claim_hash_ignores_bookkeeping": true,
-            "content_check_fires_on_postrun_edit": true,
-            "content_check_reports_unanswerable": true,
-            "content_check_spares_unedited_file": true,
-            "detector_flags_moved_dependency": true,
-            "detector_sees_amendment": true,
-            "detector_spares_unmoved_dependency": true,
-            "drift_sees_amended_claim": true,
-            "drift_spares_unamended_claim": true,
-            "history_absence_preserved": true,
-            "history_carries_evidence": true,
-            "history_keeps_amendment": true,
-            "pass_rows_claim_unstamped": 84,
-            "pass_rows_claim_verified": 0,
-            "pass_rows_with_drifted_claim": 0,
-            "refuses_pass_and_fail": true,
-            "refuses_unattributed": true,
-            "run_spec_leaves_amended_empty": true,
-            "run_spec_stamps_the_claim": false,
-            "unknown_attempt_is_sticky": true,
-            "unprotected_pass_certificates": 0,
-            "unstamped_answered_by_content": 28,
-            "unstamped_claim_is_not_clean": true,
-            "unstamped_records_examined": 28,
-            "unstamped_unanswerable": 0
-          },
-          "ran_at": "2026-08-29T13:14:23",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "a237619e332e8397",
-          "status": "FAIL"
-        },
         {
           "commit": "d84101e+dirty",
           "control_metrics": {
@@ -19204,9 +19157,57 @@
           ],
           "spec_sha": "a237619e332e8397",
           "status": "PASS"
+        },
+        {
+          "commit": "df94566",
+          "control_metrics": {
+            "claim_rule_sees_amended_claim": true,
+            "detector_sees_amendment": false,
+            "hand_edit_took_effect": true,
+            "impl_sha_rule_sees_amended_claim": false
+          },
+          "gpu_job_id": null,
+          "impl_sha": "21133beb0baac4f4",
+          "message": "",
+          "metrics": {
+            "amendment_is_attributable": true,
+            "claim_hash_covers_every_claim_field": true,
+            "claim_hash_ignores_bookkeeping": true,
+            "content_check_fires_on_postrun_edit": true,
+            "content_check_reports_unanswerable": true,
+            "content_check_spares_unedited_file": true,
+            "detector_flags_moved_dependency": true,
+            "detector_sees_amendment": true,
+            "detector_spares_unmoved_dependency": true,
+            "drift_sees_amended_claim": true,
+            "drift_spares_unamended_claim": true,
+            "history_absence_preserved": true,
+            "history_carries_evidence": true,
+            "history_keeps_amendment": true,
+            "pass_rows_claim_unstamped": 11,
+            "pass_rows_claim_verified": 91,
+            "pass_rows_with_drifted_claim": 0,
+            "refuses_pass_and_fail": true,
+            "refuses_unattributed": true,
+            "run_spec_leaves_amended_empty": true,
+            "run_spec_stamps_the_claim": true,
+            "spec_fields_all_classified": true,
+            "unknown_attempt_is_sticky": true,
+            "unprotected_pass_certificates": 0,
+            "unstamped_answered_by_content": 3,
+            "unstamped_claim_is_not_clean": true,
+            "unstamped_records_examined": 3,
+            "unstamped_unanswerable": 0
+          },
+          "ran_at": "2026-09-04T08:16:54",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "a237619e332e8397",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "21133beb0baac4f4",
+      "impl_sha": "50fa942648bfd721",
       "message": "",
       "metrics": {
         "amendment_is_attributable": true,
@@ -19224,7 +19225,7 @@
         "history_carries_evidence": true,
         "history_keeps_amendment": true,
         "pass_rows_claim_unstamped": 11,
-        "pass_rows_claim_verified": 91,
+        "pass_rows_claim_verified": 96,
         "pass_rows_with_drifted_claim": 0,
         "refuses_pass_and_fail": true,
         "refuses_unattributed": true,
@@ -19239,9 +19240,9 @@
         "unstamped_unanswerable": 0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 214.6,
+      "peak_rss_mb": 215.3,
       "preserved_impl": null,
-      "ran_at": "2026-09-04T08:16:54",
+      "ran_at": "2026-09-06T13:19:24",
       "seeds": [
         0
       ],
@@ -24037,14 +24038,14 @@
     },
     "T0.33": {
       "amended": [],
-      "attempt": 14,
-      "commit": "8b9dd86",
+      "attempt": 15,
+      "commit": "e800964",
       "compute_s": null,
       "control_metrics": {
         "alive": true,
         "leak_visible": true
       },
-      "duration_s": 1.23,
+      "duration_s": 1.29,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -24778,9 +24779,82 @@
           ],
           "spec_sha": "5fa065bb96101742",
           "status": "PASS"
+        },
+        {
+          "commit": "8b9dd86",
+          "control_metrics": {
+            "alive": true,
+            "leak_visible": true
+          },
+          "gpu_job_id": null,
+          "impl_sha": "8c5ea327a6f65bd8",
+          "message": "",
+          "metrics": {
+            "affords_small": true,
+            "charged_moves": true,
+            "class_slack": [
+              {
+                "budget": "cpu<2h",
+                "n": 59,
+                "n_foreclosed": 0,
+                "slack_s": 3600.0,
+                "used_s": 3.5
+              },
+              {
+                "budget": "cpu<10min",
+                "n": 78,
+                "n_foreclosed": 0,
+                "slack_s": 46800.0,
+                "used_s": 3.5
+              },
+              {
+                "budget": "cpu<1min",
+                "n": 23,
+                "n_foreclosed": 0,
+                "slack_s": 56545.56,
+                "used_s": 3.5
+              }
+            ],
+            "corrupt_ledger_fails_closed": true,
+            "cpu_foreclosed": [],
+            "cpu_quota_enforced": 1.0,
+            "detached_routed": true,
+            "empty_ledger_falls_back": true,
+            "est_above_enum": [],
+            "exhausted_refused": true,
+            "fresh_admits_worst": true,
+            "gpu_unbound": true,
+            "isolation_ok": true,
+            "live_load": 0.2,
+            "live_remaining_s": 57596.5,
+            "load_refused": true,
+            "loop_load_agrees": true,
+            "n_foreclosed_enum": 0,
+            "n_foreclosed_now": 0,
+            "n_foreclosed_unmeasured": 0,
+            "overrun_marked": true,
+            "persists": true,
+            "projection_binds": true,
+            "projection_only_tightens": true,
+            "receipt_committable": true,
+            "refuses_oversized": true,
+            "remaining_mid_s": 57000.0,
+            "shipped_refusal": true,
+            "shipped_refusal_s": 0.012,
+            "slack_predicts_refusal": true,
+            "stale_writer_safe": true,
+            "starts_full": true,
+            "wiring_ok": true
+          },
+          "ran_at": "2026-09-06T01:16:05",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "5fa065bb96101742",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "8c5ea327a6f65bd8",
+      "impl_sha": "f5ed13abefa19832",
       "message": "",
       "metrics": {
         "affords_small": true,
@@ -24788,24 +24862,24 @@
         "class_slack": [
           {
             "budget": "cpu<2h",
-            "n": 59,
-            "n_foreclosed": 0,
+            "n": 60,
+            "n_foreclosed": 39,
             "slack_s": 3600.0,
-            "used_s": 3.5
+            "used_s": 4629.92
           },
           {
             "budget": "cpu<10min",
-            "n": 78,
+            "n": 80,
             "n_foreclosed": 0,
             "slack_s": 46800.0,
-            "used_s": 3.5
+            "used_s": 4629.92
           },
           {
             "budget": "cpu<1min",
             "n": 23,
             "n_foreclosed": 0,
             "slack_s": 56545.56,
-            "used_s": 3.5
+            "used_s": 4629.92
           }
         ],
         "corrupt_ledger_fails_closed": true,
@@ -24818,13 +24892,13 @@
         "fresh_admits_worst": true,
         "gpu_unbound": true,
         "isolation_ok": true,
-        "live_load": 0.2,
-        "live_remaining_s": 57596.5,
+        "live_load": 0.55,
+        "live_remaining_s": 52970.08,
         "load_refused": true,
         "loop_load_agrees": true,
-        "n_foreclosed_enum": 0,
-        "n_foreclosed_now": 0,
-        "n_foreclosed_unmeasured": 0,
+        "n_foreclosed_enum": 58,
+        "n_foreclosed_now": 39,
+        "n_foreclosed_unmeasured": 39,
         "overrun_marked": true,
         "persists": true,
         "projection_binds": true,
@@ -24833,16 +24907,16 @@
         "refuses_oversized": true,
         "remaining_mid_s": 57000.0,
         "shipped_refusal": true,
-        "shipped_refusal_s": 0.012,
+        "shipped_refusal_s": 0.072,
         "slack_predicts_refusal": true,
         "stale_writer_safe": true,
         "starts_full": true,
         "wiring_ok": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 215.3,
+      "peak_rss_mb": 215.7,
       "preserved_impl": null,
-      "ran_at": "2026-09-06T01:16:05",
+      "ran_at": "2026-09-06T13:19:25",
       "seeds": [
         0
       ],
@@ -25077,6 +25151,49 @@
       ],
       "spec_id": "T0.34",
       "spec_sha": "264208da469df397",
+      "status": "PASS"
+    },
+    "T0.35": {
+      "amended": [],
+      "attempt": 1,
+      "commit": "e800964",
+      "compute_s": null,
+      "control_metrics": {
+        "full_instrument_sees_violator": true,
+        "optin_examined": 1,
+        "optin_violations": 0
+      },
+      "duration_s": 3.52,
+      "gpu_job_id": null,
+      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "history": [],
+      "impl_sha": "26e533f21c1e35c4",
+      "message": "",
+      "metrics": {
+        "compile_failures": 0,
+        "compile_failures_named": [],
+        "control_optin_reads_clean": true,
+        "detector_fires_on_lazy_undeclared": true,
+        "detector_silent_on_declarer": true,
+        "failed_properties": [],
+        "grandfather_stale": 0,
+        "grandfather_stale_named": {},
+        "grandfathered": 35,
+        "late_future_import_parse_compile_split": true,
+        "new_undeclared": 0,
+        "new_undeclared_named": {},
+        "properties_failed": 0,
+        "undeclared_importers": 35
+      },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 215.2,
+      "preserved_impl": null,
+      "ran_at": "2026-09-06T13:19:21",
+      "seeds": [
+        0
+      ],
+      "spec_id": "T0.35",
+      "spec_sha": "e5497a3a40b0bcc2",
       "status": "PASS"
     },
     "T1.01": {

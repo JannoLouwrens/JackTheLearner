@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 106 / 244 demonstrated
+## 107 / 245 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -1113,6 +1113,10 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Every launch through scripts/launch_detached.sh is admitted against the same day ledger as the runner's children BEFORE it detaches, and bills its measured wall clock incrementally as it runs — split across the calendar days it spans — so a multi-day child appears in every day it occupied and a group-killed child undercharges by at most one heartbeat.
       - _dies if:_ A detached child that runs without moving the budget, a midnight-straddling interval billed to a single day, or an undercharge after SIGKILL of the process group exceeding one heartbeat plus slack.
       - _then delete:_ Nothing on the ladder; it protects the tenants, which SYSTEM.md ranks above the ladder.
+- [x] **T0.35** An implementation dependency cannot go undeclared
+      - _asserts:_ Every registered spec's implementation module, parsed statically (never imported), declares in IMPL_DEPS every repo-root module it imports at ANY nesting depth — except a named, shrink-only grandfather set of today's 35 measured violators, which may only lose entries — and every registered module compile()s (dp_04 carried a statement above its future-import for seven days; ast.parse accepts that, compile() refuses it).
+      - _dies if:_ A repo-root import absent from both IMPL_DEPS and the grandfather set (a NEW undeclared dependency, on any spec), a grandfather entry that no longer matches a live violation (stale allowlist = licence for silent regression), a registered module that does not compile, or the detector missing the lazy known-positive fixture / firing on the declarer fixture.
+      - _then delete:_ The assumption that a green STALE-CLAIMS lane means the board is fresh. It means the DECLARING third of the board is fresh; this spec makes the other two thirds unable to hide.
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
