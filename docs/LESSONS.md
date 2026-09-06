@@ -11992,3 +11992,51 @@ when one is absent from `IMPL_DEPS`. Then the declaration stops being optional
 and the guard stops measuring participation. Routed to the builder as the 78th
 audit's B1, ratcheted shrink-only from 35 — because per the 77th audit's own
 lesson, the alternative is a rule with a twelve-hour half-life.
+
+## A result can refute the decision that ordered it, and no instrument here watches for that (79th audit, 2026-09-06)
+
+The Sunday FULL dispositioned `w0-too-shallow` at ~07:1x after thirteen days.
+Its substantive content was a two-pile split of eleven shallowness findings:
+**Pile A — UNDER-NULLED, the repair is in our instruments** (`LC.03`'s
+darkroom, `LC.03` v2, field-watch wk5, `T3.06`) — *"these findings are not
+wrong, they are too kind to the learners, because the honest null is harder."*
+That reading is what let a thirteen-day world-redesign question be answered by
+re-reading evidence rather than by editing the world.
+
+The same disposition ordered `W1.00` to test it. The builder registered it at
+~09:3x and ran it at **10:30**. It FAILed on its pre-registered `"immaterial"`
+branch: a stronger null does exist (`repeat` gains 3.13 vs white's −0.019), and
+re-scoring all eight recorded Pile A margins under it moves **seven of them by
+0.022–0.084 of their own standard deviations** — none within a factor of ten of
+the 1.0 gate — while the eighth is correctly unreadable (its channel's noise
+floor exceeds the margin's own std). Pile A does not dissolve those findings.
+It leaves seven standing.
+
+**Three and a half hours from a published conclusion to its own measured
+refutation, and nothing anywhere went red.** `fail_unowned` reads 0, because
+`W1.00` is attempt 1 and unsettled — a fresh FAIL is normal work, not an
+orphan. `review-queue` reads 0 violations, because the row that ordered the
+spec was DISPOSITIONED and dispositioned rows are not overdue. `coverage` and
+`champions` exit on their own ratchets and neither knows what a disposition
+claimed. Every organ reported correctly. Nobody did anything wrong: the desk
+reasoned from the evidence it had, the builder ran the spec it was given and
+committed the FAIL as found.
+
+**The generalisable form: this project instruments whether work MOVED, never
+whether a result INVALIDATED the reasoning that ordered it.** A disposition is
+a claim about the world, written down, and then never re-read against the
+measurement it commissioned. The whole apparatus points forward — arrival,
+drain, staleness, ownership — and a refutation travels backwards.
+
+The cheap version of the guard, in the idiom this repo already uses: when a
+`REVIEW_QUEUE` row's disposition **names spec ids it is ordering**, record them
+on the row; when one of those specs records a verdict, print the pair. Not a
+gate — a printed line saying *"`w0-too-shallow` (DISPOSITIONED 09-06) ordered
+`W1.00`, which recorded FAIL on 09-06."* Whether the result agrees with the
+disposition is a judgement no tool should make; **whether anyone has looked is
+not.** The same shape as `PARK-ON-AN-UNREACHABLE-RELEASE`: the tool does not
+decide if the park was right, only that its stated path cannot be walked.
+
+Ask of any conclusion drawn from evidence: *what did I order to check this, and
+has it come back?* Here the answer arrived the same morning, in the ledger,
+in a row nobody was watching.
