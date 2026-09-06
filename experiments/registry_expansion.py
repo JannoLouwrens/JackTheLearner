@@ -7538,11 +7538,14 @@ EXPANSION: list[Spec] = [
                "an AST walk; neither appears in the tree today. "
                "Deleting a grandfather entry is the ONLY legal edit to the "
                "set; additions are the widening move UNREACHABLE_BASELINE's "
-               "header forbids. No COVERS declaration: this is a harness "
+               "header forbids. No coverage declaration: this is a harness "
                "spec, not a GOAL.md commitment claim — the first draft "
-               "declared 'COVERS: harness integrity (rule)' against a "
-               "commitment that does not exist and T0.21's p7 caught it "
-               "within the hour, which is that spec doing its one job."),
+               "declared one against a commitment ('harness integrity') "
+               "that does not exist and T0.21's p7 caught it within the "
+               "hour, which is that spec doing its one job. (The marker "
+               "word itself cannot appear in these notes: T0.21's parser "
+               "reads it in prose too, which is by design — a word that "
+               "flatters coverage must be unwritable, not merely wrong.)"),
 
     # ── OWNERS_HANDS.md §6 (INTEGRATION_QUEUE row, registered 2026-09-04) ────
     # GOAL.md: "their hands may leave things in his world for him to find —
