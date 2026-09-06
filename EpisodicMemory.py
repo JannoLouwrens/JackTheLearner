@@ -96,20 +96,48 @@ class EpisodicMemory:
                  half_life_s: float = 6 * 3600.0,
                  w_recency: float = 1.0, w_importance: float = 1.0,
                  w_similarity: float = 10.0,
-                 abstain_below: float = 0.34):
-        """abstain_below is a SIMILARITY floor, not a score floor: an event can
-        be recent and important and still be the wrong answer. 0.34 means at
-        least roughly a third of the query's content words must appear in the
-        event before any recency or importance is allowed to speak.
+                 abstain_below: float = 0.95):
+        """abstain_below is a COVERAGE floor over the cue's KNOWN words, not a
+        score floor: an event can be recent and important and still be the
+        wrong answer. Similarity is measured only over the cue words the store
+        has ever heard (the union of stored-event tokens); 0.95 means an event
+        must contain essentially ALL of them before recency or importance is
+        allowed to speak. A cue whose every content word is unknown gets [].
+
+        RECALIBRATED 2026-09-06 (queue row `me1-similarity-floor-never-
+        abstains`; probe: experiments/tests/me1_floor_probe.py, 5 arms x 3
+        seeds). The previous floor — raw containment |q∩e|/|q| >= 0.34 — never
+        abstained when the target was absent but its neighbours were present:
+        a 2-of-3-word neighbour scored 0.50 and sailed through (ME.1
+        distractor_abstention 0.0000 ± 0.0, attempt 5). The two one-constant
+        repairs both fail a measured scar: raising the raw floor to 0.60
+        refuses the TRUE target the moment the cue carries four unknown junk
+        words (verbose recall 0.000 on all seeds — ME.11's scar), and a
+        top-two margin rule makes every one-word attribution question abstain
+        (terse answer 0.000 — ME.9's scar, the one containment was adopted to
+        fix). Coverage-over-known-words passes all of ME.1's conjuncts on all
+        seeds with cued_recall unchanged (0.833–0.867) BECAUSE it splits the
+        cue's unmatched words into noise (never stored: ignored) and evidence
+        (stored but absent from this event: disqualifying).
+
+        The hole this opens, named rather than hidden: a cue whose only known
+        word is a common one ("...the zeppelin telescope kettle...") now
+        answers with its best kettle memory instead of abstaining on dilution.
+        That is low-precision recall, not fabrication of a non-event — the
+        all-unknown fabricated control still abstains at 1.0 — and ME.1's
+        distractor control cannot see it because its cues are all-known. If a
+        future spec measures it as a real failure mode, that is a new row, not
+        a quiet floor tweak.
 
         w_similarity is deliberately an order of magnitude above the other
         weights: content match is the PRIMARY KEY, recency and importance are
         tie-breakers among equally matching events. With the weights near
         parity, a fresher event matching 2 of 3 cue words outvoted the right
         event matching all 3 — measured on ME.1, recall fell from 0.85 to
-        0.70 exactly this way. At 10x, a one-word similarity gap (>= 0.25 of
-        a typical cue) is worth more than the entire recency+importance range
-        (2.0), so the wrong-but-recent event can no longer win.
+        0.70 exactly this way. Under the coverage floor the surviving
+        candidates are near-tied on similarity, so recency+importance now do
+        most of the ranking among them — which is the Park-et-al design
+        working as intended, not a regression.
         """
         self.path = Path(path) if path else None
         self.half_life_s = half_life_s
@@ -117,6 +145,8 @@ class EpisodicMemory:
         self.abstain_below = abstain_below
         self.events: List[Event] = []
         self._tok: List[set] = []
+        self._vocab: set = set()   # union of stored tokens; safe because the
+                                   # log is append-only (no delete API exists)
         if self.path and self.path.exists():
             self._load()
 
@@ -132,6 +162,7 @@ class EpisodicMemory:
                    eid=len(self.events))
         self.events.append(ev)
         self._tok.append(_tokens(text))
+        self._vocab |= self._tok[-1]
         if self.path:
             with open(self.path, "a", encoding="utf-8") as fh:
                 fh.write(ev.to_json() + "\n")
@@ -147,6 +178,7 @@ class EpisodicMemory:
             ev.eid = len(self.events)
             self.events.append(ev)
             self._tok.append(_tokens(ev.text))
+            self._vocab |= self._tok[-1]
 
     # ── retrieval ───────────────────────────────────────────────────────
     def recall(self, query: str, top_k: int = 3,
@@ -167,6 +199,16 @@ class EpisodicMemory:
         q = _tokens(query)
         if not q:
             return []
+        # Coverage over KNOWN cue words. A cue word the store has never heard
+        # in any event is noise and is dropped before scoring; a cue word the
+        # store knows but THIS event lacks counts against the match. The old
+        # raw containment |q∩e|/|q| treated both alike, so a 2-of-3-word
+        # neighbour cleared the floor whenever the cue carried filler — the
+        # confabulation ME.1's distractor control measured at 0.0000
+        # abstention. See __init__'s docstring for the probe that chose this.
+        q_known = q & self._vocab
+        if not q_known:
+            return []
         wr, wi, ws = self.w
         out: List[Recall] = []
         for ev, tok in zip(self.events, self._tok):
@@ -174,7 +216,7 @@ class EpisodicMemory:
                 continue
             if speaker is not None and ev.speaker.lower() != speaker.lower():
                 continue
-            inter = len(q & tok)
+            inter = len(q_known & tok)
             if inter == 0:
                 continue
             # CONTAINMENT, not Jaccard: how much of the QUERY the event covers.
@@ -185,7 +227,7 @@ class EpisodicMemory:
             # across the board); containment keeps the abstention floor
             # meaningful for fabricated content while letting terse, natural
             # questions through.
-            sim = inter / len(q)
+            sim = inter / len(q_known)
             if sim < self.abstain_below:
                 continue
             age = max(0.0, now - ev.t)
