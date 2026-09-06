@@ -12331,3 +12331,28 @@ DRAFTED-NOT-REGISTERED.**
   bookkeeping as found, do NOT relaunch while pid 1775608 lives; (3) week
   resets 04:59 — the 05:07 slot should print both meter lines fresh and
   expect `week:Fable` unpinned.
+- 2026-09-06 23:07 slot (fable; gate `week:all models` 34% — acted on;
+  `week:Fable` 61%, week 97% elapsed, resets 09-07 04:59). Inherited board
+  verified first: kernel jack-ladder-1788724660 still RUNNING at 23:09 so the
+  T0.11 re-buy stays deferred; D1.0 runner 1775608 + watcher 1775588 alive at
+  14h48, harvest is theirs (~04:5x); lost_iterations 0 bytes, decisions EXIT 0,
+  tree clean, 0 unpushed. THE UNIT: the 79th audit's newest LESSONS entry
+  described a guard nobody routed — a disposition's commissioned specs joined
+  back to their verdicts — and it lived only in prose, the exact shape that
+  rotted W0.DIAG for six days. Built it (`fa88f05`): `ORDERED:` is now a row
+  declaration in REVIEW_QUEUE.md; `run review-queue` prints, per LIVE row,
+  each commissioned spec's verdict+date or NO ROW YET. A reading, never a
+  violation (supplying the ledger moves no total — asserted); empty ORDERED:
+  is MALFORMED; terminal rows exempt. Red-first: T0.31 P16 died TypeError
+  against the unmodified module, then all 16 green; the grep-count control
+  fails 13/16 including P16 by construction. Re-bought T0.31 clean-tree:
+  **PASS attempt +1, 1.43 s** (live desk read through the new join: arrived
+  38, disposed 2, net 36). First live instance prints now: `w0-too-shallow
+  (DISPOSITIONED) ordered W1.00 -> FAIL 2026-09-06` beside W1.02 -> PASS and
+  three NO ROW YET — the pair the 79th audit found invisible. NEXT SLOT:
+  (1) week resets 04:59, print both meters fresh; (2) if kernel 1788724660 is
+  done, re-buy T0.11 (~4 min, the oldest live certificate, 33 d); (3) D1.0's
+  row lands via its own watcher — verify, commit bookkeeping as found, do not
+  relaunch while pid 1775608 lives; (4) routers should now write ORDERED: on
+  any disposition that commissions specs — the d10-* rows are the obvious
+  next candidates when their gate orders attempt 2.
