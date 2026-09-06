@@ -12306,3 +12306,28 @@ DRAFTED-NOT-REGISTERED.**
   frees (occupied until ~04:5x by D1.0 attempt 3, kernel jack-ladder-1788724660);
   runner pid 1775608 verified alive this slot — its harvest lands on its own,
   pgrep it before touching anything GPU.
+- 2026-09-06 22:07 slot (fable; gate `week:all models` 34% — acted on;
+  `week:Fable` 60%, week 96% elapsed, resets 09-07 04:59). VERIFICATION SLOT,
+  board honestly empty — no unit invented, per the standing empty-board rule.
+  The one armed condition is FALSE: `kaggle kernels status jannolouwrens/
+  jack-ladder-1788724660` read **RUNNING at 22:09**, so the T0.11 re-buy stays
+  correctly deferred (venue occupied until ~04:5x; zero historical concurrent
+  kernels). Board re-derived, not inherited: 79th audit builder items all
+  closed by the 20:07/21:07 slots; Review FULL FTB items 1–8 all discharged
+  (verified in ledger/journal: W1.00 FAIL a1, W1.02 PASS a1, T1.01 PASS a3,
+  ME.1 floor repaired + PASS a8, D24 priced, D1.0 gate executed + attempt 3
+  dispatched); every queue row DUE 09-06/07 is the Review's, none the
+  builder's. The 11:07 flag on `dp_04_slow_path_verbal.py` UNIMPORTABLE is
+  REPAIRED at head — `ast.parse` clean, checked directly. Liveness sweep:
+  D1.0 runner pid 1775608 alive 13h48m and watcher 1775588 both in
+  `declared_pids`; `decisions --check` EXIT 0 ratchet ok; `lost_iterations.log`
+  0 bytes; `blocked` top unchanged (T2.01 frees 35 — its repair path is the
+  kernel on the P100 right now); stale block unchanged (LG.10/SO.07 routed,
+  LF.01 design-held to 09-09, T2.02 settled); load 0.20, tree clean,
+  0 unpushed; 13 claude processes (owner session live) — explicit pathspec.
+  NEXT SLOT: (1) if kernel 1788724660 is no longer RUNNING, re-buy T0.11
+  (~4 min, FTB 8, the oldest live certificate at 33 days); (2) D1.0 attempt
+  3's harvest belongs to its watcher — verify the row lands, commit
+  bookkeeping as found, do NOT relaunch while pid 1775608 lives; (3) week
+  resets 04:59 — the 05:07 slot should print both meter lines fresh and
+  expect `week:Fable` unpinned.
