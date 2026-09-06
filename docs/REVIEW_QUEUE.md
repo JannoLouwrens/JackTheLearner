@@ -1620,7 +1620,7 @@ ROUTED: me11-every-arm-hits-the-same-infeasible-branch | 2026-08-31 | 23d53c7 (5
     0.250 recall ceiling: this venue's semantic scorers invent more easily
     than they find, exactly as the registry's control note predicted.
 
-ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 3 seeds x 3000 decisions) | OPEN
+ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 3 seeds x 3000 decisions) | DISPOSITIONED 2026-09-06 (Review FULL — option (a), the re-scope specified in the C2' block below; design only, the builder implements and re-runs, and the 0.6 m bar does not move in either branch)
     DUE: 2026-09-06 | a disposition for LT.01's C2 clause, owed by the Review's
         Sunday FULL run and decided in the SAME window as `w0-too-shallow`,
         because both turn on the identical fork (is the repair the world, or
@@ -1675,6 +1675,79 @@ ROUTED: lt01-c2-body-cannot-rise | 2026-09-01 | a0e6011 (LT.01 attempt 1, FAIL, 
     Staleness bill: NONE for (a) — LT.01 has one FAIL row and no certificate
     cites it. (b) and (c) bill nothing either; (c) defers to whatever bill
     `w0-too-shallow` chooses.
+    DUE: 2026-09-13 | IMPLEMENTATION of `C2'` below plus LT.01 attempt 2,
+        owed by the BUILDER. This row stays LIVE until a commit carries the
+        adversarial height-seeking arm; a re-run without that arm is NOT this
+        disposition and must not be stamped against it.
+
+**DISPOSITION (Review FULL, 2026-09-06): option (a), and here is the exact
+re-scope. Read the objection first, because this is the shape the law
+forbids and I have to show why it is not that.**
+
+**The objection.** Re-scoping a clause of a FAILING spec so the spec can pass
+is, on its face, the one act I am forbidden. `LT.01` FAILs, seven specs are
+welded behind it, the Curiosity-signal seat's entire arena is among them, and
+I have an obvious motive.
+
+**Why the EXPERIMENT is wrong, in one line that decides it.** The spec is
+titled ***"The Ladder Test is measurable: null floor and un-gameable rise"***
+— and it FAILED because the rise turned out to be **un-gameable**. `C2`
+pre-registered, from a 2026-08-09 pilot on a different body whose free-roam z
+ceiling was 1.007 m, that a random agent *must reach* ≥ 0.6 m of NON-LADDER
+torso rise. That requirement exists as a NECESSITY ARGUMENT for the
+ladder-specific `h(t)` metric: *show raw height is gameable, therefore h(t) is
+needed.* On the as-built rover body the reading is **0.084 ± 0.067 m** — the
+body tips within seconds and travels by dragging. So the clause demands, as a
+precondition of the claim, an observation whose absence is the claim's own
+title. That is not a hard bar the system failed to clear; it is a
+pre-registration that encoded the wrong sign, and its failure carries **zero
+information about whether the Ladder Test is measurable**. Every other clause
+HELD: null floor exactly 0 engaged attempts, P(hang | 3 s burst) 0.031 inside
+the pre-registered [0.01, 0.05] band, platform unreachable by free-roam AND by
+the adhesion-disabled oracle, force calibration +1.000 W, scripted hang ENGAGED
+through the full `h(t)` conjunction, oracle rise 0.416 m. This is the T1.02
+precedent on its facts, and the attempt-1 FAIL row stays in history.
+
+**`C2'` — the replacement, and it is STRICTLY HARDER than `C2`.** The clause
+becomes a two-branch necessity test in which **the branch taken is RECORDED on
+the ledger row**, and the `0.6 m` bar is unchanged in both:
+
+  **Branch G — GAMEABLE (the original observation).** A null reaches ≥ 0.6 m
+  non-ladder torso rise → raw height is gameable, `h(t)` is necessary,
+  identical to `C2` as written. Nothing about this branch changes.
+
+  **Branch U — UN-GAMEABLE, and it must be EARNED, not inferred from an
+  absence.** To record `un-gameable`, the run must show BOTH: (i) the null's
+  non-ladder rise ceiling is < 0.6 m — the reading `C2` already has — AND
+  (ii) **an ADVERSARIAL height-seeking arm also fails to reach 0.6 m**: a
+  privileged arm with adhesion ENABLED, scored on raw torso height alone,
+  explicitly optimised to maximise it while never engaging the ladder, run at
+  the same seeds. Only if a policy that is *trying* to game raw height cannot
+  do it is "un-gameable" a measurement.
+
+**That is the strengthening, stated plainly:** `C2` as written had **no
+adversarial arm at all** — it inferred gameability from a random agent and
+would have inferred un-gameability from that same random agent's silence.
+`C2'` requires a run to defeat a deliberate gamer before it may claim the
+metric is safe. A spec that could previously conclude "un-gameable" from a
+null doing nothing must now beat an optimiser doing its best.
+
+**And `h(t)` STAYS under Branch U.** Un-gameability is a property of THIS body,
+measured today; a future body that can rise re-opens Branch G. Deleting the
+ladder-specific metric because the current body is too weak to threaten it
+would be exactly the kind of convenience this file exists to refuse.
+
+**WHAT THIS DOES NOT FIX, and I will not let it be read as fixing it.** The
+`D9`/`D8` DEADLOCK is untouched: `D9`'s default parks the body question until
+the playground-humanoid line, that line is `LT.08`, and `LT.08` sits behind the
+`LT.01 → LT.03 → LT.05 → LT.07` chain whose first link failed *because of the
+body*. Option (a) ROUTES AROUND that deadlock; it does not dissolve it, and
+nobody should read a green `LT.01` as evidence the body question was answered.
+Option (b) — register `W0.BAL` so the body gets a seat and arm C's upright
+1.000 vs 0.002–0.004 becomes a defended verdict — went to the owner on
+2026-08-31 and is still on the desk. It stays there, and I am re-raising it in
+this run's FOR THE OWNER rather than deciding it: a joint property of two
+armed defaults is not mine to unpick.
 
 ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca793 (58th audit F1) + the B1 repair commit | OPEN
     DUE: 2026-09-06 | successor specs or re-parenting for the dead
