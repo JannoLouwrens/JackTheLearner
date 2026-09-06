@@ -467,6 +467,42 @@ the right spend"* — that is `D10` branch (b) and it is the owner's, unchanged.
 If the answer is no new world, `W1.00`, `W1.02` and `W1.04` still stand: they
 are measurement repairs and they are owed regardless of which world we run in.
 
+ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Part 2 (ME.1 strengthened, FAIL, clean-tree re-buy) | OPEN
+    DUE: 2026-09-13 | a repair for `EpisodicMemory`'s similarity floor, owed
+        by the BUILDER — either a calibration that abstains on absent targets
+        without costing `cued_recall`, or a measured demonstration that the
+        two cannot be had together on this scorer, which would be an
+        architecture finding and belongs on the owner's desk.
+    Question: `EpisodicMemory.recall` never abstains when the target is
+    absent but its neighbours are present. ME.1 strengthened 2026-09-06 with
+    ME.11's distractor control — 60 events held OUT of the store, cued for
+    against the 940 retained — measures `distractor_abstention` **0.0000 ±
+    0.0** on 3 seeds (40.0 ± 4.5 cues evaluated) at the spec's OWN unchanged
+    0.95 bar, while the pre-existing `fabricated_abstention` reads a perfect
+    **1.0000**. Verified alive before the row was written: store size 940 as
+    designed, and a genuinely out-of-vocabulary cue still returns `[]`, so the
+    floor exists — it is calibrated for disjoint vocabulary only. Worked
+    example: *"the thing about the meadow and the ladder amber"* returns
+    *"ada buried the amber kite near the meadow"* — 2 of 3 content words, full
+    confidence, no abstention. That is the failure mode ME.1's own docstring
+    names: *"confabulating the nearest neighbour is the failure mode that
+    poisons every downstream user of memory — a companion that invents your
+    preferences is worse than one that forgets them."* It was invisible for 29
+    days because the only control that could see it was in a different spec.
+    Blast radius, stated plainly: ME.1 FAILs, and ME.3, ME.5, ME.9, ME.10 are
+    blocked behind it (unreachable 94 -> 95, baseline raised with this
+    justification in `coverage.py`'s growth log). `ME.9` is named in GOAL.md.
+    Staleness bill: NONE mechanical — no PASS certificate hashes
+    `EpisodicMemory.py` today. SEMANTIC — the four ME specs above all rest on
+    the same floor and each should be re-read once it is recalibrated.
+    **A NOTE ON MY OWN RECOMMENDATION.** This row is the first live test of
+    `D23`: I have just discharged a `FAIL-UNOWNED` by routing a FAIL into the
+    queue that measures its own drain as UNBOUNDED, which is precisely the act
+    I asked the owner to keep counting. It was still the right act — the
+    alternative is an unrouted orphan — and it is exactly why `D23`'s default
+    is a second printed number rather than a stricter gate. Recorded here so
+    that when `FAIL-OWNED-BUT-UNDRAINED` first prints, this row is in it.
+
 ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
     DUE: 2026-09-13 | the single world-edit sitting that `W1.03` opens, which
         pays the 21-certificate `playground.py` mechanical bill ONCE for every

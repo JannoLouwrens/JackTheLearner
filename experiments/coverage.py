@@ -927,6 +927,25 @@ QUEUE_EMPTY_BASELINE = frozenset()
 # were moved and nothing was renumbered, reworded or re-justified — so where
 # an entry says "the N-entry above" it was written under the old order and
 # means the EARLIER entry, which now sits BELOW it.
+#   95 @ 2026-09-06 (GROWTH, Review FULL Part 2) — ME.1 was STRENGTHENED and
+#     the strengthening FAILED it, which blocks ME.3, ME.5, ME.9 and ME.10
+#     behind it and moves the live count 94 -> 95. The justification the
+#     ratchet asks for, in full: ME.1's abstention control used cues whose
+#     every content word was ABSENT from the store, so a keyword filter
+#     passed it and it read a perfect 1.0000 for 29 days. On 2026-09-02
+#     ME.11 SETTLED FAIL measuring the HARD version of that same question on
+#     this project's retrieval stack — gold masked, topically-similar
+#     remainder retained — at abstention 0.877 against 0.95. ME.1 now carries
+#     that control (60 events held out of the store, cued for against the 940
+#     remaining) at its OWN unchanged 0.95 bar, and measures
+#     distractor_abstention 0.0000 +- 0.0 on three seeds against
+#     fabricated_abstention 1.0: the store confabulates the nearest neighbour
+#     on EVERY absent-target cue. No threshold moved in either direction and
+#     cued_recall is unchanged at 0.85. This growth is a measurement becoming
+#     honest, not a regression — the four specs behind ME.1 were always
+#     resting on a floor calibrated against a control it could not fail.
+#     Routed for repair as `me1-similarity-floor-never-abstains` (DUE
+#     2026-09-13), so FAIL-UNOWNED returns to its floor of 0.
 #   94 @ 2026-09-04 (SHRINK, builder) — SO.06 PASSED (attempt 2, clean tree
 #     3ad646e) and released SO.07, SO.08 and SO.09 in one step, so the live
 #     count fell 97 -> 94 within the hour the 97 was written. The floor follows
@@ -1010,7 +1029,7 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 94
+UNREACHABLE_BASELINE = 95
 
 
 def unreachable_ratchet(ledger=None,
