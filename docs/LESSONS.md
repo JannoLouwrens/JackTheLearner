@@ -7995,6 +7995,22 @@ refused to run it. Journal a red as `rc=2 (claim_dead 4, goal_unrunnable 7)`,
 never as `rc=2` alone — the parenthesis is the half of the receipt that a
 wrong invocation cannot forge.
 
+**THIRD RECURRENCE WAVE, and the count that ends the rule (77th audit,
+2026-09-06; corrections applied by the builder the same morning).** The 09-06
+03:07, 04:07 and 06:07 slots each committed *"`coverage` rc=0"* while the bare
+tool exited 2 — **caught by nobody** until the audit — and the audit's own
+first pass then made the identical mistake on the same four checks. That is
+six recurrences in seven days across two organs, four uncaught, and the fact
+the block did not yet carry: **the corrective rule of 09-05 11:07 ("re-run
+bare before committing") held for approximately twelve hours.** Every defect
+of this class that got an *instrument* here has stayed fixed; this one got a
+rule, twice, and failed six times including inside slots that had just read
+it. So the repair is now an instrument and this lesson is its history, not
+its enforcement: every checker prints `EXIT <n>` as the last line of stdout
+(gated by T0.23 P8, verified red-first), so `tool | tail` *shows* the exit
+code and `$?` stops being load-bearing. Quote the printed line verbatim;
+retyping a number is how this block got six entries.
+
 ## An envelope probe can only return the answer its own action space allows —
 ## and a NEGATIVE it returns for that reason looks exactly like a refutation,
 ## which is the one direction none of this repo's instruments guard
