@@ -927,6 +927,18 @@ QUEUE_EMPTY_BASELINE = frozenset()
 # were moved and nothing was renumbered, reworded or re-justified — so where
 # an entry says "the N-entry above" it was written under the old order and
 # means the EARLIER entry, which now sits BELOW it.
+#   94 @ 2026-09-06 (SHRINK, builder, 78th audit B4) — LG.00 re-bought PASS
+#     (attempt 7, clean tree) after the 12:32 --llm-pass verdict recompute
+#     landed, and its 12:16 VOID's +2 came back down: DP.04 (parents DP.00 and
+#     VO.01 both PASS, so its reachability turned solely on LG.00) and LG.10
+#     (sole dependency LG.00) re-entered the reachable set. LG.11 stays
+#     unreachable behind LF.01's VOID, exactly as its registration entry
+#     predicted. NOTE the interim reading of 96 (visible in run status
+#     13:07-13:1x) was ABOVE the then-floor of 95 and no commit raised the
+#     constant — that growth is hereby accounted: it was LG.00's VOID blocking
+#     these same two specs, transient by design (the spec self-VOIDs on any
+#     retrieval change and re-buys after the recompute), and the floor
+#     follows the number down in the SAME commit, shrink-only.
 #   95 @ 2026-09-06 (GROWTH, Review FULL Part 2) — ME.1 was STRENGTHENED and
 #     the strengthening FAILED it, which blocks ME.3, ME.5, ME.9 and ME.10
 #     behind it and moves the live count 94 -> 95. The justification the
@@ -1029,7 +1041,7 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 95
+UNREACHABLE_BASELINE = 94
 
 
 def unreachable_ratchet(ledger=None,

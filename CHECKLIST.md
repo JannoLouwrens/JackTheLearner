@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 105 / 244 demonstrated
+## 106 / 244 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -823,7 +823,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 4 — COMPOSITION — does adding B break A?
 
-- [~] **LG.00** Jack knows what his LLM cannot — he is not a puppet  — grounded_knowledge_advantage=0.699333; grounded_knowledge_advantage_s0=0.8333
+- [x] **LG.00** Jack knows what his LLM cannot — he is not a puppet
       - _asserts:_ On questions about HIS world, HIS body and HIS history, full Jack (learned core + diary + LLM) beats LLM-ALONE given the identical prompt context, by >=3 sigma. The knowledge is in the parts that LIVED, not in the frozen weights that never did.
       - _dies if:_ LLM-alone matches full Jack on world questions. Then Jack is a costume on a language model, the learned core and diary are decorative, and the project has not built a creature.
       - _then delete:_ The frozen-LLM architecture as implemented. If the mouth is doing the knowing, the mind was never built.
