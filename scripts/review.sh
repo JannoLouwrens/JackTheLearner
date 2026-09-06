@@ -74,15 +74,16 @@ say "review start — mode ${MODE}, model ${MODEL}, ${TMOUT} / ${MAXTURNS} turns
 # after this moment are this run's own acts. Captured before the agent starts.
 RUN_START=$(date +%s)
 mark_log
-usage_ledger review start    # D15 (d): attribution, both meters, never blocks
+usage_ledger review start "$MODEL"    # D15 (d): attribution; model passed, not env-read (76th B1)
 nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
 if credits_out; then
   say "OUT OF CREDITS on ${MODEL} — retrying on sonnet"
   mark_log
+  MODEL=sonnet   # the ledger append below must name what RAN (76th B1)
   nice -n 19 env TMPDIR=/data/tmp timeout "$TMOUT" claude -p "$(printf "REVIEW MODE TODAY: %s\n\n" "$MODE"; cat "$REPO/scripts/review_prompt.md")" \
-    --model sonnet --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
+    --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 elif [ "$RC" -ne 0 ] && api_overloaded; then
   # Transient server-side 5xx (the 08-24 daily died on one 529 and never ran).
@@ -94,12 +95,32 @@ elif [ "$RC" -ne 0 ] && api_overloaded; then
     --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 fi
-usage_ledger review end      # D15 (d): after any retry, one line whatever RC says
+usage_ledger review end "$MODEL"      # D15 (d): after any retry, one line whatever RC says;
+                                      # MODEL tracks the retry branch so this names what RAN
 # A run that dies LATE has already written its report -> stamp it a DRAFT. A run
 # that dies BEFORE writing leaves a clean file that is nonetheless no longer
 # current state -> stamp it STALE, but only once it is older than this organ's
 # 24 h cadence (both branches in scripts/lib_seal.sh; the 08-30 FULL death is
 # the scar for the second one).
 seal_output "$RC" docs/PROGRESS.md review say 25 "$RUN_START"
+# The trend row must not die with the run (76th audit B4). The append to
+# docs/PROGRESS_LOG.md sits at the END of the agent's checklist, and the last
+# two runs both died before reaching it — so the file that exists "so trends
+# survive any single Review" lost its 09-05 row entirely, and a trend file
+# that only records the runs that finished over-reports this desk's own
+# throughput, which is the exact quantity D22 turns on. A dead run writes a
+# row that SAYS it is a hole; a completed run's own append is untouched (the
+# grep guard means this never duplicates one the agent already wrote).
+if [ "$RC" -ne 0 ] && ! grep -q "^| $(date -u +%F) " docs/PROGRESS_LOG.md 2>/dev/null; then
+  echo "| $(date -u +%F) | $MODE | — | — | — | — | INCOMPLETE — the ${MODE} run exited rc=${RC} before appending its own row; written by review.sh (76th audit B4) so the trend has a labelled hole instead of a silent gap. The exit code is in review.log; any sealed draft is bannered in docs/PROGRESS.md. |" >> docs/PROGRESS_LOG.md
+  git add -- docs/PROGRESS_LOG.md 2>/dev/null
+  git commit -q -m "review: rc=${RC} run recorded as an INCOMPLETE row in PROGRESS_LOG.md (76th audit B4)
+
+Committed by review.sh, not by the organ's agent, because the agent died
+before its own append. A trend file that only records the runs that finished
+over-reports the desk's throughput." -- docs/PROGRESS_LOG.md 2>/dev/null \
+    && say "wrote the INCOMPLETE trend row for $(date -u +%F)" \
+    || say "WARNING: could not commit the INCOMPLETE trend row"
+fi
 say "sweep end rc=${RC} — $(grep -c STRENGTHEN docs/PROGRESS.md 2>/dev/null || echo 0) strengthen lines"
 exit 0

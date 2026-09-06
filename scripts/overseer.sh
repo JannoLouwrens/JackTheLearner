@@ -48,20 +48,35 @@ usage_gate say || exit 0
 cd "$REPO" || exit 0
 
 # D15's clause (c), default fired 2026-09-06 (builder; DECIDE block in
-# docs/DECISIONS_NEEDED.md): the FIRST audit of each UTC day is EXEMPT from
-# pacing — a full adversarial pass survives every day whatever the meter says
-# — and the other three slots take the SAME pace_gate as the builder. The 90%
-# usage_gate above is untouched and still runs first. review.sh and
-# field_watch.sh are deliberately not paced: at 7/wk and 1/wk they are not the
-# term that matters (the DECIDE block's own arithmetic).
+# docs/DECISIONS_NEEDED.md): ONE audit per UTC day is EXEMPT from pacing — a
+# full adversarial pass survives every day whatever the meter says — and the
+# other slots take the SAME pace_gate as the builder. The 90% usage_gate above
+# is untouched and still runs first. review.sh and field_watch.sh are
+# deliberately not paced: at 7/wk and 1/wk they are not the term that matters
+# (the DECIDE block's own arithmetic).
+#
+# WHICH audit is exempt was amended six hours after the firing (76th audit B2,
+# 2026-09-06). As fired, the exemption went to "the first completed audit of
+# each UTC day" — the 00:37 slot, the one audit that can only ever read
+# YESTERDAY'S Review page, while the two slots that could read today's (12:37,
+# 18:37) were first to be paced away. This desk's own prompt was amended
+# because "the Review reads you every morning and until now you did not read
+# it back" — and clause (c) as fired made that reading the first thing to go.
+# So the exemption now goes to the first COMPLETED audit AT OR AFTER the
+# Review's daily slot (06:37; REVIEW_SLOT_H below, from the crontab). Same
+# spend arithmetic — still exactly one unpaced audit per UTC day — and the
+# fired default is not reversed, only the guaranteed slot moves. Recorded in
+# DECISIONS_RESOLVED.md's D15 entry rather than done silently.
 #
 # The date stamp is written ONLY at the completion point at the bottom of this
-# script, beside NOOP_STATE — so a first-of-day audit that dies does NOT
-# consume the exemption, and the next slot runs exempt again. The guard fails
+# script, beside NOOP_STATE — so an exempt audit that dies does NOT consume
+# the exemption, and the next eligible slot runs exempt again. The guard fails
 # toward MORE oversight, never less (same design as D13's no-op state).
 PACE_DATE_F="$LOGDIR/overseer_pace.date"
-if [ "$(cat "$PACE_DATE_F" 2>/dev/null)" = "$(date -u +%F)" ]; then
-  pace_gate say || { say "audit slot paced (D15 clause c) — a completed audit already ran this UTC day; budget held"; exit 0; }
+REVIEW_SLOT_H=6    # review.sh's crontab hour (37 6 * * *)
+RUN_HOUR=$(date -u +%-H)
+if [ "$(cat "$PACE_DATE_F" 2>/dev/null)" = "$(date -u +%F)" ] || [ "$RUN_HOUR" -lt "$REVIEW_SLOT_H" ]; then
+  pace_gate say || { say "audit slot paced (D15 clause c, 76th B2 slotting) — the exempt audit is the first completed one at or after the Review's ${REVIEW_SLOT_H}:37 slot; budget held"; exit 0; }
 fi
 
 # Declare this audit to procwatch (65th audit B5): the overseer's read-only
@@ -141,7 +156,7 @@ review_liveness say || true
 # after this moment are this run's own acts. Captured before the agent starts.
 RUN_START=$(date +%s)
 mark_log
-usage_ledger overseer start    # D15 (d): attribution, both meters, never blocks
+usage_ledger overseer start "$MODEL"    # D15 (d): attribution; model passed, not env-read (76th B1)
 
 nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
   timeout 25m claude -p "$(cat "$REPO/scripts/overseer_prompt.md")" \
@@ -150,7 +165,7 @@ nice -n 19 ionice -c3 env TMPDIR=/data/tmp \
     --max-turns "$MAXTURNS" \
     >> "$LOG" 2>&1
 RC=$?
-usage_ledger overseer end      # D15 (d): one line whatever RC says
+usage_ledger overseer end "$MODEL"      # D15 (d): one line whatever RC says
 
 # Same credit-exhaustion trap the builder fell into: the CLI prints a message
 # and exits in ~3s, which looks identical to a clean fast run.
@@ -183,7 +198,9 @@ say "audit end rc=${RC} — verdict: ${VERDICT}"
 # A COMPLETED audit is the only thing that resets D13's no-op state: skips
 # back to 0, HEAD and timestamp stamped. Dead runs leave it stale on purpose.
 # D15 (c): the same completion point consumes the day's pacing exemption —
-# only a COMPLETED audit counts as "the first audit of the UTC day".
+# but only for a run that STARTED at or after the Review slot (76th B2): a
+# completed 00:37 audit (paced, and the meter happened to be low) must not
+# spend the exemption the 06:37+ slots exist to receive.
 echo "$(git rev-parse HEAD) $(date -Iseconds) 0" > "$NOOP_STATE"
-date -u +%F > "$PACE_DATE_F"
+[ "$RUN_HOUR" -ge "$REVIEW_SLOT_H" ] && date -u +%F > "$PACE_DATE_F"
 exit 0

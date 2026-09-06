@@ -190,7 +190,8 @@ TOTAL=$(/data/venvs/jackthelearner/bin/python -c \
   "from experiments.registry import LADDER; print(len(LADDER))" 2>/dev/null || echo 105)
 
 say "iteration start — ${BEFORE}/${TOTAL} demonstrated, model ${JACK_LOOP_MODEL:-opus}, load ${LOAD}, ${FREE_GB}GB free"
-usage_ledger builder start    # D15 (d): attribution, both meters, never blocks
+usage_ledger builder start "${JACK_LOOP_MODEL:-opus}"    # D15 (d): the configured primary —
+                              # what WILL run is not known until the chain walks (76th B1)
 if [ -s "$LOST" ]; then
   say "inheriting $(wc -l < "$LOST") iteration(s) lost to limits since the last success (see $LOST)"
 fi
@@ -287,7 +288,10 @@ if [ -z "$CHAIN" ]; then
   echo "$(date -Iseconds) model-floor reading=${READING} chain=${MODEL} ${FALLBACK_MODELS}" >> "$LOST"
   harvest_bookkeeping            # a refused slot still owes detached ledger rows
   ITER_ENDED=1
-  usage_ledger builder end     # D15 (d): a refused slot still writes its pair
+  usage_ledger builder end none    # D15 (d): a refused slot still writes its pair;
+                                   # "none" because NO model ran — recording the configured
+                                   # primary here would attribute spend to a model the floor
+                                   # just refused (76th B1)
   say "iteration end rc=0 — ${BEFORE} -> ${BEFORE} demonstrated (refused at the model floor)"
   exit 0
 fi
@@ -335,8 +339,12 @@ AFTER=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
 
 ITER_ENDED=1
-usage_ledger builder end       # D15 (d): one line whatever RC says (KILLED path
-                               # excepted — a dying shell cannot spawn the CLI)
+usage_ledger builder end "$MODEL"    # D15 (d): one line whatever RC says (KILLED path
+                               # excepted — a dying shell cannot spawn the CLI).
+                               # $MODEL is the WALKED model — the chain loop reassigns
+                               # it per attempt — so a Fable-pinned day that ran on
+                               # Opus is attributed to Opus, not to the Fable line
+                               # the 76th audit caught it billing (9.1, defect 4)
 # The end line may not be silent about stranded compute: `rc=0` next to a
 # 99.7%-CPU orphan is the "Working" README in one line.
 leftover_report

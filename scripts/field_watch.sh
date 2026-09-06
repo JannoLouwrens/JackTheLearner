@@ -41,7 +41,7 @@ say "sweep start — model ${MODEL}"
 # after this moment are this run's own acts. Captured before the agent starts.
 RUN_START=$(date +%s)
 mark_log
-usage_ledger field-watch start    # D15 (d): attribution, both meters, never blocks
+usage_ledger field-watch start "$MODEL"    # D15 (d): attribution; model passed, not env-read (76th B1)
 nice -n 19 env TMPDIR=/data/tmp timeout 30m claude -p "$(cat "$REPO/scripts/field_watch_prompt.md")" \
   --model "$MODEL" --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
 RC=$?
@@ -52,7 +52,7 @@ if credits_out; then
     --model sonnet --dangerously-skip-permissions --max-turns "$MAXTURNS" >> "$LOG" 2>&1
   RC=$?
 fi
-usage_ledger field-watch end      # D15 (d): after any retry, one line whatever RC says
+usage_ledger field-watch end "$MODEL"      # D15 (d): after any retry, one line whatever RC says
 # Same seal as the overseer and the review: a late death leaves a written report
 # that nothing marks as a draft, and a death before writing leaves a page that
 # still claims to be current (scripts/lib_seal.sh). 169 h = this organ's weekly

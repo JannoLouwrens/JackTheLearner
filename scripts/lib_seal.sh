@@ -59,6 +59,47 @@
 # `git commit` otherwise writes the whole index and these organs share a tree
 # with a builder that may have staged anything.
 
+# _seal_stamp_emissions <path> <organ> <rc> <stamp>
+#
+# THE SCAR (76th audit 9.3, 2026-09-06): `D23` — an armed owner decision with a
+# default that fires by silence — was written by the 09-05 Review run that died
+# at max turns. The seal bannered THE PAGE, the sweep committed the run's other
+# dirty files with provenance in the COMMIT MESSAGE — and the entry itself
+# reached the owner's desk reading like any other, because `decisions --check`
+# and every human reads the FILE, not `git log`. A dead run's routed artefacts
+# outlived the banner that was supposed to qualify them.
+#
+# So: when the sweep commits a registry the dead run wrote into, each entry the
+# run ADDED (a `##`/`###` header new in the diff) gets one provenance line
+# directly under its header — a disclosure, never a reversal: nothing is
+# re-dated, weakened or un-armed. Scoped to the three files where an entry can
+# sit on a clock or hold a seat; other swept files keep commit-message
+# provenance only. Idempotent: a header already followed by a PROVENANCE line
+# is left alone.
+_seal_stamp_emissions() {
+  local p="$1" organ="$2" rc="$3" stamp="$4" hdr note
+  case "$p" in
+    docs/DECISIONS_NEEDED.md|docs/REVIEW_QUEUE.md|docs/CHAMPIONS.md) ;;
+    *) return 0;;
+  esac
+  note="> PROVENANCE (scripts/lib_seal.sh, ${stamp}): this entry was written by a ${organ} run that exited rc=${rc} without completing its own checklist — its report is sealed as an INCOMPLETE RUN draft. The entry's facts are that dead run's, unverified until an audit re-measures them; nothing here is re-dated, weakened or un-armed by this line."
+  # Added headers only: the diff is unstaged working-tree vs HEAD, taken before
+  # the sweep's `git add`, so `+## ...` lines are exactly what this run created.
+  while IFS= read -r hdr; do
+    [ -n "$hdr" ] || continue
+    grep -qxF "$hdr" "$p" || continue
+    awk -v h="$hdr" -v n="$note" '
+      { lines[NR] = $0 }
+      END {
+        for (i = 1; i <= NR; i++) {
+          print lines[i]
+          if (lines[i] == h && lines[i+1] !~ /^> PROVENANCE/) print n
+        }
+      }' "$p" > "$p.provstamp" && mv "$p.provstamp" "$p"
+  done < <(git diff -- "$p" 2>/dev/null | grep -E '^\+#{2,3} ' | sed 's/^\+//')
+  return 0
+}
+
 # Hours since the commit that last touched <file>, or 99999 if git cannot say.
 # mtime is the wrong clock: a checkout rewrites it and would make a
 # months-stale report look minutes fresh. UNKNOWN IS NOT ZERO — an unanswerable
@@ -223,6 +264,15 @@ in doubt." -- "$file" 2>/dev/null \
   # path-scoped commit that names the rc, the organ and the sealed report, so
   # `git log` joins them the way the banner joins the report to the log.
   if [ "${#swept[@]}" -gt 0 ]; then
+    # A routed artefact gets the provenance its page gets (76th audit B3):
+    # stamp entries the dying run ADDED to the decision/queue/champions
+    # registries before they are committed, so the disclosure travels in the
+    # FILE the next reader opens, not only in a commit message nobody greps.
+    local _sp _stamp
+    _stamp="$(date -Iseconds)"
+    for _sp in "${swept[@]}"; do
+      _seal_stamp_emissions "$_sp" "$organ" "$rc" "$_stamp"
+    done
     git add -- "${swept[@]}" 2>/dev/null
     git commit -q -m "$organ: rc=$rc run's other dirty files, committed unbannered — see the sealed $file
 

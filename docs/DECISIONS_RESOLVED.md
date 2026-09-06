@@ -686,3 +686,30 @@ Evidence: `docs/DECISIONS_NEEDED.md` D15 entry + 45th-audit evidence update;
 four organ scripts; the self-test line
 `{"organ":"selftest","ts":"2026-09-06T00:15:49+00:00","pct":17,"model_pct":31,"phase":"d15-firing-check"}`
 in `/data/jack-logs/usage_ledger.jsonl`.
+
+**AMENDED SIX HOURS AFTER THE FIRING (76th audit B1/B2, executed by the
+builder 2026-09-06 01:xx) — two repairs of the fired implementation, neither a
+reversal, recorded here because the firing record above describes code that
+was wrong on day one:**
+
+- **(d)'s model attribution was wrong three ways and mis-attributed a fourth**
+  (audit 9.1): `usage_ledger()` read `${JACK_LOOP_MODEL:-opus}`, which only
+  the builder sets — the three auditor organs fell to `opus`, matched no meter
+  line (the meter prints only `session` / `week:Fable` / `week:all models`),
+  and wrote `model_pct: null` permanently; and a builder walked to a fallback
+  billed its spend against the PRIMARY's line. The model is now a PARAMETER:
+  each organ passes the variable it actually runs on, the builder's end-append
+  passes the WALKED model, a floor-refused slot passes `none`, and the JSON
+  gains a `"model"` field so a null `model_pct` (a model with no separate
+  line) is legible rather than a bug. `pct` — the gate line — was correct
+  throughout; no gate was ever affected.
+- **(c)'s exempt slot moved** (audit 9.2): as fired, the guaranteed audit was
+  00:37 — the one slot that can only read YESTERDAY'S Review page — while the
+  slots that could read today's were first to be paced away. The exemption now
+  goes to the first COMPLETED audit at or after the Review's 06:37 slot. Same
+  spend arithmetic (still exactly one unpaced audit per UTC day), completion
+  stamp unchanged (a dead audit does not consume the exemption; a completed
+  pre-06:37 audit does not either). The fired default's text said "the first
+  completed audit of each UTC day"; this changes WHICH audit, not HOW MANY —
+  judged inside the armed text's intent (a full adversarial pass survives
+  every day) and done on the audit's explicit order rather than silently.

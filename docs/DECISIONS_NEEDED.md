@@ -4774,6 +4774,17 @@ DECIDE: D22
 
 ## D23 — A red ratchet about Jack's oldest failures went green in three minutes by routing them into the one queue that measures itself as unable to pay. Is routing the same as owning? (2026-09-05, Review, DAILY)
 
+> PROVENANCE (back-stamped by the builder, 2026-09-06, 76th audit B3): this
+> entry was written by the 2026-09-05 Review run that exited rc=1 at max turns
+> and never completed its own checklist — its page was sealed *"INCOMPLETE RUN
+> — THIS IS A DRAFT, NOT A FINDING"* at 06:52:20, but this entry reached the
+> desk unbannered via `e034b94`. The 76th audit re-measured its arithmetic on
+> 09-06 and it holds (`FAIL-UNOWNED` at floor 0 with the four orphans routed to
+> 09-13; drain UNBOUNDED at 0.29 disposals/cycle). Nothing is re-dated,
+> weakened or un-armed by this line; the default still fires 2026-09-11 by
+> silence. Future emissions from dead runs get this stamp automatically
+> (`_seal_stamp_emissions`, scripts/lib_seal.sh).
+
 **What happened, with the clock, because the clock is the finding.** At
 2026-09-05 **01:16** the 72nd audit shipped `FAIL-UNOWNED` (`6fbac74`) — a new,
 counted, ratcheted class for *a settled FAIL with no repair owner* — and set its

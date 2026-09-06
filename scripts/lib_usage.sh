@@ -229,14 +229,26 @@ chain_reading() {
   printf '%s\n' "$chain"
 }
 
-# usage_ledger <organ> <phase> — D15's clause (d), default fired 2026-09-06
-# (builder; DECIDE block in docs/DECISIONS_NEEDED.md, full record in
+# usage_ledger <organ> <phase> [model] — D15's clause (d), default fired
+# 2026-09-06 (builder; DECIDE block in docs/DECISIONS_NEEDED.md, full record in
 # docs/DECISIONS_RESOLVED.md). Every organ appends
-#   {"organ","ts","pct","model_pct","phase"}
+#   {"organ","ts","model","pct","model_pct","phase"}
 # to /data/jack-logs/usage_ledger.jsonl at the start and end of its run, so
 # the next audit reads spend ATTRIBUTION instead of inferring it from
 # co-occurrence — the inference that produced three falsified price models in
 # one week (42nd/44th audits; "do not model the meter").
+#
+# THE MODEL IS A PARAMETER, NOT AN ENV READ (76th audit B1, 2026-09-06 — the
+# instrument shipped six hours earlier reading `${JACK_LOOP_MODEL:-opus}`,
+# which only the builder sets: the three auditor organs fell to `opus`,
+# matched no meter line, and wrote `model_pct: null` permanently, while a
+# builder walked to a fallback recorded its spend against the PRIMARY's
+# line). Each organ passes the model variable it actually runs on, and the
+# builder's end-append passes the WALKED model — the one the chain returned —
+# so the record names what ran, not what was configured. The name itself is
+# in the JSON: a model with no separate meter line (opus, sonnet — they roll
+# into `all models`, verified 2026-08-30) HONESTLY records `model_pct: null`,
+# and the `model` field is what makes that null legible instead of a bug.
 #
 # One CLI read per append, both meters parsed from the same invocation.
 # NEVER BLOCKS THE RUN: an unreadable meter writes null (valid JSON), a failed
@@ -244,14 +256,13 @@ chain_reading() {
 # above already own refusal. Detectors on this file must treat it as a shared
 # log (lib_credits.sh precedent): match structure, not prose.
 usage_ledger() {
-  local organ="$1" phase="$2" mdl out pct mpct
-  mdl="${JACK_LOOP_MODEL:-opus}"
+  local organ="$1" phase="$2" mdl="${3:-${JACK_LOOP_MODEL:-opus}}" out pct mpct
   out=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" 2>/dev/null)
   pct=$(printf '%s\n' "$out" | grep -im1 'week:all models' | grep -oE '[0-9]+%' | head -1 | tr -d '%')
   mpct=$(printf '%s\n' "$out" | grep -im1 "week:${mdl}" | grep -oE '[0-9]+%' | head -1 | tr -d '%')
   case "$pct" in ''|*[!0-9]*) pct=null;; esac
   case "$mpct" in ''|*[!0-9]*) mpct=null;; esac
-  printf '{"organ":"%s","ts":"%s","pct":%s,"model_pct":%s,"phase":"%s"}\n' \
-    "$organ" "$(date -u -Iseconds)" "$pct" "$mpct" "$phase" \
+  printf '{"organ":"%s","ts":"%s","model":"%s","pct":%s,"model_pct":%s,"phase":"%s"}\n' \
+    "$organ" "$(date -u -Iseconds)" "$mdl" "$pct" "$mpct" "$phase" \
     >> /data/jack-logs/usage_ledger.jsonl 2>/dev/null || true
 }
