@@ -3119,6 +3119,20 @@
           ],
           "commit": "aabced4",
           "reason": "priced the foreclosure declaration: FORECLOSURE ARITHMETIC + BLAST RADIUS blocks added (docstring only; validation now refuses unpriced declarations)"
+        },
+        {
+          "at": "2026-09-06T19:12:56",
+          "by": "79th-audit-3.3b",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "e1e3e4b0a6a42057",
+              "proof": "reconstructed e1e3e4b0a6a42057 from git aabced4dc205; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "49fba65a8f859a26"
+            }
+          ],
+          "commit": "5e380a8",
+          "reason": "prose-only: VOID-FORECLOSED declaration re-pointed off the closed D10 desk to D24 (screen) and the W1 family (W0); pointer had been stale since D10 fired 2026-09-01"
         }
       ],
       "attempt": 3,
@@ -3738,7 +3752,7 @@
           "status": "VOID"
         }
       ],
-      "impl_sha": "e1e3e4b0a6a42057",
+      "impl_sha": "49fba65a8f859a26",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "borrowed_commit": "f45afa4",
