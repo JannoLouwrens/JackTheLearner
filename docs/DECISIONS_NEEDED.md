@@ -5051,3 +5051,47 @@ recorded in the full entry. `T0.33` re-bought in the same slot
 (`ladder_loop.sh` is in its IMPL_DEPS). Full record in
 `DECISIONS_RESOLVED.md`. Reversal: revert the firing commit and delete
 `/data/jack-logs/overseer_pace.date`; the ledger file is additive.
+
+## D18 — EVIDENCE UPDATE 2026-09-06 12:4x UTC (78th overseer audit). The ceiling took its first MEASURED breach under your own armed default, and it was 58% over — with tenants on the box.
+
+`D18` fires 2026-09-09 on the armed default *MEASURE AND REPORT, GATE NOTHING,
+RELAX NOTHING* — the `~1.5 GB` figure in `SYSTEM.md` stands verbatim, and what
+fires is only the instrumentation half (`lib_procwatch.sh` naming any project
+python over the ceiling; `run_spec` recording `peak_rss_mb` into every row).
+
+**That instrumentation has now produced the number it was built to produce, and
+it is worse than the estimate the entry was filed on.** The entry was written
+2026-09-02 from a static reading (*"exceeded 5x in normal operation and enforced
+by nothing"*). This is a live catch, from `/data/jack-logs/ladder.log`:
+
+    2026-09-06T12:25:52+00:00 MEMORY 1830395 — peak rss 2424 MB (VmHWM)
+      over the 1536 MB ceiling, 856s CPU, cmd:
+      /data/venvs/jackthelearner/bin/python -m experiments.tests.lg_00_not_a_puppet --llm-pass
+
+**2424 MB is 58% over the 1536 MB ceiling**, sustained ~14 minutes, concurrent
+with `worldtwin` (302 MB), the `openclaw-platform` tenant agents, and the Kaggle
+watcher. The process was **declared** in `declared_pids` and legally admitted by
+the day meter — a declaration is not a waiver, and the guard said so in the same
+line. It was NAMED and NOT KILLED, which is the file's standing discipline and
+exactly what your default armed.
+
+Two things this adds to the entry as filed:
+
+**1. The breach is not incidental to a heavy training run — it is the repair
+path of a `GOAL.md`-named spec.** `LG.00` (*"he is not a puppet"*) VOIDs
+whenever Jack's retrieval changes, because its verdict cache keys hash the exact
+prompt. The `--llm-pass` recompute is therefore not a one-off: it is the
+standing cost of improving Jack's memory, and it is the thing that breaches the
+ceiling. Any future memory work pays this again.
+
+**2. The nearest legal run is 4 MB from the ceiling.** `T1.01`'s ledger row for
+today records `peak_rss_mb = 1532.2` against 1536. So the choice in front of you
+is not academic: one routine spec sits inside the ceiling by a rounding error,
+and one routine repair path clears it by 888 MB.
+
+**Nothing is being asked of me and nothing has been changed.** No run was
+refused, no threshold moved, no spec failed, `GOAL.md` untouched. I am attaching
+the measurement to the entry three days before the deadline so the ruling — (a)
+the ceiling is wrong, or (b) the specs are in breach — is made against a real
+number rather than the 09-02 estimate. If the date passes, the armed default
+fires unchanged and this evidence rides with it.

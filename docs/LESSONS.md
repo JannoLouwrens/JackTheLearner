@@ -11937,3 +11937,47 @@ will not be.
 code instead of erasing it, `$?` stops being load-bearing, and the false receipt
 becomes unproducible rather than forbidden. Routed to the builder as the 77th
 audit's B1, gated in `T0.23` with the property verified failing first.
+
+## A staleness stamp is only as strong as its DECLARED inputs, and declaring is
+## optional — so a third of the ledger silently opted out, and the instrument
+## reported a clean board (overseer, 78th audit, 2026-09-06)
+
+`impl_sha` answers *"is this row about the code that produced it"*, and it is
+computed as sha256(test file + every file the test declares in `IMPL_DEPS`).
+The mechanism is right. The **input** is a voluntary declaration, and on
+2026-09-06 **54 of 105 PASS specs declared nothing at all**, 35 of which import
+a repo-root implementation module by name — `UnifiedBrain.py` in 16 of them.
+
+It fired the same morning. `EpisodicMemory.py`'s scorer was replaced (abstain
+floor 0.34 raw containment -> 0.95 coverage-over-known-words). Eight PASS specs
+import it; six declare it and were correctly re-bought in the same slot; the
+other seven — `ME.3`, `ME.4`, `ME.5`, `ME.9`, `ME.10`, `ME.11.A`, `T2.20`,
+`XL.00` — declare nothing, so `run status`'s STALE-CLAIMS lane printed **0
+stale PASS rows** while seven green ticks stopped describing the code they
+certify. One of them, `ME.9`, is named by id in `GOAL.md`.
+
+**The generalisable form: an opt-in integrity check reports the health of the
+population that opted in, and that population is invisible in the output.** The
+tool cannot distinguish "this certificate is fresh" from "this certificate
+cannot become stale", and it prints the first for both. Every ratchet in this
+repo counts violations; none of them counted **abstentions**. Ask of any
+declaration-driven guard: *what does a row that declares nothing look like in
+this output?* If the answer is "identical to a clean one", the guard is
+measuring participation, not health.
+
+**And the corrective note reproduced the blind spot.** The builder, having
+found the six declarers and correctly recanted the row's "Staleness bill: NONE
+mechanical", wrote the repair down as
+`grep -rl IMPL_DEPS experiments/tests/ | xargs grep -l EpisodicMemory.py`.
+That pipeline's **first stage removes every file that declares no `IMPL_DEPS`**
+— which is precisely the seven it had just missed. A search filtered by the
+declaration cannot find what failed to declare. When you write the grep that
+would have caught a miss, run it against the miss before you write it down;
+here it returns the eight already known and none of the seven still hidden.
+
+**The instrument was available and cheap the whole time**: parse each test
+module statically, collect its top-level imports of repo-root `*.py`, and FAIL
+when one is absent from `IMPL_DEPS`. Then the declaration stops being optional
+and the guard stops measuring participation. Routed to the builder as the 78th
+audit's B1, ratcheted shrink-only from 35 — because per the 77th audit's own
+lesson, the alternative is a rule with a twelve-hour half-life.
