@@ -510,6 +510,23 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
     Staleness bill: NONE mechanical — no PASS certificate hashes
     `EpisodicMemory.py` today. SEMANTIC — the four ME specs above all rest on
     the same floor and each should be re-read once it is recalibrated.
+    [CORRECTED 2026-09-06, builder, while executing this row: the mechanical
+    bill was NOT none — eight specs declare `EpisodicMemory.py` in
+    `IMPL_DEPS` (LG.00/01/02, LG.10, SO.08, LF.01/02, SO.07), five of them
+    holding PASS certificates when the floor was edited. All five were
+    re-bought in the same slot (~272 s total; LG.00 additionally needed its
+    documented `--llm-pass` verdict recompute because the recalibrated
+    retrieval changed Jack's prompts).]
+    [CORRECTED AGAIN 2026-09-06 (78th audit B3): the grep this note first
+    prescribed — `grep -rl IMPL_DEPS experiments/tests/ | xargs grep -l
+    EpisodicMemory.py` — was the BLIND SPOT, not the cure: its first stage
+    removes every file that declares no IMPL_DEPS, which is exactly the seven
+    importers it missed (ME.3/4/5/9/10, ME.11.A, T2.20, XL.00 — found by the
+    78th audit). The right question is the reverse one: *which tests import
+    it?* — `grep -rl EpisodicMemory experiments/tests/`, then subtract the
+    declarers. A search filtered by the declaration cannot find what failed to
+    declare. What actually retires this class is the audit's B1 guard (static
+    import parse vs IMPL_DEPS), not any grep.]
     **A NOTE ON MY OWN RECOMMENDATION.** This row is the first live test of
     `D23`: I have just discharged a `FAIL-UNOWNED` by routing a FAIL into the
     queue that measures its own drain as UNBOUNDED, which is precisely the act

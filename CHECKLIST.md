@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 104 / 244 demonstrated
+## 105 / 244 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -364,7 +364,7 @@ Every line here is backed by an experiment that could have failed;
 - [x] **T2.20** Episodic memory helps the next episode
       - _asserts:_ With the episodic store, a hidden object is found faster in episode N+1 than by a memoryless agent.
       - _dies if:_ Search time does not drop across episodes.
-- [!] **ME.1** Event log: what happened is retrievable  — cued_recall=0.85; cued_recall_std=0.0136355
+- [x] **ME.1** Event log: what happened is retrievable
       - _asserts:_ Cued QA over Jack's own event stream answers >=80% at 1k events via recency x importance x similarity scoring.
       - _dies if:_ Accuracy at 1k events <= recency-only retrieval.
 - [x] **ME.2** Owner memory lives on disk
@@ -823,7 +823,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 4 — COMPOSITION — does adding B break A?
 
-- [x] **LG.00** Jack knows what his LLM cannot — he is not a puppet
+- [~] **LG.00** Jack knows what his LLM cannot — he is not a puppet  — grounded_knowledge_advantage=0.699333; grounded_knowledge_advantage_s0=0.8333
       - _asserts:_ On questions about HIS world, HIS body and HIS history, full Jack (learned core + diary + LLM) beats LLM-ALONE given the identical prompt context, by >=3 sigma. The knowledge is in the parts that LIVED, not in the frozen weights that never did.
       - _dies if:_ LLM-alone matches full Jack on world questions. Then Jack is a costume on a language model, the learned core and diary are decorative, and the project has not built a creature.
       - _then delete:_ The frozen-LLM architecture as implemented. If the mouth is doing the knowing, the mind was never built.
@@ -924,11 +924,11 @@ Every line here is backed by an experiment that could have failed;
       - _asserts:_ Part of W0's nine-instrument shallowness reading is exploration-process-limited, not world-limited: a random policy whose actions are TEMPORALLY CORRELATED colored noise — per-decision marginal action distribution identical to LC.03's `random` null, correlation time scheduled near-white -> red across the run — records a positive within-run `life_gain` that the stationary nulls cannot, because sustained action moves the body far enough to reach food that per-decision white noise never does.
       - _dies if:_ Either failure branch, each named in the recorded metrics (`claim_branch` — the BA.03 one-bit-verdict lesson): (a) the paired margin (life_gain of the correlation-ramp-UP run minus the plain random null, per seed) under 3 sigma with every instrument gate green — correlation buys no measurable life; or (b) the margin fires but the up-run shows NO food advantage over the null (mean eats), so the gain is the PASSIVITY channel — correlated noise does less work and drifts toward statuehood, which is LC.03's already-measured gradient, not exploration reaching reward. On either branch the shallowness finding survives its cheapest attack.
       - _then delete:_ On FAIL: nothing — a FAIL is itself the finding (the shallowness survives the cheap attack) and feeds the `w0-too-shallow` design due 2026-09-06. On PASS: the UNQUALIFIED reading of the nine instruments dies — 'W0 does not reward capability' must be re-read as partly 'no tested policy's exploration process ever reaches what W0 does reward', which lands in D10 fork (b) and reprices the edit-W0-vs-build-W1 fork before a redesign is spent on it.
-- [ ] **W1.00** The null is the strongest process that has not learned
+- [!] **W1.00** The null is the strongest process that has not learned  — borrowed_ok=1.0; borrowed_ok_std=0.0
       - _asserts:_ For a W-venue claim spec, the honest null is the best-scoring member of {stationary white, temporally-correlated colored noise at the W0.DIAG schedule, repeat-action} SELECTED ON THE NULL'S OWN OUTCOME, never on the claim arm's — and re-scoring the Pile A shallowness findings (LC.03's darkroom control, LC.03 v2's one-learner-in-five, field-watch wk5's random-covers-W0, T3.06's random_dwell_worst_life) against that null changes at least one recorded margin by more than that margin's own std. W0.DIAG measured the mechanism: same-marginal correlated noise buys gain_up 12.12 +- 1.20 where the stationary null reads 0.0095 +- 0.39, so every 'the null does as well as the learner' reading was taken against a null strictly weaker than an unlearned process can be.
       - _dies if:_ Either branch, named in `claim_branch` (the BA.03 one-bit-verdict lesson): (a) the correlated null does NOT outscore the white null on the venue's own outcome — W0.DIAG's result does not generalise past food-seeking and Pile A dissolves; or (b) the strongest null re-scores every recorded Pile A margin within its own std — the under-nulling was real but immaterial and the recorded findings stand as written.
       - _then delete:_ On FAIL branch (a): the null upgrade is retired, the Pile A findings keep their recorded nulls, and the repair for those venues moves to Pile B (the world), which reprices D10 fork (b). On PASS: every W-venue spec registered after this row states its null as the W1.00-selected process; nothing that already PASSed is re-opened — the upgrade can only RAISE a null, nothing that passed can pass more easily.
-- [ ] **W1.02** Outcomes have resolution
+- [x] **W1.02** Outcomes have resolution
       - _asserts:_ W0's outcome metric, with censored lifespan REPLACED by a graded outcome (integrated need-satisfaction from drives.DriveLayer, or per-need time-to-first-failure), resolves differences smaller than the effect any claim built on it wants to make: >= K distinct outcome values over N lives (K and N pre-registered in the test before its first run), measurement quantum <= MIN_GAIN/3 (MIN_GAIN imported from DP.04's test, 5.0, unmoved), and censoring below a declared cap with the censoring rate reported. This is DP.04's defect promoted from a pilot's refusal to a world-fidelity gate: 21 distinct lifespans over 3072 lives at a quantum of 6.25 against a MIN_GAIN of 5.0 is a metric that cannot see the thing it exists to see — the derived >= 5791 lives/arm/task is the arithmetic saying so.
       - _dies if:_ Any conjunct: fewer than K distinct outcome values; quantum above MIN_GAIN/3; censoring above the declared cap; or — the one that matters — the synthetic known-advantage control goes undetected, in which case the replacement metric is exactly as blind as the one it replaces and the venue still cannot host a DP-family claim.
       - _then delete:_ On FAIL: W0 keeps its censored-lifespan metric and the fact is recorded where it binds — DP.04 stays PILOT-BLOCKED, no DP-family claim is admissible in this venue, and the repair moves to the world-edit window (W1.03's sitting). On PASS: W1.01 and W1.03 quote this spec's measured quantum in their bars, which is why it must exist before either of them can be registered.

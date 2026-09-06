@@ -375,6 +375,8 @@ lane, NOT `DECISIONS_NEEDED.md`: law 3 says a fork whose arms can both be run
 is an experiment nobody has written yet, not an owner escalation.
 """
 
+from __future__ import annotations
+
 # WHY A PILOT IS NOT THE REPAIR HERE, declared so the QUEUE-DEPTH instrument
 # stops advertising one. `_GATES_FROZEN = False` alone reads "PILOT OWED
 # (cheapest repair)" in `run coverage` — true for most provisional specs and
@@ -388,7 +390,6 @@ _PILOT_BLOCKED = (
     "2.357-step sd. The repair is a world/metric redesign (Review + "
     "REVIEW_QUEUE `dp04-lifespan-has-no-resolution`), not a pilot."
 )
-from __future__ import annotations
 
 import hashlib
 import json
