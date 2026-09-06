@@ -5858,14 +5858,14 @@
     },
     "ME.1": {
       "amended": [],
-      "attempt": 3,
-      "commit": "c7325c2",
+      "attempt": 4,
+      "commit": "24e4680+dirty",
       "compute_s": null,
       "control_metrics": {
         "recency_only_recall": 0.0,
         "recency_only_recall_std": 0.0
       },
-      "duration_s": 1.8,
+      "duration_s": 2.06,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -5915,13 +5915,47 @@
           ],
           "spec_sha": "0bef0b2f1432595f",
           "status": "PASS"
+        },
+        {
+          "commit": "c7325c2",
+          "control_metrics": {
+            "recency_only_recall": 0.0,
+            "recency_only_recall_std": 0.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "b831827f4a99e9ff",
+          "message": "",
+          "metrics": {
+            "cued_recall": 0.85,
+            "cued_recall_std": 0.0136355,
+            "events": 1000.0,
+            "events_std": 0.0,
+            "fabricated_abstention": 1.0,
+            "fabricated_abstention_std": 0.0,
+            "recall_after_reload": 0.85,
+            "recall_after_reload_std": 0.0136355
+          },
+          "ran_at": "2026-09-02T18:42:10",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "0bef0b2f1432595f",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "b831827f4a99e9ff",
-      "message": "",
+      "impl_sha": "9908307cc8025299",
+      "message": "pre-registered threshold not met | failing implementation preserved at refs/jack/failimpl/ME.1/2026-09-06T06-51-46",
       "metrics": {
         "cued_recall": 0.85,
         "cued_recall_std": 0.0136355,
+        "distractor_abstention": 0.0,
+        "distractor_abstention_std": 0.0,
+        "distractor_evaluated": 40.0,
+        "distractor_evaluated_std": 4.546061,
+        "distractor_excluded": 20.0,
+        "distractor_excluded_std": 4.546061,
         "events": 1000.0,
         "events_std": 0.0,
         "fabricated_abstention": 1.0,
@@ -5929,8 +5963,10 @@
         "recall_after_reload": 0.85,
         "recall_after_reload_std": 0.0136355
       },
-      "preserved_impl": null,
-      "ran_at": "2026-09-02T18:42:10",
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 215.3,
+      "preserved_impl": "refs/jack/failimpl/ME.1/2026-09-06T06-51-46",
+      "ran_at": "2026-09-06T06:51:46",
       "seeds": [
         0,
         1,
@@ -5938,7 +5974,7 @@
       ],
       "spec_id": "ME.1",
       "spec_sha": "0bef0b2f1432595f",
-      "status": "PASS"
+      "status": "FAIL"
     },
     "ME.10": {
       "amended": [],
