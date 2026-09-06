@@ -310,7 +310,41 @@ Three rules, each of them a scar:
 - SEAT: Temperature (thermoception) | HELD: VACANT | ARENA: SH.02, W.3
 - SEAT: Interoception (hunger, thirst, fatigue) | HELD: VACANT | ARENA: NE.02, UB.11
 - SEAT: Emotion (affect) | HELD: BY DEFAULT | ARENA: T2.12, T3.07
+- SEAT: Body schema (the model of his own body) | HELD: VACANT | ARENA: UB.14
+- SEAT: Death & persistence (what survives a life) | HELD: VACANT | ARENA: XL.01, XL.00, LF.02
 - SEAT: DECIDED BY DECREE 2026-08-09: PLASTIC ONLY. NO FROZEN COMPONENTS IN JACK. | HELD: BY DECREE | TRIGGER: PL.00 | ARENA: PL.00, PL.02
+
+**TWO SEATS ADDED 2026-09-06 (Review, FULL — the ANATOMY AUDIT).** Both are
+capabilities `GOAL.md` requires by name and neither had a seat, which means
+both were components with no scrutiny. Adding a seat only invites competition,
+which is why this direction is mine to take and removal is not.
+
+- **`Body schema (the model of his own body)`.** `GOAL.md`'s capability target
+  is *"a body with EVERY sense a human has"* and *"a mind is shaped by what it
+  can perceive"* — and knowing where your own limbs are, and what is part of
+  you, is not proprioception (which reports joint states) but the model built
+  from them. It was named as a **ZERO-SPEC hole by the owner on 2026-08-09**
+  and it is the one item on that list that has not moved since: voice went
+  0 → 3 specs, smell 0 → 3, taste 0 → 3, body schema is still **0**. It is not
+  unmeasured, though, and that is why the seat is owed: `UB.14` MEASURED it —
+  `vision_sees_body` **0.4036 ± 0.0256** against a 0.5 gate, `fused_r2` 0.0013
+  against a 0.05 floor — and is VOID-FORECLOSED, *"the binding fault is the
+  VENUE, measured, not the instrument"*. A component that has been measured,
+  foreclosed, and given no seat is the exact thing this file exists to stop.
+  `ARENA: UB.14` is named knowing it is currently a closed door; that is a
+  truthful `ARENA:`, and the file's own instruments should print the
+  consequence rather than have me hide it behind `NONE`.
+
+- **`Death & persistence (what survives a life)`.** `GOAL.md` is unambiguous:
+  *"what survives death is the point"*, *"Life N+1 must be measurably better
+  than life N because of what life N recorded"*, *"Death is not a reset; it is
+  a page turn"* — and it calls the diary crossing death the one place Jack
+  deliberately surpasses biology. There was no seat. The consequence is on the
+  record: `XL.01` — *"death does not erase what he learned"* — read **FAIL for
+  17 days** while five instruments called it fine, which is the whole reason
+  `D23` is on the owner's desk. `ARENA: XL.01, XL.00, LF.02` — `XL.00` PASSes,
+  `LF.02` PASSes (a life survives `kill -9` bit-exactly), `XL.01` is the
+  contested one. This ring is real and enterable today.
 
 **What changed, and what it cost — read this before believing the report got
 better on its own (builder, 2026-08-31).** Seven of the twenty-six declarations
