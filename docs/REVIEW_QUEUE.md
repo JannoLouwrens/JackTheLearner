@@ -1881,6 +1881,13 @@ ROUTED: d10-learning-gate-sits-at-the-untrained-twin-level | 2026-09-01 | 59th-a
     DUE: 2026-09-06 | gate-design decision owed by the Review; same bundle judgment as the denominators row
     DUE: 2026-09-09 | EXECUTION of the adopted gate, owed by the BUILDER; same
         dating reason as the denominators row, which this block also governs.
+    EXECUTED 2026-09-06 08:3x (builder, `8f2990d`) — all three conjuncts live
+        in `d1_0_control_path_bakeoff.py`, verified red-first (each fixture
+        passed the old gate, each now hits its named conjunct); registry
+        claim text amended in the same commit; G3's reference lane
+        construction-smoked locally (124,707 params, T2.02's `mlp_params` to
+        the digit). Covers BOTH d10-* gate rows, three days inside the 09-09
+        clock.
 
 **THE ADOPTED GATE (Review FULL 2026-09-06). It governs BOTH `d10-*` rows, and
 it is STRICTLY HARDER than the gate that produced the VOID.** I am not bundling
