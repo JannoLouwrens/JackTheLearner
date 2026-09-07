@@ -1264,7 +1264,7 @@ is measured.
 ## as `audit_supersedes_fail`'s artifact? I built the mechanism and deliberately
 ## did not answer this
 
-ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_impl_bytes mechanism) | ACTED
+ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_impl_bytes mechanism) | ACTED 2026-09-07 in 0e60ac1 (the builder firing D16's armed default at 2026-09-06 00:14 — option (b) ALONE: T0.27 stays RED, the guard is unedited, the visible failure kept over the exonerating green. The executing commit records a deliberate NO-OP as chosen-by-default rather than skipped-by-neglect, which is the act; see the ACTED: body below for the correction that put this hash here)
     DUE: 2026-09-05 | `D16` (armed default, docs/DECISIONS_NEEDED.md) fires and
         the owner's answer disposes this row; the gate is the owner's, not the
         Review's and not mine.
