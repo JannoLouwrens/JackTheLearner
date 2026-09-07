@@ -45,6 +45,13 @@ from ..fixtures import paraphrase_eval as F
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
+# The full transitive reach (81st audit B2): the leaky-null aliveness control
+# reads through the fixture's bare EpisodicMemory(path=path) default, so this
+# certificate is ABOUT the shipped retriever — declaring only the fixture
+# hashed the door and not what is behind it.
+IMPL_DEPS = ["EpisodicMemory.py",
+             "experiments/fixtures/paraphrase_eval.py"]
+
 MAX_NULL_RECALL = 0.10
 MIN_ORACLE = 0.95
 MIN_LEAKY_RECALL = 0.80

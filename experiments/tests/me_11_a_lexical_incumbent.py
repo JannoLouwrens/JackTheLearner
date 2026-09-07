@@ -49,6 +49,16 @@ from ..protocol import Ledger, run_spec
 from ..registry import BY_ID
 from .me_1_event_log import N_QUERIES, _build_life, _cue
 
+# The full transitive reach, not just the direct doors (81st audit B2/B3):
+# this spec certifies the SHIPPED retriever, reached through the fixture and
+# through me_1_event_log's borrowed _build_life — the borrow that broke this
+# module's control on 2026-09-06 while every staleness instrument slept.
+# T0.35's P9 mutation falsifier asserts the first entry participates in this
+# spec's impl_sha; remove it and T0.35 FAILs.
+IMPL_DEPS = ["EpisodicMemory.py",
+             "experiments/fixtures/paraphrase_eval.py",
+             "experiments/tests/me_1_event_log.py"]
+
 MAX_PARAPHRASE_RECALL = 0.10
 MIN_ABSTENTION = 0.95
 MIN_TEMPLATED_RECALL = 0.80

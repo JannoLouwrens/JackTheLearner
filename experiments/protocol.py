@@ -1295,6 +1295,166 @@ def undeclared_impl_imports(path, source: Optional[bytes] = None) -> tuple:
     return tuple(missing), problem
 
 
+def transitive_impl_imports(path, source: Optional[bytes] = None,
+                            overlay: Optional[dict] = None) -> tuple:
+    """Modules a test module REACHES through other test modules or fixtures
+    but does not DECLARE.
+
+    The 81st audit's B2/B3 (2026-09-07). `undeclared_impl_imports` above walks
+    ONE module's own import nodes, and `impl_sha_of` below hashes ONE hop of
+    declared files — both one hop, by construction. On 2026-09-06
+    `EpisodicMemory.py`'s scorer was replaced and `me_1_event_log._build_life`
+    grew a fourth return value; eight `ME.11` modules reach `EpisodicMemory.py`
+    at 1–3 hops through `me_1_event_log.py` or `fixtures/paraphrase_eval.py`,
+    none declared it, and every staleness instrument printed a clean board —
+    including over `ME.11.A`, a live PASS whose control had started raising
+    `ValueError`. Six of the eight declared `paraphrase_eval.py`, which is the
+    honest instinct and catches nothing: declaring the door does not hash what
+    is behind it.
+
+    THE RULE THIS PREDICATE CHECKS: a spec module must declare, in its own
+    `IMPL_DEPS`, every repo-root module, sibling test module, and fixture
+    module it reaches through any chain of test/fixture imports. Declaring
+    each link is NOT enough — `impl_sha_of` hashes declared BYTES one level
+    deep, so `A declares B, B declares C` leaves A's sha unmoved when C
+    changes. The certificate holder must name the far end itself. (This
+    resolves the audit's B3 fork as "cross-test imports are declared,
+    checkable in the same walker" rather than "move shared helpers into
+    fixtures/" — the tree has ~20 cross-test importers and one declared
+    precedent, `t2_10`, and a rule the walker enforces cannot half-migrate.)
+
+    SCOPE, chosen on measurement and named so nobody mistakes it for
+    coverage. Traversal recurses ONLY through `experiments/tests/` and
+    `experiments/fixtures/`; repo-root modules and everything else under
+    `experiments/` (protocol, registry, cores, senses, …) are ENDPOINTS —
+    root/test/fixture endpoints are mandated, `experiments/*.py` endpoints
+    are not, and nothing recurses INTO an endpoint. Two measured reasons,
+    2026-09-07: (a) recursing through root modules (UnifiedBrain imports
+    seven siblings) or through shared `experiments/*.py` plumbing reads 72
+    and 45 violators respectively, dominated by a ContactAudio/UnifiedBrain
+    cluster that predates the audit — mandating it is the mass-declaration
+    wave `impl_sha_of`'s docstring refuses, and that wider hole is REAL and
+    REMAINS (it belongs to a routed redesign, not a quiet widening here);
+    (b) the audit's scope — "a test module that reaches an impl module
+    through a fixture or a sibling test module" — reads 20 violators, every
+    one of the audit's eight among them, small enough for a shrink-only
+    named set (T0.35). `__init__.py` files are exempt: they are package
+    plumbing with no implementation to certify.
+
+    `overlay`, when given, maps repo-relative POSIX paths to source bytes
+    consulted before disk — T0.35's fixtures build a two-module chain that
+    never touches the tree, so the known-positive cannot rot when the real
+    ladder's violators drain. `source` overrides the entry module's bytes,
+    same lane as `impl_deps_of`.
+
+    Returns `(missing, problem)`: `missing` is the sorted repo-relative paths
+    the module must add to `IMPL_DEPS` (exactly the strings to paste),
+    `problem` is `impl_deps_of`'s complaint for the entry module. An
+    unreadable INTERMEDIATE module simply stops that branch of the walk —
+    unreadable modules are T0.35's compile property, not this predicate's.
+    Inherits the one-hop walker's named evasions (string-based
+    `importlib.import_module`, `exec`) and adds one: a chain that leaves the
+    traversal scope and re-enters (test → cores.py → test) is invisible,
+    because endpoints are not recursed into.
+    """
+    import ast
+    overlay = overlay or {}
+    root = Path(__file__).resolve().parents[1]
+
+    def _rel(p) -> str:
+        rp = Path(p)
+        if rp.is_absolute():
+            try:
+                return rp.resolve().relative_to(root).as_posix()
+            except ValueError:
+                return rp.as_posix()
+        return rp.as_posix()
+
+    def _exists(rel: str) -> bool:
+        return rel in overlay or (root / rel).is_file()
+
+    def _read(rel: str) -> Optional[bytes]:
+        if rel in overlay:
+            return overlay[rel]
+        f = root / rel
+        try:
+            return f.read_bytes() if f.is_file() else None
+        except OSError:
+            return None
+
+    def _kind(rel: str) -> str:
+        parts = tuple(rel.split("/"))
+        if len(parts) == 1:
+            return "root"
+        if parts[:2] == ("experiments", "tests"):
+            return "test"
+        if parts[:2] == ("experiments", "fixtures"):
+            return "fixture"
+        return "other"
+
+    def _resolve(dotted: str) -> Optional[str]:
+        base = "/".join(dotted.split("."))
+        for cand in (base + ".py", base + "/__init__.py"):
+            if _exists(cand):
+                return cand
+        return None
+
+    def _candidates(pkg_parts: tuple, node) -> list:
+        out = []
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                out.append(alias.name)
+        elif isinstance(node, ast.ImportFrom):
+            if node.level == 0:
+                if node.module:
+                    out.append(node.module)
+                    for alias in node.names:
+                        out.append(node.module + "." + alias.name)
+            elif node.level - 1 <= len(pkg_parts):
+                base = list(pkg_parts)[:len(pkg_parts) - (node.level - 1)]
+                mod = ".".join(base + ([node.module] if node.module else []))
+                if mod:
+                    out.append(mod)
+                    for alias in node.names:
+                        out.append(mod + "." + alias.name)
+        return out
+
+    entry = _rel(path)
+    deps, problem = impl_deps_of(path, source=source)
+    declared = set(deps)
+
+    seen, reached = set(), set()
+    queue = [(entry, source if source is not None else _read(entry))]
+    while queue:
+        rel, src = queue.pop()
+        if rel in seen:
+            continue
+        seen.add(rel)
+        if rel != entry:
+            reached.add(rel)
+            if _kind(rel) in ("root", "other"):
+                continue            # endpoint: never recursed into
+        if src is None:
+            continue
+        try:
+            tree = ast.parse(src)
+        except SyntaxError:
+            continue                # unreadable intermediates are P5's problem
+        pkg = tuple(rel.split("/")[:-1])
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Import, ast.ImportFrom)):
+                for dotted in _candidates(pkg, node):
+                    tf = _resolve(dotted)
+                    if tf and tf != rel:
+                        queue.append((tf, _read(tf)))
+
+    missing = sorted(rel for rel in reached
+                     if _kind(rel) != "other"
+                     and not rel.endswith("__init__.py")
+                     and rel not in declared)
+    return tuple(missing), problem
+
+
 def impl_sha_of(path, file_bytes: Optional[bytes] = None,
                 dep_bytes: Optional[dict] = None) -> Optional[str]:
     """sha256 of a test file — the test as it was when it ran.

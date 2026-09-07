@@ -54,24 +54,61 @@ FIVE PROPERTIES, each able to fail on its own:
       that split (parse OK, compile SyntaxError), so this property cannot
       quietly degrade to a parse check.
 
-THE CONTROL is the blind spot re-enacted: the OPT-IN instrument — examine
-only modules that DECLARE `IMPL_DEPS`, the shape of both the pre-audit
-staleness lane and the corrected-then-recorrected queue-note grep — run over
-a two-module population containing one undeclared importer. It MUST read
-zero violations where the full instrument reads one. A control that also
-sees the violator would mean opt-in was never the defect and this spec
+THE SECOND SCAR, ONE LEVEL UP (81st audit, 2026-09-07): every property above
+is ONE HOP deep, and the hop past it broke a live certificate the same week
+the one-hop detector shipped. `me_11_a_lexical_incumbent.py` imports
+`_build_life` from a SIBLING test module; `ME.1`'s strengthening gave that
+helper a fourth return value; `ME.11.A`'s control started raising
+`ValueError` while holding a PASS, and eight `ME.11` modules kept certifying
+a retriever (`EpisodicMemory.py`, reached at 1–3 hops through
+`me_1_event_log.py` or `fixtures/paraphrase_eval.py`) that had been replaced
+underneath them. Six of the eight declared `paraphrase_eval.py` — the honest
+instinct, catching nothing, because declaring the door does not hash what is
+behind it. The audit's B2 hand-counted eight violators; the shipped walker
+reads TWENTY (`LC.03`, `LC.07`, `T0.26` were never in anyone's count). Four
+more properties:
+
+  P6  TRANSITIVE KNOWN-POSITIVE, and it must split against P1's instrument:
+      a module reaching `EpisodicMemory` only through a sibling test module
+      is caught by `transitive_impl_imports` while `undeclared_impl_imports`
+      reads CLEAN on the same bytes. The split is the property — a chain the
+      one-hop walker could see would mean the transitive class was never
+      invisible and this strengthening measures nothing.
+  P7  TRANSITIVE KNOWN-NEGATIVE: the identical chain with both far ends
+      declared is clean.
+  P8  THE REAL LADDER, transitively, ratcheted BY NAME, shrink-only:
+      `TRANSITIVE_GRANDFATHERED` under exactly P3/P4's rules — a new or
+      widened reach is a FAIL, a stale entry is a FAIL, the set only drains.
+  P9  THE MUTATION FALSIFIER the audit ordered: mutate `EpisodicMemory.py`'s
+      bytes (via `impl_sha_of`'s `dep_bytes` lane — nothing on disk moves)
+      and `ME.11.A`'s impl_sha MUST change. This is only true because
+      `ME.11.A` now declares its transitive reach; delete that declaration
+      and P9 fails. A staleness detector that cannot be shown to fire is the
+      thing the 81st audit was about.
+
+THE CONTROL is the blind spot re-enacted, twice: the OPT-IN instrument —
+examine only modules that DECLARE `IMPL_DEPS`, the shape of both the
+pre-audit staleness lane and the corrected-then-recorrected queue-note grep
+— run over a two-module population containing one undeclared importer. It
+MUST read zero violations where the full instrument reads one. And the
+ONE-HOP instrument — the corrected shape that closed the 78th audit — run
+over the transitive chain, where it MUST also read zero while the transitive
+walker sees two undeclared reaches. A control that sees either violator
+would mean the corresponding blindness was never the defect and this spec
 measures nothing.
 
 Static throughout: nothing here imports a test module, touches the real
 ledger, or runs a spec. `module_path_for(strict=True)` resolves files;
-`undeclared_impl_imports` (protocol.py, declared below) does the walking.
+`undeclared_impl_imports` and `transitive_impl_imports` (protocol.py,
+declared below) do the walking.
 """
 from __future__ import annotations
 
 import ast
 from pathlib import Path
 
-from ..protocol import (Ledger, module_path_for, run_spec,
+from ..protocol import (Ledger, impl_deps_of, impl_sha_of, module_path_for,
+                        run_spec, transitive_impl_imports,
                         undeclared_impl_imports)
 from ..registry import BY_ID, LADDER
 
@@ -115,6 +152,46 @@ GRANDFATHERED = {
     "T3.09": ("EpisodicMemory",),
 }
 
+# ── P8's ratchet: transitive violators, BY NAME, shrink-only ────────────────
+# Measured 2026-09-07 by `transitive_impl_imports` over all implemented
+# registered specs: 20 violators. The audit hand-counted 8; the walker found
+# LC.03/LC.07/T0.26 and the direct-set overlap nobody added up. Same rules as
+# GRANDFATHERED above: DO NOT ADD OR WIDEN AN ENTRY — the repair is the
+# spec's own declaration; DELETE the entry in the same commit that declares
+# (P8 fails until you do). ME.11.A and ME.11.0 — the two LIVE PASSes the
+# 81st audit flagged — declared their reaches in this same commit and were
+# re-bought; they are deliberately absent. Everything below holds a FAIL,
+# VOID, PARKED or held row whose re-run is routed elsewhere, or a PASS whose
+# re-buy costs 17-63 min (T1.01/T1.06/T1.12/T2.00, same reasoning as the
+# direct set above): declare each ONLY in a slot that re-runs it.
+TRANSITIVE_GRANDFATHERED = {
+    "D1.0": ("TrainingPipeline.py", "UnifiedBrain.py"),
+    "LC.03": ("experiments/tests/lc_02_throughput_floor.py",),
+    "LC.07": ("experiments/tests/lc_02_throughput_floor.py",),
+    "LF.01": ("EpisodicMemory.py",),
+    "ME.11": ("EpisodicMemory.py",
+              "experiments/tests/me_11_a_lexical_incumbent.py",
+              "experiments/tests/me_1_event_log.py"),
+    "ME.11.B": ("EpisodicMemory.py", "experiments/tests/me_1_event_log.py"),
+    "ME.11.C": ("EpisodicMemory.py", "experiments/tests/me_1_event_log.py"),
+    "ME.11.D": ("EpisodicMemory.py", "experiments/tests/me_1_event_log.py"),
+    "ME.11.E": ("EpisodicMemory.py",
+                "experiments/tests/me_11_a_lexical_incumbent.py",
+                "experiments/tests/me_1_event_log.py"),
+    "ME.11.F": ("EpisodicMemory.py",
+                "experiments/tests/me_11_a_lexical_incumbent.py",
+                "experiments/tests/me_11_b_bm25s_stemming.py",
+                "experiments/tests/me_1_event_log.py"),
+    "PL.00": ("UnifiedBrain.py", "playground.py"),
+    "T0.26": ("experiments/tests/ba_01_feels_the_fall.py",),
+    "T1.01": ("UnifiedBrain.py",),
+    "T1.06": ("UnifiedBrain.py",),
+    "T1.12": ("UnifiedBrain.py",),
+    "T2.00": ("TrainingPipeline.py",),
+    "T2.10": ("EpisodicMemory.py", "experiments/tests/me_1_event_log.py"),
+    "T3.09": ("EpisodicMemory.py",),
+}
+
 # ── fixtures: source bytes, never files on disk ─────────────────────────────
 # P1's import is INSIDE a function on purpose (see the docstring). The module
 # name is a real repo-root module so the existence check is live, but nothing
@@ -142,6 +219,33 @@ _BANNER = "looks harmless"
 from __future__ import annotations
 '''
 
+# P6/P7's chain is the ME.11.A defect verbatim: the entry module imports a
+# helper from a SIBLING test module, and only the sibling touches the impl.
+# The chain lives in an overlay, never on disk, so the known-positive cannot
+# rot when the real ladder's violators drain. The entry path is what gives
+# the walker its package for the relative import.
+_FIXTURE_TRANSITIVE_ENTRY = "experiments/tests/fixture_transitive.py"
+_FIXTURE_TRANSITIVE = b'''
+"""fixture: reaches EpisodicMemory only through a sibling test module."""
+def _experiment(seed):
+    from .fixture_bridge import build
+    return {}
+'''
+_FIXTURE_TRANSITIVE_DECLARED = b'''
+"""fixture: the identical chain, both far ends declared."""
+IMPL_DEPS = ["EpisodicMemory.py", "experiments/tests/fixture_bridge.py"]
+def _experiment(seed):
+    from .fixture_bridge import build
+    return {}
+'''
+_OVERLAY = {"experiments/tests/fixture_bridge.py": b'''
+"""fixture bridge: the sibling that actually imports the impl."""
+def build():
+    from EpisodicMemory import EpisodicMemory
+    return EpisodicMemory
+'''}
+_CHAIN_REACH = ("EpisodicMemory.py", "experiments/tests/fixture_bridge.py")
+
 
 def _parse_ok(src: bytes) -> bool:
     try:
@@ -159,9 +263,10 @@ def _compile_ok(src: bytes, name: str) -> bool:
         return False
 
 
-def _sweep() -> tuple[dict, list]:
-    """(violators, compile_failures) over every implemented registered spec."""
-    violators, compile_bad = {}, []
+def _sweep() -> tuple[dict, dict, list]:
+    """(violators, transitive_violators, compile_failures) over every
+    implemented registered spec."""
+    violators, trans_violators, compile_bad = {}, {}, []
     for spec in LADDER:
         path = module_path_for(spec.id, strict=True)
         if path is None:
@@ -172,11 +277,14 @@ def _sweep() -> tuple[dict, list]:
         missing, _problem = undeclared_impl_imports(path, source=src)
         if missing:
             violators[spec.id] = tuple(missing)
-    return violators, compile_bad
+        t_missing, _problem = transitive_impl_imports(path, source=src)
+        if t_missing:
+            trans_violators[spec.id] = tuple(t_missing)
+    return violators, trans_violators, compile_bad
 
 
 def _experiment(seed: int) -> dict:
-    # P1 / P2 — the detector on known ground.
+    # P1 / P2 — the one-hop detector on known ground.
     pos, _ = undeclared_impl_imports("fixture_violator.py",
                                      source=_FIXTURE_VIOLATOR)
     neg, _ = undeclared_impl_imports("fixture_declarer.py",
@@ -187,8 +295,32 @@ def _experiment(seed: int) -> dict:
     late_future_split = (_parse_ok(_FIXTURE_LATE_FUTURE)
                          and not _compile_ok(_FIXTURE_LATE_FUTURE, "fx"))
 
-    # P3 / P4 / P5 — the real ladder.
-    violators, compile_bad = _sweep()
+    # P6 / P7 — the transitive detector on known ground, and the SPLIT: the
+    # one-hop walker must be blind to the same chain, or the transitive class
+    # was never invisible and this strengthening measures nothing.
+    t_pos, _ = transitive_impl_imports(_FIXTURE_TRANSITIVE_ENTRY,
+                                       source=_FIXTURE_TRANSITIVE,
+                                       overlay=_OVERLAY)
+    t_pos_onehop, _ = undeclared_impl_imports("fixture_transitive.py",
+                                              source=_FIXTURE_TRANSITIVE)
+    t_neg, _ = transitive_impl_imports(_FIXTURE_TRANSITIVE_ENTRY,
+                                       source=_FIXTURE_TRANSITIVE_DECLARED,
+                                       overlay=_OVERLAY)
+
+    # P9 — the 81st audit's mutation falsifier: mutate EpisodicMemory.py's
+    # bytes through impl_sha_of's dep_bytes lane (disk untouched) and
+    # ME.11.A's sha must move. Only true while ME.11.A declares the reach.
+    me11a = module_path_for("ME.11.A", strict=True)
+    me11a_deps, _ = impl_deps_of(me11a)
+    sha_now = impl_sha_of(me11a)
+    sha_mut = impl_sha_of(me11a, dep_bytes={
+        "EpisodicMemory.py": b"# mutated by T0.35's P9 falsifier\n"})
+    mutation_fires = ("EpisodicMemory.py" in me11a_deps
+                      and sha_now is not None and sha_mut is not None
+                      and sha_now != sha_mut)
+
+    # P3 / P4 / P5 / P8 — the real ladder.
+    violators, trans_violators, compile_bad = _sweep()
     new_violations = {sid: mods for sid, mods in violators.items()
                       if sid not in GRANDFATHERED}
     widened = {sid: mods for sid, mods in violators.items()
@@ -196,17 +328,35 @@ def _experiment(seed: int) -> dict:
     stale_entries = {sid: mods for sid, mods in GRANDFATHERED.items()
                      if sid not in BY_ID
                      or violators.get(sid) != mods}
+    t_new = {sid: mods for sid, mods in trans_violators.items()
+             if sid not in TRANSITIVE_GRANDFATHERED}
+    t_widened = {sid: mods for sid, mods in trans_violators.items()
+                 if sid in TRANSITIVE_GRANDFATHERED
+                 and TRANSITIVE_GRANDFATHERED[sid] != mods}
+    t_stale = {sid: mods for sid, mods in TRANSITIVE_GRANDFATHERED.items()
+               if sid not in BY_ID
+               or trans_violators.get(sid) != mods}
 
     return {
         "detector_fires_on_lazy_undeclared": pos == ("EpisodicMemory",),
         "detector_silent_on_declarer": neg == (),
         "late_future_import_parse_compile_split": late_future_split,
+        "transitive_fires_where_onehop_blind": (t_pos == _CHAIN_REACH
+                                                and t_pos_onehop == ()),
+        "transitive_silent_on_declarer": t_neg == (),
+        "mutation_stales_me11a": mutation_fires,
         "undeclared_importers": len(violators),
         "grandfathered": len(GRANDFATHERED),
         "new_undeclared": len(new_violations) + len(widened),
         "new_undeclared_named": {**new_violations, **widened},
         "grandfather_stale": len(stale_entries),
         "grandfather_stale_named": dict(stale_entries),
+        "transitive_undeclared": len(trans_violators),
+        "transitive_grandfathered": len(TRANSITIVE_GRANDFATHERED),
+        "new_transitive": len(t_new) + len(t_widened),
+        "new_transitive_named": {**t_new, **t_widened},
+        "transitive_grandfather_stale": len(t_stale),
+        "transitive_grandfather_stale_named": dict(t_stale),
         "compile_failures": len(compile_bad),
         "compile_failures_named": list(compile_bad),
     }
@@ -237,9 +387,20 @@ def _control(seed: int) -> dict:
 
     full_missing, _ = undeclared_impl_imports("fixture_violator.py",
                                               source=_FIXTURE_VIOLATOR)
+
+    # The second blindness, re-enacted the same way: the CORRECTED one-hop
+    # instrument — the shape that closed the 78th audit — over the transitive
+    # chain. It must read zero where the transitive walker sees two.
+    onehop_on_chain, _ = undeclared_impl_imports("fixture_transitive.py",
+                                                 source=_FIXTURE_TRANSITIVE)
+    trans_on_chain, _ = transitive_impl_imports(_FIXTURE_TRANSITIVE_ENTRY,
+                                                source=_FIXTURE_TRANSITIVE,
+                                                overlay=_OVERLAY)
     return {"optin_examined": examined,
             "optin_violations": optin_violations,
-            "full_instrument_sees_violator": len(full_missing) > 0}
+            "full_instrument_sees_violator": len(full_missing) > 0,
+            "onehop_violations_on_chain": len(onehop_on_chain),
+            "transitive_sees_chain": len(trans_on_chain) > 0}
 
 
 def _check(m: dict, c: dict) -> bool:
@@ -250,20 +411,33 @@ def _check(m: dict, c: dict) -> bool:
             m.get("detector_silent_on_declarer", False),
         "late_future_import_parse_compile_split":
             m.get("late_future_import_parse_compile_split", False),
+        "transitive_fires_where_onehop_blind":
+            m.get("transitive_fires_where_onehop_blind", False),
+        "transitive_silent_on_declarer":
+            m.get("transitive_silent_on_declarer", False),
+        "mutation_stales_me11a": m.get("mutation_stales_me11a", False),
         "no_new_undeclared": m.get("new_undeclared", 1) == 0,
         "no_stale_grandfather": m.get("grandfather_stale", 1) == 0,
+        "no_new_transitive": m.get("new_transitive", 1) == 0,
+        "no_stale_transitive_grandfather":
+            m.get("transitive_grandfather_stale", 1) == 0,
         "all_modules_compile": m.get("compile_failures", 1) == 0,
     }
     m["properties_failed"] = sum(1 for v in props.values() if not v)
     m["failed_properties"] = [k for k, v in props.items() if not v]
 
-    # The control must have produced the WRONG answer: the opt-in instrument
-    # reads clean over a population the full instrument sees a violator in.
-    # `.get(..., 1)` so an empty control reads as "opt-in saw it", i.e. FAIL.
+    # The control must have produced the WRONG answer, twice: the opt-in
+    # instrument reads clean over a population the full instrument sees a
+    # violator in, and the one-hop instrument reads clean over a chain the
+    # transitive walker sees through. `.get(..., 1)` so an empty control
+    # reads as "the blind instrument saw it", i.e. FAIL.
     control_is_blind = (c.get("optin_violations", 1) == 0
                         and c.get("full_instrument_sees_violator", False))
     m["control_optin_reads_clean"] = control_is_blind
-    return all(props.values()) and control_is_blind
+    control_onehop_blind = (c.get("onehop_violations_on_chain", 1) == 0
+                            and c.get("transitive_sees_chain", False))
+    m["control_onehop_reads_clean"] = control_onehop_blind
+    return all(props.values()) and control_is_blind and control_onehop_blind
 
 
 def run(ledger: Ledger | None = None):
