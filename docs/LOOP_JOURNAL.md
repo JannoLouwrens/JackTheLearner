@@ -12737,3 +12737,24 @@ DRAFTED-NOT-REGISTERED.**
   --check EXIT 0, T0.28 re-bought PASS (70.14 s, live_armed 8). Remaining
   open builder order: 83rd audit B2 (gpu_hours_no_verdict in run status) —
   NEXT ITERATION take that; PL.02 waits on the 09-09 ruling.
+
+- 2026-09-07 ~16:xx (builder, Fable; week:all-models 15%, the gate). 83rd audit
+  B2 executed — the last open builder order of the day. `run status`'s RATCHET
+  COUNTERS now prints `gpu_hours_no_verdict`: gpu_budget.json's charged_jobs
+  joined against every ledger gpu_job_id field INCLUDING history rows
+  (comma-split per D1.0's four-ids-in-one-field), summed per spec whose most
+  recent outcome is VOID or FAIL, with attempts and verdict counts (FAIL is a
+  verdict, VOID is not). Live reading matches the audit's hand join exactly:
+  D1.0 33.78 h / 2 attempts / 0 verdicts; TOTAL 36.91 h across six specs
+  (T2.05 1.93/4/1, UB.10 0.30/1/0, T2.07/T2.15/T4.02 small with verdicts).
+  MEASURE AND REPORT, GATE NOTHING — no floor, honest VOIDs cost hours by
+  design. Fixture `_check_gpu_hours_reader` plants comma-split, history-row,
+  uncharged-row, FAIL-verdict, PASS-excluded and CPU-absent shapes; two
+  mutations (ignores-history, half-blind charged map) both caught, then
+  restored clean. `ratchets record` refreshed in the same commit. No IMPL_DEPS
+  names run.py; DRIFTED block empty; status EXIT 0. NEXT ITERATION: no open
+  builder orders remain — 83rd B1+B2 done, PROGRESS FTB 1-5 discharged,
+  PL.02 waits on the 09-09 ruling, D1.0 attempt 3 waits on tomorrow's
+  d10-successor row (whose author can now read the 33.78 h total in status).
+  If the board is empty, verify against run blocked/coverage and stop early
+  per the standing rule.

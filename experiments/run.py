@@ -747,6 +747,81 @@ def _check_red_delta_detector() -> None:
             "refusing to report a scan it may not have performed")
 
 
+def gpu_hours_verdictless(results, charged: dict) -> dict:
+    """Compute bought against verdicts returned (83rd audit B2).
+
+    For every spec whose MOST RECENT outcome is VOID or FAIL, join each of its
+    ledger rows — the current one AND every `history` row — against
+    `charged` (job id -> hours from `gpu_budget.json`'s `charged_jobs`).
+    `gpu_job_id` is comma-joined for multi-kernel dispatches (`D1.0` carries
+    four ids in one field), so split before looking up. A row counts as an
+    ATTEMPT only if it names at least one charged job (this reading is about
+    charged compute, not about runs in general); it counts as a VERDICT if
+    that row's status is PASS or FAIL — a FAIL is an honest measurement, a
+    VOID is not, and the verdict count is what separates money that bought an
+    answer from money that bought none. Returns {"TOTAL": "H h",
+    spec_id: "H h / N attempt(s) / V verdict(s)", ...}; specs with no charged
+    GPU rows are absent. MEASURE AND REPORT, GATE NOTHING — monotone by
+    construction (charged hours are never un-charged), no dispatch refused,
+    no threshold moved."""
+    def fields(row):
+        if isinstance(row, dict):
+            s, jid = row.get("status"), row.get("gpu_job_id")
+        else:
+            s, jid = getattr(row, "status", None), getattr(row, "gpu_job_id",
+                                                           None)
+        return getattr(s, "value", s), jid
+
+    out, total = {}, 0.0
+    for sid in sorted(results):
+        r = results[sid]
+        latest, _ = fields(r)
+        if latest not in ("VOID", "FAIL"):
+            continue
+        hours, attempts, verdicts = 0.0, 0, 0
+        for row in [r] + list(getattr(r, "history", None) or []):
+            status, jid = fields(row)
+            ids = [j.strip() for j in str(jid or "").split(",") if j.strip()]
+            if not any(j in charged for j in ids):
+                continue
+            attempts += 1
+            hours += sum(charged[j] for j in ids if j in charged)
+            if status in ("PASS", "FAIL"):
+                verdicts += 1
+        if attempts:
+            total += hours
+            out[sid] = (f"{hours:.2f} h / {attempts} attempt(s) / "
+                        f"{verdicts} verdict(s)")
+    return {"TOTAL": f"{total:.2f} h", **out}
+
+
+def _check_gpu_hours_reader() -> None:
+    """Plant one spec per shape and require the join to read each: a VOID
+    spec with a comma-joined field AND a charged history row AND an
+    uncharged-only row (split, summed, attempt-counted, non-attempt); a FAIL
+    spec (in scope, its row IS a verdict); a PASS spec (excluded — its money
+    bought an answer); a CPU-only FAIL (absent, no charged row). The scar:
+    D1.0's 33.78 h / 2 attempts / 0 verdicts existed only as a hand join in
+    the 83rd audit — a quantity nobody prints is a quantity nobody defends."""
+    from types import SimpleNamespace as NS
+    charged = {"k/j1": 1.5, "k/j2": 2.25, "k/j3": 4.0, "k/j5": 0.5}
+    planted = {
+        "ZZ.VOID": NS(status="VOID", gpu_job_id="k/j1,k/j2",
+                      history=[{"status": "VOID", "gpu_job_id": "k/j3"},
+                               {"status": "ERROR", "gpu_job_id": "k/unc"}]),
+        "ZZ.FAIL": NS(status="FAIL", gpu_job_id="k/j5", history=[]),
+        "ZZ.PASS": NS(status="PASS", gpu_job_id="k/j5", history=[]),
+        "ZZ.CPU": NS(status="FAIL", gpu_job_id=None, history=[])}
+    got = gpu_hours_verdictless(planted, charged)
+    want = {"TOTAL": "8.25 h",
+            "ZZ.VOID": "7.75 h / 2 attempt(s) / 0 verdict(s)",
+            "ZZ.FAIL": "0.50 h / 1 attempt(s) / 1 verdict(s)"}
+    if got != want:
+        raise RuntimeError(
+            f"the gpu-hours join returned {got}, expected {want} — "
+            "refusing to report a join it may not have performed")
+
+
 # ── Ratchet counters, read independently of every verdict (64th audit B2) ──
 #
 # The scar: on 2026-09-02 the unreachable ratchet printed `GREW: 89 vs 85`
@@ -879,11 +954,31 @@ def ratchet_live(ledger: Ledger) -> dict:
             forms[v] = forms.get(v, 0) + 1
         return dict(sorted(forms.items()))
 
+    def _gpu_hours_no_verdict():
+        # 83rd audit B2: D1.0 bought 33.78 GPU-hours across two attempts for
+        # zero verdicts — 113% of a weekly free allocation on one spec — and
+        # no instrument could print that sentence; the join of
+        # gpu_budget.json against ledger gpu_job_id fields existed only as a
+        # hand computation inside the audit. Printed here so the third
+        # attempt is authorised by somebody who can see the running total on
+        # the same page as the verdict, instead of by a hand-written
+        # prohibition in a priority block. A metric with no floor: honest
+        # VOIDs and FAILs legitimately cost hours (the gate firing IS the
+        # gate working); gating this would punish honesty.
+        import json as _json
+        _check_gpu_hours_reader()
+        from .gpu import BUDGET_FILE
+        charged = {jid: rec.get("hours", 0.0)
+                   for jid, rec in _json.loads(BUDGET_FILE.read_text())
+                   .get("charged_jobs", {}).items()}
+        return gpu_hours_verdictless(ledger.results, charged)
+
     take("unreachable", _unreachable)
     take("fail_unowned", _fail_unowned)
     take("fail_unowned_owned_forms", _fail_unowned_owned_forms)
     take("goal_unrunnable", _goal_unrunnable)
     take("cpu_foreclosed_now", _cpu_foreclosed_now)
+    take("gpu_hours_no_verdict", _gpu_hours_no_verdict)
     take("claim_dead", _claim_dead_count)
     take("park_release_pairs", _park_release_pairs)
     take("champions_trigger_debt", _champions_trigger_debt)

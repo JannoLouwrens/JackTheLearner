@@ -29,6 +29,18 @@
     "at": "2026-09-05",
     "value": 7
   },
+  "gpu_hours_no_verdict": {
+    "at": "2026-09-07",
+    "value": {
+      "D1.0": "33.78 h / 2 attempt(s) / 0 verdict(s)",
+      "T2.05": "1.93 h / 4 attempt(s) / 1 verdict(s)",
+      "T2.07": "0.29 h / 1 attempt(s) / 1 verdict(s)",
+      "T2.15": "0.31 h / 1 attempt(s) / 1 verdict(s)",
+      "T4.02": "0.29 h / 2 attempt(s) / 2 verdict(s)",
+      "TOTAL": "36.91 h",
+      "UB.10": "0.30 h / 1 attempt(s) / 0 verdict(s)"
+    }
+  },
   "park_release_pairs": {
     "at": "2026-09-03",
     "value": 3
