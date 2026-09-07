@@ -12047,3 +12047,60 @@ commissioned ids against the ledger and prints the pair — verdict and date, or
 NO ROW YET, so an unreturned commission is visible too. A reading, never a
 violation; empty `ORDERED:` is MALFORMED; guarded red-first as `T0.31` P16;
 `w0-too-shallow` backfilled with W1.00–W1.04 as the first live instance.*
+
+---
+
+## Every dependency detector we own is ONE HOP DEEP, so a certificate can be
+## invalidated by a module it reaches through a fixture and stay green
+## (overseer, 81st audit, 2026-09-07)
+
+The 78th audit's lesson two entries up says *"a staleness stamp is only as
+strong as its DECLARED inputs."* The repair (`80f8c80`, 2026-09-06 14:19) was
+correct and it enumerated *"the eight `EpisodicMemory` importers."* Eight is the
+number of modules that import it **directly**. On the same morning, in the same
+family, eight MORE reached it at one to three hops and none of them was counted.
+
+`protocol.py:impl_sha_of` hashes the test file plus the files it declares.
+`protocol.py:undeclared_impl_imports` walks the module's own import nodes. Both
+stop at one hop, by construction. So:
+
+- `experiments/fixtures/paraphrase_eval.py:433` builds the store as
+  `EpisodicMemory(path=path)` — the bare default. Six `ME.11` arms declare
+  `paraphrase_eval.py` in `IMPL_DEPS`, which is the right instinct and buys
+  nothing: changing `EpisodicMemory.py` does not change `paraphrase_eval.py`'s
+  bytes. **Declaring the door does not hash what is behind it.**
+- `me_11_a_lexical_incumbent.py:50` imports `_build_life` — a *private helper* —
+  from `me_1_event_log.py`. When the Review strengthened `ME.1` (`35b9d51`) and
+  `_build_life` gained a fourth return value, `ME.11.A`'s **control** became
+  `ValueError: too many values to unpack (expected 3)`. `ME.11.A` is a live PASS
+  whose `_check` requires that control. It cannot be re-bought.
+
+Two commits, both individually right — an honest strengthening of a control that
+had passed vacuously for 29 days, and an honest bakeoff-decided repair of the
+module underneath it — composed into a green row measuring nothing. The
+strengthening commit says *"no control weakened,"* which is true: it made a
+control in a **neighbouring spec** uncallable. Nobody was careless and no
+instrument was wrong. `status`, `coverage`, `decisions`, `champions` and
+`review-queue` all exited 0.
+
+**The generalisable form: an integrity check inherits the topology of the graph
+it walks, and this codebase's real dependency graph is not a star — it is a
+chain.** Specs borrow harness code from sibling specs and reach implementation
+through shared fixtures, because that is the DRY thing to do. Every such edge is
+a place a certificate can be invalidated by an edit its author could not have
+known to look for. A one-hop detector over a three-hop graph does not report a
+smaller version of the truth; it reports a clean board.
+
+The guard, in the idiom this repo already uses: resolve `experiments.*` imports
+**transitively** and fold the reached repo-root modules into `impl_sha`; or, if
+that restamps too much at once, add a `transitive_impl_imports` predicate beside
+the existing walker and a `T0.35` property that FAILs on an undeclared
+transitive reach, with today's eight named in `GRANDFATHERED` so the floor
+follows the number down under P4. Either way ship it with a **mutation
+falsifier** — touch `EpisodicMemory.py`, assert `ME.11.A` goes stale. A
+staleness detector that has never been shown to fire is exactly the artefact
+this lesson is about.
+
+Ask of any integrity instrument: *what shape of graph does it assume, and what
+shape does the tree actually have?* Here the instrument assumed depth 1 and
+shipped the day the tree reached depth 3.
