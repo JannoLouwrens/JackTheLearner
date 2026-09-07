@@ -5016,6 +5016,95 @@ spends the meter D20 exists to protect, and it is NOT armed as an option here:
 it is a price, recorded so (iii) is chosen against a full table rather than a
 blank line.
 
+## D25 — All five Sunday FULLs have now died mid-run, but the LAST one died having already committed everything. The seal cannot tell those two deaths apart, and it defamed a complete page. Fix the seal, or buy more wall clock? (2026-09-07, Review, DAILY)
+
+**The measurement, from the organ's own log and git.** `scripts/review.sh:69-71`
+now reads `TURNS_PER_MIN=6`, so a Sunday FULL gets `40m / 240 turns`. The
+2026-08-31 fix — raising turns after four Sundays died at `Reached max turns
+(60)` — WORKED, and it worked by moving the binding constraint somewhere else.
+The file says so itself nine lines above, in a comment written before anyone
+had watched it happen: *"At 6/min the `timeout` becomes the binding ceiling."*
+
+On 2026-09-06 the FULL started at 06:37 and `lib_seal.sh` stamped it at
+**07:17:11 with `rc=124`** — a `timeout(1)` kill at exactly 40 minutes, not a
+turn exhaustion. So: **five Sunday FULLs scheduled, five deaths, and the fifth
+died against a different wall than the first four.** Yesterday's page said
+*"four of the five Sunday FULL runs ever scheduled died at max turns. This is
+the fifth"* — a sentence that reads as though the fifth survived. It did not,
+and I am correcting my own desk's record here rather than leaving it to be
+found.
+
+**And yet the fifth death cost almost nothing, which is the whole finding.**
+Before it was killed, that run had already committed: both `d10-*` gate
+adoptions, the `w0-too-shallow` disposition publishing `W1.00`-`W1.04`, the
+`lt01-c2` re-scope, `lc07`'s refusal and `D24`, the `cross-organ` fork, the
+`ME.1` strengthening and its FAIL, two new `CHAMPIONS` seats, `docs/PROGRESS.md`
+in full, and its `PROGRESS_LOG` row at **07:12** — five minutes before the
+kill. The commit-as-you-go discipline the prompt's own scar demanded did
+exactly what it was written for. **What the run lost was its exit, not its
+work.**
+
+**THE ACTUAL HARM, and it is not the lost minutes.** `lib_seal.sh` sees only
+`rc != 0` and banners the page: *"INCOMPLETE RUN — THIS IS A DRAFT, NOT A
+FINDING... any verdict, any section claiming 'no findings', and any instrument
+table in it are UNVERIFIED."* That banner is CORRECT for 2026-09-05, which
+died at max turns having appended nothing and left five files dirty. It is
+FALSE for 2026-09-06, which finished its page and its log row. The seal has one
+verdict for two opposite events — and the consequence was live: **the builder
+spent the next twenty-four hours executing seven of that page's nine `FOR THE
+BUILDER` items off a document formally marked UNVERIFIED**, and it was right to.
+An instrument that cannot distinguish "died with nothing done" from "died
+having committed everything" trains its readers to ignore it, which is the one
+failure mode a seal cannot survive.
+
+**Options.**
+
+  (i)  **BUY WALL CLOCK.** Raise the Sunday `TMOUT` (e.g. 40m -> 60m) so the
+       FULL reaches a clean exit. Costs credits against the shared all-models
+       meter — the same meter that took every organ dark for 4.3 days in
+       August — and buys a tidier exit for work that already lands.
+  (ii) **CHANGE NOTHING.** Accept that FULL runs die at the wall, on the
+       grounds that commit-as-you-go has made the death cheap. Leaves the seal
+       calling a complete page a draft, every Sunday, forever.
+  (iii) **FIX THE SEAL, BUY NOTHING.** Teach `lib_seal.sh` to read the dying
+       run's own committed acts: if `docs/PROGRESS.md` was committed by this
+       run AND its `PROGRESS_LOG` row was appended, the banner says so —
+       *page complete, run killed at the wall on the tail* — instead of
+       *this is a draft and everything in it is unverified*. A run that
+       committed neither keeps today's banner verbatim.
+
+> **My recommendation: (iii) — fix the seal, and do NOT raise the wall clock.**
+> The 2026-09-06 run is the evidence: forty minutes was enough to do Part 2,
+> both completeness audits, six dispositions, two seats and the entire page,
+> and the only thing it was not enough for was saying so. Buying minutes to
+> improve an exit is spending the one resource that has historically silenced
+> this whole system, in order to fix the cheapest part of the problem. The
+> expensive part is an instrument that tells a true thing about one Sunday and
+> a false thing about the next, in the same words — and that costs nothing to
+> repair. The price of (iii), stated: Sunday FULLs will keep exiting non-zero,
+> `review.log` will keep recording `rc=124`, and the organ will keep looking
+> unhealthy to anything that reads exit codes alone. I would rather have a
+> truthful banner over a complete page than a green exit code, and if the
+> choice is ever between the two, this desk should take the banner.
+
+- class: process
+- default: (iii) FIX THE SEAL, BUY NOTHING. This is the only legal default of
+  the three. (i) spends credits against the shared meter by silence, which is
+  the resource whose exhaustion cost 4.3 dark days and three consecutive
+  unspent GPU allocations in August — an outlay that large may not fire because
+  nobody answered. (ii) is the status quo and it writes off a MEASURED
+  falsehood in a standing instrument: the seal would go on calling the
+  2026-09-06 page a draft although that page was complete, committed and
+  correctly acted upon. (iii) moves no threshold, refuses no run, stales no
+  certificate, spends nothing, and is monotone — it can only ADD a truer
+  banner where a false one stood; a run that committed nothing keeps today's
+  wording byte-for-byte. The price, stated rather than buried: under (iii) the
+  Sunday FULL still exits `rc=124` and still looks unhealthy to anything
+  reading exit codes alone, and this desk is choosing a truthful banner over a
+  green exit code on purpose. Reversal: one conditional in `lib_seal.sh`.
+- decide_by: 2026-09-13
+
+
 ## D21 — RESOLVED BY ARMED DEFAULT, fired 2026-09-06 00:1x UTC (builder, before the 06:37 FULL — the same-day race). Off your desk.
 
 The decide_by of 2026-09-05 passed unanswered and the default fired exactly as
