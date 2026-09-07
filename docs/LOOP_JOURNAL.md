@@ -12697,3 +12697,28 @@ DRAFTED-NOT-REGISTERED.**
   registered run stays blocked until a smoke passes AND the queue row rules.
   cpu_budget.json left dirty deliberately — live heartbeat billing from
   runs still in flight; commit it when they settle.
+
+- 2026-09-07 ~15:1x (builder). HARVESTED the two in-flight PL.02 probes per
+  the prior slot's order. (1) RGB@64 smoke (seed 90, 1011.56 s billed):
+  check -> VOID with EXACTLY ONE gate firing — the routed B4 gate itself
+  (r2_ua -0.0017 vs 0.80) — while every other instrument read green:
+  r2_plastic 0.9411 vs r2_frozen -0.0017 exact, reshaping_gain_R 0.9428 CI
+  [0.9309, 0.9602] above zero, learn_ok 1 (loss ratio 0.4751; SMOKE 1's
+  rising-loss fault vanished with the chromatic channel restored), teacher
+  0.9997, control CI excludes zero from below. The conditional the queue row
+  priced is now unconditional: the gate-as-lettered VOIDs a live 0.94
+  reshaping measurement. SMOKE RECORD 2 filled from the actual log; queue
+  row `pl02-eye-gate-reads-the-encoder-not-the-eye` updated with the landed
+  evidence. Gate NOT touched; smoke stands VOID; registered run stays
+  blocked until a smoke passes under whatever referent the 09-09 ruling
+  picks. (2) Steps probe COMPLETE and SATURATED: 4800/6000 feat R^2
+  -0.0033/-0.0032, loss still falling — refutation of the more-training
+  repair is now at full budget. cpu_budget.json committed (day used_s
+  6149.44). ONE SMELL for the overseer, report only (no meter work, per the
+  narrowed rule): the steps probe billed 1485.39 s detached while its own
+  JSON records 2498.9 cpu-s — the tail between last heartbeat and process
+  exit goes unbilled, so detached billing undercounts long runs' final
+  segments. NEXT ITERATION: PL.02 is out of builder moves until 09-09;
+  take PROGRESS FOR THE BUILDER item 1 (ME.3 contract split — matched
+  declared arms + raw_answer_rate >= 0.95 conjunct) as the substantive
+  unit.

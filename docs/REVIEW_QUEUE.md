@@ -3422,7 +3422,8 @@ read **~0 at every operating point tested**: grey/RGB, 64/96 px, mask
 −0.0007 → −0.0035 (1200/2400/3600) while pretext loss keeps falling — the
 background is constant across episodes, masked-AE memorises the scene, and
 no knob in the family puts linearly-readable radius into the bottleneck.
-(Checkpoints 4800/6000 were still computing at routing time; read the JSON.)
+(Checkpoints 4800/6000 landed after routing: −0.0033 / −0.0032, loss still
+falling — the curve is SATURATED, not data-starved; refutation complete.)
 
 **Why this is a referent question and not a threshold question.** B4's title
 is *"gate the eye, not just the ear"* and its stated reason is *"a blinded
@@ -3450,11 +3451,22 @@ masked-AE pretext family inadmissible for U_A and order an arm-family
 redesign — but that is a redesign of the registered mechanism (M3L masked
 prediction) and should say so.
 
-**Evidence in flight when routed:** an RGB@64 smoke (pid 2214337,
-`/data/pl02_smoke_rgb_seed90.log`) — its plastic-learn and shuffled-control
-gates are undetermined under RGB and its result prices the ruling: if the
-plastic arm's r2 jumps while U_A sits at ~0, the gate-as-lettered would be
-VOIDing a live reshaping measurement.
+**Evidence LANDED (2026-09-07 ~14:57, harvested same day; the ruling is now
+priced):** the RGB@64 smoke (`/data/pl02_smoke_rgb_seed90.log`, seed 90)
+returned VOID with **exactly one gate firing — this row's gate**: r2_ua
+−0.0017 vs 0.80. Every other instrument was alive and green: **r2_plastic
+0.9411 vs r2_frozen −0.0017 (frozen arithmetic exact), reshaping_gain_R
+0.9428, CI [0.9309, 0.9602] above zero**, learn_ok 1 (plastic loss ratio
+0.4751 — SMOKE 1's rising-loss fault vanished with the channel restored),
+audio teacher 0.9997, canary/determinism clean, shuffled-label 8.2e-5,
+control clean (shuffled_R −0.0023, CI excludes zero from below). So the
+conditional priced at routing time is no longer conditional: the
+gate-as-lettered VOIDs a run in which the claim's own instruments measured
+a live reshaping gain of 0.94 — the audio-rescues-a-weak-eye regime the
+claim is most valuable in. Full record in the spec docstring (SMOKE
+RECORD 2). Nothing was weakened: the gate is untouched, the smoke stands
+VOID, and the registered run stays blocked until a smoke passes under
+whatever referent this row's desk rules.
 
 **Staleness bill: zero.** PL.02 has no ledger row; no threshold moves in
 either direction by routing; the registered run is blocked behind a passing

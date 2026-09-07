@@ -122,6 +122,29 @@ channel at unchanged resolution and render cost; the switch is a rig
 repair validated on the disjoint smoke seed, and no verdict threshold
 moved in any direction.
 
+SMOKE RECORD 2 (seed 90, 64 px RGB, ran 2026-09-07T14:40:47Z detached,
+/data/pl02_smoke_rgb_seed90.log, 1011.56 s billed): check -> VOID — ONE
+gate fired, and it is the routed one. r2_ua -0.001685 vs
+EYE_RADIUS_R2_MIN 0.80 (the 82nd-audit B4 gate as lettered). Every other
+instrument was alive and green: r2_plastic 0.941133 vs r2_frozen
+-0.001685 (frozen arithmetic exact-zero intact), reshaping_gain_R
+0.942818 with CI [0.930903, 0.960186] above zero, learn_ok 1 (plastic
+pretext loss fell to 0.4751 of initial — SMOKE 1's rising-loss fault is
+gone with the chromatic channel restored), audio teacher 0.999658,
+canary/determinism clean, shuffled-label probe 8.2e-5, control clean
+(shuffled_R -0.002328, CI [-0.003224, -0.001415] excludes zero from
+BELOW; control_reshapes_too 0). This is the exact scenario the routing
+priced: the gate-as-lettered VOIDs a run in which the claim's own
+instruments measured a live reshaping gain of 0.94, because U_A's
+masked-AE bottleneck never encodes radius at any tested budget (steps
+probe COMPLETE, /data/pl02_steps_probe.json, checkpoints 1200..6000:
+feat R^2 0.0192 / -0.0007 / -0.0035 / -0.0033 / -0.0032 while pretext
+loss keeps falling — saturated, not data-starved) while the raw eye
+reads 0.93 on the same episodes. The registered run stays blocked until
+a smoke PASSES and `pl02-eye-gate-reads-the-encoder-not-the-eye`
+(DUE 2026-09-09) rules what the gate reads. Nothing in this record moves
+a threshold; the gate is untouched.
+
 WEIGHTS ARE PERSISTED — the 2026-09-07 standing rule (PROGRESS item 5):
 PL.02 is an arena of the Vision-encoder seat (`experiments/champions.py`),
 so every trained A-encoder's state_dict is written to
