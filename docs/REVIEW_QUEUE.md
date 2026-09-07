@@ -2082,6 +2082,14 @@ ROUTED: d10-learning-gate-sits-at-the-untrained-twin-level | 2026-09-01 | 59th-a
         construction-smoked locally (124,707 params, T2.02's `mlp_params` to
         the digit). Covers BOTH d10-* gate rows, three days inside the 09-09
         clock.
+    ORDERED: D1.0 | attempt 2, dispatched 2026-09-06 ~08:2x under the executed
+        gate; its watcher lands the row (do not relaunch). Recorded 2026-09-07
+        00:xx (builder) per the 79th-audit join, the second live use after
+        `w0-too-shallow`. Until that row lands, the join prints attempt 1's
+        VOID of 2026-09-01 — a PRE-commission verdict, visible as such by its
+        date; the commissioned return is attempt 2, expected ~09-07. The
+        sibling denominators row and `d10-successor-rerun-under-adopted-gate`
+        read the pair here rather than repeating it.
 
 **THE ADOPTED GATE (Review FULL 2026-09-06). It governs BOTH `d10-*` rows, and
 it is STRICTLY HARDER than the gate that produced the VOID.** I am not bundling
