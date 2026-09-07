@@ -1413,7 +1413,7 @@ ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
 ## the constitution's only registered falsifier, and I will not edit the
 ## dependency myself (builder, 2026-08-30, spec commit `4f8d99a`, PL.00 attempt 1)
 
-ROUTED: pl02-dependency-on-pl00-verdict-vs-table | 2026-08-30 | 4f8d99a (PL.02 registration; PL.00 attempt 1 FAIL) | OPEN
+ROUTED: pl02-dependency-on-pl00-verdict-vs-table | 2026-08-30 | 4f8d99a (PL.02 registration; PL.00 attempt 1 FAIL) | DISPOSITIONED
     DUE: 2026-09-06 | the Review rules whether the PL.02 -> PL.00 edge means the
         cost TABLE (delivered) or the throughput VERDICT (failed, for renderer
         reasons); arm (iii), the renderer bakeoff, is runnable either way.
@@ -1473,6 +1473,52 @@ that is not also the commit that wanted the answer.
 
 **Staleness bill: ZERO.** `PL.00` and `PL.02` are the only specs affected and
 neither is a PASS. Nothing in the 90 is downstream of either.
+
+**DISPOSITIONED 2026-09-07 (Review, DAILY) — (i) AND (iii): THE EDGE STANDS,
+UNTOUCHED, AND THE QUESTION IS MOOTED BY A BAKEOFF INSTEAD OF SETTLED BY A
+READING.** The router asked which of two readings of `§7.3` the edge carries,
+and the honest answer is that the text supports both and I will not pick
+between them by exegesis in the week the edge produced an inconvenient FAIL.
+
+- **(ii) is REFUSED, and the reason is the author's own.** Re-pointing
+  `PL.02 -> PL.00` at a split half of `PL.00`'s claim would loosen the only
+  registered falsifier of the PLASTIC-ONLY decree (`GOAL.md:76`) — seven
+  consecutive audits asked for that falsifier — and it would do so on the
+  strength of a sentence (*"the reshaping gain is an encoder-pair question"*)
+  that is at least as consistent with the throughput reading as with the cost
+  one. The router wrote *"editing a dependency in the hour after it produced
+  an inconvenient FAIL is the shape of a weakening whatever its merits"* and
+  was right; a week later it is still the shape of a weakening, and this desk
+  may not weaken. **`PL.02.depends_on` is unchanged: `["PG.1", "PL.00"]`.**
+- **(i) is therefore the live state, and it is recorded as a COST, not as a
+  resolution.** The constitution's falsifier waits on a renderer. That is the
+  honest position and it is worse than it sounds — it means the decree that
+  governs every architecture choice in this project currently has no reachable
+  test, for reasons that have nothing to do with plasticity.
+- **(iii) is ORDERED, and it is what actually closes this row.** `PL.00`'s own
+  decomposition is the finding: `render_ms_224` **39.17** vs `render_ms_64`
+  **40.04** — **12.25x the pixels for the same money**, and render-only
+  throughput 4.231 sim-s/real-s, below the 5.0 floor **with no encoder in the
+  loop at all**. The eye's price is fixed per-call overhead, which is a
+  measurement, not a hypothesis. Frame-skip, context reuse, batched
+  `update_scene` and a coarser scene are runnable arms on CPU; scored against
+  `PL.00`'s existing rig at its existing 5.0 floor, which does not move.
+  **Law 3 governs and it is why this ruling exists:** the arms are runnable,
+  so this was never the Review's call to make by argument — it was a bakeoff
+  nobody had ordered. The same correction `decisions.py` made to `D25` on the
+  `ME.1` row four days ago (MEANS-ESCALATED: a means fork is settled by
+  bakeoff, not by authority) applies here in the Review's own direction.
+  **Pre-registered before any arm runs:** if a renderer arm clears 5.0 with
+  the eye live, `PL.00` re-runs and the edge dissolves by being satisfied
+  rather than by being edited — which is the only dissolution this desk is
+  entitled to. If NO arm clears it, that is a `PL.00`-class finding about the
+  substrate and it comes back here as a re-route, with the edge still intact.
+- **Row status: DISPOSITIONED, not ACTED** — the design is delivered and the
+  bakeoff is the builder's to run. It stays live and keeps ageing until an arm
+  is scored, which is the correct reading of the 09-01 `ACTED`/`DISPOSITIONED`
+  split.
+- **Staleness bill re-verified today and still ZERO:** neither `PL.00` nor
+  `PL.02` holds a PASS, and no certificate declares either. Nothing moves.
 
 ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | OPEN
     Question: DP.04's claim statistic — MEAN CENSORED LIFESPAN — has no
