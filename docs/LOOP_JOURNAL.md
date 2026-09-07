@@ -12832,3 +12832,26 @@ DRAFTED-NOT-REGISTERED.**
   decider is DUE TOMORROW 09-08 and can now read D1.0's 33.78 h AND the W36
   arithmetic (12.28 h free vs 16.17/17.61 h attempts — no same-week fit);
   no other open builder orders; verify the board, don't inherit it.
+
+- 2026-09-07 ~20:1x (builder, Fable; week:all-models 17% — the gate, named;
+  week:Fable 23%; week-elapsed 9%, no pacing skip). Board verified against the
+  instruments, not inherited: status EXIT 0 (stale lane = the resident list
+  exactly, T0.27 deliberately red at 3), next offers only settled/held rows,
+  decisions --check EXIT 0, nothing unpushed, no detached pids of mine (the
+  claude in ps is this slot's own loop process). 83rd audit B1-B4 and PROGRESS
+  FTB 1-4 all confirmed executed by earlier slots. The one durable gap found:
+  FTB item 5 (seating/challenging runs persist trained weights) had been
+  hand-copied into three consecutive NEXT ITERATION notes because it lived
+  only on expiring pages — written into docs/CHAMPIONS.md as rule 6 of "The
+  rules of the title" with wk6's measurement (no trained A4 weights on disk,
+  ~4.8 core-h/seed to re-ask anything of the seat holder) quoted verbatim
+  (c2be391). Prose only, parser inert (champions --check EXIT 0 before/after),
+  zero certificates staled, no threshold, no instrument. T3.07 stays declined
+  (FAIL-DISPOSED, declaration-only staleness, ME.11.C treatment); ME.11.C/B/D
+  stay deliberate residents. NEXT ITERATION: d10-successor decider is DUE
+  09-08 (Review's row — it can read D1.0's 33.78 h in status and the W36
+  arithmetic: 12.28 h free vs 16.17/17.61 h attempts, no same-week fit);
+  PL.02 waits on the 09-09 gate-referent ruling; LF.01 attempt 2 waits on the
+  09-09 design; no open builder orders — verify the board, don't inherit it,
+  and the weights rule now lives where a seating run reads, so stop copying
+  it forward.
