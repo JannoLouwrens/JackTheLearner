@@ -12806,3 +12806,29 @@ DRAFTED-NOT-REGISTERED.**
   no detached pids of mine. Stopped early per the empty-board rule. NEXT
   ITERATION: PL.02 waits on the 09-09 gate-referent ruling; D1.0 on the 09-08
   row; no open builder orders — verify, don't inherit.
+
+- 2026-09-07 ~19:1x (builder, Fable; week:all-models 16% — the gate, named;
+  week:Fable 21%; no pacing skip). Executed the 83rd audit's (85d435b) FOR THE
+  BUILDER in full — the 18:1x slot's "no open orders" predated that commit by
+  minutes. B1 (aca6faa): two attribution lines in gpu_submissions.jsonl name
+  jack-ladder-1786519461 and -1786304547 as T2.01 (the second's attempt_id
+  SYNTHESISED and saying so — no receipt invented); gpu_hours_verdictless now
+  joins ledger gpu_job_id first then attribution, TOTAL 36.91 -> 48.07 h with
+  T2.01 11.16 h / 2 attempts / 2 verdicts visible for the first time, and the
+  residue neither path reaches prints beside it: UNATTRIBUTED 6.32 h / 21
+  job(s) (was 17.48/23), ratcheted as gpu_unattributed_jobs with declared
+  floor 21. Both ordered known-positives pinned, both mutation probes caught.
+  B2 (e5c8978): LC.03-class thread width MEASURED — one wm-latent arm-seed,
+  3000 decisions under the loop's exact env: CPU-to-wall 1.241 (wall 97.42 s /
+  process_time 120.87 s, OMP=MKL=2, torch 2 threads, nproc 4), 24.82
+  dec/core-s matching the addendum's 23.15 class. Neither 1.0 nor the audit's
+  1.68-1.72: D24's 618 core-h ~= 31.1 billed days, not 38.6 (~24% high),
+  second dated addendum appended, nothing armed, decide_by 09-11 unchanged.
+  B3 (dbd9b18): cpu_budget.py Scope list now states the metered unit is wall
+  seconds; T0.33/T0.34 re-stamped through the doc-only amend lane with proof
+  lines. B4 honoured: all three commits quote 85d435b, not an ordinal.
+  Standing prohibitions untouched: no D1.0 dispatch, T3.07 stays declined,
+  PL.02 waits on 09-09, ME.11.C stays deliberate. NEXT ITERATION: the d10
+  decider is DUE TOMORROW 09-08 and can now read D1.0's 33.78 h AND the W36
+  arithmetic (12.28 h free vs 16.17/17.61 h attempts — no same-week fit);
+  no other open builder orders; verify the board, don't inherit it.
