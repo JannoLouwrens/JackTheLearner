@@ -12649,3 +12649,33 @@ DRAFTED-NOT-REGISTERED.**
   weights) is a standing rule for any seating run, not a unit. Whether
   existing visual certs migrate to the cheap eye is flagged on the queue
   row for the Review — do not migrate them unbidden.
+
+- 2026-09-07 ~14:1x (builder, Fable; week:all-models 10% — the gate, named;
+  week:Fable 12%). INHERITED the timed-out 13:07 slot's PL.02 work per the
+  ladder rule: implementation + 82nd-audit B4 eye gate were sound, its
+  detached seed-90 smoke COMPLETED with check -> VOID (committed as found,
+  603619c) — the B4 gate fired on its first exercise (r2_ua -0.0039 vs 0.80)
+  and plastic loss rose 1.104. Decomposed before re-smoking (PL.00's lesson;
+  pl02_rig_probe.py, artifacts /data/pl02_{rig,rgb,uargb,steps}_probe.json):
+  raw-pixel radius ceilings under the coarse eye — grey@64 0.5614, grey@96
+  0.6861, RGB@64 0.9327, RGB@96 0.9438. The first op point's .mean(axis=2)
+  grey conversion silently discarded the chromatic channel carrying most of
+  the radius signal — an inherited default nobody chose, PL.00's shape one
+  layer up. Spec pipeline converted to RGB@64 (render cost unchanged, no
+  verdict threshold moved); raw-RGB-under-coarse numbers also appended as
+  EVIDENCE to the two-eyes-one-certified queue row (decides nothing there).
+  BUT the encoder is a second, independent fault: U_A features read ~0
+  radius R^2 at every 1200-step op point tested (grey m35 -0.004, grey m60
+  -0.0036, RGB m35 0.0192) while acing the pretext (loss_drop 0.0034) — the
+  background is CONSTANT across episodes, so masked-AE memorises the scene
+  and the object is the only residual. Steps-scaling probe IN FLIGHT
+  (pid 2210350 declared, 6000 steps, checkpoints 1200..6000,
+  /data/pl02_steps_probe.json). NEXT ITERATION: read that curve. If feat R^2
+  clears 0.80 at some budget, set STEPS to it and re-smoke RGB@64 (then fill
+  SMOKE RECORD 2 from the actual run). If it saturates far below 0.80, the
+  B4 gate as lettered (U_A features >= 0.80) makes PL.02 unrunnable while
+  the EYE is measurably fine (raw 0.93) AND it contradicts the registry's
+  own small-effect calibration note (Kepler analogue R^2 0.049/-0.001/0.187;
+  a 0.80 baseline crushes R by ceiling) — route that as a gate-referent
+  question to the overseer/queue WITH the curve; do not weaken the gate
+  unilaterally. Registered run must not launch until a smoke passes.

@@ -88,23 +88,39 @@ OPERATING POINT, fixed a priori and validated for RIG ALIVENESS ONLY on
 seed 90 (disjoint from the registered seeds 0/1/2) before the registered
 run — not tuned to the verdict, which has no free threshold to tune (the
 claim bar is "CI excludes zero", from the registry):
-    64 px grey frames; N_PRETEXT=1500; probe split 1000/600; 1200 Adam
+    64 px RGB frames; N_PRETEXT=1500; probe split 1000/600; 1200 Adam
     steps at 1e-3, batch 64; patch masking 8x8 patches at 35%; audio
     dropped on 50% of rows; audio features: 12 log band energies
     (800-3600 Hz, log-spaced) + log level + pan, z-scored on pretext
     stats.
-    SMOKE RECORD (seed 90, full size, ran 2026-09-07T13:09:58Z detached,
-    /data/pl02_smoke_seed90.log, 879 s billed): check -> VOID. THE RIG IS
-    NOT ALIVE AT THIS OPERATING POINT; the registered run MUST NOT launch
-    until a smoke passes rig-aliveness. Two gates fired, honestly:
-      - r2_ua -0.0039 vs EYE_RADIUS_R2_MIN 0.80 (the 82nd-audit B4 gate,
-        firing on its first exercise). r2_frozen == r2_ua exactly and
-        r2_plastic -0.0040 — all three probes equally dead — while
-        loss_drop_ua 0.0083 says reconstruction was aced. The encoder
-        solves the pretext without encoding the object.
-      - learn_ok 0: the plastic arm's combined loss ROSE (ratio 1.104).
-    Gates that read clean: audio teacher 0.9997, canary, determinism,
-    shuffled-label probe 6e-5, frozen arithmetic exact.
+
+SMOKE RECORD 1 (seed 90, 64 px GREY, ran 2026-09-07T13:09:58Z detached,
+/data/pl02_smoke_seed90.log, 879 s billed): check -> VOID — the rig was
+not alive at the first operating point. Two gates fired, honestly:
+  - r2_ua -0.0039 vs EYE_RADIUS_R2_MIN 0.80 (the 82nd-audit B4 gate,
+    firing on its first exercise). r2_frozen == r2_ua exactly and
+    r2_plastic -0.0040 — all three probes equally dead — while
+    loss_drop_ua 0.0083 says reconstruction was aced.
+  - learn_ok 0: the plastic arm's combined loss ROSE (ratio 1.104) —
+    shared root: predicting audio from a radius-blind latent is
+    unlearnable, so the audio term cannot fall.
+Gates that read clean: audio teacher 0.9997, canary, determinism,
+shuffled-label probe 6e-5, frozen arithmetic exact.
+
+THE DECOMPOSITION (pl02_rig_probe.py, seed 90, artifacts
+/data/pl02_rig_probe.json + /data/pl02_rgb_probe.json +
+/data/pl02_uargb_probe.json), per the PL.00 lesson — decompose before
+blaming the substrate. Raw-pixel ridge ceilings at the coarse quality:
+grey@64 0.5614, grey@96 0.6861, RGB@64 0.9327, RGB@96 0.9438 (spec's own
+1000/600 split for RGB). PG.6's 0.80 certificate is an RGB raw-pixel
+number; the first operating point silently discarded the chromatic
+channel that carries most of the radius signal, capping the eye gate
+below its own bar before any encoder ran — the same inherited-default
+shape as PL.00's shadow pass, one layer up: nobody CHOSE grey, it
+arrived as a .mean(axis=2) convenience. RGB restores the certified
+channel at unchanged resolution and render cost; the switch is a rig
+repair validated on the disjoint smoke seed, and no verdict threshold
+moved in any direction.
 
 WEIGHTS ARE PERSISTED — the 2026-09-07 standing rule (PROGRESS item 5):
 PL.02 is an arena of the Vision-encoder seat (`experiments/champions.py`),
@@ -276,18 +292,23 @@ def _audio_feats(eye: _CoarseEye, radius: float, bearing_deg: float,
 
 # ── episodes ─────────────────────────────────────────────────────────────
 def _episodes(eye: _CoarseEye, rng: np.random.RandomState, n: int) -> dict:
-    frames = np.empty((n, RES, RES), dtype=np.float32)
+    frames = np.empty((n, RES, RES, 3), dtype=np.float32)
     radii = np.empty(n, dtype=np.float32)
     bearings = np.empty(n, dtype=np.float32)
     dists = np.empty(n, dtype=np.float32)
     audio = np.empty((n, N_BANDS + 2), dtype=np.float32)
     for i in range(n):
         b, d, r, _ = _sample_unoccluded(eye, rng, 0.0, IN_FOV_MAX, signed=True)
-        frames[i] = eye.frame(b, d, r).mean(axis=2)  # grey
+        frames[i] = eye.frame(b, d, r)               # RGB — see docstring
         radii[i], bearings[i], dists[i] = r, b, d
         audio[i] = _audio_feats(eye, r, b, d)
     return {"frames": frames, "radius": radii, "bearing": bearings,
             "dist": dists, "audio": audio}
+
+
+def _nchw(torch, frames: np.ndarray):
+    """(n, RES, RES, 3) float32 -> contiguous NCHW tensor."""
+    return torch.from_numpy(np.ascontiguousarray(frames.transpose(0, 3, 1, 2)))
 
 
 # ── models ───────────────────────────────────────────────────────────────
@@ -298,20 +319,23 @@ def _build_models(torch, seed: int):
     nn = torch.nn
     torch.manual_seed(seed * 1009 + 7)
 
+    side = RES // 16                # four stride-2 convs
+    feat = 64 * side * side
     enc_a = nn.Sequential(
-        nn.Conv2d(1, 16, 4, 2, 1), nn.ReLU(),    # 32
-        nn.Conv2d(16, 32, 4, 2, 1), nn.ReLU(),   # 16
-        nn.Conv2d(32, 64, 4, 2, 1), nn.ReLU(),   # 8
-        nn.Conv2d(64, 64, 4, 2, 1), nn.ReLU(),   # 4
-        nn.Flatten(), nn.Linear(64 * 16, Z_A))
+        nn.Conv2d(3, 16, 4, 2, 1), nn.ReLU(),
+        nn.Conv2d(16, 32, 4, 2, 1), nn.ReLU(),
+        nn.Conv2d(32, 64, 4, 2, 1), nn.ReLU(),
+        nn.Conv2d(64, 64, 4, 2, 1), nn.ReLU(),
+        nn.Flatten(), nn.Linear(feat, Z_A))
     enc_b = nn.Sequential(nn.Linear(N_BANDS + 2, 64), nn.ReLU(),
                           nn.Linear(64, Z_B))
     dec = nn.Sequential(
-        nn.Linear(Z_A + Z_B, 64 * 16), nn.ReLU(), nn.Unflatten(1, (64, 4, 4)),
+        nn.Linear(Z_A + Z_B, feat), nn.ReLU(),
+        nn.Unflatten(1, (64, side, side)),
         nn.ConvTranspose2d(64, 64, 4, 2, 1), nn.ReLU(),
         nn.ConvTranspose2d(64, 32, 4, 2, 1), nn.ReLU(),
         nn.ConvTranspose2d(32, 16, 4, 2, 1), nn.ReLU(),
-        nn.ConvTranspose2d(16, 1, 4, 2, 1))
+        nn.ConvTranspose2d(16, 3, 4, 2, 1))
     aud_head = nn.Sequential(nn.Linear(Z_A + Z_B, 64), nn.ReLU(),
                              nn.Linear(64, N_BANDS + 2))
     return enc_a, enc_b, dec, aud_head
@@ -336,7 +360,7 @@ def _pretrain(torch, arm: str, data: dict, seed: int, models) -> dict:
     optimiser — the same frozen tensor, per the registered null."""
     nn = torch.nn
     enc_a, enc_b, dec, aud_head = models
-    frames = torch.from_numpy(data["frames"]).unsqueeze(1)
+    frames = _nchw(torch, data["frames"])
     aud = data["audio"]
     mu, sd = aud.mean(0), aud.std(0) + 1e-8
     aud_z = torch.from_numpy((aud - mu) / sd)
@@ -392,7 +416,7 @@ def _pretrain(torch, arm: str, data: dict, seed: int, models) -> dict:
 
 def _features(torch, enc_a, frames: np.ndarray) -> np.ndarray:
     with torch.no_grad():
-        x = torch.from_numpy(frames).unsqueeze(1)
+        x = _nchw(torch, frames)
         out = []
         for i in range(0, x.shape[0], 256):
             out.append(enc_a(x[i:i + 256]).numpy())

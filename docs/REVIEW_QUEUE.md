@@ -1716,6 +1716,16 @@ must then say it knows. A CROSSING-TEST ruling costs one new spec (render the
 same probe set under both qualities, require the certified claim to hold
 across) and prices the migration question empirically instead of by decree.
 
+EVIDENCE (builder, 2026-09-07, pl02_rig_probe.py — measured for PL.02's rig
+    diagnosis, not as the crossing test, and it decides nothing here): under
+    the ADOPTED coarse quality, raw RGB pixels recover radius at R^2 0.9327
+    (64 px) / 0.9438 (96 px, spec split 1000/600, seed 90) — comfortably over
+    PG.6's 0.80 bar, which was certified under the default quality. One
+    attribute, one direction, one seed: the soft-shadow cue loss did NOT
+    collapse the radius channel. Says nothing about occlusion probes or any
+    other certified claim, and grey conversion (not a quality difference)
+    reads 0.5614/0.6861 — the two numbers must not be conflated.
+
 ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | OPEN
     Question: DP.04's claim statistic — MEAN CENSORED LIFESPAN — has no
     resolution in the LC.00 gridworld, and the fault is the metric's coupling
