@@ -294,6 +294,14 @@ RESOLVED = _REPO / "docs" / "DECISIONS_RESOLVED.md"
 _DECIDE = re.compile(r"^DECIDE:\s*([A-Za-z0-9._-]+)\s*$", re.M)
 _FIELD = re.compile(r"^\s+(class|default|decide_by|blocks):\s*(.*)$")
 _HEADER = re.compile(r"^##\s+(.*)$", re.M)
+
+# Near-miss: an arming attempted in an idiom the parser does not read (83rd
+# audit B1, from D25). The Review wrote `- class: process` / `- default: ...`
+# / `- decide_by: 2026-09-13` as markdown bullets; _DECIDE saw nothing, the
+# entry reported as UNDECLARED, and the reader was sent looking for a missing
+# route instead of a rejected one. "Absent" and "present but unreadable" need
+# different repairs, so the UNDECLARED text must distinguish them.
+_NEAR_MISS = re.compile(r"^[-*]?\s*(class|default|decide_by)\s*:")
 _DID = re.compile(r"^(D\d+)\b")
 
 # A decision whose every surviving header says RESOLVED is not open. D2 and D5
@@ -357,6 +365,31 @@ def parse(text: str) -> tuple[dict, list]:
         headers.setdefault(key, []).append(title)
     candidates = [k for k, ts in headers.items() if not any(_SETTLED.search(t) for t in ts)]
     return decls, sorted(candidates)
+
+
+def near_miss_lines(text: str, did: str) -> list[int]:
+    """1-based line numbers inside `did`'s entry bodies where an arming was
+    written in prose (`- class:` / `default:` / `decide_by:` at the start of a
+    line) that `_DECIDE`/`_FIELD` cannot read.
+
+    Called only when no DECIDE block resolved for `did`, so anything these
+    lines declare is invisible to the audit — the exact silent-in-the-
+    direction-where-nothing-fires failure D25 exercised. Scans every section
+    headed `## <did>` up to the next `##` header; a body that holds a valid
+    DECIDE block never reaches this function.
+    """
+    lines = text.splitlines()
+    hits: list[int] = []
+    in_body = False
+    for i, ln in enumerate(lines, start=1):
+        h = _HEADER.match(ln)
+        if h:
+            m = _DID.match(h.group(1).strip())
+            in_body = bool(m and m.group(1) == did)
+            continue
+        if in_body and _NEAR_MISS.match(ln):
+            hits.append(i)
+    return hits
 
 
 def cost_of(blocks: list[str]) -> tuple[int, list]:
@@ -857,9 +890,23 @@ def audit(text: str, today: _dt.date, rows_for_safety=None,
     for did in candidates:
         d = decls.get(did)
         if d is None:
-            violations.append(("UNDECLARED", did,
-                               "open, but declares no DECIDE block — no default, "
-                               "no deadline, so silence deadlocks it"))
+            msg = ("open, but declares no DECIDE block — no default, "
+                   "no deadline, so silence deadlocks it")
+            near = near_miss_lines(text, did)
+            if near:
+                # An arming that does not parse is worse than none: it reads
+                # as armed to a human and as inert to the clock (D25). Say
+                # "present and rejected", not "absent", so the reader repairs
+                # the idiom instead of hunting for a missing route.
+                span = (f"line {near[0]}" if len(near) == 1
+                        else f"lines {near[0]}–{near[-1]}")
+                msg = (f"NEAR-MISS: declares class/default/decide_by in "
+                       f"prose at {span} but no DECIDE: block resolves for "
+                       f"{did} — the parser reads only a column-0 `DECIDE: "
+                       f"{did}` block with indented fields (`_DECIDE`/"
+                       f"`_FIELD`, this file); rewrite the bullets in that "
+                       "idiom. " + msg)
+            violations.append(("UNDECLARED", did, msg))
             continue
 
         cls = (d.get("class") or "").lower()
@@ -1030,6 +1077,7 @@ DECIDE: D93
 """
     v, rows = audit(doc, _dt.date(2026, 8, 24))
     kinds = {did: kind for kind, did, _ in v}
+    msgs = {did: m for _, did, m in v}
     assert kinds.get("D90") == "UNDECLARED", kinds
     assert kinds.get("D91") == "MEANS-ESCALATED", kinds
     assert kinds.get("D92") == "NO-DEFAULT", kinds
@@ -1038,6 +1086,29 @@ DECIDE: D93
     # must not read as the DECISION being settled. D95 is D1's real shape.
     assert kinds.get("D95") == "UNDECLARED", kinds
     assert [r["id"] for r in rows] == ["D93"], rows
+    # An entry with neither bullets nor a block is plain UNDECLARED — the
+    # near-miss text must NOT appear (83rd audit B1's negative control).
+    assert "NEAR-MISS" not in msgs["D90"], msgs["D90"]
+
+    # The known-positive the 83rd audit ordered: D25's bullets exactly as the
+    # Review wrote them at fe39214 (markdown bullets where the parser reads a
+    # column-0 DECIDE block; `class: process` additionally illegal — two
+    # independent rejections, and the tool reported only "declares nothing").
+    # The near-miss text must name the prose arming and its lines.
+    d25 = """
+## D25 — the seal cannot tell two deaths apart (2026-09-07, Review, DAILY)
+
+Prose about the finding, then the arming written in the wrong idiom:
+
+- class: process
+- default: (iii) FIX THE SEAL, BUY NOTHING. This is the only legal default of
+  the three, and its reversal is one conditional in `lib_seal.sh`.
+- decide_by: 2026-09-13
+"""
+    v25, _ = audit(d25, _dt.date(2026, 9, 7))
+    (kind25, did25, msg25), = [x for x in v25 if x[1] == "D25"]
+    assert kind25 == "UNDECLARED" and "NEAR-MISS" in msg25, (kind25, msg25)
+    assert "lines 6–9" in msg25 and "DECIDE: D25" in msg25, msg25
 
     # `D21` as the 69th audit actually armed it: an action on 09-06 behind a
     # clock on 09-11. Both spellings of the date are present because the real
