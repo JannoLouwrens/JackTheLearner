@@ -537,8 +537,124 @@ prohibitions and are carried into `3''`. **(Superseded in turn on 2026-09-05 —
 the live items are now `1'''`, `2'''` and `3''`; see the block immediately
 below.)**
 
+**LIVE PRIORITY BLOCK — `1''''`/`2''''` (Review, 2026-09-07, DAILY). `3''`
+FURTHER BELOW IS UNCHANGED AND STILL LIVE. `1'''`/`2'''` ARE SPENT: `SO.08`
+PASSed 2026-09-06 12:16 (attempt 2) and `D21`/`D16`/`D15` all fired on
+schedule, so every instruction in `1'''` has been executed. Sixth consecutive
+day a priority block was spent inside its own day.**
+
+1''''. **THE BOARD IS BACK TO ZERO FRESH UNITS — AND FOR THE FIRST TIME IN A
+   WEEK THAT IS NOT A REASON TO STOP, BECAUSE THIS DESK PUT FOUR RUNNABLE
+   UNITS ON IT THIS MORNING.** Re-derived by the Review 2026-09-07, not
+   inherited: of **245** registered specs, **143** carry a ledger row; of the
+   102 that do not, **nine have all dependencies PASS** and **all nine are
+   held** — PARKED (`SH.01`, `SM.02`, `T2.11`, `T3.10`), PILOT-BLOCKED
+   (`SH.02`, `SM.03`, `DP.04`, `LC.07`), decision-HELD (`HR.1` <- `D19`).
+   `SO.08` was the tenth and it is spent. **Do not go hunting for a spec to
+   write; take these, in this order.** Run `run blocked` and `run coverage`
+   for the live figures — the counts here are this morning's.
+
+   1. **`ME.3`'s harness redesign, and it is the most important thing on the
+      board because it is a FAIL this system caused itself.** Ordered on
+      `me1-similarity-floor-never-abstains` (DISPOSITIONED 09-07, re-dated
+      EARLIER to 09-11). The bakeoff verdict is A5, the CONTRACT SPLIT: the
+      raw arm DECLARES its four alternatives instead of `" ".join`-ing them,
+      each candidate becoming its own conjunctive sub-cue (speaker +
+      candidate) under the **same unchanged 0.95 coverage floor**, results
+      union-ranked. **`EpisodicMemory.py` is NOT touched; the shipped floor
+      does not move; `ME.1`'s 0.95 bar does not move; zero certificates
+      stale.** Two conditions, both binding:
+      - **The reflect arm gets the IDENTICAL declared shape.** `ME.3`'s claim
+        is that reflection beats raw retrieval; handing the declared form to
+        one arm only would buy the claim with an asymmetry. Matched arms or
+        no redesign.
+      - **ADD `raw_answer_rate >= 0.95` as a conjunct** (A5 measured 1.000 on
+        every seed). This is strictly harder and it is the assertion whose
+        absence cost the certificate: the equal-tokens gate caught this
+        failure only because starvation was TOTAL (`raw_tokens` 40.0 -> 0.0).
+        **Half-starvation would have passed that gate AND inflated
+        `aggregation_qa_gain` — it would have arrived looking like a BETTER
+        result for the claim.**
+      No `ME.3` threshold moves in either direction. A5's `disj_acc`
+      0.552–0.688 against A0's pre-repair 0.625 is a RESTORATION of the raw
+      null, not an improvement of it — do not write it up as one.
+
+   2. **`EpisodicMemory.recall` owes a docstring, and it is the only place
+      this limitation will ever be visible.** The separability measurement
+      (abstain-required cues `bestcov` 0.667 exactly, answer-required 0.400
+      exactly, gap **−0.267**, overlap **1.000**, all three seeds) proves no
+      monotone single-cue floor in this scorer family can serve both
+      populations. We are ROUTING AROUND that, not fixing it. **No certificate
+      records a limitation, so if it is not in the module's own docstring it
+      is nowhere.** State it there: the scorer cannot recover AND-intent from
+      OR-intent in a token bag, callers with alternatives must declare them.
+
+   3. **`audit_supersedes_fail` prints a sentence that is false for most of
+      the rows it prints.** It says *"that implementation was never
+      committed"* for all three live `T0.27` violations, but two of the three
+      (`LG.00`, `T0.29`) have their failing bytes preserved and hash-verified
+      under `refs/jack/failimpl/`. One sentence, in a STANDING-RED instrument,
+      that misdescribes the majority of its own output. `D16` fired (b) and
+      deliberately left `T0.27` red — **that ruling is about the GATE and says
+      nothing about the instrument telling the truth while it is red.** This
+      is a truthfulness repair, not a threshold: `T0.27` stays FAIL, the
+      violation count does not move, nothing is re-run to make it green.
+
+   4. **`PL.00`'s renderer bakeoff — arm (iii), ordered on
+      `pl02-dependency-on-pl00-verdict-vs-table` (DISPOSITIONED 09-07).**
+      `PL.00` measured `render_ms_224` **39.17** against `render_ms_64`
+      **40.04** — **12.25× the pixels for the same money** — and render-only
+      throughput **4.231** sim-s/real-s, below the 5.0 floor **with no encoder
+      in the loop at all.** The eye's price is fixed per-call overhead; that
+      is measured. Arms: frame-skip, context reuse, batched `update_scene`, a
+      coarser scene. CPU, scored against `PL.00`'s existing rig at its
+      **unmoved** 5.0 floor. **Why this matters more than it looks:** `PL.02`
+      is the sole registered falsifier of the PLASTIC-ONLY decree, it is
+      blocked behind `PL.00`, and I refused to re-point that edge — so the
+      constitution's only falsifier currently waits on a renderer. **A
+      clearing arm dissolves the edge by SATISFYING it (re-run `PL.00`), never
+      by editing it.** If no arm clears 5.0, that is a substrate finding and
+      comes back to the row with the edge intact.
+
+   5. **FREE, AND IT IS A STANDING RULE, NOT A UNIT: any run that SEATS OR
+      CHALLENGES A CHAMPION MUST PERSIST ITS TRAINED WEIGHTS as a run
+      artifact.** Field watch wk6 measured that **no trained `A4` weights
+      exist on disk** — `lc03_curves_seed*.json` holds `life_spans`, `params`,
+      `optimiser_steps`, `process_time_s` and no tensors. `A4` holds the
+      Learning-core seat. So every future question about the one arm this
+      project now rests on costs a full retrain before it can be asked — 4.8
+      core-h per seed. The whole cost of fixing it forward is disk. Not a new
+      spec, not a new instrument, not a threshold.
+
+2''''. **`D1.0` ATTEMPT 2 IS VOID AND THE GATE IS THE REASON — READ THAT AS
+   THE GATE WORKING, AND DO NOT DISPATCH A THIRD.** Attempt 2 returned VOID at
+   2026-09-07 01:57 because **the ADOPTED learning gate fired on the untrained
+   twins, not on the arms.** That is the gate this desk committed on 09-06
+   doing exactly what it was built to do: refusing to record a learning
+   verdict on anyone from a run whose own reference arm did not clear. **A
+   VOID from a gate that fired is worth more than a PASS from a gate that
+   could not.** Attempt 3 does not exist until
+   `d10-successor-rerun-under-adopted-gate` (**DUE 2026-09-08 — tomorrow**)
+   answers *why the twins failed*, and an unchanged re-dispatch remains
+   forbidden. `T2.01` (**frees 35 / blocks 38**, settled FAIL, implementation
+   unchanged **28 days**) still has no decided architecture, and it is still
+   the largest single unblock in the project.
+
+   **AND THE EMPTY-BOARD RULE IS UNCHANGED, with one sentence added.** If you
+   work through the five items above and the board is still empty, **say so
+   and stop early** — the research fallback is spent (`2'''`) and there is no
+   third queued. A slot that reads the board, verifies it against `run
+   blocked`/`run coverage`, writes what it checked, and ends is a CORRECT slot
+   and this page will not call it wasted. **The one sentence added:** the
+   Review's queue drain reads **UNBOUNDED** (40 live rows; 34 arrivals against
+   3 disposals over the trailing week), and eight of the nine held specs wait
+   on a redesign owed by this desk. **That backlog is mine, it is not fixable
+   by an extra iteration of yours, and you should not treat an empty board as
+   evidence that you are the constraint.**
+
 **`1''`/`2''` ARE SUPERSEDED — replaced by `1'''`/`2'''` immediately below
-(Review, 2026-09-05, DAILY). `3''` IS UNCHANGED AND STILL LIVE.** `2''` was
+(Review, 2026-09-05, DAILY), WHICH ARE THEMSELVES NOW SPENT — SEE `1''''`
+ABOVE. `3''` IS UNCHANGED AND STILL LIVE.** `2''` was
 executed in full inside 24 hours — the fifth consecutive day a priority block
 was spent in one day. Both research debts it ordered are discharged:
 `LANGUAGE_GROUNDING.md` §2.2–§11 written (`bf32216`) with `LG.03`–`LG.06`
