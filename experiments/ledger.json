@@ -17525,16 +17525,43 @@
     },
     "T0.11": {
       "amended": [],
-      "attempt": 1,
-      "commit": "bb1659d",
+      "attempt": 2,
+      "commit": "f742e0b",
+      "compute_s": 202.68,
       "control_metrics": {
-        "message": "all backends failed: colab: exit 1; kaggle: forced failure",
+        "message": "all backends failed: colab: exit 1 | fetch failed: /content/job_result.json: rc=1 exists=False [colab] Session 'ladder-1",
         "ok": false
       },
-      "duration_s": 224.28,
+      "duration_s": 209.75,
+      "gpu_job_id": "ladder-1788747310,jannolouwrens/jack-ladder-1788747316,ladder-1788747514",
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": null,
+      "history": [
+        {
+          "commit": "bb1659d",
+          "control_metrics": {
+            "message": "all backends failed: colab: exit 1; kaggle: forced failure",
+            "ok": false
+          },
+          "impl_sha": null,
+          "message": "",
+          "metrics": {
+            "artifact_returned": true,
+            "device": "Tesla P100-PCIE-16GB",
+            "fell_back": true,
+            "landed_on": "kaggle",
+            "matmul_finite": true,
+            "message": " | attempts: ['colab: exit 1']",
+            "ok": true,
+            "torch": "2.5.1+cu121"
+          },
+          "ran_at": "2026-08-04T15:53:54",
+          "seeds": [
+            0
+          ],
+          "status": "PASS"
+        }
+      ],
+      "impl_sha": "3c5d118ec459bf93",
       "message": "",
       "metrics": {
         "artifact_returned": true,
@@ -17542,15 +17569,19 @@
         "fell_back": true,
         "landed_on": "kaggle",
         "matmul_finite": true,
-        "message": " | attempts: ['colab: exit 1']",
+        "message": " | attempts: [\"colab: exit 1 | fetch failed: /content/job_result.json: rc=1 exists=False [colab] Session 'ladder-1788747",
         "ok": true,
         "torch": "2.5.1+cu121"
       },
-      "ran_at": "2026-08-04T15:53:54",
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 209.3,
+      "preserved_impl": null,
+      "ran_at": "2026-09-07T02:18:39",
       "seeds": [
         0
       ],
       "spec_id": "T0.11",
+      "spec_sha": "ad93180b10469ebc",
       "status": "PASS"
     },
     "T0.12": {
@@ -28013,14 +28044,14 @@
     },
     "T1.10": {
       "amended": [],
-      "attempt": 2,
-      "commit": "d96042b",
-      "compute_s": 190.54,
+      "attempt": 3,
+      "commit": "f742e0b",
+      "compute_s": 213.36,
       "control_metrics": {
         "wrong_seed_max_diff": 0.503418
       },
-      "duration_s": 202.6,
-      "gpu_job_id": "jannolouwrens/jack-ladder-1788307807",
+      "duration_s": 224.54,
+      "gpu_job_id": "jannolouwrens/jack-ladder-1788747526",
       "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
@@ -28058,9 +28089,32 @@
             0
           ],
           "status": "PASS"
+        },
+        {
+          "commit": "d96042b",
+          "control_metrics": {
+            "wrong_seed_max_diff": 0.503418
+          },
+          "gpu_job_id": "jannolouwrens/jack-ladder-1788307807",
+          "impl_sha": "b769d1612f8aeeb0",
+          "message": "",
+          "metrics": {
+            "backend": "kaggle",
+            "gpu": "Tesla P100-PCIE-16GB",
+            "max_abs_diff": 6e-07,
+            "mean_abs_diff": 1.45e-07,
+            "tolerance": 0.002,
+            "values_compared": 1088
+          },
+          "ran_at": "2026-09-02T00:13:26",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "26ab3dda8936aa89",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "b769d1612f8aeeb0",
+      "impl_sha": "dd31e82cf7167150",
       "message": "",
       "metrics": {
         "backend": "kaggle",
@@ -28070,8 +28124,10 @@
         "tolerance": 0.002,
         "values_compared": 1088
       },
+      "peak_rss_inherited": false,
+      "peak_rss_mb": 513.4,
       "preserved_impl": null,
-      "ran_at": "2026-09-02T00:13:26",
+      "ran_at": "2026-09-07T02:22:27",
       "seeds": [
         0
       ],
