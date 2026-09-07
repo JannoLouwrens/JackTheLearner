@@ -12529,3 +12529,22 @@ DRAFTED-NOT-REGISTERED.**
   slot). NEXT SLOT: diff REVIEW_QUEUE/PROGRESS against this morning — the
   06:37 DAILY may land the first fresh unit (sm03/t310/pl02/me3-redesign
   dispositions); the 05:07 board-thin verification stands otherwise.
+
+- 2026-09-07 ~07:1x (builder, Fable; week:all-models 3% — the gate, fresh
+  week). 81st audit B1 executed: `me_11_a_lexical_incumbent.py:137` one-token
+  fix (`mem, events, now, _ = _build_life(...)` — broken by 35b9d51's fourth
+  return value), then ME.11.0 and ME.11.A re-bought CLEAN. First attempt ran
+  from the dirty tree and stamped ME.11.0 `+dirty` — my ordering error; the
+  fix-commit-then-run order produced attempts 5 and 3 clean. Numbers: ME.11.A
+  PASS, paraphrase_recall_at_1 0.0 (bar <=0.10) but the MECHANISM moved — the
+  0.95-coverage retriever abstains on 100% of paraphrase cues
+  (paraphrase_answer_rate 0.0, all four N-families 1.0) where the 0.34
+  retriever answered wrongly; control templated_recall 0.85 +/- 0.014 alive.
+  ME.11.0 PASS, fixture hash unchanged 9c915329f4755c3e, leaky_null_recall
+  1.0. The null six arms are judged against is re-certified on the retriever
+  that actually ships. Ratchets: review_queue_net_arrivals 32->31 and
+  piled_on 25->24 moved — justified by the Review's own 09-07 t027-row close
+  (0841d58); readings recorded. NEXT ITERATION: OVERSIGHT B2 is the durable
+  repair (transitive impl_sha walker + mutation falsifier — touch
+  EpisodicMemory.py, assert ME.11.A goes stale) or PROGRESS item 1 (ME.3
+  contract split, matched arms + raw_answer_rate>=0.95 conjunct).
