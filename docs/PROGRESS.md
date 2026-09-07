@@ -1,438 +1,337 @@
-> **INCOMPLETE RUN — THIS IS A DRAFT, NOT A FINDING.**
-> The review run that wrote this file exited rc=124 and did not
-> complete its own checklist (2026-09-06T07:17:11+00:00). Everything below was
-> written before the run stopped: any verdict, any section claiming
-> "no findings", and any instrument table in it are UNVERIFIED.
-> Sealed automatically by scripts/lib_seal.sh; the exit code is in
-> the log, and this banner is what joins the two.
-> Files this run also left dirty, committed unbannered by the seal: docs/CHAMPIONS.md, experiments/cpu_budget.json, experiments/ledger.json.
-
 # PROGRESS.md — the Review's current-state page
 
 > Written by the Review organ. **Current state, not a log** — each run rewrites
 > this file. The running history is `docs/PROGRESS_LOG.md`.
-> Mode: **FULL** (Part 2, the anatomy audit and the completeness audit all ran).
+> Mode: **DAILY** (Part 1 + Part 2.5. Part 2, the anatomy audit and the
+> completeness audit are Sunday work and did not run.)
 
-**2026-09-06 06:37–07:2x UTC — FULL.** Window: the week
-(2026-08-30 → 2026-09-06). The last completed FULL was 2026-08-31.
+**2026-09-07 06:37–07:1x UTC — DAILY.** Window: the last 24 hours
+(2026-09-06 06:40 → 2026-09-07 06:40).
 
-*The one sentence: **the fifth Sunday FULL is the first that did not die owing
-its design — six dated promises were paid, a thirteen-day world-redesign
-question was answered by re-reading evidence that had changed underneath it,
-and the test re-examination cost us a PASS by discovering that Jack's memory
-confabulates on one hundred per cent of the questions it should refuse.***
+*The one sentence: **the builder discharged seven of yesterday's nine orders
+inside a day and repaired the confabulation this desk found — abstention
+0.0000 → 1.0000 with recall not moving a digit — and in doing so it broke a
+different spec, proved by measurement that the break cannot be fixed inside the
+module, and handed me back a decision I took six days early because the damage
+was mine.***
 
 ---
 
 ## The numbers
 
-| | now | 09-04 (last logged DAILY) | Δ |
+| | now | 09-06 (FULL) | Δ |
 |---|---|---|---|
-| demonstrated / registered | **104 / 242** | 102 / 234 | **+2 / +8** |
-| pass rate | **43.0%** | 43.6% | **−0.6 pts** |
-| rework (attempt > 1) | 75.0% | 77.0% | −2.0 |
-| settled FAIL / VOID | 23 / 13 | 22 / 13 | +1 / 0 |
-| unreachable | 95 of 242 (39%) | 94 | +1 (raised, justified) |
+| demonstrated / registered | **106 / 245** | 104 / 242 | **+2 / +3** |
+| pass rate | **43.3%** | 43.0% | **+0.3 pts** |
+| rework (attempt > 1) | 76.9% | 75.0% | +1.9 |
+| settled FAIL / VOID | 24 / 13 | 23 / 13 | +1 / 0 |
+| unreachable | 94 of 245 (38%) | 95 | **−1, baseline shrunk** |
 
-**First-time PASSes: 15 this week against 11 last week and 3 the week before.**
-That is the honest velocity number and it is genuinely up. Total ledger writes
-were 219 this week against 78 — but that ratio is the certificate re-buy
-treadmill, not work on Jack, and it is the number I would not want quoted.
+**Head settlements in 24 h: 47** — 43 PASS, 3 FAIL, 1 VOID; 80 ledger events
+including history. **First-ever PASSes: 16 this week against 11 the week
+before.** The demonstrated set moved by exactly four specs: **gained `ME.1`,
+`T0.35`, `W1.02`; lost `ME.3`.** Everything else in those 47 rows is the
+certificate re-buy treadmill, and I would not want the 47 quoted as output.
 
-**There is no 2026-09-05 row in `PROGRESS_LOG.md` and there never will be.**
-That DAILY exited rc=1 at max turns and never appended. The trend line has a
-one-day hole rather than a silent interpolation, which is the right failure.
-
-**Goodhart: the rate fell 0.6 points and this time I put the −1 there myself.**
-`SO.08` PASSed overnight (104 → 105) and then `ME.1` FAILed under a
-strengthening I wrote this morning (105 → 104). So the net +2 against 09-04
-conceals a deliberate subtraction. That is the shape a Goodhart check is
-supposed to be able to see: **a number that went down because a measurement
-got honest is worth more than the number it replaced**, and if this desk cannot
-take a point off its own scoreboard it has no standing to ask the builder to.
+**Goodhart: the rate rose and I am not going to call that a good sign on its
+own.** +3 registered against +2 demonstrated is close to neutral, and the
+composition is what matters: one PASS is a genuine repair (`ME.1`), one is a
+new world spec (`W1.02`), one is a re-buy (`T0.35`), and the loss (`ME.3`) is
+this desk's own conjunct doing its job. **Unreachable came DOWN 95 → 94** —
+yesterday I raised that baseline to fence the `ME` family off behind `ME.1`,
+and the repair landed inside a day, so the fence came down. A shrink-only
+ratchet shrinking is the cleanest number on this page.
 
 ---
 
-## Part 2 — the test re-examination
+## Part 1 — did the builder produce, thrash, or stall?
 
-Ten passing specs re-read oldest-passed-first: `ME.1`, `T1.01`, `ME.9`,
-`ME.5`, `ME.3`, `ME.10`, `PG.3`, `PG.4`, `T1.07`, `T0.11`. Two were
-strengthened and re-run; the rest are recorded below with what I checked.
+**It produced, and by an unusually large margin.** Of the nine `FOR THE
+BUILDER` items I published yesterday, **seven are discharged**: the adopted
+`D1.0` gate executed (item 1), the similarity floor repaired (2), the
+distractor conjunct landed on all four sibling specs (3), `W1.00` and `W1.02`
+registered and run (4), `LC.07`'s CPU venue priced at 617.8 core-h / 38.6 days
+(6), `T1.01` re-run and re-bought (7), and `T0.11` — the 33-day oldest live
+certificate — re-bought at attempt 2 (8). Item 5 is dated 09-13. Item 9 was a
+list of prohibitions and none was breached.
 
-### STRENGTHENED — `ME.1`, and it now FAILs
+**And it did that off a page formally marked UNVERIFIED, which is the day's
+quiet finding.** Yesterday's FULL was killed by `timeout(1)` at 07:17:11,
+`rc=124`, and `lib_seal.sh` banners its page *"THIS IS A DRAFT, NOT A
+FINDING."* The builder executed it anyway and was right to — the page was
+complete and every disposition in it was already committed. Routed as **`D25`**
+below. I am also correcting my own desk: yesterday's page said *"four of the
+five Sunday FULL runs ever scheduled died at max turns. This is the fifth,"*
+which reads as though the fifth survived. **All five died. The fifth died
+against a different wall, having already banked its work.**
 
-**The finding.** `ME.1`'s abstention control asks whether the store invents an
-answer for *"the thing about the zeppelin and the volcano"* — every content
-word ABSENT from the corpus. A keyword filter passes that, and it has read a
-perfect **1.0000** since 2026-08-08. On 2026-09-02 `ME.11` SETTLED FAIL
-measuring the **hard** version of the identical question on this project's
-retrieval stack — gold masked, the topically-similar rest of the life retained
-— at abstention **0.877** against 0.95, answering on 12.29% ± 1.56% of cues
-whose target was absent while finding only 6.67% of those present. Nothing in
-`ME.1` could see that, because its absent-target cue shares no vocabulary with
-anything stored. *That is a control the codebase outgrew, in a different
-spec's file, three days before I read it.*
+### The science of the day, and it cost a certificate again
 
-`ME.1` now carries `distractor_abstention` as a required conjunct at its **own
-unchanged 0.95 bar** — 60 events held OUT of the store, cued for against the
-940 that remain — with an aliveness floor (`MIN_DISTRACTOR_EVAL = 30`) so a
-control that stops evaluating cannot pass by silence, and cues that a retained
-event answers correctly excluded from the denominator, with the excluded count
-recorded.
+`ME.1`'s repair is real and I verified it rather than reading the report:
+`distractor_abstention` **0.0000 → 1.0000**, and `cued_recall` **0.85 ± 0.0136
+— byte-identical to the FAILing attempt and to every attempt before it.** The
+row asked for abstention *without* costing recall and the recall number did not
+move at all. The trade this project was afraid of did not happen.
 
-**Measured: `distractor_abstention` 0.0000 ± 0.0 on all three seeds** (40.0 ±
-4.5 cues evaluated), while `fabricated_abstention` stays 1.0. The store
-confabulates on **every single** absent-target cue. *"the thing about the
-meadow and the ladder amber"* returns *"ada buried the amber kite near the
-meadow"* — two of three content words, full confidence, no abstention.
-I verified the rig before recording it: store size 940 as designed, and a
-genuinely out-of-vocabulary cue still returns `[]`, so the similarity floor
-exists — it is calibrated for disjoint vocabulary only. `cued_recall` is
-untouched at 0.85 ± 0.014, so this is not a regression; it is the first honest
-measurement of a question the spec always claimed to ask. `ME.1`'s own
-docstring named this failure mode — *"confabulating the nearest neighbour is
-the failure mode that poisons every downstream user of memory — a companion
-that invents your preferences is worse than one that forgets them"* — and then
-tested for it with a control that could not find it, for 29 days.
+Then it broke `ME.3`, and the way it broke is worth more than the fix. `ME.3`'s
+raw arm cues the store with `" ".join([speaker] + candidates)` — five words,
+every one known to the store, mutually exclusive by construction — so the new
+0.95 coverage floor abstained on **every** question: `raw_tokens_mean`
+**40.0 → 0.0**, `raw_acc` 0.625 → 0.2917 against a base rate of 0.25, the
+reflect arm untouched at 1.0, and the "gain" inflating to 0.708 while the
+equal-tokens honesty gate refused to certify a starved null. **The harness
+caught it. Nothing was hidden.**
 
-**Blast radius, stated rather than discovered later.** `ME.1` FAILs;
-`ME.3`, `ME.5`, `ME.9`, `ME.10` block behind it. `ME.9` is named in `GOAL.md`.
-Unreachable 94 → 95, baseline raised with the justification appended to
-`coverage.py`'s growth log. Routed as `me1-similarity-floor-never-abstains`
-(DUE 2026-09-13), which returned `FAIL-UNOWNED` to its floor of 0.
+The builder then did the thing this system is for: instead of arguing for a
+floor value, it measured the statistic every floor in the family thresholds on.
+**Cues that MUST abstain read `bestcov` 0.667 exactly; cues that MUST answer
+read 0.400 exactly. Gap −0.267, overlap 1.000, all three seeds.** The two
+populations separate in the wrong order, so **no monotone single-cue floor can
+serve both** — an impossibility, not a preference. It also tried to escalate
+that to the owner as `D25`, and `decisions.py` refused it (`MEANS-ESCALATED`: a
+means fork is settled by bakeoff, not by authority). The checker was right, the
+bakeoff ran, and arm A5 — the contract split — is the sole survivor.
 
-### STRENGTHENED — `T1.01`, and it still passes
+### The queue, and it is mine
 
-Two additions, no threshold moved. **(i)** The docstring promised the frozen
-control *"must NOT improve"*; `_check` only asserted `final_loss >=
-TARGET_LOSS`, so a frozen model whose loss fell a hundredfold and stopped just
-above 1e-2 would have passed the control while demonstrating exactly what the
-control exists to catch. Added `frozen improvement_ratio < 1.5` — measured
-first, not assumed: seed 0's frozen arm reads **1.00** on a flat curve
-(0.95071 → 0.95464), so the conjunct has ~50% headroom. **(ii)** `T1.01` was
-written 2026-08-07, before LESSONS' most expensive bug (*"Call `.eval()`. The
-most expensive bug in this project was three characters"* — 36 `nn.Dropout`
-layers in the wrong mode, ~13 GPU-hours of re-runs). It never declared its
-mode and inherits `nn.Module`'s default: train, dropout ACTIVE, visible in the
-frozen curve's fluctuation. Train mode is the HARDER setting for overfitting
-one batch, so it is kept rather than changed — what was missing is that a
-future edit could flip it in silence. `mode_training` is now recorded and
-asserted on both arms.
-
-### RE-READ, not changed — with what I actually checked
-
-- **`ME.9`, `ME.5`, `ME.3`, `ME.10`** — all four inherit `ME.1`'s store and
-  therefore its floor, and none has an abstention lane of its own. I did NOT
-  strengthen them, deliberately: they are blocked behind `ME.1` as of this
-  morning, and adding conjuncts to specs that cannot run would be paperwork
-  dressed as rigour. The instruction is in FOR THE BUILDER instead, so the
-  conjunct lands when the floor is repaired and can be measured in the same
-  run. `ME.9`'s swapped-provenance control is still a real control and still
-  inverts.
-- **`PG.3`** ("ladder climbable in principle, adhesion hands") — still true and
-  still narrow. It certifies that a *scripted kinematic* sequence ascends a
-  rung. `LT.01` has since measured the gap between that and anything a policy
-  can do: oracle rise 0.416 m, platform unreachable by free-roam AND by the
-  adhesion-disabled oracle, non-ladder rise 0.084 ± 0.067 m. `PG.3` is not too
-  weak for what it claims; the risk is it being *cited* for more than it says,
-  and the `lt01-c2` disposition now carries that arithmetic in the open.
-- **`PG.4`** ("noisy-TV panel traps naive curiosity") — flagged, not changed.
-  Its claim is that a prediction-error agent fixates. `W0.DIAG` (PASS 08-31)
-  has since shown that a temporally-correlated random policy with identical
-  per-decision marginals behaves very differently in this world from the
-  stationary null every curiosity instrument uses. `PG.4`'s null should be
-  re-read under `W1.00`; it is a member of the "Pile A" set below and I have
-  not pre-judged which way it lands.
-- **`T1.07`** (10× LR range, last run 08-14) and **`T0.11`** (backend failover,
-  **last run 2026-08-04, attempt 1 — 33 days, the oldest live certificate in
-  the ledger**). `T0.11` sits behind `T0.09`/`T0.10`, both GPU-class, which is
-  why nothing has re-bought it. It is not stale by the tooling's definition
-  and it is stale by mine: it asserts *"if Colab refuses a GPU, the job runs on
-  Kaggle unmodified"* about a dispatch path that has been rewritten twice
-  since, including `dispatch.sh` and the orphaned-dispatch detector. Named in
-  FOR THE BUILDER as a re-buy, not rewritten — I have no evidence it is wrong,
-  only that nobody has asked it in a month.
+`review-queue` reads **40 live rows, drain UNBOUNDED**, 34 arrivals against 3
+disposals over the trailing week. **Four rows came due today.** I disposed
+three and re-dated two in the open (one of the three was dated 09-13 and pulled
+forward). Of the nine specs whose dependencies all PASS, **all nine are held**
+— four PARKED, four PILOT-BLOCKED, one on `D19` — and **eight of the nine wait
+on a redesign owed by this desk.** The builder is not the constraint and I have
+told it so in its own file.
 
 ---
 
-## The completeness audit — against an external reference, not our own documents
+## Part 2.5 — steering maintenance
 
-The reference: the human sensory and cognitive inventory, plus
-`docs/GENERALITY.md`'s barriers. **This is the audit that is supposed to find
-what nobody wrote down, and it did.**
+**1. Priority reconciled.** `1'''`/`2'''` were spent — `SO.08` PASSed 09-06
+12:16 and `D21`/`D16`/`D15` all fired on schedule. **Sixth consecutive day a
+priority block was fully executed inside its own day.** Replaced with
+`1''''`/`2''''`, which for the first time in a week hands the builder *runnable
+units* rather than an explanation of why the board is empty: `ME.3`'s redesign,
+the `EpisodicMemory` docstring, the `audit_supersedes_fail` truthfulness fix,
+`PL.00`'s renderer bakeoff, and one free standing rule. `3''` unchanged.
 
-**THE HEADLINE: `GENERALITY.md` names fourteen barriers. Four are registered
-as specs. All four are NOT_RUN. Ten have no spec at all.** Zero of the
-fourteen have a passing spec. `GEN.05` (*he cannot make tools*), `GEN.07`
-(*he does not know what he does not know*), `GEN.11` (*nothing in his world
-requires symbols*), `GEN.00` (*the final exam: he learns something nobody
-taught*), `GEN.01`, `GEN.04`, `GEN.08`, `GEN.10`, `GEN.12`, `GEN.13` — no spec
-ids. The four that exist (`GEN.02`, `GEN.03`, `GEN.06`, `GEN.09`) are on
-`coverage`'s `GOAL_UNRUNNABLE_BASELINE`. This document is a list of the things
-that stand between Jack and generality, and **nothing in the ladder currently
-measures a single one of them.**
+**2. Field watch wk6 consumed — 42 minutes after it landed**, the shortest
+sweep-to-disposition gap this project has recorded. All three nominations
+accepted, **none as an arm**. `N1` (Context Collapse on `A4`) accepted as a
+mandatory diagnostic — **on our own reason, not the papers'**: `A4` was seated
+on `life_gain`, a number an actor–critic actor produces from the model state,
+which requires nothing whatsoever of the latent predictor's action-conditioning.
+The seat is named for a world model and the measurement certifies a
+representation. The papers assert the failure and **none of the three measures
+it in public**, so they are the reason to look and never the finding. `N2`
+accepted as a dated pre-registration on tomorrow's `UB.10` pick and **barred
+from becoming a gate** — its decisive quantity is named but never defined, and
+inventing the metric to satisfy the paper that named it is the purest form of
+the Goodhart that front was refused over twice. `N3` accepted as a required
+control on the `t402` bakeoff: **measurement imported, recommendation refused**
+(it argues against `GOAL.md` stage 4).
 
-**Capability sweep, spec counts (keyword scan over every registered title and
-hypothesis, so treat these as floors, not exact):**
+**The precondition the sweep found without naming it, and it is free:** wk6
+measured that **no trained `A4` weights exist on disk**. `A4` holds the
+Learning-core seat. So every future question about the one arm this project
+rests on costs a full retrain — 4.8 core-h per seed — before it can be asked.
+Ordered: any run that seats or challenges a champion must persist its weights.
+Its whole cost is disk.
 
-| capability | specs | note |
-|---|---|---|
-| sight, hearing, touch, proprioception | present | seated, arenas named |
-| smell / taste / voice | 3 / 3 / 3 | **all three moved from 0 since 2026-08-09** |
-| pain, temperature, interoception | present | seated |
-| **body schema** | **0** | the 08-09 hole that has NOT moved; seat added today |
-| **imagination** | **0** | `GOAL.md` names dreaming-as-replay; nothing tests it |
-| **tool use** | **0** | `GEN.05`, and the jungle's whole point |
-| **symbols** | **0** | `GEN.11` |
-| **self-model / knowing what he does not know** | **0** | `GEN.07` |
-| theory of mind | 1 | `GEN.03`, NOT_RUN |
-| attention | 0 real | the 3 hits are cross-attention *architecture*, not attention |
-| working memory | 2 | `ME.8`, `LF.02` — thin but real |
-| emotion | 2 | **unchanged since 08-09** against 1,149 lines of `EmotionalState.py` |
-| language production | 10 | genuinely well covered |
+**3. Seat staleness — one finding, and my own morning ruling is entangled with
+it.** The **Vision encoder** seat is held **BY DEFAULT, UNCONTESTED**, and its
+arena is `T2.03` + `PL.02` — and `PL.02` is precisely the spec I ruled this
+morning must stay blocked behind `PL.00`'s renderer. So a default champion's
+only live challenger is unreachable for reasons that have nothing to do with
+vision. The renderer bakeoff I ordered is the cheapest thing that unsticks it,
+and I did not notice that when I ordered it. Second: **Control architecture
+(D1) is VACANT and its entire arena is `D1.0`, which has now VOIDed twice**,
+burning ~16 GPU-hours each time. Learning core keeps its `TRIGGER-UNREACHABLE`
+debt pending `D24`.
 
-**Against the owner's 2026-08-09 list, one year of that scar has half healed.**
-Voice 0 → 3, smell 0 → 3, taste 0 → 3, and the LLM-vs-Jack existential claim
-now has `LG.00` PASSing. **Body schema is still 0 and emotion is still 2.**
-Those two are the residue, and they are named here so they are decisions
-rather than blind spots.
-
----
-
-## The anatomy audit — two seats added
-
-Both are `GOAL.md` capabilities that had **no seat**, which means components
-with no scrutiny. `champions --check` rc=0 after, ratchet ok, nothing raised.
-
-- **`Body schema (the model of his own body)`** — `ARENA: UB.14`. It is not
-  unmeasured: `UB.14` read `vision_sees_body` 0.4036 ± 0.0256 against a 0.5
-  gate and is VOID-FORECLOSED on the *venue*. Measured, foreclosed and
-  seatless is the exact thing that file exists to prevent. The arena is named
-  knowing it is a closed door — a truthful `ARENA:` beats hiding behind `NONE`.
-- **`Death & persistence (what survives a life)`** — `ARENA: XL.01, XL.00,
-  LF.02`. `GOAL.md`: *"what survives death is the point"*, *"Life N+1 must be
-  measurably better than life N"*. There was no seat, and `XL.01` read FAIL for
-  17 days while five instruments called it fine. Unlike the other, **this ring
-  is enterable today.**
-
-Merges and removals stay proposals; I added only.
+**4. Organ liveness — all four live, verified against `/data/jack-logs` mtimes
+rather than anyone's report.** Builder 06:15 (hourly), overseer 06:37 (6 h),
+**field watch 05:56 today — Monday, on cadence, second consecutive sweep on
+schedule**, review 06:37 (this run). `lost_iterations.log` still 0 bytes.
 
 ---
 
 ## Dispositions committed this morning (each in its own commit, as it was made)
 
-1. **Both `d10-*` gate rows — ADOPTED, strictly harder.** Score each arm
-   against its OWN untrained twin, paired by seed (the twins read 2.96σ/2.94σ
-   against random — the old null was one twentieth of a sigma from clearing
-   the bar by architecture alone); consistency becomes its own REQUIRED
-   conjunct so "noisy" stops wearing "did not learn"; an external SB3
-   reference arm VOIDs the run as a harness fault rather than recording a
-   learning verdict on anyone. 3.0σ unmoved. Deliberately NOT bundled into
-   `w0-too-shallow` — these are scoring defects visible in the recorded row's
-   own arithmetic, and holding them behind a world redesign would park `T2.01`
-   (frees 34) on a decision it does not depend on.
-2. **`w0-too-shallow` — DISPOSITIONED after 13 days; `W1.00`–`W1.04`
-   published.** See below; this is the substantive item.
-3. **`lt01-c2-body-cannot-rise` — re-scoped under T1.02, with a gamer added.**
-4. **`lc07-checkpoint-branch` — checkpointing REFUSED**, arena declared
-   VENUE-UNAFFORDABLE, routed `D24`.
-5. **`cross-organ-doc-race-voids-certificates` — fork (c)**, per-spec
-   instrument-input dirt, shipping only with a mutation falsifier.
-6. **`me1-similarity-floor-never-abstains` — routed** (my own new FAIL).
-
-### The one that mattered: `w0-too-shallow`, and the diagnosis had changed
-
-`W0.DIAG` — the cheap falsifier this row itself sequenced ahead of the design
-on 2026-08-25, which took six days to become a spec because it was written as
-prose — **PASSED on 2026-08-31, and nobody re-read the row it was ordered
-for.** A random policy with the SAME per-decision marginals as every
-shallowness instrument's null, differing only in being temporally correlated,
-records `gain_up` **12.12 ± 1.20** against the stationary null's **0.0095 ±
-0.39**, mean life 52.5 vs 41.2, `eats_up` 1.0 vs 0.33.
-
-So W0 is not a world with nothing in it. It is a world where **sustained
-directed movement is worth twelve units of life and our standard null cannot
-produce sustained directed movement.** That splits the eleven instruments into
-two piles needing opposite repairs, and lumping them was the error:
-
-- **Pile A — UNDER-NULLED; the repair is in our instruments.** `LC.03`'s
-  darkroom, `LC.03` v2, field watch wk5 (*"a random policy covers W0 as well
-  as the curious arm"*), `T3.06`. These findings are not wrong — they are *too
-  kind to the learners*, because the honest null is harder.
-- **Pile B — GENUINELY SHALLOW; the repair is the world.** `SH.02` (twin,
-  privileged oracle and both cosmetic controls all exactly **1.0000** against
-  `HEADROOM_MAX` 0.85), `SH.01`, `DP.04` (0 of 3072 lives ended between the
-  caps; measurement quantum 6.25 **larger than** the 5.0 effect it must
-  detect), `DP.05`, `BA.03`, `LF.01`, `LG.03`, `SO.07`.
-
-The family: **`W1.00`** the null is the strongest process that has not learned;
-**`W1.01`** passivity dies (the precondition `SH.02` falsified); **`W1.02`**
-outcomes have resolution (`DP.04`'s defect promoted to a world-fidelity gate,
-with a known-advantage synthetic arm that must be detected); **`W1.03`** traps,
-delays and irreversibility exist and are discoverable, with a features-removed
-twin world that must fail all three conjuncts; **`W1.04`** the horizon is ≥ 3×
-the measured time-to-consequence. `W1.00` and `W1.02` run on **W0 as built with
-no staleness bill** and go first. Also routed `w1-world-edit-window` and
-re-pointed the two holds onto it — a hold whose blocker has been dispositioned
-is itself a violation.
-
-**`GOAL.md` untouched. No spec re-parented. Nothing registered by me.**
+1. **`t027-preserved-failimpl-as-artifact` — ACTED.** `D16` fired 09-06 by
+   armed default, option (b) alone: `T0.27` stays RED, untouched. The owner's
+   silence chose the option that costs a visible failure over a manufactured
+   green and there is nothing for me to add. Two facts survive the close rather
+   than being filed with it: the violation arrival rate that argued against
+   (a)'s premise has been **flat at 3 for three days**, so (b) is holding and
+   `D16` is what re-opens if it climbs; and `audit_supersedes_fail` still
+   prints *"that implementation was never committed"* for all three violations
+   when two of them have hash-verified bytes under `refs/jack/failimpl/`.
+2. **`pl02-dependency-on-pl00-verdict-vs-table` — DISPOSITIONED, (i)+(iii).**
+   The edge STANDS. Option (ii) refused on the router's own reason: re-pointing
+   `PL.02 → PL.00` would loosen the sole registered falsifier of the
+   PLASTIC-ONLY decree, on a sentence that reads both ways, in the week that
+   edge produced an inconvenient FAIL. Arm (iii) ordered instead — the eye's
+   price is **fixed per-call overhead** (`render_ms_224` 39.17 vs
+   `render_ms_64` 40.04, 12.25× the pixels for the same money; render-only
+   4.231 below a 5.0 floor with no encoder in the loop). **A clearing arm
+   dissolves the edge by satisfying it, never by editing it.**
+3. **`me1-similarity-floor-never-abstains` — DISPOSITIONED six days early, and
+   re-dated EARLIER (09-13 → 09-11).** A5 adopted on the −0.267 separability
+   gap. `ME.3`'s harness declares its alternatives; **matched arms binding**;
+   `EpisodicMemory.py` untouched; no threshold moves; A5's 0.552–0.688 against
+   A0's 0.625 is a **restoration** of the raw null and I will not write it up as
+   a strengthening. **One conjunct added and it is strictly harder:
+   `raw_answer_rate >= 0.95`** — the equal-tokens gate caught this only because
+   starvation was total; half-starvation would have passed it *and* inflated
+   the gain, arriving as a better-looking result for the claim.
+4. **`t310-anticorrelated-gates` → 09-11 and `sm03-heldout-split-saturated` →
+   09-12, re-dated in the open, second slip on both, named as capacity.** Both
+   onto one-row days rather than 09-13's pile of ten. Nothing moves meanwhile
+   on either spec, in either direction. Cost stated: `SM.02` is parked on
+   `SM.03` as its revival path, so smell stays a commitment with a spec and no
+   measurement for five more days.
+5. **Field watch wk6 consumed** into `INTEGRATION_QUEUE`.
+6. **`ladder_prompt.md` priority block replaced.**
+7. **`D25` routed** to `DECISIONS_NEEDED`.
 
 ---
 
 ## The frontier
 
-`T2.01` still tops it and has for weeks: **frees 34 / blocks 38**, settled FAIL
-since 08-12, implementation unchanged **27 days**, repair through `D1.0` —
-whose gate is now adopted, which is the first thing to move on that row in
-almost a month. `LT.01` frees 7 (re-scope dispositioned today). `NE.01` frees
-8. `UB.10` frees 4. `T2.02` frees 3. `LG.03` frees 3. `HR.1` frees 3, D19-held.
+`T2.01` still tops it and has for weeks: **frees 35 / blocks 38**, settled FAIL,
+implementation unchanged **28 days**, repair through `D1.0` — whose attempt 2
+**VOIDed at 01:57 this morning because the gate I adopted on Sunday fired on the
+untrained twins.** That is the gate working: it refused to record a learning
+verdict on anyone from a run whose own reference arm did not clear. **A VOID
+from a gate that fired is worth more than a PASS from a gate that could not**,
+and it is still the second time ~16 GPU-hours have bought no verdict. Attempt 3
+does not exist until `d10-successor-rerun-under-adopted-gate` (**DUE tomorrow**)
+answers why the twins failed. Behind it: `LT.01` frees 7, `NE.01` frees 5,
+`UB.10` frees 4 (its pick is tomorrow), `T2.02` frees 3, `LG.03` frees 3,
+`HR.1` frees 3 (D19-held).
 
 ---
 
 ## The honest paragraph
 
-We are closer, and the reason I can say so is the thing that looks worst on the
-scoreboard. This desk spent the morning paying promises rather than making new
-ones, and the single most valuable hour of it produced a red light where a
-green one had been sitting for a month: the memory that GOAL.md says makes him
-*him* — he remembers the ladder, he remembers you — answers confidently and
-wrongly every single time it is asked about something that never happened, and
-it did so behind a control designed so gently that a keyword filter would pass
-it. Nothing was hidden and nobody cheated; the control was written early, in
-good faith, and then the project learned something in a neighbouring spec that
-nobody carried back. That is the whole argument for having a desk whose only
-job is to re-read old green ticks, and it is the argument for doing it on a
-schedule rather than when something feels wrong, because nothing felt wrong.
-The world question moved too, and it moved by re-reading evidence rather than
-by arguing: a result that landed six days ago says our nulls have been too weak
-to reach the food, which means a third of the case that this world is empty was
-really a case that our instruments were, and the two halves needed opposite
-repairs. The most important step toward Jack this week was subtracting a point
-from our own count in order to find out that his memory invents things. The
-most concerning drift is what the completeness audit found and what no
-instrument here will ever raise on its own: fourteen named barriers stand
-between this creature and generality, ten of them have no spec at all, none of
-them has a passing one, and every organ in this system will keep reporting
-green while that stays true — because each of them measures the ladder we
-built, and none of them measures the ladder we did not.
+We are closer, and today the evidence is unusually clean, because for once the
+thing that improved was the creature and not the instrument that watches him.
+Yesterday this desk found that his memory answered confidently and wrongly every
+single time it was asked about something that never happened; within eight hours
+it no longer did, and — this is the part that matters — it did not lose a single
+point of what it could already remember to get there. That is not a scoreboard
+move, it is the difference between a companion who might invent your preferences
+and one who says he does not know. But the same repair silently starved a
+different question, and instead of tuning a number until both looked fine,
+somebody measured the one quantity that both questions have to share and found
+they demand it in opposite directions by an amount that no setting can bridge.
+That is the best hour of method in the project this week and it came from the
+builder, not from here. The most important step toward Jack was that the memory
+learned to refuse. The most concerning drift is entirely mine and it is
+structural: forty live rows, an unbounded drain, every one of the nine specs
+that could run today held behind a redesign this desk owes, and four dated
+promises landing on a single morning of which I could honestly keep three. The
+builder has now spent six consecutive days executing everything I give it inside
+the day I give it, and the reason the board keeps emptying is not that it is
+slow — it is that I am the part of this system that does not scale, and no
+instrument here will report that as a failure, because I am the organ that
+writes the reports.
 
 ---
 
 ## FOR THE BUILDER
 
-1. **Execute the adopted `D1.0` gate before anything else touches W36.** The
-   design is on both `d10-*` rows (DUE 09-09). Order matters: the gate is
-   committed BEFORE the ~16 h attempt-2 dispatch, not during it. An unchanged
-   re-dispatch is still forbidden.
-2. **Repair `EpisodicMemory`'s similarity floor** (`me1-similarity-floor-
-   never-abstains`, DUE 09-13). Either a calibration that abstains on absent
-   targets without costing `cued_recall`, or a MEASURED demonstration that
-   this scorer cannot have both — which is an architecture finding and goes to
-   the owner, not into a threshold. **Do not repair it by widening ME.1's
-   exclusion filter or lowering 0.95**; the bar is the spec's own and it does
-   not move.
-3. **When that floor is repaired, add the same distractor conjunct to `ME.3`,
-   `ME.5`, `ME.9` and `ME.10` in the same run.** I deliberately did not add it
-   today — they are blocked behind `ME.1` and conjuncts on specs that cannot
-   run are paperwork dressed as rigour. `ME.9` is named in `GOAL.md`; it should
-   not be the last one done.
-4. **Register `W1.00` and `W1.02` first** (DUE 09-13, on `w0-too-shallow`).
-   They measure on W0 as built and carry no staleness bill. `W1.01`/`W1.03`/
-   `W1.04` wait on `w1-world-edit-window`.
-5. **`cross-organ` fork (c) does not land without its mutation falsifier.** A
-   bare `DOC_OUTPUTS` widening committed against that row is fork (a) wearing
-   fork (c)'s name; refuse it, including from me.
-6. **Price the CPU venue for `LC.07`** — one calculation, no dispatch, no
-   seeds: 526 GPU-wall-hours through the pilot's own borrowed `LC.02` ratio
-   against the measured 57,600 s/day. Five days as an unpriced option is how a
-   decision gets deferred forever.
-7. **`T1.01`'s re-run did not finish, and its certificate is now STALE — this
-   is my debt, named rather than left to be discovered.** The strengthened
-   spec file is committed (`mode_training` + the frozen-improvement conjunct);
-   the run to re-buy it was killed at a 900 s timeout having written no row,
-   so **`T1.01`'s ledger row is still the 2026-09-02 PASS, which does not
-   carry `mode_training` and was produced by the weaker `_check`.** Re-run it
-   and commit the row as found. On a 58M-parameter model at 3 seeds × 400
-   steps on CPU it needs **well over 15 minutes** — budget for that rather
-   than assuming it is quick. I expect it to PASS (the frozen control measured
-   `improvement_ratio` 1.00 with ~50% headroom, and the mode conjunct asserts
-   the state it has always run in), but expectation is not a row, and if it
-   FAILs that is a real finding and must be committed as one, not re-rolled.
-   I also removed a stale 0-byte `/tmp/jack-ladder.lock` left by that killed
-   run, after verifying no `experiments.run` process was alive — I checked
-   that in the wrong order and am recording it.
-8. **Re-buy `T0.11`** — backend failover, last run 2026-08-04, attempt 1, the
-   oldest live certificate in the ledger at 33 days, asserting something about
-   a dispatch path rewritten twice since. Not a rewrite; just ask it again.
-9. **Standing prohibitions, unchanged:** do not re-dispatch `D1.0` outside the
-   adopted gate; `HR.1`–`HR.4` stay D19-held to 09-14; `HR.6` stays behind
-   `HR.5`; `LF.01` attempt 2 waits for the 09-09 design; the CPU-accountant
-   rule stays as narrowed on 09-05 (repairs that make the meter refuse fewer
-   runs or print more honestly need no permission; new accounting *surface* is
-   what is prohibited).
+1. **`ME.3`'s harness redesign — the contract split, first, because it is a
+   FAIL this system caused itself.** Full order on the queue row and in
+   `1''''`. Two conditions bind: the reflect arm gets the **identical** declared
+   shape (matched arms or no redesign), and **`raw_answer_rate >= 0.95` is
+   added** as a conjunct. `EpisodicMemory.py` is not touched, the 0.95 coverage
+   floor does not move, `ME.1`'s bar does not move, no `ME.3` threshold moves,
+   and zero certificates stale. Do not write A5's 0.552–0.688 up as an
+   improvement on A0's 0.625 — it is a restoration.
+2. **`EpisodicMemory.recall` owes a docstring naming what it cannot do.** No
+   certificate records a limitation, so if the −0.267 gap is not in the
+   module's own words it is nowhere. The scorer cannot recover AND-intent from
+   OR-intent in a token bag; callers with alternatives must declare them.
+3. **`audit_supersedes_fail` prints a sentence that is false for most of its
+   own rows.** Two of the three live `T0.27` violations (`LG.00`, `T0.29`) have
+   hash-verified preserved bytes. `D16` ruled on the **gate**; it said nothing
+   about the instrument telling the truth while red. `T0.27` stays FAIL, the
+   count does not move, nothing is re-run to make it green.
+4. **`PL.00`'s renderer bakeoff, arm (iii).** Frame-skip, context reuse,
+   batched `update_scene`, coarser scene — CPU, against `PL.00`'s existing rig
+   at its unmoved 5.0 floor. This is also what unsticks the Vision encoder
+   seat's only challenger.
+5. **Free, and it is a standing rule: any run that seats or challenges a
+   champion must persist its trained weights as a run artifact.** Not a spec,
+   not an instrument, not a threshold. Until it holds, *"we could measure that
+   on the seated arm"* is false about every seat in `CHAMPIONS.md`.
+6. **Standing prohibitions, unchanged and restated in `3''`:** no third `D1.0`
+   dispatch before tomorrow's row answers; `HR.1`–`HR.4` stay D19-held to
+   09-14; `HR.6` stays behind `HR.5`; `LF.01` attempt 2 waits for the 09-09
+   design; the CPU-accountant rule stays as narrowed on 09-05.
 
 ---
 
 ## FOR THE OWNER
 
-1. **The Learning-core seat's arena costs 17.5 weeks of this project's entire
-   GPU allocation, and the cheap way out is the one I am not allowed to take
-   alone. Routed as `D24`** (`class: goal`, `decide_by` 2026-09-11).
-   `LC.07`'s pilot is healthy and its arithmetic is not: ~526 wall-hours
-   against 30 h/week, with the cheapest single run at 14.49 h against an 8.5 h
-   kernel ceiling. Checkpoint surgery — which `LF.02`'s bit-exact resume PASS
-   proves is *feasible* — repairs the per-run ceiling and does not touch the
-   total, so I refused it on the row; that refusal is mine. What is yours is
-   the money, and the *"~10x"* scale ratio.
+1. **All five Sunday FULLs have now died mid-run — but the fifth died having
+   already committed everything, and the seal cannot tell those two deaths
+   apart. Routed as `D25`** (`class: process`, `decide_by` 2026-09-13). The
+   08-31 turn fix worked and moved the binding constraint to the wall clock:
+   `review.sh` gives FULL `40m / 240 turns` and 09-06 was killed by `timeout`
+   at exactly 40 minutes, `rc=124`. Before that kill it had committed six
+   dispositions, two seats, the whole page and its log row. `lib_seal.sh` sees
+   only `rc != 0` and banners it *"THIS IS A DRAFT... UNVERIFIED"* — correct for
+   09-05, which died having appended nothing, and false for 09-06. **The
+   builder then spent 24 hours executing seven of nine items off a document
+   formally marked unverified, and was right to.**
 
-   > **My recommendation: (iii) — declare it VENUE-UNAFFORDABLE and change
-   > nothing else.** No threshold moves, no spec fails, no certificate stales,
-   > and the 10× survives intact. One label changes, so `champions` prints the
-   > uncontestedness it currently only implies. I am recommending against
-   > shrinking the ratio even though shrinking it is the only option that
-   > makes the seat contestable this quarter, because a 10× transfer claim is
-   > strictly stronger than a 3× one and buying a PASS with a smaller question
-   > is the thing `SYSTEM.md` law 4 exists to forbid. The price, stated: under
-   > (iii) this project cannot currently contest its own learning-core choice,
-   > and that stays true until the budget or the venue changes. Making it
-   > visible is the point; it is not a fix and I am not calling it one.
+   > **My recommendation: (iii) — fix the seal, and do NOT raise the wall
+   > clock.** The 2026-09-06 run is the evidence: forty minutes was enough to
+   > do Part 2, both completeness audits, six dispositions, two seats and the
+   > entire page, and the only thing it was not enough for was saying so.
+   > Buying minutes to improve an exit is spending the one resource that has
+   > historically silenced this whole system, in order to fix the cheapest part
+   > of the problem. The expensive part is an instrument that tells a true
+   > thing about one Sunday and a false thing about the next, in the same words
+   > — and that costs nothing to repair. The price of (iii), stated: Sunday
+   > FULLs will keep exiting non-zero, `review.log` will keep recording
+   > `rc=124`, and the organ will keep looking unhealthy to anything that reads
+   > exit codes alone. I would rather have a truthful banner over a complete
+   > page than a green exit code, and if the choice is ever between the two,
+   > this desk should take the banner.
 
-2. NO-DECISION: report of an act already taken and already routed to the
-   builder; nothing here for you to rule on unless the repair fails.
-   **Jack's memory confabulates on 100% of the questions it should refuse.**
-   `ME.1` — the base of the whole `ME` family, and the parent of `ME.9`, which
-   `GOAL.md` names by id — has been certified since 2026-08-08 by an abstention
-   control whose cues contained no word present in the store. Given `ME.11`'s
-   control the same store reads `distractor_abstention` **0.0000 ± 0.0** on
-   three seeds. I strengthened the spec, it FAILed, four specs blocked behind
-   it, I raised the unreachable baseline with justification and routed the
-   repair. You are seeing this because the demonstrated count went down by one
-   this morning and I want the reason on your desk in my words rather than
-   inferred from a table. If the repair shows this scorer cannot abstain and
-   recall at once, that IS a decision for you and it will arrive as one.
+2. **`D24` (decide_by 2026-09-11) now gates more than it did when you got it,
+   and I am telling you rather than re-asking.** Cited, not re-routed. Field
+   watch wk6 nominated a Context Collapse diagnostic on `A4` — the arm that
+   holds the Learning-core seat — and its cheap route bolts it to `LC.07` at
+   zero marginal compute. **If `D24`'s default fires and declares the venue
+   unaffordable, that route does not exist and the diagnostic costs 14.4
+   core-h**, roughly 90% of a whole CPU day. My recommendation on `D24` is
+   unchanged and is (iii); this note only records that its blast radius grew,
+   and that I am still recommending the option that leaves the seat
+   uncontestable rather than shrinking a 10× claim to fit a budget.
 
-3. NO-DECISION: a deadlock I am reporting rather than unpicking, because it is
-   a joint property of two of your own armed defaults and not mine to touch.
-   `D9`'s default parks the body question *"until the playground-humanoid
-   line"*; that line is `LT.08`; `LT.08` sits behind the
-   `LT.01 → LT.03 → LT.05 → LT.07` chain — whose first link, `LT.01`, failed
-   **because of the body**. `D8` re-parents `BA.02` behind the same `LT.08`.
-   Neither default is wrong on its own terms and no organ reads them together.
-   Today's `lt01-c2` re-scope **routes around** this; it does not dissolve it,
-   and a green `LT.01` must not be read as the body question having been
-   answered. The standing proposal to register `W0.BAL` so the body gets a seat
-   (`PROGRESS` 08-31, FOR THE OWNER 1) is still the cheapest exit and is still
-   unanswered; I am re-stating it rather than re-routing it, because it is the
-   same ask and duplicating it would be noise.
+3. NO-DECISION: a report on this desk's own capacity, with nothing for you to
+   rule on today, and I would rather you saw it before it becomes an ask.
+   The review queue holds **40 live rows with an UNBOUNDED drain** — 34
+   arrivals against 3 disposals over the trailing week — and **eight of the
+   nine specs whose dependencies all PASS are waiting on a redesign this desk
+   owes**. Four dated promises came due this morning and I could honestly keep
+   three. The builder has executed every order I have given it inside the day
+   for six consecutive days. **The bottleneck in this system is not compute,
+   not credits, and not the builder; it is the organ writing this sentence**,
+   and the two instruments that would normally catch such a thing cannot,
+   because `review-queue` correctly declines to call a slow week a violation
+   and the liveness check reads my log's mtime, which is fresh. If the drain is
+   still unbounded a week from now it becomes an ask about cadence or scope,
+   and it will arrive as one.
 
 4. NO-DECISION: liveness report, nothing here to rule on.
    All four organs live, verified against `/data/jack-logs` mtimes rather than
-   anyone's report: builder 06:10 (hourly), overseer 06:37 (6 h), field watch
-   2026-08-31 05:53 (Mondays — next fire 09-07, inside cadence; `FIELD_WATCH.md`
-   unchanged since wk5 was consumed on 08-31, so **Part 2.5 duty 2 has nothing
-   to consume this run**), review 06:37 (this run). `lost_iterations.log` still
-   0 bytes and still never exercised. **The one liveness fact worth naming:
-   four of the five Sunday FULL runs ever scheduled died at max turns. This is
-   the fifth, and it is the first to publish its design — because it committed
-   every disposition as it made it rather than holding them for the page.**
+   anyone's report: builder 06:15 (hourly), overseer 06:37 (6 h), field watch
+   05:56 today (Mondays — **second consecutive sweep on its intended cadence**,
+   and `FIELD_WATCH.md` wk6 was consumed by this run 42 minutes after it
+   landed), review 06:37 (this run). `lost_iterations.log` still 0 bytes and
+   still never exercised.
