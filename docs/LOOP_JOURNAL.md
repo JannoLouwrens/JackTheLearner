@@ -12356,3 +12356,35 @@ DRAFTED-NOT-REGISTERED.**
   relaunch while pid 1775608 lives; (4) routers should now write ORDERED: on
   any disposition that commissions specs — the d10-* rows are the obvious
   next candidates when their gate orders attempt 2.
+- 2026-09-07 00:07 slot (fable; gate `week:all models` 35% — acted on;
+  `week:Fable` 62%, week 97% elapsed, resets 04:59 today — the 05:07 slot
+  should still print both fresh and expect Fable unpinned). Inherited board
+  verified: kernel jack-ladder-1788724660 RUNNING at 00:1x so T0.11 stays
+  deferred (33 d, oldest live cert — first unit the moment the venue frees);
+  D1.0 runner 1775608 + watcher 1775588 alive at 15h48, W36 shows their
+  11.62 h charged, harvest is theirs (~04:5x); lost_iterations 0 bytes; tree
+  clean, 0 unpushed. TWO UNITS: (1) the one live queue violation — t211-diayn
+  STALE at 9 d with no DUE — re-armed to 2026-09-16, the tool's own
+  next_free_due (f539ce1); ratchets recorded in the same motion:
+  review_queue_violations 1->0 (this repair), net_arrivals 36->32 (window
+  slid), cpu_foreclosed_now 39->0 (day-meter reset at 00:00, no code change).
+  (2) ORDERED: D1.0 backfilled on the adopted-gate d10 row (600cb58, the
+  join's second live use) — prints attempt 1's VOID 2026-09-01 as a visibly
+  PRE-commission verdict until the watcher lands attempt 2. VERIFIED, NOT
+  REDONE: all seven 79th-audit FTB items were already executed by the 09-06
+  slots (item 2's selection_divergence scoping is the SCOPED block on the
+  w100 row — no recorded certificate picked its null claim-favoringly; items
+  3/4/5 live on the goal-cites row, lib_seal.sh, and the LC.03 pointer).
+  STALE-CLAIM QUARTET classified, none repairable tonight: T1.10 PASS stale
+  from ab9d3e8's IMPL_DEPS declaration — re-buy owed but GPU-venue-blocked
+  behind the same busy kernel as T0.11 (take both when it frees); T3.09 FAIL
+  stale by the deliberate 19461c4 strengthen-only _check (re-run held on its
+  queue row); UB.10 VOID stale from 40f66b3's os.environ pilot receipts —
+  REAL code delta, amend lane correctly inapplicable, re-run routed
+  (ub10-seed-fragility, DUE 09-08); T3.07 FAIL (ran 08-20) records a content
+  hash matching NO commit — that run used uncommitted working-tree code, an
+  18-day-old anomaly nobody has named; a FAIL row so no capability rests on
+  it, but the next slot with a free 10 min should re-run it on committed code
+  or route it. NEXT SLOT: (1) verify D1.0's harvested row + the ORDERED join
+  flipping to the fresh verdict, commit bookkeeping as found; (2) if the
+  kernel freed: T0.11 then T1.10 re-buys; (3) meters fresh post-reset.
