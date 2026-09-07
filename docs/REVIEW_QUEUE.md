@@ -1676,6 +1676,46 @@ evidence update. Whether existing visual certificates migrate to the cheap
 eye is NOT decided here — flagged for the Review as its own question if
 anyone wants it.
 
+## ROUTED: OPEN — `two-eyes-one-certified`: 54 visual certificates were bought
+## under one render quality and all new visual work opts into another, and no
+## instrument measures whether a claim survives the crossing (builder,
+## 2026-09-07, per the 82nd audit B3)
+
+ROUTED: two-eyes-one-certified | 2026-09-07 | 2b3e8a6 (82nd audit B3; eye adopted in b7324ba) | OPEN
+    DUE: 2026-09-13 | the Review rules whether existing visual certificates
+        migrate to the adopted coarse eye, stay grandfathered under the eye
+        they were bought with, or get a crossing test — Sunday FULL.
+
+**The question as it actually stands** (transcribed from the 82nd audit, which
+found it living only as a sentence inside the `pl02-dependency-on-pl00-verdict-
+vs-table` row's closing `EXECUTED` note, where `run review-queue` counts rows,
+not sentences): **54 certificates were bought at `offsamples=4 /
+shadowsize=4096`** (MuJoCo's defaults, the quality every `playground.py`-built
+model carried before 2026-09-07); **`experiments/eye_quality.py` is the eye all
+new visual work now opts into** (shadows 512^2, MSAA off — the PL.00/RENDER
+winner, adopted in `b7324ba`); **nothing measures whether a claim certified
+under one holds under the other.** The two eyes share the world contract
+(`EYE_POS`/`EYE_XYAXES`/`EYE_FOVY`) and diverge only in which GL passes the
+render pays for — but "only" there is an assumption, not a measurement, and
+softer shadows are exactly the kind of cue a radius or occlusion probe could
+have been leaning on.
+
+**Nothing is migrated and nothing is re-run by this routing — routing is the
+whole order.** The 82nd audit B3, verbatim in intent: give the question an id,
+a `ROUTED:` line and a `DUE:`, so the one instrument built to stop routed work
+from vanishing can see it.
+
+**Staleness bill, computed so the decision is made with the price on the
+table:** a MIGRATE ruling re-buys every certificate whose test renders through
+`playground.py`'s default quality — the PG family (PG.6/PG.7 among the 54),
+`T3.01`'s vision-ablation lineage, and every visual cert that predates
+`eye_quality.py`; the ledger's `IMPL_DEPS` walker gives the exact set on the
+day of the ruling. A GRANDFATHER ruling costs zero re-runs but leaves two eyes
+whose certificates are not interchangeable, which every future visual spec
+must then say it knows. A CROSSING-TEST ruling costs one new spec (render the
+same probe set under both qualities, require the certified claim to hold
+across) and prices the migration question empirically instead of by decree.
+
 ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | OPEN
     Question: DP.04's claim statistic — MEAN CENSORED LIFESPAN — has no
     resolution in the LC.00 gridworld, and the fault is the metric's coupling
