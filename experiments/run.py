@@ -747,8 +747,45 @@ def _check_red_delta_detector() -> None:
             "refusing to report a scan it may not have performed")
 
 
-def gpu_hours_verdictless(results, charged: dict) -> dict:
-    """Compute bought against verdicts returned (83rd audit B2).
+def gpu_attribution(lines) -> tuple:
+    """(attributed, named) out of `gpu_submissions.jsonl` records (83rd audit,
+    `85d435b`, B1).
+
+    `attributed`: job id -> {"spec", "ran_at"} from `phase: "attribution"`
+    lines only — the backfill lane for charged jobs whose ledger rows predate
+    the `gpu_job_id` field. A line reaches its job ids through its own
+    `job_id` field (a synthesised attempt has no result line to join through)
+    or through every result line sharing its `attempt_id`.
+
+    `named`: job id -> True for every charged-joinable record that names ANY
+    spec string at all — attribution lines plus the `spec` field the runner
+    writes on attempt/result lines, probe/pilot labels included. This is the
+    domain of "attributable to no spec by any record this project keeps",
+    which is deliberately wider than `attributed`: a probe label is not a
+    ledger row, but the money has a name."""
+    att_to_jobs = {}
+    for l in lines:
+        if l.get("job_id") and l.get("attempt_id"):
+            att_to_jobs.setdefault(l["attempt_id"], set()).add(l["job_id"])
+    attributed, named = {}, {}
+    for l in lines:
+        spec = (l.get("spec") or "").strip()
+        if not spec:
+            continue
+        jobs = set()
+        if l.get("job_id"):
+            jobs.add(l["job_id"])
+        jobs |= att_to_jobs.get(l.get("attempt_id"), set())
+        for j in jobs:
+            named[j] = True
+            if l.get("phase") == "attribution":
+                attributed[j] = {"spec": spec, "ran_at": l.get("ran_at")}
+    return attributed, named
+
+
+def gpu_hours_verdictless(results, charged: dict, attributed=None) -> dict:
+    """Compute bought against verdicts returned (82nd audit `2b3e8a6` B2;
+    attribution path 83rd audit `85d435b` B1).
 
     For every spec whose MOST RECENT outcome is VOID or FAIL, join each of its
     ledger rows — the current one AND every `history` row — against
@@ -759,40 +796,112 @@ def gpu_hours_verdictless(results, charged: dict) -> dict:
     charged compute, not about runs in general); it counts as a VERDICT if
     that row's status is PASS or FAIL — a FAIL is an honest measurement, a
     VOID is not, and the verdict count is what separates money that bought an
-    answer from money that bought none. Returns {"TOTAL": "H h",
+    answer from money that bought none.
+
+    The ledger field joins FIRST; `attributed` (job id -> {"spec", "ran_at"}
+    from `gpu_attribution`) may only ADD charged jobs the ledger does not
+    already name — 5 of 21 remote rows predate the field, so the two most
+    expensive non-PASS GPU rows in the ladder (T2.01's pair of 5.58 h
+    kernels) read as zero here until the backfill. An attributed job whose
+    `ran_at` matches one of the spec's rows counts against THAT row, so its
+    PASS/FAIL is honestly a verdict; one matching no row counts as an attempt
+    that bought none. Returns {"TOTAL": "H h",
     spec_id: "H h / N attempt(s) / V verdict(s)", ...}; specs with no charged
     GPU rows are absent. MEASURE AND REPORT, GATE NOTHING — monotone by
     construction (charged hours are never un-charged), no dispatch refused,
     no threshold moved."""
     def fields(row):
         if isinstance(row, dict):
-            s, jid = row.get("status"), row.get("gpu_job_id")
+            s, jid, ra = (row.get("status"), row.get("gpu_job_id"),
+                          row.get("ran_at"))
         else:
-            s, jid = getattr(row, "status", None), getattr(row, "gpu_job_id",
-                                                           None)
-        return getattr(s, "value", s), jid
+            s, jid, ra = (getattr(row, "status", None),
+                          getattr(row, "gpu_job_id", None),
+                          getattr(row, "ran_at", None))
+        return getattr(s, "value", s), jid, ra
+
+    att_by_spec = {}
+    for jid, a in (attributed or {}).items():
+        if jid in charged:
+            att_by_spec.setdefault(a["spec"], []).append((jid, a.get("ran_at")))
 
     out, total = {}, 0.0
-    for sid in sorted(results):
-        r = results[sid]
-        latest, _ = fields(r)
+    for sid in sorted(set(results) | set(att_by_spec)):
+        r = results.get(sid)
+        if r is None:
+            continue   # attributed to a spec with no ledger row at all
+        latest, _, _ = fields(r)
         if latest not in ("VOID", "FAIL"):
             continue
-        hours, attempts, verdicts = 0.0, 0, 0
-        for row in [r] + list(getattr(r, "history", None) or []):
-            status, jid = fields(row)
+        rows = [r] + list(getattr(r, "history", None) or [])
+        hours, attempts, verdicts, used = 0.0, 0, 0, set()
+        for row in rows:
+            status, jid, _ = fields(row)
             ids = [j.strip() for j in str(jid or "").split(",") if j.strip()]
             if not any(j in charged for j in ids):
                 continue
             attempts += 1
+            used.update(j for j in ids if j in charged)
             hours += sum(charged[j] for j in ids if j in charged)
             if status in ("PASS", "FAIL"):
+                verdicts += 1
+        for jid, ran_at in sorted(att_by_spec.get(sid, [])):
+            if jid in used:
+                continue   # the ledger already names it; attribution adds only
+            attempts += 1
+            hours += charged[jid]
+            row_status = next((fields(row)[0] for row in rows
+                               if ran_at and fields(row)[2] == ran_at), None)
+            if row_status in ("PASS", "FAIL"):
                 verdicts += 1
         if attempts:
             total += hours
             out[sid] = (f"{hours:.2f} h / {attempts} attempt(s) / "
                         f"{verdicts} verdict(s)")
     return {"TOTAL": f"{total:.2f} h", **out}
+
+
+# Shrink-only floor on charged jobs that join to NO spec by either path —
+# ledger `gpu_job_id` or a `gpu_submissions.jsonl` record (83rd audit
+# `85d435b` B1, same idiom as coverage's FAIL_UNOWNED_BASELINE: the constant
+# moves only in the commit that moves the number, with the reason here).
+# Growth log:
+#   2026-09-07  declared at 21 jobs / 6.32 h, immediately after the T2.01
+#               backfill (was 23 / 17.48 before it). The 21 are probe/error
+#               kernels and pre-spec-field dispatches nobody has evidence to
+#               name; shrinking is welcome, growing means a dispatch lane
+#               stopped writing its receipt.
+GPU_UNATTRIBUTED_FLOOR = 21
+
+
+def gpu_unattributed(charged: dict, ledger_jobs, named) -> dict:
+    """Charged jobs joining to no spec by EITHER path. Returns
+    {job id: hours}; the counter reports len() and the reading prints the
+    hour sum beside it. Pure, so the fixture can pin both known-positives."""
+    return {j: h for j, h in charged.items()
+            if j not in ledger_jobs and j not in named}
+
+
+def _ledger_job_ids(results) -> set:
+    """Every job id any ledger row (current or history) names, all statuses —
+    a PASS's money bought an answer, so its jobs are attributed."""
+    ids = set()
+    for r in results.values():
+        for row in [r] + list(getattr(r, "history", None) or []):
+            jid = (row.get("gpu_job_id") if isinstance(row, dict)
+                   else getattr(row, "gpu_job_id", None))
+            ids.update(j.strip() for j in str(jid or "").split(",")
+                       if j.strip())
+    return ids
+
+
+def _load_gpu_attribution() -> tuple:
+    import json as _json
+    path = _REPO / "experiments" / "gpu_submissions.jsonl"
+    if not path.exists():
+        return {}, {}
+    lines = [_json.loads(l) for l in path.read_text().splitlines() if l.strip()]
+    return gpu_attribution(lines)
 
 
 def _check_gpu_hours_reader() -> None:
@@ -802,24 +911,47 @@ def _check_gpu_hours_reader() -> None:
     spec (in scope, its row IS a verdict); a PASS spec (excluded — its money
     bought an answer); a CPU-only FAIL (absent, no charged row). The scar:
     D1.0's 33.78 h / 2 attempts / 0 verdicts existed only as a hand join in
-    the 83rd audit — a quantity nobody prints is a quantity nobody defends."""
+    the 82nd audit — a quantity nobody prints is a quantity nobody defends.
+
+    Attribution shapes (83rd audit `85d435b` B1), both known-positives
+    ordered by the audit: a charged job reachable ONLY through an
+    attribution line MUST be counted (ZZ.ATT — the T2.01 shape: FAIL row,
+    `gpu_job_id` None, `ran_at`-matched so its verdict counts; k/j7 on the
+    same spec matches no row, an attempt that bought none); one reachable
+    through NEITHER path must appear in the unattributed figure and not
+    silently vanish. Precedence pinned too: an attribution naming a job the
+    ledger already names adds nothing (k/j1)."""
     from types import SimpleNamespace as NS
-    charged = {"k/j1": 1.5, "k/j2": 2.25, "k/j3": 4.0, "k/j5": 0.5}
+    charged = {"k/j1": 1.5, "k/j2": 2.25, "k/j3": 4.0, "k/j5": 0.5,
+               "k/j6": 3.0, "k/j7": 0.25, "k/orphan": 0.75}
     planted = {
         "ZZ.VOID": NS(status="VOID", gpu_job_id="k/j1,k/j2",
                       history=[{"status": "VOID", "gpu_job_id": "k/j3"},
                                {"status": "ERROR", "gpu_job_id": "k/unc"}]),
         "ZZ.FAIL": NS(status="FAIL", gpu_job_id="k/j5", history=[]),
         "ZZ.PASS": NS(status="PASS", gpu_job_id="k/j5", history=[]),
-        "ZZ.CPU": NS(status="FAIL", gpu_job_id=None, history=[])}
-    got = gpu_hours_verdictless(planted, charged)
-    want = {"TOTAL": "8.25 h",
+        "ZZ.CPU": NS(status="FAIL", gpu_job_id=None, history=[]),
+        "ZZ.ATT": NS(status="FAIL", gpu_job_id=None, ran_at="t-head",
+                     history=[])}
+    attributed = {"k/j6": {"spec": "ZZ.ATT", "ran_at": "t-head"},
+                  "k/j7": {"spec": "ZZ.ATT", "ran_at": "t-nowhere"},
+                  "k/j1": {"spec": "ZZ.VOID", "ran_at": None}}
+    got = gpu_hours_verdictless(planted, charged, attributed)
+    want = {"TOTAL": "11.50 h",
+            "ZZ.ATT": "3.25 h / 2 attempt(s) / 1 verdict(s)",
             "ZZ.VOID": "7.75 h / 2 attempt(s) / 0 verdict(s)",
             "ZZ.FAIL": "0.50 h / 1 attempt(s) / 1 verdict(s)"}
     if got != want:
         raise RuntimeError(
             f"the gpu-hours join returned {got}, expected {want} — "
             "refusing to report a join it may not have performed")
+    orphan = gpu_unattributed(
+        charged, ledger_jobs={"k/j1", "k/j2", "k/j3", "k/j5"},
+        named={"k/j6": True, "k/j7": True})
+    if orphan != {"k/orphan": 0.75}:
+        raise RuntimeError(
+            f"the unattributed reader returned {orphan}, expected the orphan "
+            "job alone — refusing to report a residue it may not have read")
 
 
 # ── Ratchet counters, read independently of every verdict (64th audit B2) ──
@@ -955,9 +1087,9 @@ def ratchet_live(ledger: Ledger) -> dict:
         return dict(sorted(forms.items()))
 
     def _gpu_hours_no_verdict():
-        # 83rd audit B2: D1.0 bought 33.78 GPU-hours across two attempts for
-        # zero verdicts — 113% of a weekly free allocation on one spec — and
-        # no instrument could print that sentence; the join of
+        # 82nd audit (2b3e8a6) B2: D1.0 bought 33.78 GPU-hours across two
+        # attempts for zero verdicts — 113% of a weekly free allocation on
+        # one spec — and no instrument could print that sentence; the join of
         # gpu_budget.json against ledger gpu_job_id fields existed only as a
         # hand computation inside the audit. Printed here so the third
         # attempt is authorised by somebody who can see the running total on
@@ -965,13 +1097,36 @@ def ratchet_live(ledger: Ledger) -> dict:
         # prohibition in a priority block. A metric with no floor: honest
         # VOIDs and FAILs legitimately cost hours (the gate firing IS the
         # gate working); gating this would punish honesty.
+        # 83rd audit (85d435b) B1: the attribution path joins second, and
+        # the residue neither path reaches is printed beside the total.
         import json as _json
         _check_gpu_hours_reader()
         from .gpu import BUDGET_FILE
         charged = {jid: rec.get("hours", 0.0)
                    for jid, rec in _json.loads(BUDGET_FILE.read_text())
                    .get("charged_jobs", {}).items()}
-        return gpu_hours_verdictless(ledger.results, charged)
+        attributed, named = _load_gpu_attribution()
+        out = gpu_hours_verdictless(ledger.results, charged, attributed)
+        orphans = gpu_unattributed(charged, _ledger_job_ids(ledger.results),
+                                   named)
+        out["UNATTRIBUTED"] = (f"{sum(orphans.values()):.2f} h / "
+                               f"{len(orphans)} job(s)")
+        return out
+
+    def _gpu_unattributed_jobs():
+        # 83rd audit (85d435b) B1: 23 charged jobs — 17.48 h, 27.7% of every
+        # per-job record — joined to no spec by any record this project
+        # keeps. Counted as its own ratchet with a declared floor
+        # (GPU_UNATTRIBUTED_FLOOR) so the residue is shrink-only: growth
+        # means a dispatch lane stopped writing its receipt.
+        import json as _json
+        from .gpu import BUDGET_FILE
+        charged = {jid: rec.get("hours", 0.0)
+                   for jid, rec in _json.loads(BUDGET_FILE.read_text())
+                   .get("charged_jobs", {}).items()}
+        _, named = _load_gpu_attribution()
+        return len(gpu_unattributed(charged,
+                                    _ledger_job_ids(ledger.results), named))
 
     take("unreachable", _unreachable)
     take("fail_unowned", _fail_unowned)
@@ -979,6 +1134,7 @@ def ratchet_live(ledger: Ledger) -> dict:
     take("goal_unrunnable", _goal_unrunnable)
     take("cpu_foreclosed_now", _cpu_foreclosed_now)
     take("gpu_hours_no_verdict", _gpu_hours_no_verdict)
+    take("gpu_unattributed_jobs", _gpu_unattributed_jobs)
     take("claim_dead", _claim_dead_count)
     take("park_release_pairs", _park_release_pairs)
     take("champions_trigger_debt", _champions_trigger_debt)
@@ -1001,7 +1157,8 @@ def ratchet_floors() -> dict:
     """
     from .coverage import FAIL_UNOWNED_BASELINE, UNREACHABLE_BASELINE
     return {"unreachable": UNREACHABLE_BASELINE,
-            "fail_unowned": FAIL_UNOWNED_BASELINE}
+            "fail_unowned": FAIL_UNOWNED_BASELINE,
+            "gpu_unattributed_jobs": GPU_UNATTRIBUTED_FLOOR}
 
 
 def floor_status(cur, floor):

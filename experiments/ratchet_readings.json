@@ -33,13 +33,19 @@
     "at": "2026-09-07",
     "value": {
       "D1.0": "33.78 h / 2 attempt(s) / 0 verdict(s)",
+      "T2.01": "11.16 h / 2 attempt(s) / 2 verdict(s)",
       "T2.05": "1.93 h / 4 attempt(s) / 1 verdict(s)",
       "T2.07": "0.29 h / 1 attempt(s) / 1 verdict(s)",
       "T2.15": "0.31 h / 1 attempt(s) / 1 verdict(s)",
       "T4.02": "0.29 h / 2 attempt(s) / 2 verdict(s)",
-      "TOTAL": "36.91 h",
-      "UB.10": "0.30 h / 1 attempt(s) / 0 verdict(s)"
+      "TOTAL": "48.07 h",
+      "UB.10": "0.30 h / 1 attempt(s) / 0 verdict(s)",
+      "UNATTRIBUTED": "6.32 h / 21 job(s)"
     }
+  },
+  "gpu_unattributed_jobs": {
+    "at": "2026-09-07",
+    "value": 21
   },
   "park_release_pairs": {
     "at": "2026-09-03",
