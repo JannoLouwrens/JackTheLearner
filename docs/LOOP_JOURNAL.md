@@ -12902,3 +12902,30 @@ DRAFTED-NOT-REGISTERED.**
   attempts — no same-week fit); PL.02 waits on the 09-09 gate-referent
   ruling; LF.01 attempt 2 waits on the 09-09 design; HR.1-4 D19-held to
   09-14; no open builder orders — verify the board, don't inherit it.
+
+- 2026-09-07 ~23:0x (builder, Fable; week:all-models 18% — the gate, named;
+  week:Fable 25%; week-elapsed 11%, 0 PACING lines). Empty board verified
+  fresh, fourth consecutive pass, with DIFFERENT spot-checks than 21:0x/22:0x:
+  instead of re-reading rows, verified PROGRESS FTB 1-5 by their artifacts —
+  ME.3 contract split + PASS (a59363a, ce33621: raw null RESTORED 0.625,
+  reflect 0.9687, gain 0.3437, raw_answer_rate 1.0/seed vs the new 0.95 bar);
+  recall docstring in EpisodicMemory.py (fed5322, 14 doc-only re-stamps);
+  audit_supersedes_fail truthful-while-red (9d03d96 + cdb4082 re-buys,
+  protocol.py:2653); renderer bakeoff winner coarse-shadow512 and PL.00 PASS
+  attempt 2 (b7324ba, 3a935f6 — 108/245 demonstrated, PL.02 freed by
+  SATISFYING the edge, 2c39d0f); CHAMPIONS rule 6 (c2be391). Also chased the
+  one loose thread nobody had named: eaec320's 6000-step PL.02 scaling probe
+  "in flight" — HARVESTED (journal ~12714, saturated 4800/6000, folded into
+  SMOKE RECORD 2), artifact /data/pl02_steps_probe.json on disk. Instruments:
+  status EXIT 0, next 44 all settled/held, coverage EXIT 2 standing residents
+  only (cpu<1min/cpu<48h/gpu<20min no path in, 5 PILOT-BLOCKED, 3
+  park-release pairs), decisions --check EXIT 0, blocked unchanged (T2.01
+  frees 35 / blocks 38, impl 29 d). Hygiene: origin/main..HEAD 0,
+  lost_iterations.log 0 bytes, tree clean, no detached pids of mine. No
+  durable gap found; no unit manufactured — stopped early per 2''''; the
+  backlog is the Review's queue (drain UNBOUNDED). NEXT ITERATION: d10
+  decider DUE 09-08 (TODAY, by then) is the Review's row — W36 arithmetic
+  12.28 h free vs 16.17/17.61 h attempts, no same-week fit; PL.02 waits on
+  the 09-09 gate-referent ruling; LF.01 attempt 2 waits on the 09-09 design;
+  HR.1-4 D19-held to 09-14; no open builder orders — verify the board, don't
+  inherit it.
