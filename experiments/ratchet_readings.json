@@ -8,8 +8,8 @@
     "value": 4
   },
   "cpu_foreclosed_now": {
-    "at": "2026-09-05",
-    "value": 39
+    "at": "2026-09-07",
+    "value": 0
   },
   "fail_unowned": {
     "at": "2026-09-05",
@@ -34,8 +34,8 @@
     "value": 3
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-06",
-    "value": 36
+    "at": "2026-09-07",
+    "value": 32
   },
   "review_queue_piled_on": {
     "at": "2026-09-06",

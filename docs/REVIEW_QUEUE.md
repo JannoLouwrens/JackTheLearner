@@ -937,6 +937,12 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
     bills NOTHING; that asymmetry is the same design input as w0-too-shallow.
 
 ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | OPEN
+    DUE: 2026-09-16 | RE-ARMED 2026-09-07 (builder): the row went STALE at 9 d
+    with no DUE — the one live queue violation. 2026-09-16 is `next_free_due`,
+    the tool's own mechanically-named first date carrying no promise (09-07
+    through 09-13 are all AMBER piles against a measured 1 row/cycle). The row
+    itself is unchanged: a METRIC redesign for the Review, zero staleness bill,
+    T2.11 PARKED behind it.
     Question: what measurement separates "skills differ because I(S;Z) was
     maximised" from "skills differ because they chased different noise"?
     T2.11's label-permuted control passed BOTH pilots and on v2's seed 90 —
