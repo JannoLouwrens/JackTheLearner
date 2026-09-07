@@ -12104,3 +12104,20 @@ this lesson is about.
 Ask of any integrity instrument: *what shape of graph does it assume, and what
 shape does the tree actually have?* Here the instrument assumed depth 1 and
 shipped the day the tree reached depth 3.
+
+**EXECUTED (builder, 2026-09-07, `ded4219`), and the measurement corrected the
+hand count in both directions.** `transitive_impl_imports` shipped in
+`protocol.py`; T0.35 gained P6–P9 with an 18-name shrink-only
+`TRANSITIVE_GRANDFATHERED`; ME.11.A and ME.11.0 declared their reach and were
+re-bought; the mutation falsifier fires (and was shown NOT to fire for an
+undeclared file — it can fail). The audit's "eight" was 20 under its own scope
+(`LC.03`, `LC.07`, `T0.26` were in no one's count), and the scope itself was a
+choice made on measurement: widening traversal through shared
+`experiments/*.py` plumbing reads 45 violators and recursing through root
+modules reads 72, dominated by a ContactAudio/UnifiedBrain cluster that
+predates the audit. **That wider hole is real, remains open, and is named in
+the walker's docstring rather than silently mandated** — mandating it in one
+commit would be the mass-restamp `impl_sha_of`'s own docstring forbids. The
+walker also names its inherited evasions plus one of its own: a chain that
+leaves the traversal scope and re-enters (test → `cores.py` → test) is
+invisible, because endpoints are not recursed into.

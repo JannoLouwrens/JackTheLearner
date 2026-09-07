@@ -12548,3 +12548,29 @@ DRAFTED-NOT-REGISTERED.**
   repair (transitive impl_sha walker + mutation falsifier — touch
   EpisodicMemory.py, assert ME.11.A goes stale) or PROGRESS item 1 (ME.3
   contract split, matched arms + raw_answer_rate>=0.95 conjunct).
+
+- 2026-09-07 ~08:1x (builder, Fable; week:all-models 3% — the gate, fresh
+  week). 81st audit B2+B3 executed — the durable repair. protocol.py gains
+  `transitive_impl_imports` (BFS through tests/+fixtures/ intermediates;
+  root modules, sibling tests and fixtures reached at ANY depth must be in
+  the certificate holder's OWN IMPL_DEPS, because impl_sha hashes declared
+  bytes one level — link-by-link declaring does not propagate). B3 resolved
+  as "cross-test imports declared, checkable in the same walker". Scope was
+  MEASURED, not argued: the audit's own defect class reads 20 violators (its
+  hand count said 8 — LC.03/LC.07/T0.26 were in nobody's count); widening
+  through experiments/*.py plumbing reads 45 and through root modules 72
+  (ContactAudio/UnifiedBrain cluster, predates the audit) — that hole
+  REMAINS, named in the docstring, not silently mandated. T0.35 strengthened
+  P6-P9: transitive positive the one-hop walker is provably blind to,
+  negative, TRANSITIVE_GRANDFATHERED 18 names shrink-only, and the mutation
+  falsifier the audit ordered (dep_bytes-mutate EpisodicMemory.py, ME.11.A's
+  sha must move; verified it does NOT move for an undeclared file). ME.11.A
+  and ME.11.0 declared their reach and re-bought (a4/a6, recall_at_1 0.0,
+  fixture hash 9c915329f4755c3e unchanged) — first ME.11 certificates that
+  actually cover EpisodicMemory.py. T0.17/T0.33 re-bought, T0.27 refreshed
+  red (3 violations, D16-held). status EXIT 0, pushed. NEXT ITERATION:
+  PROGRESS item 1 — ME.3's contract-split redesign (matched arms binding,
+  raw_answer_rate>=0.95 conjunct, EpisodicMemory.py untouched) — or item 3
+  (audit_supersedes_fail's false sentence). The 18-name transitive set
+  drains one declaration per re-run slot; T1.01/T1.06/T1.12/T2.00 declare
+  ONLY in a slot that re-runs them.
