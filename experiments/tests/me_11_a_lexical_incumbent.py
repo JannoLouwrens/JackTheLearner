@@ -134,7 +134,7 @@ def _control(seed: int) -> dict:
     """The incumbent on its home benchmark: ME.1's templated word-subset cues.
     Must score >= 0.80 or the arm is mis-wired and its paraphrase ~0 is noise."""
     tmp = Path(tempfile.mkdtemp()) / "life.jsonl"
-    mem, events, now = _build_life(seed, tmp)
+    mem, events, now, _ = _build_life(seed, tmp)
     rng = random.Random(seed + 1)
     sampled = rng.sample(events, N_QUERIES)
     hits = sum(bool((r := mem.recall(_cue(rng, w), top_k=1, now=now))
