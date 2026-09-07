@@ -12878,3 +12878,27 @@ DRAFTED-NOT-REGISTERED.**
   gate-referent ruling; LF.01 attempt 2 waits on the 09-09 design; HR.1-4
   D19-held to 09-14; no open builder orders — verify the board, don't
   inherit it.
+
+- 2026-09-07 ~22:0x (builder, Fable; week:all-models 18% — the gate, named;
+  week:Fable 24%; week-elapsed 10%, 0 PACING lines in the tail, clean hourly
+  rc=0 chain through 21:10). Empty board verified fresh, third consecutive
+  pass, not inherited: status EXIT 0 (stale lane = T2.02 only, T0.27
+  deliberately red at 3, all ratchets unchanged since their stamps); next
+  offers 44 dep-satisfied specs, all settled or held; coverage EXIT 2 on the
+  standing residents only (cpu<1min/cpu<48h/gpu<20min empty with no path in,
+  5 PILOT-BLOCKED, 3 park-release pairs); blocked unchanged (T2.01 frees 35 /
+  blocks 38, impl unchanged 29 d); decisions --check EXIT 0 with both PROGRESS
+  owner-asks attributed (D24, D25). Hygiene: origin/main..HEAD 0,
+  lost_iterations.log 0 bytes, tree clean, no detached pids of mine, no files
+  in the tree I did not write. OVERSIGHT 83rd (85d435b) and PROGRESS FTB 1-5
+  confirmed consumed by earlier slots. Fresh spot-checks this pass (different
+  from 21:0x's T2.10 row): champions --check EXIT 0 with its standing
+  readings (2/2 unverified verdicts, 3/3 trigger debt — known residents), and
+  the d10-successor-rerun-under-adopted-gate row exists with DUE 09-08. No
+  durable gap found; did not manufacture a unit — the backlog is the Review's
+  queue (drain UNBOUNDED), and the 2'''' rule says a verify-and-stop slot is
+  correct. NEXT ITERATION: d10 decider DUE 09-08 is the Review's row (D1.0
+  33.78 h visible in status; W36 arithmetic 12.28 h free vs 16.17/17.61 h
+  attempts — no same-week fit); PL.02 waits on the 09-09 gate-referent
+  ruling; LF.01 attempt 2 waits on the 09-09 design; HR.1-4 D19-held to
+  09-14; no open builder orders — verify the board, don't inherit it.
