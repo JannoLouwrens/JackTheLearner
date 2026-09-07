@@ -982,6 +982,12 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     `cpu<1min` and blocked, so that class stays no-path-in and stays in
 #     QUEUE_EMPTY_BASELINE — registering did not clear it and this entry does
 #     not claim it did.
+#   93 @ 2026-09-07 (builder, SHRINK) — PL.00's first PASS (3a935f6, attempt 2
+#     under the adopted coarse-shadow512 eye) reopened its downstream: PL.02,
+#     the PLASTIC-ONLY decree's sole registered falsifier, left the
+#     unreachable set by SATISFACTION of the PL.02 -> PL.00 edge, which was
+#     never edited (the 09-07 disposition's required shape). The floor
+#     follows the number down, shrink-only.
 #   94 @ 2026-09-04 (builder) — the LG grounding bakeoff registered from
 #     docs/research/LANGUAGE_GROUNDING.md §7 under the INTEGRATION_QUEUE
 #     protocol: LG.03 (the cell-certification FIXTURE) is RUNNABLE and refills
@@ -1041,7 +1047,7 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #     three (HR.1, HR.5, HR.7) are RUNNABLE and refill the empty cpu<10min
 #     class, which is the point of the registration.
 #   85 @ 2026-09-01 — seeded from the 58th audit's own measurement (B3).
-UNREACHABLE_BASELINE = 94
+UNREACHABLE_BASELINE = 93
 
 
 def unreachable_ratchet(ledger=None,
