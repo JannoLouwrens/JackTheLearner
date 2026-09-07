@@ -698,7 +698,9 @@ nominations have died on: all nine of the paper's DMC tasks are
 confirmed on re-fetch to be decoder-independent — so it ports to `A4` (which is
 `A2` minus the decoder) rather than to the arm that measured −0.94. Two
 hyperparameters (ρ_min, ρ_max), no new network, no new loss term, and `A4`'s
-≈1.37 M parameters stay put or fall. **The condition that travels with it, and
+parameters — **861,545 measured**, not the ≈1.37 M this entry carried until
+2026-09-07 (field watch wk6 §6; `LEARNING_CORE.md` §5.5's correction note) —
+stay put or fall. **The condition that travels with it, and
 it is the scout's own strongest objection, not mine:** the headline 8/9 win rate
 has **no stated seed count and no CIs**, assembled from "available seeds" under
 a public protocol — precisely the statistic `UNIFIED_BRAIN_BAKEOFF.md` §1.8

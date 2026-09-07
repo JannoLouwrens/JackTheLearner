@@ -184,6 +184,14 @@ hardware?** Measured on this box, 2026-08-09, `torch 2.8.0+cpu`,
 | PPO-scale separate actor-critic, **120,841 params** (π 96→128→128→8, V 96→256→256→1) | update at minibatch 512: **68.4 ms** core-time · single-obs act: **168 µs** |
 | **RSSM at a DreamerV3-XS shape** — GRU deter 256, 32×8 categorical stochastic, width-256 MLPs, encoder/decoder/reward(255-bin twohot)/continue heads: **1,432,160 params**; actor+critic **463,887**; **1,896,047 total** | one train step at batch 16 × length 32 (512 transitions) with a 15-step imagination rollout from every posterior state (7,680 imagined states): **3.754 s core-time**, 1.963 s wall |
 
+*(These are the shapes as timed on 2026-08-09, kept verbatim because they
+describe that benchmark. They are NOT the shipped arms' parameter counts —
+`cores.py` was created 84 minutes after §5's table was written and shipped
+smaller heads, and `56fbf38`'s critic repair changed the world-model arms
+again the same evening. The live, measured counts are in §5.5's table and
+its 2026-09-07 correction note; largest divergence `wm-latent`, −37% vs the
+old estimate.)*
+
 Converted to the project's declared cost unit (`CURIOSITY_BAKEOFF.md` §3.1,
 `PURPOSE_AND_SCAFFOLDING.md` §4.2 — *CPU-core-seconds of learner time per 1,000
 decisions*) [C]:
@@ -1868,8 +1876,12 @@ is what distinguishes it from A4).
 - **Prior:** *strong on paper, unproven at our replay ratio.* §3.0 measures
   that the model is cheap and the **replay ratio** is what costs; LC.02 fixes
   that number before this arm runs.
-- **Params (cost):** **1,896,047** measured at this exact shape [M]
-  (RSSM 1,432,160 + actor/critic 463,887).
+- **Params (cost):** **1,671,065** [M] — recorded by LC.03 v2 on all 3 seeds
+  and reproduced at HEAD 2026-09-07 (world model 1,536,016 + actor 67,976 +
+  critic 67,073). The **1,896,047** (RSSM 1,432,160 + actor/critic 463,887)
+  this line carried until 2026-09-07 was measured on §3.0's benchmark shapes
+  before `cores.py` existed and never reconciled — see the correction note
+  in §5.5.
 
 ---
 
@@ -1905,7 +1917,9 @@ G(π) = −E[ ln C(o_int) ]  +  −E[ information gain ]
   `action_entropy` in the final third below 10 % of A2's ⇒ `Status.VOID` for
   A3 with reason "epistemic-term collapse (arXiv:2303.01618)". A named,
   predicted failure that is detected is a result; an undetected one is a lie.
-- **Params (cost):** **≈ 1,900,000** + 4 extra ensemble dynamics heads [C].
+- **Params (cost):** **2,052,265** [M] — dreamer-xs 1,671,065 + the K=5
+  ensemble's 381,200; recorded by LC.03 v2, reproduced at HEAD 2026-09-07
+  (was ≈ 1,900,000 [C]; see the correction note in §5.5).
 - **Two extra hyperparameters, declared:** the nat-scale of `ln C` and the
   precision `γ_EFE`. §3.3.1: these are the intrinsic/extrinsic coefficient
   under another name, and B2 counts them.
@@ -1929,8 +1943,12 @@ pre-registered floor) is `Status.VOID` for A4, not a good loss curve.
 - **Prior:** *unknown at 2M parameters on a ray retina.* Reconstruction is a
   much stronger learning signal when the observation is 96-dimensional and
   every dimension matters, which is W0's regime.
-- **Params (cost):** ≈ **1,370,000** [C] (A2 minus the ~528K decoder, plus a
-  target encoder).
+- **Params (cost):** **861,545** [M] — dreamer-xs 1,671,065 − decoder 958,832
+  + latent_pred 149,312; recorded by LC.03 v2 on all 3 seeds, reproduced at
+  HEAD 2026-09-07. The estimate this replaced (≈ 1,370,000 [C], "A2 minus the
+  ~528K decoder") undersized the decoder by ~430K — the arm is **smaller**
+  than every prior citation of it, including field watch wk5's. See the
+  correction note in §5.5.
 
 ---
 
@@ -1968,16 +1986,45 @@ Score B's axis, and §3.0 gives the measured baseline.
 | arm | `cost` (trainable params) | measured/derived |
 |---|---|---|
 | `sb3-ppo` (reference, ineligible) | ~121,000 | [C] from the A0 shape |
-| `ppo-needs` | **120,841** | [M] |
-| `ppo-lp` | ≈ 211,000 | [C] |
-| `dreamer-xs` | **1,896,047** | [M] |
-| `wm-efe` | ≈ 1,900,000 + 4 ensemble heads | [C] |
-| `wm-latent` | ≈ 1,370,000 | [C] |
+| `ppo-needs` | **135,961** | [M] |
+| `ppo-lp` | **144,794** | [M] |
+| `dreamer-xs` | **1,671,065** | [M] |
+| `wm-efe` | **2,052,265** (incl. K=5 ensemble, 381,200) | [M] |
+| `wm-latent` | **861,545** | [M] |
+
+> **CORRECTION, 2026-09-07 (builder, on field watch wk6 §6's finding).** Every
+> row above except `sb3-ppo` was stale from 2026-08-09 onward — including the
+> two then marked [M] — and the cause is twofold, both halves confirmed from
+> git rather than inferred. (1) The table was written in `ea9de11` (08-09
+> 16:53), **84 minutes before `cores.py` existed** (`db9fd7b`, 18:17): every
+> row, [M] included, describes §3.0's pre-implementation benchmark shapes,
+> not the shipped constructor (e.g. the benchmark's width-256 actor/critic
+> heads, 463,887 params, vs the shipped width-128 heads, 135,049). (2) The
+> same evening `56fbf38` (22:36) landed LC.02's critic repair (`cores.py:338`
+> — the world-model critic was `LATENT`-wide from `Core.__init__` and LC.01
+> never called it, so the fault was invisible until the first gradient),
+> further changing the three world-model arms; its diff touches nothing else,
+> so the PPO deltas are entirely cause (1). The table was reconciled against
+> neither. The values now shown are what **LC.03 v2 recorded on all 3 seeds**
+> and what `build_arm` reproduces exactly at HEAD:
+>
+>     /data/venvs/jackthelearner/bin/python -c "
+>     from experiments.cores import build_arm, n_params, CANDIDATE_ARMS
+>     for a in CANDIDATE_ARMS: print(a, n_params(build_arm(a)))"
+>
+> Old values, for the record: ppo-needs 120,841 [M]; ppo-lp ≈ 211,000 [C];
+> dreamer-xs 1,896,047 [M]; wm-efe ≈ 1,900,000 [C]; wm-latent ≈ 1,370,000 [C].
+> `sb3-ppo`'s ~121,000 [C] is untouched by the repair (SB3's own network, not
+> `cores.py`'s) and stands as the estimate it always was.
 
 Every one is inside the simplicity budget's B1 ceiling (5M) and only the two
 PPO arms are inside its W0 soft target (750K) — which is itself a finding worth
 stating in advance: **if a world-model arm wins, the soft target moves and the
-reason is on the record.**
+reason is on the record.** That arm has since won: **`wm-latent` is seated
+(LC.03 v2, sole clean learner) at 861,545 params — 14.9% over the 750K soft
+target, not the 83% the stale ≈ 1,370,000 implied.** Same decision, very
+different size of concession; LC.06 is the spec that reads exactly this
+number.
 
 #### The gates, all fixed here
 
@@ -2266,6 +2313,11 @@ register these in isolation.
                "problem. Cost is parameters and NOT core-seconds on purpose: "
                "compute is already LC.05's axis, and counting it twice would "
                "let the tie-break re-decide the thing LC.05 decides."),
+
+*(Draft kept as registered. The declared costs in it are stale — measured
+values and the two-cause breakdown are in §5.5's 2026-09-07 correction note;
+the live registry entry in `registry_expansion.py` carries the same dated
+correction and its F7 assertion binds against the measured values.)*
 
     Spec("LC.05", 5, "The same arms, arbitrated at matched COMPUTE",
          hypothesis="Scored off the SAME stored curves at exactly W_CLOCK "

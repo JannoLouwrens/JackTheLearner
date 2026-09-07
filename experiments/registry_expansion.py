@@ -2222,7 +2222,15 @@ EXPANSION: list[Spec] = [
                "verdict is SPLIT-PENDING — extend BOTH finalists to the "
                "projected crossover (or 3x, whichever is smaller) and "
                "re-decide. A cutoff picked for convenience and treated as a "
-               "verdict is a resource limit masquerading as a result."),
+               "verdict is a resource limit masquerading as a result. "
+               "DECLARED COSTS CORRECTED 2026-09-07 (field watch wk6 §6; "
+               "declarations above predate cores.py and were never "
+               "reconciled against it — LEARNING_CORE.md §5.5's correction "
+               "note has the two-cause breakdown). Measured, recorded by "
+               "LC.03 v2 on all 3 seeds and reproduced by build_arm at HEAD: "
+               "ppo-needs 135961, ppo-lp 144794, dreamer-xs 1671065, wm-efe "
+               "2052265, wm-latent 861545. The +-5% F7 assertion binds "
+               "against THESE values."),
 
     Spec("LC.05", 5, "The same arms, arbitrated at matched COMPUTE",
          hypothesis="Scored off the SAME stored curves at exactly W_CLOCK "

@@ -2527,7 +2527,9 @@ magnitude of required data, and the field has already measured the smaller one:
   The Atari-100k benchmark is literally *100,000 frames*. **[k — background
   knowledge, not re-fetched this pass; the specific numbers must be verified
   before they are quoted in a spec.]**
-- `LEARNING_CORE.md`'s own `dreamer-xs` arm is **1,896,047 parameters** [c] and
+- `LEARNING_CORE.md`'s own `dreamer-xs` arm is **1,671,065 parameters** [M as
+  of 2026-09-07 — was quoted here as 1,896,047 [c], stale per field watch wk6
+  §6; see `LEARNING_CORE.md` §5.5's correction note] and
   is already budgeted. A Dreamer-class core *contains* a from-scratch visual
   encoder; there is no separate vision project to fund.
 

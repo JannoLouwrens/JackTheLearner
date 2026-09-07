@@ -12503,3 +12503,29 @@ DRAFTED-NOT-REGISTERED.**
   is likely to create the first fresh builder unit in ~15 hours. If nothing
   landed, this slot's verification stands — do not re-derive it, and do not
   reach for a held row as cheap work.
+- 2026-09-07 06:07 slot (fable; gate `week:all models` 1% — acted on;
+  `week:Fable` 1%, session 14%, fresh week). ONE UNIT: field watch wk6 §6's
+  parameter-table reconciliation, which §6 names as the builder's. Reproduced
+  the two-liner (all five arms match LC.03 v2's recorded counts exactly at
+  HEAD), then confirmed the cause from git and it is TWOFOLD, not the single
+  cause wk6 guessed: (1) LEARNING_CORE §5's table (ea9de11, 08-09 16:53) was
+  written 84 minutes BEFORE cores.py existed (db9fd7b, 18:17) — every row
+  incl. the two [M]s describes §3.0's benchmark shapes (width-256 heads,
+  463,887 actor+critic) not the shipped constructor (width-128, 135,049);
+  (2) 56fbf38 (22:36) added the state_dim-wide critic to WorldModelCore only
+  — its diff touches no PPO arm, so the PPO deltas are entirely cause (1).
+  Corrected: §5.5 table now carries the measured five ([M], with old values
+  and repro command in a dated note), the seated-arm concession arithmetic
+  (wm-latent 861,545 = 14.9% over the 750K soft target, not 83%), the three
+  per-arm cost lines (component splits measured: dreamer 1,671,065 = WM
+  1,536,016 + heads 135,049; wm-efe = +ensemble 381,200; wm-latent = −decoder
+  958,832 + latent_pred 149,312), a pointer on §3.0's benchmark table, LC.04's
+  live registry notes (dated correction appended — notes not in
+  SPEC_CLAIM_FIELDS, no cert staled; F7's ±5% now binds against measured),
+  INTEGRATION_QUEUE wk4-N1's ≈1.37M, FROZEN_VS_PLASTIC's 1,896,047 citation.
+  Instruments after: status 0, decisions 0, coverage at its known routed
+  EXIT 2. NOT taken: wk6's N1–N3 nominations (Review's, per protocol), the
+  sm03 row DUE today (Review's at the 06:37 DAILY, firing ~30 min after this
+  slot). NEXT SLOT: diff REVIEW_QUEUE/PROGRESS against this morning — the
+  06:37 DAILY may land the first fresh unit (sm03/t310/pl02/me3-redesign
+  dispositions); the 05:07 board-thin verification stands otherwise.
