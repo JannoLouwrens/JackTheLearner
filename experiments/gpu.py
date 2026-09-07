@@ -356,6 +356,15 @@ class JobResult:
     # billing it is how a 30 h ceiling closed a week at 37.4554 h. None means
     # "no narrower window is known" and the full duration is charged.
     billable_s: Optional[float] = None
+    # HEAD at DISPATCH — the same value `submit` writes into the attempt
+    # receipt (`gpu_submissions.jsonl`). A blocking `submit` can span pushes,
+    # so a caller that stamps `_head_sha()` AFTER it returns names a commit
+    # the kernel never ran (80th audit: all four of D1.0 attempt 2's kernels,
+    # off by 3–11 commits). Mergers must stamp THIS. On a reattach the repo
+    # head may have moved since the original dispatch; the kernel BODY is
+    # separately proven byte-identical by `reattach_code_check`, which refuses
+    # or records any divergence.
+    head: str = ""
 
     @property
     def charge_seconds(self) -> float:
@@ -946,6 +955,12 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
 
 
 def _head_sha() -> str:
+    """HEAD right now — which is only ever the head a kernel RAN if you call
+    this at DISPATCH. Any call after a blocking `submit()` returns is the 80th
+    audit's bug (D1.0 attempt 2 stamped four kernels with harvest-time HEAD,
+    off by 3–11 commits): use `JobResult.head`, which `submit` fills with the
+    same value it writes to the attempt receipt.
+    """
     p = subprocess.run(["git", "-C", str(Path(__file__).parent.parent),
                         "rev-parse", "--short", "HEAD"],
                        capture_output=True, text=True)
@@ -1157,7 +1172,11 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
         budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id)
         if res.ok:
             res.message = (res.message + f" | attempts: {attempts}") if attempts else res.message
+            # Carry the dispatch head out on the result, so a multi-kernel
+            # merger never has to (wrongly) re-read HEAD at harvest time.
+            res.head = head
             return res
         attempts.append(f"{backend}: {res.message}")
 
-    return JobResult(order[-1], False, message="all backends failed: " + "; ".join(attempts))
+    return JobResult(order[-1], False, head=head,
+                     message="all backends failed: " + "; ".join(attempts))

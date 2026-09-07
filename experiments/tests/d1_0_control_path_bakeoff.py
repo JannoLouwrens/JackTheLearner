@@ -808,7 +808,6 @@ def _submit_full() -> dict:
     # its own kernel before any arm trains. If it misses its floor, the run
     # is VOID as a HARNESS fault and the three arm kernels (~15 h) are never
     # submitted — D1_CONTROL_ARCHITECTURE.md section 7's sequencing.
-    from ..gpu import _head_sha
     ref_job = build_job(_REF_JOB)
     ref_res = submit(ref_job, prefer="kaggle", est_hours=1.8, timeout_s=10800,
                      fetch=["d10_ref.json"])
@@ -824,7 +823,7 @@ def _submit_full() -> dict:
         "ref_mean": ref.get("ref_mean"),
         "reference_runs": ref["reference_runs"],
         "gpu": ref["gpu"], "wall_minutes": ref["wall_minutes"],
-        "backend": ref_res.backend, "head": _head_sha()}
+        "backend": ref_res.backend, "head": ref_res.head}
     merged["random_returns"] = ref["random_returns"]
     ref_mean = ref.get("ref_mean")
     if ref_mean is None or ref_mean < SB3_REFERENCE_FLOOR:
@@ -849,12 +848,14 @@ def _submit_full() -> dict:
         merged["runs"].extend(d["runs"])
         # `head` per kernel (59th audit B7): the row's top-level `commit` is
         # stamped once at run start, but a multi-kernel dispatch can span
-        # pushes — each kernel names the HEAD it was actually built from.
-        from ..gpu import _head_sha
+        # pushes. `res.head` is the HEAD `submit` recorded at DISPATCH — the
+        # 80th audit found the previous version called `_head_sha()` HERE,
+        # after the blocking submit returned, stamping harvest-time HEAD:
+        # every kernel of attempt 2 named a commit it did not run.
         merged["kernels"].append({"arms": list(arms), "gpu": d["gpu"],
                                   "wall_minutes": d["wall_minutes"],
                                   "backend": res.backend,
-                                  "head": _head_sha()})
+                                  "head": res.head})
         if "random_returns" not in merged:
             merged["random_returns"] = d["random_returns"]
     return merged
