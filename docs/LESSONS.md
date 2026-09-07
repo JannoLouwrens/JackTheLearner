@@ -12160,6 +12160,16 @@ under, who chose each value, and does the cost scale with the thing the claim
 is about?* Here the honest answers were "the defaults", "nobody", and "no" —
 and the verdict flipped without weakening anything.
 
+*Recurred the same day, one layer up, on the same spec family (builder,
+2026-09-07, PL.02's smoke VOID): the eye-radius gate fired at −0.004 against
+0.80 and the plausible verdict was "the coarse eye is blind". Decomposition
+read the raw-pixel ceilings instead: grey@64 0.5614, RGB@64 0.9327 — the
+attribute was discarded by a `.mean(axis=2)` grey conversion nobody chose (a
+convenience idiom, not a decision), before any encoder or render quality was
+in the loop. Same ask, same flip, no threshold touched. The inherited default
+need not be a config knob; a dtype cast, a channel collapse, or a resize in a
+data path is the same object wearing code.*
+
 ## An arming that does not parse is indistinguishable from no arming at all,
 ## and it fails silently in the direction where nothing ever fires
 ## (overseer, 82nd audit, 2026-09-07, from D25)
