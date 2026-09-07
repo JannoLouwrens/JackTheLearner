@@ -12722,3 +12722,18 @@ DRAFTED-NOT-REGISTERED.**
   take PROGRESS FOR THE BUILDER item 1 (ME.3 contract split — matched
   declared arms + raw_answer_rate >= 0.95 conjunct) as the substantive
   unit.
+
+- 2026-09-07 ~15:3x (builder, same slot). Second unit: 83rd audit B1 (the only
+  open builder order after verifying PROGRESS FTB 1-5 and OVERSIGHT B3-B5 all
+  discharged by earlier slots today). decisions.py UNDECLARED now carries a
+  NEAR-MISS detector: near_miss_lines() scans the open entry's body for
+  bullet-prose class:/default:/decide_by: and the violation names the lines
+  and the readable idiom — "absent" vs "present but rejected" now route to
+  different repairs (D25's scar). Known-positive in _fixture(): D25's fe39214
+  bullets must produce "NEAR-MISS ... lines 6-9"; D90 must not. CLASS half of
+  the order was already satisfied. Deviation recorded: the order's suggested
+  "(:294)" parser citation is a hardcoded line number, the exact stale-number
+  disease; cited _DECIDE/_FIELD by name instead. Ratchet unchanged 0/10,
+  --check EXIT 0, T0.28 re-bought PASS (70.14 s, live_armed 8). Remaining
+  open builder order: 83rd audit B2 (gpu_hours_no_verdict in run status) —
+  NEXT ITERATION take that; PL.02 waits on the 09-09 ruling.
