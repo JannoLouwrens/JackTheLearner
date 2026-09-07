@@ -9,7 +9,13 @@ sibling: a plain JSON file a person can read, a debit for every runner child,
 and a refusal BEFORE a child spawns.
 
 Scope, stated honestly:
-  - The metered unit is `run.py:_run_isolated`'s child — the only lane
+  - The metered unit is WALL SECONDS of the child, not core-seconds: a child
+    permitted 2 threads by `ladder_loop.sh:253` can consume up to 2
+    core-seconds per billed second — measured 1.68x/1.72x on two live probes
+    on 2026-09-07, and 1.241x on an LC.03-class arm-seed the same day. A
+    planner writing core-hours must divide by the workload's thread width
+    before comparing against `CPU_DAY_CEILING_S`.
+  - The metered child is `run.py:_run_isolated`'s — the only lane
     `cmd_run` (and therefore `--gate`) uses. The gate still refuses `cpu<48h`
     with a ROUTING reason: that class belongs to the detached lane, which
     since T0.34 keeps its own accounts (`admit_detached` + the heartbeat

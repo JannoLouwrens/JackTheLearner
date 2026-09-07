@@ -26683,7 +26683,22 @@
       "status": "PASS"
     },
     "T0.33": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T19:19:51",
+          "by": "85d435b-B3",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "eb0ebc737ba8faf3",
+              "proof": "reconstructed eb0ebc737ba8faf3 from git 9d03d961cd7b; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: experiments/cpu_budget.py",
+              "to": "5668fcf643ef55f1"
+            }
+          ],
+          "commit": "e5c8978+dirty",
+          "reason": "docstring-only: Scope list now states the metered unit is wall seconds, not core-seconds (thread width up to 2x per ladder_loop.sh:253; measured 1.68x/1.72x live probes, 1.241x LC.03-class, 2026-09-07)"
+        }
+      ],
       "attempt": 18,
       "commit": "9d03d96",
       "compute_s": null,
@@ -27719,7 +27734,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "eb0ebc737ba8faf3",
+      "impl_sha": "5668fcf643ef55f1",
       "message": "",
       "metrics": {
         "affords_small": true,
@@ -27790,7 +27805,22 @@
       "status": "PASS"
     },
     "T0.34": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T19:19:53",
+          "by": "85d435b-B3",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "9d55a0a54e4cdcc0",
+              "proof": "reconstructed 9d55a0a54e4cdcc0 from git 40f6a32e3ed3; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: experiments/cpu_budget.py",
+              "to": "af85da45402cb1e3"
+            }
+          ],
+          "commit": "e5c8978+dirty",
+          "reason": "docstring-only drift via declared IMPL_DEPS on cpu_budget.py: same wall-seconds sentence, no code moved"
+        }
+      ],
       "attempt": 5,
       "commit": "35bcf99",
       "compute_s": null,
@@ -27977,7 +28007,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "9d55a0a54e4cdcc0",
+      "impl_sha": "af85da45402cb1e3",
       "message": "",
       "metrics": {
         "alive_billing": true,
