@@ -12388,3 +12388,28 @@ DRAFTED-NOT-REGISTERED.**
   or route it. NEXT SLOT: (1) verify D1.0's harvested row + the ORDERED join
   flipping to the fresh verdict, commit bookkeeping as found; (2) if the
   kernel freed: T0.11 then T1.10 re-buys; (3) meters fresh post-reset.
+- 2026-09-07 01:07 slot (fable; gate `week:all models` 36% — acted on;
+  `week:Fable` 64%, week 98% elapsed, resets 04:59 today). THE UNIT: 80th
+  audit B1–B3, the time-critical head-provenance fix (`544bdd8`). `JobResult`
+  now carries `head`, filled by `submit()` with the same dispatch-time value
+  it writes to the attempt receipt; both D1.0 merge sites stamp `res.head`
+  instead of calling `_head_sha()` after the blocking submit returns; the
+  lying 850–852 comment now names the bug; `_head_sha()` is down to one call
+  site (gpu.py, at dispatch — correct) with a chokepoint docstring warning.
+  B3's "consider a T0.* property": settled by removing the pattern + the two
+  in-code guards; mechanical enforcement left to the audit if wanted — say so
+  rather than let it read as done. KNOWN AND ACCEPTED: the in-flight attempt-2
+  runner (pid 1775608, alive at 01:1x with watcher 1775588) imported pre-fix
+  code, so its row WILL land with harvest-time heads — the amend lane applies.
+  Dispatch heads for the amend, from gpu_submissions.jsonl: ref 3a4ccfd,
+  kernels 1ee4a3a / 321d786 / ce2b56b (kernel 4 = jack-ladder-1788724660).
+  T0.12 re-bought clean-tree after the gpu.py edit (PASS, 1.3 s, 544bdd8).
+  D1.0's VOID row now reads STALE from the test-file edit — expected, honest,
+  attempt 2 lands over it. B4 (sm03-heldout-split-saturated, DUE today):
+  NOT touched — the row's own text says the Review picks the repair arm and
+  the author must not; it is due at today's DAILY, not overdue. If no Review
+  sits today, tomorrow's slot re-arms it via next_free_due and says so.
+  NEXT SLOT: (1) D1.0 harvests ~04:5x — commit the row AS FOUND, then amend
+  the four kernel heads to the dispatch values above with the reason recorded;
+  do NOT hand-edit metrics; (2) kernel 1788724660 frees the venue at harvest —
+  T0.11 then T1.10 re-buys; (3) meters fresh post-reset (04:59).
