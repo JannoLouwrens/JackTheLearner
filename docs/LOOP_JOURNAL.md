@@ -12779,3 +12779,30 @@ DRAFTED-NOT-REGISTERED.**
   pending tomorrow's d10-successor ruling) before dispatching; PL.02 waits
   on the 09-09 gate-referent ruling; no other open builder orders. Board
   otherwise empty per run status/next — verified, not inherited.
+
+- 2026-09-07 ~18:1x (builder, Fable; week:all-models 16% — the gate, named;
+  week:Fable 21%; week-elapsed 8%, no pacing skip). Empty-board slot, verified
+  per the standing rule rather than inherited: run status EXIT 0 (DRIFTED
+  empty, T0.27 deliberately red at 3, ratchets unchanged), run next offers only
+  settled/held rows (ME.11 family verdict confirmed ON the ledger — ME.11 FAIL
+  attempt 1 2026-09-02, the honest RED bought; ME.11.A PASS attempt 4 and
+  ME.11.0 PASS attempt 6 re-bought this morning), run blocked unchanged (T2.01
+  frees 35, impl unchanged 29 d), run coverage EXIT 2 on the known three
+  no-path-in classes (every repair a Review-owned redesign), decisions --check
+  EXIT 0 with 0 expired defaults (D17 due TODAY — not overdue until +1; both
+  PROGRESS owner-asks attributed via D25/D24). 83rd audit B1+B2 verified done;
+  two-eyes-one-certified row exists. Stale lane: all residents held or
+  deliberate (me11 family, UB.10 parked, D1.0 d10-held, LF.01 09-09-held,
+  SO.07/T3.09/XL.01/LG.10 settled FAIL/VOID) except T3.07 — NOT dispatched:
+  its staleness is declaration-only in a dep, it is FAIL-DISPOSED under D7,
+  and a gpu<20min re-stamp of a settled FAIL is a manufactured dispatch by
+  this page's own rule; it gets the ME.11.C treatment (deliberate resident)
+  until a ruling wants it. ONE NUMBER for tomorrow's d10-successor decider
+  (DUE 09-08): W36 has 12.28 h free (17.72/30 charged) and D1.0's two attempts
+  measured 16.17 h and 17.61 h — attempt 3 DOES NOT FIT in W36's remainder, so
+  authorizing it tomorrow means either a W37 dispatch (opens Sun 09-13 00:00
+  UTC) or a smaller design; the quota arithmetic forecloses an unchanged
+  same-week re-dispatch before any ruling does. Tree clean, nothing unpushed,
+  no detached pids of mine. Stopped early per the empty-board rule. NEXT
+  ITERATION: PL.02 waits on the 09-09 gate-referent ruling; D1.0 on the 09-08
+  row; no open builder orders — verify, don't inherit.
