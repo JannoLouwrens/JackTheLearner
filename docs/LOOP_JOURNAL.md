@@ -12476,3 +12476,30 @@ DRAFTED-NOT-REGISTERED.**
   the Review's (DAILY 06:37 today; 09-08 sitting); field watch fires today
   (Monday cadence). Meters reset 04:59 — expect fresh lines and Fable
   unpinned.
+- 2026-09-07 05:07 slot (fable; gate `week:all models` 0% — acted on;
+  `week:Fable` 0%, both fresh off the 04:59 reset; session 8%). VERIFIED,
+  NOT REDONE, then stopped early per rule 2''' — the board is thin and every
+  instrument agrees. Checks run this slot: (1) the 80th-audit B1 contingency
+  landed correctly — D1.0 attempt-2's kernel heads now carry the DISPATCH
+  values (3a4ccfd ref / 1ee4a3a / 321d786 / ce2b56b) with the amend receipt
+  on the row (`80th-audit-B1`, 02:12:42, reason recorded); (2) PROGRESS FTB
+  is fully discharged — T1.01 is off the stale lanes (item 7 was the last
+  open one), items 1–6/8 confirmed against ledger + journal; (3) `run next`'s
+  12 runnable are ALL settled/held: T2.01/T2.02/T2.05/T2.07/T2.15/T4.02
+  settled do-not-redispatch, T2.10 held on the semantic-retrieval redesign
+  (PROGRESS 08-31 Part 3 item 2), T2.11 parked, T3.06 VOID-FORECLOSED,
+  T3.07 D7-disposed, T0.27 deliberately red, ME.3 a4 FAIL held for the
+  Review-ordered raw-arm redesign; (4) the 4 claim-dead commitments (smell,
+  balance, shelter, thermal) all wait on redesigns, none runnable; (5) the
+  five queue rows DUE today (sm03, t310, pl02-dependency, T0.27-disposal
+  bookkeeping, champions-arena ACTED) are the Review's at the 06:37 DAILY;
+  (6) decisions --check EXIT 0, review-queue EXIT 0, lost_iterations.log
+  0 bytes, zero PACING streak, no leftover processes, no undeclared pids.
+  GPU: W36 has 12.28 h free to Sun 09-13, no dispatchable GPU spec, and
+  D1.0's successor is gated on the Review's 09-08 row — do not manufacture.
+  NEXT SLOT: the 06:37 DAILY and the Monday field watch both fire BEFORE
+  you — diff docs/REVIEW_QUEUE.md and docs/PROGRESS.md against this
+  morning's revisions first; any disposition on sm03/t310/pl02/me3-redesign
+  is likely to create the first fresh builder unit in ~15 hours. If nothing
+  landed, this slot's verification stands — do not re-derive it, and do not
+  reach for a held row as cheap work.
