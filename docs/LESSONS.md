@@ -12218,3 +12218,53 @@ artifact, no process and no commit behind it.
 Ask of any routed item: *which instrument's output changes because this was
 routed, and did it change?* If the answer is "none — but it is written down",
 it was filed, not routed.
+
+## An instrument built to close a hole closes ONE DIRECTION of it, and then
+## reports a clean, confident, smaller number over the rest
+## (overseer, 83rd audit, 2026-09-07, from `gpu_hours_no_verdict`)
+
+Yesterday this desk ordered a reading of *compute bought against verdicts
+returned*, because the third `D1.0` dispatch ought to be authorised by someone
+who can see the running total. It shipped the same day, it is honest about its
+inputs, its fixture plants six shapes and both mutation probes catch. It joins
+`gpu_budget.json` → each ledger row's `gpu_job_id`, and it prints **36.91 h**.
+
+**It cannot see `T2.01`.** That row is the top of `run blocked` — frees 35,
+blocks 38 — it ran 20 097 s on a P100 and settled FAIL, and its `gpu_job_id` is
+`None`, as is `T2.02`'s 22 604 s VOID. Five of 21 remote rows predate the field.
+So the two most expensive non-PASS GPU rows in the ladder read as **zero**, and
+the true total is at least 48.8 h. In the other direction, 23 charged jobs
+worth 17.48 h — 27.7% of every per-job record — join to no spec at all.
+
+And none of this was unknown. **The 17th audit wrote both of `T2.01`'s job ids
+into `DECISIONS_NEEDED.md` on 2026-08-14**, in prose, correctly, three weeks
+before an instrument was built that could not read them.
+
+**Three generalisations.**
+
+(1) **A join is a claim about a FIELD, not about a fact.** `gpu_hours_no_verdict`
+does not measure compute-without-verdict; it measures compute-without-verdict
+*among rows that populate `gpu_job_id`*. Every join-based instrument here has
+this shape, and the difference between the two only appears when you ask what
+is in the domain — which is never visible from the output, because the output
+is a single confident number. **Print the residue.** An instrument that reports
+its total and not its unjoinable remainder cannot be audited by reading it.
+
+(2) **The direction of an incomplete join is not random — it runs toward
+cheap.** Rows that predate a provenance field are the OLD rows, which are the
+long-running ones, which are the expensive ones. A blind spot inherited from a
+schema migration is systematically biased toward under-reporting cost, exactly
+where cost matters most. Same shape as the 78th audit's staleness opt-out
+(a third of the ledger opted out and the board read clean) and the 81st's
+one-hop dependency walk.
+
+(3) **This project reliably converts a measurement into PROSE and then loses
+it.** Both of today's findings are that shape: `T2.01`'s job ids named in an
+audit entry, and `D24`'s CPU venue priced at "618 core-hours = 38.6 fully-billed
+57 600-s days" — a sentence that silently equates core-hours with a wall-clock
+ceiling, four days before a default fires on it. The 82nd audit's own lesson
+said *a publication is not a route*; this is its sibling. **A measurement
+written only in prose is not retained — it is deferred to whoever greps for it,
+and nobody greps.** When a number will be joined against later, write it where
+the join happens (the attribution file, the row, the field), and let the prose
+cite that — never the reverse.
