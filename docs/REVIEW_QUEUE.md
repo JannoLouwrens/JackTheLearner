@@ -572,7 +572,7 @@ the right spend"* — that is `D10` branch (b) and it is the owner's, unchanged.
 If the answer is no new world, `W1.00`, `W1.02` and `W1.04` still stand: they
 are measurement repairs and they are owed regardless of which world we run in.
 
-ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Part 2 (ME.1 strengthened, FAIL, clean-tree re-buy) | OPEN
+ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Part 2 (ME.1 strengthened, FAIL, clean-tree re-buy) | DISPOSITIONED
     DUE: 2026-09-13 | a repair for `EpisodicMemory`'s similarity floor, owed
         by the BUILDER — either a calibration that abstains on absent targets
         without costing `cued_recall`, or a measured demonstration that the
@@ -684,6 +684,87 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
     is done: the row asked for a calibration or a demonstration, and it got
     the demonstration that no calibration of this scorer exists PLUS the
     measured mechanism that does.]
+
+    **DISPOSITIONED 2026-09-07 (Review, DAILY) — THE CONTRACT SPLIT IS
+    ADOPTED AS THE MECHANISM, AND `ME.3`'s HARNESS REDESIGN IS ORDERED WITH
+    ONE CONJUNCT ADDED THAT WOULD HAVE CAUGHT THIS FAILURE BY NAME.**
+    Disposed six days early, off a date that already carried ten rows, for
+    one reason: `ME.3` is a settled FAIL that MY OWN 09-06 order caused, and
+    a desk that dates its own damage a week out is not owning it.
+
+    **What I verified before ruling, rather than reading the builder's
+    report.** (1) `ME.1` a8: `distractor_abstention` 0.0000 -> **1.0000**
+    while `cued_recall` is **0.85 +/- 0.0136 — byte-identical to the FAILing
+    attempt 5 and to every attempt before it**. The row asked for abstention
+    *without costing recall*, and the recall number did not move at all. The
+    trade this row was afraid of did not happen, and that is the single most
+    important fact on the page. (2) The conjunct is on all five ME specs and
+    all five read `distractor_abstention` 1.0 with live denominators — `ME.1`
+    40.0+/-4.5, `ME.3` 39.3+/-2.9, `ME.9` 15/15, `ME.10` 36/36, `ME.5` 52-60
+    across four store sizes. (3) `ME.3` a4's collapse is real and is exactly
+    one thing: `raw_tokens_mean` **40.0 -> 0.0**, `raw_acc` 0.625 -> 0.2917
+    against `base_rate` 0.25, `reflect_acc` untouched at 1.0. The raw arm was
+    starved to silence and the equal-tokens gate refused to certify the
+    inflated 0.708 gain. **The harness caught it. Nothing was hidden and the
+    FAIL is a true measurement.**
+
+    **THE RULING.** Adopt **A5**, the contract split, as the mechanism, on
+    the separability measurement and not on its story: on the same store, all
+    three seeds, `bestcov` for cues that MUST ABSTAIN is **0.667 exactly** and
+    for cues that MUST ANSWER is **0.400 exactly** — gap **-0.267**, overlap
+    **1.000**. The two populations separate in the wrong order on the only
+    statistic any floor in this family can see, so **no monotone single-cue
+    floor can serve both, and that is arithmetic, not a preference.** A0-A4
+    confirm it empirically and A5 is the sole survivor of a decision rule
+    written before the run.
+
+    **WHAT IS ORDERED, PRECISELY, AND WHY IT IS NOT A WEAKENING.**
+    - `ME.3`'s raw arm DECLARES its four alternatives instead of joining them
+      into one string; each candidate becomes its own conjunctive sub-cue
+      (speaker + candidate) under the **same unchanged 0.95 coverage floor**,
+      results union-ranked. **`EpisodicMemory.py` is not touched, the shipped
+      floor does not move, `ME.1`'s 0.95 abstention bar does not move, and
+      zero certificates stale.**
+    - **The reflect arm gets the identical declared shape.** This is
+      load-bearing: `ME.3`'s claim is that reflection beats raw retrieval, and
+      handing the declared form to only one arm would buy the claim with an
+      asymmetry. Matched arms or no redesign.
+    - **No threshold of `ME.3`'s moves in either direction.** `base_rate`
+      0.25, the equal-tokens honesty gate and the `aggregation_qa_gain` bar
+      all stand exactly as registered. A5 measured `disj_acc` **0.552-0.688**
+      against A0's pre-repair **0.625** — this **RESTORES the raw null to the
+      strength it always had; it does not exceed it, and I will not describe
+      a restoration as a strengthening.**
+    - **ONE CONJUNCT IS ADDED, AND IT IS STRICTLY HARDER: `raw_answer_rate
+      >= 0.95`** — the raw arm must SURFACE EVIDENCE on essentially every
+      question, per the probe's own pre-stated `disj_answer >= 0.95`, which
+      A5 measured at **1.000 on every seed**. Here is why it earns its place:
+      the equal-tokens gate caught this failure only because the starvation
+      was TOTAL (40.0 -> 0.0). A floor change that starved the raw arm to
+      *half* its evidence would have left the gate satisfiable and shown up as
+      a *larger* `aggregation_qa_gain` — i.e. **as a better-looking result for
+      the claim.** This conjunct converts that from silent flattery into a
+      named FAIL. It is additive, it cannot make any spec easier to pass, and
+      it is the assertion whose absence cost the ledger a certificate.
+
+    **WHAT THIS ROW DOES NOT CLAIM.** Adopting the contract split says
+    OR-intent lives at the call site. It does NOT say Jack's memory now
+    handles disjunctive questions — it says our harness must ask them in a
+    form the scorer can express, and that the scorer's inability to infer
+    intent from a token bag is a real, measured limitation of
+    `EpisodicMemory` that we are routing around rather than fixing. **That
+    limitation is not written down anywhere a certificate would show it**, so
+    it goes to `FOR THE BUILDER` as a docstring the module owes, not as a
+    silent success.
+
+    **Status: DISPOSITIONED, not ACTED.** The design is delivered; `ME.3`'s
+    redesign and re-run are the builder's, and this row stays live and keeps
+    ageing until `ME.3` returns a row under the declared shape. `ME.3`'s FAIL
+    stands until then and must not be papered over.
+    DUE: 2026-09-11 | RE-DATED EARLIER, not later (was 2026-09-13). The design
+        input is complete, the work is one harness edit plus a re-run, and
+        09-13 carries ten rows against a measured consumer capacity of ~1 per
+        cycle while 09-11 carried one.
 
 ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
     DUE: 2026-09-13 | the single world-edit sitting that `W1.03` opens, which
