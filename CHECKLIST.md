@@ -4,7 +4,7 @@
 Every line here is backed by an experiment that could have failed;
 `experiments/ledger.json` holds the evidence.
 
-## 107 / 245 demonstrated
+## 108 / 245 demonstrated
 
 `[x]` proved · `[!]` failed, needs a fix · `[-]` blocked by a dependency · `[ ]` not run
 
@@ -954,7 +954,7 @@ Every line here is backed by an experiment that could have failed;
 
 ### Tier 2 — COMPONENT vs NULL — does it beat the baseline?
 
-- [!] **PL.00** What each perception encoder costs on THIS box  — A_dreamer-cnn_ms_per_frame=2.227733; A_dreamer-cnn_ms_per_frame_std=0.0431491
+- [x] **PL.00** What each perception encoder costs on THIS box
       - _asserts:_ Every candidate perception encoder is measured on one ARM core for ms/frame at its native resolution, and THE PURE FROM-SCRATCH ENCODER — the only arm the PLASTIC-ONLY decree admits — lets the full loop clear the 5.0 simulated-seconds-per-real-second throughput floor with vision live at 5 Hz.
       - _dies if:_ The pure encoder does not clear the floor with vision live. Then vision at 5 Hz is unaffordable on this box under the one architecture the decree permits, and the decree's OWN pre-registered RE-OPEN TRIGGER fires (`CHAMPIONS.md`: *'if a from-scratch encoder cannot hit the PL.00 throughput floor on this hardware ... the decision returns to the owner with that number attached'*). This spec is the only registered thing in the repo that can pull that trigger.
       - _then delete:_ Any perception encoder that cannot clear the throughput floor — INADMISSIBLE, not scored (LEARNING_CORE.md ADMISSION-2). This spec can eliminate an encoder in MINUTES, before any accuracy question is asked. Under the decree its edge is turned inward: the arm it can kill is the seat holder's own.

@@ -12121,3 +12121,41 @@ commit would be the mass-restamp `impl_sha_of`'s own docstring forbids. The
 walker also names its inherited evasions plus one of its own: a chain that
 leaves the traversal scope and re-enters (test → `cores.py` → test) is
 invisible, because endpoints are not recursed into.
+
+---
+
+## A cost that does not scale with what you asked for is the cost of something
+## you did not ask for (builder, 2026-09-07, from the PL.00 renderer bakeoff)
+
+`PL.00` attempt 1 measured Jack's eye at ~40 ms/frame, resolution-independent
+— 39.17 ms at 224x224 vs 40.04 ms at 64x64, "12.25x the pixels for the same
+money" — and correctly concluded the renderer, not the encoder, was the
+binding constraint on the 5.0 floor. The system then carried *"a live pixel
+eye is unaffordable on this box under any architecture"* for eight days, filed
+D17 to the owner on it, and blocked the constitution's only PLASTIC-ONLY
+falsifier behind it.
+
+The decomposition took one probe: the 40 ms was a **4096^2 shadow-map pass
+(~22.7 ms) plus 4x MSAA (~12.7 ms)** — two full-scene software-GL passes
+serving a 4,096-pixel frame. `update_scene`, the part everyone would optimise
+first, measured 0.008 ms. Nobody chose 4096 or 4x; they are MuJoCo's
+defaults, silently inherited into the measured world. Shadows kept at 512^2
+with MSAA off, the same loop reads 8.9 sim-s/real-s and `PL.00` PASSes with
+every gate green and no threshold moved.
+
+**The generalisable form, in two halves. (1) An inherited default is a design
+decision nobody made** — the measured world includes every knob left at
+factory value, and a feasibility verdict inherits that configuration as
+silently as a certificate inherits an undeclared import. **(2) The
+scale-invariance was itself the diagnostic, sitting unread in the row.**
+Attempt 1 recorded the 12.25x observation and used it only to rule out
+cropping. Read rightly, a price that does not move when the output shrinks
+3,136-fold is not the price of the output — it is a fixed overhead, and fixed
+overheads decompose into passes, and passes have off switches. The same
+signature (cost flat under a 10x input change) should trigger the same move
+anywhere: decompose before escalating the substrate.
+
+Ask of any infeasibility measurement: *which configuration was this measured
+under, who chose each value, and does the cost scale with the thing the claim
+is about?* Here the honest answers were "the defaults", "nobody", and "no" —
+and the verdict flipped without weakening anything.

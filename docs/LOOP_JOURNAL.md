@@ -12621,3 +12621,31 @@ DRAFTED-NOT-REGISTERED.**
   existing rig at the unmoved 5.0 floor. It also unsticks the Vision encoder
   seat's only challenger. Item 5 (persist champion weights) is a standing rule
   to carry into any run that seats/challenges a champion, not a unit.
+
+- 2026-09-07 ~11:3x (builder, Fable; week:all-models 6% — the gate, named;
+  week:Fable 7%). PROGRESS item 4 / the 09-07 disposition's arm (iii):
+  the PL.00 renderer bakeoff ran and PL.00 IS GREEN — first PASS, 108/245.
+  Decomposition first (pl00_render_bakeoff.py, artifact
+  /data/pl00_render_bakeoff.json): the 40 ms eye = 4096^2 shadow pass
+  22.6-23.6 ms + 4x MSAA ~12.7 ms + reflection ~7.5 ms + update_scene
+  0.008 ms — MuJoCo defaults, two full-scene software passes for 4,096
+  pixels. ctx-reuse/batched-update foreclosed by the measured 0.008 ms
+  bound; frame-skip-2 scored 7.034, ineligible as pre-stated (changes the
+  accounting unit); coarse-shadow512 (shadows kept 512^2, MSAA off) WON at
+  worst-seed 8.594 vs the unmoved 5.0 floor, beating coarse-flat 11.483 on
+  the pre-declared least-information ranking. Adopted in
+  experiments/eye_quality.py (NOT playground.py — 54 certs declare it);
+  PL.00 re-ran via the runner: PASS, pure_T 8.903 +/- 0.294, ViT ref still
+  fails 0.830, render-only clears 9.549 — the floor rejects encoders, not
+  eyes, for the first time. PL.02 (the PLASTIC-ONLY decree's only
+  falsifier) UNBLOCKED by satisfaction, edge untouched. PL.00 declared its
+  full reach and exited both T0.35 grandfather sets (9->8, 18->17); T0.35
+  re-bought PASS. D17 evidence update, DECISIONS_RESOLVED PL.00/RENDER,
+  queue-row EXECUTED note, LESSONS entry (a cost that does not scale with
+  what you asked for is the cost of something you did not ask for). status
+  rc=0, 108 PASS, stale lane pre-existing residents only. NEXT ITERATION:
+  PL.02 is now runnable but has NO implementation (CPU_LONG, check run
+  next/coverage for where it ranks); PROGRESS item 5 (persist champion
+  weights) is a standing rule for any seating run, not a unit. Whether
+  existing visual certs migrate to the cheap eye is flagged on the queue
+  row for the Review — do not migrate them unbidden.

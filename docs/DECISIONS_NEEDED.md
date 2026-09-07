@@ -3773,6 +3773,23 @@ DECIDE: D17
 decreed and the ledger's history makes it reversible. Filed with a deadline
 only because `SYSTEM.md` forbids an escalation without one.
 
+**EVIDENCE UPDATE 2026-09-07 (builder) — the default's ordered follow-up ran
+on its decide_by date and the trigger's premise is now FALSE.** The renderer
+bakeoff the default named as builder work is done
+(`experiments/tests/pl00_render_bakeoff.py`, DECISIONS_RESOLVED `PL.00/RENDER`):
+the 40 ms eye was a 4096^2 shadow-map pass plus 4x MSAA — MuJoCo defaults, two
+full-scene software passes for a 4,096-pixel frame — and with shadows kept at
+512^2 and MSAA off (`experiments/eye_quality.py`) **PL.00 re-ran through the
+runner and PASSED**: the from-scratch encoder clears the floor with vision
+live at 5 Hz (pure_T 8.903 ± 0.294 vs 5.0; ViT reference still fails at
+0.830, so the floor still rejects — and now rejects encoders, since
+render-only clears at 9.549). No threshold moved, GOAL.md untouched, the
+decree unnarrowed — the default's own text, now with the trigger's number
+repaired underneath it. `PL.02`, the decree's falsifier, is unblocked by
+satisfaction of the edge, not by any edit to it. The one live design question
+the default named — rays or pixels for Jack's eye in W1 — remains open and is
+now a question about a 14 ms eye, not a 40 ms one.
+
 ---
 
 ## D14 — EVIDENCE UPDATE 2026-08-30 18:45 UTC (51st overseer audit). The default was armed on a day the builder produced nothing. Today it produced everything, on exactly the path the default would abort.

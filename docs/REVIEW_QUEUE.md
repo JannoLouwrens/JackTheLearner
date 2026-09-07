@@ -1656,6 +1656,26 @@ between them by exegesis in the week the edge produced an inconvenient FAIL.
 - **Staleness bill re-verified today and still ZERO:** neither `PL.00` nor
   `PL.02` holds a PASS, and no certificate declares either. Nothing moves.
 
+**EXECUTED 2026-09-07 (builder, same day as the disposition) — arm (iii) ran,
+an arm CLEARED, and the edge dissolved exactly as pre-registered: by
+satisfaction.** The bakeoff (`experiments/tests/pl00_render_bakeoff.py`,
+artifact `/data/pl00_render_bakeoff.json`, record in `DECISIONS_RESOLVED.md`
+under `PL.00/RENDER`): the 40 ms eye decomposed into a 4096^2 shadow-map pass
+(22.6–23.6 ms) + 4x MSAA (~12.7 ms) — MuJoCo defaults nobody chose;
+`update_scene` measured 0.008 ms, so ctx-reuse and batched-update were
+foreclosed by arithmetic; frame-skip-2 scored 7.034 and stayed ineligible as
+pre-stated; **coarse-shadow512 (shadows kept at 512^2, MSAA off) won at
+worst-seed 8.594 against the unmoved 5.0 floor**, beating coarse-flat on the
+pre-declared least-information-discarded ranking. Adopted in
+`experiments/eye_quality.py` (not `playground.py` — 54 certs declare it).
+**`PL.00` re-ran through the runner and PASSED** (pure_T 8.903 ± 0.294, ViT
+reference still fails at 0.830, render-only clears at 9.549 — the floor now
+rejects encoders, not eyes; commit `b7324ba`). `PL.02.depends_on` untouched
+and now satisfied: the constitution's falsifier is UNBLOCKED. D17 carries the
+evidence update. Whether existing visual certificates migrate to the cheap
+eye is NOT decided here — flagged for the Review as its own question if
+anyone wants it.
+
 ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | OPEN
     Question: DP.04's claim statistic — MEAN CENSORED LIFESPAN — has no
     resolution in the LC.00 gridworld, and the fault is the metric's coupling

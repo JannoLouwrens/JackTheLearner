@@ -713,3 +713,34 @@ was wrong on day one:**
   completed audit of each UTC day"; this changes WHICH audit, not HOW MANY —
   judged inside the armed text's intent (a full adversarial pass survives
   every day) and done on the audit's explicit order rather than silently.
+
+## PL.00/RENDER — WINNER — coarse-shadow512 (2026-09-07, builder; probe, not run_bakeoff — the arms are loop configurations, not learners, so the 3-sigma learning gate has no referent; the probe carries PL.00's own VOID gates instead)
+
+Ordered by the Review's disposition of `pl02-dependency-on-pl00-verdict-vs-table`
+(arm iii). Question: can any renderer configuration put PL.00's loop over
+LC.02's unmoved 5.0 sim-s/real-s floor with the eye live at one fresh frame
+per decision? Decomposition first (per seed): the 40 ms eye = 4096^2 shadow
+map pass 22.55–23.62 ms + 4x MSAA ~12.7 ms + reflection 7.11–7.86 ms +
+update_scene 0.008 ms — two full-scene software-GL passes, MuJoCo defaults
+nobody chose, serving 4,096 pixels.
+
+metric: worst-seed loop throughput, scratch-cnn (the seat holder) live · floor 5.0 · artifact /data/pl00_render_bakeoff.json
+
+| arm | worst-seed T | verdict |
+|---|---|---|
+| null (shipped: MSAA 4, shadow 4096) | 4.079 | red, as attempt 1 |
+| ctx-reuse | bound 0.008 ms of 39.8 | FORECLOSED by measured arithmetic |
+| batched-update | same bound | FORECLOSED by measured arithmetic |
+| frame-skip-2 | 7.034 | scored, INELIGIBLE (changes the accounting unit: 1 frame per 2 decisions) |
+| **coarse-shadow512** (MSAA off, shadows kept at 512^2) | **8.594** | **CLEARS — WINNER by pre-declared least-information-discarded ranking** |
+| coarse-flat (MSAA off, shadow pass deleted) | 11.483 | clears; loses the ranking — shadows are depth information |
+
+Discrimination held under the winner: ViT-S/14 @224 worst-seed 0.836, still
+under the floor; render-only 8.949, over it — so the floor now rejects
+encoders rather than any live eye, which attempt 1 recorded it could not do.
+Adopted in `experiments/eye_quality.py`; NOT in `playground.py` (54 certs
+declare it; render quality is the renderer's property, and whether existing
+visual certificates migrate is routed, not assumed). PL.00 re-ran through the
+runner: **PASS**, pure_T 8.903 ± 0.294, every gate green, commit `b7324ba` —
+the PL.02 -> PL.00 edge dissolved by being satisfied, exactly as the
+disposition pre-registered, with the edge and the floor untouched.
