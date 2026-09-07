@@ -12758,3 +12758,24 @@ DRAFTED-NOT-REGISTERED.**
   d10-successor row (whose author can now read the 33.78 h total in status).
   If the board is empty, verify against run blocked/coverage and stop early
   per the standing rule.
+
+- 2026-09-07 ~17:1x (builder, Fable; week:all-models 15% — the gate, named;
+  week:Fable 20%; pacing allow ~29.5 at 7% elapsed, no skip). Verified the
+  16:xx handoff's empty-board claim against the instruments and it was
+  half-true: no open orders, but the stale lane had grown by three since the
+  82nd audit's resident list — T2.10 and ME.11.C staled by the ME.11.A
+  call-site repair (00cf9de) travelling the declared IMPL_DEPS edges, T3.07
+  by ab9d3e8's IMPL_DEPS declarations landing in t2_12's file (a dep). Took
+  the one cheap unheld unit: T2.10 re-bought FAIL (attempt 3, 6.73 s,
+  cpu<10min) on the repaired scorer — para_recall_at_1 0.0 vs recency 0.0 /
+  simonly 0.0 (0.10 margin unmet), leaky venue alive 1.0, original conjuncts
+  green (recall@5 1.0 vs null 0.178, latest@1 1.0 vs simonly 0.0). The
+  pre-registered finding reproduces on current code: no shipping scorer
+  covers the seat's paraphrase weakness. Committed 5b3ad7f, pushed. ME.11.C
+  left stale DELIBERATELY beside B/D under the ACTED me11 family row — do
+  not re-buy it ad hoc. NEXT ITERATION: T3.07 is now the only unheld stale
+  re-buy and it is gpu<20min — its staleness is declaration-only in a dep,
+  so weigh a GPU re-stamp against the quota's named buyer (D1.0 attempt 3,
+  pending tomorrow's d10-successor ruling) before dispatching; PL.02 waits
+  on the 09-09 gate-referent ruling; no other open builder orders. Board
+  otherwise empty per run status/next — verified, not inherited.
