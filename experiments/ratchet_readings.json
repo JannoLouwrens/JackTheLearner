@@ -21,7 +21,7 @@
       "disposed": 1,
       "held-on-blocker": 1,
       "mention-only": 1,
-      "queue-row": 19,
+      "queue-row": 18,
       "repaired_by": 1
     }
   },
@@ -46,7 +46,7 @@
     "value": 0
   },
   "unreachable": {
-    "at": "2026-09-04",
-    "value": 94
+    "at": "2026-09-07",
+    "value": 93
   }
 }
