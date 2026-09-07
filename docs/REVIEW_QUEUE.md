@@ -1121,6 +1121,26 @@ ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-
         design the Sunday sitting owes; a daily run can carry it.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated.)
+    DUE: 2026-09-11 | RE-DATED 2026-09-07 (Review, DAILY) — **second slip, and
+        I am naming it as one rather than dressing it as sequencing.** The
+        first re-arm (09-06 -> 09-07) was correct and was about venue coupling.
+        This one is not: it is capacity. Four rows came due today against a
+        desk whose measured throughput is ~1 disposal per cycle and whose drain
+        reads UNBOUNDED (41 live, +34 arrivals against 2 disposals over the
+        trailing week). I disposed three today — `t027` closed on `D16`,
+        `pl02` ruled, and `me1-similarity-floor` pulled forward six days
+        because it owns a FAIL this desk caused — and this row is the fourth.
+        **The reason it is the one that waits:** its question 1 (what
+        independent control certifies zero drift when a converged phase A moves
+        an unfrozen trunk no more than a frozen one) is a genuine control
+        design that needs the frozen-vs-plastic evidence re-read, not a pick
+        among stated arms; question 2 asks whether +0.0299 at ~1.7σ is the
+        ceiling of the question or of the substrate, and answering that from
+        the two pilots alone would be exactly the kind of reading-off this desk
+        refuses elsewhere. Dated onto 09-11, which carried one live row, rather
+        than onto 09-13's pile of ten. **Nothing about `T3.10` moves in the
+        meantime: it stays PARKED, the one-diagnostic cap stays SPENT, no third
+        recipe, and the 0.15 `knowledge_margin_min` bar does not move.**
 
 **Routed here by the spec's own pre-registered fork (ii), not by an argument.**
 The one-diagnostic cap (SM.02/UB.10 precedent) is SPENT: no third recipe was
@@ -1185,6 +1205,26 @@ ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pi
         does not need the Sunday FULL sitting and should not compete with it.
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated.)
+    DUE: 2026-09-12 | RE-DATED 2026-09-07 (Review, DAILY) — **second slip,
+        named as capacity and not as sequencing.** Same arithmetic as `t310`
+        above: four dated rows landed on one DAILY against ~1 disposal per
+        cycle; three were disposed and this is the fourth. **Why this one and
+        not another:** the row's own text says the author must not pick the arm
+        and that arm 3 (hold out by BEARING SECTOR) *"is the biggest change to
+        the pre-registered claim, so it is the one I am least entitled to make
+        alone"* — that is a correct instinct and it means the pick needs the
+        odour-field arithmetic re-derived, not a preference stated. It also has
+        a second fault (`vis_open` 0.1167 against a 0.60 floor) that the row
+        itself says may not be downstream of the first, and picking F1's arm
+        without an answer for F2 would order a run that VOIDs on the alive
+        proof exactly as the pilot did. **Nothing moves meanwhile:**
+        `_GATES_FROZEN` stays False, `run()` keeps refusing, no seeds are
+        spent, and `MIN_SEP_M` / `VIS_OPEN_MIN` do not move in either
+        direction. Dated onto 09-12 (one live row) rather than 09-13 (ten).
+        **The cost of the wait, stated:** `SM.02` is PARKED with `SM.03` as its
+        stated revival path, so this row is one of the three
+        `PARK-ON-AN-UNREACHABLE-RELEASE` pairs `coverage` prints, and smell
+        stays a commitment with a spec and no measurement for five more days.
 
 **Status: OPEN. Gates provisional, `run()` still refuses, nothing dispatched.**
 
