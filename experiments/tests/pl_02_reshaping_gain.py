@@ -1,0 +1,608 @@
+"""PL.02 — The RESHAPING test: does another sense change what an encoder computes?
+
+THE CLAIM. A vision encoder trained JOINTLY with audio by cross-modal masked
+prediction outperforms an A-only encoder of matched capacity WHEN BOTH ARE
+EVALUATED ON VISION ALONE. The reshaping gain
+
+    R = perf(M_AB | A only) - perf(U_A)
+
+is positive, paired by seed, bootstrap CI excluding zero. This is the M3L
+signature (arXiv:2311.00924) made into a metric, and since the PLASTIC-ONLY
+decree (2026-08-09) it measures what the plastic path BUYS — it is the
+decree's sole registered falsifier. A null R does not restore freezing (the
+owner decreed the ENDS); it removes the arithmetic argument that has been
+carried as if it were a measurement.
+
+THE MODALITY PAIR, and why it is this one. A = the playground eye — PG.6's
+certified protocol (object radius recoverable at R^2 >= 0.80 from raw pixels,
+occlusion-rejected sampling, the canary/GL discipline), rendered at 64 px
+under the ADOPTED eye quality (`experiments/eye_quality.py`, the PL.00
+renderer bakeoff's winner — new visual work opts in; existing certificates
+were not migrated). B = contact audio from `ContactAudio.py`'s modal family:
+a struck object rings at f0 = clip(180 / char_size, 80, 4000) Hz
+(`ContactAudioSynth.fundamental`), so over the probe band r in [0.06, 0.18] m
+the fundamental spans 1000-3000 Hz and audio is PHYSICALLY monotone in the
+attribute the probe reads. Stereo pan carries bearing, 1/dist carries range.
+That is the teaching channel: sound knows the radius; does hearing it during
+training change what the eye's encoder computes about radius afterwards?
+
+perf(.) IS PRE-REGISTERED AS: ridge-probe (l2 = 1.0, PG.6's operating point)
+R^2 for object RADIUS from the encoder's 64-d features, on held-out episodes
+never seen in pretraining, VISION ALONE at test (the A-encoder never takes
+audio as input in any arm — fusion lives in the decoder heads, so "evaluated
+on A alone" is structural, not a masking convention). Bearing gain is
+reported as a diagnostic and is NOT scored.
+
+THE ARMS. One A-encoder architecture, one per-seed init shared by every arm
+(same torch seed -> byte-identical initial tensors), matched optimiser steps,
+matched batch:
+
+    U_A       masked autoencoding on frames only. The A-only baseline.
+    PLASTIC   joint cross-modal masked prediction: masked frame + (dropped
+              half the time) audio; reconstruct masked pixels AND predict the
+              audio features from the joint latent on audio-dropped rows.
+    FROZEN    the registered null: M_AB whose A-encoder IS U_A's trained
+              tensor, frozen — heads and audio encoder train, the A-features
+              cannot move, so R = 0 EXACTLY, by construction. Scored and
+              ineligible, never excluded. The harness ASSERTS the arithmetic
+              (max |feature diff| < FEAT_TOL, |R_frozen| < FROZEN_TOL) and
+              returns VOID if its own pairing is broken.
+    SHUFFLED  the declared control: identical to PLASTIC but the audio drawn
+              from a DIFFERENT episode (a fixed derangement of the pretext
+              set) — correspondence destroyed, marginals and temporal
+              statistics preserved. R must collapse to ~0. If shuffled-B
+              reshapes A just as well, the gain is capacity or
+              regularisation, not binding, and the run is VOID.
+
+VERDICT ARITHMETIC, pre-registered (house worst-seed idiom):
+    claim   PASS iff, on EVERY seed, the paired bootstrap 95% CI of
+            R_plastic (resample the test episodes, recompute both probes'
+            R^2 on the SAME resample, difference) lies above zero.
+    control VOID (any seed) iff shuf_R's CI excludes zero from above AND
+            shuf_R >= CONTROL_COLLAPSE_FRAC * plastic_R — "reshapes just as
+            well" operationalised at half the plastic gain, chosen
+            conservative in the refusing direction: a control that VOIDs a
+            true claim costs a re-design; a control that waves through a
+            capacity artifact costs a false certificate.
+    null    VOID iff the frozen arm's R is not exactly zero (see FROZEN).
+
+RIG GATES, each VOID (an invalid run is not evidence): the GL canary must
+not move (frame-sum, PG.6's discipline); every trained arm's pretext loss
+must fall below LEARN_DROP x its initial value (an arm that never learned
+tests nothing); the audio channel itself must know the radius (ridge from
+audio features -> radius R^2 >= AUDIO_TEACH_R2_MIN on the held-out set —
+if the teacher is ignorant the premise is dead, not refuted); the probe
+instrument must be alive (shuffled-label probe R^2 <= SHUF_LABEL_R2_MAX);
+feature extraction must be deterministic (encode twice, identical); AND
+the eye itself must still carry the attribute (82nd audit B4, 2026-09-07):
+U_A's absolute radius R^2 >= EYE_RADIUS_R2_MIN, PG.6's own 0.80 bar, on
+the coarse eye that PG.6's certificate predates. R is a difference, so a
+blinded eye collapses both arms together and a null R would be
+indistinguishable from a dead channel — on the PLASTIC-ONLY decree's sole
+registered falsifier, that ambiguity must VOID, not FAIL. This gate reads
+the whole vision pathway (coarse render -> U_A encoder -> ridge), so it is
+strictly harder than PG.6's raw-pixel probe; if it fires, the artifact
+distinguishes eye-blindness from encoder loss (the pixels are on disk).
+
+OPERATING POINT, fixed a priori and validated for RIG ALIVENESS ONLY on
+seed 90 (disjoint from the registered seeds 0/1/2) before the registered
+run — not tuned to the verdict, which has no free threshold to tune (the
+claim bar is "CI excludes zero", from the registry):
+    64 px grey frames; N_PRETEXT=1500; probe split 1000/600; 1200 Adam
+    steps at 1e-3, batch 64; patch masking 8x8 patches at 35%; audio
+    dropped on 50% of rows; audio features: 12 log band energies
+    (800-3600 Hz, log-spaced) + log level + pan, z-scored on pretext
+    stats.
+    SMOKE RECORD (seed 90, full size, ran 2026-09-07T13:09:58Z detached,
+    /data/pl02_smoke_seed90.log, 879 s billed): check -> VOID. THE RIG IS
+    NOT ALIVE AT THIS OPERATING POINT; the registered run MUST NOT launch
+    until a smoke passes rig-aliveness. Two gates fired, honestly:
+      - r2_ua -0.0039 vs EYE_RADIUS_R2_MIN 0.80 (the 82nd-audit B4 gate,
+        firing on its first exercise). r2_frozen == r2_ua exactly and
+        r2_plastic -0.0040 — all three probes equally dead — while
+        loss_drop_ua 0.0083 says reconstruction was aced. The encoder
+        solves the pretext without encoding the object.
+      - learn_ok 0: the plastic arm's combined loss ROSE (ratio 1.104).
+    Gates that read clean: audio teacher 0.9997, canary, determinism,
+    shuffled-label probe 6e-5, frozen arithmetic exact.
+
+WEIGHTS ARE PERSISTED — the 2026-09-07 standing rule (PROGRESS item 5):
+PL.02 is an arena of the Vision-encoder seat (`experiments/champions.py`),
+so every trained A-encoder's state_dict is written to
+`experiments/artifacts/pl02_encoders_seed{n}.pt` (gitignored, on-box) and
+the row records the path. Any future question about these encoders costs a
+file read, not a retrain.
+
+REUSE, declared: PG.6's geometry, occlusion-rejected sampler, ridge and
+canary discipline are imported from `pg_6_playground_eyes.py` (declared in
+IMPL_DEPS — the sibling-helper edge the 81st audit ordered tracked; the
+transitive walker sees it as of `ded4219`). The eye here applies the
+adopted coarse quality, which PG.6's certificate predates, so PG.6's _Eye
+is not reused directly — the world contract (EYE_POS/EYE_XYAXES/EYE_FOVY)
+is identical and comes from `playground.py` either way.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import math
+import os
+from pathlib import Path
+
+import numpy as np
+
+# ensure_gl() must precede the mujoco import (experiments/render.py: GLX
+# under Xvfb; no libEGL/libOSMesa on this box).
+from ..render import ensure_gl
+
+ensure_gl()
+
+import mujoco  # noqa: E402  (must follow ensure_gl)
+
+import playground as pg  # noqa: E402
+
+from ContactAudio import (MODE_GAINS, MODE_RATIOS, SAMPLE_RATE, TAU0,  # noqa: E402
+                          VOICE_SECONDS, ContactAudioSynth)
+from ..eye_quality import apply_eye_quality  # noqa: E402
+from ..protocol import Ledger, Status, run_spec  # noqa: E402
+from ..registry import BY_ID  # noqa: E402
+from . import pg_6_playground_eyes as pg6  # noqa: E402
+from .pg_6_playground_eyes import (IN_FOV_MAX, _r2, _Ridge,  # noqa: E402
+                                   _sample_unoccluded)
+
+SPEC_ID = "PL.02"
+IMPL_DEPS = ["playground.py", "ContactAudio.py",
+             "experiments/eye_quality.py",
+             "experiments/tests/pg_6_playground_eyes.py"]
+
+RES = 64
+N_PRETEXT = 1500
+N_PROBE_TR, N_PROBE_TE = 1000, 600
+STEPS, BATCH, LR = 1200, 64, 1e-3
+Z_A, Z_B = 64, 32
+PATCH, MASK_FRAC = 8, 0.35
+AUDIO_DROP = 0.5
+L2 = 1.0                       # PG.6's ridge operating point, unchanged
+N_BOOT = 2000
+CI_LO, CI_HI = 2.5, 97.5
+
+LEARN_DROP = 0.90              # final pretext loss must be < this x initial
+AUDIO_TEACH_R2_MIN = 0.50      # the teaching channel must know the radius
+EYE_RADIUS_R2_MIN = 0.80       # PG.6's bar: the eye must carry the radius
+SHUF_LABEL_R2_MAX = 0.10       # a probe that fits shuffled labels leaks
+CONTROL_COLLAPSE_FRAC = 0.50   # "reshapes just as well" = half the gain
+FROZEN_TOL = 1e-9
+FEAT_TOL = 1e-5
+
+N_BANDS = 12
+BAND_LO_HZ, BAND_HI_HZ = 800.0, 3600.0
+
+ART_DIR = Path(__file__).resolve().parents[1] / "artifacts"
+
+
+def _torch():
+    import torch
+    torch.set_num_threads(2)   # four shared cores, paying tenants beside us
+    return torch
+
+
+# ── the eye, at the adopted quality ──────────────────────────────────────
+_EYES: dict = {}
+
+
+class _CoarseEye(pg6._Eye):
+    """PG.6's eye with the PL.00-adopted render quality applied.
+
+    The construction lines are repeated rather than inherited because
+    `apply_eye_quality` must run BEFORE `mujoco.Renderer` allocates its
+    offscreen framebuffers, and pg6._Eye does both inside one __init__.
+    Everything behavioural (place/frame/truth/unoccluded/canary) is
+    inherited, so the two eyes cannot drift in what they measure — only in
+    what the render costs and which GL passes it pays for.
+    """
+
+    def __init__(self, seed: int, res: int = RES):
+        params = pg.PlaygroundParams(seed=seed, n_objects=0)
+        self.model, self.data, _ = pg.make_playground(
+            params, with_water=False,
+            probe_objects=(("probe0", 0.0, 0.0, 0.10),))
+        apply_eye_quality(self.model)          # the one divergence from pg6
+        self.gid = self.model.geom("probe0").id
+        self.bid = self.model.body("probe0").id
+        self.qadr = self.model.jnt_qposadr[self.model.body_jntadr[self.bid]]
+        self.r = mujoco.Renderer(self.model, height=res, width=res)
+        self._canary = None
+        self._canary = self.canary()
+
+
+def get_eye(seed: int) -> _CoarseEye:
+    # Held for the process lifetime: a GC'd Renderer poisons the shared X
+    # display and the NEXT renderer returns plausible corrupt frames (PG.6).
+    if seed not in _EYES:
+        _EYES[seed] = _CoarseEye(seed)
+    return _EYES[seed]
+
+
+# ── the audio channel ────────────────────────────────────────────────────
+def _f0_of_radius(eye: _CoarseEye, radius: float) -> float:
+    """The fundamental ContactAudio would assign this geom at this radius.
+
+    Read THROUGH ContactAudioSynth rather than re-deriving 180/r here, so if
+    the modal family's size->pitch law ever changes, this spec follows it
+    (ContactAudio.py is in IMPL_DEPS; a change stales this certificate)."""
+    eye.model.geom_size[eye.gid, 0] = radius
+    synth = ContactAudioSynth(eye.model)
+    return synth.fundamental(eye.gid)
+
+
+def _ring(f0: float) -> np.ndarray:
+    """Mono modal ring, ContactAudio's synthesis family (free-bar partials)."""
+    n = int(VOICE_SECONDS * SAMPLE_RATE)
+    t = np.arange(n) / SAMPLE_RATE
+    sig = np.zeros(n)
+    total = 0.0
+    for ratio, gain in zip(MODE_RATIOS, MODE_GAINS):
+        f = f0 * ratio
+        if f >= 0.45 * SAMPLE_RATE:
+            break
+        sig += gain * np.exp(-t / (TAU0 / ratio)) * np.sin(2 * math.pi * f * t)
+        total += gain
+    return sig / max(total, 1e-12)
+
+
+_BAND_EDGES = np.geomspace(BAND_LO_HZ, BAND_HI_HZ, N_BANDS + 1)
+
+
+def _audio_feats(eye: _CoarseEye, radius: float, bearing_deg: float,
+                 dist: float) -> np.ndarray:
+    """14-d: 12 log band energies + log level + pan. Deterministic physics."""
+    sig = _ring(_f0_of_radius(eye, radius))
+    p = math.sin(math.radians(bearing_deg))          # pan toward the right
+    gl_, gr_ = math.sqrt((1.0 - p) / 2.0), math.sqrt((1.0 + p) / 2.0)
+    g = 1.0 / max(dist, 0.1)
+    left, right = gl_ * g * sig, gr_ * g * sig
+    mid = 0.5 * (left + right)
+    spec = np.abs(np.fft.rfft(mid)) ** 2
+    freqs = np.fft.rfftfreq(len(mid), 1.0 / SAMPLE_RATE)
+    bands = np.empty(N_BANDS)
+    for i in range(N_BANDS):
+        m = (freqs >= _BAND_EDGES[i]) & (freqs < _BAND_EDGES[i + 1])
+        bands[i] = math.log(float(spec[m].sum()) + 1e-12)
+    el, er = float((left ** 2).sum()), float((right ** 2).sum())
+    level = math.log(el + er + 1e-12)
+    pan = (er - el) / max(er + el, 1e-12)
+    return np.concatenate([bands, [level, pan]]).astype(np.float32)
+
+
+# ── episodes ─────────────────────────────────────────────────────────────
+def _episodes(eye: _CoarseEye, rng: np.random.RandomState, n: int) -> dict:
+    frames = np.empty((n, RES, RES), dtype=np.float32)
+    radii = np.empty(n, dtype=np.float32)
+    bearings = np.empty(n, dtype=np.float32)
+    dists = np.empty(n, dtype=np.float32)
+    audio = np.empty((n, N_BANDS + 2), dtype=np.float32)
+    for i in range(n):
+        b, d, r, _ = _sample_unoccluded(eye, rng, 0.0, IN_FOV_MAX, signed=True)
+        frames[i] = eye.frame(b, d, r).mean(axis=2)  # grey
+        radii[i], bearings[i], dists[i] = r, b, d
+        audio[i] = _audio_feats(eye, r, b, d)
+    return {"frames": frames, "radius": radii, "bearing": bearings,
+            "dist": dists, "audio": audio}
+
+
+# ── models ───────────────────────────────────────────────────────────────
+def _build_models(torch, seed: int):
+    """One init per seed, shared by every arm: torch is reseeded to the same
+    value before each construction, so the arms' initial A-encoders are
+    byte-identical and R is paired by construction, not by hope."""
+    nn = torch.nn
+    torch.manual_seed(seed * 1009 + 7)
+
+    enc_a = nn.Sequential(
+        nn.Conv2d(1, 16, 4, 2, 1), nn.ReLU(),    # 32
+        nn.Conv2d(16, 32, 4, 2, 1), nn.ReLU(),   # 16
+        nn.Conv2d(32, 64, 4, 2, 1), nn.ReLU(),   # 8
+        nn.Conv2d(64, 64, 4, 2, 1), nn.ReLU(),   # 4
+        nn.Flatten(), nn.Linear(64 * 16, Z_A))
+    enc_b = nn.Sequential(nn.Linear(N_BANDS + 2, 64), nn.ReLU(),
+                          nn.Linear(64, Z_B))
+    dec = nn.Sequential(
+        nn.Linear(Z_A + Z_B, 64 * 16), nn.ReLU(), nn.Unflatten(1, (64, 4, 4)),
+        nn.ConvTranspose2d(64, 64, 4, 2, 1), nn.ReLU(),
+        nn.ConvTranspose2d(64, 32, 4, 2, 1), nn.ReLU(),
+        nn.ConvTranspose2d(32, 16, 4, 2, 1), nn.ReLU(),
+        nn.ConvTranspose2d(16, 1, 4, 2, 1))
+    aud_head = nn.Sequential(nn.Linear(Z_A + Z_B, 64), nn.ReLU(),
+                             nn.Linear(64, N_BANDS + 2))
+    return enc_a, enc_b, dec, aud_head
+
+
+def _mask_frames(torch, x, rng):
+    """Zero a fixed fraction of 8x8 patches; return (masked, patch mask)."""
+    b = x.shape[0]
+    g = RES // PATCH
+    keep = torch.from_numpy(
+        (rng.rand(b, g, g) >= MASK_FRAC).astype(np.float32))
+    m = keep.repeat_interleave(PATCH, 1).repeat_interleave(PATCH, 2)
+    return x * m.unsqueeze(1), (1.0 - m).unsqueeze(1)
+
+
+def _pretrain(torch, arm: str, data: dict, seed: int, models) -> dict:
+    """One arm's pretext run. Matched steps/batch/optimiser for every arm.
+
+    arm in {"ua", "plastic", "frozen", "shuffled"}. `models` are freshly
+    built with the shared per-seed init; for "frozen" the caller passes an
+    A-encoder already trained by the "ua" arm, and it is excluded from the
+    optimiser — the same frozen tensor, per the registered null."""
+    nn = torch.nn
+    enc_a, enc_b, dec, aud_head = models
+    frames = torch.from_numpy(data["frames"]).unsqueeze(1)
+    aud = data["audio"]
+    mu, sd = aud.mean(0), aud.std(0) + 1e-8
+    aud_z = torch.from_numpy((aud - mu) / sd)
+    n = frames.shape[0]
+
+    rng = np.random.RandomState(seed * 31 + {"ua": 0, "plastic": 1,
+                                             "frozen": 2, "shuffled": 3}[arm])
+    if arm == "shuffled":
+        # A fixed derangement: every row's audio comes from a DIFFERENT
+        # episode. Marginals preserved, correspondence destroyed.
+        perm = np.roll(rng.permutation(n), 1)
+        aud_z = aud_z[torch.from_numpy(perm)]
+
+    params = list(dec.parameters())
+    if arm != "ua":
+        params += list(enc_b.parameters()) + list(aud_head.parameters())
+    if arm != "frozen":
+        params = list(enc_a.parameters()) + params
+    opt = torch.optim.Adam(params, lr=LR)
+    torch.manual_seed(seed * 7919 + 11)
+
+    first_loss, last_loss = None, None
+    for step in range(STEPS):
+        idx = torch.from_numpy(rng.randint(0, n, BATCH))
+        x = frames[idx]
+        xm, hole = _mask_frames(torch, x, rng)
+        za = enc_a(xm)
+        if arm == "ua":
+            zb = torch.zeros(BATCH, Z_B)
+        else:
+            drop = torch.from_numpy(
+                (rng.rand(BATCH) < AUDIO_DROP).astype(np.float32)).unsqueeze(1)
+            zb = enc_b(aud_z[idx]) * (1.0 - drop)
+        z = torch.cat([za, zb], dim=1)
+        recon = dec(z)
+        loss = ((recon - x) ** 2 * hole).sum() / hole.sum().clamp(min=1.0)
+        if arm != "ua":
+            pred = aud_head(z)
+            # predict B only where B was withheld — cross-modal, not copy
+            w = drop
+            aud_loss = ((pred - aud_z[idx]) ** 2 * w).sum() / (
+                w.sum() * (N_BANDS + 2)).clamp(min=1.0)
+            loss = loss + aud_loss
+        opt.zero_grad()
+        loss.backward()
+        opt.step()
+        if step == 0:
+            first_loss = float(loss.detach())
+        last_loss = float(loss.detach())
+    return {"enc_a": enc_a, "first_loss": first_loss, "last_loss": last_loss,
+            "aud_mu": mu, "aud_sd": sd}
+
+
+def _features(torch, enc_a, frames: np.ndarray) -> np.ndarray:
+    with torch.no_grad():
+        x = torch.from_numpy(frames).unsqueeze(1)
+        out = []
+        for i in range(0, x.shape[0], 256):
+            out.append(enc_a(x[i:i + 256]).numpy())
+    return np.concatenate(out).astype(np.float64)
+
+
+def _probe_r2(Xtr, ytr, Xte, yte) -> tuple:
+    fit = _Ridge(Xtr, l2=L2)
+    pred = fit.predict(ytr, Xte)
+    return _r2(yte, pred), pred
+
+
+def _boot_ci(y, pred_a, pred_b, seed: int) -> tuple:
+    """Paired bootstrap over test episodes of r2(pred_a) - r2(pred_b)."""
+    rng = np.random.RandomState(seed * 613 + 29)
+    n = len(y)
+    diffs = np.empty(N_BOOT)
+    for k in range(N_BOOT):
+        idx = rng.randint(0, n, n)
+        diffs[k] = _r2(y[idx], pred_a[idx]) - _r2(y[idx], pred_b[idx])
+    return (float(np.percentile(diffs, CI_LO)),
+            float(np.percentile(diffs, CI_HI)))
+
+
+# ── the experiment ───────────────────────────────────────────────────────
+_CACHE: dict = {}
+
+
+def _fixture(seed: int) -> dict:
+    """Rendered episodes + the U_A/plastic training results, cached so the
+    declared control (_control) reuses the SAME data, init and baseline
+    rather than re-rolling them — the pairing is the measurement."""
+    if seed in _CACHE:
+        return _CACHE[seed]
+    torch = _torch()
+    eye = get_eye(seed)
+    canary0 = eye.canary()
+    rng = np.random.RandomState(seed * 271 + 3)
+    pretext = _episodes(eye, rng, N_PRETEXT)
+    probe_tr = _episodes(eye, rng, N_PROBE_TR)
+    probe_te = _episodes(eye, rng, N_PROBE_TE)
+    _CACHE[seed] = {"eye": eye, "canary0": canary0, "pretext": pretext,
+                    "probe_tr": probe_tr, "probe_te": probe_te}
+    return _CACHE[seed]
+
+
+def _arm_r2(torch, fx: dict, res: dict) -> tuple:
+    """(r2, test predictions) of one trained A-encoder on radius, A only."""
+    Xtr = _features(torch, res["enc_a"], fx["probe_tr"]["frames"])
+    Xte = _features(torch, res["enc_a"], fx["probe_te"]["frames"])
+    r2, pred = _probe_r2(Xtr, fx["probe_tr"]["radius"].astype(np.float64),
+                         Xte, fx["probe_te"]["radius"].astype(np.float64))
+    return r2, pred, Xte
+
+
+def _experiment(seed: int) -> dict:
+    try:
+        os.nice(19 - os.nice(0))
+    except OSError:
+        pass
+    torch = _torch()
+    fx = _fixture(seed)
+    yte = fx["probe_te"]["radius"].astype(np.float64)
+
+    ua = _pretrain(torch, "ua", fx["pretext"], seed,
+                   _build_models(torch, seed))
+    plastic = _pretrain(torch, "plastic", fx["pretext"], seed,
+                        _build_models(torch, seed))
+    # FROZEN: fresh heads from the shared init, but the A-encoder IS U_A's
+    # trained tensor — a deep copy, then excluded from the optimiser.
+    import copy
+    fr_models = _build_models(torch, seed)
+    fr_models = (copy.deepcopy(ua["enc_a"]),) + fr_models[1:]
+    for p in fr_models[0].parameters():
+        p.requires_grad_(False)
+    frozen = _pretrain(torch, "frozen", fx["pretext"], seed, fr_models)
+
+    r2_ua, pred_ua, Xte_ua = _arm_r2(torch, fx, ua)
+    r2_pl, pred_pl, _ = _arm_r2(torch, fx, plastic)
+    r2_fr, pred_fr, Xte_fr = _arm_r2(torch, fx, frozen)
+
+    R_pl = r2_pl - r2_ua
+    lo_pl, hi_pl = _boot_ci(yte, pred_pl, pred_ua, seed)
+    R_fr = r2_fr - r2_ua
+    feat_diff = float(np.abs(Xte_fr - Xte_ua).max())
+
+    # rig gates, measured
+    det = float(np.abs(_features(torch, ua["enc_a"],
+                                 fx["probe_te"]["frames"]) - Xte_ua).max())
+    aud_tr = fx["probe_tr"]["audio"].astype(np.float64)
+    aud_te = fx["probe_te"]["audio"].astype(np.float64)
+    r2_aud, _ = _probe_r2(aud_tr, fx["probe_tr"]["radius"].astype(np.float64),
+                          aud_te, yte)
+    sh = np.random.RandomState(seed * 97 + 1).permutation(len(yte))
+    r2_shuf_label, _ = _probe_r2(
+        Xte_ua, yte[sh], Xte_ua, yte)  # fit on shuffled labels, score on true
+    canary_ok = int(fx["eye"].canary() == fx["canary0"])
+    learn_ok = int(all(r["last_loss"] < LEARN_DROP * r["first_loss"]
+                       for r in (ua, plastic, frozen)))
+
+    # persist the trained A-encoders — the champion-arena standing rule
+    ART_DIR.mkdir(exist_ok=True)
+    art = ART_DIR / f"pl02_encoders_seed{seed}.pt"
+    torch.save({"ua": ua["enc_a"].state_dict(),
+                "plastic": plastic["enc_a"].state_dict(),
+                "spec": SPEC_ID, "seed": seed,
+                "note": "frozen arm's A-encoder == ua's, by construction"},
+               art)
+    art_sha = hashlib.sha256(art.read_bytes()).hexdigest()[:8]
+
+    frozen_exact = int(abs(R_fr) < FROZEN_TOL and feat_diff < FEAT_TOL)
+    claim_seed = int(lo_pl > 0.0)
+
+    # Cached for the declared control: same U_A baseline, same pairing.
+    fx["ua_res"], fx["pred_ua"] = ua, pred_ua
+    fx["r2_ua"], fx["plastic_R"] = r2_ua, R_pl
+
+    return {
+        "seed": seed,
+        "reshaping_gain_R": round(R_pl, 6),
+        "R_ci_lo": round(lo_pl, 6), "R_ci_hi": round(hi_pl, 6),
+        "r2_ua": round(r2_ua, 6), "r2_plastic": round(r2_pl, 6),
+        "r2_frozen": round(r2_fr, 6),
+        "frozen_R": R_fr, "frozen_feat_diff": feat_diff,
+        "frozen_exact_zero": frozen_exact,
+        "claim_ci_above_zero": claim_seed,
+        "audio_channel_r2": round(r2_aud, 6),
+        "shuffled_label_r2": round(r2_shuf_label, 6),
+        "canary_ok": canary_ok, "learn_ok": learn_ok,
+        "det_drift": det,
+        "loss_drop_ua": round(ua["last_loss"] / max(ua["first_loss"], 1e-12), 4),
+        "loss_drop_plastic": round(
+            plastic["last_loss"] / max(plastic["first_loss"], 1e-12), 4),
+        "weights_artifact": str(art), "weights_sha8": art_sha,
+    }
+
+
+def _control(seed: int) -> dict:
+    """SHUFFLED-PARTNER, the declared control. Same data, same init, same
+    steps as the plastic arm — only the correspondence is destroyed. Its R
+    must collapse to ~0; a shuffled partner that reshapes as well as the
+    real one means the gain was capacity, and _check returns VOID."""
+    torch = _torch()
+    fx = _fixture(seed)
+    yte = fx["probe_te"]["radius"].astype(np.float64)
+    shuf = _pretrain(torch, "shuffled", fx["pretext"], seed,
+                     _build_models(torch, seed))
+    # The U_A baseline comes from the experiment's cache — the SAME trained
+    # tensor and the SAME predictions, so the control's R is paired against
+    # the identical baseline the claim's R was. run_spec runs experiments
+    # before controls in one process; a missing cache is a harness fault and
+    # should error loudly, not silently re-derive.
+    r2_ua, pred_ua = fx["r2_ua"], fx["pred_ua"]
+    r2_sh, pred_sh, _ = _arm_r2(torch, fx, shuf)
+    R_sh = r2_sh - r2_ua
+    lo, hi = _boot_ci(yte, pred_sh, pred_ua, seed + 500)
+    # "reshapes just as well", per-seed, against the SAME seed's plastic R
+    reshapes_too = int(lo > 0.0 and R_sh >= CONTROL_COLLAPSE_FRAC
+                       * max(fx["plastic_R"], 1e-12))
+    return {"seed": seed, "shuffled_R": round(R_sh, 6),
+            "shuffled_ci_lo": round(lo, 6), "shuffled_ci_hi": round(hi, 6),
+            "r2_ua_ctrl": round(r2_ua, 6), "r2_shuffled": round(r2_sh, 6),
+            "control_reshapes_too": reshapes_too,
+            "shuffled_learn_ok": int(
+                shuf["last_loss"] < LEARN_DROP * shuf["first_loss"])}
+
+
+def _check(m: dict, c: dict):
+    # ── RIG GATES: VOID, not FAIL — an invalid run is not evidence.
+    if m["canary_ok"] < 1.0 or m["learn_ok"] < 1.0:
+        return Status.VOID
+    if c.get("shuffled_learn_ok", 1.0) < 1.0:
+        return Status.VOID
+    if m["det_drift"] > 0.0:
+        return Status.VOID
+    if m["audio_channel_r2"] < AUDIO_TEACH_R2_MIN:
+        return Status.VOID          # the teacher is ignorant; premise dead
+    if m["r2_ua"] < EYE_RADIUS_R2_MIN:
+        return Status.VOID          # the eye is blind; R would be a
+        # difference of two dead probes, not a reshaping measurement
+        # (82nd audit B4 — the coarse eye postdates PG.6's certificate)
+    if m["shuffled_label_r2"] > SHUF_LABEL_R2_MAX:
+        return Status.VOID          # the probe instrument leaks
+    # the analytic null must BE the arithmetic it claims to be
+    if m["frozen_exact_zero"] < 1.0:
+        return Status.VOID
+    # ── THE DECLARED CONTROL: shuffled-B must not reshape "just as well".
+    # `control_reshapes_too` is a per-seed indicator paired against the same
+    # seed's plastic R; aggregation is mean-across-seeds, so ANY offending
+    # seed pulls the mean above 0 and this fires — conservative in the
+    # refusing direction, per the docstring.
+    if c["control_reshapes_too"] > 0.0:
+        return Status.VOID
+    # ── THE CLAIM: every seed's paired bootstrap CI above zero.
+    return bool(m["claim_ci_above_zero"] >= 1.0)
+
+
+def run(ledger: Ledger | None = None):
+    return run_spec(BY_ID[SPEC_ID], _experiment, _check,
+                    control_fn=_control, ledger=ledger)
+
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "smoke":
+        # Rig-aliveness pass on seed 90 (disjoint from registered seeds).
+        m = _experiment(90)
+        c = _control(90)
+        print({k: m[k] for k in sorted(m) if not k.startswith("weights")})
+        print({k: c[k] for k in sorted(c)})
+        print("check ->", _check(m, c))
+    else:
+        print(run())
