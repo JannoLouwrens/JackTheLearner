@@ -41,6 +41,39 @@ abstain on >= MIN_ABSTENTION of evaluated cues; a cue is excluded from the
 denominator when some stored event carries all three words (a hit would be
 retrieval, not confabulation), and the excluded count is recorded with a floor
 on the denominator. Nothing above moved.
+
+REDESIGNED 2026-09-07 — THE CONTRACT SPLIT (ordered by the Review's DAILY
+disposition of `me1-similarity-floor-never-abstains`, verdict A5 of
+me1_floor_probe.py; a harness redesign, not a module or threshold change).
+Attempt 4 FAILed because this harness `" ".join`-ed the speaker and all four
+candidates into one cue: five known, mutually-exclusive words, so best-event
+coverage is capped at 2/5 = 0.4 and the module's 0.95 coverage floor abstains
+on EVERY question (raw_tokens 40.0 -> 0.0, raw_acc 0.625 -> 0.2917; the
+equal-tokens gate refused the starved null). The probe's separability
+measurement proved this is not a floor value to tune: abstain-required cues
+score bestcov 0.667 exactly and answer-required cues 0.400 exactly on the one
+statistic the scorer sees (gap -0.267, overlap 1.000, all three seeds), so no
+monotone single-cue floor can serve both populations. The intent lives at the
+call site, so the call site declares it:
+
+  BOTH ARMS get the identical declared shape (matched arms or no redesign —
+  the claim is that reflection beats raw retrieval; handing the declared form
+  to one arm would buy the claim with an asymmetry). Each candidate becomes
+  its own conjunctive sub-cue (speaker + candidate) through the module's OWN
+  unchanged recall — same 0.95 coverage floor, abstention preserved per
+  sub-cue — and the results are union-ranked by the module's own key.
+
+  raw_answer_rate >= MIN_RAW_ANSWER is a NEW required conjunct, strictly
+  harder (A5 measured 1.000 on every seed). The equal-tokens gate caught
+  attempt 4 only because starvation was TOTAL; a half-starved raw arm would
+  have passed that gate AND inflated aggregation_qa_gain — arrived looking
+  like a BETTER result for the claim. The answer rate asserts the null was
+  fed, not merely token-matched.
+
+EpisodicMemory.py is untouched; the 0.95 coverage floor does not move; no
+ME.3 threshold moves in either direction; zero certificates stale. A5's
+disj_acc 0.552-0.688 against A0's pre-repair 0.625 is a RESTORATION of the
+raw null, not an improvement of it.
 """
 from __future__ import annotations
 
@@ -69,6 +102,10 @@ MIN_CONTROL_DROP = 0.30       # reflect minus wrong-agent accuracy
 N_DISTRACTOR = 60             # candidate absent combinations, fixed up front
 MIN_DISTRACTOR_EVAL = 30      # aliveness: below this the control has gone quiet
 MIN_ABSTENTION = 0.95
+# Added 2026-09-07 (contract split; strictly harder — see docstring). The
+# starved-null failure mode must announce itself even when partial: the raw
+# arm must surface evidence on essentially every question.
+MIN_RAW_ANSWER = 0.95
 
 OBJECTS = ["kettle", "ladder", "apple", "lantern", "hammer", "compass",
            "bucket", "rope", "mirror", "whistle", "anchor", "basket", "drum",
@@ -174,20 +211,57 @@ def _read(lines, candidates, rng):
     return rng.choice([c for c in candidates if score[c] == best])
 
 
+def _mem_alternatives(mem, speaker, cands, now, top_k=32):
+    """The raw arm's declared-alternatives contract (A5): each candidate is
+    its own conjunctive sub-cue through the module's own unchanged recall —
+    same 0.95 coverage floor, abstention preserved per sub-cue (a never-lived
+    speaker/candidate pairing still clears nothing) — union-ranked by the
+    module's own score."""
+    by_eid = {}
+    for cand in cands:
+        for r in mem.recall(f"{speaker} {cand}", top_k=top_k, now=now):
+            eid = r.event.eid
+            if eid not in by_eid or r.score > by_eid[eid].score:
+                by_eid[eid] = r
+    ranked = sorted(by_eid.values(), key=lambda r: r.score, reverse=True)
+    return [r.event.text for r in ranked[:top_k]]
+
+
+def _refl_alternatives(refl, speaker, cands, top_k=32):
+    """The identical declared shape for the reflect arm (matched arms or no
+    redesign). Reflections.recall returns beliefs ranked but unscored, so the
+    union re-ranks by the module's own key — containment similarity to the
+    sub-cue, then evidence count — recomputed with the module's tokenizer.
+    Each sub-cue still passes through the module's own recall and floor."""
+    from EpisodicMemory import _tokens
+    best = {}
+    for cand in cands:
+        q = _tokens(f"{speaker} {cand}")
+        for b in refl.recall(f"{speaker} {cand}", top_k=top_k):
+            sim = len(q & _tokens(b.text)) / len(q) if q else 0.0
+            k = id(b)
+            if k not in best or (sim, b.count) > best[k][:2]:
+                best[k] = (sim, b.count, b)
+    ranked = sorted(best.values(), key=lambda x: (x[0], x[1]), reverse=True)
+    return [b.text for _, _, b in ranked[:top_k]]
+
+
 def _answer_all(questions, reflect_store, mem, now, rng):
-    """Accuracy of each arm over the same questions, cue, budget, reader."""
-    r_hits = e_hits = r_tok = e_tok = 0
+    """Accuracy of each arm over the same questions, declared shape, budget,
+    reader. Also returns each arm's answer rate — the fraction of questions
+    on which the arm surfaced any evidence at all (see MIN_RAW_ANSWER)."""
+    r_hits = e_hits = r_tok = e_tok = r_ans = e_ans = 0
     for s, cands, truth in questions:
-        cue = " ".join([s] + cands)
-        r_lines, rt = _pack([b.text for b in reflect_store.recall(cue, top_k=32)])
-        e_lines, et = _pack([r.event.text
-                             for r in mem.recall(cue, top_k=32, now=now)])
+        r_lines, rt = _pack(_refl_alternatives(reflect_store, s, cands))
+        e_lines, et = _pack(_mem_alternatives(mem, s, cands, now))
         r_hits += _read(r_lines, cands, rng) == truth
         e_hits += _read(e_lines, cands, rng) == truth
+        r_ans += bool(r_lines)
+        e_ans += bool(e_lines)
         r_tok += rt
         e_tok += et
     n = len(questions)
-    return (r_hits / n, e_hits / n, r_tok / n, e_tok / n)
+    return (r_hits / n, e_hits / n, r_tok / n, e_tok / n, r_ans / n, e_ans / n)
 
 
 def _distractor_abstention(mem, now, seed: int) -> dict:
@@ -236,7 +310,8 @@ def _experiment(seed: int) -> dict:
     reloaded = Reflections(path=tmp / "reflections.jsonl")   # off disk only
 
     rng = random.Random(seed + 2)
-    r_acc, e_acc, r_tok, e_tok = _answer_all(questions, reloaded, mem, now, rng)
+    (r_acc, e_acc, r_tok, e_tok,
+     r_ans, e_ans) = _answer_all(questions, reloaded, mem, now, rng)
     return {
         **_distractor_abstention(mem, now, seed),
         "n_questions": len(questions),
@@ -245,6 +320,8 @@ def _experiment(seed: int) -> dict:
         "aggregation_qa_gain": round(r_acc - e_acc, 4),
         "reflect_tokens_mean": round(r_tok, 1),
         "raw_tokens_mean": round(e_tok, 1),
+        "reflect_answer_rate": round(r_ans, 4),
+        "raw_answer_rate": round(e_ans, 4),
         "n_beliefs": len(reloaded),
         "base_rate": 1.0 / N_CANDIDATES,
     }
@@ -265,7 +342,7 @@ def _control(seed: int) -> dict:
     wrong.consolidate(other, now=other_now)
 
     rng = random.Random(seed + 3)
-    w_acc, _, _, _ = _answer_all(questions, wrong, mem, now, rng)
+    w_acc, _, _, _, _, _ = _answer_all(questions, wrong, mem, now, rng)
     return {"wrong_agent_acc": round(w_acc, 4)}
 
 
@@ -280,7 +357,12 @@ def _check(m: dict, c: dict) -> bool:
             # abstention on absent combinations, denominator floored so the
             # control cannot pass by going quiet.
             and m["distractor_evaluated"] >= MIN_DISTRACTOR_EVAL
-            and m["distractor_abstention"] >= MIN_ABSTENTION)
+            and m["distractor_abstention"] >= MIN_ABSTENTION
+            # Added 2026-09-07 (contract split; strictly harder): a starved
+            # null must fail loudly even when starvation is partial — the
+            # equal-tokens gate alone cannot see a half-fed raw arm, and a
+            # half-fed raw arm inflates aggregation_qa_gain.
+            and m["raw_answer_rate"] >= MIN_RAW_ANSWER)
 
 
 def run(ledger: Ledger | None = None):
