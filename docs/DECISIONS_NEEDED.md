@@ -5121,6 +5121,65 @@ failure mode a seal cannot survive.
   green exit code on purpose. Reversal: one conditional in `lib_seal.sh`.
 - decide_by: 2026-09-13
 
+**ARMED 2026-09-07 by the 82nd overseer audit — a TRANSCRIPTION, not a ruling.**
+The four bullets above were written by the Review this morning and published to
+you in `PROGRESS.md` as *"routed as `D25`, `class: process`, `decide_by`
+2026-09-13"*. **`decisions.py` could not see any of it**, and said so:
+`[UNDECLARED] D25 — open, but declares no DECIDE block — no default, no
+deadline, so silence deadlocks it`. Two independent reasons, either alone
+sufficient: the fields are markdown bullets and the parser reads only a
+column-0 `DECIDE:` block with indented fields (`_DECIDE`,
+`experiments/decisions.py:294`); and `class: process` is not a legal class —
+`CLASSES = ("means", "goal")` (`:313`), so even in the right syntax it would
+have been rejected. The consequence was not cosmetic: overdue is computed as
+`(today - decide_by).days > 0` against a PARSED `decide_by`, so an entry with
+none **can never go OVERDUE and its default can never fire**. `D25` was on
+course to sit open forever while both the Review and the owner believed it was
+on a clock — the `D1` deadlock arriving through a syntax gap instead of through
+neglect. Every other entry, `D1` through `D24`, uses the block form.
+
+Nothing below is the overseer's opinion. The class is set to `goal` because
+that is the only legal home for a fork the owner rules on, and the default and
+the date are the Review's own words, shortened only to remove a calendar date
+from the default text (a bare date inside a `default` resolves as a named
+ACTION and would fire `DEFAULT-ACTION-EXPIRED` against a later `decide_by`).
+The Review's full reasoning and its recommendation stand verbatim above.
+
+DECIDE: D25
+  class:     goal
+  blocks:    no spec id. What is at stake is whether a standing instrument may
+             go on telling a MEASURED falsehood: `lib_seal.sh` reads only
+             `rc != 0` and so banners a Sunday FULL that committed its whole
+             page, its dispositions and its log row with the same *"THIS IS A
+             DRAFT, NOT A FINDING ... UNVERIFIED"* it correctly gives a run
+             that committed nothing. The cost is already realised, not
+             hypothetical: the builder spent a full day executing seven of
+             nine `FOR THE BUILDER` items off a page formally marked
+             unverified, and was right to. An instrument that cannot tell
+             "died with nothing done" from "died having committed everything"
+             teaches its readers to ignore it.
+  default:   (iii) FIX THE SEAL, BUY NOTHING. `lib_seal.sh` learns to read the
+             dying run's own committed acts: if this run committed
+             `docs/PROGRESS.md` AND appended its `PROGRESS_LOG` row, the
+             banner says so — page complete, run killed at the wall on the
+             tail — and a run that committed neither keeps today's wording
+             BYTE-FOR-BYTE. This is the only legal default of the three. (i)
+             RAISE THE WALL CLOCK spends credits against the shared all-models
+             meter by silence, and that meter's exhaustion is what took every
+             organ dark for 4.3 days and expired three consecutive GPU
+             allocations — an outlay that size may not fire because nobody
+             answered. (ii) CHANGE NOTHING writes off the falsehood and keeps
+             it standing every Sunday. (iii) picks only already-permitted
+             actions: it moves no threshold, refuses no run, fails no spec,
+             stales no certificate, spends nothing, touches no GOAL.md text,
+             and is MONOTONE — it can only add a truer banner where a false
+             one stood. The price, stated rather than buried: Sunday FULLs
+             keep exiting `rc=124` and keep looking unhealthy to anything that
+             reads exit codes alone; this desk takes a truthful banner over a
+             green exit code on purpose. Reversal: one conditional in
+             `lib_seal.sh`.
+  decide_by: 2026-09-13
+
 
 ## D21 — RESOLVED BY ARMED DEFAULT, fired 2026-09-06 00:1x UTC (builder, before the 06:37 FULL — the same-day race). Off your desk.
 

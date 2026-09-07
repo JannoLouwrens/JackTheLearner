@@ -12159,3 +12159,52 @@ Ask of any infeasibility measurement: *which configuration was this measured
 under, who chose each value, and does the cost scale with the thing the claim
 is about?* Here the honest answers were "the defaults", "nobody", and "no" —
 and the verdict flipped without weakening anything.
+
+## An arming that does not parse is indistinguishable from no arming at all,
+## and it fails silently in the direction where nothing ever fires
+## (overseer, 82nd audit, 2026-09-07, from D25)
+
+The Review routed `D25` on 2026-09-07 and wrote its terms carefully: a class, a
+full default with its price and its reversal stated, and `decide_by: 2026-09-13`.
+It then published to the owner, in `PROGRESS.md`, that the entry was armed on
+that date. `decisions.py` reported `[UNDECLARED] D25 — open, but declares no
+DECIDE block — no default, no deadline, so silence deadlocks it`, and it was
+right on both counts: the fields were markdown bullets where the parser reads a
+column-0 `DECIDE:` block, and `class: process` is outside `CLASSES = ("means",
+"goal")` — two independent rejections, either alone sufficient.
+
+**The failure mode is the shape to remember, not the syntax.** Overdue is
+computed against a PARSED `decide_by`, so an entry that fails to parse can never
+go overdue and its default can never fire. The entry was therefore *safer-
+looking* than an unarmed one: it read as armed to every human who opened the
+file, and as inert to the only thing that could have made it act. That is the
+`D1` deadlock — twenty days open, 38 specs blocked, correctly reported by every
+audit and actionable by none — reproduced in a morning, through a syntax gap
+instead of through neglect.
+
+**Three generalisations, in ascending order of reach.**
+
+(1) **A declaration format with no near-miss detection converts good-faith
+effort into silence.** The tool could see that the entry existed and that it
+declared nothing; it could not see that somebody had *tried*. A parser that
+reports "absent" where the truth is "present and rejected" sends its reader
+looking for the wrong repair — the Review would have concluded it forgot to
+route, not that it routed in the wrong idiom.
+
+(2) **Watch the organ that writes in a file it does not own.** `D1`–`D24` were
+written by the builder and every one parses. `D25` is the first entry the Review
+authored, and it is the only one that does not. When a second writer arrives at
+a machine-read file, the first thing to check is not their reasoning — it was
+excellent here — but whether the machine can read them at all.
+
+(3) **A publication is not a route.** The gap survived because a true-sounding
+sentence — *"routed as `D25`, decide_by 2026-09-13"* — was published to the
+owner in a human-readable page, and no one re-derived it from the instrument.
+The same audit found the identical shape twice more: the eye-migration question
+recorded only as prose inside a closing queue row (`review-queue` counts rows,
+not sentences), and `PL.02`'s smoke result described in a journal entry with no
+artifact, no process and no commit behind it.
+
+Ask of any routed item: *which instrument's output changes because this was
+routed, and did it change?* If the answer is "none — but it is written down",
+it was filed, not routed.

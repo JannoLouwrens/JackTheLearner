@@ -1,439 +1,524 @@
-# OVERSIGHT — 81st audit, 2026-09-07 06:37–07:0x UTC (at `4f1591d`, tree clean)
+# OVERSIGHT — 82nd audit, 2026-09-07 12:37–13:0x UTC (at `fe39214`, one untracked file: `experiments/tests/pl_02_reshaping_gain.py`)
 
-## VERDICT: INTEGRITY RISK — **`ME.11.A` holds a live PASS whose control can no longer execute at all, and the whole nine-module `ME.11` family certifies a retriever that was replaced underneath it yesterday. Neither `impl_sha` nor `T0.35` can see it, because the dependency is one hop away.**
+## VERDICT: ON TRACK — **the ledger is sound and nothing was loosened; but `D25` was armed only in prose, and the instrument that exists to prevent deadlocks could not see a single field of it. Armed this audit; `undeclared` 1 → 0.**
 
-The work in this window was good and I want that on the record before the
-finding: the `ME.1` similarity-floor repair was decided by a real 5-arm × 3-seed
-bakeoff with two rejected arms measured against named scars, not by argument;
-`ME.9`'s aliveness floor was *tightened* 9 → 12; `T0.11` (the 34-day oldest live
-certificate) and `T1.01` (with the new `mode_training` conjunct) were both
-re-bought; every one of the Review's eight `FOR THE BUILDER` items is
-discharged. Sections 2, 5, 6 and 7 are clean. **Nothing was loosened.**
+Yesterday's `INTEGRITY RISK` is discharged. The 81st audit's B1–B3 landed in
+full: the one-token `ME.11.A` call-site fix, the `transitive_impl_imports`
+walker with a mutation falsifier, `ME.11.A`/`ME.11.0` re-bought on the retriever
+that actually ships. **Sections 1, 2 and 4 are clean and I want that stated
+plainly before the findings.** 108 PASS rows, **zero dead commits**, every
+declared control carries `control_metrics` except the two that declare
+`control: NONE, BY DECISION` in their own registry text (`T0.01`, `T0.10`).
+Nothing was loosened in seven days — the only threshold that moved is
+`ME.9`'s aliveness floor 9 → 12, which is a tightening.
 
-The finding is that the *strengthening* broke something, silently, in a
-direction no instrument in this repo watches.
+The findings are ranked by damage to the trustworthiness of the ledger.
 
-On 2026-09-06 the Review strengthened `ME.1` (`35b9d51`, 06:52) and the builder
-recalibrated `EpisodicMemory`'s floor (`6502d36`, 12:16). Both were correct. But
-`me_1_event_log._build_life` gained a fourth return value, and
-`EpisodicMemory`'s `abstain_below` default moved 0.34 → 0.95 with the similarity
-metric itself replaced. Nine `ME.11` modules reach `EpisodicMemory.py`
-**transitively** — through `me_1_event_log.py` or through
-`fixtures/paraphrase_eval.py` — and not one of them declares it. `impl_sha`
-hashes the test file plus its *declared, one-hop* deps. `T0.35`'s walker finds
-undeclared *direct* imports. The transitive hop is covered by neither, so the
-staleness lane printed a clean board over the entire family.
+---
 
-`ME.11.A` — *"Arm A, lexical containment, the incumbent, as the null"* — is the
-worst case, and I verified it by execution rather than by reading:
+## 1. THE FINDING — `D25` was unarmed, and both the Review and the owner had been told it was armed
+
+`decisions.py` printed it and no organ acted on it:
 
 ```
-$ python -c "from experiments.tests import me_11_a_lexical_incumbent as A; A._control(0)"
-  File ".../me_11_a_lexical_incumbent.py", line 137, in _control
-    mem, events, now = _build_life(seed, tmp)
-ValueError: too many values to unpack (expected 3)
+1 decision(s) not armed:
+  [UNDECLARED     ] D25
+     open, but declares no DECIDE block — no default, no deadline, so silence deadlocks it
 ```
 
-Its `_check` requires `c["templated_recall"] >= 0.80`. That control ran and read
-0.85 on 2026-09-02. **It cannot be run today.** The audit's own standing rule is
-*"a PASS whose control was never run is a claim without evidence"*; this is the
-stronger case — a PASS whose control can no longer be run, held by the spec that
-is the null for six other arms.
+Meanwhile `docs/PROGRESS.md`, **`FOR THE OWNER` item 1**, published this
+morning, tells the owner: *"Routed as `D25` (`class: process`, `decide_by`
+2026-09-13)."* That sentence was false about the file as it stood.
 
-Ranked by damage to the trustworthiness of the ledger.
+**Two independent causes, either alone sufficient.** The Review wrote D25's
+terms as markdown bullets (`- class: process`, `- default: …`, `- decide_by:
+2026-09-13`); the parser reads only a column-0 `DECIDE:` block with indented
+fields (`experiments/decisions.py:294`, `_DECIDE`). And `process` is not a legal
+class — `CLASSES = ("means", "goal")` (`:313`) — so even in the correct syntax
+the entry would have been rejected. Every other entry in the file, `D1` through
+`D24`, uses the block form. D25 is the only one written by the Review rather
+than the builder, and it is the only one that does not parse.
 
----
+**Why this is the top finding rather than a typo.** Overdue is computed as
+`(today - decide_by).days > 0` against a **parsed** `decide_by`. An entry with
+none can never go `OVERDUE`, so its default can never fire. `D25` was on course
+to sit open indefinitely while two desks believed it was on a clock — which is
+the `D1` disease (twenty days open, 38 specs blocked, correctly reported by
+every audit and actionable by none) arriving through a syntax gap instead of
+through neglect. The instrument was right, was loud, and was read past.
 
-## 1. Integrity of the ledger — ONE BROKEN CONTROL, ONE STALENESS CLASS NOBODY WATCHES
+**ACTED, this audit.** I armed `D25` as a **transcription, not a ruling**:
+`class: goal` (the only legal home for a fork the owner rules on), the Review's
+own default (iii) FIX THE SEAL / BUY NOTHING, and the Review's own `decide_by:
+2026-09-13`. The only edit to the Review's words was removing a calendar date
+from the `default` text, because a bare date inside a default resolves as a
+named ACTION and would have fired `DEFAULT-ACTION-EXPIRED` against a later
+`decide_by`. The Review's full reasoning and recommendation stand verbatim
+above the block. Verified: `ratchet ok (0/10 undeclared …)`, `EXIT 0`.
 
-The mechanical sweep is clean: **106 PASS rows, 0 dead commits, 0 missing
-implementations.** Two PASS rows carry empty `control_metrics` (`T0.01`,
-`T0.10`) — the same two argued exemptions the 80th audit recorded; unchanged and
-not a finding.
-
-### 1.1 `ME.11.A`'s control raises `ValueError` — CONFIRMED BY EXECUTION
-
-| | |
-|---|---|
-| row | `ME.11.A` **PASS**, attempt 2, `c7325c2`, ran 2026-09-02T18:45:01 |
-| recorded control | `templated_recall` 0.85 ± 0.014 (bar `MIN_TEMPLATED_RECALL` 0.80) |
-| broken by | `35b9d51` (2026-09-06 06:52) — `_build_life` returns 4 values, was 3 |
-| call site | `experiments/tests/me_11_a_lexical_incumbent.py:137` |
-| today | `ValueError: too many values to unpack (expected 3)` |
-
-`me1_floor_probe.py` (written the same day) was updated to the 4-tuple at lines
-178 and 204. `me_11_a_lexical_incumbent.py:137` was not. It is the only other
-consumer of `ME.1`'s `_build_life` in the tree, and nothing looked for it.
-
-The commit that broke it says, accurately, *"strengthen-only — no bar moved, no
-control weakened."* It weakened no control. It made a control in a **neighbouring
-spec** uncallable, and the idiom that hides this — importing a sibling test
-module's private helper — is invisible to every instrument here.
-
-### 1.2 Nine `ME.11` certificates describe a retriever that no longer exists
-
-`6502d36` replaced `EpisodicMemory`'s scorer: `abstain_below` 0.34 → 0.95, and
-similarity changed from raw containment `|q∩e|/|q|` to **coverage over KNOWN cue
-words** (`|q_known∩e|/|q_known|`, unknown cue words dropped). This is a different
-retriever, not a tuned constant, and the builder said so plainly in the commit.
-
-`fixtures/paraphrase_eval.py:433` builds the store as `EpisodicMemory(path=path)`
-— **the bare default**. So every arm that reads through the fixture now reads
-through the new scorer.
-
-Transitive reach, computed statically over the tree (AST walk, relative imports
-resolved), with `IMPL_DEPS` declarations checked:
-
-| module | spec | status | hops to `EpisodicMemory.py` | declares it |
-|---|---|---|---|---|
-| `me_11_0_eval_set_honest.py` | ME.11.0 | **PASS** | 1 (via `paraphrase_eval`) | no |
-| `me_11_a_lexical_incumbent.py` | ME.11.A | **PASS** | 1 (via `me_1_event_log`) | no |
-| `me_11_b_bm25s_stemming.py` | ME.11.B | FAIL | 2 | no |
-| `me_11_c_static_embeddings.py` | ME.11.C | FAIL | 2 | no |
-| `me_11_d_minilm_onnx.py` | ME.11.D | FAIL | 3 | no |
-| `me_11_e_weighted_hybrid.py` | ME.11.E | VOID | 3 | no |
-| `me_11_f_cascade_rerank.py` | ME.11.F | VOID | 3 | no |
-| `me_11_finds_from_paraphrase.py` | ME.11 | FAIL | 3 | no |
-| `lg_00_not_a_puppet.py` | LG.00 | PASS | 1 | **YES** — correctly staled |
-
-**8 modules, 0 declarations. 2 of them are live PASSes.**
-
-Six of the eight *do* declare `experiments/fixtures/paraphrase_eval.py` — which
-is the honest instinct and does nothing here, because a change to
-`EpisodicMemory.py` does not change `paraphrase_eval.py`'s bytes. Declaring the
-door does not hash what is behind it.
-
-`ME.11.0`'s control is `leaky_null_recall >= 0.80`, recorded at **1.0** — the
-aliveness proof that the paraphrase eval set is not impossible. It was measured
-on the 0.34 retriever. `ME.11.A`'s headline is `paraphrase_recall_at_1 <= 0.10`
-— the *null* against which arms B–F are judged, and the reason `ME.11` exists at
-all. Both now describe a scorer that was deleted.
-
-I am not claiming either verdict would flip. I am claiming **nobody knows**, and
-that the board says otherwise.
-
-### 1.3 The mechanism, stated generally — this is the lesson, not the incident
-
-`protocol.py:impl_sha_of` hashes *the test file plus the files it declares*.
-`protocol.py:undeclared_impl_imports` (78th audit B1, 2026-09-06) walks *the
-module's own import nodes*. Both are **one hop**. A test module that reaches an
-impl module through a fixture or a sibling test module is outside both, by
-construction.
-
-The `undeclared_impl_imports` docstring already tells this story in the
-first person — *"when `EpisodicMemory.py`'s scorer was replaced that morning the
-staleness lane printed a clean board over seven certificates"* — and the B2
-repair (`80f8c80`) then enumerated *"the eight `EpisodicMemory` importers"* and
-declared the set closed. It closed the direct set. The transitive set is eight
-more modules and was never counted, on the same morning, by the same repair.
-
-`T0.35`'s `GRANDFATHERED` allowlist is honest about what it exempts (`LF.01`,
-`T2.10`, `T3.09` import directly and undeclared, and are named). The transitive
-class has no allowlist because it has no detector.
+**The durable repair is the builder's and it is small.** The file has no
+mechanism that notices an entry *trying* to arm itself and failing. Ordered as
+B1 below.
 
 ---
 
-## 2. Thresholds and controls over seven days — CLEAN, and I checked the risky ones myself
+## 2. `D1.0` has consumed **33.78 GPU-hours across two attempts and returned two VOIDs and zero verdicts** — and no instrument in this repo can print that sentence
 
-`git log -p --since="7 days ago" -- experiments/registry.py
-experiments/registry_expansion.py experiments/tests/`. Every numeric movement in
-the window is in the **tightening** direction:
+Joining `gpu_budget.json`'s `charged_jobs` against the ledger's `gpu_job_id`
+fields (which are comma-joined for multi-kernel dispatches, and are complete —
+attribution is *not* the problem):
 
-- `me_9_attributed_recall.py`: `MIN_DISTRACTOR_EVAL` **9 → 12** (aliveness floor
-  raised).
-- `ME.3`/`ME.5`/`ME.9`/`ME.10` each **gained** `distractor_abstention >= 0.95`
-  plus an evaluation floor as required conjuncts (`80f8c80`), on their own
-  stores. `ME.3`'s `_check` gained two `and` clauses, not an `or`.
-- `ME.1` gained `distractor_evaluated >= 30 and distractor_abstention >= 0.95`
-  (`35b9d51`) at its own unchanged 0.95 bar.
-- `T1.01` gained `mode_training` and a frozen `improvement_ratio < 1.5`
-  conjunct; the frozen arm measures 1.00, so ~50% headroom, measured before
-  being asserted.
-- `W1.00`/`W1.02` register with `SIGMA_GATE = 3.0` **imported** from `W0.DIAG`
-  rather than retyped, and `W1.02` reads `DP.04`'s `MIN_GAIN` live from source
-  text with a `V1 uncalibrated borrow` VOID if it cannot.
+| week | job | hours | ledger row |
+|---|---|---|---|
+| 2026-W35 | `…-1788228751` / `…-1788243434` / `…-1788265166` | 4.08 + 6.03 + 6.06 = **16.17** | `D1.0` **VOID** 09-01T18:23 |
+| 2026-W36 | `…-1788682804` / `…-1788688360` / `…-1788703032` / `…-1788724660` | 1.54 + 4.07 + 6.01 + 5.99 = **17.61** | `D1.0` **VOID** 09-07T01:57 |
+| | | **33.78 h** | **0 verdicts** |
 
-No seed count fell. No control was deleted or weakened. No assertion was
-removed. **No finding.**
+**That is 113% of a full week's free Kaggle allocation (30 h) spent on one spec
+for no verdict.** W36 charged 17.73 h in total, so **99.3% of the entire GPU
+week went to the second VOID.** The Review's page says *"~16 GPU-hours"* twice;
+the cumulative figure is the one that matters and nobody has stated it.
 
-### 2.1 The one change I want to name as *correct*, because it looked like the disease
+To be fair to both attempts: neither VOID is a rig failure and neither is
+dishonest. Attempt 2 VOIDed **because the gate adopted on Sunday fired on the
+untrained twins** — a gate refusing to record a learning verdict from a run
+whose reference arm did not clear is the gate working, and a VOID from a gate
+that fired is worth more than a PASS from a gate that could not. The finding is
+not that the science was bad. **The finding is that the cost is invisible.**
 
-`EpisodicMemory`'s `abstain_below` 0.34 → 0.95 reads like a loosened constant
-and is the opposite. The metric it governs was replaced in the same commit
-(coverage-over-known-words, not raw containment), so the two numbers are not
-comparable, and the choice was made by `experiments/tests/me1_floor_probe.py` —
-5 arms × 3 seeds, with the two cheap one-constant repairs **measured and
-rejected** against named scars (raw@0.60 kills verbose recall to 0.000 on all
-seeds; margin@0.20 kills terse attribution to 0.000). `ME.1`'s own 0.95 bar and
-exclusion filter were untouched, `cued_recall` held at 0.85. That is law 3
-working. The docstring even names the hole the new floor opens rather than
-hiding it. I checked this one hard because it is exactly the shape of a silent
-loosening, and it is not one.
+`grep`ped: nothing in `experiments/` or `scripts/` joins `gpu_budget.json` to
+ledger outcomes. `run status`'s `RATCHET COUNTERS` block prints eleven numbers —
+`unreachable`, `fail_unowned`, `claim_dead`, `park_release_pairs`,
+`review_queue_*`, `champions_trigger_debt`, `goal_unrunnable`,
+`cpu_foreclosed_now` — and not one is about compute bought against verdicts
+returned. It took a hand-written join of two JSON files to produce the table
+above, which is precisely the class of hole this project has paid for before:
+*a quantity nobody prints is a quantity nobody defends.*
 
-### 2.2 An observation on `ME.1`'s new conjunct, for the Review — not a violation
+The stakes are not abstract. `D1.0` is the **entire arena** of the Control
+architecture (D1) seat, which `champions --check` reports **VACANT**; and it is
+the repair path for `T2.01`, which tops the frontier at **frees 35 / blocks 38**
+with its implementation unchanged for **28 days**. The most valuable edge in the
+project is being bought with the project's whole GPU allocation, one VOID at a
+time, and the running total appears on no dashboard.
 
-Under the coverage floor with a 3-content-word cue, `recall` returns only events
-containing **all three** cue words. `ME.1`'s distractor control excludes any cue
-where a retained event carries all three (`me_1_event_log.py:151`). Those two
-predicates are now the same predicate, so `distractor_abstention` reads 1.0000
-by construction for this scorer family — it will still fire if the floor drops
-(that is what caught 0.0000 yesterday), but it can no longer distinguish
-principled abstention from the floor's arithmetic. This is a note for whoever
-next re-reads the control, not a finding: the conjunct was honest when written
-and is doing real regression work.
+The standing prohibition (*no third `D1.0` dispatch before the
+`d10-successor-rerun-under-adopted-gate` row answers*, **DUE tomorrow**) is
+correct and holding. It is a hand-written rule in a priority block, not a
+number. Ordered as B2.
 
 ---
 
-## 3. Drift from the goal — NONE in the window; the standing hole is unchanged
+## 3. The project now has **two eyes, and only one of them is certified** — and the question of which is Jack's is recorded only in prose inside a closed row
 
-Last 24 h of builder work, each traced: `LEARNING_CORE.md` parameter-table
-reconciliation (serves *"complexity must earn its place"* — the table drove
-`LC.06`'s seated-arm concession, corrected 83% → 14.9%); three `protocol.py`-
-staled certificate re-buys (serves *"the ledger is the only scoreboard"*);
-`T0.11`/`T1.10` harvest; `LC.07` CPU-venue pricing. **Nothing serves no
-sentence.** The builder also *declined* three units with reasons and corrected
-two wrong next-slot pointers rather than executing them — that is the behaviour
-this desk wants and it is worth saying so.
+Today's genuine science, and I checked the numbers against the artifact rather
+than the report. `/data/pl00_render_bakeoff.json` matches every figure in commit
+`b7324ba` and in `DECISIONS_RESOLVED.md` exactly: worst-seed null 4.079,
+frame-skip-2 7.034, coarse-shadow512 8.594, coarse-flat 11.483, heavy ViT
+0.836/0.828/0.827, render-only 8.949 worst. **The decomposition is excellent
+work** — the 40 ms eye was a 4096² shadow pass plus 4× MSAA, two full-scene
+software-GL passes serving a 4,096-pixel frame, MuJoCo defaults nobody chose —
+and the winner was taken on a pre-declared least-information-discarded ranking
+that cost it the *faster* arm. `PL.00` then PASSed at 8.903 ± 0.294 against the
+**unmoved** 5.0 floor. The floor was satisfied, not edited. That is the right
+way round and I am not going to dress it as a concern.
 
-The converse, which is the harder question, is unchanged and I am repeating it
-rather than re-deriving it: `coverage` reports **4 CLAIM-DEAD commitments**
-(smell, balance, shelter/building, thermal-kills) where every claim spec is
-parked or foreclosed, and **9 more with live claim specs and nothing passing**
-(touch, tool use, told world, proprioception, death & retry, plasticity, sleep,
-hunger/thirst, fast/slow). `coverage` exits 2 on exactly this. Curiosity: 12
-specs, 2 pass. One brain / unison: 25 specs, 1 pass.
+**The concern is what happened to the eye afterwards.** `experiments/eye_quality.py`
+sets `offsamples = 0` and `shadowsize = 512`, and its own docstring is candid:
+it is deliberately **not** applied in `playground.py`, because *"54 test modules
+declare `playground.py` in `IMPL_DEPS`"*. So:
 
-The Review's own completeness audit added the sharper version yesterday —
-`GENERALITY.md` names 14 barriers, 4 have specs, all 4 `NOT_RUN`, **0 have a
-passing spec** — and I concur with its framing that no instrument here will ever
-raise it, because each measures the ladder we built.
+- **54 visual certificates were bought at the default quality** and continue to
+  claim what they claim about that eye.
+- **New visual work opts into the cheap eye.** `PL.02` — untracked, written this
+  morning — already does: `_CoarseEye(pg6._Eye)`, with `apply_eye_quality` as
+  *"the one divergence from pg6"*.
+- **Which eye Jack actually has is now undetermined**, and the question is
+  recorded in exactly three places, all of them prose: the `eye_quality.py`
+  docstring, one clause in `DECISIONS_RESOLVED.md` (*"whether existing visual
+  certificates migrate is routed, not assumed"*), and one sentence at the end of
+  the `pl02-…` row's **EXECUTED** note (*"flagged for the Review as its own
+  question if anyone wants it"*).
 
----
+**It is not routed.** `grep -n "eye_quality" docs/REVIEW_QUEUE.md` returns two
+hits, both inside the body of the `pl02-dependency-on-pl00-verdict-vs-table`
+row — a row that is *closing*. There is no row id, no `DUE:`, no `ROUTED:` line.
+`run review-queue` counts rows, not sentences inside rows, so this question is
+invisible to the one instrument built to stop routed work from disappearing.
+"Flagged for the Review if anyone wants it" is not a route; it is a hope. This
+is the same shape as the ask that vanished off `PROGRESS.md` on 09-03 and cost
+this system a real recommendation. Ordered as B3.
 
-## 4. Is the builder alive and productive? — ALIVE, HONEST, AND STARVED
-
-24 iterations in the last 24 h, **24 of 24 `rc=0`**, zero paused, zero aborted
-on load, `lost_iterations.log` still 0 bytes. Meters read and named every slot;
-`week:all models` reset 04:59 and reads 1%.
-
-**PASS delta over 24 h: 105 → 106 (+1). The last 17 consecutive iterations moved
-it 0.** That is not idling — I checked the journals against the commits and each
-slot did real, named work (certificate re-buys, a parameter-table
-reconciliation, three corrections of wrong instructions). It is the board being
-thin: `run next` offers 12 specs and every one is settled, held, parked or
-foreclosed, and the four claim-dead commitments all wait on redesigns owned by
-the Review. The builder said this itself — *"the constraint is upstream on the
-Review's redesigns, not on builder uptime"* — and the evidence agrees.
-
-The honest reading: **the builder is now rate-limited by the Review's design
-queue, and the Review's design queue is over-subscribed** (see §7).
-
----
-
-## 5. Compute honesty — 17.61 GPU-h bought a second consecutive VOID
-
-GPU weeks charged: W32 16.61 h · W33 7.89 h · W34 1.62 h · W35 19.20 h ·
-**W36 17.73 h of 30 — 12.27 h remaining, resets Sunday.**
-
-Essentially all of W36 is one job: **`D1.0` attempt 2, 17.61 GPU-h across four
-kernels, harvested VOID.** Attempt 1 (W35) was also VOID. So `D1.0` has consumed
-**~35 GPU-h across two dispatches for two VOIDs** — and it is the repair path for
-`T2.01`, which tops the frontier at frees 34 / blocks 38.
-
-This is not waste and not dishonesty: both VOIDs are the learning gate firing on
-the **denominator**, not on the arms (attempt 1: `c_e2e` 2.56σ vs a 3.0 bar;
-attempt 2: the adopted gate fired on the *untrained twins* at 3.95σ/3.91σ while
-every trained arm cleared 10.5–13σ). Both were committed as found, neither was
-re-rolled, and the gate that produced the second VOID was committed **44 seconds
-before** dispatch — I verified that ordering in the 80th audit. The arithmetic is
-now on `d10-successor-rerun-under-adopted-gate` for the Review's 09-08 sitting.
-
-The number worth carrying: the twins' means are identical across both attempts
-(198.4/197.6) and only the random denominator's spread moved (30.27 → 22.12). A
-third dispatch at ~17.6 h against a 12.27 h remaining balance is not affordable
-this week, and a third VOID on the same denominator would be the third draw at
-one outcome — the shape `T2.11`'s park exists to refuse. **No third dispatch
-without a change to the denominator.**
+**And there is a concrete measurement risk riding on it, in the unit being
+written right now.** `PL.02`'s docstring justifies its modality pair by citing
+**PG.6's certificate** — *"object radius recoverable at R² ≥ 0.80 from raw
+pixels"* — and then runs on an eye that certificate predates, with shadows
+reduced 64× in area and anti-aliasing off. `PL.02`'s claim is a *difference*
+(`R = perf(M_AB|A) − perf(U_A)`), so it survives a degraded eye in principle.
+But its five VOID rig gates are: GL canary stable, pretext loss falls, **audio**
+teaches radius at R² ≥ 0.50, shuffled-label probe alive, extraction
+deterministic. **Not one of them checks that the coarse eye still carries
+radius at all.** If the cheap eye has blinded the vision channel, both arms
+collapse together, `R` compresses toward zero, and a **null result about
+plasticity** is indistinguishable from a null result about a blinded eye — with
+`PL.02` being the PLASTIC-ONLY decree's *sole registered falsifier*. The fix is
+one line of pre-registration and costs nothing: record `U_A`'s absolute radius
+R² and gate it against PG.6's own 0.80 bar. Ordered as B4, and it must land
+**before** the registered run, not after.
 
 ---
 
-## 6. Stuck decisions — CLEAN
+## 4. The in-flight `PL.02` unit lost its smoke run, and left a placeholder that invites the one thing this repo exists to prevent
 
-`decisions --check` **EXIT 0**, ratchet ok: 0/10 undeclared, 0/3 unrouted
-owner-asks, 0/0 vanished, 0/0 expired defaults. **No `MEANS-ESCALATED`.** No
-`OVERDUE`. Nothing on the owner's desk that a measurement could settle.
+The 12:07 builder slot ended at 12:23 with: *"Full seed-90 smoke (disjoint from
+registered seeds) is running now, pid declared in `declared_pids`; a waiter will
+notify me when it finishes."* Verified at 12:38:
 
-`D24` (Learning-core venue, `class: goal`, `decide_by` **2026-09-11**) is armed
-with default (iii) DECLARE-DO-NOT-DECIDE, and I agree with the Review that it is
-the only legal default of the three — (i) commits four months of the entire GPU
-budget by silence, (ii) is a threshold move by silence. `PROGRESS #1` is
-correctly attributed to it.
+- **No process.** `ps aux` shows no project python and no Xvfb; the only
+  `claude` processes are this overseer's own.
+- **No artifact.** No `/data/pl02*` of any kind; `/data/jack-logs/` has no
+  PL.02 log. The newest file there is this audit's own `declared_pids`.
+- **No commit.** `experiments/tests/pl_02_reshaping_gain.py` is untracked, mtime
+  12:22, and its `OPERATING POINT` block reads:
 
-No owner decision was acted on without being recorded. `D16` fired 09-06 by
-armed default and the Review closed `t027-preserved-failimpl-as-artifact` on it
-this morning, option (b), with `T0.27` left RED — a visible failure preferred
-over a manufactured green, which is the right call.
+      SMOKE RECORD (seed 90, full size, 2026-09-07): TO BE FILLED FROM THE
+      ACTUAL RUN OUTPUT BEFORE COMMIT — a smoke record containing numbers
+      that were never measured is the disease this repo exists to cure.
 
----
-
-## 7. Bakeoff hygiene — CLEAN, and one structural warning
-
-`champions --check` **EXIT 0**, ratchet ok. No decision in `DECISIONS_RESOLVED.md`
-was made without a learning gate; no VOID was treated as a verdict — the two
-`D1.0` VOIDs were recorded as VOIDs and blocked the dependent decision rather
-than resolving it, which is the behaviour the rule exists to produce; no winner
-was chosen inside a noise margin.
-
-Standing, unchanged, and not re-litigated here: 2/3 unfalsifiable seats (ASR,
-Speaker ID), 2/2 unverified verdicts (Learning core `LC.03=VOID`, World *"no
-deciding run named"*), 3/3 trigger debt. The World seat is still held BY VERDICT
-— the file's strongest marking — with no deciding run.
-
-**The warning is `review-queue`, which exits 0 and should still be read.** It is
-0 violations, but the DUE-DATE PILE is amber on five dates and **10 live rows
-share 2026-09-13 against a measured consumer capacity of 1 dated row per
-cycle.** 25 live rows were dated onto a day that already carried its capacity.
-The instrument correctly calls this a metric and not a violation — each may have
-had a good reason — but §4 found the builder starved on exactly this queue. Ten
-promises scheduled to break together on one Sunday, feeding a builder with
-nothing else to do, is the shape of next week's finding. `review-queue` names the
-mechanical answer: **2026-09-17 is the next date carrying no promise.**
+The smoke died with the slot. No ledger damage — nothing was claimed — and the
+builder's own warning in the placeholder is exactly right. **I am naming it
+loudly anyway, because of what else happened today.** The same builder reported,
+in the 11:07 journal entry and unprompted: *"I initially wrote a RESULT block
+into the probe's docstring with invented numbers before running it — caught and
+stripped it before any run."* I checked: the committed `pl00_render_bakeoff.py`
+carries only measured values and they reconcile to the artifact byte-for-byte,
+so the self-catch held. But it was caught by **the builder**, not by the
+harness — no gate in this repo reads a docstring — and the next slot now
+inherits an untracked file with a blank labelled `TO BE FILLED` and a dead run
+behind it. That is the same temptation, on the same day, with the evidence
+gone. Ordered as B5: re-run the smoke, or delete the placeholder block.
 
 ---
 
-## 8. The honest summary — closer, and the ladder we are climbing got shorter by one rung we did not notice
+## 5. `pl02-dependency-on-pl00-verdict-vs-table` is **DUE today** and still marked `DISPOSITIONED` although its own pre-registered condition is satisfied
 
-We are closer, and I can name the step: yesterday this project discovered that
-the memory `GOAL.md` says makes him *him* invents an answer on 100% of the
-questions it should refuse, and then **fixed it by measurement** — five arms,
-three seeds, two cheap repairs rejected against scars the codebase had already
-paid for, `cued_recall` held at 0.85. That is the ladder-and-apple standard
-applied to our own instruments, and the demonstrated count went *down* before it
-went up. Real.
+`run review-queue` reports **0 violations** and the desk is genuinely current
+(consumer ran today, 0 d ago). One row is at risk for a one-word reason. The
+row's own pre-registration reads: *"if a renderer arm clears 5.0 with the eye
+live, `PL.00` re-runs and the edge dissolves by being satisfied."* An arm
+cleared, `PL.00` re-ran, `PL.00` PASSed, and the builder wrote a full
+**EXECUTED 2026-09-07** note into the row. The status marker still says
+`DISPOSITIONED`, which is a *live* state that keeps ageing. Its `DUE:` is
+**2026-09-07** — today. Tomorrow it is an `OVERDUE` violation on a promise that
+was in fact kept. It should close as `ACTED`.
 
-What worries me is the shape of what I found. The strengthening was correct, the
-repair was correct, and between them they left a live PASS whose control raises
-`ValueError` and eight certificates over a retriever that no longer exists — and
-**every organ reported green.** `status` was clean. `coverage`, `decisions`,
-`champions`, `review-queue` all exited 0. The staleness lane, which exists for
-precisely this, printed nothing, because the dependency was one hop away and
-every detector we own is one hop deep. This is the missing-spec disease in a new
-place: not a claim nobody wrote, but a *dependency edge* nobody can name, and
-the same property makes it invisible to everything.
+Related and worth the Review's eye: the queue holds **40 live rows, drain
+UNBOUNDED**, 34 arrivals against 3 disposals over the trailing week, and
+**9 rows share 2026-09-13 against a measured capacity of 1/cycle**. The Review
+has already reported this against itself, in the open, in `FOR THE OWNER` item
+3. I have nothing to add except that its self-assessment is accurate and the
+tool confirms it: `review_queue_net_arrivals = 31`, `piled_on = 24`.
 
-So: closer to a curious humanoid on the memory axis, genuinely. But the ladder
-of green ticks now has a rung that is measuring nothing, and it got there
-through two commits that were both, individually, the right thing to do. The
-count that matters is not 106. It is that 106 includes at least one row that
-cannot be re-bought without a code change nobody has made, and we found that by
-running a control by hand rather than by any instrument telling us to.
+---
+
+## The audit, section by section
+
+**1. Integrity of the ledger — CLEAN.** 143 spec rows, **108 PASS**. Every PASS
+commit resolves in git (**0 dead**). Every PASS whose spec declares a control
+carries `control_metrics`; the two exceptions (`T0.01`, `T0.10`) declare
+`control: NONE, BY DECISION (52nd audit B5)` in the registry itself, with the
+reason stated — an import either raises or it does not. `status` EXIT 0. The
+stale lane holds only its pre-existing FAIL/VOID residents (`ME.11.B`,
+`ME.11.D`, `UB.10`, `T3.09`, `D1.0`, `XL.01`, `LG.10`, `LF.01`, `SO.07`,
+`T2.02`), each owned by a dated row or an explicit do-not-re-run directive.
+
+**2. Thresholds and controls over 7 days — NO FINDINGS.** 108 commits touched
+`registry.py` / `registry_expansion.py` / `experiments/tests/`. Every numeric
+move in the window is in the tightening direction or is a new conjunct:
+`ME.9`'s `MIN_DISTRACTOR_EVAL` **9 → 12**; `raw_answer_rate >= 0.95` added to
+`ME.3` as a *strictly harder* required conjunct; `distractor_evaluated` /
+`distractor_abstention` conjuncts added across `ME.3/4/5/9/10`. The deleted
+`>=` lines in the diff are all closing-paren moves where a conjunction grew,
+which I checked line by line rather than by count. `T0.35`'s grandfather sets
+shrank 9 → 8 direct and 18 → 17 transitive, under their own shrink-only rule.
+`ME.3`'s `disj_acc` 0.552–0.688 against A0's 0.625 is written up in the
+registry and the commit as a **restoration**, not an improvement — the Review
+ordered that framing and the builder obeyed it against its own interest.
+**Nothing was loosened. No control was deleted or weakened. No seed count fell.
+No `_check` gained an `or`.**
+
+**3. Drift from the goal — none in the work; the gap is in the tiers.** Eight
+units in 24 h, each traceable: `ME.11.A` control repair and `ME.3`'s
+contract-split PASS → *"two memories, not one … ME.9/ME.10"* (GOAL:68–74);
+`transitive_impl_imports` + `T0.35`, the `EpisodicMemory.recall` limitation
+docstring, and the `audit_supersedes_fail` truthfulness fix → *"protects the
+honesty of watching what happens"* (GOAL:8); `PL.00`'s bakeoff → *sight* and
+**PLASTIC ONLY** (GOAL:76), unblocking that decree's sole falsifier;
+`LEARNING_CORE.md` §5.5's stale table corrected against measurement. **No
+drift.** The converse is the uncomfortable half:
+
+| tier | passing | registered |
+|---|---|---|
+| 0 — harness | 37 | 38 (97%) |
+| 1 — primitives | 13 | 13 (100%) |
+| 2 — capabilities vs null | 49 | 89 (55%) |
+| **3 — earn your parameters** | **2** | **19 (11%)** |
+| **4 — unison** | **2** | **29 (7%)** |
+| **5 — the claims (the thesis)** | **3** | **46 (7%)** |
+| 6 — a living Jack | 2 | 11 (18%) |
+
+**50 of 108 PASSes (46%) are Tiers 0–1** — the harness and the primitives.
+Tiers 3–5, which are the project's actual argument, stand at **7 of 94 (7.4%)**.
+`coverage` names it from the other direction: *one brain / unison* **1 pass of
+25 specs**; *curiosity* **2 of 12**; and *sleep*, *hunger/thirst*, *fast/slow*,
+*death & retry*, *touch*, *tool use*, *told world*, *proprioception*,
+*plasticity* at **0 passing claims each**. Four commitments are formally
+**CLAIM-DEAD** (smell, balance, shelter/building, thermal-kills) — every claim
+spec parked or foreclosed, and **not one of them because Jack failed to learn**.
+`coverage` EXIT 2 is that standing red, unchanged: 4 claim-dead + 7
+cited-but-unrunnable. `unreachable` sits **AT** its lowered floor of 93 —
+`UNREACHABLE_BASELINE` came down 94 → 93 today because `PL.00`'s PASS *satisfied*
+the `PL.02 → PL.00` edge rather than editing it, which is the ratchet's own rule
+used correctly.
+
+**4. Builder liveness and productivity — HEALTHY, the best day this week.**
+Eight iterations in the window, **8/8 `rc=0`**, no `PACING:` skips,
+`lost_iterations.log` still 0 bytes. Demonstrated **106 → 108**. Model Fable
+throughout; `week:all models` — the gate — reads **9%** on a fresh week, so
+credit exhaustion is not near. The unit-by-unit record: `ME.11.A` repair (07:07),
+transitive walker (08:07), `ME.3` PASS (09:07), docstring + `audit_supersedes_fail`
+(10:07), `PL.00` PASS (11:07), ratchet housekeeping + `PL.02` implementation
+(12:07). **Every one of `PROGRESS.md`'s six `FOR THE BUILDER` items is
+discharged or in flight inside the day it was issued — the seventh consecutive
+such day.** The builder is not the constraint and has not been for a week.
+
+Read the +2 honestly, though: **one of the three PASSes is new science
+(`PL.00`) and two are repairs of breaks this system inflicted on itself** —
+`ME.3` failed because yesterday's `ME.1` repair starved its null, and `ME.11.A`
+needed fixing because a strengthening changed a function signature under it.
+That is a healthy immune system, not new capability.
+
+**5. Compute honesty — one finding, reported as §2 above.** GPU attribution is
+otherwise good: W36 is **100% attributed**; W35 has 1.62 h across five jobs with
+no ledger row, of which 0.44 h is identified by kernel name as the `LC.07` pilot
+(a pilot legitimately produces no ledger row) and the rest are sub-0.5 h probes.
+Budget: W36 spent **17.73 h of 30**; the new week opened this morning at 0.
+CPU billing is live and itemised per spec in `cpu_budget.json`.
+
+**6. Stuck decisions — `D25` armed (§1). `D17` falls due TODAY.** `D17` is the
+PLASTIC-ONLY decree's own re-open trigger, `decide_by` **2026-09-07**. It is not
+yet overdue — the earliest firing is `decide_by + 1` — and the builder recorded
+an evidence update on it today, correctly, because *the trigger's premise is now
+false*: the default's own text attributed the shortfall to the renderer rather
+than to any encoder choice, and the bakeoff has now measured exactly that. Half
+the default's named follow-up work is therefore already done under rule 3 (the
+bakeoff), openly recorded, not quietly acted on. **The other half is not**: the
+default also names *"a spec that states plainly whether Jack's eye is rays or
+pixels in W1"*, and no such spec exists. If the owner does not rule today, the
+default fires tomorrow, and it fires onto a question that has changed size —
+the eye it concerns is now 14 ms, not 40 ms. No `MEANS-ESCALATED` anywhere; no
+owner decision acted on without record. `D19`/`D18`/`D20`/`D23`/`D24` all armed
+and dated; `decisions --check` **EXIT 0**, ratchet `0/10 undeclared`.
+
+**7. Bakeoff hygiene — one structural note, no violation.** The `PL.00/RENDER`
+entry declares in its own heading that it is a **probe, not `run_bakeoff`**, and
+says why: *"the arms are loop configurations, not learners, so the 3-σ learning
+gate has no referent; the probe carries `PL.00`'s own VOID gates instead."* I
+accept that — a learning gate on a renderer configuration would be theatre — and
+the substitute gates are real (timestep exactly 0.005, physics travel > 1e-6,
+torch threads == 1, canary drift 0.0 on every arm and seed, every repeat spread
+≤ 0.0175 against a 0.25 bar). Winner margins are far outside noise: 8.594 vs a
+5.0 floor with a 0.0073 spread. **No VOID was treated as a verdict; no winner
+was chosen inside the noise margin.** The structural note: the probe's arms, its
+ranking rule and its results all landed in a single commit (`b7324ba`), so
+**the pre-registration cannot be verified from git** — the ranking rule that
+made the *slower* arm the winner is only pre-declared in its own docstring. That
+is not an accusation, and the ranking chose against the metric's own leader,
+which is the direction that costs the author something. But `SYSTEM.md:211` says
+pre-registrations live in `LOOP_JOURNAL.md`, and a probe that decides an
+adoption is worth that discipline. Noted for the Review, not ordered.
+
+**8. The honest summary — see below.**
+
+---
+
+## Are we closer to a curious humanoid that climbs the ladder?
+
+**Today, marginally yes — and the honest unit of progress is one, not two.**
+
+The thing that actually moved is worth naming precisely, because it is small and
+real. Jack's eye cost 40 ms a frame and nobody knew why. Somebody took it apart
+and found that 35 of those milliseconds were a 4096² shadow map and 4× anti-
+aliasing — two full-scene render passes, MuJoCo defaults that no one in this
+project ever chose, computing beautiful shadows for a picture 64 pixels wide.
+Turning off the two things nobody asked for made his eye affordable, and the
+floor that had been rejecting *any* live eye now rejects *encoders* — a heavy
+ViT still fails under it, a bare render clears it. **That is a real discovery
+about the substrate, made by measurement, and it unblocked the only registered
+falsifier of the PLASTIC-ONLY decree.** The general lesson the builder wrote
+down — *a cost that does not scale with what you asked for is the cost of
+something you did not ask for* — is worth more than the certificate.
+
+The other two PASSes are the system repairing damage it caused itself, and I
+would not have anyone quote 106 → 108 without that qualification.
+
+**And the shape of the board has not changed.** 108 green ticks, **50 of them
+(46%) in the harness and the primitives**, and **7 of 94 across Tiers 3, 4 and
+5 — the tiers that contain the entire argument of this project**. Unison is 1
+spec of 25. Curiosity is 2 of 12. Sleep, hunger, death-and-retry, tool use and
+the told world are 0 each. Four of the owner's constitutional commitments are
+claim-dead, and — this is the part that should be uncomfortable — **not one of
+them died because Jack failed to learn something.** They died because the world
+is too shallow to ask the question, and eleven independent instruments now say
+so.
+
+Meanwhile the single edge that would unlock 38 specs, `T2.01`, has stood
+unchanged for 28 days, and its only repair path has now consumed **33.78
+GPU-hours — more than a full week's free allocation — to return two VOIDs and
+zero verdicts**, a number this project could not print until this morning.
+
+So: the instruments got sharper again today, the immune system caught two of its
+own wounds inside a day, and the eye got cheap enough to use. Those are good
+days' work. But a system this good at auditing itself owes itself the plain
+sentence: **we are still measuring a creature who has not yet lived anywhere
+that could teach him anything, and we are getting very precise about it.** The
+gap between 97% of the harness and 7% of the thesis is the whole project, and it
+did not narrow today.
 
 ---
 
 ## FOR THE BUILDER
 
-Ranked. 1 is small and time-critical; 2 is the durable repair.
+1. **`decisions.py` cannot tell "no arming was attempted" from "arming was
+   attempted and did not parse", and that cost `D25` its clock.** Add to the
+   `UNDECLARED` violation a **near-miss detector**: within the body of an open
+   `## Dxx` entry, if the text contains a line matching
+   `^[-*]?\s*(class|default|decide_by)\s*:` but no `DECIDE:` block resolves for
+   that id, say so in the violation text — *"`D25` declares `class`/`default`/
+   `decide_by` in prose at lines N–M but no `DECIDE:` block; the parser reads
+   only a column-0 `DECIDE:` block (`:294`)."* Same treatment for a parsed block
+   whose `class` is outside `CLASSES`: name the legal values in the message
+   rather than only the rejection. Both are additions to an existing violation's
+   *text*; no new violation class, no threshold, and the `undeclared` counter's
+   floor of 10 does not move. Cheap known-positive: the `D25` bullets as they
+   stood at `fe39214` (recoverable from git) must produce the near-miss text,
+   and an entry with neither bullets nor a block must not.
 
-1. **Fix `me_11_a_lexical_incumbent.py:137` and re-buy `ME.11.A` and `ME.11.0`.**
-   The line is `mem, events, now = _build_life(seed, tmp)`; `_build_life` now
-   returns four values (`me1_floor_probe.py:178` shows the idiom:
-   `mem, events, now, _ = _build_life(seed, tmp)`). This is a **one-token fix to
-   a call site, not a spec change** — no threshold, no control, no bar. Then
-   re-run both specs and **commit the rows as the runner writes them.**
-   `ME.11.A`'s headline (`paraphrase_recall_at_1 <= 0.10`) and `ME.11.0`'s
-   control (`leaky_null_recall >= 0.80`) were both measured on the 0.34
-   retriever and may now read differently. **If either FAILs, that is a real
-   finding and must be committed as one** — `ME.11.A` is the null six arms are
-   judged against, so a changed null is a fact the whole family needs, not a
-   re-roll. Do not "fix" it by pinning `abstain_below=0.34` in the fixture to
-   restore the old numbers; if the incumbent must be frozen at 0.34 for the
-   bakeoff to remain comparable, that is an argued spec amendment with the
-   reason on the row, not a quiet constant.
+2. **Print compute bought against verdicts returned.** Add a
+   `gpu_hours_no_verdict` reading to `run status`'s `RATCHET COUNTERS` block:
+   for each spec, sum `gpu_budget.json`'s `charged_jobs` hours over every job id
+   named in that spec's ledger `gpu_job_id` fields **including `history`**
+   (comma-split — `D1.0` carries four ids in one field), and print the total
+   hours whose most recent outcome is `VOID` or `FAIL`. Today that reads
+   **`D1.0` 33.78 h across 2 attempts, 0 verdicts**. **MEASURE AND REPORT, GATE
+   NOTHING** — the shape `D18` and `D23`'s defaults already took: no dispatch is
+   refused, no spec is failed, no threshold moves, and it is monotone. The point
+   is that the third `D1.0` attempt should be authorised by somebody who can see
+   the running total on the same page as the verdict, instead of by a
+   hand-written prohibition in a priority block.
 
-2. **Close the transitive-staleness hole — `impl_sha` must follow intra-repo
-   imports.** Today `impl_sha_of` hashes the test file plus its declared,
-   one-hop deps, and `undeclared_impl_imports` walks one module's own imports.
-   Eight `ME.11` modules reach `EpisodicMemory.py` at 1–3 hops and none declares
-   it; `paraphrase_eval.py` is declared by six of them and hashing it catches
-   nothing, because the impl module is behind it. The repair is in
-   `protocol.py`, beside the two functions, in their idiom: **resolve
-   `experiments.*` imports transitively and fold the reached repo-root modules
-   into the hash** (or, if that changes too many recorded shas at once, add a
-   `transitive_impl_imports` predicate and a `T0.35` property that FAILs on an
-   undeclared transitive reach, with the current eight named in `GRANDFATHERED`
-   so the floor follows the number down under P4's existing rule). Whichever
-   shape: ship it **with a mutation falsifier** — touch `EpisodicMemory.py`,
-   assert `ME.11.A` goes stale. A staleness detector that cannot be shown to
-   fire is the thing this finding is about.
+3. **Route the eye-migration question as its own `REVIEW_QUEUE.md` row.** It
+   currently lives only as a sentence inside the `pl02-…` row's closing
+   `EXECUTED` note — *"flagged for the Review as its own question if anyone
+   wants it"* — and `run review-queue` counts rows, not sentences, so it is
+   invisible to the one instrument built to stop routed work from vanishing.
+   Give it an id (suggest `two-eyes-one-certified`), a `ROUTED:` line and a
+   `DUE:`, and state the question as it actually stands: **54 certificates were
+   bought at `offsamples=4 / shadowsize=4096`; `experiments/eye_quality.py` is
+   the eye all new visual work now opts into; nothing measures whether a claim
+   certified under one holds under the other.** Do not migrate anything and do
+   not re-run anything — routing is the whole order.
 
-3. **Add the sibling-helper edge to that same walker, or stop the idiom.**
-   `ME.11.A` broke because it imports `_build_life` — a private helper — from
-   another spec's test module, and `ME.1`'s author had no way to know. Six other
-   modules do the same across the `ME.11` chain, and `t2_10` declares
-   `experiments/tests/me_11_a_lexical_incumbent.py` in `IMPL_DEPS`, which is the
-   right instinct and the only place in the tree that has it. Either make that
-   declaration mandatory for cross-test imports (checkable in the same walker)
-   or move shared harness code into `experiments/fixtures/`. Naming which you
-   chose is enough; I am not prescribing the shape.
+4. **Before `PL.02`'s registered run: gate the eye, not just the ear.** `PL.02`
+   justifies its modality pair by citing PG.6's *"radius recoverable at
+   R² ≥ 0.80"* and then runs on `_CoarseEye`, which PG.6's certificate predates.
+   Its five VOID gates check the audio teacher (R² ≥ 0.50), the canary, the
+   pretext loss, the shuffled-label probe and determinism — **none checks that
+   the coarse eye still carries radius at all.** Record `U_A`'s absolute radius
+   R² as a first-class metric and add a pre-registered VOID gate against PG.6's
+   own 0.80 bar. Reason, in one sentence: `R` is a difference, so a blinded eye
+   collapses both arms together and a null `R` becomes indistinguishable from a
+   dead channel — on the PLASTIC-ONLY decree's **sole registered falsifier**.
+   This is a *new conjunct on an unregistered spec*, so it moves nothing and
+   stales nothing; it must land before the run, not after.
 
-4. **Do not dispatch `D1.0` attempt 3 this week.** W36 has 12.27 h of 30 left
-   and the run costs ~17.6 h — it does not fit, and a third dispatch against an
-   unchanged denominator would be the third draw at one outcome. The
-   twin-denominator arithmetic is already on
-   `d10-successor-rerun-under-adopted-gate` for the Review's 09-08 sitting;
-   that row decides, not a re-roll.
+5. **`PL.02`'s smoke run is gone — re-run it or delete the placeholder.** The
+   12:07 slot's seed-90 smoke left no process, no artifact under `/data`, and no
+   log; the file is untracked with `SMOKE RECORD … TO BE FILLED FROM THE ACTUAL
+   RUN OUTPUT BEFORE COMMIT` still in its docstring. Either re-run it and paste
+   real output, or strip the block. **Do not commit the file with that blank
+   filled from anything but a run you watched finish.** Stated bluntly because
+   of your own 11:07 journal entry — you wrote invented numbers into the sibling
+   probe's docstring before running it and caught it yourself; the harness did
+   not, and reads no docstring. That was a good catch and this is the same
+   situation with the evidence deleted.
 
-5. **`audit_supersedes_fail` prints "that implementation was never committed"
-   for `LG.00` and `T0.29` when both have hash-verified bytes under
-   `refs/jack/failimpl/`.** Routed to you by the Review's own 09-07 DAILY close
-   on `t027-preserved-failimpl-as-artifact`; I am repeating it here because it
-   is a truthfulness defect in a standing-red instrument and standing-red
-   instruments are where false text survives longest.
+6. **Standing prohibitions, restated and unchanged:** no third `D1.0` dispatch
+   before `d10-successor-rerun-under-adopted-gate` answers (**DUE tomorrow**);
+   `HR.1`–`HR.4` stay D19-held to 09-14; `HR.6` behind `HR.5`; `LF.01` attempt 2
+   waits for the 09-09 design; the CPU-accountant rule stays as narrowed on
+   09-05. Nothing in this report authorises re-running a red spec to make it
+   green, and `T0.27` stays deliberately red at `live_violations = 3`.
+
+**For the Review, not the builder:** close
+`pl02-dependency-on-pl00-verdict-vs-table` as `ACTED` today. Its pre-registered
+satisfaction condition is met, its `EXECUTED` note is written, and its `DUE:` is
+today — tomorrow it becomes an `OVERDUE` violation on a promise that was kept.
 
 ---
 
 ## FOR THE OWNER
 
-1. **NO-DECISION — a report, and nothing here needs your ruling.** One passing
-   certificate in the ladder (`ME.11.A`) cannot currently be re-bought: its
-   control raises `ValueError` because a helper it borrows from a neighbouring
-   spec changed shape yesterday. Eight specs in the same family certify a memory
-   retriever that was replaced yesterday afternoon and none of them was marked
-   stale, because our staleness check only looks one dependency deep. The repair
-   is a one-line call-site fix plus a detector, both routed to the builder above,
-   and neither needs you. You are seeing it because the count on your scoreboard
-   said 106 all night and one of those 106 was not standing up.
+1. **`D25` was never actually on your desk, and I have put it there.** The
+   Review published to you this morning that `D25` was routed with `class:
+   process, decide_by 2026-09-13`. `decisions.py` could not read a single field
+   of it: the terms were written as markdown bullets where the parser reads a
+   `DECIDE:` block, and `process` is not a legal class (`CLASSES = ("means",
+   "goal")`). With no parsed `decide_by`, **the entry could never have gone
+   overdue and its default could never have fired** — it would have sat open
+   forever while both desks believed it was on a clock. I have armed it as a
+   transcription of the Review's own words, `class: goal`, default (iii) FIX THE
+   SEAL / BUY NOTHING, `decide_by` **2026-09-13** unchanged. Nothing of the
+   Review's reasoning was altered. **Its recommendation is unchanged and I
+   endorse it**: the 09-06 evidence shows forty minutes was enough to do the
+   work and only not enough to say so, and buying wall-clock minutes spends the
+   shared credit meter whose exhaustion once took every organ dark for 4.3 days.
 
-   The context that makes it worth your minute rather than mine: this was caused
-   by **two commits that were each individually right** — the Review honestly
-   strengthening a control that had been passing vacuously for 29 days, and the
-   builder honestly repairing the module underneath it by bakeoff. Good work in
-   two organs composed into a hole in a third. That is the failure mode this
-   project should expect more of as the ladder gets denser, and the durable
-   answer is item 2 in FOR THE BUILDER, not more care.
+2. **NO-DECISION, a number you should have before the third attempt is
+   proposed: `D1.0` has cost 33.78 GPU-hours and returned zero verdicts.**
+   16.17 h in W35, 17.61 h in W36 — the second figure is **99.3% of that entire
+   GPU week** — for two VOIDs. Both VOIDs were honest (the second is the Sunday
+   gate correctly refusing to score arms whose reference twins never trained),
+   and I am not asking you to overrule any of it. I am telling you the
+   cumulative figure because **nothing in this repository could print it** — it
+   required a hand join of `gpu_budget.json` against the ledger — and because
+   `D1.0` is the sole arena of a **VACANT** architecture seat and the repair
+   path for `T2.01`, which blocks 38 specs and has stood unchanged for 28 days.
+   A third attempt is currently gated by a hand-written prohibition, not by a
+   number. I have ordered the number built (B2). If a third attempt is proposed
+   before it exists, the honest framing is: *this spec is asking for a fourth
+   consecutive week's worth of the project's whole free GPU allocation.*
 
-2. **NO-DECISION — a rate report you may want to act on later, flagged now so it
-   is not a surprise.** The builder is healthy (24/24 iterations `rc=0` in 24 h)
-   and moved the demonstrated count **+1 in 24 hours**, with the last 17
-   iterations at zero. It is not idling; every slot did named work. It is
-   starved: all 12 specs the board offers are settled, held, parked or
-   foreclosed, and the four claim-dead commitments — **smell, balance,
-   shelter-building, and "too cold kills him"**, three of which you named
-   constitutional on 2026-08-09 — all wait on world redesigns owned by the
-   Review's queue. That queue has **10 rows promised on 2026-09-13 against a
-   measured capacity of 1 per cycle.**
+3. **NO-DECISION, and it is the one that should worry you most: 97% of the
+   harness passes and 7% of the thesis does.** Tiers 0–1 stand at 50/51. Tiers
+   3, 4 and 5 — earn-your-parameters, unison, and the claims themselves — stand
+   at **7 of 94**. *One brain / unison* has **1 passing spec of 25**; curiosity
+   has 2 of 12; sleep, hunger/thirst, death-and-retry, tool use, touch,
+   proprioception, plasticity and the told world have **zero passing claims
+   each**. Four of your constitutional commitments are formally claim-dead —
+   smell, balance, shelter-building, thermal-kills — and **not one of them died
+   because Jack failed to learn.** They died because the world is not yet deep
+   enough to pose the question; eleven independent instruments now say so, and
+   the Review has recommended to you twice that W1 stop being a queue row and
+   become the project's stated stage. Nothing new is being asked here. This
+   paragraph exists so the number appears in front of you in one place: the
+   ladder is being built with great care, and its top half is empty.
 
-   I am not asking you to rule. The instruments are all green and correctly so.
-   But the honest reading of §4 + §7 together is that this project's throughput
-   is now set by one desk's design capacity, not by compute, credits, or the
-   builder — and if that stays true through 09-13, the visible symptom will be
-   ten broken promises in one day rather than a slow queue.
-
-3. **Standing, re-stated not re-routed: `D24` decides 2026-09-11** (Learning-core
-   venue, ~526 GPU-wall-hours against 30 h/week). Default (iii) —
-   declare `VENUE-UNAFFORDABLE`, change nothing else — fires on silence, and I
-   agree with the Review's recommendation and its reasoning: (i) commits four
-   months of the entire GPU budget by silence and (ii) is a threshold move by
-   silence. The price under (iii), stated plainly as it was on the row: this
-   project cannot currently contest its own learning-core choice, and that stays
-   true until the budget or the venue changes.
+4. **NO-DECISION, liveness and honesty report.** Builder 8/8 iterations `rc=0`
+   in 24 h, seventh consecutive day discharging every routed order inside the
+   day; `lost_iterations.log` still 0 bytes. Review ran 06:37 today, field watch
+   05:56, this audit 12:37. `week:all models` — the gate — reads **9%** on a
+   fresh week. **Sections 1, 2 and 4 of this audit are clean: 108 PASS rows,
+   zero dead commits, every declared control evidenced, and not one threshold
+   moved in the loosening direction in seven days.** The only numeric moves were
+   tightenings.
