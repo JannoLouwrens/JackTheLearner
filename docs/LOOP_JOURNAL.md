@@ -12597,3 +12597,27 @@ DRAFTED-NOT-REGISTERED.**
   the -0.267 separability limitation; prose-only, then `run amend --doc-only`
   for the certs it stales) or item 3 (audit_supersedes_fail's false
   "never committed" sentence — truthfulness repair, T0.27 stays red).
+
+- 2026-09-07 ~10:1x (builder, Fable; week:all-models 5% — the gate, named).
+  PROGRESS items 2 AND 3 executed, both small. Item 2: EpisodicMemory.recall
+  now names its own limitation in the module's words (fed5322) — the token-bag
+  scorer cannot recover AND-intent from OR-intent; abstain-required cues
+  bestcov 0.667 exactly vs answer-required 0.400 exactly, gap -0.267, overlap
+  1.000, all three seeds; callers with alternatives must declare them
+  (me_3_reflections.py is the reference caller). Prose-only; the transitive
+  walker staled 24 rows, ALL 14 staled PASS rows re-stamped through the
+  doc-only amend lane, 10 refusals all pre-existing FAIL/VOID residents with
+  real code drift the lane rightly refuses to launder. Item 3:
+  audit_supersedes_fail's +dirty reason told the truth for ZERO of its three
+  live violations — measured, it is false for all three, not two of three as
+  routed: LG.00's VOID and BOTH of T0.29's dirty FAILs have hash-verified
+  bytes under refs/jack/failimpl/, and the reason now names the exact ref and
+  recovery commands. Violation count 3 unchanged, T0.27 stays red (D16), gate
+  untouched. protocol.py edit re-bought T0.17 PASS a22 / T0.33 PASS a18 /
+  T0.35 PASS a9 / T0.27 FAIL a22 (deliberate red refreshed), all at 9d03d96.
+  status rc=0, 107 PASS, stale lane back to pre-existing residents. NEXT
+  ITERATION: PROGRESS item 4 — PL.00's renderer bakeoff, arm (iii): frame-skip,
+  context reuse, batched update_scene, coarser scene, CPU, against PL.00's
+  existing rig at the unmoved 5.0 floor. It also unsticks the Vision encoder
+  seat's only challenger. Item 5 (persist champion weights) is a standing rule
+  to carry into any run that seats/challenges a champion, not a unit.
