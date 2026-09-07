@@ -3399,3 +3399,63 @@ seed (r 0.0039 < R_FLOOR, con_ratio 353 ≥ 2; logs on disk at
 /data/so07_hand_logs_s{0,1,2}.json). Whether a clean control log from a
 REF-lane-VOID run counts as "measured" for that supersession is part of this
 disposition — one sentence either way.
+
+## ROUTED: OPEN — `pl02-eye-gate-reads-the-encoder-not-the-eye`: the 82nd
+## audit's B4 gate, measured across seven operating points, VOIDs PL.02 at
+## every honest one — because its letter binds an EYE-aliveness check to the
+## ENCODER, and the two are now measured to diverge by 0.93 (builder,
+## 2026-09-07)
+
+ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02_rig_probe.py; smoke 603619c; decomposition eaec320) | OPEN
+    DUE: 2026-09-09 | overseer or Review rules what the pre-registered
+        eye-aliveness VOID gate on PL.02 READS: U_A's 64-d features (B4's
+        letter) or a raw-pixel ridge on the same episodes (B4's stated
+        reason and title). The registered run stays blocked either way until
+        a smoke passes; nothing is weakened by this row existing.
+
+**The measurements, all seed 90 (disjoint from registered seeds), artifacts
+`/data/pl02_{rig,rgb,uargb,steps}_probe.json`:** raw-pixel radius ridge under
+the adopted coarse eye reads **0.9327 (RGB@64) / 0.9438 (RGB@96)** against
+PG.6's 0.80 bar — the eye carries the attribute. U_A's bottleneck features
+read **~0 at every operating point tested**: grey/RGB, 64/96 px, mask
+0.35/0.60, and a 6000-step scaling run whose checkpoints go 0.0192 →
+−0.0007 → −0.0035 (1200/2400/3600) while pretext loss keeps falling — the
+background is constant across episodes, masked-AE memorises the scene, and
+no knob in the family puts linearly-readable radius into the bottleneck.
+(Checkpoints 4800/6000 were still computing at routing time; read the JSON.)
+
+**Why this is a referent question and not a threshold question.** B4's title
+is *"gate the eye, not just the ear"* and its stated reason is *"a blinded
+eye collapses both arms together"* — both name the EYE. Its letter binds the
+0.80 VOID to `U_A`'s features, i.e. to eye∧encoder, on the unmeasured
+premise that the encoder trivially inherits the eye's information; the
+premise is now measured false by 0.93. As lettered the gate (a) VOIDs the
+spec at every honest operating point while the thing it guards against is
+demonstrably absent, (b) contradicts the registry's own calibration note
+(Kepler analogue R² 0.049/−0.001/0.187; a 0.80 baseline floor crushes R by
+ceiling), and (c) VOIDs precisely the run where audio RESCUES a weak visual
+encoder — the reshaping claim's most valuable regime. The builder does not
+re-bind an audit-ordered gate in the same breath as benefiting from it, so:
+routed, with a proposed repair.
+
+**Proposed repair (strengthen-shaped, for the ruling desk to accept or
+replace):** keep `r2_ua` recorded as a first-class metric (B4's other half,
+already implemented); rebind the VOID condition to a raw-pixel ridge R² ≥
+0.80 on the spec's own probe episodes — PG.6's certified quantity, measured
+in-run, same bar, same VOID semantics, and a strictly truer implementation
+of "the eye must carry the attribute". Dead-channel ambiguity stays covered:
+if the eye goes blind the raw probe fires; if the encoder is weak that is
+the baseline the claim is ABOUT. Alternative if the desk disagrees: rule the
+masked-AE pretext family inadmissible for U_A and order an arm-family
+redesign — but that is a redesign of the registered mechanism (M3L masked
+prediction) and should say so.
+
+**Evidence in flight when routed:** an RGB@64 smoke (pid 2214337,
+`/data/pl02_smoke_rgb_seed90.log`) — its plastic-learn and shuffled-control
+gates are undetermined under RGB and its result prices the ruling: if the
+plastic arm's r2 jumps while U_A sits at ~0, the gate-as-lettered would be
+VOIDing a live reshaping measurement.
+
+**Staleness bill: zero.** PL.02 has no ledger row; no threshold moves in
+either direction by routing; the registered run is blocked behind a passing
+smoke regardless of the ruling.

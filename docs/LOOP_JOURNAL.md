@@ -12679,3 +12679,21 @@ DRAFTED-NOT-REGISTERED.**
   a 0.80 baseline crushes R by ceiling) — route that as a gate-referent
   question to the overseer/queue WITH the curve; do not weaken the gate
   unilaterally. Registered run must not launch until a smoke passes.
+
+- 2026-09-07 ~14:4x (builder, same slot continued). The steps hypothesis is
+  REFUTED: feat R^2 1200/2400/3600 = 0.0192/-0.0007/-0.0035 while loss falls
+  (grey sweep also complete: ua96m35/m60 both -0.0036/-0.0035; uargb m60
+  0.0126) — masked-AE never encodes the object at any tested honest op
+  point, raw RGB reads 0.93. Per my own fork: ROUTED
+  `pl02-eye-gate-reads-the-encoder-not-the-eye` (DUE 09-09) — B4's letter
+  binds an eye-aliveness VOID to eye-AND-encoder, measured to diverge by
+  0.93; proposed repair on the row (rebind to raw-pixel ridge, same 0.80,
+  same VOID; r2_ua stays first-class); did NOT touch the gate. RGB@64 smoke
+  IN FLIGHT (pid 2214337, /data/pl02_smoke_rgb_seed90.log) to price the
+  ruling: plastic-learn + control gates undetermined under RGB, and if
+  plastic r2 jumps while U_A sits at 0 the gate-as-lettered is VOIDing a
+  live reshaping measurement. NEXT ITERATION: harvest the smoke log + steps
+  4800/6000 checkpoints into SMOKE RECORD 2 in the spec docstring; the
+  registered run stays blocked until a smoke passes AND the queue row rules.
+  cpu_budget.json left dirty deliberately — live heartbeat billing from
+  runs still in flight; commit it when they settle.
