@@ -2647,6 +2647,18 @@ def audit_supersedes_fail(results: Dict[str, Any],
     `results` is the raw ledger dict (`json.loads(...)["results"]`).
     `repo_root=None` skips the git-existence check (fixture ledgers carry
     synthetic commits); pass the repo root to audit the real ledger.
+
+    TRUTHFULNESS, 2026-09-07 (Review FTB 3 / 81st audit B5; `D16` ruled on the
+    GATE and said nothing about this text): a `+dirty` stamp used to print
+    "that implementation was never committed" unconditionally, which was false
+    for most of the rows it printed — `preserve_impl_bytes` has archived the
+    exact failing bytes of `LG.00` and `T0.29` under `FAILIMPL_REF_PREFIX`,
+    hash-verified against the row's own `impl_sha` at write time. The
+    violation is UNCHANGED either way (the gate demands a committed tree
+    state, and whether a preserved manifest should count as an equal artifact
+    is a Review-routed spec question, not this function's to settle); only the
+    reason now says which of the two worlds the reader is in: bytes
+    recoverable via the named ref, or genuinely gone.
     """
     violations: List[Dict[str, Any]] = []
     checked = unauditable = 0
@@ -2659,6 +2671,42 @@ def audit_supersedes_fail(results: Dict[str, Any],
             return p.returncode == 0
         except Exception:
             return False
+
+    def _preserved_ref(spec_id: str, impl_sha: str) -> str:
+        """The failimpl ref whose manifest names this exact impl_sha, or ''.
+
+        Write-time verification is the proof (`preserve_impl_bytes` refuses to
+        write a ref unless the stored bytes re-derive `impl_sha_of` equal to
+        the row's sha), so matching the manifest's recorded `impl_sha` here is
+        matching a proven claim, not trusting a label. Skipped when repo_root
+        is None, like `_commit_exists` — fixture ledgers have no refs.
+        """
+        if repo_root is None or not impl_sha:
+            return ""
+        try:
+            p = subprocess.run(
+                ["git", "for-each-ref", "--format=%(refname) %(objectname)",
+                 f"{FAILIMPL_REF_PREFIX}/{spec_id}/"],
+                capture_output=True, text=True, cwd=repo_root, timeout=10)
+            if p.returncode != 0:
+                return ""
+            for line in p.stdout.splitlines():
+                ref, _, obj = line.strip().partition(" ")
+                if not obj:
+                    continue
+                m = subprocess.run(["git", "cat-file", "blob", obj],
+                                   capture_output=True, text=True,
+                                   cwd=repo_root, timeout=10)
+                if m.returncode != 0:
+                    continue
+                try:
+                    if json.loads(m.stdout).get("impl_sha") == impl_sha:
+                        return ref
+                except (ValueError, AttributeError):
+                    continue
+        except Exception:
+            return ""
+        return ""
 
     for sid, row in results.items():
         if row.get("status") != Status.PASS.value:
@@ -2688,8 +2736,18 @@ def audit_supersedes_fail(results: Dict[str, Any],
             if not stamp or stamp == "unknown":
                 reasons.append(f"{lbl} carries no commit stamp")
             elif stamp.endswith("+dirty"):
-                reasons.append(f"{lbl} stamped {stamp}: that implementation "
-                               "was never committed")
+                ref = _preserved_ref(sid, e.get("impl_sha") or "")
+                if ref:
+                    reasons.append(
+                        f"{lbl} stamped {stamp}: no commit names it, but the "
+                        f"exact failing bytes are preserved, hash-verified, at "
+                        f"{ref} (git cat-file -p the ref for the manifest, "
+                        "then each blob); still a violation — the gate "
+                        "requires a committed tree state")
+                else:
+                    reasons.append(f"{lbl} stamped {stamp}: that "
+                                   "implementation was never committed and no "
+                                   "preserved bytes match its impl_sha")
             elif repo_root is not None and not _commit_exists(stamp):
                 reasons.append(f"{lbl} commit {stamp} does not exist in this "
                                "repository")
