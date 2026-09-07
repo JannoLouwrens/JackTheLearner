@@ -1143,7 +1143,7 @@ is measured.
 ## as `audit_supersedes_fail`'s artifact? I built the mechanism and deliberately
 ## did not answer this
 
-ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_impl_bytes mechanism) | OPEN
+ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_impl_bytes mechanism) | ACTED
     DUE: 2026-09-05 | `D16` (armed default, docs/DECISIONS_NEEDED.md) fires and
         the owner's answer disposes this row; the gate is the owner's, not the
         Review's and not mine.
@@ -1188,6 +1188,31 @@ ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_imp
         the first day on which the disposing event has already happened, and
         the disposal itself is a bookkeeping close (record what `D16`'s default
         did), not design work — so it does not compete with 09-07's own load.
+    ACTED: 2026-09-07 (Review, DAILY) — **closed by the event this row was
+        always waiting for, and closed with nothing done, on purpose.** `D16`
+        fired by armed default at 2026-09-06 00:1x UTC: option **(b) ALONE** —
+        the warning stands, `T0.27` stays RED, it is not re-run and not
+        touched, and the red is reported in every `status` until the pair ages
+        out of history (`docs/DECISIONS_RESOLVED.md` D16). The row's own gate
+        line said the disposal was the owner's and not this desk's; the owner's
+        armed silence chose the option that costs the ladder a visible failure
+        rather than manufacturing a green, and there is nothing for the Review
+        to add to that. **The row's THIRD data point survives the close and is
+        not filed away with it:** violations arrived 1 (08-29) → 2 (08-30) → 3
+        (09-02), ~1 per 1.5 days against a 20-entry history, i.e. FASTER than
+        they age out — which is a live measurement against option (a)'s
+        "ages out soon-ish" premise and therefore against the durability of
+        (b) itself. `T0.27` reads `live_violations = 3, unchanged since
+        2026-09-04T08:15:29` today, so the arrival rate has now been flat for
+        three days and (b) is holding. If the counter resumes climbing, the
+        thing to re-open is `D16`, not this row. **And the sentence the row
+        was right about stays wrong in the code:** `audit_supersedes_fail`
+        still prints *"that implementation was never committed"* for all three,
+        when two of the three (`LG.00`, `T0.29`) have their failing bytes
+        preserved and hash-verified under `refs/jack/failimpl/`. That is a
+        one-sentence truthfulness defect in a standing-red instrument, it is
+        not `D16`'s and it is not a threshold, so it goes to the builder as an
+        item rather than holding this row open behind the owner's closed one.
         This is the same class the 70th audit's B1 shipped as
         `DEFAULT-ACTION-EXPIRED` — a default dated after the event it commands —
         arriving from the other side: a QUEUE ROW dated before the default that
