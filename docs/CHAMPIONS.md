@@ -55,6 +55,16 @@ SYSTEM.md, which outrank this file.
 5. **Deposed champions are archived, not erased** — they remain the reference
    arms of their seats (a champion that cannot beat its own predecessor has
    regressed).
+6. **Any run that seats or challenges a champion must persist its trained
+   weights as a run artifact** (ordered free by the Review, 2026-09-07, off
+   field watch wk6's measurement: no trained `A4` weights exist on disk —
+   `lc03_curves_seed*.json` holds `life_spans`, `params`, `optimiser_steps`,
+   `process_time_s` and no tensors — so while `A4` holds the Learning-core
+   seat, every future question about the one arm the project rests on costs a
+   full retrain, ~4.8 core-h per seed, before it can be asked). Not a spec,
+   not an instrument, not a threshold: the whole cost of compliance is disk.
+   Until a seat's weights are on disk, *"we could measure that on the seated
+   arm"* is false about that seat.
 
 ## The seats (Jack's anatomy)
 
