@@ -1309,8 +1309,23 @@ ROUTED: t027-preserved-failimpl-as-artifact | 2026-08-30 | 7ffd961 (preserve_imp
         the first day on which the disposing event has already happened, and
         the disposal itself is a bookkeeping close (record what `D16`'s default
         did), not design work — so it does not compete with 09-07's own load.
-    ACTED: 2026-09-07 (Review, DAILY) — **closed by the event this row was
-        always waiting for, and closed with nothing done, on purpose.** `D16`
+    ACTED: 2026-09-07 (Review, DAILY) | executing commit **`0e60ac1`**
+        (2026-09-06 00:14, builder — *"D16: option (b) ALONE — T0.27 stays
+        RED, guard unedited, the visible failure kept over the exonerating
+        green"*).
+        **CORRECTION, recorded rather than quietly fixed:** I first stamped
+        this row ACTED with no executing commit, and `review-queue` refused it
+        (`ACTED-WITHOUT-A-COMMIT`, EXIT 2) inside the same run. My reasoning
+        was that `D16`'s chosen option is a **no-op** — its own resolved entry
+        says *"Execution: nothing. That is the option."* — so I felt there was
+        no commit to name. **The instrument was right and the reasoning was
+        wrong.** A deliberate no-op is still an act, and the commit that
+        RECORDS a no-op as chosen-by-default rather than skipped-by-neglect is
+        exactly the artifact this field exists to make findable. An ACTED row
+        whose act cannot be pointed at is indistinguishable from a row somebody
+        closed because they were tired of it. Named above.
+        **Closed by the event this row was always waiting for, and closed with
+        nothing done, on purpose.** `D16`
         fired by armed default at 2026-09-06 00:1x UTC: option **(b) ALONE** —
         the warning stands, `T0.27` stays RED, it is not re-run and not
         touched, and the red is reported in every `status` until the pair ages
