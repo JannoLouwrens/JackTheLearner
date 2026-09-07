@@ -192,6 +192,36 @@ class EpisodicMemory:
         recall(q, channel="heard", speaker="Ada"); "what did I say" is
         recall(q, channel="said", speaker="jack"). Returns [] when nothing
         clears the similarity floor — abstention is a first-class answer.
+
+        LIMITATION, measured and permanent for this scorer family (probe:
+        experiments/tests/me1_floor_probe.py `separability`, 2026-09-06;
+        recorded here because no certificate records a limitation — if it is
+        not in this module's own words it is nowhere). The query is a token
+        BAG, so this scorer cannot recover AND-intent from OR-intent: a
+        conjunctive cue (every word describes ONE event) and a disjunctive cue
+        (words enumerate mutually exclusive alternatives, e.g. a speaker plus
+        four candidate values joined into one string) are indistinguishable in
+        the single statistic the floor thresholds on, best-event coverage.
+        And the two populations separate in the WRONG ORDER: on ME.3's
+        habit-skewed store, cues that MUST abstain (3-word combinations that
+        never co-occur) score bestcov 0.667 exactly, while cues that MUST
+        answer (speaker + 4 mutually exclusive candidates) score 0.400
+        exactly — gap −0.267, overlap 1.000, identical on all three seeds. So
+        no monotone single-cue floor over this statistic can serve both
+        populations at once, at ANY value: raising it starves disjunctive
+        callers (ME.3 attempt 4: raw_tokens 40.0 → 0.0), lowering it readmits
+        the confabulation ME.1's distractor control measures. That is an
+        impossibility of the token-bag interface, not a mistuning of 0.95.
+
+        The contract that routes around it, adopted by bakeoff (A5 of
+        me1_floor_probe, Review disposition 2026-09-07): a caller holding
+        alternatives must DECLARE them — issue one conjunctive sub-cue per
+        alternative (e.g. speaker + candidate) through this same recall, each
+        under the same floor with abstention preserved per sub-cue, and
+        union-rank the results by this module's own score key. `" ".join`-ing
+        alternatives into one cue asks a question this interface cannot
+        represent, and the floor will (correctly, by its own contract)
+        abstain on it. me_3_reflections.py holds the reference caller.
         """
         if not self.events:
             return []

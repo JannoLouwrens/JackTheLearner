@@ -4929,7 +4929,22 @@
       "status": "VOID"
     },
     "LF.02": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:28",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "21586a829f9f05cb",
+              "proof": "reconstructed 21586a829f9f05cb from git 6502d36d6eaa; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "cd3d3803261610e1"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 3,
       "commit": "6502d36",
       "compute_s": null,
@@ -5047,7 +5062,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "21586a829f9f05cb",
+      "impl_sha": "cd3d3803261610e1",
       "message": "",
       "metrics": {
         "borrowed_commit": "6c57954",
@@ -5096,7 +5111,22 @@
       "status": "PASS"
     },
     "LG.00": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:24",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "6ed81521e58db0bc",
+              "proof": "reconstructed 6ed81521e58db0bc from git 6502d36d6eaa; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "e2d9b4d0350951b5"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 7,
       "commit": "2438502",
       "compute_s": null,
@@ -6025,7 +6055,7 @@
           }
         }
       ],
-      "impl_sha": "6ed81521e58db0bc",
+      "impl_sha": "e2d9b4d0350951b5",
       "message": "",
       "metrics": {
         "grounded_knowledge_advantage": 0.532667,
@@ -6147,7 +6177,22 @@
       "status": "PASS"
     },
     "LG.01": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:22",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "3216fa4a6e1276e2",
+              "proof": "reconstructed 3216fa4a6e1276e2 from git 6502d36d6eaa; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "38f7ec87bf4d4ccc"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 5,
       "commit": "6502d36",
       "compute_s": null,
@@ -6550,7 +6595,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "3216fa4a6e1276e2",
+      "impl_sha": "38f7ec87bf4d4ccc",
       "message": "",
       "metrics": {
         "calib_acc": 0.8333,
@@ -6640,7 +6685,22 @@
       "status": "PASS"
     },
     "LG.02": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:26",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "2c92397433a463e8",
+              "proof": "reconstructed 2c92397433a463e8 from git 6502d36d6eaa; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "bff81c0a52a8c2c2"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 3,
       "commit": "6502d36",
       "compute_s": null,
@@ -6905,7 +6965,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "2c92397433a463e8",
+      "impl_sha": "bff81c0a52a8c2c2",
       "message": "",
       "metrics": {
         "attrib_acc": 0.95,
@@ -7338,7 +7398,22 @@
       "status": "FAIL"
     },
     "ME.1": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:02",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "a721df40d4d6011e",
+              "proof": "reconstructed a721df40d4d6011e from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "1511dae37b8a12bc"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 8,
       "commit": "80f8c80",
       "compute_s": null,
@@ -7614,7 +7689,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "a721df40d4d6011e",
+      "impl_sha": "1511dae37b8a12bc",
       "message": "",
       "metrics": {
         "cued_recall": 0.85,
@@ -7646,7 +7721,22 @@
       "status": "PASS"
     },
     "ME.10": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:12",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "61d16b3439074f71",
+              "proof": "reconstructed 61d16b3439074f71 from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "c0fbacf560a6443f"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 3,
       "commit": "80f8c80",
       "compute_s": null,
@@ -7751,7 +7841,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "61d16b3439074f71",
+      "impl_sha": "c0fbacf560a6443f",
       "message": "",
       "metrics": {
         "distractor_abstention": 1.0,
@@ -7868,7 +7958,22 @@
       "status": "FAIL"
     },
     "ME.11.0": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:14",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "483b36147b0414d8",
+              "proof": "reconstructed 483b36147b0414d8 from git ded4219c0d25; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "f2ceeeba8721fcf2"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 6,
       "commit": "ded4219",
       "compute_s": null,
@@ -8073,7 +8178,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "483b36147b0414d8",
+      "impl_sha": "f2ceeeba8721fcf2",
       "message": "",
       "metrics": {
         "ambiguous_cues": 12.0,
@@ -8118,7 +8223,22 @@
       "status": "PASS"
     },
     "ME.11.A": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:16",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "991869b8ff2550a2",
+              "proof": "reconstructed 991869b8ff2550a2 from git ded4219c0d25; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "2d49e2010071d5d4"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 4,
       "commit": "ded4219",
       "compute_s": null,
@@ -8282,7 +8402,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "991869b8ff2550a2",
+      "impl_sha": "2d49e2010071d5d4",
       "message": "",
       "metrics": {
         "abstain_N1": 1.0,
@@ -8983,7 +9103,22 @@
       "status": "PASS"
     },
     "ME.3": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:04",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "8cf93829dfa86712",
+              "proof": "reconstructed 8cf93829dfa86712 from git a59363a2f56c; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "3c18ee4f0675baa9"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 5,
       "commit": "a59363a",
       "compute_s": null,
@@ -9133,7 +9268,7 @@
           "status": "FAIL"
         }
       ],
-      "impl_sha": "8cf93829dfa86712",
+      "impl_sha": "3c18ee4f0675baa9",
       "message": "",
       "metrics": {
         "aggregation_qa_gain": 0.343733,
@@ -9211,7 +9346,22 @@
       }
     },
     "ME.4": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:06",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "4adfe34fae2e35d6",
+              "proof": "reconstructed 4adfe34fae2e35d6 from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "000822a6793c6b1d"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 4,
       "commit": "80f8c80",
       "compute_s": null,
@@ -9341,7 +9491,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "4adfe34fae2e35d6",
+      "impl_sha": "000822a6793c6b1d",
       "message": "",
       "metrics": {
         "fifo_retention_acc": 0.0,
@@ -9381,7 +9531,22 @@
       "status": "PASS"
     },
     "ME.5": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:08",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "634155e62f0c09f8",
+              "proof": "reconstructed 634155e62f0c09f8 from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "ceafed31f6d61033"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 3,
       "commit": "80f8c80",
       "compute_s": null,
@@ -9538,7 +9703,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "634155e62f0c09f8",
+      "impl_sha": "ceafed31f6d61033",
       "message": "",
       "metrics": {
         "a_match_100": 1.0,
@@ -9733,7 +9898,22 @@
       "status": "PASS"
     },
     "ME.9": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:10",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "6187f2605e68a987",
+              "proof": "reconstructed 6187f2605e68a987 from git 4f62755010d4; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "fa2dffbd27362b9e"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 6,
       "commit": "4f62755",
       "compute_s": null,
@@ -9940,7 +10120,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "6187f2605e68a987",
+      "impl_sha": "fa2dffbd27362b9e",
       "message": "",
       "metrics": {
         "acc_did": 1.0,
@@ -16106,7 +16286,22 @@
       "status": "VOID"
     },
     "SO.08": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:30",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "4426f4f96edc70d7",
+              "proof": "reconstructed 4426f4f96edc70d7 from git 6502d36d6eaa; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "0ef664ac8eb778d6"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 2,
       "commit": "6502d36",
       "compute_s": null,
@@ -16375,7 +16570,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "4426f4f96edc70d7",
+      "impl_sha": "0ef664ac8eb778d6",
       "message": "",
       "metrics": {
         "approach_bad_lastq": 0.133333,
@@ -31047,7 +31242,22 @@
       "status": "PASS"
     },
     "T2.20": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:00",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "4cfea48e86436f8d",
+              "proof": "reconstructed 4cfea48e86436f8d from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "ad03c71068e83ea1"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 7,
       "commit": "80f8c80",
       "compute_s": null,
@@ -31242,7 +31452,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "4cfea48e86436f8d",
+      "impl_sha": "ad03c71068e83ea1",
       "message": "",
       "metrics": {
         "ep1_sighted_frac": 1.0,
@@ -36939,7 +37149,22 @@
       "status": "PASS"
     },
     "XL.00": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T10:10:20",
+          "by": "PROGRESS-FTB-2-2026-09-07",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "0e22cecb41358ac7",
+              "proof": "reconstructed 0e22cecb41358ac7 from git 80f8c80d63a9; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: EpisodicMemory.py",
+              "to": "3e6f99163a620c21"
+            }
+          ],
+          "commit": "ce33621+dirty",
+          "reason": "EpisodicMemory.recall gained the LIMITATION docstring the Review ordered (the -0.267 separability gap: token-bag scorer cannot recover AND-intent from OR-intent; callers with alternatives must declare them). Prose-only; no code, threshold or contract moved."
+        }
+      ],
       "attempt": 8,
       "commit": "80f8c80",
       "compute_s": null,
@@ -37478,7 +37703,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "0e22cecb41358ac7",
+      "impl_sha": "3e6f99163a620c21",
       "message": "",
       "metrics": {
         "alpha": 0.027222,
