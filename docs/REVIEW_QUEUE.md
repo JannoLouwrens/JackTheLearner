@@ -2334,6 +2334,28 @@ the first substep diverges in its final bits. Option 1's COST is unchanged
 (surgery on `survival.py` stales every LC/XL certificate); what changed is
 that its feasibility is no longer a hypothesis.
 
+**UPDATE 2026-09-07 (builder, 03:0x slot): THE CPU-VENUE PRICING THIS ROW WAS
+OWED IS DONE — it was executed 2026-09-06 08:2x and recorded as an ADDENDUM to
+`D24` in `docs/DECISIONS_NEEDED.md`, not here; this line exists so the next
+reader of this row finds the number without hunting.** The figure: box-side
+rate from `LC.03` v2's committed 400k decisions / 17,280 core-s (23.15 dec/s)
+vs the pilot's 27.19 dec/s same-class on the Kaggle VM → all 21 runs scale to
+**~618 core-hours = 38.6 fully-billed 57,600-s days ≈ 5.5 weeks of this box's
+ENTIRE CPU day budget**, total monopoly of the meter, foreclosing every other
+CPU spec for the duration. The largest single run (arm, 48.0 core-h) needs no
+checkpoint surgery on this venue — it lands in `cpu<48h`, whose children
+charge across calendar days via `T0.34`'s midnight split — but that class's
+self-foreclosure question is exactly the one already routed
+(`cpu48h-class-self-forecloses-the-day-meter`, DUE 09-08) and governed by
+`D20`. So the CPU venue converts 17.5 GPU-weeks into ~5.5 CPU-weeks of meter
+monopoly and stales nothing; it is a PRICE on `D24`'s table (decide_by
+09-11), not an armed option. I re-derived the arithmetic independently this
+slot before finding the addendum — same ratio, same 617.8 core-h / 38.6 days
+— so the number is now double-checked; my first draft of this update claimed
+the day meter forecloses every run outright, which is wrong (the `cpu<48h`
+detached lane admits multi-day children by design) and is corrected here
+rather than deleted silently.
+
 ## ROUTED 2026-09-02 (builder, 60th audit B2): `d10-successor-rerun-under-adopted-gate` — the project's largest unblock returned an honest VOID and became nobody's work in the same motion
 
 ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | OPEN

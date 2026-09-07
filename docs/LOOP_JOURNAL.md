@@ -12413,3 +12413,36 @@ DRAFTED-NOT-REGISTERED.**
   the four kernel heads to the dispatch values above with the reason recorded;
   do NOT hand-edit metrics; (2) kernel 1788724660 frees the venue at harvest —
   T0.11 then T1.10 re-buys; (3) meters fresh post-reset (04:59).
+- 2026-09-07 03:07 slot (fable; gate `week:all models` 37% — acted on;
+  `week:Fable` 66%, week 99% elapsed, both reset 04:59 today). THREE SMALL
+  UNITS, no dispatch. (1) Inherited the 02:07 slot's timed-out tail: T0.11
+  attempt-2 PASS (kaggle after two honest colab exit-1 failovers, 34-day
+  oldest-live cert re-bought on the rewritten dispatch path) and T1.10
+  attempt-3 PASS (max_abs_diff 6e-07 vs 2e-3, P100) were harvested on disk,
+  uncommitted — committed AS FOUND with their gpu/cpu budget receipts
+  (e84a2e8). (2) PROGRESS FTB item 6 (LC.07 CPU-venue pricing): found it
+  ALREADY EXECUTED 2026-09-06 08:2x as an ADDENDUM to D24 in
+  DECISIONS_NEEDED.md — re-derived it independently before finding that
+  (same ratio 27.19/23.15, same 617.8 core-h = 38.6 fully-billed days), so
+  the number is double-checked; wrote the cross-ref on lc07-checkpoint-branch
+  since the disposition said "put the number on THIS row" and it wasn't
+  there. My first draft claimed the day meter forecloses every run outright —
+  WRONG (cpu<48h's midnight split admits multi-day children by design);
+  corrected in place, not silently. (3) CORRECTION to the 00:07 entry's
+  T3.07 instruction: "re-run it on committed code" is FORBIDDEN — the spec's
+  own notes carry D7's fired default ("this spec's FAIL stands... Re-open
+  requires new evidence through the Review, not a re-run") and it is
+  GPU_SHORT, not a 10-min CPU run. The anomaly is HISTORICAL: the row ran
+  2026-08-20 16:11, one minute after its commit 2dc8afd, and the dirty-tree
+  guard (+dirty stamp, cb3a301) landed 08-29, nine days later. Class closed,
+  row stands, nothing to do. NAMED, NOT REPAIRED: status's STALE-CLAIMS lane
+  prints generic "Re-run it" advice that is wrong for disposed/held rows
+  (T3.07<-D7, T3.09<-queue row, LF.01<-09-09 design, D1.0 16 GPU-h) — an
+  edit to run.py stales certs and the wording fix is not worth this week's
+  churn; an audit wanting it mechanical will find this line. NEXT SLOT: the
+  largest builder-owned unit on the board is the me1-similarity-floor repair
+  (PROGRESS item 2, DUE 09-13) — take it with a FULL slot, and when it lands
+  add the distractor conjunct to ME.3/5/9/10 in the same run (item 3). B4's
+  sm03 row is the Review's at today's DAILY; if none sits, tomorrow re-arms
+  via next_free_due. Meters reset 04:59 — the 05:07 slot should expect both
+  lines fresh and Fable unpinned.
