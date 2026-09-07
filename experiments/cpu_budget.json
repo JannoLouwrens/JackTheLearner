@@ -99,6 +99,7 @@
         "T0.28": 70.69,
         "T0.33": 5.33,
         "T0.35": 16.9,
+        "T2.10": 7.21,
         "detached:pl02_rgb_probe.log": 54.55,
         "detached:pl02_rig_probe.log": 1473.33,
         "detached:pl02_smoke_rgb_seed90.log": 1011.56,
@@ -106,7 +107,7 @@
         "detached:pl02_steps_probe.log": 1485.39,
         "detached:pl02_uargb_probe.log": 717.59
       },
-      "used_s": 6220.13
+      "used_s": 6227.34
     }
   },
   "overruns": []
