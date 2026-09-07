@@ -115,6 +115,21 @@ physics. The pilot was timing a nearly-blind eye. `_Rig.reset()` and
 spec was right and the unregistered convenience measurement was 3.9x wrong in
 the flattering direction. Generalised in `LESSONS.md`.
 
+ATTEMPT 2 (2026-09-07) RUNS UNDER THE BAKEOFF-ADOPTED EYE QUALITY. The Review's
+disposition of `pl02-dependency-on-pl00-verdict-vs-table` ordered arm (iii),
+the renderer bakeoff (`pl00_render_bakeoff.py`), and pre-registered that a
+clearing arm dissolves the PL.02 edge by SATISFYING this spec — never by
+editing it. The winner: `experiments/eye_quality.py` — MSAA off, shadow map
+4096^2 -> 512^2, shadows kept. The 40 ms attempt 1 measured was two fixed
+full-scene software-GL passes (shadow map ~22.7 ms, 4x MSAA ~12.7 ms) —
+MuJoCo defaults nobody chose — not rasterisation of the 4,096-pixel frame,
+which is WHY the price was resolution-independent. Nothing else moves: the
+floor is 5.0, the camera is the world contract's, one rendered frame per
+decision, both controls and every rig gate unchanged. Under the adopted
+quality the discrimination control also becomes REAL for the first time:
+render-only clears the floor (worst-seed 8.949 in the bakeoff), so the
+ViT reference failing it is at last a sentence about the encoder.
+
 THE GL TRAP, inherited rather than rediscovered. A `mujoco.Renderer` that is
 garbage-collected poisons the shared X display, and the NEXT renderer returns
 frames that are corrupted but entirely plausible (`pg_6.get_eye`'s docstring,
@@ -137,6 +152,11 @@ from ..registry import BY_ID
 
 REPO = Path(__file__).resolve().parents[2]
 SPEC_ID = "PL.00"
+
+# The full implementation reach, declared (T0.35 P6-P9; PL.00's entries in
+# both GRANDFATHERED sets are deleted in the same commit, per their own rule:
+# declare in the slot that re-runs).
+IMPL_DEPS = ["playground.py", "UnifiedBrain.py", "experiments/eye_quality.py"]
 
 # ── PRE-REGISTERED CONSTANTS. Fixed before the run; see the docstring for the
 # provenance of each. Nothing here was fitted to an observation. ────────────
@@ -311,6 +331,8 @@ class _Rig:
         self.mj = mujoco
         params = pg.PlaygroundParams(seed=seed)
         self.model, self.data, _ = pg.make_playground(params, with_water=False)
+        from experiments.eye_quality import apply_eye_quality
+        apply_eye_quality(self.model)   # before Renderer: buffers alloc here
         self.r = mujoco.Renderer(self.model, height=res, width=res)
         self._canary = None
         self._canary = self.canary()

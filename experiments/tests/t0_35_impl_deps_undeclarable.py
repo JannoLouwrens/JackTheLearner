@@ -137,13 +137,15 @@ REPO = Path(__file__).resolve().parents[2]
 # (editing its module under a live watcher risks a sha mismatch on the row
 # the watcher writes); T1.01/T1.06/T1.12/T2.00 are PASS certs whose re-buys
 # cost 17-63 min each — declare each ONLY in a slot that re-runs it, or the
-# declaration itself manufactures a DRIFTED claim; LF.01/PL.00/T2.10/T3.09
+# declaration itself manufactures a DRIFTED claim; LF.01/T2.10/T3.09
 # hold FAIL/VOID rows whose re-runs are routed or held, so a declaration
 # would push them into the stale lane with no sanctioned way out.
+# 2026-09-07: PL.00 declared (playground.py, UnifiedBrain.py, eye_quality.py)
+# and deleted from BOTH sets in the same commit — its re-run was sanctioned
+# by the renderer-bakeoff disposition, 9 -> 8.
 GRANDFATHERED = {
     "D1.0": ("TrainingPipeline", "UnifiedBrain"),
     "LF.01": ("EpisodicMemory",),
-    "PL.00": ("UnifiedBrain", "playground"),
     "T1.01": ("UnifiedBrain",),
     "T1.06": ("UnifiedBrain",),
     "T1.12": ("UnifiedBrain",),
@@ -182,7 +184,6 @@ TRANSITIVE_GRANDFATHERED = {
                 "experiments/tests/me_11_a_lexical_incumbent.py",
                 "experiments/tests/me_11_b_bm25s_stemming.py",
                 "experiments/tests/me_1_event_log.py"),
-    "PL.00": ("UnifiedBrain.py", "playground.py"),
     "T0.26": ("experiments/tests/ba_01_feels_the_fall.py",),
     "T1.01": ("UnifiedBrain.py",),
     "T1.06": ("UnifiedBrain.py",),
