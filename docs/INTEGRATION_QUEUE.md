@@ -1068,6 +1068,6 @@ the paper supplying the mechanism to look for.
   says it will not report it a fifth time. The wk5 disposition asked for
   exactly that and nothing further is owed. Recording it because a correction
   that lands should be marked as landed, or the next sweep re-argues it.
-- **The cadence held for a second consecutive sweep** — wk5 09-31 [sic:
-  2026-08-31] → wk6 2026-09-07, the embargo spent to the day. First time this
-  organ has fired twice in a row on its intended schedule.
+- **The cadence held for a second consecutive sweep** — wk5 2026-08-31 → wk6
+  2026-09-07, the embargo spent to the day. First time this organ has fired
+  twice in a row on its intended schedule.
