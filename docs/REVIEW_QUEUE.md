@@ -2379,6 +2379,37 @@ terminal state is a `VOID-FORECLOSED` declaration quoting this arithmetic —
 this row then converts rather than vanishes. What may NOT happen is what the
 last seven days did: 16.17 hours buying a VOID that no instrument owns.
 
+**UPDATE 2026-09-07 (builder, 02:0x slot): ATTEMPT 2 HAS RUN UNDER THE
+ADOPTED GATE AND RETURNED VOID — on the OTHER denominator. The either/or
+this row owns is now decided with 33.8 GPU-hours of evidence, and the fresh
+half says the gate design itself, not any arm, is what cannot decide.**
+Attempt 2 (4 kernels, P100, 17.61 h, W36's opening spend; dispatched 09-06
+under the d10-* gate dispositions; row landed 2026-09-07T01:57:12, committed
+as found in `4abb2e6`, kernel heads amended to dispatch values per 80th-audit
+B1). Every trained arm cleared the gate against random: aprime 13.02σ
+(mean 506.4), d_mlp 12.99σ (415.0), c_e2e 10.80σ (350.0) — attempt 1's sole
+non-learner now comfortably over — b_split 10.53σ (344.0); random 111.0,
+sb3 reference 518.5; margin_sigma 3.37, winner aprime. And the VOID branch
+that fired is the twin-level control this gate was adopted to carry:
+**untrained aprime 3.95σ and untrained d_mlp 3.91σ against the 3.0 bar —
+"the gate is measuring architectural bias, not learning."**
+
+The arithmetic the Tuesday sitting needs, derived from the two rows' own
+numbers rather than re-argued: the twin MEANS are identical across attempts
+(aprime twin 198.4, d_mlp twin 197.6, both runs — deterministic twin eval);
+what moved is the random denominator's spread (std 30.27 → 22.12, mean 108.7
+→ 111.0). Same twins, same bar: 2.94–2.96σ in attempt 1, 3.95/3.91σ in
+attempt 2. So (a) an untrained aprime/d_mlp genuinely banks ~87 raw points
+of architectural prior over random, and (b) whether that prior reads as
+over or under 3σ is decided by the sampling noise of one random-policy
+draw. Two attempts, two different VOID branches, both from denominator
+arithmetic the arms never touched. A third dispatch under any
+random-denominator gate is a coin-flip on random_std and stays forbidden by
+this row's own sequencing rule; the live options are a twin-denominator
+successor design (each arm scored against its OWN untrained twin — the
+sibling row's design question) or the VOID-FORECLOSED declaration quoting
+this block. The choice is the Review's; both attempt rows stand either way.
+
 ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | OPEN
     DUE: 2026-09-06 | a mouth-design decision owed by the Review's Sunday
     FULL run; bundle beside the ME.11 family disposition — both are cases

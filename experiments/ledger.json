@@ -705,7 +705,49 @@
       "status": "VOID"
     },
     "D1.0": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-07T02:12:42",
+          "by": "80th-audit-B1",
+          "changes": [
+            {
+              "field": "metrics.sb3_reference.head",
+              "from": "1ee4a3a",
+              "to": "3a4ccfd"
+            },
+            {
+              "field": "metrics.kernels[0].head",
+              "from": "321d786",
+              "to": "1ee4a3a"
+            },
+            {
+              "field": "metrics.kernels[1].head",
+              "from": "ce2b56b",
+              "to": "321d786"
+            },
+            {
+              "field": "metrics.kernels[2].head",
+              "from": "f85ad82",
+              "to": "ce2b56b"
+            }
+          ],
+          "commit": "4abb2e6+dirty",
+          "reason": "In-flight attempt-2 runner (pid 1775608) imported pre-fix code and stamped each head AFTER its blocking submit returned (harvest-time HEAD). Reconciled with the dispatch-time heads submit() wrote to the attempt receipts at build time \u2014 the value that names the code each kernel actually ran. Ordered by 80th-audit B1's contingency: row committed as found (4abb2e6), heads amended, metrics untouched."
+        },
+        {
+          "at": "2026-09-07T02:13:07",
+          "by": "59th-audit-B7-lane",
+          "changes": [
+            {
+              "field": "hardware",
+              "from": "aarch64/Linux/torch2.8.0+cpu/cpu",
+              "to": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)"
+            }
+          ],
+          "commit": "4abb2e6+dirty",
+          "reason": "hardware stamps the aarch64 dispatcher while all three arm kernels record Tesla P100-PCIE-16GB in metrics.kernels[].gpu \u2014 same provenance defect attempt 1 carried, same derived lane, applied to the fresh attempt-2 row."
+        }
+      ],
       "attempt": 2,
       "commit": "3a4ccfd",
       "compute_s": 63399.54,
@@ -729,7 +771,7 @@
       },
       "duration_s": 63432.31,
       "gpu_job_id": "jannolouwrens/jack-ladder-1788682804,jannolouwrens/jack-ladder-1788688360,jannolouwrens/jack-ladder-1788703032,jannolouwrens/jack-ladder-1788724660",
-      "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+      "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [
         {
           "amended": [
@@ -1113,7 +1155,7 @@
             ],
             "backend": "kaggle",
             "gpu": "Tesla P100-PCIE-16GB",
-            "head": "321d786",
+            "head": "1ee4a3a",
             "wall_minutes": 241.2
           },
           {
@@ -1122,7 +1164,7 @@
             ],
             "backend": "kaggle",
             "gpu": "Tesla P100-PCIE-16GB",
-            "head": "ce2b56b",
+            "head": "321d786",
             "wall_minutes": 357.0
           },
           {
@@ -1131,7 +1173,7 @@
             ],
             "backend": "kaggle",
             "gpu": "Tesla P100-PCIE-16GB",
-            "head": "f85ad82",
+            "head": "ce2b56b",
             "wall_minutes": 356.1
           }
         ],
@@ -1145,7 +1187,7 @@
         "sb3_reference": {
           "backend": "kaggle",
           "gpu": "Tesla P100-PCIE-16GB",
-          "head": "1ee4a3a",
+          "head": "3a4ccfd",
           "ref_mean": 518.5386594019477,
           "reference_runs": [
             {

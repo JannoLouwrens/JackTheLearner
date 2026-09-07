@@ -813,6 +813,7 @@ class Ledger:
               status: Optional[Status] = None,
               unknown_history: bool = False,
               fix_hardware: bool = False,
+              fix_heads: bool = False,
               doc_only: bool = False) -> Dict[str, Any]:
         """Change an entry WITHOUT a run, and make the entry say so.
 
@@ -871,7 +872,7 @@ class Ledger:
                 "PASS claims a capability and FAIL fires the spec's `kills` — "
                 "both require a run that could have failed.")
         if status is None and not unknown_history and not fix_hardware \
-                and not doc_only:
+                and not fix_heads and not doc_only:
             raise ValueError("amend with nothing to change")
 
         lock_path = self.path.with_suffix(self.path.suffix + ".lock")
@@ -920,6 +921,78 @@ class Ledger:
                     changes.append({"field": "hardware", "from": old_hw,
                                     "to": new_hw})
                     row["hardware"] = new_hw
+                if fix_heads:
+                    # fix_heads (80th-audit B1): a multi-kernel row whose
+                    # per-kernel `head` was stamped AFTER the blocking
+                    # submit() returned names the HEAD it harvested at, not
+                    # the HEAD it dispatched. The dispatch value is on disk —
+                    # submit() writes `head` into the attempt receipt in
+                    # gpu_submissions.jsonl before the kernel ever runs — so
+                    # like fix_hardware this is DERIVED, never supplied: join
+                    # the row's own gpu_job_id list against the receipts
+                    # (result line -> attempt_id -> attempt line -> head) and
+                    # reconcile every head-bearing block. Dispatch order is
+                    # the join key: the sb3_reference block (submitted first,
+                    # G3 sequencing) then metrics['kernels'] in list order;
+                    # a count mismatch or a missing receipt refuses loudly
+                    # rather than guessing. Status, metrics values and seeds
+                    # are untouched — provenance, not re-verdict.
+                    from .gpu import SUBMISSION_LOG
+                    metrics = row.get("metrics") or {}
+                    kernels = metrics.get("kernels")
+                    if not (isinstance(kernels, list) and kernels):
+                        raise ValueError(
+                            f"{spec_id}: fix_heads needs a metrics['kernels'] "
+                            "block — single-kernel rows stamp head at dispatch "
+                            "and have nothing to reconcile")
+                    blocks: List[Dict[str, Any]] = []
+                    ref = metrics.get("sb3_reference")
+                    if isinstance(ref, dict) and "head" in ref:
+                        blocks.append({"label": "metrics.sb3_reference",
+                                       "block": ref})
+                    blocks += [{"label": f"metrics.kernels[{i}]", "block": k}
+                               for i, k in enumerate(kernels)]
+                    job_ids = [j.strip()
+                               for j in str(row.get("gpu_job_id") or "").split(",")
+                               if j.strip()]
+                    if len(job_ids) != len(blocks):
+                        raise ValueError(
+                            f"{spec_id}: fix_heads cannot join {len(job_ids)} "
+                            f"job id(s) onto {len(blocks)} head-bearing "
+                            "block(s); an ambiguous mapping must refuse, not "
+                            "guess")
+                    attempt_head: Dict[str, str] = {}
+                    job_attempt: Dict[str, str] = {}
+                    for line in SUBMISSION_LOG.read_text().splitlines():
+                        try:
+                            rec = json.loads(line)
+                        except ValueError:
+                            continue
+                        if rec.get("phase") == "attempt" and rec.get("head"):
+                            attempt_head[rec.get("attempt_id", "")] = rec["head"]
+                        elif rec.get("phase") == "result" and rec.get("job_id"):
+                            job_attempt[rec["job_id"]] = rec.get("attempt_id", "")
+                    dispatch = {j: attempt_head.get(job_attempt.get(j, ""), "")
+                                for j in job_ids}
+                    missing = [j for j in job_ids if not dispatch[j]]
+                    if missing:
+                        raise ValueError(
+                            f"{spec_id}: no dispatch-time head on record for "
+                            f"{', '.join(missing)} — the correction must be "
+                            "derived from the attempt receipts, never supplied")
+                    head_changes = [
+                        (b["label"], b["block"], b["block"].get("head"),
+                         dispatch[j])
+                        for j, b in zip(job_ids, blocks)
+                        if b["block"].get("head") != dispatch[j]]
+                    if not head_changes:
+                        raise ValueError(
+                            f"{spec_id}: every recorded head already matches "
+                            "its dispatch receipt; nothing to amend")
+                    for label, block, old, new in head_changes:
+                        changes.append({"field": f"{label}.head",
+                                        "from": old, "to": new})
+                        block["head"] = new
                 if doc_only:
                     recorded = row.get("impl_sha")
                     if not recorded:

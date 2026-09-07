@@ -1870,7 +1870,7 @@ def cmd_amend(ledger: Ledger, args) -> int:
     if len(args.spec) != 2:
         print("usage: run amend <SPEC> --by <SPEC-or-finding> --reason '...' "
               "[--status VOID|SKIP|NOT_RUN] [--unknown-history] [--fix-hardware] "
-              "[--doc-only]")
+              "[--fix-heads] [--doc-only]")
         return 2
     spec_id = args.spec[1]
     try:
@@ -1878,6 +1878,7 @@ def cmd_amend(ledger: Ledger, args) -> int:
         row = ledger.amend(spec_id, by=args.by or "", reason=args.reason or "",
                            status=status, unknown_history=args.unknown_history,
                            fix_hardware=args.fix_hardware,
+                           fix_heads=args.fix_heads,
                            doc_only=args.doc_only)
     except (ValueError, KeyError) as e:
         print(f"Refusing to amend {spec_id}: {e}")
@@ -2417,6 +2418,11 @@ def main() -> int:
     ap.add_argument("--fix-hardware", action="store_true",
                     help="amend: reconcile `hardware` with the row's own "
                          "metrics['gpu'] (17th-audit B2 provenance amendment)")
+    ap.add_argument("--fix-heads", action="store_true",
+                    help="amend: reconcile multi-kernel metrics[...].head "
+                         "stamps with the dispatch-time heads in the attempt "
+                         "receipts (80th-audit B1 provenance amendment — "
+                         "derived from gpu_submissions.jsonl, never supplied)")
     ap.add_argument("--doc-only", action="store_true",
                     help="amend: re-stamp impl_sha after a PROVABLY prose-only "
                          "edit — refuses unless the recorded sha reconstructs "
