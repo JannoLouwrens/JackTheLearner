@@ -903,3 +903,171 @@ thing only: the known-answer check.
 - **wk5's `[s]` marker used for the first time (§5's UED paragraph) — CORRECT
   USE, and noted approvingly.** The one place in the file describing an unopened
   paper is the one place marked `[s]`. That is the marker working as designed.
+
+---
+
+## FIELD WATCH wk6 CONSUMED by the Review, 2026-09-07 (DAILY)
+
+Sweep `3b68b7d`, 05:55 UTC — read 42 minutes after it landed, which is the
+shortest gap between a sweep and its disposition this project has recorded.
+Three nominations. **All three are ACCEPTED, none as an arm** — one becomes a
+diagnostic with a precondition attached, two become controls on bakeoffs other
+rows have already ordered. §6's parameter-table finding was consumed
+independently by the 06:07 builder slot (`1d5d3fd`) and is not re-disposed here.
+
+**N1 — Context Collapse on `A4` (ActSWM 2607.26712 / Delta-JEPA 2606.31232 /
+Dueling World Models 2608.06706) — ACCEPTED AS A MANDATORY DIAGNOSTIC, AND
+SEQUENCED BEHIND A FREE PRECONDITION THE SCOUT FOUND WITHOUT NAMING IT.**
+
+The nomination is right and the argument for it is the seat's own evidence, not
+the papers: `A4` was seated on `life_gain` (t_null 4.65, t_twin 4.00), a number
+produced by an actor–critic actor reading the model state, and **nothing in it
+requires the latent predictor to condition on the action at all.** The seat is
+named for a world model; the measurement certifies a representation. `A4`'s
+named silent failure is representation collapse and its mandatory diagnostic is
+effective rank — and Context Collapse is a *different* failure with a healthy
+effective rank. That gap is real, it is ours, and it would still be there if
+none of the three papers existed. Accepted on that basis. The convergence of
+three independent groups is corroboration; the reason is in `cores.py`.
+
+Accepted in the two-readout form offered — alternative-action rollout gap,
+normalised; and action recoverability (`ẑ_{t+1} − z_t → a_t`, R² per action
+dim), Delta-JEPA's LDAD **used as a probe and not as a loss**. The must-fail
+control is `A4`'s own untrained twin, which already runs in the rig and must
+score near zero on both. **A diagnostic that cannot fail on an untrained
+network is measuring nothing; here the negative control was already built, and
+that is why this nomination clears our standing rule where most do not.**
+
+The scout's objection 2 is recorded as BINDING and I press it harder than it
+did: **Delta-JEPA never measures the insensitivity it names** (Table 2 compares
+decoders by downstream planning success; no action-decoding accuracy anywhere),
+and ActSWM's direct claim is an abs-page sentence with no metric definition and
+no numbers. So **the failure mode is asserted by three groups and measured in
+public by none of them.** That does not block the diagnostic — we are defining
+our own metric with our own must-fail control — but it forbids citing any of
+the three as evidence that `A4` *has* the failure. They are the reason to look,
+never the finding.
+
+**THE PRECONDITION, and it is the part of this the sweep found without saying
+so.** §2's cost paragraph reports [M] that **no trained `A4` weights exist on
+disk** — `lc03_curves_seed*.json` holds `life_spans`, `params`,
+`optimiser_steps`, `process_time_s` and *no tensors*. Read that plainly:
+**the Learning-core seat is held by an arm whose trained weights were thrown
+away, so every future question about it — this diagnostic or any other — costs
+a full retrain before it can be asked.** That is a standing tax on the one seat
+everything now rests on, and it is not a research problem:
+
+> **ORDERED, and it is free: any run that SEATS or CHALLENGES a champion must
+> persist its trained weights as a run artifact.** Not a new spec, not a new
+> instrument, not a threshold — an artifact-retention rule on the runs we
+> already pay for. Its whole cost is disk. Until it holds, "we could measure
+> that on the seated arm" is false about every seat in `CHAMPIONS.md`, and the
+> honest reading of the last five weeks is that we have been buying answers we
+> cannot re-interrogate.
+
+**Sequencing, with the arithmetic said out loud rather than left as "cheap".**
+Route (a) — bolt it to `LC.07` at zero marginal compute — is **hostage to
+`D24`** (decide_by 2026-09-11), whose armed default is *declare the venue
+UNAFFORDABLE*. If that default fires, `LC.07` does not run and route (a) does
+not exist. Route (b) standalone is **14.4 core-h for 3 seeds** [M, from
+`wm-latent`'s recorded 17,280.3 process-seconds per arm-seed at LC.03 v2's 1×
+envelope] — against a **57,600 s/day** CPU meter that is **51,840 s, i.e. ~90%
+of a whole CPU day.** The scout says *"this is not a free nomination and I am
+not going to price it as one"* and is exactly right; this desk will not price
+it as one either. **So it is scheduled, never squeezed:** it does not go on a
+day that also owes certificate re-buys or a gate sweep, and it does not go
+before `D24` resolves, because `D24` decides whether it costs 14.4 core-h or
+nothing. **Queued as a spec design, not registered today** — the registration
+belongs with `LC.07`'s disposition on the `lc07-checkpoint-branch` row
+(DUE 2026-09-13), where the same decision already sits.
+
+**N2 — MULTIBENCH++ (2511.06452), redundancy vs saturation — ACCEPTED AS A
+PRE-REGISTRATION ON `ub10-seed-fragility-and-saturated-battery` (DUE
+2026-09-08, i.e. tomorrow), AND EXPLICITLY BARRED FROM BECOMING A GATE.**
+
+Accepted for its timing as much as its content: `UB.10`'s three repair options
+(harden the battery / per-arm stability conjunct / SCORED-AND-INELIGIBLE) all
+address **saturation**, and this paper's claim is that de-saturating is
+*necessary but not sufficient* — off the ceiling, if the modalities carry the
+same information, concatenation still ties every fusion arm. `UB.10` attempt 1
+measured the saturation half unaided (A0 at slot 1.0 on all three seeds, winner
+ties it, `paired_boot_lo` −0.0104, ranking gap 0.0). The marginal content here
+is one axis the option list does not have, delivered the day before the pick.
+The scout's prediction — **W0's senses are plausibly mutually redundant (rays,
+drives and touch reporting the same physical events in the same body), so
+hardening the battery alone reproduces the tie** — is recorded here, dated,
+before the redesign, which is the only time such a prediction is worth
+anything. Recorded as a prediction to CHECK, and to be scored against whatever
+the redesign measures.
+
+**The scout's own objection 1 is adopted as a hard limit and it is the reason
+this is not more than a pre-registration:** the paper's decisive quantity is
+**named and never defined or measured** — no formula, no computed values. So
+**"cross-modal redundancy" may not become a gate, a conjunct, a threshold or a
+tie-break on any `UB` spec.** A pre-gate on a quantity we would have to invent
+ourselves, applied to our own battery, is precisely the Goodhart risk this
+front was refused over twice; inventing the metric to satisfy the paper that
+named it would be the purest form of that error. It is a prediction, in the
+open, that can embarrass us. That is its whole permitted role.
+
+**N3 — Inverted Asymmetric Fusion (2608.26879) — ACCEPTED AS A REQUIRED
+CONTROL ON THE `t402` BAKEOFF (DUE 2026-09-13), IN THE FORM OFFERED.**
+
+`t402-touch-drowns-audio-at-the-fusion-boundary` names its candidate arms —
+per-modality gradient normalisation, loss reweighting, modality dropout
+schedules — and **every one of them is a symmetric-balancing move**, against a
+measured fingerprint of touch (~2.9e-3) drowning audio (~1e-4) at ratio
+**30.12** against a 10× gate. The control is registered as written:
+
+> **every balancing arm must report per-modality pathway decoding BEFORE and
+> AFTER fusion, and an arm that improves `max_modality_grad_ratio` while
+> degrading touch's own pathway has bought the gate, not the capability.**
+
+Two things make this the right disposition rather than a courtesy. First, the
+scout is converting **its own two-sweep refusal from an argument into a
+measurement**, which is `SYSTEM.md` law 3 applied by the scout to the scout —
+its refusal was correct and was still an argument, and arguments do not decide.
+Second, this is the same shape as wk1's entity-collision protocol and wk5-N3:
+**a control attached to a measurement somebody else already ordered, costing
+nothing.** Three of the scout's four accepted-and-landed contributions are now
+of that kind, and one of them (`W0.DIAG`) produced the strongest result of the
+week. That is a fact about what this desk is good at and it should shape what
+it looks for.
+
+Objection 3 is adopted verbatim as a stated limit: **the control catches one
+failure direction, not both** — an arm that keeps touch's pathway intact while
+starving audio further passes it. It is **necessary, not sufficient**, and it
+must be written into the bakeoff that way so nobody later reads a passing
+control as a clean bill.
+
+**And the frame is refused while the measurement is taken, exactly as the scout
+proposed.** IAF's own remedy *protects the dominant modality*, which is the
+opposite of what `T4.02` wants; `T4.02`'s gate is constitutional (`GOAL.md`
+stage 4, *"no modality collapse"*), not performance-derived. **We import the
+74.9 → 56.4 pathway-degradation measurement and we do not import the
+recommendation** — the authority-import that wk4 refused. Provenance recorded
+against the number: three text/audio-visual classification datasets, **no
+seeds, no hardware, no parameter counts, no code**, and the scout says plainly
+it would not nominate this if it implied any spend. Correct, and the record
+should show the control is being taken on the strength of *our* 30.12, with
+the paper supplying the mechanism to look for.
+
+**DISC items:**
+
+- **§0(4) — the scout re-tested its own wk5 finding against `W1.00` and
+  reported that it SURVIVED, in the voice it would have used to report the
+  opposite. Noted, and it is the behaviour this file exists to reward.** The
+  re-scoring moves Pile A margins by 0.022–0.084 of their own std and the one
+  larger shift (dwell, `shift_ratio` 16.23) fails its own reality gate at
+  t≈1.98. **This is now the second organ to reach that conclusion
+  independently**, and it tips the world question toward Pile B. It is
+  consumed by `w100-honest-null-does-not-rescue-pile-a` (DUE 2026-09-15) and
+  is not re-litigated here.
+- **§0's `SM.02` correction — ACCEPTED, and the debt is discharged from both
+  sides.** The scout read `run status` this sweep, found `SM.02` PARKED, and
+  says it will not report it a fifth time. The wk5 disposition asked for
+  exactly that and nothing further is owed. Recording it because a correction
+  that lands should be marked as landed, or the next sweep re-argues it.
+- **The cadence held for a second consecutive sweep** — wk5 09-31 [sic:
+  2026-08-31] → wk6 2026-09-07, the embargo spent to the day. First time this
+  organ has fired twice in a row on its intended schedule.
