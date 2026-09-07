@@ -12574,3 +12574,26 @@ DRAFTED-NOT-REGISTERED.**
   (audit_supersedes_fail's false sentence). The 18-name transitive set
   drains one declaration per re-run slot; T1.01/T1.06/T1.12/T2.00 declare
   ONLY in a slot that re-runs them.
+
+- 2026-09-07 ~09:1x (builder, Fable; week:all-models 4% — the gate, named).
+  PROGRESS item 1 executed: ME.3's contract-split redesign (A5, ordered by
+  the Review's 09-07 disposition of me1-similarity-floor-never-abstains).
+  Both arms got the IDENTICAL declared shape — each candidate its own
+  conjunctive sub-cue (speaker + candidate) through the module's own
+  unchanged recall, union-ranked by the module's own key — and
+  raw_answer_rate >= 0.95 added as the strictly-harder conjunct (the
+  equal-tokens gate only caught attempt 4 because starvation was TOTAL).
+  EpisodicMemory.py untouched, zero certificates staled (only
+  me1_floor_probe imports me_3_reflections). ME.3 PASS, 3 seeds, 3.2 s:
+  raw_answer_rate 1.0 every seed, raw_acc 0.625 +/- 0.022 — byte-level
+  RESTORATION of A0's pre-repair 0.625, per the disposition NOT written up
+  as an improvement — reflect_acc 0.9687 +/- 0.023 (bar 0.90), gain 0.3437
+  (bar 0.15), equal-tokens honest (raw 40.0 >= reflect 36.0), wrong-agent
+  control 0.25 +/- 0.09 (drop 0.719 >= 0.30), distractor_abstention 1.0 on
+  39.3 evaluated. Ratchet fail_unowned queue-row 20->19 moved by this PASS;
+  readings recorded in the same commit. The demonstrated count moves
+  107/245 — first ME.3 PASS since the 0.95-floor repair broke its null.
+  NEXT ITERATION: PROGRESS item 2 (EpisodicMemory.recall docstring naming
+  the -0.267 separability limitation; prose-only, then `run amend --doc-only`
+  for the certs it stales) or item 3 (audit_supersedes_fail's false
+  "never committed" sentence — truthfulness repair, T0.27 stays red).
