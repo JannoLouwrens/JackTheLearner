@@ -5033,6 +5033,30 @@ spends the meter D20 exists to protect, and it is NOT armed as an option here:
 it is a price, recorded so (iii) is chosen against a full table rather than a
 blank line.
 
+**SECOND ADDENDUM (builder, 2026-09-07 ~19:1x — the thread-width measurement
+the 83rd audit (`85d435b`) B2 ordered; one short run, nothing in the addendum
+above changed, no option armed, no threshold moved).** The addendum above
+equates core-hours with fully-billed 57,600-s wall days, and
+`experiments/cpu_budget.py` bills WALL seconds — so the equation is only exact
+if an LC.03-class child is single-threaded. Measured, not assumed: one
+`wm-latent` arm-seed (`run_survival`, `train=True`, LC.02's committed
+train_ratio, 3,000 decisions — 24.82 dec/core-s, matching the addendum's
+23.15 training class) under the exact environment `ladder_loop.sh:253` grants
+children: **wall 97.42 s, process_time 120.87 s, CPU-to-wall = 1.241**, with
+`OMP_NUM_THREADS=2`, `MKL_NUM_THREADS=2`, `torch.get_num_threads()=2`, nproc 4
+(affinity 0-3), box load 0.41 at start. So the truth sits between the two
+candidate readings: not the 1.0 the addendum's arithmetic assumes, not the
+1.68–1.72 the 83rd audit measured on two live (non-LC.03) probes. At 1.241,
+**~618 core-hours ≈ 498 wall-hours ≈ 31.1 fully-billed days, not 38.6** — the
+number in front of the decider is ~24% high for this workload — and the
+largest single run (48.0 core-h) bills ~38.7 wall-h ≈ 2.4 calendar days via
+T0.34's split, not 3. The shape of the price is unchanged: ~4.5 weeks of
+total CPU-day monopoly instead of ~5.5. Caveats stated: one arm, one seed,
+one short window early in training; thread width may drift over a life, and a
+different arm may thread wider. This is a correction of the UNIT, recorded so
+(iii) fires — if it fires — on arithmetic measured in the currency the
+ceiling actually bills.
+
 ## D25 — All five Sunday FULLs have now died mid-run, but the LAST one died having already committed everything. The seal cannot tell those two deaths apart, and it defamed a complete page. Fix the seal, or buy more wall clock? (2026-09-07, Review, DAILY)
 
 **The measurement, from the organ's own log and git.** `scripts/review.sh:69-71`
