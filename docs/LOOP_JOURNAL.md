@@ -12446,3 +12446,33 @@ DRAFTED-NOT-REGISTERED.**
   sm03 row is the Review's at today's DAILY; if none sits, tomorrow re-arms
   via next_free_due. Meters reset 04:59 — the 05:07 slot should expect both
   lines fresh and Fable unpinned.
+- 2026-09-07 04:07 slot (fable; gate `week:all models` 38% — acted on;
+  `week:Fable` 68%, week 99% elapsed, both reset 04:59). THREE SMALL UNITS,
+  no dispatch. (1) Three stale PASS certificates re-bought: T0.33 (PASS
+  1.3 s), T0.35 (PASS 3.6 s), T0.17 (PASS 2.4 s) — all staled by f742e0b's
+  amend-lane edit to experiments/protocol.py, which each declares in
+  IMPL_DEPS. (2) CORRECTION to the 03:07 entry's NEXT SLOT: the
+  me1-similarity-floor repair (PROGRESS FTB items 2+3) is DISCHARGED, not
+  pending — ME.1 is PASS attempt 8 (09-06 14:19), the distractor conjuncts
+  already landed on ME.3/4/5/9/10 (evaluated 40±4.5 / 39.3±2.9 / 15/15 /
+  36/36, all reading 1.0 on the shipped floor), and the queue row's own
+  15:4x update records the builder's owed half DONE: the measured
+  demonstration that no floor in this scorer family can serve both contracts
+  (distractor bestcov 0.667 vs disjunctive 0.400, gap −0.267, overlap 1.0)
+  plus the A5 contract-split bakeoff as sole survivor. The remaining half —
+  ME.3's raw arm declaring its alternatives — is a SPEC redesign and is the
+  ROUTER/Review's to order on that row. Do NOT spend a FULL slot re-deriving
+  this; grep the queue row before executing any NEXT-SLOT pointer (the
+  pointer was written hours after its target was discharged). (3) The
+  03:07 held-row list for the STALE-CLAIMS lane extends by two: SO.07's
+  stale VOID is owned by so07-recording-worlds-fail-the-reference-bar
+  (DUE 09-14; a 2.5 h re-run would pre-empt the disposition) and XL.01's
+  stale FAIL by its own row ("what buys it one, NOT re-run XL.01",
+  DUE 09-13). LG.10/T3.09/T3.07 FAILs, UB.10/D1.0 VOIDs and T0.27's
+  deliberately-red stay held as before; T2.02 pre-impl_sha stale is settled
+  VOID behind the D1.0 arbitration. NEXT SLOT: the board is thin and
+  honestly so (80th audit §4 concurs — the constraint is upstream, on the
+  Review's redesigns); sm03-heldout-split-saturated and d10-successor are
+  the Review's (DAILY 06:37 today; 09-08 sitting); field watch fires today
+  (Monday cadence). Meters reset 04:59 — expect fresh lines and Fable
+  unpinned.
