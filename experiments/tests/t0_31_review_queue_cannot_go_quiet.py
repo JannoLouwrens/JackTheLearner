@@ -132,6 +132,7 @@ import io
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 from ..review_queue import (DOC_PATH, LOG_PATH, MAX_OPEN_AGE_DAYS,
+                            MEASURED_DISCHARGE_CAPACITY,
                             THROUGHPUT_WINDOW_DAYS, VIOLATIONS, audit, check,
                             consumer_last_run, live_audit, parse, render,
                             throughput)
@@ -467,27 +468,38 @@ def _probe(blind: bool) -> dict:
     # 09-04 three newly-routed rows had put it back to eight, because each
     # router chose the date with nothing telling it the date was full. Five
     # conjuncts: (i) a row dated onto a day that already carried CAPACITY live
-    # rows when it was ROUTED is named in `piled_on`, and the row that got
-    # there first is NOT — an instrument that blames the whole day blames the
-    # innocent; (ii) it is a METRIC and never a violation, so adding a
-    # perfectly healthy row onto a full day moves `piled_on` and leaves
-    # `total` and every violation class exactly where they were (68th audit
-    # B3: report a number, do not gate at zero); (iii) THE RATCHET — re-dating
-    # a piled row onto ANOTHER full day does not lower the count, because
-    # moving a promise between piles is not a repair; (iv) moving it to a day
-    # under capacity DOES clear it, so the honest escape hatch works;
-    # (v) `next_free_due` names a future date that really carries no live
-    # promise, which is the mechanical alternative to defaulting onto Sunday.
-    # `other-day` is routed BEFORE `second` on purpose: the sideways re-date in
-    # (iii) must land on a day whose occupant got there first, or the metric's
-    # documented conservatism (a re-arm is timestamped by the row's ROUTED
-    # date, which can only under-count) would clear the row for the wrong
-    # reason and the ratchet would be testing the wrong thing.
-    pile_rows = [
-        ("first", "2026-08-20", "OPEN", ["DUE: 2026-09-06 | got there first"]),
-        ("second", "2026-08-25", "OPEN", ["DUE: 2026-09-06 | dated onto a full day"]),
-        ("other-day", "2026-08-21", "OPEN", ["DUE: 2026-09-20 | its own day, occupied early"]),
-    ]
+    # rows when it was ROUTED is named in `piled_on`, and the rows that got
+    # there first — everyone within capacity — are NOT: an instrument that
+    # blames the whole day blames the innocent; (ii) it is a METRIC and never
+    # a violation, so adding a perfectly healthy row onto a full day moves
+    # `piled_on` and leaves `total` and every violation class exactly where
+    # they were (68th audit B3: report a number, do not gate at zero);
+    # (iii) THE RATCHET — re-dating a piled row onto ANOTHER full day does not
+    # lower the count, because moving a promise between piles is not a repair;
+    # (iv) moving it to a day under capacity DOES clear it, so the honest
+    # escape hatch works; (v) `next_free_due` names a future date that really
+    # has room under the measured capacity, which is the mechanical
+    # alternative to defaulting onto Sunday.
+    # The fixtures are built FROM the imported constant — exactly CAPACITY
+    # occupants fill a day — so this property certifies the MECHANISM at
+    # whatever value the constant honestly reads, rather than pinning the
+    # value; the value's own raising rule (cite a cycle that discharged N)
+    # lives in the constant's docstring and is the auditor's to police.
+    # The `other-*` day is occupied BEFORE `second` routes on purpose: the
+    # sideways re-date in (iii) must land on a day whose occupants got there
+    # first, or the metric's documented conservatism (a re-arm is timestamped
+    # by the row's ROUTED date, which can only under-count) would clear the
+    # row for the wrong reason and the ratchet would be testing the wrong
+    # thing.
+    CAP = MEASURED_DISCHARGE_CAPACITY
+    pile_rows = (
+        [(f"first-{k:02d}", "2026-08-20", "OPEN",
+          ["DUE: 2026-09-06 | got there first"]) for k in range(CAP)]
+        + [("second", "2026-08-25", "OPEN",
+            ["DUE: 2026-09-06 | dated onto a full day"])]
+        + [(f"other-{k:02d}", "2026-08-21", "OPEN",
+            ["DUE: 2026-09-20 | its own day, occupied early"]) for k in range(CAP)]
+    )
     pile = audit(_doc(pile_rows), None, TODAY)
     piled_ids = {p["id"] for p in pile["piled_on"]}
     # (ii) a healthy row added onto the full day: metric moves, violations do not
@@ -509,7 +521,7 @@ def _probe(blind: bool) -> dict:
             or honest_move["piled_on"]
             or not free
             or _dt.date.fromisoformat(free) <= TODAY
-            or pile["due_pile"].get(free, 0) != 0):
+            or pile["due_pile"].get(free, 0) >= CAP):
         failed.append("p14_a_promise_dated_onto_a_full_day_is_named")
 
     # P14b — THE BATCH (73rd audit B1, 2026-09-05). Four rows routed in ONE
@@ -519,18 +531,20 @@ def _probe(blind: bool) -> dict:
     # it were the measurement, and the live board read 17 where the truth was
     # 22. The file is append-ordered, so a row's INDEX in the parsed list is
     # the total order the date cannot supply. Assert on the CLASS, not the
-    # tidy example: same routed day, one due date — the first row in the
-    # motion is innocent, EVERY later row is named, the TOTAL matches, and
-    # the batch stays a metric (no violation fires). A comparison that orders
-    # by the clock alone reads an empty pile here.
+    # tidy example: same routed day, one due date — the rows within capacity
+    # are innocent, EVERY row beyond capacity is named with its true prior,
+    # the TOTAL matches, and the batch stays a metric (no violation fires).
+    # A comparison that orders by the clock alone reads an empty pile here.
+    # CAPACITY + 2 rows in one motion, so two are over the line — built from
+    # the imported constant for the same reason as P14's fixtures.
     batch = audit(_doc([
-        ("batch-first", "2026-08-28", "OPEN", ["DUE: 2026-09-25 | first in the motion"]),
-        ("batch-second", "2026-08-28", "OPEN", ["DUE: 2026-09-25 | same commit, same day"]),
-        ("batch-third", "2026-08-28", "OPEN", ["DUE: 2026-09-25 | same commit, same day"]),
+        (f"batch-{k:02d}", "2026-08-28", "OPEN",
+         ["DUE: 2026-09-25 | same commit, same day"]) for k in range(CAP + 2)
     ]), None, TODAY)
-    if ({p["id"] for p in batch["piled_on"]} != {"batch-second", "batch-third"}
+    over = {f"batch-{k:02d}" for k in (CAP, CAP + 1)}
+    if ({p["id"] for p in batch["piled_on"]} != over
             or len(batch["piled_on"]) != 2
-            or [p["prior"] for p in sorted(batch["piled_on"], key=lambda p: p["id"])] != [1, 2]
+            or [p["prior"] for p in sorted(batch["piled_on"], key=lambda p: p["id"])] != [CAP, CAP + 1]
             or batch["total"] != 0):
         failed.append("p14b_a_same_day_batch_is_still_a_pile")
 
@@ -657,7 +671,14 @@ def _probe(blind: bool) -> dict:
     # violation: supplying the ledger moves no total and no class, and the one
     # red thing here is `ORDERED:` naming nothing, which is MALFORMED like any
     # empty declaration; (vi) the blind reader fails by construction — a row
-    # count contains no pairs.
+    # count contains no pairs; (vii) THE THIRD STATE (85th audit, finding 3):
+    # with the registry's ids supplied, an ordered id that resolves to NO
+    # registered spec prints NOT REGISTERED, not NO ROW YET — a typo'd
+    # commission must not read as an honest pending measurement forever —
+    # while a registered-but-unrun id still reads NO ROW YET, supplying the
+    # set moves no total and no class, and WITHOUT the set the distinction is
+    # honestly unavailable (every rowless id reads NO ROW YET, none reads
+    # NOT REGISTERED).
     odoc = _doc([
         ("od-live", "2026-08-30",
          "DISPOSITIONED 2026-08-31 (design; measurements commissioned)",
@@ -672,6 +693,13 @@ def _probe(blind: bool) -> dict:
     oa_dry = audit(odoc, None, TODAY)
     orets = {(e["row"], e["spec"]): e for e in oa.get("ordered_returns", [])}
     otext = render(oa)
+    # (vii): W9.97 is commissioned, unrun AND absent from the supplied
+    # registry — the known-positive; W9.96 is registered and unrun, so it must
+    # stay NO ROW YET or the third state has eaten the second.
+    oreg = audit(odoc, None, TODAY, ledger=fake_ledger,
+                 registered={"W9.98", "W9.96", "W9.95"})
+    oregs = {(e["row"], e["spec"]): e for e in oreg.get("ordered_returns", [])}
+    rtext = render(oreg)
     ordered_ok = (
         ("od-live", "W9.98") in orets
         and orets[("od-live", "W9.98")]["verdict"] == "FAIL"
@@ -682,8 +710,12 @@ def _probe(blind: bool) -> dict:
         and not any(e["row"] == "od-acted" for e in oa.get("ordered_returns", []))
         and "W9.98 -> FAIL 2026-08-31" in otext
         and "NO ROW YET" in otext
-        and oa["total"] == oa_dry["total"] == 1
-        and oa["counts"] == oa_dry["counts"]
+        and "NOT REGISTERED" not in otext
+        and oregs[("od-live", "W9.97")]["registered"] is False
+        and "W9.97 -> NOT REGISTERED" in rtext
+        and "W9.96 -> NO ROW YET" in rtext
+        and oreg["total"] == oa["total"] == oa_dry["total"] == 1
+        and oreg["counts"] == oa["counts"] == oa_dry["counts"]
         and oa["counts"]["MALFORMED"] == 1)
     if blind or not ordered_ok:
         failed.append("p16_an_ordered_specs_return_is_printed")

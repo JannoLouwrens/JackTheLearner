@@ -209,14 +209,23 @@ LIVE = ("OPEN", "HELD", "DISPOSITIONED")
 TERMINAL = ("ACTED", "DECLINED")
 STATUSES = LIVE + TERMINAL
 
-#: The consumer's only MEASURED discharge capacity, in rows per cycle: the
-#: 2026-08-30 FULL run died at eleven minutes owing exactly ONE dated row
-#: (`w0-too-shallow`), and no cycle since has demonstrably discharged more.
-#: A due date carrying more live rows than this is a pile of promises
-#: scheduled to break together — worth predicting before Sunday rather than
-#: reporting on Monday (65th audit B6, written the week seven rows shared
-#: 2026-09-06). Raise it only by citing a cycle that actually discharged N.
-MEASURED_DISCHARGE_CAPACITY = 1
+#: The consumer's MEASURED discharge capacity, in rows per cycle — the most
+#: dated rows a single cycle has demonstrably discharged. Two cycles bound it:
+#: the 2026-08-30 FULL run died at eleven minutes owing exactly ONE dated row
+#: (`w0-too-shallow`), which set the original value of 1; the 2026-09-08 DAILY
+#: then discharged SIX dated rows in one sitting — one ACTED (`102a47a`) and
+#: five DISPOSITIONED (`9924291`, `ad9bced`, `66dcd86`, `da202e1`, `16f7eb8`),
+#: each in its own commit, taking `review-queue` from 5 violations to 0 (85th
+#: audit, finding 1). This is a demonstrated one-cycle MAXIMUM, not a
+#: sustained rate: over the trailing week that contained it, `throughput()`
+#: read 0.43 disposed + 1.71 designed per cycle and the drain line read
+#: UNBOUNDED — and it is the drain line, never this constant, that carries
+#: that truth. A due date carrying more live rows than this is a pile of
+#: promises scheduled to break together — worth predicting before Sunday
+#: rather than reporting on Monday (65th audit B6, written the week seven
+#: rows shared 2026-09-06). Raise it only by citing a cycle that actually
+#: discharged N.
+MEASURED_DISCHARGE_CAPACITY = 6
 
 #: One consumer cycle, in days. DERIVED: `review.sh` runs DAILY, so a day is
 #: the finest cadence at which this desk can dispose of anything, and it is the
@@ -423,7 +432,8 @@ def throughput(doc: str, base_doc: str | None,
 
 
 def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
-          base_doc: str | None = None, ledger: dict | None = None) -> dict:
+          base_doc: str | None = None, ledger: dict | None = None,
+          registered: set | None = None) -> dict:
     """Every violation in `doc`, with `prev_doc` (the previous committed
     revision) as the only baseline. Pure: no clock, no git, no filesystem —
     `main()` supplies all three, so the properties can hold the world still.
@@ -436,6 +446,15 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
     `ledger` — the ledger's `results` dict (spec id -> row), supplied by
     `live_audit()`, for the ORDERED join only. A METRIC input: supplying or
     withholding it moves no violation either way.
+
+    `registered` — the registry's spec ids (`BY_ID`'s keys), supplied by
+    `live_audit()`, for the ORDERED join's third state only (85th audit,
+    finding 3): an ordered id with no ledger row AND no registry entry prints
+    NOT REGISTERED rather than NO ROW YET, because a typo'd commission that
+    resolves to nothing must not read as an honest pending measurement
+    forever. A METRIC input like `ledger`: supplying or withholding it moves
+    no violation; absent, the distinction is unavailable and every rowless id
+    reads NO ROW YET.
     """
     today = today or _dt.date.today()
     rows = parse(doc)
@@ -591,6 +610,8 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
             lrow = (ledger or {}).get(sid) or {}
             ordered_returns.append({
                 "row": r["id"], "row_status": r["status"], "spec": sid,
+                "registered": (sid in registered) if registered is not None
+                              else None,
                 "verdict": str(lrow.get("status", "") or ""),
                 "ran_at": str(lrow.get("ran_at", "") or "")[:10]})
 
@@ -709,17 +730,24 @@ def render(a: dict, last_run: str = "") -> str:
         out.append("  with the disposition is no tool's judgement; whether anyone "
                    "can see the pair is:")
         for e in a["ordered_returns"]:
-            came = (f"{e['verdict']} {e['ran_at']}" if e["verdict"]
-                    else "NO ROW YET")
+            # Three states (85th audit, finding 3): a verdict, an honest
+            # pending commission, and an id that resolves to nothing in the
+            # registry — the last would otherwise read as pending forever.
+            if e["verdict"]:
+                came = f"{e['verdict']} {e['ran_at']}"
+            elif e.get("registered") is False:
+                came = "NOT REGISTERED"
+            else:
+                came = "NO ROW YET"
             out.append(f"    {e['row']} ({e['row_status']})  ordered "
                        f"{e['spec']} -> {came}")
     if a["due_pile"]:
         out.append("")
         out.append("  DUE-DATE PILE — live rows per promised date (65th audit "
-                   "B6). The consumer's one")
+                   "B6). The consumer's best")
         out.append("  measured cycle discharged "
-                   f"{MEASURED_DISCHARGE_CAPACITY} dated row; a date carrying "
-                   "more is amber:")
+                   f"{MEASURED_DISCHARGE_CAPACITY} dated row(s); a date "
+                   "carrying more is amber:")
         for d in sorted(a["due_pile"]):
             n = a["due_pile"][d]
             flag = ("  !! AMBER: pile" if n > MEASURED_DISCHARGE_CAPACITY
@@ -754,14 +782,14 @@ def render(a: dict, last_run: str = "") -> str:
                            "least-crowded first, elided from this print only "
                            "(all are in `piled_on`).")
         if a["next_free_due"]:
-            out.append(f"  Next date carrying no promise yet: "
+            out.append(f"  Next date with room under the measured capacity: "
                        f"{a['next_free_due']} — the mechanical answer for the")
             out.append("  next router, instead of defaulting onto Sunday.")
         else:
-            out.append(f"  NO date in the next {FREE_DATE_HORIZON_DAYS} days is "
-                       "free of promises. There is no")
-            out.append("  honest re-date left: the repair is to ACT or to "
-                       "DECLINE.")
+            out.append(f"  NO date in the next {FREE_DATE_HORIZON_DAYS} days "
+                       "has room under the measured")
+            out.append("  capacity. There is no honest re-date left: the "
+                       "repair is to ACT or to DECLINE.")
     if a["total"]:
         out.append("")
         out.append(f"  {a['total']} VIOLATION(S) — "
@@ -835,8 +863,14 @@ def live_audit(doc_path: Path | None = None, today: _dt.date | None = None) -> d
     # instrument is broken" into "no row yet" is the opt-in blindness again.
     ledger = (json.loads(LEDGER_PATH.read_text()).get("results", {})
               if LEDGER_PATH.exists() else {})
+    # The registry's ids, for the ORDERED join's third state. Imported here
+    # rather than at module level so this reader stays importable on its own;
+    # NOT wrapped in try/except, for the ledger's own reason above — a broken
+    # registry raising is honest, converting it into "NO ROW YET" is the
+    # opt-in blindness again.
+    from .registry import BY_ID
     return audit(p.read_text(), _prev_revision(p), today, base_doc=base,
-                 ledger=ledger)
+                 ledger=ledger, registered=set(BY_ID))
 
 
 def check(doc_path: Path | None = None) -> int:

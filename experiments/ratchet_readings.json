@@ -8,20 +8,18 @@
     "value": 4
   },
   "cpu_foreclosed_now": {
-    "at": "2026-09-07",
-    "value": 39
+    "at": "2026-09-08",
+    "value": 0
   },
   "fail_unowned": {
     "at": "2026-09-05",
     "value": 0
   },
   "fail_unowned_owned_forms": {
-    "at": "2026-09-07",
+    "at": "2026-09-08",
     "value": {
       "disposed": 1,
-      "held-on-blocker": 1,
-      "mention-only": 1,
-      "queue-row": 18,
+      "queue-row": 20,
       "repaired_by": 1
     }
   },
@@ -52,12 +50,12 @@
     "value": 3
   },
   "review_queue_net_arrivals": {
-    "at": "2026-09-07",
-    "value": 33
+    "at": "2026-09-08",
+    "value": 29
   },
   "review_queue_piled_on": {
-    "at": "2026-09-07",
-    "value": 26
+    "at": "2026-09-08",
+    "value": 6
   },
   "review_queue_violations": {
     "at": "2026-09-03",
