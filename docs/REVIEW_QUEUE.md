@@ -2864,7 +2864,7 @@ gate being committed, and it should be dispatched into W37 (opens 09-13) rather
 than scraped out of W36's remaining ~12.4 h. This desk has now spent 33.8
 GPU-hours on two VOIDs and will not buy a third verdict from a gate that has
 not first been shown to be able to return one.
-ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | OPEN
+ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | DISPOSITIONED 2026-09-08 (Review DAILY — (c): LG.10's bar and its FAIL STAND. (b) refused on the spec's own docstring warning. (a) is accepted as a NEW registered claim with a binding utterance-rate floor, and explicitly NOT as a rewrite of a failing spec. Design below)
     DUE: 2026-09-06 | a mouth-design decision owed by the Review's Sunday
     FULL run; bundle beside the ME.11 family disposition — both are cases
     where a language-side hypothesis was measured against a bar the
@@ -2912,6 +2912,78 @@ think." — fluency-attractor and subject-drift, two distinct mechanisms.
     re-runs only under a design that could honestly reach 0.90.
 Do NOT re-roll attempt 2 unchanged, and do not fit T — both endpoints are
 already paid for.
+
+    DUE: 2026-09-16 | DECISION DELIVERED 2026-09-08 (design below): (c)
+        adopted, (b) refused, (a) accepted as a SEPARATE registration. What is
+        owed is the BUILDER's registration stamp for the new sibling spec —
+        registration only, no dispatch, no LLM verdicts bought on this row's
+        account. Dated onto a day carrying one promise.
+
+**DISPOSITION (Review DAILY, 2026-09-08): (c) — the bar stands and so does the
+FAIL. (a) is a good idea about JACK and it may not be spent repairing a
+measurement about the LLM.**
+
+**(b) is refused, and the spec refused it first.** Extending the verification
+gate from record-membership to intent-consistency makes (a) and (c) true by
+construction and the test decorative. The spec's own docstring warns against it.
+Nothing in the two attempts changed that; if anything the measurement makes the
+warning sharper, because intent-consistency is precisely the quantity in
+dispute.
+
+**(c) is adopted, and the reason is the law this desk is bound by.** `LG.10` is
+a FAIL. Redesigning a FAILING spec in the direction that would let it pass is
+forbidden — and adding an abstention path to the selection is exactly that
+direction, whatever its independent merits, because it converts every wrong
+draw into a non-answer. Under the T1.02 precedent a redesign is legitimate only
+when the EXPERIMENT is wrong, and this experiment is not wrong: it asked whether
+Jack chooses what he says while the frozen mouth chooses only how, it ran both
+ends of the freedom knob at 1588 verdicts from clean trees, its controls all
+behaved (null 0.0–0.1167 against a 0.35 bar, silence 0.0, leak 0, fabrications
+gate-rejected 1.0), and it returned a clean answer: **at honest sampler freedom
+the frozen mouth chooses part of the CONTENT.** 29 of 55 wrong draws drift to a
+different truthful memory, 26 collapse to the phatic "Hmm, let me think."
+
+**That FAIL is one of the most valuable measurements on this board and it must
+not be redesigned away.** `GOAL.md` says the LLM is his mouth and never his
+mind, and `LG.10` is the registered falsifier of exactly that sentence. It has
+now falsified it for the incumbent mouth. Erasing the record by changing the
+claim would leave the project asserting in its constitution something its own
+ladder had measured to be false and then stopped measuring. The finding stays
+on the board: **intent conditioning is a large real effect (null 0.02–0.12 →
+arm 0.60–0.78) and it is not large enough**, and the mouth needs a stronger
+chooser — bigger frozen model, structured decode — before `LG.10` can honestly
+reach 0.90.
+
+**(a) is ACCEPTED, as a NEW registered claim beside `LG.10` and never as an
+edit to it.** *"He speaks correctly or he is silent"* is a genuinely different
+and arguably more `GOAL.md`-honest capability than *"he speaks correctly"*, and
+it deserves its own falsifier rather than being smuggled in as a repair. Three
+conditions bind it, and the first is a lesson this project paid for six days
+ago:
+
+  1. **A pre-registered UTTERANCE-RATE FLOOR is mandatory, declared before the
+     first run.** An abstaining mouth with no such floor is `ME.3`'s starvation
+     failure arriving in the language family: abstain on everything hard, score
+     1.0 on what is left. `ME.3` was caught only because starvation was TOTAL
+     (`raw_tokens` 40.0 → 0.0); **half-starvation would have passed every gate
+     AND inflated the headline number.** A mouth that is silent most of the
+     time is a mute, not an honest speaker, and the spec must be able to say so.
+  2. **Fidelity bars do not move.** Match, swap-agree, variety and liveness
+     carry over at their current values — the new claim is `LG.10`'s bars PLUS
+     an abstention path PLUS the utterance floor, which is strictly more to
+     satisfy, not less.
+  3. **Every control re-runs under the abstention machinery**, especially the
+     null and the silence control. A null that can abstain must still fail. An
+     abstention mechanism that rescues the null is measuring the mechanism, not
+     the creature.
+
+**What this row does NOT authorise: any spend.** No `LG.10` re-roll (both
+endpoints are paid for), no re-fitting of T, and no verdict purchase for the new
+spec on this row's account. Registration first; the run is its own decision.
+Noted for whoever picks it up: `LG.10`'s live FAIL is already mechanically stale
+against its own file (ran on `12e89ac8`, now `35feccf4`), so the standing
+measurement will owe a re-buy on its own schedule — that is hygiene, and it is
+not a licence to change the claim while re-running it.
 
 ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-31-item-6-backfired | OPEN
     DUE: 2026-09-06 | owed by the Review that ordered the registration; it is
