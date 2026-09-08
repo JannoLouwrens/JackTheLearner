@@ -744,3 +744,44 @@ visual certificates migrate is routed, not assumed). PL.00 re-ran through the
 runner: **PASS**, pure_T 8.903 ± 0.294, every gate green, commit `b7324ba` —
 the PL.02 -> PL.00 edge dissolved by being satisfied, exactly as the
 disposition pre-registered, with the edge and the floor untouched.
+
+## D17 — RESOLVED BY ARMED DEFAULT (fired 2026-09-08 01:0x UTC, builder, the first decision this project has ever carried into OVERDUE — deadline passed at 2026-09-08T00:00 UTC, firing slot 01:0x): the PLASTIC-ONLY decree (GOAL.md:76) STANDS verbatim and unnarrowed; the re-open trigger is recorded FIRED and DISCHARGED with its number. GOAL.md IS NOT TOUCHED.
+
+**The question** (2026-08-30, builder, from `PL.00`'s FAIL): `docs/CHAMPIONS.md`
+pre-registered on 2026-08-09 that *"if a from-scratch encoder cannot hit the
+PL.00 throughput floor on this hardware ... the decision returns to the owner
+with that number attached."* `PL.00` FAILed attempt 1 (pure path 4.145
+sim-s/real-s vs the 5.0 floor) and the trigger fired, so the decree returned
+to the owner with the decomposition attached: render-only, with NO encoder at
+all, already read 4.231 — the shortfall was the renderer's, with 2.6%
+attributable to any encoder choice.
+
+**The default that fired.** The decree stands verbatim; the trigger is
+FIRED and DISCHARGED with its number. No decree narrowed, no threshold moved
+(the 5.0 floor is LC.02's and stays at 5.0), GOAL.md untouched, `PL.02` stays
+registered and runnable as the decree's falsifier so nothing goes claim-dead.
+The default's ordered follow-up was builder work under rule 3 — a
+renderer-cost bakeoff over the named arms — and it was ALREADY DONE at firing
+time: it ran on the decide_by date itself (2026-09-07, `b7324ba`,
+`experiments/tests/pl00_render_bakeoff.py`; the 40 ms eye was a 4096² shadow
+map plus 4× MSAA, MuJoCo defaults), after which `PL.00` re-ran through the
+runner and **PASSED** — pure_T 8.903 ± 0.294 vs the unmoved 5.0 floor, ViT
+reference still fails at 0.830, render-only clears at 9.549 so the floor now
+rejects encoders. **The trigger's own premise is FALSE at firing**: the
+from-scratch encoder does hit the floor. The firing is therefore pure
+paperwork — the alternative, quietly extending a deadline once it goes red,
+is the deadlock the armed-default mechanism was built to replace.
+
+**Invariants checked at firing:** no GOAL.md edit, no threshold moved, no
+control loosened, no new permission created, nothing re-run. The one live
+design question the default named — rays or pixels for Jack's eye in W1 —
+remains open and remains routed design work, not resolved by this firing.
+
+**To reverse:** the owner may rule differently at any later date at no cost;
+the default wrote nothing to GOAL.md and moved no number.
+
+Evidence: `docs/DECISIONS_NEEDED.md` D17 entry + its EVIDENCE UPDATE
+2026-09-07 + the 84th audit's OVERDUE NOTICE (2026-09-08 00:38 UTC);
+`docs/OVERSIGHT.md` 84th audit B1 (the routing, with required wording);
+`experiments/decisions.py` overdue rule `(today - decide_by).days > 0`;
+`b7324ba` (bakeoff + PL.00 PASS).

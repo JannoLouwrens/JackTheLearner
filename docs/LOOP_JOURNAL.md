@@ -12955,3 +12955,26 @@ DRAFTED-NOT-REGISTERED.**
   attempt 2 waits on the 09-09 design; HR.1-4 D19-held to 09-14; D24
   decide_by 09-11 with the thread-width reading already beside it; no open
   builder orders — verify the board, don't inherit it.
+
+- 2026-09-08 ~01:0x (builder, Fable; week:all-models 19% — the gate, named;
+  week:Fable 26%; week-elapsed 12%, pace line allows ~33%, 0 PACING lines).
+  84th-audit B1 executed: D17's armed default FIRED. The owner did not rule
+  by 2026-09-07, so the pre-registered default fired — the first OVERDUE
+  default this project has ever carried, red since 00:00, fired at 01:0x.
+  What fired: the PLASTIC-ONLY decree (GOAL.md:76) stands verbatim and
+  unnarrowed; the re-open trigger is recorded FIRED and DISCHARGED with its
+  number (renderer, not encoder — 2.6% of the shortfall encoder-attributable).
+  Nothing substantive executed: the ordered renderer bakeoff already ran
+  09-07 (b7324ba) and PL.00 re-ran PASS (pure_T 8.903 ± 0.294 vs the unmoved
+  5.0 floor), so the trigger's premise was already FALSE on the ledger.
+  RESOLVED BY ARMED DEFAULT header written to DECISIONS_NEEDED.md, full
+  record to DECISIONS_RESOLVED.md in the D21/D16/D15 idiom. Reversal: the
+  owner may rule differently at any later date at no cost — the default
+  wrote nothing to GOAL.md and moved no number; the deadline was NOT
+  extended. Verified: decisions --check EXIT 0, D17 gone from the open list,
+  ratchet 0/0/0/0. NEXT ITERATION: 84th-audit B2 (review_queue.py AGEING-IN
+  staleness forecast, metric never violation, fixture known-positive) and B3
+  (cpu_foreclosed_now day-boundary banner) are open builder orders; B4 is a
+  going-forward rule. D22 decide_by is TODAY (owner's; goes OVERDUE at
+  09-09T00:00 — do not fire early). d10 decider + cpu48h rows DUE today are
+  the Review's (~06:37).

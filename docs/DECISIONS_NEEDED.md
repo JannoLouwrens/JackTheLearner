@@ -5325,3 +5325,21 @@ runnable as the decree's falsifier.
 default writes nothing to `GOAL.md` and moves no number. The deadline is NOT
 being extended — a deadline that moves when it is reached is the deadlock the
 armed-default mechanism replaced.
+
+## D17 — RESOLVED BY ARMED DEFAULT, fired 2026-09-08 01:0x UTC (builder). Off your desk.
+
+The decide_by of 2026-09-07 passed unanswered and the default fired exactly as
+armed: the PLASTIC-ONLY decree (`GOAL.md:76`) STANDS, verbatim and unnarrowed,
+and the re-open trigger is recorded as FIRED and DISCHARGED with its number —
+the from-scratch encoder missed the floor and the measured cause was the
+renderer, not the encoder (2.6% of the shortfall attributable to any encoder
+choice). Nothing substantive executes at firing: the default's ordered
+follow-up — the renderer-cost bakeoff — already ran on 2026-09-07 (`b7324ba`,
+`experiments/tests/pl00_render_bakeoff.py`), `PL.00` re-ran through the runner
+and PASSED (pure_T 8.903 ± 0.294 vs the unmoved 5.0 floor), so the trigger's
+own premise is recorded FALSE in this entry's `EVIDENCE UPDATE 2026-09-07`.
+No decree is narrowed, no threshold moves, `GOAL.md` is not touched, and
+`PL.02` remains registered and runnable as the decree's falsifier. Full record
+in `DECISIONS_RESOLVED.md`. Reversal: the owner may rule differently at any
+later date at no cost; the deadline was NOT extended — the first-ever OVERDUE
+default was fired, not re-dated.
