@@ -1193,11 +1193,26 @@ def committed_ratchet_readings() -> tuple:
     return {}, "MISSING"
 
 
-def ratchet_deltas(live: dict, recorded: dict) -> list:
+#: Counters whose value is a point-in-time reading of a meter that RESETS at
+#: 00:00 UTC. A delta across that boundary is the clock, not a change: the
+#: `!! MOVED` banner fired four times for `cpu_foreclosed_now`'s nightly
+#: 0 <-> ~40 swing (84th audit, LOOP_JOURNAL 11342/12205/12370 + the audit
+#: itself), and a metric that is right every night and alarming every night
+#: trains its readers to skim — the exact failure the 64th audit's block was
+#: built to prevent, arriving from the opposite direction. Same-day movement
+#: still banners; only the cross-day comparison is suppressed, out loud.
+DAY_SCOPED_COUNTERS = ("cpu_foreclosed_now",)
+
+
+def ratchet_deltas(live: dict, recorded: dict, today: str = "",
+                   day_scoped: tuple = DAY_SCOPED_COUNTERS) -> list:
     """(name, kind, cur, prev, prev_at, note) for every counter either side
     knows. Kinds: MOVED / UNCHANGED / LOST (the live computation refused) /
     UNRECORDED (a live counter with no committed reading) / VANISHED (a
-    committed reading whose counter is no longer computed at all)."""
+    committed reading whose counter is no longer computed at all) /
+    DAY-ROLLED (a day-scoped counter whose committed reading is from a
+    different UTC day — the comparison crosses the metric's own reset, so a
+    delta is the clock and not a change)."""
     out = []
     for name in sorted(set(live) | set(recorded)):
         rec = recorded.get(name)
@@ -1211,6 +1226,9 @@ def ratchet_deltas(live: dict, recorded: dict) -> list:
             out.append((name, "LOST", None, prev, prev_at, note))
         elif rec is None:
             out.append((name, "UNRECORDED", cur, None, None, note))
+        elif (name in day_scoped and today and prev_at != today
+              and cur != prev):
+            out.append((name, "DAY-ROLLED", cur, prev, prev_at, note))
         elif cur != prev:
             out.append((name, "MOVED", cur, prev, prev_at, note))
         else:
@@ -1224,17 +1242,26 @@ def _check_ratchet_reader() -> None:
     iterations — 64th audit); the quiet shapes must classify correctly too,
     or the block teaches iterations to ignore it."""
     live = {"a_moved": (89, ""), "b_same": (3, ""),
-            "c_lost": (None, "boom"), "d_new": (2, "")}
+            "c_lost": (None, "boom"), "d_new": (2, ""),
+            "f_dayroll": (0, ""), "g_daysame": (7, "")}
     rec = {"a_moved": {"value": 85, "at": "t0"},
            "b_same": {"value": 3, "at": "t1"},
            "c_lost": {"value": 1, "at": "t2"},
-           "e_gone": {"value": 9, "at": "t3"}}
-    got = ratchet_deltas(live, rec)
+           "e_gone": {"value": 9, "at": "t3"},
+           # the 84th-audit shapes: a day-scoped counter compared across the
+           # metric's own midnight must suppress the banner; the same counter
+           # moving WITHIN its day must still fire it.
+           "f_dayroll": {"value": 39, "at": "yesterday"},
+           "g_daysame": {"value": 4, "at": "today"}}
+    got = ratchet_deltas(live, rec, today="today",
+                         day_scoped=("f_dayroll", "g_daysame"))
     want = [("a_moved", "MOVED", 89, 85, "t0", ""),
             ("b_same", "UNCHANGED", 3, 3, "t1", ""),
             ("c_lost", "LOST", None, 1, "t2", "boom"),
             ("d_new", "UNRECORDED", 2, None, None, ""),
-            ("e_gone", "VANISHED", None, 9, "t3", "")]
+            ("e_gone", "VANISHED", None, 9, "t3", ""),
+            ("f_dayroll", "DAY-ROLLED", 0, 39, "yesterday", ""),
+            ("g_daysame", "MOVED", 7, 4, "today", "")]
     if got != want:
         raise RuntimeError(
             f"the ratchet reader returned {got}, expected {want} — "
@@ -1250,7 +1277,8 @@ def _check_ratchet_reader() -> None:
 def print_ratchet_block(ledger: Ledger) -> None:
     _check_ratchet_reader()
     recorded, prov = committed_ratchet_readings()
-    rows = ratchet_deltas(ratchet_live(ledger), recorded)
+    rows = ratchet_deltas(ratchet_live(ledger), recorded,
+                          today=time.strftime("%Y-%m-%d"))
     floors = ratchet_floors()
     print("  RATCHET COUNTERS — standing-red tools' numbers, printed here so "
           "a blessed red\n    can never silence them (64th audit B2). "
@@ -1263,6 +1291,11 @@ def print_ratchet_block(ledger: Ledger) -> None:
                   f"(was {prev}). Say so in your report;\n      if a "
                   f"committed change justifies it, `run ratchets record` in "
                   f"that commit.")
+        elif kind == "DAY-ROLLED":
+            print(f"      {name} = {cur}  (day-scoped: resets at 00:00 UTC; "
+                  f"the committed reading {prev}\n      is from {prev_at}, a "
+                  f"different UTC day, so the delta is the clock, not a "
+                  f"change.\n      Movement within today would still banner.)")
         elif kind == "UNCHANGED":
             print(f"      {name} = {cur}  (unchanged since {prev_at})")
         elif kind == "LOST":
