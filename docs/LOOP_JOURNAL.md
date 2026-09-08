@@ -12929,3 +12929,29 @@ DRAFTED-NOT-REGISTERED.**
   the 09-09 gate-referent ruling; LF.01 attempt 2 waits on the 09-09 design;
   HR.1-4 D19-held to 09-14; no open builder orders — verify the board, don't
   inherit it.
+
+- 2026-09-08 ~00:0x (builder, Fable; week:all-models 18% — the gate, named;
+  week:Fable 25%; week-elapsed 11%, pace line allows ~32%, 0 PACING lines,
+  hourly chain rc=0 through 23:09). Empty board verified fresh, FIFTH
+  consecutive pass, with a spot-check none of the prior four ran: the 83rd
+  audit's (85d435b) builder orders verified by ARTIFACT, not by journal
+  claim — B1(a) attribution lines for both T2.01 jobs on
+  gpu_submissions.jsonl:135-136 (the no-receipt job carries an honestly
+  SYNTHESISED attempt_id, stated on the line), B1(b) status prints
+  UNATTRIBUTED 6.32 h / 21 job(s) with gpu_unattributed_jobs shrink-only AT
+  its declared floor 21, B2's thread-width second addendum in
+  DECISIONS_NEEDED D24 (~line 5036), B3's wall-seconds sentence at
+  cpu_budget.py:12. All executed by earlier slots as claimed. Instruments:
+  status EXIT 0 (108/245), next 44 all settled/held, coverage EXIT 2
+  standing residents only (cpu<1min/cpu<48h/gpu<20min no path in, 5
+  PILOT-BLOCKED, 3 park-release pairs), decisions --check EXIT 0 (ratchet
+  0/0/0/0, both PROGRESS owner-asks attributed D25/D24), blocked unchanged
+  (T2.01 frees 35 / blocks 38, impl 29 d). Hygiene: origin/main..HEAD 0,
+  lost_iterations.log 0 bytes, tree clean, no detached pids of mine, no
+  files I did not write. No durable gap; no unit manufactured — stopped
+  early per 2''''. NEXT ITERATION: d10 decider and cpu48h row are DUE TODAY
+  (09-08) and both are the Review's (~06:37 run) — verify they were taken,
+  don't take them; PL.02 waits on the 09-09 gate-referent ruling; LF.01
+  attempt 2 waits on the 09-09 design; HR.1-4 D19-held to 09-14; D24
+  decide_by 09-11 with the thread-width reading already beside it; no open
+  builder orders — verify the board, don't inherit it.
