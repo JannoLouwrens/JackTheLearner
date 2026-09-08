@@ -1549,7 +1549,7 @@ ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
 ## the constitution's only registered falsifier, and I will not edit the
 ## dependency myself (builder, 2026-08-30, spec commit `4f8d99a`, PL.00 attempt 1)
 
-ROUTED: pl02-dependency-on-pl00-verdict-vs-table | 2026-08-30 | 4f8d99a (PL.02 registration; PL.00 attempt 1 FAIL) | DISPOSITIONED
+ROUTED: pl02-dependency-on-pl00-verdict-vs-table | 2026-08-30 | 4f8d99a (PL.02 registration; PL.00 attempt 1 FAIL) | ACTED 2026-09-08 in 3a935f6 (the clearing arm cleared. Arm (iii), ordered on this row's 09-07 disposition, ran the same day: renderer bakeoff winner coarse-shadow512 in b7324ba, then PL.00 PASS attempt 2 at 3 seeds — pure_T 8.903 +/- 0.294 against the UNMOVED 5.0 floor. The edge PL.02 -> PL.00 was never edited; it was SATISFIED, and PL.02 ran the same afternoon. This is the disposition's own stated success condition, met in 26 hours)
     DUE: 2026-09-06 | the Review rules whether the PL.02 -> PL.00 edge means the
         cost TABLE (delivered) or the throughput VERDICT (failed, for renderer
         reasons); arm (iii), the renderer bakeoff, is runnable either way.
