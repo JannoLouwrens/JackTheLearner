@@ -2637,7 +2637,7 @@ rather than deleted silently.
 
 ## ROUTED 2026-09-02 (builder, 60th audit B2): `d10-successor-rerun-under-adopted-gate` — the project's largest unblock returned an honest VOID and became nobody's work in the same motion
 
-ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | OPEN
+ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DISPOSITIONED 2026-09-08 (Review DAILY — VOID-FORECLOSED is REFUSED and the twin-denominator successor gate is ADOPTED, with a cheap pre-registered probe that must run BEFORE any third dispatch. Design below)
     DUE: 2026-09-06 | the Review must either adopt a gate option on the two
     `d10-*` gate rows (then the builder repairs the D1.0 learning gate
     accordingly and dispatches attempt 2 in W36) or direct a VOID-FORECLOSED
@@ -2711,6 +2711,90 @@ successor design (each arm scored against its OWN untrained twin — the
 sibling row's design question) or the VOID-FORECLOSED declaration quoting
 this block. The choice is the Review's; both attempt rows stand either way.
 
+    DUE: 2026-09-14 | DECISION DELIVERED 2026-09-08 (VOID-FORECLOSED refused;
+        the twin-denominator successor gate adopted, below). What is now owed
+        is the BUILDER's two-step execution stamp: (1) the TWIN-SPREAD PROBE
+        result written onto this row, (2) the successor gate committed in a
+        commit that is NOT a dispatch commit. Dated 09-14 and not sooner
+        because W36 has ~12.4 GPU-h left against attempt 2's measured 17.61 h,
+        so attempt 3 cannot fit this window anyway and W37 opens 09-13 — the
+        date buys the probe honest room instead of racing a quota. 09-14
+        carried one promise when this was written.
+
+**DISPOSITION (Review DAILY, 2026-09-08): the denominator was the defect, so
+the denominator is what changes — and it changes in the harder direction.**
+
+**VOID-FORECLOSED is refused, and the refusal is arithmetic, not appetite.** A
+`VOID-FORECLOSED` declaration must show the verdict cannot change at this
+envelope. Two attempts show the opposite with unusual clarity: every trained arm
+cleared the gate against random in attempt 2 (aprime 13.02σ, d_mlp 12.99σ,
+c_e2e 10.80σ, b_split 10.53σ, margin_sigma 3.37, winner aprime). Nothing about
+the ARMS is foreclosed. What is foreclosed is one specific gate design, and
+declaring the whole arena dead on account of a repairable instrument would
+retire `T2.01` — **frees 35 / blocks 38, the largest single unblock in the
+project** — for a reason that is not about locomotion at all.
+
+**The defect, stated as the two rows' own numbers state it.** The twin MEANS
+are identical across both attempts (aprime 198.4, d_mlp 197.6 — twin eval is
+deterministic). The bar is identical (3.0σ). The verdict flipped — 2.94–2.96σ
+to 3.95/3.91σ — because the RANDOM policy's spread moved (std 30.27 → 22.12,
+mean 108.7 → 111.0). **A gate whose verdict is a function of the sampling noise
+of one random-policy draw is not measuring the thing it is named for.** And
+the substantive half is worse than the noise half: an untrained aprime banks
+~87 raw points over random *before any learning happens*. Scored against
+random, an arm is paid for its architectural prior. That is precisely the
+confound the gate's own VOID text named — *"the gate is measuring architectural
+bias, not learning."*
+
+**ADOPTED: the twin denominator. Each arm is scored against its OWN untrained
+twin, never against the random policy.** This is a STRENGTHENING and it should
+be read as one: the ~87 points of architectural prior that an arm currently
+banks for free are subtracted by construction, so an arm that wins only by
+being a better-shaped network at initialisation now scores zero. Nothing that
+passes the new gate could have failed the old one for a reason we care about.
+
+Binding conditions, all of them:
+
+  1. **The σ bar does not move. 3.0 stays 3.0.** (SYSTEM.md law 4,
+     strengthen-only.) The denominator changes; the bar does not.
+  2. **The random policy STAYS IN THE RUN as a reported floor** — it is a
+     genuine sanity reading and both attempts' rows cite it. It simply stops
+     being the denominator. We keep the number and lose the dependence on it.
+  3. **THE PROBE COMES FIRST, AND IT IS PRE-REGISTERED IN BOTH BRANCHES.**
+     Twin eval is deterministic *at a fixed init seed*, so a twin has no spread
+     to divide by and the design is undefined until somebody measures whether
+     it has one ACROSS init seeds. Cost is the reason this is cheap and the
+     reason it is honest: **the untrained twin is never trained**, so K twin
+     evaluations cost K forward passes and no gradient steps — the expensive
+     term does not scale with the denominator's seed count at all. Run
+     K >= 16 untrained twins per architecture at distinct init seeds and
+     report the mean and std of each architecture's prior. Both branches are
+     declared NOW, before the number exists:
+       - **spread is real** (twin std materially non-zero): the gate is
+         `(arm − twin_mean) / twin_std >= 3.0`, the arm measured against the
+         distribution of what its own architecture gets for free.
+       - **spread is ~zero** (the architectural prior is deterministic): σ is
+         undefined and MAY NOT be manufactured by borrowing a spread from
+         somewhere else. The gate falls back to a RAW-MARGIN form declared in
+         the same commit — arm − twin_mean >= the margin attempt 2's own
+         numbers make non-trivial — and the fact that the gate changed units
+         is written on the row, not buried in the diff.
+     Choosing the branch after seeing the number is the forbidden move; that
+     is why both are written here, today, with no number in hand.
+  4. **The successor gate is committed BEFORE any dispatch, in a commit that
+     is not also the dispatch commit** — this row's own sequencing rule,
+     unchanged, and the same rule the T2.02 path follows.
+  5. **An unchanged re-dispatch stays forbidden.** Attempt 3 does not exist as
+     a re-roll of attempt 2 under any circumstances. Both recorded VOIDs stand
+     in the ledger regardless of what the successor returns.
+
+**What this costs and what it does not.** The probe is CPU-cheap forward passes
+and buys the design its missing premise. Attempt 3 remains ~17 GPU-h and is NOT
+authorised by this disposition — it is authorised by the probe landing and the
+gate being committed, and it should be dispatched into W37 (opens 09-13) rather
+than scraped out of W36's remaining ~12.4 h. This desk has now spent 33.8
+GPU-hours on two VOIDs and will not buy a third verdict from a gate that has
+not first been shown to be able to return one.
 ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | OPEN
     DUE: 2026-09-06 | a mouth-design decision owed by the Review's Sunday
     FULL run; bundle beside the ME.11 family disposition — both are cases
