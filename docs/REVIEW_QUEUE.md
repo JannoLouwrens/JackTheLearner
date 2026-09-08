@@ -2442,7 +2442,7 @@ redesign for future runs only; the recorded VOID stands.
 
 ## ROUTED 2026-09-01 (builder, UB.10 attempt-1 harvest): `ub10-seed-fragility-and-saturated-battery` — the unparked design ran honestly and measured two defects in itself
 
-ROUTED: ub10-seed-fragility-and-saturated-battery | 2026-09-01 | UB.10-attempt-1-VOID | OPEN
+ROUTED: ub10-seed-fragility-and-saturated-battery | 2026-09-01 | UB.10-attempt-1-VOID | DISPOSITIONED 2026-09-08 (Review DAILY — the anchor's saturation is the load-bearing defect and is repaired by HARDENING THE TASK, never by shortening training; the per-arm stability conjunct is adopted; the seed-level SCORED-AND-INELIGIBLE retirement is REFUSED as a weakening. Design below)
     DUE: 2026-09-06 | an arm/task redesign decision owed by the Review's
     Sunday FULL run; bundle beside `recipe-sensitivity`'s lineage (this row
     is what its 08-25 disposition, fully executed, measured next)
@@ -2485,6 +2485,75 @@ at the seed level. Any change is spec redesign under the T1.02 precedent —
 the recorded VOID stands, nothing re-runs on this row's account, and UB.11
 (which Review 08-31 item 4 needs for T2.12's conjunct) stays blocked behind
 an UB.10 verdict this row's redesign must first make reachable.
+
+    DUE: 2026-09-15 | DECISION DELIVERED 2026-09-08 (design below). What is
+        owed is the BUILDER's implementation stamp on this row: the hardened
+        battery, the A0-HEADROOM rig gate and the per-arm stability conjunct,
+        committed BEFORE any re-dispatch. Dated onto a day carrying one
+        promise, at this desk's own measured capacity of ~1 row/cycle, rather
+        than onto the 09-13 pile of ten.
+
+**DISPOSITION (Review DAILY, 2026-09-08): defect 2 is the one that matters, and
+the two defects must not be repaired in the same direction.**
+
+**Order of importance, because the row lists them the other way round.** Seed
+fragility (defect 1) is an ARM result — two dropout arms cannot train reliably,
+which is a finding about those arms and a third independent demonstration of
+it. Anchor saturation (defect 2) is an INSTRUMENT result: A0 reads slot 1.0 on
+all three seeds, so the PASS conjunct *"winner > A0 on every seed"* cannot fire
+against anything. **Repairing fragility alone buys a run that still cannot
+return a verdict.** Defect 2 is therefore the unit of work and defect 1 rides
+with it.
+
+**ADOPTED (defect 2): harden the TASK, and gate the anchor's headroom.**
+Of the three offered repairs for saturation the row lists — more slots,
+composite XOR variants, lower training budget — **the training-budget cut is
+refused.** Shortening training to move the anchor off its ceiling makes every
+arm worse in order to make the picture interesting, and it confounds the claim
+this battery exists to test: *"fusion helps"* would become *"fusion helps when
+undertrained"*, which is a different and much weaker sentence. The honest
+repair for a null at ceiling is a task the null cannot solve. So:
+
+  - **Composite / cross-modal-XOR slots**, whose defining property is that no
+    single modality carries the answer — the discriminating structure a fusion
+    battery is supposed to have and currently does not. More slots as needed
+    to hold measurement error down, but slot COUNT is not the repair; slot
+    STRUCTURE is.
+  - **A new rig gate, `A0_HEADROOM`, pre-registered and firing BEFORE any arm
+    is scored:** the anchor must read strictly below ceiling on EVERY
+    registered seed, by a declared margin, or the run VOIDs on the rig and no
+    ranking is emitted. This is the exact shape of the learning gate this desk
+    adopted on `D1.0` — a reference arm that must leave room before anyone
+    else's number means anything — and it is strictly additive: no run that
+    passes it could have failed today's rig.
+
+**ADOPTED (defect 1): the per-arm stability conjunct.** An arm must train on
+ALL registered seeds to hold a seat. This turns basin fragility from a rig VOID
+that hides the finding into a SCORED finding that disqualifies the arm, and it
+is strictly harder than today's spec, which has no such requirement at all. The
+row's own two "legal-looking repairs" stay illegal and are restated so no later
+reader re-proposes them: per-registered-seed re-selection is tuning on
+registered seeds, and a seed re-roll is run-until-pass.
+
+**REFUSED: retiring the marginal-floor VOID in favour of SCORED-AND-INELIGIBLE
+at the seed level.** This is the one option on the menu that makes a run which
+today returns no verdict return one instead, and it does so by letting an arm
+that failed to train on a registered seed keep competing on the seeds where it
+did. That is a weakening wearing a bookkeeping name, and it points the opposite
+way from the conjunct adopted above. The recorded VOID stands; UB.10 becomes
+reachable by getting a battery that can discriminate, not by relaxing what
+counts as a result.
+
+**The kinship is not decoration and it is the reason this ruling is not local.**
+A null at ceiling here, a null with no headroom in `sh02-null-saturation`, a
+world too shallow to separate anything in `w0-too-shallow`: three fronts, one
+disease — **our tasks are too easy for our instruments to say anything.** Every
+one of them is repaired in the same direction, by making the world harder, and
+never by making the bar lower. If a fourth arrives, it is not a coincidence and
+it belongs on a Sunday as a single question about how this project picks tasks.
+
+**Nothing re-runs on this row's account until the redesign is committed**, per
+the T1.02 precedent, and `UB.11` stays blocked behind a real UB.10 verdict.
 
 ## ROUTED 2026-09-01 (builder, LC.07 pilot harvest): `lc07-checkpoint-branch` — the seat's own scale-transfer arena cannot physically run inside a Kaggle kernel
 
