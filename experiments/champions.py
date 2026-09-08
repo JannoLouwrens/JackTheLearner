@@ -393,6 +393,39 @@ BASELINE_TRIGGER_UNREACHABLE = 3
 # their arena, not a promise.
 TRIGGER_SCOPE = ("BY VERDICT", "BY DECREE")
 
+# ARENA SPECS CREDITED AS CHALLENGERS WHILE DECLARING NO `COVERS:` KIND — the
+# soft spot `_challenger_runs`'s own docstring has named since the 45th audit
+# B4 ("a spec with no COVERS: marker at all counts as a challenger"), finally
+# given a number.
+#
+# THE SCAR (85th audit §2, 2026-09-08). When the rule was written the docstring
+# said "`Learning core` is discharged by exactly one such spec, `LC.02`."
+# Nothing counted the class, so it grew 1 -> 8 in silence under a green
+# `ratchet ok` line — and the only two seats `--check` called UNCONTESTED were
+# precisely the two whose arena specs (`T2.03` fixture, `PL.00` rule) declared
+# their kind honestly. An instrument that rewards NOT declaring what a spec is
+# trains the registry to stay vague.
+#
+# MEASURED 2026-09-08, THE CLASS BEFORE THE MIGRATION (LESSONS.md, 60th audit:
+# add the class, watch it fire, THEN migrate): NINE specs across four seats —
+# `LC.00`, `LC.02` (Learning core), `ME.11.A`–`ME.11.D` (Episodic retrieval),
+# `T2.12`, `T3.07` (Emotion (affect)), and `LF.02` (Death & persistence). The
+# 85th audit's prose said "seven", its own id list had eight entries, and the
+# tool's first firing read NINE: `LF.02` was invisible to the seat-level
+# `weak` print the audit counted from, because Death & persistence is ALSO
+# discharged by declared specs (`XL.00`/`XL.01`) and that print lists only
+# seats discharged EXCLUSIVELY by kindless ones. The spec-level union is the
+# honest quantity, and this constant records the tool's count, per the
+# standing rule that no page outranks the instrument. It may shrink and may
+# never grow. It shrinks ONLY by DECLARING a spec's kind honestly in its
+# registry notes — never by widening NON_CHALLENGER_KINDS (a detector tuned
+# until it agrees with its maintainer is `coverage.py`'s scar 1), and never by
+# deleting a spec from an arena cell. Note the honest consequence, stated
+# before any declaration lands: declaring a spec a fixture/rule/sensor removes
+# it from `challenger_runs`, which may flip a seat UNCONTESTED — that is the
+# repair working, not failing.
+BASELINE_KINDLESS_DISCHARGES = 9
+
 # ARENA REFS THAT CAN NEVER BE REGISTERED, and why — the honest cost of closing
 # the gap, which this file used to leave the reader to discover by spending the
 # iteration (LESSONS.md 2026-08-29: "an instrument that names a gap must also
@@ -868,12 +901,15 @@ def _challenger_runs(arena_status: Dict[str, str], by_id: dict) -> List[str]:
     A SPEC WITH NO `COVERS:` MARKER AT ALL COUNTS AS A CHALLENGER, and that is
     the ordered rule (45th audit B4: "its COVERS kind is not fixture, rule or
     sensor"), not an oversight. It is also this filter's remaining soft spot,
-    so `main()` prints every seat that rests on kindless arenas rather than
-    leaving the reader to assume the discharge was earned: `Learning core` is
-    discharged by exactly one such spec, `LC.02` (a throughput feasibility
-    gate), which is plausibly the same false positive one layer down. Tightening
-    it means DECLARING LC.02's kind, not widening this predicate — a detector
-    tuned until it agrees with its maintainer is `coverage.py`'s scar 1.
+    and it is now COUNTED, not merely printed: `kindless_discharges()` reports
+    every credited challenger with no declared kind, ratcheted shrink-only at
+    `BASELINE_KINDLESS_DISCHARGES`. (This paragraph used to say `Learning
+    core` is discharged by "exactly one such spec, `LC.02`" — live count when
+    somebody finally added it up: EIGHT specs across three seats, 85th audit
+    §2. A soft spot named in prose and counted by nobody grew 1 -> 8 under a
+    green check.) Tightening it means DECLARING each spec's kind, not widening
+    this predicate — a detector tuned until it agrees with its maintainer is
+    `coverage.py`'s scar 1.
 
     NOT filtered here, because it needs a judgement this parser cannot make:
     **the incumbent's own arm is not a contest.** `Episodic retrieval` is held
@@ -888,6 +924,23 @@ def _challenger_runs(arena_status: Dict[str, str], by_id: dict) -> List[str]:
                   if st in VERDICTS
                   and not (kinds.get(sid, set())
                            and kinds[sid] <= set(NON_CHALLENGER_KINDS)))
+
+
+def kindless_discharges(seats: list, by_id: dict) -> List[str]:
+    """Arena specs credited as CHALLENGERS while declaring no `COVERS:` kind.
+
+    The ratcheted quantity behind `BASELINE_KINDLESS_DISCHARGES` — see the
+    constant for the scar (1 -> 8 in silence, 85th audit §2). A spec here is
+    being paid challenger credit on a contest the registry cannot verify: it
+    has a verdict, it discharges a seat, and nobody has said whether it is a
+    capability test or apparatus. The UNION across seats, so a spec shared by
+    two arenas is one defect, not two — mirroring how the repair works (one
+    declaration in one notes field clears every seat it touches).
+    """
+    kinds = _spec_kinds(by_id)
+    return sorted({sid for s in seats
+                   for sid in (s.get("challenger_runs") or [])
+                   if not kinds.get(sid)})
 
 
 def _unrunnable(by_id: dict, status: Callable[[str], str],
@@ -1691,18 +1744,27 @@ def main(argv: List[str]) -> int:
     pending = [(s["seat"], s["arena_present"]) for s in seats
                if s["held"] == "BY ANALYSIS" and s["arena_present"]
                and not s.get("challenger_runs")]
-    # The residual soft spot in _challenger_runs, printed instead of assumed.
+    # The residual soft spot in _challenger_runs — counted and ratcheted since
+    # 2026-09-08 (85th audit §2), printed always so an empty class is a
+    # statement rather than an absence.
     kindless = _spec_kinds(BY_ID)
+    kd = kindless_discharges(seats, BY_ID)
     weak = [(s["seat"], s["challenger_runs"]) for s in seats
             if s.get("challenger_runs")
             and not any(kindless.get(i) for i in s["challenger_runs"])]
+    print(f"  KINDLESS DISCHARGES — specs credited as challengers that declare "
+          f"no COVERS\n  kind, so the contest cannot be verified from the "
+          f"registry; declare the kind to\n  settle it "
+          f"({len(kd)}/{BASELINE_KINDLESS_DISCHARGES}):")
+    if kd:
+        print(f"    {', '.join(kd)}")
+    else:
+        print("    (none — every credited challenger says what it is)")
     if weak:
-        print("  seats discharged ONLY by arena specs that declare no COVERS "
-              "kind — the\n  contest cannot be verified from the registry; "
-              "declare the kind to settle it:")
+        print("  ...and the seats discharged ONLY by such specs:")
         for seat, runs in weak:
             print(f"    {seat[:44]:<44} {', '.join(runs)}")
-        print()
+    print()
 
     if pending:
         print("  held BY ANALYSIS with a real arena that has never run "
@@ -1853,6 +1915,15 @@ def main(argv: List[str]) -> int:
                   f"verdict, is declared and\n  verified, or the seat is "
                   f"honestly re-marked — never by deleting the VERDICT: line.\n")
             return 1
+        if len(kd) > BASELINE_KINDLESS_DISCHARGES:
+            print(f"  RATCHET BROKEN: {len(kd)} spec(s) are credited as "
+                  f"challengers while declaring no COVERS\n  kind, baseline "
+                  f"{BASELINE_KINDLESS_DISCHARGES}. The count may shrink, "
+                  f"never grow — and it shrinks ONLY by\n  declaring the "
+                  f"spec's kind honestly in its registry notes, never by "
+                  f"widening\n  NON_CHALLENGER_KINDS and never by deleting "
+                  f"the spec from an arena cell.\n")
+            return 1
         if len(trig) > BASELINE_TRIGGER_UNREACHABLE:
             print(f"  RATCHET BROKEN: {len(trig)} promise-holding seat(s) "
                   f"whose re-open triggers are all closed\n  doors or "
@@ -1870,7 +1941,9 @@ def main(argv: List[str]) -> int:
               f"{BASELINE_UNCONTESTABLE} uncontestable in total, arena-"
               f"unreachable included;\n  {len(unv)}/"
               f"{BASELINE_VERDICT_UNVERIFIED} unverified verdicts; "
-              f"{len(trig)}/{BASELINE_TRIGGER_UNREACHABLE} trigger debt).\n")
+              f"{len(trig)}/{BASELINE_TRIGGER_UNREACHABLE} trigger debt;\n  "
+              f"{len(kd)}/{BASELINE_KINDLESS_DISCHARGES} kindless "
+              f"discharges).\n")
     return 0
 
 
