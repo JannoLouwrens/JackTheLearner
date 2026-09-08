@@ -26099,23 +26099,23 @@
     },
     "T0.31": {
       "amended": [],
-      "attempt": 16,
-      "commit": "021d302",
+      "attempt": 17,
+      "commit": "cd5a27b",
       "compute_s": null,
       "control_metrics": {
         "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires",
         "fixture_violations": 5.0,
         "live_arrived": 32.0,
-        "live_disposed": 2.0,
-        "live_net_arrivals": 30.0,
+        "live_disposed": 3.0,
+        "live_net_arrivals": 29.0,
         "live_oldest_days": 8.0,
-        "live_open": 32.0,
+        "live_open": 27.0,
         "live_rows": 46.0,
         "live_violations": 0.0,
         "properties_checked": 17.0,
         "properties_failed": 14.0
       },
-      "duration_s": 1.43,
+      "duration_s": 1.46,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -26646,27 +26646,65 @@
           ],
           "spec_sha": "adba85e6f8c5d773",
           "status": "PASS"
+        },
+        {
+          "commit": "021d302",
+          "control_metrics": {
+            "failed_names": "p2_overdue_fires_on_a_passed_date_only,p3_stale_is_age_and_only_age,p5_deleting_the_row_does_not_help,p7_a_hold_names_a_live_blocker,p8_malformation_is_recorded_not_raised,p9_prose_opens_no_row_and_sets_no_clock,p10_an_absent_baseline_accuses_nobody,p11_every_class_is_reachable_and_reported,p12_a_disposition_is_not_an_execution,p13_a_prose_row_is_counted_never_parsed,p14_a_promise_dated_onto_a_full_day_is_named,p15_the_desk_is_measured_disposing_not_only_breaking,p16_an_ordered_specs_return_is_printed,p17_ageing_is_forecast_a_day_before_it_fires",
+            "fixture_violations": 5.0,
+            "live_arrived": 32.0,
+            "live_disposed": 2.0,
+            "live_net_arrivals": 30.0,
+            "live_oldest_days": 8.0,
+            "live_open": 32.0,
+            "live_rows": 46.0,
+            "live_violations": 0.0,
+            "properties_checked": 17.0,
+            "properties_failed": 14.0
+          },
+          "gpu_job_id": null,
+          "impl_sha": "1dee54c1dd9d0a5a",
+          "message": "",
+          "metrics": {
+            "failed_names": "",
+            "fixture_violations": 5.0,
+            "live_arrived": 32.0,
+            "live_disposed": 2.0,
+            "live_net_arrivals": 30.0,
+            "live_oldest_days": 8.0,
+            "live_open": 32.0,
+            "live_rows": 46.0,
+            "live_violations": 0.0,
+            "properties_checked": 17.0,
+            "properties_failed": 0.0
+          },
+          "ran_at": "2026-09-08T01:13:57",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "adba85e6f8c5d773",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "1dee54c1dd9d0a5a",
+      "impl_sha": "608754ec63d1619b",
       "message": "",
       "metrics": {
         "failed_names": "",
         "fixture_violations": 5.0,
         "live_arrived": 32.0,
-        "live_disposed": 2.0,
-        "live_net_arrivals": 30.0,
+        "live_disposed": 3.0,
+        "live_net_arrivals": 29.0,
         "live_oldest_days": 8.0,
-        "live_open": 32.0,
+        "live_open": 27.0,
         "live_rows": 46.0,
         "live_violations": 0.0,
         "properties_checked": 17.0,
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 216.4,
+      "peak_rss_mb": 216.7,
       "preserved_impl": null,
-      "ran_at": "2026-09-08T01:13:57",
+      "ran_at": "2026-09-08T07:16:39",
       "seeds": [
         0
       ],
