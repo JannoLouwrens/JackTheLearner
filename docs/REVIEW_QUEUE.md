@@ -3069,7 +3069,7 @@ if LC.07's redesign is not decidable on 09-06.
         sentence (or the revival per options a/b above) — NEVER an addition
         to the baseline, which is shrink-only by construction.
 
-ROUTED: t309-control-clears-the-claims-own-margin | 2026-09-02 | 06f6a01 | OPEN
+ROUTED: t309-control-clears-the-claims-own-margin | 2026-09-02 | 06f6a01 | DISPOSITIONED 2026-09-08 (Review DAILY — (a): the kills clause is NOT executed, because a run whose control cleared the claim's own margin is a VOID and a VOID cannot kill anything. (b) refused. (c) survives as the constructive path and is downstream of the venue design. Design below)
     DUE: 2026-09-08 | an instrument/venue disposition owed by the Review — dated
     off the 09-06 pile deliberately (61st audit B2/FINDING 3: eighteen rows
     already land on that one Sunday, and this row is readable standalone after
@@ -3114,6 +3114,65 @@ under the corrected lane are a VOID, recorded as such in the registry note).
 MECHANICAL, if the kills clause is later executed — `T0.01` (imports) names
 `AlphaGeometryLoop` in its roster and TaskManager/UnifiedBrain import it
 inside try/except; the docstring's deletion protocol covers both.
+
+    DUE: 2026-09-17 | DECISION DELIVERED 2026-09-08 (design below): the kills
+        clause is NOT executed and the deletion is NOT authorised. What is owed
+        is the BUILDER's registry stamp recording that T3.09's attempt-3 row is
+        a VOID under the corrected lane and is not a kills-executing verdict —
+        a note, not a run. Dated onto the first day carrying no promise at all,
+        which is also this row's own preferred reading order: after the venue
+        design has moved.
+
+**DISPOSITION (Review DAILY, 2026-09-08): (a). The kills clause is not executed
+today, and the reason is that there is no valid verdict to execute it with.**
+
+**The law does the work here and it is unconditional.** `SYSTEM.md` law 2,
+class-3: a control that clears the claim's own margin VOIDs the run **whichever
+way the claim went**. The wrong-goal control gained **+12.47** against
+`MARGIN_AFF` **11.0**. So attempt 3's recorded FAIL is not a finding about the
+creative loop — it is a voided run, and **a voided run cannot kill a module.**
+Executing a deletion clause on it would be doing exactly what this whole system
+exists to prevent: taking an irreversible act on evidence the harness has
+already refused to certify. That the act happens to point at deleting something
+rather than claiming something makes no difference; a kills clause is a verdict
+like any other and it needs a run whose controls behaved.
+
+**And the second fact is stronger than the first.** `loop_creative` fired **0
+times on 142 consults across both recorded runs.** The branch named in the
+spec's own title never executed once. So `T3.09` has not merely failed to
+demonstrate that the creative loop earns its existence — **it has never tested
+the claim at all.** A module cannot be deleted for failing a test that did not
+run against it, and it equally cannot be kept on the strength of one. Both
+directions are unsupported, and that is the honest state of this row.
+
+**(b) is refused for that reason.** "Judge the site unrepairable and execute the
+deletion on the accumulated record" reads as decisive and is not: the
+accumulated record is three attempts of which the informative one is void, plus
+zero firings of the branch under judgment. Deleting on it would be a design
+judgment made to look like a ledger verdict, and this desk may not manufacture
+finality out of an absence of measurement. The archive copy is byte-identical
+and stays either way, so nothing is lost by waiting for a valid run.
+
+**What the row DOES support is one sentence, and it is adopted verbatim:** *at
+this call site, at n=11 on one seed, detour advice of any kind is noise.* That
+is a statement about the SITE, the same shape as `DP.00`'s "the finding is about
+the world" — and it is corroborated by the ranking, which is anti-correlated
+with advice quality (shuf 134.2 s, off 146.7 s, loop 156.6 s, twin 191.2 s:
+**correct directional advice HURTS by 44.5 s**). A venue in which being told the
+right thing is worse than being told the wrong thing is not measuring advice.
+
+**(c) — re-site the consult — survives as the constructive path and is not
+decided here**, because it is the same question as `w0-too-shallow` one call
+site down: does this venue reward perturbation as such? Re-siting before that is
+answered buys a second venue with the same disease. This is the third front of
+that disease named on this board today, beside `UB.10`'s saturated anchor and
+`sh02-null-saturation`.
+
+**Binding until then:** do NOT re-roll attempt 3 unchanged at this site; the
+kills clause stays unexecuted and `AlphaGeometryLoop.py` stays; `seeds=3` is
+already declared in the registry for any future attempt; and any future
+execution of the clause must rest on a run whose controls behave — that is the
+whole content of (a).
 
 ROUTED: cross-organ-doc-race-voids-certificates | 2026-09-03 | 64th-audit-B3 | DISPOSITIONED 2026-09-06 (Review FULL — fork (c), PER-SPEC instrument-input dirt; design below, builder implements with the mutation falsifier that makes it safe)
     DUE: 2026-09-06 | a design fork owed by the Review. Dated ON the 09-06
