@@ -1212,7 +1212,14 @@ def ratchet_deltas(live: dict, recorded: dict, today: str = "",
     committed reading whose counter is no longer computed at all) /
     DAY-ROLLED (a day-scoped counter whose committed reading is from a
     different UTC day — the comparison crosses the metric's own reset, so a
-    delta is the clock and not a change)."""
+    delta is the clock and not a change).
+
+    KNOWN BLIND SPOT, declared rather than papered over (85th audit §4): the
+    day-roll branch fires on any `cur != prev` across the boundary, so a
+    day-scoped meter that FAILED to reset is invisible either way — 39 -> 39
+    reads UNCHANGED, 39 -> 20 reads DAY-ROLLED. The stronger form would
+    assert the new value is consistent with a reset having happened; worth
+    one line if a failed reset is ever observed, not a rewrite before."""
     out = []
     for name in sorted(set(live) | set(recorded)):
         rec = recorded.get(name)
@@ -1277,8 +1284,12 @@ def _check_ratchet_reader() -> None:
 def print_ratchet_block(ledger: Ledger) -> None:
     _check_ratchet_reader()
     recorded, prov = committed_ratchet_readings()
+    # gmtime, not localtime: the DAY-ROLLED print asserts "resets at 00:00
+    # UTC", and a local-time `today` makes that a lie on any box whose TZ
+    # drifts from GMT (85th audit §4 — latent here because TZ=GMT, fixed
+    # before it is live anywhere else).
     rows = ratchet_deltas(ratchet_live(ledger), recorded,
-                          today=time.strftime("%Y-%m-%d"))
+                          today=time.strftime("%Y-%m-%d", time.gmtime()))
     floors = ratchet_floors()
     print("  RATCHET COUNTERS — standing-red tools' numbers, printed here so "
           "a blessed red\n    can never silence them (64th audit B2). "
