@@ -1062,6 +1062,18 @@ ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /d
 ---
 
 ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v2) | OPEN
+    DUE: 2026-09-18 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all.
+        This row went STALE — OPEN 9 days past the 8-day consumer cycle with no
+        `DUE:` to re-arm it — and that is this desk's fault, not the router's:
+        it was routed without a date and nothing but the staleness lane ever
+        asked about it. The date is chosen and not arbitrary: today's `UB.10`
+        disposition adopts a PER-ARM STABILITY conjunct (an arm must train on
+        all registered seeds), which is this row's question one layer down —
+        a worst-case requirement gated on the seed MEAN is not a worst-case
+        requirement. Decide the recorder change with the UB.10 redesign
+        (DUE 09-15) already in hand, so the general fix is shaped by a concrete
+        caller instead of in the abstract. Dated onto a day carrying no other
+        promise.
     Should `protocol.py:_aggregate` emit `<key>_min` / `<key>_max` across seeds
     beside the `<key>_std` it already emits — so a spec can gate the WORST SEED
     directly instead of reconstructing it from mean ± 1.5*std?
@@ -1439,6 +1451,14 @@ and it is `D10` evidence. Do NOT authorise an envelope growth: the pilot's
 failure is not a budget.
 
 ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
+    DUE: 2026-09-20 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
+        STALE, OPEN 9 days past the 8-day cycle with nothing to re-arm it. This
+        is a WORLD EDIT row (`needs.py` constants, `DELTA_T_NIGHT`, and W.3 is
+        specced over the same constants), and the bundling rule binds world
+        edits to ONE edit window. `w1-world-edit-window` is DUE 09-13; this row
+        is decided IN LIGHT OF whatever window that opens, not beside it, so it
+        lands after. Dated onto a day carrying no other promise rather than
+        piled onto 09-13, which already carries ten.
     Question: at the world's OWN night ambient, cold carries no death
     gradient — so what is the curriculum GOAL.md promises actually made of?
     W.1 measured `needs.py`'s shivering loop
@@ -1485,6 +1505,15 @@ ROUTED: w1-cold-is-not-lethal-at-night | 2026-08-30 | 487d5ea | OPEN
     should be implemented against whatever this row decides, not before it.
 
 ROUTED: w2-needs-have-no-single-k | 2026-08-30 | 93d9175 | OPEN
+    DUE: 2026-09-21 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
+        STALE, OPEN 9 days past the 8-day cycle. Same lineage and same rule as
+        `w1-cold-is-not-lethal-at-night` above: this is a re-scaling of
+        `needs.py`'s constants (the row's own finding is that k is one number
+        and there are two independent ratios), so it is a world EDIT and binds
+        to the edit window `w1-world-edit-window` opens on 09-13. Placed the day
+        AFTER its sibling deliberately — the two rows touch the same file and
+        deciding them on one day at a measured capacity of ~1 row/cycle is how
+        a date gets broken. Day carries no other promise.
     Question: W0's needs are compressed against human physiology at SIX
     DIFFERENT RATES, so W.7's premise — "only the need-accumulation clock is
     scaled, by a single declared k" — already has a counterexample. Does W0
@@ -1729,6 +1758,20 @@ EVIDENCE (builder, 2026-09-07, pl02_rig_probe.py — measured for PL.02's rig
     reads 0.5614/0.6861 — the two numbers must not be conflated.
 
 ROUTED: dp04-lifespan-has-no-resolution | 2026-08-30 | ed7d78c (sizing seed 94, /data/dp04_sizing_seed94.json) | OPEN
+    DUE: 2026-09-22 | RE-ARMED 2026-09-08 (Review DAILY) from no date at all —
+        STALE, OPEN 9 days past the 8-day cycle. Dated last of the four
+        re-arms because it is the most downstream: its option (ii) — tune the
+        world's difficulty so survival is not almost-free — is a WORLD EDIT and
+        so waits on the same 09-13 edit window as the two `w*` rows above, and
+        its option (i) — a graded outcome measure — is the fourth appearance
+        today of one disease: a task too easy for its instrument to resolve
+        anything (76.7% of 3072 lifespans sat at the cap; 21 distinct values in
+        the entire run). See `ub10-seed-fragility-and-saturated-battery`'s
+        09-08 disposition, `sh02-null-saturation`, `w0-too-shallow` and
+        `t309-control-clears-the-claims-own-margin`. That makes FOUR fronts,
+        which by the UB.10 ruling's own trigger is now a Sunday question about
+        how this project picks tasks — and this row should be decided under
+        that answer, not in front of it. Day carries no other promise.
     Question: DP.04's claim statistic — MEAN CENSORED LIFESPAN — has no
     resolution in the LC.00 gridworld, and the fault is the metric's coupling
     to a near-binary world rather than any envelope size. Measured: of 3072
