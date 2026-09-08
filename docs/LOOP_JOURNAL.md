@@ -13140,3 +13140,43 @@ DRAFTED-NOT-REGISTERED.**
   registered run and LF.01 attempt 2 wait on 09-09 rulings; HR.1-4
   D19-held to 09-14; D24 09-11.
 - 2026-09-08 ~07:1x (builder, Fable; week:all-models 24%, gate clear): executed 85th audit items 1+3 in `cd5a27b` — `MEASURED_DISCHARGE_CAPACITY` 1→6 citing the six refuting disposal commits in the constant's own docstring; `next_free_due` 2026-09-23→2026-09-10, amber dates 6→2 (09-09 at 8, 09-13 at 10), `review_queue_piled_on` 26→6 recorded as DEFINITIONAL in the same commit (−1 the Review's morning, −19 the denominator); ORDERED lane got its third state (`W1.01/03/04 -> NOT REGISTERED` live, typo'd commissions can no longer read as pending forever); T0.31's P14/P14b fixtures rebuilt parametric on the imported constant, P16 extended with the third-state known-positive, re-bought PASS 17/17 at `cd5a27b` (1.46 s). Next iteration: audit item 2 (declare the seven kindless arena kinds in registry notes + `kindless_arena_discharges` floor 7 in the champions ratchet — note declaring `LC.02`/`T2.12` honestly may flip a seat red, which is the repair working) and item 4 (two `run.py` residuals — `time.gmtime()` in the day-scoped banner, docstring note that a failed reset is invisible; editing run.py stales T0.22, budget for the re-buy). Then the Review's dated block: D1.0 twin-spread probe (DUE 09-14, forward passes only, both branches pre-registered on the row) before UB.10/LG.10/T3.09.
+- 2026-09-08 ~08:1x (builder, Fable; week:all-models 31% — the gate, named;
+  week:Fable 47%; 0 PACING lines): executed 85th audit items 2+4, closing
+  the audit's whole FOR-THE-BUILDER docket (items 1+3 were the 07:1x slot's).
+  Item 2 in two commits per the 60th-audit precedent (add the class, watch it
+  fire, THEN migrate): `fcea551` lands `kindless_discharges()` +
+  `BASELINE_KINDLESS_DISCHARGES` in champions.py — and the counter's FIRST
+  FIRING corrected the audit that ordered it: it reads NINE, not seven (the
+  audit's prose) or eight (its id list) — `LF.02` was invisible to the
+  seat-level `weak` print because Death & persistence is also discharged by
+  declared specs (XL.00/XL.01) and that print lists only exclusively-kindless
+  seats. `0d57b1d` migrates: eight kinds declared in registry notes for what
+  each spec IS (LC.00 death&retry fixture, LC.02 death&retry rule, T2.12
+  one-brain sensor, T3.07 one-brain claim — FAIL standing, ME.11.A
+  memory-across-lives fixture — which also discharges the incumbent-arm
+  judgement _challenger_runs recorded as owed, ME.11.B/C/D
+  memory-across-lives claim — all FAIL), ratchet 9 -> 1. LF.02 is the named
+  resident BY DECISION (66th audit B3 refused it a COVERS commitment; the
+  grammar cannot express a commitment-free kind) — floor falls to 0 only via
+  a coverage.py/T0.21 grammar design, not a champions.py edit. No commitment
+  gained a pass; no seat flipped (Emotion keeps T3.07 as a real claim-FAIL
+  contest); violations 10 before and after; champions --check EXIT 0 at 1/1.
+  T0.29 re-bought PASS at 0d57b1d (attempt 12, 20.3 s, 10/10, control fails
+  p2/p4/p6) in `7dec7b6`. Item 4 in `42de057`: DAY-ROLLED `today` now
+  time.gmtime (print asserts UTC; localtime was latent-only on this GMT box),
+  failed-reset blind spot declared in ratchet_deltas' docstring. CORRECTION
+  to the 07:1x journal line: editing run.py stales NOTHING — IMPL_DEPS live
+  in test files and none declares experiments/run.py; `run stale` shows the
+  same 12 pre-existing FAIL/VOID rows before and after. Hygiene: coverage
+  EXIT 2 on the same known residents (no new malformed declaration), status
+  EXIT 0, cpu day meter ~48 s of 57,600 (slack preserved for item-5 specs),
+  13 claude pids = own loop family, no files I did not write. NEXT
+  ITERATION: the Review's dated block, item 1 — D1.0's twin-spread probe
+  (DUE 09-14): K>=16 untrained twins per architecture at distinct init
+  seeds, FORWARD PASSES ONLY, both branches pre-registered on
+  `d10-successor-rerun-under-adopted-gate` — read the row + attempt 2's rows
+  before writing code; successor gate goes in a NON-dispatch commit; attempt
+  3 is W37 (opens 09-13), never W36. Then UB.10 redesign (09-15), LG.10
+  sibling REGISTRATION ONLY (09-16), T3.09 registry note (09-17). D22
+  default (i) fires 09-09T00:00 if the owner is silent; D18 decide_by 09-09;
+  PL.02 registered run and LF.01 attempt 2 wait on 09-09 rulings.
