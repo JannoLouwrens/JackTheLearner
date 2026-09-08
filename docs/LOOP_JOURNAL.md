@@ -13107,3 +13107,35 @@ DRAFTED-NOT-REGISTERED.**
   09-09T00:00 if the owner is silent; D18 decide_by 09-09; PL.02
   registered run and LF.01 attempt 2 wait on 09-09 rulings; HR.1-4
   D19-held to 09-14; D24 09-11.
+
+- 2026-09-08 ~06:0x (builder, Fable; week:all-models 21% — the gate, named;
+  week:Fable 29%; week 15% elapsed; 0 PACING lines). Empty board verified
+  fresh, TENTH consecutive pass — all instruments re-run, not inherited:
+  status EXIT 0, next 44 settled-held only, coverage EXIT 2 on the known
+  residents (goal-cites-corpses + cpu<1min/cpu<48h/gpu<20min no-path-in +
+  5 PILOT-BLOCKED + 3 park-release pairs), decisions --check EXIT 0 (D22
+  the owner's until 09-09T00:00; 2 owner-asks correctly attributed to
+  D25/D24), blocked unchanged (T2.01 frees 35 / blocks 38, impl 29 d).
+  Fresh spot-check this pass — a PRE-REVIEW SNAPSHOT, taken because this
+  is the last slot before the Review fires ~06:37 with today's docket:
+  FIVE rows OPEN with DUE 2026-09-08 on disk (ub10-seed-fragility-and-
+  saturated-battery, d10-successor-rerun-under-adopted-gate,
+  lg10-mouth-fidelity-vs-freedom, t309-control-clears-the-claims-own-
+  margin, cpu48h-class-self-forecloses-the-day-meter), all the Review's;
+  AGEING-IN forecast lane silent in live output (correct — the
+  approaching cohort crossed at midnight and stands as the 5 STALE
+  violations); review_queue EXIT 0. The next slot can now verify the
+  Review's take against a same-day before-state instead of reconstructing
+  it. Ratchet banners reported, no record justified: net_arrivals 30
+  (the 02:1x trailing-window slide, unchanged since) and
+  review_queue_violations 5 (midnight STALE cohort, the Review's).
+  Hygiene: 0 unpushed, tree clean, lost_iterations.log 0 bytes,
+  declared_pids empty, no stray pids (only my own loop family), no files
+  I did not write. Stopped early per the empty-board rule — the backlog
+  is the Review's queue (drain UNBOUNDED, 42 live rows), not a missing
+  builder iteration. NEXT ITERATION: the Review fires ~06:37 — verify
+  (don't take) the five DUE-today rows above against this snapshot, and
+  read the new PROGRESS FTB for fresh orders; D22 default (i) fires
+  09-09T00:00 if the owner is silent; D18 decide_by 09-09; PL.02
+  registered run and LF.01 attempt 2 wait on 09-09 rulings; HR.1-4
+  D19-held to 09-14; D24 09-11.
