@@ -3378,7 +3378,7 @@ ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-
     stale loudly at the next `run status`. A W1-line fix (new world file)
     bills zero of them.
 
-ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 (finding 5) | OPEN
+ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 (finding 5) | DISPOSITIONED 2026-09-08 (Review DAILY — the ROUTING CONSEQUENCE only, exactly as this row instructed for the case where the owner has not yet answered: (i)+(iv) SCHEDULE AROUND IT, wall clock stands, no ceiling raised or split. The unit question stays armed on `D20`, decide_by 2026-09-18. Design below)
     DUE: 2026-09-08 | deliberately NOT 09-06 (the audit's own B7: the Sunday
     pile is 8 rows against a measured capacity of ~1/cycle) and independent
     of the W0/W1 design. It is coupled instead to the OWNER question the
@@ -3452,6 +3452,65 @@ ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 
     raise** — the loop runs first-run `cpu<2h` specs before its own
     housekeeping, which costs nothing and loosens nothing, and is the runner-
     lane twin of option (i)'s answer for the detached lane.
+
+    DUE: 2026-09-19 | ROUTING CONSEQUENCE DELIVERED 2026-09-08 (below); the
+        UNIT question is untouched and stays armed on `D20` (decide_by
+        2026-09-18). Re-dated to the day AFTER that deadline so this row
+        consumes either the owner's answer or `D20`'s armed default, instead
+        of asking the same question a third time in front of it. What is owed
+        on 09-19 is the consequence of whichever way `D20` lands.
+
+**DISPOSITION (Review DAILY, 2026-09-08): (i)+(iv) — schedule around it. No
+ceiling is raised, split, or re-unitised by this desk.**
+
+**Taking the row's own instruction rather than improvising one.** This row was
+dated 09-08 with an explicit conditional: *if the owner answers before 09-08,
+consume the answer; if not, decide the routing consequence only and leave the
+unit question armed.* `D20` is live with `decide_by 2026-09-18` and unanswered.
+So the conditional resolves to its second branch and this disposition
+deliberately does less than the row's menu offers.
+
+**Options (ii) and (iii) are not mine to take and I am not taking them.** Both
+edit what a tenant-protection ceiling counts or how it is partitioned, on a box
+with paying tenants. `SYSTEM.md` law 4 makes that owner-gated, the row says so
+itself, and no default here may fire it. Anything other than "wall clock
+stands" RELAXES a protection — that is the whole reason this is a desk row and
+not a builder fix, and it would remain the reason even if I found the arithmetic
+persuasive, which for the record I do.
+
+**ADOPTED, both halves, because they are the same answer for two lanes:**
+
+  - **(i) for the detached lane.** Wall clock stands. A `cpu<48h` dispatch is
+    accepted as *buying N foreclosed days*, and that is planned for rather than
+    argued with. The instruments to plan against already exist and were built
+    for this: `T0.33`'s `n_foreclosed_now` and `run status`'s live
+    unaffordable-set print. A foreclosure that reports itself while it happens
+    is a schedulable cost.
+  - **(iv) for the runner lane.** The loop runs first-run `cpu<2h` specs before
+    its own housekeeping. This matters on the date rather than someday for the
+    reason B4 gave: `CPU_DAY_CEILING_S` is only **1.067×** the largest legal
+    child, so a never-run `cpu<2h` spec is refused once the day passes **3600 s
+    — 6.25% of the ceiling**, which one routine gate sweep spends. A never-run
+    spec is exactly what today's dispositions commission (`UB.10`'s hardened
+    battery, `D1.0`'s twin probe, `LG.10`'s sibling), so this fires on the first
+    morning of the work this page just ordered.
+
+**Why this is the honest small answer and not a dodge.** (i)+(iv) are the only
+two options on the menu that **cost nothing and loosen nothing**: they move no
+constant, edit no ceiling, stale no certificate, and change what no instrument
+counts. They are pure scheduling. If they turn out to be sufficient, the owner's
+question becomes cheaper to answer rather than more urgent; if they turn out to
+be insufficient, `D20` will be answered by then and the expensive options are
+still on the table with a measured foreclosure count behind them instead of
+worst-case arithmetic. Deciding a threshold question early, in the absence of an
+answer, on a box with tenants, to save myself a second sitting, is not a trade
+this desk should make.
+
+**Bills, restated so 09-19 does not have to re-derive them:** SEMANTIC none.
+MECHANICAL — (i)+(iv) as adopted touch no ceiling constant and so bill nothing;
+it is (ii)/(iii) that would edit `experiments/cpu_budget.py` (T0.33 ~2 s, T0.34
+~60 s re-buys) and (ii) that would additionally stale every certificate citing
+`rtf.py`. That asymmetry is itself an argument for scheduling first.
 
 ## ROUTED 2026-09-04 (builder, LG.03 attempt-1 harvest): `lg03-blind-twin-cannot-prove-itself-alive` — the certifier VOIDs on its own liveness gate, and the repair it pre-registered is falsified
 
