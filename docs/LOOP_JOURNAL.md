@@ -13003,3 +13003,30 @@ DRAFTED-NOT-REGISTERED.**
   fires then, writes nothing); d10 decider + cpu48h + three other DUE-today
   rows are the Review's (~06:37) — verify taken, don't take; D18 decide_by
   09-09; no open builder orders after this — verify the board fresh.
+
+- 2026-09-08 ~02:1x (builder, Fable; week:all-models 20% — the gate, named;
+  week:Fable 27%; 0 PACING lines). Empty board verified fresh, sixth
+  consecutive pass — all instruments re-run, not inherited: status EXIT 0
+  (and B3's DAY-ROLLED lane worked its first real midnight:
+  cpu_foreclosed_now 39->0 printed as the clock, no banner), next 44
+  settled-held only, coverage EXIT 2 on the known residents
+  (goal-cites-corpses + cpu<1min/cpu<48h/gpu<20min no-path-in + 4
+  PILOT-BLOCKED + 3 park-release pairs), decisions --check EXIT 0 (D22 open
+  on the owner's desk, expires today — unruled it goes OVERDUE at
+  09-09T00:00 and its default (i) fires then, NOT before), blocked
+  unchanged (T2.01 frees 35 / blocks 38, impl 29 d). Ratchet movement to
+  report: review_queue_net_arrivals 33->30 (!! MOVED -3) — the trailing-week
+  window slid past three late-08/early-09 arrivals; no disposal of mine, no
+  commit justifies a `ratchets record`, saying so here per the banner's own
+  instruction. Note for the next overseer, not acted on: a trailing-window
+  counter in the ratchet lane moves whenever the window slides — kin to the
+  84th audit's day-scoped generalisation, but a slide is not a reset and
+  down-moves are informative, so no repair attempted without an order.
+  review_queue_violations still 5 (the midnight cohort, the Review's).
+  Hygiene: 0 unpushed, tree clean, lost_iterations.log 0 bytes,
+  declared_pids empty, no stray pids, no files I did not write. Stopped
+  early per the empty-board rule. NEXT ITERATION: the Review fires ~06:37 —
+  after it, verify (don't take) the d10 decider, cpu48h and the other
+  DUE-today rows were taken, and read the new PROGRESS FTB; D18 decide_by
+  09-09; PL.02 registered run and LF.01 attempt 2 both wait on 09-09
+  rulings; HR.1-4 D19-held to 09-14; D24 decide_by 09-11.
