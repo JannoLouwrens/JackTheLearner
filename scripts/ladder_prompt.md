@@ -537,11 +537,141 @@ prohibitions and are carried into `3''`. **(Superseded in turn on 2026-09-05 —
 the live items are now `1'''`, `2'''` and `3''`; see the block immediately
 below.)**
 
-**LIVE PRIORITY BLOCK — `1''''`/`2''''` (Review, 2026-09-07, DAILY). `3''`
-FURTHER BELOW IS UNCHANGED AND STILL LIVE. `1'''`/`2'''` ARE SPENT: `SO.08`
-PASSed 2026-09-06 12:16 (attempt 2) and `D21`/`D16`/`D15` all fired on
-schedule, so every instruction in `1'''` has been executed. Sixth consecutive
-day a priority block was spent inside its own day.**
+**LIVE PRIORITY BLOCK — `1'''''`/`2'''''` (Review, 2026-09-08, DAILY). `3''`
+FURTHER BELOW IS UNCHANGED AND STILL LIVE. `1''''`/`2''''` ARE SPENT — ALL FIVE
+ITEMS, INSIDE THE DAY, FOR THE SEVENTH CONSECUTIVE DAY:** `ME.3`'s contract
+split landed and PASSed at attempt 5 (`a59363a`, `ce33621`);
+`EpisodicMemory.recall` names the −0.267 gap in its own words (`fed5322`);
+`audit_supersedes_fail` tells the truth while red (`9d03d96`) with four
+certificates re-bought behind it (`cdb4082`); `PL.00`'s renderer bakeoff ran and
+WON (`b7324ba`, winner coarse-shadow512) and `PL.00` re-ran to **PASS** at 3
+seeds (`3a935f6`, pure_T 8.903 ± 0.294 against the unmoved 5.0 floor); and the
+persist-weights standing rule got a durable home as `CHAMPIONS.md` rule 6
+(`c2be391`). `2''''`'s prohibition held — no third `D1.0` dispatch was made.
+**`2''''` is now superseded rather than merely spent: the row it was waiting on
+was decided this morning, and the answer is below.**
+
+1'''''. **FOUR RUNNABLE UNITS, AND FOR THE FIRST TIME THEY ARE ALL DATED —
+   TAKE THEM IN THIS ORDER.** Every item below is a disposition this desk
+   committed this morning, each with a `DUE:` on its queue row that
+   `run review-queue` will hold me to. Re-derive the live figures yourself with
+   `run blocked` / `run coverage`; the counts in this block are 06:4x today's.
+
+   1. **`D1.0`'s TWIN-SPREAD PROBE — first, cheapest, and it stands in front of
+      the largest unblock in the project.** Ordered on
+      `d10-successor-rerun-under-adopted-gate` (DISPOSITIONED 09-08, **DUE
+      09-14**). Two attempts and 33.8 GPU-hours have now returned two different
+      VOIDs, and the two rows' own numbers say the ARMS were never the problem:
+      twin means identical across both runs (aprime 198.4, d_mlp 197.6 —
+      deterministic twin eval), bar identical at 3.0σ, and the verdict flipped
+      **2.94–2.96σ → 3.95/3.91σ purely because the random policy's spread moved
+      30.27 → 22.12.** The denominator is the defect, so the denominator
+      changes: **each arm is scored against its OWN untrained twin, never
+      against random.** That is a STRENGTHENING — the ~87 raw points of
+      architectural prior an untrained arm currently banks for free are
+      subtracted by construction.
+      **What you actually run, and it is forward passes only:** K ≥ 16
+      untrained twins per architecture at distinct init seeds, reporting each
+      architecture's prior mean and std. **Nothing is trained**, so the cost
+      does not scale with the denominator's seed count — that is the whole
+      economy of this design. Both branches are already pre-registered on the
+      row and you may not choose between them after seeing the number: real
+      spread → `(arm − twin_mean)/twin_std >= 3.0`; ~zero spread → σ is
+      undefined, MAY NOT be manufactured by borrowing a spread from elsewhere,
+      and the gate falls back to the declared raw-margin form with the change
+      of units written on the row. **The 3.0σ bar does not move. Random stays
+      in the run as a reported floor.** The successor gate is committed in a
+      commit that is NOT a dispatch commit, and attempt 3 goes to **W37 (opens
+      09-13)** — W36 has ~12.4 GPU-h left against attempt 2's measured 17.61 h,
+      so it does not fit and must not be squeezed.
+
+   2. **`UB.10`'s battery redesign.** Ordered on
+      `ub10-seed-fragility-and-saturated-battery` (DISPOSITIONED 09-08, **DUE
+      09-15**). The row lists its defects in the wrong order of importance:
+      A0 reads slot **1.0 on all three seeds**, so the PASS conjunct *"winner >
+      A0 on every seed"* cannot fire against anything, and repairing seed
+      fragility alone buys a run that still returns no verdict. Three parts:
+      **composite / cross-modal-XOR slots** (no single modality carries the
+      answer — the discriminating structure a fusion battery is supposed to
+      have); a new pre-registered rig gate **`A0_HEADROOM`** — the anchor must
+      read strictly below ceiling on EVERY registered seed by a declared margin
+      or the run VOIDs on the rig **before any arm is scored**, the same shape
+      as `D1.0`'s learning gate; and the **per-arm stability conjunct** — an arm
+      must train on all registered seeds to hold a seat, which turns basin
+      fragility from a rig VOID that hides the finding into a scored
+      disqualification. **Two things are refused and named so nobody
+      re-proposes them: the training-budget cut** (it makes every arm worse so
+      the picture looks interesting, and silently rewrites the claim to *"fusion
+      helps when undertrained"*) **and seed-level SCORED-AND-INELIGIBLE** (it
+      lets an arm that failed to train on a registered seed keep competing on
+      the seeds where it did). Committed BEFORE any re-dispatch; `UB.11` stays
+      blocked behind a real verdict.
+
+   3. **`LG.10`'s sibling spec — REGISTRATION ONLY.** Ordered on
+      `lg10-mouth-fidelity-vs-freedom` (DISPOSITIONED 09-08, **DUE 09-16**).
+      `LG.10`'s bar and its FAIL both STAND: it is the registered falsifier of
+      `GOAL.md`'s *"the LLM is his mouth, never his mind"*, and at honest
+      sampler freedom it falsified that sentence for the incumbent mouth (29 of
+      55 wrong draws drift to a different truthful memory, 26 collapse to
+      phatic filler). **Do not touch that spec.** What you register is a NEW
+      claim beside it — *"he speaks correctly or he is silent"* — carrying a
+      **pre-registered utterance-rate floor**, which is mandatory and is the
+      `ME.3` lesson arriving in the language family: an abstaining mouth with no
+      floor abstains on everything hard and scores 1.0 on what is left, and
+      `ME.3` was caught only because starvation was TOTAL. Fidelity bars carry
+      over unmoved; every control re-runs under the abstention machinery and a
+      null that can abstain must still fail. **No dispatch, no LLM verdicts
+      bought on this row.**
+
+   4. **`T3.09`'s registry note — a note, not a run.** Ordered on
+      `t309-control-clears-the-claims-own-margin` (DISPOSITIONED 09-08, **DUE
+      09-17**). Record that attempt 3's row is a **VOID** under the corrected
+      lane and is **NOT** a kills-executing verdict: law 2 class-3 is
+      unconditional, the wrong-goal control gained +12.47 against `MARGIN_AFF`
+      11.0, and a voided run cannot delete a module. Second fact, and it is the
+      stronger one: **`loop_creative` fired 0 times on 142 consults** — the
+      branch in the spec's own title has never executed, so `T3.09` has not
+      failed to demonstrate its claim, it has never tested it.
+      `AlphaGeometryLoop.py` stays.
+
+   5. **FREE, AND IT COSTS NOTHING TO OBEY: run first-run `cpu<2h` specs BEFORE
+      your own housekeeping.** Adopted as option (iv) on
+      `cpu48h-class-self-forecloses-the-day-meter` (DISPOSITIONED 09-08).
+      `CPU_DAY_CEILING_S` is only **1.067×** the largest legal child, so a
+      never-run `cpu<2h` spec is refused once the day passes **3,600 s — 6.25%
+      of the ceiling**, which one routine gate sweep spends. **Items 1–3 above
+      commission exactly such never-run specs**, so this fires on the first
+      morning of the work this page just ordered. It moves no constant, edits no
+      ceiling, and stales no certificate.
+
+2'''''. **`D1.0` ATTEMPT 3 IS NOW REACHABLE — AND IT IS NOT AUTHORISED BY THE
+   ROW BEING DECIDED.** `2''''` forbade a third dispatch until
+   `d10-successor-rerun-under-adopted-gate` answered why the twins failed. It
+   answered this morning, and the answer authorises **the probe and the gate**,
+   not a dispatch. Attempt 3 exists only once (1) the twin-spread probe result
+   is written onto the row and (2) the successor gate is committed in a
+   non-dispatch commit — and then into W37, not scraped out of W36. **An
+   unchanged re-dispatch stays forbidden under every branch.** `VOID-FORECLOSED`
+   was refused on arithmetic: every trained arm cleared attempt 2's gate
+   (13.02 / 12.99 / 10.80 / 10.53σ, margin 3.37, winner aprime), so nothing
+   about the arms is foreclosed, and declaring the arena dead would retire
+   **`T2.01` — frees 35 / blocks 38, settled FAIL, implementation unchanged 29
+   days, still the largest single unblock in the project** — for a reason that
+   is not about locomotion at all.
+
+   **AND THE EMPTY-BOARD RULE IS UNCHANGED, with its sentence updated.** If you
+   work through the five items above and the board is still empty, **say so and
+   stop early**; a slot that reads the board, verifies it against `run blocked`
+   / `run coverage`, writes what it checked, and ends is a CORRECT slot. The
+   updated sentence: the queue drain still reads **UNBOUNDED** (41 live rows,
+   32 arrivals against 3 disposals over the trailing week), but this morning it
+   went to **zero violations** for the first time in five days — one row closed
+   ACTED, five decided, four stale rows re-armed with chosen dates. **The
+   backlog is still mine and still not fixable by an extra iteration of yours.**
+
+**`1''''`/`2''''` BELOW ARE SUPERSEDED (Review, 2026-09-08) — kept for the
+record, not for execution. Every item in `1''''` was executed; `2''''`'s
+question was answered this morning by the row it was waiting on.**
 
 1''''. **THE BOARD IS BACK TO ZERO FRESH UNITS — AND FOR THE FIRST TIME IN A
    WEEK THAT IS NOT A REASON TO STOP, BECAUSE THIS DESK PUT FOUR RUNNABLE
