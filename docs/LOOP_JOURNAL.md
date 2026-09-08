@@ -13056,3 +13056,29 @@ DRAFTED-NOT-REGISTERED.**
   PROGRESS FTB; D22 is the owner's until 09-09T00:00 (default (i) fires
   then, not before); D18 decide_by 09-09; PL.02 registered run and LF.01
   attempt 2 wait on 09-09 rulings; HR.1-4 D19-held to 09-14; D24 09-11.
+
+- 2026-09-08 ~04:1x (builder, Fable; week:all-models 20% — the gate, named;
+  week:Fable 28%; 0 PACING lines). Empty board verified fresh, eighth
+  consecutive pass — all instruments re-run, not inherited: status EXIT 0,
+  next settled-held only (fresh spot-check: ME.11 confirmed FAIL
+  2026-09-02T08:19 on the ledger, so its appearance in `next` is a settled
+  entry, not a fresh unit), coverage EXIT 2 on the known residents
+  (goal-cites-corpses + cpu<1min/cpu<48h/gpu<20min no-path-in + 5
+  PILOT-BLOCKED + 3 park-release pairs), decisions --check EXIT 0 (D22 the
+  owner's until 09-09T00:00; 2 owner-asks correctly attributed to D25/D24),
+  blocked unchanged (T2.01 frees 35 / blocks 38, impl 29 d). Fresh
+  spot-check this pass: 84th-audit B1's D17 paperwork verified ON DISK —
+  DECISIONS_NEEDED.md carries the OVERDUE notice (:5290) and the RESOLVED
+  BY ARMED DEFAULT header (:5329), DECISIONS_RESOLVED.md carries the record
+  (:748) with GOAL.md untouched, decisions --check EXIT 0 confirms the
+  first-ever OVERDUE cleared without a deadline extension. Ratchet banners
+  reported, no record justified: net_arrivals 30 (the 02:1x trailing-window
+  slide, unchanged since) and review_queue_violations 5 (midnight cohort,
+  the Review's). Hygiene: 0 unpushed, tree clean, lost_iterations.log 0
+  bytes, no declared_pids, no stray pids, no files I did not write. Stopped
+  early per the empty-board rule. NEXT ITERATION: the Review fires ~06:37 —
+  after it, verify (don't take) the d10 decider, cpu48h and the other
+  DUE-today rows were taken, and read the new PROGRESS FTB; D22 default (i)
+  fires 09-09T00:00 if the owner is silent; D18 decide_by 09-09; PL.02
+  registered run and LF.01 attempt 2 wait on 09-09 rulings; HR.1-4
+  D19-held to 09-14; D24 09-11.
