@@ -144,7 +144,7 @@ SPEC_ID = "T0.31"
 # T0.29 champions.py).
 IMPL_DEPS = ["experiments/review_queue.py"]
 
-N_PROPERTIES = 16
+N_PROPERTIES = 17
 
 TODAY = _dt.date(2026, 9, 1)
 
@@ -688,6 +688,53 @@ def _probe(blind: bool) -> dict:
     if blind or not ordered_ok:
         failed.append("p16_an_ordered_specs_return_is_printed")
 
+    # P17 — AGEING IS FORECAST A DAY BEFORE IT FIRES (84th audit B2: four
+    # un-clocked rows routed 2026-08-30 crossed the 8-day cycle together at
+    # the 2026-09-08 midnight, and the finder was whichever organ ran next —
+    # every input to say so existed a day earlier). The known-positive, both
+    # horizons, both directions: (i) four un-clocked OPEN rows at day
+    # MAX_OPEN_AGE_DAYS print in the 24 h horizon and are NOT STALE yet;
+    # (ii) a day-7 row prints at 48 h; (iii) the SAME rows with a DUE: are
+    # silent — the clock is the honest hatch and it must work here as
+    # everywhere; (iv) an already-STALE row is an alarm, not a forecast, and
+    # appears in neither horizon, as a young row appears in neither;
+    # (v) a METRIC, never a violation — the only finding in the fixture is
+    # the STALE row's own; (vi) the renderer prints the horizon and the ids,
+    # because a forecast nobody can read re-arms nothing.
+    age_rows = ([(f"age24-{i}",
+                  (TODAY - _dt.timedelta(days=MAX_OPEN_AGE_DAYS)).isoformat(),
+                  "OPEN", []) for i in range(4)]
+                + [("age48",
+                    (TODAY - _dt.timedelta(days=MAX_OPEN_AGE_DAYS - 1)).isoformat(),
+                    "OPEN", []),
+                   ("age-already-stale",
+                    (TODAY - _dt.timedelta(days=MAX_OPEN_AGE_DAYS + 1)).isoformat(),
+                    "OPEN", []),
+                   ("age-young", (TODAY - _dt.timedelta(days=2)).isoformat(),
+                    "OPEN", [])])
+    fore = audit(_doc(age_rows), None, TODAY)
+    armed = audit(_doc([(r[0], r[1], r[2],
+                         ["DUE: 2026-12-01 | re-armed with a reason"])
+                        for r in age_rows]), None, TODAY)
+    ids24 = {e["id"] for e in fore["ageing_in"] if e["stale_in_days"] == 1}
+    ids48 = {e["id"] for e in fore["ageing_in"] if e["stale_in_days"] == 2}
+    ftext = render(fore)
+    forecast_ok = (
+        ids24 == {f"age24-{i}" for i in range(4)}
+        and ids48 == {"age48"}
+        and {e["id"] for e in fore["ageing_in"]} == ids24 | ids48
+        and {rid for c, rid, _ in fore["findings"] if c == "STALE"}
+            == {"age-already-stale"}
+        and fore["total"] == 1
+        and not armed["ageing_in"]
+        and armed["total"] == 0
+        and "AGEING IN" in ftext
+        and all(f"age24-{i}" in ftext for i in range(4))
+        and "age48" in ftext
+        and "within 24 h: 4" in ftext and "within 48 h: 1" in ftext)
+    if blind or not forecast_ok:
+        failed.append("p17_ageing_is_forecast_a_day_before_it_fires")
+
     # The live desk's own numbers, recorded in the ledger row so the reading
     # that motivated P15 is dated and attributable rather than quoted from an
     # audit page. `-1` is the honest value for "no git baseline in this
@@ -723,7 +770,7 @@ def _control(seed: int) -> dict:
     and on the one sabotage it CAN see it reports the wrong sign: delete the
     rotting row and the number falls, so the backlog looks healthier.
 
-    Measured: it fails 13 of 16, and the 3 it passes are worth naming so nobody
+    Measured: it fails 14 of 17, and the 3 it passes are worth naming so nobody
     reads this as a straw man. P1 is a statement about the live DOCUMENT rather
     than about the reader, and is not asked of it. P4 and P6 it passes
     VACUOUSLY — relabelling a row `HELD` and deleting its `DUE:` both leave the
@@ -747,6 +794,10 @@ def _control(seed: int) -> dict:
     P16 it fails by construction: a row count contains no commissioned spec ids
     and no verdicts, so the pair a refutation travels back along is invisible
     to it — which is the 79th audit's finding, executable.
+
+    P17 it fails by construction too: a row count carries no ages, so it can
+    no more forecast a row going STALE tomorrow than it could see one STALE
+    today — the 84th audit's midnight cohort, executable.
     """
     return _probe(blind=True)
 

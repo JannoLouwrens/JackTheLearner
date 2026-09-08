@@ -558,6 +558,27 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
             break
         d += _dt.timedelta(days=1)
 
+    # THE AGEING FORECAST (84th audit B2). At 2026-09-08T00:00 four un-clocked
+    # rows — a single cohort routed 2026-08-30 — crossed the consumer cycle in
+    # the same second, and the organ that found them was whichever happened to
+    # run next: a deadline instrument reports a state, and a state has no
+    # owner. Every input needed to print "these go STALE tomorrow" existed a
+    # day earlier, in this function; yesterday's consumer could have re-armed
+    # all four at zero cost. Same idiom as `next_free_due`: a METRIC, never a
+    # violation — riding at day 7 is legal, and a gate here would forbid a
+    # legal move. The predicate MIRRORS the STALE class exactly
+    # (OPEN/DISPOSITIONED, no DUE:, routed known); a forecast whose predicate
+    # drifts from its alarm forecasts a different alarm.
+    ageing_in: list[dict] = []
+    for r in live:
+        if (r["status"] in ("OPEN", "DISPOSITIONED") and r["due"] is None
+                and r["routed"] is not None):
+            left = MAX_OPEN_AGE_DAYS + 1 - (today - r["routed"]).days
+            if 0 < left <= 2:
+                ageing_in.append({"id": r["id"], "status": r["status"],
+                                  "age_days": (today - r["routed"]).days,
+                                  "stale_in_days": left})
+
     # THE ORDERED JOIN (79th audit): every LIVE row's commissioned spec ids,
     # each against the ledger's verdict for it — or against its absence, which
     # is the half the 78th audit's opt-in lesson says must also be visible.
@@ -576,6 +597,7 @@ def audit(doc: str, prev_doc: str | None = None, today: _dt.date | None = None,
     return {"rows": rows, "findings": findings, "counts": counts,
             "due_pile": due_pile, "piled_on": piled_on,
             "ordered_returns": ordered_returns,
+            "ageing_in": ageing_in,
             "next_free_due": next_free_due,
             "throughput": throughput(doc, base_doc),
             "total": len(findings), "today": today,
@@ -660,6 +682,22 @@ def render(a: dict, last_run: str = "") -> str:
         elif r["blocked_by"]:
             clock = f"  BLOCKED-BY {r['blocked_by']}"
         out.append(f"    {r['status']:<13} {age}  {r['id']}{clock}")
+    if a.get("ageing_in"):
+        n24 = [e for e in a["ageing_in"] if e["stale_in_days"] == 1]
+        n48 = [e for e in a["ageing_in"] if e["stale_in_days"] == 2]
+        out.append("")
+        out.append("  AGEING IN — un-clocked live rows approaching the "
+                   f"{MAX_OPEN_AGE_DAYS}-day consumer cycle (84th")
+        out.append("  audit: four crossed together at midnight and the finder "
+                   "was whoever was awake).")
+        out.append("  A METRIC, never a violation: a DUE: with a reason "
+                   "re-arms any of these at zero cost:")
+        if n24:
+            out.append(f"    within 24 h: {len(n24)} row(s) — "
+                       + ", ".join(e["id"] for e in n24))
+        if n48:
+            out.append(f"    within 48 h: {len(n48)} further row(s) — "
+                       + ", ".join(e["id"] for e in n48))
     if a.get("ordered_returns"):
         out.append("")
         out.append("  ORDERED MEASUREMENTS — what live rows commissioned, and what "
