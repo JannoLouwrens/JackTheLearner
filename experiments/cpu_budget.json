@@ -108,6 +108,12 @@
         "detached:pl02_uargb_probe.log": 717.59
       },
       "used_s": 6227.34
+    },
+    "2026-09-08": {
+      "by_spec": {
+        "T0.31": 3.92
+      },
+      "used_s": 3.92
     }
   },
   "overruns": []
