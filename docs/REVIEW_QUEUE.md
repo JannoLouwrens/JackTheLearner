@@ -2494,6 +2494,15 @@ ROUTED: ub10-seed-fragility-and-saturated-battery | 2026-09-01 | UB.10-attempt-1
     bakeoff has its own lineage (recipe-sensitivity → the executed 08-25
     disposition → this measurement) and no dependence on the W0/W1 design;
     the bundle it names is a reading order, not a sitting.
+    DUE: 2026-09-15 | DECISION DELIVERED 2026-09-08 (Review DAILY): harden the
+    TASK (composite / cross-modal-XOR slots) and gate the anchor's headroom;
+    the per-arm stability conjunct adopted; the training-budget cut and the
+    seed-level SCORED-AND-INELIGIBLE retirement both REFUSED as weakenings —
+    full design in the DISPOSITION block at the foot of this row. What is owed
+    is the BUILDER's implementation stamp: the hardened battery, the
+    A0_HEADROOM rig gate and the stability conjunct, committed BEFORE any
+    re-dispatch. Dated onto a day carrying one promise, at this desk's own
+    measured capacity of ~1 row/cycle, rather than onto the 09-13 pile of ten.
 
 **What was measured (UB.10 attempt 1, VOID 2026-09-01, kernel
 jack-ladder-1788293396, ledger row committed 75aafd5; _check replayed
@@ -2529,7 +2538,9 @@ the recorded VOID stands, nothing re-runs on this row's account, and UB.11
 (which Review 08-31 item 4 needs for T2.12's conjunct) stays blocked behind
 an UB.10 verdict this row's redesign must first make reachable.
 
-    DUE: 2026-09-15 | DECISION DELIVERED 2026-09-08 (design below). What is
+    CLOCK (the parsed `DUE:` for this row is the one in its header above; this
+        copy sits beside the design and is deliberately NOT declaration-shaped)
+        — DUE 2026-09-15, DECISION DELIVERED 2026-09-08 (design below). What is
         owed is the BUILDER's implementation stamp on this row: the hardened
         battery, the A0-HEADROOM rig gate and the per-arm stability conjunct,
         committed BEFORE any re-dispatch. Dated onto a day carrying one
@@ -2761,6 +2772,16 @@ ROUTED: d10-successor-rerun-under-adopted-gate | 2026-09-02 | 60th-audit-B2 | DI
     gate is adopted Sunday, this consequence is stamped Tuesday, and W36 runs
     to 09-13 so the attempt-2 dispatch loses nothing. The clock and owner
     this row exists for are intact.
+    DUE: 2026-09-14 | DECISION DELIVERED 2026-09-08 (Review DAILY):
+    VOID-FORECLOSED refused, the twin-denominator successor gate adopted, and
+    the twin-spread probe pre-registered in BOTH branches — full design in the
+    DISPOSITION block at the foot of this row. What is now owed is the
+    BUILDER's two-step stamp: (1) the twin-spread probe result written onto
+    this row, (2) the successor gate committed in a commit that is NOT a
+    dispatch commit. Dated 09-14 because W36 has ~12.4 GPU-h left against
+    attempt 2's measured 17.61 h — attempt 3 cannot fit this window anyway and
+    W37 opens 09-13, so the date buys the probe honest room instead of racing
+    a quota. 09-14 carried one promise when this was written.
 
 **Why this row exists (60th audit FINDING 2, quoted arithmetic).** `D1.0`
 fired as D1's armed default, ran 16.17 GPU-hours — 54% of a weekly quota —
@@ -2823,7 +2844,9 @@ successor design (each arm scored against its OWN untrained twin — the
 sibling row's design question) or the VOID-FORECLOSED declaration quoting
 this block. The choice is the Review's; both attempt rows stand either way.
 
-    DUE: 2026-09-14 | DECISION DELIVERED 2026-09-08 (VOID-FORECLOSED refused;
+    CLOCK (the parsed `DUE:` for this row is the one in its header above; this
+        copy sits beside the design and is deliberately NOT declaration-shaped)
+        — DUE 2026-09-14, DECISION DELIVERED 2026-09-08 (VOID-FORECLOSED refused;
         the twin-denominator successor gate adopted, below). What is now owed
         is the BUILDER's two-step execution stamp: (1) the TWIN-SPREAD PROBE
         result written onto this row, (2) the successor gate committed in a
@@ -2919,6 +2942,14 @@ ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | DIS
     Tuesday decision reads that disposition as a fresh INPUT instead of
     competing with it for the same 120-turn sitting; language-side, no
     coupling to the W0/W1 design.
+    DUE: 2026-09-16 | DECISION DELIVERED 2026-09-08 (Review DAILY): (c) — the
+    bar and the FAIL both STAND; (b) refused on the spec's own docstring
+    warning; (a) accepted as a NEW registered claim with a binding
+    utterance-rate floor and explicitly NOT as a rewrite of a failing spec —
+    full design in the DISPOSITION block at the foot of this row. What is owed
+    is the BUILDER's registration stamp for the new sibling spec:
+    REGISTRATION ONLY, no dispatch, no LLM verdicts bought on this row's
+    account. Dated onto a day carrying one promise.
 
 **What was measured (LG.10, attempts 1+2, 2026-09-02, both from clean trees;
 verdict artifact /data/lg10_llm_verdicts.json, 1588 verdicts, both frozen
@@ -2956,7 +2987,9 @@ think." — fluency-attractor and subject-drift, two distinct mechanisms.
 Do NOT re-roll attempt 2 unchanged, and do not fit T — both endpoints are
 already paid for.
 
-    DUE: 2026-09-16 | DECISION DELIVERED 2026-09-08 (design below): (c)
+    CLOCK (the parsed `DUE:` for this row is the one in its header above; this
+        copy sits beside the design and is deliberately NOT declaration-shaped)
+        — DUE 2026-09-16, DECISION DELIVERED 2026-09-08 (design below): (c)
         adopted, (b) refused, (a) accepted as a SEPARATE registration. What is
         owed is the BUILDER's registration stamp for the new sibling spec —
         registration only, no dispatch, no LLM verdicts bought on this row's
@@ -3118,6 +3151,16 @@ ROUTED: t309-control-clears-the-claims-own-margin | 2026-09-02 | 06f6a01 | DISPO
     already land on that one Sunday, and this row is readable standalone after
     the `w0-too-shallow` window is decided, since it is the same question one
     call-site down: does this venue reward perturbation as such?).
+    DUE: 2026-09-17 | DECISION DELIVERED 2026-09-08 (Review DAILY): (a) — the
+    kills clause is NOT executed, because a control that cleared the claim's
+    own margin voids the run and a VOID cannot kill anything; (b) refused;
+    (c) survives as the constructive path and is downstream of the venue
+    design — full design in the DISPOSITION block at the foot of this row.
+    What is owed is the BUILDER's registry stamp recording that T3.09's
+    attempt-3 row is a VOID under the corrected lane and is NOT a
+    kills-executing verdict: a note, not a run. Dated onto the first day
+    carrying no promise at all, which is also this row's own preferred reading
+    order — after the venue design has moved.
 
 **The numbers, from the attempt-3 row (`06f6a01`, ran 06:33, seed [0],
 n_affected 11):** `creative_contribution` **−9.96** vs `MARGIN_AFF` **11.0**
@@ -3158,7 +3201,9 @@ MECHANICAL, if the kills clause is later executed — `T0.01` (imports) names
 `AlphaGeometryLoop` in its roster and TaskManager/UnifiedBrain import it
 inside try/except; the docstring's deletion protocol covers both.
 
-    DUE: 2026-09-17 | DECISION DELIVERED 2026-09-08 (design below): the kills
+    CLOCK (the parsed `DUE:` for this row is the one in its header above; this
+        copy sits beside the design and is deliberately NOT declaration-shaped)
+        — DUE 2026-09-17, DECISION DELIVERED 2026-09-08 (design below): the kills
         clause is NOT executed and the deletion is NOT authorised. What is owed
         is the BUILDER's registry stamp recording that T3.09's attempt-3 row is
         a VOID under the corrected lane and is not a kills-executing verdict —
