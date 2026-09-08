@@ -424,7 +424,30 @@ TRIGGER_SCOPE = ("BY VERDICT", "BY DECREE")
 # before any declaration lands: declaring a spec a fixture/rule/sensor removes
 # it from `challenger_runs`, which may flip a seat UNCONTESTED — that is the
 # repair working, not failing.
-BASELINE_KINDLESS_DISCHARGES = 9
+#
+# RATCHETED DOWN 9 -> 1, 2026-09-08, by the migration (same morning, own
+# commit, after the counter's firing was committed at 9): eight kinds declared
+# in the registry for what each spec IS — `LC.00` death & retry (fixture: the
+# gridworld+life_gain apparatus), `LC.02` death & retry (rule: the wall-clock
+# admission floor its falsified_by argues from GOAL.md's lives), `T2.12` one
+# brain / unison (sensor: the affect channel emits; nothing acts on it),
+# `T3.07` one brain / unison (claim: the ablate-a-channel programme, FAIL
+# standing), `ME.11.A` memory across lives (fixture: the incumbent-as-null
+# premise check — which also discharges the "incumbent's own arm is not a
+# contest" judgement `_challenger_runs`'s docstring recorded as owed for this
+# exact arm), `ME.11.B`–`D` memory across lives (claim: all FAIL, no pass
+# credit bought). No commitment gained a passing claim from any of this.
+#
+# THE RESIDENT AT THE FLOOR OF 1 IS `LF.02`, AND IT IS A DECISION, NOT DEBT:
+# its notes declare NO `COVERS:` commitment deliberately (66th audit B3 — a
+# mid-life kill/resume is an interruption, not a death; across-lives
+# persistence is NE.08/ME.10's), and the COVERS grammar cannot express a kind
+# without a commitment. Re-declaring a commitment the 66th audit explicitly
+# refused, to quiet this counter, would be the counter causing the exact
+# vagueness-laundering it exists to catch. The floor falls to 0 only if the
+# grammar ever grows an honest commitment-free kind form — a coverage.py/
+# T0.21 design question, not a champions.py edit.
+BASELINE_KINDLESS_DISCHARGES = 1
 
 # ARENA REFS THAT CAN NEVER BE REGISTERED, and why — the honest cost of closing
 # the gap, which this file used to leave the reader to discover by spending the

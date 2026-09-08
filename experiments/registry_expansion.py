@@ -1165,7 +1165,13 @@ EXPANSION: list[Spec] = [
          control="On the ME.1-style TEMPLATED cue set this same code must still "
                  "score >=0.80. An arm that fails its own home benchmark is "
                  "mis-wired, and its 0.10 on paraphrases would mean nothing.",
-         notes="Measured pilot: 0/8 paraphrase cues, and only 1 of 8 cleared "
+         notes="COVERS: memory across lives (fixture). The incumbent-as-null "
+               "premise check, written to be beatable — the incumbent's own "
+               "arm quantifies the floor the claims must clear and is not "
+               "itself a contest (85th audit item 2; champions.py's "
+               "_challenger_runs docstring recorded exactly this arm as the "
+               "judgement its parser could not make).\n"
+               "  Measured pilot: 0/8 paraphrase cues, and only 1 of 8 cleared "
                "the 0.34 floor. Report N1 (held-out-target) abstention "
                "separately; that is where the floor is expected to fail."),
 
@@ -1185,7 +1191,10 @@ EXPANSION: list[Spec] = [
          control="Shuffle the term-document matrix rows: recall must collapse "
                  "to ~1/N. A BM25 that scores the same on a shuffled index is "
                  "reading document length, not content.",
-         notes="Measured: build 100k = 4.24 s, query = 0.876 ms — 40x FASTER "
+         notes="COVERS: memory across lives (claim). A retrieval capability "
+               "test on the diary that persists across lives; its FAIL is the "
+               "measurement (85th audit item 2).\n"
+               "  Measured: build 100k = 4.24 s, query = 0.876 ms — 40x FASTER "
                "than the incumbent's 35.4 ms linear scan, so whatever wins on "
                "recall, this replaces the scan on efficiency grounds alone. "
                "BM25S: Lu, arXiv:2407.03618."),
@@ -1212,7 +1221,10 @@ EXPANSION: list[Spec] = [
                  "re-center, re-calibrate. Recall must collapse to ~chance. If "
                  "a random table scores anywhere near the learned one, the arm "
                  "is measuring sentence length or token count, not meaning.",
-         notes="Measured on this box: 0.123 ms/query encode, 15,258 docs/s, "
+         notes="COVERS: memory across lives (claim). A retrieval capability "
+               "test on the diary that persists across lives; its FAIL is the "
+               "measurement (85th audit item 2).\n"
+               "  Measured on this box: 0.123 ms/query encode, 15,258 docs/s, "
                "100k index built in 6.6 s and held in 102 MB. Pilot p@1 0.625, "
                "recall@10 1.000. Cheapest arm that could plausibly win, and its "
                "6.6 s reindex (vs MiniLM's 18 min) is an operational argument "
@@ -1243,7 +1255,10 @@ EXPANSION: list[Spec] = [
          kills="If Arm D ties Arm C, every transformer encoder is removed from "
                "the memory path and the 90 MB of weights, the onnxruntime "
                "dependency and the 18-minute reindex go with it.",
-         notes="Measured: 13.4 ms/query (fp32), 93 docs/s, 1073 s to index 100k. "
+         notes="COVERS: memory across lives (claim). A retrieval capability "
+               "test on the diary that persists across lives; its FAIL is the "
+               "measurement (85th audit item 2).\n"
+               "  Measured: 13.4 ms/query (fp32), 93 docs/s, 1073 s to index 100k. "
                "int8-arm64 dynamic quantization made it SLOWER (17.8 ms) — this "
                "Neoverse-N1 has asimddp but NOT i8mm; int8 is a disk win, not a "
                "speed win. Report both. bge-small-en-v1.5 is a within-arm "
@@ -1960,7 +1975,11 @@ EXPANSION: list[Spec] = [
                "cheapest thing that can falsify the metric, the world contract "
                "and the four-core framing before any body, any physics, any "
                "torch or any GPU is involved. Modelled on PS.00.",
-         notes="No MuJoCo, no torch. Tabular over (x, y, need0_bucket, "
+         notes="COVERS: death & retry (fixture). The gridworld, "
+               "death-on-depletion and the cross-life life_gain metric are "
+               "apparatus the lives-improve claims stand on, not one of them "
+               "(85th audit item 2).\n"
+               "  No MuJoCo, no torch. Tabular over (x, y, need0_bucket, "
                "need1_bucket). Also emits the pre-registered numeric value of "
                "the FROZEN control's life_gain, which LC.03/LC.04 reuse as "
                "their own control threshold rather than inventing a new one."),
@@ -2048,7 +2067,12 @@ EXPANSION: list[Spec] = [
                "Selecting a hyperparameter by its score is tuning on the "
                "metric; selection here is on wall-clock fit only, and the "
                "chosen value is committed to the ledger before LC.03 runs.",
-         notes="train_ratio and model size are the two things DreamerV3 does "
+         notes="COVERS: death & retry (rule). An admission floor, not a "
+               "capability: its falsified_by argues from GOAL.md's lives, "
+               "death and cross-life learning, and champions.py called it 'a "
+               "throughput feasibility gate' for forty audits before the "
+               "registry said so (85th audit item 2).\n"
+               "  train_ratio and model size are the two things DreamerV3 does "
                "NOT hold fixed across its 150+ tasks (arXiv:2301.04104 Table "
                "A.1), and they are exactly the two that decide affordability. "
                "Director (arXiv:2206.04114) ran at one gradient step per "

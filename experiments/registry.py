@@ -682,7 +682,12 @@ LADDER: list[Spec] = [
          null_baseline="Random walk with matched variance.",
          metric="state_separability", budget=Budget.CPU, seeds=3, depends_on=["T0.02"],
          control="TWO. A variance-matched RANDOM WALK must not be separable, and SHUFFLED labels on the real trajectories must collapse to chance. The first rules out separability that any drifting scalar would show; the second rules out a classifier reading trajectory identity rather than emotion.",
-         kills="EmotionalState as an input modality."),
+         kills="EmotionalState as an input modality.",
+         notes="COVERS: one brain / unison (sensor). The affect channel "
+               "emits distinguishable states; nothing acts on it here — "
+               "whether anything DOES is T3.07's claim, and its FAIL is on "
+               "the record (85th audit item 2: kind declared for what the "
+               "spec IS)."),
 
     # ===================================================================
     # TIER 3 — ABLATION. Does each component EARN its parameters?
@@ -776,7 +781,13 @@ LADDER: list[Spec] = [
                "FAIL-DISPOSED: D7 2026-09-01 — the fired default above is "
                "the disposition; this marker is what excludes T3.07 from "
                "FAIL-UNOWNED by declaration rather than by hardcoded id "
-               "(72nd audit B1)."),
+               "(72nd audit B1).\n"
+               "  COVERS: one brain / unison (claim). GOAL.md's "
+               "ablate-a-channel programme — mood must be load-bearing on "
+               "behaviour or it is not part of the one brain — and the FAIL "
+               "stands as the registered finding (85th audit item 2: kind "
+               "declared for what the spec IS, not what keeps a seat "
+               "green)."),
     Spec("T3.08", 3, "Ablate the LLM", hypothesis="The frozen LLM improves command following over a bag-of-words encoder.",
          falsified_by="Bag-of-words matches it.", null_baseline="TF-IDF command encoder.",
          metric="command_success_rate", budget=Budget.GPU, seeds=3, depends_on=["T2.07"],
