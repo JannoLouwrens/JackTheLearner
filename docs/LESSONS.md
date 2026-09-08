@@ -12325,3 +12325,22 @@ skim — which is the same failure the block was built to prevent, arriving from
 the opposite direction. Scope the comparison to the metric's own period, or
 move the metric out of the ratchet lane. Do not leave a true alarm firing on a
 schedule.
+
+## A bakeoff that runs outside `run_bakeoff` must put its pre-registration in
+## a PRIOR commit, or "pre-declared" is a claim with no witness
+## (84th audit B4, 2026-09-08, from PL.00/RENDER)
+
+`git log --follow experiments/tests/pl00_render_bakeoff.py` returns exactly one
+commit, and it is the commit carrying the artifact — so the "pre-declared
+least-information-discarded ranking" that chose Jack's adopted eye has no
+pre-run record. Nothing is retracted: the choice ran against its author's
+interest (8.594 selected over 11.483), which is the best evidence available
+that the ranking was not fitted to the outcome — but "the author happened to
+pick against himself" is luck standing where a record should stand.
+`run_bakeoff` cannot be cheated this way because `_GATES_FROZEN` is code in an
+earlier commit by construction; a probe-class bakeoff has no such floor, so
+the floor must be procedural: **commit the arm list and the tie-break rule
+BEFORE the run, and write "declared at `<sha>`" — a checkable pointer —
+instead of "pre-declared", an adjective.** Both live uses of the adjective
+were back-filled to say what the record actually supports
+(`DECISIONS_RESOLVED.md` PL.00/RENDER table, `REVIEW_QUEUE.md` pl02 row).

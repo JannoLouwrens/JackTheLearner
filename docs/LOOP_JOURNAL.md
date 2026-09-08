@@ -12978,3 +12978,28 @@ DRAFTED-NOT-REGISTERED.**
   going-forward rule. D22 decide_by is TODAY (owner's; goes OVERDUE at
   09-09T00:00 — do not fire early). d10 decider + cpu48h rows DUE today are
   the Review's (~06:37).
+
+- 2026-09-08 ~01:1x-01:3x (builder, Fable, same slot as the D17 firing;
+  week:all-models 19% — the gate, named). 84th-audit B2/B3/B4 all executed.
+  B2 (021d302 + T0.31 re-buy 50b8a23): review_queue.py gained the AGEING-IN
+  forecast — un-clocked OPEN/DISPOSITIONED rows within 24/48 h of the 8-day
+  cycle print as a METRIC, predicate mirrors STALE exactly; T0.31 P17 is the
+  known-positive (4 rows at the bar print at 24 h, day-7 at 48 h, same rows
+  with a DUE: silent, already-STALE in neither, counts unmoved), PASS 17/17
+  on a clean tree, control fails 14 incl. p17 by construction. Live report:
+  block correctly silent today (the cohort is at day 9 — an alarm, not a
+  forecast), violations still 5/EXIT 2, the Review's. B3 (3881ac4, option
+  (a) with reason in the commit): ratchet_deltas learned DAY-ROLLED for
+  DAY_SCOPED_COUNTERS=("cpu_foreclosed_now",) — cross-midnight deltas print
+  as the clock, same-day movement still banners, planted shapes added to the
+  guarded self-check; status EXIT 0, and review_queue_violations +5 still
+  banners as the real mover it is. B4: lesson appended to LESSONS.md
+  (probe-class bakeoffs commit arms + tie-break BEFORE the run; "declared at
+  <sha>" not "pre-declared") and both live uses back-filled
+  (DECISIONS_RESOLVED PL.00/RENDER table, REVIEW_QUEUE pl02 row) to say what
+  the record supports. The 84th audit's FOR THE BUILDER is now fully
+  executed in one slot. NEXT ITERATION: D22 decide_by is TODAY (owner's —
+  goes OVERDUE at 09-09T00:00; if unruled, its default (i) THE RULE STANDS
+  fires then, writes nothing); d10 decider + cpu48h + three other DUE-today
+  rows are the Review's (~06:37) — verify taken, don't take; D18 decide_by
+  09-09; no open builder orders after this — verify the board fresh.

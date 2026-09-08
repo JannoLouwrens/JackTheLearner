@@ -1666,7 +1666,9 @@ under `PL.00/RENDER`): the 40 ms eye decomposed into a 4096^2 shadow-map pass
 foreclosed by arithmetic; frame-skip-2 scored 7.034 and stayed ineligible as
 pre-stated; **coarse-shadow512 (shadows kept at 512^2, MSAA off) won at
 worst-seed 8.594 against the unmoved 5.0 floor**, beating coarse-flat on the
-pre-declared least-information-discarded ranking. Adopted in
+least-information-discarded ranking declared at `b7324ba` (the same commit
+carries the artifact; no prior commit holds the declaration — 84th audit B4).
+Adopted in
 `experiments/eye_quality.py` (not `playground.py` — 54 certs declare it).
 **`PL.00` re-ran through the runner and PASSED** (pure_T 8.903 ± 0.294, ViT
 reference still fails at 0.830, render-only clears at 9.549 — the floor now

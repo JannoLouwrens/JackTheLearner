@@ -732,7 +732,7 @@ metric: worst-seed loop throughput, scratch-cnn (the seat holder) live · floor 
 | ctx-reuse | bound 0.008 ms of 39.8 | FORECLOSED by measured arithmetic |
 | batched-update | same bound | FORECLOSED by measured arithmetic |
 | frame-skip-2 | 7.034 | scored, INELIGIBLE (changes the accounting unit: 1 frame per 2 decisions) |
-| **coarse-shadow512** (MSAA off, shadows kept at 512^2) | **8.594** | **CLEARS — WINNER by pre-declared least-information-discarded ranking** |
+| **coarse-shadow512** (MSAA off, shadows kept at 512^2) | **8.594** | **CLEARS — WINNER by the least-information-discarded ranking declared at `b7324ba` (the commit that also carries the artifact — no prior commit holds it; 84th audit B4)** |
 | coarse-flat (MSAA off, shadow pass deleted) | 11.483 | clears; loses the ranking — shadows are depth information |
 
 Discrimination held under the winner: ViT-S/14 @224 worst-seed 0.836, still
