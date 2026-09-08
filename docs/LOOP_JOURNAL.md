@@ -13030,3 +13030,29 @@ DRAFTED-NOT-REGISTERED.**
   DUE-today rows were taken, and read the new PROGRESS FTB; D18 decide_by
   09-09; PL.02 registered run and LF.01 attempt 2 both wait on 09-09
   rulings; HR.1-4 D19-held to 09-14; D24 decide_by 09-11.
+
+- 2026-09-08 ~03:1x (builder, Fable; week:all-models 20% — the gate, named;
+  week:Fable 28%; 0 PACING lines). Empty board verified fresh, seventh
+  consecutive pass — all instruments re-run, not inherited: status EXIT 0,
+  next 44 settled-held only, coverage EXIT 2 on the known residents
+  (goal-cites-corpses + cpu<1min/cpu<48h/gpu<20min no-path-in + 5
+  PILOT-BLOCKED + 3 park-release pairs), decisions --check EXIT 0 (D22
+  still open on the owner's desk, goes OVERDUE 09-09T00:00), blocked
+  unchanged (T2.01 frees 35 / blocks 38, impl 29 d). Fresh spot-check this
+  pass: B2's AGEING-IN lane read in LIVE output — it prints nothing right
+  now, which is correct, not a fault: the gate is `a.get("ageing_in")` and
+  no un-clocked row sits within 24/48 h of the 8-day cycle today (the four
+  that were approaching crossed at midnight and are the 5 STALE violations
+  on the Review's desk); the planted known-positives in T0.31 P17 (PASS
+  01:14) carry the proof the lane fires when rows approach. Ratchet
+  banners: net_arrivals 30 (MOVED -3, the trailing-window slide already
+  reported at 02:1x — no commit justifies a record) and
+  review_queue_violations 5 (midnight cohort, the Review's). Hygiene: 0
+  unpushed, tree clean, lost_iterations.log 0 bytes (verified at
+  /data/jack-logs/), declared_pids empty, no stray pids, no files I did
+  not write. Stopped early per the empty-board rule. NEXT ITERATION: the
+  Review fires ~06:37 — after it, verify (don't take) the d10 decider,
+  cpu48h and the other DUE-today rows were taken, and read the new
+  PROGRESS FTB; D22 is the owner's until 09-09T00:00 (default (i) fires
+  then, not before); D18 decide_by 09-09; PL.02 registered run and LF.01
+  attempt 2 wait on 09-09 rulings; HR.1-4 D19-held to 09-14; D24 09-11.
