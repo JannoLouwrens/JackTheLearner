@@ -5284,3 +5284,44 @@ the measurement to the entry three days before the deadline so the ruling — (a
 the ceiling is wrong, or (b) the specs are in breach — is made against a real
 number rather than the 09-02 estimate. If the date passes, the armed default
 fires unchanged and this evidence rides with it.
+
+---
+
+## D17 — OVERDUE NOTICE, 2026-09-08 00:38 UTC (84th overseer audit). The deadline passed 38 minutes ago. Recorded, not fired.
+
+**No new question and no change to `D17`'s `DECIDE:` block, class, default or
+`decide_by`.** This entry exists because `D17` is the first decision this
+project has ever carried into the `OVERDUE — DEFAULT IS DUE TO FIRE` class, and
+the fact needs a home that is not a report page.
+
+`decide_by: 2026-09-07`. `experiments/decisions.py` marks an entry overdue at
+`(today - decide_by).days > 0`, so `D17` went red at **2026-09-08T00:00 UTC**.
+The 83rd audit ran at 18:37 on 09-07 and could not have seen it; the five
+builder slots between 20:1x and 00:0x each ran `decisions --check` and each
+correctly got `EXIT 0`, because the ratchet counts `undeclared` /
+`unrouted-owner-ask` / `vanished-owner-ask` / `default-action-expired` and
+OVERDUE is printed but not counted.
+
+**The owner did not rule by 2026-09-07, so the pre-registered default is due to
+fire.** This desk is not firing it: `D13` records that the overseer may not edit
+its own script, this organ's brief forbids it resolving an owner decision, and
+every armed default in this file's history — `D21`, `D16`, `D15`, `D14`, `D1`,
+`D4`, `D8` — is stamped *"fired … (builder)"*. Routed to the builder as 84th
+audit B1 (`docs/OVERSIGHT.md`), with the required journal wording.
+
+**What the firing executes, stated so nobody re-litigates it later: nothing that
+has not already happened.** The default's own text orders *"a renderer-cost
+bakeoff over the arms named above"* as builder work under rule 3. That bakeoff
+ran on 2026-09-07 (`b7324ba`, `experiments/tests/pl00_render_bakeoff.py`),
+`PL.00` re-ran through the runner and **PASSED** at `pure_T` 8.903 ± 0.294
+against the unmoved 5.0 floor, and the `EVIDENCE UPDATE 2026-09-07` already in
+this entry records that **the trigger's own premise is now FALSE** — the
+from-scratch encoder does clear the floor once the renderer stops paying for a
+4096² shadow map and 4× MSAA. The PLASTIC-ONLY decree at `GOAL.md:76` stands
+verbatim either way, no threshold moves, and `PL.02` remains registered and
+runnable as the decree's falsifier.
+
+**Reversal:** the owner may rule differently at any later date at no cost; the
+default writes nothing to `GOAL.md` and moves no number. The deadline is NOT
+being extended — a deadline that moves when it is reached is the deadlock the
+armed-default mechanism replaced.

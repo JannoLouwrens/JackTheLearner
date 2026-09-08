@@ -1,438 +1,457 @@
-# OVERSIGHT — 83rd audit, 2026-09-07 18:37–19:0x UTC (at `3babc3a`, tree clean)
+# OVERSIGHT — 84th audit, 2026-09-08 00:38–01:0x UTC (at `8c6fc69`, tree clean, 0 unpushed)
 
-## VERDICT: ON TRACK — **the ledger is sound, nothing was loosened, and 24 of 24 iterations ran green. The day's findings are all in the COMPUTE-ACCOUNTING lane: the `gpu_hours_no_verdict` reading that shipped this afternoon prints 36.91 h and is structurally blind to 11.86 h more on `T2.01` and `T2.02`, while 17.48 h of charged jobs name no spec in any machine-readable record this project keeps.**
+## VERDICT: ON TRACK — **the ledger is sound and nothing was loosened, but three clocks turned over at midnight thirty-eight minutes before this audit opened and I am the first organ to see any of them: `D17`'s armed default is now OVERDUE and due to fire, `review_queue_violations` went 0 → 5 on its shrink-only floor, and `D22` — the one decision on the owner's desk that addresses this project's measured binding constraint — reaches its `decide_by` TODAY.**
 
-Sections 1, 2 and 4 are clean and I want that stated plainly before the
-findings. **108 PASS rows, zero dead commits** (checked across every head row
-*and* every history row), every PASS has an implementation on disk, every PASS
-spec declares a control, and the only two rows without `control_metrics` are
-`T0.01`/`T0.10`, which declare `"NONE, BY DECISION (52nd audit B5)"` in their
-own registry text. **Nothing was loosened in seven days**, positively verified:
-every deletion the diff shows is a conjunct being *added* beside it
-(`ME.9`'s `MIN_DISTRACTOR_EVAL` 9 → 12, `T0.35`'s `control_is_blind` →
-`control_is_blind and control_onehop_blind`, `T1.01`'s
-`control_did_not_learn and mode_declared`, `D1.0`'s
-`sigma_vs_random` → `paired_t` against its own untrained twin with the 3.0 bar
-**unmoved and both conjuncts live**). No `_check` gained an `or`. No seed count
-fell. **Eleven certificates are STALE and not one of them is a PASS** — every
-resident is FAIL or VOID.
+Sections 1, 2, 3 and 4 are clean and I want that on the record before the
+findings. **108 PASS rows, zero dead commits** across all 649 unique
+spec-commit pairs in the ledger including history; every PASS resolves to an
+implementation on disk; every PASS spec declares a `control`; the only two rows
+without `control_metrics` are `T0.01`/`T0.10`, which argue `"NONE, BY DECISION"`
+on their own specs. **Nothing was loosened**: the only numeric move in the last
+26 hours is `T0.35`'s `GRANDFATHERED` set **9 → 8** (`PL.00` removed and made to
+declare its real `IMPL_DEPS` in the same commit), which is a tightening, and
+`ME.3` gained `raw_answer_rate >= MIN_RAW_ANSWER` as a **new required
+conjunct**. No `_check` gained an `or`. No seed count fell. **25 iterations in
+24 h, 25 × rc=0, PASS delta +2** (`ME.1` 09:12, `PL.00` 11:25).
 
-The findings are ranked by how much damage they do to the trustworthiness of
-what this project reports about itself. **Neither of the top two touches a
-claim on the ladder**, and I am saying so rather than dressing them up.
+**I also verified the builder's central claim myself rather than inheriting
+it**, because it has now made the same claim five slots running. Of 245 specs,
+ten have every dependency PASS and **no ledger row at all** — `DP.04`, `HR.1`,
+`LC.07`, `PL.02`, `SH.01`, `SH.02`, `SM.02`, `SM.03`, `T2.11`, `T3.10` — and I
+resolved each one individually: four PILOT-BLOCKED, three PARKED by fired
+branches, one PARKED (`T3.10`, 2026-08-30, one-diagnostic cap spent), one held
+by `D19` to 09-14, one (`PL.02`) held pending the 09-09 ruling on its own
+routed row. **The empty board is real. It is not the builder's fault and it is
+not compute's.**
 
----
-
-## 1. THE FINDING — the instrument shipped today to price compute-without-verdict cannot see the most expensive compute-without-verdict on the board
-
-The 82nd audit's B2 landed at 16:07 (`a5de52f`) and `run status` now prints:
-
-```
-gpu_hours_no_verdict = {'TOTAL': '36.91 h',
-                        'D1.0': '33.78 h / 2 attempt(s) / 0 verdict(s)', ...}
-```
-
-That number is correct for what it joins, and what it joins is
-`gpu_budget.json` → every ledger row's `gpu_job_id`. **Five of the 21 remote
-(GPU) rows in the ledger carry `gpu_job_id: None`, and two of them are the two
-most expensive non-PASS GPU rows this project owns:**
-
-| spec | row | `ran_at` | `duration_s` | `gpu_job_id` |
-|---|---|---|---|---|
-| `T2.02` | head **VOID** | 2026-08-09T07:30:25 | 22 604.42 s = **6.28 h** | `None` |
-| `T2.01` | head **FAIL** | 2026-08-12T12:59:15 | 20 097.42 s = **5.58 h** | `None` |
-| `T1.08` | head PASS | 2026-08-12T08:17:36 | 1 983.01 s | `None` |
-| `T1.07` | head PASS | 2026-08-14T02:37:02 | 1 606.68 s | `None` |
-| `T0.09` | head PASS | 2026-08-30T10:09:39 | 34.16 s | `None` |
-
-`T2.01` is the spec at the top of `run blocked` — **frees 35 / blocks 38**,
-settled FAIL, implementation unchanged 29 days. `T2.02` is a `gpu<8h` VOID and
-the ladder's one remaining pre-`impl_sha` stale row. Both are exactly the rows
-the new reading exists to price, and both read as **zero**. Its true total is
-**≥ 48.8 h**, not 36.91 h — a 32% understatement, concentrated on the frontier.
-
-**The join is recoverable and I did it.** `gpu_submissions.jsonl:10` records
-job `jannolouwrens/jack-ladder-1786519461` with `duration_s 20093.64` and
-`charge_seconds 20087.11`; the result line lands at
-`ts 1786539555` = **2026-08-12T12:59:15**, matching `T2.01`'s head row *to the
-second*, at 5.5798 h. Job `1786304547` submits ~2026-08-09T19:42 and its
-5.5786 h lands at 2026-08-10T01:17 — `T2.01`'s history FAIL is
-`2026-08-10T01:17:15`. This is not a new discovery: **the 17th audit already
-wrote both ids down in prose**, at `docs/DECISIONS_NEEDED.md:1611` — *"billed
-5.58 h on each of the two occasions it has run (`1786304547`,
-`1786519461`)"*. **Eleven point one six GPU-hours have been known to belong to
-`T2.01` since 2026-08-14 and no machine has been able to read it since.**
-
-### 1b. The other direction of the same hole: 17.48 h charged to no spec at all
-
-Joining `charged_jobs` → ledger → `gpu_submissions.jsonl` (attempt/attribution/
-result lines, on `attempt_id`):
-
-```
-63 charged jobs, 63.05 h of per-job records
-  35 jobs claimed by a ledger gpu_job_id
-   5 jobs attributed only via gpu_submissions.jsonl   2.13 h
-       SM.02 (pilot) 1.558   LC.07 (pilot) 0.440   T2.04/T2.05/T2.06 probes 0.136
-  23 jobs attributed BY NOTHING                      17.48 h   ← 27.7% of all
-     per-job records                                            per-job records
-       5.5798 h  W32 ok  1786519461   (submission record exists, spec field empty)
-       5.5786 h  W32 ok  1786304547   (no submission record at all)
-       ...21 more, 0.05–0.99 h each
-```
-
-The two 5.58 h jobs at the head of that list are `T2.01`'s, per §1. The
-remaining 6.32 h across 21 jobs is genuine bookkeeping debris, most of it W32.
-
-**Why this is a finding and not a chore.** Two of this project's standing
-lessons are that a shrink-only counter must count the whole class, and that an
-instrument reading clean over a domain it cannot see is worse than no
-instrument. `gpu_hours_no_verdict` is one week old, it is honest about its
-inputs, and it will now be quoted — the builder's own 18:10 journal entry
-already leans on GPU arithmetic to reason about `D1.0` attempt 3. A reader who
-takes 36.91 h as the project's compute-without-verdict total is off by at least
-a third, in the direction of thinking the ladder is cheaper than it is.
-
-**The repair has a precedent in this repo and it does not touch the ledger.**
-`gpu_submissions.jsonl:50` is an *attribution line* appended by the 20th
-audit's own B2 backfill — *"the SM.02 pilot was dispatched outside `run_spec`
-so its attempt receipt reads `spec:""`; this line names it"* — joined by
-`attempt_id`. That is the idiom. Ordered as **B1** below: append attribution
-lines, teach the reader to follow them, and print the unattributable remainder
-as its own number so it can only ever shrink. **No ledger row is edited, no
-threshold moves, nothing is re-run.**
+Findings are ranked by damage to the trustworthiness of what this project
+reports about itself.
 
 ---
 
-## 2. Core-hours and wall-hours are the same number on the owner's desk, and they are not the same number on this box — `D24` decides in 4 days
+## 1. THE FINDING — `D17`'s pre-registered default went OVERDUE at 00:00 tonight, and every substantive part of it was already executed yesterday
 
-`experiments/cpu_budget.py` is titled *"CPU-hour accounting"* and bills, by its
-own docstring at `:23`, *"the wall clock actually spent"*. `bill_interval`
-charges `seg - t0`: pure wall, no core weighting. That is a deliberate,
-documented choice and it is self-consistent.
+```
+D17    costs   0 specs   OVERDUE — DEFAULT IS DUE TO FIRE
+```
 
-**The planning side is written in core-hours and divides by that wall ceiling.**
-`docs/DECISIONS_NEEDED.md:5023`, the `D24` addendum, `decide_by` **2026-09-11**:
+`docs/DECISIONS_NEEDED.md:3708`, `decide_by: 2026-09-07`. `decisions.py` marks
+an entry overdue at `(today - decide_by).days > 0`, so this went red at
+**2026-09-08T00:00**, thirty-eight minutes before this audit opened. The 83rd
+audit ran at 18:37 yesterday and could not have seen it; the five builder slots
+between 20:1x and 00:0x each ran `decisions --check`, each got `EXIT 0`, and
+`EXIT 0` is correct — the ratchet counts `undeclared` / `unrouted-owner-ask` /
+`vanished-owner-ask` / `default-action-expired`, and OVERDUE is printed but not
+counted. **It is the one HARD class in this desk's own brief and it is sitting
+in the middle of a report that four organs read as green.**
 
-> *"~618 core-hours = 38.6 fully-billed 57,600-s days ≈ 5.5 weeks of this box's
-> ENTIRE CPU day budget"*
+**The owner did not rule by 2026-09-07, so the pre-registered default is due to
+fire.** I am naming it rather than firing it: `SYSTEM.md`'s `D13` precedent and
+this file's own history put execution with the builder — every one of
+`D21`/`D16`/`D15`/`D14`/`D1` is stamped *"RESOLVED BY ARMED DEFAULT (fired …,
+builder)"* — and my brief forbids me resolving an owner decision. Routed as
+**B1** with the exact wording, and appended to `DECISIONS_NEEDED.md` as a dated
+OVERDUE notice so the fact does not live only here.
 
-and, in the same paragraph, *"the largest single run (arm, 4.0M decisions) is
-**48.0 core-h** … but that lands it exactly in the `cpu<48h` class"* — a class
-defined by `spec_child_timeout_seconds`, i.e. wall.
+**What makes this cheap, and worth saying plainly: the default writes nothing
+that has not already happened.** `D17`'s default reads *"the PLASTIC-ONLY decree
+STANDS, verbatim and unnarrowed… what the loop does next is builder work under
+rule 3: a renderer-cost bakeoff over the arms named above."* That bakeoff ran
+yesterday (`b7324ba`), `PL.00` re-ran and **PASSED** (`pure_T` 8.903 ± 0.294 vs
+the unmoved 5.0 floor), and the builder wrote an `EVIDENCE UPDATE 2026-09-07`
+into the entry recording that **the trigger's own premise is now FALSE** — the
+from-scratch encoder does clear the floor once the renderer stops paying for a
+4096² shadow map. So the entry is an escalation whose question has been answered
+by measurement, whose ordered follow-up has been executed, and which is still
+formally open and now formally broken. **Nothing about the science is at risk
+here. What is at risk is the meaning of the word OVERDUE** — this is the first
+entry to reach that state since the instrument gained it, and if the first one
+is left standing because "it doesn't really matter", the class is decorative
+from its first firing.
 
-**Measured today, on this box, twice.** The two detached `PL.02` probes:
-
-| probe | LAUNCH → last write | billed | own recorded CPU | ratio |
-|---|---|---|---|---|
-| `pl02_steps_probe` | 14:23:37Z → 14:48:22Z = **1 485 s wall** | **1 485.39 s** | 2 498.9 cpu-s | **1.68×** |
-| `pl02_rig_probe` | 14:13:10Z → 14:37:43Z = **1 473 s wall** | **1 473.33 s** | 2 529.9 cpu-s | **1.72×** |
-
-`scripts/ladder_loop.sh:253` exports `OMP_NUM_THREADS=2 MKL_NUM_THREADS=2`, so
-2.0× is what the environment permits and ~1.7× is what these took, on a
-4-core box.
-
-At the measured 1.7×, **618 core-hours is ~363 wall-hours ≈ 22.7 fully-billed
-days**, not 38.6; at the 2.0× the env allows, 19.3. And 48.0 core-h is ~28
-wall-h, which is not where the `cpu<48h` class placement was argued from —
-that class's own foreclosure row, `cpu48h-class-self-forecloses-the-day-meter`,
-is **DUE tomorrow**.
-
-**The direction of the error is the part that matters to this desk.** It
-*over*-states the venue's cost, and `D24`'s armed default is *"(iii) DECLARE IT
-UNAFFORDABLE"*. `champions --check` already reports the Learning-core seat as
-`VERDICT-IS-A-VOID` **and** `TRIGGER-UNREACHABLE` — every re-open door closed.
-An arithmetic that mixes units in the direction of foreclosing the only arena
-of the seat everything else rests on is precisely what this organ is for.
-
-**The honest limit, stated rather than buried: nobody has measured `LC.07`'s
-own thread width.** My 1.68/1.72 readings are torch-training probes; `LC.03`'s
-survival runs are MuJoCo physics and may well be single-threaded, in which case
-core-h ≈ wall-h and 38.6 is right. The artifacts that would settle it —
-`lc03_curves_seed*.json` — **are not on disk**; I looked, and their absence is
-the same fact field watch wk6 reported as *"no trained `A4` weights exist"*.
-**So the repair is a measurement, not a number change** (B2 below). I am not
-asking anyone to move 38.6; I am asking that the ratio sit next to it before a
-default fires on it.
-
-### 2b. The builder's own reported smell is refuted, and I would rather say so than let it stand
-
-The 14:42 journal entry reports, explicitly *"for the overseer"*: *"detached
-billing undercounts a long run's final segment (steps probe billed 1485.39 s vs
-2498.9 cpu-s in-probe)"*, diagnosed as *"heartbeat tail unbilled"*.
-
-**Both halves are wrong and the code says so.** `_wrap`'s loop bills
-`[last, now]` on the `done` branch as well as on `TimeoutExpired`, so no tail is
-lost; and the arithmetic above shows the steps probe billed **1 485.39 s against
-1 485 s of wall — exact.** The gap is wall-vs-CPU (§2), not a lost tail. Left
-uncorrected this sends the next reader to patch a loop that is already right,
-and away from the unit question that is actually live on `D24`. The
-*observation* was good and reporting it was correct; only the mechanism named
-was wrong.
+Reversal, per the brief: the owner rules differently at any later date; the
+default writes nothing to GOAL.md, moves no threshold, and `PL.02` stays
+registered and runnable as the decree's falsifier either way.
 
 ---
 
-## 3. `pl02-dependency-on-pl00-verdict-vs-table` is DUE today, its ordered work is finished and on the ledger, and it will go OVERDUE at midnight anyway
+## 2. `review_queue_violations` 0 → 5 at the same midnight — and four of the five were predictable a day ahead by arithmetic no instrument in this repo performs
 
-`run review-queue` prints **0 violations** and one row dated today. That row is
-`DISPOSITIONED` — which the tool correctly does *not* count as a disposal, so
-it is still live and still ageing.
+```
+review_queue_violations = 5  !! MOVED +5 since 2026-09-03 (was 0)
+  OVERDUE: pl02-dependency-on-pl00-verdict-vs-table   promised 2026-09-07 (1 d ago)
+  STALE:   aggregate-hides-worst-seed                 OPEN 9 d, no DUE:
+  STALE:   w1-cold-is-not-lethal-at-night             OPEN 9 d, no DUE:
+  STALE:   w2-needs-have-no-single-k                  OPEN 9 d, no DUE:
+  STALE:   dp04-lifespan-has-no-resolution            OPEN 9 d, no DUE:
+```
 
-The disposition was made this morning as **(i)+(iii)**: the `PL.02 → PL.00`
-edge STANDS, and a clearing arm was ordered to *"dissolve the edge by
-satisfying it"*. Both halves are done:
+**The OVERDUE was forecast and is honest.** The 83rd audit's §3 predicted it to
+the hour, named it *"not the builder's to touch"*, and it is the good case: the
+row's ordered work is finished and on the ledger (`b7324ba` bakeoff, `PL.00`
+PASS attempt 2, `PL.02` now RUNNABLE in `coverage`). The Review can mark it
+`ACTED` at 06:37. No action needed from anyone else.
 
-- `b7324ba` ran the renderer bakeoff, arm (iii) — winner `coarse-shadow512`,
-  worst-seed 8.594 against the **unmoved** 5.0 floor;
-- **`PL.00` PASS attempt 2 at 2026-09-07T11:22:15**, 128.23 s, on the ledger;
-- `run coverage` now lists `PL.02` as **RUNNABLE**.
+**The four STALE rows are the part nobody saw coming, and they were arithmetic.**
+All four were routed on **2026-08-30**. All four are `OPEN` with no `DUE:`. The
+staleness rule is one whole consumer cycle — 8 days — so all four crossed it in
+the same midnight, as a cohort. `review_queue.py` already forecasts crowding on
+the *promise* axis: it prints `piled_on` (26 live rows dated onto a day that was
+already full) and `next_free_due` (*"2026-09-17 — the mechanical answer for the
+next router"*). **It forecasts nothing on the ageing axis.** Nothing anywhere
+printed *"4 live un-clocked rows reach the consumer cycle within 24 hours"* —
+and yesterday's Review, which is the desk that owns all four, could have
+re-armed them with a `DUE:` and a reason at literally zero cost. Instead a
+shrink-only floor took a +4 that its owner will now have to pay down. Routed as
+**B2**; it is four lines in a renderer that already computes every input it
+needs.
 
-The row's own order is discharged in substance and it is still wearing a live
-`DUE: 2026-09-07`. At 00:00 it becomes `OVERDUE` — *"a dated promise that was
-broken"*, the strongest signal in that file — and moves `review_queue_violations`
-off a shrink-only floor of 0, for work that was completed inside the day it was
-promised. The Review runs at 06:37 and can mark it `ACTED`; it will read this
-first. **Not the builder's to touch** — I am naming it, not routing it.
+**Two of the four have an obvious home and I will name it without taking it.**
+`w1-cold-is-not-lethal-at-night` and `w2-needs-have-no-single-k` are world-edit
+questions, and `w1-world-edit-window` is live with `DUE: 2026-09-13`;
+`ne01-occlusion-knife-edge` and `water-apply-phantom-force` are already `HELD
+… BLOCKED-BY w1-world-edit-window` for exactly this reason. Whether the two
+cold/needs rows belong in that bundle is the Review's ruling, not mine — but if
+they do, the repair is a `BLOCKED-BY:`, not a date.
+
+**The fourth is the one I would look at first.**
+`dp04-lifespan-has-no-resolution` is the *named repair path* for `DP.04`, which
+`coverage` prints as PILOT-BLOCKED with the words *"the repair is a
+world/metric redesign (Review + REVIEW_QUEUE `dp04-lifespan-has-no-resolution`),
+not a pilot"*. Every other PILOT-BLOCKED spec's repair row carries a clock —
+`sh02-null-saturation` 09-09, `sm03-heldout-split-saturated` 09-12,
+`lc07-checkpoint-branch` 09-13. This one has none, and it is now the only
+member of that set that has gone red. A spec foreclosed by its own evidence,
+whose stated way out has no date on it, is how a commitment quietly stops being
+worked on.
 
 ---
 
-## 4. The builder mis-numbers this organ, and two commits now claim orders that will not exist where they point
+## 3. Compute honesty — correctly instrumented, and the number it now prints is stark
 
-`02f9df7` and `a5de52f` (15:15 and 16:07 today) execute *"83rd audit B1"* and
-*"83rd audit B2"*. Those are the **82nd** audit's B1 and B2 — `2b3e8a6`,
-12:49, the only `OVERSIGHT.md` revision between them, and its `FOR THE BUILDER`
-section carries exactly the near-miss detector and `gpu_hours_no_verdict`.
-Audits run on a 6 h cadence (81st 06:37, 82nd 12:37); **this one is the 83rd**,
-and its B-items are below. So the git history now holds two different "83rd
-audit B1/B2". Cheap to avoid and not worth a code change: **quote the
-`OVERSIGHT.md` commit sha, not the ordinal.**
+**GPU, week 2026-W36** (opened Sunday 09-06, 30 h Kaggle allocation), joined
+job-by-job against the ledger:
+
+| hours | job | ledger row |
+|---|---|---|
+| 1.5412 | `jack-ladder-1788682804` | `D1.0` **VOID** |
+| 4.0735 | `jack-ladder-1788688360` | `D1.0` **VOID** |
+| 6.0056 | `jack-ladder-1788703032` | `D1.0` **VOID** |
+| 5.9906 | `jack-ladder-1788724660` | `D1.0` **VOID** |
+| 0.0536 | `jack-ladder-1788747316` | `T0.11` PASS |
+| 0.0593 | `jack-ladder-1788747526` | `T1.10` PASS |
+| 0.0027 | two `ok=false` stubs | (colab, failed) |
+| **17.73** | | **12.27 h remain of 30** |
+
+**17.61 of 17.73 GPU-hours this week — 99.3% — bought one VOID.** Cumulatively
+`gpu_hours_no_verdict` now reads `D1.0: 33.78 h / 2 attempt(s) / 0 verdict(s)`.
+
+**This is not a finding against anyone and I am not writing it up as waste.**
+Every hour is attributed to a real job with a real ledger row; the 82nd audit's
+`gpu_hours_no_verdict` and the 83rd's attribution repair are exactly why I could
+compute the table above in one query, and `UNATTRIBUTED` is down to 6.32 h / 21
+jobs sitting at its declared shrink-only floor. The decision it bears on is
+already routed and already dated: `d10-successor-rerun-under-adopted-gate`, DUE
+**today**, with the builder's W36 arithmetic on record — measured attempt cost
+16.17 / 17.61 h against 12.27 h free, so **a third `D1.0` attempt cannot fit
+this GPU week** whatever the Review rules. I record it here so that when the
+ruling is made it is made in sight of the running total, which is the whole
+point of the instrument.
+
+**CPU:** `cpu_budget.json` is coherent — 09-07 billed `T0.11` 441 s, `T2.10`
+7.2 s, the `ME.11` re-buys, and two declared detached `PL.02` probes. No
+unattributed line items.
+
+---
+
+## 4. `cpu_foreclosed_now` 39 → 0 is a clock, and this is the fourth time that banner has cried wolf
+
+```
+cpu_foreclosed_now = 0  !! MOVED -39 since 2026-09-07 (was 39). Say so in your report
+```
+
+**Said, and it is not a change: it is the UTC day-meter resetting at 00:00**,
+thirty-eight minutes ago. Precedent is on the record three times already —
+`LOOP_JOURNAL.md:11342` (41 → 0), `:12205` (39 → 0, accounted at the 09-06 02:07
+slot), `:12370` (39 → 0 again). No committed change, nothing recorded.
+
+The finding is about the banner, not the number. `cpu_foreclosed_now` is a
+**point-in-time reading of a meter that resets daily**, so it cannot be a
+ratchet in the sense the other counters are: it swings 0 ↔ ~40 every night by
+construction, and every organ unlucky enough to run in the small hours pays a
+paragraph explaining that nothing happened. The 64th audit's B2 built the
+RATCHET COUNTERS block so that a blessed red could never silence a real number
+— that mechanism is load-bearing and it works by being believed. **Four false
+alarms from one counter is how a reader learns to skim the block.** Routed as
+**B3**: record the reading's UTC hour alongside its value and suppress the
+`!! MOVED` banner when the comparison crosses a day boundary on a day-scoped
+metric — or move it out of the ratchet block into the plain metrics lane. Either
+is honest; the present state is not.
+
+---
+
+## 5. `PL.00/RENDER`'s "pre-declared" tie-break has no pre-run record — a labelling defect, and the lane it exposes is worth four lines
+
+Section 7 of the brief: bakeoff hygiene. `docs/DECISIONS_RESOLVED.md:717`
+records the renderer bakeoff and says on its own face *"probe, not
+`run_bakeoff` — the arms are loop configurations, not learners, so the 3-sigma
+learning gate has no referent."* **That disclosure is exactly right and I am
+not objecting to it** — there is precedent (one earlier entry uses the same
+lane and explains itself the same way), and a throughput probe genuinely has no
+learner to gate.
+
+What I checked is the tie-break. Two arms cleared the unmoved 5.0 floor —
+`coarse-shadow512` at worst-seed **8.594** and `coarse-flat` at **11.483** — and
+the winner was chosen by a *"pre-declared least-information-discarded
+ranking."* **`git log --follow` on `experiments/tests/pl00_render_bakeoff.py`
+returns exactly one commit: `b7324ba`, the same commit that carries the
+artifact and the result.** The Review's ordering disposition
+(`REVIEW_QUEUE.md:1606`, `:1640`) names the arms — frame-skip, context reuse,
+batched `update_scene`, coarser scene — and does **not** name the criterion.
+Every appearance of the phrase "pre-declared" is in text committed at or after
+the numbers existed.
+
+**Stated fairly, because fairness matters more here than a scalp: the choice
+ran against its author's interest.** The criterion selected the arm with the
+*lower* headline throughput and rejected the faster one; you cannot manufacture
+a pass this way, and both arms cleared regardless. The winner is computed
+mechanically inside the script (`winner = next(a for a in ELIGIBLE_RANKING if
+clears[a])`), not picked by hand afterwards. This is a **labelling defect, not
+a loosening**, and I rank it last on purpose.
+
+The generalisable half is the lane. The learner lane's pre-registration is
+*enforced* — `run_bakeoff` reads `_GATES_FROZEN` and refuses. The probe lane's
+is enforced by nothing, and this project has now settled a champion-adjacent
+question through it: `coarse-shadow512` was **adopted into
+`experiments/eye_quality.py`** and is Jack's eye from here on, and `PL.00`'s
+PASS rides on that config. Routed as **B4**: for a probe-class bakeoff, commit
+the arm list and the tie-break rule in a commit that precedes the run, and say
+"declared at `<sha>`" rather than "pre-declared". Costs one extra commit and
+makes the claim checkable by someone who is not its author.
 
 ---
 
 ## The audit, section by section
 
-**1. Integrity of the ledger — CLEAN.** 143 rows: 108 PASS / 22 FAIL / 13 VOID /
-0 NOT_RUN / 0 ERROR. Every `commit` on every head row *and* every history row
-resolves in git (**0 dead**). Every PASS resolves to an implementation in
-`experiments/tests/`. Every PASS spec declares a `control`; 106 of 108 carry
-`control_metrics`, the two exceptions arguing `"NONE, BY DECISION"` on their own
-specs. **11 STALE claims + 1 pre-`impl_sha` stale, and none is a PASS** —
+**1. Integrity of the ledger — CLEAN.** 143 specs / 674 ledger rows; head
+statuses **108 PASS / 22 FAIL / 13 VOID / 0 NOT_RUN / 0 ERROR**. Every `commit`
+on every head row *and* every history row resolves in git: **0 dead across 649
+unique spec-commit pairs** (the `+dirty` suffix is a stamp, not part of the
+sha — my first pass mis-parsed it and reported 96 phantoms; re-run stripped and
+clean). Every PASS resolves to an implementation in `experiments/tests/`. Every
+PASS spec declares a `control`. 106 of 108 carry `control_metrics`; `T0.01` and
+`T0.10` declare `"NONE, BY DECISION (52nd audit B5)"` in their own registry
+text. **11 STALE claims + 1 pre-`impl_sha` stale, and not one is a PASS** —
 `T3.07`, `ME.11.B/C/D`, `T3.09`, `XL.01`, `LG.10` (FAIL) and `UB.10`, `D1.0`,
-`LF.01`, `SO.07`, `T2.02` (VOID). `T2.10` cleared the lane at 17:12 with an
-honest re-bought FAIL. `ME.11.C` and `T3.07` are held deliberately and the
-reasons are written down.
+`LF.01`, `SO.07`, `T2.02` (VOID). Unchanged from yesterday.
 
-**2. Thresholds and controls — NO LOOSENING, positively verified.** See the
-header. The one movement in seven days is `ME.9`'s `MIN_DISTRACTOR_EVAL` 9 → 12,
-a tightening with its arithmetic at the constant. `SO.08`'s budget re-declared
-`cpu<2h` → `cpu<1min` (`7aa9619`) is a **cost class re-sized on a measurement**
-(0.74 s/seed at full `N_ROUNDS=240`) — the 75th audit's own F1 repair, and no
-verdict threshold. `ME.3` gained `raw_answer_rate >= 0.95` as a *new required*
-conjunct; `A5`'s 0.552–0.688 against `A0`'s 0.625 is recorded as a restoration
-and not written up as an improvement, exactly as ordered.
+**2. Thresholds and controls — NO LOOSENING, positively verified over the last
+26 h and cross-checked against the 83rd audit's 7-day pass.** The single numeric
+movement is `T0.35`'s `GRANDFATHERED` **9 → 8**, and it is a tightening: `PL.00`
+left the grandfather set by declaring its real dependencies
+(`playground.py`, `UnifiedBrain.py`, `eye_quality.py`) in the same commit, per
+the set's own rule. `ME.3`'s redesign **adds** a required conjunct
+(`raw_answer_rate >= MIN_RAW_ANSWER`, 0.95) rather than relaxing one, and the
+Review's binding condition — *"the reflect arm gets the identical declared
+shape"* — is met. `PL.02`'s rig went grey → RGB@64 with the commit message
+stating plainly *"no verdict threshold moved"*; `PG.6`'s 0.80 bar and `LC.02`'s
+5.0 floor are both unmoved. No `_check` gained an `or`; no assertion was
+removed; no seed count fell.
 
-**3. Drift — none, and the composition is honest.** Today's committed work:
-`PL.02` implementation + rig decomposition (GOAL.md:76, the PLASTIC-ONLY
-decree's **sole registered falsifier**), the `PL.00` renderer bakeoff (the eye
-— *"every sense a human has"*), `ME.3`'s contract split and `ME.1`'s floor
-(*"memory makes it him"*), `T2.10`'s re-buy (episodic retrieval), and two
-instrument repairs (`decisions.py` near-miss, `gpu_hours_no_verdict`). Every one
-traces. **The converse is the uncomfortable half and it has not moved:** four
-commitments remain CLAIM-DEAD (smell, balance, shelter/building, thermal), nine
-more have live claim specs and nothing passing, and *curiosity* has 12 specs
-and 2 passes while *one brain / unison* has 25 specs and 1. `coverage` EXIT 2 on
-that, routed as `five-commitments-are-claim-dead-behind-foreclosures` (DUE
-09-11). **0 commitments with no declared spec** — the gate that matters most is
-green.
+**3. Drift — none.** Yesterday's committed work: the `PL.00` renderer bakeoff
+and PASS (the eye — *"every sense a human has"*), `ME.3`'s contract split and
+`ME.1`'s floor (*"memory makes it him"*), `PL.02`'s rig decomposition and probe
+harvest (`GOAL.md:76`, the PLASTIC-ONLY decree's sole registered falsifier),
+`T2.10`'s honest re-bought FAIL (episodic retrieval), the `CHAMPIONS.md` rule-6
+weights rule, and three instrument repairs from the 83rd audit's B-items. Every
+one traces to a GOAL.md sentence. **The converse has not moved and I will not
+soften it: four commitments are still CLAIM-DEAD** — smell, balance,
+shelter/building, thermal — with 0 passing claims and every claim spec parked or
+foreclosed; `coverage` reports **0 commitments with no declared spec**, which is
+the class that must stay at zero, and it is at zero.
 
-**4. Builder liveness — 24 of 24 iterations `rc=0`** in the trailing 24 h
-(2026-09-06 19:14 → 2026-09-07 18:11), demonstrated **106 → 108** (`ME.3` 09:12,
-`PL.00`+`T0.35` 11:25). No repeated identical failure, no pause, no abort on
-load. Credit meter `week:all models` **16%** at 18:37 — not the constraint.
-`lost_iterations.log` still 0 bytes. The last four slots each ended having
-verified an empty board against `status`/`next`/`blocked`/`coverage`/`decisions`
-and stopped early, which is the standing rule working, not a stall.
+**4. Builder alive and productive — YES.** 00:07 09-07 → 00:10 09-08:
+**25 iterations, 25 × rc=0, PASS delta +2** (106 → 108). No paused loop, no
+credit exhaustion, no aborts on load, no `PACING:` lines. Usage gate
+`week:all models` **18%** at 11% of the week elapsed — the meter I act on, well
+clear of the 90% stop; `week:Fable` 25%. `lost_iterations.log` still 0 bytes.
+The last five slots each ran 3 minutes and produced no ledger movement, which is
+the empty-board rule working as designed and not a stall — see the header, where
+I resolved all ten startable-looking specs by hand.
 
-**5. Compute honesty — see §1 and §2.** Beyond those: **W36 reads 17.7238 /
-30 kaggle-hours, 12.28 h free**, and the week opened yesterday. `D1.0`'s two
-attempts measured **16.17 h** (W35) and **17.61 h** (W36); I verified both
-against `charged_jobs`. **A third attempt cannot fit W36's remainder** — the
-builder's 18:10 arithmetic is right, and it belongs in tomorrow's
-`d10-successor-rerun-under-adopted-gate` ruling, which is where it put it.
-CPU: 6 227.34 s of 57 600 used today, of which **5 621.75 s (90.3%) is the six
-detached `PL.02` probes**. The 51.58 h gap between `sum(weeks)` 114.64 h and
-`sum(charged_jobs)` 63.05 h is W31's 45.20 h of pre-per-job records plus the
-labelled 6.38 h W32 opening balance — **documented, not a finding.**
+**5. Compute honesty — §3 above.** 12.27 h of 30 remain in W36. No overruns
+recorded. No GPU hour is unattributed to a job; 6.32 h across 21 jobs are
+unattributed to a *spec* and sit at their declared shrink-only floor of 21.
 
-**6. Stuck decisions — nothing improperly parked.** `decisions --check` EXIT 0:
-**0 UNDECLARED** (so there is nothing for me to arm this audit, and I am saying
-that rather than manufacturing an arming), **0 MEANS-ESCALATED, 0 OVERDUE, 0
-unrouted or vanished owner-asks.** Both of `PROGRESS.md`'s `FOR THE OWNER` items
-are matched to `D25`/`D24` by citation. **`D17` falls due TODAY** and its default
-fires tomorrow if unanswered; the 00:37 audit inherits it. Note without
-alarm: `D17`'s default text names *"a renderer-cost bakeoff over the arms named
-above"* as follow-on builder work, and that bakeoff **already ran today** via
-the Review's independent `pl02-…` disposition (`b7324ba`). Convergent, not a
-quiet enactment — different route, same act, both recorded.
+**6. Stuck decisions — one HARD violation (`D17`, §1), one deadline today
+(`D22`, below), nothing else.** `decisions --check` EXIT 0 with the ratchet
+clean: 0/10 undeclared, 0/3 unrouted-owner-ask, 0/0 vanished-owner-ask, 0/0
+default-action-expired. Both of the Review's `FOR THE OWNER` asks from
+`PROGRESS.md` are attributed to live entries (`D25` cites #1, `D24` cites #2), so
+the `UNROUTED-OWNER-ASK` hole that `D15` measured is closed for another day.
+Nothing is blocked on the owner that a bakeoff could settle: no `MEANS-ESCALATED`.
+No owner decision was acted on without being recorded — I checked `D17`
+specifically, and the builder's execution of its *ordered follow-up* is recorded
+as an `EVIDENCE UPDATE` that explicitly does not alter the `DECIDE:` block,
+which is the correct discipline.
 
-**7. Bakeoff hygiene — clean this window, with one standing red correctly
-flying.** `ME.1`/`ME.3`'s floor was settled by a six-arm bakeoff against four
-pre-registered scar shapes with `A5` the sole survivor, after `decisions.py`
-*refused* its escalation as `MEANS-ESCALATED` — the law working on the organ
-that wrote it. No winner was chosen inside a noise margin. The one VOID-treated-
-as-a-verdict is `D10` → the Learning-core seat, **and it is not hidden**:
-`champions --check` prints `VERDICT-IS-A-VOID` and `TRIGGER-UNREACHABLE` against
-it, and the seat's marking carries its own single-arm caveat. That is the honest
-handling of a bad seat, and §2 is about the arithmetic that decides whether it
-ever gets contested.
+**7. Bakeoff hygiene — one labelling defect (§5), no substantive fault.** No VOID
+is treated as a verdict in `DECISIONS_RESOLVED.md`; no winner is chosen inside a
+noise margin; the one entry that skipped the learning gate declares that it did
+and gives its reason on its own header line.
 
----
+**8. The honest summary — closer, and by a real step, but the step was not
+taken on the ladder.** Yesterday bought two things that matter. `ME.1` learned
+to **refuse**: `distractor_abstention` 0.0000 → 1.0000 with `cued_recall`
+byte-identical at 0.85 ± 0.0136 — the trade this project feared did not happen,
+and a memory that will not invent is a precondition for every claim about
+remembering across lives. And `PL.00` PASSing made Jack's eye **affordable**:
+8.903 sim-s/real-s against a floor that did not move, which unblocked `PL.02`
+by satisfying an edge rather than editing it. That is the honest good news and
+it is not a green tick.
 
-## The honest summary — are we closer to a curious humanoid that climbs the ladder?
-
-**Marginally, and today's gain was in his eye rather than his mind.** The
-renderer bakeoff found that 40 ms of "eye" was 23 ms of 4096² shadow pass plus
-13 ms of 4× MSAA rendering **four thousand pixels** — two full-scene passes
-nobody chose, serving a thumbnail — and killing them made the floor reject
-encoders instead of eyes for the first time. Then the `PL.02` decomposition
-found that `.mean(axis=2)` had been quietly throwing away the colour channel
-that carries most of the signal PG.6 certified: raw radius R² **0.5614 in grey,
-0.9327 in RGB, at the same resolution and the same render cost**. Both are real
-and neither is a scoreboard move. `demonstrated` has not budged since 11:25.
-
-**What I cannot report as progress is that he still cannot smell, cannot
-balance, and cannot build a shelter, and has not been able to for three weeks.**
-Four constitutional commitments are claim-dead behind foreclosures whose repairs
-are all redesigns on one desk. Twelve curiosity specs have bought two passes.
-Twenty-five unison specs have bought one. The ladder-and-apple standard is not
-closer today than it was yesterday; the instruments around it are.
-
-**And the day's two findings share a shape worth naming.** Both are places where
-this project measured something real, wrote it down in prose a person can read
-— the 17th audit naming `T2.01`'s two job ids, the `D24` addendum pricing the
-CPU venue — and then built an instrument that reads a *different* field and
-reports a clean, confident, smaller number. Prose is where this project's
-knowledge goes to become unreadable. The repair each time is the same and it is
-cheap: **make the join machine-readable, and print what still will not join.**
+The uncomfortable half is unchanged in shape and one day worse in degree.
+**Four of the owner's constitutional commitments still have zero passing claims
+and no live path in.** Ten specs are startable on dependencies and every single
+one is parked, pilot-blocked, or held — eight of them behind a redesign the
+Review owes. The queue that owns those redesigns holds **42 live rows with an
+UNBOUNDED drain**, 32 arrivals against 2 disposals over the trailing week, and
+tonight it went red for the first time. **We are closer to a curious humanoid
+than we were yesterday because the memory stopped lying and the eye got cheap.
+We are no closer at all on cold, smell, balance or shelter — and the reason is
+not compute, not credits, and not the builder.** It is the one thing on the
+owner's desk that expires today.
 
 ---
 
 ## FOR THE BUILDER
 
-1. **Make `gpu_hours_no_verdict` follow the attribution path, and print what
-   still refuses to join.** Two changes, both additive:
-   (a) **Append attribution lines to `gpu_submissions.jsonl`** in the
-   `:50` idiom — same shape, joined by `attempt_id`, reason stated on the line —
-   naming `jannolouwrens/jack-ladder-1786519461` and
-   `jannolouwrens/jack-ladder-1786304547` as **`T2.01`**, with the evidence in
-   the line itself: the first's result `ts 1786539555` = 2026-08-12T12:59:15 and
-   `duration_s 20093.64` against `T2.01`'s head row's `2026-08-12T12:59:15` /
-   `20097.42`; the second's 5.5786 h landing at 2026-08-10T01:17 against
-   `T2.01`'s history FAIL at `2026-08-10T01:17:15`; and
-   `docs/DECISIONS_NEEDED.md:1611`, where the 17th audit named both ids in
-   prose on 2026-08-14. `1786304547` has **no submission record at all**, so it
-   needs a synthesised `attempt_id` — say so on the line rather than inventing a
-   receipt. **Do not touch `experiments/ledger.json`.** Rows are settled; the
-   attribution file is where provenance is repaired here, by this project's own
-   precedent.
-   (b) **`run status`'s reading joins ledger `gpu_job_id` FIRST, then
-   `gpu_submissions.jsonl` attribution, and prints a third figure:
-   `gpu_hours_unattributed`** — charged hours that join to no spec by either
-   path, today **17.48 h across 23 jobs**. Make it shrink-only with a declared
-   floor, in the same idiom as `fail_unowned`. **MEASURE AND REPORT, GATE
-   NOTHING** — no dispatch refused, no spec failed, no threshold moved, monotone
-   by construction. Known-positive for the fixture: a charged job reachable only
-   through an attribution line must be counted, and one reachable through
-   neither must appear in the unattributed figure and not silently vanish.
+1. **Fire `D17`'s armed default.** `decide_by: 2026-09-07` passed unanswered;
+   `decisions --check` prints `OVERDUE — DEFAULT IS DUE TO FIRE`. Journal it
+   with the required words — *"the owner did not rule by 2026-09-07, so the
+   pre-registered default fired"* — write the `RESOLVED BY ARMED DEFAULT` header
+   into `docs/DECISIONS_NEEDED.md` and the record into
+   `docs/DECISIONS_RESOLVED.md` in the `D21`/`D16`/`D15` idiom, and state the
+   reversal (the owner may rule differently at any later date; the default
+   writes nothing to `GOAL.md`, moves no threshold, and `PL.02` stays registered
+   and runnable either way). **Nothing substantive is executed by this — the
+   default's ordered work was done yesterday in `b7324ba`** and the entry's own
+   `EVIDENCE UPDATE 2026-09-07` records that the trigger's premise is now false.
+   This is the paperwork that stops the first-ever OVERDUE from being ignored.
+   Do NOT extend the deadline. Do NOT delete the entry.
 
-2. **Measure the thread width of one `LC.03`-class arm-seed and put the ratio
-   next to the 618 core-hours, before 2026-09-11.** `D24`'s addendum equates
-   core-hours with 57 600-s wall days (`docs/DECISIONS_NEEDED.md:5023`) and I
-   measured 1.68×/1.72× divergence on this box today (§2). One short run, wall
-   clock and `process_time` both recorded, is enough; **`OMP_NUM_THREADS` /
-   `MKL_NUM_THREADS` and `nproc` must be recorded beside it or the ratio means
-   nothing.** Append the reading to the `D24` addendum as a second dated
-   addendum. **Change no number in the existing one, arm no new option, move no
-   threshold** — if the ratio comes back 1.0 the addendum is vindicated and the
-   entry is stronger for having been checked. If it comes back near 1.7, say so
-   plainly: the owner is four days from a default that declares an arena
-   unaffordable on arithmetic that would then be ~40% high. Cost: minutes.
+2. **`review_queue.py` gains a staleness forecast, in the same idiom as
+   `next_free_due`.** Print, for live rows with no `DUE:`, how many reach the
+   8-day consumer cycle within the next 24 and 48 hours — e.g. *"AGEING IN: 4
+   rows cross the cycle within 24 h — aggregate-hides-worst-seed,
+   w1-cold-is-not-lethal-at-night, w2-needs-have-no-single-k,
+   dp04-lifespan-has-no-resolution."* It is a **METRIC, never a violation** —
+   the renderer already computes every input (`routed` date, `DUE:` presence,
+   the cycle constant), and a gate here would forbid a legal move. Four rows
+   went STALE together at this midnight and no organ could have known it was
+   coming; yesterday's Review could have re-armed all four at zero cost. Add the
+   known-positive to the fixture (four un-clocked rows at day 7 must print;
+   the same rows with a `DUE:` must not). No violation class is added, no
+   existing count moves.
 
-3. **`experiments/cpu_budget.py`'s module docstring says "CPU-hour accounting"
-   and the module bills wall clock.** One sentence in the docstring, at the
-   `Scope, stated honestly` list where it belongs: the metered unit is **wall
-   seconds of the child**, not core-seconds, so a child permitted 2 threads by
-   `ladder_loop.sh:253` can consume up to 2 core-seconds per billed second —
-   measured 1.68×/1.72× on 2026-09-07. **Do not change `CPU_DAY_CEILING_S`, do
-   not change `bill_interval`, do not add a core weighting.** The meter's
-   behaviour is deliberate and its refusal semantics are load-bearing; what is
-   missing is that it says so where a planner writing core-hours would read it.
-   This is documentation of an existing measurement, not a policy change.
+3. **Stop `cpu_foreclosed_now` from crying wolf.** It is a point-in-time reading
+   of a meter that resets at 00:00 UTC, so its `!! MOVED` banner has now fired
+   four times for a clock rather than a change (`LOOP_JOURNAL.md:11342`,
+   `:12205`, `:12370`, and tonight). Either record the reading's UTC hour beside
+   its value and suppress the banner when the comparison crosses a day boundary
+   on a day-scoped metric, or move it out of the RATCHET COUNTERS block into the
+   plain metrics lane. **No counter's value changes and no floor moves** — this
+   is about the 64th audit's B2 block staying believable. Say in the commit
+   which of the two you took and why.
 
-4. **Quote the `OVERSIGHT.md` commit sha, not the audit ordinal, in commit
-   messages.** `02f9df7` and `a5de52f` both say *"83rd audit"* for orders that
-   are the **82nd**'s (`2b3e8a6`); this file is the 83rd. Free, and it stops the
-   history holding two of everything.
+4. **Probe-class bakeoffs get their pre-registration in a prior commit.**
+   `git log --follow experiments/tests/pl00_render_bakeoff.py` returns one
+   commit, which is also the commit carrying the artifact, so the
+   *"pre-declared least-information-discarded ranking"* that chose Jack's
+   adopted eye has no pre-run record. The choice ran against its author's
+   interest (8.594 selected over 11.483) so nothing is retracted and no number
+   is re-opened. Going forward: for a bakeoff that runs outside `run_bakeoff`
+   and therefore outside `_GATES_FROZEN`, commit the arm list and the tie-break
+   rule **before** the run, and write *"declared at `<sha>`"* instead of
+   *"pre-declared"*. Optionally back-fill the phrase in
+   `DECISIONS_RESOLVED.md:717` and `REVIEW_QUEUE.md:1666` to say what the record
+   can actually support. No threshold moves, no spec is re-run, `PL.00` keeps
+   its PASS.
 
-5. **Standing prohibitions, unchanged and restated:** no third `D1.0` dispatch
-   before tomorrow's `d10-successor-rerun-under-adopted-gate` row answers — and
-   note independently of that ruling that **W36's 12.28 free hours cannot hold a
-   16–17.6 h attempt**, so authorisation means W37 or a smaller design;
-   `PL.02`'s registered run stays blocked behind the 09-09
-   `pl02-eye-gate-reads-the-encoder-not-the-eye` ruling and the gate is not to be
-   touched meanwhile; `T3.07`'s stale re-buy stays declined; `ME.11.C` stays
-   stale under the ACTED `me11` family row; `HR.1`–`HR.4` stay `D19`-held to
-   09-14; `LF.01` attempt 2 waits for the 09-09 design.
+5. **Standing prohibitions, unchanged:** no third `D1.0` dispatch — the W36
+   arithmetic is now on the ledger's own face (`gpu_hours_no_verdict` D1.0
+   33.78 h / 2 attempts / 0 verdicts; 12.27 h free against a measured
+   16.17–17.61 h attempt), and today's `d10-successor-rerun-under-adopted-gate`
+   ruling is the Review's. `HR.1`–`HR.4` stay `D19`-held to 09-14. `PL.02`'s
+   registered run stays blocked pending the 09-09 ruling on
+   `pl02-eye-gate-reads-the-encoder-not-the-eye`. `LF.01` attempt 2 waits for
+   the 09-09 design. The overseer's own script stays untouched (`D13`).
 
 ---
 
 ## FOR THE OWNER
 
-1. **`D24` (decide_by 2026-09-11) is priced in a unit its own ceiling does not
-   use, and the error runs toward foreclosing the arena.** Nothing for you to
-   answer today; a correction is in flight and will reach you before the
-   default fires. The addendum reads *"~618 core-hours = 38.6 fully-billed
-   57,600-s days"*, and `experiments/cpu_budget.py` bills **wall** seconds, not
-   core-seconds — measured today on two live probes at **1.68×** and **1.72×**
-   CPU-to-wall, with `ladder_loop.sh` permitting 2.0×. If `LC.07`'s workload
-   threads like those probes, 618 core-hours is ~22.7 fully-billed days rather
-   than 38.6. **`D24`'s armed default is (iii) DECLARE IT UNAFFORDABLE**, so the
-   overstatement argues for the option that leaves the Learning-core seat — held
-   `BY VERDICT` off a **VOID**, with every re-open trigger already a closed door
-   — with no reachable arena at all. I am **not** recommending a different option
-   and I am not asking you to move the 10×; the honest position is that
-   `LC.07`'s thread width has never been measured, the artifacts that would
-   settle it are not on disk, and a one-run measurement (ordered as B2, cost:
-   minutes) tells you whether the number in front of you is right before you
-   have to rule on it. **If it comes back 1.0, the entry is unchanged and
-   stronger.**
+1. **`D22` reaches its `decide_by` TODAY, 2026-09-08, and it is the only
+   entry on your desk that addresses what every instrument in this project now
+   measures as its binding constraint.** The question: the Review asks to hand
+   *drafting* of spec redesigns to the builder, keeping ratification with the
+   Review and this desk. Its default is **(i) THE RULE STANDS** — the status
+   quo, and correctly the only legal default, because (iii) would widen what the
+   builder is permitted to do and a default may not widen what this project may
+   take. **Silence is therefore a real answer and it costs the divergence
+   continuing.**
 
-2. NO-DECISION: **compute honesty, reported because the number just became
-   quotable.** `run status` began printing `gpu_hours_no_verdict` this afternoon
-   — GPU hours bought against verdicts returned — and reads **36.91 h, of which
-   `D1.0` is 33.78 h across 2 attempts for 0 verdicts.** That reading is
-   understated: **`T2.01` (5.58 h, FAIL) and `T2.02` (6.28 h, VOID) carry no job
-   id in the ledger and are invisible to it**, and a further **17.48 h of
-   charged jobs are attributable to no spec by any record this project keeps**.
-   The honest total for compute that bought no verdict is **≥ 48.8 h**, and the
-   honest total for compute nobody can name at all is **17.48 h out of 63.05 h
-   of per-job records (27.7%)**. Ordered as B1 — an attribution backfill and a
-   third printed counter, gating nothing. Nothing on the ladder is affected: no
-   PASS depends on any of it.
+   > **The entry's own prediction, now measurable, which I think you should see
+   > before you rule.** `D22` was written on 09-04 and priced its own silence:
+   > *"silence through 2026-09-08 costs approximately 17 further net queue rows
+   > at the measured rate."* Measured at HEAD: `REVIEW_QUEUE.md` went **35
+   > routed → 46**, live rows **33 → 42**, so the true cost was **+9 net over
+   > four days**, a little over half what the entry forecast. I would rather
+   > correct my own desk's number downward in front of you than let a scary
+   > figure stand. **The direction is unchanged and it is the direction that
+   > matters:** 42 live rows, drain still UNBOUNDED at 32 arrivals against 2
+   > disposals per week, all ten startable specs behind the desk, and as of
+   > tonight the queue is red for the first time in its life.
+   >
+   > **My reading, since I am one of the two ratifying organs under (iii) and
+   > you should have it on the record.** The safeguard that proposal leans on is
+   > mine — §2 of this brief, run every six hours — and it is not theoretical:
+   > this audit ran it again tonight and the only numeric movement in 26 hours
+   > was a *tightening*. What I said on 09-04 still stands and I have not
+   > learned anything since that resolves it: today that guard audits drift the
+   > builder produces incidentally, and under (iii) it would audit redesigns the
+   > builder authored on purpose, which is a different adversary. That is the
+   > genuine risk in this fork and no tool I own can settle it. **If you rule
+   > (iii), the thing I would ask for is a tripwire, not a veto** — every
+   > builder-drafted redesign carries its old version in the ledger's history
+   > and states why the new threshold is HARDER, so that a year from now the
+   > drafts can be counted and the ones that got easier can be found.
 
-3. NO-DECISION: **the desk-capacity report the Review gave you this morning is
-   confirmed from here, and it got worse by six rows during the day.**
-   `review-queue` now reads **42 live rows**, drain **UNBOUNDED**, 36 arrivals
-   against 3 disposals over the trailing week, and **10 rows share
-   2026-09-13** against a measured capacity of 1 dated row per cycle. The
-   builder ran **24 of 24 iterations green** and spent its last four slots
-   verifying an empty board and stopping early, because everything runnable is
-   held behind a redesign that desk owes. I read the Review's own words on this
-   before writing mine and I have nothing to add to them except a second
-   measurement agreeing.
+2. **NO-DECISION, for your awareness: `D17` went overdue overnight and the loop
+   will fire its default today.** Nothing is asked of you. The default keeps the
+   PLASTIC-ONLY decree at `GOAL.md:76` verbatim and unnarrowed; it moves no
+   threshold and touches no text of yours. It is being fired only because the
+   deadline it carried has passed, and because the alternative — quietly
+   extending a deadline once it goes red — is the deadlock the whole armed-
+   default mechanism was built to replace. The substance is already settled by
+   measurement in your favour: the trigger that escalated this to you was *"a
+   from-scratch encoder cannot hit the throughput floor"*, and as of yesterday
+   it can (`PL.00` PASS, 8.903 vs 5.0, floor unmoved). You may rule differently
+   at any later date at no cost.
 
-4. NO-DECISION: liveness. All four organs live against `/data/jack-logs` mtimes,
-   not anyone's report: builder 18:11 (hourly, 24/24 `rc=0`), review 06:54,
-   field watch 05:56 today, overseer 18:37 (this run).
-   `lost_iterations.log` still 0 bytes and still never exercised. Credit meter
-   `week:all models` 16% — credits are not the constraint this week, and neither
-   is the GPU quota until W37 opens.
+3. **NO-DECISION, and it is the sentence I would want you to read if you read
+   only one: four of your own constitutional commitments — too cold kills him,
+   he builds a shelter, smell, balance — have zero passing claims and no live
+   path in, and that has been true and unmoving for six days.** Every one is
+   blocked behind a redesign owed by the Review, whose queue is the subject of
+   item 1. This is not a new finding and I am not dressing it up as one. I am
+   recording that it survived another day, that the builder shipped two genuine
+   repairs yesterday and neither of them touched any of the four, and that the
+   mechanism which would unstick them is the decision that expires today.
+
+4. **NO-DECISION: liveness, nothing to rule on.** All four organs live, verified
+   against `/data/jack-logs` mtimes rather than anyone's report: builder 00:10
+   (hourly, 25/25 rc=0), overseer 00:37 (this run), field watch 09-07 05:56
+   (Mondays), Review 09-07 06:54. Tree clean, 0 unpushed, `lost_iterations.log`
+   still 0 bytes and still never exercised. Usage `week:all models` 18% at 11%
+   of the week elapsed.

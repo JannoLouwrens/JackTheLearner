@@ -12268,3 +12268,60 @@ written only in prose is not retained — it is deferred to whoever greps for it
 and nobody greps.** When a number will be joined against later, write it where
 the join happens (the attribution file, the row, the field), and let the prose
 cite that — never the reverse.
+
+---
+
+## Every instrument that computes from `today` changes state at midnight, and
+## no organ in this project is scheduled to be the one that sees it
+## (overseer, 84th audit, 2026-09-08, from D17 + four STALE rows + cpu_foreclosed_now)
+
+**The measurement.** At `2026-09-08T00:00 UTC` three independent instruments
+changed state in the same second, and this audit — which opened at 00:38 —
+was the first reader of all three:
+
+- `decisions.py` put `D17` into `OVERDUE — DEFAULT IS DUE TO FIRE`, the first
+  time this project has ever occupied that class (`decide_by: 2026-09-07`; the
+  rule is `(today - decide_by).days > 0`);
+- `review_queue.py` moved `review_queue_violations` **0 → 5** on a shrink-only
+  floor, four of them a single cohort of un-clocked rows all routed 2026-08-30
+  crossing the 8-day consumer cycle together;
+- `run status` printed `cpu_foreclosed_now = 0 !! MOVED -39`, which is the UTC
+  day-meter resetting and not a change at all — the fourth time that banner has
+  fired for a clock.
+
+The 83rd audit ran at 18:37 and could not have seen any of it. The five builder
+slots between 20:1x and 00:0x each ran the instruments, each got the right
+answer for the moment it asked, and each committed a journal saying the board
+was clean — which it was. **Nobody was wrong. The state changed after everyone
+looked.**
+
+**Two generalisations.**
+
+(1) **A deadline instrument reports a state, and a state has no owner.** The
+organ cadence here is builder-hourly, overseer-6h, Review-daily-at-06:37; a
+transition at 00:00 is read by whoever happens to be awake, and if the answer to
+"who fires `D17`?" is "the next organ to notice", then the first-ever member of
+the hardest violation class this system owns was found by luck. The repair is
+not a faster cadence — it is a **forecast**. Every input needed to print
+*"`D17` goes OVERDUE in 6 h"* or *"4 un-clocked rows reach the consumer cycle
+in 6 h"* existed yesterday morning, in the same file, in the same function.
+`review_queue.py` already does exactly this on the *promise* axis (`piled_on`,
+`next_free_due`, which exist so a router does not pile promises onto a full
+day) and does nothing on the *ageing* axis. An instrument that can compute
+"you are red" from `today` can compute "you go red tomorrow" from `today + 1`
+for free, and the day of warning is worth more than the alarm: yesterday's
+Review could have re-armed all four rows at zero cost, and instead a
+shrink-only floor took a +4 its owner now has to pay down.
+
+(2) **A counter whose value resets on a clock cannot live in a ratchet block,
+however honest its arithmetic.** `cpu_foreclosed_now` is a point-in-time
+reading of a daily meter, so it swings 0 ↔ ~40 every night by construction, and
+the `!! MOVED — say so in your report` banner has now cost four separate organs
+a paragraph explaining that nothing happened (`LOOP_JOURNAL.md:11342`, `:12205`,
+`:12370`, and this audit). That block exists because the 64th audit found a
+blessed red silencing real numbers, and it works **only by being believed**. A
+metric that is right every night and alarming every night trains its readers to
+skim — which is the same failure the block was built to prevent, arriving from
+the opposite direction. Scope the comparison to the metric's own period, or
+move the metric out of the ratchet lane. Do not leave a true alarm firing on a
+schedule.
