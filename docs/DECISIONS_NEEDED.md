@@ -5444,3 +5444,120 @@ loosening of the project's real ceiling; it is the removal of a second, unintend
 ceiling that nobody set, that no decision ever ratified, and that is currently costing
 57 consecutive hours of the only organ that can move the ladder.* I am routing it
 rather than taking it because it is a gate, and gates are yours.
+
+---
+
+## D22 — OVERDUE NOTICE, 2026-09-09 07:0x UTC (86th overseer audit). The deadline passed 31 hours ago. Recorded, and routed to be fired.
+
+**No new question and no change to `D22`'s `DECIDE:` block, class, default or
+`decide_by`.** This entry exists because `decisions --check` now prints
+`D22  costs 0 specs  OVERDUE — DEFAULT IS DUE TO FIRE`, and the fact needs a
+home that is not a report page — which is, with some irony, the exact defect
+`D22` itself was created to pay for.
+
+`decide_by: 2026-09-08`. `experiments/decisions.py` marks an entry overdue at
+`(today - decide_by).days > 0`, so `D22` went red at **2026-09-09T00:00 UTC**.
+The 85th audit ran at 06:37 on 09-08 and could not have seen it. The builder
+has run no slot since 2026-09-08T08:23 — 22 consecutive `PACING:` skips (see
+`D26`) — so no builder iteration existed to catch it either. This is the second
+OVERDUE this project has carried, six days after the first.
+
+**The owner did not rule by 2026-09-08, so the pre-registered default is due to
+fire.** This desk is not firing it: `D13` records that the overseer may not edit
+its own script, this organ's brief forbids it resolving an owner decision, and
+every armed default in this file's history — `D21`, `D17`, `D16`, `D15`, `D14`,
+`D1`, `D4`, `D8` — is stamped *"fired … (builder)"*. Routed to the builder as
+86th audit **B1** (`docs/OVERSIGHT.md`), with the required journal wording.
+
+**What the firing executes, stated so nobody re-litigates it later: nothing.**
+The default is **(i) THE RULE STANDS** — design authority stays with the Review,
+unchanged and unnarrowed. A queue row continues to mean *"only the Review may
+answer this"*. Nothing is written, nothing is re-parented, no threshold moves,
+no control weakens, `GOAL.md` is not touched, and no commitment goes claim-dead.
+It was the only legal default of the three when it was armed and it still is:
+(iii) widens what the builder is permitted to do, and a default may not widen
+what this project may take.
+
+**The evidence moved, and it moved toward the default.** The Review — the organ
+that made the ask — wrote in its own 2026-09-08 `FOR THE OWNER` item 1 that its
+recommendation was *"unchanged in substance and weaker in confidence"* after the
+strongest single morning this organ has recorded (5 queue violations → 0, six
+rows disposed in one sitting), and asked the owner to **wait a week and
+re-measure on 09-15** rather than grant it. The default and the author's own
+current preference agree. That is a better outcome than a default firing against
+its author's wishes, and it should be recorded as such rather than as luck.
+
+**The price of the default, stated rather than buried, because the entry itself
+promised it would be:** the drain still reads `UNBOUNDED` — 41 live rows, 26
+arrivals against 3 disposals over the trailing 7 cycles — and under (i) it
+continues. The re-measurement date the Review named is 2026-09-15.
+
+**Reversal:** the owner may rule (ii) or (iii) at any later date at no cost; the
+default writes nothing to `GOAL.md` and moves no number. The deadline is NOT
+being extended — a deadline that moves when it is reached is the deadlock the
+armed-default mechanism replaced.
+
+---
+
+## D26 — EVIDENCE ADDENDUM, 2026-09-09 07:1x UTC (86th overseer audit). Option (i) is priced on the wrong model.
+
+**No new question, no change to `D26`'s options, default or `decide_by`
+(2026-09-10).** This is the second ratifying organ checking the first one's
+arithmetic before the owner rules, which is what two organs are for.
+
+**Every load-bearing number in `D26` is confirmed independently.** I reached the
+same diagnosis from a different evidence base — the diurnal shape of the meter
+(climbing 09:07→00:07, flat 00:07→06:07, which is not the shape of reporting lag
+from one 16-minute job) and the `ps` table (two long-lived non-organ `claude`
+processes owned by `opc`, one a `--fork-session --resume` at `--effort xhigh
+--permission-mode bypassPermissions` rooted outside this repo) — before reading
+this entry. 22 dark slots, `week:all models` 59% against a line of 45% at 30%
+elapsed, +28 points across a window in which `usage_ledger.jsonl` records no
+organ run at all: all confirmed.
+
+**WHAT THIS ENTRY DOES NOT PRICE.** Option (i) states: *"Effect today: 23%
+own-spend against a 44% line — the builder resumes this hour."* It would resume.
+It would not resume on Fable.
+
+`crontab` runs the loop as `JACK_LOOP_MODEL=fable`. `lib_usage.sh:181` sets
+`MODEL_FLOOR=95` and `model_gate` refuses at `mpct >= MODEL_FLOOR` (`D14` option
+(b), effective reading — the loop has printed this refusal 85 times, most
+recently across 2026-09-04). **`week:Fable` reads 95 right now.** The same
+attribution method this entry uses on the shared meter, applied to the model
+meter, over the week that reset 2026-09-07 05:00 UTC:
+
+    Fable meter at the week's first builder run (09-07 05:07)          0%
+    builder's own Fable spend, summed over 28 measured start/end pairs 27 points
+    rise recorded while the builder was NOT running                    68 points
+    ---------------------------------------------------------------------------
+    week:Fable at 2026-09-09 06:37                                     95%
+
+**72% of the builder's own model meter was spent by something that is not the
+builder**, and 48 of those points arrived in the 22 hours since it last ran —
+its final iteration ended at Fable 47%.
+
+So under (i) the loop clears `pace_gate`, reaches `model_chain`, is refused
+Fable at the floor, and walks to **Opus** (`FALLBACK_MODELS="opus sonnet"`).
+It runs — and every iteration is then an Opus iteration billed against the
+shared all-models meter that (i) has just stopped gating. This entry's "23%
+own-spend" is summed from a history that is almost entirely Fable slots, so it
+is a Fable price for an Opus outcome.
+
+**This is not an argument against (i), and the overseer's own view is on the
+record: (i) is probably right.** The pace line should measure the thing its own
+comment says it is about. But a gate decision should not be made on a price
+computed for a model the gate will immediately refuse, and the owner should have
+the second, unmetered ceiling in view when ruling. If (i) is adopted, the honest
+expectation is: the builder resumes, on Opus, at a per-slot cost nobody in this
+file has measured, until the Fable meter resets on 2026-09-14 05:00.
+
+**A note on (iv), the default, which fires tomorrow.** Its counter is the right
+instrument and it arrives late: the forecast wake is 2026-09-10T17:23 and the
+default fires 2026-09-10, so the remedy lands after the occurrence it would have
+caught. The 86th audit routes the detection half to the builder as **B2** to be
+taken now — it gates nothing, refuses nothing and relaxes nothing, so it does
+not pre-empt your ruling on (i) in either direction. If you rule (i), that
+counter is what will show whether it worked.
+
+**Nothing here changes what is being asked or when.** `decide_by` stays
+2026-09-10.
