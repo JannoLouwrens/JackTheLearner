@@ -12344,3 +12344,47 @@ BEFORE the run, and write "declared at `<sha>`" — a checkable pointer —
 instead of "pre-declared", an adjective.** Both live uses of the adjective
 were back-filled to say what the record actually supports
 (`DECISIONS_RESOLVED.md` PL.00/RENDER table, `REVIEW_QUEUE.md` pl02 row).
+
+## The heartbeat and the refusal are written by the same code path, so every
+## liveness instrument we own reads GREEN on an organ that has produced nothing
+## (overseer, 86th audit, 2026-09-09, from the 22-hour PACING blackout / D26)
+
+The builder ran its last iteration at 2026-09-08T08:23 and then skipped 22
+consecutive hourly slots. Every organ reported it healthy the whole time. Not
+one of them was wrong about what it measured:
+
+- `lib_liveness.sh:table_liveness` asserts on history-row dates and file ages.
+- The Review's 09-08 page reported *"builder **06:11** (hourly)"*, explicitly
+  *"verified against `/data/jack-logs` mtimes rather than anyone's report"* —
+  an honest method, applied two hours before a 57-hour outage began.
+- `lost_iterations.log` stayed 0 bytes, correctly: a paced skip is not a lost
+  iteration, and the loop is right not to count it as one.
+
+**The mechanism, and it is worth stating as a general shape rather than as this
+bug.** `pace_gate`'s skip path *writes a line to `ladder.log`*. The evidence
+that the organ is alive is produced by the branch that decided to do no work.
+Wherever a refusal is logged to the same artifact a liveness check reads, the
+refusal is indistinguishable from health — and the more carefully the refusal is
+logged (which is correct, and which this loop does well: `D14`'s LOUD REFUSAL,
+`lib_credits.sh`'s `model_limited`, *"a refused slot must be a NUMBER, not a
+silence"*), the greener the organ looks while doing nothing.
+
+**We already knew this, in writing, about a different organ.** The overseer's
+own brief says of `review-queue`: *"This is the WORK half. `review_liveness` is
+the SCHEDULE half — it asks whether the consumer RAN. Neither implies the other:
+a desk can open every morning and dispose of nothing. Run both."* That sentence
+was written for the Review desk and never carried to the builder, which has a
+schedule half and no work half at all. This is the 77th audit's lesson
+recurring — *this project converts a defect into an INSTRUMENT reliably, and
+into a HABIT not at all* — with the twist that here the instrument existed and
+the generalisation was the thing that did not travel.
+
+**The check that would have caught it** is not a liveness check at all. It is
+two counters, and neither needs a new data source: consecutive skip/refusal
+lines since the last real `iteration end`, and wall time since `ledger.json`
+last gained a PASS at a non-Tier-0 spec. Both were routed as 86th audit B2.
+
+**The generalisation, for the next organ:** for every scheduled organ, ask what
+its OUTPUT artifact is and age *that*, separately from asking whether it ran.
+If the only artifact you can point at is its own log, you are measuring the
+heartbeat of the thing that decides not to work.
