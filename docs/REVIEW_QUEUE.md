@@ -1413,6 +1413,19 @@ ROUTED: sh02-null-saturation | 2026-08-30 | 8abfa70 (pilot /data/sh02_pilot_seed
     (Declaration added 2026-09-02 per 60th audit B1 — this section predates the
     ROUTED: syntax and was invisible to `run review-queue` until migrated;
     its heading carried the declaration one `## ` away from being read.)
+    DUE: 2026-09-13 | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
+    09-09). This row, `ba03-null-saturates-the-horizon` and
+    `t306-matched-magnitude-noise-buys-coverage` are the SAME QUESTION wearing
+    three spec ids: a null or anchor that saturates, so the gate cannot resolve
+    the thing it was built to resolve. Yesterday's Review named that disease
+    across four more fronts (UB.10's anchor at ceiling, w0-too-shallow's world
+    that separates nothing, t309's venue where correct advice hurts, dp04's
+    76.7% at the cap) and sent it to Sunday as ONE question about how this
+    project chooses what to measure. Designing these three separately on a
+    Wednesday is the act that would guarantee three incompatible local repairs.
+    Declared cost, honestly: 09-13 already carried 10 rows against a measured
+    capacity of 6, and these make it 13 ROWS — but ONE unit of design, and the
+    FULL is the only sitting with the hours to take the general form.
 
 **The measurement.** `SH.02`'s seed-90 pilot (N=3000/arm, 6 arms, ~19 min)
 fired the spec's own pre-registered `HEADROOM` VOID. Every arm without a live
@@ -1985,6 +1998,19 @@ ROUTED: ba03-null-saturates-the-horizon | 2026-08-31 | 9e7cc86 (BA.03 attempt 1,
     constants BA.03 imports by reference) if the kick model itself moves.
     Full record: VOID RECORD in `ba_03_braces_against_a_surface.py`, and the
     machine-readable reason in that file's `VOID-FORECLOSED:` declaration.
+    DUE: 2026-09-13 | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
+    09-09). This row, `sh02-null-saturation` and
+    `t306-matched-magnitude-noise-buys-coverage` are the SAME QUESTION wearing
+    three spec ids: a null or anchor that saturates, so the gate cannot resolve
+    the thing it was built to resolve. Yesterday's Review named that disease
+    across four more fronts (UB.10's anchor at ceiling, w0-too-shallow's world
+    that separates nothing, t309's venue where correct advice hurts, dp04's
+    76.7% at the cap) and sent it to Sunday as ONE question about how this
+    project chooses what to measure. Designing these three separately on a
+    Wednesday is the act that would guarantee three incompatible local repairs.
+    Declared cost, honestly: 09-13 already carried 10 rows against a measured
+    capacity of 6, and these make it 13 ROWS — but ONE unit of design, and the
+    FULL is the only sitting with the hours to take the general form.
 
 ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06 attempt 1, ledger row VOID, 2434 s) | OPEN
     DUE: 2026-09-06 | a redesign choice among the three arms below, owed by
@@ -2052,6 +2078,19 @@ ROUTED: t306-matched-magnitude-noise-buys-coverage | 2026-08-31 | 1653104 (T3.06
     policy covers W0 as well as curiosity (the wk5 reading) re-buys the same
     unattributable contrast; any (a) redesign must gate on the random-action
     comparator too, or state why the wk5 number no longer applies.
+    DUE: 2026-09-13 | RE-DATED to the Sunday FULL and BUNDLED (Review DAILY
+    09-09). This row, `sh02-null-saturation` and
+    `ba03-null-saturates-the-horizon` are the SAME QUESTION wearing
+    three spec ids: a null or anchor that saturates, so the gate cannot resolve
+    the thing it was built to resolve. Yesterday's Review named that disease
+    across four more fronts (UB.10's anchor at ceiling, w0-too-shallow's world
+    that separates nothing, t309's venue where correct advice hurts, dp04's
+    76.7% at the cap) and sent it to Sunday as ONE question about how this
+    project chooses what to measure. Designing these three separately on a
+    Wednesday is the act that would guarantee three incompatible local repairs.
+    Declared cost, honestly: 09-13 already carried 10 rows against a measured
+    capacity of 6, and these make it 13 ROWS — but ONE unit of design, and the
+    FULL is the only sitting with the hours to take the general form.
 
 ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) + 78aad78 (ARENA-UNREACHABLE) | OPEN
     DUE: 2026-09-06 | the re-parenting design, owed by the Review's Sunday
@@ -3397,6 +3436,12 @@ ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, class
     position_only_acc control read 0.708 (control outscored the instrument,
     the T2.11 rule). The FAIL is carried by classes_present /
     has_kind_label / has_self_flag alone; do not quote 0.583.
+    DUE: 2026-09-12 | RE-DATED three days (Review DAILY 09-09). This is the
+    SECOND consecutive re-date of this row by this desk and I am naming that
+    rather than letting a third look routine: 9 days open across three promised
+    dates. The substantive reason is unchanged and still binding — it rides the
+    W1 fork and must not be designed twice — but the proximate reason today is
+    capacity, mine. 09-12 carries 2 rows.
 
 ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | OPEN
     DUE: 2026-09-10 | two build questions owed by the Review — dated OFF the
@@ -3465,6 +3510,11 @@ ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-
     LC.02, PS.02, PS.03, BA.01, TA.01, TA.02, XL.00, W0.DIAG — all go
     stale loudly at the next `run status`. A W1-line fix (new world file)
     bills zero of them.
+    DUE: 2026-09-10 | RE-DATED one day (Review DAILY 09-09), and the cheapest
+    of today's six because the row asks for no design of its own — only that
+    the W1 design consume its numbers, and that design now EXISTS
+    (w0-too-shallow DISPOSITIONED 09-06, W1.00-W1.04 published). What is owed
+    is a reading, not a fork. 09-10 carries 4 rows against a capacity of 6.
 
 ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 (finding 5) | DISPOSITIONED 2026-09-08 (Review DAILY — the ROUTING CONSEQUENCE only, exactly as this row instructed for the case where the owner has not yet answered: (i)+(iv) SCHEDULE AROUND IT, wall clock stands, no ceiling raised or split. The unit question stays armed on `D20`, decide_by 2026-09-18. Design below)
     DUE: 2026-09-08 | deliberately NOT 09-06 (the audit's own B7: the Sunday
@@ -3845,6 +3895,16 @@ ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02
         letter) or a raw-pixel ridge on the same episodes (B4's stated
         reason and title). The registered run stays blocked either way until
         a smoke passes; nothing is weakened by this row existing.
+    DUE: 2026-09-11 | RE-DATED two days (Review DAILY 09-09) and the reason is
+    a REFUSAL, not capacity. This row asks which reading of the B4 VOID gate
+    binds PL.02 — the encoder letter, or the eye its own title names — and the
+    two are MEASURED to diverge by 0.93. PL.02 is the sole registered falsifier
+    of GOAL.md's PLASTIC-ONLY decree; two days ago this desk refused to
+    re-point that same edge in the week it produced an inconvenient result and
+    ordered an expensive renderer bakeoff instead. Ruling on the gate's reading
+    in the last ten minutes of a DAILY, in the direction that would let the
+    falsifier run, is that same act wearing a deadline. Nothing is weakened by
+    the delay: the registered run stays blocked under either reading.
 
 **The measurements, all seed 90 (disjoint from registered seeds), artifacts
 `/data/pl02_{rig,rgb,uargb,steps}_probe.json`:** raw-pixel radius ridge under
