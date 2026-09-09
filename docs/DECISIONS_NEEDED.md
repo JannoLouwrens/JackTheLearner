@@ -5343,3 +5343,104 @@ No decree is narrowed, no threshold moves, `GOAL.md` is not touched, and
 in `DECISIONS_RESOLVED.md`. Reversal: the owner may rule differently at any
 later date at no cost; the deadline was NOT extended — the first-ever OVERDUE
 default was fired, not re-dated.
+
+---
+
+## D26 — The builder has been dark for 22 hours and will be dark for 35 more, because the gate that stopped it reads a meter that is 62% somebody else's. (2026-09-09, Review, DAILY)
+
+**THE MEASUREMENT, and it is the whole entry.** `pace_gate` (`scripts/lib_usage.sh:74`)
+compares `week:all models` against a line that rises from `PACE_FLOOR=25` at the
+reset to `PACE_CAP=90` at the week's end. At 2026-09-09T06:07 it read **57% spent
+into 29% of the week (line 44%)** and skipped, as it has skipped **every hourly
+slot since 2026-09-08T08:23** — 22 consecutive iterations, zero commits, zero
+ledger events, zero demonstrated movement in 24 hours.
+
+**But the 57% is not ours.** `usage_ledger.jsonl` records a `start`/`end` pair with
+a percent reading for every organ run, so this project's own spend is directly
+summable. Since the week reset (inferred 2026-09-07T05:23 UTC from
+`--week-elapsed`), across all 36 completed organ runs:
+
+    our own attributable spend (builder + overseer + review + field watch)   23 points
+    rises recorded while NO organ of this project was running                38 points
+    ------------------------------------------------------------------------------
+    week:all models at 2026-09-09T06:37                                      59%
+
+**62% of the meter that gates this project was spent by something that is not this
+project.** The single largest interval is unambiguous: `2026-09-08T08:23 -> 2026-09-09T06:37`,
+**+28 points**, during which the ladder log proves the builder skipped all 22 slots
+and the overseer log proves it paced three of its four. Nothing of ours ran, and the
+meter moved more in that gap than our organs have moved it all week.
+
+**This is the gate's own documented failure mode, arriving through the cure.**
+`lib_usage.sh:47-53` already says it, in the comment that justifies the pace line:
+
+> THE CAUSE IS NOT OVERSPENDING. `week:all models` is a SHARED pool: the owner's
+> interactive sessions draw on the same meter that stops the loop [...] So the loop
+> is stopped by consumption it does not control, and being the only consumer with a
+> gate, it is the one that starves.
+
+The pace line was built to stop that starvation by spreading *our* spend. It has no
+attribution, so it reads external drain as our own prodigality and responds by
+starving us further. Under the 90% stop alone the builder would be running right now
+at 57%.
+
+**THE FORECAST, so the cost is a number and not an adjective.** `allow = 25 + ceil(65*elapsed/100)`
+exceeds 57 first at `elapsed = 50%`. The week began 09-07T05:23, so the builder is
+foreclosed until **2026-09-10T17:23 UTC — 35.3 further dark hours, 57.0 consecutive
+in total**, unless the external consumer stops and the meter is re-read lower (it
+cannot fall; the week's spend is monotone). W37's free Kaggle GPU allocation expires
+2026-09-13 with the builder waking on the 10th.
+
+DECIDE: D26
+  class:     goal
+  blocks:    no single spec id — it blocks EVERY spec, by removing the only organ
+             that can run one. 22 slots lost at the time of writing, 35 more
+             scheduled. This is the largest single loss of builder capacity since
+             the 4.3-day August blackout, and it is happening while the ladder is
+             healthy and the board has five runnable units on it.
+  options:
+             (i)  ATTRIBUTE THE LINE. `pace_gate` compares the pace line against
+                  THIS PROJECT'S OWN cumulative weekly spend, summed from
+                  `usage_ledger.jsonl`'s existing start/end pairs, instead of the
+                  shared total. The 90% hard stop (`usage_gate`) keeps reading
+                  `week:all models` UNCHANGED, so the real ceiling is untouched and
+                  a genuinely exhausted pool still stops everything. Effect today:
+                  23% own-spend against a 44% line — the builder resumes this hour.
+             (ii) RAISE `PACE_FLOOR` or suspend pacing for the week. Blunt, spends
+                  the shared meter faster, and does not distinguish our spend from
+                  anyone's — it just moves the starvation point.
+             (iii) CHANGE NOTHING. 57 dark hours this week, and the pattern recurs
+                  every time an external consumer draws on the pool.
+             (iv) MEASURE ONLY. `pace_gate`'s skip line additionally prints our own
+                  attributed spend beside the shared total, and consecutive dark
+                  slots are counted as a ratcheted metric. Gates nothing, changes
+                  no behaviour, makes the starvation visible instead of inferable
+                  from a log nobody reads hourly.
+  default:   (iv) MEASURE ONLY, GATE NOTHING, RELAX NOTHING. This is the only legal
+             default of the four. (i) widens what the builder may spend by silence,
+             and however strongly I recommend it, a default may not loosen a gate —
+             `SYSTEM.md` law 4 exists to forbid exactly that. (ii) is the same act
+             with a cruder instrument. (iii) writes off 57 hours and keeps the
+             blind spot standing. (iv) picks only already-permitted actions: it
+             reads a file this project already writes, prints a number beside one it
+             already prints, and counts a slot it already logs. No threshold moves,
+             no run is refused, no spec is failed, no certificate is staled, nothing
+             is spent, `GOAL.md` is not touched, and it is MONOTONE — it can only
+             add a truer reading where a misleading one stood.
+             The price, stated rather than buried: under the default the builder
+             stays dark for the remaining ~35 hours and this recurs next time
+             somebody else uses the account. (iv) does not fix anything. It makes
+             the next occurrence visible within one slot instead of within one
+             Review. I am not calling it a fix.
+             Reversal: revert one commit; the gate's behaviour is unchanged by it.
+  decide_by: 2026-09-10
+
+**MY RECOMMENDATION, verbatim, and it is (i).** *The pace gate should measure the
+thing its own comment says it is about. It was built because a shared meter starves
+the only consumer that reads it; it currently reads that same shared meter and
+starves that same consumer, only sooner. Attributing the line to our own spend — while
+leaving the 90% hard stop reading the shared pool exactly as it does today — is not a
+loosening of the project's real ceiling; it is the removal of a second, unintended
+ceiling that nobody set, that no decision ever ratified, and that is currently costing
+57 consecutive hours of the only organ that can move the ladder.* I am routing it
+rather than taking it because it is a gate, and gates are yours.
