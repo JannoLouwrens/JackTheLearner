@@ -1,437 +1,338 @@
-# OVERSIGHT — 86th audit, 2026-09-09 06:37–07:2x UTC (at `f7d7d5d`, tree clean)
+# OVERSIGHT.md — the overseer's current-state report
 
-## VERDICT: DRIFTING — **the ledger is sound and nothing was loosened, but the builder has been dark for 22 hours, the demonstrated set has not moved in two days, and W37's entire 30-hour free GPU allocation is on course to expire unspent for the third time in six weeks. The Review found the cause six minutes into this audit and routed it as `D26`. My job today is the half of it `D26` does not price: the builder's own model meter reads 95%, the loop's `MODEL_FLOOR` is 95, and 72% of that meter is not ours either.**
+> Written by the overseer organ. **Current state, not a log** — each audit
+> rewrites this file. Running history lives in git.
 
-**This audit ran concurrently with the Review** (`37 */6` and `37 6` collide at
-06:37). The Review committed `f7d7d5d` at 06:43 while I was mid-sweep. I had
-independently reached the same diagnosis from a different direction — the
-diurnal shape of the meter and the `ps` table — before reading `D26`. Two organs
-converging on one finding from two evidence bases in the same ten minutes is
-worth recording as a fact about the system, not just about the finding. **I have
-not re-routed it.** Everything below either confirms `D26` against my own
-reading or adds what it does not carry.
+**2026-09-10 06:37–07:0x UTC — 87th audit.** Window: the last 24 hours
+(2026-09-09 06:50 → 2026-09-10 06:49).
 
-Sections 1, 2, 6 and 7 are clean and that goes on the record before the findings.
+## VERDICT: DRIFTING
+
+**The ledger is sound, nothing was loosened, and no instrument is lying.** The
+finding is that the builder has now been dark for **46.7 hours**, and — this is
+the new part — **`pace_gate` will not release it before the week resets itself
+on 2026-09-14, and roughly a third of the reason is the spend of the organs
+auditing the outage.** Including this one.
 
 ---
 
-## RANK 1 — `D26` is right, and its recommended option is priced on the wrong model
+## RANK 1 — the blackout is not a wait. It is an equilibrium, and we are in it.
 
-`D26` (Review, 06:43 today, `decide_by` **2026-09-10**) establishes that
-`pace_gate` starved the builder on a meter that is 62% somebody else's. I
-confirm every load-bearing number in it independently:
+The Review reached the same headline independently at 06:44 this morning
+(`6e79f7d`, `D26` evidence addendum) and its numbers are correct; I re-derived
+every one of them rather than quoting. **Three things it did not compute follow
+below, and all three make the picture worse.**
 
-| claim | my reading |
+### The measured state
+
+| | |
 |---|---|
-| builder dark since `2026-09-08T08:23` | confirmed — 22 consecutive `PACING:` lines in `ladder.log`, 09-08 09:07 → 09-09 06:07, zero iterations |
-| `week:all models` 59%, line 45%, elapsed 30% | confirmed live at 06:5x: `claude_usage.py --pct` = **59**, `--week-elapsed` = **30**, `allow = 25 + ceil(65·30/100)` = **45** |
-| the spend is not ours | confirmed by a second route: `usage_ledger.jsonl` has **no entry at all** between `2026-09-08T08:23` and `2026-09-09T06:37`, across which the meter rose **31 → 59 (+28 points)**. The rise is **diurnal** — climbing 09:07→00:07, flat 00:07→06:07 — which is not the shape of reporting lag from one 16-minute Fable job. `ps` shows two long-lived non-organ `claude` processes owned by `opc`, one a `--fork-session --resume` at `--effort xhigh --permission-mode bypassPermissions` rooted in `/home/opc/.claude/projects/-home-opc/` |
-| forecast wake `2026-09-10T17:23`, 57 dark hours total | confirmed by arithmetic: the line rises 0.65 pt per 1% of week ≈ **9.3 pts/day**; the meter rose ≈ **30 pts/day**. The gap widens, it does not close. The forecast holds only if the external draw stops |
+| builder last iteration | `2026-09-08T08:23` — **46.7 h ago** |
+| consecutive `PACING:` skips | **46 of 46 slots** |
+| builder commits in 24 h | **0** |
+| ledger settlements since the blackout began | **0** |
+| demonstrated | **108 / 245** — unmoved since `2026-09-07T11:25` (**67 h**) |
+| `week:all models` | 68% — against a **90%** hard stop nobody is near |
 
-### What `D26` does not carry, and the owner needs it before ruling tomorrow
+### (a) The closing rate is not 2.3 points/day. It is 0.29, and we spend the rest.
 
-**`D26`'s option (i) says "Effect today: 23% own-spend against a 44% line — the
-builder resumes this hour." The builder would resume, but not on Fable, and
-`D26` prices it on Fable.**
+The Review computed the pace line (9.3 pts/day) against the **external** draw
+(7.0 pts/day) and concluded the gap closes at 2.3/day — ~6 days. But the meter
+also carries **our own** spend, and the honest reading is the 06:37-to-06:37
+delta, which contains everything:
 
-`crontab` runs the loop as `JACK_LOOP_MODEL=fable`. `lib_usage.sh:181` sets
-`MODEL_FLOOR=95` and `model_gate` refuses at `mpct >= 95` (D14 option (b),
-effective reading — the loop has fired this refusal 85 times, most recently
-through 2026-09-04). **`week:Fable` reads 95 right now.** Same attribution
-method as `D26`'s, applied to the model meter:
+```
+09-07 06:37   2%  ->  09-08 06:37  23%   = +21 pts/day   (builder awake)
+09-08 06:37  23%  ->  09-09 06:37  59%   = +36 pts/day   (builder dark from 08:23)
+09-09 06:37  59%  ->  09-10 06:37  68%   =  +9 pts/day   (builder dark all day)
+                                   ^ +2 ours (review +1, overseer +2) + 7 external
+```
 
-    week reset 2026-09-07 05:00 UTC; Fable meter read 0 at the first builder run
-    builder Fable consumption, summed over 28 start/end pairs        27 points
-    rise while the builder was not running                           68 points
-    ------------------------------------------------------------------------
-    week:Fable at 2026-09-09 06:37                                   95%
+    pace line rises                          9.29 pts/day
+    meter rises, TOTAL measured               9.0  pts/day
+    ------------------------------------------------------
+    the line closes on the meter at          +0.29 pts/day
 
-**72% of the builder's own model meter was spent by something that is not the
-builder**, and 48 of those points arrived in the 22 hours since it last ran.
-The builder's final iteration ended at Fable 47%.
+**The gap is 14 points (68 − 54). At 0.29/day that is 49 days.** The week resets
+2026-09-14 05:23, 3.95 days away, by which time the line will have recovered
+**1.1 of the 14 points it needs**. `pace_gate` does not release the builder this
+week under any measured rate, and the margin is not close — it is off by 13×.
 
-So under (i) the loop clears `pace_gate`, hits `model_chain`, is refused Fable
-at the floor, and walks to **Opus** (`FALLBACK_MODELS="opus sonnet"`). It runs
-— but every iteration is then an Opus iteration billed against the shared
-all-models meter that (i) has just stopped gating, and `D26`'s "23% own-spend"
-is computed from a history that is almost entirely Fable slots. **I am not
-saying (i) is wrong. I think it is probably right.** I am saying its stated
-effect is a Fable price for an Opus outcome, and a gate decision should not be
-made on that. Routed as an evidence addendum on `D26` itself, not as a new
-entry.
+**The blackout therefore ends on 2026-09-14 05:23 by calendar rollover, not by
+any decision: 2026-09-08T08:23 → 2026-09-14T05:23 = 141 h = 5.9 days.** That
+exceeds the 4.3-day August blackout and is the largest loss of builder capacity
+in this project's history.
 
-### The cost, as a number
+### (b) Our own oversight apparatus consumes 87% of the headroom.
 
-`gpu_budget.json` has **no `2026-W37` key: 0.00 of 30 free Kaggle GPU-hours
-charged this week.** They expire **Sunday 2026-09-13**; the Claude week resets
-**2026-09-14 05:00**. The builder wakes 09-10T17:23 at the earliest.
+This is the part that indicts my own organ, so I am stating it first among the
+consequences. Of the line's 2.29 pts/day surplus over the external draw, the
+overseer and the Review spend **2.0** — leaving 0.29. Measured per-run cost this
+week from `usage_ledger.jsonl`: review **1.00 pts/run**, overseer **0.67
+pts/run**, builder **0.64 pts/run** over 28 runs.
 
-This is the third occurrence of the failure `pace_gate` was built to prevent,
-and `lib_usage.sh:36-43` records the first two in its own comment:
+Remove the two document organs and the line closes at 2.29/day and the builder
+wakes in 6 days. Leave them in and it closes at 0.29/day and the builder never
+wakes. **The organs auditing the outage are the marginal cause of its
+continuation**, and the builder's own iterations were never the expensive
+thing — 28 of them cost 18 points on 09-07, the day `demonstrated` went 106→108.
 
-    W32   dark ~4.5 d   8.82 of 30 GPU-h expired unspent
-    W33   dark ~2.7 d  22.11 of 30 GPU-h expired unspent
-    W37   dark 57 h    30.00 of 30 at risk        <- this week
+### (c) The gate is applied to exactly the wrong two organs.
 
-## RANK 2 — no instrument in this repo can see a builder that is alive and producing nothing
+```
+scripts/ladder_loop.sh:183   pace_gate   <- builder, EVERY slot, no exemption
+scripts/overseer.sh:79       pace_gate   <- overseer, 1 of 4 audits exempt daily
+scripts/review.sh:30         usage_gate only   — NOT PACED
+scripts/field_watch.sh:32    usage_gate only   — NOT PACED
+```
 
-This is mine, it is distinct from `D26`, and it is why a 22-hour outage was
-found by hand rather than printed.
+`pace_gate` was built to stop the project going dark. It is applied to the one
+organ that writes ledger rows, with no exemption, and not applied at all to the
+two organs that write prose. The result is visible in the commit log without any
+inference: **all 6 commits in the last 24 h are documents about the outage,
+written by the organs the outage does not touch.** Section 8 of my brief asks
+whether we are only accumulating green ticks; the answer this week is worse —
+we are accumulating *commentary*, on the budget that would have bought evidence.
 
-- `grep -rl PACING experiments/ scripts/` returns **only** `lib_usage.sh` (the
-  emitter) and `ladder_prompt.md`. Nothing counts consecutive skipped slots.
-- `lib_liveness.sh:table_liveness` asserts on **history-row dates and file
-  ages**. A `PACING:` skip appends to `ladder.log` every hour, so the builder's
-  liveness reads green throughout.
-- The proof it misleads: the Review's own 09-08 page reported *"builder
-  **06:11** (hourly)"* under "verified against `/data/jack-logs` mtimes rather
-  than anyone's report" — on the morning the builder was two hours from going
-  dark for 57. The verification method was honest and the answer was wrong.
-- `status`'s RATCHET COUNTERS block covers queue, champions and coverage. There
-  is no counter for builder output.
+### (d) The release, if it came, would put the builder on the metered model.
 
-`D26`'s default (iv) proposes exactly this counter — and **fires 2026-09-10,
-after the builder is forecast to wake.** The remedy arrives after the
-occurrence it would have caught. That is not an argument against (iv); it is an
-argument for the builder implementing the counting half now, which costs
-nothing and gates nothing (**B2**).
+`crontab` runs the loop `JACK_LOOP_MODEL=fable`. `week:Fable` reads **100%**
+against `MODEL_FLOOR=95`, so `model_gate` refuses Fable and the chain falls to
+Opus — which has no separate weekly line, fails open, and bills `week:all
+models`, **the meter `pace_gate` is rationing**. The gate would release the
+builder onto the only model whose spend immediately re-crosses the line it just
+cleared. At 0.64 pts/iteration the builder would re-dark within two slots.
 
-This is `LESSONS.md`'s standing shape: no organ watches for the *absence* of a
-result.
+### What this costs, in the currency the gate exists to protect
 
-## RANK 3 — `D22` is OVERDUE and the pre-registered default is due to fire
+`experiments/gpu_budget.json` has **no `2026-W37` key at all**: 0.00 of 30 free
+Kaggle GPU-hours, expiring Sunday 2026-09-13 — before any projected wake.
+Prior weeks: W32 16.61, W33 7.89, W34 1.62, W35 19.20, W36 17.73. `pace_gate`'s
+own justifying comment states its purpose as *"the loop is still awake when the
+GPU quota expires."* It is now the reason the loop is not.
 
-`decide_by: 2026-09-08` passed unanswered. `decisions --check` prints
-`D22  costs 0 specs  OVERDUE — DEFAULT IS DUE TO FIRE`.
+---
 
-**The owner did not rule by 2026-09-08, so the pre-registered default fired:**
-**(i) THE RULE STANDS** — design authority stays with the Review, unchanged and
-unnarrowed. Nothing is written, nothing is re-parented, no threshold moves, no
-control weakens, `GOAL.md` is not touched, no commitment goes claim-dead.
+## RANK 2 — three armed defaults are queued behind an organ that is switched off
 
-The firing is paperwork and is also, on today's evidence, the substantively
-right outcome: the Review's own 09-08 `FOR THE OWNER` item 1 said its
-recommendation was *"unchanged in substance and weaker in confidence"* after
-its best-ever morning, and asked the owner to **wait a week and re-measure on
-09-15** rather than grant the ask. The default and the author's current
-preference agree.
+The armed-default mechanism exists to break deadlocks caused by **owner
+silence**. It has now deadlocked on **builder absence**, a case it has no clause
+for.
 
-**Reversal:** the owner may rule (ii) or (iii) at any later date at no cost; the
-default wrote nothing. **The deadline was NOT extended** — a deadline that moves
-when it is reached is the deadlock the armed-default mechanism replaced.
-
-I have appended the OVERDUE NOTICE to `DECISIONS_NEEDED.md` with the required
-wording. Per the `D17` precedent (2026-09-08) and `D13` — the overseer does not
-write `DECISIONS_RESOLVED.md` — the resolution record is **B1** for the builder.
-
-## RANK 4 — the two standing `coverage` reds are routed, and both fall due into a week the builder cannot work
-
-`coverage` EXIT 2, unchanged in composition:
-
-- **`CITED-BUT-UNRUNNABLE`, 4 NEW: `GEN.02`, `GEN.03`, `GEN.06`, `GEN.09`** —
-  all `welded<-LC.07`, which is `PILOT-BLOCKED`. `GOAL.md:193-195` cites all
-  four in the present tense as what generality *is*. Routed as
-  `goal-cites-four-specs-that-resolve-to-corpses`, **DUE tomorrow, 09-10**,
-  OPEN 7 days. `GOAL_UNRUNNABLE_BASELINE` remains `{DP.02, DP.03, LC.04}` and
-  must not grow.
-- **4 CLAIM-DEAD commitments** — smell, balance, shelter/building, thermal
-  (kills). Every claim spec parked or foreclosed; three of the four are owner-
-  named constitutional commitments (*"too cold kills him"*, *"every sense a
-  human has"*, the owner's own image of success). Routed as
-  `five-commitments-are-claim-dead-behind-foreclosures`, DUE 09-11. **The row's
-  own title is now stale by one** — the tool reads four, not five. A row that
-  names a count should carry the count it was routed at or be re-titled; this
-  one silently disagrees with the instrument it exists to discharge (**B3**).
-
-Both dates land inside the dark window. Neither can be paid by the builder
-before it wakes.
-
-## RANK 5 — the queue: zero violations, and the pile is now scheduled to break
-
-`run review-queue` EXIT 0, **0 violations** — correct and not reassuring.
-
-- **41 live rows** (27 OPEN, 2 HELD, 12 DISPOSITIONED); oldest live 16 d.
-- **Trailing 7 cycles: arrived 26, disposed 3, designed 12. `drain UNBOUNDED`.**
-  A `DISPOSITIONED` row is designed, not disposed — it still ages.
-- **8 rows due TODAY** and **10 rows due 2026-09-13** against a measured
-  one-cycle maximum of 6. Ten promises are scheduled to break together, on a
-  Sunday, in a week whose builder is offline.
-- `review_queue_net_arrivals` **29 → 23 (!! MOVED −6)**. No committed change
-  justifies it; it is the trailing window sliding. The Review was mid-run when I
-  read it and should record it in this morning's page.
-
-## SECTION 1 — integrity of the ledger: CLEAN
-
-- **108 PASS rows. 108/108 resolve to an implementation** with a `run()` via
-  `_module_for`. **108/108 recorded commits exist in git** (`git cat-file -e`).
-  **108/108 specs declare a `control`.** **0 PASS rows** lack a
-  control/null/shuffled/twin token anywhere in the recorded row.
-- `audit_supersedes_fail`: **3 live violations, 11 checked pairs, 23
-  unauditable.** All three are the known `+dirty` class — an adverse verdict
-  stamped at an uncommitted implementation whose bytes were never preserved:
-  `LG.00` VOID `8faff43+dirty` (08-30), `T0.29` FAIL `661a48f+dirty` (09-02),
-  `T0.29` FAIL `44e54a7+dirty` (09-06). This is `T0.27`, held deliberately RED
-  by `D16`'s fired default *"option (b) ALONE — the warning stands, `T0.27`
-  stays RED and is not touched"*. Unchanged since 2026-09-07. **A deliberate red
-  is not a clean bill; it is a debt with a decision behind it, and it is still
-  three.**
-
-## SECTION 2 — thresholds and controls over 7 days: NO LOOSENING, one edit that deserved the look
-
-`git log -p --since="7 days ago" -- experiments/registry.py
-experiments/registry_expansion.py experiments/tests/`.
-
-- **One numeric constant moved: `T0.31 N_PROPERTIES 16 → 17`** (`021d302`) —
-  strengthening. No control deleted, no seed count reduced, no assertion
-  removed. New `PL.02` constants are registrations of new bars, and
-  `EYE_RADIUS_R2_MIN 0.80` is carried from `PG.6` unmoved.
-- **The one hit worth reporting, because §2 names `_check` gaining an `or`.**
-  `cd5a27b` changed `T0.31` P14 from
-  `pile["due_pile"].get(free, 0) != 0` to `... >= CAP`. That is a **weakening
-  of what the test demands**: the property used to require `next_free_due` to
-  return an *empty* day and now accepts one carrying up to `CAP-1` rows.
-  **I judge it correct and not a violation**, because it is definitional — with
-  the old `CAP = 1` the two forms are identical, and `next_free_due` is
-  specified as "the next date under the measured capacity", not "the next empty
-  date", so the old form would have failed a correct tool once the constant
-  moved. The commit rebuilt the fixtures *from* the constant so the battery
-  certifies the mechanism at any honest value. Disclosed in the commit message.
-  **Reported here rather than waved through, because a loosening-shaped edit in
-  the same commit that raises the constant it depends on is precisely the pair
-  §2 exists to make someone else look at.**
-- **A follow-on concern about that constant, which is not a violation.**
-  `MEASURED_DISCHARGE_CAPACITY 1 → 6` was raised on **one** cycle — the Review's
-  best morning ever — while `throughput()` reads **0.43 disposed/cycle
-  sustained**, a 14× gap. The builder recorded the caveat in the docstring
-  honestly. But the AMBER pile warning still *divides by 6*, and
-  `review_queue_piled_on` fell **26 → 6** in the same commit (recorded
-  DEFINITIONAL) and the flagged dates fell 6 → 2. An instrument got quieter on
-  the strength of a single record-setting day. See **B4** — print both readings;
-  do not move the ratchet.
-
-## SECTION 3 — drift: none in what was done; a real hole in what was not
-
-**Last day's builder work** (three iterations, all on 09-08): the 85th audit's
-items 1–4 — `MEASURED_DISCHARGE_CAPACITY 1 → 6`, `kindless_arena_discharges`
-counted at 9 then migrated to 1, the day-scoped banner's `today` moved to
-`time.gmtime` — plus `T0.29`/`T0.31` certificate re-buys.
-
-**Which GOAL.md sentence it serves:** the first-principle block, *"or protects
-the honesty of watching what happens when the three meet."* That clause is real
-and this is squarely inside it. **Not drift.**
-
-**The converse, which is the harder question and the worse answer.** The
-demonstrated set has not moved since **2026-09-07** (108/245). The last three
-writes to `ledger.json` are all Tier-0 self-certification — the ladder
-measuring its own instruments. Against `GOAL.md`'s named claims:
-
-| commitment | specs | passing |
+| entry | state | its default requires |
 |---|---|---|
-| one brain / unison | 27 | **1** |
-| curiosity | 12 | 2 |
-| hearing | 14 | 1 |
-| fast/slow | 8 | **0** (5 welded behind `LC.03`) |
-| sleep | 5 | 0 |
-| smell · balance · shelter · thermal | 11 | **0 — CLAIM-DEAD** |
+| `D22` | OVERDUE since 2026-09-09T00:00 | firing (writes nothing) — **still unfired 2 days on** |
+| `D18` | **OVERDUE as of 2026-09-10T00:00 — new today** | builder code (`lib_procwatch.sh`, `run_spec`) |
+| `D26` | `decide_by` is **today**; red tomorrow | builder code (`pace_gate` attribution print) |
 
-Curiosity, all-senses fusion and learning-by-living are the three my brief names
-as most likely to be quietly neglected. They are 2/12, 1/27 and 0/11.
+The 86th audit appended `D22`'s overdue notice and routed the firing to the
+builder as its B1. The builder has not run since. Every armed default in this
+project's history — `D1`, `D3`, `D4`, `D7`, `D8`, `D9`, `D11`, `D13`, `D14`,
+`D15`, `D16`, `D17`, `D21` — is stamped *"fired … (builder)"*, and `D13`
+records that the overseer may not edit its own script. So the routing is
+correct and the queue is real.
 
-## SECTION 4 — is the builder alive and productive: ALIVE, NOT PRODUCTIVE
+**`D18`'s overdue notice is appended to `docs/DECISIONS_NEEDED.md` by this
+audit, with the required wording, and its firing routed as B1 below** — the
+`D22`/`D17` precedent exactly. I am not extending any deadline.
 
-**3 iterations in the last 24 h** (09-08 06:11, 07:17, 08:23), **3 × rc=0**,
-**PASS delta 0** (108 → 108). **22 iterations skipped, 0 attempted, since
-09-08T08:23.** No crash, no credit exhaustion, no aborted load, nothing paused
-by a human. The loop is executing its own pacing rule exactly as written. See
-RANK 1 and RANK 2. `lost_iterations.log` is 0 bytes; `declared_pids` clean; no
-stray processes attributable to this project.
+---
 
-## SECTION 5 — compute honesty: nothing wasted, everything unspent
+## RANK 3 — a finding I would have got wrong, corrected by a concurrent organ
 
-- **`2026-W37`: 0.00 of 30 free Kaggle GPU-hours charged.** No key in
-  `gpu_budget.json` at all. Quota expires Sunday 09-13.
-- `gpu_hours_no_verdict` TOTAL **48.07 h**, dominated by **`D1.0` 33.78 h across
-  2 attempts and 0 verdicts**. That is correctly frozen: the Review's own FTB
-  forbids a third `D1.0` dispatch until the twin-spread probe result is on the
-  row and the gate is committed, and then only into W37. **W37 is now the week,
-  and the organ that would dispatch it is offline.**
-- `gpu_unattributed_jobs` **21, at its declared floor** (6.32 h). Shrink-only,
-  not moving.
-- The waste this week is not spent hours with nothing to show. It is **30 free
-  hours with nothing dispatched into them.**
+At 06:40 `review-queue` reported **2 OVERDUE violations** (`d10-learning-gate-
+uses-two-different-denominators`, `d10-learning-gate-sits-at-the-untrained-twin-
+level`), both reading *"EXECUTION … owed by the BUILDER"*. I had them drafted as
+builder debt dammed behind the blackout.
 
-## SECTION 6 — stuck decisions: CLEAN, with two clocks running
+They were neither. The Review, running concurrently, disposed both at `d582acc`:
+**the work landed 2026-09-06 at `8f2990d`, three days inside the clock — the
+violations were a missing ACTED marker, not missing work.** Recorded because the
+correction runs against my own thesis, and because a report written from a
+06:40 snapshot would have overstated the builder's debt in the same audit that
+argues the builder is being starved.
 
-- **`MEANS-ESCALATED`: none.** No fork that a measurement could settle is on the
-  owner's desk. The `D1` disease is not present.
-- **`UNDECLARED`: 0 of 10.** Every open decision carries a class, and every goal
-  decision a default and a `decide_by`. Nothing for me to arm this audit.
-- **`D18`'s `decide_by` is TODAY (2026-09-09)** — armed, not yet overdue; its
-  default fires tomorrow. `D24` 09-11, `D25` 09-13, `D19` 09-14, `D20` 09-18,
-  and the new `D26` **09-10**.
-- **Nothing acted on without being recorded.** `D17`'s firing (09-08) is
-  correctly papered in `DECISIONS_NEEDED.md`, `DECISIONS_RESOLVED.md` and the
-  84th audit's B1, with `GOAL.md` untouched and the premise-was-false caveat
-  stated rather than buried.
-- `UNROUTED-OWNER-ASK` 0/3, `VANISHED-OWNER-ASK` 0/0. `PROGRESS.md`'s one live
-  owner ask (item 1) is correctly attributed to `D22` — which is RANK 3.
+Queue as of this writing: **0 violations, EXIT 0.**
 
-## SECTION 7 — bakeoff hygiene: CLEAN, with one disclosed wobble that stands
+---
 
-`PL.00/RENDER` (2026-09-07) seated **coarse-shadow512** at worst-seed 8.594
-against an unmoved 5.0 floor. Two things about it, both already in the record
-and neither retracted:
+## The audit, section by section
 
-1. It was a **probe, not `run_bakeoff`** — no 3σ learning gate, because the arms
-   are loop configurations rather than learners, so the gate has no referent.
-   Stated on the entry. Correct.
-2. **The winner is not the top scorer.** `coarse-flat` read 11.483 and lost on a
-   "least-information-discarded" ranking **declared at `b7324ba` — the same
-   commit that carries the artifact.** The 84th audit caught exactly this and
-   wrote the lesson (*probe-class bakeoffs pre-register in a PRIOR commit*), and
-   back-filled the record from an adjective to a pointer. The instance was not
-   retracted and does not need to be — both arms clear the floor, so the gate is
-   satisfied either way and the choice between them is a disclosed design
-   preference. **No VOID treated as a verdict; no winner inside a noise margin.**
+**1. Integrity of the ledger — CLEAN, no findings.** 143 rows: 108 PASS, 22
+FAIL, 13 VOID. Checked every PASS independently:
 
-## SECTION 8 — the honest summary
+- implementation exists in `experiments/tests/` — **108 / 108**
+- `commit` still resolves in git (`cat-file -e`) — **108 / 108**
+- spec declares a `control` — **108 / 108**
+- non-empty `control_metrics` — **106 / 108**
 
-**No. We are not closer to a curious humanoid that climbs the ladder than we
-were yesterday, and today we are not even closer to a longer list of green
-ticks.**
+The two exceptions are `T0.01` (repo imports clean) and `T0.10` (Kaggle job
+round-trip). Both declare `control: "NONE, BY DECISION (52nd audit B5)"` with a
+stated reason — an import either raises or it does not; a sabotaged upload fails
+on the service's side. Declared, reasoned, not a silent gap. **No finding.**
 
-The demonstrated count has been 108/245 for two days. The last three things
-written to the ledger were the ladder certifying its own measuring instruments.
-The organ that could change that has been switched off for 22 hours by a gate
-reading a meter that is 62% somebody else's, on a model meter that is 72%
-somebody else's, and the week's entire free GPU allocation — 30 hours, the only
-compute this project is permitted — will expire on Sunday with a good chance
-that not one hour of it was used.
+**2. Thresholds and controls — CLEAN, no findings.** There are **no builder
+commits in the window**, so nothing new to scan. Over the full 7 days the one
+edit moving in the loosening direction is `MEASURED_DISCHARGE_CAPACITY 1 → 6`
+(`cd5a27b`), and it is exemplary rather than suspect: it cites six discharging
+commits by hash, calls 6 *"the demonstrated one-cycle MAXIMUM, not a sustained
+rate"*, prints the before/after effect on its own amber count (6 flagged dates →
+2), and explicitly refuses to let the constant carry the drain's truth — *"the
+drain line, never this constant, carries that."* Justified by measurement.
 
-**What is genuinely good, and it is not small.** The ledger is sound: 108 PASS
-rows, every commit alive, every control declared, zero stale PASS. Seven days of
-spec and test diffs contain exactly one moved constant and it moved in the
-strengthening direction. The one loosening-shaped edit is definitional and
-disclosed. Two organs independently diagnosed the outage within ten minutes of
-each other. And on 09-07 the system did the hardest thing it knows how to do:
-`PL.00`'s edge was dissolved **by being satisfied rather than edited**, in the
-week that edge produced an inconvenient FAIL.
+*One honest caveat, not a finding:* today's *"13 rows share 2026-09-13 against a
+measured capacity of 6"* is therefore measured against the best single day this
+desk has ever had, while trailing throughput reads **0.43 disposed/cycle**.
 
-**But four of the owner's constitutional commitments have no living claim at
-all** — smell, balance, shelter, thermal — and *"too cold kills him"* has been
-claim-dead since 08-25. One brain in unison is 1 of 27. Fast/slow is 0 of 8. The
-instruments are excellent and getting better every day; what they measure has
-not moved since Monday.
+**3. Drift from the goal.** The builder worked on **nothing** — it was switched
+off. `demonstrated` last moved 2026-09-07T11:25 (107→108, `PL.00`). The last
+three ledger writes before the blackout were `T0.29`/`T0.31` certificate
+re-buys — the ladder certifying its own instruments. That serves GOAL.md's
+*"protects the honesty of watching"* clause, which is real, but it is not brain,
+body, or world.
 
-**The project is not in integrity trouble. It is in motion trouble.** The
-honest verdict is DRIFTING, and the drift is not toward a wrong goal — it is
-toward spending our best hours making the ruler straighter while the thing it
-measures stands still.
+The converse question, which matters more. From `coverage`: **4 commitments are
+CLAIM-DEAD** (every claim spec parked or foreclosed) — **smell, balance,
+shelter/building, thermal (kills)** — and **9 more have live claim specs with
+nothing passing**: touch/contact, tool use, told world, proprioception,
+plasticity, sleep, hunger/thirst, death & retry, fast/slow. The three GOAL.md
+claims most at risk of quiet neglect read: **curiosity 2 of 12 passing**,
+**one brain / unison 1 of 27**, learning-by-living gated behind `W0`/`W1`.
+Zero commitments have no declared spec — the `coverage` `EXIT 2` is the
+pre-existing, ratcheted CLAIM-DEAD and empty-class population, not a new hole.
+
+**4. Is the builder alive and productive?** Alive, zero productive. 46 slots
+fired, 46 refused, `rc=0` every time — the refusal and the heartbeat are written
+by the same code path, which is the lesson the 86th audit already committed
+(`0c367a2`). Covered in RANK 1.
+
+**5. Compute honesty.** No GPU hours spent and none wasted — the waste is the
+opposite failure. **W37: 0.00 of 30, expiring Sunday.** Additionally, `coverage`
+reports `gpu<20min` among **3 cost classes that are NEWLY EMPTY with no path
+in** — nothing runnable to implement and nothing gate-provisional to pilot — so
+even an awake builder has nothing registered to dispatch there. Both levers are
+the owner's; there is no third one the system can pull for itself.
+
+**6. Stuck decisions — CLEAN apart from RANK 2.** `decisions --check` EXIT 0:
+**0 `MEANS-ESCALATED`** (no fork a measurement could settle is sitting on the
+owner's desk), **0 `UNDECLARED`** of 10 armed, 0 unrouted owner asks, 0 vanished
+owner asks. Nothing to arm this audit — the ratchet is at its floor. No owner
+decision was acted on without being recorded.
+
+**7. Bakeoff hygiene — CLEAN, no findings.** No decision was resolved in the
+window (the organ that fires them is off). Spot-checked `DECISIONS_RESOLVED.md`:
+every armed-default resolution carries its firing date, its executing organ, and
+an explicit statement of what the default did and did not change. No VOID
+treated as a verdict; no winner chosen inside a noise margin.
+
+**8. The honest summary — are we closer to a curious humanoid?**
+
+No. And this week we are not even closer to a longer list of green ticks: the
+list has not moved in 67 hours. What grew is the record of why it did not — six
+commits in 24 hours, every one of them prose about the outage.
+
+The specific thing worth saying plainly, because it is the shape this section
+exists to catch: **the project's oversight apparatus is now healthy, fast,
+well-instrumented, mutually corroborating — and is spending 87% of the budget
+headroom that would have restarted the thing it oversees.** Four organs produced
+an excellent diagnosis of a stalled builder this morning, at a cost that helps
+keep it stalled. Every instrument is working. The creature has not moved since
+Monday.
 
 ---
 
 ## FOR THE BUILDER
 
-**B1 — Fire `D22`'s default and write the record.** The owner did not rule by
-2026-09-08. The OVERDUE NOTICE is appended to `DECISIONS_NEEDED.md` (RANK 3);
-the resolution record in `DECISIONS_RESOLVED.md` is yours, because `D13` says
-the overseer may not write it. Required wording, verbatim: *"the owner did not
-rule by 2026-09-08, so the pre-registered default fired"*. What fires is **(i)
-THE RULE STANDS** — design authority stays with the Review, unchanged and
-unnarrowed; nothing is written, no threshold moves, `GOAL.md` is not touched.
-State the reversal (the owner may rule (ii) or (iii) later at no cost) and state
-that the deadline was **not** extended. Then `decisions --check` should print
-`D22` off the overdue list.
+You will read this after a multi-day outage with a budget of roughly **one
+iteration per three days** until the week resets on 09-14. The docket below is
+over-subscribed against that. **Do B1 first and alone if you get one slot.**
 
-**B2 — Count the dark slots. Instrumentation only; gate nothing.** This is
-`D26`'s default (iv) *detection half*, and it is takeable now because it moves
-no threshold, refuses no run and relaxes nothing — the same shape as the
-`kindless_arena_discharges` and `AGEING-IN` precedents. Two numbers:
-`builder_consecutive_skips` (consecutive `PACING:`/`REFUSING` lines in
-`ladder.log` since the last real `iteration end`) and `builder_hours_since_pass`
-(wall time since `ledger.json` last gained a PASS at a spec that is not Tier 0).
-Both ratcheted, both printed in `status`'s RATCHET COUNTERS block. **Do not wait
-for `D26`'s 09-10 default** — under (iv) it fires after the builder is forecast
-to wake, and a counter commissioned by an outage should exist before the next
-one. Add the known-positive to `T0.xx` in the same commit. If `D26` is later
-ruled (i), this counter is what will prove the fix worked.
+**B1 — Fire two armed defaults. Cheapest possible acts; both are overdue.**
+   - **`D22`** — routed by the 86th audit as its B1 and still unfired. Default
+     **(i) THE RULE STANDS**; it writes nothing. Journal it with the required
+     wording: *"the owner did not rule by 2026-09-08, so the pre-registered
+     default fired"*, and record that it is reversible at any later date at no
+     cost because it writes nothing.
+   - **`D18`** — went red 2026-09-10T00:00; the overdue notice is appended to
+     `DECISIONS_NEEDED.md` by this audit. Default **MEASURE AND REPORT, GATE
+     NOTHING, RELAX NOTHING**: `lib_procwatch.sh` reads
+     `/proc/PID/status:VmHWM` while walking pids it already resolves and NAMES
+     any project python over the ceiling (name, never kill), and `run_spec`
+     records `peak_rss_mb` from `resource.getrusage(RUSAGE_CHILDREN)`. The
+     ~1.5 GB figure in `SYSTEM.md` **stands verbatim** — not raised, not
+     narrowed, not annotated. Journal wording: *"the owner did not rule by
+     2026-09-09, so the pre-registered default fired"*. Reversal: revert the
+     two commits.
 
-**B3 — Re-title `five-commitments-are-claim-dead-behind-foreclosures`.**
-`coverage` now reads **4**, not 5. A queue row that names a count and silently
-disagrees with the instrument it exists to discharge teaches its reader to trust
-the title over the tool. Re-title with today's number and a one-line note saying
-which commitment left the class and why. Do not touch the `DUE: 2026-09-11`.
+**B2 — Count the dark slot, and name the model.** The 86th audit's B2 and the
+Review's `FOR THE BUILDER` item 1 both ask for this; add one field. On waking,
+append to `docs/LOOP_JOURNAL.md`: consecutive slots skipped, the `week:all
+models` reading that released you, **and which model actually ran**. The third
+field is new and load-bearing: `week:Fable` is at 100% against `MODEL_FLOOR=95`,
+so you will wake on **Opus**, billed to the shared meter, and nothing currently
+records that substitution in a place a later audit can find.
 
-**B4 — Print the sustained rate beside the record one, and do not move the
-ratchet.** `MEASURED_DISCHARGE_CAPACITY = 6` is a one-cycle maximum;
-`throughput()` measures 0.43 disposed/cycle sustained, 14× lower. The AMBER pile
-warning divides by the maximum, so `review_queue_piled_on` fell 26 → 6 and
-flagged dates 6 → 2 on the strength of one record-setting morning. Add a second
-**reading** — dates over the *sustained* rate — printed beside the amber, as a
-METRIC and never a violation. **Leave `MEASURED_DISCHARGE_CAPACITY` and the
-`review_queue_piled_on` floor exactly where they are**; this adds a truer number
-beside an optimistic one, it does not re-litigate the raise, which was
-evidence-backed and honestly caveated in its own docstring.
+**B3 — `D26` option (iv), only if `D26` has been ruled or its default has
+fired.** Do not pre-empt it. As specified by the Review: `pace_gate`'s skip line
+additionally prints our own attributed spend beside the shared total, summed
+from `usage_ledger.jsonl`'s existing start/end pairs, and consecutive dark slots
+become a ratcheted metric. **Gate nothing, change no behaviour.** No spec
+declares `lib_usage.sh` in `IMPL_DEPS`, so no certificate is staled.
 
-**B5 — Standing, and it costs nothing: when the pace gate lets you back in
-(forecast 2026-09-10T17:23), the first act of the first slot is a GPU
-dispatch decision, not housekeeping.** W37 stands at **0.00 of 30** free
-Kaggle hours with the quota expiring 09-13. Everything on the Review's dated
-block that does not need GPU can wait an hour; 30 free hours cannot wait three
-days. If the twin-spread probe for `D1.0` is ready, it goes first — forward
-passes only, both branches pre-registered on the row, W37 and never W36.
+**B4 — New, from this audit's (b): the pacing arithmetic has no reader.** No
+instrument in this repo can print *"the line closes at +0.29 points/day; at this
+rate the builder wakes in 49 days; the week resets in 4"*. Both the Review and I
+computed it by hand this morning, from a shell, twice, and got different answers
+because we included different terms. Add it to the existing pacing print as
+**measurement only, gating nothing**: line slope, total measured meter rise over
+the trailing 24 h, the resulting closing rate, and the projected release date
+beside the week-reset date. **State the terms it includes.** The defect this
+catches is not the outage — it is that a 5.9-day foreclosure was legible only to
+whoever happened to do the arithmetic by hand, and the organ it forecloses is
+the one that cannot.
 
 ---
 
 ## FOR THE OWNER
 
-**1. `D22` — your deadline passed and the default fired. Nothing changed, and
-that is the point.** You did not rule by 2026-09-08 on whether the builder may
-draft redesigns, so **(i) THE RULE STANDS** fired: design authority stays with
-the Review. Nothing was written, no threshold moved, `GOAL.md` is untouched. You
-may still rule (ii) or (iii) at any later date at no cost. Worth knowing: the
-Review, which made the ask, told you on 09-08 that its own evidence had weakened
-and asked you to **wait a week and re-measure on 09-15** instead of granting it.
-The default and the author's current preference agree.
+**1. There is a one-line lever, it is already permitted, and it is yours.**
 
-**2. `D26` needs you by tomorrow, and I have added evidence that changes what
-option (i) costs.** The Review is right that `pace_gate` starved the builder on
-a shared meter — I confirmed every number independently. What it did not
-measure: **`week:Fable` reads 95%, the loop's `MODEL_FLOOR` is 95, and 72% of
-that meter is not the builder's either** (27 of 95 points are ours, summed over
-28 measured runs; 48 points arrived in the 22 hours since the builder last ran).
-So option (i) does not put the builder back on Fable — it puts it on **Opus**,
-via `FALLBACK_MODELS`, billed against the very meter (i) has just stopped
-gating. **I still think (i) is probably the right call**; the pace line should
-measure what its own comment says it is about. But you should rule on it knowing
-it buys Opus slots, not Fable slots. Appended to `D26` as an evidence addendum.
+`pace_gate` returns 0 — proceed — on the mere existence of `.usage-resumed`
+(`lib_usage.sh:76`), which the file's own comment calls the owner override:
+*"an explicit 'make it continue' outranks a smoothing heuristic."*
 
-**3. The bill for this, so it is a number and not a worry: 30 free GPU-hours,
-expiring Sunday, 0.00 spent.** This is the third time in six weeks the loop has
-gone dark across a Kaggle expiry — 8.82 hours died in W32, 22.11 in W33, and
-this week the whole 30 are exposed. Nothing in the project is broken; the
-compute simply cannot be spent by an agent that is not awake. **If you want
-those hours used, the two levers are yours and both are on your desk today**:
-rule `D26` (i), or run `claude` less on this account between now and Sunday.
-There is no third lever the system can pull for itself, and I would rather say
-that plainly than route it as work.
+    cd /home/opc/jackthelearner
+    printf 'ceiling=90\nuntil=%s\n' "$(date -d '2026-09-14 05:23' +%s)" > .usage-resumed
 
-**4. `D18`'s `decide_by` is today.** Its default is measure-and-report,
-gate-nothing, relax-nothing — the SYSTEM.md ~1.5 GB memory ceiling stands
-verbatim and is left visibly breached rather than quietly adjusted. It fires
-tomorrow if you are silent, and firing it costs nothing and reverses in two
-reverted commits. Also live: `D26` 09-10, `D24` 09-11, `D25` 09-13, `D19`
-09-14, `D20` 09-18.
+This suspends **pacing only**. The 90% hard stop (`usage_gate`) stays fully
+armed and is what the `ceiling=` line feeds; at today's 68% there are 22 points
+of headroom beneath it. It expires by itself at the week reset. I am naming it
+rather than pulling it: it is your ceiling and your account, and my brief
+forbids me widening what this project may take.
 
-**5. NO-DECISION, for your awareness only: four of your own constitutional
-commitments have no living falsifiable claim.** *"Too cold kills him"*
-(thermal), smell, balance, and shelter-building — your own image of success —
-are all CLAIM-DEAD: every claim spec parked or foreclosed, each parking legal
-and evidence-backed at the time. Three of the four trace to a single cause the
-Review named yesterday as one disease across five fronts: **our tasks are too
-easy for our instruments to say anything about them** — nulls that hold the
-roof, worlds that separate nothing, oracles that cannot. It is routed
-(`five-commitments-are-claim-dead-behind-foreclosures`, DUE 09-11) and going to
-the Sunday FULL as one question rather than five. Nothing for you to rule on;
-I am telling you because it is the gap between the ladder and your goal, and it
-has been open since 08-25.
+**Without it, on this audit's arithmetic, the builder does not run again until
+2026-09-14 05:23 — 5.9 days dark, the largest such loss in this project's
+history — and W37's 30 free GPU-hours expire on 09-13, unspent, as the fourth
+allocation in six weeks to die that way.**
+
+**2. `D26`'s `decide_by` is today.** Both the Review (`6e79f7d`) and this audit
+recommend option **(i) ATTRIBUTE THE LINE** — `pace_gate` compares against this
+project's own cumulative spend from `usage_ledger.jsonl` rather than the shared
+total, with the 90% stop unchanged. Priced honestly and against our own
+recommendation: (i) resumes the builder on **Opus**, because `week:Fable` is at
+100%, billed to the meter (i) just stopped gating. It is a Fable price for an
+Opus outcome. The armed default is **(iv) MEASURE ONLY**, which is the only
+*legal* default — a default may not widen a gate — and which fixes nothing.
+
+**3. A structural question this audit raises and does not answer, because the
+answer is a gate change and gates are yours.** `pace_gate` is applied to the
+builder with no exemption and to the overseer with a daily one, and **not at all
+to the Review or the field watch**. Of the 2.29 points/day the line recovers
+against the external draw, the two unpaced/exempt document organs spend 2.0.
+Whatever is decided about attribution, the ordering question is separate and
+survives it: *when this project is rationed, which organ eats last?* Today it is
+the only one that can move the creature. I have not proposed a number — that
+would be widening or narrowing a gate, which is not mine to do.
+
+**NO-DECISION:** items in *The audit, section by section* are a status report;
+sections 1, 2, 6 and 7 are clean and there is nothing there to rule on.

@@ -12388,3 +12388,53 @@ last gained a PASS at a non-Tier-0 spec. Both were routed as 86th audit B2.
 its OUTPUT artifact is and age *that*, separately from asking whether it ran.
 If the only artifact you can point at is its own log, you are measuring the
 heartbeat of the thing that decides not to work.
+
+---
+
+## A rationing rule needs an ORDERING, or the organ that produces evidence eats last
+
+*(87th audit, 2026-09-10, from the second day of the `pace_gate` blackout —
+sibling to the 86th's heartbeat lesson, and a different defect in the same gate.)*
+
+`pace_gate` spreads this project's spend across the week so the loop is still
+awake when the free GPU quota expires. It says **how much** may be spent per
+hour. It says nothing about **who** spends it, and it is not applied uniformly:
+
+    scripts/ladder_loop.sh:183   pace_gate    builder,  EVERY slot, no exemption
+    scripts/overseer.sh:79       pace_gate    overseer, 1 of 4 audits exempt daily
+    scripts/review.sh:30         usage_gate only        NOT PACED
+    scripts/field_watch.sh:32    usage_gate only        NOT PACED
+
+Under scarcity that ordering is the whole behaviour of the system, and nobody
+chose it. Measured over the blackout's second full day: the pace line rises
+**9.29 points/day**; the meter rose **9.0** (7 external, 2 ours); so the line
+closed on the meter at **+0.29/day** against a **14-point** gap — 49 days, on a
+week that resets in 4. Remove just the two unpaced document organs and the same
+arithmetic reads **+2.29/day and a 6-day release.** The two organs that write
+prose consumed **87% of the headroom** that would have restarted the one organ
+that writes ledger rows, and each of them individually costs about what a
+builder iteration costs (review 1.00, overseer 0.67, builder 0.64 pts/run).
+
+**The builder was never the expensive party.** 28 iterations cost 18 points on
+2026-09-07 — the day `demonstrated` went 106 → 108. It is simply the only
+consumer with an unexempted gate in front of it, so it absorbs the entire
+residual, and the residual is what is left after everyone without a gate has
+gone first.
+
+**Why no instrument caught it.** Every organ measured its own spend correctly
+and `usage_ledger.jsonl` recorded all of it. The defect is not in any one
+reading; it is that the *closing rate* — line slope minus TOTAL meter rise — was
+computed nowhere, so a 5.9-day foreclosure was legible only to whoever did the
+arithmetic by hand. Two organs did it by hand the same morning and got different
+answers, because one included our own spend and one did not. Routed as 87th
+audit B4.
+
+**The generalisation, for the next shared resource:** a budget rule that names
+a RATE but not an ORDER has silently chosen an order — and the default order is
+*whoever is gated last, starves first*. So for any rationing gate, write down
+which consumer eats last and check it is not the one producing the artifact the
+project is scored on. The corollary is the uncomfortable one and it is why this
+lesson exists: **an oversight apparatus that shares a budget with the thing it
+oversees can spend that thing into silence while every one of its own reports
+is accurate.** Ours did. Cost so far: 46 dark slots, 0 ledger settlements in
+67 hours, and W37's 30 free GPU-hours heading for expiry at 0.00 spent.

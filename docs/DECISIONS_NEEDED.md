@@ -5649,3 +5649,65 @@ alternative on offer is six dark days and a fourth expired GPU allocation.
 
 **Nothing here changes what is being asked or when.** `decide_by` stays
 2026-09-10.
+
+---
+
+## D18 — OVERDUE NOTICE, 2026-09-10 07:0x UTC (87th overseer audit). The deadline passed at midnight. Recorded, and routed to be fired.
+
+**No new question and no change to `D18`'s `DECIDE:` block, class, default or
+`decide_by`.** This entry exists because `decisions --check` now prints
+`D18  costs 0 specs  OVERDUE — DEFAULT IS DUE TO FIRE`, and an overdue default
+needs a home that is not a report page.
+
+`decide_by: 2026-09-09`. `experiments/decisions.py` marks an entry overdue at
+`(today - decide_by).days > 0`, so **`D18` went red at 2026-09-10T00:00 UTC**.
+The 86th audit ran at 06:37 on 09-09 and could not have seen it — on that
+morning the entry was due, not overdue. This is the first audit that can.
+
+**The owner did not rule by 2026-09-09, so the pre-registered default is due to
+fire.** This desk is not firing it. `D13` records that the overseer may not edit
+its own script, this organ's brief forbids it resolving an owner decision, and
+every armed default in this file's history — `D21`, `D17`, `D16`, `D15`, `D14`,
+`D13`, `D11`, `D9`, `D8`, `D7`, `D4`, `D3`, `D1` — is stamped *"fired … (builder)"*.
+Routed to the builder as 87th audit **B1** (`docs/OVERSIGHT.md`), together with
+`D22`, with the required journal wording.
+
+**What the firing executes, stated so nobody re-litigates it later.** The
+default is **MEASURE AND REPORT, GATE NOTHING, RELAX NOTHING**. The ~1.5 GB
+figure in `SYSTEM.md` **STANDS verbatim** — not raised, not narrowed, not
+annotated with an exception, and the default does not pick between reading (a)
+(the ceiling is right and the specs are in breach) and reading (b) (the ceiling
+is stale). Both remain the owner's. What fires is the instrumentation half
+ONLY: `lib_procwatch.sh` reads `/proc/PID/status:VmHWM` while walking pids it
+already resolves and NAMES any project python over the ceiling — name, never
+kill — and `run_spec` records `peak_rss_mb` from
+`resource.getrusage(RUSAGE_CHILDREN)` into every row. No run is refused, no spec
+is failed, no threshold moves, `GOAL.md` is not touched, and no commitment goes
+claim-dead: every currently dispatchable spec stays dispatchable. It picks only
+already-permitted actions — recording a metric the ledger already records for
+`T0.07`, and printing a line in a guard that already prints lines. It
+deliberately leaves the ceiling **BREACHED AND VISIBLE**.
+
+**THE FIRING IS BLOCKED ON AN ORGAN THAT IS SWITCHED OFF, and that is this
+notice's one new fact.** `D18`'s default is the only one of the three currently
+outstanding that requires *code*. The builder has run **zero of 46 slots** since
+2026-09-08T08:23, and on the 87th audit's arithmetic `pace_gate` does not
+release it before the week resets on 2026-09-14 05:23. So:
+
+    D22   OVERDUE 2026-09-09   default writes nothing   unfired, 2 days
+    D18   OVERDUE 2026-09-10   default is builder code  unfired  <- this notice
+    D26   decide_by TODAY      default is builder code  red tomorrow
+
+The armed-default mechanism was built to break deadlocks caused by **owner
+silence**. All three of these are now waiting on **builder absence**, which is a
+case it has no clause for, and which no deadline in this file can cure. Stated
+here rather than only in `OVERSIGHT.md` because this is the file the defaults
+live in.
+
+**The deadline is NOT being extended.** A deadline that moves when it is reached
+is the deadlock the armed-default mechanism replaced. `D18` is overdue as of
+today and stays overdue until the firing is journalled.
+
+**Reversal:** revert the two commits; the ceiling is unchanged either way, and
+the owner may rule (a) or (b) at any later date at no cost — the default
+deliberately chose neither.
