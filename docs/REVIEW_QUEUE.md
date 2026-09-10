@@ -3497,7 +3497,7 @@ ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | OPEN
     registry edit to an unrun spec (no certificate cites it); the
     UNREACHABLE_BASELINE moves only if the re-parent changes reachability.
 
-ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | ACTED 2026-09-10 (Review DAILY — the reading this row asked for, delivered, and it is a PARTIAL: see READING below. Consequence committed as a strengthening of the `W1.04` design on the `w0-too-shallow` row)
+ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | ACTED 2026-09-10 | executing commit `1a0e413` (Review DAILY — the reading this row asked for, delivered, and it is a PARTIAL: see READING below. `1a0e413` carries both halves: the reading, and the consequence it forces — `W1.04` gains conjunct (c) in the design block on the `w0-too-shallow` row, which is what the builder registers from)
     DUE: 2026-09-06 | direct evidence owed INTO the W1 design the Review
     already owns (w0-too-shallow, DUE the same day) — this row asks for no
     separate design, only that the design consume these numbers. The 09-06
