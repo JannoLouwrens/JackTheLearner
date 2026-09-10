@@ -3520,7 +3520,7 @@ ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, class
     W1 fork and must not be designed twice — but the proximate reason today is
     capacity, mine. 09-12 carries 2 rows.
 
-ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | OPEN
+ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | DISPOSITIONED 2026-09-10 (Review DAILY — sub-question (b) ANSWERED YES on evidence that did not exist when this row was written, and the row's own declared bill CORRECTED from zero to real. Sub-question (a) re-dated to 09-15 with its premise materially weakened. See ANSWER (b) below)
     DUE: 2026-09-10 | two build questions owed by the Review — dated OFF the
     09-06 pile deliberately (the 65th/66th audits both flag that docket at 7
     rows vs measured capacity 1/cycle); only the re-parent sub-question rides
@@ -3544,6 +3544,54 @@ ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | OPEN
     MECHANICAL bill: re-parenting LF.01 -> W1-line in depends_on is a
     registry edit to an unrun spec (no certificate cites it); the
     UNREACHABLE_BASELINE moves only if the re-parent changes reachability.
+
+    ANSWER (b), 2026-09-10 (Review DAILY) — **YES, the apparatus is reusable,
+        and the row's declared bill is wrong.** When this row was written on
+        2026-09-03 its premise was *"LG.00 has no rows"*. **`LG.00` PASSED on
+        2026-09-06** — attempt 7, `2438502`, `spec_sha 0c06aa4612ede938`,
+        `impl_sha e2d9b4d0350951b5`, seeds 0/1/2, 1.33 s. It measured
+        `grounded_knowledge_advantage` **0.5327 ± 0.0489** (`jack_acc_life`
+        0.8039 against `jack_acc_certified` 0.7301) while its control lane
+        measured `advantage_general` **−0.2000** at a std of 2.8e−17 across
+        all three seeds, with `general_retention` 0.7273. So the frozen-mouth
+        strip apparatus is not a hypothesis any more: it exists, it runs in
+        under two seconds on CPU, and **it already carries the exact control
+        shape `LG.11` needs** — a general-knowledge lane that must NOT show
+        the advantage, which is `GOAL.md`'s "smarter inside his life, dumber
+        outside it" asymmetry as a live number. `LG.11`'s control clause may
+        assume reuse.
+        **BILL CORRECTION, and this is the part that would have been
+        discovered at run time.** The `SEMANTIC bill: none today` line
+        directly above is now FALSE, and it was true when written. `LG.00`
+        holds a live PASS certificate pinned to `impl_sha e2d9b4d0350951b5`.
+        Any edit to the strip apparatus made *in order to serve `LG.11`* —
+        re-telling it a corpus, widening what "strip" means, adding a telling
+        channel — stales that certificate and owes `LG.00` a re-buy. The
+        reuse is free to ASSUME and not free to IMPLEMENT. Whoever builds
+        `LG.11` extends the apparatus additively or pays for `LG.00` again;
+        the one thing they may not do is edit the strip in place and let the
+        `impl_sha` drift silently, which `LG.00`'s own amendment history
+        (`2026-09-07`, `PROGRESS-FTB-2`) shows this project has already had
+        to reconstruct once.
+    DUE: 2026-09-15 | **sub-question (a) ONLY; (b) is answered above and does
+        not return.** Re-dated with its premise WEAKENED rather than intact,
+        which is the reason it is worth a fresh sitting rather than a rubber
+        stamp: (a) asks whether the matched fact sets can be built before W1
+        exists, on the stated ground that *"nothing on the ledger certifies
+        any of them as lived rather than sensed"*. `LG.00`'s PASS is a
+        counter-example in the making — it already separates a `life` corpus
+        from a `certified`/`general` one and measures a 0.53 gap between them
+        — and `TA.01`/`TA.02` (one-trial aversion, both PASS) are the
+        strongest candidate certificates for a primitive learned by
+        CONSEQUENCE rather than by sensor. What this desk will NOT do in the
+        last minutes of a DAILY is declare (a) answered on that basis:
+        settling it requires reading how `LG.00` SOURCES its life corpus —
+        whether from lived `W0` episodes or from synthesised diary entries —
+        and a wrong answer there licenses a told-world rung built on a corpus
+        nobody lived, which is the precise failure `LG.11` exists to detect.
+        Dated 09-15 beside the two weld-root rows: same builder-dark
+        constraint (`D26` addendum, 09-10), and 09-13 carries 13 rows against
+        a capacity of 6.
 
 ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | ACTED 2026-09-10 (Review DAILY, executing commit `1a0e413` — the reading this row asked for, delivered, and it is a PARTIAL: see READING below. `1a0e413` carries both halves: the reading, and the consequence it forces — `W1.04` gains conjunct (c) in the design block on the `w0-too-shallow` row, which is what the builder registers from)
     DUE: 2026-09-06 | direct evidence owed INTO the W1 design the Review
