@@ -2131,6 +2131,35 @@ ROUTED: reparenting-the-welded-fifteen | 2026-08-31 | aabced4 (B3 blast radii) +
         downstream of Sunday's design, not beside it; the bundling rule binds
         world EDITS to one edit window, and re-parenting edits the registry,
         not playground.py. Paired with the GEN-corpses row, same surgery.
+    DUE: 2026-09-15 | **BUNDLED with `goal-cites-four-specs-that-resolve-to-
+        corpses` as ONE question (Review DAILY 09-10).** The pairing is not
+        new — the clause directly above already says "Paired with the
+        GEN-corpses row, same surgery" — what is new is that they now carry
+        ONE date, so they cannot be answered inconsistently on two mornings.
+        Both ask what happens to specs welded behind dead roots; the roots
+        are the same two (`LC.03`, `LC.07`); and the answer is registry
+        surgery in both cases. Designing them apart is how you get two
+        incompatible re-parent trees.
+        **Why 09-15 and not today: the input is builder work and the builder
+        is measurably switched off.** This row's own re-arm makes it
+        downstream of the W0/W1 answer, and the operative half of that answer
+        is `W1.01`/`W1.03`/`W1.04` REGISTRATION — which only the builder can
+        do. `pace_gate` has skipped every slot since 2026-09-08T08:23 and
+        this morning's arithmetic (all-models 68%, elapsed 44%, line 54%)
+        releases it no earlier than **2026-09-11T22:07**, and not before the
+        week's own reset on **2026-09-14T05:23** at the external drain rate
+        actually measured (see `D26`'s 09-10 evidence addendum). 09-15 is the
+        first Monday on which the input can exist under BOTH forecasts. It is
+        also not Sunday: 09-13 already carries 13 rows against a measured
+        capacity of 6, and 09-15 carries 2.
+        **The half that is NOT waiting on the builder, stated so it is not
+        rediscovered:** `LC.07`, one of the two weld roots, has had its arena
+        declared VENUE-UNAFFORDABLE by this desk on 2026-09-06, and the
+        affordability question is live on the OWNER's desk as `D24`. So four
+        of the seven corpse citations cannot be resolved by any surgery this
+        desk performs — their root's fate is a ruling, not a design. Whatever
+        lands on 09-15 must therefore answer for `LC.03`'s three and
+        `LC.07`'s four SEPARATELY, and say which of the two it is repairing.
     Question: which of the specs welded behind foreclosed/parked roots get
     re-parented off those roots, and onto what evidence. The set, computed
     over `depends_on` at registry 211 (2026-08-31): **15 specs**, from three
@@ -3141,6 +3170,25 @@ ROUTED: goal-cites-four-specs-that-resolve-to-corpses | 2026-09-02 | Review-08-3
     not decide this one alone" while thinning the Sunday sitting. Paired
     with `reparenting-the-welded-fifteen` — the four GEN ids' fate is the
     same registry-surgery question.
+    DUE: 2026-09-15 | **BUNDLED with `reparenting-the-welded-fifteen` as ONE
+        question (Review DAILY 09-10); the full reasoning is written on that
+        row and governs this one too.** In short: same two weld roots
+        (`LC.03`, `LC.07`), same surgery, one date so the two cannot be
+        answered inconsistently on two mornings. The input is `W1.01`/`W1.03`/
+        `W1.04` REGISTRATION, which is builder work, and `pace_gate` has
+        skipped every slot since 2026-09-08T08:23 with a release no earlier
+        than 2026-09-11T22:07 and possibly not before the week resets
+        2026-09-14T05:23 (`D26` evidence addendum, 09-10). 09-15 is the first
+        date the input can exist under both forecasts, and it carries 2 rows
+        against a capacity of 6 where 09-13 carries 13.
+        And the constraint this row must not forget: **four of its seven
+        citations are welded behind `LC.07`, whose arena this desk declared
+        VENUE-UNAFFORDABLE on 2026-09-06 and whose affordability is the
+        owner's open `D24`.** Those four are not repairable by design at all
+        until `D24` rules. `LC.03`'s three are. The 09-15 disposition owes a
+        separate answer for each group and must say which it is repairing —
+        the shrink-only ban on widening `GOAL_UNRUNNABLE_BASELINE` binds
+        either way.
 
 **WIDENED 2026-09-04 (68th audit B5, builder): the class is SEVEN, not four,
 and this row now owns all of it.** `coverage` reads `CITED-BUT-UNRUNNABLE:
