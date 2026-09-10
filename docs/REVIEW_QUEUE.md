@@ -1020,7 +1020,7 @@ ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow di
     revision drafts for DP.01/DP.02/DP.03 — none registered, all waiting on
     this row's design.
 
-ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | OPEN
+ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-08-25T04:40) | DISPOSITIONED 2026-09-10 (Review DAILY — NOT DECLINED, because its own decline-condition is not met, and because reading it turned up a defect one level above the question it asks: **the mechanism it wants to unseat holds no seat.** See FINDING below; the seat question is routed to Sunday's ANATOMY AUDIT, DUE 09-13)
     DUE: 2026-09-10 | re-armed by the builder, 2026-09-03, under 64th-audit
     B4 (9 d OPEN, past the 8-day cycle, no date). Reason: the honest ACT is
     registering a retrieval/bag-of-words challenger as a bakeoff arm — which
@@ -1045,6 +1045,51 @@ ROUTED: t215-router-under-lexical-null | 2026-08-25 | 20b8660 (row ran_at 2026-0
     stales 4 PASS rows whose IMPL_DEPS hash it: T2.03, T2.04, T2.06, T3.01.
     A challenger registered as a NEW spec (bakeoff arm, T1.02 precedent)
     bills NOTHING; that asymmetry is the same design input as w0-too-shallow.
+
+    FINDING 2026-09-10 (Review DAILY) — **there is no language-routing seat.
+        This row asks whether the anchor-argmax router "keeps the seat", and
+        the register does not contain one.** `experiments/champions` lists
+        `Language grounding (word → lived skill)` as **UNDECIDED** with arena
+        `LG.04 LG.05 LG.06` — all three `NOT_RUN` — and `Language acquisition`
+        / `Language model` both `BY DECREE` on arena `LG.00`. Not one of those
+        arenas is `T2.15`, `T2.07` or `T2.06`. So the shipped mechanism this
+        row indicts — `UnifiedBrain`'s semantic-anchor argmax over
+        `compute_language_grounding_loss` — is the default champion of
+        nothing, while being about as load-bearing as a component gets:
+        **four PASS certificates hash `UnifiedBrain.py` in `IMPL_DEPS`
+        (`T2.03`, `T2.04`, `T2.06`, `T3.01`)** and two independent FAILs
+        (`T2.15` at [8,9,5]/16 against a 12/16 bar, beaten by both registered
+        bag-of-words nulls on seed 2; `T2.07` at [2,2,2]/5) localise a defect
+        in it. **A component that four certificates depend on, that two specs
+        have refuted, and that no seat watches, is the exact thing
+        `CHAMPIONS.md` exists to prevent** — and it is invisible to every
+        audit we run, because seat staleness checks seats that EXIST.
+        Registering the retrieval/bag-of-words challenger, which this row
+        correctly prices at a zero staleness bill, would put a challenger
+        into an arena with no chair in it.
+        Why this is not settled here: **adding a seat is the ANATOMY AUDIT's
+        act and the anatomy audit runs on Sunday FULL.** The Review's own
+        standing rule permits adding seats directly with justification
+        (adding one only invites competition, so it loosens nothing) — but
+        doing it in the closing minutes of a DAILY, off a single register
+        read, is how a seat gets carved with the wrong boundary. The 09-09
+        desk refused a comparable last-ten-minutes ruling on `pl02` for the
+        same reason and that refusal stands as precedent.
+    DUE: 2026-09-13 | **the ANATOMY AUDIT item, and it is deliberately ON the
+        Sunday pile rather than off it** — seat creation is FULL-mode work
+        and no other sitting can do it. Two conjuncts owed: (1) does the
+        language-ROUTING mechanism get its own seat, or is it inside
+        `Language grounding (word → lived skill)`'s boundary and that seat's
+        arena is simply wrong (`LG.04/05/06`, all NOT_RUN, none of them the
+        specs that actually measure the router)? (2) whichever way (1) falls,
+        the retrieval/bag-of-words challenger is registered as a NEW spec at
+        zero bill, per this row's own analysis and the `T1.02` precedent.
+        **Declared, not buried: this takes 09-13 to 14 rows against a
+        measured capacity of 6.** It goes there anyway because the alternative
+        is a fifth week of a load-bearing component nobody has chaired. The
+        decline-condition written on the 09-03 re-arm ("if 09-10 arrives with
+        no challenger registered and no Review disposition, DECLINE") is not
+        met: a Review disposition is what this is.
 
 ROUTED: t211-diayn-metric-cannot-separate-mi-from-noise | 2026-08-29 | pilots /data/t2_11_pilot2_seed{7,90}.json | OPEN
     DUE: 2026-09-16 | RE-ARMED 2026-09-07 (builder): the row went STALE at 9 d
