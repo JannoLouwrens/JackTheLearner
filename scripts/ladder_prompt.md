@@ -581,9 +581,30 @@ was decided this morning, and the answer is below.**
       and the gate falls back to the declared raw-margin form with the change
       of units written on the row. **The 3.0σ bar does not move. Random stays
       in the run as a reported floor.** The successor gate is committed in a
-      commit that is NOT a dispatch commit, and attempt 3 goes to **W37 (opens
-      09-13)** — W36 has ~12.4 GPU-h left against attempt 2's measured 17.61 h,
-      so it does not fit and must not be squeezed.
+      commit that is NOT a dispatch commit, and attempt 3 goes to **W37**.
+      W36 has ~12.4 GPU-h left against attempt 2's measured 17.61 h, so it
+      does not fit and must not be squeezed.
+      > **CORRECTION, Review DAILY 2026-09-10 — "W37 (opens 09-13)" WAS WRONG
+      > AND IT WAS THE EXPENSIVE KIND OF WRONG.** `2026-W37` is Monday
+      > **2026-09-07** through Sunday **2026-09-13**. It is THIS week. It does
+      > not open on 09-13 — **it CLOSES on 09-13**, and it opened three days
+      > before you read this. The error is one ISO week-boundary off: W36
+      > ended Sunday 09-06, so W37 began the next MONDAY, not the next Sunday.
+      > It travelled from `LOOP_JOURNAL` into three queue rows and into this
+      > block, and every copy said "wait for a window that is already open".
+      > **`experiments/gpu_budget.json` has no `2026-W37` key at all: 0.00 of
+      > 30 free Kaggle GPU-hours charged, with the week already 3 days gone.**
+      > So: **do not defer the attempt-3 dispatch to 09-13. The quota is live
+      > NOW and dies at the end of 09-13.** The probe-and-gate precondition is
+      > UNCHANGED and still binds — twin-spread result written onto the row,
+      > successor gate committed in a non-dispatch commit, and only then a
+      > dispatch. This correction moves no gate, authorises no unchanged
+      > re-dispatch, and does not shorten the precondition; it corrects a date
+      > and nothing else. Read the clock against `pace_gate` too: on this
+      > morning's arithmetic you are released no earlier than **09-11T22:07**,
+      > which leaves under ~26 hours against attempt 2's measured 17.61 h.
+      > If it does not fit, say so on the row rather than squeezing it — but
+      > decide that against the real deadline, not a phantom opening.
 
    2. **`UB.10`'s battery redesign.** Ordered on
       `ub10-seed-fragility-and-saturated-battery` (DISPOSITIONED 09-08, **DUE
@@ -650,7 +671,9 @@ was decided this morning, and the answer is below.**
    answered this morning, and the answer authorises **the probe and the gate**,
    not a dispatch. Attempt 3 exists only once (1) the twin-spread probe result
    is written onto the row and (2) the successor gate is committed in a
-   non-dispatch commit — and then into W37, not scraped out of W36. **An
+   non-dispatch commit — and then into W37, not scraped out of W36. **W37 is
+   THIS week, 09-07 to 09-13 — see the correction under item 1; it closes on
+   09-13, it does not open then, and it stands at 0.00 of 30 hours.** **An
    unchanged re-dispatch stays forbidden under every branch.** `VOID-FORECLOSED`
    was refused on arithmetic: every trained arm cleared attempt 2's gate
    (13.02 / 12.99 / 10.80 / 10.53σ, margin 3.37, winner aprime), so nothing
