@@ -5561,3 +5561,91 @@ counter is what will show whether it worked.
 
 **Nothing here changes what is being asked or when.** `decide_by` stays
 2026-09-10.
+
+---
+
+## D26 — EVIDENCE ADDENDUM, 2026-09-10 06:5x UTC (Review, DAILY). The forecast this entry was decided against has slipped by 28 hours in 24, and under the measured drain pattern `pace_gate` does not release the builder at all before the week resets itself.
+
+**No new question, no change to `D26`'s options or default. `decide_by` is
+TODAY and this is the last measurement that can reach the desk before the
+default fires.** Every number below is re-measured this morning, not quoted.
+
+**The forecast moved, and it moved the wrong way.** Yesterday's entry told you
+the builder was foreclosed until **2026-09-10T17:23 — 57 consecutive dark
+hours**. Re-deriving from the same arithmetic (`allow = 25 + ceil(65·elapsed/100)`,
+skip while `pct >= allow`) against this morning's readings — `week:all models`
+**68%**, elapsed **44%**, line **54%** — the release moves to
+**2026-09-11T21:06, and the first slot that can use it is 22:07: 85.7
+consecutive dark hours, 3.6 days.** Nothing was decided, nothing was spent, and
+the wait grew by 28 hours while the desk waited a day for an answer.
+
+**The cause is measured, not inferred, and this interval is cleaner than
+yesterday's.** `usage_ledger.jsonl` records **no organ run of this project
+whatsoever** between the overseer's `end` at 2026-09-09T06:50 (61%) and this
+morning's `start` at 2026-09-10T06:37 (68%). Not a builder slot, not a field
+watch, nothing. **+7 points, zero attributable, across a full day.** Yesterday's
+interval at least contained skipped builder slots to argue about; this one
+contains nothing at all. Re-summed over the whole week across all 37 completed
+organ runs: **26 points ours, 42 points not ours, 68% total — 62% external,
+the same ratio yesterday reported, now on a bigger number.**
+
+**And the reporting-lag explanation is now dead on its own evidence.** The
+ladder log shows the meter at a *flat* 67% for **thirteen consecutive hourly
+readings**, 2026-09-09T17:07 through 2026-09-10T06:07, then 68% at 06:37. A
+meter that is quiet all night and climbs 09:07→17:07 is a person's working day.
+It is not lag from anything of ours; nothing of ours ran in either half.
+
+**THE NUMBER THAT SHOULD DECIDE THIS, and it is not in the entry above.** The
+09-11 release assumes the external consumer never draws again. The measured
+pattern says otherwise, and the arithmetic of the two rates is the finding:
+
+    the pace line rises            65 points over 168 h   =  9.3 points/day
+    the external draw measured
+      09-08T08:23 -> 09-10T06:37   +37 points over 46 h   = 19.3 points/day
+      09-09T06:50 -> 09-10T06:37    +7 points over 24 h   =  7.0 points/day
+
+**At the gentler of the two measured rates the line closes on the meter at 2.3
+points a day against a 14-point gap: ~6 days.** The week resets 2026-09-14
+05:23. So under the drain this project has actually measured, `pace_gate`
+**never releases the builder at all** — the blackout ends because the week rolls
+over, not because the gate decided anything. That is a **6.0-day loss of the
+only organ that can move the creature, the largest in this project's history,
+exceeding the 4.3-day August blackout that expired three GPU allocations.**
+
+**The bill is already being paid in the currency the gate was built to
+protect.** `pace_gate`'s own justifying comment says its purpose is that "the
+loop is still awake when the GPU quota expires". `experiments/gpu_budget.json`
+charges **0.00 of 2026-W37's 30 free GPU-hours**, and W37 ends Sunday 2026-09-13.
+Measured against the same file: W32 spent 16.61, W33 7.89, W34 1.62, W35 19.20,
+W36 17.73. Under the static forecast the builder wakes Friday 22:07 with about a
+day to dispatch and land a GPU job; under the measured-drain forecast it wakes
+after the allocation is already gone. **W37 is on course to be the fourth
+allocation in six weeks to die largely unspent, and the mechanism killing it
+this time is the cure that was installed to save it.**
+
+**The default fires today, DURING the occurrence, and does not end it.**
+Yesterday's overseer addendum noted (iv)'s counter "arrives late — the remedy
+lands after the occurrence it would have caught". That reading was generous.
+The occurrence is still running, will still be running on Friday, and (iv)
+changes no behaviour: it prints. This desk armed (iv) because a default may not
+loosen a gate and it stands by that constraint. **It is not a fix and it was
+never claimed as one.**
+
+**The Review's recommendation is UNCHANGED and now carries a larger number.**
+Quoted verbatim from `FOR THE OWNER` item 1 of 2026-09-09, so the instrument
+still matches it: *"My recommendation is **(i) ATTRIBUTE THE LINE**: `pace_gate`
+compares its line to our own summed spend while `usage_gate`'s 90% hard stop
+keeps reading the shared pool exactly as it does today. That is not a loosening
+of this project's real ceiling; it is the removal of a second, unintended
+ceiling nobody set and no decision ever ratified."*
+
+**With the overseer's Fable correction folded in, and it has got worse too.**
+`week:Fable` read 95% yesterday; **it reads 100% this morning.** Under (i) the
+builder clears `pace_gate`, is refused Fable by `model_gate` at `MODEL_FLOOR=95`,
+and walks to Opus at a per-slot cost nobody has measured, until the Fable meter
+resets 2026-09-14 05:00. That is the honest price of (i) and the owner should
+rule with it in view. **It does not change the recommendation**, because the
+alternative on offer is six dark days and a fourth expired GPU allocation.
+
+**Nothing here changes what is being asked or when.** `decide_by` stays
+2026-09-10.
