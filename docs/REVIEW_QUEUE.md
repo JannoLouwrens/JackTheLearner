@@ -550,6 +550,35 @@ and need the world-edit window, which is now its own row
   everywhere, this spec PASSes trivially and should be retired rather than
   kept as decoration — and it must say so on its own row.
 
+  > **STRENGTHENED 2026-09-10 (Review DAILY), on the reading owed by
+  > `w0-kills-a-forager-by-integrity-at-25-minutes`.** As published above,
+  > `W1.04` names LF.01's 25-minute integrity death as motivation and then
+  > constrains only the horizon we DECLARE. That is not enough, and the gap is
+  > arithmetic: a horizon is a number a designer picks, and a body the world
+  > wrecks at ~1477 sim-s caps the experience actually obtainable no matter
+  > what horizon is written down. As written, `W1.04` PASSes a venue where
+  > every life ends at 25 minutes simply by declaring a 20-minute horizon —
+  > it would certify the exact defect that produced it. So a THIRD conjunct,
+  > and it is strictly harder than the two it joins:
+  >
+  > **(c) THE LIFE IS LONGER THAN THE HORIZON.** For every registered W1
+  > claim, the MEASURED survival time — 5th percentile across lives, not the
+  > mean — must be >= the declared episode horizon, with the per-life
+  > termination CAUSE reported on the ledger row. If lives end before the
+  > horizon closes, the horizon is fiction and the spec FAILs; it may not be
+  > repaired by shortening the horizon to fit the deaths, because that is the
+  > move conjunct (c) exists to forbid. *Control:* a twin run with the
+  > terminating mechanism disabled must show the 5th-percentile survival rise
+  > above the horizon under the identical measurement — a survival gate that
+  > cannot tell a fatal world from a survivable one is measuring nothing.
+  >
+  > This can only RAISE the bar: nothing that would have passed `W1.04` as
+  > published passes it more easily, and a venue that already grants hour-long
+  > lives satisfies (c) for free. `W1.04` is NOT REGISTERED (it waits on
+  > `w1-world-edit-window`), so this amendment stales no certificate, moves no
+  > threshold on any run row, and costs no re-run — it changes what the
+  > builder registers, before it is registered.
+
 **ORDERING, and it is not the order the pile is written in.** `W1.00` first
 (cheap, no world edit, and it is the one that could show a third of this row's
 evidence was under-nulled). `W1.02` second (no world edit, and `W1.01`/`W1.03`
@@ -3468,7 +3497,7 @@ ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | OPEN
     registry edit to an unrun spec (no certificate cites it); the
     UNREACHABLE_BASELINE moves only if the re-parent changes reachability.
 
-ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | OPEN
+ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-B6 (LF.01 attempt 1, 633b5bb) | ACTED 2026-09-10 (Review DAILY — the reading this row asked for, delivered, and it is a PARTIAL: see READING below. Consequence committed as a strengthening of the `W1.04` design on the `w0-too-shallow` row)
     DUE: 2026-09-06 | direct evidence owed INTO the W1 design the Review
     already owns (w0-too-shallow, DUE the same day) — this row asks for no
     separate design, only that the design consume these numbers. The 09-06
@@ -3515,6 +3544,39 @@ ROUTED: w0-kills-a-forager-by-integrity-at-25-minutes | 2026-09-03 | 67th-audit-
     the W1 design consume its numbers, and that design now EXISTS
     (w0-too-shallow DISPOSITIONED 09-06, W1.00-W1.04 published). What is owed
     is a reading, not a fork. 09-10 carries 4 rows against a capacity of 6.
+    READING 2026-09-10 (Review DAILY) — **the design consumed the number as
+        an ILLUSTRATION and not as a CONSTRAINT, and the difference is the
+        whole row.** `W1.04` as published names this row's evidence by name:
+        "a blind twin holding 98.9% of a 12.0 s horizon and a forager dying
+        of integrity at 25 minutes are both 'the window closed before the
+        thing we are claiming had time to happen'". So the answer to *did the
+        W1 design account for a body the world wrecks in 25 minutes?* is:
+        **it cited it, and then wrote a spec that cannot see it.** `W1.04`
+        constrains the horizon a designer DECLARES to be >= 3x the measured
+        time-to-consequence. A declared horizon is a free variable; a body
+        that wrecks at sim_s 1476.9 +/- 382.0 is not. A venue in which every
+        life ends at 25 minutes satisfies `W1.04`-as-published by declaring a
+        20-minute horizon — the spec would certify the exact defect that
+        produced this row. Nothing in the five published specs bounds the
+        life; `W1.01` bounds the passive arm's SCORE, `W1.02` bounds the
+        outcome metric's RESOLUTION, `W1.03` bounds the world's FEATURES, and
+        none of the three would fail on a world whose bodies die in 25
+        minutes. This row's real question — *are lives measured in hours
+        attainable* — was unasked by the design that quoted it.
+        CONSEQUENCE, committed with this reading: `W1.04` gains a third
+        conjunct **(c) THE LIFE IS LONGER THAN THE HORIZON** (5th-percentile
+        measured survival >= declared horizon, per-life termination cause on
+        the ledger row, and an explicit ban on repairing it by shortening the
+        horizon to fit the deaths), with a mechanism-disabled twin as its
+        control. Written into the `W1.04` block on `w0-too-shallow`, which is
+        what the builder registers from. STRENGTHEN-ONLY and free: `W1.04` is
+        not registered, so no certificate stales, no threshold moves on any
+        run row, and no re-run is owed. What this reading does NOT settle,
+        named rather than absorbed: whether the 25-minute cap is a W0
+        integrity BUG or an honest property of a hostile world. Conjunct (c)
+        makes it fail loudly instead of passing quietly; it does not diagnose
+        it. That diagnosis rides `w1-world-edit-window` (DUE 09-13), which
+        already holds the two rows behind it and now holds this too.
 
 ROUTED: cpu48h-class-self-forecloses-the-day-meter | 2026-09-04 | 68th-audit-B6 (finding 5) | DISPOSITIONED 2026-09-08 (Review DAILY — the ROUTING CONSEQUENCE only, exactly as this row instructed for the case where the owner has not yet answered: (i)+(iv) SCHEDULE AROUND IT, wall clock stands, no ceiling raised or split. The unit question stays armed on `D20`, decide_by 2026-09-18. Design below)
     DUE: 2026-09-08 | deliberately NOT 09-06 (the audit's own B7: the Sunday
