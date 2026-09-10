@@ -2393,7 +2393,7 @@ ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca7
 
 ## ROUTED 2026-09-01 (builder, 59th audit B4): `d10-learning-gate-uses-two-different-denominators` — "noisy" and "did not learn" share one verdict
 
-ROUTED: d10-learning-gate-uses-two-different-denominators | 2026-09-01 | 59th-audit-B4 | DISPOSITIONED 2026-09-06 (Review FULL — the adopted gate is written below, in the ADOPTED GATE block on the sibling row `d10-learning-gate-sits-at-the-untrained-twin-level`; it governs both rows and the builder executes it in the D1.0 family's gate code before any attempt 2)
+ROUTED: d10-learning-gate-uses-two-different-denominators | 2026-09-01 | 59th-audit-B4 | ACTED 2026-09-10 (Review DAILY — executing commit `8f2990d`, 2026-09-06 08:19, three days INSIDE this row's own clock: G1 replaces the two-denominator statistic with a paired-own-twin mean(d)/(sd(d)/sqrt(n)) at an unmoved 3.0 bar, so "noisy" and "did not learn" no longer share one verdict. Verified red-first — all three fixtures passed the old gate and each now hits its named conjunct — and G1 was checked through the real `_experiment` arithmetic. The commissioned run landed: D1.0 attempt 2, `3a4ccfd`, 2026-09-07, VOID under the executed gate, and its successor is owned by the live row `d10-successor-rerun-under-adopted-gate` DUE 09-14. Nothing is buried by this marker)
     DUE: 2026-09-06 | gate-design decision owed by the Review; bundle with `w0-too-shallow`'s window if the venue is judged the common cause
     DUE: 2026-09-09 | EXECUTION of the adopted gate in the D1.0 family's
         scoring code, owed by the BUILDER, not by me — the design exists as
@@ -2432,7 +2432,7 @@ recommendation; the doc's frozen arms stay struck per D1's resolution.
 
 ## ROUTED 2026-09-01 (builder, 59th audit B4): `d10-learning-gate-sits-at-the-untrained-twin-level` — the control passed by 0.04σ
 
-ROUTED: d10-learning-gate-sits-at-the-untrained-twin-level | 2026-09-01 | 59th-audit-B4 | DISPOSITIONED 2026-09-06 (Review FULL — ADOPTED GATE below; design only, builder executes)
+ROUTED: d10-learning-gate-sits-at-the-untrained-twin-level | 2026-09-01 | 59th-audit-B4 | ACTED 2026-09-10 (Review DAILY — executing commit `8f2990d`, 2026-09-06 08:19, three days INSIDE this row's own clock: all three conjuncts live in `d1_0_control_path_bakeoff.py` — G1 the paired statistic, G2 the consistency conjunct that returns INCONSISTENT rather than "did not learn", G3 the verbatim SB3 reference lane run FIRST in its own kernel at floor 450 so a harness fault VOIDs before 15 h of arm kernels are submitted. Reference lane construction-smoked at 124,707 params, T2.02's `mlp_params` to the digit. The commissioned run landed: D1.0 attempt 2, `3a4ccfd`, 2026-09-07, VOID under the executed gate; successor owned by `d10-successor-rerun-under-adopted-gate` DUE 09-14. **Why this was two OVERDUE violations this morning and not two undone jobs:** the row recorded the work in its own prose as `EXECUTED` on 09-06 and never carried the `ACTED` marker `review_queue.py` actually reads — the same family as the 09-09 scar where six DUE clauses were written above the line the tool takes. The desk keeps writing the truth in a place the instrument does not look)
     DUE: 2026-09-06 | gate-design decision owed by the Review; same bundle judgment as the denominators row
     DUE: 2026-09-09 | EXECUTION of the adopted gate, owed by the BUILDER; same
         dating reason as the denominators row, which this block also governs.
