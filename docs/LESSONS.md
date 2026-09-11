@@ -12521,3 +12521,58 @@ not process — the same category as the 09-09 page's *"every instrument reporte
 health while the creature sat still."* Corrected in `DECISIONS_NEEDED.md` as a
 `D26` addendum, and B4 re-specified as 88th audit **B2**: print the flat-meter
 bound and the measured spread, and print **no single release date**.
+
+---
+
+## A missing key is not a zero — and read the code that WRITES a file before you
+## read a number out of it
+## (overseer, 88th audit, 2026-09-11, from the `2026-W37` GPU claim; found by the
+##  Review the same morning, verified from source here)
+
+Same morning as the lesson above, from the opposite desk, with the same shape.
+
+For three days, four documents — two of them this organ's — carried:
+
+    "gpu_budget.json has no 2026-W37 key at all: 0.00 of 30 free Kaggle
+     GPU-hours, with the week 3 days gone — the fourth allocation in six
+     weeks to die largely unspent."
+
+**The file has no `2026-W37` key because the week has not started.**
+`experiments/gpu.py:396` keys the budget with `strftime("%Y-W%U")`. `%U` weeks
+start **Sunday**, and the docstring says why: ISO `%G-W%V` *"kept charging
+Sunday's runs to the exhausted week, so the tracker refused jobs for the entire
+first day of every fresh Kaggle quota."* In the namespace the spending is
+actually accounted in, `2026-W36` is Sun 09-06 → Sat 09-12 and `2026-W37` opens
+Sunday 09-13. The live week held **17.72 h charged of 30 — the second-best of
+six — with 12.28 h left.** There was no dying allocation and never had been.
+
+**Two distinct defects, and the second is the expensive one.**
+
+**(1) Absence read as zero.** A missing dictionary key means *nothing recorded*,
+which is `not yet`, `not applicable`, `never opened` OR `genuinely zero`, and the
+file cannot tell you which. Reading it as zero manufactured an urgency argument
+that then escalated an owner decision.
+
+**(2) A desk that cannot run anything overwrote the judgement of the one that
+can.** The builder's own steering said *"attempt 3 goes to W37 (opens 09-13) —
+W36 has ~12.4 GPU-h left against attempt 2's measured 17.61 h, so it does not fit
+and must not be squeezed."* **That was correct, and derived from the code.** On
+09-10 the Review rewrote it to *"W37 IS THIS WEEK AND IT CLOSES 09-13"*, called
+it *"the day's real finding"*, and told the builder not to defer the dispatch;
+the 87th audit read the rewrite and ratified it rather than checking it; this
+organ then carried it a third time. Restored verbatim at `4bd81ec`.
+
+**The generalisation.** Before quoting a number out of a state file, open the
+function that writes it — the key format, the units, the rollover, and what an
+absent entry means are properties of the writer, never of the reader's
+expectations. And the governance corollary, which is the one that cost real
+steering here: **when a document organ's correction contradicts a number the
+executing organ derived from the code, the burden of proof is on the document
+organ.** The builder is gated, metered, ratcheted and falsified; its derivations
+survive that. A Review or overseer edit to its priority block survives nothing but
+its author's care. Two desks spent a day being confidently wrong about a file the
+switched-off organ had read correctly.
+
+Cost: three days of a false urgency argument in `D26`, one wrongly-rewritten
+priority block, and one *"the day's real finding"* that was the day's real error.
+Caught because the Review re-read its own finding instead of banking it.

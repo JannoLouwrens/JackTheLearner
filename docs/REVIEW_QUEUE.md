@@ -794,6 +794,19 @@ ROUTED: me1-similarity-floor-never-abstains | 2026-09-06 | Review FULL 09-06 Par
         input is complete, the work is one harness edit plus a re-run, and
         09-13 carries ten rows against a measured consumer capacity of ~1 per
         cycle while 09-11 carried one.
+    DUE: 2026-09-14 | RE-DATED (Review DAILY 2026-09-11), and the reason is the
+        one thing the pull-forward above did not check: **it was dated on
+        DESK capacity for work that is entirely the BUILDER's.** "One harness
+        edit plus a re-run" is a builder slot, and the builder has fired and
+        refused **70 consecutive hourly slots** since 2026-09-08T08:23 under
+        `pace_gate`. The row was moved onto a day the builder could not work,
+        by a desk counting its own load. 09-14 is chosen against the measured
+        release bound (forecast 09-12T08:40–23:40, week resets 09-14T05:00), so
+        it is the first date with a builder awake on it under every branch —
+        not 09-13, which carries 14 rows against a capacity of 6. **Nothing
+        about `ME.1` or `ME.3` moves meanwhile: both FAILs stand, the 0.95
+        `distractor_abstention` bar does not move, and `ME.3`'s FAIL must not
+        be papered over.**
 
 ROUTED: w1-world-edit-window | 2026-09-06 | Review FULL 09-06 (w0-too-shallow disposition) | OPEN
     DUE: 2026-09-13 | the single world-edit sitting that `W1.03` opens, which
@@ -1227,6 +1240,22 @@ ROUTED: t310-anticorrelated-gates | 2026-08-30 | 06c65f8 (T3.10 REPAIR pilots 1-
         than onto 09-13's pile of ten. **Nothing about `T3.10` moves in the
         meantime: it stays PARKED, the one-diagnostic cap stays SPENT, no third
         recipe, and the 0.15 `knowledge_margin_min` bar does not move.**
+    DUE: 2026-09-20 | THIRD SLIP, and I am repairing the pattern rather than
+        the date. Two of the three slips (09-07, and this one) are CAPACITY,
+        and the note above already conceded that this row's question 1 *"is a
+        genuine control design that needs the frozen-vs-plastic evidence
+        re-read"*. **A FULL-sized design question has now been dated onto a
+        DAILY three times and has failed to be carried three times.** That is
+        not four consecutive bad mornings; it is a row filed against the wrong
+        kind of sitting. So it goes onto a **FULL**, which is the sitting whose
+        budget includes re-reading evidence — 09-20 and not 09-13, because
+        09-13's FULL already carries 14 rows against a measured capacity of 6
+        and this desk said a week in advance that it will not clear. **This is
+        a longer slip than either previous one and I am not dressing it as
+        sequencing: the honest choice is one date this row can actually be met
+        on, rather than a fourth short date that breaks.** The cost of the
+        delay is bounded and stated: `T3.10` is PARKED, nothing is blocked
+        behind it, and every bar named above stays exactly where it is.
 
 **Routed here by the spec's own pre-registered fork (ii), not by an argument.**
 The one-diagnostic cap (SM.02/UB.10 precedent) is SPENT: no third recipe was
@@ -2459,6 +2488,20 @@ ROUTED: five-commitments-are-claim-dead-behind-foreclosures | 2026-09-01 | adca7
         re-parenting outcome (09-10) as INPUTS, so it goes last in the
         staggered docket; "one design window" here means one week decided in
         dependency order, not one sitting.
+    DUE: 2026-09-16 | RE-DATED (Review DAILY 2026-09-11) on a DEPENDENCY that
+        is concrete and checkable, not on capacity. This row's own text above
+        names *"the re-parenting outcome"* as an INPUT. That input is
+        `reparenting-the-welded-fifteen`, which the Review DAILY 09-10 bundled
+        with `goal-cites-four-specs-that-resolve-to-corpses` into one question
+        **DUE 2026-09-15** (`20ba75f`) — so on 09-11 this row's declared input
+        does not exist yet, and a successor/re-parenting decision taken today
+        would be taken blind to the registry surgery that determines what the
+        five commitments can be re-parented ONTO. 09-16 is the first date after
+        its input lands, and it carries 2 rows. **The `CLAIM-DEAD` ratchet
+        stays RED at 4 and `coverage` keeps exiting rc=2 until this row is
+        acted on — that red is the tool working and it is not to be quieted,
+        unparked, or answered with a successor spec against the same venue the
+        pilots already measured as unable to grade it.**
     Question: `balance`, `smell`, `shelter/building` and `thermal (kills)` —
     four of the owner's own 2026-08-09 survival directives — have zero
     passing claims and every claim-kind spec PARKED or FORECLOSED
