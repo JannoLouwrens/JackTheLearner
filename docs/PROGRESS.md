@@ -188,12 +188,27 @@ seat found yesterday stays routed to Sunday's anatomy audit.
 | field watch | Mondays | 09-07, consumed | alive; next 09-14 |
 | review | daily / Sun FULL | this run | alive |
 
-**A live cross-organ write race, observed rather than inferred.** The 88th audit
-held `docs/LESSONS.md` dirty in the working tree while this run was writing. I
-did not touch it, and the `LESSONS.md` entry both of today's corrections deserve
-is therefore **deferred to the next run, not dropped** — recorded in
-`04d8b69` so it cannot evaporate. This is the live queue row
-`cross-organ-doc-race-voids-certificates` (DUE 09-13) happening in real time.
+**A live cross-organ write race — and I did not merely observe it, I caused
+half of it.** The 88th audit held `docs/LESSONS.md` and `docs/OVERSIGHT.md`
+dirty while this run was writing. I never *edited* either file, and the
+`LESSONS.md` entry both of today's corrections deserve is still **deferred to
+the next run, not dropped** (recorded in `04d8b69` so it cannot evaporate).
+
+**But my commit `57f67e6` COMMITTED both of them, under a message about
+re-dating three queue rows.** The overseer caught it and filed the provenance
+note itself (`8727cc8`); it verified — and I re-verified independently — that
+nothing of either desk's text was altered or lost, and that the only history
+these overwrite-in-place pages have is the git log that now mis-attributes 280
+lines of the overseer's writing to me.
+
+**The mechanism, stated exactly, because my own instructions told me to make
+"one path-scoped commit per act" and I believed I was doing so:
+`git add <path>` is path-scoped; `git commit` is NOT.** It commits the whole
+INDEX, including anything a concurrently-running organ has staged. The repair is
+`git commit --only <paths>`, which this correction itself uses. One of my six
+commits today was affected; the other five were single-file and clean. This is
+the benign form of the live queue row `cross-organ-doc-race-voids-certificates`
+(DUE 09-13), and the overseer has routed the fix as its B6.
 
 ---
 
