@@ -12396,6 +12396,17 @@ heartbeat of the thing that decides not to work.
 *(87th audit, 2026-09-10, from the second day of the `pace_gate` blackout —
 sibling to the 86th's heartbeat lesson, and a different defect in the same gate.)*
 
+> **NUMBERS CORRECTED 2026-09-11 (88th audit) — see the next lesson.** The
+> ORDERING argument below stands: the four-line gate table is read from the
+> code and is exactly right, and so is *whoever is gated last, starves first*.
+> **Its arithmetic does not.** `+0.29/day`, `49 days`, `+2.29/day`, `6-day
+> release`, `5.9-day foreclosure` and **`87% of the headroom`** are all one
+> single-day sample of the meter's rise subtracted from an exact line slope,
+> and the gap they were computed from closed at **+5 points/day** over the next
+> 24 hours, not 0.29. The two document organs cost **1–2 points/day** against a
+> line that advances **9.29/day** — read that as **11–22% of the daily line
+> advance**, which is the defensible form of the claim. Do not quote the 87%.
+
 `pace_gate` spreads this project's spend across the week so the loop is still
 awake when the free GPU quota expires. It says **how much** may be spent per
 hour. It says nothing about **who** spends it, and it is not applied uniformly:
@@ -12438,3 +12449,75 @@ lesson exists: **an oversight apparatus that shares a budget with the thing it
 oversees can spend that thing into silence while every one of its own reports
 is accurate.** Ours did. Cost so far: 46 dark slots, 0 ledger settlements in
 67 hours, and W37's 30 free GPU-hours heading for expiry at 0.00 spent.
+
+---
+
+## Subtracting two rates does not give you a rate, when one of them has a
+## day-to-day spread larger than the difference — and we published one, to the
+## owner, with a lever attached
+## (overseer, 88th audit, 2026-09-11, correcting the 87th audit and the Review's
+##  09-10 `D26` addendum)
+
+On the morning of 2026-09-10 two organs of this project independently forecast
+when `pace_gate` would release the blacked-out builder. Both had the same data.
+Both published to the owner.
+
+    Review, D26 addendum   ~6 days; "pace_gate never releases the builder at all"
+    Overseer, 87th audit   49 days; "not under ANY measured rate ... off by 13x"
+                           + a one-line .usage-resumed override, recommended
+
+Twenty-four hours later the gap they were forecasting had gone **14 → 9**. It
+was closing at **+5 points/day**. My number was wrong by a factor of twenty, the
+Review's by a factor of three, and mine was wrong in the direction that argued
+for spending the owner's budget.
+
+**The mechanism of the error, which is the whole lesson.** The forecast is a
+difference of two rates:
+
+    release_rate = (pace line slope) - (meter rise)
+
+The first term is code: `allow = 25 + ceil(65*elapsed/100)`, rising **9.29
+points/day**, exact, no variance. The second term is a shared human-plus-agent
+meter, and this project's own record of it over four consecutive days reads
+
+    +21   +36   +9   +4     points/day
+
+We each took **one** of those draws and subtracted. The difference therefore
+ranges over **-26.7 to +5.3 points/day** — it changes sign. A quantity whose
+sampling spread is six times its own magnitude is not a rate; a date divided out
+of it is not a forecast; and the confident phrasings we both reached for
+("never", "under any measured rate", "off by 13x") are the tell. **The subtraction
+destroyed the signal and both of us reported the residue as a measurement.**
+
+**What actually predicted well, and it was sitting right beside the bad number.**
+The Review's *flat-meter bound* — "if nobody draws again, the line overtakes the
+meter at T" — said **09-11T21:06** on 09-10 and re-derives to **09-12T08:40**
+today: a 12-hour slip over 24 hours, while both drain extrapolations inverted.
+It is a **bound with its assumption stated**, not an extrapolation, and it uses
+only the exact term. The variance-free half of the arithmetic was the whole of
+the useful half.
+
+**Why no instrument caught it, and why the obvious repair was the wrong one.**
+The 87th audit diagnosed this correctly as *"the closing rate was computed
+nowhere"* and routed B4: make an instrument print it. **That repair would have
+made this worse.** A wrong number computed by hand in a report can be argued
+with; the same wrong number printed by a tool inherits the tool's authority and
+gets quoted as an instrument reading — which is precisely how this project's
+ratcheted counters earn their credibility. An instrument that launders a
+single-sample extrapolation is worse than no instrument.
+
+**The generalisation, and it is not about pacing.** Before publishing any
+forecast that is a *difference* of two measured quantities, print the spread of
+each term over the samples you have. If the spread of either term exceeds the
+difference, you may publish a **bound with its assumption named** and you may
+publish the **range**, and you may not publish a date. And the sharper corollary,
+because this organ's whole function is to be the counterweight: **the overseer's
+errors are more expensive than the builder's, because the overseer's output is
+addressed to the owner and arrives with a recommended action.** The builder's
+mistakes get caught by a gate. Mine get executed.
+
+Cost this time: none, because the owner did not pull the lever. That is luck,
+not process — the same category as the 09-09 page's *"every instrument reported
+health while the creature sat still."* Corrected in `DECISIONS_NEEDED.md` as a
+`D26` addendum, and B4 re-specified as 88th audit **B2**: print the flat-meter
+bound and the measured spread, and print **no single release date**.
