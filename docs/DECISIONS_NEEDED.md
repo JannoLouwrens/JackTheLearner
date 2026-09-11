@@ -5711,3 +5711,120 @@ today and stays overdue until the firing is journalled.
 **Reversal:** revert the two commits; the ceiling is unchanged either way, and
 the owner may rule (a) or (b) at any later date at no cost — the default
 deliberately chose neither.
+
+---
+
+## D26 — OVERDUE NOTICE **and FORECAST CORRECTION**, 2026-09-11 06:37–07:0x UTC (88th overseer audit). The deadline passed at midnight — and the forecast this entry was escalated on is refuted by 24 hours of its own meter.
+
+**No new question and no change to `D26`'s `DECIDE:` block, class, options or
+default.** Two things go on the record here, and the second one matters more
+than the first.
+
+### 1. The overdue notice
+
+`decide_by: 2026-09-10`. `experiments/decisions.py` marks an entry overdue at
+`(today - decide_by).days > 0`, so **`D26` went red at 2026-09-11T00:00 UTC**,
+and `decisions --check` now prints
+`D26  costs 0 specs  OVERDUE — DEFAULT IS DUE TO FIRE`.
+
+**The owner did not rule by 2026-09-10, so the pre-registered default is due to
+fire.** This desk is not firing it: `D13` records that the overseer may not edit
+its own script, the default `(iv) MEASURE ONLY` is builder code, and every armed
+default in this file's history is stamped *"fired … (builder)"*. Routed to the
+builder as 88th audit **B1**, with `D22` and `D18`, with the required journal
+wording — *"the owner did not rule by 2026-09-10, so the pre-registered default
+fired"*. **The deadline is NOT being extended.**
+
+Standing queue of unfired defaults, unchanged in kind from yesterday's `D18`
+notice and one longer:
+
+    D22   OVERDUE 2026-09-09   default writes nothing   unfired, 3 days
+    D18   OVERDUE 2026-09-10   default is builder code  unfired, 2 days
+    D26   OVERDUE 2026-09-11   default is builder code  unfired  <- this notice
+
+### 2. THE CORRECTION. Both organs' drain forecasts are wrong, mine worst, and the owner was handed a lever on the strength of mine.
+
+**What was published to this desk in the last 48 hours:**
+
+| source | forecast | published as |
+|---|---|---|
+| Review, 09-10 addendum (above) | **~6 days**; *"`pace_gate` never releases the builder at all"* before the 09-14 reset | `D26` evidence, this file |
+| Overseer, 87th audit | **49 days**; *"does not release the builder this week under any measured rate … off by 13×"* | `OVERSIGHT.md`, with a one-line `.usage-resumed` override command **recommended to the owner** |
+
+**What the meter actually did, hourly, from `ladder.log` — the same file both
+forecasts were built from:**
+
+```
+                meter  line   gap
+09-08T09:07       39    37     2
+09-09T13:07       66    47    19     <- the gap PEAKS here
+09-10T05:07       67    53    14
+09-10T06:37       68    54    14     <- both forecasts written at this reading
+09-10T17:07       72    58    14
+09-11T01:07       72    61    11
+09-11T06:07       72    63     9     <- now
+```
+
+**The gap went 14 → 9 in the 24 hours after both forecasts were published.** My
+87th audit said it was closing at **+0.29 points/day**; it closed at **+5**.
+Yesterday's headline — *"49 days, on a week that resets in 4"* — was wrong by a
+factor of roughly twenty, and it was wrong in the direction that argued for
+spending the owner's headroom.
+
+**Where the error is, precisely.** The pace line's slope is mechanical and both
+organs got it right: `allow = 25 + ceil(65·elapsed/100)` rises **9.29
+points/day**, exactly. The meter's rise is not mechanical, and this project's
+own record of it reads **+21, +36, +9, +4** points/day on the last four days. We
+each took ONE of those draws, subtracted it from 9.29, and published the
+remainder as a rate. The remainder's true range over the measured days is
+**−26.7 to +5.3 points/day** — a sign change. A difference whose sampling spread
+is six times its own magnitude is not a rate, and a date derived from it is not
+a forecast.
+
+**The part of yesterday's arithmetic that DID hold, and should be the only kind
+quoted in future.** The Review's *flat-meter* release — "if nobody draws again,
+`allow` overtakes `pct` at T" — was materially right: it said **2026-09-11T21:06**
+and the same derivation re-run this morning says **2026-09-12T08:40**, a 12-hour
+slip caused by 4 points of external draw. That number is a **bound with a stated
+assumption**, not an extrapolation, and it stayed inside half a day over 24
+hours while both drain projections inverted.
+
+**Re-derived this morning, stated as the bound it is** (meter 72%, elapsed 58%,
+line 63%, and the meter **flat at 72% for 15.5 hours**, since 2026-09-10T15:07):
+
+```
+  meter stays flat        -> pace_gate releases 2026-09-12 08:40
+  meter +3/day (09-10's measured external draw)  -> 2026-09-12 18:40
+  meter +4/day (09-10's measured TOTAL rise)     -> 2026-09-12 23:40
+  meter +7/day or more                           -> no release before the reset
+  week resets                                       2026-09-14 05:23
+```
+
+**Under every draw rate measured since this blackout began except the two worst
+single days, the builder is released on 2026-09-12 — before the week reset, and
+before W37's free GPU quota expires on Sunday 2026-09-13.**
+
+### What this correction does and does not change
+
+- It does **not** change `D26`'s question, options, default or class. The
+  structural defect the entry names — `pace_gate` rations a shared meter with no
+  attribution and no ordering — is unaffected by how long this particular
+  blackout lasts, and it recurs every time an external consumer draws.
+- It does **not** change this desk's recommendation. **(i) ATTRIBUTE THE LINE**
+  remains what I would choose, for the reason in the original entry, not for the
+  forecast.
+- It **does** withdraw the urgency. The 87th audit's `FOR THE OWNER` item 1 —
+  *"Without it, the builder does not run again until 2026-09-14 05:23 — 5.9 days
+  dark, the largest such loss in this project's history"* — is **withdrawn as
+  unsupported**. On today's reading the override buys roughly **one day**, not
+  six, at a cost of suspending pacing for the remainder of the week. That is a
+  materially different trade and the owner was entitled to see it before acting.
+- It **does** change what the 87th audit's B4 should build. B4 asked for the
+  point forecast to be printed by an instrument. **Printing this point forecast
+  would have made it worse, not better** — a number computed by hand can be
+  argued with; the same number printed by a tool acquires the tool's authority.
+  Re-specified as 88th audit **B2**: print the flat-meter bound and the measured
+  spread, and print no single release date.
+
+**Reversal:** none needed; this addendum writes no code, moves no threshold and
+changes no option. It corrects two numbers and withdraws one recommendation.
