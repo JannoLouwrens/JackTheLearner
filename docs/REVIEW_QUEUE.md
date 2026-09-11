@@ -4092,7 +4092,7 @@ disposition — one sentence either way.
 ## ENCODER, and the two are now measured to diverge by 0.93 (builder,
 ## 2026-09-07)
 
-ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02_rig_probe.py; smoke 603619c; decomposition eaec320) | OPEN
+ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02_rig_probe.py; smoke 603619c; decomposition eaec320) | DISPOSITIONED
     DUE: 2026-09-09 | overseer or Review rules what the pre-registered
         eye-aliveness VOID gate on PL.02 READS: U_A's 64-d features (B4's
         letter) or a raw-pixel ridge on the same episodes (B4's stated
@@ -4108,6 +4108,70 @@ ROUTED: pl02-eye-gate-reads-the-encoder-not-the-eye | 2026-09-07 | builder (pl02
     in the last ten minutes of a DAILY, in the direction that would let the
     falsifier run, is that same act wearing a deadline. Nothing is weakened by
     the delay: the registered run stays blocked under either reading.
+    DUE: 2026-09-14 | RULED (Review DAILY 2026-09-11), and the implementation
+    is the BUILDER's — the spec edit below, then a smoke, then the registered
+    run under the ordinary blocking rules. 09-14 and not 09-12 because the
+    builder is forecast released 09-12T08:40–23:40 and this needs a waking day;
+    not 09-13, which already carries 14 rows against a capacity of 6.
+
+**THE RULING: the eye-aliveness VOID gate READS THE RAW-PIXEL RIDGE, not
+`U_A`'s features.** Rebind the VOID condition to a raw-pixel radius ridge
+R² ≥ 0.80 (`EYE_RADIUS_R2_MIN` unmoved, same VOID semantics, PG.6's certified
+quantity) measured **on the run's own probe episodes**, not inherited from the
+seed-90 probe. `r2_ua` is **not deleted** — it stays a first-class recorded
+metric and must appear on the ledger row, per B4's other half.
+
+**Why, and the decisive reason is one neither B4 nor this row stated.** The two
+arguments already on the row are good but both are interpretive — title-and-
+reason versus letter, and a premise measured false by 0.93. The argument that
+settles it is algebraic and does not depend on which way the result falls:
+
+> **`r2_ua` is the SUBTRAHEND in the claim's own effect size.** The spec
+> computes `R_pl = r2_pl − r2_ua` and `R_fr = r2_fr − r2_ua`. A VOID gate
+> requiring `r2_ua ≥ 0.80` therefore requires the baseline to be near-saturated
+> *before the run is allowed to count*, which caps the largest reshaping gain
+> the spec can ever report at **≤ 0.20** — against a bar the claim must clear
+> and an observed gain of **0.94**. As lettered the gate does not test whether
+> the eye is alive; it algebraically suppresses the quantity it was added to
+> guard, and it is un-clearable by construction in exactly the regime the claim
+> exists to test (audio rescuing a weak encoder — where a weak `r2_ua` is the
+> premise, not the fault).
+
+A gate that no honest run of the claim can clear is not a strong gate. It is a
+contradiction between a precondition and a subject matter, and under the T1.02
+precedent that makes the EXPERIMENT wrong — which is the only ground on which a
+gate may be re-aimed.
+
+**What the old gate was incidentally covering, and why nothing is lost.** Two
+holes, both already closed by instruments that exist:
+- *Dead channel* — B4's actual stated worry, *"a blinded eye collapses both
+  arms together"*. Fully covered by the new referent: a blind eye cannot
+  produce a 0.93 raw-pixel ridge. Measured 0.9327 (RGB@64) / 0.9438 (RGB@96).
+- *Audio leakage* — the hole a rebinding could have opened, i.e. `r2_pl` coming
+  from the audio teacher (0.9997) rather than from any reshaping of vision.
+  **Already closed by the spec's own declared `SHUFFLED` control**, a fixed
+  derangement pairing each row with another episode's audio, which the spec
+  requires to collapse. Measured clean on the RGB@64 smoke: `shuffled_R`
+  **−0.002328**, CI [−0.003224, −0.001415] excluding zero **from below**,
+  `control_reshapes_too` **0**. No new conjunct is ordered, because inventing a
+  redundant control would be this desk manufacturing rigour it did not add.
+
+**THE HONEST COST, stated because this is the direction I refused on 09-09.**
+This ruling unblocks the sole registered falsifier of `GOAL.md`'s PLASTIC-ONLY
+decree, and the run it unblocks has instruments already reading in the direction
+that SUPPORTS the decree (`r2_plastic` 0.9411 vs `r2_frozen` −0.0017,
+`reshaping_gain_R` 0.9428, CI above zero). That convenience has not changed
+since 09-09 and is not why the ruling changed. What changed is that the
+subtrahend argument is algebraic: it holds whether PL.02 goes on to PASS or
+FAIL, and it would have been just as true if the smoke had read the other way.
+A desk that refuses a correct ruling *because* the correct ruling is convenient
+has not avoided bias — it has only inverted it.
+
+**Not weakened, and the ledger will show it.** `EYE_RADIUS_R2_MIN` does not
+move. The VOID semantics do not move. The control is untouched. The registered
+run stays blocked behind a PASSING smoke exactly as before; this ruling buys a
+run that can be evaluated, not a run that is excused. Staleness bill: **zero** —
+PL.02 holds no ledger row, so no certificate is staled.
 
 **The measurements, all seed 90 (disjoint from registered seeds), artifacts
 `/data/pl02_{rig,rgb,uargb,steps}_probe.json`:** raw-pixel radius ridge under
