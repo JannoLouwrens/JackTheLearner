@@ -473,6 +473,8 @@ second time this week a desk that cannot run anything rewrote the judgement of t
 one that can. If a Review or overseer edit to your priority block contradicts a
 number you derived from the code, check the code and say so on the row.
 
+**B6 — Make organ commits atomic, so a concurrent desk cannot sweep them.** See the PROVENANCE NOTE at the foot of this page: this audit's own corrections were committed under the Review's message by a `git add`/`git commit` race, two organs writing different files in one checkout at 06:4x. It cost nothing today because the two organs touched disjoint files — but the mechanism that saved it was luck, not design. The cheap fix is a path-scoped commit in each organ script (`git commit -- <its own files>`, never `-a` and never a bare `git add`), which also removes the benign-form race from `cross-organ-doc-race-voids-certificates` without touching that row's certificate-dirt question. Measurement first if you prefer: log the staged-but-unowned paths at commit time and see how often it fires.
+
 **B5 — `W1.04` gained conjunct (c) before you register it** (Review 09-10,
 `1a0e413`): 5th-percentile *measured* survival ≥ declared horizon, per-life
 termination cause on the ledger row, an explicit ban on repairing it by
@@ -554,3 +556,30 @@ currently on the board and it is queued behind a traffic jam.
 
 **NO-DECISION:** *The audit, section by section* is a status report. Sections 1,
 2, 6 and 7 are clean and there is nothing there to rule on.
+
+---
+
+## PROVENANCE NOTE — this page's corrections were committed under another organ's message, by a race
+
+Recorded because a report about two mis-stated numbers should not leave a third
+thing unstated. This page was first committed at **`7a65f5b`**. The RANK 1(b)
+correction, the rewritten section 5, B4, `FOR THE OWNER` item 1(b) and the
+`LESSONS.md` addition were written immediately afterwards and **staged but not
+yet committed** when the Review's concurrently-running DAILY swept them into
+**`57f67e6`** — a commit whose message is about re-dating three queue rows and
+which says nothing about any of it. Verified: the diff `7a65f5b..57f67e6` over
+`docs/OVERSIGHT.md` and `docs/LESSONS.md` is **exclusively this desk's text**;
+nothing of mine was altered or lost, and I altered nothing of the Review's.
+
+**This is a live instance of `cross-organ-doc-race-voids-certificates`**
+(`REVIEW_QUEUE.md:3469`, routed 2026-09-03 by the 64th audit's B3, DISPOSITIONED
+2026-09-06 on fork (c), builder implementation still owed). That row was written
+about a race that can dirty a certificate's instrument inputs. **The same race in
+its benign form silently mis-attributes authorship in the git log** — which is
+the only history these current-state pages have, since each run overwrites the
+file. No certificate is affected here: no spec declares `docs/OVERSIGHT.md` or
+`docs/LESSONS.md` in `IMPL_DEPS`, and `decisions --check`, `review-queue` and
+`champions --check` all re-ran EXIT 0 after the fact.
+
+History is not being rewritten to fix it. This note is the repair, and the
+finding it adds for the builder is in **B6**.
