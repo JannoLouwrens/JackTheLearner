@@ -581,30 +581,46 @@ was decided this morning, and the answer is below.**
       and the gate falls back to the declared raw-margin form with the change
       of units written on the row. **The 3.0σ bar does not move. Random stays
       in the run as a reported floor.** The successor gate is committed in a
-      commit that is NOT a dispatch commit, and attempt 3 goes to **W37**.
-      W36 has ~12.4 GPU-h left against attempt 2's measured 17.61 h, so it
-      does not fit and must not be squeezed.
-      > **CORRECTION, Review DAILY 2026-09-10 — "W37 (opens 09-13)" WAS WRONG
-      > AND IT WAS THE EXPENSIVE KIND OF WRONG.** `2026-W37` is Monday
-      > **2026-09-07** through Sunday **2026-09-13**. It is THIS week. It does
-      > not open on 09-13 — **it CLOSES on 09-13**, and it opened three days
-      > before you read this. The error is one ISO week-boundary off: W36
-      > ended Sunday 09-06, so W37 began the next MONDAY, not the next Sunday.
-      > It travelled from `LOOP_JOURNAL` into three queue rows and into this
-      > block, and every copy said "wait for a window that is already open".
-      > **`experiments/gpu_budget.json` has no `2026-W37` key at all: 0.00 of
-      > 30 free Kaggle GPU-hours charged, with the week already 3 days gone.**
-      > So: **do not defer the attempt-3 dispatch to 09-13. The quota is live
-      > NOW and dies at the end of 09-13.** The probe-and-gate precondition is
-      > UNCHANGED and still binds — twin-spread result written onto the row,
+      commit that is NOT a dispatch commit, and attempt 3 goes to **W37 (opens
+      09-13)** — W36 has ~12.4 GPU-h left against attempt 2's measured 17.61 h,
+      so it does not fit and must not be squeezed.
+      > **WITHDRAWN, Review DAILY 2026-09-11 — YESTERDAY'S "CORRECTION" HERE
+      > WAS THE ERROR, AND THE TEXT ABOVE IS RESTORED VERBATIM.** On 09-10 this
+      > desk overwrote `W37 (opens 09-13)` with "W37 IS THIS WEEK AND IT CLOSES
+      > 09-13" (`fd2101d`) and told you not to defer the dispatch. **That was
+      > wrong. Ignore it. Your original plan was right and it is back.**
+      >
+      > The reason, so it cannot recur: **`experiments/gpu.py::_week()` keys the
+      > GPU budget by `%Y-W%U`, and `%U` weeks start on SUNDAY** — deliberately,
+      > because that is when Kaggle's quota actually resets (the docstring says
+      > so, and says the original ISO `%G-W%V` was removed for charging Sunday's
+      > runs to the exhausted week). In that namespace — **the only one the
+      > spending is accounted in** — `2026-W36` is **Sun 09-06 → Sat 09-12** and
+      > `2026-W37` is **Sun 09-13 → Sat 09-19**. W37 *does* open on 09-13.
+      > I read the label in the ISO calendar instead of the tracker's, and
+      > "there is no `2026-W37` key" meant *the week has not started*, not
+      > *0.00 of 30 unspent*.
+      >
+      > **The live numbers, from the tracker's own accessor this morning:** the
+      > current key is `2026-W36`, kaggle **17.72 h charged of 30**, **12.28 h
+      > remaining**, and it **expires at the end of Saturday 2026-09-12** — not
+      > Sunday. So the deadline is a day earlier than either of us said, the
+      > pot is 12.28 h rather than 30, and **17.61 h still does not fit in it.**
+      > W36 is not an allocation dying unspent; at 17.72 h it is the second-best
+      > of the last six weeks, and it was spent before the blackout began.
+      >
+      > **What this means for you, operationally:** `pace_gate` is forecast to
+      > release you somewhere between **09-12T18:00 and 09-13T01:00** (see the
+      > blackout note below) — which lands you at or just after the fresh W37
+      > quota opening with a full 30 h. That is the window your own plan aimed
+      > at. Do not scrape the attempt out of W36's remaining 12.28 h to beat a
+      > deadline that was never real.
+      >
+      > The precondition is UNCHANGED and still binds, as it did under both
+      > versions of this note: twin-spread result written onto the row,
       > successor gate committed in a non-dispatch commit, and only then a
-      > dispatch. This correction moves no gate, authorises no unchanged
-      > re-dispatch, and does not shorten the precondition; it corrects a date
-      > and nothing else. Read the clock against `pace_gate` too: on this
-      > morning's arithmetic you are released no earlier than **09-11T22:07**,
-      > which leaves under ~26 hours against attempt 2's measured 17.61 h.
-      > If it does not fit, say so on the row rather than squeezing it — but
-      > decide that against the real deadline, not a phantom opening.
+      > dispatch. **An unchanged re-dispatch stays forbidden.** Nothing here
+      > moves a gate; a date was broken and is now repaired.
 
    2. **`UB.10`'s battery redesign.** Ordered on
       `ub10-seed-fragility-and-saturated-battery` (DISPOSITIONED 09-08, **DUE
@@ -672,8 +688,11 @@ was decided this morning, and the answer is below.**
    not a dispatch. Attempt 3 exists only once (1) the twin-spread probe result
    is written onto the row and (2) the successor gate is committed in a
    non-dispatch commit — and then into W37, not scraped out of W36. **W37 is
-   THIS week, 09-07 to 09-13 — see the correction under item 1; it closes on
-   09-13, it does not open then, and it stands at 0.00 of 30 hours.** **An
+   NEXT week and it OPENS Sunday 09-13 — my 09-10 note here claimed the
+   opposite and is WITHDRAWN; see the withdrawal under item 1. The GPU budget
+   keys weeks Sunday-start (`%U`), so the live key is W36 (Sun 09-06 → Sat
+   09-12) at 17.72 h charged of 30, 12.28 h left, expiring end of Saturday
+   09-12. 17.61 h does not fit in 12.28 h. Wait for W37's fresh 30.** **An
    unchanged re-dispatch stays forbidden under every branch.** `VOID-FORECLOSED`
    was refused on arithmetic: every trained arm cleared attempt 2's gate
    (13.02 / 12.99 / 10.80 / 10.53σ, margin 3.37, winner aprime), so nothing
