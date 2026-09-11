@@ -5828,3 +5828,95 @@ before W37's free GPU quota expires on Sunday 2026-09-13.**
 
 **Reversal:** none needed; this addendum writes no code, moves no threshold and
 changes no option. It corrects two numbers and withdraws one recommendation.
+
+---
+
+## D26 — EVIDENCE ADDENDUM **and PREMISE CORRECTION**, 2026-09-11 06:5x UTC (Review, DAILY). The GPU loss this entry was costed against never happened: `W37` has not started, and the live week is the second-best of the last six.
+
+**No new question and no change to `D26`'s `DECIDE:` block, class, options or
+default.** This corrects the *second* of the entry's two urgency arguments. The
+88th audit (immediately above) withdrew the first — the drain forecast — an hour
+before this was written, independently and from a different file. Neither of us
+found the other's error; we each found our own.
+
+### The claim being withdrawn
+
+Every version of it traces to one sentence, published four times in three days:
+
+| source | claim |
+|---|---|
+| Review `PROGRESS.md`, 09-10 | *"`W37` free GPU-hours charged **0.00 of 30**"*, listed in the numbers table |
+| Review `fd2101d`, 09-10 | *"`gpu_budget.json` has no `2026-W37` key at all — 0.00 of 30 … the week already 3 days gone"* — written into the **builder's live steering** |
+| Overseer 87th audit, 09-10 | *"no `2026-W37` key at all: 0.00 of 30 free Kaggle GPU-hours, expiring Sunday 2026-09-13 — before any projected wake"* |
+| Overseer 88th audit, 09-11 | *"before `W37`'s free GPU quota expires on Sunday 2026-09-13"* — carried forward uncorrected |
+
+### Why it is false
+
+`experiments/gpu.py::_week()` keys the budget by **`%Y-W%U`**. `%U` weeks start
+**Sunday**. That is deliberate and its docstring says why: Kaggle's quota resets
+on Sunday, and the original ISO `%G-W%V` *"kept charging Sunday's runs to the
+exhausted week, so the tracker refused jobs for the entire first day of every
+fresh Kaggle quota."*
+
+In the namespace the spending is actually accounted in:
+
+```
+  2026-W36   Sun 2026-09-06 -> Sat 2026-09-12     <- TODAY (Fri 09-11)
+  2026-W37   Sun 2026-09-13 -> Sat 2026-09-19     <- opens Sunday
+```
+
+**`gpu_budget.json` has no `2026-W37` key because the week has not started.**
+Absence of a key meant *not yet*, and four documents read it as *unspent*.
+
+### The live numbers, from the tracker's own accessor
+
+```
+  key 2026-W36   kaggle 17.7238 h charged of KAGGLE_WEEKLY_HOURS = 30.0
+                 12.28 h remaining, expiring end of SATURDAY 2026-09-12
+  prior weeks    W31 37.46   W32 21.06   W33 7.63   W34 1.62   W35 18.93
+```
+
+**W36 at 17.72 h is the second-best of the last six weeks**, and it was spent
+*before* the blackout began on 09-08. It is not an allocation dying unspent.
+The real deadline is a day earlier than anyone said (Sat 09-12, not Sun 09-13)
+and the real remaining pot is 12.28 h, not 30 — and `D1.0` attempt 2's measured
+**17.61 h does not fit in 12.28 h**, which is precisely what the builder's own
+steering said before this desk overwrote it (withdrawn and restored, `4bd81ec`).
+
+### What it does to `D26`
+
+- It does **not** change the question, options, default or class. The structural
+  defect — `pace_gate` rations a shared meter with no attribution and no
+  ordering — is untouched by this, exactly as the 88th audit said of the
+  forecast. It recurs whenever an external consumer draws.
+- It does **not** change this desk's recommendation, which stays **(i) ATTRIBUTE
+  THE LINE**, on the structural argument and not on either urgency argument.
+- It **does** remove the entry's remaining urgency, and the two removals compose.
+  `D26` was escalated on *"six dark days AND a fourth GPU allocation dying
+  unspent"*. The 88th audit reduced the first to roughly one day. This reduces
+  the second to **zero**: on the flat-meter bound the builder is released
+  2026-09-12 08:40–23:40, and W37's **fresh 30 hours open Sunday 09-13**. The
+  builder wakes into a full quota rather than missing a dying one. **Both
+  independent reasons the owner was asked to hurry are now withdrawn.**
+- **NOTHING here argues for deciding `D26` differently — only for deciding it
+  calmly.** The default `(iv) MEASURE ONLY` is overdue and due to fire; that is
+  unaffected, and it should still fire.
+
+### The pattern both corrections share, stated because it is the third instance this week
+
+Yesterday's page named the week's drift as *"this project's errors are migrating
+out of its instruments and into its prose."* Two more arrived within a day of
+that sentence, from opposite desks, and both have the same shape: **a number was
+read out of the correct file and interpreted in the wrong frame** — a rate
+sampled from one window of a quantity that varied six-fold, and a week label read
+in the ISO calendar when its own module keys it Sunday-start. No instrument was
+wrong. No threshold moved. Both errors reached the owner's desk, and one reached
+the builder's steering, because prose is the only artefact here that nothing
+audits. The `LESSONS.md` entry this deserves is **deferred, not dropped**: the
+overseer holds that file dirty mid-run as this is written, and a cross-organ
+write race on it is itself a live queue row
+(`cross-organ-doc-race-voids-certificates`, DUE 09-13). Filed as an owner item
+on today's page so it cannot vanish.
+
+**Reversal:** none needed; this addendum writes no code, moves no threshold and
+changes no option. It corrects one premise and withdraws one cost.
