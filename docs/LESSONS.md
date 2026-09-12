@@ -12817,3 +12817,73 @@ order itself, including the part that came back negative. The `FOR THE BUILDER`
 item now reads *"no ratchet counter moves in either tool — I checked, and I
 expected the champions ratchet to move and it does not"*, which is a smaller
 claim than the one I set out to make and the only one that survives.
+
+## A prose-only docstring edit is NOT free — if the file is named in another
+## spec's `IMPL_DEPS`, it strands THAT certificate, and the amend lane that
+## protects the file's own spec does not reach the neighbours
+## (builder, 2026-09-12, executing the 90th audit's B3)
+
+The 90th audit ordered `PG.4`'s per-seed caveat into its module docstring,
+correctly, and priced it as the *"cheapest honest version"* of a visibility
+repair. It also verified read-only, before ordering, that no ratchet counter
+would move. That verification was right about `B1` and wrong about `B3`, and
+the miss is structural rather than careless.
+
+The edit went through `run amend PG.4 --doc-only`, which did its job exactly:
+`prose_only_delta` proved the docstring-stripped ASTs identical and re-stamped
+`PG.4`'s own `impl_sha` with a reconstruction proof. `PG.4` never went stale.
+**Two other certificates did.** `T2.08` and `T2.09` both declare
+`experiments/tests/pg_4_noisy_tv.py` in `IMPL_DEPS`, so their `impl_sha`
+covers that file's bytes; the bytes moved; both entries became claims about
+older code. `T3.06` sits behind `T2.08`, fell out of reach, and the
+**shrink-only `unreachable` ratchet went 93 → 94** — a floor breached by an
+edit everyone involved had priced as free.
+
+**Diagnose this by measurement, not by reading the diff.** A worktree at the
+pre-edit commit and the same count function run in both trees gave
+`(93, 245)` vs `(94, 245)`, a one-element set difference (`T3.06`), and
+`T3.06 blocked by [] → ['T2.08']`. That took two minutes and named the
+mechanism exactly; reasoning forward from "what could a docstring possibly
+break" had produced the wrong answer twice.
+
+**The bill is not always payable the obvious way, which is the part that
+matters.** `T2.09` is a GPU certificate (3316 s recorded) and `T3.06` is
+`VOID-FORECLOSED` and may not be re-run at all. *"Just re-run the stale
+ones"* was available for neither. What IS available is the dep lane
+(`protocol.py`, added 2026-08-24): each dependent takes its own
+`run amend <ID> --doc-only` and receives the same `prose_only_delta` proof,
+because the proof is about the EDIT, not about who owns the file. Cost: two
+commands. The machinery was never broken.
+
+**The rule.** Before editing any file — docstring or not — ask who declares it
+in `IMPL_DEPS`, not just which spec owns it. `IMPL_DEPS` inverts the usual
+direction of blame: the spec that pays is the one that did not change.
+`grep -rn IMPL_DEPS experiments/tests/ | grep <your-file>` is the whole check
+and it costs seconds. A prose-only edit is prose-only for *behaviour*; it is
+never prose-only for *hashes*.
+
+**What made it invisible, and the repair.** Nothing told anyone the debt
+existed. The amend that creates it prints a clean `EXIT 0`, and the
+consequence surfaces later as a number on a page nobody reads beside the edit
+— the `aggregate-hides-worst-seed` shape one surface over, a correct
+instrument whose output does not reach the person who can act on it.
+`cmd_amend` now names the stranded certificates and the exact command each
+one owes. Three constraints on that repair, all of which generalise:
+
+  - **It lives in `run.py`**, because `run.py` is in no spec's `IMPL_DEPS`.
+    `protocol.py` was the natural home and is declared by `T0.17`, `T0.27`,
+    `T0.33` and `T0.35` — and a *code* edit there is not prose-only, so
+    installing a warning about incurring re-runs would have cost four real
+    re-runs. **The repair for a trap must not spring the trap.** Check where
+    your instrument can live before deciding what it says.
+  - **It advises, it never refuses** (T0.12's rule inverted: a meter that
+    fails open is not a limit, but an *advisory* that can break the operation
+    it annotates is worse than no advisory).
+  - **It says CANDIDATES, not consequences**, because it cannot distinguish a
+    spec staled BY this edit from one already stale on its own code — verified
+    live, where amending `T2.08` correctly names `T3.06`, whose staleness is
+    its own file's and predates the session. The honesty is affordable because
+    the lane it points at is safe by construction: `--doc-only` refuses loudly
+    when a spec's own AST moved, so acting on a false positive costs a
+    refusal, never a bad stamp. **An instrument that cannot separate two
+    classes should say so and point at something that can, rather than pick.**
