@@ -82,16 +82,135 @@ run: G1 makes the gate hardest for `c_e2e`, the arm the project would most
 like to see pass; if attempt 2 returns FAIL where the old gate would have
 given PASS, that is the gate working.
 
+THE SUCCESSOR GATE — step (2) of the two-step stamp owed on
+`d10-successor-rerun-under-adopted-gate` (DISPOSITIONED 2026-09-08, DUE
+2026-09-14). Step (1), the twin-spread probe, landed 2026-09-12 and selected
+the pre-registered SPREAD_IS_ZERO branch. Committed here in a commit that is
+NOT a dispatch commit, per the row's condition 4. Both recorded VOIDs stand
+(T2.02 precedent); the sigma bar does not move; the random policy stays in the
+run as a reported floor and is no longer a denominator anywhere.
+
+  WHAT ATTEMPT 2 ACTUALLY DIED ON, from its own ledger row. G1 — the adopted
+  paired gate — CLEARED ALL FOUR ARMS: paired-t 20.41 (aprime), 6.00
+  (b_split), 9.25 (c_e2e), 16.96 (d_mlp) against the 3.0 bar. The VOID came
+  from the CONTROL, which still scored untrained twins against the RANDOM
+  policy: aprime 3.95 and d_mlp 3.91 sigma, where the identical twin means
+  had read 2.94-2.96 in attempt 1 because random's spread moved 30.27 ->
+  22.12. So the last random denominator in the gate was in the control, and
+  that is the surface repaired here.
+
+  G0 (NEW, RIG) — the run's own 3-seed untrained means must agree with the
+       frozen TWIN_PRIOR table within TWIN_DRIFT_SIGMA standard errors, or no
+       arm is scored. This guard exists because this gate newly depends on
+       constants measured by a different file on a different day: a silent
+       drift between the probe's code and this one would mis-score every arm
+       with nothing to announce it.
+  G1b (NEW, CLAIM) — the RAW paired gain mean(trained_i - untrained_i) must
+       clear LEARN_MARGIN, in return units. This is the disposition's
+       pre-registered raw-margin fallback, and the CHANGE OF UNITS is the
+       thing it asked be written down rather than buried: the operative
+       comparison for G1b is return points, not sigma.
+  CONTROL (CHANGED) — an untrained twin must miss the margin a trained arm has
+       to clear, measured as excess over its own frozen prior. The old
+       statistic (`untrained_*_sigma`, vs random) is still computed and
+       recorded and gates nothing.
+
+  HOW LEARN_MARGIN WAS DERIVED, and the one thing it may not be derived from.
+  The row forbids deriving it from attempt 2's trained means — fitting a bar
+  to the numbers it will judge. It is instead a closed formula over one
+  pre-registered constant (MIN_LEARN_SIGMA 3.0), the registered seed count
+  (3), and the probe's measured twin spreads:
+      LEARN_MARGIN = MIN_LEARN_SIGMA x max_arm( twin_std x sqrt(2/n) ) = 175.74
+  The null it excludes is "training moved the weights and learnt nothing
+  useful", under which the trained score is a fresh draw from the
+  architecture's own untrained prior, so mean(d) has sd = std sqrt(2/n). The
+  max over arms is FORCED by the probe's own finding — the twin spreads are
+  heterogeneous by 35.5x (2.02 for d_mlp to 71.75 for c_e2e), so a per-arm
+  denominator is not a common ruler, and a single raw bar has to dominate the
+  null noise of the noisiest architecture or it admits init luck for that arm.
+  The constant is COMPUTED from the table in code, not typed, so it cannot be
+  hand-tuned without visibly editing measured numbers.
+
+  WHY A CONJUNCTION AND NOT A REPLACEMENT — and this is where the execution
+  DEPARTS FROM THE DISPOSITION'S WORDING, with the reason, as SYSTEM.md
+  requires. The disposition's two branches were written about the formula
+  `(arm - twin_mean)/twin_std`, and the row's step-(2) note concluded that
+  MIN_LEARN_SIGMA is therefore "no longer the operative comparison for G1".
+  The ledger refutes that premise: the gate actually implemented on 2026-09-06
+  is PAIRED — d_i = trained_i - untrained_i at the SAME init seed, over
+  sd(d)/sqrt(n) — which is not the disposition's formula and is strictly
+  better than it, because pairing cancels the architectural prior per seed
+  instead of subtracting its across-seed mean. Deleting a paired statistic in
+  favour of an unpaired one would be a weakening, which law 4 forbids in that
+  direction. So the raw margin is ADDED as a conjunct: the disposition's
+  branch is executed literally, and the better statistic survives. The two
+  have DISJOINT failure modes, which is the substantive reason to keep both —
+  paired-t is immune to a heavy-tailed prior (the same init seed appears on
+  both sides) but can be inflated by a coincidentally tiny sd(d) at n=3;
+  the raw margin is immune to that collapse but blind to per-seed pairing.
+  An arm now has to clear both. The refutation of the disposition's premise is
+  routed as its own queue row, not settled here.
+
+  ORDERING IS LOAD-BEARING AND IT IS ARITHMETIC. The control runs BEFORE G0.
+  Both read the same quantity at different bars, and G0's per-arm tolerance
+  1.732*std_a is ALWAYS tighter than LEARN_MARGIN = 2.449*max_std, so ordered
+  the other way round the control is unreachable FOR EVERY ARM — a gate that
+  can never fire, which is what law 2 forbids. It was written that way first
+  and the fixtures caught it; the inequality is recorded here so nobody
+  re-orders these two branches for tidiness.
+
+  WHAT IT WOULD HAVE DONE TO ATTEMPT 2, replayed through `_check` against the
+  recorded row and disclosed in full, because the bar was derived with those
+  numbers already in hand and the only honest protection is a formula with no
+  free parameter plus disclosure of everything it touches.
+    - G0 holds on every arm (largest |drift| 1.31 against a 7.86 tolerance),
+      so the probe's K=32 priors do describe this code.
+    - The control correctly fails to clear: excesses +1.31, -0.13, -28.79,
+      -22.58 against the 175.74 bar.
+    - Both learning conjuncts hold for all four arms. Raw paired gains
+      aprime 308.00, d_mlp 217.47, b_split 201.33, c_e2e 193.17 — all clear
+      175.74, the closest by 10%; paired-t 20.41 / 16.96 / 6.00 / 9.25.
+    - AND THE RUN THEN LANDS ON `VOID (SPLIT-PENDING)`. aprime leads d_mlp by
+      3.37 sigma on eval mean (506.4 vs 415.0), but d_mlp's final-third
+      TRAINING reward is HIGHER (5.411 vs 5.303, gap -0.108) with a positive
+      slope, so the owner's convergence check fires: no winner while the
+      runner-up is still closing. This is a pre-registered rule about the
+      EXPERIMENT — the budget is too short to separate these two arms — and
+      not about a denominator. Read it as the first attempt-2 verdict that is
+      about the arms at all, and as the load-bearing input to whether attempt
+      3 is worth ~17 GPU-hours AT THE SAME STEP_TARGET: on this evidence a
+      re-run at 750,000 steps is more likely to return SPLIT-PENDING than a
+      winner. That is a dispatch question for the Review and it is written
+      onto the row; it is NOT a licence to move STEP_TARGET, and nothing here
+      moves it. Attempt 2's recorded VOID is undisturbed by any of this.
+
+  KNOWN LIMITATION, recorded rather than smoothed. A 200k-sample bootstrap of
+  the null directly from the probe's 32 observed returns puts c_e2e's 99.865th
+  percentile of mean(d) at 185.80, ~6% ABOVE the parametric 175.74 — c_e2e's
+  prior is genuinely heavy-tailed (one draw at 411.3 against a mean of 179.4),
+  so for that one arm the gate's false-positive rate is slightly above
+  nominal. The bar is left parametric deliberately: an empirical 99.865th
+  percentile from 32 draws is set by a single extreme observation and is not
+  reproducible, while the formula is. The exposure is bounded by the
+  conjunction — c_e2e's paired-t reads 9.25, and the pairing that statistic
+  uses is exactly what the heavy tail cannot reach.
+
 PRE-REGISTERED DECISION RULE (the registry's, spelled out; verdicts name
 their branch WITH the comparison — the BA.03 lesson):
-  VOID   — any arm's step count < MIN_STEP_MATCH x STEP_TARGET (comparison
-           not at matched experience; raise the cap, do not compare); OR any
-           arm misses the 3-sigma learning gate vs the random null (two
-           non-learners cannot arbitrate — T2.02's precedent; the verdict
-           records WHICH arms learned, per falsified_by); OR any UNTRAINED
-           twin clears 3 sigma (the gate would be measuring architecture
-           bias, not learning — T2.02's untrained MLP hit 2.74 sigma, hence
-           twins per arm, not just random).
+  VOID   — the frozen TWIN_PRIOR table does not describe this code (G0, a rig
+           fault: re-measure the priors, do not widen the tolerance); OR any
+           arm's step count < MIN_STEP_MATCH x STEP_TARGET (comparison not at
+           matched experience; raise the cap, do not compare); OR any arm
+           misses EITHER learning conjunct against its own untrained twin —
+           paired-t < MIN_LEARN_SIGMA (G1) or raw paired gain < LEARN_MARGIN
+           (G1b) — two non-learners cannot arbitrate (T2.02's precedent; the
+           verdict records WHICH arms learned and on WHICH conjunct, per
+           falsified_by); OR any UNTRAINED twin clears LEARN_MARGIN over its
+           own frozen prior (the gate would be measuring architecture bias,
+           not learning — T2.02's untrained MLP hit 2.74 sigma, hence twins
+           per arm, not just random). Updated 2026-09-12 by the successor
+           gate: the two vs-random comparisons this rule used to name are
+           gone, recorded-only.
   FAIL   — no arm beats the runner-up by >= WIN_MARGIN_SIGMA x pooled seed
            spread: a TIE, resolved to the cheapest arm by PPO-trainable
            parameters. A real result: the control-path choice does not matter
@@ -194,6 +313,63 @@ SB3_REFERENCE_FLOOR = 450.0  # G3: the verbatim external reference (T2.02's
                             # learning verdict is recorded on any arm.
 SB3_REF_MINUTES_CAP = 45    # per seed, T2.02's own cap (probe needed ~27 min
                             # per seed for 704k steps on the kernel CPU).
+
+# ---- THE SUCCESSOR GATE: step (2) of the stamp owed on the queue row
+# ---- `d10-successor-rerun-under-adopted-gate` (DUE 2026-09-14). See the
+# ---- docstring section of the same name for the derivation and for the one
+# ---- place this execution DEPARTS from the disposition's wording.
+#
+# Frozen untrained-twin priors, measured by experiments/tests/
+# d10_twin_spread_probe.py (artifact /data/d10_twin_spread.json, 2026-09-12,
+# K=32 distinct init seeds per architecture, EVAL_EPISODES=5 at
+# EVAL_SEED_BASE=9000 — the same deterministic eval this spec uses, forward
+# passes only, nothing trained, 1838 s CPU). The probe's branch criterion was
+# committed BLIND in 8624fa0 and selected SPREAD_IS_ZERO (min cv 0.0102 vs
+# CV_MIN 0.05), so the denominator may not be a per-arm twin sigma and the
+# gate takes the pre-registered RAW-MARGIN form in return units.
+TWIN_PRIOR = {                    # arm: (mean, std) of the untrained prior
+    "aprime":  (197.09,  4.5354),
+    "b_split": (171.49, 42.2260),
+    "c_e2e":   (179.41, 71.7471),
+    "d_mlp":   (197.70,  2.0235),
+}
+TWIN_PRIOR_K = 32           # init seeds behind each row above
+TWIN_DRIFT_SIGMA = 3.0      # RIG gate: the run's OWN 3-seed untrained means
+                            # must agree with the table above to this many
+                            # standard errors, or the frozen priors do not
+                            # describe this code and NO arm is scored.
+
+
+def _null_se(std: float, n: int = len(SEEDS)) -> float:
+    """Standard error of mean(d) under the NO-LEARNING null.
+
+    The null is not "training moved no weights" (which gives d == 0 exactly,
+    since a twin shares its arm's init seed and eval seeds): it is "training
+    moved the weights and learnt nothing useful", under which the trained
+    score is a fresh draw from the architecture's own untrained prior. Then
+    d_i = X_i - Y_i with X, Y independent draws from that prior, so
+    var(d_i) = 2 std^2 and sd(mean over n seeds) = std sqrt(2/n).
+    """
+    return std * (2.0 / n) ** 0.5
+
+
+# DERIVED, NOT CHOSEN — every term is pre-registered or measured, and the
+# constant is computed here rather than typed so it cannot be hand-tuned
+# without visibly editing a measured table:
+#   MIN_LEARN_SIGMA   3.0, unmoved since the gate was first written (law 4)
+#   len(SEEDS)        3, the registered seed count
+#   max over arms     forced: the probe found the twin spreads HETEROGENEOUS
+#                     by 35.5x, so a per-arm denominator is not a common
+#                     ruler and four arms scored in four units is not a
+#                     bakeoff. A single raw bar must dominate the null noise
+#                     of the NOISIEST architecture in the field or it admits
+#                     init luck for that arm.
+#   TWIN_PRIOR stds   the probe's, from K=32 untrained evaluations per arm
+# NOTHING from attempt 2's trained means enters this number — the row's own
+# prohibition, because fitting a bar to the numbers it will judge is the move
+# every rule here forbids.
+LEARN_MARGIN = round(MIN_LEARN_SIGMA
+                     * max(_null_se(s) for _, s in TWIN_PRIOR.values()), 2)
 
 # FROZEN 2026-09-01 from the PILOT RECORD in the docstring (kernel
 # jack-ladder-1788225926, measured per-arm steps/s on the real P100).
@@ -910,6 +1086,10 @@ def _experiment(seed: int) -> dict:
             "untrained_means": [round(x, 1) for x in u_means],
             "mean": round(am, 1), "std": round(astd, 2),
             "paired_t": round(paired_t, 2),
+            # G1b (successor gate, step (2) 2026-09-12): the RAW paired gain
+            # in return units, against LEARN_MARGIN. Disjoint failure mode
+            # from paired_t — see the docstring's WHY A CONJUNCTION.
+            "learn_margin": round(d_mean, 2),
             # G2: seed-to-seed consistency, its own named quantity so an
             # inconsistent arm is never reported as "did not learn".
             "consistency": round(astd / max(abs(am), 1e-6), 3),
@@ -944,7 +1124,17 @@ def _experiment(seed: int) -> dict:
 
 
 def _control(seed: int) -> dict:
-    """Untrained twins of ALL FOUR arms must miss the learning gate."""
+    """Untrained twins of ALL FOUR arms must miss the learning gate.
+
+    SUCCESSOR GATE, step (2) 2026-09-12: the statistic changed and the
+    sentence above did not. The twins are now scored on the SAME ruler the
+    claim is scored on — excess over the frozen untrained prior, in return
+    units, against LEARN_MARGIN — and no longer against the random policy.
+    `untrained_*_sigma` is still COMPUTED AND RECORDED (the disposition's
+    condition 2: we keep the number and lose the dependence on it) but it
+    gates nothing: it is the quantity whose sampling noise decided attempt
+    2's verdict.
+    """
     rnd_mean, rnd_std = _stats(_CACHE["random_returns"])
     if _CACHE.get("reference_failed"):
         return {"reference_failed": 1.0}
@@ -952,9 +1142,17 @@ def _control(seed: int) -> dict:
     for a in ARMS:
         runs = [r for r in _CACHE["runs"] if r["arm"] == a]
         um, ustd = _stats([r["untrained_mean"] for r in runs])
+        prior_mean, prior_std = TWIN_PRIOR[a]
         c[f"untrained_{a}_mean"] = round(um, 1)
+        # RECORDED ONLY — the attempt-2 denominator, kept for continuity.
         c[f"untrained_{a}_sigma"] = round(
             (um - rnd_mean) / max(ustd, rnd_std, 1e-6), 2)
+        # GATING: same ruler as the claim. An untrained network must NOT clear
+        # the margin a trained one has to clear.
+        c[f"untrained_{a}_excess"] = round(um - prior_mean, 2)
+        # RIG: does the frozen prior table still describe this code?
+        c[f"untrained_{a}_drift_tol"] = round(
+            TWIN_DRIFT_SIGMA * prior_std / len(SEEDS) ** 0.5, 2)
     return c
 
 
@@ -987,12 +1185,79 @@ def _check(m: dict, c: dict):
                         for a, v in low.items())
             + ". Raise that arm's MINUTES_CAP; do not compare.")
         return Status.VOID
-    # G1 (adopted gate 2026-09-06): learning is scored against the arm's OWN
-    # untrained twin, paired by seed. The 3.0 bar is MIN_LEARN_SIGMA, unmoved;
-    # attempt 1's twins read 2.94-2.96 sigma vs random, so the old vs-random
-    # statistic credited every arm with its architecture's bias.
+    # THE CONTROL, on the successor gate's own ruler (step (2) 2026-09-12) —
+    # and it runs BEFORE G0 for a reason that is arithmetic, not taste. Both
+    # branches read the same quantity (the run's untrained twins against the
+    # frozen prior) at different bars, and G0's per-arm tolerance
+    # 3*std_a/sqrt(3) = 1.732*std_a is ALWAYS tighter than
+    # LEARN_MARGIN = 2.449*max_std >= 2.449*std_a. Ordered the other way round
+    # this branch is unreachable for every arm — a control that cannot fire,
+    # which is the precise thing law 2 forbids. Ordered this way, each
+    # excursion is reported by the branch that describes it: a twin scoring
+    # what a TRAINED arm must score is a claim-level indictment, a smaller
+    # disagreement is rig drift.
+    hot_twins = {a: c[f"untrained_{a}_excess"] for a in ARMS
+                 if c[f"untrained_{a}_excess"] >= LEARN_MARGIN}
+    if hot_twins:
+        m["verdict"] = (
+            "VOID — untrained twin(s) cleared the learning margin on the "
+            "claim's own ruler: "
+            + ", ".join(f"{a} at excess {v} over its frozen prior "
+                        f"(bar {LEARN_MARGIN})" for a, v in hot_twins.items())
+            + ". A network that has received no gradient scored what a trained "
+              "one has to score, so the gate is measuring something other "
+              "than learning and no arm verdict is recorded.")
+        return Status.VOID
+    # G0 (successor gate, step (2) 2026-09-12): RIG BEFORE CLAIM — the frozen
+    # TWIN_PRIOR table is the reference BOTH G1b and the control are measured
+    # against, so its validity is indicted before any arm is scored (the
+    # LG.03 ordering lesson: indict the teacher before the twin). A trip here
+    # is not an arm result and not a venue result: it means the priors were
+    # measured on different code, and the repair is to re-run
+    # d10_twin_spread_probe.py and re-freeze the table.
+    drifted = {a: (c[f"untrained_{a}_mean"], TWIN_PRIOR[a][0],
+                   c[f"untrained_{a}_drift_tol"]) for a in ARMS
+               if abs(c[f"untrained_{a}_mean"] - TWIN_PRIOR[a][0])
+               > c[f"untrained_{a}_drift_tol"]}
+    if drifted:
+        m["verdict"] = (
+            "VOID — RIG (G0): the run's own untrained twins disagree with the "
+            f"frozen TWIN_PRIOR table (K={TWIN_PRIOR_K}, probe 2026-09-12) by "
+            f"more than {TWIN_DRIFT_SIGMA} standard errors: "
+            + ", ".join(f"{a} read {got} vs prior {want} (tol +-{tol})"
+                        for a, (got, want, tol) in drifted.items())
+            + ". The frozen priors do not describe this code, so the gate's "
+              "reference is invalid and NO arm is scored. Re-run "
+              "d10_twin_spread_probe.py and re-freeze TWIN_PRIOR; do not "
+              "widen the tolerance.")
+        return Status.VOID
+    # G1 (adopted gate 2026-09-06) + G1b (successor gate, step (2)
+    # 2026-09-12): learning is scored against the arm's OWN untrained twin,
+    # paired by seed, on TWO statistics that must BOTH clear — a dimensionless
+    # paired t against MIN_LEARN_SIGMA (3.0, unmoved) and the raw paired gain
+    # against LEARN_MARGIN (derived from the probe's twin spreads, never from
+    # a trained mean). Conjunction, so strictly harder than either alone.
     missed = {a: m["arms"][a]["paired_t"] for a in ARMS
               if m["arms"][a]["paired_t"] < MIN_LEARN_SIGMA}
+    thin = {a: m["arms"][a]["learn_margin"] for a in ARMS
+            if m["arms"][a]["learn_margin"] < LEARN_MARGIN}
+    if thin and not missed:
+        held = {a: m["arms"][a]["learn_margin"] for a in ARMS
+                if a not in thin}
+        m["verdict"] = (
+            "VOID — learning gate (G1b, RAW paired margin vs own untrained "
+            "twin): "
+            + ", ".join(f"{a} gained {v} return (bar {LEARN_MARGIN})"
+                        for a, v in thin.items())
+            + f"; arms that cleared it: {held or 'none'}. These arms cleared "
+              "the paired-t conjunct, so this is NOT 'no signal' — it is a "
+              "gain too small to separate from what the noisiest "
+              "architecture in the field gets by init luck alone "
+              f"({LEARN_MARGIN} = {MIN_LEARN_SIGMA} x max_arm "
+              f"std*sqrt(2/{len(SEEDS)}), probe K={TWIN_PRIOR_K}). "
+              f"{len(thin)} arm(s) ({sorted(thin)}) void the arbitration "
+              "(T2.02's precedent).")
+        return Status.VOID
     if missed:
         learned = {a: m["arms"][a]["paired_t"] for a in ARMS
                    if a not in missed}
@@ -1000,6 +1265,7 @@ def _check(m: dict, c: dict):
             "VOID — learning gate (G1, paired vs own untrained twin): "
             + ", ".join(f"{a} at paired-t {v} (bar {MIN_LEARN_SIGMA})"
                         for a, v in missed.items())
+            + (f"; also under the raw margin: {thin}" if thin else "")
             + f"; arms that DID learn: {learned or 'none'}. "
             + f"{len(missed)} non-learner(s) ({sorted(missed)}) void the "
               "arbitration (T2.02's precedent: an arm that has not "
@@ -1011,15 +1277,6 @@ def _check(m: dict, c: dict):
                 "the shared trunk-tuned recipe failing the MLP, a recipe "
                 "question for the Review (UB.10's finding), not an "
                 "architecture verdict and not a re-roll.")
-        return Status.VOID
-    hot_twins = {a: c[f"untrained_{a}_sigma"] for a in ARMS
-                 if c[f"untrained_{a}_sigma"] >= MIN_LEARN_SIGMA}
-    if hot_twins:
-        m["verdict"] = (
-            "VOID — untrained twin(s) cleared the learning gate: "
-            + ", ".join(f"{a} at {v} sigma (bar {MIN_LEARN_SIGMA})"
-                        for a, v in hot_twins.items())
-            + ". The gate is measuring architectural bias, not learning.")
         return Status.VOID
     # G2 (adopted gate 2026-09-06): consistency is its own named conjunct so
     # "noisy" and "did not learn" never share a verdict again. It can only
