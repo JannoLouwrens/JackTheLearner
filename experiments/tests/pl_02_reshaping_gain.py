@@ -189,6 +189,30 @@ a smoke PASSES and `pl02-eye-gate-reads-the-encoder-not-the-eye`
 (DUE 2026-09-09) rules what the gate reads. Nothing in this record moves
 a threshold; the gate is untouched.
 
+SMOKE RECORD 3 (seed 90, 64 px RGB, UNDER THE RE-AIMED GATE, ran
+2026-09-12T23:11:16Z detached, /data/pl02_smoke_rawgate_seed90.log,
+~1100 s): check -> **PASS**. The rig is alive and the registered run is
+unblocked. `r2_raw_pixel` **0.924963** vs EYE_RADIUS_R2_MIN 0.80 — measured
+on THIS run's own probe split, and 0.008 below the decomposition's
+independently-sampled RGB@64 ceiling of 0.9327, which is the agreement two
+different draws of the same sampler should show.
+
+AND THE EDIT IS PROVED INERT ON EVERYTHING ELSE, which is the part worth
+keeping: every metric SMOKE RECORD 2 published reproduces to the last
+digit — reshaping_gain_R 0.942818, CI [0.930903, 0.960186], r2_plastic
+0.941133, r2_ua -0.001685 (UNCHANGED, still recorded, no longer gating),
+r2_frozen -0.001685, audio 0.999658, shuffled_label 8.2e-05, canary and
+determinism clean, control shuffled_R -0.002328 with CI excluding zero from
+BELOW and control_reshapes_too 0. The only new number is the one the ruling
+added. `loss_drop_ua` 0.0041.
+
+Housekeeping, disclosed: the process printed `XIO: fatal IO error 22` on
+the shared X display AFTER `check -> True` was written — a teardown-order
+artifact of releasing renderers at exit, not a render fault. Any frame
+corruption from a poisoned display is what `canary_ok` exists to catch and
+it read 1 on this run (PG.6's discipline, and the reason the renderers are
+held for the process lifetime in the first place).
+
 WEIGHTS ARE PERSISTED — the 2026-09-07 standing rule (PROGRESS item 5):
 PL.02 is an arena of the Vision-encoder seat (`experiments/champions.py`),
 so every trained A-encoder's state_dict is written to
