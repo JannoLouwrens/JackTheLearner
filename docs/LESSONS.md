@@ -12952,3 +12952,61 @@ branches share a status, which describes most VOID-heavy specs here.
    that it currently passes.** A control that passes may be passing because it
    is correct or because it is unreachable, and those look identical from the
    outside. The fixture that distinguishes them costs one perturbation.
+
+## A RECEIPT KEYED ON THE REGISTRY CANNOT RECEIPT WORK THE REGISTRY DOES NOT
+## CONTAIN — and the failure is not a MISSING receipt, it is a PERMANENT one
+## that describes itself as a lost result
+## (builder, 2026-09-12, blocked by `probe:d10_twin_spread` on `run next`)
+
+**What happened.** `run next` refused this slot:
+
+    AWAITING probe:d10_twin_spread since 2026-09-12T21:21:01
+      (no ledger row since launch, pid gone)
+
+The probe had been harvested twice and committed twice — its K=32 table is in
+`8608986` and `LEARN_MARGIN` was derived from it in `7cb00ea`. Nothing was
+dropped. The refusal was still correct in DIRECTION (somebody owed a decision)
+and false in CONTENT, and it would have repeated for every iteration until a
+human deleted a line.
+
+**The mechanism, and it is a domain mismatch between two halves of one
+instrument.** `proc_await SPEC_ID PID` accepts any string. `_awaiting_check`
+resolves a row by `ledger.results.get(spec)`. A PROBE writes no ledger row —
+*"no seeds, no ledger row, no gate frozen"* is the definition of a probe in this
+repo — so a row armed on one **cannot reach the RESOLVED branch at any future
+time**. The arming side's domain is *strings*; the resolving side's domain is
+*registered spec ids*; the gap between them is not empty, and everything in it
+is an eternal blocker.
+
+**THE RULE.** When a guard clears itself by looking a subject up in a registry,
+check that the ARMING side cannot accept a subject the registry will never
+contain. If it can, the guard has a class of input it can only ever refuse.
+Enumerate that class explicitly and make the instrument NAME it — do not widen
+the resolver, and do not auto-prune.
+
+**Why not auto-prune, which is the tempting fix.** Pruning an unresolvable row
+deletes the only record that a harvest is owed, which is the exact scar the
+AWAITING row exists to close (67th audit B2: a result landed with nothing
+scheduled to read it and every instrument stayed green). The correct repair is
+CLASSIFICATION, not removal: keep refusing, and say *"NOT A REGISTERED SPEC — no
+ledger row can ever resolve this; hand-clear only"* beside the row, with a note
+that this is not a lost result and that the label should not have been armed.
+**Refusing with a true sentence and refusing with a false one cost the same
+number of iterations; only one of them teaches the next reader anything.**
+
+**Generalised past this instrument.** This is the third member of a family this
+file now records in three weeks — `T0.13` comparing STATUS where it needed the
+BRANCH, a predicate read for a report's SCOPE, and now a resolver whose key
+space is narrower than its writer's. In all three the tool is *correct about its
+input* and *wrong about the world*, and in all three the giveaway is the same:
+**the instrument's two ends were written against different populations.** When
+you touch either end of a two-ended instrument, state what the other end
+assumes.
+
+**And the smaller, purely mechanical one, because it cost a wrong report before
+it cost anything else:** `grep -v PATTERN file > out && mv out file` **silently
+does nothing when the pattern matches every line** — `grep` exits 1 on no output,
+so the `&&` short-circuits and the original file survives while the command
+reads as success. It printed "rows now: 1" after a delete that did not happen.
+Check `mtime`/`md5sum`, not the exit status of a pipeline whose last useful step
+is guarded by `&&`.
