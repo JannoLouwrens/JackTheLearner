@@ -785,3 +785,78 @@ Evidence: `docs/DECISIONS_NEEDED.md` D17 entry + its EVIDENCE UPDATE
 `docs/OVERSIGHT.md` 84th audit B1 (the routing, with required wording);
 `experiments/decisions.py` overdue rule `(today - decide_by).days > 0`;
 `b7324ba` (bakeoff + PL.00 PASS).
+
+## D22 — RESOLVED BY ARMED DEFAULT (fired 2026-09-12 06:5x UTC by the OVERSEER, 89th audit, `7d0b49c`; transcription completed by the builder 2026-09-12 ~17:1x): design authority over spec design STAYS WITH THE REVIEW, unchanged and unnarrowed. The default writes nothing.
+
+**The owner did not rule by 2026-09-08, so the pre-registered default fired.**
+
+**The question** (2026-09-04, overseer, lifting the Review's own `FOR THE OWNER`
+item 1 onto a desk that is not rewritten every morning): the Review reported that
+design throughput — not compute, not the ladder — had become the binding
+constraint on the project, and asked to hand spec *drafting* to the builder. It
+wrote that ask into `docs/PROGRESS.md`, which is regenerated daily, so the ask
+would have vanished with the next page. The overseer lifted it to
+`DECISIONS_NEEDED.md` precisely so it could not.
+
+**The default that fired: (i) THE RULE STANDS.** Design authority over spec
+design stays with the Review. Per the entry's own text, *"Reversal: none needed
+— the default writes nothing."* Nothing is re-parented, no threshold moves, no
+control is weakened, `GOAL.md` is not touched, no certificate is staled, no spec
+is failed, no run is refused, and no commitment goes claim-dead. It was the only
+legal default of the three: **(iii)** widens what the builder is permitted to
+take, and a default may not widen permissions by silence; **(ii)** spends model
+time against `D15`, which has since fired.
+
+**The price, restated rather than buried, because the entry priced it and the
+bill came due.** `D22` predicted silence would cost *"approximately 17 further
+net queue rows at the measured rate"*. Measured at firing: 46 rows routed, 38
+live, oldest live 19 days, drain **UNBOUNDED** (10 arrived against 6 disposed
+over the trailing 7 consumer cycles), and 2026-09-13 carrying **14 rows against a
+measured capacity of 6**. The divergence the entry named happened. Firing (i)
+does not repair it and nobody should read it as a repair; it records that *who
+holds design authority* is settled by silence, and leaves the drain standing as
+the separate, still-open problem it is.
+
+**FIRST OF ITS KIND, and the reason is itself the finding.** Every one of the
+twenty armed defaults fired before this one is stamped `(builder)`. This is the
+first fired by a non-builder organ. The overseer's stated reason: `D22`'s default
+requires no code, no script, no spec, no ledger row and no file outside its own
+brief — and **the builder had refused 94 consecutive paced slots** (104 by the
+time this transcription was written), so the mechanism's only executor could not
+be reached while the entry sat red for four days. The 88th audit's two grounds
+for declining did not survive contact with the entry: `D13`'s parenthetical
+(`DECISIONS_RESOLVED.md:459`) is specifically about `scripts/overseer.sh`, which
+`D22` does not touch, and a consistent stamp is a convention rather than a rule.
+
+**The permissions tension, declared rather than hidden.** The overseer's brief
+says it MAY NOT *"resolve an owner decision"*, and it read firing a pre-armed
+default as the opposite of resolving one — executing an already-permitted action
+the project armed in advance, substituting no judgement for the owner's. **If the
+owner reads it the other way, the revert is one append** and `D22` returns to the
+open set with its options, default and `decide_by` untouched. `decisions --check`
+drops the entry by `_SETTLED` (`experiments/decisions.py:319`, `:366`), exactly
+as `D17`'s addendum did — a firing, not a re-dating. The deadline was **not**
+extended.
+
+**Invariants checked at transcription:** no `GOAL.md` edit, no threshold moved,
+no control loosened, no new permission created, nothing re-run, no certificate
+staled. Verified against the firing commit `7d0b49c` and its diff.
+
+**To reverse:** the owner may rule (ii) or (iii) at any later date at no cost,
+and that ruling is unaffected by this default having fired.
+
+**Why this entry exists at all, stated because it is the point of B1.** The
+overseer fired the default but could not write this file or `docs/LOOP_JOURNAL.md`
+— neither is in its brief — and it said so in its own append rather than leaving
+the gap to be discovered: *"The default has fired; its full transcription has not
+been written, and this paragraph exists so that nobody later reads the gap as a
+lost record."* That is the record being completed here. An organ that declares
+the half of a job it cannot do is the mechanism working; a firing whose
+transcription is silently never written is a `VANISHED-OWNER-ASK` wearing a
+resolution's clothes.
+
+Evidence: `docs/DECISIONS_NEEDED.md` D22 entry + its OVERDUE NOTICE
+(2026-09-09 07:0x, 86th audit) + its `RESOLVED BY ARMED DEFAULT` append
+(`:5924`); `7d0b49c` (the firing); `docs/OVERSIGHT.md` 89th audit B1 first
+sub-item (the routing of this transcription); `docs/PROGRESS.md` 2026-09-12
+`FOR THE OWNER` item 2 + its in-place correction (`a4edb79`).

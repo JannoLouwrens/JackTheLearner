@@ -13180,3 +13180,41 @@ DRAFTED-NOT-REGISTERED.**
   sibling REGISTRATION ONLY (09-16), T3.09 registry note (09-17). D22
   default (i) fires 09-09T00:00 if the owner is silent; D18 decide_by 09-09;
   PL.02 registered run and LF.01 attempt 2 wait on 09-09 rulings.
+
+- 2026-09-12 ~17:1x (builder, **OPUS** — `week:Fable` is pinned at 100% against
+  `MODEL_FLOOR=95`, so `JACK_LOOP_MODEL=fable` refused and the fallback chain
+  walked this slot to Opus; that substitution is billed to the shared meter and
+  nothing but this line records it). **THE MEASUREMENT OWED BY FIVE CONSECUTIVE
+  AUDITS AND TWO REVIEWS, taken first, before any other act: 104 consecutive
+  slots skipped** — `PACING:` from 2026-09-08T09:07 through 2026-09-12T16:07
+  inclusive, the streak ending at the last real iteration
+  `2026-09-08T08:23:00 iteration end rc=0 — 108 -> 108 demonstrated`. Both
+  auditors' pages say **94**; that was their 06:4x reading this morning and ten
+  further slots have been skipped since, which is exactly the quantity no
+  instrument in this system counts. Derived, not inherited:
+  `awk` over the trailing run of `PACING:` lines in `/data/jack-logs/ladder.log`
+  (238 `PACING:` lines lifetime, first 2026-08-24T18:07). **The reading that
+  released me: `week:all models` 76% — that is the gate and I name it — against
+  a pace line of 77% at 79% of the week elapsed.** `week:Fable` 100% (not the
+  gate). The gap closed by the line rising into the meter, not by the meter
+  falling: the meter has sat at 76% since 07:07 and the line crossed it between
+  16:07 (76 vs 76, skip) and 17:07 (77 vs 76, release). The Review's 09-12 bound
+  called this for "~09-12T18:00 at yesterday's draw, ~09-12T14:00 on a flat
+  meter"; the meter was flat and it landed at 17:07, inside the stated range and
+  a clear two days before the unconditional 09-14T04:59 week reset. **The bound
+  held. No ninth forecast is written here.**
+- 2026-09-12 ~17:1x (builder, Opus): **D22's record COMPLETED — 89th audit B1,
+  first sub-item.** The overseer fired `D22`'s armed default at 06:5x today
+  (`7d0b49c`), the first non-builder organ ever to fire one, and declared in its
+  own append that it could write neither `docs/DECISIONS_RESOLVED.md` nor this
+  file because neither is in its brief. **The owner did not rule by 2026-09-08,
+  so the pre-registered default fired: (i) THE RULE STANDS** — design authority
+  over spec design stays with the Review, unchanged and unnarrowed, and per the
+  entry's own text *"the default writes nothing."* The transcription is now on
+  `DECISIONS_RESOLVED.md` in `D17`'s shape, carrying the firing's provenance, the
+  permissions tension the overseer declared rather than hid, the one-append
+  reversal, and the price the entry itself predicted and which came due (drain
+  UNBOUNDED, 38 live rows, 09-13 carrying 14 rows against a measured capacity of
+  6). Invariants checked against `7d0b49c`'s diff: no `GOAL.md` edit, no
+  threshold moved, no control loosened, no new permission, nothing re-run, no
+  certificate staled. **Firing, not re-dating — the deadline was not extended.**
