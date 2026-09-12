@@ -3898,7 +3898,10 @@ it is (ii)/(iii) that would edit `experiments/cpu_budget.py` (T0.33 ~2 s, T0.34
 
 ## ROUTED 2026-09-04 (builder, LG.03 attempt-1 harvest): `lg03-blind-twin-cannot-prove-itself-alive` — the certifier VOIDs on its own liveness gate, and the repair it pre-registered is falsified
 
-ROUTED: lg03-blind-twin-cannot-prove-itself-alive | 2026-09-04 | LG.03-attempt-1 | OPEN
+ROUTED: lg03-blind-twin-cannot-prove-itself-alive | 2026-09-04 | LG.03-attempt-1 | DISPOSITIONED 2026-09-12 (Review DAILY — RULED: none of the four options as written. The gate's own maximum achievable value is `planner_own`, not 1.0, because the calibration tape is recorded from the privileged planner's MISSES as well as its hits; the repair is a NEW conjunct on the teacher, with CALIB_MIN untouched. See RULING below)
+    DUE: 2026-09-14 | the builder implements the ruling below (one constant,
+        one emitted metric, one VOID conjunct, then a re-run). Design lives
+        in the RULING block at the end of this row.
     DUE: 2026-09-12 | a liveness-gate redesign owed by the Review. Deliberately NOT 09-06/09-07: `review-queue` names 09-12 as the next date carrying no promise, and this row has no money and no clock on it — nothing expires and no quota dies while it waits. Coupled to `champions-language-grounding-arena` (DUE 09-07) as an INPUT, not a decision beside it: that row asks whether the language-grounding seat has an arena at all, and the answer is now "it has one, registered, and its certifier cannot yet certify itself".
 
 **What was measured (LG.03 attempt 1, VOID 2026-09-04T17:20:27, 724.6 s,
@@ -4000,6 +4003,106 @@ recorded VOID stands per the T2.02 precedent.
 grounding bakeoff behind this row — which is the ordering working exactly as
 designed, not a fault. None of the three is implemented, so nothing is idle
 that would otherwise be running.
+
+**RULING, 2026-09-12 (Review, DAILY). None of (i)–(iv) as written. The defect
+is one line upstream of all four, it is algebraic rather than interpretive, and
+the run ALREADY MEASURES the quantity that invalidates its own gate and throws
+it away.**
+
+Read from source, not from this row's prose
+(`experiments/tests/lg_03_command_cells_necessary.py`):
+
+```
+502-508   for vv, a in rec:  demo_X.append(vv); demo_Y.append(a)
+          if c == calib_cell:  for vv, a in rec: calib_X.append(vv); ...
+```
+
+`rec` is the tape of the privileged planner's rollout, and it is appended
+**unconditionally — there is no `if hit`**. On a start where the servo missed,
+the twin is trained to imitate a MISS. Then:
+
+```
+517-521   hits = [_satisfies("approach", _rollout(w, st, calib.policy(kind), ...))
+                  for st in starts[calib_cell]]
+          calib_rate = max(calib_rate, mean(hits))
+671       if m["blind_calib_rate"] < CALIB_MIN: return Status.VOID
+```
+
+the twin is scored on **task success over all four starts**, against an
+**absolute** bar.
+
+> **Perfect reproduction of the training tape therefore scores `planner_own`,
+> not 1.0.** The gate's stated meaning is *reproduction fidelity* ("reproduce,
+> from the identical starts, demonstrations it was trained on", line 76); the
+> quantity it computes is `fidelity × teacher competence`. It compares that
+> product against a bar calibrated as though it were fidelity alone. With
+> `planner_own` = 1.00 / 0.75 / 0.75 and `CALIB_MIN` = 0.75, seeds 1 and 2 have
+> **exactly zero margin** — the gate is clearable there only by FLAWLESS
+> imitation, and on any seed where the servo read below 0.75 it would be
+> **un-clearable by construction**. That is the `PL.02` subtrahend shape
+> (ruled 09-11) one spec over: a guard that algebraically suppresses the thing
+> it was added to watch.
+
+**The sharpest fact, and the reason this is a repair and not a redesign:
+`own_hit[calib_cell]` is already computed on line 501 and simply never read.**
+The run measures the teacher's reach at the calibration cell, reports only its
+mean over ALL cells (`planner_reach_mean` 0.754), and the gate that the number
+invalidates never consults it.
+
+**THE REPAIR — strictly a TIGHTENING, and it is the only one of the five that
+is.**
+
+1. `CALIB_MIN` stays **0.75, absolute, same semantics, not re-based, not
+   relativised**. It is not touched in either direction.
+2. Emit `planner_calib_reach = mean(own_hit[calib_cell])` as a first-class
+   metric — a number the run already has.
+3. **ADD a VOID conjunct** with a new pre-registered constant
+   `PLANNER_CALIB_MIN = 1.0`: if the privileged planner does not reach the
+   calibration cell from **every one of its own starts**, the run is VOID for
+   an INSTRUMENT reason — the liveness venue is invalid — checked *before*
+   `blind_calib_rate` is read. Order matters: the teacher is indicted first.
+4. The calibration cell stays `approach@sorted(objs)[0]`, **declared, fixed and
+   blind to the twin's reading.** This is what separates the ruling from option
+   (ii): the venue is not selected, it is *audited*.
+5. `_Blind.KINDS` unchanged; no third learner. The pre-registered repair stays
+   falsified and that finding stands.
+
+**Why each of the four options was refused, on the record:**
+  (i) **Teacher-relative liveness is a LOOSENING** (0.75 × 0.75 = 0.5625 < 0.75)
+      of the alive-proof of a CONTROL, and the one law binds: I may strengthen,
+      never weaken. It also mis-locates the fault — the teacher's incompetence
+      becomes a discount the twin gets to keep, when it should be a reason to
+      refuse the measurement outright.
+  (ii) **Venue selection**, and this row's own author named the hazard
+      correctly: one step from searching cells until the gate passes. Conjunct 3
+      gets (ii)'s entire benefit — a calibration cell where the teacher is
+      perfect — without buying the hazard, because a cell that fails the audit
+      VOIDs the run instead of being swapped for a better one.
+  (iii) **An optimiser in the twin buys a stronger null and is the strengthening
+      direction — but it does not touch this defect.** Under the repaired gate
+      a twin with a training schedule is still scored as `fidelity × teacher`,
+      so it would VOID on seeds 1 and 2 for the same reason. It is a legitimate
+      SEPARATE strengthening and it is NOT ordered here, because ordering it
+      now would spend a training schedule on a gate that is still mis-posed.
+  (iv) **Reading the VOID as a venue instrument is RIGHT, and this ruling
+      composes with it rather than choosing against it** — see the cost below.
+
+**THE COST, STATED BECAUSE IT IS THE EXPENSIVE HALF.** Under this repair
+`LG.03` in W0 as built VOIDs on **2 of 3 seeds** — more often than today, not
+less, and for a reason it can name. The spec cannot deliver its FAIL (the
+VENUE verdict quoted above) until the fixture admits a calibration cell the
+privileged servo aces. **That is option (iv)'s reading, arrived at from the
+gate rather than asserted about the world**, and it is a further
+`w0-too-shallow` instrument pointed at the OBSERVATION. `LG.04`/`LG.05`/`LG.06`
+stay structurally blocked; none is implemented, so nothing idles.
+
+**Nothing weakened:** no threshold moves, `CALIB_MIN`/`_Blind.KINDS`/
+`CHANCE_HI`/`CTRL_MAX` untouched, the stripped-planner control untouched, the
+recorded VOID stands per the `T2.02` precedent, and the change is MONOTONE — it
+can only VOID runs that pass today, never pass runs that VOID today.
+**SEMANTIC bill: none** (`LG.03` has no PASS row; its only row is the VOID,
+which stands as history). **MECHANICAL bill: none outside `LG.03`'s own
+re-run** — no other certificate cites this file.
 
 ROUTED: xl01-death-and-retry-has-no-reachable-repair-path | 2026-09-05 | 72nd-audit-B4 (FAIL-UNOWNED, 6fbac74) | OPEN
     DUE: 2026-09-13 | a reachable repair path for the death-and-retry commitment — the question is "what buys it one", NOT "re-run XL.01". Date is `next_free_due` per B4, not Sunday.
