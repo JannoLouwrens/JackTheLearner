@@ -935,3 +935,79 @@ Evidence: `docs/DECISIONS_NEEDED.md` D18 entry + its EVIDENCE UPDATE 2026-09-06
 `RESOLVED BY ARMED DEFAULT` append; `a071d91`; `scripts/lib_procwatch.sh:62,
 :104-113, :252-285`; `scripts/ladder_loop.sh:238`; `experiments/protocol.py:433,
 :2910, :3040, :3143, :3152`; `docs/OVERSIGHT.md` 89th audit B1.
+
+## D24 — RESOLVED BY ARMED DEFAULT (fired 2026-09-12 ~17:3x UTC, builder): (iii) DECLARE, DO NOT DECIDE. The Learning-core seat's arena is `VENUE-UNAFFORDABLE`. The "~10x" scale ratio is UNTOUCHED.
+
+**The owner did not rule by 2026-09-11, so the pre-registered default fired.**
+
+**The question** (2026-09-06, Review, FULL): `LC.07` — the scale-transfer arena
+registered by `D10`'s own firing commit *specifically so the wm-latent seat would
+not be held with a dead arena* — measures **~526 wall-hours** (21 runs, ~132
+kernel-hours at ideal 4-way packing) against a **30 h/week** free allocation:
+**≈17.5 weeks of every GPU hour this project has, for one seat's arena.** The
+pilot rig is healthy (seed 90, kernel `jack-ladder-1788297232`, 0.44 h, all 7 run
+classes measured, wiring exact, physics finite, RSS ~550 MB) and its
+pre-registered branch B fired on **arithmetic, not a fault**: rule A caps a
+full-scale run at 8.5 h wall; the cheapest class projects 14.49 h and the arm
+40.86 h — 4.8× the kernel ceiling. Bought, shrunk, or declared unaffordable?
+
+**The default that fired: (iii).** One label, with the arithmetic beside it, on
+the seat in `docs/CHAMPIONS.md`. No threshold moves in either direction, no spec
+is failed, no run is refused, no certificate is staled. `LC.07` stays
+PILOT-BLOCKED with `_GATES_FROZEN` False and `run()` refusing — identical
+behaviour before and after.
+
+**It was the only legal default of the three.** (i) commits ~17.5 weeks of the
+entire free GPU allocation **by silence**; (ii) SHRINK THE CLAIM re-reads the
+"~10x" downward to fit the budget, which is a **threshold move by silence** and
+the precise act `SYSTEM.md` law 4 exists to forbid — a 10× scale-transfer claim
+is strictly stronger than a 3× one, and shrinking it buys a PASS with a smaller
+question. **(ii) did not fire; the 10x is intact at full strength, and nothing in
+the silence should be read as choosing it.**
+
+**Why the obvious repair was refused, and by the Review rather than by this
+firing.** Checkpoint/resume surgery on `survival.py` is demonstrably feasible —
+`LF.02` PASSed on 2026-09-03 with a W0 life SIGKILLed mid-decision-stream and
+resumed **bit-exactly** over 1000 decisions across all four stores, weights-only
+null diverging 8.1 ± 2.7. But it repairs the **per-run 8.5 h ceiling** and does
+not touch the **526-hour total**: it converts *impossible* into *17.5 weeks*, and
+bills a surgery that stales every `LC` and `XL` certificate for the conversion.
+Refused on `lc07-checkpoint-branch` (DISPOSITIONED 2026-09-06).
+
+**Verified at firing rather than asserted.** `champions --check` exits 0 before
+and after, and **every ratchet counter is byte-identical across the edit**: 0/0
+phantom arena, 2/3 unfalsifiable, 2+1/4 uncontestable, 2/2 unverified verdicts,
+3/3 trigger debt, 1/1 kindless discharges. A declare-only default that moved a
+counter would not be declare-only.
+
+**One deliberate narrowing of the default's own words, declared not taken
+silently.** The default asked that the label make `champions` "print the
+uncontestedness it currently implies". `champions.py`'s declaration grammar
+admits only `HELD:`/`ARENA:`/`VERDICT:`/`TRIGGER:`, so an invented `VENUE:` field
+would be **silently ignored** — a machine-readable line that reads as declared
+and is inert, exactly the trap `DECL-INCOMPLETE` exists to catch. The label went
+into the seat's prose cell; the `SEAT:` declaration line is **untouched**. Nothing
+is lost: the tool already prints the same fact from the other end, listing the
+Learning core in **TRIGGER DEBT** with `LC.07=PILOT-BLOCKED,
+LC.03=VOID-FORECLOSED, UB.10=VOID` — every declared re-open trigger a closed
+door. The default's own reversal clause ("nothing downstream reads it")
+anticipated this.
+
+**The price, restated rather than buried, because the entry priced it:** under
+(iii) the wm-latent seat stays **UNDECIDED with no reachable arena**, and the
+honest reading of that is that **this project cannot currently contest its own
+learning-core choice.** Making it visible is the point. It is not a fix and it is
+not being called one.
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved (the 10x
+ratio, rule A's 8.5 h, and every `LC` gate unchanged), no control loosened, no new
+permission created, nothing re-run, no certificate staled, no spec failed, no run
+refused, no commitment claim-dead.
+
+**To reverse:** change one label. The owner may rule (i) or (ii) at any later
+date at no cost, unaffected by this default having fired.
+
+Evidence: `docs/DECISIONS_NEEDED.md` D24 entry + its `RESOLVED BY ARMED DEFAULT`
+append; `docs/CHAMPIONS.md` Learning-core row; `experiments/champions.py:551,
+:620-700`; `/data/lc07_pilot.json`; `lc07-checkpoint-branch`; `LF.02` PASS
+2026-09-03; `docs/OVERSIGHT.md` 89th audit B1.

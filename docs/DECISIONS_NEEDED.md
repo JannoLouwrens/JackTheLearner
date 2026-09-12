@@ -6061,3 +6061,60 @@ Evidence: `a071d91` (both halves, 2026-09-03); `scripts/lib_procwatch.sh:62,
 :2910, :3040, :3143, :3152`; this entry's EVIDENCE UPDATE 2026-09-06 12:4x (78th
 audit) and OVERDUE NOTICE 2026-09-10 07:0x (87th audit); `docs/OVERSIGHT.md`
 89th audit B1.
+
+## D24 — RESOLVED BY ARMED DEFAULT, fired 2026-09-12 ~17:3x UTC (builder). Off your desk.
+
+**The owner did not rule by 2026-09-11, so the pre-registered default fired.**
+
+Default **(iii) DECLARE, DO NOT DECIDE.** The Learning-core seat's arena is
+marked `VENUE-UNAFFORDABLE` in `docs/CHAMPIONS.md` with the 526 h / 30 h-per-week
+arithmetic beside it. **No threshold moves in either direction, no spec is
+failed, no run is refused, no certificate is staled, and the "~10x" scale ratio
+survives untouched.** `LC.07` stays PILOT-BLOCKED with `_GATES_FROZEN` False and
+`run()` refusing, exactly as before — the label changes what the file *says*, not
+what anything *does*.
+
+**It was the only legal default of the three, and the entry said so when it was
+armed:** (i) commits ~17.5 weeks of the project's entire free GPU allocation by
+silence; (ii) SHRINK THE CLAIM is a **threshold move by silence**, which is the
+act `SYSTEM.md` law 4 exists to forbid. **(ii) did not fire and nothing in this
+silence should be read as choosing it** — the 10x is intact at full strength.
+
+**Verified at firing rather than asserted:** `champions --check` exits 0 before
+and after, and **every ratchet counter is identical across the edit** (0/0
+phantom arena; 2/3 unfalsifiable; 2+1/4 uncontestable; 2/2 unverified verdicts;
+3/3 trigger debt; 1/1 kindless discharges). A default that moved a counter would
+not be the declare-only act it claims to be.
+
+**One deliberate narrowing of the default's own words, declared rather than
+silently taken.** The default said the label should make `champions` "print the
+uncontestedness it currently implies". `champions.py`'s declaration grammar
+admits only `HELD:`, `ARENA:`, `VERDICT:` and `TRIGGER:`; an invented
+`VENUE:` field would be **silently ignored** — a machine-readable line that reads
+as declared and is inert, which is the precise trap that grammar's
+`DECL-INCOMPLETE` rule exists to catch. So the label went into the seat's prose
+cell and the `SEAT:` declaration line is **untouched**. This costs nothing: the
+tool already prints the same fact from the other end — the Learning core stands
+in TRIGGER DEBT with `LC.07=PILOT-BLOCKED, LC.03=VOID-FORECLOSED, UB.10=VOID`,
+every declared re-open trigger a closed door. The default's own reversal clause
+("nothing downstream reads it") anticipated exactly this.
+
+**The price, restated rather than buried, because the entry priced it:** under
+(iii) the wm-latent seat stays **UNDECIDED with no reachable arena**, and the
+honest reading is that this project cannot currently contest its own
+learning-core choice. Making that visible is the point. **It is not a fix and it
+is not being called one.**
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved (the 10x
+ratio, `LC.07`'s 8.5 h rule A, and every `LC` gate unchanged), no control
+loosened, no new permission, nothing re-run, no certificate staled, no spec
+failed, no run refused, no commitment claim-dead.
+
+**To reverse:** change one label. The owner may rule (i) or (ii) at any later
+date at no cost, and that ruling is unaffected by this default having fired.
+
+Evidence: `docs/CHAMPIONS.md` Learning-core row (challenger-status cell);
+`experiments/champions.py:551` `_DECL_LINE` + `:620-700` field validation;
+`/data/lc07_pilot.json` (kernel `jack-ladder-1788297232`, 0.44 h, branch B);
+`lc07-checkpoint-branch` (DISPOSITIONED 2026-09-06, the surgery refused);
+`LF.02` PASS 2026-09-03; `docs/OVERSIGHT.md` 89th audit B1.

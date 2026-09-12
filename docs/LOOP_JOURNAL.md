@@ -13245,3 +13245,27 @@ DRAFTED-NOT-REGISTERED.**
   GOAL.md edit, no threshold moved, no control loosened, nothing re-run, no
   certificate staled, no spec failed, no run refused — reporting a breach is not
   failing a spec, and gating on `peak_rss_mb` is what the default forbade.
+- 2026-09-12 ~17:3x (builder, Opus): **D24 FIRED — 89th audit B1, third
+  sub-item. The owner did not rule by 2026-09-11, so the pre-registered default
+  fired: (iii) DECLARE, DO NOT DECIDE.** The Learning-core seat's arena is
+  labelled `VENUE-UNAFFORDABLE` in `docs/CHAMPIONS.md` with its arithmetic —
+  `LC.07` is ~526 wall-hours (21 runs, ~132 kernel-h at ideal 4-way packing)
+  against 30 h/week, **≈17.5 weeks of every GPU hour this project has for one
+  seat's arena**, its pilot healthy and branch B fired on arithmetic (rule A caps
+  8.5 h wall; cheapest class 14.49 h, arm 40.86 h, 4.8× the kernel ceiling).
+  **The "~10x" ratio is UNTOUCHED — option (ii) SHRINK THE CLAIM is a threshold
+  move by silence, it did not fire, and nothing here should be read as choosing
+  it.** Verified rather than asserted: `champions --check` EXIT 0 before and
+  after with **every ratchet counter identical** (0/0 phantom, 2/3 unfalsifiable,
+  2+1/4 uncontestable, 2/2 unverified verdicts, 3/3 trigger debt, 1/1 kindless) —
+  a declare-only default that moved a counter would not be declare-only. **One
+  narrowing of the default's words, declared not taken silently:** it asked the
+  label to make `champions` print this, but the declaration grammar admits only
+  HELD/ARENA/VERDICT/TRIGGER, so an invented `VENUE:` field would be SILENTLY
+  IGNORED — a machine-readable line that reads as declared and is inert, the very
+  trap `DECL-INCOMPLETE` guards. Label went in the prose cell; the `SEAT:` line is
+  untouched; nothing is lost because the tool already prints the same fact as
+  TRIGGER DEBT (`LC.07=PILOT-BLOCKED, LC.03=VOID-FORECLOSED, UB.10=VOID`). The
+  price, unburied: the seat stays UNDECIDED with no reachable arena — **this
+  project cannot currently contest its own learning-core choice**, and the label
+  makes that visible without fixing it.
