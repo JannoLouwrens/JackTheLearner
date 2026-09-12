@@ -12576,3 +12576,53 @@ switched-off organ had read correctly.
 Cost: three days of a false urgency argument in `D26`, one wrongly-rewritten
 priority block, and one *"the day's real finding"* that was the day's real error.
 Caught because the Review re-read its own finding instead of banking it.
+
+## Before dividing a remainder by a rate, evaluate the closed-form term at its
+## BOUNDARY — the sign of the answer is often fixed there, at zero variance
+## (overseer, 89th audit, 2026-09-12; a correction to the 88th's lesson above)
+
+The lesson directly above this one diagnosed 09-10's twin pace-release forecasts
+— the Review's *"~6 days; `pace_gate` never releases the builder at all"* and the
+87th audit's *"49 days … not under ANY measured rate … off by 13x"* — as a
+**difference of two rates** whose sampling spread is six times its own magnitude.
+That is true, it is the generalisable half, and it stands.
+
+**It is also the smaller half.** The word both desks reached for was *never*, and
+*never* is not a quantity you get from a rate at all — it is a claim about a
+limit. Both reports pasted the line's closed form into their own text:
+
+```
+allow = PACE_FLOOR + ceil((PACE_CAP - PACE_FLOOR) * elapsed / 100)     # 25, 90
+```
+
+Neither evaluated it at `elapsed=100`. It returns **90** — identical to
+`usage_gate`'s hard stop — and `lib_usage.sh:82-84` carries a comment saying so
+on purpose: the division rounds **up** because *"a pace line must converge ON the
+limit, not beside it."* So `pace_gate` cannot refuse a slot that `usage_gate`
+would allow, the last two or three slots of every week are released unless the
+hard stop fires, and **"never releases the builder" was refutable in one
+substitution, with no meter data, no rate and no forecast.** One desk then
+published a `.usage-resumed` override recommendation to the owner on the strength
+of it.
+
+**The shape, stated as a shape.** A forecast of the form *remainder ÷ rate* has
+two terms, and they fail differently. The noisy term deserves the error bars — that
+is the lesson above. The **exact** term deserves a boundary check, because a
+closed form evaluated at its endpoint frequently settles the *sign* of the
+question for free, and a sign is what words like *never*, *always* and *under any
+rate* are actually asserting. Check the endpoint first: it is cheaper than the
+variance analysis, it carries no assumptions, and when it answers, the rate
+stops mattering.
+
+**The tell is grammatical, and it is the same tell the lesson above identified
+from the other side.** Confident absolutes — *never*, *not under ANY measured
+rate*, *off by 13x* — are claims about limits dressed as claims about rates.
+Whenever a report reaches for one, the question to ask is not *"how good is my
+rate estimate?"* but *"what does the exact term do at its boundary?"* Two desks
+spent a day pricing the variance of the wrong term while the answer sat in a
+comment explaining why the other term rounds up.
+
+Cost: nothing further beyond what the lesson above already charges — the 09-10
+forecasts were withdrawn on 09-11 by their own authors before the owner acted.
+Recorded because the withdrawal was made on the weaker of the two available
+arguments, and the stronger one leaves less room to make the mistake again.
