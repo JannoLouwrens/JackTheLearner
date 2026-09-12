@@ -43,6 +43,46 @@ CONTROL (must fail to fixate): the identical agent, panel texture static.
 Every other geom, ray, weight and hyperparameter unchanged. Its dwell share
 must stay <= 0.15 — if it fixates without noise, dwell measures geometry and
 the fixture cannot certify any curiosity claim.
+
+HOW TO READ THIS PASS — ONE OF THE THREE SEEDS NEVER FOUND THE PANEL AT ALL.
+Per-seed `dwell_share` is **(1.0, 1.0, 0.0)**. The PASS is on the cross-seed
+MEAN, which is the aggregate protocol uniform across this ladder and was not
+bent for this run; nothing was hidden and nothing was cheated — the number was
+disclosed by the author in `4a4afb3` (2026-08-10) on the day it landed. But a
+commit message is not somewhere a reader looks, `run status` prints `[PASS]
+PG.4` unmarked, and **four specs depend on this fixture**, so the reading
+belongs here (90th audit B3).
+
+What that seed actually does to the gates, since "one weak seed" understates
+it: on the zero-dwell seed **four of the five experiment conjuncts in `_check`
+fail** — `icm_dwell_share` 0.0 vs `>= ICM_DWELL_MIN` 0.40; `dwell_margin`
+negative (it is `dwell - null`, so `-null_2`) vs `>= MARGIN_MIN` 0.25;
+`panel_reward_ratio` 0 vs `>= 2.0`; and `rays_on_panel_while_dwelling` 0 vs
+`> 0` — that last one **by construction**, because line ~283 computes it as
+`panel_hits_dwell / max(1, dwell_steps)` and a seed that never dwells has
+`dwell_steps == 0`, so the metric is `0/1`. Only `null_dwell_share` passes on
+that seed, and it is the null arm's own reading.
+
+The per-seed vector is RECOVERABLE FROM THE LEDGER ROW, which is why this is
+a disclosure and not a confession: `icm_dwell_share` records mean 0.666667,
+std 0.471405, so `Sum x = Sum x^2 = 2` (to 1.7e-06) and on [0,1] that forces
+every seed to 0 or 1 — hence `{1,1,0}` exactly. `dwell_margin` confirms it
+independently, summing to `2 - Sum(null_dwell_share)` to 1e-06. The other
+affected metrics are `{a, b, 0}` with `a ~= b` (e.g. `panel_reward_ratio`
+`{9.700e8, 9.534e8, 0}`), NOT `{a, a, 0}` — a mean+-std pins the multiset but
+never the PAIRING (`docs/LESSONS.md`, 2026-09-12), so the pairing here rests on
+the [0,1] bound and on `4a4afb3`, not on the signature.
+
+WHAT THIS DOES AND DOES NOT LICENCE. It does not move a threshold, void the
+row, or re-run anything — the protocol that produced the PASS is the ladder's
+own and changing it retroactively is not this file's call. The general repair
+is routed and dated: `aggregate-hides-worst-seed` in `docs/REVIEW_QUEUE.md`
+(DUE 2026-09-18), which carries the full worst-admissible-seed sweep and the
+three candidate arms for `protocol.py:_aggregate`. What it DOES licence is the
+caveat the author already wrote in that commit and which still stands:
+**`CU.3` should use dwell DISTRIBUTIONS, not means** — and any downstream spec
+treating `PG.4` as certifying that the trap fires reliably should read `(1, 1,
+0)` first.
 """
 from __future__ import annotations
 

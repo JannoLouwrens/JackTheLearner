@@ -1223,6 +1223,125 @@ ROUTED: aggregate-hides-worst-seed | 2026-08-30 | bf947a1 (found writing T3.06 v
     a renamed key fails loudly at its next run, which is the intended behaviour
     and must be paid deliberately rather than discovered.
 
+    THE SWEEP THIS ROW ASKED FOR IS ATTACHED (builder, 2026-09-12, 90th audit
+    B2 — no second row opened). It was RUN, not estimated: an AST pass over
+    every multi-seed PASS row, extracting each `_check` comparison of
+    `m["<key>"]` against a resolvable module constant where `<key>_std > 0`,
+    and testing the exact n=3 extreme-value bound `|x_i - mu| <= sigma*sqrt(2)`
+    (ddof=0) against the bar. No new machinery: the ledger and the spec files
+    are the whole input. **10 (spec, metric) pairs across 7 specs came back**,
+    and they do NOT all mean the same thing — the sweep's value is the
+    classification, not the count:
+
+      spec     metric                        mean       std      bar     worst adm
+      PG.4     icm_dwell_share             0.66667   0.47140   >=0.40    -3.4e-07
+      PG.4     dwell_margin                0.60527   0.44544   >=0.25    -0.024676
+      PG.4     panel_reward_ratio          6.411e8   4.534e8   >=2.0     -71730
+      PG.4     rays_on_panel_while_dwell   7.47667   5.28680   > 0       -1.5e-06
+      ME.10    skill_gain                  0.37037   0.09442   >=0.25     0.236832
+      PS.02    shuffled_r2                -0.18109   0.19870   <=0.05     0.099947
+      T2.08    coverage_margin             0.05440   0.01873   >=0.05     0.027908
+      LG.01    retained_min_per_category  23.00000   2.16000   >=20      19.944900
+      T3.01    ref_min                     0.44670   5.6e-17   >=0.38     (std==0)
+      W0.DIAG  jit_delta_up                0.02177   0.00227   > 0.0      0.018563
+
+    FOUR CLASSES, and two of them correct the finding as ordered:
+
+      BROKEN, PROVEN — **`PG.4`, and only `PG.4`.** Finding 3 below. The
+        ordered text's headline ("the measured breakage cost of arm (b) is ONE
+        spec") SURVIVES the sweep.
+      THE RECORD CANNOT ANSWER — **`ME.10` AND `PS.02`, not `ME.10` alone.**
+        `ME.10 skill_gain` is as ordered (worst admissible 0.236832 vs bar
+        0.25). **`PS.02` was excluded in the ordering as "idiom 2" and the
+        exclusion does not hold:** `ps_02_cold_is_felt.py:420` builds
+        `seed_gates_ok` out of `cold_censored`, `censored_explained`,
+        `death_s_min/max`, `law_dev`, `warm_delta_c` and `warm_deaths` — the
+        RIG gates — and `shuffled_r2` is NOT among them. The shuffled-control
+        conjunct is still gated on the cross-seed mean, and a seed at +0.0999
+        against `SHUFFLED_R2_MAX` 0.05 is admissible by the record. Idiom 2
+        protects PS.02's rig, not its claim. One re-run settles each.
+      PARTIALLY PROTECTED — **`T2.08`, which the ordering recorded as safe.**
+        Idiom 3 is real and it is there (`margin_floor = coverage_margin -
+        SEED_SPREAD_FACTOR*margin_std`, plus a paired t-stat), but it gates
+        `margin_floor > 0.0` — POSITIVITY, not clearance. The separate
+        conjunct `coverage_margin >= MARGIN_MIN` is still a bare mean, and its
+        worst admissible seed is 0.027908 against `MARGIN_MIN` 0.05. So idiom 3
+        as deployed buys a weaker guarantee than its presence suggests, which
+        is itself an argument for arm (b) over a convention.
+      SAFE, AND WORTH NAMING SO THE NEXT SWEEP DOES NOT RE-FLAG THEM —
+        `LG.01` by integer arithmetic exactly as ordered (any integer
+        >= 19.9449 is >= 20; the admissible multisets are {20,24,25} and
+        {21,22,26}, both clearing `RETAIN_MIN`); `T3.01` `ref_min` whose std is
+        5.6e-17, i.e. floating-point zero — it is idiom 1, the worst seed
+        FOLDED INTO the metric before aggregation, which is the fix already
+        applied by hand; and `W0.DIAG` `jit_delta_up`, which gates a t-statistic
+        built from the std rather than the mean alone. **`T3.01` and `W0.DIAG`
+        appear above only as DIRECTION ARTIFACTS of a naive scan** — both are
+        written as `if <bad condition>: VOID`, so the failing tail is the
+        opposite one from the comparison operator; any future implementation of
+        arm (c) must handle that inversion or it will report two false
+        positives on its first run.
+
+    **FINDING 3, RE-DERIVED RATHER THAN TRANSCRIBED — and one leg of it as
+    ordered does not hold.** The ordered text says `rays_on_panel` and
+    `panel_reward_ratio` "carry the `{a,a,0}` signature ON THE SAME SEED".
+    That is a PAIRING claim, and `docs/LESSONS.md` gained an entry on 2026-09-12
+    (`ab0544f`) saying a mean+-std can pin a multiset exactly and say nothing
+    about the pairing. It applies here, so each leg was tested separately:
+
+      PROVEN, from the row alone. `icm_dwell_share` is `{1, 1, 0}` exactly.
+        `Sum x = 3*0.666667 = 2` and `Sum x^2 = 3*(sigma^2 + mu^2) = 2` agree to
+        1.7e-06, so `Sum x(1-x) = 0`; every term is non-negative on [0,1], so
+        every seed is 0 or 1, and the sum forces two ones and a zero. This one
+        does not need the pairing — the [0,1] BOUND does the work, and no other
+        metric in the table has it.
+      PROVEN INDEPENDENTLY, from a DIFFERENT metric pair. If dwell is
+        `{1,1,0}` then `dwell_margin` (= dwell - null, per seed) must sum to
+        `2 - Sum(null_dwell_share)`. Measured: `Sum dwell_margin` = 1.815801
+        and `2 - Sum null` = 1.815800. Agreement to 1e-06 across two metrics
+        that were aggregated separately. The zero-dwell seed's margin is
+        `-null_2`, i.e. NEGATIVE.
+      NOT A SIGNATURE, BUT A DEFINITION — and this is STRONGER than what was
+        ordered. `pg_4_noisy_tv.py:283` computes `rays_on_panel_while_dwelling
+        = panel_hits_dwell / max(1, dwell_steps)`. A seed with zero late dwell
+        has `dwell_steps == 0`, so the metric is `0/1 = 0` BY CONSTRUCTION. No
+        statistical inference is needed and none should be offered: the
+        conditioning makes the zero mandatory, not merely consistent.
+      REFUTED AS STATED, WITHOUT DISTURBING THE CONCLUSION. The exact
+        `{a,a,0}` signature requires `sigma/mu = sqrt(2)/2 = 0.7071068`.
+        `rays_on_panel` reads 0.7071068 (fits); **`panel_reward_ratio` reads
+        0.7071860 and `late_reward_in_zone` the same — a 7.9e-05 discrepancy,
+        far outside 6-significant-figure rounding.** Solving `{a, b, 0}`
+        instead: `panel_reward_ratio` is `{9.700e8, 9.534e8, 0}`,
+        `rays_on_panel` `{11.219, 11.211, 0}`, `late_reward_in_zone`
+        `{0.96999, 0.95341, 0}`. Two NEARLY-equal seeds and a zero, never two
+        exactly-equal ones. The conclusion is untouched and the arithmetic is
+        now right.
+      CORROBORATED BY AN INDEPENDENT SOURCE, which is how the pairing is
+        legitimately known at all: commit `4a4afb3` (2026-08-10) states in its
+        own message *"per-seed dwell is (1.0, 1.0, 0.0) — one seed never
+        discovered the panel in its 20k-step life"*. The row cannot establish
+        the pairing; the disclosure can, and it agrees. That asymmetry is
+        exactly the defect this row exists to close.
+
+    **AND THE CONJUNCT COUNT IS CONFIRMED: four of five.** On the zero-dwell
+    seed, `pg_4_noisy_tv.py:322`'s five experiment conjuncts read
+    `icm_dwell_share` 0.0 vs `>= 0.40` FAIL; `dwell_margin` negative vs
+    `>= 0.25` FAIL; `panel_reward_ratio` 0 vs `>= 2.0` FAIL;
+    `rays_on_panel_while_dwelling` 0 vs `> 0` FAIL; `null_dwell_share` passes
+    (it is the null arm's own reading and is small on every seed). **The row
+    says PASS and four specs depend on it.**
+
+    FINDING 1, as ordered and now demonstrated rather than asserted: the sweep
+    is runnable TODAY from the ledger and the spec files alone and needs no new
+    machinery — it was run to produce this table. That is a live argument for
+    arm (c), whose cost was recorded above as "needs an AST pass and will have
+    false positives": the AST pass took minutes, and the false positives are
+    now enumerated and explained (`T3.01`, `W0.DIAG`, and the operator
+    inversion that produces them). Arm (c) is cheaper than this row priced it.
+    **It is NOT a substitute for arm (b)** — a static audit reports, and only
+    the recorder can make the wrong gate impossible to write.
+
 ---
 
 ## `t310-anticorrelated-gates` — a spec whose rig control and claim gate move in

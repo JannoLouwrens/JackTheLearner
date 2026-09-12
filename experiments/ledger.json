@@ -11831,7 +11831,22 @@
       "status": "PASS"
     },
     "PG.4": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-12T21:16:06",
+          "by": "90th audit B3",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "70ca67ad07324b80",
+              "proof": "reconstructed 70ca67ad07324b80 from git 74f86317179d; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "a2c720b43fffbd22"
+            }
+          ],
+          "commit": "2a39208+dirty",
+          "reason": "record the per-seed dwell vector (1.0, 1.0, 0.0) and its four failing conjuncts in the module docstring, where run status and coverage readers see it without git log; disclosed in 4a4afb3 on the day it landed. No threshold moved, no conjunct changed, the row is untouched."
+        }
+      ],
       "attempt": 4,
       "commit": "8d623b3",
       "compute_s": null,
@@ -11977,7 +11992,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "70ca67ad07324b80",
+      "impl_sha": "a2c720b43fffbd22",
       "message": "",
       "metrics": {
         "dwell_margin": 0.605267,
