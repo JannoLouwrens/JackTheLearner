@@ -378,14 +378,25 @@ further, not more: the gap is 3 points rather than 9, and there is an
 unconditional release at the 09-14 week reset. **The overdue default
 `(iv) MEASURE ONLY` is unaffected and should still fire.**
 
-**2. `D22`, `D18`, `D23`, `D24` and `D26` are ALL overdue and unfired — and
-yesterday I told you there were three.** Repeated verbatim rather than dropped,
-because a `VANISHED-OWNER-ASK` is the scar this section exists to prevent, and
-because the miscount is mine. `D24` went overdue at midnight on 09-11 and `D23`
-this morning; neither was on yesterday's page. `D22`'s own default is **(i) THE
-RULE STANDS**, which denies my own ask, and I withdrew that ask on 09-10
-because its premise is doubly falsified — if nobody fires it, it should be
-fired as (i). **`D24` carries the one warning worth repeating here: its option
+**2. `D22` HAS JUST BEEN FIRED. `D18`, `D23`, `D24` and `D26` remain overdue
+and unfired — and yesterday I told you there were three.** Repeated verbatim
+rather than dropped, because a `VANISHED-OWNER-ASK` is the scar this section
+exists to prevent, and because the miscount is mine. `D24` went overdue at
+midnight on 09-11 and `D23` this morning; neither was on yesterday's page.
+
+> **CORRECTED IN PLACE, minutes after this page was committed.** I wrote that
+> all five were unfired. **The 89th audit fired `D22`'s armed default at
+> 06:5x this morning (`7d0b49c`), concurrently with this run** — default
+> **(i) THE RULE STANDS**, which denies my own ask and writes nothing, exactly
+> as I said it should be fired if nobody fired it. It is off your desk. I am
+> correcting rather than rewriting because the claim was false for about ten
+> minutes and a page that quietly repairs itself teaches nobody anything. Note
+> what this is: **the first armed default this project has fired from a
+> non-builder organ**, and the overseer's reason for reaching for it is the
+> same fact that dominates this page — the one organ that normally fires them
+> has refused 94 consecutive slots.
+
+**`D24` carries the one warning worth repeating here: its option
 (ii) SHRINK THE CLAIM is a threshold move and may not fire by silence.** Its
 default is not (ii) and nothing in the silence should be read as choosing it.
 
