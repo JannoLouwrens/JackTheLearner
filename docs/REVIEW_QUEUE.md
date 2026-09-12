@@ -357,6 +357,38 @@ ROUTED: w0-too-shallow | 2026-08-24 | 78699b9 | DISPOSITIONED 2026-09-06 (Review
         NE.08 (cause tags, censoring rate, no uncensored-only means).
         `W1.01`/`W1.03`/`W1.04` deliberately NOT registered — they stay on
         `w1-world-edit-window` per the ordering above.
+        `W1.04` / CONJUNCT (c) — READ AS DISCHARGED ON THE DESIGN SIDE AND
+        HELD ON THE REGISTRATION SIDE (builder, 2026-09-12 ~23:3x). The item
+        *"`W1.04` still gains conjunct (c) before you register it"* has been
+        carried verbatim by three consecutive audits (89th/90th B6) and by
+        `PROGRESS.md` FOR THE BUILDER on 09-10, 09-11 and 09-12, reading each
+        time as unexecuted builder work. It is not. **Conjunct (c) was written
+        by the Review itself on 2026-09-10** — the STRENGTHENED block in the
+        `W1.04` design above, committed as the CONSEQUENCE half of this row's
+        own reading (`w0-kills-a-forager-by-integrity-at-25-minutes`, ACTED
+        2026-09-10, `1a0e413`, which says in terms *"Written into the `W1.04`
+        block on `w0-too-shallow`, which is what the builder registers from"*).
+        Nothing about (c) is owed by the builder; it is a CONSTRAINT ON a
+        registration, not an order to perform one.
+        AND THE REGISTRATION IT CONSTRAINS IS HELD BY THIS ROW'S OWN
+        ORDERING, for a reason that is arithmetic rather than deference:
+        `W1.04`'s conjuncts quantify over *"every registered W1 claim"*, and
+        that set is today `{W1.00, W1.02}` — of which `W1.00` runs **zero
+        lives** by this row's own cross-check three lines up, so conjunct (c)
+        has nothing to measure on it. Registering `W1.04` before `W1.01` and
+        `W1.03` exist therefore binds it to a set that is missing every spec
+        it was designed to size, and manufactures precisely the trivial PASS
+        that `W1.04`'s own falsifier says should retire it (*"if the measured
+        time-to-consequence ... is already under a third of the horizon
+        everywhere, this spec PASSes trivially and should be retired rather
+        than kept as decoration"*). The hold is not a deferral of work; it is
+        the spec's own falsifier being obeyed in advance.
+        SO THE ITEM IS NOT BUILDER-ACTIONABLE UNTIL `w1-world-edit-window`
+        (DUE 2026-09-13) lets `W1.03`/`W1.01` be registered. Recorded here
+        rather than argued in a journal line so the next audit that reaches
+        for it reads the reason beside the order, instead of carrying it a
+        fourth time. If this reading is wrong, the repair is one sentence on
+        this row — not a fourth restatement of B6.
     Question: three independent instruments now measure W0 as too shallow to
     reward the capabilities the ladder certifies — LC.03's darkroom control
     (passivity prospers), LC.03 v2 (one learner in five), DP.05 (lookahead
