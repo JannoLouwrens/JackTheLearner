@@ -711,6 +711,60 @@ was decided this morning, and the answer is below.**
       morning of the work this page just ordered. It moves no constant, edits no
       ceiling, and stales no certificate.
 
+   **ADDENDUM, Review DAILY 2026-09-12 — THREE MORE DATED UNITS, AND A COUNT
+   THIS DESK HAD WRONG. Items 1–5 above are UNCHANGED and keep their order;
+   these are additions, not a re-prioritisation.** They exist because the
+   09-12 docket came due and was ruled rather than re-dated.
+
+   6. **`LG.03`'s liveness gate — implement the ruling.** Ordered on
+      `lg03-blind-twin-cannot-prove-itself-alive` (DISPOSITIONED 09-12, **DUE
+      09-14**). The gate scores the blind twin on TASK SUCCESS over all four
+      calibration starts, but the tape it trains on is recorded from the
+      privileged planner's MISSES as well as its hits (`rec` is appended with
+      no `if hit`). **So perfect reproduction of the training tape scores
+      `planner_own`, not 1.0** — and with `planner_own` = 1.00/0.75/0.75
+      against `CALIB_MIN` 0.75, seeds 1 and 2 have exactly zero margin. Three
+      edits: emit `planner_calib_reach` (the run already computes it on line
+      501 and throws it away); add `PLANNER_CALIB_MIN = 1.0` as a **new VOID
+      conjunct checked BEFORE `blind_calib_rate`**; then re-run (CPU, ~725 s,
+      3 seeds). **`CALIB_MIN` does not move. `_Blind.KINDS` does not change —
+      no third learner; the pre-registered repair stays falsified.** Expect
+      MORE VOIDs, not fewer: this is a tightening and it is supposed to cost.
+
+   7. **`SM.03`'s F2 diagnostic — a PROBE, explicitly not a pilot.** Ordered on
+      `sm03-heldout-split-saturated` (DISPOSITIONED 09-12, **DUE 09-15**). I
+      **refused** to pick the repair arm, and the reason is yours to act on:
+      all three offered arms move F1's split geometry and **none of them
+      touches `vis_open`, which reads 0.1167 against a 0.60 floor with chance
+      at 0.125** — below chance. Any arm produces a run that VOIDs on the
+      alive-proof exactly as the pilot did. Write
+      `experiments/tests/sm03_vis_open_probe.py` in the
+      `lg03_blind_twin_probe.py` idiom — **no seeds, no ledger row, no gate
+      frozen, no constant moved** — reporting `n_test`, the OPEN-condition
+      per-class confusion, and `vis_open` recomputed on a split built WITHOUT
+      the `MIN_SEP_M` exclusion. That third number decides whether F2 is a
+      symptom of F1 or a venue fact. `coverage` marks `SM.03` PILOT-BLOCKED
+      and **another pilot is forbidden**; this is not one.
+
+   8. **`HR.5` — NOTHING FOR YOU YET, and that is the point of saying it.**
+      `hr5-fixture-refuted` is now **HELD** behind `w1-world-edit-window`
+      (Review 09-12). Its repair contract is CLOSED and gained a fifth item:
+      **`four_class_audio_separability > position_only_acc` on every seed**,
+      because the existing headline number is one its own position-only
+      control outscores (0.583 vs 0.708), and four new voices do not fix that.
+      **Do not start the world edit outside the window** — the 21-certificate
+      mechanical bill is paid once inside it or not at all.
+
+   **AND THE COUNT I HAD WRONG: there are FIVE overdue armed defaults, not
+   three.** Yesterday's page said `D22`, `D18`, `D26`. `D24` (decide_by 09-11)
+   went overdue at midnight and `D23` is overdue as of this morning — both were
+   already overdue when that page was published or within hours of it, and I
+   did not print them. **Do not take the count from any page; take it from
+   `python -m experiments.decisions`, which prints `OVERDUE — DEFAULT IS DUE TO
+   FIRE` beside each one.** All five are yours to fire on waking, with the
+   required journal wording: *"the owner did not rule by <date>, so the
+   pre-registered default fired."*
+
 2'''''. **`D1.0` ATTEMPT 3 IS NOW REACHABLE — AND IT IS NOT AUTHORISED BY THE
    ROW BEING DECIDED.** `2''''` forbade a third dispatch until
    `d10-successor-rerun-under-adopted-gate` answered why the twins failed. It
