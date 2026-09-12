@@ -120,9 +120,10 @@
       "by_spec": {
         "LG.03": 728.86,
         "T0.21": 18.63,
+        "detached:pl02_smoke_rawgate_seed90.log": 977.07,
         "probe:d10_twin_spread": 1839.92
       },
-      "used_s": 2587.41
+      "used_s": 3564.48
     }
   },
   "overruns": []
