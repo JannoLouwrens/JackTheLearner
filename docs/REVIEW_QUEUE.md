@@ -4554,3 +4554,63 @@ whatever referent this row's desk rules.
 **Staleness bill: zero.** PL.02 has no ledger row; no threshold moves in
 either direction by routing; the registered run is blocked behind a passing
 smoke regardless of the ruling.
+
+## ROUTED 2026-09-12 (Review, DAILY): three gates in two days computed a
+## different quantity from the one they declared — and nothing here looks for that
+
+ROUTED: gates-that-measure-something-other-than-what-they-say | 2026-09-12 | Review DAILY 09-12 (d61a11b, bc9c5ec; PL.02 ruling 5e39771) | OPEN
+    DUE: 2026-09-20 | a FULL-sized sweep, dated onto a SUNDAY on purpose: this
+        is Part 2 work (test re-examination) and it has already been filed
+        against the wrong kind of sitting once this week in the shape of
+        `t310`. 09-20 carries 2 live rows. What is owed is the SWEEP and a
+        verdict on whether it becomes a standing instrument.
+
+**Three instances, three specs, two days, all found by reading source rather
+than by any tool:**
+
+| spec | declared meaning of the gate | quantity actually computed |
+|---|---|---|
+| `PL.02` (ruled 09-11) | "the eye is alive" | `r2_ua`, which is the **subtrahend of the claim's own effect size** `R_pl = r2_pl − r2_ua` — so the guard capped the gain it was added to protect at ≤0.20 against an observed 0.94 |
+| `LG.03` (ruled 09-12) | "the twin reproduces demonstrations it was trained on" | `fidelity × teacher competence` — the tape is recorded from the planner's misses too, so perfect reproduction scores `planner_own`, not 1.0 |
+| `HR.5` (ruled 09-12) | "four sounds are separable" | `four_class_audio_separability` 0.583, a number its own `position_only_acc` control beats at 0.708 — separability of POSITION, not of sound |
+
+**The common shape, stated once:** a threshold is calibrated against the gate's
+STATED meaning while the code computes something else, and every organ we have
+checks only whether the computed number clears the bar. `run_spec` checks the
+bar. The overseer audits whether a threshold MOVED. `coverage` audits whether a
+commitment has a spec. `review_queue` audits whether a promise was kept.
+**Not one of them asks what the number IS.** That is why three of these sat
+unnoticed — two of them for weeks, on specs that had already been read by
+multiple audits.
+
+**What makes this worth a Sunday rather than a note.** All three were found on
+**VOID or FAIL** specs, where somebody was already looking for a reason the run
+did not count. The dangerous case is the inverse: a **PASSING** spec whose gate
+clears a bar for a quantity it does not name. That is a certificate this
+project believes and should not, and by construction nobody has had a reason to
+re-read it. **108 of 245 specs are PASS and none has been examined for this.**
+
+**Two questions owed, and the second is the one that matters:**
+  (a) A sweep of the PASS set for the pattern — prioritising gates whose metric
+      appears on BOTH sides of an effect size (the `PL.02` shape), gates scored
+      as task success against a capped teacher or oracle (the `LG.03` shape),
+      and headline metrics with a declared control that is not compared against
+      them in the check (the `HR.5` shape). Sample oldest-passed first, per the
+      standing Part 2 rule.
+  (b) **Does this become an INSTRUMENT rather than a Sunday habit?** The
+      strengthen-only law already makes the repair direction safe; what is
+      missing is detection. A candidate that needs no judgement: for every spec
+      declaring a control, assert the check actually READS the control's metric
+      — `HR.5` declares `position_only_acc`, computes it, and `_check` never
+      compares it to the claim. That one is mechanical and would have caught
+      the third instance without a human reading anything. The other two shapes
+      probably are not mechanisable, and saying so honestly is part of the
+      answer.
+
+**Staleness bill: zero to route.** No threshold moves, no spec is edited, no
+certificate is touched by the existence of this row. The bill of ACTING on it
+is unknown by construction and that is the point — **if the sweep finds a
+passing gate that measures the wrong quantity, the repair is a STRENGTHENING
+under the standing law and the certificate re-buys. A PASS that has to be
+re-bought is the outcome this row exists to find, not a reason to avoid
+looking.**
