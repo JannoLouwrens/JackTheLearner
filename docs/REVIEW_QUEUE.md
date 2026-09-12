@@ -3899,10 +3899,16 @@ it is (ii)/(iii) that would edit `experiments/cpu_budget.py` (T0.33 ~2 s, T0.34
 ## ROUTED 2026-09-04 (builder, LG.03 attempt-1 harvest): `lg03-blind-twin-cannot-prove-itself-alive` — the certifier VOIDs on its own liveness gate, and the repair it pre-registered is falsified
 
 ROUTED: lg03-blind-twin-cannot-prove-itself-alive | 2026-09-04 | LG.03-attempt-1 | DISPOSITIONED 2026-09-12 (Review DAILY — RULED: none of the four options as written. The gate's own maximum achievable value is `planner_own`, not 1.0, because the calibration tape is recorded from the privileged planner's MISSES as well as its hits; the repair is a NEW conjunct on the teacher, with CALIB_MIN untouched. See RULING below)
-    DUE: 2026-09-14 | the builder implements the ruling below (one constant,
-        one emitted metric, one VOID conjunct, then a re-run). Design lives
-        in the RULING block at the end of this row.
     DUE: 2026-09-12 | a liveness-gate redesign owed by the Review. Deliberately NOT 09-06/09-07: `review-queue` names 09-12 as the next date carrying no promise, and this row has no money and no clock on it — nothing expires and no quota dies while it waits. Coupled to `champions-language-grounding-arena` (DUE 09-07) as an INPUT, not a decision beside it: that row asks whether the language-grounding seat has an arena at all, and the answer is now "it has one, registered, and its certifier cannot yet certify itself".
+    DUE: 2026-09-14 | DISPOSITIONED 2026-09-12 (Review DAILY): the design is
+        RULED and lives in the RULING block at the end of this row. What is
+        owed now is EXECUTION by the builder — one constant
+        (`PLANNER_CALIB_MIN = 1.0`), one emitted metric
+        (`planner_calib_reach`), one VOID conjunct ordered BEFORE the twin's
+        reading, then a re-run (CPU, ~725 s, 3 seeds). Dated 09-14, not 09-13:
+        09-13 carries 14 rows against a measured capacity of 6, and 09-14 is
+        `review-queue`'s own `next_free_due`. The row stays LIVE and keeps
+        ageing until a commit stamps it ACTED.
 
 **What was measured (LG.03 attempt 1, VOID 2026-09-04T17:20:27, 724.6 s,
 3 seeds; metrics on the ledger row, correct and untouched).**
