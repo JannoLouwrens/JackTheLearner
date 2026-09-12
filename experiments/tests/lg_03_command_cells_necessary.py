@@ -136,6 +136,43 @@ language-necessary commands until an instrument certifies itself alive. See
 `docs/REVIEW_QUEUE.md`'s `lg03-blind-twin-cannot-prove-itself-alive` for where
 the gate design went.
 
+AMENDED 2026-09-12 (builder, implementing the Review DAILY ruling on that row).
+**The attempt-1 VOID was charged to the wrong party.** The gate's stated meaning
+is reproduction fidelity, but the calibration tape is appended from the
+privileged planner's rollout UNCONDITIONALLY — there is no `if hit` — so the
+twin is trained to imitate MISSES, and is then scored on task success over all
+four calibration starts against an ABSOLUTE bar. What `blind_calib_rate`
+computes is therefore `fidelity x teacher competence`, compared against a bar
+calibrated as though it were fidelity alone. Perfect imitation scores
+`planner_calib_reach`, not 1.0. At attempt 1's own numbers (1.00 / 0.75 / 0.75)
+seeds 1 and 2 had EXACTLY ZERO margin against `CALIB_MIN` 0.75, and any seed
+whose servo read below 0.75 was un-clearable by construction — a guard that
+algebraically suppresses the thing it was added to watch.
+
+The sharpest fact, and why this is a repair rather than a redesign: the run
+ALREADY COMPUTED the teacher's reach at the calibration cell (`own_hit`) and
+reported only its mean over all cells (`planner_reach_mean` 0.754). The number
+that invalidates the gate was measured and discarded.
+
+THE AMENDMENT, strictly a TIGHTENING: `planner_calib_reach` becomes a
+first-class metric, and a new pre-registered constant `PLANNER_CALIB_MIN` = 1.0
+VOIDs the run — for an INSTRUMENT reason, checked BEFORE `blind_calib_rate` —
+when the privileged planner fails to reach the calibration cell from every one
+of its own starts. `CALIB_MIN` is NOT touched in either direction, not re-based
+and not relativised; `_Blind.KINDS` is unchanged and there is no third learner,
+so attempt 1's falsification of the pre-registered repair STANDS. The
+calibration cell stays the declared, fixed `approach@sorted(objs)[0]`: the venue
+is AUDITED, never SELECTED — a cell that fails the audit VOIDs the run instead
+of being swapped for a better one, which is the one step that separates this
+from searching cells until the gate passes.
+
+THE COST, stated because it is the expensive half: under this amendment `LG.03`
+in W0 as built is expected to VOID on MORE seeds than before, not fewer, and
+the spec cannot deliver its venue FAIL until the fixture admits a calibration
+cell the privileged servo aces. That is a further `w0-too-shallow` instrument
+pointed at the OBSERVATION rather than at the world — arrived at from the gate's
+algebra, not asserted about W0. A tightening is supposed to cost.
+
 WHERE THE CROSS-SEED INTERSECTION IS COMPUTED, and why it is in the control.
 `run_spec` runs every experiment seed before it runs the control, and
 `_aggregate` cannot see across seeds. `_control` is therefore the only hook
@@ -191,6 +228,21 @@ ACH_FRAC = 0.75                # planner reaches the cell's own target
 PLUR_FRAC = 0.75               # >= 2 distinct targets reachable from the start
 CTRL_MAX = 0.10                # stripped planner satisfying BOTH demanded
 CALIB_MIN = 0.75               # blind learner liveness (in-distribution)
+# THE TEACHER IS INDICTED BEFORE THE STUDENT (Review DAILY 2026-09-12 ruling on
+# `lg03-blind-twin-cannot-prove-itself-alive`). `CALIB_MIN` is calibrated as
+# REPRODUCTION FIDELITY, but the calibration tape is recorded from the
+# privileged planner's MISSES as well as its hits (`rec` is appended with no
+# `if hit`), so what `blind_calib_rate` actually computes is
+# `fidelity x teacher competence`. Perfect imitation therefore scores
+# `planner_calib_reach`, NOT 1.0 — and at the attempt-1 reading
+# (1.00 / 0.75 / 0.75) seeds 1 and 2 had EXACTLY ZERO margin against a 0.75
+# bar, while any seed whose servo read below 0.75 would have been un-clearable
+# by construction. So the venue is AUDITED rather than selected: if the
+# privileged planner misses even one of its own calibration starts, the run is
+# VOID for an INSTRUMENT reason and `blind_calib_rate` is never read.
+# This is a TIGHTENING and it is expected to cost — under it, W0 as built
+# VOIDs on 2 of 3 seeds, more often than before, for a reason it can name.
+PLANNER_CALIB_MIN = 1.0        # teacher must ace the calibration cell -> else VOID
 VERB_ALIVE = 0.5               # a verb whose planner cannot do it -> VOID
 MIN_CELLS, MIN_VERBS, MIN_OBJECTS = 12, 4, 4
 MIN_PER_VERB, MIN_PER_OBJECT = 2, 2
@@ -599,6 +651,15 @@ def _experiment(seed: int) -> dict:
             max([rand_rate[c] for c in retained], default=0.0), 4),
         "planner_reach_mean": round(
             float(np.mean([np.mean(own_hit[c]) for c in own_hit if own_hit[c]])), 4),
+        # The teacher's reach AT THE CALIBRATION CELL — the ceiling on
+        # `blind_calib_rate`, computed by this run since attempt 1 and thrown
+        # away until the 09-12 ruling. Defaults to 0.0 (fail-closed) when the
+        # declared calibration cell is not a candidate at all: a liveness venue
+        # that does not exist is not a venue that passes.
+        "planner_calib_reach": round(
+            float(np.mean(own_hit[calib_cell])) if own_hit.get(calib_cell)
+            else 0.0, 4),
+        "calib_cell": calib_cell,
         "verb_alive_min": round(verb_alive, 4),
         "plurality_mean": round(
             float(np.mean([np.mean(plur_hit[c]) for c in plur_hit if plur_hit[c]])), 4),
@@ -668,6 +729,12 @@ def _check(m: dict, c: dict):
     # VOID first: none of these is a refutation of the claim.
     if m["obs_finite"] < 1.0:
         return Status.VOID          # the world handed a policy a NaN
+    # ORDER IS LOAD-BEARING: the teacher is indicted before the student. A tape
+    # recorded from a servo that missed caps `blind_calib_rate` at
+    # `planner_calib_reach`, so reading the student's score first would blame
+    # the twin for the demonstrator's failure. See PLANNER_CALIB_MIN above.
+    if m.get("planner_calib_reach", 0.0) < PLANNER_CALIB_MIN:
+        return Status.VOID          # the liveness VENUE is invalid, not the twin
     if m["blind_calib_rate"] < CALIB_MIN:
         return Status.VOID          # the blind twin is not demonstrably alive
     if m["verb_alive_min"] < VERB_ALIVE:
@@ -685,7 +752,8 @@ def _dry():
         d = {"obs_finite": 1.0, "blind_calib_rate": 0.9, "verb_alive_min": 0.9,
              "cellset_ok": 1.0, "retained_cells": 14.0,
              "blind_rate_retained_max": 0.25, "rand_rate_retained_max": 0.0,
-             "n_verbs_retained": 4.0, "min_per_verb": 2.0}
+             "n_verbs_retained": 4.0, "min_per_verb": 2.0,
+             "planner_calib_reach": 1.0}
         d.update(kw)
         return d
     ctl = {"stripped_both_rate": 0.0, "common_ok": 1.0, "common_n": 13.0}
@@ -696,6 +764,27 @@ def _dry():
          base(blind_calib_rate=0.5), ctl, Status.VOID),
         ("a verb the planner cannot perform -> VOID",
          base(verb_alive_min=0.25), ctl, Status.VOID),
+        # ── the 09-12 ruling's own branch ──────────────────────────────────
+        # THIS ROW IS THE DEFECT, WRITTEN DOWN. A twin that reproduces its
+        # training tape FLAWLESSLY on a teacher that reached 3 of its 4
+        # calibration starts scores 0.75 — exactly `CALIB_MIN` — and the gate
+        # as it stood read that as ALL GREEN ("control exactly on its bar is
+        # inside it"). It is now VOID, and the verdict names the teacher.
+        ("flawless twin, teacher missed one start -> VOID (was: all green)",
+         base(planner_calib_reach=0.75, blind_calib_rate=0.75), ctl,
+         Status.VOID),
+        ("the declared calibration cell is not a candidate at all -> VOID",
+         base(planner_calib_reach=0.0), ctl, Status.VOID),
+        # The teacher is checked BEFORE the twin, but both branches return the
+        # same Status, so ORDER IS NOT OBSERVABLE FROM THE VERDICT and this row
+        # does not claim to test it. What it does test is that an incompetent
+        # teacher VOIDs even when the twin's own reading is unimpeachable —
+        # i.e. that the new conjunct fires on its own rather than only ever
+        # co-firing with the old one.
+        ("teacher indicted though the twin reads clean -> VOID",
+         base(planner_calib_reach=0.5, blind_calib_rate=1.0), ctl, Status.VOID),
+        ("teacher exactly on its bar is inside it",
+         base(planner_calib_reach=PLANNER_CALIB_MIN), ctl, True),
         ("VOID outranks a failing control",
          base(blind_calib_rate=0.0), {**ctl, "stripped_both_rate": 1.0},
          Status.VOID),
