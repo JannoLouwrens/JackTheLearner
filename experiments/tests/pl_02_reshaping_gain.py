@@ -75,14 +75,58 @@ if the teacher is ignorant the premise is dead, not refuted); the probe
 instrument must be alive (shuffled-label probe R^2 <= SHUF_LABEL_R2_MAX);
 feature extraction must be deterministic (encode twice, identical); AND
 the eye itself must still carry the attribute (82nd audit B4, 2026-09-07):
-U_A's absolute radius R^2 >= EYE_RADIUS_R2_MIN, PG.6's own 0.80 bar, on
-the coarse eye that PG.6's certificate predates. R is a difference, so a
+absolute radius R^2 >= EYE_RADIUS_R2_MIN, PG.6's own 0.80 bar, on the
+coarse eye that PG.6's certificate predates. R is a difference, so a
 blinded eye collapses both arms together and a null R would be
 indistinguishable from a dead channel — on the PLASTIC-ONLY decree's sole
-registered falsifier, that ambiguity must VOID, not FAIL. This gate reads
-the whole vision pathway (coarse render -> U_A encoder -> ridge), so it is
-strictly harder than PG.6's raw-pixel probe; if it fires, the artifact
-distinguishes eye-blindness from encoder loss (the pixels are on disk).
+registered falsifier, that ambiguity must VOID, not FAIL.
+
+THAT GATE READS THE RAW-PIXEL RIDGE, NOT U_A's FEATURES (Review DAILY
+2026-09-11, `5e39771`, row `pl02-eye-gate-reads-the-encoder-not-the-eye`;
+implemented by the builder 2026-09-12). `r2_raw_pixel` is a ridge at the
+SAME operating point (l2 = L2) from the flattened RGB frames of THIS run's
+own probe split to radius — PG.6's certified quantity, re-measured here
+rather than inherited from the seed-90 probe. `EYE_RADIUS_R2_MIN` is
+unmoved at 0.80 and the VOID semantics are unmoved; only the referent
+changed, and `r2_ua` is NOT deleted — it stays a first-class recorded
+metric on the row, which was the 82nd audit B4's other half.
+
+WHY THE REFERENT MOVED, and the reason is algebraic rather than
+interpretive, so it holds whichever way the verdict falls: **`r2_ua` is the
+SUBTRAHEND in the claim's own effect size.** The spec computes
+`R_pl = r2_pl - r2_ua`. A VOID gate requiring `r2_ua >= 0.80` therefore
+requires the baseline to be near-saturated BEFORE the run is allowed to
+count, which caps the largest reshaping gain the spec can ever report at
+<= 0.20 — against an observed gain of 0.94 (SMOKE RECORD 2). As lettered
+the gate does not test whether the eye is alive; it algebraically
+suppresses the quantity it was added to guard, and it is un-clearable by
+construction in exactly the regime the claim exists to test (audio
+rescuing a weak encoder, where a weak `r2_ua` is the PREMISE and not the
+fault). Under the T1.02 precedent that makes the EXPERIMENT wrong, which
+is the only ground on which a gate may be re-aimed.
+
+BOTH HOLES THE LETTERED GATE COVERED ARE CLOSED BY INSTRUMENTS THAT
+ALREADY EXIST, so no conjunct is added: (a) dead channel — B4's actual
+worry — is covered by the new referent, since a blind eye cannot produce a
+0.93 raw-pixel ridge; (b) audio leaking into `r2_pl` is covered by the
+spec's own declared SHUFFLED control, measured clean on the RGB@64 smoke
+(shuffled_R -0.002328, CI excluding zero from BELOW, control_reshapes_too
+0). Inventing a redundant control would be manufacturing rigour rather
+than adding it.
+
+THE NEW GATE IS LIVE, AND THAT IS SHOWN BY EXHIBITING IT FIRING rather
+than by its currently passing (the 2026-09-12 lesson: a passing control
+may be correct or unreachable, and those look identical from outside).
+Replayed through `_check` on the smoke's own metric dict with
+`r2_raw_pixel` set to the decomposition's MEASURED grey@64 ceiling
+0.5614 -> VOID; at RGB@64's measured 0.9327 -> the branch is not taken and
+the check proceeds. The two numbers are the same eye at the same
+resolution differing only in the chromatic channel, so the gate's live
+range is a real operating point of this rig and not a hypothetical. No
+earlier branch reads `r2_raw_pixel`, so the branch is not dominated; it is
+placed where the lettered gate stood, AFTER the teacher gate and BEFORE
+the probe-leak gate, because an ignorant teacher is a deader premise than
+a blind eye and should be the one reported.
 
 OPERATING POINT, fixed a priori and validated for RIG ALIVENESS ONLY on
 seed 90 (disjoint from the registered seeds 0/1/2) before the registered
@@ -486,6 +530,24 @@ def _fixture(seed: int) -> dict:
     return _CACHE[seed]
 
 
+def _raw_pixel_r2(fx: dict) -> float:
+    """PG.6's certified quantity on THIS run's own probe split: radius from
+    RAW flattened RGB pixels, same ridge operating point (l2 = L2).
+
+    This is the referent of the eye-aliveness VOID gate as ruled on
+    2026-09-11 — see the docstring. It touches no encoder and no arm, so it
+    is a property of the eye and the sampler alone and cannot be moved by
+    anything the pretext training does. Dual-form ridge: d = 3*RES^2 = 12288
+    features against n = 1000 rows, so `_Ridge` solves the n x n system.
+    """
+    ytr = fx["probe_tr"]["radius"].astype(np.float64)
+    yte = fx["probe_te"]["radius"].astype(np.float64)
+    Xtr = fx["probe_tr"]["frames"].reshape(len(ytr), -1).astype(np.float64)
+    Xte = fx["probe_te"]["frames"].reshape(len(yte), -1).astype(np.float64)
+    r2, _ = _probe_r2(Xtr, ytr, Xte, yte)
+    return r2
+
+
 def _arm_r2(torch, fx: dict, res: dict) -> tuple:
     """(r2, test predictions) of one trained A-encoder on radius, A only."""
     Xtr = _features(torch, res["enc_a"], fx["probe_tr"]["frames"])
@@ -539,6 +601,8 @@ def _experiment(seed: int) -> dict:
     canary_ok = int(fx["eye"].canary() == fx["canary0"])
     learn_ok = int(all(r["last_loss"] < LEARN_DROP * r["first_loss"]
                        for r in (ua, plastic, frozen)))
+    # the eye-aliveness gate's referent (ruled 2026-09-11) — no encoder in it
+    r2_raw = _raw_pixel_r2(fx)
 
     # persist the trained A-encoders — the champion-arena standing rule
     ART_DIR.mkdir(exist_ok=True)
@@ -561,6 +625,7 @@ def _experiment(seed: int) -> dict:
         "seed": seed,
         "reshaping_gain_R": round(R_pl, 6),
         "R_ci_lo": round(lo_pl, 6), "R_ci_hi": round(hi_pl, 6),
+        "r2_raw_pixel": round(r2_raw, 6),
         "r2_ua": round(r2_ua, 6), "r2_plastic": round(r2_pl, 6),
         "r2_frozen": round(r2_fr, 6),
         "frozen_R": R_fr, "frozen_feat_diff": feat_diff,
@@ -617,10 +682,16 @@ def _check(m: dict, c: dict):
         return Status.VOID
     if m["audio_channel_r2"] < AUDIO_TEACH_R2_MIN:
         return Status.VOID          # the teacher is ignorant; premise dead
-    if m["r2_ua"] < EYE_RADIUS_R2_MIN:
+    if m["r2_raw_pixel"] < EYE_RADIUS_R2_MIN:
         return Status.VOID          # the eye is blind; R would be a
         # difference of two dead probes, not a reshaping measurement
-        # (82nd audit B4 — the coarse eye postdates PG.6's certificate)
+        # (82nd audit B4 — the coarse eye postdates PG.6's certificate).
+        # THE REFERENT IS THE RAW-PIXEL RIDGE, NOT `r2_ua` (Review DAILY
+        # 2026-09-11, 5e39771): r2_ua is the SUBTRAHEND of the claim's own
+        # effect size, so gating on it caps the reportable gain at <= 0.20
+        # and is un-clearable in exactly the regime the claim tests. The
+        # bar (0.80) and the VOID semantics are unmoved. `r2_ua` is still
+        # recorded above and still appears on the row.
     if m["shuffled_label_r2"] > SHUF_LABEL_R2_MAX:
         return Status.VOID          # the probe instrument leaks
     # the analytic null must BE the arithmetic it claims to be
