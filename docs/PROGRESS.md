@@ -5,17 +5,18 @@
 > Mode: **DAILY** (Part 1 + Part 2.5. Part 2, the anatomy audit and the
 > completeness audit are Sunday work and did not run.)
 
-**2026-09-11 06:37–07:0x UTC — DAILY.** Window: the last 24 hours
-(2026-09-10 06:37 → 2026-09-11 06:5x).
+**2026-09-12 06:37–07:0x UTC — DAILY.** Window: the last 24 hours
+(2026-09-11 06:37 → 2026-09-12 06:5x).
 
-*The one sentence: **yesterday I told the owner and the builder that the day's
-real finding was a one-week date error in the builder's steering; today the
-finding is that I was the one who was wrong, the builder had it right, and the
-correction I wrote into its live priority block was the error.***
+*The one sentence: **for the first morning in three, the day's headline is a
+finding rather than a retraction of one — and the two findings turned out to be
+the same shape as the one before them, which is a gate whose stated meaning and
+whose computed quantity are different things.***
 
 > This page is the RECEIPT for commits that already exist. Every act below was
-> committed as it was made, before this page was written: `4bd81ec`, `04d8b69`,
-> `5e39771`, `57f67e6`, `3410b77`.
+> committed as it was made, before this page was written: `d61a11b`, `adfe6f4`,
+> `bc9c5ec`, `ee122e2`, `3eb3648`, `2f8c6e7`, `e26c71e`, `f459598`, `f3dd2e7`,
+> `ca09bd9`.
 
 ---
 
@@ -25,227 +26,252 @@ correction I wrote into its live priority block was the error.***
 |---|---|---|
 | demonstrated / registry | **108 / 245** | 108 / 245 |
 | pass rate | **44.1%** | 44.1% |
-| net demonstrated | **0** (3rd consecutive) | 0 (2nd) |
+| net demonstrated | **0** (4th consecutive) | 0 (3rd) |
 | rework rate | 77.6% | 77.6% |
 | unreachable (shrink-only) | 93 of 245 (38%) | 93 |
 | ledger settlements in 24 h | **0** | 0 |
-| commits in 24 h | 19 — **0 from the builder** | 6 — 0 from the builder |
-| consecutive skipped builder slots | **70** | 46 |
-| `week:all models` | **72%** (line 63%) | 68% (line 54%) |
+| commits in 24 h | 11 — **0 from the builder** | 19 — 0 from the builder |
+| consecutive skipped builder slots | **94** | 70 |
+| `week:all models` | **75%** (line 72%, elapsed 72%) | 72% (line 63%) |
 | `week:Fable` | **100%** | 100% |
-| GPU, live week `2026-W36` | **17.72 h of 30 charged, 12.28 left** | *mis-stated as "W37: 0.00 of 30"* |
+| GPU, live week `2026-W36` | **17.72 h of 30, 12.28 left — EXPIRES TONIGHT** | 17.72 of 30 |
 | queue violations | 0 | 0 |
-| live queue rows | 38 | 39 |
+| live queue rows | 38 → **39** (one routed) | 38 |
 
-Fourth day at 108/245. No builder commit since 2026-09-08T08:23.
+Fifth day at 108/245. No builder commit since 2026-09-08T08:23.
 
 ---
 
 ## Part 1 — did the builder produce, thrash, or stall?
 
-**Still none of the three: it was switched off, and today it is day three.**
-`pace_gate` has skipped 70 consecutive hourly slots. What is new is not the
-outage — it is that **the two headline findings this desk and the overseer
-published about the outage have both now been withdrawn, within an hour of each
-other, by their own authors.**
+**Still switched off, day four, 94 slots.** Nothing new is wrong with the
+outage and I have nothing to add to it that is not arithmetic. What is new is
+that **this desk spent the day on the code instead of on its own retractions,
+and that is where the day's two findings came from.**
 
-### The one that is mine, and it reached the builder's steering
+### The blackout, as a bound and not a date
 
-Yesterday's page called this *"the day's real finding"*: the priority block said
-`attempt 3 goes to W37 (opens 09-13)`, and I rewrote it to say **"W37 IS THIS
-WEEK AND IT CLOSES SUNDAY 09-13"**, told the builder *"do not defer the
-attempt-3 dispatch"*, and committed it into the file the builder navigates by
-(`fd2101d`).
+The 88th audit's lesson binds: quote the flat-meter bound with its assumption,
+never a point forecast. Today's `06:07` reading — meter **75%**, elapsed
+**72%**, line **72%**. **The gap is 3 points, down from 9 yesterday.**
 
-**That was wrong. `experiments/gpu.py::_week()` keys the GPU budget by
-`%Y-W%U`, and `%U` weeks start SUNDAY** — deliberately. Its own docstring says
-why: Kaggle's quota resets on Sunday, and the original ISO `%G-W%V` was removed
-because it *"kept charging Sunday's runs to the exhausted week, so the tracker
-refused jobs for the entire first day of every fresh Kaggle quota."*
+- The line gains **0.375 points/hour**. This term is not a forecast — it is a
+  function of elapsed time and nothing else.
+- **Break-even is therefore a meter draw of exactly 9 points/day.**
+- Recorded daily draws: **+21, +36, +9, +4, +3**. **Two of the five are far
+  above break-even.** That is a spread, not a trend, and it is why no single
+  release date is defensible.
+- At yesterday's draw the gap closes ~09-12T18:00; on a flat meter ~14:00; at
+  any sustained draw above ~7.5 points/day it does not close before the week
+  resets.
 
-```
-  2026-W36   Sun 2026-09-06 -> Sat 2026-09-12     <- TODAY (Fri 09-11)
-  2026-W37   Sun 2026-09-13 -> Sat 2026-09-19     <- opens Sunday, as written
-```
+**The only non-forecast on this page: the week resets 09-14T04:59 UTC and that
+releases the builder unconditionally.** Everything above is about whether it
+wakes sooner. Both the late bound and the guaranteed one land it inside W37's
+fresh 30 GPU-hours — which is where the builder's own plan aimed before either
+oversight organ interfered with it.
 
-In the only namespace the spending is accounted in, **W37 opens on 09-13,
-exactly as the builder wrote it.** I read the label in the ISO calendar instead
-of the tracker's. Withdrawn and the original text restored verbatim (`4bd81ec`).
-
-**The builder's sentence carried its own arithmetic and I overwrote it.** It
-read *"W37 (opens 09-13) — W36 has ~12.4 GPU-h left against attempt 2's measured
-17.61 h, so it does not fit and must not be squeezed."* That is correct in every
-part. My edit **kept that sentence and pasted a block contradicting it directly
-underneath**, leaving the builder's live steering self-contradictory for 24
-hours. Nothing was spent on it only because the builder never woke to read it.
-That is luck, not process.
-
-### The false alarm it generated, which ran through four documents in three days
-
-| source | the claim |
-|---|---|
-| `PROGRESS.md`, 09-10 | *"W37 free GPU-hours charged **0.00 of 30**"*, in the numbers table |
-| `fd2101d`, 09-10 | *"no `2026-W37` key at all — 0.00 of 30 … the week already 3 days gone"* → **into the builder's steering** |
-| 87th audit, 09-10 | *"0.00 of 30 … expiring Sunday 2026-09-13 — before any projected wake"* |
-| 88th audit, 09-11 | *"before W37's free GPU quota expires on Sunday 2026-09-13"* — carried forward uncorrected, one hour before this page |
-
-**The key is absent because the week has not started.** Absence meant *not yet*
-and four documents read it as *unspent*. The live numbers, from the tracker's
-own accessor: key `2026-W36`, kaggle **17.7238 h of `KAGGLE_WEEKLY_HOURS=30.0`,
-12.28 h remaining, expiring end of SATURDAY 09-12** — a day earlier than anyone
-said, and a pot of 12.28 h rather than 30. **W36 at 17.72 h is the second-best
-of the last six weeks** (W31 37.46, W32 21.06, W33 7.63, W34 1.62, W35 18.93).
-It is not an allocation dying unspent; it was spent before the blackout began.
-
-### The one that is the overseer's, found independently and better
-
-The 88th audit, running concurrently and reading a different file, withdrew both
-organs' **drain forecasts** — its own 49-day figure and my *"~6 days;
-`pace_gate` never releases the builder at all"*. The gap closed **14 → 9 points
-in the 24 h after both were published**, against my 2.3/day and its 0.29/day.
-Its diagnosis is exactly right and I adopt it: we each sampled ONE day's draw
-from a quantity whose own record reads **+21, +36, +9, +4** points/day, and
-published the remainder as a rate. Its replacement — quote the **flat-meter
-bound with its assumption stated**, never a point forecast — is the correct
-instrument, and its re-specified B2 (print the bound and the spread, print no
-single release date) is better than the 87th's B4 it replaces.
-
-**Neither organ found the other's error. Each found its own.** That is the only
-encouraging structural fact on this page.
-
-**The release bound, stated as a bound:** meter 72%, elapsed 58%, line 63%, flat
-at 72% for 15.5 h. Flat meter → **09-12T08:40**; at 09-10's measured external
-draw → 09-12T18:40; at its measured total → 09-12T23:40; week resets
-09-14T05:00. **Under every rate measured since the blackout began except the two
-worst single days, the builder wakes on 09-12 — and W37's fresh 30 GPU-hours
-open the next morning.** The builder wakes into a full quota, not a dying one.
+**W36 expires at the end of today.** 12.28 h left against a 17.61 h attempt. It
+does not fit, and the prohibition on scraping it out still binds under every
+branch.
 
 ---
 
-## The day's science — `PL.02`'s eye gate, RULED
+## The day's science — three rows due, three RULED, none re-dated blind
 
-`pl02-eye-gate-reads-the-encoder-not-the-eye` was due today, was priced, and had
-already been re-dated once by this desk as a **refusal** rather than a capacity
-slip. Ruled (`5e39771`): **the pre-registered eye-aliveness VOID gate reads the
-RAW-PIXEL ridge, not `U_A`'s 64-d features.** `EYE_RADIUS_R2_MIN` unmoved at
-0.80, same VOID semantics, measured on the run's own probe episodes. `r2_ua` is
-**not deleted** — it stays a first-class recorded metric on the ledger row.
+### 1. `LG.03`'s liveness gate — the gate's maximum is not 1.0, and the run already knows it
 
-**The decisive reason is one neither the 82nd audit's B4 nor the row stated, and
-unlike their two arguments it is algebraic rather than interpretive:**
+`lg03-blind-twin-cannot-prove-itself-alive` offered four options. **I refused
+all four**, because the defect is one line upstream of them and it is algebraic
+(`d61a11b`, DISPOSITIONED, DUE 09-14). Read from source:
 
-> `r2_ua` is the **SUBTRAHEND in the claim's own effect size** — the spec
-> computes `R_pl = r2_pl − r2_ua`. A VOID gate demanding `r2_ua ≥ 0.80` demands
-> a near-saturated baseline *before the run is allowed to count*, capping the
-> largest reshaping gain the spec can ever report at **≤ 0.20**, against an
-> observed **0.94**. It does not test whether the eye is alive; it algebraically
-> suppresses the quantity it was added to guard, and is un-clearable by
-> construction in the exact regime the claim exists to test.
+```
+502-508   for vv, a in rec:  calib_X.append(vv); calib_Y.append(a)   # NO `if hit`
+517-521   hits = [_satisfies("approach", _rollout(w, st, calib.policy(kind), ...))]
+671       if m["blind_calib_rate"] < CALIB_MIN: return Status.VOID
+```
 
-**Both holes the old gate covered are already closed by instruments that exist,
-so no redundant conjunct was invented:** dead channel — B4's actual worry — by
-the new referent (a blind eye cannot produce the measured 0.9327/0.9438 pixel
-ridge); audio leakage by the spec's **own declared `SHUFFLED` derangement
-control**, measured clean (`shuffled_R` −0.0023, CI excluding zero from below,
-`control_reshapes_too` 0).
+The calibration tape is recorded from the privileged planner's rollout
+**whether or not it succeeded** — so on a start where the servo missed, the
+twin is trained to imitate a miss, and then scored on task SUCCESS.
 
-**The honest cost, stated because it is the direction I refused on 09-09:** this
-unblocks the sole registered falsifier of `GOAL.md`'s PLASTIC-ONLY decree, and
-the run it unblocks already reads in the direction that *supports* the decree.
-The convenience has not changed since 09-09; the argument has. The subtrahend
-point holds whichever way `PL.02` falls. **A desk that refuses a correct ruling
-because the correct ruling is convenient has not avoided bias — it has inverted
-it.** Nothing weakened: no threshold moves, the control is untouched, the
-registered run stays blocked behind a PASSING smoke, staleness bill zero.
+> **Perfect reproduction of the training tape scores `planner_own`, not 1.0.**
+> The gate's stated meaning is reproduction fidelity; the quantity it computes
+> is `fidelity × teacher competence`. With `planner_own` = 1.00 / 0.75 / 0.75
+> against `CALIB_MIN` 0.75, seeds 1 and 2 have **exactly zero margin** — the
+> gate is clearable there only by flawless imitation, and on any seed where the
+> servo read below 0.75 it is **un-clearable by construction.**
+
+**The sharpest fact: `own_hit[calib_cell]` is computed on line 501 and never
+read.** The run measures the number that invalidates its own gate, reports only
+its mean over all cells, and throws the relevant one away.
+
+**The repair is the only one of the five that is a TIGHTENING:** emit
+`planner_calib_reach`; add `PLANNER_CALIB_MIN = 1.0` as a new VOID conjunct
+checked **before** the twin's reading, indicting the teacher first; leave
+`CALIB_MIN` at 0.75 absolute and `_Blind.KINDS` unchanged. Option (i) was
+refused as **a loosening of a CONTROL's alive-proof** (0.5625 < 0.75), which
+the one law forbids me. Option (ii) was refused as venue-selection — conjunct 3
+buys (ii)'s entire benefit without the hazard, because a bad cell VOIDs the run
+instead of being swapped for a better one.
+
+**The cost, stated because it is the expensive half:** `LG.03` in W0 as built
+now VOIDs on 2 of 3 seeds — **more often than today, not less** — until the
+fixture admits a calibration cell the servo aces. That is option (iv)'s venue
+reading, arrived at from the gate rather than asserted about the world.
+
+### 2. `SM.03`'s arm pick — REFUSED on ordering, which is not the same as slipped
+
+Third dated promise on this row, and I did not date it a fourth time blind
+(`bc9c5ec`, DISPOSITIONED, DUE 09-15). The row has treated F1 (the saturated
+split) as the decision and F2 (the dead alive-proof) as a rider since 08-30.
+**That ordering is backwards:** `vis_open` reads **0.1167 against a 0.60 floor
+with chance at 0.125** — *below chance*. The registered run is VOID on F2
+whatever F1 does.
+
+**All three offered arms are F1 arms, and each moves F2 the wrong way or not at
+all** — shrinking `N_TRAIN_L` lowers the visual baseline's ceiling; widening
+`SRC_R_RANGE` changes the visual task unmeasurably; bearing-sector holdout is
+the largest generalisation demand of the three. **There is no arm among them
+whose selection produces a valid run, and the only move that would "fix" F2 by
+choosing is lowering `VIS_OPEN_MIN`, which I may not do.**
+
+Ordered instead: a **scratch probe, explicitly not a pilot** (`coverage` marks
+`SM.03` PILOT-BLOCKED and forbids one), in the `lg03_blind_twin_probe.py`
+idiom. Its third number — `vis_open` recomputed on a split built without the
+`MIN_SEP_M` exclusion — decides whether F2 is a symptom of F1 or a venue fact,
+and those two answers have very different prices.
+
+### 3. `HR.5` — the contract was closed, and it was missing the item that mattered
+
+`hr5-fixture-refuted` is now **HELD behind `w1-world-edit-window`**
+(`ee122e2`, `3eb3648`). Nine days OPEN across three promised dates, two broken
+by this desk, **while its own first entry declared the dependency in prose and
+never used the machine-readable field that exists for it** — its two structural
+siblings were already held behind that same blocker. Relabelling a
+twice-slipped row into a status that exempts it from ageing is exactly the move
+this file warns can turn the bundling rule into "a place rows go to die", so it
+is named rather than quietly made; the defence is that the row leaves this desk
+**finished**, not quiet.
+
+Items (1)–(4) adopted verbatim. **The fifth is the one I owed it:**
+
+> **`four_class_audio_separability > position_only_acc` on every seed**,
+> pre-registered. Items (1)–(4) all add SOUNDS; not one makes the headline
+> number mean anything. The row's own metric note records that 0.583 is
+> uninterpretable because the position-only control read **0.708**. **Without
+> item (5) the four voices get built, the fixture reports 4/4 classes present,
+> and the number everyone reads is still one its own control beats.**
+
+### And then the three findings turned out to be one finding
+
+`PL.02` (yesterday), `LG.03`, `HR.5` — **three specs, two days, the same
+shape**: a threshold calibrated against the gate's STATED meaning while the
+code computes something else. `r2_ua` was the subtrahend of its own effect
+size. `blind_calib_rate` is fidelity × teacher. `four_class_audio_separability`
+is the separability of position.
+
+**`run_spec` checks the bar. The overseer audits whether a threshold MOVED.
+`coverage` audits whether a commitment has a spec. `review_queue` audits
+whether a promise was kept. Not one of them asks what the number IS.**
+
+Routed as `gates-that-measure-something-other-than-what-they-say` (`ca09bd9`,
+DUE 09-20, a Sunday because it is Part 2 work and `t310` already taught me this
+week what filing FULL-sized work onto a DAILY costs). **All three instances
+were found on VOID or FAIL specs, where somebody was already hunting for a
+reason the run did not count. The dangerous case is the inverse — a PASSING
+spec whose gate clears a bar for a quantity it does not name — and 108 of 245
+specs are PASS with none examined for it.**
 
 ---
 
 ## Part 2.5 — steering maintenance
 
-**1. Priorities — the block was repaired, not reconciled.** Today's edit removed
-damage this desk put there yesterday; the `1'''''`/`2'''''` units are otherwise
-unchanged and still unspent at 70 skipped slots. The withdrawal note tells the
-builder plainly that its own plan was right, restates the live W36 numbers
-(12.28 h left, expiring Sat 09-12, against 17.61 h needed), and repeats that the
-probe-and-gate precondition binds and an unchanged re-dispatch stays forbidden.
+**1. Priorities — reconciled, in two commits, and one of them corrects me.**
+Items 1–5 of the live block are unchanged and keep their order; today's three
+rulings were **added** as items 6–8 (`f459598`), not substituted for anything.
+The release forecast was **re-stated as a bound** (`e26c71e`) — superseded for
+SHAPE, not withdrawn for error: the old range was defensible, it was just in
+the point-forecast form the 88th audit's lesson deprecates, and its numbers
+were a day stale.
+
+**And a count I had wrong.** Yesterday's page told the builder there were
+**three** overdue armed defaults (`D22`, `D18`, `D26`). **The instrument prints
+five** — `D24` (decide_by 09-11) went overdue at midnight and `D23` is overdue
+this morning. Neither appeared on my page. Corrected in the steering with the
+general fix rather than the specific one: **take the count from
+`python -m experiments.decisions`, never from a page.** This is the third day
+running that something in this desk's prose was wrong where the instrument was
+right; today it cost a count rather than a dispatch, and I found it by running
+the tool instead of quoting myself.
 
 **2. Field watch — nothing to consume.** Last sweep 2026-09-07 (wk6, `3b68b7d`),
-consumed in full by the 09-07 Review. Next sweep Monday 09-14. Unchanged.
+consumed in full by the 09-07 Review. Next sweep Monday 09-14. File unchanged
+since, byte for byte.
 
-**3. Seat staleness — carried, nothing new.** `Learning core` holds 3 trigger
-debts (`LC.07` PILOT-BLOCKED, `LC.03` VOID-FORECLOSED, `UB.10` VOID), `World`
-still reads no deciding run and no `TRIGGER:` declared, `Fast/slow coupling` is
-welded behind `LC.03`, `D1` (Control architecture) remains VACANT. No seat's
-arena context changed in 24 h — nothing ran. The missing language-**routing**
-seat found yesterday stays routed to Sunday's anatomy audit.
+**3. Seat staleness — carried, nothing new, and for a reason.** `Learning core`
+holds 3 trigger debts (`LC.07` PILOT-BLOCKED, `LC.03` VOID-FORECLOSED, `UB.10`
+VOID), `World` reads no deciding run and no `TRIGGER:` declared,
+`Fast/slow coupling` is welded behind `LC.03`, `D1` (Control architecture)
+remains VACANT. **No seat's arena context changed in 24 h because nothing ran** —
+which is the correct reading of an unchanged champions report during a
+blackout, not a clean bill. The missing language-**routing** seat found on 09-10
+stays routed to Sunday's anatomy audit.
 
-**4. Organ liveness — all four alive, and one apparent silence is by design.**
+**4. Organ liveness — all four alive.**
 
 | organ | cadence | last fire | verdict |
 |---|---|---|---|
-| builder | hourly | 06:07 today | alive; **70 of 70 slots fired and refused** |
-| overseer | 6-hourly | 06:37 today, 88th audit `e112a34` | alive; **the once-daily rhythm is BY DESIGN** — `overseer.sh` pacing exempts exactly one audit per UTC day at/after the Review slot and `pace_gate`s the other three. One commit per day here is the gate working, not an organ going quiet |
+| builder | hourly | 06:07 today | alive; **94 of 94 slots fired and refused** |
+| overseer | 6-hourly | 06:37 today (89th, running concurrently with this page) | alive; the once-daily commit rhythm is `overseer.sh` pacing working as designed |
 | field watch | Mondays | 09-07, consumed | alive; next 09-14 |
 | review | daily / Sun FULL | this run | alive |
 
-**A live cross-organ write race — and I did not merely observe it, I caused
-half of it.** The 88th audit held `docs/LESSONS.md` and `docs/OVERSIGHT.md`
-dirty while this run was writing. I never *edited* either file, and the
-`LESSONS.md` entry both of today's corrections deserve is still **deferred to
-the next run, not dropped** (recorded in `04d8b69` so it cannot evaporate).
+**The cross-organ write race did not recur, because I changed what I do rather
+than hoping.** The 89th audit is holding `docs/DECISIONS_NEEDED.md` and
+`docs/OVERSIGHT.md` dirty as I write. **Every one of my ten commits today used
+`git commit --only <path>`**, which commits the named paths rather than the
+whole index — the repair the 88th audit routed as its B6 after my `57f67e6`
+swept its staged files. I verified before writing this page that neither of its
+files is staged and that nothing of its work is in any commit of mine.
 
-**But my commit `57f67e6` COMMITTED both of them, under a message about
-re-dating three queue rows.** The overseer caught it and filed the provenance
-note itself (`8727cc8`); it verified — and I re-verified independently — that
-nothing of either desk's text was altered or lost, and that the only history
-these overwrite-in-place pages have is the git log that now mis-attributes 280
-lines of the overseer's writing to me.
-
-**The mechanism, stated exactly, because my own instructions told me to make
-"one path-scoped commit per act" and I believed I was doing so:
-`git add <path>` is path-scoped; `git commit` is NOT.** It commits the whole
-INDEX, including anything a concurrently-running organ has staged. The repair is
-`git commit --only <paths>`, which this correction itself uses. One of my six
-commits today was affected; the other five were single-file and clean. This is
-the benign form of the live queue row `cross-organ-doc-race-voids-certificates`
-(DUE 09-13), and the overseer has routed the fix as its B6.
+**One correction to this file's own contract, and the direction is unusual.**
+`REVIEW_QUEUE.md`'s header said *"a hold whose blocker has been dispositioned is
+itself a violation"* — written before `DISPOSITIONED` became a formal status OF
+THAT FILE. **Read literally it forbade the `HR.5` hold I made today**, which is
+legal and which `review_queue.py:487` permits (it tests `TERMINAL`, which is
+`ACTED`/`DECLINED` only). Corrected in place with the provenance (`2f8c6e7`),
+along with a second clarification found the same way: `HELD` buys exemption
+from **STALE**, never from **OVERDUE**, so the hold needed its clock re-armed
+in the open (`3eb3648`) rather than dropped. **The prose was wrong and the
+instrument was right** — the opposite of this week's direction, and worth
+recording for that alone.
 
 ---
 
 ## Dispositions committed this morning
 
-**Four rows due. Four handled. Queue 0 violations before and after.**
+**Three rows due. Three RULED — none re-dated blind, and none disposed on
+capacity. Queue 0 violations before and after.** One row routed.
 
-- **`pl02-eye-gate-reads-the-encoder-not-the-eye` → RULED, DISPOSITIONED
-  (`5e39771`), DUE 09-14.** Above. DISPOSITIONED and not ACTED deliberately: the
-  ruling exists, the spec edit does not, and `ACTED` means *executed* and must
-  name an executing commit.
-- **`me1-similarity-floor-never-abstains` → 09-14 (`57f67e6`).** The 09-07
-  pull-forward moved it EARLIER on the argument that *"09-13 carries ten rows
-  while 09-11 carried one"* — **desk** capacity, for work that is entirely the
-  **builder's** ("one harness edit plus a re-run"). It was dated onto a day the
-  builder could not work by a desk counting its own load. Both `ME.1` and `ME.3`
-  FAILs stand; the 0.95 bar does not move.
-- **`t310-anticorrelated-gates` → 09-20 (`57f67e6`). Third slip, and I repaired
-  the pattern rather than the date.** The 09-07 note already conceded the
-  question *"needs the frozen-vs-plastic evidence re-read"* — FULL-sized work,
-  now dated onto a DAILY three times and failed three times. **That is not three
-  bad mornings; it is a row filed against the wrong kind of sitting.** Onto a
-  FULL, and 09-20 not 09-13 because 09-13 already carries 14 against a capacity
-  of 6. A longer slip than either previous one, not dressed as sequencing.
-- **`five-commitments-are-claim-dead-behind-foreclosures` → 09-16 (`57f67e6`),
-  on a dependency that is checkable rather than asserted.** Its own text names
-  *"the re-parenting outcome"* as an input; that input is
-  `reparenting-the-welded-fifteen`, bundled yesterday to DUE 09-15. Deciding
-  today would mean deciding blind to the registry surgery that determines what
-  the five commitments can be re-parented onto. The CLAIM-DEAD ratchet stays RED
-  at 4 and `coverage` keeps exiting rc=2 until it is acted on.
+- **`lg03-blind-twin-cannot-prove-itself-alive` → RULED, DISPOSITIONED
+  (`d61a11b`), DUE 09-14.** DISPOSITIONED and not ACTED deliberately: the
+  ruling exists, the spec edit does not.
+- **`sm03-heldout-split-saturated` → RULED, DISPOSITIONED (`bc9c5ec`), DUE
+  09-15.** The owed unit changes hands and kind — the builder's diagnostic, not
+  this desk's pick.
+- **`hr5-fixture-refuted` → HELD behind `w1-world-edit-window` (`ee122e2`),
+  backstop DUE 09-16 (`3eb3648`).** Contract closed, fifth item added.
+- **`gates-that-measure-something-other-than-what-they-say` → ROUTED
+  (`ca09bd9`), DUE 09-20.**
 
 **Ratchets, said out loud as the tool requires:** `review_queue_net_arrivals`
-**6** (MOVED −23 since 09-08) and `review_queue_piled_on` **8** (MOVED +2).
-**Neither moved by today's re-datings** — 09-14, 09-16 and 09-20 all sit under
-the measured capacity of 6. The −23 is the drain of yesterday's seven-row
-sitting; the +2 predates this run.
+**5** (MOVED −24 since 09-08) and `review_queue_piled_on` **8** (MOVED +2).
+The net-arrivals figure went **4 → 5 by my own hand** when I routed the sweep
+row — said plainly rather than left for the tool, because a desk that routes
+work to itself and reports only the ratchet's fall is flattering itself. The
+`+2` on `piled_on` predates this run; today's dates (09-14, 09-15, 09-16,
+09-20) all sit under the measured capacity of 6.
 
 ---
 
@@ -256,40 +282,41 @@ sitting; the +2 predates this run.
 front of `T2.01` — frees 35 / blocks 38, the largest single unblock in the
 project. Untouched; nothing ran.
 
-**The frontier's constraint is unchanged, but it is no longer compounded.**
-Yesterday I reported the gate *plus* a date error that would have wasted the
-release. The date error was mine, it is withdrawn, and what remains is the gate
-alone — which, on the corrected bound, releases the builder on 09-12 into a
-fresh 30-hour GPU quota opening 09-13. The builder's own deferral plan was
-aimed at that window before either of us interfered with it.
+**What changed at the frontier today is nothing, and what changed behind it is
+three specs' worth of gate.** The constraint is the same single gate it was
+yesterday, now with a 3-point gap instead of 9 and a guaranteed release 47
+hours out. The board the builder wakes to is three units longer than it was,
+and every one of the three is CPU work that does not compete for the GPU
+window its first item is waiting on.
 
 ---
 
 ## The honest paragraph
 
-No numbers. Jack is exactly what he was on Monday, for the third day, and this
-desk spent the third day discovering that what it told the owner and the builder
-was wrong. Yesterday's page named the drift as *this project's errors are
-migrating out of its instruments and into its prose* — and then, from the same
-desk inside the same day, produced two more instances of it, one of which I
-committed into the file the builder steers by while believing I was rescuing it.
-The pattern both errors share is worth more than either: a number was read out of
-the correct file and interpreted in the wrong frame. A drain rate sampled from
-one window of a quantity that varies six-fold. A week label read in the ISO
-calendar when its own module keys it Sunday-start, and says so in a docstring
-written precisely because somebody got this wrong before. No instrument was
-wrong. No threshold moved. Every ratchet held, the ledger is sound, the gates
-bind — and all of that was true yesterday too, while the prose steering the
-creature's only productive organ said the opposite of the truth. The week's
-single most important step toward Jack is still the one made before this window.
-The most concerning drift is the same sentence I wrote yesterday, now with the
-author's name attached to it: the things that hurt us this week were a date, a
-rate, a marker and a seat — and the one artefact this project produces that
-nothing audits is the one I produce. The encouraging fact, and it is real: two
-organs, reading different files with no coordination, each caught their own
-error inside a day. Nobody covered for anybody. That is what oversight is
-supposed to look like, and it is the reason both errors cost a page instead of
-a dispatch.
+No numbers. Jack is exactly what he was on Monday, for the fourth day — and
+this is the first of those four days that did not end with this desk correcting
+something it had itself published. That is worth naming precisely, because the
+difference was not care or luck: it was where I pointed. The last two mornings
+were spent auditing our own prose, and both found errors in it, and both of
+those errors were mine. This morning was spent reading the code that three
+queue rows were arguing about, and it found that all three arguments were being
+had one level too high — the options on offer were about which repair to buy
+while the defect sat underneath all of them, in what the gate actually
+computes. That is the week's single most important step toward Jack, and it is
+not a capability: it is that the creature's tests can now be wrong in a way we
+know how to look for, three times over, with a name and a date and a row. The
+most concerning drift is the shadow the same finding casts. Every instance was
+caught on a spec that had already failed, where somebody was hunting anyway.
+The gates nobody has read are the ones that passed, and a passing gate that
+measures the wrong quantity is not a red mark waiting to be found — it is a
+certificate this project believes, that the builder builds on, that the
+overseer will check for a threshold that never moved, and that every organ here
+will go on calling green. We have spent four months learning to be honest about
+whether a number clears its bar. We have never once asked what the number is.
+And the encouraging thing, stated last because it is small and real: the
+correction I made to this file's own contract today went the other way for the
+first time this week. The instrument was right and the prose was wrong. That is
+the direction I would like the drift to run.
 
 ---
 
@@ -297,85 +324,96 @@ a dispatch.
 
 **Your first act on waking is still a measurement, not a spec** — append one
 line to `docs/LOOP_JOURNAL.md` recording how many consecutive slots you skipped
-and the `week:all models` reading that released you. It is **70** and counting.
+and the `week:all models` reading that released you. It is **94** and counting.
 Nothing in this system counts a dark slot. Then, in order:
 
-1. **YOUR W37 PLAN WAS RIGHT AND I BROKE IT. IT IS RESTORED — READ THE
-   WITHDRAWAL, NOT THE CORRECTION.** My 09-10 edit (`fd2101d`) is withdrawn
-   (`4bd81ec`). `W37` opens **Sunday 09-13**, as you wrote, because
-   `gpu.py::_week()` keys by `%U` (Sunday-start). The live week is **`W36`,
-   17.72 h charged of 30, 12.28 h left, expiring end of SATURDAY 09-12** — and
-   attempt 2's measured **17.61 h does not fit in 12.28 h**, which is exactly
-   what you said. **Do not scrape the attempt out of W36.** The precondition is
-   unchanged and still binds under every branch: twin-spread result on the row,
-   successor gate committed in a non-dispatch commit, and only then a dispatch.
-   An unchanged re-dispatch stays forbidden.
+1. **YOUR W37 PLAN IS RIGHT AND IT IS UNCHANGED.** W37 opens Sunday 09-13, as
+   you wrote. **`W36` expires at the end of TODAY** with 12.28 h left against
+   attempt 2's measured 17.61 h. If you wake this afternoon you will be looking
+   at a pot that does not fit and a deadline that expires tonight: **do not
+   scrape the attempt out of it.** The precondition binds under every branch —
+   twin-spread result on the row, successor gate committed in a non-dispatch
+   commit, and only then a dispatch. An unchanged re-dispatch stays forbidden.
 
-2. **Three overdue armed defaults are yours to fire, and the queue is one
-   longer than yesterday** — `D22` (overdue 09-09), `D18` (overdue 09-10), `D26`
-   (overdue 09-11). `D26`'s default is `(iv) MEASURE ONLY`; both of the urgency
-   arguments it was escalated on have now been withdrawn, which changes nothing
-   about whether the default fires. Use the required journal wording: *"the
-   owner did not rule by <date>, so the pre-registered default fired."*
+2. **FIVE overdue armed defaults are yours to fire, not three — and take that
+   count from the tool, not from this page.** `D22` (09-09), `D18` (09-10),
+   `D26` (09-11), plus **`D24` and `D23`, which I failed to print yesterday**.
+   Run `python -m experiments.decisions`; it prints `OVERDUE — DEFAULT IS DUE
+   TO FIRE` beside each. Use the required journal wording: *"the owner did not
+   rule by <date>, so the pre-registered default fired."* Note `D24`'s option
+   (ii) is a THRESHOLD MOVE and may not fire by silence — its default is not
+   (ii).
 
 3. **`PL.02`'s eye gate is RULED — implement it** (`5e39771`, DUE 09-14).
-   Rebind the VOID condition to a raw-pixel radius ridge R² ≥ 0.80
-   (`EYE_RADIUS_R2_MIN` unmoved) measured **on the run's own probe episodes**,
-   not inherited from the seed-90 probe. Keep `r2_ua` as a first-class recorded
-   metric on the ledger row. Then a smoke; the registered run stays blocked
-   until the smoke PASSES, exactly as before.
+   Carried unchanged from yesterday. Raw-pixel radius ridge R² ≥ 0.80,
+   `EYE_RADIUS_R2_MIN` unmoved, measured on the run's own probe episodes;
+   `r2_ua` stays a first-class recorded metric. Then a smoke.
 
-4. **`W1.04` still gains conjunct (c) before you register it** — carried
-   unchanged from yesterday. Register from the amended design, not the 09-06
-   text. It stales nothing.
+4. **`LG.03`'s liveness gate is RULED — implement it** (`d61a11b`, DUE 09-14).
+   Emit `planner_calib_reach`; add `PLANNER_CALIB_MIN = 1.0` as a VOID conjunct
+   **checked before `blind_calib_rate`**; re-run (CPU, ~725 s, 3 seeds).
+   `CALIB_MIN` does not move and `_Blind.KINDS` does not change. **Expect more
+   VOIDs, not fewer** — it is a tightening and it is supposed to cost.
+
+5. **`SM.03`'s F2 probe** (`bc9c5ec`, DUE 09-15). Not a pilot; `coverage`
+   forbids one. No seeds, no ledger row, no gate frozen, no constant moved.
+
+6. **`HR.5` — nothing for you yet**, and item 8 of the steering says why. Do
+   not start the world edit outside `w1-world-edit-window`.
+
+7. **`W1.04` still gains conjunct (c) before you register it** — carried
+   unchanged from 09-10. Register from the amended design, not the 09-06 text.
 
 ---
 
 ## FOR THE OWNER
 
-**1. `D26` — both reasons you were asked to hurry have been withdrawn, by the
-two organs that raised them, within an hour of each other. The recommendation
-is unchanged.** Already routed; see `D26` and today's premise-correction
-addendum (`04d8b69`). My recommendation stays **(i) ATTRIBUTE THE LINE**, on the
-structural argument — `pace_gate` rations a shared meter with no attribution and
-no ordering, and that recurs every time an external consumer draws, regardless of
-how long *this* blackout lasts. What is withdrawn is the urgency: the 88th audit
-withdrew the drain forecast (my "~6 days / never", its "49 days") as unsupported,
-and this desk withdrew the GPU loss (the "0.00 of 30 dying Sunday" that appeared
-in four documents, including one of mine in your builder's steering). On the
-corrected numbers the override buys roughly **one day**, not six, and W37's fresh
-30 hours open the morning after the builder is forecast to wake. **The overdue
-default `(iv) MEASURE ONLY` is unaffected by any of this and should still fire.**
-Nothing here argues for deciding `D26` differently — only for deciding it calmly.
+**1. `D26` — unchanged, already routed, and the calm case for it got calmer.**
+See `D26` and its 09-11 premise-correction addendum (`04d8b69`). My
+recommendation stays **(i) ATTRIBUTE THE LINE**, on the structural argument:
+`pace_gate` rations a shared meter with no attribution and no ordering, and
+that recurs every time an external consumer draws, regardless of how long *this*
+blackout lasts. The urgency is still withdrawn — and today's meter reduces it
+further, not more: the gap is 3 points rather than 9, and there is an
+unconditional release at the 09-14 week reset. **The overdue default
+`(iv) MEASURE ONLY` is unaffected and should still fire.**
 
-**2. NO-DECISION: the withdrawal of my own steering edit, reported because it is
-expensive and because it is mine to fix, not yours to rule on.** Yesterday I
-committed a false correction into the file the builder navigates by, on a finding
-I led this page with. It is withdrawn and the builder's original text is restored
-verbatim. It cost nothing only because the builder has been dark for 70 slots and
-never read it. I am telling you rather than asking you because there is no fork
-here — but you should know that **the steering file has now been wrong in two
-successive directions in two days, both times by this desk**, and that the
-`LESSONS.md` entry it deserves is deferred rather than written because the
-overseer held that file dirty mid-run (recorded in `04d8b69`, and it will be
-written by the next run that finds the file free).
+**2. `D22`, `D18`, `D23`, `D24` and `D26` are ALL overdue and unfired — and
+yesterday I told you there were three.** Repeated verbatim rather than dropped,
+because a `VANISHED-OWNER-ASK` is the scar this section exists to prevent, and
+because the miscount is mine. `D24` went overdue at midnight on 09-11 and `D23`
+this morning; neither was on yesterday's page. `D22`'s own default is **(i) THE
+RULE STANDS**, which denies my own ask, and I withdrew that ask on 09-10
+because its premise is doubly falsified — if nobody fires it, it should be
+fired as (i). **`D24` carries the one warning worth repeating here: its option
+(ii) SHRINK THE CLAIM is a threshold move and may not fire by silence.** Its
+default is not (ii) and nothing in the silence should be read as choosing it.
 
-**3. NO-DECISION: the docket, announced rather than asked about.** Four rows due,
-four handled, 0 violations before and after. One ruled, three re-dated on three
-distinct reasons — and only one of those three was capacity. Sunday 09-13 still
-goes to **14 rows against a measured capacity of 6**; I said a week ago it will
-not clear and I have dated nothing new onto it. `review_queue_net_arrivals` is
-**6** (MOVED −23) and `review_queue_piled_on` **8** (MOVED +2); neither moved by
-today's acts.
+**3. NO-DECISION: the day's science, declared because it is mine to do and not
+yours to rule on.** Three rows due, three ruled, zero re-dated on capacity. The
+sweep they generated —
+`gates-that-measure-something-other-than-what-they-say` — is routed to my own
+Sunday docket (`ca09bd9`, DUE 09-20), **not to your desk, because Part 2 test
+re-examination is already this desk's standing jurisdiction and manufacturing a
+fork out of my own homework would spend your attention on a decision that is
+not yours.** You should know it exists because of what it may return: if the
+sweep finds a **PASSING** spec whose gate clears a bar for a quantity it does
+not name, the repair is a strengthening under the standing law and **that
+certificate re-buys**. A PASS that has to be re-bought is the outcome the row
+exists to find, not a reason to avoid looking — and it is the only foreseeable
+way `demonstrated` goes *down* by an act of this desk. I would rather you heard
+that from me now than from a number later.
 
-**4. NO-DECISION: liveness report, nothing here to rule on.** All four organs
-alive. The overseer's once-daily commit rhythm is its own pacing working as
-designed, not silence — worth stating because "one audit a day from a 6-hourly
-organ" is exactly the shape a dead organ would also make, and the distinction is
-in `overseer.sh`, not in the log.
+**4. NO-DECISION: the docket, announced rather than asked about.** Queue 0
+violations before and after; 39 live rows. `review_queue_net_arrivals` **5**
+(MOVED −24 since 09-08) and `review_queue_piled_on` **8** (MOVED +2). The
+net-arrivals figure rose by one **by my own hand** this morning. Sunday 09-13
+still carries **14 rows against a measured capacity of 6**; I have said for a
+week it will not clear, and I have dated nothing new onto it.
 
-**5. `D22` and `D18` remain OVERDUE and unfired, and `D26` joins them today.**
-Repeated verbatim rather than dropped, because a `VANISHED-OWNER-ASK` is the
-scar this section exists to prevent. `D22`'s own default is **(i) THE RULE
-STANDS**, which denies my own ask, and I withdrew the ask on 09-10 because its
-premise is doubly falsified. If nobody fires it, it should be fired as (i).
+**5. NO-DECISION: liveness report, nothing here to rule on.** All four organs
+alive; the builder has fired and refused 94 consecutive slots. The overseer's
+once-daily commit rhythm is its own pacing working as designed. The cross-organ
+write race I caused on 09-11 did not recur: all ten of today's commits used
+`git commit --only`, and I verified the 89th audit's two dirty files are in
+none of them.
