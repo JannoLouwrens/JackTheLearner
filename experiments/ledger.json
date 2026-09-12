@@ -7085,6 +7085,20 @@
           ],
           "commit": "75a5544",
           "reason": "docstring only: attempt 2's VOID reading recorded, plus the measured per-seed pairing (teacher 1.00/0.75/0.75 vs twin 0.50/1.00/0.25) which refutes the 09-12 ruling's cap MECHANISM while leaving its repair, PLANNER_CALIB_MIN, CALIB_MIN, KINDS and the run path unchanged"
+        },
+        {
+          "at": "2026-09-12T21:10:37",
+          "by": "90th audit B1 (RANK 1)",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "e17b2ebfd164167b",
+              "proof": "reconstructed e17b2ebfd164167b from git 75a554401a41; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "c369a8dc32ee3984"
+            }
+          ],
+          "commit": "927d9f4+dirty",
+          "reason": "declare the VOID-FORECLOSED: attempt 1 and attempt 2 share 33 metrics and none differs in any digit, both gates shut on the mean, and seed 0 -- the only seed surviving gate 1 -- reads twin 0.50 vs CALIB_MIN 0.75, so auditing the venue does not deliver the liveness proof. No constant moved, no conjunct removed, KINDS and the run path unchanged."
         }
       ],
       "attempt": 2,
@@ -7182,7 +7196,7 @@
           "status": "VOID"
         }
       ],
-      "impl_sha": "e17b2ebfd164167b",
+      "impl_sha": "c369a8dc32ee3984",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "blind_calib_rate": 0.583333,

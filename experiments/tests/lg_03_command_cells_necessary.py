@@ -224,6 +224,49 @@ What is refuted is the ruling's *explanation*, which is routed as
 refusal of option (i) STRONGER, not weaker: a teacher-relative bar computes
 1.00 / 0.75 = **1.333** on seed 1, and a fidelity above 1 is not a fidelity.
 
+VOID-FORECLOSED: both gates are closed at this envelope and the run is
+    deterministic — attempt 1 (`a2ff63c`) and attempt 2 (`1bd42dc`) share 33
+    metrics and **not one of them differs in any digit**, across a 727 s run
+    on 3 seeds. A third dispatch buys the identical VOID. The repair is a
+    FIXTURE redesign, named by the amendment above; it is NOT a re-run and it
+    is NOT a third learner (that repair was pre-registered, run, and falsified
+    — `max5 == max2` on every seed, `lg03_blind_twin_probe.py`).
+
+FORECLOSURE ARITHMETIC: per-seed, measured one `_experiment(seed)` call at a
+    time and self-validated — the three vectors reproduce this run's recorded
+    mean AND std to 1e-5 on `planner_calib_reach`, `blind_calib_rate` and
+    `planner_reach_mean`, so they are the registered run's own numbers:
+
+        seed   planner_calib_reach   blind_calib_rate
+        0            1.00                  0.50
+        1            0.75                  1.00
+        2            0.75                  0.25
+
+    Gate 1 reads the mean, 0.8333 +- 0.1179 vs `PLANNER_CALIB_MIN` 1.0; gate 2
+    reads 0.5833 +- 0.3118 vs `CALIB_MIN` 0.75. Both are shut, and shutting
+    the first does not open the second: **seed 0 is the ONLY seed whose
+    teacher survives gate 1, and its twin reads 0.50** — a third of the way
+    below `CALIB_MIN` on the one seed a repaired venue would keep. So the
+    obvious repair (admit only calibration cells the privileged servo aces)
+    audits the venue without delivering the liveness proof, which is the
+    thing the gate exists to buy. No multiplier on seeds or steps moves
+    either: the calibration cell is fixed at `approach@sorted(objs)[0]` and
+    the servo's reach on it is a property of W0, not of sample size.
+    **Read this arithmetic under the CORRECTED seed labels** — the probe's
+    original docstring had one pair of them swapped, which manufactured a
+    teacher-caps-twin mechanism that seed 1 (teacher 0.75, twin 1.00)
+    refutes. The foreclosure does not rest on that mechanism and never did:
+    it rests on both means being under both bars in a deterministic run.
+
+BLAST RADIUS: LG.04, LG.05, LG.06 (all `depends_on` LG.03 — verified in
+    `registry_expansion.py`: `["LG.03", "ME.9"]`, `["LG.03", "LG.04"]`,
+    `["LG.03"]`) — which is the ENTIRE declared ARENA of the
+    `Language grounding (word -> lived skill)` seat, `docs/CHAMPIONS.md:320`.
+    Declaring this foreclosure therefore moves that seat onto the "seats no
+    one can ever WIN" list, and it should: the arena's gate is shut. The
+    fixture redesign routes onto the existing `w0-too-shallow` family — this
+    spec is an observation-side instrument for it — and NOT onto a new row.
+
 WHERE THE CROSS-SEED INTERSECTION IS COMPUTED, and why it is in the control.
 `run_spec` runs every experiment seed before it runs the control, and
 `_aggregate` cannot see across seeds. `_control` is therefore the only hook
