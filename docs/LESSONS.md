@@ -12626,3 +12626,83 @@ Cost: nothing further beyond what the lesson above already charges — the 09-10
 forecasts were withdrawn on 09-11 by their own authors before the owner acted.
 Recorded because the withdrawal was made on the weaker of the two available
 arguments, and the stronger one leaves less room to make the mistake again.
+
+## AN ARMED DEFAULT'S TEXT IS A SNAPSHOT OF THE WORLD WHEN IT WAS ARMED —
+## RE-DERIVE ITS PREMISE BEFORE YOU EXECUTE IT, because the gap between arming
+## and firing is exactly where the world moves (builder, 2026-09-12, firing four
+## overdue defaults after a 104-slot blackout; the second occurrence, D17 was the
+## first)
+
+**The mechanism is right and this lesson does not touch it.** A `decide_by` that
+fires a pre-registered default is what replaced `D1`'s twenty-day deadlock, and
+firing one is never optional. What is easy to get wrong is *how*: a default is
+written as an **instruction** — "what fires is X" — and an instruction read
+literally is executed without asking whether X is still the world.
+
+**Measured, on this project's own firings.** Two of the defaults fired so far had
+their ordered work **already done at firing**, and in both cases the deadline had
+passed:
+
+  - `D17` (fired 09-08): the re-open trigger's own premise was **false** by then.
+    It fired because a from-scratch encoder could not hit `PL.00`'s floor; on the
+    `decide_by` date itself the renderer bakeoff ran and `PL.00` **PASSed**
+    (pure_T 8.903 vs the unmoved 5.0). The firing was pure paperwork.
+  - `D18` (fired 09-12): the default ordered two code changes. **Both landed
+    2026-09-03 in `a071d91` — six days before `decide_by`, and before the entry
+    was armed.** Worse for a literal reader, the shipped code was **stronger than
+    the order**: the default said `getrusage(RUSAGE_CHILDREN)`; the
+    implementation takes `max(RUSAGE_SELF, RUSAGE_CHILDREN)`, because `run_spec`
+    calls the experiment *inline* and a children-only reading would have recorded
+    **~0 MB for the exact 7.57 GB scar the field exists for.** A builder
+    executing the default's words verbatim would have made the instrument
+    **worse** while believing it was obeying the owner.
+
+**So the rule is not "check whether it is done" — it is "re-derive what the
+default was FOR".** `D18`'s default is two words, MEASURE **AND REPORT**. The
+measure half had shipped nine days earlier; the **report half had never once been
+executed** — the instrument had been recording to every ledger row and no organ
+had read it in aggregate. Firing it as paperwork and stopping would have been
+defensible and would have taught nobody anything.
+
+**And this is why it matters, not merely tidiness.** `D18` was escalated from
+**one** live sample — `T2.00` at 7.57 GB, 5.0× the ceiling — and posed a binary:
+*is the ceiling wrong, or are the specs in breach?* Read across all 69 own-peak
+rows the instrument had since collected:
+
+    over the 1536 MB ceiling : 8 of 69 (12%), all eight on PASS rows
+    median own peak          : 239.7 MB — 6.4x UNDER the ceiling
+    max                      : 7370.0 MB  (T1.03, 4.8x, inherited=False)
+
+**Generalising that one sample to "the specs are in breach" would have been wrong
+about 61 of 69 rows.** The honest answer is neither branch the entry offered: the
+ceiling is right for 88% of the ladder and the breach is a heavy tail of eight
+named specs. The owner's decision got *easier* and *narrower* by being measured —
+and nothing about that is visible to a firing that only transcribes.
+
+**The practice, three lines:**
+
+  1. **Before firing, re-derive the default's premise** against the live tree —
+     `git log -S` the thing it orders, run the instrument it names. A default
+     armed a week ago describes a week-old world.
+  2. **Fire it anyway when the premise has moved**, and say so in the record.
+     Quietly extending a deadline once it goes red is the deadlock the mechanism
+     replaced; "already done" is a *finding to transcribe*, never a reason to
+     skip. Both `D17` and `D18` fired.
+  3. **Execute the default's PURPOSE, not its verbs.** Where the ordered code
+     already exists, the unexecuted half is usually the reporting, the reading,
+     or the aggregation — and that half is where the decision actually lives.
+     Where the shipped code is *stronger* than the order, keep the stronger code
+     and record the divergence; a default may only pick among already-permitted
+     actions, and "make a working instrument worse to match a week-old sentence"
+     is not one of them.
+
+**The generalisation beyond defaults:** every standing instruction in this repo —
+a priority block, a `FOR THE BUILDER` item, a queue row's disposition — is a
+snapshot with a write date, and this project already knows it (`PROGRESS items may
+be discharged elsewhere`; the cached-meter rule on `CLAUDE.md`; the five-day-stale
+reset date). An armed default is the case where the snapshot has *teeth*, which
+is why it is the one most likely to be executed without being re-derived.
+
+Cost: nothing. Both premises were checked in under two minutes — one `git log -S`
+and one aggregate over the ledger — and the second check is what turned a
+paperwork firing into a measurement the owner can actually rule on.
