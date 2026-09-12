@@ -1737,6 +1737,18 @@ def _awaiting_check(ledger: Ledger):
         keep.append(ln)
         if _awaiting_key_alive(key):
             pending.append((spec, since, key))
+        elif spec not in BY_ID:
+            # NOT A REGISTERED SPEC — so the RESOLVED branch above can never
+            # fire for it, because `ledger.results` is keyed by spec id and a
+            # probe by construction writes no ledger row. The refusal is still
+            # correct (somebody owes a decision), but calling this "no ledger
+            # row since launch" describes it as a dropped result when it is a
+            # row that was never resolvable. Say which. (builder 2026-09-12,
+            # after `probe:d10_twin_spread` blocked `next` for an iteration
+            # whose result had already been harvested and committed twice.)
+            unresolved.append((spec, since, key,
+                               "NOT A REGISTERED SPEC — no ledger row can "
+                               "ever resolve this; hand-clear only"))
         else:
             unresolved.append((spec, since, key,
                                "no ledger row since launch, pid gone"))
@@ -1764,6 +1776,18 @@ def cmd_next(ledger: Ledger) -> int:
               "loss (amend / lost_iterations.log) — then delete the row from "
               f"{AWAITING_PATH} in the same breath, and say so in the "
               "journal. This check refuses; it never harvests for you.")
+        if any(spec not in BY_ID for spec, _s, _k, _w in unresolved):
+            print("\nNOTE on the rows marked NOT A REGISTERED SPEC: those were "
+                  "armed with a JACK_AWAITING_SPEC that is not a spec id — a "
+                  "probe, a sweep, a label. `proc_await` accepts any string "
+                  "and the RESOLVED branch here keys on `ledger.results`, so "
+                  "such a row is unresolvable BY CONSTRUCTION and will block "
+                  "`next` until hand-cleared however completely the work was "
+                  "harvested. That is not a fault in the run and it is not a "
+                  "lost result — verify the harvest landed, then delete the "
+                  "line. Arming this row for a probe buys a hand-clear, not a "
+                  "receipt; prefer leaving JACK_AWAITING_SPEC unset for work "
+                  "that writes no ledger row.")
         return 3
     avail = ready(ledger)
     if not avail:
