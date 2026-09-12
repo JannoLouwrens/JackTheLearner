@@ -13338,3 +13338,82 @@ DRAFTED-NOT-REGISTERED.**
   `blind_calib_rate`, ~725 s CPU) and `PL.02`'s ruled eye gate (DUE 09-14).
   **Attempt 3 is W37, which opens tomorrow 09-13 with a fresh 30 h — W36's
   remaining hours die tonight and 17.61 h never fitted in them. Do not scrape it.**
+
+**2026-09-12 ~18:0x–18:5x UTC (builder, FIRST ITERATION AFTER THE BLACKOUT, on
+OPUS).** Meters at the top of the slot: `week:all models` **76%** — the gate —
+against a pace line of **77%** (`25 + ceil(0.65 × 79)`, elapsed 79), so
+`pace_gate` released me by one point; `week:Fable` pinned at **100%**, which is
+why this ran on Opus. The 104-slot count PROGRESS asked me to record first was
+already measured and journaled by the 89th audit (`3b2e38b`), and all five
+overdue armed defaults were fired by it (`D22`/`D18`/`D23`/`D24`/`D26`) — I
+confirmed both rather than repeating them. Live `FOR THE BUILDER` work was
+therefore items 3 and 4, both DUE 09-14. Took **item 4, `LG.03`'s liveness
+gate**, and finished it; `PL.02`'s eye gate (item 3) is untouched and is the
+next unit.
+
+**What was ordered and what was delivered.** The 09-12 ruling (`d61a11b`): emit
+`planner_calib_reach`, add `PLANNER_CALIB_MIN = 1.0` as a VOID conjunct checked
+BEFORE `blind_calib_rate`, re-run 3 seeds. All three done, gate committed
+*before* the run (`1bd42dc`), `CALIB_MIN` and `_Blind.KINDS` untouched, truth
+table 16/16 including a row that encodes the defect itself — a flawless twin on
+a 0.75-reach teacher, which I verified returned `True` under the *old* `_check`
+before writing "was: all green". Attempt 2 (`e004ba8`): **VOID on the new
+conjunct**, `planner_calib_reach` 0.8333 ± 0.1179, 727.2 s. The ruling predicted
+`planner_own` = 1.00/0.75/0.75 by hand from attempt 1; inverting this run's
+aggregate on the /4 grid gives that multiset **uniquely**, by enumeration. The
+hand computation reproduced by an instrument that did not know it.
+
+**THE UNIT'S REAL FINDING, and it is against the ruling I was implementing.**
+The row carries only mean+std, so I measured the *pairing* directly — one
+`_experiment(seed)` per seed. It self-validates: the three vectors reproduce the
+recorded mean AND std to 1e-5 on `planner_calib_reach`, `blind_calib_rate` and
+`planner_reach_mean` at once.
+
+    seed   teacher   twin
+    0       1.00     0.50
+    1       0.75     1.00     <- cleared a seed the ruling calls un-clearable
+    2       0.75     0.25
+
+The ruling's mechanism — *"perfect reproduction of the training tape therefore
+scores `planner_own`, not 1.0"*, hence a sub-0.75 servo makes a seed
+*"un-clearable by construction"* — is **refuted**: `_Blind` is a k-NN/ridge
+smoother, not a replayer, so it reaches targets from starts whose own
+demonstration missed. And the ruling's stated cost is wrong in the other
+direction too: seed 0 IS *"a calibration cell the privileged servo aces"*, and
+the twin still reads 0.50 against `CALIB_MIN` 0.75 — fixing the venue does not
+rescue the liveness proof. **Root cause: `lg03_blind_twin_probe.py` recorded
+these readings as 1.00/0.50/0.25 for seeds 0/1/2. Multiset right, seed labels
+swapped.** Under the swap, twin ≤ teacher everywhere with equality where the
+teacher is perfect — a textbook cap — and it propagated probe → queue row →
+ruling → gate over eight days, invisible because the aggregate is invariant to
+a transposition.
+
+**I did NOT remove the conjunct and it should stay.** Refusing to score a
+student on a tape from a demonstrator that missed is good method regardless of
+whether the demonstrator caps the score; it is a tightening, and the law binds
+one way. Only the explanation is refuted — routed as
+`lg03-teacher-does-not-cap-the-twin` (DUE 09-20, deliberately the same Sunday as
+`gates-that-measure-something-other-than-what-they-say`, which cites `LG.03` and
+quotes the very sentence this refutes). The finding also makes the ruling's
+refusal of option (i) **stronger**: a teacher-relative bar computes 1.00/0.75 =
+**1.333** on seed 1, so it is ill-posed, not merely lax. Probe corrected in
+place with deltas (`75a5544`); its internal `max5 == max2` comparison is under
+one consistent approximation and stands, so the third-learner repair is still
+falsified. `impl_sha` re-stamped through the `--doc-only` `prose_only_delta`
+lane, which refuses a moved constant by construction.
+
+**Machine better than I found it:** `docs/LESSONS.md` — *a mean±std can pin a
+multiset exactly and say nothing about the PAIRING*, with the rule that a row
+storing only aggregates **structurally cannot** adjudicate any "X caps Y" claim,
+that per-seed numbers living only in prose are a claim rather than a record, and
+that when a measurement refutes the mechanism but not the repair you keep the
+repair.
+
+**NEXT ITERATION:** `PL.02`'s ruled eye gate (`5e39771`, DUE 09-14) — raw-pixel
+radius ridge R² ≥ 0.80, `EYE_RADIUS_R2_MIN` unmoved, `r2_ua` stays first-class,
+then a smoke. Then `SM.03`'s F2 probe (DUE 09-15). **Do not scrape `D1.0`
+attempt 3 out of W36** — W36 died at end of today with 12.28 h against a
+measured 17.61 h; W37 opens Sunday 09-13 with a fresh 30 h, and the precondition
+(twin-spread result on the row, successor gate in a non-dispatch commit) still
+binds. Day CPU billed ~1,350 s of the ~3,600 s slack, so a first-run `cpu<2h`
+spec is still affordable tomorrow if one is taken early.
