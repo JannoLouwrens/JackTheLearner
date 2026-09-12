@@ -1309,7 +1309,7 @@ epochs shape goes above random, not below. Do not cite it.
 ## ROUTED 2026-08-30 (builder): `SM.03`'s held-out split is saturated — pick the
 ## repair arm, do not let me pick it
 
-ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pilot_seed90.json) | OPEN
+ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pilot_seed90.json) | DISPOSITIONED 2026-09-12 (Review DAILY — the arm pick is REFUSED, not slipped: all three offered arms act on F1's split geometry and NONE of them acts on F2, whose failure VOIDs the run whichever arm wins. F2 is promoted from rider to blocker and answered by a MEASUREMENT the builder owes, not a pick this desk owes. See RULING below)
     DUE: 2026-09-06 | the Review picks the repair arm — the author must not; and
         F2 (the dead alive-proof) needs its own answer whichever arm wins.
     DUE: 2026-09-07 | the same owed pick, moved to the Monday DAILY — RE-ARMED
@@ -1341,7 +1341,79 @@ ROUTED: sm03-heldout-split-saturated | 2026-08-30 | 13c0440 (pilot /data/sm03_pi
         `PARK-ON-AN-UNREACHABLE-RELEASE` pairs `coverage` prints, and smell
         stays a commitment with a spec and no measurement for five more days.
 
-**Status: OPEN. Gates provisional, `run()` still refuses, nothing dispatched.**
+    DUE: 2026-09-15 | RULED 2026-09-12 (Review, DAILY) — the owed unit CHANGES
+        HANDS AND KIND: what is owed on 09-15 is the builder's F2 diagnostic
+        probe, not this desk's F1 arm pick. Dated 09-15 (5 live rows, measured
+        capacity 6) and not 09-13 (14 rows). Design in the RULING below.
+
+**Status: DISPOSITIONED. Gates provisional, `run()` still refuses, nothing
+dispatched, `_GATES_FROZEN` still False.**
+
+**RULING, 2026-09-12 (Review, DAILY). The arm pick is REFUSED on ordering
+grounds, and I am naming this as the third dated promise on this row rather
+than letting a third slip look routine — but it is a refusal with a reason and
+a state change, not a fourth date.**
+
+**The argument, from this row's own recorded numbers and nothing else.** The
+pilot carries two faults, and this row has treated F1 as the decision and F2 as
+a rider since 2026-08-30. That ordering is backwards:
+
+| | fault | measured |
+|---|---|---|
+| F1 | held-out split saturated | 94.2 m² of exclusion discs asked of an 11.06 m² annulus (8.5× oversubscribed); reject 0.9958; every retained test position exactly at the `MIN_SEP_M` 0.25 floor |
+| F2 | the alive-proof is dead | `vis_open` **0.1167** against `VIS_OPEN_MIN` 0.60, with **chance at 0.125** |
+
+> **`vis_open` is BELOW chance.** It is the open-condition visual baseline — the
+> arm the nose is compared against. The registered run would be VOID by this
+> spec's own tree on F2 regardless of what F1 does, and `vis_occ` proves nothing
+> about occlusion while it stands.
+
+**The three arms on offer are all F1 arms, and each moves F2 the wrong way or
+not at all:**
+  - **shrink `N_TRAIN_L`** — fewer training positions; strictly *lowers* the
+    visual baseline's ceiling.
+  - **widen `SRC_R_RANGE`** — a different annulus, hence a different visual
+    task; effect on `vis_open` unknown and unmeasured in either direction.
+  - **hold out by BEARING SECTOR** — the largest generalisation demand of the
+    three; if anything it *lowers* `vis_open` further.
+
+**So there is no arm among the three whose selection produces a valid run, and
+the only move that would "fix" F2 by choosing is lowering `VIS_OPEN_MIN` —
+which the one law forbids and which I am not entitled to do even if it were
+wise.** Picking today would be ordering a run that VOIDs exactly as the pilot
+did, on a spec whose parked predecessor (`SM.02`) names it as the sole revival
+path. That is the honest reason, and it is stronger than the capacity reason
+that carried the two previous slips.
+
+**WHAT IS ORDERED — a probe, explicitly NOT a pilot.** `coverage` marks `SM.03`
+PILOT-BLOCKED and its own repair note says *"not another pilot"*; that binds.
+The unit is a **scratch diagnostic in the `lg03_blind_twin_probe.py` idiom** —
+kept in `experiments/tests/`, outside the ledger, spending no seeds, writing no
+row, freezing no gate, moving no constant:
+
+  `experiments/tests/sm03_vis_open_probe.py`, answering ONE question with a
+  number: **is `vis_open` at chance because the visual observation carries no
+  usable signal at this geometry, or because the retained test set is too small
+  and too degenerate to measure one?** Report, at the CURRENT geometry and on
+  the pilot's own seed: `n_test` retained, the per-class confusion in the OPEN
+  condition, and `vis_open` recomputed on a split built WITHOUT the `MIN_SEP_M`
+  exclusion (an instrument-only reading, never a bar to pass).
+
+**That third number is the discriminator and it is why the probe is worth the
+credits:** if `vis_open` rises to well above 0.125 once the saturated exclusion
+is lifted, F2 is a SYMPTOM of F1 and the arm pick becomes a real pick that this
+desk can make on the 09-15 sitting. If it stays at chance, F1 is cosmetic, the
+smell fixture has no live visual comparison arm at all, and the repair is a
+venue redesign that routes to `w0-too-shallow` — a much larger answer than any
+of the three arms, and one nobody should reach by elimination.
+
+**Nothing moved, in either direction:** `MIN_SEP_M` 0.25, `VIS_OPEN_MIN` 0.60,
+`N_TRAIN_L` 480 and `SRC_R_RANGE` are all untouched; `_GATES_FROZEN` stays
+False; `run()` keeps refusing; the pilot stays spent evidence and is not re-run.
+**The cost of the wait is unchanged and still real:** `SM.02` is PARKED with
+`SM.03` as its stated revival path, so this stays one of `coverage`'s three
+`PARK-ON-AN-UNREACHABLE-RELEASE` pairs and smell stays CLAIM-DEAD meanwhile.
+I am buying three more days of that to avoid ordering a run that cannot count.
 
 The full-size seed-90 pilot ran on CPU in 8 minutes (`/data/sm03_pilot_seed90.json`,
 head `13c0440`) and found two faults; the numbers and the arithmetic are in
