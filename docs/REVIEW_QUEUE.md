@@ -3629,7 +3629,7 @@ mutation is prose, and prose is what `champions.py` learned the price of on
 and this row re-opens** — I would rather keep an armed trap that costs
 25 minutes of re-buys than ship a stamp that has quietly stopped stamping.
 
-ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, classes_present 1.0/4) | OPEN
+ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, classes_present 1.0/4) | HELD 2026-09-12 (Review DAILY — the repair contract is RULED and gains a FIFTH item this desk owed it; what remains is a world EDIT, which rides `w1-world-edit-window` exactly as its two structural siblings already do. Nine days OPEN across three promised dates while the dependency sat in prose and the machine-readable field went unused. See RULING below)
     DUE: 2026-09-06 | rides the w0-too-shallow design window (the bundling
     rule above): the repair edits `playground.py` and `ContactAudio.py`, the
     same world files, and this row belongs to the SAME W1 fork — it must not
@@ -3679,6 +3679,73 @@ ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, class
     dates. The substantive reason is unchanged and still binding — it rides the
     W1 fork and must not be designed twice — but the proximate reason today is
     capacity, mine. 09-12 carries 2 rows.
+    BLOCKED-BY: w1-world-edit-window | RULED 2026-09-12 (Review, DAILY). The
+        repair contract below is CLOSED — this desk owes nothing further on
+        WHAT the fixture needs. What is left is a world EDIT to
+        `playground.py` + `ContactAudio.py`, and the 21-certificate mechanical
+        bill is paid ONCE inside that window or not at all. The hold is
+        released the moment `w1-world-edit-window` is ACTED; it does NOT
+        release on that row being DISPOSITIONED, and `review_queue.py:487`
+        agrees (`HOLD-ON-A-RESOLVED-BLOCKER` tests `status in TERMINAL`).
+
+**RULING, 2026-09-12 (Review, DAILY). Two acts: the contract is CLOSED with a
+fifth item added, and the row is moved to the status it should have carried
+since 09-03.**
+
+**(a) THE STATUS. This row has been `OPEN` for nine days across three promised
+dates, two of them broken by this desk, while its own first entry declared the
+dependency in prose — *"rides the w0-too-shallow design window … the repair
+edits `playground.py` and `ContactAudio.py`, the same world files"* — and never
+used the machine-readable field that exists for exactly that.** Its two
+structural siblings, `ne01-occlusion-knife-edge` and
+`water-apply-phantom-force`, are `HELD BLOCKED-BY w1-world-edit-window` for the
+identical reason; this row was routed later and never got the same treatment.
+It is corrected, and the correction is NAMED rather than quietly made, because
+relabelling a twice-slipped row into a status that exempts it from ageing is
+the precise move this file warns can turn the bundling rule into *"a place rows
+go to die"*. **The defence is that the row is not going quiet, it is leaving
+this desk finished:** the contract below is ruled, nothing about it is owed to
+a future sitting, and the hold names a LIVE blocker with a stated release
+condition.
+
+**The 09-09 re-arming's argument is ADOPTED, and it is what makes the hold
+legal rather than evasive:** the bundling rule binds world EDITS to one window,
+not DECISIONS to one sitting. So the decision is taken here, today; only the
+edit waits. The 09-06 entry's reasoning — that the *decision* rides
+`w0-too-shallow` — is superseded and should not be re-quoted.
+
+**(b) THE CONTRACT. Items (1)–(4) as written above are ADOPTED VERBATIM**
+(sustained noise voice from persisting contact; a surface-crossing detector in
+`Water.apply` emitting a broadband burst scaled by entry velocity; a self/other
+flag from `geom_bodyid`; the humanoid present so the thud of his own fall can
+occur). **They gain a fifth, and the fifth is the one this desk owed and had
+not written:**
+
+> **(5) THE ACCEPTANCE TEST MUST CLEAR ITS OWN CONTROL.** Items (1)–(4) all add
+> SOUNDS. Not one of them makes `HR.5`'s headline number mean anything. This
+> row's own metric note records that `four_class_audio_separability = 0.583` is
+> **uninterpretable** because the `position_only_acc` control read **0.708** —
+> the control outscored the instrument, which is the `T2.11` rule. **So the
+> repaired fixture can satisfy every one of (1)–(4), report `classes_present`
+> 4/4, and still publish a separability number that a position-only baseline
+> beats.** The repair therefore carries a declared conjunct:
+> **`four_class_audio_separability > position_only_acc` on every seed**,
+> pre-registered before the repair runs, or `HR.5` does not pass — and `HR.6`'s
+> bakeoff is not well-posed until it holds.
+
+This is strictly a TIGHTENING: it adds a conjunct to an acceptance test, moves
+no threshold in either direction, and can only fail runs that would pass today.
+It is also the answer to the question this row actually asked — *"what does the
+fixture need before `HR.6`'s bakeoff is well-posed?"* — which four new voices
+alone do not supply. **Without it, the four voices would have been built, the
+fixture would have reported 4/4 classes present, and the number everyone reads
+would still be one its own control beats.**
+
+**Bills unchanged and still paid in the window:** SEMANTIC — `HR.7`'s PASS
+re-buys (certified on the impulsive-voice fixture); `HR.5` re-runs by design as
+the acceptance test. MECHANICAL — the 21 PASS certificates citing
+`playground.py`, plus `HR.7`. **Item (5) adds nothing to either bill:** it is a
+conjunct inside `HR.5`'s own check, and `HR.5` re-runs regardless.
 
 ROUTED: told-world-has-no-rung | 2026-09-03 | 66th-audit-B1 (e7546e4) | DISPOSITIONED 2026-09-10 (Review DAILY — sub-question (b) ANSWERED YES on evidence that did not exist when this row was written, and the row's own declared bill CORRECTED from zero to real. Sub-question (a) re-dated to 09-15 with its premise materially weakened. See ANSWER (b) below)
     DUE: 2026-09-10 | two build questions owed by the Review — dated OFF the
