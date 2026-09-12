@@ -7071,24 +7071,9 @@
       "status": "PASS"
     },
     "LG.03": {
-      "amended": [
-        {
-          "at": "2026-09-04T17:26:59",
-          "by": "lg03_blind_twin_probe.py (2026-09-04)",
-          "changes": [
-            {
-              "field": "impl_sha",
-              "from": "f682410d0e2e3d65",
-              "proof": "reconstructed f682410d0e2e3d65 from git a2ff63cd5b8e; docstring-stripped ASTs identical (prose_only_delta)",
-              "to": "e432088c44fb5656"
-            }
-          ],
-          "commit": "e8c7922",
-          "reason": "docstring only: attempt 1's VOID reading and the falsification of its pre-registered third-learner repair recorded in the file; CALIB_MIN, KINDS and the run path unchanged"
-        }
-      ],
-      "attempt": 1,
-      "commit": "a2ff63c",
+      "amended": [],
+      "attempt": 2,
+      "commit": "1bd42dc",
       "compute_s": null,
       "control_metrics": {
         "common_cells": "approach@block, round@stairs, touch@block",
@@ -7101,11 +7086,88 @@
         "stripped_both_rate": 0.0541667,
         "stripped_both_rate_std": 0.0117851
       },
-      "duration_s": 724.6,
+      "duration_s": 727.18,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-      "history": [],
-      "impl_sha": "e432088c44fb5656",
+      "history": [
+        {
+          "amended": [
+            {
+              "at": "2026-09-04T17:26:59",
+              "by": "lg03_blind_twin_probe.py (2026-09-04)",
+              "changes": [
+                {
+                  "field": "impl_sha",
+                  "from": "f682410d0e2e3d65",
+                  "proof": "reconstructed f682410d0e2e3d65 from git a2ff63cd5b8e; docstring-stripped ASTs identical (prose_only_delta)",
+                  "to": "e432088c44fb5656"
+                }
+              ],
+              "commit": "e8c7922",
+              "reason": "docstring only: attempt 1's VOID reading and the falsification of its pre-registered third-learner repair recorded in the file; CALIB_MIN, KINDS and the run path unchanged"
+            }
+          ],
+          "commit": "a2ff63c",
+          "control_metrics": {
+            "common_cells": "approach@block, round@stairs, touch@block",
+            "common_n": 3.0,
+            "common_n_std": 0.0,
+            "common_ok": 0.0,
+            "common_ok_std": 0.0,
+            "n_stripped": 80.0,
+            "n_stripped_std": 0.0,
+            "stripped_both_rate": 0.0541667,
+            "stripped_both_rate_std": 0.0117851
+          },
+          "gpu_job_id": null,
+          "impl_sha": "e432088c44fb5656",
+          "message": "run did not test the claim; not a refutation",
+          "metrics": {
+            "blind_calib_rate": 0.583333,
+            "blind_calib_rate_std": 0.311805,
+            "blind_rate_max": 0.833333,
+            "blind_rate_max_std": 0.117851,
+            "blind_rate_retained_max": 0.25,
+            "blind_rate_retained_max_std": 0.0,
+            "cellset_ok": 0.0,
+            "cellset_ok_std": 0.0,
+            "excluded_seed0_only": "approach@ladder: no plurality (both-reached 0.25); approach@pool: unachievable (planner 0.50); approach@ramp: blind twin above chance (0.50); approach@stairs: blind twin above chance (1.00); avoid@ladder: no plurality (both-reached 0.50); avoid@pool: no plurality (both-reached 0.50); avoid@ramp: no plurality (both-reached 0.50); round@ladder: unachievable (planner 0.50); round@pool: unachievable (planner 0.50); touch@ladder: unachievable (planner 0.25); touch@pool: unachievable (planner 0.50); touch@ramp: no plurality (both-reached 0.50); touch@stairs: blind twin above chance (0.75)",
+            "min_per_object": 1.0,
+            "min_per_object_std": 0.0,
+            "min_per_verb": 1.0,
+            "min_per_verb_std": 0.0,
+            "n_candidates": 20.0,
+            "n_candidates_std": 0.0,
+            "n_objects": 5.0,
+            "n_objects_retained": 3.333333,
+            "n_objects_retained_std": 0.471405,
+            "n_objects_std": 0.0,
+            "n_verbs_retained": 4.0,
+            "n_verbs_retained_std": 0.0,
+            "obs_finite": 1.0,
+            "obs_finite_std": 0.0,
+            "planner_reach_mean": 0.754167,
+            "planner_reach_mean_std": 0.0212459,
+            "plurality_mean": 0.6125,
+            "plurality_mean_std": 0.036799,
+            "rand_rate_retained_max": 0.166667,
+            "rand_rate_retained_max_std": 0.117851,
+            "retained_cells": 6.333333,
+            "retained_cells_std": 0.471405,
+            "verb_alive_min": 1.0,
+            "verb_alive_min_std": 0.0
+          },
+          "ran_at": "2026-09-04T17:20:27",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "e9c6e2d9b10d8ffe",
+          "status": "VOID"
+        }
+      ],
+      "impl_sha": "71278010aa6ab486",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "blind_calib_rate": 0.583333,
@@ -7114,6 +7176,7 @@
         "blind_rate_max_std": 0.117851,
         "blind_rate_retained_max": 0.25,
         "blind_rate_retained_max_std": 0.0,
+        "calib_cell": "approach@block",
         "cellset_ok": 0.0,
         "cellset_ok_std": 0.0,
         "excluded_seed0_only": "approach@ladder: no plurality (both-reached 0.25); approach@pool: unachievable (planner 0.50); approach@ramp: blind twin above chance (0.50); approach@stairs: blind twin above chance (1.00); avoid@ladder: no plurality (both-reached 0.50); avoid@pool: no plurality (both-reached 0.50); avoid@ramp: no plurality (both-reached 0.50); round@ladder: unachievable (planner 0.50); round@pool: unachievable (planner 0.50); touch@ladder: unachievable (planner 0.25); touch@pool: unachievable (planner 0.50); touch@ramp: no plurality (both-reached 0.50); touch@stairs: blind twin above chance (0.75)",
@@ -7131,6 +7194,8 @@
         "n_verbs_retained_std": 0.0,
         "obs_finite": 1.0,
         "obs_finite_std": 0.0,
+        "planner_calib_reach": 0.833333,
+        "planner_calib_reach_std": 0.117851,
         "planner_reach_mean": 0.754167,
         "planner_reach_mean_std": 0.0212459,
         "plurality_mean": 0.6125,
@@ -7143,9 +7208,9 @@
         "verb_alive_min_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 243.5,
+      "peak_rss_mb": 245.0,
       "preserved_impl": null,
-      "ran_at": "2026-09-04T17:20:27",
+      "ran_at": "2026-09-12T18:23:20",
       "seeds": [
         0,
         1,
@@ -7153,7 +7218,52 @@
       ],
       "spec_id": "LG.03",
       "spec_sha": "e9c6e2d9b10d8ffe",
-      "status": "VOID"
+      "status": "VOID",
+      "supersedes_void": {
+        "commit": "a2ff63c",
+        "dirty": false,
+        "impl_changed": true,
+        "impl_sha": "e432088c44fb5656",
+        "metrics": {
+          "blind_calib_rate": 0.583333,
+          "blind_calib_rate_std": 0.311805,
+          "blind_rate_max": 0.833333,
+          "blind_rate_max_std": 0.117851,
+          "blind_rate_retained_max": 0.25,
+          "blind_rate_retained_max_std": 0.0,
+          "cellset_ok": 0.0,
+          "cellset_ok_std": 0.0,
+          "excluded_seed0_only": "approach@ladder: no plurality (both-reached 0.25); approach@pool: unachievable (planner 0.50); approach@ramp: blind twin above chance (0.50); approach@stairs: blind twin above chance (1.00); avoid@ladder: no plurality (both-reached 0.50); avoid@pool: no plurality (both-reached 0.50); avoid@ramp: no plurality (both-reached 0.50); round@ladder: unachievable (planner 0.50); round@pool: unachievable (planner 0.50); touch@ladder: unachievable (planner 0.25); touch@pool: unachievable (planner 0.50); touch@ramp: no plurality (both-reached 0.50); touch@stairs: blind twin above chance (0.75)",
+          "min_per_object": 1.0,
+          "min_per_object_std": 0.0,
+          "min_per_verb": 1.0,
+          "min_per_verb_std": 0.0,
+          "n_candidates": 20.0,
+          "n_candidates_std": 0.0,
+          "n_objects": 5.0,
+          "n_objects_retained": 3.333333,
+          "n_objects_retained_std": 0.471405,
+          "n_objects_std": 0.0,
+          "n_verbs_retained": 4.0,
+          "n_verbs_retained_std": 0.0,
+          "obs_finite": 1.0,
+          "obs_finite_std": 0.0,
+          "planner_reach_mean": 0.754167,
+          "planner_reach_mean_std": 0.0212459,
+          "plurality_mean": 0.6125,
+          "plurality_mean_std": 0.036799,
+          "rand_rate_retained_max": 0.166667,
+          "rand_rate_retained_max_std": 0.117851,
+          "retained_cells": 6.333333,
+          "retained_cells_std": 0.471405,
+          "verb_alive_min": 1.0,
+          "verb_alive_min_std": 0.0
+        },
+        "ran_at": "2026-09-04T17:20:27",
+        "spec_changed": false,
+        "spec_sha": "e9c6e2d9b10d8ffe",
+        "status": "VOID"
+      }
     },
     "LG.10": {
       "amended": [],
