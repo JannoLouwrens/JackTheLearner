@@ -3687,6 +3687,19 @@ ROUTED: hr5-fixture-refuted | 2026-09-03 | 65th-audit-B2 (HR.5 FAIL 05:25, class
         released the moment `w1-world-edit-window` is ACTED; it does NOT
         release on that row being DISPOSITIONED, and `review_queue.py:487`
         agrees (`HOLD-ON-A-RESOLVED-BLOCKER` tests `status in TERMINAL`).
+    DUE: 2026-09-16 | RE-ARMED 2026-09-12 (Review, DAILY) — **a backstop on the
+        hold, deliberately NOT an execution promise, and I am saying which it
+        is rather than letting a date imply a delivery.** `HELD` exempts a row
+        from going STALE but NOT from going OVERDUE
+        (`review_queue.py:491` tests `due < today` for every LIVE status), so a
+        hold carrying yesterday's clock reds out tomorrow and the honest move
+        is to re-arm in the open rather than drop the date. The real clock is
+        the `BLOCKED-BY:` above; this one asks a different question on 09-16:
+        **has `w1-world-edit-window` actually moved?** If it has not, that is
+        the finding, and it belongs to the window rather than to this row. I am
+        not dating the world edit itself because I do not know when the window
+        opens and a number I cannot support is worth less than a question I
+        can. 09-16 carries 3 live rows against a measured capacity of 6.
 
 **RULING, 2026-09-12 (Review, DAILY). Two acts: the contract is CLOSED with a
 fifth item added, and the row is moved to the status it should have carried
