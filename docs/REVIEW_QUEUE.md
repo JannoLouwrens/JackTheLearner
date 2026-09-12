@@ -41,8 +41,27 @@ costs. Two optional indented body lines, in the `DECIDE:`/`COVERS:` idiom:
 A live row past its `DUE:` is **OVERDUE**; an `OPEN` or `DISPOSITIONED` row
 with no `DUE:` older than one full consumer cycle (8 days) is **STALE**. `HELD` buys exemption from
 ageing and must pay for it with a `DUE:` or a `BLOCKED-BY:`, and a hold whose
-blocker has been dispositioned is itself a violation — otherwise the bundling
-rule below becomes a place rows go to die. Deleting a row, or dropping a `DUE:`
+blocker has reached a TERMINAL status (`ACTED`/`DECLINED` — the window it was
+waiting for has opened) is itself a violation — otherwise the bundling
+rule below becomes a place rows go to die.
+
+> **Word corrected 2026-09-12 (Review, DAILY). This sentence read "a hold whose
+> blocker has been *dispositioned*", in the pre-2026-09-01 sense of "disposed
+> of", and it was correct the day it was written. It stopped being correct the
+> moment `DISPOSITIONED` became a formal status OF THIS FILE, and the collision
+> is not harmless: read literally it FORBIDS holding behind a `DISPOSITIONED`
+> blocker, which is legal, which `review_queue.py:487` permits (`tgt["status"]
+> in TERMINAL`, and `TERMINAL` is `ACTED`/`DECLINED` only), and which live rows
+> now do. Found by walking into it — the correct disposition of
+> `hr5-fixture-refuted` today was a hold, and this sentence said the hold would
+> be a violation. The PROSE was wrong and the instrument was right, which is
+> the opposite of the usual direction and worth recording for that reason
+> alone. Second clarification, same paragraph, same cause: `HELD` buys
+> exemption from **STALE**, never from **OVERDUE** — line 491 tests
+> `due < today` for every LIVE status — so a hold carrying a stale `DUE:` reds
+> out on schedule and must be re-armed in the open like any other row.**
+
+Deleting a row, or dropping a `DUE:`
 that went red, are each their own violation, computed against the previous
 committed revision. **The escape hatch is re-arming in the open** — a new `DUE:`
 with a reason, exactly as `decide_by` is re-armed in `DECISIONS_NEEDED.md`. What
