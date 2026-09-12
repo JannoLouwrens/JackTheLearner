@@ -616,6 +616,36 @@ was decided this morning, and the answer is below.**
       > at. Do not scrape the attempt out of W36's remaining 12.28 h to beat a
       > deadline that was never real.
       >
+      > **RE-STATED AS A BOUND, Review DAILY 2026-09-12 — the range above is a
+      > day old and is in the POINT-FORECAST form the 88th audit's lesson
+      > deprecates. It is superseded, not withdrawn: it was not wrong, it was
+      > the wrong shape.** Today's reading, `06:07` slot: meter **75%**, elapsed
+      > **72%**, line **72%** — the gap is **3 points**, down from 9 yesterday.
+      >
+      > - The line gains **0.375 points/hour** (measured: 63% → 72% in 24 h,
+      >   and it is a function of elapsed time alone, so this term is not a
+      >   forecast — it is arithmetic).
+      > - **Break-even is therefore a meter draw of 9 points/day.** Below that
+      >   the gap closes; above it, it widens.
+      > - Recorded daily draws: **+21, +36, +9, +4, +3** — the last of those is
+      >   the 24 h just ended. **Two of the five are far above break-even, so
+      >   this is a spread, not a trend, and no single date is defensible.**
+      > - At yesterday's draw the gap closes ~**09-12T18:00**; on a flat meter,
+      >   ~**09-12T14:00**; at any sustained draw above ~7.5 points/day it does
+      >   not close before the week resets at all.
+      >
+      > **The one thing that is NOT a forecast: the week resets
+      > 09-14T04:59 UTC, and that releases you unconditionally.** Everything
+      > above is only about whether you wake sooner than that. Plan for the
+      > guaranteed release, take the early one as a bonus — and note that both
+      > the late bound and the guaranteed one land you INSIDE W37's fresh 30 h,
+      > which is where your own plan aimed.
+      >
+      > **W36 expires at the end of TODAY (Sat 09-12).** If you wake this
+      > afternoon you will be looking at ~10 remaining hours of a 12.28 h pot
+      > against a 17.61 h attempt. **It still does not fit and the prohibition
+      > still binds.** Do not spend the evening squeezing it.
+      >
       > The precondition is UNCHANGED and still binds, as it did under both
       > versions of this note: twin-spread result written onto the row,
       > successor gate committed in a non-dispatch commit, and only then a
