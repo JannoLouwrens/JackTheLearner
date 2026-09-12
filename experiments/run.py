@@ -2184,7 +2184,80 @@ def cmd_amend(ledger: Ledger, args) -> int:
     for c in note["changes"]:
         print(f"    {c['field']}: {c['from']!r} -> {c['to']!r}")
     print(f"    reason: {note['reason']}")
+    _warn_impl_deps_dependents(ledger, spec_id, note)
     return 0
+
+
+def _warn_impl_deps_dependents(ledger: Ledger, spec_id: str, note: dict) -> None:
+    """Name the OTHER certificates this amendment just stranded.
+
+    The gap this closes, paid for once (builder, 2026-09-12, 90th audit B3).
+    A prose-only docstring edit to `pg_4_noisy_tv.py` — ordered as the
+    "cheapest honest version" of a visibility repair, and correctly re-stamped
+    here by `--doc-only` — silently staled `T2.08` and `T2.09`, which both
+    declare that file in `IMPL_DEPS`. `T3.06` then fell behind the stale
+    `T2.08` and the shrink-only `unreachable` ratchet went 93 -> 94, i.e. a
+    floor was breached by an edit priced as free. The bill was worse than it
+    looks: `T2.09` is a GPU certificate (3316 s recorded) and `T3.06` is
+    VOID-FORECLOSED and may not be re-run at all, so "just re-run them" was
+    not available.
+
+    `Ledger.amend`'s dep lane ALREADY handles this correctly — each dependent
+    owes its own `--doc-only` amend and gets the same `prose_only_delta`
+    proof. Nothing was broken. What was missing is that **nothing told you the
+    debt existed**: the amend that creates it prints a clean EXIT 0, and the
+    consequence surfaces later as a ratchet number on a page nobody reads
+    beside the edit. This is the `aggregate-hides-worst-seed` shape one
+    surface over — a correct instrument whose output does not reach the person
+    who can act on it.
+
+    Advisory only: it prints, it never refuses, and it lives in the CLI layer
+    because `run.py` is in no spec's `IMPL_DEPS` — so the repair for a
+    staleness trap does not itself stale four certificates. (`protocol.py`,
+    the other candidate home, is declared by `T0.17`, `T0.27`, `T0.33` and
+    `T0.35`, and a code edit there is not prose-only, so it would have cost
+    four real re-runs to install a warning about incurring re-runs.)
+    """
+    if not any(c.get("field") == "impl_sha" for c in note.get("changes", ())):
+        return                      # nothing re-stamped: nothing stranded
+    try:
+        from .protocol import impl_deps_of, module_path_for
+        path = module_path_for(spec_id)
+        if path is None:
+            return
+        root = Path(__file__).resolve().parent.parent
+        try:
+            rel = str(Path(path).resolve().relative_to(root))
+        except ValueError:
+            return
+        owed = []
+        for sid, _status, kind, _detail in stale_claims(ledger):
+            if sid == spec_id or kind != "CHANGED":
+                continue
+            dep_path = module_path_for(sid)
+            if dep_path is None:
+                continue
+            deps, _problem = impl_deps_of(dep_path)
+            if any(str(d).replace("\\", "/") == rel for d in deps):
+                owed.append(sid)
+        if not owed:
+            return
+        print(f"\n    ! {len(owed)} OTHER certificate(s) declare {rel} in "
+              f"IMPL_DEPS and are stale:")
+        print(f"        {', '.join(sorted(owed))}")
+        print("      CANDIDATES, not proven consequences — this cannot tell "
+              "a spec staled BY this\n      edit from one already stale on "
+              "its own code. Try the same prose-only re-stamp;\n      the "
+              "lane REFUSES loudly if that spec's own AST moved, which is "
+              "the safe outcome:")
+        for sid in sorted(owed):
+            print(f"        run amend {sid} --doc-only --by ... --reason ...")
+        print("      Leave a real one unpaid and it is a silent certificate "
+              "decay that `run status`\n      reports only later, and only "
+              "to whoever next reads the stale block.")
+    except Exception:
+        return                      # an advisory that breaks an amend is worse
+                                    # than one that stays quiet (T0.12's rule)
 
 
 def _impl_age_line(root: str) -> str:

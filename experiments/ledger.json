@@ -31073,7 +31073,22 @@
       "status": "FAIL"
     },
     "T2.08": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-12T21:28:22",
+          "by": "90th audit B3 (PG.4 docstring disclosure)",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "dee635691c16ae26",
+              "proof": "reconstructed dee635691c16ae26 from git 761121ad4a02; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: experiments/tests/pg_4_noisy_tv.py",
+              "to": "dcbc73465fd36060"
+            }
+          ],
+          "commit": "8624fa0+dirty",
+          "reason": "pg_4_noisy_tv.py is in this spec's IMPL_DEPS and the B3 disclosure edit to it was prose-only; the dep lane owes the same proof here. Paid in the same unit that incurred it rather than deferred."
+        }
+      ],
       "attempt": 4,
       "commit": "c7325c2",
       "compute_s": null,
@@ -31175,7 +31190,7 @@
           "status": "PASS"
         }
       ],
-      "impl_sha": "dee635691c16ae26",
+      "impl_sha": "dcbc73465fd36060",
       "message": "",
       "metrics": {
         "auc_bored": 0.407733,
@@ -31225,6 +31240,20 @@
           ],
           "commit": "d18f8a2+dirty",
           "reason": "52nd audit B6: the seed-selection comment claimed 'only the null and the rig' while the formula reads two claim-arm static-panel rig instruments; sentence corrected (live effect zero, DECAY_MIN untouched). trap_ratio column contextualised as a floored ratio (seed 1's 9.5e11 is a vanished denominator). Prose/comment only."
+        },
+        {
+          "at": "2026-09-12T21:28:25",
+          "by": "90th audit B3 (PG.4 docstring disclosure)",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "cdf2f0cd48192a0a",
+              "proof": "reconstructed cdf2f0cd48192a0a from git c4e10f00dfa6; docstring-stripped ASTs identical (prose_only_delta); drifted IMPL_DEPS proven prose-only: experiments/tests/pg_4_noisy_tv.py",
+              "to": "223e9a5ef6faea7f"
+            }
+          ],
+          "commit": "8624fa0+dirty",
+          "reason": "pg_4_noisy_tv.py is in this spec's IMPL_DEPS and the B3 disclosure edit to it was prose-only; the dep lane owes the same proof here. Paid in the same unit that incurred it rather than deferred."
         }
       ],
       "attempt": 1,
@@ -31250,7 +31279,7 @@
       "gpu_job_id": "jannolouwrens/jack-ladder-1788031002",
       "hardware": "remote/Tesla P100-PCIE-16GB (dispatched from aarch64/Linux/torch2.8.0+cpu/cpu)",
       "history": [],
-      "impl_sha": "cdf2f0cd48192a0a",
+      "impl_sha": "223e9a5ef6faea7f",
       "message": "",
       "metrics": {
         "backend": "kaggle",
