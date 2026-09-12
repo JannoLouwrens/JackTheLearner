@@ -4614,3 +4614,90 @@ passing gate that measures the wrong quantity, the repair is a STRENGTHENING
 under the standing law and the certificate re-buys. A PASS that has to be
 re-bought is the outcome this row exists to find, not a reason to avoid
 looking.**
+
+## ROUTED 2026-09-12 (builder, implementing the LG.03 liveness ruling): the
+## ruling's REPAIR is right and committed — its stated MECHANISM is refuted by
+## the run it ordered, and the root cause is a swapped pair of seed labels
+
+ROUTED: lg03-teacher-does-not-cap-the-twin | 2026-09-12 | builder (gate 1bd42dc, row e004ba8, per-seed join 75a5544) | OPEN
+    DUE: 2026-09-20 | dated onto the SAME Sunday as
+        `gates-that-measure-something-other-than-what-they-say`, deliberately
+        and not as a pile-on: that sweep cites `LG.03` as one of its three
+        founding instances, and quotes as the instance the exact sentence this
+        row refutes. Reading them apart would let a corrected premise and the
+        generalisation built on it be ruled in different sittings.
+
+**The ruling was implemented in full and NOTHING here asks to undo it.**
+`PLANNER_CALIB_MIN = 1.0` is committed (`1bd42dc`), checked before
+`blind_calib_rate`, `CALIB_MIN` untouched, `_Blind.KINDS` untouched; attempt 2
+ran (`727.2 s`, 3 seeds) and returned **VOID on the new conjunct** at
+`planner_calib_reach` 0.8333 ± 0.1179 — the gate fires exactly where the ruling
+said it would. Refusing to score a student on a tape recorded from a
+demonstrator that missed is good method whether or not the demonstrator caps the
+score, the change is strictly a tightening, and the one law binds in one
+direction. **This row is about the EXPLANATION, not the guard.**
+
+**What was measured.** The ledger row carries only mean+std, so the pairing
+between the two metrics was measured directly — one `_experiment(seed)` call per
+seed. It is self-validating: the three vectors reproduce attempt 2's *recorded*
+mean AND std to 1e-5 on `planner_calib_reach`, `blind_calib_rate` and
+`planner_reach_mean`, so they are the registered run's own numbers and the spec
+is deterministic.
+
+| seed | `planner_calib_reach` (teacher) | `blind_calib_rate` (twin) |
+|---|---|---|
+| 0 | **1.00** | 0.50 |
+| 1 | 0.75 | **1.00** |
+| 2 | 0.75 | 0.25 |
+
+**1. The teacher does not cap the twin.** The ruling's central claim is
+*"perfect reproduction of the training tape therefore scores `planner_own`, not
+1.0"*, and its prediction is that a seed whose servo reads below 0.75 is
+*"un-clearable by construction"*. **Seed 1 is such a seed and it cleared at
+1.00.** `_Blind` is a k-NN/ridge SMOOTHER, not a replayer: it generalises across
+the tape and reaches the target from starts whose own demonstration missed.
+`planner_calib_reach` is not an upper bound on `blind_calib_rate`.
+
+**2. Auditing the venue does not rescue the liveness proof on this fixture.**
+The ruling's stated cost is that `LG.03` cannot deliver its FAIL *"until the
+fixture admits a calibration cell the privileged servo aces"*. **Seed 0 is
+exactly that seed — teacher 1.00 — and the twin reads 0.50**, far under
+`CALIB_MIN` 0.75. On n=3 the twin's best seed is one of the two with the worst
+teacher. So the expected post-repair behaviour is not "VOIDs on 2 of 3 until the
+fixture improves"; it is a fixture where venue-validity and twin-liveness are
+not the same problem and neither is yet solved.
+
+**ROOT CAUSE — a swapped pair of seed labels in a docstring.**
+`lg03_blind_twin_probe.py` recorded attempt 1's readings as `1.00 / 0.50 / 0.25`
+for seeds 0/1/2. The **multiset is correct; the seed labels are wrong** (true:
+`0.50 / 1.00 / 0.25`). Under the wrong labels the pairing reads 1.00/1.00,
+0.75/0.50, 0.75/0.25 — twin ≤ teacher on every seed, with equality exactly where
+the teacher is perfect. That is a textbook cap, and it is why the mechanism
+looked airtight to the probe, to this queue's original row, and to the ruling.
+The probe's prose is corrected in place (`75a5544`) with the per-seed deltas
+shown; its **internal** `max5 == max2` comparison is computed under one
+consistent approximation and STANDS, so the third-learner repair remains
+falsified.
+
+**ONE THING THIS STRENGTHENS.** The ruling refused option (i), a
+teacher-relative liveness bar, as a *loosening*. It is worse than a loosening:
+on seed 1 it computes 1.00 / 0.75 = **1.333**, and a "fidelity" that exceeds 1
+is not a fidelity. The refusal was right for a better reason than the one given,
+and option (i) should stay refused as **ill-posed** rather than merely lax.
+
+**The question owed.** `LG.03`'s liveness gate now has two independent problems
+where the ruling diagnosed one: (a) the venue can be invalid — handled, by the
+committed conjunct; (b) **the twin is not demonstrably alive even on a valid
+venue** — unhandled, and untouched by any option the original row offered.
+Option (iii) (an optimiser in the twin), which the ruling explicitly declined to
+order *"because ordering it now would spend a training schedule on a gate that
+is still mis-posed"*, is the only one of the four that ever addressed (b) — and
+the gate is no longer mis-posed. **That declination should be revisited on its
+merits, not re-inherited.**
+
+**Staleness bill: ZERO.** `LG.03` is VOID and a VOID claims nothing, so no
+certificate rests on any of this; no threshold moves in either direction, and
+the per-seed join changed no code (the `impl_sha` re-stamp at
+`2026-09-12T18:40:51` went through the `--doc-only` `prose_only_delta` lane,
+which refuses a moved constant by construction). The bill of ACTING is one CPU
+re-run of `LG.03` (~725 s) if (b) is answered by changing the twin.

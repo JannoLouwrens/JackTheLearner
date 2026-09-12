@@ -12706,3 +12706,72 @@ is why it is the one most likely to be executed without being re-derived.
 Cost: nothing. Both premises were checked in under two minutes — one `git log -S`
 and one aggregate over the ledger — and the second check is what turned a
 paperwork firing into a measurement the owner can actually rule on.
+
+## A mean±std can pin a MULTISET exactly and still say NOTHING about the
+## PAIRING — and a causal story about two per-seed metrics lives entirely in
+## the pairing (builder, 2026-09-12; LG.03's liveness gate, where one swapped
+## pair of seed labels in a docstring manufactured the mechanism a Review
+## ruling was built on)
+
+`LG.03` attempt 2 recorded `planner_calib_reach` 0.833333 ± 0.117851 and
+`blind_calib_rate` 0.583333 ± 0.311805. On a 4-start grid both invert
+**uniquely** — `{1.00, 0.75, 0.75}` and `{1.00, 0.50, 0.25}`, verified by
+enumeration, not by eye. It is tempting to stop there and feel well-informed.
+
+**You have learned almost nothing about the question that matters.** Six
+pairings are admissible, and they tell opposite stories:
+
+    teacher 1.00/0.75/0.75  <->  twin 1.00/0.50/0.25   "the teacher caps the twin"
+    teacher 1.00/0.75/0.75  <->  twin 0.50/1.00/0.25   "they are anti-correlated"
+
+The measured answer was the second. **Seed 0's teacher was perfect and its twin
+read 0.50; seed 1's teacher missed a start and its twin read 1.00.** A
+`max`-over-learners policy is a smoother, not a replayer, so it can succeed from
+a start whose own demonstration failed — which is precisely the possibility the
+"cap" story had no room for.
+
+**How the wrong pairing got believed.** The per-seed numbers existed only as
+prose in a probe's docstring, which listed the twin's readings as
+`1.00 / 0.50 / 0.25` for seeds 0/1/2. The multiset was right; the labels were
+swapped. Under the swapped labels twin ≤ teacher on every seed with equality
+exactly where the teacher was perfect — a textbook cap — and that reading
+propagated **probe → queue row → Review ruling → implemented gate** over eight
+days without anyone being able to check it, because the ledger row aggregates
+and the aggregate is invariant to the swap.
+
+### The rules
+
+1. **A ledger row that stores only mean+std CANNOT adjudicate any claim about
+   how two metrics co-vary across seeds.** Not weakly — structurally. If your
+   argument is "X caps Y", "X causes Y", or "Y fails where X fails", the row you
+   are citing is silent and you must re-measure. Do not infer the pairing from
+   plausibility; four of the six orderings here were "plausible".
+2. **Per-seed numbers that live only in prose are not a record, they are a
+   claim** — and an unusually dangerous one, because they *look* like raw data.
+   They carry no `impl_sha`, no re-run, nothing that fails if they rot or were
+   mistyped. A transposition in a docstring is invisible to every instrument
+   this project owns.
+3. **Re-measuring the pairing is cheap and it self-validates.** Calling
+   `_experiment(seed)` once per seed cost ~10 minutes of CPU here, and the three
+   vectors reproduced the recorded mean *and* std to 1e-5 on three separate
+   metrics — which simultaneously proved the pairing, proved the spec
+   deterministic, and proved the standalone calls were the registered run's own
+   numbers. A re-measurement that reproduces the aggregate it decomposes needs
+   no trust.
+4. **When the measurement refutes the mechanism but not the repair, say exactly
+   that and keep the repair.** The ruling's guard here is a tightening and is
+   defensible on its own terms — do not weaken a committed threshold because the
+   argument that motivated it turned out to be wrong. Route the explanation;
+   leave the guard. The law binds in one direction only, and "the reason was
+   wrong" is not new evidence that the bar is.
+
+**The generalisation:** this is the `gates-that-measure-something-other-than-
+what-they-say` shape at one remove. There the *code* computed a different
+quantity from the one the gate named; here the *record* was faithful and the
+narrative about it was not. Both survive because every instrument we have checks
+whether a number clears a bar, and none asks whether the sentence next to the
+number is true of it.
+
+Cost: ~10 minutes of CPU to measure, against eight days in which a wrong
+mechanism reached a governing ruling and was implemented. The guard it produced
+is fine; the next one built on an unchecked pairing might not be.

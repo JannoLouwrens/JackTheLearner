@@ -7071,7 +7071,22 @@
       "status": "PASS"
     },
     "LG.03": {
-      "amended": [],
+      "amended": [
+        {
+          "at": "2026-09-12T18:40:51",
+          "by": "lg03-teacher-does-not-cap-the-twin (builder, 2026-09-12; per-seed join of attempt 2)",
+          "changes": [
+            {
+              "field": "impl_sha",
+              "from": "71278010aa6ab486",
+              "proof": "reconstructed 71278010aa6ab486 from git 1bd42dcea18a; docstring-stripped ASTs identical (prose_only_delta)",
+              "to": "e17b2ebfd164167b"
+            }
+          ],
+          "commit": "75a5544",
+          "reason": "docstring only: attempt 2's VOID reading recorded, plus the measured per-seed pairing (teacher 1.00/0.75/0.75 vs twin 0.50/1.00/0.25) which refutes the 09-12 ruling's cap MECHANISM while leaving its repair, PLANNER_CALIB_MIN, CALIB_MIN, KINDS and the run path unchanged"
+        }
+      ],
       "attempt": 2,
       "commit": "1bd42dc",
       "compute_s": null,
@@ -7167,7 +7182,7 @@
           "status": "VOID"
         }
       ],
-      "impl_sha": "71278010aa6ab486",
+      "impl_sha": "e17b2ebfd164167b",
       "message": "run did not test the claim; not a refutation",
       "metrics": {
         "blind_calib_rate": 0.583333,
