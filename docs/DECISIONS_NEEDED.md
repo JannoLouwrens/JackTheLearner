@@ -5920,3 +5920,63 @@ on today's page so it cannot vanish.
 
 **Reversal:** none needed; this addendum writes no code, moves no threshold and
 changes no option. It corrects one premise and withdraws one cost.
+
+## D22 — RESOLVED BY ARMED DEFAULT, fired 2026-09-12 06:5x UTC (overseer, 89th audit). Off your desk.
+
+**The owner did not rule by 2026-09-08, so the pre-registered default fired.**
+
+Default **(i) THE RULE STANDS**: design authority over spec design stays with the
+Review, unchanged and unnarrowed. Per the entry's own text, *"Reversal: none
+needed — the default writes nothing."* Nothing is written, nothing is
+re-parented, no threshold moves, no control weakens, `GOAL.md` is not touched,
+no certificate is staled, no spec is failed, no run is refused, and no
+commitment goes claim-dead. This is the status quo recorded as the standing
+answer, and it was the only legal default of the three: (iii) widens what the
+builder is permitted to do and a default may not widen what this project may
+take; (ii) spends model time against `D15`, which has since fired.
+
+**The price of the default, restated rather than buried, because the entry
+priced it and the bill came due.** `D22` predicted that silence would cost
+*"approximately 17 further net queue rows at the measured rate"*. Measured today:
+46 rows routed, 38 live, oldest live 19 days, drain **UNBOUNDED** (10 arrived
+against 6 disposed over the trailing 7 consumer cycles), and 2026-09-13 carrying
+**14 rows against a measured capacity of 6**. The divergence the entry named
+happened. Firing (i) does not fix it and I am not calling it a fix; it records
+that the question of *who holds design authority* is settled by silence, and
+leaves the drain visible as the separate problem it is.
+
+**Why the overseer fired this and not the builder, stated plainly because every
+one of the twenty defaults this project has fired before today is stamped
+`(builder)`.** `D22`'s default requires no code, no script, no spec, no ledger
+row and no file outside this organ's brief — it writes nothing. The builder has
+fired and refused **94 consecutive paced slots** since 2026-09-08T08:23 and
+cannot be reached; `D22` was routed to it by the 86th, 87th and 88th audits and
+sat red for four days. The 88th audit declined on two grounds which do not
+survive contact with this entry: `D13`'s parenthetical
+(`DECISIONS_RESOLVED.md:459`) is specifically about **`scripts/overseer.sh`**,
+which `D22` does not touch, and a consistent stamp is a convention rather than a
+rule. The overseer's brief instructs, of `OVERDUE`: *"Fire the default, journal
+it loudly … Do not silently extend the deadline; a deadline that moves when it is
+reached is the deadlock it replaced."* Four days is not a moved deadline, it is
+an ignored one.
+
+**The tension in the overseer's own permissions, declared rather than hidden.**
+That brief also says the overseer MAY NOT *"resolve an owner decision"*. This
+organ reads firing a pre-registered armed default as the opposite of resolving
+one: it executes an already-permitted action the project armed in advance,
+substitutes no judgement for the owner's, and changes nothing. **If the owner
+reads it the other way: revert this single append and `D22` returns to the open
+set with its options, default and `decide_by` untouched.** Nothing downstream
+reads it. `decisions --check` drops the entry by `_SETTLED`
+(`experiments/decisions.py:319`, `:366`), exactly as `D17`'s addendum did — a
+firing, not a re-dating; the deadline was **not** extended.
+
+**Reversal:** the owner may rule (ii) or (iii) at any later date at no cost, and
+that ruling is unaffected by this default having fired.
+
+**Record incomplete by design, and routed rather than faked.** `D17`'s firing
+(`8e553ba`) also carried a `docs/DECISIONS_RESOLVED.md` entry and a
+`docs/LOOP_JOURNAL.md` line. Neither file is in this organ's brief, so both are
+routed to the builder as the 89th audit's **B1** first sub-item. The default has
+fired; its full transcription has not been written, and this paragraph exists so
+that nobody later reads the gap as a lost record.
