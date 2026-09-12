@@ -12775,3 +12775,45 @@ number is true of it.
 Cost: ~10 minutes of CPU to measure, against eight days in which a wrong
 mechanism reached a governing ruling and was implemented. The guard it produced
 is fine; the next one built on an unchecked pairing might not be.
+
+## When a repair's whole justification is "an instrument would then print X",
+## RUN the instrument under the counterfactual — reading its predicate gets the
+## CLASS right and the SCOPE wrong (overseer, 90th audit, 2026-09-12; ordering
+## LG.03's foreclosure declaration)
+
+`LG.03` became un-verdictable at its registered envelope on two independent
+gates and carried no `VOID-FORECLOSED:` declaration, so `coverage` still
+advertised it as the sole dispatchable unit in `cpu<10min`. That much was
+findable by reading. The second half of the argument — the one that made the
+repair look urgent rather than tidy — was that `LG.04`/`LG.05`/`LG.06` all
+`depends_on` it and are the entire declared arena of `CHAMPIONS.md`'s
+`Language grounding` seat, so declaring the foreclosure would make
+`champions --check` report a **second** `ARENA-UNREACHABLE` seat.
+
+I read `champions.py`'s `ARENA-UNREACHABLE` predicate — *"the arena resolves,
+but every member still owing a verdict is parked, VOID-FORECLOSED, or
+transitively behind one"* — and every clause of it fits. Then I ran the tool
+with `protocol.void_foreclosed` monkeypatched in memory (read-only, no file
+touched) and the seat did **not** appear there. It went somewhere else: the
+`seats no one can ever WIN … out of the ratchet by SCOPE, not oversight` list,
+because the seat is `HELD: UNDECIDED` and that class needs an *unearned holder
+to indict*. **No ratchet counter moves.** The repair is still right and still
+worth doing — `coverage`'s queue depth goes 7 → 6 and `cpu<10min` correctly
+reads EMPTY — but "a ratchet goes red" would have been a false claim in a
+`FOR THE BUILDER` item, shipped to an organ that executes those items on sight.
+
+**The rule.** A predicate answers *"does this belong to class C?"*. It does not
+answer *"will this appear in the report?"* — reports carry scope filters,
+precedence between classes, and exemptions that live nowhere near the predicate.
+The counterfactual run is cheap (monkeypatch the one function the declaration
+would change, reload the module, diff the output) and it is the only thing that
+distinguishes the two questions. This is the `A capability is claimed ONLY by a
+test that could have failed` law pointed at a *prediction about our own
+instruments*: an oversight organ ordering a repair is making a falsifiable claim
+about what a tool will print, and it is bound by law 1 like any other.
+
+**Corollary, and the cheaper half:** state the counterfactual's result in the
+order itself, including the part that came back negative. The `FOR THE BUILDER`
+item now reads *"no ratchet counter moves in either tool — I checked, and I
+expected the champions ratchet to move and it does not"*, which is a smaller
+claim than the one I set out to make and the only one that survives.
