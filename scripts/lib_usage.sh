@@ -88,11 +88,31 @@ pace_gate() {
     # bare percent and read as "the loop is ${pct}% spent" when the builder's own
     # model meter can sit 20+ points hotter, ungated. The extra CLI read costs a
     # few seconds and only on the skip path — the path where no iteration runs.
-    local mdl mpct extra
+    local mdl mpct extra attrib
     mdl="${JACK_LOOP_MODEL:-opus}"; mdl="${mdl^}"
     mpct=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --model "$mdl" --pct 2>/dev/null)
     case "$mpct" in ''|*[!0-9]*) extra="week:${mdl} unreadable";; *) extra="week:${mdl} ${mpct}% (not the gate)";; esac
-    "$say_fn" "PACING: acting on 'week:all models' ${pct}% at ${elapsed}% of the week (line ${allow}%); ${extra} — skipping, budget held for later in the week"
+    # D26's armed default, fired 2026-09-12 (the owner did not rule by
+    # 2026-09-10): (iv) MEASURE ONLY, GATE NOTHING, RELAX NOTHING. The skip line
+    # carries this project's OWN attributed share of the shared meter, split
+    # builder vs desks as a UNION of intervals (the overseer and Review overlap
+    # daily and summing sessions double-counts), plus the consecutive dark-slot
+    # streak — the one fault this gate cannot report about itself, because the
+    # organ that would report it is the organ being skipped. Nothing above is
+    # gated on it: `allow`, `pct` and the branch are untouched. Option (i)
+    # — pace against our own spend instead of the shared total — WIDENS what
+    # the builder may spend, and a default may not loosen a gate; it did not
+    # fire. Never blocks: an unreadable ledger prints "unattributed", and the
+    # 2>/dev/null || true keeps a broken instrument from costing an iteration.
+    attrib=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/usage_attribution.py" --line 2>/dev/null) || attrib=""
+    [ -n "$attrib" ] || attrib="attribution unreadable (this project's own share unknown, NOT zero)"
+    # 89th audit B2: the line's ENDPOINT, printed beside the stop it converges
+    # on. `allow` is a pure function of the clock — PACE_FLOOR + ((PACE_CAP -
+    # PACE_FLOOR) * elapsed + 99)/100, exactly 0.3869 pts/h, zero variance — so
+    # allow(100) is the constant 90, which IS the 90% hard stop. Printed so the
+    # next reader sees in one glance that the line converges on the stop and
+    # that "pace_gate never releases the builder" is unavailable as a sentence.
+    "$say_fn" "PACING: acting on 'week:all models' ${pct}% at ${elapsed}% of the week (line ${allow}%, rising to ${PACE_CAP}% at week's end = the hard stop, so the line always converges); ${extra}; ${attrib} — skipping, budget held for later in the week"
     return 1
   fi
   return 0

@@ -6189,3 +6189,88 @@ Evidence: `experiments/coverage.py` `FAIL_OWNED_QUEUE_FORMS` +
 `fail_owned_but_undrained()` + its block comment + the four fixture arms;
 `experiments/review_queue.py:386` `throughput()` / `:851` `live_audit()`;
 `docs/OVERSIGHT.md` 89th audit B1.
+
+## D26 — RESOLVED BY ARMED DEFAULT, fired 2026-09-12 ~17:5x UTC (builder). Off your desk.
+
+**The owner did not rule by 2026-09-10, so the pre-registered default fired.**
+
+Default **(iv) MEASURE ONLY, GATE NOTHING, RELAX NOTHING.** `pace_gate`'s skip
+line now prints, beside the shared total: this project's **own attributed spend**
+summed from `usage_ledger.jsonl`'s existing start/end pairs, **split builder vs
+desks**, and the **consecutive dark-slot streak**. `allow`, `pct` and the branch
+are untouched — **verified: at live settings `pace_gate` still returns 0 and
+prints nothing on the release path.** No threshold moves, no run is refused, no
+spec is failed, nothing is spent, `GOAL.md` is untouched, and **no certificate
+stales** (no spec declares `scripts/lib_usage.sh` in `IMPL_DEPS`; `run stale`
+confirms, before and after).
+
+**What the line reads today, computed rather than quoted:**
+
+    PACING: acting on 'week:all models' 76% at 79% of the week (line 77%,
+    rising to 90% at week's end = the hard stop, so the line always converges);
+    week:Fable 100% (not the gate); of this week's 76 shared point(s):
+    builder 18 (23%), desks 8 (10%), both 0 (0%), NOT THIS PROJECT 50 (65%);
+    N consecutive dark slot(s) — skipping, budget held for later in the week
+
+**THE INSTRUMENT REPRODUCES THE HAND COMPUTATION IT WAS BUILT FROM, INDEPENDENTLY.**
+The 89th audit's RANK 1 measured, by hand, *"the builder drew 18 of 75 meter
+points (24%) ... the overseer and Review together drew 7 (9%) ... 50 (67%) were
+drawn while no organ of this project was running at all."* This code, written
+from the `usage_ledger.jsonl` rows without those numbers in front of it, reads
+**builder 18, desks 8, unattributed 50 of 76** — the same three figures, one
+point later on the meter. The audit's central claim is now reproducible hourly
+instead of recomputed by hand each week.
+
+**WHY THE UNION AND NOT THE SUM — the one thing easy to get wrong, and the
+default named it.** The overseer and the Review run daily and their sessions
+overlap; summing per-session deltas double-counts every overlapping minute and
+inflates the desks' share. So each span of meter rise is attributed **once**, to
+the SET of organs alive during it: a span with both a builder and a desk alive is
+`both`, not a point to each. A known-answer arm (P1) plants two **fully
+overlapping** desk sessions across a 4-point rise and requires the answer 4 — the
+summing bug would return 8.
+
+**WHAT DELIBERATELY DID NOT FIRE.** Option (i) ATTRIBUTE THE LINE — pace against
+this project's own spend instead of the shared total — is the option the Review
+and the overseer both **recommend**, and it **WIDENS what the builder may spend**.
+A default may not loosen a gate (`SYSTEM.md` law 4), so it did not fire and
+**this firing is not a step toward it**: the number is now printed, and what to
+do about it remains entirely the owner's. Option (ii) is the same act with a
+cruder instrument. Option (iii) writes off the blackout and keeps the blind spot.
+
+**The price, restated because the entry priced it and it came due — with the one
+correction the entry could not know.** `D26` said *"under the default the builder
+stays dark for the remaining ~35 hours"*. The actual streak was **104 consecutive
+skipped slots** (2026-09-08T08:23 → 2026-09-12T17:07), released by the pace line
+rising into a flat meter. **(iv) does not fix that and is not called a fix.** It
+makes the next occurrence visible within one slot instead of within one Review.
+
+**Guards, because a measure-only instrument still gets believed.** Six
+known-answer arms in `--selftest`, all green, each planted beside the state it
+must not be confused with: P1 the union; P2 the split including the span nobody
+was awake for (the finding itself); P3 builder+desk overlap billed once to
+`both`; P4 the **weekly reset detected as the meter FALLING** rather than from a
+hard-coded date — the mistake `CLAUDE.md` has made twice, a cached reset date
+going five days stale on the one page that opens by saying no number is cached on
+it; P5 **UNKNOWN IS NOT ZERO** — an unreadable ledger reports `known=False` with
+`None` buckets and the line says "unattributed", never a comfortable 0
+(`Arm.cost`'s lesson); P6 the dark streak ends at the last real slot, and 0 is
+distinguishable from unknown.
+
+**89th audit B2 landed in the same edit:** the skip line now prints the line's
+**endpoint** — `rising to 90% at week's end = the hard stop, so the line always
+converges`. `allow` is a pure function of the clock with zero variance, so
+`allow(100)` is the constant 90, which *is* the 90% stop. Printed so *"pace_gate
+never releases the builder"* is unavailable as a sentence to the next reader.
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved
+(`PACE_FLOOR` 25 and `PACE_CAP` 90 unchanged), no control loosened, no new
+permission, nothing re-run, no certificate staled, no spec failed, no run
+refused. The gate's *behaviour* was exercised on both branches after the edit and
+is identical.
+
+**To reverse:** revert one commit; the gate's behaviour is unchanged by it.
+
+Evidence: `scripts/usage_attribution.py` (+ `--selftest`, 6 arms);
+`scripts/lib_usage.sh` `pace_gate` skip line; `/data/jack-logs/usage_ledger.jsonl`
+(164 rows); `docs/OVERSIGHT.md` 89th audit B1 + B2 + RANK 1.
