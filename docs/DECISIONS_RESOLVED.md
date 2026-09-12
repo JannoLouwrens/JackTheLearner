@@ -1011,3 +1011,95 @@ Evidence: `docs/DECISIONS_NEEDED.md` D24 entry + its `RESOLVED BY ARMED DEFAULT`
 append; `docs/CHAMPIONS.md` Learning-core row; `experiments/champions.py:551,
 :620-700`; `/data/lc07_pilot.json`; `lc07-checkpoint-branch`; `LF.02` PASS
 2026-09-03; `docs/OVERSIGHT.md` 89th audit B1.
+
+## D23 — RESOLVED BY ARMED DEFAULT (fired 2026-09-12 ~17:4x UTC, builder): (iii) MEASURE THE COMPOSITION, GATE NOTHING, TIGHTEN NOTHING. `FAIL-UNOWNED` keeps its definition and its floor of 0. The first reading is 20, against a drain of UNBOUNDED.
+
+**The owner did not rule by 2026-09-11, so the pre-registered default fired.**
+
+**The question** (2026-09-05, Review, DAILY) — *is routing the same as owning?*
+At 01:16 the 72nd audit shipped `FAIL-UNOWNED`, a counted, ratcheted class for *a
+settled FAIL with no repair owner*, at an honest baseline of 4. It immediately
+found what five other instruments had missed for a fortnight: `XL.01`, *"death
+does not erase what he learned"*, had read **FAIL for 17 days** with no owner, no
+clock and no queue row, while `run blocked`, `coverage`, `review_queue`,
+`champions` and `decisions` each reported it fine — because every one of them is
+keyed to a spec's **reachability** and none to its **disposition**. At **01:19,
+three minutes later**, the same audit routed the four orphans into
+`docs/REVIEW_QUEUE.md` with `DUE 2026-09-13` and the count went **4 -> 0**. The
+class read `AT floor — ok`. Nothing in that was misconduct and the entry said so
+first: routing is the correct response, the rows are real, dated and reasoned,
+and the audit used `next_free_due` rather than piling. **The question was what
+the discharge measured** — `coverage`'s own definition makes a queue *mention*
+sufficient for ownership, and that same morning the desk which now owned all four
+reported its own drain as **UNBOUNDED**.
+
+**The default that fired.** A single printed counter beside `FAIL-UNOWNED`,
+computed from data both tools already hold: the count of settled FAILs whose only
+repair owner is a `REVIEW_QUEUE` row, printed together with that file's own
+`drain` reading.
+
+**THE FIRST READING IS FIVE TIMES THE SIZE OF THE QUESTION THAT ARMED THE
+ENTRY.** `D23` was about four orphans. Measured at firing:
+
+    FAIL-UNOWNED                 0   settled FAIL(s) with NO repair owner  (AT floor — ok)
+    FAIL-OWNED-BUT-UNDRAINED    20   whose ONLY repair owner is a REVIEW_QUEUE row
+                                     ...and that desk's own drain: UNBOUNDED
+
+    DP.05, HR.5, LG.10, LT.01, ME.11, ME.11.B, ME.11.C, ME.11.D, NE.01, T0.27,
+    T2.05, T2.07, T2.10, T2.15, T3.09, T4.02, W.1, W.2, W1.00, XL.01
+
+**Both halves are true at once and neither is a fault.** The floor reading of 0
+is honest; routing is the correct repair. What nobody could see is the
+composition: **twenty** of Jack's settled negatives rest on a warrant from a desk
+that measures itself as unable to say when it will pay. `AT floor — ok` is true
+and misleading simultaneously, which is the one outcome the entry existed to
+prevent, and the sentence is now printed hourly instead of reconstructed once by
+a Review.
+
+**WHAT DELIBERATELY DID NOT FIRE, because it is the reason (iii) was the only
+legal default.** Option (ii) — *a queue row counts as an owner only while the
+drain is bounded* — is a **TIGHTENING**. Firing it by silence would let this
+instrument red-light twenty of the builder's specs on a property of a *different*
+desk's throughput, with nobody having ruled on it. Option (i), the status quo,
+writes the composition off rather than leaving it visible. The new counter
+therefore has **no baseline, no `!! MOVED` line, and no effect on any exit
+code** — and that absence is **asserted by a fixture arm**, not left to good
+intentions, because the number *legitimately rises* when a desk correctly routes
+an orphan: a floor here would punish exactly the behaviour the sibling class
+rewards. It is MONOTONE — a number appears where there was none — and it is the
+same shape `D18`'s default took on the memory ceiling.
+
+**The guard, because the scar demands one.** Four known-answer arms in
+`_fail_unowned_fixture` (the `T0.31` P4/P5/P6 shape), each **verified to fail
+when the property it guards is broken and to pass when restored** — P1 the
+composition (letting `repaired_by` drift into the queue-warranted set fires 3
+failures), P2 the load-bearing arm, P3 the no-ratchet guarantee, P4 the healthy
+state. **P2 is the one that matters most:** an absent git throughput baseline
+must report drain `UNKNOWN` and **never as bounded**. The join of the two numbers
+IS the measurement, so defaulting the missing half to a comfortable value would
+manufacture precisely the reassurance this entry is about — `Arm.cost`'s lesson,
+that a sentinel which is also a valid value cannot be detected.
+
+**Certificate cost, paid rather than deferred:** `T0.21` declares
+`experiments/coverage.py` in `IMPL_DEPS`, so this edit staled its certificate and
+it was re-bought PASS in the same unit.
+
+**Invariants checked at firing:** no `GOAL.md` edit; no threshold moved
+(`FAIL_UNOWNED_BASELINE` still 0, its definition unchanged); no control loosened;
+no new permission; nothing re-run for a better number; no spec failed; no run
+refused; no commitment claim-dead. `coverage` exits 2 before and after on the
+same known residents.
+
+**The price, restated because the entry priced it:** under (iii) the four
+orphans stay owned-on-paper and dated 2026-09-13, and the entry said *"if the
+drain is still UNBOUNDED then, the new counter is what will say so."* It is, and
+it does — a day early, by design.
+
+**To reverse:** delete one printed line; nothing downstream reads it.
+
+Evidence: `docs/DECISIONS_NEEDED.md` D23 entry + its `RESOLVED BY ARMED DEFAULT`
+append; `experiments/coverage.py` `FAIL_OWNED_QUEUE_FORMS`,
+`fail_owned_but_undrained()`, the block comment and the four fixture arms;
+`experiments/review_queue.py:386`, `:851`; `docs/OVERSIGHT.md` 89th audit B1;
+the 72nd audit's `6fbac74` (the class) and `52dcf9e` (the routing, three minutes
+later).

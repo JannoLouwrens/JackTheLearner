@@ -6118,3 +6118,74 @@ Evidence: `docs/CHAMPIONS.md` Learning-core row (challenger-status cell);
 `/data/lc07_pilot.json` (kernel `jack-ladder-1788297232`, 0.44 h, branch B);
 `lc07-checkpoint-branch` (DISPOSITIONED 2026-09-06, the surgery refused);
 `LF.02` PASS 2026-09-03; `docs/OVERSIGHT.md` 89th audit B1.
+
+## D23 — RESOLVED BY ARMED DEFAULT, fired 2026-09-12 ~17:4x UTC (builder). Off your desk.
+
+**The owner did not rule by 2026-09-11, so the pre-registered default fired.**
+
+Default **(iii) MEASURE THE COMPOSITION, GATE NOTHING, TIGHTEN NOTHING.**
+`FAIL-UNOWNED` keeps its present definition and its **floor of 0** — not one
+threshold moves, no control is weakened, no spec is failed, no run is refused,
+and no commitment goes claim-dead. What is added is a single printed counter
+beside it, `FAIL-OWNED-BUT-UNDRAINED`, computed from data both tools already
+hold, printed with `docs/REVIEW_QUEUE.md`'s own `drain` reading.
+
+**THE FIRST READING, and it is five times the size of the question that armed
+this entry.** `D23` was about the four orphans routed on 2026-09-05. Measured at
+firing:
+
+    FAIL-UNOWNED                 0 settled FAIL(s) with NO repair owner   (AT floor — ok)
+    FAIL-OWNED-BUT-UNDRAINED    20 settled FAIL(s) whose ONLY repair owner is a
+                                   REVIEW_QUEUE row  (queue-row 20)
+                                ...and that desk's own drain reads: UNBOUNDED
+
+    DP.05, HR.5, LG.10, LT.01, ME.11, ME.11.B, ME.11.C, ME.11.D, NE.01, T0.27,
+    T2.05, T2.07, T2.10, T2.15, T3.09, T4.02, W.1, W.2, W1.00, XL.01
+
+**Both halves are true at once and neither is a fault.** Routing IS the correct
+repair for an orphaned FAIL — it is what `FAIL-UNOWNED` was built to provoke —
+and the floor reading of 0 is honest. The composition is what nobody could see:
+**twenty** of Jack's settled negatives rest on a warrant from a desk that
+measures itself as unable to say when it will pay, and `AT floor — ok` is true
+and misleading at the same time. That is the exact sentence `D23` was escalated
+to make printable, and it is now printed hourly rather than reconstructed once by
+a Review.
+
+**WHAT DELIBERATELY DID NOT HAPPEN.** Option (ii) — *a queue row counts as an
+owner only while the drain is bounded* — is a **TIGHTENING**, and firing it by
+silence would have let this desk red-light twenty of the builder's specs on a
+property of a **different** desk's throughput with nobody having ruled on it. It
+did not fire. The new counter has **no baseline, no `!! MOVED`, and no effect on
+any exit code**, and that absence is asserted by a fixture arm (P3) rather than
+left to good intentions — because the number *legitimately rises* when a desk
+correctly routes an orphan, so a floor here would punish the behaviour the
+sibling class rewards.
+
+**Built with the guard the scar demands.** Four known-answer arms in
+`_fail_unowned_fixture` (the `T0.31` P4/P5/P6 shape), each **verified to fail
+when the property it guards is broken and to pass when restored**: P1 the
+composition (a form drifting between the queue-warranted set and
+`repaired_by`/`disposed` fires 3 failures); **P2 the load-bearing one — an absent
+git throughput baseline must report drain `UNKNOWN`, never bounded**, because
+defaulting the missing half to a comfortable value manufactures precisely the
+reassurance this entry is about (`Arm.cost`'s lesson: a sentinel that is also a
+valid value cannot be detected); P3 the no-ratchet guarantee; P4 the healthy
+state — zero queue-owned FAILs against a bounded drain — because a reading nobody
+can recognise as healthy makes the sick ones meaningless.
+
+**Certificate cost, paid not deferred:** `T0.21` declares
+`experiments/coverage.py` in `IMPL_DEPS`, so this edit staled it and it was
+re-bought PASS in the same unit.
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved
+(`FAIL_UNOWNED_BASELINE` still 0), no control loosened, no new permission,
+nothing re-run for a better number, no spec failed, no run refused. `coverage`
+exits 2 before and after on the same known residents — the new line changes no
+exit code.
+
+**To reverse:** delete one printed line; nothing downstream reads it.
+
+Evidence: `experiments/coverage.py` `FAIL_OWNED_QUEUE_FORMS` +
+`fail_owned_but_undrained()` + its block comment + the four fixture arms;
+`experiments/review_queue.py:386` `throughput()` / `:851` `live_audit()`;
+`docs/OVERSIGHT.md` 89th audit B1.

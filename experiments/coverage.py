@@ -1391,6 +1391,94 @@ def fail_unowned_ratchet(baseline: int = FAIL_UNOWNED_BASELINE,
     return out
 
 
+# ── FAIL-OWNED-BUT-UNDRAINED: owned on paper, by a desk that cannot pay ──
+#
+# D23's armed default, fired 2026-09-12 (the owner did not rule by 2026-09-11):
+# (iii) MEASURE THE COMPOSITION, GATE NOTHING, TIGHTEN NOTHING.
+#
+# THE SCAR, 2026-09-05, and the clock is the finding. At 01:16 the 72nd audit
+# shipped `FAIL-UNOWNED` with an honest baseline of 4 — and it immediately found
+# something five other instruments had missed for a fortnight: `XL.01`, *"death
+# does not erase what he learned"*, had read FAIL for 17 days with no owner, no
+# clock and no queue row, while `run blocked`, `coverage`, `review_queue`,
+# `champions` and `decisions` each reported it fine, because every one of them is
+# keyed to a spec's REACHABILITY and none to its DISPOSITION. At 01:19 — THREE
+# MINUTES LATER — the same audit routed the four orphans into `docs/REVIEW_QUEUE.md`
+# with `DUE 2026-09-13` and the count went 4 -> 0. The class read `AT floor — ok`.
+#
+# Nothing in that was misconduct, and `D23` said so first: routing IS the correct
+# response to an orphaned FAIL, it is what the class was built to provoke, the
+# rows are real, dated and reasoned, and the audit used `next_free_due` rather
+# than piling. Every step was right. **The question is what the discharge
+# MEASURED** — because `coverage`'s own definition makes a queue mention
+# sufficient for ownership, and on that same morning the desk that now owned all
+# four reported its own drain as UNBOUNDED. `AT floor — ok` was true and
+# misleading at once.
+#
+# WHY THIS IS A COUNTER AND NOT A TIGHTENING, which is the whole of the default.
+# The tempting repair — "a queue row counts as an owner only while the desk's
+# drain is bounded" — would let this instrument red-light four of the builder's
+# specs on a property of a DIFFERENT desk's throughput, with nobody ruling on it.
+# That was `D23` option (ii) and it may not fire by silence. So `FAIL-UNOWNED`
+# keeps its definition and its floor of 0 **unchanged**, and this prints beside
+# it. It is MONOTONE — a number appears where there was none — and it is the same
+# shape `D18`'s default took on the memory ceiling: measure and report, gate
+# nothing, relax nothing.
+#
+# DELIBERATELY NOT RATCHETED. A floor here would be a tightening wearing a
+# counter's clothes: the number legitimately rises when a desk correctly routes
+# an orphan, which is the behaviour the sibling class exists to reward. It has no
+# baseline, no `!! MOVED`, and no effect on any exit code.
+
+#: The ownership forms whose only warrant is a `docs/REVIEW_QUEUE.md` row. The
+#: two forms deliberately absent are the ones that do NOT depend on that desk
+#: ever getting to the row: `repaired_by` names a spec that will do the work, and
+#: `disposed` names a decision that already killed the question. Keep this list
+#: in step with `fail_unowned`'s `owned` vocabulary — a form added there and not
+#: here silently leaves a spec out of this count.
+FAIL_OWNED_QUEUE_FORMS = ("queue-row", "held-on-blocker", "mention-only")
+
+
+def fail_owned_but_undrained(owned: Optional[dict] = None,
+                             throughput: Optional[dict] = None) -> dict:
+    """Settled FAILs whose ONLY repair owner is a `REVIEW_QUEUE` row, with that
+    file's own drain reading beside them (D23's fired default).
+
+    Returns `{"ids": [...], "count": int, "by_form": {form: n},
+    "drain_cycles": float|None, "unbounded": bool|None, "drain_known": bool}`.
+
+    `drain_known` is False when git could not supply the throughput baseline —
+    a detached checkout, a fresh clone, no repo. **An unknown drain is reported
+    as unknown and never as bounded**: the whole point of this counter is the
+    join between the two numbers, and defaulting the missing half to a
+    comfortable value would manufacture exactly the reassurance the scar is
+    about. (`Arm.cost`'s lesson again: a sentinel that is also a valid value
+    cannot be detected.)
+
+    Pure when both arguments are supplied, so the fixture can hold git still.
+    """
+    if owned is None:
+        owned = fail_unowned()["owned"]
+    ids = sorted(sid for sid, form in owned.items()
+                 if form in FAIL_OWNED_QUEUE_FORMS)
+    by_form: Dict[str, int] = {}
+    for sid in ids:
+        by_form[owned[sid]] = by_form.get(owned[sid], 0) + 1
+    out = {"ids": ids, "count": len(ids),
+           "by_form": dict(sorted(by_form.items())),
+           "drain_cycles": None, "unbounded": None, "drain_known": False}
+    if throughput is None:
+        try:
+            from .review_queue import live_audit
+            throughput = live_audit().get("throughput")
+        except Exception:
+            throughput = None          # no baseline is not a bounded drain
+    if throughput:
+        out.update(drain_cycles=throughput.get("drain_cycles"),
+                   unbounded=throughput.get("unbounded"), drain_known=True)
+    return out
+
+
 def _fail_unowned_fixture() -> List[str]:
     """Known-answer battery for `fail_unowned` + its ratchet (72nd audit B1).
 
@@ -1487,6 +1575,67 @@ def _fail_unowned_fixture() -> List[str]:
             r["count"] is not None:
         fails.append("fail-unowned: a detector that raises must REFUSE the "
                      "count, not classify it")
+
+    # ── FAIL-OWNED-BUT-UNDRAINED (D23's fired default, 2026-09-12) ──────────
+    # Every arm is planted beside the state it must not be confused with, same
+    # discipline as the block above.
+    owned = {"A.1": "queue-row", "A.2": "held-on-blocker",
+             "A.3": "mention-only", "A.4": "repaired_by", "A.5": "disposed"}
+    o = fail_owned_but_undrained(owned=owned, throughput={"drain_cycles": None,
+                                                          "unbounded": True})
+    # P1 — the composition. The three queue-warranted forms count; the two
+    # that do not depend on the desk ever reaching the row do not. A form
+    # silently migrating between the two sets is the whole failure mode.
+    if o["ids"] != ["A.1", "A.2", "A.3"] or o["count"] != 3:
+        fails.append(f"fail-owned-but-undrained: the count must be exactly the "
+                     f"queue-warranted forms {FAIL_OWNED_QUEUE_FORMS}, not "
+                     f"{o['ids']} — repaired_by names a spec that will do the "
+                     f"work and disposed names a decision that killed the "
+                     f"question; neither waits on a desk")
+    if o["by_form"] != {"held-on-blocker": 1, "mention-only": 1,
+                        "queue-row": 1}:
+        fails.append(f"fail-owned-but-undrained: the by-form map must let a "
+                     f"reader see WHICH warrant each spec rests on, got "
+                     f"{o['by_form']}")
+    if not (o["drain_known"] and o["unbounded"] is True):
+        fails.append("fail-owned-but-undrained: a supplied UNBOUNDED drain "
+                     "must be carried through as known-and-unbounded — the "
+                     "join of the two numbers IS the measurement")
+    # P2 — THE LOAD-BEARING ARM. No throughput baseline (a detached checkout,
+    # a fresh clone, git silent) must read UNKNOWN and never as a bounded or
+    # healthy drain. Defaulting the missing half to a comfortable value would
+    # manufacture exactly the reassurance the 2026-09-05 scar is about.
+    o = fail_owned_but_undrained(owned=owned, throughput={})
+    if o["drain_known"] or o["unbounded"] is not None or \
+            o["drain_cycles"] is not None:
+        fails.append("fail-owned-but-undrained: an ABSENT throughput baseline "
+                     "must report drain UNKNOWN, never bounded — a sentinel "
+                     "that is also a valid value cannot be detected "
+                     "(Arm.cost's lesson)")
+    if o["count"] != 3:
+        fails.append("fail-owned-but-undrained: losing the drain reading must "
+                     "not lose the count — the two halves fail independently")
+    # P3 — it is a COUNTER, not a ratchet. D23 option (ii) was a TIGHTENING and
+    # it did not fire; if a baseline ever appears here, this class starts
+    # red-lighting the builder's specs on another desk's throughput with nobody
+    # having ruled on it. The absence is the guarantee, so it is asserted.
+    for banned in ("baseline", "grown", "stale_baseline", "violations"):
+        if banned in o:
+            fails.append(f"fail-owned-but-undrained: grew a {banned!r} key — "
+                         f"D23's default is MEASURE ONLY, GATE NOTHING, "
+                         f"TIGHTEN NOTHING, and a floor here would be a "
+                         f"tightening wearing a counter's clothes (the number "
+                         f"legitimately RISES when a desk correctly routes an "
+                         f"orphan)")
+    # P4 — an empty ownership map is a real, reportable zero, not a crash.
+    o = fail_owned_but_undrained(owned={}, throughput={"drain_cycles": 4.0,
+                                                       "unbounded": False})
+    if o["count"] != 0 or o["ids"] or o["by_form"] or not o["drain_known"] \
+            or o["unbounded"] is not False or o["drain_cycles"] != 4.0:
+        fails.append(f"fail-owned-but-undrained: no queue-owned FAILs against "
+                     f"a BOUNDED drain is the healthy state — it must be "
+                     f"recognisable or the sick readings mean nothing, got "
+                     f"{o}")
     return fails
 
 
@@ -3543,6 +3692,39 @@ def check() -> int:
         print(f"  !! {m}")
     for m in fu["stale_baseline"]:
         print(f"  {m}")
+
+    # D23's fired default (2026-09-12): the composition beside the count. Gates
+    # nothing, has no baseline, and cannot move an exit code — see the block
+    # comment on `fail_owned_but_undrained`.
+    try:
+        ou = fail_owned_but_undrained()
+    except Exception as exc:                      # a refusal, never a zero
+        print(f"\n  FAIL-OWNED-BUT-UNDRAINED (D23): the detector refused "
+              f"({type(exc).__name__}: {exc}) — no count is evidence.")
+    else:
+        if ou["drain_known"]:
+            drain = ("UNBOUNDED — the desk is not keeping up"
+                     if ou["unbounded"] else
+                     f"{ou['drain_cycles']:.0f} cycles to clear"
+                     if ou["drain_cycles"] is not None else
+                     "0 live rows — the desk is clear")
+        else:
+            drain = "UNKNOWN (no git baseline) — not reported as bounded"
+        print(f"\n  FAIL-OWNED-BUT-UNDRAINED (D23, measure-only, NO floor): "
+              f"{ou['count']} settled FAIL(s) whose\n      only repair owner "
+              f"is a REVIEW_QUEUE row"
+              + (f" ({', '.join(f'{k} {v}' for k, v in ou['by_form'].items())})"
+                 if ou["by_form"] else "")
+              + (f": {', '.join(ou['ids'])}" if ou["ids"] else ".")
+              + f"\n      ...and that desk's own drain reads: {drain}.")
+        if ou["count"] and ou["drain_known"] and ou["unbounded"]:
+            print("  Both halves are true at once and neither is a fault: "
+                  "routing IS the correct repair for an\n  orphaned FAIL, and "
+                  "FAIL-UNOWNED is honestly AT floor. This line exists so "
+                  "'owned' is not\n  read as 'being repaired' while the desk "
+                  "holding it cannot say when. NOTHING is gated on it:\n  "
+                  "tightening FAIL-UNOWNED against another desk's throughput "
+                  "was D23 option (ii), a\n  TIGHTENING, and it did not fire.")
 
     pr = park_release()
     pr_pairs = {f"{s}->{r}" for s, r, _st in pr["violations"]}
