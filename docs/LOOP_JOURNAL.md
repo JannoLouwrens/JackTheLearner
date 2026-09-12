@@ -13297,3 +13297,44 @@ DRAFTED-NOT-REGISTERED.**
   so the edit staled it — **re-bought PASS clean on committed code** (8.8 s, not
   `+dirty`; the first attempt stamped `+dirty` and was redone after the commit).
   `coverage` EXIT 2 before and after on the same known residents.
+- 2026-09-12 ~17:5x (builder, Opus): **D26 FIRED — 89th audit B1, fifth and last
+  sub-item, plus B2 in the same edit. The owner did not rule by 2026-09-10, so
+  the pre-registered default fired: (iv) MEASURE ONLY, GATE NOTHING, RELAX
+  NOTHING.** `scripts/usage_attribution.py` (new) computes this project's own
+  share of the shared meter from `usage_ledger.jsonl`'s existing start/end pairs,
+  and `pace_gate`'s skip line prints it beside the shared total. **Live reading:
+  of this week's 76 shared points — builder 18 (23%), desks 8 (10%), both 0, NOT
+  THIS PROJECT 50 (65%).** That **independently reproduces the 89th audit's RANK 1
+  hand computation** (18 of 75 / 7 / 50), which I wrote the code without in front
+  of me — so the claim that `pace_gate` rations the builder against a total
+  two-thirds not its own is now reproducible hourly instead of recomputed by hand
+  each week. **UNION, not sum** — the overseer and Review overlap daily and
+  summing sessions double-counts; each span of rise is billed ONCE to the SET of
+  organs alive during it, and arm P1 plants two fully-overlapping desk sessions
+  across a 4-point rise and requires 4 (the summing bug returns 8). **Option (i)
+  ATTRIBUTE THE LINE did NOT fire and this is not a step toward it** — both desks
+  recommend it and it would have released me immediately, but it WIDENS what I may
+  spend and law 4 forbids a default loosening a gate. Behaviour verified unchanged
+  on BOTH branches after the edit: at live settings `pace_gate` returns 0 and
+  prints nothing on the release path. Six `--selftest` arms green, each planted
+  beside the state it must not be confused with — **P4 detects the weekly reset as
+  the meter FALLING rather than from a hard-coded date** (the mistake `CLAUDE.md`
+  has made twice) and **P5 is UNKNOWN-IS-NOT-ZERO**: an unreadable ledger reports
+  `known=False` with None buckets and says so in words, never a comfortable 0.
+  **B2 landed here too:** the skip line now prints the line's endpoint — *rising
+  to 90% at week's end = the hard stop, so the line always converges* — so
+  "pace_gate never releases the builder" is unavailable as a sentence to the next
+  reader. No certificate stales (nothing declares `lib_usage.sh` in IMPL_DEPS;
+  `run stale` identical before and after). **B1 IS NOW CLOSED: the overdue
+  armed-default queue is EMPTY for the first time since 09-08** — D22 transcribed,
+  D18/D24/D23/D26 fired; D19 (09-14), D20 (09-18) and D25 (09-13) are future-dated
+  and not mine today. Lesson recorded: *an armed default's text is a snapshot of
+  the world when it was ARMED* — two firings found their work already done, and
+  D18's literal words would have made a working instrument WORSE. NEXT ITERATION:
+  the Review's dated block item 1 — **D1.0's twin-spread probe (DUE 09-14)**, K>=16
+  untrained twins per architecture at distinct init seeds, FORWARD PASSES ONLY,
+  both branches pre-registered on `d10-successor-rerun-under-adopted-gate`; then
+  `LG.03`'s liveness gate (DUE 09-14, `PLANNER_CALIB_MIN = 1.0` checked BEFORE
+  `blind_calib_rate`, ~725 s CPU) and `PL.02`'s ruled eye gate (DUE 09-14).
+  **Attempt 3 is W37, which opens tomorrow 09-13 with a fresh 30 h — W36's
+  remaining hours die tonight and 17.61 h never fitted in them. Do not scrape it.**
