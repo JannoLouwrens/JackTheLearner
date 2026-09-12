@@ -2,8 +2,12 @@
 
 NOT A SPEC. It writes nothing to the ledger and nothing depends on it. It exists
 because `LG.03` attempt 1 (2026-09-04T17:20:27) returned **VOID** on its own
-liveness gate — `blind_calib_rate` 0.583 +- 0.312, readings 1.00 / 0.50 / 0.25
-across seeds 0/1/2 against `CALIB_MIN` 0.75 — and the file had PRE-REGISTERED
+liveness gate — `blind_calib_rate` 0.583 +- 0.312, readings **0.50 / 1.00 /
+0.25** across seeds 0/1/2 against `CALIB_MIN` 0.75 (**CORRECTED 2026-09-12 —
+this line read `1.00 / 0.50 / 0.25`; the multiset was right and the SEED LABELS
+were wrong. See the CORRECTION block at the end of this docstring, because the
+swap is not cosmetic: it manufactured the mechanism this file goes on to
+assert**) — and the file had PRE-REGISTERED
 its repair in the open the day before: *"if it fires, the repair is a third
 learner in the `max`, never a lower `CALIB_MIN`"* (LOOP_JOURNAL, 2026-09-04).
 
@@ -48,9 +52,68 @@ questions and both are routed: `docs/REVIEW_QUEUE.md`,
 APPROXIMATION, DECLARED. `_experiment` runs 160 planner rollouts before it
 reaches the calibration fit, so W0's interoceptive channels enter these demos in
 a slightly different state; the planner's actions depend only on pose and
-velocity, so `Y` is unaffected and only a few of `X`'s 80 columns drift. That is
-why seed 0 reads 0.75 here and 1.00 in the registered run. The phenomenon does
-not move: two of three seeds under the bar, `max5 == max2` on all three.
+velocity, so `Y` is unaffected and only a few of `X`'s 80 columns drift.
+**CORRECTED 2026-09-12:** this paragraph used to end *"That is why seed 0 reads
+0.75 here and 1.00 in the registered run. The phenomenon does not move: two of
+three seeds under the bar"*. Both sentences are false. Seed 0 reads **0.50** in
+the registered run, and the drift moves **all three** seeds, not one:
+
+    seed   this probe (max2)   registered run   delta
+    0          0.75                0.50         -0.25
+    1          0.50                1.00         +0.50
+    2          0.75                0.25         -0.50
+
+So the approximation is not a rounding — it reorders which seed is worst. What
+DOES survive is this file's internal comparison, because `max5` and `max2` are
+computed under one consistent approximation: **`max5 == max2` on all three
+seeds, and the falsification of the third-learner repair therefore stands.**
+
+--------------------------------------------------------------------------
+CORRECTION, 2026-09-12 (builder) — THE SEED SWAP MANUFACTURED THE MECHANISM
+--------------------------------------------------------------------------
+Measured directly, one `_experiment(seed)` call per seed at commit `1bd42dc`,
+and self-validated: the three per-seed vectors reproduce the registered run's
+recorded mean AND std to 1e-5 on `planner_calib_reach`, `blind_calib_rate` and
+`planner_reach_mean`, so these are the registered run's own numbers, not a
+re-approximation.
+
+    seed   planner_own (teacher)   blind_calib_rate (twin)
+    0            1.00                      0.50
+    1            0.75                      1.00
+    2            0.75                      0.25
+
+**`THE CAUSE IS THE planner_own COLUMN` (above) IS REFUTED BY THIS TABLE.**
+That section argues *"the demonstrations the twin learns from are capped by the
+teacher, and a clone cannot be asked to exceed what was demonstrated."* On
+**seed 1 the teacher reached 0.75 and the twin reached 1.00** — the clone
+exceeded what was demonstrated. `planner_own` is not a ceiling on
+`blind_calib_rate`, and it cannot be: `_Blind` is a k-NN/ridge SMOOTHER, not a
+replayer, so it generalises across the tape and can reach the target from a
+start whose own demonstrated trajectory missed.
+
+**Why the false mechanism looked airtight.** Under the mis-attributed labels the
+pairing read 1.00/1.00, 0.75/0.50, 0.75/0.25 — twin <= teacher on every seed,
+with equality exactly where the teacher was perfect. That is a textbook cap.
+Under the true labels the twin's BEST seed is one of the two with the WORST
+teacher. One swapped pair of seed labels in a docstring produced a clean,
+plausible, and wrong causal story.
+
+**What it cost, recorded because it is the point.** This paragraph was the
+evidence behind `docs/REVIEW_QUEUE.md`'s
+`lg03-blind-twin-cannot-prove-itself-alive`, and the Review's 2026-09-12 RULING
+on that row inherited the cap claim verbatim — *"perfect reproduction of the
+training tape therefore scores `planner_own`, not 1.0"*, and the prediction that
+a seed with a sub-0.75 servo is *"un-clearable by construction"*. Seed 1 is such
+a seed and it cleared at 1.00. **The ruling's REPAIR still stands and is still a
+tightening — auditing the venue is defensible on its own terms, and it is now
+committed — but its stated MECHANISM is refuted by the run it ordered.** Routed
+as `lg03-teacher-does-not-cap-the-twin`.
+
+**The one thing this strengthens rather than weakens:** the ruling refused
+option (i), a teacher-relative liveness bar, as a loosening. It is worse than a
+loosening — on seed 1 it computes 1.00 / 0.75 = **1.333**, and a "fidelity"
+that exceeds 1 is not a fidelity. The refusal was right for a better reason
+than the one given.
 
     /data/venvs/jackthelearner/bin/python -m experiments.tests.lg03_blind_twin_probe
 """

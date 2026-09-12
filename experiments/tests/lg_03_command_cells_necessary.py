@@ -173,6 +173,57 @@ cell the privileged servo aces. That is a further `w0-too-shallow` instrument
 pointed at the OBSERVATION rather than at the world — arrived at from the gate's
 algebra, not asserted about W0. A tightening is supposed to cost.
 
+ATTEMPT 2 (2026-09-12T18:23:20, 727.2 s, 3 seeds, commit `1bd42dc`) RETURNED
+**VOID ON THE NEW CONJUNCT**, `planner_calib_reach` 0.8333 +- 0.1179 against
+`PLANNER_CALIB_MIN` 1.0 — the gate fires where the ruling said it would, and
+the teacher is indicted first. Every other reading is identical to attempt 1
+(`obs_finite` 1.0, `verb_alive_min` 1.0, `planner_reach_mean` 0.7542,
+`blind_calib_rate` 0.5833 +- 0.3118, control `stripped_both_rate` 0.0542 vs
+`CTRL_MAX` 0.10 on all 80 candidates); `calib_cell` records `approach@block`.
+
+**AND THE PER-SEED JOIN REFUTES THE MECHANISM THE RULING ARGUED FROM.** The row
+carries only mean+std, so the pairing between the two metrics was measured
+directly — one `_experiment(seed)` call per seed, whose three vectors reproduce
+this run's recorded mean AND std to 1e-5 on all of `planner_calib_reach`,
+`blind_calib_rate` and `planner_reach_mean` (so they are this run's numbers,
+and the spec is deterministic):
+
+    seed   planner_calib_reach   blind_calib_rate
+    0            1.00                  0.50
+    1            0.75                  1.00
+    2            0.75                  0.25
+
+Two consequences, both against the ruling's stated reasoning and neither against
+its repair:
+
+  1. **`planner_calib_reach` is NOT a ceiling on `blind_calib_rate`.** The
+     ruling's central claim is *"perfect reproduction of the training tape
+     therefore scores `planner_own`, not 1.0"*, and its prediction is that a
+     seed whose servo reads below 0.75 is *"un-clearable by construction"*.
+     Seed 1 is such a seed and it cleared at **1.00**. `_Blind` is a k-NN/ridge
+     SMOOTHER, not a replayer: it generalises across the tape and can reach the
+     target from a start whose own demonstration missed. The cap argument came
+     from `lg03_blind_twin_probe.py`, whose docstring had the seed labels for
+     these readings SWAPPED (corrected the same day, see its CORRECTION block);
+     under the wrong labels the twin never exceeded its teacher and the cap
+     looked airtight.
+  2. **Auditing the venue does not rescue the liveness proof on this fixture.**
+     The ruling's stated cost is that `LG.03` cannot deliver its FAIL *"until
+     the fixture admits a calibration cell the privileged servo aces"*. Seed 0
+     IS such a seed — teacher 1.00 — and the twin still reads **0.50**, far
+     under `CALIB_MIN` 0.75. So on the one seed that survives the new audit, the
+     twin fails the liveness bar anyway, and on n=3 the twin's best seed is one
+     of the two with the worst teacher.
+
+**NOTHING HERE IS A REASON TO REMOVE THE CONJUNCT, and it is not removed.**
+Refusing to score a student on a tape recorded from a demonstrator that missed
+is good method whether or not the demonstrator happens to cap the score, the
+change is strictly a tightening, and the one law binds in one direction only.
+What is refuted is the ruling's *explanation*, which is routed as
+`lg03-teacher-does-not-cap-the-twin` — and the finding makes the ruling's
+refusal of option (i) STRONGER, not weaker: a teacher-relative bar computes
+1.00 / 0.75 = **1.333** on seed 1, and a fidelity above 1 is not a fidelity.
+
 WHERE THE CROSS-SEED INTERSECTION IS COMPUTED, and why it is in the control.
 `run_spec` runs every experiment seed before it runs the control, and
 `_aggregate` cannot see across seeds. `_control` is therefore the only hook
