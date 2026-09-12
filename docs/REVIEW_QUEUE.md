@@ -3318,6 +3318,76 @@ Binding conditions, all of them:
      a re-roll of attempt 2 under any circumstances. Both recorded VOIDs stand
      in the ledger regardless of what the successor returns.
 
+**TWIN-SPREAD PROBE RESULT — STEP (1) OF THE OWED STAMP, LANDED (builder,
+2026-09-12; `experiments/tests/d10_twin_spread_probe.py`, artifact
+`/data/d10_twin_spread.json`, 1838 s CPU, K=32 init seeds per architecture,
+forward passes only, nothing trained).** The branch criterion was committed in
+`8624fa0` BEFORE the run, with no number in hand, per condition 3's own
+prohibition; the run is `e938a89`-clean and this block is the result.
+
+    arm       twin mean    twin std     cv     recorded twin (attempt 2)
+    aprime       197.09        4.54   0.0230        198.4
+    b_split      171.49       42.23   0.2462          -
+    c_e2e        179.41       71.75   0.3999          -
+    d_mlp        197.70        2.02   0.0102        197.6
+
+**The probe is measuring the right object — independent corroboration.** Its
+K=32 means reproduce attempt 2's own recorded twin means to within 1.3 points
+on both arms the row published (aprime 197.09 vs 198.4; d_mlp 197.70 vs 197.6),
+having been computed from 32 fresh init seeds by a separate entry point. The
+~87 raw points of architectural prior over random that the disposition
+identified are confirmed and are not an artifact of three seeds.
+
+**THE PRE-REGISTERED BRANCH IS `SPREAD_IS_ZERO`**: `min(cv) = 0.0102` (d_mlp)
+against the committed `CV_MIN = 0.05`, so the unanimity clause fails and the
+gate takes the DECLARED RAW-MARGIN FALLBACK. `σ` may not be manufactured, and
+per the disposition the change of units is written here rather than buried in
+a diff.
+
+**AND THE PROBE FOUND SOMETHING THE DISPOSITION DID NOT ANTICIPATE, which is
+the real result: the spreads are not merely small, they are HETEROGENEOUS BY
+35.5x** (2.02 for d_mlp to 71.75 for c_e2e). A per-arm `twin_std` denominator
+is therefore **not a common unit**, and scoring four arms in four different
+units is not a bakeoff. Run the adopted "spread is real" formula against
+attempt 2's own recorded trained means and it fires on the wrong arm:
+
+    arm      trained   twin_mean   raw margin   twin_std    sigma   verdict
+    aprime     506.4      197.09        309.3       4.54    68.20   PASS
+    b_split    344.0      171.49        172.5      42.23     4.09   PASS
+    c_e2e      350.0      179.41        170.6      71.75     2.38   FAIL (<3.0)
+    d_mlp      415.0      197.70        217.3       2.02   107.39   PASS
+
+**`b_split` and `c_e2e` learned the same amount — raw margins 172.5 and 170.6,
+1.1% apart — and the twin-σ gate PASSES one and FAILS the other.** The run
+would have VOIDed on `c_e2e` for the third time, and for the third different
+denominator reason, with nothing about `c_e2e`'s learning having changed. That
+is the identical disease this row was opened to cure, reproduced inside its own
+proposed cure: *a gate whose verdict is a function of a denominator rather than
+of learning.* Note also the top end — 68σ and 107σ — where dividing a real
+margin by a near-deterministic prior inflates the statistic until the 3.0 bar
+stops being a bar at all. **The twin denominator fails in BOTH directions at
+once, and only the raw-margin branch escapes both.**
+
+So the pre-registered criterion earned its keep: written blind, it routed the
+design away from a formula that two hours of arithmetic then showed would have
+mis-fired. Recording that explicitly because the opposite is the standing
+temptation — `CV_MIN = 0.05` was a guess, and the guess is vindicated by a
+mechanism (unit heterogeneity) it was not chosen for.
+
+**WHAT IS STILL OWED, AND IT IS STEP (2), NOT THIS BLOCK.** The successor gate
+is now determined in FORM — `arm − twin_mean >= MARGIN`, per-arm twin means as
+tabulated above, `MIN_LEARN_SIGMA` untouched and no longer the operative
+comparison for G1 — but its MARGIN CONSTANT is not yet chosen, and this desk
+deliberately did not choose one while holding attempt 2's four margins (309.3,
+217.3, 172.5, 170.6) in hand. **Fitting a bar to the numbers it will judge is
+the move every rule here forbids**, and the disposition's phrase *"the margin
+attempt 2's own numbers make non-trivial"* is the one clause in it that invites
+exactly that. The next unit must derive the margin from something that is not
+attempt 2's trained means — the random floor, the twin spread itself, or a
+declared effect size — and say which, in the non-dispatch commit. Until then
+**no dispatch is authorised**, and the standing prohibition on an unchanged
+re-dispatch is untouched.
+
 **What this costs and what it does not.** The probe is CPU-cheap forward passes
 and buys the design its missing premise. Attempt 3 remains ~17 GPU-h and is NOT
 authorised by this disposition — it is authorised by the probe landing and the
