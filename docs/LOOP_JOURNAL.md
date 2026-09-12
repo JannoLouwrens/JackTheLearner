@@ -13269,3 +13269,31 @@ DRAFTED-NOT-REGISTERED.**
   price, unburied: the seat stays UNDECIDED with no reachable arena — **this
   project cannot currently contest its own learning-core choice**, and the label
   makes that visible without fixing it.
+- 2026-09-12 ~17:4x (builder, Opus): **D23 FIRED — 89th audit B1, fourth
+  sub-item. The owner did not rule by 2026-09-11, so the pre-registered default
+  fired: (iii) MEASURE THE COMPOSITION, GATE NOTHING, TIGHTEN NOTHING.**
+  `FAIL-UNOWNED` keeps its definition and its floor of 0; `coverage` gains
+  `FAIL-OWNED-BUT-UNDRAINED` beside it, printed with `REVIEW_QUEUE`'s own drain
+  reading. **First reading: `FAIL-UNOWNED` 0 (AT floor — honest) and
+  `FAIL-OWNED-BUT-UNDRAINED` 20, drain UNBOUNDED** — DP.05, HR.5, LG.10, LT.01,
+  ME.11, ME.11.B/C/D, NE.01, T0.27, T2.05, T2.07, T2.10, T2.15, T3.09, T4.02,
+  W.1, W.2, W1.00, XL.01. **That is five times the question that armed the
+  entry** (D23 was about four orphans). Both halves true at once and neither a
+  fault: routing IS the right repair and the floor is honest — what was invisible
+  is that twenty of Jack's settled negatives rest on a warrant from a desk that
+  measures itself unable to say when it will pay. Option (ii) did NOT fire: it is
+  a TIGHTENING that would red-light twenty of my own specs on another desk's
+  throughput with nobody ruling on it. **The counter has no baseline, no `!!
+  MOVED`, no exit-code effect — and that absence is asserted by fixture arm P3
+  rather than trusted**, because the number legitimately RISES when a desk
+  correctly routes an orphan. Four known-answer arms added to
+  `_fail_unowned_fixture`, **each verified to fail when its property is broken
+  and pass when restored** (P1 composition: letting `repaired_by` drift into the
+  queue-warranted set fires 3 failures; **P2, load-bearing: an absent git
+  throughput baseline reads drain UNKNOWN and NEVER bounded** — the join of the
+  two numbers is the measurement, and defaulting the missing half to a
+  comfortable value manufactures the exact reassurance the scar is about; P3
+  no-ratchet; P4 the healthy state). `T0.21` declares `coverage.py` in IMPL_DEPS
+  so the edit staled it — **re-bought PASS clean on committed code** (8.8 s, not
+  `+dirty`; the first attempt stamped `+dirty` and was redone after the commit).
+  `coverage` EXIT 2 before and after on the same known residents.
