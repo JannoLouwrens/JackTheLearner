@@ -12887,3 +12887,68 @@ one owes. Three constraints on that repair, all of which generalise:
     when a spec's own AST moved, so acting on a false positive costs a
     refusal, never a bad stamp. **An instrument that cannot separate two
     classes should say so and point at something that can, rather than pick.**
+
+## A GATE BRANCH CAN BE UNREACHABLE BECAUSE AN EARLIER BRANCH DOMINATES IT —
+## and the instrument that exists to catch dead gates compares STATUS, so on a
+## rig whose every branch returns VOID it cannot tell a live branch from a dead
+## one (builder, 2026-09-12, writing D1.0's successor gate; the dominated
+## branch was mine, shipped and caught by its own fixtures within the hour)
+
+**What happened.** `D1.0`'s successor gate replaced a control that scored
+untrained twins against the random policy with one that scores them on the
+claim's own ruler — excess over a frozen untrained prior, against
+`LEARN_MARGIN`. I added it AFTER a new rig gate (`G0`) that reads the same
+quantity at a tolerance of `3·std_a/√3`. The fixtures said the control never
+fired. It was not a numbers problem and not luck: for EVERY arm,
+
+    G0 tolerance  = 3·std_a/√3        = 1.732·std_a
+    control bar   = 3·max_std·√(2/3)  = 2.449·max_std ≥ 2.449·std_a
+
+so any excursion large enough to trip the control had already tripped `G0`. The
+branch was unfalsifiable by construction — **and it reads as a perfectly
+ordinary control in source**: it has a threshold, a comparison, a verdict
+string, and a name that says what it means. Repaired by ORDER, not by moving a
+bar (control first, so a twin scoring what a trained arm must score is reported
+as a claim-level indictment and smaller disagreements as rig drift), with the
+inequality written into the docstring so nobody re-orders the two for tidiness.
+
+**Why this is not the saturation lesson already in this file.** "An assertion
+made against a saturated quantity cannot fail" is about the QUANTITY being
+incapable of moving. This is about the CONTROL FLOW: the quantity moves fine,
+the comparison is correct, the threshold is honest, and the branch is still
+dead because something ahead of it claims every input that would reach it.
+Conjunct order is therefore part of a gate's meaning, not presentation.
+
+**And the detector that owns this class is blind to it here — measured.**
+`T0.13` ("gates are live") exists to find *"an assertion inside a `_check` that
+cannot change the check's verdict"*, by perturbing each referenced key and
+asking whether the verdict moved. But `t0_13_gates_are_live.py:403` returns
+`("STATUS", out.value)`: the status, never the branch. Replaying `D1.0`'s
+`_check` through that comparison — baseline `("STATUS","VOID")`, control key
+perturbed to `0, 1, −1, ±1e9` — gives `moved=False` **five times out of five**,
+because every branch of that `_check` returns VOID. So the detector reports the
+repaired, demonstrably live control as DISARMED, exactly as it would have
+reported the dominated one. It is blind in BOTH directions on any rig whose
+branches share a status, which describes most VOID-heavy specs here.
+
+**THE RULES.**
+
+1. **When you add a branch to a `_check`, compare its bar against the bars of
+   every branch ahead of it that reads the same quantity — symbolically, not on
+   today's numbers.** If an earlier bar is provably tighter, your branch is
+   dead. This is arithmetic over two thresholds and takes a minute.
+2. **Order conjuncts so that each excursion is reported by the branch that
+   DESCRIBES it**, and say why in the code. "Rig before claim" is the usual
+   right answer (the `LG.03` ordering lesson) but it is not universal: where the
+   claim-level bar is the LOOSER of the two, putting the rig first silently
+   eats the claim-level finding.
+3. **A "verdict moved" test that compares only the status cannot audit a rig
+   whose branches share a status.** Compare the branch — a verdict id, or the
+   verdict text — or state in the detector that its answer is undefined for
+   single-status rigs. A detector that returns DISARMED for a live gate trains
+   its reader to ignore it, which this file already names as worse than no
+   detector at all.
+4. **Generalised: red-first on a CONTROL means showing it can FIRE, not merely
+   that it currently passes.** A control that passes may be passing because it
+   is correct or because it is unreachable, and those look identical from the
+   outside. The fixture that distinguishes them costs one perturbation.

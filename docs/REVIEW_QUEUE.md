@@ -3395,6 +3395,93 @@ gate being committed, and it should be dispatched into W37 (opens 09-13) rather
 than scraped out of W36's remaining ~12.4 h. This desk has now spent 33.8
 GPU-hours on two VOIDs and will not buy a third verdict from a gate that has
 not first been shown to be able to return one.
+
+**SUCCESSOR GATE COMMITTED — STEP (2) OF THE OWED STAMP, LANDED (builder,
+2026-09-12 ~23:0x, commit `7cb00ea`, which is NOT a dispatch commit, per
+condition 4). Both steps of this row's execution are now discharged.** The σ
+bar did not move; the random policy stays computed and recorded and is no
+longer a denominator anywhere; both recorded VOIDs are undisturbed.
+
+    LEARN_MARGIN = MIN_LEARN_SIGMA x max_arm( twin_std x sqrt(2/n) ) = 175.74
+
+**THE CHANGE OF UNITS, written here as condition 3 requires rather than left in
+a diff: the operative comparison for the new conjunct is RETURN POINTS, not
+sigma.** The derivation takes one pre-registered constant (`MIN_LEARN_SIGMA`
+3.0), the registered seed count (3) and the probe's measured spreads — **and
+nothing from attempt 2's trained means**, which is this row's own prohibition.
+The null it excludes is *"training moved the weights and learnt nothing
+useful"*, under which the trained score is a fresh draw from the arm's own
+untrained prior, so `mean(d)` has sd `std·sqrt(2/n)`. The `max` over arms is
+FORCED by the probe's heterogeneity finding: a single raw bar has to dominate
+the noisiest architecture's null or it admits init luck there. The constant is
+**computed in code from the frozen table, not typed**, so it cannot be
+hand-tuned without visibly editing measured numbers. A 200k-sample bootstrap
+off the probe's own 32 returns corroborates it and is recorded as a known
+limitation rather than smoothed: `c_e2e`'s empirical p99.865 is **185.80**, ~6%
+above the parametric bar, because its prior is heavy-tailed (one draw at
+411.3). The bar stays parametric — an empirical tail quantile from 32 draws is
+set by a single observation and is not reproducible — and the exposure is
+bounded by the conjunction below.
+
+**ONE DEPARTURE FROM THIS DISPOSITION'S WORDING, named rather than quietly
+taken.** The disposition's branches were written about
+`(arm − twin_mean)/twin_std`, and this row's step-(2) note concluded that
+`MIN_LEARN_SIGMA` is *"no longer the operative comparison for G1"*. **Attempt
+2's ledger row refutes the premise: G1 as implemented on 09-06 is PAIRED at the
+same init seed** — `mean(d)/(sd(d)/√n)` — which is not that formula and is
+strictly better than it, because pairing cancels the architectural prior per
+seed instead of subtracting its across-seed mean. Executing the literal words
+would have replaced a paired statistic with an unpaired one, i.e. weakened the
+gate in the middle of a strengthening, which law 4 forbids. **So the raw margin
+was ADDED as a conjunct instead of replacing G1**: the branch is executed
+literally and the better statistic survives, and an arm must now clear both.
+The substantive reason to keep both is that they fail differently — paired-t is
+immune to a heavy-tailed prior (the same init seed is on both sides) but
+inflatable by a coincidentally small `sd(d)` at n=3; the raw margin is immune
+to that collapse and blind to pairing. The refuted premise is routed onto
+`gates-that-measure-something-other-than-what-they-say` (DUE 09-20), not
+settled here.
+
+**WHAT ATTEMPT 2 ACTUALLY DIED ON, and it was not the arms.** `G1` cleared ALL
+FOUR arms (paired-t 20.41 / 6.00 / 9.25 / 16.96 vs the 3.0 bar). The VOID came
+from the **control**, which still scored untrained twins against RANDOM. That
+was the last random denominator in the gate and it is the surface repaired:
+
+    G0  NEW RIG   the run's own untrained means must agree with the frozen
+                  TWIN_PRIOR table (K=32) within 3 standard errors, or NO arm
+                  is scored. The gate now depends on constants measured by
+                  another file on another day, and a silent drift would
+                  mis-score every arm with nothing to announce it.
+    G1b NEW CLAIM raw paired gain >= LEARN_MARGIN, in return units.
+    CONTROL       an untrained twin must miss the margin a TRAINED arm has to
+                  clear, as excess over its own frozen prior.
+                  `untrained_*_sigma` is still computed and recorded and gates
+                  nothing — condition 2 kept, the dependence dropped.
+
+**RED-FIRST, AND IT CAUGHT A DEFECT IN THE REPAIR ITSELF.** Every branch was
+replayed through `_check` against the recorded row. `G0` fires on a +20 drift;
+`G1b` on a 170.0 gain; `G1` names both conjuncts when both miss. **But the new
+control was UNREACHABLE FOR EVERY ARM as first ordered** — `G0`'s tolerance
+`1.732·std_a` is always tighter than `LEARN_MARGIN = 2.449·max_std`, so the
+control could never fire, which is precisely what law 2 forbids. Repaired by
+ORDER (control before `G0`) with the inequality recorded in the docstring.
+
+**THE FINDING THE REVIEW NEEDS BEFORE AUTHORISING ~17 GPU-HOURS.** Attempt 2's
+verbatim row, replayed through the successor gate, clears `G0`, the control and
+BOTH learning conjuncts on all four arms — raw gains 308.00 / 217.47 / 201.33 /
+193.17 against 175.74, the closest by 10% — **and then lands on
+`VOID (SPLIT-PENDING)`.** `aprime` leads `d_mlp` by 3.37σ on eval mean (506.4
+vs 415.0) while `d_mlp`'s final-third TRAINING reward is **higher** (5.411 vs
+5.303, gap −0.108) with a positive slope, so the owner's convergence check
+fires: no winner while the runner-up is closing. **That is the first attempt-2
+verdict that is about the ARMS rather than about a denominator** — and it says
+the budget, not the gate, is now what cannot separate these two. On this
+evidence a re-run at the same `STEP_TARGET` (750,000) is likelier to return
+SPLIT-PENDING than a winner. **That is a dispatch question and it is the
+Review's: this desk has not moved `STEP_TARGET` and will not.** The
+precondition this row set is satisfied in form; whether ~17 GPU-h should buy a
+run whose most likely verdict is "still converging" is a judgement the row
+should make explicitly before W37's quota is spent.
 ROUTED: lg10-mouth-fidelity-vs-freedom | 2026-09-02 | LG.10-attempt-2-FAIL | DISPOSITIONED 2026-09-08 (Review DAILY — (c): LG.10's bar and its FAIL STAND. (b) refused on the spec's own docstring warning. (a) is accepted as a NEW registered claim with a binding utterance-rate floor, and explicitly NOT as a rewrite of a failing spec. Design below)
     DUE: 2026-09-06 | a mouth-design decision owed by the Review's Sunday
     FULL run; bundle beside the ME.11 family disposition — both are cases
@@ -4762,6 +4849,66 @@ than by any tool:**
 | `PL.02` (ruled 09-11) | "the eye is alive" | `r2_ua`, which is the **subtrahend of the claim's own effect size** `R_pl = r2_pl − r2_ua` — so the guard capped the gain it was added to protect at ≤0.20 against an observed 0.94 |
 | `LG.03` (ruled 09-12) | "the twin reproduces demonstrations it was trained on" | `fidelity × teacher competence` — the tape is recorded from the planner's misses too, so perfect reproduction scores `planner_own`, not 1.0 |
 | `HR.5` (ruled 09-12) | "four sounds are separable" | `four_class_audio_separability` 0.583, a number its own `position_only_acc` control beats at 0.708 — separability of POSITION, not of sound |
+
+**A FOURTH INSTANCE, AND IT ADDS A SECOND SUB-KIND (builder, 2026-09-12 ~23:0x,
+attached here rather than opened as its own row — the 90th audit B2 precedent,
+and `review_queue_net_arrivals` is already banner-ed).** Found while executing
+step (2) of `d10-successor-rerun-under-adopted-gate`; the gate is committed in
+`7cb00ea`.
+
+| spec | declared meaning of the gate | quantity actually computed |
+|---|---|---|
+| `D1.0` (repaired 09-12) | "untrained twins must miss the learning gate" | `(twin_mean − random_mean)/max(std)` — whether an untrained net beats a RANDOM POLICY, which it does by ~87 points of architectural prior. It VOIDed attempt 2 at 3.95/3.91σ on twin means IDENTICAL to attempt 1's, because random's spread moved 30.27 → 22.12. The gate never asked the question in its own sentence. |
+
+**The new sub-kind: a gate that cannot measure AT ALL, because an earlier
+branch dominates it.** Writing `D1.0`'s replacement control, I ordered it after
+the new rig gate and the fixtures showed it could never fire — not for these
+numbers, but **for every arm by algebra**: the rig tolerance is
+`3·std_a/√3 = 1.732·std_a` and the control bar is
+`3·max_std·√(2/3) = 2.449·max_std ≥ 2.449·std_a`. A dominated branch reads
+exactly like a live control in source, in review, and in every instrument we
+own — it has a threshold, a comparison and a verdict string — and it is
+unfalsifiable by construction. Repaired by ordering, with the inequality
+recorded in the docstring.
+
+**So the sweep this row owes should ask TWO questions of each gate, not one:**
+*what quantity does it compute* (the three instances above), and *can it fire
+at all given the branches ahead of it* (this one). The second is mechanically
+checkable in a way the first is not — a dominated branch is an arithmetic
+relationship between two thresholds — which makes it the better candidate for
+the "does it become a standing instrument" half of the verdict.
+
+**AND THE STANDING INSTRUMENT ALREADY EXISTS: `T0.13` ("gates are live"), whose
+own docstring says it exists to find *"an assertion inside a `_check` that
+cannot change the check's verdict"*. It needs exactly one change, and the need
+is MEASURED, not reasoned.** `t0_13_gates_are_live.py:403` compares
+`("STATUS", out.value)` — the status only, never the branch that produced it.
+Replaying `D1.0`'s `_check` through that comparison (builder, 2026-09-12):
+baseline `("STATUS", "VOID")`, and perturbing the control's key to each of
+`0, 1, −1, ±1e9` returns `("STATUS", "VOID")` every time, `moved=False` in all
+five. **Every branch of this `_check` returns VOID, so no perturbation of any
+key can move a status-only verdict** — the REPAIRED, demonstrably live control
+reads DISARMED exactly as the dominated one would have. The detector is blind
+in both directions on any spec whose branches share a status, which is most
+VOID-heavy rigs in this project. Including `m["verdict"]`'s branch text (or a
+branch id) in the compared tuple would separate "no effect" from "a different
+VOID" and would have caught the dominated ordering by itself. Not done here —
+`T0.13` is a PASSING certificate and this is the Sunday sweep's call, not a
+builder's drive-by.
+
+**AND A PREMISE THIS ROW SHOULD CARRY: one of the three instances above was
+itself argued from a gate-meaning error.** The 09-08 disposition on
+`d10-successor-rerun-under-adopted-gate` reasoned about `(arm − twin_mean)/
+twin_std` and concluded `MIN_LEARN_SIGMA` was "no longer the operative
+comparison for G1" — but the gate implemented on 09-06 is PAIRED at the same
+init seed, a different and strictly better statistic. Acting on the
+disposition's literal words would have DELETED a paired test in favour of an
+unpaired one, i.e. weakened the gate while executing a strengthening. The
+builder implemented both as a conjunction instead and said so. **That is the
+third time in two days a ruling's stated mechanism was refuted by reading the
+code it rules on** (`LG.03` 09-12, `PL.02` 09-11, this). The pattern is not
+carelessness at the desk; it is that a ruling is written from a row and a row
+records aggregates, while the mechanism lives in source.
 
 **The common shape, stated once:** a threshold is calibrated against the gate's
 STATED meaning while the code computes something else, and every organ we have
