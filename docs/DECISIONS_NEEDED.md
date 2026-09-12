@@ -5980,3 +5980,84 @@ that ruling is unaffected by this default having fired.
 routed to the builder as the 89th audit's **B1** first sub-item. The default has
 fired; its full transcription has not been written, and this paragraph exists so
 that nobody later reads the gap as a lost record.
+
+## D18 — RESOLVED BY ARMED DEFAULT, fired 2026-09-12 ~17:2x UTC (builder). Off your desk. **Its premise was already satisfied at firing, and the report it asked for is below.**
+
+**The owner did not rule by 2026-09-09, so the pre-registered default fired.**
+
+Default **MEASURE AND REPORT, GATE NOTHING, RELAX NOTHING.** The ~1.5 GB figure
+in `SYSTEM.md` **stands verbatim** — not raised, not narrowed, not annotated with
+an exception. No run is refused, no spec is failed, no threshold moves, no
+control is loosened, `GOAL.md` is not touched, no certificate is staled, and no
+commitment goes claim-dead.
+
+**THE PREMISE WAS ALREADY FALSE AT FIRING, and that is checkable rather than
+asserted.** The default ordered two code changes. Both landed on **2026-09-03 in
+`a071d91`** ("63rd-audit B2: the memory half of the rule lib_procwatch.sh cites
+is now read, not claimed") — *six days before this decision's `decide_by`, and
+before the entry was ever armed*:
+
+- `scripts/lib_procwatch.sh:268` `proc_memory_report()` reads
+  `/proc/PID/status:VmHWM` while walking the pids `_proc_is_ours` already
+  resolves, and **NAMES** — never kills — every project python over
+  `JACK_MEM_CEILING_MB=1536`. It is wired into the loop at
+  `scripts/ladder_loop.sh:238`, which folds `PROC_MEM_N` into `LEFTOVER_NOTE`.
+- `experiments/protocol.py:2910` `_peak_rss_mb()` + `:3152` record
+  `peak_rss_mb` on every row. It is **stronger than the default specified**:
+  the default said `RUSAGE_CHILDREN`, the implementation takes
+  `max(RUSAGE_SELF, RUSAGE_CHILDREN)` — because `run_spec` calls the experiment
+  *inline*, so a children-only reading would have recorded ~0 MB for the exact
+  7.57 GB `T2.00` scar this exists for. It also carries `peak_rss_inherited`, so
+  a row that merely inherited an earlier spec's high-water mark in a `--gate`
+  sweep cannot be mistaken for its own peak.
+
+So the firing writes no code. **What had never been done is the second word of
+the default — REPORT.** The instrument has been recording for nine days and
+nobody had read it in aggregate. Measured across `experiments/ledger.json` at
+firing (143 rows; 71 carry the metric; 69 own-peak, 2 inherited):
+
+| | |
+|---|---|
+| own-peak rows **over** the 1536 MB ceiling | **8 of 69 (12%)** |
+| median own peak | **239.7 MB** (6.4x *under* the ceiling) |
+| max own peak | **7370.0 MB — `T1.03`, 4.8x, `inherited=False`** |
+| status of all 8 breaching rows | **PASS** |
+
+    spec       peak_MB  x-ceiling   status
+    T1.03       7370.0      4.8x     PASS
+    T0.07       6943.4      4.5x     PASS
+    T0.04       3539.0      2.3x     PASS
+    T0.16       2632.3      1.7x     PASS
+    T1.04       2073.9      1.4x     PASS
+    PG.6        2073.4      1.3x     PASS
+    LC.02       2021.4      1.3x     PASS
+    T0.14       1783.0      1.2x     PASS
+
+**THIS CHANGES THE SHAPE OF YOUR QUESTION, and it is the reason the default was
+worth firing even as paperwork.** `D18` asked *"Is the ceiling wrong, or are the
+specs in breach?"* on evidence of a single live 7.57 GB sample. The ledger-wide
+answer is **neither wholesale**: the ceiling is comfortably right for **88%** of
+the measured ladder — the median spec peaks at 240 MB, *a sixth* of the limit —
+and the breach is a **heavy tail of eight named specs**, every one of them green.
+That is a materially easier decision than the one the entry posed: you are not
+choosing between a stale constitutional number and a ladder in wholesale breach;
+you are ruling on eight specs, by name, with their numbers attached. **The loop
+still may not set that bar** — `SYSTEM.md` class 3, unchanged — and this default
+deliberately leaves the ceiling **BREACHED AND VISIBLE** rather than choosing
+between (a) and (b), because both choices remain yours.
+
+**Invariants checked at firing:** no `GOAL.md` edit, no threshold moved (1536 MB
+unchanged in `lib_procwatch.sh:62`, ~1.5 GB unchanged in `SYSTEM.md`), no control
+loosened, no new permission created, nothing re-run, no certificate staled, no
+spec failed, no run refused. `T1.03`, `T0.07` and the other six keep their PASS
+rows untouched — reporting a breach is not failing a spec.
+
+**To reverse:** nothing to revert in code, because the default's code already
+existed and was not written by this firing. The owner may rule (a) or (b) at any
+later date at no cost; this default chose neither.
+
+Evidence: `a071d91` (both halves, 2026-09-03); `scripts/lib_procwatch.sh:62,
+:104-113, :252-285`; `scripts/ladder_loop.sh:238`; `experiments/protocol.py:433,
+:2910, :3040, :3143, :3152`; this entry's EVIDENCE UPDATE 2026-09-06 12:4x (78th
+audit) and OVERDUE NOTICE 2026-09-10 07:0x (87th audit); `docs/OVERSIGHT.md`
+89th audit B1.

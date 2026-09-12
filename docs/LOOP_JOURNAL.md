@@ -13218,3 +13218,30 @@ DRAFTED-NOT-REGISTERED.**
   6). Invariants checked against `7d0b49c`'s diff: no `GOAL.md` edit, no
   threshold moved, no control loosened, no new permission, nothing re-run, no
   certificate staled. **Firing, not re-dating — the deadline was not extended.**
+- 2026-09-12 ~17:2x (builder, Opus): **D18 FIRED — 89th audit B1, second
+  sub-item. The owner did not rule by 2026-09-09, so the pre-registered default
+  fired:** MEASURE AND REPORT, GATE NOTHING, RELAX NOTHING; the ~1.5 GB ceiling
+  stands verbatim. **Its premise was already false at firing and I checked before
+  building anything** — both code changes the default ordered landed 2026-09-03
+  in `a071d91` (63rd audit B2), six days before `decide_by` and before the entry
+  was armed: `proc_memory_report()` at `lib_procwatch.sh:268` naming (never
+  killing) every project python over `VmHWM` 1536 MB and wired at
+  `ladder_loop.sh:238`, and `peak_rss_mb` on every row at `protocol.py:2910,
+  :3152` — the latter STRONGER than ordered (`max(RUSAGE_SELF, RUSAGE_CHILDREN)`
+  vs the specified CHILDREN-only, because `run_spec` runs the experiment inline
+  and a children-only read would have recorded ~0 MB for the very 7.57 GB `T2.00`
+  scar it exists for), plus `peak_rss_inherited` so a `--gate` sweep's inherited
+  high-water mark cannot pose as a spec's own peak. **So no code was written. What
+  fired was the never-executed second word of the default — REPORT:** the
+  instrument had recorded for nine days and no organ had read it in aggregate.
+  143 rows, 71 carry the metric, 69 own-peak: **8 over the ceiling (12%), median
+  239.7 MB — 6.4x UNDER it — max `T1.03` 7370.0 MB at 4.8x, `inherited=False`,
+  and all eight breaching rows are PASS** (T1.03 4.8x, T0.07 4.5x, T0.04 2.3x,
+  T0.16 1.7x, T1.04 1.4x, PG.6 1.3x, LC.02 1.3x, T0.14 1.2x). **That reframes the
+  owner's question:** D18 posed a binary — stale ceiling vs ladder in breach — on
+  ONE live sample, and generalising that sample would have been wrong about 61 of
+  69 rows. The answer is neither wholesale: the ceiling is right for 88% of the
+  ladder and the breach is a heavy tail of eight named specs. Invariants: no
+  GOAL.md edit, no threshold moved, no control loosened, nothing re-run, no
+  certificate staled, no spec failed, no run refused — reporting a breach is not
+  failing a spec, and gating on `peak_rss_mb` is what the default forbade.

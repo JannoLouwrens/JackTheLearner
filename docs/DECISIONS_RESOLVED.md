@@ -860,3 +860,78 @@ Evidence: `docs/DECISIONS_NEEDED.md` D22 entry + its OVERDUE NOTICE
 (`:5924`); `7d0b49c` (the firing); `docs/OVERSIGHT.md` 89th audit B1 first
 sub-item (the routing of this transcription); `docs/PROGRESS.md` 2026-09-12
 `FOR THE OWNER` item 2 + its in-place correction (`a4edb79`).
+
+## D18 — RESOLVED BY ARMED DEFAULT (fired 2026-09-12 ~17:2x UTC, builder): MEASURE AND REPORT, GATE NOTHING, RELAX NOTHING. The ~1.5 GB ceiling STANDS VERBATIM. The default's code already existed; what fired was the report, and it reframes the question.
+
+**The owner did not rule by 2026-09-09, so the pre-registered default fired.**
+
+**The question** (2026-09-02, overseer, from a live measurement): `run_spec T2.00`
+was sampled at **7.57 GB RSS against `SYSTEM.md`'s ~1.5 GB ceiling — 5.0x** — on
+a box with paying tenants, with `nice 19` honoured and only the memory half
+breached. `T0.07` carried `policy_peak_rss_mb = 6991.0` on a **PASS** row
+re-stamped the same day. No OOM kill ever, swap flat, no tenant harmed — but free
+memory reached 808 MB on a 22.9 GB box, and the margin was luck rather than
+design. Is the ceiling wrong, or are the specs in breach? Both answers change
+what is *permitted* on a shared machine, which is `SYSTEM.md` class 3 (CONDUCT),
+so rule 3 does not reach it: the loop may measure, it may not set the bar.
+
+**The default that fired.** The ~1.5 GB figure stands verbatim — not raised, not
+narrowed, not annotated with an exception. The ceiling is left **BREACHED AND
+VISIBLE** rather than resolved, because both (a) and (b) are the owner's.
+
+**THE PREMISE WAS ALREADY SATISFIED AT FIRING — the second time this project has
+fired a default whose ordered work was already done** (`D17` was the first, and
+its trigger's premise was likewise false at firing). Both code changes the
+default ordered landed **2026-09-03 in `a071d91`**, six days before `decide_by`
+and before the entry was armed: `proc_memory_report()` (`lib_procwatch.sh:268`,
+wired at `ladder_loop.sh:238`) names every project python over the ceiling from
+`VmHWM`, never killing; and `run_spec` records `peak_rss_mb`
+(`protocol.py:2910, :3152`). The implementation is **stronger than the default
+specified** — `max(RUSAGE_SELF, RUSAGE_CHILDREN)` rather than the ordered
+`RUSAGE_CHILDREN` alone, because `run_spec` calls the experiment inline and a
+children-only reading would have recorded ~0 MB for the exact `T2.00` scar the
+field exists for — and it carries `peak_rss_inherited` so a `--gate` sweep's
+inherited high-water mark cannot masquerade as a spec's own peak.
+
+**So the firing wrote no code. What it did was the never-executed second word of
+the default: REPORT.** The instrument had been recording for nine days and no
+organ had read it in aggregate. Across the ledger at firing — 143 rows, 71
+carrying the metric, 69 own-peak:
+
+    own-peak rows over the 1536 MB ceiling : 8 of 69 (12%)
+    median own peak                        : 239.7 MB  (6.4x UNDER the ceiling)
+    max own peak                           : 7370.0 MB  T1.03, 4.8x, inherited=False
+    status of all 8 breaching rows         : PASS
+
+    T1.03 7370.0 (4.8x) · T0.07 6943.4 (4.5x) · T0.04 3539.0 (2.3x)
+    T0.16 2632.3 (1.7x) · T1.04 2073.9 (1.4x) · PG.6  2073.4 (1.3x)
+    LC.02 2021.4 (1.3x) · T0.14 1783.0 (1.2x)
+
+**THE FINDING, and it is why firing pure paperwork was still worth doing.** The
+entry posed a binary — stale ceiling, or ladder in breach — on the evidence of
+one live sample. The ledger-wide reading is **neither wholesale**: the ceiling is
+right for **88%** of the measured ladder, whose median spec peaks at a *sixth* of
+the limit, and the breach is a **heavy tail of eight named specs**. A single
+7.57 GB observation generalised to "the specs are in breach" would have been
+wrong about 61 of 69 rows. That is a materially easier decision than the one
+escalated, and it is now on the owner's desk with names and numbers attached
+rather than an anecdote.
+
+**Invariants checked at firing:** no `GOAL.md` edit; no threshold moved (1536 MB
+unchanged at `lib_procwatch.sh:62`, ~1.5 GB unchanged in `SYSTEM.md`); no control
+loosened; no new permission created; nothing re-run; no certificate staled; no
+spec failed; no run refused. The eight breaching specs keep their PASS rows —
+**reporting a breach is not failing a spec**, and gating on `peak_rss_mb` is
+exactly what the default forbade.
+
+**To reverse:** there is nothing to revert in code — the default's implementation
+predates this firing and was not written by it. The owner may rule (a) *the
+ceiling is stale, raise it* or (b) *the specs are in breach, fix them* at any
+later date at no cost; this default chose neither and the number is now there to
+rule on.
+
+Evidence: `docs/DECISIONS_NEEDED.md` D18 entry + its EVIDENCE UPDATE 2026-09-06
+12:4x (78th audit) + OVERDUE NOTICE 2026-09-10 07:0x (87th audit) + the
+`RESOLVED BY ARMED DEFAULT` append; `a071d91`; `scripts/lib_procwatch.sh:62,
+:104-113, :252-285`; `scripts/ladder_loop.sh:238`; `experiments/protocol.py:433,
+:2910, :3040, :3143, :3152`; `docs/OVERSIGHT.md` 89th audit B1.
