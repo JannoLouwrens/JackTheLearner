@@ -14603,3 +14603,113 @@ rows so the twelfth is recognised as a recurrence, and a reachability caveat on
 `coverage`'s fillable-class recommendation. I judged both to be ~an hour of
 careful instrument work with a `T0.31` or `T0.21` re-buy behind them, and
 refused to half-start one in a GPU wait.
+
+---
+
+## 2026-09-13 ~10:2x–11:0x UTC (builder, **Opus** — `week:Fable` pinned 100%, so the chain walked me off it; `week:all models` 81% at the top of the slot, 82% at the end, and all-models is the gate)
+
+**FIRST UNIT WAS THE ONE THE LAST PAGE ORDERED, and the prediction on it was
+exactly right.** `T1.08`'s attempt-3 row was sitting on disk uncommitted when I
+woke (kernel `jannolouwrens/jack-ladder-1789292618`, P100, 0.356 h W37, `ran_at`
+2026-09-13T10:05:05). Committed as the runner wrote it, `deda088`.
+
+**IT FAILED, AND THE RED IS HONEST.** `heldout_cv_pct` **40.006** against
+`MAX_HELDOUT_CV_PCT` 7.0. Every rig gate green and the control fired on its own
+side (`distinct_results` 3, `spread` 0.04209 — seeds genuinely change the
+outcome, so the noise floor is not fictional). The OLD conjunct cleared exactly
+as the strengthening predicted it would: `snr` 10.1 against its untouched 3.0
+bar, because `snr` is a property of the fixed synthetic rank-8 task and not of
+us. `heldout_std` moved 0.002847 -> 0.023399, a factor of 8.2. `kills: any
+single-seed claim in this repo` stopped being a slogan this morning.
+
+**THE CONFOUND IS NAMED AND IT WAS PRE-REGISTERED, NOT INVENTED AFTER.** The
+docstring said out loud that 7.0 stood on **n=1** (5.717) where `T1.07`'s
+sibling bar had n=2. Attempt 2 ran on a Colab **T4**; attempt 3 on a Kaggle
+**P100**. Backend is confounded with the jump and the row cannot separate them.
+That is a question for the desk, not a licence — the bar is pre-registered, law
+3 is unconditional, and an unchanged re-dispatch onto a T4 hoping for 5.7 is
+run-until-pass wearing a hardware argument. **No threshold was moved and nothing
+was re-run.**
+
+**WHAT IT COST, AND THIS IS THE HEADLINE OF THE SLOT.** `D1.0`, `T2.01` and
+`T2.02` all declare `depends_on: T1.08` and all three left the reachable set.
+
+- `run blocked` now ranks **`T1.08` FIRST in the project, frees 41 / blocks
+  45**, displacing `T2.01` (frees 35 / blocks 38) — which is itself now blocked
+  behind it. The largest single unblock in the project moved this morning, and
+  it moved because of a bar set from one sample.
+- `UNREACHABLE_BASELINE` **94 -> 97**, growth log signed as mine. Second day
+  running this desk has had to write that sentence.
+- **`D1.0` attempt 3 into W37 — ordered for TODAY by the live priority block —
+  is FORECLOSED.** `run_spec` refuses an unsatisfied dependency. That is the
+  92nd audit's B1 guard, shipped four hours earlier, meeting its first real
+  dispatch and saying no. **Nothing was worked around and no exemption was
+  sought.** Priority item 3 is not deferred by my judgement; it is illegal.
+
+**THE BUILD, and it is the half that makes the bug unrepeatable.** `run
+blast-radius <SPEC>` (`8f3b52a`) — what leaves the reachable set if a spec
+settles non-PASS, and what rejoins if a red goes green. It is not a new idea:
+`protocol.BLAST_RADIUS_DECL` has refused a `VOID-FORECLOSED:` declaration since
+the 54th audit unless the docstring carries *"the transitive set of specs the
+declaration renders unreachable, by id and title"*, calls that set **"derivable
+from `depends_on`"**, and then validates **PRESENCE, NOT TRUTH** — because for
+thirteen days nothing derived it. Now something does, and it applies to the edit
+nobody prices at all: **arming a conjunct on a PASSing spec is the same graph
+edit with no paperwork.** Priced retrospectively, the two sibling conjuncts
+armed in the SAME commit (`445b9e1`) read `T1.07 -> none` and
+`T1.08 -> {D1.0, T2.01, T2.02}`. One free, one costing the biggest unblock, and
+the commit could not tell them apart. Neither could I, four hours earlier.
+
+**RED-FIRST, TWICE, AND THE SECOND ONE WAS ME.** A deliberately double-counting
+deriver (claiming every spec that MENTIONS the root — the ranker's founding bug)
+was refused by `_check_blast_radius` before the real one was trusted. Then the
+self-exclusion conjunct **rejected my own first version of itself**: I asserted
+`X` was unreachable to prove the subject stays inside its own COUNT while
+leaving its own NAMED set; `X` is a root with no dependencies and is never in
+the stuck set at all. Rewritten against `Y`, which genuinely is. Recorded in the
+docstring, because a fixture catching its author is the only evidence it is
+alive. **Both live known answers reproduce**: `T1.08 <-> {D1.0, T2.01, T2.02}`
+(computed by hand before the tool existed) and `T2.10 -> {T6.03}`.
+
+**PRICE PAID, STATED NOT DISCOVERED.** `experiments/run.py` is in NO spec's
+`IMPL_DEPS` (verified against the registry, not taken from the audit's map), so
+the instrument cost zero staleness. `coverage.py` IS in `T0.21`'s, so the growth
+log edit staled it: re-bought, PASS, 9.08 s (`b4f123d`). `T0.23` re-run and PASS
+(37.11 s) because a CLI edit is exactly what that spec polices —
+`blast-radius` now appears in its `Commands:` line on a typo. CPU meter billed
+and committed (`9ceefb8`).
+
+**ROUTED, NOT DECIDED.** `t108-bar-set-from-n1-is-now-the-projects-largest-
+blocker`, **DUE 2026-09-16** from `review-queue`'s own `next_free_due` (09-13
+carried 14 promises against a measured capacity of 6), deliberately NOT bundled
+with `t108-noise-floor-is-quoted-by-nobody` — same spec, same date, different
+questions. The desk is asked one thing it can rule on: is 40.006 a fact about
+this repo's pipeline or about the P100, and what run settles that WITHOUT being
+an unchanged re-dispatch (~0.36 GPU-h per backend, measured). It is explicitly
+NOT asked to lower 7.0. Queue parses: 54 routed, 28 OPEN, **0 violations**.
+
+**`D25` IS NOT MINE TO FIRE AND I DID NOT.** `025f0d1` settled that at 07:16 and
+the arithmetic still holds: `decide_by` is 2026-09-13, today is 2026-09-13, the
+tool prints `due 2026-09-13` and not `OVERDUE`, and the required sentence *"the
+owner did not rule by <date>"* is not yet true. `decisions --check` reads
+`0/0 default-action-expired`. `D19` and `D25` are both the 09-14 slot's.
+
+**Housekeeping.** 12 claude processes on the box; named paths on every commit,
+no `git add -A`, nothing of anyone else's in any commit. No detached launches,
+no GPU dispatch, no background processes left running — nothing to declare in
+`declared_pids`. Tree clean at the end of every commit.
+
+**NEXT ITERATION — FIRST UNIT: `D25`'s armed default, then `D19`.** Both come
+due 09-14 and the required wording is *"the owner did not rule by <date>, so the
+pre-registered default fired"* — take the count from
+`python -m experiments.decisions`, never from a page. **After that the board's
+top unit is `T2.10`, and `blast-radius` now says something sharper about it than
+the priority page does:** `run blast-radius T2.10` returns **`{T6.03}` alone**,
+not `{T6.03, LF.02}` — because `LF.02` needs `T6.03` to actually PASS, not
+merely to become runnable. So `T2.10` green buys one spec back and a *second*
+run buys the rest; price it that way. And know what you are buying into: its bar
+is the ME.11 certified stem-disjoint paraphrase fixture where the same scorer
+measured **0.0000** and the family's best dense ceiling was **0.250 against
+0.80**. That is a redesign, not a ten-minute run, whatever the cost class says.
+**Do NOT re-dispatch `D1.0` or `T1.08`** — the first is illegal until `T1.08` is
+green, the second until the 09-16 row answers.
