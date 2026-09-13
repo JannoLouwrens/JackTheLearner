@@ -6274,3 +6274,112 @@ is identical.
 Evidence: `scripts/usage_attribution.py` (+ `--selftest`, 6 arms);
 `scripts/lib_usage.sh` `pace_gate` skip line; `/data/jack-logs/usage_ledger.jsonl`
 (164 rows); `docs/OVERSIGHT.md` 89th audit B1 + B2 + RANK 1.
+
+
+## D27 — Part 2 re-examines about ten of 107 certificates a week. Today it found the oldest one had been certifying the wrong thing for thirty-six days. Keep hand-sampling, or buy a mechanical screen? (2026-09-13, Review, FULL)
+
+**THE INSTANCE, and it is not a near-miss.** `T6.03` — *Cross-session
+persistence*, PASS since 2026-08-08, attempt 1, the oldest certificate on the
+board and never once reconsidered — is the row this project cites for GOAL.md's
+*"What he learned yesterday — about the world and about his owner — persists on
+disk."* All fourteen of its conjuncts were true of a session-1 brain **that
+never took an optimiser step.** `weights_match` therefore certified that
+`torch.save`/`torch.load` round-trips a tensor, which is `T0.03`'s claim one
+tier lower, and the word *learned* in the sentence the spec answers had no
+referent anywhere in the file. Nothing was broken; every gate was sound; the
+spec was simply not about what it was cited for. Strengthened today
+(`d44d21a`) — it now trains before saving and requires the restored brain to
+reproduce a held-out probe loss as a FUNCTION rather than as bytes.
+
+**THE ARITHMETIC THAT MAKES IT A FORK.** Part 2 is this desk's standing
+jurisdiction and it samples **8–12 specs on a Sunday, against 107 PASSes.**
+That is a **re-examination cycle of about 10.7 weeks**, and the registry grows
+faster than the sample: 213 specs on 09-01, 246 today. A certificate written
+today waits roughly a quarter of a year for its first fresh look, and the
+gap widens every week. This is not a complaint about throughput. It is that
+**hand-sampling cannot be the only screen on a ladder this size**, and today is
+the third independent demonstration in three days — `PL.02`'s `r2_ua`,
+`LG.03`'s `own_hit`, `HR.5`'s `position_only_acc`, and now `T6.03` — that the
+defect class *"the gate is sound and measures a different quantity from the one
+its spec is cited for"* is present, recurring, and invisible to every
+instrument we own. `run_spec` checks the bar. The overseer audits whether a
+threshold MOVED. `coverage` audits whether a commitment has a spec.
+`review_queue` audits whether a promise was kept. **Not one of them asks what
+the number IS.**
+
+**WHAT I PROTOTYPED, INCLUDING THE PART THAT DOES NOT WORK.** A scratch probe
+(not committed, not an instrument) parses each PASS spec's `_check`, collects
+the metric names its conjuncts actually read, and diffs them against the keys
+the ledger row records. The footprint of all four instances above is the same:
+**the run measured the quantity that would have indicted it, and then did not
+look at it.** `T1.08` records `min_detectable_effect` — the number its own
+docstring says every later tier must quote — and no conjunct reads it. `T1.07`
+records `spread_ratio` = 4.931, the literal knife-edge quantity its title
+claims robustness against, and gates only on no-LR-being-catastrophic.
+
+The probe as it stands is **not usable and I will not pretend otherwise**: it
+flags 104 of 107 PASS specs and 1,423 metrics, because a metric summarised into
+a gated aggregate (seven per-property booleans behind one `properties_failed`)
+is read in substance while unread by name. I hand-checked twelve of the flagged
+specs and three were real. **A screen with that false-positive rate is worse
+than nothing** — it is a red light nobody can act on, which is how ratchets die.
+Whether a summarisation-aware version can be built at an actionable rate is a
+genuine open question and it is the reason this is your call and not my order.
+
+**THE THREE OPTIONS.**
+
+  (i) **BUILD THE SCREEN.** A summarisation-aware `metric_recorded_but_unread`
+      counter in `run status`, floored shrink-only like `fail_unowned`. Cost:
+      builder time, and a real risk the false-positive rate cannot be brought
+      down, in which case we have spent a day and learned the class is not
+      mechanisable — which is itself worth knowing.
+  (ii) **RAISE THE SAMPLE.** Part 2 examines more specs per Sunday. Cost: this
+      desk's wall clock, and **four of the four Sunday FULLs that have ever
+      fired on cron died at max turns.** Buying more Part 2 with a budget that
+      is already over-subscribed is how the last one died owing its page.
+  (iii) **CHANGE NOTHING** and accept a ~10.7-week re-examination cycle,
+      lengthening.
+
+**MY RECOMMENDATION, stated so the instrument can match on it:**
+
+> **My recommendation is (i) BUILD THE SCREEN — and build it to report, not to
+> gate, until its false-positive rate is measured.** The class is real, it has
+> four instances in four days, and every one was found by a human reading code
+> that a machine had already declared green. (ii) spends the one budget that
+> has failed four times out of four. (iii) is a decision to let certificates
+> age unexamined for a quarter of a year on a ladder whose whole claim is that
+> a PASS means something. The honest risk is mine to name and I have named it:
+> the prototype's false-positive rate is 3-in-12 and a screen that cries wolf
+> at 104 of 107 specs will be ignored within a week. So the ask is deliberately
+> small — one counter, reported and not gated, floored only once its rate is
+> known.
+
+DECIDE: D27
+  class:     goal
+  blocks:    no spec id. What is at stake is whether a PASS on this ladder is
+             re-examined by anything other than one desk reading ten specs on
+             a Sunday. The cost is already realised, not hypothetical: `T6.03`
+             was cited for a GOAL.md sentence it did not test for 36 days, and
+             three further instances of the same class landed in the three
+             days before it. Every one was found by hand.
+  default:   (i) BUILD THE SCREEN, REPORTING ONLY. A summarisation-aware
+             `metric_recorded_but_unread` reading is added to `run status`
+             alongside the other ratchet counters and is NOT floored until its
+             false-positive rate has been measured and written down. This is
+             the only legal default of the three. (ii) RAISE THE SAMPLE spends
+             the Review's wall clock, which has died at max turns on four of
+             four Sunday FULLs, and a default may not commit a budget that is
+             already failing. (iii) CHANGE NOTHING writes off a defect class
+             with four instances in four days. (i) picks only already-
+             permitted actions: it moves no threshold, refuses no run, fails
+             no spec, stales no certificate, spends no GPU, touches no GOAL.md
+             text, and is MONOTONE — reporting-only, it can only add a number
+             where none stood, and an unfloored counter cannot turn anything
+             red. The price, stated rather than buried: an unfloored counter
+             is a number nobody is accountable to, and if its rate is never
+             measured it will sit in `run status` being ignored — which is
+             exactly the failure mode I am asking to avoid. Firing this
+             default therefore also owes the rate measurement, and the counter
+             gets floored or deleted once it exists. Reversal: delete one
+             function from `experiments/coverage.py`.
+  decide_by: 2026-09-20
